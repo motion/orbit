@@ -6,6 +6,7 @@ import * as MacAppsPlugin from './macApps'
 import * as FilesPlugin from './files'
 import * as CalculatorPlugin from './calculator'
 import * as ConversionPlugin from './conversion'
+import * as RipGrep from './ripgrep'
 import debug from '@mcro/debug'
 
 type Plugin = {
@@ -18,6 +19,7 @@ const plugins: Plugin[] = [
   FilesPlugin,
   CalculatorPlugin,
   ConversionPlugin,
+  RipGrep,
 ]
 const log = debug('Plugins')
 
@@ -59,7 +61,7 @@ export default class Plugins {
         })),
       )
       await sleep(0) // cancellation
-      Desktop.setSearchState({ pluginResults })
+      Desktop.setSearchState({ pluginResults, pluginResultsId: _.uniqueId() })
       return pluginResults
     },
   ]

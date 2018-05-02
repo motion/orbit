@@ -3,11 +3,11 @@ import * as Constants from '~/constants'
 import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
-import { Electron } from '@mcro/all'
+import { Electron, Desktop } from '@mcro/all'
 
 class MainStore {
   get mouseInActiveArea() {
-    return Electron.peekState.mouseOver || Electron.orbitState.mouseOver
+    return Desktop.hoverState.peekHovered || Desktop.hoverState.orbitHovered
   }
 }
 
@@ -43,7 +43,7 @@ export default class MainWindow extends React.Component {
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
         hasShadow={false}
-        showDevTools={Electron.state.showDevTools.highlights}
+        showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}

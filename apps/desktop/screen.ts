@@ -2,9 +2,23 @@ import Oracle from '@mcro/oracle'
 import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import { store, isEqual, react } from '@mcro/black/store'
-import { Desktop, Electron, Swift, AppState, DesktopState } from '@mcro/all'
+import { App, Desktop, Electron, Swift } from '@mcro/all'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
+
+const isMouseOver = (bounds, mousePosition) => {
+  if (!bounds || !mousePosition) {
+    return false
+  }
+  const { x, y } = mousePosition
+  const { position, size } = bounds
+  if (!position || !size) {
+    return false
+  }
+  const withinX = x > position[0] && x < position[0] + size[0]
+  const withinY = y > position[1] && y < position[1] + size[1]
+  return withinX && withinY
+}
 
 const log = debug('screen')
 debug.quiet('screen')
@@ -110,7 +124,7 @@ export default class DesktopScreen {
       }
       // console.log(`got event ${event} ${JSON.stringify(value)}`)
       const lastState = Mobx.toJS(Desktop.appState)
-      let nextState: Partial<AppState> = {}
+      let nextState: any = {}
       let id = this.curAppID
       const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
       switch (event) {
@@ -231,14 +245,7 @@ export default class DesktopScreen {
   }, 32)
 
   watchMouse = () => {
-    iohook.on(
-      'mousemove',
-      throttle(({ x, y }) => {
-        Desktop.setMouseState({
-          position: { x, y },
-        })
-      }, 40),
-    )
+    iohook.on('mousemove', throttle(this.handleMousePosition, 40))
     iohook.on('mousedown', ({ button, x, y }) => {
       if (button === 1) {
         Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
@@ -249,6 +256,46 @@ export default class DesktopScreen {
         Desktop.setMouseState({ mouseDown: null })
       }
     })
+  }
+
+  mouseOverShowDelay: any = 0
+
+  handleMousePosition = async mousePos => {
+    clearTimeout(this.mouseOverShowDelay)
+    const { hidden, position, docked } = App.orbitState
+    const { target } = App.peekState
+    const peekHovered = target && isMouseOver(App.peekState, mousePos)
+    if (docked) {
+      if (mousePos.x > App.state.screenSize[0] - App.dockedWidth) {
+        Desktop.setHoverState({ orbitHovered: true, peekHovered })
+      } else {
+        Desktop.setHoverState({ orbitHovered: false, peekHovered })
+      }
+      return
+    }
+    if (hidden) {
+      if (Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered) {
+        Desktop.setHoverState({
+          orbitHovered: false,
+          peekHovered: false,
+        })
+      }
+      // open if hovering indicator
+      const [oX, oY] = position
+      // TODO: Constants.ORBIT_WIDTH
+      const adjX = App.orbitOnLeft ? 313 : 17
+      const adjY = 36
+      const withinX = Math.abs(oX - mousePos.x + adjX) < 6
+      const withinY = Math.abs(oY - mousePos.y + adjY) < 15
+      if (withinX && withinY) {
+        this.mouseOverShowDelay = setTimeout(() => {
+          Desktop.sendMessage(App, App.messages.SHOW)
+        }, 250)
+      }
+      return
+    }
+    const orbitHovered = position && isMouseOver(App.orbitState, mousePos)
+    Desktop.setHoverState({ orbitHovered, peekHovered })
   }
 
   async rescanApp() {

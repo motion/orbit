@@ -7,17 +7,18 @@ export default class Carousel {
   render({ items, appStore }) {
     return (
       <carousel>
-        {items.map((item, index) => (
+        {(items || []).map((bit, index) => (
           <OrbitCard
-            key={`${index}${item.id}`}
+            key={`${index}${bit.id}`}
+            pane="carousel"
             appStore={appStore}
-            result={item}
+            bit={bit}
             index={index}
             total={items.length}
             expanded={false}
             style={{
-              width: 220,
-              height: 200,
+              width: 150,
+              height: 150,
             }}
           />
         ))}
@@ -28,7 +29,7 @@ export default class Carousel {
   static style = {
     carousel: {
       flexFlow: 'row',
-      padding: 20,
+      padding: [0, 20],
       overflowX: 'scroll',
     },
   }

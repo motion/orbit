@@ -35,7 +35,7 @@ export default class AppRoot extends React.Component {
       return (
         <aboveredbox
           css={{
-            background: [255, 0, 0, 0.1],
+            background: [255, 0, 0, 0.025],
             position: 'absolute',
             top: 0,
             left: 0,
@@ -59,7 +59,14 @@ export default class AppRoot extends React.Component {
           >
             <h1>Orbit Error</h1>
             <h2>{this.state.error.message}</h2>
-            <pre css={{ lineHeight: '1.4rem', fontSize: 16, color: '#000' }}>
+            <pre
+              css={{
+                lineHeight: '1.4rem',
+                fontSize: 16,
+                color: '#000',
+                opacity: 0.4,
+              }}
+            >
               {this.state.error.stack}
             </pre>
           </error>

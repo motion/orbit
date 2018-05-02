@@ -1,31 +1,73 @@
+## broadly
+
+* correctness/smoothness/perf/bugs (3 days)
+* ui/ux (3 days)
+* fake hardcoded demo features (3 days)
+* explore ui (1 day)
+* people directory (1 day)
+* highlight words (2 days)
+* improve syncers/settings (2 days)
+* profiles (1 day)
+
 ## now
 
-* [ ] fix new bug with cmd+space showing in context before showing sidebar
-  * [ ] split sidebar from context sidebar
-* [ ] prevent option tap from clearing docked sidebar
-* [ ] peek view for slack convo
-  * [ ] nice design
-  * [ ] related things design
-  * [ ] related things hardcode different types
-* [ ] peek view click between items + back
-  * [ ] go between bits
-  * [ ] go between people
-* [ ] more home design
-* [ ] nicer avatar/meta news
+* have the cards show _why_ they are there
+* topics you follow dropdown
+* profiles design iteration
+* fix settings
+* tear away peeks + super simple app
+* get dark blue theme working for news area
+  * work on themes
+* pinning item to top of news for a day
+* bring back highlight words harcode demo
 
---- idea
+demo for Formidable on May 12th:
 
-* [ ] match color to the app
+* basic search for stuff and app launch showing nlp (2 days)
+  * improve various list item results and try and remove jitter/lag (0.5 day)
+  * better peek for a document (0.5day)
+* contextual/OCR related content (~2 days, can bail if necessary)
+  * be sure we can enable it and run it on a page easily
+  * come up with a simple highlight words design that shows it
+* finish profiles with better design (1 day)
+  * includes moving between them
+  * should aggregate even if faked from multiple sources
+* bring back tear away peeks to demonstrate apps (2 days)
+* simple demo of coding an app and deploying it, mostly hardcoded but working (3 days)
+  * need to figure this out, but honestly just showing the ease of code => deploy and syntax is big
+  * hmr is cool here too
+* simple app we built showing a chart that tears away and stays on screen (1-2 day)
+* ensure settings panes generally work so we can show it quickly (2hr)
+* building a general walkthrough of demo and plan for pitching the various pieces
+  * can just be our content, they dont care about it being fake just as long as it works and has right features
+* better theme and style polish all around
 
---- demo
+* reach goals for demo
+  * make "@" show a list of slack people + search people
+    * solidifies the company directory feel
+  * make the "Home" button show hardcoded active projects and recent activity summary of each
+  * maybe: color themes for ocr/context (if can do in 1 day)
+    * think this is actually big because shows how nice the system is for deploying to your team
+    * this + news + ocr, really solidifies defensibility x how we are trustworthy for executing well in future
 
-* [ ] think through news / design
-* [ ] reach: mockup opening news item
-* [ ] slack attachments/images/emojis
+deploying beta for company like formidable (est dev time: 3m)
 
+* Merged cosal daily summaries
+* Basic version of app creation deployable
+* Basic p2p or slack based sync system for simple curation of intranet content
+* Basic project collation logic
+* finish: search, peek, profile, syncers, polish, productionize
+* maybe: simple or toggleable OCR/context bar
+
+--- me
+
+* peek needs a "pin" button like orbit context
+  * then make esc clear peek always, even not mouseover
+* clear peek on scroll
+* [ ] intercept all a=href and open in native browser (slack)
+* [ ] themes or surfaces really need well thought lighten/darken functionality
+* [ ] slack emojis
 * [ ] only close peek on esc if electron focused
-* [ ] focus electron on mouseover peek
-* [ ] interaction finish bugs
 * [ ] search jitter
 * [ ] fix keyboard movement bugs
 * [ ] slack unread/read sql
@@ -36,7 +78,7 @@
 * [ ] swindler on close window need to reposition
 * [ ] explore mockup
 * [ ] home animations
-* [ ] make "@" show a list of slack people + search people
+
 * [ ] productionize
 
 ### sorted by area
@@ -78,25 +120,13 @@
   * OrbitCard
     * [ ] for icons - try result.integration + result.type first, fallback to result.int
 
-* indicator
-
-  * likely needs to be done as native osx if we want it
-  * [ ] design
-
-* smoothness
-
-  * [ ] re-focus app after animation finish (when not holding option)
-
 * sidebar
 
   * [ ] click to link to the Bit
-  * [ ] slack: sync People, Chat Rooms
   * [ ] list: movement + animations + keyboard/scroll select orbit list
-  * [ ] overdrive: deep investigate animate performance
 
 * peek
 
-  * horizontal carousel fixing
   * design
     * open/close interactions
   * [ ] click header input clear peek
@@ -129,107 +159,38 @@
   * [ ] see if can share chromium or delay download
   * [ ] check small screen, big screen, change screens
 
-* long tail polish
-
-  * may want to fork electron to get better always-on-top functionality like Helium.app
-    * would let us do better spotlight stuff
-  * disable when super low battery
-  * bridge both setState and receiveState should batch a tiny bit
-    * if multiple setstate called before settimeout, group them
-    * if multiple recevied before timeout, group them
-
 * research
 
   * [ ] keeping chromium warm
 
-## launch
-
-* great daily summaries / trends (~3 months)
-* ocr and contextual relevants/highlights + long tail fixes there (~1 month)
-* finishing ux/peek/search interaction and features (~2 months)
-* site, beta, video (~4 months)
-* algorithm improvements (~1month)
-* deep focus on interface smoothness (~2weeks)
-  * nice animations would go a long way but require pretty intense react work
-  * making an orbit indicator/highlight words proba bly needs slim native app interface
-  * upgrade to react 16.4 async/react may take a while (require abstractions on mobx even)
-  * weve not done any real profiling
-
-security (~~~2weeks)
+security (~3weeks)
 
 * we likely either need to contract or get someone for this directly
 * involved auditing entire codebase, probably doing a variety of https things
 * encrypting a few pieces
 * local oauth system needs some work probably (hardcodes keys locally now)
 
-syncers (~1-2months)
+syncers (~4-5months)
 
 * more stable, reliable, configurable with rich data
+  * support deletions etc
 * github
 * jira
+* asana
 * confluence
+* crawler
+* dropbox/paper
+* outlook
+* arbitrary imap/email
+* trello, etc...
 * maybe some hr tools
-* maybe dropbox/paper
-* maybe alternative email platforms
 
-rich people/teams/explore (2weeks-Infinity)
+sync / simple explore/curation architecture (~2-3weeks)
 
-* would provide a much more thorough value on launch if we have explore (feels full featured from day 1)
-* smart linking together of people across different integrations
-* smart team or "commonly works together features"
-
-sync / simple curation architecture (~2-3weeks)
-
-* p2p may be simpler, or necessary
-* could be required for onboarding so everoyne doesn't need to reconfigure things
 * "pin result" feature for search
+* simple explore manager
+* could be help onboarding so everoyne doesn't need to reconfigure things
 * "create grouping" for wiki/explore
 * "define team"
 * "mark stale" etc
 * could even have it generate a wiki on-prem
-
-improving existing features (1month-Infinity)
-
-* explore better news interfaces and queries/metadata
-* help interview and test app with various beta testers
-* do tests of feature ideas for daily summaries
-* longer tail search features that really make it powerful (filters, time span etc)
-* scaling everything up to work on bigger data sets or filter them down better
-
-beta to launch work (~1month)
-
-* help building out various sections for website
-* help coordinate finding good designer or video creators
-* help reach out to get people into the beta
-* help build beta site / mailing lists / chat rooms etc
-  * various sub-pages and sections
-  * pricing page + buying stuff
-
-testing, polish, productioninizing (~2-3weeks)
-
-* testing across multiple mac versions
-* slimming bundle size
-* improving various auto updates
-* having a continuous integration process so we can deploy quickly
-
-attention (?)
-
-* may be required for good trends
-* may be really beneficial for what you've missed
-
-stack improvements (~1month)
-
-* improving typing and architecture in variety of sketchy areas
-* optimizing performance in areas where its important
-* adding checks and fixing bugs as we run into them, allowing us to focus more on design/research
-* getting our hmr working on babel 7 would allow us to use typescript everywhere
-  * means app and ui kit can be typed, much easier to work with
-* could even help release a couple packages, getting us some PR and contributors to make our stack a bit safer long term
-
-* unknown unknowns and over-optimism (~3 months or ~15% of rest of work)
-  * also keep in mind the rough trend over the last few months has been:
-    * tasks take longer than expected due to lots of detail
-    * keep adding new things we didn't think of that are outside of our current plan
-    * various life events and blockers have been coming up and will continue
-    * random libraries and apis changing, breaking
-    * especially: we realize there are new constraints to work with/arounds

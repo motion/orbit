@@ -4,34 +4,26 @@ import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
 // import { Bit } from '@mcro/models'
 import * as _ from 'lodash'
+import * as Helpers from '~/helpers'
+
+const parseBody = body =>
+  !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
 
 @view
 export class Mail {
-  render({ bit, selectedItem }) {
+  render({ bit }) {
     if (!bit) {
       return null
     }
     const { messages } = bit.data
-    const getHeader = (message, key) =>
-      (
-        ((message.payload && message.payload.headers) || []).find(
-          x => x.name === key,
-        ) || {
-          value: '',
-        }
-      ).value
     return (
       <React.Fragment>
-        <PeekHeader
-          icon="email"
-          title={selectedItem.title}
-          date={bit.createdAt}
-        />
+        <PeekHeader icon="email" title={bit.title} date={bit.createdAt} />
         <body>
           <messages if={messages}>
             {messages.map((message, index) => {
               return (
-                <message key={message.id}>
+                <message key={`${index}${message.id}`}>
                   <row
                     css={{
                       flexFlow: 'row',
@@ -55,8 +47,8 @@ export class Mail {
                       }}
                     />
                     <rest if={message.payload} $$row $$centered>
-                      <strong if={getHeader(message, 'From')}>
-                        {getHeader(message, 'From').split(' ')[0]}
+                      <strong if={Helpers.getHeader(message, 'From')}>
+                        {Helpers.getHeader(message, 'From').split(' ')[0]}
                       </strong>&nbsp;
                       <UI.Date
                         if={index !== 0}
@@ -67,23 +59,17 @@ export class Mail {
                           fontSize: 13,
                         }}
                       >
-                        {getHeader(message, 'Date')}
+                        {Helpers.getHeader(message, 'Date')}
                       </UI.Date>
                     </rest>
                   </row>
-                  <UI.Text if={message.snippet} lineHeight={23} size={1.1}>
+                  <UI.Text if={message.snippet} size={1.1}>
                     {_.flatten(
-                      message.snippet
+                      (parseBody(message.payload.body.data) || message.snippet)
                         .split('\n')
-                        .map((i, idx) => [
-                          <p key={idx}>{i}</p>,
-                          <br key={`br-${idx}`} />,
-                        ]),
+                        .map((i, idx) => <para key={idx}>{i}</para>),
                     )}
                   </UI.Text>
-                  <pre if={false}>
-                    {JSON.stringify(message.payload.headers, 0, 2)}
-                  </pre>
                 </message>
               )
             })}
@@ -101,6 +87,9 @@ export class Mail {
     message: {
       padding: [22, 35],
       borderBottom: [1, 'dotted', '#eee'],
+    },
+    para: {
+      marginBottom: '0.35rem',
     },
   }
 }

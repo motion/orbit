@@ -66,7 +66,7 @@ if (process.env.NODE_ENV === 'development') {
       shouldRestart = true
     }
     if (shouldRestart && webRunning) {
-      const touchFile = require('path').join(__dirname, '..', 'lib', 'index.js')
+      const touchFile = require('path').join(__dirname, '..', '_', 'index.js')
       console.log('restarting after parcel cycle...', touchFile)
       require('touch')(touchFile)
       clearInterval(int)

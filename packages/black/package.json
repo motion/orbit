@@ -15,7 +15,8 @@
     "mobx-deep-observer": "^0.0.4",
     "mobx-utils": "^3.2.2",
     "mobx-logger": "^0.6.0",
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "sb-event-kit": "^3.0.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0"

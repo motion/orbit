@@ -1,6 +1,7 @@
 import { react } from '@mcro/black'
 import { App } from '@mcro/all'
 import { throttle } from 'lodash'
+import AppReactions from '~/stores/AppReactions'
 
 export default class OrbitStore {
   query = ''
@@ -16,7 +17,7 @@ export default class OrbitStore {
   lastPinKey = ''
 
   willMount() {
-    App.runReactions({
+    this.appReactions = new AppReactions({
       onPinKey: key => {
         if (key === 'Delete') {
           this.query = ''
@@ -38,12 +39,12 @@ export default class OrbitStore {
     const {
       results,
       activeIndex,
-      setSelected,
+      pinSelected,
       showSettings,
     } = this.props.appStore
     const increment = (by = 1) =>
-      setSelected(Math.min(results.length - 1, activeIndex + by))
-    const decrement = (by = 1) => setSelected(Math.max(0, activeIndex - by))
+      pinSelected(Math.min(results.length - 1, activeIndex + by))
+    const decrement = (by = 1) => pinSelected(Math.max(0, activeIndex - by))
     switch (code) {
       case 37: // left
         if (showSettings) {

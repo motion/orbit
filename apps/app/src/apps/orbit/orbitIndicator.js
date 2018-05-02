@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron, Desktop } from '@mcro/all'
+import { App, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
 
 const { SHADOW_PAD } = Constants
@@ -10,7 +10,7 @@ export default view(({ iWidth, orbitOnLeft }) => {
   if (Date.now() - Desktop.state.lastAppChange < 100) {
     return null
   }
-  if (Electron.orbitState.orbitDocked) {
+  if (App.orbitState.orbitDocked) {
     return null
   }
   // log('on', orbitOnLeft)

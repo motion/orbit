@@ -6,13 +6,9 @@ import * as UI from '@mcro/ui'
 export default class PeekHeader {
   render({ title, date, subtitle, after }) {
     return (
-      <header
-        css={{
-          padding: title ? [18, 20, 0] : 0,
-        }}
-      >
+      <header>
         <title if={title}>
-          <UI.Title $titleMain size={1.3} fontWeight={700} marginBottom={5}>
+          <UI.Title $titleMain size={1.3} fontWeight={700}>
             {title}
           </UI.Title>
           <UI.Title if={subtitle} size={1} $subtitle>
@@ -31,7 +27,9 @@ export default class PeekHeader {
       justifyContent: 'center',
       position: 'relative',
       zIndex: 100,
-      // borderBottom: [1, [0, 0, 0, 0.05]],
+      borderBottom: [1, [0, 0, 0, 0.05]],
+      padding: [15, 0, 14],
+      margin: [0, 15],
     },
     icon: {
       padding: [0, 5, 0, 18],
@@ -42,11 +40,10 @@ export default class PeekHeader {
     },
     titleMain: {
       flex: 1,
-      marginBottom: 8,
+      marginBottom: 5,
     },
     subtitle: {
       opacity: 0.8,
-      marginBottom: 5,
     },
     date: { opacity: 0.5, fontSize: 14 },
     orbitInput: {

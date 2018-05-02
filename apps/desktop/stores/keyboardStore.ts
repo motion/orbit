@@ -50,15 +50,16 @@ export default class KeyboardStore {
       this.clearDownKeysAfterPause()
       if (keycode === codes.esc) {
         if (
-          App.state.peekTarget &&
-          (Electron.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
+          App.peekState.target &&
+          (App.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
         ) {
           Desktop.sendMessage(App, App.messages.HIDE_PEEK)
           return
         }
-        if (Desktop.state.focusedOnOrbit || Electron.orbitState.mouseOver) {
-          Desktop.sendMessage(App, App.messages.HIDE)
+        if (!App.isMouseInActiveArea) {
+          return
         }
+        Desktop.sendMessage(App, App.messages.HIDE)
         return
       }
       const isOption = keycode === codes.option || keycode === codes.optionRight
@@ -142,7 +143,7 @@ export default class KeyboardStore {
           break
       }
       if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
-        Desktop.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
+        Desktop.sendMessage(App, App.messages.TOGGLE_PINNED)
       }
       // be sure its a fast action not slow
       clearLastKeys = setTimeout(() => {

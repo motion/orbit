@@ -1,10 +1,13 @@
 import * as UI from '@mcro/ui'
+import * as Helpers from '~/helpers'
 
-export default ({ result, children }) =>
+export default ({ bit, children }) =>
   children({
-    title: result.title,
+    title: bit.title,
     icon: 'gmail',
-    subtitle: <UI.Date>{new Date(result.bitUpdatedAt)}</UI.Date>,
-    preview: result.body,
-    content: result.body,
+    location: Helpers.getHeaderFromShort(bit),
+    date: Date.now(),
+    subtitle: <UI.Date>{new Date(bit.bitUpdatedAt)}</UI.Date>,
+    preview: bit.body,
+    content: bit.body,
   })

@@ -17,6 +17,19 @@ import * as Helpers from '~/helpers'
 // install console formatters
 mobxFormatters(Mobx)
 
+const ogWarn = console.warn.bind(console)
+console.warn = function(...args) {
+  if (args[0] && typeof args[0] === 'string') {
+    if (args[0].indexOf('Octokat BUG: ') > -1) {
+      return
+    }
+    if (args[0].indexOf('Electron Security Warning')) {
+      return
+    }
+  }
+  return ogWarn.call(this, ...args)
+}
+
 Object.defineProperty(Object.prototype, 'toJS', {
   enumerable: false,
   value: function() {
@@ -36,15 +49,3 @@ window.log = Black.log
 window.Black = Black
 window.r2 = r2
 window.Helpers = Helpers
-
-// TODO check if this is needed and fix the global thing if so
-// PATCH: ignore octocat
-const ogWarn = console.warn.bind(console)
-console.warn = function(...args) {
-  if (args[0] && typeof args[0] === 'string') {
-    if (args[0].indexOf('Octokat BUG: ') > -1) {
-      return
-    }
-  }
-  return ogWarn.call(this, ...args)
-}

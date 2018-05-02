@@ -2,6 +2,8 @@ import SlackConversation from './slackConversation'
 import Document from './document'
 import Mail from './mail'
 import App from './app'
+import PersonCard from './personCard'
+import { Person } from '@mcro/models'
 
 const results = {
   slack: {
@@ -16,14 +18,17 @@ const results = {
   },
 }
 
-export default result => {
-  if (!result.integration || !result.type) {
-    return ({ children }) => children(result)
+export default bit => {
+  if (bit instanceof Person) {
+    return PersonCard
   }
-  const resolveIntegration = results[result.integration]
-  const resolver = resolveIntegration && resolveIntegration[result.type]
+  if (!bit.integration || !bit.type) {
+    return ({ children }) => children(bit)
+  }
+  const resolveIntegration = results[bit.integration]
+  const resolver = resolveIntegration && resolveIntegration[bit.type]
   if (!resolver) {
-    console.error('no resolver for', result.integration, result.type)
+    console.error('no resolver for', bit.integration, bit.type)
     return { title: '' }
   }
   return resolver

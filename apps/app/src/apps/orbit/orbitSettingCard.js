@@ -21,7 +21,7 @@ export default class Card {
   }) {
     const isOdd = offset % 2 == 0
     const isSelected =
-      appStore.selectedIndex === index && !!App.state.peekTarget
+      appStore.selectedIndex === index && !!App.peekState.target
     return (
       <card
         key={index}

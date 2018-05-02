@@ -35,11 +35,15 @@ export class SlackService {
       async setting => {
         this.setting = setting
         this.slack = new Slack({ token: this.setting.token })
-        this.allChannels = await this.slack.channels
-          .list({})
-          .then(res => res && res.channels)
+        this.setAllChannels(
+          await this.slack.channels.list({}).then(res => res && res.channels),
+        )
       },
     )
+  }
+
+  setAllChannels = channels => {
+    this.allChannels = channels
   }
 
   dispose() {

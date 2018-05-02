@@ -3,14 +3,17 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { RoundButton } from '~/views'
 import { App } from '@mcro/all'
+import slackDown from '@mcro/slackdown'
 
-const linkRegex = /\<([a-z]+:\/\/[^>]+)\>/
-const getLink = x => {
-  const match = x.text && x.text.match(linkRegex)
-  if (match && match.length) {
-    return match[1]
+const getSlackDate = message => {
+  if (!message.ts) {
+    return null
   }
-  return null
+  const split = message.ts.split('.')
+  if (!split.length) {
+    return null
+  }
+  return new Date(split[0] * 1000)
 }
 
 @view
@@ -20,34 +23,11 @@ export default class BitSlackMessage {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
-    let content
-    const link = getLink(message)
-    if (link && link.indexOf('.png')) {
-      console.log('attachment', link)
-      content = (
-        <miniImg>
-          <img src={link} />
-        </miniImg>
-      )
-    }
-    if (link) {
-      console.log('link', link)
-      content = <a href={link}>{link}</a>
-    }
-    if (message.text.indexOf('uploaded a file') >= 0) {
-      const src = message.text.match(/\<([a-z]+:\/\/[^>]+)\>/g).map(link =>
-        link
-          .slice(1, link.length)
-          .slice(0, link.length - 2)
-          .replace(/\|.*$/g, ''),
-      )[0]
-      console.log('src', src)
-      content = (
-        <div $$flex>
-          image
-          <img src={src} css={{ maxWidth: '100%' }} />
-        </div>
-      )
+    let htmlText = message.text
+    try {
+      htmlText = slackDown(message.text)
+    } catch (err) {
+      console.log('err parsing', err)
     }
     const person = bit.people.find(
       person => person.integrationId === message.user,
@@ -64,22 +44,24 @@ export default class BitSlackMessage {
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     const avatar = person.data.profile.image_48
-    // const [firstWord, ...rest] = message.text.split(' ')
     return (
       <message>
+        <topSpace if={!hideHeader && previousMessage} css={{ height: 14 }} />
         <header if={!hideHeader}>
           <RoundButton
             onClick={e => {
               e.stopPropagation()
-              App.setSelectedItem({
-                id: person.id,
-                icon: avatar,
-                title: message.name,
-                body: '',
-                type: 'person',
-                integration: '',
+              App.setPeekState({
+                item: {
+                  id: person.id,
+                  icon: avatar,
+                  title: message.name,
+                  body: '',
+                  type: 'person',
+                  integration: '',
+                },
               })
-              appStore.pinSelected()
+              appStore.pinSelected(-1, person)
             }}
           >
             <inner>
@@ -89,10 +71,13 @@ export default class BitSlackMessage {
           </RoundButton>
           <space />
           <date if={!previousMessage || !previousWithinOneMinute}>
-            <UI.Date>{new Date(message.ts.split('.')[0] * 1000)}</UI.Date>
+            <UI.Date>{getSlackDate(message)}</UI.Date>
           </date>
         </header>
-        <content css={contentStyle}>{content || message.text}</content>
+        <content
+          css={contentStyle}
+          dangerouslySetInnerHTML={{ __html: htmlText }}
+        />
       </message>
     )
   }
@@ -104,7 +89,7 @@ export default class BitSlackMessage {
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      margin: [4, 0],
+      margin: [3, 0, 5],
       userSelect: 'none',
       cursor: 'default',
     },
@@ -113,7 +98,7 @@ export default class BitSlackMessage {
       alignItems: 'center',
     },
     username: {
-      fontWeight: 600,
+      fontWeight: 400,
       fontSize: 14,
       color: '#000',
       margin: [0, 0, 1],
@@ -132,9 +117,9 @@ export default class BitSlackMessage {
     },
     avatar: {
       borderRadius: 100,
-      width: 16,
-      height: 16,
-      marginRight: 3,
+      width: 15,
+      height: 15,
+      marginRight: 5,
       marginLeft: -1,
     },
     content: {
@@ -142,19 +127,8 @@ export default class BitSlackMessage {
       lineHeight: '1.25rem',
       display: 'block',
       position: 'relative',
-      margin: [2, 0],
-      // color: '#000',
-      // '&::first-letter': {
-      //   fontWeight: 400,
-      //   fontSize: 18,
-      // },
-    },
-    firstWord: {
-      fontWeight: 400,
-      // background: [0, 0, 0, 0.05],
-      // borderRadius: 2,
-      // borderBottom: [1, [0, 0, 0, 0.1]],
-      display: 'inline',
+      margin: [1, 0, 0],
+      userSelect: 'auto',
     },
   }
 }

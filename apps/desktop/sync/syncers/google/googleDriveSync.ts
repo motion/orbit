@@ -41,7 +41,7 @@ export default class GoogleDriveSync {
     try {
       await this.syncFiles()
     } catch (err) {
-      console.error(`Drive sync error ${err.message}\n${err.stack}`)
+      console.log(`Drive sync error ${err.message}\n${err.stack}`)
     }
   }
 
@@ -71,7 +71,7 @@ export default class GoogleDriveSync {
 
   async createFile(info: FileObject) {
     if (!info) {
-      console.trace('no info given')
+      console.log('no info given')
       return null
     }
     const { name, contents, ...data } = info

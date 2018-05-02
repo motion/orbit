@@ -7,6 +7,7 @@ const Title = props => (
   <UI.Title size={1.1} fontWeight={600} margin={[10, 0]} {...props} />
 )
 
+@UI.injectTheme
 @view.attach('appStore')
 @view
 export default class OrbitSettings {
@@ -75,7 +76,7 @@ export default class OrbitSettings {
     this.props.appStore.setGetResults(null)
   }
 
-  render({ appStore }) {
+  render({ appStore, theme }) {
     if (!appStore.settings) {
       return null
     }
@@ -92,32 +93,37 @@ export default class OrbitSettings {
       />
     )
     return (
-      <pane css={{ padding: 10 }}>
-        <section if={activeIntegrations.length}>
-          <Title>Active</Title>
-          <cards>
-            {activeIntegrations.map((item, index) =>
-              integrationCard(activeIntegrations)(item, index, index),
-            )}
-          </cards>
-        </section>
-        <section if={inactiveIntegrations.length}>
-          <Title>Inactive</Title>
-          <cards>
-            {inactiveIntegrations.map((item, index) =>
-              integrationCard(inactiveIntegrations)(
-                item,
-                index + activeIntegrations.length,
-                index,
-              ),
-            )}
-          </cards>
-        </section>
-      </pane>
+      <React.Fragment>
+        <pane if={appStore.showSettings}>
+          <section if={activeIntegrations.length}>
+            <Title>Active</Title>
+            <cards>
+              {activeIntegrations.map((item, index) =>
+                integrationCard(activeIntegrations)(item, index, index),
+              )}
+            </cards>
+          </section>
+          <section if={inactiveIntegrations.length}>
+            <Title>Inactive</Title>
+            <cards>
+              {inactiveIntegrations.map((item, index) =>
+                integrationCard(inactiveIntegrations)(
+                  item,
+                  index + activeIntegrations.length,
+                  index,
+                ),
+              )}
+            </cards>
+          </section>
+        </pane>
+      </React.Fragment>
     )
   }
 
   static style = {
+    pane: {
+      padding: [10, 20],
+    },
     cards: {
       flexFlow: 'row',
       flexWrap: 'wrap',

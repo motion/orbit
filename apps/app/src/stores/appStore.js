@@ -5,6 +5,7 @@ import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
 import * as _ from 'lodash'
+import peekPosition from './helpers/peekPosition'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -49,9 +50,26 @@ const matchSort = (query, results) => {
     return results
   }
   const strongTitleMatches = Helpers.fuzzy(query, results, {
-    threshold: -10,
+    threshold: -40,
   })
   return uniq([...strongTitleMatches, ...results].slice(0, 10))
+}
+
+const getResults = async query => {
+  if (!query) {
+    return await Bit.find({
+      take: 8,
+      relations: ['people'],
+      order: { bitCreatedAt: 'DESC' },
+    })
+  }
+  const { conditions, rest } = parseQuery(query)
+  return await Bit.find({
+    where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
+    relations: ['people'],
+    order: { bitCreatedAt: 'DESC' },
+    take: 8,
+  })
 }
 
 const prefixes = {
@@ -81,22 +99,39 @@ const parseQuery = query => {
 
 export default class AppStore {
   refreshInterval = Date.now()
-  selectedIndex = -1
-  hoveredIndex = -1
+  activeIndex = -1
   showSettings = false
   settings = {}
   services = {}
   getResults = null
   resultRefs = {}
+  dockedResultRefs = {}
 
   get innerHeight() {
     const HEADER_HEIGHT = 90
-    return (
-      Electron.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
-    )
+    return App.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
+  }
+
+  get selectedPane() {
+    if (App.orbitState.docked) {
+      if (App.state.query) {
+        return 'summary-search'
+      }
+      return 'summary'
+    }
+    if (Desktop.hoverState.peekHovered) {
+      return 'carousel'
+    }
+    if (!App.orbitState.hidden) {
+      if (App.state.query) {
+        return 'context-search'
+      }
+      return 'context'
+    }
   }
 
   async willMount() {
+    this.updateScreenSize()
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
     this.setInterval(() => {
@@ -104,24 +139,24 @@ export default class AppStore {
     }, 1000)
   }
 
-  get activeIndex() {
-    if (App.state.peekTarget) {
-      return this.selectedIndex
-    } else {
-      return this.hoveredIndex
-    }
+  updateScreenSize() {
+    this.setInterval(() => {
+      App.setState({
+        screenSize: [window.innerWidth, window.innerHeight],
+      })
+    }, 1000)
   }
 
   @react({ log: 'state' })
-  resetSelectedIndexOnSearch = [
+  resetActiveIndexOnSearch = [
     () => App.state.query,
     () => {
-      this.selectedIndex = -1
-      this.hoveredIndex = 0
-      App.setPeekTarget(null)
+      this.activeIndex = 0
+      App.clearPeek()
     },
   ]
 
+  bitResultsId = 0
   @react({
     fireImmediately: true,
     defaultValue: [],
@@ -130,21 +165,12 @@ export default class AppStore {
   })
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshInterval],
-    async ([query]) => {
-      if (!query) {
-        return await Bit.find({
-          take: 8,
-          relations: ['people'],
-          order: { bitCreatedAt: 'DESC' },
-        })
-      }
-      const { conditions, rest } = parseQuery(query)
-      return await Bit.find({
-        where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
-        relations: ['people'],
-        order: { bitCreatedAt: 'DESC' },
-        take: 8,
-      })
+    async ([query], { sleep }) => {
+      // debounce enough for medium-speed typer
+      await sleep(120)
+      const results = await getResults(query)
+      this.bitResultsId = (this.bitResultsId + 1) % Number.MAX_VALUE
+      return results
     },
   ]
 
@@ -165,17 +191,17 @@ export default class AppStore {
 
   @react({ log: false, delay: 32 })
   selectedBit = [
-    () => App.state.selectedItem,
-    async item => {
-      if (!item) {
+    () => App.peekState.bit,
+    async bit => {
+      if (!bit) {
         return null
       }
-      if (item.type === 'person') {
-        return await Person.findOne({ id: item.id })
+      if (bit.type === 'person') {
+        return await Person.findOne({ id: bit.id })
       }
       const res = await Bit.findOne({
         where: {
-          id: item.id,
+          id: bit.id,
         },
         relations: ['people'],
       })
@@ -190,18 +216,13 @@ export default class AppStore {
   @react({
     defaultValue: { results: [], query: '' },
     fireImmediately: true,
-    delay: 120,
     log: false,
   })
   searchState = [
-    () => [
-      App.state.query,
-      Desktop.searchState.pluginResults || [],
-      this.bitResults || [],
-      this.getResults,
-    ],
-    ([query, pluginResults, bitResults, getResults]) => {
-      if (getResults) {
+    () => [App.state.query, this.getResults],
+    async ([query, getResults], { sleep, when }) => {
+      // these are all specialized searches, see below for main search logic
+      if (getResults && this.showSettings) {
         return {
           query,
           message: 'Settings',
@@ -232,9 +253,20 @@ export default class AppStore {
         message = 'SPACE to search selected channel'
         results = channelResults
       } else {
-        const unsorted = [...bitResults, ...pluginResults]
+        // 🔍 REGULAR SEARCHES GO THROUGH HERE
+        const pluginResultId = Desktop.searchState.pluginResultsId
+        const bitResultsId = this.bitResultsId
+        // no jitter - wait for everything to finish
+        await when(() => pluginResultId !== Desktop.searchState.pluginResultId)
+        await when(() => bitResultsId !== this.bitResultsId)
+        const allResultsUnsorted = [
+          ...this.bitResults,
+          ...Desktop.searchState.pluginResults,
+        ]
+        // remove prefixes
         const { rest } = parseQuery(query)
-        results = matchSort(rest, unsorted)
+        // sort
+        results = matchSort(rest, allResultsUnsorted)
       }
       return {
         query,
@@ -283,96 +315,62 @@ export default class AppStore {
     this.resultRefs[index] = ref
   })
 
+  setDockedResultRef = _.memoize(index => ref => {
+    this.dockedResultRefs[index] = ref
+  })
+
   getTargetPosition = index => {
-    const ref = this.resultRefs[index]
-    let height = 60
-    let top = Math.max(
-      Electron.orbitState.position[1] + 100,
-      Desktop.mouseState.position.y - 200,
-    )
-    if (ref) {
-      ;({ top, height } = ref.getBoundingClientRect())
+    const ref = App.orbitState.docked
+      ? this.dockedResultRefs[index]
+      : this.resultRefs[index]
+    if (!ref) {
+      throw `no result ref for index ${index} docked? ${App.orbitState.docked}`
     }
+    const { top, left, height } = ref.getBoundingClientRect()
     return {
       top,
-      left: Electron.orbitState.position[0],
-      width: Electron.orbitState.size[0],
+      left: left,
+      width: App.orbitState.size[0],
       height,
     }
   }
 
   clearSelected = () => {
-    if (!Electron.isMouseInActiveArea) {
-      App.setPeekTarget(null)
+    if (!App.isMouseInActiveArea) {
+      App.clearPeek()
     }
   }
 
   lastSelectAt = 0
 
-  _setSelected = index => {
-    if (App.isShowingOrbit) {
-      this.lastSelectAt = Date.now()
-      this.hoveredIndex = index
-      this.selectedIndex = index
-    }
+  setActive = index => {
+    this.lastSelectAt = Date.now()
+    this.activeIndex = index
   }
 
-  setSelected = (i, target) => {
-    if (i === null) {
-      this.clearSelected()
-      return
-    }
-    if (target) {
-      if (!Electron.orbitState.position) {
+  toggleSelected = (index, bit) => {
+    const isSame = this.activeIndex === index
+    if (isSame && App.peekState.target) {
+      if (Date.now() - this.lastSelectAt < 450) {
+        // ignore double clicks
         return
       }
-      const { top, width, height } = target
-      const position = {
-        // add orbits offset
-        left: Electron.orbitState.position[0],
-        top: top + Electron.orbitState.position[1],
-        width,
-        height,
-      }
-      this._setSelected(i, position)
-      return
-    }
-    if (App.state.peekTarget) {
-      this.pinSelected(i)
-      return
-    }
-    this._setSelected(i)
-  }
-
-  toggleSelected = index => {
-    if (Date.now() - this.lastSelectAt < 450) {
-      // ignore double clicks
-      return
-    }
-    const isSame = this.selectedIndex === index
-    if (isSame && App.state.peekTarget) {
-      App.setPeekTarget(null)
+      App.clearPeek()
     } else {
-      this.pinSelected(index)
+      this.pinSelected(index, bit)
     }
   }
 
-  pinSelected = thing => {
-    let index
-    if (typeof thing === 'number') {
-      index = thing > -1 ? thing : this.hoveredIndex || this.activeIndex
-      this._setSelected(index)
-    } else {
-      index = thing ? thing.id : null
-    }
-    App.setPeekTarget({
-      id: index,
-      position: this.getTargetPosition(index),
+  pinSelected = (index, bit) => {
+    this.setActive(index)
+    const target = this.getTargetPosition(index)
+    const position = peekPosition(target)
+    App.setPeekState({
+      id: Math.random(),
+      target,
+      bit: this.getPeekItem(bit),
+      ...position,
     })
-  }
-
-  clearPinned = () => {
-    App.setPeekTarget(null)
   }
 
   setGetResults = fn => {
@@ -382,40 +380,35 @@ export default class AppStore {
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 80,
     betweenDelay: 30,
-    onHovered: item => {
-      if (item && typeof item.id === 'number') {
-        this.setSelected(item.id)
+    onHovered: res => {
+      if (!res) {
+        this.clearSelected()
+      } else {
+        this.pinSelected(res.id, res.bit)
       }
     },
   })
 
   @react.if
-  hoverWordToSelectedIndex = [
+  hoverWordToActiveIndex = [
     () => App.state.hoveredWord,
-    word => this.setSelected(word.index),
+    word => this.pinSelected(word.index),
   ]
 
-  @react
-  setAppSelectedItem = [
-    () =>
-      this.selectedIndex >= 0
-        ? this.searchState.results[this.selectedIndex]
-        : null,
-    item => {
-      if (!item) {
-        throw react.cancel
-      }
-      const selectedItem = {
-        id: item.id || '',
-        icon: item.icon || '',
-        title: item.title || '',
-        body: item.body || '',
-        type: item.type || '',
-        integration: item.integration || '',
-      }
-      App.setSelectedItem(selectedItem)
-    },
-  ]
+  getPeekItem = item => {
+    if (!item) {
+      console.log('none found')
+      return null
+    }
+    return {
+      id: item.id || '',
+      icon: item.icon || '',
+      title: item.title || '',
+      body: item.body || '',
+      type: item.type || '',
+      integration: item.integration || '',
+    }
+  }
 
   getSettings = async () => {
     const settings = await Setting.find()
@@ -443,7 +436,7 @@ export default class AppStore {
   toggleSettings = () => {
     this.showSettings = !this.showSettings
     // pin if not pinned
-    if (this.showSettings && !Electron.orbitState.pinned) {
+    if (this.showSettings && !App.orbitState.pinned) {
       App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
     }
   }
@@ -483,5 +476,11 @@ export default class AppStore {
   open = async (result, openType) => {
     const url = await getPermalink(result, openType)
     App.open(url)
+  }
+
+  handleLink = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    App.open(e.target.href)
   }
 }

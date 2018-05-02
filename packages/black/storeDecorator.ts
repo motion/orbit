@@ -4,6 +4,7 @@ import emittable from '@mcro/decor/es6/plugins/core/emittable'
 import automagical from '@mcro/automagical'
 import subscribable from '@mcro/decor/es6/plugins/react/subscribable'
 import helpers from '@mcro/decor/es6/plugins/mobx/helpers'
+import { CompositeDisposable } from 'sb-event-kit'
 
 export const storeDecorator = decor([
   subscribable,
@@ -29,6 +30,16 @@ export const storeOptions = {
     }
     if (store.subscriptions) {
       store.subscriptions.dispose()
+    }
+    // unmount stores attached to root of stores
+    for (const key of Object.keys(store)) {
+      if (
+        store[key] &&
+        store[key].subscriptions instanceof CompositeDisposable
+      ) {
+        console.log('dispsoing store', key)
+        store[key].subscriptions.dispose()
+      }
     }
   },
 }

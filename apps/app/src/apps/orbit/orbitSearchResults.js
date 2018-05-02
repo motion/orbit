@@ -4,41 +4,46 @@ import OrbitCard from './orbitCard'
 import { App } from '@mcro/all'
 import * as UI from '@mcro/ui'
 
-const SPLIT_INDEX = 3
-
 @UI.injectTheme
 @view.attach('appStore')
 @view
 export default class OrbitSearchResults {
-  render({ appStore, theme }) {
+  render({ appStore, theme, parentPane }) {
+    const pane = `${parentPane}-search`
     const { query, results, message } = appStore.searchState
     const hasQuery = !!App.state.query
+    // prevent renders when searching in other pane
+    if (appStore.selectedPane !== pane && hasQuery) {
+      return null
+    }
     const isChanging = App.state.query !== query
     return (
       <orbitSearchResults
-        css={{ background: theme.base.background, opacity: hasQuery ? 1 : 0 }}
+        css={{
+          background: theme.base.background,
+          opacity: hasQuery ? 1 : 0,
+          pointerEvents: !hasQuery ? 'none' : 'auto',
+          zIndex: !hasQuery ? -1 : 10000,
+        }}
         $visible={hasQuery}
         $isChanging={isChanging}
       >
-        <space css={{ height: 10 }} />
         <message if={message}>{message}</message>
         <results
           if={results.length}
           css={{
-            opacity:
-              query ||
-              (appStore.activeIndex >= 0 && appStore.activeIndex < SPLIT_INDEX)
-                ? 1
-                : 0.5,
+            opacity: !isChanging ? 1 : 0.5,
           }}
         >
-          {results.map((result, index) => (
+          {results.map((bit, index) => (
             <OrbitCard
-              key={`${index}${result.identifier || result.id}`}
+              pane={pane}
+              key={`${index}${bit.identifier || bit.id}`}
               index={index}
               total={results.length}
-              result={result}
+              bit={bit}
               listItem
+              expanded={false}
               hoverToSelect
             />
           ))}
@@ -50,9 +55,13 @@ export default class OrbitSearchResults {
 
   static style = {
     orbitSearchResults: {
-      flex: 1,
       opacity: 0,
       pointerEvents: 'none',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
     },
     visible: {
       opacity: 1,

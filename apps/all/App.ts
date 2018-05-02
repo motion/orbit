@@ -2,9 +2,6 @@ import Bridge from './helpers/Bridge'
 import { proxySetters, setGlobal } from './helpers'
 import { store, react } from '@mcro/black/store'
 import { Desktop } from './Desktop'
-import { Electron } from './Electron'
-import AppReactions from './AppReactions'
-import * as Constants from '@mcro/constants'
 
 export let App
 
@@ -16,47 +13,61 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 @store
 class AppStore {
   messages = {
+    TOGGLE_DOCKED: 'TOGGLE_DOCKED',
     TOGGLE_SHOWN: 'TOGGLE_SHOWN',
     SHOW: 'SHOW',
     HIDE: 'HIDE',
     HIDE_PEEK: 'HIDE_PEEK',
     PIN: 'PIN',
+    UNPIN: 'UNPIN',
+    TOGGLE_PINNED: 'TOGGLE_PINNED',
   }
 
   setState: typeof Bridge.setState
   sendMessage: typeof Bridge.sendMessage
   onMessage: typeof Bridge.onMessage
   bridge: any
-  reactions: AppReactions
   source = 'App'
 
   state = {
     query: '',
+    screenSize: [0, 0],
+    orbitState: {
+      hidden: true,
+      pinned: false,
+      docked: false,
+      orbitOnLeft: false,
+      position: [0, 0],
+      size: [0, 0],
+    },
+    peekState: {
+      target: null,
+      item: null,
+      id: 0,
+      peekOnLeft: false,
+      position: [0, 0],
+      size: [0, 0],
+    },
     authState: {
       openId: null,
       closeId: null,
     },
-    selectedItem: null,
     highlightWords: {},
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
-    orbitHidden: true,
-    peekTarget: null,
   }
 
   get isShowingOrbit() {
-    if (Constants.FORCE_FULLSCREEN) {
-      return true
-    }
-    return !App.state.orbitHidden
+    return !App.orbitState.hidden
   }
 
   get isShowingPeek() {
-    return !!App.state.peekTarget
+    return !!App.peekState.target
   }
 
   animationDuration = 90
+  dockedWidth = 550
 
   @react({ log: false })
   isAnimatingOrbit = [
@@ -75,6 +86,16 @@ class AppStore {
   @react({ delay: 32, log: isOrbit })
   isFullyShown = [() => App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
 
+  // runs in every app independently
+  @react({ fireImmediately: true, log: false })
+  isMouseInActiveArea = [
+    () => !!(Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered),
+    async (over, { sleep, setValue }) => {
+      await sleep(over ? 0 : 100)
+      setValue(over)
+    },
+  ]
+
   last: Boolean
 
   @react({ log: false })
@@ -90,8 +111,15 @@ class AppStore {
     },
   ]
 
-  get isAttachedToWindow() {
-    return !Electron.orbitState.fullScreen && !!Desktop.appState
+  get orbitOnLeft() {
+    if (App.orbitState.orbitDocked) {
+      return true
+    }
+    return App.orbitState.orbitOnLeft
+  }
+
+  get orbitArrowTowards() {
+    return App.orbitState.orbitOnLeft ? 'right' : 'left'
   }
 
   get hoveredWordName() {
@@ -99,7 +127,7 @@ class AppStore {
   }
 
   get aboutToShow() {
-    return App.isAnimatingOrbit && App.state.orbitHidden
+    return App.isAnimatingOrbit && App.orbitState.hidden
   }
 
   start = options => {
@@ -110,21 +138,13 @@ class AppStore {
     this.bridge = Bridge
   }
 
-  runReactions(options) {
-    // hmr protect
-    if (this.reactions) return
-    // @ts-ignore
-    const AppReactions = require('./AppReactions').default
-    this.reactions = new AppReactions(options)
-  }
-
   open = async url => {
     App.sendMessage(Desktop, Desktop.messages.OPEN, url)
-    App.setOrbitHidden(true)
+    App.setOrbitState({ hidden: true, docked: false })
   }
 
   togglePinned = () => {
-    App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
+    App.setOrbitState({ pinned: !App.orbitState.pinned })
   }
 
   togglePeek = () => {
@@ -132,11 +152,18 @@ class AppStore {
   }
 
   toggleHidden = () => {
-    App.setState({ orbitHidden: !App.state.orbitHidden })
+    App.setOrbitState({ hidden: !App.orbitState.hidden })
   }
 
   openSettings = () => {
     App.setState({ openSettings: Date.now() })
+  }
+
+  clearPeek = () => {
+    App.setPeekState({
+      id: null,
+      target: null,
+    })
   }
 }
 

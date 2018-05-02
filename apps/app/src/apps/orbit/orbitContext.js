@@ -1,18 +1,19 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Desktop, Electron } from '@mcro/all'
-import * as Constants from '~/constants'
+import OrbitFrame from './orbitFrame'
+import OrbitSearchResults from './orbitSearchResults'
+import OrbitHeader from './orbitHeader'
+import { App, Desktop } from '@mcro/all'
 import { throttle } from 'lodash'
+import { Title, SubTitle } from '~/views'
 import Results from '~/apps/results/results'
-import { Title, SubTitle, Circle } from '~/views'
-
-const SPLIT_INDEX = 3
+import * as Constants from '~/constants'
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitPage')
 @view
-export default class OrbitHomeContext {
+export default class Orbit {
   state = {
     resultsRef: null,
     isScrolled: false,
@@ -39,35 +40,60 @@ export default class OrbitHomeContext {
     }
   }
 
-  render({ appStore, theme }) {
-    const { orbitOnLeft } = Electron
+  render({ appStore, orbitPage, theme }) {
+    const headerBg = theme.base.background
+    const { orbitOnLeft } = App
     return (
-      <orbitContext
-        css={{
-          background: theme.base.background,
-        }}
-      >
-        <fadeNotifications
-          $$untouchable
-          $fadeVisible={appStore.activeIndex >= SPLIT_INDEX}
-        />
-        <contextHeader css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}>
-          <Title ellipse={1}>{Desktop.appState.name}</Title>
-          <SubTitle if={Desktop.appState.title}>
-            {Desktop.appState.title}
-          </SubTitle>
-        </contextHeader>
-        <Results isContext />
-      </orbitContext>
+      <UI.Theme name="tan">
+        <OrbitFrame
+          headerBg={headerBg}
+          orbitPage={orbitPage}
+          shouldShow={() => !App.orbitState.hidden && !App.orbitState.docked}
+        >
+          <OrbitHeader headerBg={headerBg} />
+          <orbitInner>
+            <orbitContext
+              if={!appStore.showSettings}
+              css={{
+                background: theme.base.background,
+              }}
+            >
+              <fadeNotifications
+                $$untouchable
+                $fadeVisible={appStore.activeIndex >= 0}
+              />
+              <contextHeader
+                css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}
+              >
+                <Title ellipse={1}>{Desktop.appState.name}</Title>
+                <SubTitle if={Desktop.appState.title} ellipse={2}>
+                  {Desktop.appState.title}
+                </SubTitle>
+              </contextHeader>
+              <Results isContext />
+            </orbitContext>
+            <OrbitSearchResults parentPane="context" />
+          </orbitInner>
+        </OrbitFrame>
+      </UI.Theme>
     )
   }
+
   static style = {
+    orbitInner: {
+      position: 'relative',
+      flex: 1,
+      zIndex: 10,
+    },
     orbitContext: {
       borderBottomRadius: Constants.BORDER_RADIUS,
       position: 'relative',
       height: 'calc(100% - 35px)',
       transition: 'transform ease-in-out 150ms',
       zIndex: 100,
+    },
+    contextHeader: {
+      padding: [15, 0, 0],
     },
     results: {
       flex: 1,

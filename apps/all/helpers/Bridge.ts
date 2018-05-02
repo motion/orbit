@@ -1,5 +1,5 @@
 import { action } from 'mobx'
-import { mergeWith, isPlainObject } from 'lodash'
+import { mergeWith, isPlainObject, isEqual } from 'lodash'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from './websocket'
 import waitPort from 'wait-port'
@@ -122,40 +122,39 @@ class Bridge {
       await requestIdle()
       try {
         const messageObj = JSON.parse(data)
-        if (messageObj && typeof messageObj === 'object') {
-          const { source, state: newState } = messageObj
-          if (this._options.ignoreSelf && source === this._source) {
-            return
-          }
-          if (!newState) {
-            throw new Error(`No state received from message: ${data}`)
-          }
-          if (!source) {
-            throw new Error(`No source store
-              source: ${source}
-              data: ${data}
-            `)
-          }
-          if (!this.stores[source]) {
-            console.warn(
-              `Store not imported: this.stores:`,
-              this.stores,
-              `source: ${source}`,
-            )
-            return
-          }
-          const store = this.stores[source]
-          const { state } = store
-          if (!state) {
-            throw new Error(
-              `No state found for source (${source}) state (${state}) store(${store})`,
-            )
-          }
-          await requestIdle()
-          this._update(state, newState)
-        } else {
+        if (!messageObj || typeof messageObj !== 'object') {
           throw new Error(`Non-object received`)
         }
+        const { source, state: newState } = messageObj
+        if (this._options.ignoreSelf && source === this._source) {
+          return
+        }
+        if (!newState) {
+          throw new Error(`No state received from message: ${data}`)
+        }
+        if (!source) {
+          throw new Error(`No source store
+            source: ${source}
+            data: ${data}
+          `)
+        }
+        if (!this.stores[source]) {
+          console.warn(
+            `Store not imported: this.stores:`,
+            this.stores,
+            `source: ${source}`,
+          )
+          return
+        }
+        const store = this.stores[source]
+        const { state } = store
+        if (!state) {
+          throw new Error(
+            `No state found for source (${source}) state (${state}) store(${store})`,
+          )
+        }
+        await requestIdle()
+        this._update(state, newState)
       } catch (err) {
         console.error(
           `${err.message}:\n${err.stack}\n
@@ -236,12 +235,7 @@ class Bridge {
       )
     }
     // update our own state immediately so its sync
-    const changedState = this._update(
-      this.state,
-      newState,
-      true,
-      // ignoreSocketSend,
-    )
+    const changedState = this._update(this.state, newState, true)
     if (ignoreSocketSend) {
       return changedState
     }
@@ -283,9 +277,19 @@ class Bridge {
             - initial state:
               ${stringifyObject(this._initialState)}`,
         )
-        return changed
+        continue
       }
-      if (!Mobx.comparer.structural(stateObj[key], newState[key])) {
+      // avoid on same object
+      const bothObjects =
+        Mobx.isObservableObject(stateObj[key]) && isPlainObject(newState[key])
+      if (bothObjects) {
+        const compareOriginal = Object.keys(stateObj[key]).reduce(
+          (a, b) => ({ ...a, [b]: stateObj[b] }),
+          {},
+        )
+        if (isEqual(compareOriginal, newState)) {
+          continue
+        }
         const oldVal = Mobx.toJS(stateObj[key])
         const newVal = Mobx.toJS(newState[key])
         if (isPlainObject(oldVal) && isPlainObject(newVal)) {
@@ -302,10 +306,17 @@ class Bridge {
           }
           stateObj[key] = newState
           changed[key] = diff
-        } else {
-          stateObj[key] = newVal
-          changed[key] = newVal
         }
+      } else {
+        // avoid on same val
+        if (stateObj[key] === newState[key]) {
+          continue
+        }
+        if (Mobx.comparer.structural(stateObj[key], newState[key])) {
+          continue
+        }
+        stateObj[key] = newState[key]
+        changed[key] = newState[key]
       }
     }
     if (root.__trackStateChanges && root.__trackStateChanges.isActive) {
@@ -324,7 +335,7 @@ class Bridge {
 
   sendMessage = async (Store: any, ogMessage: string, value: string) => {
     if (!Store || !ogMessage) {
-      throw `no store || message`
+      throw `no store || message ${Store} ${ogMessage} ${value}`
     }
     const message = value
       ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}`

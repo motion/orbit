@@ -24,8 +24,8 @@ export default class OrbitArrow {
     let arrowTransformY
     if (App.state.hoveredWord) {
       const { top } = App.state.hoveredWord
-      const orbitY = Electron.orbitState.position[1]
-      const orbitH = Electron.orbitState.size[1]
+      const orbitY = App.orbitState.position[1]
+      const orbitH = App.orbitState.size[1]
       const arrowMinY = orbitY + 40
       const arrowMaxY = orbitY + orbitH - 40
       const offsetY = Math.min(arrowMaxY, Math.max(arrowMinY, top - orbitY))
@@ -35,7 +35,7 @@ export default class OrbitArrow {
     return (
       <UI.Arrow
         size={arrowSize}
-        towards={Electron.orbitArrowTowards}
+        towards={App.orbitArrowTowards}
         background={background}
         boxShadow={[['inset', 0, 0, 0, 0.5, borderColor.darken(0.1)]]}
         // border={[1, '#000']}

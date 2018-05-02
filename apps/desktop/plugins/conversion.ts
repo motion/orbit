@@ -17,10 +17,12 @@ export const fn = ({ term, display }) => {
         .from(before)
         .to(after)
       if (result) {
-        display({
-          id: -1,
-          title: `${result}${after}`,
-        })
+        display([
+          {
+            id: -1,
+            title: `${result}${after}`,
+          },
+        ])
         return
       }
     } catch (err) {}

@@ -12,6 +12,7 @@ const widthPadding = x => {
   if (Array.isArray(x)) {
     return x[1] + (typeof x[3] === 'number' ? x[3] : x[1])
   }
+  return 0
 }
 
 const heightPadding = x => {
@@ -21,6 +22,7 @@ const heightPadding = x => {
   if (Array.isArray(x)) {
     return x[0] + (typeof x[2] === 'number' ? x[2] : x[0])
   }
+  return 0
 }
 
 const cache = {}
@@ -42,7 +44,7 @@ const findMatch = name => {
 // }
 
 @view.ui
-export default class Icon extends React.PureComponent {
+export default class Icon extends React.Component {
   static defaultProps = {
     size: 16,
     type: 'mini',
@@ -59,7 +61,6 @@ export default class Icon extends React.PureComponent {
     tooltipProps,
     name,
     type,
-    className,
     children,
     margin,
     opacity,
@@ -129,14 +130,16 @@ export default class Icon extends React.PureComponent {
       opacity,
       alignSelf,
       color,
-      width,
-      height,
+      width: propWidth,
+      height: propHeight,
       size,
       hover,
       background,
     },
     theme,
   ) => {
+    const width = (propWidth || size) + widthPadding(padding)
+    const height = (propHeight || size) + heightPadding(padding)
     return {
       icon: {
         margin,
@@ -145,8 +148,8 @@ export default class Icon extends React.PureComponent {
         alignSelf,
         background,
         color: color || (theme && theme.color) || '#000',
-        width: (width || size) + widthPadding(padding),
-        height: (height || size) + heightPadding(padding),
+        width,
+        height,
         fontSize: size * 1.2,
         lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
         '&:hover': {

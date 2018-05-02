@@ -2,16 +2,14 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import BitSlackMessage from './slackMessage'
 import * as UI from '@mcro/ui'
-import { App, Desktop } from '@mcro/all'
 import { RoundButton } from '~/views'
-import pluralize from 'pluralize'
 
 // const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 const exampleTitles = [
-  `Context, TSNE, Mobile App`,
-  `Superhuman, Funny`,
-  `Search, nlp, fluid`,
-  `Sketching, creatively`,
+  `Context and TSNE`,
+  `Superhuman and funny`,
+  `Search and nlp`,
+  `Sketching and creatively`,
 ]
 const uids = {}
 
@@ -19,13 +17,12 @@ const uids = {}
 @view
 export default class BitSlackConversation {
   static defaultProps = {
-    shownLimit: 3,
+    shownLimit: 5,
   }
 
-  render({ children, result, appStore, shownLimit, theme, contentStyle }) {
-    const uid =
-      uids[result.id] || Math.floor(Math.random() * exampleTitles.length)
-    uids[result.id] = uid
+  render({ children, bit, appStore, shownLimit, theme, contentStyle }) {
+    const uid = uids[bit.id] || Math.floor(Math.random() * exampleTitles.length)
+    uids[bit.id] = uid
     return children({
       title: exampleTitles[uid],
       icon: 'slack',
@@ -33,10 +30,10 @@ export default class BitSlackConversation {
         <RoundButton
           onClick={e => {
             e.stopPropagation()
-            appStore.open(result, 'channel')
+            appStore.open(bit, 'channel')
           }}
         >
-          {result.title}
+          {bit.title.slice(1)}
         </RoundButton>
       ),
       permalink: (
@@ -48,25 +45,22 @@ export default class BitSlackConversation {
           opacity={0.6}
           onClick={e => {
             e.stopPropagation()
-            appStore.open(result)
+            appStore.open(bit)
           }}
         />
       ),
       bottom: (
-        <UI.Text size={0.85} if={result.data.messages.length > 3}>
-          + {result.data.messages.length - 3}&nbsp;more&nbsp;
-          <span if={false}>
-            {pluralize('reply', result.data.messages.length - 3)}
-          </span>
+        <UI.Text size={0.85} if={bit.data.messages.length > 3}>
+          + {bit.data.messages.length - 3}&nbsp;more&nbsp;
         </UI.Text>
       ),
       bottomAfter: (
         <row
-          if={result.people && result.people.length > 1}
+          if={bit.people && bit.people.length > 1}
           $meta
           css={{ color: theme.active.color }}
         >
-          {result.people.length}
+          {bit.people.length}
           &nbsp;
           <UI.Icon
             color="inherit"
@@ -76,16 +70,16 @@ export default class BitSlackConversation {
           />
         </row>
       ),
-      // via: result.title,
-      preview: result.body,
-      content: result.data.messages
+      // via: bit.title,
+      preview: bit.body,
+      content: (bit.data.messages || [])
         .slice(0, shownLimit)
         .map((message, index) => (
           <BitSlackMessage
             key={index}
             message={message}
-            previousMessage={result.data.messages[index - 1]}
-            bit={result}
+            previousMessage={bit.data.messages[index - 1]}
+            bit={bit}
             appStore={appStore}
             contentStyle={contentStyle}
           />
@@ -96,6 +90,7 @@ export default class BitSlackConversation {
   static style = {
     meta: {
       flexFlow: 'row',
+      alignItems: 'center',
       opacity: 0.5,
     },
     space: {

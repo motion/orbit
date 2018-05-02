@@ -69,18 +69,6 @@ export default class MenuEl {
             accelerator="CmdOrCtrl+Option+i"
             onClick={this.toggleDevTools('app')}
           />
-          <MenuItem
-            label="Show Dev Tools [Peek]"
-            onClick={this.toggleDevTools('peek')}
-          />
-          <MenuItem
-            label="Show Dev Tools [Highlights]"
-            onClick={this.toggleDevTools('highlights')}
-          />
-          <MenuItem
-            label="Show Dev Tools [Settings]"
-            onClick={this.toggleDevTools('settings')}
-          />
         </SubMenu>
       </Menu>
     )

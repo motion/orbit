@@ -351,7 +351,11 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         if (curObservable.mobxStream) {
           curObservable.mobxStream.currentVersion
         }
-        update(curObservable.get ? curObservable.get() : curObservable)
+        update(
+          typeof curObservable.get === 'function'
+            ? curObservable.get()
+            : curObservable,
+        )
       }
     })
   }
@@ -565,7 +569,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           })
           .catch(err => {
             if (err === RejectReactionSymbol) {
-              if (!IS_PROD && !preventLog) {
+              if (!IS_PROD && !preventLog && options.log !== 'state') {
                 log(`${name} [${curID}] cancelled`)
               }
             } else {
@@ -614,7 +618,11 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         const isSameObservable =
           curObservable && curObservable[AID] === result[AID]
         if (isSameObservable && curObservable) {
-          update(curObservable.get())
+          update(
+            typeof curObservable.get === 'function'
+              ? curObservable.get()
+              : curObservable,
+          )
           return
         }
         replaceDisposable()

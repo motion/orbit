@@ -29,8 +29,8 @@ class OrbitDocked {
             $settingsButton
             icon="gear"
             borderRadius={100}
-            size={1.15}
-            sizeIcon={0.8}
+            size={1}
+            sizeIcon={1}
             circular
             borderWidth={0}
             background={theme.base.background}
@@ -76,9 +76,9 @@ class OrbitDocked {
     },
     settingsButton: {
       position: 'absolute',
-      top: -21,
+      top: -15,
       right: 10,
-      zIndex: 1000,
+      zIndex: 10000000000,
     },
   }
 }

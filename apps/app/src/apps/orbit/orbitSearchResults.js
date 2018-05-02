@@ -11,7 +11,7 @@ export default class OrbitSearchResults {
   render({ appStore, theme, parentPane }) {
     const pane = `${parentPane}-search`
     const { query, results, message } = appStore.searchState
-    const hasQuery = !!query
+    const hasQuery = !!App.state.query
     // prevent renders when searching in other pane
     if (appStore.selectedPane !== pane && hasQuery) {
       return null

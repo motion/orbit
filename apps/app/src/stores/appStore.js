@@ -114,7 +114,7 @@ export default class AppStore {
 
   get selectedPane() {
     if (App.orbitState.docked) {
-      if (this.searchState.query) {
+      if (App.state.query) {
         return 'summary-search'
       }
       return 'summary'
@@ -123,7 +123,7 @@ export default class AppStore {
       return 'carousel'
     }
     if (!App.orbitState.hidden) {
-      if (this.searchState.query) {
+      if (App.state.query) {
         return 'context-search'
       }
       return 'context'

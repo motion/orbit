@@ -128,7 +128,7 @@ export default class OrbitExplore {
   render({ appStore, theme }) {
     const locale = 'en-US'
     const now = new Date()
-    const day = now.toLocaleDateString(locale, { weekday: 'long' })
+    const day = now.toLocaleDateString(locale, { weekday: 'short' })
     const month = now.toLocaleDateString(locale, { month: 'short' })
     const dayNum = now.getMonth()
     const exploreButton = {
@@ -138,25 +138,18 @@ export default class OrbitExplore {
       borderColor: theme.base.borderColor,
       background: theme.base.background,
       iconProps: {
-        color: theme.base.color.darken(0.2),
+        color: theme.base.color.darken(0.15),
         size: 14,
       },
     }
     return (
       <pane css={{ background: theme.base.background }}>
-        <title>
-          <SubTitle $subtitle>
-            <span $bolder>{day}</span>
-            &nbsp;&nbsp;
-            {month} {dayNum}
-            <span $super>{postfix[dayNum - 1]}</span>
-          </SubTitle>
-        </title>
         <section $explore>
           <UI.Button
             icon="menu"
             tooltip="Explore"
             $exploreButton
+            css={{ marginLeft: -2 }}
             {...exploreButton}
           />
           <UI.Button
@@ -174,27 +167,37 @@ export default class OrbitExplore {
                 borderBottom: [2, theme.active.background.lighten(0.02)],
               }}
             >
-              topics you follow
+              your filters
             </span>.
           </UI.Text>
         </section>
 
-        <filters>
-          {['all', 'general', 'status', 'showoff', 'releases'].map(
-            (name, index) => (
-              <RoundButton
-                fontSize={18}
-                sizePadding={1.7}
-                sizeHeight={1.2}
-                margin={[0, 1]}
-                key={index}
-                active={index === 0}
-              >
-                {name}
-              </RoundButton>
-            ),
-          )}
-        </filters>
+        <section $filterSection>
+          <title>
+            <SubTitle $subtitle>
+              {day} {month} {dayNum}
+              <span $super>{postfix[dayNum - 1]}</span>
+            </SubTitle>
+          </title>
+          <div $$flex />
+          <filters>
+            {['all', 'general', 'status', 'showoff', 'releases'].map(
+              (name, index) => (
+                <RoundButton
+                  fontSize={15}
+                  sizePadding={1.5}
+                  sizeHeight={1}
+                  sizeRadius={0.9}
+                  margin={[0, 1]}
+                  key={index}
+                  active={index === 0}
+                >
+                  {name}
+                </RoundButton>
+              ),
+            )}
+          </filters>
+        </section>
 
         <summary>
           <Masonry>
@@ -220,21 +223,9 @@ export default class OrbitExplore {
     pane: {
       flex: 1,
     },
-    title: {
-      padding: [0, 15],
-    },
-    subtitle: {
-      fontSize: 16,
-      fontWeight: 300,
-      lineHeight: '1.5rem',
-      marginTop: 16,
-      marginBottom: 0,
-      padding: 0,
-      flexFlow: 'row',
-    },
     bolder: {
-      fontSize: 22,
-      fontWeight: 200,
+      // fontSize: 22,
+      // fontWeight: 200,
     },
     super: {
       verticalAlign: 'super',
@@ -269,7 +260,7 @@ export default class OrbitExplore {
     explore: {
       width: '100%',
       flexFlow: 'row',
-      padding: [8, 8, 10],
+      padding: [8, 8, 4],
       alignItems: 'center',
     },
     item: {
@@ -279,11 +270,26 @@ export default class OrbitExplore {
       fontSize: 16,
     },
     exploreButton: {
-      margin: [0, 8, 0, 3],
+      margin: [0, 3, 0, 0],
+    },
+    filterSection: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      padding: [0, 15, 10],
+    },
+    title: {
+      padding: [0, 15, 0, 0],
+    },
+    subtitle: {
+      fontSize: 16,
+      fontWeight: 300,
+      lineHeight: '1.5rem',
+      margin: 0,
+      padding: 0,
+      flexFlow: 'row',
     },
     filters: {
       flexFlow: 'row',
-      padding: [5, 20, 20],
       alignItems: 'center',
       justifyContent: 'center',
     },

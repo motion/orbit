@@ -3,7 +3,6 @@ import * as React from 'react'
 import BitSlackMessage from './slackMessage'
 import * as UI from '@mcro/ui'
 import { RoundButton } from '~/views'
-import pluralize from 'pluralize'
 
 // const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 const exampleTitles = [
@@ -22,8 +21,10 @@ export default class BitSlackConversation {
   }
 
   render({ children, bit, appStore, shownLimit, theme, contentStyle }) {
+    console.log('111')
     const uid = uids[bit.id] || Math.floor(Math.random() * exampleTitles.length)
     uids[bit.id] = uid
+    console.log('1112')
     return children({
       title: exampleTitles[uid],
       icon: 'slack',

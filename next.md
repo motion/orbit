@@ -11,15 +11,14 @@
 
 ## now
 
-* topics you follow dropdown
+* search smoothness
 * have the cards show _why_ they are there
+* topics you follow dropdown
 * profiles design iteration
 * fix settings
-* peek mouseover works
 * tear away peeks + super simple app
 * get dark blue theme working for news area
   * work on themes
-* search smoothness
 * pinning item to top of news for a day
 * bring back highlight words harcode demo
 

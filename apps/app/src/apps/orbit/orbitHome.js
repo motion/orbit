@@ -169,7 +169,6 @@ export default class OrbitExplore {
           />
           <space $$flex />
           <UI.Text size={1.15} css={{ margin: [0, 15] }}>
-            <strong>4</strong> new from{' '}
             <span
               css={{
                 paddingBottom: 2,
@@ -177,7 +176,7 @@ export default class OrbitExplore {
               }}
             >
               your filters
-            </span>.
+            </span>
           </UI.Text>
         </section>
 

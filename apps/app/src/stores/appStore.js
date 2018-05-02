@@ -378,7 +378,7 @@ export default class AppStore {
   @react.if
   hoverWordToActiveIndex = [
     () => App.state.hoveredWord,
-    word => this.setSelected(word.index),
+    word => this.pinSelected(word.index),
   ]
 
   getPeekItem = item => {

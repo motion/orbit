@@ -1,5 +1,4 @@
 import * as React from 'react'
-// import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import PeekHeader from '../peekHeader'
 import bitContents from '~/components/bitContents'
@@ -16,6 +15,7 @@ class ConversationPeek {
     async () => {
       const people = await Person.find({ take: 3, skip: 7 })
       const bits = await Bit.find({ take: 3, relations: ['people'] })
+      console.log('carousel results', people, bits)
       return [...people, ...bits]
     },
   ]

@@ -11,17 +11,15 @@
 
 ## now
 
-* news area do some design for documents and emails
+* topics you follow dropdown
 * have the cards show _why_ they are there
+* profiles design iteration
 * peek mouseover works
 * tear away peeks + super simple app
 * get dark blue theme working for news area
   * work on themes
-* topics you follow dropdown
-* profiles design iteration
 * search smoothness
 * pinning item to top of news for a day
-* clear peek on scroll
 
 demo for Formidable on May 12th:
 
@@ -63,6 +61,7 @@ deploying beta for company like formidable (est dev time: 3m)
 
 --- me
 
+* clear peek on scroll
 * [ ] intercept all a=href and open in native browser (slack)
 * [ ] themes or surfaces really need well thought lighten/darken functionality
 * [ ] slack emojis

@@ -27,6 +27,7 @@ class HeaderStore {
         throw react.cancel
       }
       await when(() => !App.isAnimatingOrbit)
+      console.log('SHOULD FOCUS INPUT')
       if (this.inputRef) {
         this.inputRef.focus()
       }

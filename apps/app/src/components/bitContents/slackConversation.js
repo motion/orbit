@@ -21,10 +21,8 @@ export default class BitSlackConversation {
   }
 
   render({ children, bit, appStore, shownLimit, theme, contentStyle }) {
-    console.log('111')
     const uid = uids[bit.id] || Math.floor(Math.random() * exampleTitles.length)
     uids[bit.id] = uid
-    console.log('1112')
     return children({
       title: exampleTitles[uid],
       icon: 'slack',
@@ -74,7 +72,7 @@ export default class BitSlackConversation {
       ),
       // via: bit.title,
       preview: bit.body,
-      content: bit.data.messages
+      content: (bit.data.messages || [])
         .slice(0, shownLimit)
         .map((message, index) => (
           <BitSlackMessage

@@ -11,7 +11,6 @@
 
 ## now
 
-* search smoothness
 * have the cards show _why_ they are there
 * topics you follow dropdown
 * profiles design iteration

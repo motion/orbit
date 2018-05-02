@@ -21,6 +21,7 @@
   * work on themes
 * search smoothness
 * pinning item to top of news for a day
+* bring back highlight words harcode demo
 
 demo for Formidable on May 12th:
 

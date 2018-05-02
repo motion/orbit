@@ -68,7 +68,8 @@ export default class PeekFrame {
     const leftAdjustX = !docked && !orbitOnLeft ? Constants.SHADOW_PAD : 0
     peekAdjustX += onRight ? -4 + leftAdjustX : 4
     const x = state.position[0] + peekAdjustX
-    const y = state.position[1] + (willShow && !willStayShown ? -8 : 0)
+    const y =
+      state.position[1] + ((willShow && !willStayShown) || willHide ? -8 : 0)
     log(`peekpos ${x} ${y} (${peekAdjustX} ${docked})`)
     return (
       <peekFrame
@@ -76,7 +77,7 @@ export default class PeekFrame {
           transition: isHidden
             ? 'none'
             : willHide ? 'all ease-in 200ms' : 'all ease-in 150ms',
-          opacity: isHidden || (willShow && !willStayShown) ? 0 : 1,
+          opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
           width: state.size[0],
           height: state.size[1],
           transform: {

@@ -147,7 +147,7 @@ export default class Results {
                 total={total}
                 listItem
                 expanded
-                hoverToSelect={!App.peekState.target}
+                hoverToSelect
                 getRef={appStore.setResultRef(i)}
               />
             ))}

@@ -50,8 +50,9 @@ export default class Plugins {
   results = [
     () => App.state.query,
     async (query, { sleep }) => {
+      await sleep(150) // debounce to not be too aggressive during type
       const results = await this.search(query)
-      await sleep(0) // cancellation
+      await sleep()
       const pluginResults = await Promise.all(
         results.slice(0, 25).map(async result => ({
           ...result,
@@ -60,7 +61,7 @@ export default class Plugins {
           type: 'app',
         })),
       )
-      await sleep(0) // cancellation
+      await sleep()
       Desktop.setSearchState({ pluginResults, pluginResultsId: _.uniqueId() })
       return pluginResults
     },

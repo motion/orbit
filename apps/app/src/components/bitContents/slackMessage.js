@@ -29,7 +29,7 @@ export default class BitSlackMessage {
     } catch (err) {
       console.log('err parsing', err)
     }
-    const person = bit.people.find(
+    const person = (bit.people || []).find(
       person => person.integrationId === message.user,
     )
     if (!person) {

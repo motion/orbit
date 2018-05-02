@@ -9,15 +9,26 @@ import OrbitDivider from '~/apps/orbit/orbitDivider'
 import { Bit, Person } from '@mcro/models'
 
 class ConversationPeek {
-  @react({ fireImmediately: true, defaultValue: [] })
-  related = [
-    () => 0,
-    async () => {
-      const people = await Person.find({ take: 3, skip: 7 })
-      const bits = await Bit.find({ take: 3, relations: ['people'] })
-      return [...people, ...bits]
-    },
-  ]
+  @react({ defaultValue: [] })
+  related = async () => {
+    const people = await Person.find({ take: 3, skip: 7 })
+    const bits = await Bit.find({ take: 3, relations: ['people'] })
+    return [...people, ...bits]
+  }
+
+  @react({ defaultValue: [] })
+  relatedConversations = async () =>
+    await Bit.find({
+      relations: ['people'],
+      where: { integration: 'slack', type: 'conversation' },
+      take: 3,
+    })
+}
+
+const slackConvoBitContentStyle = {
+  contentStyle: {
+    paddingLeft: 17,
+  },
 }
 
 @view({
@@ -34,11 +45,7 @@ export class Conversation {
         appStore={appStore}
         bit={bit}
         shownLimit={Infinity}
-        itemProps={{
-          contentStyle: {
-            paddingLeft: 17,
-          },
-        }}
+        itemProps={slackConvoBitContentStyle}
       >
         {({ permalink, location, title, icon, content }) => {
           return (
@@ -69,17 +76,13 @@ export class Conversation {
                   <section>
                     <SubTitle>Recent and Related Conversations</SubTitle>
                     <br />
-                    {appStore.summaryResults.slice(0, 3).map((bit, index) => (
-                      <React.Fragment key={`${bit.id}${index}`}>
+                    {store.relatedConversations.map((relatedBit, index) => (
+                      <React.Fragment key={`${relatedBit.id}${index}`}>
                         <BitContent
                           appStore={appStore}
-                          bit={bit}
+                          bit={relatedBit}
                           shownLimit={Infinity}
-                          itemProps={{
-                            contentStyle: {
-                              paddingLeft: 17,
-                            },
-                          }}
+                          itemProps={slackConvoBitContentStyle}
                         >
                           {({ content }) => content}
                         </BitContent>

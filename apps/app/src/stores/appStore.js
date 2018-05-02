@@ -7,6 +7,18 @@ import * as Helpers from '~/helpers'
 import * as _ from 'lodash'
 import peekPosition from './helpers/peekPosition'
 
+const findType = (integration, type, skip = 0) =>
+  Bit.findOne({
+    skip,
+    take: 1,
+    where: {
+      type,
+      integration,
+    },
+    relations: ['people'],
+    order: { bitCreatedAt: 'DESC' },
+  })
+
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
     return result.id
@@ -283,18 +295,6 @@ export default class AppStore {
   summaryResults = [
     () => 0,
     async () => {
-      const findType = (integration, type, skip = 0) =>
-        Bit.findOne({
-          skip,
-          take: 1,
-          where: {
-            type,
-            integration,
-          },
-          relations: ['people'],
-          order: { bitCreatedAt: 'DESC' },
-        })
-
       return [
         ...(await Promise.all([
           findType('slack', 'conversation'),

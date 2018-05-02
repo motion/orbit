@@ -280,17 +280,13 @@ class Bridge {
         continue
       }
       // avoid on same object
-      const a = stateObj[key]
-      const b = newState[key]
-      const bothObjects =
-        a &&
-        b &&
-        (Mobx.isObservableObject(a) || isPlainObject(a)) &&
-        (Mobx.isObservableObject(b) || isPlainObject(b))
+      const a = Mobx.toJS(stateObj[key])
+      const b = Mobx.toJS(newState[key])
+      const bothObjects = a && b && isPlainObject(a) && isPlainObject(b)
       if (bothObjects) {
         // check if equal
-        let areEqual = false
-        for (const key of Object.keys(a)) {
+        let areEqual = true
+        for (const key of Object.keys(b)) {
           if (!isEqual(a[key], b[key])) {
             areEqual = false
             break
@@ -299,27 +295,23 @@ class Bridge {
         if (areEqual) {
           continue
         }
-        const oldVal = Mobx.toJS(a)
-        const newVal = Mobx.toJS(b)
         // merge plain objects
-        const newState = mergeWith(oldVal, newVal, (prev, next) => {
+        const newState = mergeWith(a, b, (prev, next) => {
           // avoid inner array merge, just replace
           if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
             return next
           }
         })
-        const diff = {} // minimal change diff
-        for (const key of Object.keys(newVal)) {
-          diff[key] = b
+        // minimal change diff after merge
+        const diff = {}
+        for (const key of Object.keys(b)) {
+          diff[key] = newState[key]
         }
         stateObj[key] = newState
         changed[key] = diff
       } else {
         // avoid on same val
-        if (a === b) {
-          continue
-        }
-        if (Mobx.comparer.structural(a, b)) {
+        if (a === b || isEqual(a, b)) {
           continue
         }
         stateObj[key] = b

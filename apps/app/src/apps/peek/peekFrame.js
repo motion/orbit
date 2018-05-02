@@ -6,7 +6,7 @@ import WindowControls from '~/views/windowControls'
 import * as Constants from '~/constants'
 
 const SHADOW_PAD = 50
-const borderRadius = 6
+const borderRadius = 8
 const background = '#f9f9f9'
 
 class PeekFrameStore {
@@ -67,9 +67,15 @@ export default class PeekFrame {
       borderShadow,
     ]
     const arrowSize = 30
+    // determine x adjustments
+    // adjust for docked not using shadow pad
     let peekAdjustX = docked ? -18 : 0
-    const leftAdjustX = !docked && !orbitOnLeft ? Constants.SHADOW_PAD : 0
-    peekAdjustX += onRight ? -4 + leftAdjustX : 4
+    // adjust for orbit arrow blank
+    if (orbitOnLeft && !onRight) {
+      peekAdjustX -= Constants.SHADOW_PAD
+    }
+    // small adjust to overlap
+    peekAdjustX += onRight ? -2 : 2
     const x = state.position[0] + peekAdjustX
     const y =
       state.position[1] + ((willShow && !willStayShown) || willHide ? -8 : 0)
@@ -121,7 +127,7 @@ export default class PeekFrame {
             <WindowControls
               css={{
                 position: 'absolute',
-                top: 12,
+                top: 11,
                 right: 0,
                 zIndex: 10000,
                 transform: {

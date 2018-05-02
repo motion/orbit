@@ -6,6 +6,9 @@ import PeekHeader from '../peekHeader'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
 
+const parseBody = body =>
+  !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
+
 @view
 export class Mail {
   render({ bit }) {
@@ -60,19 +63,13 @@ export class Mail {
                       </UI.Date>
                     </rest>
                   </row>
-                  <UI.Text if={message.snippet} lineHeight={23} size={1.1}>
+                  <UI.Text if={message.snippet} size={1.1}>
                     {_.flatten(
-                      message.snippet.split('\n').map((i, idx) => (
-                        <React.Fragment key={idx}>
-                          <p key={idx}>{i}</p>
-                          <br />
-                        </React.Fragment>
-                      )),
+                      (parseBody(message.payload.body.data) || message.snippet)
+                        .split('\n')
+                        .map((i, idx) => <para key={idx}>{i}</para>),
                     )}
                   </UI.Text>
-                  <pre if={false}>
-                    {JSON.stringify(message.payload.headers, 0, 2)}
-                  </pre>
                 </message>
               )
             })}
@@ -90,6 +87,9 @@ export class Mail {
     message: {
       padding: [22, 35],
       borderBottom: [1, 'dotted', '#eee'],
+    },
+    para: {
+      marginBottom: '0.35rem',
     },
   }
 }

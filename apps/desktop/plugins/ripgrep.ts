@@ -49,6 +49,5 @@ export const fn = async ({ term, display }) => {
   })
   const filtered = fuzzySort.go(term, results, FUZZY_OPTS)
   const final = filtered.map((x, index) => ({ id: index, title: x.target }))
-  console.log('ripgrep results', results, final)
   display(final)
 }

@@ -35,7 +35,7 @@ class OrbitDocked {
             borderWidth={0}
             background={theme.base.background}
             iconProps={{
-              color: theme.active.background,
+              color: theme.active.background.darken(0.1),
             }}
             onClick={appStore.toggleSettings}
           />
@@ -76,8 +76,8 @@ class OrbitDocked {
     },
     settingsButton: {
       position: 'absolute',
-      top: -20,
-      right: 0,
+      top: -21,
+      right: 10,
       zIndex: 1000,
     },
   }

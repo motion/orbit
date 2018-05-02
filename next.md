@@ -14,6 +14,7 @@
 * topics you follow dropdown
 * have the cards show _why_ they are there
 * profiles design iteration
+* fix settings
 * peek mouseover works
 * tear away peeks + super simple app
 * get dark blue theme working for news area
@@ -61,12 +62,13 @@ deploying beta for company like formidable (est dev time: 3m)
 
 --- me
 
+* peek needs a "pin" button like orbit context
+  * then make esc clear peek always, even not mouseover
 * clear peek on scroll
 * [ ] intercept all a=href and open in native browser (slack)
 * [ ] themes or surfaces really need well thought lighten/darken functionality
 * [ ] slack emojis
 * [ ] only close peek on esc if electron focused
-* [ ] focus electron on mouseover peek
 * [ ] search jitter
 * [ ] fix keyboard movement bugs
 * [ ] slack unread/read sql

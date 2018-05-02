@@ -94,7 +94,7 @@ export default class OrbitSettings {
     )
     return (
       <React.Fragment>
-        <pane if={appStore.showSettings} css={{ padding: 10 }}>
+        <pane if={appStore.showSettings}>
           <section if={activeIntegrations.length}>
             <Title>Active</Title>
             <cards>
@@ -121,6 +121,9 @@ export default class OrbitSettings {
   }
 
   static style = {
+    pane: {
+      padding: [10, 20],
+    },
     cards: {
       flexFlow: 'row',
       flexWrap: 'wrap',

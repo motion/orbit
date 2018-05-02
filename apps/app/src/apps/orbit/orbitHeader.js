@@ -12,20 +12,16 @@ class HeaderStore {
     this.inputRef && this.inputRef.focus()
   }
 
-  @react({ delay: 32, log: false })
+  @react({ log: false })
   focusInput = [
     () => [
       App.orbitState.pinned || App.orbitState.docked,
       App.isMouseInActiveArea,
     ],
     async ([shown], { when }) => {
-      if (!shown) {
-        throw react.cancel
-      }
-      await when(() => !App.isAnimatingOrbit && Desktop.state.focusedOnOrbit)
-      if (!shown) {
-        throw react.cancel
-      }
+      if (!shown) throw react.cancel
+      await when(() => Desktop.state.focusedOnOrbit)
+      await when(() => !App.isAnimatingOrbit)
       this.focus()
     },
   ]

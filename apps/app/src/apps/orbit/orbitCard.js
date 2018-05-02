@@ -158,16 +158,17 @@ export default class OrbitCard {
               if={icon}
               icon={icon}
               size={14}
-              $icon
+              $orbitIcon
               css={{
                 filter: isExpanded ? 'none' : 'grayscale(50%)',
                 opacity: isExpanded ? 1 : 0.85,
               }}
               {...tiny && tinyProps.iconProps}
             />
-            <UI.Text if={location} opacity={0.7}>
+            <UI.Text if={typeof location === 'string'} opacity={0.7}>
               {location}&nbsp;&nbsp;
             </UI.Text>
+            {typeof location !== 'string' && location}
             <UI.Text
               if={showPreview && typeof preview === 'string'}
               ellipse={1}
@@ -259,8 +260,8 @@ export default class OrbitCard {
     content: {
       flex: 1,
     },
-    icon: {
-      margin: [-1, 5, 0, 0],
+    orbitIcon: {
+      margin: [0, 5, 0, 0],
     },
     full: {
       padding: [2, 0],
@@ -275,7 +276,7 @@ export default class OrbitCard {
       // flex: 1,
     },
     preview: {
-      margin: [2, 0],
+      margin: [0, 0, 2, 0],
       height: 20,
       flexFlow: 'row',
       alignItems: 'center',

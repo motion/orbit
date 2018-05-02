@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import PeekHeader from '../peekHeader'
 // import { Bit } from '@mcro/models'
 import * as _ from 'lodash'
+import * as Helpers from '~/helpers'
 
 @view
 export class Mail {
@@ -12,14 +13,6 @@ export class Mail {
       return null
     }
     const { messages } = bit.data
-    const getHeader = (message, key) =>
-      (
-        ((message.payload && message.payload.headers) || []).find(
-          x => x.name === key,
-        ) || {
-          value: '',
-        }
-      ).value
     return (
       <React.Fragment>
         <PeekHeader icon="email" title={bit.title} date={bit.createdAt} />
@@ -51,8 +44,8 @@ export class Mail {
                       }}
                     />
                     <rest if={message.payload} $$row $$centered>
-                      <strong if={getHeader(message, 'From')}>
-                        {getHeader(message, 'From').split(' ')[0]}
+                      <strong if={Helpers.getHeader(message, 'From')}>
+                        {Helpers.getHeader(message, 'From').split(' ')[0]}
                       </strong>&nbsp;
                       <UI.Date
                         if={index !== 0}
@@ -63,7 +56,7 @@ export class Mail {
                           fontSize: 13,
                         }}
                       >
-                        {getHeader(message, 'Date')}
+                        {Helpers.getHeader(message, 'Date')}
                       </UI.Date>
                     </rest>
                   </row>

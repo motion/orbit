@@ -32,3 +32,23 @@ export const cleanText = s => {
     return ''
   }
 }
+
+export const getHeader = (message, key) =>
+  (
+    ((message.payload && message.payload.headers) || []).find(
+      x => x.name === key,
+    ) || {
+      value: '',
+    }
+  ).value
+
+export const getHeaderFromShort = bit => {
+  if (!bit.data.messages || !bit.data.messages.length) {
+    return null
+  }
+  const fromHeader = getHeader(bit.data.messages[0], 'From')
+  if (!fromHeader) {
+    return null
+  }
+  return fromHeader.replace(/ <.*/g, '')
+}

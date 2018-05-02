@@ -8,12 +8,8 @@ import ControlButton from '~/views/controlButton'
 class HeaderStore {
   inputRef = null
 
-  hover = () => {
+  focus = () => {
     this.inputRef && this.inputRef.focus()
-  }
-
-  blur = () => {
-    this.inputRef && this.inputRef.blur()
   }
 
   @react({ delay: 32, log: false })
@@ -30,20 +26,7 @@ class HeaderStore {
       if (!shown) {
         throw react.cancel
       }
-      if (this.inputRef) {
-        this.inputRef.focus()
-      }
-    },
-  ]
-
-  @react({ delay: 32 })
-  blurInput = [
-    () => App.isFullyHidden,
-    () => {
-      if (!this.inputRef) {
-        throw react.cancel
-      }
-      this.inputRef.blur()
+      this.focus()
     },
   ]
 
@@ -84,7 +67,6 @@ export default class OrbitHeader {
         }}
         {...appStore.getHoverProps({
           onHover: headerStore.hover,
-          onBlur: headerStore.blur,
         })}
       >
         <bottomBorder

@@ -71,7 +71,7 @@ export default class PeekFrame {
     // adjust for docked not using shadow pad
     let peekAdjustX = docked ? -18 : 0
     // adjust for orbit arrow blank
-    if (orbitOnLeft && !onRight) {
+    if (!docked && orbitOnLeft && !onRight) {
       peekAdjustX -= Constants.SHADOW_PAD
     }
     // small adjust to overlap

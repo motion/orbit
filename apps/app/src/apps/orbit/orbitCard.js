@@ -55,8 +55,8 @@ export default class OrbitCard {
 
   componentWillMount() {
     this.getOrbitCard = this.getOrbitCard.bind(this)
-    const { appStore, index, result } = this.props
-    this.hoverProps = appStore.getHoverProps({ result, id: index })
+    const { appStore, index, bit } = this.props
+    this.hoverProps = appStore.getHoverProps({ bit, id: index })
   }
 
   setHovered = () => {
@@ -68,7 +68,7 @@ export default class OrbitCard {
   }
 
   toggleSelected = () => {
-    this.props.appStore.toggleSelected(this.props.index)
+    this.props.appStore.toggleSelected(this.props.index, this.props.item)
   }
 
   get isExpanded() {
@@ -96,12 +96,12 @@ export default class OrbitCard {
     date,
   }) {
     const {
-      result,
       getRef,
       tiny,
       listItem,
       style,
       hoverToSelect,
+      bit,
       borderRadius: borderRadius_,
     } = this.props
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
@@ -190,9 +190,9 @@ export default class OrbitCard {
             <space if={permalink} />
             {bottom}
             <orbital if={false} />
-            <UI.Date>{result.bitUpdatedAt}</UI.Date>
+            <UI.Date>{bit.bitUpdatedAt}</UI.Date>
             <Text if={via} opacity={0.5} size={0.9}>
-              {via || result.integration}
+              {via || bit.integration}
             </Text>
             <div $$flex />
             {bottomAfter}
@@ -202,8 +202,8 @@ export default class OrbitCard {
     )
   }
 
-  render({ appStore, result, store, listItem, itemProps }) {
-    const BitContent = bitContents(result)
+  render({ appStore, bit, store, listItem, itemProps }) {
+    const BitContent = bitContents(bit)
     store.isSelected
     if (typeof BitContent !== 'function') {
       console.error('got a weird one', BitContent)
@@ -212,7 +212,7 @@ export default class OrbitCard {
     const contents = (
       <BitContent
         appStore={appStore}
-        result={result}
+        bit={bit}
         isExpanded={this.isExpanded}
         {...itemProps}
       >

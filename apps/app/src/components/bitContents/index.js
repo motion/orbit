@@ -18,17 +18,17 @@ const results = {
   },
 }
 
-export default result => {
-  if (result instanceof Person) {
+export default bit => {
+  if (bit instanceof Person) {
     return PersonCard
   }
-  if (!result.integration || !result.type) {
-    return ({ children }) => children(result)
+  if (!bit.integration || !bit.type) {
+    return ({ children }) => children(bit)
   }
-  const resolveIntegration = results[result.integration]
-  const resolver = resolveIntegration && resolveIntegration[result.type]
+  const resolveIntegration = results[bit.integration]
+  const resolver = resolveIntegration && resolveIntegration[bit.type]
   if (!resolver) {
-    console.error('no resolver for', result.integration, result.type)
+    console.error('no resolver for', bit.integration, bit.type)
     return { title: '' }
   }
   return resolver

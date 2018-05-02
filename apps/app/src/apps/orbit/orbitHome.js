@@ -183,13 +183,12 @@ export default class OrbitExplore {
 
         <summary>
           <Masonry>
-            {appStore.summaryResults.map((item, index) => (
+            {appStore.summaryResults.map((bit, index) => (
               <OrbitCard
                 key={index}
                 index={index}
-                item={item}
+                bit={bit}
                 total={appStore.summaryResults.length}
-                result={item}
                 hoverToSelect
                 expanded
                 getRef={appStore.setDockedResultRef(index)}

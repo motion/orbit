@@ -164,17 +164,17 @@ export default class AppStore {
 
   @react({ log: false, delay: 32 })
   selectedBit = [
-    () => App.peekState.item,
-    async item => {
-      if (!item) {
+    () => App.peekState.bit,
+    async bit => {
+      if (!bit) {
         return null
       }
-      if (item.type === 'person') {
-        return await Person.findOne({ id: item.id })
+      if (bit.type === 'person') {
+        return await Person.findOne({ id: bit.id })
       }
       const res = await Bit.findOne({
         where: {
-          id: item.id,
+          id: bit.id,
         },
         relations: ['people'],
       })
@@ -315,34 +315,7 @@ export default class AppStore {
     this.activeIndex = index
   }
 
-  setSelected = (i, target) => {
-    if (i === null) {
-      this.clearSelected()
-      return
-    }
-    if (target) {
-      if (!App.orbitState.position) {
-        return
-      }
-      const { top, width, height } = target
-      const position = {
-        // add orbits offset
-        left: App.orbitState.position[0],
-        top: top + App.orbitState.position[1],
-        width,
-        height,
-      }
-      this.setActive(i, position)
-      return
-    }
-    if (App.peekState.target) {
-      this.pinSelected(i)
-      return
-    }
-    this.setActive(i)
-  }
-
-  toggleSelected = index => {
+  toggleSelected = (index, bit) => {
     const isSame = this.activeIndex === index
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
@@ -351,25 +324,18 @@ export default class AppStore {
       }
       App.clearPeek()
     } else {
-      this.pinSelected(index)
+      this.pinSelected(index, bit)
     }
   }
 
-  pinSelected = thing => {
-    let index
-    if (typeof thing === 'number') {
-      index = thing > -1 ? thing : this.activeIndex
-      this.setActive(index)
-    } else {
-      index = thing ? thing.id : null
-    }
+  pinSelected = (index, bit) => {
+    this.setActive(index)
     const target = this.getTargetPosition(index)
     const position = peekPosition(target)
-    console.log('setting to', target, position)
     App.setPeekState({
       id: Math.random(),
       target,
-      item: this.getPeekItem(index),
+      bit: this.getPeekItem(bit),
       ...position,
     })
   }
@@ -381,9 +347,11 @@ export default class AppStore {
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 80,
     betweenDelay: 30,
-    onHovered: item => {
-      if (item && typeof item.id === 'number') {
-        this.setSelected(item.id)
+    onHovered: (res) => {
+      if (!res) {
+        this.clearSelected()
+      } else {
+        this.pinSelected(res.index, res.bit)
       }
     },
   })
@@ -394,12 +362,7 @@ export default class AppStore {
     word => this.setSelected(word.index),
   ]
 
-  getPeekItem = index => {
-    if (index < 0) {
-      console.log('none selected')
-      return null
-    }
-    const item = this.searchState.results[index]
+  getPeekItem = item => {
     if (!item) {
       console.log('none found')
       return null

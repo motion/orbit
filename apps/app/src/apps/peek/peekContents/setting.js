@@ -16,11 +16,11 @@ const EmptyPane = () => <div>no setting pane</div>
     bitsCount = null
 
     get setting() {
-      return this.props.appStore.settings[this.item.integration]
+      return this.props.appStore.settings[this.bit.integration]
     }
 
-    get item() {
-      return App.peekState.item
+    get bit() {
+      return App.peekState.bit
     }
 
     async willMount() {
@@ -29,7 +29,7 @@ const EmptyPane = () => <div>no setting pane</div>
     }
 
     update = async () => {
-      const { integration } = this.item
+      const { integration } = this.bit
       this.job = await Job.findOne({
         where: { type: integration },
         order: { createdAt: 'DESC' },
@@ -48,8 +48,8 @@ export class SettingView {
       return null
     }
     store.version
-    const { setting, item } = store
-    const { integration, type } = item
+    const { setting, bit } = store
+    const { integration, type } = bit
     // tries googleMail
     // falls back to google
     const SettingPane =

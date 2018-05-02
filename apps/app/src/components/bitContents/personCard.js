@@ -4,18 +4,18 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class BitSlackConversation {
-  render({ children, result }) {
+  render({ children, bit }) {
     return children({
       preview: (
         <test>
-          <img $avatar src={result.data.profile.image_512} />
+          <img $avatar src={bit.data.profile.image_512} />
           <UI.Text fontWeight={800} color="#000">
-            {result.name}
+            {bit.name}
           </UI.Text>
           <subtitles>
-            <location>{result.data.tz}</location>
-            <a href={`mailto:${result.data.profile.email}`}>
-              {result.data.profile.email}
+            <location>{bit.data.tz}</location>
+            <a href={`mailto:${bit.data.profile.email}`}>
+              {bit.data.profile.email}
             </a>
           </subtitles>
         </test>

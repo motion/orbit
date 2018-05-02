@@ -1,12 +1,12 @@
 import * as UI from '@mcro/ui'
 
-export default ({ result, children }) =>
+export default ({ bit, children }) =>
   children({
-    title: result.title,
+    title: bit.title,
     icon: 'gmail',
     location: 'Inbox',
     date: Date.now(),
-    subtitle: <UI.Date>{new Date(result.bitUpdatedAt)}</UI.Date>,
-    preview: result.body,
-    content: result.body,
+    subtitle: <UI.Date>{new Date(bit.bitUpdatedAt)}</UI.Date>,
+    preview: bit.body,
+    content: bit.body,
   })

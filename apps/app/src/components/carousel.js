@@ -7,11 +7,11 @@ export default class Carousel {
   render({ items, appStore }) {
     return (
       <carousel>
-        {items.map((item, index) => (
+        {items.map((bit, index) => (
           <OrbitCard
-            key={`${index}${item.id}`}
+            key={`${index}${bit.id}`}
             appStore={appStore}
-            result={item}
+            bit={bit}
             index={index}
             total={items.length}
             expanded={false}

@@ -1,9 +1,9 @@
-export default ({ result, children }) =>
+export default ({ bit, children }) =>
   children({
-    title: result.title,
+    title: bit.title,
     icon: 'gdoc',
     location: 'Folder',
     date: Date.now(),
-    subtitle: result.integration,
-    content: result.body,
+    subtitle: bit.integration,
+    content: bit.body,
   })

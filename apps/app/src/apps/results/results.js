@@ -137,12 +137,12 @@ export default class Results {
         <resultsScroller>
           <results if={results.length} ref={this.setResults}>
             <firstResultSpace $$untouchable css={{ height: 6 }} />
-            {results.map((result, i) => (
+            {results.map((bit, i) => (
               <OrbitCard
-                key={`${i}${result.id}`}
+                key={`${i}${bit.id}`}
                 parentElement={resultsRef}
                 appStore={appStore}
-                result={result}
+                bit={bit}
                 index={i}
                 total={total}
                 listItem

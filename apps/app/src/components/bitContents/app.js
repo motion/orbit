@@ -1,7 +1,7 @@
-export default ({ result, children }) =>
+export default ({ bit, children }) =>
   children({
-    title: result.title,
-    icon: `/icons/${result.icon}`,
-    subtitle: result.integration,
-    content: result.body,
+    title: bit.title,
+    icon: `/icons/${bit.icon}`,
+    subtitle: bit.integration,
+    content: bit.body,
   })

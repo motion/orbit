@@ -4,11 +4,11 @@ import PeekHeader from '../peekHeader'
 
 @view
 export class File {
-  render({ item }) {
+  render({ bit }) {
     return (
       <React.Fragment>
-        <PeekHeader title={item.title} />
-        <content>{item.body}</content>
+        <PeekHeader title={bit.title} />
+        <content>{bit.body}</content>
       </React.Fragment>
     )
   }

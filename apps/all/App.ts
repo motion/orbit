@@ -161,6 +161,7 @@ class AppStore {
 
   clearPeek = () => {
     App.setPeekState({
+      id: null,
       target: null,
     })
   }

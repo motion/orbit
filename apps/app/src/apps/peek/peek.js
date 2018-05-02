@@ -10,8 +10,8 @@ import PeekFrame from './peekFrame'
 @view
 export default class PeekPage {
   render({ appStore }) {
-    const { item } = App.peekState
-    const type = (item && capitalize(item.type)) || 'Empty'
+    const { bit } = App.peekState
+    const type = (bit && capitalize(bit.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
     if (!PeekContentsView) {
       console.error('none', type)
@@ -21,13 +21,13 @@ export default class PeekPage {
       <UI.Theme name="light">
         <PeekFrame>
           <PeekContentsView
+            if={appStore.selectedBit}
             bit={appStore.selectedBit}
             person={appStore.selectedBit}
-            item={item}
             appStore={appStore}
           />
         </PeekFrame>
       </UI.Theme>
     )
-  }
+  }ß
 }

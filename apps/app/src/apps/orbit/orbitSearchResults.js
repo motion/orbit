@@ -30,12 +30,12 @@ export default class OrbitSearchResults {
             opacity: !isChanging ? 1 : 0.5,
           }}
         >
-          {results.map((result, index) => (
+          {results.map((bit, index) => (
             <OrbitCard
-              key={`${index}${result.identifier || result.id}`}
+              key={`${index}${bit.identifier || bit.id}`}
               index={index}
               total={results.length}
-              result={result}
+              bit={bit}
               listItem
               expanded={false}
               hoverToSelect

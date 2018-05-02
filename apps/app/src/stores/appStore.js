@@ -165,7 +165,9 @@ export default class AppStore {
   })
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshInterval],
-    async ([query]) => {
+    async ([query], { sleep }) => {
+      // debounce enough for medium-speed typer
+      await sleep(120)
       const results = await getResults(query)
       this.bitResultsId = (this.bitResultsId + 1) % Number.MAX_VALUE
       return results
@@ -254,8 +256,6 @@ export default class AppStore {
         // 🔍 REGULAR SEARCHES GO THROUGH HERE
         const pluginResultId = Desktop.searchState.pluginResultsId
         const bitResultsId = this.bitResultsId
-        // debounce
-        await sleep(200)
         // no jitter - wait for everything to finish
         await when(() => pluginResultId !== Desktop.searchState.pluginResultId)
         await when(() => bitResultsId !== this.bitResultsId)

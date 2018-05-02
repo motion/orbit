@@ -50,9 +50,26 @@ const matchSort = (query, results) => {
     return results
   }
   const strongTitleMatches = Helpers.fuzzy(query, results, {
-    threshold: -10,
+    threshold: -40,
   })
   return uniq([...strongTitleMatches, ...results].slice(0, 10))
+}
+
+const getResults = async query => {
+  if (!query) {
+    return await Bit.find({
+      take: 8,
+      relations: ['people'],
+      order: { bitCreatedAt: 'DESC' },
+    })
+  }
+  const { conditions, rest } = parseQuery(query)
+  return await Bit.find({
+    where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
+    relations: ['people'],
+    order: { bitCreatedAt: 'DESC' },
+    take: 8,
+  })
 }
 
 const prefixes = {
@@ -139,6 +156,7 @@ export default class AppStore {
     },
   ]
 
+  bitResultsId = 0
   @react({
     fireImmediately: true,
     defaultValue: [],
@@ -148,20 +166,9 @@ export default class AppStore {
   bitResults = [
     () => [App.state.query, Desktop.appState.id, this.refreshInterval],
     async ([query]) => {
-      if (!query) {
-        return await Bit.find({
-          take: 8,
-          relations: ['people'],
-          order: { bitCreatedAt: 'DESC' },
-        })
-      }
-      const { conditions, rest } = parseQuery(query)
-      return await Bit.find({
-        where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
-        relations: ['people'],
-        order: { bitCreatedAt: 'DESC' },
-        take: 8,
-      })
+      const results = await getResults(query)
+      this.bitResultsId = (this.bitResultsId + 1) % Number.MAX_VALUE
+      return results
     },
   ]
 
@@ -207,17 +214,12 @@ export default class AppStore {
   @react({
     defaultValue: { results: [], query: '' },
     fireImmediately: true,
-    delay: 120,
     log: false,
   })
   searchState = [
-    () => [
-      App.state.query,
-      Desktop.searchState.pluginResults || [],
-      this.bitResults || [],
-      this.getResults,
-    ],
-    ([query, pluginResults, bitResults, getResults]) => {
+    () => [App.state.query, this.getResults],
+    async ([query, getResults], { sleep, when }) => {
+      // these are all specialized searches, see below for main search logic
       if (getResults && this.showSettings) {
         return {
           query,
@@ -249,9 +251,22 @@ export default class AppStore {
         message = 'SPACE to search selected channel'
         results = channelResults
       } else {
-        const unsorted = [...bitResults, ...pluginResults]
+        // 🔍 REGULAR SEARCHES GO THROUGH HERE
+        const pluginResultId = Desktop.searchState.pluginResultsId
+        const bitResultsId = this.bitResultsId
+        // debounce
+        await sleep(200)
+        // no jitter - wait for everything to finish
+        await when(() => pluginResultId !== Desktop.searchState.pluginResultId)
+        await when(() => bitResultsId !== this.bitResultsId)
+        const allResultsUnsorted = [
+          ...this.bitResults,
+          ...Desktop.searchState.pluginResults,
+        ]
+        // remove prefixes
         const { rest } = parseQuery(query)
-        results = matchSort(rest, unsorted)
+        // sort
+        results = matchSort(rest, allResultsUnsorted)
       }
       return {
         query,

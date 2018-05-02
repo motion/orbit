@@ -6,7 +6,7 @@ import os from 'os'
 const MAX_PER_DIR = 500
 const MAX_SEARCH_TIME = 150
 const FUZZY_OPTS = {
-  threshold: -150,
+  threshold: -250,
   limit: 5,
 }
 

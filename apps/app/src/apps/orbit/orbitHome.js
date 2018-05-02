@@ -184,10 +184,11 @@ export default class OrbitExplore {
             (name, index) => (
               <RoundButton
                 fontSize={18}
-                sizePadding={1.2}
+                sizePadding={1.7}
                 sizeHeight={1.2}
-                margin={[0, 5]}
+                margin={[0, 1]}
                 key={index}
+                active={index === 0}
               >
                 {name}
               </RoundButton>
@@ -199,6 +200,7 @@ export default class OrbitExplore {
           <Masonry>
             {appStore.summaryResults.map((bit, index) => (
               <OrbitCard
+                pane="summary"
                 key={index}
                 index={index}
                 bit={bit}
@@ -222,16 +224,16 @@ export default class OrbitExplore {
       padding: [0, 15],
     },
     subtitle: {
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: 300,
       lineHeight: '1.5rem',
       marginTop: 16,
-      marginBottom: 3,
+      marginBottom: 0,
       padding: 0,
       flexFlow: 'row',
     },
     bolder: {
-      fontSize: 26,
+      fontSize: 22,
       fontWeight: 200,
     },
     super: {

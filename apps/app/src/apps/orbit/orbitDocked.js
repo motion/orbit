@@ -40,7 +40,7 @@ class OrbitDocked {
             onClick={appStore.toggleSettings}
           />
           <OrbitHome if={!appStore.showSettings} appStore={appStore} />
-          <OrbitSearchResults />
+          <OrbitSearchResults parentPane="summary" />
           <OrbitSettings />
         </orbitInner>
       </frame>

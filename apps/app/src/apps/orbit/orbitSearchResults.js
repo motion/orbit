@@ -8,7 +8,7 @@ import * as UI from '@mcro/ui'
 @view.attach('appStore')
 @view
 export default class OrbitSearchResults {
-  render({ appStore, theme }) {
+  render({ appStore, theme, parentPane }) {
     const { query, results, message } = appStore.searchState
     const hasQuery = !!query
     const isChanging = App.state.query !== query
@@ -32,6 +32,7 @@ export default class OrbitSearchResults {
         >
           {results.map((bit, index) => (
             <OrbitCard
+              pane={`${parentPane}-search`}
               key={`${index}${bit.identifier || bit.id}`}
               index={index}
               total={results.length}

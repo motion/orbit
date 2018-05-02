@@ -91,7 +91,7 @@ export default class BitSlackMessage {
       alignItems: 'center',
     },
     username: {
-      fontWeight: 600,
+      fontWeight: 400,
       fontSize: 14,
       color: '#000',
       margin: [0, 0, 1],
@@ -110,9 +110,9 @@ export default class BitSlackMessage {
     },
     avatar: {
       borderRadius: 100,
-      width: 16,
-      height: 16,
-      marginRight: 3,
+      width: 15,
+      height: 15,
+      marginRight: 5,
       marginLeft: -1,
     },
     content: {

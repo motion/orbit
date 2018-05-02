@@ -27,7 +27,7 @@ export class Mail {
           <messages if={messages}>
             {messages.map((message, index) => {
               return (
-                <message key={message.id}>
+                <message key={`${index}${message.id}`}>
                   <row
                     css={{
                       flexFlow: 'row',
@@ -69,12 +69,12 @@ export class Mail {
                   </row>
                   <UI.Text if={message.snippet} lineHeight={23} size={1.1}>
                     {_.flatten(
-                      message.snippet
-                        .split('\n')
-                        .map((i, idx) => [
-                          <p key={idx}>{i}</p>,
-                          <br key={`br-${idx}`} />,
-                        ]),
+                      message.snippet.split('\n').map((i, idx) => (
+                        <React.Fragment key={idx}>
+                          <p key={idx}>{i}</p>
+                          <br />
+                        </React.Fragment>
+                      )),
                     )}
                   </UI.Text>
                   <pre if={false}>

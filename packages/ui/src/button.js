@@ -80,6 +80,7 @@ export default class Button extends React.Component {
       outline: 0,
       flexWrap: 'nowrap',
       whiteSpace: 'pre',
+      cursor: 'default',
     },
     badge: {
       position: 'absolute',

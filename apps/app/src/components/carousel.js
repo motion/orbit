@@ -10,6 +10,7 @@ export default class Carousel {
         {items.map((bit, index) => (
           <OrbitCard
             key={`${index}${bit.id}`}
+            pane="carousel"
             appStore={appStore}
             bit={bit}
             index={index}

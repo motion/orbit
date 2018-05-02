@@ -19,10 +19,17 @@ class OrbitCardStore {
 
   @react({ fireImmediately: true, log: false })
   updateIsSelected = [
-    () => this.props.appStore.activeIndex,
+    () =>
+      this.props.appStore.selectedPane === this.props.pane &&
+      this.props.appStore.activeIndex,
     index => {
+      // not selected
+      if (index === false) {
+        return
+      }
       const isSelected = index === this.props.index
       if (isSelected !== this._isSelected) {
+        console.log('set selected', index, this.props.pane, isSelected)
         this._isSelected = isSelected
       }
     },
@@ -219,7 +226,7 @@ export default class OrbitCard {
         {this.getOrbitCard}
       </BitContent>
     )
-    if (this.isExpanded && !listItem) {
+    if (this.isExpanded && store.isSelected && !listItem) {
       return <UI.Theme name="light">{contents}</UI.Theme>
     }
     return contents
@@ -269,6 +276,7 @@ export default class OrbitCard {
     },
     preview: {
       margin: [3, 0, 2],
+      height: 22,
       flexFlow: 'row',
       alignItems: 'center',
       // justifyContent: 'center',
@@ -294,7 +302,7 @@ export default class OrbitCard {
     },
   }
 
-  static theme = ({ store, tiny, listItem }, theme) => {
+  static theme = ({ index, store, tiny, listItem }, theme) => {
     const { isSelected } = store
     let hoveredStyle
     let card

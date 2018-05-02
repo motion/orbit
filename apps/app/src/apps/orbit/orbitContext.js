@@ -72,7 +72,7 @@ export default class Orbit {
               </contextHeader>
               <Results isContext />
             </orbitContext>
-            <OrbitSearchResults />
+            <OrbitSearchResults parentPane="context" />
           </orbitInner>
         </OrbitFrame>
       </UI.Theme>

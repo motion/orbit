@@ -7,10 +7,14 @@ import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
 
 const isMouseOver = (bounds, mousePosition) => {
-  if (!bounds || !mousePosition) return false
+  if (!bounds || !mousePosition) {
+    return false
+  }
   const { x, y } = mousePosition
   const { position, size } = bounds
-  if (!position || !size) return false
+  if (!position || !size) {
+    return false
+  }
   const withinX = x > position[0] && x < position[0] + size[0]
   const withinY = y > position[1] && y < position[1] + size[1]
   return withinX && withinY
@@ -260,11 +264,12 @@ export default class DesktopScreen {
     clearTimeout(this.mouseOverShowDelay)
     const { hidden, position, docked } = App.orbitState
     const { target } = App.peekState
+    const peekHovered = target && isMouseOver(App.peekState, mousePos)
     if (docked) {
       if (mousePos.x > App.state.screenSize[0] - App.dockedWidth) {
-        Desktop.setHoverState({ orbitHovered: true })
+        Desktop.setHoverState({ orbitHovered: true, peekHovered })
       } else {
-        Desktop.setHoverState({ orbitHovered: false })
+        Desktop.setHoverState({ orbitHovered: false, peekHovered })
       }
       return
     }
@@ -290,7 +295,6 @@ export default class DesktopScreen {
       return
     }
     const orbitHovered = position && isMouseOver(App.orbitState, mousePos)
-    const peekHovered = target && isMouseOver(App.peekState, mousePos)
     Desktop.setHoverState({ orbitHovered, peekHovered })
   }
 

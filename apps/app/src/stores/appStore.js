@@ -95,6 +95,24 @@ export default class AppStore {
     return App.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
   }
 
+  get selectedPane() {
+    if (App.orbitState.docked) {
+      if (this.searchState.query) {
+        return 'summary-search'
+      }
+      return 'summary'
+    }
+    if (Desktop.hoverState.peekHovered) {
+      return 'carousel'
+    }
+    if (!App.orbitState.hidden) {
+      if (this.searchState.query) {
+        return 'context-search'
+      }
+      return 'context'
+    }
+  }
+
   async willMount() {
     this.updateScreenSize()
     this.getSettings()

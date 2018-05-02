@@ -29,5 +29,6 @@ export default class PeekPage {
         </PeekFrame>
       </UI.Theme>
     )
-  }ß
+  }
+  ß
 }

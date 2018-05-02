@@ -33,7 +33,7 @@ export class Conversation {
     return (
       <BitContent
         appStore={appStore}
-        result={bit}
+        bit={bit}
         shownLimit={Infinity}
         itemProps={{
           contentStyle: {
@@ -70,11 +70,11 @@ export class Conversation {
                   <section>
                     <SubTitle>Recent and Related Conversations</SubTitle>
                     <br />
-                    {appStore.summaryResults.slice(0, 3).map((item, index) => (
-                      <React.Fragment key={`${item.id}${index}`}>
+                    {appStore.summaryResults.slice(0, 3).map((bit, index) => (
+                      <React.Fragment key={`${bit.id}${index}`}>
                         <BitContent
                           appStore={appStore}
-                          result={item}
+                          bit={bit}
                           shownLimit={Infinity}
                           itemProps={{
                             contentStyle: {

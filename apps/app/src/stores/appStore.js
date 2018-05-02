@@ -291,7 +291,7 @@ export default class AppStore {
       ? this.dockedResultRefs[index]
       : this.resultRefs[index]
     if (!ref) {
-      throw 'errrrrrr'
+      throw `no result ref for index ${index} docked? ${App.orbitState.docked}`
     }
     const { top, left, height } = ref.getBoundingClientRect()
     return {
@@ -347,11 +347,12 @@ export default class AppStore {
   getHoverProps = Helpers.hoverSettler({
     enterDelay: 80,
     betweenDelay: 30,
-    onHovered: (res) => {
+    onHovered: res => {
       if (!res) {
         this.clearSelected()
       } else {
-        this.pinSelected(res.index, res.bit)
+        console.log('hover pin', res)
+        this.pinSelected(res.id, res.bit)
       }
     },
   })

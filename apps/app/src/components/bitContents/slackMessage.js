@@ -54,7 +54,7 @@ export default class BitSlackMessage {
                   integration: '',
                 },
               })
-              appStore.pinSelected()
+              appStore.pinSelected(-1, person)
             }}
           >
             <inner>

@@ -95,6 +95,7 @@ export default class BitSlackConversation {
   static style = {
     meta: {
       flexFlow: 'row',
+      alignItems: 'center',
       opacity: 0.5,
     },
     space: {

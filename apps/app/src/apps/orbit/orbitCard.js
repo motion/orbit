@@ -153,11 +153,11 @@ export default class OrbitCard {
           <subtitle if={!tiny && typeof subtitle === 'object'}>
             {subtitle}
           </subtitle>
-          <preview if={preview}>
+          <preview if={preview || location || icon}>
             <OrbitIcon
               if={icon}
               icon={icon}
-              size={12}
+              size={14}
               $icon
               css={{
                 filter: isExpanded ? 'none' : 'grayscale(50%)',
@@ -199,7 +199,7 @@ export default class OrbitCard {
             <orbital if={false} />
             <UI.Date>{bit.bitUpdatedAt}</UI.Date>
             <Text if={via} opacity={0.5} size={0.9}>
-              {via || bit.integration}
+              {via}
             </Text>
             <div $$flex />
             {bottomAfter}
@@ -260,14 +260,14 @@ export default class OrbitCard {
       flex: 1,
     },
     icon: {
-      margin: [-4, 8, 0, 0],
+      margin: [-1, 5, 0, 0],
     },
     full: {
       padding: [2, 0],
     },
     bottom: {
       opacity: 0.5,
-      marginTop: 3,
+      marginTop: 5,
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',
@@ -275,8 +275,8 @@ export default class OrbitCard {
       // flex: 1,
     },
     preview: {
-      margin: [3, 0, 2],
-      height: 22,
+      margin: [2, 0],
+      height: 20,
       flexFlow: 'row',
       alignItems: 'center',
       // justifyContent: 'center',

@@ -14,7 +14,10 @@ class PeekFrameStore {
     if (!App.peekState.target) {
       return null
     }
-    return App.peekState
+    if (App.orbitState.docked || !App.orbitState.hidden) {
+      return App.peekState
+    }
+    return null
   }
 
   @react({ delay: 16, fireImmediately: true, log: false })
@@ -70,7 +73,6 @@ export default class PeekFrame {
     const x = state.position[0] + peekAdjustX
     const y =
       state.position[1] + ((willShow && !willStayShown) || willHide ? -8 : 0)
-    log(`peekpos ${x} ${y} (${peekAdjustX} ${docked})`)
     return (
       <peekFrame
         css={{

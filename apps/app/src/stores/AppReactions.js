@@ -81,7 +81,7 @@ export default class AppReactions {
     App.setOrbitState({ hidden: true })
   }
 
-  @react
+  @react({ log: 'state' })
   handleHoldingOption = [
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {

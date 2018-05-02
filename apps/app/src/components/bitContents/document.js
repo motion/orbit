@@ -1,9 +1,8 @@
 export default ({ bit, children }) =>
   children({
     title: bit.title,
-    icon: 'gdoc',
-    location: 'Folder',
+    icon: 'gdocs',
+    location: bit.data.spaces[0],
     date: Date.now(),
-    subtitle: bit.integration,
     content: bit.body,
   })

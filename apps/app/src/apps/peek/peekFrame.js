@@ -37,6 +37,12 @@ class PeekFrameStore {
 }
 
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
+const transitions = store => {
+  if (store.isHidden) return 'none'
+  if (store.willHide) return 'all ease-in 200ms'
+  if (store.willStayShown) return 'all ease-in 120ms'
+  return 'all ease-in 150ms'
+}
 
 @UI.injectTheme
 @view({
@@ -89,12 +95,11 @@ export default class PeekFrame {
           arrowSize / 2,
       state.size[1] - borderRadius * 2 - arrowSize,
     )
+    const transition = transitions(store)
     return (
       <peekFrame
         css={{
-          transition: isHidden
-            ? 'none'
-            : willHide ? 'all ease-in 200ms' : 'all ease-in 150ms',
+          transition,
           opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
           width: state.size[0],
           height: state.size[1],

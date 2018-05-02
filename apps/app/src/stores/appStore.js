@@ -222,6 +222,9 @@ export default class AppStore {
   ]
 
   get results() {
+    if (this.selectedPane === 'summary') {
+      return this.summaryResults
+    }
     return this.searchState.results || []
   }
 
@@ -320,6 +323,9 @@ export default class AppStore {
   })
 
   getTargetPosition = index => {
+    if (index === -1) {
+      return null
+    }
     const ref = App.orbitState.docked
       ? this.dockedResultRefs[index]
       : this.resultRefs[index]
@@ -361,7 +367,8 @@ export default class AppStore {
     }
   }
 
-  pinSelected = (index, bit) => {
+  pinSelected = (index, setBit) => {
+    const bit = setBit || this.results[index]
     this.setActive(index)
     const target = this.getTargetPosition(index)
     const position = peekPosition(target)

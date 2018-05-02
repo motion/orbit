@@ -308,7 +308,7 @@ export default class OrbitCard {
     },
   }
 
-  static theme = ({ index, store, tiny, listItem }, theme) => {
+  static theme = ({ store, tiny, listItem }, theme) => {
     const { isSelected } = store
     let hoveredStyle
     let card

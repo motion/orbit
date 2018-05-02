@@ -159,7 +159,7 @@ export default class OrbitExplore {
             {...exploreButton}
           />
           <space $$flex />
-          <UI.Text size={1.1} css={{ margin: [0, 15] }}>
+          <UI.Text size={1.15} css={{ margin: [0, 15] }}>
             <strong>4</strong> new from{' '}
             <span
               css={{
@@ -190,7 +190,9 @@ export default class OrbitExplore {
                   sizeRadius={0.9}
                   margin={[0, 1]}
                   key={index}
-                  active={index === 0}
+                  css={{
+                    opacity: index === 0 ? 1 : 0.7,
+                  }}
                 >
                   {name}
                 </RoundButton>
@@ -260,7 +262,7 @@ export default class OrbitExplore {
     explore: {
       width: '100%',
       flexFlow: 'row',
-      padding: [8, 8, 4],
+      padding: [10, 8, 4],
       alignItems: 'center',
     },
     item: {
@@ -275,7 +277,7 @@ export default class OrbitExplore {
     filterSection: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [0, 15, 10],
+      padding: [0, 15, 15],
     },
     title: {
       padding: [0, 15, 0, 0],

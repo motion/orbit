@@ -163,12 +163,11 @@ export default class AppReactions {
   })
   hideOrbitOnMouseOut = [
     () => [
-      !App.orbitState.hidden,
       Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered,
-      // react to peek closing to see if app should too
       App.peekState.target,
     ],
-    async ([isShown, mouseOver], { sleep }) => {
+    async ([mouseOver], { sleep }) => {
+      const isShown = !App.orbitState.hidden
       if (!isShown || mouseOver || App.orbitState.pinned) {
         throw react.cancel
       }

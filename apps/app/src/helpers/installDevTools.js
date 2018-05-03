@@ -11,6 +11,7 @@ import _ from 'lodash'
 import * as Black from '@mcro/black'
 import r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
+import * as MobxReact from 'mobx-react-devtools'
 
 // Mobx.useStrict(true)
 
@@ -43,6 +44,7 @@ window.ReactDOM = ReactDOM
 window.Constants = Constants
 window.Mobx = Mobx
 window.MobxUtils = MobxUtils
+window.MobxReact = MobxReact
 window.Constants = Constants
 window._ = _
 window.log = Black.log

@@ -34,6 +34,7 @@ class Bridge {
   _awaitingSocket = []
   _store = null
   _options: Options
+  queuedState = []
   _queuedState = false
   _wsOpen = false
   _source = ''
@@ -248,12 +249,21 @@ class Bridge {
           this._queuedState = true
           return changedState
         }
-        this._socket.send(
-          JSON.stringify({ state: changedState, source: this._source }),
-        )
+        // setTimeout to batch sending
+        if (!this.queuedState.length) {
+          setTimeout(this.sendQueuedState)
+        }
+        this.queuedState.push({ state: changedState, source: this._source })
       }
     }
     return changedState
+  }
+
+  sendQueuedState = () => {
+    for (const data of this.queuedState) {
+      this._socket.send(JSON.stringify(data))
+    }
+    this.queuedState = []
   }
 
   // private

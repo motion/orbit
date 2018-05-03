@@ -7,14 +7,13 @@ import OrbitHomeHeader from './orbitHome/orbitHomeHeader'
 import Masonry from '~/views/masonry'
 
 class OrbitHomeStore {
-  willUnmount() {
-    this.props.appStore.setGetResults(null)
-  }
-
   @react({ fireImmediately: true })
   setExploreResults = [
     () => !!App.state.query,
     hasQuery => {
+      if (this.props.appStore.selectedPane !== 'summary') {
+        return
+      }
       const { appStore } = this.props
       if (hasQuery) {
         appStore.setGetResults(null)

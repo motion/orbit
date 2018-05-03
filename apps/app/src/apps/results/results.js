@@ -1,96 +1,31 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import OrbitCard from '~/apps/orbit/orbitCard'
 import { throttle } from 'lodash'
-import { App } from '@mcro/all'
 
-// const getPosition = node => {
-//   const parentRect = node.parentElement.parentElement.getBoundingClientRect()
-//   const rect = node.getBoundingClientRect()
-//   const computedStyle = getComputedStyle(node)
-//   const marginTop = parseInt(computedStyle.marginTop, 10)
-//   const marginLeft = parseInt(computedStyle.marginLeft, 10)
-//   const res = {
-//     top: rect.top - marginTop - parentRect.top,
-//     left: rect.left - marginLeft - parentRect.left,
-//     width: rect.width,
-//     height: rect.height,
-//   }
-//   return res
-// }
+class ResultsStore {
+  results = []
 
-// @view
-// class AnimateItem extends React.Component {
-//   childRef = null
-//   measurements = null
+  get appStore() {
+    return this.props.appStore
+  }
 
-//   state = {
-//     children: null,
-//   }
-
-//   componentDidMount() {
-//     this.updateChildren()
-//   }
-
-//   componentWillReceiveProps(nextProps) {
-//     this.updateChildren(nextProps)
-//   }
-
-//   componentDidUpdate() {
-//     if (this.state.willMeasure) {
-//       this.measurements = getPosition(this.childRef)
-//       this.setState({ willMeasure: false })
-//     }
-//   }
-
-//   getRef(childRef) {
-//     this.childRef = childRef
-//   }
-
-//   updateChildren(props = this.props) {
-//     this.setState({
-//       willMeasure: true,
-//       children: React.cloneElement(props.children, {
-//         getRef: this.getRef.bind(this),
-//       }),
-//     })
-//   }
-
-//   render() {
-//     console.log('--', this.props.id, this.measurements)
-//     return (
-//       <React.Fragment>
-//         <hiddenContainer>{this.state.children}</hiddenContainer>
-//         <React.Fragment if={this.childRef}>
-//           {React.cloneElement(this.props.children, {
-//             style: {
-//               position: 'absolute',
-//               transition: 'all ease-in 2500ms',
-//               height: this.measurements.height,
-//               transform: `translateX(${this.measurements.left}px) translateY(${
-//                 this.measurements.top
-//               }px)`,
-//             },
-//           })}
-//         </React.Fragment>
-//       </React.Fragment>
-//     )
-//   }
-
-//   static style = {
-//     hiddenContainer: {
-//       opacity: 0,
-//       // position: 'absolute',
-//       // top: 0,
-//       // left: 0,
-//       // right: 0,
-//       // bottom: 0,
-//     },
-//   }
-// }
+  @react({ fireImmediately: true })
+  updateResults = [
+    () => [this.appStore.searchState.results, this.appStore.selectedPane],
+    ([results, selectedPane]) => {
+      if (selectedPane !== 'context') {
+        throw react.cancel
+      }
+      this.results = results
+    },
+  ]
+}
 
 @view.attach('appStore')
-@view
+@view({
+  store: ResultsStore,
+})
 export default class Results {
   frameRef = null
   state = {
@@ -128,8 +63,8 @@ export default class Results {
     }
   }, 16)
 
-  render({ appStore, isContext }, { resultsRef, isScrolled, isOverflowing }) {
-    const { results } = appStore.searchState
+  render({ appStore, store }, { resultsRef, isScrolled, isOverflowing }) {
+    const { results } = store
     const total = results.length
     return (
       <resultsFrame ref={this.setResultsFrame}>
@@ -140,6 +75,7 @@ export default class Results {
             {results.map((bit, i) => (
               <OrbitCard
                 key={`${i}${bit.id}`}
+                pane="context"
                 parentElement={resultsRef}
                 appStore={appStore}
                 bit={bit}

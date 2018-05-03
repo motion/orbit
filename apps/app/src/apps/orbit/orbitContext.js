@@ -45,11 +45,7 @@ export default class Orbit {
     const { orbitOnLeft } = App
     return (
       <UI.Theme name="tan">
-        <OrbitFrame
-          headerBg={headerBg}
-          orbitPage={orbitPage}
-          shouldShow={() => !App.orbitState.hidden && !App.orbitState.docked}
-        >
+        <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
           <orbitInner>
             <orbitContext
@@ -71,7 +67,7 @@ export default class Orbit {
               </contextHeader>
               <Results isContext />
             </orbitContext>
-            <OrbitSearchResults if={false} parentPane="context" />
+            <OrbitSearchResults parentPane="context" />
           </orbitInner>
         </OrbitFrame>
       </UI.Theme>

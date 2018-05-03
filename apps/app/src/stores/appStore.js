@@ -292,27 +292,21 @@ export default class AppStore {
   ]
 
   @react({
-    fireImmediately: true,
     defaultValue: [],
   })
-  summaryResults = [
-    () => 0,
-    async () => {
-      return [
-        ...(await Promise.all([
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation', 1),
-          findType('slack', 'conversation', 2),
-          findType('google', 'document'),
-          findType('google', 'mail'),
-          findType('google', 'mail', 1),
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation'),
-        ])),
-      ].filter(Boolean)
-    },
-  ]
+  summaryResults = async () => {
+    return (await Promise.all([
+      findType('slack', 'conversation'),
+      findType('slack', 'conversation', 1),
+      findType('slack', 'conversation', 2),
+      findType('google', 'document'),
+      findType('google', 'mail'),
+      findType('google', 'mail', 1),
+      findType('slack', 'conversation'),
+      findType('slack', 'conversation'),
+      findType('slack', 'conversation'),
+    ])).filter(Boolean)
+  }
 
   setResultRef = _.memoize(index => ref => {
     this.resultRefs[index] = ref
@@ -350,8 +344,10 @@ export default class AppStore {
   lastSelectAt = 0
 
   setActive = index => {
-    this.lastSelectAt = Date.now()
-    this.activeIndex = index
+    if (index !== this.activeIndex) {
+      this.lastSelectAt = Date.now()
+      this.activeIndex = index
+    }
   }
 
   toggleSelected = (index, bit) => {

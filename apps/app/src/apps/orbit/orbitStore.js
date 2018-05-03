@@ -42,7 +42,6 @@ export default class OrbitStore {
       pinSelected,
       showSettings,
     } = this.props.appStore
-    console.log(activeIndex, results.length)
     const increment = (by = 1) =>
       pinSelected(Math.min(results.length - 1, activeIndex + by))
     const decrement = (by = 1) => pinSelected(Math.max(-1, activeIndex - by))

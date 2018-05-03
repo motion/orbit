@@ -69,23 +69,9 @@ class DesktopStore {
     x => (this.results = x),
   ]
 
-  get isHoldingOptionPure(): Boolean {
+  get isHoldingOption(): Boolean {
     const { option, optionUp } = Desktop.state.keyboardState
     return (option || 0) > (optionUp || 1)
-  }
-
-  // dont count if holding option+shift (fullscreen)
-  get isHoldingOption(): Boolean {
-    return this.isHoldingOptionPure && !this.isHoldingShift
-  }
-
-  get isHoldingShift() {
-    const { shift, shiftUp } = Desktop.state.keyboardState
-    return (shift || 0) > (shiftUp || 1)
-  }
-
-  get isHoldingOptionShift(): Boolean {
-    return this.isHoldingShift && this.isHoldingOptionPure
   }
 
   get shouldHide() {

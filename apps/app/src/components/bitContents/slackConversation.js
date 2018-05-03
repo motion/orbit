@@ -5,11 +5,23 @@ import * as UI from '@mcro/ui'
 import { RoundButton } from '~/views'
 
 // const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
-const exampleTitles = [
-  `Context and TSNE`,
-  `Superhuman and funny`,
-  `Search and nlp`,
-  `Sketching and creatively`,
+const exampleContent = [
+  {
+    title: `Steel, Jacob, Nick & 3 more`,
+    preview: 'a16z, venture, Formidable, coffee',
+  },
+  {
+    title: `Nate and Nick`,
+    preview: 'a16z, venture, Formidable, coffee',
+  },
+  {
+    title: `Kevin, Mehak & 4 more`,
+    preview: 'a16z, venture, Formidable, coffee',
+  },
+  {
+    title: `Julie and Cam`,
+    preview: 'a16z, venture, Formidable, coffee',
+  },
 ]
 const uids = {}
 
@@ -21,10 +33,13 @@ export default class BitSlackConversation {
   }
 
   render({ children, bit, appStore, shownLimit, theme, contentStyle }) {
-    const uid = uids[bit.id] || Math.floor(Math.random() * exampleTitles.length)
+    const uid =
+      uids[bit.id] || Math.floor(Math.random() * exampleContent.length)
     uids[bit.id] = uid
+    const { title, preview } = exampleContent[uid]
     return children({
-      title: exampleTitles[uid],
+      title,
+      preview,
       icon: 'slack',
       location: (
         <RoundButton
@@ -71,8 +86,6 @@ export default class BitSlackConversation {
           />
         </row>
       ),
-      // via: bit.title,
-      preview: bit.body,
       content: (bit.data.messages || [])
         .slice(0, shownLimit)
         .map((message, index) => (

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import WindowControls from '~/views/windowControls'
@@ -22,11 +22,7 @@ const transitions = store => {
 @view
 export default class PeekFrame {
   render({ peekStore, children, ...props }) {
-    const { willShow, willHide, curState, lastState, willStayShown } = peekStore
-    let state = curState
-    if (willHide) {
-      state = lastState
-    }
+    const { willShow, willHide, state, willStayShown } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }

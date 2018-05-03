@@ -6,7 +6,7 @@
   * stress / deep work / fomo
   * duplicate work
   * reducing unecessary reach-out interruptions
-  * lack of a coherent home for your company (you have a shitty intranet)
+  * lack of a coherent home for your company
 
 * how we do it
 
@@ -38,7 +38,7 @@
   * better explore/curation
     * pin results to top of searches
     * explorable sets of things
-  * custom applications with insant deploy
+  * application
     * hook into all the cool features (contextual, nlp)
     * provide a really nice base for building (data, style, ui kit)
 

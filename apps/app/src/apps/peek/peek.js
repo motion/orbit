@@ -27,6 +27,14 @@ class PeekStore {
     },
   ]
 
+  get state() {
+    let state = this.curState
+    if (this.willHide) {
+      state = this.lastState
+    }
+    return state
+  }
+
   get curState() {
     if (!App.peekState.target) {
       return null
@@ -60,7 +68,10 @@ class PeekStore {
 @view
 export default class PeekPage {
   render({ peekStore, appStore }) {
-    const { bit } = App.peekState
+    if (!peekStore.state) {
+      return null
+    }
+    const { bit } = peekStore.state
     const type = (bit && capitalize(bit.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
     if (!PeekContentsView) {

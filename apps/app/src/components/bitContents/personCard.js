@@ -6,7 +6,8 @@ import * as UI from '@mcro/ui'
 export default class BitSlackConversation {
   render({ children, bit }) {
     return children({
-      preview: (
+      preview: bit.data.profile.email,
+      content: (
         <test>
           <img $avatar src={bit.data.profile.image_512} />
           <UI.Text fontWeight={800} color="#000">

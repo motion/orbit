@@ -8,6 +8,6 @@ export default ({ bit, children }) =>
     location: Helpers.getHeaderFromShort(bit),
     date: Date.now(),
     subtitle: <UI.Date>{new Date(bit.bitUpdatedAt)}</UI.Date>,
-    preview: bit.body,
     content: bit.body,
+    preview: `electronic invoice, April 1, April 30`,
   })

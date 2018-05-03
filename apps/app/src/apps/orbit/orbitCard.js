@@ -4,10 +4,6 @@ import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 import bitContents from '~/components/bitContents'
 
-const SubTitle = props => (
-  <UI.Title size={0.9} opacity={0.7} ellipse={1} {...props} />
-)
-
 class OrbitCardStore {
   _isSelected = false
 
@@ -108,10 +104,9 @@ export default class OrbitCard {
     title,
     via,
     icon,
-    content,
-    subtitle,
-    location,
     preview,
+    location,
+    subtitle,
     permalink,
     date,
   }) {
@@ -125,13 +120,12 @@ export default class OrbitCard {
     } = this.props
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     const isExpanded = this.isExpanded
-    const showPreview = !tiny && !isExpanded
-    const hasPreviewLine = preview || location
+    const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
       <OrbitIcon
         if={icon}
         icon={icon}
-        size={hasPreviewLine ? 14 : 18}
+        size={hasSubtitle ? 14 : 18}
         $orbitIcon
         css={{
           filter: isExpanded ? 'none' : 'grayscale(50%)',
@@ -173,29 +167,23 @@ export default class OrbitCard {
             >
               {title}
             </UI.Text>
-            {!hasPreviewLine && orbitIcon}
+            {!hasSubtitle && orbitIcon}
           </title>
-          <SubTitle $subtitle if={!tiny && typeof subtitle === 'string'}>
-            {subtitle}
-          </SubTitle>
-          <subtitle if={!tiny && typeof subtitle === 'object'}>
-            {subtitle}
-          </subtitle>
-          <preview if={hasPreviewLine}>
+          <subtitle if={hasSubtitle}>
             {orbitIcon}
             <UI.Text if={typeof location === 'string'} opacity={0.7}>
               {location}&nbsp;&nbsp;
             </UI.Text>
             {typeof location !== 'string' && location}
             <UI.Text
-              if={showPreview && typeof preview === 'string'}
+              if={typeof subtitle === 'string'}
               color="#333"
               ellipse={1}
               css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
             >
-              {preview}
+              {subtitle}
             </UI.Text>
-            {typeof preview !== 'string' && preview}
+            {typeof subtitle !== 'string' && subtitle}
             <space if={date} $$flex />
             <date
               if={date}
@@ -203,19 +191,18 @@ export default class OrbitCard {
             >
               <UI.Text opacity={0.5}>2m</UI.Text>
             </date>
+          </subtitle>
+          <preview if={preview}>
+            {typeof preview !== 'string' && preview}
+            <UI.Text
+              if={typeof preview === 'string'}
+              color="#333"
+              ellipse={5}
+              size={1.3}
+            >
+              {preview}
+            </UI.Text>
           </preview>
-          <content if={location || content}>
-            <full if={content && !tiny && isExpanded}>
-              {typeof content !== 'string' && content}
-              <UI.Text
-                if={typeof content === 'string'}
-                color="#333"
-                ellipse={5}
-              >
-                {content}
-              </UI.Text>
-            </full>
-          </content>
           <bottom if={!tiny && (bottom || permalink || via)}>
             <permalink if={isExpanded}>{permalink}</permalink>
             <space if={permalink} />
@@ -276,18 +263,12 @@ export default class OrbitCard {
       flexFlow: 'row',
       justifyContent: 'space-between',
     },
-    subtitle: {
-      margin: [2, 0, 0],
-    },
     cardHovered: {},
-    content: {
+    preview: {
       flex: 1,
     },
     orbitIcon: {
       margin: [0, 6, 0, 0],
-    },
-    full: {
-      padding: [2, 0],
     },
     bottom: {
       opacity: 0.5,
@@ -298,7 +279,7 @@ export default class OrbitCard {
       // justifyContent: 'center',
       // flex: 1,
     },
-    preview: {
+    subtitle: {
       margin: [2, 0, 3, 0],
       height: 20,
       flexFlow: 'row',

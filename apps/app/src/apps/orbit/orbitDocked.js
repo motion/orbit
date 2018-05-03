@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitHome from './orbitHome'
 import OrbitSettings from './orbitSettings'
@@ -10,17 +10,41 @@ import { App } from '@mcro/all'
 const SHADOW_PAD = 85
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
 
+class DockedStore {
+  @react({ log: false })
+  animationState = [
+    () => App.orbitState.docked,
+    async (visible, { sleep, setValue }) => {
+      // old value first to setup for transition
+      setValue({ willAnimate: true, visible: !visible })
+      await sleep(32)
+      // new value, start transition
+      setValue({ willAnimate: true, visible })
+      await sleep(App.animationDuration)
+      // done animating, reset
+      setValue({ willAnimate: false, visible })
+    },
+  ]
+}
+
 @UI.injectTheme
 @view.attach('appStore')
-@view
+@view({
+  store: DockedStore,
+})
 class OrbitDocked {
-  render({ appStore, theme }) {
+  render({ store, appStore, theme }) {
+    if (!store.animationState) {
+      return null
+    }
+    const { visible, willAnimate } = store.animationState
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     return (
       <frame
-        $visible={App.orbitState.docked}
+        $willAnimate={willAnimate}
+        $visible={visible}
         css={{ background, boxShadow: [borderShadow, DOCKED_SHADOW] }}
       >
         <OrbitHeader headerBg={background} />
@@ -64,14 +88,17 @@ class OrbitDocked {
       pointerEvents: 'none',
       width: App.dockedWidth,
       height: '100%',
-      transition: `all ease-in ${App.animationDuration}ms`,
       opacity: 0,
       transform: {
         x: 10,
       },
     },
-    main: {
-      flex: 1,
+    willAnimate: {
+      willChange: 'transform, opacity',
+      transition: `
+        transform ease-in ${App.animationDuration}ms,
+        opacity ease-in ${App.animationDuration}ms
+      `,
     },
     visible: {
       pointerEvents: 'auto',
@@ -79,6 +106,9 @@ class OrbitDocked {
       transform: {
         x: 0,
       },
+    },
+    main: {
+      flex: 1,
     },
     orbitInner: {
       position: 'relative',

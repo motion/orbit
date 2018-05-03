@@ -71,7 +71,7 @@ class AppStore {
 
   @react({ log: false })
   isAnimatingOrbit = [
-    () => App.isShowingOrbit,
+    () => [App.isShowingOrbit, App.orbitState.docked],
     async (_, { sleep, setValue }) => {
       setValue(true)
       await sleep(App.animationDuration)
@@ -81,10 +81,18 @@ class AppStore {
 
   // debounced a little to prevent aggressive reactions
   @react({ delay: 32, log: isOrbit })
-  isFullyHidden = [() => !App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
+  isFullyHidden = [
+    () =>
+      !App.isShowingOrbit && !App.orbitState.docked && !App.isAnimatingOrbit,
+    _ => _,
+  ]
 
   @react({ delay: 32, log: isOrbit })
-  isFullyShown = [() => App.isShowingOrbit && !App.isAnimatingOrbit, _ => _]
+  isFullyShown = [
+    () =>
+      (App.isShowingOrbit || App.orbitState.docked) && !App.isAnimatingOrbit,
+    _ => _,
+  ]
 
   // runs in every app independently
   @react({ fireImmediately: true, log: false })

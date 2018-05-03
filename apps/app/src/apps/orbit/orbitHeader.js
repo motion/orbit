@@ -8,6 +8,8 @@ import ControlButton from '~/views/controlButton'
 class HeaderStore {
   inputRef = null
 
+  setInputRef = ref => (this.input = ref)
+
   focus = () => {
     this.inputRef && this.inputRef.focus()
   }
@@ -47,7 +49,16 @@ export default class OrbitHeader {
     }
   }
 
-  render({ appStore, orbitStore, headerStore, theme, headerBg }) {
+  _hoverProps = null
+  get hoverProps() {
+    if (this._hoverProps) return this._hoverProps
+    this._hoverProps = this.props.appStore.getHoverProps({
+      onHover: this.props.headerStore.hover,
+    })
+    return this._hoverProps
+  }
+
+  render({ orbitStore, headerStore, theme, headerBg }) {
     return (
       <orbitHeader
         $headerBg={headerBg}
@@ -61,9 +72,7 @@ export default class OrbitHeader {
               ? 0
               : Constants.BORDER_RADIUS,
         }}
-        {...appStore.getHoverProps({
-          onHover: headerStore.hover,
-        })}
+        {...this.hoverProps}
       >
         <bottomBorder
           css={{
@@ -92,7 +101,7 @@ export default class OrbitHeader {
             background="transparent"
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
-            ref={headerStore.ref('inputRef').set}
+            ref={headerStore.setInputRef}
             onClick={headerStore.onClickInput}
           />
           <inputLn />

@@ -11,8 +11,6 @@ const animationDuration = App.animationDuration
 const SHADOW_PAD = 85
 const ARROW_PAD = 15
 
-const iWidth = 4
-
 class OrbitFrameStore {
   @react
   wasShowing = [
@@ -63,7 +61,7 @@ export default class OrbitFrame {
           opacity: 0,
           transform: {
             x: orbitOnLeft
-              ? ORBIT_WIDTH * 0.15 - ARROW_PAD - (ARROW_PAD + iWidth) + 4
+              ? ORBIT_WIDTH * 0.15 - ARROW_PAD * 2 + 8
               : -(ORBIT_WIDTH * 0.15),
           },
         }
@@ -86,11 +84,7 @@ export default class OrbitFrame {
           background={headerBg}
           borderColor={borderColor}
         />
-        <OrbitIndicator
-          store={store}
-          iWidth={iWidth}
-          orbitOnLeft={orbitOnLeft}
-        />
+        <OrbitIndicator store={store} orbitOnLeft={orbitOnLeft} />
         <overflowWrap
           $orbitAnimate={store.shouldAnimate}
           css={{

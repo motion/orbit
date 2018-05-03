@@ -3,6 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 import bitContents from '~/components/bitContents'
+import { App } from '@mcro/all'
 
 const SubTitle = props => (
   <UI.Title size={0.9} opacity={0.7} ellipse={1} {...props} />
@@ -22,11 +23,12 @@ class OrbitCardStore {
     () =>
       this.props.appStore.selectedPane === this.props.pane &&
       this.props.appStore.activeIndex,
-    index => {
+    async (index, { when }) => {
       // not selected
       if (index === false) {
         return
       }
+      await when(() => App.isFullyShown && !App.isAnimatingOrbit)
       const isSelected = index === this.props.index
       if (isSelected !== this._isSelected) {
         this._isSelected = isSelected

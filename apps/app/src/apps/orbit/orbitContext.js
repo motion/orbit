@@ -54,8 +54,6 @@ export default class Orbit {
           <orbitInner>
             <orbitContext
               css={{
-                opacity: appStore.showSettings ? 0 : 1,
-                pointerEvents: appStore.showSettings ? 'none' : 'auto',
                 background: theme.base.background,
               }}
             >
@@ -73,7 +71,7 @@ export default class Orbit {
               </contextHeader>
               <Results isContext />
             </orbitContext>
-            <OrbitSearchResults parentPane="context" />
+            <OrbitSearchResults if={false} parentPane="context" />
           </orbitInner>
         </OrbitFrame>
       </UI.Theme>

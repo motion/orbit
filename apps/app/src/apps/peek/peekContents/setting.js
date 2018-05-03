@@ -42,8 +42,19 @@ const EmptyPane = () => <div>no setting pane</div>
   },
 })
 export class Setting {
+  handleRefresh = async () => {
+    const store = this.props.store
+    const job = new Job()
+    job.type = store.bit.integration
+    job.action = 'mail'
+    job.status = Job.statuses.PENDING
+    await job.save()
+    console.log('created new job', job)
+    store.update()
+    this.props.appStore.getSettings()
+  }
+
   render({ appStore, store }) {
-    console.log('MOUNTING A SETTING VIEW')
     if (!store.setting || !store.setting.token) {
       console.log('no setting or token', store.setting)
       return null
@@ -75,16 +86,7 @@ export class Setting {
               <UI.Button
                 icon="refresh"
                 tooltip="Refresh"
-                onClick={async () => {
-                  const job = new Job()
-                  job.type = integration
-                  job.action = 'mail'
-                  job.status = Job.statuses.PENDING
-                  await job.save()
-                  console.log('created new job', job)
-                  store.update()
-                  appStore.getSettings()
-                }}
+                onClick={this.handleRefresh}
               />
               <UI.Popover
                 openOnHover
@@ -114,9 +116,6 @@ export class Setting {
             setting={setting}
             update={store.update}
           />
-          <pre if={false} css={{ opacity: 0.5 }}>
-            {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
-          </pre>
         </body>
       </React.Fragment>
     )

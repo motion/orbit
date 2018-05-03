@@ -17,7 +17,6 @@ const appTarget = ({ offset, bounds }) => {
 export default class AppReactions {
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
-
     if (window.messageAttached) {
       return
     }

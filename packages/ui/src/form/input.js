@@ -122,6 +122,7 @@ export default class Input extends React.PureComponent<Props> {
         wrapElement
         tagName={TAG_MAP[type] || type}
         className="input"
+        tagName="input"
         name={name}
         type={type}
         elementProps={{
@@ -129,6 +130,7 @@ export default class Input extends React.PureComponent<Props> {
           onChange,
           style: {
             width: '100%',
+            pointerEvents: 'auto',
             padding: `0 ${10 * size}px`,
             ...style,
           },

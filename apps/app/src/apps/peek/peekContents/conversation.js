@@ -7,6 +7,7 @@ import Carousel from '~/components/carousel'
 import { SubTitle } from '~/views'
 import OrbitDivider from '~/apps/orbit/orbitDivider'
 import { Bit, Person } from '@mcro/models'
+import * as UI from '@mcro/ui'
 
 class ConversationPeek {
   @react({ defaultValue: [] })
@@ -64,7 +65,14 @@ export class Conversation {
               />
               <main>
                 <mainInner>
-                  <content>{content}</content>
+                  <content>
+                    <UI.Text css={{ margin: [5, 0, 20] }} size={1.2}>
+                      In this conversation <strong>Nick</strong>,{' '}
+                      <strong>Nate</strong>, and 4 other people discussed a16z
+                      partners, orbit domain, mock-up, Formidable and refactor.
+                    </UI.Text>
+                    {content}
+                  </content>
                   <OrbitDivider />
                   <section>
                     <SubTitle>Related</SubTitle>

@@ -82,7 +82,7 @@ export default class OrbitHomeHeader {
             {...exploreButton}
           />
           <space $$flex />
-          <UI.Text size={1.15} css={{ margin: [0, 15] }}>
+          <UI.Text if={false} size={1.15} css={{ margin: [0, 15] }}>
             <span
               css={{
                 paddingBottom: 2,

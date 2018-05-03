@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
@@ -6,14 +7,24 @@ import { App } from '@mcro/all'
 @view.attach('appStore')
 @UI.injectTheme
 @view
-export default class Card {
+export default class Card extends React.Component {
+  hoverSettler = this.props.appStore.getHoverSettler()
+
+  setRef = ref => {
+    this.ref = ref
+    if (!ref) return
+    this.hoverSettler.setItem({ id: -1, ref })
+  }
+
   render({ id, icon, title, index, subtitle, isActive, appStore, oauth }) {
     const isSelected =
       appStore.selectedIndex === index && !!App.peekState.target
     return (
       <card
         key={index}
+        ref={this.setRef}
         $isSelected={isSelected}
+        {...this.hoverSettler.props}
         onClick={async () => {
           if (!isActive) {
             if (oauth === false) {
@@ -26,7 +37,7 @@ export default class Card {
             }
             return
           }
-          appStore.toggleSelected(index)
+          appStore.toggleSelected(index, this.ref)
         }}
       >
         <OrbitIcon $icon $iconActive={isActive} icon={icon} />

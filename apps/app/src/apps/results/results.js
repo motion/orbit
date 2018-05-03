@@ -10,7 +10,7 @@ class ResultsStore {
     return this.props.appStore
   }
 
-  @react({ fireImmediately: true })
+  @react({ fireImmediately: true, log: false })
   updateResults = [
     () => [this.appStore.searchState.results, this.appStore.selectedPane],
     ([results, selectedPane]) => {

@@ -49,13 +49,10 @@ export default class OrbitHeader {
     }
   }
 
-  _hoverProps = null
-  get hoverProps() {
-    if (this._hoverProps) return this._hoverProps
-    this._hoverProps = this.props.appStore.getHoverProps({
+  componentWillMount() {
+    this.hoverSettler = this.props.appStore.getHoverSettler({
       onHover: this.props.headerStore.hover,
     })
-    return this._hoverProps
   }
 
   render({ orbitStore, headerStore, theme, headerBg }) {
@@ -72,7 +69,7 @@ export default class OrbitHeader {
               ? 0
               : Constants.BORDER_RADIUS,
         }}
-        {...this.hoverProps}
+        {...this.hoverSettler.props}
       >
         <bottomBorder
           css={{

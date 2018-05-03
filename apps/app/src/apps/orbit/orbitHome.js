@@ -7,7 +7,7 @@ import OrbitHomeHeader from './orbitHome/orbitHomeHeader'
 import Masonry from '~/views/masonry'
 
 class OrbitHomeStore {
-  @react({ fireImmediately: true })
+  @react({ fireImmediately: true, log: false })
   setExploreResults = [
     () => !!App.state.query,
     hasQuery => {

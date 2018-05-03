@@ -35,11 +35,12 @@ export default function hoverSettler({
     }
   }, 16)
 
-  return ({ onHover, onBlur, ...extraProps }) => {
+  return ({ onHover, onBlur } = {}) => {
     let itemLastEnterTm
     let itemLastLeaveTm
     let fullyLeaveTm
     let betweenTm
+    let itemProps
 
     function handleHover(target) {
       // remove any other enters/leaves
@@ -47,7 +48,6 @@ export default function hoverSettler({
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)
       clearTimeout(betweenTm)
-
       const updateHover = () => {
         if (isReallyEqual(currentNode, target)) {
           return
@@ -62,7 +62,7 @@ export default function hoverSettler({
             left: target.offsetLeft,
             width: target.clientWidth,
             height: target.clientHeight,
-            ...extraProps,
+            ...itemProps,
           },
           onHover,
         )
@@ -71,7 +71,6 @@ export default function hoverSettler({
           lastEnter = null
         }
       }
-
       // dont delay enter at all if were already hovering other node
       const isAlreadyHovering = !!currentNode
       if (isAlreadyHovering || enterDelay === 0) {
@@ -87,7 +86,6 @@ export default function hoverSettler({
 
     function onMouseEnter(e) {
       clearTimeout(itemLastLeaveTm)
-
       const target = e.currentTarget
       handleHover(target)
     }
@@ -121,9 +119,14 @@ export default function hoverSettler({
     }
 
     return {
-      onMouseEnter,
-      onMouseLeave,
-      onMouseMove,
+      setItem(props) {
+        itemProps = props
+      },
+      props: {
+        onMouseEnter,
+        onMouseLeave,
+        onMouseMove,
+      }
     }
   }
 }

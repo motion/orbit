@@ -6,12 +6,12 @@ import AppReactions from '~/stores/AppReactions'
 export default class OrbitStore {
   query = ''
 
-  @react
+  @react({ log: false })
   updateAppQuery = [
     () => this.query,
     throttle(query => {
       App.setQuery(query)
-    }, 100),
+    }, 32),
   ]
 
   lastPinKey = ''
@@ -57,10 +57,10 @@ export default class OrbitStore {
         }
         return
       case 40: // down
-        increment(showSettings ? 2 : 1)
+        increment()
         return
       case 38: // up
-        decrement(showSettings ? 2 : 1)
+        decrement()
         return
       case 13: // enter
         this.props.appStore.open(results[activeIndex])

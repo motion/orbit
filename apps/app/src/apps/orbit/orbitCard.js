@@ -58,8 +58,10 @@ export default class OrbitCard {
 
   componentWillMount() {
     this.getOrbitCard = this.getOrbitCard.bind(this)
-    const { appStore, index, bit } = this.props
-    this.hoverProps = appStore.getHoverProps({ bit, id: index })
+    const { appStore, hoverToSelect } = this.props
+    if (hoverToSelect) {
+      this.hoverSettler = appStore.getHoverSettler()
+    }
   }
 
   setHovered = () => {
@@ -71,7 +73,7 @@ export default class OrbitCard {
   }
 
   toggleSelected = () => {
-    this.props.appStore.toggleSelected(this.props.index, this.props.item)
+    this.props.appStore.toggleSelected(this.props.index, this.ref)
   }
 
   get isExpanded() {
@@ -83,6 +85,19 @@ export default class OrbitCard {
       (this.props.store.isSelected && !this.props.tiny) ||
       (this.props.listItem && this.props.store.isSelected)
     )
+  }
+
+  setRef = ref => {
+    if (!ref) return
+    this.hoverSettler.setItem({
+      index: this.props.index,
+      id: this.props.bit.id,
+      ref,
+    })
+    this.ref = ref
+    if (this.props.getRef) {
+      this.props.getRef(ref)
+    }
   }
 
   getOrbitCard({
@@ -99,7 +114,6 @@ export default class OrbitCard {
     date,
   }) {
     const {
-      getRef,
       tiny,
       listItem,
       style,
@@ -115,9 +129,9 @@ export default class OrbitCard {
         css={{
           zIndex: isExpanded ? 5 : 4,
         }}
-        ref={getRef}
+        ref={this.setRef}
         onClick={this.toggleSelected}
-        {...hoverToSelect && this.hoverProps}
+        {...hoverToSelect && this.hoverSettler.props}
         style={style}
       >
         <card

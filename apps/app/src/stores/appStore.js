@@ -155,14 +155,15 @@ export default class AppStore {
     }, 1000)
   }
 
-  @react updateResults = [
+  @react
+  updateResults = [
     () => [Desktop.state.lastBitUpdatedAt, Desktop.searchState.pluginResultId],
     () => {
       if (this.searchState.results && this.searchState.results.length) {
         throw react.cancel
       }
       return Math.random()
-    }
+    },
   ]
 
   @react({ log: 'state' })
@@ -182,7 +183,11 @@ export default class AppStore {
     log: false,
   })
   bitResults = [
-    () => [App.state.query, Desktop.appState.id, Desktop.state.lastBitUpdatedAt],
+    () => [
+      App.state.query,
+      Desktop.appState.id,
+      Desktop.state.lastBitUpdatedAt,
+    ],
     async ([query], { sleep }) => {
       // debounce enough for medium-speed typer
       await sleep(120)
@@ -228,6 +233,9 @@ export default class AppStore {
   ]
 
   get results() {
+    if (this.getResults) {
+      return this.getResults()
+    }
     if (this.selectedPane === 'summary') {
       return this.summaryResults
     }
@@ -322,15 +330,9 @@ export default class AppStore {
     this.dockedResultRefs[index] = ref
   })
 
-  getTargetPosition = index => {
-    if (index === -1) {
-      return null
-    }
-    const ref = App.orbitState.docked
-      ? this.dockedResultRefs[index]
-      : this.resultRefs[index]
+  getTargetPosition = ref => {
     if (!ref) {
-      throw `no result ref for index ${index} docked? ${App.orbitState.docked}`
+      throw `no result ref ${ref}`
     }
     const { top, left, height } = ref.getBoundingClientRect()
     return {
@@ -356,7 +358,7 @@ export default class AppStore {
     }
   }
 
-  toggleSelected = (index, bit) => {
+  toggleSelected = (index, ref) => {
     const isSame = this.activeIndex === index
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
@@ -365,14 +367,14 @@ export default class AppStore {
       }
       App.clearPeek()
     } else {
-      this.pinSelected(index, bit)
+      this.pinSelected(index, ref)
     }
   }
 
-  pinSelected = (index, setBit) => {
+  pinSelected = (index, ref, setBit) => {
     const bit = setBit || this.results[index]
     this.setActive(index)
-    const target = this.getTargetPosition(index)
+    const target = this.getTargetPosition(ref)
     const position = peekPosition(target)
     App.setPeekState({
       id: Math.random(),
@@ -386,14 +388,14 @@ export default class AppStore {
     this.getResults = fn
   }
 
-  getHoverProps = Helpers.hoverSettler({
+  getHoverSettler = Helpers.hoverSettler({
     enterDelay: 80,
     betweenDelay: 30,
     onHovered: res => {
       if (!res) {
         this.clearSelected()
       } else {
-        this.pinSelected(res.id, res.bit)
+        this.pinSelected(res.index, res.ref)
       }
     },
   })

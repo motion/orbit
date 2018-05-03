@@ -29,7 +29,7 @@ export default class BitSlackMessage {
     } catch (err) {
       console.log('err parsing', err)
     }
-    const person = bit.people.find(
+    const person = (bit.people || []).find(
       person => person.integrationId === message.user,
     )
     if (!person) {
@@ -84,12 +84,12 @@ export default class BitSlackMessage {
 
   static style = {
     message: {
-      padding: [3, 0, 0],
+      padding: [2, 0, 0],
     },
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      margin: [3, 0, 5],
+      margin: [1, 0, 2, -4],
       userSelect: 'none',
       cursor: 'default',
     },
@@ -129,6 +129,7 @@ export default class BitSlackMessage {
       position: 'relative',
       margin: [1, 0, 0],
       userSelect: 'auto',
+      wordWrap: 'break-word',
     },
   }
 }

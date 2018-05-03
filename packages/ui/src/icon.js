@@ -44,7 +44,7 @@ const findMatch = name => {
 // }
 
 @view.ui
-export default class Icon extends React.Component {
+export default class Icon extends React.PureComponent {
   static defaultProps = {
     size: 16,
     type: 'mini',

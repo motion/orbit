@@ -4,7 +4,7 @@ import SettingCard from './orbitSettingCard'
 import * as UI from '@mcro/ui'
 
 const Title = props => (
-  <UI.Title size={1.1} fontWeight={600} margin={[10, 0]} {...props} />
+  <UI.Title size={1.2} fontWeight={600} margin={[10, 20]} {...props} />
 )
 
 @UI.injectTheme
@@ -61,19 +61,19 @@ export default class OrbitSettings {
   }
 
   componentWillMount() {
-    this.props.appStore.setGetResults(this.getResults)
-    const updateInt = setInterval(() => {
-      if (this.mounted) {
-        this.props.appStore.setGetResults(this.getResults)
-      } else {
-        clearInterval(updateInt)
-      }
-    }, 1000)
+    // this.props.appStore.setGetResults(this.getResults)
+    // const updateInt = setInterval(() => {
+    //   if (this.mounted) {
+    //     this.props.appStore.setGetResults(this.getResults)
+    //   } else {
+    //     clearInterval(updateInt)
+    //   }
+    // }, 1000)
   }
 
   componentWillUnmount() {
     this.mounted = false
-    this.props.appStore.setGetResults(null)
+    // this.props.appStore.setGetResults(null)
   }
 
   render({ appStore, theme }) {
@@ -93,42 +93,50 @@ export default class OrbitSettings {
       />
     )
     return (
-      <React.Fragment>
-        <pane if={appStore.showSettings}>
-          <section if={activeIntegrations.length}>
-            <Title>Active</Title>
-            <cards>
-              {activeIntegrations.map((item, index) =>
-                integrationCard(activeIntegrations)(item, index, index),
-              )}
-            </cards>
-          </section>
-          <section if={inactiveIntegrations.length}>
-            <Title>Inactive</Title>
-            <cards>
-              {inactiveIntegrations.map((item, index) =>
-                integrationCard(inactiveIntegrations)(
-                  item,
-                  index + activeIntegrations.length,
-                  index,
-                ),
-              )}
-            </cards>
-          </section>
-        </pane>
-      </React.Fragment>
+      <pane
+        css={{
+          background: theme.base.background,
+          opacity: appStore.showSettings ? 1 : 0,
+          zIndex: appStore.showSettings ? 1000000 : -1,
+          pointerEvents: appStore.showSettings ? 'auto' : 'none',
+        }}
+      >
+        <section if={activeIntegrations.length}>
+          <Title>Active</Title>
+          <cards>
+            {activeIntegrations.map((item, index) =>
+              integrationCard(activeIntegrations)(item, index, index),
+            )}
+          </cards>
+        </section>
+        <section if={inactiveIntegrations.length}>
+          <Title>Inactive</Title>
+          <cards>
+            {inactiveIntegrations.map((item, index) =>
+              integrationCard(inactiveIntegrations)(
+                item,
+                index + activeIntegrations.length,
+                index,
+              ),
+            )}
+          </cards>
+        </section>
+      </pane>
     )
   }
 
   static style = {
     pane: {
-      padding: [10, 20],
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: [10, 0],
     },
     cards: {
-      flexFlow: 'row',
-      flexWrap: 'wrap',
       userSelect: 'none',
-      marginBottom: 20,
+      marginBottom: 10,
     },
   }
 }

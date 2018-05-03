@@ -24,7 +24,12 @@ class OrbitDocked {
         css={{ background, boxShadow: [borderShadow, DOCKED_SHADOW] }}
       >
         <OrbitHeader headerBg={background} />
-        <orbitInner>
+        <orbitInner
+          css={{
+            opacity: appStore.showSettings ? 0 : 1,
+            pointerEvents: appStore.showSettings ? 'none' : 'auto',
+          }}
+        >
           <UI.Button
             $settingsButton
             icon="gear"
@@ -39,7 +44,7 @@ class OrbitDocked {
             }}
             onClick={appStore.toggleSettings}
           />
-          <OrbitHome if={!appStore.showSettings} appStore={appStore} />
+          <OrbitHome appStore={appStore} />
           <OrbitSearchResults parentPane="summary" />
           <OrbitSettings />
         </orbitInner>

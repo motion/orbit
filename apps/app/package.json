@@ -43,6 +43,7 @@
     "mobx-formatters": "^1.0.2",
     "fuzzysort": "^1.1.1",
     "mobx-react": "^4.3.5",
+    "mobx-react-devtools": "4.2.15",
     "mobx-utils": "^3.2.2",
     "mousetrap": "^1.6.1",
     "octokat": "^0.9.2",

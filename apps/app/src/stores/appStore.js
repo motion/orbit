@@ -7,6 +7,18 @@ import * as Helpers from '~/helpers'
 import * as _ from 'lodash'
 import peekPosition from './helpers/peekPosition'
 
+const findType = (integration, type, skip = 0) =>
+  Bit.findOne({
+    skip,
+    take: 1,
+    where: {
+      type,
+      integration,
+    },
+    relations: ['people'],
+    order: { bitCreatedAt: 'DESC' },
+  })
+
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
     return result.id
@@ -210,6 +222,9 @@ export default class AppStore {
   ]
 
   get results() {
+    if (this.selectedPane === 'summary') {
+      return this.summaryResults
+    }
     return this.searchState.results || []
   }
 
@@ -277,39 +292,21 @@ export default class AppStore {
   ]
 
   @react({
-    fireImmediately: true,
     defaultValue: [],
   })
-  summaryResults = [
-    () => 0,
-    async () => {
-      const findType = (integration, type, skip = 0) =>
-        Bit.findOne({
-          skip,
-          take: 1,
-          where: {
-            type,
-            integration,
-          },
-          relations: ['people'],
-          order: { bitCreatedAt: 'DESC' },
-        })
-
-      return [
-        ...(await Promise.all([
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation', 1),
-          findType('slack', 'conversation', 2),
-          findType('google', 'document'),
-          findType('google', 'mail'),
-          findType('google', 'mail', 1),
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation'),
-          findType('slack', 'conversation'),
-        ])),
-      ].filter(Boolean)
-    },
-  ]
+  summaryResults = async () => {
+    return (await Promise.all([
+      findType('slack', 'conversation'),
+      findType('slack', 'conversation', 1),
+      findType('slack', 'conversation', 2),
+      findType('google', 'document'),
+      findType('google', 'mail'),
+      findType('google', 'mail', 1),
+      findType('slack', 'conversation'),
+      findType('slack', 'conversation'),
+      findType('slack', 'conversation'),
+    ])).filter(Boolean)
+  }
 
   setResultRef = _.memoize(index => ref => {
     this.resultRefs[index] = ref
@@ -320,6 +317,9 @@ export default class AppStore {
   })
 
   getTargetPosition = index => {
+    if (index === -1) {
+      return null
+    }
     const ref = App.orbitState.docked
       ? this.dockedResultRefs[index]
       : this.resultRefs[index]
@@ -344,8 +344,10 @@ export default class AppStore {
   lastSelectAt = 0
 
   setActive = index => {
-    this.lastSelectAt = Date.now()
-    this.activeIndex = index
+    if (index !== this.activeIndex) {
+      this.lastSelectAt = Date.now()
+      this.activeIndex = index
+    }
   }
 
   toggleSelected = (index, bit) => {
@@ -361,7 +363,8 @@ export default class AppStore {
     }
   }
 
-  pinSelected = (index, bit) => {
+  pinSelected = (index, setBit) => {
+    const bit = setBit || this.results[index]
     this.setActive(index)
     const target = this.getTargetPosition(index)
     const position = peekPosition(target)

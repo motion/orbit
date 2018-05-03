@@ -1,17 +1,11 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import timeago from 'time-ago'
-import Text from './text'
 
 const { ago } = timeago()
 
-type Props = {
-  children: string,
-}
-
 @view.ui
-export default class DateView extends React.PureComponent<Props> {
+export default class DateView extends React.PureComponent {
   static format = text => {
     const date = new Date(text)
     const dateWords = ago(date)
@@ -21,9 +15,9 @@ export default class DateView extends React.PureComponent<Props> {
     return dateWords
   }
 
-  render({ children }: Props) {
+  render({ children }) {
     if (children) {
-      return this.constructor.format(children)
+      return DateView.format(children)
     }
     return null
   }

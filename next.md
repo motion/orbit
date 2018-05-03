@@ -1,19 +1,17 @@
 ## broadly
 
-* correctness/smoothness/perf/bugs (3 days)
-* ui/ux (3 days)
 * fake hardcoded demo features (3 days)
 * explore ui (1 day)
 * people directory (1 day)
 * highlight words (2 days)
-* improve syncers/settings (2 days)
+* working syncers/settings (2 days)
 * profiles (1 day)
 
 ## now
 
+* profiles design iteration
 * have the cards show _why_ they are there
 * topics you follow dropdown
-* profiles design iteration
 * fix settings
 * tear away peeks + super simple app
 * get dark blue theme working for news area
@@ -23,21 +21,18 @@
 
 demo for Formidable on May 12th:
 
-* basic search for stuff and app launch showing nlp (2 days)
-  * improve various list item results and try and remove jitter/lag (0.5 day)
-  * better peek for a document (0.5day)
-* contextual/OCR related content (~2 days, can bail if necessary)
+* contextual/OCR related content
   * be sure we can enable it and run it on a page easily
   * come up with a simple highlight words design that shows it
-* finish profiles with better design (1 day)
+* finish profiles with better design
   * includes moving between them
   * should aggregate even if faked from multiple sources
-* bring back tear away peeks to demonstrate apps (2 days)
-* simple demo of coding an app and deploying it, mostly hardcoded but working (3 days)
+* bring back tear away peeks to demonstrate apps
+* simple demo of coding an app and deploying it, mostly hardcoded but working
   * need to figure this out, but honestly just showing the ease of code => deploy and syntax is big
   * hmr is cool here too
-* simple app we built showing a chart that tears away and stays on screen (1-2 day)
-* ensure settings panes generally work so we can show it quickly (2hr)
+* simple app we built showing a chart that tears away and stays on screen
+* ensure settings panes generally work so we can show it quickly
 * building a general walkthrough of demo and plan for pitching the various pieces
   * can just be our content, they dont care about it being fake just as long as it works and has right features
 * better theme and style polish all around

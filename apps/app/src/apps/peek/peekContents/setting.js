@@ -43,6 +43,7 @@ const EmptyPane = () => <div>no setting pane</div>
 })
 export class SettingView {
   render({ appStore, store }) {
+    console.log('MOUNTING A SETTING VIEW')
     if (!store.setting || !store.setting.token) {
       console.log('no setting or token', store.setting)
       return null

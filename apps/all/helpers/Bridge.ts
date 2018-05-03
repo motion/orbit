@@ -34,6 +34,7 @@ class Bridge {
   _awaitingSocket = []
   _store = null
   _options: Options
+  queuedState = []
   _queuedState = false
   _wsOpen = false
   _source = ''
@@ -248,12 +249,21 @@ class Bridge {
           this._queuedState = true
           return changedState
         }
-        this._socket.send(
-          JSON.stringify({ state: changedState, source: this._source }),
-        )
+        // setTimeout to batch sending
+        if (!this.queuedState.length) {
+          setTimeout(this.sendQueuedState)
+        }
+        this.queuedState.push({ state: changedState, source: this._source })
       }
     }
     return changedState
+  }
+
+  sendQueuedState = () => {
+    for (const data of this.queuedState) {
+      this._socket.send(JSON.stringify(data))
+    }
+    this.queuedState = []
   }
 
   // private
@@ -280,43 +290,42 @@ class Bridge {
         continue
       }
       // avoid on same object
-      const bothObjects =
-        Mobx.isObservableObject(stateObj[key]) && isPlainObject(newState[key])
+      const a = Mobx.toJS(stateObj[key])
+      const b = Mobx.toJS(newState[key])
+      const bothObjects = a && b && isPlainObject(a) && isPlainObject(b)
       if (bothObjects) {
-        const compareOriginal = Object.keys(stateObj[key]).reduce(
-          (a, b) => ({ ...a, [b]: stateObj[b] }),
-          {},
-        )
-        if (isEqual(compareOriginal, newState)) {
+        // check if equal
+        let areEqual = true
+        for (const key of Object.keys(b)) {
+          if (!isEqual(a[key], b[key])) {
+            areEqual = false
+            break
+          }
+        }
+        if (areEqual) {
           continue
         }
-        const oldVal = Mobx.toJS(stateObj[key])
-        const newVal = Mobx.toJS(newState[key])
-        if (isPlainObject(oldVal) && isPlainObject(newVal)) {
-          // merge plain objects
-          const newState = mergeWith(oldVal, newVal, (prev, next) => {
-            // avoid inner array merge, just replace
-            if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
-              return next
-            }
-          })
-          const diff = {} // minimal change diff
-          for (const key of Object.keys(newVal)) {
-            diff[key] = newState[key]
+        // merge plain objects
+        const newState = mergeWith(a, b, (prev, next) => {
+          // avoid inner array merge, just replace
+          if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
+            return next
           }
-          stateObj[key] = newState
-          changed[key] = diff
+        })
+        // minimal change diff after merge
+        const diff = {}
+        for (const key of Object.keys(b)) {
+          diff[key] = newState[key]
         }
+        stateObj[key] = newState
+        changed[key] = diff
       } else {
         // avoid on same val
-        if (stateObj[key] === newState[key]) {
+        if (a === b || isEqual(a, b)) {
           continue
         }
-        if (Mobx.comparer.structural(stateObj[key], newState[key])) {
-          continue
-        }
-        stateObj[key] = newState[key]
-        changed[key] = newState[key]
+        stateObj[key] = b
+        changed[key] = b
       }
     }
     if (root.__trackStateChanges && root.__trackStateChanges.isActive) {

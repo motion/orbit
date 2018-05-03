@@ -8,42 +8,23 @@ import ControlButton from '~/views/controlButton'
 class HeaderStore {
   inputRef = null
 
-  hover = () => {
+  setInputRef = ref => (this.input = ref)
+
+  focus = () => {
     this.inputRef && this.inputRef.focus()
   }
 
-  blur = () => {
-    this.inputRef && this.inputRef.blur()
-  }
-
-  @react({ delay: 32, log: false })
+  @react({ log: false })
   focusInput = [
     () => [
       App.orbitState.pinned || App.orbitState.docked,
       App.isMouseInActiveArea,
     ],
     async ([shown], { when }) => {
-      if (!shown) {
-        throw react.cancel
-      }
-      await when(() => !App.isAnimatingOrbit && Desktop.state.focusedOnOrbit)
-      if (!shown) {
-        throw react.cancel
-      }
-      if (this.inputRef) {
-        this.inputRef.focus()
-      }
-    },
-  ]
-
-  @react({ delay: 32 })
-  blurInput = [
-    () => App.isFullyHidden,
-    () => {
-      if (!this.inputRef) {
-        throw react.cancel
-      }
-      this.inputRef.blur()
+      if (!shown) throw react.cancel
+      await when(() => Desktop.state.focusedOnOrbit)
+      await when(() => !App.isAnimatingOrbit)
+      this.focus()
     },
   ]
 
@@ -68,7 +49,16 @@ export default class OrbitHeader {
     }
   }
 
-  render({ appStore, orbitStore, headerStore, theme, headerBg }) {
+  _hoverProps = null
+  get hoverProps() {
+    if (this._hoverProps) return this._hoverProps
+    this._hoverProps = this.props.appStore.getHoverProps({
+      onHover: this.props.headerStore.hover,
+    })
+    return this._hoverProps
+  }
+
+  render({ orbitStore, headerStore, theme, headerBg }) {
     return (
       <orbitHeader
         $headerBg={headerBg}
@@ -82,10 +72,7 @@ export default class OrbitHeader {
               ? 0
               : Constants.BORDER_RADIUS,
         }}
-        {...appStore.getHoverProps({
-          onHover: headerStore.hover,
-          onBlur: headerStore.blur,
-        })}
+        {...this.hoverProps}
       >
         <bottomBorder
           css={{
@@ -104,7 +91,7 @@ export default class OrbitHeader {
           <UI.Icon
             $searchIcon
             name="ui-1_zoom"
-            size={16}
+            size={15}
             color={theme.active.background.darken(0.15).desaturate(0.4)}
           />
           <input
@@ -114,7 +101,7 @@ export default class OrbitHeader {
             background="transparent"
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
-            ref={headerStore.ref('inputRef').set}
+            ref={headerStore.setInputRef}
             onClick={headerStore.onClickInput}
           />
           <inputLn />
@@ -163,7 +150,7 @@ export default class OrbitHeader {
       transition: 'all ease-in 300ms',
     },
     searchIcon: {
-      paddingLeft: 34,
+      paddingLeft: 32,
       margin: 0,
     },
     input: {

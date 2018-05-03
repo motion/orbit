@@ -425,6 +425,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       if (!reactionID) {
         return reject(RejectReactionSymbol)
       }
+      if (typeof ms === 'undefined') {
+        resolve()
+        return
+      }
       const sleepTimeout = setTimeout(resolve, ms)
       rejections.push(() => {
         clearTimeout(sleepTimeout)
@@ -539,7 +543,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             sleep,
             when,
             whenChanged,
-            cancel: RejectReactionSymbol,
           },
         )
       } catch (err) {

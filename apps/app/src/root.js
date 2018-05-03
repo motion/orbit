@@ -42,19 +42,21 @@ export default class AppRoot extends React.Component {
             right: 0,
             bottom: 0,
             zIndex: Number.MAX_SAFE_INTEGER,
-            alignItems: 'center',
-            justifyContent: 'center',
           }}
         >
           <error
             css={{
-              width: '60%',
-              height: '50%',
-              background: [0, 0, 0, 0.1],
-              padding: 40,
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              width: '40%',
+              height: '30%',
+              background: [0, 0, 0, 0.9],
+              padding: 20,
               lineHeight: '2.5rem',
               color: 'red',
               fontWeight: 900,
+              overflowY: 'scroll',
             }}
           >
             <h1>Orbit Error</h1>
@@ -63,8 +65,7 @@ export default class AppRoot extends React.Component {
               css={{
                 lineHeight: '1.4rem',
                 fontSize: 16,
-                color: '#000',
-                opacity: 0.4,
+                color: '#fff',
               }}
             >
               {this.state.error.stack}

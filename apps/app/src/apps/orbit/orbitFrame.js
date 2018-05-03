@@ -7,43 +7,36 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import OrbitArrow from './orbitArrow'
 import OrbitIndicator from './orbitIndicator'
 
-const animationDuration = App.animationDuration
 const SHADOW_PAD = 85
 const ARROW_PAD = 15
 
-const iWidth = 4
+class FrameStore {
+  @react({ delay: 16, log: false })
+  isShowing = [() => !App.orbitState.hidden, _ => _]
 
-class OrbitFrameStore {
-  @react
-  wasShowing = [
-    () => this.isShowing,
-    async (val, { sleep, setValue }) => {
-      if (!val) {
-        await sleep(animationDuration)
-        setValue(false)
+  @react({ log: false })
+  shouldAnimate = [
+    () => App.orbitState.hidden,
+    async (hidden, { sleep, setValue }) => {
+      if (!hidden) {
+        setValue(true)
       } else {
-        setValue(val)
+        setValue(true)
+        await sleep(App.animationDuration)
+        setValue(false)
       }
     },
   ]
-
-  get isShowing() {
-    return this.props.shouldShow()
-  }
-
-  get shouldAnimate() {
-    return this.isShowing || this.wasShowing
-  }
 }
 
 @UI.injectTheme
 @view({
-  store: OrbitFrameStore,
+  store: FrameStore,
 })
 export default class OrbitFrame {
   render({ store, children, theme, headerBg }) {
-    const { position, size } = App.orbitState
-    const orbitOnLeft = App.orbitOnLeft
+    const isShowing = store.isShowing
+    const { position, size, orbitOnLeft } = App.orbitState
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     const background = theme.base.background
@@ -52,7 +45,7 @@ export default class OrbitFrame {
     const orbitLightShadow = [
       [orbitOnLeft ? -15 : 15, 4, 35, 0, [0, 0, 0, 0.05]],
     ]
-    const animationStyles = store.isShowing
+    const animationStyles = isShowing
       ? {
           opacity: 1,
           transform: {
@@ -63,14 +56,14 @@ export default class OrbitFrame {
           opacity: 0,
           transform: {
             x: orbitOnLeft
-              ? ORBIT_WIDTH * 0.15 - ARROW_PAD - (ARROW_PAD + iWidth) + 4
+              ? ORBIT_WIDTH * 0.15 - ARROW_PAD * 2 + 8
               : -(ORBIT_WIDTH * 0.15),
           },
         }
     return (
       <orbitFrame
         css={{
-          pointerEvents: store.isShowing ? 'auto' : 'none',
+          pointerEvents: isShowing ? 'auto' : 'none',
           width: size[0],
           // TODO HACKINESS fix the size/y calc in orbitPosition.js
           height: size[1] - 15,
@@ -86,11 +79,7 @@ export default class OrbitFrame {
           background={headerBg}
           borderColor={borderColor}
         />
-        <OrbitIndicator
-          store={store}
-          iWidth={iWidth}
-          orbitOnLeft={orbitOnLeft}
-        />
+        <OrbitIndicator orbitOnLeft={orbitOnLeft} />
         <overflowWrap
           $orbitAnimate={store.shouldAnimate}
           css={{
@@ -176,14 +165,13 @@ export default class OrbitFrame {
     },
     orbit: {
       position: 'relative',
-      transition: 'none',
       flex: 1,
     },
     orbitAnimate: {
       willChange: 'transform, opacity',
       transition: `
-        transform ease-in ${animationDuration}ms,
-        opacity ease-in ${animationDuration / 2}ms ${animationDuration / 2}ms
+        transform ease-in ${App.animationDuration}ms,
+        opacity ease-in ${App.animationDuration * 0.75}ms
       `,
     },
     // used to hide edge overlap of drawer during in animation

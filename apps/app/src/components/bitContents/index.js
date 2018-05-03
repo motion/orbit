@@ -18,7 +18,7 @@ const results = {
   },
 }
 
-export default bit => {
+export default function getBitContentView(bit) {
   if (bit instanceof Person) {
     return PersonCard
   }
@@ -28,7 +28,7 @@ export default bit => {
   const resolveIntegration = results[bit.integration]
   const resolver = resolveIntegration && resolveIntegration[bit.type]
   if (!resolver) {
-    console.error('no resolver for', bit.integration, bit.type)
+    console.warn('no resolver for', bit.integration, bit.type)
     return { title: '' }
   }
   return resolver

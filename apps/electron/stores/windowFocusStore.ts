@@ -72,7 +72,7 @@ export default class WindowFocusStore {
   focusOnMouseOver = [
     () => App.isMouseInActiveArea,
     async (mouseOver, { sleep, when }) => {
-      if (!App.isShowingOrbit || App.orbitState.pinned) {
+      if (!App.isShowingOrbit /* || App.orbitState.pinned*/) {
         throw react.cancel
       }
       await when(() => !App.isAnimatingOrbit)

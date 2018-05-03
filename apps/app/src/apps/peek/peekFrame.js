@@ -37,6 +37,12 @@ class PeekFrameStore {
 }
 
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
+const transitions = store => {
+  if (store.isHidden) return 'none'
+  if (store.willHide) return 'all ease-in 200ms'
+  if (store.willStayShown) return 'all ease-in 120ms'
+  return 'all ease-in 150ms'
+}
 
 @UI.injectTheme
 @view({
@@ -77,23 +83,23 @@ export default class PeekFrame {
     // small adjust to overlap
     peekAdjustX += onRight ? -2 : 2
     const x = state.position[0] + peekAdjustX
-    const y =
-      state.position[1] + ((willShow && !willStayShown) || willHide ? -8 : 0)
+    const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
+    const y = state.position[1] + animationAdjust
+    const ARROW_CARD_TOP_OFFSET = 60
     const arrowY = Math.min(
       isHidden
         ? 0
         : state.target.top +
-          state.target.height / 2 -
+          ARROW_CARD_TOP_OFFSET -
           state.position[1] -
           arrowSize / 2,
       state.size[1] - borderRadius * 2 - arrowSize,
     )
+    const transition = transitions(store)
     return (
       <peekFrame
         css={{
-          transition: isHidden
-            ? 'none'
-            : willHide ? 'all ease-in 200ms' : 'all ease-in 150ms',
+          transition,
           opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
           width: state.size[0],
           height: state.size[1],

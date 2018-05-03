@@ -3,10 +3,13 @@ import { App } from '@mcro/all'
 
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
-const TOP_OFFSET = -20
+const TOP_OFFSET = -5
 const screenSize = () => [window.innerWidth, window.innerHeight]
 
 export default function peekPosition(target) {
+  if (!target) {
+    return null
+  }
   const [screenW, screenH] = screenSize()
   let { orbitOnLeft } = App
   let width = App.orbitState.size[0]

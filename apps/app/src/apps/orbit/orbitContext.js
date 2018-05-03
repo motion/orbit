@@ -45,15 +45,10 @@ export default class Orbit {
     const { orbitOnLeft } = App
     return (
       <UI.Theme name="tan">
-        <OrbitFrame
-          headerBg={headerBg}
-          orbitPage={orbitPage}
-          shouldShow={() => !App.orbitState.hidden && !App.orbitState.docked}
-        >
+        <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
           <OrbitHeader headerBg={headerBg} />
           <orbitInner>
             <orbitContext
-              if={!appStore.showSettings}
               css={{
                 background: theme.base.background,
               }}

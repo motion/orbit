@@ -56,7 +56,7 @@ export default class KeyboardStore {
           Desktop.sendMessage(App, App.messages.HIDE_PEEK)
           return
         }
-        if (!App.isMouseInActiveArea) {
+        if (!App.orbitState.docked && !App.isMouseInActiveArea) {
           return
         }
         Desktop.sendMessage(App, App.messages.HIDE)
@@ -64,10 +64,9 @@ export default class KeyboardStore {
       }
       const isOption = keycode === codes.option || keycode === codes.optionRight
       // const isShift = keycode === codes.shift || keycode === codes.shiftRight
-      const isHoldingShift = this.keysDown.has(codes.shift)
       const holdingKeys = this.keysDown.size
       // clears:
-      if (!isHoldingShift && holdingKeys > 1 && isOption) {
+      if (holdingKeys > 1 && isOption) {
         return Desktop.clearOption()
       }
       const isHoldingOption = this.keysDown.has(codes.option)
@@ -78,23 +77,17 @@ export default class KeyboardStore {
           return
         }
       }
-      if (holdingKeys > 2 && isHoldingShift && isHoldingOption) {
-        return Desktop.setKeyboardState({
-          optionUp: Date.now(),
-          spaceUp: Date.now(),
-        })
-      }
       if (isOption) {
         return Desktop.setKeyboardState({ option: Date.now() })
       }
-      if (this.keysDown.has(codes.option) && !isHoldingShift) {
+      if (this.keysDown.has(codes.option)) {
         return Desktop.clearOption()
       }
       switch (keycode) {
-        case codes.shift:
-          return Desktop.setKeyboardState({ shift: Date.now() })
-        case codes.space:
-          return Desktop.setKeyboardState({ space: Date.now() })
+        // case codes.shift:
+        //   return Desktop.setKeyboardState({ shift: Date.now() })
+        // case codes.space:
+        //   return Desktop.setKeyboardState({ space: Date.now() })
         case codes.up:
         case codes.down:
         case codes.pgUp:
@@ -132,15 +125,15 @@ export default class KeyboardStore {
       this.clearDownKeysAfterPause()
       // option off
       switch (keycode) {
-        case codes.shift:
-          Desktop.setKeyboardState({ shiftUp: Date.now() })
-          break
+        // case codes.shift:
+        //   Desktop.setKeyboardState({ shiftUp: Date.now() })
+        //   break
         case codes.option:
           Desktop.clearOption()
           break
-        case codes.space:
-          Desktop.setKeyboardState({ spaceUp: Date.now() })
-          break
+        // case codes.space:
+        //   Desktop.setKeyboardState({ spaceUp: Date.now() })
+        // break
       }
       if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
         Desktop.sendMessage(App, App.messages.TOGGLE_PINNED)

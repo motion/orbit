@@ -375,7 +375,6 @@ export default class AppStore {
   }
 
   pinSelected = (index, ref, item) => {
-    log(`pinseelected`, index, ref, item)
     const bit = item || this.results[index]
     this.setActive(index)
     const target = this.getTargetPosition(ref)

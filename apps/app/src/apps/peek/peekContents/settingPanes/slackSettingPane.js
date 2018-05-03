@@ -37,7 +37,6 @@ class SlackSettingStore {
 })
 export default class Slack {
   render({ store, setting }) {
-    console.log('store.channels', store.channels, store)
     return (
       <slack if={setting}>
         <UI.Input

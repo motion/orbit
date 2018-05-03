@@ -33,6 +33,7 @@ const TAG_NAME_MAP = {
   item: 'div',
   text: 'div',
   col: 'div',
+  main: 'div',
 }
 
 const IS_BROWSER = typeof window !== 'undefined'
@@ -136,7 +137,7 @@ export default function fancyElementFactory(Gloss, styles) {
     }
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
-    const name: string = !isTag ? `${type.name}` : type
+    const name = !isTag ? `${type.name}` : `${type}`
     const finalProps = {}
     const finalStyles = []
     const theme = this.theme
@@ -165,16 +166,10 @@ export default function fancyElementFactory(Gloss, styles) {
         }
         // tagName={}
         if (tagNameOption && prop === tagNameOption && isTag) {
-          if (!val) {
-            // undefined, ignore
-            continue
+          // lets it be optionally undefined/false
+          if (val) {
+            type = val
           }
-          if (typeof val !== 'string') {
-            throw new Error(
-              `tagName must be a string (tag: ${name}, type received: ${typeof val})`,
-            )
-          }
-          type = val
           continue
         }
         // after tagname, css, style
@@ -261,7 +256,7 @@ export default function fancyElementFactory(Gloss, styles) {
         } else {
           finalProps.className += ` ${name}`
         }
-        if (!VALID_TAGS[name]) {
+        if (!VALID_TAGS[type]) {
           type = 'div'
         }
       }

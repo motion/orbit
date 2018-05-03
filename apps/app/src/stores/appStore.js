@@ -110,7 +110,6 @@ const parseQuery = query => {
 }
 
 export default class AppStore {
-  refreshInterval = Date.now()
   activeIndex = -1
   showSettings = false
   settings = {}
@@ -146,9 +145,6 @@ export default class AppStore {
     this.updateScreenSize()
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
-    this.setInterval(() => {
-      this.refreshInterval = Date.now()
-    }, 1000)
   }
 
   updateScreenSize() {
@@ -158,6 +154,16 @@ export default class AppStore {
       })
     }, 1000)
   }
+
+  @react updateResults = [
+    () => [Desktop.state.lastBitUpdatedAt, Desktop.searchState.pluginResultId],
+    () => {
+      if (this.searchState.results && this.searchState.results.length) {
+        throw react.cancel
+      }
+      return Math.random()
+    }
+  ]
 
   @react({ log: 'state' })
   resetActiveIndexOnSearch = [
@@ -176,7 +182,7 @@ export default class AppStore {
     log: false,
   })
   bitResults = [
-    () => [App.state.query, Desktop.appState.id, this.refreshInterval],
+    () => [App.state.query, Desktop.appState.id, Desktop.state.lastBitUpdatedAt],
     async ([query], { sleep }) => {
       // debounce enough for medium-speed typer
       await sleep(120)
@@ -234,8 +240,8 @@ export default class AppStore {
     log: false,
   })
   searchState = [
-    () => [App.state.query, this.getResults],
-    async ([query, getResults], { sleep, when }) => {
+    () => [App.state.query, this.getResults, this.updateResults],
+    async ([query, getResults], { when }) => {
       // these are all specialized searches, see below for main search logic
       if (getResults && this.showSettings) {
         return {

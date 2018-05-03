@@ -13,50 +13,48 @@ const appTarget = ({ offset, bounds }) => {
   return { top, left, width, height }
 }
 
-let reactionStore
-
-if (!window.messageAttached) {
-  window.messageAttached = true
-  App.onMessage(async msg => {
-    console.log('appmsg', msg)
-    switch (msg) {
-      case App.messages.TOGGLE_SHOWN:
-        reactionStore.toggle()
-        return
-      case App.messages.TOGGLE_DOCKED:
-        App.setOrbitState({ docked: !App.orbitState.docked })
-        return
-      case App.messages.HIDE:
-        reactionStore.hide()
-        return
-      case App.messages.SHOW:
-        reactionStore.show()
-        return
-      case App.messages.HIDE_PEEK:
-        return App.clearPeek()
-      case App.messages.PIN:
-        App.setOrbitState({ pinned: true })
-        return
-      case App.messages.UNPIN:
-        App.setOrbitState({ pinned: false })
-        return
-      case App.messages.TOGGLE_PINNED:
-        App.setOrbitState({ pinned: !App.orbitState.pinned })
-        return
-    }
-    if (msg.indexOf(App.messages.PIN) === 0) {
-      const key = msg.split('-')[1]
-      App.setOrbitState({ pinned: true })
-      reactionStore.onPinKey(key.toLowerCase())
-    }
-  })
-}
-
 @store
 export default class AppReactions {
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
-    reactionStore = this
+
+    if (window.messageAttached) {
+      return
+    }
+    window.messageAttached = true
+    App.onMessage(async msg => {
+      console.log('appmsg', msg)
+      switch (msg) {
+        case App.messages.TOGGLE_SHOWN:
+          this.toggle()
+          return
+        case App.messages.TOGGLE_DOCKED:
+          App.setOrbitState({ docked: !App.orbitState.docked })
+          return
+        case App.messages.HIDE:
+          this.hide()
+          return
+        case App.messages.SHOW:
+          this.show()
+          return
+        case App.messages.HIDE_PEEK:
+          return App.clearPeek()
+        case App.messages.PIN:
+          App.setOrbitState({ pinned: true })
+          return
+        case App.messages.UNPIN:
+          App.setOrbitState({ pinned: false })
+          return
+        case App.messages.TOGGLE_PINNED:
+          App.setOrbitState({ pinned: !App.orbitState.pinned })
+          return
+      }
+      if (msg.indexOf(App.messages.PIN) === 0) {
+        const key = msg.split('-')[1]
+        App.setOrbitState({ pinned: true })
+        this.onPinKey(key.toLowerCase())
+      }
+    })
   }
 
   toggle() {

@@ -43,6 +43,7 @@ export type DesktopState = {
   }
   focusedOnOrbit: boolean
   appStateUpdatedAt: number
+  lastBitUpdatedAt: number,
   searchState: {
     pluginResults: Array<{}>
     indexStatus: string

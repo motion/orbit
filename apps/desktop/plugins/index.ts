@@ -48,8 +48,8 @@ export default class Plugins {
 
   @react({ fireImmediately: true, log: false })
   results = [
-    () => App.state.query,
-    async (query, { sleep }) => {
+    () => [App.state.query, Desktop.state.lastBitUpdatedAt],
+    async ([query], { sleep }) => {
       await sleep(150) // debounce to not be too aggressive during type
       const results = await this.search(query)
       await sleep()

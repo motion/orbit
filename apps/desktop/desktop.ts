@@ -13,13 +13,14 @@ import Sync from './sync'
 import SQLiteServer from './sqliteServer'
 import { App, Electron, Desktop } from '@mcro/all'
 // import { sleep } from '@mcro/helpers'
-import { react, store, debugState } from '@mcro/black'
+import { store, debugState } from '@mcro/black'
 import global from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
 import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
+import { Bit } from '@mcro/models'
 
 const log = debug('desktop')
 
@@ -63,6 +64,7 @@ export default class DesktopRoot {
     })
     this.keyboardStore.start()
     iohook.start(false)
+    this.watchLastBit()
     this.setupHosts()
     await this.server.start()
     this.screen.start()
@@ -76,6 +78,17 @@ export default class DesktopRoot {
         Desktop.setAppState({ selectedText: selection })
       }
     }, 3000)
+  }
+
+  watchLastBit() {
+    this.setInterval(async () => {
+      const lastBit = await Bit.findOne({
+        order: { updatedAt: 'DESC' },
+      })
+      if (lastBit && lastBit.updatedAt !== Desktop.state.lastBitUpdatedAt) {
+        Desktop.setLastBitUpdatedAt(lastBit.updatedAt)
+      }
+    }, 1000)
   }
 
   restart() {

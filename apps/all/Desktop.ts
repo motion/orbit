@@ -54,6 +54,7 @@ class DesktopStore {
     paused: true,
     focusedOnOrbit: true,
     appStateUpdatedAt: Date.now(),
+    lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
   }

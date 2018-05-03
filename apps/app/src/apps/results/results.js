@@ -64,15 +64,14 @@ export default class Results {
   }, 16)
 
   render({ appStore, store }, { resultsRef, isScrolled, isOverflowing }) {
-    const { results } = store
-    const total = results.length
+    const total = store.results.length
     return (
       <resultsFrame ref={this.setResultsFrame}>
         <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
         <resultsScroller>
-          <results if={results.length} ref={this.setResults}>
+          <results if={store.results.length} ref={this.setResults}>
             <firstResultSpace $$untouchable css={{ height: 6 }} />
-            {results.map((bit, i) => (
+            {store.results.map((bit, i) => (
               <OrbitCard
                 key={`${i}${bit.id}`}
                 pane="context"

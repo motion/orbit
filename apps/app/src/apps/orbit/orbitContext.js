@@ -65,7 +65,7 @@ export default class Orbit {
                   {Desktop.appState.title}
                 </SubTitle>
               </contextHeader>
-              <Results isContext />
+              <Results />
             </orbitContext>
             <OrbitSearchResults parentPane="context" />
           </orbitInner>

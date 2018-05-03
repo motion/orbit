@@ -501,7 +501,11 @@ Transaction batching object:
         this.primus.end()
       })
       this.primus.on('close', () => {
-        console.log('promise was closed, may need to reconnect?')
+        console.log(
+          'promise was closed, may need to reconnect?',
+          this.primus,
+          PrimusAdaptor,
+        )
         // this.primus.end()
       })
     }

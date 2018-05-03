@@ -7,83 +7,48 @@ import { App } from '@mcro/all'
 @UI.injectTheme
 @view
 export default class Card {
-  render({
-    id,
-    icon,
-    title,
-    index,
-    offset,
-    length,
-    theme,
-    isActive,
-    appStore,
-    oauth,
-  }) {
-    const isOdd = offset % 2 == 0
+  render({ id, icon, title, index, subtitle, isActive, appStore, oauth }) {
     const isSelected =
       appStore.selectedIndex === index && !!App.peekState.target
     return (
       <card
         key={index}
-        $first={index === 0}
-        $odd={isOdd}
-        $lastRow={index >= length - 2}
         $isSelected={isSelected}
-        onClick={() => {
+        onClick={async () => {
           if (!isActive) {
+            if (oauth === false) {
+              const setting = appStore.settings[id]
+              setting.token = 'good'
+              await setting.save()
+              appStore.getSettings()
+            } else {
+              appStore.startOauth(id)
+            }
             return
           }
           appStore.toggleSelected(index)
         }}
       >
-        <inner>
-          <OrbitIcon $icon $iconActive={isActive} icon={icon} />
-          <subtitle>
-            <UI.Text fontWeight={600} fontSize={13} textAlign="center">
-              {title}
-            </UI.Text>
-          </subtitle>
-          <UI.Button
-            if={!isActive}
-            onClick={async () => {
-              if (oauth === false) {
-                const setting = appStore.settings[id]
-                setting.token = 'good'
-                await setting.save()
-                appStore.getSettings()
-              } else {
-                appStore.startOauth(id)
-              }
-            }}
-            size={0.9}
-            icon="uiadd"
-            background="transparent"
-            borderColor={theme.base.background.darken(0.05)}
-            chromeless
-            circular
-            hover={{
-              background: [255, 255, 255, 0.5],
-            }}
-            color={theme.base.background.darken(0.2).alpha(0.5)}
-            css={{
-              position: 'absolute',
-              top: 5,
-              right: 5,
-            }}
-          />
-        </inner>
+        <OrbitIcon $icon $iconActive={isActive} icon={icon} />
+        <titles>
+          <UI.Text $title fontWeight={300} size={1.4} textAlign="center">
+            {title}
+          </UI.Text>
+          <UI.Text if={subtitle} $subtitle size={0.9} textAlign="center">
+            {subtitle}
+          </UI.Text>
+        </titles>
       </card>
     )
   }
 
   static style = {
     card: {
-      position: 'relative',
-      width: '50%',
-      padding: [15, 5],
+      flexFlow: 'row',
+      flex: 1,
       alignItems: 'center',
-      justifyContent: 'center',
-      borderBottom: [1, [0, 0, 0, 0.1]],
+      position: 'relative',
+      padding: [10, 20],
       '&:hover': {
         background: [255, 255, 255, 0.1],
       },
@@ -92,25 +57,12 @@ export default class Card {
       },
     },
     isSelected: {},
-    inner: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: [10, 0],
-    },
-    odd: {
-      borderRight: [1, [0, 0, 0, 0.1]],
-      paddingRight: 7,
-    },
     lastRow: {
       borderBottom: 'none',
     },
-    subtitle: {
-      marginTop: 10,
-      flex: 1,
-      justifyContent: 'center',
-    },
     icon: {
       marginBottom: 10,
+      marginRight: 20,
       opacity: 0.5,
     },
     iconActive: {
@@ -119,18 +71,13 @@ export default class Card {
     },
   }
 
-  static theme = ({ offset, isActive }, theme) => {
-    const isOdd = offset % 2 == 0
+  static theme = ({ isActive }, theme) => {
     return {
       card: {
-        borderLeftRadius: isOdd ? 4 : 0,
-        borderRightRadius: !isOdd ? 4 : 0,
         background: 'transparent',
-        '&:hover': isActive
-          ? {
-              background: theme.hover.background,
-            }
-          : {},
+        '&:hover': {
+          background: theme.hover.background,
+        },
       },
       isSelected: {
         background: theme.active.background,

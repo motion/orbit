@@ -53,8 +53,9 @@ export default class Orbit {
           <OrbitHeader headerBg={headerBg} />
           <orbitInner>
             <orbitContext
-              if={!appStore.showSettings}
               css={{
+                opacity: appStore.showSettings ? 0 : 1,
+                pointerEvents: appStore.showSettings ? 'none' : 'auto',
                 background: theme.base.background,
               }}
             >

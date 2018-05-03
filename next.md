@@ -1,12 +1,10 @@
 ## broadly
 
-* correctness/smoothness/perf/bugs (3 days)
-* ui/ux (3 days)
 * fake hardcoded demo features (3 days)
 * explore ui (1 day)
 * people directory (1 day)
 * highlight words (2 days)
-* improve syncers/settings (2 days)
+* working syncers/settings (2 days)
 * profiles (1 day)
 
 ## now

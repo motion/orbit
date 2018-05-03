@@ -118,14 +118,18 @@ export default class PeekFrame {
               }}
               onClose={App.clearPeek}
             />
-            <chrome if={peekStore.hasHistory}>
+            <chrome
+              if={peekStore.hasHistory}
+              css={{ top: peekStore.headerHeight - 11 }}
+            >
               <UI.Button
                 icon="arrowminleft"
                 circular
                 size={0.85}
+                background="#f2f2f2"
                 iconProps={{
                   style: {
-                    transform: `translateX(-2px) translateY(-0.5px)`,
+                    transform: `translateX(-1px) translateY(-1px)`,
                   },
                 }}
               />
@@ -174,7 +178,6 @@ export default class PeekFrame {
     },
     chrome: {
       position: 'absolute',
-      top: 90,
       left: 10,
       zIndex: 100000,
     },

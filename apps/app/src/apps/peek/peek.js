@@ -7,6 +7,7 @@ import { capitalize } from 'lodash'
 import PeekFrame from './peekFrame'
 
 class PeekStore {
+  headerHeight = 0
   history = []
 
   get hasHistory() {
@@ -17,6 +18,7 @@ class PeekStore {
   updateHistory = [
     () => this.curState,
     state => {
+      this.headerHeight = 20
       if (state) {
         this.history.push(state)
       } else {

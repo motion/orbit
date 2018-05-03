@@ -13,10 +13,17 @@ export default class Card extends React.Component {
   setRef = ref => {
     this.ref = ref
     if (!ref) return
-    this.hoverSettler.setItem({ id: -1, ref })
+    this.hoverSettler.setItem({
+      item: {
+        type: 'setting',
+        integration: this.props.setting.integration,
+      },
+      ref,
+    })
   }
 
-  render({ id, icon, title, index, subtitle, isActive, appStore, oauth }) {
+  render({ setting, index, subtitle, isActive, appStore, oauth }) {
+    const { id, icon, title } = setting
     const isSelected =
       appStore.selectedIndex === index && !!App.peekState.target
     return (

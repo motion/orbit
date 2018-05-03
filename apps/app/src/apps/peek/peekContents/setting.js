@@ -41,7 +41,7 @@ const EmptyPane = () => <div>no setting pane</div>
     }
   },
 })
-export class SettingView {
+export class Setting {
   render({ appStore, store }) {
     console.log('MOUNTING A SETTING VIEW')
     if (!store.setting || !store.setting.token) {

@@ -12,7 +12,7 @@ const parseBody = body =>
 @view
 export class Mail {
   render({ bit }) {
-    if (!bit) {
+    if (!bit || !bit.data) {
       return null
     }
     const { messages } = bit.data

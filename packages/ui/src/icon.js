@@ -81,6 +81,10 @@ export default class Icon extends React.PureComponent {
     if (name[0] === '/') {
       return <img $icon src={name} {...props} />
     }
+    if (!name) {
+      console.warn('no name given for icon')
+      return null
+    }
     const iconName = findMatch(name)
     content = content || children
     return (

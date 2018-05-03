@@ -222,6 +222,9 @@ export default class AppStore {
       if (bit.type === 'person') {
         return await Person.findOne({ id: bit.id })
       }
+      if (bit.type === 'setting') {
+        return bit
+      }
       const res = await Bit.findOne({
         where: {
           id: bit.id,
@@ -371,8 +374,9 @@ export default class AppStore {
     }
   }
 
-  pinSelected = (index, ref, setBit) => {
-    const bit = setBit || this.results[index]
+  pinSelected = (index, ref, item) => {
+    log(`pinseelected`, index, ref, item)
+    const bit = item || this.results[index]
     this.setActive(index)
     const target = this.getTargetPosition(ref)
     const position = peekPosition(target)
@@ -394,9 +398,9 @@ export default class AppStore {
     onHovered: res => {
       if (!res) {
         this.clearSelected()
-      } else {
-        this.pinSelected(res.index, res.ref)
+        return
       }
+      this.pinSelected(res.index, res.ref, res.item)
     },
   })
 

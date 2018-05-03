@@ -81,15 +81,15 @@ export default class OrbitSettings {
       return null
     }
     const { activeIntegrations, inactiveIntegrations } = this.splitActiveResults
-    const integrationCard = all => (integration, index, offset) => (
+    const integrationCard = all => (setting, index, offset) => (
       <SettingCard
         key={index}
         index={index}
         offset={offset}
         appStore={appStore}
         length={all.length}
-        isActive={this.isActive(integration)}
-        {...integration}
+        isActive={this.isActive(setting)}
+        setting={setting}
       />
     )
     return (

@@ -63,7 +63,7 @@ export default class OrbitHome {
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
       overflowY: 'scroll',
-      padding: [0, 12],
+      padding: [0, 8],
     },
   }
 }

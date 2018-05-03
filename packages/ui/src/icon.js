@@ -154,7 +154,7 @@ export default class Icon extends React.PureComponent {
         color: color || (theme && theme.color) || '#000',
         width,
         height,
-        fontSize: size * 1.2,
+        fontSize: width,
         lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
         '&:hover': {
           color: (hover && hover.color) || theme.color || color,

@@ -89,11 +89,13 @@ export default class OrbitCard {
 
   setRef = ref => {
     if (!ref) return
-    this.hoverSettler.setItem({
-      index: this.props.index,
-      id: this.props.bit.id,
-      ref,
-    })
+    if (this.hoverSettler) {
+      this.hoverSettler.setItem({
+        index: this.props.index,
+        id: this.props.bit.id,
+        ref,
+      })
+    }
     this.ref = ref
     if (this.props.getRef) {
       this.props.getRef(ref)
@@ -124,6 +126,20 @@ export default class OrbitCard {
     const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
     const isExpanded = this.isExpanded
     const showPreview = !tiny && !isExpanded
+    const hasPreviewLine = preview || location
+    const orbitIcon = (
+      <OrbitIcon
+        if={icon}
+        icon={icon}
+        size={hasPreviewLine ? 14 : 18}
+        $orbitIcon
+        css={{
+          filter: isExpanded ? 'none' : 'grayscale(50%)',
+          opacity: isExpanded ? 1 : 0.85,
+        }}
+        {...tiny && tinyProps.iconProps}
+      />
+    )
     return (
       <cardWrap
         css={{
@@ -157,6 +173,7 @@ export default class OrbitCard {
             >
               {title}
             </UI.Text>
+            {!hasPreviewLine && orbitIcon}
           </title>
           <SubTitle $subtitle if={!tiny && typeof subtitle === 'string'}>
             {subtitle}
@@ -164,18 +181,8 @@ export default class OrbitCard {
           <subtitle if={!tiny && typeof subtitle === 'object'}>
             {subtitle}
           </subtitle>
-          <preview if={preview || location || icon}>
-            <OrbitIcon
-              if={icon}
-              icon={icon}
-              size={14}
-              $orbitIcon
-              css={{
-                filter: isExpanded ? 'none' : 'grayscale(50%)',
-                opacity: isExpanded ? 1 : 0.85,
-              }}
-              {...tiny && tinyProps.iconProps}
-            />
+          <preview if={hasPreviewLine}>
+            {orbitIcon}
             <UI.Text if={typeof location === 'string'} opacity={0.7}>
               {location}&nbsp;&nbsp;
             </UI.Text>

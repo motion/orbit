@@ -377,7 +377,7 @@ export default class AppStore {
   pinSelected = (index, ref, item) => {
     const bit = item || this.results[index]
     this.setActive(index)
-    const target = this.getTargetPosition(ref)
+    const target = ref ? this.getTargetPosition(ref) : App.peekState.target
     const position = peekPosition(target)
     App.setPeekState({
       id: Math.random(),

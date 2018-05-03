@@ -9,33 +9,6 @@ const SHADOW_PAD = 50
 const borderRadius = 8
 const background = '#f9f9f9'
 
-class PeekFrameStore {
-  get curState() {
-    if (!App.peekState.target) {
-      return null
-    }
-    if (App.orbitState.docked || !App.orbitState.hidden) {
-      return App.peekState
-    }
-    return null
-  }
-
-  @react({ delay: 16, fireImmediately: true, log: false })
-  lastState = [() => this.curState, _ => _]
-
-  get willHide() {
-    return !!this.lastState && !this.curState
-  }
-
-  get willShow() {
-    return !!this.curState && !this.lastState
-  }
-
-  get willStayShown() {
-    return !!this.lastState && !!this.curState
-  }
-}
-
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
 const transitions = store => {
   if (store.isHidden) return 'none'
@@ -45,12 +18,11 @@ const transitions = store => {
 }
 
 @UI.injectTheme
-@view({
-  store: PeekFrameStore,
-})
+@view.attach('peekStore')
+@view
 export default class PeekFrame {
-  render({ store, children, ...props }) {
-    const { willShow, willHide, curState, lastState, willStayShown } = store
+  render({ peekStore, children, ...props }) {
+    const { willShow, willHide, curState, lastState, willStayShown } = peekStore
     let state = curState
     if (willHide) {
       state = lastState
@@ -95,7 +67,7 @@ export default class PeekFrame {
           arrowSize / 2,
       state.size[1] - borderRadius * 2 - arrowSize,
     )
-    const transition = transitions(store)
+    const transition = transitions(peekStore)
     return (
       <peekFrame
         css={{
@@ -146,6 +118,18 @@ export default class PeekFrame {
               }}
               onClose={App.clearPeek}
             />
+            <chrome if={peekStore.hasHistory}>
+              <UI.Button
+                icon="arrowminleft"
+                circular
+                size={0.85}
+                iconProps={{
+                  style: {
+                    transform: `translateX(-2px) translateY(-0.5px)`,
+                  },
+                }}
+              />
+            </chrome>
             <peekFrameBorder
               css={{
                 borderRadius,
@@ -187,6 +171,12 @@ export default class PeekFrame {
       top: 0,
       zIndex: 100,
       transition: 'transform ease-in 100ms',
+    },
+    chrome: {
+      position: 'absolute',
+      top: 90,
+      left: 10,
+      zIndex: 100000,
     },
     peekFrameBorder: {
       position: 'absolute',

@@ -1,11 +1,39 @@
-## broadly
+## thurs
 
-* fake hardcoded demo features (3 days)
-* explore ui (1 day)
-* people directory (1 day)
-* highlight words (2 days)
-* working syncers/settings (2 days)
-* profiles (1 day)
+* directory / profiles
+* explore mock
+* final interaction/ux fixes
+
+## fri
+
+* summary pitch/design finish
+  * pin announcement
+  * pin search result
+* highlight words demo
+* ? tear away peeks
+
+## sat
+
+* website
+* any more design that helps website/pitch
+
+## sun
+
+* website
+* plan reach out to formidable / research formidable
+* ? app themes for website
+
+## mon
+
+* reach out to ken
+
+## tue
+
+## wed
+
+## thurs
+
+## fri
 
 ## now
 
@@ -17,7 +45,6 @@
 * get dark blue theme working for news area
   * work on themes
 * pinning item to top of news for a day
-* bring back highlight words harcode demo
 
 demo for Formidable on May 12th:
 

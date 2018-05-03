@@ -59,6 +59,9 @@ export default class KeyboardStore {
         if (!App.orbitState.docked && !App.isMouseInActiveArea) {
           return
         }
+        if (App.orbitState.docked && !Desktop.state.focusedOnOrbit) {
+          return
+        }
         Desktop.sendMessage(App, App.messages.HIDE)
         return
       }

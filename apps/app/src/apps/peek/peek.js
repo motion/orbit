@@ -1,15 +1,63 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import * as PeekContents from './peekContents'
 import { capitalize } from 'lodash'
 import PeekFrame from './peekFrame'
 
+class PeekStore {
+  history = []
+
+  get hasHistory() {
+    return this.history.length
+  }
+
+  @react
+  updateHistory = [
+    () => this.curState,
+    state => {
+      if (state) {
+        this.history.push(state)
+      } else {
+        this.history = []
+      }
+    },
+  ]
+
+  get curState() {
+    if (!App.peekState.target) {
+      return null
+    }
+    if (App.orbitState.docked || !App.orbitState.hidden) {
+      return App.peekState
+    }
+    return null
+  }
+
+  @react({ delay: 16, fireImmediately: true, log: false })
+  lastState = [() => this.curState, _ => _]
+
+  get willHide() {
+    return !!this.lastState && !this.curState
+  }
+
+  get willShow() {
+    return !!this.curState && !this.lastState
+  }
+
+  get willStayShown() {
+    return !!this.lastState && !!this.curState
+  }
+}
+
 @view.attach('appStore')
+@view.provide({
+  peekStore: PeekStore,
+})
 @view
 export default class PeekPage {
-  render({ appStore }) {
+  render({ peekStore, appStore }) {
     const { bit } = App.peekState
     const type = (bit && capitalize(bit.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
@@ -25,6 +73,7 @@ export default class PeekPage {
             bit={appStore.selectedBit}
             person={appStore.selectedBit}
             appStore={appStore}
+            peekStore={peekStore}
           />
         </PeekFrame>
       </UI.Theme>

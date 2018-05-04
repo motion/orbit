@@ -12,15 +12,15 @@ const exampleContent = [
   },
   {
     title: `Nate and Nick`,
-    preview: 'a16z, venture, Formidable, coffee',
+    preview: 'cosal, sketchy, hardcode, spectrum, fit, scaling, overkill',
   },
   {
     title: `Kevin, Mehak & 4 more`,
-    preview: 'a16z, venture, Formidable, coffee',
+    preview: 'ml, nlp, formidable, client',
   },
   {
     title: `Julie and Cam`,
-    preview: 'a16z, venture, Formidable, coffee',
+    preview: '10%, 60-80k, rallyinteractive.com, re-sign, loan',
   },
 ]
 const uids = {}

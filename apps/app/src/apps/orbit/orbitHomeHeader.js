@@ -70,11 +70,19 @@ export default class OrbitHomeHeader {
       <React.Fragment>
         <section $explore>
           <UI.Button
+            icon="home"
+            tooltip="Home"
+            $exploreButton
+            active={paneStore.activePane === 'home'}
+            onClick={() => paneStore.setActivePane('home')}
+            {...exploreButton}
+          />
+          <UI.Button
             icon="menu"
             tooltip="Explore"
             $exploreButton
-            css={{ marginLeft: -2 }}
             active={paneStore.activePane === 'explore'}
+            onClick={() => paneStore.setActivePane('explore')}
             {...exploreButton}
           />
           <UI.Button
@@ -82,6 +90,7 @@ export default class OrbitHomeHeader {
             tooltip="Directory"
             $exploreButton
             active={paneStore.activePane === 'directory'}
+            onClick={() => paneStore.setActivePane('directory')}
             {...exploreButton}
           />
           <space $$flex />
@@ -91,6 +100,7 @@ export default class OrbitHomeHeader {
                 {...roundBtnProps}
                 key={index}
                 active={paneStore.paneIndex === index - paneStore.mainPanes}
+                onClick={() => paneStore.setActivePane(name)}
               >
                 {name}
               </RoundButton>

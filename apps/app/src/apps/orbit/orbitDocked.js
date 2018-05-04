@@ -18,12 +18,27 @@ class PaneStore {
   paneIndex = 0
   panes = [...this.mainPanes, ...this.filters]
 
-  get isActive() {
+  willMount() {
+    this.on(this.props.orbitStore, 'key', key => {
+      if (key === 'right') {
+        this.paneIndex = Math.min(this.panes.length - 1, this.paneIndex + 1)
+      }
+      if (key === 'left') {
+        this.paneIndex = Math.max(0, this.paneIndex - 1)
+      }
+    })
+  }
+
+  get isShowingDocked() {
     return this.props.appStore.selectedPane === 'summary'
   }
 
+  setActivePane = name => {
+    this.paneIndex = this.panes.findIndex(val => val === name)
+  }
+
   get activePane() {
-    if (!this.isActive) {
+    if (!this.isShowingDocked) {
       return null
     }
     if (App.state.query) {
@@ -52,7 +67,7 @@ class PaneStore {
 }
 
 @UI.injectTheme
-@view.attach('appStore')
+@view.attach('appStore', 'orbitStore')
 @view.provide({
   paneStore: PaneStore,
 })
@@ -86,22 +101,15 @@ class OrbitDocked {
             }}
             onClick={appStore.toggleSettings}
           />
-          <OrbitHome
-            name="home"
-            isActive={paneStore.activePane === 'home'}
-            appStore={appStore}
-            paneStore={paneStore}
-          />
+          <OrbitHome name="home" appStore={appStore} paneStore={paneStore} />
           <OrbitDirectory
             name="directory"
-            isActive={paneStore.activePane === 'directory'}
             appStore={appStore}
             paneStore={paneStore}
           />
           <OrbitSearchResults
             name="search"
             parentPane="summary"
-            isActive={paneStore.activePane === 'search'}
             paneStore={paneStore}
           />
           <OrbitSettings />

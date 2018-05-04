@@ -21,8 +21,9 @@ const findType = (integration, type, skip = 0) =>
 class OrbitHomeStore {
   @react({ immediate: true })
   setGetResults = [
-    () => this.props.isActive,
-    () => {
+    () => this.props.paneStore.activePane === this.props.name,
+    isActive => {
+      if (!isActive) throw react.cancel
       this.props.appStore.setGetResults(() => this.results)
     },
   ]
@@ -51,6 +52,7 @@ class OrbitHomeStore {
 })
 export default class OrbitHome {
   render({ store }) {
+    log(`rendering home`)
     return (
       <OrbitDockedPane name="home">
         <Masonry>

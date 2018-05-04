@@ -8,7 +8,8 @@ class OrbitDirectoryStore {
   @react({ immediate: true })
   setGetResults = [
     () => this.props.paneStore.activePane === this.props.name,
-    () => {
+    isActive => {
+      if (!isActive) throw react.cancel
       this.props.appStore.setGetResults(() => this.results)
     },
   ]

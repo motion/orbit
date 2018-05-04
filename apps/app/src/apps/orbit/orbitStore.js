@@ -40,25 +40,16 @@ export default class OrbitStore {
   }
 
   handleKeyDown = code => {
-    const {
-      results,
-      activeIndex,
-      toggleSelected,
-      showSettings,
-    } = this.props.appStore
+    const { results, activeIndex, toggleSelected } = this.props.appStore
     const increment = (by = 1) =>
       toggleSelected(Math.min(results.length - 1, activeIndex + by))
     const decrement = (by = 1) => toggleSelected(Math.max(-1, activeIndex - by))
     switch (code) {
       case 37: // left
-        if (showSettings) {
-          decrement()
-        }
+        this.emit('key', 'left')
         return
       case 39: // right
-        if (showSettings) {
-          increment()
-        }
+        this.emit('key', 'right')
         return
       case 40: // down
         increment()

@@ -72,6 +72,9 @@ class DesktopStore {
   ]
 
   get isHoldingOption(): Boolean {
+    if (Desktop.mouseState.mouseDown) {
+      return false
+    }
     const { option, optionUp } = Desktop.state.keyboardState
     return (option || 0) > (optionUp || 1)
   }

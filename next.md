@@ -2,8 +2,8 @@
 
 * directory / profiles
 * explore mock
-* orbitcard bugs
 * keyboard fixes
+* peek weird bugs
 
 ## fri
 

@@ -83,7 +83,6 @@ export default class Results {
                 listItem
                 expanded
                 hoverToSelect
-                getRef={appStore.setResultRef(i)}
               />
             ))}
             <lastResultSpace $$untouchable css={{ height: 12 }} />

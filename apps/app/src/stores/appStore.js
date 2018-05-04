@@ -4,8 +4,6 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import * as _ from 'lodash'
-import peekPosition from './helpers/peekPosition'
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -110,6 +108,7 @@ const parseQuery = query => {
 }
 
 export default class AppStore {
+  nextIndex = -1
   activeIndex = -1
   showSettings = false
   settings = {}
@@ -323,69 +322,11 @@ export default class AppStore {
     ])).filter(Boolean)
   }
 
-  setResultRef = _.memoize(index => ref => {
-    this.resultRefs[index] = ref
-  })
-
-  setDockedResultRef = _.memoize(index => ref => {
-    this.dockedResultRefs[index] = ref
-  })
-
-  getTargetPosition = ref => {
-    if (!ref) {
-      throw `no result ref ${ref}`
-    }
-    const { top, left, height } = ref.getBoundingClientRect()
-    return {
-      top,
-      left: left,
-      width: App.orbitState.size[0],
-      height,
-    }
-  }
-
   clearSelected = () => {
     App.clearPeek()
   }
 
   lastSelectAt = 0
-
-  setActive = index => {
-    if (index !== this.activeIndex) {
-      this.lastSelectAt = Date.now()
-      this.activeIndex = index
-    }
-  }
-
-  toggleSelected = (index, ref) => {
-    const isSame = this.activeIndex === index
-    if (isSame && App.peekState.target) {
-      if (Date.now() - this.lastSelectAt < 450) {
-        // ignore double clicks
-        return
-      }
-      App.clearPeek()
-    } else {
-      this.pinSelected(index, ref)
-    }
-  }
-
-  pinSelected = (index, ref, item) => {
-    const bit = item || this.results[index]
-    this.setActive(index)
-    const target = ref ? this.getTargetPosition(ref) : App.peekState.target
-    const position = peekPosition(target)
-    App.setPeekState({
-      id: Math.random(),
-      target,
-      bit: this.getPeekItem(bit),
-      ...position,
-    })
-  }
-
-  setGetResults = fn => {
-    this.getResults = fn
-  }
 
   hoverOutTm = 0
   getHoverSettler = Helpers.hoverSettler({
@@ -404,9 +345,34 @@ export default class AppStore {
         // }, 200)
         return
       }
-      this.pinSelected(res.index, res.ref, res.item)
+      this.toggleSelected(res.index)
     },
   })
+
+  toggleSelected = index => {
+    const isSame = this.activeIndex === index
+    if (isSame && App.peekState.target) {
+      if (Date.now() - this.lastSelectAt < 450) {
+        // ignore double clicks
+        return isSame
+      }
+      App.clearPeek()
+    } else {
+      this.nextIndex = index
+    }
+    return false
+  }
+
+  finishSettingIndex = () => {
+    if (this.nextIndex !== this.activeIndex) {
+      this.lastSelectAt = Date.now()
+      this.activeIndex = this.nextIndex
+    }
+  }
+
+  setGetResults = fn => {
+    this.getResults = fn
+  }
 
   @react.if
   hoverWordToActiveIndex = [
@@ -419,14 +385,7 @@ export default class AppStore {
       console.log('none found')
       return null
     }
-    return {
-      id: item.id || '',
-      icon: item.icon || '',
-      title: item.title || '',
-      body: item.body || '',
-      type: item.type || '',
-      integration: item.integration || '',
-    }
+    return
   }
 
   getSettings = async () => {

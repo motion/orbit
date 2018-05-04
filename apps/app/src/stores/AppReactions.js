@@ -1,6 +1,6 @@
 import { store, react } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
-import orbitPosition from './helpers/orbitPosition'
+import orbitPosition from '~/helpers/orbitPosition'
 import debug from '@mcro/debug'
 
 const log = debug('AppReactions')
@@ -105,7 +105,7 @@ export default class AppReactions {
 
   @react({ log: 'state' })
   clearPeekOnOrbitClose = [
-    () => !App.isShowingOrbit,
+    () => App.isFullyHidden,
     hidden => {
       if (!hidden) {
         throw react.cancel

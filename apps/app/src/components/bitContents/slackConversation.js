@@ -22,8 +22,21 @@ const exampleContent = [
     title: `Julie and Cam`,
     preview: '10%, 60-80k, rallyinteractive.com, re-sign, loan',
   },
+  {
+    title: `James, Jungwon and Evan`,
+    preview: 'jitter, searches, peek, design',
+  },
+  {
+    title: `Stephanie, Drew & 10 more`,
+    preview: 'broke, docked, arrows, aligning',
+  },
+  {
+    title: `Ben`,
+    preview: 'related, conversations, glitches',
+  },
 ]
 const uids = {}
+let curId = 0
 
 @UI.injectTheme
 @view
@@ -33,8 +46,7 @@ export default class BitSlackConversation {
   }
 
   render({ children, bit, appStore, shownLimit, theme, contentStyle }) {
-    const uid =
-      uids[bit.id] || Math.floor(Math.random() * exampleContent.length)
+    const uid = uids[bit.id] || curId++ % (exampleContent.length - 1)
     uids[bit.id] = uid
     const { title, preview } = exampleContent[uid]
     return children({

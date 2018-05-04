@@ -43,12 +43,12 @@ export default class OrbitStore {
     const {
       results,
       activeIndex,
-      pinSelected,
+      toggleSelected,
       showSettings,
     } = this.props.appStore
     const increment = (by = 1) =>
-      pinSelected(Math.min(results.length - 1, activeIndex + by))
-    const decrement = (by = 1) => pinSelected(Math.max(-1, activeIndex - by))
+      toggleSelected(Math.min(results.length - 1, activeIndex + by))
+    const decrement = (by = 1) => toggleSelected(Math.max(-1, activeIndex - by))
     switch (code) {
       case 37: // left
         if (showSettings) {

@@ -11,7 +11,7 @@ const SHADOW_PAD = 85
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
 
 class DockedStore {
-  @react({ log: false })
+  @react({ log: false, defaultValue: { willAnimate: false, visible: false } })
   animationState = [
     () => App.orbitState.docked,
     async (visible, { sleep, setValue }) => {
@@ -34,9 +34,6 @@ class DockedStore {
 })
 class OrbitDocked {
   render({ store, appStore, theme }) {
-    if (!store.animationState) {
-      return null
-    }
     const { visible, willAnimate } = store.animationState
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)

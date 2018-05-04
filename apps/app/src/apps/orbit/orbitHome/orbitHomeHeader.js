@@ -62,7 +62,7 @@ export default class OrbitHomeHeader {
       background: theme.base.background,
       iconProps: {
         color: buttonColor,
-        size: 14,
+        size: 16,
       },
     }
     return (

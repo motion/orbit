@@ -31,6 +31,7 @@ class OrbitHomeStore {
 @view
 export default class OrbitHome {
   render({ appStore, theme }) {
+    log(`render home`)
     return (
       <pane css={{ background: theme.base.background }}>
         <OrbitHomeHeader theme={theme} />
@@ -39,13 +40,12 @@ export default class OrbitHome {
             {appStore.summaryResults.map((bit, index) => (
               <OrbitCard
                 pane="summary"
-                key={index}
+                key={`${bit.id}${index}`}
                 index={index}
                 bit={bit}
                 total={appStore.summaryResults.length}
                 hoverToSelect
                 expanded
-                getRef={appStore.setDockedResultRef(index)}
               />
             ))}
           </Masonry>

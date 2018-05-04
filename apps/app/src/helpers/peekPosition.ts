@@ -3,7 +3,7 @@ import { App } from '@mcro/all'
 
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
-const TOP_OFFSET = -5
+const TOP_OFFSET = 10
 const screenSize = () => [window.innerWidth, window.innerHeight]
 
 export default function peekPosition(target) {

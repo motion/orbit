@@ -43,7 +43,7 @@ export default class PeekFrame {
     const arrowSize = 30
     // determine x adjustments
     // adjust for docked not using shadow pad
-    let peekAdjustX = docked ? -18 : 0
+    let peekAdjustX = docked ? -18 - 6 : 0
     // adjust for orbit arrow blank
     if (!docked && orbitOnLeft && !onRight) {
       peekAdjustX -= Constants.SHADOW_PAD

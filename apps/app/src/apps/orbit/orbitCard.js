@@ -4,9 +4,11 @@ import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 import bitContents from '~/components/bitContents'
 import { App } from '@mcro/all'
+import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
 
 class OrbitCardStore {
   _isSelected = false
+  ref = null
 
   get isSelected() {
     return typeof this.props.isSelected === 'boolean'
@@ -14,12 +16,40 @@ class OrbitCardStore {
       : this._isSelected
   }
 
+  get isPaneSelected() {
+    return this.props.appStore.selectedPane === this.props.pane
+  }
+
+  handleClick = () => {
+    this.props.appStore.toggleSelected(this.props.index)
+  }
+
+  setRef = ref => {
+    if (!ref) return
+    this.ref = ref
+    if (this.props.getRef) {
+      this.props.getRef(ref)
+    }
+  }
+
+  @react
+  setPeekTargetOnNextIndex = [
+    () => this.props.appStore.nextIndex === this.props.index,
+    shouldSelect => {
+      if (!this.isPaneSelected || !shouldSelect) {
+        throw react.cancel
+      }
+      OrbitHelpers.setPeekTarget(this.props.bit, this.ref)
+      this.props.appStore.finishSettingIndex()
+    },
+  ]
+
   @react({ fireImmediately: true, log: false })
   updateIsSelected = [
     () => [this.props.appStore.activeIndex, App.state.peekState.target],
     ([index, target]) => {
-      if (this.props.appStore.selectedPane !== this.props.pane) {
-        return
+      if (!this.isPaneSelected) {
+        throw react.cancel
       }
       const isSelected = !target ? false : index === this.props.index
       if (isSelected !== this._isSelected) {
@@ -56,11 +86,10 @@ export default class OrbitCard {
     const { appStore, hoverToSelect } = this.props
     if (hoverToSelect) {
       this.hoverSettler = appStore.getHoverSettler()
+      this.hoverSettler.setItem({
+        index: this.props.index,
+      })
     }
-  }
-
-  toggleSelected = () => {
-    this.props.appStore.toggleSelected(this.props.index, this.ref)
   }
 
   get isExpanded() {
@@ -73,21 +102,6 @@ export default class OrbitCard {
       (this.props.store.isSelected && !this.props.tiny) ||
       (this.props.listItem && this.props.store.isSelected)
     )
-  }
-
-  setRef = ref => {
-    if (!ref) return
-    if (this.hoverSettler) {
-      this.hoverSettler.setItem({
-        index: this.props.index,
-        id: this.props.bit.id,
-        ref,
-      })
-    }
-    this.ref = ref
-    if (this.props.getRef) {
-      this.props.getRef(ref)
-    }
   }
 
   getOrbitCard({
@@ -103,6 +117,7 @@ export default class OrbitCard {
     date,
   }) {
     const {
+      store,
       tiny,
       listItem,
       style,
@@ -127,8 +142,8 @@ export default class OrbitCard {
         css={{
           zIndex: isExpanded ? 5 : 4,
         }}
-        ref={this.setRef}
-        onClick={this.toggleSelected}
+        ref={store.setRef}
+        onClick={store.handleClick}
         {...hoverToSelect && this.hoverSettler.props}
         style={style}
       >
@@ -205,6 +220,7 @@ export default class OrbitCard {
   }
 
   render({ appStore, bit, store, itemProps }) {
+    log(`render card ${bit.id}`)
     const BitContent = bitContents(bit)
     store.isSelected
     if (typeof BitContent !== 'function') {

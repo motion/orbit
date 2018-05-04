@@ -86,7 +86,7 @@ export default class OrbitHeader {
           <UI.Icon
             $searchIcon
             name="ui-1_zoom"
-            size={15}
+            size={18}
             color={theme.active.background.darken(0.15).desaturate(0.4)}
           />
           <input

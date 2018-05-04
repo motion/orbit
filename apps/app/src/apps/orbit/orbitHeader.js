@@ -79,9 +79,7 @@ export default class OrbitHeader {
             zIndex: 1,
             right: App.orbitOnLeft ? 20 : -1,
             left: App.orbitOnLeft ? -1 : 20,
-            background: `linear-gradient(to right, ${
-              theme.base.background
-            }, ${theme.active.background.darken(0.05)})`,
+            background: theme.active.background.darken(0.01).desaturate(0.1),
           }}
         />
         <title>

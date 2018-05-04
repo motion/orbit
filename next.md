@@ -1,9 +1,7 @@
 ## fri
 
 * website
-* directory / profiles
 * explore mock
-* keyboard fixes
 * peek weird bugs
 * summary pitch/design finish
   * pin announcement

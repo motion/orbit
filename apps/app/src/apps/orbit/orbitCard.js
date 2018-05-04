@@ -51,8 +51,6 @@ export default class OrbitCard {
     borderRadius: 8,
   }
 
-  hovered = false
-
   componentWillMount() {
     this.getOrbitCard = this.getOrbitCard.bind(this)
     const { appStore, hoverToSelect } = this.props
@@ -61,19 +59,12 @@ export default class OrbitCard {
     }
   }
 
-  setHovered = () => {
-    this.hovered = true
-  }
-
-  setUnhovered = () => {
-    this.hovered = false
-  }
-
   toggleSelected = () => {
     this.props.appStore.toggleSelected(this.props.index, this.ref)
   }
 
   get isExpanded() {
+    this.props.store.isSelected
     const expanded = this.props.expanded
     if (typeof expanded === 'boolean') {
       return expanded
@@ -128,10 +119,6 @@ export default class OrbitCard {
         icon={icon}
         size={hasSubtitle ? 14 : 18}
         $orbitIcon
-        css={{
-          filter: isExpanded ? 'none' : 'grayscale(50%)',
-          opacity: isExpanded ? 1 : 0.85,
-        }}
         {...tiny && tinyProps.iconProps}
       />
     )
@@ -146,19 +133,16 @@ export default class OrbitCard {
         style={style}
       >
         <card
-          $cardHovered={this.hovered}
           css={{
             padding: listItem ? 15 : tiny ? [6, 8] : [10, 11],
             borderRadius,
           }}
-          onMouseEnter={this.setHovered}
-          onMouseLeave={this.setUnhovered}
         >
           <title>
             <UI.Text
               size={1.25}
               lineHeight="1.4rem"
-              ellipse={isExpanded ? 2 : 1}
+              ellipse={2}
               fontWeight={400}
               css={{
                 maxWidth: `calc(100% - 30px)`,
@@ -223,7 +207,6 @@ export default class OrbitCard {
   render({ appStore, bit, store, itemProps }) {
     const BitContent = bitContents(bit)
     store.isSelected
-    this.isExpanded
     if (typeof BitContent !== 'function') {
       console.error('got a weird one', BitContent)
       return null
@@ -330,7 +313,6 @@ export default class OrbitCard {
     }
     return {
       card,
-      cardHovered: hoveredStyle,
       bottom: {
         opacity: isSelected ? 1 : 0.5,
       },

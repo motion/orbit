@@ -104,3 +104,26 @@ and of course, Formidable being a remote company, i thought this would be the pe
 * basically work alongside them in some sense. could work out of seattle office for a while.
 * if goes well, would basically just have its own github issue tracker. formidable team could open tickets, make requests, discuss features all in open
 * formidable can stay grandfathered in as free!
+
+# offer
+
+day 1 (< 1 month):
+
+* can replace your spotlight effectively (good experience)
+* basic nlp daily summary
+* basic nlp search
+* basic aggregate profiles
+* move into office to work with them
+* interview employees and begin backlog focused on you
+
+every 30 days
+
+* evaluate progress and see if delivering value
+* set ambitious goals for next month by reviewing backlog
+* my goals:
+  * improve all the day 1 goals to be good
+
+after 90 days
+
+* finalize trial
+* see if we can move to a permanent discounted rate

@@ -54,7 +54,6 @@ export default ({ color = '#000', size = 1, ...props }) => {
       css={{
         alignItems: 'center',
         flexFlow: 'row',
-        padding: 10,
       }}
       {...props}
     >

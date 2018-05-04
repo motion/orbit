@@ -236,11 +236,11 @@ export default class AppStore {
   ]
 
   get results() {
+    if (this.selectedPane.indexOf('-search')) {
+      return this.searchState.results
+    }
     if (this.getResults) {
       return this.getResults()
-    }
-    if (this.selectedPane === 'summary') {
-      return this.summaryResults
     }
     return this.searchState.results || []
   }

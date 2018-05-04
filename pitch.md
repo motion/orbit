@@ -109,7 +109,7 @@ and of course, Formidable being a remote company, i thought this would be the pe
 
 day 1 (< 1 month):
 
-* can replace your spotlight effectively (good experience)
+* can replace your spotlight effectively (good experience, no ragequits)
 * basic nlp daily summary
 * basic nlp search
 * basic aggregate profiles

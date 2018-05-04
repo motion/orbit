@@ -1,6 +1,7 @@
 import { store } from '@mcro/black/store'
 import { App } from './App'
 import { Electron } from './Electron'
+import { Desktop } from './Desktop'
 import debug from '@mcro/debug'
 
 const log = debug('ElectronReactions')
@@ -20,8 +21,9 @@ export default class ElectronReactions {
         return
       }
       if (App.orbitState.pinned) {
-        this.togglePinned()
-        this.toggleVisible()
+        Electron.sendMessage(Desktop, Desktop.messages.CLEAR_OPTION)
+        Electron.sendMessage(App, App.messages.HIDE)
+        Electron.sendMessage(App, App.messages.UNPIN)
         return
       } else {
         // !pinned

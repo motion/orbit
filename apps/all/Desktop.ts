@@ -15,6 +15,7 @@ class DesktopStore {
     OPEN_AUTH: 'OPEN_AUTH',
     CLOSE_AUTH: 'CLOSE_AUTH',
     OPEN: 'OPEN',
+    CLEAR_OPTION: 'CLEAR_OPTION',
   }
 
   setState: typeof Bridge.setState
@@ -118,9 +119,6 @@ class DesktopStore {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
   }
-
-  // only clear if necessary
-  clearOption = () => Desktop.setKeyboardState({ optionUp: Date.now() })
 }
 
 Desktop = proxySetters(new DesktopStore())

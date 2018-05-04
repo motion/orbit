@@ -1,3 +1,7 @@
+# to investors
+
+the question is: will companies pay as much as they do for slack to replace their intranet with something that saves them more time than slack, and is just as easy to onboard?
+
 # outline
 
 * what problems

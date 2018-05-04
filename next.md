@@ -2,7 +2,8 @@
 
 * directory / profiles
 * explore mock
-* final interaction/ux fixes
+* orbitcard bugs
+* keyboard fixes
 
 ## fri
 

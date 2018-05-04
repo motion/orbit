@@ -38,6 +38,11 @@ export default class KeyboardStore {
 
   constructor(opts: { onKeyClear?: Function } = {}) {
     this.onKeyClear = opts.onKeyClear
+    Desktop.onMessage(Desktop.messages.CLEAR_OPTION, this.clearOption)
+  }
+
+  clearOption = () => {
+    Desktop.setKeyboardState({ optionUp: Date.now() })
   }
 
   key = null
@@ -70,7 +75,7 @@ export default class KeyboardStore {
       const holdingKeys = this.keysDown.size
       // clears:
       if (holdingKeys > 1 && isOption) {
-        return Desktop.clearOption()
+        return this.clearOption()
       }
       const isHoldingOption = this.keysDown.has(codes.option)
       // holding option + press key === pin
@@ -84,7 +89,7 @@ export default class KeyboardStore {
         return Desktop.setKeyboardState({ option: Date.now() })
       }
       if (this.keysDown.has(codes.option)) {
-        return Desktop.clearOption()
+        return this.clearOption()
       }
       switch (keycode) {
         // case codes.shift:
@@ -132,7 +137,7 @@ export default class KeyboardStore {
         //   Desktop.setKeyboardState({ shiftUp: Date.now() })
         //   break
         case codes.option:
-          Desktop.clearOption()
+          this.clearOption()
           break
         // case codes.space:
         //   Desktop.setKeyboardState({ spaceUp: Date.now() })

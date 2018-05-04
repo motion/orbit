@@ -139,6 +139,7 @@ export default class AppStore {
       }
       return 'context'
     }
+    return ''
   }
 
   async willMount() {

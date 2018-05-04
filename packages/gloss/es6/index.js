@@ -108,13 +108,7 @@ let Gloss = class Gloss {
         Child.glossUID = id;
         this.themeSheets[id] = themeSheet;
         if (hasTheme) {
-          let lastProps;
           Child.prototype.glossUpdateTheme = function (props) {
-            const noChange = (0, _reactFastCompare2.default)(props, lastProps);
-            lastProps = props;
-            if (noChange) {
-              return;
-            }
             this.theme = this.theme || themeSheet;
             const activeTheme = this.context.uiThemes && this.context.uiThemes[this.context.uiActiveThemeName];
             if (activeTheme) {

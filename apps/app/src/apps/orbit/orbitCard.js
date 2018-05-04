@@ -3,6 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitIcon from './orbitIcon'
 import bitContents from '~/components/bitContents'
+import { App } from '@mcro/all'
 
 class OrbitCardStore {
   _isSelected = false
@@ -15,12 +16,12 @@ class OrbitCardStore {
 
   @react({ fireImmediately: true, log: false })
   updateIsSelected = [
-    () => this.props.appStore.activeIndex,
-    index => {
+    () => [this.props.appStore.activeIndex, App.state.peekState.target],
+    ([index, target]) => {
       if (this.props.appStore.selectedPane !== this.props.pane) {
         return
       }
-      const isSelected = index === this.props.index
+      const isSelected = !target ? false : index === this.props.index
       if (isSelected !== this._isSelected) {
         this._isSelected = isSelected
       }
@@ -207,7 +208,6 @@ export default class OrbitCard {
             <permalink if={isExpanded}>{permalink}</permalink>
             <space if={permalink} />
             {bottom}
-            <orbital if={false} />
             <UI.Date>{bit.bitUpdatedAt}</UI.Date>
             <Text if={via} opacity={0.5} size={0.9}>
               {via}
@@ -220,14 +220,15 @@ export default class OrbitCard {
     )
   }
 
-  render({ appStore, bit, pane, store, listItem, itemProps }) {
+  render({ appStore, bit, store, itemProps }) {
     const BitContent = bitContents(bit)
     store.isSelected
+    this.isExpanded
     if (typeof BitContent !== 'function') {
       console.error('got a weird one', BitContent)
       return null
     }
-    const contents = (
+    return (
       <BitContent
         appStore={appStore}
         bit={bit}
@@ -237,10 +238,6 @@ export default class OrbitCard {
         {this.getOrbitCard}
       </BitContent>
     )
-    if (this.isExpanded && store.isSelected && !listItem) {
-      return <UI.Theme name="light">{contents}</UI.Theme>
-    }
-    return contents
   }
 
   static style = {
@@ -284,19 +281,6 @@ export default class OrbitCard {
       height: 20,
       flexFlow: 'row',
       alignItems: 'center',
-      // justifyContent: 'center',
-    },
-    bottomIcon: {
-      display: 'inline-block',
-      opacity: 0.5,
-      margin: [0, 2],
-    },
-    orbital: {
-      width: 10,
-      height: 10,
-      margin: [0, 7, -4, 0],
-      borderRadius: 4,
-      position: 'relative',
     },
     location: {
       flexFlow: 'row',
@@ -334,17 +318,12 @@ export default class OrbitCard {
       }
       card = isSelected
         ? {
-            border: [1, 'transparent'],
             background: '#fff',
-            boxShadow: isSelected
-              ? [
-                  ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.2)],
-                  // [2, 0, 25, [0, 0, 0, 0.05]],
-                ]
-              : null,
+            boxShadow: [
+              ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.2)],
+            ],
           }
         : {
-            border: [1, theme.active.background],
             background: 'transparent',
             '&:hover': hoveredStyle,
           }
@@ -354,10 +333,6 @@ export default class OrbitCard {
       cardHovered: hoveredStyle,
       bottom: {
         opacity: isSelected ? 1 : 0.5,
-      },
-      orbital: {
-        background: theme.selected.background.desaturate(0.1),
-        border: [2, theme.selected.background.desaturate(0.1).darken(0.1)],
       },
     }
   }

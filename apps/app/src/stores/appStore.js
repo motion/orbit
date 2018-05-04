@@ -130,9 +130,6 @@ export default class AppStore {
       }
       return 'summary'
     }
-    if (Desktop.hoverState.peekHovered) {
-      return 'carousel'
-    }
     if (!App.orbitState.hidden) {
       if (App.state.query) {
         return 'context-search'
@@ -237,7 +234,7 @@ export default class AppStore {
   ]
 
   get results() {
-    if (this.selectedPane.indexOf('-search')) {
+    if (this.selectedPane.indexOf('-search') > 0) {
       return this.searchState.results
     }
     if (this.getResults) {
@@ -348,9 +345,7 @@ export default class AppStore {
   }
 
   clearSelected = () => {
-    if (!App.isMouseInActiveArea) {
-      App.clearPeek()
-    }
+    App.clearPeek()
   }
 
   lastSelectAt = 0
@@ -392,12 +387,21 @@ export default class AppStore {
     this.getResults = fn
   }
 
+  hoverOutTm = 0
   getHoverSettler = Helpers.hoverSettler({
     enterDelay: 80,
     betweenDelay: 30,
     onHovered: res => {
+      clearTimeout(this.hoverOutTm)
       if (!res) {
-        this.clearSelected()
+        log(`should clear peek`)
+        // interval because hoversettler is confused when going back from peek
+        // this.hoverOutTm = setInterval(() => {
+        //   if (!Desktop.hoverState.peekHovered) {
+        //     log(`no target`)
+        //     this.clearSelected()
+        //   }
+        // }, 200)
         return
       }
       this.pinSelected(res.index, res.ref, res.item)

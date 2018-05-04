@@ -112,13 +112,7 @@ export default class Gloss {
       Child.glossUID = id
       this.themeSheets[id] = themeSheet
       if (hasTheme) {
-        let lastProps
         Child.prototype.glossUpdateTheme = function(props) {
-          const noChange = isEqual(props, lastProps)
-          lastProps = props
-          if (noChange) {
-            return
-          }
           this.theme = this.theme || themeSheet
           const activeTheme =
             this.context.uiThemes &&

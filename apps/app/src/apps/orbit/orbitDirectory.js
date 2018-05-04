@@ -3,6 +3,8 @@ import { view, react } from '@mcro/black'
 // import * as UI from '@mcro/ui'
 import { Person } from '@mcro/models'
 import OrbitDockedPane from './orbitDockedPane'
+import OrbitCard from './orbitCard'
+import Masonry from '~/views/masonry'
 
 class OrbitDirectoryStore {
   @react({ immediate: true })
@@ -26,7 +28,22 @@ class OrbitDirectoryStore {
   store: OrbitDirectoryStore,
 })
 export default class OrbitDirectory {
-  render() {
-    return <OrbitDockedPane name="directory">directory</OrbitDockedPane>
+  render({ store }) {
+    return (
+      <OrbitDockedPane name="directory">
+        <Masonry>
+          {store.results.map((bit, index) => (
+            <OrbitCard
+              pane="home-directory"
+              key={`${bit.id}${index}`}
+              index={index}
+              bit={bit}
+              total={store.results.length}
+              hoverToSelect
+            />
+          ))}
+        </Masonry>
+      </OrbitDockedPane>
+    )
   }
 }

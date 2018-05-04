@@ -44,7 +44,7 @@ class OrbitCardStore {
     },
   ]
 
-  @react({ fireImmediately: true, log: false })
+  @react({ immediate: true, log: false })
   updateIsSelected = [
     () => [this.props.appStore.activeIndex, App.state.peekState.target],
     ([index, target]) => {

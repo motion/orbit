@@ -45,9 +45,10 @@ const postfix = [
   'st',
 ]
 
+@UI.injectTheme
 @view
 export default class OrbitHomeHeader {
-  render({ theme }) {
+  render({ dockedStore, theme }) {
     const locale = 'en-US'
     const now = new Date()
     const day = now.toLocaleDateString(locale, { weekday: 'short' })
@@ -73,38 +74,24 @@ export default class OrbitHomeHeader {
             tooltip="Explore"
             $exploreButton
             css={{ marginLeft: -2 }}
+            active={dockedStore.activePane === 'explore'}
             {...exploreButton}
           />
           <UI.Button
             icon="userscir"
             tooltip="Directory"
             $exploreButton
+            active={dockedStore.activePane === 'directory'}
             {...exploreButton}
           />
           <space $$flex />
-          <UI.Text if={false} size={1.15} css={{ margin: [0, 15] }}>
-            <span
-              css={{
-                paddingBottom: 2,
-                borderBottom: [2, theme.active.background.lighten(0.02)],
-              }}
-            >
-              your filters
-            </span>
-          </UI.Text>
-        </section>
-
-        <section $filterSection>
-          <title>
-            <SubTitle $subtitle>
-              {day} {month} {dayNum}
-              <span $super>{postfix[dayNum - 1]}</span>
-            </SubTitle>
-          </title>
-          <div $$flex />
           <filters>
-            {['all', 'general', 'status', 'showoff'].map((name, index) => (
-              <RoundButton {...roundBtnProps} key={index} active={index === 0}>
+            {dockedStore.filters.map((name, index) => (
+              <RoundButton
+                {...roundBtnProps}
+                key={index}
+                active={dockedStore.paneIndex === index - dockedStore.mainPanes}
+              >
                 {name}
               </RoundButton>
             ))}
@@ -118,6 +105,16 @@ export default class OrbitHomeHeader {
               }}
             />
           </filters>
+        </section>
+
+        <section $filterSection>
+          <title>
+            <SubTitle $subtitle>
+              {day} {month} {dayNum}
+              <span $super>{postfix[dayNum - 1]}</span>
+            </SubTitle>
+          </title>
+          <div $$flex />
         </section>
       </React.Fragment>
     )

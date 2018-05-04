@@ -5,18 +5,6 @@ import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
 
-const findType = (integration, type, skip = 0) =>
-  Bit.findOne({
-    skip,
-    take: 1,
-    where: {
-      type,
-      integration,
-    },
-    relations: ['people'],
-    order: { bitCreatedAt: 'DESC' },
-  })
-
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
     return result.id
@@ -174,7 +162,7 @@ export default class AppStore {
 
   bitResultsId = 0
   @react({
-    fireImmediately: true,
+    immediate: true,
     defaultValue: [],
     onlyUpdateIfChanged: true,
     log: false,
@@ -195,7 +183,7 @@ export default class AppStore {
   ]
 
   @react({
-    fireImmediately: true,
+    immediate: true,
     defaultValue: [],
   })
   contextResults = [
@@ -244,7 +232,7 @@ export default class AppStore {
 
   @react({
     defaultValue: { results: [], query: '' },
-    fireImmediately: true,
+    immediate: true,
     log: false,
   })
   searchState = [
@@ -309,23 +297,6 @@ export default class AppStore {
       }
     },
   ]
-
-  @react({
-    defaultValue: [],
-  })
-  summaryResults = async () => {
-    return (await Promise.all([
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation', 1),
-      findType('slack', 'conversation', 2),
-      findType('google', 'document'),
-      findType('google', 'mail'),
-      findType('google', 'mail', 1),
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation'),
-    ])).filter(Boolean)
-  }
 
   clearSelected = () => {
     App.clearPeek()

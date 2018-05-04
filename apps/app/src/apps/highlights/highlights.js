@@ -35,7 +35,7 @@ const log = debug('highlights')
       },
     ]
 
-    // @react({ fireImmediately: true, log: 'state' })
+    // @react({ immediate: true, log: 'state' })
     // setHovered = [
     //   () => [this.trees, Desktop.mouseState.position],
     //   ([{ word, line }, { x, y }]) => {
@@ -79,10 +79,10 @@ const log = debug('highlights')
       // ]
     }
 
-    @react({ fireImmediately: true })
+    @react({ immediate: true })
     hoverOCRLines = [() => Desktop.ocrState.lines, this.setupHover('line')]
 
-    @react({ fireImmediately: true })
+    @react({ immediate: true })
     hoverOCRWords = [
       () => this.ocrWords, //Desktop.ocrState.words,
       this.setupHover('word'),

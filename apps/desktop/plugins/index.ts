@@ -46,7 +46,7 @@ export default class Plugins {
     )
   }
 
-  @react({ fireImmediately: true, log: false })
+  @react({ immediate: true, log: false })
   results = [
     () => [App.state.query, Desktop.state.lastBitUpdatedAt],
     async ([query], { sleep }) => {

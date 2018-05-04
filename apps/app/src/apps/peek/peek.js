@@ -45,7 +45,7 @@ class PeekStore {
     return null
   }
 
-  @react({ delay: 16, fireImmediately: true, log: false })
+  @react({ delay: 16, immediate: true, log: false })
   lastState = [() => this.curState, _ => _]
 
   get willHide() {

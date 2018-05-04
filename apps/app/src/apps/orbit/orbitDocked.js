@@ -3,14 +3,35 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import OrbitHome from './orbitHome'
 import OrbitSettings from './orbitSettings'
+import OrbitHomeHeader from './orbitHomeHeader'
 import OrbitHeader from './orbitHeader'
 import OrbitSearchResults from './orbitSearchResults'
+import OrbitDirectory from './orbitDirectory'
 import { App } from '@mcro/all'
 
 const SHADOW_PAD = 85
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
 
 class DockedStore {
+  filters = ['all', 'general', 'status', 'showoff']
+  mainPanes = ['home', 'explore', 'directory']
+  paneIndex = 0
+  panes = [...this.mainPanes, ...this.filters]
+
+  get isActive() {
+    return this.props.appStore.selectedPane === 'summary'
+  }
+
+  get activePane() {
+    if (!this.isActive) {
+      return null
+    }
+    if (App.state.query) {
+      return 'search'
+    }
+    return this.panes[this.paneIndex]
+  }
+
   @react({
     log: false,
     defaultValue: { willAnimate: false, visible: false },
@@ -33,11 +54,11 @@ class DockedStore {
 @UI.injectTheme
 @view.attach('appStore')
 @view({
-  store: DockedStore,
+  dockedStore: DockedStore,
 })
 class OrbitDocked {
-  render({ store, appStore, theme }) {
-    const { visible, willAnimate } = store.animationState
+  render({ dockedStore, appStore, theme }) {
+    const { visible, willAnimate } = dockedStore.animationState
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
@@ -47,7 +68,7 @@ class OrbitDocked {
         $visible={visible}
         css={{ background, boxShadow: [borderShadow, DOCKED_SHADOW] }}
       >
-        <OrbitHeader headerBg={background} />
+        <OrbitHeader />
         <orbitInner>
           <UI.Button
             $settingsButton
@@ -63,15 +84,19 @@ class OrbitDocked {
             }}
             onClick={appStore.toggleSettings}
           />
-          <main
-            css={{
-              opacity: appStore.showSettings ? 0 : 1,
-              pointerEvents: appStore.showSettings ? 'none' : 'auto',
-            }}
-          >
-            <OrbitHome appStore={appStore} />
-            <OrbitSearchResults parentPane="summary" />
-          </main>
+          <OrbitHomeHeader dockedStore={dockedStore} theme={theme} />
+          <OrbitHome
+            isActive={dockedStore.activePane === 'home'}
+            appStore={appStore}
+          />
+          <OrbitDirectory
+            isActive={dockedStore.activePane === 'directory'}
+            appStore={appStore}
+          />
+          <OrbitSearchResults
+            isActive={dockedStore.isActive && !!App.state.query}
+            parentPane="summary"
+          />
           <OrbitSettings />
         </orbitInner>
       </frame>
@@ -106,9 +131,6 @@ class OrbitDocked {
       transform: {
         x: 0,
       },
-    },
-    main: {
-      flex: 1,
     },
     orbitInner: {
       position: 'relative',

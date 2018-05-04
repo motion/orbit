@@ -55,7 +55,8 @@ export default class OrbitHeader {
     })
   }
 
-  render({ orbitStore, headerStore, theme, headerBg }) {
+  render({ orbitStore, headerStore, theme }) {
+    const headerBg = theme.base.background
     return (
       <orbitHeader
         $headerBg={headerBg}

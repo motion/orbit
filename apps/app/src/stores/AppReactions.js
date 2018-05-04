@@ -191,7 +191,7 @@ export default class AppReactions {
     },
   ]
 
-  @react({ fireImmediately: true, log: false })
+  @react({ immediate: true, log: false })
   repositioningFromAppState = [
     () => [appTarget(Desktop.appState || {}), Desktop.linesBoundingBox],
     ([appBB, linesBB]) => {

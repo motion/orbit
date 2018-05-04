@@ -14,6 +14,7 @@ export const isEqual = comparer.structural
 
 type ReactionOptions = {
   fireImmediately?: boolean
+  immediate?: boolean
   equals?: Function
   log?: boolean | 'state'
   delay?: number
@@ -26,6 +27,10 @@ type ReactionOptions = {
 export function getReactionOptions(userOptions?: ReactionOptions) {
   let options: ReactionOptions = {
     equals: comparer.structural,
+  }
+  if (options.immediate) {
+    options.fireImmediately = true
+    delete options.immediate
   }
   if (userOptions === true) {
     options.fireImmediately = true

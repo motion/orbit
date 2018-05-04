@@ -245,7 +245,7 @@ export default class DesktopScreen {
   }, 32)
 
   watchMouse = () => {
-    iohook.on('mousemove', throttle(this.handleMousePosition, 40))
+    iohook.on('mousemove', throttle(this.handleMousePosition, 32))
     iohook.on('mousedown', ({ button, x, y }) => {
       if (button === 1) {
         Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
@@ -280,22 +280,25 @@ export default class DesktopScreen {
           peekHovered: false,
         })
       }
-      // open if hovering indicator
-      const [oX, oY] = position
-      // TODO: Constants.ORBIT_WIDTH
-      const adjX = App.orbitOnLeft ? 313 : 17
-      const adjY = 36
-      const withinX = Math.abs(oX - mousePos.x + adjX) < 6
-      const withinY = Math.abs(oY - mousePos.y + adjY) < 15
-      if (withinX && withinY) {
-        this.mouseOverShowDelay = setTimeout(() => {
-          Desktop.sendMessage(App, App.messages.SHOW)
-        }, 250)
-      }
+      this.checkHoverIndicator(mousePos, position)
       return
     }
     const orbitHovered = position && isMouseOver(App.orbitState, mousePos)
     Desktop.setHoverState({ orbitHovered, peekHovered })
+  }
+
+  checkHoverIndicator = (mousePos, position) => {
+    const [oX, oY] = position
+    // TODO: Constants.ORBIT_WIDTH
+    const adjX = App.orbitOnLeft ? 313 : 17
+    const adjY = 36
+    const withinX = Math.abs(oX - mousePos.x + adjX) < 6
+    const withinY = Math.abs(oY - mousePos.y + adjY) < 15
+    if (withinX && withinY) {
+      this.mouseOverShowDelay = setTimeout(() => {
+        Desktop.sendMessage(App, App.messages.SHOW)
+      }, 250)
+    }
   }
 
   async rescanApp() {

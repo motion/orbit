@@ -1,26 +1,23 @@
-## thurs
+## fri
 
+* website
 * directory / profiles
 * explore mock
 * keyboard fixes
 * peek weird bugs
-
-## fri
-
 * summary pitch/design finish
   * pin announcement
   * pin search result
-* highlight words demo
 * ? tear away peeks
 
 ## sat
 
-* website
 * any more design that helps website/pitch
 
 ## sun
 
 * website
+* highlight words demo
 * plan reach out to formidable / research formidable
 * ? app themes for website
 

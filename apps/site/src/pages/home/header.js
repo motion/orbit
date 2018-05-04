@@ -3,7 +3,6 @@ import * as UI from '@mcro/ui'
 import * as View from '~/views'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import { Stage, Scene, Item } from '~/views/stage'
 
 // keeping everyone on the same page.
 // Orbit works with every app and fits into your current workflow.

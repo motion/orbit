@@ -94,7 +94,7 @@ export const Section = view(
       margin: 0,
     },
     main: {
-      background: Constants.gradients.main.background,
+      background: '#fff',
     },
     mainReverse: {
       background: Constants.gradients.main.backgroundInverse,

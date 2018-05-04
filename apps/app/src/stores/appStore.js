@@ -68,7 +68,7 @@ const matchSort = (query, results) => {
 const getResults = async query => {
   if (!query) {
     return await Bit.find({
-      take: 8,
+      take: 6,
       relations: ['people'],
       order: { bitCreatedAt: 'DESC' },
     })
@@ -78,7 +78,7 @@ const getResults = async query => {
     where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
     relations: ['people'],
     order: { bitCreatedAt: 'DESC' },
-    take: 8,
+    take: 6,
   })
 }
 
@@ -187,7 +187,7 @@ export default class AppStore {
     ],
     async ([query], { sleep }) => {
       // debounce enough for medium-speed typer
-      await sleep(90)
+      await sleep(120)
       const results = await getResults(query)
       this.bitResultsId = Math.random()
       return results
@@ -249,13 +249,13 @@ export default class AppStore {
   })
   searchState = [
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, getResults], { when }) => {
+    async ([query, thisGetResults], { when }) => {
       // these are all specialized searches, see below for main search logic
-      if (getResults && this.showSettings) {
+      if (thisGetResults && this.showSettings) {
         return {
           query,
           message: 'Settings',
-          results: Helpers.fuzzy(query, getResults()),
+          results: Helpers.fuzzy(query, thisGetResults()),
         }
       }
       let results
@@ -286,8 +286,13 @@ export default class AppStore {
         const pluginResultId = Desktop.searchState.pluginResultsId
         const bitResultsId = this.bitResultsId
         // no jitter - wait for everything to finish
+        let howfar = 0
+        let toolong = setTimeout(() => console.log('took long: ', howfar), 1000)
         await when(() => pluginResultId !== Desktop.searchState.pluginResultId)
+        howfar++
         await when(() => bitResultsId !== this.bitResultsId)
+        howfar++
+        clearTimeout(toolong)
         const allResultsUnsorted = [
           ...this.bitResults,
           ...Desktop.searchState.pluginResults,

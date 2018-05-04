@@ -11,7 +11,6 @@ const Themes = {
     background: '#fff',
     color: '#222',
     borderColor: '#eee',
-    buttonBackground: 'linear-gradient(#fff, #fefefe)',
   }),
   clear: {
     button: {

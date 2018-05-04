@@ -11,7 +11,10 @@ const SHADOW_PAD = 85
 const ARROW_PAD = 15
 
 class FrameStore {
-  @react({ log: false, defaultValue: { willAnimate: false, hidden: true } })
+  @react({
+    log: false,
+    defaultValue: { willAnimate: false, hidden: true },
+  })
   animationState = [
     () => App.orbitState.hidden,
     async (hidden, { sleep, setValue }) => {

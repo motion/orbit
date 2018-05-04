@@ -8,7 +8,7 @@
     "global": "^4.3.2",
     "react": "16.2.0",
     "react-dom": "16.2.0",
-    "typeorm": "0.2.0-alpha.44"
+    "typeorm": "0.2.4"
   },
   "devDependencies": {
     "@mcro/babel-preset-motion": "*",

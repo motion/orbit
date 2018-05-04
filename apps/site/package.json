@@ -4,8 +4,9 @@
   "version": "1.5.1",
   "scripts": {
     "start": "../../node_modules/.bin/parcel index.html",
-    "start-prod": "static-server -p 4000 -n build/index.html build",
-    "deploy": "surge ./build tryorbit.com"
+    "build-app": "../../node_modules/.bin/parcel build index.html --public-url ./ --no-minify",
+    "start-prod": "static-server -p 4000 -n dist/index.html dist",
+    "deploy": "cd dist && surge . tryorbit.com"
   },
   "dependencies": {
     "@mcro/black": "^1.5.1",

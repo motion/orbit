@@ -13,7 +13,7 @@ const Section = view(
   'section',
   {
     height: window.innerHeight,
-    padding: 40,
+    padding: [60, 40],
   },
   {
     dark: { background: '#050505' },

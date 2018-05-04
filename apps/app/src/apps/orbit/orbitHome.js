@@ -52,7 +52,7 @@ class OrbitHomeStore {
 export default class OrbitHome {
   render({ store }) {
     return (
-      <OrbitDockedPane>
+      <OrbitDockedPane name="home">
         <Masonry>
           {store.results.map((bit, index) => (
             <OrbitCard

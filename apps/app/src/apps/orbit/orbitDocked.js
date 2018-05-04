@@ -12,7 +12,7 @@ import { App } from '@mcro/all'
 const SHADOW_PAD = 85
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
 
-class DockedStore {
+class PaneStore {
   filters = ['all', 'general', 'status', 'showoff']
   mainPanes = ['home', 'explore', 'directory']
   paneIndex = 0
@@ -53,12 +53,13 @@ class DockedStore {
 
 @UI.injectTheme
 @view.attach('appStore')
-@view({
-  dockedStore: DockedStore,
+@view.provide({
+  paneStore: PaneStore,
 })
+@view
 class OrbitDocked {
-  render({ dockedStore, appStore, theme }) {
-    const { visible, willAnimate } = dockedStore.animationState
+  render({ paneStore, appStore, theme }) {
+    const { visible, willAnimate } = paneStore.animationState
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
@@ -69,6 +70,7 @@ class OrbitDocked {
         css={{ background, boxShadow: [borderShadow, DOCKED_SHADOW] }}
       >
         <OrbitHeader />
+        <OrbitHomeHeader paneStore={paneStore} theme={theme} />
         <orbitInner>
           <UI.Button
             $settingsButton
@@ -84,18 +86,23 @@ class OrbitDocked {
             }}
             onClick={appStore.toggleSettings}
           />
-          <OrbitHomeHeader dockedStore={dockedStore} theme={theme} />
           <OrbitHome
-            isActive={dockedStore.activePane === 'home'}
+            name="home"
+            isActive={paneStore.activePane === 'home'}
             appStore={appStore}
+            paneStore={paneStore}
           />
           <OrbitDirectory
-            isActive={dockedStore.activePane === 'directory'}
+            name="directory"
+            isActive={paneStore.activePane === 'directory'}
             appStore={appStore}
+            paneStore={paneStore}
           />
           <OrbitSearchResults
-            isActive={dockedStore.isActive && !!App.state.query}
+            name="search"
             parentPane="summary"
+            isActive={paneStore.activePane === 'search'}
+            paneStore={paneStore}
           />
           <OrbitSettings />
         </orbitInner>

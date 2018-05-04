@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import * as UI from '@mcro/ui'
+// import * as UI from '@mcro/ui'
 import { Person } from '@mcro/models'
+import OrbitDockedPane from './orbitDockedPane'
 
 class OrbitDirectoryStore {
   @react({ immediate: true })
   setGetResults = [
-    () => this.props.isActive,
+    () => this.props.paneStore.activePane === this.props.name,
     () => {
       this.props.appStore.setGetResults(() => this.results)
     },
@@ -20,26 +21,11 @@ class OrbitDirectoryStore {
   }
 }
 
-@UI.injectTheme
 @view({
   store: OrbitDirectoryStore,
 })
 export default class OrbitDirectory {
-  render({ store, theme }) {
-    return (
-      <directory css={{ background: theme.base.background }}>
-        directory
-      </directory>
-    )
-  }
-
-  static style = {
-    directory: {
-      flex: 1,
-      position: 'relative',
-      transition: 'opacity ease-in-out 150ms',
-      overflowY: 'scroll',
-      padding: [0, 8],
-    },
+  render() {
+    return <OrbitDockedPane name="directory">directory</OrbitDockedPane>
   }
 }

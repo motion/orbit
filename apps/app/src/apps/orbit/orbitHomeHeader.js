@@ -48,7 +48,7 @@ const postfix = [
 @UI.injectTheme
 @view
 export default class OrbitHomeHeader {
-  render({ dockedStore, theme }) {
+  render({ paneStore, theme }) {
     const locale = 'en-US'
     const now = new Date()
     const day = now.toLocaleDateString(locale, { weekday: 'short' })
@@ -74,23 +74,23 @@ export default class OrbitHomeHeader {
             tooltip="Explore"
             $exploreButton
             css={{ marginLeft: -2 }}
-            active={dockedStore.activePane === 'explore'}
+            active={paneStore.activePane === 'explore'}
             {...exploreButton}
           />
           <UI.Button
             icon="userscir"
             tooltip="Directory"
             $exploreButton
-            active={dockedStore.activePane === 'directory'}
+            active={paneStore.activePane === 'directory'}
             {...exploreButton}
           />
           <space $$flex />
           <filters>
-            {dockedStore.filters.map((name, index) => (
+            {paneStore.filters.map((name, index) => (
               <RoundButton
                 {...roundBtnProps}
                 key={index}
-                active={dockedStore.paneIndex === index - dockedStore.mainPanes}
+                active={paneStore.paneIndex === index - paneStore.mainPanes}
               >
                 {name}
               </RoundButton>

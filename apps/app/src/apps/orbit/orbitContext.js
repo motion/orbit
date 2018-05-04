@@ -10,8 +10,20 @@ import { Title, SubTitle } from '~/views'
 import Results from '~/apps/results/results'
 import * as Constants from '~/constants'
 
+class PaneStore {
+  get activePane() {
+    if (App.state.query) {
+      return 'search'
+    }
+    return 'context'
+  }
+}
+
 @UI.injectTheme
 @view.attach('appStore', 'orbitPage')
+@view.provide({
+  paneStore: PaneStore,
+})
 @view
 export default class Orbit {
   state = {

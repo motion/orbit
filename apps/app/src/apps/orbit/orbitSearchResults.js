@@ -2,13 +2,12 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import OrbitCard from './orbitCard'
 import { App } from '@mcro/all'
-import * as UI from '@mcro/ui'
+import OrbitDockedPane from './orbitDockedPane'
 
-@UI.injectTheme
 @view.attach('appStore')
 @view
 export default class OrbitSearchResults {
-  render({ appStore, theme, parentPane }) {
+  render({ appStore, parentPane }) {
     const pane = `${parentPane}-search`
     const { query, results, message } = appStore.searchState
     const hasQuery = !!App.state.query
@@ -18,14 +17,9 @@ export default class OrbitSearchResults {
     }
     const isChanging = App.state.query !== query
     return (
-      <orbitSearchResults
-        css={{
-          background: theme.base.background,
-          opacity: hasQuery ? 1 : 0,
-          pointerEvents: !hasQuery ? 'none' : 'auto',
-          zIndex: !hasQuery ? -1 : 10000,
-        }}
-        $visible={hasQuery}
+      <OrbitDockedPane
+        name="search"
+        extraCondition={() => hasQuery}
         $isChanging={isChanging}
       >
         <message if={message}>{message}</message>
@@ -49,7 +43,7 @@ export default class OrbitSearchResults {
           ))}
         </results>
         <space css={{ height: 20 }} />
-      </orbitSearchResults>
+      </OrbitDockedPane>
     )
   }
 

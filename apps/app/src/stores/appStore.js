@@ -191,9 +191,9 @@ export default class AppStore {
     ],
     async ([query], { sleep }) => {
       // debounce enough for medium-speed typer
-      await sleep(120)
+      await sleep(90)
       const results = await getResults(query)
-      this.bitResultsId = (this.bitResultsId + 1) % Number.MAX_VALUE
+      this.bitResultsId = Math.random()
       return results
     },
   ]

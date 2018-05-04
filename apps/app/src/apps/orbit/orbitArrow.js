@@ -1,14 +1,15 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Electron } from '@mcro/all'
+import { App } from '@mcro/all'
 import * as Constants from '~/constants'
 
 const { SHADOW_PAD } = Constants
 
 @view
 export default class OrbitArrow {
-  render({ borderColor, background, orbitOnLeft, arrowSize, css }) {
+  render({ hidden, borderColor, background, orbitOnLeft, arrowSize, css }) {
+    const showing = !hidden
     let arrowStyle
     if (orbitOnLeft) {
       arrowStyle = {
@@ -43,19 +44,19 @@ export default class OrbitArrow {
           position: 'absolute',
           ...arrowStyle,
           zIndex: 1000000000,
-          transition: App.isShowingOrbit
+          transition: showing
             ? `
-              opacity ease-out ${ms * 0.5},
+              opacity ease-out ${ms * 0.5}ms ${ms * 0.9}ms,
               transform ease-out ${ms * 0.8}ms
             `
             : `
-              opacity ease-in ${ms * 0.5}ms ${ms * 0.6}ms,
+              opacity ease-in ${ms * 0.5}ms,
               transform ease-in 180ms
             `,
-          opacity: App.isShowingOrbit ? 1 : 0,
+          opacity: showing ? 1 : 0,
           transform: {
             y: arrowTransformY || 0,
-            x: App.isShowingOrbit
+            x: showing
               ? orbitOnLeft ? -0.5 : 0.5
               : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
           },

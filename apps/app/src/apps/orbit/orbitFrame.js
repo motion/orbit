@@ -76,6 +76,8 @@ export default class OrbitFrame {
       >
         <OrbitArrow
           arrowSize={22}
+          hidden={hidden}
+          willAnimate={willAnimate}
           orbitOnLeft={orbitOnLeft}
           background={headerBg}
           borderColor={borderColor}

@@ -41,6 +41,7 @@ export const Slant = ({
         css={{
           position: 'absolute',
           background,
+          // opacity: 0.92,
           top: -Constants.SLANT_AMT,
           bottom: -Constants.SLANT_AMT,
           left: inverse ? 'auto' : 0,
@@ -103,6 +104,9 @@ export const SectionContent = view(
   {
     padded: {
       padding: [80, 0],
+    },
+    doublePadded: {
+      padding: [120, 0],
     },
     padRight,
     padBottom: {

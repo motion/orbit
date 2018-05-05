@@ -4,6 +4,18 @@ import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
 import * as V from '~/views'
 
+const Lines = ({ width = 100, height = 100, style }) => (
+  <svg height={height} width={width} style={style} class="pattern-swatch">
+    <rect
+      style={{ fill: 'url(#diagonal-stripe-3)' }}
+      x="0"
+      y="0"
+      height={height}
+      width={width}
+    />
+  </svg>
+)
+
 const Triangle = ({
   size = 1,
   background = 'transparent',
@@ -54,9 +66,8 @@ class BrandLogo {
     return (
       <brandMark>
         <Logo size={0.5} color="#222" />
-        <br />
-        <P size={1.4} fontWeight={800}>
-          Unify your team
+        <P if={false} size={1.25} fontWeight={700} alpha={0.8}>
+          Your company home
         </P>
       </brandMark>
     )
@@ -83,33 +94,89 @@ class Header {
             <BrandLogo />
           </top>
           <div $$flex />
+          <div $$flex />
           <main>
-            <explain>
-              <P size={3} fontWeight={800}>
-                Orbit sorts through the noise & reduces it down to whats
-                important.
-              </P>
-              <br />
-              <P size={2} alpha={0.65}>
-                A smart home for everyone at your company
-              </P>
-            </explain>
+            <P size={3.3} fontWeight={800}>
+              Your business is growing, and so are your communication problems.
+            </P>
+            <br />
+            <P size={2} alpha={0.65}>
+              Orbit provides a smart personal home for your team. Remove
+              interruptions, reduce noise, and unify your organizational
+              knowledge.
+            </P>
             <show />
           </main>
+          <div $$flex />
+          <section css={{ width: 400 }}>
+            <apply css={{ borderRadius: 10, padding: 20 }}>
+              <UI.Text size={1.3}>
+                Rolling beta starting: <strong>now</strong>
+              </UI.Text>
+              <UI.Input
+                background="#fff"
+                size={1.2}
+                sizePadding={2}
+                sizeRadius={3}
+                margin={[10, 0]}
+                borderWidth={2}
+                borderColor="green"
+                placeholder="your email"
+              />
+              <UI.Button
+                theme="green"
+                size={1.2}
+                sizeRadius={3}
+                margin={[0, 0, 0, 100]}
+              >
+                Get on the list
+              </UI.Button>
+            </apply>
+          </section>
+
+          <Lines
+            width={1000}
+            height={2000}
+            css={{
+              position: 'absolute',
+              top: -200,
+              left: '-50%',
+              right: '50%',
+              overflow: 'hidden',
+              marginLeft: 100,
+              zIndex: -1,
+              opacity: 0.02,
+              // display: 'none',
+              transformOrigin: 'top left',
+              transform: {
+                rotate: '5deg',
+                scale: 4,
+              },
+            }}
+          />
+
+          <orbitals $behind>
+            <orbital $square />
+          </orbitals>
           <orbitals>
-            <orbital $spill1 $spill0>
+            <orbital $orbitText>
               <P color="#fff" size={2.5} fontWeight={800}>
-                Your Slack is about as organized as modern art
+                Slack:<br />
+                clear as modern art.
               </P>
             </orbital>
             <Triangle
               borderWidth={10}
-              size={2}
-              borderColor="rgb(0, 111, 73)"
+              size={1.8}
+              borderColor="pink"
               $triangle
+              css={{
+                opacity: 0.85,
+                top: -40,
+                left: -200,
+              }}
             />
-            <orbital $square />
-            <orbital $spill $spill3 />
+            <orbital $circle />
           </orbitals>
         </V.SectionContent>
       </V.Section>
@@ -133,6 +200,7 @@ class Header {
     main: {
       width: 600,
       background: '#fff',
+      border: [10, '#f2f2f2'],
       zIndex: 2,
       padding: 30,
       margin: -30,
@@ -145,11 +213,19 @@ class Header {
       fontWeight: 300,
     },
     orbitals: {
+      pointerEvents: 'none',
       position: 'absolute',
-      top: '10%',
-      right: '-6%',
+      top: '25%',
+      right: '-10%',
       width: 500,
       height: 500,
+      zIndex: 2,
+      transform: {
+        scale: 1.2,
+      },
+    },
+    behind: {
+      zIndex: -1,
     },
     orbital: {
       userSelect: 'none',
@@ -167,41 +243,37 @@ class Header {
     },
     triangle: {
       position: 'absolute',
-      top: -50,
-      left: -100,
-      zIndex: 2,
-      animation: 'spill3 120s ease-out',
-      animationIterationCount: 1,
+      zIndex: 5,
+      animation: 'triangle 420s linear infinite',
+      transformOrigin: '450px 300px',
     },
     spill: {
-      animation: 'spill 120s ease-out',
-      animationIterationCount: 1,
+      animation: 'spill 120s linear infinite',
     },
-    spill0: {
+    orbitText: {
       zIndex: 4,
       padding: 85,
     },
     spill12: {
       zIndex: 3,
     },
-    spill1: {
-      borderRadius: 100000,
-    },
     square: {
       width: 360,
       height: 360,
-      animation: 'square 120s ease-out',
-      background: '#2D3A83',
+      animation: 'square 90s linear infinite',
+      background: '#0B507E',
       zIndex: 1,
       top: 20,
       left: 20,
     },
-    spill3: {
+    circle: {
       borderRadius: 100000,
       background: '#D3495B',
       top: 30,
       left: 30,
       zIndex: 1,
+      width: 350,
+      height: 350,
     },
     '@keyframes spill': {
       from: {
@@ -219,12 +291,12 @@ class Header {
         transform: 'rotate(-20deg)',
       },
     },
-    '@keyframes spill3': {
+    '@keyframes triangle': {
       from: {
-        transform: 'rotate(-40deg)',
+        transform: 'rotate(0deg)',
       },
       to: {
-        transform: 'rotate(20deg) translateX(-150px) translateY(80px)',
+        transform: 'rotate(360deg)',
       },
     },
   }
@@ -236,40 +308,55 @@ class Section2 {
     return (
       <UI.Theme name="light">
         <V.Section>
-          <V.SectionContent padded fullscreen>
+          <V.SectionContent doublePadded fullscreen>
             <V.Slant inverseSlant />
             <P if={false} size={3} fontWeight={800}>
               A daily heads up<br />that works for you
             </P>
             <br />
             <main>
-              <P2 fontWeight={200} size={2.5}>
-                Slack is great, but it has a noise problem. Really,<br />
-                <Ul>your whole cloud does.</Ul>
+              <P2 fontWeight={200} size={3.2}>
+                Slack is great but it has a noise problem.
+              </P2>
+              <br />
+              <P2 fontWeight={200} size={2.4}>
+                Really, your whole cloud does.
               </P2>
               <br />
               <br />
               <P2 fontWeight={800} size={1}>
-                How it works:
+                How Orbit helps
               </P2>
               <ul>
                 <li>
-                  <P size={1.5}>Novel, on-device machine learning.</P>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.5}>On-device ML learns what you care about.</P>
                 </li>
                 <li>
-                  <P size={1.5}>A beautiful interface</P>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.5}>Upgrade your OS with an intelligent home.</P>
                 </li>
                 <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.5}>No installation (3 minute setup).</P>
                 </li>
               </ul>
               <br />
               <br />
-              <UI.Text size={4} fontWeight={800}>
-                Pull,<br />instead of getting pushed
-              </UI.Text>
-              <br />
-              <P>Give it a pull 👉</P>
+              <rightSection
+                css={{ width: 450, alignItems: 'flex-end', textAlign: 'right' }}
+              >
+                <UI.Text size={4} fontWeight={800}>
+                  Pull,<br />
+                  <span css={{ marginRight: -10 }}>instead of</span>
+                  <br />
+                  <span css={{ marginRight: -20 }}>getting pushed</span>
+                </UI.Text>
+                <br />
+                <P size={2} css={{ marginRight: -30 }}>
+                  Give it a pull&nbsp; 👈
+                </P>
+              </rightSection>
             </main>
             <div $$flex />
             <div
@@ -289,6 +376,16 @@ class Section2 {
   static style = {
     main: {
       width: 400,
+    },
+    li: {
+      display: 'flex',
+      flexFlow: 'row',
+      alignItems: 'center',
+      fontSize: 22,
+      padding: [10, 0],
+    },
+    icon: {
+      marginRight: 10,
     },
   }
 }

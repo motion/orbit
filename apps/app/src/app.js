@@ -43,7 +43,6 @@ class AppRoot {
   }
 
   async start() {
-    console.log('starting')
     if (window.location.pathname !== '/auth') {
       await connectModels(modelsList)
       await App.start()

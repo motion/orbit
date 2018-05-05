@@ -334,7 +334,7 @@ export default class OrbitCard {
     return {
       card: {
         ...card,
-        borderTop: [2, theme.active.background],
+        borderTop: [listItem ? 1 : 2, theme.active.background],
       },
       bottom: {
         opacity: isSelected ? 1 : 0.5,

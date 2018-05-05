@@ -59,9 +59,7 @@ export default class OrbitFrame {
     const hiddenAnimation = {
       opacity: 0,
       transform: {
-        x: orbitOnLeft
-          ? ORBIT_WIDTH * 0.15 - ARROW_PAD * 2 + 8
-          : -(ORBIT_WIDTH * 0.15),
+        x: orbitOnLeft ? 10 : -10,
       },
     }
     return (

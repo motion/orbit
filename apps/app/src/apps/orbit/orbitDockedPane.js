@@ -1,15 +1,25 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 
-@view.attach('paneStore')
-@view
-export default class OrbitDockedPane {
-  render({ children, name, paneStore, extraCondition, ...props }) {
-    const isActive =
+class DockedPaneStore {
+  get isActive() {
+    const { extraCondition, name, paneStore } = this.props
+    return (
       name === paneStore.activePane &&
       (extraCondition ? extraCondition() : true)
+    )
+  }
+}
+
+@view.attach('paneStore')
+@view({
+  store: DockedPaneStore,
+})
+export default class OrbitDockedPane {
+  render({ children, store, style }) {
+    log(`dockedPane`)
     return (
-      <pane $isActive={isActive} {...props}>
+      <pane $isActive={store.isActive} style={style}>
         {children}
       </pane>
     )

@@ -1,18 +1,21 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import isEqual from 'react-fast-compare'
 
 const rowHeight = 2
 const gridGap = 6
 const gridColumnGap = 8
 
-@view
+@view.ui
 export default class Masonry extends React.Component {
   state = {
     measured: false,
   }
 
-  componentWillReceiveProps() {
-    this.setState({ measured: false })
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props, nextProps)) {
+      this.setState({ measured: false })
+    }
   }
 
   setGrid(grid) {

@@ -1,21 +1,35 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import OrbitCard from './orbitCard'
 import { App } from '@mcro/all'
 import OrbitDockedPane from './orbitDockedPane'
 
+class SearchStore {
+  @react({ immediate: true })
+  state = [
+    () => this.props.appStore.searchState,
+    state => {
+      if (this.props.appStore.selectedPane !== this.props.pane) {
+        throw react.cancel
+      }
+      return state
+    },
+  ]
+}
+
 @view.attach('appStore')
-@view
+@view({
+  searchStore: SearchStore,
+})
 export default class OrbitSearchResults {
-  render({ appStore, parentPane }) {
-    log(`SEARCH --------------`)
-    const pane = `${parentPane}-search`
-    const { query, results, message } = appStore.searchState
-    const hasQuery = !!App.state.query
-    // prevent renders when searching in other pane
-    if (appStore.selectedPane !== pane && hasQuery) {
+  render({ searchStore, parentPane }) {
+    if (!searchStore.state) {
       return null
     }
+    log(`SEARCH ${parentPane} --------------`)
+    const pane = `${parentPane}-search`
+    const { query, results, message } = searchStore.state
+    const hasQuery = !!App.state.query
     const isChanging = App.state.query !== query
     return (
       <OrbitDockedPane

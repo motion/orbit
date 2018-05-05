@@ -10,6 +10,10 @@ class OrbitCardStore {
   _isSelected = false
   ref = null
 
+  willMount() {
+    log(`mountcard`)
+  }
+
   get isSelected() {
     return typeof this.props.isSelected === 'boolean'
       ? this.props.isSelected

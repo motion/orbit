@@ -23,7 +23,9 @@ class OrbitHomeStore {
   setGetResults = [
     () => this.props.paneStore.activePane === this.props.name,
     isActive => {
-      if (!isActive) throw react.cancel
+      if (!isActive) {
+        throw react.cancel
+      }
       log(`set get results`)
       this.props.appStore.setGetResults(() => this.results)
     },

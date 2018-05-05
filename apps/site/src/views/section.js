@@ -11,27 +11,20 @@ const padRight = {
 }
 
 export const Slant = ({
-  secondary,
-  reversed,
+  reverseColor,
   inverse,
   inverseSlant,
-  backgroundColor = Constants.gradients.main.background,
+  backgroundColor,
   ...props
 }) => {
   let background = backgroundColor
   if (!background) {
-    if (secondary) {
-      background = Constants.gradients.secondary.background
-      if (reversed) {
-        background = Constants.gradients.secondary.backgroundInverse
-      }
+    if (reverseColor) {
+      background = Constants.colorMain
     } else {
-      if (reversed) {
-        background = Constants.gradients.main.backgroundInverse
-      }
+      background = Constants.colorSecondary
     }
   }
-  console.log('background', background)
   return (
     <slant
       $$fullscreen
@@ -40,20 +33,14 @@ export const Slant = ({
         bottom: 0,
         right: inverse ? '50%' : '-50%',
         left: inverse ? '-50%' : '50%',
-        zIndex: 1,
+        zIndex: 0,
       }}
       {...props}
     >
       <div
         css={{
           position: 'absolute',
-          background:
-            background.indexOf('linear') === 0
-              ? background.replace(
-                  'linear-gradient(',
-                  `linear-gradient(${170 + Constants.SLANT}deg, `,
-                )
-              : background,
+          background,
           top: -Constants.SLANT_AMT,
           bottom: -Constants.SLANT_AMT,
           left: inverse ? 'auto' : 0,
@@ -89,21 +76,17 @@ export const Section = view(
     overflow: 'hidden',
   },
   {
-    padded: {
-      padding: [110, 0],
-      margin: 0,
-    },
     main: {
       background: '#fff',
     },
     mainReverse: {
-      background: Constants.gradients.main.backgroundInverse,
+      background: '#111',
     },
     secondary: {
-      background: Constants.gradients.secondary.background,
+      background: '#111',
     },
     secondaryReverse: {
-      background: Constants.gradients.secondary.backgroundInverse,
+      background: '#fff',
     },
   },
 )
@@ -118,6 +101,9 @@ export const SectionContent = view(
     position: 'relative',
   },
   {
+    padded: {
+      padding: [80, 0],
+    },
     padRight,
     padBottom: {
       paddingBottom: 80,

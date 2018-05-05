@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
+import * as V from '~/views'
 
 const P = props => <UI.Text selectable {...props} />
 const P2 = props => <P size={2} alpha={0.8} margin={[0, 0, 20]} {...props} />
@@ -29,7 +30,9 @@ class BrandLogo {
       <brandMark>
         <Logo size={0.5} color="#222" />
         <br />
-        <P fontWeight={800}>Unifying force for your team</P>
+        <P size={1.4} fontWeight={800}>
+          Unify your team
+        </P>
       </brandMark>
     )
   }
@@ -48,30 +51,37 @@ class BrandLogo {
 class Header {
   render() {
     return (
-      <Section>
-        <top>
-          <BrandLogo />
-        </top>
-        <div $$flex />
-        <main>
-          <explain>
-            <P size={3} fontWeight={800}>
-              Fix notification noise and communication silos.
-            </P>
-            <br />
-            <P size={2} alpha={0.65}>
-              Give the gift of focus to your team with Orbit
-            </P>
-          </explain>
-          <show />
-        </main>
-        <orbital>
-          <P color="#fff" size={2.5} fontWeight={800}>
-            Is Slack starting to feel like an oil spill?
-          </P>
-        </orbital>
-        <orbital $spill />
-      </Section>
+      <V.Section>
+        <V.SectionContent padded fullscreen>
+          <V.Slant />
+          <top>
+            <BrandLogo />
+          </top>
+          <div $$flex />
+          <main>
+            <explain>
+              <P size={3} fontWeight={800}>
+                We grow with you.
+              </P>
+              <br />
+              <P size={2} alpha={0.65}>
+                Orbit is a smart home plate for your entire company.
+              </P>
+            </explain>
+            <show />
+          </main>
+          <orbitals>
+            <orbital $spill1 $spill0>
+              <P color="#fff" size={2.5} fontWeight={800}>
+                You've outgrown Slack.
+              </P>
+            </orbital>
+            <orbital $spill $spill1 $spill12 />
+            <orbital $spill $spill2 />
+            <orbital $spill $spill3 />
+          </orbitals>
+        </V.SectionContent>
+      </V.Section>
     )
   }
 
@@ -90,38 +100,80 @@ class Header {
       marginRight: 20,
     },
     main: {
-      // padding: [40, 0],
+      width: 600,
+      background: '#fff',
+      zIndex: 2,
+      padding: 30,
+      margin: -30,
     },
     title: {
       fontSize: 40,
     },
-    orbital: {
+    orbitals: {
       position: 'absolute',
-      top: '-2%',
-      right: '-2%',
+      top: '10%',
+      right: '-6%',
       width: 500,
       height: 500,
-      padding: 150,
-      background: '#000',
-      borderRadius: 100000,
+    },
+    orbital: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: 400,
+      height: 400,
+      background: 'transparent',
+      border: [10, '#000'],
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
       // whiteSpace: 'nowrap',
       overflowWrap: 'break-word',
-      zIndex: 1,
     },
     spill: {
-      zIndex: -1,
       animation: 'spill 120s ease-out',
       animationIterationCount: 1,
+    },
+    spill0: {
+      zIndex: 4,
+      padding: 85,
+    },
+    spill12: {
+      zIndex: 3,
+    },
+    spill1: {
+      borderRadius: 100000,
+    },
+    spill2: {
+      width: 360,
+      height: 360,
+      animation: 'spill2 120s ease-out',
+      background: '#2D3A83',
+      zIndex: 1,
+      top: 20,
+      left: 20,
+    },
+    spill3: {
+      borderRadius: 100000,
+      background: '#D3495B',
+      top: 30,
+      left: 30,
+      zIndex: 1,
     },
     '@keyframes spill': {
       from: {
         transform: 'scale(1)',
       },
       to: {
-        transform: 'scale(2.5)',
+        transform: 'scale(1.25)',
+      },
+    },
+    '@keyframes spill2': {
+      from: {
+        transform: 'scale(1) rotate(-20deg)',
+      },
+      to: {
+        transform: 'scale(1.25) rotate(50deg)',
       },
     },
   }
@@ -131,37 +183,40 @@ class Header {
 class Section2 {
   render() {
     return (
-      <UI.Theme name="dark">
-        <Section dark>
-          <P size={2.2} fontWeight={800}>
-            A daily heads up<br />that works for you
-          </P>
-          <br />
-          <main>
-            <P2 fontWeight={200} size={2.5}>
-              Slack is great, but it has a noise problem. Really,<br />
-              <Ul>your whole cloud does.</Ul>
-            </P2>
-          </main>
-          <P2>Wish you could tame it?</P2>
-          <div $$flex />
-          <div
-            $$row
-            css={{
-              textAlign: 'right',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <section css={{ width: 400 }}>
-              <UI.Text size={4} fontWeight={800} color="#fff">
-                Pull,<br />instead of getting pushed
-              </UI.Text>
-              <br />
-              <P>Give it a pull 👉</P>
-            </section>
-          </div>
-        </Section>
+      <UI.Theme name="light">
+        <V.Section padded>
+          <V.SectionContent fullscreen>
+            <V.Slant inverseSlant />
+            <P size={3} fontWeight={800}>
+              A daily heads up<br />that works for you
+            </P>
+            <br />
+            <main>
+              <P2 fontWeight={200} size={2.5}>
+                Slack is great, but it has a noise problem. Really,<br />
+                <Ul>your whole cloud does.</Ul>
+              </P2>
+            </main>
+            <P2>Wish you could tame it?</P2>
+            <div $$flex />
+            <div
+              $$row
+              css={{
+                textAlign: 'right',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <section css={{ width: 400 }}>
+                <UI.Text size={4} fontWeight={800} color="#fff">
+                  Pull,<br />instead of getting pushed
+                </UI.Text>
+                <br />
+                <P>Give it a pull 👉</P>
+              </section>
+            </div>
+          </V.SectionContent>
+        </V.Section>
       </UI.Theme>
     )
   }

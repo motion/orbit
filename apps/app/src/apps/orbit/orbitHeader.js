@@ -73,6 +73,7 @@ export default class OrbitHeader {
         {...this.hoverSettler.props}
       >
         <bottomBorder
+          if={false}
           css={{
             position: 'absolute',
             bottom: 0,
@@ -127,7 +128,7 @@ export default class OrbitHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [3, 2],
+      padding: 2,
       transition: 'all ease-in 300ms',
     },
     headerBg: background => ({

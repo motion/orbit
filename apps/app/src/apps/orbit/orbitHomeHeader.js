@@ -149,7 +149,8 @@ export default class OrbitHomeHeader {
     explore: {
       width: '100%',
       flexFlow: 'row',
-      padding: [10, 8, 4],
+      padding: 10,
+      paddingTop: 8,
       alignItems: 'center',
     },
     exploreButton: {
@@ -158,7 +159,7 @@ export default class OrbitHomeHeader {
     filterSection: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [0, 15, 15],
+      padding: [0, 15, 10],
     },
     title: {
       padding: [0, 15, 0, 0],

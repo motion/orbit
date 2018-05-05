@@ -159,7 +159,7 @@ export default class OrbitCard {
         >
           <title>
             <UI.Text
-              size={1.25}
+              size={1.2}
               lineHeight="1.4rem"
               ellipse={2}
               fontWeight={400}
@@ -202,7 +202,7 @@ export default class OrbitCard {
               if={typeof preview === 'string'}
               color="#333"
               ellipse={5}
-              size={1.3}
+              size={listItem ? 1.1 : 1.2}
             >
               {preview}
             </UI.Text>

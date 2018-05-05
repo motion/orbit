@@ -33,6 +33,7 @@
 
 ## now
 
+* masonry renders orbit cards twice
 * profiles design iteration
 * have the cards show _why_ they are there
 * topics you follow dropdown

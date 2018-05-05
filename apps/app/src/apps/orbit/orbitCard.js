@@ -219,8 +219,8 @@ export default class OrbitCard {
     )
   }
 
-  render({ appStore, bit, store, itemProps }) {
-    log(`render card ${bit.id}`)
+  render({ pane, appStore, bit, store, itemProps }) {
+    log(`render card ${bit.id} ${pane}`)
     const BitContent = bitContents(bit)
     store.isSelected
     if (typeof BitContent !== 'function') {

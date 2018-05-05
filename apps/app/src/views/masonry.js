@@ -33,6 +33,7 @@ export default class Masonry extends React.Component {
   render() {
     const { measured } = this.state
     const { children, ...props } = this.props
+    log(`masonry`)
     if (!measured) {
       return (
         <grid ref={ref => this.setGrid(ref)} {...props}>

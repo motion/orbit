@@ -126,7 +126,7 @@ export default class AppReactions {
     },
   ]
 
-  @react
+  @react({ log: 'state' })
   unPinOnHidden = [
     () => App.isFullyHidden,
     hidden => {

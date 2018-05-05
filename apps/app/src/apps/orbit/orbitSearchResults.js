@@ -8,6 +8,7 @@ import OrbitDockedPane from './orbitDockedPane'
 @view
 export default class OrbitSearchResults {
   render({ appStore, parentPane }) {
+    log(`SEARCH --------------`)
     const pane = `${parentPane}-search`
     const { query, results, message } = appStore.searchState
     const hasQuery = !!App.state.query

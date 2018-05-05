@@ -59,7 +59,7 @@ class PaneStore {
       await sleep(32)
       // new value, start transition
       setValue({ willAnimate: true, visible })
-      await sleep(App.animationDuration)
+      await sleep(App.animationDuration * 2)
       // done animating, reset
       setValue({ willAnimate: false, visible })
     },
@@ -74,6 +74,7 @@ class PaneStore {
 @view
 class OrbitDocked {
   render({ paneStore, appStore, theme }) {
+    log(`DOCKED ------------`)
     const { visible, willAnimate } = paneStore.animationState
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
@@ -136,8 +137,8 @@ class OrbitDocked {
     willAnimate: {
       willChange: 'transform, opacity',
       transition: `
-        transform ease-in ${App.animationDuration}ms,
-        opacity ease-in ${App.animationDuration}ms
+        transform ease-in ${App.animationDuration / 2}ms,
+        opacity ease-in ${App.animationDuration / 2}ms
       `,
     },
     visible: {

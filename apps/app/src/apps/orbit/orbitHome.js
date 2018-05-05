@@ -24,6 +24,7 @@ class OrbitHomeStore {
     () => this.props.paneStore.activePane === this.props.name,
     isActive => {
       if (!isActive) throw react.cancel
+      log(`set get results`)
       this.props.appStore.setGetResults(() => this.results)
     },
   ]
@@ -52,7 +53,7 @@ class OrbitHomeStore {
 })
 export default class OrbitHome {
   render({ store }) {
-    log(`rendering home`)
+    log(`HOME---------------`)
     return (
       <OrbitDockedPane name="home">
         <Masonry>

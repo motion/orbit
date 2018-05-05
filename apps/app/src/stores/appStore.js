@@ -110,6 +110,16 @@ export default class AppStore {
     return App.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
   }
 
+  lastSelectedPane = ''
+
+  @react
+  updateLastSelectedPane = [
+    () => this.selectedPane,
+    val => {
+      this.lastSelectedPane = val
+    },
+  ]
+
   get selectedPane() {
     if (App.orbitState.docked) {
       if (App.state.query) {
@@ -123,7 +133,7 @@ export default class AppStore {
       }
       return 'context'
     }
-    return ''
+    return this.lastSelectedPane
   }
 
   async willMount() {

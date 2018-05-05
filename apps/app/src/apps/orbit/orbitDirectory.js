@@ -20,7 +20,7 @@ class OrbitDirectoryStore {
     defaultValue: [],
   })
   results = async () => {
-    return await Person.find({ take: 30 })
+    return await Person.find({ take: 10 })
   }
 }
 
@@ -29,6 +29,7 @@ class OrbitDirectoryStore {
 })
 export default class OrbitDirectory {
   render({ store }) {
+    log(`DIRECTORY --------`)
     return (
       <OrbitDockedPane name="directory">
         <Masonry>

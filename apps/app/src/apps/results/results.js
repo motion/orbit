@@ -65,6 +65,7 @@ export default class Results {
 
   render({ appStore, store }, { resultsRef, isScrolled, isOverflowing }) {
     const total = store.results.length
+    log(`CONTEXT --------------`)
     return (
       <resultsFrame ref={this.setResultsFrame}>
         <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />

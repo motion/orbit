@@ -4,6 +4,31 @@ import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
 import * as V from '~/views'
 
+const Triangle = ({
+  size = 1,
+  background = 'transparent',
+  borderColor = '#000',
+  borderWidth = 10,
+  style,
+}) => {
+  const width = 350 * size
+  const height = 450 * size
+  return (
+    <svg height={height} width={width + borderWidth} style={style}>
+      <polygon
+        points="225,10 100,210 350,210"
+        style={{
+          fill: background,
+          stroke: borderColor,
+          strokeWidth: borderWidth / size,
+          transform: `scale(${size})`,
+          transformOrigin: 'top left',
+        }}
+      />
+    </svg>
+  )
+}
+
 const P = props => <UI.Text selectable {...props} />
 const P2 = props => <P size={2} alpha={0.8} margin={[0, 0, 20]} {...props} />
 const Ul = view('span', {
@@ -65,7 +90,8 @@ class Header {
               </P>
               <br />
               <P size={2} alpha={0.65}>
-                Orbit is a smart home plate for your entire company.
+                Orbit is a smart home for your entire company, always on and at
+                your fingertips.
               </P>
             </explain>
             <show />
@@ -73,10 +99,16 @@ class Header {
           <orbitals>
             <orbital $spill1 $spill0>
               <P color="#fff" size={2.5} fontWeight={800}>
-                You've outgrown Slack.
+                You don't really know what's going on in Slack.<br />
+                <small>(but you do know it's a mess)</small>
               </P>
             </orbital>
-            <orbital $spill $spill1 $spill12 />
+            <Triangle
+              borderWidth={0}
+              size={2}
+              background="rgb(0, 111, 73)"
+              $triangle
+            />
             <orbital $spill $spill2 />
             <orbital $spill $spill3 />
           </orbitals>
@@ -109,6 +141,10 @@ class Header {
     title: {
       fontSize: 40,
     },
+    small: {
+      fontSize: 14,
+      fontWeight: 300,
+    },
     orbitals: {
       position: 'absolute',
       top: '10%',
@@ -123,14 +159,22 @@ class Header {
       width: 400,
       height: 400,
       background: 'transparent',
-      border: [10, '#000'],
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
       // whiteSpace: 'nowrap',
       overflowWrap: 'break-word',
     },
+    triangle: {
+      position: 'absolute',
+      top: -50,
+      left: -200,
+      zIndex: 2,
+      animation: 'spill3 120s ease-out',
+      animationIterationCount: 1,
+    },
     spill: {
+      // border: [10, '#000'],
       animation: 'spill 120s ease-out',
       animationIterationCount: 1,
     },
@@ -165,7 +209,7 @@ class Header {
         transform: 'scale(1)',
       },
       to: {
-        transform: 'scale(1.25)',
+        transform: 'scale(1.5)',
       },
     },
     '@keyframes spill2': {
@@ -173,7 +217,16 @@ class Header {
         transform: 'scale(1) rotate(-20deg)',
       },
       to: {
-        transform: 'scale(1.25) rotate(50deg)',
+        transform: 'scale(1.5) rotate(50deg)',
+      },
+    },
+    '@keyframes spill3': {
+      from: {
+        transform: 'scale(0.8) rotate(-40deg)',
+      },
+      to: {
+        transform:
+          'scale(1.6) rotate(20deg) translateX(-150px) translateY(80px)',
       },
     },
   }

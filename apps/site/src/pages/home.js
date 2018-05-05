@@ -86,12 +86,12 @@ class Header {
           <main>
             <explain>
               <P size={3} fontWeight={800}>
-                We grow with you.
+                Orbit sorts through the noise & reduces it down to whats
+                important.
               </P>
               <br />
               <P size={2} alpha={0.65}>
-                Orbit is a smart home for your entire company, always on and at
-                your fingertips.
+                A smart home for everyone at your company
               </P>
             </explain>
             <show />
@@ -99,17 +99,16 @@ class Header {
           <orbitals>
             <orbital $spill1 $spill0>
               <P color="#fff" size={2.5} fontWeight={800}>
-                You don't really know what's going on in Slack.<br />
-                <small>(but you do know it's a mess)</small>
+                Your Slack is about as organized as modern art
               </P>
             </orbital>
             <Triangle
-              borderWidth={0}
+              borderWidth={10}
               size={2}
-              background="rgb(0, 111, 73)"
+              borderColor="rgb(0, 111, 73)"
               $triangle
             />
-            <orbital $spill $spill2 />
+            <orbital $square />
             <orbital $spill $spill3 />
           </orbitals>
         </V.SectionContent>
@@ -153,6 +152,7 @@ class Header {
       height: 500,
     },
     orbital: {
+      userSelect: 'none',
       position: 'absolute',
       top: 0,
       left: 0,
@@ -168,13 +168,12 @@ class Header {
     triangle: {
       position: 'absolute',
       top: -50,
-      left: -200,
+      left: -100,
       zIndex: 2,
       animation: 'spill3 120s ease-out',
       animationIterationCount: 1,
     },
     spill: {
-      // border: [10, '#000'],
       animation: 'spill 120s ease-out',
       animationIterationCount: 1,
     },
@@ -188,10 +187,10 @@ class Header {
     spill1: {
       borderRadius: 100000,
     },
-    spill2: {
+    square: {
       width: 360,
       height: 360,
-      animation: 'spill2 120s ease-out',
+      animation: 'square 120s ease-out',
       background: '#2D3A83',
       zIndex: 1,
       top: 20,
@@ -206,27 +205,26 @@ class Header {
     },
     '@keyframes spill': {
       from: {
-        transform: 'scale(1)',
+        transform: 'rotate(20deg)',
       },
       to: {
-        transform: 'scale(1.5)',
+        transform: 'scale(180deg)',
       },
     },
-    '@keyframes spill2': {
+    '@keyframes square': {
       from: {
-        transform: 'scale(1) rotate(-20deg)',
+        transform: 'rotate(60deg)',
       },
       to: {
-        transform: 'scale(1.5) rotate(50deg)',
+        transform: 'rotate(-20deg)',
       },
     },
     '@keyframes spill3': {
       from: {
-        transform: 'scale(0.8) rotate(-40deg)',
+        transform: 'rotate(-40deg)',
       },
       to: {
-        transform:
-          'scale(1.6) rotate(20deg) translateX(-150px) translateY(80px)',
+        transform: 'rotate(20deg) translateX(-150px) translateY(80px)',
       },
     },
   }
@@ -237,10 +235,10 @@ class Section2 {
   render() {
     return (
       <UI.Theme name="light">
-        <V.Section padded>
-          <V.SectionContent fullscreen>
+        <V.Section>
+          <V.SectionContent padded fullscreen>
             <V.Slant inverseSlant />
-            <P size={3} fontWeight={800}>
+            <P if={false} size={3} fontWeight={800}>
               A daily heads up<br />that works for you
             </P>
             <br />
@@ -249,8 +247,30 @@ class Section2 {
                 Slack is great, but it has a noise problem. Really,<br />
                 <Ul>your whole cloud does.</Ul>
               </P2>
+              <br />
+              <br />
+              <P2 fontWeight={800} size={1}>
+                How it works:
+              </P2>
+              <ul>
+                <li>
+                  <P size={1.5}>Novel, on-device machine learning.</P>
+                </li>
+                <li>
+                  <P size={1.5}>A beautiful interface</P>
+                </li>
+                <li>
+                  <P size={1.5}>No installation (3 minute setup).</P>
+                </li>
+              </ul>
+              <br />
+              <br />
+              <UI.Text size={4} fontWeight={800}>
+                Pull,<br />instead of getting pushed
+              </UI.Text>
+              <br />
+              <P>Give it a pull 👉</P>
             </main>
-            <P2>Wish you could tame it?</P2>
             <div $$flex />
             <div
               $$row
@@ -259,15 +279,7 @@ class Section2 {
                 alignItems: 'flex-end',
                 justifyContent: 'flex-end',
               }}
-            >
-              <section css={{ width: 400 }}>
-                <UI.Text size={4} fontWeight={800} color="#fff">
-                  Pull,<br />instead of getting pushed
-                </UI.Text>
-                <br />
-                <P>Give it a pull 👉</P>
-              </section>
-            </div>
+            />
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -289,13 +301,16 @@ class Section3 {
         <Section medium>
           <main>
             <P size={3} fontWeight={800}>
-              Grow your organization, without losing your organization.
+              Your organization grows.
+              <br />
+              <br />
+              We keep it organized.
             </P>
             <br />
             <br />
             <P2>
-              Inspired by modern tech companies' intranets[1], we set out to
-              make yours easy, fun, and far more powerful.
+              Inspired by modern tech companies' intranet solutions, we set out
+              to make your even better: easy, interpretable, and powerful.
             </P2>
             <br />
             <br />

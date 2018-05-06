@@ -3,6 +3,8 @@ import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
 import * as V from '~/views'
+import homeImg from '~/../public/screen-home.png'
+import contextImg from '~/../public/screen-context.png'
 
 const Lines = ({ width = 100, height = 100, style }) => (
   <svg height={height} width={width} style={style} class="pattern-swatch">
@@ -386,6 +388,19 @@ class Section2 {
                 justifyContent: 'flex-end',
               }}
             />
+            <illustration>
+              <img
+                src={homeImg}
+                css={{
+                  width: 550,
+                  height: 'auto',
+                  position: 'absolute',
+                  top: 80,
+                  right: -80,
+                  zIndex: -1,
+                }}
+              />
+            </illustration>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -416,7 +431,7 @@ class Section3 {
       <UI.Theme name="medium">
         <V.Section css={{ background: '#f2f2f2' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant css={{ filter: 'grayscale(100%)' }} />
+            <V.Slant css={{ filter: 'grayscale(100%)', zIndex: 2 }} />
             <main>
               <P size={2.5} fontWeight={800}>
                 Give your team answers <em>before</em> they have to ask.
@@ -436,6 +451,19 @@ class Section3 {
               <br />
               <P2>Stop reaching out to each other.</P2>
             </main>
+            <illustration>
+              <img
+                src={contextImg}
+                css={{
+                  width: 550,
+                  height: 'auto',
+                  position: 'absolute',
+                  top: 125,
+                  right: -78,
+                  zIndex: 0,
+                }}
+              />
+            </illustration>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -459,8 +487,9 @@ class Section4 {
           <V.SectionContent padded fullscreen>
             <V.Slant inverseSlant />
             <main>
-              <P size={3} fontWeight={800}>
-                Organizational organization.
+              <P size={2.5} fontWeight={800}>
+                Reduced interruptions in-office & an increased sense of unity
+                remote.
               </P>
               <br />
               <br />

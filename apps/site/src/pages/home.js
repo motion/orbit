@@ -394,8 +394,12 @@ class Section2 {
                 justifyContent: 'flex-end',
               }}
             />
-            <illustration>
+            <explanation>
+              <P size={2} alpha={0.7}>
+                Your team operates well, but your tools are failing.
+              </P>
               <img
+                if={false}
                 src={homeImg}
                 css={{
                   width: 550,
@@ -406,7 +410,7 @@ class Section2 {
                   zIndex: -1,
                 }}
               />
-            </illustration>
+            </explanation>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -416,6 +420,13 @@ class Section2 {
   static style = {
     main: {
       width: 400,
+    },
+    explanation: {
+      position: 'absolute',
+      top: 150,
+      right: 0,
+      left: '65%',
+      bottom: 100,
     },
   }
 }

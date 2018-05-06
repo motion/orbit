@@ -488,14 +488,14 @@ class Section4 {
             <V.Slant inverseSlant />
             <main>
               <P size={2.5} fontWeight={800}>
-                Reduced interruptions in-office & an increased sense of unity
-                remote.
+                Reduced interruptions in-office & an increased sense of unity.
               </P>
               <br />
               <br />
               <P2>
-                Inspired by modern tech companies' intranet solutions, we set
-                out to make your even better: easy, interpretable, and powerful.
+                Inspired by Stripe and Facebook, we set out to make an
+                incredible intranet for everyone: saving time and removing
+                stress from everyday work.
               </P2>
               <br />
               <br />

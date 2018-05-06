@@ -65,7 +65,7 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.4} color="#222" />
+        <Logo size={0.38} color="#5552FA" />
         <P if={false} size={1} fontWeight={700} alpha={0.8}>
           Your company home
         </P>
@@ -107,12 +107,11 @@ class Header {
             <BrandLogo />
           </top>
           <div $$flex />
-          <div if={false} $$flex />
           <main>
-            <P size={3.2} fontWeight={800}>
+            <P size={2.9} fontWeight={800}>
               Your company is growing
             </P>
-            <P size={3.5}>(and so are your communication problems)</P>
+            <P size={3.2}>(and so are your communication problems)</P>
             <br />
             <P size={1.4} alpha={0.65}>
               Orbit is a smart personal home for your team.<br />
@@ -212,7 +211,7 @@ class Header {
       marginRight: 20,
     },
     main: {
-      width: 650,
+      width: 625,
       background: '#fff',
       border: [3, '#f2f2f2'],
       zIndex: 10,
@@ -330,8 +329,10 @@ class Section2 {
             <br />
             <main>
               <P2 fontWeight={200} size={3.2}>
-                <span css={{ background: 'yellow' }}>Slack is great</span> but
-                it has a noise problem.
+                <span css={{ background: 'yellow', fontWeight: 300 }}>
+                  Slack is great
+                </span>{' '}
+                but it has a noise problem.
               </P2>
               <br />
               <P2 fontWeight={200} size={2.4}>
@@ -417,6 +418,7 @@ class Section3 {
       <UI.Theme name="medium">
         <V.Section css={{ background: '#f2f2f2' }}>
           <V.SectionContent padded fullscreen>
+            <V.Slant css={{ filter: 'grayscale(100%)' }} />
             <main>
               <P size={3} fontWeight={800}>
                 Organization organization.
@@ -490,26 +492,29 @@ class Section5 {
   render() {
     return (
       <UI.Theme name="dark">
-        <Section dark>
-          <main>
-            <P size={3} fontWeight={800}>
-              We want to grow with you.
-            </P>
-            <br />
+        <V.Section css={{ background: '#222' }}>
+          <V.SectionContent fullscreen padded>
+            <V.Slant backgroundColor="#000" />
             <main>
-              <P2 fontWeight={200} size={2.5}>
-                We want to build the ultimate intranet system for your company.
-                We've already made the first few steps. But we want to finish it
-                by working with you.
+              <P size={3} fontWeight={800}>
+                We want to grow with you.
+              </P>
+              <br />
+              <main>
+                <P2 fontWeight={200} size={2.5}>
+                  We want to build the ultimate intranet system for your
+                  company. We've already made the first few steps. But we want
+                  to finish it by working with you.
+                </P2>
+              </main>
+              <br />
+              <br />
+              <P2>
+                Sound fun? <Ul>Get in touch</Ul>.
               </P2>
             </main>
-            <br />
-            <br />
-            <P2>
-              Sound fun? <Ul>Get in touch</Ul>.
-            </P2>
-          </main>
-        </Section>
+          </V.SectionContent>
+        </V.Section>
       </UI.Theme>
     )
   }

@@ -108,15 +108,17 @@ class Header {
           </top>
           <div $$flex />
           <main>
-            <P size={2.9} fontWeight={800}>
+            <P size={2.8} fontWeight={800}>
               Your company is growing
             </P>
-            <P size={3.2}>(and so are your communication problems)</P>
+            <P size={3.2} lineHeight={50} margin={[8, 0, 0]}>
+              Make it easy to understand whats going on.
+            </P>
             <br />
-            <P size={1.4} alpha={0.65}>
-              Orbit is a smart personal home for your team.<br />
-              Less interruptions & noise.<br />
-              Unify your organizational knowledge.
+            <P size={1.4} alpha={0.65} lineHeight={30}>
+              A personalized newspaper of what you've missed in Slack, and
+              across your cloud. All in a beautiful native app powered by
+              on-device machine learning.
             </P>
             <show />
           </main>
@@ -153,7 +155,7 @@ class Header {
             css={{
               position: 'absolute',
               top: -200,
-              left: '-50%',
+              left: '50%',
               right: '50%',
               overflow: 'hidden',
               marginLeft: 100,
@@ -173,9 +175,9 @@ class Header {
           </orbitals>
           <orbitals>
             <orbital $orbitText>
-              <P color="#fff" size={2.5} fontWeight={800}>
-                Your Slack:<br />
-                as clear as modern art.
+              <P color="#fff" size={2} fontWeight={800}>
+                Your #general room:<br />
+                about as clear as modern art.
               </P>
             </orbital>
             <Triangle
@@ -323,10 +325,6 @@ class Section2 {
         <V.Section>
           <V.SectionContent doublePadded fullscreen>
             <V.Slant inverseSlant />
-            <P if={false} size={3} fontWeight={800}>
-              A daily heads up<br />that works for you
-            </P>
-            <br />
             <main>
               <P2 fontWeight={200} size={3.2}>
                 <span css={{ background: 'yellow', fontWeight: 300 }}>
@@ -417,23 +415,26 @@ class Section3 {
     return (
       <UI.Theme name="medium">
         <V.Section css={{ background: '#f2f2f2' }}>
-          <V.SectionContent padded fullscreen>
+          <V.SectionContent fullscreen padded>
             <V.Slant css={{ filter: 'grayscale(100%)' }} />
             <main>
-              <P size={3} fontWeight={800}>
-                Organization organization.
+              <P size={2.5} fontWeight={800}>
+                Give your team answers <em>before</em> they have to ask.
               </P>
               <br />
-              <br />
               <P2>
-                Inspired by modern tech companies' intranet solutions, we set
-                out to make your even better: easy, interpretable, and powerful.
+                Orbit sits by the side of any app, searching in real-time as you
+                work -- answering questions from anywhere in your cloud.
               </P2>
               <br />
               <br />
-              <P2>
-                Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
-              </P2>
+              <P2>Writing an email.</P2>
+              <br />
+              <P2>Talking on slack.</P2>
+              <br />
+              <P2>Editing a document.</P2>
+              <br />
+              <P2>Stop reaching out to each other.</P2>
             </main>
           </V.SectionContent>
         </V.Section>
@@ -455,22 +456,22 @@ class Section4 {
     return (
       <UI.Theme name="light">
         <V.Section>
-          <V.SectionContent fullscreen padded>
+          <V.SectionContent padded fullscreen>
             <V.Slant inverseSlant />
             <main>
               <P size={3} fontWeight={800}>
-                Search comes for free.
+                Organizational organization.
               </P>
               <br />
               <br />
               <P2>
-                Upgrade spotlight with search across all your services, more
-                powerful than any of your services.
+                Inspired by modern tech companies' intranet solutions, we set
+                out to make your even better: easy, interpretable, and powerful.
               </P2>
               <br />
               <br />
               <P2>
-                Learn more on <Ul>how it works</Ul>.
+                Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
               </P2>
             </main>
           </V.SectionContent>
@@ -502,9 +503,9 @@ class Section5 {
               <br />
               <main>
                 <P2 fontWeight={200} size={2.5}>
-                  We want to build the ultimate intranet system for your
-                  company. We've already made the first few steps. But we want
-                  to finish it by working with you.
+                  We want to build the ultimate system for keeping your company
+                  happily in the know. We've already made the first few steps.
+                  But we want to finish it by working with you.
                 </P2>
               </main>
               <br />

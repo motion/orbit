@@ -172,28 +172,26 @@ class Header {
             }}
           />
 
-          <orbitals $behind>
-            <orbital $square />
-          </orbitals>
+          <chats>
+            <bubble $left>Your #general chat room</bubble>
+            <bubble>About as easy to follow as an acid trip</bubble>
+          </chats>
+
           <orbitals>
-            <orbital $orbitText>
-              <P color="#fff" size={2} fontWeight={800}>
-                Your #general room:<br />
-                about as clear as modern art.
-              </P>
-            </orbital>
-            <Triangle
-              borderWidth={10}
-              size={1.8}
-              borderColor="pink"
-              $triangle
-              css={{
-                opacity: 0.85,
-                top: -40,
-                left: -200,
-              }}
-            />
-            <orbital $circle />
+            {[1, 2, 3, 4, 5].map(i => (
+              <Triangle
+                key={i}
+                borderWidth={3}
+                size={1}
+                borderColor="pink"
+                $triangle
+                css={{
+                  opacity: 0.85,
+                  top: -40 * i,
+                  left: 10 * i,
+                }}
+              />
+            ))}
           </orbitals>
         </V.SectionContent>
       </V.Section>
@@ -228,6 +226,31 @@ class Header {
     small: {
       fontSize: 14,
       fontWeight: 300,
+    },
+    chats: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      left: '65%',
+      bottom: 0,
+      // alignItems: 'center',
+      justifyContent: 'center',
+    },
+    bubble: {
+      border: [2, '#000'],
+      background: '#fff',
+      fontSize: 16,
+      borderRadius: 15,
+      padding: 10,
+      marginLeft: 40,
+      marginBottom: 10,
+      borderBottomRightRadius: 0,
+    },
+    left: {
+      marginLeft: 0,
+      marginRight: 40,
+      borderBottomRightRadius: 10,
+      borderBottomLeftRadius: 0,
     },
     orbitals: {
       pointerEvents: 'none',
@@ -340,23 +363,6 @@ class Section2 {
               </P2>
               <br />
               <br />
-              <P2 fontWeight={600} size={1.2}>
-                How Orbit helps:
-              </P2>
-              <ul>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.5}>On-device ML learns what you care about.</P>
-                </li>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.5}>Upgrade your OS with an intelligent home.</P>
-                </li>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.5}>No installation (3 minute setup).</P>
-                </li>
-              </ul>
               <br />
               <br />
               <rightSection
@@ -410,16 +416,6 @@ class Section2 {
   static style = {
     main: {
       width: 400,
-    },
-    li: {
-      display: 'flex',
-      flexFlow: 'row',
-      alignItems: 'center',
-      fontSize: 22,
-      padding: [10, 0],
-    },
-    icon: {
-      marginRight: 10,
     },
   }
 }
@@ -521,10 +517,86 @@ class Section4 {
 class Section5 {
   render() {
     return (
+      <V.Section>
+        <V.SectionContent fullscreen padded>
+          <V.Slant />
+          <main>
+            <P size={2.5} fontWeight={800}>
+              Save time on Day 1
+            </P>
+            <br />
+            <br />
+            <P2 fontWeight={200} size={3}>
+              How Orbit helps:
+            </P2>
+            <ul>
+              <li>
+                <UI.Icon $icon name="check" size={20} color="green" />
+                <P size={1.5}>On-device ML learns what you care about.</P>
+              </li>
+              <li>
+                <UI.Icon $icon name="check" size={20} color="green" />
+                <P size={1.5}>Upgrade your OS with an intelligent home.</P>
+              </li>
+              <li>
+                <UI.Icon $icon name="check" size={20} color="green" />
+                <P size={1.5}>No installation (3 minute setup).</P>
+              </li>
+            </ul>
+            <br />
+            <br />
+            <P2 fontWeight={200} size={3}>
+              How Orbit works:
+            </P2>
+            <ul>
+              <li>
+                <UI.Icon $icon name="check" size={20} color="green" />
+                <P size={1.5}>On-device ML learns what you care about.</P>
+              </li>
+              <li>
+                <UI.Icon $icon name="check" size={20} color="green" />
+                <P size={1.5}>Upgrade your OS with an intelligent home.</P>
+              </li>
+              <li>
+                <UI.Icon $icon name="check" size={20} color="green" />
+                <P size={1.5}>No installation (3 minute setup).</P>
+              </li>
+            </ul>
+          </main>
+        </V.SectionContent>
+      </V.Section>
+    )
+  }
+
+  static style = {
+    main: {
+      width: 400,
+      flex: 1,
+    },
+    ul: {
+      margin: 0,
+    },
+    li: {
+      display: 'flex',
+      flexFlow: 'row',
+      alignItems: 'center',
+      fontSize: 22,
+      padding: [0, 0, 10, 0],
+    },
+    icon: {
+      marginRight: 10,
+    },
+  }
+}
+
+@view
+class Section6 {
+  render() {
+    return (
       <UI.Theme name="dark">
         <V.Section css={{ background: '#222' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant backgroundColor="#000" />
+            <V.Slant inverseSlant backgroundColor="#000" />
             <main>
               <P size={3} fontWeight={800}>
                 We want to grow with you.
@@ -580,6 +652,7 @@ export default class HomePage extends React.Component {
         <Section3 />
         <Section4 />
         <Section5 />
+        <Section6 />
         <Footer />
       </home>
     )

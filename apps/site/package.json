@@ -22,6 +22,7 @@
     "react": "16.2.0",
     "react-dom": "^16.2.0",
     "parcel-plugin-inlinesvg": "1.0.0",
-    "react-svg-inline": "2.1.0"
+    "react-svg-inline": "2.1.0",
+    "animejs": "2.2.0"
   }
 }

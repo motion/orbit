@@ -65,8 +65,8 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.5} color="#222" />
-        <P if={false} size={1.25} fontWeight={700} alpha={0.8}>
+        <Logo size={0.4} color="#222" />
+        <P if={false} size={1} fontWeight={700} alpha={0.8}>
           Your company home
         </P>
       </brandMark>
@@ -75,10 +75,12 @@ class BrandLogo {
 
   static style = {
     brandMark: {
+      background: '#fff',
+      padding: 20,
+      margin: -20,
       alignSelf: 'flex-end',
       alignItems: 'center',
       textAlign: 'center',
-      marginRight: 20,
     },
   }
 }
@@ -88,22 +90,34 @@ class Header {
   render() {
     return (
       <V.Section>
+        <fadeLines
+          css={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(transparent, #fff)',
+            zIndex: -1,
+          }}
+        />
         <V.SectionContent padded fullscreen>
           <V.Slant />
           <top>
             <BrandLogo />
           </top>
           <div $$flex />
-          <div $$flex />
+          <div if={false} $$flex />
           <main>
-            <P size={3.3} fontWeight={800}>
-              Your business is growing, and so are your communication problems.
+            <P size={3.2} fontWeight={800}>
+              Your company is growing
             </P>
+            <P size={3.5}>(and so are your communication problems)</P>
             <br />
-            <P size={2} alpha={0.65}>
-              Orbit provides a smart personal home for your team. Remove
-              interruptions, reduce noise, and unify your organizational
-              knowledge.
+            <P size={1.4} alpha={0.65}>
+              Orbit is a smart personal home for your team.<br />
+              Less interruptions & noise.<br />
+              Unify your organizational knowledge.
             </P>
             <show />
           </main>
@@ -144,7 +158,7 @@ class Header {
               right: '50%',
               overflow: 'hidden',
               marginLeft: 100,
-              zIndex: -1,
+              zIndex: -2,
               opacity: 0.02,
               // display: 'none',
               transformOrigin: 'top left',
@@ -161,8 +175,8 @@ class Header {
           <orbitals>
             <orbital $orbitText>
               <P color="#fff" size={2.5} fontWeight={800}>
-                Slack:<br />
-                clear as modern art.
+                Your Slack:<br />
+                as clear as modern art.
               </P>
             </orbital>
             <Triangle
@@ -198,12 +212,12 @@ class Header {
       marginRight: 20,
     },
     main: {
-      width: 600,
+      width: 650,
       background: '#fff',
-      border: [10, '#f2f2f2'],
-      zIndex: 2,
-      padding: 30,
-      margin: -30,
+      border: [3, '#f2f2f2'],
+      zIndex: 10,
+      padding: 40,
+      margin: -40,
     },
     title: {
       fontSize: 40,
@@ -221,7 +235,7 @@ class Header {
       height: 500,
       zIndex: 2,
       transform: {
-        scale: 1.2,
+        scale: 1,
       },
     },
     behind: {
@@ -316,7 +330,8 @@ class Section2 {
             <br />
             <main>
               <P2 fontWeight={200} size={3.2}>
-                Slack is great but it has a noise problem.
+                <span css={{ background: 'yellow' }}>Slack is great</span> but
+                it has a noise problem.
               </P2>
               <br />
               <P2 fontWeight={200} size={2.4}>
@@ -324,8 +339,8 @@ class Section2 {
               </P2>
               <br />
               <br />
-              <P2 fontWeight={800} size={1}>
-                How Orbit helps
+              <P2 fontWeight={600} size={1.2}>
+                How Orbit helps:
               </P2>
               <ul>
                 <li>
@@ -344,14 +359,19 @@ class Section2 {
               <br />
               <br />
               <rightSection
-                css={{ width: 450, alignItems: 'flex-end', textAlign: 'right' }}
+                css={{
+                  width: 450,
+                  padding: [20, 0],
+                  alignItems: 'flex-end',
+                  textAlign: 'right',
+                }}
               >
-                <UI.Text size={4} fontWeight={800}>
+                <P size={4} fontWeight={800}>
                   Pull,<br />
                   <span css={{ marginRight: -10 }}>instead of</span>
                   <br />
                   <span css={{ marginRight: -20 }}>getting pushed</span>
-                </UI.Text>
+                </P>
                 <br />
                 <P size={2} css={{ marginRight: -30 }}>
                   Give it a pull&nbsp; 👈
@@ -395,27 +415,26 @@ class Section3 {
   render() {
     return (
       <UI.Theme name="medium">
-        <Section medium>
-          <main>
-            <P size={3} fontWeight={800}>
-              Your organization grows.
+        <V.Section css={{ background: '#f2f2f2' }}>
+          <V.SectionContent padded fullscreen>
+            <main>
+              <P size={3} fontWeight={800}>
+                Organization organization.
+              </P>
               <br />
               <br />
-              We keep it organized.
-            </P>
-            <br />
-            <br />
-            <P2>
-              Inspired by modern tech companies' intranet solutions, we set out
-              to make your even better: easy, interpretable, and powerful.
-            </P2>
-            <br />
-            <br />
-            <P2>
-              Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
-            </P2>
-          </main>
-        </Section>
+              <P2>
+                Inspired by modern tech companies' intranet solutions, we set
+                out to make your even better: easy, interpretable, and powerful.
+              </P2>
+              <br />
+              <br />
+              <P2>
+                Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
+              </P2>
+            </main>
+          </V.SectionContent>
+        </V.Section>
       </UI.Theme>
     )
   }
@@ -433,24 +452,27 @@ class Section4 {
   render() {
     return (
       <UI.Theme name="light">
-        <Section>
-          <main>
-            <P size={3} fontWeight={800}>
-              Search comes for free.
-            </P>
-            <br />
-            <br />
-            <P2>
-              Upgrade spotlight with search across all your services, more
-              powerful than any of your services.
-            </P2>
-            <br />
-            <br />
-            <P2>
-              Learn more on <Ul>how it works</Ul>.
-            </P2>
-          </main>
-        </Section>
+        <V.Section>
+          <V.SectionContent fullscreen padded>
+            <V.Slant inverseSlant />
+            <main>
+              <P size={3} fontWeight={800}>
+                Search comes for free.
+              </P>
+              <br />
+              <br />
+              <P2>
+                Upgrade spotlight with search across all your services, more
+                powerful than any of your services.
+              </P2>
+              <br />
+              <br />
+              <P2>
+                Learn more on <Ul>how it works</Ul>.
+              </P2>
+            </main>
+          </V.SectionContent>
+        </V.Section>
       </UI.Theme>
     )
   }

@@ -71,7 +71,7 @@ const PurchaseButton = props => (
   <UI.Button
     background="#fff"
     color="blue"
-    size={1.2}
+    size={1.1}
     borderWidth={1}
     borderColor="blue"
     fontWeight={300}
@@ -207,13 +207,13 @@ class Header {
           </top>
           <div $$flex />
           <Callout css={{ margin: -34 }}>
-            <P size={2.1} fontWeight={800} color={brandColor}>
+            <P size={2.1} fontWeight={800}>
               Your company is growing
             </P>
             <P size={4.3} margin={[8, 0]}>
               Make it easy to understand what's going on.
             </P>
-            <P size={2} alpha={0.7} margin={[10, 0, 20]}>
+            <P size={2} alpha={0.7} margin={[10, 0, 25]}>
               Everything important at your company, at your fingertips. Tame the
               cloud with private on-device machine learning.
             </P>
@@ -225,6 +225,7 @@ class Header {
           <div $$flex />
 
           <linesContain
+            if={false}
             css={{
               position: 'absolute',
               top: -200,
@@ -263,38 +264,51 @@ class Header {
             <bubble $left>🙄</bubble>
           </chats>
 
-          <dock
+          <dockContain
             css={{
               position: 'absolute',
-              bottom: 0,
-              right: '-2.5%',
-              width: '45%',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-              flexFlow: 'row',
-              background: '#f9f9f9',
-              borderTopRadius: 10,
-              padding: [0, 0, 10],
-              boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-              border: [1, '#ddd'],
+              bottom: 80,
+              left: 0,
+              right: -100,
+              borderBottom: [4, brandColor],
             }}
           >
-            <dockFade
+            <dock
               css={{
                 position: 'absolute',
-                top: 0,
-                left: -10,
-                right: -10,
-                bottom: -10,
-                background: 'linear-gradient(transparent, #fff)',
+                bottom: 15,
+                right: 20,
+                width: '45%',
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                flexFlow: 'row',
+                background: '#f9f9f9',
+                borderTopRadius: 10,
+                padding: [0, 0, 10],
+                boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                border: [1, '#ddd'],
+                transform: {
+                  scale: 0.9,
+                },
               }}
-            />
-            <DropboxIcon size={0.13} after={<Badge>12</Badge>} />
-            <DriveIcon size={0.16} after={<Badge>5</Badge>} />
-            <SlackIcon size={0.18} after={<Badge>89</Badge>} />
-            <DropboxIcon size={0.16} after={<Badge>3</Badge>} />
-            <DriveIcon size={0.13} after={<Badge>22</Badge>} />
-          </dock>
+            >
+              <dockFade
+                css={{
+                  position: 'absolute',
+                  top: 0,
+                  left: -10,
+                  right: -10,
+                  bottom: -10,
+                  background: 'linear-gradient(transparent, #fff)',
+                }}
+              />
+              <DropboxIcon size={0.13} after={<Badge>12</Badge>} />
+              <DriveIcon size={0.16} after={<Badge>5</Badge>} />
+              <SlackIcon size={0.18} after={<Badge>89</Badge>} />
+              <DropboxIcon size={0.16} after={<Badge>3</Badge>} />
+              <DriveIcon size={0.13} after={<Badge>22</Badge>} />
+            </dock>
+          </dockContain>
 
           <orbitals if={false}>
             {[1, 2, 3, 4, 5].map(i => (
@@ -406,28 +420,28 @@ class Section2 {
                   <span $noisy>
                     noise<line>~~~~~~~~~~~~~~~~~~~</line>
                   </span>{' '}
-                  problem.
+                  problem
                 </P>
                 <br />
                 <br />
-                <P fontWeight={200} size={2.4}>
-                  Really, your whole cloud does.
+                <P fontWeight={200} size={2.3} alpha={0.5}>
+                  (Really, your whole cloud does)
                 </P>
                 <br />
-                <P size={1.6}>
+                <P size={2}>
                   You use the best tool for the job. But that leaves your
-                  company without anything to organize it at a high level. Now
-                  you have a solution.
+                  company without any organization at a high level. Not to
+                  mention all those damn notifications.
                 </P>
                 <br />
                 <P size={1.6}>
-                  Orbit integrates with all your cloud services and makes it
-                  easy to see whats going on, and what's relevant to you.
+                  Orbit unifies your cloud tools and sorts whats important into
+                  a home page.
                 </P>
                 <br />
                 <P size={1.6}>
-                  With a native app, it makes all of this available with the tap
-                  of a button, so you can use <Cmd>⌘+Space</Cmd> to
+                  It's a native app, available at the tap of a button, so you
+                  can use <Cmd>⌘+Space</Cmd> to
                 </P>
                 <div $$flex />
               </main>
@@ -439,7 +453,7 @@ class Section2 {
                   textAlign: 'right',
                 }}
               >
-                <P size={3.5} fontWeight={800}>
+                <P size={3.5} fontWeight={800} color={brandColor}>
                   pull,<br />
                   <span css={{ marginRight: -10 }}>instead of</span>
                   <br />
@@ -557,8 +571,7 @@ class Section4 {
               <br />
               <P2 size={2.2}>
                 Inspired by intranet systems at Stripe and Facebook, we wanted
-                to make an intranet that actually makes your team happier and
-                more productive.
+                to make a tool to make teams happier and more productive.
               </P2>
               <br />
               <ul>
@@ -612,12 +625,13 @@ class Section4 {
     li: {
       display: 'flex',
       flexFlow: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       fontSize: 22,
       padding: [0, 0, 10, 0],
     },
     icon: {
-      marginRight: 10,
+      marginTop: 6,
+      marginRight: 12,
     },
   }
 }
@@ -636,13 +650,13 @@ class Section3 {
             <br />
             <br />
             <P size={1.2} fontWeight={800}>
-              Case study 1
+              Scenario 1
             </P>
             <P2>Upgrade your chat team overnight.</P2>
             <main>
               <P2 size={1.7}>
-                Orbit puts your knowledgebase, wiki, project management tickets,
-                and docs at the tip of your fingers.
+                Orbit puts everything: your knowledgebase, project management
+                tickets, docs (and more) into your OS.
               </P2>
               <P2 size={1.7}>
                 But that's not all. Orbit can attach to any app and scan your

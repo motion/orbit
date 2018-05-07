@@ -366,7 +366,11 @@ class Section2 {
                 <span css={{ background: 'yellow', fontWeight: 300 }}>
                   Slack is great
                 </span>{' '}
-                but it has a noise problem.
+                but it has a{' '}
+                <span $noisy>
+                  noise<line>~~~~~~~~~~~~~~~~~~~</line>
+                </span>{' '}
+                problem.
               </P2>
               <P2 fontWeight={200} size={2.4}>
                 Really, your whole cloud does.
@@ -441,6 +445,24 @@ class Section2 {
       top: 260,
       width: 450,
       left: '65%',
+    },
+    noisy: {
+      position: 'relative',
+    },
+    line: {
+      userSelect: 'none',
+      fontWeight: 400,
+      position: 'absolute',
+      bottom: -25,
+      left: -35,
+      right: -35,
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      letterSpacing: -10,
+      color: 'blue',
+      transform: {
+        scale: 0.6,
+      },
     },
   }
 }
@@ -665,11 +687,11 @@ class Section6 {
 class Footer {
   render() {
     return (
-      <section css={{ padding: 100 }}>
-        <top>
+      <V.Section css={{ padding: 100 }}>
+        <V.SectionContent padded>
           <BrandLogo />
-        </top>
-      </section>
+        </V.SectionContent>
+      </V.Section>
     )
   }
 }

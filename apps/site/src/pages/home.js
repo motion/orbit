@@ -8,7 +8,57 @@ import contextImg from '~/../public/screen-context.png'
 import slackIcon from '~/../public/slack.svg'
 import driveIcon from '~/../public/drive.svg'
 import dropboxIcon from '~/../public/dropbox.svg'
+import mailIcon from '~/../public/mail.svg'
+import githubIcon from '~/../public/github.svg'
 import SVGInline from 'react-svg-inline'
+
+// <linesContain
+//               if={false}
+//               css={{
+//                 position: 'absolute',
+//                 top: -200,
+//                 left: '50%',
+//                 right: '-50%',
+//                 bottom: 0,
+//                 overflow: 'hidden',
+//                 zIndex: -2,
+//                 transform: { rotate: '-5deg' },
+//               }}
+//             >
+//               <Lines
+//                 width={1000}
+//                 height={2000}
+//                 css={{
+//                   position: 'absolute',
+//                   top: 0,
+//                   right: 0,
+//                   bottom: 0,
+//                   left: 0,
+//                   overflow: 'hidden',
+//                   marginLeft: 100,
+//                   opacity: 0.02,
+//                   // display: 'none',
+//                   transformOrigin: 'top left',
+//                   transform: {
+//                     rotate: '10deg',
+//                     x: '-12.8%',
+//                     scale: 3,
+//                   },
+//                 }}
+//               />
+//             </linesContain>
+
+const WavyLine = ({ height, ...props }) => (
+  <svg width={60} height={height} {...props}>
+    <rect
+      style={{ fill: 'url(#wavy-line)' }}
+      width={60}
+      height={height}
+      x="0"
+      y="0"
+    />
+  </svg>
+)
 
 const Badge = view('div', {
   position: 'absolute',
@@ -26,7 +76,7 @@ const Badge = view('div', {
   boxShadow: '0 0 5px rgba(0,0,0,0.5)',
 })
 
-const Icon = ({ size, icon, scale = 1, after, ...props }) => (
+const Icon = ({ size, icon, scale = 1, after, transform, ...props }) => (
   <slackIcon
     css={{ position: 'relative', width: size * 512, height: size * 512 }}
   >
@@ -35,7 +85,10 @@ const Icon = ({ size, icon, scale = 1, after, ...props }) => (
       svg={icon}
       width={512}
       height={512}
-      css={{ transformOrigin: 'top left', transform: { scale: size * scale } }}
+      css={{
+        transformOrigin: 'top left',
+        transform: { scale: size * scale, ...transform },
+      }}
       {...props}
     />
     {after}
@@ -45,6 +98,10 @@ const Icon = ({ size, icon, scale = 1, after, ...props }) => (
 const SlackIcon = props => <Icon {...props} icon={slackIcon} />
 const DriveIcon = props => <Icon {...props} scale={1.8} icon={driveIcon} />
 const DropboxIcon = props => <Icon {...props} icon={dropboxIcon} />
+const GithubIcon = props => <Icon {...props} icon={githubIcon} />
+const MailIcon = props => (
+  <Icon {...props} scale={4} transform={{ x: -15 }} icon={mailIcon} />
+)
 
 const brandColor = '#5552FA'
 
@@ -207,7 +264,7 @@ class Header {
             <PurchaseButton />
           </top>
           <div $$flex />
-          <Callout css={{ margin: [-60, -34, 0] }}>
+          <Callout css={{ margin: [-80, -34, 0] }}>
             <P size={2.1} fontWeight={800}>
               Your company is growing
             </P>
@@ -223,8 +280,10 @@ class Header {
 
           <chats>
             <bubble $left>The #general chat room</bubble>
-            <bubble>About as easy to follow as an acid trip</bubble>
+            <bubble>About as coherent as an acid trip</bubble>
             <bubble $left>🙄</bubble>
+            <bubble>Spreading like an oil spill...</bubble>
+            <bubble $left>Clear as modern art 🖌</bubble>
           </chats>
 
           <dockContain
@@ -269,8 +328,8 @@ class Header {
               <DropboxIcon size={0.13} after={<Badge>12</Badge>} />
               <DriveIcon size={0.16} after={<Badge>5</Badge>} />
               <SlackIcon size={0.18} after={<Badge>89</Badge>} />
-              <DropboxIcon size={0.16} after={<Badge>3</Badge>} />
-              <DriveIcon size={0.13} after={<Badge>22</Badge>} />
+              <MailIcon size={0.16} after={<Badge>3</Badge>} />
+              <GithubIcon size={0.13} after={<Badge>22</Badge>} />
             </dock>
           </dockContain>
 
@@ -355,6 +414,35 @@ class Header {
   }
 }
 
+const Notification = ({ title, body }) => (
+  <notification
+    css={{
+      width: 300,
+      height: 70,
+      background: '#f3f3f3',
+      border: [1, '#ddd'],
+      padding: 10,
+      borderRadius: 7,
+      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+      flexFlow: 'row',
+      overflow: 'hidden',
+      marginBottom: 20,
+    }}
+  >
+    <MailIcon size={0.09} css={{ margin: [0, 10, 0, 0] }} />
+    <content
+      css={{
+        padding: 3,
+        flex: 1,
+        overflow: 'hidden',
+      }}
+    >
+      <notTitle css={{ fontWeight: 600 }}>{title}</notTitle>
+      <UI.Text ellipse={1}>{body}</UI.Text>
+    </content>
+  </notification>
+)
+
 @view
 class Section2 {
   render() {
@@ -382,30 +470,29 @@ class Section2 {
                 <P fontWeight={200} size={4.5}>
                   Slack is great but it has a{' '}
                   <span $noisy>
-                    noise<line>~~~~~~~~~~~~~~~~~~~</line>
+                    noise<WavyLine height={1350} $line />
                   </span>{' '}
                   problem
                 </P>
                 <br />
                 <br />
-                <P fontWeight={300} size={2} alpha={0.5}>
-                  (Really, your whole cloud does)
+                <P fontWeight={300} size={2.3} alpha={0.5}>
+                  (Your whole cloud does)
                 </P>
                 <br />
-                <P size={2}>
+                <P size={1.8}>
                   You use the best tool for the job. But that leaves your
-                  company without any organization at a high level. Not to
-                  mention all those damn notifications.
+                  company without high level organization. Not to mention all
+                  those damn notifications.
                 </P>
                 <br />
                 <P size={1.6}>
-                  Orbit unifies your cloud tools and sorts whats important into
-                  a home page.
+                  Orbit unifies your cloud and sorts whats important into a
+                  personal home page.
                 </P>
                 <br />
                 <P size={1.6}>
-                  It's a native app, available at the tap of a button, so you
-                  can use <Cmd>⌘+Space</Cmd> to
+                  Turn off the noise with a simple <Cmd>⌘+Space</Cmd>.
                 </P>
                 <div $$flex />
               </main>
@@ -418,66 +505,64 @@ class Section2 {
                 }}
               >
                 <P size={3.5} fontWeight={800} color={brandColor}>
-                  pull,<br />
-                  <span css={{ marginRight: -10 }}>instead of</span>
+                  Pull,<br />
+                  <span css={{ marginRight: -5 }}>instead of</span>
                   <br />
-                  <span css={{ marginRight: -20 }}>getting pushed</span>
+                  <span css={{ marginRight: -10 }}>getting pushed</span>
                 </P>
                 <P if={false} size={2}>
                   Give it a pull&nbsp; 👈
                 </P>
+                <br />
+                <br />
               </rightSection>
             </UI.Theme>
-            <explain>
-              <notification
-                css={{
-                  width: 300,
-                  height: 70,
-                  background: '#f3f3f3',
-                  border: [1, '#ddd'],
-                  padding: 20,
-                  borderRadius: 10,
-                  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                }}
+            <notifications>
+              {[
+                {
+                  title: 'Emily Parker',
+                  body: 'Book club is cancelled tomorrow',
+                },
+                {
+                  title: 'Emily Parker',
+                  body: 'Book club is cancelled tomorrow',
+                },
+                {
+                  title: 'Emily Parker',
+                  body: 'Book club is cancelled tomorrow',
+                },
+                {
+                  title: 'Emily Parker',
+                  body: 'Book club is cancelled tomorrow',
+                },
+                {
+                  title: 'Emily Parker',
+                  body: 'Book club is cancelled tomorrow',
+                },
+                {
+                  title: 'Emily Parker',
+                  body: 'Book club is cancelled tomorrow',
+                },
+              ].map(({ title, body }, index) => (
+                <Notification key={index} title={title} body={body} />
+              ))}
+
+              <div $$flex />
+              <div $$flex />
+
+              <UI.Button
+                if={false}
+                size={1.2}
+                borderColor="#000"
+                borderWidth={1}
+                css={{ marginLeft: -50, width: 'auto' }}
               >
-                Notification
-              </notification>
-            </explain>
-            <linesContain
-              if={false}
-              css={{
-                position: 'absolute',
-                top: -200,
-                left: '50%',
-                right: '-50%',
-                bottom: 0,
-                overflow: 'hidden',
-                zIndex: -2,
-                transform: { rotate: '-5deg' },
-              }}
-            >
-              <Lines
-                width={1000}
-                height={2000}
-                css={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0,
-                  overflow: 'hidden',
-                  marginLeft: 100,
-                  opacity: 0.02,
-                  // display: 'none',
-                  transformOrigin: 'top left',
-                  transform: {
-                    rotate: '10deg',
-                    x: '-12.8%',
-                    scale: 3,
-                  },
-                }}
-              />
-            </linesContain>
+                👈 Give it a pull
+              </UI.Button>
+
+              <div $$flex />
+              <div $$flex />
+            </notifications>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -489,11 +574,12 @@ class Section2 {
       width: 400,
       flex: 1,
     },
-    explain: {
+    notifications: {
       position: 'absolute',
-      top: 260,
+      top: 200,
+      right: -20,
       width: 300,
-      left: '65%',
+      bottom: 100,
     },
     noisy: {
       position: 'relative',
@@ -502,15 +588,13 @@ class Section2 {
       userSelect: 'none',
       fontWeight: 400,
       position: 'absolute',
-      bottom: -28,
-      left: -30,
-      right: -30,
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      letterSpacing: -10,
-      color: 'rgb(99.9%, 37.9%, 0%)',
+      bottom: 0,
+      left: -3,
+      right: 0,
+      transformOrigin: 'bottom left',
       transform: {
-        scale: 0.7,
+        scale: 0.1,
+        rotate: '90deg',
       },
     },
   }
@@ -535,16 +619,15 @@ class Section4 {
               <br />
               <br />
               <P2 size={2.2}>
-                Inspired by intranet systems at Stripe and Facebook, we wanted
-                to make a tool to make teams happier and more productive.
+                Inspired intranets like <Ul>Stripe Home</Ul>, we made a tool to
+                make your team happier and more productive.
               </P2>
               <br />
               <ul>
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.5}>
-                    A daily heads up. News on what you've missed going on in
-                    your company.
+                    Daily heads up. What you missed, minus notifications.
                   </P>
                 </li>
                 <li>
@@ -611,7 +694,7 @@ class Section3 {
           <V.SectionContent fullscreen padded>
             <V.Slant backgroundColor="#f2f2f2" css={{ zIndex: 2 }} />
             <main>
-              <P size={2.5} fontWeight={800}>
+              <P size={2} fontWeight={800}>
                 How it saves time
               </P>
               <br />
@@ -619,10 +702,10 @@ class Section3 {
               <P size={1.2} fontWeight={800}>
                 Scenario 1
               </P>
-              <P2 size={3}>Upgrade your chat team in 3 minutes.</P2>
+              <P2 size={3}>Make your chat team better in 3 minutes.</P2>
               <P2 size={1.7}>
-                Put your knowledgebase, PM tickets, and docs in a smart sidebar
-                that automatically searches as you chat.
+                Your knowledgebase, PM tickets, and docs in a smart sidebar that
+                automatically searches as you chat.
                 <br />
                 <br />
                 See the <em>exact answer</em> highlighted without typing a

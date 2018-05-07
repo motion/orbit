@@ -409,13 +409,25 @@ class Section2 {
                   problem.
                 </P>
                 <br />
+                <br />
                 <P fontWeight={200} size={2.4}>
                   Really, your whole cloud does.
-                  <br />
-                  <br />
-                  Orbit is an Mac app that unifies your cloud and keeps your
-                  team in sync. Allow them to turn off notifications and focus.
-                  We call it:
+                </P>
+                <br />
+                <P size={1.6}>
+                  You use the best tool for the job. But that leaves your
+                  company without anything to organize it at a high level. Now
+                  you have a solution.
+                </P>
+                <br />
+                <P size={1.6}>
+                  Orbit integrates with all your cloud services and makes it
+                  easy to see whats going on, and what's relevant to you.
+                </P>
+                <br />
+                <P size={1.6}>
+                  With a native app, it makes all of this available with the tap
+                  of a button, so you can use <Cmd>⌘+Space</Cmd> to
                 </P>
                 <div $$flex />
               </main>
@@ -428,14 +440,10 @@ class Section2 {
                 }}
               >
                 <P size={3.5} fontWeight={800}>
-                  Pull,<br />
+                  pull,<br />
                   <span css={{ marginRight: -10 }}>instead of</span>
                   <br />
-                  <span css={{ marginRight: -20 }}>being pushed</span>
-                </P>
-                <br />
-                <P size={2} css={{ marginRight: -30 }}>
-                  <Cmd>⌘+Space</Cmd> just got a whole lot better
+                  <span css={{ marginRight: -20 }}>getting pushed</span>
                 </P>
                 <P if={false} size={2}>
                   Give it a pull&nbsp; 👈

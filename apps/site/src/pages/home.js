@@ -67,14 +67,14 @@ const Lines = ({ width = 100, height = 100, style }) => (
   </svg>
 )
 
-const Callout = props => (
+const Callout = ({ style, ...props }) => (
   <section
+    style={style}
     css={{
       width: '59%',
       background: '#fff',
       // border: [5, '#fff'],
       zIndex: 10,
-      margin: -34,
       overflow: 'hidden',
       position: 'relative',
     }}
@@ -134,17 +134,6 @@ const Ul = view('span', {
   borderBottom: [4, 'rgba(136, 231, 234, 0.9)'],
   marginBottom: -4,
 })
-const Section = view(
-  'section',
-  {
-    height: window.innerHeight,
-    padding: [70, 50],
-  },
-  {
-    dark: { background: '#111' },
-    medium: { background: '#f2f2f2' },
-  },
-)
 
 @view
 class BrandLogo {
@@ -202,7 +191,7 @@ class Header {
             <BrandLogo />
           </top>
           <div $$flex />
-          <Callout>
+          <Callout css={{ margin: -34 }}>
             <P size={2.1} fontWeight={800} color={brandColor}>
               Your company is growing
             </P>
@@ -559,6 +548,35 @@ class Section4 {
                 more productive.
               </P2>
               <br />
+              <ul>
+                <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.5}>
+                    A daily heads up. News on what you've missed going on in
+                    your company.
+                  </P>
+                </li>
+                <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.5}>
+                    A beautiful directory of all your employees, automatically.
+                  </P>
+                </li>
+                <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.5}>
+                    Intelligent search of Slack, your files, tickets, and more.
+                  </P>
+                </li>
+                <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.5}>
+                    Answers as your work. Orbit can search based on what you're
+                    doing, showing in a sidebar just by holding{' '}
+                    <Cmd>Option</Cmd>.
+                  </P>
+                </li>
+              </ul>
               <br />
               <P2>
                 Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
@@ -575,6 +593,19 @@ class Section4 {
       width: 400,
       flex: 1,
     },
+    ul: {
+      margin: 0,
+    },
+    li: {
+      display: 'flex',
+      flexFlow: 'row',
+      alignItems: 'center',
+      fontSize: 22,
+      padding: [0, 0, 10, 0],
+    },
+    icon: {
+      marginRight: 10,
+    },
   }
 }
 
@@ -586,25 +617,33 @@ class Section3 {
         <V.Section css={{ background: '#f2f2f2' }}>
           <V.SectionContent fullscreen padded>
             <V.Slant css={{ filter: 'grayscale(100%)', zIndex: 2 }} />
+            <P size={2.5} fontWeight={800}>
+              How it saves time
+            </P>
+            <br />
+            <br />
+            <P size={1.2} fontWeight={800}>
+              Case study 1
+            </P>
+            <P2>Upgrade your chat team overnight.</P2>
             <main>
-              <P size={2.5} fontWeight={800}>
-                How it saves time
-              </P>
-              <br />
-              <P2 size={2.5}>
-                Upgrade your chat sales and customer support overnight.
-              </P2>
-              <br />
               <P2 size={1.7}>
-                Orbit lives on your desktop and works with every app. Combining
-                state of the art intelligence with a novel interface, you can
-                leave Orbit on as you chat.
+                Orbit puts your knowledgebase, wiki, project management tickets,
+                and docs at the tip of your fingers.
               </P2>
-              <div $$flex />
-              <P2>
-                <strong>The result?</strong> Less interruptions, less "pinging"
-                people for small questions. Smarter email replies and better
-                customer support.
+              <P2 size={1.7}>
+                But that's not all. Orbit can attach to any app and scan your
+                current conversation in real-time, showing the{' '}
+                <em>exact section</em> within a document that provides the
+                answer to what you're looking at.
+              </P2>
+              <br />
+              <P size={1.2} fontWeight={800}>
+                The Result
+              </P>
+              <P2 size={2.5}>
+                Your customer success team answers questions faster & more
+                accurately. It only takes 3 minutes to install.
               </P2>
             </main>
             <illustration>

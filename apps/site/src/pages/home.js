@@ -77,22 +77,22 @@ const PurchaseButton = props => (
     fontWeight={300}
     {...props}
   >
-    <span css={{ fontWeight: 500 }}>Early access list</span>{' '}
-    &nbsp;&middot;&nbsp; <span css={{ fontWeight: 800 }}>$200</span>
+    <span css={{ fontWeight: 500 }}>Early access</span> &nbsp;&middot;&nbsp;{' '}
+    <span css={{ fontWeight: 800 }}>$200</span>
   </UI.Button>
 )
 
 const Callout = ({ style, ...props }) => (
   <section
-    style={style}
     css={{
-      width: '59%',
+      width: '57%',
       background: '#fff',
-      // border: [5, '#fff'],
+      border: [10, '#fff'],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
     }}
+    style={style}
   >
     <Lines
       width={1000}
@@ -111,7 +111,7 @@ const Callout = ({ style, ...props }) => (
       }}
     />
     <innerSection
-      css={{ margin: 12, padding: 40, background: '#fff' }}
+      css={{ margin: 12, borderRadius: 10, padding: 40, background: '#fff' }}
       {...props}
     />
   </section>
@@ -174,7 +174,6 @@ class BrandLogo {
       // background: '#fff',
       padding: 20,
       margin: -20,
-      alignSelf: 'flex-end',
       alignItems: 'center',
       textAlign: 'center',
     },
@@ -202,11 +201,13 @@ class Header {
               },
             }}
           />
-          <top>
+          <top $$row>
             <BrandLogo />
+            <div $$flex />
+            <PurchaseButton />
           </top>
           <div $$flex />
-          <Callout css={{ margin: -34 }}>
+          <Callout css={{ margin: [-60, -34, 0] }}>
             <P size={2.1} fontWeight={800}>
               Your company is growing
             </P>
@@ -217,46 +218,8 @@ class Header {
               Everything important at your company, at your fingertips. Tame the
               cloud with private on-device machine learning.
             </P>
-            <div $$row>
-              <div $$flex />
-              <PurchaseButton />
-            </div>
           </Callout>
           <div $$flex />
-
-          <linesContain
-            if={false}
-            css={{
-              position: 'absolute',
-              top: -200,
-              left: '50%',
-              right: -500,
-              bottom: -500,
-              overflow: 'hidden',
-              zIndex: -2,
-              transform: { rotate: '5deg' },
-            }}
-          >
-            <Lines
-              width={1000}
-              height={2000}
-              css={{
-                position: 'absolute',
-                top: -200,
-                left: -500,
-                right: '50%',
-                overflow: 'hidden',
-                marginLeft: 100,
-                zIndex: -2,
-                opacity: 0.015,
-                // display: 'none',
-                transformOrigin: 'top left',
-                transform: {
-                  scale: 6,
-                },
-              }}
-            />
-          </linesContain>
 
           <chats>
             <bubble $left>The #general chat room</bubble>
@@ -267,24 +230,25 @@ class Header {
           <dockContain
             css={{
               position: 'absolute',
-              bottom: 80,
-              left: 0,
-              right: -100,
-              borderBottom: [4, brandColor],
+              bottom: 40,
+              left: -50,
+              right: -50,
+              borderBottom: [4, '#f2f2f2'],
+              zIndex: -2,
             }}
           >
             <dock
               css={{
                 position: 'absolute',
-                bottom: 15,
-                right: 20,
+                bottom: 20,
+                right: 0,
                 width: '45%',
                 alignItems: 'flex-end',
-                justifyContent: 'center',
+                justifyContent: 'space-between',
                 flexFlow: 'row',
                 background: '#f9f9f9',
                 borderTopRadius: 10,
-                padding: [0, 0, 10],
+                padding: [0, 20, 10],
                 boxShadow: '0 0 10px rgba(0,0,0,0.1)',
                 border: [1, '#ddd'],
                 transform: {
@@ -374,7 +338,7 @@ class Header {
       },
     },
     bubble: {
-      border: [2, '#000'],
+      border: [2, '#777'],
       background: '#fff',
       fontSize: 16,
       borderRadius: 15,
@@ -424,7 +388,7 @@ class Section2 {
                 </P>
                 <br />
                 <br />
-                <P fontWeight={200} size={2.3} alpha={0.5}>
+                <P fontWeight={300} size={2} alpha={0.5}>
                   (Really, your whole cloud does)
                 </P>
                 <br />
@@ -560,8 +524,9 @@ class Section4 {
         <V.Section css={{ background: '#fff' }}>
           <V.SectionContent fullscreen padded>
             <V.Slant
+              // backgroundColor="#f2f2f2"
               inverseSlant
-              css={{ filter: 'grayscale(0%)', zIndex: 2 }}
+              css={{ zIndex: 2 }}
             />
             <main>
               <P size={2.5} fontWeight={800}>
@@ -604,7 +569,8 @@ class Section4 {
                 </li>
               </ul>
               <br />
-              <P2>
+              <div $$flex />
+              <P2 textAlign="right">
                 Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
               </P2>
             </main>
@@ -641,38 +607,39 @@ class Section3 {
   render() {
     return (
       <UI.Theme name="medium">
-        <V.Section css={{ background: '#f2f2f2' }}>
+        <V.Section css={{ background: '#f8f8f8' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant css={{ filter: 'grayscale(100%)', zIndex: 2 }} />
-            <P size={2.5} fontWeight={800}>
-              How it saves time
-            </P>
-            <br />
-            <br />
-            <P size={1.2} fontWeight={800}>
-              Scenario 1
-            </P>
-            <P2>Upgrade your chat team overnight.</P2>
+            <V.Slant backgroundColor="#f2f2f2" css={{ zIndex: 2 }} />
             <main>
-              <P2 size={1.7}>
-                Orbit puts everything: your knowledgebase, project management
-                tickets, docs (and more) into your OS.
-              </P2>
-              <P2 size={1.7}>
-                But that's not all. Orbit can attach to any app and scan your
-                current conversation in real-time, showing the{' '}
-                <em>exact section</em> within a document that provides the
-                answer to what you're looking at.
-              </P2>
+              <P size={2.5} fontWeight={800}>
+                How it saves time
+              </P>
               <br />
+              <br />
+              <P size={1.2} fontWeight={800}>
+                Scenario 1
+              </P>
+              <P2 size={3}>Upgrade your chat team in 3 minutes.</P2>
+              <P2 size={1.7}>
+                Put your knowledgebase, PM tickets, and docs in a smart sidebar
+                that automatically searches as you chat.
+                <br />
+                <br />
+                See the <em>exact answer</em> highlighted without typing a
+                thing.
+              </P2>
+            </main>
+            <br />
+            <div $$flex />
+            <Callout css={{ width: 460, marginLeft: 50 }}>
               <P size={1.2} fontWeight={800}>
                 The Result
               </P>
-              <P2 size={2.5}>
+              <P2 size={2.3} margin={0}>
                 Your customer success team answers questions faster & more
-                accurately. It only takes 3 minutes to install.
+                accurately with less onboarding time.
               </P2>
-            </main>
+            </Callout>
             <illustration>
               <img
                 src={contextImg}
@@ -786,15 +753,14 @@ class Section6 {
             <V.Slant backgroundColor="#000" />
             <main>
               <P size={3} fontWeight={800}>
-                Private.<br />
-                Secure.<br />
+                Private. Secure.<br />
                 No installation.
               </P>
               <br />
               <main>
                 <P2 fontWeight={200} size={2.5}>
-                  Orbit has no cloud, no on-prem install. It's a{' '}
-                  <em>personal assistant</em> that solves{' '}
+                  Orbit has no cloud and no on-prem install. It's a desktop app
+                  that's your <em>personal assistant</em> for solving{' '}
                   <em>company problems</em>.
                 </P2>
                 <br />
@@ -804,9 +770,9 @@ class Section6 {
                   on-device.
                 </P2>
                 <P2 size={1.5}>
-                  From permissions issues to data privacy to complex and
-                  expensive installation processess, every aspect of the cloud
-                  works against what a company assistant should be.
+                  From permissions issues to data privacy to complex to
+                  expensive installation processess, on-device was the only way
+                  to go.
                 </P2>
                 <P2 size={1.5}>
                   For the last year we've been pushing the limits of what your
@@ -814,7 +780,7 @@ class Section6 {
                 </P2>
                 <P2 size={1.5}>
                   It's made for you. Privacy first & passionate about making
-                  computing a great experience.
+                  your knowledge work for you.
                 </P2>
               </main>
             </main>

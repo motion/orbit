@@ -214,6 +214,7 @@ export default class AppStore {
       if (!bit) {
         return null
       }
+      console.log('selectedBit', bit.type)
       if (bit.type === 'person') {
         return await Person.findOne({ id: bit.id })
       }

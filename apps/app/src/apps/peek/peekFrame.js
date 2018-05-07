@@ -36,10 +36,7 @@ export default class PeekFrame {
       !onRight ? SHADOW_PAD : 0,
     ]
     const margin = padding.map(x => -x)
-    const boxShadow = [
-      [onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]],
-      borderShadow,
-    ]
+    const boxShadow = [[onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]]]
     const arrowSize = 30
     // determine x adjustments
     // adjust for docked not using shadow pad
@@ -89,6 +86,7 @@ export default class PeekFrame {
           css={{
             left: !onRight ? 'auto' : -20,
             right: !onRight ? -arrowSize : 'auto',
+            zIndex: 1000000000,
             transform: {
               y: arrowY,
               x: onRight ? 0.5 : -0.5,
@@ -133,6 +131,7 @@ export default class PeekFrame {
             <peekFrameBorder
               css={{
                 borderRadius,
+                boxShadow: [borderShadow],
               }}
             />
             <peekMain

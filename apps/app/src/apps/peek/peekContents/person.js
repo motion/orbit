@@ -1,17 +1,30 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import OrbitIcon from '~/apps/orbit/orbitIcon'
 import * as UI from '@mcro/ui'
-import Results from '~/apps/results/results'
+import Carousel from '~/components/carousel'
+import { Bit } from '@mcro/models'
 
 const mapW = 700
 const mapH = 300
 
-@view
+class PersonPeek {
+  @react({ defaultValue: [] })
+  relatedConversations = async () =>
+    await Bit.find({
+      relations: ['people'],
+      where: { integration: 'slack', type: 'conversation' },
+      take: 3,
+    })
+}
+
+@view({
+  store: PersonPeek,
+})
 export class Person {
-  render({ person, appStore }) {
+  render({ store, person, appStore }) {
     if (!person || !person.data.profile) {
-      log(`no person`)
+      log(`no person`, person)
       return null
     }
     const setting = appStore.settings.slack
@@ -41,6 +54,7 @@ export class Person {
         </cardContent>
         <map>
           <fadeMap />
+          <fadeMapRight />
           <img
             $mapImg
             src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
@@ -68,9 +82,9 @@ export class Person {
 
           <card>
             <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
-              Recently...
+              Recently relevant conversations
             </UI.Title>
-            <Results />
+            <Carousel items={store.relatedConversations} />
           </card>
         </content>
       </frame>
@@ -117,7 +131,16 @@ export class Person {
       left: 0,
       right: 0,
       height: 200,
-      background: 'linear-gradient(transparent, #fff)',
+      background: 'linear-gradient(transparent, #f9f9f9)',
+      zIndex: 2,
+    },
+    fadeMapRight: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      background: 'linear-gradient(to right, transparent, #f9f9f9)',
       zIndex: 2,
     },
     info: {

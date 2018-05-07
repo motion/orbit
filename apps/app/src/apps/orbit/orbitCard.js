@@ -203,6 +203,7 @@ export default class OrbitCard {
               color="#333"
               ellipse={5}
               size={listItem ? 1.1 : 1.2}
+              lineHeight="1.3rem"
             >
               {preview}
             </UI.Text>

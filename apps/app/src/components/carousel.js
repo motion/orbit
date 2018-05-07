@@ -29,7 +29,7 @@ export default class Carousel {
   static style = {
     carousel: {
       flexFlow: 'row',
-      padding: [0, 20],
+      // padding: [0, 20],
       overflowX: 'scroll',
     },
   }

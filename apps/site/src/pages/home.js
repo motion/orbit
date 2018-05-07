@@ -10,6 +10,7 @@ import driveIcon from '~/../public/drive.svg'
 import dropboxIcon from '~/../public/dropbox.svg'
 import mailIcon from '~/../public/mail.svg'
 import githubIcon from '~/../public/github.svg'
+import personImage from '~/../public/screen-person.png'
 import SVGInline from 'react-svg-inline'
 
 // <linesContain
@@ -657,6 +658,22 @@ class Section4 {
                 Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
               </P2>
             </main>
+            <example
+              css={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: '50%',
+              }}
+            >
+              <img
+                src={personImage}
+                width={1490}
+                height="auto"
+                css={{ transformOrigin: 'top left', transform: { scale: 0.6 } }}
+              />
+            </example>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -685,6 +702,8 @@ class Section4 {
   }
 }
 
+const Ul2 = view('span', { background: 'yellow' })
+
 @view
 class Section3 {
   render() {
@@ -692,23 +711,19 @@ class Section3 {
       <UI.Theme name="medium">
         <V.Section css={{ background: '#f8f8f8' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant backgroundColor="#f2f2f2" css={{ zIndex: 2 }} />
+            <V.Slant css={{ zIndex: 2 }} />
             <main>
-              <P size={2} fontWeight={800}>
-                How it saves time
-              </P>
-              <br />
-              <br />
               <P size={1.2} fontWeight={800}>
                 Scenario 1
               </P>
-              <P2 size={3}>Make your chat team better in 3 minutes.</P2>
+              <P2 size={3}>Make your chat team faster and more accurate.</P2>
               <P2 size={1.7}>
-                Your knowledgebase, PM tickets, and docs in a smart sidebar that
+                Yes, it works with Intercom (and the other ones too). Your
+                knowledgebase, PM tickets, and docs in a smart sidebar that
                 automatically searches as you chat.
                 <br />
                 <br />
-                See the <em>exact answer</em> highlighted without typing a
+                See the <Ul2>exact answer highlighted</Ul2> without typing a
                 thing.
               </P2>
             </main>
@@ -719,8 +734,8 @@ class Section3 {
                 The Result
               </P>
               <P2 size={2.3} margin={0}>
-                Your customer success team answers questions faster & more
-                accurately with less onboarding time.
+                Reduced onboard time and less differential between your your new
+                success agents.
               </P2>
             </Callout>
             <illustration>

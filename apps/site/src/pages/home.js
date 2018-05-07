@@ -6,6 +6,22 @@ import * as V from '~/views'
 import homeImg from '~/../public/screen-home.png'
 import contextImg from '~/../public/screen-context.png'
 
+const Cmd = view('span', {
+  padding: [3, 5],
+  margin: [-3, 0],
+  border: [1, '#555'],
+  borderRadius: 10,
+})
+
+const Callout = view('section', {
+  width: 625,
+  background: '#fff',
+  border: [3, '#f2f2f2'],
+  zIndex: 10,
+  padding: 40,
+  margin: -40,
+})
+
 const Lines = ({ width = 100, height = 100, style }) => (
   <svg height={height} width={width} style={style} class="pattern-swatch">
     <rect
@@ -109,21 +125,21 @@ class Header {
             <BrandLogo />
           </top>
           <div $$flex />
-          <main>
+          <Callout>
             <P size={2.8} fontWeight={800}>
               Your company is growing
             </P>
             <P size={3.2} lineHeight={50} margin={[8, 0, 0]}>
-              Make it easy to understand whats going on.
+              Make it easy to understand what's going on.
             </P>
             <br />
             <P size={1.4} alpha={0.65} lineHeight={30}>
-              A personalized newspaper of what you've missed in Slack, and
-              across your cloud. All in a beautiful native app powered by
-              on-device machine learning.
+              Personal news on your desktop. Everything happening in your
+              company - at your fingertips. Powered by private on-device machine
+              learning.
             </P>
             <show />
-          </main>
+          </Callout>
           <div $$flex />
           <section css={{ width: 400 }}>
             <apply css={{ borderRadius: 10, padding: 20 }}>
@@ -361,10 +377,7 @@ class Section2 {
               <P2 fontWeight={200} size={2.4}>
                 Really, your whole cloud does.
               </P2>
-              <br />
-              <br />
-              <br />
-              <br />
+              <div $$flex />
               <rightSection
                 css={{
                   width: 450,
@@ -385,18 +398,21 @@ class Section2 {
                 </P>
               </rightSection>
             </main>
-            <div $$flex />
-            <div
-              $$row
-              css={{
-                textAlign: 'right',
-                alignItems: 'flex-end',
-                justifyContent: 'flex-end',
-              }}
-            />
-            <explanation>
-              <P size={2} alpha={0.7}>
-                Your team operates well, but your tools are failing.
+            <Callout $explain>
+              <P size={1.6} alpha={0.7}>
+                Let's talk about notifications.
+                <br />
+                <br />
+                Do they have to be a necessary evil? What ever happened to deep
+                work? Do you use Do Not Disturb?
+                <br />
+                <br />
+                We think we have a solution, and thats this:{' '}
+                <strong>turn them off</strong>. But don't leave yourself out of
+                the loop. That's where Orbit helps.
+                <br />
+                <br />
+                Your <Cmd>⌘+Space</Cmd> just got a whole lot better.
               </P>
               <img
                 if={false}
@@ -410,7 +426,7 @@ class Section2 {
                   zIndex: -1,
                 }}
               />
-            </explanation>
+            </Callout>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -420,13 +436,13 @@ class Section2 {
   static style = {
     main: {
       width: 400,
+      flex: 1,
     },
-    explanation: {
+    explain: {
       position: 'absolute',
-      top: 150,
-      right: 0,
+      top: 250,
+      width: 450,
       left: '65%',
-      bottom: 100,
     },
   }
 }
@@ -444,19 +460,27 @@ class Section3 {
                 Give your team answers <em>before</em> they have to ask.
               </P>
               <br />
-              <P2>
-                Orbit sits by the side of any app, searching in real-time as you
-                work -- answering questions from anywhere in your cloud.
+              <br />
+              <P2 size={2.5}>
+                Always on and private OCR. This is the promise of Software 2.0,
+                today.
               </P2>
               <br />
+              <P2 size={1.6}>
+                No matter what the app is, hold <Cmd>Option</Cmd> and Orbit
+                shows you anything thats relevant in a beautiful sidebar.
+              </P2>
               <br />
-              <P2>Writing an email.</P2>
-              <br />
-              <P2>Talking on slack.</P2>
-              <br />
-              <P2>Editing a document.</P2>
-              <br />
-              <P2>Stop reaching out to each other.</P2>
+              <P2 size={1.6}>
+                Using the power of state of the art on-device natural language
+                processing, Orbit is powered by meaning, not just raw text.
+              </P2>
+              <div $$flex />
+              <P2>
+                <strong>The result?</strong> Less interruptions, less "pinging"
+                people for small questions. Smarter customer support, and better
+                functioning teams.
+              </P2>
             </main>
             <illustration>
               <img
@@ -495,14 +519,13 @@ class Section4 {
             <V.Slant inverseSlant />
             <main>
               <P size={2.5} fontWeight={800}>
-                Reduced interruptions in-office & an increased sense of unity.
+                Reduced interruptions with a side of unity.
               </P>
               <br />
               <br />
-              <P2>
-                Inspired by Stripe and Facebook, we set out to make an
-                incredible intranet for everyone: saving time and removing
-                stress from everyday work.
+              <P2 size={2.2}>
+                Inspired by intranet systems at Stripe and Facebook, we wanted
+                to make teams feel more in sync.
               </P2>
               <br />
               <br />

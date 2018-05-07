@@ -67,6 +67,21 @@ const Lines = ({ width = 100, height = 100, style }) => (
   </svg>
 )
 
+const PurchaseButton = props => (
+  <UI.Button
+    background="#fff"
+    color="blue"
+    size={1.2}
+    borderWidth={1}
+    borderColor="blue"
+    fontWeight={300}
+    {...props}
+  >
+    <span css={{ fontWeight: 500 }}>Early access list</span>{' '}
+    &nbsp;&middot;&nbsp; <span css={{ fontWeight: 800 }}>$200</span>
+  </UI.Button>
+)
+
 const Callout = ({ style, ...props }) => (
   <section
     style={style}
@@ -204,17 +219,7 @@ class Header {
             </P>
             <div $$row>
               <div $$flex />
-              <UI.Button
-                background="#fff"
-                color="blue"
-                size={1.2}
-                borderWidth={1}
-                borderColor="blue"
-                fontWeight={300}
-              >
-                <span css={{ fontWeight: 500 }}>Early access list</span>{' '}
-                &nbsp;&middot;&nbsp; <span css={{ fontWeight: 800 }}>$200</span>
-              </UI.Button>
+              <PurchaseButton />
             </div>
           </Callout>
           <div $$flex />
@@ -759,21 +764,37 @@ class Section6 {
             <V.Slant backgroundColor="#000" />
             <main>
               <P size={3} fontWeight={800}>
-                We want to grow with you.
+                Private.<br />
+                Secure.<br />
+                No installation.
               </P>
               <br />
               <main>
                 <P2 fontWeight={200} size={2.5}>
-                  We want to build the ultimate system for keeping your company
-                  happily in the know. We've already made the first few steps.
-                  But we want to finish it by working with you.
+                  Orbit has no cloud, no on-prem install. It's a{' '}
+                  <em>personal assistant</em> that solves{' '}
+                  <em>company problems</em>.
+                </P2>
+                <br />
+                <P2 size={1.5}>
+                  We realized early in Orbit's development that it's near
+                  impossible to deliver a great experience without going fully
+                  on-device.
+                </P2>
+                <P2 size={1.5}>
+                  From permissions issues to data privacy to complex and
+                  expensive installation processess, every aspect of the cloud
+                  works against what a company assistant should be.
+                </P2>
+                <P2 size={1.5}>
+                  For the last year we've been pushing the limits of what your
+                  desktop can do. That's what makes Orbit unique.
+                </P2>
+                <P2 size={1.5}>
+                  It's made for you. Privacy first & passionate about making
+                  computing a great experience.
                 </P2>
               </main>
-              <br />
-              <br />
-              <P2>
-                Sound fun? <Ul>Get in touch</Ul>.
-              </P2>
             </main>
           </V.SectionContent>
         </V.Section>
@@ -795,7 +816,14 @@ class Footer {
     return (
       <V.Section css={{ padding: 100 }}>
         <V.SectionContent padded>
-          <BrandLogo />
+          <div $$row>
+            <content>
+              <P2>Going into beta now</P2>
+              <PurchaseButton />
+            </content>
+            <div $$flex />
+            <BrandLogo />
+          </div>
         </V.SectionContent>
       </V.Section>
     )

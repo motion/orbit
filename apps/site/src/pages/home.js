@@ -72,7 +72,7 @@ const Callout = props => (
     css={{
       width: '59%',
       background: '#fff',
-      border: [5, '#fff'],
+      // border: [5, '#fff'],
       zIndex: 10,
       margin: -34,
       overflow: 'hidden',
@@ -88,7 +88,7 @@ const Callout = props => (
         left: 0,
         right: 0,
         zIndex: -2,
-        opacity: 0.03,
+        opacity: 0.04,
         transformOrigin: 'top left',
         transform: {
           scale: 3,
@@ -182,18 +182,6 @@ class Header {
   render() {
     return (
       <V.Section>
-        <fadeLines
-          if={false}
-          css={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'linear-gradient(transparent, #fff)',
-            zIndex: -1,
-          }}
-        />
         <V.SectionContent padded fullscreen>
           <V.Slant />
           <bgTest
@@ -218,15 +206,13 @@ class Header {
             <P size={2.1} fontWeight={800} color={brandColor}>
               Your company is growing
             </P>
-            <P size={4.3} margin={[8, 0, 0]}>
+            <P size={4.3} margin={[8, 0]}>
               Make it easy to understand what's going on.
             </P>
-            <br />
             <P size={2} alpha={0.7} margin={[10, 0, 20]}>
               Everything important at your company, at your fingertips. Tame the
               cloud with private on-device machine learning.
             </P>
-            <br />
             <div $$row>
               <div $$flex />
               <UI.Button
@@ -245,12 +231,11 @@ class Header {
           <div $$flex />
 
           <linesContain
-            if={false}
             css={{
               position: 'absolute',
               top: -200,
-              left: -500,
-              right: '50%',
+              left: '50%',
+              right: -500,
               bottom: -500,
               overflow: 'hidden',
               zIndex: -2,
@@ -268,11 +253,11 @@ class Header {
                 overflow: 'hidden',
                 marginLeft: 100,
                 zIndex: -2,
-                opacity: 0.02,
+                opacity: 0.015,
                 // display: 'none',
                 transformOrigin: 'top left',
                 transform: {
-                  scale: 3,
+                  scale: 6,
                 },
               }}
             />
@@ -552,13 +537,16 @@ class Section2 {
 }
 
 @view
-class Section3 {
+class Section4 {
   render() {
     return (
-      <UI.Theme name="medium">
-        <V.Section css={{ background: '#f2f2f2' }}>
+      <UI.Theme name="light">
+        <V.Section css={{ background: '#fff' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant css={{ filter: 'grayscale(100%)', zIndex: 2 }} />
+            <V.Slant
+              inverseSlant
+              css={{ filter: 'grayscale(0%)', zIndex: 2 }}
+            />
             <main>
               <P size={2.5} fontWeight={800}>
                 Reduced interruptions with a side of unity.
@@ -567,7 +555,8 @@ class Section3 {
               <br />
               <P2 size={2.2}>
                 Inspired by intranet systems at Stripe and Facebook, we wanted
-                to make teams feel more in sync.
+                to make an intranet that actually makes your team happier and
+                more productive.
               </P2>
               <br />
               <br />
@@ -590,16 +579,16 @@ class Section3 {
 }
 
 @view
-class Section4 {
+class Section3 {
   render() {
     return (
-      <UI.Theme name="light">
-        <V.Section>
-          <V.SectionContent padded fullscreen>
-            <V.Slant inverseSlant css={{ zIndex: 2 }} />
+      <UI.Theme name="medium">
+        <V.Section css={{ background: '#f2f2f2' }}>
+          <V.SectionContent fullscreen padded>
+            <V.Slant css={{ filter: 'grayscale(100%)', zIndex: 2 }} />
             <main>
               <P size={2.5} fontWeight={800}>
-                Your chat team: now with superpowers.
+                How it saves time
               </P>
               <br />
               <P2 size={2.5}>

@@ -84,8 +84,8 @@ class BrandLogo {
     return (
       <brandMark>
         <Logo size={0.38} color="#5552FA" />
-        <P if={false} size={1} fontWeight={700} alpha={0.8}>
-          Your company home
+        <P size={1} fontWeight={700} alpha={0.8} css={{ marginTop: 10 }}>
+          Your cloud, home
         </P>
       </brandMark>
     )
@@ -134,39 +134,30 @@ class Header {
             </P>
             <br />
             <P size={1.4} alpha={0.65} lineHeight={30}>
-              Personal news on your desktop. Everything happening in your
-              company - at your fingertips. Powered by private on-device machine
-              learning.
+              Orbit is personal news on your desktop. Everything happening in
+              your cloud - at your fingertips. Powered by private on-device
+              machine learning.
             </P>
-            <show />
+            <br />
+            <div $$row>
+              <div $$flex />
+              <UI.Button
+                background="#fff"
+                color="blue"
+                size={1.1}
+                borderWidth={1}
+                borderColor="blue"
+                fontWeight={300}
+                width={200}
+              >
+                <UI.Text size={1.1} color="blue">
+                  Join the waitlist &middot;{' '}
+                  <span css={{ fontWeight: 800 }}>$200</span>
+                </UI.Text>
+              </UI.Button>
+            </div>
           </Callout>
           <div $$flex />
-          <section css={{ width: 400 }}>
-            <apply css={{ borderRadius: 10, padding: 20 }}>
-              <UI.Text size={1.3}>
-                Rolling beta starting: <strong>now</strong>
-              </UI.Text>
-              <UI.Input
-                background="#fff"
-                size={1.2}
-                sizePadding={2}
-                sizeRadius={3}
-                margin={[10, 0]}
-                borderWidth={2}
-                borderColor="green"
-                placeholder="your email"
-              />
-              <UI.Button
-                theme="green"
-                size={1.2}
-                sizeRadius={3}
-                margin={[0, 0, 0, 100]}
-              >
-                Get on the list
-              </UI.Button>
-            </apply>
-          </section>
-
           <Lines
             width={1000}
             height={2000}
@@ -189,8 +180,9 @@ class Header {
           />
 
           <chats>
-            <bubble $left>Your #general chat room</bubble>
+            <bubble $left>The #general chat room</bubble>
             <bubble>About as easy to follow as an acid trip</bubble>
+            <bubble $left>🙄</bubble>
           </chats>
 
           <orbitals>
@@ -251,6 +243,10 @@ class Header {
       bottom: 0,
       // alignItems: 'center',
       justifyContent: 'center',
+      transform: {
+        x: 30,
+        scale: 1.3,
+      },
     },
     bubble: {
       border: [2, '#000'],
@@ -258,13 +254,12 @@ class Header {
       fontSize: 16,
       borderRadius: 15,
       padding: 10,
-      marginLeft: 40,
       marginBottom: 10,
       borderBottomRightRadius: 0,
+      alignSelf: 'flex-end',
     },
     left: {
-      marginLeft: 0,
-      marginRight: 40,
+      alignSelf: 'flex-start',
       borderBottomRightRadius: 10,
       borderBottomLeftRadius: 0,
     },
@@ -364,7 +359,7 @@ class Section2 {
     return (
       <UI.Theme name="light">
         <V.Section>
-          <V.SectionContent doublePadded fullscreen>
+          <V.SectionContent padded fullscreen>
             <V.Slant inverseSlant />
             <main>
               <P2 fontWeight={200} size={3.2}>
@@ -373,7 +368,6 @@ class Section2 {
                 </span>{' '}
                 but it has a noise problem.
               </P2>
-              <br />
               <P2 fontWeight={200} size={2.4}>
                 Really, your whole cloud does.
               </P2>
@@ -386,33 +380,37 @@ class Section2 {
                   textAlign: 'right',
                 }}
               >
-                <P size={4} fontWeight={800}>
+                <P size={3.5} fontWeight={800}>
                   Pull,<br />
                   <span css={{ marginRight: -10 }}>instead of</span>
                   <br />
-                  <span css={{ marginRight: -20 }}>getting pushed</span>
+                  <span css={{ marginRight: -20 }}>being pushed</span>
                 </P>
                 <br />
                 <P size={2} css={{ marginRight: -30 }}>
+                  <Cmd>⌘+Space</Cmd> just got a whole lot better
+                </P>
+                <P if={false} size={2}>
                   Give it a pull&nbsp; 👈
                 </P>
               </rightSection>
             </main>
             <Callout $explain>
-              <P size={1.6} alpha={0.7}>
+              <P size={1.8} alpha={0.7} color="blue">
                 Let's talk about notifications.
                 <br />
                 <br />
-                Do they have to be a necessary evil? What ever happened to deep
-                work? Do you use Do Not Disturb?
+                We think they don't have to be a necessary evil.
                 <br />
                 <br />
-                We think we have a solution, and thats this:{' '}
-                <strong>turn them off</strong>. But don't leave yourself out of
-                the loop. That's where Orbit helps.
+                Here's our solution: <strong>turn them off</strong>.
                 <br />
                 <br />
-                Your <Cmd>⌘+Space</Cmd> just got a whole lot better.
+                But don't leave yourself out of the loop. That's where Orbit
+                helps.
+                <br />
+                <br />
+                How?
               </P>
               <img
                 if={false}
@@ -440,7 +438,7 @@ class Section2 {
     },
     explain: {
       position: 'absolute',
-      top: 250,
+      top: 260,
       width: 450,
       left: '65%',
     },
@@ -465,21 +463,21 @@ class Section3 {
                 Always on and private OCR. This is the promise of Software 2.0,
                 today.
               </P2>
-              <br />
-              <P2 size={1.6}>
+              <div $$flex />
+              <P2 size={1.7}>
                 No matter what the app is, hold <Cmd>Option</Cmd> and Orbit
                 shows you anything thats relevant in a beautiful sidebar.
               </P2>
               <br />
-              <P2 size={1.6}>
-                Using the power of state of the art on-device natural language
+              <P2 size={1.7}>
+                Powered by of state of the art on-device natural language
                 processing, Orbit is powered by meaning, not just raw text.
               </P2>
               <div $$flex />
               <P2>
                 <strong>The result?</strong> Less interruptions, less "pinging"
-                people for small questions. Smarter customer support, and better
-                functioning teams.
+                people for small questions. Smarter email replies and better
+                customer support.
               </P2>
             </main>
             <illustration>

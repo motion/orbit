@@ -624,7 +624,7 @@ export default class Surface extends React.PureComponent<Props> {
         ...borderRadius,
         ...elementGlowProps,
         overflow: props.overflow || 'visible',
-        flexFlow: props.noElement ? 'column' : flexFlow,
+        flexFlow,
         fontSize: props.fontSize,
         fontWeight: props.fontWeight,
         lineHeight: props.lineHeight,

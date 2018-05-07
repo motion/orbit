@@ -24,7 +24,7 @@ const getTextProperties = props => {
   }
   let lineHeight = props.lineHeight
   if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
-    lineHeight = fontSize + 5 * (fontSize / 23)
+    lineHeight = Math.log(fontSize * 10) * 3.5 + fontSize / 1.6
     if (props.sizeLineHeight) {
       lineHeight = lineHeight * props.sizeLineHeight
     }

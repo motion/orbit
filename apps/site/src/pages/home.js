@@ -236,13 +236,9 @@ class Header {
                 borderWidth={1}
                 borderColor="blue"
                 fontWeight={300}
-                width={240}
               >
-                <UI.Text size={1.2} color="blue">
-                  <span css={{ fontWeight: 500 }}>Join the waitlist</span>{' '}
-                  &nbsp;&middot;&nbsp;{' '}
-                  <span css={{ fontWeight: 800 }}>$200</span>
-                </UI.Text>
+                <span css={{ fontWeight: 500 }}>Early access list</span>{' '}
+                &nbsp;&middot;&nbsp; <span css={{ fontWeight: 800 }}>$200</span>
               </UI.Button>
             </div>
           </Callout>
@@ -297,7 +293,7 @@ class Header {
               alignItems: 'flex-end',
               justifyContent: 'center',
               flexFlow: 'row',
-              background: '#f2f2f2',
+              background: '#f9f9f9',
               borderTopRadius: 10,
               padding: [0, 0, 10],
               boxShadow: '0 0 10px rgba(0,0,0,0.1)',
@@ -438,9 +434,9 @@ class Section2 {
                   Really, your whole cloud does.
                   <br />
                   <br />
-                  Orbit is an on-device agent that provides a beautiful daily
-                  summary, allowing your team to turn off notifications and
-                  focus. We call it:
+                  Orbit is an Mac app that unifies your cloud and keeps your
+                  team in sync. Allow them to turn off notifications and focus.
+                  We call it:
                 </P>
                 <div $$flex />
               </main>

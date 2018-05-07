@@ -32,11 +32,16 @@ const getTextProperties = props => {
   // round
   if (typeof fontSize === 'number') {
     fontSizeNum = Math.round(fontSize * 100) / 100
-    fontSize = `${fontSizeNum}px`
   }
   if (typeof lineHeight === 'number') {
     lineHeightNum = Math.round(lineHeight * 100) / 100
+  }
+  if (typeof props.sizeMethod === 'undefined') {
     lineHeight = `${lineHeightNum}px`
+    fontSize = `${fontSizeNum}px`
+  } else if (props.sizeMethod === 'vw') {
+    lineHeight = `${lineHeightNum / 12}vw`
+    fontSize = `${fontSizeNum / 12}vw`
   }
   return { fontSize, fontSizeNum, lineHeight, lineHeightNum }
 }
@@ -228,6 +233,7 @@ export default class Text {
     measure,
     debug,
     onMeasure,
+    sizeMethod,
     ...props
   }) {
     const { multiLineEllipse } = this

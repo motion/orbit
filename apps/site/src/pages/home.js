@@ -3,23 +3,56 @@ import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
 import * as V from '~/views'
-import homeImg from '~/../public/screen-home.png'
+// import homeImg from '~/../public/screen-home.png'
 import contextImg from '~/../public/screen-context.png'
+import slackIcon from '~/../public/slack.svg'
+import driveIcon from '~/../public/drive.svg'
+import dropboxIcon from '~/../public/dropbox.svg'
+import SVGInline from 'react-svg-inline'
+
+const Badge = view('div', {
+  position: 'absolute',
+  top: -5,
+  right: 5,
+  width: 25,
+  height: 25,
+  background: 'red',
+  color: '#fff',
+  borderRadius: 100,
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  fontWeight: 600,
+  boxShadow: '0 0 5px rgba(0,0,0,0.5)',
+})
+
+const Icon = ({ size, icon, scale = 1, after, ...props }) => (
+  <slackIcon
+    css={{ position: 'relative', width: size * 512, height: size * 512 }}
+  >
+    <SVGInline
+      cleanup
+      svg={icon}
+      width={512}
+      height={512}
+      css={{ transformOrigin: 'top left', transform: { scale: size * scale } }}
+      {...props}
+    />
+    {after}
+  </slackIcon>
+)
+
+const SlackIcon = props => <Icon {...props} icon={slackIcon} />
+const DriveIcon = props => <Icon {...props} scale={1.8} icon={driveIcon} />
+const DropboxIcon = props => <Icon {...props} icon={dropboxIcon} />
+
+const brandColor = '#5552FA'
 
 const Cmd = view('span', {
   padding: [3, 5],
   margin: [-3, 0],
   border: [1, '#555'],
   borderRadius: 10,
-})
-
-const Callout = view('section', {
-  width: 625,
-  background: '#fff',
-  border: [3, '#f2f2f2'],
-  zIndex: 10,
-  padding: 40,
-  margin: -40,
 })
 
 const Lines = ({ width = 100, height = 100, style }) => (
@@ -32,6 +65,41 @@ const Lines = ({ width = 100, height = 100, style }) => (
       width={width}
     />
   </svg>
+)
+
+const Callout = props => (
+  <section
+    css={{
+      width: '59%',
+      background: '#fff',
+      border: [5, '#fff'],
+      zIndex: 10,
+      margin: -34,
+      overflow: 'hidden',
+      position: 'relative',
+    }}
+  >
+    <Lines
+      width={1000}
+      height={2000}
+      css={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: -2,
+        opacity: 0.03,
+        transformOrigin: 'top left',
+        transform: {
+          scale: 3,
+        },
+      }}
+    />
+    <innerSection
+      css={{ margin: 12, padding: 40, background: '#fff' }}
+      {...props}
+    />
+  </section>
 )
 
 const Triangle = ({
@@ -83,8 +151,14 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.38} color="#5552FA" />
-        <P size={1} fontWeight={700} alpha={0.8} css={{ marginTop: 10 }}>
+        <Logo size={0.38} color={brandColor} />
+        <P
+          if={false}
+          size={1}
+          fontWeight={700}
+          alpha={0.8}
+          css={{ marginTop: 10 }}
+        >
           Your cloud, home
         </P>
       </brandMark>
@@ -93,7 +167,7 @@ class BrandLogo {
 
   static style = {
     brandMark: {
-      background: '#fff',
+      // background: '#fff',
       padding: 20,
       margin: -20,
       alignSelf: 'flex-end',
@@ -109,6 +183,7 @@ class Header {
     return (
       <V.Section>
         <fadeLines
+          if={false}
           css={{
             position: 'absolute',
             top: 0,
@@ -121,22 +196,35 @@ class Header {
         />
         <V.SectionContent padded fullscreen>
           <V.Slant />
+          <bgTest
+            css={{
+              position: 'absolute',
+              top: -500,
+              left: -500,
+              bottom: -500,
+              right: '50%',
+              zIndex: -2,
+              background: '#fff',
+              transform: {
+                rotate: '5deg',
+              },
+            }}
+          />
           <top>
             <BrandLogo />
           </top>
           <div $$flex />
           <Callout>
-            <P size={2.8} fontWeight={800}>
+            <P size={2.1} fontWeight={800} color={brandColor}>
               Your company is growing
             </P>
-            <P size={3.2} lineHeight={50} margin={[8, 0, 0]}>
+            <P size={4.3} margin={[8, 0, 0]}>
               Make it easy to understand what's going on.
             </P>
             <br />
-            <P size={1.4} alpha={0.65} lineHeight={30}>
-              Orbit is personal news on your desktop. Everything happening in
-              your cloud - at your fingertips. Powered by private on-device
-              machine learning.
+            <P size={2} alpha={0.7} margin={[10, 0, 20]}>
+              Everything important at your company, at your fingertips. Tame the
+              cloud with private on-device machine learning.
             </P>
             <br />
             <div $$row>
@@ -144,40 +232,55 @@ class Header {
               <UI.Button
                 background="#fff"
                 color="blue"
-                size={1.1}
+                size={1.2}
                 borderWidth={1}
                 borderColor="blue"
                 fontWeight={300}
-                width={200}
+                width={240}
               >
-                <UI.Text size={1.1} color="blue">
-                  Join the waitlist &middot;{' '}
+                <UI.Text size={1.2} color="blue">
+                  <span css={{ fontWeight: 500 }}>Join the waitlist</span>{' '}
+                  &nbsp;&middot;&nbsp;{' '}
                   <span css={{ fontWeight: 800 }}>$200</span>
                 </UI.Text>
               </UI.Button>
             </div>
           </Callout>
           <div $$flex />
-          <Lines
-            width={1000}
-            height={2000}
+
+          <linesContain
+            if={false}
             css={{
               position: 'absolute',
               top: -200,
-              left: '50%',
+              left: -500,
               right: '50%',
+              bottom: -500,
               overflow: 'hidden',
-              marginLeft: 100,
               zIndex: -2,
-              opacity: 0.02,
-              // display: 'none',
-              transformOrigin: 'top left',
-              transform: {
-                rotate: '5deg',
-                scale: 4,
-              },
+              transform: { rotate: '5deg' },
             }}
-          />
+          >
+            <Lines
+              width={1000}
+              height={2000}
+              css={{
+                position: 'absolute',
+                top: -200,
+                left: -500,
+                right: '50%',
+                overflow: 'hidden',
+                marginLeft: 100,
+                zIndex: -2,
+                opacity: 0.02,
+                // display: 'none',
+                transformOrigin: 'top left',
+                transform: {
+                  scale: 3,
+                },
+              }}
+            />
+          </linesContain>
 
           <chats>
             <bubble $left>The #general chat room</bubble>
@@ -185,7 +288,40 @@ class Header {
             <bubble $left>🙄</bubble>
           </chats>
 
-          <orbitals>
+          <dock
+            css={{
+              position: 'absolute',
+              bottom: 0,
+              right: '-2.5%',
+              width: '45%',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              flexFlow: 'row',
+              background: '#f2f2f2',
+              borderTopRadius: 10,
+              padding: [0, 0, 10],
+              boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+              border: [1, '#ddd'],
+            }}
+          >
+            <dockFade
+              css={{
+                position: 'absolute',
+                top: 0,
+                left: -10,
+                right: -10,
+                bottom: -10,
+                background: 'linear-gradient(transparent, #fff)',
+              }}
+            />
+            <DropboxIcon size={0.13} after={<Badge>12</Badge>} />
+            <DriveIcon size={0.16} after={<Badge>5</Badge>} />
+            <SlackIcon size={0.18} after={<Badge>89</Badge>} />
+            <DropboxIcon size={0.16} after={<Badge>3</Badge>} />
+            <DriveIcon size={0.13} after={<Badge>22</Badge>} />
+          </dock>
+
+          <orbitals if={false}>
             {[1, 2, 3, 4, 5].map(i => (
               <Triangle
                 key={i}
@@ -263,93 +399,6 @@ class Header {
       borderBottomRightRadius: 10,
       borderBottomLeftRadius: 0,
     },
-    orbitals: {
-      pointerEvents: 'none',
-      position: 'absolute',
-      top: '25%',
-      right: '-10%',
-      width: 500,
-      height: 500,
-      zIndex: 2,
-      transform: {
-        scale: 1,
-      },
-    },
-    behind: {
-      zIndex: -1,
-    },
-    orbital: {
-      userSelect: 'none',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: 400,
-      height: 400,
-      background: 'transparent',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center',
-      // whiteSpace: 'nowrap',
-      overflowWrap: 'break-word',
-    },
-    triangle: {
-      position: 'absolute',
-      zIndex: 5,
-      animation: 'triangle 420s linear infinite',
-      transformOrigin: '450px 300px',
-    },
-    spill: {
-      animation: 'spill 120s linear infinite',
-    },
-    orbitText: {
-      zIndex: 4,
-      padding: 85,
-    },
-    spill12: {
-      zIndex: 3,
-    },
-    square: {
-      width: 360,
-      height: 360,
-      animation: 'square 90s linear infinite',
-      background: '#0B507E',
-      zIndex: 1,
-      top: 20,
-      left: 20,
-    },
-    circle: {
-      borderRadius: 100000,
-      background: '#D3495B',
-      top: 30,
-      left: 30,
-      zIndex: 1,
-      width: 350,
-      height: 350,
-    },
-    '@keyframes spill': {
-      from: {
-        transform: 'rotate(20deg)',
-      },
-      to: {
-        transform: 'scale(180deg)',
-      },
-    },
-    '@keyframes square': {
-      from: {
-        transform: 'rotate(60deg)',
-      },
-      to: {
-        transform: 'rotate(-20deg)',
-      },
-    },
-    '@keyframes triangle': {
-      from: {
-        transform: 'rotate(0deg)',
-      },
-      to: {
-        transform: 'rotate(360deg)',
-      },
-    },
   }
 }
 
@@ -361,25 +410,44 @@ class Section2 {
         <V.Section>
           <V.SectionContent padded fullscreen>
             <V.Slant inverseSlant />
-            <main>
-              <P2 fontWeight={200} size={3.2}>
-                <span css={{ background: 'yellow', fontWeight: 300 }}>
-                  Slack is great
-                </span>{' '}
-                but it has a{' '}
-                <span $noisy>
-                  noise<line>~~~~~~~~~~~~~~~~~~~</line>
-                </span>{' '}
-                problem.
-              </P2>
-              <P2 fontWeight={200} size={2.4}>
-                Really, your whole cloud does.
-              </P2>
-              <div $$flex />
+            <bgTest
+              css={{
+                position: 'absolute',
+                top: -500,
+                left: -500,
+                bottom: -500,
+                right: '48%',
+                zIndex: -2,
+                background: '#fff',
+                transform: {
+                  rotate: '-5deg',
+                },
+              }}
+            />
+            <UI.Theme name="light">
+              <main css={{ marginTop: -50 }}>
+                <P fontWeight={200} size={4.5}>
+                  Slack is great but it has a{' '}
+                  <span $noisy>
+                    noise<line>~~~~~~~~~~~~~~~~~~~</line>
+                  </span>{' '}
+                  problem.
+                </P>
+                <br />
+                <P fontWeight={200} size={2.4}>
+                  Really, your whole cloud does.
+                  <br />
+                  <br />
+                  Orbit is an on-device agent that provides a beautiful daily
+                  summary, allowing your team to turn off notifications and
+                  focus. We call it:
+                </P>
+                <div $$flex />
+              </main>
               <rightSection
                 css={{
                   width: 450,
-                  padding: [20, 0],
+                  padding: [20, 0, 0],
                   alignItems: 'flex-end',
                   textAlign: 'right',
                 }}
@@ -398,37 +466,57 @@ class Section2 {
                   Give it a pull&nbsp; 👈
                 </P>
               </rightSection>
-            </main>
-            <Callout $explain>
-              <P size={1.8} alpha={0.7} color="blue">
-                Let's talk about notifications.
-                <br />
-                <br />
-                We think they don't have to be a necessary evil.
-                <br />
-                <br />
-                Here's our solution: <strong>turn them off</strong>.
-                <br />
-                <br />
-                But don't leave yourself out of the loop. That's where Orbit
-                helps.
-                <br />
-                <br />
-                How?
-              </P>
-              <img
-                if={false}
-                src={homeImg}
+            </UI.Theme>
+            <explain>
+              <notification
                 css={{
-                  width: 550,
-                  height: 'auto',
+                  width: 300,
+                  height: 70,
+                  background: '#f3f3f3',
+                  border: [1, '#ddd'],
+                  padding: 20,
+                  borderRadius: 10,
+                  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                }}
+              >
+                Notification
+              </notification>
+            </explain>
+            <linesContain
+              if={false}
+              css={{
+                position: 'absolute',
+                top: -200,
+                left: '50%',
+                right: '-50%',
+                bottom: 0,
+                overflow: 'hidden',
+                zIndex: -2,
+                transform: { rotate: '-5deg' },
+              }}
+            >
+              <Lines
+                width={1000}
+                height={2000}
+                css={{
                   position: 'absolute',
-                  top: 80,
-                  right: -80,
-                  zIndex: -1,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                  overflow: 'hidden',
+                  marginLeft: 100,
+                  opacity: 0.02,
+                  // display: 'none',
+                  transformOrigin: 'top left',
+                  transform: {
+                    rotate: '10deg',
+                    x: '-12.8%',
+                    scale: 3,
+                  },
                 }}
               />
-            </Callout>
+            </linesContain>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -443,7 +531,7 @@ class Section2 {
     explain: {
       position: 'absolute',
       top: 260,
-      width: 450,
+      width: 300,
       left: '65%',
     },
     noisy: {
@@ -453,15 +541,15 @@ class Section2 {
       userSelect: 'none',
       fontWeight: 400,
       position: 'absolute',
-      bottom: -25,
-      left: -35,
-      right: -35,
+      bottom: -28,
+      left: -30,
+      right: -30,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       letterSpacing: -10,
-      color: 'blue',
+      color: 'rgb(99.9%, 37.9%, 0%)',
       transform: {
-        scale: 0.6,
+        scale: 0.7,
       },
     },
   }
@@ -477,44 +565,20 @@ class Section3 {
             <V.Slant css={{ filter: 'grayscale(100%)', zIndex: 2 }} />
             <main>
               <P size={2.5} fontWeight={800}>
-                Give your team answers <em>before</em> they have to ask.
+                Reduced interruptions with a side of unity.
               </P>
               <br />
               <br />
-              <P2 size={2.5}>
-                Always on and private OCR. This is the promise of Software 2.0,
-                today.
-              </P2>
-              <div $$flex />
-              <P2 size={1.7}>
-                No matter what the app is, hold <Cmd>Option</Cmd> and Orbit
-                shows you anything thats relevant in a beautiful sidebar.
+              <P2 size={2.2}>
+                Inspired by intranet systems at Stripe and Facebook, we wanted
+                to make teams feel more in sync.
               </P2>
               <br />
-              <P2 size={1.7}>
-                Powered by of state of the art on-device natural language
-                processing, Orbit is powered by meaning, not just raw text.
-              </P2>
-              <div $$flex />
+              <br />
               <P2>
-                <strong>The result?</strong> Less interruptions, less "pinging"
-                people for small questions. Smarter email replies and better
-                customer support.
+                Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
               </P2>
             </main>
-            <illustration>
-              <img
-                src={contextImg}
-                css={{
-                  width: 550,
-                  height: 'auto',
-                  position: 'absolute',
-                  top: 125,
-                  right: -78,
-                  zIndex: 0,
-                }}
-              />
-            </illustration>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -536,23 +600,41 @@ class Section4 {
       <UI.Theme name="light">
         <V.Section>
           <V.SectionContent padded fullscreen>
-            <V.Slant inverseSlant />
+            <V.Slant inverseSlant css={{ zIndex: 2 }} />
             <main>
               <P size={2.5} fontWeight={800}>
-                Reduced interruptions with a side of unity.
+                Your chat team: now with superpowers.
               </P>
               <br />
-              <br />
-              <P2 size={2.2}>
-                Inspired by intranet systems at Stripe and Facebook, we wanted
-                to make teams feel more in sync.
+              <P2 size={2.5}>
+                Upgrade your chat sales and customer support overnight.
               </P2>
               <br />
-              <br />
+              <P2 size={1.7}>
+                Orbit lives on your desktop and works with every app. Combining
+                state of the art intelligence with a novel interface, you can
+                leave Orbit on as you chat.
+              </P2>
+              <div $$flex />
               <P2>
-                Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
+                <strong>The result?</strong> Less interruptions, less "pinging"
+                people for small questions. Smarter email replies and better
+                customer support.
               </P2>
             </main>
+            <illustration>
+              <img
+                src={contextImg}
+                css={{
+                  width: 550,
+                  height: 'auto',
+                  position: 'absolute',
+                  top: 125,
+                  right: -78,
+                  zIndex: 0,
+                }}
+              />
+            </illustration>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -650,7 +732,7 @@ class Section6 {
       <UI.Theme name="dark">
         <V.Section css={{ background: '#222' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant inverseSlant backgroundColor="#000" />
+            <V.Slant backgroundColor="#000" />
             <main>
               <P size={3} fontWeight={800}>
                 We want to grow with you.
@@ -705,7 +787,7 @@ export default class HomePage extends React.Component {
         <Section2 />
         <Section3 />
         <Section4 />
-        <Section5 />
+        <Section5 if={false} />
         <Section6 />
         <Footer />
       </home>

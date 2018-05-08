@@ -12,6 +12,8 @@ import mailIcon from '~/../public/mail.svg'
 import githubIcon from '~/../public/github.svg'
 import personImage from '~/../public/screen-person.png'
 import SVGInline from 'react-svg-inline'
+import Observer from '@researchgate/react-intersection-observer'
+import { Trail, animated } from 'react-spring'
 
 // <linesContain
 //               if={false}
@@ -84,8 +86,8 @@ const Icon = ({ size, icon, scale = 1, after, transform, ...props }) => (
     <SVGInline
       cleanup
       svg={icon}
-      width={512}
-      height={512}
+      width="512"
+      height="512"
       css={{
         transformOrigin: 'top left',
         transform: { scale: size * scale, ...transform },
@@ -169,7 +171,7 @@ const Callout = ({ style, ...props }) => (
       }}
     />
     <innerSection
-      css={{ margin: 12, borderRadius: 10, padding: 40, background: '#fff' }}
+      css={{ margin: 10, borderRadius: 10, padding: 40, background: '#fff' }}
       {...props}
     />
   </section>
@@ -241,6 +243,14 @@ class BrandLogo {
 @view
 class Header {
   render() {
+    const chats = [
+      <bubble $left>The #general chat room</bubble>,
+      <bubble>About as coherent as an acid trip</bubble>,
+      <bubble $left>🙄</bubble>,
+      <bubble>Spreading like an oil spill...</bubble>,
+      <bubble $left>Clear as modern art 🖌</bubble>,
+    ]
+
     return (
       <V.Section>
         <V.SectionContent padded fullscreen>
@@ -266,25 +276,38 @@ class Header {
           </top>
           <div $$flex />
           <Callout css={{ margin: [-80, -34, 0] }}>
-            <P size={2.1} fontWeight={800}>
+            <P size={2} fontWeight={800}>
               Your company is growing
             </P>
-            <P size={4.3} margin={[8, 0]}>
+            <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
               Make it easy to understand what's going on.
             </P>
-            <P size={2} alpha={0.7} margin={[10, 0, 25]}>
-              Everything important at your company, at your fingertips. Tame the
-              cloud with private on-device machine learning.
+            <P size={2} alpha={0.75} margin={[10, 0, 25]}>
+              Important things are happening and getting lost in the noise.
+              Organize your team and cloud by upgrading your operating system.
             </P>
           </Callout>
           <div $$flex />
 
           <chats>
-            <bubble $left>The #general chat room</bubble>
-            <bubble>About as coherent as an acid trip</bubble>
-            <bubble $left>🙄</bubble>
-            <bubble>Spreading like an oil spill...</bubble>
-            <bubble $left>Clear as modern art 🖌</bubble>
+            <Trail
+              native
+              from={{ opacity: 0, y: 20 }}
+              to={{ opacity: 1, y: 0 }}
+              keys={chats.map((_, index) => index)}
+              config={{ tension: 480, friction: 60 }}
+            >
+              {chats.map(item => ({ y, opacity }) => (
+                <animated.div
+                  style={{
+                    opacity,
+                    transform: y.interpolate(y => `translate3d(0,${y}%,0)`),
+                  }}
+                >
+                  {item}
+                </animated.div>
+              ))}
+            </Trail>
           </chats>
 
           <dockContain
@@ -445,7 +468,56 @@ const Notification = ({ title, body }) => (
 )
 
 @view
-class Section2 {
+class Section2 extends React.Component {
+  state = {
+    showOrbit: false,
+    showNotifs: false,
+    items: [
+      {
+        title: 'Emily Parker',
+        body: 'Book club is cancelled tomorrow',
+      },
+      {
+        title: 'Emily Parker',
+        body: 'Book club is cancelled tomorrow',
+      },
+      {
+        title: 'Emily Parker',
+        body: 'Book club is cancelled tomorrow',
+      },
+      {
+        title: 'Emily Parker',
+        body: 'Book club is cancelled tomorrow',
+      },
+      {
+        title: 'Emily Parker',
+        body: 'Book club is cancelled tomorrow',
+      },
+      {
+        title: 'Emily Parker',
+        body: 'Book club is cancelled tomorrow',
+      },
+    ],
+  }
+
+  handleIntersect = ({ isIntersecting }) => {
+    if (!isIntersecting) {
+      return
+    }
+    if (this.state.showNotifs) {
+      return
+    }
+    setTimeout(() => {
+      this.setState({ showNotifs: true })
+    }, 500)
+    setTimeout(() => {
+      this.setState({ showNotifs: false })
+    }, 1500)
+    setTimeout(() => {
+      this.setState({ showOrbit: true })
+    }, 2000)
+  }
+
   render() {
     return (
       <UI.Theme name="light">
@@ -467,36 +539,44 @@ class Section2 {
               }}
             />
             <UI.Theme name="light">
-              <main css={{ marginTop: -50 }}>
-                <P fontWeight={200} size={4.5}>
-                  Slack is great but it has a{' '}
-                  <span $noisy>
-                    noise<WavyLine height={1350} $line />
-                  </span>{' '}
-                  problem
-                </P>
-                <br />
-                <br />
-                <P fontWeight={300} size={2.3} alpha={0.5}>
-                  (Your whole cloud does)
-                </P>
-                <br />
-                <P size={1.8}>
-                  You use the best tool for the job. But that leaves your
-                  company without high level organization. Not to mention all
-                  those damn notifications.
-                </P>
-                <br />
-                <P size={1.6}>
-                  Orbit unifies your cloud and sorts whats important into a
-                  personal home page.
-                </P>
-                <br />
-                <P size={1.6}>
-                  Turn off the noise with a simple <Cmd>⌘+Space</Cmd>.
-                </P>
-                <div $$flex />
-              </main>
+              <Observer onChange={this.handleIntersect}>
+                <main css={{ marginTop: -50 }}>
+                  <P fontWeight={200} size={4.4}>
+                    Slack is great but it has a{' '}
+                    <span $noisy>
+                      noise<WavyLine height={1350} $line />
+                    </span>{' '}
+                    problem
+                  </P>
+                  <br />
+                  <br />
+                  <P fontWeight={300} size={2.3} alpha={0.5}>
+                    Your cloud is unruly
+                  </P>
+                  <br />
+                  <P size={1.8}>
+                    You use the best tool for the job. But that can leave you in{' '}
+                    <Ul2>silo-hell</Ul2>, with no coherent high level
+                    organization. Not to mention all those{' '}
+                    <Ul2>damn notifications</Ul2>.
+                  </P>
+                  <br />
+                  <P size={1.6}>
+                    Orbit unifies your cloud and sorts whats important into a
+                    personal home page.
+                  </P>
+                  <br />
+                  <P size={1.6}>
+                    It even alerts you to relevant things based on what you're
+                    doing.
+                  </P>
+                  <br />
+                  <P size={1.6}>
+                    Turn down noise with a simple <Cmd>⌘+Space</Cmd>.
+                  </P>
+                  <div $$flex />
+                </main>
+              </Observer>
               <rightSection
                 css={{
                   width: 450,
@@ -519,34 +599,26 @@ class Section2 {
               </rightSection>
             </UI.Theme>
             <notifications>
-              {[
-                {
-                  title: 'Emily Parker',
-                  body: 'Book club is cancelled tomorrow',
-                },
-                {
-                  title: 'Emily Parker',
-                  body: 'Book club is cancelled tomorrow',
-                },
-                {
-                  title: 'Emily Parker',
-                  body: 'Book club is cancelled tomorrow',
-                },
-                {
-                  title: 'Emily Parker',
-                  body: 'Book club is cancelled tomorrow',
-                },
-                {
-                  title: 'Emily Parker',
-                  body: 'Book club is cancelled tomorrow',
-                },
-                {
-                  title: 'Emily Parker',
-                  body: 'Book club is cancelled tomorrow',
-                },
-              ].map(({ title, body }, index) => (
-                <Notification key={index} title={title} body={body} />
-              ))}
+              <Trail
+                native
+                from={{ opacity: 0, x: 100 }}
+                to={{
+                  opacity: this.state.showNotifs ? 1 : 0,
+                  x: this.state.showNotifs ? 0 : 100,
+                }}
+                keys={this.state.items.map((_, index) => index)}
+              >
+                {this.state.items.map(({ title, body }) => ({ x, opacity }) => (
+                  <animated.div
+                    style={{
+                      opacity,
+                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
+                    }}
+                  >
+                    <Notification title={title} body={body} />
+                  </animated.div>
+                ))}
+              </Trail>
 
               <div $$flex />
               <div $$flex />

@@ -130,10 +130,10 @@ const Lines = ({ width = 100, height = 100, style }) => (
 const PurchaseButton = props => (
   <UI.Button
     background="#fff"
-    color="blue"
+    color="green"
+    borderColor="green"
+    borderWidth={2}
     size={1.1}
-    borderWidth={1}
-    borderColor="blue"
     fontWeight={300}
     {...props}
   >
@@ -276,14 +276,16 @@ class Header {
           </top>
           <div $$flex />
           <Callout css={{ margin: [-80, -34, 0] }}>
-            <P size={2} fontWeight={800}>
+            <P size={2} fontWeight={800} color={brandColor}>
               Your company is growing
             </P>
             <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
               Make it easy to understand what's going on.
             </P>
             <P size={2} alpha={0.75} margin={[10, 0, 25]}>
-              Important things are happening and getting lost in the noise.
+              <span css={{ color: '#000' }}>
+                Important things are happening and getting lost in the noise.
+              </span>{' '}
               Organize your team and cloud by upgrading your operating system.
             </P>
           </Callout>
@@ -323,7 +325,7 @@ class Header {
             <dock
               css={{
                 position: 'absolute',
-                bottom: 20,
+                bottom: 40,
                 right: 0,
                 width: '45%',
                 alignItems: 'flex-end',
@@ -410,13 +412,13 @@ class Header {
     chats: {
       position: 'absolute',
       top: 0,
-      right: 0,
-      left: '65%',
+      right: '5%',
+      left: '66%',
       bottom: 0,
       // alignItems: 'center',
       justifyContent: 'center',
       transform: {
-        x: 30,
+        // x: 30,
         scale: 1.3,
       },
     },
@@ -512,10 +514,10 @@ class Section2 extends React.Component {
     }, 500)
     setTimeout(() => {
       this.setState({ showNotifs: false })
-    }, 1500)
+    }, 2500)
     setTimeout(() => {
       this.setState({ showOrbit: true })
-    }, 2000)
+    }, 3000)
   }
 
   render() {
@@ -541,20 +543,22 @@ class Section2 extends React.Component {
             <UI.Theme name="light">
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -50 }}>
-                  <P fontWeight={200} size={4.4}>
+                  <P fontWeight={600} size={4.4}>
                     Slack is great but it has a{' '}
                     <span $noisy>
                       noise<WavyLine height={1350} $line />
                     </span>{' '}
                     problem
                   </P>
-                  <br />
-                  <br />
-                  <P fontWeight={300} size={2.3} alpha={0.5}>
+                  <P
+                    fontWeight={300}
+                    size={2.3}
+                    alpha={0.5}
+                    margin={[30, 0, 12]}
+                  >
                     Your cloud is unruly
                   </P>
-                  <br />
-                  <P size={1.8}>
+                  <P size={2}>
                     You use the best tool for the job. But that can leave you in{' '}
                     <Ul2>silo-hell</Ul2>, with no coherent high level
                     organization. Not to mention all those{' '}
@@ -563,12 +567,8 @@ class Section2 extends React.Component {
                   <br />
                   <P size={1.6}>
                     Orbit unifies your cloud and sorts whats important into a
-                    personal home page.
-                  </P>
-                  <br />
-                  <P size={1.6}>
-                    It even alerts you to relevant things based on what you're
-                    doing.
+                    personal home page. It even alerts you to relevant things
+                    based on what you're doing.
                   </P>
                   <br />
                   <P size={1.6}>
@@ -579,13 +579,13 @@ class Section2 extends React.Component {
               </Observer>
               <rightSection
                 css={{
-                  width: 450,
-                  padding: [20, 0, 0],
+                  width: 520,
+                  padding: [30, 0, 0],
                   alignItems: 'flex-end',
                   textAlign: 'right',
                 }}
               >
-                <P size={3.5} fontWeight={800} color={brandColor}>
+                <P size={4} fontWeight={200} color={brandColor}>
                   Pull,<br />
                   <span css={{ marginRight: -5 }}>instead of</span>
                   <br />
@@ -644,7 +644,7 @@ class Section2 extends React.Component {
 
   static style = {
     main: {
-      width: 400,
+      width: 450,
       flex: 1,
     },
     notifications: {
@@ -801,7 +801,7 @@ class Section3 {
               </P>
               <P2 size={3}>Make your success team more successful.</P2>
               <P2 size={1.8}>
-                It works fine alongside Intercom or Zendesk. Your knowledgebase,
+                Orbit works alongside Intercom and Zendesk. Your knowledgebase,
                 recently closed tickets and docs now power live, automatic
                 answers as you chat.
                 <br />
@@ -812,15 +812,18 @@ class Section3 {
             </main>
             <br />
             <div $$flex />
-            <Callout css={{ width: 460, marginLeft: 50 }}>
+            <div $$flex />
+            <div $$flex />
+            <Callout css={{ width: 460, marginLeft: 80 }}>
               <P size={1.2} fontWeight={800}>
                 The Result
               </P>
-              <P2 size={2.3} margin={0}>
-                Reduced onboarding time and less interruptions over small
+              <P2 size={2.2} margin={0}>
+                Reduced onboarding time. Less interruptions over small
                 questions.
               </P2>
             </Callout>
+            <div $$flex />
             <illustration>
               <img
                 src={contextImg}
@@ -842,7 +845,7 @@ class Section3 {
 
   static style = {
     main: {
-      width: 400,
+      width: 450,
       flex: 1,
     },
   }

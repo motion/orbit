@@ -1,6 +1,6 @@
 import * as UI from '@mcro/ui'
 
-export const smallSize = 1000
+export const smallSize = 1100
 
 export const PAGE_WIDTH = smallSize
 

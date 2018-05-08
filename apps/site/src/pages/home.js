@@ -410,6 +410,7 @@ class Header {
       fontWeight: 300,
     },
     chats: {
+      pointerEvents: 'none',
       position: 'absolute',
       top: 0,
       right: '5%',
@@ -431,6 +432,7 @@ class Header {
       marginBottom: 10,
       borderBottomRightRadius: 0,
       alignSelf: 'flex-end',
+      pointerEvents: 'auto',
     },
     left: {
       alignSelf: 'flex-start',

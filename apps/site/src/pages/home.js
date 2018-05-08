@@ -687,14 +687,19 @@ class Section4 {
             />
             <main>
               <P size={2.5} fontWeight={800}>
-                Reduced interruptions with a side of unity.
+                A sense of unity.
               </P>
               <br />
               <br />
               <P2 size={2.2}>
-                Inspired intranets like <Ul>Stripe Home</Ul>, we made a tool to
-                make your team happier and more productive.
+                Inspired solutions like <Ul>Stripe Home</Ul>, we set to make a
+                tool that turns hidden organizational knowledge into a beautiful
+                home base.
               </P2>
+              <br />
+              <P size={1.2} fontWeight={700}>
+                How it does it:
+              </P>
               <br />
               <ul>
                 <li>
@@ -733,7 +738,7 @@ class Section4 {
             <example
               css={{
                 position: 'absolute',
-                top: 0,
+                top: 80,
                 right: 0,
                 bottom: 0,
                 left: '50%',
@@ -743,7 +748,7 @@ class Section4 {
                 src={personImage}
                 width={1490}
                 height="auto"
-                css={{ transformOrigin: 'top left', transform: { scale: 0.6 } }}
+                css={{ transformOrigin: 'top left', transform: { scale: 0.5 } }}
               />
             </example>
           </V.SectionContent>
@@ -788,11 +793,11 @@ class Section3 {
               <P size={1.2} fontWeight={800}>
                 Scenario 1
               </P>
-              <P2 size={3}>Make your chat team faster and more accurate.</P2>
-              <P2 size={1.7}>
-                Yes, it works with Intercom (and the other ones too). Your
-                knowledgebase, PM tickets, and docs in a smart sidebar that
-                automatically searches as you chat.
+              <P2 size={3}>Make your success team more successful.</P2>
+              <P2 size={1.8}>
+                It works fine alongside Intercom or Zendesk. Your knowledgebase,
+                recently closed tickets and docs now power live, automatic
+                answers answers as you chat.
                 <br />
                 <br />
                 See the <Ul2>exact answer highlighted</Ul2> without typing a
@@ -806,8 +811,8 @@ class Section3 {
                 The Result
               </P>
               <P2 size={2.3} margin={0}>
-                Reduced onboard time and less differential between your your new
-                success agents.
+                Reduced onboarding time and less interruptions over small
+                questions.
               </P2>
             </Callout>
             <illustration>

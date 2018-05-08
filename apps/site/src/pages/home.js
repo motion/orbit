@@ -251,10 +251,11 @@ class Header {
       <bubble $left>Clear as modern art 🖌</bubble>,
     ]
 
+    //  'linear-gradient(#f2f2f2, #fff)'
     return (
-      <V.Section>
+      <V.Section css={{ background: '#fff' }}>
         <V.SectionContent padded fullscreen>
-          <V.Slant />
+          <V.Slant rightBackground="#fff" />
           <bgTest
             css={{
               position: 'absolute',
@@ -282,11 +283,14 @@ class Header {
             <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
               Make it easy to understand what's going on.
             </P>
-            <P size={2} alpha={0.75} margin={[10, 0, 25]}>
+            <line
+              css={{ margin: [15, 40], height: 3, background: '#f2f2f2' }}
+            />
+            <P size={2} alpha={0.75} margin={[5, 0, 25]}>
               <span css={{ color: '#000' }}>
-                Important things are happening and getting lost in the noise.
+                A cloudless solution to whats going on in your company.
               </span>{' '}
-              Organize your team and cloud by upgrading your operating system.
+              Personalized company news, search & more, installed in 3 minutes.
             </P>
           </Callout>
           <div $$flex />
@@ -319,7 +323,7 @@ class Header {
               left: -50,
               right: -50,
               borderBottom: [4, '#f2f2f2'],
-              zIndex: -2,
+              zIndex: 0,
             }}
           >
             <dock
@@ -545,7 +549,7 @@ class Section2 extends React.Component {
             <UI.Theme name="light">
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -50 }}>
-                  <P fontWeight={600} size={4.4}>
+                  <P fontWeight={600} size={4.4} margin={[0, 0, 6]}>
                     Slack is great but it has a{' '}
                     <span $noisy>
                       noise<WavyLine height={1350} $line />
@@ -556,7 +560,7 @@ class Section2 extends React.Component {
                     fontWeight={300}
                     size={2.3}
                     alpha={0.5}
-                    margin={[30, 0, 12]}
+                    margin={[30, 0, 20]}
                   >
                     Your cloud is unruly
                   </P>
@@ -567,14 +571,16 @@ class Section2 extends React.Component {
                     <Ul2>damn notifications</Ul2>.
                   </P>
                   <br />
-                  <P size={1.6}>
-                    Orbit unifies your cloud and sorts whats important into a
-                    personal home page. It even alerts you to relevant things
-                    based on what you're doing.
+                  <br />
+                  <P size={1.8}>
+                    Orbit unifies your integrations and sorts them into a
+                    personal home page. Then it shows you to relevant things as
+                    you work.
                   </P>
                   <br />
-                  <P size={1.6}>
-                    Turn down noise with a simple <Cmd>⌘+Space</Cmd>.
+                  <br />
+                  <P size={2}>
+                    Turn down noise with <Cmd>⌘+Space</Cmd> and
                   </P>
                   <div $$flex />
                 </main>
@@ -676,89 +682,31 @@ class Section2 extends React.Component {
 }
 
 @view
-class Section4 {
+class Section3 {
   render() {
     return (
       <UI.Theme name="light">
         <V.Section css={{ background: '#fff' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant
-              // backgroundColor="#f2f2f2"
-              inverseSlant
-              css={{ zIndex: 2 }}
-            />
+            <V.Slant css={{ zIndex: 2 }} />
             <main>
-              <P size={2.5} fontWeight={800}>
-                A sense of unity.
+              <P size={4} fontWeight={800}>
+                Answers before you ask.
               </P>
               <br />
               <br />
               <P2 size={2.2}>
-                Inspired solutions like <Ul>Stripe Home</Ul>, we set to make a
-                tool that turns hidden organizational knowledge into a beautiful
-                home base.
+                Orbit upgrades your OS with company knowledge. That means some
+                pretty big upsides to how your team works.
               </P2>
               <br />
-              <P size={1.2} fontWeight={700}>
-                How it does it:
-              </P>
-              <br />
-              <ul>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.5}>
-                    <strong>Daily heads up</strong>. Unified notification as a
-                    newspaper, minus the noise and summarized.
-                  </P>
-                </li>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.5}>
-                    <strong>Directory</strong>. Beautiful profiles with relevant
-                    recent activity of all co-workers, automatically.
-                  </P>
-                </li>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.5}>
-                    <strong>Intelligent search</strong> of everything you do:
-                    Slack, your files, tickets, and more.
-                  </P>
-                </li>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.5}>
-                    <strong>Realtime answers</strong>. As you compute, hold{' '}
-                    <Cmd>Option</Cmd> in any app. Ultra fast OCR uses your
-                    screen to provide contextual answers.
-                  </P>
-                </li>
-              </ul>
-              <br />
-              <div $$flex />
+              <P2 size={2}>
+                In literally any app at any time just hold <Cmd>Option</Cmd>.
+                Whether writing an email, or chatting with a customer, you'll
+                see contextually relevant realtime answers using all the
+                knowledge in your cloud.
+              </P2>
             </main>
-            <P2 css={{ width: 480 }} textAlign="right">
-              Silicon Valley has finally delivered
-              <span css={{ marginRight: -10 }}>
-                <Ul>a new intranet</Ul>.
-              </span>
-            </P2>
-            <example
-              css={{
-                position: 'absolute',
-                top: 80,
-                right: 0,
-                bottom: 0,
-                left: '50%',
-              }}
-            >
-              <img
-                src={personImage}
-                width={1490}
-                height="auto"
-                css={{ transformOrigin: 'top left', transform: { scale: 0.5 } }}
-              />
-            </example>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -767,41 +715,25 @@ class Section4 {
 
   static style = {
     main: {
-      width: 400,
+      width: 490,
       flex: 1,
-    },
-    ul: {
-      margin: 0,
-    },
-    li: {
-      display: 'flex',
-      flexFlow: 'row',
-      alignItems: 'flex-start',
-      fontSize: 22,
-      padding: [0, 0, 10, 0],
-    },
-    icon: {
-      marginTop: 6,
-      marginRight: 12,
     },
   }
 }
 
-const Ul2 = view('span', { background: 'yellow' })
-
 @view
-class Section3 {
+class Section4 {
   render() {
     return (
       <UI.Theme name="medium">
         <V.Section css={{ background: '#f8f8f8' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant css={{ zIndex: 2 }} />
+            <V.Slant inverseSlant css={{ zIndex: 2 }} />
             <main>
               <P size={1.2} fontWeight={800}>
-                Scenario 1
+                Use case #1
               </P>
-              <P2 size={3}>Make your success team more successful.</P2>
+              <P2 size={3}>Reduce workplace interruptions instantly.</P2>
               <P2 size={1.8}>
                 Orbit works alongside Intercom and Zendesk. Your knowledgebase,
                 recently closed tickets and docs now power live, automatic
@@ -857,60 +789,159 @@ class Section3 {
 class Section5 {
   render() {
     return (
-      <V.Section>
-        <V.SectionContent fullscreen padded>
-          <V.Slant />
-          <main>
-            <P size={2.5} fontWeight={800}>
-              Save time on Day 1
-            </P>
+      <UI.Theme name="medium">
+        <V.Section css={{ background: '#f8f8f8' }}>
+          <V.SectionContent fullscreen padded>
+            <V.Slant css={{ zIndex: 2 }} />
+            <main>
+              <P size={1.2} fontWeight={800}>
+                Use case #2
+              </P>
+              <P2 size={3}>Make your success team more successful.</P2>
+              <P2 size={1.8}>
+                Orbit works alongside Intercom and Zendesk. Your knowledgebase,
+                recently closed tickets and docs now power live, automatic
+                answers as you chat.
+                <br />
+                <br />
+                See the <Ul2>exact answer highlighted</Ul2> without typing a
+                thing.
+              </P2>
+            </main>
             <br />
-            <br />
-            <P2 fontWeight={200} size={3}>
-              How Orbit helps:
-            </P2>
-            <ul>
-              <li>
-                <UI.Icon $icon name="check" size={20} color="green" />
-                <P size={1.5}>On-device ML learns what you care about.</P>
-              </li>
-              <li>
-                <UI.Icon $icon name="check" size={20} color="green" />
-                <P size={1.5}>Upgrade your OS with an intelligent home.</P>
-              </li>
-              <li>
-                <UI.Icon $icon name="check" size={20} color="green" />
-                <P size={1.5}>No installation (3 minute setup).</P>
-              </li>
-            </ul>
-            <br />
-            <br />
-            <P2 fontWeight={200} size={3}>
-              How Orbit works:
-            </P2>
-            <ul>
-              <li>
-                <UI.Icon $icon name="check" size={20} color="green" />
-                <P size={1.5}>On-device ML learns what you care about.</P>
-              </li>
-              <li>
-                <UI.Icon $icon name="check" size={20} color="green" />
-                <P size={1.5}>Upgrade your OS with an intelligent home.</P>
-              </li>
-              <li>
-                <UI.Icon $icon name="check" size={20} color="green" />
-                <P size={1.5}>No installation (3 minute setup).</P>
-              </li>
-            </ul>
-          </main>
-        </V.SectionContent>
-      </V.Section>
+            <div $$flex />
+            <div $$flex />
+            <div $$flex />
+            <Callout css={{ width: 460, marginLeft: 80 }}>
+              <P size={1.2} fontWeight={800}>
+                The Result
+              </P>
+              <P2 size={2.2} margin={0}>
+                Reduced onboarding time. Less interruptions over small
+                questions.
+              </P2>
+            </Callout>
+            <div $$flex />
+            <illustration>
+              <img
+                src={contextImg}
+                css={{
+                  width: 550,
+                  height: 'auto',
+                  position: 'absolute',
+                  top: 125,
+                  right: -78,
+                  zIndex: 0,
+                }}
+              />
+            </illustration>
+          </V.SectionContent>
+        </V.Section>
+      </UI.Theme>
     )
   }
 
   static style = {
     main: {
-      width: 400,
+      width: 450,
+      flex: 1,
+    },
+  }
+}
+
+@view
+class Section6 {
+  render() {
+    return (
+      <UI.Theme name="light">
+        <V.Section css={{ background: '#fff' }}>
+          <V.SectionContent fullscreen padded>
+            <V.Slant
+              // backgroundColor="#f2f2f2"
+              inverseSlant
+              css={{ zIndex: 2 }}
+            />
+            <main>
+              <P size={2.5} fontWeight={800}>
+                A sense of unity.
+              </P>
+              <br />
+              <br />
+              <P2 size={2.2}>
+                Orbit is an entire intranet solution, without any install.
+                Inspired by solutions like <Ul>Stripe Home</Ul>, we wanted to
+                deliver a beautiful and practical home base for your company.
+              </P2>
+              <br />
+              <P size={1.2} fontWeight={700}>
+                Features
+              </P>
+              <br />
+              <ul>
+                <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.6}>
+                    <strong>Daily heads up</strong>. Unified notification as a
+                    newspaper, minus the noise and summarized.
+                  </P>
+                </li>
+                <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.6}>
+                    <strong>Directory</strong>. Beautiful profiles with relevant
+                    recent activity of all co-workers, automatically.
+                  </P>
+                </li>
+                <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.6}>
+                    <strong>Intelligent search</strong> of everything you do:
+                    Slack, your files, tickets, and more.
+                  </P>
+                </li>
+                <li>
+                  <UI.Icon $icon name="check" size={20} color="green" />
+                  <P size={1.6}>
+                    <strong>Realtime answers</strong>. As you compute, hold{' '}
+                    <Cmd>Option</Cmd> in any app. Ultra fast OCR uses your
+                    screen to provide contextual answers.
+                  </P>
+                </li>
+              </ul>
+              <br />
+              <div $$flex />
+            </main>
+            <P2 css={{ width: 480 }} textAlign="right">
+              Silicon Valley has finally delivered
+              <span css={{ marginRight: -10 }}>
+                <Ul>a new intranet</Ul>.
+              </span>
+            </P2>
+            <example
+              css={{
+                position: 'absolute',
+                top: 80,
+                right: 0,
+                bottom: 0,
+                left: '50%',
+              }}
+            >
+              <img
+                src={personImage}
+                width={1490}
+                height="auto"
+                css={{ transformOrigin: 'top left', transform: { scale: 0.5 } }}
+              />
+            </example>
+          </V.SectionContent>
+        </V.Section>
+      </UI.Theme>
+    )
+  }
+
+  static style = {
+    main: {
+      width: 480,
       flex: 1,
     },
     ul: {
@@ -919,18 +950,21 @@ class Section5 {
     li: {
       display: 'flex',
       flexFlow: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       fontSize: 22,
       padding: [0, 0, 10, 0],
     },
     icon: {
-      marginRight: 10,
+      marginTop: 6,
+      marginRight: 12,
     },
   }
 }
 
+const Ul2 = view('span', { background: 'yellow' })
+
 @view
-class Section6 {
+class Section7 {
   render() {
     return (
       <UI.Theme name="dark">
@@ -1013,8 +1047,9 @@ export default class HomePage extends React.Component {
         <Section2 />
         <Section3 />
         <Section4 />
-        <Section5 if={false} />
+        <Section5 />
         <Section6 />
+        <Section7 />
         <Footer />
       </home>
     )

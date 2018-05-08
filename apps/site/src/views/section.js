@@ -15,6 +15,7 @@ export const Slant = ({
   inverse,
   inverseSlant,
   backgroundColor,
+  rightBackground,
   ...props
 }) => {
   let background = backgroundColor
@@ -59,7 +60,7 @@ export const Slant = ({
       <div
         css={{
           position: 'absolute',
-          // background,
+          background: rightBackground,
           top: 0,
           right: inverse ? Constants.SLANT_AMT : '-200%',
           left: inverse ? '-200%' : Constants.SLANT_AMT,

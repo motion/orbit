@@ -1,35 +1,28 @@
-## fri
+## website
 
-* website
-* explore mock
-* peek weird bugs
-* summary pitch/design finish
-  * pin announcement
-  * pin search result
-* ? tear away peeks
+* add section to explain featureset before going into specifics
 
-## sat
+sections:
 
-* any more design that helps website/pitch
+1.  header/intro
+2.  problem/solution (home)
+3.  problem/solution (context)
+4.  scenario 1 (context)
+5.  scenario 2 (home)
+6.  vision (home/unity)
+7.  security/buynow
+8.  footer
 
-## sun
+design ideas:
 
-* website
-* highlight words demo
-* plan reach out to formidable / research formidable
-* ? app themes for website
-
-## mon
-
-* reach out to ken
-
-## tue
-
-## wed
-
-## thurs
-
-## fri
+* fun colorful/playful pieces that interact with the stripe
+  * peek out from behind / go over
+  * could be ribbons, bubbles, splotches, clouds, characters
+* testimonial
+* integrations section
+* pitch growing with their company
+* better pitch organizational people features (lattice)
+* feature chart (diamond.io)
 
 ## now
 

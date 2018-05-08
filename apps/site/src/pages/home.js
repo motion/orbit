@@ -705,36 +705,42 @@ class Section4 {
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.5}>
-                    Daily heads up. What you missed, minus notifications.
+                    <strong>Daily heads up</strong>. Unified notification as a
+                    newspaper, minus the noise and summarized.
                   </P>
                 </li>
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.5}>
-                    A beautiful directory of all your employees, automatically.
+                    <strong>Directory</strong>. Beautiful profiles with relevant
+                    recent activity of all co-workers, automatically.
                   </P>
                 </li>
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.5}>
-                    Intelligent search of Slack, your files, tickets, and more.
+                    <strong>Intelligent search</strong> of everything you do:
+                    Slack, your files, tickets, and more.
                   </P>
                 </li>
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.5}>
-                    Answers as your work. Orbit can search based on what you're
-                    doing, showing in a sidebar just by holding{' '}
-                    <Cmd>Option</Cmd>.
+                    <strong>Realtime answers</strong>. As you compute, hold{' '}
+                    <Cmd>Option</Cmd> in any app. Ultra fast OCR uses your
+                    screen to provide contextual answers.
                   </P>
                 </li>
               </ul>
               <br />
               <div $$flex />
-              <P2 textAlign="right">
-                Silicon Valley has finally delivered <Ul>a new intranet</Ul>.
-              </P2>
             </main>
+            <P2 css={{ width: 480 }} textAlign="right">
+              Silicon Valley has finally delivered
+              <span css={{ marginRight: -10 }}>
+                <Ul>a new intranet</Ul>.
+              </span>
+            </P2>
             <example
               css={{
                 position: 'absolute',
@@ -797,7 +803,7 @@ class Section3 {
               <P2 size={1.8}>
                 It works fine alongside Intercom or Zendesk. Your knowledgebase,
                 recently closed tickets and docs now power live, automatic
-                answers answers as you chat.
+                answers as you chat.
                 <br />
                 <br />
                 See the <Ul2>exact answer highlighted</Ul2> without typing a

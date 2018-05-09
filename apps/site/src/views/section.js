@@ -34,7 +34,7 @@ export const Slant = ({
         bottom: 0,
         right: inverse ? '50%' : '-50%',
         left: inverse ? '-50%' : '50%',
-        zIndex: 0,
+        zIndex: 1,
       }}
       {...props}
     >
@@ -51,6 +51,7 @@ export const Slant = ({
           zIndex: Constants.SLANT_AMT * 2,
           transformOrigin: 'center right',
           transform: {
+            x: -Constants.SLANT_AMT,
             rotate: `${(inverse ? -1 : 1) *
               (inverseSlant ? -1 : 1) *
               Constants.SLANT}deg`,

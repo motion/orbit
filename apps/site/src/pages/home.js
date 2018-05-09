@@ -15,42 +15,6 @@ import SVGInline from 'react-svg-inline'
 import Observer from '@researchgate/react-intersection-observer'
 import { Trail, animated } from 'react-spring'
 
-// <linesContain
-//               if={false}
-//               css={{
-//                 position: 'absolute',
-//                 top: -200,
-//                 left: '50%',
-//                 right: '-50%',
-//                 bottom: 0,
-//                 overflow: 'hidden',
-//                 zIndex: -2,
-//                 transform: { rotate: '-5deg' },
-//               }}
-//             >
-//               <Lines
-//                 width={1000}
-//                 height={2000}
-//                 css={{
-//                   position: 'absolute',
-//                   top: 0,
-//                   right: 0,
-//                   bottom: 0,
-//                   left: 0,
-//                   overflow: 'hidden',
-//                   marginLeft: 100,
-//                   opacity: 0.02,
-//                   // display: 'none',
-//                   transformOrigin: 'top left',
-//                   transform: {
-//                     rotate: '10deg',
-//                     x: '-12.8%',
-//                     scale: 3,
-//                   },
-//                 }}
-//               />
-//             </linesContain>
-
 const WavyLine = ({ height, ...props }) => (
   <svg width={60} height={height} {...props}>
     <rect
@@ -106,7 +70,7 @@ const MailIcon = props => (
   <Icon {...props} scale={4} transform={{ x: -15 }} icon={mailIcon} />
 )
 
-const brandColor = '#5552FA'
+const brandColor = UI.color('#5552FA')
 
 const Cmd = view('span', {
   padding: [3, 5],
@@ -177,32 +141,7 @@ const Callout = ({ style, ...props }) => (
   </section>
 )
 
-const Triangle = ({
-  size = 1,
-  background = 'transparent',
-  borderColor = '#000',
-  borderWidth = 10,
-  style,
-}) => {
-  const width = 350 * size
-  const height = 450 * size
-  return (
-    <svg height={height} width={width + borderWidth} style={style}>
-      <polygon
-        points="225,10 100,210 350,210"
-        style={{
-          fill: background,
-          stroke: borderColor,
-          strokeWidth: borderWidth / size,
-          transform: `scale(${size})`,
-          transformOrigin: 'top left',
-        }}
-      />
-    </svg>
-  )
-}
-
-const P = props => <UI.Text selectable {...props} />
+const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const P2 = props => <P size={2} alpha={0.8} margin={[0, 0, 20]} {...props} />
 const Ul = view('span', {
   display: 'inline-block',
@@ -256,6 +195,21 @@ class Header {
       <V.Section css={{ background: '#fff' }}>
         <V.SectionContent padded fullscreen>
           <V.Slant rightBackground="#fff" />
+          <glow
+            css={{
+              top: '35%',
+              left: '20%',
+              zIndex: 0,
+              position: 'absolute',
+              background: '#CCCEF1',
+              width: 400,
+              height: 300,
+              borderRadius: 100,
+              filter: {
+                blur: 150,
+              },
+            }}
+          />
           <bgTest
             css={{
               position: 'absolute',
@@ -272,113 +226,113 @@ class Header {
           />
           <top $$row>
             <BrandLogo />
-            <div $$flex />
-            <PurchaseButton />
           </top>
           <div $$flex />
           <Callout css={{ margin: [-80, -34, 0] }}>
-            <P size={2} fontWeight={800} color={brandColor}>
+            <P size={1.9} fontWeight={800} color={'#000' || brandColor}>
               Your company is growing
             </P>
             <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
               Make it easy to understand what's going on.
             </P>
             <line
+              if={false}
               css={{ margin: [15, 40], height: 3, background: '#f2f2f2' }}
             />
             <P size={2} alpha={0.75} margin={[5, 0, 25]}>
               <span css={{ color: '#000' }}>
                 A cloudless solution to whats going on in your company.
               </span>{' '}
-              Personalized company news, search & more, installed in 3 minutes.
+              Personalized company news and more with a three minute install.
+            </P>
+            <br />
+            <P size={1.2}>
+              <Ul>Learn how Orbit makes your OS smart</Ul>
             </P>
           </Callout>
+
           <div $$flex />
 
-          <chats>
-            <Trail
-              native
-              from={{ opacity: 0, y: 20 }}
-              to={{ opacity: 1, y: 0 }}
-              keys={chats.map((_, index) => index)}
-              config={{ tension: 480, friction: 60 }}
-            >
-              {chats.map(item => ({ y, opacity }) => (
-                <animated.div
-                  style={{
-                    opacity,
-                    transform: y.interpolate(y => `translate3d(0,${y}%,0)`),
-                  }}
-                >
-                  {item}
-                </animated.div>
-              ))}
-            </Trail>
-          </chats>
-
-          <dockContain
-            css={{
-              position: 'absolute',
-              bottom: 40,
-              left: -50,
-              right: -50,
-              borderBottom: [4, '#f2f2f2'],
-              zIndex: 0,
-            }}
-          >
-            <dock
+          <rightSide>
+            <top
               css={{
                 position: 'absolute',
-                bottom: 40,
+                top: 40,
                 right: 0,
-                width: '45%',
-                alignItems: 'flex-end',
-                justifyContent: 'space-between',
-                flexFlow: 'row',
-                background: '#f9f9f9',
-                borderTopRadius: 10,
-                padding: [0, 20, 10],
-                boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                border: [1, '#ddd'],
-                transform: {
-                  scale: 0.9,
-                },
+                height: 150,
+                alignItems: 'center',
               }}
             >
-              <dockFade
+              <PurchaseButton />
+            </top>
+            <chats>
+              <Trail
+                native
+                from={{ opacity: 0, y: 20 }}
+                to={{ opacity: 1, y: 0 }}
+                keys={chats.map((_, index) => index)}
+                config={{ tension: 480, friction: 60 }}
+              >
+                {chats.map(item => ({ y, opacity }) => (
+                  <animated.div
+                    style={{
+                      opacity,
+                      transform: y.interpolate(y => `translate3d(0,${y}%,0)`),
+                    }}
+                  >
+                    {item}
+                  </animated.div>
+                ))}
+              </Trail>
+            </chats>
+
+            <dockContain
+              css={{
+                position: 'absolute',
+                bottom: 90,
+                left: 0,
+                right: -50,
+                borderBottom: [4, '#f2f2f2'],
+                zIndex: 0,
+              }}
+            >
+              <dock
                 css={{
                   position: 'absolute',
-                  top: 0,
-                  left: -10,
-                  right: -10,
-                  bottom: -10,
-                  background: 'linear-gradient(transparent, #fff)',
+                  bottom: 15,
+                  right: 0,
+                  left: 0,
+                  alignItems: 'flex-end',
+                  justifyContent: 'space-between',
+                  flexFlow: 'row',
+                  background: '#f9f9f9',
+                  borderTopRadius: 10,
+                  padding: [0, 20, 10],
+                  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                  border: [1, '#ddd'],
+                  transform: {
+                    scale: 0.9,
+                  },
                 }}
-              />
-              <DropboxIcon size={0.13} after={<Badge>12</Badge>} />
-              <DriveIcon size={0.16} after={<Badge>5</Badge>} />
-              <SlackIcon size={0.18} after={<Badge>89</Badge>} />
-              <MailIcon size={0.16} after={<Badge>3</Badge>} />
-              <GithubIcon size={0.13} after={<Badge>22</Badge>} />
-            </dock>
-          </dockContain>
-
-          <orbitals if={false}>
-            {[1, 2, 3, 4, 5].map(i => (
-              <Triangle
-                key={i}
-                borderWidth={3}
-                size={1}
-                borderColor="pink"
-                $triangle
-                css={{
-                  opacity: 0.85,
-                  top: -40 * i,
-                  left: 10 * i,
-                }}
-              />
-            ))}
-          </orbitals>
+              >
+                <dockFade
+                  css={{
+                    position: 'absolute',
+                    top: 0,
+                    left: -10,
+                    right: -10,
+                    bottom: -10,
+                    background: 'linear-gradient(transparent, #fff)',
+                  }}
+                />
+                <DropboxIcon size={0.13} after={<Badge>12</Badge>} />
+                <DriveIcon size={0.16} after={<Badge>5</Badge>} />
+                <SlackIcon size={0.18} after={<Badge>89</Badge>} />
+                <MailIcon size={0.16} after={<Badge>3</Badge>} />
+                <GithubIcon size={0.13} after={<Badge>22</Badge>} />
+              </dock>
+            </dockContain>
+          </rightSide>
         </V.SectionContent>
       </V.Section>
     )
@@ -418,13 +372,13 @@ class Header {
       position: 'absolute',
       top: 0,
       right: '5%',
-      left: '66%',
+      left: 100,
       bottom: 0,
       // alignItems: 'center',
       justifyContent: 'center',
       transform: {
         // x: 30,
-        scale: 1.3,
+        scale: 1.15,
       },
     },
     bubble: {
@@ -442,6 +396,14 @@ class Header {
       alignSelf: 'flex-start',
       borderBottomRightRadius: 10,
       borderBottomLeftRadius: 0,
+    },
+    rightSide: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: '60%',
+      zIndex: 2,
     },
   }
 }
@@ -533,6 +495,7 @@ class Section2 extends React.Component {
           <V.SectionContent padded fullscreen>
             <V.Slant inverseSlant />
             <bgTest
+              if={false}
               css={{
                 position: 'absolute',
                 top: -500,
@@ -689,11 +652,18 @@ class Section3 {
         <V.Section css={{ background: '#fff' }}>
           <V.SectionContent fullscreen padded>
             <V.Slant css={{ zIndex: 2 }} />
-            <main>
-              <P size={4} fontWeight={800}>
+            <rightSide>
+              <edge
+                css={{
+                  shapeOutside: 'polygon(0% 0%, 90px 0%, 0% 1096px)',
+                  float: 'left',
+                  width: 110,
+                  height: 720,
+                }}
+              />
+              <P size={3} fontWeight={800}>
                 Answers before you ask.
               </P>
-              <br />
               <br />
               <P2 size={2.2}>
                 Orbit upgrades your OS with company knowledge. That means some
@@ -706,7 +676,7 @@ class Section3 {
                 see contextually relevant realtime answers using all the
                 knowledge in your cloud.
               </P2>
-            </main>
+            </rightSide>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -714,9 +684,13 @@ class Section3 {
   }
 
   static style = {
-    main: {
-      width: 490,
+    rightSide: {
+      zIndex: 3,
       flex: 1,
+      position: 'absolute',
+      left: '50%',
+      right: 0,
+      display: 'block',
     },
   }
 }

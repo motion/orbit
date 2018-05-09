@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'
 import 'babel-polyfill'
 import 'intersection-observer'
 import React from 'react'

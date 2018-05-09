@@ -5,16 +5,13 @@ import * as UI from '@mcro/ui'
 import * as V from '~/views'
 // import homeImg from '~/../public/screen-home.png'
 import contextImg from '~/../public/screen-context.png'
-import slackIcon from '~/../public/slack.svg'
-import driveIcon from '~/../public/drive.svg'
-import dropboxIcon from '~/../public/dropbox.svg'
-import mailIcon from '~/../public/mail.svg'
-import githubIcon from '~/../public/github.svg'
 import personImage from '~/../public/screen-person.png'
 import wordImage from '~/../public/word.png'
-import SVGInline from 'react-svg-inline'
 import Observer from '@researchgate/react-intersection-observer'
-import { Spring, Trail, animated } from 'react-spring'
+import { Spring, animated } from 'react-spring'
+import Trail from '~/trail'
+import HeaderIllustration from './headerIllustration'
+import { MailIcon } from '~/views/icons'
 
 const WavyLine = ({ height, ...props }) => (
   <svg width={60} height={height} {...props}>
@@ -26,49 +23,6 @@ const WavyLine = ({ height, ...props }) => (
       y="0"
     />
   </svg>
-)
-
-const Badge = view('div', {
-  position: 'absolute',
-  top: -5,
-  right: 5,
-  width: 25,
-  height: 25,
-  background: 'red',
-  color: '#fff',
-  borderRadius: 100,
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  fontWeight: 600,
-  boxShadow: '0 0 5px rgba(0,0,0,0.5)',
-})
-
-const Icon = ({ size, icon, scale = 1, after, transform, ...props }) => (
-  <slackIcon
-    css={{ position: 'relative', width: size * 512, height: size * 512 }}
-  >
-    <SVGInline
-      cleanup
-      svg={icon}
-      width="512"
-      height="512"
-      css={{
-        transformOrigin: 'top left',
-        transform: { scale: size * scale, ...transform },
-      }}
-      {...props}
-    />
-    {after}
-  </slackIcon>
-)
-
-const SlackIcon = props => <Icon {...props} icon={slackIcon} />
-const DriveIcon = props => <Icon {...props} scale={1.8} icon={driveIcon} />
-const DropboxIcon = props => <Icon {...props} icon={dropboxIcon} />
-const GithubIcon = props => <Icon {...props} icon={githubIcon} />
-const MailIcon = props => (
-  <Icon {...props} scale={4} transform={{ x: -15 }} icon={mailIcon} />
 )
 
 const brandColor = UI.color('#5552FA')
@@ -136,7 +90,7 @@ const Callout = ({ style, ...props }) => (
       }}
     />
     <innerSection
-      css={{ margin: 10, borderRadius: 10, padding: 40, background: '#fff' }}
+      css={{ margin: 8, borderRadius: 10, padding: 40, background: '#fff' }}
       {...props}
     />
   </section>
@@ -183,14 +137,6 @@ class BrandLogo {
 @view
 class Header {
   render() {
-    const chats = [
-      <bubble $left>The #general chat room</bubble>,
-      <bubble>About as coherent as an acid trip</bubble>,
-      <bubble $left>🙄</bubble>,
-      <bubble>Spreading like an oil spill...</bubble>,
-      <bubble $left>Clear as modern art 🖌</bubble>,
-    ]
-
     //  'linear-gradient(#f2f2f2, #fff)'
     return (
       <V.Section css={{ background: '#fff' }}>
@@ -231,7 +177,7 @@ class Header {
           <div $$flex />
           <Callout css={{ margin: [-80, -34, 0] }}>
             <P size={1.9} fontWeight={800} color={'#000' || brandColor}>
-              Your company is growing
+              Your company is growing...
             </P>
             <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
               Make it easy to understand what's going on.
@@ -242,9 +188,10 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[5, 0, 25]}>
               <span css={{ color: '#000' }}>
-                A cloudless solution to whats going on in your company.
+                A cloudless solution to organizing your cloud.
               </span>{' '}
-              Personalized company news and more with a three minute install.
+              Personalized company news and more, baked into your OS. Just 3
+              minutes to install.
             </P>
             <br />
             <P size={1.2}>
@@ -266,73 +213,7 @@ class Header {
             >
               <PurchaseButton />
             </top>
-            <chats>
-              <Trail
-                native
-                from={{ opacity: 0, y: 20 }}
-                to={{ opacity: 1, y: 0 }}
-                keys={chats.map((_, index) => index)}
-                config={{ tension: 480, friction: 60 }}
-              >
-                {chats.map(item => ({ y, opacity }) => (
-                  <animated.div
-                    style={{
-                      opacity,
-                      transform: y.interpolate(y => `translate3d(0,${y}%,0)`),
-                    }}
-                  >
-                    {item}
-                  </animated.div>
-                ))}
-              </Trail>
-            </chats>
-
-            <dockContain
-              css={{
-                position: 'absolute',
-                bottom: 90,
-                left: 0,
-                right: -50,
-                borderBottom: [4, '#f2f2f2'],
-                zIndex: 0,
-              }}
-            >
-              <dock
-                css={{
-                  position: 'absolute',
-                  bottom: 15,
-                  right: 0,
-                  left: 0,
-                  alignItems: 'flex-end',
-                  justifyContent: 'space-between',
-                  flexFlow: 'row',
-                  background: '#f9f9f9',
-                  borderTopRadius: 10,
-                  padding: [0, 20, 10],
-                  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                  border: [1, '#ddd'],
-                  transform: {
-                    scale: 0.9,
-                  },
-                }}
-              >
-                <dockFade
-                  css={{
-                    position: 'absolute',
-                    top: 0,
-                    left: -10,
-                    right: -10,
-                    bottom: -10,
-                    background: 'linear-gradient(transparent, #fff)',
-                  }}
-                />
-                <DropboxIcon size={0.13} after={<Badge>12</Badge>} />
-                <DriveIcon size={0.16} after={<Badge>5</Badge>} />
-                <SlackIcon size={0.18} after={<Badge>89</Badge>} />
-                <MailIcon size={0.16} after={<Badge>3</Badge>} />
-                <GithubIcon size={0.13} after={<Badge>22</Badge>} />
-              </dock>
-            </dockContain>
+            <HeaderIllustration />
           </rightSide>
         </V.SectionContent>
       </V.Section>
@@ -367,36 +248,6 @@ class Header {
     small: {
       fontSize: 14,
       fontWeight: 300,
-    },
-    chats: {
-      pointerEvents: 'none',
-      position: 'absolute',
-      top: 0,
-      right: '5%',
-      left: 100,
-      bottom: 0,
-      // alignItems: 'center',
-      justifyContent: 'center',
-      transform: {
-        // x: 30,
-        scale: 1.15,
-      },
-    },
-    bubble: {
-      border: [2, '#777'],
-      background: '#fff',
-      fontSize: 16,
-      borderRadius: 15,
-      padding: 10,
-      marginBottom: 10,
-      borderBottomRightRadius: 0,
-      alignSelf: 'flex-end',
-      pointerEvents: 'auto',
-    },
-    left: {
-      alignSelf: 'flex-start',
-      borderBottomRightRadius: 10,
-      borderBottomLeftRadius: 0,
     },
     rightSide: {
       position: 'absolute',
@@ -516,23 +367,28 @@ class Section2 extends React.Component {
                   <P fontWeight={600} size={4.4} margin={[0, 0, 46]}>
                     Slack is great but it has a{' '}
                     <span $noisy>
-                      noise<WavyLine height={1350} $line />
+                      noise<WavyLine height={1500} $line />
                     </span>{' '}
                     problem
                   </P>
-                  <P size={2.2}>
-                    You use the best tool for the job. But that leaves you with
-                    no coherent high level organization.
-                    <br />
-                    <br />
-                    Not to mention all those <Ul2>damn notifications</Ul2>.
+                  <P size={2.4}>
+                    You use the best tool for the job. But that leaves you
+                    without high level organization.
                   </P>
                   <br />
+                  <P size={1.8}>
+                    Not to mention all those{' '}
+                    <Ul2 style={{}}>damn notifications</Ul2>.
+                  </P>
+                  <br />
+                  <P size={1.6}>
+                    Orbit starts by unifying your integrations. Then it sorts
+                    them daily into a personal newspaper. It even shows you if
+                    you're missing something, while you work.<br />
+                  </P>
                   <br />
                   <P size={1.8}>
-                    Orbit unifies your integrations and sorts them into a
-                    personal home page. Then it shows you to relevant things as
-                    you work. Turn down noise with <Cmd>⌘+Space</Cmd>.
+                    The result? Kill the noise with <Cmd>⌘+Space</Cmd>.
                   </P>
                   <div $$flex />
                 </main>
@@ -540,7 +396,7 @@ class Section2 extends React.Component {
               <rightSection
                 css={{
                   width: 500,
-                  padding: [30, 0, 0],
+                  margin: [0, 0, -20],
                   alignItems: 'flex-end',
                   textAlign: 'right',
                 }}
@@ -694,10 +550,9 @@ class Section3 extends React.Component {
                 </P2>
                 <br />
                 <P2 size={2}>
-                  At any time just hold <Cmd>Option</Cmd>. Whether writing an
-                  email, or chatting with a customer, you'll see contextually
-                  relevant realtime answers using all the knowledge in your
-                  cloud.
+                  At any time just hold your Option key. Whether writing an
+                  email or chatting with a customer, you'll see contextually
+                  relevant answers in realtime.
                 </P2>
                 <br />
                 <P2 size={2} color={brandColor}>
@@ -719,6 +574,7 @@ class Section3 extends React.Component {
       left: '50%',
       right: 0,
       bottom: 20,
+      paddingRight: 30,
     },
     inner: {
       alignSelf: 'center',

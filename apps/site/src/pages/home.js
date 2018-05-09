@@ -11,9 +11,10 @@ import dropboxIcon from '~/../public/dropbox.svg'
 import mailIcon from '~/../public/mail.svg'
 import githubIcon from '~/../public/github.svg'
 import personImage from '~/../public/screen-person.png'
+import wordImage from '~/../public/word.png'
 import SVGInline from 'react-svg-inline'
 import Observer from '@researchgate/react-intersection-observer'
-import { Trail, animated } from 'react-spring'
+import { Spring, Trail, animated } from 'react-spring'
 
 const WavyLine = ({ height, ...props }) => (
   <svg width={60} height={height} {...props}>
@@ -512,45 +513,33 @@ class Section2 extends React.Component {
             <UI.Theme name="light">
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -50 }}>
-                  <P fontWeight={600} size={4.4} margin={[0, 0, 6]}>
+                  <P fontWeight={600} size={4.4} margin={[0, 0, 46]}>
                     Slack is great but it has a{' '}
                     <span $noisy>
                       noise<WavyLine height={1350} $line />
                     </span>{' '}
                     problem
                   </P>
-                  <P
-                    fontWeight={300}
-                    size={2.3}
-                    alpha={0.5}
-                    margin={[30, 0, 20]}
-                  >
-                    Your cloud is unruly
-                  </P>
-                  <P size={2}>
-                    You use the best tool for the job. But that can leave you in{' '}
-                    <Ul2>silo-hell</Ul2>, with no coherent high level
-                    organization. Not to mention all those{' '}
-                    <Ul2>damn notifications</Ul2>.
+                  <P size={2.2}>
+                    You use the best tool for the job. But that leaves you with
+                    no coherent high level organization.
+                    <br />
+                    <br />
+                    Not to mention all those <Ul2>damn notifications</Ul2>.
                   </P>
                   <br />
                   <br />
                   <P size={1.8}>
                     Orbit unifies your integrations and sorts them into a
                     personal home page. Then it shows you to relevant things as
-                    you work.
-                  </P>
-                  <br />
-                  <br />
-                  <P size={2}>
-                    Turn down noise with <Cmd>⌘+Space</Cmd> and
+                    you work. Turn down noise with <Cmd>⌘+Space</Cmd>.
                   </P>
                   <div $$flex />
                 </main>
               </Observer>
               <rightSection
                 css={{
-                  width: 520,
+                  width: 500,
                   padding: [30, 0, 0],
                   alignItems: 'flex-end',
                   textAlign: 'right',
@@ -645,37 +634,76 @@ class Section2 extends React.Component {
 }
 
 @view
-class Section3 {
+class Section3 extends React.Component {
+  state = {
+    isIntersecting: false,
+  }
+
+  handleIntersect = ({ isIntersecting }) => {
+    this.setState({ isIntersecting })
+  }
+
   render() {
+    const { isIntersecting } = this.state
+    console.log('isIntersecting', isIntersecting)
     return (
       <UI.Theme name="light">
         <V.Section css={{ background: '#fff' }}>
           <V.SectionContent fullscreen padded>
             <V.Slant css={{ zIndex: 2 }} />
+            <Observer onChange={this.handleIntersect}>
+              <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }}>
+                <Spring from={{ x: 0 }} to={{ x: 100 }}>
+                  {({ x }) => (
+                    <animated.div
+                      style={{
+                        transform: `translate3d(${x}px,0,0)`,
+                      }}
+                    >
+                      <img
+                        src={wordImage}
+                        css={{
+                          width: 1634,
+                          height: 'auto',
+                          transformOrigin: 'top left',
+                          transform: { scale: 0.45, x: 250 },
+                        }}
+                      />
+                    </animated.div>
+                  )}
+                </Spring>
+              </leftSide>
+            </Observer>
             <rightSide>
-              <edge
-                css={{
-                  shapeOutside: 'polygon(0% 0%, 90px 0%, 0% 1096px)',
-                  float: 'left',
-                  width: 110,
-                  height: 720,
-                }}
-              />
-              <P size={3} fontWeight={800}>
-                Answers before you ask.
-              </P>
-              <br />
-              <P2 size={2.2}>
-                Orbit upgrades your OS with company knowledge. That means some
-                pretty big upsides to how your team works.
-              </P2>
-              <br />
-              <P2 size={2}>
-                In literally any app at any time just hold <Cmd>Option</Cmd>.
-                Whether writing an email, or chatting with a customer, you'll
-                see contextually relevant realtime answers using all the
-                knowledge in your cloud.
-              </P2>
+              <inner>
+                <edge
+                  css={{
+                    shapeOutside: 'polygon(0% 0%, 90px 0%, 0% 1096px)',
+                    float: 'left',
+                    width: 110,
+                    height: 720,
+                  }}
+                />
+                <P size={3} fontWeight={800}>
+                  Your Mac, upgraded.
+                </P>
+                <br />
+                <P2 size={2.2}>
+                  Orbit upgrades your OS with a smart sidebar. That means some
+                  pretty big upsides to how you operate.
+                </P2>
+                <br />
+                <P2 size={2}>
+                  At any time just hold <Cmd>Option</Cmd>. Whether writing an
+                  email, or chatting with a customer, you'll see contextually
+                  relevant realtime answers using all the knowledge in your
+                  cloud.
+                </P2>
+                <br />
+                <P2 size={2} color={brandColor}>
+                  Try holding <Cmd>Option</Cmd> now.
+                </P2>
+              </inner>
             </rightSide>
           </V.SectionContent>
         </V.Section>
@@ -690,6 +718,10 @@ class Section3 {
       position: 'absolute',
       left: '50%',
       right: 0,
+      bottom: 20,
+    },
+    inner: {
+      alignSelf: 'center',
       display: 'block',
     },
   }
@@ -700,22 +732,23 @@ class Section4 {
   render() {
     return (
       <UI.Theme name="medium">
-        <V.Section css={{ background: '#f8f8f8' }}>
+        <V.Section css={{ background: '#fafafa' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant inverseSlant css={{ zIndex: 2 }} />
+            <V.Slant
+              inverseSlant
+              backgroundColor="#f0f0f0"
+              css={{ zIndex: 2 }}
+            />
             <main>
               <P size={1.2} fontWeight={800}>
                 Use case #1
               </P>
               <P2 size={3}>Reduce workplace interruptions instantly.</P2>
               <P2 size={1.8}>
-                Orbit works alongside Intercom and Zendesk. Your knowledgebase,
-                recently closed tickets and docs now power live, automatic
-                answers as you chat.
-                <br />
-                <br />
-                See the <Ul2>exact answer highlighted</Ul2> without typing a
-                thing.
+                Whether alongside Intercom or Slack, all of your cloud from
+                knowledgebase information to recently closed tickets power live,
+                automatic answers as you chat. See the{' '}
+                <Ul2>exact answer highlighted</Ul2> without typing a thing.
               </P2>
             </main>
             <br />
@@ -764,51 +797,59 @@ class Section5 {
   render() {
     return (
       <UI.Theme name="medium">
-        <V.Section css={{ background: '#f8f8f8' }}>
+        <V.Section css={{ background: '#fafafa' }}>
           <V.SectionContent fullscreen padded>
-            <V.Slant css={{ zIndex: 2 }} />
-            <main>
-              <P size={1.2} fontWeight={800}>
-                Use case #2
-              </P>
-              <P2 size={3}>Make your success team more successful.</P2>
-              <P2 size={1.8}>
-                Orbit works alongside Intercom and Zendesk. Your knowledgebase,
-                recently closed tickets and docs now power live, automatic
-                answers as you chat.
+            <V.Slant backgroundColor="#f0f0f0" css={{ zIndex: 2 }} />
+            <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }}>
+              <leftInner>
+                <img
+                  src={wordImage}
+                  css={{
+                    width: 1634,
+                    height: 'auto',
+                    transformOrigin: 'top left',
+                    transform: { scale: 0.45, x: 250 },
+                  }}
+                />
+              </leftInner>
+            </leftSide>
+            <rightSide>
+              <inner>
+                <edge
+                  css={{
+                    shapeOutside: 'polygon(0% 0%, 90px 0%, 0% 1096px)',
+                    float: 'left',
+                    width: 110,
+                    height: 720,
+                  }}
+                />
+                <P size={1.2} fontWeight={800}>
+                  Use case #2
+                </P>
+                <P2 size={3}>Make your success team more successful.</P2>
+                <P2 size={1.8}>
+                  Orbit works alongside Intercom and Zendesk. Your
+                  knowledgebase, recently closed tickets and docs now power
+                  live, automatic answers as you chat.
+                  <br />
+                  <br />
+                  See the <Ul2>exact answer highlighted</Ul2> without typing a
+                  thing.
+                </P2>
                 <br />
                 <br />
-                See the <Ul2>exact answer highlighted</Ul2> without typing a
-                thing.
-              </P2>
-            </main>
-            <br />
-            <div $$flex />
-            <div $$flex />
-            <div $$flex />
-            <Callout css={{ width: 460, marginLeft: 80 }}>
-              <P size={1.2} fontWeight={800}>
-                The Result
-              </P>
-              <P2 size={2.2} margin={0}>
-                Reduced onboarding time. Less interruptions over small
-                questions.
-              </P2>
-            </Callout>
-            <div $$flex />
-            <illustration>
-              <img
-                src={contextImg}
-                css={{
-                  width: 550,
-                  height: 'auto',
-                  position: 'absolute',
-                  top: 125,
-                  right: -78,
-                  zIndex: 0,
-                }}
-              />
-            </illustration>
+                <br />
+                <Callout css={{ width: 460, left: -80 }}>
+                  <P size={1.2} fontWeight={800}>
+                    The Result
+                  </P>
+                  <P2 size={2.2} margin={0}>
+                    Reduced onboarding time. Less interruptions over small
+                    questions.
+                  </P2>
+                </Callout>
+              </inner>
+            </rightSide>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
@@ -816,9 +857,17 @@ class Section5 {
   }
 
   static style = {
-    main: {
-      width: 450,
+    rightSide: {
+      zIndex: 3,
       flex: 1,
+      position: 'absolute',
+      left: '51%',
+      right: 0,
+      bottom: 100,
+    },
+    inner: {
+      // alignSelf: 'center',
+      display: 'block',
     },
   }
 }
@@ -842,7 +891,6 @@ class Section6 {
               <br />
               <br />
               <P2 size={2.2}>
-                Orbit is an entire intranet solution, without any install.
                 Inspired by solutions like <Ul>Stripe Home</Ul>, we wanted to
                 deliver a beautiful and practical home base for your company.
               </P2>

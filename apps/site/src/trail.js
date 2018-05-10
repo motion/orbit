@@ -2,6 +2,8 @@ import * as React from 'react'
 import PropTypes from 'prop-types'
 import { Spring, config as springConfig } from 'react-spring'
 
+const sleep = ms => new Promise(res => setTimeout(res, ms))
+
 export default class Trail extends React.PureComponent {
   static propTypes = {
     native: PropTypes.bool,
@@ -21,11 +23,26 @@ export default class Trail extends React.PureComponent {
     ]),
   }
 
+  state = {
+    hold: false,
+  }
+
   getValues() {
     return this.instance && this.instance.getValues()
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { delay, children } = this.props
+    if (delay) {
+      this.setState({ hold: children.map(() => true) })
+      const delays = Array.isArray(delay) ? delay : children.map(() => delay)
+      for (const [index, delay] of delays.entries()) {
+        await sleep(delay)
+        const hold = [...this.state.hold]
+        hold[index] = false
+        this.setState({ hold })
+      }
+    }
     this.instance && this.instance.flush()
   }
 
@@ -41,10 +58,12 @@ export default class Trail extends React.PureComponent {
       to = {},
       native = false,
       config = springConfig.default,
+      getProps,
       keys,
       onRest,
       ...extra
     } = this.props
+    console.log('this.state.hold', this.state.hold)
     const animations = new Set()
     const hook = (index, animation) => {
       animations.add(animation)
@@ -67,6 +86,8 @@ export default class Trail extends React.PureComponent {
           attach={attachedHook}
           render={render && child}
           children={render ? children : child}
+          hold={!this.state.hold ? true : this.state.hold[i]}
+          {...(getProps ? getProps(i) : null)}
         />
       )
     })

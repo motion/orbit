@@ -2,14 +2,8 @@ import * as React from 'react'
 import CountUp from 'react-countup'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import {
-  Keyframes,
-  Trail,
-  Spring,
-  animated,
-  config,
-  interpolate,
-} from 'react-spring'
+import Trail from '~/trail'
+import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 // import Trail from '~/trail'
 import {
   DropboxIcon,
@@ -63,31 +57,20 @@ export default class HeaderIllustration extends React.Component {
       from: { scale: 1, opacity: 0, y: 0 },
       to: { scale: 1, opacity: 0, y: 0 },
     })
-    await sleep(1000)
-    this.setState({ bounceSlack: true })
+    await sleep(800)
     await this.chats(Trail, {
       from: { opacity: 0, y: -20 },
       to: { opacity: 1, y: 0 },
-      config: config.slow,
+      config: { tension: 100, friction: 20 },
+      delay: [650, 650, 650, 650, 650],
     })
-    setTimeout(() => {
-      this.setState({ bounceDropbox: true })
-    }, 300)
-    setTimeout(() => {
-      this.setState({ bounceMail: true })
-    }, 800)
-    setTimeout(() => {
-      this.setState({ bounceDrive: true })
-    }, 900)
-    setTimeout(() => {
-      this.setState({ bounceGithub: true })
-    }, 950)
-    await sleep(500)
+    await sleep(5000)
+    this.bounceIcons()
     this.chatFrame(Spring, {
       to: { scale: 0.3, opacity: 1, y: -200 },
       config: config.slow,
     })
-    await sleep(1000)
+    await sleep(2000)
     this.setState({
       bounceSlack: false,
       bounceDropbox: false,
@@ -110,6 +93,22 @@ export default class HeaderIllustration extends React.Component {
       from: { opacity: 0 },
       to: { opacity: 1 },
     })
+  }
+
+  bounceIcons = async () => {
+    this.setState({ bounceSlack: true })
+    setTimeout(() => {
+      this.setState({ bounceDropbox: true })
+    }, 200)
+    setTimeout(() => {
+      this.setState({ bounceMail: true })
+    }, 300)
+    setTimeout(() => {
+      this.setState({ bounceDrive: true })
+    }, 600)
+    setTimeout(() => {
+      this.setState({ bounceGithub: true })
+    }, 450)
   }
 
   render() {
@@ -350,13 +349,8 @@ export default class HeaderIllustration extends React.Component {
     },
     bouncy: {
       transition: 'all ease-in 100ms',
-      animation: 'bounceIn 1s infinite',
-      // animationDuration: '1s',
-      // animationFillMode: 'both',
+      animation: 'bounceIn 3s',
       transformOrigin: 'center bottom',
-      // transform: {
-      //   scale: 2,
-      // },
     },
     icon: {
       transition: 'all ease-in 500ms',

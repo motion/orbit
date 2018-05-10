@@ -99,8 +99,8 @@ const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const P2 = props => <P size={2} alpha={0.8} margin={[0, 0, 20]} {...props} />
 const Ul = view('span', {
   display: 'inline-block',
-  borderBottom: [4, 'rgba(136, 231, 234, 0.9)'],
-  marginBottom: -4,
+  borderBottom: [3, 'rgba(136, 231, 234, 0.9)'],
+  marginBottom: -3,
 })
 
 @view
@@ -188,6 +188,11 @@ class Header {
           />
           <top $$row>
             <BrandLogo />
+            <div $$flex />
+            <P size={1.2}>
+              <Ul>Customer Success</Ul> &middot; <Ul>No install</Ul> &middot;{' '}
+              <Ul>Buy</Ul>
+            </P>
           </top>
           <div $$flex />
           <Callout css={{ width: '57%', margin: [-80, 0, 0, -34] }}>
@@ -207,25 +212,11 @@ class Header {
               </span>{' '}
               Company news, search and more, right on your OS. 3 minute install.
             </P>
-            <P if={false} size={1.2}>
-              <Ul>Learn how Orbit makes your OS smart</Ul>
-            </P>
           </Callout>
 
           <div $$flex />
 
           <rightSide>
-            <top
-              css={{
-                position: 'absolute',
-                top: 40,
-                right: 0,
-                height: 150,
-                alignItems: 'center',
-              }}
-            >
-              <PurchaseButton />
-            </top>
             <HeaderIllustration />
           </rightSide>
         </V.SectionContent>
@@ -240,6 +231,8 @@ class Header {
     },
     top: {
       flexFlow: 'row',
+      zIndex: 100,
+      position: 'relative',
     },
     brandMark: {
       alignSelf: 'flex-end',
@@ -760,8 +753,8 @@ class Section6 {
               <br />
               <br />
               <P2 size={2.2}>
-                Inspired by solutions like <Ul>Stripe Home</Ul>, we wanted to
-                deliver a beautiful and practical home base for your company.
+                Inspired by solutions like <Ul>Stripe Home</Ul>, we made a
+                beautiful, practical home for your company.
               </P2>
               <br />
               <P size={1.2} fontWeight={700}>
@@ -772,30 +765,29 @@ class Section6 {
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.6}>
-                    <strong>Daily heads up</strong>. Unified notification as a
-                    newspaper, minus the noise and summarized.
+                    <strong>Heads up</strong>. Unified personal news, minus the
+                    noise.
                   </P>
                 </li>
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.6}>
-                    <strong>Directory</strong>. Beautiful profiles with relevant
-                    recent activity of all co-workers, automatically.
+                    <strong>Directory</strong>. Beautiful smart profiles of your
+                    team.
                   </P>
                 </li>
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.6}>
-                    <strong>Intelligent search</strong> of everything you do:
-                    Slack, your files, tickets, and more.
+                    <strong>Search</strong> everything: Slack, your files,
+                    tickets, and more.
                   </P>
                 </li>
                 <li>
                   <UI.Icon $icon name="check" size={20} color="green" />
                   <P size={1.6}>
-                    <strong>Realtime answers</strong>. As you compute, hold{' '}
-                    <Cmd>Option</Cmd> in any app. Ultra fast OCR uses your
-                    screen to provide contextual answers.
+                    <strong>Answers</strong>. As you compute, hold{' '}
+                    <Cmd>Option</Cmd> to see context in any app.
                   </P>
                 </li>
               </ul>

@@ -8,8 +8,7 @@ import contextImg from '~/../public/screen-context.png'
 import personImage from '~/../public/screen-person.png'
 import wordImage from '~/../public/word.png'
 import Observer from '@researchgate/react-intersection-observer'
-import { Spring, animated } from 'react-spring'
-import Trail from '~/trail'
+import { Trail, Spring, animated } from 'react-spring'
 import HeaderIllustration from './headerIllustration'
 import { MailIcon } from '~/views/icons'
 
@@ -22,7 +21,9 @@ const RightSide = ({ children, inverse, ...props }) => (
       left: '50%',
       right: 0,
       bottom: 90,
-      paddingRight: 30,
+      top: 90,
+      paddingRight: 20,
+      justifyContent: 'center',
     }}
     {...props}
   >
@@ -363,6 +364,7 @@ class Section2 extends React.Component {
   }
 
   handleIntersect = ({ isIntersecting }) => {
+    console.log('NOTIFS INTERS', isIntersecting)
     if (!isIntersecting) {
       return
     }
@@ -404,46 +406,46 @@ class Section2 extends React.Component {
             <UI.Theme name="light">
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -20 }}>
-                  <P fontWeight={600} size={4} margin={[0, 0, 35]}>
-                    Slack's great,<br /> but it's an<br />
+                  <P fontWeight={500} size={4} margin={[0, 0, 35]}>
+                    Your cloud has turned into an{' '}
                     <span $noisy>
                       echo chamber<WavyLine height={3600} $line />
                     </span>
                   </P>
-                  <P size={2.2}>How Orbit organizes your cloud</P>
+                  <P size={2.2}>How Orbit organizes your org.</P>
                   <br />
-                  <P size={2}>
+                  <P size={1.8}>
                     It starts by unifying all your integrations natively on your
                     Mac. Then, it upgrades your spotlight with beautiful daily
                     news, custom to what you care about.
                   </P>
                   <br />
                   <P size={1.8}>
-                    Orbit simplifies your company organization, removing the
-                    noise and letting you focus more and get interrupted less.
+                    We want to remove the noise and let your team focus on what
+                    matters, while not missing out on what's important.
                   </P>
                 </main>
               </Observer>
-              <rightSection
+              <quote
                 css={{
                   width: 500,
-                  // margin: [0, 0, -20],
-                  alignItems: 'flex-end',
+                  // margin: [-20, 0, 0],
+                  // alignItems: 'flex-end',
                   textAlign: 'right',
                 }}
               >
                 <P size={4} fontWeight={200} color={brandColor}>
-                  pull,<br />
-                  <span css={{ marginRight: -5 }}>instead of</span>
+                  Pull,<br />
+                  <span css={{ marginRight: -4 }}>instead of</span>
                   <br />
-                  <span css={{ marginRight: -10 }}>getting pushed</span>
+                  <span css={{ marginRight: -8 }}>being pushed</span>
                 </P>
                 <P if={false} size={2}>
                   Give it a pull&nbsp; 👈
                 </P>
                 <br />
                 <br />
-              </rightSection>
+              </quote>
             </UI.Theme>
             <notifications>
               <Trail
@@ -633,7 +635,7 @@ class Section4 {
             </Callout>
             <div $$flex />
             <RightSide inverse>
-              <Callout>
+              <Callout css={{ margin: [40, 0, 40, 0], left: -70 }}>
                 <P size={1.2} fontWeight={800}>
                   Automatic Profiles
                 </P>

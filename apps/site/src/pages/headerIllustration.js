@@ -38,6 +38,16 @@ const Badge = view('div', {
   boxShadow: '0 0 5px rgba(0,0,0,0.5)',
 })
 
+const Count = ({ active, ...props }) =>
+  active ? <CountUp {...props} /> : props.start
+
+const CountBadge = props =>
+  props.active ? (
+    <Badge>
+      <Count {...props} />
+    </Badge>
+  ) : null
+
 @view
 export default class HeaderIllustration extends React.Component {
   state = {
@@ -55,6 +65,12 @@ export default class HeaderIllustration extends React.Component {
     })
     await sleep(1000)
     this.setState({ bounceSlack: true })
+    await this.chats(Trail, {
+      from: { opacity: 0, y: -20 },
+      to: { opacity: 1, y: 0 },
+      config: config.slow,
+    })
+    await sleep(500)
     setTimeout(() => {
       this.setState({ bounceDropbox: true })
     }, 300)
@@ -66,13 +82,7 @@ export default class HeaderIllustration extends React.Component {
     }, 900)
     setTimeout(() => {
       this.setState({ bounceGithub: true })
-    }, 1200)
-    await this.chats(Trail, {
-      from: { opacity: 0, y: -20 },
-      to: { opacity: 1, y: 0 },
-      config: config.slow,
-    })
-    await sleep(500)
+    }, 950)
     this.chatFrame(Spring, {
       to: { scale: 0.3, opacity: 1, y: -200 },
       config: config.slow,
@@ -183,12 +193,10 @@ export default class HeaderIllustration extends React.Component {
               bottom: 15,
               right: 0,
               left: 0,
-              alignItems: 'flex-end',
-              justifyContent: 'space-between',
-              flexFlow: 'row',
               background: '#f9f9f9',
               borderTopRadius: 10,
               padding: [0, 20, 10],
+              height: 100,
               boxShadow: '0 0 10px rgba(0,0,0,0.1)',
               border: [1, '#ddd'],
               transform: {
@@ -206,53 +214,80 @@ export default class HeaderIllustration extends React.Component {
                 background: 'linear-gradient(transparent, #fff)',
               }}
             />
-            <DropboxIcon
-              $bouncy={this.state.bounceDropbox}
-              size={0.13}
-              after={
-                <Badge>
-                  <CountUp duration={15} start={1} end={22} />
-                </Badge>
-              }
-            />
-            <DriveIcon
-              $bouncy={this.state.bounceDrive}
-              size={0.16}
-              after={
-                <Badge>
-                  <CountUp duration={15} start={2} end={12} />
-                </Badge>
-              }
-            />
-            <SlackIcon
-              size={0.18}
-              $bouncy={this.state.bounceSlack}
-              after={
-                <Badge>
-                  <CountUp duration={15} start={1} end={122} />
-                </Badge>
-              }
-            />
-            <MailIcon
-              $bouncy={this.state.bounceMail}
-              size={0.16}
-              after={
-                <Badge>
-                  <CountUp duration={15} start={0} end={3} />
-                </Badge>
-              }
-            />
-            <GithubIcon
-              $bouncy={this.state.bounceGithub}
-              size={0.13}
-              after={
-                <Badge>
-                  <CountUp duration={15} start={0} end={12} />
-                </Badge>
-              }
-            />
           </dock>
         </dockContain>
+        <dockIcons
+          css={{
+            position: 'absolute',
+            bottom: 120,
+            left: 40,
+            right: -10,
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            flexFlow: 'row',
+          }}
+        >
+          <DropboxIcon
+            $bouncy={this.state.bounceDropbox}
+            size={0.13}
+            after={
+              <CountBadge
+                active={this.state.bounceDropbox}
+                duration={15}
+                start={0}
+                end={22}
+              />
+            }
+          />
+          <DriveIcon
+            $bouncy={this.state.bounceDrive}
+            size={0.16}
+            after={
+              <CountBadge
+                active={this.state.bounceDrive}
+                duration={15}
+                start={0}
+                end={12}
+              />
+            }
+          />
+          <SlackIcon
+            size={0.18}
+            $bouncy={this.state.bounceSlack}
+            after={
+              <CountBadge
+                active={this.state.bounceSlack}
+                duration={15}
+                start={0}
+                end={122}
+              />
+            }
+          />
+          <MailIcon
+            $bouncy={this.state.bounceMail}
+            size={0.16}
+            after={
+              <CountBadge
+                active={this.state.bounceMail}
+                duration={15}
+                start={0}
+                end={3}
+              />
+            }
+          />
+          <GithubIcon
+            $bouncy={this.state.bounceGithub}
+            size={0.13}
+            after={
+              <CountBadge
+                active={this.state.bounceGithub}
+                duration={15}
+                start={0}
+                end={12}
+              />
+            }
+          />
+        </dockIcons>
       </headerIll>
     )
   }

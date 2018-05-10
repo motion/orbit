@@ -142,21 +142,37 @@ class Header {
       <V.Section css={{ background: '#fff' }}>
         <V.SectionContent padded fullscreen>
           <V.Slant rightBackground="#fff" />
-          <glow
+          <glowContain
             css={{
-              top: '35%',
-              left: '20%',
-              zIndex: 0,
               position: 'absolute',
-              background: '#CCCEF1',
-              width: 400,
-              height: 300,
-              borderRadius: 100,
-              filter: {
-                blur: 150,
+              top: -200,
+              left: 0,
+              bottom: 0,
+              right: '50%',
+              zIndex: 0,
+              overflow: 'hidden',
+              transform: {
+                rotate: '5deg',
               },
             }}
-          />
+          >
+            <glow
+              css={{
+                position: 'absolute',
+                top: '42%',
+                right: 0,
+                marginRight: -100,
+                background: '#CCCEF1',
+                width: 400,
+                height: 350,
+                borderRadius: 100,
+                opacity: 0.7,
+                filter: {
+                  blur: 150,
+                },
+              }}
+            />
+          </glowContain>
           <bgTest
             css={{
               position: 'absolute',
@@ -175,9 +191,9 @@ class Header {
             <BrandLogo />
           </top>
           <div $$flex />
-          <Callout css={{ margin: [-80, -34, 0] }}>
+          <Callout css={{ margin: [-80, 0, 0, -34] }}>
             <P size={1.9} fontWeight={800} color={'#000' || brandColor}>
-              Your company is growing...
+              Your company is growing
             </P>
             <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
               Make it easy to understand what's going on.
@@ -187,14 +203,13 @@ class Header {
               css={{ margin: [15, 40], height: 3, background: '#f2f2f2' }}
             />
             <P size={2} alpha={0.75} margin={[5, 0, 25]}>
-              <span css={{ color: '#000' }}>
+              <span if={false} css={{ color: '#000' }}>
                 A cloudless solution to organizing your cloud.
               </span>{' '}
               Personalized company news and more, baked into your OS. Just 3
               minutes to install.
             </P>
-            <br />
-            <P size={1.2}>
+            <P if={false} size={1.2}>
               <Ul>Learn how Orbit makes your OS smart</Ul>
             </P>
           </Callout>
@@ -363,31 +378,31 @@ class Section2 extends React.Component {
             />
             <UI.Theme name="light">
               <Observer onChange={this.handleIntersect}>
-                <main css={{ marginTop: -50 }}>
-                  <P fontWeight={600} size={4.4} margin={[0, 0, 40]}>
-                    Slack is great but it has a{' '}
+                <main css={{ marginTop: -20 }}>
+                  <P fontWeight={600} size={4} margin={[0, 0, 25]}>
+                    Slack is great,<br /> but it's too{' '}
                     <span $noisy>
-                      noise<WavyLine height={1500} $line />
-                    </span>{' '}
-                    problem
+                      noisy<WavyLine height={1500} $line />
+                    </span>
                   </P>
-                  <P size={2.4}>
-                    You use the best tool for the job. But that leaves you
-                    without high level organization.
-                  </P>
-                  <br />
-                  <P size={1.8}>
-                    Not to mention all those{' '}
-                    <Ul2 style={{}}>damn notifications</Ul2>.
-                  </P>
-                  <br />
-                  <P size={1.8} alpha={0.8}>
-                    Orbit unifies your cloud into a personal newspaper. Then it
-                    shows if you're missing something while you work.<br />
+                  <P size={2.2}>
+                    Orbit unifies cloud services and provides you with
+                    distraction-free news, right on your desktop.
                   </P>
                   <br />
                   <P size={1.8}>
-                    Kill the noise with <Cmd>⌘+Space</Cmd>.
+                    It starts by upgrading your spotlight. Your{' '}
+                    <Cmd>⌘+Space</Cmd> now has intelligence, showing relevant
+                    updates from chat, email and across your cloud.
+                  </P>
+                  <br />
+                  <P size={1.8} color={brandColor}>
+                    Let your team turn down notifications focus on what matters.
+                  </P>
+                  <br />
+                  <P size={1.8}>
+                    Powered by private on-device machine learning and a layer
+                    that runs right on your OS. Letting you
                   </P>
                   <div $$flex />
                 </main>
@@ -401,7 +416,7 @@ class Section2 extends React.Component {
                 }}
               >
                 <P size={4} fontWeight={200} color={brandColor}>
-                  Pull,<br />
+                  pull,<br />
                   <span css={{ marginRight: -5 }}>instead of</span>
                   <br />
                   <span css={{ marginRight: -10 }}>getting pushed</span>
@@ -540,23 +555,21 @@ class Section3 extends React.Component {
                   }}
                 />
                 <P size={3} fontWeight={800}>
-                  Your Mac, upgraded
+                  Upgrade your OS
                 </P>
                 <br />
                 <P2 size={2.2}>
-                  Orbit upgrades your OS with a smart sidebar that keeps your
-                  team in sync.
+                  In any app, hold option and see realtime relevant items.
                 </P2>
                 <br />
                 <P2 size={1.8}>
-                  At any time just hold your Option key. Whether writing an
-                  email or chatting with a customer, you'll see contextually
-                  relevant answers in realtime.
+                  Whether writing an email or chatting with a customer, you'll
+                  see contextually relevant answers in realtime.
                 </P2>
                 <br />
                 <br />
                 <P2 size={2} color={brandColor}>
-                  Try holding <Cmd>Option</Cmd> now.
+                  <strong>Demo:</strong> try holding <Cmd>Option</Cmd> now.
                 </P2>
               </inner>
             </rightSide>

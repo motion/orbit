@@ -364,7 +364,7 @@ class Section2 extends React.Component {
             <UI.Theme name="light">
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -50 }}>
-                  <P fontWeight={600} size={4.4} margin={[0, 0, 46]}>
+                  <P fontWeight={600} size={4.4} margin={[0, 0, 40]}>
                     Slack is great but it has a{' '}
                     <span $noisy>
                       noise<WavyLine height={1500} $line />
@@ -381,14 +381,13 @@ class Section2 extends React.Component {
                     <Ul2 style={{}}>damn notifications</Ul2>.
                   </P>
                   <br />
-                  <P size={1.6}>
-                    Orbit starts by unifying your integrations. Then it sorts
-                    them daily into a personal newspaper. It even shows you if
-                    you're missing something, while you work.<br />
+                  <P size={1.8} alpha={0.8}>
+                    Orbit unifies your cloud into a personal newspaper. Then it
+                    shows if you're missing something while you work.<br />
                   </P>
                   <br />
                   <P size={1.8}>
-                    The result? Kill the noise with <Cmd>⌘+Space</Cmd>.
+                    Kill the noise with <Cmd>⌘+Space</Cmd>.
                   </P>
                   <div $$flex />
                 </main>
@@ -396,7 +395,7 @@ class Section2 extends React.Component {
               <rightSection
                 css={{
                   width: 500,
-                  margin: [0, 0, -20],
+                  // margin: [0, 0, -20],
                   alignItems: 'flex-end',
                   textAlign: 'right',
                 }}
@@ -541,19 +540,20 @@ class Section3 extends React.Component {
                   }}
                 />
                 <P size={3} fontWeight={800}>
-                  Your Mac, upgraded.
+                  Your Mac, upgraded
                 </P>
                 <br />
                 <P2 size={2.2}>
-                  Orbit upgrades your OS with a smart sidebar. That means some
-                  pretty big upsides to how you operate.
+                  Orbit upgrades your OS with a smart sidebar that keeps your
+                  team in sync.
                 </P2>
                 <br />
-                <P2 size={2}>
+                <P2 size={1.8}>
                   At any time just hold your Option key. Whether writing an
                   email or chatting with a customer, you'll see contextually
                   relevant answers in realtime.
                 </P2>
+                <br />
                 <br />
                 <P2 size={2} color={brandColor}>
                   Try holding <Cmd>Option</Cmd> now.

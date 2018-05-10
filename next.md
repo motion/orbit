@@ -1,20 +1,7 @@
 ## website
 
-* add section to explain featureset before going into specifics
-
-sections:
-
-1.  header/intro
-2.  problem/solution (home)
-3.  problem/solution (context)
-4.  scenario 1 (context)
-5.  scenario 2 (home)
-6.  vision (home/unity)
-7.  security/buynow
-8.  footer
-
-design ideas:
-
+* header animation
+* context bar should be black themed at least in website examples
 * fun colorful/playful pieces that interact with the stripe
   * peek out from behind / go over
   * could be ribbons, bubbles, splotches, clouds, characters
@@ -24,7 +11,7 @@ design ideas:
 * better pitch organizational people features (lattice)
 * feature chart (diamond.io)
 
-## now
+## app
 
 * masonry renders orbit cards twice
 * profiles design iteration

@@ -1,6 +1,14 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Keyframes, Trail, Spring, animated, config } from 'react-spring'
+import * as UI from '@mcro/ui'
+import {
+  Keyframes,
+  Trail,
+  Spring,
+  animated,
+  config,
+  interpolate,
+} from 'react-spring'
 // import Trail from '~/trail'
 import {
   DropboxIcon,
@@ -10,6 +18,7 @@ import {
   GithubIcon,
 } from '~/views/icons'
 
+const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const Badge = view('div', {
@@ -32,19 +41,29 @@ const Badge = view('div', {
 export default class HeaderIllustration {
   async componentDidMount() {
     await this.chatFrame(Spring, {
-      from: { scale: 1, opacity: 0 },
-      to: { scale: 1, opacity: 0 },
+      from: { scale: 1, opacity: 0, y: 0 },
+      to: { scale: 1, opacity: 0, y: 0 },
     })
     await sleep(1000)
     await this.chats(Trail, {
       from: { opacity: 0, y: -20 },
       to: { opacity: 1, y: 0 },
-      // config: config.slow
+      config: config.slow,
     })
     await sleep(500)
+    this.chatFrame(Spring, {
+      to: { scale: 0.3, opacity: 1, y: -200 },
+      config: config.slow,
+    })
+    await sleep(1000)
     await this.chatFrame(Spring, {
-      from: { scale: 1, opacity: 0 },
-      to: { scale: 0.4, opacity: 1 },
+      to: { scale: 0.2, opacity: 0.3, y: -500 },
+      config: config.slow,
+    })
+    await sleep(200)
+    await this.chatText(Spring, {
+      from: { opacity: 0 },
+      to: { opacity: 1 },
     })
   }
 
@@ -61,41 +80,57 @@ export default class HeaderIllustration {
       <headerIll>
         <chats>
           <Keyframes native script={next => (this.chatFrame = next)}>
-            {({ scale, opacity }) => (
-              <animated.div
-                style={{
-                  // transformOrigin: 'top center',
-                  transform: scale.interpolate(scale => `scale(${scale})`),
-                }}
-              >
-                <Keyframes
-                  native
-                  keys={chats.map((_, i) => i)}
-                  script={next => (this.chats = next)}
-                >
-                  {chats.map(chat => ({ y, opacity }) => (
-                    <animated.div
-                      style={{
-                        opacity,
-                        transform: y.interpolate(y => `translate3d(0,${y}%,0)`),
-                      }}
-                    >
-                      {chat}
-                    </animated.div>
-                  ))}
-                </Keyframes>
+            {({ scale, opacity, y }) => {
+              console.log('okk', y._value)
+              return (
                 <animated.div
                   style={{
-                    opacity,
-                    height: opacity._value === 0 ? 0 : 500,
+                    transform: interpolate(
+                      [scale, y],
+                      (scale, y) => `translate3d(0,${y}px,0) scale(${scale})`,
+                    ),
                   }}
                 >
-                  {chats.map(chat => chat)}
-                  {chats.map(chat => chat)}
-                  {chats.map(chat => chat)}
-                  {chats.map(chat => chat)}
-                  {chats.map(chat => chat)}
+                  <Keyframes
+                    native
+                    keys={chats.map((_, i) => i)}
+                    script={next => (this.chats = next)}
+                  >
+                    {chats.map(chat => ({ y, opacity }) => (
+                      <animated.div
+                        style={{
+                          opacity,
+                          transform: y.interpolate(
+                            y => `translate3d(0,${y}%,0)`,
+                          ),
+                        }}
+                      >
+                        {chat}
+                      </animated.div>
+                    ))}
+                  </Keyframes>
+                  <animated.div
+                    style={{
+                      opacity,
+                      height: opacity._value === 0 ? 0 : 500,
+                    }}
+                  >
+                    {chats.map(chat => chat)}
+                    {chats.map(chat => chat)}
+                    {chats.map(chat => chat)}
+                    {chats.map(chat => chat)}
+                    {chats.map(chat => chat)}
+                  </animated.div>
                 </animated.div>
+              )
+            }}
+          </Keyframes>
+          <Keyframes native script={next => (this.chatText = next)}>
+            {({ opacity }) => (
+              <animated.div style={{ opacity }}>
+                <message>
+                  <P size={1.2}>It's time things made more sense.</P>
+                </message>
               </animated.div>
             )}
           </Keyframes>
@@ -181,6 +216,14 @@ export default class HeaderIllustration {
       alignSelf: 'flex-start',
       borderBottomRightRadius: 10,
       borderBottomLeftRadius: 0,
+    },
+    message: {
+      position: 'absolute',
+      bottom: 400,
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   }
 }

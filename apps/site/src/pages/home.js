@@ -206,8 +206,7 @@ class Header {
               <span if={false} css={{ color: '#000' }}>
                 A cloudless solution to organizing your cloud.
               </span>{' '}
-              Personalized company news and more, baked into your OS. Just 3
-              minutes to install.
+              Company news, search and more, right on your OS. 3 minute install.
             </P>
             <P if={false} size={1.2}>
               <Ul>Learn how Orbit makes your OS smart</Ul>
@@ -380,29 +379,31 @@ class Section2 extends React.Component {
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -20 }}>
                   <P fontWeight={600} size={4} margin={[0, 0, 25]}>
-                    Slack is great,<br /> but it's too{' '}
+                    Your #general:<br /> a lot of{' '}
                     <span $noisy>
-                      noisy<WavyLine height={1500} $line />
+                      noise<WavyLine height={1400} $line />
                     </span>
                   </P>
+                  <P2 size={2.2}>How Orbit simplifies your day.</P2>
                   <P size={2.2}>
-                    Orbit unifies cloud services and provides you with
-                    distraction-free news, right on your desktop.
+                    Orbit unifies the cloud locally to your Mac, as though it
+                    were native. Then it uses on-device ML to keep you
+                    intelligently informed.
                   </P>
+                  <br />
+                  <P size={1.8}>That means more time for you to focus.</P>
                   <br />
                   <P size={1.8}>
-                    It starts by upgrading your spotlight. Your{' '}
-                    <Cmd>⌘+Space</Cmd> now has intelligence, showing relevant
-                    updates from chat, email and across your cloud.
-                  </P>
-                  <br />
-                  <P size={1.8} color={brandColor}>
-                    Let your team turn down notifications focus on what matters.
-                  </P>
-                  <br />
-                  <P size={1.8}>
-                    Powered by private on-device machine learning and a layer
-                    that runs right on your OS. Letting you
+                    It upgrades spotlight and
+                    <Cmd>⌘+Space</Cmd> to show a beautiful daily heads up with
+                    intelligent search so you can{' '}
+                    <P
+                      size={1.8}
+                      color={brandColor}
+                      css={{ display: 'inline' }}
+                    >
+                      turn down notifications & focus.
+                    </P>
                   </P>
                   <div $$flex />
                 </main>
@@ -555,16 +556,19 @@ class Section3 extends React.Component {
                   }}
                 />
                 <P size={3} fontWeight={800}>
-                  Upgrade your OS
+                  Everywhere it matters.
                 </P>
                 <br />
                 <P2 size={2.2}>
-                  In any app, hold option and see realtime relevant items.
+                  Your company knowledge should not just be on demand. In order
+                  to truly let you focus and stay in sync, we went one step
+                  further and integrated it with any app.
                 </P2>
                 <br />
                 <P2 size={1.8}>
-                  Whether writing an email or chatting with a customer, you'll
-                  see contextually relevant answers in realtime.
+                  Whether writing an email or chatting with a customer, a tap of
+                  a button lets you see contextually relevant answers in
+                  realtime.
                 </P2>
                 <br />
                 <br />

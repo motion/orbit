@@ -70,7 +70,6 @@ export default class HeaderIllustration extends React.Component {
       to: { opacity: 1, y: 0 },
       config: config.slow,
     })
-    await sleep(500)
     setTimeout(() => {
       this.setState({ bounceDropbox: true })
     }, 300)
@@ -83,6 +82,7 @@ export default class HeaderIllustration extends React.Component {
     setTimeout(() => {
       this.setState({ bounceGithub: true })
     }, 950)
+    await sleep(500)
     this.chatFrame(Spring, {
       to: { scale: 0.3, opacity: 1, y: -200 },
       config: config.slow,
@@ -98,6 +98,13 @@ export default class HeaderIllustration extends React.Component {
     await this.chatFrame(Spring, {
       to: { scale: 0.2, opacity: 0.3, y: -500 },
       config: config.slow,
+    })
+    this.setState({
+      leaveSlack: true,
+      leaveDropbox: true,
+      leaveMail: true,
+      leaveDrive: true,
+      leaveGithub: true,
     })
     await this.chatText(Spring, {
       from: { opacity: 0 },
@@ -228,7 +235,9 @@ export default class HeaderIllustration extends React.Component {
           }}
         >
           <DropboxIcon
+            $icon
             $bouncy={this.state.bounceDropbox}
+            $leave={this.state.leaveDropbox}
             size={0.13}
             after={
               <CountBadge
@@ -240,7 +249,9 @@ export default class HeaderIllustration extends React.Component {
             }
           />
           <DriveIcon
+            $icon
             $bouncy={this.state.bounceDrive}
+            $leave={this.state.leaveDrive}
             size={0.16}
             after={
               <CountBadge
@@ -253,7 +264,9 @@ export default class HeaderIllustration extends React.Component {
           />
           <SlackIcon
             size={0.18}
+            $icon
             $bouncy={this.state.bounceSlack}
+            $leave={this.state.leaveSlack}
             after={
               <CountBadge
                 active={this.state.bounceSlack}
@@ -264,7 +277,9 @@ export default class HeaderIllustration extends React.Component {
             }
           />
           <MailIcon
+            $icon
             $bouncy={this.state.bounceMail}
+            $leave={this.state.leaveMail}
             size={0.16}
             after={
               <CountBadge
@@ -276,7 +291,9 @@ export default class HeaderIllustration extends React.Component {
             }
           />
           <GithubIcon
+            $icon
             $bouncy={this.state.bounceGithub}
+            $leave={this.state.leaveGithub}
             size={0.13}
             after={
               <CountBadge
@@ -340,6 +357,15 @@ export default class HeaderIllustration extends React.Component {
       // transform: {
       //   scale: 2,
       // },
+    },
+    icon: {
+      transition: 'all ease-in 500ms',
+    },
+    leave: {
+      opacity: 0,
+      transform: {
+        y: 200,
+      },
     },
   }
 }

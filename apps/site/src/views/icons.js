@@ -6,8 +6,19 @@ import dropboxIcon from '~/../public/dropbox.svg'
 import mailIcon from '~/../public/mail.svg'
 import githubIcon from '~/../public/github.svg'
 
-export const Icon = ({ size, icon, scale = 1, after, transform, ...props }) => (
-  <div css={{ position: 'relative', width: size * 512, height: size * 512 }}>
+export const Icon = ({
+  size,
+  icon,
+  scale = 1,
+  after,
+  transform,
+  style,
+  ...props
+}) => (
+  <div
+    css={{ position: 'relative', width: size * 512, height: size * 512 }}
+    style={style}
+  >
     <SVGInline
       cleanup
       svg={icon}

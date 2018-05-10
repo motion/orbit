@@ -1,4 +1,5 @@
 import * as React from 'react'
+import CountUp from 'react-countup'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import {
@@ -38,13 +39,34 @@ const Badge = view('div', {
 })
 
 @view
-export default class HeaderIllustration {
+export default class HeaderIllustration extends React.Component {
+  state = {
+    bounceSlack: false,
+    bounceDropbox: false,
+    bounceMail: false,
+    bounceDrive: false,
+    bounceGithub: false,
+  }
+
   async componentDidMount() {
     await this.chatFrame(Spring, {
       from: { scale: 1, opacity: 0, y: 0 },
       to: { scale: 1, opacity: 0, y: 0 },
     })
     await sleep(1000)
+    this.setState({ bounceSlack: true })
+    setTimeout(() => {
+      this.setState({ bounceDropbox: true })
+    }, 300)
+    setTimeout(() => {
+      this.setState({ bounceMail: true })
+    }, 800)
+    setTimeout(() => {
+      this.setState({ bounceDrive: true })
+    }, 900)
+    setTimeout(() => {
+      this.setState({ bounceGithub: true })
+    }, 1200)
     await this.chats(Trail, {
       from: { opacity: 0, y: -20 },
       to: { opacity: 1, y: 0 },
@@ -56,11 +78,17 @@ export default class HeaderIllustration {
       config: config.slow,
     })
     await sleep(1000)
+    this.setState({
+      bounceSlack: false,
+      bounceDropbox: false,
+      bounceMail: false,
+      bounceDrive: false,
+      bounceGithub: false,
+    })
     await this.chatFrame(Spring, {
       to: { scale: 0.2, opacity: 0.3, y: -500 },
       config: config.slow,
     })
-    await sleep(200)
     await this.chatText(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
@@ -115,6 +143,9 @@ export default class HeaderIllustration {
                       height: opacity._value === 0 ? 0 : 500,
                     }}
                   >
+                    {chats.map(chat => chat)}
+                    {chats.map(chat => chat)}
+                    {chats.map(chat => chat)}
                     {chats.map(chat => chat)}
                     {chats.map(chat => chat)}
                     {chats.map(chat => chat)}
@@ -175,11 +206,51 @@ export default class HeaderIllustration {
                 background: 'linear-gradient(transparent, #fff)',
               }}
             />
-            <DropboxIcon size={0.13} after={<Badge>12</Badge>} />
-            <DriveIcon size={0.16} after={<Badge>5</Badge>} />
-            <SlackIcon size={0.18} after={<Badge>89</Badge>} />
-            <MailIcon size={0.16} after={<Badge>3</Badge>} />
-            <GithubIcon size={0.13} after={<Badge>22</Badge>} />
+            <DropboxIcon
+              $bouncy={this.state.bounceDropbox}
+              size={0.13}
+              after={
+                <Badge>
+                  <CountUp duration={15} start={1} end={22} />
+                </Badge>
+              }
+            />
+            <DriveIcon
+              $bouncy={this.state.bounceDrive}
+              size={0.16}
+              after={
+                <Badge>
+                  <CountUp duration={15} start={2} end={12} />
+                </Badge>
+              }
+            />
+            <SlackIcon
+              size={0.18}
+              $bouncy={this.state.bounceSlack}
+              after={
+                <Badge>
+                  <CountUp duration={15} start={1} end={122} />
+                </Badge>
+              }
+            />
+            <MailIcon
+              $bouncy={this.state.bounceMail}
+              size={0.16}
+              after={
+                <Badge>
+                  <CountUp duration={15} start={0} end={3} />
+                </Badge>
+              }
+            />
+            <GithubIcon
+              $bouncy={this.state.bounceGithub}
+              size={0.13}
+              after={
+                <Badge>
+                  <CountUp duration={15} start={0} end={12} />
+                </Badge>
+              }
+            />
           </dock>
         </dockContain>
       </headerIll>
@@ -224,6 +295,16 @@ export default class HeaderIllustration {
       right: 0,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    bouncy: {
+      transition: 'all ease-in 100ms',
+      animation: 'bounceIn 1s infinite',
+      // animationDuration: '1s',
+      // animationFillMode: 'both',
+      transformOrigin: 'center bottom',
+      // transform: {
+      //   scale: 2,
+      // },
     },
   }
 }

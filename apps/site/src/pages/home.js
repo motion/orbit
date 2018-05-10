@@ -13,6 +13,40 @@ import Trail from '~/trail'
 import HeaderIllustration from './headerIllustration'
 import { MailIcon } from '~/views/icons'
 
+const RightSide = ({ children, inverse, ...props }) => (
+  <rightSide
+    css={{
+      zIndex: 3,
+      flex: 1,
+      position: 'absolute',
+      left: '50%',
+      right: 0,
+      bottom: 90,
+      paddingRight: 30,
+    }}
+    {...props}
+  >
+    <inner
+      css={{
+        alignSelf: 'center',
+        display: 'block',
+      }}
+    >
+      <edge
+        css={{
+          shapeOutside: inverse
+            ? 'polygon(39% 0%, 0% 74px, 117% 1096px)'
+            : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
+          float: 'left',
+          width: 110,
+          height: 720,
+        }}
+      />
+      {children}
+    </inner>
+  </rightSide>
+)
+
 const WavyLine = ({ height, ...props }) => (
   <svg width={60} height={height} {...props}>
     <rect
@@ -527,60 +561,33 @@ class Section3 extends React.Component {
                 </Spring>
               </leftSide>
             </Observer>
-            <rightSide>
-              <inner>
-                <edge
-                  css={{
-                    shapeOutside: 'polygon(0% 0%, 90px 0%, 0% 1096px)',
-                    float: 'left',
-                    width: 110,
-                    height: 720,
-                  }}
-                />
-                <P size={3} fontWeight={800}>
-                  Everywhere it matters.
-                </P>
-                <br />
-                <P2 size={2.2}>
-                  Your company knowledge should augment how you work. In order
-                  to truly upgrade your team, we integrated it with everything
-                  you do.
+            <RightSide>
+              <P size={3} fontWeight={800}>
+                Everywhere it matters.
+              </P>
+              <br />
+              <P2 size={2.2}>
+                Your company knowledge should augment how you work. In order to
+                truly upgrade your team, we integrated it with everything you
+                do.
+              </P2>
+              <br />
+              <P2 size={1.8}>
+                Whether writing an email or chatting with a customer, a tap of a
+                button lets you see contextually relevant answers in realtime.
+              </P2>
+              <br />
+              <br />
+              <Callout>
+                <P2 size={2} color={brandColor}>
+                  <strong>Demo:</strong> hold <Cmd>Option</Cmd> now.
                 </P2>
-                <br />
-                <P2 size={1.8}>
-                  Whether writing an email or chatting with a customer, a tap of
-                  a button lets you see contextually relevant answers in
-                  realtime.
-                </P2>
-                <br />
-                <br />
-                <Callout>
-                  <P2 size={2} color={brandColor}>
-                    <strong>Demo:</strong> hold <Cmd>Option</Cmd> now.
-                  </P2>
-                </Callout>
-              </inner>
-            </rightSide>
+              </Callout>
+            </RightSide>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>
     )
-  }
-
-  static style = {
-    rightSide: {
-      zIndex: 3,
-      flex: 1,
-      position: 'absolute',
-      left: '50%',
-      right: 0,
-      bottom: 90,
-      paddingRight: 30,
-    },
-    inner: {
-      alignSelf: 'center',
-      display: 'block',
-    },
   }
 }
 
@@ -602,10 +609,13 @@ class Section4 {
               </P>
               <P2 size={3}>Reduce workplace interruptions instantly.</P2>
               <P2 size={1.8}>
-                Whether alongside Intercom or Slack, all of your cloud from
-                knowledgebase information to recently closed tickets power live,
-                automatic answers as you chat. See the{' '}
-                <Ul2>exact answer highlighted</Ul2> without typing a thing.
+                Deep work is under assault. Notifications come from all angles,
+                and company knowledge is distributed and unclear.
+              </P2>
+              <P2 size={1.5}>
+                Orbit tackles it in two ways. First, it gives you search with
+                state of the art NLP that learns your company vocabulary and
+                uses it to improve results.
               </P2>
             </main>
             <br />
@@ -614,27 +624,41 @@ class Section4 {
             <div $$flex />
             <Callout css={{ width: 460, marginLeft: 80 }}>
               <P size={1.2} fontWeight={800}>
-                The Result
+                Smarter Search
               </P>
               <P2 size={2.2} margin={0}>
-                Reduced onboarding time. Less interruptions over small
-                questions.
+                Less time wasted finding documents and tickets, and a more
+                accessible knowledgebase.
               </P2>
             </Callout>
             <div $$flex />
-            <illustration>
-              <img
-                src={contextImg}
-                css={{
-                  width: 550,
-                  height: 'auto',
-                  position: 'absolute',
-                  top: 125,
-                  right: -78,
-                  zIndex: 0,
-                }}
-              />
-            </illustration>
+            <RightSide inverse>
+              <Callout>
+                <P size={1.2} fontWeight={800}>
+                  Automatic Profiles
+                </P>
+                <P2 size={2.2} margin={0}>
+                  Less time wasted finding documents and tickets, and a more
+                  accessible knowledgebase.
+                </P2>
+              </Callout>
+
+              <P2 size={1.8}>
+                Everyone is an expert in something, and always on the move.
+              </P2>
+              <P2 size={1.5}>
+                Orbit tackles it in two ways. First, it gives you search with
+                state of the art NLP that learns your company vocabulary and
+                uses it to improve results.
+              </P2>
+
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+            </RightSide>
           </V.SectionContent>
         </V.Section>
       </UI.Theme>

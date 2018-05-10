@@ -370,29 +370,24 @@ class Section2 extends React.Component {
             <UI.Theme name="light">
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -20 }}>
-                  <P fontWeight={600} size={4} margin={[0, 0, 25]}>
-                    Slack works,<br /> but there's too much{' '}
+                  <P fontWeight={600} size={4} margin={[0, 0, 35]}>
+                    Slack's great,<br /> but it's an<br />
                     <span $noisy>
-                      noise<WavyLine height={1400} $line />
+                      echo chamber<WavyLine height={3600} $line />
                     </span>
                   </P>
-                  <P2 size={2.2}>
-                    Step one: unify your integrations native to your Mac.
-                  </P2>
+                  <P size={2.2}>How Orbit organizes your cloud</P>
+                  <br />
                   <P size={2}>
-                    Step two: generate a daily heads up that's targeted to you.
+                    It starts by unifying all your integrations natively on your
+                    Mac. Then, it upgrades your spotlight with beautiful daily
+                    news, custom to what you care about.
                   </P>
                   <br />
                   <P size={1.8}>
                     Orbit simplifies your company organization, removing the
-                    noise. That means more time focusing and less interruptions.
+                    noise and letting you focus more and get interrupted less.
                   </P>
-                  <br />
-                  <P size={1.8}>
-                    It works by upgrading spotlight with beautiful daily news on
-                    your <Cmd>⌘+Space</Cmd>.
-                  </P>
-                  <div $$flex />
                 </main>
               </Observer>
               <rightSection

@@ -32,6 +32,28 @@ const Badge = view('div', {
   boxShadow: '0 0 5px rgba(0,0,0,0.5)',
 })
 
+const Bubble = view(
+  'div',
+  {
+    border: [2, '#777'],
+    background: '#fff',
+    fontSize: 16,
+    borderRadius: 15,
+    padding: 10,
+    marginBottom: 10,
+    borderBottomRightRadius: 0,
+    alignSelf: 'flex-end',
+    pointerEvents: 'auto',
+  },
+  {
+    left: {
+      alignSelf: 'flex-start',
+      borderBottomRightRadius: 10,
+      borderBottomLeftRadius: 0,
+    },
+  },
+)
+
 const Count = ({ active, ...props }) =>
   active ? <CountUp {...props} /> : props.start
 
@@ -41,6 +63,66 @@ const CountBadge = props =>
       <Count {...props} />
     </Badge>
   ) : null
+
+const messages = (
+  <React.Fragment>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>Lorem ipsume dolor sit.</Bubble>
+    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+  </React.Fragment>
+)
+
+@view
+class LongChats {
+  render() {
+    return messages
+  }
+}
 
 @view
 export default class HeaderIllustration extends React.Component {
@@ -67,10 +149,20 @@ export default class HeaderIllustration extends React.Component {
     await sleep(5000)
     this.bounceIcons()
     this.chatFrame(Spring, {
-      to: { scale: 0.3, opacity: 1, y: -200 },
-      config: config.slow,
+      to: { scale: 0.4, opacity: 1, y: -250 },
+      config: config.fast,
     })
-    await sleep(2000)
+    await sleep(3000)
+    this.chatFrame(Spring, {
+      to: { scale: 0.3, opacity: 0.4, y: -450 },
+      config: config.fast,
+    })
+    await sleep(3000)
+    this.chatFrame(Spring, {
+      to: { scale: 0.2, opacity: 0, y: -550 },
+      config: config.fast,
+    })
+    await sleep(3000)
     this.setState({
       bounceSlack: false,
       bounceDropbox: false,
@@ -78,17 +170,8 @@ export default class HeaderIllustration extends React.Component {
       bounceDrive: false,
       bounceGithub: false,
     })
-    await this.chatFrame(Spring, {
-      to: { scale: 0.2, opacity: 0.3, y: -500 },
-      config: config.slow,
-    })
-    this.setState({
-      leaveSlack: true,
-      leaveDropbox: true,
-      leaveMail: true,
-      leaveDrive: true,
-      leaveGithub: true,
-    })
+    await this.leaveIcons()
+    await sleep(1000)
     await this.chatText(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
@@ -97,27 +180,33 @@ export default class HeaderIllustration extends React.Component {
 
   bounceIcons = async () => {
     this.setState({ bounceSlack: true })
-    setTimeout(() => {
-      this.setState({ bounceDropbox: true })
-    }, 200)
-    setTimeout(() => {
-      this.setState({ bounceMail: true })
-    }, 300)
-    setTimeout(() => {
-      this.setState({ bounceDrive: true })
-    }, 600)
-    setTimeout(() => {
-      this.setState({ bounceGithub: true })
-    }, 450)
+    await sleep(1000)
+    this.setState({ bounceDropbox: true })
+    await sleep(200)
+    this.setState({ bounceMail: true })
+    this.setState({ bounceDrive: true })
+    await sleep(300)
+    this.setState({ bounceGithub: true })
+  }
+
+  leaveIcons = async () => {
+    this.setState({ leaveDropbox: true })
+    await sleep(200)
+    this.setState({ leaveMail: true })
+    this.setState({ leaveDrive: true })
+    await sleep(300)
+    this.setState({ leaveGithub: true })
+    await sleep(1000)
+    this.setState({ leaveSlack: true })
   }
 
   render() {
     const chats = [
-      <bubble $left>The #general chat room</bubble>,
-      <bubble>About as coherent as an acid trip</bubble>,
-      <bubble $left>🙄</bubble>,
-      <bubble>Spreading like an oil spill...</bubble>,
-      <bubble $left>Clear as modern art 🖌</bubble>,
+      <Bubble left>The #general chat room</Bubble>,
+      <Bubble>Clear as modern art</Bubble>,
+      <Bubble left>🙄</Bubble>,
+      <Bubble>and spreading like an oil spill...</Bubble>,
+      <Bubble left>🤷‍</Bubble>,
     ]
 
     return (
@@ -159,14 +248,7 @@ export default class HeaderIllustration extends React.Component {
                       height: opacity._value === 0 ? 0 : 500,
                     }}
                   >
-                    {chats.map(chat => chat)}
-                    {chats.map(chat => chat)}
-                    {chats.map(chat => chat)}
-                    {chats.map(chat => chat)}
-                    {chats.map(chat => chat)}
-                    {chats.map(chat => chat)}
-                    {chats.map(chat => chat)}
-                    {chats.map(chat => chat)}
+                    <LongChats />
                   </animated.div>
                 </animated.div>
               )
@@ -175,9 +257,10 @@ export default class HeaderIllustration extends React.Component {
           <Keyframes native script={next => (this.chatText = next)}>
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
-                <message>
-                  <P size={1.2}>It's time things made more sense.</P>
-                </message>
+                <P $message size={1.2} fontWeight={800}>
+                  Feel like your organization<br />
+                  has no organization?
+                </P>
               </animated.div>
             )}
           </Keyframes>
@@ -191,6 +274,8 @@ export default class HeaderIllustration extends React.Component {
             right: -50,
             borderBottom: [4, '#f2f2f2'],
             zIndex: 0,
+            transition: 'all ease-out 1000ms',
+            opacity: this.state.leaveSlack ? 0 : 1,
           }}
         >
           <dock
@@ -228,9 +313,11 @@ export default class HeaderIllustration extends React.Component {
             bottom: 120,
             left: 40,
             right: -10,
+            height: 100,
             alignItems: 'flex-end',
             justifyContent: 'space-between',
             flexFlow: 'row',
+            overflow: 'hidden',
           }}
         >
           <DropboxIcon
@@ -323,29 +410,14 @@ export default class HeaderIllustration extends React.Component {
         scale: 1.15,
       },
     },
-    bubble: {
-      border: [2, '#777'],
-      background: '#fff',
-      fontSize: 16,
-      borderRadius: 15,
-      padding: 10,
-      marginBottom: 10,
-      borderBottomRightRadius: 0,
-      alignSelf: 'flex-end',
-      pointerEvents: 'auto',
-    },
-    left: {
-      alignSelf: 'flex-start',
-      borderBottomRightRadius: 10,
-      borderBottomLeftRadius: 0,
-    },
     message: {
       position: 'absolute',
-      bottom: 400,
+      bottom: 500,
       left: 0,
       right: 0,
       alignItems: 'center',
       justifyContent: 'center',
+      textAlign: 'center',
     },
     bouncy: {
       transition: 'all ease-in 100ms',
@@ -353,12 +425,12 @@ export default class HeaderIllustration extends React.Component {
       transformOrigin: 'center bottom',
     },
     icon: {
-      transition: 'all ease-in 500ms',
+      transition: 'opacity ease-out 100ms, transform ease-out 300ms',
     },
     leave: {
       opacity: 0,
       transform: {
-        y: 200,
+        y: 50,
       },
     },
   }

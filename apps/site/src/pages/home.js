@@ -64,7 +64,6 @@ const PurchaseButton = props => (
 const Callout = ({ style, ...props }) => (
   <section
     css={{
-      width: '57%',
       background: '#fff',
       border: [10, '#fff'],
       zIndex: 10,
@@ -191,7 +190,7 @@ class Header {
             <BrandLogo />
           </top>
           <div $$flex />
-          <Callout css={{ margin: [-80, 0, 0, -34] }}>
+          <Callout css={{ width: '57%', margin: [-80, 0, 0, -34] }}>
             <P size={1.9} fontWeight={800} color={'#000' || brandColor}>
               Your company is growing
             </P>
@@ -379,31 +378,26 @@ class Section2 extends React.Component {
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -20 }}>
                   <P fontWeight={600} size={4} margin={[0, 0, 25]}>
-                    Your #general:<br /> a lot of{' '}
+                    Slack works,<br /> but there's too much{' '}
                     <span $noisy>
                       noise<WavyLine height={1400} $line />
                     </span>
                   </P>
-                  <P2 size={2.2}>How Orbit simplifies your day.</P2>
-                  <P size={2.2}>
-                    Orbit unifies the cloud locally to your Mac, as though it
-                    were native. Then it uses on-device ML to keep you
-                    intelligently informed.
+                  <P2 size={2.2}>
+                    Step one: unify your integrations native to your Mac.
+                  </P2>
+                  <P size={2}>
+                    Step two: generate a daily heads up that's targeted to you.
                   </P>
                   <br />
-                  <P size={1.8}>That means more time for you to focus.</P>
+                  <P size={1.8}>
+                    Orbit simplifies your company organization, removing the
+                    noise. That means more time focusing and less interruptions.
+                  </P>
                   <br />
                   <P size={1.8}>
-                    It upgrades spotlight and
-                    <Cmd>⌘+Space</Cmd> to show a beautiful daily heads up with
-                    intelligent search so you can{' '}
-                    <P
-                      size={1.8}
-                      color={brandColor}
-                      css={{ display: 'inline' }}
-                    >
-                      turn down notifications & focus.
-                    </P>
+                    It works by upgrading spotlight with beautiful daily news on
+                    your <Cmd>⌘+Space</Cmd>.
                   </P>
                   <div $$flex />
                 </main>
@@ -560,9 +554,9 @@ class Section3 extends React.Component {
                 </P>
                 <br />
                 <P2 size={2.2}>
-                  Your company knowledge should not just be on demand. In order
-                  to truly let you focus and stay in sync, we went one step
-                  further and integrated it with any app.
+                  Your company knowledge should augment how you work. In order
+                  to truly upgrade your team, we integrated it with everything
+                  you do.
                 </P2>
                 <br />
                 <P2 size={1.8}>
@@ -572,9 +566,11 @@ class Section3 extends React.Component {
                 </P2>
                 <br />
                 <br />
-                <P2 size={2} color={brandColor}>
-                  <strong>Demo:</strong> try holding <Cmd>Option</Cmd> now.
-                </P2>
+                <Callout>
+                  <P2 size={2} color={brandColor}>
+                    <strong>Demo:</strong> hold <Cmd>Option</Cmd> now.
+                  </P2>
+                </Callout>
               </inner>
             </rightSide>
           </V.SectionContent>
@@ -590,7 +586,7 @@ class Section3 extends React.Component {
       position: 'absolute',
       left: '50%',
       right: 0,
-      bottom: 20,
+      bottom: 90,
       paddingRight: 30,
     },
     inner: {

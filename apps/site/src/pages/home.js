@@ -2,9 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
-import * as V from '~/views'
+import { Section, SectionContent, Slant, PurchaseButton } from '~/views'
 // import homeImg from '~/../public/screen-home.png'
-import contextImg from '~/../public/screen-context.png'
 import personImage from '~/../public/screen-person.png'
 import wordImage from '~/../public/word.png'
 import Observer from '@researchgate/react-intersection-observer'
@@ -81,21 +80,6 @@ const Lines = ({ width = 100, height = 100, style }) => (
   </svg>
 )
 
-const PurchaseButton = props => (
-  <UI.Button
-    background="#fff"
-    color="green"
-    borderColor="green"
-    borderWidth={2}
-    size={1.1}
-    fontWeight={300}
-    {...props}
-  >
-    <span css={{ fontWeight: 500 }}>Early access</span> &nbsp;&middot;&nbsp;{' '}
-    <span css={{ fontWeight: 800 }}>$200</span>
-  </UI.Button>
-)
-
 const Callout = ({ style, ...props }) => (
   <section
     css={{
@@ -137,6 +121,12 @@ const Ul = view('span', {
   borderBottom: [3, 'rgba(136, 231, 234, 0.9)'],
   marginBottom: -3,
 })
+const Ul2 = view('span', {
+  display: 'inline-block',
+  borderBottom: [1, 'dotted', '#ddd'],
+  marginBottom: -1,
+})
+const Hl = view('span', { background: 'yellow' })
 
 @view
 class BrandLogo {
@@ -173,9 +163,9 @@ class Header {
   render() {
     //  'linear-gradient(#f2f2f2, #fff)'
     return (
-      <V.Section css={{ background: '#fff' }}>
-        <V.SectionContent padded fullscreen>
-          <V.Slant rightBackground="#fff" />
+      <Section css={{ background: '#fff' }}>
+        <SectionContent padded fullscreen>
+          <Slant rightBackground="#fff" />
           <glowContain
             css={{
               position: 'absolute',
@@ -254,8 +244,8 @@ class Header {
           <rightSide>
             <HeaderIllustration />
           </rightSide>
-        </V.SectionContent>
-      </V.Section>
+        </SectionContent>
+      </Section>
     )
   }
 
@@ -385,9 +375,9 @@ class Section2 extends React.Component {
   render() {
     return (
       <UI.Theme name="light">
-        <V.Section>
-          <V.SectionContent padded fullscreen>
-            <V.Slant inverseSlant />
+        <Section>
+          <SectionContent padded fullscreen>
+            <Slant inverseSlant />
             <bgTest
               if={false}
               css={{
@@ -412,40 +402,37 @@ class Section2 extends React.Component {
                       echo chamber<WavyLine height={3600} $line />
                     </span>
                   </P>
-                  <P size={2.2}>How Orbit organizes your org.</P>
+                  <P size={2.2}>Orbit gives signal to noise</P>
                   <br />
                   <P size={1.8}>
-                    It starts by unifying all your integrations natively on your
-                    Mac. Then, it upgrades your spotlight with beautiful daily
-                    news, custom to what you care about.
+                    It starts by upgrading Spotlight with{' '}
+                    <Ul2>natural language search</Ul2> and a beautiful{' '}
+                    <Ul2>daily summary</Ul2> across all your services.
                   </P>
                   <br />
                   <P size={1.8}>
-                    We want to remove the noise and let your team focus on what
-                    matters, while not missing out on what's important.
+                    The goal is to let you focus and avoid notification
+                    overload. We think you should
                   </P>
+                  <br />
+                  <br />
+                  <quote
+                    css={{
+                      width: 500,
+                      // margin: [-20, 0, 0],
+                      // alignItems: 'flex-end',
+                      textAlign: 'right',
+                    }}
+                  >
+                    <P size={4} fontWeight={200} color={brandColor}>
+                      Pull,<br />
+                      <span css={{ marginRight: -4 }}>instead of</span>
+                      <br />
+                      <span css={{ marginRight: -8 }}>being pushed</span>
+                    </P>
+                  </quote>
                 </main>
               </Observer>
-              <quote
-                css={{
-                  width: 500,
-                  // margin: [-20, 0, 0],
-                  // alignItems: 'flex-end',
-                  textAlign: 'right',
-                }}
-              >
-                <P size={4} fontWeight={200} color={brandColor}>
-                  Pull,<br />
-                  <span css={{ marginRight: -4 }}>instead of</span>
-                  <br />
-                  <span css={{ marginRight: -8 }}>being pushed</span>
-                </P>
-                <P if={false} size={2}>
-                  Give it a pull&nbsp; 👈
-                </P>
-                <br />
-                <br />
-              </quote>
             </UI.Theme>
             <notifications>
               <Trail
@@ -468,25 +455,9 @@ class Section2 extends React.Component {
                   </animated.div>
                 ))}
               </Trail>
-
-              <div $$flex />
-              <div $$flex />
-
-              <UI.Button
-                if={false}
-                size={1.2}
-                borderColor="#000"
-                borderWidth={1}
-                css={{ marginLeft: -50, width: 'auto' }}
-              >
-                👈 Give it a pull
-              </UI.Button>
-
-              <div $$flex />
-              <div $$flex />
             </notifications>
-          </V.SectionContent>
-        </V.Section>
+          </SectionContent>
+        </Section>
       </UI.Theme>
     )
   }
@@ -498,10 +469,10 @@ class Section2 extends React.Component {
     },
     notifications: {
       position: 'absolute',
-      top: 200,
-      right: -20,
+      top: 100,
+      right: 50,
       width: 300,
-      bottom: 100,
+      bottom: 150,
     },
     noisy: {
       position: 'relative',
@@ -537,9 +508,9 @@ class Section3 extends React.Component {
     console.log('isIntersecting', isIntersecting)
     return (
       <UI.Theme name="light">
-        <V.Section css={{ background: '#fff' }}>
-          <V.SectionContent fullscreen padded>
-            <V.Slant css={{ zIndex: 2 }} />
+        <Section css={{ background: '#fff' }}>
+          <SectionContent fullscreen padded>
+            <Slant css={{ zIndex: 2 }} />
             <Observer onChange={this.handleIntersect}>
               <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }}>
                 <Spring from={{ x: 0 }} to={{ x: 100 }}>
@@ -586,8 +557,8 @@ class Section3 extends React.Component {
                 </P2>
               </Callout>
             </RightSide>
-          </V.SectionContent>
-        </V.Section>
+          </SectionContent>
+        </Section>
       </UI.Theme>
     )
   }
@@ -598,13 +569,9 @@ class Section4 {
   render() {
     return (
       <UI.Theme name="medium">
-        <V.Section css={{ background: '#fafafa' }}>
-          <V.SectionContent fullscreen padded>
-            <V.Slant
-              inverseSlant
-              backgroundColor="#f0f0f0"
-              css={{ zIndex: 2 }}
-            />
+        <Section css={{ background: '#fafafa' }}>
+          <SectionContent fullscreen padded>
+            <Slant inverseSlant backgroundColor="#f0f0f0" css={{ zIndex: 2 }} />
             <main>
               <P size={1.2} fontWeight={800}>
                 Use case #1
@@ -661,8 +628,8 @@ class Section4 {
               <br />
               <br />
             </RightSide>
-          </V.SectionContent>
-        </V.Section>
+          </SectionContent>
+        </Section>
       </UI.Theme>
     )
   }
@@ -680,9 +647,9 @@ class Section5 {
   render() {
     return (
       <UI.Theme name="medium">
-        <V.Section css={{ background: '#fafafa' }}>
-          <V.SectionContent fullscreen padded>
-            <V.Slant backgroundColor="#f0f0f0" css={{ zIndex: 2 }} />
+        <Section css={{ background: '#fafafa' }}>
+          <SectionContent fullscreen padded>
+            <Slant backgroundColor="#f0f0f0" css={{ zIndex: 2 }} />
             <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }}>
               <leftInner>
                 <img
@@ -716,7 +683,7 @@ class Section5 {
                   live, automatic answers as you chat.
                   <br />
                   <br />
-                  See the <Ul2>exact answer highlighted</Ul2> without typing a
+                  See the <Hl>exact answer highlighted</Hl> without typing a
                   thing.
                 </P2>
                 <br />
@@ -733,8 +700,8 @@ class Section5 {
                 </Callout>
               </inner>
             </rightSide>
-          </V.SectionContent>
-        </V.Section>
+          </SectionContent>
+        </Section>
       </UI.Theme>
     )
   }
@@ -760,9 +727,9 @@ class Section6 {
   render() {
     return (
       <UI.Theme name="light">
-        <V.Section css={{ background: '#fff' }}>
-          <V.SectionContent fullscreen padded>
-            <V.Slant
+        <Section css={{ background: '#fff' }}>
+          <SectionContent fullscreen padded>
+            <Slant
               // backgroundColor="#f2f2f2"
               inverseSlant
               css={{ zIndex: 2 }}
@@ -837,8 +804,8 @@ class Section6 {
                 css={{ transformOrigin: 'top left', transform: { scale: 0.5 } }}
               />
             </example>
-          </V.SectionContent>
-        </V.Section>
+          </SectionContent>
+        </Section>
       </UI.Theme>
     )
   }
@@ -865,16 +832,14 @@ class Section6 {
   }
 }
 
-const Ul2 = view('span', { background: 'yellow' })
-
 @view
 class Section7 {
   render() {
     return (
       <UI.Theme name="dark">
-        <V.Section css={{ background: '#222' }}>
-          <V.SectionContent fullscreen padded>
-            <V.Slant backgroundColor="#000" />
+        <Section css={{ background: '#222' }}>
+          <SectionContent fullscreen padded>
+            <Slant backgroundColor="#000" />
             <main>
               <P size={3} fontWeight={800}>
                 Private. Secure.<br />
@@ -908,8 +873,8 @@ class Section7 {
                 </P2>
               </main>
             </main>
-          </V.SectionContent>
-        </V.Section>
+          </SectionContent>
+        </Section>
       </UI.Theme>
     )
   }
@@ -926,8 +891,8 @@ class Section7 {
 class Footer {
   render() {
     return (
-      <V.Section css={{ padding: 100 }}>
-        <V.SectionContent padded>
+      <Section css={{ padding: 100 }}>
+        <SectionContent padded>
           <div $$row>
             <content>
               <P2>Going into beta now</P2>
@@ -936,8 +901,8 @@ class Footer {
             <div $$flex />
             <BrandLogo />
           </div>
-        </V.SectionContent>
-      </V.Section>
+        </SectionContent>
+      </Section>
     )
   }
 }

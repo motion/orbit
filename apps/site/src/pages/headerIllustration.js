@@ -1,5 +1,6 @@
 import * as React from 'react'
 import CountUp from 'react-countup'
+import { PurchaseButton } from '~/views'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Trail from '~/trail'
@@ -143,8 +144,8 @@ export default class HeaderIllustration extends React.Component {
     await this.chats(Trail, {
       from: { opacity: 0, y: -20 },
       to: { opacity: 1, y: 0 },
-      config: { tension: 100, friction: 20 },
-      delay: [650, 650, 650, 650, 650],
+      config: { tension: 20, friction: 2 },
+      delay: [0, 1000, 1000, 1000, 1000],
     })
     await sleep(5000)
     this.bounceIcons()
@@ -173,6 +174,15 @@ export default class HeaderIllustration extends React.Component {
     await this.leaveIcons()
     await sleep(1000)
     await this.chatText(Spring, {
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+    })
+    await this.chatText(Spring, {
+      from: { opacity: 1 },
+      to: { opacity: 0 },
+      config: config.fast,
+    })
+    await this.chatText2(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
     })
@@ -257,9 +267,22 @@ export default class HeaderIllustration extends React.Component {
           <Keyframes native script={next => (this.chatText = next)}>
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
-                <P $message size={1.2} fontWeight={800}>
+                <P $message size={1.3} fontWeight={800}>
                   Feel like your organization<br />
                   has no organization?
+                </P>
+              </animated.div>
+            )}
+          </Keyframes>
+          <Keyframes native script={next => (this.chatText2 = next)}>
+            {({ opacity }) => (
+              <animated.div style={{ opacity }}>
+                <P $message size={1.3} fontWeight={800}>
+                  Orbit unites your company.<br />
+                  Stay in sync, stress free.
+                  <PurchaseButton css={{ margin: [20, 'auto', -20] }}>
+                    Learn more
+                  </PurchaseButton>
                 </P>
               </animated.div>
             )}
@@ -418,6 +441,7 @@ export default class HeaderIllustration extends React.Component {
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
+      pointerEvents: 'auto',
     },
     bouncy: {
       transition: 'all ease-in 100ms',

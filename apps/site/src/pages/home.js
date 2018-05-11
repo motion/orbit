@@ -11,6 +11,15 @@ import { Trail, Spring, animated } from 'react-spring'
 import HeaderIllustration from './headerIllustration'
 import { MailIcon } from '~/views/icons'
 
+const Animate = {
+  Wiggle: view('div', {
+    display: 'inline-block',
+    // transition: 'all ease-in 100ms',
+    transformOrigin: 'top center',
+    animation: 'wiggle 5s infinite',
+  }),
+}
+
 const RightSide = ({ children, inverse, ...props }) => (
   <rightSide
     css={{
@@ -39,7 +48,7 @@ const RightSide = ({ children, inverse, ...props }) => (
             : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
           float: 'left',
           width: 110,
-          height: 720,
+          height: 810,
         }}
       />
       {children}
@@ -62,10 +71,10 @@ const WavyLine = ({ height, ...props }) => (
 const brandColor = UI.color('#5552FA')
 
 const Cmd = view('span', {
-  padding: [3, 5],
-  margin: [-3, 0],
-  border: [1, '#555'],
-  borderRadius: 10,
+  padding: [2, 5],
+  margin: [-2, 0],
+  border: [1, '#ccc'],
+  borderRadius: 12,
 })
 
 const Lines = ({ width = 100, height = 100, style }) => (
@@ -108,7 +117,14 @@ const Callout = ({ style, ...props }) => (
       }}
     />
     <innerSection
-      css={{ margin: 8, borderRadius: 10, padding: 40, background: '#fff' }}
+      css={{
+        margin: 8,
+        // borderRadius: 5,
+        padding: 30,
+        background: '#fff',
+        overflow: 'hidden',
+        position: 'relative',
+      }}
       {...props}
     />
   </section>
@@ -232,10 +248,9 @@ class Header {
               css={{ margin: [15, 40], height: 3, background: '#f2f2f2' }}
             />
             <P size={2} alpha={0.75} margin={[5, 0, 25]}>
-              <span if={false} css={{ color: '#000' }}>
-                A cloudless solution to organizing your cloud.
-              </span>{' '}
-              Company news, search and more, right on your OS. 3 minute install.
+              <span if={false} css={{ color: '#000' }} />
+              Cloud news and search at your fingertips. Your company home,
+              installed in 3 minutes.
             </P>
           </Callout>
 
@@ -411,8 +426,7 @@ class Section2 extends React.Component {
                   </P>
                   <br />
                   <P size={1.8}>
-                    The goal is to let you focus and avoid notification
-                    overload. We think you should
+                    Focus on work and not every notification. We think you can
                   </P>
                   <br />
                   <br />
@@ -535,25 +549,30 @@ class Section3 extends React.Component {
               </leftSide>
             </Observer>
             <RightSide>
-              <P size={3} fontWeight={800}>
-                Everywhere it matters.
+              <P size={3} fontWeight={800} margin={[0, 0, 35]}>
+                Upgrade your Mac
               </P>
-              <br />
               <P2 size={2.2}>
-                Your company knowledge should augment how you work. In order to
-                truly upgrade your team, we integrated it with everything you
-                do.
+                It's time the power of modern machine learning was seamlessly
+                integrated with how you work.
               </P2>
               <br />
               <P2 size={1.8}>
-                Whether writing an email or chatting with a customer, a tap of a
-                button lets you see contextually relevant answers in realtime.
+                Whether writing an email or chatting with a customer, a single
+                key allows you see relevant answers in realtime.
               </P2>
               <br />
               <br />
               <Callout>
-                <P2 size={2} color={brandColor}>
-                  <strong>Demo:</strong> hold <Cmd>Option</Cmd> now.
+                <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
+                  Give it a try
+                </P>
+                <P2 size={2} color={brandColor} margin={0}>
+                  Hold{' '}
+                  <Animate.Wiggle>
+                    <Cmd>Option</Cmd>
+                  </Animate.Wiggle>{' '}
+                  to see context.
                 </P2>
               </Callout>
             </RightSide>
@@ -573,60 +592,74 @@ class Section4 {
           <SectionContent fullscreen padded>
             <Slant inverseSlant backgroundColor="#f0f0f0" css={{ zIndex: 2 }} />
             <main>
-              <P size={1.2} fontWeight={800}>
-                Use case #1
+              <P
+                size={1.1}
+                fontWeight={800}
+                textTransform="uppercase"
+                alpha={0.4}
+              >
+                How Orbit saves time
               </P>
-              <P2 size={3}>Reduce workplace interruptions instantly.</P2>
-              <P2 size={1.8}>
+              <P2 size={3}>Reducing workplace interruptions.</P2>
+              <P2 size={2.1}>
                 Deep work is under assault. Notifications come from all angles,
                 and company knowledge is distributed and unclear.
               </P2>
+              <div $$flex />
+              <P size={1.2} fontWeight={800}>
+                Smarter Search
+              </P>
               <P2 size={1.5}>
                 Orbit tackles it in two ways. First, it gives you search with
                 state of the art NLP that learns your company vocabulary and
                 uses it to improve results.
               </P2>
             </main>
-            <br />
-            <div $$flex />
-            <div $$flex />
-            <div $$flex />
             <Callout css={{ width: 460, marginLeft: 80 }}>
-              <P size={1.2} fontWeight={800}>
-                Smarter Search
-              </P>
               <P2 size={2.2} margin={0}>
                 Less time wasted finding documents and tickets, and a more
                 accessible knowledgebase.
               </P2>
             </Callout>
-            <div $$flex />
-            <RightSide inverse>
-              <Callout css={{ margin: [40, 0, 40, 0], left: -70 }}>
-                <P size={1.2} fontWeight={800}>
-                  Automatic Profiles
-                </P>
-                <P2 size={2.2} margin={0}>
-                  Less time wasted finding documents and tickets, and a more
-                  accessible knowledgebase.
-                </P2>
-              </Callout>
-
-              <P2 size={1.8}>
-                Everyone is an expert in something, and always on the move.
-              </P2>
+            <RightSide inverse css={{ bottom: 0 }}>
+              <div $$flex css={{ marginTop: 80 }} />
+              <P size={1.2} fontWeight={800}>
+                Automatic Profiles
+              </P>
               <P2 size={1.5}>
-                Orbit tackles it in two ways. First, it gives you search with
-                state of the art NLP that learns your company vocabulary and
-                uses it to improve results.
+                See where people hang out, and their recent projects in a smart
+                and simple profile created from their aggregate services.
               </P2>
-
+              <Callout css={{ margin: [20, 0, 40, 0], left: -60 }}>
+                <div $$row>
+                  <P2 size={2.2} margin={0}>
+                    Less pinging to see what someone is doing or to find where
+                    that file went.
+                  </P2>
+                  <UI.Icon
+                    name="clock"
+                    size={256}
+                    color="#ccc"
+                    opacity={0.1}
+                    css={{
+                      position: 'absolute',
+                      top: -20,
+                      right: -20,
+                    }}
+                  />
+                </div>
+              </Callout>
               <br />
               <br />
-              <br />
-              <br />
-              <br />
-              <br />
+              <P size={1.2} fontWeight={800}>
+                Contextual Answers
+              </P>
+              <P2 size={3}>Make your success team more successful.</P2>
+              <P2 size={1.8}>
+                Orbit works alongside Intercom and Zendesk. Your knowledgebase,
+                recently closed tickets and docs now power live, automatic
+                answers as you chat.
+              </P2>
             </RightSide>
           </SectionContent>
         </Section>
@@ -648,77 +681,41 @@ class Section5 {
     return (
       <UI.Theme name="medium">
         <Section css={{ background: '#fafafa' }}>
+          <graphic
+            css={{
+              position: 'absolute',
+              top: -20,
+              left: '50%',
+              marginLeft: -250,
+              width: 300,
+              height: 300,
+              border: [10, '#ccc'],
+              zIndex: -2,
+              borderRadius: 1000,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            graphic
+          </graphic>
           <SectionContent fullscreen padded>
             <Slant backgroundColor="#f0f0f0" css={{ zIndex: 2 }} />
-            <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }}>
-              <leftInner>
-                <img
-                  src={wordImage}
-                  css={{
-                    width: 1634,
-                    height: 'auto',
-                    transformOrigin: 'top left',
-                    transform: { scale: 0.45, x: 250 },
-                  }}
-                />
-              </leftInner>
-            </leftSide>
-            <rightSide>
-              <inner>
-                <edge
-                  css={{
-                    shapeOutside: 'polygon(0% 0%, 90px 0%, 0% 1096px)',
-                    float: 'left',
-                    width: 110,
-                    height: 720,
-                  }}
-                />
-                <P size={1.2} fontWeight={800}>
-                  Use case #2
-                </P>
-                <P2 size={3}>Make your success team more successful.</P2>
-                <P2 size={1.8}>
-                  Orbit works alongside Intercom and Zendesk. Your
-                  knowledgebase, recently closed tickets and docs now power
-                  live, automatic answers as you chat.
-                  <br />
-                  <br />
-                  See the <Hl>exact answer highlighted</Hl> without typing a
-                  thing.
-                </P2>
-                <br />
-                <br />
-                <br />
-                <Callout css={{ width: 460, left: -80 }}>
-                  <P size={1.2} fontWeight={800}>
-                    The Result
-                  </P>
+            <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }} />
+            <RightSide css={{ top: 0, justifyContent: 'flex-start' }}>
+              <content>
+                <Callout css={{ width: 460, left: -20, top: 0 }}>
                   <P2 size={2.2} margin={0}>
                     Reduced onboarding time. Less interruptions over small
                     questions.
                   </P2>
                 </Callout>
-              </inner>
-            </rightSide>
+                <div $$flex />
+              </content>
+            </RightSide>
           </SectionContent>
         </Section>
       </UI.Theme>
     )
-  }
-
-  static style = {
-    rightSide: {
-      zIndex: 3,
-      flex: 1,
-      position: 'absolute',
-      left: '51%',
-      right: 0,
-      bottom: 100,
-    },
-    inner: {
-      // alignSelf: 'center',
-      display: 'block',
-    },
   }
 }
 
@@ -839,7 +836,7 @@ class Section7 {
       <UI.Theme name="dark">
         <Section css={{ background: '#222' }}>
           <SectionContent fullscreen padded>
-            <Slant backgroundColor="#000" />
+            <Slant inverseSlant backgroundColor="#000" />
             <main>
               <P size={3} fontWeight={800}>
                 Private. Secure.<br />
@@ -917,7 +914,7 @@ export default class HomePage extends React.Component {
         <Section3 />
         <Section4 />
         <Section5 />
-        <Section6 />
+        {/* <Section6 /> */}
         <Section7 />
         <Footer />
       </home>

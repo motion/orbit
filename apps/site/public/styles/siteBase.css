@@ -95,6 +95,28 @@
   }
 }
 
+@keyframes wiggle {
+  2% {
+    transform: rotate3d(0, 0, 1, 10deg);
+  }
+
+  4% {
+    transform: rotate3d(0, 0, 1, -5deg);
+  }
+
+  6% {
+    transform: rotate3d(0, 0, 1, 2.5deg);
+  }
+
+  8% {
+    transform: rotate3d(0, 0, 1, -2.5deg);
+  }
+
+  10% {
+    transform: rotate3d(0, 0, 1, 0.000001deg);
+  }
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;

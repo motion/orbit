@@ -76,7 +76,7 @@ export const Section = view(
   'section',
   {
     position: 'relative',
-    overflow: 'hidden',
+    zIndex: -2,
   },
   {
     main: {
@@ -102,6 +102,7 @@ export const SectionContent = view(
     maxWidth: Constants.smallSize,
     margin: [0, 'auto'],
     position: 'relative',
+    overflow: 'hidden',
   },
   {
     padded: {

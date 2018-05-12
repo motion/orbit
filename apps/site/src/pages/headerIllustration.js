@@ -248,7 +248,7 @@ export default class HeaderIllustration extends React.Component {
       to: { scale: 0.1, opacity: 0, y: -850 },
       config: { tension: 20, friction: 50 },
     })
-    await sleep(3000)
+    await sleep(4500)
     await this.chatText(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },

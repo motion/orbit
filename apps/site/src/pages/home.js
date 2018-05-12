@@ -718,9 +718,9 @@ class Section4 {
                 Realtime context
               </P>
               <P2 size={1.5}>
-                Orbit can scan what you're doing in under 200ms. Then it matches
-                important concepts, projects, and people in your company to
-                results in the sidebar.
+                Orbit privately scans any app in a quarter second. Then it
+                matches important concepts, projects, and people in your company
+                to results in the sidebar.
               </P2>
             </main>
             <Callout
@@ -732,7 +732,8 @@ class Section4 {
               }}
             >
               <P2 size={2.2} margin={0}>
-                A custom OCR engine works with every app on Mac.
+                Discover someone already started the planning doc or had a Slack
+                conversation <em>before</em> you hit send.
               </P2>
             </Callout>
             <RightSide inverse css={{ bottom: 0 }}>
@@ -740,27 +741,29 @@ class Section4 {
               <P size={1.2} fontWeight={800}>
                 Automatic Profiles
               </P>
-              <P2 size={1.5}>
+              <P2 size={1.5} css={{ marginRight: 90 }}>
                 See which chat rooms people spend time in as well as recent
                 things they've done that are relevant to you.
               </P2>
               <Callout css={{ margin: [20, 0, 40, 0], left: -60 }}>
                 <div $$row>
                   <P2 size={2.2} margin={0}>
-                    Less shoulder taps to have someone re-send the link to that
-                    document.
+                    Less pinging someone because you can't find the link to a
+                    shared document from last week.
                   </P2>
                 </div>
               </Callout>
               <br />
               <br />
               <br />
-              <P2 size={3}>Make your success team more successful.</P2>
-              <P2 size={1.8}>
-                Orbit works alongside Intercom and Zendesk. Your knowledgebase,
-                recently closed tickets and docs now power live, automatic
-                answers as you chat.
-              </P2>
+              <content if={false}>
+                <P2 size={3}>Make your success team more successful.</P2>
+                <P2 size={1.8}>
+                  Orbit works alongside Intercom and Zendesk. Your
+                  knowledgebase, recently closed tickets and docs now power
+                  live, automatic answers as you chat.
+                </P2>
+              </content>
             </RightSide>
           </SectionContent>
         </Section>

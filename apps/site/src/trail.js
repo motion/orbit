@@ -63,7 +63,6 @@ export default class Trail extends React.PureComponent {
       onRest,
       ...extra
     } = this.props
-    console.log('this.state.hold', this.state.hold)
     const animations = new Set()
     const hook = (index, animation) => {
       animations.add(animation)

@@ -249,7 +249,7 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[5, 0, 25]}>
               <span if={false} css={{ color: '#000' }} />
-              Cloud news and search at your fingertips. Your company home,
+              Cloud news and search at your fingertips. Your company home
               installed in 3 minutes.
             </P>
           </Callout>

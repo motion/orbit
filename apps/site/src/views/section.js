@@ -76,7 +76,7 @@ export const Section = view(
   'section',
   {
     position: 'relative',
-    zIndex: -2,
+    // zIndex: -2,
   },
   {
     main: {

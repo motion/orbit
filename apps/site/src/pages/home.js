@@ -47,7 +47,6 @@ const RightSide = ({ children, inverse, ...props }) => (
   >
     <inner
       css={{
-        alignSelf: 'center',
         display: 'block',
       }}
     >
@@ -58,7 +57,7 @@ const RightSide = ({ children, inverse, ...props }) => (
             : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
           float: 'left',
           width: 110,
-          height: 810,
+          height: 990,
         }}
       />
       {children}
@@ -159,7 +158,7 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.38} color={brandColor} />
+        <Logo size={0.32} color={brandColor} />
         <P
           if={false}
           size={1}
@@ -246,7 +245,7 @@ class Header {
             </P>
           </top>
           <div $$flex />
-          <Callout css={{ width: '57%', margin: [-80, 0, 0, -34] }}>
+          <Callout css={{ width: '57%', margin: [-80, 0, 0, -10] }}>
             <P size={2.2} fontWeight={800} color={brandColor}>
               Your company is growing
             </P>
@@ -407,63 +406,41 @@ class Section2 extends React.Component {
         <Section>
           <SectionContent padded fullscreen>
             <Slant inverseSlant />
-            <bgTest
-              if={false}
-              css={{
-                position: 'absolute',
-                top: -500,
-                left: -500,
-                bottom: -500,
-                right: '48%',
-                zIndex: -2,
-                background: '#fff',
-                transform: {
-                  rotate: '-5deg',
-                },
-              }}
-            />
-            <UI.Theme name="light">
-              <Observer onChange={this.handleIntersect}>
-                <main css={{ marginTop: -20 }}>
-                  <SmallTitle>News</SmallTitle>
-                  <P fontWeight={500} size={4} margin={[0, 0, 35]}>
-                    Your Slack is an<br />
-                    <span $noisy>
-                      echo chamber<WavyLine height={3600} $line />
-                    </span>
+            <Observer onChange={this.handleIntersect}>
+              <main css={{ marginTop: -75 }}>
+                <SmallTitle>News</SmallTitle>
+                <P size={3} fontWeight={800} margin={[0, 0, 35]}>
+                  Slack can be an<br />
+                  <span $noisy>
+                    echo chamber<WavyLine height={2900} $line />
+                  </span>
+                </P>
+                <P size={1.8}>
+                  It starts with upgrading giving your <Cmd>⌘+Space</Cmd> a
+                  beautiful daily heads up powered by a novel{' '}
+                  <Ul2>natural language model</Ul2>.
+                </P>
+                <br />
+                <br />
+                <quote
+                  if={false}
+                  css={{
+                    width: 500,
+                    // margin: [-20, 0, 0],
+                    // alignItems: 'flex-end',
+                    textAlign: 'right',
+                  }}
+                >
+                  <P size={3.5} fontWeight={200} alpha={0.5}>
+                    Pull,<br />
+                    <span css={{ marginRight: -4 }}>instead of</span>
+                    <br />
+                    <span css={{ marginRight: -8 }}>being pushed</span>
                   </P>
-                  <P size={1.8}>
-                    Orbit's goal is to make your company operation as seamless
-                    as possible. So it starts by upgrading your Spotlight with a
-                    beautiful daily heads up powered by a novel{' '}
-                    <Ul2>natural language model</Ul2>.
-                  </P>
-                  <br />
-                  <P size={1.8}>
-                    Give yourself peace of mind and turn down the notification
-                    noise.
-                  </P>
-                  <br />
-                  <br />
-                  <quote
-                    css={{
-                      width: 500,
-                      // margin: [-20, 0, 0],
-                      // alignItems: 'flex-end',
-                      textAlign: 'right',
-                    }}
-                  >
-                    <P size={4} fontWeight={200} color={brandColor}>
-                      Pull,<br />
-                      <span css={{ marginRight: -4 }}>instead of</span>
-                      <br />
-                      <span css={{ marginRight: -8 }}>being pushed</span>
-                    </P>
-                  </quote>
-                </main>
-              </Observer>
-            </UI.Theme>
-            <notifications>
+                </quote>
+              </main>
+            </Observer>
+            <newsIllustration>
               <Trail
                 native
                 from={{ opacity: 0, x: 100 }}
@@ -484,7 +461,23 @@ class Section2 extends React.Component {
                   </animated.div>
                 ))}
               </Trail>
-            </notifications>
+            </newsIllustration>
+
+            <RightSide inverse>
+              <div css={{ height: 520 }} />
+              <SmallTitle>Search</SmallTitle>
+              <P size={3} fontWeight={800} margin={[0, 0, 35]}>
+                Upgrade your Mac
+              </P>
+              <P2 size={2.2}>
+                The power of modern machine learning for your cloud.
+              </P2>
+              <br />
+              <P2 size={1.8}>
+                Across every service you care about, faster than you can think
+                it.
+              </P2>
+            </RightSide>
           </SectionContent>
         </Section>
       </UI.Theme>
@@ -496,7 +489,7 @@ class Section2 extends React.Component {
       width: 450,
       flex: 1,
     },
-    notifications: {
+    newsIllustration: {
       position: 'absolute',
       top: 100,
       right: 50,

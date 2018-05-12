@@ -458,7 +458,7 @@ class Section2 extends React.Component {
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 40 }}>
+                <content css={{ display: 'block', marginTop: 80 }}>
                   <SmallTitle>News</SmallTitle>
                   <P size={3} fontWeight={800} margin={[0, 0, 35]}>
                     Slack can be an<br />
@@ -552,7 +552,7 @@ class Section2 extends React.Component {
             />
 
             <RightSide inverse css={{ zIndex: 10000000000 }}>
-              <div css={{ height: 600 }} />
+              <div css={{ height: 610 }} />
               <SmallTitle>Search</SmallTitle>
               <P size={3} fontWeight={800} margin={[0, 0, 20]}>
                 Search that works
@@ -561,7 +561,7 @@ class Section2 extends React.Component {
                 Like Spotlight that searches Gmail, Slack, Jira, GDocs,
                 Dropbox...
               </P2>
-              <P2 size={1.6}>
+              <P2 size={1.6} margin={0}>
                 Completely private and on-device.<br />
                 Powered by state of the art <Ul2>NLP</Ul2>.
               </P2>
@@ -623,7 +623,7 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
-              <div css={{ marginTop: 200 }} />
+              <div css={{ marginTop: 300 }} />
               <SmallTitle>Context</SmallTitle>
               <P size={3} fontWeight={800} margin={[0, 0, 20]}>
                 Context without context-switching
@@ -688,15 +688,15 @@ class Section4 {
     return (
       <UI.Theme name="light">
         <Section inverse leftBackground={Constants.BACKGROUND_ALT}>
-          <SectionContent fullscreen padded>
+          <SectionContent fullscreen padded css={{ zIndex: 3 }}>
             <Slant
               inverseSlant
-              slantBackground={`linear-gradient(${
+              slantBackground={`linear-gradient(200deg, ${
                 Constants.colorSecondary
-              }, ${Constants.BACKGROUND_ALT.darken(0.2)})`}
+              } 5%, ${Constants.BACKGROUND_ALT.darken(0.2)} 95%)`}
               css={{ zIndex: 2 }}
             />
-            <main>
+            <main css={{ marginTop: -50 }}>
               <P
                 size={1.1}
                 fontWeight={800}
@@ -707,51 +707,49 @@ class Section4 {
               </P>
               <P2 size={3}>Reducing workplace interruptions</P2>
               <P2 size={2.1}>
-                Deep work is under assault. Notifications come from all angles,
-                and company knowledge is distributed and unclear.
-              </P2>
-              <div $$flex />
-              <P size={1.2} fontWeight={800}>
-                Smarter Search
-              </P>
-              <P2 size={1.5}>
-                Orbit tackles it in two ways. First, it gives you search with
-                state of the art NLP that learns your company vocabulary and
-                uses it to improve results.
+                Orbit takes a unique approach to making your company clear and
+                distraction-free.
               </P2>
             </main>
-            <Callout css={{ width: 460, marginLeft: 80 }}>
+            <div $$flex />
+            <div $$flex />
+            <main css={{ paddingLeft: 60 }}>
+              <P size={1.2} fontWeight={800}>
+                Realtime context
+              </P>
+              <P2 size={1.5}>
+                Orbit can scan what you're doing in under 200ms. Then it matches
+                important concepts, projects, and people in your company to
+                results in the sidebar.
+              </P2>
+            </main>
+            <Callout
+              css={{
+                width: 460,
+                marginLeft: 80,
+                marginTop: 20,
+                marginBottom: -30,
+              }}
+            >
               <P2 size={2.2} margin={0}>
-                Less time wasted finding documents and tickets, and a more
-                accessible knowledgebase.
+                A custom OCR engine works with every app on Mac.
               </P2>
             </Callout>
             <RightSide inverse css={{ bottom: 0 }}>
-              <div $$flex css={{ marginTop: 80 }} />
+              <div $$flex css={{ marginTop: 140 }} />
               <P size={1.2} fontWeight={800}>
                 Automatic Profiles
               </P>
               <P2 size={1.5}>
-                See where people hang out, and their recent projects in a smart
-                and simple profile created from their aggregate services.
+                See which chat rooms people spend time in as well as recent
+                things they've done that are relevant to you.
               </P2>
               <Callout css={{ margin: [20, 0, 40, 0], left: -60 }}>
                 <div $$row>
                   <P2 size={2.2} margin={0}>
-                    Less pinging to see what someone is doing or to find where
-                    that file went.
+                    Less shoulder taps to have someone re-send the link to that
+                    document.
                   </P2>
-                  <UI.Icon
-                    name="clock"
-                    size={256}
-                    color="#ccc"
-                    opacity={0.1}
-                    css={{
-                      position: 'absolute',
-                      top: -20,
-                      right: -20,
-                    }}
-                  />
                 </div>
               </Callout>
               <br />
@@ -896,9 +894,9 @@ class Section7 {
           <SectionContent fullscreen padded>
             <Slant
               inverseSlant
-              slantBackground={`linear-gradient(${Constants.BACKGROUND_ALT.darken(
+              slantBackground={`linear-gradient(200deg, ${Constants.BACKGROUND_ALT.darken(
                 0.2,
-              )}, ${Constants.colorSecondary})`}
+              )} 5%, #111)`}
             />
             <main>
               <P size={3} fontWeight={800}>

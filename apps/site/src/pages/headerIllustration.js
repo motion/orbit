@@ -361,7 +361,6 @@ export default class HeaderIllustration extends React.Component {
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
                 <P $message size={1.3} fontWeight={800}>
-                  Orbit unites your company.<br />
                   Stay in sync, stress free.
                   <PurchaseButton css={{ margin: [20, 'auto', -20] }}>
                     Learn more

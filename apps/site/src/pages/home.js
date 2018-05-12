@@ -20,6 +20,16 @@ const Animate = {
   }),
 }
 
+const SmallTitle = props => (
+  <P
+    size={1.1}
+    fontWeight={800}
+    textTransform="uppercase"
+    alpha={0.5}
+    {...props}
+  />
+)
+
 const RightSide = ({ children, inverse, ...props }) => (
   <rightSide
     css={{
@@ -237,7 +247,7 @@ class Header {
           </top>
           <div $$flex />
           <Callout css={{ width: '57%', margin: [-80, 0, 0, -34] }}>
-            <P size={1.9} fontWeight={800} color={brandColor}>
+            <P size={2.2} fontWeight={800} color={brandColor}>
               Your company is growing
             </P>
             <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
@@ -249,7 +259,11 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[5, 0, 25]}>
               <span if={false} css={{ color: '#000' }} />
-              Cloud news and search at your fingertips. Your company home
+              Upgrade your Mac with intelligence. Your company cloud meets your
+              OS.
+            </P>
+            <P size={1.2} alpha={0.7}>
+              <Ul2>News</Ul2>, <Ul2>search</Ul2> and <Ul2>context</Ul2>{' '}
               installed in 3 minutes.
             </P>
           </Callout>
@@ -300,7 +314,7 @@ class Header {
       top: 0,
       right: 0,
       bottom: 0,
-      left: '60%',
+      left: '55%',
       zIndex: 2,
     },
   }
@@ -411,20 +425,23 @@ class Section2 extends React.Component {
             <UI.Theme name="light">
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -20 }}>
+                  <SmallTitle>News</SmallTitle>
                   <P fontWeight={500} size={4} margin={[0, 0, 35]}>
-                    Slack has turned into an<br />
+                    Your Slack is an<br />
                     <span $noisy>
                       echo chamber<WavyLine height={3600} $line />
                     </span>
                   </P>
                   <P size={1.8}>
-                    It starts by upgrading Spotlight with{' '}
-                    <Ul2>natural language search</Ul2> and a beautiful{' '}
-                    <Ul2>daily summary</Ul2> across all your services.
+                    Orbit's goal is to make your company operation as seamless
+                    as possible. So it starts by upgrading your Spotlight with a
+                    beautiful daily heads up powered by a novel{' '}
+                    <Ul2>natural language model</Ul2>.
                   </P>
                   <br />
                   <P size={1.8}>
-                    Focus on work and not every notification. We think you can
+                    Give yourself peace of mind and turn down the notification
+                    noise.
                   </P>
                   <br />
                   <br />
@@ -547,6 +564,7 @@ class Section3 extends React.Component {
               </leftSide>
             </Observer>
             <RightSide>
+              <SmallTitle>Context</SmallTitle>
               <P size={3} fontWeight={800} margin={[0, 0, 35]}>
                 Upgrade your Mac
               </P>
@@ -596,9 +614,9 @@ class Section4 {
                 textTransform="uppercase"
                 alpha={0.4}
               >
-                How Orbit saves time
+                In Depth
               </P>
-              <P2 size={3}>Reducing workplace interruptions.</P2>
+              <P2 size={3}>Reducing workplace interruptions</P2>
               <P2 size={2.1}>
                 Deep work is under assault. Notifications come from all angles,
                 and company knowledge is distributed and unclear.

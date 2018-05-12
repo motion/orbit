@@ -25,7 +25,7 @@ class PaneStore {
   paneStore: PaneStore,
 })
 @view
-export default class Orbit {
+class Orbit {
   state = {
     resultsRef: null,
     isScrolled: false,
@@ -56,33 +56,29 @@ export default class Orbit {
     const headerBg = theme.base.background
     const { orbitOnLeft } = App
     return (
-      <UI.Theme name="tan">
-        <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
-          <OrbitHeader headerBg={headerBg} />
-          <orbitInner>
-            <orbitContext
-              css={{
-                background: theme.base.background,
-              }}
-            >
-              <fadeNotifications
-                $$untouchable
-                $fadeVisible={appStore.activeIndex >= 0}
-              />
-              <contextHeader
-                css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}
-              >
-                <Title ellipse={1}>{Desktop.appState.name}</Title>
-                <SubTitle if={Desktop.appState.title} ellipse={2}>
-                  {Desktop.appState.title}
-                </SubTitle>
-              </contextHeader>
-              <Results />
-            </orbitContext>
-            <OrbitSearchResults parentPane="context" />
-          </orbitInner>
-        </OrbitFrame>
-      </UI.Theme>
+      <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
+        <OrbitHeader headerBg={headerBg} />
+        <orbitInner>
+          <orbitContext
+            css={{
+              background: theme.base.background,
+            }}
+          >
+            <fadeNotifications
+              $$untouchable
+              $fadeVisible={appStore.activeIndex >= 0}
+            />
+            <contextHeader css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}>
+              <Title ellipse={1}>{Desktop.appState.name}</Title>
+              <SubTitle if={Desktop.appState.title} ellipse={2}>
+                {Desktop.appState.title}
+              </SubTitle>
+            </contextHeader>
+            <Results />
+          </orbitContext>
+          <OrbitSearchResults parentPane="context" />
+        </orbitInner>
+      </OrbitFrame>
     )
   }
 
@@ -146,3 +142,9 @@ export default class Orbit {
     }
   }
 }
+
+export default props => (
+  <UI.Theme name="dark">
+    <Orbit {...props} />
+  </UI.Theme>
+)

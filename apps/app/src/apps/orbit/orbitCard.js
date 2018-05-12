@@ -200,7 +200,7 @@ export default class OrbitCard {
             {typeof preview !== 'string' && preview}
             <UI.Text
               if={typeof preview === 'string'}
-              color="#333"
+              alpha={0.7}
               ellipse={5}
               size={listItem ? 1.1 : 1.4}
             >

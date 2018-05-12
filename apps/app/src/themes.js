@@ -66,6 +66,18 @@ const Themes = {
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
     borderColor: '#222',
+    hover: {
+      background: color([255, 255, 255, 0.01]),
+    },
+    selected: {
+      background: color([255, 255, 255, 0.02]),
+    },
+    active: {
+      background: color([255, 255, 255, 0.03]),
+    },
+    activeHover: {
+      background: color([255, 255, 255, 0.025]),
+    },
   }),
   light: Theme.fromStyles({
     background: color('#fff'),

@@ -173,7 +173,10 @@ export default class HeaderIllustration extends React.Component {
   state = INITIAL_STATE
 
   async onReload() {
-    console.log('on relaod')
+    this.animate()
+  }
+
+  async animate() {
     this.setState({ reset: true })
     this.setState(INITIAL_STATE)
     await sleep(100)
@@ -182,8 +185,11 @@ export default class HeaderIllustration extends React.Component {
     this.componentDidMount()
   }
 
-  async componentDidMount() {
-    console.log('did mount')
+  componentDidMount() {
+    // this.startAnimations()
+  }
+
+  startAnimations = async () => {
     await this.chatFrame(Spring, {
       from: { scale: 1, opacity: 0, y: 0 },
       to: { scale: 1, opacity: 0, y: 0 },
@@ -193,7 +199,7 @@ export default class HeaderIllustration extends React.Component {
   }
 
   async animateIcons() {
-    await sleep(5000)
+    await sleep(4000)
     this.bounceIcons()
     await sleep(6000)
     this.setState({
@@ -203,7 +209,7 @@ export default class HeaderIllustration extends React.Component {
       bounceDrive: 2,
       bounceGithub: 2,
     })
-    await sleep(3000)
+    await sleep(1000)
     await this.leaveIcons()
   }
 
@@ -292,6 +298,7 @@ export default class HeaderIllustration extends React.Component {
     return (
       <headerIll>
         <chats>
+          <UI.Button onClick={this.animate}>aniamte</UI.Button>
           <Keyframes
             reset={this.state.reset}
             native
@@ -376,7 +383,7 @@ export default class HeaderIllustration extends React.Component {
             position: 'absolute',
             bottom: 90,
             left: 0,
-            right: -50,
+            right: 0,
             borderBottom: [4, '#f2f2f2'],
             zIndex: 0,
             transition: 'all ease-out 1000ms',
@@ -395,6 +402,7 @@ export default class HeaderIllustration extends React.Component {
               height: 100,
               boxShadow: '0 0 10px rgba(0,0,0,0.1)',
               border: [1, '#ddd'],
+              transformOrigin: 'top center',
               transform: {
                 scale: 0.9,
               },
@@ -417,8 +425,8 @@ export default class HeaderIllustration extends React.Component {
             position: 'absolute',
             bottom: 120,
             left: 40,
-            right: -10,
-            height: 100,
+            right: 40,
+            height: 120,
             alignItems: 'flex-end',
             justifyContent: 'space-between',
             flexFlow: 'row',

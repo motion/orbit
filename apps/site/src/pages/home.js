@@ -54,7 +54,7 @@ const RightSide = ({ children, inverse, ...props }) => (
       <edge
         css={{
           shapeOutside: inverse
-            ? 'polygon(39% 0%, 0% 74px, 117% 1096px)'
+            ? 'polygon(26% 0%, 0% 74px, 120% 1096px)'
             : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
           float: 'left',
           width: 110,
@@ -248,7 +248,7 @@ class Header {
                 top: '42%',
                 right: 0,
                 marginRight: -100,
-                background: '#CCCEF1',
+                background: '#eee',
                 width: 400,
                 height: 350,
                 borderRadius: 100,
@@ -295,8 +295,8 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[5, 0, 25]}>
               <span if={false} css={{ color: '#000' }} />
-              Upgrade your Mac with intelligence. Your company cloud meets your
-              OS.
+              Upgrade your Mac with intelligence.<br />
+              Your company cloud meets your OS.
             </P>
             <P size={1.2} alpha={0.7}>
               <Ul2>News</Ul2>, <Ul2>search</Ul2> and <Ul2>context</Ul2>{' '}
@@ -349,8 +349,10 @@ class Header {
       position: 'absolute',
       top: 0,
       right: 0,
-      bottom: 0,
-      left: '55%',
+      bottom: 160,
+      overflow: 'hidden',
+      left: '50%',
+      paddingLeft: '5%',
       zIndex: 4,
     },
   }
@@ -384,6 +386,21 @@ const Notification = ({ title, body }) => (
     </content>
   </notification>
 )
+
+const Num = view('div', {
+  position: 'absolute',
+  height: 100,
+  width: 100,
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: '#fff',
+  border: [1, 'dotted', '#eee'],
+  color: '#ccc',
+  fontWeight: 100,
+  fontSize: 62,
+  borderRadius: 1000,
+  zIndex: 1,
+})
 
 @view
 class Section2 extends React.Component {
@@ -441,6 +458,9 @@ class Section2 extends React.Component {
     return (
       <UI.Theme name="light">
         <Section>
+          <Num if={false} css={{ left: '50%', marginLeft: -160, top: -100 }}>
+            <UI.Icon name="news" />
+          </Num>
           <SectionContent padded fullscreen>
             <Slant inverseSlant />
             <LeftSide>
@@ -453,11 +473,12 @@ class Section2 extends React.Component {
                       echo chamber<WavyLine height={2900} $line />
                     </span>
                   </P>
-                  <P size={1.8}>
-                    It starts with upgrading giving your <Cmd>⌘+Space</Cmd> a
-                    beautiful daily heads up powered by a novel{' '}
-                    <Ul2>natural language model</Ul2>.
-                  </P>
+                  <P2 size={1.6}>
+                    A heads up tray to sort your day.<br />
+                    Your cloud meets <Cmd>⌘+Space</Cmd>.
+                    <br />
+                    With on-device <Ul2>machine learning</Ul2>.
+                  </P2>
                   <br />
                   <br />
                   <quote
@@ -506,7 +527,7 @@ class Section2 extends React.Component {
             <fadeawayfadeawayfadeaway
               css={{
                 position: 'absolute',
-                top: 300,
+                top: 350,
                 right: -250,
                 width: 900,
                 height: 500,
@@ -523,17 +544,18 @@ class Section2 extends React.Component {
             />
 
             <RightSide inverse css={{ zIndex: 10000000000 }}>
-              <div css={{ height: 540 }} />
+              <div css={{ height: 600 }} />
               <SmallTitle>Search</SmallTitle>
               <P size={3} fontWeight={800} margin={[0, 0, 20]}>
                 Search that works
               </P>
               <P2 size={2.2}>
-                The power of modern machine learning for your cloud.
+                Like Spotlight that searches Gmail, Slack, Jira, GDocs,
+                Dropbox...
               </P2>
-              <P2 size={1.8}>
-                Across every service you care about, faster than you can think
-                it.
+              <P2 size={1.6}>
+                Completely private and on-device.<br />
+                Powered by state of the art <Ul2>NLP</Ul2>.
               </P2>
             </RightSide>
           </SectionContent>
@@ -593,23 +615,24 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
+              <div css={{ marginTop: 200 }} />
               <SmallTitle>Context</SmallTitle>
               <P size={3} fontWeight={800} margin={[0, 0, 20]}>
-                Realtime superpowers
+                Context without context-switching
               </P>
               <P2 size={2.2}>
-                It's time the power of modern machine learning was seamlessly
-                integrated with how you work.
+                The <Cmd>Option</Cmd> key upgrades.
               </P2>
-              <P2 size={1.8}>
-                Whether writing an email or chatting with a customer, a single
-                key allows you see relevant answers in realtime.
+              <P2 size={1.6}>
+                Writing an important email or doc?<br />
+                See updates on projects and people.<br />
+                Powered by realtime <Ul2>OCR</Ul2>.
               </P2>
               <Observer onChange={this.handleIntersect}>
                 <br />
               </Observer>
               <br />
-              <Callout>
+              <Callout if={false}>
                 <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
                   Give it a try
                 </P>
@@ -637,7 +660,7 @@ class Section3 extends React.Component {
                         marginLeft: -500,
                         height: 'auto',
                         transformOrigin: 'center left',
-                        transform: { scale: 0.45, x: 250 },
+                        transform: { scale: 0.35, x: 400 },
                       }}
                     />
                   </animated.div>

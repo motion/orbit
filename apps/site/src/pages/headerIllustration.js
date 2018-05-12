@@ -53,7 +53,7 @@ const Bubble = view(
       borderBottomLeftRadius: 0,
     },
     chromeless: {
-      border: 'none',
+      // border: 'none',
       // transformOrigin: 'center left',
       // transform: {
       //   scale: 1.5,
@@ -172,9 +172,9 @@ class LongChats {
 export default class HeaderIllustration extends React.Component {
   state = INITIAL_STATE
 
-  async onReload() {
-    this.animate()
-  }
+  // async onReload() {
+  //   this.animate()
+  // }
 
   animate = async () => {
     this.setState({ reset: true })
@@ -241,25 +241,25 @@ export default class HeaderIllustration extends React.Component {
     })
     await sleep(6200)
     this.chatFrame(Spring, {
-      to: { scale: 0.4, opacity: 1, y: -300 },
+      to: { scale: 0.6, opacity: 1, y: -400 },
       config: { tension: 10, friction: 50 },
     })
     await sleep(2500)
     this.chatFrame(Spring, {
-      to: { scale: 0.4, opacity: 0.4, y: -400 },
-      config: { tension: 20, friction: 50 },
+      to: { scale: 0.6, opacity: 0.6, y: -500 },
+      config: { tension: 25, friction: 50 },
     })
-    await sleep(2000)
+    await sleep(2500)
     this.chatFrame(Spring, {
-      to: { scale: 0.1, opacity: 0, y: -850 },
+      to: { scale: 0.6, opacity: 0, y: -1000 },
       config: { tension: 20, friction: 50 },
     })
-    await sleep(5500)
+    await sleep(1500)
     await this.chatText(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
     })
-    await sleep(1000)
+    await sleep(700)
     await this.chatText(Spring, {
       from: { opacity: 1 },
       to: { opacity: 0 },
@@ -380,10 +380,11 @@ export default class HeaderIllustration extends React.Component {
         <dockContain
           css={{
             position: 'absolute',
-            bottom: 160,
+            bottom: 0,
             left: 0,
             right: 0,
             borderBottom: [4, '#f2f2f2'],
+            background: 'linear-gradient(transparent, #fff)',
             zIndex: 0,
             transition: 'all ease-out 1000ms',
             opacity: this.state.leaveSlack ? 0 : 1,
@@ -422,7 +423,7 @@ export default class HeaderIllustration extends React.Component {
         <dockIcons
           css={{
             position: 'absolute',
-            bottom: 160 + 30,
+            bottom: 25,
             left: 40,
             right: 40,
             height: 120,
@@ -508,6 +509,10 @@ export default class HeaderIllustration extends React.Component {
   }
 
   static style = {
+    headerIll: {
+      position: 'relative',
+      height: '100%',
+    },
     chats: {
       // pointerEvents: 'none',
       position: 'absolute',
@@ -525,7 +530,7 @@ export default class HeaderIllustration extends React.Component {
     },
     message: {
       position: 'absolute',
-      bottom: 500,
+      top: 120,
       left: 0,
       right: 0,
       alignItems: 'center',

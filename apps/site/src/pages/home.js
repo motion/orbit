@@ -26,6 +26,7 @@ const SmallTitle = props => (
     fontWeight={800}
     textTransform="uppercase"
     alpha={0.5}
+    margin={[0, 0, 10]}
     {...props}
   />
 )
@@ -63,6 +64,42 @@ const RightSide = ({ children, inverse, ...props }) => (
       {children}
     </inner>
   </rightSide>
+)
+
+const LeftSide = ({ children, inverse, ...props }) => (
+  <leftSide
+    css={{
+      zIndex: 3,
+      flex: 1,
+      position: 'absolute',
+      left: 0,
+      right: '50%',
+      bottom: 50,
+      top: 50,
+      paddingRight: 20,
+      justifyContent: 'center',
+    }}
+    {...props}
+  >
+    <inner
+      css={{
+        display: 'block',
+        textAlign: 'right',
+      }}
+    >
+      <edge
+        css={{
+          shapeOutside: inverse
+            ? 'polygon(82% 0%, 90px 0%, 0% 1096px)'
+            : 'polygon(0% 0%, 90px 0%, 94% 1096px)',
+          float: 'right',
+          width: 110,
+          height: 990,
+        }}
+      />
+      {children}
+    </inner>
+  </leftSide>
 )
 
 const WavyLine = ({ height, ...props }) => (
@@ -245,7 +282,7 @@ class Header {
             </P>
           </top>
           <div $$flex />
-          <Callout css={{ width: '57%', margin: [-80, 0, 0, -10] }}>
+          <Callout css={{ width: '52%', margin: [-80, 0, 0, -10] }}>
             <P size={2.2} fontWeight={800} color={brandColor}>
               Your company is growing
             </P>
@@ -406,40 +443,42 @@ class Section2 extends React.Component {
         <Section>
           <SectionContent padded fullscreen>
             <Slant inverseSlant />
-            <Observer onChange={this.handleIntersect}>
-              <main css={{ marginTop: -75 }}>
-                <SmallTitle>News</SmallTitle>
-                <P size={3} fontWeight={800} margin={[0, 0, 35]}>
-                  Slack can be an<br />
-                  <span $noisy>
-                    echo chamber<WavyLine height={2900} $line />
-                  </span>
-                </P>
-                <P size={1.8}>
-                  It starts with upgrading giving your <Cmd>⌘+Space</Cmd> a
-                  beautiful daily heads up powered by a novel{' '}
-                  <Ul2>natural language model</Ul2>.
-                </P>
-                <br />
-                <br />
-                <quote
-                  if={false}
-                  css={{
-                    width: 500,
-                    // margin: [-20, 0, 0],
-                    // alignItems: 'flex-end',
-                    textAlign: 'right',
-                  }}
-                >
-                  <P size={3.5} fontWeight={200} alpha={0.5}>
-                    Pull,<br />
-                    <span css={{ marginRight: -4 }}>instead of</span>
-                    <br />
-                    <span css={{ marginRight: -8 }}>being pushed</span>
+            <LeftSide>
+              <Observer onChange={this.handleIntersect}>
+                <content css={{ display: 'block', marginTop: 40 }}>
+                  <SmallTitle>News</SmallTitle>
+                  <P size={3} fontWeight={800} margin={[0, 0, 35]}>
+                    Slack can be an<br />
+                    <span $noisy>
+                      echo chamber<WavyLine height={2900} $line />
+                    </span>
                   </P>
-                </quote>
-              </main>
-            </Observer>
+                  <P size={1.8}>
+                    It starts with upgrading giving your <Cmd>⌘+Space</Cmd> a
+                    beautiful daily heads up powered by a novel{' '}
+                    <Ul2>natural language model</Ul2>.
+                  </P>
+                  <br />
+                  <br />
+                  <quote
+                    if={false}
+                    css={{
+                      width: 500,
+                      // margin: [-20, 0, 0],
+                      // alignItems: 'flex-end',
+                      textAlign: 'right',
+                    }}
+                  >
+                    <P size={3.5} fontWeight={200} alpha={0.5}>
+                      Pull,<br />
+                      <span css={{ marginRight: -4 }}>instead of</span>
+                      <br />
+                      <span css={{ marginRight: -8 }}>being pushed</span>
+                    </P>
+                  </quote>
+                </content>
+              </Observer>
+            </LeftSide>
             <newsIllustration>
               <Trail
                 native
@@ -532,36 +571,36 @@ class Section3 extends React.Component {
         <Section css={{ background: '#fff' }}>
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
-            <Observer onChange={this.handleIntersect}>
-              <leftSide css={{ width: '48%', zIndex: 0, overflow: 'hidden' }}>
-                <SmallTitle>Context</SmallTitle>
-                <P size={3} fontWeight={800} margin={[0, 0, 20]}>
-                  Realtime superpowers
+            <LeftSide inverse>
+              <SmallTitle>Context</SmallTitle>
+              <P size={3} fontWeight={800} margin={[0, 0, 20]}>
+                Realtime superpowers
+              </P>
+              <P2 size={2.2}>
+                It's time the power of modern machine learning was seamlessly
+                integrated with how you work.
+              </P2>
+              <P2 size={1.8}>
+                Whether writing an email or chatting with a customer, a single
+                key allows you see relevant answers in realtime.
+              </P2>
+              <Observer onChange={this.handleIntersect}>
+                <br />
+              </Observer>
+              <br />
+              <Callout>
+                <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
+                  Give it a try
                 </P>
-                <P2 size={2.2}>
-                  It's time the power of modern machine learning was seamlessly
-                  integrated with how you work.
+                <P2 size={2} color={brandColor} margin={0}>
+                  Hold{' '}
+                  <Animate.Wiggle>
+                    <Cmd>Option</Cmd>
+                  </Animate.Wiggle>{' '}
+                  to see context.
                 </P2>
-                <P2 size={1.8}>
-                  Whether writing an email or chatting with a customer, a single
-                  key allows you see relevant answers in realtime.
-                </P2>
-                <br />
-                <br />
-                <Callout>
-                  <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
-                    Give it a try
-                  </P>
-                  <P2 size={2} color={brandColor} margin={0}>
-                    Hold{' '}
-                    <Animate.Wiggle>
-                      <Cmd>Option</Cmd>
-                    </Animate.Wiggle>{' '}
-                    to see context.
-                  </P2>
-                </Callout>
-              </leftSide>
-            </Observer>
+              </Callout>
+            </LeftSide>
             <RightSide css={{ zIndex: 0, overflow: 'hidden' }}>
               <Spring from={{ x: 100 }} to={{ x: 0 }}>
                 {({ x }) => (

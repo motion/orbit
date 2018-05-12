@@ -466,13 +466,12 @@ class Section2 extends React.Component {
             <RightSide inverse>
               <div css={{ height: 520 }} />
               <SmallTitle>Search</SmallTitle>
-              <P size={3} fontWeight={800} margin={[0, 0, 35]}>
-                Upgrade your Mac
+              <P size={3} fontWeight={800} margin={[0, 0, 20]}>
+                Search that works
               </P>
               <P2 size={2.2}>
                 The power of modern machine learning for your cloud.
               </P2>
-              <br />
               <P2 size={1.8}>
                 Across every service you care about, faster than you can think
                 it.
@@ -535,55 +534,55 @@ class Section3 extends React.Component {
             <Slant css={{ zIndex: 2 }} />
             <Observer onChange={this.handleIntersect}>
               <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }}>
-                <Spring from={{ x: 0 }} to={{ x: 100 }}>
-                  {({ x }) => (
-                    <animated.div
-                      style={{
-                        transform: `translate3d(${x}px,0,0)`,
-                      }}
-                    >
-                      <img
-                        src={wordImage}
-                        css={{
-                          width: 1634,
-                          height: 'auto',
-                          transformOrigin: 'top left',
-                          transform: { scale: 0.45, x: 250 },
-                        }}
-                      />
-                    </animated.div>
-                  )}
-                </Spring>
+                <SmallTitle>Context</SmallTitle>
+                <P size={3} fontWeight={800} margin={[0, 0, 35]}>
+                  Upgrade your Mac
+                </P>
+                <P2 size={2.2}>
+                  It's time the power of modern machine learning was seamlessly
+                  integrated with how you work.
+                </P2>
+                <br />
+                <P2 size={1.8}>
+                  Whether writing an email or chatting with a customer, a single
+                  key allows you see relevant answers in realtime.
+                </P2>
+                <br />
+                <br />
+                <Callout>
+                  <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
+                    Give it a try
+                  </P>
+                  <P2 size={2} color={brandColor} margin={0}>
+                    Hold{' '}
+                    <Animate.Wiggle>
+                      <Cmd>Option</Cmd>
+                    </Animate.Wiggle>{' '}
+                    to see context.
+                  </P2>
+                </Callout>
               </leftSide>
             </Observer>
             <RightSide>
-              <SmallTitle>Context</SmallTitle>
-              <P size={3} fontWeight={800} margin={[0, 0, 35]}>
-                Upgrade your Mac
-              </P>
-              <P2 size={2.2}>
-                It's time the power of modern machine learning was seamlessly
-                integrated with how you work.
-              </P2>
-              <br />
-              <P2 size={1.8}>
-                Whether writing an email or chatting with a customer, a single
-                key allows you see relevant answers in realtime.
-              </P2>
-              <br />
-              <br />
-              <Callout>
-                <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
-                  Give it a try
-                </P>
-                <P2 size={2} color={brandColor} margin={0}>
-                  Hold{' '}
-                  <Animate.Wiggle>
-                    <Cmd>Option</Cmd>
-                  </Animate.Wiggle>{' '}
-                  to see context.
-                </P2>
-              </Callout>
+              <Spring from={{ x: 0 }} to={{ x: 100 }}>
+                {({ x }) => (
+                  <animated.div
+                    style={{
+                      transform: `translate3d(${x}px,0,0)`,
+                    }}
+                  >
+                    <img
+                      src={wordImage}
+                      css={{
+                        width: 1634,
+                        height: 'auto',
+                        transformOrigin: 'top left',
+                        transform: { scale: 0.45, x: 250 },
+                      }}
+                    />
+                  </animated.div>
+                )}
+              </Spring>
             </RightSide>
           </SectionContent>
         </Section>
@@ -660,9 +659,7 @@ class Section4 {
               </Callout>
               <br />
               <br />
-              <P size={1.2} fontWeight={800}>
-                Contextual Answers
-              </P>
+              <br />
               <P2 size={3}>Make your success team more successful.</P2>
               <P2 size={1.8}>
                 Orbit works alongside Intercom and Zendesk. Your knowledgebase,
@@ -685,50 +682,6 @@ class Section4 {
 }
 
 @view
-class Section5 {
-  render() {
-    return (
-      <UI.Theme name="medium">
-        <Section css={{ background: '#fafafa' }}>
-          <graphic
-            css={{
-              position: 'absolute',
-              top: -20,
-              left: '50%',
-              marginLeft: -250,
-              width: 300,
-              height: 300,
-              border: [10, '#ccc'],
-              zIndex: -2,
-              borderRadius: 1000,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            graphic
-          </graphic>
-          <SectionContent fullscreen padded>
-            <Slant backgroundColor="#f0f0f0" css={{ zIndex: 2 }} />
-            <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }} />
-            <RightSide css={{ top: 0, justifyContent: 'flex-start' }}>
-              <content>
-                <Callout css={{ width: 460, left: -20, top: 0 }}>
-                  <P2 size={2.2} margin={0}>
-                    Reduced onboarding time. Less interruptions over small
-                    questions.
-                  </P2>
-                </Callout>
-                <div $$flex />
-              </content>
-            </RightSide>
-          </SectionContent>
-        </Section>
-      </UI.Theme>
-    )
-  }
-}
-
-@view
 class Section6 {
   render() {
     return (
@@ -737,7 +690,7 @@ class Section6 {
           <SectionContent fullscreen padded>
             <Slant
               // backgroundColor="#f2f2f2"
-              inverseSlant
+              // inverseSlant
               css={{ zIndex: 2 }}
             />
             <main>
@@ -922,8 +875,8 @@ export default class HomePage extends React.Component {
         <Section2 />
         <Section3 />
         <Section4 />
-        <Section5 />
-        {/* <Section6 /> */}
+        {/* <Section5 /> */}
+        <Section6 />
         <Section7 />
         <Footer />
       </home>

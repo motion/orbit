@@ -351,7 +351,7 @@ class Header {
       right: 0,
       bottom: 0,
       left: '55%',
-      zIndex: 2,
+      zIndex: 4,
     },
   }
 }
@@ -479,6 +479,7 @@ class Section2 extends React.Component {
                 </content>
               </Observer>
             </LeftSide>
+
             <newsIllustration>
               <Trail
                 native
@@ -502,8 +503,27 @@ class Section2 extends React.Component {
               </Trail>
             </newsIllustration>
 
-            <RightSide inverse>
-              <div css={{ height: 520 }} />
+            <fadeawayfadeawayfadeaway
+              css={{
+                position: 'absolute',
+                top: 300,
+                right: -250,
+                width: 900,
+                height: 500,
+                background: '#fff',
+                borderRadius: 1000,
+                filter: {
+                  blur: 80,
+                },
+                transform: {
+                  z: 0,
+                },
+                zIndex: 2,
+              }}
+            />
+
+            <RightSide inverse css={{ zIndex: 10000000000 }}>
+              <div css={{ height: 540 }} />
               <SmallTitle>Search</SmallTitle>
               <P size={3} fontWeight={800} margin={[0, 0, 20]}>
                 Search that works
@@ -529,10 +549,11 @@ class Section2 extends React.Component {
     },
     newsIllustration: {
       position: 'absolute',
-      top: 100,
-      right: 50,
+      top: 20,
+      right: 100,
       width: 300,
       bottom: 150,
+      zIndex: 1,
     },
     noisy: {
       position: 'relative',

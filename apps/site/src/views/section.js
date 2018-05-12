@@ -34,7 +34,7 @@ export const Slant = ({
         bottom: 0,
         right: inverse ? '50%' : '-50%',
         left: inverse ? '-50%' : '50%',
-        zIndex: 1,
+        zIndex: 3,
       }}
       {...props}
     >

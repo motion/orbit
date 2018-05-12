@@ -176,7 +176,7 @@ export default class HeaderIllustration extends React.Component {
     this.animate()
   }
 
-  async animate() {
+  animate = async () => {
     this.setState({ reset: true })
     this.setState(INITIAL_STATE)
     await sleep(100)
@@ -186,7 +186,7 @@ export default class HeaderIllustration extends React.Component {
   }
 
   componentDidMount() {
-    // this.startAnimations()
+    this.startAnimations()
   }
 
   startAnimations = async () => {
@@ -298,7 +298,6 @@ export default class HeaderIllustration extends React.Component {
     return (
       <headerIll>
         <chats>
-          <UI.Button onClick={this.animate}>aniamte</UI.Button>
           <Keyframes
             reset={this.state.reset}
             native
@@ -381,7 +380,7 @@ export default class HeaderIllustration extends React.Component {
         <dockContain
           css={{
             position: 'absolute',
-            bottom: 90,
+            bottom: 160,
             left: 0,
             right: 0,
             borderBottom: [4, '#f2f2f2'],
@@ -423,7 +422,7 @@ export default class HeaderIllustration extends React.Component {
         <dockIcons
           css={{
             position: 'absolute',
-            bottom: 120,
+            bottom: 160 + 30,
             left: 40,
             right: 40,
             height: 120,

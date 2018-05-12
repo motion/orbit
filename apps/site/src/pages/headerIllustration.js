@@ -193,9 +193,9 @@ export default class HeaderIllustration extends React.Component {
   }
 
   async animateIcons() {
-    await sleep(3000)
+    await sleep(3500)
     this.bounceIcons()
-    await sleep(5000)
+    await sleep(6000)
     this.setState({
       bounceSlack: 2,
       bounceDropbox: 2,
@@ -203,7 +203,7 @@ export default class HeaderIllustration extends React.Component {
       bounceDrive: 2,
       bounceGithub: 2,
     })
-    await sleep(1000)
+    await sleep(3000)
     await this.leaveIcons()
   }
 
@@ -253,14 +253,16 @@ export default class HeaderIllustration extends React.Component {
       from: { opacity: 0 },
       to: { opacity: 1 },
     })
+    await sleep(1000)
     await this.chatText(Spring, {
       from: { opacity: 1 },
       to: { opacity: 0 },
-      config: config.fast,
+      config: config.slow,
     })
     await this.chatText2(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
+      config: config.slow,
     })
   }
 

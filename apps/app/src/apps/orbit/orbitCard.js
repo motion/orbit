@@ -153,7 +153,7 @@ export default class OrbitCard {
       >
         <card
           css={{
-            padding: listItem ? 15 : tiny ? [6, 8] : [10, 11],
+            padding: listItem ? 15 : tiny ? [6, 8] : [12, 14],
             borderRadius,
           }}
         >
@@ -202,13 +202,12 @@ export default class OrbitCard {
               if={typeof preview === 'string'}
               color="#333"
               ellipse={5}
-              size={listItem ? 1.1 : 1.2}
-              lineHeight="1.3rem"
+              size={listItem ? 1.1 : 1.4}
             >
               {preview}
             </UI.Text>
           </preview>
-          <bottom if={!tiny && (bottom || permalink || via)}>
+          <bottom if={false && !tiny && (bottom || permalink || via)}>
             <permalink if={isExpanded}>{permalink}</permalink>
             <space if={permalink} />
             {bottom}
@@ -281,7 +280,7 @@ export default class OrbitCard {
       // flex: 1,
     },
     subtitle: {
-      margin: [2, 0, 3, 0],
+      margin: [4, 0, 3],
       height: 20,
       flexFlow: 'row',
       alignItems: 'center',
@@ -335,7 +334,7 @@ export default class OrbitCard {
     return {
       card: {
         ...card,
-        borderTop: [listItem ? 1 : 2, theme.active.background],
+        borderTop: [listItem ? 1 : 1, theme.active.background],
       },
       bottom: {
         opacity: isSelected ? 1 : 0.5,

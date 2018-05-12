@@ -73,7 +73,6 @@ export default class OrbitHeader {
         {...this.hoverSettler.props}
       >
         <bottomBorder
-          if={false}
           css={{
             position: 'absolute',
             bottom: 0,
@@ -81,14 +80,16 @@ export default class OrbitHeader {
             zIndex: 1,
             right: App.orbitOnLeft ? 20 : -1,
             left: App.orbitOnLeft ? -1 : 20,
-            background: theme.active.background.darken(0.01).desaturate(0.1),
+            background: `linear-gradient(to right, transparent, ${theme.active.background
+              .darken(0.01)
+              .desaturate(0.1)})`,
           }}
         />
         <title>
           <UI.Icon
             $searchIcon
             name="ui-1_zoom"
-            size={18}
+            size={16}
             color={theme.active.background.darken(0.15).desaturate(0.4)}
           />
           <input

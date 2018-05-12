@@ -237,7 +237,7 @@ class Header {
           </top>
           <div $$flex />
           <Callout css={{ width: '57%', margin: [-80, 0, 0, -34] }}>
-            <P size={1.9} fontWeight={800} color={'#000' || brandColor}>
+            <P size={1.9} fontWeight={800} color={brandColor}>
               Your company is growing
             </P>
             <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
@@ -412,13 +412,11 @@ class Section2 extends React.Component {
               <Observer onChange={this.handleIntersect}>
                 <main css={{ marginTop: -20 }}>
                   <P fontWeight={500} size={4} margin={[0, 0, 35]}>
-                    Your cloud has turned into an{' '}
+                    Slack has turned into an<br />
                     <span $noisy>
                       echo chamber<WavyLine height={3600} $line />
                     </span>
                   </P>
-                  <P size={2.2}>Orbit gives signal to noise</P>
-                  <br />
                   <P size={1.8}>
                     It starts by upgrading Spotlight with{' '}
                     <Ul2>natural language search</Ul2> and a beautiful{' '}

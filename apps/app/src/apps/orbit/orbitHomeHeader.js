@@ -63,7 +63,7 @@ export default class OrbitHomeHeader {
       background: theme.base.background,
       iconProps: {
         color: buttonColor,
-        size: 16,
+        size: 18,
       },
     }
     return (
@@ -78,6 +78,7 @@ export default class OrbitHomeHeader {
             {...exploreButton}
           />
           <UI.Button
+            if={false}
             icon="menu"
             tooltip="Explore"
             $exploreButton
@@ -119,7 +120,7 @@ export default class OrbitHomeHeader {
 
         <section $filterSection>
           <title>
-            <SubTitle $subtitle>
+            <SubTitle $niceDate>
               {day} {month} {dayNum}
               <span $super>{postfix[dayNum - 1]}</span>
             </SubTitle>
@@ -137,9 +138,6 @@ export default class OrbitHomeHeader {
       fontSize: 11,
       opacity: 0.6,
     },
-    section: {
-      padding: [5, 0],
-    },
     cards: {
       flexFlow: 'row',
       flexWrap: 'wrap',
@@ -149,12 +147,11 @@ export default class OrbitHomeHeader {
     explore: {
       width: '100%',
       flexFlow: 'row',
-      padding: 10,
-      paddingTop: 8,
+      padding: [7, 10, 10, 12],
       alignItems: 'center',
     },
     exploreButton: {
-      margin: [0, 3, 0, 0],
+      margin: [0, ,6 0, 0],
     },
     filterSection: {
       flexFlow: 'row',
@@ -164,7 +161,7 @@ export default class OrbitHomeHeader {
     title: {
       padding: [0, 15, 0, 0],
     },
-    subtitle: {
+    niceDate: {
       fontSize: 16,
       fontWeight: 300,
       lineHeight: '1.5rem',
@@ -176,6 +173,10 @@ export default class OrbitHomeHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      opacity: 0.5,
+      '&:hover': {
+        opacity: 1,
+      },
     },
   }
 }

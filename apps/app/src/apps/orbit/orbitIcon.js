@@ -24,7 +24,7 @@ const adjust = name => {
   if (name === 'slack') {
     return {
       transform: {
-        y: 1,
+        y: -1,
         scale: 0.95,
       },
     }

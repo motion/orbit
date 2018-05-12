@@ -24,17 +24,17 @@ const getTextProperties = props => {
   }
   let lineHeight = props.lineHeight
   if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
-    lineHeight = Math.log(fontSize * 10) * 3.5 + fontSize / 1.6
+    lineHeight = Math.log(fontSize * 100) * 2.8 + fontSize / 1.4 - 9
     if (props.sizeLineHeight) {
       lineHeight = lineHeight * props.sizeLineHeight
     }
   }
   // round
   if (typeof fontSize === 'number') {
-    fontSizeNum = Math.round(fontSize * 100) / 100
+    fontSizeNum = Math.round(fontSize * 10) / 10
   }
   if (typeof lineHeight === 'number') {
-    lineHeightNum = Math.round(lineHeight * 100) / 100
+    lineHeightNum = Math.round(lineHeight * 10) / 10
   }
   if (typeof props.sizeMethod === 'undefined') {
     lineHeight = `${lineHeightNum}px`

@@ -193,7 +193,7 @@ export default class HeaderIllustration extends React.Component {
   }
 
   async animateIcons() {
-    await sleep(3500)
+    await sleep(5000)
     this.bounceIcons()
     await sleep(6000)
     this.setState({

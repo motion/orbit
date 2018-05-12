@@ -151,7 +151,7 @@ export default class OrbitHomeHeader {
       alignItems: 'center',
     },
     exploreButton: {
-      margin: [0, ,6 0, 0],
+      margin: [0, 6, 0, 0],
     },
     filterSection: {
       flexFlow: 'row',

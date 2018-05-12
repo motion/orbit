@@ -533,16 +533,15 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <Observer onChange={this.handleIntersect}>
-              <leftSide css={{ width: '50%', zIndex: 0, overflow: 'hidden' }}>
+              <leftSide css={{ width: '48%', zIndex: 0, overflow: 'hidden' }}>
                 <SmallTitle>Context</SmallTitle>
-                <P size={3} fontWeight={800} margin={[0, 0, 35]}>
-                  Upgrade your Mac
+                <P size={3} fontWeight={800} margin={[0, 0, 20]}>
+                  Realtime superpowers
                 </P>
                 <P2 size={2.2}>
                   It's time the power of modern machine learning was seamlessly
                   integrated with how you work.
                 </P2>
-                <br />
                 <P2 size={1.8}>
                   Whether writing an email or chatting with a customer, a single
                   key allows you see relevant answers in realtime.
@@ -563,8 +562,8 @@ class Section3 extends React.Component {
                 </Callout>
               </leftSide>
             </Observer>
-            <RightSide>
-              <Spring from={{ x: 0 }} to={{ x: 100 }}>
+            <RightSide css={{ zIndex: 0, overflow: 'hidden' }}>
+              <Spring from={{ x: 100 }} to={{ x: 0 }}>
                 {({ x }) => (
                   <animated.div
                     style={{
@@ -575,8 +574,9 @@ class Section3 extends React.Component {
                       src={wordImage}
                       css={{
                         width: 1634,
+                        marginLeft: -500,
                         height: 'auto',
-                        transformOrigin: 'top left',
+                        transformOrigin: 'center left',
                         transform: { scale: 0.45, x: 250 },
                       }}
                     />

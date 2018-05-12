@@ -5,6 +5,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
+import * as Constants from '~/constants'
 // import Trail from '~/trail'
 import {
   DropboxIcon,
@@ -384,7 +385,7 @@ export default class HeaderIllustration extends React.Component {
             left: 0,
             right: 0,
             borderBottom: [4, '#f2f2f2'],
-            background: 'linear-gradient(transparent, #fff)',
+            background: `linear-gradient(transparent, ${Constants.BACKGROUND_ALT})`,
             zIndex: 0,
             transition: 'all ease-out 1000ms',
             opacity: this.state.leaveSlack ? 0 : 1,
@@ -415,7 +416,7 @@ export default class HeaderIllustration extends React.Component {
                 left: -10,
                 right: -10,
                 bottom: -10,
-                background: 'linear-gradient(transparent, #fff)',
+                background: `linear-gradient(transparent, ${Constants.BACKGROUND_ALT})`,
               }}
             />
           </dock>

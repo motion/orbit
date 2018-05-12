@@ -59,6 +59,7 @@ export default class OrbitHeader {
     const headerBg = theme.base.background
     return (
       <orbitHeader
+        $$draggable
         $headerBg={headerBg}
         css={{
           borderTopLeftRadius:

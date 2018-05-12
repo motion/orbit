@@ -6,10 +6,12 @@ import { Section, SectionContent, Slant, PurchaseButton } from '~/views'
 // import homeImg from '~/../public/screen-home.png'
 import personImage from '~/../public/screen-person.png'
 import wordImage from '~/../public/word.png'
+import homeImg from '~/../public/screen-home.png'
 import Observer from '@researchgate/react-intersection-observer'
 import { Trail, Spring, animated } from 'react-spring'
 import HeaderIllustration from './headerIllustration'
 import { MailIcon } from '~/views/icons'
+import * as Constants from '~/constants'
 
 const Animate = {
   Wiggle: view('div', {
@@ -225,17 +227,17 @@ class Header {
   render() {
     //  'linear-gradient(#f2f2f2, #fff)'
     return (
-      <Section css={{ background: '#fff' }}>
+      <Section leftBackground={Constants.BACKGROUND_ALT}>
         <SectionContent padded fullscreen>
-          <Slant rightBackground="#fff" />
+          <Slant />
           <glowContain
             css={{
               position: 'absolute',
               top: -200,
-              left: 0,
+              left: -100,
               bottom: 0,
               right: '50%',
-              zIndex: 0,
+              zIndex: 1,
               overflow: 'hidden',
               transform: {
                 rotate: '5deg',
@@ -248,31 +250,17 @@ class Header {
                 top: '42%',
                 right: 0,
                 marginRight: -100,
-                background: '#eee',
-                width: 400,
-                height: 350,
+                background: Constants.BACKGROUND_ALT.darken(0.2),
+                opacity: 0.5,
+                width: 350,
+                height: 300,
                 borderRadius: 100,
-                opacity: 0.7,
                 filter: {
                   blur: 150,
                 },
               }}
             />
           </glowContain>
-          <bgTest
-            css={{
-              position: 'absolute',
-              top: -500,
-              left: -500,
-              bottom: -500,
-              right: '50%',
-              zIndex: -2,
-              background: '#fff',
-              transform: {
-                rotate: '5deg',
-              },
-            }}
-          />
           <top $$row>
             <BrandLogo />
             <div $$flex />
@@ -282,11 +270,16 @@ class Header {
             </P>
           </top>
           <div $$flex />
-          <Callout css={{ width: '52%', margin: [-80, 0, 0, -10] }}>
-            <P size={2.2} fontWeight={800} color={brandColor}>
+          <Callout css={{ width: '52%', margin: [-80, 0, 0, -50] }}>
+            <P
+              size={2.1}
+              fontWeight={700}
+              color={brandColor.darken(0.2)}
+              marginBottom={-5}
+            >
               Your company is growing
             </P>
-            <P size={4.3} margin={[15, 0, 10]} fontWeight={300}>
+            <P size={4.3} margin={[15, 0, 10]} fontWeight={500}>
               Make it easy to understand what's going on.
             </P>
             <line
@@ -457,7 +450,7 @@ class Section2 extends React.Component {
   render() {
     return (
       <UI.Theme name="light">
-        <Section>
+        <Section leftBackground={Constants.BACKGROUND_ALT} inverse>
           <Num if={false} css={{ left: '50%', marginLeft: -160, top: -100 }}>
             <UI.Icon name="news" />
           </Num>
@@ -474,7 +467,7 @@ class Section2 extends React.Component {
                     </span>
                   </P>
                   <P2 size={1.6}>
-                    A heads up tray to sort your day.<br />
+                    Turn off notifications & stay up to date.<br />
                     Your cloud meets <Cmd>⌘+Space</Cmd>.
                     <br />
                     With on-device <Ul2>machine learning</Ul2>.
@@ -522,6 +515,21 @@ class Section2 extends React.Component {
                   </animated.div>
                 ))}
               </Trail>
+
+              <img
+                src={homeImg}
+                css={{
+                  position: 'absolute',
+                  top: 10,
+                  width: 1100,
+                  height: 'auto',
+                  transformOrigin: 'top left',
+                  transform: {
+                    scale: 0.5,
+                  },
+                  boxShadow: [[0, 0, 100, [0, 0, 0, 0.1]]],
+                }}
+              />
             </newsIllustration>
 
             <fadeawayfadeawayfadeaway
@@ -611,7 +619,7 @@ class Section3 extends React.Component {
     console.log('isIntersecting', isIntersecting)
     return (
       <UI.Theme name="light">
-        <Section css={{ background: '#fff' }}>
+        <Section leftBackground={Constants.BACKGROUND_ALT}>
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
@@ -678,10 +686,16 @@ class Section3 extends React.Component {
 class Section4 {
   render() {
     return (
-      <UI.Theme name="medium">
-        <Section css={{ background: '#fafafa' }}>
+      <UI.Theme name="light">
+        <Section inverse leftBackground={Constants.BACKGROUND_ALT}>
           <SectionContent fullscreen padded>
-            <Slant inverseSlant backgroundColor="#f0f0f0" css={{ zIndex: 2 }} />
+            <Slant
+              inverseSlant
+              slantBackground={`linear-gradient(${
+                Constants.colorSecondary
+              }, ${Constants.BACKGROUND_ALT.darken(0.2)})`}
+              css={{ zIndex: 2 }}
+            />
             <main>
               <P
                 size={1.1}
@@ -769,11 +783,10 @@ class Section6 {
   render() {
     return (
       <UI.Theme name="light">
-        <Section css={{ background: '#fff' }}>
+        <Section leftBackground={Constants.BACKGROUND_ALT}>
           <SectionContent fullscreen padded>
             <Slant
-              // backgroundColor="#f2f2f2"
-              // inverseSlant
+              slantBackground={Constants.BACKGROUND_ALT.darken(0.2)}
               css={{ zIndex: 2 }}
             />
             <main>
@@ -881,7 +894,12 @@ class Section7 {
       <UI.Theme name="dark">
         <Section css={{ background: '#222' }}>
           <SectionContent fullscreen padded>
-            <Slant inverseSlant backgroundColor="#000" />
+            <Slant
+              inverseSlant
+              slantBackground={`linear-gradient(${Constants.BACKGROUND_ALT.darken(
+                0.2,
+              )}, ${Constants.colorSecondary})`}
+            />
             <main>
               <P size={3} fontWeight={800}>
                 Private. Secure.<br />

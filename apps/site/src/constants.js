@@ -26,6 +26,8 @@ export const colorSecondaryDark = colorSecondary.darken(0.35)
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')
 
+export const BACKGROUND_ALT = UI.color('#FCFAFB')
+
 export const mainLight = UI.color(colorMain)
   .lighten(0.65)
   .hex()

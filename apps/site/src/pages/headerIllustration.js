@@ -354,8 +354,8 @@ export default class HeaderIllustration extends React.Component {
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
                 <P $message size={1.3} fontWeight={800}>
-                  Feels like your organization<br />
-                  is lacking organization?
+                  Is your organization<br />
+                  lacking organization?
                 </P>
               </animated.div>
             )}

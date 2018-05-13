@@ -28,12 +28,13 @@ const SmallTitle = props => (
     fontWeight={700}
     textTransform="uppercase"
     alpha={0.5}
+    padding={[0, 2]}
     margin={[0, 0, 5]}
     {...props}
   />
 )
 
-const RightSide = ({ children, inverse, ...props }) => (
+const RightSide = ({ children, inverse, noEdge, ...props }) => (
   <rightSide
     css={{
       zIndex: 3,
@@ -49,6 +50,7 @@ const RightSide = ({ children, inverse, ...props }) => (
     {...props}
   >
     <inner
+      if={!noEdge}
       css={{
         display: 'block',
       }}
@@ -65,6 +67,7 @@ const RightSide = ({ children, inverse, ...props }) => (
       />
       {children}
     </inner>
+    {noEdge && children}
   </rightSide>
 )
 
@@ -80,13 +83,13 @@ const LeftSide = ({ children, inverse, ...props }) => (
       top: 50,
       paddingRight: 20,
       justifyContent: 'center',
+      textAlign: 'right',
     }}
     {...props}
   >
     <inner
       css={{
         display: 'block',
-        textAlign: 'right',
       }}
     >
       <edge
@@ -189,7 +192,13 @@ const Ul2 = view('span', {
   borderBottom: [1, 'dotted', '#ddd'],
   marginBottom: -1,
 })
-const Hl = view('span', { background: 'yellow' })
+const Hl = view('span', {
+  background: UI.color('yellow').alpha(0.8),
+  padding: [0, 2],
+  margin: [0, -2],
+  borderRadius: 3,
+  color: '#000',
+})
 
 @view
 class BrandLogo {
@@ -739,7 +748,7 @@ class Section4 {
               } 5%, ${Constants.BACKGROUND_ALT.darken(0.2)} 95%)`}
               css={{ zIndex: 2 }}
             />
-            <main css={{ marginTop: -50 }}>
+            <LeftSide>
               <P
                 size={1.1}
                 fontWeight={800}
@@ -753,7 +762,7 @@ class Section4 {
                 Orbit takes a unique approach to making your company clear and
                 distraction-free.
               </P2>
-            </main>
+            </LeftSide>
             <div $$flex />
             <div $$flex />
             <main css={{ paddingLeft: 60 }}>
@@ -945,45 +954,42 @@ class Section7 {
       <UI.Theme name="dark">
         <Section css={{ background: '#222' }}>
           <SectionContent fullscreen padded>
-            <Slant
-              inverseSlant
-              slantBackground={`linear-gradient(200deg, ${Constants.BACKGROUND_ALT.darken(
-                0.2,
-              )} 5%, #111)`}
-            />
-            <main>
+            <Slant inverseSlant slantBackground="#111" />
+            <LeftSide css={{ textAlign: 'left', marginTop: 220 }}>
               <P size={3} fontWeight={800}>
-                Private. Secure.<br />
-                No installation.
+                Secure & Private
               </P>
               <br />
-              <main>
-                <P2 fontWeight={200} size={2.5}>
-                  Orbit has no cloud and no on-prem install. It's a desktop app
-                  that's your <em>personal assistant</em> for solving{' '}
-                  <em>company problems</em>.
-                </P2>
-                <br />
-                <P2 size={1.5}>
-                  We realized early in Orbit's development that it's near
-                  impossible to deliver a great experience without going fully
-                  on-device.
-                </P2>
-                <P2 size={1.5}>
-                  From permissions issues to data privacy to complex to
-                  expensive installation processess, on-device was the only way
-                  to go.
-                </P2>
-                <P2 size={1.5}>
-                  For the last year we've been pushing the limits of what your
-                  desktop can do. That's what makes Orbit unique.
-                </P2>
-                <P2 size={1.5}>
-                  It's made for you. Privacy first & passionate about making
-                  your knowledge work for you.
-                </P2>
-              </main>
-            </main>
+              <P2 fontWeight={200} size={2.2}>
+                Orbit is completely private and doesn't sync any data to the
+                cloud.
+              </P2>
+              <P2 size={1.5}>
+                We realized early in Orbit's development that it's near
+                impossible to deliver a great experience without going fully
+                on-device. We wanted to avoid data privacy issues, permissions
+                errors, and complex, expensive installations.
+              </P2>
+              <P2 size={1.5} />
+              <P2 size={1.5}>
+                For the last year we've been testing and pusing the limits of
+                what your desktop can do given those constraints. We think we
+                have the tech figured out.
+              </P2>
+              <P2 size={1.5}>
+                But more importantly, because Orbit is a <Ul>personal app,</Ul>{' '}
+                it's focus it entirely on person using it. We believe strongly
+                that the only way Orbit survives is by making the individual
+                experience as good as possible.
+              </P2>
+            </LeftSide>
+            <RightSide noEdge>
+              <content css={{ display: 'block', margin: ['auto', 0] }}>
+                <PurchaseButton size={1.2}>
+                  Free Download for Mac
+                </PurchaseButton>
+              </content>
+            </RightSide>
           </SectionContent>
         </Section>
       </UI.Theme>

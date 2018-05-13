@@ -490,24 +490,6 @@ class Section2 extends React.Component {
                     Summarized & custom to you.<br />
                     It's better sync, without notifications.<br />
                   </P2>
-                  <br />
-                  <br />
-                  <quote
-                    if={false}
-                    css={{
-                      width: 500,
-                      // margin: [-20, 0, 0],
-                      // alignItems: 'flex-end',
-                      textAlign: 'right',
-                    }}
-                  >
-                    <P size={3.5} fontWeight={200} alpha={0.5}>
-                      Pull,<br />
-                      <span css={{ marginRight: -4 }}>instead of</span>
-                      <br />
-                      <span css={{ marginRight: -8 }}>being pushed</span>
-                    </P>
-                  </quote>
                 </content>
               </Observer>
             </LeftSide>
@@ -560,13 +542,13 @@ class Section2 extends React.Component {
                       src={homeImg}
                       css={{
                         position: 'absolute',
-                        top: 80,
-                        right: -660,
+                        top: 40,
+                        right: -700,
                         width: 1100,
                         height: 'auto',
                         transformOrigin: 'top left',
                         transform: {
-                          scale: 0.5,
+                          scale: 0.4,
                         },
                         boxShadow: [[0, 10, 120, [0, 0, 0, 0.1]]],
                       }}
@@ -634,7 +616,7 @@ class Section2 extends React.Component {
     },
     notifications: {
       position: 'absolute',
-      top: 20,
+      top: 0,
       right: 100,
       width: 300,
       bottom: 150,
@@ -693,7 +675,7 @@ class Section3 extends React.Component {
                 </P2>
                 <P2 size={1.6}>
                   Hold <Cmd>Option</Cmd> for a smart sidebar.<br />
-                  Get answers without switching apps.<br />
+                  Correct mistakes before they happen.<br />
                   Powered by realtime <Ul2>OCR</Ul2>.
                 </P2>
                 <Observer onChange={this.handleIntersect}>
@@ -851,60 +833,70 @@ class Section6 {
               slantBackground={Constants.BACKGROUND_ALT.darken(0.2)}
               css={{ zIndex: 2 }}
             />
-            <main>
-              <P size={2.5} fontWeight={800}>
-                A sense of unity.
-              </P>
-              <br />
-              <br />
-              <P2 size={2.2}>
-                Inspired by solutions like <Ul>Stripe Home</Ul>, we made a
-                beautiful, practical home for your company.
-              </P2>
-              <br />
-              <P size={1.2} fontWeight={700}>
-                Features
-              </P>
-              <br />
-              <ul>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.6}>
-                    <strong>Heads up</strong>. Unified personal news, minus the
-                    noise.
+            <LeftSide inverse>
+              <content
+                css={{
+                  display: 'block',
+                  textAlign: 'right',
+                  margin: [150, 0, 100, 40],
+                }}
+              >
+                <P size={2.5} fontWeight={800}>
+                  A sense of unity
+                </P>
+                <br />
+                <br />
+                <P2 size={2.2}>
+                  Inspired by solutions like <Ul>Stripe Home</Ul>, we made a
+                  beautiful, practical home for your company.
+                </P2>
+                <br />
+                <Callout
+                  css={{ textAlign: 'left', position: 'absolute', bottom: 50 }}
+                >
+                  <P size={1.2} fontWeight={700}>
+                    Features
                   </P>
-                </li>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.6}>
-                    <strong>Directory</strong>. Beautiful smart profiles of your
-                    team.
-                  </P>
-                </li>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.6}>
-                    <strong>Search</strong> everything: Slack, your files,
-                    tickets, and more.
-                  </P>
-                </li>
-                <li>
-                  <UI.Icon $icon name="check" size={20} color="green" />
-                  <P size={1.6}>
-                    <strong>Answers</strong>. As you compute, hold{' '}
-                    <Cmd>Option</Cmd> to see context in any app.
-                  </P>
-                </li>
-              </ul>
-              <br />
-              <div $$flex />
-            </main>
-            <P2 css={{ width: 480 }} textAlign="right">
-              Silicon Valley has finally delivered
-              <span css={{ marginRight: -10 }}>
-                <Ul>a new intranet</Ul>.
-              </span>
-            </P2>
+                  <br />
+                  <ul>
+                    <li>
+                      <UI.Icon $icon name="check" size={20} color="green" />
+                      <P size={1.6}>
+                        <strong>Heads up</strong>. Unified personal news, minus
+                        the noise.
+                      </P>
+                    </li>
+                    <li>
+                      <UI.Icon $icon name="check" size={20} color="green" />
+                      <P size={1.6}>
+                        <strong>Directory</strong>. Beautiful smart profiles of
+                        your team.
+                      </P>
+                    </li>
+                    <li>
+                      <UI.Icon $icon name="check" size={20} color="green" />
+                      <P size={1.6}>
+                        <strong>Search</strong> everything: Slack, your files,
+                        tickets, and more.
+                      </P>
+                    </li>
+                    <li>
+                      <UI.Icon $icon name="check" size={20} color="green" />
+                      <P size={1.6}>
+                        <strong>Answers</strong>. As you compute, hold{' '}
+                        <Cmd>Option</Cmd> to see context in any app.
+                      </P>
+                    </li>
+                  </ul>
+                </Callout>
+                <P2 if={false} css={{ width: 480 }} textAlign="right">
+                  Silicon Valley has finally delivered
+                  <span css={{ marginRight: -10 }}>
+                    <Ul>a new intranet</Ul>.
+                  </span>
+                </P2>
+              </content>
+            </LeftSide>
             <example
               css={{
                 position: 'absolute',
@@ -928,12 +920,9 @@ class Section6 {
   }
 
   static style = {
-    main: {
-      width: 480,
-      flex: 1,
-    },
     ul: {
       margin: 0,
+      overflow: 'hidden',
     },
     li: {
       display: 'flex',

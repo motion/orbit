@@ -28,7 +28,7 @@ const SmallTitle = props => (
     fontWeight={700}
     textTransform="uppercase"
     alpha={0.5}
-    margin={[0, 0, 10]}
+    margin={[0, 0, 5]}
     {...props}
   />
 )
@@ -41,8 +41,8 @@ const RightSide = ({ children, inverse, ...props }) => (
       position: 'absolute',
       left: '50%',
       right: 0,
-      bottom: 90,
-      top: 90,
+      bottom: 80,
+      top: 80,
       paddingRight: 20,
       justifyContent: 'center',
     }}
@@ -56,10 +56,10 @@ const RightSide = ({ children, inverse, ...props }) => (
       <edge
         css={{
           shapeOutside: inverse
-            ? 'polygon(26% 0%, 0% 74px, 120% 1096px)'
+            ? 'polygon(26% 0%, 0% 1px, 93% 1096px)'
             : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
           float: 'left',
-          width: 110,
+          width: 147,
           height: 990,
         }}
       />
@@ -93,7 +93,7 @@ const LeftSide = ({ children, inverse, ...props }) => (
         css={{
           shapeOutside: inverse
             ? 'polygon(82% 0%, 90px 0%, 0% 1096px)'
-            : 'polygon(0% 0%, 90px 0%, 94% 1096px)',
+            : 'polygon(0% 0%, 1px 0%, 85% 1096px)',
           float: 'right',
           width: 110,
           height: 990,
@@ -221,6 +221,8 @@ class BrandLogo {
   }
 }
 
+const altColor = '#D4C042'
+
 @view
 class Header {
   render() {
@@ -263,7 +265,7 @@ class Header {
           <top $$row>
             <BrandLogo />
             <div $$flex />
-            <P size={1.2}>
+            <P if={false} size={1.2}>
               <Ul>Customer Success</Ul> &middot; <Ul>No install</Ul> &middot;{' '}
               <Ul>Buy</Ul>
             </P>
@@ -275,26 +277,26 @@ class Header {
               margin: [-80, 0, 0, -50],
             }}
           >
-            <P size={2.3} fontWeight={300} color="#DB6AA3">
+            <P if={false} size={2.2} fontWeight={400} color={altColor}>
               Your company is growing
             </P>
-            <P size={4.2} margin={[8, 0, 0]} fontWeight={400}>
+            <P size={4} margin={[8, 0, 5]} fontWeight={600}>
               Make it easy<br />
               to understand<br />
               what's going on
             </P>
             <line
               css={{
-                margin: [35, 40],
-                height: 2,
-                background: '#DB6AA3',
+                margin: [26, 40],
+                height: 5,
+                background: altColor,
                 opacity: 0.15,
               }}
             />
             <P size={2} alpha={0.75} margin={[0, 0, 10]}>
               <span if={false} css={{ color: '#000' }} />
-              Upgrade your Mac with intelligence.<br />
-              Your company now runs on your OS.
+              Company, meet OS.<br />
+              A team brain that organizes knowledge.
             </P>
             <P size={1.3} alpha={0.7}>
               <Ul2>News</Ul2>, <Ul2>search</Ul2> and <Ul2>context</Ul2>{' '}
@@ -406,7 +408,7 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 class Section2 extends React.Component {
   state = {
     showOrbit: false,
-    showNotifs: false,
+    showNotifs: true,
     items: [
       {
         title: 'Emily Parker',
@@ -436,27 +438,24 @@ class Section2 extends React.Component {
   }
 
   handleIntersect = async ({ isIntersecting }) => {
-    console.log('NOTIFS INTERS', isIntersecting)
+    console.log('brief intersect', isIntersecting)
     if (!isIntersecting) {
       return
     }
-    if (this.state.showNotifs || this.hasRun) {
+    if (!this.state.showNotifs || this.state.showOrbit) {
       return
     }
-    this.hasRun = true
-    await sleep(500)
-    this.setState({ showNotifs: true })
-    await sleep(2000)
+    await sleep(1500)
+    console.log('hide notifs')
     this.setState({ showNotifs: false })
-    await sleep(1000)
-    await this.orbitExample(Spring, {
-      from: { x: 50, opacity: 0 },
-      to: { x: 0, opacity: 1 },
-      config: config.slow,
-    })
+    await sleep(2000)
+    console.log('show orbit')
+    this.setState({ showOrbit: true })
   }
 
   render() {
+    const { showOrbit, showNotifs } = this.state
+
     return (
       <UI.Theme name="light">
         <Section leftBackground={Constants.BACKGROUND_ALT} inverse>
@@ -467,19 +466,29 @@ class Section2 extends React.Component {
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 40 }}>
+                <content css={{ display: 'block', marginTop: 30 }}>
                   <SmallTitle>News</SmallTitle>
-                  <P size={3} fontWeight={800} margin={[0, 0, 35]}>
-                    Slack can be an<br />
+                  <P size={3} fontWeight={800} margin={[0, 0, 20]}>
+                    Your daily brief
+                  </P>
+                  <P2
+                    size={2.2}
+                    css={{
+                      overflow: 'hidden',
+                      paddingBottom: 7,
+                      marginBottom: -7,
+                    }}
+                  >
+                    Silence the Slack<br />
                     <span $noisy>
                       echo chamber<WavyLine height={2900} $line />
                     </span>
-                  </P>
+                  </P2>
                   <P2 size={1.6}>
-                    Turn off notifications & stay up to date.<br />
-                    Your cloud meets <Cmd>⌘+Space</Cmd>.
                     <br />
-                    With on-device <Ul2>machine learning</Ul2>.
+                    Everything you need to see.<br />
+                    Summarized & custom to you.<br />
+                    It's better sync, without notifications.<br />
                   </P2>
                   <br />
                   <br />
@@ -507,11 +516,11 @@ class Section2 extends React.Component {
               <notifications>
                 <Trail
                   native
-                  from={{ opacity: 0, x: 100 }}
+                  from={{ opacity: 1, x: 0 }}
                   config={config.fast}
                   to={{
-                    opacity: this.state.showNotifs ? 1 : 0,
-                    x: this.state.showNotifs ? 0 : 100,
+                    opacity: showNotifs ? 1 : 0,
+                    x: showNotifs ? 0 : 100,
                   }}
                   keys={this.state.items.map((_, index) => index)}
                 >
@@ -532,15 +541,11 @@ class Section2 extends React.Component {
                 </Trail>
               </notifications>
 
-              <Keyframes
+              <Spring
+                if={showOrbit}
                 native
-                script={next => {
-                  this.orbitExample = next
-                  this.orbitExample(Spring, {
-                    from: { x: 50, opacity: 0 },
-                    to: { x: 50, opacity: 0 },
-                  })
-                }}
+                from={{ opacity: 0, x: 100 }}
+                to={{ opacity: 1, x: 0 }}
               >
                 {({ opacity, x }) => (
                   <animated.div
@@ -568,12 +573,12 @@ class Section2 extends React.Component {
                     />
                   </animated.div>
                 )}
-              </Keyframes>
+              </Spring>
 
               <fadeRight
                 $$fullscreen
                 css={{
-                  left: '88%',
+                  left: '92%',
                   zIndex: 100,
                   background: `linear-gradient(to right, transparent, #fff)`,
                 }}
@@ -599,17 +604,18 @@ class Section2 extends React.Component {
               />
 
               <secondSection>
-                <div css={{ height: 600 }} />
+                <div css={{ height: 660 }} />
                 <content css={{ display: 'block', background: '#fff' }}>
                   <SmallTitle>Search</SmallTitle>
                   <P size={3} fontWeight={800} margin={[0, 0, 20]}>
-                    Sort the cloud
+                    Search that works
                   </P>
                   <P2 size={2.2}>
-                    Native search for Gmail, Slack, Jira, GDocs, Dropbox...
+                    Folders don't scale and conversations get lost
                   </P2>
                   <P2 size={1.6} margin={0}>
-                    Completely private and on-device.<br />
+                    Better results on your desktop across Gmail, Slack, Jira,
+                    GDocs, Dropbox...<br />
                     Powered by state of the art <Ul2>NLP</Ul2>.
                   </P2>
                 </content>
@@ -677,35 +683,36 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
-              <div css={{ marginTop: 300 }} />
-              <SmallTitle>Context</SmallTitle>
-              <P size={3} fontWeight={800} margin={[0, 0, 20]}>
-                Context without context-switching
-              </P>
-              <P2 size={2.2}>
-                The <Cmd>Option</Cmd> key upgrades.
-              </P2>
-              <P2 size={1.6}>
-                Writing an important email or doc?<br />
-                See updates on projects and people.<br />
-                Powered by realtime <Ul2>OCR</Ul2>.
-              </P2>
-              <Observer onChange={this.handleIntersect}>
-                <br />
-              </Observer>
-              <br />
-              <Callout if={false}>
-                <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
-                  Give it a try
+              <div css={{ display: 'block', margin: [280, 0, 0, 30] }}>
+                <SmallTitle>Context</SmallTitle>
+                <P size={3} fontWeight={800} margin={[0, 0, 20]}>
+                  Knowledge at hand
                 </P>
-                <P2 size={2} color={brandColor} margin={0}>
-                  Hold{' '}
-                  <Animate.Wiggle>
-                    <Cmd>Option</Cmd>
-                  </Animate.Wiggle>{' '}
-                  to see context.
+                <P2 size={2.2}>
+                  Intelligent contextual search without having to type
                 </P2>
-              </Callout>
+                <P2 size={1.6}>
+                  Hold <Cmd>Option</Cmd> for a smart sidebar.<br />
+                  Get answers without switching apps.<br />
+                  Powered by realtime <Ul2>OCR</Ul2>.
+                </P2>
+                <Observer onChange={this.handleIntersect}>
+                  <br />
+                </Observer>
+                <br />
+                <Callout if={false}>
+                  <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
+                    Give it a try
+                  </P>
+                  <P2 size={2} color={brandColor} margin={0}>
+                    Hold{' '}
+                    <Animate.Wiggle>
+                      <Cmd>Option</Cmd>
+                    </Animate.Wiggle>{' '}
+                    to see context.
+                  </P2>
+                </Callout>
+              </div>
             </LeftSide>
             <RightSide css={{ zIndex: 0, overflow: 'hidden' }}>
               <Spring from={{ x: 100 }} to={{ x: 0 }}>

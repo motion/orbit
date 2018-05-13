@@ -1,6 +1,6 @@
 ## what we are
 
-"intranet meets operating system for your company"
+"intranet / operating system for your company"
 
 nearest neighbors:
 
@@ -11,7 +11,7 @@ nearest neighbors:
 
 short pitch:
 
-it's your company intranet as a an upgrade to your mac that provides a unified search and news interface for your company + custom apps. it unifies all your cloud services privately on device (mail, slack, jira, etc...), and then provides powerful tools and interface for seeing whats happening and what you should know at your company.
+increase employeee happiness, effictiveness and reduce company interruptions and sync issues all at once by upgrading your employee's operating systems with a company brain.
 
 ## features
 

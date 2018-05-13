@@ -354,8 +354,8 @@ export default class HeaderIllustration extends React.Component {
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
                 <P $message size={1.3} fontWeight={800}>
-                  Feel like your organization<br />
-                  has no organization?
+                  Feels like your organization<br />
+                  is lacking organization?
                 </P>
               </animated.div>
             )}
@@ -385,7 +385,9 @@ export default class HeaderIllustration extends React.Component {
             left: 0,
             right: 0,
             borderBottom: [4, '#f2f2f2'],
-            background: `linear-gradient(transparent, ${Constants.BACKGROUND_ALT})`,
+            background: `linear-gradient(transparent, ${
+              Constants.BACKGROUND_ALT
+            })`,
             zIndex: 0,
             transition: 'all ease-out 1000ms',
             opacity: this.state.leaveSlack ? 0 : 1,
@@ -416,7 +418,9 @@ export default class HeaderIllustration extends React.Component {
                 left: -10,
                 right: -10,
                 bottom: -10,
-                background: `linear-gradient(transparent, ${Constants.BACKGROUND_ALT})`,
+                background: `linear-gradient(transparent, ${
+                  Constants.BACKGROUND_ALT
+                })`,
               }}
             />
           </dock>

@@ -8,7 +8,7 @@ import personImage from '~/../public/screen-person.png'
 import wordImage from '~/../public/word.png'
 import homeImg from '~/../public/screen-home.png'
 import Observer from '@researchgate/react-intersection-observer'
-import { Trail, Spring, animated } from 'react-spring'
+import { Trail, Spring, Keyframes, animated, config } from 'react-spring'
 import HeaderIllustration from './headerIllustration'
 import { MailIcon } from '~/views/icons'
 import * as Constants from '~/constants'
@@ -24,8 +24,8 @@ const Animate = {
 
 const SmallTitle = props => (
   <P
-    size={1.1}
-    fontWeight={800}
+    size={1}
+    fontWeight={700}
     textTransform="uppercase"
     alpha={0.5}
     margin={[0, 0, 10]}
@@ -140,7 +140,6 @@ const Lines = ({ width = 100, height = 100, style }) => (
 const Callout = ({ style, ...props }) => (
   <section
     css={{
-      background: '#fff',
       border: [10, '#fff'],
       zIndex: 10,
       overflow: 'hidden',
@@ -157,18 +156,18 @@ const Callout = ({ style, ...props }) => (
         left: 0,
         right: 0,
         zIndex: -2,
-        opacity: 0.04,
+        opacity: 0.025,
         transformOrigin: 'top left',
         transform: {
-          scale: 3,
+          scale: 4,
         },
       }}
     />
     <innerSection
       css={{
-        margin: 8,
+        margin: 6,
         // borderRadius: 5,
-        padding: 30,
+        padding: [30, 32],
         background: '#fff',
         overflow: 'hidden',
         position: 'relative',
@@ -270,28 +269,34 @@ class Header {
             </P>
           </top>
           <div $$flex />
-          <Callout css={{ width: '52%', margin: [-80, 0, 0, -50] }}>
-            <P
-              size={2.1}
-              fontWeight={700}
-              color={brandColor.darken(0.2)}
-              marginBottom={-5}
-            >
+          <Callout
+            css={{
+              width: '53%',
+              margin: [-80, 0, 0, -50],
+            }}
+          >
+            <P size={2.3} fontWeight={300} color="#DB6AA3">
               Your company is growing
             </P>
-            <P size={4.3} margin={[15, 0, 10]} fontWeight={500}>
-              Make it easy to understand what's going on.
+            <P size={4.2} margin={[8, 0, 0]} fontWeight={400}>
+              Make it easy<br />
+              to understand<br />
+              what's going on
             </P>
             <line
-              if={false}
-              css={{ margin: [15, 40], height: 3, background: '#f2f2f2' }}
+              css={{
+                margin: [35, 40],
+                height: 2,
+                background: '#DB6AA3',
+                opacity: 0.15,
+              }}
             />
-            <P size={2} alpha={0.75} margin={[5, 0, 25]}>
+            <P size={2} alpha={0.75} margin={[0, 0, 10]}>
               <span if={false} css={{ color: '#000' }} />
               Upgrade your Mac with intelligence.<br />
-              Your company cloud meets your OS.
+              Your company now runs on your OS.
             </P>
-            <P size={1.2} alpha={0.7}>
+            <P size={1.3} alpha={0.7}>
               <Ul2>News</Ul2>, <Ul2>search</Ul2> and <Ul2>context</Ul2>{' '}
               installed in 3 minutes.
             </P>
@@ -395,6 +400,8 @@ const Num = view('div', {
   zIndex: 1,
 })
 
+const sleep = ms => new Promise(res => setTimeout(res, ms))
+
 @view
 class Section2 extends React.Component {
   state = {
@@ -428,23 +435,25 @@ class Section2 extends React.Component {
     ],
   }
 
-  handleIntersect = ({ isIntersecting }) => {
+  handleIntersect = async ({ isIntersecting }) => {
     console.log('NOTIFS INTERS', isIntersecting)
     if (!isIntersecting) {
       return
     }
-    if (this.state.showNotifs) {
+    if (this.state.showNotifs || this.hasRun) {
       return
     }
-    setTimeout(() => {
-      this.setState({ showNotifs: true })
-    }, 500)
-    setTimeout(() => {
-      this.setState({ showNotifs: false })
-    }, 2500)
-    setTimeout(() => {
-      this.setState({ showOrbit: true })
-    }, 3000)
+    this.hasRun = true
+    await sleep(500)
+    this.setState({ showNotifs: true })
+    await sleep(2000)
+    this.setState({ showNotifs: false })
+    await sleep(1000)
+    await this.orbitExample(Spring, {
+      from: { x: 50, opacity: 0 },
+      to: { x: 0, opacity: 1 },
+      config: config.slow,
+    })
   }
 
   render() {
@@ -458,7 +467,7 @@ class Section2 extends React.Component {
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 80 }}>
+                <content css={{ display: 'block', marginTop: 40 }}>
                   <SmallTitle>News</SmallTitle>
                   <P size={3} fontWeight={800} margin={[0, 0, 35]}>
                     Slack can be an<br />
@@ -494,77 +503,117 @@ class Section2 extends React.Component {
               </Observer>
             </LeftSide>
 
-            <newsIllustration>
-              <Trail
+            <RightSide inverse css={{ zIndex: 1, overflow: 'hidden', top: 0 }}>
+              <notifications>
+                <Trail
+                  native
+                  from={{ opacity: 0, x: 100 }}
+                  config={config.fast}
+                  to={{
+                    opacity: this.state.showNotifs ? 1 : 0,
+                    x: this.state.showNotifs ? 0 : 100,
+                  }}
+                  keys={this.state.items.map((_, index) => index)}
+                >
+                  {this.state.items.map(
+                    ({ title, body }) => ({ x, opacity }) => (
+                      <animated.div
+                        style={{
+                          opacity,
+                          transform: x.interpolate(
+                            x => `translate3d(${x}%,0,0)`,
+                          ),
+                        }}
+                      >
+                        <Notification title={title} body={body} />
+                      </animated.div>
+                    ),
+                  )}
+                </Trail>
+              </notifications>
+
+              <Keyframes
                 native
-                from={{ opacity: 0, x: 100 }}
-                to={{
-                  opacity: this.state.showNotifs ? 1 : 0,
-                  x: this.state.showNotifs ? 0 : 100,
+                script={next => {
+                  this.orbitExample = next
+                  this.orbitExample(Spring, {
+                    from: { x: 50, opacity: 0 },
+                    to: { x: 50, opacity: 0 },
+                  })
                 }}
-                keys={this.state.items.map((_, index) => index)}
               >
-                {this.state.items.map(({ title, body }) => ({ x, opacity }) => (
+                {({ opacity, x }) => (
                   <animated.div
                     style={{
                       opacity,
-                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
+                      transform: x
+                        ? x.interpolate(x => `translate3d(${x}%,0,0)`)
+                        : null,
                     }}
                   >
-                    <Notification title={title} body={body} />
+                    <img
+                      src={homeImg}
+                      css={{
+                        position: 'absolute',
+                        top: 80,
+                        right: -660,
+                        width: 1100,
+                        height: 'auto',
+                        transformOrigin: 'top left',
+                        transform: {
+                          scale: 0.5,
+                        },
+                        boxShadow: [[0, 10, 120, [0, 0, 0, 0.1]]],
+                      }}
+                    />
                   </animated.div>
-                ))}
-              </Trail>
+                )}
+              </Keyframes>
 
-              <img
-                src={homeImg}
+              <fadeRight
+                $$fullscreen
                 css={{
-                  position: 'absolute',
-                  top: 10,
-                  width: 1100,
-                  height: 'auto',
-                  transformOrigin: 'top left',
-                  transform: {
-                    scale: 0.5,
-                  },
-                  boxShadow: [[0, 0, 100, [0, 0, 0, 0.1]]],
+                  left: '88%',
+                  zIndex: 100,
+                  background: `linear-gradient(to right, transparent, #fff)`,
                 }}
               />
-            </newsIllustration>
 
-            <fadeawayfadeawayfadeaway
-              css={{
-                position: 'absolute',
-                top: 350,
-                right: -250,
-                width: 900,
-                height: 500,
-                background: '#fff',
-                borderRadius: 1000,
-                filter: {
-                  blur: 80,
-                },
-                transform: {
-                  z: 0,
-                },
-                zIndex: 2,
-              }}
-            />
+              <fadeawayfadeawayfadeaway
+                css={{
+                  position: 'absolute',
+                  top: 390,
+                  right: -250,
+                  width: 900,
+                  height: 350,
+                  background: '#fff',
+                  borderRadius: 1000,
+                  filter: {
+                    blur: 30,
+                  },
+                  transform: {
+                    z: 0,
+                  },
+                  zIndex: 2,
+                }}
+              />
 
-            <RightSide inverse css={{ zIndex: 10000000000 }}>
-              <div css={{ height: 610 }} />
-              <SmallTitle>Search</SmallTitle>
-              <P size={3} fontWeight={800} margin={[0, 0, 20]}>
-                Search that works
-              </P>
-              <P2 size={2.2}>
-                Like Spotlight that searches Gmail, Slack, Jira, GDocs,
-                Dropbox...
-              </P2>
-              <P2 size={1.6} margin={0}>
-                Completely private and on-device.<br />
-                Powered by state of the art <Ul2>NLP</Ul2>.
-              </P2>
+              <secondSection>
+                <div css={{ height: 600 }} />
+                <content css={{ display: 'block', background: '#fff' }}>
+                  <SmallTitle>Search</SmallTitle>
+                  <P size={3} fontWeight={800} margin={[0, 0, 20]}>
+                    Sort the cloud
+                  </P>
+                  <P2 size={2.2}>
+                    Native search for Gmail, Slack, Jira, GDocs, Dropbox...
+                  </P2>
+                  <P2 size={1.6} margin={0}>
+                    Completely private and on-device.<br />
+                    Powered by state of the art <Ul2>NLP</Ul2>.
+                  </P2>
+                </content>
+              </secondSection>
             </RightSide>
           </SectionContent>
         </Section>
@@ -577,7 +626,7 @@ class Section2 extends React.Component {
       width: 450,
       flex: 1,
     },
-    newsIllustration: {
+    notifications: {
       position: 'absolute',
       top: 20,
       right: 100,
@@ -600,6 +649,11 @@ class Section2 extends React.Component {
         scale: 0.1,
         rotate: '90deg',
       },
+    },
+    secondSection: {
+      position: 'relative',
+      display: 'block',
+      zIndex: 101,
     },
   }
 }
@@ -726,7 +780,7 @@ class Section4 {
             <Callout
               css={{
                 width: 460,
-                marginLeft: 80,
+                marginLeft: 120,
                 marginTop: 20,
                 marginBottom: -30,
               }}
@@ -745,11 +799,11 @@ class Section4 {
                 See which chat rooms people spend time in as well as recent
                 things they've done that are relevant to you.
               </P2>
-              <Callout css={{ margin: [20, 0, 40, 0], left: -60 }}>
+              <Callout css={{ margin: [20, 0, 40, 0], left: -80 }}>
                 <div $$row>
                   <P2 size={2.2} margin={0}>
-                    Less pinging someone because you can't find the link to a
-                    shared document from last week.
+                    Instead of pinging for the link to a shared document from
+                    last week, find it.
                   </P2>
                 </div>
               </Callout>

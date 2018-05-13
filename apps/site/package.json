@@ -21,10 +21,10 @@
     "mobx-formatters": "^1.0.0",
     "react": "16.3.2",
     "react-dom": "16.3.2",
-    "parcel-plugin-inlinesvg": "1.0.0",
-    "react-svg-inline": "2.1.0",
+    "react-svg-inline": "^2.1.0",
     "react-spring": "^5.1.1",
     "@researchgate/react-intersection-observer": "^0.6.1",
+    "parcel-plugin-inlinesvg": "^1.0.0",
     "intersection-observer": "^0.5.0",
     "regenerator-runtime": "0.11.1",
     "react-countup": "3.0.3"

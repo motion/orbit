@@ -16,7 +16,7 @@ module.exports = function(context, givenOpts) {
       //   regenerator: true,
       // }),
       // getPlugin('babel-plugin-transform-optional-chaining'),
-      getPlugin('babel-plugin-macros'),
+      // getPlugin('babel-plugin-macros'),
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),

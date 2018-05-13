@@ -12,6 +12,7 @@
     "@mcro/black": "^1.5.1",
     "@mcro/gloss": "^1.5.1",
     "@mcro/react-tunnel": "^1.5.1",
+    "@mcro/hmr-view": "*",
     "color": "2.0.1",
     "element-resize-detector": "^1.1.12",
     "fuzzy": "^0.1.3",

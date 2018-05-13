@@ -18,7 +18,7 @@ export const Slant = ({
   ...props
 }) => {
   return (
-    <slantClip $$fullscreen css={{ overflow: 'hidden' }}>
+    <slantClip $$fullscreen css={{ overflow: 'hidden', pointerEvents: 'none' }}>
       <slant
         css={{
           position: 'absolute',
@@ -51,6 +51,7 @@ export const Slant = ({
           }}
         />
         <div
+          if={rightBackground}
           css={{
             position: 'absolute',
             background: rightBackground,

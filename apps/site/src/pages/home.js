@@ -315,8 +315,8 @@ class Header {
               margin: [-80, 0, 0, -50],
             }}
           >
-            <Title reduceCapsPct={10} size={6} margin={[0, 0, 5]}>
-              Your Team Operating System
+            <Title reduceCapsPct={10} size={5.5} margin={[0, 0, 5]}>
+              Smarter Team Operating System
             </Title>
             <line
               css={{
@@ -328,7 +328,7 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 20]}>
               <span if={false} css={{ color: '#000' }} />
-              Keep teams in sync with the cloud.<br />
+              Sort through the cloud and stay in sync.<br />
               Smart news, search & more for the Mac.
             </P>
             <P2

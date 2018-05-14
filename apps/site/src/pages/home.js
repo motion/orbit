@@ -24,7 +24,7 @@ const Animate = {
 
 const IS_UPPER = /[A-Z]/
 
-const Title = ({ children, size = 3.2, ...props }) => (
+const Title = ({ children, size = 3, ...props }) => (
   <P
     size={size}
     fontWeight={800}
@@ -127,7 +127,7 @@ const LeftSide = ({ children, inverse, ...props }) => (
         css={{
           shapeOutside: inverse
             ? 'polygon(82% 0%, 90px 0%, 0% 1096px)'
-            : 'polygon(0% 0%, 1px 0%, 85% 1096px)',
+            : 'polygon(0% 0%, 1px 0%, 96% 1096px)',
           float: 'right',
           width: 110,
           height: 990,
@@ -326,12 +326,11 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 10]}>
               <span if={false} css={{ color: '#000' }} />
-              Make it easy to understand what's going on by giving your Mac an
-              intelligent platform.
+              Make it easy to understand what's going on by giving your company
+              an intelligent Mac.
             </P>
-            <P size={1.3} alpha={0.7}>
-              Install team <Ul2>news</Ul2>, <Ul2>search</Ul2> and{' '}
-              <Ul2>context</Ul2> in 3 minutes.
+            <P size={1.4} alpha={0.7}>
+              Team news, search and context installed in 3 minutes.
             </P>
           </Callout>
 
@@ -490,11 +489,10 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 140 }}>
-                  <Title>Company News</Title>
+                  <Title>Personalized News</Title>
                   <P2
-                    size={2}
+                    size={1.8}
                     css={{
-                      overflow: 'hidden',
                       marginBottom: 15,
                     }}
                   >
@@ -504,9 +502,9 @@ class Section2 extends React.Component {
                     </span>
                   </P2>
                   <Callout
-                    css={{ width: 500, position: 'absolute', right: -60 }}
+                    css={{ width: 550, position: 'absolute', right: -60 }}
                   >
-                    <P2 size={1.6} css={{ textAlign: 'left' }}>
+                    <P2 size={1.7} css={{ textAlign: 'left' }}>
                       You use the best tool for the job. But that can leave your
                       company feeling <em>a little all over the place</em>.
                       <br />
@@ -627,9 +625,8 @@ class Section2 extends React.Component {
                   <SmallTitle if={false}>Search</SmallTitle>
                   <Title>Search that works</Title>
                   <P2
-                    size={2}
+                    size={1.8}
                     css={{
-                      overflow: 'hidden',
                       marginBottom: 15,
                     }}
                   >
@@ -703,24 +700,24 @@ class Section3 extends React.Component {
               <div css={{ display: 'block', margin: [380, 0, 0, 30] }}>
                 <Title>Knowledge at hand</Title>
                 <P2
-                  size={2}
+                  size={1.8}
                   css={{
-                    overflow: 'hidden',
                     marginBottom: 15,
                   }}
                 >
                   Intelligent contextual search
                 </P2>
-                <Callout css={{ width: 480, position: 'absolute', right: 0 }}>
+                <Callout css={{ width: 550, position: 'absolute', right: 0 }}>
                   <P2 size={1.6} css={{ textAlign: 'left' }}>
-                    Here's something you do every day: write emails and talk
-                    with clients. But do you double check there wasn't a
-                    relevant conversation, ticket, or previous before you every
-                    send?
+                    All day you communicate whether via emails, chat, or your PM
+                    tool. But do you always know if there wasn't an important
+                    conversation or document that already happened?
                     <br />
                     <br />
-                    Orbit uses on-device OCR that scans any app instantly and
-                    powers realtime results.
+                    With a simple hold of <Cmd>Option</Cmd> Orbit's on-device
+                    OCR finds important terms, people, and relevant items in
+                    your cloud and shows you the{' '}
+                    <em>exact important section</em> you need to see.
                   </P2>
                 </Callout>
                 <Observer onChange={this.handleIntersect}>
@@ -784,7 +781,7 @@ class Section4 {
                 fontWeight={800}
                 textTransform="uppercase"
                 alpha={0.4}
-                margin={[50, 0, 10]}
+                margin={[120, 0, 10]}
               >
                 In Depth
               </P>
@@ -793,14 +790,13 @@ class Section4 {
                 workplace<br />
                 interruptions
               </Title>
-              <P2 size={2.1}>
-                Orbit takes a unique approach to making your company clear and
-                distraction-free.
+              <P2 size={1.8} css={{ paddingLeft: 50 }}>
+                Orbit takes a unique approach to helping your company operate.
               </P2>
             </LeftSide>
             <div $$flex />
             <div $$flex />
-            <main css={{ paddingLeft: 60 }}>
+            <main css={{ paddingLeft: 100, marginTop: 150 }}>
               <P size={1.2} fontWeight={800}>
                 Realtime context
               </P>
@@ -818,13 +814,13 @@ class Section4 {
                 marginBottom: -30,
               }}
             >
-              <P2 size={2.2} margin={0}>
+              <P2 size={2} margin={0}>
                 Discover someone already started the planning doc or had a Slack
                 conversation <em>before</em> you hit send.
               </P2>
             </Callout>
             <RightSide inverse css={{ bottom: 0 }}>
-              <div $$flex css={{ marginTop: 140 }} />
+              <div $$flex css={{ marginTop: 300 }} />
               <P size={1.2} fontWeight={800}>
                 Automatic Profiles
               </P>
@@ -834,7 +830,7 @@ class Section4 {
               </P2>
               <Callout css={{ margin: [20, 0, 40, 0], left: -80 }}>
                 <div $$row>
-                  <P2 size={2.2} margin={0}>
+                  <P2 size={2} margin={0}>
                     Instead of pinging for the link to a shared document from
                     last week, find it.
                   </P2>
@@ -1068,6 +1064,8 @@ export default class HomePage extends React.Component {
             $$fullscreen
             css={{
               border: [4, 'dotted', '#fff'],
+              borderLeft: 'none',
+              borderRight: 'none',
               width: 'calc(85% + 100px)',
               minWidth: 660,
               maxWidth: Constants.smallSize + 100,

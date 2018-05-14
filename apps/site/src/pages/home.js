@@ -22,12 +22,35 @@ const Animate = {
   }),
 }
 
-const Title = props => (
+const IS_UPPER = /[A-Z]/
+
+const Title = ({ children, size = 3.2, ...props }) => (
   <P
-    css={{ fontFamily: '"Mercury Display A", "Mercury Display B"' }}
+    size={size}
+    fontWeight={800}
+    margin={[0, 0, 5]}
+    css={{
+      fontFamily: '"Mercury Display A", "Mercury Display B"',
+      // letterSpacing: size < 4 ? -1 : 0,
+    }}
     // css={{ fontFamily: '"Chronicle Display A", "Chronicle Display B"' }}
     {...props}
-  />
+  >
+    {typeof children === 'string'
+      ? children
+          .split('')
+          .map(
+            char =>
+              IS_UPPER.test(char) ? (
+                <span style={{ fontSize: size < 4 ? '86%' : '95%' }}>
+                  {char}
+                </span>
+              ) : (
+                char
+              ),
+          )
+      : children}
+  </P>
 )
 
 const SmallTitle = props => (
@@ -290,7 +313,7 @@ class Header {
               margin: [-80, 0, 0, -50],
             }}
           >
-            <Title size={5} margin={[0, 0, 5]} fontWeight={600}>
+            <Title size={5} margin={[0, 0, 5]}>
               An operating system for your company
             </Title>
             <line
@@ -303,12 +326,12 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 10]}>
               <span if={false} css={{ color: '#000' }} />
-              Make it easy to understand what's going on with a brain for your
-              team.
+              Make it easy to understand what's going on by giving your Mac an
+              intelligent platform.
             </P>
             <P size={1.3} alpha={0.7}>
-              <Ul2>News</Ul2>, <Ul2>search</Ul2> and <Ul2>context</Ul2>{' '}
-              installed in 3 minutes.
+              Install team <Ul2>news</Ul2>, <Ul2>search</Ul2> and{' '}
+              <Ul2>context</Ul2> in 3 minutes.
             </P>
           </Callout>
 
@@ -467,9 +490,7 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 140 }}>
-                  <Title size={3.5} fontWeight={800} margin={[0, 0, 10]}>
-                    Company News
-                  </Title>
+                  <Title>Company News</Title>
                   <P2
                     size={2}
                     css={{
@@ -604,9 +625,7 @@ class Section2 extends React.Component {
                   }}
                 >
                   <SmallTitle if={false}>Search</SmallTitle>
-                  <Title size={3.5} fontWeight={800} margin={[0, 0, 10]}>
-                    Search that works
-                  </Title>
+                  <Title>Search that works</Title>
                   <P2
                     size={2}
                     css={{
@@ -682,9 +701,7 @@ class Section3 extends React.Component {
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
               <div css={{ display: 'block', margin: [380, 0, 0, 30] }}>
-                <Title size={3.5} fontWeight={800} margin={[0, 0, 10]}>
-                  Knowledge at hand
-                </Title>
+                <Title>Knowledge at hand</Title>
                 <P2
                   size={2}
                   css={{
@@ -771,8 +788,10 @@ class Section4 {
               >
                 In Depth
               </P>
-              <Title size={3.5} fontWeight={800} margin={[0, 0, 10]}>
-                Reducing workplace interruptions
+              <Title>
+                Reducing<br />
+                workplace<br />
+                interruptions
               </Title>
               <P2 size={2.1}>
                 Orbit takes a unique approach to making your company clear and
@@ -866,9 +885,7 @@ class Section6 {
                   margin: [150, 0, 100, 40],
                 }}
               >
-                <P size={2.5} fontWeight={800}>
-                  A sense of unity
-                </P>
+                <Title>A sense of unity</Title>
                 <br />
                 <br />
                 <P2 size={2.2}>
@@ -1050,7 +1067,7 @@ export default class HomePage extends React.Component {
           <border
             $$fullscreen
             css={{
-              border: [2, 'dotted', '#f2f2f2'],
+              border: [4, 'dotted', '#fff'],
               width: 'calc(85% + 100px)',
               minWidth: 660,
               maxWidth: Constants.smallSize + 100,

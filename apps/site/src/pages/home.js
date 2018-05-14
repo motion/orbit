@@ -22,23 +22,22 @@ const Animate = {
   }),
 }
 
-// const IS_UPPER = /[A-Z]/
-// const changeCaps = children => typeof children === 'string'
-//       ? children
-//           .split('')
-//           .map(
-//             char =>
-//               IS_UPPER.test(char) ? (
-//                 <span style={{ fontSize: size < 4 ? '86%' : '95%' }}>
-//                   {char}
-//                 </span>
-//               ) : (
-//                 char
-//               ),
-//           )
-//       : children
+const IS_UPPER = /[A-Z]/
+const changeCaps = (str, reducePct) =>
+  typeof str === 'string'
+    ? str
+        .split('')
+        .map(
+          char =>
+            IS_UPPER.test(char) ? (
+              <span style={{ fontSize: `${100 - reducePct}%` }}>{char}</span>
+            ) : (
+              char
+            ),
+        )
+    : str
 
-const Title = ({ children, size = 3.3, ...props }) => (
+const Title = ({ children, reduceCapsPct, size = 3.3, ...props }) => (
   <P
     size={size}
     fontWeight={800}
@@ -50,7 +49,7 @@ const Title = ({ children, size = 3.3, ...props }) => (
     // css={{ fontFamily: '"Chronicle Display A", "Chronicle Display B"' }}
     {...props}
   >
-    {children}
+    {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}
   </P>
 )
 
@@ -316,8 +315,8 @@ class Header {
               margin: [-80, 0, 0, -50],
             }}
           >
-            <Title size={6.2} margin={[0, 0, 5]}>
-              Team Operating System
+            <Title reduceCapsPct={10} size={6} margin={[0, 0, 5]}>
+              Your Team Operating System
             </Title>
             <line
               css={{
@@ -497,7 +496,7 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 160 }}>
-                  <Title>Company Home</Title>
+                  <Title size={4}>My Home</Title>
                   <P2
                     size={1.8}
                     css={{
@@ -714,8 +713,8 @@ class Section3 extends React.Component {
                 <Callout css={{ width: 550, position: 'absolute', right: 0 }}>
                   <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                     All day you're communicating. Whether email, chat, or on
-                    projects. Do it smarter by{' '}
-                    <em>knowing context to what you're doing</em> as you do it.
+                    projects. Do it smarter by <em>knowing context</em> to what
+                    you're doing <em>as you do it</em>.
                     <vertSpace css={{ height: 25 }} />
                     With a simple hold of <Cmd>Option</Cmd> you'll see all
                     important terms, people, and relevant items in your cloud
@@ -807,7 +806,7 @@ class Section4 {
               } 5%, ${Constants.BACKGROUND_ALT.darken(0.2)} 95%)`}
               css={{ zIndex: 2 }}
             />
-            <LeftSide>
+            <LeftSide css={{ pointerEvents: 'none' }}>
               <P
                 size={1.1}
                 fontWeight={800}
@@ -817,13 +816,13 @@ class Section4 {
               >
                 In Depth
               </P>
-              <Title>
+              <Title size={3.2}>
                 Reducing<br />
                 workplace<br />
                 interruptions
               </Title>
               <P2 size={1.8} css={{ paddingLeft: 50 }}>
-                Orbit takes a unique approach to helping your company operate.
+                Orbit focuses on the individual to solve your company clarity.
               </P2>
             </LeftSide>
             <div $$flex />
@@ -1010,31 +1009,30 @@ class Section7 {
           <SectionContent fullscreen padded>
             <Slant inverseSlant slantBackground="#111" />
             <LeftSide css={{ textAlign: 'left', marginTop: 220 }}>
-              <P size={3} fontWeight={800}>
-                Secure & Private
-              </P>
+              <Title size={5.5}>Secure & Private</Title>
               <br />
-              <P2 fontWeight={200} size={2.2}>
-                Orbit is completely private and doesn't sync any data to the
-                cloud.
+              <P2 fontWeight={200} size={2.5}>
+                Orbit is completely private. It doesn't send any data outside
+                your computer.
               </P2>
-              <P2 size={1.5}>
+              <P2 size={2} fontWeight={200}>
                 We realized early in Orbit's development that it's near
                 impossible to deliver a great experience without going fully
-                on-device. We wanted to avoid data privacy issues, permissions
-                errors, and complex, expensive installations.
+                on-device. To avoid data privacy issues, permissions errors, and
+                complex installations we spent the last year pusing the limits
+                of what your desktop can do.
               </P2>
-              <P2 size={1.5} />
+
+              <br />
+              <br />
+
+              <SmallTitle>Our Mission</SmallTitle>
               <P2 size={1.5}>
-                For the last year we've been testing and pusing the limits of
-                what your desktop can do given those constraints. We think we
-                have the tech figured out.
-              </P2>
-              <P2 size={1.5}>
-                But more importantly, because Orbit is a <Ul>personal app,</Ul>{' '}
-                it's focus it entirely on person using it. We believe strongly
-                that the only way Orbit survives is by making the individual
-                experience as good as possible.
+                Orbit is a personal app that runs intimately in your everyday.
+                That means it has to work for you, the individual. Our goal is
+                to make computers smarter and more reactive to how we work. To
+                do that we need trust. So our decisions will always put privacy
+                and security first.
               </P2>
             </LeftSide>
             <RightSide noEdge>

@@ -508,7 +508,7 @@ class Section2 extends React.Component {
                   >
                     <P2 size={1.7} css={{ textAlign: 'left' }} margin={0}>
                       You use the best tool for the job. But that can leave your
-                      company organization <em>a little all over the place</em>.
+                      organization <em>a little all over the place</em>.
                       <vertSpace css={{ height: 25 }} />
                       Keep everyone on the same page with company-wide news,
                       generated using custom on-device machine learning.
@@ -572,7 +572,7 @@ class Section2 extends React.Component {
                       src={homeImg}
                       css={{
                         position: 'absolute',
-                        top: 200,
+                        top: 140,
                         right: -700,
                         width: 1100,
                         height: 'auto',
@@ -601,7 +601,7 @@ class Section2 extends React.Component {
               <fadeawayfadeawayfadeaway
                 css={{
                   position: 'absolute',
-                  top: 680,
+                  top: 640,
                   right: -250,
                   width: 900,
                   height: 450,
@@ -618,7 +618,7 @@ class Section2 extends React.Component {
               />
 
               <secondSection>
-                <div css={{ height: 860 }} />
+                <div css={{ height: 840 }} />
                 <content
                   css={{
                     display: 'block',
@@ -695,8 +695,8 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
-              <div css={{ display: 'block', margin: [420, 0, 0, 30] }}>
-                <Title>Augment your intelligence</Title>
+              <div css={{ display: 'block', margin: [360, 0, 0, 30] }}>
+                <Title>Augmented intelligence</Title>
                 <P2
                   size={1.8}
                   css={{
@@ -724,14 +724,14 @@ class Section3 extends React.Component {
             </LeftSide>
             <RightSide css={{ top: 0, overflow: 'visible' }}>
               <Callout
-                css={{ width: 550, position: 'absolute', top: -20, left: 35 }}
+                css={{ width: 550, position: 'absolute', top: -35, left: 35 }}
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                   It's not just search across the entire cloud, it's incredibly
-                  fast and natural language powered search.
+                  fast and natural language powered search that works with
+                  Slack.
                   <vertSpace css={{ height: 25 }} />
-                  Did we mention it works with conversations on Slack, using
-                  smart summaries to let you browse your company easily?
+                  Search works better when you it's this quick.
                 </P2>
               </Callout>
             </RightSide>
@@ -754,7 +754,7 @@ class Section3 extends React.Component {
                         marginLeft: -500,
                         height: 'auto',
                         transformOrigin: 'top left',
-                        transform: { scale: 0.32, x: 400, y: 1100 },
+                        transform: { scale: 0.33, x: 400, y: 900 },
                       }}
                     />
                   </animated.div>

@@ -28,7 +28,6 @@ const Title = ({ children, size = 3, ...props }) => (
   <P
     size={size}
     fontWeight={800}
-    margin={[0, 0, 5]}
     css={{
       fontFamily: '"Mercury Display A", "Mercury Display B"',
       // letterSpacing: size < 4 ? -1 : 0,
@@ -94,6 +93,7 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
           float: 'left',
           width: 147,
           height: 990,
+          marginLeft: -25,
         }}
       />
       {children}
@@ -131,6 +131,7 @@ const LeftSide = ({ children, inverse, ...props }) => (
           float: 'right',
           width: 110,
           height: 990,
+          marginLeft: -25,
         }}
       />
       {children}
@@ -150,7 +151,7 @@ const WavyLine = ({ height, ...props }) => (
   </svg>
 )
 
-const brandColor = UI.color('#5552FA')
+const brandColor = UI.color('#5315D8')
 
 const Cmd = view('span', {
   padding: [2, 5],
@@ -236,7 +237,7 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.32} color={brandColor} />
+        <Logo size={0.4} color={brandColor} />
         <P
           if={false}
           size={1}
@@ -488,7 +489,7 @@ class Section2 extends React.Component {
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 140 }}>
+                <content css={{ display: 'block', marginTop: 160 }}>
                   <Title>Personalized News</Title>
                   <P2
                     size={1.8}
@@ -502,16 +503,17 @@ class Section2 extends React.Component {
                     </span>
                   </P2>
                   <Callout
-                    css={{ width: 550, position: 'absolute', right: -60 }}
+                    css={{ width: 550, position: 'absolute', right: -50 }}
                   >
-                    <P2 size={1.7} css={{ textAlign: 'left' }}>
+                    <P2 size={1.7} css={{ textAlign: 'left' }} margin={0}>
                       You use the best tool for the job. But that can leave your
-                      company feeling <em>a little all over the place</em>.
-                      <br />
-                      <br />
+                      company organization <em>a little all over the place</em>.
+                      <vertSpace css={{ height: 25 }} />
                       Keep everyone on the same page with company-wide news,
-                      generated using custom on-device machine learning focused
-                      on making your day run smoothly.
+                      generated using custom on-device machine learning.
+                      <vertSpace css={{ height: 25 }} />
+                      That means less interruptions for everyone and much
+                      clearer internal org knowledge.
                     </P2>
                   </Callout>
                 </content>
@@ -569,7 +571,7 @@ class Section2 extends React.Component {
                       src={homeImg}
                       css={{
                         position: 'absolute',
-                        top: 240,
+                        top: 200,
                         right: -700,
                         width: 1100,
                         height: 'auto',
@@ -598,7 +600,7 @@ class Section2 extends React.Component {
               <fadeawayfadeawayfadeaway
                 css={{
                   position: 'absolute',
-                  top: 580,
+                  top: 680,
                   right: -250,
                   width: 900,
                   height: 450,
@@ -615,7 +617,7 @@ class Section2 extends React.Component {
               />
 
               <secondSection>
-                <div css={{ height: 810 }} />
+                <div css={{ height: 860 }} />
                 <content
                   css={{
                     display: 'block',
@@ -624,12 +626,7 @@ class Section2 extends React.Component {
                 >
                   <SmallTitle if={false}>Search</SmallTitle>
                   <Title>Search that works</Title>
-                  <P2
-                    size={1.8}
-                    css={{
-                      marginBottom: 15,
-                    }}
-                  >
+                  <P2 size={1.8} css={{ margin: 0 }}>
                     Natural language cloud search
                   </P2>
                 </content>
@@ -697,27 +694,26 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
-              <div css={{ display: 'block', margin: [380, 0, 0, 30] }}>
-                <Title>Knowledge at hand</Title>
+              <div css={{ display: 'block', margin: [420, 0, 0, 30] }}>
+                <Title>Augment your intelligence</Title>
                 <P2
                   size={1.8}
                   css={{
                     marginBottom: 15,
                   }}
                 >
-                  Intelligent contextual search
+                  Search as you work, that works
                 </P2>
                 <Callout css={{ width: 550, position: 'absolute', right: 0 }}>
-                  <P2 size={1.6} css={{ textAlign: 'left' }}>
-                    All day you communicate whether via emails, chat, or your PM
-                    tool. But do you always know if there wasn't an important
-                    conversation or document that already happened?
-                    <br />
-                    <br />
-                    With a simple hold of <Cmd>Option</Cmd> Orbit's on-device
-                    OCR finds important terms, people, and relevant items in
-                    your cloud and shows you the{' '}
-                    <em>exact important section</em> you need to see.
+                  <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
+                    All day you're communicating. Whether email, chat, or on
+                    projects. Do it smarter by{' '}
+                    <em>knowing context to what you're doing</em> as you do it.
+                    <vertSpace css={{ height: 25 }} />
+                    With a simple hold of <Cmd>Option</Cmd> you'll see all
+                    important terms, people, and relevant items in your cloud
+                    instantly. Orbit even shows you the exact important section
+                    without having to type.
                   </P2>
                 </Callout>
                 <Observer onChange={this.handleIntersect}>
@@ -725,13 +721,23 @@ class Section3 extends React.Component {
                 </Observer>
               </div>
             </LeftSide>
-            <RightSide css={{ zIndex: 0, overflow: 'hidden' }}>
-              <Callout css={{ width: 480 }}>
-                <P2 size={1.6} css={{ textAlign: 'left' }}>
-                  searhc lorems
+            <RightSide css={{ top: 0, overflow: 'visible' }}>
+              <Callout
+                css={{ width: 550, position: 'absolute', top: -20, left: 35 }}
+              >
+                <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
+                  It's not just search across the entire cloud, it's incredibly
+                  fast and natural language powered search.
+                  <vertSpace css={{ height: 25 }} />
+                  Did we mention it works with conversations on Slack, using
+                  smart summaries to let you browse your company easily?
                 </P2>
               </Callout>
+            </RightSide>
 
+            <RightSide
+              css={{ zIndex: 0, overflow: 'hidden', top: 0, bottom: 0 }}
+            >
               <Spring from={{ x: 100 }} to={{ x: 0 }}>
                 {({ x }) => (
                   <animated.div
@@ -746,8 +752,8 @@ class Section3 extends React.Component {
                         width: 1634,
                         marginLeft: -500,
                         height: 'auto',
-                        transformOrigin: 'center left',
-                        transform: { scale: 0.35, x: 400, y: 200 },
+                        transformOrigin: 'top left',
+                        transform: { scale: 0.32, x: 400, y: 1100 },
                       }}
                     />
                   </animated.div>

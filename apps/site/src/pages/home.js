@@ -143,7 +143,7 @@ const Lines = ({ width = 100, height = 100, style }) => (
 const Callout = ({ style, ...props }) => (
   <section
     css={{
-      border: [10, '#fff'],
+      border: [10, [255, 255, 255, 0.5]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
@@ -462,16 +462,16 @@ class Section2 extends React.Component {
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 160 }}>
+                <content css={{ display: 'block', marginTop: 140 }}>
                   <SmallTitle if={false}>News</SmallTitle>
                   <P size={3} fontWeight={800} margin={[0, 0, 10]}>
                     Company News
                   </P>
                   <P2
-                    size={2.2}
+                    size={2}
                     css={{
                       overflow: 'hidden',
-                      marginBottom: 20,
+                      marginBottom: 15,
                     }}
                   >
                     Turn down the noise
@@ -480,12 +480,11 @@ class Section2 extends React.Component {
                     </span>
                   </P2>
                   <Callout
-                    css={{ width: 500, position: 'absolute', right: 20 }}
+                    css={{ width: 500, position: 'absolute', right: -60 }}
                   >
                     <P2 size={1.6} css={{ textAlign: 'left' }}>
-                      You use the best tool for the job, but that can leave your
-                      company without much cohesiveness.{' '}
-                      <em>Stuff is all over the place</em>.
+                      You use the best tool for the job. But that can leave your
+                      company feeling <em>a little all over the place</em>.
                       <br />
                       <br />
                       Keep everyone on the same page with company-wide news,
@@ -577,7 +576,7 @@ class Section2 extends React.Component {
                   top: 580,
                   right: -250,
                   width: 900,
-                  height: 350,
+                  height: 450,
                   background: Constants.backgroundColor,
                   borderRadius: 1000,
                   filter: {
@@ -591,7 +590,7 @@ class Section2 extends React.Component {
               />
 
               <secondSection>
-                <div css={{ height: 802 }} />
+                <div css={{ height: 810 }} />
                 <content
                   css={{
                     display: 'block',
@@ -599,11 +598,17 @@ class Section2 extends React.Component {
                   }}
                 >
                   <SmallTitle if={false}>Search</SmallTitle>
-                  <P size={2.8} fontWeight={800} margin={[0, 0, 10]}>
+                  <P size={3} fontWeight={800} margin={[0, 0, 10]}>
                     Search that works
                   </P>
-                  <P2 size={2.2}>
-                    Folders don't scale and conversations get lost
+                  <P2
+                    size={2}
+                    css={{
+                      overflow: 'hidden',
+                      marginBottom: 15,
+                    }}
+                  >
+                    Fix folder phobia & conversation black holes
                   </P2>
                 </content>
               </secondSection>
@@ -671,15 +676,19 @@ class Section3 extends React.Component {
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
               <div css={{ display: 'block', margin: [280, 0, 0, 30] }}>
-                <SmallTitle>Context</SmallTitle>
-                <P size={3} fontWeight={800} margin={[0, 0, 20]}>
+                <P size={3} fontWeight={800} margin={[0, 0, 10]}>
                   Knowledge at hand
                 </P>
-                <P2 size={2.2}>
-                  Intelligent contextual search without having to type
+                <P2
+                  size={2}
+                  css={{
+                    overflow: 'hidden',
+                    marginBottom: 15,
+                  }}
+                >
+                  Intelligent contextual search
                 </P2>
                 <P2 size={1.6}>
-                  Hold <Cmd>Option</Cmd> for a smart sidebar.<br />
                   Correct mistakes before they happen.<br />
                   Powered by realtime <Ul2>OCR</Ul2>.
                 </P2>
@@ -1056,7 +1065,7 @@ export default class HomePage extends React.Component {
                 // textTransform: 'titlecase',
                 boxShadow: [[0, 0, 80, [0, 0, 0, 0.1]]],
                 transform: {
-                  scale: 1.3,
+                  scale: 1.1,
                 },
               }}
             >

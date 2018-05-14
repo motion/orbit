@@ -15,6 +15,7 @@ export const Slant = ({
   inverseSlant,
   slantBackground = Constants.colorSecondary,
   rightBackground,
+  slantSize = 30,
   ...props
 }) => {
   return (
@@ -39,11 +40,11 @@ export const Slant = ({
             bottom: -Constants.SLANT_AMT,
             left: inverse ? 'auto' : 0,
             right: inverse ? 0 : 'auto',
-            width: Constants.SLANT_AMT * 2,
+            width: slantSize,
             zIndex: Constants.SLANT_AMT * 2,
             transformOrigin: 'center right',
             transform: {
-              x: -Constants.SLANT_AMT,
+              x: -slantSize / 2,
               rotate: `${(inverse ? -1 : 1) *
                 (inverseSlant ? -1 : 1) *
                 Constants.SLANT}deg`,

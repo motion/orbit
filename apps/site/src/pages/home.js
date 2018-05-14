@@ -282,10 +282,6 @@ class Header {
           <top $$row>
             <BrandLogo />
             <div $$flex />
-            <P if={false} size={1.2}>
-              <Ul>Customer Success</Ul> &middot; <Ul>No install</Ul> &middot;{' '}
-              <Ul>Buy</Ul>
-            </P>
           </top>
           <div $$flex />
           <Callout
@@ -294,7 +290,7 @@ class Header {
               margin: [-80, 0, 0, -50],
             }}
           >
-            <Title size={4.5} margin={[8, 0, 5]} fontWeight={600}>
+            <Title size={5} margin={[0, 0, 5]} fontWeight={600}>
               An operating system for your company
             </Title>
             <line
@@ -471,7 +467,7 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 140 }}>
-                  <Title size={3} fontWeight={800} margin={[0, 0, 10]}>
+                  <Title size={3.5} fontWeight={800} margin={[0, 0, 10]}>
                     Company News
                   </Title>
                   <P2
@@ -608,9 +604,9 @@ class Section2 extends React.Component {
                   }}
                 >
                   <SmallTitle if={false}>Search</SmallTitle>
-                  <P size={3} fontWeight={800} margin={[0, 0, 10]}>
+                  <Title size={3.5} fontWeight={800} margin={[0, 0, 10]}>
                     Search that works
-                  </P>
+                  </Title>
                   <P2
                     size={2}
                     css={{
@@ -686,9 +682,9 @@ class Section3 extends React.Component {
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
               <div css={{ display: 'block', margin: [380, 0, 0, 30] }}>
-                <P size={3} fontWeight={800} margin={[0, 0, 10]}>
+                <Title size={3.5} fontWeight={800} margin={[0, 0, 10]}>
                   Knowledge at hand
-                </P>
+                </Title>
                 <P2
                   size={2}
                   css={{
@@ -771,10 +767,13 @@ class Section4 {
                 fontWeight={800}
                 textTransform="uppercase"
                 alpha={0.4}
+                margin={[50, 0, 10]}
               >
                 In Depth
               </P>
-              <P2 size={3}>Reducing workplace interruptions</P2>
+              <Title size={3.5} fontWeight={800} margin={[0, 0, 10]}>
+                Reducing workplace interruptions
+              </Title>
               <P2 size={2.1}>
                 Orbit takes a unique approach to making your company clear and
                 distraction-free.

@@ -504,7 +504,7 @@ class Section2 extends React.Component {
                     </span>
                   </P2>
                   <Callout
-                    css={{ width: 550, position: 'absolute', right: -50 }}
+                    css={{ width: 550, position: 'absolute', right: -30 }}
                   >
                     <P2 size={1.7} css={{ textAlign: 'left' }} margin={0}>
                       You use the best tool for the job. But that can leave your
@@ -618,7 +618,7 @@ class Section2 extends React.Component {
               />
 
               <secondSection>
-                <div css={{ height: 840 }} />
+                <div css={{ height: 820 }} />
                 <content
                   css={{
                     display: 'block',
@@ -724,7 +724,7 @@ class Section3 extends React.Component {
             </LeftSide>
             <RightSide css={{ top: 0, overflow: 'visible' }}>
               <Callout
-                css={{ width: 550, position: 'absolute', top: -35, left: 35 }}
+                css={{ width: 550, position: 'absolute', top: -55, left: 35 }}
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                   It's not just search across the entire cloud, it's incredibly
@@ -754,7 +754,7 @@ class Section3 extends React.Component {
                         marginLeft: -500,
                         height: 'auto',
                         transformOrigin: 'top left',
-                        transform: { scale: 0.33, x: 400, y: 900 },
+                        transform: { scale: 0.3, x: 400, y: 1000 },
                       }}
                     />
                   </animated.div>

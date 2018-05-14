@@ -340,23 +340,34 @@ class Header {
               Sort through the cloud and stay in sync.<br />
               Desktop news, search and more.
             </P>
-            <P2
-              size={1.2}
-              fontWeight={700}
-              color={brandColor}
-              css={{ margin: 0 }}
+
+            <btn
+              css={{
+                padding: [5, 10],
+                margin: [0, 'auto', -5, -10],
+                borderRadius: 8,
+                border: [1, 'dashed', '#eee'],
+                flex: 'none',
+              }}
             >
-              <Ul2>Install in just 3 minutes.</Ul2>{' '}
-              <AppleLogo
-                width={20}
-                height={20}
-                css={{
-                  display: 'inline-block',
-                  margin: [-6, 0, 0, 10],
-                  opacity: 0.35,
-                }}
-              />
-            </P2>
+              <P2
+                size={1.1}
+                fontWeight={700}
+                color={brandColor}
+                css={{ margin: 0 }}
+              >
+                Install in just 3 minutes{' '}
+                <AppleLogo
+                  width={18}
+                  height={18}
+                  css={{
+                    display: 'inline-block',
+                    margin: [-6, 0, 0, 4],
+                    opacity: 0.35,
+                  }}
+                />
+              </P2>
+            </btn>
           </Callout>
 
           <div $$flex />

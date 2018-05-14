@@ -329,7 +329,7 @@ class Header {
             <P size={2} alpha={0.75} margin={[0, 0, 20]}>
               <span if={false} css={{ color: '#000' }} />
               Sort through the cloud and stay in sync.<br />
-              Smart news, search & more for the Mac.
+              Desktop news, search and more.
             </P>
             <P2
               size={1.2}

@@ -22,7 +22,21 @@ const Animate = {
   }),
 }
 
-const IS_UPPER = /[A-Z]/
+// const IS_UPPER = /[A-Z]/
+// const changeCaps = children => typeof children === 'string'
+//       ? children
+//           .split('')
+//           .map(
+//             char =>
+//               IS_UPPER.test(char) ? (
+//                 <span style={{ fontSize: size < 4 ? '86%' : '95%' }}>
+//                   {char}
+//                 </span>
+//               ) : (
+//                 char
+//               ),
+//           )
+//       : children
 
 const Title = ({ children, size = 3.3, ...props }) => (
   <P
@@ -36,20 +50,7 @@ const Title = ({ children, size = 3.3, ...props }) => (
     // css={{ fontFamily: '"Chronicle Display A", "Chronicle Display B"' }}
     {...props}
   >
-    {typeof children === 'string'
-      ? children
-          .split('')
-          .map(
-            char =>
-              IS_UPPER.test(char) ? (
-                <span style={{ fontSize: size < 4 ? '86%' : '95%' }}>
-                  {char}
-                </span>
-              ) : (
-                char
-              ),
-          )
-      : children}
+    {children}
   </P>
 )
 
@@ -315,8 +316,8 @@ class Header {
               margin: [-80, 0, 0, -50],
             }}
           >
-            <Title size={5} margin={[0, 0, 5]}>
-              The operating system for your company
+            <Title size={6.2} margin={[0, 0, 5]}>
+              Team Operating System
             </Title>
             <line
               css={{
@@ -328,8 +329,8 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 20]}>
               <span if={false} css={{ color: '#000' }} />
-              Upgrade your Mac to make the cloud clear.<br />
-              Smart company news and search.
+              Keep teams in sync with the cloud.<br />
+              Smart news, search & more for the Mac.
             </P>
             <P2
               size={1.2}
@@ -496,14 +497,14 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 160 }}>
-                  <Title>Reduce Interruptions</Title>
+                  <Title>Company Home</Title>
                   <P2
                     size={1.8}
                     css={{
                       marginBottom: 20,
                     }}
                   >
-                    Turn down the noise with <Cmd>⌘+Space</Cmd>
+                    Sync up with <Cmd>⌘+Space</Cmd>
                     <span if={false} $noisy>
                       echo chamber<WavyLine height={2900} $line />
                     </span>
@@ -515,8 +516,9 @@ class Section2 extends React.Component {
                       You use the best tool for the job. But that can leave your
                       organization <em>a little all over the place</em>.
                       <vertSpace css={{ height: 25 }} />
-                      Keep everyone on the same page with only the important
-                      updates they need, letting them avoid notification noise.
+                      Stay focused by peeking at what's important now. No more
+                      notification overload, just well summarized news that's
+                      relevant to you.
                       <vertSpace css={{ height: 25 }} />
                       Powered by on-device ML that learns your company
                       vocabulary and what you care about.
@@ -630,8 +632,7 @@ class Section2 extends React.Component {
                     background: Constants.backgroundColor,
                   }}
                 >
-                  <SmallTitle if={false}>Search</SmallTitle>
-                  <Title>Search that works</Title>
+                  <Title size={3.5}>Smarter Search</Title>
                   <P2 size={1.8} css={{ margin: 0 }}>
                     All your integrations in one place
                   </P2>
@@ -701,14 +702,14 @@ class Section3 extends React.Component {
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
               <div css={{ display: 'block', margin: [360, 0, 0, 30] }}>
-                <Title>Augmented intelligence</Title>
+                <Title size={4}>Augmented intelligence</Title>
                 <P2
                   size={1.8}
                   css={{
                     marginBottom: 15,
                   }}
                 >
-                  Realtime contextual answers
+                  A new way to operate with context
                 </P2>
                 <Callout css={{ width: 550, position: 'absolute', right: 0 }}>
                   <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
@@ -733,8 +734,8 @@ class Section3 extends React.Component {
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                   It's not just search across the entire cloud, it's incredibly
-                  fast and natural language powered search that works with Slack
-                  and many cloud services.
+                  fast, conceptual search that sorts everything from Slack
+                  conversations to local files.
                   <vertSpace css={{ height: 25 }} />
                   Get more from your knowledge by putting it at your fingertips.
                 </P2>

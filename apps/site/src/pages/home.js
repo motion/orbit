@@ -152,7 +152,7 @@ const WavyLine = ({ height, ...props }) => (
   </svg>
 )
 
-const brandColor = UI.color('#5315D8')
+const brandColor = UI.color('#4D31CC')
 
 const Cmd = view('span', {
   padding: [2, 5],
@@ -326,14 +326,19 @@ class Header {
                 opacity: 0.15,
               }}
             />
-            <P size={2} alpha={0.75} margin={[0, 0, 10]}>
+            <P size={2} alpha={0.75} margin={[0, 0, 20]}>
               <span if={false} css={{ color: '#000' }} />
-              Give your team an intelligent experience with augmented knowledge
-              on the Mac.<br />
+              Upgrade your Mac to make the cloud clear.<br />
+              Smart company news and search.
             </P>
-            <P size={1.4} alpha={0.7}>
-              News, search and contextual answers. 3 minute install.
-            </P>
+            <P2
+              size={1.2}
+              fontWeight={700}
+              color={brandColor}
+              css={{ margin: 0 }}
+            >
+              <Ul2>Install in just 3 minutes.</Ul2>
+            </P2>
           </Callout>
 
           <div $$flex />

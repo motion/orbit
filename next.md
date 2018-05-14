@@ -1,15 +1,12 @@
 ## website
 
-* header animation
-* context bar should be black themed at least in website examples
+* advertisement
 * fun colorful/playful pieces that interact with the stripe
   * peek out from behind / go over
   * could be ribbons, bubbles, splotches, clouds, characters
-* testimonial
+* blog post about each major feature with link from each section
 * integrations section
-* pitch growing with their company
-* better pitch organizational people features (lattice)
-* feature chart (diamond.io)
+* companies using this section (soon after starting)
 
 ## app
 

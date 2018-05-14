@@ -24,10 +24,11 @@ const Animate = {
 
 const IS_UPPER = /[A-Z]/
 
-const Title = ({ children, size = 3, ...props }) => (
+const Title = ({ children, size = 3.3, ...props }) => (
   <P
     size={size}
     fontWeight={800}
+    margin={[0, 0, 3]}
     css={{
       fontFamily: '"Mercury Display A", "Mercury Display B"',
       // letterSpacing: size < 4 ? -1 : 0,
@@ -702,7 +703,7 @@ class Section3 extends React.Component {
                     marginBottom: 15,
                   }}
                 >
-                  Search as you work, that works
+                  Realtime contextual answers
                 </P2>
                 <Callout css={{ width: 550, position: 'absolute', right: 0 }}>
                   <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>

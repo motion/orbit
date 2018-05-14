@@ -7,6 +7,7 @@ import { Section, SectionContent, Slant, PurchaseButton } from '~/views'
 import personImage from '~/../public/screen-person.png'
 import wordImage from '~/../public/screen-context-word.png'
 import homeImg from '~/../public/screen-home.png'
+import slackSearchImg from '~/../public/screen-slack-search.png'
 import Observer from '@researchgate/react-intersection-observer'
 import { Trail, Spring, Keyframes, animated, config } from 'react-spring'
 import HeaderIllustration from './headerIllustration'
@@ -525,7 +526,7 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 160 }}>
-                  <Title size={4}>My Home</Title>
+                  <Title size={4}>Personal News</Title>
                   <P2
                     size={1.8}
                     css={{
@@ -541,8 +542,8 @@ class Section2 extends React.Component {
                     css={{ width: 550, position: 'absolute', right: -30 }}
                   >
                     <P2 size={1.7} css={{ textAlign: 'left' }} margin={0}>
-                      You use the best tool for the job. But that can leave your
-                      organization <em>a little all over the place</em>.
+                      Your team uses the best tool for the job. But that can
+                      lead to a pretty messy big picture.
                       <vertSpace css={{ height: 25 }} />
                       Stay focused by peeking at what's important now. No more
                       notification overload, just well summarized news that's
@@ -660,7 +661,7 @@ class Section2 extends React.Component {
                     background: Constants.backgroundColor,
                   }}
                 >
-                  <Title size={3.5}>Smarter Search</Title>
+                  <Title size={4}>Search</Title>
                   <P2 size={1.8} css={{ margin: 0 }}>
                     All your integrations in one place
                   </P2>
@@ -729,7 +730,7 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
-              <div css={{ display: 'block', margin: [360, 0, 0, 30] }}>
+              <div css={{ display: 'block', margin: [380, 0, 0, 30] }}>
                 <Title size={4}>Augmented intelligence</Title>
                 <P2
                   size={1.8}
@@ -795,22 +796,16 @@ class Section3 extends React.Component {
                 )}
               </Spring>
 
-              <fadeawayfadeawayfadeaway
+              <fadeDown
+                $$fullscreen
                 css={{
-                  position: 'absolute',
-                  top: 780,
-                  right: -20,
-                  width: 800,
-                  height: 300,
-                  background: Constants.backgroundColor,
-                  borderRadius: 1000,
-                  filter: {
-                    blur: 20,
-                  },
-                  transform: {
-                    z: 0,
-                  },
-                  zIndex: 2,
+                  top: 'auto',
+                  bottom: 150,
+                  height: 100,
+                  zIndex: 100,
+                  background: `linear-gradient(transparent, ${
+                    Constants.backgroundColor
+                  })`,
                 }}
               />
             </RightSide>
@@ -1130,6 +1125,7 @@ export default class HomePage extends React.Component {
             }}
           >
             <borderTitle
+              if={false}
               css={{
                 marginTop: -20,
                 height: 40,
@@ -1149,6 +1145,51 @@ export default class HomePage extends React.Component {
             </borderTitle>
           </border>
           <Section2 />
+          <searchIllustration
+            css={{
+              position: 'relative',
+              overflow: 'hidden',
+              top: -200,
+              left: '50%',
+              marginLeft: -550,
+              width: 550,
+              height: 450,
+              marginBottom: -450,
+              zIndex: 0,
+            }}
+          >
+            <img
+              src={slackSearchImg}
+              css={{
+                width: 1150,
+                height: 'auto',
+                transformOrigin: 'top left',
+                transform: { scale: 0.5 },
+              }}
+            />
+            <fadeRight
+              $$fullscreen
+              css={{
+                left: 'auto',
+                width: 100,
+                zIndex: 100,
+                background: `linear-gradient(to right, transparent, ${
+                  Constants.backgroundColor
+                } 80%)`,
+              }}
+            />
+            <fadeDown
+              $$fullscreen
+              css={{
+                top: 'auto',
+                height: 100,
+                zIndex: 100,
+                background: `linear-gradient(transparent, ${
+                  Constants.backgroundColor
+                })`,
+              }}
+            />
+          </searchIllustration>
           <Section3 />
         </surround>
         <Section4 />

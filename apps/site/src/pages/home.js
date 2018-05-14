@@ -274,11 +274,14 @@ const altColor = '#D4C042'
 @view
 class Header {
   render() {
-    //  'linear-gradient(#f2f2f2, #fff)'
     return (
       <Section>
         <SectionContent padded fullscreen>
-          <Slant />
+          <Slant
+            slantBackground={`linear-gradient(200deg, ${Constants.colorSecondary.darken(
+              0.15,
+            )} 5%, ${Constants.colorSecondary} 95%)`}
+          />
           <glowContain
             css={{
               position: 'absolute',
@@ -916,7 +919,9 @@ class Section6 {
         <Section>
           <SectionContent fullscreen padded>
             <Slant
-              slantBackground={Constants.BACKGROUND_ALT.darken(0.2)}
+              slantBackground={`linear-gradient(200deg, ${Constants.BACKGROUND_ALT.darken(
+                0.2,
+              )} 5%, ${Constants.BACKGROUND_ALT.darken(0.2).alpha(0.3)} 95%)`}
               css={{ zIndex: 2 }}
             />
             <LeftSide inverse>

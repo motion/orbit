@@ -888,21 +888,14 @@ class Section6 {
                   margin: [150, 0, 100, 40],
                 }}
               >
-                <Title>A sense of unity</Title>
-                <br />
-                <br />
                 <P2 size={2.2}>
                   Inspired by solutions like <Ul>Stripe Home</Ul>, we made a
                   beautiful, practical home for your company.
                 </P2>
-                <br />
                 <Callout
+                  if={false}
                   css={{ textAlign: 'left', position: 'absolute', bottom: 50 }}
                 >
-                  <P size={1.2} fontWeight={700}>
-                    Features
-                  </P>
-                  <br />
                   <ul>
                     <li>
                       <UI.Icon $icon name="check" size={20} color="green" />

@@ -181,7 +181,7 @@ const Callout = ({ style, ...props }) => (
 )
 
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
-const P2 = props => <P size={2} alpha={0.8} margin={[0, 0, 20]} {...props} />
+const P2 = props => <P size={2} alpha={0.85} margin={[0, 0, 20]} {...props} />
 const Ul = view('span', {
   display: 'inline-block',
   borderBottom: [3, 'rgba(136, 231, 234, 0.9)'],
@@ -282,30 +282,25 @@ class Header {
           <div $$flex />
           <Callout
             css={{
-              width: '53%',
+              width: '56%',
               margin: [-80, 0, 0, -50],
             }}
           >
-            <P if={false} size={2.2} fontWeight={400} color={altColor}>
-              Your company is growing
-            </P>
             <P size={4} margin={[8, 0, 5]} fontWeight={600}>
-              Make it easy<br />
-              to understand<br />
-              what's going on
+              The operating system for your company.
             </P>
             <line
               css={{
                 margin: [26, 40],
-                height: 5,
-                background: altColor,
+                height: 4,
+                background: '#ddd',
                 opacity: 0.15,
               }}
             />
             <P size={2} alpha={0.75} margin={[0, 0, 10]}>
               <span if={false} css={{ color: '#000' }} />
-              Company, meet OS.<br />
-              A team brain that organizes knowledge.
+              Make it easy to understand what's going on with a brain for your
+              team.
             </P>
             <P size={1.3} alpha={0.7}>
               <Ul2>News</Ul2>, <Ul2>search</Ul2> and <Ul2>context</Ul2>{' '}
@@ -338,14 +333,6 @@ class Header {
       alignItems: 'center',
       textAlign: 'center',
       marginRight: 20,
-    },
-    main: {
-      width: 625,
-      background: '#fff',
-      border: [3, '#f2f2f2'],
-      zIndex: 10,
-      padding: 40,
-      margin: -40,
     },
     title: {
       fontSize: 40,
@@ -475,30 +462,37 @@ class Section2 extends React.Component {
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 30 }}>
-                  <SmallTitle>News</SmallTitle>
-                  <P size={3} fontWeight={800} margin={[0, 0, 20]}>
-                    Your daily brief
+                <content css={{ display: 'block', marginTop: 160 }}>
+                  <SmallTitle if={false}>News</SmallTitle>
+                  <P size={3} fontWeight={800} margin={[0, 0, 10]}>
+                    Company News
                   </P>
                   <P2
                     size={2.2}
                     css={{
                       overflow: 'hidden',
-                      paddingBottom: 7,
-                      marginBottom: -7,
+                      marginBottom: 20,
                     }}
                   >
-                    Silence the Slack<br />
-                    <span $noisy>
+                    Turn down the noise
+                    <span if={false} $noisy>
                       echo chamber<WavyLine height={2900} $line />
                     </span>
                   </P2>
-                  <P2 size={1.6}>
-                    <br />
-                    Everything you need to see.<br />
-                    Summarized & custom to you.<br />
-                    It's better sync, without notifications.<br />
-                  </P2>
+                  <Callout
+                    css={{ width: 500, position: 'absolute', right: 20 }}
+                  >
+                    <P2 size={1.6} css={{ textAlign: 'left' }}>
+                      You use the best tool for the job, but that can leave your
+                      company without much cohesiveness.{' '}
+                      <em>Stuff is all over the place</em>.
+                      <br />
+                      <br />
+                      Keep everyone on the same page with company-wide news,
+                      generated using custom on-device machine learning focused
+                      on making your day run smoothly.
+                    </P2>
+                  </Callout>
                 </content>
               </Observer>
             </LeftSide>
@@ -551,15 +545,15 @@ class Section2 extends React.Component {
                       src={homeImg}
                       css={{
                         position: 'absolute',
-                        top: 40,
+                        top: 240,
                         right: -700,
                         width: 1100,
                         height: 'auto',
                         transformOrigin: 'top left',
                         transform: {
-                          scale: 0.4,
+                          scale: 0.5,
                         },
-                        boxShadow: [[0, 10, 120, [0, 0, 0, 0.1]]],
+                        boxShadow: [[0, 15, 120, [0, 0, 0, 0.1]]],
                       }}
                     />
                   </animated.div>
@@ -571,18 +565,20 @@ class Section2 extends React.Component {
                 css={{
                   left: '92%',
                   zIndex: 100,
-                  background: `linear-gradient(to right, transparent, #fff)`,
+                  background: `linear-gradient(to right, transparent, ${
+                    Constants.backgroundColor
+                  })`,
                 }}
               />
 
               <fadeawayfadeawayfadeaway
                 css={{
                   position: 'absolute',
-                  top: 390,
+                  top: 580,
                   right: -250,
                   width: 900,
                   height: 350,
-                  background: '#fff',
+                  background: Constants.backgroundColor,
                   borderRadius: 1000,
                   filter: {
                     blur: 30,
@@ -595,19 +591,19 @@ class Section2 extends React.Component {
               />
 
               <secondSection>
-                <div css={{ height: 660 }} />
-                <content css={{ display: 'block', background: '#fff' }}>
-                  <SmallTitle>Search</SmallTitle>
-                  <P size={3} fontWeight={800} margin={[0, 0, 20]}>
+                <div css={{ height: 802 }} />
+                <content
+                  css={{
+                    display: 'block',
+                    background: Constants.backgroundColor,
+                  }}
+                >
+                  <SmallTitle if={false}>Search</SmallTitle>
+                  <P size={2.8} fontWeight={800} margin={[0, 0, 10]}>
                     Search that works
                   </P>
                   <P2 size={2.2}>
                     Folders don't scale and conversations get lost
-                  </P2>
-                  <P2 size={1.6} margin={0}>
-                    Better results on your desktop across Gmail, Slack, Jira,
-                    GDocs, Dropbox...<br />
-                    Powered by state of the art <Ul2>NLP</Ul2>.
                   </P2>
                 </content>
               </secondSection>
@@ -625,7 +621,7 @@ class Section2 extends React.Component {
     },
     notifications: {
       position: 'absolute',
-      top: 0,
+      top: 200,
       right: 100,
       width: 300,
       bottom: 150,
@@ -1028,10 +1024,48 @@ class Footer {
 export default class HomePage extends React.Component {
   render() {
     return (
-      <home>
+      <home css={{ background: Constants.backgroundColor }}>
         <Header />
-        <Section2 />
-        <Section3 />
+        <surround css={{ position: 'relative' }}>
+          <border
+            $$fullscreen
+            css={{
+              border: [2, 'dotted', '#f2f2f2'],
+              width: 'calc(85% + 100px)',
+              minWidth: 660,
+              maxWidth: Constants.smallSize + 100,
+              zIndex: 10000,
+              margin: [0, 'auto'],
+              alignItems: 'center',
+              pointerEvents: 'none',
+              // zIndex: -1
+            }}
+          >
+            <borderTitle
+              css={{
+                marginTop: -20,
+                height: 40,
+                background: '#fff',
+                color: '#000',
+                // border: [3, Constants.colorSecondary.darken(0.2)],
+                borderTop: 'none',
+                borderBottom: 'none',
+                padding: [0, 40],
+                justifyContent: 'center',
+                fontWeight: 800,
+                // textTransform: 'titlecase',
+                boxShadow: [[0, 0, 80, [0, 0, 0, 0.1]]],
+                transform: {
+                  scale: 1.3,
+                },
+              }}
+            >
+              <SmallTitle css={{ margin: 0 }}>How Orbit Works</SmallTitle>
+            </borderTitle>
+          </border>
+          <Section2 />
+          <Section3 />
+        </surround>
         <Section4 />
         {/* <Section5 /> */}
         <Section6 />

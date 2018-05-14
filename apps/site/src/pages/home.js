@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 import { Section, SectionContent, Slant, PurchaseButton } from '~/views'
 // import homeImg from '~/../public/screen-home.png'
 import personImage from '~/../public/screen-person.png'
-import wordImage from '~/../public/word.png'
+import wordImage from '~/../public/screen-context-word.png'
 import homeImg from '~/../public/screen-home.png'
 import Observer from '@researchgate/react-intersection-observer'
 import { Trail, Spring, Keyframes, animated, config } from 'react-spring'
@@ -28,9 +28,9 @@ const Title = ({ children, size = 3.3, ...props }) => (
   <P
     size={size}
     fontWeight={800}
-    margin={[0, 0, 3]}
+    margin={[0, 0, 5]}
     css={{
-      fontFamily: '"Mercury Display A", "Mercury Display B"',
+      fontFamily: '"Chronicle Display A", "Chronicle Display B"',
       // letterSpacing: size < 4 ? -1 : 0,
     }}
     // css={{ fontFamily: '"Chronicle Display A", "Chronicle Display B"' }}
@@ -238,7 +238,7 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.4} color={brandColor} />
+        <Logo size={0.35} color={brandColor} />
         <P
           if={false}
           size={1}
@@ -328,8 +328,8 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 10]}>
               <span if={false} css={{ color: '#000' }} />
-              Make it easy to understand what's going on by giving your company
-              an intelligent Mac.
+              Make it easy to understand what's going on.<br />
+              Give your team an intelligent home on Mac.
             </P>
             <P size={1.4} alpha={0.7}>
               Team news, search and context installed in 3 minutes.
@@ -482,7 +482,7 @@ class Section2 extends React.Component {
 
     return (
       <UI.Theme name="light">
-        <Section leftBackground="transparent" inverse>
+        <Section inverse>
           <Num if={false} css={{ left: '50%', marginLeft: -160, top: -100 }}>
             <UI.Icon name="news" />
           </Num>
@@ -491,14 +491,14 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 160 }}>
-                  <Title>Personalized News</Title>
+                  <Title>Unified News</Title>
                   <P2
                     size={1.8}
                     css={{
-                      marginBottom: 15,
+                      marginBottom: 20,
                     }}
                   >
-                    Turn down the noise
+                    Turn down the noise with <Cmd>⌘+Space</Cmd>
                     <span if={false} $noisy>
                       echo chamber<WavyLine height={2900} $line />
                     </span>
@@ -510,11 +510,12 @@ class Section2 extends React.Component {
                       You use the best tool for the job. But that can leave your
                       organization <em>a little all over the place</em>.
                       <vertSpace css={{ height: 25 }} />
-                      Keep everyone on the same page with company-wide news,
-                      generated using custom on-device machine learning.
+                      Keep everyone on the same page with relevant updates,
+                      generated using company specific on-device machine
+                      learning.
                       <vertSpace css={{ height: 25 }} />
-                      That means less interruptions for everyone and much
-                      clearer internal org knowledge.
+                      Reduce interruptions and make everyone better in sync all
+                      at once.
                     </P2>
                   </Callout>
                 </content>
@@ -628,7 +629,7 @@ class Section2 extends React.Component {
                   <SmallTitle if={false}>Search</SmallTitle>
                   <Title>Search that works</Title>
                   <P2 size={1.8} css={{ margin: 0 }}>
-                    Natural language cloud search
+                    All your integrations in one place
                   </P2>
                 </content>
               </secondSection>
@@ -728,10 +729,10 @@ class Section3 extends React.Component {
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                   It's not just search across the entire cloud, it's incredibly
-                  fast and natural language powered search that works with
-                  Slack.
+                  fast and natural language powered search that works with Slack
+                  and many cloud services.
                   <vertSpace css={{ height: 25 }} />
-                  Search works better when you it's this quick.
+                  Get more from your knowledge by putting it at your fingertips.
                 </P2>
               </Callout>
             </RightSide>
@@ -739,7 +740,7 @@ class Section3 extends React.Component {
             <RightSide
               css={{ zIndex: 0, overflow: 'hidden', top: 0, bottom: 0 }}
             >
-              <Spring from={{ x: 100 }} to={{ x: 0 }}>
+              <Spring from={{ x: 100 }} to={{ x: 10 }}>
                 {({ x }) => (
                   <animated.div
                     style={{
@@ -751,15 +752,34 @@ class Section3 extends React.Component {
                       css={{
                         position: 'absolute',
                         width: 1634,
-                        marginLeft: -500,
+                        marginLeft: -300,
                         height: 'auto',
                         transformOrigin: 'top left',
-                        transform: { scale: 0.3, x: 400, y: 1000 },
+                        transform: { scale: 0.35, x: 400, y: 1250 },
                       }}
                     />
                   </animated.div>
                 )}
               </Spring>
+
+              <fadeawayfadeawayfadeaway
+                css={{
+                  position: 'absolute',
+                  top: 780,
+                  right: -20,
+                  width: 800,
+                  height: 300,
+                  background: Constants.backgroundColor,
+                  borderRadius: 1000,
+                  filter: {
+                    blur: 20,
+                  },
+                  transform: {
+                    z: 0,
+                  },
+                  zIndex: 2,
+                }}
+              />
             </RightSide>
           </SectionContent>
         </Section>
@@ -1092,7 +1112,7 @@ export default class HomePage extends React.Component {
                 boxShadow: [[0, 0, 80, [0, 0, 0, 0.1]]],
               }}
             >
-              <SmallTitle css={{ margin: 0 }}>How Orbit Works</SmallTitle>
+              <SmallTitle css={{ margin: 0 }}>Your Team OS</SmallTitle>
             </borderTitle>
           </border>
           <Section2 />

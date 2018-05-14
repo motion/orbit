@@ -496,7 +496,10 @@ class Section2 extends React.Component {
               </Observer>
             </LeftSide>
 
-            <RightSide inverse css={{ zIndex: 1, overflow: 'hidden', top: 0 }}>
+            <RightSide
+              inverse
+              css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
+            >
               <notifications>
                 <Trail
                   native
@@ -608,7 +611,7 @@ class Section2 extends React.Component {
                       marginBottom: 15,
                     }}
                   >
-                    Fix folder phobia & conversation black holes
+                    Natural language cloud search
                   </P2>
                 </content>
               </secondSection>
@@ -675,7 +678,7 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
-              <div css={{ display: 'block', margin: [280, 0, 0, 30] }}>
+              <div css={{ display: 'block', margin: [380, 0, 0, 30] }}>
                 <P size={3} fontWeight={800} margin={[0, 0, 10]}>
                   Knowledge at hand
                 </P>
@@ -688,29 +691,30 @@ class Section3 extends React.Component {
                 >
                   Intelligent contextual search
                 </P2>
-                <P2 size={1.6}>
-                  Correct mistakes before they happen.<br />
-                  Powered by realtime <Ul2>OCR</Ul2>.
-                </P2>
+                <Callout css={{ width: 480, position: 'absolute', right: 0 }}>
+                  <P2 size={1.6} css={{ textAlign: 'left' }}>
+                    Here's something you do every day: write emails and talk
+                    with clients. But do you double check there wasn't a
+                    relevant conversation, ticket, or previous before you every
+                    send?
+                    <br />
+                    <br />
+                    Orbit uses on-device OCR that scans any app instantly and
+                    powers realtime results.
+                  </P2>
+                </Callout>
                 <Observer onChange={this.handleIntersect}>
                   <br />
                 </Observer>
-                <br />
-                <Callout if={false}>
-                  <P fontWeight={600} size={1.4} margin={[-5, 0, 5]}>
-                    Give it a try
-                  </P>
-                  <P2 size={2} color={brandColor} margin={0}>
-                    Hold{' '}
-                    <Animate.Wiggle>
-                      <Cmd>Option</Cmd>
-                    </Animate.Wiggle>{' '}
-                    to see context.
-                  </P2>
-                </Callout>
               </div>
             </LeftSide>
             <RightSide css={{ zIndex: 0, overflow: 'hidden' }}>
+              <Callout css={{ width: 480 }}>
+                <P2 size={1.6} css={{ textAlign: 'left' }}>
+                  searhc lorems
+                </P2>
+              </Callout>
+
               <Spring from={{ x: 100 }} to={{ x: 0 }}>
                 {({ x }) => (
                   <animated.div
@@ -721,11 +725,12 @@ class Section3 extends React.Component {
                     <img
                       src={wordImage}
                       css={{
+                        position: 'absolute',
                         width: 1634,
                         marginLeft: -500,
                         height: 'auto',
                         transformOrigin: 'center left',
-                        transform: { scale: 0.35, x: 400 },
+                        transform: { scale: 0.35, x: 400, y: 200 },
                       }}
                     />
                   </animated.div>

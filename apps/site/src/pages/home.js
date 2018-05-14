@@ -316,7 +316,7 @@ class Header {
             }}
           >
             <Title size={5} margin={[0, 0, 5]}>
-              An operating system for your company
+              The operating system for your company
             </Title>
             <line
               css={{
@@ -328,11 +328,11 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 10]}>
               <span if={false} css={{ color: '#000' }} />
-              Make it easy to understand what's going on.<br />
-              Give your team an intelligent home on Mac.
+              Give your team an intelligent experience with augmented knowledge
+              on the Mac.<br />
             </P>
             <P size={1.4} alpha={0.7}>
-              Team news, search and context installed in 3 minutes.
+              News, search and contextual answers. 3 minute install.
             </P>
           </Callout>
 

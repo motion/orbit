@@ -4,7 +4,7 @@ import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
 import { Section, SectionContent, Slant, PurchaseButton } from '~/views'
 // import homeImg from '~/../public/screen-home.png'
-import personImage from '~/../public/screen-person.png'
+import profileImage from '~/../public/screen-profile.png'
 import wordImage from '~/../public/screen-context-word.png'
 import homeImg from '~/../public/screen-home.png'
 import slackSearchImg from '~/../public/screen-slack-search.png'
@@ -18,6 +18,25 @@ const AppleLogo = props => (
   <svg width="170px" height="170px" viewBox="0 0 170 170" {...props}>
     <path d="m150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.197-2.12-9.973-3.17-14.34-3.17-4.58 0-9.492 1.05-14.746 3.17-5.262 2.13-9.501 3.24-12.742 3.35-4.929 0.21-9.842-1.96-14.746-6.52-3.13-2.73-7.045-7.41-11.735-14.04-5.032-7.08-9.169-15.29-12.41-24.65-3.471-10.11-5.211-19.9-5.211-29.378 0-10.857 2.346-20.221 7.045-28.068 3.693-6.303 8.606-11.275 14.755-14.925s12.793-5.51 19.948-5.629c3.915 0 9.049 1.211 15.429 3.591 6.362 2.388 10.447 3.599 12.238 3.599 1.339 0 5.877-1.416 13.57-4.239 7.275-2.618 13.415-3.702 18.445-3.275 13.63 1.1 23.87 6.473 30.68 16.153-12.19 7.386-18.22 17.731-18.1 31.002 0.11 10.337 3.86 18.939 11.23 25.769 3.34 3.17 7.07 5.62 11.22 7.36-0.9 2.61-1.85 5.11-2.86 7.51zm-31.26-123.01c0 8.1021-2.96 15.667-8.86 22.669-7.12 8.324-15.732 13.134-25.071 12.375-0.119-0.972-0.188-1.995-0.188-3.07 0-7.778 3.386-16.102 9.399-22.908 3.002-3.446 6.82-6.3113 11.45-8.597 4.62-2.2516 8.99-3.4968 13.1-3.71 0.12 1.0831 0.17 2.1663 0.17 3.2409z" />
   </svg>
+)
+
+const DottedButton = props => (
+  <btn
+    css={{
+      display: 'inline-block',
+      padding: [8, 12],
+      borderRadius: 8,
+      border: [1, 'dashed', '#eee'],
+      flex: 'none',
+      cursor: 'pointer',
+      color: brandColor,
+      fontWeight: 500,
+      fontSize: 18,
+      flexFlow: 'row',
+      alignItems: 'center',
+    }}
+    {...props}
+  />
 )
 
 const Animate = {
@@ -44,7 +63,7 @@ const changeCaps = (str, reducePct) =>
         )
     : str
 
-const Title = ({ children, reduceCapsPct, size = 3.3, ...props }) => (
+const Title = ({ children, reduceCapsPct, size = 4, ...props }) => (
   <P
     size={size}
     fontWeight={800}
@@ -59,6 +78,8 @@ const Title = ({ children, reduceCapsPct, size = 3.3, ...props }) => (
     {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}
   </P>
 )
+
+const SubTitle = props => <Title size={3.3} reduceCapsPct={5} {...props} />
 
 const SmallTitle = props => (
   <P
@@ -322,11 +343,11 @@ class Header {
           <Callout
             css={{
               width: '56%',
-              margin: [-80, 0, 0, -50],
+              margin: [-50, 0, 0, -50],
             }}
           >
-            <Title reduceCapsPct={10} size={5.7} margin={0}>
-              Smarter Team Operating System
+            <Title reduceCapsPct={10} size={5.5} margin={0}>
+              Smarter company organization
             </Title>
             <line
               css={{
@@ -338,36 +359,38 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 20]}>
               <span if={false} css={{ color: '#000' }} />
-              Sort through the cloud and stay in sync.<br />
+              Orbit sorts the cloud to keep teams in sync.<br />
               Desktop news, search and more.
             </P>
 
             <btn
               css={{
-                padding: [5, 10],
-                margin: [0, 'auto', -5, -10],
+                padding: [8, 12],
+                margin: [10, 'auto', -8, -10],
                 borderRadius: 8,
                 border: [1, 'dashed', '#eee'],
                 flex: 'none',
+                cursor: 'pointer',
+                color: brandColor,
+                fontWeight: 700,
+                fontSize: 18,
+                flexFlow: 'row',
+                alignItems: 'center',
+              }}
+              onClick={() => {
+                alert('soon')
               }}
             >
-              <P2
-                size={1.1}
-                fontWeight={700}
-                color={brandColor}
-                css={{ margin: 0 }}
-              >
-                Install in just 3 minutes{' '}
-                <AppleLogo
-                  width={18}
-                  height={18}
-                  css={{
-                    display: 'inline-block',
-                    margin: [-6, 0, 0, 4],
-                    opacity: 0.35,
-                  }}
-                />
-              </P2>
+              Install in just 3 minutes{' '}
+              <AppleLogo
+                width={20}
+                height={20}
+                css={{
+                  display: 'inline-block',
+                  margin: [-2, 0, 0, 6],
+                  opacity: 0.32,
+                }}
+              />
             </btn>
           </Callout>
 
@@ -525,33 +548,34 @@ class Section2 extends React.Component {
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 160 }}>
-                  <Title size={4}>Personal News</Title>
+                <content css={{ display: 'block', marginTop: 140 }}>
+                  <SubTitle size={4}>Personal News</SubTitle>
                   <P2
                     size={1.8}
                     css={{
-                      marginBottom: 20,
+                      marginBottom: 30,
                     }}
                   >
                     Sync up with <Cmd>⌘+Space</Cmd>
-                    <span if={false} $noisy>
-                      echo chamber<WavyLine height={2900} $line />
-                    </span>
                   </P2>
                   <Callout
                     css={{ width: 550, position: 'absolute', right: -30 }}
                   >
                     <P2 size={1.7} css={{ textAlign: 'left' }} margin={0}>
-                      Your team uses the best tool for the job. But that can
-                      lead to a pretty messy big picture.
+                      Your team uses the best tool for the job. But between all
+                      the services, that can lead to a pretty messy big picture.
                       <vertSpace css={{ height: 25 }} />
                       Stay focused by peeking at what's important now. No more
                       notification overload, just well summarized news that's
                       relevant to you.
                       <vertSpace css={{ height: 25 }} />
-                      Powered by on-device ML that learns your company
-                      vocabulary and what you care about.
+                      Powered by on-device ML.{' '}
                     </P2>
+                    <DottedButton
+                      css={{ position: 'absolute', bottom: 20, right: 20 }}
+                    >
+                      Learn more
+                    </DottedButton>
                   </Callout>
                 </content>
               </Observer>
@@ -608,7 +632,7 @@ class Section2 extends React.Component {
                       src={homeImg}
                       css={{
                         position: 'absolute',
-                        top: 140,
+                        top: 120,
                         right: -700,
                         width: 1100,
                         height: 'auto',
@@ -637,7 +661,7 @@ class Section2 extends React.Component {
               <fadeawayfadeawayfadeaway
                 css={{
                   position: 'absolute',
-                  top: 640,
+                  top: 600,
                   right: -250,
                   width: 900,
                   height: 450,
@@ -661,10 +685,8 @@ class Section2 extends React.Component {
                     background: Constants.backgroundColor,
                   }}
                 >
-                  <Title size={4}>Search</Title>
-                  <P2 size={1.8} css={{ margin: 0 }}>
-                    All your integrations in one place
-                  </P2>
+                  <SubTitle size={4}>Search</SubTitle>
+                  <P2 size={1.8}>All your integrations in one place</P2>
                 </content>
               </secondSection>
             </RightSide>
@@ -686,22 +708,6 @@ class Section2 extends React.Component {
       width: 300,
       bottom: 150,
       zIndex: 1,
-    },
-    noisy: {
-      position: 'relative',
-    },
-    line: {
-      userSelect: 'none',
-      fontWeight: 400,
-      position: 'absolute',
-      bottom: 0,
-      left: -3,
-      right: 0,
-      transformOrigin: 'bottom left',
-      transform: {
-        scale: 0.1,
-        rotate: '90deg',
-      },
     },
     secondSection: {
       position: 'relative',
@@ -730,17 +736,17 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
-              <div css={{ display: 'block', margin: [380, 0, 0, 30] }}>
-                <Title size={4}>Augmented intelligence</Title>
+              <div css={{ display: 'block', margin: [420, 0, 0, 30] }}>
+                <SubTitle size={4}>Augmented intelligence</SubTitle>
                 <P2
                   size={1.8}
                   css={{
-                    marginBottom: 15,
+                    marginBottom: 30,
                   }}
                 >
                   A new way to operate with context
                 </P2>
-                <Callout css={{ width: 550, position: 'absolute', right: 0 }}>
+                <Callout css={{ width: 550, position: 'absolute', right: 10 }}>
                   <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                     All day you're communicating. Whether email, chat, or on
                     projects. Do it smarter by <em>knowing context</em> to what
@@ -759,7 +765,7 @@ class Section3 extends React.Component {
             </LeftSide>
             <RightSide css={{ top: 0, overflow: 'visible' }}>
               <Callout
-                css={{ width: 550, position: 'absolute', top: -55, left: 40 }}
+                css={{ width: 550, position: 'absolute', top: -40, left: 40 }}
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                   It's not just search across the entire cloud, it's incredibly
@@ -789,7 +795,7 @@ class Section3 extends React.Component {
                         marginLeft: -300,
                         height: 'auto',
                         transformOrigin: 'top left',
-                        transform: { scale: 0.35, x: 400, y: 1150 },
+                        transform: { scale: 0.35, x: 400, y: 1300 },
                       }}
                     />
                   </animated.div>
@@ -800,12 +806,12 @@ class Section3 extends React.Component {
                 $$fullscreen
                 css={{
                   top: 'auto',
-                  bottom: 150,
-                  height: 100,
+                  bottom: 90,
+                  height: 200,
                   zIndex: 100,
                   background: `linear-gradient(transparent, ${
                     Constants.backgroundColor
-                  })`,
+                  } 95%)`,
                 }}
               />
             </RightSide>
@@ -942,46 +948,10 @@ class Section6 {
                   Inspired by solutions like <Ul>Stripe Home</Ul>, we made a
                   beautiful, practical home for your company.
                 </P2>
-                <Callout
-                  if={false}
-                  css={{ textAlign: 'left', position: 'absolute', bottom: 50 }}
-                >
-                  <ul>
-                    <li>
-                      <UI.Icon $icon name="check" size={20} color="green" />
-                      <P size={1.6}>
-                        <strong>Heads up</strong>. Unified personal news, minus
-                        the noise.
-                      </P>
-                    </li>
-                    <li>
-                      <UI.Icon $icon name="check" size={20} color="green" />
-                      <P size={1.6}>
-                        <strong>Directory</strong>. Beautiful smart profiles of
-                        your team.
-                      </P>
-                    </li>
-                    <li>
-                      <UI.Icon $icon name="check" size={20} color="green" />
-                      <P size={1.6}>
-                        <strong>Search</strong> everything: Slack, your files,
-                        tickets, and more.
-                      </P>
-                    </li>
-                    <li>
-                      <UI.Icon $icon name="check" size={20} color="green" />
-                      <P size={1.6}>
-                        <strong>Answers</strong>. As you compute, hold{' '}
-                        <Cmd>Option</Cmd> to see context in any app.
-                      </P>
-                    </li>
-                  </ul>
-                </Callout>
-                <P2 if={false} css={{ width: 480 }} textAlign="right">
-                  Silicon Valley has finally delivered
-                  <span css={{ marginRight: -10 }}>
-                    <Ul>a new intranet</Ul>.
-                  </span>
+                <br />
+                <P2 if={false} size={1.6}>
+                  Intranet systems are the unloved, and oft ignored pieces of a
+                  company.
                 </P2>
               </content>
             </LeftSide>
@@ -991,14 +961,42 @@ class Section6 {
                 top: 80,
                 right: 0,
                 bottom: 0,
-                left: '50%',
+                left: '55%',
+                overflow: 'hidden',
+                zIndex: 10,
               }}
             >
               <img
-                src={personImage}
-                width={1490}
+                src={profileImage}
+                width={1199}
                 height="auto"
-                css={{ transformOrigin: 'top left', transform: { scale: 0.5 } }}
+                css={{
+                  transformOrigin: 'top left',
+                  transform: { scale: 0.5 },
+                }}
+              />
+              <fadeRight
+                $$fullscreen
+                css={{
+                  left: 'auto',
+                  width: 100,
+                  zIndex: 100,
+                  background: `linear-gradient(to right, transparent, ${
+                    Constants.backgroundColor
+                  } 80%)`,
+                }}
+              />
+              <fadeDown
+                $$fullscreen
+                css={{
+                  top: 'auto',
+                  height: 300,
+                  bottom: 250,
+                  zIndex: 100,
+                  background: `linear-gradient(transparent, ${
+                    Constants.backgroundColor
+                  } 90%)`,
+                }}
               />
             </example>
           </SectionContent>
@@ -1109,49 +1107,16 @@ export default class HomePage extends React.Component {
       <home css={{ background: Constants.backgroundColor }}>
         <Header />
         <surround css={{ position: 'relative' }}>
-          <border
-            $$fullscreen
-            css={{
-              borderTop: [4, 'dotted', '#eee'],
-              borderBottom: [4, 'dotted', '#eee'],
-              width: 'calc(85% + 100px)',
-              minWidth: 660,
-              maxWidth: Constants.smallSize + 100,
-              zIndex: 10000,
-              margin: [0, 'auto'],
-              alignItems: 'center',
-              pointerEvents: 'none',
-              // zIndex: -1
-            }}
-          >
-            <borderTitle
-              if={false}
-              css={{
-                marginTop: -20,
-                height: 40,
-                background: '#fff',
-                color: '#000',
-                // border: [3, Constants.colorSecondary.darken(0.2)],
-                borderTop: 'none',
-                borderBottom: 'none',
-                padding: [0, 40],
-                justifyContent: 'center',
-                fontWeight: 800,
-                // textTransform: 'titlecase',
-                boxShadow: [[0, 5, 40, [0, 0, 0, 0.05]]],
-              }}
-            >
-              <SmallTitle css={{ margin: 0 }}>Your Team OS</SmallTitle>
-            </borderTitle>
-          </border>
+          <border css={{ top: -40 }} />
+          <border css={{ bottom: -40 }} />
           <Section2 />
           <searchIllustration
             css={{
               position: 'relative',
               overflow: 'hidden',
-              top: -200,
+              top: -220,
               left: '50%',
-              marginLeft: -550,
+              marginLeft: -560,
               width: 550,
               height: 450,
               marginBottom: -450,
@@ -1162,6 +1127,7 @@ export default class HomePage extends React.Component {
               src={slackSearchImg}
               css={{
                 width: 1150,
+                marginTop: 0,
                 height: 'auto',
                 transformOrigin: 'top left',
                 transform: { scale: 0.5 },
@@ -1199,5 +1165,25 @@ export default class HomePage extends React.Component {
         <Footer />
       </home>
     )
+  }
+
+  static style = {
+    border: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      borderBottom: [4, 'dotted', '#eee'],
+      transform: {
+        y: -2,
+      },
+      // width: 'calc(85% + 100px)',
+      minWidth: 660,
+      maxWidth: Constants.smallSize + 100,
+      zIndex: 10000,
+      margin: [0, 'auto'],
+      alignItems: 'center',
+      pointerEvents: 'none',
+      // zIndex: -1
+    },
   }
 }

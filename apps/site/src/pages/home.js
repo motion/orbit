@@ -238,7 +238,7 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.35} color={brandColor} />
+        <Logo size={0.32} color={brandColor} />
         <P
           if={false}
           size={1}
@@ -496,7 +496,7 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 160 }}>
-                  <Title>Unified News</Title>
+                  <Title>Reduce Interruptions</Title>
                   <P2
                     size={1.8}
                     css={{
@@ -515,12 +515,11 @@ class Section2 extends React.Component {
                       You use the best tool for the job. But that can leave your
                       organization <em>a little all over the place</em>.
                       <vertSpace css={{ height: 25 }} />
-                      Keep everyone on the same page with relevant updates,
-                      generated using company specific on-device machine
-                      learning.
+                      Keep everyone on the same page with only the important
+                      updates they need, letting them avoid notification noise.
                       <vertSpace css={{ height: 25 }} />
-                      Reduce interruptions and make everyone better in sync all
-                      at once.
+                      Powered by on-device ML that learns your company
+                      vocabulary and what you care about.
                     </P2>
                   </Callout>
                 </content>
@@ -730,7 +729,7 @@ class Section3 extends React.Component {
             </LeftSide>
             <RightSide css={{ top: 0, overflow: 'visible' }}>
               <Callout
-                css={{ width: 550, position: 'absolute', top: -55, left: 35 }}
+                css={{ width: 550, position: 'absolute', top: -55, left: 40 }}
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                   It's not just search across the entire cloud, it's incredibly
@@ -760,7 +759,7 @@ class Section3 extends React.Component {
                         marginLeft: -300,
                         height: 'auto',
                         transformOrigin: 'top left',
-                        transform: { scale: 0.35, x: 400, y: 1250 },
+                        transform: { scale: 0.35, x: 400, y: 1150 },
                       }}
                     />
                   </animated.div>
@@ -1088,9 +1087,8 @@ export default class HomePage extends React.Component {
           <border
             $$fullscreen
             css={{
-              border: [4, 'dotted', '#fff'],
-              borderLeft: 'none',
-              borderRight: 'none',
+              borderTop: [4, 'dotted', '#eee'],
+              borderBottom: [4, 'dotted', '#eee'],
               width: 'calc(85% + 100px)',
               minWidth: 660,
               maxWidth: Constants.smallSize + 100,
@@ -1114,7 +1112,7 @@ export default class HomePage extends React.Component {
                 justifyContent: 'center',
                 fontWeight: 800,
                 // textTransform: 'titlecase',
-                boxShadow: [[0, 0, 80, [0, 0, 0, 0.1]]],
+                boxShadow: [[0, 5, 40, [0, 0, 0, 0.05]]],
               }}
             >
               <SmallTitle css={{ margin: 0 }}>Your Team OS</SmallTitle>

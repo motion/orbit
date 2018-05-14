@@ -22,6 +22,14 @@ const Animate = {
   }),
 }
 
+const Title = props => (
+  <P
+    css={{ fontFamily: '"Mercury Display A", "Mercury Display B"' }}
+    // css={{ fontFamily: '"Chronicle Display A", "Chronicle Display B"' }}
+    {...props}
+  />
+)
+
 const SmallTitle = props => (
   <P
     size={1}
@@ -143,7 +151,7 @@ const Lines = ({ width = 100, height = 100, style }) => (
 const Callout = ({ style, ...props }) => (
   <section
     css={{
-      border: [10, [255, 255, 255, 0.5]],
+      border: [5, [255, 255, 255, 0.5]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
@@ -237,7 +245,7 @@ class Header {
   render() {
     //  'linear-gradient(#f2f2f2, #fff)'
     return (
-      <Section leftBackground={Constants.BACKGROUND_ALT}>
+      <Section>
         <SectionContent padded fullscreen>
           <Slant />
           <glowContain
@@ -286,9 +294,9 @@ class Header {
               margin: [-80, 0, 0, -50],
             }}
           >
-            <P size={4} margin={[8, 0, 5]} fontWeight={600}>
-              The operating system for your company.
-            </P>
+            <Title size={4.5} margin={[8, 0, 5]} fontWeight={600}>
+              An operating system for your company
+            </Title>
             <line
               css={{
                 margin: [26, 40],
@@ -454,7 +462,7 @@ class Section2 extends React.Component {
 
     return (
       <UI.Theme name="light">
-        <Section leftBackground={Constants.BACKGROUND_ALT} inverse>
+        <Section leftBackground="transparent" inverse>
           <Num if={false} css={{ left: '50%', marginLeft: -160, top: -100 }}>
             <UI.Icon name="news" />
           </Num>
@@ -463,10 +471,9 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 140 }}>
-                  <SmallTitle if={false}>News</SmallTitle>
-                  <P size={3} fontWeight={800} margin={[0, 0, 10]}>
+                  <Title size={3} fontWeight={800} margin={[0, 0, 10]}>
                     Company News
-                  </P>
+                  </Title>
                   <P2
                     size={2}
                     css={{
@@ -674,7 +681,7 @@ class Section3 extends React.Component {
     console.log('isIntersecting', isIntersecting)
     return (
       <UI.Theme name="light">
-        <Section leftBackground={Constants.BACKGROUND_ALT}>
+        <Section>
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
@@ -749,7 +756,7 @@ class Section4 {
   render() {
     return (
       <UI.Theme name="light">
-        <Section inverse leftBackground={Constants.BACKGROUND_ALT}>
+        <Section inverse>
           <SectionContent fullscreen padded css={{ zIndex: 3 }}>
             <Slant
               inverseSlant
@@ -846,7 +853,7 @@ class Section6 {
   render() {
     return (
       <UI.Theme name="light">
-        <Section leftBackground={Constants.BACKGROUND_ALT}>
+        <Section>
           <SectionContent fullscreen padded>
             <Slant
               slantBackground={Constants.BACKGROUND_ALT.darken(0.2)}
@@ -1069,9 +1076,6 @@ export default class HomePage extends React.Component {
                 fontWeight: 800,
                 // textTransform: 'titlecase',
                 boxShadow: [[0, 0, 80, [0, 0, 0, 0.1]]],
-                transform: {
-                  scale: 1.1,
-                },
               }}
             >
               <SmallTitle css={{ margin: 0 }}>How Orbit Works</SmallTitle>

@@ -42,7 +42,7 @@ export const LogoIcon = ({ fill, ...props }) => (
   </svg>
 )
 
-export default ({ color = '#000', size = 1, ...props }) => {
+export default ({ iconColor = '#000', color = '#000', size = 1, ...props }) => {
   const css = {
     transform: { scale: size },
     transformOrigin: 'top left',
@@ -57,6 +57,12 @@ export default ({ color = '#000', size = 1, ...props }) => {
       }}
       {...props}
     >
+      <LogoIcon
+        if={false}
+        fill={iconColor}
+        height={naturalHeight * size * 0.8}
+        css={{ margin: [-70 * size, 20 * size, 0, 0] }}
+      />
       <LogoText css={css} fill={color} />
     </logos>
   )

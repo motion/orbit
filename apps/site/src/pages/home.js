@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
-import { Section, SectionContent, Slant, PurchaseButton } from '~/views'
+import { Section, SectionContent, Slant } from '~/views'
 // import homeImg from '~/../public/screen-home.png'
 import profileImage from '~/../public/screen-profile.png'
 import wordImage from '~/../public/screen-context-word.png'
@@ -10,10 +10,12 @@ import homeImg from '~/../public/screen-home.png'
 import slackSearchImg from '~/../public/screen-slack-search.png'
 import girlImg from '~/../public/video-girl.jpg'
 import Observer from '@researchgate/react-intersection-observer'
-import { Trail, Spring, Keyframes, animated, config } from 'react-spring'
+import { Trail, Spring, animated, config } from 'react-spring'
 import HeaderIllustration from './headerIllustration'
 import { MailIcon } from '~/views/icons'
 import * as Constants from '~/constants'
+
+const brandColor = Constants.colorMain
 
 const AppleLogo = props => (
   <svg width="170px" height="170px" viewBox="0 0 170 170" {...props}>
@@ -64,14 +66,14 @@ const changeCaps = (str, reducePct) =>
         )
     : str
 
-const Title = ({ children, reduceCapsPct, size = 4, ...props }) => (
+const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
   <P
     size={size}
     fontWeight={700}
     margin={[0, 0, 5]}
     css={{
       fontFamily: '"Mercury Display A", "Mercury Display B"',
-      fontStyle: 'italic',
+      fontStyle: italic ? 'italic' : 'normal',
       letterSpacing: size < 4 ? -1 : 0,
     }}
     {...props}
@@ -80,7 +82,7 @@ const Title = ({ children, reduceCapsPct, size = 4, ...props }) => (
   </P>
 )
 
-const SubTitle = props => <Title size={3.5} reduceCapsPct={5} {...props} />
+const SubTitle = props => <Title size={3.6} reduceCapsPct={5} {...props} />
 
 const SmallTitle = props => (
   <P
@@ -184,8 +186,6 @@ const WavyLine = ({ height, ...props }) => (
   </svg>
 )
 
-const brandColor = Constants.colorMain || UI.color('#9D36E2')
-
 const Cmd = view('span', {
   padding: [2, 5],
   margin: [-2, 0],
@@ -252,25 +252,13 @@ const Ul = view('span', {
   borderBottom: [3, 'rgba(136, 231, 234, 0.9)'],
   marginBottom: -3,
 })
-const Ul2 = view('span', {
-  display: 'inline-block',
-  borderBottom: [1, 'dotted', '#ddd'],
-  marginBottom: -1,
-})
-const Hl = view('span', {
-  background: UI.color('yellow').alpha(0.8),
-  padding: [0, 2],
-  margin: [0, -2],
-  borderRadius: 3,
-  color: '#000',
-})
 
 @view
 class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.32} color={brandColor} />
+        <Logo size={0.25} color={brandColor} iconColor={brandColor} />
         <P
           if={false}
           size={1}
@@ -287,8 +275,9 @@ class BrandLogo {
   static style = {
     brandMark: {
       // background: '#fff',
-      padding: 20,
-      margin: -20,
+      // padding: 20,
+      // margin: -20,
+      // marginLeft: -60,
       alignItems: 'center',
       textAlign: 'center',
     },
@@ -303,11 +292,7 @@ class Header {
     return (
       <Section>
         <SectionContent padded fullscreen>
-          <Slant
-            slantBackground={`linear-gradient(200deg, ${Constants.colorSecondary.darken(
-              0.15,
-            )} 5%, ${Constants.colorSecondary} 95%)`}
-          />
+          <Slant />
           <glowContain
             css={{
               position: 'absolute',
@@ -347,10 +332,10 @@ class Header {
           <Callout
             css={{
               width: '55%',
-              margin: [-90, 0, 0, -50],
+              margin: [-50, 0, 0, -50],
             }}
           >
-            <Title reduceCapsPct={10} size={5.8} margin={0}>
+            <Title italic reduceCapsPct={10} size={5.8} margin={0}>
               Smarter company organization
             </Title>
             <line
@@ -362,9 +347,8 @@ class Header {
               }}
             />
             <P size={2} alpha={0.75} margin={[0, 0, 20]}>
-              <span if={false} css={{ color: '#000' }} />
-              Sort the cloud to keep your team in sync.<br />
-              Desktop news, search and more.
+              The cloud gets smart on your desktop.<br />
+              Team news, search and more.
             </P>
 
             <DottedButton css={{ margin: [8, -12, -8, 'auto'] }}>
@@ -431,7 +415,7 @@ class Header {
       flexFlow: 'row',
       alignItems: 'center',
       transformOrigin: 'center center',
-      transform: { scale: 0.25 },
+      transform: { scale: 0.2 },
       transition: 'all linear 100ms',
       '&:hover': { transform: { scale: 0.26 } },
     },
@@ -580,28 +564,28 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 0 }}>
-                  <SmallTitle css={{ marginBottom: 15 }}>
+                  <SmallTitle css={{ margin: [-15, 0, 10] }}>
                     How Orbit Works
                   </SmallTitle>
-                  <SubTitle>Personal News</SubTitle>
+                  <SubTitle size={5}>News</SubTitle>
                   <P2
                     size={1.8}
                     css={{
                       marginBottom: 30,
                     }}
                   >
-                    Sync up with <Cmd>⌘+Space</Cmd>
+                    Stay smart with <Cmd>⌘+Space</Cmd>
                   </P2>
                   <Callout
-                    css={{ width: 550, position: 'absolute', right: -20 }}
+                    css={{ width: 530, position: 'absolute', right: -10 }}
                   >
                     <P2 size={1.6} css={{ textAlign: 'left' }} margin={0}>
-                      Your team uses the best tool for the job. But between all
-                      the services, that can lead to a pretty messy big picture.
+                      Your team uses the right tool for the job. But that can
+                      lead to a pretty messy big picture.
                       <vertSpace css={{ height: 20 }} />
-                      Stay focused by peeking at what's important now. No more
-                      notification overload, just well summarized news that's
-                      relevant to you.
+                      Stay focused, up to date, and eliminate notification
+                      overload. It's well summarized news that's relevant to you
+                      across everything in your cloud.
                       <vertSpace css={{ height: 20 }} />
                       Powered by on-device ML.{' '}
                     </P2>
@@ -719,7 +703,7 @@ class Section2 extends React.Component {
                     background: Constants.backgroundColor,
                   }}
                 >
-                  <SubTitle>Search</SubTitle>
+                  <SubTitle size={5}>Search</SubTitle>
                   <P2 size={1.8}>All your integrations in one place</P2>
                 </content>
               </secondSection>
@@ -731,10 +715,6 @@ class Section2 extends React.Component {
   }
 
   static style = {
-    main: {
-      width: 450,
-      flex: 1,
-    },
     notifications: {
       position: 'absolute',
       top: 200,
@@ -776,9 +756,7 @@ class Section3 extends React.Component {
                   margin: [contextYOff + 120, 0, 0, 30],
                 }}
               >
-                <SubTitle>
-                  Augmented<br />intelligence
-                </SubTitle>
+                <SubTitle size={5}>Intelligence</SubTitle>
                 <P2
                   size={1.8}
                   css={{
@@ -787,7 +765,7 @@ class Section3 extends React.Component {
                 >
                   Always on contextual answers
                 </P2>
-                <Callout css={{ width: 550, position: 'absolute', right: 10 }}>
+                <Callout css={{ width: 530, position: 'absolute', right: 10 }}>
                   <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                     Email, chat, tickets. All day you communicate. Orbit
                     attaches to every app, providing <em>realtime</em> relevant
@@ -796,7 +774,7 @@ class Section3 extends React.Component {
                     Simply hold <Cmd>Option</Cmd>. Important terms, people, and
                     items in your cloud are shown instantly.
                     <vertSpace css={{ height: 20 }} />
-                    Orbit finds answers automatically.
+                    Automatic answers with smarts.
                   </P2>
                   <DottedButton
                     css={{ position: 'absolute', bottom: 20, right: 20 }}
@@ -887,9 +865,7 @@ class Section4 {
           <SectionContent fullscreen padded css={{ zIndex: 3 }}>
             <Slant
               inverseSlant
-              slantBackground={`linear-gradient(200deg, ${altBg.darken(
-                0.1,
-              )} 5%, ${altBg.darken(0.15)} 95%)`}
+              slantBackground={altBg.darken(0.1)}
               css={{ zIndex: 2 }}
             />
             <LeftSide>
@@ -899,7 +875,7 @@ class Section4 {
               >
                 Use Cases
               </SmallTitle>
-              <SubTitle color={altBg.darken(0.7).desaturate(0.2)}>
+              <SubTitle italic color={altBg.darken(0.7).desaturate(0.2)}>
                 Reducing<br />
                 workplace<br />
                 interruptions
@@ -1070,23 +1046,27 @@ class Section5 {
   }
 }
 
-const alt2Bg = UI.color('#3b4a91')
+const alt2Bg = altBg //UI.color('#3b4a91')
 
 @view
 class Section6 {
   render() {
     return (
-      <UI.Theme name="dark">
+      <UI.Theme name="light">
         <Section css={{ background: alt2Bg }}>
           <SectionContent fullscreen padded>
-            <Slant slantBackground={alt2Bg.darken(0.15)} />
+            <Slant
+              slantBackground={`linear-gradient(200deg, ${altBg.darken(
+                0.1,
+              )} 5%, ${altBg} 95%)`}
+            />
             <LeftSide inverse>
               <SmallTitle alpha={0.5} margin={[0, 0, 10]}>
                 Use Cases
               </SmallTitle>
-              <Title>
-                Customer<br />Success<br />Accuracy
-              </Title>
+              <SubTitle italic>
+                Customer<br />Success
+              </SubTitle>
               <div css={{ height: 240 }} />
               <P size={1.2} fontWeight={800}>
                 Faster Responses for Support
@@ -1186,7 +1166,7 @@ export default class HomePage extends React.Component {
             css={{
               position: 'relative',
               overflow: 'hidden',
-              top: -220,
+              top: searchYOff - 240,
               left: '50%',
               marginLeft: -560,
               width: 550,
@@ -1202,7 +1182,7 @@ export default class HomePage extends React.Component {
                 marginTop: 0,
                 height: 'auto',
                 transformOrigin: 'top left',
-                transform: { scale: 0.5, x: 70, y: searchYOff + 20 },
+                transform: { scale: 0.5, x: 70, y: 20 },
               }}
             />
             <fadeRight
@@ -1249,7 +1229,7 @@ export default class HomePage extends React.Component {
       // width: 'calc(85% + 100px)',
       minWidth: 660,
       maxWidth: Constants.smallSize + 100,
-      zIndex: 0,
+      zIndex: 5,
       margin: [0, 'auto'],
       alignItems: 'center',
       pointerEvents: 'none',

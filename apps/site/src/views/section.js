@@ -13,9 +13,9 @@ const padRight = {
 export const Slant = ({
   inverse,
   inverseSlant,
-  slantBackground = Constants.colorSecondary,
+  slantBackground = '#f2f2f2',
   rightBackground,
-  slantSize = 35,
+  slantSize = 30,
   ...props
 }) => {
   return (

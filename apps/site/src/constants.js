@@ -18,7 +18,7 @@ export const ORA_BORDER_RADIUS = 6
 export const ORA_PULL_UP = 110
 
 export const backgroundColor = UI.color('#fcfcfc')
-export const colorMain = UI.color('rgb(35.5%, 20%, 89.4%)')
+export const colorMain = UI.color('rgb(25.9%, 20.1%, 89.8%)')
 export const colorSecondary = UI.color('rgb(93.3%, 92.6%, 26.4%)')
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')

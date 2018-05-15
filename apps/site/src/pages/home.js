@@ -516,6 +516,10 @@ const Num = view('div', {
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
+const newsIllYOffset = 60
+const searchYOff = -40
+const contextYOff = 160
+
 @view
 class Section2 extends React.Component {
   state = {
@@ -576,7 +580,7 @@ class Section2 extends React.Component {
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 0 }}>
-                  <SmallTitle css={{ marginBottom: 30 }}>
+                  <SmallTitle css={{ marginBottom: 15 }}>
                     How Orbit Works
                   </SmallTitle>
                   <SubTitle>Personal News</SubTitle>
@@ -662,7 +666,7 @@ class Section2 extends React.Component {
                       src={homeImg}
                       css={{
                         position: 'absolute',
-                        top: 120,
+                        top: newsIllYOffset + 20,
                         right: -700,
                         width: 1100,
                         height: 'auto',
@@ -691,7 +695,7 @@ class Section2 extends React.Component {
               <fadeawayfadeawayfadeaway
                 css={{
                   position: 'absolute',
-                  top: 600,
+                  top: newsIllYOffset + 500,
                   right: -250,
                   width: 900,
                   height: 450,
@@ -708,7 +712,7 @@ class Section2 extends React.Component {
               />
 
               <secondSection>
-                <div css={{ height: 820 }} />
+                <div css={{ height: searchYOff + 800 }} />
                 <content
                   css={{
                     display: 'block',
@@ -747,8 +751,6 @@ class Section2 extends React.Component {
   }
 }
 
-const section3TopOff = 200
-
 @view
 class Section3 extends React.Component {
   state = {
@@ -771,7 +773,7 @@ class Section3 extends React.Component {
               <div
                 css={{
                   display: 'block',
-                  margin: [section3TopOff + 120, 0, 0, 30],
+                  margin: [contextYOff + 120, 0, 0, 30],
                 }}
               >
                 <SubTitle>
@@ -809,7 +811,12 @@ class Section3 extends React.Component {
             </LeftSide>
             <RightSide css={{ top: 0, overflow: 'visible' }}>
               <Callout
-                css={{ width: 500, position: 'absolute', top: -45, left: 40 }}
+                css={{
+                  width: 500,
+                  position: 'absolute',
+                  top: searchYOff - 55,
+                  left: 40,
+                }}
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                   It's not just search across the entire cloud, it's incredibly
@@ -842,7 +849,7 @@ class Section3 extends React.Component {
                         transform: {
                           scale: 0.35,
                           x: 350,
-                          y: section3TopOff + 950,
+                          y: contextYOff + 950,
                         },
                       }}
                     />
@@ -853,7 +860,7 @@ class Section3 extends React.Component {
               <fadeDown
                 $$fullscreen
                 css={{
-                  top: Constants.SECTION_HEIGHT - 100 - section3TopOff,
+                  top: Constants.SECTION_HEIGHT - 100 - contextYOff,
                   height: 200,
                   zIndex: 100,
                   background: `linear-gradient(transparent, ${
@@ -1063,20 +1070,22 @@ class Section5 {
   }
 }
 
+const alt2Bg = UI.color('#3b4a91')
+
 @view
 class Section6 {
   render() {
     return (
       <UI.Theme name="dark">
-        <Section css={{ background: '#222' }}>
+        <Section css={{ background: alt2Bg }}>
           <SectionContent fullscreen padded>
-            <Slant slantBackground="#111" />
+            <Slant slantBackground={alt2Bg.darken(0.15)} />
             <LeftSide inverse>
-              <SmallTitle color="#999" margin={[0, 0, 10]}>
+              <SmallTitle alpha={0.5} margin={[0, 0, 10]}>
                 Use Cases
               </SmallTitle>
               <Title>
-                Customer<br />Success<br />Agent
+                Customer<br />Success<br />Accuracy
               </Title>
               <div css={{ height: 240 }} />
               <P size={1.2} fontWeight={800}>
@@ -1193,7 +1202,7 @@ export default class HomePage extends React.Component {
                 marginTop: 0,
                 height: 'auto',
                 transformOrigin: 'top left',
-                transform: { scale: 0.5, x: 70, y: 0 },
+                transform: { scale: 0.5, x: 70, y: searchYOff + 20 },
               }}
             />
             <fadeRight

@@ -344,11 +344,11 @@ class Header {
           <div $$flex />
           <Callout
             css={{
-              width: '56%',
-              margin: [-100, 0, 0, -50],
+              width: '55%',
+              margin: [-90, 0, 0, -50],
             }}
           >
-            <Title reduceCapsPct={10} size={5} margin={0}>
+            <Title reduceCapsPct={10} size={5.8} margin={0}>
               Smarter company organization
             </Title>
             <line
@@ -361,18 +361,18 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 20]}>
               <span if={false} css={{ color: '#000' }} />
-              Sort the cloud to keep teams in sync.<br />
+              Sort the cloud to keep your team in sync.<br />
               Desktop news, search and more.
             </P>
 
             <DottedButton css={{ margin: [8, -12, -8, 'auto'] }}>
-              Install in just 3 minutes{' '}
+              Install in 3 minutes{' '}
               <AppleLogo
                 width={20}
                 height={20}
                 css={{
                   display: 'inline-block',
-                  margin: [-2, 0, 0, 6],
+                  margin: [-5, 0, 0, 5],
                   opacity: 0.32,
                 }}
               />
@@ -388,8 +388,8 @@ class Header {
           <videos
             css={{
               position: 'absolute',
-              bottom: 25,
-              left: 100,
+              top: -22,
+              right: 100,
               width: 200,
               alignItems: 'center',
               justifyContent: 'center',
@@ -397,14 +397,19 @@ class Header {
             }}
           >
             <videoSpot>
-              <img $girlImg src={girlImg} width={432} />
+              <img
+                $girlImg
+                src={girlImg}
+                width={432}
+                css={{ transform: { scale: 0.9 } }}
+              />
               <UI.Icon
                 name="media-1_button-play"
                 color="#fff"
                 size={45}
-                css={{ zIndex: 100, position: 'absolute', top: 100, left: 200 }}
+                css={{ zIndex: 100, position: 'absolute', top: 120, left: 200 }}
               />
-              <P selectable={false} size={3.5} margin={0}>
+              <P selectable={false} size={4.5} margin={0}>
                 Watch the 30s<br /> introduction
               </P>
             </videoSpot>
@@ -424,9 +429,9 @@ class Header {
       flexFlow: 'row',
       alignItems: 'center',
       transformOrigin: 'center center',
-      transform: { scale: 0.32 },
-      transition: 'all ease-in 400ms',
-      '&:hover': { transform: { scale: 0.35 } },
+      transform: { scale: 0.25 },
+      transition: 'all linear 100ms',
+      '&:hover': { transform: { scale: 0.26 } },
     },
     girlImg: {
       margin: [0, 60, 0, 0],
@@ -988,7 +993,7 @@ class Section5 {
                 top: 80,
                 right: 0,
                 bottom: 0,
-                left: '55%',
+                left: '53%',
                 overflow: 'hidden',
                 zIndex: 10,
               }}

@@ -32,7 +32,7 @@ const DottedButton = props => (
       cursor: 'pointer',
       color: brandColor,
       fontWeight: 500,
-      fontSize: 18,
+      fontSize: 16,
       flexFlow: 'row',
       alignItems: 'center',
     }}
@@ -344,10 +344,10 @@ class Header {
           <Callout
             css={{
               width: '56%',
-              margin: [-50, 0, 0, -50],
+              margin: [-100, 0, 0, -50],
             }}
           >
-            <Title reduceCapsPct={10} size={5.2} margin={0}>
+            <Title reduceCapsPct={10} size={5} margin={0}>
               Smarter company organization
             </Title>
             <line
@@ -364,24 +364,7 @@ class Header {
               Desktop news, search and more.
             </P>
 
-            <btn
-              css={{
-                padding: [8, 12],
-                margin: [10, 'auto', -8, -10],
-                borderRadius: 8,
-                border: [1, 'dashed', '#eee'],
-                flex: 'none',
-                cursor: 'pointer',
-                color: brandColor,
-                fontWeight: 700,
-                fontSize: 18,
-                flexFlow: 'row',
-                alignItems: 'center',
-              }}
-              onClick={() => {
-                alert('soon')
-              }}
-            >
+            <DottedButton css={{ margin: [8, -12, -8, 'auto'] }}>
               Install in just 3 minutes{' '}
               <AppleLogo
                 width={20}
@@ -392,7 +375,7 @@ class Header {
                   opacity: 0.32,
                 }}
               />
-            </btn>
+            </DottedButton>
           </Callout>
 
           <div $$flex />

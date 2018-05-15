@@ -1,12 +1,25 @@
 ## website
 
-* advertisement
-* fun colorful/playful pieces that interact with the stripe
-  * peek out from behind / go over
-  * could be ribbons, bubbles, splotches, clouds, characters
-* blog post about each major feature with link from each section
-* integrations section
-* companies using this section (soon after starting)
+* <UI.Theme theme={{ background: 'green', color: 'white' }}></UI.Theme> simple themes
+* Make bottom sections theme fine
+* fixup animation at top quite a bit
+* make Ad button smaller
+* <SubTitle> bigger
+* Sub-Sub titles in How Orbit Works, make alpha lighter
+* <Parallax> move Search and Augmented Intelligence sections
+* bottom spacing in Reducing Workplace Interrupts
+* Footer links / info
+* Privacy Policy
+* Office map
+* Mobile fixes
+* Big screen test scale(1.2) for media query
+* Blog - two posts
+  * Turn down the noise and focus
+  * Realtime context as you work (accompany with screencast later)
+* a couple small fun design details for the site, maybe parallax them
+* show integrations it supports
+* purchase page
+* company logos (after sending to people)
 
 ## app
 

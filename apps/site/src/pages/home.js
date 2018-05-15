@@ -599,7 +599,7 @@ class Section2 extends React.Component {
                       <vertSpace css={{ height: 20 }} />
                       Stay focused, up to date, and eliminate notification
                       overload. It's well summarized news that's relevant to you
-                      across everything in your cloud.
+                      across your cloud.
                       <vertSpace css={{ height: 20 }} />
                       Powered by on-device ML.{' '}
                     </P2>
@@ -781,14 +781,14 @@ class Section3 extends React.Component {
                 <FeatureSubTitle>Always on contextual answers</FeatureSubTitle>
                 <Callout css={{ width: 530, position: 'absolute', right: 10 }}>
                   <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-                    Email, chat, tickets. All day you communicate. Orbit
-                    attaches to every app, providing <em>realtime</em> relevant
-                    answers based on what you're doing.
+                    All day you communicate. Orbit attaches to any app providing{' '}
+                    <em>realtime</em> relevant answers based on what you're
+                    doing.
                     <vertSpace css={{ height: 20 }} />
                     Simply hold <Cmd>Option</Cmd>. Important terms, people, and
                     items in your cloud are shown instantly.
                     <vertSpace css={{ height: 20 }} />
-                    Automatic answers with smarts.
+                    It's a new way to stay in sync.
                   </P2>
                   <DottedButton
                     css={{ position: 'absolute', bottom: 20, right: 20 }}
@@ -811,11 +811,12 @@ class Section3 extends React.Component {
                 }}
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-                  It's not just search across the entire cloud, it's incredibly
-                  fast conceptual search that sorts everything from Slack
-                  conversations to local files.
+                  Search across the entire cloud locally with fast conceptual
+                  search that even supports showing summarized Slack
+                  conversations.
                   <vertSpace css={{ height: 20 }} />
-                  Get more from your knowledge by putting it at your fingertips.
+                  Search people to see profiles that show where they spend time,
+                  recent interactions and more.
                 </P2>
               </Callout>
             </RightSide>
@@ -1081,7 +1082,7 @@ class Section6 {
                 Use Cases
               </SmallTitle>
               <SubTitle italic>
-                Customer<br />Success
+                Customer<br />Success<br />Assistant
               </SubTitle>
               <div css={{ height: 240 }} />
               <P size={1.2} fontWeight={800}>

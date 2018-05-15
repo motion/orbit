@@ -113,6 +113,7 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
       if={!noEdge}
       css={{
         display: 'block',
+        height: '100%',
       }}
     >
       <edge
@@ -202,7 +203,7 @@ const Lines = ({ width = 100, height = 100, style }) => (
   </svg>
 )
 
-const Callout = ({ style, ...props }) => (
+const Callout = UI.injectTheme(({ style, theme, ...props }) => (
   <section
     css={{
       border: [5, [255, 255, 255, 0.5]],
@@ -233,14 +234,14 @@ const Callout = ({ style, ...props }) => (
         margin: 6,
         // borderRadius: 5,
         padding: [30, 32],
-        background: '#fff',
+        background: theme.base.background,
         overflow: 'hidden',
         position: 'relative',
       }}
       {...props}
     />
   </section>
-)
+))
 
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const P2 = props => <P size={2} alpha={0.85} margin={[0, 0, 20]} {...props} />
@@ -869,12 +870,12 @@ class Section4 {
               )} 5%, ${altBg.darken(0.15)} 95%)`}
               css={{ zIndex: 2 }}
             />
-            <LeftSide css={{ pointerEvents: 'none' }}>
+            <LeftSide>
               <SmallTitle
                 color={altBg.darken(0.55).desaturate(0.2)}
                 margin={[120, 0, 10]}
               >
-                In Depth
+                Use Cases
               </SmallTitle>
               <SubTitle color={altBg.darken(0.7).desaturate(0.2)}>
                 Reducing<br />
@@ -884,46 +885,42 @@ class Section4 {
               <P2 size={1.8} css={{ paddingLeft: 50 }}>
                 Orbit focuses on the individual to solve your company clarity.
               </P2>
-            </LeftSide>
-            <div $$flex />
-            <div $$flex />
-            <main css={{ paddingLeft: 100, marginTop: 150 }}>
+              <div css={{ height: 120 }} />
               <P size={1.2} fontWeight={800}>
-                Realtime context
+                Turning Down Notifications
               </P>
-              <P2 size={1.5}>
-                Orbit privately scans any app in a quarter second. Then it
-                matches important concepts, projects, and people in your company
-                to results in the sidebar.
+              <P2 size={1.5} css={{ margin: [0, 0, 25, 90] }}>
+                The Orbit home page is designed around picking the right things
+                to show you based on how you work. It's summarization also lets
+                you glance to see what's new.
               </P2>
-            </main>
-            <Callout
-              css={{
-                width: 460,
-                marginLeft: 120,
-                marginTop: 20,
-                marginBottom: -30,
-              }}
-            >
-              <P2 size={2} margin={0}>
-                Discover someone already started the planning doc or had a Slack
-                conversation <em>before</em> you hit send.
-              </P2>
-            </Callout>
+              <Callout
+                css={{
+                  width: 460,
+                  marginLeft: 120,
+                  marginBottom: -30,
+                }}
+              >
+                <P2 size={2} margin={0}>
+                  Allow everyone to turn do not disturb on more easily, and
+                  focus for longer periods of time.
+                </P2>
+              </Callout>
+            </LeftSide>
             <RightSide inverse css={{ bottom: 0 }}>
-              <div $$flex css={{ marginTop: 300 }} />
+              <div $$flex css={{ marginTop: 260 }} />
               <P size={1.2} fontWeight={800}>
-                Automatic Profiles
+                Preventing Shoulder Taps
               </P>
               <P2 size={1.5} css={{ marginRight: 90 }}>
-                See which chat rooms people spend time in as well as recent
-                things they've done that are relevant to you.
+                Profiles are generated and aggregated across platforms. Then, we
+                show helpful details about everyone in your company.
               </P2>
-              <Callout css={{ margin: [20, 0, 40, 0], left: -80 }}>
+              <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
                 <div $$row>
                   <P2 size={2} margin={0}>
-                    Instead of pinging for the link to a shared document from
-                    last week, find it.
+                    Seeing recent collaboration in profiles allows less pings
+                    throughout the day.
                   </P2>
                 </div>
               </Callout>
@@ -1059,11 +1056,25 @@ class Section6 {
           <SectionContent fullscreen padded>
             <Slant slantBackground="#111" />
             <LeftSide css={{ textAlign: 'left', marginTop: 220 }}>
-              <Title size={5.5}>Secure & Private</Title>
+              <Callout>
+                <SmallTitle>Our Mission</SmallTitle>
+                <P2 size={1.5}>
+                  Orbit is a personal app that runs intimately in your everyday.
+                  That means it has to work for you, the individual. Our goal is
+                  to make computers more reactive to how we work. To do that we
+                  need trust. So our decisions will always put privacy and
+                  security first.
+                </P2>
+              </Callout>
+            </LeftSide>
+            <RightSide>
+              <Title>
+                Privacy<br />Security<br />Etc
+              </Title>
               <br />
               <P2 fontWeight={200} size={2.5}>
-                Orbit is completely private. It doesn't send any data outside
-                your computer.
+                Orbit is completely private to your desktop. It never sends any
+                data outside your computer.
               </P2>
               <P2 size={2} fontWeight={200}>
                 We realized early in Orbit's development that it's near
@@ -1072,25 +1083,6 @@ class Section6 {
                 complex installations we spent the last year pusing the limits
                 of what your desktop can do.
               </P2>
-
-              <br />
-              <br />
-
-              <SmallTitle>Our Mission</SmallTitle>
-              <P2 size={1.5}>
-                Orbit is a personal app that runs intimately in your everyday.
-                That means it has to work for you, the individual. Our goal is
-                to make computers more reactive to how we work. To do that we
-                need trust. So our decisions will always put privacy and
-                security first.
-              </P2>
-            </LeftSide>
-            <RightSide noEdge>
-              <content css={{ display: 'block', margin: ['auto', 0] }}>
-                <PurchaseButton size={1.2}>
-                  Free Download for Mac
-                </PurchaseButton>
-              </content>
             </RightSide>
           </SectionContent>
         </Section>
@@ -1134,7 +1126,7 @@ export default class HomePage extends React.Component {
         <Header />
         <surround css={{ position: 'relative' }}>
           <border css={{ top: -40 }} />
-          <border css={{ bottom: -40 }} />
+          <border if={false} css={{ bottom: 0 }} />
           <Section2 />
           <searchIllustration
             css={{

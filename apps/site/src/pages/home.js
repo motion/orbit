@@ -67,20 +67,20 @@ const changeCaps = (str, reducePct) =>
 const Title = ({ children, reduceCapsPct, size = 4, ...props }) => (
   <P
     size={size}
-    fontWeight={800}
+    fontWeight={700}
     margin={[0, 0, 5]}
     css={{
-      fontFamily: '"Chronicle Display A", "Chronicle Display B"',
-      // letterSpacing: size < 4 ? -1 : 0,
+      fontFamily: '"Mercury Display A", "Mercury Display B"',
+      fontStyle: 'italic',
+      letterSpacing: size < 4 ? -1 : 0,
     }}
-    // css={{ fontFamily: '"Chronicle Display A", "Chronicle Display B"' }}
     {...props}
   >
     {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}
   </P>
 )
 
-const SubTitle = props => <Title size={3.2} reduceCapsPct={5} {...props} />
+const SubTitle = props => <Title size={3.5} reduceCapsPct={5} {...props} />
 
 const SmallTitle = props => (
   <P
@@ -208,7 +208,7 @@ const Lines = ({ width = 100, height = 100, style }) => (
 const Callout = UI.injectTheme(({ style, theme, ...props }) => (
   <section
     css={{
-      border: [5, [255, 255, 255, 0.5]],
+      border: [1, [255, 255, 255, 0.3]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
@@ -246,7 +246,7 @@ const Callout = UI.injectTheme(({ style, theme, ...props }) => (
 ))
 
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
-const P2 = props => <P size={2} alpha={0.85} margin={[0, 0, 20]} {...props} />
+const P2 = props => <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
 const Ul = view('span', {
   display: 'inline-block',
   borderBottom: [3, 'rgba(136, 231, 234, 0.9)'],
@@ -327,14 +327,14 @@ class Header {
                 position: 'absolute',
                 top: '42%',
                 right: 0,
-                marginRight: -100,
-                background: Constants.BACKGROUND_ALT.darken(0.2),
-                opacity: 0.5,
+                marginRight: -170,
+                background: '#000',
+                opacity: 0.15,
                 width: 350,
                 height: 300,
                 borderRadius: 100,
                 filter: {
-                  blur: 150,
+                  blur: 120,
                 },
               }}
             />
@@ -1076,7 +1076,7 @@ class Section6 {
                 Use Cases
               </SmallTitle>
               <Title>
-                Customer<br />Success<br />Brain
+                Customer<br />Success<br />Agent
               </Title>
               <div css={{ height: 240 }} />
               <P size={1.2} fontWeight={800}>
@@ -1240,11 +1240,10 @@ export default class HomePage extends React.Component {
       // width: 'calc(85% + 100px)',
       minWidth: 660,
       maxWidth: Constants.smallSize + 100,
-      zIndex: 10000,
+      zIndex: 0,
       margin: [0, 'auto'],
       alignItems: 'center',
       pointerEvents: 'none',
-      // zIndex: -1
     },
   }
 }

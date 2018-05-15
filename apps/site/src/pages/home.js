@@ -8,6 +8,7 @@ import profileImage from '~/../public/screen-profile.png'
 import wordImage from '~/../public/screen-context-word.png'
 import homeImg from '~/../public/screen-home.png'
 import slackSearchImg from '~/../public/screen-slack-search.png'
+import girlImg from '~/../public/video-girl.jpg'
 import Observer from '@researchgate/react-intersection-observer'
 import { Trail, Spring, Keyframes, animated, config } from 'react-spring'
 import HeaderIllustration from './headerIllustration'
@@ -346,7 +347,7 @@ class Header {
               margin: [-50, 0, 0, -50],
             }}
           >
-            <Title reduceCapsPct={10} size={5.5} margin={0}>
+            <Title reduceCapsPct={10} size={5.2} margin={0}>
               Smarter company organization
             </Title>
             <line
@@ -359,7 +360,7 @@ class Header {
             />
             <P size={2} alpha={0.75} margin={[0, 0, 20]}>
               <span if={false} css={{ color: '#000' }} />
-              Orbit sorts the cloud to keep teams in sync.<br />
+              Sort the cloud to keep teams in sync.<br />
               Desktop news, search and more.
             </P>
 
@@ -399,6 +400,31 @@ class Header {
           <rightSide>
             <HeaderIllustration />
           </rightSide>
+
+          <videos
+            css={{
+              position: 'absolute',
+              bottom: 25,
+              left: 100,
+              width: 200,
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 100,
+            }}
+          >
+            <videoSpot>
+              <img $girlImg src={girlImg} width={432} />
+              <UI.Icon
+                name="media-1_button-play"
+                color="#fff"
+                size={45}
+                css={{ zIndex: 100, position: 'absolute', top: 100, left: 200 }}
+              />
+              <P selectable={false} size={3.5} margin={0}>
+                Watch the 30s<br /> introduction
+              </P>
+            </videoSpot>
+          </videos>
         </SectionContent>
       </Section>
     )
@@ -408,6 +434,19 @@ class Header {
     header: {
       padding: 25,
       position: 'relative',
+    },
+    videoSpot: {
+      cursor: 'pointer',
+      flexFlow: 'row',
+      alignItems: 'center',
+      transformOrigin: 'center center',
+      transform: { scale: 0.32 },
+      transition: 'all ease-in 400ms',
+      '&:hover': { transform: { scale: 0.35 } },
+    },
+    girlImg: {
+      margin: [0, 60, 0, 0],
+      boxShadow: [[0, 0, 90, [0, 0, 0, 0.1]]],
     },
     top: {
       flexFlow: 'row',

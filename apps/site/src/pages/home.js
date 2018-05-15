@@ -124,7 +124,7 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
           float: 'left',
           width: 147,
           height: 990,
-          marginLeft: -25,
+          marginLeft: -30,
         }}
       />
       {children}
@@ -133,7 +133,7 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
   </rightSide>
 )
 
-const LeftSide = ({ children, inverse, ...props }) => (
+const LeftSide = ({ children, noEdge, inverse, ...props }) => (
   <leftSide
     css={{
       zIndex: 3,
@@ -141,8 +141,8 @@ const LeftSide = ({ children, inverse, ...props }) => (
       position: 'absolute',
       left: 0,
       right: '50%',
-      bottom: 50,
-      top: 50,
+      bottom: 80,
+      top: 80,
       paddingRight: 20,
       justifyContent: 'center',
       textAlign: 'right',
@@ -152,17 +152,19 @@ const LeftSide = ({ children, inverse, ...props }) => (
     <inner
       css={{
         display: 'block',
+        height: '100%',
       }}
     >
       <edge
+        if={!noEdge}
         css={{
           shapeOutside: inverse
-            ? 'polygon(82% 0%, 90px 0%, 0% 1096px)'
+            ? 'polygon(105% 0%, 90px 0%, 0% 1096px)'
             : 'polygon(0% 0%, 1px 0%, 96% 1096px)',
           float: 'right',
           width: 110,
           height: 990,
-          marginLeft: -25,
+          marginLeft: inverse ? -15 : -35,
         }}
       />
       {children}
@@ -573,7 +575,10 @@ class Section2 extends React.Component {
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 140 }}>
+                <content css={{ display: 'block', marginTop: 0 }}>
+                  <SmallTitle css={{ marginBottom: 30 }}>
+                    How Orbit Works
+                  </SmallTitle>
                   <SubTitle>Personal News</SubTitle>
                   <P2
                     size={1.8}
@@ -766,7 +771,7 @@ class Section3 extends React.Component {
               <div
                 css={{
                   display: 'block',
-                  margin: [section3TopOff + 180, 0, 0, 30],
+                  margin: [section3TopOff + 120, 0, 0, 30],
                 }}
               >
                 <SubTitle>
@@ -778,19 +783,24 @@ class Section3 extends React.Component {
                     marginBottom: 30,
                   }}
                 >
-                  A new way to operate with context
+                  Always on contextual answers
                 </P2>
                 <Callout css={{ width: 550, position: 'absolute', right: 10 }}>
                   <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-                    All day you're communicating. Whether email, chat, or on
-                    projects. Do it smarter by <em>knowing context</em> to what
-                    you're doing <em>as you do it</em>.
+                    Email, chat, tickets. All day you communicate. Orbit
+                    attaches to every app, providing <em>realtime</em> relevant
+                    answers based on what you're doing.
                     <vertSpace css={{ height: 20 }} />
-                    With a simple hold of <Cmd>Option</Cmd> you'll see all
-                    important terms, people, and relevant items in your cloud
-                    instantly. Orbit even shows you the exact important section
-                    without having to type.
+                    Simply hold <Cmd>Option</Cmd>. Important terms, people, and
+                    items in your cloud are shown instantly.
+                    <vertSpace css={{ height: 20 }} />
+                    Orbit finds answers automatically.
                   </P2>
+                  <DottedButton
+                    css={{ position: 'absolute', bottom: 20, right: 20 }}
+                  >
+                    Learn more
+                  </DottedButton>
                 </Callout>
                 <Observer onChange={this.handleIntersect}>
                   <br />
@@ -799,11 +809,11 @@ class Section3 extends React.Component {
             </LeftSide>
             <RightSide css={{ top: 0, overflow: 'visible' }}>
               <Callout
-                css={{ width: 550, position: 'absolute', top: -40, left: 40 }}
+                css={{ width: 500, position: 'absolute', top: -45, left: 40 }}
               >
                 <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                   It's not just search across the entire cloud, it's incredibly
-                  fast, conceptual search that sorts everything from Slack
+                  fast conceptual search that sorts everything from Slack
                   conversations to local files.
                   <vertSpace css={{ height: 20 }} />
                   Get more from your knowledge by putting it at your fingertips.
@@ -878,7 +888,7 @@ class Section4 {
             <LeftSide>
               <SmallTitle
                 color={altBg.darken(0.55).desaturate(0.2)}
-                margin={[120, 0, 10]}
+                margin={[0, 0, 10]}
               >
                 Use Cases
               </SmallTitle>
@@ -888,9 +898,10 @@ class Section4 {
                 interruptions
               </SubTitle>
               <P2 size={1.8} css={{ paddingLeft: 50 }}>
-                Orbit focuses on the individual to solve your company clarity.
+                Orbit focuses on the individual<br /> to make teams less
+                interrupted.
               </P2>
-              <div css={{ height: 120 }} />
+              <div css={{ height: 220 }} />
               <P size={1.2} fontWeight={800}>
                 Turning Down Notifications
               </P>
@@ -913,7 +924,7 @@ class Section4 {
               </Callout>
             </LeftSide>
             <RightSide inverse css={{ bottom: 0 }}>
-              <div $$flex css={{ marginTop: 260 }} />
+              <div $$flex css={{ marginTop: 200 }} />
               <P size={1.2} fontWeight={800}>
                 Preventing Shoulder Taps
               </P>
@@ -1060,63 +1071,92 @@ class Section6 {
         <Section css={{ background: '#222' }}>
           <SectionContent fullscreen padded>
             <Slant slantBackground="#111" />
-            <LeftSide css={{ textAlign: 'left', marginTop: 220 }}>
-              <Callout>
-                <SmallTitle>Our Mission</SmallTitle>
-                <P2 size={1.5}>
-                  Orbit is a personal app that runs intimately in your everyday.
-                  That means it has to work for you, the individual. Our goal is
-                  to make computers more reactive to how we work. To do that we
-                  need trust. So our decisions will always put privacy and
-                  security first.
+            <LeftSide inverse>
+              <SmallTitle color="#999" margin={[0, 0, 10]}>
+                Use Cases
+              </SmallTitle>
+              <Title>
+                Customer<br />Success<br />Brain
+              </Title>
+              <div css={{ height: 240 }} />
+              <P size={1.2} fontWeight={800}>
+                Faster Responses for Support
+              </P>
+              <P2 size={1.5} css={{ margin: [0, 0, 25, 90] }}>
+                Orbit's contextual answers work with your support software as
+                your team chats. In realtime it searches knowledge and
+                highlights the exact section with a potential answer.
+              </P2>
+              <Callout
+                css={{
+                  width: 460,
+                  marginLeft: 80,
+                  marginBottom: -30,
+                }}
+              >
+                <P2 size={2} margin={0}>
+                  Answers on hand for your entire success team, powered by all
+                  your knowledgebase.
                 </P2>
               </Callout>
             </LeftSide>
             <RightSide>
-              <Title>
-                Privacy<br />Security<br />Etc
-              </Title>
-              <br />
-              <P2 fontWeight={200} size={2.5}>
-                Orbit is completely private to your desktop. It never sends any
-                data outside your computer.
+              <div $$flex css={{ marginTop: 200 }} />
+              <P size={1.2} fontWeight={800}>
+                Reduced Onboarding for Sales
+              </P>
+              <P2 size={1.5} css={{ marginRight: 90 }}>
+                Sales requires intimate knowledge of your product. Orbit can sit
+                side by side with your success team as they chat on Intercom or
+                ZenDesk providing realtime answers from your knowledgebase.
               </P2>
-              <P2 size={2} fontWeight={200}>
-                We realized early in Orbit's development that it's near
-                impossible to deliver a great experience without going fully
-                on-device. To avoid data privacy issues, permissions errors, and
-                complex installations we spent the last year pusing the limits
-                of what your desktop can do.
-              </P2>
+              <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
+                <P2 size={2} margin={0}>
+                  Organizational knowledge is now always at hand and usable
+                  during outbound chats.
+                </P2>
+              </Callout>
             </RightSide>
           </SectionContent>
         </Section>
       </UI.Theme>
     )
   }
-
-  static style = {
-    main: {
-      width: 400,
-      flex: 1,
-    },
-  }
 }
+
+// <P2 fontWeight={200} size={2.5}>
+// Orbit is completely private to your desktop. It never sends any
+// data outside your computer.
+// </P2>
+// <P2 size={2} fontWeight={200}>
+// We realized early in Orbit's development that it's near
+// impossible to deliver a great experience without going fully
+// on-device. To avoid data privacy issues, permissions errors, and
+// complex installations we spent the last year pusing the limits
+// of what your desktop can do.
+// </P2>
 
 @view
 class Footer {
   render() {
     return (
-      <Section css={{ padding: 100 }}>
-        <SectionContent padded>
-          <div $$row>
-            <content>
-              <P2>Going into beta now</P2>
-              <PurchaseButton />
-            </content>
-            <div $$flex />
+      <Section>
+        <SectionContent css={{ padding: [150, 0] }}>
+          <left css={{ width: '50%', padding: [0, 100, 0, 0] }}>
+            <SmallTitle>Our Mission</SmallTitle>
+            <P2 size={1.5}>
+              Orbit runs intimately in your everyday. That means it has to work
+              for you, the individual.
+              <br />
+              <br />
+              Our goal is to build a smarter and more intuitive OS. To do that
+              we need trust. We make privacy, security, and user experience our
+              first priorities.
+            </P2>
+          </left>
+          <RightSide noEdge>
             <BrandLogo />
-          </div>
+          </RightSide>
         </SectionContent>
       </Section>
     )
@@ -1182,7 +1222,6 @@ export default class HomePage extends React.Component {
           <Section3 />
         </surround>
         <Section4 />
-        {/* <Section5 /> */}
         <Section6 />
         <Footer />
       </home>

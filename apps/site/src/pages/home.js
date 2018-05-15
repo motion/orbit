@@ -292,7 +292,11 @@ class Header {
     return (
       <Section>
         <SectionContent padded fullscreen>
-          <Slant />
+          <Slant
+            slantBackground={`linear-gradient(200deg, ${
+              Constants.colorSecondary
+            } 80%, #f2f2f2 95%)`}
+          />
           <glowContain
             css={{
               position: 'absolute',
@@ -415,9 +419,9 @@ class Header {
       flexFlow: 'row',
       alignItems: 'center',
       transformOrigin: 'center center',
-      transform: { scale: 0.2 },
+      transform: { scale: 0.22 },
       transition: 'all linear 100ms',
-      '&:hover': { transform: { scale: 0.26 } },
+      '&:hover': { transform: { scale: 0.23 } },
     },
     girlImg: {
       margin: [0, 60, 0, 0],
@@ -567,7 +571,7 @@ class Section2 extends React.Component {
                   <SmallTitle css={{ margin: [-15, 0, 10] }}>
                     How Orbit Works
                   </SmallTitle>
-                  <SubTitle size={5}>News</SubTitle>
+                  <SubTitle size={4.8}>News</SubTitle>
                   <P2
                     size={1.8}
                     css={{
@@ -703,7 +707,7 @@ class Section2 extends React.Component {
                     background: Constants.backgroundColor,
                   }}
                 >
-                  <SubTitle size={5}>Search</SubTitle>
+                  <SubTitle size={4.8}>Search</SubTitle>
                   <P2 size={1.8}>All your integrations in one place</P2>
                 </content>
               </secondSection>
@@ -756,7 +760,7 @@ class Section3 extends React.Component {
                   margin: [contextYOff + 120, 0, 0, 30],
                 }}
               >
-                <SubTitle size={5}>Intelligence</SubTitle>
+                <SubTitle size={4.8}>Intelligence</SubTitle>
                 <P2
                   size={1.8}
                   css={{
@@ -1229,7 +1233,7 @@ export default class HomePage extends React.Component {
       // width: 'calc(85% + 100px)',
       minWidth: 660,
       maxWidth: Constants.smallSize + 100,
-      zIndex: 5,
+      zIndex: 2,
       margin: [0, 'auto'],
       alignItems: 'center',
       pointerEvents: 'none',

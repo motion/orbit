@@ -369,9 +369,21 @@ export default class HeaderIllustration extends React.Component {
               <animated.div style={{ opacity }}>
                 <P $message size={2}>
                   Stay in sync, stress free.
-                  <PurchaseButton css={{ margin: [20, 'auto', -20] }}>
-                    Learn more
-                  </PurchaseButton>
+                  <UI.Row
+                    spaced
+                    itemProps={{
+                      margin: [0, 3],
+                    }}
+                    css={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: [20, 0, 0],
+                    }}
+                  >
+                    <UI.Button>Features</UI.Button>
+                    <UI.Button>Reduce Interruptions</UI.Button>
+                    <UI.Button>Customer Success</UI.Button>
+                  </UI.Row>
                 </P>
               </animated.div>
             )}

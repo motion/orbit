@@ -15,7 +15,7 @@ export const Slant = ({
   inverseSlant,
   slantBackground = Constants.colorSecondary,
   rightBackground,
-  slantSize = 30,
+  slantSize = 35,
   ...props
 }) => {
   return (

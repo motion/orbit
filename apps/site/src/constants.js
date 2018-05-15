@@ -18,12 +18,8 @@ export const ORA_BORDER_RADIUS = 6
 export const ORA_PULL_UP = 110
 
 export const backgroundColor = UI.color('#fcfcfc')
-export const colorMain = UI.color('rgb(92.1%, 69.7%, 34%)')
-export const colorMainLight = colorMain.lighten(0.15)
-export const colorMainDark = colorMain.darken(0.48)
-export const colorSecondary = UI.color('rgb(56.2%, 45%, 77.7%)')
-export const colorSecondaryLight = colorSecondary.lighten(0.35)
-export const colorSecondaryDark = colorSecondary.darken(0.35)
+export const colorMain = UI.color('rgb(35.5%, 20%, 89.4%)')
+export const colorSecondary = UI.color('rgb(93.3%, 92.6%, 26.4%)')
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')
 
@@ -35,15 +31,4 @@ export const mainLight = UI.color(colorMain)
 
 export const screen = {
   small: `@media (max-width: ${smallSize}px)`,
-}
-
-export const gradients = {
-  main: {
-    background: `linear-gradient(${colorMain}, ${colorMainLight})`,
-    backgroundInverse: `linear-gradient(${colorMainLight}, ${colorMain})`,
-  },
-  secondary: {
-    background: `linear-gradient(${colorSecondary}, ${colorSecondaryLight})`,
-    backgroundInverse: `linear-gradient(${colorSecondaryLight}, ${colorSecondary})`,
-  },
 }

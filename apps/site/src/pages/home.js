@@ -80,7 +80,7 @@ const Title = ({ children, reduceCapsPct, size = 4, ...props }) => (
   </P>
 )
 
-const SubTitle = props => <Title size={3.3} reduceCapsPct={5} {...props} />
+const SubTitle = props => <Title size={3.2} reduceCapsPct={5} {...props} />
 
 const SmallTitle = props => (
   <P
@@ -181,7 +181,7 @@ const WavyLine = ({ height, ...props }) => (
   </svg>
 )
 
-const brandColor = UI.color('#4D31CC')
+const brandColor = Constants.colorMain || UI.color('#9D36E2')
 
 const Cmd = view('span', {
   padding: [2, 5],
@@ -563,15 +563,12 @@ class Section2 extends React.Component {
     return (
       <UI.Theme name="light">
         <Section inverse>
-          <Num if={false} css={{ left: '50%', marginLeft: -160, top: -100 }}>
-            <UI.Icon name="news" />
-          </Num>
           <SectionContent padded fullscreen>
             <Slant inverseSlant />
             <LeftSide>
               <Observer onChange={this.handleIntersect}>
                 <content css={{ display: 'block', marginTop: 140 }}>
-                  <SubTitle size={4}>Personal News</SubTitle>
+                  <SubTitle>Personal News</SubTitle>
                   <P2
                     size={1.8}
                     css={{
@@ -581,16 +578,16 @@ class Section2 extends React.Component {
                     Sync up with <Cmd>⌘+Space</Cmd>
                   </P2>
                   <Callout
-                    css={{ width: 550, position: 'absolute', right: -30 }}
+                    css={{ width: 550, position: 'absolute', right: -20 }}
                   >
-                    <P2 size={1.7} css={{ textAlign: 'left' }} margin={0}>
+                    <P2 size={1.6} css={{ textAlign: 'left' }} margin={0}>
                       Your team uses the best tool for the job. But between all
                       the services, that can lead to a pretty messy big picture.
-                      <vertSpace css={{ height: 25 }} />
+                      <vertSpace css={{ height: 20 }} />
                       Stay focused by peeking at what's important now. No more
                       notification overload, just well summarized news that's
                       relevant to you.
-                      <vertSpace css={{ height: 25 }} />
+                      <vertSpace css={{ height: 20 }} />
                       Powered by on-device ML.{' '}
                     </P2>
                     <DottedButton
@@ -660,7 +657,7 @@ class Section2 extends React.Component {
                         height: 'auto',
                         transformOrigin: 'top left',
                         transform: {
-                          scale: 0.5,
+                          scale: 0.4,
                         },
                         boxShadow: [[0, 15, 120, [0, 0, 0, 0.1]]],
                       }}
@@ -707,7 +704,7 @@ class Section2 extends React.Component {
                     background: Constants.backgroundColor,
                   }}
                 >
-                  <SubTitle size={4}>Search</SubTitle>
+                  <SubTitle>Search</SubTitle>
                   <P2 size={1.8}>All your integrations in one place</P2>
                 </content>
               </secondSection>
@@ -739,6 +736,8 @@ class Section2 extends React.Component {
   }
 }
 
+const section3TopOff = 200
+
 @view
 class Section3 extends React.Component {
   state = {
@@ -758,8 +757,15 @@ class Section3 extends React.Component {
           <SectionContent fullscreen padded>
             <Slant css={{ zIndex: 2 }} />
             <LeftSide inverse>
-              <div css={{ display: 'block', margin: [420, 0, 0, 30] }}>
-                <SubTitle size={4}>Augmented intelligence</SubTitle>
+              <div
+                css={{
+                  display: 'block',
+                  margin: [section3TopOff + 180, 0, 0, 30],
+                }}
+              >
+                <SubTitle>
+                  Augmented<br />intelligence
+                </SubTitle>
                 <P2
                   size={1.8}
                   css={{
@@ -773,7 +779,7 @@ class Section3 extends React.Component {
                     All day you're communicating. Whether email, chat, or on
                     projects. Do it smarter by <em>knowing context</em> to what
                     you're doing <em>as you do it</em>.
-                    <vertSpace css={{ height: 25 }} />
+                    <vertSpace css={{ height: 20 }} />
                     With a simple hold of <Cmd>Option</Cmd> you'll see all
                     important terms, people, and relevant items in your cloud
                     instantly. Orbit even shows you the exact important section
@@ -793,7 +799,7 @@ class Section3 extends React.Component {
                   It's not just search across the entire cloud, it's incredibly
                   fast, conceptual search that sorts everything from Slack
                   conversations to local files.
-                  <vertSpace css={{ height: 25 }} />
+                  <vertSpace css={{ height: 20 }} />
                   Get more from your knowledge by putting it at your fingertips.
                 </P2>
               </Callout>
@@ -817,7 +823,11 @@ class Section3 extends React.Component {
                         marginLeft: -300,
                         height: 'auto',
                         transformOrigin: 'top left',
-                        transform: { scale: 0.35, x: 400, y: 1300 },
+                        transform: {
+                          scale: 0.35,
+                          x: 350,
+                          y: section3TopOff + 950,
+                        },
                       }}
                     />
                   </animated.div>
@@ -827,8 +837,7 @@ class Section3 extends React.Component {
               <fadeDown
                 $$fullscreen
                 css={{
-                  top: 'auto',
-                  bottom: 90,
+                  top: Constants.SECTION_HEIGHT - 100 - section3TopOff,
                   height: 200,
                   zIndex: 100,
                   background: `linear-gradient(transparent, ${
@@ -844,35 +853,34 @@ class Section3 extends React.Component {
   }
 }
 
+const altBg = UI.color('#FCF6ED')
+
 @view
 class Section4 {
   render() {
     return (
       <UI.Theme name="light">
-        <Section inverse>
+        <Section inverse css={{ background: altBg }}>
           <SectionContent fullscreen padded css={{ zIndex: 3 }}>
             <Slant
               inverseSlant
-              slantBackground={`linear-gradient(200deg, ${
-                Constants.colorSecondary
-              } 5%, ${Constants.BACKGROUND_ALT.darken(0.2)} 95%)`}
+              slantBackground={`linear-gradient(200deg, ${altBg.darken(
+                0.1,
+              )} 5%, ${altBg.darken(0.15)} 95%)`}
               css={{ zIndex: 2 }}
             />
             <LeftSide css={{ pointerEvents: 'none' }}>
-              <P
-                size={1.1}
-                fontWeight={800}
-                textTransform="uppercase"
-                alpha={0.4}
+              <SmallTitle
+                color={altBg.darken(0.55).desaturate(0.2)}
                 margin={[120, 0, 10]}
               >
                 In Depth
-              </P>
-              <Title size={3.2}>
+              </SmallTitle>
+              <SubTitle color={altBg.darken(0.7).desaturate(0.2)}>
                 Reducing<br />
                 workplace<br />
                 interruptions
-              </Title>
+              </SubTitle>
               <P2 size={1.8} css={{ paddingLeft: 50 }}>
                 Orbit focuses on the individual to solve your company clarity.
               </P2>
@@ -946,16 +954,16 @@ class Section4 {
 }
 
 @view
-class Section6 {
+class Section5 {
   render() {
     return (
       <UI.Theme name="light">
-        <Section>
+        <Section css={{ background: altBg }}>
           <SectionContent fullscreen padded>
             <Slant
-              slantBackground={`linear-gradient(200deg, ${Constants.BACKGROUND_ALT.darken(
-                0.2,
-              )} 5%, ${Constants.BACKGROUND_ALT.darken(0.2).alpha(0.3)} 95%)`}
+              slantBackground={`linear-gradient(200deg, ${altBg.darken(
+                0.15,
+              )} 5%, ${altBg} 95%)`}
               css={{ zIndex: 2 }}
             />
             <LeftSide inverse>
@@ -1003,9 +1011,7 @@ class Section6 {
                   left: 'auto',
                   width: 100,
                   zIndex: 100,
-                  background: `linear-gradient(to right, transparent, ${
-                    Constants.backgroundColor
-                  } 80%)`,
+                  background: `linear-gradient(to right, transparent, ${altBg} 80%)`,
                 }}
               />
               <fadeDown
@@ -1015,9 +1021,7 @@ class Section6 {
                   height: 300,
                   bottom: 250,
                   zIndex: 100,
-                  background: `linear-gradient(transparent, ${
-                    Constants.backgroundColor
-                  } 90%)`,
+                  background: `linear-gradient(transparent, ${altBg} 90%)`,
                 }}
               />
             </example>
@@ -1047,13 +1051,13 @@ class Section6 {
 }
 
 @view
-class Section7 {
+class Section6 {
   render() {
     return (
       <UI.Theme name="dark">
         <Section css={{ background: '#222' }}>
           <SectionContent fullscreen padded>
-            <Slant inverseSlant slantBackground="#111" />
+            <Slant slantBackground="#111" />
             <LeftSide css={{ textAlign: 'left', marginTop: 220 }}>
               <Title size={5.5}>Secure & Private</Title>
               <br />
@@ -1152,7 +1156,7 @@ export default class HomePage extends React.Component {
                 marginTop: 0,
                 height: 'auto',
                 transformOrigin: 'top left',
-                transform: { scale: 0.5 },
+                transform: { scale: 0.5, x: 70, y: 0 },
               }}
             />
             <fadeRight
@@ -1183,7 +1187,6 @@ export default class HomePage extends React.Component {
         <Section4 />
         {/* <Section5 /> */}
         <Section6 />
-        <Section7 />
         <Footer />
       </home>
     )

@@ -1,6 +1,6 @@
+import ZenScroll from 'zenscroll'
 import * as React from 'react'
 import CountUp from 'react-countup'
-import { PurchaseButton } from '~/views'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Trail from '~/trail'
@@ -17,6 +17,8 @@ import {
 
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const sleep = ms => new Promise(res => setTimeout(res, ms))
+
+const scrollTo = query => () => ZenScroll.to(document.querySelector(query))
 
 const Badge = view('div', {
   position: 'absolute',
@@ -380,9 +382,15 @@ export default class HeaderIllustration extends React.Component {
                       margin: [20, 0, 0],
                     }}
                   >
-                    <UI.Button>Features</UI.Button>
-                    <UI.Button>Reduce Interruptions</UI.Button>
-                    <UI.Button>Customer Success</UI.Button>
+                    <UI.Button onClick={scrollTo('#features')}>
+                      Features
+                    </UI.Button>
+                    <UI.Button onClick={scrollTo('#reduce-interrupts')}>
+                      Reduce Interruptions
+                    </UI.Button>
+                    <UI.Button onClick={scrollTo('#customer-success')}>
+                      Customer Success
+                    </UI.Button>
                   </UI.Row>
                 </P>
               </animated.div>

@@ -189,7 +189,7 @@ const WavyLine = ({ height, ...props }) => (
 const Cmd = view('span', {
   padding: [2, 5],
   margin: [-2, 0],
-  border: [1, '#ccc'],
+  border: [1, 'dotted', '#ccc'],
   borderRadius: 12,
 })
 
@@ -258,7 +258,7 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.25} color={brandColor} iconColor={brandColor} />
+        <Logo size={0.3} color={brandColor} iconColor={brandColor} />
         <P
           if={false}
           size={1}
@@ -508,6 +508,17 @@ const newsIllYOffset = 60
 const searchYOff = -40
 const contextYOff = 160
 
+const FeatureSubTitle = props => (
+  <P2
+    size={1.8}
+    alpha={0.6}
+    css={{
+      marginBottom: 30,
+    }}
+    {...props}
+  />
+)
+
 @view
 class Section2 extends React.Component {
   state = {
@@ -562,7 +573,7 @@ class Section2 extends React.Component {
 
     return (
       <UI.Theme name="light">
-        <Section inverse>
+        <Section id="features" inverse>
           <SectionContent padded fullscreen>
             <Slant inverseSlant />
             <LeftSide>
@@ -572,14 +583,13 @@ class Section2 extends React.Component {
                     How Orbit Works
                   </SmallTitle>
                   <SubTitle size={4.8}>News</SubTitle>
-                  <P2
-                    size={1.8}
+                  <FeatureSubTitle
                     css={{
-                      marginBottom: 30,
+                      marginTop: 12,
                     }}
                   >
                     Stay smart with <Cmd>⌘+Space</Cmd>
-                  </P2>
+                  </FeatureSubTitle>
                   <Callout
                     css={{ width: 530, position: 'absolute', right: -10 }}
                   >
@@ -708,7 +718,9 @@ class Section2 extends React.Component {
                   }}
                 >
                   <SubTitle size={4.8}>Search</SubTitle>
-                  <P2 size={1.8}>All your integrations in one place</P2>
+                  <FeatureSubTitle>
+                    All your integrations in one place
+                  </FeatureSubTitle>
                 </content>
               </secondSection>
             </RightSide>
@@ -752,7 +764,12 @@ class Section3 extends React.Component {
       <UI.Theme name="light">
         <Section>
           <SectionContent fullscreen padded>
-            <Slant css={{ zIndex: 2 }} />
+            <Slant
+              css={{ zIndex: 2 }}
+              slantBackground={`linear-gradient(200deg, #f2f2f2 80%, ${altBg.darken(
+                0.05,
+              )} 95%)`}
+            />
             <LeftSide inverse>
               <div
                 css={{
@@ -761,14 +778,7 @@ class Section3 extends React.Component {
                 }}
               >
                 <SubTitle size={4.8}>Intelligence</SubTitle>
-                <P2
-                  size={1.8}
-                  css={{
-                    marginBottom: 30,
-                  }}
-                >
-                  Always on contextual answers
-                </P2>
+                <FeatureSubTitle>Always on contextual answers</FeatureSubTitle>
                 <Callout css={{ width: 530, position: 'absolute', right: 10 }}>
                   <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
                     Email, chat, tickets. All day you communicate. Orbit
@@ -865,11 +875,13 @@ class Section4 {
   render() {
     return (
       <UI.Theme name="light">
-        <Section inverse css={{ background: altBg }}>
+        <Section id="reduce-interrupts" inverse css={{ background: altBg }}>
           <SectionContent fullscreen padded css={{ zIndex: 3 }}>
             <Slant
               inverseSlant
-              slantBackground={altBg.darken(0.1)}
+              slantBackground={`linear-gradient(200deg, ${altBg.darken(
+                0.05,
+              )} 5%, ${altBg.darken(0.1)} 95%)`}
               css={{ zIndex: 2 }}
             />
             <LeftSide>
@@ -1057,7 +1069,7 @@ class Section6 {
   render() {
     return (
       <UI.Theme name="light">
-        <Section css={{ background: alt2Bg }}>
+        <Section id="customer-success" css={{ background: alt2Bg }}>
           <SectionContent fullscreen padded>
             <Slant
               slantBackground={`linear-gradient(200deg, ${altBg.darken(

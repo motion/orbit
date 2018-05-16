@@ -1255,72 +1255,79 @@ class Footer {
 export default class HomePage extends React.Component {
   render() {
     return (
-      <home css={{ background: Constants.backgroundColor }}>
-        <Header />
-        <surround css={{ position: 'relative' }}>
-          <border css={{ top: -40 }} />
-          <border if={false} css={{ bottom: 0 }} />
-          <Section2 />
+      <Media query={Constants.screen.superLarge}>
+        {isSuperLarge => (
+          <home
+            $superLarge={isSuperLarge}
+            css={{ background: Constants.backgroundColor }}
+          >
+            <Header />
+            <surround css={{ position: 'relative' }}>
+              <border css={{ top: -40 }} />
+              <border if={false} css={{ bottom: 0 }} />
+              <Section2 />
 
-          <Media
-            query={Constants.screen.large}
-            render={() => (
-              <searchIllustration
-                css={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  top: searchYOff - 240,
-                  left: '50%',
-                  marginLeft: -560,
-                  width: 550,
-                  height: 450,
-                  marginBottom: -450,
-                  zIndex: 0,
-                  pointerEvents: 'none',
-                }}
-              >
-                <img
-                  src={slackSearchImg}
-                  css={{
-                    width: 1150,
-                    marginTop: 0,
-                    height: 'auto',
-                    transformOrigin: 'top left',
-                    transform: { scale: 0.5, x: 70, y: 20 },
-                  }}
-                />
-                <fadeRight
-                  $$fullscreen
-                  css={{
-                    left: 'auto',
-                    width: 100,
-                    zIndex: 100,
-                    background: `linear-gradient(to right, transparent, ${
-                      Constants.backgroundColor
-                    } 80%)`,
-                  }}
-                />
-                <fadeDown
-                  $$fullscreen
-                  css={{
-                    top: 'auto',
-                    height: 100,
-                    zIndex: 100,
-                    background: `linear-gradient(transparent, ${
-                      Constants.backgroundColor
-                    })`,
-                  }}
-                />
-              </searchIllustration>
-            )}
-          />
+              <Media
+                query={Constants.screen.large}
+                render={() => (
+                  <searchIllustration
+                    css={{
+                      position: 'relative',
+                      overflow: 'hidden',
+                      top: searchYOff - 240,
+                      left: '50%',
+                      marginLeft: -560,
+                      width: 550,
+                      height: 450,
+                      marginBottom: -450,
+                      zIndex: 0,
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    <img
+                      src={slackSearchImg}
+                      css={{
+                        width: 1150,
+                        marginTop: 0,
+                        height: 'auto',
+                        transformOrigin: 'top left',
+                        transform: { scale: 0.5, x: 70, y: 20 },
+                      }}
+                    />
+                    <fadeRight
+                      $$fullscreen
+                      css={{
+                        left: 'auto',
+                        width: 100,
+                        zIndex: 100,
+                        background: `linear-gradient(to right, transparent, ${
+                          Constants.backgroundColor
+                        } 80%)`,
+                      }}
+                    />
+                    <fadeDown
+                      $$fullscreen
+                      css={{
+                        top: 'auto',
+                        height: 100,
+                        zIndex: 100,
+                        background: `linear-gradient(transparent, ${
+                          Constants.backgroundColor
+                        })`,
+                      }}
+                    />
+                  </searchIllustration>
+                )}
+              />
 
-          <Section3 />
-        </surround>
-        <Section4 />
-        <Section6 />
-        <Footer />
-      </home>
+              <Section3 />
+            </surround>
+            <Section4 />
+            <Section6 />
+            <Footer />
+          </home>
+        )}
+      </Media>
     )
   }
 
@@ -1340,6 +1347,12 @@ export default class HomePage extends React.Component {
       margin: [0, 'auto'],
       alignItems: 'center',
       pointerEvents: 'none',
+    },
+    superLarge: {
+      transformOrigin: 'top center',
+      transform: {
+        scale: 1.3,
+      },
     },
   }
 }

@@ -35,4 +35,5 @@ export const screen = {
   smallQuery: `@media (max-width: ${smallSize}px)`,
   small: { maxWidth: smallSize },
   large: { minWidth: smallSize - 1 },
+  superLarge: { minWidth: smallSize * 1.5 },
 }

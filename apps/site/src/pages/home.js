@@ -318,11 +318,11 @@ class Header {
                   top: -200,
                   left: -100,
                   bottom: 0,
-                  right: '50%',
+                  right: '49.5%',
                   zIndex: 1,
                   overflow: 'hidden',
                   transform: {
-                    rotate: '5deg',
+                    rotate: '4.7deg',
                   },
                 }}
               >
@@ -331,9 +331,9 @@ class Header {
                     position: 'absolute',
                     top: '42%',
                     right: 0,
-                    marginRight: -170,
+                    marginRight: -172,
                     background: '#fff',
-                    opacity: 0.35,
+                    opacity: 1,
                     width: 350,
                     height: 300,
                     borderRadius: 100,
@@ -357,7 +357,7 @@ class Header {
                   italic
                   reduceCapsPct={10}
                   size={6.5}
-                  margin={[0, 0, 0, -15]}
+                  margin={[0, 0, 0, -5]}
                 >
                   Smarter company organization
                 </Title>
@@ -370,29 +370,37 @@ class Header {
                   }}
                 />
                 <P size={2} alpha={0.75} margin={[0, 0, 15, 0]}>
-                  Search and news for your company.<br />
-                  Augment mac with intelligence.<br />
-                  Install in 3 minutes.
+                  Upgrade Mac with team intelligence.<br />
+                  Search and news for your company.
                 </P>
 
-                <DottedButton
-                  $smallInstallBtn={!isLarge}
+                <actions
+                  $$row
                   css={{
-                    margin: [25, 'auto', -8, 10],
-                    transform: { scale: 1.2 },
+                    margin: [25, 'auto', 0, 0],
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  Try now free{' '}
-                  <AppleLogo
-                    width={20}
-                    height={20}
+                  <DottedButton
+                    $smallInstallBtn={!isLarge}
                     css={{
-                      display: 'inline-block',
-                      margin: [-5, 0, 0, 5],
-                      opacity: 0.32,
+                      margin: [0, 20, 0, -10],
                     }}
-                  />
-                </DottedButton>
+                  >
+                    Install in 3 minutes{' '}
+                    <AppleLogo
+                      width={20}
+                      height={20}
+                      css={{
+                        display: 'inline-block',
+                        margin: [-5, 0, 0, 5],
+                        opacity: 0.32,
+                      }}
+                    />
+                  </DottedButton>
+                  <P>Privacy</P>
+                </actions>
               </mainSection>
             )}
           </Media>
@@ -579,6 +587,27 @@ const FeatureSubTitle = props => (
     }}
     {...props}
   />
+)
+
+const SearchCallout = ({ isLarge }) => (
+  <Callout
+    css={
+      isLarge && {
+        width: 500,
+        position: 'absolute',
+        top: searchYOff - 55,
+        left: 40,
+      }
+    }
+  >
+    <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
+      Search across the entire cloud locally with fast conceptual search that
+      even supports showing summarized Slack conversations.
+      <vertSpace css={{ height: 20 }} />
+      Search people to see profiles that show where they spend time, recent
+      interactions and more.
+    </P2>
+  </Callout>
 )
 
 @view
@@ -784,20 +813,22 @@ class Section2 extends React.Component {
                     />
                   </React.Fragment>
 
-                  <secondSection>
-                    <div if={isLarge} css={{ height: searchYOff + 800 }} />
-                    <content
-                      css={{
-                        display: 'block',
-                        background: Constants.backgroundColor,
-                      }}
-                    >
-                      <SubTitle size={4.8}>Search</SubTitle>
-                      <FeatureSubTitle>
-                        All your integrations in one place
-                      </FeatureSubTitle>
-                    </content>
-                  </secondSection>
+                  <div if={isLarge} css={{ height: 'calc(100% - 240px)' }} />
+                  <content
+                    css={{
+                      display: 'block',
+                      background: Constants.backgroundColor,
+                      position: 'relative',
+                      zIndex: 1000,
+                    }}
+                  >
+                    <SubTitle size={4.8}>Search</SubTitle>
+                    <FeatureSubTitle>Spotlight, meet the cloud</FeatureSubTitle>
+                  </content>
+                  <Media
+                    query={Constants.screen.small}
+                    render={() => <SearchCallout />}
+                  />
                 </RightSide>
               </SectionContent>
             </Section>
@@ -815,11 +846,6 @@ class Section2 extends React.Component {
       width: 300,
       bottom: 150,
       zIndex: 1,
-    },
-    secondSection: {
-      position: 'relative',
-      display: 'block',
-      zIndex: 101,
     },
   }
 }
@@ -892,72 +918,61 @@ class Section3 extends React.Component {
                     </Observer>
                   </div>
                 </LeftSide>
-                <RightSide css={{ top: 0, overflow: 'visible' }}>
-                  <Callout
-                    css={
-                      isLarge && {
-                        width: 500,
-                        position: 'absolute',
-                        top: searchYOff - 55,
-                        left: 40,
-                      }
-                    }
-                  >
-                    <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-                      Search across the entire cloud locally with fast
-                      conceptual search that even supports showing summarized
-                      Slack conversations.
-                      <vertSpace css={{ height: 20 }} />
-                      Search people to see profiles that show where they spend
-                      time, recent interactions and more.
-                    </P2>
-                  </Callout>
-                </RightSide>
 
                 <Media
                   query={Constants.screen.large}
                   render={() => (
-                    <RightSide
-                      css={{ zIndex: 0, overflow: 'hidden', top: 0, bottom: 0 }}
-                    >
-                      <Spring from={{ x: 100 }} to={{ x: 10 }}>
-                        {({ x }) => (
-                          <animated.div
-                            style={{
-                              transform: `translate3d(${x}px,0,0)`,
-                            }}
-                          >
-                            <img
-                              src={wordImage}
-                              css={{
-                                position: 'absolute',
-                                width: 1634,
-                                marginLeft: -300,
-                                height: 'auto',
-                                transformOrigin: 'top left',
-                                transform: {
-                                  scale: 0.35,
-                                  x: 350,
-                                  y: contextYOff + 950,
-                                },
-                              }}
-                            />
-                          </animated.div>
-                        )}
-                      </Spring>
-
-                      <fadeDown
-                        $$fullscreen
+                    <React.Fragment>
+                      <RightSide css={{ top: 0, overflow: 'visible' }}>
+                        <SearchCallout isLarge />
+                      </RightSide>
+                      <RightSide
                         css={{
-                          top: Constants.SECTION_HEIGHT - 100 - contextYOff,
-                          height: 200,
-                          zIndex: 100,
-                          background: `linear-gradient(transparent, ${
-                            Constants.backgroundColor
-                          } 95%)`,
+                          zIndex: 0,
+                          overflow: 'hidden',
+                          top: 0,
+                          bottom: 0,
                         }}
-                      />
-                    </RightSide>
+                      >
+                        <Spring from={{ x: 100 }} to={{ x: 10 }}>
+                          {({ x }) => (
+                            <animated.div
+                              style={{
+                                transform: `translate3d(${x}px,0,0)`,
+                              }}
+                            >
+                              <img
+                                src={wordImage}
+                                css={{
+                                  position: 'absolute',
+                                  width: 1634,
+                                  marginLeft: -300,
+                                  height: 'auto',
+                                  transformOrigin: 'top left',
+                                  transform: {
+                                    scale: 0.35,
+                                    x: 350,
+                                    y: contextYOff + 950,
+                                  },
+                                }}
+                              />
+                            </animated.div>
+                          )}
+                        </Spring>
+
+                        <fadeDown
+                          $$fullscreen
+                          css={{
+                            top: Constants.SECTION_HEIGHT - 100 - contextYOff,
+                            height: 200,
+                            zIndex: 100,
+                            background: `linear-gradient(transparent, ${
+                              Constants.backgroundColor
+                            } 95%)`,
+                          }}
+                        />
+                      </RightSide>
+                    </React.Fragment>
                   )}
                 />
               </SectionContent>
@@ -970,13 +985,19 @@ class Section3 extends React.Component {
 }
 
 const altBg = UI.color('#FCF6ED')
+const peachTheme = {
+  background: altBg,
+  color: altBg.darken(0.7).desaturate(0.2),
+  titleColor: altBg.darken(0.55).desaturate(0.2),
+  subTitleColor: altBg.darken(0.7).desaturate(0.2),
+}
 
 @view
 class Section4 {
   render() {
     return (
-      <UI.Theme name="light">
-        <Section id="reduce-interrupts" inverse css={{ background: altBg }}>
+      <UI.Theme theme={peachTheme}>
+        <Section id="remote-teams" inverse css={{ background: altBg }}>
           <SectionContent fullscreen padded css={{ zIndex: 3 }}>
             <Slant
               inverseSlant
@@ -986,13 +1007,154 @@ class Section4 {
               css={{ zIndex: 2 }}
             />
             <LeftSide>
-              <SmallTitle
-                color={altBg.darken(0.55).desaturate(0.2)}
-                margin={[0, 0, 10]}
+              <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
+              <SubTitle italic>
+                Enabling<br />
+                remote-first<br />
+                companies
+              </SubTitle>
+              <P2 size={1.8} css={{ paddingLeft: 50 }}>
+                Inspired by Stripe<br />
+                Orbit is a beautiful<br />
+                company home.
+              </P2>
+              <div css={{ height: 210 }} />
+              <section
+                css={{
+                  textAlign: 'left',
+                  display: 'block',
+                  margin: [0, 0, 0, 90],
+                }}
               >
-                Use Cases
-              </SmallTitle>
-              <SubTitle italic color={altBg.darken(0.7).desaturate(0.2)}>
+                <P size={1.2} fontWeight={800}>
+                  Connect people
+                </P>
+                <P2 size={1.5}>
+                  A single profile is created for everyone from combined info
+                  across your cloud. See which Slack rooms people spend time in.
+                  What general topics they are interested in. Plus see recently
+                  edited and relevant files, tickets, and more that are relevant
+                  to both you and them.
+                </P2>
+              </section>
+              <Callout
+                css={{
+                  width: 460,
+                  marginLeft: 120,
+                  textAlign: 'left',
+                }}
+              >
+                <P2 size={2} margin={0}>
+                  Allow everyone to turn do not disturb on more easily, and
+                  focus for longer periods of time.
+                </P2>
+              </Callout>
+            </LeftSide>
+            <RightSide inverse css={{ bottom: 0 }}>
+              <div $$flex css={{ marginTop: 200 }} />
+              <P size={1.2} fontWeight={800}>
+                Homebase
+              </P>
+              <P2 size={1.5} css={{ marginRight: 90 }}>
+                News in Orbit is designed for distributing knowledge with
+                intelligence. It starts by learning your company vocabulary.
+                Then it learns locally what you care about. The intersection of
+                what you care about and haven't seen, relative to your custom
+                company corpus is then shown.
+              </P2>
+              <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
+                <div $$row>
+                  <P2 size={2} margin={0}>
+                    A carefully curated newspaper, daily, for everyone in the
+                    company.
+                  </P2>
+                </div>
+              </Callout>
+            </RightSide>
+          </SectionContent>
+        </Section>
+      </UI.Theme>
+    )
+  }
+}
+
+const alt2Bg = altBg //UI.color('#3b4a91')
+
+@view
+class Section6 {
+  render() {
+    return (
+      <UI.Theme theme={{ background: alt2Bg, color: alt2Bg }}>
+        <Section id="customer-success" css={{ background: alt2Bg }}>
+          <SectionContent fullscreen padded>
+            <Slant slantBackground={altBg.darken(0.1)} />
+            <LeftSide inverse>
+              <SubTitle italic>
+                Improving<br />Customer<br />Success
+              </SubTitle>
+              <div css={{ height: 240 }} />
+              <P size={1.2} fontWeight={800}>
+                Faster Responses for Support
+              </P>
+              <P2 size={1.5} css={{ margin: [0, 0, 25, 90] }}>
+                Orbit's contextual answers work with your support software as
+                your team chats. In realtime it searches knowledge and
+                highlights the exact section with a potential answer.
+              </P2>
+              <Callout
+                css={{
+                  width: 460,
+                  marginLeft: 80,
+                  marginBottom: -30,
+                }}
+              >
+                <P2 size={2} margin={0}>
+                  Answers on hand for your entire success team, powered by all
+                  your knowledgebase.
+                </P2>
+              </Callout>
+            </LeftSide>
+            <RightSide>
+              <div $$flex css={{ marginTop: 200 }} />
+              <P size={1.2} fontWeight={800}>
+                Reduced Onboarding for Sales
+              </P>
+              <P2 size={1.5} css={{ marginRight: 90 }}>
+                Sales requires intimate knowledge of your product. Orbit can sit
+                side by side with your success team as they chat on Intercom or
+                ZenDesk providing realtime answers from your knowledgebase.
+              </P2>
+              <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
+                <P2 size={2} margin={0}>
+                  Organizational knowledge is now always at hand and usable
+                  during outbound chats.
+                </P2>
+              </Callout>
+            </RightSide>
+          </SectionContent>
+        </Section>
+      </UI.Theme>
+    )
+  }
+}
+
+@view
+class Section7 {
+  render() {
+    return (
+      <UI.Theme theme={peachTheme}>
+        <Section id="reduce-interrupts" inverse css={{ background: altBg }}>
+          <SectionContent fullscreen padded css={{ zIndex: 3 }}>
+            <Slant
+              inverseSlant
+              slantBackground={`linear-gradient(200deg, ${altBg.darken(
+                0.1,
+              )} 5%, ${altBg} 95%)`}
+              css={{ zIndex: 2 }}
+            />
+            <LeftSide>
+              <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
+              <SubTitle italic>
                 Reducing<br />
                 workplace<br />
                 interruptions
@@ -1039,188 +1201,6 @@ class Section4 {
                     throughout the day.
                   </P2>
                 </div>
-              </Callout>
-              <br />
-              <br />
-              <br />
-              <content if={false}>
-                <P2 size={3}>Make your success team more successful.</P2>
-                <P2 size={1.8}>
-                  Orbit works alongside Intercom and Zendesk. Your
-                  knowledgebase, recently closed tickets and docs now power
-                  live, automatic answers as you chat.
-                </P2>
-              </content>
-            </RightSide>
-          </SectionContent>
-        </Section>
-      </UI.Theme>
-    )
-  }
-
-  static style = {
-    main: {
-      width: 450,
-      flex: 1,
-    },
-  }
-}
-
-@view
-class Section5 {
-  render() {
-    return (
-      <UI.Theme name="light">
-        <Section css={{ background: altBg }}>
-          <SectionContent fullscreen padded>
-            <Slant
-              slantBackground={`linear-gradient(200deg, ${altBg.darken(
-                0.15,
-              )} 5%, ${altBg} 95%)`}
-              css={{ zIndex: 2 }}
-            />
-            <LeftSide inverse>
-              <content
-                css={{
-                  display: 'block',
-                  textAlign: 'right',
-                  margin: [150, 0, 100, 40],
-                }}
-              >
-                <P2 size={2.2}>
-                  Inspired by solutions like <Ul>Stripe Home</Ul>, we made a
-                  beautiful, practical home for your company.
-                </P2>
-                <br />
-                <P2 if={false} size={1.6}>
-                  Intranet systems are the unloved, and oft ignored pieces of a
-                  company.
-                </P2>
-              </content>
-            </LeftSide>
-            <example
-              css={{
-                position: 'absolute',
-                top: 80,
-                right: 0,
-                bottom: 0,
-                left: '53%',
-                overflow: 'hidden',
-                zIndex: 10,
-              }}
-            >
-              <img
-                src={profileImage}
-                width={1199}
-                height="auto"
-                css={{
-                  transformOrigin: 'top left',
-                  transform: { scale: 0.5 },
-                }}
-              />
-              <fadeRight
-                $$fullscreen
-                css={{
-                  left: 'auto',
-                  width: 100,
-                  zIndex: 100,
-                  background: `linear-gradient(to right, transparent, ${altBg} 80%)`,
-                }}
-              />
-              <fadeDown
-                $$fullscreen
-                css={{
-                  top: 'auto',
-                  height: 300,
-                  bottom: 250,
-                  zIndex: 100,
-                  background: `linear-gradient(transparent, ${altBg} 90%)`,
-                }}
-              />
-            </example>
-          </SectionContent>
-        </Section>
-      </UI.Theme>
-    )
-  }
-
-  static style = {
-    ul: {
-      margin: 0,
-      overflow: 'hidden',
-    },
-    li: {
-      display: 'flex',
-      flexFlow: 'row',
-      alignItems: 'flex-start',
-      fontSize: 22,
-      padding: [0, 0, 10, 0],
-    },
-    icon: {
-      marginTop: 6,
-      marginRight: 12,
-    },
-  }
-}
-
-const alt2Bg = altBg //UI.color('#3b4a91')
-
-@view
-class Section6 {
-  render() {
-    return (
-      <UI.Theme name="light">
-        <Section id="customer-success" css={{ background: alt2Bg }}>
-          <SectionContent fullscreen padded>
-            <Slant
-              slantBackground={`linear-gradient(200deg, ${altBg.darken(
-                0.1,
-              )} 5%, ${altBg} 95%)`}
-            />
-            <LeftSide inverse>
-              <SmallTitle alpha={0.5} margin={[0, 0, 10]}>
-                Use Cases
-              </SmallTitle>
-              <SubTitle italic>
-                Customer<br />Success<br />Assistant
-              </SubTitle>
-              <div css={{ height: 240 }} />
-              <P size={1.2} fontWeight={800}>
-                Faster Responses for Support
-              </P>
-              <P2 size={1.5} css={{ margin: [0, 0, 25, 90] }}>
-                Orbit's contextual answers work with your support software as
-                your team chats. In realtime it searches knowledge and
-                highlights the exact section with a potential answer.
-              </P2>
-              <Callout
-                css={{
-                  width: 460,
-                  marginLeft: 80,
-                  marginBottom: -30,
-                }}
-              >
-                <P2 size={2} margin={0}>
-                  Answers on hand for your entire success team, powered by all
-                  your knowledgebase.
-                </P2>
-              </Callout>
-            </LeftSide>
-            <RightSide>
-              <div $$flex css={{ marginTop: 200 }} />
-              <P size={1.2} fontWeight={800}>
-                Reduced Onboarding for Sales
-              </P>
-              <P2 size={1.5} css={{ marginRight: 90 }}>
-                Sales requires intimate knowledge of your product. Orbit can sit
-                side by side with your success team as they chat on Intercom or
-                ZenDesk providing realtime answers from your knowledgebase.
-              </P2>
-              <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
-                <P2 size={2} margin={0}>
-                  Organizational knowledge is now always at hand and usable
-                  during outbound chats.
-                </P2>
               </Callout>
             </RightSide>
           </SectionContent>
@@ -1342,6 +1322,7 @@ export default class HomePage extends React.Component {
             </surround>
             <Section4 />
             <Section6 />
+            <Section7 />
             <Footer />
           </home>
         )}

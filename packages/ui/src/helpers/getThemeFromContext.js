@@ -2,7 +2,10 @@ import ThemeMaker from './themeMaker'
 
 const Theme = new ThemeMaker()
 
-export default function getThemeFromContext(propName = 'theme') {
+export default function getThemeFromContext(
+  propName = 'name',
+  themePropName = 'theme',
+) {
   return function getContext() {
     const prop = this.props[propName]
     if (prop) {
@@ -13,15 +16,17 @@ export default function getThemeFromContext(propName = 'theme') {
         }
       }
       // no found theme, try making custom
-      const theme = Theme.fromColor(prop)
-      if (theme) {
-        return {
-          uiThemes: {
-            ...this.context.uiThemes,
-            [prop]: theme,
-          },
-          uiActiveThemeName: prop,
-          uiActiveTheme: theme,
+      if (this.props[themePropName]) {
+        const theme = Theme.fromColor(this.props[themePropName])
+        if (theme) {
+          return {
+            uiThemes: {
+              ...this.context.uiThemes,
+              [prop]: theme,
+            },
+            uiActiveThemeName: prop,
+            uiActiveTheme: theme,
+          }
         }
       }
     } else {

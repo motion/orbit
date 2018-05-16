@@ -371,27 +371,26 @@ export default class HeaderIllustration extends React.Component {
               <animated.div style={{ opacity }}>
                 <P $message size={2}>
                   Stay in sync, stress free.
-                  <UI.Row
-                    spaced
-                    itemProps={{
-                      margin: [0, 3],
-                    }}
+                  <links
                     css={{
                       alignItems: 'center',
                       justifyContent: 'center',
                       margin: [20, 0, 0],
                     }}
                   >
-                    <UI.Button onClick={scrollTo('#features')}>
-                      Features
+                    <P size={1.2} alpha={0.7} css={{ margin: [10, 0, 20] }}>
+                      Use Cases
+                    </P>
+                    <UI.Button onClick={scrollTo('#remote-teams')}>
+                      Remote Teams
                     </UI.Button>
                     <UI.Button onClick={scrollTo('#reduce-interrupts')}>
-                      Reduce Interruptions
+                      Deep Work
                     </UI.Button>
                     <UI.Button onClick={scrollTo('#customer-success')}>
                       Customer Success
                     </UI.Button>
-                  </UI.Row>
+                  </links>
                 </P>
               </animated.div>
             )}

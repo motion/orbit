@@ -94,7 +94,9 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <rightSide css={{ padding: sidePadSmall }}>{children}</rightSide>
+        <rightSide css={{ padding: [0, 0, sidePadSmall, 0] }}>
+          {children}
+        </rightSide>
       ) : (
         <rightSide
           css={{
@@ -141,7 +143,9 @@ const LeftSide = ({ children, innerStyle, noEdge, inverse, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <leftSide css={{ padding: sidePadSmall }}>{children}</leftSide>
+        <leftSide css={{ padding: [0, 0, sidePadSmall, 0] }}>
+          {children}
+        </leftSide>
       ) : (
         <leftSide
           css={{
@@ -357,7 +361,7 @@ class Header {
                 <Title
                   italic
                   reduceCapsPct={10}
-                  size={6.5}
+                  size={isLarge ? 6.5 : 4.5}
                   margin={[0, 0, 0, -5]}
                 >
                   Smarter company organization
@@ -370,14 +374,14 @@ class Header {
                     opacity: 0.15,
                   }}
                 />
-                <P size={2} alpha={0.75} margin={[0, 0, 15, 0]}>
+                <P size={isLarge ? 2 : 1.5} alpha={0.75} margin={[0, 0, 15, 0]}>
                   Cloud search and news in your OS
                 </P>
 
                 <actions
                   $$row
                   css={{
-                    margin: [25, 'auto', 0, 0],
+                    margin: isLarge ? [25, 'auto', 0, 0] : 0,
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
@@ -1023,82 +1027,88 @@ class Section4 {
   render() {
     return (
       <UI.Theme theme={peachTheme}>
-        <Section id="remote-teams" inverse css={{ background: altBg }}>
-          <SectionContent fullscreen padded css={{ zIndex: 3 }}>
-            <Slant
-              inverseSlant
-              slantBackground={`linear-gradient(200deg, ${altBg.darken(
-                0.05,
-              )} 5%, ${altBg.darken(0.1)} 95%)`}
-              css={{ zIndex: 2 }}
-            />
-            <LeftSide>
-              <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
-              <SubTitle italic>
-                Enabling<br />
-                remote-first<br />
-                companies
-              </SubTitle>
-              <P2 size={1.8} css={{ paddingLeft: 50 }}>
-                Inspired by Stripe<br />
-                Orbit is a beautiful<br />
-                company home.
-              </P2>
-              <div css={{ height: 210 }} />
-              <section
-                css={{
-                  textAlign: 'left',
-                  display: 'block',
-                  margin: [0, 0, 0, 90],
-                }}
-              >
-                <P size={1.2} fontWeight={800}>
-                  Connect people
-                </P>
-                <P2 size={1.5}>
-                  A single profile is created for everyone from combined info
-                  across your cloud. See which Slack rooms people spend time in.
-                  What general topics they are interested in. Plus see recently
-                  edited and relevant files, tickets, and more that are relevant
-                  to both you and them.
-                </P2>
-              </section>
-              <Callout
-                css={{
-                  width: 460,
-                  marginLeft: 120,
-                  textAlign: 'left',
-                }}
-              >
-                <P2 size={2} margin={0}>
-                  Allow everyone to turn do not disturb on more easily, and
-                  focus for longer periods of time.
-                </P2>
-              </Callout>
-            </LeftSide>
-            <RightSide inverse css={{ bottom: 0 }}>
-              <div $$flex css={{ marginTop: 200 }} />
-              <P size={1.2} fontWeight={800}>
-                Homebase
-              </P>
-              <P2 size={1.5} css={{ marginRight: 90 }}>
-                News in Orbit is designed for distributing knowledge with
-                intelligence. It starts by learning your company vocabulary.
-                Then it learns locally what you care about. The intersection of
-                what you care about and haven't seen, relative to your custom
-                company corpus is then shown.
-              </P2>
-              <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
-                <div $$row>
-                  <P2 size={2} margin={0}>
-                    A carefully curated newspaper, daily, for everyone in the
-                    company.
+        <Media query={Constants.screen.large}>
+          {isLarge => (
+            <Section id="remote-teams" inverse css={{ background: altBg }}>
+              <SectionContent fullscreen padded css={{ zIndex: 3 }}>
+                <Slant
+                  inverseSlant
+                  slantBackground={`linear-gradient(200deg, ${altBg.darken(
+                    0.05,
+                  )} 5%, ${altBg.darken(0.1)} 95%)`}
+                  css={{ zIndex: 2 }}
+                />
+                <LeftSide>
+                  <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
+                  <SubTitle italic>
+                    Enabling<br />
+                    remote-first<br />
+                    companies
+                  </SubTitle>
+                  <P2 size={1.8} css={{ paddingLeft: isLarge ? 50 : 0 }}>
+                    Inspired by Stripe<br />
+                    Orbit is a beautiful<br />
+                    company home.
                   </P2>
-                </div>
-              </Callout>
-            </RightSide>
-          </SectionContent>
-        </Section>
+                  <div if={isLarge} css={{ height: 210 }} />
+                  <section
+                    css={{
+                      textAlign: 'left',
+                      display: 'block',
+                      margin: isLarge ? [0, 0, 0, 90] : 0,
+                    }}
+                  >
+                    <P size={1.2} fontWeight={800}>
+                      Connect people
+                    </P>
+                    <P2 size={1.5}>
+                      A single profile is created for everyone from combined
+                      info across your cloud. See which Slack rooms people spend
+                      time in. What general topics they are interested in. Plus
+                      see recently edited and relevant files, tickets, and more
+                      that are relevant to both you and them.
+                    </P2>
+                  </section>
+                  <Callout
+                    css={
+                      isLarge && {
+                        width: 460,
+                        marginLeft: 120,
+                        textAlign: 'left',
+                      }
+                    }
+                  >
+                    <P2 size={2} margin={0}>
+                      Allow everyone to turn do not disturb on more easily, and
+                      focus for longer periods of time.
+                    </P2>
+                  </Callout>
+                </LeftSide>
+                <RightSide inverse css={{ bottom: 0 }}>
+                  <div $$flex css={{ marginTop: isLarge ? 200 : 0 }} />
+                  <P size={1.2} fontWeight={800}>
+                    Homebase
+                  </P>
+                  <P2 size={1.5} css={{ marginRight: isLarge ? 90 : 0 }}>
+                    News in Orbit is designed for distributing knowledge with
+                    intelligence. It starts by learning your company vocabulary.
+                    Then it learns locally what you care about. The intersection
+                    of what you care about and haven't seen, relative to your
+                    custom company corpus is then shown.
+                  </P2>
+                  <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
+                    <div $$row>
+                      <P2 size={2} margin={0}>
+                        A carefully curated newspaper, daily, for everyone in
+                        the company.
+                      </P2>
+                    </div>
+                  </Callout>
+                </RightSide>
+              </SectionContent>
+            </Section>
+          )}
+        </Media>
       </UI.Theme>
     )
   }
@@ -1111,54 +1121,61 @@ class Section6 {
   render() {
     return (
       <UI.Theme theme={{ background: alt2Bg, color: alt2Bg }}>
-        <Section id="customer-success" css={{ background: alt2Bg }}>
-          <SectionContent fullscreen padded>
-            <Slant slantBackground={altBg.darken(0.1)} />
-            <LeftSide inverse>
-              <SubTitle italic>
-                Improving<br />Customer<br />Success
-              </SubTitle>
-              <div css={{ height: 240 }} />
-              <P size={1.2} fontWeight={800}>
-                Faster Responses for Support
-              </P>
-              <P2 size={1.5} css={{ margin: [0, 0, 25, 90] }}>
-                Orbit's contextual answers work with your support software as
-                your team chats. In realtime it searches knowledge and
-                highlights the exact section with a potential answer.
-              </P2>
-              <Callout
-                css={{
-                  width: 460,
-                  marginLeft: 80,
-                  marginBottom: -30,
-                }}
-              >
-                <P2 size={2} margin={0}>
-                  Answers on hand for your entire success team, powered by all
-                  your knowledgebase.
-                </P2>
-              </Callout>
-            </LeftSide>
-            <RightSide>
-              <div $$flex css={{ marginTop: 200 }} />
-              <P size={1.2} fontWeight={800}>
-                Reduced Onboarding for Sales
-              </P>
-              <P2 size={1.5} css={{ marginRight: 90 }}>
-                Sales requires intimate knowledge of your product. Orbit can sit
-                side by side with your success team as they chat on Intercom or
-                ZenDesk providing realtime answers from your knowledgebase.
-              </P2>
-              <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
-                <P2 size={2} margin={0}>
-                  Organizational knowledge is now always at hand and usable
-                  during outbound chats.
-                </P2>
-              </Callout>
-            </RightSide>
-          </SectionContent>
-        </Section>
+        <Media query={Constants.screen.large}>
+          {isLarge => (
+            <Section id="customer-success" css={{ background: alt2Bg }}>
+              <SectionContent fullscreen padded>
+                <Slant slantBackground={altBg.darken(0.1)} />
+                <LeftSide inverse>
+                  <SubTitle italic>
+                    Improving<br />Customer<br />Success
+                  </SubTitle>
+                  <div if={isLarge} css={{ height: 240 }} />
+                  <P size={1.2} fontWeight={800}>
+                    Faster Responses for Support
+                  </P>
+                  <P2 size={1.5} css={{ margin: isLarge ? [0, 0, 25, 90] : 0 }}>
+                    Orbit's contextual answers work with your support software
+                    as your team chats. In realtime it searches knowledge and
+                    highlights the exact section with a potential answer.
+                  </P2>
+                  <Callout
+                    css={
+                      isLarge && {
+                        width: 460,
+                        marginLeft: 80,
+                        marginBottom: -30,
+                      }
+                    }
+                  >
+                    <P2 size={2} margin={0}>
+                      Answers on hand for your entire success team, powered by
+                      all your knowledgebase.
+                    </P2>
+                  </Callout>
+                </LeftSide>
+                <RightSide>
+                  <div if={isLarge} $$flex css={{ marginTop: 200 }} />
+                  <P size={1.2} fontWeight={800}>
+                    Reduced Onboarding for Sales
+                  </P>
+                  <P2 size={1.5} css={{ marginRight: 90 }}>
+                    Sales requires intimate knowledge of your product. Orbit can
+                    sit side by side with your success team as they chat on
+                    Intercom or ZenDesk providing realtime answers from your
+                    knowledgebase.
+                  </P2>
+                  <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
+                    <P2 size={2} margin={0}>
+                      Organizational knowledge is now always at hand and usable
+                      during outbound chats.
+                    </P2>
+                  </Callout>
+                </RightSide>
+              </SectionContent>
+            </Section>
+          )}
+        </Media>
       </UI.Theme>
     )
   }

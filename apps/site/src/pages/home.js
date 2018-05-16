@@ -316,11 +316,7 @@ class Header {
     return (
       <Section>
         <SectionContent padded fullscreen>
-          <Slant
-            slantBackground={`linear-gradient(200deg, #f5b926, ${
-              Constants.colorSecondary
-            } 85%)`}
-          />
+          <Slant slantBackground={Constants.colorSecondary} />
           <Media
             query={Constants.screen.large}
             render={() => (
@@ -586,8 +582,9 @@ const Notification = ({ title, body }) => (
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const newsTopOffPct = '8%'
-const searchYOff = 0
+const searchYOff = 20
 const contextYOff = 160
+const featuresSlantColor = '#F3B7B1'
 
 const FeatureSubTitle = props => (
   <P2
@@ -681,17 +678,17 @@ class SectionFeatureNewsSearch extends React.Component {
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${
                     Constants.colorSecondary
-                  } 5%, #f2f2f2 95%)`}
+                  } 5%, ${featuresSlantColor} 95%)`}
                 />
                 <LeftSide>
                   <Observer onChange={this.handleIntersect}>
                     <content
                       css={{ display: 'block', marginTop: newsTopOffPct }}
                     >
-                      <SmallTitle css={{ margin: [0, 0, 10] }}>
+                      <SmallTitle css={{ margin: [-30, 0, 10] }}>
                         How Orbit Works
                       </SmallTitle>
-                      <SubTitle size={4.8}>News</SubTitle>
+                      <SubTitle size={5}>News</SubTitle>
                       <FeatureSubTitle
                         css={{
                           marginTop: 12,
@@ -848,13 +845,14 @@ class SectionFeatureNewsSearch extends React.Component {
                     />
                   </section>
 
-                  <div if={isLarge} css={{ height: 'calc(100% - 170px)' }} />
+                  <div if={isLarge} css={{ height: '100%' }} />
                   <content
                     css={{
                       display: 'block',
                       background: Constants.backgroundColor,
                       position: 'relative',
                       zIndex: 1000,
+                      marginTop: -180 + searchYOff,
                     }}
                   >
                     <SubTitle size={4.8}>Search</SubTitle>
@@ -895,11 +893,11 @@ class SectionFeatureIntelligence extends React.Component {
               <SectionContent fullscreen padded>
                 <Slant
                   css={{ zIndex: 2 }}
-                  slantBackground={`linear-gradient(200deg, #f2f2f2 80%, ${altBg.darken(
+                  slantBackground={`linear-gradient(200deg, ${featuresSlantColor} 30%, ${altBg.darken(
                     0.05,
                   )} 95%)`}
                 />
-                <LeftSide inverse innerStyle={{ paddingTop: '50%' }}>
+                <LeftSide inverse innerStyle={{ paddingTop: '40%' }}>
                   <div
                     css={
                       isLarge && {
@@ -908,7 +906,7 @@ class SectionFeatureIntelligence extends React.Component {
                       }
                     }
                   >
-                    <SubTitle size={4.8}>Intelligence</SubTitle>
+                    <SubTitle size={4.6}>Intelligence</SubTitle>
                     <FeatureSubTitle>
                       Always on contextual answers
                     </FeatureSubTitle>
@@ -952,7 +950,7 @@ class SectionFeatureIntelligence extends React.Component {
                           zIndex: 0,
                           position: 'absolute',
                           width: 500,
-                          height: 500,
+                          height: 420,
                           marginTop: -250 + contextYOff,
                           top: '50%',
                           left: '50%',
@@ -992,7 +990,7 @@ class SectionFeatureIntelligence extends React.Component {
                             bottom: 0,
                             left: 0,
                             right: 0,
-                            height: 100,
+                            height: 30,
                             zIndex: 100,
                             background: `linear-gradient(transparent, ${
                               Constants.backgroundColor
@@ -1005,7 +1003,7 @@ class SectionFeatureIntelligence extends React.Component {
                             bottom: 0,
                             left: 0,
                             top: 0,
-                            width: 100,
+                            width: 30,
                             zIndex: 100,
                             background: `linear-gradient(to left, transparent, ${
                               Constants.backgroundColor
@@ -1315,16 +1313,19 @@ const SearchIllustration = () => (
     render={() => (
       <searchIllustration
         css={{
-          position: 'relative',
+          position: 'absolute',
           overflow: 'hidden',
-          top: searchYOff - 190,
           left: '50%',
+          top: '50%',
           marginLeft: -560,
           width: 550,
           height: 380,
           marginBottom: -450,
           zIndex: 0,
           pointerEvents: 'none',
+          transform: {
+            y: searchYOff - 220,
+          },
         }}
       >
         <img
@@ -1334,7 +1335,7 @@ const SearchIllustration = () => (
             marginTop: 0,
             height: 'auto',
             transformOrigin: 'top left',
-            transform: { scale: 0.4, x: 70, y: 20 },
+            transform: { scale: 0.45, x: -20, y: 20 },
           }}
         />
         <fadeRight
@@ -1344,6 +1345,17 @@ const SearchIllustration = () => (
             width: 100,
             zIndex: 100,
             background: `linear-gradient(to right, transparent, ${
+              Constants.backgroundColor
+            } 80%)`,
+          }}
+        />
+        <fadeLeft
+          $$fullscreen
+          css={{
+            right: 'auto',
+            width: 100,
+            zIndex: 100,
+            background: `linear-gradient(to left, transparent, ${
               Constants.backgroundColor
             } 80%)`,
           }}

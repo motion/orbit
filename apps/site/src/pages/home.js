@@ -418,7 +418,7 @@ class Header {
                 <rightSide>
                   <HeaderIllustration />
                 </rightSide>
-                <videos>
+                <videos if={false}>
                   <videoSpot>
                     <img
                       $girlImg

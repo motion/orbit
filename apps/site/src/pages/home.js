@@ -1053,8 +1053,7 @@ class SectionUseCaseRemoteTeams {
                 <LeftSide>
                   <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
                   <SubTitle italic>
-                    Enabling<br />
-                    remote-first<br />
+                    Remote-first<br />
                     companies
                   </SubTitle>
                   <div if={isLarge} css={{ height: '30%' }} />
@@ -1069,11 +1068,11 @@ class SectionUseCaseRemoteTeams {
                     <P2 size={1.8} css={{ margin: [5, 0, 10, 0] }}>
                       Beautiful unified profiles
                     </P2>
-                    <P2 size={1.5}>
-                      A profile page is created for each person with combined
-                      information from the cloud. See which Slack rooms people
-                      spend time in, what topics are interested in, and
-                      relevant recently edited files, tickets, and more.
+                    <P2 size={1.6}>
+                      A profile page for each person combines information from
+                      across the cloud. See where people talk in Slack, what
+                      topics they care about, and relevant recently edited
+                      files, tickets, and more.
                     </P2>
                   </section>
                   <Callout
@@ -1086,18 +1085,18 @@ class SectionUseCaseRemoteTeams {
                     }
                   >
                     <P2 size={2} margin={0}>
-                      Allow everyone to turn do not disturb on more easily, and
-                      focus for longer periods of time.
+                      Easily explore and find people to get helpful links to
+                      your recent collaborations.
                     </P2>
                   </Callout>
                 </LeftSide>
                 <RightSide inverse css={{ bottom: 0 }}>
-                  <div $$flex css={{ marginTop: isLarge ? '35%' : 0 }} />
-                  <SubSubTitle>Homebase</SubSubTitle>
+                  <div $$flex css={{ marginTop: isLarge ? '30%' : 0 }} />
+                  <SubSubTitle>A company home</SubSubTitle>
                   <P2 size={1.8} css={{ margin: [5, 0, 10, 0] }}>
-                    A smart company newspaper
+                    The smart way to sync
                   </P2>
-                  <P2 size={1.5} css={{ marginRight: isLarge ? '30%' : 0 }}>
+                  <P2 size={1.6} css={{ marginRight: isLarge ? '30%' : 0 }}>
                     News in Orbit is designed for distributing knowledge with
                     intelligence. It starts by learning your company vocabulary.
                     Then it learns locally what you care about. The intersection
@@ -1139,9 +1138,9 @@ class SectionUseCaseRemoteFirst {
                       margin: isLarge ? [0, 0, 0, '30%'] : 0,
                     }}
                   >
-                    <SubSubTitle>Faster Responses for Support</SubSubTitle>
+                    <SubSubTitle>Better support responses</SubSubTitle>
                     <P2
-                      size={1.5}
+                      size={1.6}
                       css={{ margin: isLarge ? [0, 0, 25, 0] : 0 }}
                     >
                       Orbit's contextual answers work with your support software
@@ -1166,12 +1165,12 @@ class SectionUseCaseRemoteFirst {
                 </LeftSide>
                 <RightSide>
                   <div if={isLarge} $$flex css={{ marginTop: '35%' }} />
-                  <SubSubTitle>Reduced Onboarding for Sales</SubSubTitle>
-                  <P2 size={1.5} css={{ marginRight: '30%' }}>
-                    Sales requires intimate knowledge of your product. Orbit can
-                    sit side by side with your success team as they chat on
-                    Intercom or ZenDesk providing realtime answers from your
-                    knowledgebase.
+                  <SubSubTitle>Less onboarding in sales</SubSubTitle>
+                  <P2 size={1.6} css={{ marginRight: '30%' }}>
+                    Sales chat requires intimate knowledge of your product.
+                    Orbit can sit side by side with your success team as they
+                    chat on Intercom or ZenDesk providing realtime answers from
+                    your knowledgebase.
                   </P2>
                   <Callout css={{ margin: [20, '20%', 40, 0], left: -45 }}>
                     <P2 size={2} margin={0}>
@@ -1226,10 +1225,10 @@ class SectionUseCaseReduceInterrupts {
                     }}
                   >
                     <SubSubTitle>Prevent shoulder taps</SubSubTitle>
-                    <P2 size={1.5}>
-                      The Orbit home page is designed around picking the right
-                      things to show you based on how you work. It's
-                      summarization also lets you glance to see what's new.
+                    <P2 size={1.6}>
+                      Search that actually works means a lot less time hunting
+                      around for files and having to interrupt co-workers to
+                      find things.
                     </P2>
                   </section>
                   <Callout
@@ -1242,21 +1241,24 @@ class SectionUseCaseReduceInterrupts {
                     }
                   >
                     <P2 size={2} margin={0}>
-                      Allow everyone to turn do not disturb on more easily, and
-                      focus for longer periods of time.
+                      The Orbit search model uses state of the art NLP that
+                      learns your company corpus.
                     </P2>
                   </Callout>
                 </LeftSide>
                 <RightSide inverse css={{ bottom: 0 }}>
-                  <div $$flex css={{ marginTop: isLarge ? '35%' : 0 }} />
-                  <SubSubTitle>Reduce notification noise</SubSubTitle>
-                  <P2 size={1.5} css={{ marginRight: isLarge ? '30%' : 0 }}>
-                    News in Orbit is designed for distributing knowledge with
-                    intelligence. It starts by learning your company vocabulary.
-                    Then it learns locally what you care about. The intersection
-                    of what you care about and haven't seen, relative to your
-                    custom company corpus is then shown.
+                  <div $$flex css={{ marginTop: isLarge ? '30%' : 0 }} />
+                  <SubSubTitle>Notification noise</SubSubTitle>
+                  <P2 size={1.6} css={{ marginRight: isLarge ? '30%' : 0 }}>
+                    Use the power of Do not disturb in Slack without losing
+                    synchronicity. Orbit Home lets you snooze notifications, but
+                    still pull (when you're ready) to see what's happened.
                   </P2>
+                  <Callout css={{ margin: [20, '20%', 0, 0], left: -45 }}>
+                    <P2 size={2} margin={0}>
+                      Pull, instead of being pushed by notifications.
+                    </P2>
+                  </Callout>
                 </RightSide>
               </SectionContent>
             </Section>
@@ -1283,7 +1285,7 @@ class Footer {
                 }
               >
                 <SmallTitle>Our Mission</SmallTitle>
-                <P2 size={1.5}>
+                <P2 size={1.6}>
                   Orbit runs intimately in your everyday. That means it has to
                   work for you, the individual.
                   <br />

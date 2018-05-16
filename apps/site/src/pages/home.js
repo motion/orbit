@@ -43,15 +43,6 @@ const DottedButton = props => (
   />
 )
 
-const Animate = {
-  Wiggle: view('div', {
-    display: 'inline-block',
-    // transition: 'all ease-in 100ms',
-    transformOrigin: 'top center',
-    animation: 'wiggle 5s infinite',
-  }),
-}
-
 const IS_UPPER = /[A-Z]/
 const changeCaps = (str, reducePct) =>
   typeof str === 'string'
@@ -217,27 +208,32 @@ const Lines = ({ width = 100, height = 100, style }) => (
 class Callout {
   render({ style, theme, ...props }) {
     return (
-      <section style={style}>
-        <Lines width={1000} height={2000} $lines />
-        <innerSection
-          css={{
-            background: theme.base.background,
-          }}
-          {...props}
-        />
-      </section>
+      <Media query={Constants.screen.small}>
+        {isSmall =>
+          isSmall ? (
+            <section {...props} />
+          ) : (
+            <section $largeCallout style={style}>
+              <Lines width={1000} height={2000} $lines />
+              <innerSection
+                css={{
+                  background: theme.base.background,
+                }}
+                {...props}
+              />
+            </section>
+          )
+        }
+      </Media>
     )
   }
 
   static style = {
-    section: {
+    largeCallout: {
       border: [1, [255, 255, 255, 0.3]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
-      [Constants.screen.small]: {
-        border: 'none',
-      },
     },
     lines: {
       position: 'absolute',
@@ -250,16 +246,13 @@ class Callout {
       transform: {
         scale: 4,
       },
-      [Constants.screen.small]: {
-        display: 'none',
-      },
     },
     innerSection: {
       margin: 6,
       padding: [30, 32],
       overflow: 'hidden',
       position: 'relative',
-      [Constants.screen.small]: {
+      [Constants.screen.smallQuery]: {
         margin: 0,
       },
     },
@@ -316,8 +309,9 @@ class Header {
               Constants.colorSecondary
             } 80%, #f2f2f2 95%)`}
           />
-          <Media query={Constants.screen.large}>
-            {() => (
+          <Media
+            query={Constants.screen.large}
+            render={() => (
               <glowContain
                 css={{
                   position: 'absolute',
@@ -350,52 +344,57 @@ class Header {
                 />
               </glowContain>
             )}
-          </Media>
+          />
           <top $$row>
             <BrandLogo />
             <div $$flex />
           </top>
           <div $$flex />
-          <Callout $callout>
-            <Title italic reduceCapsPct={10} size={5.8} margin={0}>
-              Smarter company organization
-            </Title>
-            <line
-              css={{
-                margin: [26, 40],
-                height: 4,
-                background: '#ddd',
-                opacity: 0.15,
-              }}
-            />
-            <P size={2} alpha={0.75} margin={[0, 0, 20]}>
-              The cloud gets smart on your desktop.<br />
-              Team news, search and more.
-            </P>
+          <Media query={Constants.screen.large}>
+            {isLarge => (
+              <Callout $halfCallout>
+                <Title italic reduceCapsPct={10} size={5.8} margin={0}>
+                  Smarter company organization
+                </Title>
+                <line
+                  css={{
+                    margin: [26, 40],
+                    height: 4,
+                    background: '#ddd',
+                    opacity: 0.15,
+                  }}
+                />
+                <P size={2} alpha={0.75} margin={[0, 0, 20]}>
+                  The cloud gets smart on your desktop.<br />
+                  Team news, search and more.
+                </P>
 
-            <DottedButton css={{ margin: [8, -12, -8, 'auto'] }}>
-              Install in 3 minutes{' '}
-              <AppleLogo
-                width={20}
-                height={20}
-                css={{
-                  display: 'inline-block',
-                  margin: [-5, 0, 0, 5],
-                  opacity: 0.32,
-                }}
-              />
-            </DottedButton>
-          </Callout>
+                <DottedButton css={{ margin: [8, -12, -8, 'auto'] }}>
+                  Install in 3 minutes{' '}
+                  <AppleLogo
+                    width={20}
+                    height={20}
+                    css={{
+                      display: 'inline-block',
+                      margin: [-5, 0, 0, 5],
+                      opacity: 0.32,
+                    }}
+                  />
+                </DottedButton>
+              </Callout>
+            )}
+          </Media>
 
           <div $$flex />
 
-          <Media query={Constants.screen.large}>
-            {() => (
+          <Media
+            query={Constants.screen.large}
+            render={() => (
               <rightSide>
                 <HeaderIllustration />
               </rightSide>
             )}
-          </Media>
+          />
 
           <videos>
             <videoSpot>
@@ -426,11 +425,9 @@ class Header {
       padding: 25,
       position: 'relative',
     },
-    callout: {
-      [Constants.screen.large]: {
-        width: '55%',
-        margin: [-50, 0, 0, -50],
-      },
+    halfCallout: {
+      width: '55%',
+      margin: [-50, 0, 0, -50],
     },
     videoSpot: {
       cursor: 'pointer',
@@ -481,7 +478,7 @@ class Header {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 100,
-      [Constants.screen.small]: {
+      [Constants.screen.smallQuery]: {
         position: 'relative',
         width: 'auto',
       },
@@ -489,7 +486,6 @@ class Header {
   }
 }
 
-console.log('Constants.screen.small', Constants.screen.small)
 const Notification = ({ title, body }) => (
   <notification
     css={{
@@ -649,8 +645,9 @@ class Section2 extends React.Component {
               inverse
               css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
             >
-              <Media query={Constants.screen.large}>
-                {() => (
+              <Media
+                query={Constants.screen.large}
+                render={() => (
                   <notifications>
                     <Trail
                       native
@@ -679,7 +676,7 @@ class Section2 extends React.Component {
                     </Trail>
                   </notifications>
                 )}
-              </Media>
+              />
 
               <Spring
                 if={showOrbit}
@@ -857,8 +854,9 @@ class Section3 extends React.Component {
               </Callout>
             </RightSide>
 
-            <Media query={Constants.screen.large}>
-              {() => (
+            <Media
+              query={Constants.screen.large}
+              render={() => (
                 <RightSide
                   css={{ zIndex: 0, overflow: 'hidden', top: 0, bottom: 0 }}
                 >
@@ -901,7 +899,7 @@ class Section3 extends React.Component {
                   />
                 </RightSide>
               )}
-            </Media>
+            />
           </SectionContent>
         </Section>
       </UI.Theme>

@@ -1,15 +1,7 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-// import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import Media from 'react-media'
-
-const padRight = {
-  paddingRight: 380,
-  [Constants.screen.small]: {
-    paddingRight: 0,
-  },
-}
 
 export const Slant = ({
   inverse,
@@ -20,8 +12,9 @@ export const Slant = ({
   ...props
 }) => {
   return (
-    <Media query={Constants.screen.small}>
-      {() => (
+    <Media
+      query={Constants.screen.large}
+      render={() => (
         <slantClip
           $$fullscreen
           css={{
@@ -74,7 +67,7 @@ export const Slant = ({
           </slant>
         </slantClip>
       )}
-    </Media>
+    />
   )
 }
 
@@ -118,7 +111,6 @@ export const SectionContent = view(
     doublePadded: {
       padding: [120, 0],
     },
-    padRight,
     padBottom: {
       paddingBottom: 80,
     },

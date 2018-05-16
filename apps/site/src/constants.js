@@ -32,6 +32,7 @@ export const mainLight = UI.color(colorMain)
   .hex()
 
 export const screen = {
-  small: `@media (max-width: ${smallSize}px)`,
-  large: `@media (min-width: ${smallSize - 1}px)`,
+  smallQuery: `@media (max-width: ${smallSize}px)`,
+  small: { maxWidth: smallSize },
+  large: { minWidth: smallSize - 1 },
 }

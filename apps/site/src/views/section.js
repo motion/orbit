@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import * as Constants from '~/constants'
 import Media from 'react-media'
+import { debounce } from 'lodash'
 
 export const Slant = ({
   inverse,
@@ -99,6 +100,20 @@ export class Section extends React.Component {
 
 @view
 export class SectionContent {
+  state = {
+    resize: false,
+  }
+
+  componentDidMount() {
+    this.on(
+      window,
+      'resize',
+      debounce(() => {
+        this.setState({ resize: Math.random() })
+      }, 1000),
+    )
+  }
+
   render({ padded, fullscreen, ...props }) {
     const height = fullscreen
       ? Math.max(980, Math.min(1300, window.innerHeight))
@@ -115,7 +130,9 @@ export class SectionContent {
 
   static style = {
     section: {
-      width: Constants.smallSize,
+      width: '95%',
+      minWidth: Constants.smallSize,
+      maxWidth: Constants.mediumSize,
       margin: [0, 'auto'],
       position: 'relative',
       [Constants.screen.smallQuery]: {

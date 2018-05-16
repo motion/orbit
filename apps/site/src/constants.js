@@ -1,6 +1,9 @@
 import * as UI from '@mcro/ui'
 
-export const smallSize = 1100
+export const smallSize = 980
+export const mediumSize = 1300
+export const superLargeSize = 1500
+
 export const smallMax = smallSize - 1
 export const smallMin = smallSize
 
@@ -35,5 +38,5 @@ export const screen = {
   smallQuery: `@media (max-width: ${smallSize}px)`,
   small: { maxWidth: smallSize },
   large: { minWidth: smallSize - 1 },
-  superLarge: { minWidth: smallSize * 1.5 },
+  superLarge: { minWidth: superLargeSize },
 }

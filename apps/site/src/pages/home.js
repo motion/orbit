@@ -83,6 +83,10 @@ const SubTitle = UI.injectTheme(({ theme, ...props }) => (
   />
 ))
 
+const SubSubTitle = props => (
+  <P size={1.2} fontWeight={800} {...props} margin={[0, 0, 8]} />
+)
+
 const SmallTitle = props => (
   <P
     size={1}
@@ -618,7 +622,7 @@ const SearchCallout = ({ isLarge }) => (
 )
 
 @view
-class Section2 extends React.Component {
+class SectionFeatureNewsSearch extends React.Component {
   state = {
     showOrbit: false,
     showNotifs: true,
@@ -867,7 +871,7 @@ class Section2 extends React.Component {
 }
 
 @view
-class Section3 extends React.Component {
+class SectionFeatureIntelligence extends React.Component {
   state = {
     isIntersecting: false,
   }
@@ -1026,7 +1030,7 @@ const peachTheme = {
 }
 
 @view
-class Section4 {
+class SectionUseCaseRemoteTeams {
   render() {
     return (
       <UI.Theme theme={peachTheme}>
@@ -1053,35 +1057,30 @@ class Section4 {
                     remote-first<br />
                     companies
                   </SubTitle>
-                  <P2 size={1.8} css={{ paddingLeft: isLarge ? 50 : 0 }}>
-                    Inspired by Stripe<br />
-                    Orbit is a beautiful<br />
-                    company home.
-                  </P2>
-                  <div if={isLarge} css={{ height: 210 }} />
+                  <div if={isLarge} css={{ height: '30%' }} />
                   <section
                     css={{
                       textAlign: 'left',
                       display: 'block',
-                      margin: isLarge ? [0, 0, 0, 90] : 0,
+                      margin: isLarge ? [0, 0, 0, '30%'] : 0,
                     }}
                   >
-                    <P size={1.2} fontWeight={800}>
-                      Connect people
-                    </P>
+                    <SubSubTitle>Connecting people</SubSubTitle>
+                    <P2 size={1.8} css={{ margin: [5, 0, 10, 0] }}>
+                      Beautiful unified profiles
+                    </P2>
                     <P2 size={1.5}>
-                      A single profile is created for everyone from combined
-                      info across your cloud. See which Slack rooms people spend
-                      time in. What general topics they are interested in. Plus
-                      see recently edited and relevant files, tickets, and more
-                      that are relevant to both you and them.
+                      A profile page is created for each person with combined
+                      information from the cloud. See which Slack rooms people
+                      spend time in, what topics are interested in, and
+                      relevant recently edited files, tickets, and more.
                     </P2>
                   </section>
                   <Callout
                     css={
                       isLarge && {
-                        width: 460,
-                        marginLeft: 120,
+                        width: '72%',
+                        marginLeft: '35%',
                         textAlign: 'left',
                       }
                     }
@@ -1093,25 +1092,18 @@ class Section4 {
                   </Callout>
                 </LeftSide>
                 <RightSide inverse css={{ bottom: 0 }}>
-                  <div $$flex css={{ marginTop: isLarge ? 200 : 0 }} />
-                  <P size={1.2} fontWeight={800}>
-                    Homebase
-                  </P>
-                  <P2 size={1.5} css={{ marginRight: isLarge ? 90 : 0 }}>
+                  <div $$flex css={{ marginTop: isLarge ? '35%' : 0 }} />
+                  <SubSubTitle>Homebase</SubSubTitle>
+                  <P2 size={1.8} css={{ margin: [5, 0, 10, 0] }}>
+                    A smart company newspaper
+                  </P2>
+                  <P2 size={1.5} css={{ marginRight: isLarge ? '30%' : 0 }}>
                     News in Orbit is designed for distributing knowledge with
                     intelligence. It starts by learning your company vocabulary.
                     Then it learns locally what you care about. The intersection
                     of what you care about and haven't seen, relative to your
                     custom company corpus is then shown.
                   </P2>
-                  <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
-                    <div $$row>
-                      <P2 size={2} margin={0}>
-                        A carefully curated newspaper, daily, for everyone in
-                        the company.
-                      </P2>
-                    </div>
-                  </Callout>
                 </RightSide>
               </SectionContent>
             </Section>
@@ -1123,7 +1115,7 @@ class Section4 {
 }
 
 @view
-class Section6 {
+class SectionUseCaseRemoteFirst {
   render() {
     return (
       <UI.Theme theme={peachTheme}>
@@ -1133,24 +1125,36 @@ class Section6 {
               <SectionContent fullscreen padded>
                 <Slant slantBackground={altBg.darken(0.1)} />
                 <LeftSide inverse>
+                  <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
                   <SubTitle italic>
                     Improving<br />Customer<br />Success
                   </SubTitle>
-                  <div if={isLarge} css={{ height: 240 }} />
-                  <P size={1.2} fontWeight={800}>
-                    Faster Responses for Support
-                  </P>
-                  <P2 size={1.5} css={{ margin: isLarge ? [0, 0, 25, 90] : 0 }}>
-                    Orbit's contextual answers work with your support software
-                    as your team chats. In realtime it searches knowledge and
-                    highlights the exact section with a potential answer.
-                  </P2>
+
+                  <div if={isLarge} css={{ height: '35%' }} />
+
+                  <section
+                    css={{
+                      textAlign: 'left',
+                      display: 'block',
+                      margin: isLarge ? [0, 0, 0, '30%'] : 0,
+                    }}
+                  >
+                    <SubSubTitle>Faster Responses for Support</SubSubTitle>
+                    <P2
+                      size={1.5}
+                      css={{ margin: isLarge ? [0, 0, 25, 0] : 0 }}
+                    >
+                      Orbit's contextual answers work with your support software
+                      as your team chats. In realtime it searches knowledge and
+                      highlights the exact section with a potential answer.
+                    </P2>
+                  </section>
                   <Callout
                     css={
                       isLarge && {
-                        width: 460,
-                        marginLeft: 80,
-                        marginBottom: -30,
+                        width: '72%',
+                        marginLeft: '30%',
+                        textAlign: 'left',
                       }
                     }
                   >
@@ -1161,17 +1165,15 @@ class Section6 {
                   </Callout>
                 </LeftSide>
                 <RightSide>
-                  <div if={isLarge} $$flex css={{ marginTop: 200 }} />
-                  <P size={1.2} fontWeight={800}>
-                    Reduced Onboarding for Sales
-                  </P>
-                  <P2 size={1.5} css={{ marginRight: 90 }}>
+                  <div if={isLarge} $$flex css={{ marginTop: '35%' }} />
+                  <SubSubTitle>Reduced Onboarding for Sales</SubSubTitle>
+                  <P2 size={1.5} css={{ marginRight: '30%' }}>
                     Sales requires intimate knowledge of your product. Orbit can
                     sit side by side with your success team as they chat on
                     Intercom or ZenDesk providing realtime answers from your
                     knowledgebase.
                   </P2>
-                  <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
+                  <Callout css={{ margin: [20, '20%', 40, 0], left: -45 }}>
                     <P2 size={2} margin={0}>
                       Organizational knowledge is now always at hand and usable
                       during outbound chats.
@@ -1188,14 +1190,19 @@ class Section6 {
 }
 
 @view
-class Section7 {
+class SectionUseCaseReduceInterrupts {
   render() {
     return (
       <UI.Theme theme={peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section id="reduce-interrupts" inverse css={{ background: altBg }}>
-              <SectionContent fullscreen padded css={{ zIndex: 3 }}>
+            <Section id="use-cases" inverse css={{ background: altBg }}>
+              <SectionContent
+                id="remote-teams"
+                fullscreen
+                padded
+                css={{ zIndex: 3 }}
+              >
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${altBg.darken(
@@ -1210,25 +1217,27 @@ class Section7 {
                     workplace<br />
                     interruptions
                   </SubTitle>
-                  <P2 size={1.8} css={isLarge && { paddingLeft: 50 }}>
-                    Orbit focuses on the individual<br /> to make teams less
-                    interrupted.
-                  </P2>
-                  <div if={isLarge} css={{ height: 220 }} />
-                  <P size={1.2} fontWeight={800}>
-                    Turning Down Notifications
-                  </P>
-                  <P2 size={1.5} css={isLarge && { margin: [0, 0, 25, 90] }}>
-                    The Orbit home page is designed around picking the right
-                    things to show you based on how you work. It's summarization
-                    also lets you glance to see what's new.
-                  </P2>
+                  <div if={isLarge} css={{ height: '30%' }} />
+                  <section
+                    css={{
+                      textAlign: 'left',
+                      display: 'block',
+                      margin: isLarge ? [0, 0, 0, '30%'] : 0,
+                    }}
+                  >
+                    <SubSubTitle>Prevent shoulder taps</SubSubTitle>
+                    <P2 size={1.5}>
+                      The Orbit home page is designed around picking the right
+                      things to show you based on how you work. It's
+                      summarization also lets you glance to see what's new.
+                    </P2>
+                  </section>
                   <Callout
                     css={
                       isLarge && {
-                        width: 460,
-                        marginLeft: 120,
-                        marginBottom: -30,
+                        width: '72%',
+                        marginLeft: '35%',
+                        textAlign: 'left',
                       }
                     }
                   >
@@ -1239,25 +1248,15 @@ class Section7 {
                   </Callout>
                 </LeftSide>
                 <RightSide inverse css={{ bottom: 0 }}>
-                  <div if={isLarge} $$flex css={{ marginTop: 200 }} />
-                  <P size={1.2} fontWeight={800}>
-                    Preventing Shoulder Taps
-                  </P>
-                  <P2 size={1.5} css={isLarge && { marginRight: 90 }}>
-                    Profiles are generated and aggregated across platforms.
-                    Then, we show helpful details about everyone in your
-                    company.
+                  <div $$flex css={{ marginTop: isLarge ? '35%' : 0 }} />
+                  <SubSubTitle>Reduce notification noise</SubSubTitle>
+                  <P2 size={1.5} css={{ marginRight: isLarge ? '30%' : 0 }}>
+                    News in Orbit is designed for distributing knowledge with
+                    intelligence. It starts by learning your company vocabulary.
+                    Then it learns locally what you care about. The intersection
+                    of what you care about and haven't seen, relative to your
+                    custom company corpus is then shown.
                   </P2>
-                  <Callout
-                    css={isLarge && { margin: [20, 0, 40, 0], left: -55 }}
-                  >
-                    <div $$row>
-                      <P2 size={2} margin={0}>
-                        Seeing recent collaboration in profiles allows less
-                        pings throughout the day.
-                      </P2>
-                    </div>
-                  </Callout>
                 </RightSide>
               </SectionContent>
             </Section>
@@ -1267,18 +1266,6 @@ class Section7 {
     )
   }
 }
-
-// <P2 fontWeight={200} size={2.5}>
-// Orbit is completely private to your desktop. It never sends any
-// data outside your computer.
-// </P2>
-// <P2 size={2} fontWeight={200}>
-// We realized early in Orbit's development that it's near
-// impossible to deliver a great experience without going fully
-// on-device. To avoid data privacy issues, permissions errors, and
-// complex installations we spent the last year pusing the limits
-// of what your desktop can do.
-// </P2>
 
 @view
 class Footer {
@@ -1317,6 +1304,61 @@ class Footer {
   }
 }
 
+const SearchIllustration = () => (
+  <Media
+    query={Constants.screen.large}
+    render={() => (
+      <searchIllustration
+        css={{
+          position: 'relative',
+          overflow: 'hidden',
+          top: searchYOff - 240,
+          left: '50%',
+          marginLeft: -560,
+          width: 550,
+          height: 450,
+          marginBottom: -450,
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      >
+        <img
+          src={slackSearchImg}
+          css={{
+            width: 1150,
+            marginTop: 0,
+            height: 'auto',
+            transformOrigin: 'top left',
+            transform: { scale: 0.5, x: 70, y: 20 },
+          }}
+        />
+        <fadeRight
+          $$fullscreen
+          css={{
+            left: 'auto',
+            width: 100,
+            zIndex: 100,
+            background: `linear-gradient(to right, transparent, ${
+              Constants.backgroundColor
+            } 80%)`,
+          }}
+        />
+        <fadeDown
+          $$fullscreen
+          css={{
+            top: 'auto',
+            height: 100,
+            zIndex: 100,
+            background: `linear-gradient(transparent, ${
+              Constants.backgroundColor
+            })`,
+          }}
+        />
+      </searchIllustration>
+    )}
+  />
+)
+
 @view
 export default class HomePage extends React.Component {
   render() {
@@ -1331,66 +1373,13 @@ export default class HomePage extends React.Component {
             <surround css={{ position: 'relative' }}>
               <border css={{ top: -40 }} />
               <border if={false} css={{ bottom: 0 }} />
-              <Section2 />
-
-              <Media
-                query={Constants.screen.large}
-                render={() => (
-                  <searchIllustration
-                    css={{
-                      position: 'relative',
-                      overflow: 'hidden',
-                      top: searchYOff - 240,
-                      left: '50%',
-                      marginLeft: -560,
-                      width: 550,
-                      height: 450,
-                      marginBottom: -450,
-                      zIndex: 0,
-                      pointerEvents: 'none',
-                    }}
-                  >
-                    <img
-                      src={slackSearchImg}
-                      css={{
-                        width: 1150,
-                        marginTop: 0,
-                        height: 'auto',
-                        transformOrigin: 'top left',
-                        transform: { scale: 0.5, x: 70, y: 20 },
-                      }}
-                    />
-                    <fadeRight
-                      $$fullscreen
-                      css={{
-                        left: 'auto',
-                        width: 100,
-                        zIndex: 100,
-                        background: `linear-gradient(to right, transparent, ${
-                          Constants.backgroundColor
-                        } 80%)`,
-                      }}
-                    />
-                    <fadeDown
-                      $$fullscreen
-                      css={{
-                        top: 'auto',
-                        height: 100,
-                        zIndex: 100,
-                        background: `linear-gradient(transparent, ${
-                          Constants.backgroundColor
-                        })`,
-                      }}
-                    />
-                  </searchIllustration>
-                )}
-              />
-
-              <Section3 />
+              <SectionFeatureNewsSearch />
+              <SearchIllustration />
+              <SectionFeatureIntelligence />
             </surround>
-            <Section4 />
-            <Section6 />
-            <Section7 />
+            <SectionUseCaseRemoteTeams />
+            <SectionUseCaseRemoteFirst />
+            <SectionUseCaseReduceInterrupts />
             <Footer />
           </home>
         )}
@@ -1418,7 +1407,7 @@ export default class HomePage extends React.Component {
     superLarge: {
       transformOrigin: 'top center',
       transform: {
-        scale: 1.3,
+        scale: 1.1,
       },
     },
   }

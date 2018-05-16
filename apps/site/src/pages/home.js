@@ -211,7 +211,7 @@ class Callout {
       <Media query={Constants.screen.small}>
         {isSmall =>
           isSmall ? (
-            <section {...props} />
+            <section style={style} {...props} />
           ) : (
             <section $largeCallout style={style}>
               <Lines width={1000} height={2000} $lines />
@@ -352,7 +352,7 @@ class Header {
           <div $$flex />
           <Media query={Constants.screen.large}>
             {isLarge => (
-              <Callout $halfCallout>
+              <Callout $smallCallout={!isLarge} $halfCallout={isLarge}>
                 <Title italic reduceCapsPct={10} size={5.8} margin={0}>
                   Smarter company organization
                 </Title>
@@ -369,7 +369,10 @@ class Header {
                   Team news, search and more.
                 </P>
 
-                <DottedButton css={{ margin: [8, -12, -8, 'auto'] }}>
+                <DottedButton
+                  $smallInstallBtn={!isLarge}
+                  css={{ margin: [8, -12, -8, 'auto'] }}
+                >
                   Install in 3 minutes{' '}
                   <AppleLogo
                     width={20}
@@ -390,31 +393,37 @@ class Header {
           <Media
             query={Constants.screen.large}
             render={() => (
-              <rightSide>
-                <HeaderIllustration />
-              </rightSide>
+              <React.Fragment>
+                <rightSide>
+                  <HeaderIllustration />
+                </rightSide>
+                <videos>
+                  <videoSpot>
+                    <img
+                      $girlImg
+                      src={girlImg}
+                      width={432}
+                      css={{ transform: { scale: 0.9 } }}
+                    />
+                    <UI.Icon
+                      name="media-1_button-play"
+                      color="#fff"
+                      size={45}
+                      css={{
+                        zIndex: 100,
+                        position: 'absolute',
+                        top: 120,
+                        left: 200,
+                      }}
+                    />
+                    <P selectable={false} size={4.5} margin={0}>
+                      Watch the 30s<br /> introduction
+                    </P>
+                  </videoSpot>
+                </videos>
+              </React.Fragment>
             )}
           />
-
-          <videos>
-            <videoSpot>
-              <img
-                $girlImg
-                src={girlImg}
-                width={432}
-                css={{ transform: { scale: 0.9 } }}
-              />
-              <UI.Icon
-                name="media-1_button-play"
-                color="#fff"
-                size={45}
-                css={{ zIndex: 100, position: 'absolute', top: 120, left: 200 }}
-              />
-              <P selectable={false} size={4.5} margin={0}>
-                Watch the 30s<br /> introduction
-              </P>
-            </videoSpot>
-          </videos>
         </SectionContent>
       </Section>
     )
@@ -425,9 +434,18 @@ class Header {
       padding: 25,
       position: 'relative',
     },
+    smallCallout: {
+      padding: [10, 0, 40, 0],
+    },
     halfCallout: {
       width: '55%',
       margin: [-50, 0, 0, -50],
+    },
+    smallInstallBtn: {
+      transformOrigin: 'top right',
+      transform: {
+        scale: 1.2,
+      },
     },
     videoSpot: {
       cursor: 'pointer',
@@ -446,6 +464,9 @@ class Header {
       flexFlow: 'row',
       zIndex: 100,
       position: 'relative',
+      [Constants.screen.smallQuery]: {
+        padding: [0, 0, 20, 0],
+      },
     },
     brandMark: {
       alignSelf: 'flex-end',
@@ -601,54 +622,57 @@ class Section2 extends React.Component {
 
     return (
       <UI.Theme name="light">
-        <Section id="features" inverse>
-          <SectionContent padded fullscreen>
-            <Slant inverseSlant />
-            <LeftSide>
-              <Observer onChange={this.handleIntersect}>
-                <content css={{ display: 'block', marginTop: 0 }}>
-                  <SmallTitle css={{ margin: [-15, 0, 10] }}>
-                    How Orbit Works
-                  </SmallTitle>
-                  <SubTitle size={4.8}>News</SubTitle>
-                  <FeatureSubTitle
-                    css={{
-                      marginTop: 12,
-                    }}
-                  >
-                    Stay smart with <Cmd>⌘+Space</Cmd>
-                  </FeatureSubTitle>
-                  <Callout
-                    css={{ width: 530, position: 'absolute', right: -10 }}
-                  >
-                    <P2 size={1.6} css={{ textAlign: 'left' }} margin={0}>
-                      Your team uses the right tool for the job. But that can
-                      lead to a pretty messy big picture.
-                      <vertSpace css={{ height: 20 }} />
-                      Stay focused, up to date, and eliminate notification
-                      overload. It's well summarized news that's relevant to you
-                      across your cloud.
-                      <vertSpace css={{ height: 20 }} />
-                      Powered by on-device ML.{' '}
-                    </P2>
-                    <DottedButton
-                      css={{ position: 'absolute', bottom: 20, right: 20 }}
-                    >
-                      Learn more
-                    </DottedButton>
-                  </Callout>
-                </content>
-              </Observer>
-            </LeftSide>
+        <Media query={Constants.screen.large}>
+          {isLarge => (
+            <Section id="features" inverse>
+              <SectionContent padded fullscreen>
+                <Slant inverseSlant />
+                <LeftSide>
+                  <Observer onChange={this.handleIntersect}>
+                    <content css={{ display: 'block', marginTop: 0 }}>
+                      <SmallTitle css={{ margin: [-15, 0, 10] }}>
+                        How Orbit Works
+                      </SmallTitle>
+                      <SubTitle size={4.8}>News</SubTitle>
+                      <FeatureSubTitle
+                        css={{
+                          marginTop: 12,
+                        }}
+                      >
+                        Stay smart with <Cmd>⌘+Space</Cmd>
+                      </FeatureSubTitle>
+                      <Callout
+                        css={
+                          isLarge
+                            ? { width: 530, position: 'absolute', right: -10 }
+                            : {}
+                        }
+                      >
+                        <P2 size={1.6} css={{ textAlign: 'left' }} margin={0}>
+                          Your team uses the right tool for the job. But that
+                          can lead to a pretty messy big picture.
+                          <vertSpace css={{ height: 20 }} />
+                          Stay focused, up to date, and eliminate notification
+                          overload. It's well summarized news that's relevant to
+                          you across your cloud.
+                          <vertSpace css={{ height: 20 }} />
+                          Powered by on-device ML.{' '}
+                        </P2>
+                        <DottedButton
+                          css={{ position: 'absolute', bottom: 20, right: 20 }}
+                        >
+                          Learn more
+                        </DottedButton>
+                      </Callout>
+                    </content>
+                  </Observer>
+                </LeftSide>
 
-            <RightSide
-              inverse
-              css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
-            >
-              <Media
-                query={Constants.screen.large}
-                render={() => (
-                  <notifications>
+                <RightSide
+                  inverse
+                  css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
+                >
+                  <notifications if={isLarge}>
                     <Trail
                       native
                       from={{ opacity: 1, x: 0 }}
@@ -675,90 +699,90 @@ class Section2 extends React.Component {
                       )}
                     </Trail>
                   </notifications>
-                )}
-              />
 
-              <Spring
-                if={showOrbit}
-                native
-                from={{ opacity: 0, x: 100 }}
-                to={{ opacity: 1, x: 0 }}
-              >
-                {({ opacity, x }) => (
-                  <animated.div
-                    style={{
-                      opacity,
-                      transform: x
-                        ? x.interpolate(x => `translate3d(${x}%,0,0)`)
-                        : null,
-                    }}
+                  <Spring
+                    if={showOrbit}
+                    native
+                    from={{ opacity: 0, x: 100 }}
+                    to={{ opacity: 1, x: 0 }}
                   >
-                    <img
-                      src={homeImg}
+                    {({ opacity, x }) => (
+                      <animated.div
+                        style={{
+                          opacity,
+                          transform: x
+                            ? x.interpolate(x => `translate3d(${x}%,0,0)`)
+                            : null,
+                        }}
+                      >
+                        <img
+                          src={homeImg}
+                          css={{
+                            position: 'absolute',
+                            top: newsIllYOffset + 20,
+                            right: -700,
+                            width: 1100,
+                            height: 'auto',
+                            transformOrigin: 'top left',
+                            transform: {
+                              scale: 0.4,
+                            },
+                            boxShadow: [[0, 15, 120, [0, 0, 0, 0.1]]],
+                          }}
+                        />
+                      </animated.div>
+                    )}
+                  </Spring>
+
+                  <fadeRight
+                    $$fullscreen
+                    css={{
+                      left: '92%',
+                      zIndex: 100,
+                      background: `linear-gradient(to right, transparent, ${
+                        Constants.backgroundColor
+                      })`,
+                    }}
+                  />
+
+                  <fadeawayfadeawayfadeaway
+                    css={{
+                      position: 'absolute',
+                      top: newsIllYOffset + 500,
+                      right: -250,
+                      width: 900,
+                      height: 450,
+                      background: Constants.backgroundColor,
+                      borderRadius: 1000,
+                      filter: {
+                        blur: 30,
+                      },
+                      transform: {
+                        z: 0,
+                      },
+                      zIndex: 2,
+                    }}
+                  />
+
+                  <secondSection>
+                    <div css={{ height: searchYOff + 800 }} />
+                    <content
                       css={{
-                        position: 'absolute',
-                        top: newsIllYOffset + 20,
-                        right: -700,
-                        width: 1100,
-                        height: 'auto',
-                        transformOrigin: 'top left',
-                        transform: {
-                          scale: 0.4,
-                        },
-                        boxShadow: [[0, 15, 120, [0, 0, 0, 0.1]]],
+                        display: 'block',
+                        background: Constants.backgroundColor,
                       }}
-                    />
-                  </animated.div>
-                )}
-              </Spring>
-
-              <fadeRight
-                $$fullscreen
-                css={{
-                  left: '92%',
-                  zIndex: 100,
-                  background: `linear-gradient(to right, transparent, ${
-                    Constants.backgroundColor
-                  })`,
-                }}
-              />
-
-              <fadeawayfadeawayfadeaway
-                css={{
-                  position: 'absolute',
-                  top: newsIllYOffset + 500,
-                  right: -250,
-                  width: 900,
-                  height: 450,
-                  background: Constants.backgroundColor,
-                  borderRadius: 1000,
-                  filter: {
-                    blur: 30,
-                  },
-                  transform: {
-                    z: 0,
-                  },
-                  zIndex: 2,
-                }}
-              />
-
-              <secondSection>
-                <div css={{ height: searchYOff + 800 }} />
-                <content
-                  css={{
-                    display: 'block',
-                    background: Constants.backgroundColor,
-                  }}
-                >
-                  <SubTitle size={4.8}>Search</SubTitle>
-                  <FeatureSubTitle>
-                    All your integrations in one place
-                  </FeatureSubTitle>
-                </content>
-              </secondSection>
-            </RightSide>
-          </SectionContent>
-        </Section>
+                    >
+                      <SubTitle size={4.8}>Search</SubTitle>
+                      <FeatureSubTitle>
+                        All your integrations in one place
+                      </FeatureSubTitle>
+                    </content>
+                  </secondSection>
+                </RightSide>
+              </SectionContent>
+            </Section>
+          )}
+        </Media>
       </UI.Theme>
     )
   }

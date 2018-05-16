@@ -103,10 +103,16 @@ export const SectionContent = view(
     width: Constants.smallSize,
     margin: [0, 'auto'],
     position: 'relative',
+    [Constants.screen.smallQuery]: {
+      width: '100%',
+    },
   },
   {
     padded: {
       padding: [80, 0],
+      [Constants.screen.smallQuery]: {
+        padding: [50, 30],
+      },
     },
     doublePadded: {
       padding: [120, 0],
@@ -120,9 +126,8 @@ export const SectionContent = view(
     },
     fullscreen: {
       height: Constants.SECTION_HEIGHT,
-      [Constants.screen.small]: {
+      [Constants.screen.smallQuery]: {
         height: 'auto',
-        padding: [50, 0],
       },
     },
   },

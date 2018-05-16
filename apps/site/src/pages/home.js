@@ -371,7 +371,7 @@ class Header {
                 />
                 <P size={2} alpha={0.75} margin={[0, 0, 15, 0]}>
                   A smarter, more intuitive OS for your team<br />
-                  to turn the noise of the cloud into signal.
+                  to turn cloud noise to signal.
                 </P>
 
                 <DottedButton

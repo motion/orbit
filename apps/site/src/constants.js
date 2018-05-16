@@ -1,6 +1,8 @@
 import * as UI from '@mcro/ui'
 
 export const smallSize = 1100
+export const smallMax = smallSize - 1
+export const smallMin = smallSize
 
 export const PAGE_WIDTH = smallSize
 
@@ -31,4 +33,5 @@ export const mainLight = UI.color(colorMain)
 
 export const screen = {
   small: `@media (max-width: ${smallSize}px)`,
+  large: `@media (min-width: ${smallSize - 1}px)`,
 }

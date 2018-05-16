@@ -14,6 +14,7 @@ import { Trail, Spring, animated, config } from 'react-spring'
 import HeaderIllustration from './headerIllustration'
 import { MailIcon } from '~/views/icons'
 import * as Constants from '~/constants'
+import Media from 'react-media'
 
 const brandColor = Constants.colorMain
 
@@ -96,94 +97,100 @@ const SmallTitle = props => (
   />
 )
 
+const sidePadSmall = 40
+
 const RightSide = ({ children, inverse, noEdge, ...props }) => (
-  <rightSide
-    css={{
-      zIndex: 3,
-      flex: 1,
-      position: 'absolute',
-      left: '50%',
-      right: 0,
-      bottom: 80,
-      top: 80,
-      paddingRight: 20,
-      justifyContent: 'center',
-    }}
-    {...props}
-  >
-    <inner
-      if={!noEdge}
-      css={{
-        display: 'block',
-        height: '100%',
-      }}
-    >
-      <edge
-        css={{
-          shapeOutside: inverse
-            ? 'polygon(26% 0%, 0% 1px, 93% 1096px)'
-            : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
-          float: 'left',
-          width: 147,
-          height: 990,
-          marginLeft: -30,
-        }}
-      />
-      {children}
-    </inner>
-    {noEdge && children}
-  </rightSide>
+  <Media query={Constants.screen.small}>
+    {isSmall =>
+      isSmall ? (
+        <rightSide css={{ padding: sidePadSmall }}>{children}</rightSide>
+      ) : (
+        <rightSide
+          css={{
+            zIndex: 3,
+            flex: 1,
+            position: 'absolute',
+            left: '50%',
+            right: 0,
+            bottom: 80,
+            top: 80,
+            paddingRight: 20,
+            justifyContent: 'center',
+          }}
+          {...props}
+        >
+          <inner
+            if={!noEdge}
+            css={{
+              display: 'block',
+              height: '100%',
+            }}
+          >
+            <edge
+              css={{
+                shapeOutside: inverse
+                  ? 'polygon(26% 0%, 0% 1px, 93% 1096px)'
+                  : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
+                float: 'left',
+                width: 147,
+                height: 990,
+                marginLeft: -30,
+              }}
+            />
+            {children}
+          </inner>
+          {noEdge && children}
+        </rightSide>
+      )
+    }
+  </Media>
 )
 
 const LeftSide = ({ children, noEdge, inverse, ...props }) => (
-  <leftSide
-    css={{
-      zIndex: 3,
-      flex: 1,
-      position: 'absolute',
-      left: 0,
-      right: '50%',
-      bottom: 80,
-      top: 80,
-      paddingRight: 20,
-      justifyContent: 'center',
-      textAlign: 'right',
-    }}
-    {...props}
-  >
-    <inner
-      css={{
-        display: 'block',
-        height: '100%',
-      }}
-    >
-      <edge
-        if={!noEdge}
-        css={{
-          shapeOutside: inverse
-            ? 'polygon(105% 0%, 90px 0%, 0% 1096px)'
-            : 'polygon(0% 0%, 1px 0%, 96% 1096px)',
-          float: 'right',
-          width: 110,
-          height: 990,
-          marginLeft: inverse ? -15 : -35,
-        }}
-      />
-      {children}
-    </inner>
-  </leftSide>
-)
-
-const WavyLine = ({ height, ...props }) => (
-  <svg width={60} height={height} {...props}>
-    <rect
-      style={{ fill: 'url(#wavy-line)' }}
-      width={60}
-      height={height}
-      x="0"
-      y="0"
-    />
-  </svg>
+  <Media query={Constants.screen.small}>
+    {isSmall =>
+      isSmall ? (
+        <leftSide css={{ padding: sidePadSmall }}>{children}</leftSide>
+      ) : (
+        <leftSide
+          css={{
+            zIndex: 3,
+            flex: 1,
+            position: 'absolute',
+            left: 0,
+            right: '50%',
+            bottom: 80,
+            top: 80,
+            paddingRight: 20,
+            justifyContent: 'center',
+            textAlign: 'right',
+          }}
+          {...props}
+        >
+          <inner
+            css={{
+              display: 'block',
+              height: '100%',
+            }}
+          >
+            <edge
+              if={!noEdge}
+              css={{
+                shapeOutside: inverse
+                  ? 'polygon(105% 0%, 90px 0%, 0% 1096px)'
+                  : 'polygon(0% 0%, 1px 0%, 96% 1096px)',
+                float: 'right',
+                width: 110,
+                height: 990,
+                marginLeft: inverse ? -15 : -35,
+              }}
+            />
+            {children}
+          </inner>
+        </leftSide>
+      )
+    }
+  </Media>
 )
 
 const Cmd = view('span', {
@@ -205,45 +212,59 @@ const Lines = ({ width = 100, height = 100, style }) => (
   </svg>
 )
 
-const Callout = UI.injectTheme(({ style, theme, ...props }) => (
-  <section
-    css={{
+@UI.injectTheme
+@view
+class Callout {
+  render({ style, theme, ...props }) {
+    return (
+      <section style={style}>
+        <Lines width={1000} height={2000} $lines />
+        <innerSection
+          css={{
+            background: theme.base.background,
+          }}
+          {...props}
+        />
+      </section>
+    )
+  }
+
+  static style = {
+    section: {
       border: [1, [255, 255, 255, 0.3]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
-    }}
-    style={style}
-  >
-    <Lines
-      width={1000}
-      height={2000}
-      css={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: -2,
-        opacity: 0.025,
-        transformOrigin: 'top left',
-        transform: {
-          scale: 4,
-        },
-      }}
-    />
-    <innerSection
-      css={{
-        margin: 6,
-        // borderRadius: 5,
-        padding: [30, 32],
-        background: theme.base.background,
-        overflow: 'hidden',
-        position: 'relative',
-      }}
-      {...props}
-    />
-  </section>
-))
+      [Constants.screen.small]: {
+        border: 'none',
+      },
+    },
+    lines: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: -2,
+      opacity: 0.025,
+      transformOrigin: 'top left',
+      transform: {
+        scale: 4,
+      },
+      [Constants.screen.small]: {
+        display: 'none',
+      },
+    },
+    innerSection: {
+      margin: 6,
+      padding: [30, 32],
+      overflow: 'hidden',
+      position: 'relative',
+      [Constants.screen.small]: {
+        margin: 0,
+      },
+    },
+  }
+}
 
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const P2 = props => <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
@@ -284,8 +305,6 @@ class BrandLogo {
   }
 }
 
-const altColor = '#D4C042'
-
 @view
 class Header {
   render() {
@@ -297,48 +316,47 @@ class Header {
               Constants.colorSecondary
             } 80%, #f2f2f2 95%)`}
           />
-          <glowContain
-            css={{
-              position: 'absolute',
-              top: -200,
-              left: -100,
-              bottom: 0,
-              right: '50%',
-              zIndex: 1,
-              overflow: 'hidden',
-              transform: {
-                rotate: '5deg',
-              },
-            }}
-          >
-            <glow
-              css={{
-                position: 'absolute',
-                top: '42%',
-                right: 0,
-                marginRight: -170,
-                background: '#000',
-                opacity: 0.15,
-                width: 350,
-                height: 300,
-                borderRadius: 100,
-                filter: {
-                  blur: 120,
-                },
-              }}
-            />
-          </glowContain>
+          <Media query={Constants.screen.large}>
+            {() => (
+              <glowContain
+                css={{
+                  position: 'absolute',
+                  top: -200,
+                  left: -100,
+                  bottom: 0,
+                  right: '50%',
+                  zIndex: 1,
+                  overflow: 'hidden',
+                  transform: {
+                    rotate: '5deg',
+                  },
+                }}
+              >
+                <glow
+                  css={{
+                    position: 'absolute',
+                    top: '42%',
+                    right: 0,
+                    marginRight: -170,
+                    background: '#000',
+                    opacity: 0.15,
+                    width: 350,
+                    height: 300,
+                    borderRadius: 100,
+                    filter: {
+                      blur: 120,
+                    },
+                  }}
+                />
+              </glowContain>
+            )}
+          </Media>
           <top $$row>
             <BrandLogo />
             <div $$flex />
           </top>
           <div $$flex />
-          <Callout
-            css={{
-              width: '55%',
-              margin: [-50, 0, 0, -50],
-            }}
-          >
+          <Callout $callout>
             <Title italic reduceCapsPct={10} size={5.8} margin={0}>
               Smarter company organization
             </Title>
@@ -371,21 +389,15 @@ class Header {
 
           <div $$flex />
 
-          <rightSide>
-            <HeaderIllustration />
-          </rightSide>
+          <Media query={Constants.screen.large}>
+            {() => (
+              <rightSide>
+                <HeaderIllustration />
+              </rightSide>
+            )}
+          </Media>
 
-          <videos
-            css={{
-              position: 'absolute',
-              top: -22,
-              right: 100,
-              width: 200,
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 100,
-            }}
-          >
+          <videos>
             <videoSpot>
               <img
                 $girlImg
@@ -413,6 +425,12 @@ class Header {
     header: {
       padding: 25,
       position: 'relative',
+    },
+    callout: {
+      [Constants.screen.large]: {
+        width: '55%',
+        margin: [-50, 0, 0, -50],
+      },
     },
     videoSpot: {
       cursor: 'pointer',
@@ -455,9 +473,23 @@ class Header {
       paddingLeft: '5%',
       zIndex: 4,
     },
+    videos: {
+      position: 'absolute',
+      top: -22,
+      right: 100,
+      width: 200,
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 100,
+      [Constants.screen.small]: {
+        position: 'relative',
+        width: 'auto',
+      },
+    },
   }
 }
 
+console.log('Constants.screen.small', Constants.screen.small)
 const Notification = ({ title, body }) => (
   <notification
     css={{
@@ -617,33 +649,37 @@ class Section2 extends React.Component {
               inverse
               css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
             >
-              <notifications>
-                <Trail
-                  native
-                  from={{ opacity: 1, x: 0 }}
-                  config={config.fast}
-                  to={{
-                    opacity: showNotifs ? 1 : 0,
-                    x: showNotifs ? 0 : 100,
-                  }}
-                  keys={this.state.items.map((_, index) => index)}
-                >
-                  {this.state.items.map(
-                    ({ title, body }) => ({ x, opacity }) => (
-                      <animated.div
-                        style={{
-                          opacity,
-                          transform: x.interpolate(
-                            x => `translate3d(${x}%,0,0)`,
-                          ),
-                        }}
-                      >
-                        <Notification title={title} body={body} />
-                      </animated.div>
-                    ),
-                  )}
-                </Trail>
-              </notifications>
+              <Media query={Constants.screen.large}>
+                {() => (
+                  <notifications>
+                    <Trail
+                      native
+                      from={{ opacity: 1, x: 0 }}
+                      config={config.fast}
+                      to={{
+                        opacity: showNotifs ? 1 : 0,
+                        x: showNotifs ? 0 : 100,
+                      }}
+                      keys={this.state.items.map((_, index) => index)}
+                    >
+                      {this.state.items.map(
+                        ({ title, body }) => ({ x, opacity }) => (
+                          <animated.div
+                            style={{
+                              opacity,
+                              transform: x.interpolate(
+                                x => `translate3d(${x}%,0,0)`,
+                              ),
+                            }}
+                          >
+                            <Notification title={title} body={body} />
+                          </animated.div>
+                        ),
+                      )}
+                    </Trail>
+                  </notifications>
+                )}
+              </Media>
 
               <Spring
                 if={showOrbit}
@@ -821,47 +857,51 @@ class Section3 extends React.Component {
               </Callout>
             </RightSide>
 
-            <RightSide
-              css={{ zIndex: 0, overflow: 'hidden', top: 0, bottom: 0 }}
-            >
-              <Spring from={{ x: 100 }} to={{ x: 10 }}>
-                {({ x }) => (
-                  <animated.div
-                    style={{
-                      transform: `translate3d(${x}px,0,0)`,
-                    }}
-                  >
-                    <img
-                      src={wordImage}
-                      css={{
-                        position: 'absolute',
-                        width: 1634,
-                        marginLeft: -300,
-                        height: 'auto',
-                        transformOrigin: 'top left',
-                        transform: {
-                          scale: 0.35,
-                          x: 350,
-                          y: contextYOff + 950,
-                        },
-                      }}
-                    />
-                  </animated.div>
-                )}
-              </Spring>
+            <Media query={Constants.screen.large}>
+              {() => (
+                <RightSide
+                  css={{ zIndex: 0, overflow: 'hidden', top: 0, bottom: 0 }}
+                >
+                  <Spring from={{ x: 100 }} to={{ x: 10 }}>
+                    {({ x }) => (
+                      <animated.div
+                        style={{
+                          transform: `translate3d(${x}px,0,0)`,
+                        }}
+                      >
+                        <img
+                          src={wordImage}
+                          css={{
+                            position: 'absolute',
+                            width: 1634,
+                            marginLeft: -300,
+                            height: 'auto',
+                            transformOrigin: 'top left',
+                            transform: {
+                              scale: 0.35,
+                              x: 350,
+                              y: contextYOff + 950,
+                            },
+                          }}
+                        />
+                      </animated.div>
+                    )}
+                  </Spring>
 
-              <fadeDown
-                $$fullscreen
-                css={{
-                  top: Constants.SECTION_HEIGHT - 100 - contextYOff,
-                  height: 200,
-                  zIndex: 100,
-                  background: `linear-gradient(transparent, ${
-                    Constants.backgroundColor
-                  } 95%)`,
-                }}
-              />
-            </RightSide>
+                  <fadeDown
+                    $$fullscreen
+                    css={{
+                      top: Constants.SECTION_HEIGHT - 100 - contextYOff,
+                      height: 200,
+                      zIndex: 100,
+                      background: `linear-gradient(transparent, ${
+                        Constants.backgroundColor
+                      } 95%)`,
+                    }}
+                  />
+                </RightSide>
+              )}
+            </Media>
           </SectionContent>
         </Section>
       </UI.Theme>
@@ -1179,52 +1219,59 @@ export default class HomePage extends React.Component {
           <border css={{ top: -40 }} />
           <border if={false} css={{ bottom: 0 }} />
           <Section2 />
-          <searchIllustration
-            css={{
-              position: 'relative',
-              overflow: 'hidden',
-              top: searchYOff - 240,
-              left: '50%',
-              marginLeft: -560,
-              width: 550,
-              height: 450,
-              marginBottom: -450,
-              zIndex: 0,
-            }}
-          >
-            <img
-              src={slackSearchImg}
-              css={{
-                width: 1150,
-                marginTop: 0,
-                height: 'auto',
-                transformOrigin: 'top left',
-                transform: { scale: 0.5, x: 70, y: 20 },
-              }}
-            />
-            <fadeRight
-              $$fullscreen
-              css={{
-                left: 'auto',
-                width: 100,
-                zIndex: 100,
-                background: `linear-gradient(to right, transparent, ${
-                  Constants.backgroundColor
-                } 80%)`,
-              }}
-            />
-            <fadeDown
-              $$fullscreen
-              css={{
-                top: 'auto',
-                height: 100,
-                zIndex: 100,
-                background: `linear-gradient(transparent, ${
-                  Constants.backgroundColor
-                })`,
-              }}
-            />
-          </searchIllustration>
+
+          <Media query={Constants.screen.large}>
+            {() => (
+              <searchIllustration
+                css={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  top: searchYOff - 240,
+                  left: '50%',
+                  marginLeft: -560,
+                  width: 550,
+                  height: 450,
+                  marginBottom: -450,
+                  zIndex: 0,
+                  pointerEvents: 'none',
+                }}
+              >
+                <img
+                  src={slackSearchImg}
+                  css={{
+                    width: 1150,
+                    marginTop: 0,
+                    height: 'auto',
+                    transformOrigin: 'top left',
+                    transform: { scale: 0.5, x: 70, y: 20 },
+                  }}
+                />
+                <fadeRight
+                  $$fullscreen
+                  css={{
+                    left: 'auto',
+                    width: 100,
+                    zIndex: 100,
+                    background: `linear-gradient(to right, transparent, ${
+                      Constants.backgroundColor
+                    } 80%)`,
+                  }}
+                />
+                <fadeDown
+                  $$fullscreen
+                  css={{
+                    top: 'auto',
+                    height: 100,
+                    zIndex: 100,
+                    background: `linear-gradient(transparent, ${
+                      Constants.backgroundColor
+                    })`,
+                  }}
+                />
+              </searchIllustration>
+            )}
+          </Media>
+
           <Section3 />
         </surround>
         <Section4 />

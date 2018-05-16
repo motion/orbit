@@ -3,8 +3,7 @@ import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
 import { Section, SectionContent, Slant } from '~/views'
-// import homeImg from '~/../public/screen-home.png'
-import profileImage from '~/../public/screen-profile.png'
+import profileImg from '~/../public/screen-profile.png'
 import wordImg from '~/../public/screen-context-word.png'
 import homeImg from '~/../public/screen-home.png'
 import slackSearchImg from '~/../public/screen-slack-search.png'
@@ -17,6 +16,45 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 
 const brandColor = Constants.colorMain
+
+const FadedArea = ({ fadeRight, fadeDown, fadeLeft, fadeColor, children }) => (
+  <React.Fragment>
+    {children}
+    <fadeRight
+      if={fadeRight}
+      $$fullscreen
+      css={{
+        left: 'auto',
+        width: 100,
+        zIndex: 100,
+        background: `linear-gradient(to right, transparent, ${fadeColor ||
+          Constants.backgroundColor} 80%)`,
+      }}
+    />
+    <fadeLeft
+      if={fadeLeft}
+      $$fullscreen
+      css={{
+        right: 'auto',
+        width: 100,
+        zIndex: 100,
+        background: `linear-gradient(to left, transparent, ${fadeColor ||
+          Constants.backgroundColor} 80%)`,
+      }}
+    />
+    <fadeDown
+      if={fadeDown}
+      $$fullscreen
+      css={{
+        top: 'auto',
+        height: 100,
+        zIndex: 100,
+        background: `linear-gradient(transparent, ${fadeColor ||
+          Constants.backgroundColor})`,
+      }}
+    />
+  </React.Fragment>
+)
 
 const AppleLogo = props => (
   <svg width="170px" height="170px" viewBox="0 0 170 170" {...props}>
@@ -66,7 +104,7 @@ const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
     css={{
       fontFamily: '"Mercury Display A", "Mercury Display B"',
       fontStyle: italic ? 'italic' : 'normal',
-      letterSpacing: size < 4 ? -1 : 0,
+      letterSpacing: size < 4.1 ? -1 : 0,
     }}
     {...props}
   >
@@ -76,9 +114,9 @@ const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
 
 const SubTitle = UI.injectTheme(({ theme, ...props }) => (
   <Title
-    size={3.6}
+    size={4}
     color={theme.subTitleColor || theme.base.color}
-    reduceCapsPct={5}
+    reduceCapsPct={8}
     {...props}
   />
 ))
@@ -1026,9 +1064,9 @@ class SectionFeatureIntelligence extends React.Component {
 const altBg = UI.color('#FCF6ED')
 const peachTheme = {
   background: altBg,
-  color: altBg.darken(0.8).desaturate(0.2),
-  titleColor: altBg.darken(0.55).desaturate(0.2),
-  subTitleColor: altBg.darken(0.6).desaturate(0.2),
+  color: altBg.darken(0.8).desaturate(0.1),
+  titleColor: altBg.darken(0.55).desaturate(0.3),
+  subTitleColor: altBg.darken(0.6).desaturate(0.4),
 }
 
 @view
@@ -1058,24 +1096,28 @@ class SectionUseCaseRemoteTeams {
                     Remote-first<br />
                     companies
                   </SubTitle>
-                  <div if={isLarge} css={{ height: '30%' }} />
+                  <div if={isLarge} css={{ height: '26%' }} />
                   <section
                     css={{
                       textAlign: 'left',
                       display: 'block',
-                      margin: isLarge ? [0, 0, 0, '30%'] : 0,
+                      margin: isLarge ? [0, 0, 0, '32%'] : 0,
                     }}
                   >
                     <SubSubTitle>Connecting people</SubSubTitle>
-                    <P2 size={1.8} css={{ margin: [5, 0, 10, 0] }}>
-                      Beautiful unified profiles
+                    <P alpha={0.6} size={2} margin={[0, 0, 10]}>
+                      Beautiful unified profiles.
+                    </P>
+                    <P2 size={1.8}>
+                      Combined information from across the cloud in one place
+                      with helpful information.
                     </P2>
                     <P2 size={1.6}>
-                      A profile page for each person combines information from
-                      across the cloud. See where people talk in Slack, what
-                      topics they care about, and relevant recently edited
-                      files, tickets, and more.
+                      See where people talk in Slack, what topics they care
+                      about, and relevant recently edited files, tickets, and
+                      more.
                     </P2>
+                    <br />
                   </section>
                   <Callout
                     css={
@@ -1086,25 +1128,57 @@ class SectionUseCaseRemoteTeams {
                       }
                     }
                   >
-                    <P2 size={2} margin={0}>
-                      Easily explore and find people to get helpful links to
-                      your recent collaborations.
+                    <P2 size={2} margin={0} fontStyle="italic">
+                      Create a sense of unity with Orbit for your remote team.
                     </P2>
                   </Callout>
                 </LeftSide>
                 <RightSide inverse css={{ bottom: 0 }}>
-                  <div $$flex css={{ marginTop: isLarge ? '30%' : 0 }} />
+                  <div $$flex css={{ marginTop: isLarge ? '22%' : 0 }} />
                   <SubSubTitle>A company home</SubSubTitle>
-                  <P2 size={1.8} css={{ margin: [5, 0, 10, 0] }}>
+                  <P2 if={false} size={1.8} css={{ margin: [5, 0, 10, 0] }}>
                     The smart way to sync
                   </P2>
-                  <P2 size={1.6} css={{ marginRight: isLarge ? '30%' : 0 }}>
-                    News in Orbit is designed for distributing knowledge with
-                    intelligence. It starts by learning your company vocabulary.
-                    Then it learns locally what you care about. The intersection
-                    of what you care about and haven't seen, relative to your
-                    custom company corpus is then shown.
-                  </P2>
+                  <P
+                    alpha={0.6}
+                    size={2}
+                    css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}
+                  >
+                    News in Orbit is your team's home.
+                  </P>
+                  <P size={1.6} css={{ marginRight: isLarge ? '25%' : 0 }}>
+                    It starts by learning company vocabulary. Then it learns
+                    what you care about. The intersection of what you care about
+                    and haven't seen, relative to your custom company's unique
+                    vocab is shown.
+                  </P>
+                  <section
+                    css={{
+                      position: 'absolute',
+                      bottom: '20%',
+                      left: 50,
+                      height: '35%',
+                      width: 450,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <FadedArea fadeColor={altBg} fadeDown fadeRight>
+                      <img
+                        src={profileImg}
+                        css={{
+                          position: 'absolute',
+                          width: 1199,
+                          height: 'auto',
+                          transformOrigin: 'top left',
+                          transform: {
+                            scale: 0.35,
+                            x: 0,
+                            y: 0,
+                          },
+                        }}
+                      />
+                    </FadedArea>
+                  </section>
                 </RightSide>
               </SectionContent>
             </Section>
@@ -1122,7 +1196,10 @@ class SectionUseCaseRemoteFirst {
       <UI.Theme theme={peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section id="customer-success" css={{ background: altBg }}>
+            <Section
+              id="customer-success"
+              css={{ background: altBg.lighten(0.02) }}
+            >
               <SectionContent fullscreen padded>
                 <Slant slantBackground={altBg.darken(0.1)} />
                 <LeftSide inverse>
@@ -1285,19 +1362,24 @@ class Footer {
                     : { padding: [0, 0, 50] }
                 }
               >
+                <Callout>
                 <SmallTitle>Our Mission</SmallTitle>
-                <P2 size={1.6}>
-                  Orbit runs intimately in your everyday. That means it has to
-                  work for you, the individual.
-                  <br />
-                  <br />
-                  Our goal is to build a more intuitive OS. To do that we need
-                  trust. We make privacy, security, and user experience our
-                  first priorities.
-                </P2>
+                  <P2 size={1.6}>
+                    Orbit runs intimately in your everyday. That means it has to
+                    work for you, the individual.
+                    <br />
+                    <br />
+                    Our goal is to build a more intuitive OS. To do that we need
+                    trust. We make privacy, security, and user experience our
+                    first priorities.
+                  </P2>
+                </Callout>
               </left>
               <RightSide noEdge>
-                <BrandLogo />
+                <div css={{ flexFlow: 'row' }}>
+                  <div $$flex />
+                  <BrandLogo />
+                </div>
               </RightSide>
             </SectionContent>
           </Section>
@@ -1328,49 +1410,18 @@ const SearchIllustration = () => (
           },
         }}
       >
-        <img
-          src={slackSearchImg}
-          css={{
-            width: 1150,
-            marginTop: 0,
-            height: 'auto',
-            transformOrigin: 'top left',
-            transform: { scale: 0.45, x: -20, y: 20 },
-          }}
-        />
-        <fadeRight
-          $$fullscreen
-          css={{
-            left: 'auto',
-            width: 100,
-            zIndex: 100,
-            background: `linear-gradient(to right, transparent, ${
-              Constants.backgroundColor
-            } 80%)`,
-          }}
-        />
-        <fadeLeft
-          $$fullscreen
-          css={{
-            right: 'auto',
-            width: 100,
-            zIndex: 100,
-            background: `linear-gradient(to left, transparent, ${
-              Constants.backgroundColor
-            } 80%)`,
-          }}
-        />
-        <fadeDown
-          $$fullscreen
-          css={{
-            top: 'auto',
-            height: 100,
-            zIndex: 100,
-            background: `linear-gradient(transparent, ${
-              Constants.backgroundColor
-            })`,
-          }}
-        />
+        <FadedArea fadeRight fadeDown fadeLeft>
+          <img
+            src={slackSearchImg}
+            css={{
+              width: 1150,
+              marginTop: 0,
+              height: 'auto',
+              transformOrigin: 'top left',
+              transform: { scale: 0.45, x: -20, y: 20 },
+            }}
+          />
+        </FadedArea>
       </searchIllustration>
     )}
   />

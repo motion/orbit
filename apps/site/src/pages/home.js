@@ -353,7 +353,7 @@ class Header {
           <Media query={Constants.screen.large}>
             {isLarge => (
               <Callout $smallCallout={!isLarge} $halfCallout={isLarge}>
-                <Title italic reduceCapsPct={10} size={5.8} margin={0}>
+                <Title italic reduceCapsPct={10} size={6.5} margin={0}>
                   Smarter company organization
                 </Title>
                 <line
@@ -364,9 +364,9 @@ class Header {
                     opacity: 0.15,
                   }}
                 />
-                <P size={2} alpha={0.75} margin={[0, 0, 20]}>
-                  The cloud gets smart on your desktop.<br />
-                  Team news, search and more.
+                <P size={2} alpha={0.75} margin={[0, 0, 15]}>
+                  A smarter, more intuitive OS for your team<br />
+                  to turn the noise of the cloud into signal.
                 </P>
 
                 <DottedButton

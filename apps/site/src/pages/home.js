@@ -1186,68 +1186,77 @@ class Section7 {
   render() {
     return (
       <UI.Theme theme={peachTheme}>
-        <Section id="reduce-interrupts" inverse css={{ background: altBg }}>
-          <SectionContent fullscreen padded css={{ zIndex: 3 }}>
-            <Slant
-              inverseSlant
-              slantBackground={`linear-gradient(200deg, ${altBg.darken(
-                0.1,
-              )} 5%, ${altBg} 95%)`}
-              css={{ zIndex: 2 }}
-            />
-            <LeftSide>
-              <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
-              <SubTitle italic>
-                Reducing<br />
-                workplace<br />
-                interruptions
-              </SubTitle>
-              <P2 size={1.8} css={{ paddingLeft: 50 }}>
-                Orbit focuses on the individual<br /> to make teams less
-                interrupted.
-              </P2>
-              <div css={{ height: 220 }} />
-              <P size={1.2} fontWeight={800}>
-                Turning Down Notifications
-              </P>
-              <P2 size={1.5} css={{ margin: [0, 0, 25, 90] }}>
-                The Orbit home page is designed around picking the right things
-                to show you based on how you work. It's summarization also lets
-                you glance to see what's new.
-              </P2>
-              <Callout
-                css={{
-                  width: 460,
-                  marginLeft: 120,
-                  marginBottom: -30,
-                }}
-              >
-                <P2 size={2} margin={0}>
-                  Allow everyone to turn do not disturb on more easily, and
-                  focus for longer periods of time.
-                </P2>
-              </Callout>
-            </LeftSide>
-            <RightSide inverse css={{ bottom: 0 }}>
-              <div $$flex css={{ marginTop: 200 }} />
-              <P size={1.2} fontWeight={800}>
-                Preventing Shoulder Taps
-              </P>
-              <P2 size={1.5} css={{ marginRight: 90 }}>
-                Profiles are generated and aggregated across platforms. Then, we
-                show helpful details about everyone in your company.
-              </P2>
-              <Callout css={{ margin: [20, 0, 40, 0], left: -55 }}>
-                <div $$row>
-                  <P2 size={2} margin={0}>
-                    Seeing recent collaboration in profiles allows less pings
-                    throughout the day.
+        <Media query={Constants.screen.large}>
+          {isLarge => (
+            <Section id="reduce-interrupts" inverse css={{ background: altBg }}>
+              <SectionContent fullscreen padded css={{ zIndex: 3 }}>
+                <Slant
+                  inverseSlant
+                  slantBackground={`linear-gradient(200deg, ${altBg.darken(
+                    0.1,
+                  )} 5%, ${altBg} 95%)`}
+                  css={{ zIndex: 2 }}
+                />
+                <LeftSide>
+                  <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
+                  <SubTitle italic>
+                    Reducing<br />
+                    workplace<br />
+                    interruptions
+                  </SubTitle>
+                  <P2 size={1.8} css={isLarge && { paddingLeft: 50 }}>
+                    Orbit focuses on the individual<br /> to make teams less
+                    interrupted.
                   </P2>
-                </div>
-              </Callout>
-            </RightSide>
-          </SectionContent>
-        </Section>
+                  <div if={isLarge} css={{ height: 220 }} />
+                  <P size={1.2} fontWeight={800}>
+                    Turning Down Notifications
+                  </P>
+                  <P2 size={1.5} css={isLarge && { margin: [0, 0, 25, 90] }}>
+                    The Orbit home page is designed around picking the right
+                    things to show you based on how you work. It's summarization
+                    also lets you glance to see what's new.
+                  </P2>
+                  <Callout
+                    css={
+                      isLarge && {
+                        width: 460,
+                        marginLeft: 120,
+                        marginBottom: -30,
+                      }
+                    }
+                  >
+                    <P2 size={2} margin={0}>
+                      Allow everyone to turn do not disturb on more easily, and
+                      focus for longer periods of time.
+                    </P2>
+                  </Callout>
+                </LeftSide>
+                <RightSide inverse css={{ bottom: 0 }}>
+                  <div if={isLarge} $$flex css={{ marginTop: 200 }} />
+                  <P size={1.2} fontWeight={800}>
+                    Preventing Shoulder Taps
+                  </P>
+                  <P2 size={1.5} css={isLarge && { marginRight: 90 }}>
+                    Profiles are generated and aggregated across platforms.
+                    Then, we show helpful details about everyone in your
+                    company.
+                  </P2>
+                  <Callout
+                    css={isLarge && { margin: [20, 0, 40, 0], left: -55 }}
+                  >
+                    <div $$row>
+                      <P2 size={2} margin={0}>
+                        Seeing recent collaboration in profiles allows less
+                        pings throughout the day.
+                      </P2>
+                    </div>
+                  </Callout>
+                </RightSide>
+              </SectionContent>
+            </Section>
+          )}
+        </Media>
       </UI.Theme>
     )
   }
@@ -1269,25 +1278,35 @@ class Section7 {
 class Footer {
   render() {
     return (
-      <Section>
-        <SectionContent css={{ padding: [150, 0] }}>
-          <left css={{ width: '50%', padding: [0, 100, 0, 0] }}>
-            <SmallTitle>Our Mission</SmallTitle>
-            <P2 size={1.5}>
-              Orbit runs intimately in your everyday. That means it has to work
-              for you, the individual.
-              <br />
-              <br />
-              Our goal is to build a smarter and more intuitive OS. To do that
-              we need trust. We make privacy, security, and user experience our
-              first priorities.
-            </P2>
-          </left>
-          <RightSide noEdge>
-            <BrandLogo />
-          </RightSide>
-        </SectionContent>
-      </Section>
+      <Media query={Constants.screen.large}>
+        {isLarge => (
+          <Section>
+            <SectionContent padded css={isLarge && { padding: [150, 0] }}>
+              <left
+                css={
+                  isLarge
+                    ? { width: '50%', padding: [0, 100, 0, 0] }
+                    : { padding: [0, 0, 50] }
+                }
+              >
+                <SmallTitle>Our Mission</SmallTitle>
+                <P2 size={1.5}>
+                  Orbit runs intimately in your everyday. That means it has to
+                  work for you, the individual.
+                  <br />
+                  <br />
+                  Our goal is to build a smarter and more intuitive OS. To do
+                  that we need trust. We make privacy, security, and user
+                  experience our first priorities.
+                </P2>
+              </left>
+              <RightSide noEdge>
+                <BrandLogo />
+              </RightSide>
+            </SectionContent>
+          </Section>
+        )}
+      </Media>
     )
   }
 }

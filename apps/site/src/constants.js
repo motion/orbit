@@ -7,7 +7,7 @@ export const smallMin = smallSize
 export const PAGE_WIDTH = smallSize
 
 export const SLANT_AMT = 40
-export const SECTION_HEIGHT = 980 //Math.max(980, Math.min(1300, window.innerHeight))
+export const SECTION_HEIGHT = 1100 //Math.max(980, Math.min(1300, window.innerHeight))
 
 export const SLANT = Math.atan(SLANT_AMT / (SECTION_HEIGHT / 2)) * 180 / Math.PI
 

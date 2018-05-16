@@ -305,9 +305,9 @@ class Header {
       <Section>
         <SectionContent padded fullscreen>
           <Slant
-            slantBackground={`linear-gradient(200deg, ${
+            slantBackground={`linear-gradient(200deg, #f2ce26, ${
               Constants.colorSecondary
-            } 80%, #f2f2f2 95%)`}
+            } 95%)`}
           />
           <Media
             query={Constants.screen.large}
@@ -332,8 +332,8 @@ class Header {
                     top: '42%',
                     right: 0,
                     marginRight: -170,
-                    background: '#000',
-                    opacity: 0.15,
+                    background: '#fff',
+                    opacity: 0.35,
                     width: 350,
                     height: 300,
                     borderRadius: 100,
@@ -352,8 +352,13 @@ class Header {
           <div $$flex />
           <Media query={Constants.screen.large}>
             {isLarge => (
-              <Callout $smallCallout={!isLarge} $halfCallout={isLarge}>
-                <Title italic reduceCapsPct={10} size={6.5} margin={0}>
+              <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
+                <Title
+                  italic
+                  reduceCapsPct={10}
+                  size={6.5}
+                  margin={[0, 0, 0, -15]}
+                >
                   Smarter company organization
                 </Title>
                 <line
@@ -364,14 +369,17 @@ class Header {
                     opacity: 0.15,
                   }}
                 />
-                <P size={2} alpha={0.75} margin={[0, 0, 15]}>
+                <P size={2} alpha={0.75} margin={[0, 0, 15, 0]}>
                   A smarter, more intuitive OS for your team<br />
                   to turn the noise of the cloud into signal.
                 </P>
 
                 <DottedButton
                   $smallInstallBtn={!isLarge}
-                  css={{ margin: [8, -12, -8, 'auto'] }}
+                  css={{
+                    margin: [25, 'auto', -8, 10],
+                    transform: { scale: 1.2 },
+                  }}
                 >
                   Install in 3 minutes{' '}
                   <AppleLogo
@@ -384,7 +392,7 @@ class Header {
                     }}
                   />
                 </DottedButton>
-              </Callout>
+              </mainSection>
             )}
           </Media>
 
@@ -430,6 +438,10 @@ class Header {
   }
 
   static style = {
+    mainSection: {
+      position: 'relative',
+      zIndex: 10,
+    },
     header: {
       padding: 25,
       position: 'relative',
@@ -437,9 +449,9 @@ class Header {
     smallCallout: {
       padding: [10, 0, 40, 0],
     },
-    halfCallout: {
-      width: '55%',
-      margin: [-50, 0, 0, -50],
+    largeCallout: {
+      width: '48%',
+      margin: [-50, 0, 0, 0],
     },
     smallInstallBtn: {
       transformOrigin: 'top right',
@@ -626,7 +638,12 @@ class Section2 extends React.Component {
           {isLarge => (
             <Section id="features" inverse>
               <SectionContent padded fullscreen>
-                <Slant inverseSlant />
+                <Slant
+                  inverseSlant
+                  slantBackground={`linear-gradient(200deg, ${
+                    Constants.colorSecondary
+                  } 5%, #f2f2f2 95%)`}
+                />
                 <LeftSide>
                   <Observer onChange={this.handleIntersect}>
                     <content css={{ display: 'block', marginTop: 0 }}>

@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 import { Section, SectionContent, Slant } from '~/views'
 // import homeImg from '~/../public/screen-home.png'
 import profileImage from '~/../public/screen-profile.png'
-import wordImage from '~/../public/screen-context-word.png'
+import wordImg from '~/../public/screen-context-word.png'
 import homeImg from '~/../public/screen-home.png'
 import slackSearchImg from '~/../public/screen-slack-search.png'
 import girlImg from '~/../public/video-girl.jpg'
@@ -137,7 +137,7 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
   </Media>
 )
 
-const LeftSide = ({ children, noEdge, inverse, ...props }) => (
+const LeftSide = ({ children, innerStyle, noEdge, inverse, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
@@ -159,6 +159,7 @@ const LeftSide = ({ children, noEdge, inverse, ...props }) => (
           {...props}
         >
           <inner
+            style={innerStyle}
             css={{
               display: 'block',
               height: '100%',
@@ -875,12 +876,12 @@ class Section3 extends React.Component {
                     0.05,
                   )} 95%)`}
                 />
-                <LeftSide inverse>
+                <LeftSide inverse innerStyle={{ paddingTop: '50%' }}>
                   <div
                     css={
                       isLarge && {
                         display: 'block',
-                        margin: [contextYOff + 120, 0, 0, 30],
+                        margin: [contextYOff, 0, 0, 30],
                       }
                     }
                   >
@@ -898,12 +899,9 @@ class Section3 extends React.Component {
                       }
                     >
                       <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-                        All day you communicate. Orbit attaches to any app
-                        providing <em>realtime</em> relevant answers based on
-                        what you're doing.
-                        <vertSpace css={{ height: 20 }} />
-                        Simply hold <Cmd>Option</Cmd>. Important terms, people,
-                        and items in your cloud are shown instantly.
+                        Attach realtime search to any app with a simple hold of{' '}
+                        <Cmd>Option</Cmd>. Important terms, people, and items in
+                        your cloud are shown instantly.
                         <vertSpace css={{ height: 20 }} />
                         It's a new way to stay in sync.
                       </P2>
@@ -926,12 +924,17 @@ class Section3 extends React.Component {
                       <RightSide css={{ top: 0, overflow: 'visible' }}>
                         <SearchCallout isLarge />
                       </RightSide>
-                      <RightSide
+                      <section
                         css={{
                           zIndex: 0,
+                          position: 'absolute',
+                          width: 500,
+                          height: 500,
+                          marginTop: -250 + contextYOff,
+                          top: '50%',
+                          left: '50%',
+                          marginLeft: 50,
                           overflow: 'hidden',
-                          top: 0,
-                          bottom: 0,
                         }}
                       >
                         <Spring from={{ x: 100 }} to={{ x: 10 }}>
@@ -942,17 +945,16 @@ class Section3 extends React.Component {
                               }}
                             >
                               <img
-                                src={wordImage}
+                                src={wordImg}
                                 css={{
                                   position: 'absolute',
                                   width: 1634,
-                                  marginLeft: -300,
                                   height: 'auto',
                                   transformOrigin: 'top left',
                                   transform: {
                                     scale: 0.35,
-                                    x: 350,
-                                    y: contextYOff + 950,
+                                    x: -350,
+                                    y: 0,
                                   },
                                 }}
                               />
@@ -961,17 +963,33 @@ class Section3 extends React.Component {
                         </Spring>
 
                         <fadeDown
-                          $$fullscreen
+                          if={false}
                           css={{
-                            top: Constants.SECTION_HEIGHT - 100 - contextYOff,
-                            height: 200,
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: 100,
                             zIndex: 100,
                             background: `linear-gradient(transparent, ${
                               Constants.backgroundColor
                             } 95%)`,
                           }}
                         />
-                      </RightSide>
+                        <fadeLeft
+                          css={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            top: 0,
+                            width: 100,
+                            zIndex: 100,
+                            background: `linear-gradient(to left, transparent, ${
+                              Constants.backgroundColor
+                            } 95%)`,
+                          }}
+                        />
+                      </section>
                     </React.Fragment>
                   )}
                 />

@@ -77,7 +77,7 @@ const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
 const SubTitle = UI.injectTheme(({ theme, ...props }) => (
   <Title
     size={3.6}
-    color={theme.base.subTitleColor || theme.base.color}
+    color={theme.subTitleColor || theme.base.color}
     reduceCapsPct={5}
     {...props}
   />
@@ -229,7 +229,7 @@ class Callout {
               <Lines width={1000} height={2000} $lines />
               <innerSection
                 css={{
-                  background: theme.base.background,
+                  background: theme.base.background.lighten(0.028),
                 }}
                 {...props}
               />
@@ -1020,7 +1020,7 @@ class Section3 extends React.Component {
 const altBg = UI.color('#FCF6ED')
 const peachTheme = {
   background: altBg,
-  color: altBg.darken(0.7).desaturate(0.2),
+  color: altBg.darken(0.8).desaturate(0.2),
   titleColor: altBg.darken(0.55).desaturate(0.2),
   subTitleColor: altBg.darken(0.6).desaturate(0.2),
 }

@@ -700,72 +700,74 @@ class Section2 extends React.Component {
                     </Trail>
                   </notifications>
 
-                  <Spring
-                    if={showOrbit}
-                    native
-                    from={{ opacity: 0, x: 100 }}
-                    to={{ opacity: 1, x: 0 }}
-                  >
-                    {({ opacity, x }) => (
-                      <animated.div
-                        style={{
-                          opacity,
-                          transform: x
-                            ? x.interpolate(x => `translate3d(${x}%,0,0)`)
-                            : null,
-                        }}
-                      >
-                        <img
-                          src={homeImg}
-                          css={{
-                            position: 'absolute',
-                            top: newsIllYOffset + 20,
-                            right: -700,
-                            width: 1100,
-                            height: 'auto',
-                            transformOrigin: 'top left',
-                            transform: {
-                              scale: 0.4,
-                            },
-                            boxShadow: [[0, 15, 120, [0, 0, 0, 0.1]]],
+                  <React.Fragment if={isLarge}>
+                    <Spring
+                      if={showOrbit}
+                      native
+                      from={{ opacity: 0, x: 100 }}
+                      to={{ opacity: 1, x: 0 }}
+                    >
+                      {({ opacity, x }) => (
+                        <animated.div
+                          style={{
+                            opacity,
+                            transform: x
+                              ? x.interpolate(x => `translate3d(${x}%,0,0)`)
+                              : null,
                           }}
-                        />
-                      </animated.div>
-                    )}
-                  </Spring>
+                        >
+                          <img
+                            src={homeImg}
+                            css={{
+                              position: 'absolute',
+                              top: newsIllYOffset + 20,
+                              right: -700,
+                              width: 1100,
+                              height: 'auto',
+                              transformOrigin: 'top left',
+                              transform: {
+                                scale: 0.4,
+                              },
+                              boxShadow: [[0, 15, 120, [0, 0, 0, 0.1]]],
+                            }}
+                          />
+                        </animated.div>
+                      )}
+                    </Spring>
 
-                  <fadeRight
-                    $$fullscreen
-                    css={{
-                      left: '92%',
-                      zIndex: 100,
-                      background: `linear-gradient(to right, transparent, ${
-                        Constants.backgroundColor
-                      })`,
-                    }}
-                  />
+                    <fadeRight
+                      $$fullscreen
+                      css={{
+                        left: '92%',
+                        zIndex: 100,
+                        background: `linear-gradient(to right, transparent, ${
+                          Constants.backgroundColor
+                        })`,
+                      }}
+                    />
 
-                  <fadeawayfadeawayfadeaway
-                    css={{
-                      position: 'absolute',
-                      top: newsIllYOffset + 500,
-                      right: -250,
-                      width: 900,
-                      height: 450,
-                      background: Constants.backgroundColor,
-                      borderRadius: 1000,
-                      filter: {
-                        blur: 30,
-                      },
-                      transform: {
-                        z: 0,
-                      },
-                      zIndex: 2,
-                    }}
-                  />
+                    <fadeawayfadeawayfadeaway
+                      css={{
+                        position: 'absolute',
+                        top: newsIllYOffset + 500,
+                        right: -250,
+                        width: 900,
+                        height: 450,
+                        background: Constants.backgroundColor,
+                        borderRadius: 1000,
+                        filter: {
+                          blur: 30,
+                        },
+                        transform: {
+                          z: 0,
+                        },
+                        zIndex: 2,
+                      }}
+                    />
+                  </React.Fragment>
 
                   <secondSection>
-                    <div css={{ height: searchYOff + 800 }} />
+                    <div if={isLarge} css={{ height: searchYOff + 800 }} />
                     <content
                       css={{
                         display: 'block',
@@ -819,113 +821,131 @@ class Section3 extends React.Component {
     console.log('isIntersecting', isIntersecting)
     return (
       <UI.Theme name="light">
-        <Section>
-          <SectionContent fullscreen padded>
-            <Slant
-              css={{ zIndex: 2 }}
-              slantBackground={`linear-gradient(200deg, #f2f2f2 80%, ${altBg.darken(
-                0.05,
-              )} 95%)`}
-            />
-            <LeftSide inverse>
-              <div
-                css={{
-                  display: 'block',
-                  margin: [contextYOff + 120, 0, 0, 30],
-                }}
-              >
-                <SubTitle size={4.8}>Intelligence</SubTitle>
-                <FeatureSubTitle>Always on contextual answers</FeatureSubTitle>
-                <Callout css={{ width: 530, position: 'absolute', right: 10 }}>
-                  <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-                    All day you communicate. Orbit attaches to any app providing{' '}
-                    <em>realtime</em> relevant answers based on what you're
-                    doing.
-                    <vertSpace css={{ height: 20 }} />
-                    Simply hold <Cmd>Option</Cmd>. Important terms, people, and
-                    items in your cloud are shown instantly.
-                    <vertSpace css={{ height: 20 }} />
-                    It's a new way to stay in sync.
-                  </P2>
-                  <DottedButton
-                    css={{ position: 'absolute', bottom: 20, right: 20 }}
+        <Media query={Constants.screen.large}>
+          {isLarge => (
+            <Section>
+              <SectionContent fullscreen padded>
+                <Slant
+                  css={{ zIndex: 2 }}
+                  slantBackground={`linear-gradient(200deg, #f2f2f2 80%, ${altBg.darken(
+                    0.05,
+                  )} 95%)`}
+                />
+                <LeftSide inverse>
+                  <div
+                    css={
+                      isLarge && {
+                        display: 'block',
+                        margin: [contextYOff + 120, 0, 0, 30],
+                      }
+                    }
                   >
-                    Learn more
-                  </DottedButton>
-                </Callout>
-                <Observer onChange={this.handleIntersect}>
-                  <br />
-                </Observer>
-              </div>
-            </LeftSide>
-            <RightSide css={{ top: 0, overflow: 'visible' }}>
-              <Callout
-                css={{
-                  width: 500,
-                  position: 'absolute',
-                  top: searchYOff - 55,
-                  left: 40,
-                }}
-              >
-                <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-                  Search across the entire cloud locally with fast conceptual
-                  search that even supports showing summarized Slack
-                  conversations.
-                  <vertSpace css={{ height: 20 }} />
-                  Search people to see profiles that show where they spend time,
-                  recent interactions and more.
-                </P2>
-              </Callout>
-            </RightSide>
-
-            <Media
-              query={Constants.screen.large}
-              render={() => (
-                <RightSide
-                  css={{ zIndex: 0, overflow: 'hidden', top: 0, bottom: 0 }}
-                >
-                  <Spring from={{ x: 100 }} to={{ x: 10 }}>
-                    {({ x }) => (
-                      <animated.div
-                        style={{
-                          transform: `translate3d(${x}px,0,0)`,
-                        }}
+                    <SubTitle size={4.8}>Intelligence</SubTitle>
+                    <FeatureSubTitle>
+                      Always on contextual answers
+                    </FeatureSubTitle>
+                    <Callout
+                      css={
+                        isLarge && {
+                          width: 530,
+                          position: 'absolute',
+                          right: 10,
+                        }
+                      }
+                    >
+                      <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
+                        All day you communicate. Orbit attaches to any app
+                        providing <em>realtime</em> relevant answers based on
+                        what you're doing.
+                        <vertSpace css={{ height: 20 }} />
+                        Simply hold <Cmd>Option</Cmd>. Important terms, people,
+                        and items in your cloud are shown instantly.
+                        <vertSpace css={{ height: 20 }} />
+                        It's a new way to stay in sync.
+                      </P2>
+                      <DottedButton
+                        css={{ position: 'absolute', bottom: 20, right: 20 }}
                       >
-                        <img
-                          src={wordImage}
-                          css={{
-                            position: 'absolute',
-                            width: 1634,
-                            marginLeft: -300,
-                            height: 'auto',
-                            transformOrigin: 'top left',
-                            transform: {
-                              scale: 0.35,
-                              x: 350,
-                              y: contextYOff + 950,
-                            },
-                          }}
-                        />
-                      </animated.div>
-                    )}
-                  </Spring>
-
-                  <fadeDown
-                    $$fullscreen
-                    css={{
-                      top: Constants.SECTION_HEIGHT - 100 - contextYOff,
-                      height: 200,
-                      zIndex: 100,
-                      background: `linear-gradient(transparent, ${
-                        Constants.backgroundColor
-                      } 95%)`,
-                    }}
-                  />
+                        Learn more
+                      </DottedButton>
+                    </Callout>
+                    <Observer onChange={this.handleIntersect}>
+                      <br />
+                    </Observer>
+                  </div>
+                </LeftSide>
+                <RightSide css={{ top: 0, overflow: 'visible' }}>
+                  <Callout
+                    css={
+                      isLarge && {
+                        width: 500,
+                        position: 'absolute',
+                        top: searchYOff - 55,
+                        left: 40,
+                      }
+                    }
+                  >
+                    <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
+                      Search across the entire cloud locally with fast
+                      conceptual search that even supports showing summarized
+                      Slack conversations.
+                      <vertSpace css={{ height: 20 }} />
+                      Search people to see profiles that show where they spend
+                      time, recent interactions and more.
+                    </P2>
+                  </Callout>
                 </RightSide>
-              )}
-            />
-          </SectionContent>
-        </Section>
+
+                <Media
+                  query={Constants.screen.large}
+                  render={() => (
+                    <RightSide
+                      css={{ zIndex: 0, overflow: 'hidden', top: 0, bottom: 0 }}
+                    >
+                      <Spring from={{ x: 100 }} to={{ x: 10 }}>
+                        {({ x }) => (
+                          <animated.div
+                            style={{
+                              transform: `translate3d(${x}px,0,0)`,
+                            }}
+                          >
+                            <img
+                              src={wordImage}
+                              css={{
+                                position: 'absolute',
+                                width: 1634,
+                                marginLeft: -300,
+                                height: 'auto',
+                                transformOrigin: 'top left',
+                                transform: {
+                                  scale: 0.35,
+                                  x: 350,
+                                  y: contextYOff + 950,
+                                },
+                              }}
+                            />
+                          </animated.div>
+                        )}
+                      </Spring>
+
+                      <fadeDown
+                        $$fullscreen
+                        css={{
+                          top: Constants.SECTION_HEIGHT - 100 - contextYOff,
+                          height: 200,
+                          zIndex: 100,
+                          background: `linear-gradient(transparent, ${
+                            Constants.backgroundColor
+                          } 95%)`,
+                        }}
+                      />
+                    </RightSide>
+                  )}
+                />
+              </SectionContent>
+            </Section>
+          )}
+        </Media>
       </UI.Theme>
     )
   }
@@ -1242,8 +1262,9 @@ export default class HomePage extends React.Component {
           <border if={false} css={{ bottom: 0 }} />
           <Section2 />
 
-          <Media query={Constants.screen.large}>
-            {() => (
+          <Media
+            query={Constants.screen.large}
+            render={() => (
               <searchIllustration
                 css={{
                   position: 'relative',
@@ -1292,7 +1313,7 @@ export default class HomePage extends React.Component {
                 />
               </searchIllustration>
             )}
-          </Media>
+          />
 
           <Section3 />
         </surround>

@@ -97,32 +97,36 @@ export class Section extends React.Component {
   }
 }
 
-export const SectionContent = view(
-  'section',
-  {
-    width: Constants.smallSize,
-    margin: [0, 'auto'],
-    position: 'relative',
-    [Constants.screen.smallQuery]: {
-      width: '100%',
+@view
+export class SectionContent {
+  render({ padded, fullscreen, ...props }) {
+    const height = fullscreen
+      ? Math.max(980, Math.min(1300, window.innerHeight))
+      : 'auto'
+    return (
+      <section
+        $padded={padded}
+        $fullscreen={fullscreen}
+        css={{ height }}
+        {...props}
+      />
+    )
+  }
+
+  static style = {
+    section: {
+      width: Constants.smallSize,
+      margin: [0, 'auto'],
+      position: 'relative',
+      [Constants.screen.smallQuery]: {
+        width: '100%',
+      },
     },
-  },
-  {
     padded: {
       padding: [80, 0],
       [Constants.screen.smallQuery]: {
         padding: [50, 30],
       },
-    },
-    doublePadded: {
-      padding: [120, 0],
-    },
-    padBottom: {
-      paddingBottom: 80,
-    },
-    row: {
-      flexFlow: 'row',
-      alignItems: 'center',
     },
     fullscreen: {
       height: Constants.SECTION_HEIGHT,
@@ -130,5 +134,5 @@ export const SectionContent = view(
         height: 'auto',
       },
     },
-  },
-)
+  }
+}

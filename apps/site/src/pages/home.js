@@ -310,9 +310,9 @@ class Header {
       <Section>
         <SectionContent padded fullscreen>
           <Slant
-            slantBackground={`linear-gradient(200deg, #f2ce26, ${
+            slantBackground={`linear-gradient(200deg, #f5b926, ${
               Constants.colorSecondary
-            } 95%)`}
+            } 85%)`}
           />
           <Media
             query={Constants.screen.large}
@@ -375,7 +375,8 @@ class Header {
                   }}
                 />
                 <P size={isLarge ? 2 : 1.5} alpha={0.75} margin={[0, 0, 15, 0]}>
-                  Cloud search and news in your OS
+                  Upgrade Spotlight and Notification Drawer<br />
+                  with AI for your company cloud.
                 </P>
 
                 <actions
@@ -386,24 +387,34 @@ class Header {
                     justifyContent: 'center',
                   }}
                 >
-                  <DottedButton
+                  <UI.Button
+                    borderStyle="dotted"
+                    borderColor="#ccc"
+                    size={1.1}
                     $smallInstallBtn={!isLarge}
+                    tooltip=""
                     css={{
-                      margin: [0, 20, 0, -10],
+                      margin: [0, 10, 0, -5],
                     }}
                   >
-                    Install in 3 minutes{' '}
+                    Try for{' '}
                     <AppleLogo
                       width={20}
                       height={20}
                       css={{
                         display: 'inline-block',
-                        margin: [-5, 0, 0, 5],
+                        margin: [-2, 0, 0, 0],
                         opacity: 0.32,
                       }}
                     />
-                  </DottedButton>
-                  <P>Privacy</P>
+                  </UI.Button>
+                  <UI.Button
+                    chromeless
+                    alpha={0.5}
+                    tooltip="Completely private on-device."
+                  >
+                    Privacy
+                  </UI.Button>
                 </actions>
               </mainSection>
             )}
@@ -1029,8 +1040,13 @@ class Section4 {
       <UI.Theme theme={peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section id="remote-teams" inverse css={{ background: altBg }}>
-              <SectionContent fullscreen padded css={{ zIndex: 3 }}>
+            <Section id="use-cases" inverse css={{ background: altBg }}>
+              <SectionContent
+                id="remote-teams"
+                fullscreen
+                padded
+                css={{ zIndex: 3 }}
+              >
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${altBg.darken(
@@ -1295,9 +1311,9 @@ class Footer {
                   work for you, the individual.
                   <br />
                   <br />
-                  Our goal is to build a smarter and more intuitive OS. To do
-                  that we need trust. We make privacy, security, and user
-                  experience our first priorities.
+                  Our goal is to build a more intuitive OS. To do that we need
+                  trust. We make privacy, security, and user experience our
+                  first priorities.
                 </P2>
               </left>
               <RightSide noEdge>

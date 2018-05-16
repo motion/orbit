@@ -39,11 +39,10 @@ const Badge = view('div', {
 const Bubble = view(
   'div',
   {
-    border: [1, '#777'],
-    background: '#fff',
-    fontSize: 16,
+    border: [1, '#ccc'],
+    fontSize: 18,
     borderRadius: 15,
-    padding: 10,
+    padding: [10, 12],
     marginBottom: 10,
     borderBottomRightRadius: 0,
     alignSelf: 'flex-end',
@@ -86,29 +85,26 @@ const INITIAL_STATE = {
 }
 
 const chats = [
-  <Bubble left>The #general chat room</Bubble>,
+  <Bubble left>The #dev chat room</Bubble>,
   <Bubble>clear as modern art</Bubble>,
   <Bubble left chromeless>
     🙄
   </Bubble>,
-  <Bubble>spreading like an oil spill...</Bubble>,
+  <Bubble>& spreading like an oil spill...</Bubble>,
   <Bubble left chromeless>
     🤷‍
   </Bubble>,
-  <Bubble left>The #general chat room</Bubble>,
-  <Bubble>clear as modern art</Bubble>,
+  <Bubble left>It's not that it doesn't work</Bubble>,
+  <Bubble>Yea, but you'd hope for a bit more...</Bubble>,
   <Bubble left chromeless>
-    🙄
+    clarity, perhaps
   </Bubble>,
-  <Bubble>spreading like an oil spill...</Bubble>,
+  <Bubble>at least some sort of summary</Bubble>,
   <Bubble left chromeless>
-    🤷‍
+    👆
   </Bubble>,
-  <Bubble left>The #general chat room</Bubble>,
-  <Bubble>clear as modern art</Bubble>,
-  <Bubble left chromeless>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-  </Bubble>,
+  <Bubble left>too much FOMO</Bubble>,
+  <Bubble>unsubscribe</Bubble>,
 ]
 
 const messages = (
@@ -202,7 +198,7 @@ export default class HeaderIllustration extends React.Component {
   }
 
   async animateIcons() {
-    await sleep(4000)
+    await sleep(2000)
     this.bounceIcons()
     await sleep(6000)
     this.setState({
@@ -219,7 +215,7 @@ export default class HeaderIllustration extends React.Component {
   async animateChats() {
     await sleep(800)
     this.chatFrame(Spring, {
-      to: { scale: 1, opacity: 1, y: 0 },
+      to: { scale: 1, opacity: 1, opacityRest: 0, y: 0 },
       config: config.fast,
     })
     await this.chats(Trail, {
@@ -237,7 +233,6 @@ export default class HeaderIllustration extends React.Component {
         500,
         500,
         500,
-        400,
         400,
         400,
       ].slice(0, chats.length),
@@ -263,11 +258,12 @@ export default class HeaderIllustration extends React.Component {
       to: { opacity: 1 },
     })
     await sleep(700)
-    await this.chatText(Spring, {
+    this.chatText(Spring, {
       from: { opacity: 1 },
       to: { opacity: 0 },
       config: config.slow,
     })
+    await sleep(1000)
     await this.chatText2(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
@@ -277,7 +273,7 @@ export default class HeaderIllustration extends React.Component {
 
   bounceIcons = async () => {
     this.setState({ bounceSlack: true })
-    await sleep(1000)
+    await sleep(4000)
     this.setState({ bounceDropbox: true })
     await sleep(200)
     this.setState({ bounceMail: true })
@@ -300,20 +296,33 @@ export default class HeaderIllustration extends React.Component {
   render() {
     return (
       <headerIll>
+        <fades
+          $$fullscreen
+          css={{
+            pointerEvents: 'none',
+            background: `linear-gradient(to bottom, transparent 80%, ${
+              Constants.backgroundColor
+            } 95%), linear-gradient(to top, transparent 80%, ${
+              Constants.backgroundColor
+            } 95%)`,
+            zIndex: 100,
+          }}
+        />
         <chats>
           <Keyframes
             reset={this.state.reset}
             native
             script={next => (this.chatFrame = next)}
           >
-            {({ scale, opacity, y }) => {
+            {({ scale, opacity, opacityRest, y }) => {
               return (
                 <animated.div
                   style={{
                     opacity,
                     transform: interpolate(
                       [scale, y],
-                      (scale, y) => `translate3d(0,${y}px,0) scale(${scale})`,
+                      (scale, y) =>
+                        `translate3d(0,${y + 110}px,0) scale(${scale})`,
                     ),
                   }}
                 >
@@ -338,7 +347,7 @@ export default class HeaderIllustration extends React.Component {
                   </Keyframes>
                   <animated.div
                     style={{
-                      opacity,
+                      opacity: opacityRest,
                       height: 500,
                     }}
                   >
@@ -355,10 +364,10 @@ export default class HeaderIllustration extends React.Component {
           >
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
-                <P $message size={2}>
+                <message>
                   Is your organization<br />
                   lacking organization?
-                </P>
+                </message>
               </animated.div>
             )}
           </Keyframes>
@@ -369,29 +378,24 @@ export default class HeaderIllustration extends React.Component {
           >
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
-                <P $message size={2}>
+                <message>
                   Stay in sync, stress free.
                   <links
                     css={{
+                      flexFlow: 'row',
                       alignItems: 'center',
                       justifyContent: 'center',
                       margin: [20, 0, 0],
                     }}
                   >
-                    <P size={1.2} alpha={0.7} css={{ margin: [10, 0, 20] }}>
+                    <UI.Button onClick={scrollTo('#features')}>
+                      Features
+                    </UI.Button>
+                    <UI.Button onClick={scrollTo('#use-cases')}>
                       Use Cases
-                    </P>
-                    <UI.Button onClick={scrollTo('#remote-teams')}>
-                      Remote Teams
-                    </UI.Button>
-                    <UI.Button onClick={scrollTo('#reduce-interrupts')}>
-                      Deep Work
-                    </UI.Button>
-                    <UI.Button onClick={scrollTo('#customer-success')}>
-                      Customer Success
                     </UI.Button>
                   </links>
-                </P>
+                </message>
               </animated.div>
             )}
           </Keyframes>
@@ -403,11 +407,10 @@ export default class HeaderIllustration extends React.Component {
             bottom: 0,
             left: 0,
             right: 0,
-            borderBottom: [4, '#f2f2f2'],
             background: `linear-gradient(transparent, ${
-              Constants.BACKGROUND_ALT
+              Constants.backgroundColor
             })`,
-            zIndex: 0,
+            zIndex: 200,
             transition: 'all ease-out 1000ms',
             opacity: this.state.leaveSlack ? 0 : 1,
           }}
@@ -438,7 +441,7 @@ export default class HeaderIllustration extends React.Component {
                 right: -10,
                 bottom: -10,
                 background: `linear-gradient(transparent, ${
-                  Constants.BACKGROUND_ALT
+                  Constants.backgroundColor
                 })`,
               }}
             />
@@ -451,6 +454,7 @@ export default class HeaderIllustration extends React.Component {
             left: 40,
             right: 40,
             height: 120,
+            zIndex: 201,
             alignItems: 'flex-end',
             justifyContent: 'space-between',
             flexFlow: 'row',
@@ -535,28 +539,29 @@ export default class HeaderIllustration extends React.Component {
   static style = {
     headerIll: {
       position: 'relative',
-      height: '100%',
+      height: 600,
+      width: '100%',
+      margin: 'auto',
+      overflow: 'hidden',
     },
     chats: {
       // pointerEvents: 'none',
       position: 'absolute',
-      top: 320,
+      top: 0,
       right: '5%',
-      left: 50,
+      left: '5%',
       bottom: 0,
-      // alignItems: 'center',
       justifyContent: 'flex-start',
-      transformOrigin: 'center right',
-      transform: {
-        // x: 30,
-        scale: 1.15,
-      },
+      overflow: 'hidden',
     },
     message: {
+      fontSize: 22,
+      lineHeight: '30px',
       position: 'absolute',
-      top: 120,
+      top: 0,
       left: 0,
       right: 0,
+      bottom: 0,
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',

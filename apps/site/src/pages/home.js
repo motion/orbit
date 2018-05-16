@@ -370,8 +370,9 @@ class Header {
                   }}
                 />
                 <P size={2} alpha={0.75} margin={[0, 0, 15, 0]}>
-                  A smarter, more intuitive OS for your team<br />
-                  to turn cloud noise to signal.
+                  Search and news for your company.<br />
+                  Augment mac with intelligence.<br />
+                  Install in 3 minutes.
                 </P>
 
                 <DottedButton
@@ -381,7 +382,7 @@ class Header {
                     transform: { scale: 1.2 },
                   }}
                 >
-                  Install in 3 minutes{' '}
+                  Try now free{' '}
                   <AppleLogo
                     width={20}
                     height={20}

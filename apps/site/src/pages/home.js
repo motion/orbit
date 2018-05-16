@@ -247,6 +247,7 @@ class Callout {
   static style = {
     largeCallout: {
       // border: [1, [0, 0, 0, 0.02]],
+      boxShadow: [[0, 10, 120, [0, 0, 0, 0.045]]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
@@ -257,14 +258,14 @@ class Callout {
       left: 0,
       right: 0,
       zIndex: -2,
-      opacity: 0.01,
+      opacity: 0.02,
       transformOrigin: 'top left',
       transform: {
-        scale: 4,
+        scale: 12,
       },
     },
     innerSection: {
-      margin: 10,
+      margin: 8,
       padding: 26,
       overflow: 'hidden',
       position: 'relative',
@@ -277,18 +278,13 @@ class Callout {
 
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const P2 = props => <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
-const Ul = view('span', {
-  display: 'inline-block',
-  borderBottom: [3, 'rgba(136, 231, 234, 0.9)'],
-  marginBottom: -3,
-})
 
 @view
 class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.3} color={brandColor} iconColor={brandColor} />
+        <Logo size={0.29} color={brandColor} iconColor={brandColor} />
         <P
           if={false}
           size={1}
@@ -385,7 +381,11 @@ class Header {
                     opacity: 0.15,
                   }}
                 />
-                <P size={isLarge ? 2 : 1.5} alpha={0.75} margin={[0, 0, 15, 0]}>
+                <P
+                  size={isLarge ? 1.8 : 1.5}
+                  alpha={0.75}
+                  margin={[0, 0, 15, 0]}
+                >
                   Upgrade Spotlight and Notification Drawer<br />
                   with AI for your company cloud.
                 </P>
@@ -486,7 +486,7 @@ class Header {
     },
     largeCallout: {
       width: '48%',
-      margin: [-50, 0, 0, 0],
+      margin: [-15, 0, 0, 0],
     },
     smallInstallBtn: {
       transformOrigin: 'top right',
@@ -532,7 +532,7 @@ class Header {
       position: 'absolute',
       top: 0,
       right: 0,
-      bottom: 160,
+      bottom: 0,
       overflow: 'hidden',
       left: '50%',
       paddingLeft: '5%',
@@ -585,8 +585,8 @@ const Notification = ({ title, body }) => (
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-const newsTopOffPct = '12%'
-const searchYOff = -40
+const newsTopOffPct = '8%'
+const searchYOff = 0
 const contextYOff = 160
 
 const FeatureSubTitle = props => (
@@ -594,7 +594,7 @@ const FeatureSubTitle = props => (
     size={1.8}
     alpha={0.6}
     css={{
-      marginBottom: 30,
+      marginBottom: 20,
     }}
     {...props}
   />
@@ -702,7 +702,11 @@ class SectionFeatureNewsSearch extends React.Component {
                       <Callout
                         css={
                           isLarge
-                            ? { width: 510, position: 'absolute', right: -10 }
+                            ? {
+                                width: 510,
+                                position: 'absolute',
+                                right: 0,
+                              }
                             : {}
                         }
                       >
@@ -736,7 +740,7 @@ class SectionFeatureNewsSearch extends React.Component {
                       position: 'absolute',
                       top: newsTopOffPct,
                       marginTop: -20,
-                      right: 20,
+                      right: '16%',
                       left: 0,
                       height: 700,
                       overflow: 'hidden',
@@ -746,7 +750,7 @@ class SectionFeatureNewsSearch extends React.Component {
                       css={{
                         position: 'absolute',
                         top: 50,
-                        left: 50,
+                        left: '20%',
                         right: 0,
                         bottom: 0,
                       }}
@@ -797,15 +801,15 @@ class SectionFeatureNewsSearch extends React.Component {
                             src={homeImg}
                             css={{
                               position: 'absolute',
-                              top: 35,
-                              right: -700,
+                              top: 55,
+                              right: -650,
                               width: 1100,
                               height: 'auto',
                               transformOrigin: 'top left',
                               transform: {
-                                scale: 0.45,
+                                scale: 0.5,
                               },
-                              boxShadow: [[0, 15, 120, [0, 0, 0, 0.1]]],
+                              boxShadow: [[0, 15, 150, [0, 0, 0, 0.07]]],
                             }}
                           />
                         </animated.div>
@@ -817,7 +821,7 @@ class SectionFeatureNewsSearch extends React.Component {
                         top: 0,
                         bottom: 0,
                         right: 0,
-                        width: 150,
+                        width: '20%',
                         zIndex: 100,
                         background: `linear-gradient(to right, transparent, ${
                           Constants.backgroundColor
@@ -827,7 +831,7 @@ class SectionFeatureNewsSearch extends React.Component {
                     <fadeawayfadeawayfadeaway
                       css={{
                         position: 'absolute',
-                        bottom: -300,
+                        bottom: -250,
                         right: -250,
                         width: 900,
                         height: 450,
@@ -844,7 +848,7 @@ class SectionFeatureNewsSearch extends React.Component {
                     />
                   </section>
 
-                  <div if={isLarge} css={{ height: 'calc(100% - 240px)' }} />
+                  <div if={isLarge} css={{ height: 'calc(100% - 170px)' }} />
                   <content
                     css={{
                       display: 'block',
@@ -1126,7 +1130,7 @@ class SectionUseCaseRemoteFirst {
                 <LeftSide inverse>
                   <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
                   <SubTitle italic>
-                    Improving<br />Customer<br />Success
+                    Customer<br />Success
                   </SubTitle>
 
                   <div if={isLarge} css={{ height: '35%' }} />
@@ -1212,8 +1216,7 @@ class SectionUseCaseReduceInterrupts {
                 <LeftSide>
                   <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
                   <SubTitle italic>
-                    Reducing<br />
-                    workplace<br />
+                    Workplace<br />
                     interruptions
                   </SubTitle>
                   <div if={isLarge} css={{ height: '30%' }} />
@@ -1314,11 +1317,11 @@ const SearchIllustration = () => (
         css={{
           position: 'relative',
           overflow: 'hidden',
-          top: searchYOff - 240,
+          top: searchYOff - 190,
           left: '50%',
           marginLeft: -560,
           width: 550,
-          height: 450,
+          height: 380,
           marginBottom: -450,
           zIndex: 0,
           pointerEvents: 'none',
@@ -1331,7 +1334,7 @@ const SearchIllustration = () => (
             marginTop: 0,
             height: 'auto',
             transformOrigin: 'top left',
-            transform: { scale: 0.5, x: 70, y: 20 },
+            transform: { scale: 0.4, x: 70, y: 20 },
           }}
         />
         <fadeRight

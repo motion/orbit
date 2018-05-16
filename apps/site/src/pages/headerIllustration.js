@@ -539,10 +539,13 @@ export default class HeaderIllustration extends React.Component {
   static style = {
     headerIll: {
       position: 'relative',
-      height: 600,
+      height: 700,
       width: '100%',
       margin: 'auto',
       overflow: 'hidden',
+      // transform: {
+      //   y: 100,
+      // },
     },
     chats: {
       // pointerEvents: 'none',

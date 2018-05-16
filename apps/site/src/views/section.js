@@ -116,7 +116,7 @@ export class SectionContent {
 
   render({ padded, fullscreen, ...props }) {
     const height = fullscreen
-      ? Math.max(980, Math.min(1300, window.innerHeight))
+      ? Math.max(1000, Math.min(1300, window.innerHeight))
       : 'auto'
     return (
       <section
@@ -140,7 +140,7 @@ export class SectionContent {
       },
     },
     padded: {
-      padding: [80, 0],
+      padding: [80, 20],
       [Constants.screen.smallQuery]: {
         padding: [50, 30],
       },

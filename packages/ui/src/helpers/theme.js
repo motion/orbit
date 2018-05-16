@@ -15,7 +15,7 @@ export default class Theme extends React.Component {
     uiThemes: object,
   }
 
-  theme = getThemeFromContext('name')
+  theme = getThemeFromContext('name', 'theme')
 
   getChildContext() {
     const context = this.theme()

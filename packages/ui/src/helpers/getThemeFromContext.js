@@ -15,22 +15,26 @@ export default function getThemeFromContext(
           uiActiveTheme: this.context.uiThemes[prop],
         }
       }
-      // no found theme, try making custom
-      if (this.props[themePropName]) {
-        const theme = Theme.fromColor(this.props[themePropName])
-        if (theme) {
-          return {
-            uiThemes: {
-              ...this.context.uiThemes,
-              [prop]: theme,
-            },
-            uiActiveThemeName: prop,
-            uiActiveTheme: theme,
-          }
+    }
+    // no found theme, try making custom
+    const themeProp = this.props[themePropName]
+    if (themeProp) {
+      const theme =
+        typeof themeProp === 'string'
+          ? Theme.fromColor(themeProp)
+          : Theme.fromStyles(themeProp)
+      console.log('making theme', themeProp, theme)
+      if (theme) {
+        return {
+          uiThemes: {
+            ...this.context.uiThemes,
+            [prop]: theme,
+          },
+          uiActiveThemeName: prop,
+          uiActiveTheme: theme,
         }
       }
-    } else {
-      return this.context
     }
+    return this.context
   }
 }

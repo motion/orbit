@@ -74,7 +74,14 @@ const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
   </P>
 )
 
-const SubTitle = props => <Title size={3.6} reduceCapsPct={5} {...props} />
+const SubTitle = UI.injectTheme(({ theme, ...props }) => (
+  <Title
+    size={3.6}
+    color={theme.base.subTitleColor || theme.base.color}
+    reduceCapsPct={5}
+    {...props}
+  />
+))
 
 const SmallTitle = props => (
   <P
@@ -122,12 +129,12 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
             <edge
               css={{
                 shapeOutside: inverse
-                  ? 'polygon(26% 0%, 0% 1px, 93% 1096px)'
+                  ? 'polygon(0% 0%, 0% 21px, 174% 2131px)'
                   : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
                 float: 'left',
-                width: 147,
-                height: 990,
-                marginLeft: -30,
+                width: 187,
+                height: '100%',
+                marginLeft: -90,
               }}
             />
             {children}
@@ -235,7 +242,7 @@ class Callout {
 
   static style = {
     largeCallout: {
-      border: [1, [255, 255, 255, 0.3]],
+      // border: [1, [0, 0, 0, 0.02]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
@@ -246,15 +253,15 @@ class Callout {
       left: 0,
       right: 0,
       zIndex: -2,
-      opacity: 0.025,
+      opacity: 0.01,
       transformOrigin: 'top left',
       transform: {
         scale: 4,
       },
     },
     innerSection: {
-      margin: 6,
-      padding: [30, 32],
+      margin: 10,
+      padding: 26,
       overflow: 'hidden',
       position: 'relative',
       [Constants.screen.smallQuery]: {
@@ -572,24 +579,9 @@ const Notification = ({ title, body }) => (
   </notification>
 )
 
-const Num = view('div', {
-  position: 'absolute',
-  height: 100,
-  width: 100,
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: '#fff',
-  border: [1, 'dotted', '#eee'],
-  color: '#ccc',
-  fontWeight: 100,
-  fontSize: 62,
-  borderRadius: 1000,
-  zIndex: 1,
-})
-
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-const newsTopOffPct = '10%'
+const newsTopOffPct = '12%'
 const searchYOff = -40
 const contextYOff = 160
 
@@ -616,8 +608,8 @@ const SearchCallout = ({ isLarge }) => (
     }
   >
     <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-      Search across the entire cloud locally with fast conceptual search that
-      even supports showing summarized Slack conversations.
+      Search across the entire cloud with fast conceptual search that aggregates
+      your cloud services and summarizes Slack conversations.
       <vertSpace css={{ height: 20 }} />
       Search people to see profiles that show where they spend time, recent
       interactions and more.
@@ -706,7 +698,7 @@ class Section2 extends React.Component {
                       <Callout
                         css={
                           isLarge
-                            ? { width: 530, position: 'absolute', right: -10 }
+                            ? { width: 510, position: 'absolute', right: -10 }
                             : {}
                         }
                       >
@@ -915,9 +907,9 @@ class Section3 extends React.Component {
                     <Callout
                       css={
                         isLarge && {
-                          width: 530,
+                          width: 510,
                           position: 'absolute',
-                          right: 10,
+                          right: 5,
                         }
                       }
                     >
@@ -1030,7 +1022,7 @@ const peachTheme = {
   background: altBg,
   color: altBg.darken(0.7).desaturate(0.2),
   titleColor: altBg.darken(0.55).desaturate(0.2),
-  subTitleColor: altBg.darken(0.7).desaturate(0.2),
+  subTitleColor: altBg.darken(0.6).desaturate(0.2),
 }
 
 @view
@@ -1130,16 +1122,14 @@ class Section4 {
   }
 }
 
-const alt2Bg = altBg //UI.color('#3b4a91')
-
 @view
 class Section6 {
   render() {
     return (
-      <UI.Theme theme={{ background: alt2Bg, color: alt2Bg }}>
+      <UI.Theme theme={peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section id="customer-success" css={{ background: alt2Bg }}>
+            <Section id="customer-success" css={{ background: altBg }}>
               <SectionContent fullscreen padded>
                 <Slant slantBackground={altBg.darken(0.1)} />
                 <LeftSide inverse>

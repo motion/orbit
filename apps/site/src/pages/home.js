@@ -371,8 +371,7 @@ class Header {
                   }}
                 />
                 <P size={2} alpha={0.75} margin={[0, 0, 15, 0]}>
-                  Upgrade Mac with team intelligence.<br />
-                  Search and news for your company.
+                  Cloud search and news in your OS
                 </P>
 
                 <actions
@@ -575,7 +574,7 @@ const Num = view('div', {
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-const newsIllYOffset = 60
+const newsTopOffPct = '10%'
 const searchYOff = -40
 const contextYOff = 160
 
@@ -653,10 +652,8 @@ class Section2 extends React.Component {
       return
     }
     await sleep(1500)
-    console.log('hide notifs')
     this.setState({ showNotifs: false })
     await sleep(2000)
-    console.log('show orbit')
     this.setState({ showOrbit: true })
   }
 
@@ -677,8 +674,10 @@ class Section2 extends React.Component {
                 />
                 <LeftSide>
                   <Observer onChange={this.handleIntersect}>
-                    <content css={{ display: 'block', marginTop: 0 }}>
-                      <SmallTitle css={{ margin: [-15, 0, 10] }}>
+                    <content
+                      css={{ display: 'block', marginTop: newsTopOffPct }}
+                    >
+                      <SmallTitle css={{ margin: [0, 0, 10] }}>
                         How Orbit Works
                       </SmallTitle>
                       <SubTitle size={4.8}>News</SubTitle>
@@ -700,11 +699,11 @@ class Section2 extends React.Component {
                           Your team uses the right tool for the job. But that
                           can lead to a pretty messy big picture.
                           <vertSpace css={{ height: 20 }} />
-                          Stay focused, up to date, and eliminate notification
-                          overload. It's well summarized news that's relevant to
-                          you across your cloud.
+                          Stay focused without missing out. It's well summarized
+                          news that's relevant to you and your team from across
+                          all your integrations.
                           <vertSpace css={{ height: 20 }} />
-                          Powered by on-device ML.{' '}
+                          Eliminate notification overload.
                         </P2>
                         <DottedButton
                           css={{ position: 'absolute', bottom: 20, right: 20 }}
@@ -720,35 +719,54 @@ class Section2 extends React.Component {
                   inverse
                   css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
                 >
-                  <notifications if={isLarge}>
-                    <Trail
-                      native
-                      from={{ opacity: 1, x: 0 }}
-                      config={config.fast}
-                      to={{
-                        opacity: showNotifs ? 1 : 0,
-                        x: showNotifs ? 0 : 100,
+                  <section
+                    if={isLarge}
+                    css={{
+                      position: 'absolute',
+                      top: newsTopOffPct,
+                      marginTop: -20,
+                      right: 20,
+                      left: 0,
+                      height: 700,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <notifications
+                      css={{
+                        position: 'absolute',
+                        top: 50,
+                        left: 50,
+                        right: 0,
+                        bottom: 0,
                       }}
-                      keys={this.state.items.map((_, index) => index)}
+                      if={isLarge}
                     >
-                      {this.state.items.map(
-                        ({ title, body }) => ({ x, opacity }) => (
-                          <animated.div
-                            style={{
-                              opacity,
-                              transform: x.interpolate(
-                                x => `translate3d(${x}%,0,0)`,
-                              ),
-                            }}
-                          >
-                            <Notification title={title} body={body} />
-                          </animated.div>
-                        ),
-                      )}
-                    </Trail>
-                  </notifications>
-
-                  <React.Fragment if={isLarge}>
+                      <Trail
+                        native
+                        from={{ opacity: 1, x: 0 }}
+                        config={config.fast}
+                        to={{
+                          opacity: showNotifs ? 1 : 0,
+                          x: showNotifs ? 0 : 100,
+                        }}
+                        keys={this.state.items.map((_, index) => index)}
+                      >
+                        {this.state.items.map(
+                          ({ title, body }) => ({ x, opacity }) => (
+                            <animated.div
+                              style={{
+                                opacity,
+                                transform: x.interpolate(
+                                  x => `translate3d(${x}%,0,0)`,
+                                ),
+                              }}
+                            >
+                              <Notification title={title} body={body} />
+                            </animated.div>
+                          ),
+                        )}
+                      </Trail>
+                    </notifications>
                     <Spring
                       if={showOrbit}
                       native
@@ -768,13 +786,13 @@ class Section2 extends React.Component {
                             src={homeImg}
                             css={{
                               position: 'absolute',
-                              top: newsIllYOffset + 20,
+                              top: 35,
                               right: -700,
                               width: 1100,
                               height: 'auto',
                               transformOrigin: 'top left',
                               transform: {
-                                scale: 0.4,
+                                scale: 0.45,
                               },
                               boxShadow: [[0, 15, 120, [0, 0, 0, 0.1]]],
                             }}
@@ -782,22 +800,23 @@ class Section2 extends React.Component {
                         </animated.div>
                       )}
                     </Spring>
-
                     <fadeRight
-                      $$fullscreen
                       css={{
-                        left: '92%',
+                        position: 'absolute',
+                        top: 0,
+                        bottom: 0,
+                        right: 0,
+                        width: 150,
                         zIndex: 100,
                         background: `linear-gradient(to right, transparent, ${
                           Constants.backgroundColor
                         })`,
                       }}
                     />
-
                     <fadeawayfadeawayfadeaway
                       css={{
                         position: 'absolute',
-                        top: newsIllYOffset + 500,
+                        bottom: -300,
                         right: -250,
                         width: 900,
                         height: 450,
@@ -812,7 +831,7 @@ class Section2 extends React.Component {
                         zIndex: 2,
                       }}
                     />
-                  </React.Fragment>
+                  </section>
 
                   <div if={isLarge} css={{ height: 'calc(100% - 240px)' }} />
                   <content
@@ -837,17 +856,6 @@ class Section2 extends React.Component {
         </Media>
       </UI.Theme>
     )
-  }
-
-  static style = {
-    notifications: {
-      position: 'absolute',
-      top: 200,
-      right: 100,
-      width: 300,
-      bottom: 150,
-      zIndex: 1,
-    },
   }
 }
 
@@ -881,7 +889,7 @@ class Section3 extends React.Component {
                     css={
                       isLarge && {
                         display: 'block',
-                        margin: [contextYOff, 0, 0, 30],
+                        margin: [contextYOff - 20, 0, 0, 30],
                       }
                     }
                   >

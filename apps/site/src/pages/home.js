@@ -414,6 +414,7 @@ class Header {
                 <line
                   css={{
                     margin: [26, 40],
+                    width: '75%',
                     height: 4,
                     background: '#ddd',
                     opacity: 0.15,
@@ -423,9 +424,12 @@ class Header {
                   size={isLarge ? 1.8 : 1.5}
                   alpha={0.75}
                   margin={[0, 0, 15, 0]}
+                  css={{
+                    lineHeight: '34px',
+                  }}
                 >
                   Upgrade Spotlight and Notification Drawer<br />
-                  with an intelligent cloud experience.
+                  with an intelligent team operating system.
                 </P>
 
                 <actions
@@ -700,9 +704,9 @@ class SectionFeatureNewsSearch extends React.Component {
     if (!this.state.showNotifs || this.state.showOrbit) {
       return
     }
-    await sleep(1500)
+    await sleep(1200)
     this.setState({ showNotifs: false })
-    await sleep(2000)
+    await sleep(1500)
     this.setState({ showOrbit: true })
   }
 
@@ -828,6 +832,7 @@ class SectionFeatureNewsSearch extends React.Component {
                       native
                       from={{ opacity: 0, x: 100 }}
                       to={{ opacity: 1, x: 0 }}
+                      config={config.slow}
                     >
                       {({ opacity, x }) => (
                         <animated.div

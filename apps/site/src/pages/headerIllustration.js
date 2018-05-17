@@ -9,6 +9,8 @@ import * as Constants from '~/constants'
 // import Trail from '~/trail'
 import * as Icons from '~/views/icons'
 
+const bgColor = '#fff'
+
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -285,11 +287,7 @@ export default class HeaderIllustration extends React.Component {
           $$fullscreen
           css={{
             pointerEvents: 'none',
-            background: `linear-gradient(to bottom, transparent 80%, ${
-              Constants.backgroundColor
-            } 95%), linear-gradient(to top, transparent 80%, ${
-              Constants.backgroundColor
-            } 95%)`,
+            background: `linear-gradient(to bottom, transparent 80%, ${bgColor} 95%), linear-gradient(to top, transparent 80%, ${bgColor} 95%)`,
             zIndex: 100,
           }}
         />
@@ -399,9 +397,7 @@ export default class HeaderIllustration extends React.Component {
             bottom: 0,
             left: 0,
             right: 0,
-            background: `linear-gradient(transparent, ${
-              Constants.backgroundColor
-            })`,
+            background: `linear-gradient(transparent, ${bgColor})`,
             zIndex: 200,
             transition: 'all ease-out 1000ms',
             opacity: this.state.leaveSlack ? 0 : 1,
@@ -432,9 +428,7 @@ export default class HeaderIllustration extends React.Component {
                 left: -10,
                 right: -10,
                 bottom: -10,
-                background: `linear-gradient(transparent, ${
-                  Constants.backgroundColor
-                })`,
+                background: `linear-gradient(transparent, ${bgColor})`,
               }}
             />
           </dock>
@@ -551,7 +545,7 @@ export default class HeaderIllustration extends React.Component {
       content: ' ',
       width: '60%',
       height: '40%',
-      background: Constants.backgroundColor,
+      background: bgColor,
       filter: {
         blur: 55,
       },

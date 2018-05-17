@@ -781,20 +781,20 @@ class SectionFeatureNewsSearch extends React.Component {
         body: 'Following up on the ad placement',
       },
       {
-        title: 'Emily Parker',
-        body: 'Book club is cancelled tomorrow',
+        title: 'Theresa Suzuki',
+        body: 'Re: 2017 Year End Additional Info Request',
       },
       {
-        title: 'Emily Parker',
-        body: 'Book club is cancelled tomorrow',
+        title: 'Jarrod Reynolds',
+        body: 'Thanks for your order from Hoefler & Co.',
       },
       {
-        title: 'Emily Parker',
-        body: 'Book club is cancelled tomorrow',
+        title: 'Zenefits',
+        body: '[Final Reminder] Submit your May 5, 2018 - May',
       },
       {
-        title: 'Emily Parker',
-        body: 'Book club is cancelled tomorrow',
+        title: 'Audible',
+        body: 'Get "Three Body Problem" from audible',
       },
     ],
   }

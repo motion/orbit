@@ -7,13 +7,7 @@ import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 import * as Constants from '~/constants'
 // import Trail from '~/trail'
-import {
-  DropboxIcon,
-  DriveIcon,
-  SlackIcon,
-  MailIcon,
-  GithubIcon,
-} from '~/views/icons'
+import * as Icons from '~/views/icons'
 
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -197,14 +191,14 @@ export default class HeaderIllustration extends React.Component {
       bounceDrive: 2,
       bounceGithub: 2,
     })
-    await sleep(1000)
+    await sleep(3000)
     await this.leaveIcons()
   }
 
   async animateChats() {
     await this.chatFrame(Spring, {
-      from: { scale: 1, opacity: 0, y: 0 },
-      to: { scale: 1, opacity: 1, y: 0 },
+      from: { scale: 1, opacity: 0, opacityRest: 0, y: 0 },
+      to: { scale: 1, opacity: 1, opacityRest: 0, y: 0 },
     })
     await sleep(800)
     await this.chats(Trail, {
@@ -228,7 +222,7 @@ export default class HeaderIllustration extends React.Component {
     })
     await sleep(6200)
     this.chatFrame(Spring, {
-      to: { scale: 0.6, opacity: 1, y: -400 },
+      to: { scale: 0.6, opacity: 1, opacityRest: 1, y: -400 },
       config: { tension: 10, friction: 50 },
     })
     await sleep(2500)
@@ -238,7 +232,7 @@ export default class HeaderIllustration extends React.Component {
     })
     await sleep(2500)
     this.chatFrame(Spring, {
-      to: { scale: 0.6, opacity: 0, y: -1000 },
+      to: { scale: 0.6, opacity: 0.1, y: -1000 },
       config: { tension: 20, friction: 50 },
     })
     await sleep(1500)
@@ -451,76 +445,53 @@ export default class HeaderIllustration extends React.Component {
             overflow: 'hidden',
           }}
         >
-          <DropboxIcon
-            $icon
-            $bouncy={this.state.bounceDropbox}
-            $leave={this.state.leaveDropbox}
-            size={0.13}
-            after={
-              <CountBadge
-                active={this.state.bounceDropbox}
-                duration={15}
-                start={0}
-                end={22}
-              />
-            }
-          />
-          <DriveIcon
-            $icon
-            $bouncy={this.state.bounceDrive}
-            $leave={this.state.leaveDrive}
-            size={0.16}
-            after={
-              <CountBadge
-                active={this.state.bounceDrive}
-                duration={15}
-                start={0}
-                end={12}
-              />
-            }
-          />
-          <SlackIcon
-            size={0.18}
-            $icon
-            $bouncy={this.state.bounceSlack}
-            $leave={this.state.leaveSlack}
-            after={
-              <CountBadge
-                active={this.state.bounceSlack}
-                duration={15}
-                start={0}
-                end={122}
-              />
-            }
-          />
-          <MailIcon
-            $icon
-            $bouncy={this.state.bounceMail}
-            $leave={this.state.leaveMail}
-            size={0.16}
-            after={
-              <CountBadge
-                active={this.state.bounceMail}
-                duration={15}
-                start={0}
-                end={3}
-              />
-            }
-          />
-          <GithubIcon
-            $icon
-            $bouncy={this.state.bounceGithub}
-            $leave={this.state.leaveGithub}
-            size={0.13}
-            after={
-              <CountBadge
-                active={this.state.bounceGithub}
-                duration={15}
-                start={0}
-                end={12}
-              />
-            }
-          />
+          {[
+            {
+              name: 'Dropbox',
+              size: 0.13,
+              countProps: { start: 0, end: 22, duration: 15 },
+            },
+            {
+              name: 'Drive',
+              size: 0.16,
+              countProps: { start: 0, end: 36, duration: 15 },
+            },
+            {
+              name: 'Slack',
+              size: 0.18,
+              countProps: { start: 0, end: 122, duration: 15 },
+            },
+            {
+              name: 'Mail',
+              size: 0.16,
+              countProps: { start: 0, end: 225, duration: 15 },
+            },
+            {
+              name: 'Github',
+              size: 0.13,
+              countProps: { start: 0, end: 27, duration: 15 },
+            },
+          ].map(({ name, size, countProps }) => {
+            const Icon = Icons[`${name}Icon`]
+            const bounce = this.state[`bounce${name}`]
+            const leave = this.state[`leave${name}`]
+            const countHigher = bounce === 2
+            return this.glossElement(Icon, {
+              key: name,
+              $icon: true,
+              $bouncy: bounce,
+              $leave: leave,
+              size,
+              after: (
+                <CountBadge
+                  active={bounce}
+                  {...countProps}
+                  start={countHigher ? countProps.end : countProps.start}
+                  end={countProps.end * (countHigher ? 2 : 1)}
+                />
+              ),
+            })
+          })}
         </dockIcons>
       </headerIll>
     )
@@ -569,10 +540,7 @@ export default class HeaderIllustration extends React.Component {
       transition: 'opacity ease-out 100ms, transform ease-out 300ms',
     },
     leave: {
-      opacity: 0,
-      transform: {
-        y: 50,
-      },
+      opacity: 0.5,
     },
   }
 }

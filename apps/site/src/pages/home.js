@@ -16,7 +16,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 
 const brandColor = Constants.colorMain
-const featuresSlantColor = UI.color('#F3B7B1')
+const featuresSlantColor = UI.color('#F2B0BF')
 
 const Border = UI.injectTheme(({ theme, ...props }) => (
   <border
@@ -139,7 +139,7 @@ const SubTitle = UI.injectTheme(({ theme, size, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall => (
       <Title
-        size={isSmall ? 3 : size || 3.6}
+        size={isSmall ? 3 : size || 4.5}
         color={theme.subTitleColor || theme.base.color}
         reduceCapsPct={8}
         {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
@@ -491,6 +491,9 @@ class Header {
                   <br if={isLarge} />
                   with an intelligent team operating system.
                 </P>
+                <P2 if={false} size={1}>
+                  AI for your organization.
+                </P2>
 
                 <actions
                   $$row
@@ -718,10 +721,11 @@ const SearchCallout = ({ isLarge }) => (
       }
     }
   >
-    <P2 size={1.8} css={{ textAlign: 'left', margin: 0 }}>
-      It's search with NLP that works with Slack and all your integrations.
-      <vertSpace css={{ height: 20 }} />
-      With automatic aggregated profiles of everyone on your team.
+    <P2 size={2}>Sort the chaos with clear, fast and smart cloud search.</P2>
+    <P2 size={1.6}>
+      NLP search of summarized Slack conversations and more. With aggregated
+      profiles of everyone on the team, so you can see who and what is going on
+      clearly.
     </P2>
   </Callout>
 )
@@ -818,25 +822,25 @@ class SectionFeatureNewsSearch extends React.Component {
                         Unify your cloud with <Cmd>⌘+Space</Cmd>
                       </FeatureSubTitle>
                       <Callout
-                        css={
-                          isLarge
+                        css={{
+                          textAlign: 'left',
+                          ...(isLarge
                             ? {
                                 width: 510,
                                 position: 'absolute',
                                 right: '6%',
                               }
-                            : {}
-                        }
+                            : null),
+                        }}
                       >
-                        <P2 size={1.8} css={{ textAlign: 'left' }} margin={0}>
+                        <P2 size={2}>
                           Use the right tool for the job without losing the big
                           picture.
-                          <vertSpace css={{ height: 20 }} />
-                          Summarized news of what's new and relevant across
-                          everything. Stop distraction by pulling instead of
-                          push notifications.
-                          <vertSpace css={{ height: 20 }} />
-                          A teams newspaper.
+                        </P2>
+                        <P2 size={1.6}>
+                          A newspaper that sums up the day for your team. Using
+                          novel on-device machine learning that learns your
+                          company vocab.
                         </P2>
                         <DottedButton
                           css={
@@ -991,7 +995,9 @@ class SectionFeatureNewsSearch extends React.Component {
                     }
                   >
                     <SubTitle size={4.3}>Search</SubTitle>
-                    <FeatureSubTitle>Spotlight, meet the cloud</FeatureSubTitle>
+                    <FeatureSubTitle>
+                      Spotlight, meet your brain
+                    </FeatureSubTitle>
                   </content>
                   <Media
                     query={Constants.screen.small}
@@ -1028,7 +1034,7 @@ class SectionFeatureIntelligence extends React.Component {
               <SectionContent fullscreen={isLarge} padded>
                 <Slant
                   css={{ zIndex: 2 }}
-                  slantBackground={`linear-gradient(200deg, ${featuresSlantColor} 30%, ${altBg.darken(
+                  slantBackground={`linear-gradient(200deg, ${featuresSlantColor} 5%, ${altBg.darken(
                     0.05,
                   )} 95%)`}
                 />
@@ -1052,23 +1058,28 @@ class SectionFeatureIntelligence extends React.Component {
                   >
                     <SubTitle size={4.2}>Intelligence</SubTitle>
                     <FeatureSubTitle>
-                      Always on contextual answers
+                      A whole new way to compute
                     </FeatureSubTitle>
                     <Callout
-                      css={
-                        isLarge && {
-                          width: 500,
-                          position: 'absolute',
-                          right: 10,
-                        }
-                      }
+                      css={{
+                        textAlign: 'left',
+                        ...(isLarge
+                          ? {
+                              width: 500,
+                              position: 'absolute',
+                              right: 10,
+                            }
+                          : null),
+                      }}
                     >
-                      <P2 size={1.8} css={{ textAlign: 'left', margin: 0 }}>
-                        Attach realtime search to any app just by holding{' '}
-                        <Cmd>Option</Cmd>. Important terms, people, and items in
-                        your cloud instantly.
-                        <vertSpace css={{ height: 20 }} />
-                        A new way to stay in sync.
+                      <P2 size={2}>
+                        It's realtime contextual answers that work with every
+                        app (yes, even Slack, Intercom, and your Mail client).
+                      </P2>
+                      <P2 size={1.6}>
+                        And all you have to do is hold <Cmd>Option</Cmd>.
+                        Important terms, people, and items in your cloud with
+                        summarized answers, instantly.
                       </P2>
                       <DottedButton
                         css={
@@ -1333,7 +1344,7 @@ class SectionUseCaseRemoteFirst {
                 </LeftSide>
                 <RightSide>
                   <div if={isLarge} $$flex css={{ marginTop: '80%' }} />
-                  <SubSubTitle>Less onboarding in sales</SubSubTitle>
+                  <SubSubTitle>Less onboarding for sales</SubSubTitle>
                   <P2 size={1.6} css={isLarge && { marginRight: '30%' }}>
                     Sales chat requires intimate knowledge of your product.
                     Orbit can sit side by side with your success team as they
@@ -1432,9 +1443,9 @@ class SectionUseCaseReduceInterrupts {
                   <div $$flex css={{ marginTop: isLarge ? '26%' : 0 }} />
                   <SubSubTitle>Notification noise</SubSubTitle>
                   <P2 size={1.6} css={{ marginRight: isLarge ? '30%' : 0 }}>
-                    Use the power of Do not disturb in Slack without losing
-                    synchronicity. Orbit Home lets you snooze notifications, but
-                    still pull (when you're ready) to see what's happened.
+                    Use the power of Do Not Disturb in Slack without losing
+                    synchronicity. Home lets you snooze notifications, but still
+                    pull, when you're ready, to see everything new.
                   </P2>
                   <Callout css={{ margin: [20, '20%', 0, 0], left: -45 }}>
                     <P2 size={2} margin={0}>

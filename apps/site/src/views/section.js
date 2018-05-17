@@ -9,7 +9,7 @@ export const Slant = ({
   inverseSlant,
   slantBackground = '#f2f2f2',
   rightBackground,
-  slantSize = 18,
+  slantSize = 16,
   amount = 40,
   ...props
 }) => {

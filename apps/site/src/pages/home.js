@@ -139,7 +139,7 @@ const SubTitle = UI.injectTheme(({ theme, size, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall => (
       <Title
-        size={isSmall ? 3 : size || 4}
+        size={isSmall ? 3 : size || 3.6}
         color={theme.subTitleColor || theme.base.color}
         reduceCapsPct={8}
         {...props}
@@ -413,9 +413,9 @@ class Header {
             amount={20}
           />
           <Slant
-            slantBackground={`linear-gradient(200deg, #f6f6f6 5%, ${featuresSlantColor.alpha(
-              0.25,
-            )} 95%)`}
+            slantBackground={`linear-gradient(200deg, ${
+              Constants.backgroundColor
+            } 5%, #f2f2f2 95%)`}
             css={{ zIndex: 2 }}
           />
 
@@ -710,7 +710,7 @@ const SearchCallout = ({ isLarge }) => (
         width: 500,
         position: 'absolute',
         top: searchYOff - 55,
-        left: 40,
+        left: '8%',
       }
     }
   >
@@ -780,12 +780,10 @@ class SectionFeatureNewsSearch extends React.Component {
               <SectionContent padded={!isLarge} fullscreen={isLarge}>
                 <Slant
                   inverseSlant
-                  slantBackground={`linear-gradient(200deg, ${featuresSlantColor.alpha(
-                    0.25,
-                  )} 5%, ${featuresSlantColor} 95%)`}
+                  slantBackground={`linear-gradient(200deg, #f2f2f2 5%, ${featuresSlantColor} 95%)`}
                 />
                 <Slant
-                  css={{ zIndex: 2 }}
+                  css={{ zIndex: 1 }}
                   slantSize={12}
                   amount={20}
                   slantBackground={`linear-gradient(200deg, ${Constants.colorSecondary.alpha(
@@ -803,7 +801,7 @@ class SectionFeatureNewsSearch extends React.Component {
                       <SmallTitle css={{ margin: [-30, 0, 10] }}>
                         How Orbit Works
                       </SmallTitle>
-                      <SubTitle size={5}>News</SubTitle>
+                      <SubTitle size={4.6}>News</SubTitle>
                       <FeatureSubTitle
                         css={{
                           marginTop: 12,
@@ -817,14 +815,14 @@ class SectionFeatureNewsSearch extends React.Component {
                             ? {
                                 width: 510,
                                 position: 'absolute',
-                                right: 0,
+                                right: '6%',
                               }
                             : {}
                         }
                       >
                         <P2 size={1.8} css={{ textAlign: 'left' }} margin={0}>
-                          You use the right tool for the job. But how do you
-                          understand what's happening across all of them?
+                          Use the right tool for the job without losing the big
+                          picture.
                           <vertSpace css={{ height: 20 }} />
                           Summarized news of what's new and relevant across
                           everything. Stop distraction by pulling instead of
@@ -857,8 +855,8 @@ class SectionFeatureNewsSearch extends React.Component {
                       position: 'absolute',
                       top: newsTopOffPct,
                       marginTop: -210,
-                      right: '16%',
-                      left: 0,
+                      right: '14%',
+                      left: '8%',
                       height: 700,
                       overflow: 'hidden',
                     }}
@@ -978,7 +976,7 @@ class SectionFeatureNewsSearch extends React.Component {
                       }
                     }
                   >
-                    <SubTitle size={4.8}>Search</SubTitle>
+                    <SubTitle size={4.3}>Search</SubTitle>
                     <FeatureSubTitle>Spotlight, meet the cloud</FeatureSubTitle>
                   </content>
                   <Media
@@ -1038,7 +1036,7 @@ class SectionFeatureIntelligence extends React.Component {
                       }
                     }
                   >
-                    <SubTitle size={4.6}>Intelligence</SubTitle>
+                    <SubTitle size={4.2}>Intelligence</SubTitle>
                     <FeatureSubTitle>
                       Always on contextual answers
                     </FeatureSubTitle>
@@ -1481,7 +1479,7 @@ const SearchIllustration = () => (
           overflow: 'hidden',
           left: '50%',
           top: '50%',
-          marginLeft: -560,
+          marginLeft: 'calc(-5% - 520px)',
           width: 550,
           height: 380,
           marginBottom: -450,
@@ -1500,7 +1498,7 @@ const SearchIllustration = () => (
               marginTop: 0,
               height: 'auto',
               transformOrigin: 'top left',
-              transform: { scale: 0.4, x: 140, y: 20 },
+              transform: { scale: 0.45, x: 50, y: 20 },
             }}
           />
         </FadedArea>

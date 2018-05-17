@@ -182,10 +182,6 @@ export default class HeaderIllustration extends React.Component {
   }
 
   startAnimations = async () => {
-    this.chatFrame(Spring, {
-      from: { scale: 1, opacity: 0, y: 0 },
-      to: { scale: 1, opacity: 0, y: 0 },
-    })
     this.animateChats()
     this.animateIcons()
   }
@@ -206,6 +202,10 @@ export default class HeaderIllustration extends React.Component {
   }
 
   async animateChats() {
+    await this.chatFrame(Spring, {
+      from: { scale: 1, opacity: 0, y: 0 },
+      to: { scale: 1, opacity: 1, y: 0 },
+    })
     await sleep(800)
     await this.chats(Trail, {
       from: { opacity: 0, y: -20 },

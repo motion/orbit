@@ -210,7 +210,7 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
                 float: 'left',
                 width: 187,
                 height: '100%',
-                marginLeft: -90,
+                marginLeft: inverse ? -75 : -90,
               }}
             />
             {children}
@@ -261,7 +261,7 @@ const LeftSide = ({ children, innerStyle, noEdge, inverse, ...props }) => (
                 float: 'right',
                 width: 110,
                 height: 990,
-                marginLeft: inverse ? -15 : -35,
+                marginLeft: inverse ? 5 : -20,
               }}
             />
             {children}
@@ -698,8 +698,8 @@ const Notification = ({ title, body, ...props }) => (
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-const newsTopOffPct = '28%'
-const searchYOff = 20
+const newsTopOffPct = '33%'
+const searchYOff = -10
 const contextYOff = 160
 
 const FeatureSubTitle = props => (
@@ -724,15 +724,14 @@ const SearchCallout = ({ isLarge }) => (
         width: 500,
         position: 'absolute',
         top: searchYOff - 55,
-        left: '8%',
+        left: '12%',
       }
     }
   >
     <P2 size={2}>Sort the chaos with clear, fast and smart cloud search.</P2>
     <P2 size={1.6}>
-      NLP search of summarized Slack conversations and more. With aggregated
-      profiles of everyone on the team, so you can see who and what is going on
-      clearly.
+      NLP search your cloud instantly. Including summarized Slack conversations
+      and aggregated profiles of your team.
     </P2>
   </Callout>
 )
@@ -841,8 +840,8 @@ class SectionFeatureNewsSearch extends React.Component {
                         }}
                       >
                         <P2 size={2}>
-                          Use the right tool for the job without losing the big
-                          picture.
+                          Your new way to stay up to date. Summarized news
+                          personalized to you.
                         </P2>
                         <P2 size={1.6}>
                           A newspaper that sums up the day for your team. Using
@@ -879,10 +878,11 @@ class SectionFeatureNewsSearch extends React.Component {
                     css={{
                       position: 'absolute',
                       top: newsTopOffPct,
-                      marginTop: -210,
+                      marginTop: -250,
                       right: '14%',
                       left: '8%',
-                      height: 700,
+                      height: '80%',
+                      maxHeight: 800,
                       overflow: 'hidden',
                     }}
                   >
@@ -997,7 +997,7 @@ class SectionFeatureNewsSearch extends React.Component {
                         background: Constants.backgroundColor,
                         position: 'relative',
                         zIndex: 1000,
-                        marginTop: -180 + searchYOff,
+                        marginTop: -185 + searchYOff,
                       }
                     }
                   >
@@ -1054,12 +1054,12 @@ class SectionFeatureIntelligence extends React.Component {
                     .desaturate(0.5)
                     .alpha(0.1)} 5%, ${Constants.backgroundColor} 95%)`}
                 />
-                <LeftSide inverse innerStyle={{ paddingTop: '40%' }}>
+                <LeftSide inverse innerStyle={{ paddingTop: '45%' }}>
                   <div
                     css={
                       isLarge && {
                         display: 'block',
-                        margin: [contextYOff - 50, 0, 0, 30],
+                        margin: [contextYOff - 30, 0, 0, 30],
                       }
                     }
                   >
@@ -1080,8 +1080,8 @@ class SectionFeatureIntelligence extends React.Component {
                       }}
                     >
                       <P2 size={2}>
-                        It's realtime contextual answers that work with every
-                        app (yes, even Slack, Intercom, and your Mail client).
+                        Realtime contextual answers that work with every app
+                        (yes, even Slack, Intercom, and your Mail client).
                       </P2>
                       <P2 size={1.6}>
                         And all you have to do is hold <Cmd>Option</Cmd>.
@@ -1217,11 +1217,11 @@ class SectionUseCaseRemoteTeams {
                     <P alpha={0.6} size={2} margin={[0, 0, 10]}>
                       Beautiful unified profiles
                     </P>
-                    <P2 size={1.8}>
+                    <P2 size={1.6}>
                       Combined information from across the cloud in one place
                       with helpful information.
                     </P2>
-                    <P2 if={false} size={1.6}>
+                    <P2 size={1.6}>
                       See where people talk in Slack, what topics they care
                       about, and relevant recently edited files, tickets, and
                       more.
@@ -1238,7 +1238,8 @@ class SectionUseCaseRemoteTeams {
                     }
                   >
                     <P2 size={2} margin={0}>
-                      A sense of unity for your remote team.
+                      Give your remote team a sense of unity and a place to
+                      explore your company.
                     </P2>
                   </Callout>
                 </LeftSide>
@@ -1322,13 +1323,13 @@ class SectionUseCaseRemoteFirst {
                     position: 'absolute',
                     zIndex: 0,
                     left: '27%',
-                    top: 150,
+                    top: '20%',
                   }}
                 >
                   <ChatIcon />
                 </chat>
                 <LeftSide inverse>
-                  <div if={isLarge} css={{ height: '45%' }} />
+                  <div if={isLarge} css={{ height: '48%' }} />
 
                   <section
                     css={{
@@ -1338,6 +1339,14 @@ class SectionUseCaseRemoteFirst {
                     }}
                   >
                     <SubSubTitle>Better support responses</SubSubTitle>
+                    <P
+                      if={isLarge}
+                      alpha={0.6}
+                      size={2}
+                      css={{ margin: [0, '25%', 10, 0] }}
+                    >
+                      Live help for live support
+                    </P>
                     <P2
                       size={1.6}
                       css={{ margin: isLarge ? [0, 0, 25, 0] : 0 }}
@@ -1368,6 +1377,14 @@ class SectionUseCaseRemoteFirst {
                   </SubTitle>
                   <div if={isLarge} $$flex css={{ marginTop: '15%' }} />
                   <SubSubTitle>Less onboarding for sales</SubSubTitle>
+                  <P
+                    if={isLarge}
+                    alpha={0.6}
+                    size={2}
+                    css={{ margin: [0, '25%', 10, 0] }}
+                  >
+                    Knowledge at hand
+                  </P>
                   <P2 size={1.6} css={isLarge && { marginRight: '30%' }}>
                     Sales chat requires intimate knowledge of your product.
                     Orbit can sit side by side with your success team as they
@@ -1429,7 +1446,7 @@ class SectionUseCaseReduceInterrupts {
                       marginBottom: 0,
                     }}
                   />
-                  <div if={isLarge} css={{ height: '18%' }} />
+                  <div if={isLarge} css={{ height: '28%' }} />
                   <section
                     css={{
                       textAlign: 'left',
@@ -1438,10 +1455,19 @@ class SectionUseCaseReduceInterrupts {
                     }}
                   >
                     <SubSubTitle>Prevent shoulder taps</SubSubTitle>
+                    <P
+                      if={isLarge}
+                      alpha={0.6}
+                      size={2}
+                      css={{ margin: [0, '25%', 10, 0] }}
+                    >
+                      Stop losing links and files
+                    </P>
                     <P2 size={1.6}>
                       Search that actually works means a lot less time hunting
-                      around for files and having to interrupt co-workers to
-                      find things.
+                      around for files. Combined with smart profiles that show
+                      you recent collaborations, Orbit aims to eliminate pings
+                      for things you just can't find in the cloud.
                     </P2>
                   </section>
                   <Callout
@@ -1461,8 +1487,16 @@ class SectionUseCaseReduceInterrupts {
                   </Callout>
                 </LeftSide>
                 <RightSide inverse css={{ bottom: 0 }}>
-                  <div $$flex css={{ marginTop: isLarge ? '26%' : 0 }} />
+                  <div $$flex css={{ marginTop: isLarge ? '30%' : 0 }} />
                   <SubSubTitle>Notification noise</SubSubTitle>
+                  <P
+                    if={isLarge}
+                    alpha={0.6}
+                    size={2}
+                    css={{ margin: [0, '25%', 10, 0] }}
+                  >
+                    Enabling deep work
+                  </P>
                   <P2 size={1.6} css={{ marginRight: isLarge ? '30%' : 0 }}>
                     Use the power of Do Not Disturb in Slack without losing
                     synchronicity. Home lets you snooze notifications, but still
@@ -1542,7 +1576,7 @@ const SearchIllustration = () => (
           zIndex: 0,
           pointerEvents: 'none',
           transform: {
-            y: searchYOff - 220,
+            y: searchYOff - 200,
           },
         }}
       >

@@ -200,6 +200,7 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
             css={{
               display: 'block',
               height: '100%',
+              paddingLeft: 20,
             }}
           >
             <edge
@@ -1335,7 +1336,7 @@ class SectionUseCaseRemoteFirst {
                     css={{
                       textAlign: 'left',
                       display: 'block',
-                      margin: isLarge ? [0, 0, 0, '30%'] : 0,
+                      margin: isLarge ? [0, 0, 0, '25%'] : 0,
                     }}
                   >
                     <SubSubTitle>Better support responses</SubSubTitle>
@@ -1360,7 +1361,7 @@ class SectionUseCaseRemoteFirst {
                     if={isLarge}
                     css={{
                       width: '72%',
-                      marginLeft: '30%',
+                      marginLeft: '23%',
                       textAlign: 'left',
                     }}
                   >
@@ -1381,19 +1382,19 @@ class SectionUseCaseRemoteFirst {
                     if={isLarge}
                     alpha={0.6}
                     size={2}
-                    css={{ margin: [0, '25%', 10, 0] }}
+                    css={{ margin: [0, '15%', 10, 0] }}
                   >
                     Knowledge at hand
                   </P>
-                  <P2 size={1.6} css={isLarge && { marginRight: '30%' }}>
+                  <P2 size={1.6} css={isLarge && { marginRight: '20%' }}>
                     Sales chat requires intimate knowledge of your product.
-                    Orbit can sit side by side with your success team as they
-                    chat on Intercom or ZenDesk providing realtime answers from
-                    your knowledgebase.
+                    Orbit sits side by side with your success team as they chat
+                    on Intercom or ZenDesk providing realtime answers from your
+                    knowledgebase.
                   </P2>
                   <Callout
                     if={isLarge}
-                    css={{ margin: [20, '20%', 40, 0], left: -45 }}
+                    css={{ margin: [20, '15%', 40, 0], left: -30 }}
                   >
                     <P2 size={2} margin={0}>
                       Organizational knowledge is now always at hand and usable
@@ -1438,8 +1439,8 @@ class SectionUseCaseReduceInterrupts {
                   </SubTitle>
                   <Notification
                     if={isLarge}
-                    title="Jane Doe"
-                    body="Lorem ipsum dolor sit amet."
+                    title="Uber Receipts"
+                    body="Your Thursday morning trip with Uber"
                     css={{
                       marginLeft: 'auto',
                       marginTop: 40,
@@ -1497,7 +1498,7 @@ class SectionUseCaseReduceInterrupts {
                   >
                     Enabling deep work
                   </P>
-                  <P2 size={1.6} css={{ marginRight: isLarge ? '30%' : 0 }}>
+                  <P2 size={1.6} css={{ marginRight: isLarge ? '22%' : 0 }}>
                     Use the power of Do Not Disturb in Slack without losing
                     synchronicity. Home lets you snooze notifications, but still
                     pull, when you're ready, to see everything new.

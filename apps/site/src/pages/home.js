@@ -135,7 +135,7 @@ const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
     css={{
       fontFamily: '"Mercury Display A", "Mercury Display B"',
       fontStyle: italic ? 'italic' : 'normal',
-      letterSpacing: size < 4.6 ? -2 : 0,
+      letterSpacing: size <= 5 ? -2 : 0,
     }}
     {...props}
   >
@@ -147,7 +147,7 @@ const SubTitle = UI.injectTheme(({ theme, size, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall => (
       <Title
-        size={isSmall ? 3 : size || 4.5}
+        size={isSmall ? 3 : size || 5}
         color={theme.subTitleColor || theme.base.color}
         reduceCapsPct={8}
         {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
@@ -722,7 +722,7 @@ const SearchCallout = ({ isLarge }) => (
   <Callout
     css={
       isLarge && {
-        width: 500,
+        width: '85%',
         position: 'absolute',
         top: searchYOff - 55,
         left: '12%',
@@ -833,7 +833,7 @@ class SectionFeatureNewsSearch extends React.Component {
                           textAlign: 'left',
                           ...(isLarge
                             ? {
-                                width: 510,
+                                width: '85%',
                                 position: 'absolute',
                                 right: '6%',
                               }
@@ -1073,7 +1073,7 @@ class SectionFeatureIntelligence extends React.Component {
                         textAlign: 'left',
                         ...(isLarge
                           ? {
-                              width: 500,
+                              width: '86%',
                               position: 'absolute',
                               right: 10,
                             }
@@ -1176,7 +1176,7 @@ const peachTheme = {
   background: altBg,
   color: altBg.darken(0.8).desaturate(0.1),
   titleColor: altBg.darken(0.55).desaturate(0.3),
-  subTitleColor: altBg.darken(0.4).desaturate(0.65),
+  subTitleColor: altBg.darken(0.45).desaturate(0.8),
 }
 
 @view
@@ -1211,7 +1211,7 @@ class SectionUseCaseRemoteTeams {
                     css={{
                       textAlign: 'left',
                       display: 'block',
-                      margin: isLarge ? [0, 0, 0, '32%'] : 0,
+                      margin: isLarge ? [0, 0, 0, '25%'] : 0,
                     }}
                   >
                     <SubSubTitle>Connecting people</SubSubTitle>
@@ -1253,11 +1253,11 @@ class SectionUseCaseRemoteTeams {
                   <P
                     alpha={0.6}
                     size={2}
-                    css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}
+                    css={{ margin: [0, isLarge ? '20%' : 0, 10, 0] }}
                   >
                     News is your teams home
                   </P>
-                  <P size={1.6} css={{ marginRight: isLarge ? '25%' : 0 }}>
+                  <P size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
                     It starts by learning company vocabulary. Then it learns
                     what you care about. The intersection of what you care about
                     and haven't seen, relative to your custom company's unique
@@ -1267,7 +1267,7 @@ class SectionUseCaseRemoteTeams {
                     if={isLarge}
                     css={{
                       position: 'absolute',
-                      bottom: '20%',
+                      top: '35%',
                       left: 50,
                       height: '35%',
                       width: 450,
@@ -1350,7 +1350,7 @@ class SectionUseCaseRemoteFirst {
                     </P>
                     <P2
                       size={1.6}
-                      css={{ margin: isLarge ? [0, 0, 25, 0] : 0 }}
+                      css={{ margin: isLarge ? [0, 0, 35, 0] : 0 }}
                     >
                       Orbit's contextual answers work with your support software
                       as your team chats. In realtime it searches across your
@@ -1360,8 +1360,8 @@ class SectionUseCaseRemoteFirst {
                   <Callout
                     if={isLarge}
                     css={{
-                      width: '72%',
-                      marginLeft: '23%',
+                      width: '80%',
+                      marginLeft: '25%',
                       textAlign: 'left',
                     }}
                   >
@@ -1394,7 +1394,7 @@ class SectionUseCaseRemoteFirst {
                   </P2>
                   <Callout
                     if={isLarge}
-                    css={{ margin: [20, '15%', 40, 0], left: -30 }}
+                    css={{ margin: [35, '15%', 40, 0], left: -30 }}
                   >
                     <P2 size={2} margin={0}>
                       Organizational knowledge is now always at hand and usable
@@ -1443,8 +1443,8 @@ class SectionUseCaseReduceInterrupts {
                     body="Your Thursday morning trip with Uber"
                     css={{
                       marginLeft: 'auto',
-                      marginTop: 40,
-                      marginBottom: 0,
+                      marginTop: 60,
+                      marginBottom: -40,
                     }}
                   />
                   <div if={isLarge} css={{ height: '28%' }} />
@@ -1477,6 +1477,7 @@ class SectionUseCaseReduceInterrupts {
                       isLarge && {
                         width: '72%',
                         marginLeft: '35%',
+                        marginTop: 35,
                         textAlign: 'left',
                       }
                     }
@@ -1500,10 +1501,10 @@ class SectionUseCaseReduceInterrupts {
                   </P>
                   <P2 size={1.6} css={{ marginRight: isLarge ? '22%' : 0 }}>
                     Use the power of Do Not Disturb in Slack without losing
-                    synchronicity. Home lets you snooze notifications, but still
-                    pull, when you're ready, to see everything new.
+                    synchronicity. Home lets you snooze notifications but still
+                    pull, exactly when you're ready, to see everything new.
                   </P2>
-                  <Callout css={{ margin: [20, '20%', 0, 0], left: -45 }}>
+                  <Callout css={{ margin: [35, '20%', 0, 0], left: -45 }}>
                     <P2 size={2} margin={0}>
                       Pull, instead of being pushed by notifications.
                     </P2>

@@ -473,7 +473,7 @@ class Header {
                 <Title
                   italic
                   reduceCapsPct={10}
-                  size={isLarge ? 5.8 : 4}
+                  size={isLarge ? 6.1 : 4}
                   margin={[-15, 0, 0, -5]}
                 >
                   Smart&nbsp;team<br />organization
@@ -490,14 +490,13 @@ class Header {
                 <P
                   size={isLarge ? 1.9 : 1.5}
                   alpha={0.75}
-                  margin={[0, 0, 15, 0]}
+                  margin={[0, '20%', 15, 0]}
                   css={{
                     lineHeight: '36px',
                   }}
                 >
-                  Replace Spotlight and the notification drawer
-                  <br if={isLarge} />
-                  with an intelligent team operating system.
+                  Replace Spotlight and the notification drawer with an
+                  intelligent team operating system.
                 </P>
                 <P2 if={false} size={1}>
                   AI for your organization.

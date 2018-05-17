@@ -18,8 +18,8 @@ const Badge = view('div', {
   position: 'absolute',
   top: -5,
   right: 5,
-  width: 25,
-  height: 25,
+  width: 24,
+  height: 24,
   background: 'red',
   color: '#fff',
   borderRadius: 100,
@@ -27,6 +27,8 @@ const Badge = view('div', {
   justifyContent: 'center',
   textAlign: 'center',
   fontWeight: 600,
+  fontSize: 12,
+  letterSpacing: -1,
   boxShadow: '0 0 5px rgba(0,0,0,0.5)',
 })
 
@@ -232,7 +234,7 @@ export default class HeaderIllustration extends React.Component {
     })
     await sleep(2500)
     this.chatFrame(Spring, {
-      to: { scale: 0.6, opacity: 0.1, y: -1000 },
+      to: { scale: 0.6, opacity: 0.2, y: -1000 },
       config: { tension: 20, friction: 50 },
     })
     await sleep(1500)
@@ -348,6 +350,7 @@ export default class HeaderIllustration extends React.Component {
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
                 <message>
+                  <msgBlur />
                   Is your organization<br />
                   lacking organization?
                 </message>
@@ -362,8 +365,14 @@ export default class HeaderIllustration extends React.Component {
             {({ opacity }) => (
               <animated.div style={{ opacity }}>
                 <message>
+                  <msgBlur />
                   Stay in sync, stress free.
-                  <links
+                  <UI.Row
+                    spaced
+                    itemProps={{
+                      size: 1.1,
+                      alpha: 0.8,
+                    }}
                     css={{
                       flexFlow: 'row',
                       alignItems: 'center',
@@ -377,7 +386,7 @@ export default class HeaderIllustration extends React.Component {
                     <UI.Button onClick={scrollTo('#use-cases')}>
                       Use Cases
                     </UI.Button>
-                  </links>
+                  </UI.Row>
                 </message>
               </animated.div>
             )}
@@ -440,7 +449,7 @@ export default class HeaderIllustration extends React.Component {
             zIndex: 201,
             alignItems: 'flex-end',
             justifyContent: 'space-around',
-            padding: [0, 10],
+            padding: [0, 15],
             flexFlow: 'row',
             overflow: 'hidden',
           }}
@@ -464,7 +473,7 @@ export default class HeaderIllustration extends React.Component {
             {
               name: 'Mail',
               size: 0.16,
-              countProps: { start: 0, end: 225, duration: 15 },
+              countProps: { start: 0, end: 195, duration: 15 },
             },
             {
               name: 'Github',
@@ -519,17 +528,33 @@ export default class HeaderIllustration extends React.Component {
       overflow: 'hidden',
     },
     message: {
-      fontSize: 22,
-      lineHeight: '30px',
+      color: '#999',
+      fontWeight: 400,
+      fontSize: 26,
+      lineHeight: '34px',
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
+      zIndex: 10,
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
       pointerEvents: 'auto',
+    },
+    msgBlur: {
+      zIndex: -1,
+      position: 'absolute',
+      alignSelf: 'center',
+      display: 'flex',
+      content: ' ',
+      width: '60%',
+      height: '40%',
+      background: Constants.backgroundColor,
+      filter: {
+        blur: 55,
+      },
     },
     bouncy: {
       transition: 'all ease-in 100ms',
@@ -537,10 +562,14 @@ export default class HeaderIllustration extends React.Component {
       transformOrigin: 'center bottom',
     },
     icon: {
-      transition: 'opacity ease-out 100ms, transform ease-out 300ms',
+      transition: 'all ease-in 100ms',
     },
     leave: {
-      opacity: 0.5,
+      // opacity: 0.5,
+      filter: {
+        // grayscale: '100%',
+        // brightness: '100%',
+      },
     },
   }
 }

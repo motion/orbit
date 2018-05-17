@@ -48,7 +48,13 @@ const Border = UI.injectTheme(({ theme, ...props }) => (
   />
 ))
 
-const FadedArea = ({ fadeRight, fadeDown, fadeLeft, fadeColor, children }) => (
+const FadedArea = ({
+  fadeRight,
+  fadeDown,
+  fadeLeft,
+  fadeBackground,
+  children,
+}) => (
   <React.Fragment>
     {children}
     <fadeRight
@@ -58,7 +64,7 @@ const FadedArea = ({ fadeRight, fadeDown, fadeLeft, fadeColor, children }) => (
         left: 'auto',
         width: 100,
         zIndex: 100,
-        background: `linear-gradient(to right, transparent, ${fadeColor ||
+        background: `linear-gradient(to right, transparent, ${fadeBackground ||
           Constants.backgroundColor} 80%)`,
       }}
     />
@@ -69,7 +75,7 @@ const FadedArea = ({ fadeRight, fadeDown, fadeLeft, fadeColor, children }) => (
         right: 'auto',
         width: 100,
         zIndex: 100,
-        background: `linear-gradient(to left, transparent, ${fadeColor ||
+        background: `linear-gradient(to left, transparent, ${fadeBackground ||
           Constants.backgroundColor} 80%)`,
       }}
     />
@@ -80,7 +86,7 @@ const FadedArea = ({ fadeRight, fadeDown, fadeLeft, fadeColor, children }) => (
         top: 'auto',
         height: 100,
         zIndex: 100,
-        background: `linear-gradient(transparent, ${fadeColor ||
+        background: `linear-gradient(transparent, ${fadeBackground ||
           Constants.backgroundColor})`,
       }}
     />
@@ -357,7 +363,7 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.32} color={brandColor} iconColor={brandColor} />
+        <Logo size={0.22} color="#000" iconColor={brandColor} />
         <P
           if={false}
           size={1}
@@ -387,7 +393,7 @@ class BrandLogo {
 class Header {
   render() {
     return (
-      <Section>
+      <Section css={{ background: '#fff' }}>
         {/* {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => (
           <Slant
             key={i}
@@ -491,13 +497,13 @@ class Header {
                 <P
                   size={isLarge ? 1.9 : 1.5}
                   alpha={0.75}
-                  margin={[0, '20%', 15, 0]}
+                  margin={[0, '26%', 15, 0]}
                   css={{
                     lineHeight: '36px',
                   }}
                 >
-                  Replace Spotlight and the notification drawer with an
-                  intelligent team operating system.
+                  Upgrade Mac Spotlight and notifications with an intelligent
+                  team operating system.
                 </P>
                 <P2 if={false} size={1}>
                   AI for your organization.
@@ -737,6 +743,27 @@ const SearchCallout = ({ isLarge }) => (
   </Callout>
 )
 
+const Glow = ({ below, style = {}, ...props }) => (
+  <glow
+    $$fullscreen
+    css={{
+      zIndex: below ? -1 : 0,
+      background: '#fff',
+      ...style,
+      filter: {
+        blur: 160,
+        ...style.filter,
+      },
+      transform: {
+        scale: 0.38,
+        y: '-20%',
+        ...style.transform,
+      },
+    }}
+    {...props}
+  />
+)
+
 @view
 class SectionFeatureNewsSearch extends React.Component {
   state = {
@@ -797,6 +824,8 @@ class SectionFeatureNewsSearch extends React.Component {
                 css={!isLarge && { paddingBottom: 0 }}
                 fullscreen={isLarge}
               >
+                <Glow />
+                <Glow style={{ transform: { y: '130%' } }} />
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, #f2f2f2 5%, ${featuresSlantColor} 95%)`}
@@ -995,7 +1024,6 @@ class SectionFeatureNewsSearch extends React.Component {
                     css={
                       isLarge && {
                         display: 'block',
-                        background: Constants.backgroundColor,
                         position: 'relative',
                         zIndex: 1000,
                         marginTop: -185 + searchYOff,
@@ -1040,6 +1068,7 @@ class SectionFeatureIntelligence extends React.Component {
           {isLarge => (
             <Section>
               <SectionContent fullscreen={isLarge} padded>
+                <Glow style={{ transform: { y: '30%' } }} />
                 <Slant
                   css={{ zIndex: 2 }}
                   slantBackground={`linear-gradient(200deg, ${featuresSlantColor} 5%, ${altBg.darken(
@@ -1132,7 +1161,7 @@ class SectionFeatureIntelligence extends React.Component {
                           overflow: 'hidden',
                         }}
                       >
-                        <FadedArea fadeLeft>
+                        <FadedArea fadeLeft fadeBackground="#fff">
                           <Spring from={{ x: 100 }} to={{ x: 10 }}>
                             {({ x }) => (
                               <animated.div
@@ -1176,7 +1205,7 @@ const peachTheme = {
   background: altBg,
   color: altBg.darken(0.8).desaturate(0.1),
   titleColor: altBg.darken(0.55).desaturate(0.3),
-  subTitleColor: altBg.darken(0.45).desaturate(0.8),
+  subTitleColor: altBg.darken(0.55).desaturate(0.8),
 }
 
 @view
@@ -1193,6 +1222,12 @@ class SectionUseCaseRemoteTeams {
                 padded
                 css={{ zIndex: 3 }}
               >
+                <Glow
+                  style={{
+                    background: altBg.lighten(0.015),
+                    transform: { x: '-30%', y: '-15%' },
+                  }}
+                />
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${altBg.darken(
@@ -1274,7 +1309,7 @@ class SectionUseCaseRemoteTeams {
                       overflow: 'hidden',
                     }}
                   >
-                    <FadedArea fadeColor={altBg} fadeDown fadeRight>
+                    <FadedArea fadeBackground={altBg} fadeDown fadeRight>
                       <img
                         src={profileImg}
                         css={{
@@ -1311,6 +1346,12 @@ class SectionUseCaseRemoteFirst {
             <Section id="customer-success" css={{ background: altBg }}>
               <SectionContent fullscreen={isLarge} padded>
                 <Border css={{ top: -80 }} />
+                <Glow
+                  style={{
+                    background: altBg.lighten(0.015),
+                    transform: { x: '-20%', y: '-25%' },
+                  }}
+                />
                 <Slant
                   slantBackground={`linear-gradient(200deg, ${useCasesSlantBg1} 5%, ${useCasesSlantBg2} 95%)`}
                 />
@@ -1425,6 +1466,12 @@ class SectionUseCaseReduceInterrupts {
                 padded
                 css={{ zIndex: 3 }}
               >
+                <Glow
+                  style={{
+                    background: altBg.lighten(0.025),
+                    transform: { x: '-20%', y: '-25%' },
+                  }}
+                />
                 <Border css={{ top: -20 }} />
                 <Slant
                   inverseSlant
@@ -1582,7 +1629,7 @@ const SearchIllustration = () => (
           },
         }}
       >
-        <FadedArea fadeRight fadeDown>
+        <FadedArea fadeRight fadeDown fadeBackground="#fff">
           <img
             src={slackSearchImg}
             css={{
@@ -1611,7 +1658,7 @@ export default class HomePage extends React.Component {
           >
             <Header />
             <surround css={{ position: 'relative' }}>
-              <Border css={{ top: -40 }} />
+              <Border css={{ top: 0, zIndex: 1 }} />
               <SectionFeatureNewsSearch />
               <SearchIllustration />
               <SectionFeatureIntelligence />

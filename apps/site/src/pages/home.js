@@ -409,7 +409,7 @@ class Header {
                   size={isLarge ? 6.5 : 4.5}
                   margin={[0, 0, 0, -5]}
                 >
-                  Smarter company organization
+                  Smarter<br />company<br />organization
                 </Title>
                 <line
                   css={{
@@ -425,7 +425,7 @@ class Header {
                   margin={[0, 0, 15, 0]}
                 >
                   Upgrade Spotlight and Notification Drawer<br />
-                  with AI for your company cloud.
+                  with intelligence and company cloud.
                 </P>
 
                 <actions
@@ -714,7 +714,7 @@ class SectionFeatureNewsSearch extends React.Component {
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section id="features" inverse>
-              <SectionContent padded={!isLarge} fullscreen>
+              <SectionContent padded={!isLarge} fullscreen={isLarge}>
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${
@@ -936,7 +936,7 @@ class SectionFeatureIntelligence extends React.Component {
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section>
-              <SectionContent fullscreen padded>
+              <SectionContent fullscreen={isLarge} padded>
                 <Slant
                   css={{ zIndex: 2 }}
                   slantBackground={`linear-gradient(200deg, ${featuresSlantColor} 30%, ${altBg.darken(
@@ -1061,7 +1061,7 @@ class SectionUseCaseRemoteTeams {
             <Section id="use-cases" inverse css={{ background: altBg }}>
               <SectionContent
                 id="remote-teams"
-                fullscreen
+                fullscreen={isLarge}
                 padded
                 css={{ zIndex: 3 }}
               >
@@ -1183,7 +1183,7 @@ class SectionUseCaseRemoteFirst {
               id="customer-success"
               css={{ background: altBg.lighten(0.02) }}
             >
-              <SectionContent fullscreen padded>
+              <SectionContent fullscreen={isLarge} padded>
                 <Slant slantBackground={altBg.darken(0.1)} />
                 <LeftSide inverse>
                   <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
@@ -1260,7 +1260,7 @@ class SectionUseCaseReduceInterrupts {
             <Section id="use-cases" inverse css={{ background: altBg }}>
               <SectionContent
                 id="remote-teams"
-                fullscreen
+                fullscreen={isLarge}
                 padded
                 css={{ zIndex: 3 }}
               >

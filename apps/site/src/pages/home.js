@@ -348,7 +348,7 @@ class BrandLogo {
   render() {
     return (
       <brandMark>
-        <Logo size={0.29} color={brandColor} iconColor={brandColor} />
+        <Logo size={0.32} color={brandColor} iconColor={brandColor} />
         <P
           if={false}
           size={1}
@@ -379,8 +379,32 @@ class Header {
   render() {
     return (
       <Section>
+        {/* {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => (
+          <Slant
+            key={i}
+            slantBackground={`linear-gradient(200deg, #f2f2f2, ${
+              Constants.backgroundColor
+            } 95%)`}
+            slantSize={36 / i}
+            css={{
+              zIndex: 2,
+              opacity: 11 / i / 11 + 0.3,
+              transformOrigin: 'top left',
+              transform: {
+                scale: 2.5 / i,
+                x: (-60 * i * i + 60) / 2.5,
+                y: -50 * i * 2.5,
+                // scaleX: 5 * i,
+                // scaleY: 2,
+                // rotate: `${-i * 3}deg`,
+              },
+            }}
+          />
+        ))} */}
+
         <SectionContent padded fullscreen>
           <Slant slantBackground={Constants.colorSecondary} />
+
           <Media
             query={Constants.screen.large}
             render={() => (
@@ -429,7 +453,7 @@ class Header {
                   italic
                   reduceCapsPct={10}
                   size={isLarge ? 5.8 : 4.5}
-                  margin={[0, 0, 0, -5]}
+                  margin={[-15, 0, 0, -5]}
                 >
                   Smart&nbsp;team<br />organization
                 </Title>

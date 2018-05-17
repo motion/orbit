@@ -23,8 +23,8 @@ export const ORA_WIDTH = 300
 export const ORA_BORDER_RADIUS = 6
 export const ORA_PULL_UP = 110
 
-export const colorMain = UI.color('rgb(28.8%, 24.8%, 73%)')
-export const colorSecondary = UI.color('rgb(93.3%, 92.6%, 26.4%)')
+export const colorMain = UI.color('#a976ff')
+export const colorSecondary = UI.color('rgb(94.5%, 80.1%, 12.3%)')
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')
 

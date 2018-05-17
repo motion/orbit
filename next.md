@@ -1,10 +1,13 @@
 ## website
 
-* Mobile fixes
-* top animation finish
-  * fix chat animation and timing
-  * fix icon bounce and num timings
+* animation:
+  * fix chat messages
+  * better icon bounce and num timings
+  * dont make it dissapear at the end have text come in over it
   * better chat text
+* Mobile fixes
+  * make it actually look half decent spacing wise
+  * add back in a couple images
 * Footer links / info
 * Privacy Policy
 * Blog - two posts

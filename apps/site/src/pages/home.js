@@ -17,6 +17,8 @@ import Media from 'react-media'
 
 const brandColor = Constants.colorMain
 const featuresSlantColor = UI.color('#F2B0BF')
+const useCasesSlantBg1 = '#F4E1B5'
+const useCasesSlantBg2 = '#E0CACA'
 
 const Border = UI.injectTheme(({ theme, ...props }) => (
   <border
@@ -127,7 +129,7 @@ const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
     css={{
       fontFamily: '"Mercury Display A", "Mercury Display B"',
       fontStyle: italic ? 'italic' : 'normal',
-      letterSpacing: size < 4.1 ? -1 : 0,
+      letterSpacing: size < 4.6 ? -2 : 0,
     }}
     {...props}
   >
@@ -1168,7 +1170,7 @@ const peachTheme = {
   background: altBg,
   color: altBg.darken(0.8).desaturate(0.1),
   titleColor: altBg.darken(0.55).desaturate(0.3),
-  subTitleColor: altBg.darken(0.6).desaturate(0.4),
+  subTitleColor: altBg.darken(0.4).desaturate(0.65),
 }
 
 @view
@@ -1189,7 +1191,7 @@ class SectionUseCaseRemoteTeams {
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${altBg.darken(
                     0.05,
-                  )} 5%, ${altBg.darken(0.1)} 95%)`}
+                  )} 5%, ${useCasesSlantBg1} 95%)`}
                   css={{ zIndex: 2 }}
                 />
                 <LeftSide>
@@ -1302,13 +1304,10 @@ class SectionUseCaseRemoteFirst {
             <Section id="customer-success" css={{ background: altBg }}>
               <SectionContent fullscreen={isLarge} padded>
                 <Border css={{ top: -80 }} />
-                <Slant slantBackground={altBg.darken(0.1)} />
+                <Slant
+                  slantBackground={`linear-gradient(200deg, ${useCasesSlantBg1} 5%, ${useCasesSlantBg2} 95%)`}
+                />
                 <LeftSide inverse>
-                  <SmallTitle margin={[-80, 0, 10]}>Use Cases</SmallTitle>
-                  <SubTitle italic>
-                    Customer<br />Success
-                  </SubTitle>
-
                   <div if={isLarge} css={{ height: '10%' }} />
 
                   <section
@@ -1342,8 +1341,12 @@ class SectionUseCaseRemoteFirst {
                     </P2>
                   </Callout>
                 </LeftSide>
-                <RightSide>
-                  <div if={isLarge} $$flex css={{ marginTop: '80%' }} />
+                <RightSide css={{ top: 0 }}>
+                  <SmallTitle margin={[-10, 0, 10]}>Use Cases</SmallTitle>
+                  <SubTitle italic>
+                    Customer<br />Success
+                  </SubTitle>
+                  <div if={isLarge} $$flex css={{ marginTop: '60%' }} />
                   <SubSubTitle>Less onboarding for sales</SubSubTitle>
                   <P2 size={1.6} css={isLarge && { marginRight: '30%' }}>
                     Sales chat requires intimate knowledge of your product.
@@ -1387,9 +1390,7 @@ class SectionUseCaseReduceInterrupts {
                 <Border css={{ top: -20 }} />
                 <Slant
                   inverseSlant
-                  slantBackground={`linear-gradient(200deg, ${altBg.darken(
-                    0.1,
-                  )} 5%, ${altBg} 95%)`}
+                  slantBackground={`linear-gradient(200deg, ${useCasesSlantBg2} 5%, ${altBg} 95%)`}
                   css={{ zIndex: 2 }}
                 />
                 <LeftSide>

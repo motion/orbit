@@ -16,6 +16,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 
 const brandColor = Constants.colorMain
+const featuresSlantColor = UI.color('#F3B7B1')
 
 const Border = UI.injectTheme(({ theme, ...props }) => (
   <border
@@ -403,7 +404,20 @@ class Header {
         ))} */}
 
         <SectionContent padded fullscreen>
-          <Slant slantBackground={Constants.colorSecondary} />
+          <Slant
+            inverseSlant
+            slantBackground={`linear-gradient(200deg, ${
+              Constants.colorSecondary
+            } 5%, ${Constants.colorSecondary.alpha(0.4)} 95%)`}
+            slantSize={12}
+            amount={20}
+          />
+          <Slant
+            slantBackground={`linear-gradient(200deg, #f6f6f6 5%, ${featuresSlantColor.alpha(
+              0.25,
+            )} 95%)`}
+            css={{ zIndex: 2 }}
+          />
 
           <Media
             query={Constants.screen.large}
@@ -677,7 +691,6 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 const newsTopOffPct = '28%'
 const searchYOff = 20
 const contextYOff = 160
-const featuresSlantColor = '#F3B7B1'
 
 const FeatureSubTitle = props => (
   <P2
@@ -767,9 +780,17 @@ class SectionFeatureNewsSearch extends React.Component {
               <SectionContent padded={!isLarge} fullscreen={isLarge}>
                 <Slant
                   inverseSlant
-                  slantBackground={`linear-gradient(200deg, ${
-                    Constants.colorSecondary
-                  } 5%, ${featuresSlantColor} 95%)`}
+                  slantBackground={`linear-gradient(200deg, ${featuresSlantColor.alpha(
+                    0.25,
+                  )} 5%, ${featuresSlantColor} 95%)`}
+                />
+                <Slant
+                  css={{ zIndex: 2 }}
+                  slantSize={12}
+                  amount={20}
+                  slantBackground={`linear-gradient(200deg, ${Constants.colorSecondary.alpha(
+                    0.4,
+                  )} 5%, ${featuresSlantColor.desaturate(0.5).alpha(0.1)} 95%)`}
                 />
                 <LeftSide css={{ top: 0 }}>
                   <Observer onChange={this.handleIntersect}>
@@ -998,6 +1019,15 @@ class SectionFeatureIntelligence extends React.Component {
                   slantBackground={`linear-gradient(200deg, ${featuresSlantColor} 30%, ${altBg.darken(
                     0.05,
                   )} 95%)`}
+                />
+                <Slant
+                  inverseSlant
+                  css={{ zIndex: 1 }}
+                  slantSize={12}
+                  amount={20}
+                  slantBackground={`linear-gradient(200deg, ${featuresSlantColor
+                    .desaturate(0.5)
+                    .alpha(0.1)} 5%, ${Constants.backgroundColor} 95%)`}
                 />
                 <LeftSide inverse innerStyle={{ paddingTop: '40%' }}>
                   <div

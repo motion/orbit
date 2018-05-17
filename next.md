@@ -1,21 +1,12 @@
 ## website
 
 * Mobile fixes
-* more dynamic height/size:
-  * calculate a range of section heights between 1100 and 1700 or so
-  * then use that to calculate a scale value between 0.0 and 0.2 or so
-  * use scale for all font sizes and for some transform: { scale } on images
-* finish theme of bottom area
-  * <UI.Theme theme={{ background: 'green', color: 'white' }}></UI.Theme> simple themes
-  * Make bottom sections theme fine
 * top animation finish
-  * occlude it better
   * fix chat animation and timing
   * fix icon bounce and num timings
   * better chat text
 * Footer links / info
 * Privacy Policy
-* really Big screen test scale(1.2) for media query
 * Blog - two posts
   * Turn down the noise and focus
   * Realtime context as you work (accompany with screencast later)

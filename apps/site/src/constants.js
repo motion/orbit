@@ -1,8 +1,9 @@
 import * as UI from '@mcro/ui'
 
+export const sectionMaxHeight = 1250
+
 export const smallSize = 980
-export const mediumSize = 1300
-export const superLargeSize = 1500
+export const mediumSize = 1250
 
 export const smallMax = smallSize - 1
 export const smallMin = smallSize
@@ -37,5 +38,5 @@ export const screen = {
   smallQuery: `@media (max-width: ${smallSize}px)`,
   small: { maxWidth: smallSize },
   large: { minWidth: smallSize - 1 },
-  superLarge: { minWidth: superLargeSize },
+  tall: { minHeight: sectionMaxHeight * 1.6 },
 }

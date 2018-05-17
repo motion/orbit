@@ -17,6 +17,28 @@ import Media from 'react-media'
 
 const brandColor = Constants.colorMain
 
+const Border = UI.injectTheme(({ theme, ...props }) => (
+  <border
+    css={{
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      borderBottom: [4, 'dotted', theme.base.color.alpha(0.08)],
+      transform: {
+        y: -2,
+      },
+      // width: 'calc(85% + 100px)',
+      minWidth: 660,
+      maxWidth: Constants.smallSize + 100,
+      zIndex: 2,
+      margin: [0, 'auto'],
+      alignItems: 'center',
+      pointerEvents: 'none',
+    }}
+    {...props}
+  />
+))
+
 const FadedArea = ({ fadeRight, fadeDown, fadeLeft, fadeColor, children }) => (
   <React.Fragment>
     {children}
@@ -406,7 +428,7 @@ class Header {
                 <Title
                   italic
                   reduceCapsPct={10}
-                  size={isLarge ? 6.5 : 4.5}
+                  size={isLarge ? 5.8 : 4.5}
                   margin={[0, 0, 0, -5]}
                 >
                   Smart&nbsp;team<br />organization
@@ -421,11 +443,11 @@ class Header {
                   }}
                 />
                 <P
-                  size={isLarge ? 1.8 : 1.5}
+                  size={isLarge ? 1.9 : 1.5}
                   alpha={0.75}
                   margin={[0, 0, 15, 0]}
                   css={{
-                    lineHeight: '34px',
+                    lineHeight: '36px',
                   }}
                 >
                   Upgrade Spotlight and Notification Drawer<br />
@@ -595,7 +617,7 @@ class Header {
   }
 }
 
-const Notification = ({ title, body }) => (
+const Notification = ({ title, body, ...props }) => (
   <notification
     css={{
       width: 300,
@@ -608,7 +630,9 @@ const Notification = ({ title, body }) => (
       flexFlow: 'row',
       overflow: 'hidden',
       marginBottom: 20,
+      textAlign: 'left',
     }}
+    {...props}
   >
     <MailIcon size={0.09} css={{ margin: [0, 10, 0, 0] }} />
     <content
@@ -653,12 +677,10 @@ const SearchCallout = ({ isLarge }) => (
       }
     }
   >
-    <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-      Search across the entire cloud with fast conceptual search that aggregates
-      your cloud services and summarizes Slack conversations.
+    <P2 size={1.8} css={{ textAlign: 'left', margin: 0 }}>
+      It's search with NLP that works with Slack and all your integrations.
       <vertSpace css={{ height: 20 }} />
-      Search people to see profiles that show where they spend time, recent
-      interactions and more.
+      With automatic aggregated profiles of everyone on your team.
     </P2>
   </Callout>
 )
@@ -755,18 +777,23 @@ class SectionFeatureNewsSearch extends React.Component {
                             : {}
                         }
                       >
-                        <P2 size={1.6} css={{ textAlign: 'left' }} margin={0}>
-                          Your team uses the right tool for the job. But that
-                          can lead to a pretty messy big picture.
+                        <P2 size={1.8} css={{ textAlign: 'left' }} margin={0}>
+                          You use the right tool for the job. But how do you
+                          understand what's happening across all of them?
                           <vertSpace css={{ height: 20 }} />
-                          Stay focused without missing out. It's well summarized
-                          news that's relevant to you and your team from across
-                          all your integrations.
+                          Summarized news of what's new and relevant across
+                          everything. Stop distraction by pulling instead of
+                          push notifications.
                           <vertSpace css={{ height: 20 }} />
-                          Eliminate notification overload.
+                          A teams newspaper.
                         </P2>
                         <DottedButton
-                          css={{ position: 'absolute', bottom: 20, right: 20 }}
+                          css={{
+                            fontSize: 15,
+                            position: 'absolute',
+                            bottom: 20,
+                            right: 20,
+                          }}
                         >
                           Learn more
                         </DottedButton>
@@ -953,7 +980,7 @@ class SectionFeatureIntelligence extends React.Component {
                     css={
                       isLarge && {
                         display: 'block',
-                        margin: [contextYOff - 20, 0, 0, 30],
+                        margin: [contextYOff - 50, 0, 0, 30],
                       }
                     }
                   >
@@ -970,15 +997,20 @@ class SectionFeatureIntelligence extends React.Component {
                         }
                       }
                     >
-                      <P2 size={1.6} css={{ textAlign: 'left', margin: 0 }}>
-                        Attach realtime search to any app with a simple hold of{' '}
+                      <P2 size={1.8} css={{ textAlign: 'left', margin: 0 }}>
+                        Attach realtime search to any app just by holding{' '}
                         <Cmd>Option</Cmd>. Important terms, people, and items in
-                        your cloud are shown instantly.
+                        your cloud instantly.
                         <vertSpace css={{ height: 20 }} />
-                        It's a new way to stay in sync.
+                        A new way to stay in sync.
                       </P2>
                       <DottedButton
-                        css={{ position: 'absolute', bottom: 20, right: 20 }}
+                        css={{
+                          fontSize: 15,
+                          position: 'absolute',
+                          bottom: 20,
+                          right: 20,
+                        }}
                       >
                         Learn more
                       </DottedButton>
@@ -1099,7 +1131,7 @@ class SectionUseCaseRemoteTeams {
                       Combined information from across the cloud in one place
                       with helpful information.
                     </P2>
-                    <P2 size={1.6}>
+                    <P2 if={false} size={1.6} css={{ textAlign: 'justify' }}>
                       See where people talk in Slack, what topics they care
                       about, and relevant recently edited files, tickets, and
                       more.
@@ -1115,8 +1147,8 @@ class SectionUseCaseRemoteTeams {
                       }
                     }
                   >
-                    <P2 size={2} margin={0} fontStyle="italic">
-                      Create a sense of unity with Orbit for your remote team.
+                    <P2 size={2} margin={0}>
+                      A sense of unity for your remote team.
                     </P2>
                   </Callout>
                 </LeftSide>
@@ -1184,23 +1216,21 @@ class SectionUseCaseRemoteFirst {
       <UI.Theme theme={peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section
-              id="customer-success"
-              css={{ background: altBg.lighten(0.02) }}
-            >
+            <Section id="customer-success" css={{ background: altBg }}>
               <SectionContent fullscreen={isLarge} padded>
+                <Border css={{ top: -80 }} />
                 <Slant slantBackground={altBg.darken(0.1)} />
                 <LeftSide inverse>
-                  <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
+                  <SmallTitle margin={[-80, 0, 10]}>Use Cases</SmallTitle>
                   <SubTitle italic>
                     Customer<br />Success
                   </SubTitle>
 
-                  <div if={isLarge} css={{ height: '35%' }} />
+                  <div if={isLarge} css={{ height: '10%' }} />
 
                   <section
                     css={{
-                      textAlign: 'left',
+                      textAlign: 'justify',
                       display: 'block',
                       margin: isLarge ? [0, 0, 0, '30%'] : 0,
                     }}
@@ -1211,8 +1241,8 @@ class SectionUseCaseRemoteFirst {
                       css={{ margin: isLarge ? [0, 0, 25, 0] : 0 }}
                     >
                       Orbit's contextual answers work with your support software
-                      as your team chats. In realtime it searches knowledge and
-                      highlights the exact section with a potential answer.
+                      as your team chats. In realtime it searches across your
+                      cloud and shows exact sections with answers.
                     </P2>
                   </section>
                   <Callout
@@ -1231,7 +1261,7 @@ class SectionUseCaseRemoteFirst {
                   </Callout>
                 </LeftSide>
                 <RightSide>
-                  <div if={isLarge} $$flex css={{ marginTop: '35%' }} />
+                  <div if={isLarge} $$flex css={{ marginTop: '80%' }} />
                   <SubSubTitle>Less onboarding in sales</SubSubTitle>
                   <P2 size={1.6} css={{ marginRight: '30%' }}>
                     Sales chat requires intimate knowledge of your product.
@@ -1269,6 +1299,7 @@ class SectionUseCaseReduceInterrupts {
                 padded
                 css={{ zIndex: 3 }}
               >
+                <Border css={{ top: -20 }} />
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${altBg.darken(
@@ -1277,12 +1308,21 @@ class SectionUseCaseReduceInterrupts {
                   css={{ zIndex: 2 }}
                 />
                 <LeftSide>
-                  <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
+                  <SmallTitle margin={[-20, 0, 10]}>Use Cases</SmallTitle>
                   <SubTitle italic>
                     Workplace<br />
                     interruptions
                   </SubTitle>
-                  <div if={isLarge} css={{ height: '30%' }} />
+                  <Notification
+                    title="Jane Doe"
+                    body="Lorem ipsum dolor sit amet."
+                    css={{
+                      marginLeft: 'auto',
+                      marginTop: 40,
+                      marginBottom: 0,
+                    }}
+                  />
+                  <div if={isLarge} css={{ height: '18%' }} />
                   <section
                     css={{
                       textAlign: 'left',
@@ -1313,7 +1353,7 @@ class SectionUseCaseReduceInterrupts {
                   </Callout>
                 </LeftSide>
                 <RightSide inverse css={{ bottom: 0 }}>
-                  <div $$flex css={{ marginTop: isLarge ? '30%' : 0 }} />
+                  <div $$flex css={{ marginTop: isLarge ? '26%' : 0 }} />
                   <SubSubTitle>Notification noise</SubSubTitle>
                   <P2 size={1.6} css={{ marginRight: isLarge ? '30%' : 0 }}>
                     Use the power of Do not disturb in Slack without losing
@@ -1419,16 +1459,15 @@ const SearchIllustration = () => (
 export default class HomePage extends React.Component {
   render() {
     return (
-      <Media query={Constants.screen.superLarge}>
-        {isSuperLarge => (
+      <Media query={Constants.screen.tall}>
+        {isTall => (
           <home
-            $superLarge={isSuperLarge}
+            $scaledUp={isTall}
             css={{ background: Constants.backgroundColor }}
           >
             <Header />
             <surround css={{ position: 'relative' }}>
-              <border css={{ top: -40 }} />
-              <border if={false} css={{ bottom: 0 }} />
+              <Border css={{ top: -40 }} />
               <SectionFeatureNewsSearch />
               <SearchIllustration />
               <SectionFeatureIntelligence />
@@ -1444,23 +1483,7 @@ export default class HomePage extends React.Component {
   }
 
   static style = {
-    border: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      borderBottom: [4, 'dotted', '#eee'],
-      transform: {
-        y: -2,
-      },
-      // width: 'calc(85% + 100px)',
-      minWidth: 660,
-      maxWidth: Constants.smallSize + 100,
-      zIndex: 2,
-      margin: [0, 'auto'],
-      alignItems: 'center',
-      pointerEvents: 'none',
-    },
-    superLarge: {
+    scaledUp: {
       transformOrigin: 'top center',
       transform: {
         scale: 1.1,

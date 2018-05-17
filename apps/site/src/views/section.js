@@ -117,7 +117,7 @@ export class SectionContent {
   render({ padded, fullscreen, ...props }) {
     const isSmall = window.innerWidth <= Constants.screen.small.maxWidth
     const height = fullscreen
-      ? Math.max(1000, Math.min(1250, window.innerHeight))
+      ? Math.max(1000, Math.min(Constants.sectionMaxHeight, window.innerHeight))
       : 'auto'
     const style = isSmall ? { minHeight: height } : { height }
     return (

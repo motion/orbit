@@ -487,8 +487,9 @@ class Header {
                     lineHeight: '36px',
                   }}
                 >
-                  Replace Spotlight and the notification drawer with an
-                  intelligent team operating system.
+                  Replace Spotlight and the notification drawer
+                  <br if={isLarge} />
+                  with an intelligent team operating system.
                 </P>
 
                 <actions

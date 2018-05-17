@@ -14,6 +14,12 @@ import HeaderIllustration from './headerIllustration'
 import { MailIcon } from '~/views/icons'
 import * as Constants from '~/constants'
 import Media from 'react-media'
+import chatImg from '~/../public/chat.svg'
+import SVGInline from 'react-svg-inline'
+
+export const ChatIcon = props => (
+  <SVGInline svg={chatImg} width={`${120}px`} {...props} />
+)
 
 const brandColor = Constants.colorMain
 const featuresSlantColor = UI.color('#F2B0BF')
@@ -1307,8 +1313,23 @@ class SectionUseCaseRemoteFirst {
                 <Slant
                   slantBackground={`linear-gradient(200deg, ${useCasesSlantBg1} 5%, ${useCasesSlantBg2} 95%)`}
                 />
+                <chat
+                  css={{
+                    opacity: 0.1,
+                    filter: {
+                      grayscale: '100%',
+                    },
+                    transform: { scale: 3 },
+                    position: 'absolute',
+                    zIndex: 0,
+                    left: '27%',
+                    top: 150,
+                  }}
+                >
+                  <ChatIcon />
+                </chat>
                 <LeftSide inverse>
-                  <div if={isLarge} css={{ height: '10%' }} />
+                  <div if={isLarge} css={{ height: '45%' }} />
 
                   <section
                     css={{
@@ -1346,7 +1367,7 @@ class SectionUseCaseRemoteFirst {
                   <SubTitle italic>
                     Customer<br />Success
                   </SubTitle>
-                  <div if={isLarge} $$flex css={{ marginTop: '60%' }} />
+                  <div if={isLarge} $$flex css={{ marginTop: '15%' }} />
                   <SubSubTitle>Less onboarding for sales</SubSubTitle>
                   <P2 size={1.6} css={isLarge && { marginRight: '30%' }}>
                     Sales chat requires intimate knowledge of your product.

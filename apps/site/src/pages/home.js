@@ -142,6 +142,7 @@ const SubTitle = UI.injectTheme(({ theme, size, ...props }) => (
         size={isSmall ? 3 : size || 3.6}
         color={theme.subTitleColor || theme.base.color}
         reduceCapsPct={8}
+        {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
         {...props}
       />
     )}
@@ -170,9 +171,7 @@ const RightSide = ({ children, inverse, noEdge, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <rightSide css={{ padding: [0, 0, sidePadSmall, 0] }}>
-          {children}
-        </rightSide>
+        <rightSide>{children}</rightSide>
       ) : (
         <rightSide
           css={{
@@ -466,7 +465,7 @@ class Header {
                 <Title
                   italic
                   reduceCapsPct={10}
-                  size={isLarge ? 5.8 : 4.5}
+                  size={isLarge ? 5.8 : 4}
                   margin={[-15, 0, 0, -5]}
                 >
                   Smart&nbsp;team<br />organization
@@ -488,8 +487,8 @@ class Header {
                     lineHeight: '36px',
                   }}
                 >
-                  Replace Spotlight and the notification drawer<br />
-                  with an intelligent team operating system.
+                  Replace Spotlight and the notification drawer with an
+                  intelligent team operating system.
                 </P>
 
                 <actions
@@ -693,14 +692,18 @@ const searchYOff = 20
 const contextYOff = 160
 
 const FeatureSubTitle = props => (
-  <P2
-    size={1.9}
-    alpha={0.6}
-    css={{
-      marginBottom: 30,
-    }}
-    {...props}
-  />
+  <Media query={Constants.screen.large}>
+    {isLarge => (
+      <P2
+        size={isLarge ? 1.8 : 1.5}
+        alpha={0.6}
+        css={{
+          marginBottom: 30,
+        }}
+        {...props}
+      />
+    )}
+  </Media>
 )
 
 const SearchCallout = ({ isLarge }) => (
@@ -777,7 +780,11 @@ class SectionFeatureNewsSearch extends React.Component {
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section id="features" inverse>
-              <SectionContent padded={!isLarge} fullscreen={isLarge}>
+              <SectionContent
+                padded={!isLarge}
+                css={!isLarge && { paddingBottom: 0 }}
+                fullscreen={isLarge}
+              >
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, #f2f2f2 5%, ${featuresSlantColor} 95%)`}
@@ -831,12 +838,18 @@ class SectionFeatureNewsSearch extends React.Component {
                           A teams newspaper.
                         </P2>
                         <DottedButton
-                          css={{
-                            fontSize: 15,
-                            position: 'absolute',
-                            bottom: 20,
-                            right: 20,
-                          }}
+                          css={
+                            isLarge
+                              ? {
+                                  fontSize: 15,
+                                  position: 'absolute',
+                                  bottom: 20,
+                                  right: 20,
+                                }
+                              : {
+                                  margin: [20, 0, 0, 'auto'],
+                                }
+                          }
                         >
                           Learn more
                         </DottedButton>
@@ -1057,12 +1070,18 @@ class SectionFeatureIntelligence extends React.Component {
                         A new way to stay in sync.
                       </P2>
                       <DottedButton
-                        css={{
-                          fontSize: 15,
-                          position: 'absolute',
-                          bottom: 20,
-                          right: 20,
-                        }}
+                        css={
+                          isLarge
+                            ? {
+                                fontSize: 15,
+                                position: 'absolute',
+                                bottom: 20,
+                                right: 20,
+                              }
+                            : {
+                                margin: [20, 0, 0, 'auto'],
+                              }
+                        }
                       >
                         Learn more
                       </DottedButton>
@@ -1298,13 +1317,12 @@ class SectionUseCaseRemoteFirst {
                     </P2>
                   </section>
                   <Callout
-                    css={
-                      isLarge && {
-                        width: '72%',
-                        marginLeft: '30%',
-                        textAlign: 'left',
-                      }
-                    }
+                    if={isLarge}
+                    css={{
+                      width: '72%',
+                      marginLeft: '30%',
+                      textAlign: 'left',
+                    }}
                   >
                     <P2 size={2} margin={0}>
                       Answers on hand for your entire success team, powered by
@@ -1315,13 +1333,16 @@ class SectionUseCaseRemoteFirst {
                 <RightSide>
                   <div if={isLarge} $$flex css={{ marginTop: '80%' }} />
                   <SubSubTitle>Less onboarding in sales</SubSubTitle>
-                  <P2 size={1.6} css={{ marginRight: '30%' }}>
+                  <P2 size={1.6} css={isLarge && { marginRight: '30%' }}>
                     Sales chat requires intimate knowledge of your product.
                     Orbit can sit side by side with your success team as they
                     chat on Intercom or ZenDesk providing realtime answers from
                     your knowledgebase.
                   </P2>
-                  <Callout css={{ margin: [20, '20%', 40, 0], left: -45 }}>
+                  <Callout
+                    if={isLarge}
+                    css={{ margin: [20, '20%', 40, 0], left: -45 }}
+                  >
                     <P2 size={2} margin={0}>
                       Organizational knowledge is now always at hand and usable
                       during outbound chats.
@@ -1366,6 +1387,7 @@ class SectionUseCaseReduceInterrupts {
                     interruptions
                   </SubTitle>
                   <Notification
+                    if={isLarge}
                     title="Jane Doe"
                     body="Lorem ipsum dolor sit amet."
                     css={{
@@ -1390,6 +1412,7 @@ class SectionUseCaseReduceInterrupts {
                     </P2>
                   </section>
                   <Callout
+                    if={isLarge}
                     css={
                       isLarge && {
                         width: '72%',
@@ -1535,6 +1558,9 @@ export default class HomePage extends React.Component {
   }
 
   static style = {
+    home: {
+      overflow: 'hidden',
+    },
     scaledUp: {
       transformOrigin: 'top center',
       transform: {

@@ -4,9 +4,9 @@ import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
 import { Section, SectionContent, Slant } from '~/views'
 import profileImg from '~/../public/screen-profile.png'
-import wordImg from '~/../public/screen-context-word.png'
-import homeImg from '~/../public/screen-home.png'
-import slackSearchImg from '~/../public/screen-slack-search.png'
+import intelligenceImg from '~/../public/screen-context-word.png'
+import newsImg from '~/../public/screen-home.png'
+import searchImg from '~/../public/screen-slack-search.png'
 import girlImg from '~/../public/video-girl.jpg'
 import Observer from '@researchgate/react-intersection-observer'
 import { Trail, Spring, animated, config } from 'react-spring'
@@ -170,9 +170,9 @@ const SubSubTitle = props => (
 const SmallTitle = props => (
   <P
     size={1}
-    fontWeight={700}
+    fontWeight={500}
     textTransform="uppercase"
-    alpha={0.5}
+    alpha={0.45}
     padding={[0, 2]}
     margin={[0, 0, 5]}
     {...props}
@@ -713,7 +713,7 @@ const FeatureSubTitle = props => (
   <Media query={Constants.screen.large}>
     {isLarge => (
       <P2
-        size={isLarge ? 1.8 : 1.5}
+        size={isLarge ? 1.7 : 1.4}
         alpha={0.6}
         css={{
           marginBottom: 30,
@@ -735,10 +735,12 @@ const SearchCallout = ({ isLarge }) => (
       }
     }
   >
-    <P2 size={2}>Sort the chaos with clear, fast and smart cloud search.</P2>
+    <P2 size={2}>
+      Sort the cloud with fast local search that summarizes conversations.
+    </P2>
     <P2 size={1.6}>
-      NLP search your cloud instantly. Including summarized Slack conversations
-      and aggregated profiles of your team.
+      It's NLP powered search for your cloud. With overviews of Slack
+      conversations and aggregated profiles to make your cloud clear.
     </P2>
   </Callout>
 )
@@ -846,7 +848,7 @@ class SectionFeatureNewsSearch extends React.Component {
                         marginTop: isLarge ? newsTopOffPct : 0,
                       }}
                     >
-                      <SmallTitle css={{ margin: [-30, 0, 10] }}>
+                      <SmallTitle css={{ margin: [-50, 0, 8] }}>
                         How Orbit Works
                       </SmallTitle>
                       <SubTitle size={4.6}>News</SubTitle>
@@ -870,13 +872,13 @@ class SectionFeatureNewsSearch extends React.Component {
                         }}
                       >
                         <P2 size={2}>
-                          Your new way to stay up to date. Summarized news
-                          personalized to you.
+                          Summarized news personalized to you, always at your
+                          fingertips.
                         </P2>
                         <P2 size={1.6}>
-                          A newspaper that sums up the day for your team. Using
-                          novel on-device machine learning that learns your
-                          company vocab.
+                          A newspaper that sums up the day for you and your
+                          team. Using novel on-device machine learning that
+                          learns your company vocab.
                         </P2>
                         <DottedButton
                           css={
@@ -908,9 +910,9 @@ class SectionFeatureNewsSearch extends React.Component {
                     css={{
                       position: 'absolute',
                       top: newsTopOffPct,
-                      marginTop: -250,
-                      right: '14%',
-                      left: '8%',
+                      marginTop: '-45%',
+                      right: '6%',
+                      left: '5%',
                       height: '80%',
                       maxHeight: 800,
                       overflow: 'hidden',
@@ -969,7 +971,7 @@ class SectionFeatureNewsSearch extends React.Component {
                           }}
                         >
                           <img
-                            src={homeImg}
+                            src={newsImg}
                             css={{
                               position: 'absolute',
                               top: 55,
@@ -977,8 +979,9 @@ class SectionFeatureNewsSearch extends React.Component {
                               width: 1100,
                               height: 'auto',
                               transformOrigin: 'top left',
+                              border: [1, '#ddd'],
                               transform: {
-                                scale: 0.45,
+                                scale: 0.5,
                               },
                               boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
                             }}
@@ -1089,7 +1092,7 @@ class SectionFeatureIntelligence extends React.Component {
                     css={
                       isLarge && {
                         display: 'block',
-                        margin: [contextYOff - 30, 0, 0, 30],
+                        margin: [contextYOff - 130, 0, 0, 30],
                       }
                     }
                   >
@@ -1170,7 +1173,7 @@ class SectionFeatureIntelligence extends React.Component {
                                 }}
                               >
                                 <img
-                                  src={wordImg}
+                                  src={intelligenceImg}
                                   css={{
                                     position: 'absolute',
                                     width: 1634,
@@ -1236,7 +1239,7 @@ class SectionUseCaseRemoteTeams {
                   css={{ zIndex: 2 }}
                 />
                 <LeftSide>
-                  <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
+                  <SmallTitle margin={[0, 0, 8]}>Use Cases</SmallTitle>
                   <SubTitle italic>
                     Remote<br />
                     teams
@@ -1246,7 +1249,7 @@ class SectionUseCaseRemoteTeams {
                     css={{
                       textAlign: 'left',
                       display: 'block',
-                      margin: isLarge ? [0, 0, 0, '25%'] : 0,
+                      margin: isLarge ? [-40, 0, 0, '25%'] : 0,
                     }}
                   >
                     <SubSubTitle>Connecting people</SubSubTitle>
@@ -1290,7 +1293,7 @@ class SectionUseCaseRemoteTeams {
                     size={2}
                     css={{ margin: [0, isLarge ? '20%' : 0, 10, 0] }}
                   >
-                    News is your teams home
+                    News is your team home
                   </P>
                   <P size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
                     It starts by learning company vocabulary. Then it learns
@@ -1413,7 +1416,7 @@ class SectionUseCaseRemoteFirst {
                   </Callout>
                 </LeftSide>
                 <RightSide css={{ top: 0 }}>
-                  <SmallTitle margin={[-10, 0, 10]}>Use Cases</SmallTitle>
+                  <SmallTitle margin={[-10, 0, 8]}>Use Cases</SmallTitle>
                   <SubTitle italic>
                     Customer<br />Success
                   </SubTitle>
@@ -1479,7 +1482,7 @@ class SectionUseCaseReduceInterrupts {
                   css={{ zIndex: 2 }}
                 />
                 <LeftSide>
-                  <SmallTitle margin={[-20, 0, 10]}>Use Cases</SmallTitle>
+                  <SmallTitle margin={[-20, 0, 8]}>Use Cases</SmallTitle>
                   <SubTitle italic>
                     Workplace<br />
                     interruptions
@@ -1499,7 +1502,7 @@ class SectionUseCaseReduceInterrupts {
                     css={{
                       textAlign: 'left',
                       display: 'block',
-                      margin: isLarge ? [0, 0, 0, '30%'] : 0,
+                      margin: isLarge ? [-40, 0, 0, '30%'] : 0,
                     }}
                   >
                     <SubSubTitle>Prevent shoulder taps</SubSubTitle>
@@ -1631,13 +1634,13 @@ const SearchIllustration = () => (
       >
         <FadedArea fadeRight fadeDown fadeBackground="#fff">
           <img
-            src={slackSearchImg}
+            src={searchImg}
             css={{
               width: 1150,
               marginTop: 0,
               height: 'auto',
               transformOrigin: 'top left',
-              transform: { scale: 0.45, x: 50, y: 20 },
+              transform: { scale: 0.5, x: 0, y: 20 },
             }}
           />
         </FadedArea>

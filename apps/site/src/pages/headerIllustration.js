@@ -54,13 +54,6 @@ const Bubble = view(
       borderBottomRightRadius: 10,
       borderBottomLeftRadius: 0,
     },
-    chromeless: {
-      // border: 'none',
-      // transformOrigin: 'center left',
-      // transform: {
-      //   scale: 1.5,
-      // },
-    },
   },
 )
 
@@ -189,7 +182,7 @@ export default class HeaderIllustration extends React.Component {
   }
 
   startAnimations = async () => {
-    await this.chatFrame(Spring, {
+    this.chatFrame(Spring, {
       from: { scale: 1, opacity: 0, y: 0 },
       to: { scale: 1, opacity: 0, y: 0 },
     })
@@ -214,10 +207,6 @@ export default class HeaderIllustration extends React.Component {
 
   async animateChats() {
     await sleep(800)
-    this.chatFrame(Spring, {
-      to: { scale: 1, opacity: 1, opacityRest: 0, y: 0 },
-      config: config.fast,
-    })
     await this.chats(Trail, {
       from: { opacity: 0, y: -20 },
       to: { opacity: 1, y: 0 },
@@ -456,7 +445,8 @@ export default class HeaderIllustration extends React.Component {
             height: 120,
             zIndex: 201,
             alignItems: 'flex-end',
-            justifyContent: 'space-between',
+            justifyContent: 'space-around',
+            padding: [0, 10],
             flexFlow: 'row',
             overflow: 'hidden',
           }}

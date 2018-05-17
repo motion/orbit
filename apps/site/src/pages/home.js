@@ -112,13 +112,17 @@ const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
   </P>
 )
 
-const SubTitle = UI.injectTheme(({ theme, ...props }) => (
-  <Title
-    size={4}
-    color={theme.subTitleColor || theme.base.color}
-    reduceCapsPct={8}
-    {...props}
-  />
+const SubTitle = UI.injectTheme(({ theme, size, ...props }) => (
+  <Media query={Constants.screen.small}>
+    {isSmall => (
+      <Title
+        size={isSmall ? 3 : size || 4}
+        color={theme.subTitleColor || theme.base.color}
+        reduceCapsPct={8}
+        {...props}
+      />
+    )}
+  </Media>
 ))
 
 const SubSubTitle = props => (
@@ -427,9 +431,8 @@ class Header {
                 <actions
                   $$row
                   css={{
-                    margin: isLarge ? [25, 'auto', 0, 0] : 0,
+                    margin: isLarge ? [25, 'auto', 0, 0] : [0, 0, 0, 25],
                     alignItems: 'center',
-                    justifyContent: 'center',
                   }}
                 >
                   <UI.Button
@@ -519,7 +522,7 @@ class Header {
       padding: [10, 0, 40, 0],
     },
     largeCallout: {
-      width: '48%',
+      width: '54%',
       margin: [-15, 0, 0, 0],
     },
     smallInstallBtn: {
@@ -711,7 +714,7 @@ class SectionFeatureNewsSearch extends React.Component {
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section id="features" inverse>
-              <SectionContent fullscreen>
+              <SectionContent padded={!isLarge} fullscreen>
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${
@@ -721,7 +724,10 @@ class SectionFeatureNewsSearch extends React.Component {
                 <LeftSide css={{ top: 0 }}>
                   <Observer onChange={this.handleIntersect}>
                     <content
-                      css={{ display: 'block', marginTop: newsTopOffPct }}
+                      css={{
+                        display: 'block',
+                        marginTop: isLarge ? newsTopOffPct : 0,
+                      }}
                     >
                       <SmallTitle css={{ margin: [-30, 0, 10] }}>
                         How Orbit Works
@@ -885,13 +891,15 @@ class SectionFeatureNewsSearch extends React.Component {
 
                   <div if={isLarge} css={{ height: '100%' }} />
                   <content
-                    css={{
-                      display: 'block',
-                      background: Constants.backgroundColor,
-                      position: 'relative',
-                      zIndex: 1000,
-                      marginTop: -180 + searchYOff,
-                    }}
+                    css={
+                      isLarge && {
+                        display: 'block',
+                        background: Constants.backgroundColor,
+                        position: 'relative',
+                        zIndex: 1000,
+                        marginTop: -180 + searchYOff,
+                      }
+                    }
                   >
                     <SubTitle size={4.8}>Search</SubTitle>
                     <FeatureSubTitle>Spotlight, meet the cloud</FeatureSubTitle>
@@ -1067,8 +1075,8 @@ class SectionUseCaseRemoteTeams {
                 <LeftSide>
                   <SmallTitle margin={[0, 0, 10]}>Use Cases</SmallTitle>
                   <SubTitle italic>
-                    Remote-first<br />
-                    companies
+                    Remote<br />
+                    teams
                   </SubTitle>
                   <div if={isLarge} css={{ height: '26%' }} />
                   <section
@@ -1080,7 +1088,7 @@ class SectionUseCaseRemoteTeams {
                   >
                     <SubSubTitle>Connecting people</SubSubTitle>
                     <P alpha={0.6} size={2} margin={[0, 0, 10]}>
-                      Beautiful unified profiles.
+                      Beautiful unified profiles
                     </P>
                     <P2 size={1.8}>
                       Combined information from across the cloud in one place
@@ -1118,7 +1126,7 @@ class SectionUseCaseRemoteTeams {
                     size={2}
                     css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}
                   >
-                    News in Orbit is your team's home.
+                    News is your teams home
                   </P>
                   <P size={1.6} css={{ marginRight: isLarge ? '25%' : 0 }}>
                     It starts by learning company vocabulary. Then it learns
@@ -1127,6 +1135,7 @@ class SectionUseCaseRemoteTeams {
                     vocab is shown.
                   </P>
                   <section
+                    if={isLarge}
                     css={{
                       position: 'absolute',
                       bottom: '20%',
@@ -1145,7 +1154,7 @@ class SectionUseCaseRemoteTeams {
                           height: 'auto',
                           transformOrigin: 'top left',
                           transform: {
-                            scale: 0.35,
+                            scale: 0.39,
                             x: 0,
                             y: 0,
                           },

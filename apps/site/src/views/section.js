@@ -115,9 +115,11 @@ export class SectionContent {
   }
 
   render({ padded, fullscreen, ...props }) {
-    const height = fullscreen
-      ? Math.max(1000, Math.min(1250, window.innerHeight))
-      : 'auto'
+    const isSmall = window.innerWidth <= Constants.screen.small.maxWidth
+    const height =
+      !isSmall && fullscreen
+        ? Math.max(1000, Math.min(1250, window.innerHeight))
+        : 'auto'
     return (
       <section
         $padded={padded}
@@ -137,18 +139,15 @@ export class SectionContent {
       position: 'relative',
       [Constants.screen.smallQuery]: {
         width: '100%',
+        height: 'auto',
+        minWidth: 'auto',
+        maxWidth: 'auto',
       },
     },
     padded: {
-      padding: [80, 20],
+      padding: [80, 30],
       [Constants.screen.smallQuery]: {
         padding: [50, 30],
-      },
-    },
-    fullscreen: {
-      height: Constants.SECTION_HEIGHT,
-      [Constants.screen.smallQuery]: {
-        height: 'auto',
       },
     },
   }

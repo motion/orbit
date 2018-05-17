@@ -409,7 +409,7 @@ class Header {
                   size={isLarge ? 6.5 : 4.5}
                   margin={[0, 0, 0, -5]}
                 >
-                  Smarter<br />company<br />organization
+                  Smart&nbsp;team<br />organization
                 </Title>
                 <line
                   css={{
@@ -425,7 +425,7 @@ class Header {
                   margin={[0, 0, 15, 0]}
                 >
                   Upgrade Spotlight and Notification Drawer<br />
-                  with intelligence and company cloud.
+                  with an intelligent cloud experience.
                 </P>
 
                 <actions

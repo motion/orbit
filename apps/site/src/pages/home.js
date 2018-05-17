@@ -285,7 +285,7 @@ class Callout {
   static style = {
     largeCallout: {
       // border: [1, [0, 0, 0, 0.02]],
-      boxShadow: [[0, 10, 120, [0, 0, 0, 0.045]]],
+      boxShadow: [[0, 4, 30, [0, 0, 0, 0.065]]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
@@ -619,7 +619,7 @@ const Notification = ({ title, body }) => (
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-const newsTopOffPct = '8%'
+const newsTopOffPct = '28%'
 const searchYOff = 20
 const contextYOff = 160
 const featuresSlantColor = '#F3B7B1'
@@ -629,7 +629,7 @@ const FeatureSubTitle = props => (
     size={1.8}
     alpha={0.6}
     css={{
-      marginBottom: 20,
+      marginBottom: 30,
     }}
     {...props}
   />
@@ -667,8 +667,8 @@ class SectionFeatureNewsSearch extends React.Component {
         body: 'Book club is cancelled tomorrow',
       },
       {
-        title: 'Emily Parker',
-        body: 'Book club is cancelled tomorrow',
+        title: 'John G',
+        body: 'Following up on the ad placement',
       },
       {
         title: 'Emily Parker',
@@ -711,14 +711,14 @@ class SectionFeatureNewsSearch extends React.Component {
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section id="features" inverse>
-              <SectionContent padded fullscreen>
+              <SectionContent fullscreen>
                 <Slant
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, ${
                     Constants.colorSecondary
                   } 5%, ${featuresSlantColor} 95%)`}
                 />
-                <LeftSide>
+                <LeftSide css={{ top: 0 }}>
                   <Observer onChange={this.handleIntersect}>
                     <content
                       css={{ display: 'block', marginTop: newsTopOffPct }}
@@ -774,7 +774,7 @@ class SectionFeatureNewsSearch extends React.Component {
                     css={{
                       position: 'absolute',
                       top: newsTopOffPct,
-                      marginTop: -20,
+                      marginTop: -210,
                       right: '16%',
                       left: 0,
                       height: 700,
@@ -842,9 +842,9 @@ class SectionFeatureNewsSearch extends React.Component {
                               height: 'auto',
                               transformOrigin: 'top left',
                               transform: {
-                                scale: 0.5,
+                                scale: 0.45,
                               },
-                              boxShadow: [[0, 15, 150, [0, 0, 0, 0.07]]],
+                              boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
                             }}
                           />
                         </animated.div>
@@ -1363,7 +1363,7 @@ class Footer {
                 }
               >
                 <Callout>
-                <SmallTitle>Our Mission</SmallTitle>
+                  <SmallTitle>Our Mission</SmallTitle>
                   <P2 size={1.6}>
                     Orbit runs intimately in your everyday. That means it has to
                     work for you, the individual.

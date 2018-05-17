@@ -488,7 +488,7 @@ class Header {
                     lineHeight: '36px',
                   }}
                 >
-                  Upgrade Spotlight and Notification Drawer<br />
+                  Replace Spotlight and the notification drawer<br />
                   with an intelligent team operating system.
                 </P>
 
@@ -1183,7 +1183,7 @@ class SectionUseCaseRemoteTeams {
                       Combined information from across the cloud in one place
                       with helpful information.
                     </P2>
-                    <P2 if={false} size={1.6} css={{ textAlign: 'justify' }}>
+                    <P2 if={false} size={1.6}>
                       See where people talk in Slack, what topics they care
                       about, and relevant recently edited files, tickets, and
                       more.
@@ -1282,7 +1282,7 @@ class SectionUseCaseRemoteFirst {
 
                   <section
                     css={{
-                      textAlign: 'justify',
+                      textAlign: 'left',
                       display: 'block',
                       margin: isLarge ? [0, 0, 0, '30%'] : 0,
                     }}
@@ -1438,7 +1438,7 @@ class Footer {
               <left
                 css={
                   isLarge
-                    ? { width: '50%', padding: [0, 100, 0, 0] }
+                    ? { width: '50%', padding: [0, 20] }
                     : { padding: [0, 0, 50] }
                 }
               >
@@ -1450,8 +1450,8 @@ class Footer {
                     <br />
                     <br />
                     Our goal is to build a more intuitive OS. To do that we need
-                    trust. We make privacy, security, and user experience our
-                    first priorities.
+                    trust. Privacy, security, and user experience our first
+                    priorities.
                   </P2>
                 </Callout>
               </left>

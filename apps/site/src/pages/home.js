@@ -633,7 +633,7 @@ const featuresSlantColor = '#F3B7B1'
 
 const FeatureSubTitle = props => (
   <P2
-    size={1.8}
+    size={1.9}
     alpha={0.6}
     css={{
       marginBottom: 30,
@@ -742,7 +742,7 @@ class SectionFeatureNewsSearch extends React.Component {
                           marginTop: 12,
                         }}
                       >
-                        Stay smart with <Cmd>⌘+Space</Cmd>
+                        Unify your cloud with <Cmd>⌘+Space</Cmd>
                       </FeatureSubTitle>
                       <Callout
                         css={

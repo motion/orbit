@@ -285,7 +285,7 @@ class Callout {
   static style = {
     largeCallout: {
       // border: [1, [0, 0, 0, 0.02]],
-      boxShadow: [[0, 4, 30, [0, 0, 0, 0.065]]],
+      boxShadow: [[0, 3, 10, [0, 0, 0, 0.065]]],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
@@ -303,7 +303,7 @@ class Callout {
       },
     },
     innerSection: {
-      margin: 8,
+      margin: 4,
       padding: 26,
       overflow: 'hidden',
       position: 'relative',
@@ -951,9 +951,9 @@ class SectionFeatureIntelligence extends React.Component {
                     <Callout
                       css={
                         isLarge && {
-                          width: 510,
+                          width: 500,
                           position: 'absolute',
-                          right: 5,
+                          right: 10,
                         }
                       }
                     >
@@ -996,58 +996,32 @@ class SectionFeatureIntelligence extends React.Component {
                           overflow: 'hidden',
                         }}
                       >
-                        <Spring from={{ x: 100 }} to={{ x: 10 }}>
-                          {({ x }) => (
-                            <animated.div
-                              style={{
-                                transform: `translate3d(${x}px,0,0)`,
-                              }}
-                            >
-                              <img
-                                src={wordImg}
-                                css={{
-                                  position: 'absolute',
-                                  width: 1634,
-                                  height: 'auto',
-                                  transformOrigin: 'top left',
-                                  transform: {
-                                    scale: 0.35,
-                                    x: -350,
-                                    y: 0,
-                                  },
+                        <FadedArea fadeLeft>
+                          <Spring from={{ x: 100 }} to={{ x: 10 }}>
+                            {({ x }) => (
+                              <animated.div
+                                style={{
+                                  transform: `translate3d(${x}px,0,0)`,
                                 }}
-                              />
-                            </animated.div>
-                          )}
-                        </Spring>
-
-                        <fadeDown
-                          if={false}
-                          css={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: 30,
-                            zIndex: 100,
-                            background: `linear-gradient(transparent, ${
-                              Constants.backgroundColor
-                            } 95%)`,
-                          }}
-                        />
-                        <fadeLeft
-                          css={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            top: 0,
-                            width: 30,
-                            zIndex: 100,
-                            background: `linear-gradient(to left, transparent, ${
-                              Constants.backgroundColor
-                            } 95%)`,
-                          }}
-                        />
+                              >
+                                <img
+                                  src={wordImg}
+                                  css={{
+                                    position: 'absolute',
+                                    width: 1634,
+                                    height: 'auto',
+                                    transformOrigin: 'top left',
+                                    transform: {
+                                      scale: 0.35,
+                                      x: -350,
+                                      y: 0,
+                                    },
+                                  }}
+                                />
+                              </animated.div>
+                            )}
+                          </Spring>
+                        </FadedArea>
                       </section>
                     </React.Fragment>
                   )}
@@ -1410,7 +1384,7 @@ const SearchIllustration = () => (
           },
         }}
       >
-        <FadedArea fadeRight fadeDown fadeLeft>
+        <FadedArea fadeRight fadeDown>
           <img
             src={slackSearchImg}
             css={{
@@ -1418,7 +1392,7 @@ const SearchIllustration = () => (
               marginTop: 0,
               height: 'auto',
               transformOrigin: 'top left',
-              transform: { scale: 0.45, x: -20, y: 20 },
+              transform: { scale: 0.4, x: 140, y: 20 },
             }}
           />
         </FadedArea>

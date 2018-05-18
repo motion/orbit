@@ -39,10 +39,10 @@ class Home {
                     <Title
                       italic
                       reduceCapsPct={10}
-                      size={isLarge ? 6.5 : 4}
+                      size={isLarge ? 7.2 : 4}
                       margin={[-15, 0, -15, -5]}
                     >
-                      Command<br />your cloud
+                      Work smart
                     </Title>
                     <line
                       css={{
@@ -56,13 +56,13 @@ class Home {
                     <P
                       size={isLarge ? 1.9 : 1.5}
                       alpha={0.75}
-                      margin={[0, '27%', 15, 0]}
+                      margin={[0, '25%', 15, 0]}
                       css={{
                         lineHeight: '36px',
                       }}
                     >
-                      Upgrade your Mac's intelligence with a unified work
-                      operating system.
+                      Your cloud and your Mac meet.<br />
+                      An intelligent new operating layer.
                     </P>
 
                     <actions

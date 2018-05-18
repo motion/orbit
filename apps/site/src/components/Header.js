@@ -2,7 +2,7 @@ import * as React from 'react'
 import Router from '~/router'
 import { view } from '@mcro/black'
 import { SectionContent } from '~/views/section'
-import { BrandLogo } from '~/views'
+import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 // import Media from 'react-media'
 
@@ -10,35 +10,41 @@ import * as Constants from '~/constants'
 export class Header {
   render() {
     return (
-      <header>
+      <React.Fragment>
         <headerBorder
           css={{
             position: 'absolute',
-            bottom: 0,
+            top: 90,
             height: 1,
             background: '#f4f4f4',
             left: 0,
             right: 0,
+            zIndex: 3,
           }}
         />
-        <SectionContent>
-          <headerInner>
-            <BrandLogo css={{ cursor: 'pointer' }} onClick={Router.link('/')} />
-            <div $$flex />
-            <nav>
-              <a href="/features" onClick={Router.link('/features')}>
-                Features
-              </a>
-              <a href="/use-cases" onClick={Router.link('/use-cases')}>
-                Use Cases
-              </a>
-              <a href="/about" onClick={Router.link('/about')}>
-                About
-              </a>
-            </nav>
-          </headerInner>
-        </SectionContent>
-      </header>
+        <header>
+          <SectionContent>
+            <headerInner>
+              <BrandLogo
+                css={{ cursor: 'pointer' }}
+                onClick={Router.link('/')}
+              />
+              <div $$flex />
+              <nav>
+                <a href="/features" onClick={Router.link('/features')}>
+                  Features
+                </a>
+                <a href="/use-cases" onClick={Router.link('/use-cases')}>
+                  Use Cases
+                </a>
+                <a href="/about" onClick={Router.link('/about')}>
+                  About
+                </a>
+              </nav>
+            </headerInner>
+          </SectionContent>
+        </header>
+      </React.Fragment>
     )
   }
 

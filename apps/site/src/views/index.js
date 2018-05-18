@@ -1,6 +1,5 @@
 import { view } from '@mcro/black'
 import Media from 'react-media'
-import Logo from '~/views/logo'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
@@ -188,37 +187,6 @@ export const RightSide = ({ children, inverse, noEdge, ...props }) => (
     }
   </Media>
 )
-
-@view
-export class BrandLogo {
-  render() {
-    return (
-      <brandMark {...this.props}>
-        <Logo
-          size={0.25}
-          color={Constants.brandColor}
-          iconColor={Constants.brandColor}
-        />
-        <P
-          if={false}
-          size={1}
-          fontWeight={700}
-          alpha={0.8}
-          css={{ marginTop: 10 }}
-        >
-          Your cloud, home
-        </P>
-      </brandMark>
-    )
-  }
-
-  static style = {
-    brandMark: {
-      alignItems: 'center',
-      textAlign: 'center',
-    },
-  }
-}
 
 export const Border = UI.injectTheme(
   view(({ theme, ...props }) => (

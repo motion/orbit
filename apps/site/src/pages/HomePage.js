@@ -632,10 +632,10 @@ class HomeHeader {
                         opacity: 0.15,
                       }}
                     />
-                    <below css={{ margin: [0, '24%', 10, 0] }}>
+                    <below css={{ margin: [0, '25%', 10, 0] }}>
                       <P size={2} fontWeight={300} alpha={0.8}>
-                        A smart and new way to manage the cloud as a smart layer
-                        on your desktop.
+                        A new way to manage your team cloud as&nbsp;a&nbsp;smart
+                        layer on your desktop.
                       </P>
                     </below>
                     <actions

@@ -38,10 +38,11 @@ class Home {
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      size={isLarge ? 6.8 : 4}
+                      size={isLarge ? 5 : 4}
                       margin={[-15, 0, -15, -5]}
                     >
-                      Stay in sync, stress free
+                      Get a handle<br />
+                      on whats going on
                     </Title>
                     <line
                       css={{
@@ -53,14 +54,12 @@ class Home {
                       }}
                     />
                     <P
-                      size={isLarge ? 1.9 : 1.5}
+                      size={isLarge ? 1.8 : 1.5}
                       alpha={0.75}
                       margin={[0, '25%', 15, 0]}
                     >
-                      Organize your team and stay up to date.
-                    </P>
-                    <P size={1.2} alpha={0.6}>
-                      News, search and context for your OS.
+                      An intelligent layer for Mac that sorts your company cloud
+                      and brings clarity to your team.
                     </P>
 
                     <actions

@@ -11,8 +11,8 @@ export const LogoText = props => (
 )
 
 const iconSize = 0.5
-const markWidth = 215
-const markHeight = 332
+const markWidth = 177
+const markHeight = 357
 export const LogoIcon = props => (
   <SVGInline svg={LogoIconSVG} width={`${markWidth}px`} {...props} />
 )

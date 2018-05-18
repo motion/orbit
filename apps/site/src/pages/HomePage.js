@@ -12,12 +12,7 @@ import Router from '~/router'
 import { Parallax } from 'react-spring'
 
 const Stars = () => (
-  <svg
-    width="830px"
-    height="1603px"
-    viewBox="-1 -1 830 1603"
-    style={{ pointerEvents: 'none' }}
-  >
+  <svg width="830px" height="1603px" viewBox="-1 -1 830 1603">
     <g
       id="Group"
       opacity="0.25"
@@ -884,11 +879,10 @@ export default () => (
       <Parallax.Layer offset={1} speed={0}>
         <HomeFooter />
       </Parallax.Layer>
-      <Parallax.Layer offset={1} speed={0.25}>
+      <Parallax.Layer offset={1} speed={0.25} style={{ pointerEvents: 'none' }}>
         <div
           $$row
           css={{
-            pointerEvents: 'none',
             transform: { y: -200 },
             opacity: 0.7,
           }}

@@ -11,15 +11,39 @@ export class Join {
         <SubTitle size={1.8} css={{ marginRight: 30 }}>
           Get early access with your email
         </SubTitle>
-        <input placeholder="Email address..." />
-        <UI.Button
-          size={1.1}
-          theme="rgb(3.5%, 44.5%, 23.6%)"
-          sizeRadius={3}
-          margin={[0, 0, 0, 'auto']}
+        <form
+          action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5&amp;id=015e5a3442"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          class="validate"
+          target="_blank"
+          novalidate
         >
-          Join Early Waitlist
-        </UI.Button>
+          <input
+            type="email"
+            name="EMAIL"
+            class="required email"
+            id="mce-EMAIL"
+          />
+          <div $$hidden aria-hidden="true">
+            <input
+              type="text"
+              name="b_019909d3efb283014d35674e5_015e5a3442"
+              tabindex="-1"
+              value=""
+            />
+          </div>
+          <UI.Button
+            size={1.1}
+            theme="rgb(3.5%, 44.5%, 23.6%)"
+            sizeRadius={3}
+            margin={[0, 0, 0, 'auto']}
+            type="submit"
+          >
+            Join Early Waitlist
+          </UI.Button>
+        </form>
       </section>
     )
   }
@@ -52,6 +76,7 @@ export class Join {
     return {
       input: {
         color: theme.base.color,
+        WebkitTextFillColor: `${theme.base.color} !important`,
         background: bg[adjust](0.3 * amt),
         border: [1, bg[adjust](1.2 * amt)],
       },

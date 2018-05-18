@@ -145,7 +145,7 @@ textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-text-fill-color: #000;
+  -webkit-text-fill-color: inherit;
   background-color: inherit;
   transition: background-color 5000s ease-in-out 0s;
 }

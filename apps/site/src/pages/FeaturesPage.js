@@ -13,6 +13,7 @@ import {
   Callout,
   Notification,
   Glow,
+  HalfSection,
 } from '~/views'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
@@ -44,10 +45,8 @@ class FeaturesIntro {
         {isLarge => (
           <Section>
             <SectionContent halfscreen>
-              <section
-                css={{ flex: 1, width: '50%', justifyContent: 'flex-end' }}
-              >
-                <Title italic size={3} margin={[0, 0, 10, 0]}>
+              <HalfSection>
+                <Title italic size={2.8} margin={[0, 0, 10, 0]}>
                   Upgrade your Mac with an intelligent work agent
                 </Title>
                 <P size={1.3} alpha={0.75}>
@@ -57,14 +56,12 @@ class FeaturesIntro {
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#context')}>Context</a>
                 </P>
-              </section>
-              <section
-                css={{ flex: 1, width: '50%', justifyContent: 'flex-end' }}
-              >
-                <Callout css={{ margin: [0, 0, 0, 'auto'] }}>
+              </HalfSection>
+              <HalfSection>
+                <Callout css={isLarge && { margin: [0, 0, 0, 'auto'] }}>
                   <Join />
                 </Callout>
-              </section>
+              </HalfSection>
             </SectionContent>
           </Section>
         )}

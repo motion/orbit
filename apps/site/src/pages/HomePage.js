@@ -148,7 +148,7 @@ class HomeHeader {
       zIndex: 10,
     },
     smallCallout: {
-      padding: [10, 0, 40, 0],
+      padding: [10, 0, 40, 40],
     },
     largeCallout: {
       width: '54%',
@@ -215,7 +215,7 @@ class HomeHeader {
 
 const blackBg = UI.color('#111')
 const blackTheme = {
-  background: blackBg,
+  background: UI.color('#2D194D'),
   color: '#f2f2f2',
   subTitleColor: '#eee',
   titleColor: blackBg.darken(0.75).desaturate(0.3),
@@ -228,13 +228,23 @@ class HomeFooter {
       <UI.Theme theme={blackTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section inverse>
+            <Section
+              css={{
+                background: `linear-gradient(95deg, ${
+                  blackTheme.background
+                }, ${blackTheme.background.darken(0.1).desaturate(0.2)})`,
+              }}
+              inverse
+            >
               <SectionContent padded={!isLarge} fullscreen>
                 <Slant
                   css={{ zIndex: 1 }}
                   slantSize={12}
                   inverseSlant
-                  slantGradient={['#222', '#333']}
+                  slantGradient={[
+                    blackTheme.background.darken(0.2),
+                    blackTheme.background.darken(0.1),
+                  ]}
                 />
                 <Slant
                   slantSize={8}
@@ -246,22 +256,22 @@ class HomeFooter {
                 />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
-                  <Title italic size={2.8} css={{ marginRight: '20%' }}>
+                  <Title italic size={2.5} css={{ marginRight: '20%' }}>
                     A smarter way to&nbsp;operate
                   </Title>
-                  <below css={{ margin: [15, '15%', 0, 0] }}>
-                    <P2 size={2.8} alpha={0.95} fontWeight={200}>
-                      We use more and more tools that store data all over the
-                      place.
+                  <below css={{ margin: [15, '10%', 0, 0] }}>
+                    <P2 size={2.7} alpha={0.95} fontWeight={200}>
+                      We're using more and more tools leaving our data all over
+                      the place.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
                       It makes sense to use best tool for the job. But that
-                      leads to a lack of high level organization.
+                      leads to a lack of high-level organization.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
                       Orbit brings company news, search and exploratory features
-                      to your desktop by giving it a beautiful new interface and
-                      a powerful on-device machine learning system.
+                      to your desktop with a beautiful new interface and
+                      powerful on-device machine learning.
                     </P2>
                   </below>
                 </LeftSide>

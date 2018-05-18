@@ -34,26 +34,30 @@ export const Title = ({
   size = 4,
   ...props
 }) => (
-  <P
-    size={size}
-    fontWeight={700}
-    margin={[0, 0, 5]}
-    css={{
-      fontFamily: '"Mercury Display A", "Mercury Display B"',
-      fontStyle: italic ? 'italic' : 'normal',
-    }}
-    {...props}
-  >
-    {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}
-  </P>
+  <Media query={Constants.screen.small}>
+    {isSmall => (
+      <P
+        size={size * (isSmall ? 0.8 : 1)}
+        fontWeight={700}
+        margin={[0, 0, 5]}
+        css={{
+          fontFamily: '"Mercury Display A", "Mercury Display B"',
+          fontStyle: italic ? 'italic' : 'normal',
+        }}
+        {...props}
+      >
+        {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}
+      </P>
+    )}
+  </Media>
 )
 
 export const SubTitle = UI.injectTheme(
-  view(({ theme, size, ...props }) => (
+  view(({ theme, size = 3.5, ...props }) => (
     <Media query={Constants.screen.small}>
       {isSmall => (
         <Title
-          size={isSmall ? 3 : size || 3.5}
+          size={size}
           color={theme.subTitleColor || theme.base.color}
           reduceCapsPct={8}
           {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
@@ -93,7 +97,7 @@ export const LeftSide = ({
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <leftSide css={{ padding: [0, 0, sidePadSmall, 0] }}>
+        <leftSide css={{ padding: [sidePadSmall, sidePadSmall / 2] }}>
           {children}
         </leftSide>
       ) : (
@@ -143,7 +147,9 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <rightSide>{children}</rightSide>
+        <rightSide css={{ padding: [sidePadSmall, sidePadSmall / 2] }}>
+          {children}
+        </rightSide>
       ) : (
         <rightSide
           css={{
@@ -402,3 +408,13 @@ export const Notification = ({ title, body, ...props }) => (
     </content>
   </notification>
 )
+
+export const HalfSection = view('section', {
+  flex: 1,
+  width: '50%',
+  justifyContent: 'flex-end',
+  [Constants.screen.smallQuery]: {
+    width: '100%',
+    padding: [30, 20],
+  },
+})

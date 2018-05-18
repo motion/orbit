@@ -14,7 +14,10 @@ export class Footer {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent padded css={isLarge && { padding: [150, 0] }}>
+            <SectionContent
+              padded
+              css={isLarge ? { padding: [150, 0] } : { padding: [40, 20] }}
+            >
               <left
                 css={
                   isLarge

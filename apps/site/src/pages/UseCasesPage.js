@@ -13,6 +13,7 @@ import {
   FadedArea,
   Glow,
   Notification,
+  HalfSection,
 } from '~/views'
 import { Section, Slant, SectionContent } from '~/views/section'
 import * as React from 'react'
@@ -37,10 +38,8 @@ class UseCasesIntro {
         {isLarge => (
           <Section>
             <SectionContent halfscreen>
-              <section
-                css={{ flex: 1, width: '50%', justifyContent: 'flex-end' }}
-              >
-                <Title italic size={3} margin={[0, '10%', 10, -5]}>
+              <HalfSection>
+                <Title italic size={2.8} margin={[0, '10%', 10, -5]}>
                   Keep your team in sync<br />
                   and enable deep work
                 </Title>
@@ -53,14 +52,12 @@ class UseCasesIntro {
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#reduce-interrupts')}>Focus</a>
                 </P>
-              </section>
-              <section
-                css={{ flex: 1, width: '50%', justifyContent: 'flex-end' }}
-              >
-                <Callout css={{ margin: [0, 0, 0, 'auto'] }}>
+              </HalfSection>
+              <HalfSection>
+                <Callout css={isLarge && { margin: [0, 0, 0, 'auto'] }}>
                   <Join />
                 </Callout>
-              </section>
+              </HalfSection>
             </SectionContent>
           </Section>
         )}
@@ -164,7 +161,7 @@ class SectionUseCaseRemoteTeams {
                     if={isLarge}
                     css={{
                       position: 'absolute',
-                      top: '35%',
+                      top: '38%',
                       left: 50,
                       height: '35%',
                       width: 450,
@@ -186,7 +183,7 @@ class SectionUseCaseRemoteTeams {
                           transform: {
                             scale: 0.39,
                             x: 0,
-                            y: 0,
+                            y: 130,
                           },
                         }}
                       />
@@ -221,7 +218,7 @@ class SectionUseCaseCustomerSuccess {
                   }}
                 />
                 <Slant
-                  slantBackground={[
+                  slantGradient={[
                     Constants.useCasesSlantBg1,
                     Constants.useCasesSlantBg2,
                   ]}

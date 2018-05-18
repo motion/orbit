@@ -101,27 +101,19 @@ export const LeftSide = ({
           {children}
         </leftSide>
       ) : (
-        <leftSide
-          css={{
-            zIndex: 3,
-            flex: 1,
-            position: 'absolute',
-            left: 0,
-            right: '50%',
-            bottom: noPad ? 0 : 80,
-            top: noPad ? 0 : 80,
-            paddingRight: noEdge ? 0 : '3%',
-            justifyContent: 'center',
-            textAlign: 'right',
-          }}
-          {...props}
-        >
-          <inner
-            style={innerStyle}
+        <outer css={{ flex: 1, width: '50%', position: 'relative', zIndex: 3 }}>
+          <leftSide
             css={{
               display: 'block',
               height: '100%',
+              width: '100%',
+              position: 'relative',
+              paddingRight: noEdge ? 0 : '3%',
+              justifyContent: 'center',
+              textAlign: 'right',
             }}
+            style={innerStyle}
+            {...props}
           >
             <edge
               if={!noEdge}
@@ -136,8 +128,8 @@ export const LeftSide = ({
               }}
             />
             {children}
-          </inner>
-        </leftSide>
+          </leftSide>
+        </outer>
       )
     }
   </Media>

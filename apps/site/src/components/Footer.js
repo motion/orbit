@@ -9,7 +9,7 @@ import Media from 'react-media'
 
 @view
 export class Footer {
-  render() {
+  render({ noMission }) {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
@@ -25,7 +25,7 @@ export class Footer {
                     : { padding: [0, 0, 50] }
                 }
               >
-                <Callout>
+                <Callout if={!noMission}>
                   <SmallTitle>Our Mission</SmallTitle>
                   <P2 size={1.6}>
                     Orbit runs intimately in your everyday. That means it has to

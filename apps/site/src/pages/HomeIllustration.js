@@ -6,6 +6,7 @@ import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 import * as Icons from '~/views/icons'
 import Router from '~/router'
+import { scrollTo } from '~/helpers'
 
 const bgColor = '#fff'
 
@@ -366,6 +367,7 @@ export default class HeaderIllustration extends React.Component {
                       margin: [20, 0, 0],
                     }}
                   >
+                    <UI.Button onClick={scrollTo('#signup')}>Beta</UI.Button>
                     <UI.Button onClick={Router.link('/features')}>
                       Features
                     </UI.Button>
@@ -510,10 +512,10 @@ export default class HeaderIllustration extends React.Component {
       overflow: 'hidden',
     },
     message: {
-      color: '#999',
-      fontWeight: 400,
-      fontSize: 26,
-      lineHeight: '34px',
+      color: '#444',
+      fontWeight: 300,
+      fontSize: 32,
+      lineHeight: '42px',
       position: 'absolute',
       top: 0,
       left: 0,
@@ -526,10 +528,11 @@ export default class HeaderIllustration extends React.Component {
       pointerEvents: 'auto',
     },
     msgBlur: {
+      display: 'none',
       zIndex: -1,
       position: 'absolute',
       alignSelf: 'center',
-      display: 'flex',
+      // display: 'flex',
       content: ' ',
       width: '60%',
       height: '40%',

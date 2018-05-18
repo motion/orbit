@@ -99,7 +99,9 @@ export class ObservableRouter {
   }
 
   link = () => e => {
-    e.preventDefault()
+    if (e && e.preventDefault) {
+      e.preventDefault()
+    }
     this.go(e.target.href)
   }
 

@@ -44,7 +44,7 @@ class FeaturesIntro {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent halfscreen>
+            <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={2.8} margin={[0, 0, 10, 0]}>
                   Upgrade your Mac with an intelligent work agent
@@ -203,7 +203,16 @@ export class SectionFeatureNewsSearch extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section id="features" inverse>
+          <Section
+            id="features"
+            inverse
+            css={{
+              background: `linear-gradient(
+            ${blueTheme.background.lighten(0.02)},
+            ${blueTheme.background} 10%
+          )`,
+            }}
+          >
             <SectionContent
               id="news"
               padded={!isLarge}

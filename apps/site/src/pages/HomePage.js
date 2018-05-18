@@ -599,7 +599,7 @@ class HomeHeader {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section css={{ background: '#fff' }}>
-            <SectionContent padded={!isLarge} fullscreen>
+            <SectionContent padded fullscreen>
               <Slant
                 inverseSlant
                 slantGradient={[
@@ -620,7 +620,7 @@ class HomeHeader {
                       margin={[-15, 0, -15, -5]}
                       color="#333"
                     >
-                      Your team<br />
+                      Operating<br />
                       intelligence
                     </Title>
                     <line
@@ -634,8 +634,8 @@ class HomeHeader {
                     />
                     <below css={{ margin: [0, '24%', 10, 0] }}>
                       <P size={2} fontWeight={300} alpha={0.8}>
-                        A smart new way to operate your company by bringing the
-                        cloud down to your OS.
+                        A smart and new way to manage the cloud as a smart layer
+                        on your desktop.
                       </P>
                     </below>
                     <actions
@@ -818,7 +818,7 @@ class HomeFooter {
               }}
               inverse
             >
-              <SectionContent padded={!isLarge} fullscreen>
+              <SectionContent padded fullscreen>
                 <Slant
                   css={{ zIndex: 1 }}
                   slantSize={12}
@@ -839,21 +839,24 @@ class HomeFooter {
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <Title italic size={2.5} css={{ marginRight: '20%' }}>
-                    A new way to&nbsp;operate
+                    A new way to&nbsp;organize
                   </Title>
-                  <below css={{ margin: [15, '10%', 0, 0] }}>
-                    <P2 size={2.7} alpha={0.95} fontWeight={200}>
-                      We use more tools for more things, our organization need
-                      to keep up.
+                  <below css={{ margin: [15, '5%', 0, 0] }}>
+                    <P2 size={2.8} alpha={0.95} fontWeight={200}>
+                      As software in the cloud grows, organizations need to keep
+                      up.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      It makes sense to use best tool for the job. But that
-                      leads to a lack of high-level organization.
+                      Use best tool for the job. But don't lose clear and
+                      effective high-level organization.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Orbit brings company news, search and exploratory features
-                      to your desktop with a beautiful new interface and
+                      Orbit brings smart company news, search and exploration to
+                      your desktop with a beautiful new interface for Mac and
                       powerful on-device machine learning.
+                    </P2>
+                    <P2 size={1.3} alpha={0.85}>
+                      Rolling out in beta now.
                     </P2>
                   </below>
                 </LeftSide>
@@ -869,29 +872,46 @@ class HomeFooter {
   }
 }
 
+// @view.ui
+// export default class Home {
+//   render() {
+//     return (
+//       <home css={{ height: '100%', width: '100%', overflow: 'hidden' }}>
+//         <Parallax pages={2}>
+//           <Header />
+//           <Parallax.Layer offset={0} speed={0}>
+//             <HomeHeader />
+//           </Parallax.Layer>
+//           <Parallax.Layer offset={1} speed={0}>
+//             <HomeFooter />
+//           </Parallax.Layer>
+//           <Parallax.Layer
+//             offset={1}
+//             speed={0.25}
+//             style={{ pointerEvents: 'none' }}
+//           >
+//             <div
+//               $$row
+//               css={{
+//                 transform: { y: -200 },
+//                 opacity: 0.7,
+//               }}
+//             >
+//               <Stars />
+//               <Stars />
+//               <Stars />
+//             </div>
+//           </Parallax.Layer>
+//         </Parallax>
+//       </home>
+//     )
+//   }
+// }
+
 export default () => (
-  <home css={{ height: '100%', width: '100%', overflow: 'hidden' }}>
-    <Parallax pages={2}>
-      <Header />
-      <Parallax.Layer offset={0} speed={0}>
-        <HomeHeader />
-      </Parallax.Layer>
-      <Parallax.Layer offset={1} speed={0}>
-        <HomeFooter />
-      </Parallax.Layer>
-      <Parallax.Layer offset={1} speed={0.25} style={{ pointerEvents: 'none' }}>
-        <div
-          $$row
-          css={{
-            transform: { y: -200 },
-            opacity: 0.7,
-          }}
-        >
-          <Stars />
-          <Stars />
-          <Stars />
-        </div>
-      </Parallax.Layer>
-    </Parallax>
-  </home>
+  <React.Fragment>
+    <Header />
+    <HomeHeader />
+    <HomeFooter />
+  </React.Fragment>
 )

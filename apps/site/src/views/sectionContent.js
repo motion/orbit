@@ -50,10 +50,11 @@ export class SectionContent {
 
   static style = {
     section: {
-      width: '95%',
+      width: '100%',
       minWidth: Constants.smallSize,
       maxWidth: Constants.mediumSize,
       margin: [0, 'auto'],
+      padding: [0, 30],
       position: 'relative',
       [Constants.screen.smallQuery]: {
         width: '100%',

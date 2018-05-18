@@ -9,12 +9,14 @@ import Media from 'react-media'
 const A = view(
   'a',
   {
-    padding: [5, 6],
-    margin: [0, 10],
+    color: [0, 0, 0, 0.7],
+    padding: [5, 0],
+    margin: [0, 0, 0, 30],
     borderBottom: [3, 'transparent'],
   },
   {
     active: {
+      color: [0, 0, 0, 1],
       borderBottom: [3, Constants.colorMain],
     },
   },

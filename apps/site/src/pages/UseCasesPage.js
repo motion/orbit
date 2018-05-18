@@ -37,7 +37,7 @@ class UseCasesIntro {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent halfscreen>
+            <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={2.8} margin={[0, '10%', 10, -5]}>
                   Keep your team in sync<br />
@@ -73,7 +73,16 @@ class SectionUseCaseRemoteTeams {
       <UI.Theme theme={Constants.peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section id="use-cases" inverse>
+            <Section
+              id="use-cases"
+              inverse
+              css={{
+                background: `linear-gradient(
+                  ${Constants.peachTheme.background.lighten(0.03)},
+                  ${Constants.peachTheme.background} 30%
+                )`,
+              }}
+            >
               <SectionContent
                 id="remote-teams"
                 fullscreen={isLarge}

@@ -36,15 +36,18 @@ class UseCasesIntro {
         {isLarge => (
           <Section>
             <SectionContent halfscreen css={{ padding: [0, 100] }}>
-              <LeftSide noPad css={{ paddingTop: 60, textAlign: 'left' }}>
+              <LeftSide
+                noPad
+                css={{ paddingTop: 60, width: '60%', textAlign: 'left' }}
+              >
                 <section css={{ justifyContent: 'center', height: '100%' }}>
-                  <SmallTitle>Use Cases</SmallTitle>
-                  <Title italic size={3} margin={[0, 0, 10, -5]}>
-                    Enabling smarter work by bringing intelligence and knowledge
-                    to your fingertips
+                  <Title italic size={3} margin={[0, '20%', 10, -5]}>
+                    Bring intelligence to your operating system
                   </Title>
-                  <P size={1.1} alpha={0.75}>
-                    Remote teams &middot; Customer Success &middot; Workplace
+                  <br />
+                  <P size={1.2} alpha={0.75}>
+                    Remote teams &nbsp;&nbsp;&middot;&nbsp;&nbsp; Customer
+                    Success &nbsp;&nbsp;&middot;&nbsp;&nbsp; Workplace
                     interruptions
                   </P>
                 </section>

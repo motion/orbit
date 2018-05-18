@@ -14,8 +14,10 @@ import {
   Glow,
   Notification,
   HalfSection,
+  Section,
+  Slant,
+  SectionContent,
 } from '~/views'
-import { Section, Slant, SectionContent } from '~/views/section'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'

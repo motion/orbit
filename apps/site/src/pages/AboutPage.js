@@ -52,14 +52,13 @@ export default class FeaturesPage {
           <Border css={{ bottom: -4 }} />
           <SectionContent padded>
             <inner css={{ padding: [0, '10%'] }}>
-              <P size={3.2} css={{ lineHeight: '65px' }} alpha={0.75}>
+              <P size={2.4} css={{ lineHeight: '44px' }} alpha={0.75}>
                 Orbit runs intimately in your everyday. That means it has to
                 work for you, the individual.
                 <br />
                 <br />
                 Our goal is to build a more intuitive OS. To do that we need
                 trust. Privacy, security, and user experience our first
-                priorities.
               </P>
             </inner>
           </SectionContent>

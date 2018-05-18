@@ -1,8 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-// import * as UI from '@mcro/ui'
-import { Section, SectionContent } from '~/views/section'
-import { SmallTitle, P2, RightSide, Callout } from '~/views'
+import {
+  Section,
+  SectionContent,
+  SmallTitle,
+  P2,
+  RightSide,
+  Callout,
+} from '~/views'
 import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'

@@ -215,7 +215,7 @@ class HomeHeader {
 
 const blackBg = UI.color('#111')
 const blackTheme = {
-  background: UI.color('#2D194D'),
+  background: UI.color('#2A1B38'),
   color: '#f2f2f2',
   subTitleColor: '#eee',
   titleColor: blackBg.darken(0.75).desaturate(0.3),
@@ -257,7 +257,7 @@ class HomeFooter {
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <Title italic size={2.5} css={{ marginRight: '20%' }}>
-                    A smarter way to&nbsp;operate
+                    A new way to&nbsp;operate
                   </Title>
                   <below css={{ margin: [15, '10%', 0, 0] }}>
                     <P2 size={2.7} alpha={0.95} fontWeight={200}>

@@ -624,11 +624,11 @@ class HomeHeader {
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      size={isLarge ? 6.5 : 4}
+                      size={isLarge ? 6.2 : 4}
                       margin={[-15, 0, -15, -5]}
                       color="#333"
                     >
-                      Operating<br />
+                      Operate with<br />
                       intelligence
                     </Title>
                     <line

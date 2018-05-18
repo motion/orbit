@@ -41,7 +41,7 @@ export const Title = ({
     css={{
       fontFamily: '"Mercury Display A", "Mercury Display B"',
       fontStyle: italic ? 'italic' : 'normal',
-      letterSpacing: size <= 5 ? -2 : 0,
+      letterSpacing: size <= 5 ? -1 : 0,
     }}
     {...props}
   >

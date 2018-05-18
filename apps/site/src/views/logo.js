@@ -2,6 +2,7 @@ import * as React from 'react'
 import SVGInline from 'react-svg-inline'
 import LogoTextSVG from '~/../public/orbit.svg'
 import LogoIconSVG from '~/../public/mark.svg'
+import * as Constants from '~/constants'
 
 const naturalWidth = 425
 const naturalHeight = 142
@@ -29,7 +30,7 @@ export default ({ iconColor = '#000', color = '#000', size = 1, ...props }) => {
     width: naturalWidth * size,
     height: naturalHeight * size,
   }
-  const iSize = iconSize * size * 0.8
+  const iSize = iconSize * size * 0.6
   const iWidth = markWidth * iSize
   const iHeight = markHeight * iSize
   return (
@@ -41,9 +42,11 @@ export default ({ iconColor = '#000', color = '#000', size = 1, ...props }) => {
       {...props}
     >
       <LogoIcon
+        if={false}
+        fill={Constants.colorMain}
         css={{
           transformOrigin: 'top left',
-          transform: { scale: iSize },
+          transform: { scale: iSize, y: '-500%' },
           width: iWidth,
           height: iHeight,
           margin: [0, 50 * iSize, 0, -40 * iSize],

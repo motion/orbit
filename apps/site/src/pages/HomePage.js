@@ -20,30 +20,23 @@ class Home {
             <SectionContent padded={!isLarge} fullscreenFixed>
               <Slant
                 inverseSlant
-                slantBackground={`linear-gradient(200deg, ${
-                  Constants.colorSecondary
-                } 5%, ${Constants.colorSecondary.alpha(0.4)} 95%)`}
+                slantBackground={Constants.colorMain}
                 slantSize={12}
                 amount={20}
               />
-              <Slant
-                slantBackground={`linear-gradient(200deg, ${
-                  Constants.backgroundColor
-                } 5%, #f2f2f2 95%)`}
-                css={{ zIndex: 2 }}
-              />
+              <Slant slantBackground={`#f2f2f2`} css={{ zIndex: 2 }} />
               <div $$flex />
               <Media query={Constants.screen.large}>
                 {isLarge => (
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      size={isLarge ? 5 : 4}
+                      size={isLarge ? 8 : 4}
                       margin={[-15, 0, -15, -5]}
-                      color="#2E233B"
+                      color={Constants.colorMain.darken(0.6).desaturate(0.6)}
                     >
-                      Get a handle<br />
-                      on what's going on
+                      The cloud,<br />
+                      clear as day
                     </Title>
                     <line
                       css={{
@@ -54,16 +47,19 @@ class Home {
                         opacity: 0.15,
                       }}
                     />
-                    <P
-                      size={isLarge ? 1.7 : 1.5}
-                      alpha={0.75}
-                      margin={[0, '20%', 10, 0]}
-                    >
-                      Organize your company and bring clarity to your day.
-                    </P>
-                    <P size={1.4} alpha={0.7} margin={[0, '20%', 5, 0]}>
-                      An intelligent operating layer for your Mac.
-                    </P>
+                    <below css={{ margin: [0, '24%', 10, 0] }}>
+                      <P
+                        size={2}
+                        fontWeight={400}
+                        // color={Constants.colorMain.darken(0.2).desaturate(0.3)}
+                      >
+                        Company news, search and more
+                      </P>
+                      <verSpace css={{ height: 5 }} />
+                      <P size={isLarge ? 1.8 : 1.5} alpha={0.7}>
+                        Upgrade Mac with intelligence in 3 minutes.
+                      </P>
+                    </below>
 
                     <actions
                       $$row
@@ -97,6 +93,7 @@ class Home {
                         chromeless
                         alpha={0.5}
                         onClick={() => Router.go('/features')}
+                        margin={[0, 0, 0, 10]}
                       >
                         Learn more
                       </UI.Button>

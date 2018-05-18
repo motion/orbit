@@ -8,7 +8,9 @@ export class Join {
   render({ theme, ...props }) {
     return (
       <section {...props}>
-        <SubTitle size={1.8}>Get early access with your email</SubTitle>
+        <SubTitle size={1.8} css={{ marginRight: 30 }}>
+          Get early access with your email
+        </SubTitle>
         <input placeholder="Email address..." />
         <UI.Button
           size={1.1}
@@ -29,6 +31,7 @@ export class Join {
       width: '100%',
       maxWidth: 400,
       margin: [0, 'auto'],
+      padding: [5, 10],
     },
     input: {
       display: 'flex',
@@ -42,11 +45,15 @@ export class Join {
   }
 
   static theme = (props, theme) => {
+    const bg = theme.base.background
+    const isLight = bg.isLight()
+    const adjust = isLight ? 'darken' : 'lighten'
+    const amt = isLight ? 0.1 : 1
     return {
       input: {
         color: theme.base.color,
-        background: theme.base.background.lighten(0.2),
-        border: [1, theme.base.background.lighten(0.5)],
+        background: bg[adjust](0.3 * amt),
+        border: [1, bg[adjust](1.2 * amt)],
       },
     }
   }

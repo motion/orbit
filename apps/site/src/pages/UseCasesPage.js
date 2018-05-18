@@ -37,29 +37,30 @@ class UseCasesIntro {
         {isLarge => (
           <Section>
             <SectionContent halfscreen>
-              <LeftSide noPad css={{ paddingTop: 0, textAlign: 'left' }}>
-                <section css={{ justifyContent: 'center', height: '100%' }}>
-                  <Title italic size={3} margin={[0, '10%', 10, -5]}>
-                    Keep your team in sync<br />
-                    and enable deep work
-                  </Title>
-                  <br />
-                  <P size={1.3} alpha={0.75}>
-                    <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
-                    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                    <a onClick={scrollTo('#customer-success')}>
-                      Customer Success
-                    </a>
-                    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                    <a onClick={scrollTo('#reduce-interrupts')}>Focus</a>
-                  </P>
-                </section>
-              </LeftSide>
-              <RightSide noEdge noPad>
-                <Callout css={{ margin: 'auto' }}>
+              <section
+                css={{ flex: 1, width: '50%', justifyContent: 'flex-end' }}
+              >
+                <Title italic size={3} margin={[0, '10%', 10, -5]}>
+                  Keep your team in sync<br />
+                  and enable deep work
+                </Title>
+                <P size={1.3} alpha={0.75}>
+                  <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
+                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                  <a onClick={scrollTo('#customer-success')}>
+                    Customer Success
+                  </a>
+                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                  <a onClick={scrollTo('#reduce-interrupts')}>Focus</a>
+                </P>
+              </section>
+              <section
+                css={{ flex: 1, width: '50%', justifyContent: 'flex-end' }}
+              >
+                <Callout css={{ margin: [0, 0, 0, 'auto'] }}>
                   <Join />
                 </Callout>
-              </RightSide>
+              </section>
             </SectionContent>
           </Section>
         )}

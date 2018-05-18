@@ -63,8 +63,8 @@ export class SectionContent {
       },
     },
     halfscreen: {
-      padding: [0, 100],
-      top: 80,
+      flexFlow: 'row',
+      padding: [80 + 60, 0, 60],
     },
     padded: {
       padding: [80, 30],

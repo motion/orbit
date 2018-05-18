@@ -28,7 +28,7 @@
     "primus": "^7.1.1",
     "babel-plugin-transform-regenerator": "6.26.0",
     "babel-polyfill": "^6.23.0",
-    "color": "^2.0.1",
+    "color": "^3.0.0",
     "date-fns": "^2.0.0-alpha.7",
     "keycode": "^2.1.9",
     "kill-port": "^1.1.0",

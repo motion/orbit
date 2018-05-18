@@ -1,20 +1,16 @@
-import ZenScroll from 'zenscroll'
 import * as React from 'react'
 import CountUp from 'react-countup'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
-import * as Constants from '~/constants'
-// import Trail from '~/trail'
 import * as Icons from '~/views/icons'
+import Router from '~/router'
 
 const bgColor = '#fff'
 
 const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-
-const scrollTo = query => () => ZenScroll.to(document.querySelector(query))
 
 const Badge = view('div', {
   position: 'absolute',
@@ -78,22 +74,14 @@ const INITIAL_STATE = {
 const chats = [
   <Bubble left>The #dev chat room</Bubble>,
   <Bubble>clear as modern art</Bubble>,
-  <Bubble left>
-    🙄
-  </Bubble>,
+  <Bubble left>🙄</Bubble>,
   <Bubble>& spreading like an oil spill...</Bubble>,
-  <Bubble left>
-    🤷‍
-  </Bubble>,
+  <Bubble left>🤷‍</Bubble>,
   <Bubble left>It's not that it doesn't work</Bubble>,
   <Bubble>Yea, but you'd hope for a bit more...</Bubble>,
-  <Bubble left>
-    clarity, perhaps
-  </Bubble>,
+  <Bubble left>clarity, perhaps</Bubble>,
   <Bubble>at least some sort of summary</Bubble>,
-  <Bubble left>
-    👆
-  </Bubble>,
+  <Bubble left>👆</Bubble>,
   <Bubble left>too much FOMO</Bubble>,
   <Bubble>unsubscribe</Bubble>,
 ]
@@ -378,10 +366,10 @@ export default class HeaderIllustration extends React.Component {
                       margin: [20, 0, 0],
                     }}
                   >
-                    <UI.Button onClick={scrollTo('#features')}>
+                    <UI.Button onClick={Router.link('/features')}>
                       Features
                     </UI.Button>
-                    <UI.Button onClick={scrollTo('#use-cases')}>
+                    <UI.Button onClick={Router.link('/use-cases')}>
                       Use Cases
                     </UI.Button>
                   </UI.Row>

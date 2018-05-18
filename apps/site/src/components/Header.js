@@ -9,11 +9,12 @@ import * as Constants from '~/constants'
 const A = view(
   'a',
   {
-    borderBottom: [2, 'transparent'],
+    padding: [5, 0],
+    borderBottom: [3, 'transparent'],
   },
   {
     active: {
-      borderBottom: [2, 'blue'],
+      borderBottom: [3, Constants.colorMain],
     },
   },
 )

@@ -23,6 +23,7 @@ import Media from 'react-media'
 import profileImg from '~/../public/screen-profile.png'
 import chatImg from '~/../public/chat.svg'
 import SVGInline from 'react-svg-inline'
+import { scrollTo } from '~/helpers'
 
 export const ChatIcon = props => (
   <SVGInline svg={chatImg} width={`${120}px`} {...props} />
@@ -42,16 +43,20 @@ class UseCasesIntro {
               >
                 <section css={{ justifyContent: 'center', height: '100%' }}>
                   <Title italic size={3} margin={[0, '10%', 10, -5]}>
-                    Intelligence for your operations
+                    Keeping your team in sync<br />
+                    and enabling deep work
                   </Title>
-                  <P size={isLarge ? 1.7 : 1.5} alpha={0.75}>
-                    Work smarter with less interruption.
-                  </P>
                   <br />
-                  <P size={1.2} alpha={0.75}>
-                    Remote teams &nbsp;&nbsp;&middot;&nbsp;&nbsp; Customer
-                    Success &nbsp;&nbsp;&middot;&nbsp;&nbsp; Workplace
-                    interruptions
+                  <P size={1.3} alpha={0.75}>
+                    <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
+                    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <a onClick={scrollTo('#customer-success')}>
+                      Customer Success
+                    </a>
+                    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <a onClick={scrollTo('#reduce-interrupts')}>
+                      Workplace interruptions
+                    </a>
                   </P>
                 </section>
               </LeftSide>
@@ -86,9 +91,10 @@ class SectionUseCaseRemoteTeams {
                 />
                 <Slant
                   inverseSlant
-                  slantGradient={[Constants.altBg.darken(
-                    0.05,
-                  ), Constants.useCasesSlantBg1]}
+                  slantGradient={[
+                    Constants.altBg.darken(0.05),
+                    Constants.useCasesSlantBg1,
+                  ]}
                   css={{ zIndex: 2 }}
                 />
                 <LeftSide>
@@ -216,7 +222,9 @@ class SectionUseCaseCustomerSuccess {
                 />
                 <Slant
                   slantBackground={[
-                    Constants.useCasesSlantBg1, Constants.useCasesSlantBg2]}
+                    Constants.useCasesSlantBg1,
+                    Constants.useCasesSlantBg2,
+                  ]}
                 />
                 <chat>
                   <ChatIcon />
@@ -322,13 +330,9 @@ class SectionUseCaseReduceInterrupts {
       <UI.Theme theme={Constants.peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section
-              id="use-cases"
-              inverse
-              css={{ background: Constants.altBg }}
-            >
+            <Section inverse css={{ background: Constants.altBg }}>
               <SectionContent
-                id="remote-teams"
+                id="reduce-interrupts"
                 fullscreen={isLarge}
                 padded
                 css={{ zIndex: 3 }}

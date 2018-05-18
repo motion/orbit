@@ -199,7 +199,6 @@ export const Border = UI.injectTheme(
         transform: {
           y: -2,
         },
-        minWidth: 660,
         maxWidth: Constants.smallSize + 200,
         zIndex: 2,
         margin: [0, 'auto'],

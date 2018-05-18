@@ -24,7 +24,7 @@ class HomeHeader {
                   Constants.colorSecondary,
                   Constants.colorSecondary.lighten(0.4),
                 ]}
-                slantSize={12}
+                slantSize={8}
                 amount={20}
               />
               <Slant slantBackground={`#f6f6f6`} css={{ zIndex: 2 }} />
@@ -38,8 +38,8 @@ class HomeHeader {
                       margin={[-15, 0, -15, -5]}
                       color="#333"
                     >
-                      Intelligent<br />
-                      for you
+                      Your team<br />
+                      intelligence
                     </Title>
                     <line
                       css={{
@@ -71,6 +71,7 @@ class HomeHeader {
                         tooltip=""
                         css={{
                           margin: [0, 10, 0, 0],
+                          cursor: 'pointer',
                         }}
                       >
                         Try for{' '}
@@ -89,6 +90,9 @@ class HomeHeader {
                         alpha={0.5}
                         onClick={() => Router.go('/features')}
                         margin={[0, 0, 0, 10]}
+                        css={{
+                          cursor: 'pointer',
+                        }}
                       >
                         Learn more
                       </UI.Button>
@@ -228,12 +232,12 @@ class HomeFooter {
               <SectionContent padded={!isLarge} fullscreen>
                 <Slant
                   css={{ zIndex: 1 }}
-                  slantSize={10}
+                  slantSize={12}
                   inverseSlant
                   slantGradient={['#222', '#333']}
                 />
                 <Slant
-                  slantSize={10}
+                  slantSize={8}
                   amount={20}
                   slantGradient={[
                     Constants.colorSecondary.lighten(0.4),
@@ -243,21 +247,21 @@ class HomeFooter {
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <Title italic size={2.8} color="#fff">
-                    A brain for your company
+                    A smarter way to operate
                   </Title>
                   <below css={{ margin: [20, '15%', 0, 0] }}>
-                    <P2 size={2.1} alpha={0.8}>
-                      We use more and more tools everyday. They store data all
+                    <P2 size={3} alpha={0.95} fontWeight={200}>
+                      We use more and more tools everyday that store data all
                       over the place.
                     </P2>
-                    <P2 size={1.8} alpha={0.7}>
+                    <P2 size={1.8} alpha={0.85}>
                       It makes sense to use best tool for the job. But that
                       leads to a lack of high level organization.
                     </P2>
-                    <P2 size={1.8} alpha={0.7}>
+                    <P2 size={1.8} alpha={0.85}>
                       Orbit brings company news, search and exploratory features
                       to your desktop by giving it a powerful on-device machine
-                      learning system and a whole new interface.
+                      learning system and a beautiful new interface.
                     </P2>
                   </below>
                 </LeftSide>

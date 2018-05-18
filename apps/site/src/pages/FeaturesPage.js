@@ -25,6 +25,7 @@ import { Trail, Spring, animated, config } from 'react-spring'
 import intelligenceImg from '~/../public/screen-context-word.png'
 import newsImg from '~/../public/screen-home.png'
 import searchImg from '~/../public/screen-slack-search.png'
+import { scrollTo } from '~/helpers'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const blueBg = UI.color('#FAFAFF')
@@ -48,8 +49,12 @@ class FeaturesIntro {
                   <Title italic size={3} margin={[0, 0, 10, -5]}>
                     Upgrade your Mac with an intelligent work agent
                   </Title>
-                  <P size={isLarge ? 1.7 : 1.5} alpha={0.75}>
-                    Smart contextual news and search
+                  <P size={1.3} alpha={0.75}>
+                    <a onClick={scrollTo('#news')}>News</a>{' '}
+                    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <a onClick={scrollTo('#search')}>Search</a>
+                    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                    <a onClick={scrollTo('#context')}>Context</a>
                   </P>
                 </section>
               </LeftSide>
@@ -85,14 +90,14 @@ const SearchIllustration = () => (
           width: 550,
           height: 380,
           marginBottom: -450,
-          zIndex: 0,
+          zIndex: 1,
           pointerEvents: 'none',
           transform: {
             y: searchYOff - 200,
           },
         }}
       >
-        <FadedArea fadeRight fadeDown fadeBackground="#fff">
+        <FadedArea fadeRight fadeDown>
           <img
             src={searchImg}
             css={{
@@ -149,6 +154,7 @@ const SearchCallout = ({ isLarge }) => (
   </Callout>
 )
 
+@UI.injectTheme
 @view
 export class SectionFeatureNewsSearch extends React.Component {
   state = {
@@ -197,314 +203,71 @@ export class SectionFeatureNewsSearch extends React.Component {
   }
 
   render() {
+    const { theme } = this.props
     const { showOrbit, showNotifs } = this.state
 
     return (
-      <UI.Theme theme={blueTheme}>
-        <Media query={Constants.screen.large}>
-          {isLarge => (
-            <Section id="features" inverse>
-              <SectionContent
-                padded={!isLarge}
-                css={!isLarge && { paddingBottom: 0 }}
-                fullscreen={isLarge}
-              >
-                <Glow style={{ transform: { y: '-10%', x: '-40%' } }} />
-                <Glow style={{ transform: { y: '130%' } }} />
-                <Slant
-                  slantSize={10}
-                  inverseSlant
-                  slantGradient={['#f2f2f2', Constants.featuresSlantColor]}
-                />
-                <Slant
-                  slantSize={10}
-                  css={{ zIndex: 1 }}
-                  amount={20}
-                  slantGradient={[
-                    Constants.colorSecondary.alpha(0.4),
-                    Constants.featuresSlantColor.desaturate(0.5).alpha(0.1),
-                  ]}
-                />
-                <LeftSide css={{ top: 0 }}>
-                  <Observer onChange={this.handleIntersect}>
-                    <content
-                      css={{
-                        display: 'block',
-                        marginTop: isLarge ? newsTopOffPct : 0,
-                      }}
-                    >
-                      <SubTitle size={2.5}>Daily Summary</SubTitle>
-                      <FeatureSubTitle
-                        css={{
-                          marginTop: 12,
-                        }}
-                      >
-                        Command the cloud with <Cmd>⌘+Space</Cmd>
-                      </FeatureSubTitle>
-                      <Callout
-                        css={{
-                          textAlign: 'left',
-                          ...(isLarge
-                            ? {
-                                width: '85%',
-                                position: 'absolute',
-                                right: '6%',
-                              }
-                            : null),
-                        }}
-                      >
-                        <P2 size={2}>
-                          Summarized news personalized to you, always at your
-                          fingertips.
-                        </P2>
-                        <P2 size={1.6}>
-                          A newspaper that sums up the day for you and your
-                          team. Using novel on-device machine learning that
-                          learns your company vocab.
-                        </P2>
-                        <DottedButton
-                          css={
-                            isLarge
-                              ? {
-                                  fontSize: 15,
-                                  position: 'absolute',
-                                  bottom: 20,
-                                  right: 20,
-                                }
-                              : {
-                                  margin: [20, 0, 0, 'auto'],
-                                }
-                          }
-                        >
-                          Learn more
-                        </DottedButton>
-                      </Callout>
-                    </content>
-                  </Observer>
-                </LeftSide>
-
-                <RightSide
-                  inverse
-                  css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
-                >
-                  <section
-                    if={isLarge}
+      <Media query={Constants.screen.large}>
+        {isLarge => (
+          <Section id="features" inverse>
+            <SectionContent
+              id="news"
+              padded={!isLarge}
+              css={!isLarge && { paddingBottom: 0, overflow: 'visible' }}
+              fullscreen={isLarge}
+            >
+              <Glow style={{ transform: { y: '-10%', x: '-40%' } }} />
+              <Glow style={{ transform: { y: '130%', x: '60%' } }} />
+              <Slant
+                slantSize={10}
+                inverseSlant
+                slantGradient={['#f2f2f2', Constants.featuresSlantColor]}
+              />
+              <Slant
+                slantSize={10}
+                css={{ zIndex: 1 }}
+                amount={20}
+                slantGradient={[
+                  Constants.colorSecondary.alpha(0.4),
+                  Constants.featuresSlantColor.desaturate(0.5).alpha(0.1),
+                ]}
+              />
+              <LeftSide css={{ top: 0 }}>
+                <Observer onChange={this.handleIntersect}>
+                  <content
                     css={{
-                      position: 'absolute',
-                      top: newsTopOffPct,
-                      marginTop: '-30%',
-                      right: '6%',
-                      left: '5%',
-                      height: '60%',
-                      maxHeight: 800,
-                      overflow: 'hidden',
+                      display: 'block',
+                      marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <notifications
+                    <SubTitle size={2.5}>Daily Summary</SubTitle>
+                    <FeatureSubTitle
                       css={{
-                        position: 'absolute',
-                        top: 50,
-                        left: '20%',
-                        right: 0,
-                        bottom: 0,
+                        marginTop: 12,
                       }}
-                      if={isLarge}
                     >
-                      <Trail
-                        native
-                        from={{ opacity: 1, x: 0 }}
-                        config={config.fast}
-                        to={{
-                          opacity: showNotifs ? 1 : 0,
-                          x: showNotifs ? 0 : 100,
-                        }}
-                        keys={this.state.items.map((_, index) => index)}
-                      >
-                        {this.state.items.map(
-                          ({ title, body }) => ({ x, opacity }) => (
-                            <animated.div
-                              style={{
-                                opacity,
-                                transform: x.interpolate(
-                                  x => `translate3d(${x}%,0,0)`,
-                                ),
-                              }}
-                            >
-                              <Notification title={title} body={body} />
-                            </animated.div>
-                          ),
-                        )}
-                      </Trail>
-                    </notifications>
-                    <Spring
-                      if={showOrbit}
-                      native
-                      from={{ opacity: 0, x: 100 }}
-                      to={{ opacity: 1, x: 0 }}
-                      config={config.slow}
-                    >
-                      {({ opacity, x }) => (
-                        <animated.div
-                          style={{
-                            opacity,
-                            transform: x
-                              ? x.interpolate(x => `translate3d(${x}%,0,0)`)
-                              : null,
-                          }}
-                        >
-                          <img
-                            src={newsImg}
-                            css={{
-                              position: 'absolute',
-                              top: 55,
-                              right: -650,
-                              width: 1100,
-                              height: 'auto',
-                              transformOrigin: 'top left',
-                              border: [1, '#ddd'],
-                              transform: {
-                                scale: 0.4,
-                              },
-                              boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
-                            }}
-                          />
-                        </animated.div>
-                      )}
-                    </Spring>
-                    <fadeRight
-                      css={{
-                        position: 'absolute',
-                        top: 0,
-                        bottom: 0,
-                        right: 0,
-                        width: '20%',
-                        zIndex: 100,
-                        background: `linear-gradient(to right, transparent, ${
-                          Constants.backgroundColor
-                        })`,
-                      }}
-                    />
-                    <fadeawayfadeawayfadeaway
-                      css={{
-                        position: 'absolute',
-                        bottom: -250,
-                        right: -250,
-                        width: 900,
-                        height: 450,
-                        background: Constants.backgroundColor,
-                        borderRadius: 1000,
-                        filter: {
-                          blur: 30,
-                        },
-                        transform: {
-                          z: 0,
-                        },
-                        zIndex: 2,
-                      }}
-                    />
-                  </section>
-
-                  <div if={isLarge} css={{ height: '100%' }} />
-                  <content
-                    css={
-                      isLarge && {
-                        display: 'block',
-                        position: 'relative',
-                        zIndex: 1000,
-                        marginTop: -185 + searchYOff,
-                      }
-                    }
-                  >
-                    <SubTitle size={2.5}>Smart Search</SubTitle>
-                    <FeatureSubTitle>
-                      Spotlight, meet your brain
-                    </FeatureSubTitle>
-                  </content>
-                  <Media
-                    query={Constants.screen.small}
-                    render={() => <SearchCallout />}
-                  />
-                </RightSide>
-              </SectionContent>
-            </Section>
-          )}
-        </Media>
-      </UI.Theme>
-    )
-  }
-}
-
-@view
-export class SectionFeatureIntelligence extends React.Component {
-  state = {
-    isIntersecting: false,
-  }
-
-  handleIntersect = ({ isIntersecting }) => {
-    this.setState({ isIntersecting })
-  }
-
-  render() {
-    const { isIntersecting } = this.state
-    console.log('isIntersecting', isIntersecting)
-    return (
-      <UI.Theme theme={blueTheme}>
-        <Media query={Constants.screen.large}>
-          {isLarge => (
-            <Section>
-              <SectionContent fullscreen={isLarge} padded>
-                <Glow style={{ transform: { y: '30%' } }} />
-                <Slant
-                  slantSize={10}
-                  css={{ zIndex: 2 }}
-                  slantGradient={[
-                    Constants.featuresSlantColor,
-                    Constants.altBg.darken(0.05),
-                  ]}
-                />
-                <Slant
-                  slantSize={10}
-                  inverseSlant
-                  css={{ zIndex: 1 }}
-                  amount={20}
-                  slantGradient={[
-                    Constants.featuresSlantColor.desaturate(0.5).alpha(0.1),
-                    Constants.backgroundColor,
-                  ]}
-                />
-                <LeftSide inverse innerStyle={{ paddingTop: '45%' }}>
-                  <div
-                    css={
-                      isLarge && {
-                        display: 'block',
-                        margin: [contextYOff - 130, 0, 0, 30],
-                      }
-                    }
-                  >
-                    <SubTitle size={2.5}>Contextual Answers</SubTitle>
-                    <FeatureSubTitle>
-                      A whole new way to compute
+                      Command the cloud with <Cmd>⌘+Space</Cmd>
                     </FeatureSubTitle>
                     <Callout
                       css={{
                         textAlign: 'left',
                         ...(isLarge
                           ? {
-                              width: '86%',
+                              width: '85%',
                               position: 'absolute',
-                              right: 10,
+                              right: '6%',
                             }
                           : null),
                       }}
                     >
                       <P2 size={2}>
-                        Realtime contextual answers that work with every app
-                        (yes, even Slack, Intercom, and your Mail client).
+                        Summarized news personalized to you, always at your
+                        fingertips.
                       </P2>
                       <P2 size={1.6}>
-                        And all you have to do is hold <Cmd>Option</Cmd>.
-                        Important terms, people, and items in your cloud with
-                        summarized answers, instantly.
+                        A newspaper that sums up the day for you and your team.
+                        Using novel on-device machine learning that learns your
+                        company vocab.
                       </P2>
                       <DottedButton
                         css={
@@ -523,33 +286,278 @@ export class SectionFeatureIntelligence extends React.Component {
                         Learn more
                       </DottedButton>
                     </Callout>
-                    <Observer onChange={this.handleIntersect}>
-                      <br />
-                    </Observer>
-                  </div>
-                </LeftSide>
+                  </content>
+                </Observer>
+              </LeftSide>
 
-                <Media
-                  query={Constants.screen.large}
-                  render={() => (
-                    <React.Fragment>
-                      <RightSide css={{ top: 0, overflow: 'visible' }}>
-                        <SearchCallout isLarge />
-                      </RightSide>
-                      <section
-                        css={{
-                          zIndex: 0,
-                          position: 'absolute',
-                          width: 500,
-                          height: 420,
-                          marginTop: -250 + contextYOff,
-                          top: '50%',
-                          left: '50%',
-                          marginLeft: 50,
-                          overflow: 'hidden',
+              <RightSide
+                inverse
+                css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
+              >
+                <section
+                  if={isLarge}
+                  css={{
+                    position: 'absolute',
+                    top: newsTopOffPct,
+                    marginTop: '-30%',
+                    right: '6%',
+                    left: '5%',
+                    height: '60%',
+                    maxHeight: 800,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <notifications
+                    css={{
+                      position: 'absolute',
+                      top: 50,
+                      left: '20%',
+                      right: 0,
+                      bottom: 0,
+                    }}
+                    if={isLarge}
+                  >
+                    <Trail
+                      native
+                      from={{ opacity: 1, x: 0 }}
+                      config={config.fast}
+                      to={{
+                        opacity: showNotifs ? 1 : 0,
+                        x: showNotifs ? 0 : 100,
+                      }}
+                      keys={this.state.items.map((_, index) => index)}
+                    >
+                      {this.state.items.map(
+                        ({ title, body }) => ({ x, opacity }) => (
+                          <animated.div
+                            style={{
+                              opacity,
+                              transform: x.interpolate(
+                                x => `translate3d(${x}%,0,0)`,
+                              ),
+                            }}
+                          >
+                            <Notification title={title} body={body} />
+                          </animated.div>
+                        ),
+                      )}
+                    </Trail>
+                  </notifications>
+                  <Spring
+                    if={showOrbit}
+                    native
+                    from={{ opacity: 0, x: 100 }}
+                    to={{ opacity: 1, x: 0 }}
+                    config={config.slow}
+                  >
+                    {({ opacity, x }) => (
+                      <animated.div
+                        style={{
+                          opacity,
+                          transform: x
+                            ? x.interpolate(x => `translate3d(${x}%,0,0)`)
+                            : null,
                         }}
                       >
-                        <FadedArea fadeLeft>
+                        <img
+                          src={newsImg}
+                          css={{
+                            position: 'absolute',
+                            top: 55,
+                            right: -650,
+                            width: 1100,
+                            height: 'auto',
+                            transformOrigin: 'top left',
+                            border: [1, '#ddd'],
+                            transform: {
+                              scale: 0.4,
+                            },
+                            boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
+                          }}
+                        />
+                      </animated.div>
+                    )}
+                  </Spring>
+                  <fadeRight
+                    css={{
+                      position: 'absolute',
+                      top: 0,
+                      bottom: 0,
+                      right: 0,
+                      width: '20%',
+                      zIndex: 100,
+                      background: `linear-gradient(to right, transparent, ${
+                        theme.base.background
+                      })`,
+                    }}
+                  />
+                  <fadeawayfadeawayfadeaway
+                    css={{
+                      position: 'absolute',
+                      bottom: -250,
+                      right: -250,
+                      width: 900,
+                      height: 450,
+                      background: theme.base.background,
+                      borderRadius: 1000,
+                      filter: {
+                        blur: 30,
+                      },
+                      transform: {
+                        z: 0,
+                      },
+                      zIndex: 2,
+                    }}
+                  />
+                </section>
+
+                <div if={isLarge} css={{ height: '100%' }} />
+                <content
+                  id="search"
+                  css={
+                    isLarge && {
+                      display: 'block',
+                      position: 'relative',
+                      zIndex: 1000,
+                      marginTop: -185 + searchYOff,
+                    }
+                  }
+                >
+                  <SubTitle size={2.5}>Smart Search</SubTitle>
+                  <FeatureSubTitle>Spotlight, meet your brain</FeatureSubTitle>
+                </content>
+                <Media
+                  query={Constants.screen.small}
+                  render={() => <SearchCallout />}
+                />
+              </RightSide>
+            </SectionContent>
+          </Section>
+        )}
+      </Media>
+    )
+  }
+}
+
+@view
+export class SectionFeatureIntelligence extends React.Component {
+  state = {
+    isIntersecting: false,
+  }
+
+  handleIntersect = ({ isIntersecting }) => {
+    this.setState({ isIntersecting })
+  }
+
+  render() {
+    const { isIntersecting } = this.state
+    console.log('isIntersecting', isIntersecting)
+    return (
+      <Media query={Constants.screen.large}>
+        {isLarge => (
+          <Section>
+            <SectionContent id="context" fullscreen={isLarge} padded>
+              <Glow style={{ transform: { y: '10%', x: '-55%' } }} />
+              <Slant
+                slantSize={10}
+                css={{ zIndex: 2 }}
+                slantGradient={[
+                  Constants.featuresSlantColor,
+                  Constants.altBg.darken(0.05),
+                ]}
+              />
+              <Slant
+                slantSize={10}
+                inverseSlant
+                css={{ zIndex: 1 }}
+                amount={20}
+                slantGradient={[
+                  Constants.featuresSlantColor.desaturate(0.5).alpha(0.1),
+                  Constants.backgroundColor,
+                ]}
+              />
+              <LeftSide inverse innerStyle={{ paddingTop: '45%' }}>
+                <div
+                  css={
+                    isLarge && {
+                      display: 'block',
+                      margin: [contextYOff - 130, 0, 0, 30],
+                    }
+                  }
+                >
+                  <SubTitle size={2.5}>Contextual Answers</SubTitle>
+                  <FeatureSubTitle>A whole new way to compute</FeatureSubTitle>
+                  <Callout
+                    css={{
+                      textAlign: 'left',
+                      ...(isLarge
+                        ? {
+                            width: '86%',
+                            position: 'absolute',
+                            right: 10,
+                          }
+                        : null),
+                    }}
+                  >
+                    <P2 size={2}>
+                      Realtime contextual answers that work with every app (yes,
+                      even Slack, Intercom, and your Mail client).
+                    </P2>
+                    <P2 size={1.6}>
+                      And all you have to do is hold <Cmd>Option</Cmd>.
+                      Important terms, people, and items in your cloud with
+                      summarized answers, instantly.
+                    </P2>
+                    <DottedButton
+                      css={
+                        isLarge
+                          ? {
+                              fontSize: 15,
+                              position: 'absolute',
+                              bottom: 20,
+                              right: 20,
+                            }
+                          : {
+                              margin: [20, 0, 0, 'auto'],
+                            }
+                      }
+                    >
+                      Learn more
+                    </DottedButton>
+                  </Callout>
+                  <Observer onChange={this.handleIntersect}>
+                    <br />
+                  </Observer>
+                </div>
+              </LeftSide>
+
+              <Media
+                query={Constants.screen.large}
+                render={() => (
+                  <React.Fragment>
+                    <RightSide css={{ top: 0, overflow: 'visible' }}>
+                      <SearchCallout isLarge />
+                    </RightSide>
+                    <section
+                      css={{
+                        zIndex: 0,
+                        position: 'absolute',
+                        width: 500,
+                        height: 420,
+                        marginTop: -250 + contextYOff,
+                        top: '50%',
+                        left: '50%',
+                        marginLeft: 50,
+                      }}
+                    >
+                      <Border
+                        css={{
+                          bottom: -2,
+                          zIndex: 10000,
+                        }}
+                      />
+                      <inner css={{ flex: 1, overflow: 'hidden' }}>
+                        <FadedArea fadeLeft fadeDown>
                           <Spring from={{ x: 100 }} to={{ x: 10 }}>
                             {({ x }) => (
                               <animated.div
@@ -575,15 +583,15 @@ export class SectionFeatureIntelligence extends React.Component {
                             )}
                           </Spring>
                         </FadedArea>
-                      </section>
-                    </React.Fragment>
-                  )}
-                />
-              </SectionContent>
-            </Section>
-          )}
-        </Media>
-      </UI.Theme>
+                      </inner>
+                    </section>
+                  </React.Fragment>
+                )}
+              />
+            </SectionContent>
+          </Section>
+        )}
+      </Media>
     )
   }
 }
@@ -595,13 +603,15 @@ export default class FeaturesPage {
       <React.Fragment>
         <Header />
         <FeaturesIntro />
-        <surround css={{ position: 'relative' }}>
-          <Border css={{ top: -2, zIndex: 0 }} />
-          <Border css={{ bottom: -4, zIndex: 4 }} />
-          <SectionFeatureNewsSearch />
-          <SearchIllustration />
-          <SectionFeatureIntelligence />
-        </surround>
+        <UI.Theme theme={blueTheme}>
+          <surround css={{ position: 'relative' }}>
+            <Border css={{ top: -2, zIndex: 0 }} />
+            <Border css={{ bottom: -4, zIndex: 4 }} />
+            <SectionFeatureNewsSearch />
+            <SearchIllustration />
+            <SectionFeatureIntelligence />
+          </surround>
+        </UI.Theme>
         <Footer />
       </React.Fragment>
     )

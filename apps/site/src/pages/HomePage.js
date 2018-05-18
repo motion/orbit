@@ -56,11 +56,11 @@ class Home {
                       size={isLarge ? 1.9 : 1.5}
                       alpha={0.75}
                       margin={[0, '25%', 15, 0]}
-                      css={{
-                        lineHeight: '36px',
-                      }}
                     >
-                      Organize your team and stay up to date.<br />
+                      Organize your team and stay up to date.
+                    </P>
+                    <P size={1.2} alpha={0.6}>
+                      News, search and context for your OS.
                     </P>
 
                     <actions
@@ -94,7 +94,7 @@ class Home {
                       <UI.Button
                         chromeless
                         alpha={0.5}
-                        onClick={Router.link('/features')}
+                        onClick={() => Router.go('/features')}
                       >
                         Learn more
                       </UI.Button>

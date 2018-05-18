@@ -25,7 +25,6 @@ export default ({ iconColor = '#000', color = '#000', size = 1, ...props }) => {
     height: naturalHeight * size,
   }
   const iSize = iconSize * size
-  console.log('iSize', iSize)
   return (
     <logos
       css={{
@@ -37,7 +36,7 @@ export default ({ iconColor = '#000', color = '#000', size = 1, ...props }) => {
       <LogoIcon
         css={{
           transformOrigin: 'top left',
-          transform: { scale: iSize },
+          transform: { scale: iSize, y: 400 * iSize },
           width: markWidth * iSize,
           height: markHeight * iSize,
           margin: [0, 40 * iSize, 0, 0],

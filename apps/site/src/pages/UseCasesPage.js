@@ -4,6 +4,7 @@ import {
   P,
   P2,
   LeftSide,
+  Title,
   SmallTitle,
   SubTitle,
   SubSubTitle,
@@ -31,9 +32,27 @@ export const ChatIcon = props => (
 class UseCasesIntro {
   render() {
     return (
-      <Section>
-        <SectionContent halfscreen />
-      </Section>
+      <Media query={Constants.screen.large}>
+        {isLarge => (
+          <Section>
+            <SectionContent halfscreen css={{ padding: [0, 100] }}>
+              <LeftSide noPad css={{ paddingTop: 60, textAlign: 'left' }}>
+                <section css={{ justifyContent: 'center', height: '100%' }}>
+                  <SmallTitle>Use Cases</SmallTitle>
+                  <Title italic size={4} margin={[0, 0, 10, -5]}>
+                    Your team homebase and answers
+                  </Title>
+                  <P size={1.1} alpha={0.75}>
+                    Remote teams &middot; Customer Success &middot; Workplace
+                    interruptions
+                  </P>
+                </section>
+              </LeftSide>
+              <RightSide />
+            </SectionContent>
+          </Section>
+        )}
+      </Media>
     )
   }
 }
@@ -45,11 +64,7 @@ class SectionUseCaseRemoteTeams {
       <UI.Theme theme={Constants.peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section
-              id="use-cases"
-              inverse
-              css={{ background: Constants.altBg }}
-            >
+            <Section id="use-cases" inverse>
               <SectionContent
                 id="remote-teams"
                 fullscreen={isLarge}

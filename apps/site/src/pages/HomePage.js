@@ -8,6 +8,7 @@ import girlImg from '~/../public/video-girl.jpg'
 import HomeIllustration from './HomeIllustration'
 import * as Constants from '~/constants'
 import Media from 'react-media'
+import Router from '~/router'
 
 @view
 class Home {
@@ -60,7 +61,8 @@ class Home {
                         lineHeight: '36px',
                       }}
                     >
-                      Upgrade your Mac's intelligence with a unified work operating system.
+                      Upgrade your Mac's intelligence with a unified work
+                      operating system.
                     </P>
 
                     <actions
@@ -94,7 +96,7 @@ class Home {
                       <UI.Button
                         chromeless
                         alpha={0.5}
-                        tooltip="Completely private on-device."
+                        onClick={Router.link('/features')}
                       >
                         Learn more
                       </UI.Button>

@@ -28,6 +28,13 @@ import newsImg from '~/../public/screen-home.png'
 import searchImg from '~/../public/screen-slack-search.png'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
+const blueBg = UI.color('#FAFAFF')
+const blueTheme = {
+  background: blueBg,
+  color: '#222',
+  titleColor: blueBg.darken(0.75).desaturate(0.3),
+  subTitleColor: blueBg.darken(0.6).desaturate(0.8),
+}
 
 @view
 class FeaturesIntro {
@@ -39,18 +46,12 @@ class FeaturesIntro {
             <SectionContent halfscreen css={{ padding: [0, 100] }}>
               <LeftSide noPad css={{ paddingTop: 60, textAlign: 'left' }}>
                 <section css={{ justifyContent: 'center', height: '100%' }}>
-                  <SmallTitle>Features</SmallTitle>
                   <Title italic size={4} margin={[0, 0, 10, -5]}>
-                    Bring the cloud<br />down to earth
+                    Intelligence for your computer and team
                   </Title>
-                  <P
-                    size={isLarge ? 2 : 1.5}
-                    alpha={0.75}
-                    css={{
-                      lineHeight: '36px',
-                    }}
-                  >
-                    Three features to keep your team in sync.
+                  <P size={isLarge ? 1.7 : 1.5} alpha={0.75}>
+                    How Orbit brings smart contextual search and news from your
+                    company to your desktop.
                   </P>
                 </section>
               </LeftSide>
@@ -192,7 +193,7 @@ export class SectionFeatureNewsSearch extends React.Component {
     const { showOrbit, showNotifs } = this.state
 
     return (
-      <UI.Theme name="light">
+      <UI.Theme theme={blueTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section id="features" inverse>
@@ -442,7 +443,7 @@ export class SectionFeatureIntelligence extends React.Component {
     const { isIntersecting } = this.state
     console.log('isIntersecting', isIntersecting)
     return (
-      <UI.Theme name="light">
+      <UI.Theme theme={blueTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section>

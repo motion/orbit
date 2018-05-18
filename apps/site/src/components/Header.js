@@ -48,7 +48,7 @@ export class Header {
       left: 0,
       right: 0,
       position: 'absolute',
-      zIndex: 1,
+      zIndex: 4,
     },
     headerInner: {
       padding: [25, 0],
@@ -61,7 +61,7 @@ export class Header {
     },
     nav: {
       flexFlow: 'row',
-      width: 240,
+      width: 280,
       justifyContent: 'space-between',
       alignItems: 'center',
       fontSize: 16,

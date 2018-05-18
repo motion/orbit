@@ -55,7 +55,7 @@ export const SubTitle = UI.injectTheme(
     <Media query={Constants.screen.small}>
       {isSmall => (
         <Title
-          size={isSmall ? 3 : size || 4}
+          size={isSmall ? 3 : size || 3.5}
           color={theme.subTitleColor || theme.base.color}
           reduceCapsPct={8}
           {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}

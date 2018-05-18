@@ -145,7 +145,7 @@ export default function fancyElementFactory(Gloss, styles) {
           style = { ...style, ...val }
           continue
         }
-        if (IS_BROWSER && prop === 'onClick') {
+        if (IS_BROWSER && prop === 'onClick' && typeof val === 'function') {
           const ogClick = val
           finalProps.onClick = function(...args) {
             if (cancelNextClick) {

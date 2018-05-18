@@ -5,19 +5,19 @@ import { debounce } from 'lodash'
 
 @view.ui
 export class SectionContent {
-  // state = {
-  //   resize: false,
-  // }
+  state = {
+    resize: false,
+  }
 
-  // componentDidMount() {
-  //   this.on(
-  //     window,
-  //     'resize',
-  //     debounce(() => {
-  //       this.setState({ resize: Math.random() })
-  //     }, 300),
-  //   )
-  // }
+  componentDidMount() {
+    this.on(
+      window,
+      'resize',
+      debounce(() => {
+        this.setState({ resize: Math.random() })
+      }, 300),
+    )
+  }
 
   render({ padded, halfscreen, fullscreen, fullscreenFixed, ...props }) {
     const isSmall = window.innerWidth <= Constants.screen.small.maxWidth
@@ -32,7 +32,7 @@ export class SectionContent {
       )
     }
     if (halfscreen) {
-      height = height / 1.75
+      height = height / 2
       height = Math.max(500, height)
     }
     const style = isSmall ? { minHeight: height } : { height }

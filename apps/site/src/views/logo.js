@@ -38,11 +38,11 @@ export default ({ iconColor = '#000', color = '#000', size = 1, ...props }) => {
       css={{
         alignItems: 'center',
         flexFlow: 'row',
+        marginLeft: -20,
       }}
       {...props}
     >
       <LogoIcon
-        if={false}
         fill={Constants.colorMain}
         css={{
           transformOrigin: 'top left',

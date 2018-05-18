@@ -20,7 +20,7 @@ class Home {
             <SectionContent padded={!isLarge} fullscreenFixed>
               <Slant
                 inverseSlant
-                slantBackground={Constants.colorMain}
+                slantBackground={Constants.colorSecondary}
                 slantSize={12}
                 amount={20}
               />
@@ -31,12 +31,12 @@ class Home {
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      size={isLarge ? 6.8 : 4}
+                      size={isLarge ? 6.5 : 4}
                       margin={[-15, 0, -15, -5]}
-                      color={Constants.colorMain.darken(0.6).desaturate(0.6)}
+                      color="#333"
                     >
-                      Your cloud,<br />
-                      clear as day
+                      Your cloud<br />
+                      made clear
                     </Title>
                     <line
                       css={{

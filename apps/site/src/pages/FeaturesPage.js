@@ -12,7 +12,6 @@ import {
   RightSide,
   Callout,
   Notification,
-  SmallTitle,
   Glow,
 } from '~/views'
 import * as React from 'react'
@@ -46,9 +45,8 @@ class FeaturesIntro {
             <SectionContent halfscreen css={{ padding: [0, 100] }}>
               <LeftSide noPad css={{ paddingTop: 60, textAlign: 'left' }}>
                 <section css={{ justifyContent: 'center', height: '100%' }}>
-                  <SmallTitle>Features</SmallTitle>
                   <Title italic size={3} margin={[0, 0, 10, -5]}>
-                    Making work clearer, more organized, and more enjoyable
+                    Upgrade your Mac with an intelligent work agent.
                   </Title>
                   <P size={isLarge ? 1.7 : 1.5} alpha={0.75}>
                     Smart contextual search, news and answers.

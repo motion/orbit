@@ -38,11 +38,10 @@ class Home {
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      reduceCapsPct={10}
-                      size={isLarge ? 7.2 : 4}
+                      size={isLarge ? 6.8 : 4}
                       margin={[-15, 0, -15, -5]}
                     >
-                      Work smart
+                      Stay in sync, stress free
                     </Title>
                     <line
                       css={{
@@ -61,8 +60,7 @@ class Home {
                         lineHeight: '36px',
                       }}
                     >
-                      Your cloud and your Mac meet.<br />
-                      An intelligent new operating layer.
+                      Organize your team and stay up to date.<br />
                     </P>
 
                     <actions

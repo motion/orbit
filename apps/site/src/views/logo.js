@@ -1,8 +1,8 @@
 import * as React from 'react'
 import SVGInline from 'react-svg-inline'
-import LogoTextSVG from '~/../public/orbit3.svg'
+import LogoTextSVG from '~/../public/orbit.svg'
 
-const naturalWidth = 413
+const naturalWidth = 425
 const naturalHeight = 142
 
 export const LogoText = props => (

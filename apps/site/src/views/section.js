@@ -9,7 +9,7 @@ export const Slant = ({
   inverseSlant,
   slantBackground = '#f2f2f2',
   rightBackground,
-  slantSize = 16,
+  slantSize = 14,
   amount = 40,
   ...props
 }) => {
@@ -102,7 +102,7 @@ export class Section extends React.Component {
 }
 
 @view
-export class SectionContent {
+export class SectionContent extends React.Component {
   state = {
     resize: false,
   }
@@ -113,23 +113,33 @@ export class SectionContent {
       'resize',
       debounce(() => {
         this.setState({ resize: Math.random() })
-      }, 1000),
+      }, 300),
     )
   }
 
-  render({ padded, fullscreen, ...props }) {
+  render({ padded, halfscreen, fullscreen, fullscreenFixed, ...props }) {
     const isSmall = window.innerWidth <= Constants.screen.small.maxWidth
-    const height = fullscreen
-      ? Math.max(
-          isSmall ? 500 : 1000,
-          Math.min(Constants.sectionMaxHeight, window.innerHeight),
-        )
-      : 'auto'
+    let height = 'auto'
+    if (fullscreenFixed) {
+      height = window.innerHeight
+    }
+    if (halfscreen || fullscreen) {
+      height = Math.max(
+        isSmall ? 500 : 1000,
+        Math.min(Constants.sectionMaxHeight, window.innerHeight),
+      )
+    }
+    if (halfscreen) {
+      height = height / 1.5
+      height = Math.max(800, height)
+    }
     const style = isSmall ? { minHeight: height } : { height }
     return (
       <section
         $padded={padded}
+        $halfscreen={halfscreen}
         $fullscreen={fullscreen}
+        $fullscreenFixed={fullscreenFixed}
         css={style}
         {...props}
       />
@@ -149,6 +159,9 @@ export class SectionContent {
         minWidth: 'auto',
         maxWidth: 'auto',
       },
+    },
+    halfscreen: {
+      padding: [0, 120],
     },
     padded: {
       padding: [80, 30],

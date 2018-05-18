@@ -130,16 +130,6 @@ function fancyElementFactory(Gloss, styles) {
     if (!type) {
       throw new Error(`Didn't get a valid type: ${type}, children: ${children ? children.toString() : children}`);
     }
-    if (IS_BROWSER && props && props.onClick) {
-      const ogClick = props.onClick;
-      props.onClick = function (...args) {
-        if (cancelNextClick) {
-          cancelNextClick = false;
-          return;
-        }
-        return ogClick.call(this, ...args);
-      };
-    }
     if (!this) {
       return ogCreateElement(type, props, ...children);
     }
@@ -166,6 +156,17 @@ function fancyElementFactory(Gloss, styles) {
         // style={}
         if (prop === 'style') {
           style = _extends({}, style, val);
+          continue;
+        }
+        if (IS_BROWSER && prop === 'onClick') {
+          const ogClick = val;
+          finalProps.onClick = function (...args) {
+            if (cancelNextClick) {
+              cancelNextClick = false;
+              return;
+            }
+            return ogClick.call(this, ...args);
+          };
           continue;
         }
         // css={}

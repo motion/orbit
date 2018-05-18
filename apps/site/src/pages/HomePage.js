@@ -2,7 +2,17 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
-import { Section, SectionContent, Slant } from '~/views'
+import { Section, SectionContent, Slant } from '~/views/section'
+import {
+  Title,
+  SubTitle,
+  SubSubTitle,
+  SmallTitle,
+  P,
+  P2,
+  LeftSide,
+  RightSide,
+} from '~/views'
 import profileImg from '~/../public/screen-profile.png'
 import intelligenceImg from '~/../public/screen-context-word.png'
 import newsImg from '~/../public/screen-home.png'
@@ -16,6 +26,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import chatImg from '~/../public/chat.svg'
 import SVGInline from 'react-svg-inline'
+import Router from '~/router'
 
 export const ChatIcon = props => (
   <SVGInline svg={chatImg} width={`${120}px`} {...props} />
@@ -26,7 +37,7 @@ const featuresSlantColor = UI.color('#F2B0BF')
 const useCasesSlantBg1 = '#F4E1B5'
 const useCasesSlantBg2 = '#E0CACA'
 
-const Border = UI.injectTheme(({ theme, ...props }) => (
+export const Border = UI.injectTheme(({ theme, ...props }) => (
   <border
     css={{
       position: 'absolute',
@@ -118,167 +129,6 @@ const DottedButton = props => (
   />
 )
 
-const IS_UPPER = /[A-Z]/
-const changeCaps = (str, reducePct) =>
-  typeof str === 'string'
-    ? str
-        .split('')
-        .map(
-          char =>
-            IS_UPPER.test(char) ? (
-              <span style={{ fontSize: `${100 - reducePct}%` }}>{char}</span>
-            ) : (
-              char
-            ),
-        )
-    : str
-
-const Title = ({ children, reduceCapsPct, italic, size = 4, ...props }) => (
-  <P
-    size={size}
-    fontWeight={700}
-    margin={[0, 0, 5]}
-    css={{
-      fontFamily: '"Mercury Display A", "Mercury Display B"',
-      fontStyle: italic ? 'italic' : 'normal',
-      letterSpacing: size <= 5 ? -2 : 0,
-    }}
-    {...props}
-  >
-    {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}
-  </P>
-)
-
-const SubTitle = UI.injectTheme(({ theme, size, ...props }) => (
-  <Media query={Constants.screen.small}>
-    {isSmall => (
-      <Title
-        size={isSmall ? 3 : size || 5}
-        color={theme.subTitleColor || theme.base.color}
-        reduceCapsPct={8}
-        {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
-        {...props}
-      />
-    )}
-  </Media>
-))
-
-const SubSubTitle = props => (
-  <P size={1.2} fontWeight={800} {...props} margin={[0, 0, 8]} />
-)
-
-const SmallTitle = props => (
-  <P
-    size={1}
-    fontWeight={500}
-    textTransform="uppercase"
-    alpha={0.45}
-    padding={[0, 2]}
-    margin={[0, 0, 5]}
-    {...props}
-  />
-)
-
-const sidePadSmall = 40
-
-const RightSide = ({ children, inverse, noEdge, ...props }) => (
-  <Media query={Constants.screen.small}>
-    {isSmall =>
-      isSmall ? (
-        <rightSide>{children}</rightSide>
-      ) : (
-        <rightSide
-          css={{
-            zIndex: 3,
-            flex: 1,
-            position: 'absolute',
-            left: '50%',
-            right: 0,
-            bottom: 80,
-            top: 80,
-            paddingRight: 20,
-            justifyContent: 'center',
-          }}
-          {...props}
-        >
-          <inner
-            if={!noEdge}
-            css={{
-              display: 'block',
-              height: '100%',
-              paddingLeft: 20,
-            }}
-          >
-            <edge
-              css={{
-                shapeOutside: inverse
-                  ? 'polygon(0% 0%, 0% 21px, 174% 2131px)'
-                  : 'polygon(0% 0%, 90px 0%, 0% 1096px)',
-                float: 'left',
-                width: 187,
-                height: '100%',
-                marginLeft: inverse ? -75 : -90,
-              }}
-            />
-            {children}
-          </inner>
-          {noEdge && children}
-        </rightSide>
-      )
-    }
-  </Media>
-)
-
-const LeftSide = ({ children, innerStyle, noEdge, inverse, ...props }) => (
-  <Media query={Constants.screen.small}>
-    {isSmall =>
-      isSmall ? (
-        <leftSide css={{ padding: [0, 0, sidePadSmall, 0] }}>
-          {children}
-        </leftSide>
-      ) : (
-        <leftSide
-          css={{
-            zIndex: 3,
-            flex: 1,
-            position: 'absolute',
-            left: 0,
-            right: '50%',
-            bottom: 80,
-            top: 80,
-            paddingRight: 20,
-            justifyContent: 'center',
-            textAlign: 'right',
-          }}
-          {...props}
-        >
-          <inner
-            style={innerStyle}
-            css={{
-              display: 'block',
-              height: '100%',
-            }}
-          >
-            <edge
-              if={!noEdge}
-              css={{
-                shapeOutside: inverse
-                  ? 'polygon(105% 0%, 90px 0%, 0% 1096px)'
-                  : 'polygon(0% 0%, 1px 0%, 96% 1096px)',
-                float: 'right',
-                width: 110,
-                height: 990,
-                marginLeft: inverse ? 5 : -20,
-              }}
-            />
-            {children}
-          </inner>
-        </leftSide>
-      )
-    }
-  </Media>
-)
-
 const Cmd = view('span', {
   padding: [2, 5],
   margin: [-2, 0],
@@ -355,15 +205,12 @@ class Callout {
   }
 }
 
-const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
-const P2 = props => <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
-
 @view
-class BrandLogo {
+export class BrandLogo {
   render() {
     return (
-      <brandMark>
-        <Logo size={0.22} color="#000" iconColor={brandColor} />
+      <brandMark {...this.props}>
+        <Logo size={0.25} color={brandColor} iconColor={brandColor} />
         <P
           if={false}
           size={1}
@@ -379,10 +226,6 @@ class BrandLogo {
 
   static style = {
     brandMark: {
-      // background: '#fff',
-      // padding: 20,
-      // margin: -20,
-      // marginLeft: -60,
       alignItems: 'center',
       textAlign: 'center',
     },
@@ -390,203 +233,204 @@ class BrandLogo {
 }
 
 @view
-class Header {
+export class Header {
   render() {
     return (
-      <Section css={{ background: '#fff' }}>
-        {/* {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => (
-          <Slant
-            key={i}
-            slantBackground={`linear-gradient(200deg, #f2f2f2, ${
-              Constants.backgroundColor
-            } 95%)`}
-            slantSize={36 / i}
-            css={{
-              zIndex: 2,
-              opacity: 11 / i / 11 + 0.3,
-              transformOrigin: 'top left',
-              transform: {
-                scale: 2.5 / i,
-                x: (-60 * i * i + 60) / 2.5,
-                y: -50 * i * 2.5,
-                // scaleX: 5 * i,
-                // scaleY: 2,
-                // rotate: `${-i * 3}deg`,
-              },
-            }}
-          />
-        ))} */}
-
-        <SectionContent padded fullscreen>
-          <Slant
-            inverseSlant
-            slantBackground={`linear-gradient(200deg, ${
-              Constants.colorSecondary
-            } 5%, ${Constants.colorSecondary.alpha(0.4)} 95%)`}
-            slantSize={12}
-            amount={20}
-          />
-          <Slant
-            slantBackground={`linear-gradient(200deg, ${
-              Constants.backgroundColor
-            } 5%, #f2f2f2 95%)`}
-            css={{ zIndex: 2 }}
-          />
-
-          <Media
-            query={Constants.screen.large}
-            render={() => (
-              <glowContain
-                css={{
-                  position: 'absolute',
-                  top: -200,
-                  left: -100,
-                  bottom: 0,
-                  right: '49.5%',
-                  zIndex: 1,
-                  overflow: 'hidden',
-                  transform: {
-                    rotate: '4.7deg',
-                  },
-                }}
-              >
-                <glow
-                  css={{
-                    position: 'absolute',
-                    top: '42%',
-                    right: 0,
-                    marginRight: -172,
-                    background: '#fff',
-                    opacity: 1,
-                    width: 350,
-                    height: 300,
-                    borderRadius: 100,
-                    filter: {
-                      blur: 120,
-                    },
-                  }}
-                />
-              </glowContain>
-            )}
-          />
-          <top $$row>
-            <BrandLogo />
+      <header>
+        <headerBorder
+          css={{
+            position: 'absolute',
+            bottom: 0,
+            height: 1,
+            background: '#f4f4f4',
+            left: 0,
+            right: 0,
+          }}
+        />
+        <SectionContent>
+          <headerInner>
+            <BrandLogo css={{ cursor: 'pointer' }} onClick={Router.link('/')} />
             <div $$flex />
-          </top>
-          <div $$flex />
-          <Media query={Constants.screen.large}>
-            {isLarge => (
-              <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
-                <Title
-                  italic
-                  reduceCapsPct={10}
-                  size={isLarge ? 6.1 : 4}
-                  margin={[-15, 0, 0, -5]}
-                >
-                  Smart&nbsp;team<br />organization
-                </Title>
-                <line
-                  css={{
-                    margin: [26, 40],
-                    width: '75%',
-                    height: 4,
-                    background: '#ddd',
-                    opacity: 0.15,
-                  }}
-                />
-                <P
-                  size={isLarge ? 1.9 : 1.5}
-                  alpha={0.75}
-                  margin={[0, '26%', 15, 0]}
-                  css={{
-                    lineHeight: '36px',
-                  }}
-                >
-                  Upgrade Mac Spotlight and notifications with an intelligent
-                  team operating system.
-                </P>
-                <P2 if={false} size={1}>
-                  AI for your organization.
-                </P2>
-
-                <actions
-                  $$row
-                  css={{
-                    margin: isLarge ? [25, 'auto', 0, 0] : [0, 0, 0, 25],
-                    alignItems: 'center',
-                  }}
-                >
-                  <UI.Button
-                    borderStyle="dotted"
-                    borderColor="#ccc"
-                    size={1.1}
-                    $smallInstallBtn={!isLarge}
-                    tooltip=""
-                    css={{
-                      margin: [0, 10, 0, -5],
-                    }}
-                  >
-                    Try for{' '}
-                    <AppleLogo
-                      width={20}
-                      height={20}
-                      css={{
-                        display: 'inline-block',
-                        margin: [-2, 0, 0, 0],
-                        opacity: 0.32,
-                      }}
-                    />
-                  </UI.Button>
-                  <UI.Button
-                    chromeless
-                    alpha={0.5}
-                    tooltip="Completely private on-device."
-                  >
-                    Privacy
-                  </UI.Button>
-                </actions>
-              </mainSection>
-            )}
-          </Media>
-
-          <div $$flex />
-
-          <Media
-            query={Constants.screen.large}
-            render={() => (
-              <React.Fragment>
-                <rightSide>
-                  <HeaderIllustration />
-                </rightSide>
-                <videos if={false}>
-                  <videoSpot>
-                    <img
-                      $girlImg
-                      src={girlImg}
-                      width={432}
-                      css={{ transform: { scale: 0.9 } }}
-                    />
-                    <UI.Icon
-                      name="media-1_button-play"
-                      color="#fff"
-                      size={45}
-                      css={{
-                        zIndex: 100,
-                        position: 'absolute',
-                        top: 120,
-                        left: 200,
-                      }}
-                    />
-                    <P selectable={false} size={4.5} margin={0}>
-                      Watch the 30s<br /> introduction
-                    </P>
-                  </videoSpot>
-                </videos>
-              </React.Fragment>
-            )}
-          />
+            <nav>
+              <a href="/features" onClick={Router.link('/features')}>
+                Features
+              </a>
+              <a href="/use-cases" onClick={Router.link('/use-cases')}>
+                Use Cases
+              </a>
+              <a href="/about" onClick={Router.link('/about')}>
+                About
+              </a>
+            </nav>
+          </headerInner>
         </SectionContent>
-      </Section>
+      </header>
+    )
+  }
+
+  static style = {
+    header: {
+      top: 0,
+      left: 0,
+      right: 0,
+      position: 'absolute',
+      zIndex: 1,
+    },
+    headerInner: {
+      padding: [25, 0],
+      flexFlow: 'row',
+      zIndex: 100,
+      alignItems: 'center',
+      [Constants.screen.smallQuery]: {
+        padding: [0, 0, 20, 0],
+      },
+    },
+    nav: {
+      flexFlow: 'row',
+      width: 240,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+  }
+}
+
+@view
+class Home {
+  render() {
+    return (
+      <Media query={Constants.screen.large}>
+        {isLarge => (
+          <Section css={{ background: '#fff' }}>
+            <SectionContent padded={!isLarge} fullscreenFixed>
+              <Slant
+                inverseSlant
+                slantBackground={`linear-gradient(200deg, ${
+                  Constants.colorSecondary
+                } 5%, ${Constants.colorSecondary.alpha(0.4)} 95%)`}
+                slantSize={12}
+                amount={20}
+              />
+              <Slant
+                slantBackground={`linear-gradient(200deg, ${
+                  Constants.backgroundColor
+                } 5%, #f2f2f2 95%)`}
+                css={{ zIndex: 2 }}
+              />
+              <div $$flex />
+              <Media query={Constants.screen.large}>
+                {isLarge => (
+                  <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
+                    <Title
+                      italic
+                      reduceCapsPct={10}
+                      size={isLarge ? 6.5 : 4}
+                      margin={[-15, 0, 20, -5]}
+                    >
+                      Command<br />your cloud
+                    </Title>
+                    <line
+                      if={false}
+                      css={{
+                        margin: [26, 40],
+                        width: '75%',
+                        height: 4,
+                        background: '#ddd',
+                        opacity: 0.15,
+                      }}
+                    />
+                    <P
+                      size={isLarge ? 1.9 : 1.5}
+                      alpha={0.75}
+                      margin={[0, '27%', 15, 0]}
+                      css={{
+                        lineHeight: '36px',
+                      }}
+                    >
+                      Upgrade your Mac's intelligence with a unified work
+                      operating system.
+                    </P>
+                    <P2 if={false} size={1}>
+                      AI for your organization.
+                    </P2>
+
+                    <actions
+                      $$row
+                      css={{
+                        margin: isLarge ? [25, 'auto', 0, 0] : [0, 0, 0, 25],
+                        alignItems: 'center',
+                      }}
+                    >
+                      <UI.Button
+                        borderStyle="dotted"
+                        borderColor="#ccc"
+                        size={1.1}
+                        $smallInstallBtn={!isLarge}
+                        tooltip=""
+                        css={{
+                          margin: [0, 10, 0, -5],
+                        }}
+                      >
+                        Try for{' '}
+                        <AppleLogo
+                          width={20}
+                          height={20}
+                          css={{
+                            display: 'inline-block',
+                            margin: [-2, 0, 0, 0],
+                            opacity: 0.32,
+                          }}
+                        />
+                      </UI.Button>
+                      <UI.Button
+                        chromeless
+                        alpha={0.5}
+                        tooltip="Completely private on-device."
+                      >
+                        Learn more
+                      </UI.Button>
+                    </actions>
+                  </mainSection>
+                )}
+              </Media>
+              <div $$flex />
+              <Media
+                query={Constants.screen.large}
+                render={() => (
+                  <React.Fragment>
+                    <rightSide>
+                      <HeaderIllustration />
+                    </rightSide>
+                    <videos if={false}>
+                      <videoSpot>
+                        <img
+                          $girlImg
+                          src={girlImg}
+                          width={432}
+                          css={{ transform: { scale: 0.9 } }}
+                        />
+                        <UI.Icon
+                          name="media-1_button-play"
+                          color="#fff"
+                          size={45}
+                          css={{
+                            zIndex: 100,
+                            position: 'absolute',
+                            top: 120,
+                            left: 200,
+                          }}
+                        />
+                        <P selectable={false} size={4.5} margin={0}>
+                          Watch the 30s<br /> introduction
+                        </P>
+                      </videoSpot>
+                    </videos>
+                  </React.Fragment>
+                )}
+              />
+            </SectionContent>
+          </Section>
+        )}
+      </Media>
     )
   }
 
@@ -594,10 +438,6 @@ class Header {
     mainSection: {
       position: 'relative',
       zIndex: 10,
-    },
-    header: {
-      padding: 25,
-      position: 'relative',
     },
     smallCallout: {
       padding: [10, 0, 40, 0],
@@ -625,14 +465,6 @@ class Header {
       margin: [0, 60, 0, 0],
       boxShadow: [[0, 0, 90, [0, 0, 0, 0.1]]],
     },
-    top: {
-      flexFlow: 'row',
-      zIndex: 100,
-      position: 'relative',
-      [Constants.screen.smallQuery]: {
-        padding: [0, 0, 20, 0],
-      },
-    },
     brandMark: {
       alignSelf: 'flex-end',
       alignItems: 'center',
@@ -655,6 +487,7 @@ class Header {
       left: '50%',
       paddingLeft: '5%',
       zIndex: 4,
+      pointerEvents: 'none',
     },
     videos: {
       position: 'absolute',
@@ -767,7 +600,7 @@ const Glow = ({ below, style = {}, ...props }) => (
 )
 
 @view
-class SectionFeatureNewsSearch extends React.Component {
+export class SectionFeatureNewsSearch extends React.Component {
   state = {
     showOrbit: false,
     showNotifs: true,
@@ -1053,7 +886,7 @@ class SectionFeatureNewsSearch extends React.Component {
 }
 
 @view
-class SectionFeatureIntelligence extends React.Component {
+export class SectionFeatureIntelligence extends React.Component {
   state = {
     isIntersecting: false,
   }
@@ -1212,7 +1045,7 @@ const peachTheme = {
 }
 
 @view
-class SectionUseCaseRemoteTeams {
+export class SectionUseCaseRemoteTeams {
   render() {
     return (
       <UI.Theme theme={peachTheme}>
@@ -1340,7 +1173,7 @@ class SectionUseCaseRemoteTeams {
 }
 
 @view
-class SectionUseCaseRemoteFirst {
+export class SectionUseCaseRemoteFirst {
   render() {
     return (
       <UI.Theme theme={peachTheme}>
@@ -1456,7 +1289,7 @@ class SectionUseCaseRemoteFirst {
 }
 
 @view
-class SectionUseCaseReduceInterrupts {
+export class SectionUseCaseReduceInterrupts {
   render() {
     return (
       <UI.Theme theme={peachTheme}>
@@ -1570,7 +1403,7 @@ class SectionUseCaseReduceInterrupts {
 }
 
 @view
-class Footer {
+export class Footer {
   render() {
     return (
       <Media query={Constants.screen.large}>
@@ -1611,7 +1444,7 @@ class Footer {
   }
 }
 
-const SearchIllustration = () => (
+export const SearchIllustration = () => (
   <Media
     query={Constants.screen.large}
     render={() => (
@@ -1650,41 +1483,13 @@ const SearchIllustration = () => (
 )
 
 @view
-export default class HomePage extends React.Component {
+export default class HomePage {
   render() {
     return (
-      <Media query={Constants.screen.tall}>
-        {isTall => (
-          <home
-            $scaledUp={isTall}
-            css={{ background: Constants.backgroundColor }}
-          >
-            <Header />
-            <surround css={{ position: 'relative' }}>
-              <Border css={{ top: 0, zIndex: 1 }} />
-              <SectionFeatureNewsSearch />
-              <SearchIllustration />
-              <SectionFeatureIntelligence />
-            </surround>
-            <SectionUseCaseRemoteTeams />
-            <SectionUseCaseRemoteFirst />
-            <SectionUseCaseReduceInterrupts />
-            <Footer />
-          </home>
-        )}
-      </Media>
+      <React.Fragment>
+        <Header />
+        <Home />
+      </React.Fragment>
     )
-  }
-
-  static style = {
-    home: {
-      overflow: 'hidden',
-    },
-    scaledUp: {
-      transformOrigin: 'top center',
-      transform: {
-        scale: 1.1,
-      },
-    },
   }
 }

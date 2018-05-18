@@ -98,6 +98,11 @@ export class ObservableRouter {
     this.history.goForward()
   }
 
+  link = () => e => {
+    e.preventDefault()
+    this.go(e.target.href)
+  }
+
   @action
   go = (...segments) => {
     let path = segments.join('/')

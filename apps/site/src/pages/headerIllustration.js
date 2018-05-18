@@ -78,20 +78,20 @@ const INITIAL_STATE = {
 const chats = [
   <Bubble left>The #dev chat room</Bubble>,
   <Bubble>clear as modern art</Bubble>,
-  <Bubble left chromeless>
+  <Bubble left>
     🙄
   </Bubble>,
   <Bubble>& spreading like an oil spill...</Bubble>,
-  <Bubble left chromeless>
+  <Bubble left>
     🤷‍
   </Bubble>,
   <Bubble left>It's not that it doesn't work</Bubble>,
   <Bubble>Yea, but you'd hope for a bit more...</Bubble>,
-  <Bubble left chromeless>
+  <Bubble left>
     clarity, perhaps
   </Bubble>,
   <Bubble>at least some sort of summary</Bubble>,
-  <Bubble left chromeless>
+  <Bubble left>
     👆
   </Bubble>,
   <Bubble left>too much FOMO</Bubble>,

@@ -9,21 +9,25 @@ export const smallMax = smallSize - 1
 export const smallMin = smallSize
 
 export const PAGE_WIDTH = smallSize
-
 export const SECTION_HEIGHT = 1100 //Math.max(980, Math.min(1300, window.innerHeight))
 
-export const ORA_LEFT_PAD = 285
-export const ORA_TOP_PAD = 60
-export const ORA_TOP = SECTION_HEIGHT
-export const ORA_HEIGHT = 410
-export const ORA_WIDTH = 300
-export const ORA_BORDER_RADIUS = 6
-export const ORA_PULL_UP = 110
-
 export const colorMain = UI.color('rgb(149, 73, 255)')
+export const brandColor = colorMain
 export const colorSecondary = UI.color('rgb(94.5%, 80.1%, 12.3%)')
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')
+
+export const featuresSlantColor = UI.color('#F2B0BF')
+export const useCasesSlantBg1 = '#F4E1B5'
+export const useCasesSlantBg2 = '#E0CACA'
+
+export const altBg = UI.color('#FCF6ED')
+export const peachTheme = {
+  background: altBg,
+  color: altBg.darken(0.8).desaturate(0.1),
+  titleColor: altBg.darken(0.55).desaturate(0.3),
+  subTitleColor: altBg.darken(0.55).desaturate(0.8),
+}
 
 export const backgroundColor = UI.color('#fcfcfc')
 

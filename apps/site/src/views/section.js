@@ -130,8 +130,8 @@ export class SectionContent extends React.Component {
       )
     }
     if (halfscreen) {
-      height = height / 1.5
-      height = Math.max(800, height)
+      height = height / 2
+      height = Math.max(500, height)
     }
     const style = isSmall ? { minHeight: height } : { height }
     return (

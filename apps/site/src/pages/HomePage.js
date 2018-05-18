@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Section, SectionContent, Slant } from '~/views/section'
 import { Header } from '~/components'
-import { Title, P, P2, AppleLogo } from '~/views'
+import { Title, P, P2, LeftSide, AppleLogo } from '~/views'
 import girlImg from '~/../public/video-girl.jpg'
 import HomeIllustration from './HomeIllustration'
 import * as Constants from '~/constants'
@@ -11,20 +11,23 @@ import Media from 'react-media'
 import Router from '~/router'
 
 @view
-class Home {
+class HomeHeader {
   render() {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section css={{ background: '#fff' }}>
-            <SectionContent padded={!isLarge} fullscreenFixed>
+            <SectionContent padded={!isLarge} fullscreen>
               <Slant
                 inverseSlant
-                slantBackground={Constants.colorSecondary}
+                slantGradient={[
+                  Constants.colorSecondary,
+                  Constants.colorSecondary.lighten(0.4),
+                ]}
                 slantSize={12}
                 amount={20}
               />
-              <Slant slantBackground={`#f2f2f2`} css={{ zIndex: 2 }} />
+              <Slant slantBackground={`#f6f6f6`} css={{ zIndex: 2 }} />
               <div $$flex />
               <Media query={Constants.screen.large}>
                 {isLarge => (
@@ -35,8 +38,8 @@ class Home {
                       margin={[-15, 0, -15, -5]}
                       color="#333"
                     >
-                      Your cloud<br />
-                      made clear
+                      Intelligent<br />
+                      for you
                     </Title>
                     <line
                       css={{
@@ -48,19 +51,11 @@ class Home {
                       }}
                     />
                     <below css={{ margin: [0, '24%', 10, 0] }}>
-                      <P
-                        size={2}
-                        fontWeight={400}
-                        // color={Constants.colorMain.darken(0.2).desaturate(0.3)}
-                      >
-                        Company news, search and more
-                      </P>
-                      <verSpace css={{ height: 8 }} />
-                      <P size={isLarge ? 1.8 : 1.5} alpha={0.7}>
-                        Upgrade Mac with intelligence in 3 minutes.
+                      <P size={2} fontWeight={300} alpha={0.8}>
+                        A smart new way to operate your company by bringing the
+                        cloud down to your OS.
                       </P>
                     </below>
-
                     <actions
                       $$row
                       css={{
@@ -214,9 +209,71 @@ class Home {
   }
 }
 
+const blackBg = UI.color('#111')
+const blackTheme = {
+  background: blackBg,
+  color: '#f2f2f2',
+  titleColor: blackBg.darken(0.75).desaturate(0.3),
+  subTitleColor: blackBg.darken(0.6).desaturate(0.8),
+}
+
+@view
+class HomeFooter {
+  render() {
+    return (
+      <UI.Theme theme={blackTheme}>
+        <Media query={Constants.screen.large}>
+          {isLarge => (
+            <Section inverse>
+              <SectionContent padded={!isLarge} fullscreen>
+                <Slant
+                  css={{ zIndex: 1 }}
+                  slantSize={10}
+                  inverseSlant
+                  slantGradient={['#222', '#333']}
+                />
+                <Slant
+                  slantSize={10}
+                  amount={20}
+                  slantGradient={[
+                    Constants.colorSecondary.lighten(0.4),
+                    Constants.colorSecondary.darken(0.2),
+                  ]}
+                />
+                <LeftSide css={{ textAlign: 'left' }}>
+                  <div css={{ height: '22%' }} />
+                  <Title italic size={2.8} color="#fff">
+                    A brain for your company
+                  </Title>
+                  <below css={{ margin: [20, '15%', 0, 0] }}>
+                    <P2 size={2.1} alpha={0.8}>
+                      We use more and more tools everyday. They store data all
+                      over the place.
+                    </P2>
+                    <P2 size={1.8} alpha={0.7}>
+                      It makes sense to use best tool for the job. But that
+                      leads to a lack of high level organization.
+                    </P2>
+                    <P2 size={1.8} alpha={0.7}>
+                      Orbit brings company news, search and exploratory features
+                      to your desktop by giving it a powerful on-device machine
+                      learning system and a whole new interface.
+                    </P2>
+                  </below>
+                </LeftSide>
+              </SectionContent>
+            </Section>
+          )}
+        </Media>
+      </UI.Theme>
+    )
+  }
+}
+
 export default () => (
   <React.Fragment>
     <Header />
-    <Home />
+    <HomeHeader />
+    <HomeFooter />
   </React.Fragment>
 )

@@ -41,9 +41,12 @@ class UseCasesIntro {
                 css={{ paddingTop: 60, width: '60%', textAlign: 'left' }}
               >
                 <section css={{ justifyContent: 'center', height: '100%' }}>
-                  <Title italic size={3} margin={[0, '20%', 10, -5]}>
-                    Bring intelligence to your operating system
+                  <Title italic size={3} margin={[0, '10%', 10, -5]}>
+                    Intelligence for your operations
                   </Title>
+                  <P size={isLarge ? 1.7 : 1.5} alpha={0.75}>
+                    Work smarter with less interruption.
+                  </P>
                   <br />
                   <P size={1.2} alpha={0.75}>
                     Remote teams &nbsp;&nbsp;&middot;&nbsp;&nbsp; Customer
@@ -83,9 +86,9 @@ class SectionUseCaseRemoteTeams {
                 />
                 <Slant
                   inverseSlant
-                  slantBackground={`linear-gradient(200deg, ${Constants.altBg.darken(
+                  slantGradient={[Constants.altBg.darken(
                     0.05,
-                  )} 5%, ${Constants.useCasesSlantBg1} 95%)`}
+                  ), Constants.useCasesSlantBg1]}
                   css={{ zIndex: 2 }}
                 />
                 <LeftSide>
@@ -205,7 +208,6 @@ class SectionUseCaseCustomerSuccess {
               css={{ background: Constants.altBg }}
             >
               <SectionContent fullscreen={isLarge} padded>
-                <Border css={{ top: -80 }} />
                 <Glow
                   style={{
                     background: Constants.altBg.lighten(0.025),
@@ -213,9 +215,8 @@ class SectionUseCaseCustomerSuccess {
                   }}
                 />
                 <Slant
-                  slantBackground={`linear-gradient(200deg, ${
-                    Constants.useCasesSlantBg1
-                  } 5%, ${Constants.useCasesSlantBg2} 95%)`}
+                  slantBackground={[
+                    Constants.useCasesSlantBg1, Constants.useCasesSlantBg2]}
                 />
                 <chat>
                   <ChatIcon />
@@ -338,12 +339,9 @@ class SectionUseCaseReduceInterrupts {
                     transform: { x: '-20%', y: '-25%' },
                   }}
                 />
-                <Border css={{ top: -20 }} />
                 <Slant
                   inverseSlant
-                  slantBackground={`linear-gradient(200deg, ${
-                    Constants.useCasesSlantBg2
-                  } 5%, ${Constants.altBg} 95%)`}
+                  slantGradient={[Constants.useCasesSlantBg2, Constants.altBg]}
                   css={{ zIndex: 2 }}
                 />
                 <LeftSide>
@@ -442,7 +440,8 @@ export default class UseCasesPage {
         <Header />
         <UseCasesIntro />
         <surround css={{ position: 'relative' }}>
-          <Border css={{ top: 0, zIndex: 1 }} />
+          <Border css={{ top: -2, zIndex: 0 }} />
+          <Border css={{ bottom: -4, zIndex: 4 }} />
           <SectionUseCaseRemoteTeams />
           <SectionUseCaseCustomerSuccess />
           <SectionUseCaseReduceInterrupts />

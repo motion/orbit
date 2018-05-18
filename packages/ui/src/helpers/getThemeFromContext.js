@@ -23,7 +23,6 @@ export default function getThemeFromContext(
         typeof themeProp === 'string'
           ? Theme.fromColor(themeProp)
           : Theme.fromStyles(themeProp)
-      console.log('making theme', themeProp, theme)
       if (theme) {
         return {
           uiThemes: {

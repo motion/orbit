@@ -9,6 +9,7 @@ export const Slant = ({
   inverse,
   inverseSlant,
   slantBackground = '#f2f2f2',
+  slantGradient,
   rightBackground,
   slantSize = 14,
   amount = 40,
@@ -41,8 +42,11 @@ export const Slant = ({
             <div
               css={{
                 position: 'absolute',
-                background: slantBackground,
-                // opacity: 0.92,
+                background: slantGradient
+                  ? `linear-gradient(200deg, ${slantGradient[0]} 5%, ${
+                      slantGradient[1]
+                    } 95%)`
+                  : slantBackground,
                 top: -slant,
                 bottom: -slant,
                 left: inverse ? 'auto' : 0,

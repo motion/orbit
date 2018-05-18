@@ -32,7 +32,7 @@ const blueTheme = {
   background: blueBg,
   color: '#222',
   titleColor: blueBg.darken(0.75).desaturate(0.3),
-  subTitleColor: blueBg.darken(0.6).desaturate(0.8),
+  subTitleColor: blueBg.darken(0.7).desaturate(0.8),
 }
 
 @view
@@ -46,10 +46,10 @@ class FeaturesIntro {
               <LeftSide noPad css={{ paddingTop: 60, textAlign: 'left' }}>
                 <section css={{ justifyContent: 'center', height: '100%' }}>
                   <Title italic size={3} margin={[0, 0, 10, -5]}>
-                    Upgrade your Mac with an intelligent work agent.
+                    Upgrade your Mac with an intelligent work agent
                   </Title>
                   <P size={isLarge ? 1.7 : 1.5} alpha={0.75}>
-                    Smart contextual search, news and answers.
+                    Smart contextual news and search
                   </P>
                 </section>
               </LeftSide>
@@ -214,19 +214,16 @@ export class SectionFeatureNewsSearch extends React.Component {
                 <Slant
                   slantSize={10}
                   inverseSlant
-                  slantBackground={`linear-gradient(200deg, #f2f2f2 5%, ${
-                    Constants.featuresSlantColor
-                  } 95%)`}
+                  slantGradient={['#f2f2f2', Constants.featuresSlantColor]}
                 />
                 <Slant
                   slantSize={10}
                   css={{ zIndex: 1 }}
                   amount={20}
-                  slantBackground={`linear-gradient(200deg, ${Constants.colorSecondary.alpha(
-                    0.4,
-                  )} 5%, ${Constants.featuresSlantColor
-                    .desaturate(0.5)
-                    .alpha(0.1)} 95%)`}
+                  slantGradient={[
+                    Constants.colorSecondary.alpha(0.4),
+                    Constants.featuresSlantColor.desaturate(0.5).alpha(0.1),
+                  ]}
                 />
                 <LeftSide css={{ top: 0 }}>
                   <Observer onChange={this.handleIntersect}>
@@ -236,13 +233,13 @@ export class SectionFeatureNewsSearch extends React.Component {
                         marginTop: isLarge ? newsTopOffPct : 0,
                       }}
                     >
-                      <SubTitle size={3}>Daily Summary</SubTitle>
+                      <SubTitle size={2.5}>Daily Summary</SubTitle>
                       <FeatureSubTitle
                         css={{
                           marginTop: 12,
                         }}
                       >
-                        Unify your cloud with <Cmd>⌘+Space</Cmd>
+                        Command the cloud with <Cmd>⌘+Space</Cmd>
                       </FeatureSubTitle>
                       <Callout
                         css={{
@@ -418,7 +415,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       }
                     }
                   >
-                    <SubTitle size={3}>Smart Search</SubTitle>
+                    <SubTitle size={2.5}>Smart Search</SubTitle>
                     <FeatureSubTitle>
                       Spotlight, meet your brain
                     </FeatureSubTitle>
@@ -460,18 +457,20 @@ export class SectionFeatureIntelligence extends React.Component {
                 <Slant
                   slantSize={10}
                   css={{ zIndex: 2 }}
-                  slantBackground={`linear-gradient(200deg, ${
-                    Constants.featuresSlantColor
-                  } 5%, ${Constants.altBg.darken(0.05)} 95%)`}
+                  slantGradient={[
+                    Constants.featuresSlantColor,
+                    Constants.altBg.darken(0.05),
+                  ]}
                 />
                 <Slant
                   slantSize={10}
                   inverseSlant
                   css={{ zIndex: 1 }}
                   amount={20}
-                  slantBackground={`linear-gradient(200deg, ${Constants.featuresSlantColor
-                    .desaturate(0.5)
-                    .alpha(0.1)} 5%, ${Constants.backgroundColor} 95%)`}
+                  slantGradient={[
+                    Constants.featuresSlantColor.desaturate(0.5).alpha(0.1),
+                    Constants.backgroundColor,
+                  ]}
                 />
                 <LeftSide inverse innerStyle={{ paddingTop: '45%' }}>
                   <div
@@ -482,7 +481,7 @@ export class SectionFeatureIntelligence extends React.Component {
                       }
                     }
                   >
-                    <SubTitle size={3}>Contextual Answers</SubTitle>
+                    <SubTitle size={2.5}>Contextual Answers</SubTitle>
                     <FeatureSubTitle>
                       A whole new way to compute
                     </FeatureSubTitle>
@@ -597,7 +596,8 @@ export default class FeaturesPage {
         <Header />
         <FeaturesIntro />
         <surround css={{ position: 'relative' }}>
-          <Border css={{ top: 0, zIndex: 1 }} />
+          <Border css={{ top: -2, zIndex: 0 }} />
+          <Border css={{ bottom: -4, zIndex: 4 }} />
           <SectionFeatureNewsSearch />
           <SearchIllustration />
           <SectionFeatureIntelligence />

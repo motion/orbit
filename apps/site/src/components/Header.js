@@ -6,6 +6,27 @@ import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 // import Media from 'react-media'
 
+const A = view(
+  'a',
+  {
+    borderBottom: [2, 'transparent'],
+  },
+  {
+    active: {
+      borderBottom: [2, 'blue'],
+    },
+  },
+)
+
+const Link = ({ to, ...props }) => (
+  <A
+    active={Router.isActive(to)}
+    href={to}
+    onClick={Router.link(to)}
+    {...props}
+  />
+)
+
 @view
 export class Header {
   render() {
@@ -31,15 +52,9 @@ export class Header {
               />
               <div $$flex />
               <nav>
-                <a href="/features" onClick={Router.link('/features')}>
-                  Features
-                </a>
-                <a href="/use-cases" onClick={Router.link('/use-cases')}>
-                  Use Cases
-                </a>
-                <a href="/about" onClick={Router.link('/about')}>
-                  About
-                </a>
+                <Link to="/features">What's Orbit?</Link>
+                <Link to="/use-cases">Use Cases</Link>
+                <Link to="/about">About Us</Link>
               </nav>
             </headerInner>
           </SectionContent>
@@ -67,11 +82,14 @@ export class Header {
     },
     nav: {
       flexFlow: 'row',
-      width: 280,
+      width: 300,
       justifyContent: 'space-between',
       alignItems: 'center',
-      fontSize: 16,
+      fontSize: 15,
       fontWeight: 400,
+    },
+    a: {
+      color: [0, 0, 0, 0.7],
     },
   }
 }

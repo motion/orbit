@@ -32,8 +32,8 @@ export class SectionContent {
       )
     }
     if (halfscreen) {
-      height = height / 2
-      height = Math.max(500, height)
+      height = height / 2.3
+      height = Math.max(420, height)
     }
     const style = isSmall ? { minHeight: height } : { height }
     return (
@@ -63,7 +63,8 @@ export class SectionContent {
       },
     },
     halfscreen: {
-      padding: [0, 120],
+      padding: [0, 100],
+      top: 80,
     },
     padded: {
       padding: [80, 30],

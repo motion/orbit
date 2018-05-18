@@ -2,8 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Section, SectionContent, Slant } from '~/views/section'
-import { Header } from '~/components'
-import { Title, P, P2, LeftSide, AppleLogo } from '~/views'
+import { Header, Join } from '~/components'
+import { Title, P, P2, LeftSide, RightSide, AppleLogo } from '~/views'
 import girlImg from '~/../public/video-girl.jpg'
 import HomeIllustration from './HomeIllustration'
 import * as Constants from '~/constants'
@@ -217,8 +217,8 @@ const blackBg = UI.color('#111')
 const blackTheme = {
   background: blackBg,
   color: '#f2f2f2',
+  subTitleColor: '#eee',
   titleColor: blackBg.darken(0.75).desaturate(0.3),
-  subTitleColor: blackBg.darken(0.6).desaturate(0.8),
 }
 
 @view
@@ -246,13 +246,13 @@ class HomeFooter {
                 />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
-                  <Title italic size={2.8} color="#fff">
-                    A smarter way to operate
+                  <Title italic size={2.8} css={{ marginRight: '20%' }}>
+                    A smarter way to&nbsp;operate
                   </Title>
-                  <below css={{ margin: [20, '15%', 0, 0] }}>
-                    <P2 size={3} alpha={0.95} fontWeight={200}>
-                      We use more and more tools everyday that store data all
-                      over the place.
+                  <below css={{ margin: [15, '15%', 0, 0] }}>
+                    <P2 size={2.8} alpha={0.95} fontWeight={200}>
+                      We use more and more tools that store data all over the
+                      place.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
                       It makes sense to use best tool for the job. But that
@@ -260,11 +260,14 @@ class HomeFooter {
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
                       Orbit brings company news, search and exploratory features
-                      to your desktop by giving it a powerful on-device machine
-                      learning system and a beautiful new interface.
+                      to your desktop by giving it a beautiful new interface and
+                      a powerful on-device machine learning system.
                     </P2>
                   </below>
                 </LeftSide>
+                <RightSide noEdge $$centered>
+                  <Join />
+                </RightSide>
               </SectionContent>
             </Section>
           )}

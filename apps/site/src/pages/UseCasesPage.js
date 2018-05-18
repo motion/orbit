@@ -1,4 +1,4 @@
-import { Header, Footer } from '~/components'
+import { Header, Footer, Join } from '~/components'
 import {
   Border,
   P,
@@ -36,15 +36,12 @@ class UseCasesIntro {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent halfscreen css={{ padding: [0, 100] }}>
-              <LeftSide
-                noPad
-                css={{ paddingTop: 60, width: '60%', textAlign: 'left' }}
-              >
+            <SectionContent halfscreen>
+              <LeftSide noPad css={{ paddingTop: 0, textAlign: 'left' }}>
                 <section css={{ justifyContent: 'center', height: '100%' }}>
                   <Title italic size={3} margin={[0, '10%', 10, -5]}>
-                    Keeping your team in sync<br />
-                    and enabling deep work
+                    Keep your team in sync<br />
+                    and enable deep work
                   </Title>
                   <br />
                   <P size={1.3} alpha={0.75}>
@@ -54,13 +51,15 @@ class UseCasesIntro {
                       Customer Success
                     </a>
                     &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                    <a onClick={scrollTo('#reduce-interrupts')}>
-                      Workplace interruptions
-                    </a>
+                    <a onClick={scrollTo('#reduce-interrupts')}>Focus</a>
                   </P>
                 </section>
               </LeftSide>
-              <RightSide />
+              <RightSide noEdge noPad>
+                <Callout css={{ margin: 'auto' }}>
+                  <Join />
+                </Callout>
+              </RightSide>
             </SectionContent>
           </Section>
         )}

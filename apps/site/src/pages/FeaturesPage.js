@@ -1,4 +1,4 @@
-import { Header, Footer } from '~/components'
+import { Header, Footer, Join } from '~/components'
 import {
   Border,
   Title,
@@ -43,10 +43,10 @@ class FeaturesIntro {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent halfscreen css={{ padding: [0, 100] }}>
-              <LeftSide noPad css={{ paddingTop: 60, textAlign: 'left' }}>
+            <SectionContent halfscreen>
+              <LeftSide noPad css={{ paddingTop: 0, textAlign: 'left' }}>
                 <section css={{ justifyContent: 'center', height: '100%' }}>
-                  <Title italic size={3} margin={[0, 0, 10, -5]}>
+                  <Title italic size={3} margin={[0, 0, 10, 0]}>
                     Upgrade your Mac with an intelligent work agent
                   </Title>
                   <P size={1.3} alpha={0.75}>
@@ -58,15 +58,10 @@ class FeaturesIntro {
                   </P>
                 </section>
               </LeftSide>
-              <RightSide noEdge>
-                <div $$flex />
-                <div $$row>
-                  <div $$flex />
-                  <form css={{ width: 300 }}>
-                    Signup for the beta
-                    <UI.Input borderWidth={1} borderColor="#333" />
-                  </form>
-                </div>
+              <RightSide noEdge noPad>
+                <Callout css={{ margin: 'auto' }}>
+                  <Join />
+                </Callout>
               </RightSide>
             </SectionContent>
           </Section>

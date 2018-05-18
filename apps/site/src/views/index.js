@@ -41,7 +41,6 @@ export const Title = ({
     css={{
       fontFamily: '"Mercury Display A", "Mercury Display B"',
       fontStyle: italic ? 'italic' : 'normal',
-      letterSpacing: size <= 5 ? -1 : 0,
     }}
     {...props}
   >
@@ -140,7 +139,7 @@ export const LeftSide = ({
   </Media>
 )
 
-export const RightSide = ({ children, inverse, noEdge, ...props }) => (
+export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
@@ -153,9 +152,9 @@ export const RightSide = ({ children, inverse, noEdge, ...props }) => (
             position: 'absolute',
             left: '50%',
             right: 0,
-            bottom: 80,
-            top: 80,
-            paddingRight: 20,
+            bottom: noPad ? 0 : 80,
+            top: noPad ? 0 : 80,
+            paddingRight: noPad ? 0 : 20,
             justifyContent: 'center',
           }}
           {...props}

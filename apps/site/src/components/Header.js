@@ -14,7 +14,7 @@ export class Header {
         <headerBorder
           css={{
             position: 'absolute',
-            top: 90,
+            top: 84,
             height: 1,
             background: '#f4f4f4',
             left: 0,

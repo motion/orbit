@@ -40,9 +40,10 @@ class Home {
                       italic
                       size={isLarge ? 5 : 4}
                       margin={[-15, 0, -15, -5]}
+                      color="#2E233B"
                     >
                       Get a handle<br />
-                      on whats going on
+                      on what's going on
                     </Title>
                     <line
                       css={{
@@ -54,12 +55,14 @@ class Home {
                       }}
                     />
                     <P
-                      size={isLarge ? 1.8 : 1.5}
+                      size={isLarge ? 1.7 : 1.5}
                       alpha={0.75}
-                      margin={[0, '25%', 15, 0]}
+                      margin={[0, '20%', 10, 0]}
                     >
-                      An intelligent layer for Mac that sorts your company cloud
-                      and brings clarity to your team.
+                      Organize your company and bring clarity to your day.
+                    </P>
+                    <P size={1.4} alpha={0.7} margin={[0, '20%', 5, 0]}>
+                      An intelligent operating layer for your Mac.
                     </P>
 
                     <actions

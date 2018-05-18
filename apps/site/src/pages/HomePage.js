@@ -31,17 +31,17 @@ class Home {
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      size={isLarge ? 8 : 4}
+                      size={isLarge ? 6.8 : 4}
                       margin={[-15, 0, -15, -5]}
                       color={Constants.colorMain.darken(0.6).desaturate(0.6)}
                     >
-                      The cloud,<br />
+                      Your cloud,<br />
                       clear as day
                     </Title>
                     <line
                       css={{
-                        margin: [26, 40],
-                        width: '60%',
+                        margin: [30, 40, 20],
+                        width: '53%',
                         height: 4,
                         background: '#ddd',
                         opacity: 0.15,
@@ -55,7 +55,7 @@ class Home {
                       >
                         Company news, search and more
                       </P>
-                      <verSpace css={{ height: 5 }} />
+                      <verSpace css={{ height: 8 }} />
                       <P size={isLarge ? 1.8 : 1.5} alpha={0.7}>
                         Upgrade Mac with intelligence in 3 minutes.
                       </P>
@@ -75,7 +75,7 @@ class Home {
                         $smallInstallBtn={!isLarge}
                         tooltip=""
                         css={{
-                          margin: [0, 10, 0, -5],
+                          margin: [0, 10, 0, 0],
                         }}
                       >
                         Try for{' '}

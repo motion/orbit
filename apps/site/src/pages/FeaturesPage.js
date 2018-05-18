@@ -14,11 +14,13 @@ import {
   Notification,
   Glow,
   HalfSection,
+  Section,
+  Slant,
+  SectionContent,
 } from '~/views'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { Section, Slant, SectionContent } from '~/views/section'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Observer from '@researchgate/react-intersection-observer'

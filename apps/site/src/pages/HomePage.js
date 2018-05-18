@@ -1,15 +1,23 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Section, SectionContent, Slant } from '~/views/section'
 import { Header, Join } from '~/components'
-import { Title, P, P2, LeftSide, RightSide, AppleLogo } from '~/views'
+import {
+  Section,
+  SectionContent,
+  Slant,
+  Title,
+  P,
+  P2,
+  LeftSide,
+  RightSide,
+  AppleLogo,
+} from '~/views'
 import girlImg from '~/../public/video-girl.jpg'
 import HomeIllustration from './HomeIllustration'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
-import { Parallax } from 'react-spring'
 
 const Stars = () => (
   <svg width="830px" height="1603px" viewBox="-1 -1 830 1603">
@@ -634,8 +642,8 @@ class HomeHeader {
                     />
                     <below css={{ margin: [0, '25%', 10, 0] }}>
                       <P size={2} fontWeight={300} alpha={0.8}>
-                        A new way to manage your team cloud as&nbsp;a&nbsp;smart
-                        layer on your desktop.
+                        A new way to manage your team&nbsp;cloud
+                        as&nbsp;a&nbsp;smart layer on your desktop.
                       </P>
                     </below>
                     <actions
@@ -838,22 +846,26 @@ class HomeFooter {
                 />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
-                  <Title italic size={2.5} css={{ marginRight: '20%' }}>
-                    A new way to&nbsp;organize
+                  <Title italic size={2.2} css={{ marginRight: '20%' }}>
+                    Hello, cloud
                   </Title>
                   <below css={{ margin: [15, '5%', 0, 0] }}>
                     <P2 size={2.8} alpha={0.95} fontWeight={200}>
-                      As software in the cloud grows, organizations need to keep
-                      up.
+                      Our first personal computers were huge boxes that barely
+                      handled word processing.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Use best tool for the job. But don't lose clear and
-                      effective high-level organization.
+                      As computing has grown in our lives, our ability to stay
+                      on top all the incoming hasn't kept up.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Orbit brings smart company news, search and exploration to
-                      your desktop with a beautiful new interface for Mac and
-                      powerful on-device machine learning.
+                      Orbit brings smarts to your computer. A personal
+                      summarized newspaper at the tap of a button with amazing
+                      cloud search.
+                    </P2>
+                    <P2 size={1.8} alpha={0.85}>
+                      It's completely private and on-device so it can work for
+                      you, across everything you care about.
                     </P2>
                     <P2 size={1.3} alpha={0.85}>
                       Rolling out in beta now.

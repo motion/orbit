@@ -1,8 +1,15 @@
 import { Header, Footer, Join } from '~/components'
-import { Title, P, Callout, HalfSection, Border } from '~/views'
+import {
+  Title,
+  P,
+  Callout,
+  HalfSection,
+  Border,
+  Section,
+  SectionContent,
+} from '~/views'
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Section, SectionContent } from '~/views/section'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 

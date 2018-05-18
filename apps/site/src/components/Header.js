@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Router from '~/router'
 import { view } from '@mcro/black'
-import { SectionContent } from '~/views/section'
+import { SectionContent } from '~/views'
 import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'

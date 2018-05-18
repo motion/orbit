@@ -5,6 +5,9 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import { MailIcon } from '~/views/icons'
 
+export * from './section'
+export * from './sectionContent'
+
 export const P = props => (
   <UI.Text selectable css={{ display: 'block' }} {...props} />
 )
@@ -59,7 +62,6 @@ export const SubTitle = UI.injectTheme(
         <Title
           size={size}
           color={theme.subTitleColor || theme.base.color}
-          reduceCapsPct={8}
           {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
           {...props}
         />

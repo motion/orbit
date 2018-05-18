@@ -3,8 +3,6 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
 
-export * from './sectionContent'
-
 export const Slant = ({
   inverse,
   inverseSlant,

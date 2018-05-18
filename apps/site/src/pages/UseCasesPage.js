@@ -39,8 +39,9 @@ class UseCasesIntro {
               <LeftSide noPad css={{ paddingTop: 60, textAlign: 'left' }}>
                 <section css={{ justifyContent: 'center', height: '100%' }}>
                   <SmallTitle>Use Cases</SmallTitle>
-                  <Title italic size={4} margin={[0, 0, 10, -5]}>
-                    Your team homebase and answers
+                  <Title italic size={3} margin={[0, 0, 10, -5]}>
+                    Enabling smarter work by bringing intelligence and knowledge
+                    to your fingertips
                   </Title>
                   <P size={1.1} alpha={0.75}>
                     Remote teams &middot; Customer Success &middot; Workplace
@@ -190,7 +191,7 @@ class SectionUseCaseRemoteTeams {
 }
 
 @view
-class SectionUseCaseRemoteFirst {
+class SectionUseCaseCustomerSuccess {
   render() {
     return (
       <UI.Theme theme={Constants.peachTheme}>
@@ -204,8 +205,8 @@ class SectionUseCaseRemoteFirst {
                 <Border css={{ top: -80 }} />
                 <Glow
                   style={{
-                    background: Constants.altBg.lighten(0.015),
-                    transform: { x: '-20%', y: '-25%' },
+                    background: Constants.altBg.lighten(0.025),
+                    transform: { x: '40%', y: '-50%' },
                   }}
                 />
                 <Slant
@@ -213,19 +214,7 @@ class SectionUseCaseRemoteFirst {
                     Constants.useCasesSlantBg1
                   } 5%, ${Constants.useCasesSlantBg2} 95%)`}
                 />
-                <chat
-                  css={{
-                    opacity: 0.1,
-                    filter: {
-                      grayscale: '100%',
-                    },
-                    transform: { scale: 3 },
-                    position: 'absolute',
-                    zIndex: 0,
-                    left: '27%',
-                    top: '20%',
-                  }}
-                >
+                <chat>
                   <ChatIcon />
                 </chat>
                 <LeftSide inverse>
@@ -307,6 +296,18 @@ class SectionUseCaseRemoteFirst {
         </Media>
       </UI.Theme>
     )
+  }
+
+  static style = {
+    chat: {
+      opacity: 0.4,
+      filter: `hue-rotate(40deg)`,
+      transform: { scale: 3 },
+      position: 'absolute',
+      zIndex: 0,
+      left: '27%',
+      top: '20%',
+    },
   }
 }
 
@@ -440,7 +441,7 @@ export default class UseCasesPage {
         <surround css={{ position: 'relative' }}>
           <Border css={{ top: 0, zIndex: 1 }} />
           <SectionUseCaseRemoteTeams />
-          <SectionUseCaseRemoteFirst />
+          <SectionUseCaseCustomerSuccess />
           <SectionUseCaseReduceInterrupts />
         </surround>
         <Footer />

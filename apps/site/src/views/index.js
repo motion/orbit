@@ -108,7 +108,7 @@ export const LeftSide = ({
             right: '50%',
             bottom: noPad ? 0 : 80,
             top: noPad ? 0 : 80,
-            paddingRight: noEdge ? 0 : 20,
+            paddingRight: noEdge ? 0 : '3%',
             justifyContent: 'center',
             textAlign: 'right',
           }}
@@ -243,49 +243,45 @@ export const Border = UI.injectTheme(
   )),
 )
 
-export const FadedArea = ({
-  fadeRight,
-  fadeDown,
-  fadeLeft,
-  fadeBackground,
-  children,
-}) => (
-  <React.Fragment>
-    {children}
-    <fadeRight
-      if={fadeRight}
-      $$fullscreen
-      css={{
-        left: 'auto',
-        width: 100,
-        zIndex: 100,
-        background: `linear-gradient(to right, transparent, ${fadeBackground ||
-          Constants.backgroundColor} 80%)`,
-      }}
-    />
-    <fadeLeft
-      if={fadeLeft}
-      $$fullscreen
-      css={{
-        right: 'auto',
-        width: 100,
-        zIndex: 100,
-        background: `linear-gradient(to left, transparent, ${fadeBackground ||
-          Constants.backgroundColor} 80%)`,
-      }}
-    />
-    <fadeDown
-      if={fadeDown}
-      $$fullscreen
-      css={{
-        top: 'auto',
-        height: 100,
-        zIndex: 100,
-        background: `linear-gradient(transparent, ${fadeBackground ||
-          Constants.backgroundColor})`,
-      }}
-    />
-  </React.Fragment>
+export const FadedArea = UI.injectTheme(
+  ({ theme, fadeRight, fadeDown, fadeLeft, fadeBackground, children }) => (
+    <React.Fragment>
+      {children}
+      <fadeRight
+        if={fadeRight}
+        $$fullscreen
+        css={{
+          left: 'auto',
+          width: 100,
+          zIndex: 100,
+          background: `linear-gradient(to right, transparent, ${fadeBackground ||
+            theme.base.background} 80%)`,
+        }}
+      />
+      <fadeLeft
+        if={fadeLeft}
+        $$fullscreen
+        css={{
+          right: 'auto',
+          width: 100,
+          zIndex: 100,
+          background: `linear-gradient(to left, transparent, ${fadeBackground ||
+            theme.base.background} 80%)`,
+        }}
+      />
+      <fadeDown
+        if={fadeDown}
+        $$fullscreen
+        css={{
+          top: 'auto',
+          height: 100,
+          zIndex: 100,
+          background: `linear-gradient(transparent, ${fadeBackground ||
+            theme.base.background})`,
+        }}
+      />
+    </React.Fragment>
+  ),
 )
 
 export const AppleLogo = props => (
@@ -397,7 +393,7 @@ export const Glow = ({ below, style = {}, ...props }) => (
       background: '#fff',
       ...style,
       filter: {
-        blur: 160,
+        blur: 180,
         ...style.filter,
       },
       transform: {

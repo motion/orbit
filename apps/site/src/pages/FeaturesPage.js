@@ -9,10 +9,10 @@ import {
   FadedArea,
   LeftSide,
   SubTitle,
-  SmallTitle,
   RightSide,
   Callout,
   Notification,
+  SmallTitle,
   Glow,
 } from '~/views'
 import * as React from 'react'
@@ -46,16 +46,25 @@ class FeaturesIntro {
             <SectionContent halfscreen css={{ padding: [0, 100] }}>
               <LeftSide noPad css={{ paddingTop: 60, textAlign: 'left' }}>
                 <section css={{ justifyContent: 'center', height: '100%' }}>
-                  <Title italic size={4} margin={[0, 0, 10, -5]}>
-                    Intelligence for your computer and team
+                  <SmallTitle>Features</SmallTitle>
+                  <Title italic size={3} margin={[0, 0, 10, -5]}>
+                    Making work clearer, more organized, and more enjoyable
                   </Title>
                   <P size={isLarge ? 1.7 : 1.5} alpha={0.75}>
-                    How Orbit brings smart contextual search and news from your
-                    company to your desktop.
+                    Smart contextual search, news and answers.
                   </P>
                 </section>
               </LeftSide>
-              <RightSide />
+              <RightSide noEdge>
+                <div $$flex />
+                <div $$row>
+                  <div $$flex />
+                  <form css={{ width: 300 }}>
+                    Signup for the beta
+                    <UI.Input borderWidth={1} borderColor="#333" />
+                  </form>
+                </div>
+              </RightSide>
             </SectionContent>
           </Section>
         )}
@@ -202,17 +211,18 @@ export class SectionFeatureNewsSearch extends React.Component {
                 css={!isLarge && { paddingBottom: 0 }}
                 fullscreen={isLarge}
               >
-                <Glow />
+                <Glow style={{ transform: { y: '-10%', x: '-40%' } }} />
                 <Glow style={{ transform: { y: '130%' } }} />
                 <Slant
+                  slantSize={10}
                   inverseSlant
                   slantBackground={`linear-gradient(200deg, #f2f2f2 5%, ${
                     Constants.featuresSlantColor
                   } 95%)`}
                 />
                 <Slant
+                  slantSize={10}
                   css={{ zIndex: 1 }}
-                  slantSize={12}
                   amount={20}
                   slantBackground={`linear-gradient(200deg, ${Constants.colorSecondary.alpha(
                     0.4,
@@ -228,7 +238,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                         marginTop: isLarge ? newsTopOffPct : 0,
                       }}
                     >
-                      <SubTitle>Daily Summary</SubTitle>
+                      <SubTitle size={3}>Daily Summary</SubTitle>
                       <FeatureSubTitle
                         css={{
                           marginTop: 12,
@@ -287,10 +297,10 @@ export class SectionFeatureNewsSearch extends React.Component {
                     css={{
                       position: 'absolute',
                       top: newsTopOffPct,
-                      marginTop: '-45%',
+                      marginTop: '-30%',
                       right: '6%',
                       left: '5%',
-                      height: '80%',
+                      height: '60%',
                       maxHeight: 800,
                       overflow: 'hidden',
                     }}
@@ -358,7 +368,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                               transformOrigin: 'top left',
                               border: [1, '#ddd'],
                               transform: {
-                                scale: 0.5,
+                                scale: 0.4,
                               },
                               boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
                             }}
@@ -410,7 +420,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       }
                     }
                   >
-                    <SubTitle>Smart Search</SubTitle>
+                    <SubTitle size={3}>Smart Search</SubTitle>
                     <FeatureSubTitle>
                       Spotlight, meet your brain
                     </FeatureSubTitle>
@@ -450,15 +460,16 @@ export class SectionFeatureIntelligence extends React.Component {
               <SectionContent fullscreen={isLarge} padded>
                 <Glow style={{ transform: { y: '30%' } }} />
                 <Slant
+                  slantSize={10}
                   css={{ zIndex: 2 }}
                   slantBackground={`linear-gradient(200deg, ${
                     Constants.featuresSlantColor
                   } 5%, ${Constants.altBg.darken(0.05)} 95%)`}
                 />
                 <Slant
+                  slantSize={10}
                   inverseSlant
                   css={{ zIndex: 1 }}
-                  slantSize={12}
                   amount={20}
                   slantBackground={`linear-gradient(200deg, ${Constants.featuresSlantColor
                     .desaturate(0.5)
@@ -473,7 +484,7 @@ export class SectionFeatureIntelligence extends React.Component {
                       }
                     }
                   >
-                    <SubTitle>Contextual Answers</SubTitle>
+                    <SubTitle size={3}>Contextual Answers</SubTitle>
                     <FeatureSubTitle>
                       A whole new way to compute
                     </FeatureSubTitle>
@@ -541,7 +552,7 @@ export class SectionFeatureIntelligence extends React.Component {
                           overflow: 'hidden',
                         }}
                       >
-                        <FadedArea fadeLeft fadeBackground="#fff">
+                        <FadedArea fadeLeft>
                           <Spring from={{ x: 100 }} to={{ x: 10 }}>
                             {({ x }) => (
                               <animated.div

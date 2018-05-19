@@ -42,8 +42,11 @@ class UseCasesIntro {
             <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={2.8} margin={[0, '10%', 15, 0]}>
-                  Making your knowledge work&nbsp;for&nbsp;you
+                  Use cases
                 </Title>
+                <P2 size={1.3} alpha={0.75}>
+                  Making your knowledge work&nbsp;for&nbsp;you
+                </P2>
                 <P size={1.2} alpha={0.7}>
                   <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;

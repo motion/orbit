@@ -850,13 +850,13 @@ class HomeFooter {
                     <br />
                     <P2 size={1.8} alpha={0.85}>
                       The services that power your life and work are diverse.
-                      Making sense of it all requires handling a lot of
-                      sensitive data. It's best done{' '}
-                      <strong>completely privately, on your device</strong>.
+                      Making sense of them will require handling much of your
+                      sensitive data. It's has to be done{' '}
+                      <strong>completely privately, on device</strong>.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Orbit is on-device and always at hand. That means we must
-                      take care to ensure a great experience.
+                      Orbit does this to be always at hand. That means we need
+                      to deliver a truly great experience.
                     </P2>
                     <br />
                     <P2 size={1.3} alpha={0.85}>

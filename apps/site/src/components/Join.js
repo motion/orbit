@@ -7,7 +7,7 @@ import * as UI from '@mcro/ui'
 export class Join {
   render({ theme, ...props }) {
     return (
-      <section {...props}>
+      <section id="join" {...props}>
         <P size={1.5} css={{ marginRight: 30 }}>
           Join the early access mailing list
         </P>

@@ -7,6 +7,7 @@ import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 import * as Icons from '~/views/icons'
 import Router from '~/router'
 import { scrollTo } from '~/helpers'
+import { brandColor } from 'constants'
 
 const bgColor = '#fff'
 const dockIcons = [
@@ -58,20 +59,38 @@ const Badge = view('div', {
 const Bubble = view(
   'div',
   {
-    border: [1, '#ccc'],
+    color: '#fff',
+    background: '#E4B44B',
     fontSize: 18,
     borderRadius: 15,
     padding: [10, 12],
     marginBottom: 10,
-    borderBottomRightRadius: 0,
-    alignSelf: 'flex-end',
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 0,
+    alignSelf: 'flex-start',
     pointerEvents: 'all',
   },
   {
-    left: {
-      alignSelf: 'flex-start',
-      borderBottomRightRadius: 10,
-      borderBottomLeftRadius: 0,
+    two: {
+      background: '#CE355B',
+      color: '#fff',
+      alignSelf: 'flex-end',
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 0,
+    },
+    three: {
+      background: '#869A4A',
+      color: '#fff',
+      alignSelf: 'flex-end',
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 0,
+    },
+    four: {
+      background: '#7ABEA2',
+      color: '#fff',
+      alignSelf: 'flex-end',
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 0,
     },
   },
 )
@@ -89,81 +108,74 @@ const CountBadge = props =>
   ) : null
 
 const chats = [
-  <Bubble left>The #dev chat room</Bubble>,
-  <Bubble>clear as modern art</Bubble>,
-  <Bubble left>🙄</Bubble>,
-  <Bubble>& spreading like an oil spill...</Bubble>,
-  <Bubble left>🤷‍</Bubble>,
-  <Bubble left>It's not that it doesn't work</Bubble>,
+  <Bubble>The #dev chat room</Bubble>,
+  <Bubble three>clear as modern art</Bubble>,
+  <Bubble two>🙄</Bubble>,
+  <Bubble four>& spreading like an oil spill...</Bubble>,
+  <Bubble two>🤷‍</Bubble>,
+  <Bubble two>It's not that it doesn't work</Bubble>,
   <Bubble>Yea, but you'd hope for a bit more...</Bubble>,
-  <Bubble left>clarity, perhaps</Bubble>,
-  <Bubble>at least some sort of summary</Bubble>,
-  <Bubble left>👆</Bubble>,
-  <Bubble left>too much FOMO</Bubble>,
-  <Bubble>unsubscribe</Bubble>,
+  <Bubble two>clarity, perhaps</Bubble>,
+  <Bubble four>at least some sort of summary</Bubble>,
+  <Bubble two>👆</Bubble>,
+  <Bubble two>too much FOMO</Bubble>,
+  <Bubble four>unsubscribe</Bubble>,
 ]
 
 const messages = (
   <React.Fragment>
     <Bubble>this shows good potential</Bubble>
-    <Bubble left>the icon isn’t good that you have now</Bubble>
-    <Bubble left>
+    <Bubble two>the icon isn’t good that you have now</Bubble>
+    <Bubble two>
       and i think with some tweaking this could work as a logo concept -
       animation proves some extensibility too
     </Bubble>
-    <Bubble>
+    <Bubble three>
       yeah, new idea is really close though to being what I think you would need
       to start shopping the concept around
     </Bubble>
-    <Bubble>we actually have this indicator</Bubble>
-    <Bubble left>
+    <Bubble four>we actually have this indicator</Bubble>
+    <Bubble two>
       that is prototype stage but meant to signify you have something relevant
     </Bubble>
     <Bubble>
       signifies that its a small thing that sort of hangs around with you
     </Bubble>
-    <Bubble left>the little line is nice actually</Bubble>
-    <Bubble>makes the logo 10x more identifiable</Bubble>
-    <Bubble left>with some tweak maybe</Bubble>
+    <Bubble two>the little line is nice actually</Bubble>
+    <Bubble four>makes the logo 10x more identifiable</Bubble>
+    <Bubble two>with some tweak maybe</Bubble>
     <Bubble>Lorem maybe rounded to the O</Bubble>
-    <Bubble left>
+    <Bubble two>
       I think screens will really help. Going to try and add by tn
     </Bubble>
-    <Bubble>
+    <Bubble four>
       but thinking about … that idea …. of, the answer to the ‘so what…’
     </Bubble>
-    <Bubble left>
+    <Bubble two>
       “The one dashboard that Sauron would’ve made if he was a good guy.”
     </Bubble>
-    <Bubble left>I need to get the screenshots in there</Bubble>
-    <Bubble>
+    <Bubble two>I need to get the screenshots in there</Bubble>
+    <Bubble three>
       maybe oil slick concept goes more like this for that first problem
       statement part
     </Bubble>
-    <Bubble>
+    <Bubble four>
       also think that “unifying force for your team” may be too long
     </Bubble>
-    <Bubble>
+    <Bubble three>
       may want to do some simple moire or comic dot-grid effects that sort of
       procedurally space-fill the empty areas with black/white checkers/dots
     </Bubble>
-    <Bubble left>
+    <Bubble two>
       using ben-day dot pattern for the transition between the different
       sections could be a cool way to carry motif through it as well
     </Bubble>
-    <Bubble left>
+    <Bubble two>
       mockups for graphite drawings I’m having produced in China
     </Bubble>
     <Bubble>based on our tests</Bubble>
   </React.Fragment>
 )
-
-@view
-class LongChats {
-  render() {
-    return messages
-  }
-}
 
 class IllustrationStore {
   animate = false
@@ -235,7 +247,7 @@ class IllustrationStore {
   }
 
   animateChats = async sleep => {
-    await this.chatFrame(Spring, {
+    this.chatFrame(Spring, {
       from: { scale: 1, opacity: 0, opacityRest: 0, y: 0 },
       to: { scale: 1, opacity: 1, opacityRest: 0, y: 0 },
     })
@@ -244,34 +256,24 @@ class IllustrationStore {
       from: { opacity: 0, y: -20 },
       to: { opacity: 1, y: 0 },
       config: { tension: 20, friction: 4 },
-      delay: [
-        300,
-        1300,
-        1300,
-        1300,
-        1300,
-        800,
-        800,
-        500,
-        500,
-        500,
-        400,
-        400,
-      ].slice(0, chats.length),
+      delay: [10, 900, 600, 500, 900, 800, 800, 500, 500, 500, 400, 400].slice(
+        0,
+        chats.length,
+      ),
     })
     await sleep(6200)
     this.chatFrame(Spring, {
-      to: { scale: 0.6, opacity: 1, opacityRest: 1, y: -400 },
-      config: { tension: 10, friction: 50 },
+      to: { scale: 0.6, opacity: 1, opacityRest: 0, y: -400 },
+      config: { tension: 30, friction: 50 },
     })
-    await sleep(2500)
+    await sleep(2300)
     this.chatFrame(Spring, {
-      to: { scale: 0.6, opacity: 0.6, y: -500 },
-      config: { tension: 25, friction: 50 },
+      to: { scale: 0.6, opacity: 0.6, opacityRest: 1, y: -500 },
+      config: { tension: 35, friction: 50 },
     })
-    await sleep(2500)
+    await sleep(1800)
     this.chatFrame(Spring, {
-      to: { scale: 0.6, opacity: 0.2, y: -1000 },
+      to: { scale: 0.6, opacity: 0.1, y: -1000 },
       config: { tension: 20, friction: 50 },
     })
     await sleep(1500)
@@ -344,7 +346,7 @@ export default class HeaderIllustration {
                         height: 500,
                       }}
                     >
-                      <LongChats />
+                      {messages}
                     </animated.div>
                   </animated.div>
                 )
@@ -372,6 +374,7 @@ export default class HeaderIllustration {
                       itemProps={{
                         size: 1.1,
                         alpha: 0.8,
+                        theme: brandColor,
                       }}
                       css={{
                         flexFlow: 'row',
@@ -380,7 +383,9 @@ export default class HeaderIllustration {
                         margin: [20, 0, 0],
                       }}
                     >
-                      <UI.Button onClick={scrollTo('#signup')}>Beta</UI.Button>
+                      <UI.Button onClick={scrollTo('#join')}>
+                        Early Access
+                      </UI.Button>
                       <UI.Button onClick={Router.link('/features')}>
                         Features
                       </UI.Button>
@@ -444,23 +449,22 @@ export default class HeaderIllustration {
     chats: {
       position: 'absolute',
       top: 0,
-      right: '5%',
-      left: '5%',
+      right: '15%',
+      left: '15%',
       bottom: 0,
       justifyContent: 'flex-start',
       overflow: 'hidden',
     },
     fades: {
       pointerEvents: 'none',
-      background: `linear-gradient(to bottom, transparent 80%, ${bgColor} 95%), linear-gradient(to top, transparent 80%, ${bgColor} 95%)`,
+      background: `linear-gradient(to bottom, transparent 90%, ${bgColor} 95%), linear-gradient(to top, transparent 90%, ${bgColor} 95%)`,
       zIndex: 100,
     },
     dockContain: {
       position: 'absolute',
       bottom: 0,
-      right: '5%',
-      left: '5%',
-      maxWidth: 600,
+      right: '2%',
+      left: '2%',
       background: `linear-gradient(transparent, ${bgColor})`,
       zIndex: 200,
       transition: 'all ease-out 1000ms',
@@ -470,7 +474,6 @@ export default class HeaderIllustration {
       bottom: 15,
       right: '5%',
       left: '5%',
-      maxWidth: 600,
       background: '#f9f9f9',
       borderTopRadius: 10,
       padding: [0, 20, 10],
@@ -493,8 +496,8 @@ export default class HeaderIllustration {
     dockIcons: {
       position: 'absolute',
       bottom: 25,
-      left: 40,
-      right: 40,
+      left: '10%',
+      right: '10%',
       height: 120,
       zIndex: 201,
       alignItems: 'flex-end',
@@ -504,15 +507,15 @@ export default class HeaderIllustration {
       overflow: 'hidden',
     },
     message: {
-      color: '#444',
-      fontWeight: 300,
-      fontSize: 32,
-      lineHeight: '42px',
+      color: '#5E937D',
+      fontWeight: 700,
+      fontSize: 28,
+      lineHeight: '38px',
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
-      bottom: 0,
+      bottom: 100,
       zIndex: 10,
       alignItems: 'center',
       justifyContent: 'center',
@@ -520,7 +523,6 @@ export default class HeaderIllustration {
       pointerEvents: 'auto',
     },
     msgBlur: {
-      display: 'none',
       zIndex: -1,
       position: 'absolute',
       alignSelf: 'center',
@@ -530,7 +532,7 @@ export default class HeaderIllustration {
       height: '40%',
       background: bgColor,
       filter: {
-        blur: 55,
+        blur: 125,
       },
     },
     monitorWrap: {

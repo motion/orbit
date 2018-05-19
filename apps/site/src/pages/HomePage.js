@@ -641,9 +641,8 @@ class HomeHeader {
                       }}
                     />
                     <below css={{ margin: [0, '25%', 10, 0] }}>
-                      <P size={2} fontWeight={300} alpha={0.8}>
-                        A new way to manage your team&nbsp;cloud
-                        as&nbsp;a&nbsp;smart layer on your desktop.
+                      <P size={1.8} fontWeight={300} alpha={0.8}>
+                        A modern personal assistant for your desktop.
                       </P>
                     </below>
                     <actions
@@ -833,42 +832,38 @@ class HomeFooter {
                   inverseSlant
                   slantGradient={[
                     blackTheme.background.darken(0.2),
-                    blackTheme.background.darken(0.1),
+                    blackTheme.background.darken(0.25),
                   ]}
                 />
                 <Slant
                   slantSize={8}
                   amount={20}
                   slantGradient={[
-                    Constants.colorSecondary.lighten(0.4),
-                    Constants.colorSecondary.darken(0.2),
+                    Constants.colorSecondary.darken(0.4),
+                    Constants.colorSecondary.darken(0.6),
                   ]}
                 />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
-                  <Title italic size={2.2} css={{ marginRight: '20%' }}>
-                    Hello, cloud
-                  </Title>
                   <below css={{ margin: [15, '5%', 0, 0] }}>
-                    <P2 size={2.8} alpha={0.95} fontWeight={200}>
-                      Our first personal computers were huge boxes that barely
-                      handled word processing.
+                    <P2 size={3} alpha={1} fontWeight={200}>
+                      We live and work through our&nbsp;technology.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      As computing has grown in our lives, our ability to stay
-                      on top all the incoming hasn't kept up.
+                      The cloud that powers your life and your company is
+                      diverse and complex and bringing clarity to it requires a
+                      unique approach.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Orbit brings smarts to your computer. A personal
-                      summarized newspaper at the tap of a button with amazing
-                      cloud search.
+                      Making sense of information across services is best done
+                      <strong>privately, on your device</strong>. That means the
+                      bar is high to make your personal computing experience{' '}
+                      <em>more enjoyable</em>, not less.
                     </P2>
-                    <P2 size={1.8} alpha={0.85}>
-                      It's completely private and on-device so it can work for
-                      you, across everything you care about.
-                    </P2>
+                    <br />
                     <P2 size={1.3} alpha={0.85}>
-                      Rolling out in beta now.
+                      Learn about our approach to <strong>privacy</strong> and{' '}
+                      <strong>experience</strong>.
                     </P2>
                   </below>
                 </LeftSide>

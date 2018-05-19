@@ -49,9 +49,13 @@ class FeaturesIntro {
             <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={2.8} margin={[0, 0, 10, 0]}>
-                  Upgrade your Mac with an intelligent work agent
+                  Features
                 </Title>
-                <P size={1.3} alpha={0.75}>
+                <P2 size={1.3} alpha={0.75}>
+                  Orbit lives on your desktop as a private personal assistant.
+                  It&nbsp;unifies&nbsp;your cloud so you can work smarter.
+                </P2>
+                <P size={1.2} alpha={0.7}>
                   <a onClick={scrollTo('#news')}>News</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#search')}>Search</a>
@@ -135,18 +139,15 @@ const SearchCallout = ({ isLarge }) => (
       isLarge && {
         width: '85%',
         position: 'absolute',
-        top: searchYOff - 55,
+        top: searchYOff - 65,
         left: '12%',
       }
     }
   >
-    <P2 size={2}>
-      Sort the cloud with fast local search that summarizes conversations.
-    </P2>
-    <P2 size={1.6}>
-      It's NLP powered search for your cloud. With overviews of Slack
-      conversations and aggregated profiles to make your cloud clear.
-    </P2>
+    <P size={1.6}>
+      It's NLP powered search for your cloud and team. With overviews of Slack
+      conversations and aggregated profiles across every integration.
+    </P>
   </Callout>
 )
 
@@ -245,13 +246,13 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <SubTitle size={2.5}>Daily Summary</SubTitle>
+                    <SubTitle size={2.5}>Simplify your incoming</SubTitle>
                     <FeatureSubTitle
                       css={{
                         marginTop: 12,
                       }}
                     >
-                      Command the cloud with <Cmd>⌘+Space</Cmd>
+                      Summarized notifications in your <Cmd>⌘+Space</Cmd>
                     </FeatureSubTitle>
                     <Callout
                       css={{
@@ -265,15 +266,12 @@ export class SectionFeatureNewsSearch extends React.Component {
                           : null),
                       }}
                     >
-                      <P2 size={2}>
-                        Summarized news personalized to you, always at your
-                        fingertips.
-                      </P2>
-                      <P2 size={1.6}>
+                      <P size={1.6}>
                         A newspaper that sums up the day for you and your team.
                         Using novel on-device machine learning that learns your
                         company vocab.
-                      </P2>
+                      </P>
+                      <br />
                       <DottedButton
                         css={
                           isLarge
@@ -424,11 +422,11 @@ export class SectionFeatureNewsSearch extends React.Component {
                       display: 'block',
                       position: 'relative',
                       zIndex: 1000,
-                      marginTop: -185 + searchYOff,
+                      marginTop: -175 + searchYOff,
                     }
                   }
                 >
-                  <SubTitle size={2.5}>Smart Search</SubTitle>
+                  <SubTitle size={2.5}>Search for the cloud</SubTitle>
                   <FeatureSubTitle>Spotlight, meet your brain</FeatureSubTitle>
                 </content>
                 <Media
@@ -490,8 +488,8 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={2.5}>Contextual Answers</SubTitle>
-                  <FeatureSubTitle>A whole new way to compute</FeatureSubTitle>
+                  <SubTitle size={2.5}>Realtime contextual search</SubTitle>
+                  <FeatureSubTitle>Smart sidebar for any app</FeatureSubTitle>
                   <Callout
                     css={{
                       textAlign: 'left',

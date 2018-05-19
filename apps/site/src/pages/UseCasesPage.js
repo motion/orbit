@@ -41,18 +41,19 @@ class UseCasesIntro {
           <Section>
             <SectionContent padded halfscreen>
               <HalfSection>
-                <Title italic size={2.8} margin={[0, '10%', 10, -5]}>
-                  Keep your team in sync<br />
-                  and enable deep work
+                <Title italic size={2.8} margin={[0, '10%', 15, 0]}>
+                  Making your knowledge work&nbsp;for&nbsp;you
                 </Title>
-                <P size={1.3} alpha={0.75}>
+                <P size={1.2} alpha={0.7}>
                   <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#customer-success')}>
                     Customer Success
                   </a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#reduce-interrupts')}>Focus</a>
+                  <a onClick={scrollTo('#reduce-interrupts')}>
+                    Workplace Interruptions
+                  </a>
                 </P>
               </HalfSection>
               <HalfSection>

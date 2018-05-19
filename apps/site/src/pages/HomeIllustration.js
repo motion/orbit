@@ -1,6 +1,6 @@
 import * as React from 'react'
 import CountUp from 'react-countup'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
@@ -9,7 +9,33 @@ import Router from '~/router'
 import { scrollTo } from '~/helpers'
 
 const bgColor = '#fff'
-const sleep = ms => new Promise(res => setTimeout(res, ms))
+const dockIcons = [
+  {
+    name: 'Dropbox',
+    size: 0.13,
+    countProps: { start: 0, end: 22, duration: 15 },
+  },
+  {
+    name: 'Drive',
+    size: 0.16,
+    countProps: { start: 0, end: 36, duration: 15 },
+  },
+  {
+    name: 'Slack',
+    size: 0.18,
+    countProps: { start: 0, end: 122, duration: 15 },
+  },
+  {
+    name: 'Mail',
+    size: 0.16,
+    countProps: { start: 0, end: 195, duration: 15 },
+  },
+  {
+    name: 'Github',
+    size: 0.13,
+    countProps: { start: 0, end: 27, duration: 15 },
+  },
+]
 
 const Badge = view('div', {
   position: 'absolute',
@@ -61,14 +87,6 @@ const CountBadge = props =>
       <Count {...props} />
     </Badge>
   ) : null
-
-const INITIAL_STATE = {
-  bounceSlack: false,
-  bounceDropbox: false,
-  bounceMail: false,
-  bounceDrive: false,
-  bounceGithub: false,
-}
 
 const chats = [
   <Bubble left>The #dev chat room</Bubble>,
@@ -147,48 +165,76 @@ class LongChats {
   }
 }
 
-@view
-export default class HeaderIllustration extends React.Component {
-  state = INITIAL_STATE
-
-  // async onReload() {
-  //   this.animate()
-  // }
-
-  animate = async () => {
-    this.setState({ reset: true })
-    this.setState(INITIAL_STATE)
-    await sleep(100)
-    this.setState({ reset: false })
-    await sleep(100)
-    this.componentDidMount()
+class IllustrationStore {
+  animate = false
+  bounce = {
+    slack: false,
+    dropbox: false,
+    mail: false,
+    drive: false,
+    github: false,
+  }
+  leave = {
+    slack: false,
+    dropbox: false,
+    mail: false,
+    drive: false,
+    github: false,
   }
 
-  componentDidMount() {
-    this.startAnimations()
+  willMount() {
+    setTimeout(() => {
+      this.animate = true
+    }, 300)
   }
 
-  startAnimations = async () => {
-    this.animateChats()
-    this.animateIcons()
-  }
+  @react
+  runAnimation = [
+    () => this.animate,
+    async (shouldAnimate, { sleep }) => {
+      if (!shouldAnimate) {
+        throw react.cancel
+      }
+      console.log(`running acnimat`)
+      this.animateIcons(sleep)
+      this.animateChats(sleep)
+    },
+  ]
 
-  async animateIcons() {
+  animateIcons = async sleep => {
+    const bounceIcons = async () => {
+      this.bounce.slack = true
+      await sleep(4000)
+      this.bounce.dropbox = true
+      await sleep(200)
+      this.bounce.mail = true
+      this.bounce.drive = true
+      await sleep(300)
+      this.bounce.github = true
+    }
+    const leaveIcons = async () => {
+      this.leave.dropbox = true
+      await sleep(200)
+      this.leave.mail = true
+      this.leave.drive = true
+      await sleep(300)
+      this.leave.github = true
+      await sleep(1000)
+      this.leave.slack = true
+    }
     await sleep(2000)
-    this.bounceIcons()
+    bounceIcons()
     await sleep(6000)
-    this.setState({
-      bounceSlack: 2,
-      bounceDropbox: 2,
-      bounceMail: 2,
-      bounceDrive: 2,
-      bounceGithub: 2,
-    })
+    this.bounce.slack = 2
+    this.bounce.dropbox = 2
+    this.bounce.mail = 2
+    this.bounce.drive = 2
+    this.bounce.github = 2
     await sleep(3000)
-    await this.leaveIcons()
+    leaveIcons()
   }
 
-  async animateChats() {
+  animateChats = async sleep => {
     await this.chatFrame(Spring, {
       from: { scale: 1, opacity: 0, opacityRest: 0, y: 0 },
       to: { scale: 1, opacity: 1, opacityRest: 0, y: 0 },
@@ -246,269 +292,215 @@ export default class HeaderIllustration extends React.Component {
       config: config.slow,
     })
   }
+}
 
-  bounceIcons = async () => {
-    this.setState({ bounceSlack: true })
-    await sleep(4000)
-    this.setState({ bounceDropbox: true })
-    await sleep(200)
-    this.setState({ bounceMail: true })
-    this.setState({ bounceDrive: true })
-    await sleep(300)
-    this.setState({ bounceGithub: true })
-  }
-
-  leaveIcons = async () => {
-    this.setState({ leaveDropbox: true })
-    await sleep(200)
-    this.setState({ leaveMail: true })
-    this.setState({ leaveDrive: true })
-    await sleep(300)
-    this.setState({ leaveGithub: true })
-    await sleep(1000)
-    this.setState({ leaveSlack: true })
-  }
-
-  render() {
+@view({
+  store: IllustrationStore,
+})
+export default class HeaderIllustration {
+  render({ store }) {
     return (
-      <headerIll>
-        <fades
-          $$fullscreen
-          css={{
-            pointerEvents: 'none',
-            background: `linear-gradient(to bottom, transparent 80%, ${bgColor} 95%), linear-gradient(to top, transparent 80%, ${bgColor} 95%)`,
-            zIndex: 100,
-          }}
-        />
-        <chats>
-          <Keyframes
-            reset={this.state.reset}
-            native
-            script={next => (this.chatFrame = next)}
-          >
-            {({ scale, opacity, opacityRest, y }) => {
-              return (
-                <animated.div
-                  style={{
-                    opacity,
-                    transform: interpolate(
-                      [scale, y],
-                      (scale, y) =>
-                        `translate3d(0,${y + 110}px,0) scale(${scale})`,
-                    ),
-                  }}
-                >
-                  <Keyframes
-                    reset={this.state.reset}
-                    native
-                    keys={chats.map((_, i) => i)}
-                    script={next => (this.chats = next)}
-                  >
-                    {chats.map(chat => ({ y, opacity }) => (
-                      <animated.div
-                        style={{
-                          opacity,
-                          transform: y.interpolate(
-                            y => `translate3d(0,${y}%,0)`,
-                          ),
-                        }}
-                      >
-                        {chat}
-                      </animated.div>
-                    ))}
-                  </Keyframes>
+      <React.Fragment>
+        <monitorWrap>
+          <monitorFrame $$fullscreen />
+        </monitorWrap>
+        <headerIll>
+          <fades $$fullscreen />
+          <chats>
+            <Keyframes native script={next => (store.chatFrame = next)}>
+              {({ scale, opacity, opacityRest, y }) => {
+                return (
                   <animated.div
                     style={{
-                      opacity: opacityRest,
-                      height: 500,
+                      opacity,
+                      transform: interpolate(
+                        [scale, y],
+                        (scale, y) =>
+                          `translate3d(0,${y + 110}px,0) scale(${scale})`,
+                      ),
                     }}
                   >
-                    <LongChats />
+                    <Keyframes
+                      native
+                      keys={chats.map((_, i) => i)}
+                      script={next => (store.chats = next)}
+                    >
+                      {chats.map(chat => ({ y, opacity }) => (
+                        <animated.div
+                          style={{
+                            opacity,
+                            transform: y.interpolate(
+                              y => `translate3d(0,${y}%,0)`,
+                            ),
+                          }}
+                        >
+                          {chat}
+                        </animated.div>
+                      ))}
+                    </Keyframes>
+                    <animated.div
+                      style={{
+                        opacity: opacityRest,
+                        height: 500,
+                      }}
+                    >
+                      <LongChats />
+                    </animated.div>
                   </animated.div>
-                </animated.div>
-              )
-            }}
-          </Keyframes>
-          <Keyframes
-            reset={this.state.reset}
-            native
-            script={next => (this.chatText = next)}
-          >
-            {({ opacity }) => (
-              <animated.div style={{ opacity }}>
-                <message>
-                  <msgBlur />
-                  Is your organization<br />
-                  lacking organization?
-                </message>
-              </animated.div>
-            )}
-          </Keyframes>
-          <Keyframes
-            reset={this.state.reset}
-            native
-            script={next => (this.chatText2 = next)}
-          >
-            {({ opacity }) => (
-              <animated.div style={{ opacity }}>
-                <message>
-                  <msgBlur />
-                  Stay in sync, stress free.
-                  <UI.Row
-                    spaced
-                    itemProps={{
-                      size: 1.1,
-                      alpha: 0.8,
-                    }}
-                    css={{
-                      flexFlow: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      margin: [20, 0, 0],
-                    }}
-                  >
-                    <UI.Button onClick={scrollTo('#signup')}>Beta</UI.Button>
-                    <UI.Button onClick={Router.link('/features')}>
-                      Features
-                    </UI.Button>
-                    <UI.Button onClick={Router.link('/use-cases')}>
-                      Use Cases
-                    </UI.Button>
-                  </UI.Row>
-                </message>
-              </animated.div>
-            )}
-          </Keyframes>
-        </chats>
-
-        <dockContain
-          css={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            background: `linear-gradient(transparent, ${bgColor})`,
-            zIndex: 200,
-            transition: 'all ease-out 1000ms',
-            opacity: this.state.leaveSlack ? 0 : 1,
-          }}
-        >
-          <dock
-            css={{
-              position: 'absolute',
-              bottom: 15,
-              right: 0,
-              left: 0,
-              background: '#f9f9f9',
-              borderTopRadius: 10,
-              padding: [0, 20, 10],
-              height: 100,
-              boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-              border: [1, '#ddd'],
-              transformOrigin: 'top center',
-              transform: {
-                scale: 0.9,
-              },
-            }}
-          >
-            <dockFade
-              css={{
-                position: 'absolute',
-                top: 0,
-                left: -10,
-                right: -10,
-                bottom: -10,
-                background: `linear-gradient(transparent, ${bgColor})`,
+                )
               }}
-            />
-          </dock>
-        </dockContain>
-        <dockIcons
-          css={{
-            position: 'absolute',
-            bottom: 25,
-            left: 40,
-            right: 40,
-            height: 120,
-            zIndex: 201,
-            alignItems: 'flex-end',
-            justifyContent: 'space-around',
-            padding: [0, 15],
-            flexFlow: 'row',
-            overflow: 'hidden',
-          }}
-        >
-          {[
-            {
-              name: 'Dropbox',
-              size: 0.13,
-              countProps: { start: 0, end: 22, duration: 15 },
-            },
-            {
-              name: 'Drive',
-              size: 0.16,
-              countProps: { start: 0, end: 36, duration: 15 },
-            },
-            {
-              name: 'Slack',
-              size: 0.18,
-              countProps: { start: 0, end: 122, duration: 15 },
-            },
-            {
-              name: 'Mail',
-              size: 0.16,
-              countProps: { start: 0, end: 195, duration: 15 },
-            },
-            {
-              name: 'Github',
-              size: 0.13,
-              countProps: { start: 0, end: 27, duration: 15 },
-            },
-          ].map(({ name, size, countProps }) => {
-            const Icon = Icons[`${name}Icon`]
-            const bounce = this.state[`bounce${name}`]
-            const leave = this.state[`leave${name}`]
-            const countHigher = bounce === 2
-            return this.glossElement(Icon, {
-              key: name,
-              $icon: true,
-              $bouncy: bounce,
-              $leave: leave,
-              size,
-              after: (
-                <CountBadge
-                  active={bounce}
-                  {...countProps}
-                  start={countHigher ? countProps.end : countProps.start}
-                  end={countProps.end * (countHigher ? 2 : 1)}
-                />
-              ),
-            })
-          })}
-        </dockIcons>
-      </headerIll>
+            </Keyframes>
+            <Keyframes native script={next => (store.chatText = next)}>
+              {({ opacity }) => (
+                <animated.div style={{ opacity }}>
+                  <message>
+                    <msgBlur />
+                    Is your organization<br />
+                    lacking organization?
+                  </message>
+                </animated.div>
+              )}
+            </Keyframes>
+            <Keyframes native script={next => (store.chatText2 = next)}>
+              {({ opacity }) => (
+                <animated.div style={{ opacity }}>
+                  <message>
+                    <msgBlur />
+                    Stay in sync, stress free.
+                    <UI.Row
+                      spaced
+                      itemProps={{
+                        size: 1.1,
+                        alpha: 0.8,
+                      }}
+                      css={{
+                        flexFlow: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: [20, 0, 0],
+                      }}
+                    >
+                      <UI.Button onClick={scrollTo('#signup')}>Beta</UI.Button>
+                      <UI.Button onClick={Router.link('/features')}>
+                        Features
+                      </UI.Button>
+                      <UI.Button onClick={Router.link('/use-cases')}>
+                        Use Cases
+                      </UI.Button>
+                    </UI.Row>
+                  </message>
+                </animated.div>
+              )}
+            </Keyframes>
+          </chats>
+
+          <dockContain
+            css={{
+              opacity: store.leave.slack ? 0 : 1,
+            }}
+          >
+            <dock>
+              <dockFade />
+            </dock>
+          </dockContain>
+          <dockIcons>
+            {dockIcons.map(({ name, size, countProps }) => {
+              const Icon = Icons[`${name}Icon`]
+              const bounce = store.bounce[name.toLowerCase()]
+              const leave = store.leave[name.toLowerCase()]
+              const countHigher = bounce === 2
+              return this.glossElement(Icon, {
+                key: name,
+                $icon: true,
+                $bouncy: bounce,
+                $leave: leave,
+                size,
+                after: (
+                  <CountBadge
+                    active={bounce}
+                    {...countProps}
+                    start={countHigher ? countProps.end : countProps.start}
+                    end={countProps.end * (countHigher ? 2 : 1)}
+                  />
+                ),
+              })
+            })}
+          </dockIcons>
+        </headerIll>
+      </React.Fragment>
     )
   }
 
   static style = {
     headerIll: {
       position: 'relative',
-      height: 700,
+      height: '80%',
+      maxHeight: 800,
       width: '100%',
       margin: 'auto',
       overflow: 'hidden',
-      // transform: {
-      //   y: 100,
-      // },
+      zIndex: 0,
     },
     chats: {
-      // pointerEvents: 'none',
       position: 'absolute',
       top: 0,
       right: '5%',
       left: '5%',
       bottom: 0,
       justifyContent: 'flex-start',
+      overflow: 'hidden',
+    },
+    fades: {
+      pointerEvents: 'none',
+      background: `linear-gradient(to bottom, transparent 80%, ${bgColor} 95%), linear-gradient(to top, transparent 80%, ${bgColor} 95%)`,
+      zIndex: 100,
+    },
+    dockContain: {
+      position: 'absolute',
+      bottom: 0,
+      right: '5%',
+      left: '5%',
+      maxWidth: 600,
+      background: `linear-gradient(transparent, ${bgColor})`,
+      zIndex: 200,
+      transition: 'all ease-out 1000ms',
+    },
+    dock: {
+      position: 'absolute',
+      bottom: 15,
+      right: '5%',
+      left: '5%',
+      maxWidth: 600,
+      background: '#f9f9f9',
+      borderTopRadius: 10,
+      padding: [0, 20, 10],
+      height: 100,
+      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+      border: [1, '#ddd'],
+      transformOrigin: 'top center',
+      transform: {
+        scale: 0.9,
+      },
+    },
+    dockFade: {
+      position: 'absolute',
+      top: 0,
+      left: -10,
+      right: -10,
+      bottom: -10,
+      background: `linear-gradient(transparent, ${bgColor})`,
+    },
+    dockIcons: {
+      position: 'absolute',
+      bottom: 25,
+      left: 40,
+      right: 40,
+      height: 120,
+      zIndex: 201,
+      alignItems: 'flex-end',
+      justifyContent: 'space-around',
+      padding: [0, 15],
+      flexFlow: 'row',
       overflow: 'hidden',
     },
     message: {
@@ -540,6 +532,23 @@ export default class HeaderIllustration extends React.Component {
       filter: {
         blur: 55,
       },
+    },
+    monitorWrap: {
+      position: 'absolute',
+      top: 80,
+      bottom: 60,
+      left: 19,
+      right: -50,
+      overflow: 'hidden',
+      pointerEvents: 'none',
+    },
+    monitorFrame: {
+      margin: [50, 50, 50, 0],
+      border: [2, '#f2f2f2'],
+      boxShadow: [[0, 0, 50, [0, 0, 0, 0.05]]],
+      borderRightRadius: 10,
+      borderLeft: 'none',
+      zIndex: 1,
     },
     bouncy: {
       transition: 'all ease-in 100ms',

@@ -639,8 +639,8 @@ class HomeHeader {
                   }}
                 />
                 <below css={{ margin: [0, isLarge && '25%', 10, 0] }}>
-                  <P size={1.8} fontWeight={300} alpha={0.8}>
-                    A modern personal assistant for your desktop.
+                  <P size={2.2} fontWeight={300} alpha={0.8}>
+                    A modern organizational assistant for&nbsp;your&nbsp;desktop.
                   </P>
                 </below>
                 <actions

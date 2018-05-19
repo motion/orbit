@@ -19,6 +19,11 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
 
+const SubLink = view('a', {
+  color: '#fff',
+  borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
+})
+
 const Stars = () => (
   <svg width="830px" height="1603px" viewBox="-1 -1 830 1603">
     <g
@@ -640,7 +645,8 @@ class HomeHeader {
                 />
                 <below css={{ margin: [0, isLarge && '25%', 10, 0] }}>
                   <P size={2.2} fontWeight={300} alpha={0.8}>
-                    A modern organizational assistant for&nbsp;your&nbsp;desktop.
+                    A modern organizational assistant
+                    for&nbsp;your&nbsp;desktop.
                   </P>
                 </below>
                 <actions
@@ -844,21 +850,21 @@ class HomeFooter {
                     <P2 size={3} alpha={1} fontWeight={200}>
                       We live and work through our&nbsp;technology.
                     </P2>
+                    <br />
                     <P2 size={1.8} alpha={0.85}>
-                      The cloud that powers your life and your company is
-                      diverse and complex and bringing clarity to it requires a
-                      unique approach.
+                      The cloud that powers your life and work is diverse and
+                      complex. Making sense of information across every service
+                      is best done <strong>privately, on your device</strong>.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Making sense of information across services is best done{' '}
-                      <strong>privately, on your device</strong>. That means the
-                      bar is high to make your personal computing experience{' '}
-                      <em>more enjoyable</em>, not less.
+                      Because Orbit is working with you all the time, our goal
+                      is to make your personal computer{' '}
+                      <em>more&nbsp;enjoyable to use</em>.
                     </P2>
                     <br />
                     <P2 size={1.3} alpha={0.85}>
-                      Learn about our approach to <strong>privacy</strong> and{' '}
-                      <strong>experience</strong>.
+                      Learn about our approach to <SubLink>privacy</SubLink> and{' '}
+                      <SubLink>experience</SubLink>.
                     </P2>
                   </below>
                 </LeftSide>

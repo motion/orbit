@@ -66,6 +66,9 @@ export class SectionContent {
     halfscreen: {
       flexFlow: 'row',
       padding: [80 + 60, 0, 60],
+      [Constants.screen.smallQuery]: {
+        flexFlow: 'column',
+      },
     },
     padded: {
       padding: [80, 30],

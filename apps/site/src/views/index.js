@@ -8,8 +8,17 @@ import { MailIcon } from '~/views/icons'
 export * from './section'
 export * from './sectionContent'
 
-export const P = props => (
-  <UI.Text selectable css={{ display: 'block' }} {...props} />
+export const P = ({ size, ...props }) => (
+  <Media query={Constants.screen.small}>
+    {isSmall => (
+      <UI.Text
+        size={size * (isSmall ? 0.9 : 1)}
+        selectable
+        css={{ display: 'block' }}
+        {...props}
+      />
+    )}
+  </Media>
 )
 export const P2 = props => (
   <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
@@ -40,9 +49,9 @@ export const Title = ({
   <Media query={Constants.screen.small}>
     {isSmall => (
       <P
-        size={size * (isSmall ? 0.8 : 1)}
         fontWeight={700}
         margin={[0, 0, 5]}
+        size={size * (isSmall ? 0.7 : 1)}
         css={{
           fontFamily: '"Mercury Display A", "Mercury Display B"',
           fontStyle: italic ? 'italic' : 'normal',
@@ -409,6 +418,6 @@ export const HalfSection = view('section', {
   justifyContent: 'flex-end',
   [Constants.screen.smallQuery]: {
     width: '100%',
-    padding: [30, 20],
+    padding: [0, 0, 40, 0],
   },
 })

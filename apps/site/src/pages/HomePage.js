@@ -619,76 +619,72 @@ class HomeHeader {
               />
               <Slant slantBackground={`#f6f6f6`} css={{ zIndex: 2 }} />
               <div $$flex />
-              <Media query={Constants.screen.large}>
-                {isLarge => (
-                  <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
-                    <Title
-                      italic
-                      size={isLarge ? 6.2 : 4}
-                      margin={[-15, 0, -15, -5]}
-                      color="#333"
-                    >
-                      Operate with<br />
-                      intelligence
-                    </Title>
-                    <line
+              <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
+                <Title
+                  italic
+                  size={6.2}
+                  margin={[-15, 0, -15, -5]}
+                  color="#333"
+                >
+                  Operate with<br />
+                  intelligence
+                </Title>
+                <line
+                  css={{
+                    margin: [30, 40, 20],
+                    width: '53%',
+                    height: 4,
+                    background: '#ddd',
+                    opacity: 0.15,
+                  }}
+                />
+                <below css={{ margin: [0, isLarge && '25%', 10, 0] }}>
+                  <P size={1.8} fontWeight={300} alpha={0.8}>
+                    A modern personal assistant for your desktop.
+                  </P>
+                </below>
+                <actions
+                  $$row
+                  css={{
+                    margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
+                    alignItems: 'center',
+                  }}
+                >
+                  <UI.Button
+                    borderStyle="dotted"
+                    borderColor="#ccc"
+                    size={1.1}
+                    $smallInstallBtn={!isLarge}
+                    tooltip=""
+                    css={{
+                      margin: [0, 10, 0, 0],
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Try for{' '}
+                    <AppleLogo
+                      width={20}
+                      height={20}
                       css={{
-                        margin: [30, 40, 20],
-                        width: '53%',
-                        height: 4,
-                        background: '#ddd',
-                        opacity: 0.15,
+                        display: 'inline-block',
+                        margin: [-2, 0, 0, 0],
+                        opacity: 0.32,
                       }}
                     />
-                    <below css={{ margin: [0, '25%', 10, 0] }}>
-                      <P size={1.8} fontWeight={300} alpha={0.8}>
-                        A modern personal assistant for your desktop.
-                      </P>
-                    </below>
-                    <actions
-                      $$row
-                      css={{
-                        margin: isLarge ? [25, 'auto', 0, 0] : [0, 0, 0, 25],
-                        alignItems: 'center',
-                      }}
-                    >
-                      <UI.Button
-                        borderStyle="dotted"
-                        borderColor="#ccc"
-                        size={1.1}
-                        $smallInstallBtn={!isLarge}
-                        tooltip=""
-                        css={{
-                          margin: [0, 10, 0, 0],
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Try for{' '}
-                        <AppleLogo
-                          width={20}
-                          height={20}
-                          css={{
-                            display: 'inline-block',
-                            margin: [-2, 0, 0, 0],
-                            opacity: 0.32,
-                          }}
-                        />
-                      </UI.Button>
-                      <UI.Button
-                        chromeless
-                        alpha={0.5}
-                        onClick={() => Router.go('/features')}
-                        margin={[0, 0, 0, 10]}
-                        css={{
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Learn more
-                      </UI.Button>
-                    </actions>
-                  </mainSection>
-                )}
-              </Media>
+                  </UI.Button>
+                  <UI.Button
+                    chromeless
+                    alpha={0.5}
+                    onClick={() => Router.go('/features')}
+                    margin={[0, 0, 0, 10]}
+                    css={{
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Learn more
+                  </UI.Button>
+                </actions>
+              </mainSection>
               <div $$flex />
               <Media
                 query={Constants.screen.large}
@@ -737,17 +733,16 @@ class HomeHeader {
       zIndex: 10,
     },
     smallCallout: {
-      padding: [10, 0, 40, 40],
+      padding: [0, 0, 40, 0],
     },
     largeCallout: {
       width: '54%',
       margin: [-15, 0, 0, 0],
     },
     smallInstallBtn: {
-      transformOrigin: 'top right',
-      transform: {
-        scale: 1.2,
-      },
+      // transform: {
+      //   scale: 1.2,
+      // },
     },
     videoSpot: {
       cursor: 'pointer',
@@ -855,7 +850,7 @@ class HomeFooter {
                       unique approach.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Making sense of information across services is best done
+                      Making sense of information across services is best done{' '}
                       <strong>privately, on your device</strong>. That means the
                       bar is high to make your personal computing experience{' '}
                       <em>more enjoyable</em>, not less.

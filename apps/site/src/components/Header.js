@@ -90,7 +90,7 @@ export class Header {
       zIndex: 100,
       alignItems: 'center',
       [Constants.screen.smallQuery]: {
-        padding: [25, 20],
+        padding: [25, 0],
       },
     },
     nav: {

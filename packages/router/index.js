@@ -98,11 +98,11 @@ export class ObservableRouter {
     this.history.goForward()
   }
 
-  link = () => e => {
+  link = where => e => {
     if (e && e.preventDefault) {
       e.preventDefault()
     }
-    this.go(e.target.href)
+    this.go(where || (e && e.target.href))
   }
 
   @action

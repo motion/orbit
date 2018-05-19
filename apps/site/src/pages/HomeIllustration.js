@@ -6,7 +6,6 @@ import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 import * as Icons from '~/views/icons'
 import Router from '~/router'
-import { scrollTo } from '~/helpers'
 import { brandColor } from 'constants'
 
 const bgColor = '#fff'
@@ -200,6 +199,13 @@ class IllustrationStore {
     }, 300)
   }
 
+  restart() {
+    this.animate = false
+    setTimeout(() => {
+      this.animate = true
+    })
+  }
+
   @react
   runAnimation = [
     () => this.animate,
@@ -256,22 +262,22 @@ class IllustrationStore {
       from: { opacity: 0, y: -20 },
       to: { opacity: 1, y: 0 },
       config: { tension: 20, friction: 4 },
-      delay: [10, 900, 600, 500, 900, 800, 800, 500, 500, 500, 400, 400].slice(
+      delay: [10, 900, 600, 500, 900, 800, 800, 500, 500, 300, 500, 300].slice(
         0,
         chats.length,
       ),
     })
-    await sleep(6200)
+    await sleep(6000)
     this.chatFrame(Spring, {
       to: { scale: 0.6, opacity: 1, opacityRest: 0, y: -400 },
       config: { tension: 30, friction: 50 },
     })
-    await sleep(2300)
+    await sleep(1800)
     this.chatFrame(Spring, {
       to: { scale: 0.6, opacity: 0.6, opacityRest: 1, y: -500 },
       config: { tension: 35, friction: 50 },
     })
-    await sleep(1800)
+    await sleep(800)
     this.chatFrame(Spring, {
       to: { scale: 0.6, opacity: 0.1, y: -1000 },
       config: { tension: 20, friction: 50 },
@@ -357,7 +363,7 @@ export default class HeaderIllustration {
                 <animated.div style={{ opacity }}>
                   <message>
                     <msgBlur />
-                    Is your organization<br />
+                    Your organization<br />
                     lacking organization?
                   </message>
                 </animated.div>
@@ -383,9 +389,11 @@ export default class HeaderIllustration {
                         margin: [20, 0, 0],
                       }}
                     >
-                      <UI.Button onClick={scrollTo('#join')}>
-                        Early Access
-                      </UI.Button>
+                      <UI.Button
+                        icon="refresh"
+                        tooltip="Replay"
+                        onClick={store.restart}
+                      />
                       <UI.Button onClick={Router.link('/features')}>
                         Features
                       </UI.Button>

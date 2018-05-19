@@ -51,9 +51,9 @@ class FeaturesIntro {
                 <Title italic size={2.8} margin={[0, 0, 10, 0]}>
                   A smarter operating system
                 </Title>
-                <P2 size={1.4} alpha={0.75}>
-                  Orbit&nbsp;unifies&nbsp;the cloud and gives it a brain so you
-                  and your team can be more effective and in sync.
+                <P2 size={1.8} alpha={0.75}>
+                  Unify the cloud and give it a brain so you and your team can
+                  be more effective and more in sync.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>News</a>{' '}

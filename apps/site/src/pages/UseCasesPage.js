@@ -44,8 +44,8 @@ class UseCasesIntro {
                 <Title italic size={2.8} margin={[0, '10%', 15, 0]}>
                   Use cases
                 </Title>
-                <P2 size={1.3} alpha={0.75}>
-                  Whether using personally or as part of a big team, Orbit helps
+                <P2 size={1.8} alpha={0.75}>
+                  Whether using personally or as part of a team, Orbit helps
                   make knowledge work for you.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>

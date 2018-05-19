@@ -197,13 +197,13 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
 )
 
 export const Border = UI.injectTheme(
-  view(({ theme, ...props }) => (
+  view(({ theme, width = 4, color, type = 'dotted', ...props }) => (
     <border
       css={{
         position: 'absolute',
         left: -30,
         right: -30,
-        borderBottom: [4, 'dotted', theme.base.color.alpha(0.08)],
+        borderBottom: [width, type, color || theme.base.color.alpha(0.08)],
         transform: {
           y: -2,
         },
@@ -361,23 +361,28 @@ export class Callout {
 }
 
 export const Glow = ({ below, style = {}, ...props }) => (
-  <glow
-    $$fullscreen
-    css={{
-      zIndex: below ? -1 : 0,
-      background: '#fff',
-      ...style,
-      filter: {
-        blur: 180,
-        ...style.filter,
-      },
-      transform: {
-        scale: 0.38,
-        y: '-20%',
-        ...style.transform,
-      },
-    }}
-    {...props}
+  <Media
+    query={Constants.screen.large}
+    render={() => (
+      <glow
+        $$fullscreen
+        css={{
+          zIndex: below ? -1 : 0,
+          background: '#fff',
+          ...style,
+          filter: {
+            blur: 180,
+            ...style.filter,
+          },
+          transform: {
+            scale: 0.38,
+            y: '-20%',
+            ...style.transform,
+          },
+        }}
+        {...props}
+      />
+    )}
   />
 )
 

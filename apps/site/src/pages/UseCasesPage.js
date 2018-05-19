@@ -45,9 +45,10 @@ class UseCasesIntro {
                   Use cases
                 </Title>
                 <P2 size={1.3} alpha={0.75}>
-                  Making your knowledge work&nbsp;for&nbsp;you
+                  Whether using personally or as part of a big team, Orbit helps
+                  make knowledge work for you.
                 </P2>
-                <P size={1.2} alpha={0.7}>
+                <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#customer-success')}>
@@ -111,7 +112,7 @@ class SectionUseCaseRemoteTeams {
                 />
                 <LeftSide>
                   <SmallTitle margin={[0, 0, 8]}>Use Cases</SmallTitle>
-                  <SubTitle italic>
+                  <SubTitle size={5} italic>
                     Remote<br />
                     teams
                   </SubTitle>
@@ -285,7 +286,7 @@ class SectionUseCaseCustomerSuccess {
                 </LeftSide>
                 <RightSide css={{ top: 0 }}>
                   <SmallTitle margin={[-10, 0, 8]}>Use Cases</SmallTitle>
-                  <SubTitle italic>
+                  <SubTitle size={5} italic>
                     Customer<br />Success
                   </SubTitle>
                   <div if={isLarge} $$flex css={{ marginTop: '15%' }} />
@@ -362,7 +363,7 @@ class SectionUseCaseReduceInterrupts {
                 />
                 <LeftSide>
                   <SmallTitle margin={[-20, 0, 8]}>Use Cases</SmallTitle>
-                  <SubTitle italic>
+                  <SubTitle size={5} italic>
                     Workplace<br />
                     interruptions
                   </SubTitle>
@@ -376,12 +377,12 @@ class SectionUseCaseReduceInterrupts {
                       marginBottom: -40,
                     }}
                   />
-                  <div if={isLarge} css={{ height: '28%' }} />
+                  <div if={isLarge} css={{ height: '26%' }} />
                   <section
                     css={{
                       textAlign: 'left',
                       display: 'block',
-                      margin: isLarge ? [-40, 0, 0, '30%'] : 0,
+                      margin: isLarge ? [-60, 0, 0, '30%'] : 0,
                     }}
                   >
                     <SubSubTitle>Prevent shoulder taps</SubSubTitle>

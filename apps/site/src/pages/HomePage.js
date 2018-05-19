@@ -645,7 +645,7 @@ class HomeHeader {
                 />
                 <below css={{ margin: [0, isLarge && '25%', 10, 0] }}>
                   <P size={2.2} fontWeight={300} alpha={0.8}>
-                    A smart organizational assistant that lives
+                    A smart organizational layer for the cloud that lives
                     on&nbsp;your&nbsp;desktop.
                   </P>
                 </below>
@@ -852,18 +852,18 @@ class HomeFooter {
                     </P2>
                     <br />
                     <P2 size={1.8} alpha={0.85}>
-                      The cloud that powers your life and work is diverse and
-                      complex. Making sense of information across every service
-                      is best done <strong>privately, on your device</strong>.
+                      The services that power your life and work are diverse.
+                      Making sense across them all handles lots of sensitive
+                      information. It's best done{' '}
+                      <strong>privately, on your device</strong>.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Because Orbit is working with you all the time, our goal
-                      is to make your personal computer{' '}
-                      <em>more&nbsp;enjoyable to use</em>.
+                      For Orbit to be on device and always at hand, it must make
+                      your day to day <em>more&nbsp;enjoyable</em>.
                     </P2>
                     <br />
                     <P2 size={1.3} alpha={0.85}>
-                      Learn about our approach to <SubLink>privacy</SubLink> and{' '}
+                      Learn about how we approach <SubLink>privacy</SubLink> &{' '}
                       <SubLink>experience</SubLink>.
                     </P2>
                   </below>

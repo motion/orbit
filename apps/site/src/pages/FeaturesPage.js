@@ -49,14 +49,13 @@ class FeaturesIntro {
             <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={2.8} margin={[0, 0, 10, 0]}>
-                  Features
+                  A smarter operating system
                 </Title>
-                <P2 size={1.3} alpha={0.75}>
-                  Orbit lives on your desktop as a private personal assistant.
-                  It&nbsp;unifies&nbsp;your cloud so you and your team are more
-                  effective.
+                <P2 size={1.4} alpha={0.75}>
+                  Orbit&nbsp;unifies&nbsp;the cloud and gives it a brain so you
+                  and your team can be more effective and in sync.
                 </P2>
-                <P size={1.2} alpha={0.7}>
+                <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>News</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#search')}>Search</a>
@@ -146,8 +145,10 @@ const SearchCallout = ({ isLarge }) => (
     }
   >
     <P size={1.6}>
-      It's NLP powered search for your cloud and team. With overviews of Slack
-      conversations and aggregated profiles across every integration.
+      Concept-powered search across your entire cloud. With keyword summaries
+      for Slack conversations that learn what terms are common to your company.
+      Plus aggregated profiles of everyone you interact with across every
+      integration.
     </P>
   </Callout>
 )
@@ -247,13 +248,13 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <SubTitle size={2.5}>Simplify your incoming</SubTitle>
+                    <SubTitle size={2.5}>Your daily heads up</SubTitle>
                     <FeatureSubTitle
                       css={{
                         marginTop: 12,
                       }}
                     >
-                      Summarized notifications in your <Cmd>⌘+Space</Cmd>
+                      Simplify the incoming with <Cmd>⌘+Space</Cmd>
                     </FeatureSubTitle>
                     <Callout
                       css={{
@@ -268,24 +269,17 @@ export class SectionFeatureNewsSearch extends React.Component {
                       }}
                     >
                       <P size={1.6}>
-                        A newspaper that sums up the day for you and your team.
-                        Using novel on-device machine learning that learns your
-                        company vocab.
+                        Orbit takes over for spotlight with a home that
+                        understands you and sorts through all the incoming.
+                        <br />
+                        <br />
+                        It uses novel on-device ML that can adjust to the custom
+                        terminology your team uses.
                       </P>
-                      <br />
                       <DottedButton
-                        css={
-                          isLarge
-                            ? {
-                                fontSize: 15,
-                                position: 'absolute',
-                                bottom: 20,
-                                right: 20,
-                              }
-                            : {
-                                margin: [20, 0, 0, 'auto'],
-                              }
-                        }
+                        css={{
+                          margin: [0, 0, 0, 'auto'],
+                        }}
                       >
                         Learn more
                       </DottedButton>
@@ -490,7 +484,9 @@ export class SectionFeatureIntelligence extends React.Component {
                   }
                 >
                   <SubTitle size={2.5}>Realtime contextual search</SubTitle>
-                  <FeatureSubTitle>Smart sidebar for any app</FeatureSubTitle>
+                  <FeatureSubTitle>
+                    A whole new ability for your computer
+                  </FeatureSubTitle>
                   <Callout
                     css={{
                       textAlign: 'left',
@@ -503,28 +499,19 @@ export class SectionFeatureIntelligence extends React.Component {
                         : null),
                     }}
                   >
-                    <P2 size={2}>
-                      Realtime contextual answers that work with every app (yes,
-                      even Slack, Intercom, and your Mail client).
+                    <P2 size={1.6}>
+                      Realtime contextual answers across every app. Even your
+                      desktop apps like Slack.
                     </P2>
                     <P2 size={1.6}>
                       And all you have to do is hold <Cmd>Option</Cmd>.
-                      Important terms, people, and items in your cloud with
-                      summarized answers, instantly.
+                      Important terms, people, and items in your cloud are shown
+                      with highlighted summarized answers, instantly.
                     </P2>
                     <DottedButton
-                      css={
-                        isLarge
-                          ? {
-                              fontSize: 15,
-                              position: 'absolute',
-                              bottom: 20,
-                              right: 20,
-                            }
-                          : {
-                              margin: [20, 0, 0, 'auto'],
-                            }
-                      }
+                      css={{
+                        margin: [0, 0, 0, 'auto'],
+                      }}
                     >
                       Learn more
                     </DottedButton>

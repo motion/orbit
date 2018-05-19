@@ -9,8 +9,6 @@ import Router from '~/router'
 import { scrollTo } from '~/helpers'
 
 const bgColor = '#fff'
-
-const P = props => <UI.Text selectable css={{ display: 'block' }} {...props} />
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 const Badge = view('div', {
@@ -89,54 +87,56 @@ const chats = [
 
 const messages = (
   <React.Fragment>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
-    <Bubble>Lorem ipsume dolor sit.</Bubble>
-    <Bubble left>Lorem ipsume dolor sit.</Bubble>
+    <Bubble>this shows good potential</Bubble>
+    <Bubble left>the icon isn’t good that you have now</Bubble>
+    <Bubble left>
+      and i think with some tweaking this could work as a logo concept -
+      animation proves some extensibility too
+    </Bubble>
+    <Bubble>
+      yeah, new idea is really close though to being what I think you would need
+      to start shopping the concept around
+    </Bubble>
+    <Bubble>we actually have this indicator</Bubble>
+    <Bubble left>
+      that is prototype stage but meant to signify you have something relevant
+    </Bubble>
+    <Bubble>
+      signifies that its a small thing that sort of hangs around with you
+    </Bubble>
+    <Bubble left>the little line is nice actually</Bubble>
+    <Bubble>makes the logo 10x more identifiable</Bubble>
+    <Bubble left>with some tweak maybe</Bubble>
+    <Bubble>Lorem maybe rounded to the O</Bubble>
+    <Bubble left>
+      I think screens will really help. Going to try and add by tn
+    </Bubble>
+    <Bubble>
+      but thinking about … that idea …. of, the answer to the ‘so what…’
+    </Bubble>
+    <Bubble left>
+      “The one dashboard that Sauron would’ve made if he was a good guy.”
+    </Bubble>
+    <Bubble left>I need to get the screenshots in there</Bubble>
+    <Bubble>
+      maybe oil slick concept goes more like this for that first problem
+      statement part
+    </Bubble>
+    <Bubble>
+      also think that “unifying force for your team” may be too long
+    </Bubble>
+    <Bubble>
+      may want to do some simple moire or comic dot-grid effects that sort of
+      procedurally space-fill the empty areas with black/white checkers/dots
+    </Bubble>
+    <Bubble left>
+      using ben-day dot pattern for the transition between the different
+      sections could be a cool way to carry motif through it as well
+    </Bubble>
+    <Bubble left>
+      mockups for graphite drawings I’m having produced in China
+    </Bubble>
+    <Bubble>based on our tests</Bubble>
   </React.Fragment>
 )
 

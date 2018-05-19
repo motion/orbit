@@ -53,7 +53,8 @@ class FeaturesIntro {
                 </Title>
                 <P2 size={1.3} alpha={0.75}>
                   Orbit lives on your desktop as a private personal assistant.
-                  It&nbsp;unifies&nbsp;your cloud so you can work smarter.
+                  It&nbsp;unifies&nbsp;your cloud so you and your team are more
+                  effective.
                 </P2>
                 <P size={1.2} alpha={0.7}>
                   <a onClick={scrollTo('#news')}>News</a>{' '}

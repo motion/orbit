@@ -301,7 +301,7 @@ export default class HeaderIllustration {
   render({ store }) {
     return (
       <React.Fragment>
-        <monitorWrap>
+        <monitorWrap if={false}>
           <monitorFrame $$fullscreen />
         </monitorWrap>
         <headerIll>
@@ -545,7 +545,7 @@ export default class HeaderIllustration {
     monitorFrame: {
       margin: [50, 50, 50, 0],
       border: [2, '#f2f2f2'],
-      boxShadow: [[0, 0, 50, [0, 0, 0, 0.05]]],
+      // boxShadow: [[0, 0, 50, [0, 0, 0, 0.05]]],
       borderRightRadius: 10,
       borderLeft: 'none',
       zIndex: 1,

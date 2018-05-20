@@ -3,7 +3,6 @@ import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import JSS from '~/stylesheet'
 import * as Helpers_ from '@mcro/css'
-import isEqual from 'react-fast-compare'
 
 // exports
 import ThemeProvide_ from './components/themeProvide'
@@ -53,11 +52,12 @@ export default class Gloss {
 
   decorator = (
     optionalNameOrChild: string | Function,
+    // these are only used for shorthand views
     optionalStyle?: Object,
     optionalPropStyles?: Object,
   ) => {
+    // Short style component --  view('tagName', {})
     if (typeof optionalNameOrChild === 'string') {
-      // shorthand -- $('tagName', {}) style component
       const tagName = optionalNameOrChild
       const styles = optionalStyle
       const id = uid()
@@ -86,9 +86,8 @@ export default class Gloss {
       glossComponent.displayName = tagName
       return glossComponent
     }
-
+    // Class style component
     const Child = optionalNameOrChild
-
     if (!Child) {
       console.error(
         'invalid view given to gloss',
@@ -98,8 +97,6 @@ export default class Gloss {
       )
       return () => this.createElement('div', { children: 'Error Component' })
     }
-
-    // @view decorated style component
     if (Child.prototype && Child.prototype.render) {
       const { attachStyles, css } = this
       Child.prototype.glossElement = this.createElement
@@ -130,7 +127,6 @@ export default class Gloss {
             this.theme.addRules(rules)
           }
         }
-
         // for HMR needs to re-run on mount idk why
         if (process.env.NODE_ENV === 'development') {
           const ogComponentWillMount = Child.prototype.componentWillMount
@@ -144,7 +140,6 @@ export default class Gloss {
           }
         }
       }
-
       let lastUpdatedStyles = null
       const ogrender = Child.prototype.render
       if (Child.prototype.render) {

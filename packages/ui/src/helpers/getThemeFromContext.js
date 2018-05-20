@@ -14,6 +14,16 @@ export default function getThemeFromContext(
           uiActiveThemeName: prop,
           uiActiveTheme: this.context.uiThemes[prop],
         }
+      } else {
+        console.error(
+          'this is',
+          this,
+          'got theme prop',
+          prop,
+          'whats in context',
+          this.context.uiThemes,
+        )
+        throw new Error(`Didnt find theme for this prop ${propName}`)
       }
     }
     // no found theme, try making custom

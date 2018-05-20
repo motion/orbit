@@ -10,7 +10,7 @@ const darken = {
 }
 const str = x => `${x}`
 const adjust = (color, adjuster, opposite = false) => {
-  const isLight = color.lightness() > 50
+  const isLight = color.isLight()
   const direction = isLight ? darken[str(opposite)] : lighten[str(opposite)]
   return color[direction](adjuster(color))
 }
@@ -70,6 +70,9 @@ export default class ThemeMaker {
     borderColor,
     ...rest
   }) => {
+    if (!background || !color) {
+      throw new Error(`Themes require at least background or color`)
+    }
     const base = this.colorize({
       highlightColor,
       highlightBackground,
@@ -78,7 +81,7 @@ export default class ThemeMaker {
       borderColor,
     })
     const focused = {
-      background: adjust(base.background, largeAmt, true),
+      background: base.background && adjust(base.background, largeAmt, true),
       borderColor: base.borderColor && adjust(base.borderColor, largeAmt, true),
     }
     return this.colorize({

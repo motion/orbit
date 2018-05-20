@@ -4,7 +4,6 @@ import baseStyles from './baseStyles'
 const gloss = new Gloss({
   baseStyles,
   glossProp: 'css',
-  themeProp: 'theme',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,
   toColor: obj => {

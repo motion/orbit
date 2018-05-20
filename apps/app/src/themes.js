@@ -1,19 +1,8 @@
 import { ThemeMaker, color } from '@mcro/ui'
-import * as Constants from '~/constants'
 
 const Theme = new ThemeMaker()
 
 const highlightColor = '#fff'
-const highlightBackground = Constants.ORBIT_COLOR
-
-const blank = {
-  highlightBackground: 'transparent',
-  highlightColor: 'transparent',
-  background: 'transparent',
-  color: '#fff',
-  borderColor: 'transparent',
-  buttonBackground: 'transparent',
-}
 
 const tanBg = color('rgb(255,255,245)')
 const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
@@ -27,6 +16,8 @@ const dbActiveHoverBg = dbHoverBg.darken(0.06).desaturate(0.3)
 
 const Themes = {
   tan: Theme.fromStyles({
+    highlightBackground: [0, 0, 0, 0.05],
+    highlightColor,
     background: tanBg,
     color: '#656141',
     borderColor: tanActiveBg,
@@ -44,6 +35,8 @@ const Themes = {
     },
   }),
   darkBlue: Theme.fromStyles({
+    highlightBackground: [0, 0, 0, 0.05],
+    highlightColor,
     background: dbBg,
     color: '#fff',
     borderColor: dbActiveBg,
@@ -80,6 +73,8 @@ const Themes = {
     },
   }),
   light: Theme.fromStyles({
+    highlightBackground: [0, 0, 0, 0.05],
+    highlightColor,
     background: color('#fff'),
     color: color('#444'),
     borderColor: color('#999'),
@@ -96,30 +91,6 @@ const Themes = {
       background: color('#ccc'),
     },
   }),
-  blank: {
-    base: blank,
-    hover: blank,
-    active: blank,
-    focus: blank,
-    highlight: blank,
-  },
-  clear: {
-    button: {
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-      borderRightWidth: 0,
-    },
-    glow: {
-      color: [255, 255, 255, 0.1],
-    },
-    ...Theme.fromStyles({
-      highlightBackground,
-      highlightColor,
-      background: [255, 255, 255, 1],
-      color: '#555',
-      borderColor: [0, 0, 0, 0.1],
-    }),
-  },
 }
 
 window.Themes = Themes

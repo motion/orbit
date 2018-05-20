@@ -47,9 +47,8 @@
     "wait-port": "^0.2.2",
     "iohook": "^0.1.11",
     "electron-context-menu": "^0.9.1",
-    "electron-debug": "^1.4.0",
-    "electron-localshortcut": "^2.0.2",
-    "electron-simple-updater": "^1.2.1",
+    "electron-debug": "^1.5.0",
+    "electron-simple-updater": "^1.2.3",
     "lodash": "^4.17.4",
     "mobx": "^3.5.0",
     "raf": "^3.4.0",
@@ -60,7 +59,7 @@
     "usage": "^0.7.1"
   },
   "devDependencies": {
-    "electron": "2.0.0-beta.7",
+    "electron": "^2.0.1",
     "electron-rebuild": "^1.7.3",
     "node-loader": "^0.6.0",
     "nodemon": "^1.15.1",

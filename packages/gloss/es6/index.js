@@ -22,10 +22,6 @@ var _stylesheet = require('./stylesheet');
 
 var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
-var _reactFastCompare = require('react-fast-compare');
-
-var _reactFastCompare2 = _interopRequireDefault(_reactFastCompare);
-
 var _themeProvide = require('./components/themeProvide');
 
 var _themeProvide2 = _interopRequireDefault(_themeProvide);
@@ -57,8 +53,8 @@ let Gloss = class Gloss {
     this.JSS = _stylesheet2.default;
 
     this.decorator = (optionalNameOrChild, optionalStyle, optionalPropStyles) => {
+      // Short style component --  view('tagName', {})
       if (typeof optionalNameOrChild === 'string') {
-        // shorthand -- $('tagName', {}) style component
         const tagName = optionalNameOrChild;
         const styles = optionalStyle;
         const id = uid();
@@ -87,15 +83,12 @@ let Gloss = class Gloss {
         glossComponent.displayName = tagName;
         return glossComponent;
       }
-
+      // Class style component
       const Child = optionalNameOrChild;
-
       if (!Child) {
         console.error('invalid view given to gloss', optionalNameOrChild, optionalStyle, optionalPropStyles);
         return () => this.createElement('div', { children: 'Error Component' });
       }
-
-      // @view decorated style component
       if (Child.prototype && Child.prototype.render) {
         const { attachStyles, css } = this;
         Child.prototype.glossElement = this.createElement;
@@ -124,7 +117,6 @@ let Gloss = class Gloss {
               this.theme.addRules(rules);
             }
           };
-
           // for HMR needs to re-run on mount idk why
           if (process.env.NODE_ENV === 'development') {
             const ogComponentWillMount = Child.prototype.componentWillMount;
@@ -138,7 +130,6 @@ let Gloss = class Gloss {
             };
           }
         }
-
         let lastUpdatedStyles = null;
         const ogrender = Child.prototype.render;
         if (Child.prototype.render) {

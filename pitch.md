@@ -53,7 +53,7 @@ Maybe. Technically it probably can but the hard part isn't really the ML, it's _
 
 Meanwhile desktops have stagnated. Spotlight? Notification drawer? Nothing integrates with the cloud. ML is used only in the most limited areas -- we can ask Siri for very specific things.
 
-We're constantly moving between all these services but it doesn't feel like we're operating with them. We're using the browser. Nothing works together, and there's no exploratory interface for your company.
+"Our computers dont feel like Minority Report"
 
 ## All together now
 

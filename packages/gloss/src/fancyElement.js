@@ -145,6 +145,7 @@ export default function fancyElementFactory(Gloss, styles) {
           style = { ...style, ...val }
           continue
         }
+        // hacky hacky place to put this, should be out of gloss
         if (IS_BROWSER && prop === 'onClick' && typeof val === 'function') {
           const ogClick = val
           finalProps.onClick = function(...args) {
@@ -165,6 +166,7 @@ export default function fancyElementFactory(Gloss, styles) {
           }
           continue
         }
+        // also hacky to put this here
         // tagName={}
         if (tagNameOption && prop === tagNameOption && isTag) {
           // lets it be optionally undefined/false

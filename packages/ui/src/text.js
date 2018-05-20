@@ -228,6 +228,7 @@ export default class Text {
     placeholder,
     lineHeight,
     highlightWords,
+    sizeLineHeight,
     highlightWordsColor,
     className,
     measure,

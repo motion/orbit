@@ -18,6 +18,7 @@ import HomeIllustration from './HomeIllustration'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
+import { scrollTo } from '~/helpers'
 
 const SubLink = view('a', {
   color: '#fff',
@@ -638,9 +639,15 @@ class HomeHeader {
                   </Title>
                   <borderLine />
                   <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
-                    <P size={2.2} fontWeight={300} alpha={0.8}>
-                      A smart organizational layer for the cloud that lives on
-                      your&nbsp;desktop.
+                    <P
+                      size={1.35}
+                      sizeLineHeight={1.2}
+                      fontWeight={300}
+                      alpha={0.8}
+                    >
+                      As your team grows the amount of overhead in your cloud
+                      does too. Conversations happen all&nbsp;over.
+                      Orbit&nbsp;sorts it out for you on the desktop.
                     </P>
                   </below>
                   <actions
@@ -654,14 +661,16 @@ class HomeHeader {
                       borderStyle="dotted"
                       borderColor="#ccc"
                       size={1.1}
+                      onClick={scrollTo('#join')}
                       $smallInstallBtn={!isLarge}
                       tooltip=""
                       css={{
                         margin: [0, 10, 0, 0],
                         cursor: 'pointer',
+                        lineHeight: '1.1rem',
                       }}
                     >
-                      Try for{' '}
+                      Coming soon for{' '}
                       <AppleLogo
                         width={20}
                         height={20}
@@ -851,14 +860,14 @@ class HomeFooter {
                     </P2>
                     <br />
                     <P2 size={1.8} alpha={0.85}>
-                      The services that power your life and work are diverse.
-                      Making sense of them will require handling much of your
-                      sensitive data. It has to be done{' '}
-                      <strong>completely privately, on device</strong>.
+                      The services that power your life and work are constantly
+                      changing. Making sense of it all requires handling lots of
+                      sensitive data. We think it has to be done{' '}
+                      <strong>privately, on your device</strong>.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Orbit does this. It's always at hand. That means we need
-                      to deliver a truly great experience.
+                      Orbit works right besides you day to day. We want to be
+                      sure it's a great experience.
                     </P2>
                     <br />
                     <P2 size={1.3} alpha={0.85}>

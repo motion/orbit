@@ -21,17 +21,13 @@ class AboutIntro {
         {isLarge => (
           <Section>
             <SectionContent padded halfscreen>
-              <HalfSection css={{ paddingRight: '10%' }}>
+              <HalfSection>
                 <Title italic size={2.8} margin={[0, 0, 10, 0]}>
-                  Focused on making operating systems more intelligently in tune
-                  with how we work.
+                  Passionate about making our tools more intelligent and
+                  intuitive.
                 </Title>
               </HalfSection>
-              <HalfSection>
-                <Callout css={isLarge && { margin: [0, 0, 0, 'auto'] }}>
-                  <Join />
-                </Callout>
-              </HalfSection>
+              <HalfSection />
             </SectionContent>
           </Section>
         )}
@@ -51,8 +47,8 @@ export default class FeaturesPage {
           <Border css={{ top: 0 }} />
           <Border css={{ bottom: -4 }} />
           <SectionContent padded>
-            <inner css={{ padding: [0, '10%'] }}>
-              <P size={2.4} css={{ lineHeight: '44px' }} alpha={0.75}>
+            <inner css={{ padding: [100, '20%'] }}>
+              <P size={2} css={{ lineHeight: '44px' }} alpha={0.75}>
                 Orbit runs intimately in your everyday. That means it has to
                 work for you, the individual.
                 <br />

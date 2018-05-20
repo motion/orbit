@@ -7,8 +7,9 @@ import {
   P2,
   RightSide,
   Callout,
+  Link,
 } from '~/views'
-import { BrandLogo } from '~/components'
+import { BrandLogo, Join } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 
@@ -19,18 +20,19 @@ export class Footer {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent
-              padded
-              css={isLarge ? { padding: [150, 0] } : { padding: [40, 20] }}
-            >
+            <SectionContent padded>
               <left
+                $$row
                 css={
                   isLarge
                     ? { width: '50%', padding: [0, 20] }
                     : { padding: [0, 0, 50] }
                 }
               >
-                <Callout if={!noMission}>
+                <Callout>
+                  <Join />
+                </Callout>
+                <section if={false}>
                   <SmallTitle>Our Mission</SmallTitle>
                   <P2 size={1.6}>
                     Orbit runs intimately in your everyday. That means it has to
@@ -41,10 +43,21 @@ export class Footer {
                     trust. Privacy, security, and user experience our first
                     priorities.
                   </P2>
-                </Callout>
+                </section>
               </left>
               <RightSide noEdge>
-                <div css={{ flexFlow: 'row' }}>
+                <div css={isLarge && { flex: 1, flexFlow: 'row', padding: 40 }}>
+                  <nav>
+                    <Link $link to="/features">
+                      {isLarge ? 'What\'s Orbit?' : 'What'}
+                    </Link>
+                    <Link $link to="/use-cases">
+                      {isLarge ? 'Use Cases' : 'Why'}
+                    </Link>
+                    <Link $link to="/about">
+                      {isLarge ? 'About Us' : 'Who'}
+                    </Link>
+                  </nav>
                   <div $$flex />
                   <BrandLogo />
                 </div>
@@ -54,5 +67,15 @@ export class Footer {
         )}
       </Media>
     )
+  }
+
+  static style = {
+    nav: {
+      flex: 1,
+      height: '100%',
+    },
+    link: {
+      margin: [0, 0, 10],
+    },
   }
 }

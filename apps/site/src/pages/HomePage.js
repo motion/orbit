@@ -607,128 +607,123 @@ const Stars = () => (
 
 @view
 class HomeHeader {
-  render() {
+  render({ isMedium }) {
     return (
       <Media query={Constants.screen.large}>
-        {isLarge => (
-          <Section css={{ background: '#fff' }}>
-            <SectionContent padded fullscreen>
-              <Slant
-                inverseSlant
-                slantGradient={[
-                  Constants.colorSecondary,
-                  Constants.colorSecondary.lighten(0.4),
-                ]}
-                slantSize={8}
-                amount={20}
-              />
-              <Slant slantBackground={`#f6f6f6`} css={{ zIndex: 2 }} />
-              <div $$flex />
-              <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
-                <Title
-                  italic
-                  size={6.2}
-                  margin={[-15, 0, -15, -5]}
-                  color="#333"
-                >
-                  Operate with<br />
-                  intelligence
-                </Title>
-                <line
-                  css={{
-                    margin: [30, 40, 20],
-                    width: '53%',
-                    height: 4,
-                    background: '#ddd',
-                    opacity: 0.15,
-                  }}
+        {isLarge => {
+          console.log('isLarge', isLarge)
+          return (
+            <Section css={{ background: '#fff' }}>
+              <SectionContent padded fullscreen>
+                <Slant
+                  inverseSlant
+                  slantGradient={[
+                    Constants.colorSecondary,
+                    Constants.colorSecondary.lighten(0.4),
+                  ]}
+                  slantSize={8}
+                  amount={20}
                 />
-                <below css={{ margin: [0, isLarge && '25%', 10, 0] }}>
-                  <P size={2.2} fontWeight={300} alpha={0.8}>
-                    A smart organizational layer for the cloud that lives
-                    on&nbsp;your&nbsp;desktop.
-                  </P>
-                </below>
-                <actions
-                  $$row
-                  css={{
-                    margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
-                    alignItems: 'center',
-                  }}
-                >
-                  <UI.Button
-                    borderStyle="dotted"
-                    borderColor="#ccc"
-                    size={1.1}
-                    $smallInstallBtn={!isLarge}
-                    tooltip=""
+                <Slant slantBackground={`#f6f6f6`} css={{ zIndex: 2 }} />
+                <div $$flex />
+                <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
+                  <Title
+                    italic
+                    size={isMedium ? 5 : 6.2}
+                    margin={[-15, 0, -15, -5]}
+                    color="#333"
+                  >
+                    Operate with<br />
+                    intelligence
+                  </Title>
+                  <borderLine />
+                  <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
+                    <P size={2.2} fontWeight={300} alpha={0.8}>
+                      A smart organizational layer for the cloud that lives on
+                      your&nbsp;desktop.
+                    </P>
+                  </below>
+                  <actions
+                    $$row
                     css={{
-                      margin: [0, 10, 0, 0],
-                      cursor: 'pointer',
+                      margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
+                      alignItems: 'center',
                     }}
                   >
-                    Try for{' '}
-                    <AppleLogo
-                      width={20}
-                      height={20}
+                    <UI.Button
+                      borderStyle="dotted"
+                      borderColor="#ccc"
+                      size={1.1}
+                      $smallInstallBtn={!isLarge}
+                      tooltip=""
                       css={{
-                        display: 'inline-block',
-                        margin: [-2, 0, 0, 0],
-                        opacity: 0.32,
+                        margin: [0, 10, 0, 0],
+                        cursor: 'pointer',
                       }}
-                    />
-                  </UI.Button>
-                  <UI.Button
-                    chromeless
-                    alpha={0.5}
-                    onClick={() => Router.go('/features')}
-                    margin={[0, 0, 0, 10]}
-                    css={{
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Learn more
-                  </UI.Button>
-                </actions>
-              </mainSection>
-              <div $$flex />
-              <Media
-                query={Constants.screen.large}
-                render={() => (
-                  <React.Fragment>
-                    <rightSide>
-                      <HomeIllustration />
-                    </rightSide>
-                    <videos if={false}>
-                      <videoSpot>
-                        <img
-                          $girlImg
-                          src={girlImg}
-                          width={432}
-                          css={{ transform: { scale: 0.9 } }}
-                        />
-                        <UI.Icon
-                          name="media-1_button-play"
-                          color="#fff"
-                          size={45}
-                          css={{
-                            zIndex: 100,
-                            position: 'absolute',
-                            top: 120,
-                            left: 200,
-                          }}
-                        />
-                        <P selectable={false} size={4.5} margin={0}>
-                          Watch the 30s<br /> introduction
-                        </P>
-                      </videoSpot>
-                    </videos>
-                  </React.Fragment>
-                )}
-              />
-            </SectionContent>
-          </Section>
-        )}
+                    >
+                      Try for{' '}
+                      <AppleLogo
+                        width={20}
+                        height={20}
+                        css={{
+                          display: 'inline-block',
+                          margin: [-2, 0, 0, 0],
+                          opacity: 0.32,
+                        }}
+                      />
+                    </UI.Button>
+                    <UI.Button
+                      chromeless
+                      alpha={0.5}
+                      onClick={() => Router.go('/features')}
+                      margin={[0, 0, 0, 10]}
+                      css={{
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Learn more
+                    </UI.Button>
+                  </actions>
+                </mainSection>
+                <div $$flex />
+                <Media
+                  query={Constants.screen.large}
+                  render={() => (
+                    <React.Fragment>
+                      <rightSide>
+                        <HomeIllustration />
+                      </rightSide>
+                      <videos if={false}>
+                        <videoSpot>
+                          <img
+                            $girlImg
+                            src={girlImg}
+                            width={432}
+                            css={{ transform: { scale: 0.9 } }}
+                          />
+                          <UI.Icon
+                            name="media-1_button-play"
+                            color="#fff"
+                            size={45}
+                            css={{
+                              zIndex: 100,
+                              position: 'absolute',
+                              top: 120,
+                              left: 200,
+                            }}
+                          />
+                          <P selectable={false} size={4.5} margin={0}>
+                            Watch the 30s<br /> introduction
+                          </P>
+                        </videoSpot>
+                      </videos>
+                    </React.Fragment>
+                  )}
+                />
+              </SectionContent>
+            </Section>
+          )
+        }}
       </Media>
     )
   }
@@ -744,6 +739,13 @@ class HomeHeader {
     largeCallout: {
       width: '54%',
       margin: [-15, 0, 0, 0],
+    },
+    borderLine: {
+      margin: [30, 40, 20],
+      width: '53%',
+      height: 4,
+      background: '#ddd',
+      opacity: 0.15,
     },
     smallInstallBtn: {
       // transform: {
@@ -851,11 +853,11 @@ class HomeFooter {
                     <P2 size={1.8} alpha={0.85}>
                       The services that power your life and work are diverse.
                       Making sense of them will require handling much of your
-                      sensitive data. It's has to be done{' '}
+                      sensitive data. It has to be done{' '}
                       <strong>completely privately, on device</strong>.
                     </P2>
                     <P2 size={1.8} alpha={0.85}>
-                      Orbit does this to be always at hand. That means we need
+                      Orbit does this. It's always at hand. That means we need
                       to deliver a truly great experience.
                     </P2>
                     <br />
@@ -877,46 +879,14 @@ class HomeFooter {
   }
 }
 
-// @view.ui
-// export default class Home {
-//   render() {
-//     return (
-//       <home css={{ height: '100%', width: '100%', overflow: 'hidden' }}>
-//         <Parallax pages={2}>
-//           <Header />
-//           <Parallax.Layer offset={0} speed={0}>
-//             <HomeHeader />
-//           </Parallax.Layer>
-//           <Parallax.Layer offset={1} speed={0}>
-//             <HomeFooter />
-//           </Parallax.Layer>
-//           <Parallax.Layer
-//             offset={1}
-//             speed={0.25}
-//             style={{ pointerEvents: 'none' }}
-//           >
-//             <div
-//               $$row
-//               css={{
-//                 transform: { y: -200 },
-//                 opacity: 0.7,
-//               }}
-//             >
-//               <Stars />
-//               <Stars />
-//               <Stars />
-//             </div>
-//           </Parallax.Layer>
-//         </Parallax>
-//       </home>
-//     )
-//   }
-// }
-
 export default () => (
-  <React.Fragment>
-    <Header />
-    <HomeHeader />
-    <HomeFooter />
-  </React.Fragment>
+  <Media query={Constants.screen.medium}>
+    {isMedium => (
+      <React.Fragment>
+        <Header />
+        <HomeHeader isMedium={isMedium} />
+        <HomeFooter isMedium={isMedium} />
+      </React.Fragment>
+    )}
+  </Media>
 )

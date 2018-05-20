@@ -1,35 +1,10 @@
 import * as React from 'react'
 import Router from '~/router'
 import { view } from '@mcro/black'
-import { SectionContent } from '~/views'
+import { SectionContent, Link } from '~/views'
 import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
-
-const A = view(
-  'a',
-  {
-    color: [0, 0, 0, 0.7],
-    padding: [5, 0],
-    margin: [0, 0, 0, 30],
-    borderBottom: [3, 'transparent'],
-  },
-  {
-    active: {
-      color: [0, 0, 0, 1],
-      borderBottom: [3, Constants.colorMain],
-    },
-  },
-)
-
-const Link = ({ to, ...props }) => (
-  <A
-    active={Router.isActive(to)}
-    href={to}
-    onClick={Router.link(to)}
-    {...props}
-  />
-)
 
 @view
 export class Header {

@@ -4,6 +4,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import { MailIcon } from '~/views/icons'
+import Router from '~/router'
 
 export * from './section'
 export * from './sectionContent'
@@ -426,3 +427,28 @@ export const HalfSection = view('section', {
     padding: [0, 0, 40, 0],
   },
 })
+
+export const A = view(
+  'a',
+  {
+    color: [0, 0, 0, 0.7],
+    padding: [5, 0],
+    margin: [0, 0, 0, 30],
+    borderBottom: [3, 'transparent'],
+  },
+  {
+    active: {
+      color: [0, 0, 0, 1],
+      borderBottom: [3, Constants.colorMain],
+    },
+  },
+)
+
+export const Link = ({ to, ...props }) => (
+  <A
+    active={Router.isActive(to)}
+    href={to}
+    onClick={Router.link(to)}
+    {...props}
+  />
+)

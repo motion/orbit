@@ -1,4 +1,4 @@
-import { Header, Footer, Join } from '~/components'
+import { Header, Footer } from '~/components'
 import {
   Border,
   Title,
@@ -63,11 +63,7 @@ class FeaturesIntro {
                   <a onClick={scrollTo('#context')}>Context</a>
                 </P>
               </HalfSection>
-              <HalfSection>
-                <Callout css={isLarge && { margin: [0, 0, 0, 'auto'] }}>
-                  <Join />
-                </Callout>
-              </HalfSection>
+              <HalfSection />
             </SectionContent>
           </Section>
         )}

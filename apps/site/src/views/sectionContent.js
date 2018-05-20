@@ -54,13 +54,14 @@ export class SectionContent {
       minWidth: Constants.smallSize,
       maxWidth: Constants.mediumSize,
       margin: [0, 'auto'],
-      padding: [0, 30],
+      padding: [0, Constants.sidePad],
       position: 'relative',
       [Constants.screen.smallQuery]: {
         width: '100%',
         height: 'auto',
         minWidth: 'auto',
         maxWidth: 'auto',
+        padding: [0, Constants.sidePad / 2],
       },
     },
     halfscreen: {
@@ -71,9 +72,9 @@ export class SectionContent {
       },
     },
     padded: {
-      padding: [80, 30],
+      padding: [80, Constants.sidePad],
       [Constants.screen.smallQuery]: {
-        padding: [80, 30],
+        padding: [80, Constants.sidePad / 2],
       },
     },
   }

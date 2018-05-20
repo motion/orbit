@@ -60,11 +60,7 @@ class UseCasesIntro {
                   </a>
                 </P>
               </HalfSection>
-              <HalfSection>
-                <Callout css={isLarge && { margin: [0, 0, 0, 'auto'] }}>
-                  <Join />
-                </Callout>
-              </HalfSection>
+              <HalfSection />
             </SectionContent>
           </Section>
         )}

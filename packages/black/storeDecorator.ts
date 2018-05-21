@@ -1,14 +1,12 @@
 import decor from '@mcro/decor'
-import hydratable from '@mcro/decor/es6/plugins/core/hydratable'
-import emittable from '@mcro/decor/es6/plugins/core/emittable'
+import { hydratable, reactable } from '@mcro/decor-mobx'
+import { subscribable, emittable } from '@mcro/decor-classes'
 import automagical from '@mcro/automagical'
-import subscribable from '@mcro/decor/es6/plugins/react/subscribable'
-import helpers from '@mcro/decor/es6/plugins/mobx/helpers'
 import { CompositeDisposable } from 'sb-event-kit'
 
 export const storeDecorator = decor([
   subscribable,
-  helpers,
+  reactable,
   emittable,
   automagical,
   hydratable,

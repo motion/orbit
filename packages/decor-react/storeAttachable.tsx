@@ -1,11 +1,11 @@
-import React from 'react'
+import * as React from 'react'
 import { object } from 'prop-types'
 import { pickBy } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 
-export default function attacher(options) {
+export function storeAttachable(options) {
   return {
-    name: 'attach',
+    name: 'storeAttachable',
     once: true,
     decorator: View => {
       class ContextAttacher extends React.Component {
@@ -19,7 +19,7 @@ export default function attacher(options) {
               {...this.props}
               {...pickBy(
                 this.context.stores,
-                (value, key) => options.names.indexOf(key) >= 0
+                (_, key) => options.names.indexOf(key) >= 0,
               )}
             />
           )

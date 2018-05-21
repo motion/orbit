@@ -1,25 +1,35 @@
-// @flow
 import reactMixin from 'react-mixin'
 import { Emitter } from 'sb-event-kit'
 export { Emitter, CompositeDisposable } from 'sb-event-kit'
 
 type Helpers = {
-  emitter: Emitter,
-  alreadyDecorated: (a: any) => boolean,
+  emit: typeof Emitter.emit
+  alreadyDecorated: (a: any) => boolean
 }
 
 type Plugin = (
   options: Object,
   Helpers: Helpers,
 ) => {
-  name: string,
-  once?: boolean,
-  onlyClass?: boolean,
-  decorator?: (a: Class<any> | Function, b?: Object) => any,
-  mixin?: Object,
+  name: string
+  once?: boolean
+  onlyClass?: boolean
+  decorator?: (a: Function, b?: Object) => any
+  mixin?: Object
 }
 
 const empty = () => void 0
+
+interface DecorDecorator {
+  (): (
+    target: Function | Object,
+    opts?: Object,
+  ) => <T extends Function>(target: T) => T
+  on: typeof Emitter.on
+  emitter: typeof Emitter
+  off: typeof Emitter.off
+  emit: typeof Emitter.emit
+}
 
 export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   const allPlugins = []
@@ -92,14 +102,13 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     allPlugins.push(plugin)
   }
 
-  function decorDecorator(
-    KlassOrOpts: Class<any> | Function | Object,
+  const decorDecorator = <DecorDecorator>function decorDecorator(
+    KlassOrOpts: Function | Object,
     opts?: Object,
   ) {
     // optional: decorator-side props
     if (typeof KlassOrOpts === 'object') {
-      return (NextKlass: Class<any> | Function) =>
-        decorDecorator(NextKlass, KlassOrOpts)
+      return (NextKlass: Function) => decorDecorator(NextKlass, KlassOrOpts)
     }
 
     let decoratedClass = KlassOrOpts

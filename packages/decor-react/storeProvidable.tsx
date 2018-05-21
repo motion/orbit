@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import * as Mobx from 'mobx'
 import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
@@ -21,7 +21,7 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
   }
 })
 
-export default function storeProvidable(options, Helpers) {
+export function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',
     once: true,

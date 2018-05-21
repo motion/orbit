@@ -10,6 +10,9 @@
   "dependencies": {
     "@mcro/automagical": "^1.5.1",
     "@mcro/decor": "^1.5.1",
+    "@mcro/decor-react": "*",
+    "@mcro/decor-mobx": "*",
+    "@mcro/decor-classes": "*",
     "@mcro/gloss": "^1.5.1",
     "global": "^4.3.0",
     "mobx-deep-observer": "^0.0.4",

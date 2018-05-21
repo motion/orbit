@@ -1,12 +1,7 @@
 import { Emitter } from 'sb-event-kit'
 
-// declare class Emittable {
-//   emitter: Emitter,
-//   emit(name: string, data: any): void,
-// }
-
 // store.emitter
-export default function emittable(options) {
+export function emittable(options) {
   const emitterProp = options.emitterProp || 'emitter'
   const emitProp = options.emitProp || 'emit'
 

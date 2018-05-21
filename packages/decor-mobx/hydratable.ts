@@ -1,6 +1,6 @@
 import * as Mobx from 'mobx'
 
-export default function hydratable() {
+export function hydratable() {
   return {
     name: 'hydratable',
     once: true,

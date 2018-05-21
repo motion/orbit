@@ -1,0 +1,16 @@
+{
+  "name": "@mcro/decor-classes",
+  "main": "_/decor-classes.js",
+  "version": "1.5.1",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch"
+  },
+  "dependencies": {
+    "autobind-decorator": "^2.1.0",
+    "sb-event-kit": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

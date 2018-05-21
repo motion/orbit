@@ -1,20 +1,21 @@
 import decor from '@mcro/decor'
 import * as PropTypes from 'prop-types'
-import extendsReact from '@mcro/decor/es6/plugins/react/extendsReact'
-import observer from '@mcro/decor/es6/plugins/mobx/observer'
+import {
+  storeProvidable,
+  storeAttachable,
+  extendsReact,
+  contextual,
+  renderArgumentable,
+  emitsMount,
+} from '@mcro/decor-react'
+import { subscribable } from '@mcro/decor-classes'
+import { reactable, reactObservable } from '@mcro/decor-mobx'
 import automagical from '@mcro/automagical'
-import helpers from '@mcro/decor/es6/plugins/mobx/helpers'
-import subscribable from '@mcro/decor/es6/plugins/react/subscribable'
-import emitsMount from '@mcro/decor/es6/plugins/react/emitsMount'
-import reactRenderArgs from '@mcro/decor/es6/plugins/react/reactRenderArgs'
-import addContext from '@mcro/decor/es6/plugins/react/addContext'
-import attach from '@mcro/decor/es6/plugins/react/attach'
-import storeProvidable from '@mcro/decor/es6/plugins/react/storeProvidable'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
 
 const uiContext = [
-  addContext,
+  contextual,
   {
     uiActiveThemeName: PropTypes.string,
     uiActiveTheme: PropTypes.object,
@@ -29,10 +30,10 @@ const decorations = (
 ) => [
   extendsReact,
   subscribable,
-  helpers,
+  reactable,
   enable.ui && uiContext,
-  reactRenderArgs,
-  enable.mobx && observer,
+  renderArgumentable,
+  enable.mobx && reactObservable,
   // gloss after mobx
   enable.ui && glossPlugin,
   enable.magic && automagical,
@@ -77,7 +78,7 @@ function createViewDecorator() {
   const providable = decor([[storeProvidable, storeOptions]])
   view.provide = stores => providable({ stores, context: true })
   view.provide.on = providable.on
-  view.attach = (...names) => decor([[attach, { names }]])
+  view.attach = (...names) => decor([[storeAttachable, { names }]])
   return view
 }
 

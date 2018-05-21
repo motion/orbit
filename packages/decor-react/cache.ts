@@ -15,11 +15,11 @@ export default class Cache {
         ...acc,
         [key]: restored[key] || provides[key],
       }),
-      {}
+      {},
     )
   }
   // private
-  getCached({ stores }, current): Object<string, Store> {
+  getCached({ stores }): { [key: string]: Function } {
     let result = {}
     if (stores) {
       const storeNames = Object.keys(stores)

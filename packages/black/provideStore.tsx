@@ -1,6 +1,6 @@
 import React from 'react'
 import { storeOptions } from './storeDecorator'
-import storeProvidable from '@mcro/decor/es6/plugins/react/storeProvidable'
+import { storeProvidable } from '@mcro/decor-react'
 
 const storeDecorator = storeProvidable(storeOptions).decorator
 const PassThrough = props => props.children(props)

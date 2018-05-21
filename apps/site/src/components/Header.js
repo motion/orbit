@@ -34,7 +34,7 @@ export class Header {
                   <div $$flex />
                   <nav>
                     <Link to="/features">
-                      {isLarge ? 'What\'s Orbit?' : 'What'}
+                      {isLarge ? 'Features' : 'What'}
                     </Link>
                     <Link to="/use-cases">{isLarge ? 'Use Cases' : 'Why'}</Link>
                     <Link to="/about">{isLarge ? 'About Us' : 'Who'}</Link>

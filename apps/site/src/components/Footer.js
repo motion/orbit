@@ -49,7 +49,7 @@ export class Footer {
                 <div css={isLarge && { flex: 1, flexFlow: 'row', padding: 40 }}>
                   <nav>
                     <Link $link to="/features">
-                      {isLarge ? 'What\'s Orbit?' : 'What'}
+                      {isLarge ? 'Features' : 'What'}
                     </Link>
                     <Link $link to="/use-cases">
                       {isLarge ? 'Use Cases' : 'Why'}

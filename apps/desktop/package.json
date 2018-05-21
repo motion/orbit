@@ -19,7 +19,6 @@
     "@mcro/oracle": "*",
     "@mcro/passport-slack": "^1.5.1",
     "@mcro/all": "*",
-    "@mcro/macros": "*",
     "@mcro/models": "*",
     "@mcro/services": "*",
     "@mcro/examples": "*",

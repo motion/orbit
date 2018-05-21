@@ -16,7 +16,6 @@
     "@mcro/constants": "^1.5.1",
     "@mcro/debug": "*",
     "@mcro/gloss": "^1.5.1",
-    "@mcro/macros": "*",
     "@mcro/models": "^1.5.1",
     "@mcro/services": "*",
     "@mcro/r2": "^1.5.1",

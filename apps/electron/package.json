@@ -34,7 +34,6 @@
   "dependencies": {
     "@mcro/chrome-extensions": "*",
     "@mcro/debug": "*",
-    "@mcro/macros": "*",
     "@mcro/desktop": "^1.5.1",
     "@mcro/black": "^1.5.1",
     "@mcro/constants": "^1.5.1",

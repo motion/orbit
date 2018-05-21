@@ -6,7 +6,7 @@
     "start": "../../node_modules/.bin/parcel index.html",
     "build-app": "../../node_modules/.bin/parcel build index.html --public-url ./ --no-minify",
     "start-prod": "static-server -p 4000 -n dist/index.html dist",
-    "deploy": "cd dist && surge . tryorbit.com"
+    "deploy": "./surge-fix.sh && cd dist && surge . tryorbit.com"
   },
   "dependencies": {
     "@mcro/black": "^1.5.1",

@@ -1,5 +1,5 @@
-import Bridge from './helpers/Bridge'
-import { setGlobal, proxySetters } from './helpers'
+import Bridge, { proxySetters } from '@mcro/mobx-bridge'
+import { setGlobal } from './helpers'
 import { store, react } from '@mcro/black/store'
 import ElectronReactions from './ElectronReactions'
 // import debug from '@mcro/debug'

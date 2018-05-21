@@ -1,14 +1,16 @@
 import { action } from 'mobx'
 import { mergeWith, isPlainObject, isEqual } from 'lodash'
-import ReconnectingWebSocket from 'reconnecting-websocket'
-import WebSocket from './websocket'
+import RWebSocket from 'reconnecting-websocket'
+import WS from './websocket'
 import waitPort from 'wait-port'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
-// import debug from '@mcro/debug'
 
-// const log = debug('Bridge')
+// exports
+export * from './proxySetters'
+export const WebSocket = WS
+export const ReconnectingWebSocket = RWebSocket
 
 const root = typeof window !== 'undefined' ? window : require('global')
 const MESSAGE_SPLIT_VAL = '**|**'

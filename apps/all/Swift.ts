@@ -1,8 +1,5 @@
 import { store } from '@mcro/black/store'
-import WebSocket from './helpers/websocket'
-import ReconnectingWebSocket from 'reconnecting-websocket'
-// import debug from '@mcro/debug'
-// const log = debug('Swift')
+import { WebSocket, ReconnectingWebSocket } from '@mcro/mobx-bridge'
 
 export let Swift
 

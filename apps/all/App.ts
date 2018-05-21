@@ -1,5 +1,5 @@
-import Bridge from './helpers/Bridge'
-import { proxySetters, setGlobal } from './helpers'
+import Bridge, { proxySetters } from '@mcro/mobx-bridge'
+import { setGlobal } from './helpers'
 import { store, react } from '@mcro/black/store'
 import { Desktop } from './Desktop'
 

@@ -38,7 +38,7 @@ class PaneStore {
   }
 
   get activePane() {
-    if (!this.isShowingDocked) {
+    if (!App.orbitState.docked) {
       return null
     }
     if (App.state.query) {
@@ -109,7 +109,7 @@ class OrbitDocked {
             paneStore={paneStore}
           />
           <OrbitSearchResults
-            name="search"
+            name="summary-search"
             parentPane="summary"
             paneStore={paneStore}
           />

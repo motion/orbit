@@ -249,6 +249,9 @@ export default class AppStore {
   searchState = [
     () => [App.state.query, this.getResults, this.updateResults],
     async ([query, thisGetResults], { when }) => {
+      if (!query) {
+        return { query, results: [] }
+      }
       // these are all specialized searches, see below for main search logic
       if (thisGetResults && this.showSettings) {
         return {

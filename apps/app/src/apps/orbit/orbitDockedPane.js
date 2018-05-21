@@ -4,6 +4,9 @@ import { view } from '@mcro/black'
 class DockedPaneStore {
   get isActive() {
     const { extraCondition, name, paneStore } = this.props
+    if (name === 'search') {
+      log(`dockedis active ${name} ${paneStore.activePane}`)
+    }
     return (
       name === paneStore.activePane &&
       (extraCondition ? extraCondition() : true)
@@ -16,8 +19,8 @@ class DockedPaneStore {
   store: DockedPaneStore,
 })
 export default class OrbitDockedPane {
-  render({ children, store, style }) {
-    log(`dockedPane`)
+  render({ children, store, style, name }) {
+    log(`dockedPane ${store.isActive} ${name}`)
     return (
       <pane $isActive={store.isActive} style={style}>
         {children}

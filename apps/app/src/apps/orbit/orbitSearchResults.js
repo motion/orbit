@@ -9,12 +9,16 @@ class SearchStore {
   state = [
     () => this.props.appStore.searchState,
     state => {
-      if (this.props.appStore.selectedPane !== this.props.pane) {
+      if (this.props.appStore.selectedPane !== this.props.name) {
         throw react.cancel
       }
       return state
     },
   ]
+
+  hasQuery() {
+    return !!App.state.query
+  }
 }
 
 @view.attach('appStore')
@@ -22,31 +26,24 @@ class SearchStore {
   searchStore: SearchStore,
 })
 export default class OrbitSearchResults {
-  render({ searchStore, parentPane }) {
+  render({ searchStore, name }) {
     if (!searchStore.state) {
       return null
     }
-    log(`SEARCH ${parentPane} --------------`)
-    const pane = `${parentPane}-search`
     const { query, results, message } = searchStore.state
-    const hasQuery = !!App.state.query
     const isChanging = App.state.query !== query
+    log(`SEARCH ${name} --------------`)
     return (
       <OrbitDockedPane
         name="search"
-        extraCondition={() => hasQuery}
+        extraCondition={searchStore.hasQuery}
         $isChanging={isChanging}
       >
         <message if={message}>{message}</message>
-        <results
-          if={results.length}
-          css={{
-            opacity: !isChanging ? 1 : 0.5,
-          }}
-        >
+        <results if={results.length}>
           {results.map((bit, index) => (
             <OrbitCard
-              pane={pane}
+              pane={name}
               key={`${index}${bit.identifier || bit.id}`}
               index={index}
               total={results.length}

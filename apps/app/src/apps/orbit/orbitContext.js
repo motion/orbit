@@ -76,7 +76,7 @@ class Orbit {
             </contextHeader>
             <Results />
           </orbitContext>
-          <OrbitSearchResults parentPane="context" />
+          <OrbitSearchResults name="context-search" parentPane="context" />
         </orbitInner>
       </OrbitFrame>
     )

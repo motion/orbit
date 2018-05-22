@@ -13,16 +13,20 @@ function _setTimeout(givenCallback: Function, duration: number): number {
     givenCallback.call(this)
   }
   const timeoutId = ogSetTimeout(callback, duration)
-  subscription = this.subscriptions.add(() => {
-    clearTimeout(timeoutId)
+  subscription = this.subscriptions.add({
+    dispose() {
+      clearTimeout(timeoutId)
+    },
   })
   return timeoutId
 }
 
 function _setInterval(givenCallback: Function, duration: number): number {
   const intervalId = ogSetInterval(givenCallback, duration)
-  this.subscriptions.add(() => {
-    clearInterval(intervalId)
+  this.subscriptions.add({
+    dispose() {
+      clearInterval(intervalId)
+    },
   })
   return intervalId
 }

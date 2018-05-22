@@ -1,40 +1,14 @@
 import { Emitter } from 'event-kit'
 export { Emitter, CompositeDisposable } from 'event-kit'
+import { DecorPlugins, DecorCompiledDecorator } from './decor.d'
 
-export type Helpers = {
-  emit: typeof Emitter.emit
-  alreadyDecorated: (a: any) => boolean
-}
-
-export type Plugin = (
-  options: Object,
-  Helpers: Helpers,
-) => {
-  name: string
-  once?: boolean
-  onlyClass?: boolean
-  decorator?: (a: Function, b?: Object) => any
-}
-
-interface DecorDecorator {
-  (): (
-    target: Function | Object,
-    opts?: Object,
-  ) => <T extends Function>(target: T) => T
-  on: typeof Emitter.on
-  emitter: typeof Emitter
-  off: typeof Emitter.off
-  emit: typeof Emitter.emit
-}
-
-export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
+export default function decor(plugins: DecorPlugins): DecorCompiledDecorator {
   const allPlugins = []
 
   // Helpers
   const emitter = new Emitter()
-  const emit = (...args) => emitter.emit(...args)
-  const on = (...args) => emitter.on(...args)
-  const off = (...args) => emitter.off(...args)
+  const emit = (a, b?) => emitter.emit(a, b)
+  const on = (a, b) => emitter.on(a, b)
   const isClass = x =>
     x &&
     x.prototype &&
@@ -47,20 +21,17 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     index++
     let getPlugin = curPlugin
     let options = {}
-
     // array-style config
     if (Array.isArray(curPlugin)) {
       getPlugin = curPlugin[0]
       options = curPlugin[1] || {}
     }
-
     if (typeof getPlugin !== 'function') {
       console.log('got some bad plugins', plugins)
       throw `Bad plugin at index ${index} (expected a function):
         got type: ${typeof getPlugin}
         value: ${(getPlugin && getPlugin.toString()) || ''}`
     }
-
     // uid per plugin
     const decoratedStore = new WeakMap()
     const alreadyDecorated = Klass => {
@@ -73,28 +44,29 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     const Helpers = {
       emit,
       on,
-      off,
       alreadyDecorated,
     }
-
-    let plugin = getPlugin(options, Helpers)
-    if (!plugin.decorator) {
-      throw `Bad plugin, needs decorator ${plugin.name}`
+    const ogPlugin = getPlugin(options, Helpers)
+    if (!ogPlugin.decorator) {
+      throw `No decorator provided for decor plugin ${ogPlugin.name}`
     }
-    const ogPlugin = plugin.decorator
-    if (plugin.once) {
-      plugin.decorator = (Klass, ...args) =>
-        alreadyDecorated(Klass) ? Klass : ogPlugin(Klass, ...args)
+    const plugin = {
+      ...ogPlugin,
+      // add helpers for once and onlyClass
+      decorator: (Klass, ...args) => {
+        if (plugin.once && alreadyDecorated(Klass)) {
+          return Klass
+        }
+        if (plugin.onlyClass && !isClass(Klass)) {
+          return Klass
+        }
+        return ogPlugin.decorator(Klass, ...args)
+      },
     }
-    if (plugin.onlyClass) {
-      plugin.decorator = (Klass, ...args) =>
-        !isClass(Klass) ? Klass : ogPlugin(Klass, ...args)
-    }
-
     allPlugins.push(plugin)
   }
 
-  const decorDecorator = <DecorDecorator>function decorDecorator(
+  const decorDecorator = <DecorCompiledDecorator>function decorDecorator(
     KlassOrOpts: Function | Object,
     opts?: Object,
   ) {
@@ -117,8 +89,7 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   }
 
   // to listen to plugin events
-  decorDecorator.off = (...args) => emitter.off(...args)
-  decorDecorator.on = (...args) => emitter.on(...args)
+  decorDecorator.on = (a, b) => emitter.on(a, b)
   decorDecorator.emit = emit
   decorDecorator.emitter = emitter
 

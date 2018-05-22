@@ -2,13 +2,6 @@
   "extends": "./tsconfig.base",
   "compilerOptions": {
     "allowJs": false,
-    "declaration": true,
-    "outDir": "_",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["*"]
-    }
-  },
-  "include": ["/**/*"],
-  "exclude": ["_", "node_modules", "tmp", "*.js"]
+    "declaration": true
+  }
 }

@@ -1,5 +1,10 @@
 import { Emitter } from 'event-kit'
 
+export interface Emittable {
+  emitter: Emitter
+  emit: Emitter['emit']
+}
+
 // store.emitter
 export function emittable(options) {
   const emitterProp = options.emitterProp || 'emitter'

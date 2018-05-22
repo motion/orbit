@@ -51,6 +51,8 @@ export function storeProvidable(options, Helpers) {
 
       // return HoC
       class StoreProvider extends React.PureComponent {
+        hmrDispose: any
+
         static get name() {
           return Klass.name
         }
@@ -99,7 +101,7 @@ export function storeProvidable(options, Helpers) {
           this.mountStores()
           if (global.Black) {
             this.errorClear = this.clearErrors.bind(this)
-            global.Black.view.on('hmr', this.errorClear)
+            this.hmrDispose = global.Black.view.on('hmr', this.errorClear)
           }
         }
 
@@ -121,11 +123,11 @@ export function storeProvidable(options, Helpers) {
         componentWillUnmount() {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
-            if (global.Black) {
-              global.Black.view.off('hmr', this.errorClear)
-            }
             this.disposeStores()
             this.unmounted = true
+            if (this.hmrDispose) {
+              this.hmrDispose.dispose()
+            }
           }
         }
 

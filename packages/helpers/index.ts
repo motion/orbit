@@ -12,7 +12,7 @@ export const sleep = ms => new Promise(res => setTimeout(res, ms))
 import { comparer } from 'mobx'
 export const isEqual = comparer.structural
 
-type ReactionOptions = {
+export type ReactionOptions = {
   fireImmediately?: boolean
   immediate?: boolean
   equals?: Function

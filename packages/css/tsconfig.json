@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": "./",
@@ -8,5 +8,5 @@
     }
   },
   "include": ["/**/*"],
-  "exclude": ["_", "node_modules", "tmp"]
+  "exclude": ["_", "node_modules", "tmp", "*.js"]
 }

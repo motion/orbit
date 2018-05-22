@@ -6,7 +6,7 @@
     "build": "echo hi",
     "watch": "echo hi",
     "start": "../../node_modules/.bin/parcel index.html",
-    "build-app": "../../node_modules/.bin/parcel build index.html --public-url ./ --no-minify",
+    "build-app": "../../node_modules/.bin/parcel build index.html --public-url ./",
     "start-prod": "static-server -p 4000 -n dist/index.html dist",
     "deploy": "./surge-fix.sh && cd dist && surge . tryorbit.com"
   },

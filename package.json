@@ -25,6 +25,7 @@
     "fs-extra": "^5.0.0",
     "lerna": "^2.11.0",
     "mobx": "^3.5.0",
+    "parcel": "^1.8.1",
     "prettier": "^1.12.1",
     "sb-promisify": "^2.0.2",
     "strong-log-transformer": "^1.0.6",

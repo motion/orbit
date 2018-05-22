@@ -63,9 +63,9 @@ class HomeHeader {
                       fontWeight={300}
                       alpha={0.8}
                     >
-                      As your team grows the amount of overhead in your cloud
-                      does too. Conversations happen all&nbsp;over.
-                      Orbit&nbsp;sorts it out for you on the desktop.
+                      As your team grows, it's cloud does too. Conversations
+                      happen all&nbsp;over.<br />
+                      Orbit&nbsp;sorts it out.
                     </P>
                   </below>
                   <actions

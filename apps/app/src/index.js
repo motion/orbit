@@ -1,16 +1,12 @@
+import './createElement'
 import 'regenerator-runtime/runtime'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
-import createElement from '@mcro/black/_/createElement'
-// dont import * as React, we need to overwrite createElement
-import React from 'react'
 import * as Constants from './constants'
 
 process.on('uncaughtException', err => {
   console.log('App.uncaughtException', err.stack)
 })
-
-React.createElement = createElement // any <tag /> can use $$style
 
 if (Constants.IS_PROD) {
   require('./helpers/installProd')

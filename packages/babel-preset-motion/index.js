@@ -20,7 +20,6 @@ module.exports = function(context, givenOpts) {
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),
-      // getPlugin('babel-plugin-sitrep'),
       getPlugin('@mcro/babel-plugin-if'),
       getPlugin('@mcro/gloss/transform', {
         decoratorName: opts.decorator || 'view',
@@ -32,19 +31,10 @@ module.exports = function(context, givenOpts) {
             typeof opts.rootSuffix === 'undefined' ? 'src' : opts.rootSuffix,
         },
       ]),
-      // getPlugin('@mcro/hmr', {
-      //   decoratorName: opts.decorator || 'view',
-      //   transforms: [
-      //     {
-      //       transform: '@mcro/hmr-view',
-      //       imports: ['react'],
-      //       locals: ['module'],
-      //     },
-      //   ],
-      // }),
       getPlugin('babel-plugin-transform-react-jsx', {
         pragma: '__dom',
       }),
+      getPlugin('babel-plugin-lodash'),
     ],
     presets: opts.presets || [
       getPlugin(

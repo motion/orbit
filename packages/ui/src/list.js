@@ -2,12 +2,12 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import ListItem from './listItem'
-import { List as VirtualList } from 'react-virtualized'
+// import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { Props as ItemProps } from './listItem'
 import Separator from './separator'
 import { isArrayLike } from 'mobx'
-import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+// import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 import { throttle, debounce } from 'lodash'
 
 const idFn = _ => _
@@ -382,7 +382,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (React.isValidElement(item)) {
       return React.cloneElement(
         item,
-        this.getItemProps(index, rowProps, item.type.isListItem)
+        this.getItemProps(index, rowProps, item.type.isListItem),
       )
     }
     // pass object to ListItem
@@ -401,9 +401,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
       item
         ? React.cloneElement(
             item,
-            this.getItemProps(index, rowProps, item.type.isListItem)
+            this.getItemProps(index, rowProps, item.type.isListItem),
           )
-        : null
+        : null,
     )
 
   // mutative which is odd

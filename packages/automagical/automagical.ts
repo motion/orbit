@@ -175,12 +175,9 @@ function decorateMethodWithAutomagic(
   }
   if (descriptor && (!!descriptor.get || !!descriptor.set)) {
     if (descriptor.get) {
-      Mobx.extendObservable(target, {
-        [method]: Mobx.computed(descriptor.get),
+      Mobx.decorate(target, {
+        [method]: Mobx.computed({ requiresReaction: true }),
       })
-    }
-    if (descriptor.set) {
-      Object.defineProperty(target, method, descriptor)
     }
     return
   }
@@ -220,7 +217,9 @@ function decorateMethodWithAutomagic(
     return target[method]
   }
   // @observable.ref
-  Mobx.extendObservable(target, { [method]: value })
+  Mobx.decorate(target, {
+    [method]: Mobx.observable.ref,
+  })
   return value
 }
 

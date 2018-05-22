@@ -6,7 +6,6 @@ import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
-import { extras } from 'mobx'
 import waitPort from 'wait-port'
 import global from 'global'
 
@@ -38,9 +37,6 @@ process.on('SIGUSR2', exitHandler)
 process.on('uncaughtException', err => {
   console.log('uncaughtException', err.stack)
 })
-
-// share state because node loads multiple copies
-extras.shareGlobalState()
 
 let started = false
 

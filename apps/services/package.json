@@ -14,7 +14,7 @@
     "@mcro/black": "*",
     "@mcro/debug": "*",
     "global": "^4.3.2",
-    "lodash": "^4.17.4",
+    "lodash": "4.17.10",
     "slack": "^11.0.0",
     "octokat": "0.10.0"
   },

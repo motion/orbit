@@ -8,7 +8,7 @@
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "4.17.10"
   },
   "publishConfig": {
     "access": "public"

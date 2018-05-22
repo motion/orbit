@@ -16,7 +16,7 @@
     "@mcro/constants": "*",
     "reconnecting-websocket": "^3.2.2",
     "html5-websocket": "^2.0.2",
-    "lodash": "^4.17.5",
+    "lodash": "4.17.10",
     "stringify-object": "^3.2.2",
     "ws": "^5.1.0",
     "kill-port": "^1.1.0",

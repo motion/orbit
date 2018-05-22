@@ -50,7 +50,7 @@
     "iohook": "0.1.11",
     "isomorphic-fetch": "^2.2.1",
     "kill-port": "^1.1.0",
-    "lodash": "^4.17.4",
+    "lodash": "4.17.10",
     "morgan": "^1.8.2",
     "node-osascript": "~2.0.0",
     "osx-mouse": "^1.2.1",

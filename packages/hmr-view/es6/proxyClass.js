@@ -4,11 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _find2 = require('lodash/find');
+
+var _find3 = _interopRequireDefault(_find2);
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 exports.default = createClassProxy;
-
-var _lodash = require('lodash');
 
 var _proxyProto = require('./proxyProto');
 
@@ -52,7 +54,7 @@ function getDisplayName(Component) {
 
 let allProxies = [];
 function findProxy(Component) {
-  const pair = (0, _lodash.find)(allProxies, ([key]) => key === Component);
+  const pair = (0, _find3.default)(allProxies, ([key]) => key === Component);
   return pair ? pair[1] : null;
 }
 function addProxy(Component, proxy) {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { object } from 'prop-types'
-import { pickBy } from 'lodash'
+import pickBy from 'lodash/pickBy'
 import hoistStatics from 'hoist-non-react-statics'
 
 export function storeAttachable(options) {

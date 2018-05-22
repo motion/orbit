@@ -10,7 +10,7 @@
     "@mcro/helpers": "^1.5.1",
     "@mcro/decor": "^1.5.1",
     "hoist-non-react-statics": "^2.3.1",
-    "lodash": "^4.17.4",
+    "lodash": "4.17.10",
     "prop-types": "^15.6.0",
     "global": "^4.3.2",
     "event-kit": "^2.5.0",

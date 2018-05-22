@@ -3,9 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _difference2 = require('lodash/difference');
+
+var _difference3 = _interopRequireDefault(_difference2);
+
+var _assign2 = require('lodash/assign');
+
+var _assign3 = _interopRequireDefault(_assign2);
+
 exports.default = createPrototypeProxy;
 
-var _lodash = require('lodash');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function createPrototypeProxy() {
   let proxy = {};
@@ -38,7 +47,7 @@ function createPrototypeProxy() {
     };
 
     // Copy properties of the original function, if any
-    (0, _lodash.assign)(proxiedMethod, current[name]);
+    (0, _assign3.default)(proxiedMethod, current[name]);
     proxiedMethod.toString = proxyToString(name);
 
     return proxiedMethod;
@@ -137,7 +146,7 @@ function createPrototypeProxy() {
     // Find changed property names
     const currentNames = Object.getOwnPropertyNames(current);
     const previousName = Object.getOwnPropertyNames(proxy);
-    const removedNames = (0, _lodash.difference)(previousName, currentNames);
+    const removedNames = (0, _difference3.default)(previousName, currentNames);
 
     // Remove properties and methods that are no longer there
     removedNames.forEach(name => {

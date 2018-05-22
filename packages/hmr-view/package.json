@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "global": "^4.3.2",
-    "lodash": "^4.17.4",
+    "lodash": "4.17.10",
     "react-deep-force-update": "^2.0.1"
   },
   "publishConfig": {

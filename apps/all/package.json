@@ -15,7 +15,7 @@
     "@mcro/constants": "*",
     "@mcro/mobx-bridge": "*",
     "global": "^4.3.2",
-    "lodash": "^4.17.5"
+    "lodash": "4.17.10"
   },
   "devDependencies": {
     "@types/ws": "^4.0.2",

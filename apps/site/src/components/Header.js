@@ -1,14 +1,16 @@
 import * as React from 'react'
 import Router from '~/router'
 import { view } from '@mcro/black'
-import { SectionContent, Link } from '~/views'
+import { Link } from '~/views'
+import SectionContent from '~/views/sectionContent'
 import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 
 @view
-export class Header {
+export class Header extends React.Component {
   render() {
+    setTimeout(() => console.log(this))
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (

@@ -16,8 +16,8 @@ import {
   HalfSection,
   Section,
   Slant,
-  SectionContent,
 } from '~/views'
+import SectionContent from '~/views/sectionContent'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'

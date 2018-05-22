@@ -1,13 +1,6 @@
 import { Header, Footer, Join } from '~/components'
-import {
-  Title,
-  P,
-  Callout,
-  HalfSection,
-  Border,
-  Section,
-  SectionContent,
-} from '~/views'
+import { Title, P, Callout, HalfSection, Border, Section } from '~/views'
+import SectionContent from '~/views/sectionContent'
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Constants from '~/constants'

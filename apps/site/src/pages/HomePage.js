@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Join } from '~/components'
-import { SectionContent } from '~/views/sectionContent'
+import SectionContent from '~/views/sectionContent'
 import {
   Section,
   Slant,

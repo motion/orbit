@@ -7,7 +7,6 @@ import { MailIcon } from '~/views/icons'
 import Router from '~/router'
 
 export * from './section'
-export * from './sectionContent'
 
 export const P = ({ size, ...props }) => (
   <Media query={Constants.screen.small}>

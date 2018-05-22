@@ -1,13 +1,10 @@
 import * as React from 'react'
-import SVGInline from 'react-svg-inline'
-import LogoSVG from '~/../public/orbit-full.svg'
+import LogoSVG from '~/public/orbit-full.svg'
 
 const naturalWidth = 471
 const naturalHeight = 148
 
-export const Logo = props => (
-  <SVGInline svg={LogoSVG} width={`${naturalWidth}px`} {...props} />
-)
+export const Logo = props => <img src={LogoSVG} {...props} />
 
 export default ({ size = 1, ...props }) => {
   const css = {

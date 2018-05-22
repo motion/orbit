@@ -4,7 +4,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function ({ types: t, template }) {
+var _find = require('lodash/find');
+
+var _find2 = _interopRequireDefault(_find);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+  var enterModule = require('react-hot-loader').enterModule;
+
+  enterModule && enterModule(module);
+})();
+
+const _default = function ({ types: t, template }) {
   function matchesDecorator(node, decoratorName) {
     return node.decorators && node.decorators.some(item => {
       if (!item.expression) {
@@ -315,6 +327,13 @@ exports.default = function ({ types: t, template }) {
         EXPRESSION: expression
       });
     }
+
+    // @ts-ignore
+    __reactstandin__regenerateByEval(key, code) {
+      // @ts-ignore
+      this[key] = eval(code);
+    }
+
   };
 
 
@@ -330,9 +349,21 @@ exports.default = function ({ types: t, template }) {
   };
 };
 
-var _find = require('lodash/find');
+exports.default = _default;
+;
 
-var _find2 = _interopRequireDefault(_find);
+(function () {
+  var reactHotLoader = require('react-hot-loader').default;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  var leaveModule = require('react-hot-loader').leaveModule;
+
+  if (!reactHotLoader) {
+    return;
+  }
+
+  reactHotLoader.register(_default, 'default', 'src/index.js');
+  leaveModule(module);
+})();
+
+;
 //# sourceMappingURL=index.js.map

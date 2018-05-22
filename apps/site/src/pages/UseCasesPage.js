@@ -23,13 +23,12 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import * as Constants from '~/constants'
 import Media from 'react-media'
-import profileImg from '~/../public/screen-profile.png'
-import chatImg from '~/../public/chat.svg'
-import SVGInline from 'react-svg-inline'
+import profileImg from '~/public/screen-profile.png'
+import chatImg from '~/public/chat.svg'
 import { scrollTo } from '~/helpers'
 
 export const ChatIcon = props => (
-  <SVGInline svg={chatImg} width={`${120}px`} {...props} />
+  <img src={chatImg} width={`${120}px`} {...props} />
 )
 
 @view

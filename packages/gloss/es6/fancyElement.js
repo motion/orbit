@@ -28,6 +28,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+(function () {
+  var enterModule = require('react-hot-loader').enterModule;
+
+  enterModule && enterModule(module);
+})();
+
 const electronTags = ['webview'];
 
 const $ = '$';
@@ -263,4 +269,29 @@ function fancyElementFactory(Gloss, styles) {
 
   return fancyElement;
 }
+;
+
+(function () {
+  var reactHotLoader = require('react-hot-loader').default;
+
+  var leaveModule = require('react-hot-loader').leaveModule;
+
+  if (!reactHotLoader) {
+    return;
+  }
+
+  reactHotLoader.register(electronTags, 'electronTags', 'src/fancyElement.js');
+  reactHotLoader.register($, '$', 'src/fancyElement.js');
+  reactHotLoader.register(ogCreateElement, 'ogCreateElement', 'src/fancyElement.js');
+  reactHotLoader.register(VALID_TAGS, 'VALID_TAGS', 'src/fancyElement.js');
+  reactHotLoader.register(arrayOfObjectsToObject, 'arrayOfObjectsToObject', 'src/fancyElement.js');
+  reactHotLoader.register(TAG_NAME_MAP, 'TAG_NAME_MAP', 'src/fancyElement.js');
+  reactHotLoader.register(IS_BROWSER, 'IS_BROWSER', 'src/fancyElement.js');
+  reactHotLoader.register(cancelNextClick, 'cancelNextClick', 'src/fancyElement.js');
+  reactHotLoader.register(lastMouseDown, 'lastMouseDown', 'src/fancyElement.js');
+  reactHotLoader.register(fancyElementFactory, 'fancyElementFactory', 'src/fancyElement.js');
+  leaveModule(module);
+})();
+
+;
 //# sourceMappingURL=fancyElement.js.map

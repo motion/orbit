@@ -4,6 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = deleteUnknownAutoBindMethods;
+
+(function () {
+  var enterModule = require('react-hot-loader').enterModule;
+
+  enterModule && enterModule(module);
+})();
+
 function shouldDeleteClassicInstanceMethod(component, name) {
   if (component.__reactAutoBindMap && component.__reactAutoBindMap.hasOwnProperty(name)) {
     // It's a known autobound function, keep it
@@ -80,4 +87,23 @@ function deleteUnknownAutoBindMethods(component) {
     }
   });
 }
+;
+
+(function () {
+  var reactHotLoader = require('react-hot-loader').default;
+
+  var leaveModule = require('react-hot-loader').leaveModule;
+
+  if (!reactHotLoader) {
+    return;
+  }
+
+  reactHotLoader.register(shouldDeleteClassicInstanceMethod, 'shouldDeleteClassicInstanceMethod', 'src/deleteUnknownAutoBindMethods.js');
+  reactHotLoader.register(shouldDeleteModernInstanceMethod, 'shouldDeleteModernInstanceMethod', 'src/deleteUnknownAutoBindMethods.js');
+  reactHotLoader.register(shouldDeleteInstanceMethod, 'shouldDeleteInstanceMethod', 'src/deleteUnknownAutoBindMethods.js');
+  reactHotLoader.register(deleteUnknownAutoBindMethods, 'deleteUnknownAutoBindMethods', 'src/deleteUnknownAutoBindMethods.js');
+  leaveModule(module);
+})();
+
+;
 //# sourceMappingURL=deleteUnknownAutoBindMethods.js.map

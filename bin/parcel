@@ -1,7 +1,0 @@
-#!/bin/bash
-
-. $(dirname $0)/__/common
-
-VERSION=$($ROOT/node_modules/.bin/parcel --version)
-echo "running with parcel version $VERSION"
-$ROOT/node_modules/.bin/parcel ${@:1}

@@ -5,6 +5,9 @@ import UseCasesPage from '~/pages/UseCasesPage'
 import AboutPage from '~/pages/AboutPage'
 
 function runRouter() {
+  // setTimeout(() => {
+  //   console.log('setting up router')
+  // }, 500)
   return new Router({
     routes: {
       '/': HomePage,
@@ -19,13 +22,6 @@ let AppRouter = runRouter()
 
 // because doing in installDevTools would break import order
 window.Router = AppRouter
-
-// for hmr
-if (module.hot) {
-  module.hot.accept('.', () => {
-    AppRouter = runRouter()
-    window.Root.render()
-  })
-}
+window.runRouter = runRouter
 
 export default AppRouter

@@ -3,6 +3,8 @@
   "private": true,
   "version": "1.5.1",
   "scripts": {
+    "build": "echo hi",
+    "watch": "echo hi",
     "start": "../../node_modules/.bin/parcel index.html",
     "build-app": "../../node_modules/.bin/parcel build index.html --public-url ./ --no-minify",
     "start-prod": "static-server -p 4000 -n dist/index.html dist",
@@ -13,6 +15,7 @@
     "@mcro/gloss": "^1.5.1",
     "@mcro/router": "^1.5.1",
     "@mcro/ui": "^1.5.1",
+    "@mcro/hmr-view": "^1.5.1",
     "add": "^2.0.6",
     "animated": "^0.2.1",
     "babel-polyfill": "^6.23.0",
@@ -24,11 +27,11 @@
     "react-svg-inline": "^2.1.0",
     "react-spring": "^5.1.1",
     "@researchgate/react-intersection-observer": "^0.6.1",
-    "parcel-plugin-inlinesvg": "^1.0.0",
     "intersection-observer": "^0.5.0",
     "regenerator-runtime": "0.11.1",
     "react-countup": "3.0.3",
     "zenscroll": "^4.0.2",
-    "react-media": "^1.8.0"
+    "react-media": "^1.8.0",
+    "react-hot-loader": "^4.2.0"
   }
 }

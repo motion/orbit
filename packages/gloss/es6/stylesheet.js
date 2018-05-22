@@ -28,9 +28,33 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+(function () {
+  var enterModule = require('react-hot-loader').enterModule;
+
+  enterModule && enterModule(module);
+})();
+
 const jss = JSS.create();
 
 jss.use((0, _jssNested2.default)(), (0, _jssDefaultUnit2.default)(), (0, _jssPropsSort2.default)(), (0, _jssIsolate2.default)({ isolate: false }));
 
-exports.default = jss;
+const _default = jss;
+exports.default = _default;
+;
+
+(function () {
+  var reactHotLoader = require('react-hot-loader').default;
+
+  var leaveModule = require('react-hot-loader').leaveModule;
+
+  if (!reactHotLoader) {
+    return;
+  }
+
+  reactHotLoader.register(jss, 'jss', 'src/stylesheet.js');
+  reactHotLoader.register(_default, 'default', 'src/stylesheet.js');
+  leaveModule(module);
+})();
+
+;
 //# sourceMappingURL=stylesheet.js.map

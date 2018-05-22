@@ -13,7 +13,7 @@ import {
   RightSide,
   AppleLogo,
 } from '~/views'
-import girlImg from '~/../public/video-girl.jpg'
+// import girlImg from '~/public/video-girl.jpg'
 import HomeIllustration from './HomeIllustration'
 import * as Constants from '~/constants'
 import Media from 'react-media'

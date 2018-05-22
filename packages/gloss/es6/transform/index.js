@@ -4,7 +4,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function ({ types: t }) {
+var _babelHelperBuilderReactJsx = require('babel-helper-builder-react-jsx');
+
+var _babelHelperBuilderReactJsx2 = _interopRequireDefault(_babelHelperBuilderReactJsx);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+  var enterModule = require('react-hot-loader').enterModule;
+
+  enterModule && enterModule(module);
+})();
+
+const _default = function ({ types: t }) {
   // convert React.createElement() => this.glossElement()
 
   const classBodyVisitor = {
@@ -91,9 +103,21 @@ exports.default = function ({ types: t }) {
   };
 };
 
-var _babelHelperBuilderReactJsx = require('babel-helper-builder-react-jsx');
+exports.default = _default;
+;
 
-var _babelHelperBuilderReactJsx2 = _interopRequireDefault(_babelHelperBuilderReactJsx);
+(function () {
+  var reactHotLoader = require('react-hot-loader').default;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  var leaveModule = require('react-hot-loader').leaveModule;
+
+  if (!reactHotLoader) {
+    return;
+  }
+
+  reactHotLoader.register(_default, 'default', 'src/transform/index.js');
+  leaveModule(module);
+})();
+
+;
 //# sourceMappingURL=index.js.map

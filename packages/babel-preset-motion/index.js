@@ -11,6 +11,7 @@ module.exports = function(context, givenOpts) {
 
   const config = {
     plugins: [
+      getPlugin('react-hot-loader/babel'),
       // getPlugin('babel-plugin-transform-runtime', {
       //   polyfill: true,
       //   regenerator: true,
@@ -31,16 +32,16 @@ module.exports = function(context, givenOpts) {
             typeof opts.rootSuffix === 'undefined' ? 'src' : opts.rootSuffix,
         },
       ]),
-      getPlugin('@mcro/hmr', {
-        decoratorName: opts.decorator || 'view',
-        transforms: [
-          {
-            transform: getPlugin('@mcro/hmr-view'),
-            imports: ['react'],
-            locals: ['module'],
-          },
-        ],
-      }),
+      // getPlugin('@mcro/hmr', {
+      //   decoratorName: opts.decorator || 'view',
+      //   transforms: [
+      //     {
+      //       transform: '@mcro/hmr-view',
+      //       imports: ['react'],
+      //       locals: ['module'],
+      //     },
+      //   ],
+      // }),
       getPlugin('babel-plugin-transform-react-jsx', {
         pragma: 'window.createElement',
       }),

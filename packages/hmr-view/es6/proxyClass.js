@@ -28,6 +28,12 @@ var _supportsProtoAssignment2 = _interopRequireDefault(_supportsProtoAssignment)
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+(function () {
+  var enterModule = require('react-hot-loader').enterModule;
+
+  enterModule && enterModule(module);
+})();
+
 const RESERVED_STATICS = ['length', 'displayName', 'name', 'arguments', 'caller', 'prototype', 'toString'];
 
 function isEqualDescriptor(a, b) {
@@ -271,4 +277,28 @@ function createFallback(Component) {
 function createClassProxy(Component) {
   return Component.__proto__ && (0, _supportsProtoAssignment2.default)() ? proxyClass(Component) : createFallback(Component);
 }
+;
+
+(function () {
+  var reactHotLoader = require('react-hot-loader').default;
+
+  var leaveModule = require('react-hot-loader').leaveModule;
+
+  if (!reactHotLoader) {
+    return;
+  }
+
+  reactHotLoader.register(RESERVED_STATICS, 'RESERVED_STATICS', 'src/proxyClass.js');
+  reactHotLoader.register(isEqualDescriptor, 'isEqualDescriptor', 'src/proxyClass.js');
+  reactHotLoader.register(getDisplayName, 'getDisplayName', 'src/proxyClass.js');
+  reactHotLoader.register(allProxies, 'allProxies', 'src/proxyClass.js');
+  reactHotLoader.register(findProxy, 'findProxy', 'src/proxyClass.js');
+  reactHotLoader.register(addProxy, 'addProxy', 'src/proxyClass.js');
+  reactHotLoader.register(proxyClass, 'proxyClass', 'src/proxyClass.js');
+  reactHotLoader.register(createFallback, 'createFallback', 'src/proxyClass.js');
+  reactHotLoader.register(createClassProxy, 'createClassProxy', 'src/proxyClass.js');
+  leaveModule(module);
+})();
+
+;
 //# sourceMappingURL=proxyClass.js.map

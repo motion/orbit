@@ -1,13 +1,12 @@
-import reactMixin from 'react-mixin'
-import { Emitter } from 'sb-event-kit'
-export { Emitter, CompositeDisposable } from 'sb-event-kit'
+import { Emitter } from 'event-kit'
+export { Emitter, CompositeDisposable } from 'event-kit'
 
-type Helpers = {
+export type Helpers = {
   emit: typeof Emitter.emit
   alreadyDecorated: (a: any) => boolean
 }
 
-type Plugin = (
+export type Plugin = (
   options: Object,
   Helpers: Helpers,
 ) => {
@@ -15,10 +14,7 @@ type Plugin = (
   once?: boolean
   onlyClass?: boolean
   decorator?: (a: Function, b?: Object) => any
-  mixin?: Object
 }
-
-const empty = () => void 0
 
 interface DecorDecorator {
   (): (
@@ -82,19 +78,15 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     }
 
     let plugin = getPlugin(options, Helpers)
-
-    if (!plugin.decorator && !plugin.mixin) {
-      throw `Bad plugin, needs decorator or mixin ${plugin.name}`
+    if (!plugin.decorator) {
+      throw `Bad plugin, needs decorator ${plugin.name}`
     }
-
-    // apply helpers
+    const ogPlugin = plugin.decorator
     if (plugin.once) {
-      const ogPlugin = plugin.decorator || empty
       plugin.decorator = (Klass, ...args) =>
         alreadyDecorated(Klass) ? Klass : ogPlugin(Klass, ...args)
     }
     if (plugin.onlyClass) {
-      const ogPlugin = plugin.decorator || empty
       plugin.decorator = (Klass, ...args) =>
         !isClass(Klass) ? Klass : ogPlugin(Klass, ...args)
     }
@@ -118,13 +110,7 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     }
 
     for (const plugin of allPlugins) {
-      if (plugin.mixin && decoratedClass.prototype) {
-        reactMixin(decoratedClass.prototype, plugin.mixin)
-      }
-      if (plugin.decorator) {
-        decoratedClass =
-          plugin.decorator(decoratedClass, opts) || decoratedClass
-      }
+      decoratedClass = plugin.decorator(decoratedClass, opts) || decoratedClass
     }
 
     return decoratedClass

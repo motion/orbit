@@ -40,14 +40,17 @@ const decorations = (
   [storeProvidable, storeOptions],
   !enable.ui && emitsMount,
 ]
-const base = decor(decorations({ mobx: true, magic: false, ui: true }))
 
-interface ViewDecorator {
+export const decorBase = decor(
+  decorations({ mobx: true, magic: false, ui: true }),
+)
+
+export interface ViewDecorator {
   (): any
-  on: typeof base.on
-  emitter: typeof base.emitter
-  off: typeof base.off
-  emit: typeof base.emit
+  on: typeof decorBase.on
+  emitter: typeof decorBase.emitter
+  off: typeof decorBase.off
+  emit: typeof decorBase.emit
   ui: typeof decor
   electron: typeof decor
   provide: any
@@ -61,17 +64,17 @@ function createViewDecorator() {
     }
     // @view({ ...stores }) shorthand
     if (typeof item === 'object') {
-      const res = base({ stores: item })
+      const res = decorBase({ stores: item })
       return res
     }
-    const res = base(item)
+    const res = decorBase(item)
     return res
   }
   // pass on emitter
-  view.emitter = base.emitter
-  view.on = base.on
-  view.off = base.off
-  view.emit = base.emit
+  view.emitter = decorBase.emitter
+  view.on = decorBase.on
+  view.off = decorBase.off
+  view.emit = decorBase.emit
   // other decorators
   view.ui = decor(decorations({ ui: true }))
   view.electron = decor(decorations({ mobx: true, ui: false }))

@@ -1,5 +1,5 @@
 import event from 'disposable-event'
-import { Disposable } from 'sb-event-kit'
+import { Disposable } from 'event-kit'
 
 export default function on(...args): Disposable {
   // allows calling with just on('eventName', callback) and using this

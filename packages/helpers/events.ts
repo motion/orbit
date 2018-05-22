@@ -1,4 +1,4 @@
-import { CompositeDisposable } from 'sb-event-kit'
+import { CompositeDisposable } from 'event-kit'
 import global from 'global'
 import _on from './on'
 import _requestAnimationFrame from './requestAnimationFrame'

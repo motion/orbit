@@ -44,7 +44,7 @@
     "react": "16.2.0",
     "react-dom": "^16.2.0",
     "reconnecting-websocket": "^3.2.2",
-    "sb-event-kit": "^3.0.0",
+    "event-kit": "^2.5.0",
     "simple-quadtree": "^0.1.3",
     "time-ago": "^0.1.0",
     "regenerator-runtime": "0.11.1"

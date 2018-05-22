@@ -1,0 +1,12 @@
+import { ColorObject, Color, CSSArray } from './types';
+export declare function hash(thing: string | Object): number;
+export declare function camelToSnake(key: string): any;
+export declare function snakeToCamel(key: string): any;
+export declare function colorToString(color: Color, options?: Object): string;
+export declare const isColorLike: (a?: any, b?: any, c?: any) => {};
+export declare function isColorLikeString(str: string): boolean;
+export declare function isColorLikeArray(array: Array<number | string>): boolean;
+export declare function isColorLikeObject(object: ColorObject): boolean;
+export declare function isColorLikeLibrary(val: any, options?: any): boolean;
+export declare function getColorLikeLibraryValue(val: any, options?: any): any;
+export declare function expandCSSArray(given: number | Array<number | string>): CSSArray;

@@ -1,4 +1,4 @@
-import * as EventKit from 'sb-event-kit'
+import * as EventKit from 'event-kit'
 import * as Events from './events'
 import ref_ from './ref'
 

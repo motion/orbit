@@ -1,4 +1,4 @@
-import { Emitter } from 'sb-event-kit'
+import { Emitter } from 'event-kit'
 
 // store.emitter
 export function emittable(options) {

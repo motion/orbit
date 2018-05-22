@@ -13,7 +13,7 @@
     "global": "^4.3.2",
     "disposable-event": "^1.0.3",
     "object-path": "^0.11.3",
-    "sb-event-kit": "^3.0.0"
+    "event-kit": "^2.5.0"
   },
   "peerDependencies": {
     "mobx": "*"

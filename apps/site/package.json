@@ -6,9 +6,9 @@
     "build": "echo hi",
     "watch": "echo hi",
     "start": "../../node_modules/.bin/parcel index.html",
-    "build-app": "NODE_ENV=production ../../node_modules/.bin/parcel build index.html --public-url ./",
+    "build-app": "NODE_ENV=production ../../node_modules/.bin/parcel build index.html --public-url ./ --no-minify",
     "start-prod": "static-server -p 4000 -n dist/index.html dist",
-    "deploy": "./surge-fix.sh && cd dist && surge . tryorbit.com"
+    "deploy": "./surge-fix.sh && cd dist && surge ."
   },
   "dependencies": {
     "@mcro/black": "^1.5.1",

@@ -129,17 +129,6 @@ function collectGetterPropertyDescriptors(proto) {
   )
 }
 
-function mobxifyPromise(obj, method, val) {
-  const observable = fromPromise(val)
-  Object.defineProperty(obj, method, {
-    get() {
-      if (observable.state === 'rejected' || observable.state === 'fulfilled') {
-        return observable.value
-      }
-    },
-  })
-}
-
 function decorateClassWithAutomagic(obj: MagicalObject) {
   const descriptors = {
     ...Object.keys(obj).reduce(
@@ -148,11 +137,18 @@ function decorateClassWithAutomagic(obj: MagicalObject) {
     ),
     ...collectGetterPropertyDescriptors(Object.getPrototypeOf(obj)),
   }
-  // mutate to be mobx observables
+  const decorations = {}
   for (const method of Object.keys(descriptors)) {
-    if (method === '__automagical') continue
-    decorateMethodWithAutomagic(obj, method, descriptors[method])
+    if (FILTER_KEYS[method]) {
+      continue
+    }
+    const decor = decorateMethodWithAutomagic(obj, method, descriptors[method])
+    if (decor) {
+      decorations[method] = decor
+    }
   }
+  console.log('decorating', obj, decorations)
+  Mobx.decorate(obj, decorations)
 }
 
 // * => mobx
@@ -164,7 +160,7 @@ function decorateMethodWithAutomagic(
   // @computed get (do first to avoid hitting the getter on next line)
   // @ts-ignore
   if (descriptor && descriptor.get && descriptor.get.IS_AUTO_RUN) {
-    return mobxifyWatch(
+    mobxifyWatch(
       target,
       method,
       // @ts-ignore
@@ -172,55 +168,37 @@ function decorateMethodWithAutomagic(
       // @ts-ignore
       descriptor.get.options,
     )
-  }
-  if (descriptor && (!!descriptor.get || !!descriptor.set)) {
-    if (descriptor.get) {
-      Mobx.decorate(target, {
-        [method]: Mobx.computed({ requiresReaction: true }),
-      })
-    }
     return
   }
-
-  let value = target[method]
-
-  // let it be
-  if (isObservable(value)) {
-    return value
+  if (descriptor && (!!descriptor.get || !!descriptor.set)) {
+    return Mobx.computed
   }
+  let value = target[method]
   // @watch: autorun |> automagical (value)
   if (isWatch(value)) {
-    return mobxifyWatch(
+    mobxifyWatch(
       target,
       method,
       value,
       typeof value.IS_AUTO_RUN === 'object' ? value.IS_AUTO_RUN : undefined,
     )
-  }
-  if (isPromise(value)) {
-    mobxifyPromise(target, method, value)
     return
   }
   if (isFunction(value)) {
-    // @action
-    const targetMethod = target[method].bind(target)
     const NAME = `${target.constructor.name}.${method}`
-    // TODO remove in prod
-    const logWrappedMethod = (...args) => {
+    // autobind
+    const targetMethod = target[method].bind(target)
+    // wrap for logging helpers
+    target[method] = (...args) => {
       if (root.__shouldLog && root.__shouldLog[NAME]) {
         log(NAME, ...args)
       }
       return targetMethod(...args)
     }
-
-    target[method] = Mobx.action(NAME, logWrappedMethod)
-    return target[method]
+    // actionize
+    return Mobx.action
   }
-  // @observable.ref
-  Mobx.decorate(target, {
-    [method]: Mobx.observable.ref,
-  })
-  return value
+  return Mobx.observable.ref
 }
 
 // * => Mobx
@@ -286,10 +264,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return undefined
       }
     }
-    if (result && result instanceof Mobx.BaseAtom) {
-      // @ts-ignore
-      return result.get()
-    }
+    // if (result && result instanceof Mobx.BaseAtom) {
+    //   // @ts-ignore
+    //   return result.get()
+    // }
     return result
   }
 

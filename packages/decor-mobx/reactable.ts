@@ -2,13 +2,11 @@ import * as AllHelpers from '@mcro/helpers'
 import { autorun, autorunAsync, reaction } from 'mobx'
 
 // subscribe-aware helpers
-export function watch(fn, debounce) {
-  let runner
-  if (typeof debounce === 'number') {
-    runner = autorunAsync(fn.bind(this))
-  } else {
-    runner = autorun(fn.bind(this))
-  }
+export function watch(fn, userOptions) {
+  const runner = autorun(
+    fn.bind(this),
+    AllHelpers.getReactionOptions(userOptions),
+  )
   this.subscriptions.add(runner)
   return runner
 }

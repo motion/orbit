@@ -1,34 +1,18 @@
-const getStateKey = key => {
-  let unSet = `${key.replace('set', '')}`
-  const unCapital = `${unSet[0].toLowerCase()}${unSet.slice(1)}`
-  return unCapital
-}
-
 export function proxySetters(klass) {
-  return new Proxy(klass, {
-    get(target, method) {
-      if (Reflect.has(target, method) || typeof method !== 'string') {
-        return Reflect.get(target, method)
-      }
-      if (method.indexOf('set') === 0) {
-        const stateKey = getStateKey(method)
-        if (typeof target.state[stateKey] !== 'undefined') {
-          return nextState => {
-            return target.setState({ [stateKey]: nextState })
-          }
-        } else {
-          throw new Error(
-            `Attempted a setState on a key that doesn't exist! ${method}`,
-          )
-        }
-      }
-      // shorthand getter for state items ending in State
-      if (
-        method.indexOf('State') === method.length - 5 &&
-        typeof target.state[method] !== 'undefined'
-      ) {
-        return target.state[method]
-      }
-    },
-  })
+  for (const stateKey of Object.keys(klass.state)) {
+    // klass.setXState
+    const setKey = `set${stateKey[0].toUpperCase()}${stateKey.slice(1)}`
+    klass[setKey] = nextState => {
+      return klass.setState({ [stateKey]: nextState })
+    }
+    // klass.XState => klass.state.XState
+    if (stateKey.indexOf('State') === stateKey.length - 5) {
+      Object.defineProperty(klass, stateKey, {
+        get: function() {
+          return klass.state[stateKey]
+        },
+      })
+    }
+  }
+  return klass
 }

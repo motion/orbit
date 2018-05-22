@@ -196,6 +196,7 @@ class IllustrationStore {
   willMount() {
     setTimeout(() => {
       this.animate = true
+      console.log('homeill', this)
     }, 300)
   }
 

@@ -8,6 +8,9 @@ import React from 'react'
 import { render } from '@mcro/reactron'
 import { extras } from 'mobx'
 import waitPort from 'wait-port'
+import global from 'global'
+
+global.__dom = React.createElement
 
 require('module-alias').addAlias('~', __dirname + '/')
 

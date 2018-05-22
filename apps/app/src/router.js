@@ -17,13 +17,6 @@ let AppRouter = runRouter()
 
 // because doing in installDevTools would break import order
 window.Router = AppRouter
-
-// for hmr
-if (module.hot) {
-  module.hot.accept('.', () => {
-    AppRouter = runRouter()
-    window.App.render()
-  })
-}
+window.runRouter = runRouter
 
 export default AppRouter

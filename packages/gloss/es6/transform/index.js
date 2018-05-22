@@ -11,7 +11,7 @@ exports.default = function ({ types: t }) {
     ClassMethod(path) {
       // add a fancyelement hook to start of render
       if (path.node.body.body) {
-        path.node.body.body.unshift(t.variableDeclaration('const', [t.variableDeclarator(t.identifier('__dom'), t.identifier('this.glossElement.bind(this)'))]));
+        path.node.body.body.unshift(t.variableDeclaration('const', [t.variableDeclarator(t.identifier('__dom'), t.identifier('this.glossElement && this.glossElement.bind(this) || window.__dom'))]));
       }
     }
   };

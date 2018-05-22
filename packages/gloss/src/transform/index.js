@@ -9,7 +9,9 @@ export default function({ types: t }) {
           t.variableDeclaration('const', [
             t.variableDeclarator(
               t.identifier('__dom'),
-              t.identifier('this.glossElement.bind(this)'),
+              t.identifier(
+                'this.glossElement && this.glossElement.bind(this) || window.__dom',
+              ),
             ),
           ]),
         )

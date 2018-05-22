@@ -5,14 +5,16 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import { uniqBy } from 'lodash'
-import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
 import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
 
 // HMR
-if (module && module.hot) {
-  module.hot.accept('.', async () => {
+if (module.hot) {
+  module.hot.accept(async () => {
+    if (window.runRouter) {
+      window.runRouter()
+    }
     await start(true)
   })
 }

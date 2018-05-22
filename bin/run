@@ -10,6 +10,11 @@ killgroup() {
 
 # just in case
 rm -rf ./packages/decor/node_modules/mobx 2> /dev/null
+rm -rf ./packages/decor-classes/node_modules/mobx 2> /dev/null
+rm -rf ./packages/decor-classes/node_modules/react 2> /dev/null
+rm -rf ./packages/decor-react/node_modules/mobx 2> /dev/null
+rm -rf ./packages/decor-react/node_modules/react 2> /dev/null
+rm -rf ./packages/decor-mobx/node_modules/mobx 2> /dev/null
 rm -rf ./packages/router/node_modules/mobx 2> /dev/null
 rm -rf ./packages/black/node_modules/mobx 2> /dev/null
 rm -rf ./packages/automagical/node_modules/mobx 2> /dev/null

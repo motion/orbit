@@ -10,11 +10,12 @@ import * as Black from '@mcro/black'
 import * as Constants from '~/constants'
 
 window.Constants = Constants
+// gloss all <tag />s
+React.createElement = createElement
+window.createElement = createElement
+
 // for hmr clearing
 Black.view.on('hmr', main)
-
-// Gloss: all <tag />s can use $$styleProps or css={{}}
-React.createElement = createElement
 
 function main() {
   const RootNode = document.querySelector('#app')

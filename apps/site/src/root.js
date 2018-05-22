@@ -7,7 +7,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 
 @view
-export default class Root extends React.Component {
+export default class Root {
   render() {
     const CurrentPage = Router.activeView || NotFound
     const width = window.innerWidth

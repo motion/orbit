@@ -1,35 +1,10 @@
-// @flow
 import helper from 'babel-helper-builder-react-jsx'
 
-export default function({ types: t }: { types: Object }) {
+export default function({ types: t }) {
   // convert React.createElement() => this.glossElement()
 
-  // todo this is horrible and lame
-  const isIf = attribute =>
-    attribute.type === 'JSXAttribute' && attribute.name.name === 'if'
-  const isntIf = x => !isIf(x)
-  const jsxIfPlugin = path => {
-    const { node } = path
-    const attributes = node.openingElement.attributes
-    if (!attributes) return
-    const ifAttribute = attributes.filter(isIf)[0]
-    if (ifAttribute) {
-      const opening = t.JSXOpeningElement(
-        node.openingElement.name,
-        attributes.filter(isntIf)
-      )
-      const tag = t.JSXElement(opening, node.closingElement, node.children)
-      const conditional = t.conditionalExpression(
-        ifAttribute.value.expression,
-        tag,
-        t.nullLiteral()
-      )
-      path.replaceWith(conditional)
-    }
-  }
-
   const classBodyVisitor = {
-    ClassMethod(path: Object, state: Object) {
+    ClassMethod(path, state) {
       const GLOSS_ID = path.scope.generateUidIdentifier('gloss')
       let hasJSX = false
 
@@ -38,7 +13,6 @@ export default function({ types: t }: { types: Object }) {
           // need path to determine if variable or tag
           const stupidIsTag =
             state.tagName && state.tagName[0].toLowerCase() === state.tagName[0]
-
           state.call = t.callExpression(GLOSS_ID, [
             stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr,
             ...state.args,
@@ -50,16 +24,13 @@ export default function({ types: t }: { types: Object }) {
         {
           JSXNamespacedName,
           JSXElement: {
-            enter(path) {
-              if (state.opts.jsxIf) {
-                jsxIfPlugin(path)
-              }
+            enter() {
               hasJSX = true
             },
             exit: JSXElement.exit,
           },
         },
-        state
+        state,
       )
 
       if (hasJSX) {
@@ -68,16 +39,16 @@ export default function({ types: t }: { types: Object }) {
           t.variableDeclaration('const', [
             t.variableDeclarator(
               GLOSS_ID,
-              t.identifier('this.glossElement.bind(this)')
+              t.identifier('this.glossElement.bind(this)'),
             ),
-          ])
+          ]),
         )
       }
     },
   }
 
   const programVisitor = {
-    Class(path: Object, state: Object) {
+    Class(path, state) {
       const node = path.node
 
       if (!node.decorators || !node.decorators.length) {
@@ -136,13 +107,8 @@ export default function({ types: t }: { types: Object }) {
 
   return {
     visitor: {
-      Program(path: Object, state: Object) {
+      Program(path, state) {
         path.traverse(programVisitor, state)
-      },
-      JSXElement(path, state) {
-        if (state.opts.jsxIf) {
-          jsxIfPlugin(path)
-        }
       },
     },
   }

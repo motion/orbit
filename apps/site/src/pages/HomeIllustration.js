@@ -309,9 +309,6 @@ export default class HeaderIllustration {
   render({ store }) {
     return (
       <React.Fragment>
-        <monitorWrap if={false}>
-          <monitorFrame $$fullscreen />
-        </monitorWrap>
         <headerIll>
           <fades $$fullscreen />
           <chats>

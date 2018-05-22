@@ -1,0 +1,10 @@
+{
+  "name": "@mcro/babel-plugin-if",
+  "version": "1.5.1",
+  "description": "babel plugin if to jsx",
+  "main": "babel-plugin-if.js",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

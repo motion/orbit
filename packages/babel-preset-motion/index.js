@@ -15,16 +15,15 @@ module.exports = function(context, givenOpts) {
       //   polyfill: true,
       //   regenerator: true,
       // }),
-      // getPlugin('babel-plugin-transform-optional-chaining'),
-      // getPlugin('babel-plugin-macros'),
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),
       // getPlugin('babel-plugin-sitrep'),
-      getPlugin('@mcro/gloss/transform', {
-        decoratorName: opts.decorator || 'view',
-        jsxIf: opts.jsxIf || true,
-      }),
+      getPlugin('@mcro/babel-plugin-if'),
+      // getPlugin('')
+      // getPlugin('@mcro/gloss/transform', {
+      //   decoratorName: opts.decorator || 'view',
+      // }),
       getPlugin('babel-plugin-root-import', [
         {
           rootPathPrefix: '~',
@@ -41,6 +40,9 @@ module.exports = function(context, givenOpts) {
             locals: ['module'],
           },
         ],
+      }),
+      getPlugin('babel-plugin-transform-react-jsx', {
+        pragma: 'window.createElement',
       }),
     ],
     presets: opts.presets || [

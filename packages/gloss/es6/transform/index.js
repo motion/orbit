@@ -7,22 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function ({ types: t }) {
   // convert React.createElement() => this.glossElement()
 
-  // todo this is horrible and lame
-  const isIf = attribute => attribute.type === 'JSXAttribute' && attribute.name.name === 'if';
-  const isntIf = x => !isIf(x);
-  const jsxIfPlugin = path => {
-    const { node } = path;
-    const attributes = node.openingElement.attributes;
-    if (!attributes) return;
-    const ifAttribute = attributes.filter(isIf)[0];
-    if (ifAttribute) {
-      const opening = t.JSXOpeningElement(node.openingElement.name, attributes.filter(isntIf));
-      const tag = t.JSXElement(opening, node.closingElement, node.children);
-      const conditional = t.conditionalExpression(ifAttribute.value.expression, tag, t.nullLiteral());
-      path.replaceWith(conditional);
-    }
-  };
-
   const classBodyVisitor = {
     ClassMethod(path, state) {
       const GLOSS_ID = path.scope.generateUidIdentifier('gloss');
@@ -32,7 +16,6 @@ exports.default = function ({ types: t }) {
         post(state) {
           // need path to determine if variable or tag
           const stupidIsTag = state.tagName && state.tagName[0].toLowerCase() === state.tagName[0];
-
           state.call = t.callExpression(GLOSS_ID, [stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr, ...state.args]);
         }
       });
@@ -40,10 +23,7 @@ exports.default = function ({ types: t }) {
       path.traverse({
         JSXNamespacedName,
         JSXElement: {
-          enter(path) {
-            if (state.opts.jsxIf) {
-              jsxIfPlugin(path);
-            }
+          enter() {
             hasJSX = true;
           },
           exit: JSXElement.exit
@@ -106,11 +86,6 @@ exports.default = function ({ types: t }) {
     visitor: {
       Program(path, state) {
         path.traverse(programVisitor, state);
-      },
-      JSXElement(path, state) {
-        if (state.opts.jsxIf) {
-          jsxIfPlugin(path);
-        }
       }
     }
   };

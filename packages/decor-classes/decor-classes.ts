@@ -1,3 +1,3 @@
 export * from './autobound'
-export * from './emittable'
-export * from './subscribable'
+export { default as emittable } from './emittable'
+export { default as subscribable } from './subscribable'

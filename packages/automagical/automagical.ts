@@ -7,7 +7,7 @@ const root = typeof window !== 'undefined' ? window : require('global')
 const IS_PROD = process.env.NODE_ENV === 'production'
 
 type MagicalObject = {
-  subscriptions: { add: (fn: Function) => void }
+  subscriptions: { add: ({ dispose: Function }) => void }
   __automagical: { watchers?: [any] | undefined[] }
   props?: {}
 }
@@ -31,9 +31,6 @@ const logRes = (res: any) => {
   }
   if (res instanceof Promise) {
     return [PREFIX, 'Promise']
-  }
-  if (res && res.value && isQuery(res.value)) {
-    return [PREFIX, 'RxQuery']
   }
   if (Mobx.isArrayLike(res)) {
     return [PREFIX, res.map(x => Mobx.toJS(x))]
@@ -62,7 +59,6 @@ const isObservable = (x: any) => {
   }
 }
 const isFunction = val => typeof val === 'function'
-const isQuery = val => val && (val.$isQuery || (!!val.mquery && val.id))
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
 const isObservableLike = val =>
@@ -131,16 +127,6 @@ function collectGetterPropertyDescriptors(proto) {
     }),
     {},
   )
-}
-
-function mobxifyQuery(obj, method, val) {
-  Object.defineProperty(obj, method, {
-    get() {
-      return val.current // hit observable
-    },
-  })
-  obj.subscriptions.add(val)
-  return val
 }
 
 function mobxifyPromise(obj, method, val) {
@@ -216,10 +202,6 @@ function decorateMethodWithAutomagic(
   }
   if (isPromise(value)) {
     mobxifyPromise(target, method, value)
-    return
-  }
-  if (isQuery(value)) {
-    mobxifyQuery(target, method, value)
     return
   }
   if (isFunction(value)) {
@@ -378,7 +360,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
   // auto add subscription so it disposes on unmount
   if (obj.subscriptions && obj.subscriptions.add) {
-    obj.subscriptions.add(dispose)
+    obj.subscriptions.add({ dispose })
   }
 
   const isReaction = Array.isArray(val)

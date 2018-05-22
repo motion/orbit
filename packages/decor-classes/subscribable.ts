@@ -1,4 +1,5 @@
 import { CompositeDisposable } from 'event-kit'
+import { DecorPlugin } from '@mcro/decor'
 
 export interface Subscribable {
   readonly subscriptions: CompositeDisposable
@@ -23,7 +24,7 @@ function subscribableDecorator(Klass: any): Subscribable {
   return Klass
 }
 
-export default function subscribable() {
+export default <DecorPlugin<Subscribable>>function subscribable() {
   return {
     name: 'subscribable',
     once: true,

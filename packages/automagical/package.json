@@ -1,8 +1,6 @@
 {
   "name": "@mcro/automagical",
-  "main": "_/index.js",
-  "module": "_/index.js",
-  "module:production": "dist/index.js",
+  "main": "_/automagical.js",
   "version": "1.5.1",
   "scripts": {
     "build": "tsc",

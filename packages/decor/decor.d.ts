@@ -6,7 +6,7 @@ export type Helpers = {
 }
 
 export interface DecorPlugin<T> {
-  (options: Object, Helpers: Helpers): {
+  (options?: any, Helpers?: Helpers): {
     name: string
     once?: boolean
     onlyClass?: boolean
@@ -16,16 +16,21 @@ export interface DecorPlugin<T> {
 
 export type DecorPlugins = Array<[DecorPlugin<any>, Object] | DecorPlugin<any>>
 
-export interface DecorCompiledDecorator {
-  (): (
-    target: Function | Object,
-    opts?: Object,
-  ) => <T extends Function>(target: T) => T
+export type DecorDecorator<T> = <X extends Function>(target: X) => T & X
+
+export type DecorDecoratorWithOptionalOptions<T> = T extends Object
+  ? (options: Object) => DecorDecorator<T>
+  : T extends Function ? DecorDecorator<T> : void
+
+export interface DecorCompiledDecorator<Extensions> {
+  <T>(target: T): DecorDecoratorWithOptionalOptions<T>
   emitter: Emitter
   on: Emitter['on']
   emit: Emitter['emit']
 }
 
-declare function Decor(plugins: DecorPlugins): DecorCompiledDecorator
+declare function Decor(
+  plugins: DecorPlugins,
+): DecorCompiledDecorator<DecorPlugins>
 
 export default Decor

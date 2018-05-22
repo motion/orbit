@@ -74,17 +74,13 @@ export default function decor(plugins: DecorPlugins): DecorCompiledDecorator {
     if (typeof KlassOrOpts === 'object') {
       return (NextKlass: Function) => decorDecorator(NextKlass, KlassOrOpts)
     }
-
     let decoratedClass = KlassOrOpts
-
     if (!decoratedClass) {
       throw new Error('No class/function passed to decorator')
     }
-
     for (const plugin of allPlugins) {
       decoratedClass = plugin.decorator(decoratedClass, opts) || decoratedClass
     }
-
     return decoratedClass
   }
 

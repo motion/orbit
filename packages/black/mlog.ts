@@ -3,8 +3,6 @@ import Mobx from 'mobx'
 import { deepObserve } from 'mobx-deep-observer'
 import { enableLogging } from 'mobx-logger'
 
-console.log('global', global)
-
 let runners = (global.__mlogRunners = global.__mlogRunners || [])
 
 function deepMobxToJS(_thing) {

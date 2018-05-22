@@ -1,4 +1,5 @@
 import { Emitter } from 'event-kit'
+import { DecorPlugin } from '@mcro/decor'
 
 export interface Emittable {
   emitter: Emitter
@@ -6,10 +7,9 @@ export interface Emittable {
 }
 
 // store.emitter
-export function emittable(options) {
+export default <DecorPlugin<Emittable>>function emittable(options) {
   const emitterProp = options.emitterProp || 'emitter'
   const emitProp = options.emitProp || 'emit'
-
   return {
     name: 'emittable',
     once: true,

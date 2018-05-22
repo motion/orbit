@@ -104,11 +104,7 @@ export default function fancyElementFactory(Gloss, styles) {
     }
   }
 
-  function fancyElement(
-    type_: string | Function,
-    props?: Object,
-    ...children: Array<any>
-  ) {
+  function fancyElement(type_, props, ...children) {
     let type = type_
     if (!type) {
       throw new Error(
@@ -117,10 +113,8 @@ export default function fancyElementFactory(Gloss, styles) {
         }`,
       )
     }
-    if (!this) {
-      return ogCreateElement(type, props, ...children)
-    }
-    let glossUID = this.constructor.glossUID
+    let glossUID = this && this.constructor.glossUID
+    // for shorthand components
     if (props && props.glossUID) {
       glossUID = props.glossUID
       delete props.glossUID
@@ -130,13 +124,14 @@ export default function fancyElementFactory(Gloss, styles) {
     const name = !isTag ? `${type.name}` : `${type}`
     const finalProps = {}
     const finalStyles = []
-    const theme = this.theme
+    const theme = this && this.theme
 
     if (name) {
       addStyle(finalStyles, theme, styles, `${name}--${glossUID}`, null, true)
     }
 
     let style
+
     if (propNames) {
       for (const prop of propNames) {
         const val = props && props[prop]

@@ -10,9 +10,7 @@ export default class Modal {
     return (
       <Portal {...portalProps}>
         <bg {...bgProps}>
-          <modal {...props}>
-            {children}
-          </modal>
+          <modal {...props}>{children}</modal>
         </bg>
       </Portal>
     )

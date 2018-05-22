@@ -10,18 +10,16 @@ export default class DefinitionList extends React.Component {
 
     return (
       <dl {...props}>
-        {rows.map((item, i) =>
+        {rows.map((item, i) => (
           <row key={`${item}${i}`}>
-            <dt>
-              {item}
-            </dt>
+            <dt>{item}</dt>
             <dd>
               {typeof target[item] === 'object'
                 ? JSON.stringify(target[item])
                 : target[item]}
             </dd>
           </row>
-        )}
+        ))}
       </dl>
     )
   }

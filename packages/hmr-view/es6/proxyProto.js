@@ -7,12 +7,6 @@ exports.default = createPrototypeProxy;
 
 var _lodash = require('lodash');
 
-(function () {
-  var enterModule = require('react-hot-loader').enterModule;
-
-  enterModule && enterModule(module);
-})();
-
 function createPrototypeProxy() {
   let proxy = {};
   let current = null;
@@ -192,20 +186,4 @@ function createPrototypeProxy() {
     get
   };
 }
-;
-
-(function () {
-  var reactHotLoader = require('react-hot-loader').default;
-
-  var leaveModule = require('react-hot-loader').leaveModule;
-
-  if (!reactHotLoader) {
-    return;
-  }
-
-  reactHotLoader.register(createPrototypeProxy, 'createPrototypeProxy', 'src/proxyProto.js');
-  leaveModule(module);
-})();
-
-;
 //# sourceMappingURL=proxyProto.js.map

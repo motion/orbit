@@ -12,7 +12,7 @@ window.Constants = Constants
 
 function render() {
   setTimeout(() => {
-    console.log('rendering1253')
+    console.log('rerender')
   })
   const RootNode = document.querySelector('#app')
   const Root = require('./root').default

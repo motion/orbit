@@ -8,8 +8,6 @@ export const Logo = props => <img src={LogoSVG} {...props} />
 
 export default ({ size = 1, ...props }) => {
   const css = {
-    transformOrigin: 'top left',
-    transform: { scale: size },
     width: naturalWidth * size,
     height: naturalHeight * size,
   }

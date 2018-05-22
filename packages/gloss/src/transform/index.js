@@ -1,44 +1,14 @@
-import helper from 'babel-helper-builder-react-jsx'
-
 export default function({ types: t }) {
   // convert React.createElement() => this.glossElement()
 
   const classBodyVisitor = {
-    ClassMethod(path, state) {
-      const GLOSS_ID = path.scope.generateUidIdentifier('gloss')
-      let hasJSX = false
-
-      const { JSXNamespacedName, JSXElement } = helper({
-        post(state) {
-          // need path to determine if variable or tag
-          const stupidIsTag =
-            state.tagName && state.tagName[0].toLowerCase() === state.tagName[0]
-          state.call = t.callExpression(GLOSS_ID, [
-            stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr,
-            ...state.args,
-          ])
-        },
-      })
-
-      path.traverse(
-        {
-          JSXNamespacedName,
-          JSXElement: {
-            enter() {
-              hasJSX = true
-            },
-            exit: JSXElement.exit,
-          },
-        },
-        state,
-      )
-
-      if (hasJSX) {
-        // add a fancyelement hook to start of render
+    ClassMethod(path) {
+      // add a fancyelement hook to start of render
+      if (path.node.body.body) {
         path.node.body.body.unshift(
           t.variableDeclaration('const', [
             t.variableDeclarator(
-              GLOSS_ID,
+              t.identifier('__dom'),
               t.identifier('this.glossElement.bind(this)'),
             ),
           ]),

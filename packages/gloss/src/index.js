@@ -144,7 +144,6 @@ export default class Gloss {
       const ogrender = Child.prototype.render
       if (Child.prototype.render) {
         Child.prototype.render = function(...args) {
-          window.createElement = this.glossElement.bind(this)
           if (hasTheme) {
             this.glossUpdateTheme(this.props)
           }

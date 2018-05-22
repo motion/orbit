@@ -1,6 +1,7 @@
 module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
+
   const getPlugin = (name, opts) => {
     if (disable.find(x => x === name)) {
       return null
@@ -21,10 +22,9 @@ module.exports = function(context, givenOpts) {
       getPlugin('babel-plugin-transform-class-properties'),
       // getPlugin('babel-plugin-sitrep'),
       getPlugin('@mcro/babel-plugin-if'),
-      // getPlugin('')
-      // getPlugin('@mcro/gloss/transform', {
-      //   decoratorName: opts.decorator || 'view',
-      // }),
+      getPlugin('@mcro/gloss/transform', {
+        decoratorName: opts.decorator || 'view',
+      }),
       getPlugin('babel-plugin-root-import', [
         {
           rootPathPrefix: '~',
@@ -43,7 +43,7 @@ module.exports = function(context, givenOpts) {
       //   ],
       // }),
       getPlugin('babel-plugin-transform-react-jsx', {
-        pragma: 'window.createElement',
+        pragma: '__dom',
       }),
     ],
     presets: opts.presets || [

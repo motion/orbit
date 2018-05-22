@@ -1,7 +1,7 @@
 import React from 'react'
 import Surface from './surface'
 
-export default props =>
+export default props => (
   <Surface
     tagName="tag"
     background="#e5ebf1"
@@ -14,3 +14,4 @@ export default props =>
     {...props}
     noElement
   />
+)

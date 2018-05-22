@@ -20,11 +20,7 @@ export default class Grid extends React.Component<Props> {
     return (
       <grid css={{ flexWrap: 'wrap' }} {...props}>
         {React.Children.map(children, (child, index) => {
-          return (
-            <child key={index}>
-              {child}
-            </child>
-          )
+          return <child key={index}>{child}</child>
         })}
       </grid>
     )

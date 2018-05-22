@@ -2,7 +2,6 @@ import { view } from '@mcro/black'
 import * as React from 'react'
 import Popover from './popover'
 import iconNames from './iconNames'
-import iconsDetailed from './iconsDetailed'
 import fuzzy from 'fuzzy'
 
 const widthPadding = x => {
@@ -71,13 +70,6 @@ export default class Icon extends React.PureComponent {
     ...props
   }) {
     let content
-    if (type === 'detailed') {
-      content = (
-        <div $detailedIcon css={{ transform: { scale: 0.01 * size } }}>
-          {iconsDetailed[name]}
-        </div>
-      )
-    }
     if (name[0] === '/') {
       return <img $icon src={name} {...props} />
     }

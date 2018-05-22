@@ -3,8 +3,8 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import { debounce } from 'lodash'
 
-@view.ui
-export class SectionContent {
+@view
+export class SectionContent extends React.Component {
   state = {
     resize: false,
   }
@@ -36,6 +36,7 @@ export class SectionContent {
       height = Math.max(420, height)
     }
     const style = isSmall ? { minHeight: height } : { height }
+    console.log(__dom)
     return (
       <section
         $padded={padded}

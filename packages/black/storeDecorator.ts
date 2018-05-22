@@ -3,10 +3,8 @@ import { hydratable, reactable } from '@mcro/decor-mobx'
 import { subscribable, emittable } from '@mcro/decor-classes'
 import automagical from '@mcro/automagical'
 import { CompositeDisposable } from 'event-kit'
-import { Subscribable } from '../decor-classes/subscribable'
-import { Emittable } from '../decor-classes/emittable'
 
-export const storeDecorator: DecorCompiledDecorator<Subscribable> = decor([
+export const storeDecorator: DecorCompiledDecorator<any> = decor([
   subscribable,
   reactable,
   emittable,

@@ -4,47 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _babelHelperBuilderReactJsx = require('babel-helper-builder-react-jsx');
-
-var _babelHelperBuilderReactJsx2 = _interopRequireDefault(_babelHelperBuilderReactJsx);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-(function () {
-  var enterModule = require('react-hot-loader').enterModule;
-
-  enterModule && enterModule(module);
-})();
-
-const _default = function ({ types: t }) {
+exports.default = function ({ types: t }) {
   // convert React.createElement() => this.glossElement()
 
   const classBodyVisitor = {
-    ClassMethod(path, state) {
-      const GLOSS_ID = path.scope.generateUidIdentifier('gloss');
-      let hasJSX = false;
-
-      const { JSXNamespacedName, JSXElement } = (0, _babelHelperBuilderReactJsx2.default)({
-        post(state) {
-          // need path to determine if variable or tag
-          const stupidIsTag = state.tagName && state.tagName[0].toLowerCase() === state.tagName[0];
-          state.call = t.callExpression(GLOSS_ID, [stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr, ...state.args]);
-        }
-      });
-
-      path.traverse({
-        JSXNamespacedName,
-        JSXElement: {
-          enter() {
-            hasJSX = true;
-          },
-          exit: JSXElement.exit
-        }
-      }, state);
-
-      if (hasJSX) {
-        // add a fancyelement hook to start of render
-        path.node.body.body.unshift(t.variableDeclaration('const', [t.variableDeclarator(GLOSS_ID, t.identifier('this.glossElement.bind(this)'))]));
+    ClassMethod(path) {
+      // add a fancyelement hook to start of render
+      if (path.node.body.body) {
+        path.node.body.body.unshift(t.variableDeclaration('const', [t.variableDeclarator(t.identifier('__dom'), t.identifier('this.glossElement.bind(this)'))]));
       }
     }
   };
@@ -102,22 +69,4 @@ const _default = function ({ types: t }) {
     }
   };
 };
-
-exports.default = _default;
-;
-
-(function () {
-  var reactHotLoader = require('react-hot-loader').default;
-
-  var leaveModule = require('react-hot-loader').leaveModule;
-
-  if (!reactHotLoader) {
-    return;
-  }
-
-  reactHotLoader.register(_default, 'default', 'src/transform/index.js');
-  leaveModule(module);
-})();
-
-;
 //# sourceMappingURL=index.js.map

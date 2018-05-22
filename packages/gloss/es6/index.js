@@ -34,12 +34,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-(function () {
-  var enterModule = require('react-hot-loader').enterModule;
-
-  enterModule && enterModule(module);
-})();
-
 const Theme = exports.Theme = _theme2.default;
 const ThemeProvide = exports.ThemeProvide = _themeProvide2.default;
 const Helpers = exports.Helpers = Helpers_;
@@ -140,7 +134,6 @@ let Gloss = class Gloss {
         const ogrender = Child.prototype.render;
         if (Child.prototype.render) {
           Child.prototype.render = function (...args) {
-            window.createElement = this.glossElement.bind(this);
             if (hasTheme) {
               this.glossUpdateTheme(this.props);
             }
@@ -199,35 +192,6 @@ let Gloss = class Gloss {
 
 
   // runs niceStyleSheet on non-function styles
-
-  // @ts-ignore
-  __reactstandin__regenerateByEval(key, code) {
-    // @ts-ignore
-    this[key] = eval(code);
-  }
-
 };
 exports.default = Gloss;
-;
-
-(function () {
-  var reactHotLoader = require('react-hot-loader').default;
-
-  var leaveModule = require('react-hot-loader').leaveModule;
-
-  if (!reactHotLoader) {
-    return;
-  }
-
-  reactHotLoader.register(Theme, 'Theme', 'src/index.js');
-  reactHotLoader.register(ThemeProvide, 'ThemeProvide', 'src/index.js');
-  reactHotLoader.register(Helpers, 'Helpers', 'src/index.js');
-  reactHotLoader.register(DEFAULT_OPTS, 'DEFAULT_OPTS', 'src/index.js');
-  reactHotLoader.register(idCounter, 'idCounter', 'src/index.js');
-  reactHotLoader.register(uid, 'uid', 'src/index.js');
-  reactHotLoader.register(Gloss, 'Gloss', 'src/index.js');
-  leaveModule(module);
-})();
-
-;
 //# sourceMappingURL=index.js.map

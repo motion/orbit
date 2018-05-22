@@ -4,13 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = bindAutoBindMethods;
-
-(function () {
-  var enterModule = require('react-hot-loader').enterModule;
-
-  enterModule && enterModule(module);
-})();
-
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -98,23 +91,4 @@ function bindAutoBindMethodsFromArray(component) {
     component[autoBindKey] = bindAutoBindMethod(component, method);
   }
 }
-;
-
-(function () {
-  var reactHotLoader = require('react-hot-loader').default;
-
-  var leaveModule = require('react-hot-loader').leaveModule;
-
-  if (!reactHotLoader) {
-    return;
-  }
-
-  reactHotLoader.register(bindAutoBindMethod, 'bindAutoBindMethod', 'src/bindAutoBindMethods.js');
-  reactHotLoader.register(bindAutoBindMethodsFromMap, 'bindAutoBindMethodsFromMap', 'src/bindAutoBindMethods.js');
-  reactHotLoader.register(bindAutoBindMethods, 'bindAutoBindMethods', 'src/bindAutoBindMethods.js');
-  reactHotLoader.register(bindAutoBindMethodsFromArray, 'bindAutoBindMethodsFromArray', 'src/bindAutoBindMethods.js');
-  leaveModule(module);
-})();
-
-;
 //# sourceMappingURL=bindAutoBindMethods.js.map

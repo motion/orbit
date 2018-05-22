@@ -13,7 +13,6 @@
   "dependencies": {
     "@mcro/black": "^1.5.1",
     "@mcro/gloss": "^1.5.1",
-    "@mcro/hmr-view": "^1.5.1",
     "@mcro/router": "^1.5.1",
     "@mcro/ui": "^1.5.1",
     "@researchgate/react-intersection-observer": "^0.6.1",

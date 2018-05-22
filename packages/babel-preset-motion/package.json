@@ -4,8 +4,6 @@
   "version": "1.5.2",
   "dependencies": {
     "@mcro/gloss": "^1.5.1",
-    "@mcro/hmr": "^1.5.1",
-    "@mcro/hmr-view": "^1.5.1",
     "@mcro/babel-plugin-if": "^1.5.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-plugin-root-import": "^5.1.0",

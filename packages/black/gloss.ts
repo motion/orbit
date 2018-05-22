@@ -29,5 +29,5 @@ const gloss = new Gloss({
   },
 })
 
-export default gloss
 export const { decorator, createElement } = gloss
+export default gloss

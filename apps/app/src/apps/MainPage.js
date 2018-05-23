@@ -1,21 +1,21 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Highlights from './highlights/highlights'
-import Orbit from './orbit/orbit'
-import Peek from './peek/peek'
+import { HighlightsPage } from './HighlightsPage'
+import { OrbitPage } from './OrbitPage'
+import { PeekPage } from './PeekPage'
 import AppStore from '~/stores/appStore'
 
 @view.provide({
   appStore: AppStore,
 })
 @view
-export default class OrbitMain {
+export class MainPage {
   render() {
     return (
       <main>
-        <Highlights />
-        <Orbit />
-        <Peek />
+        <HighlightsPage />
+        <OrbitPage />
+        <PeekPage />
       </main>
     )
   }

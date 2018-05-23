@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import OrbitIcon from '~/apps/orbit/orbitIcon'
+import { OrbitIcon } from '~/apps/orbit/orbitIcon'
 import * as UI from '@mcro/ui'
-import Carousel from '~/components/carousel'
+import { Carousel } from '~/components/carousel'
 import { Bit } from '@mcro/models'
 
 const mapW = 700

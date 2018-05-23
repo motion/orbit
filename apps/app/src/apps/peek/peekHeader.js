@@ -15,7 +15,7 @@ class HeaderStore {
 @view({
   store: HeaderStore,
 })
-export default class PeekHeader extends React.Component {
+export class PeekHeader extends React.Component {
   render({ store, peekStore, title, date, subtitle, after }) {
     return (
       <header css={{ height: store.height }}>

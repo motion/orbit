@@ -1,7 +1,9 @@
+import '../public/styles/base.css'
+import '../public/styles/nucleo.css'
 import './createElement'
-import 'regenerator-runtime/runtime'
+// import 'regenerator-runtime/runtime'
 import 'isomorphic-fetch'
-import '@mcro/debug/inject'
+import '@mcro/debug/inject.js'
 import * as Constants from './constants'
 import { start } from './app'
 

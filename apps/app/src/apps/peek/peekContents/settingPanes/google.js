@@ -1,12 +1,12 @@
 import { view } from '@mcro/black'
-import GoogleMailSetting from './googleMail'
+import { GoogleMail } from './googleMail'
 
 @view
 export default class GoogleSetting {
   render() {
     return (
       <React.Fragment>
-        <GoogleMailSetting {...this.props} />
+        <GoogleMail {...this.props} />
       </React.Fragment>
     )
   }

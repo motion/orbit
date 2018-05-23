@@ -2,7 +2,7 @@ import { view } from '@mcro/black'
 import { isEqual } from 'lodash'
 
 @view
-export default class AnimateList {
+export class AnimateList {
   state = {
     children: [],
   }

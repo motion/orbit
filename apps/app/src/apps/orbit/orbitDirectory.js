@@ -2,9 +2,9 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 // import * as UI from '@mcro/ui'
 import { Person } from '@mcro/models'
-import OrbitDockedPane from './orbitDockedPane'
-import OrbitCard from './orbitCard'
-import Masonry from '~/views/masonry'
+import { OrbitDockedPane } from './orbitDockedPane'
+import { OrbitCard } from './orbitCard'
+import { Masonry } from '~/views/masonry'
 
 class OrbitDirectoryStore {
   setGetResults = react(
@@ -27,7 +27,7 @@ class OrbitDirectoryStore {
 @view({
   store: OrbitDirectoryStore,
 })
-export default class OrbitDirectory {
+export class OrbitDirectory {
   render({ store }) {
     log(`DIRECTORY --------`)
     return (

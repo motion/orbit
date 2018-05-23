@@ -3,7 +3,7 @@ import { view, react } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import { Bit } from '~/app'
 import * as Collapse from '../views/collapse'
-import Repos from './repos'
+import { GithubRepos } from './githubRepos'
 
 class OrgStore {
   open = false
@@ -23,7 +23,7 @@ class OrgStore {
 @view({
   store: OrgStore,
 })
-export default class Org {
+export class GithubOrg {
   render({ store, githubStore, name }) {
     const repos = reverse(sortBy(store.repos || [], 'updatedAt'))
     githubStore.syncVersion
@@ -51,7 +51,7 @@ export default class Org {
           </UI.Title>
         </bar>
         <Collapse.Body open={store.open}>
-          <Repos repos={repos} />
+          <GithubRepos repos={repos} />
         </Collapse.Body>
       </org>
     )

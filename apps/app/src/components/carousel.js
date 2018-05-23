@@ -1,9 +1,9 @@
 import { view } from '@mcro/black'
-import OrbitCard from '~/apps/orbit/orbitCard'
+import { OrbitCard } from '~/apps/orbit/orbitCard'
 
 @view.attach('appStore')
 @view
-export default class Carousel {
+export class Carousel {
   render({ items, appStore }) {
     return (
       <carousel>

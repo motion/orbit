@@ -1,4 +1,4 @@
-import '@mcro/debug/inject'
+import '@mcro/debug/inject.js'
 
 export * from './Desktop'
 export * from './Electron'

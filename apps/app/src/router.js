@@ -1,12 +1,12 @@
 import Router from '@mcro/router'
-import Auth from '~/apps/auth'
-import Main from '~/apps/main'
+import { AuthPage } from '~/apps/AuthPage'
+import { MainPage } from '~/apps/MainPage'
 
 function runRouter() {
   return new Router({
     routes: {
-      '/': Main,
-      '/auth': Auth,
+      '/': MainPage,
+      '/auth': AuthPage,
     },
   })
 }

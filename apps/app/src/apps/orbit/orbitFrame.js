@@ -3,8 +3,8 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import * as Constants from '~/constants'
-import OrbitArrow from './orbitArrow'
-import OrbitIndicator from './orbitIndicator'
+import { OrbitArrow } from './orbitArrow'
+import { OrbitIndicator } from './orbitIndicator'
 
 const SHADOW_PAD = 85
 const ARROW_PAD = 15
@@ -41,7 +41,7 @@ const showingAnimation = {
 @view({
   store: FrameStore,
 })
-export default class OrbitFrame {
+export class OrbitFrame {
   render({ store, children, theme, headerBg }) {
     if (!store.animationState) {
       return null

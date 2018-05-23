@@ -3,7 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
-import ControlButton from '~/views/controlButton'
+import { ControlButton } from '~/views/controlButton'
 
 class HeaderStore {
   inputRef = null
@@ -40,7 +40,7 @@ class HeaderStore {
 @view({
   headerStore: HeaderStore,
 })
-export default class OrbitHeader {
+export class OrbitHeader {
   handleKeyDown = e => {
     // up/down
     const { keyCode } = e

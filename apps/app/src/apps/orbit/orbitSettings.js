@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import { partition } from 'lodash'
-import SettingCard from './orbitSettingCard'
+import { OrbitSettingCard } from './orbitSettingCard'
 import * as UI from '@mcro/ui'
 
 const Title = props => (
@@ -10,7 +10,7 @@ const Title = props => (
 @UI.injectTheme
 @view.attach('appStore')
 @view
-export default class OrbitSettings {
+export class OrbitSettings {
   isActive = integration =>
     this.props.appStore.settings[integration.id] &&
     this.props.appStore.settings[integration.id].token
@@ -82,7 +82,7 @@ export default class OrbitSettings {
     }
     const { activeIntegrations, inactiveIntegrations } = this.splitActiveResults
     const integrationCard = all => (setting, index, offset) => (
-      <SettingCard
+      <OrbitSettingCard
         key={index}
         index={index}
         offset={offset}

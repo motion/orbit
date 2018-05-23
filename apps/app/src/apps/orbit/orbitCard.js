@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitIcon from './orbitIcon'
+import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
 import { App } from '@mcro/all'
 import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
@@ -75,7 +75,7 @@ const tinyProps = {
 @view({
   store: OrbitCardStore,
 })
-export default class OrbitCard {
+export class OrbitCard {
   static defaultProps = {
     borderRadius: 8,
   }

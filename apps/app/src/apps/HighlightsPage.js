@@ -3,9 +3,8 @@ import { view, react } from '@mcro/black'
 import quadtree from 'simple-quadtree'
 import { Helpers, App, Desktop, Swift } from '@mcro/all'
 // import { LINE_Y_ADJ, toTarget } from './helpers'
-import OCRWord from './ocrWord'
-import OCRLine from './ocrLine'
-import ner from '~/stores/language/ner'
+import { OCRWord } from './highlights/ocrWord'
+import { OCRLine } from './highlights/ocrLine'
 
 const log = debug('highlights')
 
@@ -22,17 +21,17 @@ const log = debug('highlights')
       return Desktop.activeOCRWords.map(i => i[4]).join(' ')
     }
 
-    setHighlightWords = react(
-      () => this.content,
-      () => {
-        App.setHighlightWords(
-          ner(this.content).reduce(
-            (acc, item) => ({ ...acc, [item]: true }),
-            {},
-          ),
-        )
-      },
-    )
+    // setHighlightWords = react(
+    //   () => this.content,
+    //   () => {
+    //     App.setHighlightWords(
+    //       ner(this.content).reduce(
+    //         (acc, item) => ({ ...acc, [item]: true }),
+    //         {},
+    //       ),
+    //     )
+    //   },
+    // )
 
     // react({ immediate: true, log: 'state' })
     // setHovered = [
@@ -120,7 +119,7 @@ const log = debug('highlights')
     }
   },
 })
-export default class HighlightsPage {
+export class HighlightsPage {
   render({ store }) {
     return (
       <frame if={store.showAll}>

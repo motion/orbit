@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import OrbitCard from '~/apps/orbit/orbitCard'
+import { OrbitCard } from '~/apps/orbit/orbitCard'
 import { throttle } from 'lodash'
 
 class ResultsStore {
@@ -26,7 +26,7 @@ class ResultsStore {
 @view({
   store: ResultsStore,
 })
-export default class Results {
+export class ResultsPage {
   frameRef = null
   state = {
     resultsRef: null,

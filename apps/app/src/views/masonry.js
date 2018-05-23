@@ -7,7 +7,7 @@ const gridGap = 6
 const gridColumnGap = 8
 
 @view.ui
-export default class Masonry extends React.Component {
+export class Masonry extends React.Component {
   state = {
     measured: false,
   }

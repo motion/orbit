@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitIcon from './orbitIcon'
+import { OrbitIcon } from './orbitIcon'
 import { App } from '@mcro/all'
 
 @view.attach('appStore')
 @UI.injectTheme
 @view
-export default class Card extends React.Component {
+export class OrbitSettingCard extends React.Component {
   hoverSettler = this.props.appStore.getHoverSettler()
 
   setRef = ref => {

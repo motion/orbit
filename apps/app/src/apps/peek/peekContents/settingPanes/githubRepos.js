@@ -85,7 +85,7 @@ class Repo {
     showAll = false
   },
 })
-export default class Repos {
+export class GithubRepos {
   render({ repos, store }) {
     const oneMonth = 2628000000
     const recent = store.showAll

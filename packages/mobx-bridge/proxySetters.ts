@@ -1,5 +1,4 @@
 export function proxySetters(klass) {
-  console.log(klass)
   for (const stateKey of Object.keys(klass.state)) {
     // klass.setXState
     const setKey = `set${stateKey[0].toUpperCase()}${stateKey.slice(1)}`

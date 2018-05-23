@@ -47,7 +47,7 @@ const postfix = [
 
 @UI.injectTheme
 @view
-export default class OrbitHomeHeader {
+export class OrbitHomeHeader {
   render({ paneStore, theme }) {
     const locale = 'en-US'
     const now = new Date()

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { HL_PAD, TOP_BAR_PAD } from './helpers'
-import { App, Desktop, Helpers } from '@mcro/all'
+import { App, Helpers } from '@mcro/all'
 
 @view
-export default class OCRWord {
+export class OCRWord {
   render({ item, store: { hoveredWord } }) {
     const [x, y, width, height, word, index, color] = item
     const key = Helpers.wordKey(item)

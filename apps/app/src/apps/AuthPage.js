@@ -9,7 +9,7 @@ import { capitalize } from 'lodash'
 const service = (window.location + '').split('service=')[1]
 
 @view
-export default class AuthPage {
+export class AuthPage {
   link = async () => {
     console.log('linking service...', service)
     const info = await passportLink(`${Constants.API_URL}/auth/${service}`)

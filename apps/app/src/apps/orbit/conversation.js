@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 
 @view
-export default class ConversationRenderer {
+export class Conversation {
   render({ thing }) {
     return (
       <conversation>

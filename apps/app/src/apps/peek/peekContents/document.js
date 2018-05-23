@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import PeekHeader from '../peekHeader'
+import { PeekHeader } from '../peekHeader'
 
 @view
 export class Document {

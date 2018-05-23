@@ -4,7 +4,7 @@ import OrbitDivider from './orbitDivider'
 import * as Constants from '~/constants'
 
 @view
-export default class SlideUpDrawer {
+export class SlideUpDrawer {
   static defaultProps = {
     slideAmount: 100,
   }

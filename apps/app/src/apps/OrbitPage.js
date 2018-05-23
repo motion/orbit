@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import OrbitDocked from './orbitDocked'
-import OrbitContext from './orbitContext'
-import OrbitStore from './orbitStore'
+import OrbitDocked from './orbit/orbitDocked'
+import OrbitContext from './orbit/orbitContext'
+import OrbitStore from './orbit/orbitStore'
 
 @view.attach('appStore')
 @view.provide({
   orbitStore: OrbitStore,
 })
 @view
-export default class Orbit {
+export class OrbitPage {
   render() {
     return (
       <React.Fragment>

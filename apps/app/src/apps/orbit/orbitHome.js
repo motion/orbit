@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import * as UI from '@mcro/ui'
 import { Bit } from '@mcro/models'
-import OrbitCard from './orbitCard'
-import Masonry from '~/views/masonry'
-import OrbitDockedPane from './orbitDockedPane'
+import { OrbitCard } from './orbitCard'
+import { Masonry } from '~/views/masonry'
+import { OrbitDockedPane } from './orbitDockedPane'
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -54,7 +53,7 @@ class OrbitHomeStore {
 @view({
   store: OrbitHomeStore,
 })
-export default class OrbitHome {
+export class OrbitHome {
   render({ store }) {
     log(`HOME---------------`)
     return (

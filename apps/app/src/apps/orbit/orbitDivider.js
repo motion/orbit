@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export default class OrbitDivider {
+export class OrbitDivider {
   render({ height, ...props }) {
     return (
       <barOuter {...props}>

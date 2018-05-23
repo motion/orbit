@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 const HEIGHT = 30
 
 @view
-export default class Drawer {
+export class Drawer {
   static defaultProps = {
     theme: 'dark',
     background: '#333',

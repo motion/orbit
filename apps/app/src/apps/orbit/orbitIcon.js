@@ -38,7 +38,7 @@ const adjust = name => {
   }
 }
 
-export default ({ icon, size = 25, style, ...props }) => {
+export const OrbitIcon = ({ icon, size = 25, style, ...props }) => {
   const sizeProps = {
     width: size,
     height: size,

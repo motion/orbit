@@ -8,7 +8,7 @@ const { SHADOW_PAD } = Constants
 const iWidth = 4
 
 @view
-export default class OrbitIndicator {
+export class OrbitIndicator {
   render({ orbitOnLeft }) {
     if (Date.now() - Desktop.state.lastAppChange < 100) {
       return null

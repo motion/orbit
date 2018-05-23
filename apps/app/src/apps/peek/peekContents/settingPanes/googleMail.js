@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import OrbitIcon from '~/apps/orbit/orbitIcon'
+import { OrbitIcon } from '~/apps/orbit/orbitIcon'
 
 @view({
   store: class {
@@ -17,7 +17,7 @@ import OrbitIcon from '~/apps/orbit/orbitIcon'
     }
   },
 })
-export default class GoogleMailSetting {
+export class GoogleMail {
   render({ store, setting, update }) {
     const { syncSettings } = setting.values
     return (

@@ -1,6 +1,6 @@
 // 🐛 note: dont import router or app here
 // it causes the entire app to be imported before boot
-import '@mcro/black/mlog'
+import '@mcro/black/mlog.js'
 import * as React from 'react'
 import * as Mobx from 'mobx'
 import * as MobxUtils from 'mobx-utils'

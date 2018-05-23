@@ -166,7 +166,6 @@ function getAutoRunDescriptors(obj) {
 }
 
 function decorateClassWithAutomagic(obj: MagicalObject) {
-  console.log('decorating', obj)
   const descriptors = {
     ...Object.keys(obj).reduce(
       (a, b) => ({ ...a, [b]: Object.getOwnPropertyDescriptor(obj, b) }),

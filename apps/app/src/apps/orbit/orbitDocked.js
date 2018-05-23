@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitHome from './orbitHome'
-import OrbitSettings from './orbitSettings'
-import OrbitHomeHeader from './orbitHomeHeader'
-import OrbitHeader from './orbitHeader'
-import OrbitSearchResults from './orbitSearchResults'
-import OrbitDirectory from './orbitDirectory'
+import { OrbitHome } from './orbitHome'
+import { OrbitSettings } from './orbitSettings'
+import { OrbitHomeHeader } from './orbitHomeHeader'
+import { OrbitHeader } from './orbitHeader'
+import { OrbitSearchResults } from './orbitSearchResults'
+import { OrbitDirectory } from './orbitDirectory'
 import { App } from '@mcro/all'
 
 const SHADOW_PAD = 85

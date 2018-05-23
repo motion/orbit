@@ -1,6 +1,6 @@
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
-import '@mcro/black/mlog'
+import '@mcro/black/mlog.js'
 import * as Mobx from 'mobx'
 import debug from '@mcro/debug'
 

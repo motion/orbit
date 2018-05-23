@@ -10,7 +10,7 @@ const config = {
     filename: 'bundle.js',
     publicPath: '/',
   },
-  devtool: false, //'cheap-eval-source-map',
+  devtool: 'cheap-module-source-map', //'cheap-eval-source-map',
   resolveLoader: {
     modules: [Path.join(__dirname, '..', 'node_modules')],
   },
@@ -19,14 +19,25 @@ const config = {
       {
         test: /\.js$/,
         use: ['babel-loader'],
+        exclude: ['node_modules'],
       },
       {
         test: /\.tsx?$/,
-        use: ['awesome-typescript-loader', 'babel-loader'],
+        use: ['ts-loader', 'babel-loader'],
+        exclude: ['node_modules'],
       },
       {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+      },
+      {
+        test: /\.(ttf|eot|woff|woff2)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: 'fonts/[name].[ext]',
+          },
+        },
       },
       {
         test: /\.svg$/,

@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitFrame from './orbitFrame'
-import OrbitSearchResults from './orbitSearchResults'
-import OrbitHeader from './orbitHeader'
+import { OrbitFrame } from './orbitFrame'
+import { OrbitSearchResults } from './orbitSearchResults'
+import { OrbitHeader } from './orbitHeader'
 import { App, Desktop } from '@mcro/all'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '~/views'
-import Results from '~/apps/results/results'
+import { ResultsPage } from '~/apps/ResultsPage'
 import * as Constants from '~/constants'
 
 class PaneStore {
@@ -74,7 +74,7 @@ class Orbit {
                 {Desktop.appState.title}
               </SubTitle>
             </contextHeader>
-            <Results />
+            <ResultsPage />
           </orbitContext>
           <OrbitSearchResults name="context-search" parentPane="context" />
         </orbitInner>

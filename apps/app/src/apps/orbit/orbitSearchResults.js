@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import OrbitCard from './orbitCard'
 import { App } from '@mcro/all'
-import OrbitDockedPane from './orbitDockedPane'
+import { OrbitCard } from './orbitCard'
+import { OrbitDockedPane } from './orbitDockedPane'
 
 class SearchStore {
   state = react(
@@ -25,7 +25,7 @@ class SearchStore {
 @view({
   searchStore: SearchStore,
 })
-export default class OrbitSearchResults {
+export class OrbitSearchResults {
   render({ searchStore, name }) {
     if (!searchStore.state) {
       return null

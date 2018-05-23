@@ -7,7 +7,7 @@ import * as Constants from '~/constants'
 const { SHADOW_PAD } = Constants
 
 @view
-export default class OrbitArrow {
+export class OrbitArrow {
   render({ hidden, borderColor, background, orbitOnLeft, arrowSize, css }) {
     const showing = !hidden
     let arrowStyle
@@ -57,7 +57,9 @@ export default class OrbitArrow {
           transform: {
             y: arrowTransformY || 0,
             x: showing
-              ? orbitOnLeft ? -0.5 : 0.5
+              ? orbitOnLeft
+                ? -0.5
+                : 0.5
               : (orbitOnLeft ? -arrowSize : arrowSize) / 3,
           },
           ...css,

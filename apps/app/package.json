@@ -40,8 +40,6 @@
     "mobx-utils": "^4.0.1",
     "pluralize": "^7.0.0",
     "primus": "^7.1.1",
-    "react": "^16.3.2",
-    "react-dom": "^16.2.0",
     "react-fast-compare": "^1.0.0",
     "react-hot-loader": "^4.2.0",
     "reconnecting-websocket": "^3.2.2",
@@ -51,5 +49,9 @@
   },
   "devDependencies": {
     "@mcro/dev": "*"
+  },
+  "peerDependencies": {
+    "react": "16.3.2",
+    "react-dom": "16.3.2"
   }
 }

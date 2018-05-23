@@ -2,9 +2,9 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
-import * as PeekContents from './peekContents'
+import * as PeekContents from './peek/peekContents'
 import { capitalize } from 'lodash'
-import PeekFrame from './peekFrame'
+import PeekFrame from './peek/peekFrame'
 
 class PeekStore {
   headerHeight = 0
@@ -68,7 +68,7 @@ class PeekStore {
   peekStore: PeekStore,
 })
 @view
-export default class PeekPage {
+export class PeekPage {
   render({ peekStore, appStore }) {
     if (!peekStore.state) {
       return null

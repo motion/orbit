@@ -86,7 +86,7 @@ class Tab {
 }
 
 @view
-export default class SidebarTitle {
+export class SidebarTitle {
   render({ after, image, backProps, noBack, icon, subtitle, title, onBack }) {
     const titleIsString = typeof title === 'string'
     const titleIsElement = React.isValidElement(title)

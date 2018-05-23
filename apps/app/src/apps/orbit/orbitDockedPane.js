@@ -18,8 +18,8 @@ class DockedPaneStore {
 @view({
   store: DockedPaneStore,
 })
-export default class OrbitDockedPane {
-  render({ children, store, style, name }) {
+export class OrbitDockedPane {
+  render({ children, store, style }) {
     return (
       <pane $isActive={store.isActive} style={style}>
         {children}

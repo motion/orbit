@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
-import WindowControls from '~/views/windowControls'
+import { WindowControls } from '~/views/windowControls'
 import * as Constants from '~/constants'
 
 const SHADOW_PAD = 50

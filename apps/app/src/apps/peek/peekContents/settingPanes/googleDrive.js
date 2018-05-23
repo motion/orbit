@@ -129,7 +129,7 @@ class Folder {
     }
   },
 })
-export default class Drive {
+export class GoogleDrive {
   render({ store }) {
     const loading = !store.folders
 

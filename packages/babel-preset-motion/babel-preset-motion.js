@@ -69,6 +69,5 @@ module.exports = function(context, givenOpts) {
   config.plugins = config.plugins.filter(x => !!x)
   config.presets = config.presets.filter(x => !!x)
 
-  console.log('config', config)
   return config
 }

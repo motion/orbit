@@ -1,20 +1,20 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Bar } from './bar'
-import { Circle } from './circle'
+import { ProgressBar } from './progressBar'
+import { ProgressCircle } from './progressCircle'
 
 @view.ui
 export class Progress extends React.Component {
-  static Bar = Bar
-  static Circle = Circle
+  static Bar = ProgressBar
+  static Circle = ProgressCircle
 
   render() {
     const { type, ...props } = this.props
 
     if (type === 'circle') {
-      return <Circle {...props} />
+      return <ProgressCircle {...props} />
     } else if (type === 'bar') {
-      return <Bar {...props} />
+      return <ProgressBar {...props} />
     }
 
     throw new Error('Invalid progress type given')

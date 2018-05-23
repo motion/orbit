@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
-import offset from '~/helpers/offset'
+import { offset } from '../helpers/offset'
 import throttle from 'raf-throttle'
 
 // type Props = {

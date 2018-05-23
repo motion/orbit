@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Tilt from 'react-tilt'
-import HoverGlow from './hoverGlow'
+import { HoverGlow } from './hoverGlow'
 
 // type Props = {
 //   width: number,

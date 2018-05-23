@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { object, string } from 'prop-types'
-import getThemeFromContext from './getThemeFromContext'
+import { getThemeFromContext } from './getThemeFromContext'
 
 export class Theme extends React.Component {
   static contextTypes = {

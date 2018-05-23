@@ -52,7 +52,6 @@ class AppRoot {
   async dispose() {}
 
   render() {
-    console.log('rendering')
     ReactDOM.render(
       <ThemeProvide {...Themes}>
         <UI.Theme name="light">

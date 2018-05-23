@@ -1,4 +1,4 @@
-import BaseComponent from './BaseComponent'
+import { BaseComponent } from './BaseComponent'
 
 const EVENT_KEYS = {
   onReady: 'on-ready',
@@ -7,7 +7,7 @@ const EVENT_KEYS = {
   onQuit: 'quit',
 }
 
-export default class App extends BaseComponent {
+export class App extends BaseComponent {
   mount() {
     this.app = this.root.app
     this.update()

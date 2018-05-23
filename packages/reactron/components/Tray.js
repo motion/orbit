@@ -1,5 +1,5 @@
-import { Tray } from 'electron'
-import BaseComponent from './BaseComponent'
+import { Tray as ElectronTray } from 'electron'
+import { BaseComponent } from './BaseComponent'
 
 const EVENT_KEYS = {
   onClick: 'click',
@@ -19,12 +19,12 @@ const EVENT_KEYS = {
   onDragEnd: 'drag-end',
 }
 
-export default class TrayElement extends BaseComponent {
+export class Tray extends BaseComponent {
   mount() {
     if (!this.props.image) {
       throw new Error(`Expects an image prop with path to image file`)
     }
-    this.tray = new Tray(this.props.image)
+    this.tray = new ElectronTray(this.props.image)
   }
 
   propHandlers = {

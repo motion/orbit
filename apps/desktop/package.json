@@ -7,8 +7,7 @@
     "build": "tsc",
     "watch": "npm run build -- --watch",
     "start": "./start.sh",
-    "start-prod": "NODE_ENV=production node index.js",
-    "build-electron": "electron-rebuild -v 1.7.10"
+    "start-prod": "NODE_ENV=production node index.js"
   },
   "dependencies": {
     "@mcro/all": "*",
@@ -64,9 +63,7 @@
     "recursive-readdir": "^2.2.2",
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.4.16",
-    "sqlite": "2.9.1",
-    "sqlite3": "^4.0.0",
-    "static-kdtree": "1.0.2",
+    "sqlite": "2.9.2",
     "sudo-prompt": "^7.1.1",
     "ws": "^3.3.3"
   },

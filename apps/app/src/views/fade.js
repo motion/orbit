@@ -21,13 +21,6 @@ export class Fade extends React.Component {
     const movingForward = previousIndex < currentIndex
     const x = (index - currentIndex) * width / 5
 
-    // console.log(
-    //   'Fade:',
-    //   index,
-    //   x,
-    //   movingBack ? 'BACK' : movingForward ? 'FORWARD' : ''
-    // )
-
     return (
       <fade
         css={{

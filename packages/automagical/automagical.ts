@@ -157,7 +157,6 @@ function getAutoRunDescriptors(obj) {
   const protoDescriptors = collectGetterPropertyDescriptors(
     Object.getPrototypeOf(obj),
   )
-  console.log(obj, protoDescriptors)
   return Object.keys(protoDescriptors)
     .filter(
       key => protoDescriptors[key].get && protoDescriptors[key].get.IS_AUTO_RUN,
@@ -503,7 +502,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return
       }
       if (isIf) {
-        console.log('reactin', reactValArg)
+        console.log('reactinf', reactValArg)
       }
       reactionID = uid()
       const curID = reactionID

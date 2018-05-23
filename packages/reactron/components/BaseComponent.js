@@ -3,7 +3,7 @@ import configureEventHandler from '../utils/configureEventHandler'
 
 // sort of like our own mini react API
 
-export default class BaseComponent {
+export class BaseComponent {
   constructor(root, props) {
     this._id = `${this.constructor.name}${Math.random()}`
     this.root = root

@@ -1,4 +1,4 @@
-import BaseComponent from './BaseComponent'
+import { BaseComponent } from './BaseComponent'
 import { BrowserWindow } from 'electron'
 import debug from 'debug'
 import isEqual from 'lodash.isequal'
@@ -20,7 +20,7 @@ const properCase = str => `${str[0].toUpperCase()}${str.slice(1)}`
 // these should only load once, even across many windows
 const ALL_EXTENSIONS = new Set()
 
-export default class Window extends BaseComponent {
+export class Window extends BaseComponent {
   mount() {
     this.extensionNames = {}
 

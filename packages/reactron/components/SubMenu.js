@@ -1,7 +1,7 @@
-import BaseComponent from './BaseComponent'
+import { BaseComponent } from './BaseComponent'
 import { Menu, MenuItem } from 'electron'
 
-export default class SubMenu extends BaseComponent {
+export class SubMenu extends BaseComponent {
   mount() {
     this.update()
   }

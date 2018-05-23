@@ -1,8 +1,8 @@
-import BaseComponent from './BaseComponent'
+import { BaseComponent } from './BaseComponent'
 import { MenuItem as ElectronMenuItem } from 'electron'
 import EventEmitter from 'events'
 
-export default class MenuItem extends BaseComponent {
+export class MenuItem extends BaseComponent {
   mount() {
     this.emitter = new EventEmitter()
     this.update()

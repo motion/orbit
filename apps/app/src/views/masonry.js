@@ -36,7 +36,6 @@ export default class Masonry extends React.Component {
   render() {
     const { measured } = this.state
     const { children, ...props } = this.props
-    log(`masonry`)
     if (!measured) {
       return (
         <grid ref={ref => this.setGrid(ref)} {...props}>
@@ -51,7 +50,10 @@ export default class Masonry extends React.Component {
       >
         {React.Children.map(children, (child, index) => {
           return React.cloneElement(child, {
-            style: this.styles[index],
+            style: {
+              ...this.styles[index],
+              ...child.props.style,
+            },
           })
         })}
       </grid>

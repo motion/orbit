@@ -67,6 +67,11 @@ export default class OrbitHome {
               total={store.results.length}
               hoverToSelect
               expanded
+              style={
+                index < 2 && {
+                  gridColumnEnd: 'span 2',
+                }
+              }
             />
           ))}
         </Masonry>

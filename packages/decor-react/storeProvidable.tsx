@@ -5,6 +5,7 @@ import difference from 'lodash/difference'
 import isEqual from 'lodash/isEqual'
 import hoistStatics from 'hoist-non-react-statics'
 import { object } from 'prop-types'
+import global from 'global'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
@@ -23,7 +24,7 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
 })
 
 // @ts-ignore
-window.loadedStores = new Set()
+global.loadedStores = new Set()
 const storeHMRCache = {}
 
 export function storeProvidable(options, Helpers) {
@@ -107,7 +108,7 @@ export function storeProvidable(options, Helpers) {
           if (this.stores === null) {
             return
           }
-          window.loadedStores.add(this)
+          global.loadedStores.add(this)
           this.mounted = true
           this.mountStores()
           // if (global.Black) {
@@ -132,7 +133,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         componentWillUnmount() {
-          window.loadedStores.delete(this)
+          global.loadedStores.delete(this)
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()

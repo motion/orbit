@@ -62,6 +62,9 @@ class ElectronStore {
   clearApp = [
     () => this.clear,
     async (_, { when, sleep }) => {
+      if (!this.appRef) {
+        throw react.cancel
+      }
       this.appRef.hide()
       const getState = () => ({
         ...Desktop.appState,

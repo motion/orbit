@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Button from './button'
+import { Button } from './button'
 import { Provider } from '@mcro/react-tunnel'
-import inject from './helpers/inject'
-import Surface from './surface'
+import { inject } from './helpers/inject'
+import { Surface } from './surface'
 
 // type Props = {
 //   active?: number,
@@ -24,7 +24,7 @@ import Surface from './surface'
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Row extends React.Component {
+export class Row extends React.Component {
   state = {
     active: null,
   }

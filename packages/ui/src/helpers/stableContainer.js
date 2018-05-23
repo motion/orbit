@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export default class StableContainer extends React.Component {
+export class StableContainer extends React.Component {
   componentWillMount() {
     this.setState({
       children: this.props.children,

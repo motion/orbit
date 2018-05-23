@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class Avatar {
+export class Avatar {
   static defaultProps = {
     size: 75,
   }

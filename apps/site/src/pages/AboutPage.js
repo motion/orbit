@@ -30,7 +30,7 @@ class AboutIntro {
 }
 
 @view
-export default class FeaturesPage {
+export class AboutPage {
   render() {
     return (
       <React.Fragment>

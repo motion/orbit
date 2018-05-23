@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import ListItem from './listItem'
+import { ListItem } from './listItem'
 // import { List as VirtualList } from 'react-virtualized'
-import parentSize from '~/helpers/parentSize'
-import Separator from './separator'
+import { parentSize } from './helpers/parentSize'
+import { Separator } from './separator'
 import { isArrayLike } from 'mobx'
 // import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 import { throttle, debounce } from 'lodash'
@@ -57,7 +57,7 @@ const SCROLL_BAR_WIDTH = 16
 
 @parentSize('virtualized', 'parentSize')
 @view.ui
-class List extends React.PureComponent {
+export class List extends React.PureComponent {
   static Item = ListItem
 
   static defaultProps = {
@@ -588,5 +588,3 @@ class List extends React.PureComponent {
     },
   }
 }
-
-export default List

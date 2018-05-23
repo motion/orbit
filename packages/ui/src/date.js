@@ -5,7 +5,7 @@ import timeago from 'time-ago'
 const { ago } = timeago()
 
 @view.ui
-export default class DateView extends React.PureComponent {
+export class Date extends React.PureComponent {
   static format = text => {
     const date = new Date(text)
     const dateWords = ago(date)

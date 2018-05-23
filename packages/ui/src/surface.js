@@ -1,11 +1,11 @@
 import * as React from 'react'
-import Theme from './helpers/theme'
+import { Theme } from './helpers/theme'
 import { view } from '@mcro/black'
 import $ from 'color'
-import Icon from './icon'
-import HoverGlow from './effects/hoverGlow'
-import Glint from './effects/glint'
-import Popover from './popover'
+import { Icon } from './icon'
+import { HoverGlow } from './effects/hoverGlow'
+import { Glint } from './effects/glint'
+import { Popover } from './popover'
 import { object } from 'prop-types'
 
 // export type Props = {
@@ -106,7 +106,7 @@ const hasChildren = children =>
     : !!children
 
 @view.ui
-export default class Surface extends React.PureComponent {
+export class Surface extends React.PureComponent {
   static contextTypes = {
     provided: object,
   }

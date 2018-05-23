@@ -584,7 +584,7 @@ export class SectionFeatureIntelligence extends React.Component {
 }
 
 @view
-export default class FeaturesPage {
+export class FeaturesPage {
   render() {
     return (
       <React.Fragment>

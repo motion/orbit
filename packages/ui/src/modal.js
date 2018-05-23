@@ -1,9 +1,9 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import Portal from './helpers/portal'
+import { Portal } from './helpers/portal'
 
 @view.ui
-export default class Modal {
+export class Modal {
   render() {
     const { portalProps, bgProps, children, ...props } = this.props
 

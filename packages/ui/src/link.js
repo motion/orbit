@@ -6,7 +6,7 @@ import { view, Constants } from '@mcro/black'
 // }
 
 @view
-export default class Link extends React.Component {
+export class Link extends React.Component {
   isActive = false
 
   componentDidMount() {

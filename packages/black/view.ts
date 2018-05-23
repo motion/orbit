@@ -24,8 +24,6 @@ const uiContext = [
   },
 ]
 
-console.log('decorator from gloss is', decorator)
-
 const glossPlugin = () => ({ decorator })
 const decorations = (
   enable: { ui?: boolean; mobx?: boolean; magic?: boolean } = {},

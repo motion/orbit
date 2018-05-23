@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { range } from 'lodash'
+
+const range = num => [...new Array(num)]
 
 @view.ui
-export default class FakeText extends React.PureComponent {
+export class FakeText extends React.PureComponent {
   static defaultProps = {
     minWidth: 40,
     maxWidth: 100,
@@ -18,8 +19,10 @@ export default class FakeText extends React.PureComponent {
       return this.lines[key]
     }
     const { minWidth, maxWidth } = this.props
-    this.lines[key] = ((Math.random() * (maxWidth - minWidth) + minWidth) ^
-      0).toString()
+    this.lines[key] = (
+      (Math.random() * (maxWidth - minWidth) + minWidth) ^
+      0
+    ).toString()
     return this.lines[key]
   }
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import inject from '../helpers/inject'
+import { inject } from '../helpers/inject'
 
 const BAR_HEIGHT = 8
 const BAR_WIDTH = 30
@@ -8,7 +8,7 @@ const BAR_INVISIBLE_PAD = 5
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Toggle extends React.Component {
+export class Toggle extends React.Component {
   static defaultProps = {
     dotSize: 14,
     onChange: _ => _,

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Surface from './surface'
+import { Surface } from './surface'
 
 const opposite = direction =>
   ({
@@ -34,7 +34,7 @@ const opposite = direction =>
 // }
 
 @view.ui
-export default class Drawer extends React.PureComponent {
+export class Drawer extends React.PureComponent {
   static defaultProps = {
     size: 400,
     from: 'left',

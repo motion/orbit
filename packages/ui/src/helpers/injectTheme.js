@@ -1,12 +1,10 @@
 import React from 'react'
-import { object, string } from 'prop-types'
+import { object } from 'prop-types'
 
-export default View => {
-  return class ThemeInject extends React.Component {
+export const injectTheme = View => {
+  class ThemeInject extends React.Component {
     static contextTypes = {
-      uiActiveThemeName: string,
       uiActiveTheme: object,
-      uiThemes: object,
     }
 
     render() {
@@ -14,4 +12,13 @@ export default View => {
       return <View {...this.props} theme={theme} />
     }
   }
+  return new Proxy(ThemeInject, {
+    set(target, method, value) {
+      View[method] = value
+      return true
+    },
+    get(target, method) {
+      return Reflect.get(target, method)
+    },
+  })
 }

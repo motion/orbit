@@ -2,7 +2,7 @@ import * as React from 'react'
 import { object, string } from 'prop-types'
 import getThemeFromContext from './getThemeFromContext'
 
-export default class Theme extends React.Component {
+export class Theme extends React.Component {
   static contextTypes = {
     uiActiveThemeName: string,
     uiActiveTheme: object,

@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import getTarget from './helpers/getTarget'
-import Portal from './helpers/portal'
+import { getTarget } from './helpers/getTarget'
+import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
-import Arrow from './arrow'
-import SizedSurface from './sizedSurface'
-import Theme from './helpers/theme'
+import { Arrow } from './arrow'
+import { SizedSurface } from './sizedSurface'
+import { Theme } from './helpers/theme'
 import * as PropTypes from 'prop-types'
 
 // export type Props = {
@@ -81,7 +81,7 @@ const getShadow = (shadow, elevation) => {
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @view.ui
-class Popover extends React.PureComponent {
+export class Popover extends React.PureComponent {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,
@@ -899,5 +899,3 @@ class Popover extends React.PureComponent {
 }
 
 Popover.acceptsHovered = 'open'
-
-export default Popover

@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { object } from 'prop-types'
-import Surface from '../surface'
+import { Surface } from '../surface'
 
 const resolveFormValues = obj =>
   Object.keys(obj).reduce(
     (acc, key) => ({ ...acc, [key]: obj[key] && obj[key]() }),
-    {}
+    {},
   )
 
-export default class Form extends React.Component {
+export class Form extends React.Component {
   static contextTypes = {
     provided: object,
   }

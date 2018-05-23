@@ -17,9 +17,9 @@ export type Options = {
 
 const DEFAULT_OPTS = {}
 
-let idCounter = 0
+let idCounter = 1
 function uid() {
-  return idCounter++
+  return idCounter++ % Number.MAX_SAFE_INTEGER
 }
 
 export default class Gloss {
@@ -50,23 +50,23 @@ export default class Gloss {
   }
 
   decorator = (
-    optionalNameOrChild: any,
+    eitherNameOrChild: any,
     // these are only used for shorthand views
-    optionalStyle?: Object,
-    optionalPropStyles?: Object,
+    maybeStyle?: Object,
+    maybePropStyles?: Object,
   ) => {
     // Short style component --  view('tagName', {})
-    if (typeof optionalNameOrChild === 'string') {
-      const tagName = optionalNameOrChild
-      const styles = optionalStyle
+    if (typeof eitherNameOrChild === 'string') {
+      const tagName = eitherNameOrChild
+      const styles = maybeStyle
       const id = uid()
       const glossComponent = props => {
         let finalProps
         // make propstyles work
-        if (props && optionalPropStyles) {
+        if (props && maybePropStyles) {
           finalProps = {}
           for (const key of Object.keys(props)) {
-            if (optionalPropStyles[key]) {
+            if (maybePropStyles[key]) {
               finalProps[`$${key}`] = props[key]
             } else {
               finalProps[key] = props[key]
@@ -78,7 +78,7 @@ export default class Gloss {
         return this.createElement(tagName, { glossUID: id, ...finalProps })
       }
       try {
-        this.attachStyles(`${id}`, { [tagName]: styles, ...optionalPropStyles })
+        this.attachStyles(`${id}`, { [tagName]: styles, ...maybePropStyles })
       } catch (err) {
         console.log('error attaching styles:', tagName, this, styles)
       }
@@ -87,18 +87,18 @@ export default class Gloss {
       return glossComponent
     }
     // Class style component
-    const Child = optionalNameOrChild
+    const Child = eitherNameOrChild
     if (!Child) {
       console.error(
         'invalid view given to gloss',
-        optionalNameOrChild,
-        optionalStyle,
-        optionalPropStyles,
+        eitherNameOrChild,
+        maybeStyle,
+        maybePropStyles,
       )
       return () => this.createElement('div', { children: 'Error Component' })
     }
     if (!Child.prototype || !Child.prototype.render) {
-      console.log('not a class')
+      console.log('not a class', Child)
       return
     }
     const { css, attachStyles } = this
@@ -108,63 +108,65 @@ export default class Gloss {
     Child.prototype.glossElement = this.createElement
     Child.prototype.gloss = this
     Child.prototype.glossStylesheet = this.stylesheet
-    // babel 7 bugfix
-    setTimeout(() => {
-      console.log('decorating', Child, Child.theme)
-      const hasTheme = Child.theme && typeof Child.theme === 'function'
-      const themeSheet = JSS.createStyleSheet().attach()
-      // @ts-ignore
-      Child.glossUID = id
-      this.themeSheets[id] = themeSheet
+    const themeSheet = JSS.createStyleSheet().attach()
+    // @ts-ignore
+    Child.glossUID = id
+    this.themeSheets[id] = themeSheet
+    let hasAttached = false
+    let hasTheme = false
+    const attachTheme = () => {
+      hasTheme = Child.theme && typeof Child.theme === 'function'
+      if (!hasTheme) {
+        return
+      }
+      Child.prototype.glossUpdateTheme = function(props) {
+        this.theme = this.theme || themeSheet
+        const activeTheme =
+          this.context.uiThemes &&
+          this.context.uiThemes[this.context.uiActiveThemeName]
+        if (activeTheme) {
+          const childTheme = Child.theme(props, activeTheme, this)
+          const rules = {}
+          for (const name of Object.keys(childTheme)) {
+            const style = css(childTheme[name])
+            const selector = `${name}--${Child.glossUID}--theme`
+            rules[selector] = style
+            this.theme.deleteRule(selector)
+          }
+          this.themeActiveRules = Object.keys(rules)
+          this.theme.addRules(rules)
+        }
+      }
+      // for HMR needs to re-run on mount idk why
+      if (process.env.NODE_ENV === 'development') {
+        const ogComponentWillMount = Child.prototype.componentWillMount
+        Child.prototype.componentWillMount = function(...args) {
+          if (hasTheme) {
+            this.glossUpdateTheme(this.props)
+          }
+          if (ogComponentWillMount) {
+            return ogComponentWillMount.call(this, ...args)
+          }
+        }
+      }
+    }
+    const ogrender = Child.prototype.render
+    Child.prototype.render = function(...args) {
+      if (!hasAttached) {
+        attachTheme()
+        attachStyles(Child.glossUID, Child.style, true)
+        if (this.constructor.name === 'Join') {
+          console.log('JOIN ME', Child)
+        }
+        hasAttached = true
+      }
       if (hasTheme) {
-        Child.prototype.glossUpdateTheme = function(props) {
-          this.theme = this.theme || themeSheet
-          const activeTheme =
-            this.context.uiThemes &&
-            this.context.uiThemes[this.context.uiActiveThemeName]
-          if (activeTheme) {
-            const childTheme = Child.theme(props, activeTheme, this)
-            const rules = {}
-            for (const name of Object.keys(childTheme)) {
-              const style = css(childTheme[name])
-              const selector = `${name}--${Child.glossUID}--theme`
-              rules[selector] = style
-              this.theme.deleteRule(selector)
-            }
-            this.themeActiveRules = Object.keys(rules)
-            this.theme.addRules(rules)
-          }
-        }
-        // for HMR needs to re-run on mount idk why
-        if (process.env.NODE_ENV === 'development') {
-          const ogComponentWillMount = Child.prototype.componentWillMount
-          Child.prototype.componentWillMount = function(...args) {
-            if (hasTheme) {
-              this.glossUpdateTheme(this.props)
-            }
-            if (ogComponentWillMount) {
-              return ogComponentWillMount.call(this, ...args)
-            }
-          }
-        }
+        this.glossUpdateTheme(this.props)
       }
-      const ogrender = Child.prototype.render
-      let hasSetStyles = false
-      Child.prototype.render = function(...args) {
-        console.log('check it out', hasTheme, this.theme)
-        if (!hasSetStyles) {
-          console.log('attaching', Child.glossUID, Child.style)
-          attachStyles(Child.glossUID, Child.style, true)
-          hasSetStyles = true
-        }
-        if (hasTheme) {
-          this.glossUpdateTheme(this.props)
-        }
-        if (ogrender) {
-          return ogrender.call(this, ...args)
-        }
+      if (ogrender) {
+        return ogrender.call(this, ...args)
       }
-    })
+    }
   }
 
   // runs niceStyleSheet on non-function styles

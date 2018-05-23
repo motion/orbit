@@ -11,7 +11,7 @@ import { view } from '@mcro/black'
 // }
 
 @view.ui
-export default class ProgressCircle extends React.Component {
+export class ProgressCircle extends React.Component {
   static defaultProps = {
     backgroundColor: [0, 0, 0, 1],
     lineColor: 'green',

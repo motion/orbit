@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import inject from '../helpers/inject'
-import SizedSurface from '../sizedSurface'
-import Button from '../button'
-import Checkbox from './checkbox'
+import { inject } from '../helpers/inject'
+import { SizedSurface } from '../sizedSurface'
+import { Button } from '../button'
+import { Checkbox } from './checkbox'
 
 // type Props = {
 //   uiContext: Object,
@@ -23,7 +23,7 @@ const TAG_MAP = {
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Input extends React.PureComponent {
+export class Input extends React.PureComponent {
   static defaultProps = {
     size: 1,
     type: 'input',

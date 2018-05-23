@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Text from './text'
+import { Text } from './text'
 
 @view.ui
-export default class Separator {
+export class Separator {
   render({ after, children, ...props }) {
     return (
       <separator {...props}>

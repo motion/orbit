@@ -10,7 +10,7 @@ import { view } from '@mcro/black'
 // }
 
 @view.ui
-export default class Arrow extends React.Component {
+export class Arrow extends React.Component {
   static defaultProps = {
     size: 16,
     towards: 'bottom',

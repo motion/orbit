@@ -25,9 +25,9 @@ module.exports = function(context, givenOpts) {
       plug('@babel/plugin-proposal-class-properties', {
         loose: true,
       }),
-      // plug('@babel/plugin-proposal-decorators', {
-      //   legacy: true,
-      // }),
+      plug('@babel/plugin-proposal-decorators', {
+        legacy: true,
+      }),
       plug('babel-plugin-root-import', {
         rootPathPrefix: '~',
         rootPathSuffix:

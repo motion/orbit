@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Surface from './surface'
+import { Surface } from './surface'
 
 const LINE_HEIGHT = 30
 
@@ -12,7 +12,7 @@ const LINE_HEIGHT = 30
 //   sizeRadius?: boolean | number,
 // }
 
-export default function SizedSurface(props) {
+export function SizedSurface(props) {
   const {
     sizeHeight,
     sizeMargin,

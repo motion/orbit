@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Bar from './bar'
-import Circle from './circle'
+import { Bar } from './bar'
+import { Circle } from './circle'
 
 @view.ui
-export default class Progress extends React.Component {
+export class Progress extends React.Component {
   static Bar = Bar
   static Circle = Circle
 

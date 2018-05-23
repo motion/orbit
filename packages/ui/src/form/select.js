@@ -1,8 +1,8 @@
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class Select {
+export class Select {
   static defaultProps = {
     height: 20,
     width: 100,

@@ -1,8 +1,8 @@
-import ThemeMaker from './themeMaker'
+import { ThemeMaker } from './themeMaker'
 
 const Theme = new ThemeMaker()
 
-export default function getThemeFromContext(
+export function getThemeFromContext(
   propName = 'name',
   themePropName = 'theme',
 ) {

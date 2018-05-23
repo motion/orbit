@@ -15,7 +15,7 @@ const isUndef = x => typeof x === 'undefined'
 // }
 
 @view.ui
-export default class Glint extends React.Component {
+export class Glint extends React.Component {
   static defaultProps = {
     color: [255, 255, 255, 0.09],
     size: 1,

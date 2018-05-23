@@ -1,19 +1,21 @@
 import { view } from '@mcro/black'
-import { SubTitle, P, P2 } from '~/views'
+// import { P, P2 } from '~/views'
 import * as UI from '@mcro/ui'
 
 @UI.injectTheme
 @view
 export class Join {
   render({ theme, ...props }) {
+    console.log('theme', theme)
+    console.log(this.glossElement, '123')
     return (
       <section id="join" {...props}>
-        <P size={1.8} css={{ marginRight: 30 }}>
+        <p size={1.8} css={{ marginRight: 30 }}>
           Get early access
-        </P>
-        <P2 alpha={0.7} size={1.2} margin={[5, 0, 10]}>
+        </p>
+        <p alpha={0.7} size={1.2} margin={[5, 0, 10]}>
           We'll send one or two updates as we develop Orbit with progress.
-        </P2>
+        </p>
         <form
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5&amp;id=015e5a3442"
           method="post"
@@ -37,7 +39,7 @@ export class Join {
               value=""
             />
           </div>
-          <UI.Button
+          <button
             size={1.1}
             theme="rgb(3.5%, 44.5%, 23.6%)"
             sizeRadius={3}
@@ -45,7 +47,7 @@ export class Join {
             type="submit"
           >
             Join early access
-          </UI.Button>
+          </button>
         </form>
       </section>
     )

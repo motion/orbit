@@ -1,8 +1,8 @@
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class DefinitionList extends React.Component {
+export class DefinitionList extends React.Component {
   render() {
     const { object, children, ...props } = this.props
     const target = object || children

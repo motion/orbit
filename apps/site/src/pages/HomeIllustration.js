@@ -8,7 +8,7 @@ import * as Icons from '~/views/icons'
 import Router from '~/router'
 import { colorMain } from '~/constants'
 
-const bgColor = '#fff'
+const bgColor = '#fff2'
 const dockIcons = [
   {
     name: 'Dropbox',
@@ -306,7 +306,7 @@ class IllustrationStore {
 @view({
   store: IllustrationStore,
 })
-export default class HeaderIllustration {
+export class HomeIllustration {
   render({ store }) {
     const dom = this.glossElement.bind(this)
     return (

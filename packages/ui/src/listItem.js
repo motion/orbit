@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
-import Text from './text'
-import Date from './date'
-import SizedSurface from './sizedSurface'
+import { Text } from './text'
+import { Date } from './date'
+import { SizedSurface } from './sizedSurface'
 
 // export type Props = {
 //   after?: React.Element<any>,
@@ -37,7 +37,7 @@ import SizedSurface from './sizedSurface'
 // }
 
 @view
-export default class ListItem extends React.Component {
+export class ListItem extends React.Component {
   static isListItem = true
   static contextTypes = {
     uiTheme: object,

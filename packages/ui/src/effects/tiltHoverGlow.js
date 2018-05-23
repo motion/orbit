@@ -12,7 +12,7 @@ import HoverGlow from './hoverGlow'
 // }
 
 @view.ui
-export default class TiltHoverGlow extends React.PureComponent {
+export class TiltHoverGlow extends React.PureComponent {
   version() {
     return 1
   }

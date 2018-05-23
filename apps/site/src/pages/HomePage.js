@@ -243,7 +243,7 @@ class HomeFooter {
   }
 }
 
-export default () => (
+export const Home = () => (
   <Media query={Constants.screen.medium}>
     {isMedium => (
       <React.Fragment>

@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export default class Loading {
+export class Loading {
   render() {
     return <loading>loading...</loading>
   }

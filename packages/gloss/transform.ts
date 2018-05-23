@@ -7,8 +7,8 @@ export default function({ types: t }) {
       if (path.node.kind === 'constructor') {
         return
       }
-      if (path.node.body.body && !path.glossHasVisited) {
-        path.glossHasVisited = true
+      if (path.node.body.body && !path.node.body.glossHasVisited) {
+        path.node.body.glossHasVisited = true
         path.node.body.body.unshift(
           t.variableDeclaration('const', [
             t.variableDeclarator(

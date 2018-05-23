@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export default class PassProps extends React.Component {
+export class PassProps extends React.Component {
   render() {
     const { children, containerProps, ...props } = this.props
 

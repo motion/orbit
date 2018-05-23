@@ -64,20 +64,18 @@ export const Title = ({
   </Media>
 )
 
-export const SubTitle = UI.injectTheme(
-  view(({ theme, size = 3.5, ...props }) => (
-    <Media query={Constants.screen.small}>
-      {isSmall => (
-        <Title
-          size={size}
-          color={theme.subTitleColor || theme.base.color}
-          {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
-          {...props}
-        />
-      )}
-    </Media>
-  )),
-)
+export const SubTitle = UI.injectTheme(({ theme, size = 3.5, ...props }) => (
+  <Media query={Constants.screen.small}>
+    {isSmall => (
+      <Title
+        size={size}
+        color={theme.subTitleColor || theme.base.color}
+        {...(isSmall ? { margin: [0, 0, 25, 0] } : null)}
+        {...props}
+      />
+    )}
+  </Media>
+))
 
 export const SubSubTitle = props => (
   <P size={1.2} fontWeight={800} {...props} margin={[0, 0, 8]} />
@@ -197,7 +195,7 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
 )
 
 export const Border = UI.injectTheme(
-  view(({ theme, width = 4, color, type = 'dotted', ...props }) => (
+  ({ theme, width = 4, color, type = 'dotted', ...props }) => (
     <border
       css={{
         position: 'absolute',
@@ -215,7 +213,7 @@ export const Border = UI.injectTheme(
       }}
       {...props}
     />
-  )),
+  ),
 )
 
 export const FadedArea = UI.injectTheme(

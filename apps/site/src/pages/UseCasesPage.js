@@ -445,7 +445,7 @@ class SectionUseCaseReduceInterrupts {
 }
 
 @view
-export default class UseCasesPage {
+export class UseCasesPage {
   render() {
     return (
       <React.Fragment>

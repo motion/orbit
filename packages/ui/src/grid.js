@@ -6,7 +6,7 @@ import { view } from '@mcro/black'
 // }
 
 @view.ui
-export default class Grid extends React.Component {
+export class Grid extends React.Component {
   static defaultProps = {
     columns: 1,
   }

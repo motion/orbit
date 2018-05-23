@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import List from './list'
-import Button from './button'
-import Popover from './popover'
-import Arrow from './arrow'
+import { List } from './list'
+import { Button } from './button'
+import { Popover } from './popover'
+import { Arrow } from './arrow'
 
 // export type Props = {
 //   children: React$Element<any> | string,
@@ -17,7 +17,7 @@ import Arrow from './arrow'
 // }
 
 @view.ui
-export default class Dropdown extends React.Component {
+export class Dropdown extends React.Component {
   static defaultProps = {
     width: 100,
   }

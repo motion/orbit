@@ -1,6 +1,6 @@
 import { findDOMNode } from 'react-dom'
 
-export default function getTarget(target) {
+export function getTarget(target) {
   if (!target) {
     return null
   }

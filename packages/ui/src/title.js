@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Text from './text'
+import { Text } from './text'
 
 // export type Props = {
 //   size: number,
@@ -18,7 +18,7 @@ import Text from './text'
 // }
 
 @view.ui
-export default class Title extends React.PureComponent {
+export class Title extends React.PureComponent {
   static defaultProps = {
     size: 1,
     tagName: 'title',

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Surface from './surface'
-import Text from './text'
-import Icon from './icon'
+import { Surface } from './surface'
+import { Text } from './text'
+import { Icon } from './icon'
 
 // type Props = {
 //   background?: Color,
@@ -19,7 +19,7 @@ import Icon from './icon'
 // }
 
 @view.ui
-export default class Badge extends React.Component {
+export class Badge extends React.Component {
   static defaultProps = {
     background: [0, 0, 0, 0.1],
     borderRadius: 30,

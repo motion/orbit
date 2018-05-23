@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Label from './label'
-import Row from '../row'
+import { Row } from '../row'
 
 // fields
-import Input from './input'
-import Select from './select'
-import Toggle from './toggle'
-import Checkbox from './checkbox'
+import { Input } from './input'
+import { Select } from './select'
+import { Toggle } from './toggle'
+import { Checkbox } from './checkbox'
 
 const fields = {
   input: Input,
@@ -39,7 +39,7 @@ const TYPE_TO_ELEMENT_MAP = {
 // }
 
 @view.ui
-export default class Field extends React.Component {
+export class Field extends React.Component {
   static defaultProps = {
     type: 'input',
     width: 'auto',

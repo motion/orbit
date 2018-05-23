@@ -10,7 +10,7 @@ import $ from 'color'
 // }
 
 @view.ui
-export default class ProgressBar extends React.Component {
+export class ProgressBar extends React.Component {
   static defaultProps = {
     width: 90,
     percent: 0,

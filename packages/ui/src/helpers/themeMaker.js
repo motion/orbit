@@ -20,7 +20,7 @@ const smallAmt = color =>
   Math.min(0.5, Math.max(MIN_ADJUST, 2 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
 const largeAmt = color => smallAmt(color) * 1.25
 
-export default class ThemeMaker {
+export class ThemeMaker {
   cache = {}
 
   colorize = obj =>

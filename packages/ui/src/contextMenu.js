@@ -2,8 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
-import List from './list'
-import Popover from './popover'
+import { List } from './list'
+import { Popover } from './popover'
 
 @view.ui
 class ContextMenuTarget extends React.Component {
@@ -47,7 +47,7 @@ class ContextMenuStore {
 @view({
   store: ContextMenuStore,
 })
-class ContextMenu extends React.Component {
+export class ContextMenu extends React.Component {
   node = null
 
   static defaultProps = {
@@ -139,5 +139,3 @@ class ContextMenu extends React.Component {
 }
 
 ContextMenu.Target = ContextMenuTarget
-
-export default ContextMenu

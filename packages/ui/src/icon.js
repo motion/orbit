@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import Popover from './popover'
+import { Popover } from './popover'
 import iconNames from './iconNames'
 import fuzzy from 'fuzzy'
 
@@ -43,7 +43,7 @@ const findMatch = name => {
 // }
 
 @view.ui
-export default class Icon extends React.PureComponent {
+export class Icon extends React.PureComponent {
   static defaultProps = {
     size: 16,
     type: 'mini',

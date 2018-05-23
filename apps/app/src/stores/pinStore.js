@@ -5,7 +5,7 @@ import * as Constants from '~/constants'
 // import * as BannerStore from '~/stores/oraBannerStore'
 
 @store
-export default class PinStore {
+export class PinStore {
   add = async ({ url } = {}) => {
     if (!url) {
       throw new Error(`No url provided to context`)

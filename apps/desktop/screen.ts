@@ -50,7 +50,7 @@ const PREVENT_SCANNING = {
 }
 
 @store
-export default class DesktopScreen {
+export class Screen {
   hasResolvedOCR = false
   appStateTm: any
   clearOCRTm: any

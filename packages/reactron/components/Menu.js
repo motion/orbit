@@ -13,6 +13,6 @@ export class Menu extends BaseComponent {
         this.menu.append(child.menuItem)
       }
     }
-    Menu.setApplicationMenu(this.menu)
+    ElectronMenu.setApplicationMenu(this.menu)
   }
 }

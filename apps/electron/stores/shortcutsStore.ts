@@ -2,9 +2,7 @@ import { globalShortcut } from 'electron'
 import { store } from '@mcro/black'
 
 @store
-export default class ShortcutsStore {
-  // emitter: EventEmitter
-
+export class ShortcutsStore {
   constructor(shortcuts) {
     this.registerShortcuts(shortcuts)
   }

@@ -14,7 +14,7 @@ const appTarget = ({ offset, bounds }) => {
 }
 
 @store
-export default class AppReactions {
+export class AppReactions {
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
     if (window.messageAttached) {
@@ -84,6 +84,7 @@ export default class AppReactions {
   handleHoldingOption = react(
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
+      console.log('hilding', isHoldingOption)
       if (App.orbitState.pinned || App.orbitState.docked) {
         throw react.cancel
       }

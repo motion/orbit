@@ -1,7 +1,7 @@
 import { react } from '@mcro/black'
 import { App } from '@mcro/all'
 import { throttle } from 'lodash'
-import AppReactions from '~/stores/AppReactions'
+import { AppReactions } from '~/stores/AppReactions'
 
 export default class OrbitStore {
   query = ''

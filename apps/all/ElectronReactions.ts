@@ -4,7 +4,7 @@ import { Electron } from './Electron'
 import { Desktop } from './Desktop'
 
 @store
-export default class ElectronReactions {
+export class ElectronReactions {
   onShortcut = async shortcut => {
     if (shortcut === 'CommandOrControl+Space') {
       console.log('send toggle docked')

@@ -24,7 +24,7 @@ const plugins: Plugin[] = [
 const log = debug('Plugins')
 
 @store
-export default class Plugins {
+export class Plugins {
   plugins = plugins
   searchId = 0
   server: any

@@ -33,7 +33,6 @@
     "kill-port": "^1.1.0",
     "latinize": "0.4.0",
     "lodash": "4.17.10",
-    "mobx": "^4.3.0",
     "mobx-formatters": "^1.0.2",
     "mobx-react": "^5.1.2",
     "mobx-react-devtools": "^5.0.1",
@@ -51,6 +50,7 @@
     "@mcro/dev": "*"
   },
   "peerDependencies": {
+    "mobx": "^4.3.0",
     "react": "16.3.2",
     "react-dom": "16.3.2"
   }

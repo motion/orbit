@@ -6,7 +6,7 @@ import debug from '@mcro/debug'
 const log = debug('OrbitWindow')
 
 @store
-export default class WindowFocusStore {
+export class WindowFocusStore {
   show = 0
   orbitRef = null
 

@@ -1,4 +1,4 @@
-import { fromPromise, isPromiseBasedObservable, whenAsync } from 'mobx-utils'
+import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import * as McroHelpers from '@mcro/helpers'
 import debug from '@mcro/debug'
@@ -441,7 +441,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return reject(RejectReactionSymbol)
       }
       let cancelWhen = false
-      whenAsync(condition)
+      Mobx.when(condition)
         .then((val: any) => {
           if (cancelWhen) return
           resolve(val)
@@ -461,7 +461,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return reject(RejectReactionSymbol)
       }
       let cancelWhen = false
-      whenAsync(() => {
+      Mobx.when(() => {
         if (typeof oldVal === 'undefined') {
           oldVal = condition()
           return false

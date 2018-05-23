@@ -29,7 +29,7 @@ const DOUBLE_TAP_OPTION = [
 let lastKeys = []
 
 @store
-export default class KeyboardStore {
+export class KeyboardStore {
   // this is imperfect, iohook doesn't always match events perfectly
   // so in cases of errors, we clear it after a little delay
   keysDown = new Set()

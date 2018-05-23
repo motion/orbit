@@ -28,12 +28,12 @@ if (process.env.NODE_ENV === 'development') {
   global.Constants = require('./constants')
 }
 
-const Desktop = require('./desktop').default
-const rootStore = new Desktop()
+const { Root } = require('./root')
+const root = new Root()
 
 const exitHandler = async (code?: any) => {
   console.log('handling exit', code)
-  if (await rootStore.dispose()) {
+  if (await root.dispose()) {
     // otherwise it wont exit :/
     process.kill(process.pid)
   }
@@ -67,7 +67,7 @@ process.on('unhandledRejection', function(reason, promise) {
 
 export async function run() {
   try {
-    await rootStore.start()
+    await root.start()
   } catch (err) {
     log('error', err)
   }

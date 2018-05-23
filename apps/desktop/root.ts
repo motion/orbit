@@ -1,15 +1,15 @@
 import * as Models from '@mcro/models'
 import connectModels from './helpers/connectModels'
 import Server from './server'
-import Plugins from './plugins'
-import Screen from './screen'
-import KeyboardStore from './stores/keyboardStore'
-import Auth from './auth'
+import { Plugins } from './plugins'
+import { Screen } from './screen'
+import { KeyboardStore } from './stores/keyboardStore'
+import { Auth } from './auth'
 import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import Sync from './sync'
+import { Sync } from './sync'
 import SQLiteServer from './sqliteServer'
 import { App, Electron, Desktop } from '@mcro/all'
 // import { sleep } from '@mcro/helpers'
@@ -28,7 +28,7 @@ const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
 
 @store
-export default class DesktopRoot {
+export class Root {
   disposed = false
   sync: Sync
   screen: Screen

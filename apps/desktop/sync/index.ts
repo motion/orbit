@@ -8,7 +8,7 @@ debug.quiet('sync')
 
 // @ts-ignore
 @store
-export default class Sync {
+export class Sync {
   locks: Set<string> = new Set()
   jobs = []
   syncers?: Object = null

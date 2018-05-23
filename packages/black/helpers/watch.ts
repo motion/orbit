@@ -1,3 +1,5 @@
+import { Reaction } from '@mcro/automagical'
+
 const RejectReactionSymbol = '___REJECT_REACTION___'
 
 function validWatch(val) {
@@ -26,6 +28,15 @@ function tsWatch(options) {
 
 // @watch decorator
 export function watch(a, b?, c?, opts?) {
+  if (typeof a === 'function') {
+    if (typeof b === 'function') {
+      return new Reaction(a, b, c)
+    }
+    if (typeof b === 'object' || !b) {
+      return new Reaction(a, b)
+    }
+  }
+
   // passing options
   if (!b) {
     const options = { ...a, ...opts }
@@ -48,15 +59,6 @@ export const react = watch
 
 // @ts-ignore
 watch.cancel = RejectReactionSymbol
-
-// @ts-ignore
-watch.if = function watchIf(a, b?, c?) {
-  // passing options
-  if (!b) {
-    return (d, e, f) => watch(d, e, f, { isIf: true, ...a })
-  }
-  return watch(a, b, c, { isIf: true })
-}
 
 function doWatch(target, _, descriptor, userOptions) {
   // non-decorator

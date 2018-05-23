@@ -9,13 +9,15 @@ const mapW = 700
 const mapH = 300
 
 class PersonPeek {
-  @react({ defaultValue: [] })
-  relatedConversations = async () =>
-    await Bit.find({
-      relations: ['people'],
-      where: { integration: 'slack', type: 'conversation' },
-      take: 3,
-    })
+  relatedConversations = react(
+    async () =>
+      await Bit.find({
+        relations: ['people'],
+        where: { integration: 'slack', type: 'conversation' },
+        take: 3,
+      }),
+    { defaultValue: [] },
+  )
 }
 
 @view({

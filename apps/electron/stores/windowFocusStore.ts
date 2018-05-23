@@ -19,8 +19,7 @@ export default class WindowFocusStore {
     'Delete',
   ].map(key => ({ key, shortcut: `Option+${key}` }))
 
-  @react
-  easyPinWithLetter = [
+  easyPinWithLetter = react(
     () => Desktop.isHoldingOption && App.isShowingOrbit,
     async (down, { when }) => {
       await when(() => !App.isAnimatingOrbit)
@@ -41,7 +40,7 @@ export default class WindowFocusStore {
         this.unRegisterKeyShortcuts()
       }
     },
-  ]
+  )
 
   unRegisterKeyShortcuts = () => {
     for (const { shortcut } of this.keyShortcuts) {
@@ -54,8 +53,7 @@ export default class WindowFocusStore {
     this.orbitRef.focus()
   }
 
-  @react
-  focusOnPinned = [
+  focusOnPinned = react(
     () => App.orbitState.docked || App.orbitState.pinned,
     async (pinned, { sleep, when }) => {
       await sleep(App.animationDuration + 50)
@@ -66,12 +64,11 @@ export default class WindowFocusStore {
       }
       this.focusOrbit()
     },
-  ]
+  )
 
-  @react
-  focusOnMouseOver = [
+  focusOnMouseOver = react(
     () => App.isMouseInActiveArea,
-    async (mouseOver, { sleep, when }) => {
+    async (mouseOver, { when }) => {
       if (!App.isShowingOrbit /* || App.orbitState.pinned*/) {
         throw react.cancel
       }
@@ -85,7 +82,7 @@ export default class WindowFocusStore {
         Swift.defocus()
       }
     },
-  ]
+  )
 
   handleOrbitRef = ref => {
     if (!ref) return

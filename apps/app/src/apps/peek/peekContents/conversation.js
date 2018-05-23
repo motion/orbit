@@ -10,20 +10,24 @@ import { Bit, Person } from '@mcro/models'
 import * as UI from '@mcro/ui'
 
 class ConversationPeek {
-  @react({ defaultValue: [] })
-  related = async () => {
-    const people = await Person.find({ take: 3, skip: 7 })
-    const bits = await Bit.find({ take: 3, relations: ['people'] })
-    return [...people, ...bits]
-  }
+  related = react(
+    async () => {
+      const people = await Person.find({ take: 3, skip: 7 })
+      const bits = await Bit.find({ take: 3, relations: ['people'] })
+      return [...people, ...bits]
+    },
+    { defaultValue: [] },
+  )
 
-  @react({ defaultValue: [] })
-  relatedConversations = async () =>
-    await Bit.find({
-      relations: ['people'],
-      where: { integration: 'slack', type: 'conversation' },
-      take: 3,
-    })
+  relatedConversations = react(
+    async () =>
+      await Bit.find({
+        relations: ['people'],
+        where: { integration: 'slack', type: 'conversation' },
+        take: 3,
+      }),
+    { defaultValue: [] },
+  )
 }
 
 const slackConvoBitContentStyle = {

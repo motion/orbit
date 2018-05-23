@@ -14,8 +14,7 @@ class HeaderStore {
     this.inputRef && this.inputRef.focus()
   }
 
-  @react({ log: false })
-  focusInput = [
+  focusInput = react(
     () => [
       App.orbitState.pinned || App.orbitState.docked,
       App.isMouseInActiveArea,
@@ -26,7 +25,8 @@ class HeaderStore {
       await when(() => !App.isAnimatingOrbit)
       this.focus()
     },
-  ]
+    { log: false },
+  )
 
   onClickInput = () => {
     if (!App.orbitState.pinned && Desktop.isHoldingOption) {

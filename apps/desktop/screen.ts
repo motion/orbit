@@ -60,10 +60,9 @@ export default class DesktopScreen {
   watchSettings = { name: '', settings: {} }
   oracle = new Oracle()
 
-  @react rescanOnNewAppState = [() => Desktop.appState, this.rescanApp]
+  rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 
-  @react
-  handleOCRWords = [
+  handleOCRWords = react(
     () => Desktop.ocrState.words,
     words => {
       if (!words) {
@@ -87,7 +86,7 @@ export default class DesktopScreen {
         })),
       })
     },
-  ]
+  )
 
   togglePaused = () => {
     console.log('toggle paused screen')

@@ -48,8 +48,7 @@ export default class KeyboardStore {
   key = null
   keyAt = 0
 
-  @react({ log: false })
-  onKey = [
+  onKey = react(
     () => [this.key, this.keyAt],
     ([keycode]) => {
       this.clearDownKeysAfterPause()
@@ -106,7 +105,8 @@ export default class KeyboardStore {
           }
       }
     },
-  ]
+    { log: false },
+  )
 
   keyDown = keycode => {
     this.key = keycode

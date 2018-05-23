@@ -14,8 +14,7 @@ class PeekStore {
     return this.history.length
   }
 
-  @react
-  updateHistory = [
+  updateHistory = react(
     () => this.curState,
     state => {
       this.headerHeight = 20
@@ -25,7 +24,7 @@ class PeekStore {
         this.history = []
       }
     },
-  ]
+  )
 
   get state() {
     let state = this.curState
@@ -45,8 +44,11 @@ class PeekStore {
     return null
   }
 
-  @react({ delay: 16, immediate: true, log: false })
-  lastState = [() => this.curState, _ => _]
+  lastState = react(() => this.curState, _ => _, {
+    delay: 16,
+    immediate: true,
+    log: false,
+  })
 
   get willHide() {
     return !!this.lastState && !this.curState

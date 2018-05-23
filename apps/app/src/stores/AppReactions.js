@@ -81,8 +81,7 @@ export default class AppReactions {
     App.setOrbitState({ hidden: true })
   }
 
-  @react({ log: 'state' })
-  handleHoldingOption = [
+  handleHoldingOption = react(
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
       if (App.orbitState.pinned || App.orbitState.docked) {
@@ -101,10 +100,10 @@ export default class AppReactions {
       // await sleep(3500)
       // this.updatePinned(true)
     },
-  ]
+    { log: 'state' },
+  )
 
-  @react({ log: 'state' })
-  clearPeekOnOrbitClose = [
+  clearPeekOnOrbitClose = react(
     () => App.isFullyHidden,
     hidden => {
       if (!hidden) {
@@ -112,10 +111,10 @@ export default class AppReactions {
       }
       App.clearPeek()
     },
-  ]
+    { log: 'state' },
+  )
 
-  @react({ log: 'state' })
-  onPinned = [
+  onPinned = react(
     () => App.orbitState.pinned,
     pinned => {
       if (pinned) {
@@ -124,10 +123,10 @@ export default class AppReactions {
         App.setOrbitState({ hidden: true })
       }
     },
-  ]
+    { log: 'state' },
+  )
 
-  @react({ log: 'state' })
-  unPinOnHidden = [
+  unPinOnHidden = react(
     () => App.isFullyHidden,
     hidden => {
       if (!hidden) {
@@ -135,13 +134,15 @@ export default class AppReactions {
       }
       App.setOrbitState({ pinned: false })
     },
-  ]
+    { log: 'state' },
+  )
 
-  @react({ log: 'state' })
-  clearPeekOnReposition = [() => App.orbitState.position, App.clearPeek]
+  clearPeekOnReposition = react(() => App.orbitState.position, App.clearPeek, {
+    log: 'state',
+  })
 
   // disabled during testing, reenable
-  // @react
+  // react
   // clearPeekOnMouseOut = [
   //   () => Desktop.hoverState.peekHovered,
   //   async (mouseOver, { sleep }) => {
@@ -154,11 +155,19 @@ export default class AppReactions {
   //   },
   // ]
 
-  @react({
-    delay: 32,
-    log: 'state',
-  })
-  hideOrbitOnMouseOut = [
+  showOrbitOnHoverWord = react(
+    () => App.hoveredWordName,
+    async (word, { sleep }) => {
+      if (Desktop.isHoldingOption) {
+        throw react.cancel
+      }
+      const hidden = !word
+      await sleep(hidden ? 50 : 500)
+      App.setOrbitState({ hidden })
+    },
+  )
+
+  hideOrbitOnMouseOut = react(
     () => [
       Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered,
       App.peekState.target,
@@ -176,23 +185,13 @@ export default class AppReactions {
       console.log(`hiding orbit from mouseout`)
       App.setOrbitState({ hidden: true })
     },
-  ]
-
-  @react
-  showOrbitOnHoverWord = [
-    () => App.hoveredWordName,
-    async (word, { sleep }) => {
-      if (Desktop.isHoldingOption) {
-        throw react.cancel
-      }
-      const hidden = !word
-      await sleep(hidden ? 50 : 500)
-      App.setOrbitState({ hidden })
+    {
+      delay: 32,
+      log: 'state',
     },
-  ]
+  )
 
-  @react({ immediate: true, log: false })
-  repositioningFromAppState = [
+  repositioningFromAppState = react(
     () => [appTarget(Desktop.appState || {}), Desktop.linesBoundingBox],
     ([appBB, linesBB]) => {
       // prefer using lines bounding box, fall back to app
@@ -215,5 +214,6 @@ export default class AppReactions {
         orbitDocked,
       })
     },
-  ]
+    { immediate: true, log: false },
+  )
 }

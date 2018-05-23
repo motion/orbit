@@ -7,21 +7,21 @@ import OrbitCard from './orbitCard'
 import Masonry from '~/views/masonry'
 
 class OrbitDirectoryStore {
-  @react({ immediate: true })
-  setGetResults = [
+  setGetResults = react(
     () => this.props.paneStore.activePane === this.props.name,
     isActive => {
       if (!isActive) throw react.cancel
       this.props.appStore.setGetResults(() => this.results)
     },
-  ]
+    { immediate: true },
+  )
 
-  @react({
-    defaultValue: [],
-  })
-  results = async () => {
-    return await Person.find({ take: 10 })
-  }
+  results = react(
+    async () => {
+      return await Person.find({ take: 10 })
+    },
+    { defaultValue: [] },
+  )
 }
 
 @view({

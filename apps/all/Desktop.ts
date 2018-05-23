@@ -68,14 +68,14 @@ class DesktopStore {
 
   results = []
 
-  @react({ log: false })
-  memoizedResults = [
+  memoizedResults = react(
     () => [
       ...Desktop.searchState.searchResults,
       ...Desktop.searchState.pluginResults,
     ],
     x => (this.results = x),
-  ]
+    { log: false },
+  )
 
   get isHoldingOption(): Boolean {
     if (Desktop.mouseState.mouseDown) {

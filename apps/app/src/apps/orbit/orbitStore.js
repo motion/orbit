@@ -6,13 +6,13 @@ import AppReactions from '~/stores/AppReactions'
 export default class OrbitStore {
   query = ''
 
-  @react({ log: false })
-  updateAppQuery = [
+  updateAppQuery = react(
     () => this.query,
     throttle(query => {
       App.setQuery(query)
     }, 32),
-  ]
+    { log: false },
+  )
 
   lastPinKey = ''
 

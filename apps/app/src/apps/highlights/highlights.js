@@ -22,8 +22,7 @@ const log = debug('highlights')
       return Desktop.activeOCRWords.map(i => i[4]).join(' ')
     }
 
-    @react
-    setHighlightWords = [
+    setHighlightWords = react(
       () => this.content,
       () => {
         App.setHighlightWords(
@@ -33,9 +32,9 @@ const log = debug('highlights')
           ),
         )
       },
-    ]
+    )
 
-    // @react({ immediate: true, log: 'state' })
+    // react({ immediate: true, log: 'state' })
     // setHovered = [
     //   () => [this.trees, Desktop.mouseState.position],
     //   ([{ word, line }, { x, y }]) => {
@@ -79,14 +78,17 @@ const log = debug('highlights')
       // ]
     }
 
-    @react({ immediate: true })
-    hoverOCRLines = [() => Desktop.ocrState.lines, this.setupHover('line')]
+    hoverOCRLines = react(
+      () => Desktop.ocrState.lines,
+      this.setupHover('line'),
+      { immediate: true },
+    )
 
-    @react({ immediate: true })
-    hoverOCRWords = [
+    hoverOCRWords = react(
       () => this.ocrWords, //Desktop.ocrState.words,
       this.setupHover('word'),
-    ]
+      { immediate: true },
+    )
 
     get showAll() {
       if (Swift.state.isPaused) {

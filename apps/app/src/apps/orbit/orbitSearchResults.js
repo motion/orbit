@@ -5,8 +5,7 @@ import { App } from '@mcro/all'
 import OrbitDockedPane from './orbitDockedPane'
 
 class SearchStore {
-  @react({ immediate: true })
-  state = [
+  state = react(
     () => this.props.appStore.searchState,
     state => {
       if (this.props.appStore.selectedPane !== this.props.name) {
@@ -14,7 +13,8 @@ class SearchStore {
       }
       return state
     },
-  ]
+    { immediate: true },
+  )
 
   hasQuery() {
     return !!App.state.query

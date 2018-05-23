@@ -58,8 +58,7 @@ class ElectronStore {
     Electron.onClear()
   }
 
-  @react
-  clearApp = [
+  clearApp = react(
     () => this.clear,
     async (_, { when, sleep }) => {
       if (!this.appRef) {
@@ -82,11 +81,10 @@ class ElectronStore {
       await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
       this.show = 2
     },
-  ]
+  )
 
   // focus on pinned
-  @react({ delay: App.animationDuration })
-  focusOnPin = [
+  focusOnPin = react(
     () => App.orbitState.pinned,
     pinned => {
       // only focus on option+space
@@ -97,7 +95,8 @@ class ElectronStore {
         this.appRef.focus()
       }
     },
-  ]
+    { delay: App.animationDuration },
+  )
 
   restart() {
     if (process.env.NODE_ENV === 'development') {

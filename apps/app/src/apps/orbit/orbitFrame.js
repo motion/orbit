@@ -3,7 +3,6 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import * as Constants from '~/constants'
-import { ORBIT_WIDTH } from '@mcro/constants'
 import OrbitArrow from './orbitArrow'
 import OrbitIndicator from './orbitIndicator'
 
@@ -11,12 +10,7 @@ const SHADOW_PAD = 85
 const ARROW_PAD = 15
 
 class FrameStore {
-  @react({
-    immediate: true,
-    log: false,
-    defaultValue: { willAnimate: false, hidden: true },
-  })
-  animationState = [
+  animationState = react(
     () => App.orbitState.hidden,
     async (hidden, { sleep, setValue }) => {
       // old value first to setup for transition
@@ -28,7 +22,12 @@ class FrameStore {
       // done animating, reset
       setValue({ willAnimate: false, hidden })
     },
-  ]
+    {
+      immediate: true,
+      log: false,
+      defaultValue: { willAnimate: false, hidden: true },
+    },
+  )
 }
 
 const showingAnimation = {

@@ -8,6 +8,8 @@ import * as Icons from '~/views/icons'
 import Router from '~/router'
 import { colorMain } from '~/constants'
 
+console.log('reactis', react)
+
 const bgColor = '#fff2'
 const dockIcons = [
   {
@@ -207,10 +209,10 @@ class IllustrationStore {
     })
   }
 
-  @react
-  runAnimation = [
+  runAnimation = react(
     () => this.animate,
     async (shouldAnimate, { sleep }) => {
+      console.log('run aimationg', shouldAnimate)
       if (!shouldAnimate) {
         throw react.cancel
       }
@@ -218,7 +220,7 @@ class IllustrationStore {
       this.animateIcons(sleep)
       this.animateChats(sleep)
     },
-  ]
+  )
 
   animateIcons = async sleep => {
     const bounceIcons = async () => {
@@ -308,6 +310,7 @@ class IllustrationStore {
 })
 export class HomeIllustration {
   render({ store }) {
+    console.log('is animating', store.animate)
     const dom = this.glossElement.bind(this)
     return (
       <React.Fragment>

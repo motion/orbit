@@ -38,8 +38,7 @@ export default class Sync {
     console.log(`----${title}----`)
   }
 
-  @react
-  processJobs = [
+  processJobs = react(
     () => this.jobs,
     async jobs => {
       if (!this.enabled) {
@@ -59,7 +58,7 @@ export default class Sync {
         this.completeJob(job)
       }
     },
-  ]
+  )
 
   completeJob = async (job: Job) => {
     this.locks.add(job.lock)

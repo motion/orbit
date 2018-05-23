@@ -47,12 +47,7 @@ class PaneStore {
     return this.panes[this.paneIndex]
   }
 
-  @react({
-    immediate: true,
-    log: false,
-    defaultValue: { willAnimate: false, visible: false },
-  })
-  animationState = [
+  animationState = react(
     () => App.orbitState.docked,
     async (visible, { sleep, setValue }) => {
       log(`111111 SET IT UP`)
@@ -67,7 +62,12 @@ class PaneStore {
       log(`111111 DONE`)
       setValue({ willAnimate: false, visible })
     },
-  ]
+    {
+      immediate: true,
+      log: false,
+      defaultValue: { willAnimate: false, visible: false },
+    },
+  )
 }
 
 @UI.injectTheme

@@ -112,13 +112,12 @@ export default class AppStore {
 
   lastSelectedPane = ''
 
-  @react
-  updateLastSelectedPane = [
+  updateLastSelectedPane = react(
     () => this.selectedPane,
     val => {
       this.lastSelectedPane = val
     },
-  ]
+  )
 
   get selectedPane() {
     if (App.orbitState.docked) {
@@ -150,8 +149,7 @@ export default class AppStore {
     }, 1000)
   }
 
-  @react
-  updateResults = [
+  updateResults = react(
     () => [Desktop.state.lastBitUpdatedAt, Desktop.searchState.pluginResultId],
     () => {
       if (this.searchState.results && this.searchState.results.length) {
@@ -159,25 +157,19 @@ export default class AppStore {
       }
       return Math.random()
     },
-  ]
+  )
 
-  @react({ log: 'state' })
-  resetActiveIndexOnSearch = [
+  resetActiveIndexOnSearch = react(
     () => App.state.query,
     () => {
       this.activeIndex = 0
       App.clearPeek()
     },
-  ]
+    { log: 'state' },
+  )
 
   bitResultsId = 0
-  @react({
-    immediate: true,
-    defaultValue: [],
-    onlyUpdateIfChanged: true,
-    log: false,
-  })
-  bitResults = [
+  bitResults = react(
     () => [
       App.state.query,
       Desktop.appState.id,
@@ -190,13 +182,15 @@ export default class AppStore {
       this.bitResultsId = Math.random()
       return results
     },
-  ]
+    {
+      immediate: true,
+      defaultValue: [],
+      onlyUpdateIfChanged: true,
+      log: false,
+    },
+  )
 
-  @react({
-    immediate: true,
-    defaultValue: [],
-  })
-  contextResults = [
+  contextResults = react(
     () => 0,
     async () => {
       return await Bit.find({
@@ -205,10 +199,13 @@ export default class AppStore {
         order: { bitCreatedAt: 'DESC' },
       })
     },
-  ]
+    {
+      immediate: true,
+      defaultValue: [],
+    },
+  )
 
-  @react({ log: false, delay: 32 })
-  selectedBit = [
+  selectedBit = react(
     () => App.peekState.bit,
     async bit => {
       if (!bit) {
@@ -229,7 +226,8 @@ export default class AppStore {
       })
       return res
     },
-  ]
+    { log: false, delay: 32 },
+  )
 
   get results() {
     if (this.selectedPane.indexOf('-search') > 0) {
@@ -241,12 +239,7 @@ export default class AppStore {
     return this.searchState.results || []
   }
 
-  @react({
-    defaultValue: { results: [], query: '' },
-    immediate: true,
-    log: false,
-  })
-  searchState = [
+  searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
     async ([query, thisGetResults], { when }) => {
       if (!query) {
@@ -310,7 +303,12 @@ export default class AppStore {
         results,
       }
     },
-  ]
+    {
+      defaultValue: { results: [], query: '' },
+      immediate: true,
+      log: false,
+    },
+  )
 
   clearSelected = () => {
     App.clearPeek()
@@ -364,11 +362,10 @@ export default class AppStore {
     this.getResults = fn
   }
 
-  @react.if
-  hoverWordToActiveIndex = [
+  hoverWordToActiveIndex = react(
     () => App.state.hoveredWord,
-    word => this.pinSelected(word.index),
-  ]
+    word => word && this.pinSelected(word.index),
+  )
 
   getPeekItem = item => {
     if (!item) {

@@ -19,8 +19,7 @@ const findType = (integration, type, skip = 0) =>
   })
 
 class OrbitHomeStore {
-  @react({ immediate: true })
-  setGetResults = [
+  setGetResults = react(
     () => this.props.paneStore.activePane === this.props.name,
     isActive => {
       if (!isActive) {
@@ -29,24 +28,27 @@ class OrbitHomeStore {
       log(`set get results`)
       this.props.appStore.setGetResults(() => this.results)
     },
-  ]
+    { immediate: true },
+  )
 
-  @react({
-    defaultValue: [],
-  })
-  results = async () => {
-    return (await Promise.all([
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation', 1),
-      findType('slack', 'conversation', 2),
-      findType('google', 'document'),
-      findType('google', 'mail'),
-      findType('google', 'mail', 1),
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation'),
-    ])).filter(Boolean)
-  }
+  results = react(
+    async () => {
+      return (await Promise.all([
+        findType('slack', 'conversation'),
+        findType('slack', 'conversation', 1),
+        findType('slack', 'conversation', 2),
+        findType('google', 'document'),
+        findType('google', 'mail'),
+        findType('google', 'mail', 1),
+        findType('slack', 'conversation'),
+        findType('slack', 'conversation'),
+        findType('slack', 'conversation'),
+      ])).filter(Boolean)
+    },
+    {
+      defaultValue: [],
+    },
+  )
 }
 
 @view({

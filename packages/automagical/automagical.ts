@@ -70,6 +70,22 @@ const isObservableLike = val =>
 
 const DEFAULT_VALUE = undefined
 
+export class Reaction {
+  options = null
+  reaction = null
+  constructor(a, b, c) {
+    if (!b || typeof b === 'object') {
+      // watch
+      this.reaction = a
+      this.options = b
+    } else {
+      // react
+      this.reaction = [a, b]
+      this.options = c
+    }
+  }
+}
+
 export default function automagical() {
   return {
     name: 'automagical',
@@ -141,13 +157,16 @@ function getAutoRunDescriptors(obj) {
   const protoDescriptors = collectGetterPropertyDescriptors(
     Object.getPrototypeOf(obj),
   )
+  console.log(obj, protoDescriptors)
   return Object.keys(protoDescriptors)
-    .filter(key => protoDescriptors[key].get)
-    .filter(key => protoDescriptors[key].get.IS_AUTO_RUN)
+    .filter(
+      key => protoDescriptors[key].get && protoDescriptors[key].get.IS_AUTO_RUN,
+    )
     .reduce((a, b) => ({ ...a, [b]: protoDescriptors[b] }), {})
 }
 
 function decorateClassWithAutomagic(obj: MagicalObject) {
+  console.log('decorating', obj)
   const descriptors = {
     ...Object.keys(obj).reduce(
       (a, b) => ({ ...a, [b]: Object.getOwnPropertyDescriptor(obj, b) }),
@@ -174,17 +193,10 @@ function decorateMethodWithAutomagic(
   method: string,
   descriptor: PropertyDescriptor,
 ) {
-  // @computed get (do first to avoid hitting the getter on next line)
-  // @ts-ignore
-  if (descriptor && descriptor.get && descriptor.get.IS_AUTO_RUN) {
-    mobxifyWatch(
-      target,
-      method,
-      // @ts-ignore
-      descriptor.get.value,
-      // @ts-ignore
-      descriptor.get.options,
-    )
+  // non decorator reactions
+  if (descriptor && descriptor.value instanceof Reaction) {
+    const reaction = descriptor.value
+    mobxifyWatch(target, method, reaction.reaction, reaction.options)
     return
   }
   if (descriptor && (!!descriptor.get || !!descriptor.set)) {

@@ -46,8 +46,7 @@ export default class Plugins {
     )
   }
 
-  @react({ immediate: true, log: false })
-  results = [
+  results = react(
     () => [App.state.query, Desktop.state.lastBitUpdatedAt],
     async ([query], { sleep }) => {
       await sleep(150) // debounce to not be too aggressive during type
@@ -65,7 +64,8 @@ export default class Plugins {
       Desktop.setSearchState({ pluginResults, pluginResultsId: _.uniqueId() })
       return pluginResults
     },
-  ]
+    { immediate: true, log: false },
+  )
 
   search = async term => {
     return _.flatten(

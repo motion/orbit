@@ -1,5 +1,5 @@
 import * as AllHelpers from '@mcro/helpers'
-import { autorun, autorunAsync, reaction } from 'mobx'
+import { autorun, reaction } from 'mobx'
 
 // subscribe-aware helpers
 export function watch(fn, userOptions) {

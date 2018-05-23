@@ -32,8 +32,7 @@ class OrbitCardStore {
     }
   }
 
-  @react
-  setPeekTargetOnNextIndex = [
+  setPeekTargetOnNextIndex = react(
     () => this.props.appStore.nextIndex === this.props.index,
     shouldSelect => {
       if (!this.isPaneSelected || !shouldSelect) {
@@ -42,10 +41,9 @@ class OrbitCardStore {
       OrbitHelpers.setPeekTarget(this.props.bit, this.ref)
       this.props.appStore.finishSettingIndex()
     },
-  ]
+  )
 
-  @react({ immediate: true, log: false })
-  updateIsSelected = [
+  updateIsSelected = react(
     () => [this.props.appStore.activeIndex, App.state.peekState.target],
     ([index, target]) => {
       if (!this.isPaneSelected) {
@@ -56,7 +54,8 @@ class OrbitCardStore {
         this._isSelected = isSelected
       }
     },
-  ]
+    { immediate: true, log: false },
+  )
 }
 
 const tinyProps = {

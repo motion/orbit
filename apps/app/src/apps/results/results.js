@@ -10,8 +10,7 @@ class ResultsStore {
     return this.props.appStore
   }
 
-  @react({ immediate: true, log: false })
-  updateResults = [
+  updateResults = react(
     () => [this.appStore.searchState.results, this.appStore.selectedPane],
     ([results, selectedPane]) => {
       if (selectedPane !== 'context') {
@@ -19,7 +18,8 @@ class ResultsStore {
       }
       this.results = results
     },
-  ]
+    { immediate: true, log: false },
+  )
 }
 
 @view.attach('appStore')

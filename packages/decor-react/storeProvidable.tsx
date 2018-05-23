@@ -3,7 +3,6 @@ import * as Mobx from 'mobx'
 import pickBy from 'lodash/pickBy'
 import difference from 'lodash/difference'
 import isEqual from 'lodash/isEqual'
-import hoistStatics from 'hoist-non-react-statics'
 import { object } from 'prop-types'
 import global from 'global'
 

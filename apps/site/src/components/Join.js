@@ -21,25 +21,19 @@ export class Join {
           method="post"
           id="mc-embedded-subscribe-form"
           name="mc-embedded-subscribe-form"
-          class="validate"
           target="_blank"
-          novalidate
+          noValidate
         >
-          <input
-            type="email"
-            name="EMAIL"
-            class="required email"
-            id="mce-EMAIL"
-          />
+          <input type="email" name="EMAIL" id="mce-EMAIL" />
           <div $$hidden aria-hidden="true">
             <input
               type="text"
               name="b_019909d3efb283014d35674e5_015e5a3442"
-              tabindex="-1"
+              tabIndex="-1"
               value=""
             />
           </div>
-          <button
+          <UI.Button
             size={1.1}
             theme="rgb(3.5%, 44.5%, 23.6%)"
             sizeRadius={3}
@@ -47,7 +41,7 @@ export class Join {
             type="submit"
           >
             Join early access
-          </button>
+          </UI.Button>
         </form>
       </section>
     )

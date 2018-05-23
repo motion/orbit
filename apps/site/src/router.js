@@ -1,13 +1,13 @@
 import Router from '@mcro/router'
-// import HomePage from '~/pages/HomePage'
-import FeaturesPage from '~/pages/FeaturesPage'
-import UseCasesPage from '~/pages/UseCasesPage'
-import AboutPage from '~/pages/AboutPage'
+import { HomePage } from '~/pages/HomePage'
+import { FeaturesPage } from '~/pages/FeaturesPage'
+import { UseCasesPage } from '~/pages/UseCasesPage'
+import { AboutPage } from '~/pages/AboutPage'
 
 function runRouter() {
   return new Router({
     routes: {
-      '/': require('./pages/HomePage').default,
+      '/': HomePage,
       '/features': FeaturesPage,
       '/use-cases': UseCasesPage,
       '/about': AboutPage,

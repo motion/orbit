@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Router from '~/router'
-import NotFound from '~/pages/404Page'
+import { NotFoundPage } from '~/pages/NotFoundPage'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import Media from 'react-media'
@@ -10,7 +10,7 @@ import { hot } from 'react-hot-loader'
 @view
 class Root extends React.Component {
   render() {
-    const CurrentPage = Router.activeView || NotFound
+    const CurrentPage = Router.activeView || NotFoundPage
     const width = window.innerWidth
     const isSmall = width < Constants.smallSize
     return (
@@ -47,5 +47,4 @@ class Root extends React.Component {
   }
 }
 
-console.log('hot it up')
 export default hot(module)(Root)

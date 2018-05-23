@@ -4,24 +4,28 @@ import './createElement'
 // import 'intersection-observer'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-// import Themes from '~/themes'
-// import { ThemeProvide } from '@mcro/ui'
-// import * as Constants from '~/constants'
+import Themes from '~/themes'
+import { ThemeProvide } from '@mcro/ui'
+import * as Constants from '~/constants'
 
 // for hmr
-// import '~/router'
+import '~/router'
 
-// window.Constants = Constants
+window.Constants = Constants
 
 async function render() {
-  await new Promise(res => setTimeout(res, 1000))
   if (window.restartRouter) {
     console.log('restarting router')
     window.restartRouter()
   }
   const RootNode = document.querySelector('#app')
-  const Root = require('./components/Join').Join
-  ReactDOM.render(<Root />, RootNode)
+  const Root = require('./root').default
+  ReactDOM.render(
+    <ThemeProvide {...Themes}>
+      <Root />
+    </ThemeProvide>,
+    RootNode,
+  )
 }
 
 render()

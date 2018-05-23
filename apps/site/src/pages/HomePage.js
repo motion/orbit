@@ -14,7 +14,7 @@ import {
   AppleLogo,
 } from '~/views'
 // import girlImg from '~/public/video-girl.jpg'
-import HomeIllustration from './HomeIllustration'
+import { HomeIllustration } from './HomeIllustration'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
@@ -243,7 +243,7 @@ class HomeFooter {
   }
 }
 
-export const Home = () => (
+export const HomePage = () => (
   <Media query={Constants.screen.medium}>
     {isMedium => (
       <React.Fragment>

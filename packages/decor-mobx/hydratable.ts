@@ -9,7 +9,7 @@ export function hydratable() {
       Klass.prototype.hydrate = function hydrate(state) {
         for (const key of Object.keys(state).filter(filter)) {
           // changed to computed, ignore
-          if (Mobx.isComputed(this, key)) {
+          if (Mobx.isComputedProp(this, key)) {
             continue
           }
           this[key] = state[key]
@@ -21,10 +21,10 @@ export function hydratable() {
           let state = {}
           const storeKeys = Object.keys(this.$mobx.values).filter(filter)
           for (const key of storeKeys) {
-            if (Mobx.isComputed(this, key)) {
+            if (Mobx.isComputedProp(this, key)) {
               continue
             }
-            if (Mobx.isAction(this, key)) {
+            if (Mobx.isAction(this[key])) {
               continue
             }
             state[key] = this[key]

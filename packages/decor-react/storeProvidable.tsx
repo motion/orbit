@@ -5,7 +5,6 @@ import difference from 'lodash/difference'
 import isEqual from 'lodash/isEqual'
 import hoistStatics from 'hoist-non-react-statics'
 import { object } from 'prop-types'
-import global from 'global'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
@@ -22,6 +21,10 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
     props[extraProp] = undefined
   }
 })
+
+// @ts-ignore
+window.loadedStores = new Set()
+const storeHMRCache = {}
 
 export function storeProvidable(options, Helpers) {
   return {
@@ -54,7 +57,12 @@ export function storeProvidable(options, Helpers) {
       // return HoC
       class StoreProvider extends React.PureComponent {
         hmrDispose: any
+        _props: any
+        mounted: boolean
+        stores: any
+        unmounted: boolean
 
+        // @ts-ignore
         static get name() {
           return Klass.name
         }
@@ -99,12 +107,13 @@ export function storeProvidable(options, Helpers) {
           if (this.stores === null) {
             return
           }
+          window.loadedStores.add(this)
           this.mounted = true
           this.mountStores()
-          if (global.Black) {
-            this.errorClear = this.clearErrors.bind(this)
-            this.hmrDispose = global.Black.view.on('hmr', this.errorClear)
-          }
+          // if (global.Black) {
+          //   this.errorClear = this.clearErrors.bind(this)
+          //   this.hmrDispose = global.Black.view.on('hmr', this.errorClear)
+          // }
         }
 
         clearErrors() {
@@ -123,6 +132,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         componentWillUnmount() {
+          window.loadedStores.delete(this)
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()
@@ -227,15 +237,14 @@ export function storeProvidable(options, Helpers) {
           if (!this.stores) {
             return
           }
-          this.storeHMRCache = {}
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             // pass in state + auto dehydrate
-            this.storeHMRCache[name] = {
+            storeHMRCache[name] = {
               state: store.dehydrate(),
             }
             if (store.onWillReload) {
-              store.willReload(this.storeHMRCache[name])
+              store.willReload(storeHMRCache[name])
             }
           }
         }
@@ -246,9 +255,13 @@ export function storeProvidable(options, Helpers) {
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
+            if (!storeHMRCache[name]) {
+              console.log('no hmr state for', name)
+              continue
+            }
             // auto rehydrate
-            if (this.storeHMRCache[name].state) {
-              store.hydrate(this.storeHMRCache[name].state)
+            if (storeHMRCache[name].state) {
+              store.hydrate(storeHMRCache[name].state)
             }
             if (store.onReload) {
               store.onReload()

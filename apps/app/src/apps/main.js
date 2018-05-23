@@ -22,6 +22,7 @@ export default class OrbitMain {
 
   static style = {
     main: {
+      // background: [0, 0, 0, 0.1],
       maxWidth: '100%',
       maxHeight: '100%',
       overflow: 'hidden',

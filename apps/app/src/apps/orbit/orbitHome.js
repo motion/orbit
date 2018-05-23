@@ -49,7 +49,6 @@ class OrbitHomeStore {
   }
 }
 
-@UI.injectTheme
 @view({
   store: OrbitHomeStore,
 })

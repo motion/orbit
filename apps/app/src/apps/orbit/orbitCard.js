@@ -78,7 +78,7 @@ const tinyProps = {
 })
 export default class OrbitCard {
   static defaultProps = {
-    borderRadius: 0,
+    borderRadius: 8,
   }
 
   componentWillMount() {
@@ -165,7 +165,7 @@ export default class OrbitCard {
               }}
               {...tiny && tinyProps.titleProps}
             >
-              {title}
+              {title} 123
             </UI.Text>
             {!hasSubtitle && orbitIcon}
           </title>
@@ -330,7 +330,7 @@ export default class OrbitCard {
     return {
       card: {
         ...card,
-        borderTop: [listItem ? 1 : 1, theme.active.background],
+        border: [listItem ? 1 : 1, theme.active.background],
       },
       bottom: {
         opacity: isSelected ? 1 : 0.5,

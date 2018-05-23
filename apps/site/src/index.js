@@ -24,11 +24,7 @@ function render() {
   )
 }
 
-if (window.runRouter) {
-  window.runRouter()
-} else {
-  render()
-}
+render()
 
 if (module.hot) {
   module.hot.accept(render)

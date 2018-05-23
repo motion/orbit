@@ -22,6 +22,5 @@ let AppRouter = runRouter()
 
 // because doing in installDevTools would break import order
 window.Router = AppRouter
-window.runRouter = runRouter
 
 export default AppRouter

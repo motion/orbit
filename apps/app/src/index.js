@@ -3,6 +3,11 @@ import 'regenerator-runtime/runtime'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import * as Constants from './constants'
+import { start } from './app'
+
+console.clear = function() {
+  console.log('HMR')
+}
 
 process.on('uncaughtException', err => {
   console.log('App.uncaughtException', err.stack)
@@ -14,12 +19,25 @@ if (Constants.IS_PROD) {
   require('./helpers/installDevTools')
 }
 
-export function start() {
+export function main() {
   if (!window.Root) {
     console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
     console.timeEnd('splash')
   }
-  require('./app')
+  start()
 }
 
-start()
+main()
+
+if (module.hot) {
+  module.hot.accept(async () => {
+    setTimeout(() => console.log('real root'), 17)
+    for (const store of [...window.loadedStores]) {
+      store.onWillReload()
+    }
+    await start(true)
+    for (const store of [...window.loadedStores]) {
+      store.onReload()
+    }
+  })
+}

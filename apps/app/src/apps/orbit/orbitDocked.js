@@ -48,19 +48,23 @@ class PaneStore {
   }
 
   @react({
+    immediate: true,
     log: false,
     defaultValue: { willAnimate: false, visible: false },
   })
   animationState = [
     () => App.orbitState.docked,
     async (visible, { sleep, setValue }) => {
+      log(`111111 SET IT UP`)
       // old value first to setup for transition
       setValue({ willAnimate: true, visible: !visible })
       await sleep(32)
+      log(`111111 GOGO`)
       // new value, start transition
       setValue({ willAnimate: true, visible })
       await sleep(App.animationDuration * 2)
       // done animating, reset
+      log(`111111 DONE`)
       setValue({ willAnimate: false, visible })
     },
   ]
@@ -75,6 +79,7 @@ class PaneStore {
 class OrbitDocked {
   render({ paneStore, appStore, theme }) {
     log(`DOCKED ------------`)
+    console.log('docked', paneStore.animationState)
     const { visible, willAnimate } = paneStore.animationState
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
@@ -165,7 +170,7 @@ class OrbitDocked {
 }
 
 export default props => (
-  <UI.Theme name="tan">
+  <UI.Theme name="grey">
     <OrbitDocked {...props} />
   </UI.Theme>
 )

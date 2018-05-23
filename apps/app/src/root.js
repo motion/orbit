@@ -11,7 +11,6 @@ export default class AppRoot extends React.Component {
   }
 
   componentDidMount() {
-    this.on(view, 'hmr', () => this.clearErrors())
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
   }

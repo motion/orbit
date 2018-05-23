@@ -12,6 +12,7 @@ const ARROW_PAD = 15
 
 class FrameStore {
   @react({
+    immediate: true,
     log: false,
     defaultValue: { willAnimate: false, hidden: true },
   })

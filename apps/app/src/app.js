@@ -8,16 +8,7 @@ import { uniqBy } from 'lodash'
 import * as UI from '@mcro/ui'
 import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
-
-// HMR
-if (module.hot) {
-  module.hot.accept(async () => {
-    if (window.runRouter) {
-      window.runRouter()
-    }
-    await start(true)
-  })
-}
+import RootComponent from './root'
 
 const onPort = async cb => {
   await sleep(200)
@@ -44,8 +35,8 @@ class AppRoot {
     })
   }
 
-  async start() {
-    if (window.location.pathname !== '/auth') {
+  async start({ recreate }) {
+    if (!recreate && window.location.pathname !== '/auth') {
       await connectModels(modelsList)
       await App.start()
     }
@@ -61,13 +52,10 @@ class AppRoot {
   async dispose() {}
 
   render() {
-    const isResults = window.location.pathname === '/results'
-    const RootComponent = isResults
-      ? require('./apps/results/results').default
-      : require('./root').default
+    console.log('rendering')
     ReactDOM.render(
       <ThemeProvide {...Themes}>
-        <UI.Theme name="tan">
+        <UI.Theme name="light">
           <RootComponent />
         </UI.Theme>
       </ThemeProvide>,
@@ -101,22 +89,24 @@ class AppRoot {
   }
 }
 
-let app = window.Root
-
 export async function start(recreate) {
-  if (window.Root || window._isDisposing) return
+  console.log('app.start')
+  let app = window.Root
+  if (window._isDisposing || (app && !recreate)) {
+    console.log('already disposing', window._isDisposing)
+    return
+  }
   window._isDisposing = true
   if (app) {
     await app.dispose()
+    app = null
+    recreate = true
   }
   if (recreate || !app) {
     app = new AppRoot()
-    await app.start({ quiet: recreate })
+    await app.start({ recreate })
   }
+  log('NOPENOPENOPE')
   window._isDisposing = false
+  return app
 }
-
-// start!
-start()
-
-export default app

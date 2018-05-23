@@ -52,7 +52,6 @@ export default class KeyboardStore {
   onKey = [
     () => [this.key, this.keyAt],
     ([keycode]) => {
-      console.log('reaction', keycode)
       this.clearDownKeysAfterPause()
       if (keycode === codes.esc) {
         if (

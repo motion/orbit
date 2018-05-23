@@ -10,7 +10,7 @@ const config = {
     filename: 'bundle.js',
     publicPath: '/',
   },
-  devtool: false, //'cheap-eval-source-map',
+  devtool: 'cheap-eval-source-map',
   module: {
     rules: [
       {

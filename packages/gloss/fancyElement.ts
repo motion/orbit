@@ -111,6 +111,7 @@ export default function fancyElementFactory(Gloss, styles) {
       console.error('Error values', type, props, children)
       throw new Error(`Didn't get a valid type: ${type}`)
     }
+    // @ts-ignore
     let glossUID = this && this.constructor.glossUID
     // for shorthand components
     if (props && props.glossUID) {

@@ -262,6 +262,7 @@ export default class Text {
         console.warn('Expected chidlren to be string for highlighting')
       }
     }
+    console.log('text style', style, this.props)
     return (
       <text
         className={className}
@@ -341,6 +342,7 @@ export default class Text {
   }
 
   static theme = (props, theme) => {
+    console.log('runnig theme for text', props)
     const { fontSize, lineHeight } = getTextProperties(props)
     let color = props.color || theme.base.color
     // allow alpha adjustments

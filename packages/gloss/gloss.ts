@@ -98,13 +98,15 @@ export default class Gloss {
       return () => this.createElement('div', { children: 'Error Component' })
     }
     if (Child.prototype && Child.prototype.render) {
-      const { css } = this
+      const { css, attachStyles } = this
+      const id = uid()
+      // @ts-ignore
+      this.createElement.glossUID = id
       Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
       Child.prototype.glossStylesheet = this.stylesheet
       const hasTheme = Child.theme && typeof Child.theme === 'function'
       const themeSheet = JSS.createStyleSheet().attach()
-      const id = uid()
       // @ts-ignore
       Child.glossUID = id
       this.themeSheets[id] = themeSheet
@@ -141,9 +143,14 @@ export default class Gloss {
         }
       }
       const ogrender = Child.prototype.render
+      let hasSetStyles = false
       if (Child.prototype.render) {
         Child.prototype.render = function(...args) {
-          console.log('rendering', this)
+          if (!hasSetStyles) {
+            console.log('attaching', Child.glossUID, Child.style)
+            attachStyles(Child.glossUID, Child.style, true)
+            hasSetStyles = true
+          }
           if (hasTheme) {
             this.glossUpdateTheme(this.props)
           }

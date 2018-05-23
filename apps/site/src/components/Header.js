@@ -10,7 +10,7 @@ import Media from 'react-media'
 console.log('view', view)
 
 @view
-export class Header extends React.Component {
+export class Header {
   render() {
     return (
       <Media query={Constants.screen.large}>

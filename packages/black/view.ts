@@ -1,4 +1,4 @@
-import decor from '@mcro/decor'
+import decor, { DecorCompiledDecorator } from '@mcro/decor'
 import * as PropTypes from 'prop-types'
 import {
   storeProvidable,
@@ -24,6 +24,8 @@ const uiContext = [
   },
 ]
 
+console.log('decorator from gloss is', decorator)
+
 const glossPlugin = () => ({ decorator })
 const decorations = (
   enable: { ui?: boolean; mobx?: boolean; magic?: boolean } = {},
@@ -41,18 +43,17 @@ const decorations = (
   !enable.ui && emitsMount,
 ]
 
-export const decorBase = decor(
+export const blackDecorator = decor(
   decorations({ mobx: true, magic: false, ui: true }),
 )
 
 export interface ViewDecorator {
   (): any
-  on: typeof decorBase.on
-  emitter: typeof decorBase.emitter
-  off: typeof decorBase.off
-  emit: typeof decorBase.emit
-  ui: typeof decor
-  electron: typeof decor
+  on: typeof blackDecorator.on
+  emitter: typeof blackDecorator.emitter
+  emit: typeof blackDecorator.emit
+  ui: DecorCompiledDecorator<any>
+  electron: DecorCompiledDecorator<any>
   provide: any
   attach: any
 }
@@ -64,17 +65,16 @@ function createViewDecorator() {
     }
     // @view({ ...stores }) shorthand
     if (typeof item === 'object') {
-      const res = decorBase({ stores: item })
+      const res = blackDecorator({ stores: item })
       return res
     }
-    const res = decorBase(item)
+    const res = blackDecorator(item)
     return res
   }
   // pass on emitter
-  view.emitter = decorBase.emitter
-  view.on = decorBase.on
-  view.off = decorBase.off
-  view.emit = decorBase.emit
+  view.emitter = blackDecorator.emitter
+  view.on = blackDecorator.on
+  view.emit = blackDecorator.emit
   // other decorators
   view.ui = decor(decorations({ ui: true }))
   view.electron = decor(decorations({ mobx: true, ui: false }))

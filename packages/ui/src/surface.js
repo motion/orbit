@@ -402,6 +402,7 @@ export default class Surface extends React.PureComponent {
   }
 
   static theme = (props, theme, self) => {
+    console.log('running surface theme', self)
     const uiContext = self.uiContext
 
     // sizes

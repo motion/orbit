@@ -7,6 +7,8 @@ import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 
+console.log('view', view)
+
 @view
 export class Header extends React.Component {
   render() {

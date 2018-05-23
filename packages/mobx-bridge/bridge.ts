@@ -2,7 +2,6 @@ import { action } from 'mobx'
 import { mergeWith, isPlainObject, isEqual } from 'lodash'
 import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
-import waitPort from 'wait-port'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
@@ -107,7 +106,7 @@ class Bridge {
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', this.dispose)
     } else {
-      await waitPort({ host: 'localhost', port: 40510 })
+      await eval(`require('wait-port')`)({ host: 'localhost', port: 40510 })
       process.on('exit', this.dispose)
     }
   }

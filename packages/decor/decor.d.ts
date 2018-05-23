@@ -10,20 +10,20 @@ export interface DecorPlugin<T> {
     name: string
     once?: boolean
     onlyClass?: boolean
-    decorator?: <A>(a: A, b?: Object) => T & A
+    decorator?: <A>(a: new <A>() => any, b?: Object) => T & A
   }
 }
 
 export type DecorPlugins = Array<[DecorPlugin<any>, Object] | DecorPlugin<any>>
 
-export type DecorDecorator<T> = <X extends Function>(target: X) => T & X
+// export type DecorDecorator<T> = <X extends Function>(target: X) => T & X
 
-export type DecorDecoratorWithOptionalOptions<T> = T extends Object
-  ? (options: Object) => DecorDecorator<T>
-  : T extends Function ? DecorDecorator<T> : void
+// export type DecorDecoratorWithOptionalOptions<T> = T extends Object
+//   ? (options: Object) => DecorDecorator<T>
+//   : T extends Function ? DecorDecorator<T> : void
 
 export interface DecorCompiledDecorator<Extensions> {
-  <T>(target: T): DecorDecoratorWithOptionalOptions<T>
+  <T>(target: T): T & Extensions
   emitter: Emitter
   on: Emitter['on']
   emit: Emitter['emit']

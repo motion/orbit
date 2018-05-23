@@ -2,9 +2,6 @@ import { store } from '@mcro/black/store'
 import { App } from './App'
 import { Electron } from './Electron'
 import { Desktop } from './Desktop'
-import debug from '@mcro/debug'
-
-const log = debug('ElectronReactions')
 
 @store
 export default class ElectronReactions {

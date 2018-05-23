@@ -63,6 +63,7 @@ module.exports = function(context, givenOpts) {
         loose: true,
         decoratorsLegacy: true,
       }),
+      plug('@babel/preset-typescript'),
     ],
   }
 

@@ -2,7 +2,9 @@ import { Emitter } from 'event-kit'
 export { Emitter, CompositeDisposable } from 'event-kit'
 import { DecorPlugins, DecorCompiledDecorator } from './decor.d'
 
-export default function decor(plugins: DecorPlugins): DecorCompiledDecorator {
+export default function decor(
+  plugins: DecorPlugins,
+): DecorCompiledDecorator<any> {
   const allPlugins = []
 
   // Helpers

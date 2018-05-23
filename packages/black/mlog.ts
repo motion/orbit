@@ -21,7 +21,14 @@ function deepMobxToJS(_thing) {
 
 let cur
 
-export const mlog = (fn, ...rest) => {
+type MLog = {
+  (fn: Function, ...rest: Array<any>): void
+  clear: Function
+  enable: Function
+  disable: Function
+}
+
+export const mlog = <MLog>function mlog(fn, ...rest) {
   // regular log
   if (typeof fn !== 'function') {
     cur = fn
@@ -50,7 +57,6 @@ export const mlog = (fn, ...rest) => {
   )
 }
 
-// @ts-ignore
 mlog.clear = () => {
   runners.forEach(r => r())
   runners = []
@@ -65,11 +71,9 @@ enableLogging({
   compute: true,
 })
 
-// @ts-ignore
 mlog.enable = () => {
   logMobx = true
 }
-// @ts-ignore
 mlog.disable = () => {
   logMobx = false
 }

@@ -15,8 +15,8 @@ export const fuzzy = (query, results, extraOpts) =>
 import latinize from 'latinize'
 import * as React from 'react'
 
-export hoverSettler from './hoverSettler'
-export logClass from './logClass'
+export * from './hoverSettler'
+export * from './logClass'
 
 export const trimSingleLine = str => str.trim().replace(/\s{2,}/g, ' ')
 export const sleep = ms => new Promise(res => setTimeout(res, ms))

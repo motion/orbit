@@ -1,7 +1,5 @@
 import { isEqual, throttle } from 'lodash'
 
-const log = debug('hoverSettler')
-
 // isEqual but works with dom nodes (lodash doesnt)
 function isReallyEqual(a, b) {
   if (a && a.isEqualNode) {
@@ -10,7 +8,7 @@ function isReallyEqual(a, b) {
   return isEqual(a, b)
 }
 
-export default function hoverSettler({
+export function hoverSettler({
   enterDelay = 0,
   leaveDelay = 32,
   betweenDelay = 0,
@@ -126,7 +124,7 @@ export default function hoverSettler({
         onMouseEnter,
         onMouseLeave,
         onMouseMove,
-      }
+      },
     }
   }
 }

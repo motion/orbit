@@ -194,10 +194,16 @@ function decorateMethodWithAutomagic(
   descriptor: PropertyDescriptor,
 ) {
   // non decorator reactions
-  if (descriptor && descriptor.value instanceof Reaction) {
-    const reaction = descriptor.value
-    mobxifyWatch(target, method, reaction.reaction, reaction.options)
-    return
+  if (descriptor && descriptor.value) {
+    if (descriptor.value instanceof Reaction) {
+      const reaction = descriptor.value
+      mobxifyWatch(target, method, reaction.reaction, reaction.options)
+      return
+    }
+    if (descriptor.value.__IS_DEEP) {
+      delete descriptor.value.__IS_DEEP
+      return Mobx.observable.deep
+    }
   }
   if (descriptor && (!!descriptor.get || !!descriptor.set)) {
     return Mobx.computed

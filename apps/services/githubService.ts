@@ -1,5 +1,5 @@
 import { Setting } from '@mcro/models'
-import { store, watch } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import Octokat from 'octokat'
 
 @store
@@ -14,7 +14,7 @@ export class GithubService {
     })
   }
 
-  @watch allOrgs = () => this.github && this.github.user.orgs.fetchAll()
+  allOrgs = react(() => this.github && this.github.user.orgs.fetchAll())
 
   get activeRepos() {
     if (!this.setting) return

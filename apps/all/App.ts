@@ -29,8 +29,7 @@ class AppStore {
   bridge: any
   source = 'App'
 
-  @deep
-  state = {
+  state = deep({
     query: '',
     screenSize: [0, 0],
     orbitState: {
@@ -57,7 +56,7 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
-  }
+  })
 
   get isShowingOrbit() {
     return !App.orbitState.hidden

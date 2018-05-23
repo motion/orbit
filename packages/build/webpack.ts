@@ -1,8 +1,6 @@
-const webpack = require('webpack')
-const devServer = require('webpack-dev-server')
-const config = require('./webpack.config')
-
-console.log(config)
+import webpack from 'webpack'
+import devServer from 'webpack-dev-server'
+import config from './webpack.config'
 
 const compiler = webpack(config)
 const webpackServer = new devServer(compiler, {

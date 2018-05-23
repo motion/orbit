@@ -23,8 +23,7 @@ class DesktopStore {
   onMessage = Bridge.onMessage
   source = 'Desktop'
 
-  @deep
-  state: DesktopState = {
+  state: DesktopState = deep({
     screenSize: [0, 0],
     appState: {
       selectedText: '',
@@ -64,7 +63,7 @@ class DesktopStore {
     lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
-  }
+  })
 
   results = []
 

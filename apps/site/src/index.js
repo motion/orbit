@@ -1,3 +1,4 @@
+import '~/public/styles/siteBase.css'
 import './createElement'
 // import 'regenerator-runtime/runtime'
 // import 'babel-polyfill'

@@ -1,4 +1,4 @@
-import { store, watch, react } from '@mcro/black'
+import { store, react } from '@mcro/black'
 import * as Syncers from './syncers'
 import { Job, remove } from '@mcro/models'
 import debug from '@mcro/debug'
@@ -30,13 +30,12 @@ export default class Sync {
 
   // save in 3.2.s
 
-  @watch({ log: false })
-  syncLog = () => {
+  syncLog = react(() => {
     const title = this.enabled
       ? 'SYNC ENABLED ✅ (Root.sync.disable())'
       : 'SYNC DISABLED (Root.sync.enable())'
     console.log(`----${title}----`)
-  }
+  })
 
   processJobs = react(
     () => this.jobs,

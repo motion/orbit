@@ -1,16 +1,19 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const webpack = require('webpack')
+import * as Path from 'path'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import webpack from 'webpack'
 
 const config = {
-  mode: 'development',
-  entry: './src/index',
+  mode: process.env.NODE_ENV || 'development',
+  entry: './src',
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: Path.join(__dirname, 'dist'),
     filename: 'bundle.js',
     publicPath: '/',
   },
   devtool: false, //'cheap-eval-source-map',
+  resolveLoader: {
+    modules: [Path.join(__dirname, '..', 'node_modules')],
+  },
   module: {
     rules: [
       {
@@ -20,6 +23,10 @@ const config = {
       {
         test: /\.tsx?$/,
         use: ['awesome-typescript-loader', 'babel-loader'],
+      },
+      {
+        test: /\.css$/,
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
       },
       {
         test: /\.svg$/,
@@ -50,4 +57,4 @@ const config = {
   ],
 }
 
-module.exports = config
+export default config

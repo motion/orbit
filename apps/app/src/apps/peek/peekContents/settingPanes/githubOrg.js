@@ -1,5 +1,5 @@
 import * as UI from '@mcro/ui'
-import { view, watch } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import { Bit } from '~/app'
 import * as Collapse from '../views/collapse'
@@ -10,13 +10,14 @@ class OrgStore {
   get api() {
     return GithubService.github
   }
-  @watch
-  repos = () =>
-    this.api &&
-    this.api
-      .orgs(this.props.name)
-      .repos.fetch({ per_page: 100 })
-      .then(res => res.items)
+  repos = react(
+    () =>
+      this.api &&
+      this.api
+        .orgs(this.props.name)
+        .repos.fetch({ per_page: 100 })
+        .then(res => res.items),
+  )
 }
 @view.attach('githubStore')
 @view({

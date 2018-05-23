@@ -23,15 +23,14 @@ class ElectronStore {
   onClear = null
   lastAction = null
 
-  @deep
-  state = {
+  state = deep({
     settingsPosition: [], // todo: settingsState.position
     showDevTools: {
       orbit: false,
       peek: false,
       highlights: false,
     },
-  }
+  })
 
   start = options => {
     Bridge.start(this, this.state, options)

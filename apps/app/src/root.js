@@ -3,9 +3,10 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { NotFound } from '~/views/notFound'
 import Router from '~/router'
+import { hot } from 'react-hot-loader'
 
 @view
-export default class AppRoot extends React.Component {
+class Root extends React.Component {
   state = {
     error: null,
   }
@@ -80,3 +81,5 @@ export default class AppRoot extends React.Component {
     )
   }
 }
+
+export default hot(module)(Root)

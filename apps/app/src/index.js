@@ -7,9 +7,8 @@ import '@mcro/debug/inject.js'
 import * as Constants from './constants'
 import { start } from './app'
 
-console.clear = function() {
-  console.log('HMR')
-}
+// for hmr
+import '~/router'
 
 process.on('uncaughtException', err => {
   console.log('App.uncaughtException', err.stack)

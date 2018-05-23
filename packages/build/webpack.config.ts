@@ -3,17 +3,24 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 // @ts-ignore
 import webpack from 'webpack'
 
+const entry = process.env.ENTRY || './src'
+const buildNodeModules =
+  process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
+
 const config = {
   mode: process.env.NODE_ENV || 'development',
-  entry: './src',
+  entry,
   output: {
     path: Path.join(__dirname, 'dist'),
     filename: 'bundle.js',
     publicPath: '/',
   },
   devtool: 'cheap-module-source-map', //'cheap-eval-source-map',
+  resolve: {
+    modules: [Path.join(entry, 'node_modules'), buildNodeModules],
+  },
   resolveLoader: {
-    modules: [Path.join(__dirname, '..', 'node_modules')],
+    modules: [buildNodeModules],
   },
   module: {
     rules: [
@@ -68,5 +75,7 @@ const config = {
     }),
   ],
 }
+
+console.log('config is', config)
 
 export default config

@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-// import { P, P2 } from '~/views'
+import { P, P2 } from '~/views'
 import * as UI from '@mcro/ui'
 
 @UI.injectTheme
@@ -10,12 +10,12 @@ export class Join {
     console.log(this.glossElement, '123')
     return (
       <section id="join" {...props}>
-        <p size={1.8} css={{ marginRight: 30 }}>
+        <P size={1.8} css={{ marginRight: 30 }}>
           Get early access
-        </p>
-        <p alpha={0.7} size={1.2} margin={[5, 0, 10]}>
+        </P>
+        <P2 alpha={0.7} size={1.2} margin={[5, 0, 10]}>
           We'll send one or two updates as we develop Orbit with progress.
-        </p>
+        </P2>
         <form
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5&amp;id=015e5a3442"
           method="post"

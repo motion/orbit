@@ -302,9 +302,6 @@ export function storeProvidable(options, Helpers) {
         }
       }
 
-      // copy statics
-      hoistStatics(StoreProvider, Klass)
-
       // add stores to context
       if (context) {
         StoreProvider.contextTypes = {
@@ -315,7 +312,15 @@ export function storeProvidable(options, Helpers) {
         }
       }
 
-      return StoreProvider
+      return new Proxy(StoreProvider, {
+        set(_, method, value) {
+          Klass[method] = value
+          return true
+        },
+        get(target, method) {
+          return Reflect.get(target, method)
+        },
+      }
     },
   }
 }

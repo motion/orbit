@@ -13,9 +13,8 @@ import '~/router'
 
 window.Constants = Constants
 
-console.log(1223200000)
-
-function render() {
+async function render() {
+  await new Promise(res => setTimeout(res, 10))
   if (window.restartRouter) {
     console.log('restarting router')
     window.restartRouter()

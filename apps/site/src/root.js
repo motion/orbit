@@ -7,8 +7,6 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import { hot } from 'react-hot-loader'
 
-console.log('1230')
-
 @view
 class Root extends React.Component {
   render() {

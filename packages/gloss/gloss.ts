@@ -97,14 +97,20 @@ export default class Gloss {
       )
       return () => this.createElement('div', { children: 'Error Component' })
     }
-    if (Child.prototype && Child.prototype.render) {
-      const { css, attachStyles } = this
-      const id = uid()
-      // @ts-ignore
-      this.createElement.glossUID = id
-      Child.prototype.glossElement = this.createElement
-      Child.prototype.gloss = this
-      Child.prototype.glossStylesheet = this.stylesheet
+    if (!Child.prototype || !Child.prototype.render) {
+      console.log('not a class')
+      return
+    }
+    const { css, attachStyles } = this
+    const id = uid()
+    // @ts-ignore
+    this.createElement.glossUID = id
+    Child.prototype.glossElement = this.createElement
+    Child.prototype.gloss = this
+    Child.prototype.glossStylesheet = this.stylesheet
+    // babel 7 bugfix
+    setTimeout(() => {
+      console.log('decorating', Child, Child.theme)
       const hasTheme = Child.theme && typeof Child.theme === 'function'
       const themeSheet = JSS.createStyleSheet().attach()
       // @ts-ignore
@@ -144,22 +150,21 @@ export default class Gloss {
       }
       const ogrender = Child.prototype.render
       let hasSetStyles = false
-      if (Child.prototype.render) {
-        Child.prototype.render = function(...args) {
-          if (!hasSetStyles) {
-            console.log('attaching', Child.glossUID, Child.style)
-            attachStyles(Child.glossUID, Child.style, true)
-            hasSetStyles = true
-          }
-          if (hasTheme) {
-            this.glossUpdateTheme(this.props)
-          }
-          if (ogrender) {
-            return ogrender.call(this, ...args)
-          }
+      Child.prototype.render = function(...args) {
+        console.log('check it out', hasTheme, this.theme)
+        if (!hasSetStyles) {
+          console.log('attaching', Child.glossUID, Child.style)
+          attachStyles(Child.glossUID, Child.style, true)
+          hasSetStyles = true
+        }
+        if (hasTheme) {
+          this.glossUpdateTheme(this.props)
+        }
+        if (ogrender) {
+          return ogrender.call(this, ...args)
         }
       }
-    }
+    })
   }
 
   // runs niceStyleSheet on non-function styles

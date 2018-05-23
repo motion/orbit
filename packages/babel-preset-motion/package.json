@@ -1,6 +1,6 @@
 {
   "name": "@mcro/babel-preset-motion",
-  "main": "index.js",
+  "main": "babel-preset-motion.js",
   "version": "1.5.2",
   "dependencies": {
     "@mcro/babel-plugin-if": "^1.5.1",

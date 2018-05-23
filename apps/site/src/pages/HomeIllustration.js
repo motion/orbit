@@ -308,6 +308,7 @@ class IllustrationStore {
 })
 export default class HeaderIllustration {
   render({ store }) {
+    const dom = this.glossElement.bind(this)
     return (
       <React.Fragment>
         <headerIll>
@@ -420,7 +421,7 @@ export default class HeaderIllustration {
               const bounce = store.bounce[name.toLowerCase()]
               const leave = store.leave[name.toLowerCase()]
               const countHigher = bounce === 2
-              return this.glossElement(Icon, {
+              return dom(Icon, {
                 key: name,
                 $icon: true,
                 $bouncy: bounce,

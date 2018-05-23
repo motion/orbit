@@ -1,16 +1,8 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 
-type Props = {}
-type State = {
-  children: React$Element<any>,
-}
-
 @view
-export default class StableContainer extends React.Component<Props, State> {
-  static defaultProps: {}
-
+export default class StableContainer extends React.Component {
   componentWillMount() {
     this.setState({
       children: this.props.children,
@@ -36,10 +28,6 @@ export default class StableContainer extends React.Component<Props, State> {
   }
 
   render() {
-    return (
-      <container>
-        {this.state.children || null}
-      </container>
-    )
+    return <container>{this.state.children || null}</container>
   }
 }

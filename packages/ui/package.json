@@ -12,21 +12,22 @@
     "@mcro/black": "^1.5.1",
     "@mcro/gloss": "^1.5.1",
     "@mcro/react-tunnel": "^1.5.1",
+    "batch-processor": "^1.0.0",
     "color": "^3.0.0",
     "element-resize-detector": "^1.1.12",
     "fuzzy": "^0.1.3",
     "hoist-non-react-statics": "^2.3.0",
     "keycode": "^2.1.9",
+    "prop-types": "^15.6.0",
+    "raf-throttle": "^2.0.3",
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.13.0",
     "time-ago": "^0.1.0",
-    "raf-throttle": "^2.0.3",
-    "prop-types": "^15.6.0",
-    "batch-processor": "^1.0.0"
+    "react-hot-loader": "^4.2.0"
   },
   "peerDependencies": {
-    "mobx": "^4.3.0",
     "lodash": "*",
+    "mobx": "^4.3.0",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },

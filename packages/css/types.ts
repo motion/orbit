@@ -1,4 +1,4 @@
-type NoS = number | string
+export type NoS = number | string
 
 export type CSSArray = Array<NoS>
 

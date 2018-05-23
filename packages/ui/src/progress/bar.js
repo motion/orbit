@@ -1,24 +1,22 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
-import type { Color } from '@mcro/gloss'
 
-type Props = {
-  background?: Color,
-  color?: Color,
-  width: number,
-  percent: number | string,
-}
+// type Props = {
+//   background?: Color,
+//   color?: Color,
+//   width: number,
+//   percent: number | string,
+// }
 
 @view.ui
-export default class ProgressBar extends React.Component<Props> {
+export default class ProgressBar extends React.Component {
   static defaultProps = {
     width: 90,
     percent: 0,
   }
 
-  render({ percent, color, background, width, ...props }: Props) {
+  render({ percent, color, background, width, ...props }) {
     return (
       <outer $width={width} {...props}>
         <inner $percent={+percent} $color={color} />
@@ -46,7 +44,7 @@ export default class ProgressBar extends React.Component<Props> {
     }),
   }
 
-  static theme = ({ color, background }: Props, theme) => ({
+  static theme = ({ color, background }, theme) => ({
     outer: {
       background:
         background || theme.base.background

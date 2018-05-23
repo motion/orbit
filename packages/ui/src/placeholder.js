@@ -1,8 +1,7 @@
-// @flow
 import * as React from 'react'
 import Text from './text'
 
-export default (props: Object) =>
+export default props => (
   <Text
     tagName="placeholder"
     size={1.5}
@@ -13,3 +12,4 @@ export default (props: Object) =>
     }}
     {...props}
   />
+)

@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { observable } from 'mobx'
 import SizedSurface from '../sizedSurface'
@@ -6,7 +7,7 @@ import SizedSurface from '../sizedSurface'
 export default class Checkbox {
   @observable isChecked = this.props.defaultValue || false
 
-  onChange = (e: Event) => {
+  onChange = e => {
     this.isChecked = e.target.checked
     return this.isChecked
   }

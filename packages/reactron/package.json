@@ -10,15 +10,15 @@
     "test": "electron lib/tests"
   },
   "peerDependencies": {
+    "electron": "*",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "electron": "*"
+    "react-dom": "^16.2.0"
   },
   "dependencies": {
-    "react-reconciler": "^0.7.0",
+    "debug": "^3.1.0",
     "fbjs": "^0.8.16",
     "lodash.isequal": "^4.5.0",
-    "debug": "^3.1.0"
+    "react-reconciler": "^0.7.0"
   },
   "publishConfig": {
     "access": "public"

@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { object, string } from 'prop-types'
 import getThemeFromContext from './getThemeFromContext'
 

@@ -10,16 +10,16 @@
   },
   "dependencies": {
     "@mcro/black": "*",
-    "@mcro/debug": "*",
-    "@mcro/models": "*",
     "@mcro/constants": "*",
+    "@mcro/debug": "*",
     "@mcro/mobx-bridge": "*",
+    "@mcro/models": "*",
     "global": "^4.3.2",
     "lodash": "4.17.10"
   },
   "devDependencies": {
-    "@types/ws": "^4.0.2",
-    "@types/reconnectingwebsocket": "^1.0.1"
+    "@types/reconnectingwebsocket": "^1.0.1",
+    "@types/ws": "^4.0.2"
   },
   "peerDependencies": {
     "mobx": "*"

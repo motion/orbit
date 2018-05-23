@@ -1,9 +1,6 @@
 import { findDOMNode } from 'react-dom'
 
-type Target = string | (() => React$Children | React$Children)
-
-// @flow
-export default function getTarget(target: Target) {
+export default function getTarget(target) {
   if (!target) {
     return null
   }

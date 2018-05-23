@@ -7,8 +7,8 @@
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mcro/helpers": "^1.5.1",
     "@mcro/decor": "^1.5.1",
+    "@mcro/helpers": "^1.5.1",
     "mobx-react": "^5.1.2"
   },
   "peerDependencies": {

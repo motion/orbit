@@ -15,7 +15,6 @@
         [
           "@mcro/babel-preset-motion",
           {
-            "nodeTarget": 8,
             "disable": ["@mcro/gloss/transform", "react-hot-loader/babel"]
           }
         ]

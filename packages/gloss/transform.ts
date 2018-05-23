@@ -79,8 +79,24 @@ export default function({ types: t }) {
 
   return {
     visitor: {
-      Program(path, state) {
-        path.traverse(programVisitor, state)
+      ClassMethod(path) {
+        // add a fancyelement hook to start of render
+        if (path.node.kind === 'constructor') {
+          return
+        }
+        if (path.node.body.body && !path.glossHasVisited) {
+          path.glossHasVisited = true
+          path.node.body.body.unshift(
+            t.variableDeclaration('const', [
+              t.variableDeclarator(
+                t.identifier('__dom'),
+                t.identifier(
+                  'this.glossElement && this.glossElement.bind(this) || window.__dom',
+                ),
+              ),
+            ]),
+          )
+        }
       },
     },
   }

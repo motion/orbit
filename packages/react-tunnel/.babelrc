@@ -1,0 +1,14 @@
+{
+  "env": {
+    "es6": {
+      "presets": [
+        [
+          "@mcro/babel-preset-motion",
+          {
+            "disable": ["@mcro/gloss/transform", "react-hot-loader/babel"]
+          }
+        ]
+      ]
+    }
+  }
+}

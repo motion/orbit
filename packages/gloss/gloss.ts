@@ -1,22 +1,18 @@
-// @flow
 import fancyElement from './fancyElement'
 import css from '@mcro/css'
-import JSS from '~/stylesheet'
-import * as Helpers_ from '@mcro/css'
+import JSS from './stylesheet'
 
-// exports
-import ThemeProvide_ from './components/themeProvide'
-import Theme_ from './components/theme'
-export const Theme = Theme_
-export const ThemeProvide = ThemeProvide_
+import * as Helpers_ from '@mcro/css'
 export const Helpers = Helpers_
+export * from './components/themeProvide'
+export * from './components/theme'
 
 export type Options = {
-  dontTheme?: boolean,
-  baseStyles?: Object,
-  tagName?: boolean,
-  toColor?: Function,
-  isColor?: Function,
+  dontTheme?: boolean
+  baseStyles?: Object
+  tagName?: boolean
+  toColor?: Function
+  isColor?: Function
 }
 
 const DEFAULT_OPTS = {}
@@ -27,9 +23,11 @@ function uid() {
 }
 
 export default class Gloss {
+  stylesheet: any
+  css: any
+  helpers: any
   options: Options
-  css: (a: Object) => Object
-  baseStyles: ?Object
+  baseStyles?: Object
   createElement: Function
   Helpers: Object = Helpers
   themeSheets = {}
@@ -47,11 +45,12 @@ export default class Gloss {
       this.attachStyles(null, opts.baseStyles)
     }
     this.createElement = fancyElement(this, this.stylesheet)
+    // @ts-ignore
     this.decorator.createElement = this.createElement
   }
 
   decorator = (
-    optionalNameOrChild: string | Function,
+    optionalNameOrChild: any,
     // these are only used for shorthand views
     optionalStyle?: Object,
     optionalPropStyles?: Object,
@@ -79,10 +78,11 @@ export default class Gloss {
         return this.createElement(tagName, { glossUID: id, ...finalProps })
       }
       try {
-        this.attachStyles(id, { [tagName]: styles, ...optionalPropStyles })
+        this.attachStyles(`${id}`, { [tagName]: styles, ...optionalPropStyles })
       } catch (err) {
         console.log('error attaching styles:', tagName, this, styles)
       }
+      // @ts-ignore
       glossComponent.displayName = tagName
       return glossComponent
     }
@@ -98,7 +98,7 @@ export default class Gloss {
       return () => this.createElement('div', { children: 'Error Component' })
     }
     if (Child.prototype && Child.prototype.render) {
-      const { attachStyles, css } = this
+      const { css } = this
       Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
       Child.prototype.glossStylesheet = this.stylesheet
@@ -140,22 +140,11 @@ export default class Gloss {
           }
         }
       }
-      let lastUpdatedStyles = null
       const ogrender = Child.prototype.render
       if (Child.prototype.render) {
         Child.prototype.render = function(...args) {
           if (hasTheme) {
             this.glossUpdateTheme(this.props)
-          }
-          // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK
-          if (
-            !lastUpdatedStyles ||
-            (typeof window !== 'undefined' &&
-              window.lastHotReload &&
-              lastUpdatedStyles > window.lastHotReload)
-          ) {
-            attachStyles(Child.glossUID, Child.style, true)
-            lastUpdatedStyles = Date.now()
           }
           if (ogrender) {
             return ogrender.call(this, ...args)
@@ -167,8 +156,8 @@ export default class Gloss {
 
   // runs niceStyleSheet on non-function styles
   attachStyles = (
-    childKey: ?string,
-    styles: ?{ [a: string]: Object },
+    childKey?: string,
+    styles?: Object,
     force: boolean = false,
   ): void => {
     if (!styles) {

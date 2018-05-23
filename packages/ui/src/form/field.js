@@ -1,7 +1,5 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import type { Color } from '@mcro/gloss'
 import Label from './label'
 import Row from '../row'
 
@@ -23,25 +21,25 @@ const TYPE_TO_ELEMENT_MAP = {
   password: 'input',
 }
 
-type Props = {
-  type: 'input' | 'select' | 'toggle' | 'password' | 'checkbox' | 'textarea',
-  spacing: number,
-  row?: boolean,
-  name?: string,
-  label?: string,
-  placeholder?: string,
-  placeholderColor?: Color,
-  elementStyle?: Object,
-  fieldStyle?: Object,
-  labelStyle?: Object,
-  elementProps?: Object,
-  fieldProps?: Object,
-  labelProps?: Object,
-  element?: React$Element<any>,
-}
+// type Props = {
+//   type: 'input' | 'select' | 'toggle' | 'password' | 'checkbox' | 'textarea',
+//   spacing: number,
+//   row?: boolean,
+//   name?: string,
+//   label?: string,
+//   placeholder?: string,
+//   placeholderColor?: Color,
+//   elementStyle?: Object,
+//   fieldStyle?: Object,
+//   labelStyle?: Object,
+//   elementProps?: Object,
+//   fieldProps?: Object,
+//   labelProps?: Object,
+//   element?: React$Element<any>,
+// }
 
 @view.ui
-export default class Field extends React.Component<Props> {
+export default class Field extends React.Component {
   static defaultProps = {
     type: 'input',
     width: 'auto',
@@ -74,7 +72,7 @@ export default class Field extends React.Component<Props> {
     value,
     size,
     ...props
-  }: Props) {
+  }) {
     const Element = fields[TYPE_TO_ELEMENT_MAP[type] || type]
     const id =
       name ||

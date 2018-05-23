@@ -52,8 +52,8 @@
     "time-ago": "^0.1.0"
   },
   "devDependencies": {
-    "@mcro/dev": "*",
     "@mcro/babel-preset-motion": "*",
+    "@mcro/dev": "*",
     "babel-core": "^6.26.0"
   }
 }

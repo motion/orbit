@@ -1,7 +1,11 @@
-import React from 'react'
+import * as React from 'react'
 import { object } from 'prop-types'
 
-export default class ThemeProvide extends React.Component {
+export class ThemeProvide extends React.Component {
+  props: {
+    children: any
+  }
+
   static childContextTypes = {
     uiThemes: object,
     provided: object,

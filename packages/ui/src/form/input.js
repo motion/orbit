@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import inject from '../helpers/inject'
@@ -6,17 +5,17 @@ import SizedSurface from '../sizedSurface'
 import Button from '../button'
 import Checkbox from './checkbox'
 
-type Props = {
-  uiContext: Object,
-  sync?: Object,
-  onEnter?: Function,
-  getRef?: Function,
-  type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password',
-  name?: string,
-  form?: Object,
-  elementProps?: Object,
-  onClick?: Function,
-}
+// type Props = {
+//   uiContext: Object,
+//   sync?: Object,
+//   onEnter?: Function,
+//   getRef?: Function,
+//   type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password',
+//   name?: string,
+//   form?: Object,
+//   elementProps?: Object,
+//   onClick?: Function,
+// }
 
 const TAG_MAP = {
   password: 'input',
@@ -24,14 +23,14 @@ const TAG_MAP = {
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Input extends React.PureComponent<Props> {
+export default class Input extends React.PureComponent {
   static defaultProps = {
     size: 1,
     type: 'input',
     elementProps: {},
   }
 
-  node: ?HTMLInputElement = null
+  node = null
 
   componentDidMount() {
     this.setValues()
@@ -53,7 +52,7 @@ export default class Input extends React.PureComponent<Props> {
     }
   }
 
-  onNode = (node: ?HTMLInputElement) => {
+  onNode = node => {
     this.node = node
     if (this.props.getRef) {
       this.props.getRef(node)

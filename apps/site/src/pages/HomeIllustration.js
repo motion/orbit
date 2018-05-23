@@ -6,7 +6,7 @@ import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 import * as Icons from '~/views/icons'
 import Router from '~/router'
-import { brandColor } from 'constants'
+import { colorMain } from '~/constants'
 
 const bgColor = '#fff'
 const dockIcons = [
@@ -378,7 +378,7 @@ export default class HeaderIllustration {
                       itemProps={{
                         size: 1.1,
                         alpha: 0.8,
-                        theme: brandColor,
+                        theme: colorMain,
                       }}
                       css={{
                         flexFlow: 'row',

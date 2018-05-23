@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
-import { pick } from 'lodash'
 
 const wrapHighlights = (text, highlightWordsColor, highlightWords) => {
   let result = text

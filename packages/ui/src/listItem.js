@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
@@ -6,39 +5,39 @@ import Text from './text'
 import Date from './date'
 import SizedSurface from './sizedSurface'
 
-export type Props = {
-  after?: React.Element<any>,
-  before?: React.Element<any>,
-  borderWidth?: number,
-  borderRadius?: number,
-  children?: React.Element<any>,
-  date?: React.Element<any>,
-  dateSize?: number,
-  iconProps?: Object,
-  isFirstElement?: boolean,
-  isLastElement?: boolean,
-  meta?: React.Element<any>,
-  onClick?: Function,
-  onItemMount?: Function,
-  onToggle?: Function,
-  primary?: React.Element<any>,
-  row?: boolean,
-  secondary?: React.Element<any>,
-  ellipse?: boolean,
-  glowProps?: Object,
-  editable?: boolean,
-  onFinishEdit?: Function,
-  childrenProps?: Object,
-  primaryEllipse?: boolean,
-  glow?: boolean,
-  fontWeight?: number | string,
-  fontSize?: number | string,
-  primaryProps?: Object,
-  index?: number,
-}
+// export type Props = {
+//   after?: React.Element<any>,
+//   before?: React.Element<any>,
+//   borderWidth?: number,
+//   borderRadius?: number,
+//   children?: React.Element<any>,
+//   date?: React.Element<any>,
+//   dateSize?: number,
+//   iconProps?: Object,
+//   isFirstElement?: boolean,
+//   isLastElement?: boolean,
+//   meta?: React.Element<any>,
+//   onClick?: Function,
+//   onItemMount?: Function,
+//   onToggle?: Function,
+//   primary?: React.Element<any>,
+//   row?: boolean,
+//   secondary?: React.Element<any>,
+//   ellipse?: boolean,
+//   glowProps?: Object,
+//   editable?: boolean,
+//   onFinishEdit?: Function,
+//   childrenProps?: Object,
+//   primaryEllipse?: boolean,
+//   glow?: boolean,
+//   fontWeight?: number | string,
+//   fontSize?: number | string,
+//   primaryProps?: Object,
+//   index?: number,
+// }
 
 @view
-export default class ListItem extends React.Component<Props> {
+export default class ListItem extends React.Component {
   static isListItem = true
   static contextTypes = {
     uiTheme: object,

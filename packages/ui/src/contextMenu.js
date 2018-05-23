@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { findDOMNode } from 'react-dom'
@@ -6,13 +5,8 @@ import { object } from 'prop-types'
 import List from './list'
 import Popover from './popover'
 
-type TargetProps = {
-  contextMenu: Object,
-}
-
 @view.ui
-class ContextMenuTarget extends React.Component<TargetProps> {
-  static defaultProps: {}
+class ContextMenuTarget extends React.Component {
   static contextTypes = {
     contextMenu: object,
   }
@@ -29,13 +23,13 @@ class ContextMenuTarget extends React.Component<TargetProps> {
   }
 }
 
-export type Props = {
-  width: number,
-  children: React.Element<any>,
-  inactive?: Boolean,
-  options?: Object,
-  store?: ContextMenuStore,
-}
+// export type Props = {
+//   width: number,
+//   children: React.Element<any>,
+//   inactive?: Boolean,
+//   options?: Object,
+//   store?: ContextMenuStore,
+// }
 
 class ContextMenuStore {
   event = null
@@ -45,7 +39,7 @@ class ContextMenuStore {
     this.event = null
   }
 
-  handleContext = (event: Event) => {
+  handleContext = event => {
     this.event = event
   }
 }
@@ -53,7 +47,7 @@ class ContextMenuStore {
 @view({
   store: ContextMenuStore,
 })
-class ContextMenu extends React.Component<Props> {
+class ContextMenu extends React.Component {
   node = null
 
   static defaultProps = {
@@ -75,7 +69,7 @@ class ContextMenu extends React.Component<Props> {
   }
 
   componentDidMount() {
-    this.on(window, 'click', (event: Event) => {
+    this.on(window, 'click', event => {
       if (this.props.inactive) return
       if (this.props.store.event) {
         event.preventDefault()
@@ -83,7 +77,7 @@ class ContextMenu extends React.Component<Props> {
       }
     })
 
-    this.on(this.node, 'contextmenu', (event: Event) => {
+    this.on(this.node, 'contextmenu', event => {
       if (this.props.inactive) return
       event.preventDefault()
       event.stopPropagation()
@@ -91,7 +85,7 @@ class ContextMenu extends React.Component<Props> {
     })
   }
 
-  render({ inactive, width, children, options, store, ...props }: Props) {
+  render({ inactive, width, children, options, store, ...props }) {
     return (
       <contextmenu ref={this.ref('node').set} {...props}>
         {children}

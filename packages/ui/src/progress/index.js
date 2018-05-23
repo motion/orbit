@@ -1,15 +1,10 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Bar from './bar'
 import Circle from './circle'
 
-type Props = {
-  type: 'bar' | 'circle',
-}
-
 @view.ui
-export default class Progress extends React.Component<Props> {
+export default class Progress extends React.Component {
   static Bar = Bar
   static Circle = Circle
 

@@ -2,7 +2,7 @@
   "name": "@mcro/css",
   "version": "1.5.1",
   "description": "",
-  "main": "_/index.js",
+  "main": "_/css.js",
   "author": "Motion",
   "license": "MIT",
   "scripts": {

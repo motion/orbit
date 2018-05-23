@@ -5,9 +5,12 @@ import NotFound from '~/pages/404Page'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import Media from 'react-media'
+import { hot } from 'react-hot-loader'
+
+console.log('1230')
 
 @view
-export default class Root {
+class Root extends React.Component {
   render() {
     const CurrentPage = Router.activeView || NotFound
     const width = window.innerWidth
@@ -45,3 +48,6 @@ export default class Root {
     },
   }
 }
+
+console.log('hot it up')
+export default hot(module)(Root)

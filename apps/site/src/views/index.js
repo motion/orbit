@@ -274,7 +274,7 @@ export const DottedButton = props => (
       border: [1, 'dashed', '#eee'],
       flex: 'none',
       cursor: 'pointer',
-      color: Constants.brandColor,
+      color: Constants.colorMain,
       fontWeight: 500,
       fontSize: 16,
       flexFlow: 'row',

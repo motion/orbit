@@ -1,4 +1,4 @@
-const Oracle = require('./lib').default
+const Oracle = require('../_/oracle').default
 const Fs = require('fs')
 const Path = require('path')
 const execa = require('execa')

@@ -1,12 +1,9 @@
-// @flow
-import EventEmitter from 'events'
-
 export default function configureEventHandler(
-  emitter: EventEmitter,
-  attachedHandlers: { [string]: Function },
-  eventKey: string,
-  rawHandler: Function,
-  wrapper: Function
+  emitter,
+  attachedHandlers,
+  eventKey,
+  rawHandler,
+  wrapper,
 ) {
   const removingHandler =
     rawHandler === undefined && attachedHandlers[eventKey] !== undefined

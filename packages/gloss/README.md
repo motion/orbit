@@ -10,7 +10,6 @@ full-featured example:
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Gloss, { color as $, Theme, ThemeProvide } from '@mcro/gloss'
-import type { Color } from '@mcro/gloss'
 import Icon from './icon'
 import Popover from './popover'
 

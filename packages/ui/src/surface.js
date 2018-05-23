@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import Theme from './helpers/theme'
 import { view } from '@mcro/black'
@@ -7,88 +6,87 @@ import Icon from './icon'
 import HoverGlow from './effects/hoverGlow'
 import Glint from './effects/glint'
 import Popover from './popover'
-import type { Color } from '@mcro/gloss'
 import { object } from 'prop-types'
 
-export type Props = {
-  active?: boolean,
-  after?: Element | string,
-  align?: string,
-  alignSelf?: string,
-  background?: Color,
-  badge?: React.Element<any>,
-  badgeProps?: Object,
-  border?: Array<any> | Object,
-  borderBottom?: Array<any> | Object,
-  borderBottomRadius?: number,
-  borderLeft?: Array<any> | Object,
-  borderLeftRadius?: number,
-  borderRadius: number,
-  borderRight?: Array<any> | Object,
-  borderRightRadius?: number,
-  borderStyle?: 'solid' | 'dotted',
-  borderTop?: Array<any> | Object,
-  borderTopRadius?: number,
-  borderWidth?: number | string,
-  boxShadow?: Array<any> | string,
-  children?: Element | string,
-  chromeless?: boolean,
-  circular?: boolean,
-  className?: string,
-  clickable?: boolean,
-  color?: Color,
-  dim?: boolean,
-  elementProps?: Object,
-  elevation?: number,
-  flex?: boolean | number,
-  focusable?: boolean,
-  getRef?: Function,
-  glint?: boolean,
-  glow?: boolean,
-  glowProps?: Object,
-  height?: number,
-  highlight?: boolean,
-  hoverable?: boolean,
-  hovered?: boolean,
-  icon?: React.Element<any> | string,
-  iconAfter?: boolean,
-  iconColor?: Color,
-  iconProps?: Object,
-  iconSize?: number,
-  inline?: boolean,
-  justify?: string,
-  lineHeight?: number | string,
-  margin?: number | Array<number>,
-  marginBottom?: number,
-  marginLeft?: number,
-  marginRight?: number,
-  marginTop?: number,
-  maxWidth?: number,
-  minWidth?: number,
-  noElement?: boolean,
-  noWrap?: boolean,
-  onClick?: Function,
-  opacity?: number,
-  overflow?: 'hidden' | 'visible' | 'scroll' | 'default',
-  padding?: number | Array<number>,
-  paddingBottom?: number,
-  paddingLeft?: number,
-  paddingRight?: number,
-  paddingTop?: number,
-  row?: boolean,
-  size?: number,
-  sizeIcon?: number,
-  spaced?: boolean,
-  stretch?: boolean,
-  tagName: string,
-  theme?: string,
-  tooltip?: string,
-  tooltipProps?: Object,
-  uiContext?: boolean,
-  width?: number,
-  wrapElement?: boolean,
-  borderRadius?: number,
-}
+// export type Props = {
+//   active?: boolean,
+//   after?: Element | string,
+//   align?: string,
+//   alignSelf?: string,
+//   background?: Color,
+//   badge?: React.Element<any>,
+//   badgeProps?: Object,
+//   border?: Array<any> | Object,
+//   borderBottom?: Array<any> | Object,
+//   borderBottomRadius?: number,
+//   borderLeft?: Array<any> | Object,
+//   borderLeftRadius?: number,
+//   borderRadius: number,
+//   borderRight?: Array<any> | Object,
+//   borderRightRadius?: number,
+//   borderStyle?: 'solid' | 'dotted',
+//   borderTop?: Array<any> | Object,
+//   borderTopRadius?: number,
+//   borderWidth?: number | string,
+//   boxShadow?: Array<any> | string,
+//   children?: Element | string,
+//   chromeless?: boolean,
+//   circular?: boolean,
+//   className?: string,
+//   clickable?: boolean,
+//   color?: Color,
+//   dim?: boolean,
+//   elementProps?: Object,
+//   elevation?: number,
+//   flex?: boolean | number,
+//   focusable?: boolean,
+//   getRef?: Function,
+//   glint?: boolean,
+//   glow?: boolean,
+//   glowProps?: Object,
+//   height?: number,
+//   highlight?: boolean,
+//   hoverable?: boolean,
+//   hovered?: boolean,
+//   icon?: React.Element<any> | string,
+//   iconAfter?: boolean,
+//   iconColor?: Color,
+//   iconProps?: Object,
+//   iconSize?: number,
+//   inline?: boolean,
+//   justify?: string,
+//   lineHeight?: number | string,
+//   margin?: number | Array<number>,
+//   marginBottom?: number,
+//   marginLeft?: number,
+//   marginRight?: number,
+//   marginTop?: number,
+//   maxWidth?: number,
+//   minWidth?: number,
+//   noElement?: boolean,
+//   noWrap?: boolean,
+//   onClick?: Function,
+//   opacity?: number,
+//   overflow?: 'hidden' | 'visible' | 'scroll' | 'default',
+//   padding?: number | Array<number>,
+//   paddingBottom?: number,
+//   paddingLeft?: number,
+//   paddingRight?: number,
+//   paddingTop?: number,
+//   row?: boolean,
+//   size?: number,
+//   sizeIcon?: number,
+//   spaced?: boolean,
+//   stretch?: boolean,
+//   tagName: string,
+//   theme?: string,
+//   tooltip?: string,
+//   tooltipProps?: Object,
+//   uiContext?: boolean,
+//   width?: number,
+//   wrapElement?: boolean,
+//   borderRadius?: number,
+// }
 
 const ICON_SCALE = 12
 // TODO: make this dynamic with size (move into theme)
@@ -102,13 +100,13 @@ const BORDER_RADIUS_SIDES = [
   'borderRightRadius',
 ]
 
-const hasChildren = (children: any): boolean =>
+const hasChildren = children =>
   Array.isArray(children)
     ? children.reduce((a, b) => a || !!b, false)
     : !!children
 
 @view.ui
-export default class Surface extends React.PureComponent<Props> {
+export default class Surface extends React.PureComponent {
   static contextTypes = {
     provided: object,
   }
@@ -506,7 +504,9 @@ export default class Surface extends React.PureComponent<Props> {
     if (props.glint) {
       glintColor =
         props.glint === true
-          ? colorfulBg ? background.lighten(0.1) : [255, 255, 255, 0.2]
+          ? colorfulBg
+            ? background.lighten(0.1)
+            : [255, 255, 255, 0.2]
           : props.glint
       // boxShadow.push(['inset', 0, 0, 0, glintColor])
     }
@@ -605,7 +605,9 @@ export default class Surface extends React.PureComponent<Props> {
     const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
     const undoPadding = {
       margin: padding
-        ? typeof padding === 'number' ? -padding : padding.map(x => -x)
+        ? typeof padding === 'number'
+          ? -padding
+          : padding.map(x => -x)
         : 0,
       padding,
     }
@@ -637,7 +639,9 @@ export default class Surface extends React.PureComponent<Props> {
       wrapContents: undoPadding,
       after: {
         marginTop: padding
-          ? Array.isArray(padding) ? padding[0] : padding
+          ? Array.isArray(padding)
+            ? padding[0]
+            : padding
           : 0,
       },
       surface: {

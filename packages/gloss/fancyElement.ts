@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import deepExtend from 'deep-extend'
 import tags from 'html-tags'
@@ -43,6 +42,7 @@ let lastMouseDown = Date.now()
 // TODO
 // Put this on fancyElement.setClickInterrupt or something
 setTimeout(() => {
+  // @ts-ignore
   if (IS_BROWSER && window.addDragListener) {
     window.addEventListener('mousedown', () => {
       lastMouseDown = Date.now()
@@ -52,6 +52,7 @@ setTimeout(() => {
         cancelNextClick = false
       })
     })
+    // @ts-ignore
     window.addDragListener(() => {
       if (cancelNextClick) {
         return
@@ -107,11 +108,8 @@ export default function fancyElementFactory(Gloss, styles) {
   function fancyElement(type_, props, ...children) {
     let type = type_
     if (!type) {
-      throw new Error(
-        `Didn't get a valid type: ${type}, children: ${
-          children ? children.toString() : children
-        }`,
-      )
+      console.error('Error values', type, props, children)
+      throw new Error(`Didn't get a valid type: ${type}`)
     }
     let glossUID = this && this.constructor.glossUID
     // for shorthand components
@@ -122,7 +120,7 @@ export default function fancyElementFactory(Gloss, styles) {
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
     const name = !isTag ? `${type.name}` : `${type}`
-    const finalProps = {}
+    const finalProps: any = {}
     const finalStyles = []
     const theme = this && this.theme
 

@@ -10,7 +10,6 @@ import Media from 'react-media'
 @view
 export class Header extends React.Component {
   render() {
-    setTimeout(() => console.log(this))
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (

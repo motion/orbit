@@ -1,19 +1,18 @@
-// @flow
 import * as React from 'react'
 import Surface from './surface'
 
 const LINE_HEIGHT = 30
 
-type Props = {
-  size: number,
-  sizeHeight?: boolean | number,
-  sizeFont?: boolean | number,
-  sizePadding?: boolean | number,
-  sizeMargin?: boolean | number,
-  sizeRadius?: boolean | number,
-}
+// type Props = {
+//   size: number,
+//   sizeHeight?: boolean | number,
+//   sizeFont?: boolean | number,
+//   sizePadding?: boolean | number,
+//   sizeMargin?: boolean | number,
+//   sizeRadius?: boolean | number,
+// }
 
-export default function SizedSurface(props: Props) {
+export default function SizedSurface(props) {
   const {
     sizeHeight,
     sizeMargin,

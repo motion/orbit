@@ -15,6 +15,9 @@
     "@mcro/gloss": "^1.5.1",
     "@mcro/router": "^1.5.1",
     "@mcro/ui": "^1.5.1",
+    "svg-inline-loader": "^0.8.0",
+    "image-webpack-loader": "^4.2.0",
+    "file-loader": "^1.1.11",
     "@researchgate/react-intersection-observer": "^0.6.1",
     "add": "^2.0.6",
     "animated": "^0.2.1",
@@ -23,15 +26,17 @@
     "lodash": "4.17.10",
     "mobx": "^4.3.0",
     "mobx-formatters": "^1.0.2",
-    "react": "16.3.2",
+    "parcel-plugin-bundle-visualiser": "^1.1.2",
     "react-countup": "3.0.3",
-    "react-dom": "16.3.2",
     "react-hot-loader": "^4.2.0",
     "react-media": "^1.8.0",
     "react-spring": "^5.1.1",
     "react-svg-inline": "^2.1.0",
-    "parcel-plugin-bundle-visualiser": "^1.1.2",
     "regenerator-runtime": "0.11.1",
     "zenscroll": "^4.0.2"
+  },
+  "peerDependencies": {
+    "react": "16.3.2",
+    "react-dom": "16.3.2"
   }
 }

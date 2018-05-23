@@ -1,18 +1,17 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 
-type Props = {
-  columns: number,
-}
+// type Props = {
+//   columns: number,
+// }
 
 @view.ui
-export default class Grid extends React.Component<Props> {
+export default class Grid extends React.Component {
   static defaultProps = {
     columns: 1,
   }
 
-  render({ children, columns, ...props }: Props) {
+  render({ children, columns, ...props }) {
     if (!children) {
       return null
     }

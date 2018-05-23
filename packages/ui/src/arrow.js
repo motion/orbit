@@ -1,18 +1,16 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import type { Color } from '@mcro/gloss'
 
-export type Props = {
-  size: number,
-  towards: 'top' | 'right' | 'bottom' | 'left',
-  theme?: string | Object,
-  boxShadow?: any,
-  background?: Color,
-}
+// export type Props = {
+//   size: number,
+//   towards: 'top' | 'right' | 'bottom' | 'left',
+//   theme?: string | Object,
+//   boxShadow?: any,
+//   background?: Color,
+// }
 
 @view.ui
-export default class Arrow extends React.Component<> {
+export default class Arrow extends React.Component {
   static defaultProps = {
     size: 16,
     towards: 'bottom',
@@ -27,7 +25,7 @@ export default class Arrow extends React.Component<> {
     opacity,
     style,
     border,
-  }: Props) {
+  }) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
     const transform = {

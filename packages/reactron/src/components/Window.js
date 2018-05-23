@@ -1,4 +1,3 @@
-// @flow
 import BaseComponent from './BaseComponent'
 import { BrowserWindow } from 'electron'
 import debug from 'debug'
@@ -166,7 +165,7 @@ function configureExtensions({ devToolsExtensions }) {
   }
 }
 
-function configureFile({ file }: Object) {
+function configureFile({ file }) {
   if (file) {
     this.window.loadURL(`${file}`)
   } else {
@@ -174,12 +173,7 @@ function configureFile({ file }: Object) {
   }
 }
 
-function configureSize({
-  size: oSize,
-  onResize,
-  defaultSize,
-  animateSize,
-}: Object) {
+function configureSize({ size: oSize, onResize, defaultSize, animateSize }) {
   if (this.unmounted) {
     return
   }
@@ -227,7 +221,7 @@ function configurePosition({
   onMoved,
   defaultPosition,
   animatePosition,
-}: Object) {
+}) {
   if (this.unmounted) return
   if (!this.window) return
   try {

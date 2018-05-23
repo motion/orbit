@@ -1,5 +1,6 @@
 import * as Path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+// @ts-ignore
 import webpack from 'webpack'
 
 const config = {

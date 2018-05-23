@@ -68,7 +68,7 @@ export default function decor(
     allPlugins.push(plugin)
   }
 
-  const decorDecorator = <DecorCompiledDecorator>function decorDecorator(
+  const decorDecorator = <DecorCompiledDecorator<any>>function decorDecorator(
     KlassOrOpts: Function | Object,
     opts?: Object,
   ) {

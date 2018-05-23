@@ -1,3 +1,4 @@
+// @ts-ignore
 import webpack from 'webpack'
 import devServer from 'webpack-dev-server'
 import config from './webpack.config'

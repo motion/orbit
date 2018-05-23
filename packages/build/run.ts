@@ -1,3 +1,4 @@
+// @ts-ignore
 import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
 import historyApiFallback from 'connect-history-api-fallback'
@@ -24,7 +25,7 @@ function setupCompiler() {
 function onProxyError(proxy) {
   return function(err, req, res) {
     var host = req.headers && req.headers.host
-    console.log('Proxy error:')
+    console.log('Proxy error:', proxy, host)
     if (res.writeHead && !res.headersSent) {
       res.writeHead(500)
     }
@@ -95,11 +96,12 @@ function runDevServer(host, port) {
   })
 }
 
-const getArg = (name = '', defaultValue = true) => {
+const getArg = (name = '', defaultValue: any = true) => {
   const argIndex = process.argv.indexOf(`--${name}`)
   if (argIndex) {
-    if (process.argv[argIndex + 1][0] != '-') {
-      return process.argv[argIndex + 1]
+    const value = process.argv[argIndex + 1]
+    if (value && value[0] != '-') {
+      return value
     }
     return defaultValue
   }

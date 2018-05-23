@@ -4,6 +4,7 @@ export * from './provideStore'
 export * from './helpers/log'
 export * from './helpers/watch'
 export * from './helpers/mobx'
+export * from './helpers/deep'
 import * as Constants_ from './constants'
 export const Constants = Constants_
 export * from './helpers/debugState'

@@ -67,6 +67,7 @@ class Bridge {
         masterSource: 'Desktop',
         port: 40510,
         onState: (source, state) => {
+          console.log('got state', source, state)
           this._update(stores[source].state, state)
         },
         actions: {

@@ -1,6 +1,6 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
 import { setGlobal } from './helpers'
-import { store, react } from '@mcro/black/store'
+import { store, react, deep } from '@mcro/black/store'
 import { Desktop } from './Desktop'
 
 export let App
@@ -29,6 +29,7 @@ class AppStore {
   bridge: any
   source = 'App'
 
+  @deep
   state = {
     query: '',
     screenSize: [0, 0],

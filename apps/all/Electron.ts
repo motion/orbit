@@ -1,6 +1,6 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
 import { setGlobal } from './helpers'
-import { store, react } from '@mcro/black/store'
+import { store, deep } from '@mcro/black/store'
 import ElectronReactions from './ElectronReactions'
 // import debug from '@mcro/debug'
 
@@ -23,6 +23,7 @@ class ElectronStore {
   onClear = null
   lastAction = null
 
+  @deep
   state = {
     settingsPosition: [], // todo: settingsState.position
     showDevTools: {

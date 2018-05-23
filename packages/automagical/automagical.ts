@@ -8,7 +8,11 @@ const IS_PROD = process.env.NODE_ENV === 'production'
 
 type MagicalObject = {
   subscriptions: { add: ({ dispose: Function }) => void }
-  __automagical: { watchers?: [any] | undefined[] }
+  __automagical: {
+    watchers?: [any] | undefined[]
+    deep?: {}
+    started?: boolean
+  }
   props?: {}
 }
 
@@ -75,12 +79,15 @@ export default function automagical() {
         function() {
           if (!this.__automagical) {
             this.__automagical = {}
+          }
+          if (!this.__automagical.started) {
             decorateClassWithAutomagic(this)
             if (this.__automagical.watchers) {
               for (const watcher of this.__automagical.watchers) {
                 watcher()
               }
             }
+            this.__automagical.started = true
           }
         }
       return Klass
@@ -89,6 +96,7 @@ export default function automagical() {
 }
 
 const FILTER_KEYS = {
+  __automagical: true,
   automagic: true,
   componentDidMount: true,
   componentDidUpdate: true,
@@ -129,13 +137,23 @@ function collectGetterPropertyDescriptors(proto) {
   )
 }
 
+function getAutoRunDescriptors(obj) {
+  const protoDescriptors = collectGetterPropertyDescriptors(
+    Object.getPrototypeOf(obj),
+  )
+  return Object.keys(protoDescriptors)
+    .filter(key => protoDescriptors[key].get)
+    .filter(key => protoDescriptors[key].get.IS_AUTO_RUN)
+    .reduce((a, b) => ({ ...a, [b]: protoDescriptors[b] }), {})
+}
+
 function decorateClassWithAutomagic(obj: MagicalObject) {
   const descriptors = {
     ...Object.keys(obj).reduce(
       (a, b) => ({ ...a, [b]: Object.getOwnPropertyDescriptor(obj, b) }),
       {},
     ),
-    ...collectGetterPropertyDescriptors(Object.getPrototypeOf(obj)),
+    ...getAutoRunDescriptors(obj),
   }
   const decorations = {}
   for (const method of Object.keys(descriptors)) {
@@ -147,7 +165,6 @@ function decorateClassWithAutomagic(obj: MagicalObject) {
       decorations[method] = decor
     }
   }
-  console.log('decorating', obj, decorations)
   Mobx.decorate(obj, decorations)
 }
 
@@ -173,6 +190,9 @@ function decorateMethodWithAutomagic(
   if (descriptor && (!!descriptor.get || !!descriptor.set)) {
     return Mobx.computed
   }
+  if (target.__automagical.deep && target.__automagical.deep[method]) {
+    return Mobx.observable.deep
+  }
   let value = target[method]
   // @watch: autorun |> automagical (value)
   if (isWatch(value)) {
@@ -197,6 +217,9 @@ function decorateMethodWithAutomagic(
     }
     // actionize
     return Mobx.action
+  }
+  if (Mobx.isObservable(target[method])) {
+    return
   }
   return Mobx.observable.ref
 }
@@ -264,10 +287,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return undefined
       }
     }
-    // if (result && result instanceof Mobx.BaseAtom) {
-    //   // @ts-ignore
-    //   return result.get()
-    // }
+    if (result && result.isMobXObservableValue) {
+      // @ts-ignore
+      return result.get()
+    }
     return result
   }
 

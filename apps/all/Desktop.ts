@@ -1,6 +1,6 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
 import { setGlobal } from './helpers'
-import { store, react } from '@mcro/black/store'
+import { store, react, deep } from '@mcro/black/store'
 import { DesktopState } from './types'
 
 export let Desktop
@@ -23,6 +23,7 @@ class DesktopStore {
   onMessage = Bridge.onMessage
   source = 'Desktop'
 
+  @deep
   state: DesktopState = {
     screenSize: [0, 0],
     appState: {
@@ -44,7 +45,12 @@ class DesktopStore {
       searchResults: [],
       pluginResults: [],
     },
-    keyboardState: {},
+    keyboardState: {
+      option: 0,
+      optionUp: 1,
+      space: 0,
+      shiftUp: 0,
+    },
     hoverState: {
       orbitHovered: false,
       peekHovered: false,

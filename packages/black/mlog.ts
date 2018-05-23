@@ -1,5 +1,5 @@
 import global from 'global'
-import Mobx from 'mobx'
+import * as Mobx from 'mobx'
 import { deepObserve } from 'mobx-deep-observer'
 import { enableLogging } from 'mobx-logger'
 

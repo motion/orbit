@@ -57,7 +57,7 @@ const SCROLL_BAR_WIDTH = 16
 
 @parentSize('virtualized', 'parentSize')
 @view.ui
-export class List extends React.PureComponent {
+class ListThing extends React.PureComponent {
   static Item = ListItem
 
   static defaultProps = {
@@ -588,3 +588,5 @@ export class List extends React.PureComponent {
     },
   }
 }
+
+export const List = ListThing

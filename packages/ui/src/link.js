@@ -5,7 +5,7 @@ import { view, Constants } from '@mcro/black'
 //   router?: { path: string, go: Function },
 // }
 
-@view
+@view.ui
 export class Link extends React.Component {
   isActive = false
 

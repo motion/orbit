@@ -26,6 +26,7 @@
     "react-hot-loader": "^4.2.0"
   },
   "peerDependencies": {
+    "lodash": "*",
     "mobx": "^4.3.0",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"

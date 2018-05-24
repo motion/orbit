@@ -106,7 +106,7 @@ const hasChildren = children =>
     : !!children
 
 @view.ui
-export class Surface extends React.PureComponent {
+class SurfacePlain {
   static contextTypes = {
     provided: object,
   }
@@ -222,7 +222,7 @@ export class Surface extends React.PureComponent {
     const { themeValues } = this
 
     if (!themeValues) {
-      console.warn('this is weird')
+      console.warn('this is weird', this)
       return null
     }
 
@@ -714,3 +714,5 @@ export class Surface extends React.PureComponent {
     return result
   }
 }
+
+export const Surface = view.ui(SurfacePlain)

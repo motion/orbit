@@ -49,6 +49,7 @@ export class Header {
 
   static style = {
     header: {
+      // background: '#000',
       top: 0,
       left: 0,
       right: 0,

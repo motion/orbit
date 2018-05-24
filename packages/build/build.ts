@@ -12,4 +12,10 @@ if (fs.existsSync(paths.appPublic)) {
   ncp(paths.appPublic, paths.appBuild, console.log.bind(console))
 }
 
-webpack(config, log)
+webpack(
+  {
+    mode: 'production',
+    ...config,
+  },
+  log,
+)

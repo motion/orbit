@@ -14,7 +14,7 @@ export default function decor(
   const emit = (a, b?) => emitter.emit(a, b)
   const on = (a, b) => emitter.on(a, b)
   const isClass = x =>
-    (x && x._isDecoratedClass) ||
+    x instanceof Proxy ||
     (x.prototype &&
       (x.toString().indexOf('class ') === 0 ||
         x.toString().indexOf('classCallCheck') > -1))
@@ -91,8 +91,6 @@ export default function decor(
         return true
       },
     })
-    // @ts-ignore
-    ProxiedClass._isDecoratedClass = true
     return ProxiedClass
   }
 

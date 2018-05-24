@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom'
 import Themes from '~/themes'
 import { ThemeProvide } from '@mcro/ui'
 import * as Constants from '~/constants'
+import { sleep } from '@mcro/black'
 
 // for hmr
 import '~/router'
@@ -15,6 +16,7 @@ import '~/router'
 window.Constants = Constants
 
 async function render() {
+  // await sleep(1600)
   if (window.restartRouter) {
     console.log('restarting router')
     window.restartRouter()

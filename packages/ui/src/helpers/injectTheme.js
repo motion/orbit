@@ -17,8 +17,5 @@ export const injectTheme = View => {
       View[method] = value
       return true
     },
-    get(target, method) {
-      return Reflect.get(target, method)
-    },
   })
 }

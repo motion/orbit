@@ -48,13 +48,12 @@ class FeaturesIntro {
           <Section>
             <SectionContent padded halfscreen>
               <HalfSection>
-                <Title italic size={2.8} margin={[0, 0, 10, 0]}>
-                  Operate with intelligence
+                <Title italic size={3.4} margin={[0, 0, 10, 0]}>
+                  Features
                 </Title>
-                <P2 size={1.8} alpha={0.75}>
-                  Orbit augments your computer with news, search, and contextual
-                  intelligence. It sorts through your company cloud and keeps
-                  your knowledge at hand.
+                <P2 size={1.7} alpha={0.75}>
+                  Augments your computer with news, search, and contextual
+                  answers. It's your important cloud knowledge, at hand.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>Incoming</a>{' '}
@@ -212,7 +211,7 @@ export class SectionFeatureNewsSearch extends React.Component {
             css={{
               background: `linear-gradient(
             ${blueTheme.background.lighten(0.02)},
-            ${blueTheme.background} 10%
+            ${blueTheme.background} 35%
           )`,
             }}
           >
@@ -246,7 +245,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <SubTitle size={2.5}>Master of Incoming</SubTitle>
+                    <SubTitle size={2.5}>Master incoming</SubTitle>
                     <FeatureSubTitle
                       css={{
                         marginTop: 12,

@@ -116,6 +116,7 @@ export default class Gloss {
     let hasTheme = false
     const attachTheme = () => {
       hasTheme = Child.theme && typeof Child.theme === 'function'
+      console.log('has theme', Child, Child.theme)
       if (!hasTheme) {
         return
       }
@@ -155,9 +156,6 @@ export default class Gloss {
       if (!hasAttached) {
         attachTheme()
         attachStyles(Child.glossUID, Child.style, true)
-        if (this.constructor.name === 'Join') {
-          console.log('JOIN ME', Child)
-        }
         hasAttached = true
       }
       if (hasTheme) {

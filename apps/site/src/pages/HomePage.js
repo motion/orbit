@@ -40,17 +40,20 @@ class HomeHeader {
                     Constants.colorSecondary,
                     Constants.colorSecondary.lighten(0.4),
                   ]}
-                  slantSize={8}
+                  slantSize={4}
                   amount={20}
                 />
-                <Slant slantBackground={'#f6f6f6'} css={{ zIndex: 2 }} />
+                <Slant
+                  slantGradient={['#fcfcfc', '#f9f9f9']}
+                  css={{ zIndex: 2 }}
+                />
                 <div $$flex />
                 <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                   <Title
                     italic
                     size={isMedium ? 5 : 6}
                     margin={[-15, 0, -15, -5]}
-                    color="#333"
+                    alpha={0.9}
                   >
                     Incoming,<br />
                     solved.
@@ -63,9 +66,9 @@ class HomeHeader {
                       fontWeight={300}
                       alpha={0.8}
                     >
-                      Upgrade your Mac with a smart operating system. Sort team
-                      knowledge and all the incoming from the cloud right on
-                      your desktop.
+                      A smarter operating system for your day to day.
+                      Put&nbsp;team knowledge at hand and understand what's
+                      happening from across the cloud.
                     </P>
                   </below>
                   <actions
@@ -168,7 +171,7 @@ class HomeHeader {
 
 const blackBg = UI.color('#111')
 const blackTheme = {
-  background: UI.color('#2A1B38'),
+  background: UI.color('#111'),
   color: '#f2f2f2',
   subTitleColor: '#eee',
   titleColor: blackBg.darken(0.75).desaturate(0.3),
@@ -192,18 +195,18 @@ class HomeFooter {
               <SectionContent padded fullscreen>
                 <Slant
                   css={{ zIndex: 1 }}
-                  slantSize={12}
+                  slantSize={20}
                   inverseSlant
                   slantGradient={[
-                    blackTheme.background.darken(0.2),
-                    blackTheme.background.darken(0.25),
+                    blackTheme.background.darken(0.3),
+                    blackTheme.background.darken(0.35),
                   ]}
                 />
                 <Slant
-                  slantSize={8}
+                  slantSize={4}
                   amount={20}
                   slantGradient={[
-                    Constants.colorSecondary.darken(0.4),
+                    Constants.colorSecondary.darken(0.1),
                     Constants.colorSecondary.darken(0.6),
                   ]}
                 />
@@ -216,21 +219,22 @@ class HomeFooter {
                     <br />
                     <UI.PassProps size={1.7} alpha={0.85}>
                       <P2>
-                        It's time the cloud started working for us. Making sense
-                        of all the incoming is important, but it has to be done
-                        right. That means{' '}
+                        It's time our devices got a little smart. Making sense
+                        of whats happening at your company is best done on your
+                        desktop because{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
-                          not risking your sensitive data with third parties
+                          you can't risk sharing all your sensitive data with a
+                          third party
                         </span>.
                       </P2>
                       <P2>
-                        Orbit runs entirely privately on your desktop so it
-                        doesn't put you at risk. Being always at hand also means
-                        it's more effective for you.
+                        That's why Orbit runs entirely privately on your
+                        computer. It's an app that you'll interact with often,
+                        so we know we have to get the experience right.
                       </P2>
-                      <P2>
-                        Learn how we're building{' '}
-                        <SubLink>a better UX with privacy</SubLink>.
+                      <P2 size={2.2}>
+                        Learn more on how we're building{' '}
+                        <SubLink>better UX without the cloud</SubLink>.
                       </P2>
                     </UI.PassProps>
                   </below>

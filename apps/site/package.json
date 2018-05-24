@@ -5,7 +5,7 @@
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi",
-    "start": "mcro-build --port 9000",
+    "start": "mcro-build --port 4000",
     "build-app": "NODE_ENV=production mcro-build --prod",
     "start-prod": "static-server -p 4000 -n dist/index.html dist",
     "deploy": "./surge-fix.sh && cd dist && surge ."

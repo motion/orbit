@@ -56,7 +56,7 @@ class HomeHeader {
                     alpha={0.9}
                   >
                     Incoming,<br />
-                    solved.
+                    sorted.
                   </Title>
                   <borderLine />
                   <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
@@ -66,9 +66,9 @@ class HomeHeader {
                       fontWeight={300}
                       alpha={0.8}
                     >
-                      A smarter operating system for your day to day.
-                      Put&nbsp;team knowledge at hand and understand what's
-                      happening from across the cloud.
+                      A smarter operating system for your day.
+                      Orbit&nbsp;augments Mac with team knowledge and gives you
+                      a clear view of your cloud.
                     </P>
                   </below>
                   <actions

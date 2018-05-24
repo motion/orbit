@@ -224,9 +224,9 @@ class HomeFooter {
                         </span>.
                       </P2>
                       <P2>
-                        Orbit runs entirely privately on your desktop so it's
-                        completely secure. Always at hand also means it's more
-                        effective for you.
+                        Orbit runs entirely privately on your desktop so it
+                        doesn't put you at risk. Being always at hand also means
+                        it's more effective for you.
                       </P2>
                       <P2>
                         Learn how we're building{' '}

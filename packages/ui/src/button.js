@@ -1,7 +1,6 @@
-import React from 'react'
+import * as React from 'react'
 import { SizedSurface } from './sizedSurface'
 import { injectTheme } from './helpers/injectTheme'
-import { inject } from '@mcro/react-tunnel'
 import { view } from '@mcro/black'
 
 @view.ui

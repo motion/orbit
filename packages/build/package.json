@@ -9,6 +9,9 @@
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "thread-loader": "^1.1.5",
+    "hard-source-webpack-plugin": "^0.6.9",
     "execa": "0.10.0",
     "null-loader": "^0.1.1",
     "ts-loader": "^4.3.0",

@@ -1,22 +1,18 @@
 import '~/public/styles/siteBase.css'
 import './createElement'
-// import 'regenerator-runtime/runtime'
-// import 'babel-polyfill'
-// import 'intersection-observer'
+import 'intersection-observer'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from '~/themes'
 import { ThemeProvide } from '@mcro/ui'
 import * as Constants from '~/constants'
-import { sleep } from '@mcro/black'
 
 // for hmr
 import '~/router'
 
 window.Constants = Constants
 
-async function render() {
-  // await sleep(1600)
+function render() {
   if (window.restartRouter) {
     console.log('restarting router')
     window.restartRouter()

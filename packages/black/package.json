@@ -19,13 +19,13 @@
     "global": "^4.3.0",
     "mobx-deep-observer": "^0.0.4",
     "mobx-logger": "^0.7.0",
-    "mobx-utils": "^4.0.1",
     "prop-types": "^15.6.0"
   },
   "devDependencies": {
     "@types/event-kit": "2.4.0"
   },
   "peerDependencies": {
+    "mobx-utils": "^4.0.1",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "publishConfig": {

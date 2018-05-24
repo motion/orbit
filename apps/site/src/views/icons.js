@@ -4,7 +4,7 @@ import driveIcon from '~/public/drive.svg'
 import dropboxIcon from '~/public/dropbox.svg'
 import mailIcon from '~/public/mail.svg'
 import githubIcon from '~/public/github.svg'
-import ReactSVGInline from 'react-svg-inline'
+// import ReactSVGInline from 'react-svg-inline'
 
 export const Icon = ({
   size,
@@ -19,16 +19,16 @@ export const Icon = ({
     css={{ position: 'relative', width: size * 512, height: size * 512 }}
     style={style}
   >
-    <ReactSVGInline
+    <img
       width="512"
       height="512"
       css={{
-        transformOrigin: 'top left',
-        transform: { scale: size * scale, ...transform },
+        // transformOrigin: 'top left',
+        // transform: { scale: size * scale, ...transform },
         width: size * 512,
         height: size * 512,
       }}
-      svg={icon}
+      src={icon}
       {...props}
     />
     {after}

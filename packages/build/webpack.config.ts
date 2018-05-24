@@ -3,6 +3,8 @@ import webpack from 'webpack'
 import * as Path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
@@ -21,7 +23,7 @@ const config = {
     filename: 'bundle.js',
     publicPath: '/',
   },
-  devtool: 'cheap-module-source-map', //'cheap-eval-source-map',
+  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
@@ -33,12 +35,12 @@ const config = {
     rules: [
       {
         test: /\.js$/,
-        use: ['babel-loader'],
+        use: ['thread-loader', 'babel-loader'],
         exclude: ['node_modules'],
       },
       {
         test: /\.tsx?$/,
-        use: ['babel-loader', 'ts-loader'],
+        use: ['thread-loader', 'babel-loader', 'ts-loader'],
         exclude: ['node_modules'],
       },
       {
@@ -54,12 +56,12 @@ const config = {
           },
         },
       },
+      // {
+      //   test: /\.svg$/,
+      //   use: 'svg-inline-loader',
+      // },
       {
-        test: /\.svg$/,
-        use: 'svg-inline-loader',
-      },
-      {
-        test: /\.(gif|png|jpe?g)$/,
+        test: /\.(gif|png|jpe?g|svg)$/,
         use: [
           'file-loader',
           {
@@ -73,12 +75,21 @@ const config = {
     ],
   },
   plugins: [
+    new HardSourceWebpackPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       template: 'index.html',
     }),
-    false &&
-      isProd &&
+    isProd &&
+      new UglifyJsPlugin({
+        // uglifyOptions: {
+        //   ecma: 8,
+        //   toplevel: true,
+        // },
+        sourceMap: true,
+        parallel: 2,
+      }),
+    process.argv.indexOf('--report') > 0 &&
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
       }),

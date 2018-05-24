@@ -2,10 +2,11 @@
   "name": "@mcro/ui",
   "private": true,
   "version": "1.5.1",
-  "main": "index.js",
+  "main": "lib/index.js",
   "license": "MIT",
+  "sideEffects": false,
   "scripts": {
-    "build": "build prod,dev",
+    "build": "build dev",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

@@ -3,6 +3,10 @@
 const isProd =
   process.argv.indexOf('--prod') > 0 || process.env.NODE_ENV === 'production'
 
+if (process.argv.indexOf('--clean') > 0) {
+  require('./_/helpers/clean').clean()
+}
+
 if (isProd) {
   require('./_/build.js')
 } else {

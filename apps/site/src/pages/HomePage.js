@@ -58,13 +58,14 @@ class HomeHeader {
                   <borderLine />
                   <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
                     <P
-                      size={1.55}
+                      size={1.6}
                       sizeLineHeight={1.2}
                       fontWeight={300}
                       alpha={0.8}
                     >
-                      Upgrade Mac with a smart operating layer. Orbit&nbsp;gives
-                      you an intelligent unified cloud.
+                      Upgrade your Mac with a smart operating system. Sort team
+                      knowledge and all the incoming from the cloud right on
+                      your desktop.
                     </P>
                   </below>
                   <actions

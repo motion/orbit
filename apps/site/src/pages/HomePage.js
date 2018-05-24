@@ -63,9 +63,8 @@ class HomeHeader {
                       fontWeight={300}
                       alpha={0.8}
                     >
-                      Upgrade your Mac with a smart operating layer.
-                      Orbit&nbsp;tames the cloud on your Mac using intelligence,
-                      letting you and your team operate with clarity.
+                      Upgrade Mac with a smart operating layer. Orbit&nbsp;gives
+                      you an intelligent unified cloud.
                     </P>
                   </below>
                   <actions
@@ -210,25 +209,30 @@ class HomeFooter {
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <below css={{ margin: [15, '5%', 0, 0] }}>
-                    <P2 size={3} alpha={1} fontWeight={200}>
-                      We live and work through our&nbsp;technology.
+                    <P2 size={3.5} alpha={1} fontWeight={200}>
+                      We live and work with&nbsp;technology.
                     </P2>
                     <br />
-                    <P2 size={1.8} alpha={0.85}>
-                      The services that power your life and work are constantly
-                      changing. Making sense of it all requires handling lots of
-                      sensitive data. We think it has to be done{' '}
-                      <strong>privately, on your device</strong>.
-                    </P2>
-                    <P2 size={1.8} alpha={0.85}>
-                      Orbit works right besides you day to day. We want to be
-                      sure it's a great experience.
-                    </P2>
-                    <br />
-                    <P2 size={1.3} alpha={0.85}>
-                      Learn about how we approach{' '}
-                      <SubLink>privacy & experience</SubLink>.
-                    </P2>
+                    <UI.PassProps size={1.7} alpha={0.85}>
+                      <P2>
+                        It's time the cloud started working for us. Making sense
+                        of all the incoming is important, but it has to be done
+                        right. That means{' '}
+                        <strong>
+                          not putting all your sensitive data into the cloud
+                        </strong>.
+                      </P2>
+                      <P2>
+                        Orbit runs entirely privately on your desktop. So, we
+                        want to be sure it deserves it's position there.
+                      </P2>
+                      <P2>
+                        Learn how we're making a{' '}
+                        <SubLink>
+                          better UX by starting&nbsp;with privacy
+                        </SubLink>.
+                      </P2>
+                    </UI.PassProps>
                   </below>
                 </LeftSide>
                 <RightSide noEdge $$centered>

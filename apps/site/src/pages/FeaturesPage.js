@@ -49,15 +49,15 @@ class FeaturesIntro {
             <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={2.8} margin={[0, 0, 10, 0]}>
-                  A better way to operate
+                  Operate with intelligence
                 </Title>
                 <P2 size={1.8} alpha={0.75}>
-                  Orbit provides a heads up display that sorts through your
-                  company cloud, with intelligent features for keeping knowledge
-                  at hand.
+                  Orbit augments your computer with news, search, and contextual
+                  intelligence. It sorts through your company cloud and keeps
+                  your knowledge at hand.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#news')}>Heads up</a>{' '}
+                  <a onClick={scrollTo('#news')}>Incoming</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#search')}>Search</a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
@@ -246,7 +246,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <SubTitle size={2.5}>Your daily heads up</SubTitle>
+                    <SubTitle size={2.5}>Master of Incoming</SubTitle>
                     <FeatureSubTitle
                       css={{
                         marginTop: 12,
@@ -267,13 +267,12 @@ export class SectionFeatureNewsSearch extends React.Component {
                       }}
                     >
                       <P size={1.6}>
-                        Orbit takes over spotlight with a home that sorts
-                        through all the incoming and summarizes relevant
-                        information.
+                        Give yourself a home that sorts through every service
+                        and summarizes relevant information, even conversations.
                         <br />
                         <br />
-                        It uses novel on-device ML that can adjust to the custom
-                        terminology your team uses.
+                        Using novel on-device ML, Orbit adjusts to what you care
+                        about and the custom terminology your team uses.
                       </P>
                       <DottedButton
                         css={{

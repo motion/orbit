@@ -219,19 +219,18 @@ class HomeFooter {
                         It's time the cloud started working for us. Making sense
                         of all the incoming is important, but it has to be done
                         right. That means{' '}
-                        <strong>
-                          not putting all your sensitive data into the cloud
-                        </strong>.
+                        <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
+                          not risking your sensitive data with third parties
+                        </span>.
                       </P2>
                       <P2>
-                        Orbit runs entirely privately on your desktop. So, we
-                        want to be sure it deserves it's position there.
+                        Orbit runs entirely privately on your desktop so it's
+                        completely secure. Always at hand also means it's more
+                        effective for you.
                       </P2>
                       <P2>
-                        Learn how we're making a{' '}
-                        <SubLink>
-                          better UX by starting&nbsp;with privacy
-                        </SubLink>.
+                        Learn how we're building{' '}
+                        <SubLink>a better UX with privacy</SubLink>.
                       </P2>
                     </UI.PassProps>
                   </below>

@@ -7,9 +7,7 @@ export interface Subscribable {
 
 function subscribableDecorator(Klass: any): Subscribable {
   if (Klass.prototype.subscriptions) {
-    throw new Error(
-      'skip, already has subscriptions or dispsose already defined! ${Klass.constructor.name}',
-    )
+    return Klass
   }
   Object.defineProperty(Klass.prototype, 'subscriptions', {
     configurable: true,

@@ -56,6 +56,7 @@ export function storeProvidable(options, Helpers) {
 
       // return HoC
       class StoreProvider extends React.PureComponent {
+        props: Object
         hmrDispose: any
         _props: any
         mounted: boolean
@@ -270,6 +271,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         render() {
+          console.log('rendering class', Klass.name, this.props, this.stores)
           return <Klass {...this.props} {...this.stores} />
         }
       }
@@ -315,9 +317,6 @@ export function storeProvidable(options, Helpers) {
         set(_, method, value) {
           Klass[method] = value
           return true
-        },
-        get(target, method) {
-          return Reflect.get(target, method)
         },
       }
     },

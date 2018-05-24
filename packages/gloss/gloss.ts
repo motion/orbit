@@ -2,9 +2,11 @@ import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import JSS from './stylesheet'
 
+import * as TP from './components/themeProvide'
+export const ThemeProvide = TP.ThemeProvide
+
 import * as Helpers_ from '@mcro/css'
 export const Helpers = Helpers_
-export * from './components/themeProvide'
 export * from './components/theme'
 
 export type Options = {
@@ -135,18 +137,6 @@ export default class Gloss {
           }
           this.themeActiveRules = Object.keys(rules)
           this.theme.addRules(rules)
-        }
-      }
-      // for HMR needs to re-run on mount idk why
-      if (process.env.NODE_ENV === 'development') {
-        const ogComponentWillMount = Child.prototype.componentWillMount
-        Child.prototype.componentWillMount = function(...args) {
-          if (hasTheme) {
-            this.glossUpdateTheme(this.props)
-          }
-          if (ogComponentWillMount) {
-            return ogComponentWillMount.call(this, ...args)
-          }
         }
       }
     }

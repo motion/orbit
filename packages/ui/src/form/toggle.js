@@ -6,9 +6,8 @@ const BAR_HEIGHT = 8
 const BAR_WIDTH = 30
 const BAR_INVISIBLE_PAD = 5
 
-@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export class Toggle extends React.Component {
+class UIToggle extends React.Component {
   static defaultProps = {
     dotSize: 14,
     onChange: _ => _,
@@ -19,7 +18,8 @@ export class Toggle extends React.Component {
     on: false,
   }
 
-  componentWillMount() {
+  constructor(a, b) {
+    super(a, b)
     this.updateValue(this.props)
   }
 
@@ -140,3 +140,7 @@ export class Toggle extends React.Component {
     },
   })
 }
+
+export const Toggle = inject(context => ({ uiContext: context.uiContext }))(
+  UIToggle,
+)

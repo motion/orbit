@@ -14,7 +14,7 @@ export default function decor(
   const emit = (a, b?) => emitter.emit(a, b)
   const on = (a, b) => emitter.on(a, b)
   const isClass = x =>
-    x instanceof Proxy ||
+    x._isDecoratedClass ||
     (x.prototype &&
       (x.toString().indexOf('class ') === 0 ||
         x.toString().indexOf('classCallCheck') > -1))
@@ -85,6 +85,8 @@ export default function decor(
     for (const plugin of allPlugins) {
       decoratedClass = plugin.decorator(decoratedClass, opts) || decoratedClass
     }
+    // @ts-ignore
+    decoratedClass._isDecoratedClass = true
     const ProxiedClass = new Proxy(decoratedClass, {
       set(_, method, value) {
         KlassOrOpts[method] = value

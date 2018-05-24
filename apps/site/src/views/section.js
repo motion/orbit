@@ -15,6 +15,7 @@ export const Slant = ({
 }) => {
   const slant =
     Math.atan(amount / (Constants.SECTION_HEIGHT / 2)) * 180 / Math.PI
+  const rotate = `${(inverse ? -1 : 1) * (inverseSlant ? -1 : 1) * slant}deg`
   return (
     <Media
       query={Constants.screen.large}
@@ -45,8 +46,8 @@ export const Slant = ({
                       slantGradient[1]
                     } 95%)`
                   : slantBackground,
-                top: -slant,
-                bottom: -slant,
+                top: -slant * 3,
+                bottom: -slant * 3,
                 left: inverse ? 'auto' : 0,
                 right: inverse ? 0 : 'auto',
                 width: slantSize,
@@ -54,9 +55,7 @@ export const Slant = ({
                 transformOrigin: 'center right',
                 transform: {
                   x: -slantSize / 2,
-                  rotate: `${(inverse ? -1 : 1) *
-                    (inverseSlant ? -1 : 1) *
-                    slant}deg`,
+                  rotate,
                 },
               }}
             />
@@ -65,10 +64,15 @@ export const Slant = ({
               css={{
                 position: 'absolute',
                 background: rightBackground,
-                top: 0,
+                top: '-15%',
                 right: inverse ? slant : '-200%',
                 left: inverse ? '-200%' : slant,
-                bottom: 0,
+                bottom: '-15%',
+                zIndex: -1,
+                transform: {
+                  rotate,
+                  x: -1,
+                },
               }}
             />
           </slant>

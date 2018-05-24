@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Join } from '~/components'
 import SectionContent from '~/views/sectionContent'
+import { Stars } from '~/views/stars'
 import {
   Section,
   Slant,
@@ -32,89 +33,118 @@ class HomeHeader {
       <Media query={Constants.screen.large}>
         {isLarge => {
           return (
-            <Section css={{ background: '#fff' }}>
+            <Section
+              css={{
+                background: `linear-gradient(${Constants.leftBg.lighten(
+                  0.2,
+                )}, ${Constants.leftBg})`,
+              }}
+            >
+              <Stars
+                $$fullscreen
+                css={{
+                  opacity: 0.8,
+                  zIndex: 0,
+                }}
+              />
+              <rightBackground
+                $$fullscreen
+                css={{ background: Constants.rightBg, left: '55%' }}
+              />
               <SectionContent padded fullscreen>
                 <Slant
-                  inverseSlant
+                  slantSize={10}
+                  amount={60}
                   slantGradient={[
-                    Constants.colorSecondary,
-                    Constants.colorSecondary.lighten(0.4),
+                    'rgba(255,255,255,0.1)',
+                    'rgba(255,255,255,0.1)',
                   ]}
-                  slantSize={4}
-                  amount={20}
+                  css={{ zIndex: 0 }}
                 />
                 <Slant
-                  slantGradient={['#fcfcfc', '#f9f9f9']}
-                  css={{ zIndex: 2 }}
+                  inverseSlant
+                  rightBackground={Constants.rightBg}
+                  slantSize={0}
+                  amount={30}
+                  css={{
+                    zIndex: 0,
+                  }}
+                />
+                <Slant
+                  slantBackground={Constants.colorSecondary}
+                  slantSize={2}
+                  amount={15}
+                  css={{ zIndex: 0 }}
                 />
                 <div $$flex />
-                <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
-                  <Title
-                    italic
-                    size={isMedium ? 5 : 6}
-                    margin={[-15, 0, -15, -5]}
-                    alpha={0.9}
-                  >
-                    Incoming,<br />
-                    sorted.
-                  </Title>
-                  <borderLine />
-                  <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
-                    <P
-                      size={1.6}
-                      sizeLineHeight={1.2}
-                      fontWeight={300}
-                      alpha={0.8}
+                <UI.Theme name="dark">
+                  <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
+                    <Title
+                      italic
+                      size={isMedium ? 4 : 4.5}
+                      margin={[-15, '10%', -15, -5]}
+                      alpha={1}
                     >
-                      A smarter operating system for your day.
-                      Orbit&nbsp;augments Mac with team knowledge and gives you
-                      a clear view of your cloud.
-                    </P>
-                  </below>
-                  <actions
-                    $$row
-                    css={{
-                      margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
-                      alignItems: 'center',
-                    }}
-                  >
-                    <UI.Button
-                      borderStyle="dotted"
-                      borderColor="#ccc"
-                      size={1.1}
-                      onClick={scrollTo('#join')}
-                      $smallInstallBtn={!isLarge}
-                      tooltip=""
+                      Desktop 2.0
+                    </Title>
+                    <borderLine />
+                    <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
+                      <P
+                        size={1.35}
+                        sizeLineHeight={1.15}
+                        fontWeight={300}
+                        alpha={0.8}
+                      >
+                        Orbit is a new operating layer for your desktop. Unified
+                        cloud knowledge, sorted at your fingertips. It's&nbsp;a
+                        smarter way to sync teams.
+                      </P>
+                    </below>
+                    <actions
+                      $$row
                       css={{
-                        margin: [0, 10, 0, 0],
-                        cursor: 'pointer',
-                        lineHeight: '1.1rem',
+                        margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
+                        alignItems: 'center',
                       }}
                     >
-                      Coming soon for{' '}
-                      <AppleLogo
-                        width={20}
-                        height={20}
+                      <UI.Button
+                        borderStyle="dotted"
+                        size={1.1}
+                        onClick={scrollTo('#join')}
+                        $smallInstallBtn={!isLarge}
+                        tooltip=""
                         css={{
-                          display: 'inline-block',
-                          margin: [-2, 0, 0, 0],
-                          opacity: 0.32,
+                          margin: [0, 10, 0, 0],
+                          cursor: 'pointer',
+                          lineHeight: '1.1rem',
                         }}
-                      />
-                    </UI.Button>
-                    <UI.Button
-                      chromeless
-                      alpha={0.5}
-                      onClick={() => Router.go('/features')}
-                      margin={[0, 0, 0, 10]}
-                      css={{
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Learn more
-                    </UI.Button>
-                  </actions>
-                </mainSection>
+                      >
+                        Coming soon for{' '}
+                        <AppleLogo
+                          width={20}
+                          height={20}
+                          css={{
+                            fill: '#fff',
+                            display: 'inline-block',
+                            margin: [-2, 0, 0, 4],
+                            opacity: 0.32,
+                          }}
+                        />
+                      </UI.Button>
+                      <UI.Button
+                        chromeless
+                        alpha={0.4}
+                        onClick={Router.link('/features')}
+                        margin={[0, 0, 0, 10]}
+                        css={{
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Learn more
+                      </UI.Button>
+                    </actions>
+                  </mainSection>
+                </UI.Theme>
                 <div $$flex />
                 <rightSide>
                   <Media
@@ -143,11 +173,10 @@ class HomeHeader {
       margin: [-15, 0, 0, 0],
     },
     borderLine: {
-      margin: [30, 40, 20],
-      width: '53%',
-      height: 4,
-      background: '#ddd',
-      opacity: 0.15,
+      margin: [30, 40, 10, 0],
+      width: '65%',
+      height: 1,
+      background: [255, 255, 255, 0.05],
     },
     smallInstallBtn: {
       // transform: {
@@ -171,7 +200,7 @@ class HomeHeader {
 
 const blackBg = UI.color('#111')
 const blackTheme = {
-  background: UI.color('#111'),
+  background: UI.color(Constants.leftBg),
   color: '#f2f2f2',
   subTitleColor: '#eee',
   titleColor: blackBg.darken(0.75).desaturate(0.3),
@@ -186,55 +215,69 @@ class HomeFooter {
           {isLarge => (
             <Section
               css={{
-                background: `linear-gradient(${
-                  blackTheme.background
-                }, ${blackTheme.background.darken(0.15).desaturate(0.2)})`,
+                background: blackTheme.background,
               }}
               inverse
             >
+              <Stars
+                $$fullscreen
+                css={{
+                  opacity: 0.8,
+                  zIndex: 0,
+                }}
+              />
+              <rightBackground
+                $$fullscreen
+                css={{ background: Constants.rightBg, left: '55%' }}
+              />
               <SectionContent padded fullscreen>
                 <Slant
-                  css={{ zIndex: 1 }}
-                  slantSize={20}
                   inverseSlant
+                  slantSize={10}
+                  amount={60}
                   slantGradient={[
-                    blackTheme.background.darken(0.3),
-                    blackTheme.background.darken(0.35),
+                    'rgba(255,255,255,0.1)',
+                    'rgba(255,255,255,0.3)',
                   ]}
+                  css={{ zIndex: 3 }}
                 />
                 <Slant
-                  slantSize={4}
-                  amount={20}
-                  slantGradient={[
-                    Constants.colorSecondary.darken(0.1),
-                    Constants.colorSecondary.darken(0.6),
-                  ]}
+                  slantSize={0}
+                  rightBackground={Constants.rightBg}
+                  amount={30}
+                />
+                <Slant
+                  inverseSlant
+                  slantBackground={Constants.colorSecondary}
+                  slantSize={2}
+                  amount={15}
+                  css={{ zIndex: 0 }}
                 />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
-                  <below css={{ margin: [15, '5%', 0, 0] }}>
+                  <below css={{ margin: [15, '10%', 0, 0] }}>
                     <P2 size={3.5} alpha={1} fontWeight={200}>
                       We live and work with&nbsp;technology.
                     </P2>
                     <br />
-                    <UI.PassProps size={1.7} alpha={0.85}>
+                    <UI.PassProps size={1.3} sizeLineHeight={1.2} alpha={0.85}>
                       <P2>
-                        It's time our devices got a little smart. Making sense
-                        of whats happening at your company is best done on your
-                        desktop because{' '}
+                        It's time our devices got a little smarter. You have
+                        knowledge spread all over. Orbit puts it to work. We're
+                        making sense of all the incoming on your desktop. And
+                        it's{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
-                          you can't risk sharing all your sensitive data with a
-                          third party
+                          completely private, with no data leaving your computer
                         </span>.
                       </P2>
                       <P2>
-                        That's why Orbit runs entirely privately on your
-                        computer. It's an app that you'll interact with often,
+                        Orbit solves hard problems to make it's experience
+                        enjoyable. It's an app that you'll interact with often,
                         so we know we have to get the experience right.
                       </P2>
-                      <P2 size={2.2}>
-                        Learn more on how we're building{' '}
-                        <SubLink>better UX without the cloud</SubLink>.
+                      <P2 size={1.4}>
+                        Learn more about{' '}
+                        <SubLink>how we're building it</SubLink>.
                       </P2>
                     </UI.PassProps>
                   </below>
@@ -255,7 +298,7 @@ export const HomePage = () => (
   <Media query={Constants.screen.medium}>
     {isMedium => (
       <>
-        <Header />
+        <Header white />
         <HomeHeader isMedium={isMedium} />
         <HomeFooter isMedium={isMedium} />
       </>

@@ -3,10 +3,10 @@ import Logo from '~/views/logo'
 
 @view
 export class BrandLogo {
-  render() {
+  render({ white }) {
     return (
       <brandMark {...this.props}>
-        <Logo size={0.2} color="#090909" />
+        <Logo size={0.2} white={white} />
       </brandMark>
     )
   }

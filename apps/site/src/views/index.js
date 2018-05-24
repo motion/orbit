@@ -428,14 +428,15 @@ export const HalfSection = view('section', {
 export const A = view(
   'a',
   {
-    color: [0, 0, 0, 0.7],
+    fontSize: 14,
+    // color: [0, 0, 0, 0.7],
     padding: [5, 0],
-    margin: [0, 0, 0, 30],
+    margin: [0, 0, 0, 50],
     borderBottom: [3, 'transparent'],
   },
   {
     active: {
-      color: [0, 0, 0, 1],
+      // color: [0, 0, 0, 1],
       borderBottom: [3, Constants.colorMain],
     },
   },

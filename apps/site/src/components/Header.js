@@ -9,7 +9,7 @@ import Media from 'react-media'
 
 @view
 export class Header {
-  render() {
+  render({ white }) {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
@@ -19,7 +19,7 @@ export class Header {
                 position: 'absolute',
                 top: 84,
                 height: 1,
-                background: '#f4f4f4',
+                background: [0, 0, 0, 0.03],
                 left: 0,
                 right: 0,
                 zIndex: 3,
@@ -31,12 +31,28 @@ export class Header {
                   <BrandLogo
                     css={{ cursor: 'pointer' }}
                     onClick={Router.link('/')}
+                    white={white}
                   />
                   <div $$flex />
                   <nav>
-                    <Link to="/features">{isLarge ? 'Features' : 'What'}</Link>
-                    <Link to="/use-cases">{isLarge ? 'Use Cases' : 'Why'}</Link>
-                    <Link to="/about">{isLarge ? 'About Us' : 'Who'}</Link>
+                    <Link
+                      css={{ color: white ? '#fff' : [0, 0, 0, 0.6] }}
+                      to="/features"
+                    >
+                      {isLarge ? 'Features' : 'What'}
+                    </Link>
+                    <Link
+                      css={{ color: white ? '#fff' : [0, 0, 0, 0.6] }}
+                      to="/use-cases"
+                    >
+                      {isLarge ? 'Use Cases' : 'Why'}
+                    </Link>
+                    <Link
+                      css={{ color: white ? '#fff' : [0, 0, 0, 0.6] }}
+                      to="/about"
+                    >
+                      {isLarge ? 'About' : 'Who'}
+                    </Link>
                   </nav>
                 </headerInner>
               </SectionContent>

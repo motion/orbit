@@ -10,10 +10,13 @@ export const smallMin = smallSize
 export const PAGE_WIDTH = smallSize
 export const SECTION_HEIGHT = 1100 //Math.max(980, Math.min(1300, window.innerHeight))
 
-export const colorMain = UI.color('#6251BC')
+export const colorMain = UI.color('#27252A')
 export const colorSecondary = UI.color('rgb(94.5%, 80.1%, 12.3%)')
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')
+
+export const leftBg = UI.color('#111')
+export const rightBg = colorMain
 
 export const featuresSlantColor = UI.color('#F2B0BF')
 export const useCasesSlantBg1 = '#F4E1B5'

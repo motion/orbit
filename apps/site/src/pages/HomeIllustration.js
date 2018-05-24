@@ -6,9 +6,8 @@ import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 import * as Icons from '~/views/icons'
 import Router from '~/router'
-import { colorMain } from '~/constants'
+import * as Constants from '~/constants'
 
-const bgColor = '#fff2'
 const dockIcons = [
   {
     name: 'Dropbox',
@@ -59,7 +58,7 @@ const Bubble = view(
   'div',
   {
     color: '#fff',
-    background: '#E4B44B',
+    background: Constants.colorMain.darken(0.2).desaturate(0.2),
     fontSize: 18,
     borderRadius: 15,
     padding: [10, 12],
@@ -71,21 +70,25 @@ const Bubble = view(
   },
   {
     two: {
-      background: '#CE355B',
+      background: Constants.colorMain.darken(0.3).desaturate(0.3),
       color: '#fff',
       alignSelf: 'flex-end',
       borderBottomLeftRadius: 10,
       borderBottomRightRadius: 0,
     },
     three: {
-      background: '#869A4A',
+      background: UI.color('#869A4A')
+        .darken(0.2)
+        .desaturate(0.2),
       color: '#fff',
       alignSelf: 'flex-end',
       borderBottomLeftRadius: 10,
       borderBottomRightRadius: 0,
     },
     four: {
-      background: '#7ABEA2',
+      background: UI.color('#7ABEA2')
+        .darken(0.2)
+        .desaturate(0.2),
       color: '#fff',
       alignSelf: 'flex-end',
       borderBottomLeftRadius: 10,
@@ -307,7 +310,7 @@ export class HomeIllustration {
     const dom = this.glossElement.bind(this)
     return (
       <>
-        <headerIll>
+        <illus>
           <fades $$fullscreen />
           <chats>
             <Keyframes native script={next => (store.chatFrame = next)}>
@@ -371,11 +374,11 @@ export class HomeIllustration {
                     <msgBlur />
                     Stay in sync, stress free.
                     <UI.Row
+                      if={false}
                       spaced
                       itemProps={{
                         size: 1.1,
                         alpha: 0.8,
-                        theme: colorMain,
                       }}
                       css={{
                         flexFlow: 'row',
@@ -434,17 +437,17 @@ export class HomeIllustration {
               })
             })}
           </dockIcons>
-        </headerIll>
+        </illus>
       </>
     )
   }
 
   static style = {
-    headerIll: {
+    illus: {
       position: 'relative',
       height: '80%',
       maxHeight: 800,
-      width: '100%',
+      width: '90%',
       margin: 'auto',
       overflow: 'hidden',
       zIndex: 0,
@@ -460,29 +463,33 @@ export class HomeIllustration {
     },
     fades: {
       pointerEvents: 'none',
-      background: `linear-gradient(to bottom, transparent 90%, ${bgColor} 95%), linear-gradient(to top, transparent 90%, ${bgColor} 95%)`,
+      background: `linear-gradient(to bottom, transparent 90%, ${
+        Constants.rightBg
+      } 95%), linear-gradient(to top, transparent 90%, ${
+        Constants.rightBg
+      } 95%)`,
       zIndex: 100,
     },
     dockContain: {
       position: 'absolute',
       bottom: 0,
-      right: '2%',
-      left: '2%',
-      background: `linear-gradient(transparent, ${bgColor})`,
+      right: 0,
+      left: 0,
+      background: `linear-gradient(transparent, ${Constants.rightBg})`,
       zIndex: 200,
       transition: 'all ease-out 1000ms',
     },
     dock: {
       position: 'absolute',
       bottom: 15,
-      right: '5%',
-      left: '5%',
-      background: '#f9f9f9',
+      right: '2%',
+      left: '2%',
+      background: [255, 255, 255, 0.07],
       borderTopRadius: 10,
       padding: [0, 20, 10],
       height: 100,
       boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-      border: [1, '#ddd'],
+      border: [1, [255, 255, 255, 0.1]],
       transformOrigin: 'top center',
       transform: {
         scale: 0.9,
@@ -491,16 +498,16 @@ export class HomeIllustration {
     dockFade: {
       position: 'absolute',
       top: 0,
-      left: -10,
-      right: -10,
+      left: 0,
+      right: 0,
       bottom: -10,
-      background: `linear-gradient(transparent, ${bgColor})`,
+      background: `linear-gradient(transparent, ${Constants.rightBg})`,
     },
     dockIcons: {
       position: 'absolute',
-      bottom: 25,
-      left: '10%',
-      right: '10%',
+      bottom: 35,
+      left: '5%',
+      right: '5%',
       height: 120,
       zIndex: 201,
       alignItems: 'flex-end',
@@ -510,10 +517,10 @@ export class HomeIllustration {
       overflow: 'hidden',
     },
     message: {
-      color: '#5E937D',
-      fontWeight: 700,
-      fontSize: 28,
-      lineHeight: '38px',
+      color: '#fff',
+      fontWeight: 200,
+      fontSize: 42,
+      lineHeight: '55px',
       position: 'absolute',
       top: 0,
       left: 0,
@@ -533,7 +540,7 @@ export class HomeIllustration {
       content: ' ',
       width: '60%',
       height: '40%',
-      background: bgColor,
+      background: Constants.rightBg,
       filter: {
         blur: 125,
       },

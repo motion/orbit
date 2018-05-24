@@ -5,9 +5,9 @@ const Theme = new ThemeMaker()
 const highlightColor = '#fff'
 
 const greyBg = color('#f2f2f2')
-const greyHoverBg = greyBg.darken(0.02).desaturate(0.3)
-const greyActiveBg = greyHoverBg.darken(0.05).desaturate(0.3)
-const greyActiveHoverBg = greyHoverBg.darken(0.06).desaturate(0.3)
+const greyHoverBg = greyBg.darken(0.02)
+const greyActiveBg = greyHoverBg.darken(0.05)
+const greyActiveHoverBg = greyHoverBg.darken(0.06)
 
 const tanBg = color('rgb(255,255,245)')
 const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)

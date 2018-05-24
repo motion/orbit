@@ -165,7 +165,7 @@ export class OrbitCard extends React.Component {
               }}
               {...tiny && tinyProps.titleProps}
             >
-              {title} 123
+              {title}
             </UI.Text>
             {!hasSubtitle && orbitIcon}
           </title>
@@ -291,6 +291,7 @@ export class OrbitCard extends React.Component {
   }
 
   static theme = ({ store, tiny, listItem }, theme) => {
+    console.log('update theme', store.isSelected)
     const { isSelected } = store
     let hoveredStyle
     let card
@@ -326,6 +327,9 @@ export class OrbitCard extends React.Component {
             background: 'transparent',
             '&:hover': hoveredStyle,
           }
+    }
+    if (isSelected) {
+      console.log('card theme', card)
     }
     return {
       card: {

@@ -35,7 +35,7 @@ const config = {
     rules: [
       {
         test: /\.js$/,
-        use: ['thread-loader', 'babel-loader'],
+        use: [/*'thread-loader',*/ 'babel-loader'],
         exclude: ['node_modules'],
       },
       {
@@ -75,7 +75,7 @@ const config = {
     ],
   },
   plugins: [
-    new HardSourceWebpackPlugin(),
+    // new HardSourceWebpackPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       template: 'index.html',

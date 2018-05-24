@@ -246,7 +246,7 @@ class SurfacePlain {
     const glowColor = (this.theme && themeValues.color) || DEFAULT_GLOW_COLOR
 
     const contents = (
-      <React.Fragment>
+      <>
         <Glint
           if={glint}
           key={0}
@@ -311,7 +311,7 @@ class SurfacePlain {
         >
           {tooltip}
         </Popover>
-      </React.Fragment>
+      </>
     )
 
     const surface = (

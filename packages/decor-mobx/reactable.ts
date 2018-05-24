@@ -1,12 +1,15 @@
-import * as AllHelpers from '@mcro/helpers'
+import {
+  getReactionOptions,
+  setInterval,
+  setTimeout,
+  on,
+  ref,
+} from '@mcro/helpers'
 import { autorun, reaction } from 'mobx'
 
 // subscribe-aware helpers
 export function watch(fn, userOptions) {
-  const runner = autorun(
-    fn.bind(this),
-    AllHelpers.getReactionOptions(userOptions),
-  )
+  const runner = autorun(fn.bind(this), getReactionOptions(userOptions))
   this.subscriptions.add(runner)
   return runner
 }
@@ -16,7 +19,7 @@ export function react(fn, onReact, userOptions) {
     fn,
     onReact.bind(this),
     // @ts-ignore
-    AllHelpers.getReactionOptions(userOptions),
+    getReactionOptions(userOptions),
   )
   this.subscriptions.add(dispose)
   return dispose
@@ -29,7 +32,10 @@ export function reactable() {
     onlyClass: true,
     decorator: Klass => {
       Object.assign(Klass.prototype, {
-        ...AllHelpers,
+        ref,
+        on,
+        setInterval,
+        setTimeout,
         watch,
         react,
       })

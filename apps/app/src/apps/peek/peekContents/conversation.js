@@ -54,7 +54,7 @@ export class Conversation {
       >
         {({ permalink, location, title, icon, content }) => {
           return (
-            <React.Fragment>
+            <>
               <PeekHeader
                 if={bit}
                 title={title}
@@ -111,7 +111,7 @@ export class Conversation {
                   </section>
                 </mainInner>
               </main>
-            </React.Fragment>
+            </>
           )
         }}
       </BitContent>

@@ -117,10 +117,6 @@ export default class Gloss {
     let hasAttached = false
     let hasTheme = false
     const attachTheme = () => {
-      hasTheme = Child.theme && typeof Child.theme === 'function'
-      if (!hasTheme) {
-        return
-      }
       Child.prototype.glossUpdateTheme = function(props) {
         this.theme = this.theme || themeSheet
         const activeTheme =
@@ -143,9 +139,16 @@ export default class Gloss {
     const ogrender = Child.prototype.render
     Child.prototype.render = function(...args) {
       if (!hasAttached) {
-        attachTheme()
+        hasTheme = Child.theme && typeof Child.theme === 'function'
+        if (hasTheme) {
+          console.log('attach theme for', Child.name)
+          attachTheme()
+        }
         attachStyles(Child.glossUID, Child.style, true)
         hasAttached = true
+      }
+      if (Child.name === 'OrbitCard') {
+        console.log('theme?', hasTheme, this.props.bit.id)
       }
       if (hasTheme) {
         this.glossUpdateTheme(this.props)

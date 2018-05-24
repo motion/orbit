@@ -2,18 +2,18 @@ import Router from '@mcro/router'
 import { AuthPage } from '~/apps/AuthPage'
 import { MainPage } from '~/apps/MainPage'
 
-function runRouter() {
-  return new Router({
+let AppRouter
+
+export function runRouter() {
+  AppRouter = new Router({
     routes: {
       '/': MainPage,
       '/auth': AuthPage,
     },
   })
+  window.Router = AppRouter
 }
 
-let AppRouter = runRouter()
-
-// because doing in installDevTools would break import order
-window.Router = AppRouter
+runRouter()
 
 export default AppRouter

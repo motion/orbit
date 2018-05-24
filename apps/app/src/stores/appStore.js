@@ -88,14 +88,14 @@ const parseQuery = query => {
       rest: query.replace(prefix, '').trim(),
       conditions: Object.keys(q).reduce(
         (query, key) => `${query} AND ${key} = "${q[key]}"`,
-        ``,
+        '',
       ),
     }
   }
   return { rest: query, conditions: '' }
 }
 
-export default class AppStore {
+export class AppStore {
   nextIndex = -1
   activeIndex = -1
   showSettings = false
@@ -323,7 +323,7 @@ export default class AppStore {
     onHovered: res => {
       clearTimeout(this.hoverOutTm)
       if (!res) {
-        log(`should clear peek`)
+        log('should clear peek')
         // interval because hoversettler is confused when going back from peek
         // this.hoverOutTm = setInterval(() => {
         //   if (!Desktop.hoverState.peekHovered) {

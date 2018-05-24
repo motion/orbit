@@ -69,7 +69,7 @@ export class Setting {
       SettingPanes[integration] ||
       EmptyPane
     return (
-      <React.Fragment>
+      <>
         <PeekHeader
           title={capitalize(integration)}
           subtitle={
@@ -117,7 +117,7 @@ export class Setting {
             update={store.update}
           />
         </body>
-      </React.Fragment>
+      </>
     )
   }
 

@@ -5,10 +5,14 @@ import './createElement'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject.js'
 import * as Constants from './constants'
-import { start } from './app'
+import { App } from './app'
+import * as UI from '@mcro/ui'
+import { ThemeProvide } from '@mcro/ui'
+import * as React from 'react'
+import ReactDOM from 'react-dom'
+import Themes from './themes'
 
-// for hmr
-import '~/router'
+import './router'
 
 process.on('uncaughtException', err => {
   console.log('App.uncaughtException', err.stack)
@@ -20,25 +24,25 @@ if (Constants.IS_PROD) {
   require('./helpers/installDevTools')
 }
 
-export function main() {
+async function render() {
   if (!window.Root) {
     console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
     console.timeEnd('splash')
+    const app = new App()
+    window.Root = app
+    await app.start()
   }
-  start()
+  const RootComponent = require('./root').default
+  ReactDOM.render(
+    <ThemeProvide {...Themes}>
+      <UI.Theme name="light">
+        <RootComponent />
+      </UI.Theme>
+    </ThemeProvide>,
+    document.querySelector('#app'),
+  )
 }
 
-main()
+render()
 
-if (module.hot) {
-  module.hot.accept(async () => {
-    setTimeout(() => console.log('real root'), 17)
-    for (const store of [...window.loadedStores]) {
-      store.onWillReload()
-    }
-    await start(true)
-    for (const store of [...window.loadedStores]) {
-      store.onReload()
-    }
-  })
-}
+module.hot && module.hot.accept(render)

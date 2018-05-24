@@ -12,10 +12,10 @@ import OrbitStore from './orbit/orbitStore'
 export class OrbitPage {
   render() {
     return (
-      <React.Fragment>
+      <>
         <OrbitDocked />
         <OrbitContext />
-      </React.Fragment>
+      </>
     )
   }
 }

@@ -17,7 +17,7 @@ export class Mail {
     }
     const { messages } = bit.data
     return (
-      <React.Fragment>
+      <>
         <PeekHeader icon="email" title={bit.title} date={bit.createdAt} />
         <body>
           <messages if={messages}>
@@ -75,7 +75,7 @@ export class Mail {
             })}
           </messages>
         </body>
-      </React.Fragment>
+      </>
     )
   }
 

@@ -67,7 +67,7 @@ export class OrbitHomeHeader {
       },
     }
     return (
-      <React.Fragment>
+      <>
         <section $explore>
           <UI.Button
             icon="home"
@@ -117,8 +117,7 @@ export class OrbitHomeHeader {
             />
           </filters>
         </section>
-
-        <section $filterSection>
+        <section if={false} $subSection>
           <title>
             <SubTitle $niceDate>
               {day} {month} {dayNum}
@@ -127,7 +126,7 @@ export class OrbitHomeHeader {
           </title>
           <div $$flex />
         </section>
-      </React.Fragment>
+      </>
     )
   }
 
@@ -153,7 +152,7 @@ export class OrbitHomeHeader {
     exploreButton: {
       margin: [0, 6, 0, 0],
     },
-    filterSection: {
+    subSection: {
       flexFlow: 'row',
       alignItems: 'center',
       padding: [0, 15, 10],

@@ -6,10 +6,10 @@ import { PeekHeader } from '../peekHeader'
 export class File {
   render({ bit }) {
     return (
-      <React.Fragment>
+      <>
         <PeekHeader title={bit.title} />
         <content>{bit.body}</content>
-      </React.Fragment>
+      </>
     )
   }
 

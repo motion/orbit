@@ -82,7 +82,7 @@ export class Field extends React.Component {
       throw new Error('Invalid field type or no children given to Field')
     }
     const contents = (
-      <React.Fragment>
+      <>
         <Label if={label} $label htmlFor={id} size={size} {...labelProps}>
           {label === true ? ' ' : label}
         </Label>
@@ -104,7 +104,7 @@ export class Field extends React.Component {
           {...elementProps}
         />
         {children}
-      </React.Fragment>
+      </>
     )
     if (row) {
       return <Row $field>{contents}</Row>

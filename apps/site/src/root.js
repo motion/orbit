@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Router from '~/router'
+import Router from './router'
 import { NotFoundPage } from '~/pages/NotFoundPage'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'

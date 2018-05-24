@@ -3,15 +3,14 @@ import { view } from '@mcro/black'
 import { HighlightsPage } from './HighlightsPage'
 import { OrbitPage } from './OrbitPage'
 import { PeekPage } from './PeekPage'
-import AppStore from '~/stores/appStore'
+import { AppStore } from '~/stores/appStore'
 
 @view.provide({
   appStore: AppStore,
 })
 @view
-export class MainPage {
+export class MainPage extends React.Component {
   render() {
-    console.log('this', this)
     return (
       <main>
         <HighlightsPage />

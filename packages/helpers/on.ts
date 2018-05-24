@@ -2,7 +2,6 @@ import event from 'disposable-event'
 import { Disposable } from 'event-kit'
 
 export default function on(...args): Disposable {
-  console.log('calling', this, args)
   // allows calling with just on('eventName', callback) and using this
   if (args.length === 2) {
     // duck type observables for now

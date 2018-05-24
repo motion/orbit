@@ -9,7 +9,7 @@ export class Document {
       return null
     }
     return (
-      <React.Fragment>
+      <>
         <PeekHeader title={bit.title} />
         <content>
           <bodyContents
@@ -18,7 +18,7 @@ export class Document {
             }}
           />
         </content>
-      </React.Fragment>
+      </>
     )
   }
 

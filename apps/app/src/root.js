@@ -1,11 +1,9 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { NotFound } from '~/views/notFound'
-import Router from '~/router'
 import { hot } from 'react-hot-loader'
+import Router from './router'
 
-@view
 class Root extends React.Component {
   state = {
     error: null,
@@ -22,11 +20,6 @@ class Root extends React.Component {
 
   clearErrors() {
     this.setState({ error: null })
-  }
-
-  clearHmr = async () => {
-    await window.start()
-    view.emit('hmr')
   }
 
   render() {

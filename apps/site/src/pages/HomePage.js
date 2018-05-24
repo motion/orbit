@@ -32,21 +32,20 @@ class HomeStore {
   stars = null
 
   willMount() {
-    this.on(
-      window,
-      'scroll',
-      throttle(() => {
-        const max = window.innerHeight * 3
-        // 0 - 1 of how far down we are
-        const pctDown =
-          (max - (max - document.scrollingElement.scrollTop)) / max
-        const offset = pctDown * 100
-        // this.stars.stopAnimation()
-        this.stars(Spring, {
-          to: { y: -offset },
-        })
-      }, 16),
-    )
+    // window.addEventListener(
+    //   'scroll',
+    //   throttle(() => {
+    //     const max = window.innerHeight * 3
+    //     // 0 - 1 of how far down we are
+    //     const pctDown =
+    //       (max - (max - document.scrollingElement.scrollTop)) / max
+    //     const offset = pctDown * 100
+    //     // this.stars.stopAnimation()
+    //     this.stars(Spring, {
+    //       to: { y: -offset },
+    //     })
+    //   }, 16),
+    // )
 
     setTimeout(() => {
       this.stars(Spring, {

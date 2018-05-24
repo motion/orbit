@@ -303,7 +303,7 @@ const Lines = ({ width = 100, height = 100, style }) => (
 
 @UI.injectTheme
 @view
-export class Callout {
+export class Callout extends React.Component {
   render({ style, theme, ...props }) {
     return (
       <Media query={Constants.screen.small}>

@@ -81,7 +81,7 @@ const getShadow = (shadow, elevation) => {
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @view.ui
-export class Popover extends React.PureComponent {
+export class Popover extends React.Component {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,

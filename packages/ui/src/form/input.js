@@ -21,9 +21,8 @@ const TAG_MAP = {
   password: 'input',
 }
 
-@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export class Input extends React.PureComponent {
+class InputPlain extends React.PureComponent {
   static defaultProps = {
     size: 1,
     type: 'input',
@@ -141,3 +140,7 @@ export class Input extends React.PureComponent {
     )
   }
 }
+
+export const Input = inject(context => ({ uiContext: context.uiContext }))(
+  InputPlain,
+)

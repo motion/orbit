@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { Text } from './text'
 
 @view.ui
-export class Separator {
+export class Separator extends React.Component {
   render({ after, children, ...props }) {
     return (
       <separator {...props}>

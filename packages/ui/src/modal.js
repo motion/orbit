@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { Portal } from './helpers/portal'
 
 @view.ui
-export class Modal {
+export class Modal extends React.Component {
   render() {
     const { portalProps, bgProps, children, ...props } = this.props
 

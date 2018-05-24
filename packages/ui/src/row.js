@@ -22,9 +22,8 @@ import { Surface } from './surface'
 //   spaced?: boolean,
 // }
 
-@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export class Row extends React.Component {
+class RowPlain extends React.Component {
   state = {
     active: null,
   }
@@ -183,3 +182,7 @@ export class Row extends React.Component {
     },
   })
 }
+
+export const Row = inject(context => ({ uiContext: context.uiContext }))(
+  RowPlain,
+)

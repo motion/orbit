@@ -4,7 +4,7 @@ import { injectTheme } from './helpers/injectTheme'
 import { view } from '@mcro/black'
 
 @view.ui
-class ButtonPlain {
+class ButtonPlain extends React.Component {
   render({
     badge,
     children,

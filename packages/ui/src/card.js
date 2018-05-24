@@ -4,7 +4,7 @@ import { Theme } from './helpers/theme'
 import { Title } from './title'
 
 @view.ui
-export class Card {
+export class Card extends React.Component {
   static defaultProps = {
     theme: 'light',
   }

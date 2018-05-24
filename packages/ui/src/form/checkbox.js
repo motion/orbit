@@ -4,7 +4,7 @@ import { observable } from 'mobx'
 import { SizedSurface } from '../sizedSurface'
 
 @view
-export class Checkbox {
+export class Checkbox extends React.Component {
   @observable isChecked = this.props.defaultValue || false
 
   onChange = e => {

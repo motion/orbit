@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export class Select {
+export class Select extends React.Component {
   static defaultProps = {
     height: 20,
     width: 100,

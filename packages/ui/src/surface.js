@@ -106,7 +106,7 @@ const hasChildren = children =>
     : !!children
 
 @view.ui
-class SurfacePlain {
+class SurfacePlain extends React.Component {
   static contextTypes = {
     provided: object,
   }

@@ -11,7 +11,7 @@ import * as Constants from '~/constants'
 const Badge = view('div', {
   position: 'absolute',
   top: -5,
-  right: 5,
+  right: -5,
   width: 24,
   height: 24,
   background: 'red',
@@ -519,7 +519,7 @@ export class HomeIllustration {
       overflow: 'hidden',
     },
     message: {
-      color: '#fff',
+      // color: '#fff',
       fontWeight: 200,
       fontSize: 42,
       lineHeight: '55px',

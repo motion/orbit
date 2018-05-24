@@ -22,9 +22,7 @@ export class Footer {
                     : { padding: [0, 0, 50] }
                 }
               >
-                <Callout>
-                  <Join />
-                </Callout>
+                <Join />
                 <section if={false}>
                   <SmallTitle>Our Mission</SmallTitle>
                   <P2 size={1.6}>

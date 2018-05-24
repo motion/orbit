@@ -24,8 +24,8 @@ import { scrollTo } from '~/helpers'
 import { Keyframes, Spring, animated } from 'react-spring'
 
 const SubLink = view('a', {
-  color: '#fff',
-  borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
+  // color: '#fff',
+  borderBottom: [1, 'dotted', [0, 0, 0, 0.1]],
 })
 
 class HomeStore {
@@ -142,6 +142,16 @@ class HomeHeader {
                     <borderLine />
                     <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
                       <P
+                        size={1.35}
+                        sizeLineHeight={1.15}
+                        fontWeight={300}
+                        alpha={0.8}
+                      >
+                        Orbit is a smart desktop for Mac that keeps team
+                        knowledge sorted and at hand.
+                      </P>
+                      <P
+                        if={false}
                         size={1.35}
                         sizeLineHeight={1.15}
                         fontWeight={300}
@@ -308,8 +318,8 @@ class HomeFooter {
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <below css={{ margin: [15, '15%', 0, 0] }}>
-                    <P2 size={3} alpha={1} fontWeight={200}>
-                      Your life operating system
+                    <P2 size={2.8} alpha={1} fontWeight={200}>
+                      It's time our computers started helping us operate.
                     </P2>
                     <br />
                     <UI.PassProps size={1.3} sizeLineHeight={1.2} alpha={0.85}>

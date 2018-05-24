@@ -40,7 +40,7 @@ const blueTheme = {
 }
 
 @view
-class FeaturesIntro {
+class FeaturesIntro extends React.Component {
   render() {
     return (
       <Media query={Constants.screen.large}>
@@ -586,7 +586,7 @@ export class SectionFeatureIntelligence extends React.Component {
 }
 
 @view
-export class FeaturesPage {
+export class FeaturesPage extends React.Component {
   render() {
     return (
       <>

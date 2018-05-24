@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import './createElement'

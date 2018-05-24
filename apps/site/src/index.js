@@ -1,3 +1,4 @@
+// import 'babel-polyfill'
 import '~/public/styles/siteBase.css'
 import './createElement'
 import 'intersection-observer'

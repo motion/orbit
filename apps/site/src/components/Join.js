@@ -1,11 +1,11 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { P, P2, Callout } from '~/views'
 import * as UI from '@mcro/ui'
 
-@UI.injectTheme
 @view
-export class Join {
-  render({ theme, ...props }) {
+export class Join extends React.Component {
+  render({ ...props }) {
     return (
       <section id="join" {...props}>
         <Callout>

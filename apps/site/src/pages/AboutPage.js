@@ -7,7 +7,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 
 @view
-class AboutIntro {
+class AboutIntro extends React.Component {
   render() {
     return (
       <Media query={Constants.screen.large}>
@@ -30,7 +30,7 @@ class AboutIntro {
 }
 
 @view
-export class AboutPage {
+export class AboutPage extends React.Component {
   render() {
     return (
       <>

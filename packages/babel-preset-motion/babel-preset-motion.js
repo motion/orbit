@@ -1,7 +1,6 @@
 module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
-
   const plug = (name, opts) => {
     if (disable.find(x => x === name)) {
       return null
@@ -9,14 +8,13 @@ module.exports = function(context, givenOpts) {
     const plugin = require.resolve(name)
     return opts ? [plugin, opts] : plugin
   }
-
   const config = {
     plugins: [
       plug('react-hot-loader/babel'),
-      // plug('babel-plugin-transform-runtime', {
-      //   polyfill: true,
-      //   regenerator: true,
-      // }),
+      plug('@babel/plugin-transform-runtime', {
+        polyfill: true,
+        regenerator: false,
+      }),
       plug('@mcro/babel-plugin-if'),
       plug('@mcro/gloss/transform', {
         decoratorName: opts.decorator || 'view',
@@ -48,7 +46,7 @@ module.exports = function(context, givenOpts) {
       //       loose: true,
       //       useBuiltIns: 'entry',
       //       targets: opts.targets || {
-      //         node: 'current',
+      //         chrome: '45',
       //       },
       //       exclude: ['transform-regenerator', 'transform-async-to-generator'],
       //     },
@@ -60,12 +58,11 @@ module.exports = function(context, givenOpts) {
         loose: true,
         decoratorsLegacy: true,
       }),
-      // plug('@babel/preset-typescript'),
+      plug('@babel/preset-typescript'),
     ],
   }
-
   config.plugins = config.plugins.filter(x => !!x)
   config.presets = config.presets.filter(x => !!x)
-
+  // console.log('babel config', config)
   return config
 }

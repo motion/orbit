@@ -40,7 +40,7 @@
     "@mcro/desktop": "^1.5.1",
     "@mcro/r2": "^1.5.1",
     "@mcro/reactron": "^1.5.1",
-    "babel-polyfill": "^6.26.0",
+    "babel-polyfill": "7.0.0-beta.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.5.0",
     "electron-simple-updater": "^1.2.3",

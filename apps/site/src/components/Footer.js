@@ -7,7 +7,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 
 @view
-export class Footer {
+export class Footer extends React.Component {
   render() {
     return (
       <Media query={Constants.screen.large}>

@@ -1,6 +1,6 @@
 import { Helpers } from '@mcro/decor'
 
-export default function emitsMount(_, Helpers: Helpers) {
+export function emitsMount(_, Helpers: Helpers) {
   return {
     name: 'extends-react',
     once: true,

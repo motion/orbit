@@ -27,6 +27,7 @@
     "react-hot-loader": "^4.2.0"
   },
   "peerDependencies": {
+    "@babel/runtime": "*",
     "lodash": "*",
     "mobx": "^4.3.0",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",

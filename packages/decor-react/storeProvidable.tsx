@@ -318,7 +318,7 @@ export function storeProvidable(options, Helpers) {
           Klass[method] = value
           return true
         },
-      }
+      })
     },
   }
 }

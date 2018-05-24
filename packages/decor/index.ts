@@ -13,11 +13,14 @@ export default function decor(
   const emitter = new Emitter()
   const emit = (a, b?) => emitter.emit(a, b)
   const on = (a, b) => emitter.on(a, b)
-  const isClass = x =>
-    x._isDecoratedClass ||
-    (x.prototype &&
-      (x.toString().indexOf('class ') === 0 ||
-        x.toString().indexOf('classCallCheck') > -1))
+  const isClass = x => {
+    return (
+      x._isDecoratedClass ||
+      (x.prototype &&
+        (x.toString().indexOf('class ') === 0 ||
+          x.toString().indexOf('classCallCheck') > -1))
+    )
+  }
 
   // process plugins
   let index = -1

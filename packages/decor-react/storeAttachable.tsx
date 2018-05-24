@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { object } from 'prop-types'
 import pickBy from 'lodash/pickBy'
-import hoistStatics from 'hoist-non-react-statics'
 
 export function storeAttachable(options) {
   return {
@@ -12,7 +11,6 @@ export function storeAttachable(options) {
         static contextTypes = {
           stores: object,
         }
-
         render() {
           return (
             <View
@@ -25,11 +23,12 @@ export function storeAttachable(options) {
           )
         }
       }
-
-      // copy statics
-      hoistStatics(ContextAttacher, View)
-
-      return ContextAttacher
+      return new Proxy(ContextAttacher, {
+        set(_, method, value) {
+          View[method] = value
+          return true
+        }
+      }
     },
   }
 }

@@ -141,14 +141,10 @@ export default class Gloss {
       if (!hasAttached) {
         hasTheme = Child.theme && typeof Child.theme === 'function'
         if (hasTheme) {
-          console.log('attach theme for', Child.name)
           attachTheme()
         }
         attachStyles(Child.glossUID, Child.style, true)
         hasAttached = true
-      }
-      if (Child.name === 'OrbitCard') {
-        console.log('theme?', hasTheme, this.props.bit.id)
       }
       if (hasTheme) {
         this.glossUpdateTheme(this.props)

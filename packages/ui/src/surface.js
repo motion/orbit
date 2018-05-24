@@ -222,7 +222,7 @@ class SurfacePlain {
     const { themeValues } = this
 
     if (!themeValues) {
-      console.warn('this is weird', this)
+      console.warn('this is weird', this, 'sure you set a theme?', this.context)
       return null
     }
 

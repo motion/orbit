@@ -32,7 +32,7 @@ export const ChatIcon = props => (
 )
 
 @view
-class UseCasesIntro {
+class UseCasesIntro extends React.Component {
   render() {
     return (
       <Media query={Constants.screen.large}>
@@ -69,7 +69,7 @@ class UseCasesIntro {
 }
 
 @view
-class SectionUseCaseRemoteTeams {
+class SectionUseCaseRemoteTeams extends React.Component {
   render() {
     return (
       <UI.Theme theme={Constants.peachTheme}>
@@ -211,7 +211,7 @@ class SectionUseCaseRemoteTeams {
 }
 
 @view
-class SectionUseCaseCustomerSuccess {
+class SectionUseCaseCustomerSuccess extends React.Component {
   render() {
     return (
       <UI.Theme theme={Constants.peachTheme}>
@@ -332,7 +332,7 @@ class SectionUseCaseCustomerSuccess {
 }
 
 @view
-class SectionUseCaseReduceInterrupts {
+class SectionUseCaseReduceInterrupts extends React.Component {
   render() {
     return (
       <UI.Theme theme={Constants.peachTheme}>
@@ -445,7 +445,7 @@ class SectionUseCaseReduceInterrupts {
 }
 
 @view
-export class UseCasesPage {
+export class UseCasesPage extends React.Component {
   render() {
     return (
       <>

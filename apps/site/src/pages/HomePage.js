@@ -59,7 +59,7 @@ class HomeStore {
 @view({
   store: HomeStore,
 })
-class HomeHeader {
+class HomeHeader extends React.Component {
   render({ isMedium, store }) {
     return (
       <Media query={Constants.screen.large}>
@@ -272,7 +272,7 @@ const blackTheme = {
 }
 
 @view
-class HomeFooter {
+class HomeFooter extends React.Component {
   render() {
     return (
       <UI.Theme theme="light">

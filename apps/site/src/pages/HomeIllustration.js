@@ -305,7 +305,7 @@ class IllustrationStore {
 @view({
   store: IllustrationStore,
 })
-export class HomeIllustration {
+export class HomeIllustration extends React.Component {
   render({ store }) {
     const dom = this.glossElement.bind(this)
     return (

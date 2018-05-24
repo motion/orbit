@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CAMEL_TO_SNAKE = {
+export const CAMEL_TO_SNAKE = {
     pointerEvents: 'pointer-events',
     WebkitAppRegion: '-webkit-app-region',
     WebkitLineClamp: '-webkit-line-clamp',
@@ -156,5 +154,5 @@ exports.CAMEL_TO_SNAKE = {
     gridTemplateColumns: 'grid-template-columns',
     gridAutoRows: 'grid-auto-rows',
 };
-exports.SNAKE_TO_CAMEL = Object.keys(exports.CAMEL_TO_SNAKE).reduce((acc, cur) => (Object.assign({}, acc, { [exports.CAMEL_TO_SNAKE[cur]]: cur })), {});
+export const SNAKE_TO_CAMEL = Object.keys(CAMEL_TO_SNAKE).reduce((acc, cur) => (Object.assign({}, acc, { [CAMEL_TO_SNAKE[cur]]: cur })), {});
 //# sourceMappingURL=cssNameMap.js.map

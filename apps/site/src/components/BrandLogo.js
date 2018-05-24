@@ -1,8 +1,9 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 
 @view
-export class BrandLogo {
+export class BrandLogo extends React.Component {
   render({ white }) {
     return (
       <brandMark {...this.props}>

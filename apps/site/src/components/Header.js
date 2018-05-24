@@ -8,7 +8,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 
 @view
-export class Header {
+export class Header extends React.Component {
   render({ white }) {
     return (
       <Media query={Constants.screen.large}>

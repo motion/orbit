@@ -4,7 +4,7 @@ import * as Path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
+// import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
@@ -80,15 +80,15 @@ const config = {
     new HtmlWebpackPlugin({
       template: 'index.html',
     }),
-    isProd &&
-      new UglifyJsPlugin({
-        // uglifyOptions: {
-        //   ecma: 8,
-        //   toplevel: true,
-        // },
-        sourceMap: true,
-        parallel: 2,
-      }),
+    // isProd &&
+    //   new UglifyJsPlugin({
+    //     // uglifyOptions: {
+    //     //   ecma: 8,
+    //     //   toplevel: true,
+    //     // },
+    //     sourceMap: true,
+    //     parallel: 2,
+    //   }),
     process.argv.indexOf('--report') > 0 &&
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',

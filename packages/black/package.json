@@ -1,5 +1,6 @@
 {
   "name": "@mcro/black",
+  "types": "./index.d.ts",
   "main": "_/index.js",
   "module": "_/index.js",
   "version": "1.5.1",

@@ -8,7 +8,7 @@ import Media from 'react-media'
 
 @view
 export class Footer {
-  render({ noMission }) {
+  render() {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (

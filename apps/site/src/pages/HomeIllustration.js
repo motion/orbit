@@ -1,12 +1,30 @@
 import * as React from 'react'
 import CountUp from 'react-countup'
-import { view, react, sleep } from '@mcro/black'
+import { view, react, sleep, deep } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 import * as Icons from '~/views/icons'
 import Router from '~/router'
 import * as Constants from '~/constants'
+
+const Badge = view('div', {
+  position: 'absolute',
+  top: -5,
+  right: 5,
+  width: 24,
+  height: 24,
+  background: 'red',
+  color: '#fff',
+  borderRadius: 100,
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  fontWeight: 600,
+  fontSize: 12,
+  letterSpacing: -1,
+  boxShadow: '0 0 5px rgba(0,0,0,0.5)',
+})
 
 const dockIcons = [
   {
@@ -35,24 +53,6 @@ const dockIcons = [
     countProps: { start: 0, end: 27, duration: 15 },
   },
 ]
-
-const Badge = view('div', {
-  position: 'absolute',
-  top: -5,
-  right: 5,
-  width: 24,
-  height: 24,
-  background: 'red',
-  color: '#fff',
-  borderRadius: 100,
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  fontWeight: 600,
-  fontSize: 12,
-  letterSpacing: -1,
-  boxShadow: '0 0 5px rgba(0,0,0,0.5)',
-})
 
 const Bubble = view(
   'div',
@@ -96,6 +96,8 @@ const Bubble = view(
     },
   },
 )
+
+console.log('CountUp', CountUp)
 
 const Count = ({ active, ...props }) =>
   active ? <CountUp {...props} /> : props.start
@@ -181,20 +183,20 @@ const messages = (
 
 class IllustrationStore {
   animate = false
-  bounce = {
+  bounce = deep({
     slack: false,
     dropbox: false,
     mail: false,
     drive: false,
     github: false,
-  }
-  leave = {
+  })
+  leave = deep({
     slack: false,
     dropbox: false,
     mail: false,
     drive: false,
     github: false,
-  }
+  })
 
   async willMount() {
     await sleep(100)
@@ -420,20 +422,22 @@ export class HomeIllustration {
               const bounce = store.bounce[name.toLowerCase()]
               const leave = store.leave[name.toLowerCase()]
               const countHigher = bounce === 2
+              const badge = (
+                <CountBadge
+                  active={bounce}
+                  {...countProps}
+                  start={countHigher ? countProps.end : countProps.start}
+                  end={countProps.end * (countHigher ? 2 : 1)}
+                />
+              )
+              console.log(badge)
               return dom(Icon, {
                 key: name,
                 $icon: true,
                 $bouncy: bounce,
                 $leave: leave,
                 size,
-                after: (
-                  <CountBadge
-                    active={bounce}
-                    {...countProps}
-                    start={countHigher ? countProps.end : countProps.start}
-                    end={countProps.end * (countHigher ? 2 : 1)}
-                  />
-                ),
+                after: badge,
               })
             })}
           </dockIcons>
@@ -460,6 +464,7 @@ export class HomeIllustration {
       bottom: 0,
       justifyContent: 'flex-start',
       overflow: 'hidden',
+      pointerEvents: 'none',
     },
     fades: {
       pointerEvents: 'none',

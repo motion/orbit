@@ -245,7 +245,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <SubTitle size={2.5}>Master incoming</SubTitle>
+                    <SubTitle size={2.5}>News for your team</SubTitle>
                     <FeatureSubTitle
                       css={{
                         marginTop: 12,
@@ -365,7 +365,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                             transformOrigin: 'top left',
                             border: [1, '#ddd'],
                             transform: {
-                              scale: 0.4,
+                              scale: 0.5,
                             },
                             boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
                           }}

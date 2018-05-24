@@ -71,6 +71,7 @@ export class Header {
       right: 0,
       position: 'absolute',
       zIndex: 4,
+      userSelect: 'none',
       [Constants.screen.smallQuery]: {
         position: 'relative',
       },

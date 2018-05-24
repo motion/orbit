@@ -53,35 +53,38 @@ class HomeHeader {
               />
               <SectionContent padded fullscreen>
                 <Slant
-                  slantSize={10}
-                  amount={60}
-                  slantGradient={[
-                    'rgba(255,255,255,0.1)',
-                    'rgba(255,255,255,0.1)',
-                  ]}
-                  css={{ zIndex: 0 }}
-                />
-                <Slant
                   inverseSlant
                   rightBackground={Constants.rightBg}
                   slantSize={0}
-                  amount={30}
+                  amount={40}
                   css={{
                     zIndex: 0,
                   }}
                 />
                 <Slant
-                  slantBackground={Constants.colorSecondary}
+                  slantGradient={[
+                    Constants.colorSecondary.alpha(0.5),
+                    Constants.colorSecondary,
+                  ]}
                   slantSize={2}
                   amount={15}
                   css={{ zIndex: 0 }}
                 />
-                <div $$flex />
+                <Slant
+                  slantSize={10}
+                  amount={30}
+                  slantGradient={[
+                    'rgba(255,255,255,0.025)',
+                    'rgba(255,255,255,0.1)',
+                  ]}
+                  css={{ zIndex: 3 }}
+                />
+                <spacer $$flex={3.5} />
                 <UI.Theme name="dark">
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      size={isMedium ? 4 : 4.5}
+                      size={isMedium ? 3.5 : 4}
                       margin={[-15, '10%', -15, -5]}
                       alpha={1}
                     >
@@ -145,7 +148,7 @@ class HomeHeader {
                     </actions>
                   </mainSection>
                 </UI.Theme>
-                <div $$flex />
+                <spacer $$flex />
                 <rightSide>
                   <Media
                     query={Constants.screen.large}
@@ -161,6 +164,9 @@ class HomeHeader {
   }
 
   static style = {
+    spacer: {
+      pointerEvents: 'none',
+    },
     mainSection: {
       position: 'relative',
       zIndex: 10,
@@ -234,17 +240,17 @@ class HomeFooter {
                 <Slant
                   inverseSlant
                   slantSize={10}
-                  amount={60}
+                  amount={30}
                   slantGradient={[
                     'rgba(255,255,255,0.1)',
                     'rgba(255,255,255,0.3)',
                   ]}
-                  css={{ zIndex: 3 }}
+                  css={{ zIndex: 0 }}
                 />
                 <Slant
                   slantSize={0}
                   rightBackground={Constants.rightBg}
-                  amount={30}
+                  amount={40}
                 />
                 <Slant
                   inverseSlant
@@ -255,25 +261,24 @@ class HomeFooter {
                 />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
-                  <below css={{ margin: [15, '10%', 0, 0] }}>
-                    <P2 size={3.5} alpha={1} fontWeight={200}>
-                      We live and work with&nbsp;technology.
+                  <below css={{ margin: [15, '15%', 0, 0] }}>
+                    <P2 size={3} alpha={1} fontWeight={200}>
+                      Your life operating system
                     </P2>
                     <br />
                     <UI.PassProps size={1.3} sizeLineHeight={1.2} alpha={0.85}>
                       <P2>
-                        It's time our devices got a little smarter. You have
-                        knowledge spread all over. Orbit puts it to work. We're
-                        making sense of all the incoming on your desktop. And
-                        it's{' '}
+                        You have knowledge in many places. Orbit makes sense of
+                        it all privately, right on your desktop. We strongly
+                        think an organizational tool needs to be{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
-                          completely private, with no data leaving your computer
+                          completely private, and put the user first
                         </span>.
                       </P2>
-                      <P2>
-                        Orbit solves hard problems to make it's experience
-                        enjoyable. It's an app that you'll interact with often,
-                        so we know we have to get the experience right.
+                      <P2 css={{ marginBottom: 40 }}>
+                        Orbit has to solve hard problems to be an enjoyable
+                        experience. It's an app that you'll interact with often,
+                        so we know we have to get it right.
                       </P2>
                       <P2 size={1.4}>
                         Learn more about{' '}

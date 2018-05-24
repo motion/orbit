@@ -48,24 +48,24 @@ class HomeHeader {
                 <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                   <Title
                     italic
-                    size={isMedium ? 5 : 6.2}
+                    size={isMedium ? 5 : 6}
                     margin={[-15, 0, -15, -5]}
                     color="#333"
                   >
-                    Operate with<br />
-                    intelligence
+                    Incoming,<br />
+                    solved.
                   </Title>
                   <borderLine />
                   <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
                     <P
-                      size={1.35}
+                      size={1.55}
                       sizeLineHeight={1.2}
                       fontWeight={300}
                       alpha={0.8}
                     >
-                      As your team grows, it's cloud gets harder to understand.
-                      Conversations happen everywhere. Orbit&nbsp;organizes the
-                      cloud on your desktop.
+                      Upgrade your Mac with a smart operating layer.
+                      Orbit&nbsp;tames the cloud on your Mac using intelligence,
+                      letting you and your team operate with clarity.
                     </P>
                   </below>
                   <actions

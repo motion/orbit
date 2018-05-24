@@ -49,18 +49,19 @@ class FeaturesIntro {
             <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={2.8} margin={[0, 0, 10, 0]}>
-                  A smarter operating system
+                  A better way to operate
                 </Title>
                 <P2 size={1.8} alpha={0.75}>
-                  Unify the cloud and give it a brain so you and your team can
-                  be more effective and more in sync.
+                  Orbit provides a heads up display that sorts through your
+                  company cloud, with intelligent features for keeping knowledge
+                  at hand.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#news')}>News</a>{' '}
+                  <a onClick={scrollTo('#news')}>Heads up</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#search')}>Search</a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#context')}>Context</a>
+                  <a onClick={scrollTo('#context')}>Intelligence</a>
                 </P>
               </HalfSection>
               <HalfSection />
@@ -141,10 +142,11 @@ const SearchCallout = ({ isLarge }) => (
     }
   >
     <P size={1.6}>
-      Concept-powered search across your entire cloud. With keyword summaries
-      for Slack conversations that learn what terms are common to your company.
-      Plus aggregated profiles of everyone you interact with across every
-      integration.
+      Search the entire cloud with keyword summaries of all conversations,
+      adjusted to important terms specific to your company.
+      <br />
+      <br />Aggregated profiles of everyone you interact with lets you avoid
+      interruptions and explore your team.
     </P>
   </Callout>
 )
@@ -250,7 +252,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                         marginTop: 12,
                       }}
                     >
-                      Simplify the incoming with <Cmd>⌘+Space</Cmd>
+                      Command the cloud with <Cmd>⌘+Space</Cmd>
                     </FeatureSubTitle>
                     <Callout
                       css={{
@@ -265,8 +267,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                       }}
                     >
                       <P size={1.6}>
-                        Orbit takes over for spotlight with a home that
-                        understands you and sorts through all the incoming.
+                        Orbit takes over spotlight with a home that sorts
+                        through all the incoming and summarizes relevant
+                        information.
                         <br />
                         <br />
                         It uses novel on-device ML that can adjust to the custom
@@ -417,7 +420,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={2.5}>Search for the cloud</SubTitle>
+                  <SubTitle size={2.5}>A smarter search</SubTitle>
                   <FeatureSubTitle>Spotlight, meet your brain</FeatureSubTitle>
                 </content>
                 <Media
@@ -479,9 +482,9 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={2.5}>Realtime contextual search</SubTitle>
+                  <SubTitle size={2.5}>Realtime intelligence</SubTitle>
                   <FeatureSubTitle>
-                    A whole new ability for your computer
+                    Always on contextual search that works
                   </FeatureSubTitle>
                   <Callout
                     css={{
@@ -496,13 +499,14 @@ export class SectionFeatureIntelligence extends React.Component {
                     }}
                   >
                     <P2 size={1.6}>
-                      Realtime contextual answers across every app. Even your
-                      desktop apps like Slack.
+                      It's a pinnable sidebar that works hand in hand with any
+                      app, from Slack to your browser.
                     </P2>
                     <P2 size={1.6}>
-                      And all you have to do is hold <Cmd>Option</Cmd>.
-                      Important terms, people, and items in your cloud are shown
-                      with highlighted summarized answers, instantly.
+                      And all you have to do is hold <Cmd>Option</Cmd> or tap{' '}
+                      <Cmd>Option+Space</Cmd>. Important terms, people, and
+                      items in your cloud are shown with highlighted summarized
+                      answers, instantly.
                     </P2>
                     <DottedButton
                       css={{

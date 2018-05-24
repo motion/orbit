@@ -6,7 +6,7 @@ export class BrandLogo {
   render() {
     return (
       <brandMark {...this.props}>
-        <Logo size={0.25} color="#090909" />
+        <Logo size={0.2} color="#090909" />
       </brandMark>
     )
   }

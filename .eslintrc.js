@@ -3,14 +3,8 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:flowtype/recommended',
-    'prettier',
-    'prettier/flowtype',
-    'prettier/react',
-  ],
-  plugins: ['react', 'flowtype', 'prettier'],
+  extends: ['eslint:recommended', 'prettier', 'prettier/react'],
+  plugins: ['babel', 'react', 'prettier'],
   parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 8,

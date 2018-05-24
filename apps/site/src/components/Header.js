@@ -13,7 +13,7 @@ export class Header {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <React.Fragment>
+          <>
             <headerBorder
               css={{
                 position: 'absolute',
@@ -41,7 +41,7 @@ export class Header {
                 </headerInner>
               </SectionContent>
             </header>
-          </React.Fragment>
+          </>
         )}
       </Media>
     )

@@ -17,7 +17,8 @@ const config = {
   },
   devtool: 'cheap-module-source-map', //'cheap-eval-source-map',
   resolve: {
-    modules: [Path.join(entry, 'node_modules'), buildNodeModules],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
   },
   resolveLoader: {
     modules: [buildNodeModules],
@@ -31,7 +32,7 @@ const config = {
       },
       {
         test: /\.tsx?$/,
-        use: ['ts-loader', 'babel-loader'],
+        use: ['babel-loader', 'ts-loader'],
         exclude: ['node_modules'],
       },
       {
@@ -65,9 +66,6 @@ const config = {
       },
     ],
   },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  },
   plugins: [
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
@@ -75,7 +73,5 @@ const config = {
     }),
   ],
 }
-
-console.log('config is', config)
 
 export default config

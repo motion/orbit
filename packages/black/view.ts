@@ -1,4 +1,4 @@
-import decor, { DecorCompiledDecorator } from '@mcro/decor'
+import decor from '@mcro/decor'
 import * as PropTypes from 'prop-types'
 import {
   storeProvidable,
@@ -13,6 +13,9 @@ import { reactable, reactObservable } from '@mcro/decor-mobx'
 import automagical from '@mcro/automagical'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
+
+import { DecorCompiledDecorator } from '@mcro/decor'
+export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 
 const uiContext = [
   contextual,
@@ -41,7 +44,7 @@ const decorations = (
   !enable.ui && emitsMount,
 ]
 
-export const blackDecorator = decor(
+export const blackDecorator: DecorCompiledDecorator<any> = decor(
   decorations({ mobx: true, magic: false, ui: true }),
 )
 
@@ -50,13 +53,13 @@ export interface ViewDecorator {
   on: typeof blackDecorator.on
   emitter: typeof blackDecorator.emitter
   emit: typeof blackDecorator.emit
-  ui: DecorCompiledDecorator<any>
-  electron: DecorCompiledDecorator<any>
+  ui: ReturnType<typeof decor>
+  electron: ReturnType<typeof decor>
   provide: any
   attach: any
 }
 
-function createViewDecorator() {
+function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(item, ...args) {
     if (typeof item === 'string') {
       return decorator(item, ...args)
@@ -83,4 +86,4 @@ function createViewDecorator() {
   return view
 }
 
-export const view = createViewDecorator()
+export const view: ViewDecorator = createViewDecorator()

@@ -1,7 +1,7 @@
 {
   "name": "@mcro/decor",
-  "main": "_/decor.js",
-  "types": "./decor.d.ts",
+  "main": "_/index.js",
+  "types": "./index.d.ts",
   "version": "1.5.1",
   "scripts": {
     "build": "tsc",

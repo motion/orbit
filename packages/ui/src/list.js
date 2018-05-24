@@ -55,9 +55,8 @@ const SCROLL_BAR_WIDTH = 16
 //   parent: any,
 // }
 
-@parentSize('virtualized', 'parentSize')
 @view.ui
-class ListThing extends React.PureComponent {
+class ListUI extends React.PureComponent {
   static Item = ListItem
 
   static defaultProps = {
@@ -76,20 +75,17 @@ class ListThing extends React.PureComponent {
   virtualListRef = null
   totalGroups = 0
 
-  componentWillMount() {
+  constructor(a, b) {
+    super(a, b)
     this.totalItems = this.getTotalItems(this.props)
-
     if (typeof this.props.defaultSelected !== 'undefined') {
       this.setState({ selected: this.props.defaultSelected })
     }
-
     if (this.props.getRef) {
       this.props.getRef(this)
     }
-
     this.updateChildren()
-
-    this.setTimeout(() => {
+    setTimeout(() => {
       // TODO stupid ass bugfix, for some reason lists started flickering
       // likely a bug with our cellmeasurer, or maybe even gloss
       // this seems to fix for now
@@ -589,4 +585,4 @@ class ListThing extends React.PureComponent {
   }
 }
 
-export const List = ListThing
+export const List = parentSize('virtualized', 'parentSize')(ListUI)

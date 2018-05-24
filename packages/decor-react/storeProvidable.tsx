@@ -92,7 +92,8 @@ export function storeProvidable(options, Helpers) {
           this.onReloadStores()
         }
 
-        componentWillMount() {
+        constructor(a, b) {
+          super(a, b)
           this.componentWillUpdate = this.componentWillUpdate.bind(this)
           this.setupProps()
           this.setupStores()
@@ -271,7 +272,6 @@ export function storeProvidable(options, Helpers) {
         }
 
         render() {
-          console.log('rendering class', Klass.name, this.props, this.stores)
           return <Klass {...this.props} {...this.stores} />
         }
       }

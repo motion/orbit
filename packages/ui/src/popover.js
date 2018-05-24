@@ -97,7 +97,7 @@ export class Popover extends React.PureComponent {
     uiThemes: PropTypes.object,
   }
 
-  curProps = {}
+  curProps = this.props
   popoverRef = null
   targetRef = null
 
@@ -117,10 +117,6 @@ export class Popover extends React.PureComponent {
 
   // curProps is always up to date, so we dont have to thread props around a ton
   // also, nicely lets us define get fn helpers
-
-  componentWillMount() {
-    this.curProps = this.props
-  }
 
   componentWillReceiveProps = nextProps => {
     this.curProps = nextProps

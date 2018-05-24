@@ -20,7 +20,7 @@ const transitions = store => {
 @UI.injectTheme
 @view.attach('peekStore')
 @view
-export default class PeekFrame {
+export class PeekFrame {
   render({ peekStore, children, ...props }) {
     const { willShow, willHide, state, willStayShown } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {
@@ -123,7 +123,7 @@ export default class PeekFrame {
                 background="#f2f2f2"
                 iconProps={{
                   style: {
-                    transform: `translateX(-1px) translateY(-1px)`,
+                    transform: 'translateX(-1px) translateY(-1px)',
                   },
                 }}
               />

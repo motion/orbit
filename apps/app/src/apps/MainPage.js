@@ -11,6 +11,7 @@ import AppStore from '~/stores/appStore'
 @view
 export class MainPage {
   render() {
+    console.log('this', this)
     return (
       <main>
         <HighlightsPage />

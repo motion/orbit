@@ -9,7 +9,8 @@ export class Portal extends Component {
     children: PropTypes.node,
   }
 
-  componentWillMount() {
+  constructor(a, b) {
+    super(a, b)
     this.popup = document.createElement('div')
     document.body.appendChild(this.popup)
     this.renderLayer()

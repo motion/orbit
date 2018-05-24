@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import * as PeekContents from './peek/peekContents'
 import { capitalize } from 'lodash'
-import PeekFrame from './peek/peekFrame'
+import { PeekFrame } from './peek/peekFrame'
 
 class PeekStore {
   headerHeight = 0

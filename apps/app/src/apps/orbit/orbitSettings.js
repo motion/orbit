@@ -60,16 +60,14 @@ export class OrbitSettings {
     return [...activeIntegrations, ...inactiveIntegrations]
   }
 
-  componentWillMount() {
-    // this.props.appStore.setGetResults(this.getResults)
-    // const updateInt = setInterval(() => {
-    //   if (this.mounted) {
-    //     this.props.appStore.setGetResults(this.getResults)
-    //   } else {
-    //     clearInterval(updateInt)
-    //   }
-    // }, 1000)
-  }
+  // this.props.appStore.setGetResults(this.getResults)
+  // const updateInt = setInterval(() => {
+  //   if (this.mounted) {
+  //     this.props.appStore.setGetResults(this.getResults)
+  //   } else {
+  //     clearInterval(updateInt)
+  //   }
+  // }, 1000)
 
   componentWillUnmount() {
     this.mounted = false

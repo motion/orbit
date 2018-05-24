@@ -61,7 +61,7 @@ const getTextProperties = props => {
 
 // click away from edit clears it
 @view.ui
-export class Text {
+export class Text extends React.Component {
   selected = false
   editable = false
   node = null
@@ -81,7 +81,8 @@ export class Text {
     return this.props.ellipse > 1 || this.props.ellipse === true
   }
 
-  componentWillMount() {
+  constructor(a, b) {
+    super(a, b)
     this.handleProps(this.props)
   }
 

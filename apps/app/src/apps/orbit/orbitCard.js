@@ -75,12 +75,13 @@ const tinyProps = {
 @view({
   store: OrbitCardStore,
 })
-export class OrbitCard {
+export class OrbitCard extends React.Component {
   static defaultProps = {
     borderRadius: 8,
   }
 
-  componentWillMount() {
+  constructor(...args) {
+    super(...args)
     this.getOrbitCard = this.getOrbitCard.bind(this)
     const { appStore, hoverToSelect } = this.props
     if (hoverToSelect) {
@@ -159,7 +160,7 @@ export class OrbitCard {
               ellipse={2}
               fontWeight={400}
               css={{
-                maxWidth: `calc(100% - 30px)`,
+                maxWidth: 'calc(100% - 30px)',
                 marginBottom: 1,
               }}
               {...tiny && tinyProps.titleProps}

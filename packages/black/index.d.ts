@@ -1,3 +1,5 @@
 import { DecorCompiledDecorator } from '@mcro/decor'
 
-type view = DecorCompiledDecorator<any>
+export { DecorCompiledDecorator } from '@mcro/decor'
+
+export type DecorView = DecorCompiledDecorator<any>

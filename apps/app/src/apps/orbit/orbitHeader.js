@@ -40,7 +40,7 @@ class HeaderStore {
 @view({
   headerStore: HeaderStore,
 })
-export class OrbitHeader {
+export class OrbitHeader extends React.Component {
   handleKeyDown = e => {
     // up/down
     const { keyCode } = e
@@ -49,11 +49,9 @@ export class OrbitHeader {
     }
   }
 
-  componentWillMount() {
-    this.hoverSettler = this.props.appStore.getHoverSettler({
-      onHover: this.props.headerStore.hover,
-    })
-  }
+  hoverSettler = this.props.appStore.getHoverSettler({
+    onHover: this.props.headerStore.hover,
+  })
 
   render({ orbitStore, headerStore, theme }) {
     const headerBg = theme.base.background

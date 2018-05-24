@@ -50,20 +50,20 @@ export default class Overdrive extends React.Component {
     needsMeasure: false,
   }
 
-  componentWillMount() {
-    // this.updateNaturalChildren()
-  }
+  // componentWillMount() {
+  //   // this.updateNaturalChildren()
+  // }
 
-  componentWillReceiveProps() {
-    // this.setState({ needsMeasure: true })
-    // this.updateNaturalChildren()
-  }
+  // componentWillReceiveProps() {
+  //   // this.setState({ needsMeasure: true })
+  //   // this.updateNaturalChildren()
+  // }
 
-  componentDidUpdate() {
-    // if (this.state.needsMeasure) {
-    //   this.setState({ needsMeasure: false })
-    // }
-  }
+  // componentDidUpdate() {
+  //   // if (this.state.needsMeasure) {
+  //   //   this.setState({ needsMeasure: false })
+  //   // }
+  // }
 
   reRenderAfterCollectingChildren = () => {
     this.setState({ rerender: true })

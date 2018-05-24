@@ -12,6 +12,8 @@ if (fs.existsSync(paths.appPublic)) {
   ncp(paths.appPublic, paths.appBuild, console.log.bind(console))
 }
 
+process.env.NODE_ENV = 'production'
+
 webpack(
   {
     mode: 'production',

@@ -1,17 +1,23 @@
-import * as Path from 'path'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
 // @ts-ignore
 import webpack from 'webpack'
+import * as Path from 'path'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+const mode = process.env.NODE_ENV || 'development'
+const isProd = mode === 'production'
 const entry = process.env.ENTRY || './src'
+const path = Path.join(process.cwd(), 'dist')
 const buildNodeModules =
   process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
 
+console.log('outputting to', path)
+
 const config = {
-  mode: process.env.NODE_ENV || 'development',
+  mode,
   entry,
   output: {
-    path: Path.join(__dirname, 'dist'),
+    path,
     filename: 'bundle.js',
     publicPath: '/',
   },
@@ -71,7 +77,12 @@ const config = {
     new HtmlWebpackPlugin({
       template: 'index.html',
     }),
-  ],
+    false &&
+      isProd &&
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+      }),
+  ].filter(Boolean),
 }
 
 export default config

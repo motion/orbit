@@ -116,7 +116,6 @@ export default class Gloss {
     let hasTheme = false
     const attachTheme = () => {
       hasTheme = Child.theme && typeof Child.theme === 'function'
-      console.log('has theme', Child, Child.theme)
       if (!hasTheme) {
         return
       }

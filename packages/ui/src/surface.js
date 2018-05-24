@@ -402,7 +402,6 @@ class SurfacePlain {
   }
 
   static theme = (props, theme, self) => {
-    console.log('running surface theme', self)
     const uiContext = self.uiContext
 
     // sizes

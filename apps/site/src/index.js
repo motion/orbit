@@ -13,10 +13,6 @@ import '~/router'
 window.Constants = Constants
 
 function render() {
-  if (window.restartRouter) {
-    console.log('restarting router')
-    window.restartRouter()
-  }
   const RootNode = document.querySelector('#app')
   const Root = require('./root').default
   ReactDOM.render(

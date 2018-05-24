@@ -8,8 +8,6 @@ import * as Icons from '~/views/icons'
 import Router from '~/router'
 import { colorMain } from '~/constants'
 
-console.log('reactis', react)
-
 const bgColor = '#fff2'
 const dockIcons = [
   {
@@ -212,7 +210,6 @@ class IllustrationStore {
   runAnimation = react(
     () => this.animate,
     async (shouldAnimate, { sleep }) => {
-      console.log('run aimationg', shouldAnimate)
       if (!shouldAnimate) {
         throw react.cancel
       }

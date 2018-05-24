@@ -35,22 +35,13 @@ export class Header {
                   />
                   <div $$flex />
                   <nav>
-                    <Link
-                      css={{ color: white ? '#fff' : [0, 0, 0, 0.6] }}
-                      to="/features"
-                    >
+                    <Link css={{ color: [0, 0, 0, 0.6] }} to="/features">
                       {isLarge ? 'Features' : 'What'}
                     </Link>
-                    <Link
-                      css={{ color: white ? '#fff' : [0, 0, 0, 0.6] }}
-                      to="/use-cases"
-                    >
+                    <Link css={{ color: [0, 0, 0, 0.6] }} to="/use-cases">
                       {isLarge ? 'Use Cases' : 'Why'}
                     </Link>
-                    <Link
-                      css={{ color: white ? '#fff' : [0, 0, 0, 0.6] }}
-                      to="/about"
-                    >
+                    <Link css={{ color: [0, 0, 0, 0.6] }} to="/about">
                       {isLarge ? 'About' : 'Who'}
                     </Link>
                   </nav>

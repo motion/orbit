@@ -97,8 +97,6 @@ const Bubble = view(
   },
 )
 
-console.log('CountUp', CountUp)
-
 const Count = ({ active, ...props }) =>
   active ? <CountUp {...props} /> : props.start
 
@@ -430,7 +428,6 @@ export class HomeIllustration {
                   end={countProps.end * (countHigher ? 2 : 1)}
                 />
               )
-              console.log(badge)
               return dom(Icon, {
                 key: name,
                 $icon: true,

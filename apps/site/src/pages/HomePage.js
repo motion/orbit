@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { Header, Join } from '~/components'
 import SectionContent from '~/views/sectionContent'
 import { Stars } from '~/views/stars'
+import { throttle } from 'lodash'
 import {
   Section,
   Slant,
@@ -20,31 +21,83 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
 import { scrollTo } from '~/helpers'
+import { Keyframes, Spring, animated } from 'react-spring'
 
 const SubLink = view('a', {
   color: '#fff',
   borderBottom: [1, 'dotted', [255, 255, 255, 0.1]],
 })
 
-@view
+class HomeStore {
+  stars = null
+
+  willMount() {
+    this.on(
+      window,
+      'scroll',
+      throttle(() => {
+        const max = window.innerHeight * 3
+        // 0 - 1 of how far down we are
+        const pctDown =
+          (max - (max - document.scrollingElement.scrollTop)) / max
+        const offset = pctDown * 100
+        // this.stars.stopAnimation()
+        this.stars(Spring, {
+          to: { y: -offset },
+        })
+      }, 16),
+    )
+
+    setTimeout(() => {
+      this.stars(Spring, {
+        to: { y: 0 },
+      })
+    })
+  }
+}
+
+@view({
+  store: HomeStore,
+})
 class HomeHeader {
-  render({ isMedium }) {
+  render({ isMedium, store }) {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => {
           return (
             <Section
               css={{
-                background: `linear-gradient(${Constants.leftBg.lighten(
-                  0.2,
-                )}, ${Constants.leftBg})`,
+                background: `linear-gradient(#fff, ${Constants.leftBg})`,
               }}
             >
-              <Stars
+              <Keyframes native script={ref => (store.stars = ref)}>
+                {({ y }) => (
+                  <animated.div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      transform: y.interpolate(y => `translate3d(0,${y}%,0)`),
+                    }}
+                  >
+                    <Stars
+                      $$fullscreen
+                      css={{
+                        zIndex: 0,
+                      }}
+                    />
+                  </animated.div>
+                )}
+              </Keyframes>
+              <leftBackground
                 $$fullscreen
                 css={{
-                  opacity: 0.8,
                   zIndex: 0,
+                  background: `linear-gradient(transparent, ${
+                    Constants.leftBg
+                  })`,
                 }}
               />
               <rightBackground
@@ -54,12 +107,16 @@ class HomeHeader {
               <SectionContent padded fullscreen>
                 <Slant
                   inverseSlant
-                  rightBackground={Constants.rightBg}
-                  slantSize={0}
+                  slantSize={2}
+                  amount={20}
+                  slantBackground="#f9f9f9"
+                  css={{ zIndex: 0 }}
+                />
+                <Slant
+                  slantSize={10}
                   amount={40}
-                  css={{
-                    zIndex: 0,
-                  }}
+                  slantGradient={['#f9f9f9', '#f9f9f9']}
+                  css={{ zIndex: 0 }}
                 />
                 <Slant
                   slantGradient={[
@@ -70,25 +127,17 @@ class HomeHeader {
                   amount={15}
                   css={{ zIndex: 0 }}
                 />
-                <Slant
-                  slantSize={10}
-                  amount={30}
-                  slantGradient={[
-                    'rgba(255,255,255,0.025)',
-                    'rgba(255,255,255,0.1)',
-                  ]}
-                  css={{ zIndex: 3 }}
-                />
-                <spacer $$flex={3.5} />
-                <UI.Theme name="dark">
+                <spacer $$flex={1.5} />
+                <UI.Theme name="light">
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      size={isMedium ? 3.5 : 4}
+                      size={isMedium ? 3.5 : 8}
                       margin={[-15, '10%', -15, -5]}
                       alpha={1}
+                      color={Constants.colorMain}
                     >
-                      Desktop 2.0
+                      Rethink desktop
                     </Title>
                     <borderLine />
                     <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
@@ -111,13 +160,13 @@ class HomeHeader {
                       }}
                     >
                       <UI.Button
-                        borderStyle="dotted"
+                        borderColor="#f2f2f2"
                         size={1.1}
                         onClick={scrollTo('#join')}
                         $smallInstallBtn={!isLarge}
                         tooltip=""
                         css={{
-                          margin: [0, 10, 0, 0],
+                          margin: [0, 10, 0, -10],
                           cursor: 'pointer',
                           lineHeight: '1.1rem',
                         }}
@@ -127,7 +176,7 @@ class HomeHeader {
                           width={20}
                           height={20}
                           css={{
-                            fill: '#fff',
+                            // fill: '#fff',
                             display: 'inline-block',
                             margin: [-2, 0, 0, 4],
                             opacity: 0.32,
@@ -179,10 +228,10 @@ class HomeHeader {
       margin: [-15, 0, 0, 0],
     },
     borderLine: {
-      margin: [30, 40, 10, 0],
+      margin: [40, 40, 20, 0],
       width: '65%',
       height: 1,
-      background: [255, 255, 255, 0.05],
+      background: [0, 0, 0, 0.05],
     },
     smallInstallBtn: {
       // transform: {
@@ -216,7 +265,7 @@ const blackTheme = {
 class HomeFooter {
   render() {
     return (
-      <UI.Theme theme={blackTheme}>
+      <UI.Theme theme="light">
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section
@@ -240,24 +289,21 @@ class HomeFooter {
                 <Slant
                   inverseSlant
                   slantSize={10}
-                  amount={30}
-                  slantGradient={[
-                    'rgba(255,255,255,0.1)',
-                    'rgba(255,255,255,0.3)',
-                  ]}
+                  amount={40}
+                  slantGradient={['#f9f9f9', '#f9f9f9']}
                   css={{ zIndex: 0 }}
                 />
                 <Slant
-                  slantSize={0}
-                  rightBackground={Constants.rightBg}
-                  amount={40}
+                  slantSize={2}
+                  amount={20}
+                  slantBackground="#f2f2f2"
+                  css={{ zIndex: 0 }}
                 />
                 <Slant
                   inverseSlant
                   slantBackground={Constants.colorSecondary}
                   slantSize={2}
                   amount={15}
-                  css={{ zIndex: 0 }}
                 />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
@@ -303,7 +349,7 @@ export const HomePage = () => (
   <Media query={Constants.screen.medium}>
     {isMedium => (
       <>
-        <Header white />
+        <Header />
         <HomeHeader isMedium={isMedium} />
         <HomeFooter isMedium={isMedium} />
       </>

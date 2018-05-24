@@ -124,7 +124,7 @@ const chats = [
 ]
 
 const messages = (
-  <React.Fragment>
+  <>
     <Bubble>this shows good potential</Bubble>
     <Bubble two>the icon isn’t good that you have now</Bubble>
     <Bubble two>
@@ -175,7 +175,7 @@ const messages = (
       mockups for graphite drawings I’m having produced in China
     </Bubble>
     <Bubble>based on our tests</Bubble>
-  </React.Fragment>
+  </>
 )
 
 class IllustrationStore {
@@ -216,7 +216,7 @@ class IllustrationStore {
       if (!shouldAnimate) {
         throw react.cancel
       }
-      console.log(`running acnimat`)
+      console.log('running acnimat')
       this.animateIcons(sleep)
       this.animateChats(sleep)
     },
@@ -313,7 +313,7 @@ export class HomeIllustration {
     console.log('is animating', store.animate)
     const dom = this.glossElement.bind(this)
     return (
-      <React.Fragment>
+      <>
         <headerIll>
           <fades $$fullscreen />
           <chats>
@@ -442,7 +442,7 @@ export class HomeIllustration {
             })}
           </dockIcons>
         </headerIll>
-      </React.Fragment>
+      </>
     )
   }
 

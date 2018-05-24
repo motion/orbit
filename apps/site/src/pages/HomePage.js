@@ -43,7 +43,7 @@ class HomeHeader {
                   slantSize={8}
                   amount={20}
                 />
-                <Slant slantBackground={`#f6f6f6`} css={{ zIndex: 2 }} />
+                <Slant slantBackground={'#f6f6f6'} css={{ zIndex: 2 }} />
                 <div $$flex />
                 <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                   <Title
@@ -246,11 +246,11 @@ class HomeFooter {
 export const HomePage = () => (
   <Media query={Constants.screen.medium}>
     {isMedium => (
-      <React.Fragment>
+      <>
         <Header />
         <HomeHeader isMedium={isMedium} />
         <HomeFooter isMedium={isMedium} />
-      </React.Fragment>
+      </>
     )}
   </Media>
 )

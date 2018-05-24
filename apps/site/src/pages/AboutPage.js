@@ -33,7 +33,7 @@ class AboutIntro {
 export class AboutPage {
   render() {
     return (
-      <React.Fragment>
+      <>
         <Header />
         <AboutIntro />
         <Section>
@@ -53,7 +53,7 @@ export class AboutPage {
           </SectionContent>
         </Section>
         <Footer noMission />
-      </React.Fragment>
+      </>
     )
   }
 }

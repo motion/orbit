@@ -13,7 +13,6 @@ module.exports = {
   rules: {
     indent: 'off',
     'linebreak-style': ['error', 'unix'],
-    quotes: ['error', 'single', { allowTemplateLiterals: true }],
     semi: ['error', 'never'],
     'no-console': 'off',
     'no-unused-vars': 'error',
@@ -23,6 +22,7 @@ module.exports = {
     'react/jsx-uses-react': 'error',
     'no-case-declarations': 'off',
     'no-debugger': 'off',
+    'babel/quotes': [1, 'single'],
   },
   settings: {
     'import/resolver': {

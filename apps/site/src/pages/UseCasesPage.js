@@ -321,7 +321,7 @@ class SectionUseCaseCustomerSuccess {
   static style = {
     chat: {
       opacity: 0.4,
-      filter: `hue-rotate(40deg)`,
+      filter: 'hue-rotate(40deg)',
       transform: { scale: 3 },
       position: 'absolute',
       zIndex: 0,
@@ -448,7 +448,7 @@ class SectionUseCaseReduceInterrupts {
 export class UseCasesPage {
   render() {
     return (
-      <React.Fragment>
+      <>
         <Header />
         <UseCasesIntro />
         <surround css={{ position: 'relative' }}>
@@ -459,7 +459,7 @@ export class UseCasesPage {
           <SectionUseCaseReduceInterrupts />
         </surround>
         <Footer />
-      </React.Fragment>
+      </>
     )
   }
 }

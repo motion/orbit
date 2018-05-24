@@ -218,7 +218,7 @@ export const Border = UI.injectTheme(
 
 export const FadedArea = UI.injectTheme(
   ({ theme, fadeRight, fadeDown, fadeLeft, fadeBackground, children }) => (
-    <React.Fragment>
+    <>
       {children}
       <fadeRight
         if={fadeRight}
@@ -253,7 +253,7 @@ export const FadedArea = UI.injectTheme(
             theme.base.background})`,
         }}
       />
-    </React.Fragment>
+    </>
   ),
 )
 

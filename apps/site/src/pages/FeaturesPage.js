@@ -525,7 +525,7 @@ export class SectionFeatureIntelligence extends React.Component {
               <Media
                 query={Constants.screen.large}
                 render={() => (
-                  <React.Fragment>
+                  <>
                     <RightSide css={{ top: 0, overflow: 'visible' }}>
                       <SearchCallout isLarge />
                     </RightSide>
@@ -576,7 +576,7 @@ export class SectionFeatureIntelligence extends React.Component {
                         </FadedArea>
                       </inner>
                     </section>
-                  </React.Fragment>
+                  </>
                 )}
               />
             </SectionContent>
@@ -591,7 +591,7 @@ export class SectionFeatureIntelligence extends React.Component {
 export class FeaturesPage {
   render() {
     return (
-      <React.Fragment>
+      <>
         <Header />
         <FeaturesIntro />
         <UI.Theme theme={blueTheme}>
@@ -604,7 +604,7 @@ export class FeaturesPage {
           </surround>
         </UI.Theme>
         <Footer />
-      </React.Fragment>
+      </>
     )
   }
 }

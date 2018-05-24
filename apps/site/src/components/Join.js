@@ -6,8 +6,6 @@ import * as UI from '@mcro/ui'
 @view
 export class Join {
   render({ theme, ...props }) {
-    console.log('theme', theme)
-    console.log(this.glossElement, '123')
     return (
       <section id="join" {...props}>
         <P size={1.8} css={{ marginRight: 30 }}>

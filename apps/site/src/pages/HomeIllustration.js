@@ -1,6 +1,6 @@
 import * as React from 'react'
 import CountUp from 'react-countup'
-import { view, react } from '@mcro/black'
+import { view, react, sleep } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
@@ -193,11 +193,9 @@ class IllustrationStore {
     github: false,
   }
 
-  willMount() {
-    setTimeout(() => {
-      this.animate = true
-      console.log('homeill', this)
-    }, 300)
+  async willMount() {
+    await sleep(100)
+    this.animate = true
   }
 
   restart() {
@@ -213,7 +211,6 @@ class IllustrationStore {
       if (!shouldAnimate) {
         throw react.cancel
       }
-      console.log('running acnimat')
       this.animateIcons(sleep)
       this.animateChats(sleep)
     },
@@ -307,7 +304,6 @@ class IllustrationStore {
 })
 export class HomeIllustration {
   render({ store }) {
-    console.log('is animating', store.animate)
     const dom = this.glossElement.bind(this)
     return (
       <>

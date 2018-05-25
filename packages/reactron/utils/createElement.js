@@ -23,12 +23,10 @@ export function createElement(type, props) {
     WINDOW: () => new Components.Window(ROOT, props),
     TRAY: () => new Components.Tray(ROOT, props),
   }
-
   if (COMPONENTS[type]) {
     const instance = COMPONENTS[type]()
     // instance.applyProps(props)
     return instance
   }
-
   console.warn('Invalid type given to reactron:', type)
 }

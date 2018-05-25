@@ -24,6 +24,7 @@ export default class MainWindow extends React.Component {
 
   handleReadyToShow = () => {
     this.setState({
+      size: Helpers.getScreenSize(),
       show: true,
     })
   }
@@ -49,7 +50,7 @@ export default class MainWindow extends React.Component {
         webPreferences={Constants.WEB_PREFERENCES}
         onReadyToShow={this.handleReadyToShow}
         position={this.state.position}
-        size={Helpers.getScreenSize()}
+        size={this.state.size}
         onMove={this.handleMove}
       />
     )

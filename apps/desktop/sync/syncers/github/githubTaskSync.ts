@@ -121,7 +121,6 @@ export default class GithubIssueSync {
   }
 
   syncRepo = async (org: string, name: string): Promise<any> => {
-    console.log('getting', org, name)
     const results = await this.graphFetch({
       query: `
       query AllIssues {

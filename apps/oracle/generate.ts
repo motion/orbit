@@ -17,7 +17,6 @@ server.get('/:font', (req, res) => {
 server.listen(3003)
 
 function getPage(fontName) {
-  console.log('getting', fontName)
   return `
 <html>
   <head>

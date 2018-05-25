@@ -94,7 +94,6 @@ export default class Overdrive extends React.Component {
       width: rect.width,
       height: rect.height,
     }
-    console.log('getting psoition', res)
     return res
   }
 

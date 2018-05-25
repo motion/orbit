@@ -22,7 +22,7 @@ import { scrollTo } from '~/helpers'
 import { Keyframes, Spring, animated } from 'react-spring'
 import topo from '~/public/topo2.svg'
 import { throttle } from 'lodash'
-import bg from '~/public/cavolo.jpg'
+import bg from '~/public/cav.jpg'
 
 const borderColor = '#fff' || Constants.colorMain.darken(0.15)
 // const blackBg = UI.color('#111')
@@ -128,9 +128,9 @@ class HomeHeader extends React.Component {
                   <inner
                     css={{
                       position: 'absolute',
-                      bottom: '-5%',
+                      bottom: '-10%',
                       left: '48.7%',
-                      right: '-15%',
+                      right: '-100%',
                       padding: [180, 0, 120, 55],
                       background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, ${bottomRightBackground} 95%)`,
                       // border: [4, '#000'],
@@ -381,16 +381,18 @@ class HomeFooter extends React.Component {
                   </below>
                 </LeftSide>
                 <RightSide noEdge $$centered>
-                  <Join
-                    css={{
-                      transform: {
-                        scale: 1.4,
-                        rotate: '1.5deg',
-                        y: -20,
-                        x: -0,
-                      },
-                    }}
-                  />
+                  <UI.Theme name="dark">
+                    <Join
+                      css={{
+                        transform: {
+                          scale: 1.2,
+                          rotate: '1.5deg',
+                          y: -20,
+                          x: -0,
+                        },
+                      }}
+                    />
+                  </UI.Theme>
                 </RightSide>
               </SectionContent>
             </Section>

@@ -265,8 +265,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                       }}
                     >
                       <P size={1.6}>
-                        Give yourself a home that sorts through every service
-                        and summarizes relevant information, even conversations.
+                        Home. It sorts through your incoming based on what you
+                        are about. It's your personal assistant for what's going
+                        on.
                         <br />
                         <br />
                         Using novel on-device ML, Orbit adjusts to what you care

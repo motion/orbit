@@ -37,22 +37,6 @@ module.exports = function(context, givenOpts) {
       plug('babel-plugin-lodash'),
     ],
     presets: opts.presets || [
-      // plug(
-      //   '@babel/preset-env',
-      //   Object.assign(
-      //     {
-      //       // this could avoid building es6 altogether, but lets fix stack before testing
-      //       modules: false,
-      //       loose: true,
-      //       useBuiltIns: 'entry',
-      //       targets: opts.targets || {
-      //         chrome: '45',
-      //       },
-      //       exclude: ['transform-regenerator', 'transform-async-to-generator'],
-      //     },
-      //     opts.env,
-      //   ),
-      // ),
       plug('@babel/preset-react'),
       plug('@babel/preset-stage-2', {
         loose: true,
@@ -66,3 +50,20 @@ module.exports = function(context, givenOpts) {
   // console.log('babel config', config)
   return config
 }
+
+// plug(
+//   '@babel/preset-env',
+//   Object.assign(
+//     {
+//       // this could avoid building es6 altogether, but lets fix stack before testing
+//       modules: false,
+//       loose: true,
+//       useBuiltIns: 'entry',
+//       targets: opts.targets || {
+//         chrome: '45',
+//       },
+//       exclude: ['transform-regenerator', 'transform-async-to-generator'],
+//     },
+//     opts.env,
+//   ),
+// ),

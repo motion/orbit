@@ -26,6 +26,7 @@ const config = {
   devtool: isProd ? 'source-map' : 'cheap-module-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
   },
   resolveLoader: {
@@ -75,6 +76,9 @@ const config = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
     new HardSourceWebpackPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({

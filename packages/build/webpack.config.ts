@@ -82,6 +82,7 @@ const config = {
     new HardSourceWebpackPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
+      favicon: 'src/public/favicon.png',
       template: 'index.html',
     }),
     // isProd &&

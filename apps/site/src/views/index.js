@@ -431,13 +431,13 @@ export const A = view(
     fontSize: 14,
     // color: [0, 0, 0, 0.7],
     padding: [5, 0],
-    margin: [0, 0, 0, 50],
-    borderBottom: [3, 'transparent'],
+    margin: [0, 0, 0, 35],
+    borderBottom: [1, 'transparent'],
   },
   {
     active: {
       // color: [0, 0, 0, 1],
-      borderBottom: [3, Constants.colorMain],
+      borderBottom: [1, Constants.colorMain],
     },
   },
 )

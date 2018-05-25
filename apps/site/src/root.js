@@ -36,6 +36,7 @@ class Root extends React.Component {
 
   static style = {
     root: {
+      position: 'relative',
       overflow: 'hidden',
     },
     scaledUp: {

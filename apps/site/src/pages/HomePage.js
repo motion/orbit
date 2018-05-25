@@ -3,8 +3,6 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Join } from '~/components'
 import SectionContent from '~/views/sectionContent'
-import { Stars } from '~/views/stars'
-import { throttle } from 'lodash'
 import {
   Section,
   Slant,
@@ -22,6 +20,7 @@ import Media from 'react-media'
 import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import { Keyframes, Spring, animated } from 'react-spring'
+import topo from '~/public/topo.svg'
 
 const SubLink = view('a', {
   // color: '#fff',
@@ -64,12 +63,8 @@ class HomeHeader extends React.Component {
       <Media query={Constants.screen.large}>
         {isLarge => {
           return (
-            <Section
-              css={{
-                background: `linear-gradient(#fff, ${Constants.leftBg})`,
-              }}
-            >
-              <Keyframes native script={ref => (store.stars = ref)}>
+            <Section css={{ background: 'transparent' }}>
+              {/* <Keyframes native script={ref => (store.stars = ref)}>
                 {({ y }) => (
                   <animated.div
                     style={{
@@ -89,32 +84,30 @@ class HomeHeader extends React.Component {
                     />
                   </animated.div>
                 )}
-              </Keyframes>
-              <leftBackground
-                $$fullscreen
-                css={{
-                  zIndex: 0,
-                  background: `linear-gradient(transparent, ${
-                    Constants.leftBg
-                  })`,
-                }}
-              />
+              </Keyframes> */}
               <rightBackground
                 $$fullscreen
                 css={{ background: Constants.rightBg, left: '55%' }}
               />
               <SectionContent padded fullscreen>
                 <Slant
+                  slantSize={0}
+                  amount={40}
+                  rightBackground="#fff"
+                  css={{ zIndex: 0 }}
+                />
+                <Slant
                   inverseSlant
                   slantSize={2}
                   amount={20}
-                  slantBackground="#f9f9f9"
+                  slantBackground="#f2f2f2"
+                  rightBackground="#fff"
                   css={{ zIndex: 0 }}
                 />
                 <Slant
                   slantSize={10}
                   amount={40}
-                  slantGradient={['#f9f9f9', '#f9f9f9']}
+                  slantBackground="#f9f9f9"
                   css={{ zIndex: 0 }}
                 />
                 <Slant
@@ -131,12 +124,12 @@ class HomeHeader extends React.Component {
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
                       italic
-                      size={isMedium ? 3.5 : 8}
+                      size={isMedium ? 5 : 6}
                       margin={[-15, '10%', -15, -5]}
                       alpha={1}
                       color={Constants.colorMain}
                     >
-                      Rethink desktop
+                      Rethinking the&nbsp;desktop
                     </Title>
                     <borderLine />
                     <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
@@ -146,7 +139,7 @@ class HomeHeader extends React.Component {
                         fontWeight={300}
                         alpha={0.8}
                       >
-                        Orbit is a smart desktop for Mac that keeps team
+                        Orbit is a smart layer above your Mac that keeps team
                         knowledge sorted and at hand.
                       </P>
                       <P
@@ -279,27 +272,17 @@ class HomeFooter extends React.Component {
           {isLarge => (
             <Section
               css={{
-                background: blackTheme.background,
+                background: 'transparent',
               }}
               inverse
             >
-              <Stars
-                $$fullscreen
-                css={{
-                  opacity: 0.8,
-                  zIndex: 0,
-                }}
-              />
-              <rightBackground
-                $$fullscreen
-                css={{ background: Constants.rightBg, left: '55%' }}
-              />
               <SectionContent padded fullscreen>
                 <Slant
                   inverseSlant
                   slantSize={10}
                   amount={40}
-                  slantGradient={['#f9f9f9', '#f9f9f9']}
+                  slantBackground="#f9f9f9"
+                  rightBackground="#fff"
                   css={{ zIndex: 0 }}
                 />
                 <Slant
@@ -358,6 +341,14 @@ export const HomePage = () => (
   <Media query={Constants.screen.medium}>
     {isMedium => (
       <>
+        <leftBackground
+          $$fullscreen
+          css={{
+            zIndex: 0,
+            opacity: 0.2,
+            background: `url(${topo})`,
+          }}
+        />
         <Header />
         <HomeHeader isMedium={isMedium} />
         <HomeFooter isMedium={isMedium} />

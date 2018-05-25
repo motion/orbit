@@ -40,10 +40,10 @@ class UseCasesIntro extends React.Component {
           <Section>
             <SectionContent padded halfscreen>
               <HalfSection>
-                <Title italic size={2.8} margin={[0, '10%', 15, 0]}>
+                <Title italic size={2.5} margin={[0, '10%', 10, 0]}>
                   Use cases
                 </Title>
-                <P2 size={1.8} alpha={0.75}>
+                <P2 size={1.7} alpha={0.75}>
                   Whether using personally or as part of a team, Orbit helps
                   make knowledge work for you.
                 </P2>
@@ -75,16 +75,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
       <UI.Theme theme={Constants.peachTheme}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section
-              id="use-cases"
-              inverse
-              css={{
-                background: `linear-gradient(
-                  ${Constants.peachTheme.background.lighten(0.03)},
-                  ${Constants.peachTheme.background} 30%
-                )`,
-              }}
-            >
+            <Section id="use-cases" inverse>
               <SectionContent
                 id="remote-teams"
                 fullscreen={isLarge}
@@ -452,8 +443,6 @@ export class UseCasesPage extends React.Component {
         <Header />
         <UseCasesIntro />
         <surround css={{ position: 'relative' }}>
-          <Border css={{ top: -2, zIndex: 0 }} />
-          <Border css={{ bottom: -4, zIndex: 4 }} />
           <SectionUseCaseRemoteTeams />
           <SectionUseCaseCustomerSuccess />
           <SectionUseCaseReduceInterrupts />

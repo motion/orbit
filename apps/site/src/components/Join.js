@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { P, P2, Callout } from '~/views'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
 
 @view
 export class Join extends React.Component {
@@ -9,7 +10,7 @@ export class Join extends React.Component {
     return (
       <section id="join" {...props}>
         <Callout>
-          <P size={1.8} css={{ marginRight: 30 }}>
+          <P size={2.2} fontWeight={600} css={{ marginRight: 30 }}>
             Get early access
           </P>
           <P2 alpha={0.7} size={1.2} margin={[5, 0, 10]}>
@@ -32,15 +33,17 @@ export class Join extends React.Component {
                 value=""
               />
             </div>
-            <UI.Button
-              size={1.1}
-              theme="rgb(3.5%, 44.5%, 23.6%)"
-              sizeRadius={3}
-              margin={[0, 0, 0, 'auto']}
-              type="submit"
-            >
-              Join early access
-            </UI.Button>
+            <UI.Theme theme={Constants.colorMain.toString()}>
+              <UI.Button
+                size={1.1}
+                theme="rgb(3.5%, 44.5%, 23.6%)"
+                sizeRadius={3}
+                margin={[0, 0, 0, 'auto']}
+                type="submit"
+              >
+                Join early access
+              </UI.Button>
+            </UI.Theme>
           </form>
         </Callout>
       </section>

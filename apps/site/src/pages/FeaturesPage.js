@@ -48,12 +48,12 @@ class FeaturesIntro extends React.Component {
           <Section>
             <SectionContent padded halfscreen>
               <HalfSection>
-                <Title italic size={3.4} margin={[0, 0, 10, 0]}>
+                <Title italic size={2.5} margin={[0, 0, 10, 0]}>
                   Features
                 </Title>
                 <P2 size={1.7} alpha={0.75}>
-                  Augments your computer with news, search, and contextual
-                  answers. It's your important cloud knowledge, at hand.
+                  A sorted daily heads up of everything happening in your
+                  company. Plus really smart search.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>Incoming</a>{' '}
@@ -205,16 +205,7 @@ export class SectionFeatureNewsSearch extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section
-            id="features"
-            inverse
-            css={{
-              background: `linear-gradient(
-            ${blueTheme.background.lighten(0.02)},
-            ${blueTheme.background} 35%
-          )`,
-            }}
-          >
+          <Section id="features" inverse>
             <SectionContent
               id="news"
               padded={!isLarge}
@@ -590,17 +581,15 @@ export class FeaturesPage extends React.Component {
   render() {
     return (
       <>
-        <Header />
-        <FeaturesIntro />
-        <UI.Theme theme={blueTheme}>
-          <surround css={{ position: 'relative' }}>
-            <Border css={{ top: -2, zIndex: 0 }} />
-            <Border css={{ bottom: -4, zIndex: 4 }} />
-            <SectionFeatureNewsSearch />
-            <SearchIllustration />
-            <SectionFeatureIntelligence />
-          </surround>
+        <UI.Theme name="dark">
+          <Header />
+          <FeaturesIntro />
         </UI.Theme>
+        <surround css={{ position: 'relative' }}>
+          <SectionFeatureNewsSearch />
+          <SearchIllustration />
+          <SectionFeatureIntelligence />
+        </surround>
         <Footer />
       </>
     )

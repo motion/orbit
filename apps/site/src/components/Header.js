@@ -6,15 +6,18 @@ import SectionContent from '~/views/sectionContent'
 import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
+import * as UI from '@mcro/ui'
 
+@UI.injectTheme
 @view
 export class Header extends React.Component {
-  render({ white }) {
+  render({ white, theme }) {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
           <>
             <headerBorder
+              if={!Router.isActive('/')}
               css={{
                 position: 'absolute',
                 top: 84,
@@ -25,35 +28,23 @@ export class Header extends React.Component {
                 zIndex: 3,
               }}
             />
-            <headerBg
-              if={false}
-              css={{
-                position: 'absolute',
-                top: 0,
-                height: 84,
-                background: '#fff',
-                left: 0,
-                right: 0,
-                zIndex: 0,
-              }}
-            />
             <header>
               <SectionContent>
                 <headerInner>
                   <BrandLogo
                     css={{ cursor: 'pointer' }}
                     onClick={Router.link('/')}
-                    white={white}
+                    white={theme.base.background.lightness() < 20}
                   />
                   <div $$flex />
                   <nav>
-                    <Link css={{ color: [0, 0, 0, 0.6] }} to="/features">
+                    <Link css={{ color: theme.base.color }} to="/features">
                       {isLarge ? 'Features' : 'What'}
                     </Link>
-                    <Link css={{ color: [0, 0, 0, 0.6] }} to="/use-cases">
+                    <Link css={{ color: theme.base.color }} to="/use-cases">
                       {isLarge ? 'Use Cases' : 'Why'}
                     </Link>
-                    <Link css={{ color: [0, 0, 0, 0.6] }} to="/about">
+                    <Link css={{ color: theme.base.color }} to="/about">
                       {isLarge ? 'About' : 'Who'}
                     </Link>
                   </nav>

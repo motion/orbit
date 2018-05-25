@@ -22,7 +22,7 @@ const Themes = {
   dark: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,
-    background: '#333',
+    background: '#111',
     color: '#fff',
     borderColor: '#222',
   }),

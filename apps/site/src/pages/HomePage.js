@@ -20,7 +20,7 @@ import Media from 'react-media'
 import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import { Keyframes, Spring, animated } from 'react-spring'
-import topo from '~/public/topo.svg'
+import topo from '~/public/topo2.svg'
 
 const SubLink = view('a', {
   // color: '#fff',

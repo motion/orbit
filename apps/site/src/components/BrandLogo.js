@@ -7,7 +7,7 @@ export class BrandLogo extends React.Component {
   render({ white }) {
     return (
       <brandMark {...this.props}>
-        <Logo size={0.29} white={white} />
+        <Logo size={0.25} white={white} />
       </brandMark>
     )
   }
@@ -16,8 +16,7 @@ export class BrandLogo extends React.Component {
     brandMark: {
       alignItems: 'center',
       textAlign: 'center',
-      marginTop: -5,
-      marginLeft: -8,
+      margin: [-22, -22],
       // marginLeft: -20,
     },
   }

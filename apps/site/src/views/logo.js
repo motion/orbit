@@ -1,10 +1,10 @@
 import * as React from 'react'
-import LogoSVG from '~/public/orbit.svg'
+import LogoSVG from '~/public/orbit2.svg'
 import LogoSVGWhite from '~/public/orbit-white.svg'
 // import ReactSVGInline from 'react-svg-inline'
 
-const naturalWidth = 405
-const naturalHeight = 145
+const naturalWidth = 543
+const naturalHeight = 285
 
 export const Logo = ({ white, ...props }) => (
   <img src={white ? LogoSVGWhite : LogoSVG} {...props} />

@@ -29,7 +29,6 @@ import intelligenceImg from '~/public/screen-context-word.png'
 import newsImg from '~/public/screen-home.png'
 import searchImg from '~/public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
-import stars from '~/public/stars.svg'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const blueBg = UI.color('#FAFAFF')
@@ -47,22 +46,21 @@ class FeaturesIntro extends React.Component {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <stars $$fullscreen />
             <SectionContent padded halfscreen>
               <HalfSection>
-                <Title italic size={2.5} margin={[0, 0, 10, 0]}>
+                <Title italic size={3} margin={[0, 0, 15, 0]}>
                   Features
                 </Title>
-                <P2 size={1.7} alpha={0.75}>
-                  A sorted daily heads up of everything happening in your
-                  company. Plus really smart search.
+                <P2 size={1.2} alpha={0.75}>
+                  Version one of Orbit OS is three things to improve your
+                  workday.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#news')}>Incoming</a>{' '}
+                  <a onClick={scrollTo('#news')}>Home</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#search')}>Search</a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#context')}>Intelligence</a>
+                  <a onClick={scrollTo('#context')}>Context</a>
                 </P>
               </HalfSection>
               <HalfSection />
@@ -71,12 +69,6 @@ class FeaturesIntro extends React.Component {
         )}
       </Media>
     )
-  }
-
-  static style = {
-    stars: {
-      background: `url(${stars}) top center`,
-    },
   }
 }
 
@@ -126,7 +118,7 @@ const FeatureSubTitle = props => (
   <Media query={Constants.screen.large}>
     {isLarge => (
       <P2
-        size={isLarge ? 1.7 : 1.4}
+        size={isLarge ? 1.5 : 1.35}
         alpha={0.6}
         css={{
           marginBottom: 30,
@@ -223,17 +215,17 @@ export class SectionFeatureNewsSearch extends React.Component {
               <Glow style={{ transform: { y: '-10%', x: '-40%' } }} />
               <Glow style={{ transform: { y: '130%', x: '60%' } }} />
               <Slant
-                slantSize={10}
+                slantSize={8}
                 inverseSlant
                 slantGradient={['#f2f2f2', Constants.featuresSlantColor]}
               />
               <Slant
-                slantSize={10}
+                slantSize={6}
                 css={{ zIndex: 1 }}
-                amount={20}
+                amount={30}
                 slantGradient={[
                   Constants.colorSecondary.alpha(0.4),
-                  Constants.featuresSlantColor.desaturate(0.5).alpha(0.1),
+                  blueTheme.background.darken(0.025),
                 ]}
               />
               <LeftSide css={{ top: 0 }}>
@@ -244,7 +236,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <SubTitle size={2.5}>News for your team</SubTitle>
+                    <SubTitle size={3.5}>Home</SubTitle>
                     <FeatureSubTitle
                       css={{
                         marginTop: 12,
@@ -265,9 +257,8 @@ export class SectionFeatureNewsSearch extends React.Component {
                       }}
                     >
                       <P size={1.6}>
-                        Home. It sorts through your incoming based on what you
-                        are about. It's your personal assistant for what's going
-                        on.
+                        Home. It's a heads up display for all your incoming.
+                        Sorted by what you've been interested in recently.
                         <br />
                         <br />
                         Using novel on-device ML, Orbit adjusts to what you care
@@ -418,7 +409,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={2.5}>A smarter search</SubTitle>
+                  <SubTitle size={3.5}>Search</SubTitle>
                   <FeatureSubTitle>Spotlight, meet your brain</FeatureSubTitle>
                 </content>
                 <Media
@@ -454,7 +445,7 @@ export class SectionFeatureIntelligence extends React.Component {
             <SectionContent id="context" fullscreen={isLarge} padded>
               <Glow style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
-                slantSize={10}
+                slantSize={8}
                 css={{ zIndex: 2 }}
                 slantGradient={[
                   Constants.featuresSlantColor,
@@ -462,13 +453,13 @@ export class SectionFeatureIntelligence extends React.Component {
                 ]}
               />
               <Slant
-                slantSize={10}
+                slantSize={6}
                 inverseSlant
                 css={{ zIndex: 1 }}
-                amount={20}
+                amount={30}
                 slantGradient={[
-                  Constants.featuresSlantColor.desaturate(0.5).alpha(0.1),
-                  Constants.backgroundColor,
+                  blueTheme.background.darken(0.025),
+                  blueTheme.background.darken(0.1),
                 ]}
               />
               <LeftSide inverse innerStyle={{ paddingTop: '45%' }}>
@@ -480,7 +471,7 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={2.5}>Realtime intelligence</SubTitle>
+                  <SubTitle size={3.5}>Context</SubTitle>
                   <FeatureSubTitle>
                     Always on contextual search that works
                   </FeatureSubTitle>
@@ -491,14 +482,14 @@ export class SectionFeatureIntelligence extends React.Component {
                         ? {
                             width: '86%',
                             position: 'absolute',
-                            right: 10,
+                            right: '8%',
                           }
                         : null),
                     }}
                   >
                     <P2 size={1.6}>
-                      It's a pinnable sidebar that works hand in hand with any
-                      app, from Slack to your browser.
+                      Attach realtime contextual search to any app, whether its
+                      as your talk in Slack or browse in your favorite browser.
                     </P2>
                     <P2 size={1.6}>
                       And all you have to do is hold <Cmd>Option</Cmd> or tap{' '}
@@ -590,9 +581,9 @@ export class FeaturesPage extends React.Component {
   render() {
     return (
       <>
-        <UI.Theme name="dark">
+        <UI.Theme theme={blueTheme}>
           <Header />
-          <FeaturesIntro />
+          <FeaturesIntro if={false} />
         </UI.Theme>
         <UI.Theme theme={blueTheme}>
           <surround css={{ position: 'relative' }}>

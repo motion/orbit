@@ -431,8 +431,9 @@ export const A = view(
   {
     fontSize: 14,
     // color: [0, 0, 0, 0.7],
-    padding: [5, 0],
-    margin: [0, 0, 0, 35],
+    fontWeight: 800,
+    padding: [5, 10],
+    margin: [0, 0, 0, 15],
     borderBottom: [1, 'transparent'],
   },
   {

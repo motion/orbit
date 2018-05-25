@@ -87,69 +87,73 @@ class HomeHeader extends React.Component {
               </Keyframes> */}
               <rightBackground
                 $$fullscreen
-                css={{ background: Constants.rightBg, left: '55%' }}
-              />
+                css={{
+                  left: '50.2%',
+                  right: '-100%',
+                  top: '-10%',
+                  bottom: '-10%',
+                  overflow: 'hidden',
+                  transform: {
+                    rotate: '4.3deg',
+                  },
+                }}
+              >
+                <rightBg
+                  $$fullscreen
+                  css={{
+                    background:
+                      'url(https://backgrounds.wetransfer.net/riccav6_1680x1050.jpg) bottom left',
+                    transform: {
+                      rotate: '-4.3deg',
+                      x: -500,
+                      y: -100,
+                    },
+                  }}
+                />
+              </rightBackground>
               <SectionContent padded fullscreen>
-                <Slant slantSize={0} amount={40} css={{ zIndex: 0 }} />
-                <Slant
-                  inverseSlant
-                  slantSize={2}
-                  amount={20}
-                  slantBackground="#f2f2f2"
-                  rightBackground="#fff"
-                  css={{ zIndex: 0 }}
-                />
-                <Slant
-                  slantSize={10}
-                  amount={40}
-                  slantBackground="#f9f9f9"
-                  css={{ zIndex: 0 }}
-                />
-                <Slant
-                  slantGradient={[
-                    Constants.colorSecondary.alpha(0.5),
-                    Constants.colorSecondary,
-                  ]}
-                  slantSize={2}
-                  amount={15}
-                  css={{ zIndex: 0 }}
-                />
-                <spacer $$flex={1} />
-                <UI.Theme name="light">
-                  <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
+                <inner
+                  css={{
+                    position: 'absolute',
+                    bottom: '-5%',
+                    left: '48.5%',
+                    padding: [40, 45, 150, 55],
+                    background: 'rgba(0,0,0,0.92)',
+                    // border: [4, '#000'],
+                    transform: {
+                      rotate: '4deg',
+                    },
+                  }}
+                >
+                  <innerInner
+                    css={{
+                      width: 400,
+                      transform: {
+                        rotate: '-4deg',
+                      },
+                    }}
+                  >
                     <Title
                       italic
-                      size={isMedium ? 5 : 6}
-                      margin={[0, 0, -15, -3]}
+                      size={isMedium ? 6 : 7}
+                      margin={[0, 0, 20, 0]}
                       alpha={1}
-                      color={Constants.colorMain}
+                      color="#fff"
                     >
-                      Rethinking the&nbsp;desktop
+                      Rethink<br />Desktop
                     </Title>
-                    <borderLine />
-                    <below>
-                      <P
-                        size={1.35}
-                        sizeLineHeight={1.15}
-                        fontWeight={300}
-                        alpha={0.8}
-                      >
-                        Orbit is a smart operating layer for your Mac that keeps
-                        team knowledge sorted and at hand.
-                      </P>
-                      <P
-                        if={false}
-                        size={1.35}
-                        sizeLineHeight={1.15}
-                        fontWeight={300}
-                        alpha={0.8}
-                      >
-                        Orbit is a new operating layer for your desktop. Unified
-                        cloud knowledge, sorted at your fingertips. It's&nbsp;a
-                        smarter way to sync teams.
-                      </P>
-                    </below>
+                    <P
+                      size={1.35}
+                      sizeLineHeight={1.15}
+                      fontWeight={300}
+                      alpha={0.9}
+                      color="#fff"
+                    >
+                      Orbit is a smart operating layer for Mac that keeps team
+                      knowledge sorted and at hand.
+                    </P>
                     <actions
+                      if={false}
                       $$row
                       css={{
                         margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
@@ -192,15 +196,29 @@ class HomeHeader extends React.Component {
                         Learn more
                       </UI.Button>
                     </actions>
-                  </mainSection>
-                </UI.Theme>
-                <spacer $$flex />
-                <rightSide>
+                  </innerInner>
+                </inner>
+                <Slant
+                  slantSize={10}
+                  amount={40}
+                  slantBackground="#111"
+                  css={{ zIndex: 0 }}
+                />
+                <leftSide
+                  css={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    width: '50%',
+                  }}
+                >
                   <Media
                     query={Constants.screen.large}
                     render={() => <HomeIllustration />}
                   />
-                </rightSide>
+                </leftSide>
+                <rightSide />
               </SectionContent>
             </Section>
           )
@@ -216,19 +234,22 @@ class HomeHeader extends React.Component {
     mainSection: {
       position: 'relative',
       zIndex: 10,
-      background: '#fff',
-      flex: 'none',
+      // background: '#fff',
     },
     smallCallout: {
       padding: [0, 0, 40, 0],
     },
     largeCallout: {
-      display: 'inline-block',
-      width: '45%',
-      minWidth: 520,
-      border: [1, [0, 0, 0, 0.04]],
-      padding: [60, 40],
-      margin: [-60, -40],
+      position: 'absolute',
+      top: 0,
+      left: '55%',
+      right: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      // border: [1, [0, 0, 0, 0.04]],
+      // padding: [60, 40],
+      // margin: [-60, -40],
     },
     borderLine: {
       margin: [40, 40, 20, 0],
@@ -277,26 +298,21 @@ class HomeFooter extends React.Component {
               }}
               inverse
             >
+              <rightBackground
+                $$fullscreen
+                css={{
+                  left: '55%',
+                  background: '#fff',
+                }}
+              />
               <SectionContent padded fullscreen>
                 <Slant
                   inverseSlant
                   slantSize={10}
                   amount={40}
-                  slantBackground="#f9f9f9"
+                  rightBackground={'#fff'}
+                  slantBackground="#111"
                   css={{ zIndex: 0 }}
-                />
-                <Slant
-                  slantSize={2}
-                  amount={20}
-                  slantBackground="#f2f2f2"
-                  rightBackground="#fff"
-                  css={{ zIndex: 0 }}
-                />
-                <Slant
-                  inverseSlant
-                  slantBackground={Constants.colorSecondary}
-                  slantSize={2}
-                  amount={15}
                 />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
@@ -313,20 +329,24 @@ class HomeFooter extends React.Component {
                       }}
                     >
                       <P2 size={2.8} alpha={1} fontWeight={400}>
-                        It's time our computers helped us stay sharp.
+                        A smarter way to stay up to date and in the know.
                       </P2>
                       <P2>
                         You and your team have knowledge all over. Orbit gives
-                        you the tools and interface to put it to use. We think
-                        any organizational tool has to be{' '}
-                        <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
-                          completely private
-                        </span>.
+                        you the tools and interface to put it to use. It unifies
+                        cloud knowledge and gives it a brain.
                       </P2>
                       <P2>
-                        Orbit wants to make your day to day work interpretable
+                        Orbit wants to make your day to day more interpretable
                         and fluid. It's an app that you'll interact with often,
-                        so we know we have to get the details right.
+                        and it will touch your most sensitive data.
+                      </P2>
+                      <P2>
+                        That's why it's{' '}
+                        <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
+                          completely private and on-device
+                        </span>. It's a new way to operate, so it has to work
+                        for you.
                       </P2>
                       <space css={{ height: 25 }} />
                       <P2 color={Constants.colorMain} fontWeight={500}>
@@ -360,7 +380,12 @@ export const HomePage = () => (
             background: `url(${topo})`,
           }}
         />
-        <Header />
+        <Header
+          linkStyle={{
+            color: '#000',
+            background: 'white',
+          }}
+        />
         <HomeHeader isMedium={isMedium} />
         <HomeFooter isMedium={isMedium} />
       </>

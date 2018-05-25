@@ -311,7 +311,7 @@ export class HomeIllustration extends React.Component {
     return (
       <>
         <illus>
-          <fades $$fullscreen />
+          {/* <fades $$fullscreen /> */}
           <chats>
             <Keyframes native script={next => (store.chatFrame = next)}>
               {({ scale, opacity, opacityRest, y }) => {
@@ -456,8 +456,8 @@ export class HomeIllustration extends React.Component {
     chats: {
       position: 'absolute',
       top: 0,
-      right: '15%',
-      left: '15%',
+      right: '5%',
+      left: '5%',
       bottom: 0,
       justifyContent: 'flex-start',
       overflow: 'hidden',
@@ -521,8 +521,8 @@ export class HomeIllustration extends React.Component {
     message: {
       // color: '#fff',
       fontWeight: 200,
-      fontSize: 42,
-      lineHeight: '55px',
+      fontSize: 36,
+      lineHeight: '50px',
       position: 'absolute',
       top: 0,
       left: 0,

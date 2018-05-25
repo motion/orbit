@@ -39,6 +39,21 @@ const blueTheme = {
   subTitleColor: blueBg.darken(0.7).desaturate(0.8),
 }
 
+const FeatureSubTitle = props => (
+  <Media query={Constants.screen.large}>
+    {isLarge => (
+      <P2
+        size={isLarge ? 1.5 : 1.35}
+        alpha={0.6}
+        css={{
+          marginBottom: 30,
+        }}
+        {...props}
+      />
+    )}
+  </Media>
+)
+
 @view
 class FeaturesIntro extends React.Component {
   render() {
@@ -113,21 +128,6 @@ const SearchIllustration = () => (
 const newsTopOffPct = '33%'
 const searchYOff = -10
 const contextYOff = 160
-
-const FeatureSubTitle = props => (
-  <Media query={Constants.screen.large}>
-    {isLarge => (
-      <P2
-        size={isLarge ? 1.5 : 1.35}
-        alpha={0.6}
-        css={{
-          marginBottom: 30,
-        }}
-        {...props}
-      />
-    )}
-  </Media>
-)
 
 const SearchCallout = ({ isLarge }) => (
   <Callout
@@ -236,7 +236,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <SubTitle size={3.5}>Home</SubTitle>
+                    <SubTitle size={5} italic>
+                      Home
+                    </SubTitle>
                     <FeatureSubTitle
                       css={{
                         marginTop: 12,
@@ -409,7 +411,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={3.5}>Search</SubTitle>
+                  <SubTitle size={5} italic>
+                    Search
+                  </SubTitle>
                   <FeatureSubTitle>Spotlight, meet your brain</FeatureSubTitle>
                 </content>
                 <Media
@@ -471,7 +475,9 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={3.5}>Context</SubTitle>
+                  <SubTitle size={5} italic>
+                    Context
+                  </SubTitle>
                   <FeatureSubTitle>
                     Always on contextual search that works
                   </FeatureSubTitle>

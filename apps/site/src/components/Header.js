@@ -11,7 +11,7 @@ import * as UI from '@mcro/ui'
 @UI.injectTheme
 @view
 export class Header extends React.Component {
-  render({ white, theme }) {
+  render({ linkStyle, theme }) {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
@@ -38,13 +38,22 @@ export class Header extends React.Component {
                   />
                   <div $$flex />
                   <nav>
-                    <Link css={{ color: theme.base.color }} to="/features">
+                    <Link
+                      css={{ color: theme.base.color, ...linkStyle }}
+                      to="/features"
+                    >
                       {isLarge ? 'Features' : 'What'}
                     </Link>
-                    <Link css={{ color: theme.base.color }} to="/use-cases">
+                    <Link
+                      css={{ color: theme.base.color, ...linkStyle }}
+                      to="/use-cases"
+                    >
                       {isLarge ? 'Use Cases' : 'Why'}
                     </Link>
-                    <Link css={{ color: theme.base.color }} to="/about">
+                    <Link
+                      css={{ color: theme.base.color, ...linkStyle }}
+                      to="/about"
+                    >
                       {isLarge ? 'About' : 'Who'}
                     </Link>
                   </nav>

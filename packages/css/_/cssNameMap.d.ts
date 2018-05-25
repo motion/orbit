@@ -5,6 +5,9 @@ export declare const CAMEL_TO_SNAKE: {
     WebkitBoxOrient: string;
     WebkitBackgroundClip: string;
     WebkitTextFillColor: string;
+    WebkitTextStroke: string;
+    WebkitTextStrokeWidth: string;
+    WebkitTextStrokeColor: string;
     alignContent: string;
     alignItems: string;
     alignSelf: string;

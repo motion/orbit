@@ -3,6 +3,9 @@ import CountUp from 'react-countup'
 import { view, react, deep } from '@mcro/black'
 import * as Icons from '~/views/icons'
 import * as Constants from '~/constants'
+import { dockIcons } from './stageItems'
+
+const distanceFromBottom = 50
 
 const Badge = view('div', {
   position: 'absolute',
@@ -24,34 +27,6 @@ const Badge = view('div', {
     scale: 1.2,
   },
 })
-
-const dockIcons = [
-  {
-    name: 'Dropbox',
-    size: 0.13,
-    countProps: { start: 0, end: 22, duration: 15 },
-  },
-  {
-    name: 'Drive',
-    size: 0.16,
-    countProps: { start: 0, end: 36, duration: 15 },
-  },
-  {
-    name: 'Slack',
-    size: 0.18,
-    countProps: { start: 0, end: 122, duration: 15 },
-  },
-  {
-    name: 'Mail',
-    size: 0.16,
-    countProps: { start: 0, end: 195, duration: 15 },
-  },
-  {
-    name: 'Github',
-    size: 0.13,
-    countProps: { start: 0, end: 27, duration: 15 },
-  },
-]
 
 const Count = ({ active, ...props }) =>
   active ? <CountUp {...props} /> : props.start
@@ -110,7 +85,7 @@ class DockPlayStore {
       await sleep(1000)
       this.leave.slack = true
     }
-    await sleep(2000)
+    await sleep(1000)
     bounceIcons()
     await sleep(6000)
     this.bounce.slack = 2
@@ -122,8 +97,6 @@ class DockPlayStore {
     leaveIcons()
   }
 }
-
-const distanceFromBottom = 50
 
 @view({
   store: DockPlayStore,
@@ -226,10 +199,9 @@ export class HomePlayDock extends React.Component {
       transition: 'all ease-in 100ms',
     },
     leave: {
-      // opacity: 0.5,
-      filter: {
-        // grayscale: '100%',
-        // brightness: '100%',
+      opacity: 0,
+      transition: {
+        y: 50,
       },
     },
   }

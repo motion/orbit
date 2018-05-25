@@ -32,7 +32,7 @@ const borderColor = '#fff' || Constants.colorMain.darken(0.15)
 //   subTitleColor: '#eee',
 //   titleColor: blackBg.darken(0.75).desaturate(0.3),
 // }
-const bottomRightBackground = '#151515'
+const bottomRightBackground = '#121212'
 const firstSlant = {
   slantSize: 6,
   amount: 40,
@@ -129,11 +129,10 @@ class HomeHeader extends React.Component {
                     css={{
                       position: 'absolute',
                       bottom: '-5%',
-                      left: '49%',
+                      left: '48.7%',
                       right: '-15%',
                       padding: [180, 0, 120, 55],
-                      background:
-                        'linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.9))',
+                      background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, ${bottomRightBackground} 95%)`,
                       // border: [4, '#000'],
                       transform: {
                         rotate: '4.25deg',
@@ -142,7 +141,7 @@ class HomeHeader extends React.Component {
                   >
                     <innerInner
                       css={{
-                        width: 400,
+                        width: 420,
                         transform: {
                           rotate: '-4.25deg',
                         },
@@ -154,7 +153,7 @@ class HomeHeader extends React.Component {
                         margin={[0, 0, 20, 0]}
                         alpha={1}
                       >
-                        Smart<br />desktop
+                        Team OS
                       </Title>
                       <P
                         size={1.6}

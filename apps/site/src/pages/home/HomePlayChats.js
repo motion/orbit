@@ -60,7 +60,7 @@ class PlayChatsStore {
     await sleep(200)
     this.chatFrame(Spring, {
       to: { scale: 0.6, opacity: 0, y: -550 },
-      config: { tension: 4, friction: 80 },
+      config: { tension: 6, friction: 50 },
     })
   }
 }
@@ -124,7 +124,7 @@ export class HomePlayChats extends React.Component {
   static style = {
     chats: {
       position: 'absolute',
-      top: 0,
+      top: 50,
       right: '5%',
       left: '5%',
       bottom: 0,

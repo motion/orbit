@@ -6,15 +6,7 @@ import mailIcon from '~/public/mail.svg'
 import githubIcon from '~/public/github.svg'
 // import ReactSVGInline from 'react-svg-inline'
 
-export const Icon = ({
-  size,
-  icon,
-  scale = 1,
-  after,
-  transform,
-  style,
-  ...props
-}) => (
+export const Icon = ({ size, icon, after, style, ...props }) => (
   <div
     css={{ position: 'relative', width: size * 512, height: size * 512 }}
     style={style}

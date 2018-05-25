@@ -18,11 +18,13 @@ class HomePlayStore {
 export class HomePlay extends React.Component {
   render({ store }) {
     return (
-      <illus>
-        {/* <HomePlayDock animate={store.animate} /> */}
-        <HomePlayChats animate={store.animate} />
-        {/* <HomePlayMessages animate={store.animate} /> */}
-      </illus>
+      <>
+        <illus>
+          <HomePlayDock animate={store.animate} />
+          <HomePlayChats animate={store.animate} />
+        </illus>
+        <HomePlayMessages animate={store.animate} />
+      </>
     )
   }
 

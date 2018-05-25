@@ -4,6 +4,11 @@ import * as UI from '@mcro/ui'
 import { Keyframes, Spring, animated, config } from 'react-spring'
 import Router from '~/router'
 import * as Constants from '~/constants'
+import Orbital from '~/views/orbital'
+import * as Icons from '~/views/icons'
+import { dockIcons } from './stageItems'
+
+const size = 640
 
 class PlayMessagesStore {
   runAnimation = react(
@@ -15,8 +20,7 @@ class PlayMessagesStore {
   )
 
   animate = async sleep => {
-    await sleep(5000)
-    await sleep(1500)
+    await sleep(10000)
     await this.chatText(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
@@ -55,7 +59,7 @@ export class HomePlayMessages extends React.Component {
         </Keyframes>
         <Keyframes native script={next => (store.chatText2 = next)}>
           {({ opacity }) => (
-            <animated.div style={{ opacity }}>
+            <animated.div style={{ opacity, zIndex: 1000 }}>
               <message>
                 <msgBlur />
                 Stay in sync, stress free.
@@ -86,6 +90,22 @@ export class HomePlayMessages extends React.Component {
                   </UI.Button>
                 </UI.Row>
               </message>
+              <Orbital
+                size={size}
+                borderColor="transparent"
+                borderWidth={2}
+                background={[0, 0, 0, 0.03]}
+                css={{
+                  top: '50%',
+                  left: '50%',
+                  margin: [-size / 2 - 48, 0, 0, -size / 2],
+                  position: 'absolute',
+                }}
+                items={dockIcons.map(({ name }) => {
+                  const Icon = Icons[`${name}Icon`]
+                  return <Icon size={0.11} />
+                })}
+              />
             </animated.div>
           )}
         </Keyframes>
@@ -104,7 +124,7 @@ export class HomePlayMessages extends React.Component {
       left: 0,
       right: 0,
       bottom: 100,
-      zIndex: 10,
+      zIndex: 100,
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',

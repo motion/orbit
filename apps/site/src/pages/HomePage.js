@@ -141,7 +141,7 @@ class HomeHeader extends React.Component {
                   >
                     <innerInner
                       css={{
-                        width: 420,
+                        width: 460,
                         transform: {
                           rotate: '-4.25deg',
                         },
@@ -153,7 +153,8 @@ class HomeHeader extends React.Component {
                         margin={[0, 0, 20, 0]}
                         alpha={1}
                       >
-                        Team OS
+                        Smart<br />
+                        Desktop
                       </Title>
                       <P
                         size={1.6}
@@ -161,9 +162,9 @@ class HomeHeader extends React.Component {
                         fontWeight={300}
                         alpha={0.9}
                       >
-                        Give your Mac a brain that sorts the cloud. Orbit is a
-                        productive new interface that puts team knowledge at
-                        your fingertips.
+                        Your Mac gets a brain that sorts the cloud.<br />
+                        Orbit is a new productivity app that sorts team
+                        knowledge at your fingertips.
                       </P>
                       <actions
                         $$row

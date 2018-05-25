@@ -7,9 +7,9 @@ import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
 import waitPort from 'wait-port'
-import global from 'global'
+import root from 'global'
 
-global.__dom = React.createElement
+root.__dom = React.createElement
 
 require('module-alias').addAlias('~', __dirname + '/')
 
@@ -61,7 +61,7 @@ if (process.env.NODE_ENV === 'development') {
   const int = setInterval(async () => {
     const webRunning = await check(3002, '127.0.0.1')
     if (!webRunning && !shouldRestart) {
-      console.log('parcel down, will restart on next start')
+      console.log('app down, will restart on next app startup')
       shouldRestart = true
     }
     if (shouldRestart && webRunning) {

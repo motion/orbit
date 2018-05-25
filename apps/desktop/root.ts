@@ -14,7 +14,7 @@ import SQLiteServer from './sqliteServer'
 import { App, Electron, Desktop } from '@mcro/all'
 // import { sleep } from '@mcro/helpers'
 import { store, debugState } from '@mcro/black'
-import global from 'global'
+import root from 'global'
 import Path from 'path'
 import { getChromeContext } from './helpers/getContext'
 import open from 'opn'
@@ -40,8 +40,8 @@ export class Root {
   stores = null
 
   async start() {
-    global.Root = this
-    global.restart = this.restart
+    root.Root = this
+    root.restart = this.restart
     await Desktop.start({
       ignoreSelf: true,
       master: true,

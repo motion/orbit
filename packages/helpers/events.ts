@@ -1,10 +1,10 @@
 import { CompositeDisposable } from 'event-kit'
-import global from 'global'
+import root from 'global'
 import _on from './on'
 import _requestAnimationFrame from './requestAnimationFrame'
 
-const ogSetTimeout = global.setTimeout
-const ogSetInterval = global.setInterval
+const ogSetTimeout = root.setTimeout
+const ogSetInterval = root.setInterval
 
 function _setTimeout(givenCallback: Function, duration: number): number {
   let subscription

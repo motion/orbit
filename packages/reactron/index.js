@@ -1,7 +1,7 @@
 // helpers for Menu.Separator, Menu.About, etc...
 import * as MenuItems_ from './components/MenuItemExtra'
 export const MenuItems = MenuItems_
-export { render } from './renderer/render'
+export * from './renderer/render'
 export const App = 'APP'
 export const Window = 'WINDOW'
 export const Tray = 'TRAY'

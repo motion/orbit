@@ -65,7 +65,8 @@
     "source-map-support": "^0.4.16",
     "sqlite": "2.9.2",
     "sudo-prompt": "^7.1.1",
-    "ws": "^3.3.3"
+    "ws": "^3.3.3",
+    "esm": "^3.0.37"
   },
   "devDependencies": {
     "@mcro/dev": "*",

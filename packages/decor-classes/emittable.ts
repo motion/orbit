@@ -7,7 +7,7 @@ export interface Emittable {
 }
 
 // store.emitter
-export default <DecorPlugin<Emittable>>function emittable(options) {
+export const emittable = <DecorPlugin<Emittable>>function emittable(options) {
   const emitterProp = options.emitterProp || 'emitter'
   const emitProp = options.emitProp || 'emit'
   return {

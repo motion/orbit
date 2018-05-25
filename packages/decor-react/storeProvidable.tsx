@@ -4,7 +4,7 @@ import pickBy from 'lodash/pickBy'
 import difference from 'lodash/difference'
 import isEqual from 'lodash/isEqual'
 import { object } from 'prop-types'
-import global from 'global'
+import root from 'global'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
@@ -23,7 +23,7 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
 })
 
 // @ts-ignore
-global.loadedStores = new Set()
+root.loadedStores = new Set()
 const storeHMRCache = {}
 
 export function storeProvidable(options, Helpers) {
@@ -109,12 +109,12 @@ export function storeProvidable(options, Helpers) {
           if (this.stores === null) {
             return
           }
-          global.loadedStores.add(this)
+          root.loadedStores.add(this)
           this.mounted = true
           this.mountStores()
-          // if (global.Black) {
+          // if (root.Black) {
           //   this.errorClear = this.clearErrors.bind(this)
-          //   this.hmrDispose = global.Black.view.on('hmr', this.errorClear)
+          //   this.hmrDispose = root.Black.view.on('hmr', this.errorClear)
           // }
         }
 
@@ -134,7 +134,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         componentWillUnmount() {
-          global.loadedStores.delete(this)
+          root.loadedStores.delete(this)
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()

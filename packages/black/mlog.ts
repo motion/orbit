@@ -1,9 +1,9 @@
-import global from 'global'
+import root from 'global'
 import * as Mobx from 'mobx'
 import { deepObserve } from 'mobx-deep-observer'
 import { enableLogging } from 'mobx-logger'
 
-let runners = (global.__mlogRunners = global.__mlogRunners || [])
+let runners = (root.__mlogRunners = root.__mlogRunners || [])
 
 function deepMobxToJS(_thing) {
   if (!_thing) return _thing

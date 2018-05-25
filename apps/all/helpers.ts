@@ -1,5 +1,5 @@
-import global from 'global'
+import root from 'global'
 
 export const setGlobal = (name: string, val: any) => {
-  global[name] = val
+  root[name] = val
 }

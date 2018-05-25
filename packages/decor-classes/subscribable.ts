@@ -22,7 +22,7 @@ function subscribableDecorator(Klass: any): Subscribable {
   return Klass
 }
 
-export default <DecorPlugin<Subscribable>>function subscribable() {
+export const subscribable = <DecorPlugin<Subscribable>>function subscribable() {
   return {
     name: 'subscribable',
     once: true,

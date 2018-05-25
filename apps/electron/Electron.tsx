@@ -7,7 +7,7 @@ import MenuItems from './views/MenuItems'
 import MainWindow from './views/MainWindow'
 import { ShortcutsStore } from '~/stores/shortcutsStore'
 import { WindowFocusStore } from '~/stores/windowFocusStore'
-import global from 'global'
+import root from 'global'
 import debug from '@mcro/debug'
 import { isEqual } from '@mcro/black'
 
@@ -25,8 +25,8 @@ class ElectronStore {
   show = 0
 
   async willMount() {
-    global.Root = this
-    global.restart = this.restart
+    root.Root = this
+    root.restart = this.restart
     debugState(({ stores, views }) => {
       this.stores = stores
       this.views = views
@@ -34,7 +34,7 @@ class ElectronStore {
     await Electron.start({
       ignoreSelf: true,
     })
-    global.el = Electron
+    root.el = Electron
     this.windowFocusStore = new WindowFocusStore()
     this.shortcutStore = new ShortcutsStore([
       'Option+Space',

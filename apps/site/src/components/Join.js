@@ -14,7 +14,8 @@ export class Join extends React.Component {
             Get early access
           </P>
           <P2 alpha={0.7} size={1.2} margin={[5, 0, 10]}>
-            We'll send one or two updates as we develop Orbit with progress.
+            We'll send interesting development updates, and let you know when we
+            roll out your group.
           </P2>
           <form
             action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5&amp;id=015e5a3442"
@@ -41,7 +42,7 @@ export class Join extends React.Component {
                 margin={[0, 0, 0, 'auto']}
                 type="submit"
               >
-                Join early access
+                Early access signup
               </UI.Button>
             </UI.Theme>
           </form>

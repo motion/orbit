@@ -14,38 +14,62 @@ import {
   AppleLogo,
 } from '~/views'
 // import girlImg from '~/public/video-girl.jpg'
-import { HomeIllustration } from './HomeIllustration'
+import { HomePlay } from './home/HomePlay'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import { Keyframes, Spring, animated } from 'react-spring'
 import topo from '~/public/topo2.svg'
+import { throttle } from 'lodash'
 import bg from '~/public/cavolo.jpg'
 
-const SubLink = view('a', {
-  // color: '#fff',
-  borderBottom: [1, 'dotted', [0, 0, 0, 0.1]],
-})
+const borderColor = '#fff' || Constants.colorMain.darken(0.15)
+// const blackBg = UI.color('#111')
+// const blackTheme = {
+//   background: UI.color(Constants.leftBg),
+//   color: '#f2f2f2',
+//   subTitleColor: '#eee',
+//   titleColor: blackBg.darken(0.75).desaturate(0.3),
+// }
+const bottomRightBackground = '#151515'
+const firstSlant = {
+  slantSize: 6,
+  amount: 40,
+  slantBackground: borderColor,
+  css: { zIndex: 0 },
+}
+const secondSlant = {
+  slantSize: 10,
+  amount: 25,
+  slantBackground: [200, 200, 200, 0.15],
+  css: { zIndex: 0 },
+}
+const thirdSlant = {
+  slantBackground: [150, 150, 150, 0.2],
+  slantSize: 4,
+  amount: 15,
+}
 
 class HomeStore {
   stars = null
 
   willMount() {
-    // window.addEventListener(
-    //   'scroll',
-    //   throttle(() => {
-    //     const max = window.innerHeight * 3
-    //     // 0 - 1 of how far down we are
-    //     const pctDown =
-    //       (max - (max - document.scrollingElement.scrollTop)) / max
-    //     const offset = pctDown * 100
-    //     // this.stars.stopAnimation()
-    //     this.stars(Spring, {
-    //       to: { y: -offset },
-    //     })
-    //   }, 16),
-    // )
+    this.on(
+      window,
+      'scroll',
+      throttle(() => {
+        const max = window.innerHeight * 3
+        // 0 - 1 of how far down we are
+        const pctDown =
+          (max - (max - document.scrollingElement.scrollTop)) / max
+        const offset = pctDown * 15
+        // this.stars.stopAnimation()
+        this.stars(Spring, {
+          to: { y: -offset },
+        })
+      }, 100),
+    )
 
     setTimeout(() => {
       this.stars(Spring, {
@@ -65,62 +89,51 @@ class HomeHeader extends React.Component {
         {isLarge => {
           return (
             <Section css={{ background: 'transparent' }}>
-              {/* <Keyframes native script={ref => (store.stars = ref)}>
-                {({ y }) => (
-                  <animated.div
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      transform: y.interpolate(y => `translate3d(0,${y}%,0)`),
-                    }}
-                  >
-                    <Stars
-                      $$fullscreen
-                      css={{
-                        zIndex: 0,
-                      }}
-                    />
-                  </animated.div>
-                )}
-              </Keyframes> */}
-              <rightBackground
-                $$fullscreen
+              <borderBottom
+                if={false}
                 css={{
-                  left: '50.2%',
-                  right: '-100%',
-                  top: '-10%',
-                  bottom: '-10%',
-                  overflow: 'hidden',
-                  transform: {
-                    rotate: '4.3deg',
-                  },
+                  position: 'absolute',
+                  bottom: 0,
+                  left: '48.035%',
+                  right: 0,
+                  height: 6,
+                  background: borderColor,
+                  zIndex: 1000,
                 }}
-              >
-                <rightBg
-                  $$fullscreen
-                  css={{
-                    background: `url(${bg}) no-repeat bottom right`,
-                    backgroundScale: 'cover',
-                    transform: {
-                      rotate: '-4.3deg',
-                      x: -1200,
-                      y: -100,
-                    },
-                  }}
-                />
-              </rightBackground>
+              />
+              <paintingOverflow css={{ overflow: 'hidden' }} $$fullscreen>
+                <paintingWrap $$fullscreen>
+                  <Keyframes native script={ref => (store.stars = ref)}>
+                    {({ y }) => (
+                      <animated.div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          transform: y.interpolate(
+                            y => `translate3d(0,${y}%,0)`,
+                          ),
+                        }}
+                      >
+                        <painting $$fullscreen />
+                      </animated.div>
+                    )}
+                  </Keyframes>
+                </paintingWrap>
+              </paintingOverflow>
               <SectionContent padded fullscreen>
                 <UI.Theme name="dark">
                   <inner
                     css={{
                       position: 'absolute',
-                      bottom: '-2%',
-                      left: '48.5%',
-                      padding: [40, 45, 120, 55],
-                      background: 'rgba(0,0,0,0.8)',
+                      bottom: '-5%',
+                      left: '49%',
+                      right: '-15%',
+                      padding: [180, 0, 120, 55],
+                      background:
+                        'linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.9))',
                       // border: [4, '#000'],
                       transform: {
                         rotate: '4.25deg',
@@ -141,16 +154,17 @@ class HomeHeader extends React.Component {
                         margin={[0, 0, 20, 0]}
                         alpha={1}
                       >
-                        A new<br />desktop
+                        Smart<br />desktop
                       </Title>
                       <P
-                        size={1.35}
+                        size={1.6}
                         sizeLineHeight={1.15}
                         fontWeight={300}
                         alpha={0.9}
                       >
-                        Orbit is a brain for your Mac that sorts through your
-                        cloud and gives your team a productive heads up display.
+                        Give your Mac a brain that sorts the cloud. Orbit is a
+                        productive new interface that puts team knowledge at
+                        your fingertips.
                       </P>
                       <actions
                         $$row
@@ -166,7 +180,7 @@ class HomeHeader extends React.Component {
                           size={1.1}
                           onClick={scrollTo('#join')}
                           $smallInstallBtn={!isLarge}
-                          tooltip=""
+                          fontWeight={700}
                           css={{
                             margin: [0, 10, 0, -10],
                             cursor: 'pointer',
@@ -178,14 +192,15 @@ class HomeHeader extends React.Component {
                             width={20}
                             height={20}
                             css={{
-                              fill: '#fff',
+                              fill: '#ccc',
                               display: 'inline-block',
                               margin: [-2, 0, 0, 4],
-                              opacity: 0.32,
+                              // opacity: 0.32,
                             }}
                           />
                         </UI.Button>
                         <UI.Button
+                          if={false}
                           chromeless
                           alpha={0.4}
                           onClick={Router.link('/features')}
@@ -200,12 +215,9 @@ class HomeHeader extends React.Component {
                     </innerInner>
                   </inner>
                 </UI.Theme>
-                <Slant
-                  slantSize={6}
-                  amount={40}
-                  slantBackground="#111"
-                  css={{ zIndex: 0 }}
-                />
+                <Slant {...firstSlant} />
+                <Slant inverseSlant if={false} {...secondSlant} />
+                <Slant if={false} {...thirdSlant} />
                 <leftSide
                   css={{
                     position: 'absolute',
@@ -217,7 +229,7 @@ class HomeHeader extends React.Component {
                 >
                   <Media
                     query={Constants.screen.large}
-                    render={() => <HomeIllustration />}
+                    render={() => <HomePlay />}
                   />
                 </leftSide>
                 <rightSide />
@@ -230,6 +242,27 @@ class HomeHeader extends React.Component {
   }
 
   static style = {
+    paintingWrap: {
+      left: '50.2%',
+      right: '-10%',
+      top: '-15%',
+      bottom: '-15%',
+      overflow: 'hidden',
+      transform: {
+        rotate: '4.3deg',
+      },
+    },
+    painting: {
+      // opacity: 0.2,
+      background: `url(${bg}) no-repeat top left`,
+      backgroundSize: 'cover',
+      bottom: '-10%',
+      transform: {
+        rotate: '-4.3deg',
+        x: '-5%',
+        y: '-10%',
+      },
+    },
     spacer: {
       pointerEvents: 'none',
     },
@@ -279,14 +312,6 @@ class HomeHeader extends React.Component {
   }
 }
 
-const blackBg = UI.color('#111')
-const blackTheme = {
-  background: UI.color(Constants.leftBg),
-  color: '#f2f2f2',
-  subTitleColor: '#eee',
-  titleColor: blackBg.darken(0.75).desaturate(0.3),
-}
-
 @view
 class HomeFooter extends React.Component {
   render() {
@@ -304,18 +329,17 @@ class HomeFooter extends React.Component {
                 $$fullscreen
                 css={{
                   left: '55%',
-                  background: '#fff',
+                  background: bottomRightBackground,
                 }}
               />
               <SectionContent padded fullscreen>
                 <Slant
                   inverseSlant
-                  slantSize={6}
-                  amount={40}
-                  rightBackground={'#fff'}
-                  slantBackground="#111"
-                  css={{ zIndex: 0 }}
+                  {...firstSlant}
+                  rightBackground={bottomRightBackground}
                 />
+                <Slant if={false} {...secondSlant} />
+                <Slant inverseSlant if={false} {...thirdSlant} />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <below css={{ margin: [15, '15%', 0, 0] }}>
@@ -335,7 +359,7 @@ class HomeFooter extends React.Component {
                       </P2>
                       <P2>
                         You and your team have a lot of knowledge. Much of it
-                        lives hidden in silos around your cloud. Orbit unifies
+                        lives in silos spread around the cloud. Orbit unifies
                         that knowledge on your desktop and gives it a brain.
                       </P2>
                       <P2>
@@ -360,7 +384,12 @@ class HomeFooter extends React.Component {
                 <RightSide noEdge $$centered>
                   <Join
                     css={{
-                      transform: { scale: 1.5, rotate: '1.5deg', y: -20 },
+                      transform: {
+                        scale: 1.4,
+                        rotate: '1.5deg',
+                        y: -20,
+                        x: -0,
+                      },
                     }}
                   />
                 </RightSide>
@@ -388,8 +417,12 @@ export const HomePage = () => (
         />
         <Header
           linkStyle={{
+            color: Constants.colorMain,
+            background: '#fff',
+          }}
+          linkStyleHover={{
+            background: Constants.colorMain,
             color: '#fff',
-            background: '#111',
           }}
         />
         <HomeHeader isMedium={isMedium} />

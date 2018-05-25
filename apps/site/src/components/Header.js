@@ -11,7 +11,7 @@ import * as UI from '@mcro/ui'
 @UI.injectTheme
 @view
 export class Header extends React.Component {
-  render({ linkStyle, theme }) {
+  render({ linkStyle, linkStyleHover, theme }) {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
@@ -40,18 +40,21 @@ export class Header extends React.Component {
                   <nav>
                     <Link
                       css={{ color: theme.base.color, ...linkStyle }}
+                      hoverStyle={linkStyleHover}
                       to="/features"
                     >
                       {isLarge ? 'Features' : 'What'}
                     </Link>
                     <Link
                       css={{ color: theme.base.color, ...linkStyle }}
+                      hoverStyle={linkStyleHover}
                       to="/use-cases"
                     >
                       {isLarge ? 'Use Cases' : 'Why'}
                     </Link>
                     <Link
                       css={{ color: theme.base.color, ...linkStyle }}
+                      hoverStyle={linkStyleHover}
                       to="/about"
                     >
                       {isLarge ? 'About' : 'Who'}

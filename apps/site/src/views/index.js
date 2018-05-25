@@ -330,6 +330,7 @@ export class Callout extends React.Component {
     largeCallout: {
       // border: [1, [0, 0, 0, 0.02]],
       boxShadow: [[0, 3, 10, [0, 0, 0, 0.065]]],
+      background: [255, 255, 255, 0.5],
       zIndex: 10,
       overflow: 'hidden',
       position: 'relative',
@@ -426,23 +427,44 @@ export const HalfSection = view('section', {
   },
 })
 
-export const A = view(
-  'a',
-  {
-    fontSize: 14,
-    // color: [0, 0, 0, 0.7],
-    fontWeight: 800,
-    padding: [5, 10],
-    margin: [0, 0, 0, 15],
-    borderBottom: [1, 'transparent'],
-  },
-  {
+@view.ui
+export class A {
+  render({ hoverStyle, active, ...props }) {
+    return <a $active={active} {...props} />
+  }
+
+  static style = {
+    a: {
+      fontSize: 14,
+      // color: [0, 0, 0, 0.7],
+      fontWeight: 800,
+      padding: [5, 10],
+      margin: [0, 0, 0, 15],
+      borderBottom: [1, 'transparent'],
+    },
     active: {
       // color: [0, 0, 0, 1],
-      borderBottom: [1, Constants.colorMain],
+      borderBottom: [3, '#111'],
     },
-  },
-)
+  }
+
+  static theme = props => {
+    return {
+      a: {
+        '&:hover': {
+          ...props.hoverStyle,
+          borderBottom: [3, [0, 0, 0, 0.1]],
+        },
+      },
+      active: {
+        '&:hover': {
+          ...props.hoverStyle,
+          borderBottom: [3, '#111'],
+        },
+      },
+    }
+  }
+}
 
 export const Link = ({ to, ...props }) => (
   <A

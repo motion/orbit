@@ -5,6 +5,15 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as Constants from '~/constants'
 import Media from 'react-media'
+import * as UI from '@mcro/ui'
+
+const blueBg = UI.color('#FCFCFF')
+const blueTheme = {
+  background: blueBg,
+  color: '#222',
+  titleColor: blueBg.darken(0.75).desaturate(0.3),
+  subTitleColor: blueBg.darken(0.7).desaturate(0.8),
+}
 
 @view
 class AboutIntro extends React.Component {
@@ -33,7 +42,7 @@ class AboutIntro extends React.Component {
 export class AboutPage extends React.Component {
   render() {
     return (
-      <>
+      <UI.Theme theme={blueTheme}>
         <Header />
         <AboutIntro />
         <Section>
@@ -53,7 +62,7 @@ export class AboutPage extends React.Component {
           </SectionContent>
         </Section>
         <Footer noMission />
-      </>
+      </UI.Theme>
     )
   }
 }

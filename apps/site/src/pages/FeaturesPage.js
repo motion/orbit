@@ -31,7 +31,7 @@ import searchImg from '~/public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-const blueBg = UI.color('#FCFCFF')
+const blueBg = UI.color('#fff') //UI.color('#FCFCFF')
 const blueTheme = {
   background: blueBg,
   color: '#222',

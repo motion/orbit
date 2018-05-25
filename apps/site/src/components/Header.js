@@ -25,6 +25,18 @@ export class Header extends React.Component {
                 zIndex: 3,
               }}
             />
+            <headerBg
+              if={false}
+              css={{
+                position: 'absolute',
+                top: 0,
+                height: 84,
+                background: '#fff',
+                left: 0,
+                right: 0,
+                zIndex: 0,
+              }}
+            />
             <header>
               <SectionContent>
                 <headerInner>

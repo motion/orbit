@@ -20,6 +20,9 @@ export default ({ size = 1, white, ...props }) => {
       css={{
         alignItems: 'center',
         flexFlow: 'row',
+        // background: '#fff',
+        // padding: [10, 15],
+        // margin: [-10, -15],
       }}
       {...props}
     >

@@ -125,22 +125,22 @@ class HomeHeader extends React.Component {
                     <Title
                       italic
                       size={isMedium ? 5 : 6}
-                      margin={[-15, '10%', -15, -5]}
+                      margin={[0, 0, -15, -3]}
                       alpha={1}
                       color={Constants.colorMain}
                     >
                       Rethinking the&nbsp;desktop
                     </Title>
                     <borderLine />
-                    <below css={{ margin: [0, isLarge ? '25%' : 0, 10, 0] }}>
+                    <below>
                       <P
                         size={1.35}
                         sizeLineHeight={1.15}
                         fontWeight={300}
                         alpha={0.8}
                       >
-                        Orbit is a smart layer above your Mac that keeps team
-                        knowledge sorted and at hand.
+                        Orbit is a smart operating layer for your Mac that keeps
+                        team knowledge sorted and at hand.
                       </P>
                       <P
                         if={false}
@@ -221,13 +221,17 @@ class HomeHeader extends React.Component {
     mainSection: {
       position: 'relative',
       zIndex: 10,
+      background: '#fff',
+      flex: 'none',
     },
     smallCallout: {
       padding: [0, 0, 40, 0],
     },
     largeCallout: {
-      width: '54%',
-      margin: [-15, 0, 0, 0],
+      display: 'inline-block',
+      width: '45%',
+      padding: 40,
+      margin: -40,
     },
     borderLine: {
       margin: [40, 40, 20, 0],
@@ -300,25 +304,35 @@ class HomeFooter extends React.Component {
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <below css={{ margin: [15, '15%', 0, 0] }}>
-                    <P2 size={2.8} alpha={1} fontWeight={400}>
-                      It's time our computers helped us sort things out.
-                    </P2>
-                    <br />
-                    <UI.PassProps size={1.3} sizeLineHeight={1.2} alpha={0.85}>
+                    <UI.PassProps
+                      size={1.3}
+                      sizeLineHeight={1.2}
+                      alpha={0.85}
+                      style={{
+                        background: '#fff',
+                        padding: 5,
+                        margin: -5,
+                        marginBottom: 15,
+                      }}
+                    >
+                      <P2 size={2.8} alpha={1} fontWeight={400}>
+                        It's time our computers helped us stay sharp.
+                      </P2>
                       <P2>
-                        You and your team have knowledge all over. Orbit makes
-                        sense of it right on your desktop. We think any
-                        organizational tool has to be{' '}
+                        You and your team have knowledge all over. Orbit gives
+                        you the tools and interface to put it to use. We think
+                        any organizational tool has to be{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
                           completely private
                         </span>.
                       </P2>
-                      <P2 css={{ marginBottom: 40 }}>
+                      <P2>
                         Orbit wants to make your day to day work interpretable
                         and fluid. It's an app that you'll interact with often,
                         so we know we have to get the details right.
                       </P2>
-                      <P2 size={1.4}>
+                      <space css={{ height: 25 }} />
+                      <P2 color={Constants.colorMain} fontWeight={500}>
                         Sign up for early access to learn more as we build it.
                       </P2>
                     </UI.PassProps>
@@ -344,7 +358,7 @@ export const HomePage = () => (
           $$fullscreen
           css={{
             zIndex: 0,
-            opacity: 0.2,
+            opacity: 0.05,
             background: `url(${topo})`,
           }}
         />

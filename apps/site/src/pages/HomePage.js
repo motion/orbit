@@ -300,27 +300,26 @@ class HomeFooter extends React.Component {
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <below css={{ margin: [15, '15%', 0, 0] }}>
-                    <P2 size={2.8} alpha={1} fontWeight={200}>
-                      It's time our computers started helping us operate.
+                    <P2 size={2.8} alpha={1} fontWeight={400}>
+                      It's time our computers helped us sort things out.
                     </P2>
                     <br />
                     <UI.PassProps size={1.3} sizeLineHeight={1.2} alpha={0.85}>
                       <P2>
-                        You have knowledge in many places. Orbit makes sense of
-                        it all privately, right on your desktop. We strongly
-                        think an organizational tool needs to be{' '}
+                        You and your team have knowledge all over. Orbit makes
+                        sense of it right on your desktop. We think any
+                        organizational tool has to be{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
-                          completely private, and put the user first
+                          completely private
                         </span>.
                       </P2>
                       <P2 css={{ marginBottom: 40 }}>
-                        Orbit has to solve hard problems to be an enjoyable
-                        experience. It's an app that you'll interact with often,
-                        so we know we have to get it right.
+                        Orbit wants to make your day to day work interpretable
+                        and fluid. It's an app that you'll interact with often,
+                        so we know we have to get the details right.
                       </P2>
                       <P2 size={1.4}>
-                        Learn more about{' '}
-                        <SubLink>how we're building it</SubLink>.
+                        Sign up for early access to learn more as we build it.
                       </P2>
                     </UI.PassProps>
                   </below>

@@ -30,7 +30,7 @@ export const peachTheme = {
   subTitleColor: altBg.darken(0.55).desaturate(0.8),
 }
 
-export const backgroundColor = UI.color('#fcfcfc')
+export const backgroundColor = UI.color('#fff')
 
 export const mainLight = UI.color(colorMain)
   .lighten(0.65)

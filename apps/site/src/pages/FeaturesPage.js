@@ -29,6 +29,7 @@ import intelligenceImg from '~/public/screen-context-word.png'
 import newsImg from '~/public/screen-home.png'
 import searchImg from '~/public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
+import stars from '~/public/stars.svg'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const blueBg = UI.color('#FAFAFF')
@@ -46,6 +47,7 @@ class FeaturesIntro extends React.Component {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
+            <stars $$fullscreen />
             <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={2.5} margin={[0, 0, 10, 0]}>
@@ -69,6 +71,12 @@ class FeaturesIntro extends React.Component {
         )}
       </Media>
     )
+  }
+
+  static style = {
+    stars: {
+      background: `url(${stars}) top center`,
+    },
   }
 }
 
@@ -537,7 +545,7 @@ export class SectionFeatureIntelligence extends React.Component {
                         }}
                       />
                       <inner css={{ flex: 1, overflow: 'hidden' }}>
-                        <FadedArea fadeLeft fadeDown>
+                        <FadedArea fadeLeft>
                           <Spring from={{ x: 100 }} to={{ x: 10 }}>
                             {({ x }) => (
                               <animated.div
@@ -585,11 +593,13 @@ export class FeaturesPage extends React.Component {
           <Header />
           <FeaturesIntro />
         </UI.Theme>
-        <surround css={{ position: 'relative' }}>
-          <SectionFeatureNewsSearch />
-          <SearchIllustration />
-          <SectionFeatureIntelligence />
-        </surround>
+        <UI.Theme theme={blueTheme}>
+          <surround css={{ position: 'relative' }}>
+            <SectionFeatureNewsSearch />
+            <SearchIllustration />
+            <SectionFeatureIntelligence />
+          </surround>
+        </UI.Theme>
         <Footer />
       </>
     )

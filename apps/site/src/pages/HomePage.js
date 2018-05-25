@@ -90,12 +90,7 @@ class HomeHeader extends React.Component {
                 css={{ background: Constants.rightBg, left: '55%' }}
               />
               <SectionContent padded fullscreen>
-                <Slant
-                  slantSize={0}
-                  amount={40}
-                  rightBackground="#fff"
-                  css={{ zIndex: 0 }}
-                />
+                <Slant slantSize={0} amount={40} css={{ zIndex: 0 }} />
                 <Slant
                   inverseSlant
                   slantSize={2}
@@ -119,7 +114,7 @@ class HomeHeader extends React.Component {
                   amount={15}
                   css={{ zIndex: 0 }}
                 />
-                <spacer $$flex={1.5} />
+                <spacer $$flex={1} />
                 <UI.Theme name="light">
                   <mainSection $smallCallout={!isLarge} $largeCallout={isLarge}>
                     <Title
@@ -230,8 +225,10 @@ class HomeHeader extends React.Component {
     largeCallout: {
       display: 'inline-block',
       width: '45%',
-      padding: 40,
-      margin: -40,
+      minWidth: 520,
+      border: [1, [0, 0, 0, 0.04]],
+      padding: [60, 40],
+      margin: [-60, -40],
     },
     borderLine: {
       margin: [40, 40, 20, 0],
@@ -286,13 +283,13 @@ class HomeFooter extends React.Component {
                   slantSize={10}
                   amount={40}
                   slantBackground="#f9f9f9"
-                  rightBackground="#fff"
                   css={{ zIndex: 0 }}
                 />
                 <Slant
                   slantSize={2}
                   amount={20}
                   slantBackground="#f2f2f2"
+                  rightBackground="#fff"
                   css={{ zIndex: 0 }}
                 />
                 <Slant
@@ -357,8 +354,9 @@ export const HomePage = () => (
         <leftBackground
           $$fullscreen
           css={{
+            right: '45%',
             zIndex: 0,
-            opacity: 0.05,
+            opacity: 0.035,
             background: `url(${topo})`,
           }}
         />

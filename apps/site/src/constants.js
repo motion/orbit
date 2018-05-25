@@ -22,7 +22,7 @@ export const featuresSlantColor = UI.color('#F2B0BF')
 export const useCasesSlantBg1 = '#F4E1B5'
 export const useCasesSlantBg2 = '#E0CACA'
 
-export const altBg = UI.color('#FCF6ED')
+export const altBg = UI.color('#FFFBF5')
 export const peachTheme = {
   background: altBg,
   color: altBg.darken(0.8).desaturate(0.1),

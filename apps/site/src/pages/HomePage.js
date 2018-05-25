@@ -21,6 +21,7 @@ import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import { Keyframes, Spring, animated } from 'react-spring'
 import topo from '~/public/topo2.svg'
+import bg from '~/public/cavolo.jpg'
 
 const SubLink = view('a', {
   // color: '#fff',
@@ -101,105 +102,106 @@ class HomeHeader extends React.Component {
                 <rightBg
                   $$fullscreen
                   css={{
-                    background:
-                      'url(https://backgrounds.wetransfer.net/riccav6_1680x1050.jpg) bottom left',
+                    background: `url(${bg}) no-repeat bottom right`,
+                    backgroundScale: 'cover',
                     transform: {
                       rotate: '-4.3deg',
-                      x: -500,
+                      x: -1200,
                       y: -100,
                     },
                   }}
                 />
               </rightBackground>
               <SectionContent padded fullscreen>
-                <inner
-                  css={{
-                    position: 'absolute',
-                    bottom: '-5%',
-                    left: '48.5%',
-                    padding: [40, 45, 150, 55],
-                    background: 'rgba(0,0,0,0.92)',
-                    // border: [4, '#000'],
-                    transform: {
-                      rotate: '4deg',
-                    },
-                  }}
-                >
-                  <innerInner
+                <UI.Theme name="dark">
+                  <inner
                     css={{
-                      width: 400,
+                      position: 'absolute',
+                      bottom: '-2%',
+                      left: '48.5%',
+                      padding: [40, 45, 120, 55],
+                      background: 'rgba(0,0,0,0.8)',
+                      // border: [4, '#000'],
                       transform: {
-                        rotate: '-4deg',
+                        rotate: '4.25deg',
                       },
                     }}
                   >
-                    <Title
-                      italic
-                      size={isMedium ? 6 : 7}
-                      margin={[0, 0, 20, 0]}
-                      alpha={1}
-                      color="#fff"
-                    >
-                      Rethink<br />Desktop
-                    </Title>
-                    <P
-                      size={1.35}
-                      sizeLineHeight={1.15}
-                      fontWeight={300}
-                      alpha={0.9}
-                      color="#fff"
-                    >
-                      Orbit is a smart operating layer for Mac that keeps team
-                      knowledge sorted and at hand.
-                    </P>
-                    <actions
-                      if={false}
-                      $$row
+                    <innerInner
                       css={{
-                        margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
-                        alignItems: 'center',
+                        width: 400,
+                        transform: {
+                          rotate: '-4.25deg',
+                        },
                       }}
                     >
-                      <UI.Button
-                        borderColor="#f2f2f2"
-                        size={1.1}
-                        onClick={scrollTo('#join')}
-                        $smallInstallBtn={!isLarge}
-                        tooltip=""
+                      <Title
+                        italic
+                        size={isMedium ? 6 : 7.5}
+                        margin={[0, 0, 20, 0]}
+                        alpha={1}
+                      >
+                        A new<br />desktop
+                      </Title>
+                      <P
+                        size={1.35}
+                        sizeLineHeight={1.15}
+                        fontWeight={300}
+                        alpha={0.9}
+                      >
+                        Orbit is a brain for your Mac that sorts through your
+                        cloud and gives your team a productive heads up display.
+                      </P>
+                      <actions
+                        $$row
                         css={{
-                          margin: [0, 10, 0, -10],
-                          cursor: 'pointer',
-                          lineHeight: '1.1rem',
+                          margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
+                          alignItems: 'center',
                         }}
                       >
-                        Coming soon for{' '}
-                        <AppleLogo
-                          width={20}
-                          height={20}
+                        <UI.Button
+                          background="transparent"
+                          borderColor="#444"
+                          color="#fff"
+                          size={1.1}
+                          onClick={scrollTo('#join')}
+                          $smallInstallBtn={!isLarge}
+                          tooltip=""
                           css={{
-                            // fill: '#fff',
-                            display: 'inline-block',
-                            margin: [-2, 0, 0, 4],
-                            opacity: 0.32,
+                            margin: [0, 10, 0, -10],
+                            cursor: 'pointer',
+                            lineHeight: '1.1rem',
                           }}
-                        />
-                      </UI.Button>
-                      <UI.Button
-                        chromeless
-                        alpha={0.4}
-                        onClick={Router.link('/features')}
-                        margin={[0, 0, 0, 10]}
-                        css={{
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Learn more
-                      </UI.Button>
-                    </actions>
-                  </innerInner>
-                </inner>
+                        >
+                          Coming soon for{' '}
+                          <AppleLogo
+                            width={20}
+                            height={20}
+                            css={{
+                              fill: '#fff',
+                              display: 'inline-block',
+                              margin: [-2, 0, 0, 4],
+                              opacity: 0.32,
+                            }}
+                          />
+                        </UI.Button>
+                        <UI.Button
+                          chromeless
+                          alpha={0.4}
+                          onClick={Router.link('/features')}
+                          margin={[0, 0, 0, 10]}
+                          css={{
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Learn more
+                        </UI.Button>
+                      </actions>
+                    </innerInner>
+                  </inner>
+                </UI.Theme>
                 <Slant
-                  slantSize={10}
+                  slantSize={6}
                   amount={40}
                   slantBackground="#111"
                   css={{ zIndex: 0 }}
@@ -308,7 +310,7 @@ class HomeFooter extends React.Component {
               <SectionContent padded fullscreen>
                 <Slant
                   inverseSlant
-                  slantSize={10}
+                  slantSize={6}
                   amount={40}
                   rightBackground={'#fff'}
                   slantBackground="#111"
@@ -329,20 +331,20 @@ class HomeFooter extends React.Component {
                       }}
                     >
                       <P2 size={2.8} alpha={1} fontWeight={400}>
-                        A smarter way to stay up to date and in the know.
+                        A home for your day
                       </P2>
                       <P2>
-                        You and your team have knowledge all over. Orbit gives
-                        you the tools and interface to put it to use. It unifies
-                        cloud knowledge and gives it a brain.
+                        You and your team have a lot of knowledge. Much of it
+                        lives hidden in silos around your cloud. Orbit unifies
+                        that knowledge on your desktop and gives it a brain.
                       </P2>
                       <P2>
-                        Orbit wants to make your day to day more interpretable
-                        and fluid. It's an app that you'll interact with often,
-                        and it will touch your most sensitive data.
+                        With a smart interface and new technology that enables
+                        it to understand what you're looking at and care about,
+                        Orbit aims to reinvent desktop computing.
                       </P2>
                       <P2>
-                        That's why it's{' '}
+                        That's why Orbit is{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
                           completely private and on-device
                         </span>. It's a new way to operate, so it has to work
@@ -356,7 +358,11 @@ class HomeFooter extends React.Component {
                   </below>
                 </LeftSide>
                 <RightSide noEdge $$centered>
-                  <Join />
+                  <Join
+                    css={{
+                      transform: { scale: 1.5, rotate: '1.5deg', y: -20 },
+                    }}
+                  />
                 </RightSide>
               </SectionContent>
             </Section>
@@ -382,8 +388,8 @@ export const HomePage = () => (
         />
         <Header
           linkStyle={{
-            color: '#000',
-            background: 'white',
+            color: '#fff',
+            background: '#111',
           }}
         />
         <HomeHeader isMedium={isMedium} />

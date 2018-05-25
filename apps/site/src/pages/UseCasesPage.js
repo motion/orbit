@@ -38,7 +38,7 @@ class UseCasesIntro extends React.Component {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent padded fullscreen css={{ marginTop: '-40%' }}>
+            <SectionContent padded fullscreen css={{ marginTop: '-32%' }}>
               <Slant
                 slantBackground={Constants.altBg.darken(0.05)}
                 css={{ zIndex: 2 }}
@@ -48,8 +48,8 @@ class UseCasesIntro extends React.Component {
                   Use cases
                 </Title>
                 <P2 size={1.7} alpha={0.75}>
-                  Whether using personally or as part of a team, Orbit helps
-                  make knowledge work for you.
+                  Whether personally or as part of a team, Orbit helps make
+                  knowledge work for you.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
@@ -98,7 +98,6 @@ class SectionUseCaseRemoteTeams extends React.Component {
                 css={{ zIndex: 2 }}
               />
               <LeftSide>
-                <SmallTitle margin={[0, 0, 8]}>Use Cases</SmallTitle>
                 <SubTitle size={5} italic>
                   Remote<br />
                   teams
@@ -108,7 +107,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                   css={{
                     textAlign: 'left',
                     display: 'block',
-                    margin: isLarge ? [-40, 0, 0, '25%'] : 0,
+                    margin: isLarge ? [-40, 0, 0, '15%'] : 0,
                   }}
                 >
                   <SubSubTitle>Connecting people</SubSubTitle>
@@ -230,7 +229,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                   css={{
                     textAlign: 'left',
                     display: 'block',
-                    margin: isLarge ? [0, 0, 0, '25%'] : 0,
+                    margin: isLarge ? [0, 0, 0, '15%'] : 0,
                   }}
                 >
                   <SubSubTitle>Better support responses</SubSubTitle>
@@ -238,7 +237,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                     if={isLarge}
                     alpha={0.6}
                     size={2}
-                    css={{ margin: [0, '25%', 10, 0] }}
+                    css={{ margin: [0, 0, 10, 0] }}
                   >
                     Live help for live support
                   </P>
@@ -263,7 +262,6 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 </Callout>
               </LeftSide>
               <RightSide css={{ top: 0 }}>
-                <SmallTitle margin={[-10, 0, 8]}>Use Cases</SmallTitle>
                 <SubTitle size={5} italic>
                   Customer<br />Success
                 </SubTitle>
@@ -277,7 +275,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 >
                   Knowledge at hand
                 </P>
-                <P2 size={1.6} css={isLarge && { marginRight: '20%' }}>
+                <P2 size={1.6} css={isLarge && { marginRight: '15%' }}>
                   Sales chat requires intimate knowledge of your product. Orbit
                   sits side by side with your success team as they chat on
                   Intercom or ZenDesk providing realtime answers from your
@@ -338,7 +336,6 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 css={{ zIndex: 2 }}
               />
               <LeftSide>
-                <SmallTitle margin={[-20, 0, 8]}>Use Cases</SmallTitle>
                 <SubTitle size={5} italic>
                   Workplace<br />
                   interruptions
@@ -358,7 +355,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                   css={{
                     textAlign: 'left',
                     display: 'block',
-                    margin: isLarge ? [-60, 0, 0, '30%'] : 0,
+                    margin: isLarge ? [-70, 0, 0, '15%'] : 0,
                   }}
                 >
                   <SubSubTitle>Prevent shoulder taps</SubSubTitle>
@@ -371,10 +368,9 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                     Stop losing links and files
                   </P>
                   <P2 size={1.6}>
-                    Search that actually works means a lot less time hunting
-                    around for files. Combined with smart profiles that show you
-                    recent collaborations, Orbit aims to eliminate pings for
-                    things you just can't find in the cloud.
+                    Search that works means a lot less time hunting around for
+                    links. Combine with smart profiles that show recent
+                    collaborations and pings just to find things go down.
                   </P2>
                 </section>
                 <Callout
@@ -395,7 +391,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 </Callout>
               </LeftSide>
               <RightSide inverse css={{ bottom: 0 }}>
-                <div $$flex css={{ marginTop: isLarge ? '30%' : 0 }} />
+                <div $$flex css={{ marginTop: isLarge ? '20%' : 0 }} />
                 <SubSubTitle>Notification noise</SubSubTitle>
                 <P
                   if={isLarge}
@@ -405,7 +401,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 >
                   Enabling deep work
                 </P>
-                <P2 size={1.6} css={{ marginRight: isLarge ? '22%' : 0 }}>
+                <P2 size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
                   Use the power of Do Not Disturb in Slack without losing
                   synchronicity. Home lets you snooze notifications but still
                   pull, exactly when you're ready, to see everything new.

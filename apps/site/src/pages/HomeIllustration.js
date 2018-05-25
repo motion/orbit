@@ -113,15 +113,17 @@ const chats = [
   <Bubble>The #dev chat room</Bubble>,
   <Bubble three>clear as modern art</Bubble>,
   <Bubble two>🙄</Bubble>,
-  <Bubble four>& spreading like an oil spill...</Bubble>,
-  <Bubble two>🤷‍</Bubble>,
-  <Bubble two>It's not that it doesn't work</Bubble>,
-  <Bubble>Yea, but you'd hope for a bit more...</Bubble>,
-  <Bubble two>clarity, perhaps</Bubble>,
-  <Bubble four>at least some sort of summary</Bubble>,
+  <Bubble four>and growing every day</Bubble>,
+  <Bubble two>Would be nice if I could focus</Bubble>,
   <Bubble two>👆</Bubble>,
-  <Bubble two>too much FOMO</Bubble>,
-  <Bubble four>unsubscribe</Bubble>,
+  <Bubble>we should get something to sort it all out</Bubble>,
+  <Bubble two>you're just not using it right</Bubble>,
+  <Bubble>maybe some sort of summary</Bubble>,
+  <Bubble two>chat is just the start of it, really</Bubble>,
+  <Bubble two>what about email?</Bubble>,
+  <Bubble four>
+    email, tickets, the wiki, all the different rooms here...
+  </Bubble>,
 ]
 
 const messages = (
@@ -361,8 +363,7 @@ export class HomeIllustration extends React.Component {
                 <animated.div style={{ opacity }}>
                   <message>
                     <msgBlur />
-                    Your organization<br />
-                    lacking organization?
+                    Incoming overload?
                   </message>
                 </animated.div>
               )}

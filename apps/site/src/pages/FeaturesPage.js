@@ -31,7 +31,7 @@ import searchImg from '~/public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-const blueBg = UI.color('#FAFAFF')
+const blueBg = UI.color('#FCFCFF')
 const blueTheme = {
   background: blueBg,
   color: '#222',
@@ -133,9 +133,9 @@ const SearchCallout = ({ isLarge }) => (
   <Callout
     css={
       isLarge && {
-        width: '85%',
+        width: '80%',
         position: 'absolute',
-        top: searchYOff - 65,
+        top: searchYOff - 35,
         left: '12%',
       }
     }
@@ -212,8 +212,11 @@ export class SectionFeatureNewsSearch extends React.Component {
               css={!isLarge && { paddingBottom: 0, overflow: 'visible' }}
               fullscreen={isLarge}
             >
-              <Glow style={{ transform: { y: '-10%', x: '-40%' } }} />
-              <Glow style={{ transform: { y: '130%', x: '60%' } }} />
+              <Glow
+                if={false}
+                style={{ transform: { y: '-10%', x: '-40%' } }}
+              />
+              <Glow if={false} style={{ transform: { y: '130%', x: '60%' } }} />
               <Slant
                 slantSize={8}
                 inverseSlant
@@ -236,7 +239,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <SubTitle size={5} italic>
+                    <SubTitle size={6} italic>
                       Home
                     </SubTitle>
                     <FeatureSubTitle
@@ -411,7 +414,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={5} italic>
+                  <SubTitle size={6} italic>
                     Search
                   </SubTitle>
                   <FeatureSubTitle>Spotlight, meet your brain</FeatureSubTitle>
@@ -447,7 +450,7 @@ export class SectionFeatureIntelligence extends React.Component {
         {isLarge => (
           <Section>
             <SectionContent id="context" fullscreen={isLarge} padded>
-              <Glow style={{ transform: { y: '10%', x: '-55%' } }} />
+              <Glow if={false} style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
                 slantSize={8}
                 css={{ zIndex: 2 }}
@@ -471,11 +474,11 @@ export class SectionFeatureIntelligence extends React.Component {
                   css={
                     isLarge && {
                       display: 'block',
-                      margin: [contextYOff - 130, 0, 0, 30],
+                      margin: [contextYOff - 150, 0, 0, 30],
                     }
                   }
                 >
-                  <SubTitle size={5} italic>
+                  <SubTitle size={6} italic>
                     Context
                   </SubTitle>
                   <FeatureSubTitle>

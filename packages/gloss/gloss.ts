@@ -62,7 +62,11 @@ export default class Gloss {
       const tagName = eitherNameOrChild
       const styles = maybeStyle
       const id = uid()
+      const elementCache = new WeakMap()
       const glossComponent = props => {
+        if (elementCache.has(props)) {
+          return elementCache.get(props)
+        }
         let finalProps
         // make propstyles work
         if (props && maybePropStyles) {
@@ -77,7 +81,12 @@ export default class Gloss {
         } else {
           finalProps = props
         }
-        return this.createElement(tagName, { glossUID: id, ...finalProps })
+        const element = this.createElement(tagName, {
+          glossUID: id,
+          ...finalProps,
+        })
+        elementCache.set(props, element)
+        return element
       }
       try {
         this.attachStyles(`${id}`, { [tagName]: styles, ...maybePropStyles })

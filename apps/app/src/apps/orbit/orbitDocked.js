@@ -14,7 +14,7 @@ const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
 
 class PaneStore {
   filters = ['all', 'general', 'status', 'showoff']
-  mainPanes = ['home', 'explore', 'directory']
+  mainPanes = ['home', 'directory', 'settings']
   paneIndex = 0
   panes = [...this.mainPanes, ...this.filters]
 
@@ -92,23 +92,10 @@ class OrbitDocked {
           }}
         />
         <container>
-          <OrbitHeader />
-          <OrbitHomeHeader paneStore={paneStore} theme={theme} />
+          <OrbitHeader
+            after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
+          />
           <orbitInner>
-            <UI.Button
-              $settingsButton
-              icon="gear"
-              borderRadius={100}
-              size={1.05}
-              sizeIcon={1.2}
-              circular
-              borderWidth={0}
-              background={theme.base.background}
-              iconProps={{
-                color: theme.active.background.darken(0.1),
-              }}
-              onClick={appStore.toggleSettings}
-            />
             <OrbitHome name="home" appStore={appStore} paneStore={paneStore} />
             {/* <OrbitDirectory
             name="directory"

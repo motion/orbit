@@ -60,7 +60,7 @@ export class OrbitHomeHeader {
       circular: true,
       borderWidth: 0,
       borderColor: theme.base.borderColor,
-      background: theme.base.background,
+      background: 'transparent',
       iconProps: {
         color: buttonColor,
         size: 18,
@@ -78,15 +78,6 @@ export class OrbitHomeHeader {
             {...exploreButton}
           />
           <UI.Button
-            if={false}
-            icon="menu"
-            tooltip="Explore"
-            $exploreButton
-            active={paneStore.activePane === 'explore'}
-            onClick={() => paneStore.setActivePane('explore')}
-            {...exploreButton}
-          />
-          <UI.Button
             icon="userscir"
             tooltip="Directory"
             $exploreButton
@@ -94,7 +85,16 @@ export class OrbitHomeHeader {
             onClick={() => paneStore.setActivePane('directory')}
             {...exploreButton}
           />
-          <space $$flex />
+          <UI.Button
+            icon="gear"
+            tooltip="Settings"
+            $exploreButton
+            sizeIcon={1.2}
+            active={paneStore.activePane === 'settings'}
+            onClick={() => paneStore.setActivePane('settings')}
+            {...exploreButton}
+          />
+          {/* <space $$flex />
           <filters>
             {paneStore.filters.map((name, index) => (
               <RoundButton
@@ -115,7 +115,7 @@ export class OrbitHomeHeader {
                 style: { marginTop: 3 },
               }}
             />
-          </filters>
+          </filters> */}
         </section>
         <section if={false} $subSection>
           <title>

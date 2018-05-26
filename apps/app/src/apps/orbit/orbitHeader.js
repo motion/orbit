@@ -53,7 +53,7 @@ export class OrbitHeader extends React.Component {
     onHover: this.props.headerStore.hover,
   })
 
-  render({ orbitStore, headerStore, theme }) {
+  render({ orbitStore, headerStore, after, theme }) {
     const headerBg = theme.base.background
     return (
       <orbitHeader
@@ -74,7 +74,7 @@ export class OrbitHeader extends React.Component {
           <UI.Icon
             $searchIcon
             name="ui-1_zoom"
-            size={16}
+            size={20}
             color={theme.active.background.darken(0.15).desaturate(0.4)}
           />
           <input
@@ -89,6 +89,7 @@ export class OrbitHeader extends React.Component {
           />
           <inputLn />
         </title>
+        <after if={after}>{after}</after>
         <ControlButton
           if={!App.orbitState.docked}
           onClick={App.togglePinned}
@@ -117,6 +118,14 @@ export class OrbitHeader extends React.Component {
       padding: 2,
       transition: 'all ease-in 300ms',
     },
+    after: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: 'center',
+      flexFlow: 'row',
+    },
     headerBg: background => ({
       background: `linear-gradient(${background
         .darken(0.03)
@@ -139,9 +148,9 @@ export class OrbitHeader extends React.Component {
     input: {
       width: '100%',
       fontWeight: 300,
-      fontSize: 22,
-      padding: [10, 10, 10, 30],
-      height: 54,
+      fontSize: 24,
+      padding: [20, 10, 20, 36],
+      // height: 54,
       border: 'none',
       background: 'transparent',
     },

@@ -6,13 +6,14 @@ import bitContents from '~/components/bitContents'
 import { App } from '@mcro/all'
 import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
 
-const loggers = []
+let loggers = []
 let nextLog = null
 const debounceLog = (...args) => {
   loggers.push([...args])
   if (!nextLog) {
     nextLog = setTimeout(() => {
       console.log('debounceLog', loggers.length, loggers.join(', '))
+      loggers = []
       nextLog = null
     })
   }

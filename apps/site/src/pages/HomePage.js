@@ -70,12 +70,11 @@ class HomeStore {
     //     })
     //   }, 100),
     // )
-
-    setTimeout(() => {
-      this.stars(Spring, {
-        to: { y: 0 },
-      })
-    })
+    // setTimeout(() => {
+    //   this.stars(Spring, {
+    //     to: { y: 0 },
+    //   })
+    // })
   }
 }
 

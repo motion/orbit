@@ -13,17 +13,26 @@ const size = 500
 class PlayMessagesStore {
   showOrbitals = false
 
-  runAnimation = react(
-    () => [this.props.animate, this.props.hasAnimated],
-    async ([shouldAnimate, hasAnimated], { sleep }) => {
-      if (hasAnimated) {
+  willMount() {
+    if (this.props.hasAnimated) {
+      setTimeout(() => {
+        console.log('resuming from end')
         this.showFinalText()
         this.showOrbitals = true
         return
+      })
+    }
+  }
+
+  runAnimation = react(
+    () => [this.props.animate, this.props.hasAnimated],
+    async ([shouldAnimate, hasAnimated], { sleep }) => {
+      if (hasAnimated || !shouldAnimate) {
+        throw react.cancel
       }
-      if (!shouldAnimate) throw react.cancel
       this.animate(sleep)
     },
+    { immediate: true },
   )
 
   animate = async sleep => {
@@ -122,7 +131,7 @@ export class HomePlayMessages extends React.Component {
                 }}
                 items={dockIcons.map(({ name }) => {
                   const Icon = Icons[`${name}Icon`]
-                  return <Icon size={0.11} />
+                  return <Icon key={name} size={0.11} />
                 })}
               />
             </animated.div>

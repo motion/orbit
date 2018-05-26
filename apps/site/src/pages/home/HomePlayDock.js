@@ -62,7 +62,10 @@ class DockPlayStore {
   runAnimation = react(
     () => this.props.animate && !this.props.hasAnimated,
     async (shouldAnimate, { sleep }) => {
-      if (!shouldAnimate) throw react.cancel
+      if (!shouldAnimate) {
+        throw react.cancel
+      }
+      await sleep(30)
       this.animateIcons(sleep)
     },
   )
@@ -105,11 +108,12 @@ class DockPlayStore {
   store: DockPlayStore,
 })
 export class HomePlayDock extends React.Component {
-  render({ store }) {
+  render({ store, animate }) {
     const dom = this.glossElement.bind(this)
     return (
       <>
         <dockContain
+          if={animate}
           css={{
             opacity: store.leave.slack ? 0 : 1,
           }}
@@ -118,7 +122,7 @@ export class HomePlayDock extends React.Component {
             <dockFade />
           </dockFrame>
         </dockContain>
-        <dockIcons>
+        <dockIcons if={animate}>
           {dockIcons.map(({ name, size, countProps }) => {
             const Icon = Icons[`${name}Icon`]
             const bounce = store.bounce[name.toLowerCase()]

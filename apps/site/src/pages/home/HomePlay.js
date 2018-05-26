@@ -14,8 +14,8 @@ class HomePlayStore {
     }
     await sleep(250)
     this.animate = true
-
-    await sleep(10000)
+    // set done
+    await sleep(9000)
     hasAnimated = true
   }
 }
@@ -25,6 +25,7 @@ class HomePlayStore {
 })
 export class HomePlay extends React.Component {
   render({ store }) {
+    console.log('render play', hasAnimated)
     return (
       <>
         <illus>

@@ -20,9 +20,9 @@ export class Header extends React.Component {
               if={!Router.isActive('/')}
               css={{
                 position: 'absolute',
-                top: 84,
+                top: 82,
                 height: 1,
-                background: [0, 0, 0, 0.03],
+                background: [100, 100, 100, 0.1],
                 left: 0,
                 right: 0,
                 zIndex: 3,
@@ -71,7 +71,7 @@ export class Header extends React.Component {
 
   static style = {
     header: {
-      // background: '#000',
+      // background: Constants.colorMain,
       top: 0,
       left: 0,
       right: 0,

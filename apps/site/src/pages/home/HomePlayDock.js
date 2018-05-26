@@ -5,7 +5,10 @@ import * as Icons from '~/views/icons'
 import * as Constants from '~/constants'
 import { dockIcons } from './stageItems'
 
-const distanceFromBottom = 50
+const distanceFromBottom = 100
+const transform = {
+  scale: 0.9,
+}
 
 const Badge = view('div', {
   position: 'absolute',
@@ -152,6 +155,7 @@ export class HomePlayDock extends React.Component {
       background: `linear-gradient(transparent, ${Constants.rightBg})`,
       zIndex: 200,
       transition: 'all ease-out 1000ms',
+      transform,
     },
     dockFrame: {
       position: 'absolute',
@@ -178,6 +182,7 @@ export class HomePlayDock extends React.Component {
       background: `linear-gradient(transparent, ${Constants.rightBg})`,
     },
     dockIcons: {
+      transform,
       position: 'absolute',
       bottom: 35 + distanceFromBottom,
       left: '5%',
@@ -200,7 +205,7 @@ export class HomePlayDock extends React.Component {
     },
     leave: {
       opacity: 0,
-      transition: {
+      transform: {
         y: 50,
       },
     },

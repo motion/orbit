@@ -22,7 +22,7 @@ import { scrollTo } from '~/helpers'
 import { Keyframes, Spring, animated } from 'react-spring'
 import topo from '~/public/topo2.svg'
 import { throttle } from 'lodash'
-import bg from '~/public/cav.jpg'
+import bg from '~/public/girl.svg'
 
 const borderColor = '#fff' || Constants.colorMain.darken(0.15)
 // const blackBg = UI.color('#111')
@@ -34,7 +34,7 @@ const borderColor = '#fff' || Constants.colorMain.darken(0.15)
 // }
 const bottomRightBackground = '#121212'
 const firstSlant = {
-  slantSize: 6,
+  slantSize: 8,
   amount: 40,
   slantBackground: borderColor,
   css: { zIndex: 0 },
@@ -55,21 +55,21 @@ class HomeStore {
   stars = null
 
   willMount() {
-    this.on(
-      window,
-      'scroll',
-      throttle(() => {
-        const max = window.innerHeight * 3
-        // 0 - 1 of how far down we are
-        const pctDown =
-          (max - (max - document.scrollingElement.scrollTop)) / max
-        const offset = pctDown * 15
-        // this.stars.stopAnimation()
-        this.stars(Spring, {
-          to: { y: -offset },
-        })
-      }, 100),
-    )
+    // this.on(
+    //   window,
+    //   'scroll',
+    //   throttle(() => {
+    //     const max = window.innerHeight * 3
+    //     // 0 - 1 of how far down we are
+    //     const pctDown =
+    //       (max - (max - document.scrollingElement.scrollTop)) / max
+    //     const offset = pctDown * 30
+    //     // this.stars.stopAnimation()
+    //     this.stars(Spring, {
+    //       to: { y: -offset },
+    //     })
+    //   }, 100),
+    // )
 
     setTimeout(() => {
       this.stars(Spring, {
@@ -123,19 +123,25 @@ class HomeHeader extends React.Component {
                   </Keyframes>
                 </paintingWrap>
               </paintingOverflow>
+              <Slant {...firstSlant} />
+              <Slant inverseSlant if={false} {...secondSlant} />
+              <Slant if={false} {...thirdSlant} />
               <SectionContent padded fullscreen>
                 <UI.Theme name="dark">
                   <inner
                     css={{
                       position: 'absolute',
-                      bottom: '-10%',
-                      left: '48.7%',
+                      bottom: 0,
+                      left: '50%',
                       right: '-100%',
                       padding: [180, 0, 120, 55],
                       background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, ${bottomRightBackground} 95%)`,
                       // border: [4, '#000'],
+                      transformOrigin: 'top left',
                       transform: {
-                        rotate: '4.25deg',
+                        y: firstSlant.slantSize,
+                        x: firstSlant.slantSize,
+                        rotate: '4.1deg',
                       },
                     }}
                   >
@@ -143,16 +149,17 @@ class HomeHeader extends React.Component {
                       css={{
                         width: 460,
                         transform: {
-                          rotate: '-4.25deg',
+                          rotate: '-4.1deg',
                         },
                       }}
                     >
                       <Title
                         italic
-                        size={isMedium ? 6 : 7.5}
+                        size={isMedium ? 5.5 : 6}
                         margin={[0, 0, 20, 0]}
                         alpha={1}
                       >
+                        Your<br />
                         Smart<br />
                         Desktop
                       </Title>
@@ -162,9 +169,8 @@ class HomeHeader extends React.Component {
                         fontWeight={300}
                         alpha={0.9}
                       >
-                        Your Mac gets a brain that sorts the cloud.<br />
-                        Orbit is a new productivity app that sorts team
-                        knowledge at your fingertips.
+                        Upgrade Mac with intelligence.<br />
+                        Your desktop meets your cloud.
                       </P>
                       <actions
                         $$row
@@ -215,9 +221,6 @@ class HomeHeader extends React.Component {
                     </innerInner>
                   </inner>
                 </UI.Theme>
-                <Slant {...firstSlant} />
-                <Slant inverseSlant if={false} {...secondSlant} />
-                <Slant if={false} {...thirdSlant} />
                 <leftSide
                   css={{
                     position: 'absolute',
@@ -243,6 +246,7 @@ class HomeHeader extends React.Component {
 
   static style = {
     paintingWrap: {
+      background: '#000',
       left: '50.2%',
       right: '-10%',
       top: '-15%',
@@ -253,7 +257,7 @@ class HomeHeader extends React.Component {
       },
     },
     painting: {
-      // opacity: 0.2,
+      opacity: 0.3,
       background: `url(${bg}) no-repeat top left`,
       backgroundSize: 'cover',
       bottom: '-10%',
@@ -386,10 +390,10 @@ class HomeFooter extends React.Component {
                     <Join
                       css={{
                         transform: {
-                          scale: 1.2,
-                          rotate: '1.5deg',
-                          y: -20,
-                          x: -0,
+                          scale: 1.36,
+                          rotate: '1.7deg',
+                          y: -40,
+                          x: 30,
                         },
                       }}
                     />
@@ -408,19 +412,12 @@ export const HomePage = () => (
   <Media query={Constants.screen.medium}>
     {isMedium => (
       <>
-        <leftBackground
-          $$fullscreen
-          css={{
-            right: '45%',
-            zIndex: 0,
-            opacity: 0.035,
-            background: `url(${topo})`,
-          }}
-        />
         <Header
           linkStyle={{
-            color: Constants.colorMain,
-            background: '#fff',
+            color: '#fff',
+            // background: '#111',
+            borderRadius: 100,
+            border: [2, '#fff'],
           }}
           linkStyleHover={{
             background: Constants.colorMain,
@@ -429,6 +426,14 @@ export const HomePage = () => (
         />
         <HomeHeader isMedium={isMedium} />
         <HomeFooter isMedium={isMedium} />
+        <topoBg
+          $$fullscreen
+          css={{
+            zIndex: 0,
+            opacity: 0.06,
+            background: `url(${topo})`,
+          }}
+        />
       </>
     )}
   </Media>

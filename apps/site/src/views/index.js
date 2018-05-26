@@ -436,8 +436,8 @@ export class A {
   static style = {
     a: {
       fontSize: 14,
-      // color: [0, 0, 0, 0.7],
-      fontWeight: 800,
+      color: [0, 0, 0, 0.6],
+      fontWeight: 700,
       padding: [5, 10],
       margin: [0, 0, 0, 15],
       borderBottom: [1, 'transparent'],

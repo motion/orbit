@@ -11,6 +11,8 @@ import { dockIcons } from './stageItems'
 const size = 640
 
 class PlayMessagesStore {
+  showOrbitals = false
+
   runAnimation = react(
     () => this.props.animate,
     async (shouldAnimate, { sleep }) => {
@@ -20,23 +22,25 @@ class PlayMessagesStore {
   )
 
   animate = async sleep => {
-    await sleep(10000)
+    await sleep(13000)
     await this.chatText(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
     })
-    await sleep(700)
+    await sleep(1500)
     this.chatText(Spring, {
       from: { opacity: 1 },
       to: { opacity: 0 },
       config: config.slow,
     })
-    await sleep(1000)
-    await this.chatText2(Spring, {
+    await sleep(1500)
+    this.chatText2(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
       config: config.slow,
     })
+    await sleep(1000)
+    this.showOrbitals = true
   }
 }
 
@@ -45,6 +49,7 @@ class PlayMessagesStore {
 })
 export class HomePlayMessages extends React.Component {
   render({ store }) {
+    store.showOrbitals
     return (
       <>
         <Keyframes native script={next => (store.chatText = next)}>
@@ -61,7 +66,7 @@ export class HomePlayMessages extends React.Component {
           {({ opacity }) => (
             <animated.div style={{ opacity, zIndex: 1000 }}>
               <message>
-                <msgBlur />
+                <msgBlur if={false} />
                 Stay in sync, stress free.
                 <UI.Row
                   if={false}
@@ -93,13 +98,18 @@ export class HomePlayMessages extends React.Component {
               <Orbital
                 size={size}
                 borderColor="transparent"
-                borderWidth={2}
-                background={[0, 0, 0, 0.03]}
+                borderWidth={1}
+                background="#DDE3EC33"
                 css={{
                   top: '50%',
                   left: '50%',
-                  margin: [-size / 2 - 48, 0, 0, -size / 2],
+                  margin: [-size / 2, 0, 0, -size / 2],
                   position: 'absolute',
+                  transition: 'all ease-in 1000ms',
+                  opacity: store.showOrbitals ? 1 : 0,
+                  // transform: {
+                  //   scale: store.showOrbitals ? 1 : 0.98,
+                  // },
                 }}
                 items={dockIcons.map(({ name }) => {
                   const Icon = Icons[`${name}Icon`]
@@ -123,7 +133,7 @@ export class HomePlayMessages extends React.Component {
       top: 0,
       left: 0,
       right: 0,
-      bottom: 100,
+      bottom: 0,
       zIndex: 100,
       alignItems: 'center',
       justifyContent: 'center',

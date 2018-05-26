@@ -36,7 +36,7 @@ const blueTheme = {
   background: blueBg,
   color: '#222',
   titleColor: blueBg.darken(0.75).desaturate(0.3),
-  subTitleColor: blueBg.darken(0.7).desaturate(0.8),
+  subTitleColor: '#111',
 }
 
 const FeatureSubTitle = props => (
@@ -125,7 +125,7 @@ const SearchIllustration = () => (
   />
 )
 
-const newsTopOffPct = '33%'
+const newsTopOffPct = '29%'
 const searchYOff = -10
 const contextYOff = 160
 
@@ -239,6 +239,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
+                    <topSpace css={{ height: 40 }} />
                     <SubTitle size={6} italic>
                       Home
                     </SubTitle>
@@ -290,9 +291,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                   css={{
                     position: 'absolute',
                     top: newsTopOffPct,
-                    marginTop: '-30%',
-                    right: '6%',
-                    left: '5%',
+                    marginTop: -210,
+                    right: 0,
+                    left: '16%',
                     height: '60%',
                     maxHeight: 800,
                     overflow: 'hidden',
@@ -355,9 +356,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                           css={{
                             position: 'absolute',
                             top: 55,
-                            right: -650,
-                            width: 1100,
-                            height: 'auto',
+                            // right: -650,
+                            // width: 1100,
+                            // height: 'auto',
                             transformOrigin: 'top left',
                             border: [1, '#ddd'],
                             transform: {
@@ -375,7 +376,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       top: 0,
                       bottom: 0,
                       right: 0,
-                      width: '20%',
+                      width: '10%',
                       zIndex: 100,
                       background: `linear-gradient(to right, transparent, ${
                         theme.base.background
@@ -385,7 +386,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                   <fadeawayfadeawayfadeaway
                     css={{
                       position: 'absolute',
-                      bottom: -250,
+                      bottom: -300,
                       right: -250,
                       width: 900,
                       height: 450,

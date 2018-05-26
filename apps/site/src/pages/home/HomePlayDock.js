@@ -60,7 +60,7 @@ class DockPlayStore {
   })
 
   runAnimation = react(
-    () => this.props.animate,
+    () => this.props.animate && !this.props.hasAnimated,
     async (shouldAnimate, { sleep }) => {
       if (!shouldAnimate) throw react.cancel
       this.animateIcons(sleep)

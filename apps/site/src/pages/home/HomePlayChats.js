@@ -7,7 +7,7 @@ import { chats, messages } from './stageItems'
 
 class PlayChatsStore {
   runAnimation = react(
-    () => this.props.animate,
+    () => this.props.animate && !this.props.hasAnimated,
     async (shouldAnimate, { sleep }) => {
       if (!shouldAnimate) throw react.cancel
       this.animateChats(sleep)

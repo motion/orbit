@@ -14,8 +14,13 @@ class PlayMessagesStore {
   showOrbitals = false
 
   runAnimation = react(
-    () => this.props.animate,
-    async (shouldAnimate, { sleep }) => {
+    () => [this.props.animate, this.props.hasAnimated],
+    async ([shouldAnimate, hasAnimated], { sleep }) => {
+      if (hasAnimated) {
+        this.showFinalText()
+        this.showOrbitals = true
+        return
+      }
       if (!shouldAnimate) throw react.cancel
       this.animate(sleep)
     },
@@ -34,13 +39,17 @@ class PlayMessagesStore {
       config: config.slow,
     })
     await sleep(1500)
+    this.showFinalText()
+    await sleep(1000)
+    this.showOrbitals = true
+  }
+
+  showFinalText = () => {
     this.chatText2(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
       config: config.slow,
     })
-    await sleep(1000)
-    this.showOrbitals = true
   }
 }
 

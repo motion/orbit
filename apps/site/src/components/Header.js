@@ -18,8 +18,14 @@ export class Header extends React.Component {
           <>
             <header
               css={{
-                background: theme.base.background,
-                borderBottom: [1, [100, 100, 100, 0.1]],
+                // background: theme.base.background,
+                borderBottom: [
+                  1,
+                  theme.base.background
+                    .darken(0.2)
+                    .desaturate(0.3)
+                    .alpha(0.2),
+                ],
               }}
             >
               <SectionContent>

@@ -41,7 +41,7 @@ const firstSlant = {
 }
 const secondSlant = {
   slantSize: 10,
-  amount: 25,
+  amount: 20,
   slantBackground: [200, 200, 200, 0.15],
   css: { zIndex: 2 },
 }
@@ -134,13 +134,13 @@ class HomeHeader extends React.Component {
                       bottom: 0,
                       left: '50%',
                       right: '-100%',
-                      padding: [180, 0, 120, 55],
+                      padding: [180, 0, 320, 55],
                       background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, ${bottomRightBackground} 95%)`,
                       // border: [4, '#000'],
                       transformOrigin: 'top left',
                       transform: {
                         y: firstSlant.slantSize,
-                        x: firstSlant.slantSize,
+                        x: firstSlant.slantSize + 10,
                         rotate: '4.1deg',
                       },
                     }}
@@ -155,7 +155,7 @@ class HomeHeader extends React.Component {
                     >
                       <Title
                         italic
-                        size={isMedium ? 5.5 : 6}
+                        size={isMedium ? 5.5 : 6.5}
                         margin={[0, 0, 20, 0]}
                         alpha={1}
                       >

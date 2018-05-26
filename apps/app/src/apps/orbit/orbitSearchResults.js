@@ -34,27 +34,25 @@ export class OrbitSearchResults {
     const isChanging = App.state.query !== query
     log(`SEARCH ${name} --------------`)
     return (
-      <OrbitDockedPane
-        name="search"
-        extraCondition={searchStore.hasQuery}
-        $isChanging={isChanging}
-      >
-        <message if={message}>{message}</message>
-        <results if={results.length}>
-          {results.map((bit, index) => (
-            <OrbitCard
-              pane={name}
-              key={`${index}${bit.identifier || bit.id}`}
-              index={index}
-              total={results.length}
-              bit={bit}
-              listItem
-              expanded={false}
-              hoverToSelect
-            />
-          ))}
-        </results>
-        <space css={{ height: 20 }} />
+      <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
+        <contents $$flex $isChanging={isChanging}>
+          <message if={message}>{message}</message>
+          <results if={results.length}>
+            {results.map((bit, index) => (
+              <OrbitCard
+                pane={name}
+                key={`${index}${bit.identifier || bit.id}`}
+                index={index}
+                total={results.length}
+                bit={bit}
+                listItem
+                expanded={false}
+                hoverToSelect
+              />
+            ))}
+          </results>
+          <space css={{ height: 20 }} />
+        </contents>
       </OrbitDockedPane>
     )
   }

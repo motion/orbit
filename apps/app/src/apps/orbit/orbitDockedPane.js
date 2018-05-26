@@ -19,7 +19,8 @@ class DockedPaneStore {
   store: DockedPaneStore,
 })
 export class OrbitDockedPane {
-  render({ children, store, style }) {
+  render({ name, children, store, style }) {
+    console.log('pane', name, store.isActive)
     return (
       <pane $isActive={store.isActive} style={style}>
         {children}

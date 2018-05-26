@@ -91,7 +91,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 8,
+    borderRadius: 10,
   }
 
   constructor(...args) {
@@ -130,16 +130,7 @@ export class OrbitCard extends React.Component {
     permalink,
     date,
   }) {
-    const {
-      store,
-      tiny,
-      listItem,
-      style,
-      hoverToSelect,
-      bit,
-      borderRadius: borderRadius_,
-    } = this.props
-    const borderRadius = listItem && tiny ? 4 : listItem ? 0 : borderRadius_
+    const { store, tiny, listItem, style, hoverToSelect, bit } = this.props
     const isExpanded = this.isExpanded
     const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
@@ -152,84 +143,87 @@ export class OrbitCard extends React.Component {
       />
     )
     return (
-      <cardWrap
-        css={{
-          zIndex: isExpanded ? 5 : 4,
-        }}
-        ref={store.setRef}
-        onClick={store.handleClick}
-        {...hoverToSelect && this.hoverSettler.props}
-        style={style}
+      <UI.Theme
+        theme={store.isSelected ? { color: 'blue', background: '#fff' } : null}
       >
-        <card
+        <cardWrap
           css={{
-            padding: listItem ? 15 : tiny ? [6, 8] : [12, 14],
-            borderRadius,
+            zIndex: isExpanded ? 5 : 4,
           }}
+          ref={store.setRef}
+          onClick={store.handleClick}
+          {...hoverToSelect && this.hoverSettler.props}
+          style={style}
         >
-          <title>
-            <UI.Text
-              size={1.2}
-              lineHeight="1.4rem"
-              ellipse={2}
-              fontWeight={400}
-              css={{
-                maxWidth: 'calc(100% - 30px)',
-                marginBottom: 1,
-              }}
-              {...tiny && tinyProps.titleProps}
-            >
-              {title}
-            </UI.Text>
-            {!hasSubtitle && orbitIcon}
-          </title>
-          <subtitle if={hasSubtitle}>
-            {orbitIcon}
-            <UI.Text if={typeof location === 'string'} opacity={0.7}>
-              {location}&nbsp;&nbsp;
-            </UI.Text>
-            {typeof location !== 'string' && location}
-            <UI.Text
-              if={typeof subtitle === 'string'}
-              color="#333"
-              ellipse={1}
-              css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
-            >
-              {subtitle}
-            </UI.Text>
-            {typeof subtitle !== 'string' && subtitle}
-            <space if={date} $$flex />
-            <date
-              if={date}
-              css={{ fontWeight: 500, width: 30, textAlign: 'right' }}
-            >
-              <UI.Text opacity={0.5}>2m</UI.Text>
-            </date>
-          </subtitle>
-          <preview if={preview}>
-            {typeof preview !== 'string' && preview}
-            <UI.Text
-              if={typeof preview === 'string'}
-              alpha={0.7}
-              ellipse={5}
-              size={listItem ? 1.1 : 1.4}
-            >
-              {preview}
-            </UI.Text>
-          </preview>
-          <bottom if={false && !tiny && (bottom || permalink || via)}>
-            <permalink if={isExpanded}>{permalink}</permalink>
-            <space if={permalink} />
-            {bottom}
-            <UI.Date>{bit.bitUpdatedAt}</UI.Date>
-            <Text if={via} opacity={0.5} size={0.9}>
-              {via}
-            </Text>
-            <div $$flex />
-            {bottomAfter}
-          </bottom>
-        </card>
-      </cardWrap>
+          <card
+            css={{
+              padding: listItem ? 15 : tiny ? [6, 8] : [12, 14],
+            }}
+          >
+            <title>
+              <UI.Text
+                size={1.2}
+                lineHeight="1.4rem"
+                ellipse={2}
+                fontWeight={400}
+                css={{
+                  maxWidth: 'calc(100% - 30px)',
+                  marginBottom: 1,
+                }}
+                {...tiny && tinyProps.titleProps}
+              >
+                {title}
+              </UI.Text>
+              {!hasSubtitle && orbitIcon}
+            </title>
+            <subtitle if={hasSubtitle}>
+              {orbitIcon}
+              <UI.Text if={typeof location === 'string'} opacity={0.7}>
+                {location}&nbsp;&nbsp;
+              </UI.Text>
+              {typeof location !== 'string' && location}
+              <UI.Text
+                if={typeof subtitle === 'string'}
+                color="#333"
+                ellipse={1}
+                css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
+              >
+                {subtitle}
+              </UI.Text>
+              {typeof subtitle !== 'string' && subtitle}
+              <space if={date} $$flex />
+              <date
+                if={date}
+                css={{ fontWeight: 500, width: 30, textAlign: 'right' }}
+              >
+                <UI.Text opacity={0.5}>2m</UI.Text>
+              </date>
+            </subtitle>
+            <preview if={preview}>
+              {typeof preview !== 'string' && preview}
+              <UI.Text
+                if={typeof preview === 'string'}
+                alpha={0.7}
+                ellipse={5}
+                size={listItem ? 1.1 : 1.4}
+              >
+                {preview}
+              </UI.Text>
+            </preview>
+            <bottom if={false && !tiny && (bottom || permalink || via)}>
+              <permalink if={isExpanded}>{permalink}</permalink>
+              <space if={permalink} />
+              {bottom}
+              <UI.Date>{bit.bitUpdatedAt}</UI.Date>
+              <Text if={via} opacity={0.5} size={0.9}>
+                {via}
+              </Text>
+              <div $$flex />
+              {bottomAfter}
+            </bottom>
+          </card>
+        </cardWrap>
+      </UI.Theme>
     )
   }
 
@@ -308,12 +302,15 @@ export class OrbitCard extends React.Component {
     },
   }
 
-  static theme = ({ store, tiny, listItem }, theme) => {
-    log('run theme')
-    if (store.isSelected) {
-      log('card theme')
-    }
+  static theme = ({ store, tiny, listItem, borderRadius }, theme) => {
     const { isSelected } = store
+    const radius = isSelected
+      ? borderRadius * 1.333
+      : listItem && tiny
+        ? 4
+        : listItem
+          ? 0
+          : borderRadius
     let hoveredStyle
     let card
     if (listItem || tiny) {
@@ -337,25 +334,25 @@ export class OrbitCard extends React.Component {
           ? theme.selected.background
           : theme.hover.background,
       }
-      card = isSelected
-        ? {
-            background: '#fff',
-            boxShadow: [
-              ['inset', 0, 0, 0, 0.5, theme.active.background.darken(0.2)],
-            ],
-          }
-        : {
-            background: 'transparent',
-            '&:hover': hoveredStyle,
-          }
-    }
-    if (isSelected) {
-      console.log('card theme', card)
+      card = {
+        background: 'transparent',
+        '&:hover': hoveredStyle,
+      }
+      if (isSelected) {
+        card = {
+          background: '#fff',
+          boxShadow: [[0, 6, 35, [0, 0, 0, 0.08]]],
+        }
+      }
     }
     return {
       card: {
+        borderRadius: radius,
         ...card,
-        border: [listItem ? 0 : 1, theme.active.background],
+        border: [
+          listItem ? 0 : 1,
+          isSelected ? 'transparent' : theme.active.background,
+        ],
       },
       bottom: {
         opacity: isSelected ? 1 : 0.5,

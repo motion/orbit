@@ -36,7 +36,8 @@ export class OrbitDockedPane {
       left: 0,
       transition: 'opacity ease-in-out 150ms',
       overflowY: 'scroll',
-      padding: [0, 8],
+      padding: [40, 8],
+      margin: [-40, 0],
       pointerEvents: 'none',
       opacity: 0,
       transform: {
@@ -52,11 +53,11 @@ export class OrbitDockedPane {
     },
   }
 
-  static theme = (props, theme) => {
-    return {
-      pane: {
-        background: theme.base.background,
-      },
-    }
-  }
+  // static theme = (props, theme) => {
+  //   return {
+  //     pane: {
+  //       background: theme.base.background,
+  //     },
+  //   }
+  // }
 }

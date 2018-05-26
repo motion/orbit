@@ -97,7 +97,7 @@ const parseQuery = query => {
 
 export class AppStore {
   nextIndex = -1
-  activeIndex = -1
+  activeIndex = 0
   showSettings = false
   settings = {}
   services = {}

@@ -132,7 +132,7 @@ class OrbitDocked {
     },
     container: {
       borderRadius: borderRadius + 1,
-      overflow: 'hidden',
+      // overflow: 'hidden',
       flex: 1,
     },
     border: {

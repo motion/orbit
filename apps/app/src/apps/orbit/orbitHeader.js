@@ -117,6 +117,7 @@ export class OrbitHeader extends React.Component {
       justifyContent: 'center',
       padding: 2,
       transition: 'all ease-in 300ms',
+      zIndex: 10000000,
     },
     after: {
       position: 'absolute',
@@ -126,11 +127,11 @@ export class OrbitHeader extends React.Component {
       alignItems: 'center',
       flexFlow: 'row',
     },
-    headerBg: background => ({
-      background: `linear-gradient(${background
-        .darken(0.03)
-        .desaturate(0.5)}, transparent)`,
-    }),
+    // headerBg: background => ({
+    //   background: `linear-gradient(${background
+    //     .darken(0.03)
+    //     .desaturate(0.5)}, transparent)`,
+    // }),
     inputLn: {
       width: 10,
       height: 2,

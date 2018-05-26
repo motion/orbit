@@ -426,14 +426,14 @@ export const HomePage = () => (
         />
         <HomeHeader isMedium={isMedium} />
         <HomeFooter isMedium={isMedium} />
-        <topoBg
+        {/* <topoBg
           $$fullscreen
           css={{
             zIndex: 0,
             opacity: 0.06,
             background: `url(${topo})`,
           }}
-        />
+        /> */}
       </>
     )}
   </Media>

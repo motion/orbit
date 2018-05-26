@@ -12,7 +12,7 @@ const debounceLog = (...args) => {
   loggers.push([...args])
   if (!nextLog) {
     nextLog = setTimeout(() => {
-      console.log('debounceLog', loggers.length, loggers.join(', '))
+      log('debounceLog', loggers.length, loggers.join(', '))
       loggers = []
       nextLog = null
     })
@@ -63,6 +63,7 @@ class OrbitCardStore {
         throw react.cancel
       }
       const isSelected = !target ? false : index === this.props.index
+      console.log(this.props.bit.id, isSelected)
       if (isSelected !== this._isSelected) {
         this._isSelected = isSelected
       }
@@ -233,7 +234,11 @@ export class OrbitCard extends React.Component {
   }
 
   render({ pane, appStore, bit, store, itemProps }) {
-    debounceLog(`${bit.id}.${pane}${this.props.id}`)
+    debounceLog(
+      `${bit.id}.${pane}${this.props.id} ${store.isSelected} ${
+        store._isSelected
+      }`,
+    )
     const BitContent = bitContents(bit)
     store.isSelected
     if (typeof BitContent !== 'function') {
@@ -304,6 +309,10 @@ export class OrbitCard extends React.Component {
   }
 
   static theme = ({ store, tiny, listItem }, theme) => {
+    log('run theme')
+    if (store.isSelected) {
+      log('card theme')
+    }
     const { isSelected } = store
     let hoveredStyle
     let card

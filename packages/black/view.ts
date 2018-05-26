@@ -36,9 +36,8 @@ const decorations = (
   reactable,
   enable.ui && uiContext,
   renderArgumentable,
-  enable.mobx && reactObservable,
-  // gloss after mobx
   enable.ui && glossPlugin,
+  enable.mobx && reactObservable,
   enable.magic && automagical,
   [storeProvidable, storeOptions],
   !enable.ui && emitsMount,

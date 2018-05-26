@@ -84,7 +84,6 @@ export class AppReactions {
   handleHoldingOption = react(
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
-      console.log('hilding', isHoldingOption)
       if (App.orbitState.pinned || App.orbitState.docked) {
         throw react.cancel
       }
@@ -183,7 +182,7 @@ export class AppReactions {
       if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
         throw react.cancel
       }
-      console.log(`hiding orbit from mouseout`)
+      console.log('hiding orbit from mouseout')
       App.setOrbitState({ hidden: true })
     },
     {

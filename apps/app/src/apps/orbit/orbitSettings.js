@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import { partition } from 'lodash'
 import { OrbitSettingCard } from './orbitSettingCard'
+import { OrbitDockedPane } from './orbitDockedPane'
 import * as UI from '@mcro/ui'
 
 const Title = props => (
@@ -91,14 +92,7 @@ export class OrbitSettings {
       />
     )
     return (
-      <pane
-        css={{
-          background: theme.base.background,
-          opacity: appStore.showSettings ? 1 : 0,
-          zIndex: appStore.showSettings ? 1000000 : -1,
-          pointerEvents: appStore.showSettings ? 'auto' : 'none',
-        }}
-      >
+      <OrbitDockedPane name="settings">
         <section if={activeIntegrations.length}>
           <Title>Active</Title>
           <cards>
@@ -119,7 +113,7 @@ export class OrbitSettings {
             )}
           </cards>
         </section>
-      </pane>
+      </OrbitDockedPane>
     )
   }
 

@@ -346,7 +346,7 @@ export class OrbitCard extends React.Component {
     return {
       card: {
         ...card,
-        border: [listItem ? 1 : 1, theme.active.background],
+        border: [listItem ? 0 : 1, theme.active.background],
       },
       bottom: {
         opacity: isSelected ? 1 : 0.5,

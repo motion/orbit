@@ -39,7 +39,7 @@ class PaneStore {
 
   get activePane() {
     if (!App.orbitState.docked) {
-      return null
+      return this.panes[this.paneIndex]
     }
     if (App.state.query) {
       return 'search'
@@ -97,16 +97,16 @@ class OrbitDocked {
           />
           <orbitInner>
             <OrbitHome name="home" appStore={appStore} paneStore={paneStore} />
-            {/* <OrbitDirectory
-            name="directory"
-            appStore={appStore}
-            paneStore={paneStore}
-          />
-          <OrbitSearchResults
-            name="summary-search"
-            parentPane="summary"
-            paneStore={paneStore}
-          /> */}
+            <OrbitDirectory
+              name="directory"
+              appStore={appStore}
+              paneStore={paneStore}
+            />
+            <OrbitSearchResults
+              name="summary-search"
+              parentPane="summary"
+              paneStore={paneStore}
+            />
             <OrbitSettings />
           </orbitInner>
         </container>

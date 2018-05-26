@@ -34,20 +34,20 @@ const borderColor = '#fff' || Constants.colorMain.darken(0.15)
 // }
 const bottomRightBackground = '#fff'
 const firstSlant = {
-  slantSize: 8,
+  slantSize: 3,
   amount: 40,
   slantBackground: borderColor,
   css: { zIndex: 2 },
 }
 const secondSlant = {
-  slantSize: 5,
+  slantSize: 2,
   amount: 10,
   slantBackground: [200, 200, 200, 0.15],
   css: { zIndex: 2 },
 }
 const thirdSlant = {
   slantBackground: [150, 150, 150, 0.2],
-  slantSize: 4,
+  slantSize: 1,
   amount: 18,
 }
 
@@ -126,7 +126,7 @@ class HomeHeader extends React.Component {
               <Slant {...firstSlant} />
               <Slant inverseSlant {...secondSlant} />
               <Slant {...thirdSlant} />
-              <SectionContent padded fullscreen>
+              <SectionContent padded fullscreen smallerFs>
                 <UI.Theme name="light">
                   <inner
                     css={{
@@ -160,7 +160,6 @@ class HomeHeader extends React.Component {
                         margin={[0, 0, 20, 0]}
                         alpha={1}
                       >
-                        Your<br />
                         Smart<br />
                         Desktop
                       </Title>
@@ -170,8 +169,7 @@ class HomeHeader extends React.Component {
                         fontWeight={300}
                         alpha={0.9}
                       >
-                        Upgrade Mac with intelligence.<br />
-                        Your desktop meets your cloud.
+                        A more intelligent way to stay in sync.
                       </P>
                       <actions
                         $$row
@@ -336,7 +334,7 @@ class HomeFooter extends React.Component {
                   background: bottomRightBackground,
                 }}
               />
-              <SectionContent padded fullscreen>
+              <SectionContent padded fullscreen smallerFs>
                 <Slant
                   inverseSlant
                   {...firstSlant}
@@ -346,53 +344,34 @@ class HomeFooter extends React.Component {
                 <Slant inverseSlant {...thirdSlant} />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
-                  <below css={{ margin: [15, '15%', 0, 0] }}>
-                    <UI.PassProps
-                      size={1.3}
-                      sizeLineHeight={1.2}
-                      alpha={0.85}
-                      style={{
-                        background: '#fff',
-                        padding: 5,
-                        margin: -5,
-                        marginBottom: 15,
-                      }}
-                    >
+                  <below css={{ margin: [15, 0, 0, 0] }}>
+                    <UI.PassProps size={1.3} sizeLineHeight={1.2} alpha={0.85}>
                       <P2 size={2.8} alpha={1} fontWeight={400}>
                         Home, for you
                       </P2>
                       <P2>
                         You and your team have a lot of knowledge. It lives in
-                        silos spread around your cloud. Orbit unifies it on your
-                        desktop and gives it a brain.
+                        silos spread around your cloud.
                       </P2>
                       <P2>
-                        With a smart interface and new technology that enables
-                        it to understand what you're looking at and what care
-                        about, Orbit aims to update desktop computing for today.
+                        Orbit aims to solve a variety of synchronization
+                        problems that are common in small and large teams. With
+                        a smart interface and contextual feature, Orbit helps
+                        teams share knowledge.
                       </P2>
                       <P2>
-                        Because it runs with your intimate data, Orbit is{' '}
+                        It's also{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
                           completely private and on-device
-                        </span>. It's a new way to operate, so it has to work
-                        for you.
+                        </span>, so your data always stays with you. It's a new
+                        way to operate, user focused and in the loop.
                       </P2>
                     </UI.PassProps>
                   </below>
                 </LeftSide>
                 <RightSide noEdge $$centered>
                   <UI.Theme name="light">
-                    <Join
-                      css={{
-                        transform: {
-                          scale: 1.36,
-                          rotate: '1.7deg',
-                          y: -40,
-                          x: 30,
-                        },
-                      }}
-                    />
+                    <Join />
                   </UI.Theme>
                 </RightSide>
               </SectionContent>

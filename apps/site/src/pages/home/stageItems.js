@@ -6,27 +6,27 @@ import * as UI from '@mcro/ui'
 export const dockIcons = [
   {
     name: 'Dropbox',
-    size: 0.13,
+    size: 0.11,
     countProps: { start: 0, end: 22, duration: 15 },
   },
   {
     name: 'Drive',
-    size: 0.16,
+    size: 0.13,
     countProps: { start: 0, end: 36, duration: 15 },
   },
   {
     name: 'Slack',
-    size: 0.18,
+    size: 0.16,
     countProps: { start: 0, end: 122, duration: 15 },
   },
   {
     name: 'Mail',
-    size: 0.16,
+    size: 0.13,
     countProps: { start: 0, end: 195, duration: 15 },
   },
   {
     name: 'Github',
-    size: 0.13,
+    size: 0.11,
     countProps: { start: 0, end: 27, duration: 15 },
   },
 ]

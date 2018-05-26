@@ -19,7 +19,14 @@ class SectionContent extends React.Component {
     )
   }
 
-  render({ padded, halfscreen, fullscreen, fullscreenFixed, ...props }) {
+  render({
+    padded,
+    halfscreen,
+    fullscreen,
+    fullscreenFs,
+    fullscreenFixed,
+    ...props
+  }) {
     const isSmall = window.innerWidth <= Constants.screen.small.maxWidth
     let height = 'auto'
     if (fullscreenFixed) {
@@ -27,7 +34,7 @@ class SectionContent extends React.Component {
     }
     if (halfscreen || fullscreen) {
       height = Math.max(
-        isSmall ? 500 : 1000,
+        isSmall || fullscreenFs ? 500 : 1000,
         Math.min(Constants.sectionMaxHeight, window.innerHeight),
       )
     }

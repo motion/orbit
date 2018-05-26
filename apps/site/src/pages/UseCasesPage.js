@@ -107,10 +107,9 @@ class SectionUseCaseRemoteTeams extends React.Component {
                   css={{
                     textAlign: 'left',
                     display: 'block',
-                    margin: isLarge ? [-40, 0, 0, '15%'] : 0,
+                    margin: isLarge ? [-40, 0, 0, '10%'] : 0,
                   }}
                 >
-                  <SubSubTitle>Connecting people</SubSubTitle>
                   <P alpha={0.6} size={2} margin={[0, 0, 10]}>
                     Beautiful unified profiles
                   </P>
@@ -140,19 +139,18 @@ class SectionUseCaseRemoteTeams extends React.Component {
                 </Callout>
               </LeftSide>
               <RightSide inverse css={{ bottom: 0 }}>
-                <div $$flex css={{ marginTop: isLarge ? '22%' : 0 }} />
-                <SubSubTitle>A company home</SubSubTitle>
+                <div $$flex css={{ marginTop: isLarge ? '21%' : 0 }} />
                 <P2 if={false} size={1.8} css={{ margin: [5, 0, 10, 0] }}>
                   The smart way to sync
                 </P2>
                 <P
                   alpha={0.6}
                   size={2}
-                  css={{ margin: [0, isLarge ? '20%' : 0, 10, 0] }}
+                  css={{ margin: [0, isLarge ? '12%' : 0, 10, 0] }}
                 >
                   News is your team home
                 </P>
-                <P size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
+                <P size={1.6} css={{ marginRight: isLarge ? '15%' : 0 }}>
                   It starts by learning company vocabulary. Then it learns what
                   you care about. The intersection of what you care about and
                   haven't seen, relative to your custom company's unique vocab
@@ -229,10 +227,9 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                   css={{
                     textAlign: 'left',
                     display: 'block',
-                    margin: isLarge ? [0, 0, 0, '15%'] : 0,
+                    margin: isLarge ? [0, 0, 0, '12%'] : 0,
                   }}
                 >
-                  <SubSubTitle>Better support responses</SubSubTitle>
                   <P
                     if={isLarge}
                     alpha={0.6}
@@ -262,18 +259,18 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 </Callout>
               </LeftSide>
               <RightSide css={{ top: 0 }}>
+                <div if={isLarge} $$flex css={{ marginTop: '5%' }} />
                 <SubTitle size={5} italic>
                   Customer<br />Success
                 </SubTitle>
-                <div if={isLarge} $$flex css={{ marginTop: '15%' }} />
-                <SubSubTitle>Less onboarding for sales</SubSubTitle>
+                <div if={isLarge} $$flex css={{ marginTop: '10%' }} />
                 <P
                   if={isLarge}
                   alpha={0.6}
                   size={2}
                   css={{ margin: [0, '15%', 10, 0] }}
                 >
-                  Knowledge at hand
+                  Reduce onboarding time
                 </P>
                 <P2 size={1.6} css={isLarge && { marginRight: '15%' }}>
                   Sales chat requires intimate knowledge of your product. Orbit
@@ -283,7 +280,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 </P2>
                 <Callout
                   if={isLarge}
-                  css={{ margin: [35, '15%', 40, 0], left: -30 }}
+                  css={{ margin: [45, '10%', 40, 0], left: -30 }}
                 >
                   <P2 size={2} margin={0}>
                     Organizational knowledge is now always at hand and usable
@@ -300,8 +297,8 @@ class SectionUseCaseCustomerSuccess extends React.Component {
 
   static style = {
     chat: {
-      opacity: 0.4,
-      filter: 'hue-rotate(40deg)',
+      opacity: 0.1,
+      filter: 'hue-rotate(40deg) grayscale(100%)',
       transform: { scale: 3 },
       position: 'absolute',
       zIndex: 0,
@@ -355,10 +352,9 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                   css={{
                     textAlign: 'left',
                     display: 'block',
-                    margin: isLarge ? [-70, 0, 0, '15%'] : 0,
+                    margin: isLarge ? [-70, 0, 0, '12%'] : 0,
                   }}
                 >
-                  <SubSubTitle>Prevent shoulder taps</SubSubTitle>
                   <P
                     if={isLarge}
                     alpha={0.6}
@@ -392,7 +388,6 @@ class SectionUseCaseReduceInterrupts extends React.Component {
               </LeftSide>
               <RightSide inverse css={{ bottom: 0 }}>
                 <div $$flex css={{ marginTop: isLarge ? '20%' : 0 }} />
-                <SubSubTitle>Notification noise</SubSubTitle>
                 <P
                   if={isLarge}
                   alpha={0.6}

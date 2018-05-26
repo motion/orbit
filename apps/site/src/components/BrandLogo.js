@@ -7,7 +7,7 @@ export class BrandLogo extends React.Component {
   render({ white }) {
     return (
       <brandMark {...this.props}>
-        <Logo size={0.25} white={white} />
+        <Logo size={0.2} white={white} />
       </brandMark>
     )
   }

@@ -39,6 +39,10 @@ const blueTheme = {
   subTitleColor: '#111',
 }
 
+const FeatureTitle = props => (
+  <Title italic size={2.8} css={{ marginBottom: 20 }} {...props} />
+)
+
 const FeatureSubTitle = props => (
   <Media query={Constants.screen.large}>
     {isLarge => (
@@ -104,7 +108,7 @@ const SearchIllustration = () => (
           zIndex: 1,
           pointerEvents: 'none',
           transform: {
-            y: searchYOff - 200,
+            y: searchYOff - 190,
           },
         }}
       >
@@ -135,7 +139,7 @@ const SearchCallout = ({ isLarge }) => (
       isLarge && {
         width: '80%',
         position: 'absolute',
-        top: searchYOff - 35,
+        top: searchYOff - 75,
         left: '12%',
       }
     }
@@ -218,12 +222,12 @@ export class SectionFeatureNewsSearch extends React.Component {
               />
               <Glow if={false} style={{ transform: { y: '130%', x: '60%' } }} />
               <Slant
-                slantSize={8}
+                slantSize={4}
                 inverseSlant
                 slantGradient={['#f2f2f2', Constants.featuresSlantColor]}
               />
               <Slant
-                slantSize={6}
+                slantSize={3}
                 css={{ zIndex: 1 }}
                 amount={30}
                 slantGradient={[
@@ -240,22 +244,13 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }}
                   >
                     <topSpace css={{ height: 40 }} />
-                    <SubTitle size={5} italic>
-                      Home
-                    </SubTitle>
-                    <FeatureSubTitle
-                      css={{
-                        marginTop: 12,
-                      }}
-                    >
-                      Command the cloud with <Cmd>⌘+Space</Cmd>
-                    </FeatureSubTitle>
+                    <FeatureTitle>Home</FeatureTitle>
                     <Callout
                       css={{
                         textAlign: 'left',
                         ...(isLarge
                           ? {
-                              width: '85%',
+                              width: '95%',
                               position: 'absolute',
                               right: '6%',
                             }
@@ -263,11 +258,11 @@ export class SectionFeatureNewsSearch extends React.Component {
                       }}
                     >
                       <P size={1.6}>
-                        Home. It's a heads up display for all your incoming.
-                        Sorted by what you've been interested in recently.
+                        A heads up display for all your incoming. Sorted by what
+                        you've been interested in recently.
                         <br />
                         <br />
-                        Using novel on-device ML, Orbit adjusts to what you care
+                        With novel on-device ML, Orbit adjusts to what you care
                         about and the custom terminology your team uses.
                       </P>
                       <DottedButton
@@ -411,14 +406,11 @@ export class SectionFeatureNewsSearch extends React.Component {
                       display: 'block',
                       position: 'relative',
                       zIndex: 1000,
-                      marginTop: -175 + searchYOff,
+                      marginTop: -145 + searchYOff,
                     }
                   }
                 >
-                  <SubTitle size={5} italic>
-                    Search
-                  </SubTitle>
-                  <FeatureSubTitle>Spotlight, meet your brain</FeatureSubTitle>
+                  <FeatureTitle>Search</FeatureTitle>
                 </content>
                 <Media
                   query={Constants.screen.small}
@@ -453,7 +445,7 @@ export class SectionFeatureIntelligence extends React.Component {
             <SectionContent id="context" fullscreen={isLarge} padded>
               <Glow if={false} style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
-                slantSize={8}
+                slantSize={4}
                 css={{ zIndex: 2 }}
                 slantGradient={[
                   Constants.featuresSlantColor,
@@ -461,7 +453,7 @@ export class SectionFeatureIntelligence extends React.Component {
                 ]}
               />
               <Slant
-                slantSize={6}
+                slantSize={3}
                 inverseSlant
                 css={{ zIndex: 1 }}
                 amount={30}
@@ -470,7 +462,7 @@ export class SectionFeatureIntelligence extends React.Component {
                   blueTheme.background.darken(0.1),
                 ]}
               />
-              <LeftSide inverse innerStyle={{ paddingTop: '45%' }}>
+              <LeftSide inverse innerStyle={{ paddingTop: '48%' }}>
                 <div
                   css={
                     isLarge && {
@@ -479,18 +471,13 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={5} italic>
-                    Context
-                  </SubTitle>
-                  <FeatureSubTitle>
-                    Always on contextual search that works
-                  </FeatureSubTitle>
+                  <FeatureTitle>Context</FeatureTitle>
                   <Callout
                     css={{
                       textAlign: 'left',
                       ...(isLarge
                         ? {
-                            width: '86%',
+                            width: '95%',
                             position: 'absolute',
                             right: '8%',
                           }
@@ -498,14 +485,12 @@ export class SectionFeatureIntelligence extends React.Component {
                     }}
                   >
                     <P2 size={1.6}>
-                      Attach realtime contextual search to any app, whether its
-                      as your talk in Slack or browse in your favorite browser.
+                      Realtime contextual search for every app.
                     </P2>
                     <P2 size={1.6}>
-                      And all you have to do is hold <Cmd>Option</Cmd> or tap{' '}
+                      Simply hold <Cmd>Option</Cmd> or press{' '}
                       <Cmd>Option+Space</Cmd>. Important terms, people, and
-                      items in your cloud are shown with highlighted summarized
-                      answers, instantly.
+                      conversations are highlighted and summarized, instantly.
                     </P2>
                     <DottedButton
                       css={{

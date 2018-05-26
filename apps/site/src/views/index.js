@@ -329,7 +329,7 @@ export class Callout extends React.Component {
   static style = {
     largeCallout: {
       // border: [1, [0, 0, 0, 0.02]],
-      boxShadow: [[0, 3, 10, [0, 0, 0, 0.065]]],
+      boxShadow: [[0, 5, 20, [0, 0, 0, 0.065]]],
       background: [255, 255, 255, 0.1],
       zIndex: 10,
       overflow: 'hidden',

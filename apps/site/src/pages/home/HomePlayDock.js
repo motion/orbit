@@ -7,7 +7,7 @@ import { dockIcons } from './stageItems'
 
 const distanceFromBottom = '20%'
 const transform = {
-  scale: 0.9,
+  // scale: 0.9,
 }
 
 const Badge = view('div', {

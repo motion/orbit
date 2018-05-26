@@ -8,7 +8,7 @@ import Orbital from '~/views/orbital'
 import * as Icons from '~/views/icons'
 import { dockIcons } from './stageItems'
 
-const size = 640
+const size = 500
 
 class PlayMessagesStore {
   showOrbitals = false

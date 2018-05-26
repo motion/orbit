@@ -1,9 +1,9 @@
 @keyframes orbit {
   from {
-    transform: rotate(-0deg) translateY(320px) rotate(-0deg);
+    transform: rotate(-0deg) translateY(250px) rotate(-0deg);
   }
   to {
-    transform: rotate(360deg) translateY(320px) rotate(-360deg);
+    transform: rotate(360deg) translateY(250px) rotate(-360deg);
   }
 }
 

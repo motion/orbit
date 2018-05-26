@@ -5,24 +5,16 @@ import { Section, SmallTitle, P2, RightSide, Callout, Link } from '~/views'
 import { BrandLogo, Join } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
-import stars from '~/public/stars.svg'
 import * as UI from '@mcro/ui'
 
 @view
 export class Footer extends React.Component {
   render() {
     return (
-      <UI.Theme name="dark">
+      <UI.Theme name="light">
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section>
-              <stars
-                $$fullscreen
-                css={{
-                  opacity: 0.5,
-                  background: `url(${stars}) top center`,
-                }}
-              />
+            <Section css={{ borderTop: [1, '#f2f2f2'] }}>
               <SectionContent padded>
                 <left
                   $$row
@@ -51,18 +43,18 @@ export class Footer extends React.Component {
                     css={isLarge && { flex: 1, flexFlow: 'row', padding: 40 }}
                   >
                     <nav>
-                      <Link css={{ color: '#fff' }} $link to="/features">
+                      <Link $link to="/features">
                         {isLarge ? 'Features' : 'What'}
                       </Link>
-                      <Link css={{ color: '#fff' }} $link to="/use-cases">
+                      <Link $link to="/use-cases">
                         {isLarge ? 'Use Cases' : 'Why'}
                       </Link>
-                      <Link css={{ color: '#fff' }} $link to="/about">
+                      <Link $link to="/about">
                         {isLarge ? 'About Us' : 'Who'}
                       </Link>
                     </nav>
                     <div $$flex />
-                    <BrandLogo white />
+                    <BrandLogo />
                   </div>
                 </RightSide>
               </SectionContent>

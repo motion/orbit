@@ -16,19 +16,12 @@ export class Header extends React.Component {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <>
-            <headerBorder
-              if={!Router.isActive('/')}
+            <header
               css={{
-                position: 'absolute',
-                top: 82,
-                height: 1,
-                background: [100, 100, 100, 0.1],
-                left: 0,
-                right: 0,
-                zIndex: 3,
+                background: theme.base.background,
+                borderBottom: [1, [100, 100, 100, 0.1]],
               }}
-            />
-            <header>
+            >
               <SectionContent>
                 <headerInner>
                   <BrandLogo

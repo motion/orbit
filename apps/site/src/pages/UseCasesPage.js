@@ -38,12 +38,12 @@ class UseCasesIntro extends React.Component {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent padded fullscreen css={{ marginTop: '-32%' }}>
+            <SectionContent padded fullscreen css={{ marginTop: -850 }}>
               <Slant
                 slantBackground={Constants.altBg.darken(0.05)}
                 css={{ zIndex: 2 }}
               />
-              <HalfSection css={{ position: 'absolute', bottom: 100 }}>
+              {/* <HalfSection css={{ position: 'absolute', bottom: 100 }}>
                 <Title italic size={2.5} margin={[0, '10%', 10, 0]}>
                   Use cases
                 </Title>
@@ -61,7 +61,7 @@ class UseCasesIntro extends React.Component {
                   <a onClick={scrollTo('#reduce-interrupts')}>Focus</a>
                 </P>
               </HalfSection>
-              <HalfSection />
+              <HalfSection /> */}
             </SectionContent>
           </Section>
         )}

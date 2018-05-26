@@ -1,14 +1,9 @@
 ## website
 
-* animation:
-  * fix chat messages
-  * better icon bounce and num timings
-  * dont make it dissapear at the end have text come in over it
-  * better chat text
+* once animated dont do again on return
 * Mobile fixes
   * add back in a couple images
-* Footer links / info
-* Privacy Policy
+* Footer fixes
 * Blog - two posts
   * Turn down the noise and focus
   * Realtime context as you work (accompany with screencast later)

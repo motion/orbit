@@ -32,7 +32,7 @@ const borderColor = '#fff' || Constants.colorMain.darken(0.15)
 //   subTitleColor: '#eee',
 //   titleColor: blackBg.darken(0.75).desaturate(0.3),
 // }
-const bottomRightBackground = '#121212'
+const bottomRightBackground = '#fff'
 const firstSlant = {
   slantSize: 8,
   amount: 40,
@@ -101,7 +101,7 @@ class HomeHeader extends React.Component {
                   zIndex: 1000,
                 }}
               />
-              <paintingOverflow css={{ overflow: 'hidden' }} $$fullscreen>
+              {/* <paintingOverflow css={{ overflow: 'hidden' }} $$fullscreen>
                 <paintingWrap $$fullscreen>
                   <Keyframes native script={ref => (store.stars = ref)}>
                     {({ y }) => (
@@ -122,12 +122,12 @@ class HomeHeader extends React.Component {
                     )}
                   </Keyframes>
                 </paintingWrap>
-              </paintingOverflow>
+              </paintingOverflow> */}
               <Slant {...firstSlant} />
               <Slant inverseSlant {...secondSlant} />
               <Slant {...thirdSlant} />
               <SectionContent padded fullscreen>
-                <UI.Theme name="dark">
+                <UI.Theme name="light">
                   <inner
                     css={{
                       position: 'absolute',
@@ -135,7 +135,7 @@ class HomeHeader extends React.Component {
                       left: '50%',
                       right: '-100%',
                       padding: [180, 0, 320, 55],
-                      background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, ${bottomRightBackground} 95%)`,
+                      // background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, ${bottomRightBackground} 95%)`,
                       // border: [4, '#000'],
                       transformOrigin: 'top left',
                       transform: {
@@ -148,6 +148,7 @@ class HomeHeader extends React.Component {
                     <innerInner
                       css={{
                         width: 460,
+                        marginLeft: 20,
                         transform: {
                           rotate: '-4.1deg',
                         },
@@ -181,12 +182,11 @@ class HomeHeader extends React.Component {
                       >
                         <UI.Button
                           background="transparent"
-                          borderColor="#444"
-                          color="#fff"
+                          borderColor="#ccc"
                           size={1.1}
                           onClick={scrollTo('#join')}
                           $smallInstallBtn={!isLarge}
-                          fontWeight={700}
+                          alpha={0.5}
                           css={{
                             margin: [0, 10, 0, -10],
                             cursor: 'pointer',
@@ -359,34 +359,30 @@ class HomeFooter extends React.Component {
                       }}
                     >
                       <P2 size={2.8} alpha={1} fontWeight={400}>
-                        A home for your day
+                        Home, for you
                       </P2>
                       <P2>
-                        You and your team have a lot of knowledge. Much of it
-                        lives in silos spread around the cloud. Orbit unifies
-                        that knowledge on your desktop and gives it a brain.
+                        You and your team have a lot of knowledge. It lives in
+                        silos spread around your cloud. Orbit unifies it on your
+                        desktop and gives it a brain.
                       </P2>
                       <P2>
                         With a smart interface and new technology that enables
-                        it to understand what you're looking at and care about,
-                        Orbit aims to reinvent desktop computing.
+                        it to understand what you're looking at and what care
+                        about, Orbit aims to update desktop computing for today.
                       </P2>
                       <P2>
-                        That's why Orbit is{' '}
+                        Because it runs with your intimate data, Orbit is{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
                           completely private and on-device
                         </span>. It's a new way to operate, so it has to work
                         for you.
                       </P2>
-                      <space css={{ height: 25 }} />
-                      <P2 color={Constants.colorMain} fontWeight={500}>
-                        Sign up for early access to learn more as we build it.
-                      </P2>
                     </UI.PassProps>
                   </below>
                 </LeftSide>
                 <RightSide noEdge $$centered>
-                  <UI.Theme name="dark">
+                  <UI.Theme name="light">
                     <Join
                       css={{
                         transform: {
@@ -412,18 +408,7 @@ export const HomePage = () => (
   <Media query={Constants.screen.medium}>
     {isMedium => (
       <>
-        <Header
-          linkStyle={{
-            color: '#fff',
-            // background: '#111',
-            borderRadius: 100,
-            border: [2, '#fff'],
-          }}
-          linkStyleHover={{
-            background: Constants.colorMain,
-            color: '#fff',
-          }}
-        />
+        <Header />
         <HomeHeader isMedium={isMedium} />
         <HomeFooter isMedium={isMedium} />
         {/* <topoBg

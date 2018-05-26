@@ -124,9 +124,9 @@ export class HomePlayChats extends React.Component {
   static style = {
     chats: {
       position: 'absolute',
-      top: 50,
-      right: '5%',
-      left: '5%',
+      top: 0,
+      right: '8%',
+      left: '8%',
       bottom: 0,
       justifyContent: 'flex-start',
       overflow: 'hidden',

@@ -428,7 +428,7 @@ export const HalfSection = view('section', {
 })
 
 @view.ui
-export class A {
+export class A extends React.Component {
   render({ hoverStyle, active, ...props }) {
     return <a $active={active} {...props} />
   }

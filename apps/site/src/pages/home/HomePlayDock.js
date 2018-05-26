@@ -5,7 +5,7 @@ import * as Icons from '~/views/icons'
 import * as Constants from '~/constants'
 import { dockIcons } from './stageItems'
 
-const distanceFromBottom = 100
+const distanceFromBottom = '20%'
 const transform = {
   scale: 0.9,
 }
@@ -184,7 +184,7 @@ export class HomePlayDock extends React.Component {
     dockIcons: {
       transform,
       position: 'absolute',
-      bottom: 35 + distanceFromBottom,
+      bottom: `calc(${distanceFromBottom} + 35px)`,
       left: '5%',
       right: '5%',
       height: 120,
@@ -201,7 +201,7 @@ export class HomePlayDock extends React.Component {
       transformOrigin: 'center bottom',
     },
     icon: {
-      transition: 'all ease-in 100ms',
+      transition: 'all ease-in 400ms',
     },
     leave: {
       opacity: 0,

@@ -440,26 +440,25 @@ export class A extends React.Component {
       fontWeight: 700,
       padding: [5, 10],
       margin: [0, 0, 0, 15],
-      borderBottom: [1, 'transparent'],
+      border: [2, 'transparent'],
     },
-    active: {
-      // color: [0, 0, 0, 1],
-      borderBottom: [3, '#111'],
-    },
+    active: {},
   }
 
-  static theme = props => {
+  static theme = (props, theme) => {
+    const bg = theme.base.background.darken(0.1).desaturate(0.1)
     return {
       a: {
         '&:hover': {
           ...props.hoverStyle,
-          borderBottom: [3, [0, 0, 0, 0.1]],
+          borderBottom: [3, bg.alpha(0.3)],
         },
       },
       active: {
+        borderBottom: [3, bg],
         '&:hover': {
           ...props.hoverStyle,
-          borderBottom: [3, '#111'],
+          borderBottom: [3, bg],
         },
       },
     }

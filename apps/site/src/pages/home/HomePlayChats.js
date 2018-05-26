@@ -81,7 +81,7 @@ export class HomePlayChats extends React.Component {
                   transform: interpolate(
                     [scale, y],
                     (scale, y) =>
-                      `translate3d(0,${y + 110}px,0) scale(${scale})`,
+                      `translate3d(0,${y + 210}px,0) scale(${scale})`,
                   ),
                 }}
               >

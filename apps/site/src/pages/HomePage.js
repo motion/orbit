@@ -37,13 +37,13 @@ const firstSlant = {
   slantSize: 8,
   amount: 40,
   slantBackground: borderColor,
-  css: { zIndex: 0 },
+  css: { zIndex: 2 },
 }
 const secondSlant = {
   slantSize: 10,
   amount: 25,
   slantBackground: [200, 200, 200, 0.15],
-  css: { zIndex: 0 },
+  css: { zIndex: 2 },
 }
 const thirdSlant = {
   slantBackground: [150, 150, 150, 0.2],
@@ -124,8 +124,8 @@ class HomeHeader extends React.Component {
                 </paintingWrap>
               </paintingOverflow>
               <Slant {...firstSlant} />
-              <Slant inverseSlant if={false} {...secondSlant} />
-              <Slant if={false} {...thirdSlant} />
+              <Slant inverseSlant {...secondSlant} />
+              <Slant {...thirdSlant} />
               <SectionContent padded fullscreen>
                 <UI.Theme name="dark">
                   <inner
@@ -342,8 +342,8 @@ class HomeFooter extends React.Component {
                   {...firstSlant}
                   rightBackground={bottomRightBackground}
                 />
-                <Slant if={false} {...secondSlant} />
-                <Slant inverseSlant if={false} {...thirdSlant} />
+                <Slant {...secondSlant} />
+                <Slant inverseSlant {...thirdSlant} />
                 <LeftSide css={{ textAlign: 'left' }}>
                   <div css={{ height: '22%' }} />
                   <below css={{ margin: [15, '15%', 0, 0] }}>

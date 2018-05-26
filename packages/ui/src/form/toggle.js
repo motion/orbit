@@ -40,6 +40,7 @@ class UIToggle extends React.Component {
   }
 
   setOn = (on, triggerOnChange) => {
+    console.log('toggling', on)
     if (typeof on !== 'undefined') {
       this.setState({ on })
       if (triggerOnChange) {
@@ -51,7 +52,7 @@ class UIToggle extends React.Component {
     }
   }
 
-  toggleClick = e => {
+  toggleClick = () => {
     this.setOn(!this.value, true)
   }
 

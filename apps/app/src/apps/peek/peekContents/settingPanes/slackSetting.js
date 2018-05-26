@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { fuzzy } from '~/helpers'
 import * as _ from 'lodash'
-import SlackChannel from './slackChannel'
+import { SlackChannel } from './slackPanes/slackChannel'
 
 class SlackSettingStore {
   search = ''
@@ -35,7 +35,7 @@ class SlackSettingStore {
 @view({
   store: SlackSettingStore,
 })
-export default class Slack {
+export class SlackSetting extends React.Component {
   render({ store, setting }) {
     return (
       <slack if={setting}>

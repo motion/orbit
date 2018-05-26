@@ -4,7 +4,6 @@ import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
 import { App } from '@mcro/all'
-import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
 
 let loggers = []
 let nextLog = null
@@ -51,18 +50,21 @@ class OrbitCardStore {
       if (!this.isPaneSelected || !shouldSelect) {
         throw react.cancel
       }
-      OrbitHelpers.setPeekTarget(this.props.bit, this.ref)
-      this.props.appStore.finishSettingIndex()
+      this.props.appStore.setTarget(this.props.bit, this.ref)
     },
   )
 
   updateIsSelected = react(
-    () => [this.props.appStore.activeIndex, App.state.peekState.target],
-    ([index, target]) => {
-      if (!this.isPaneSelected) {
+    () => [
+      this.isPaneSelected,
+      this.props.appStore.activeIndex,
+      App.state.peekState.target,
+    ],
+    ([paneSelected, index, target]) => {
+      if (!paneSelected) {
         throw react.cancel
       }
-      const isSelected = !target ? false : index === this.props.index
+      const isSelected = index === this.props.index
       console.log(this.props.bit.id, isSelected)
       if (isSelected !== this._isSelected) {
         this._isSelected = isSelected

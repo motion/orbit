@@ -34,7 +34,7 @@ export class OrbitDockedPane {
       right: 0,
       bottom: 0,
       left: 0,
-      transition: 'opacity ease-in-out 150ms',
+      transition: 'all ease-in-out 150ms',
       overflowY: 'scroll',
       padding: [40, 8],
       margin: [-40, 0],

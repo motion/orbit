@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 
 @view
-export default class SlackChannel extends React.Component {
+export class SlackChannel extends React.Component {
   version = 0
 
   get setting() {

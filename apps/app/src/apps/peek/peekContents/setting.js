@@ -61,13 +61,9 @@ export class Setting {
     }
     store.version
     const { setting, bit } = store
-    const { integration, type } = bit
-    // tries googleMail
-    // falls back to google
+    const { integration } = bit
     const SettingPane =
-      SettingPanes[`${integration}${capitalize(type)}`] ||
-      SettingPanes[integration] ||
-      EmptyPane
+      SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
       <>
         <PeekHeader

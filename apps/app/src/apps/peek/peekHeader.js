@@ -6,7 +6,7 @@ class HeaderStore {
   height = 0
 
   willMount() {
-    this.height = this.props.subtitle ? 85 : 50
+    this.height = this.props.subtitle || this.props.after ? 85 : 50
     this.props.peekStore.headerHeight = this.height
   }
 }

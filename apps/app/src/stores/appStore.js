@@ -4,6 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
+import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -351,7 +352,8 @@ export class AppStore {
     return false
   }
 
-  finishSettingIndex = () => {
+  setTarget = (item, target) => {
+    OrbitHelpers.setPeekTarget(item, target)
     if (this.nextIndex !== this.activeIndex) {
       this.lastSelectAt = Date.now()
       this.activeIndex = this.nextIndex

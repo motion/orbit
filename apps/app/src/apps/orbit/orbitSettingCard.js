@@ -44,10 +44,10 @@ export class OrbitSettingCard extends React.Component {
             }
             return
           }
-          appStore.toggleSelected(index, this.ref)
+          appStore.setTarget(setting, this.ref)
         }}
       >
-        <OrbitIcon $icon $iconActive={isActive} icon={icon} />
+        <OrbitIcon $icon $iconActive={isActive} icon={icon} size={22} />
         <titles>
           <UI.Text $title fontWeight={300} size={1.4} textAlign="center">
             {title}
@@ -79,8 +79,7 @@ export class OrbitSettingCard extends React.Component {
       borderBottom: 'none',
     },
     icon: {
-      marginBottom: 10,
-      marginRight: 20,
+      margin: ['auto', 12, 'auto', 0],
       opacity: 0.5,
     },
     iconActive: {

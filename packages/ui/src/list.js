@@ -474,10 +474,10 @@ class ListUI extends React.PureComponent {
       }
     }
 
-    this.cache = new CellMeasurerCache({
-      defaultHeight: 50,
-      fixedWidth: true,
-    })
+    // this.cache = new CellMeasurerCache({
+    //   defaultHeight: 50,
+    //   fixedWidth: true,
+    // })
 
     this.didUpdateChildren = true
     this.children = children

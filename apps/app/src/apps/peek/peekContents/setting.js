@@ -54,6 +54,14 @@ export class Setting {
     this.props.appStore.getSettings()
   }
 
+  removeIntegration = async () => {
+    const { store } = this.props
+    store.setting.values = {}
+    store.setting.token = ''
+    await store.setting.save()
+    store.update()
+  }
+
   render({ appStore, store }) {
     if (!store.setting || !store.setting.token) {
       console.log('no setting or token', store.setting)
@@ -78,7 +86,7 @@ export class Setting {
             </div>
           }
           after={
-            <UI.Row $$flex css={{ opacity: 0.2 }}>
+            <UI.Row $$flex $actions>
               <UI.Button
                 icon="refresh"
                 tooltip="Refresh"
@@ -94,12 +102,7 @@ export class Setting {
                   <UI.ListItem primary="hello3" />
                   <UI.ListItem
                     primary="remove integration"
-                    onClick={async () => {
-                      store.setting.values = {}
-                      store.setting.token = ''
-                      await store.setting.save()
-                      store.update()
-                    }}
+                    onClick={this.removeIntegration}
                   />
                 </UI.List>
               </UI.Popover>
@@ -122,5 +125,6 @@ export class Setting {
       padding: 20,
       flex: 1,
     },
+    actions: { opacity: 0.2 },
   }
 }

@@ -37,6 +37,7 @@ class SlackSettingStore {
 })
 export class SlackSetting extends React.Component {
   render({ store, setting }) {
+    console.log('rendering slack')
     return (
       <slack if={setting}>
         <UI.Input

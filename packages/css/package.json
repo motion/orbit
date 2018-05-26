@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsc",
     "prebuild": "tsc",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch",
+    "test": "node ./_/test.js"
   },
   "publishConfig": {
     "access": "public"

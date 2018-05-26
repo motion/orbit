@@ -12,6 +12,12 @@ import { CAMEL_TO_SNAKE } from './cssNameMap'
 export { Transform, Color } from './types'
 export * from './helpers'
 
+type Opts = {
+  errorMessage?: string
+  snakeCase?: boolean
+}
+
+const UNDEFINED = 'undefined'
 const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor'])
 const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
@@ -47,7 +53,8 @@ const BORDER_KEY = {
 }
 
 // helpers
-const px = (x: number | string) => (/px$/.test(`${x}`) ? x : `${x}px`)
+const px = (x: number | string) =>
+  typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x
 
 // style transform creator
 export default function motionStyle(options: Object = {}) {
@@ -102,9 +109,6 @@ export default function motionStyle(options: Object = {}) {
   }
 
   function objectValue(key: string, value: any) {
-    if (Array.isArray(value)) {
-      return processArray(key, value)
-    }
     if (OBJECT_TRANSFORM[key]) {
       return OBJECT_TRANSFORM[key](value)
     }
@@ -159,20 +163,19 @@ export default function motionStyle(options: Object = {}) {
         continue
       }
       let value = object[subKey]
-      value = objectValue(subKey, value)
+      if (Array.isArray(value)) {
+        value = processArray(key, value)
+      } else {
+        value = objectValue(subKey, value)
+      }
       toReturn.push(`${TRANSFORM_KEYS_MAP[subKey] || subKey}(${value})`)
     }
     return toReturn.join(' ')
   }
 
-  type Opts = {
-    errorMessage?: string
-    snakeCase?: boolean
-  }
-
   // RETURN THIS
   // style transformer
-  function processStyles(styles: Object, opts: Opts): Object {
+  function processStyles(styles: Object, opts?: Opts): Object {
     const toReturn: any = {}
     const shouldSnake = !opts || opts.snakeCase !== false
     if (!styles || typeof styles !== 'object') {
@@ -192,7 +195,7 @@ export default function motionStyle(options: Object = {}) {
         valueType = typeof value
       }
       // simple syles
-      if (valueType === 'undefined' || value === null || value === false) {
+      if (valueType === UNDEFINED || value === null || value === false) {
         continue
       }
       let respond

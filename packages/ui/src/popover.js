@@ -81,7 +81,7 @@ const getShadow = (shadow, elevation) => {
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @view.ui
-export class Popover extends React.Component {
+export class Popover extends React.PureComponent {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,
@@ -119,11 +119,13 @@ export class Popover extends React.Component {
   // also, nicely lets us define get fn helpers
 
   componentWillReceiveProps = nextProps => {
+    console.log('willreceive')
     this.curProps = nextProps
     this.setPosition()
   }
 
   componentWillUpdate = nextProps => {
+    console.log('willupdate')
     this.setOpenOrClosed(nextProps)
     this.setTarget()
   }
@@ -306,6 +308,7 @@ export class Popover extends React.Component {
   }
 
   setPosition(callback) {
+    console.log('set position')
     if (!this.popoverRef) {
       return
     }
@@ -547,7 +550,8 @@ export class Popover extends React.Component {
 
   removeListenForHover() {
     for (const listener of this.listeners) {
-      listener.dispose()
+      console.log('listener', listener)
+      listener()
     }
     this.listeners = []
   }

@@ -1,6 +1,12 @@
-import { colorToString, isColorLike, snakeToCamel, camelToSnake, hash, } from './helpers';
-import { CAMEL_TO_SNAKE } from './cssNameMap';
-export * from './helpers';
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+const helpers_1 = require("./helpers");
+const cssNameMap_1 = require("./cssNameMap");
+__export(require("./helpers"));
+const UNDEFINED = 'undefined';
 const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor']);
 const TRANSFORM_KEYS_MAP = {
     x: 'translateX',
@@ -30,10 +36,10 @@ const BORDER_KEY = {
     borderBottom: true,
     borderTop: true,
 };
-const px = (x) => (/px$/.test(`${x}`) ? x : `${x}px`);
-export default function motionStyle(options = {}) {
-    const isColor = (color) => isColorLike(color, options);
-    const toColor = (color) => colorToString(color, options);
+const px = (x) => typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x;
+function motionStyle(options = {}) {
+    const isColor = (color) => helpers_1.isColorLike(color, options);
+    const toColor = (color) => helpers_1.colorToString(color, options);
     const OBJECT_TRANSFORM = {
         textShadow: ({ x, y, blur, color }) => `${px(x)} ${px(y)} ${px(blur)} ${toColor(color)}`,
         boxShadow: v => v.inset || v.x || v.y || v.blur || v.spread || v.color
@@ -68,9 +74,6 @@ export default function motionStyle(options = {}) {
             .join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ');
     }
     function objectValue(key, value) {
-        if (Array.isArray(value)) {
-            return processArray(key, value);
-        }
         if (OBJECT_TRANSFORM[key]) {
             return OBJECT_TRANSFORM[key](value);
         }
@@ -112,7 +115,12 @@ export default function motionStyle(options = {}) {
                 continue;
             }
             let value = object[subKey];
-            value = objectValue(subKey, value);
+            if (Array.isArray(value)) {
+                value = processArray(key, value);
+            }
+            else {
+                value = objectValue(subKey, value);
+            }
             toReturn.push(`${TRANSFORM_KEYS_MAP[subKey] || subKey}(${value})`);
         }
         return toReturn.join(' ');
@@ -128,13 +136,13 @@ export default function motionStyle(options = {}) {
             let valueType = typeof value;
             let finalKey = key;
             if (shouldSnake) {
-                finalKey = CAMEL_TO_SNAKE[key] || key;
+                finalKey = cssNameMap_1.CAMEL_TO_SNAKE[key] || key;
             }
             if (value === false) {
                 value === FALSE_VALUES[key];
                 valueType = typeof value;
             }
-            if (valueType === 'undefined' || value === null || value === false) {
+            if (valueType === UNDEFINED || value === null || value === false) {
                 continue;
             }
             let respond;
@@ -193,7 +201,7 @@ export default function motionStyle(options = {}) {
                 key = SHORTHANDS[key];
                 if (Array.isArray(key)) {
                     for (let k of key) {
-                        k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k;
+                        k = shouldSnake ? cssNameMap_1.CAMEL_TO_SNAKE[k] || k : k;
                         toReturn[k] = value;
                     }
                 }
@@ -207,14 +215,15 @@ export default function motionStyle(options = {}) {
         return toReturn;
     }
     processStyles.helpers = {
-        hash,
+        hash: helpers_1.hash,
         toColor,
         isColor,
         processArray,
         processObject,
-        snakeToCamel,
-        camelToSnake,
+        snakeToCamel: helpers_1.snakeToCamel,
+        camelToSnake: helpers_1.camelToSnake,
     };
     return processStyles;
 }
+exports.default = motionStyle;
 //# sourceMappingURL=css.js.map

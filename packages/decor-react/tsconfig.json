@@ -1,5 +1,6 @@
 {
   "extends": "../../tsconfig.tspackage",
+  "types": "decor-react.d.ts",
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": "./",

@@ -1,3 +1,3 @@
-export * from './reactable'
+export * from './utilityUsable'
 export * from './hydratable'
 export * from './reactObservable'

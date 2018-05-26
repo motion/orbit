@@ -1,6 +1,5 @@
 ## website
 
-* once animated dont do again on return
 * Mobile fixes
   * add back in a couple images
 * Footer fixes
@@ -15,14 +14,11 @@
 
 ## app
 
-* masonry renders orbit cards twice
 * profiles design iteration
 * have the cards show _why_ they are there
 * topics you follow dropdown
 * fix settings
 * tear away peeks + super simple app
-* get dark blue theme working for news area
-  * work on themes
 * pinning item to top of news for a day
 
 demo for Formidable on May 12th:

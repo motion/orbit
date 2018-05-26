@@ -1,6 +1,11 @@
-import colorNames from './colorNames';
-import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap';
-export function hash(thing) {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const colorNames_1 = __importDefault(require("./colorNames"));
+const cssNameMap_1 = require("./cssNameMap");
+function hash(thing) {
     let str = thing;
     if (thing instanceof Object) {
         str = JSON.stringify(thing);
@@ -14,12 +19,15 @@ export function hash(thing) {
         return hash >>> 0;
     }
 }
-export function camelToSnake(key) {
-    return CAMEL_TO_SNAKE[key] || key;
+exports.hash = hash;
+function camelToSnake(key) {
+    return cssNameMap_1.CAMEL_TO_SNAKE[key] || key;
 }
-export function snakeToCamel(key) {
-    return SNAKE_TO_CAMEL[key] || key;
+exports.camelToSnake = camelToSnake;
+function snakeToCamel(key) {
+    return cssNameMap_1.SNAKE_TO_CAMEL[key] || key;
 }
+exports.snakeToCamel = snakeToCamel;
 function memoize(cb) {
     const Cache = new WeakMap();
     return (key, ...rest) => {
@@ -37,7 +45,7 @@ function memoize(cb) {
         return newVal;
     };
 }
-export function colorToString(color, options) {
+function colorToString(color, options) {
     if (typeof color === 'string') {
         return color;
     }
@@ -51,7 +59,8 @@ export function colorToString(color, options) {
     res = objectToColor(res);
     return `${res}`;
 }
-export const isColorLike = memoize((object, options) => {
+exports.colorToString = colorToString;
+exports.isColorLike = memoize((object, options) => {
     if (!object) {
         return false;
     }
@@ -66,26 +75,28 @@ export const isColorLike = memoize((object, options) => {
     }
     return false;
 });
-export function isColorLikeString(str) {
+function isColorLikeString(str) {
     if (str[0] === '#' && (str.length === 4 || str.length === 7)) {
         return true;
     }
     if (str.indexOf('rgb(') === 0 || str.indexOf('rgba(') === 0) {
         return true;
     }
-    if (colorNames[str]) {
+    if (colorNames_1.default[str]) {
         return true;
     }
     return false;
 }
-export function isColorLikeArray(array) {
+exports.isColorLikeString = isColorLikeString;
+function isColorLikeArray(array) {
     return (typeof array[0] === 'number' &&
         typeof array[1] === 'number' &&
         typeof array[2] === 'number' &&
         (typeof array[3] === 'undefined' || typeof array[3] === 'number') &&
         typeof array[4] === 'undefined');
 }
-export function isColorLikeObject(object) {
+exports.isColorLikeArray = isColorLikeArray;
+function isColorLikeObject(object) {
     const keyLen = Object.keys(object).length;
     if (keyLen < 3 || keyLen > 4)
         return false;
@@ -95,7 +106,8 @@ export function isColorLikeObject(object) {
         return true;
     return false;
 }
-export function isColorLikeLibrary(val, options) {
+exports.isColorLikeObject = isColorLikeObject;
+function isColorLikeLibrary(val, options) {
     return ((options &&
         options.isColor &&
         typeof val === 'object' &&
@@ -105,7 +117,8 @@ export function isColorLikeLibrary(val, options) {
             typeof val.rgb === 'function' ||
             typeof val.rgba === 'function'));
 }
-export function getColorLikeLibraryValue(val, options) {
+exports.isColorLikeLibrary = isColorLikeLibrary;
+function getColorLikeLibraryValue(val, options) {
     let res = val;
     if (options && options.isColor(val)) {
         return options.toColor(val);
@@ -124,6 +137,7 @@ export function getColorLikeLibraryValue(val, options) {
     }
     return res;
 }
+exports.getColorLikeLibraryValue = getColorLikeLibraryValue;
 const objectToColor = memoize(color => {
     if (Array.isArray(color)) {
         const length = color.length;
@@ -145,7 +159,7 @@ const objectToColor = memoize(color => {
 const arr3to4 = arr => [...arr, arr[1]];
 const arr2to4 = arr => [...arr, arr[0], arr[1]];
 const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]];
-export function expandCSSArray(given) {
+function expandCSSArray(given) {
     if (typeof given === 'number') {
         return [given, given, given, given];
     }
@@ -163,4 +177,5 @@ export function expandCSSArray(given) {
     }
     throw new Error('Invalid type given');
 }
+exports.expandCSSArray = expandCSSArray;
 //# sourceMappingURL=helpers.js.map

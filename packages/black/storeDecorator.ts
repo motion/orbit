@@ -1,5 +1,5 @@
 import decor from '@mcro/decor'
-import { hydratable, reactable } from '@mcro/decor-mobx'
+import { hydratable, utilityUsable } from '@mcro/decor-mobx'
 import { subscribable, emittable } from '@mcro/decor-classes'
 import automagical from '@mcro/automagical'
 import { CompositeDisposable } from 'event-kit'
@@ -9,7 +9,7 @@ export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 
 export const storeDecorator: DecorCompiledDecorator<any> = decor([
   subscribable,
-  reactable,
+  utilityUsable,
   emittable,
   automagical,
   hydratable,

@@ -9,7 +9,7 @@ import {
   emitsMount,
 } from '@mcro/decor-react'
 import { subscribable } from '@mcro/decor-classes'
-import { reactable, reactObservable } from '@mcro/decor-mobx'
+import { utilityUsable, reactObservable } from '@mcro/decor-mobx'
 import automagical from '@mcro/automagical'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
@@ -33,7 +33,7 @@ const decorations = (
 ) => [
   extendsReact,
   subscribable,
-  reactable,
+  utilityUsable,
   enable.ui && uiContext,
   renderArgumentable,
   enable.ui && glossPlugin,

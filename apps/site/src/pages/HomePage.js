@@ -40,15 +40,15 @@ const firstSlant = {
   css: { zIndex: 2 },
 }
 const secondSlant = {
-  slantSize: 10,
-  amount: 20,
+  slantSize: 5,
+  amount: 10,
   slantBackground: [200, 200, 200, 0.15],
   css: { zIndex: 2 },
 }
 const thirdSlant = {
   slantBackground: [150, 150, 150, 0.2],
   slantSize: 4,
-  amount: 15,
+  amount: 18,
 }
 
 class HomeStore {

@@ -240,7 +240,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }}
                   >
                     <topSpace css={{ height: 40 }} />
-                    <SubTitle size={6} italic>
+                    <SubTitle size={5} italic>
                       Home
                     </SubTitle>
                     <FeatureSubTitle
@@ -415,7 +415,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={6} italic>
+                  <SubTitle size={5} italic>
                     Search
                   </SubTitle>
                   <FeatureSubTitle>Spotlight, meet your brain</FeatureSubTitle>
@@ -479,7 +479,7 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <SubTitle size={6} italic>
+                  <SubTitle size={5} italic>
                     Context
                   </SubTitle>
                   <FeatureSubTitle>

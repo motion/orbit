@@ -356,15 +356,15 @@ class HomeFooter extends React.Component {
                       <P2>
                         Orbit aims to solve a variety of synchronization
                         problems that are common in small and large teams. With
-                        a smart interface and contextual feature, Orbit helps
-                        teams share knowledge.
+                        a smart interface and contextual features, Orbit helps
+                        teams operate.
                       </P2>
                       <P2>
-                        It's also{' '}
+                        It's{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
                           completely private and on-device
-                        </span>, so your data always stays with you. It's a new
-                        way to operate, user focused and in the loop.
+                        </span>, so your data always stays with you. Sign up
+                        here to join our beta.
                       </P2>
                     </UI.PassProps>
                   </below>

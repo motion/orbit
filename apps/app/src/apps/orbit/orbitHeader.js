@@ -57,7 +57,6 @@ export class OrbitHeader extends React.Component {
     const headerBg = theme.base.background
     return (
       <orbitHeader
-        $$draggable
         $headerBg={headerBg}
         css={{
           borderTopLeftRadius:
@@ -71,19 +70,6 @@ export class OrbitHeader extends React.Component {
         }}
         {...this.hoverSettler.props}
       >
-        <bottomBorder
-          css={{
-            position: 'absolute',
-            bottom: 0,
-            height: 1,
-            zIndex: 1,
-            right: App.orbitOnLeft ? 20 : -1,
-            left: App.orbitOnLeft ? -1 : 20,
-            background: `linear-gradient(to right, transparent, ${theme.active.background
-              .darken(0.01)
-              .desaturate(0.1)})`,
-          }}
-        />
         <title>
           <UI.Icon
             $searchIcon

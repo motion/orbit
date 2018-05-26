@@ -18,6 +18,15 @@ export const storeDecorator: DecorCompiledDecorator<any> = decor([
 export const storeOptions = {
   storeDecorator,
   onStoreMount(_, store, props) {
+    if (!store._decorated) {
+      console.warn('decoarte twice', store, props)
+      // return
+    }
+    Object.defineProperty(store, '_decorated', {
+      enumerable: false,
+      writable: false,
+      value: true,
+    })
     if (store.automagic) {
       store.automagic()
     }
@@ -48,6 +57,7 @@ export const storeOptions = {
 export function store(Store) {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
+    // console.log('on store mount', this, args)
     const store = new DecoratedStore(...args)
     storeOptions.onStoreMount(Store.constructor.name, store, args[0])
     return store

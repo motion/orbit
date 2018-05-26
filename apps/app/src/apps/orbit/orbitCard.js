@@ -6,6 +6,18 @@ import bitContents from '~/components/bitContents'
 import { App } from '@mcro/all'
 import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
 
+const loggers = []
+let nextLog = null
+const debounceLog = (...args) => {
+  loggers.push([...args])
+  if (!nextLog) {
+    nextLog = setTimeout(() => {
+      console.log('debounceLog', loggers.length, loggers.join(', '))
+      nextLog = null
+    })
+  }
+}
+
 class OrbitCardStore {
   _isSelected = false
   ref = null
@@ -220,7 +232,7 @@ export class OrbitCard extends React.Component {
   }
 
   render({ pane, appStore, bit, store, itemProps }) {
-    log(`render card ${bit.id} ${pane}`)
+    debounceLog(`${bit.id}.${pane}${this.props.id}`)
     const BitContent = bitContents(bit)
     store.isSelected
     if (typeof BitContent !== 'function') {
@@ -291,7 +303,6 @@ export class OrbitCard extends React.Component {
   }
 
   static theme = ({ store, tiny, listItem }, theme) => {
-    console.log('update theme', store.isSelected)
     const { isSelected } = store
     let hoveredStyle
     let card

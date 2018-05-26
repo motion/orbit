@@ -94,6 +94,9 @@ export function storeProvidable(options, Helpers) {
 
         constructor(a, b) {
           super(a, b)
+          if (Klass.name === 'PaneStore') {
+            console.log('storeprovidable mount', Klass.name, Stores)
+          }
           this.componentWillUpdate = this.componentWillUpdate.bind(this)
           this.setupProps()
           this.setupStores()

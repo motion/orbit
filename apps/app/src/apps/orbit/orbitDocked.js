@@ -67,6 +67,8 @@ class PaneStore {
   )
 }
 
+const borderRadius = 20
+
 @UI.injectTheme
 @view.attach('appStore', 'orbitStore')
 @view.provide({
@@ -76,36 +78,39 @@ class PaneStore {
 class OrbitDocked {
   render({ paneStore, appStore, theme }) {
     log('DOCKED ------------')
-    console.log('docked', this.props, paneStore)
     const { visible, willAnimate } = paneStore.animationState
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     return (
-      <frame
-        $willAnimate={willAnimate}
-        $visible={visible}
-        css={{ background, boxShadow: [borderShadow, DOCKED_SHADOW] }}
-      >
-        <OrbitHeader />
-        <OrbitHomeHeader paneStore={paneStore} theme={theme} />
-        <orbitInner>
-          <UI.Button
-            $settingsButton
-            icon="gear"
-            borderRadius={100}
-            size={1.05}
-            sizeIcon={1.2}
-            circular
-            borderWidth={0}
-            background={theme.base.background}
-            iconProps={{
-              color: theme.active.background.darken(0.1),
-            }}
-            onClick={appStore.toggleSettings}
-          />
-          <OrbitHome name="home" appStore={appStore} paneStore={paneStore} />
-          <OrbitDirectory
+      <frame $willAnimate={willAnimate} $visible={visible} css={{ background }}>
+        <border
+          $$fullscreen
+          css={{
+            borderRadius: borderRadius + 1,
+            boxShadow: [borderShadow, DOCKED_SHADOW],
+          }}
+        />
+        <container>
+          <OrbitHeader />
+          <OrbitHomeHeader paneStore={paneStore} theme={theme} />
+          <orbitInner>
+            <UI.Button
+              $settingsButton
+              icon="gear"
+              borderRadius={100}
+              size={1.05}
+              sizeIcon={1.2}
+              circular
+              borderWidth={0}
+              background={theme.base.background}
+              iconProps={{
+                color: theme.active.background.darken(0.1),
+              }}
+              onClick={appStore.toggleSettings}
+            />
+            <OrbitHome name="home" appStore={appStore} paneStore={paneStore} />
+            {/* <OrbitDirectory
             name="directory"
             appStore={appStore}
             paneStore={paneStore}
@@ -114,9 +119,10 @@ class OrbitDocked {
             name="summary-search"
             parentPane="summary"
             paneStore={paneStore}
-          />
-          <OrbitSettings />
-        </orbitInner>
+          /> */}
+            <OrbitSettings />
+          </orbitInner>
+        </container>
       </frame>
     )
   }
@@ -124,17 +130,27 @@ class OrbitDocked {
   static style = {
     frame: {
       position: 'absolute',
-      top: 0,
-      right: 0,
+      top: 10,
+      right: 10,
+      bottom: 10,
+      borderRadius,
       zIndex: 2,
       flex: 1,
       pointerEvents: 'none',
       width: App.dockedWidth,
-      height: '100%',
       opacity: 0,
       transform: {
         x: 10,
       },
+    },
+    container: {
+      borderRadius: borderRadius + 1,
+      overflow: 'hidden',
+      flex: 1,
+    },
+    border: {
+      zIndex: Number.MAX_SAFE_INTEGER,
+      pointerEvents: 'none',
     },
     willAnimate: {
       willChange: 'transform, opacity',

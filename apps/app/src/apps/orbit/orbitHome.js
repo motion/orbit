@@ -24,7 +24,7 @@ class OrbitHomeStore {
       if (!isActive) {
         throw react.cancel
       }
-      log(`set get results`)
+      log('set get results')
       this.props.appStore.setGetResults(() => this.results)
     },
     { immediate: true },
@@ -55,12 +55,13 @@ class OrbitHomeStore {
 })
 export class OrbitHome {
   render({ store }) {
-    log(`HOME---------------`)
+    log('HOME---------------')
     return (
       <OrbitDockedPane name="home">
         <Masonry>
           {store.results.map((bit, index) => (
             <OrbitCard
+              id={Math.random()}
               pane="summary"
               key={`${bit.id}${index}`}
               index={index}

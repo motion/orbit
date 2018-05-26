@@ -28,9 +28,9 @@ export function getReactionOptions(userOptions?: ReactionOptions) {
   let options: ReactionOptions = {
     equals: comparer.structural,
   }
-  if (options.immediate) {
+  if (userOptions.immediate) {
     options.fireImmediately = true
-    delete options.immediate
+    delete userOptions.immediate
   }
   if (userOptions === true) {
     options.fireImmediately = true

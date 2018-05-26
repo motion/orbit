@@ -7,6 +7,10 @@ const ogSetTimeout = root.setTimeout
 const ogSetInterval = root.setInterval
 
 function _setTimeout(givenCallback: Function, duration: number): number {
+  if (!this) {
+    console.warn('weird no this')
+    return 0
+  }
   let subscription
   const callback = () => {
     if (subscription) subscription.dispose()
@@ -23,6 +27,10 @@ function _setTimeout(givenCallback: Function, duration: number): number {
 
 function _setInterval(givenCallback: Function, duration: number): number {
   const intervalId = ogSetInterval(givenCallback, duration)
+  if (!this) {
+    console.warn('weird no this')
+    return 0
+  }
   this.subscriptions.add({
     dispose() {
       clearInterval(intervalId)
@@ -34,7 +42,9 @@ function _setInterval(givenCallback: Function, duration: number): number {
 // adds this.subscriptions to a class at call-time
 function patchSubscribers(fn) {
   return function(...args: Array<any>) {
-    if (!this.subscriptions) {
+    if (!this) {
+      console.warn('weird no this')
+    } else if (!this.subscriptions) {
       this.subscriptions = new CompositeDisposable()
       // dispose
       const oComponentWillUnmount = this.componentWillUnmount

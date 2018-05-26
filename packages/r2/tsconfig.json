@@ -8,6 +8,6 @@
       "~/*": ["*"]
     }
   },
-  "include": ["/**/*"],
+  "include": ["**/*"],
   "exclude": ["_", "node_modules", "tmp"]
 }

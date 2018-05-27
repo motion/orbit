@@ -34,11 +34,15 @@ async function render() {
   }
   const RootComponent = require('./root').default
   ReactDOM.render(
-    <ThemeProvide {...Themes}>
-      <UI.Theme name="light">
-        <RootComponent />
-      </UI.Theme>
-    </ThemeProvide>,
+    <React.StrictMode>
+      <React.unstable_AsyncMode>
+        <ThemeProvide {...Themes}>
+          <UI.Theme name="light">
+            <RootComponent />
+          </UI.Theme>
+        </ThemeProvide>
+      </React.unstable_AsyncMode>
+    </React.StrictMode>,
     document.querySelector('#app'),
   )
 }

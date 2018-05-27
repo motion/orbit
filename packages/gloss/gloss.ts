@@ -119,13 +119,14 @@ export default class Gloss {
     Child.prototype.glossElement = this.createElement
     Child.prototype.gloss = this
     Child.prototype.glossStylesheet = this.stylesheet
-    const themeSheet = JSS.createStyleSheet().attach()
+    let themeSheet
     // @ts-ignore
     Child.glossUID = id
     this.themeSheets[id] = themeSheet
     let hasAttached = false
     let hasTheme = false
     const attachTheme = () => {
+      themeSheet = JSS.createStyleSheet().attach()
       Child.prototype.glossUpdateTheme = function(props) {
         this.theme = this.theme || themeSheet
         const activeTheme =
@@ -138,9 +139,10 @@ export default class Gloss {
             const style = css(childTheme[name])
             const selector = `${name}--${Child.glossUID}--theme`
             rules[selector] = style
-            this.theme.deleteRule(selector)
+            if (this.theme.classes[selector]) {
+              this.theme.deleteRule(selector)
+            }
           }
-          this.themeActiveRules = Object.keys(rules)
           this.theme.addRules(rules)
         }
       }

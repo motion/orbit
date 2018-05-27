@@ -13,16 +13,15 @@ import {
   RightSide,
   AppleLogo,
 } from '~/views'
-// import girlImg from '~/public/video-girl.jpg'
 import { HomePlay } from './home/HomePlay'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import { Keyframes, Spring, animated } from 'react-spring'
-import topo from '~/public/topo2.svg'
+import topo from '~/../public/topo2.svg'
 import { throttle } from 'lodash'
-import bg from '~/public/girl.svg'
+import bg from '~/../public/girl.svg'
 
 const borderColor = '#fff' || Constants.colorMain.darken(0.15)
 // const blackBg = UI.color('#111')

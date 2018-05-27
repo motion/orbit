@@ -87,14 +87,13 @@ export default function fancyElementFactory(Gloss, styles) {
     if (!style) {
       style = obj.getRule ? obj.getRule(key) : obj[key]
     }
-    if (!style) {
-      return null
-    }
     // dynamic
-    if (typeof style === 'function') {
-      return css(style(val))
-    } else {
-      finalStyles.push(style)
+    if (style) {
+      if (typeof style === 'function') {
+        return css(style(val))
+      } else {
+        finalStyles.push(style)
+      }
     }
     if (checkTheme && theme) {
       const themeKey = `${key}--theme`

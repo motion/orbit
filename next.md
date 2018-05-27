@@ -1,3 +1,7 @@
+* fix theme bug not applying unless empty object in styles
+* upgrade react 16.4
+* hmr dehydrate/hydrate
+
 ## website
 
 * Mobile fixes

@@ -1,6 +1,6 @@
 import * as React from 'react'
-import LogoSVG from '~/public/orbit2.svg'
-import LogoSVGWhite from '~/public/orbit-white.svg'
+import LogoSVG from '~/../public/orbit2.svg'
+import LogoSVGWhite from '~/../public/orbit-white.svg'
 // import ReactSVGInline from 'react-svg-inline'
 
 const naturalWidth = 543

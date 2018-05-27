@@ -25,9 +25,9 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import Observer from '@researchgate/react-intersection-observer'
 import { Trail, Spring, animated, config } from 'react-spring'
-import intelligenceImg from '~/public/screen-context-word.png'
-import newsImg from '~/public/screen-home.png'
-import searchImg from '~/public/screen-slack-search.png'
+import intelligenceImg from '~/../public/screen-context-word.png'
+import newsImg from '~/../public/screen-home.png'
+import searchImg from '~/../public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))

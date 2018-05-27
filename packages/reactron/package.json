@@ -11,8 +11,8 @@
   },
   "peerDependencies": {
     "electron": "*",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react": "16.2.0",
+    "react-dom": "16.2.0"
   },
   "dependencies": {
     "debug": "^3.1.0",

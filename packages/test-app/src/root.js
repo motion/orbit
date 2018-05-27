@@ -2,13 +2,21 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-@view
+@view({
+  store: class TestStore {
+    x = 0
+
+    didMount() {
+      console.log('hi there')
+    }
+  },
+})
 export class Root extends React.Component {
-  render() {
+  render({ store }) {
     return (
       <root>
         <UI.Button size={2}>Hello world</UI.Button>
-        <thing>wtf</thing>
+        <thing onClick={() => (store.x = store.x + 1)}>wtf {store.x}</thing>
       </root>
     )
   }

@@ -18,7 +18,7 @@ export const storeDecorator: DecorCompiledDecorator<any> = decor([
 export const storeOptions = {
   storeDecorator,
   onStoreMount(_, store, props) {
-    if (!store._decorated) {
+    if (store._decorated) {
       console.warn('decoarte twice', store, props)
       // return
     }
@@ -32,6 +32,11 @@ export const storeOptions = {
     }
     if (store.willMount) {
       store.willMount.call(store, props)
+    }
+  },
+  onStoreDidMount(store, props) {
+    if (store.didMount) {
+      store.didMount.call(store, props)
     }
   },
   onStoreUnmount(store) {

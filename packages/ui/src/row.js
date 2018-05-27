@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { Button } from './button'
-import { Provider } from '@mcro/react-tunnel'
-import { inject } from './helpers/inject'
 import { Surface } from './surface'
+import { UIContext } from './contexts'
 
 // type Props = {
 //   active?: number,
@@ -99,9 +98,9 @@ class RowPlain extends React.Component {
             typeof child === 'string' ? <span>{child}</span> : child
 
           return (
-            <Provider
+            <UIContext.Provider
               key={index}
-              provide={getContext(index, realChildren.length)}
+              value={getContext(index, realChildren.length)}
             >
               {itemProps
                 ? React.cloneElement(finalChild, {
@@ -109,7 +108,7 @@ class RowPlain extends React.Component {
                     ...finalChild.props,
                   }) /* merge child props so they can override */
                 : finalChild}
-            </Provider>
+            </UIContext.Provider>
           )
         })
         .filter(Boolean)
@@ -183,6 +182,8 @@ class RowPlain extends React.Component {
   })
 }
 
-export const Row = inject(context => ({ uiContext: context.uiContext }))(
-  RowPlain,
+export const Row = props => (
+  <UIContext.Consumer>
+    {uiContext => <RowPlain uiContext={uiContext} {...props} />}
+  </UIContext.Consumer>
 )

@@ -7,18 +7,25 @@ module.exports = function({ types: t }) {
       if (path.node.kind === 'constructor') {
         return
       }
+      if (path.node.static) {
+        return
+      }
       if (path.node.body.body && !path.node.body.glossHasVisited) {
         path.node.body.glossHasVisited = true
-        path.node.body.body.unshift(
-          t.variableDeclaration('const', [
-            t.variableDeclarator(
-              t.identifier('__dom'),
-              t.identifier(
-                'this.glossElement && this.glossElement.bind(this) || window.__dom',
+        const hasReturnStatement =
+          path.node.body.body.findIndex(x => t.isReturnStatement(x)) > -1
+        if (hasReturnStatement) {
+          path.node.body.body.unshift(
+            t.variableDeclaration('const', [
+              t.variableDeclarator(
+                t.identifier('__dom'),
+                t.identifier(
+                  'this.glossElement && this.glossElement.bind(this) || window.__dom',
+                ),
               ),
-            ),
-          ]),
-        )
+            ]),
+          )
+        }
       }
     },
   }

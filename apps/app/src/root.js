@@ -68,9 +68,11 @@ class Root extends React.Component {
     }
     const CurrentPage = Router.activeView || NotFound
     return (
-      <UI.Theme name="tan">
-        <CurrentPage key={Router.key} {...Router.params} />
-      </UI.Theme>
+      <React.StrictMode>
+        <UI.Theme name="tan">
+          <CurrentPage key={Router.key} {...Router.params} />
+        </UI.Theme>
+      </React.StrictMode>
     )
   }
 }

@@ -107,7 +107,7 @@ class ListUI extends React.PureComponent {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (
       typeof this.props.scrollToRow === 'number' &&
       this.props.scrollToRow !== this.lastScrolledToRow
@@ -120,46 +120,38 @@ class ListUI extends React.PureComponent {
       this.scrollToRow(this.lastScrolledToRow)
       this.didUpdateChildren = false
     }
-  }
 
-  // willUpdate only runs when PureComponent has new props
-  componentWillUpdate(nextProps) {
-    const totalItems = this.getTotalItems(nextProps)
+    // migrated from cWU
+    const { virtualized, selected } = prevProps
+    const totalItems = this.getTotalItems(prevProps)
     const hasNeverSetChildren = !this.childrenVersion
     const hasNewSelected =
-      typeof nextProps.selected === 'number' && this.state.selected !== selected
+      typeof prevProps.selected === 'number' && this.state.selected !== selected
     const hasNewItems = this.totalItems !== totalItems
     const hasNewItemsKey =
-      typeof nextProps.itemsKey !== 'undefined' &&
-      nextProps.itemsKey !== this.props.itemsKey
-
+      typeof prevProps.itemsKey !== 'undefined' &&
+      prevProps.itemsKey !== this.props.itemsKey
     this.totalItems = totalItems
-
-    const { virtualized, selected } = nextProps
-
     const shouldUpdateChildren =
       hasNeverSetChildren ||
       hasNewSelected ||
       !virtualized ||
-      nextProps.updateChildren ||
+      prevProps.updateChildren ||
       hasNewItems ||
       hasNewItemsKey
-
     if (shouldUpdateChildren) {
-      this.props = nextProps
+      this.props = prevProps
       this.updateChildren()
     }
-
     if (typeof selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
       if (selected !== this.state.selected) {
         this.setState({ selected })
       }
     }
-
     if (
-      nextProps.virtualized &&
-      nextProps.virtualized.measure &&
+      prevProps.virtualized &&
+      prevProps.virtualized.measure &&
       ((this.props.virtualized && !this.props.virtualized.measure) ||
         !this.props.virtualized)
     ) {

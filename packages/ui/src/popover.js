@@ -7,6 +7,9 @@ import { Arrow } from './arrow'
 import { SizedSurface } from './sizedSurface'
 import { Theme } from './helpers/theme'
 import * as PropTypes from 'prop-types'
+import isEqual from 'react-fast-compare'
+
+console.log('hi')
 
 // export type Props = {
 //   // can pass function to get isOpen passed in
@@ -97,7 +100,10 @@ export class Popover extends React.PureComponent {
     uiThemes: PropTypes.object,
   }
 
-  curProps = this.props
+  get curProps() {
+    return this.state.props
+  }
+
   popoverRef = null
   targetRef = null
 
@@ -118,26 +124,24 @@ export class Popover extends React.PureComponent {
   // curProps is always up to date, so we dont have to thread props around a ton
   // also, nicely lets us define get fn helpers
 
-  componentWillReceiveProps = nextProps => {
-    console.log('willreceive')
-    this.curProps = nextProps
-    this.setPosition()
-  }
-
-  componentWillUpdate = nextProps => {
-    console.log('willupdate')
-    this.setOpenOrClosed(nextProps)
-    this.setTarget()
+  static getDerivedStateFromProps(props, state) {
+    if (!isEqual(props, state.props)) {
+      return {
+        setPosition: true,
+        props,
+      }
+    }
+    return {
+      setPosition: false,
+    }
   }
 
   componentDidMount() {
     this.mounted = true
     const { openOnClick, closeOnClick, closeOnEsc, open } = this.curProps
-
     this.listenForResize()
     this.setTarget()
     this.listenForHover()
-
     if (openOnClick) {
       this.listenForClick()
     }
@@ -709,6 +713,11 @@ export class Popover extends React.PureComponent {
     closeOnEsc,
     ...props
   }) {
+    if (this.state.setPosition) {
+      this.setPosition()
+      this.setOpenOrClosed(this.props)
+      this.setTarget()
+    }
     const {
       bottom,
       top,

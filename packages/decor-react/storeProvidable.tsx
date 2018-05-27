@@ -97,14 +97,13 @@ export function storeProvidable(options, Helpers) {
           if (Klass.name === 'PaneStore') {
             console.log('storeprovidable mount', Klass.name, Stores)
           }
-          this.componentWillUpdate = this.componentWillUpdate.bind(this)
           this.setupProps()
           this.setupStores()
           this.unmounted = false
         }
 
         // PureComponent means this is only called when props are not shallow equal
-        componentWillUpdate(nextProps) {
+        componentDidUpdate(nextProps) {
           updateProps(this._props, nextProps)
         }
 

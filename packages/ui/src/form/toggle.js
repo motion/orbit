@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { inject } from '../helpers/inject'
+import { UIContext } from '../contexts'
 
 const BAR_HEIGHT = 8
 const BAR_WIDTH = 30
 const BAR_INVISIBLE_PAD = 5
 
 @view.ui
-class UIToggle extends React.Component {
+class TogglePlain extends React.Component {
   static defaultProps = {
     dotSize: 14,
     onChange: _ => _,
@@ -23,7 +23,7 @@ class UIToggle extends React.Component {
     this.updateValue(this.props)
   }
 
-  componentWillReceiveProps(props) {
+  componentDidUpdate(props) {
     this.updateValue(props)
   }
 
@@ -142,6 +142,8 @@ class UIToggle extends React.Component {
   })
 }
 
-export const Toggle = inject(context => ({ uiContext: context.uiContext }))(
-  UIToggle,
+export const Toggle = props => (
+  <UIContext.Consumer>
+    {uiContext => <TogglePlain uiContext={uiContext} {...props} />}
+  </UIContext.Consumer>
 )

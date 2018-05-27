@@ -13,7 +13,6 @@
   "dependencies": {
     "@mcro/black": "^1.5.1",
     "@mcro/gloss": "^1.5.1",
-    "@mcro/react-tunnel": "^1.5.1",
     "batch-processor": "^1.0.0",
     "color": "^3.0.0",
     "element-resize-detector": "^1.1.12",
@@ -25,7 +24,8 @@
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.13.0",
     "time-ago": "^0.1.0",
-    "react-hot-loader": "^4.2.0"
+    "react-hot-loader": "^4.2.0",
+    "react-fast-compare": "^1.0.0"
   },
   "peerDependencies": {
     "@babel/runtime": "*",

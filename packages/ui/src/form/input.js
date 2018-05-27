@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { inject } from '../helpers/inject'
 import { SizedSurface } from '../sizedSurface'
 import { Button } from '../button'
 import { Checkbox } from './checkbox'
+import { UIContext } from '../contexts'
 
 // type Props = {
 //   uiContext: Object,
@@ -141,6 +141,8 @@ class InputPlain extends React.PureComponent {
   }
 }
 
-export const Input = inject(context => ({ uiContext: context.uiContext }))(
-  InputPlain,
+export const Input = props => (
+  <UIContext.Consumer>
+    {uiContext => <InputPlain uiContext={uiContext} {...props} />}
+  </UIContext.Consumer>
 )

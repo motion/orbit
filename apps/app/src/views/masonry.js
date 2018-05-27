@@ -10,11 +10,15 @@ const gridColumnGap = 8
 export class Masonry extends React.Component {
   state = {
     measured: false,
+    children: null,
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props, nextProps)) {
-      this.setState({ measured: false })
+  static getDerivedStateFromProps(props, state) {
+    if (!isEqual(state.children, props.children)) {
+      return { measured: false, children: props.children }
+    }
+    return {
+      children: props.children,
     }
   }
 

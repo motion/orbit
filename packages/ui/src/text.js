@@ -91,11 +91,8 @@ export class Text extends React.Component {
     this.measure()
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.handleProps(nextProps)
-  }
-
   componentDidUpdate() {
+    this.handleProps(this.props)
     if (
       this.node &&
       this.props.autoselect &&

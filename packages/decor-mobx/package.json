@@ -1,6 +1,7 @@
 {
   "name": "@mcro/decor-mobx",
   "main": "_/decor-mobx.js",
+  "types": "decor-mobx.d.ts",
   "version": "1.5.1",
   "scripts": {
     "build": "tsc",

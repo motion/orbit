@@ -1,5 +1,6 @@
 {
   "extends": "../../tsconfig.tspackage",
+  "types": "decor-mobx.d.ts",
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": "./",

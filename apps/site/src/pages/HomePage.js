@@ -18,9 +18,6 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
 import { scrollTo } from '~/helpers'
-import { Keyframes, Spring, animated } from 'react-spring'
-import topo from '~/../public/topo2.svg'
-import { throttle } from 'lodash'
 import bg from '~/../public/girl.svg'
 
 const borderColor = '#fff' || Constants.colorMain.darken(0.15)
@@ -81,7 +78,7 @@ class HomeStore {
   store: HomeStore,
 })
 class HomeHeader extends React.Component {
-  render({ isMedium, store }) {
+  render({ isMedium }) {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => {
@@ -318,7 +315,7 @@ class HomeFooter extends React.Component {
     return (
       <UI.Theme theme="light">
         <Media query={Constants.screen.large}>
-          {isLarge => (
+          {() => (
             <Section
               css={{
                 background: 'transparent',
@@ -345,24 +342,25 @@ class HomeFooter extends React.Component {
                   <below css={{ margin: [15, 0, 0, 0] }}>
                     <UI.PassProps size={1.3} sizeLineHeight={1.2} alpha={0.85}>
                       <P2 size={2.8} alpha={1} fontWeight={400}>
-                        Home, for you
+                        Team Operating System
                       </P2>
                       <P2>
-                        You and your team have a lot of knowledge. It lives in
-                        silos spread around your cloud.
+                        Your team and company has a ton going on, across
+                        everything. You probably feel the pain most with Slack,
+                        where conversations are happening at all times.
                       </P2>
                       <P2>
-                        Orbit aims to solve a variety of synchronization
-                        problems that are common in small and large teams. With
-                        a smart interface and contextual features, Orbit helps
-                        teams operate.
+                        Orbit summarizes anything in your cloud and gives you a
+                        clean home to see what's relevant to you. It also gives
+                        you powerful search and augmented intelligence for your
+                        day to day.
                       </P2>
                       <P2>
-                        It's{' '}
+                        It runs{' '}
                         <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
                           completely private and on-device
-                        </span>, so your data always stays with you. Sign up
-                        here to join our beta.
+                        </span>, so your data never leaves your firewall. We're
+                        currently in private beta. Sign up to get early access.
                       </P2>
                     </UI.PassProps>
                   </below>

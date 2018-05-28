@@ -54,7 +54,7 @@ Strategy.prototype.userProfile = function(accessToken, done) {
   }
   // this._oauth2.setAccessTokenName('token')
 
-  this.get(this.profileUrl + accessToken, function(err, body, res) {
+  this.get(this.profileUrl + accessToken, function(err, body) {
     if (err) {
       return done(err)
     } else {

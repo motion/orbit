@@ -11,7 +11,7 @@ const getName = x =>
 export default class Icons {
   cache = {}
 
-  async getIcon(path, opts = {}) {
+  async getIcon(path, opts = { size: 64 }) {
     const name = `${getName(path)}.png`
     const destination = Path.join(TMP_DIR, name)
     if (this.cache[name]) {

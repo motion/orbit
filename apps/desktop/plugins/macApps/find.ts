@@ -46,13 +46,13 @@ const filterEmpty = (data, done) => {
 const makeArgs = (array, argName) => flatten(array.map(item => [argName, item]))
 
 export default function mdfind({
-  query,
+  query = '',
   attributes = Object.keys(REAL_KEYS),
   names = [],
   directories = [],
   live = false,
   interpret = false,
-  limit,
+  limit = 200,
 } = {}) {
   const dirArgs = makeArgs(directories, '-onlyin')
   const nameArgs = makeArgs(names, '-name')

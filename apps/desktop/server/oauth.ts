@@ -76,7 +76,7 @@ export default class Oauth {
   }
 
   setupSerialization() {
-    Passport.serializeUser(async (user, done) => {
+    Passport.serializeUser(async (_, done) => {
       done(null, 'a@b.com')
     })
 

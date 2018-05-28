@@ -15,6 +15,10 @@ export default class SlackAttachmentSync {
     this.service = service
   }
 
+  get setting() {
+    return this.service.setting
+  }
+
   get lastSync() {
     return this.service.setting.values.lastAttachmentSync || {}
   }
@@ -55,7 +59,7 @@ export default class SlackAttachmentSync {
           for (const entries of _.chunk(links, 10)) {
             console.log('crawling chunk', entries)
             const { results } = await r2.post(
-              `${Constants.API_URL}/crawler/exact`,
+              `${Constants.APP_URL}/crawler/exact`,
               {
                 json: {
                   options: { entries },

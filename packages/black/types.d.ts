@@ -16,4 +16,9 @@ export function react<B extends ReactionFunction>(
   c?: Object,
 ): ReturnType<B>
 
+export function watch<A extends ReactionFunction>(
+  a: A,
+  b?: Object,
+): ReturnType<A>
+
 export function debugState(cb: Function): void

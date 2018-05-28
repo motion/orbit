@@ -1,34 +1,31 @@
 import * as React from 'react'
-import { object } from 'prop-types'
 import pickBy from 'lodash/pickBy'
+import { StoreContext } from '~/contexts'
 
-export function storeAttachable(options) {
+export interface ContextAttacher {}
+
+export function storeAttachable(options): ContextAttacher {
   return {
     name: 'storeAttachable',
     once: true,
     decorator: View => {
-      class ContextAttacher extends React.Component {
-        static contextTypes = {
-          stores: object,
-        }
-        render() {
-          return (
+      const ContextAttacher = props => (
+        <StoreContext.Consumer>
+          {stores => (
             <View
-              {...this.props}
-              {...pickBy(
-                this.context.stores,
-                (_, key) => options.names.indexOf(key) >= 0,
-              )}
+              {...props}
+              {...pickBy(stores, (_, key) => options.stores.indexOf(key) >= 0)}
             />
-          )
-        }
-      }
+          )}
+        </StoreContext.Consumer>
+      )
+      // pass statics down
       return new Proxy(ContextAttacher, {
         set(_, method, value) {
           View[method] = value
           return true
-        }
-      }
+        },
+      })
     },
   }
 }

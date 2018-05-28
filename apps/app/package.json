@@ -16,7 +16,6 @@
     "@mcro/debug": "*",
     "@mcro/gloss": "^1.5.1",
     "@mcro/models": "^1.5.1",
-    "@mcro/overdrive": "*",
     "@mcro/r2": "^1.5.1",
     "@mcro/router": "^1.5.1",
     "@mcro/services": "*",

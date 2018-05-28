@@ -1,6 +1,6 @@
 import { store, react, isEqual } from '@mcro/black/store'
 import iohook from 'iohook'
-import { Desktop, App, Electron } from '@mcro/all'
+import { Desktop, App } from '@mcro/all'
 // import debug from '@mcro/debug'
 // const log = debug('KeyboardStore')
 

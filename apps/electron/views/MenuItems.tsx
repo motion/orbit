@@ -3,9 +3,13 @@ import { Menu, SubMenu, MenuItem, MenuItems } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import { Electron } from '@mcro/all'
 
+// @ts-ignore
 @view.attach('electronStore')
+// @ts-ignore
 @view.electron
 export default class MenuEl {
+  isClosing = false
+
   toggleDevTools = appName => () => {
     Electron.setShowDevTools({
       [appName]: !Electron.state.showDevTools[appName],
@@ -18,7 +22,7 @@ export default class MenuEl {
 
   handleClose = () => {
     if (Electron.state.showSettings) {
-      this.handleSettingsVisibility(false)
+      // this.handleSettingsVisibility(false)
     }
   }
 

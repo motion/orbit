@@ -16,7 +16,7 @@ require('module-alias').addAlias('~', __dirname + '/')
 // now stuff that uses relative paths
 require('./helpers/handlePromiseErrors')
 require('./helpers/updateChecker')
-const Electron = require('./Electron').default
+const { Electron } = require('./Electron')
 
 Error.stackTraceLimit = Infinity
 
@@ -32,8 +32,8 @@ process.stdin.resume()
 // do something when app is closing
 process.on('exit', exitHandler)
 process.on('SIGINT', () => exitHandler(0))
-process.on('SIGUSR1', exitHandler)
-process.on('SIGUSR2', exitHandler)
+process.on('SIGUSR1', () => exitHandler(0))
+process.on('SIGUSR2', () => exitHandler(0))
 process.on('uncaughtException', err => {
   console.log('uncaughtException', err.stack)
 })

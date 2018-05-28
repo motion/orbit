@@ -81,7 +81,7 @@ function createViewDecorator(): ViewDecorator {
   const providable = decor([[storeProvidable, storeOptions]])
   view.provide = stores => providable({ stores, context: true })
   view.provide.on = providable.on
-  view.attach = (...names) => decor([[storeAttachable, { names }]])
+  view.attach = (...stores) => decor([[storeAttachable, { stores }]])
   return view
 }
 

@@ -1,4 +1,4 @@
-import { store, react } from '@mcro/black'
+import { store, react, watch } from '@mcro/black'
 import * as Syncers from './syncers'
 import { Job, remove } from '@mcro/models'
 import debug from '@mcro/debug'
@@ -30,7 +30,7 @@ export class Sync {
 
   // save in 3.2.s
 
-  syncLog = react(() => {
+  syncLog = watch(() => {
     const title = this.enabled
       ? 'SYNC ENABLED ✅ (Root.sync.disable())'
       : 'SYNC DISABLED (Root.sync.enable())'

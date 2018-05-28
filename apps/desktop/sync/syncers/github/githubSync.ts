@@ -1,7 +1,7 @@
 import Syncer from '../syncer'
 // import GithubFeedSync from './githubFeedSync'
 import GithubTaskSync from './githubTaskSync'
-// import GithubPeopleSync from './githubPeopleSync'
+import GithubPeopleSync from './githubPeopleSync'
 
 export default new Syncer('github', {
   actions: {
@@ -11,7 +11,7 @@ export default new Syncer('github', {
   },
   getSyncers: setting => ({
     task: new GithubTaskSync(setting),
-    people: new GithubPeopleSync(setting, helpers),
+    people: new GithubPeopleSync(setting),
     // feed: new GithubFeedSync(setting, helpers),
   }),
 })

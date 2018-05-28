@@ -81,6 +81,7 @@ export class Root {
   }
 
   watchLastBit() {
+    // @ts-ignore
     this.setInterval(async () => {
       const lastBit = await Bit.findOne({
         order: { updatedAt: 'DESC' },

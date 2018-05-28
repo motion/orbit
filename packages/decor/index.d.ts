@@ -1,6 +1,7 @@
 import { Emitter } from 'event-kit'
 
 export type Helpers = {
+  on: Emitter['on']
   emit: Emitter['emit']
   alreadyDecorated: (a: any) => boolean
 }
@@ -10,7 +11,7 @@ export interface DecorPlugin<T> {
     name: string
     once?: boolean
     onlyClass?: boolean
-    decorator?: <A>(a: new <A>() => any, b?: Object) => T & A
+    decorator?: <A>(a: new <A>() => any, b?: any) => T
   }
 }
 
@@ -29,8 +30,6 @@ export interface DecorCompiledDecorator<Extensions> {
   emit: Emitter['emit']
 }
 
-declare function Decor(
-  plugins: DecorPlugins,
-): DecorCompiledDecorator<DecorPlugins>
+declare function Decor(plugins: DecorPlugins): DecorCompiledDecorator<any>
 
 export default Decor

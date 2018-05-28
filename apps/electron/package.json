@@ -59,6 +59,8 @@
     "esm": "3.0.37"
   },
   "devDependencies": {
+    "@types/react": "16.3.14",
+    "@types/react-dom": "16.0.5",
     "electron": "^2.0.1",
     "electron-rebuild": "^1.7.3",
     "node-loader": "^0.6.0",

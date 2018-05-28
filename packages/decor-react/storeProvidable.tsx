@@ -3,8 +3,9 @@ import * as Mobx from 'mobx'
 import pickBy from 'lodash/pickBy'
 import difference from 'lodash/difference'
 import isEqual from 'lodash/isEqual'
-import { object } from 'prop-types'
 import root from 'global'
+import { DecorPlugin } from '@mcro/decor'
+import { StoreContext } from '~/contexts'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
@@ -26,12 +27,16 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
 root.loadedStores = new Set()
 const storeHMRCache = {}
 
-export function storeProvidable(options, Helpers) {
+export interface StoreProvidable {}
+
+export let storeProvidable: DecorPlugin<StoreProvidable>
+
+storeProvidable = function(options, Helpers) {
   return {
     name: 'store-providable',
     once: true,
     onlyClass: true,
-    decorator: (Klass, opts = {}) => {
+    decorator: (Klass, opts: any = {}) => {
       const allStores = opts.stores || options.stores
       const context = opts.context || options.context
       const storeDecorator = opts.storeDecorator || options.storeDecorator
@@ -55,8 +60,8 @@ export function storeProvidable(options, Helpers) {
       decorateStores()
 
       // return HoC
-      class StoreProvider extends React.PureComponent {
-        props: Object
+      class StoreProvider extends React.Component implements StoreProvidable {
+        props: any | { __contextualStores?: Object }
         hmrDispose: any
         _props: any
         mounted: boolean
@@ -269,20 +274,11 @@ export function storeProvidable(options, Helpers) {
           }
         }
 
-        render() {
-          return <Klass {...this.props} {...this.stores} />
-        }
-      }
-
-      if (context && Stores) {
-        StoreProvider.prototype.childContextTypes = {
-          stores: object,
-        }
-
-        StoreProvider.prototype.getChildContext = function() {
-          if (options.warnOnOverwriteStore && this.context.stores) {
+        childContextStores() {
+          const parentStores = this.props.__contextualStores
+          if (options.warnOnOverwriteStore && parentStores) {
             Object.keys(Stores).forEach(name => {
-              if (this.context.stores[name]) {
+              if (parentStores[name]) {
                 console.log(
                   `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${
                     Klass.name
@@ -291,27 +287,38 @@ export function storeProvidable(options, Helpers) {
               }
             })
           }
-
           const names = Object.keys(Stores)
           const stores = {
-            ...this.context.stores,
-            ...pickBy(this.stores, (value, key) => names.indexOf(key) >= 0),
+            ...parentStores,
+            ...pickBy(this.stores, (_, key) => names.indexOf(key) >= 0),
           }
           return { stores }
         }
+
+        render() {
+          const { __contextualStores, ...props } = this.props
+          const children = <Klass {...props} {...this.stores} />
+          if (context) {
+            ;<StoreContext.Provider value={this.childContextStores()}>
+              {children}
+            </StoreContext.Provider>
+          }
+          return children
+        }
       }
 
-      // add stores to context
+      let StoreProviderWithContext: any = StoreProvider
+
+      // we need to merge parent stores down
       if (context) {
-        StoreProvider.contextTypes = {
-          stores: object,
-        }
-        StoreProvider.childContextTypes = {
-          stores: object,
-        }
+        StoreProviderWithContext = props => (
+          <StoreContext.Consumer>
+            {stores => <StoreProvider __contextualStores={stores} {...props} />}
+          </StoreContext.Consumer>
+        )
       }
 
-      return new Proxy(StoreProvider, {
+      return new Proxy(StoreProviderWithContext, {
         set(_, method, value) {
           Klass[method] = value
           return true

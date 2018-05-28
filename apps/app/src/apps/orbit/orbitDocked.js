@@ -138,8 +138,8 @@ class OrbitDocked {
     willAnimate: {
       willChange: 'transform, opacity',
       transition: `
-        transform ease-in ${App.animationDuration / 2}ms,
-        opacity ease-in ${App.animationDuration / 2}ms
+        transform ease-in ${App.animationDuration * 0.8}ms,
+        opacity ease-in ${App.animationDuration * 0.8}ms
       `,
     },
     visible: {

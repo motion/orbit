@@ -75,7 +75,7 @@ export class OrbitHeader extends React.Component {
             $searchIcon
             name="ui-1_zoom"
             size={20}
-            color={theme.active.background.darken(0.15).desaturate(0.4)}
+            color={theme.base.color.alpha(0.3)}
           />
           <input
             value={orbitStore.query}
@@ -86,6 +86,9 @@ export class OrbitHeader extends React.Component {
             onKeyDown={this.handleKeyDown}
             ref={headerStore.setInputRef}
             onClick={headerStore.onClickInput}
+            css={{
+              color: theme.base.color.alpha(0.8),
+            }}
           />
           <inputLn />
         </title>

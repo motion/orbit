@@ -102,11 +102,7 @@ class OrbitDocked {
               appStore={appStore}
               paneStore={paneStore}
             />
-            <OrbitSearchResults
-              name="summary-search"
-              parentPane="summary"
-              paneStore={paneStore}
-            />
+            <OrbitSearchResults name="summary-search" parentPane="summary" />
             <OrbitSettings />
           </orbitInner>
         </container>

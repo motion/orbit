@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view } from '@mcro/black'
+import { view, Component } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { Electron, Desktop } from '@mcro/all'
@@ -12,21 +12,16 @@ class MainStore {
   }
 }
 
-// @ts-ignore
 @view.attach('electronStore')
-// @ts-ignore
 @view.provide({
   store: MainStore,
 })
-// @ts-ignore
 @view.electron
-export default class MainWindow extends React.Component {
-  props: {
-    store: MainStore
-    electronStore: ElectronStore
-    onRef?: Function
-  }
-
+export class MainWindow extends Component<{
+  store: MainStore
+  electronStore: ElectronStore
+  onRef?: Function
+}> {
   state = {
     show: false,
     position: [0, 0],

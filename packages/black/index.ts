@@ -10,3 +10,6 @@ export * from './helpers/debugState'
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export { DecorPlugins, DecorCompiledDecorator } from '@mcro/decor'
+
+import * as React from 'react'
+export const Component = React.Component

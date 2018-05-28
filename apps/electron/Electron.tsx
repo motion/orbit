@@ -1,20 +1,18 @@
 import { App as AppWindow } from '@mcro/reactron'
-import { view } from '@mcro/black'
+import { view, Component } from '@mcro/black'
 import * as React from 'react'
 import Tray from './views/Tray'
-import MenuItems from './views/MenuItems'
-import MainWindow from './views/MainWindow'
+import { MenuItems } from './views/MenuItems'
+import { MainWindow } from './views/MainWindow'
 import { ElectronStore } from '~/stores/ElectronStore'
 
 @view.provide({
   electronStore: ElectronStore,
 })
 @view.electron
-export class Electron extends React.Component {
-  props: {
-    electronStore: ElectronStore
-  }
-
+export class Electron extends Component<{
+  electronStore: ElectronStore
+}> {
   componentDidCatch(error) {
     this.props.electronStore.error = error
     console.error(error)

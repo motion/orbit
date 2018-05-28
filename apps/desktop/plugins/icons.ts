@@ -17,10 +17,14 @@ export default class Icons {
     if (this.cache[name]) {
       return name
     }
-    await fileIcon.file(path, {
-      size: opts.size || 64,
-      destination,
-    })
+    try {
+      await fileIcon.file(path, {
+        size: opts.size || 64,
+        destination,
+      })
+    } catch {
+      console.log('error getting icon')
+    }
     this.cache[name] = true
     return name
   }

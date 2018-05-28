@@ -1,4 +1,5 @@
 * hmr dehydrate/hydrate
+* types for .provide, .attach, and view()
 
 ## website
 

@@ -1,9 +1,6 @@
-import { react, store, sleep } from '@mcro/black'
+import { react, store } from '@mcro/black'
 import { App, Electron, Desktop, Swift } from '@mcro/all'
-import { globalShortcut } from 'electron'
-import debug from '@mcro/debug'
-
-const log = debug('OrbitWindow')
+import * as ElectronNode from 'electron'
 
 @store
 export class WindowFocusStore {
@@ -25,7 +22,8 @@ export class WindowFocusStore {
       await when(() => !App.isAnimatingOrbit)
       if (down) {
         for (const { key, shortcut } of this.keyShortcuts) {
-          globalShortcut.register(shortcut, async () => {
+          // @ts-ignore
+          ElectronNode.globalShortcut.register(shortcut, async () => {
             // TYPE THE KEY
             Electron.sendMessage(App, `${App.messages.PIN}-${key}`)
             // FOCUS
@@ -44,7 +42,8 @@ export class WindowFocusStore {
 
   unRegisterKeyShortcuts = () => {
     for (const { shortcut } of this.keyShortcuts) {
-      globalShortcut.unregister(shortcut)
+      // @ts-ignore
+      ElectronNode.globalShortcut.unregister(shortcut)
     }
   }
 
@@ -90,9 +89,5 @@ export class WindowFocusStore {
     this.orbitRef = ref.window
     this.focusOrbit()
     this.props.onRef(this.orbitRef)
-  }
-
-  handleReadyToShow = () => {
-    this.show = true
   }
 }

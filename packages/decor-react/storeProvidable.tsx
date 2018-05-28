@@ -297,7 +297,6 @@ storeProvidable = function(options, Helpers) {
 
         render() {
           const { __contextualStores, ...props } = this.props
-          console.log('stores are', this.stores)
           const children = <Klass {...props} {...this.stores} />
           if (context) {
             return (

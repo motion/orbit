@@ -1,6 +1,5 @@
 export * from './view'
 export * from './storeDecorator'
-export * from './provideStore'
 export * from './helpers/log'
 export * from './helpers/watch'
 export * from './helpers/mobx'

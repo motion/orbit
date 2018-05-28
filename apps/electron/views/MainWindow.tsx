@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { Electron, Desktop } from '@mcro/all'
-import { ElectronStore } from '~/stores'
+import { ElectronStore } from '~/stores/ElectronStore'
 
 class MainStore {
   get mouseInActiveArea() {
@@ -24,11 +24,13 @@ export default class MainWindow extends React.Component {
   props: {
     store: MainStore
     electronStore: ElectronStore
+    onRef?: Function
   }
 
   state = {
     show: false,
     position: [0, 0],
+    size: null,
   }
 
   componentDidMount() {
@@ -53,7 +55,6 @@ export default class MainWindow extends React.Component {
     if (!this.state.size) {
       return null
     }
-    console.log('electronStore.show', electronStore.show)
     return (
       <Window
         alwaysOnTop

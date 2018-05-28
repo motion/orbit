@@ -10,7 +10,6 @@ import {
 } from '@mcro/decor-react'
 import { subscribable } from '@mcro/decor-classes'
 import { utilityUsable, reactObservable } from '@mcro/decor-mobx'
-import automagical from '@mcro/automagical'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
 
@@ -28,9 +27,7 @@ const uiContext = [
 ]
 
 const glossPlugin = () => ({ decorator })
-const decorations = (
-  enable: { ui?: boolean; mobx?: boolean; magic?: boolean } = {},
-) => [
+const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   extendsReact,
   subscribable,
   utilityUsable,
@@ -38,13 +35,12 @@ const decorations = (
   renderArgumentable,
   enable.ui && glossPlugin,
   enable.mobx && reactObservable,
-  enable.magic && automagical,
   [storeProvidable, storeOptions],
   !enable.ui && emitsMount,
 ]
 
 export const blackDecorator: DecorCompiledDecorator<any> = decor(
-  decorations({ mobx: true, magic: false, ui: true }),
+  decorations({ mobx: true, ui: true }),
 )
 
 export interface ViewDecorator {

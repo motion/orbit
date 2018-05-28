@@ -3,6 +3,8 @@ import configureEventHandler from '../utils/configureEventHandler'
 
 // sort of like our own mini react API
 
+const NOT_NEW = '__NOT_NEW__'
+
 export class BaseComponent {
   constructor(root, props) {
     this._id = `${this.constructor.name}${Math.random()}`
@@ -41,6 +43,10 @@ export class BaseComponent {
     this.children.splice(index, 1)
   }
 
+  commitUpdate(instance, updatePayload, type, lastRawProps, nextRawProps) {
+    this.applyProps(lastRawProps, nextRawProps)
+  }
+
   applyProps(newProps = {}, oldProps) {
     this.props = newProps
     this.update(oldProps)
@@ -51,8 +57,8 @@ export class BaseComponent {
     const newPropKeys = !prevProps
       ? currentPropKeys
       : currentPropKeys
-          .map(k => (!isEqual(this.props[k], prevProps[k]) ? k : '__NOT_NEW__'))
-          .filter(x => x !== '__NOT_NEW__')
+          .map(k => (!isEqual(this.props[k], prevProps[k]) ? k : NOT_NEW))
+          .filter(x => x !== NOT_NEW)
     if (this.handleNewProps) {
       this.handleNewProps(newPropKeys, prevProps)
     }

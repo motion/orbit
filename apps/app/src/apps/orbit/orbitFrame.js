@@ -68,10 +68,10 @@ export class OrbitFrame {
           pointerEvents: hidden ? 'none' : 'auto',
           width: size[0],
           // TODO HACKINESS fix the size/y calc in orbitPosition.js
-          height: size[1] - 15,
+          height: size[1] - 5,
           transform: {
             x: position[0],
-            y: position[1] + 5,
+            y: position[1],
           },
         }}
       >

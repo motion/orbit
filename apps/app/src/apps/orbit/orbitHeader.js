@@ -151,12 +151,12 @@ export class OrbitHeader extends React.Component {
     },
     input: {
       width: '100%',
+      background: 'transparent',
       fontWeight: 300,
       fontSize: 24,
       padding: [20, 10, 20, 36],
       // height: 54,
       border: 'none',
-      background: 'transparent',
     },
     pinnedIcon: {
       position: 'relative',

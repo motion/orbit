@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import { NotFound } from '~/views/notFound'
 import { hot } from 'react-hot-loader'
 import Router from './router'
+import { view } from '@mcro/black'
 
 class Root extends React.Component {
   state = {
@@ -74,5 +75,21 @@ class Root extends React.Component {
     )
   }
 }
+
+// make hmr state preserve
+
+// if (module.hot.addStatusHandler) {
+//   if (module.hot.status() === 'idle') {
+//     module.hot.addStatusHandler(status => {
+//       console.log('hottt', status)
+//       if (status === 'prepare') {
+//         view.emit('will-hmr')
+//       }
+//       if (status === 'apply') {
+//         view.emit('hmr')
+//       }
+//     })
+//   }
+// }
 
 export default hot(module)(Root)

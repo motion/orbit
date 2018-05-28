@@ -11,7 +11,7 @@ const debounceLog = (...args) => {
   loggers.push([...args])
   if (!nextLog) {
     nextLog = setTimeout(() => {
-      log('debounceLog', loggers.length, loggers.join(', '))
+      log('rendered cards', loggers.length)
       loggers = []
       nextLog = null
     })
@@ -60,12 +60,11 @@ class OrbitCardStore {
       this.props.appStore.activeIndex,
       App.state.peekState.target,
     ],
-    ([paneSelected, index, target]) => {
+    ([paneSelected, index]) => {
       if (!paneSelected) {
         throw react.cancel
       }
       const isSelected = index === this.props.index
-      console.log(this.props.bit.id, isSelected)
       if (isSelected !== this._isSelected) {
         this._isSelected = isSelected
       }
@@ -265,7 +264,7 @@ export class OrbitCard extends React.Component {
       overflow: 'hidden',
       position: 'relative',
       maxHeight: '100%',
-      // transition: 'all ease-in 2500ms',
+      transition: 'all ease-in 160ms',
     },
     title: {
       maxWidth: '100%',

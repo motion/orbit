@@ -80,13 +80,13 @@ const log = debug('highlights')
     hoverOCRLines = react(
       () => Desktop.ocrState.lines,
       this.setupHover('line'),
-      { immediate: true },
+      { immediate: true, log: false },
     )
 
     hoverOCRWords = react(
       () => this.ocrWords, //Desktop.ocrState.words,
       this.setupHover('word'),
-      { immediate: true },
+      { immediate: true, log: false },
     )
 
     get showAll() {

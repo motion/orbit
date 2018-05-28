@@ -79,18 +79,14 @@ export function storeProvidable(options, Helpers) {
         allStores = allStores
         storeHMRCache = {}
 
-        onWillReload() {
-          this.onWillReloadStores()
-          this.disposeStores()
-          this.setupProps()
-          this.setupStores()
-          this.mountStores()
-          this.forceUpdate()
-        }
-
-        onReload() {
-          this.onReloadStores()
-        }
+        // onWillReload() {
+        //   this.onWillReloadStores()
+        //   this.disposeStores()
+        //   this.setupProps()
+        //   this.setupStores()
+        //   this.mountStores()
+        //   this.forceUpdate()
+        // }
 
         constructor(a, b) {
           super(a, b)
@@ -114,10 +110,8 @@ export function storeProvidable(options, Helpers) {
           root.loadedStores.add(this)
           this.mounted = true
           this.mountStores()
-          // if (root.Black) {
-          //   this.errorClear = this.clearErrors.bind(this)
-          //   this.hmrDispose = root.Black.view.on('hmr', this.errorClear)
-          // }
+          Helpers.on('will-hmr', this.onWillReloadStores)
+          Helpers.on('did-hmr', this.onReloadStores)
         }
 
         clearErrors() {
@@ -238,6 +232,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         onWillReloadStores() {
+          console.log('will reload, dehydrating')
           if (!this.stores) {
             return
           }
@@ -254,6 +249,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         onReloadStores() {
+          console.log('did reload, rehydrating')
           if (!this.stores) {
             return
           }

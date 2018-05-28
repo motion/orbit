@@ -98,9 +98,6 @@ export default function automagical() {
           }
           if (!this.__automagical.started) {
             decorateClassWithAutomagic(this)
-            if (Klass.name === 'PaneStore') {
-              console.log('paneauto', this.__automagical)
-            }
             if (this.__automagical.watchers) {
               for (const watcher of this.__automagical.watchers) {
                 watcher()
@@ -385,9 +382,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const isReaction = Array.isArray(val)
 
   function run() {
-    if (obj.constructor.name === 'PaneStore') {
-      console.log('set it tup', obj, method, val, options)
-    }
     setTimeout(() => {
       if (disposed) {
         // this avoids work/bugs by cancelling reactions after disposed
@@ -566,9 +560,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         isAsyncReaction = true
         reactionResult
           .then(val => {
-            if (obj.constructor.name === 'PaneStore') {
-              console.log('val', val)
-            }
             if (typeof val !== 'undefined') {
               if (hasCalledSetValue) {
                 throw new Error(

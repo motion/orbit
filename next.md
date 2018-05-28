@@ -1,4 +1,3 @@
-* upgrade react 16.4
 * hmr dehydrate/hydrate
 
 ## website

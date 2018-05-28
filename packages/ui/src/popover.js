@@ -9,8 +9,6 @@ import { Theme } from './helpers/theme'
 import * as PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
-console.log('hi')
-
 // export type Props = {
 //   // can pass function to get isOpen passed in
 //   children?: React.Element<any> | Function,
@@ -312,7 +310,6 @@ export class Popover extends React.PureComponent {
   }
 
   setPosition(callback) {
-    console.log('set position')
     if (!this.popoverRef) {
       return
     }

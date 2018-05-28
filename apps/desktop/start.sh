@@ -16,6 +16,10 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/all)/_ \
   --watch $(realpath node_modules/@mcro/oracle)/lib \
   --watch $(realpath node_modules/@mcro/automagical)/_ \
+  --watch $(realpath node_modules/@mcro/decor-mobx)/_  \
+  --watch $(realpath node_modules/@mcro/decor-react)/_  \
+  --watch $(realpath node_modules/@mcro/decor-classes)/_  \
+  --watch $(realpath node_modules/@mcro/decor)/_  \
   --exec 'npx kill-port 3001 && \
     npx kill-port 9000 && \
     NODE_ENV=development node -r esm --inspect=127.0.0.1:9000 _/index.js'

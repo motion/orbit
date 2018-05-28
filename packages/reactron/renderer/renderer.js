@@ -30,7 +30,7 @@ export default Reconciler({
 
   prepareForCommit: noop,
 
-  prepareUpdate(element, type, oldProps, newProps) {
+  prepareUpdate(/*element, type, oldProps, newProps */) {
     return true
   },
 
@@ -45,7 +45,7 @@ export default Reconciler({
     return emptyObject
   },
 
-  shouldSetTextContent(type, props) {
+  shouldSetTextContent(/*type, props */) {
     return false
   },
 

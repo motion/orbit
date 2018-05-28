@@ -131,6 +131,7 @@ export class Window extends BaseComponent {
     try {
       for (const key of keys) {
         const val = this.props[key]
+        console.log('handleNewProp', key, val)
         if (EVENT_KEYS[key]) {
           this.handleEvent(this.window, EVENT_KEYS[key], val)
           continue
@@ -174,6 +175,7 @@ function configureFile({ file }) {
 }
 
 function configureSize({ size: oSize, onResize, defaultSize, animateSize }) {
+  console.log('confguring size', oSize)
   if (this.unmounted) {
     return
   }
@@ -190,7 +192,6 @@ function configureSize({ size: oSize, onResize, defaultSize, animateSize }) {
       const size = this.window.getSize()
       rawHandler(size)
     })
-
     if (!size && defaultSize) {
       this.window.setSize(...defaultSize)
       this.window.setResizable(true)
@@ -236,12 +237,10 @@ function configurePosition({
       const position = this.window.getPosition()
       rawHandler(position)
     })
-
     this.handleEvent(this.window, 'moved', onMoved, rawHandler => {
       const position = this.window.getPosition()
       rawHandler(position)
     })
-
     if (!position && defaultPosition) {
       this.window.setPosition(...defaultPosition)
       this.window.setMovable(true)
@@ -252,9 +251,9 @@ function configurePosition({
       return
     }
     if (position) {
-      if (!Array.isArray(position)) end(`not array`)
+      if (!Array.isArray(position)) end('not array')
       if (typeof position[0] !== 'number' || typeof position[1] !== 'number')
-        end(`not number`)
+        end('not number')
       if (onMove || onMoved) {
         this.window.setPosition(...position)
         this.window.setMovable(true)

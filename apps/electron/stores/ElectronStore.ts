@@ -15,9 +15,9 @@ export class ElectronStore {
   views = null
   orbitRef = null
   clear = Date.now()
-  show = 0
+  show = 2
 
-  async willMount() {
+  async didMount() {
     root.Root = this
     root.restart = this.restart
     debugState(({ stores, views }) => {

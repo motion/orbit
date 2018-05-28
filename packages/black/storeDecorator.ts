@@ -1,21 +1,15 @@
 // @ts-ignore
 import decor, { DecorPlugin } from '@mcro/decor'
-import {
-  hydratable,
-  utilityUsable,
-  UtilityUsable,
-  // @ts-ignore
-  UtilityUsableClass,
-} from '@mcro/decor-mobx'
+import { hydratable, utilityUsable, UtilityUsable } from '@mcro/decor-mobx'
 import { subscribable, emittable } from '@mcro/decor-classes'
 import automagical from '@mcro/automagical'
 import { CompositeDisposable } from 'event-kit'
 
-import { DecorCompiledDecorator } from '@mcro/decor'
+// import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
-export { UtilityUsableClass } from '@mcro/decor-mobx'
 
-export const storeDecorator: DecorCompiledDecorator<UtilityUsable> = decor([
+// DecorCompiledDecorator<UtilityUsable>
+export const storeDecorator: any = decor([
   subscribable,
   utilityUsable,
   emittable,

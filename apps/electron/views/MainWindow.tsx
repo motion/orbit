@@ -31,7 +31,13 @@ export default class MainWindow extends React.Component {
     position: [0, 0],
   }
 
+  componentDidMount() {
+    this.handleReadyToShow()
+    console.log('MOUNTED')
+  }
+
   handleReadyToShow = () => {
+    console.log('Helpers.getScreenSize()', Helpers.getScreenSize())
     this.setState({
       size: Helpers.getScreenSize(),
       show: true,
@@ -44,6 +50,10 @@ export default class MainWindow extends React.Component {
 
   render() {
     const { store, electronStore, onRef } = this.props
+    if (!this.state.size) {
+      return null
+    }
+    console.log('electronStore.show', electronStore.show)
     return (
       <Window
         alwaysOnTop
@@ -58,7 +68,6 @@ export default class MainWindow extends React.Component {
         transparent
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
-        onReadyToShow={this.handleReadyToShow}
         position={this.state.position}
         size={this.state.size}
         onMove={this.handleMove}

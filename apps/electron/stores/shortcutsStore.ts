@@ -13,7 +13,7 @@ export class ShortcutsStore {
         this.emit('shortcut', shortcut)
       })
       if (!ret) {
-        console.log('couldnt register shortcut')
+        console.log('couldnt register shortcut', shortcut, ret)
       }
     }
   }

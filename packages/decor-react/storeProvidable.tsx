@@ -5,7 +5,7 @@ import difference from 'lodash/difference'
 import isEqual from 'lodash/isEqual'
 import root from 'global'
 import { DecorPlugin } from '@mcro/decor'
-import { StoreContext } from '~/contexts'
+import { StoreContext } from './contexts'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
@@ -292,16 +292,18 @@ storeProvidable = function(options, Helpers) {
             ...parentStores,
             ...pickBy(this.stores, (_, key) => names.indexOf(key) >= 0),
           }
-          return { stores }
+          return stores
         }
 
         render() {
           const { __contextualStores, ...props } = this.props
           const children = <Klass {...props} {...this.stores} />
           if (context) {
-            ;<StoreContext.Provider value={this.childContextStores()}>
-              {children}
-            </StoreContext.Provider>
+            return (
+              <StoreContext.Provider value={this.childContextStores()}>
+                {children}
+              </StoreContext.Provider>
+            )
           }
           return children
         }

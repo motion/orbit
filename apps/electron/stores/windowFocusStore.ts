@@ -55,7 +55,7 @@ export class WindowFocusStore {
   focusOnPinned = react(
     () => App.orbitState.docked || App.orbitState.pinned,
     async (pinned, { sleep, when }) => {
-      await sleep(App.animationDuration * 1.6)
+      await sleep(App.animationDuration * 2)
       await when(() => !App.isAnimatingOrbit)
       if (!pinned) {
         Swift.defocus()

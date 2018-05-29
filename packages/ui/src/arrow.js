@@ -61,7 +61,6 @@ export class Arrow extends React.Component {
                 top: innerTop * 0.75,
                 width: size,
                 height: size,
-                background: background || '#fff',
                 boxShadow,
                 opacity,
                 border,
@@ -85,5 +84,13 @@ export class Arrow extends React.Component {
       borderRadius: 1,
       transform: { rotate: '45deg' },
     },
+  }
+
+  static theme = ({ background }, theme) => {
+    return {
+      arrowInner: {
+        background: background || theme.base.background,
+      },
+    }
   }
 }

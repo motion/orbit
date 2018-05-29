@@ -71,6 +71,9 @@ export class OrbitHomeHeader {
         borderColor: '#ddd',
         opacity: 1,
       },
+      hoverStyle: {
+        background: 'transparent',
+      },
     }
     return (
       <>

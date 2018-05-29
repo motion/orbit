@@ -8,6 +8,8 @@ import { Glint } from './effects/glint'
 import { Popover } from './popover'
 import { object } from 'prop-types'
 
+const POPOVER_PROPS = { style: { fontSize: 12 } }
+
 // export type Props = {
 //   active?: boolean,
 //   after?: Element | string,
@@ -169,7 +171,7 @@ class SurfacePlain extends React.Component {
       highlight,
       highlightBackground,
       highlightColor,
-      hover,
+      hoverStyle,
       hoverable,
       hovered,
       icon,
@@ -291,27 +293,26 @@ class SurfacePlain extends React.Component {
           {children}
         </element>
         {noElement && noWrap && hasChildren(children) && children}
-        <Popover
-          if={tooltip}
-          theme="dark"
-          background
-          openOnHover
-          closeOnClick
-          noHover
-          noArrow
-          animation="bounce 150ms"
-          target={`.${this.uniq}`}
-          padding={[2, 7]}
-          borderRadius={5}
-          distance={8}
-          forgiveness={8}
-          arrowSize={10}
-          delay={100}
-          popoverProps={{ style: { fontSize: 12 } }}
-          {...tooltipProps}
-        >
-          {tooltip}
-        </Popover>
+        <Theme if={tooltip} name="dark">
+          <Popover
+            background
+            openOnHover
+            closeOnClick
+            noHover
+            animation="bounce 150ms"
+            target={`.${this.uniq}`}
+            padding={[2, 7]}
+            borderRadius={5}
+            distance={8}
+            forgiveness={8}
+            arrowSize={10}
+            delay={100}
+            popoverProps={POPOVER_PROPS}
+            {...tooltipProps}
+          >
+            {tooltip}
+          </Popover>
+        </Theme>
       </>
     )
 
@@ -568,15 +569,25 @@ class SurfacePlain extends React.Component {
       color: hoverColor,
       borderColor: hoverBorderColor,
       background: hoverBackground,
-      ...props.hover,
+      ...props.hoverStyle,
     }
 
-    const activeStyle = !props.chromeless && {
+    let activeStyle = !props.chromeless && {
       position: 'relative',
       zIndex: props.zIndex || 1000,
-      ...(props.clickable && theme[STATE]),
-      ...(props.clickable && { '&:hover': theme[STATE] }),
-      ...props.activeStyle,
+    }
+
+    if (props.active) {
+      const userActiveStyle =
+        props.activeStyle || (props.clickable && theme.active)
+      if (userActiveStyle) {
+        activeStyle = {
+          ...activeStyle,
+          ...userActiveStyle,
+          '&:hover':
+            userActiveStyle['&:hover'] || userActiveStyle || activeStyle,
+        }
+      }
     }
 
     const chromelessStyle = props.chromeless && {

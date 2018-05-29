@@ -41,7 +41,7 @@ const slackConvoBitContentStyle = {
 @view({
   store: ConversationPeek,
 })
-export class Conversation {
+export class Conversation extends React.Component {
   render({ store, bit, appStore }) {
     if (!bit) {
       return null

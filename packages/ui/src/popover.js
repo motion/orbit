@@ -5,7 +5,6 @@ import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import { Arrow } from './arrow'
 import { SizedSurface } from './sizedSurface'
-import { Theme } from './helpers/theme'
 import * as PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
@@ -93,9 +92,6 @@ export class Popover extends React.PureComponent {
     animation: 'slide 300ms',
     adjust: [0, 0],
     delay: 16,
-  }
-  static contextTypes = {
-    uiThemes: PropTypes.object,
   }
 
   get curProps() {
@@ -313,12 +309,9 @@ export class Popover extends React.PureComponent {
     if (!this.popoverRef) {
       return
     }
-    clearTimeout(this.positionTimeout)
-    this.positionTimeout = this.setTimeout(() => {
-      if (!this.unmounted) {
-        this.setState(this.positionState, callback)
-      }
-    })
+    if (!this.unmounted) {
+      this.setState(this.positionState, callback)
+    }
   }
 
   get forgiveness() {
@@ -340,11 +333,9 @@ export class Popover extends React.PureComponent {
 
   get targetBounds() {
     const { top, left } = this.curProps
-    const bounds = {}
+    const bounds = { top: 0, left: 0, width: 0, height: 0 }
     // find target dimensions
     if (this.isManuallyPositioned) {
-      bounds.width = 0
-      bounds.height = 0
       bounds.left = left
       bounds.top = top
     } else {
@@ -392,7 +383,7 @@ export class Popover extends React.PureComponent {
   get direction() {
     const { forgiveness, popoverSize, targetBounds } = this
     const { towards } = this.curProps
-    if (towards !== 'auto') {
+    if (!targetBounds || towards !== 'auto') {
       return towards
     }
     const popoverY = popoverSize.height + forgiveness
@@ -412,9 +403,11 @@ export class Popover extends React.PureComponent {
 
   get x() {
     const { direction, popoverSize, targetBounds } = this
+    if (!targetBounds) {
+      return 0
+    }
     const VERTICAL = direction === 'top' || direction === 'bottom'
     const { adjust, distance, arrowSize, forgiveness } = this.curProps
-
     // measurements
     const popoverHalfWidth = popoverSize.width / 2
     const targetCenter = targetBounds.left + targetBounds.width / 2
@@ -422,7 +415,6 @@ export class Popover extends React.PureComponent {
 
     let left
     let arrowLeft = 0 // defaults to 0
-
     // auto for now will just be top/bottom
     // in future it needs to measure target and then determine
     if (VERTICAL) {
@@ -431,7 +423,6 @@ export class Popover extends React.PureComponent {
         window.innerWidth,
         popoverSize.width,
       )
-
       // arrow
       if (targetCenter < popoverHalfWidth) {
         // ON LEFT SIDE
@@ -442,13 +433,11 @@ export class Popover extends React.PureComponent {
         const edgeAdjustment = window.innerWidth - (left + popoverSize.width)
         arrowLeft = targetCenter - arrowCenter + edgeAdjustment
       }
-
       // arrowLeft bounds
       const max = Math.max(0, popoverHalfWidth - arrowSize * 0.75)
       const min = -popoverHalfWidth + arrowSize * 0.5 + distance
       arrowLeft = Math.max(min, Math.min(max, arrowLeft))
       arrowLeft = -(arrowSize / 2) + arrowLeft
-
       // adjust arrows off in this case
       // TODO: this isnt quite right
       if (distance > forgiveness) {
@@ -464,11 +453,9 @@ export class Popover extends React.PureComponent {
         arrowLeft = -popoverHalfWidth - arrowSize
       }
     }
-
     // adjustments
     left += adjust[0]
     arrowLeft -= adjust[0]
-
     return { arrowLeft, left }
   }
 
@@ -700,7 +687,6 @@ export class Popover extends React.PureComponent {
     showForgiveness,
     style,
     target,
-    theme,
     top: _top,
     towards,
     width,
@@ -784,31 +770,29 @@ export class Popover extends React.PureComponent {
                 }}
               >
                 <Arrow
-                  theme={
-                    this.context.uiThemes &&
-                    this.context.uiThemes[theme] &&
-                    this.context.uiThemes[theme].base
+                  background={
+                    typeof background === 'string' &&
+                    background !== 'transparent'
+                      ? background
+                      : null
                   }
-                  background={background !== 'transparent' ? background : null}
                   size={arrowSize}
                   towards={INVERSE[direction]}
                   boxShadow={getShadow(shadow, elevation)}
                 />
               </arrowContain>
-              <Theme name={theme}>
-                <SizedSurface
-                  sizeRadius
-                  ignoreSegment
-                  flex={1}
-                  {...props}
-                  elevation={elevation}
-                  background={background}
-                >
-                  {typeof children === 'function'
-                    ? children(showPopover)
-                    : children}
-                </SizedSurface>
-              </Theme>
+              <SizedSurface
+                sizeRadius
+                ignoreSegment
+                flex={1}
+                {...props}
+                elevation={elevation}
+                background={background}
+              >
+                {typeof children === 'function'
+                  ? children(showPopover)
+                  : children}
+              </SizedSurface>
             </popover>
           </container>
         </Portal>

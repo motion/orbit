@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import { NotFound } from '~/views/notFound'
 import { hot } from 'react-hot-loader'
 import Router from './router'
-import { view } from '@mcro/black'
+// import { view } from '@mcro/black'
 
 class Root extends React.Component {
   state = {
@@ -25,6 +25,7 @@ class Root extends React.Component {
   }
 
   render() {
+    console.log('hi')
     if (this.state.error) {
       return (
         <aboveredbox

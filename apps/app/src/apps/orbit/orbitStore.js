@@ -32,6 +32,7 @@ export default class OrbitStore {
         this.lastPinKey = key
       },
     })
+    console.log('willmount orbitstore')
     this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))
   }
 
@@ -40,6 +41,7 @@ export default class OrbitStore {
   }
 
   handleKeyDown = code => {
+    console.log('keydown', code)
     const { results, activeIndex, toggleSelected } = this.props.appStore
     const increment = (by = 1) =>
       toggleSelected(Math.min(results.length - 1, activeIndex + by))

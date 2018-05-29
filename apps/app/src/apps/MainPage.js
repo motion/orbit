@@ -11,6 +11,7 @@ import { AppStore } from '~/stores/appStore'
 @view
 export class MainPage extends React.Component {
   render() {
+    log('main')
     return (
       <main>
         <HighlightsPage />

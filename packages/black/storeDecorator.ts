@@ -22,7 +22,7 @@ export const storeOptions = {
   onStoreMount(_, store, props) {
     if (store._decorated) {
       console.warn('decoarte twice', store, props)
-      // return
+      return
     }
     Object.defineProperty(store, '_decorated', {
       enumerable: false,

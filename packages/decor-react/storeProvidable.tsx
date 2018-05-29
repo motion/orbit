@@ -61,10 +61,12 @@ storeProvidable = function(options, Helpers) {
 
       // return HoC
       class StoreProvider extends React.Component implements StoreProvidable {
+        isSetup = false
+        id = Math.random()
+
         props: any | { __contextualStores?: Object }
         hmrDispose: any
         _props: any
-        mounted: boolean
         stores: any
         unmounted: boolean
 
@@ -96,7 +98,7 @@ storeProvidable = function(options, Helpers) {
           }
           this.setupProps()
           this.setupStores()
-          this.unmounted = false
+          this.isSetup = true
         }
 
         // PureComponent means this is only called when props are not shallow equal
@@ -109,7 +111,6 @@ storeProvidable = function(options, Helpers) {
             return
           }
           root.loadedStores.add(this)
-          this.mounted = true
           this.mountStores()
           Helpers.on('will-hmr', this.onWillReloadStores)
           Helpers.on('did-hmr', this.onReloadStores)
@@ -121,9 +122,6 @@ storeProvidable = function(options, Helpers) {
           if (this.disposeStores) {
             this.disposeStores()
             this.unmounted = true
-            if (this.hmrDispose) {
-              this.hmrDispose.dispose()
-            }
           }
         }
 

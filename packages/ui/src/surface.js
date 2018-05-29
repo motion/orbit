@@ -214,6 +214,7 @@ class SurfacePlain extends React.Component {
       alignItems,
       justifyContent,
       backgroundAlpha,
+      activeStyle,
       ...props
     } = this.props
     const hasIconBefore = icon && !iconAfter
@@ -575,6 +576,7 @@ class SurfacePlain extends React.Component {
       zIndex: props.zIndex || 1000,
       ...(props.clickable && theme[STATE]),
       ...(props.clickable && { '&:hover': theme[STATE] }),
+      ...props.activeStyle,
     }
 
     const chromelessStyle = props.chromeless && {

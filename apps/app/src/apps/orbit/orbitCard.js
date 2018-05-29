@@ -9,13 +9,12 @@ let loggers = []
 let nextLog = null
 const debounceLog = (...args) => {
   loggers.push([...args])
-  if (!nextLog) {
-    nextLog = setTimeout(() => {
-      log('rendered cards', loggers.length)
-      loggers = []
-      nextLog = null
-    })
-  }
+  clearTimeout(nextLog)
+  nextLog = setTimeout(() => {
+    log('**', loggers.length, loggers.join(' -- '))
+    loggers = []
+    nextLog = null
+  }, 16)
 }
 
 class OrbitCardStore {
@@ -226,11 +225,7 @@ export class OrbitCard extends React.Component {
   }
 
   render({ pane, appStore, bit, store, itemProps }) {
-    debounceLog(
-      `${bit.id}.${pane}${this.props.id} ${store.isSelected} ${
-        store._isSelected
-      }`,
-    )
+    debounceLog(`${bit.id}.${pane} ${store.isSelected}`)
     const BitContent = bitContents(bit)
     store.isSelected
     if (typeof BitContent !== 'function') {

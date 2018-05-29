@@ -24,7 +24,7 @@ const Themes = {
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,
     background: greyBg,
-    color: '#656141',
+    color: '#666',
     borderColor: greyActiveBg,
     hover: {
       background: greyHoverBg,

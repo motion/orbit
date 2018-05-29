@@ -54,16 +54,22 @@ export class OrbitHomeHeader {
     const day = now.toLocaleDateString(locale, { weekday: 'short' })
     const month = now.toLocaleDateString(locale, { month: 'short' })
     const dayNum = now.getMonth()
-    const buttonColor = theme.base.color.darken(0.15)
+    const buttonColor = theme.base.color.lighten(0.2)
     const exploreButton = {
       size: 1.2,
       circular: true,
-      borderWidth: 0,
-      borderColor: theme.base.borderColor,
+      borderWidth: 1,
+      borderColor: 'transparent',
       background: 'transparent',
       iconProps: {
         color: buttonColor,
-        size: 18,
+        size: 16,
+      },
+      opacity: 0.5,
+      activeStyle: {
+        background: 'transparent',
+        borderColor: '#ddd',
+        opacity: 1,
       },
     }
     return (
@@ -78,7 +84,7 @@ export class OrbitHomeHeader {
             {...exploreButton}
           />
           <UI.Button
-            icon="userscir"
+            icon="menu35"
             tooltip="Directory"
             $exploreButton
             active={paneStore.activePane === 'directory'}

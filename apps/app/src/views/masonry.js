@@ -11,21 +11,20 @@ export class Masonry extends React.Component {
   state = {
     measured: false,
     children: null,
+    gridChildren: null,
   }
 
   static getDerivedStateFromProps(props, state) {
     if (!isEqual(state.children, props.children)) {
       return { measured: false, children: props.children }
     }
-    return {
-      children: props.children,
-    }
+    return null
   }
 
   async setGrid(grid) {
     if (!grid) return
     if (this.state.measured) return
-    await sleep(16)
+    await sleep(100)
     this.styles = []
     for (const item of Array.from(grid.children)) {
       const content = item.querySelector('.card')
@@ -35,7 +34,21 @@ export class Masonry extends React.Component {
       )
       this.styles.push({ gridRowEnd: `span ${rowSpan}` })
     }
-    this.setState({ measured: true })
+    const gridChildren = React.Children.map(
+      this.props.children,
+      (child, index) => {
+        return React.cloneElement(child, {
+          style: {
+            ...this.styles[index],
+            ...child.props.style,
+          },
+        })
+      },
+    )
+    this.setState({
+      gridChildren,
+      measured: true,
+    })
   }
 
   handleGridRef = ref => this.setGrid(ref)
@@ -47,28 +60,22 @@ export class Masonry extends React.Component {
     const { children, ...props } = this.props
     if (!measured) {
       return (
-        <grid ref={this.handleGridRef} {...props}>
+        <grid ref={this.handleGridRef} {...props} css={{ opacity: 0 }}>
           {children}
         </grid>
       )
     }
     return (
       <grid style={this.gridStyle} {...props}>
-        {React.Children.map(children, (child, index) => {
-          return React.cloneElement(child, {
-            style: {
-              ...this.styles[index],
-              ...child.props.style,
-            },
-          })
-        })}
+        {this.state.gridChildren}
       </grid>
     )
   }
 
   static style = {
     grid: {
-      minHeight: '100%',
+      height: '100%',
+      overflowY: 'scroll',
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
     },

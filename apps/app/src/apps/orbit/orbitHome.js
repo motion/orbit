@@ -54,6 +54,10 @@ class OrbitHomeStore {
   store: OrbitHomeStore,
 })
 export class OrbitHome {
+  span2 = {
+    gridColumnEnd: 'span 2',
+  }
+
   render({ store }) {
     log('HOME---------------')
     return (
@@ -61,7 +65,6 @@ export class OrbitHome {
         <Masonry>
           {store.results.map((bit, index) => (
             <OrbitCard
-              id={Math.random()}
               pane="summary"
               key={`${bit.id}${index}`}
               index={index}
@@ -69,11 +72,7 @@ export class OrbitHome {
               total={store.results.length}
               hoverToSelect
               expanded
-              style={
-                index < 2 && {
-                  gridColumnEnd: 'span 2',
-                }
-              }
+              style={index < 2 && this.span2}
             />
           ))}
         </Masonry>

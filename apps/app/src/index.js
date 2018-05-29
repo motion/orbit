@@ -11,7 +11,7 @@ import { ThemeProvide } from '@mcro/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
-import { debounce } from 'lodash'
+import { throttle } from 'lodash'
 
 import './router'
 
@@ -27,7 +27,7 @@ if (Constants.IS_PROD) {
 
 // hmr calls render twice out the gate
 // so prevent that
-const render = debounce(async () => {
+const render = throttle(async () => {
   if (!window.Root) {
     console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
     console.timeEnd('splash')
@@ -38,15 +38,15 @@ const render = debounce(async () => {
   console.log('rendering')
   const RootComponent = require('./root').default
   ReactDOM.render(
-    <React.StrictMode>
-      {/* <React.unstable_AsyncMode> */}
-      <ThemeProvide {...Themes}>
-        <UI.Theme name="light">
-          <RootComponent />
-        </UI.Theme>
-      </ThemeProvide>
-      {/* </React.unstable_AsyncMode> */}
-    </React.StrictMode>,
+    // <React.StrictMode>
+    // <React.unstable_AsyncMode>
+    <ThemeProvide {...Themes}>
+      <UI.Theme name="light">
+        <RootComponent />
+      </UI.Theme>
+    </ThemeProvide>,
+    // </React.unstable_AsyncMode>
+    // </React.StrictMode>
     document.querySelector('#app'),
   )
 }, 32)

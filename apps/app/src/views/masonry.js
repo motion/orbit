@@ -25,6 +25,7 @@ export class Masonry extends React.Component {
     if (!grid) return
     if (this.state.measured) return
     this.styles = []
+    await sleep(100)
     for (const item of Array.from(grid.children)) {
       const content = item.querySelector('.card')
       const contentHeight = content.clientHeight

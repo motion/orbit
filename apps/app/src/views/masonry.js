@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, sleep } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
 const rowHeight = 4
@@ -22,9 +22,10 @@ export class Masonry extends React.Component {
     }
   }
 
-  setGrid(grid) {
+  async setGrid(grid) {
     if (!grid) return
     if (this.state.measured) return
+    await sleep(16)
     this.styles = []
     for (const item of Array.from(grid.children)) {
       const content = item.querySelector('.card')

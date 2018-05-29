@@ -58,7 +58,7 @@ export class OrbitHome {
     log('HOME---------------')
     return (
       <OrbitDockedPane name="home">
-        <Masonry columnSpans={[2, 2]}>
+        <Masonry>
           {store.results.map((bit, index) => (
             <OrbitCard
               id={Math.random()}

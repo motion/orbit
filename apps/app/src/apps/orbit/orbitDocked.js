@@ -79,18 +79,9 @@ class OrbitDocked {
   render({ paneStore, appStore, theme }) {
     log('DOCKED ------------')
     const { visible, willAnimate } = paneStore.animationState
-    const background = theme.base.background
-    const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
-    const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     return (
-      <frame $willAnimate={willAnimate} $visible={visible} css={{ background }}>
-        <border
-          $$fullscreen
-          css={{
-            borderRadius: borderRadius + 1,
-            boxShadow: [borderShadow, DOCKED_SHADOW],
-          }}
-        />
+      <frame $willAnimate={willAnimate} $visible={visible}>
+        <border $$fullscreen />
         <container>
           <OrbitHeader
             after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
@@ -108,6 +99,21 @@ class OrbitDocked {
         </container>
       </frame>
     )
+  }
+
+  static theme = (props, theme) => {
+    const background = theme.base.background
+    const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
+    const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
+    return {
+      frame: {
+        background,
+      },
+      border: {
+        borderRadius: borderRadius + 1,
+        boxShadow: [borderShadow, DOCKED_SHADOW],
+      },
+    }
   }
 
   static style = {

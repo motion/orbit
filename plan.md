@@ -12,11 +12,12 @@ or
 
 nearest neighbors:
 
-* stripe home
+* guru (guru flux) - https://www.getguru.com/solutions/flux/
+* cresta - https://www.cresta.ai/
+* startups - diamond.io, layer
 * openfin
-* advanced tech companies' internal intranet
-* microsoft start menu meets ms365
-* google for work
+* stripe home
+* advanced tech companies' internal intranet, microsoft start menu meets ms365, google for work
 
 correllated / parallel products of past:
 

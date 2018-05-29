@@ -11,6 +11,8 @@ nearest neighbors:
 * stripe home
 * openfin
 * advanced tech companies' internal intranet
+* microsoft start menu meets ms365
+* google for work
 
 correllated / parallel products of past:
 

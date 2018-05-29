@@ -39,13 +39,13 @@ const render = debounce(async () => {
   const RootComponent = require('./root').default
   ReactDOM.render(
     <React.StrictMode>
-      <React.unstable_AsyncMode>
-        <ThemeProvide {...Themes}>
-          <UI.Theme name="light">
-            <RootComponent />
-          </UI.Theme>
-        </ThemeProvide>
-      </React.unstable_AsyncMode>
+      {/* <React.unstable_AsyncMode> */}
+      <ThemeProvide {...Themes}>
+        <UI.Theme name="light">
+          <RootComponent />
+        </UI.Theme>
+      </ThemeProvide>
+      {/* </React.unstable_AsyncMode> */}
     </React.StrictMode>,
     document.querySelector('#app'),
   )

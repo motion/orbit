@@ -263,7 +263,7 @@ export default class GoogleMailSync {
         info = await this.fetchThread(id)
         await sleep(50)
       } catch (err) {
-        console.log(err, id)
+        log(`error: ${err} ${id}`)
         continue
       }
       results.push(await onThread(info))

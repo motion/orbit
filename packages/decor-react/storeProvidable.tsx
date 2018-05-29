@@ -77,10 +77,6 @@ storeProvidable = function(options, Helpers) {
           return Klass.name
         }
 
-        state = {
-          error: null,
-        }
-
         allStores = allStores
         storeHMRCache = {}
 
@@ -119,21 +115,6 @@ storeProvidable = function(options, Helpers) {
           Helpers.on('did-hmr', this.onReloadStores)
         }
 
-        clearErrors() {
-          if (this.unmounted) {
-            return
-          }
-          if (this.clearError) {
-            this.clearError()
-          }
-        }
-
-        clearError() {
-          if (this.mounted && !this.unmounted) {
-            this.setState({ error: null })
-          }
-        }
-
         componentWillUnmount() {
           root.loadedStores.delete(this)
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
@@ -144,11 +125,6 @@ storeProvidable = function(options, Helpers) {
               this.hmrDispose.dispose()
             }
           }
-        }
-
-        componentDidCatch(error) {
-          console.warn('StoreProvidable.handleError', error)
-          this.setState({ error })
         }
 
         // for reactive props in stores

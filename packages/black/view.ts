@@ -12,6 +12,7 @@ import { subscribable } from '@mcro/decor-classes'
 import { utilityUsable, reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
+// import { catchesRenderErrors } from './catchesRenderErrors'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
@@ -28,6 +29,9 @@ const uiContext = [
 
 const glossPlugin = () => ({ decorator })
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
+  // process.env.NODE_ENV === 'development' &&
+  //   typeof window !== 'undefined' &&
+  //   catchesRenderErrors,
   extendsReact,
   subscribable,
   utilityUsable,

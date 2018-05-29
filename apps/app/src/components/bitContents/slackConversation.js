@@ -1,37 +1,37 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import BitSlackMessage from './slackMessage'
+import { BitSlackMessage } from './slackMessage'
 import * as UI from '@mcro/ui'
-import { RoundButton } from '~/views'
+import { RoundButton } from '~/views/roundButton'
 
 // const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 const exampleContent = [
   {
-    title: `Steel, Jacob, Nick & 3 more`,
+    title: 'Steel, Jacob, Nick & 3 more',
     preview: 'a16z, venture, Formidable, coffee',
   },
   {
-    title: `Nate and Nick`,
+    title: 'Nate and Nick',
     preview: 'cosal, sketchy, hardcode, spectrum, fit, scaling, overkill',
   },
   {
-    title: `Kevin, Mehak & 4 more`,
+    title: 'Kevin, Mehak & 4 more',
     preview: 'ml, nlp, formidable, client',
   },
   {
-    title: `Julie and Cam`,
+    title: 'Julie and Cam',
     preview: '10%, 60-80k, rallyinteractive.com, re-sign, loan',
   },
   {
-    title: `James, Jungwon and Evan`,
+    title: 'James, Jungwon and Evan',
     preview: 'jitter, searches, peek, design',
   },
   {
-    title: `Stephanie, Drew & 10 more`,
+    title: 'Stephanie, Drew & 10 more',
     preview: 'broke, docked, arrows, aligning',
   },
   {
-    title: `Ben`,
+    title: 'Ben',
     preview: 'related, conversations, glitches',
   },
 ]
@@ -40,7 +40,7 @@ let curId = 0
 
 @UI.injectTheme
 @view
-export default class BitSlackConversation {
+export class BitSlackConversation extends React.Component {
   static defaultProps = {
     shownLimit: 5,
   }

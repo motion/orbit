@@ -17,8 +17,8 @@ const getSlackDate = message => {
 }
 
 @view
-export default class BitSlackMessage {
-  render({ bit, message, previousMessage, appStore, contentStyle }) {
+export class BitSlackMessage extends React.Component {
+  render({ bit, message, previousMessage, contentStyle }) {
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null

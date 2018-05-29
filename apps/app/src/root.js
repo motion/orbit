@@ -16,6 +16,7 @@ class Root extends React.Component {
   }
 
   componentDidCatch(error) {
+    console.warn('did catch', error)
     this.setState({ error })
   }
 

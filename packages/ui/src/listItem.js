@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { object, string } from 'prop-types'
 import { Text } from './text'
 import { Date } from './date'
 import { SizedSurface } from './sizedSurface'
@@ -39,10 +38,7 @@ import { SizedSurface } from './sizedSurface'
 @view
 export class ListItem extends React.Component {
   static isListItem = true
-  static contextTypes = {
-    uiTheme: object,
-    uiActiveTheme: string,
-  }
+
   static defaultProps = {
     size: 1,
     borderWidth: 0,

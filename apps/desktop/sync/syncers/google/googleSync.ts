@@ -3,7 +3,7 @@ import GoogleDriveSync from './googleDriveSync'
 import GoogleCalSync from './googleCalSync'
 import GoogleMailSync from './googleMailSync'
 
-export default new Syncer('google', {
+export const google = new Syncer('google', {
   actions: {
     drive: { secondsBetween: 60 * 2 },
     mail: { secondsBetween: 60 * 2 },

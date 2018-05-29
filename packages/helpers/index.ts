@@ -1,11 +1,9 @@
 import * as EventKit from 'event-kit'
-import * as Events from './events'
-import ref_ from './ref'
+export * from './events'
+export * from './ref'
 
 export { Helpers } from './types'
 export const { CompositeDisposable } = EventKit
-export const { requestAnimationFrame, setTimeout, setInterval, on } = Events
-export const ref = ref_
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 

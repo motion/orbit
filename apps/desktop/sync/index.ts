@@ -89,11 +89,11 @@ export class Sync {
     }
   }
 
-  run(integration?: string, action?: string) {
-    if (!integration) {
+  run(name?: string, action?: string) {
+    if (!name) {
       console.log('Needs parameters')
     } else {
-      this.syncers[integration][action ? 'run' : 'runAll'](action)
+      this.syncers[name][action ? 'run' : 'runAll'](action)
     }
   }
 

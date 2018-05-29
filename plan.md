@@ -2,6 +2,10 @@
 
 "intranet / operating system for your company"
 
+or
+
+"on device OS operating agent for your company"
+
 nearest neighbors:
 
 * stripe home

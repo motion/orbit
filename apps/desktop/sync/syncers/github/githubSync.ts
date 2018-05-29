@@ -3,7 +3,7 @@ import Syncer from '../syncer'
 import GithubTaskSync from './githubTaskSync'
 import GithubPeopleSync from './githubPeopleSync'
 
-export default new Syncer('github', {
+export const github = new Syncer('github', {
   actions: {
     task: { secondsBetween: 60 * 5 },
     people: { secondsBetween: 60 * 5 },

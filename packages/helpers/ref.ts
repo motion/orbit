@@ -26,7 +26,7 @@ const Cache = {}
 // give it a reference to an object path
 // it gives you helpers for get/set/...
 // also works nicely with mobx
-export default function ref(path: CursorPath): Cursor {
+export function ref(path: CursorPath): Cursor {
   // Cache
   // by returning same function, prevent react from deoptimizing renders that use this
   // because it can track the function as being stable over time

@@ -18,20 +18,19 @@ class TogglePlain extends React.Component {
     on: false,
   }
 
-  constructor(a, b) {
-    super(a, b)
-    this.updateValue(this.props)
-  }
-
   componentDidUpdate(props) {
     this.updateValue(props)
   }
 
   updateValue(props) {
-    this.setState({ on: props.value || props.defaultValue })
+    const on = props.value || props.defaultValue
+    if (on !== this.state.on) {
+      this.setState({ on })
+    }
   }
 
   componentDidMount() {
+    this.updateValue(this.props)
     this.syncToForm()
   }
 

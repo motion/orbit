@@ -4,7 +4,7 @@ import SlackMessagesSync from './slackMessagesSync'
 import SlackPeopleSync from './slackPeopleSync'
 import { SlackService } from '@mcro/services'
 
-export default new Syncer('slack', {
+export const slack = new Syncer('slack', {
   actions: {
     messages: { secondsBetween: 60 * 5 },
     people: { secondsBetween: 60 * 20 },

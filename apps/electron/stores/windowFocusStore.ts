@@ -52,18 +52,22 @@ export class WindowFocusStore {
     this.orbitRef.focus()
   }
 
-  focusOnPinned = react(
-    () => App.orbitState.docked || App.orbitState.pinned,
-    async (pinned, { sleep, when }) => {
-      await sleep(App.animationDuration * 2)
-      await when(() => !App.isAnimatingOrbit)
-      if (!pinned) {
-        Swift.defocus()
-        return
-      }
-      this.focusOrbit()
-    },
-  )
+  defocusOrbit = () => {
+    Swift.defocus()
+  }
+
+  // focusOnPinned = react(
+  //   () => App.orbitState.docked || App.orbitState.pinned,
+  //   async (pinned, { sleep, when }) => {
+  //     await sleep(App.animationDuration * 2)
+  //     await when(() => !App.isAnimatingOrbit)
+  //     if (!pinned) {
+  //       Swift.defocus()
+  //       return
+  //     }
+  //     this.focusOrbit()
+  //   },
+  // )
 
   focusOnMouseOver = react(
     () => App.isMouseInActiveArea,

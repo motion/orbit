@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 import * as Constants from '~/constants'
 import { OrbitArrow } from './orbitArrow'
 import { OrbitIndicator } from './orbitIndicator'
@@ -18,9 +18,17 @@ class FrameStore {
       await sleep(32)
       // new value, start transition
       setValue({ willAnimate: true, hidden })
-      await sleep(App.animationDuration)
+      await sleep(App.animationDuration * 2)
       // done animating, reset
       setValue({ willAnimate: false, hidden })
+      if (App.orbitState.pinned) {
+        App.sendMessage(
+          Electron,
+          App.orbitState.pinned
+            ? Electron.messages.FOCUS
+            : Electron.messages.DEFOCUS,
+        )
+      }
     },
     {
       immediate: true,

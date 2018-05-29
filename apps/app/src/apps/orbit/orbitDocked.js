@@ -7,7 +7,7 @@ import { OrbitHomeHeader } from './orbitHomeHeader'
 import { OrbitHeader } from './orbitHeader'
 import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitDirectory } from './orbitDirectory'
-import { App } from '@mcro/all'
+import { App, Electron } from '@mcro/all'
 
 const SHADOW_PAD = 85
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
@@ -58,6 +58,10 @@ class PaneStore {
       await sleep(App.animationDuration * 2)
       // done animating, reset
       setValue({ willAnimate: false, visible })
+      App.sendMessage(
+        Electron,
+        visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
+      )
     },
     {
       immediate: true,
@@ -67,7 +71,7 @@ class PaneStore {
   )
 }
 
-const borderRadius = 16
+const borderRadius = 14
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitStore')

@@ -12,6 +12,8 @@ export let Electron
 class ElectronStore {
   messages = {
     CLEAR: 'CLEAR',
+    DEFOCUS: 'DEFOCUS',
+    FOCUS: 'FOCUS',
   }
 
   setState: typeof Bridge.setState

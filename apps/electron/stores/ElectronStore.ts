@@ -1,5 +1,5 @@
 import { App, Electron, Desktop } from '@mcro/all'
-import { isEqual, store, view, react, debugState } from '@mcro/black'
+import { isEqual, store, react, debugState } from '@mcro/black'
 import { ShortcutsStore } from '~/stores/shortcutsStore'
 import { WindowFocusStore } from '~/stores/windowFocusStore'
 import {} from '@mcro/black'
@@ -40,6 +40,12 @@ export class ElectronStore {
       switch (msg) {
         case Electron.messages.CLEAR:
           this.clear = Date.now()
+          return
+        case Electron.messages.DEFOCUS:
+          this.windowFocusStore.defocusOrbit()
+          return
+        case Electron.messages.FOCUS:
+          this.windowFocusStore.focusOrbit()
           return
       }
     })

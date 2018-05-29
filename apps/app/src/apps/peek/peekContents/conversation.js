@@ -9,6 +9,8 @@ import { OrbitDivider } from '~/apps/orbit/orbitDivider'
 import { Bit, Person } from '@mcro/models'
 import * as UI from '@mcro/ui'
 
+// delays here help ensure it doesn't jitter
+
 class ConversationPeek {
   related = react(
     async () => {
@@ -16,7 +18,7 @@ class ConversationPeek {
       const bits = await Bit.find({ take: 3, relations: ['people'] })
       return [...people, ...bits]
     },
-    { defaultValue: [] },
+    { defaultValue: [], delay: 40 },
   )
 
   relatedConversations = react(
@@ -26,7 +28,7 @@ class ConversationPeek {
         where: { integration: 'slack', type: 'conversation' },
         take: 3,
       }),
-    { defaultValue: [] },
+    { defaultValue: [], delay: 40 },
   )
 }
 

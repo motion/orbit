@@ -92,7 +92,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 10,
+    borderRadius: 4,
   }
 
   constructor(...args) {
@@ -163,13 +163,13 @@ export class OrbitCard extends React.Component {
           >
             <title>
               <UI.Text
-                size={1.2}
-                lineHeight="1.4rem"
+                size={1.4}
+                sizeLineHeight={0.9}
                 ellipse={2}
                 fontWeight={400}
                 css={{
                   maxWidth: 'calc(100% - 30px)',
-                  marginBottom: 1,
+                  marginBottom: 3,
                 }}
                 {...tiny && tinyProps.titleProps}
               >
@@ -177,6 +177,17 @@ export class OrbitCard extends React.Component {
               </UI.Text>
               {!hasSubtitle && orbitIcon}
             </title>
+            <preview if={preview}>
+              {typeof preview !== 'string' && preview}
+              <UI.Text
+                if={typeof preview === 'string'}
+                alpha={0.7}
+                ellipse={5}
+                size={listItem ? 1.1 : 1.4}
+              >
+                {preview}
+              </UI.Text>
+            </preview>
             <subtitle if={hasSubtitle}>
               {orbitIcon}
               <UI.Text if={typeof location === 'string'} opacity={0.7}>
@@ -192,25 +203,11 @@ export class OrbitCard extends React.Component {
                 {subtitle}
               </UI.Text>
               {typeof subtitle !== 'string' && subtitle}
-              <space if={date} $$flex />
-              <date
-                if={date}
-                css={{ fontWeight: 500, width: 30, textAlign: 'right' }}
-              >
-                <UI.Text opacity={0.5}>2m</UI.Text>
-              </date>
-            </subtitle>
-            <preview if={preview}>
-              {typeof preview !== 'string' && preview}
-              <UI.Text
-                if={typeof preview === 'string'}
-                alpha={0.7}
-                ellipse={5}
-                size={listItem ? 1.1 : 1.4}
-              >
-                {preview}
+              <space $$flex />
+              <UI.Text alpha={0.5} size={0.95}>
+                {Math.floor(Math.random() * 5) + 1}m&nbsp;ago
               </UI.Text>
-            </preview>
+            </subtitle>
             <bottom if={false && !tiny && (bottom || permalink || via)}>
               <permalink if={isExpanded}>{permalink}</permalink>
               <space if={permalink} />
@@ -289,7 +286,7 @@ export class OrbitCard extends React.Component {
       // flex: 1,
     },
     subtitle: {
-      margin: [4, 0, 3],
+      margin: [8, 0, 0],
       height: 20,
       flexFlow: 'row',
       alignItems: 'center',
@@ -342,7 +339,7 @@ export class OrbitCard extends React.Component {
       if (isSelected) {
         card = {
           background: '#fff',
-          boxShadow: [[0, 6, 35, [0, 0, 0, 0.08]]],
+          boxShadow: [[0, 3, 12, [0, 0, 0, 0.05]]],
         }
       }
     }
@@ -352,7 +349,7 @@ export class OrbitCard extends React.Component {
         ...card,
         border: [
           listItem ? 0 : 1,
-          isSelected ? 'transparent' : theme.active.background,
+          isSelected ? 'transparent' : theme.hover.background,
         ],
       },
       bottom: {

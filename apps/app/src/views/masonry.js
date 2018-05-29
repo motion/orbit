@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
-const rowHeight = 2
+const rowHeight = 4
 const gridGap = 6
 const gridColumnGap = 8
 
@@ -37,21 +37,22 @@ export class Masonry extends React.Component {
     this.setState({ measured: true })
   }
 
+  handleGridRef = ref => this.setGrid(ref)
+
+  gridStyle = { gridAutoRows: rowHeight, gridGap, gridColumnGap }
+
   render() {
     const { measured } = this.state
     const { children, ...props } = this.props
     if (!measured) {
       return (
-        <grid ref={ref => this.setGrid(ref)} {...props}>
+        <grid ref={this.handleGridRef} {...props}>
           {children}
         </grid>
       )
     }
     return (
-      <grid
-        style={{ gridAutoRows: rowHeight, gridGap, gridColumnGap }}
-        {...props}
-      >
+      <grid style={this.gridStyle} {...props}>
         {React.Children.map(children, (child, index) => {
           return React.cloneElement(child, {
             style: {

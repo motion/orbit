@@ -41,7 +41,7 @@ const EmptyPane = () => <div>no setting pane</div>
     }
   },
 })
-export class Setting {
+export class Setting extends React.Component {
   handleRefresh = async () => {
     const store = this.props.store
     const job = new Job()

@@ -23,10 +23,10 @@ class PersonPeek {
 @view({
   store: PersonPeek,
 })
-export class Person {
+export class Person extends React.Component {
   render({ store, person, appStore }) {
     if (!person || !person.data.profile) {
-      log(`no person`, person)
+      log('no person', person)
       return null
     }
     const setting = appStore.settings.slack

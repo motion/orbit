@@ -10,7 +10,7 @@ const parseBody = body =>
   !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
 
 @view
-export class Mail {
+export class Mail extends React.Component {
   render({ bit }) {
     if (!bit || !bit.data) {
       return null

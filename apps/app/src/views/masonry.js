@@ -24,7 +24,7 @@ export class Masonry extends React.Component {
   async setGrid(grid) {
     if (!grid) return
     if (this.state.measured) return
-    await sleep(100)
+    await sleep(150)
     this.styles = []
     for (const item of Array.from(grid.children)) {
       const content = item.querySelector('.card')

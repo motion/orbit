@@ -28,7 +28,6 @@ class HomePlayStore {
 export class HomePlay extends React.Component {
   render({ store }) {
     const hasAnimated = window.hasAnimated
-    console.log('render play', store.animate, hasAnimated)
     return (
       <>
         <illus>

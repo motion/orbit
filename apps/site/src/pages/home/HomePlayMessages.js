@@ -39,20 +39,20 @@ class PlayMessagesStore {
 
   animate = async sleep => {
     console.log('starting animation')
-    await sleep(13000)
+    await sleep(13200)
     await this.chatText(Spring, {
       from: { opacity: 0 },
       to: { opacity: 1 },
     })
-    await sleep(1500)
+    await sleep(800)
     this.chatText(Spring, {
       from: { opacity: 1 },
       to: { opacity: 0 },
       config: config.slow,
     })
-    await sleep(1500)
+    await sleep(800)
     this.showFinalText()
-    await sleep(1000)
+    await sleep(600)
     this.showOrbitals = true
   }
 
@@ -121,9 +121,9 @@ export class HomePlayMessages extends React.Component {
         </Keyframes>
         <Orbital
           size={size}
-          borderColor="transparent"
+          borderColor={Constants.colorMain.darken(0.2).alpha(0.5)}
           borderWidth={1}
-          background={[255, 255, 255, 0.1]}
+          background="transparent"
           css={{
             top: '50%',
             left: '50%',
@@ -146,9 +146,8 @@ export class HomePlayMessages extends React.Component {
 
   static style = {
     message: {
-      // color: '#fff',
       fontWeight: 200,
-      fontSize: 36,
+      fontSize: 32,
       lineHeight: '50px',
       position: 'absolute',
       top: 0,

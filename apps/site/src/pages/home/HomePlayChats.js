@@ -20,44 +20,48 @@ class PlayChatsStore {
       to: { scale: 1, opacity: 1, opacityRest: 0, y: 0 },
     })
     await sleep(800)
-    this.chatsRest(Spring, {
-      to: { opacity: 0 },
-      config: config.fast,
-    })
     await this.chats(DurationTrail, {
+      delays: [
+        500,
+        800,
+        900,
+        700,
+        500,
+        600,
+        400,
+        450,
+        350,
+        400,
+        300,
+        350,
+        350,
+        200,
+        250,
+        300,
+      ],
       delay: 0,
-      ms: 800,
+      ms: 200,
       from: { opacity: 0, y: -25 },
       to: { opacity: 1, y: 0 },
       config: { tension: 20, friction: 5 },
     })
     this.animateChatsAway(sleep)
-    await sleep(8000)
-    this.chatsRest(Spring, {
-      impl: TimingAnimation,
-      config: {
-        delay: 0,
-        duration: 3500,
-        easing: Easing.easeIn,
-      },
-      to: { opacity: 1 },
-    })
   }
 
   animateChatsAway = async sleep => {
-    await sleep(3800)
+    await sleep(3000)
     await this.chatFrame(Spring, {
       impl: TimingAnimation,
       config: {
         delay: 0,
-        duration: 4000,
+        duration: 3500,
         easing: Easing.easeOut,
       },
-      to: { scale: 0.6, opacity: 0.6, y: -200 },
+      to: { scale: 0.6, opacity: 0.6, y: -700 },
     })
     await sleep(200)
     this.chatFrame(Spring, {
-      to: { scale: 0.6, opacity: 0, y: -550 },
+      to: { scale: 0.6, opacity: 0, y: -1100 },
       config: { tension: 6, friction: 50 },
     })
   }
@@ -99,18 +103,6 @@ export class HomePlayChats extends React.Component {
                       {chat}
                     </animated.div>
                   ))}
-                </Keyframes>
-                <Keyframes native script={next => (store.chatsRest = next)}>
-                  {({ opacity }) => (
-                    <animated.div
-                      style={{
-                        opacity: opacity,
-                        height: 500,
-                      }}
-                    >
-                      {messages}
-                    </animated.div>
-                  )}
                 </Keyframes>
               </animated.div>
             )

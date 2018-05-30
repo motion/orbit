@@ -21,7 +21,7 @@ import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 
-const background = UI.color('#F7DFE5') // '#D6B190' //'#E1D1C8'
+const background = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const borderColor = background.darken(0.1)
 
 const firstSlant = {
@@ -327,7 +327,7 @@ class HomeFooter extends React.Component {
                 <div css={{ height: '22%' }} />
                 <below css={{ margin: [15, 0, 0, 0] }}>
                   <Title size={2.3} css={{ marginBottom: 20 }}>
-                    Give your company an operating system.
+                    Your company<br />operating system.
                   </Title>
                   <UI.PassProps size={1.3} sizeLineHeight={1.1} alpha={0.85}>
                     <P2>
@@ -335,16 +335,17 @@ class HomeFooter extends React.Component {
                       lives all over the place.
                     </P2>
                     <P2>
-                      Orbit sorts your knowledge autonomously. It uses modern
-                      NLP to curate and summarize answers on-demand. And it{' '}
-                      <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
-                        works across every integration, and with any app
+                      Orbit sorts team knowledge autonomously on the desktop.
+                      It's a modern OS for company knowledge. It sorts and
+                      summarizes everything using state of the art NLP. And it{' '}
+                      <span css={{ fontWeight: 400, fontStyle: 'italic' }}>
+                        works across all your integrations, and contextually
+                        with every app
                       </span>.
                     </P2>
                     <P2>
-                      It has no cloud setup or install process and runs{' '}
-                      completely privately on your device so your data never
-                      leaves your firewall.
+                      It's also fundamentally private, with no cloud or on prem
+                      install. Your data never leaves the firewall.
                     </P2>
                     <P2>
                       It's a new way to operate. Currently in private beta.

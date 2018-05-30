@@ -15,7 +15,7 @@ export class BrandLogo extends React.Component {
             .darken(0.35)
             .desaturate(0.7)
             .toString()}
-          size={0.25}
+          size={0.23}
           white={white}
         />
       </brandMark>

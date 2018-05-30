@@ -91,7 +91,7 @@ class DockPlayStore {
       await sleep(1000)
       this.leave.slack = true
     }
-    await sleep(1000)
+    await sleep(1500)
     bounceIcons()
     await sleep(6000)
     this.bounce.slack = 2
@@ -161,6 +161,7 @@ export class HomePlayDock extends React.Component {
       transform: {
         scale: 0.85,
       },
+      zIndex: 200,
     },
     dockContain: {
       position: 'absolute',

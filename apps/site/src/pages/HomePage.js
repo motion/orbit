@@ -21,7 +21,7 @@ import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 
-const background = UI.color('#F0C4CE') // '#D6B190' //'#E1D1C8'
+const background = UI.color('#F2D5DC') // '#D6B190' //'#E1D1C8'
 const borderColor = background.darken(0.1)
 
 const firstSlant = {
@@ -320,14 +320,15 @@ class HomeFooter extends React.Component {
                     </P2>
                     <P2>
                       Orbit sorts your knowledge autonomously. It uses modern
-                      NLP to curate and summarize answers on-demand, integrating
-                      with literally everything you do.
+                      NLP to curate and summarize answers on-demand. And it{' '}
+                      <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
+                        works across every integration, and with any app
+                      </span>.
                     </P2>
                     <P2>
                       It has no cloud setup or install process and runs{' '}
-                      <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
-                        completely privately on your device
-                      </span>, so your data never leaves your firewall.
+                      completely privately on your device so your data never
+                      leaves your firewall.
                     </P2>
                     <P2>
                       It's a new way to operate. Currently in private beta.

@@ -4,14 +4,13 @@ import { HomePlayChats } from './HomePlayChats'
 import { HomePlayMessages } from './HomePlayMessages'
 import { HomePlayDock } from './HomePlayDock'
 
-let hasAnimated = false
+window.hasAnimated = false
 
 class HomePlayStore {
   animate = false
 
   async didMount() {
-    console.log('ok?', hasAnimated)
-    if (hasAnimated) {
+    if (window.hasAnimated) {
       return
     }
     await sleep(250)
@@ -19,7 +18,7 @@ class HomePlayStore {
     this.animate = true
     // set done
     await sleep(9000)
-    hasAnimated = true
+    window.hasAnimated = true
   }
 }
 
@@ -28,6 +27,7 @@ class HomePlayStore {
 })
 export class HomePlay extends React.Component {
   render({ store }) {
+    const hasAnimated = window.hasAnimated
     console.log('render play', store.animate, hasAnimated)
     return (
       <>

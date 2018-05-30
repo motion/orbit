@@ -141,8 +141,8 @@ class HomeHeader extends React.Component {
                       },
                     }}
                   >
-                    <Title italic size={3} margin={[0, 0, 20, 0]}>
-                      Smarter<br />Knowledge Management
+                    <Title italic size={2.7} margin={[0, 0, 20, 0]}>
+                      Smarter<br />Knowledge<br />Management
                     </Title>
                     <P
                       size={1.6}

@@ -23,6 +23,9 @@ export default ({
         position: 'absolute',
         height: size,
         width: size,
+        transform: {
+          z: 0,
+        },
       }}
       {...props}
     >

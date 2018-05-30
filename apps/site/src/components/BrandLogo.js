@@ -3,13 +3,21 @@ import { view } from '@mcro/black'
 import Logo from '~/views/logo'
 import * as UI from '@mcro/ui'
 
+@UI.injectTheme
 @view
 export class BrandLogo extends React.Component {
-  render({ white, ...props }) {
+  render({ theme, white, ...props }) {
     return (
       <brandMark {...props}>
         <orbit />
-        <Logo size={0.2} white={white} />
+        <Logo
+          fill={theme.base.background
+            .darken(0.35)
+            .desaturate(0.7)
+            .toString()}
+          size={0.25}
+          white={white}
+        />
       </brandMark>
     )
   }
@@ -18,20 +26,19 @@ export class BrandLogo extends React.Component {
     brandMark: {
       alignItems: 'center',
       textAlign: 'center',
-      margin: [-22, -22],
-      // marginLeft: -20,
+      margin: [0, 0, -10],
     },
     orbit: {
-      width: 350,
-      height: 350,
+      width: 250,
+      height: 250,
       position: 'absolute',
       top: 0,
       left: 0,
       borderRadius: 1000,
       zIndex: -1,
       transform: {
-        x: -150,
-        y: -220,
+        x: -90,
+        y: -120,
       },
     },
   }
@@ -39,7 +46,8 @@ export class BrandLogo extends React.Component {
   static theme = (_, theme) => {
     return {
       orbit: {
-        border: [2, theme.base.background.darken(0.1)],
+        // border: [1, theme.base.background.darken(0.1)],
+        // background: theme.base.background.darken(0.05).alpha(0.5),
       },
     }
   }

@@ -111,7 +111,7 @@ export class HomePlayDock extends React.Component {
   render({ store, animate }) {
     const dom = this.glossElement.bind(this)
     return (
-      <>
+      <dockOuter>
         <dockContain
           if={animate}
           css={{
@@ -146,11 +146,22 @@ export class HomePlayDock extends React.Component {
             })
           })}
         </dockIcons>
-      </>
+      </dockOuter>
     )
   }
 
   static style = {
+    dockOuter: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 200,
+      transformOrigin: 'top center',
+      transform: {
+        scale: 0.85,
+      },
+    },
     dockContain: {
       position: 'absolute',
       bottom: distanceFromBottom,

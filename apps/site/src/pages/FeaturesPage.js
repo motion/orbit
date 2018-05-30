@@ -43,36 +43,42 @@ const FeatureTitle = props => (
   <Title italic size={4} css={{ marginBottom: 20 }} {...props} />
 )
 
-const FeatureSubTitle = props => (
-  <Media query={Constants.screen.large}>
-    {isLarge => (
-      <P2
-        size={isLarge ? 1.5 : 1.35}
-        alpha={0.6}
-        css={{
-          marginBottom: 30,
-        }}
-        {...props}
-      />
-    )}
-  </Media>
-)
-
+@UI.injectTheme
 @view
 class FeaturesIntro extends React.Component {
-  render() {
+  render({ theme }) {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section css={{ background: 'transparent' }}>
-            <SectionContent padded halfscreen>
-              <HalfSection>
-                <Title italic size={3} margin={[0, 0, 15, 0]}>
-                  Features
+          <Section>
+            <SectionContent padded fullscreen css={{ marginTop: -450 }}>
+              <Slant
+                slantBackground={Constants.altBg.darken(0.05)}
+                css={{ zIndex: 2 }}
+              />
+              <Slant
+                if={false}
+                inverseSlant
+                slantSize={3}
+                css={{ zIndex: 1 }}
+                amount={30}
+                slantGradient={[
+                  theme.base.background.darken(0.1),
+                  theme.base.background.darken(0.1),
+                ]}
+              />
+              <HalfSection css={{ position: 'absolute', bottom: 100 }}>
+                <Title
+                  color="#111"
+                  italic
+                  size={2.5}
+                  margin={[0, '10%', 10, 0]}
+                >
+                  The intelligent agent for your company operation.
                 </Title>
-                <P2 size={1.2} alpha={0.75}>
-                  Version one of Orbit OS is three things to improve your
-                  workday.
+                <P2 size={1.7} alpha={0.75}>
+                  Orbit unifies knowledge from across the cloud and lets your
+                  teams use it effectively.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>Home</a>{' '}
@@ -134,24 +140,26 @@ const searchYOff = -10
 const contextYOff = 160
 
 const SearchCallout = ({ isLarge }) => (
-  <Callout
-    css={
-      isLarge && {
-        width: '80%',
-        position: 'absolute',
-        top: searchYOff - 75,
-        left: '12%',
+  <UI.Theme name="light">
+    <Callout
+      css={
+        isLarge && {
+          width: '80%',
+          position: 'absolute',
+          top: searchYOff - 75,
+          left: '12%',
+        }
       }
-    }
-  >
-    <P size={1.6}>
-      Search the entire cloud with keyword summaries of all conversations,
-      adjusted to important terms specific to your company.
-      <br />
-      <br />Aggregated profiles of everyone you interact with lets you avoid
-      interruptions and explore your team.
-    </P>
-  </Callout>
+    >
+      <P size={1.6}>
+        Search the entire cloud with keyword summaries of all conversations,
+        adjusted to important terms specific to your company.
+        <br />
+        <br />Aggregated profiles of everyone you interact with lets you avoid
+        interruptions and explore your team.
+      </P>
+    </Callout>
+  </UI.Theme>
 )
 
 @UI.injectTheme
@@ -221,16 +229,20 @@ export class SectionFeatureNewsSearch extends React.Component {
                 style={{ transform: { y: '-10%', x: '-40%' } }}
               />
               <Glow if={false} style={{ transform: { y: '130%', x: '60%' } }} />
-              <Slant slantSize={4} inverseSlant slantBackground="#fff" />
-              {/* <Slant
+              <Slant
+                inverseSlant
+                slantSize={14}
+                slantBackground={Constants.altBg.darken(0.05)}
+              />
+              <Slant
                 slantSize={3}
                 css={{ zIndex: 1 }}
                 amount={30}
                 slantGradient={[
-                  Constants.colorSecondary,
-                  Constants.colorSecondary,
+                  theme.base.background.darken(0.1).alpha(0),
+                  theme.base.background.darken(0.1),
                 ]}
-              /> */}
+              />
               <LeftSide css={{ top: 0 }}>
                 <Observer onChange={this.handleIntersect}>
                   <content
@@ -241,34 +253,36 @@ export class SectionFeatureNewsSearch extends React.Component {
                   >
                     <topSpace css={{ height: 40 }} />
                     <FeatureTitle>Home</FeatureTitle>
-                    <Callout
-                      css={{
-                        textAlign: 'left',
-                        ...(isLarge
-                          ? {
-                              width: '95%',
-                              position: 'absolute',
-                              right: '6%',
-                            }
-                          : null),
-                      }}
-                    >
-                      <P size={1.6}>
-                        A heads up display for all your incoming. Sorted by what
-                        you've been interested in recently.
-                        <br />
-                        <br />
-                        With novel on-device ML, Orbit adjusts to what you care
-                        about and the custom terminology your team uses.
-                      </P>
-                      <DottedButton
+                    <UI.Theme name="light">
+                      <Callout
                         css={{
-                          margin: [0, 0, 0, 'auto'],
+                          textAlign: 'left',
+                          ...(isLarge
+                            ? {
+                                width: '95%',
+                                position: 'absolute',
+                                right: '6%',
+                              }
+                            : null),
                         }}
                       >
-                        Learn more
-                      </DottedButton>
-                    </Callout>
+                        <P size={1.6}>
+                          A heads up display for all your incoming. Sorted by
+                          what you've been interested in recently.
+                          <br />
+                          <br />
+                          With novel on-device ML, Orbit adjusts to what you
+                          care about and the custom terminology your team uses.
+                        </P>
+                        <DottedButton
+                          css={{
+                            margin: [0, 0, 0, 'auto'],
+                          }}
+                        >
+                          Learn more
+                        </DottedButton>
+                      </Callout>
+                    </UI.Theme>
                   </content>
                 </Observer>
               </LeftSide>
@@ -421,6 +435,7 @@ export class SectionFeatureNewsSearch extends React.Component {
   }
 }
 
+@UI.injectTheme
 @view
 export class SectionFeatureIntelligence extends React.Component {
   state = {
@@ -432,6 +447,7 @@ export class SectionFeatureIntelligence extends React.Component {
   }
 
   render() {
+    const { theme } = this.props
     const { isIntersecting } = this.state
     console.log('isIntersecting', isIntersecting)
     return (
@@ -441,19 +457,16 @@ export class SectionFeatureIntelligence extends React.Component {
             <SectionContent id="context" fullscreen={isLarge} padded>
               <Glow if={false} style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
-                slantSize={4}
                 css={{ zIndex: 2 }}
-                slantGradient={[background.darken(0.1), background.darken(0.1)]}
+                slantSize={14}
+                slantBackground={Constants.altBg.darken(0.05)}
               />
               <Slant
-                slantSize={3}
                 inverseSlant
+                slantSize={3}
                 css={{ zIndex: 1 }}
                 amount={30}
-                slantGradient={[
-                  theme.background.darken(0.025),
-                  theme.background.darken(0.1),
-                ]}
+                slantBackground={theme.base.background.darken(0.1)}
               />
               <LeftSide inverse innerStyle={{ paddingTop: '48%' }}>
                 <div
@@ -465,34 +478,36 @@ export class SectionFeatureIntelligence extends React.Component {
                   }
                 >
                   <FeatureTitle>Context</FeatureTitle>
-                  <Callout
-                    css={{
-                      textAlign: 'left',
-                      ...(isLarge
-                        ? {
-                            width: '95%',
-                            position: 'absolute',
-                            right: '8%',
-                          }
-                        : null),
-                    }}
-                  >
-                    <P2 size={1.6}>
-                      Realtime contextual search for every app.
-                    </P2>
-                    <P2 size={1.6}>
-                      Simply hold <Cmd>Option</Cmd> or press{' '}
-                      <Cmd>Option+Space</Cmd>. Important terms, people, and
-                      conversations are highlighted and summarized, instantly.
-                    </P2>
-                    <DottedButton
+                  <UI.Theme name="light">
+                    <Callout
                       css={{
-                        margin: [0, 0, 0, 'auto'],
+                        textAlign: 'left',
+                        ...(isLarge
+                          ? {
+                              width: '95%',
+                              position: 'absolute',
+                              right: '8%',
+                            }
+                          : null),
                       }}
                     >
-                      Learn more
-                    </DottedButton>
-                  </Callout>
+                      <P2 size={1.6}>
+                        Realtime contextual search for every app.
+                      </P2>
+                      <P2 size={1.6}>
+                        Simply hold <Cmd>Option</Cmd> or press{' '}
+                        <Cmd>Option+Space</Cmd>. Important terms, people, and
+                        conversations are highlighted and summarized, instantly.
+                      </P2>
+                      <DottedButton
+                        css={{
+                          margin: [0, 0, 0, 'auto'],
+                        }}
+                      >
+                        Learn more
+                      </DottedButton>
+                    </Callout>
+                  </UI.Theme>
                   <Observer onChange={this.handleIntersect}>
                     <br />
                   </Observer>
@@ -572,7 +587,7 @@ export class FeaturesPage extends React.Component {
         <UI.Theme theme={theme}>
           <TopoBg />
           <Header />
-          <FeaturesIntro if={false} />
+          <FeaturesIntro />
           <surround css={{ position: 'relative' }}>
             <SectionFeatureNewsSearch />
             <SearchIllustration />

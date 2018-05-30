@@ -38,18 +38,23 @@ class UseCasesIntro extends React.Component {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section>
-            <SectionContent padded fullscreen css={{ marginTop: -850 }}>
+            <SectionContent padded fullscreen css={{ marginTop: -500 }}>
               <Slant
                 slantBackground={Constants.altBg.darken(0.05)}
                 css={{ zIndex: 2 }}
               />
-              {/* <HalfSection css={{ position: 'absolute', bottom: 100 }}>
-                <Title italic size={2.5} margin={[0, '10%', 10, 0]}>
+              <HalfSection css={{ position: 'absolute', bottom: 100 }}>
+                <Title
+                  color="#111"
+                  italic
+                  size={2.5}
+                  margin={[0, '10%', 10, 0]}
+                >
                   Use cases
                 </Title>
                 <P2 size={1.7} alpha={0.75}>
-                  Whether personally or as part of a team, Orbit helps make
-                  knowledge work for you.
+                  Make your customer success team more successful and your
+                  customers happier.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
@@ -61,7 +66,7 @@ class UseCasesIntro extends React.Component {
                   <a onClick={scrollTo('#reduce-interrupts')}>Focus</a>
                 </P>
               </HalfSection>
-              <HalfSection /> */}
+              <HalfSection />
             </SectionContent>
           </Section>
         )}

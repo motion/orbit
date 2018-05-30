@@ -4,10 +4,8 @@ import * as UI from '@mcro/ui'
 import { OrbitFrame } from './orbitFrame'
 import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitHeader } from './orbitHeader'
-import { App, Desktop } from '@mcro/all'
-import { throttle } from 'lodash'
-import { Title, SubTitle } from '~/views'
-import { ResultsPage } from '~/apps/ResultsPage'
+import { App } from '@mcro/all'
+import { OrbitContextHome } from './orbitContextHome'
 import * as Constants from '~/constants'
 
 class PaneStore {
@@ -25,49 +23,14 @@ class PaneStore {
   paneStore: PaneStore,
 })
 @view
-class Orbit {
-  state = {
-    resultsRef: null,
-    isScrolled: false,
-  }
-
-  setRef = resultsRef => {
-    if (resultsRef) {
-      this.setState({ resultsRef })
-      this.on(
-        resultsRef,
-        'scroll',
-        throttle(() => {
-          if (resultsRef.scrollTop > 0) {
-            if (!this.state.isScrolled) {
-              this.setState({ isScrolled: true })
-            }
-          } else {
-            if (this.state.isScrolled) {
-              this.setState({ isScrolled: false })
-            }
-          }
-        }, 16),
-      )
-    }
-  }
-
+class Orbit extends React.Component {
   render({ orbitPage, theme }) {
     const headerBg = theme.base.background
-    const { orbitOnLeft } = App
     return (
       <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
         <OrbitHeader headerBg={headerBg} />
         <orbitInner>
-          <orbitContext>
-            <contextHeader css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}>
-              <Title ellipse={1}>{Desktop.appState.name}</Title>
-              <SubTitle if={Desktop.appState.title} ellipse={2}>
-                {Desktop.appState.title}
-              </SubTitle>
-            </contextHeader>
-            <ResultsPage />
-          </orbitContext>
+          <OrbitContextHome />
           <OrbitSearchResults name="context-search" parentPane="context" />
         </orbitInner>
       </OrbitFrame>

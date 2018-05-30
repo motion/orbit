@@ -91,7 +91,7 @@ class OrbitDocked {
             after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
           />
           <orbitInner>
-            <OrbitHome name="home" appStore={appStore} paneStore={paneStore} />
+            <OrbitHome appStore={appStore} paneStore={paneStore} />
             <OrbitDirectory
               name="directory"
               appStore={appStore}

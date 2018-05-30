@@ -38,14 +38,13 @@ const exampleContent = [
 const uids = {}
 let curId = 0
 
-@UI.injectTheme
 @view
 export class BitSlackConversation extends React.Component {
   static defaultProps = {
     shownLimit: 5,
   }
 
-  render({ children, bit, appStore, shownLimit, theme, contentStyle }) {
+  render({ children, bit, appStore, shownLimit, contentStyle }) {
     const uid = uids[bit.id] || curId++ % (exampleContent.length - 1)
     uids[bit.id] = uid
     const { title, preview } = exampleContent[uid]
@@ -68,9 +67,8 @@ export class BitSlackConversation extends React.Component {
         <UI.Button
           circular
           icon="link69"
-          color={theme.active.color}
           size={0.8}
-          opacity={0.6}
+          alpha={0.6}
           onClick={e => {
             e.stopPropagation()
             appStore.open(bit)
@@ -83,11 +81,7 @@ export class BitSlackConversation extends React.Component {
         </UI.Text>
       ),
       bottomAfter: (
-        <row
-          if={bit.people && bit.people.length > 1}
-          $meta
-          css={{ color: theme.active.color }}
-        >
+        <row if={bit.people && bit.people.length > 1} $meta>
           {bit.people.length}
           &nbsp;
           <UI.Icon

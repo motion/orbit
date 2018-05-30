@@ -144,7 +144,11 @@ export class OrbitCard extends React.Component {
     )
     return (
       <UI.Theme
-        theme={store.isSelected ? { color: 'blue', background: '#fff' } : null}
+        theme={
+          store.isSelected
+            ? { color: 'rgb(42.4%, 24.8%, 96%)', background: '#fff' }
+            : null
+        }
       >
         <cardWrap
           css={{
@@ -180,7 +184,7 @@ export class OrbitCard extends React.Component {
               {typeof preview !== 'string' && preview}
               <UI.Text
                 if={typeof preview === 'string'}
-                alpha={0.7}
+                alpha={0.6}
                 ellipse={5}
                 size={listItem ? 1.1 : 1.4}
               >
@@ -195,8 +199,8 @@ export class OrbitCard extends React.Component {
               {typeof location !== 'string' && location}
               <UI.Text
                 if={typeof subtitle === 'string'}
-                color="#333"
                 ellipse={1}
+                alpha={0.7}
                 css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
               >
                 {subtitle}

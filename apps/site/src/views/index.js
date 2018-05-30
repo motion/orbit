@@ -290,7 +290,7 @@ export const Cmd = view('span', {
 })
 
 const Lines = ({ width = 100, height = 100, style }) => (
-  <svg height={height} width={width} style={style} class="pattern-swatch">
+  <svg height={height} width={width} style={style}>
     <rect
       style={{ fill: 'url(#diagonal-stripe-3)' }}
       x="0"

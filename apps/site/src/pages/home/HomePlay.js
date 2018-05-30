@@ -8,11 +8,14 @@ let hasAnimated = false
 
 class HomePlayStore {
   animate = false
-  async willMount() {
+
+  async didMount() {
+    console.log('ok?', hasAnimated)
     if (hasAnimated) {
       return
     }
     await sleep(250)
+    console.log('set')
     this.animate = true
     // set done
     await sleep(9000)
@@ -25,7 +28,7 @@ class HomePlayStore {
 })
 export class HomePlay extends React.Component {
   render({ store }) {
-    console.log('render play', hasAnimated)
+    console.log('render play', store.animate, hasAnimated)
     return (
       <>
         <illus>

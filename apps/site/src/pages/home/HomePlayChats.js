@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import Trail from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
-import { TimingAnimation, Easing } from 'react-spring/dist/addons.esm'
+import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 import { chats, messages } from './stageItems'
 
 class PlayChatsStore {

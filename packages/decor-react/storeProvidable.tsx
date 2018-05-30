@@ -93,17 +93,14 @@ storeProvidable = function(options, Helpers) {
 
         constructor(a, b) {
           super(a, b)
-          if (Klass.name === 'PaneStore') {
-            console.log('storeprovidable mount', Klass.name, Stores)
-          }
           this.setupProps()
           this.setupStores()
           this.isSetup = true
         }
 
         // PureComponent means this is only called when props are not shallow equal
-        componentDidUpdate(nextProps) {
-          updateProps(this._props, nextProps)
+        componentDidUpdate() {
+          updateProps(this._props, this.props)
         }
 
         componentDidMount() {

@@ -50,7 +50,7 @@ const thirdSlant = {
 class HomeStore {
   stars = null
 
-  willMount() {
+  didMount() {
     // this.on(
     //   window,
     //   'scroll',
@@ -121,7 +121,7 @@ class HomeHeader extends React.Component {
               <Slant {...firstSlant} />
               <Slant inverseSlant {...secondSlant} />
               <Slant {...thirdSlant} />
-              <SectionContent padded fullscreen smallerFs>
+              <SectionContent padded fullscreen fullscreenFs>
                 <UI.Theme name="light">
                   <inner
                     css={{
@@ -149,14 +149,8 @@ class HomeHeader extends React.Component {
                         },
                       }}
                     >
-                      <Title
-                        italic
-                        size={isMedium ? 5.5 : 6.5}
-                        margin={[0, 0, 20, 0]}
-                        alpha={1}
-                      >
-                        Smart<br />
-                        Desktop
+                      <Title italic size={3} margin={[0, 0, 20, 0]} alpha={1}>
+                        Knowledge Management, Redefined
                       </Title>
                       <P
                         size={1.6}
@@ -164,7 +158,8 @@ class HomeHeader extends React.Component {
                         fontWeight={300}
                         alpha={0.9}
                       >
-                        A more intelligent way to stay in sync.
+                        An intelligent layer for your operating system that
+                        augments your teams with knowledge.
                       </P>
                       <actions
                         $$row
@@ -329,7 +324,7 @@ class HomeFooter extends React.Component {
                   background: bottomRightBackground,
                 }}
               />
-              <SectionContent padded fullscreen smallerFs>
+              <SectionContent padded fullscreen fullscreenFs>
                 <Slant
                   inverseSlant
                   {...firstSlant}

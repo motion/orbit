@@ -13,7 +13,8 @@ const size = 500
 class PlayMessagesStore {
   showOrbitals = false
 
-  willMount() {
+  didMount() {
+    console.log('hi me', this)
     if (this.props.hasAnimated) {
       setTimeout(() => {
         console.log('resuming from end')
@@ -27,6 +28,7 @@ class PlayMessagesStore {
   runAnimation = react(
     () => [this.props.animate, this.props.hasAnimated],
     async ([shouldAnimate, hasAnimated], { sleep }) => {
+      console.log('shouldAnimate, hasAnimated', shouldAnimate, hasAnimated)
       if (hasAnimated || !shouldAnimate) {
         throw react.cancel
       }
@@ -36,6 +38,7 @@ class PlayMessagesStore {
   )
 
   animate = async sleep => {
+    console.log('starting animation')
     await sleep(13000)
     await this.chatText(Spring, {
       from: { opacity: 0 },

@@ -50,6 +50,8 @@ class OrbitHomeStore {
   )
 }
 
+const selectedTheme = { color: 'rgb(42.4%, 24.8%, 96%)', background: '#fff' }
+
 @view({
   store: OrbitHomeStore,
 })
@@ -66,6 +68,7 @@ export class OrbitHome {
           {store.results.map((bit, index) => (
             <OrbitCard
               pane="summary"
+              selectedTheme={selectedTheme}
               key={`${bit.id}${index}`}
               index={index}
               bit={bit}

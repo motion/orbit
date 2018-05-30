@@ -130,7 +130,15 @@ export class OrbitCard extends React.Component {
     permalink,
     date,
   }) {
-    const { store, tiny, listItem, style, hoverToSelect, bit } = this.props
+    const {
+      store,
+      tiny,
+      listItem,
+      style,
+      hoverToSelect,
+      bit,
+      selectedTheme,
+    } = this.props
     const isExpanded = this.isExpanded
     const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
@@ -144,11 +152,7 @@ export class OrbitCard extends React.Component {
     )
     return (
       <UI.Theme
-        theme={
-          store.isSelected
-            ? { color: 'rgb(42.4%, 24.8%, 96%)', background: '#fff' }
-            : null
-        }
+        theme={store.isSelected && selectedTheme ? selectedTheme : null}
       >
         <cardWrap
           css={{

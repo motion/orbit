@@ -31,7 +31,7 @@ import searchImg from '~/../public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-const background = UI.color('#F0D3C0')
+const background = UI.color('#F5E2D5')
 const theme = {
   background: background,
   color: background.darken(0.5).desaturate(0.9),
@@ -39,8 +39,10 @@ const theme = {
   subTitleColor: '#111',
 }
 
+const slantBg = background
+
 const FeatureTitle = props => (
-  <Title italic size={4} css={{ marginBottom: 20 }} {...props} />
+  <Title italic size={3.5} css={{ marginBottom: 20 }} {...props} />
 )
 
 @UI.injectTheme
@@ -50,42 +52,31 @@ class FeaturesIntro extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section>
-            <SectionContent padded fullscreen css={{ marginTop: -450 }}>
+          <Section css={{ background: 'transparent' }}>
+            <SectionContent padded fullscreen css={{ marginTop: -400 }}>
               <Slant
-                slantBackground={Constants.altBg.darken(0.05)}
+                slantBackground={slantBg.darken(0.05)}
                 css={{ zIndex: 2 }}
-              />
-              <Slant
-                if={false}
-                inverseSlant
-                slantSize={3}
-                css={{ zIndex: 1 }}
-                amount={30}
-                slantGradient={[
-                  theme.base.background.darken(0.1),
-                  theme.base.background.darken(0.1),
-                ]}
               />
               <HalfSection css={{ position: 'absolute', bottom: 100 }}>
                 <Title
                   color="#111"
                   italic
-                  size={2.5}
+                  size={2.3}
                   margin={[0, '10%', 10, 0]}
                 >
-                  The intelligent agent for your company operation.
+                  The intelligent agent for company operation.
                 </Title>
-                <P2 size={1.7} alpha={0.75}>
+                <P2 size={1.6} alpha={0.75}>
                   Orbit unifies knowledge from across the cloud and lets your
                   teams use it effectively.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#news')}>Home</a>{' '}
+                  <a onClick={scrollTo('#news')}>News</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#search')}>Search</a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#context')}>Context</a>
+                  <a onClick={scrollTo('#context')}>Answers</a>
                 </P>
               </HalfSection>
               <HalfSection />
@@ -232,16 +223,7 @@ export class SectionFeatureNewsSearch extends React.Component {
               <Slant
                 inverseSlant
                 slantSize={14}
-                slantBackground={Constants.altBg.darken(0.05)}
-              />
-              <Slant
-                slantSize={3}
-                css={{ zIndex: 1 }}
-                amount={30}
-                slantGradient={[
-                  theme.base.background.darken(0.1).alpha(0),
-                  theme.base.background.darken(0.1),
-                ]}
+                slantBackground={slantBg.darken(0.05)}
               />
               <LeftSide css={{ top: 0 }}>
                 <Observer onChange={this.handleIntersect}>
@@ -251,8 +233,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <topSpace css={{ height: 40 }} />
-                    <FeatureTitle>Home</FeatureTitle>
+                    <FeatureTitle>Company news</FeatureTitle>
                     <UI.Theme name="light">
                       <Callout
                         css={{
@@ -420,7 +401,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
-                  <FeatureTitle>Search</FeatureTitle>
+                  <FeatureTitle>Unified search</FeatureTitle>
                 </content>
                 <Media
                   query={Constants.screen.small}
@@ -459,25 +440,18 @@ export class SectionFeatureIntelligence extends React.Component {
               <Slant
                 css={{ zIndex: 2 }}
                 slantSize={14}
-                slantBackground={Constants.altBg.darken(0.05)}
+                slantBackground={slantBg.darken(0.05)}
               />
-              <Slant
-                inverseSlant
-                slantSize={3}
-                css={{ zIndex: 1 }}
-                amount={30}
-                slantBackground={theme.base.background.darken(0.1)}
-              />
-              <LeftSide inverse innerStyle={{ paddingTop: '48%' }}>
+              <LeftSide inverse innerStyle={{ paddingTop: '50%' }}>
                 <div
                   css={
                     isLarge && {
                       display: 'block',
-                      margin: [contextYOff - 150, 0, 0, 30],
+                      margin: [contextYOff - 130, 0, 0, 30],
                     }
                   }
                 >
-                  <FeatureTitle>Context</FeatureTitle>
+                  <FeatureTitle>Realtime answers</FeatureTitle>
                   <UI.Theme name="light">
                     <Callout
                       css={{
@@ -492,7 +466,8 @@ export class SectionFeatureIntelligence extends React.Component {
                       }}
                     >
                       <P2 size={1.6}>
-                        Realtime contextual search for every app.
+                        A sidebar that shows relevant answers from your
+                        knowledgebase alongside every app.
                       </P2>
                       <P2 size={1.6}>
                         Simply hold <Cmd>Option</Cmd> or press{' '}

@@ -476,7 +476,7 @@ export const TopoBg = () => (
     $$fullscreen
     css={{
       zIndex: 0,
-      opacity: 0.12,
+      opacity: 0.17,
       background: `url(${require('../../public/topo2.svg')})`,
     }}
   />

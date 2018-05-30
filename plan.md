@@ -1,18 +1,16 @@
 ## what we are
 
-"intelligence for your company knowledge"
+"intelligence for company knowledge" evolving into "an os for your company"
 
 starting with:
 
 (Enterprise early edition)
 
 Customer success agent that realtime answers using knowledge base
+Search across your cloud with aggregated projects/profiles
+News for everything happening in your company
 
-then:
-
-(Slack-like edition)
-
-Stripe Home for your cloud, unified cloud search and notification sorting, with realtime context.
+then later launch a direct to consumer slack like model edition once its polished enough.
 
 # Competition
 

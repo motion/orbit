@@ -1,13 +1,11 @@
-import { Header, Footer, Join } from '~/components'
+import { Header, Footer } from '~/components'
 import {
-  Border,
+  TopoBg,
   P,
   P2,
   LeftSide,
   Title,
-  SmallTitle,
   SubTitle,
-  SubSubTitle,
   RightSide,
   Callout,
   FadedArea,
@@ -37,9 +35,10 @@ class UseCasesIntro extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section>
-            <SectionContent padded fullscreen css={{ marginTop: -500 }}>
+          <Section css={{ background: 'transparent' }}>
+            <SectionContent padded fullscreen css={{ marginTop: -400 }}>
               <Slant
+                inverseSlant
                 slantBackground={Constants.altBg.darken(0.05)}
                 css={{ zIndex: 2 }}
               />
@@ -47,23 +46,23 @@ class UseCasesIntro extends React.Component {
                 <Title
                   color="#111"
                   italic
-                  size={2.5}
+                  size={2.3}
                   margin={[0, '10%', 10, 0]}
                 >
-                  Use cases
+                  Company knowledge sorted and at hand.
                 </Title>
-                <P2 size={1.7} alpha={0.75}>
-                  Make your customer success team more successful and your
-                  customers happier.
+                <P2 size={1.6} alpha={0.75}>
+                  Everyone operates better when incoming is sorted and answers
+                  are at hand.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#remote-teams')}>Remote teams</a>{' '}
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#customer-success')}>
                     Customer Success
-                  </a>
+                  </a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#reduce-interrupts')}>Focus</a>
+                  <a onClick={scrollTo('#reduce-interrupts')}>Team sync</a>
+                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                  <a onClick={scrollTo('#remote-teams')}>Remote teams</a>
                 </P>
               </HalfSection>
               <HalfSection />
@@ -81,7 +80,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section id="use-cases" inverse>
+          <Section css={{ background: 'transparent' }} id="use-cases" inverse>
             <SectionContent
               id="remote-teams"
               fullscreen={isLarge}
@@ -95,14 +94,10 @@ class SectionUseCaseRemoteTeams extends React.Component {
                 }}
               />
               <Slant
-                inverseSlant
-                slantGradient={[
-                  Constants.altBg.darken(0.05),
-                  Constants.useCasesSlantBg1,
-                ]}
+                slantGradient={[Constants.useCasesSlantBg2, Constants.altBg]}
                 css={{ zIndex: 2 }}
               />
-              <LeftSide>
+              <LeftSide inverse>
                 <SubTitle size={5} italic>
                   Remote<br />
                   teams
@@ -143,7 +138,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                   </P2>
                 </Callout>
               </LeftSide>
-              <RightSide inverse css={{ bottom: 0 }}>
+              <RightSide css={{ bottom: 0 }}>
                 <div $$flex css={{ marginTop: isLarge ? '21%' : 0 }} />
                 <P2 if={false} size={1.8} css={{ margin: [5, 0, 10, 0] }}>
                   The smart way to sync
@@ -208,7 +203,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section id="customer-success" css={{ background: Constants.altBg }}>
+          <Section css={{ background: 'transparent' }} id="customer-success">
             <SectionContent fullscreen={isLarge} padded>
               <Glow
                 style={{
@@ -218,7 +213,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
               />
               <Slant
                 slantGradient={[
-                  Constants.useCasesSlantBg1,
+                  Constants.altBg.darken(0.05),
                   Constants.useCasesSlantBg2,
                 ]}
               />
@@ -241,12 +236,13 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                     size={2}
                     css={{ margin: [0, 0, 10, 0] }}
                   >
-                    Live help for live support
+                    Reduce onboarding time by 1/3
                   </P>
                   <P2 size={1.6} css={{ margin: isLarge ? [0, 0, 35, 0] : 0 }}>
-                    Orbit's contextual answers work with your support software
-                    as your team chats. In realtime it searches across your
-                    cloud and shows exact sections with answers.
+                    Onboarding is an expensive process because it requires
+                    multiple experienced people helping new employees. Orbit
+                    puts knowledge they would normally never search or find at
+                    their hands with automatic realtime contextual search.
                   </P2>
                 </section>
                 <Callout
@@ -258,8 +254,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                   }}
                 >
                   <P2 size={2} margin={0}>
-                    Answers on hand for your entire success team, powered by all
-                    your knowledgebase.
+                    A smarter way to build your team knowledge.
                   </P2>
                 </Callout>
               </LeftSide>
@@ -275,21 +270,20 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                   size={2}
                   css={{ margin: [0, '15%', 10, 0] }}
                 >
-                  Reduce onboarding time
+                  Your CSAT secret weapon
                 </P>
                 <P2 size={1.6} css={isLarge && { marginRight: '15%' }}>
                   Sales chat requires intimate knowledge of your product. Orbit
                   sits side by side with your success team as they chat on
-                  Intercom or ZenDesk providing realtime answers from your
-                  knowledgebase.
+                  Intercom or ZenDesk providing realtime answers from everything
+                  happening at your company.
                 </P2>
                 <Callout
                   if={isLarge}
                   css={{ margin: [45, '10%', 40, 0], left: -30 }}
                 >
                   <P2 size={2} margin={0}>
-                    Organizational knowledge is now always at hand and usable
-                    during outbound chats.
+                    Organizational knowledge is now always at hand and useful.
                   </P2>
                 </Callout>
               </RightSide>
@@ -319,7 +313,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section inverse css={{ background: Constants.altBg }}>
+          <Section inverse css={{ background: 'transparent' }}>
             <SectionContent
               id="reduce-interrupts"
               fullscreen={isLarge}
@@ -334,13 +328,16 @@ class SectionUseCaseReduceInterrupts extends React.Component {
               />
               <Slant
                 inverseSlant
-                slantGradient={[Constants.useCasesSlantBg2, Constants.altBg]}
+                slantGradient={[
+                  Constants.useCasesSlantBg2,
+                  Constants.useCasesSlantBg2,
+                ]}
                 css={{ zIndex: 2 }}
               />
               <LeftSide>
                 <SubTitle size={5} italic>
                   Workplace<br />
-                  interruptions
+                  operations
                 </SubTitle>
                 <Notification
                   if={isLarge}
@@ -366,20 +363,19 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                     size={2}
                     css={{ margin: [0, '25%', 10, 0] }}
                   >
-                    Stop losing links and files
+                    Smarter unified knowledgebase
                   </P>
                   <P2 size={1.6}>
-                    Search that works means a lot less time hunting around for
-                    links. Combine with smart profiles that show recent
-                    collaborations and pings just to find things go down.
+                    Smart profiles and project information, with relevant
+                    conversations shown inline. Reduce pings for links, lost
+                    discussions, and other common causes for interruptions.
                   </P2>
                 </section>
                 <Callout
                   if={isLarge}
                   css={
                     isLarge && {
-                      width: '72%',
-                      marginLeft: '35%',
+                      marginLeft: '15%',
                       marginTop: 35,
                       textAlign: 'left',
                     }
@@ -403,10 +399,11 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 </P>
                 <P2 size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
                   Use the power of Do Not Disturb in Slack without losing
-                  synchronicity. Home lets you snooze notifications but still
-                  pull, exactly when you're ready, to see everything new.
+                  synchronicity. The Orbit Home shows everything relevant and
+                  summarized to each employeee. That means less notification
+                  noise, and a better ability to focus.
                 </P2>
-                <Callout css={{ margin: [35, '20%', 0, 0], left: -45 }}>
+                <Callout css={{ margin: [35, '15%', 0, 0], left: -45 }}>
                   <P2 size={2} margin={0}>
                     Pull, instead of being pushed by notifications.
                   </P2>
@@ -424,18 +421,19 @@ class SectionUseCaseReduceInterrupts extends React.Component {
 export class UseCasesPage extends React.Component {
   render() {
     return (
-      <>
+      <usecases $$flex $$background={Constants.peachTheme.background}>
         <UI.Theme theme={Constants.peachTheme}>
+          <TopoBg />
           <Header />
           <UseCasesIntro />
           <surround css={{ position: 'relative' }}>
-            <SectionUseCaseRemoteTeams />
             <SectionUseCaseCustomerSuccess />
             <SectionUseCaseReduceInterrupts />
+            <SectionUseCaseRemoteTeams />
           </surround>
           <Footer />
         </UI.Theme>
-      </>
+      </usecases>
     )
   }
 }

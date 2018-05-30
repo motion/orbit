@@ -21,7 +21,7 @@ import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 
-const background = UI.color('#F2D5DC') // '#D6B190' //'#E1D1C8'
+const background = UI.color('#F7DFE5') // '#D6B190' //'#E1D1C8'
 const borderColor = background.darken(0.1)
 
 const firstSlant = {
@@ -167,7 +167,6 @@ class HomeHeader extends React.Component {
                         onClick={scrollTo('#join')}
                         $smallInstallBtn={!isLarge}
                         alpha={0.85}
-                        color="#fff"
                         css={{
                           margin: [0, 10, 0, -10],
                           cursor: 'pointer',
@@ -179,7 +178,10 @@ class HomeHeader extends React.Component {
                           width={20}
                           height={20}
                           css={{
-                            fill: '#fff',
+                            fill: background
+                              .darken(0.25)
+                              .desaturate(0.2)
+                              .toString(),
                             display: 'inline-block',
                             margin: [-2, 0, 0, 4],
                             // opacity: 0.32,

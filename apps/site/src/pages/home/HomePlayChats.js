@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import Trail from '~/trail'
+import { DurationTrail } from '~/trail'
 import { Keyframes, Spring, animated, config, interpolate } from 'react-spring'
 import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 import { chats, messages } from './stageItems'
@@ -24,14 +24,12 @@ class PlayChatsStore {
       to: { opacity: 0 },
       config: config.fast,
     })
-    await this.chats(Trail, {
+    await this.chats(DurationTrail, {
+      delay: 0,
+      ms: 800,
       from: { opacity: 0, y: -25 },
       to: { opacity: 1, y: 0 },
       config: { tension: 20, friction: 5 },
-      delay: [10, 900, 900, 900, 900, 800, 500, 400, 400, 300, 500, 200].slice(
-        0,
-        chats.length,
-      ),
     })
     this.animateChatsAway(sleep)
     await sleep(8000)
@@ -90,8 +88,9 @@ export class HomePlayChats extends React.Component {
                   keys={chats.map((_, i) => i)}
                   script={next => (store.chats = next)}
                 >
-                  {chats.map(chat => ({ y, opacity }) => (
+                  {chats.map((chat, index) => ({ y, opacity }) => (
                     <animated.div
+                      key={index}
                       style={{
                         opacity,
                         transform: y.interpolate(y => `translate3d(0,${y}%,0)`),

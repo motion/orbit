@@ -53,8 +53,8 @@ export const Title = ({
         margin={[0, 0, 5]}
         size={size * (isSmall ? 0.7 : 1)}
         css={{
-          fontFamily: '"Mercury Display A", "Mercury Display B"',
-          fontStyle: italic ? 'italic' : 'normal',
+          fontFamily: 'OPTIsupAuvantGothicBold', //'"Mercury Display A", "Mercury Display B"',
+          fontStyle: italic ? 'normal' : 'normal',
         }}
         {...props}
       >

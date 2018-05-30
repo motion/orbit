@@ -116,30 +116,30 @@ export class HomePlayMessages extends React.Component {
                   </UI.Button>
                 </UI.Row>
               </message>
-              <Orbital
-                size={size}
-                borderColor="transparent"
-                borderWidth={1}
-                background="#DDE3EC33"
-                css={{
-                  top: '50%',
-                  left: '50%',
-                  margin: [-size / 2, 0, 0, -size / 2],
-                  position: 'absolute',
-                  transition: 'all ease-in 1000ms',
-                  opacity: store.showOrbitals ? 1 : 0,
-                  // transform: {
-                  //   scale: store.showOrbitals ? 1 : 0.98,
-                  // },
-                }}
-                items={dockIcons.map(({ name }) => {
-                  const Icon = Icons[`${name}Icon`]
-                  return <Icon key={name} size={0.11} />
-                })}
-              />
             </animated.div>
           )}
         </Keyframes>
+        <Orbital
+          size={size}
+          borderColor="transparent"
+          borderWidth={1}
+          background={[255, 255, 255, 0.1]}
+          css={{
+            top: '50%',
+            left: '50%',
+            margin: [-size / 2, 0, 0, -size / 2],
+            position: 'absolute',
+            transition: 'all ease-in 1000ms',
+            opacity: store.showOrbitals ? 1 : 0,
+            // transform: {
+            //   scale: store.showOrbitals ? 1 : 0.98,
+            // },
+          }}
+          items={dockIcons.map(({ name }) => {
+            const Icon = Icons[`${name}Icon`]
+            return <Icon key={name} size={0.11} />
+          })}
+        />
       </>
     )
   }

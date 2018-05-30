@@ -2,23 +2,17 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-class HeaderStore {
-  height = 0
-
-  willMount() {
-    this.height = this.props.subtitle || this.props.after ? 85 : 50
-    this.props.peekStore.headerHeight = this.height
-  }
-}
-
 @view.attach('peekStore')
-@view({
-  store: HeaderStore,
-})
+@view
 export class PeekHeader extends React.Component {
-  render({ store, peekStore, title, date, subtitle, after }) {
+  onHeader = ref => {
+    if (!ref) return
+    this.props.peekStore.setHeaderHeight(ref.clientHeight)
+  }
+
+  render({ peekStore, title, date, subtitle, after }) {
     return (
-      <header css={{ height: store.height }}>
+      <header ref={this.onHeader}>
         <title if={title}>
           <chromeSpace if={peekStore.hasHistory} />
           <titles>

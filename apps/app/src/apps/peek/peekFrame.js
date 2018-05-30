@@ -17,7 +17,6 @@ const transitions = store => {
   return 'all ease-in 150ms'
 }
 
-@UI.injectTheme
 @view.attach('peekStore')
 @view
 export class PeekFrame {

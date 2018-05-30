@@ -73,9 +73,8 @@ export class Conversation extends React.Component {
                 <mainInner>
                   <content>
                     <UI.Text selectable css={{ margin: [5, 0, 20] }} size={1.2}>
-                      In this conversation <strong>Nick</strong>,{' '}
-                      <strong>Nate</strong>, and 4 other people discussed a16z
-                      partners, orbit domain, mock-up, Formidable and refactor.
+                      <strong>Key points</strong>: a16z partners, orbit domain,
+                      mock-up, Formidable and refactor.
                     </UI.Text>
                     {content}
                   </content>

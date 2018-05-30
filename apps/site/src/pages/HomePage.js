@@ -69,6 +69,66 @@ class HomeStore {
   }
 }
 
+const Pitch = ({ isLarge }) => (
+  <>
+    <Title italic size={2.7} margin={[0, 0, 20, 0]}>
+      Smarter<br />Knowledge<br />Management
+    </Title>
+    <P size={1.6} sizeLineHeight={1.15} fontWeight={300} alpha={0.9}>
+      Augment team knowledge with an intelligent desktop app that organizes your
+      company.
+    </P>
+    <actions
+      $$row
+      css={{
+        margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
+        alignItems: 'center',
+      }}
+    >
+      <UI.Button
+        background="transparent"
+        borderColor={[255, 255, 255, 0.45]}
+        size={1.1}
+        onClick={scrollTo('#join')}
+        $smallInstallBtn={!isLarge}
+        alpha={0.85}
+        css={{
+          margin: [0, 10, 0, -10],
+          cursor: 'pointer',
+          lineHeight: '1.1rem',
+        }}
+      >
+        Coming soon for{' '}
+        <AppleLogo
+          width={20}
+          height={20}
+          css={{
+            fill: background
+              .darken(0.25)
+              .desaturate(0.2)
+              .toString(),
+            display: 'inline-block',
+            margin: [-2, 0, 0, 4],
+            // opacity: 0.32,
+          }}
+        />
+      </UI.Button>
+      <UI.Button
+        if={false}
+        chromeless
+        alpha={0.4}
+        onClick={Router.link('/features')}
+        margin={[0, 0, 0, 10]}
+        css={{
+          cursor: 'pointer',
+        }}
+      >
+        Learn more
+      </UI.Button>
+    </actions>
+  </>
+)
+
 @view({
   store: HomeStore,
 })
@@ -117,107 +177,61 @@ class HomeHeader extends React.Component {
               <Slant inverseSlant {...secondSlant} />
               <Slant {...thirdSlant} />
               <SectionContent padded fullscreen fullscreenFs>
-                <inner
-                  css={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: '50%',
-                    right: '-100%',
-                    padding: [180, 0, '10%', 55],
-                    transformOrigin: 'top left',
-                    transform: {
-                      y: firstSlant.slantSize,
-                      x: firstSlant.slantSize + 10,
-                      rotate: '4.1deg',
-                    },
-                  }}
-                >
-                  <innerInner
-                    css={{
-                      width: 460,
-                      marginLeft: 20,
-                      transform: {
-                        rotate: '-4.1deg',
-                      },
-                    }}
-                  >
-                    <Title italic size={2.7} margin={[0, 0, 20, 0]}>
-                      Smarter<br />Knowledge<br />Management
-                    </Title>
-                    <P
-                      size={1.6}
-                      sizeLineHeight={1.15}
-                      fontWeight={300}
-                      alpha={0.9}
-                    >
-                      Augment your team knowledge with an intelligent app that
-                      lives on your desktop.
-                    </P>
-                    <actions
-                      $$row
-                      css={{
-                        margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
-                        alignItems: 'center',
-                      }}
-                    >
-                      <UI.Button
-                        background="transparent"
-                        borderColor={[255, 255, 255, 0.45]}
-                        size={1.1}
-                        onClick={scrollTo('#join')}
-                        $smallInstallBtn={!isLarge}
-                        alpha={0.85}
+                <Media
+                  query={Constants.screen.small}
+                  render={() => (
+                    <>
+                      <div $$flex />
+                      <Pitch />
+                      <div $$flex />
+                    </>
+                  )}
+                />
+                <Media
+                  query={Constants.screen.large}
+                  render={() => (
+                    <>
+                      <leftSide
                         css={{
-                          margin: [0, 10, 0, -10],
-                          cursor: 'pointer',
-                          lineHeight: '1.1rem',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          bottom: 0,
+                          width: '50%',
                         }}
                       >
-                        Coming soon for{' '}
-                        <AppleLogo
-                          width={20}
-                          height={20}
+                        <HomePlay />
+                      </leftSide>
+                      <inner
+                        css={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: '50%',
+                          right: '-100%',
+                          padding: [180, 0, '10%', 55],
+                          transformOrigin: 'top left',
+                          transform: {
+                            y: firstSlant.slantSize,
+                            x: firstSlant.slantSize + 10,
+                            rotate: '4.1deg',
+                          },
+                        }}
+                      >
+                        <innerInner
                           css={{
-                            fill: background
-                              .darken(0.25)
-                              .desaturate(0.2)
-                              .toString(),
-                            display: 'inline-block',
-                            margin: [-2, 0, 0, 4],
-                            // opacity: 0.32,
+                            width: 460,
+                            marginLeft: 20,
+                            transform: {
+                              rotate: '-4.1deg',
+                            },
                           }}
-                        />
-                      </UI.Button>
-                      <UI.Button
-                        if={false}
-                        chromeless
-                        alpha={0.4}
-                        onClick={Router.link('/features')}
-                        margin={[0, 0, 0, 10]}
-                        css={{
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Learn more
-                      </UI.Button>
-                    </actions>
-                  </innerInner>
-                </inner>
-                <leftSide
-                  css={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    width: '50%',
-                  }}
-                >
-                  <Media
-                    query={Constants.screen.large}
-                    render={() => <HomePlay />}
-                  />
-                </leftSide>
-                <rightSide />
+                        >
+                          <Pitch isLarge />
+                        </innerInner>
+                      </inner>
+                    </>
+                  )}
+                />
               </SectionContent>
             </Section>
           )

@@ -52,8 +52,13 @@ class FeaturesIntro extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section css={{ background: 'transparent' }}>
-            <SectionContent padded fullscreen css={{ marginTop: -400 }}>
+          <Section
+            css={{
+              background: 'transparent',
+              marginTop: -window.innerHeight / 2.2,
+            }}
+          >
+            <SectionContent padded fullscreen>
               <Slant
                 slantBackground={slantBg.darken(0.05)}
                 css={{ zIndex: 2 }}
@@ -67,7 +72,7 @@ class FeaturesIntro extends React.Component {
                 >
                   The intelligent agent for company operation.
                 </Title>
-                <P2 size={1.6} alpha={0.75}>
+                <P2 size={1.6} alpha={0.8}>
                   Orbit unifies knowledge from across the cloud and lets your
                   teams use it effectively.
                 </P2>

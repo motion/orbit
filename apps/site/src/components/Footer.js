@@ -20,23 +20,13 @@ export class Footer extends React.Component {
                   $$row
                   css={
                     isLarge
-                      ? { width: '50%', padding: [0, 20] }
+                      ? { width: '50%', paddingRight: '10%' }
                       : { padding: [0, 0, 50] }
                   }
                 >
-                  <Join />
-                  <section if={false}>
-                    <SmallTitle>Our Mission</SmallTitle>
-                    <P2 size={1.6}>
-                      Orbit runs intimately in your everyday. That means it has
-                      to work for you, the individual.
-                      <br />
-                      <br />
-                      Our goal is to build a more intuitive OS. To do that we
-                      need trust. Privacy, security, and user experience our
-                      first priorities.
-                    </P2>
-                  </section>
+                  <UI.Theme name="light">
+                    <Join />
+                  </UI.Theme>
                 </left>
                 <RightSide noEdge>
                   <div

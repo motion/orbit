@@ -25,6 +25,14 @@ import profileImg from '~/../public/screen-profile.png'
 import chatImg from '~/../public/chat.svg'
 import { scrollTo } from '~/helpers'
 
+const altBg = UI.color('#F5F0E6')
+const peachTheme = {
+  background: altBg,
+  color: altBg.darken(0.8).desaturate(0.1),
+  titleColor: altBg.darken(0.55).desaturate(0.3),
+  subTitleColor: altBg.darken(0.55).desaturate(0.8),
+}
+
 export const ChatIcon = props => (
   <img src={chatImg} width={`${120}px`} {...props} />
 )
@@ -35,11 +43,16 @@ class UseCasesIntro extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section css={{ background: 'transparent' }}>
-            <SectionContent padded fullscreen css={{ marginTop: -400 }}>
+          <Section
+            css={{
+              background: 'transparent',
+              marginTop: -window.innerHeight / 2.2,
+            }}
+          >
+            <SectionContent padded fullscreen>
               <Slant
                 inverseSlant
-                slantBackground={Constants.altBg.darken(0.05)}
+                slantBackground={altBg.darken(0.05)}
                 css={{ zIndex: 2 }}
               />
               <HalfSection css={{ position: 'absolute', bottom: 100 }}>
@@ -51,7 +64,7 @@ class UseCasesIntro extends React.Component {
                 >
                   Company knowledge sorted and at hand.
                 </Title>
-                <P2 size={1.6} alpha={0.75}>
+                <P2 size={1.6} alpha={0.8}>
                   Everyone operates better when incoming is sorted and answers
                   are at hand.
                 </P2>
@@ -89,12 +102,12 @@ class SectionUseCaseRemoteTeams extends React.Component {
             >
               <Glow
                 style={{
-                  background: Constants.altBg.lighten(0.015),
+                  background: altBg.lighten(0.015),
                   transform: { x: '-30%', y: '-15%' },
                 }}
               />
               <Slant
-                slantGradient={[Constants.useCasesSlantBg2, Constants.altBg]}
+                slantGradient={[Constants.useCasesSlantBg2, altBg]}
                 css={{ zIndex: 2 }}
               />
               <LeftSide inverse>
@@ -167,11 +180,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                     overflow: 'hidden',
                   }}
                 >
-                  <FadedArea
-                    fadeBackground={Constants.altBg}
-                    fadeDown
-                    fadeRight
-                  >
+                  <FadedArea fadeBackground={altBg} fadeDown fadeRight>
                     <img
                       src={profileImg}
                       css={{
@@ -207,15 +216,12 @@ class SectionUseCaseCustomerSuccess extends React.Component {
             <SectionContent fullscreen={isLarge} padded>
               <Glow
                 style={{
-                  background: Constants.altBg.lighten(0.025),
+                  background: altBg.lighten(0.025),
                   transform: { x: '40%', y: '-50%' },
                 }}
               />
               <Slant
-                slantGradient={[
-                  Constants.altBg.darken(0.05),
-                  Constants.useCasesSlantBg2,
-                ]}
+                slantGradient={[altBg.darken(0.05), Constants.useCasesSlantBg2]}
               />
               <chat>
                 <ChatIcon />
@@ -322,7 +328,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
             >
               <Glow
                 style={{
-                  background: Constants.altBg.lighten(0.025),
+                  background: altBg.lighten(0.025),
                   transform: { x: '-20%', y: '-25%' },
                 }}
               />
@@ -421,8 +427,8 @@ class SectionUseCaseReduceInterrupts extends React.Component {
 export class UseCasesPage extends React.Component {
   render() {
     return (
-      <usecases $$flex $$background={Constants.peachTheme.background}>
-        <UI.Theme theme={Constants.peachTheme}>
+      <usecases $$flex $$background={peachTheme.background}>
+        <UI.Theme theme={peachTheme}>
           <TopoBg />
           <Header />
           <UseCasesIntro />

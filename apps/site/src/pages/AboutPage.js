@@ -24,7 +24,7 @@ class AboutIntro extends React.Component {
           <Section>
             <SectionContent padded halfscreen>
               <HalfSection>
-                <Title italic size={2.8} margin={[0, 0, 10, 0]}>
+                <Title italic size={2.7} margin={[0, 0, 10, 0]}>
                   Passionate about making our tools more intelligent and
                   intuitive.
                 </Title>

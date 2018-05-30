@@ -1,59 +1,30 @@
-* hmr dehydrate/hydrate
-* types for .provide, .attach, and view()
+# biz
 
-## website
+* nick agreement
+* demo/talk to spacex
+* demo/talk to bloomberg
+* demo/talk to vc fund
+* cofounder find
 
+# website
+
+* simpler italian theme and better messaging / new font
 * Mobile fixes
-  * add back in a couple images
-* Footer fixes
-* Blog - two posts
-  * Turn down the noise and focus
-  * Realtime context as you work (accompany with screencast later)
-* a couple small fun design details for the site, maybe parallax them
-* show integrations it supports
+* Blog - one post: noise or customer success
 * purchase page
 * company logos (after sending to people)
 * <Parallax> move Search and Augmented Intelligence sections
 
-## app
+# dev
 
-* profiles design iteration
-* have the cards show _why_ they are there
-* topics you follow dropdown
-* fix settings
+* fix directory showing profile card
+* hmr dehydrate/hydrate
+* types for .provide, .attach, and view()
+* think through guru flux competitor
 * tear away peeks + super simple app
 * pinning item to top of news for a day
-
-demo for Formidable on May 12th:
-
-* contextual/OCR related content
-  * be sure we can enable it and run it on a page easily
-  * come up with a simple highlight words design that shows it
-* finish profiles with better design
-  * includes moving between them
-  * should aggregate even if faked from multiple sources
-* bring back tear away peeks to demonstrate apps
-* simple demo of coding an app and deploying it, mostly hardcoded but working
-  * need to figure this out, but honestly just showing the ease of code => deploy and syntax is big
-  * hmr is cool here too
-* simple app we built showing a chart that tears away and stays on screen
-* ensure settings panes generally work so we can show it quickly
-* building a general walkthrough of demo and plan for pitching the various pieces
-  * can just be our content, they dont care about it being fake just as long as it works and has right features
-* better theme and style polish all around
-
-* reach goals for demo
-  * make "@" show a list of slack people + search people
-    * solidifies the company directory feel
-  * make the "Home" button show hardcoded active projects and recent activity summary of each
-  * maybe: color themes for ocr/context (if can do in 1 day)
-    * think this is actually big because shows how nice the system is for deploying to your team
-    * this + news + ocr, really solidifies defensibility x how we are trustworthy for executing well in future
-
-deploying beta for company like formidable (est dev time: 3m)
-
+* custom apps
 * Merged cosal daily summaries
-* Basic version of app creation deployable
 * Basic p2p or slack based sync system for simple curation of intranet content
 * Basic project collation logic
 * finish: search, peek, profile, syncers, polish, productionize
@@ -73,12 +44,10 @@ deploying beta for company like formidable (est dev time: 3m)
 * [ ] slack unread/read sql
 * [ ] slack various formatting issues: backticks ``, inline html
 * [ ] setting pane improvements
-* [ ] fix option hold not working sometimes after a delay, until you move cursor
 * [ ] double click to open OrbitCard item
 * [ ] swindler on close window need to reposition
 * [ ] explore mockup
 * [ ] home animations
-
 * [ ] productionize
 
 ### sorted by area
@@ -152,23 +121,6 @@ deploying beta for company like formidable (est dev time: 3m)
   * [ ] fix electron devtools not working
 
 * productionize
-
-  * [ ] get builds working to .app
-  * [ ] get auto update working
-  * [ ] minimize builds to smaller size
-  * [ ] see if can share chromium or delay download
-  * [ ] check small screen, big screen, change screens
-
-* research
-
-  * [ ] keeping chromium warm
-
-security (~3weeks)
-
-* we likely either need to contract or get someone for this directly
-* involved auditing entire codebase, probably doing a variety of https things
-* encrypting a few pieces
-* local oauth system needs some work probably (hardcodes keys locally now)
 
 syncers (~4-5months)
 

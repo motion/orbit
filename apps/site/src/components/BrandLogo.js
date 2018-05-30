@@ -39,7 +39,7 @@ export class BrandLogo extends React.Component {
   static theme = (_, theme) => {
     return {
       orbit: {
-        border: [5, theme.base.background.darken(0.1)],
+        border: [2, theme.base.background.darken(0.1)],
       },
     }
   }

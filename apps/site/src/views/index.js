@@ -39,29 +39,26 @@ const changeCaps = (str, reducePct) =>
         )
     : str
 
-export const Title = ({
-  children,
-  reduceCapsPct,
-  italic,
-  size = 4,
-  ...props
-}) => (
-  <Media query={Constants.screen.small}>
-    {isSmall => (
-      <P
-        fontWeight={700}
-        margin={[0, 0, 5]}
-        size={size * (isSmall ? 0.7 : 1)}
-        css={{
-          fontFamily: 'OPTIsupAuvantGothicBold', //'"Mercury Display A", "Mercury Display B"',
-          fontStyle: italic ? 'normal' : 'normal',
-        }}
-        {...props}
-      >
-        {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}
-      </P>
-    )}
-  </Media>
+export const Title = UI.injectTheme(
+  ({ theme, children, reduceCapsPct, italic, size = 4, ...props }) => (
+    <Media query={Constants.screen.small}>
+      {isSmall => (
+        <P
+          fontWeight={500}
+          margin={[0, 0, 5]}
+          size={size * (isSmall ? 0.7 : 1)}
+          color={theme.titleColor || theme.base.color}
+          css={{
+            fontFamily: 'OPTIsupAuvantGothicBold', //'"Mercury Display A", "Mercury Display B"',
+            fontStyle: italic ? 'normal' : 'normal',
+          }}
+          {...props}
+        >
+          {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}
+        </P>
+      )}
+    </Media>
+  ),
 )
 
 export const SubTitle = UI.injectTheme(({ theme, size = 3.5, ...props }) => (
@@ -471,5 +468,16 @@ export const Link = ({ to, ...props }) => (
     href={to}
     onClick={Router.link(to)}
     {...props}
+  />
+)
+
+export const TopoBg = () => (
+  <topoBg
+    $$fullscreen
+    css={{
+      zIndex: 0,
+      opacity: 0.12,
+      background: `url(${require('../../public/topo2.svg')})`,
+    }}
   />
 )

@@ -156,7 +156,6 @@ export class HomePlayDock extends React.Component {
       bottom: distanceFromBottom,
       right: 0,
       left: 0,
-      background: `linear-gradient(transparent, ${Constants.rightBg})`,
       zIndex: 200,
       transition: 'all ease-out 1000ms',
       transform,
@@ -183,7 +182,6 @@ export class HomePlayDock extends React.Component {
       left: 0,
       right: 0,
       bottom: -10,
-      background: `linear-gradient(transparent, ${Constants.rightBg})`,
     },
     dockIcons: {
       transform,
@@ -213,5 +211,16 @@ export class HomePlayDock extends React.Component {
         y: 50,
       },
     },
+  }
+
+  static theme = (_, theme) => {
+    return {
+      dockContain: {
+        background: `linear-gradient(transparent, ${theme.base.background})`,
+      },
+      dockFade: {
+        background: `linear-gradient(transparent, ${theme.base.background})`,
+      },
+    }
   }
 }

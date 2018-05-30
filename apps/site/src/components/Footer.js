@@ -11,7 +11,7 @@ import * as UI from '@mcro/ui'
 export class Footer extends React.Component {
   render() {
     return (
-      <UI.Theme name="light">
+      <footer>
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section css={{ borderTop: [1, '#f2f2f2'] }}>
@@ -61,11 +61,14 @@ export class Footer extends React.Component {
             </Section>
           )}
         </Media>
-      </UI.Theme>
+      </footer>
     )
   }
 
   static style = {
+    footer: {
+      overflow: 'hidden',
+    },
     nav: {
       flex: 1,
       height: '100%',

@@ -428,8 +428,8 @@ export class UseCasesPage extends React.Component {
             <SectionUseCaseCustomerSuccess />
             <SectionUseCaseReduceInterrupts />
           </surround>
+          <Footer />
         </UI.Theme>
-        <Footer />
       </>
     )
   }

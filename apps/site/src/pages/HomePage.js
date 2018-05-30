@@ -12,6 +12,7 @@ import {
   LeftSide,
   RightSide,
   AppleLogo,
+  TopoBg,
 } from '~/views'
 import { HomePlay } from './home/HomePlay'
 import * as Constants from '~/constants'
@@ -20,29 +21,23 @@ import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 
-const borderColor = '#fff' || Constants.colorMain.darken(0.15)
-// const blackBg = UI.color('#111')
-// const blackTheme = {
-//   background: UI.color(Constants.leftBg),
-//   color: '#f2f2f2',
-//   subTitleColor: '#eee',
-//   titleColor: blackBg.darken(0.75).desaturate(0.3),
-// }
-const bottomRightBackground = '#fff'
+const background = UI.color('#F0C4CE') // '#D6B190' //'#E1D1C8'
+const borderColor = background.darken(0.1)
+
 const firstSlant = {
-  slantSize: 3,
+  slantSize: 1,
   amount: 40,
   slantBackground: borderColor,
   css: { zIndex: 2 },
 }
 const secondSlant = {
-  slantSize: 2,
+  slantSize: 1,
   amount: 10,
-  slantBackground: [200, 200, 200, 0.15],
+  slantBackground: borderColor,
   css: { zIndex: 2 },
 }
 const thirdSlant = {
-  slantBackground: [150, 150, 150, 0.2],
+  slantBackground: borderColor,
   slantSize: 1,
   amount: 18,
 }
@@ -122,93 +117,90 @@ class HomeHeader extends React.Component {
               <Slant inverseSlant {...secondSlant} />
               <Slant {...thirdSlant} />
               <SectionContent padded fullscreen fullscreenFs>
-                <UI.Theme name="light">
-                  <inner
+                <inner
+                  css={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '50%',
+                    right: '-100%',
+                    padding: [180, 0, '10%', 55],
+                    transformOrigin: 'top left',
+                    transform: {
+                      y: firstSlant.slantSize,
+                      x: firstSlant.slantSize + 10,
+                      rotate: '4.1deg',
+                    },
+                  }}
+                >
+                  <innerInner
                     css={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: '50%',
-                      right: '-100%',
-                      padding: [180, 0, 320, 55],
-                      // background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6) 30%, ${bottomRightBackground} 95%)`,
-                      // border: [4, '#000'],
-                      transformOrigin: 'top left',
+                      width: 460,
+                      marginLeft: 20,
                       transform: {
-                        y: firstSlant.slantSize,
-                        x: firstSlant.slantSize + 10,
-                        rotate: '4.1deg',
+                        rotate: '-4.1deg',
                       },
                     }}
                   >
-                    <innerInner
+                    <Title italic size={3} margin={[0, 0, 20, 0]}>
+                      Smarter<br />Knowledge Management
+                    </Title>
+                    <P
+                      size={1.6}
+                      sizeLineHeight={1.15}
+                      fontWeight={300}
+                      alpha={0.9}
+                    >
+                      Augment your team knowledge with an intelligent app that
+                      lives on your desktop.
+                    </P>
+                    <actions
+                      $$row
                       css={{
-                        width: 460,
-                        marginLeft: 20,
-                        transform: {
-                          rotate: '-4.1deg',
-                        },
+                        margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
+                        alignItems: 'center',
                       }}
                     >
-                      <Title italic size={3} margin={[0, 0, 20, 0]} alpha={1}>
-                        Knowledge Management, Redefined
-                      </Title>
-                      <P
-                        size={1.6}
-                        sizeLineHeight={1.15}
-                        fontWeight={300}
-                        alpha={0.9}
-                      >
-                        An intelligent layer for your operating system that
-                        augments your teams with knowledge.
-                      </P>
-                      <actions
-                        $$row
+                      <UI.Button
+                        background="transparent"
+                        borderColor={[255, 255, 255, 0.45]}
+                        size={1.1}
+                        onClick={scrollTo('#join')}
+                        $smallInstallBtn={!isLarge}
+                        alpha={0.85}
+                        color="#fff"
                         css={{
-                          margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
-                          alignItems: 'center',
+                          margin: [0, 10, 0, -10],
+                          cursor: 'pointer',
+                          lineHeight: '1.1rem',
                         }}
                       >
-                        <UI.Button
-                          background="transparent"
-                          borderColor="#ccc"
-                          size={1.1}
-                          onClick={scrollTo('#join')}
-                          $smallInstallBtn={!isLarge}
-                          alpha={0.5}
+                        Coming soon for{' '}
+                        <AppleLogo
+                          width={20}
+                          height={20}
                           css={{
-                            margin: [0, 10, 0, -10],
-                            cursor: 'pointer',
-                            lineHeight: '1.1rem',
+                            fill: '#fff',
+                            display: 'inline-block',
+                            margin: [-2, 0, 0, 4],
+                            // opacity: 0.32,
                           }}
-                        >
-                          Coming soon for{' '}
-                          <AppleLogo
-                            width={20}
-                            height={20}
-                            css={{
-                              fill: '#ccc',
-                              display: 'inline-block',
-                              margin: [-2, 0, 0, 4],
-                              // opacity: 0.32,
-                            }}
-                          />
-                        </UI.Button>
-                        <UI.Button
-                          if={false}
-                          chromeless
-                          alpha={0.4}
-                          onClick={Router.link('/features')}
-                          margin={[0, 0, 0, 10]}
-                          css={{
-                            cursor: 'pointer',
-                          }}
-                        >
-                          Learn more
-                        </UI.Button>
-                      </actions>
-                    </innerInner>
-                  </inner>
-                </UI.Theme>
+                        />
+                      </UI.Button>
+                      <UI.Button
+                        if={false}
+                        chromeless
+                        alpha={0.4}
+                        onClick={Router.link('/features')}
+                        margin={[0, 0, 0, 10]}
+                        css={{
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Learn more
+                      </UI.Button>
+                    </actions>
+                  </innerInner>
+                </inner>
                 <leftSide
                   css={{
                     position: 'absolute',
@@ -308,88 +300,67 @@ class HomeHeader extends React.Component {
 class HomeFooter extends React.Component {
   render() {
     return (
-      <UI.Theme theme="light">
-        <Media query={Constants.screen.large}>
-          {() => (
-            <Section
-              css={{
-                background: 'transparent',
-              }}
-              inverse
-            >
-              <rightBackground
-                $$fullscreen
-                css={{
-                  left: '55%',
-                  background: bottomRightBackground,
-                }}
-              />
-              <SectionContent padded fullscreen fullscreenFs>
-                <Slant
-                  inverseSlant
-                  {...firstSlant}
-                  rightBackground={bottomRightBackground}
-                />
-                <Slant {...secondSlant} />
-                <Slant inverseSlant {...thirdSlant} />
-                <LeftSide css={{ textAlign: 'left' }}>
-                  <div css={{ height: '22%' }} />
-                  <below css={{ margin: [15, 0, 0, 0] }}>
-                    <UI.PassProps size={1.3} sizeLineHeight={1.2} alpha={0.85}>
-                      <P2 size={2.8} alpha={1} fontWeight={400}>
-                        Team Operating System
-                      </P2>
-                      <P2>
-                        Your team and company has a ton going on, across
-                        everything. You probably feel the pain most with Slack,
-                        where conversations are happening at all times.
-                      </P2>
-                      <P2>
-                        Orbit summarizes anything in your cloud and gives you a
-                        clean home to see what's relevant to you. It also gives
-                        you powerful search and augmented intelligence for your
-                        day to day.
-                      </P2>
-                      <P2>
-                        It runs{' '}
-                        <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
-                          completely private and on-device
-                        </span>, so your data never leaves your firewall. We're
-                        currently in private beta. Sign up to get early access.
-                      </P2>
-                    </UI.PassProps>
-                  </below>
-                </LeftSide>
-                <RightSide noEdge $$centered>
-                  <UI.Theme name="light">
-                    <Join />
-                  </UI.Theme>
-                </RightSide>
-              </SectionContent>
-            </Section>
-          )}
-        </Media>
-      </UI.Theme>
+      <Media query={Constants.screen.large}>
+        {() => (
+          <Section inverse css={{ background: 'transparent' }}>
+            <SectionContent padded fullscreen fullscreenFs>
+              <Slant inverseSlant {...firstSlant} />
+              <Slant {...secondSlant} />
+              <Slant inverseSlant {...thirdSlant} />
+              <LeftSide css={{ textAlign: 'left' }}>
+                <div css={{ height: '22%' }} />
+                <below css={{ margin: [15, 0, 0, 0] }}>
+                  <Title size={2.3} css={{ marginBottom: 20 }}>
+                    Give your company an operating system.
+                  </Title>
+                  <UI.PassProps size={1.3} sizeLineHeight={1.1} alpha={0.85}>
+                    <P2>
+                      Conversations, tickets, emails, and wiki. Your knowledge
+                      lives all over the place.
+                    </P2>
+                    <P2>
+                      Orbit sorts your knowledge autonomously. It uses modern
+                      NLP to curate and summarize answers on-demand, integrating
+                      with literally everything you do.
+                    </P2>
+                    <P2>
+                      It has no cloud setup or install process and runs{' '}
+                      <span css={{ fontWeight: 500, fontStyle: 'italic' }}>
+                        completely privately on your device
+                      </span>, so your data never leaves your firewall.
+                    </P2>
+                    <P2>
+                      It's a new way to operate. Currently in private beta.
+                    </P2>
+                  </UI.PassProps>
+                </below>
+              </LeftSide>
+              <RightSide noEdge $$centered>
+                <UI.Theme name="light">
+                  <Join />
+                </UI.Theme>
+              </RightSide>
+            </SectionContent>
+          </Section>
+        )}
+      </Media>
     )
   }
 }
 
 export const HomePage = () => (
-  <Media query={Constants.screen.medium}>
-    {isMedium => (
-      <>
-        <Header />
-        <HomeHeader isMedium={isMedium} />
-        <HomeFooter isMedium={isMedium} />
-        {/* <topoBg
-          $$fullscreen
-          css={{
-            zIndex: 0,
-            opacity: 0.06,
-            background: `url(${topo})`,
-          }}
-        /> */}
-      </>
-    )}
-  </Media>
+  <UI.Theme
+    theme={{ background, color: background.darken(0.6).desaturate(0.5) }}
+  >
+    <Media query={Constants.screen.medium}>
+      {isMedium => (
+        <home $$flex $$background={background}>
+          <TopoBg />
+          <Header white />
+          <HomeHeader isMedium={isMedium} />
+          <HomeFooter isMedium={isMedium} />
+        </home>
+      )}
+    </Media>
+  </UI.Theme>
 )

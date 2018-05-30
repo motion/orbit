@@ -17,23 +17,24 @@ export class Header extends React.Component {
         {isLarge => (
           <>
             <header
-              css={{
-                // background: theme.base.background,
-                borderBottom: [
-                  1,
-                  theme.base.background
-                    .darken(0.2)
-                    .desaturate(0.3)
-                    .alpha(0.2),
-                ],
-              }}
+              css={
+                {
+                  // background: theme.base.background,
+                  // borderBottom: [
+                  //   1,
+                  //   theme.base.background
+                  //     .darken(0.2)
+                  //     .desaturate(0.3)
+                  //     .alpha(0.2),
+                  // ],
+                }
+              }
             >
               <SectionContent>
                 <headerInner>
                   <BrandLogo
                     css={{ cursor: 'pointer' }}
                     onClick={Router.link('/')}
-                    white={theme.base.background.lightness() < 20}
                   />
                   <div $$flex />
                   <nav>

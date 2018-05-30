@@ -8,7 +8,7 @@ import {
   DottedButton,
   FadedArea,
   LeftSide,
-  SubTitle,
+  TopoBg,
   RightSide,
   Callout,
   Notification,
@@ -31,16 +31,16 @@ import searchImg from '~/../public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-const blueBg = UI.color('#fff') //UI.color('#FCFCFF')
-const blueTheme = {
-  background: blueBg,
-  color: '#222',
-  titleColor: blueBg.darken(0.75).desaturate(0.3),
+const background = UI.color('#F0D3C0')
+const theme = {
+  background: background,
+  color: background.darken(0.5).desaturate(0.9),
+  titleColor: background.darken(0.65).desaturate(0.7),
   subTitleColor: '#111',
 }
 
 const FeatureTitle = props => (
-  <Title italic size={2.8} css={{ marginBottom: 20 }} {...props} />
+  <Title italic size={4} css={{ marginBottom: 20 }} {...props} />
 )
 
 const FeatureSubTitle = props => (
@@ -64,7 +64,7 @@ class FeaturesIntro extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section>
+          <Section css={{ background: 'transparent' }}>
             <SectionContent padded halfscreen>
               <HalfSection>
                 <Title italic size={3} margin={[0, 0, 15, 0]}>
@@ -209,7 +209,7 @@ export class SectionFeatureNewsSearch extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section id="features" inverse>
+          <Section css={{ background: 'transparent' }} id="features" inverse>
             <SectionContent
               id="news"
               padded={!isLarge}
@@ -221,20 +221,16 @@ export class SectionFeatureNewsSearch extends React.Component {
                 style={{ transform: { y: '-10%', x: '-40%' } }}
               />
               <Glow if={false} style={{ transform: { y: '130%', x: '60%' } }} />
-              <Slant
-                slantSize={4}
-                inverseSlant
-                slantGradient={['#f2f2f2', Constants.featuresSlantColor]}
-              />
-              <Slant
+              <Slant slantSize={4} inverseSlant slantBackground="#fff" />
+              {/* <Slant
                 slantSize={3}
                 css={{ zIndex: 1 }}
                 amount={30}
                 slantGradient={[
-                  Constants.colorSecondary.alpha(0.4),
-                  blueTheme.background.darken(0.025),
+                  Constants.colorSecondary,
+                  Constants.colorSecondary,
                 ]}
-              />
+              /> */}
               <LeftSide css={{ top: 0 }}>
                 <Observer onChange={this.handleIntersect}>
                   <content
@@ -441,16 +437,13 @@ export class SectionFeatureIntelligence extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <Section>
+          <Section css={{ background: 'transparent' }}>
             <SectionContent id="context" fullscreen={isLarge} padded>
               <Glow if={false} style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
                 slantSize={4}
                 css={{ zIndex: 2 }}
-                slantGradient={[
-                  Constants.featuresSlantColor,
-                  Constants.altBg.darken(0.05),
-                ]}
+                slantGradient={[background.darken(0.1), background.darken(0.1)]}
               />
               <Slant
                 slantSize={3}
@@ -458,8 +451,8 @@ export class SectionFeatureIntelligence extends React.Component {
                 css={{ zIndex: 1 }}
                 amount={30}
                 slantGradient={[
-                  blueTheme.background.darken(0.025),
-                  blueTheme.background.darken(0.1),
+                  theme.background.darken(0.025),
+                  theme.background.darken(0.1),
                 ]}
               />
               <LeftSide inverse innerStyle={{ paddingTop: '48%' }}>
@@ -575,20 +568,19 @@ export class SectionFeatureIntelligence extends React.Component {
 export class FeaturesPage extends React.Component {
   render() {
     return (
-      <>
-        <UI.Theme theme={blueTheme}>
+      <features $$flex $$background={background}>
+        <UI.Theme theme={theme}>
+          <TopoBg />
           <Header />
           <FeaturesIntro if={false} />
-        </UI.Theme>
-        <UI.Theme theme={blueTheme}>
           <surround css={{ position: 'relative' }}>
             <SectionFeatureNewsSearch />
             <SearchIllustration />
             <SectionFeatureIntelligence />
           </surround>
+          <Footer />
         </UI.Theme>
-        <Footer />
-      </>
+      </features>
     )
   }
 }

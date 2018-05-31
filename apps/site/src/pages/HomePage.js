@@ -23,7 +23,7 @@ import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
-const bottomBg = UI.color('#f2f2f2')
+const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
@@ -77,12 +77,23 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={isLarge ? 2.4 : 3} margin={[0, 0, 15, 0]}>
+    <Title
+      italic
+      size={isLarge ? 2.4 : 3}
+      margin={[0, 0, 15, 0]}
+      color={'#222'}
+    >
       Autonomous intranet
     </Title>
-    <P size={1.7} sizeLineHeight={1.1} fontWeight={300} alpha={0.9}>
-      Your company knowledge, sorted. News, search, profiles and more. Installed
-      in 3 minutes.
+    <P
+      size={1.6}
+      sizeLineHeight={1.1}
+      fontWeight={300}
+      color={'#000'}
+      alpha={0.8}
+    >
+      Company knowledge, sorted. News, search, profiles and more. Installed in 3
+      minutes.
     </P>
     <actions
       $$row
@@ -98,7 +109,7 @@ const Pitch = ({ isLarge }) => (
         size={1.1}
         onClick={scrollTo('#join')}
         $smallInstallBtn={!isLarge}
-        alpha={0.85}
+        alpha={0.6}
         css={{
           margin: [0, 10, 0, -10],
           cursor: 'pointer',
@@ -310,9 +321,9 @@ class HomeFooter extends React.Component {
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
                     <Title size={2.3} css={{ marginBottom: 20 }}>
-                      Knowledge management 2.0
+                      A new way to manage knowledge.
                     </Title>
-                    <UI.PassProps size={1.35} sizeLineHeight={1} alpha={0.85}>
+                    <UI.PassProps size={1.35} sizeLineHeight={1} alpha={0.9}>
                       <P2>
                         Conversations, tickets, emails, docs, wiki. Work happens
                         all over, often chaotically.

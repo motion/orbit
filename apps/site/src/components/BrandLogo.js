@@ -8,8 +8,8 @@ import * as UI from '@mcro/ui'
 export class BrandLogo extends React.Component {
   render({ theme, white, ...props }) {
     const fill = theme.base.background
-      .darken(0.35)
-      .desaturate(0.7)
+      .darken(0.55)
+      .desaturate(0.6)
       .toString()
     return (
       <brandMark {...props}>

@@ -37,12 +37,12 @@ export class Join extends React.Component {
     return (
       <section id="join" {...props}>
         <Callout>
-          <P size={2.2} fontWeight={600} css={{ marginRight: 30 }}>
-            Get early access
+          <P size={2} fontWeight={600} css={{ marginBottom: 5 }}>
+            Early access
           </P>
           <P2 alpha={0.7} size={1.2} margin={[5, 0, 10]}>
-            We're rolling out Orbit now. We'll send invites to early signups
-            first, along with interesting development updates.
+            We're rolling Orbit into beta. We'll send invites to early signups
+            first!
           </P2>
           <form
             ref={this.form}

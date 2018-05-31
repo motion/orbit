@@ -47,7 +47,7 @@ export const Title = UI.injectTheme(
           fontWeight={500}
           margin={[0, 0, 5]}
           size={size * (isSmall ? 0.7 : 1)}
-          color={theme.titleColor || theme.base.color.alpha(0.9)}
+          color={theme.titleColor || theme.base.color.desaturate(0.3).alpha(0.8)}
           css={{
             fontFamily: 'Auvant', //'"Mercury Display A", "Mercury Display B"',
             fontStyle: italic ? 'normal' : 'normal',

@@ -12,7 +12,7 @@ import * as UI from '@mcro/ui'
 @view
 export class Header extends React.Component {
   render({ linkStyle, linkStyleHover, theme }) {
-    const color = theme.base.color.desaturate(0.2).alpha(0.7)
+    const color = theme.base.color.desaturate(0.2).alpha(0.8)
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (

@@ -35,7 +35,7 @@ const Bubble = view(
   'div',
   {
     color: '#fff',
-    background: '#A58790',
+    background: Constants.colorMain.darken(0.15).desaturate(0.15),
     fontSize: 18,
     borderRadius: 15,
     padding: [10, 12],

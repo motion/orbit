@@ -147,7 +147,7 @@ export class HomePlayMessages extends React.Component {
   static style = {
     message: {
       fontWeight: 200,
-      fontSize: 32,
+      fontSize: 28,
       lineHeight: '50px',
       position: 'absolute',
       top: 0,

@@ -21,23 +21,28 @@ import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 
-const background = Constants.colorMain // '#D6B190' //'#E1D1C8'
-const borderColor = background.darken(0.1)
+const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
+const bottomBg = UI.color('#f2f2f2')
+
+const borderize = bg => bg.darken(0.2).alpha(0.5)
+const topSlants = {
+  slantGradient: [topBg, bottomBg.mix(topBg)].map(borderize),
+}
+const bottomSlants = {
+  slantGradient: [bottomBg.mix(topBg), bottomBg].map(borderize),
+}
 
 const firstSlant = {
   slantSize: 1,
   amount: 40,
-  slantBackground: borderColor,
   css: { zIndex: 2 },
 }
 const secondSlant = {
   slantSize: 1,
   amount: 10,
-  slantBackground: borderColor,
   css: { zIndex: 2 },
 }
 const thirdSlant = {
-  slantBackground: borderColor,
   slantSize: 1,
   amount: 18,
 }
@@ -71,11 +76,11 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={2.7} margin={[0, 0, 20, 0]}>
-      Automated<br />company intranet
+    <Title italic size={2.3} margin={[0, 0, 15, 0]}>
+      Automatic<br />company intranet
     </Title>
     <P size={1.6} sizeLineHeight={1.15} fontWeight={300} alpha={0.9}>
-      A home for your company. Team news, search, and exploration.
+      A home for your company with team news, search, and exploration.
       Automatically, with no install.
     </P>
     <actions
@@ -103,7 +108,7 @@ const Pitch = ({ isLarge }) => (
           width={20}
           height={20}
           css={{
-            fill: background
+            fill: topBg
               .darken(0.25)
               .desaturate(0.2)
               .toString(),
@@ -139,18 +144,6 @@ class HomeHeader extends React.Component {
         {isLarge => {
           return (
             <Section css={{ background: 'transparent' }}>
-              <borderBottom
-                if={false}
-                css={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: '48.035%',
-                  right: 0,
-                  height: 6,
-                  background: borderColor,
-                  zIndex: 1000,
-                }}
-              />
               {/* <paintingOverflow css={{ overflow: 'hidden' }} $$fullscreen>
                 <paintingWrap $$fullscreen>
                   <Keyframes native script={ref => (store.stars = ref)}>
@@ -173,9 +166,9 @@ class HomeHeader extends React.Component {
                   </Keyframes>
                 </paintingWrap>
               </paintingOverflow> */}
-              <Slant {...firstSlant} />
-              <Slant inverseSlant {...secondSlant} />
-              <Slant {...thirdSlant} />
+              <Slant {...firstSlant} {...topSlants} />
+              <Slant inverseSlant {...secondSlant} {...topSlants} />
+              <Slant {...thirdSlant} {...topSlants} />
               <SectionContent padded fullscreen fullscreenFs>
                 <Media
                   query={Constants.screen.small}
@@ -320,32 +313,30 @@ class HomeFooter extends React.Component {
         {() => (
           <Section inverse css={{ background: 'transparent' }}>
             <SectionContent padded fullscreen fullscreenFs>
-              <Slant inverseSlant {...firstSlant} />
-              <Slant {...secondSlant} />
-              <Slant inverseSlant {...thirdSlant} />
+              <Slant inverseSlant {...firstSlant} {...bottomSlants} />
+              <Slant {...secondSlant} {...bottomSlants} />
+              <Slant inverseSlant {...thirdSlant} {...bottomSlants} />
               <LeftSide css={{ textAlign: 'left' }}>
                 <div css={{ height: '22%' }} />
                 <below css={{ margin: [15, 0, 0, 0] }}>
                   <Title size={2.3} css={{ marginBottom: 20 }}>
-                    Knowledge management, redefined.
+                    Knowledge management, redone.
                   </Title>
                   <UI.PassProps size={1.3} sizeLineHeight={1.1} alpha={0.85}>
                     <P2>
                       Conversations, tickets, emails, docs, wiki. Your team
-                      operates in many places.
+                      works in many places.
                     </P2>
                     <P2>
-                      Orbit sorts team knowledge on the desktop. It's a modern
-                      way to operate a company with project collation, profiles,
-                      summarized events, and search. All powered by state of the
-                      art NLP.
+                      Orbit sorts knowledge on the desktop. It's a modern way to
+                      operate a company with collated projects and profiles,
+                      summarized news, and search. All powered by novel NLP
+                      summarization and relevancy.
                     </P2>
                     <P2>
-                      It also{' '}
-                      <span css={{ fontWeight: 400, fontStyle: 'italic' }}>
-                        works across every integration, privately on your device
-                      </span>{' '}
-                      and can search real-time next to any app you use.
+                      It works across every integration, privately on your
+                      device and can attach realtime to any app to provide
+                      context.
                     </P2>
                     <P2>
                       It's a new way to operate. Currently in private beta.
@@ -368,15 +359,22 @@ class HomeFooter extends React.Component {
 
 export const HomePage = () => (
   <UI.Theme
-    theme={{ background, color: background.darken(0.6).desaturate(0.5) }}
+    theme={{ background: topBg, color: topBg.darken(0.6).desaturate(0.5) }}
   >
     <Media query={Constants.screen.medium}>
       {isMedium => (
-        <home $$flex $$background={background}>
+        <home $$flex $$background={`linear-gradient(${topBg}, ${bottomBg})`}>
           <TopoBg />
           <Header white />
           <HomeHeader isMedium={isMedium} />
-          <HomeFooter isMedium={isMedium} />
+          <UI.Theme
+            theme={{
+              background: bottomBg,
+              color: bottomBg.darken(0.6).desaturate(0.3),
+            }}
+          >
+            <HomeFooter isMedium={isMedium} />
+          </UI.Theme>
         </home>
       )}
     </Media>

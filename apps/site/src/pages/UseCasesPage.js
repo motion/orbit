@@ -62,20 +62,16 @@ class UseCasesIntro extends React.Component {
                   size={2.3}
                   margin={[0, '10%', 10, 0]}
                 >
-                  Company knowledge sorted and at hand.
+                  A new way to manage knowledge.
                 </Title>
-                <P2 size={1.6} alpha={0.8}>
-                  Everyone operates better when incoming is sorted and answers
-                  are at hand.
-                </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#customer-success')}>
                     Customer Success
                   </a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#reduce-interrupts')}>Team sync</a>
+                  <a onClick={scrollTo('#reduce-interrupts')}>Deep work</a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#remote-teams')}>Remote teams</a>
+                  <a onClick={scrollTo('#remote-teams')}>Wiki replacement</a>
                 </P>
               </HalfSection>
               <HalfSection />
@@ -112,8 +108,8 @@ class SectionUseCaseRemoteTeams extends React.Component {
               />
               <LeftSide inverse>
                 <SubTitle size={4.5} italic>
-                  Remote<br />
-                  teams
+                  Knowledge<br />
+                  managed
                 </SubTitle>
                 <div if={isLarge} css={{ height: '26%' }} />
                 <section
@@ -161,7 +157,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                   size={2}
                   css={{ margin: [0, isLarge ? '12%' : 0, 10, 0] }}
                 >
-                  News is your team home
+                  Home for your team
                 </P>
                 <P size={1.6} css={{ marginRight: isLarge ? '15%' : 0 }}>
                   It starts by learning company vocabulary. Then it learns what
@@ -245,10 +241,8 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                     Reduce onboarding time by 1/3
                   </P>
                   <P2 size={1.6} css={{ margin: isLarge ? [0, 0, 35, 0] : 0 }}>
-                    Onboarding is an expensive process because it requires
-                    multiple experienced people helping new employees. Orbit
-                    puts knowledge they would normally never search or find at
-                    their hands with automatic realtime contextual search.
+                    Onboarding is hard, and ties up your experienced people.
+                    Orbit's automatic realtime contextual search speeds it up.
                   </P2>
                 </section>
                 <Callout
@@ -281,8 +275,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 <P2 size={1.6} css={isLarge && { marginRight: '15%' }}>
                   Sales chat requires intimate knowledge of your product. Orbit
                   sits side by side with your success team as they chat on
-                  Intercom or ZenDesk providing realtime answers from everything
-                  happening at your company.
+                  providing realtime answers.
                 </P2>
                 <Callout
                   if={isLarge}
@@ -369,12 +362,11 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                     size={2}
                     css={{ margin: [0, '25%', 10, 0] }}
                   >
-                    Smarter unified knowledgebase
+                    Smarter unified knowledge
                   </P>
                   <P2 size={1.6}>
-                    Smart profiles and project information, with relevant
-                    conversations shown inline. Reduce pings for links, lost
-                    discussions, and other common causes for interruptions.
+                    Profiles and project information keep people from pinging
+                    each other. Stop losing links, discussions, and more.
                   </P2>
                 </section>
                 <Callout
@@ -388,8 +380,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                   }
                 >
                   <P2 size={2} margin={0}>
-                    The Orbit search model uses state of the art NLP that learns
-                    your company corpus.
+                    A sense of unity and better insight for your teams.
                   </P2>
                 </Callout>
               </LeftSide>
@@ -404,10 +395,9 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                   Enabling deep work
                 </P>
                 <P2 size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
-                  Use the power of Do Not Disturb in Slack without losing
-                  synchronicity. The Orbit Home shows everything relevant and
-                  summarized to each employeee. That means less notification
-                  noise, and a better ability to focus.
+                  Do Not Disturb Slack without losing synchronicity. Orbit Home
+                  is a smarter way to do notifications. Less noise, and a better
+                  ability to focus.
                 </P2>
                 <Callout css={{ margin: [35, '15%', 0, 0], left: -45 }}>
                   <P2 size={2} margin={0}>

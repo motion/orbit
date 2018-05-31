@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { P, P2, Callout } from '~/views'
 import * as UI from '@mcro/ui'
-import * as Constants from '~/constants'
+import { BrandLogo } from '~/components'
 
 @view
 export class Join extends React.Component {
@@ -14,8 +14,8 @@ export class Join extends React.Component {
             Get early access
           </P>
           <P2 alpha={0.7} size={1.2} margin={[5, 0, 10]}>
-            We'll send interesting development updates, and let you know when we
-            roll out your group.
+            We're rolling out Orbit now. We'll send invites to early signups
+            first, along with interesting development updates.
           </P2>
           <form
             action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5&amp;id=015e5a3442"
@@ -25,7 +25,12 @@ export class Join extends React.Component {
             target="_blank"
             noValidate
           >
-            <input type="email" name="EMAIL" id="mce-EMAIL" />
+            <input
+              type="email"
+              name="EMAIL"
+              id="mce-EMAIL"
+              placeholder="Email address..."
+            />
             <div $$hidden aria-hidden="true">
               <input
                 type="text"
@@ -41,7 +46,7 @@ export class Join extends React.Component {
                 margin={[0, 0, 0, 'auto']}
                 type="submit"
               >
-                Early access signup
+                Signup
               </UI.Button>
             </UI.Theme>
           </form>
@@ -78,7 +83,7 @@ export class Join extends React.Component {
     return {
       input: {
         color: theme.base.color,
-        WebkitTextFillColor: `${theme.base.color} !important`,
+        WebkitTextFillColor: `${theme.base.color.alpha(0.7)} !important`,
         background: bg[adjust](0.3 * amt),
         border: [1, bg[adjust](1.2 * amt)],
       },

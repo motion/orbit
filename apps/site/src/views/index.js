@@ -47,7 +47,7 @@ export const Title = UI.injectTheme(
           fontWeight={500}
           margin={[0, 0, 5]}
           size={size * (isSmall ? 0.7 : 1)}
-          color={theme.titleColor || theme.base.color}
+          color={theme.titleColor || theme.base.color.alpha(0.9)}
           css={{
             fontFamily: 'Auvant', //'"Mercury Display A", "Mercury Display B"',
             fontStyle: italic ? 'normal' : 'normal',
@@ -433,9 +433,8 @@ export class A extends React.Component {
       fontWeight: 700,
       padding: [5, 5],
       margin: [0, 0, 0, 20],
-      border: [2, 'transparent'],
+      borderBottom: [2, 'transparent'],
     },
-    active: {},
   }
 
   static theme = (props, theme) => {
@@ -444,14 +443,14 @@ export class A extends React.Component {
       a: {
         '&:hover': {
           ...props.hoverStyle,
-          borderBottom: [3, bg.alpha(0.3)],
+          borderBottom: [2, bg.alpha(0.3)],
         },
       },
       active: {
-        borderBottom: [3, bg],
+        borderBottom: [2, bg],
         '&:hover': {
           ...props.hoverStyle,
-          borderBottom: [3, bg],
+          borderBottom: [2, bg],
         },
       },
     }
@@ -476,5 +475,22 @@ export const TopoBg = () => (
       opacity: 0.17,
       background: `url(${require('../../public/topo2.svg')})`,
     }}
+  />
+)
+
+import screenImg from '~/../public/screen.jpg'
+export const HomeImg = props => (
+  <img
+    src={screenImg}
+    css={{
+      width: 1100 / 2,
+      borderRadius: 16,
+      boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
+      transform: {
+        x: 20,
+        y: 100,
+      },
+    }}
+    {...props}
   />
 )

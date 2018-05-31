@@ -16,6 +16,7 @@ import {
   HalfSection,
   Section,
   Slant,
+  HomeImg,
 } from '~/views'
 import SectionContent from '~/views/sectionContent'
 import * as React from 'react'
@@ -26,9 +27,9 @@ import Media from 'react-media'
 import Observer from '@researchgate/react-intersection-observer'
 import { Trail, Spring, animated, config } from 'react-spring'
 import intelligenceImg from '~/../public/screen-context-word.png'
-import newsImg from '~/../public/screen-home.png'
 import searchImg from '~/../public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
+import profileImg from '~/../public/screen-profile.png'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const background = UI.color('#F5E2D5')
@@ -74,11 +75,8 @@ class FeaturesIntro extends React.Component {
                   size={2.3}
                   margin={[0, '10%', 10, 0]}
                 >
-                  Intelligent company organization.
+                  Organization organization.
                 </Title>
-                <P2 size={1.6} alpha={0.8}>
-                  Unify knowledge from across the cloud so your teams can focus.
-                </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>Home</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
@@ -107,10 +105,10 @@ const SearchIllustration = () => (
           position: 'absolute',
           overflow: 'hidden',
           left: '50%',
-          top: '36%',
+          top: '32%',
           marginLeft: 'calc(-5% - 520px)',
           width: 550,
-          height: 380,
+          height: '18%',
           marginBottom: -450,
           zIndex: 1,
           pointerEvents: 'none',
@@ -156,8 +154,8 @@ const SearchCallout = ({ isLarge }) => (
         Search the entire cloud with keyword summaries of all conversations,
         adjusted to important terms specific to your company.
         <br />
-        <br />Aggregated profiles of everyone you interact with lets you avoid
-        interruptions and explore your team.
+        <br />
+        Find documents, links, conversations, projects, and more instantly.
       </P>
     </Callout>
   </UI.Theme>
@@ -238,9 +236,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <FeatureTitle>A sorted home</FeatureTitle>
+                    <FeatureTitle>A heads up for you</FeatureTitle>
                     <FeatureSubTitle>
-                      Unified, summarized feed of your company
+                      Unified news feed of your company
                     </FeatureSubTitle>
                     <UI.Theme name="light">
                       <Callout
@@ -256,12 +254,12 @@ export class SectionFeatureNewsSearch extends React.Component {
                         }}
                       >
                         <P size={1.6}>
-                          A heads up display for all your incoming. Sorted by
-                          what you've been interested in recently.
+                          Reduce notification noise and don't miss out on
+                          important conversations. Sorted news for your team.
                           <br />
                           <br />
-                          With novel on-device ML, Orbit adjusts to what you
-                          care about and the custom terminology your team uses.
+                          Orbit adjusts to what you care about and the custom
+                          terminology your team uses.
                         </P>
                         <DottedButton
                           css={{
@@ -345,20 +343,10 @@ export class SectionFeatureNewsSearch extends React.Component {
                             : null,
                         }}
                       >
-                        <img
-                          src={newsImg}
+                        <HomeImg
                           css={{
                             position: 'absolute',
-                            top: 55,
-                            // right: -650,
-                            // width: 1100,
-                            // height: 'auto',
-                            transformOrigin: 'top left',
-                            border: [1, '#ddd'],
-                            transform: {
-                              scale: 0.5,
-                            },
-                            boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
+                            top: 0,
                           }}
                         />
                       </animated.div>
@@ -411,7 +399,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                 >
                   <FeatureTitle>Smart unified search</FeatureTitle>
                   <FeatureSubTitle>
-                    Summaries of conversations at hand
+                    Search with a summary of everything
                   </FeatureSubTitle>
                 </content>
                 <Media
@@ -515,47 +503,30 @@ export class SectionFeatureIntelligence extends React.Component {
                         zIndex: 0,
                         position: 'absolute',
                         width: 500,
-                        height: 420,
-                        marginTop: -250 + contextYOff,
-                        top: '50%',
+                        height: '55%',
+                        marginTop: -340 + contextYOff,
+                        top: '48%',
                         left: '50%',
                         marginLeft: 50,
+                        overflow: 'hidden',
                       }}
                     >
-                      <Border
-                        css={{
-                          bottom: -2,
-                          zIndex: 10000,
-                        }}
-                      />
-                      <inner css={{ flex: 1, overflow: 'hidden' }}>
-                        <FadedArea fadeLeft>
-                          <Spring from={{ x: 100 }} to={{ x: 10 }}>
-                            {({ x }) => (
-                              <animated.div
-                                style={{
-                                  transform: `translate3d(${x}px,0,0)`,
-                                }}
-                              >
-                                <img
-                                  src={intelligenceImg}
-                                  css={{
-                                    position: 'absolute',
-                                    width: 1634,
-                                    height: 'auto',
-                                    transformOrigin: 'top left',
-                                    transform: {
-                                      scale: 0.35,
-                                      x: -350,
-                                      y: 0,
-                                    },
-                                  }}
-                                />
-                              </animated.div>
-                            )}
-                          </Spring>
-                        </FadedArea>
-                      </inner>
+                      <FadedArea fadeDown fadeRight>
+                        <img
+                          src={profileImg}
+                          css={{
+                            position: 'absolute',
+                            width: 1199,
+                            height: 'auto',
+                            transformOrigin: 'top left',
+                            transform: {
+                              scale: 0.5,
+                              x: 0,
+                              y: 130,
+                            },
+                          }}
+                        />
+                      </FadedArea>
                     </section>
                   </>
                 )}
@@ -579,7 +550,7 @@ export class SectionSmartSidebar extends React.Component {
           <Section
             css={{
               background: 'transparent',
-              marginBottom: -window.innerHeight * 0.333,
+              marginBottom: -window.innerHeight * 0.23,
             }}
             inverse
           >
@@ -614,12 +585,16 @@ export class SectionSmartSidebar extends React.Component {
                     }}
                   >
                     <P size={1.6}>
-                      A heads up display for all your incoming. Sorted by what
-                      you've been interested in recently.
+                      A smart sidebar for every app. From Intercom to Word to
+                      Email, your day just got smarter.
                       <br />
                       <br />
-                      With novel on-device ML, Orbit adjusts to what you care
-                      about and the custom terminology your team uses.
+                      Orbit uses on-device OCR to search as you work. Providing
+                      answers, it's your second brain.
+                      <br />
+                      <br />
+                      Simply hold <Cmd>Option</Cmd> or press{' '}
+                      <Cmd>Option+Space</Cmd>.
                     </P>
                   </Callout>
                 </UI.Theme>
@@ -641,50 +616,23 @@ export class SectionSmartSidebar extends React.Component {
                     overflow: 'hidden',
                   }}
                 >
-                  <img
-                    src={newsImg}
-                    css={{
-                      position: 'absolute',
-                      top: 0,
-                      transformOrigin: 'top left',
-                      border: [1, '#ddd'],
-                      transform: {
-                        scale: 0.5,
-                      },
-                      boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
-                    }}
-                  />
-                  <fadeRight
-                    css={{
-                      position: 'absolute',
-                      top: 0,
-                      bottom: 0,
-                      right: 0,
-                      width: '10%',
-                      zIndex: 100,
-                      background: `linear-gradient(to right, transparent, ${
-                        theme.base.background
-                      })`,
-                    }}
-                  />
-                  <fadeawayfadeawayfadeaway
-                    css={{
-                      position: 'absolute',
-                      bottom: -300,
-                      right: -250,
-                      width: 900,
-                      height: 450,
-                      background: theme.base.background,
-                      borderRadius: 1000,
-                      filter: {
-                        blur: 30,
-                      },
-                      transform: {
-                        z: 0,
-                      },
-                      zIndex: 2,
-                    }}
-                  />
+                  <FadedArea fadeLeft fadeDown>
+                    <img
+                      src={intelligenceImg}
+                      css={{
+                        position: 'absolute',
+                        width: 1634,
+                        zIndex: 0,
+                        height: 'auto',
+                        transformOrigin: 'top left',
+                        transform: {
+                          scale: 0.4,
+                          x: -530,
+                          y: 100,
+                        },
+                      }}
+                    />
+                  </FadedArea>
                 </section>
                 <div if={isLarge} css={{ height: '100%' }} />
               </RightSide>

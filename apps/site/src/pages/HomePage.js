@@ -13,9 +13,9 @@ import {
   RightSide,
   AppleLogo,
   TopoBg,
+  HomeImg,
 } from '~/views'
 // import { HomePlay } from './home/HomePlay'
-import screenImg from '~/../public/screen.jpg'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
@@ -81,8 +81,8 @@ const Pitch = ({ isLarge }) => (
       Autonomous intranet
     </Title>
     <P size={1.7} sizeLineHeight={1.1} fontWeight={300} alpha={0.9}>
-      Your home for company knowledge with news, search, and more. Installed in
-      3 minutes.
+      Your company knowledge, sorted. News, search, profiles and more. Installed
+      in 3 minutes.
     </P>
     <actions
       $$row
@@ -207,18 +207,7 @@ class HomeHeader extends React.Component {
                           }}
                         >
                           <div $$flex />
-                          <img
-                            src={screenImg}
-                            css={{
-                              width: 1100 / 2,
-                              borderRadius: 16,
-                              boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
-                              transform: {
-                                x: 20,
-                                y: 100,
-                              },
-                            }}
-                          />
+                          <HomeImg />
                           <div $$flex />
                         </inner>
                       </RightSide>
@@ -319,24 +308,23 @@ class HomeFooter extends React.Component {
               <LeftSide css={{ textAlign: 'left' }}>
                 <inner $$fullscreen>
                   <div $$flex />
-                  <content css={isLarge && { marginRight: 40 }}>
+                  <content css={isLarge && { marginRight: 80 }}>
                     <Title size={2.3} css={{ marginBottom: 20 }}>
                       Knowledge management 2.0
                     </Title>
-                    <UI.PassProps size={1.3} sizeLineHeight={1} alpha={0.85}>
+                    <UI.PassProps size={1.35} sizeLineHeight={1} alpha={0.85}>
                       <P2>
-                        Conversations, tickets, emails, docs, wiki. Your team
-                        works in many places.
+                        Conversations, tickets, emails, docs, wiki. Work happens
+                        all over, often chaotically.
                       </P2>
                       <P2>
-                        Orbit sorts knowledge on your desktop. It's a modern way
-                        to operate a company with summarized projects and
-                        profiles, news, and search. All powered by novel NLP.
+                        Orbit unifies knowledge on your desktop and sorts
+                        through it all. Summarized projects and profiles,
+                        personal news, and natural language search. Without any
+                        cloud or on-prem install, and{' '}
+                        <em>completely private on your device</em>.
                       </P2>
-                      <P2>
-                        It works across every integration, privately on your
-                        device. Currently in private beta.
-                      </P2>
+                      <P2>Currently in private beta.</P2>
                     </UI.PassProps>
                   </content>
                   <div $$flex />

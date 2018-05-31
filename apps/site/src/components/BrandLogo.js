@@ -23,7 +23,7 @@ export class BrandLogo extends React.Component {
     brandMark: {
       alignItems: 'center',
       textAlign: 'center',
-      margin: [0, 0, -10],
+      margin: [-12, 0],
     },
     orbit: {
       width: 250,

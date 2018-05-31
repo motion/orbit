@@ -42,27 +42,29 @@ class AboutIntro extends React.Component {
 export class AboutPage extends React.Component {
   render() {
     return (
-      <UI.Theme theme={blueTheme}>
-        <Header />
-        <AboutIntro />
-        <Section>
-          <Border css={{ top: 0 }} />
-          <Border css={{ bottom: -4 }} />
-          <SectionContent padded>
-            <inner css={{ padding: [100, '20%'] }}>
-              <P size={2} css={{ lineHeight: '44px' }} alpha={0.75}>
-                Orbit runs intimately in your everyday. That means it has to
-                work for you, the individual.
-                <br />
-                <br />
-                Our goal is to build a more intuitive OS. To do that we need
-                trust. Privacy, security, and user experience our first
-              </P>
-            </inner>
-          </SectionContent>
-        </Section>
-        <Footer noMission />
-      </UI.Theme>
+      <page $$flex $$background={blueTheme.background}>
+        <UI.Theme theme={blueTheme}>
+          <Header />
+          <AboutIntro />
+          <Section>
+            <Border css={{ top: 0 }} />
+            <Border css={{ bottom: -4 }} />
+            <SectionContent padded>
+              <inner css={{ padding: [100, '20%'] }}>
+                <P size={2} css={{ lineHeight: '44px' }} alpha={0.75}>
+                  Orbit runs intimately in your everyday. That means it has to
+                  work for you, the individual.
+                  <br />
+                  <br />
+                  Our goal is to build a more intuitive OS. To do that we need
+                  trust. Privacy, security, and user experience our first
+                </P>
+              </inner>
+            </SectionContent>
+          </Section>
+          <Footer noMission />
+        </UI.Theme>
+      </page>
     )
   }
 }

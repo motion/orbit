@@ -1,6 +1,6 @@
 import { Header, Footer } from '~/components'
 import {
-  Border,
+  FeatureSubTitle,
   Title,
   P,
   P2,
@@ -43,11 +43,7 @@ const theme = {
 const slantBg = background
 
 const FeatureTitle = props => (
-  <Title italic size={3} css={{ marginBottom: 15 }} {...props} />
-)
-
-const FeatureSubTitle = props => (
-  <P size={1.8} alpha={0.8} css={{ marginBottom: 25 }} {...props} />
+  <Title italic size={2.6} css={{ marginBottom: 15 }} {...props} />
 )
 
 @UI.injectTheme
@@ -139,13 +135,13 @@ const searchYOff = -10
 const contextYOff = 160
 
 const SearchCallout = ({ isLarge }) => (
-  <UI.Theme name="light">
+  <UI.Theme name="lighter">
     <Callout
       css={
         isLarge && {
           width: '80%',
           position: 'absolute',
-          top: searchYOff - 60,
+          top: searchYOff - 80,
           left: '12%',
         }
       }
@@ -238,9 +234,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                   >
                     <FeatureTitle>A heads up for you</FeatureTitle>
                     <FeatureSubTitle>
-                      Unified news feed of your company
+                      Smart news for your company
                     </FeatureSubTitle>
-                    <UI.Theme name="light">
+                    <UI.Theme name="lighter">
                       <Callout
                         css={{
                           textAlign: 'left',
@@ -434,7 +430,7 @@ export class SectionFeatureIntelligence extends React.Component {
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section css={{ background: 'transparent' }}>
-            <SectionContent id="context" fullscreen={isLarge} padded>
+            <SectionContent id="context" fullscreen={isLarge} padded={isLarge}>
               <Glow if={false} style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
                 css={{ zIndex: 2 }}
@@ -452,9 +448,9 @@ export class SectionFeatureIntelligence extends React.Component {
                 >
                   <FeatureTitle>Projects and profiles</FeatureTitle>
                   <FeatureSubTitle>
-                    Automatically collation keeps your team in sync
+                    Automatic visiblity into your teams
                   </FeatureSubTitle>
-                  <UI.Theme name="light">
+                  <UI.Theme name="lighter">
                     <Callout
                       css={{
                         textAlign: 'left',
@@ -476,17 +472,10 @@ export class SectionFeatureIntelligence extends React.Component {
                         <Cmd>Option+Space</Cmd>. Important terms, people, and
                         conversations are highlighted and summarized, instantly.
                       </P2>
-                      <DottedButton
-                        css={{
-                          margin: [0, 0, 0, 'auto'],
-                        }}
-                      >
-                        Learn more
-                      </DottedButton>
                     </Callout>
                   </UI.Theme>
                   <Observer onChange={this.handleIntersect}>
-                    <br />
+                    <span />
                   </Observer>
                 </div>
               </LeftSide>
@@ -543,20 +532,20 @@ export class SectionFeatureIntelligence extends React.Component {
 @view
 export class SectionSmartSidebar extends React.Component {
   render() {
-    const { theme } = this.props
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
           <Section
-            css={{
-              background: 'transparent',
-              marginBottom: -window.innerHeight * 0.23,
-            }}
+            css={
+              isLarge && {
+                background: 'transparent',
+                marginBottom: -window.innerHeight * 0.23,
+              }
+            }
             inverse
           >
             <SectionContent
               id="intelligence"
-              padded={!isLarge}
               css={!isLarge && { paddingBottom: 0, overflow: 'visible' }}
               fullscreen={isLarge}
             >
@@ -566,12 +555,10 @@ export class SectionSmartSidebar extends React.Component {
                 slantBackground={slantBg.darken(0.05)}
               />
               <LeftSide css={{ top: 0 }}>
-                <verticalSpace css={{ height: '11%' }} />
+                <verticalSpace if={isLarge} css={{ height: '11%' }} />
                 <FeatureTitle>Augmented operation</FeatureTitle>
-                <FeatureSubTitle>
-                  A smart sidebar for every app.
-                </FeatureSubTitle>
-                <UI.Theme name="light">
+                <FeatureSubTitle>A smart sidebar for every app</FeatureSubTitle>
+                <UI.Theme name="lighter">
                   <Callout
                     css={{
                       textAlign: 'left',
@@ -585,12 +572,13 @@ export class SectionSmartSidebar extends React.Component {
                     }}
                   >
                     <P size={1.6}>
-                      A smart sidebar for every app. From Intercom to Word to
-                      Email, your day just got smarter.
+                      From Intercom to Word to Email, put your knowledge to
+                      work. It's realtime search as you work across all your
+                      knowledge.
                       <br />
                       <br />
-                      Orbit uses on-device OCR to search as you work. Providing
-                      answers, it's your second brain.
+                      Orbit uses custom on-device OCR that's 100x faster than
+                      the current best.
                       <br />
                       <br />
                       Simply hold <Cmd>Option</Cmd> or press{' '}

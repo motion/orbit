@@ -103,7 +103,7 @@ export const LeftSide = ({
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <leftSide css={{ padding: [sidePadSmall, 0] }}>{children}</leftSide>
+        <leftSide css={{ padding: [sidePadSmall, 0, 0] }}>{children}</leftSide>
       ) : (
         <outer css={{ flex: 1, width: '50%', position: 'relative', zIndex: 3 }}>
           <leftSide
@@ -143,7 +143,9 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <rightSide css={{ padding: [sidePadSmall, 0] }}>{children}</rightSide>
+        <rightSide css={{ padding: [sidePadSmall, 0, 0] }}>
+          {children}
+        </rightSide>
       ) : (
         <rightSide
           css={{
@@ -265,7 +267,6 @@ export const DottedButton = props => (
       border: [1, 'dashed', '#eee'],
       flex: 'none',
       cursor: 'pointer',
-      color: Constants.colorMain,
       fontWeight: 500,
       fontSize: 16,
       flexFlow: 'row',
@@ -493,4 +494,18 @@ export const HomeImg = props => (
     }}
     {...props}
   />
+)
+
+export const FeatureSubTitle = props => (
+  <Media query={Constants.screen.large}>
+    {isLarge => (
+      <P
+        if={isLarge}
+        size={2}
+        alpha={0.6}
+        css={{ marginBottom: 20 }}
+        {...props}
+      />
+    )}
+  </Media>
 )

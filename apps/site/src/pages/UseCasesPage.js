@@ -1,5 +1,6 @@
 import { Header, Footer } from '~/components'
 import {
+  FeatureSubTitle,
   TopoBg,
   P,
   P2,
@@ -119,9 +120,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                     margin: isLarge ? [-40, 0, 0, '10%'] : 0,
                   }}
                 >
-                  <P alpha={0.6} size={2} margin={[0, 0, 10]}>
-                    Beautiful unified profiles
-                  </P>
+                  <FeatureSubTitle>Beautiful unified profiles</FeatureSubTitle>
                   <P2 size={1.6}>
                     Combined information from across the cloud in one place with
                     helpful information.
@@ -152,13 +151,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                 <P2 if={false} size={1.8} css={{ margin: [5, 0, 10, 0] }}>
                   The smart way to sync
                 </P2>
-                <P
-                  alpha={0.6}
-                  size={2}
-                  css={{ margin: [0, isLarge ? '12%' : 0, 10, 0] }}
-                >
-                  Home for your team
-                </P>
+                <FeatureSubTitle>Home for your team</FeatureSubTitle>
                 <P size={1.6} css={{ marginRight: isLarge ? '15%' : 0 }}>
                   It starts by learning company vocabulary. Then it learns what
                   you care about. The intersection of what you care about and
@@ -224,7 +217,6 @@ class SectionUseCaseCustomerSuccess extends React.Component {
               </chat>
               <LeftSide inverse>
                 <div if={isLarge} css={{ height: '48%' }} />
-
                 <section
                   css={{
                     textAlign: 'left',
@@ -232,14 +224,12 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                     margin: isLarge ? [0, 0, 0, '12%'] : 0,
                   }}
                 >
-                  <P
-                    if={isLarge}
-                    alpha={0.6}
-                    size={2}
-                    css={{ margin: [0, 0, 10, 0] }}
-                  >
+                  <SubTitle if={!isLarge} size={4.5} italic>
+                    Customer<br />Success
+                  </SubTitle>
+                  <FeatureSubTitle>
                     Reduce onboarding time by 1/3
-                  </P>
+                  </FeatureSubTitle>
                   <P2 size={1.6} css={{ margin: isLarge ? [0, 0, 35, 0] : 0 }}>
                     Onboarding is hard, and ties up your experienced people.
                     Orbit's automatic realtime contextual search speeds it up.
@@ -259,19 +249,14 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 </Callout>
               </LeftSide>
               <RightSide css={{ top: 0 }}>
-                <div if={isLarge} $$flex css={{ marginTop: '5%' }} />
-                <SubTitle size={4.5} italic>
-                  Customer<br />Success
-                </SubTitle>
-                <div if={isLarge} $$flex css={{ marginTop: '10%' }} />
-                <P
-                  if={isLarge}
-                  alpha={0.6}
-                  size={2}
-                  css={{ margin: [0, '15%', 10, 0] }}
-                >
-                  Your CSAT secret weapon
-                </P>
+                <React.Fragment if={isLarge}>
+                  <div $$flex css={{ marginTop: '5%' }} />
+                  <SubTitle size={4.5} italic>
+                    Customer<br />Success
+                  </SubTitle>
+                  <div $$flex css={{ marginTop: '10%' }} />
+                  <FeatureSubTitle>Your CSAT secret weapon</FeatureSubTitle>
+                </React.Fragment>
                 <P2 size={1.6} css={isLarge && { marginRight: '15%' }}>
                   Sales chat requires intimate knowledge of your product. Orbit
                   sits side by side with your success team as they chat on
@@ -356,14 +341,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                     margin: isLarge ? [-70, 0, 0, '12%'] : 0,
                   }}
                 >
-                  <P
-                    if={isLarge}
-                    alpha={0.6}
-                    size={2}
-                    css={{ margin: [0, '25%', 10, 0] }}
-                  >
-                    Smarter unified knowledge
-                  </P>
+                  <FeatureSubTitle>Smarter unified knowledge</FeatureSubTitle>
                   <P2 size={1.6}>
                     Profiles and project information keep people from pinging
                     each other. Stop losing links, discussions, and more.
@@ -385,21 +363,17 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 </Callout>
               </LeftSide>
               <RightSide inverse css={{ bottom: 0 }}>
-                <div $$flex css={{ marginTop: isLarge ? '20%' : 0 }} />
-                <P
-                  if={isLarge}
-                  alpha={0.6}
-                  size={2}
-                  css={{ margin: [0, '25%', 10, 0] }}
-                >
-                  Enabling deep work
-                </P>
+                <div if={isLarge} $$flex css={{ marginTop: '20%' }} />
+                <FeatureSubTitle>Enabling deep work</FeatureSubTitle>
                 <P2 size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
                   Do Not Disturb Slack without losing synchronicity. Orbit Home
                   is a smarter way to do notifications. Less noise, and a better
                   ability to focus.
                 </P2>
-                <Callout css={{ margin: [35, '15%', 0, 0], left: -45 }}>
+                <Callout
+                  if={isLarge}
+                  css={{ margin: [35, '15%', 0, 0], left: -45 }}
+                >
                   <P2 size={2} margin={0}>
                     Pull, instead of being pushed by notifications.
                   </P2>

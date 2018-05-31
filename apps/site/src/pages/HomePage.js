@@ -77,7 +77,7 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={2.4} margin={[0, 0, 15, 0]}>
+    <Title italic size={isLarge ? 2.4 : 3} margin={[0, 0, 15, 0]}>
       Autonomous intranet
     </Title>
     <P size={1.7} sizeLineHeight={1.1} fontWeight={300} alpha={0.9}>
@@ -306,7 +306,7 @@ class HomeFooter extends React.Component {
               <Slant {...secondSlant} {...bottomSlants} />
               <Slant inverseSlant {...thirdSlant} {...bottomSlants} />
               <LeftSide css={{ textAlign: 'left' }}>
-                <inner $$fullscreen>
+                <inner $$fullscreen={isLarge}>
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
                     <Title size={2.3} css={{ marginBottom: 20 }}>

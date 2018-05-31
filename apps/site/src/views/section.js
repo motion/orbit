@@ -82,15 +82,11 @@ export const Slant = ({
   )
 }
 
-@UI.injectTheme
 export class Section extends React.Component {
   render() {
-    const { theme, leftBackground, inverse, children, ...props } = this.props
+    const { leftBackground, inverse, children, ...props } = this.props
     return (
-      <section
-        css={{ position: 'relative', background: theme.base.background }}
-        {...props}
-      >
+      <section css={{ position: 'relative' }} {...props}>
         <bgTest
           if={leftBackground}
           css={{

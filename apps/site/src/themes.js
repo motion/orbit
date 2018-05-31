@@ -12,6 +12,10 @@ const Themes = {
     color: '#222',
     borderColor: '#eee',
   }),
+  lighter: Theme.fromStyles({
+    background: '#FCF4ED',
+    color: '#736255',
+  }),
   medium: Theme.fromStyles({
     highlightBackground,
     highlightColor,

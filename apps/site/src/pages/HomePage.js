@@ -75,8 +75,8 @@ const Pitch = ({ isLarge }) => (
       Automated<br />company intranet
     </Title>
     <P size={1.6} sizeLineHeight={1.15} fontWeight={300} alpha={0.9}>
-      A home for your company. Team news, search, and exploration automatically,
-      with no install.
+      A home for your company. Team news, search, and exploration.
+      Automatically, with no install.
     </P>
     <actions
       $$row

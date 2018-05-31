@@ -40,17 +40,17 @@ class PlayMessagesStore {
   animate = async sleep => {
     console.log('starting animation')
     await sleep(13200)
-    await this.chatText(Spring, {
-      from: { opacity: 0 },
-      to: { opacity: 1 },
-    })
-    await sleep(800)
-    this.chatText(Spring, {
-      from: { opacity: 1 },
-      to: { opacity: 0 },
-      config: config.slow,
-    })
-    await sleep(800)
+    // await this.chatText(Spring, {
+    //   from: { opacity: 0 },
+    //   to: { opacity: 1 },
+    // })
+    // await sleep(800)
+    // this.chatText(Spring, {
+    //   from: { opacity: 1 },
+    //   to: { opacity: 0 },
+    //   config: config.slow,
+    // })
+    // await sleep(800)
     this.showFinalText()
     await sleep(600)
     this.showOrbitals = true

@@ -15,6 +15,7 @@
     "@mcro/gloss": "^1.5.1",
     "@mcro/router": "^1.5.1",
     "@mcro/ui": "^1.5.1",
+    "@mcro/r2": "*",
     "@researchgate/react-intersection-observer": "^0.6.1",
     "intersection-observer": "^0.5.0",
     "lodash": "4.17.10",

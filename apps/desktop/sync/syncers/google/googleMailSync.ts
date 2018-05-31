@@ -1,9 +1,8 @@
-import { Bit, Setting, insert, createOrUpdate } from '@mcro/models'
+import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import getHelpers from './getHelpers'
 import * as _ from 'lodash'
-import { create } from 'domain'
 
 const log = debug('googleMail')
 const timeCancel = (asyncFn, ms) => {
@@ -264,7 +263,7 @@ export default class GoogleMailSync {
         info = await this.fetchThread(id)
         await sleep(50)
       } catch (err) {
-        console.log(err, id)
+        log(`error: ${err} ${id}`)
         continue
       }
       results.push(await onThread(info))

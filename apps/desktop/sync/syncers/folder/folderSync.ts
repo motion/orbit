@@ -73,7 +73,7 @@ class FolderSync {
   }
 }
 
-export default new Syncer('folder', {
+export const folder = new Syncer('folder', {
   actions: {
     folder: { secondsBetween: 60 * 5 },
   },

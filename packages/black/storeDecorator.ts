@@ -1,14 +1,17 @@
-import decor from '@mcro/decor'
-import hydratable from '@mcro/decor/es6/plugins/core/hydratable'
-import emittable from '@mcro/decor/es6/plugins/core/emittable'
+// @ts-ignore
+import decor, { DecorPlugin } from '@mcro/decor'
+import { hydratable, utilityUsable, UtilityUsable } from '@mcro/decor-mobx'
+import { subscribable, emittable } from '@mcro/decor-classes'
 import automagical from '@mcro/automagical'
-import subscribable from '@mcro/decor/es6/plugins/react/subscribable'
-import helpers from '@mcro/decor/es6/plugins/mobx/helpers'
-import { CompositeDisposable } from 'sb-event-kit'
+import { CompositeDisposable } from 'event-kit'
 
-export const storeDecorator = decor([
+// import { DecorCompiledDecorator } from '@mcro/decor'
+export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
+
+// DecorCompiledDecorator<UtilityUsable>
+export const storeDecorator: any = decor([
   subscribable,
-  helpers,
+  utilityUsable,
   emittable,
   automagical,
   hydratable,
@@ -17,11 +20,25 @@ export const storeDecorator = decor([
 export const storeOptions = {
   storeDecorator,
   onStoreMount(_, store, props) {
+    if (store._decorated) {
+      console.warn('decoarte twice', store, props)
+      return
+    }
+    Object.defineProperty(store, '_decorated', {
+      enumerable: false,
+      writable: false,
+      value: true,
+    })
     if (store.automagic) {
       store.automagic()
     }
     if (store.willMount) {
       store.willMount.call(store, props)
+    }
+  },
+  onStoreDidMount(store, props) {
+    if (store.didMount) {
+      store.didMount.call(store, props)
     }
   },
   onStoreUnmount(store) {
@@ -44,9 +61,10 @@ export const storeOptions = {
   },
 }
 
-export function store(Store) {
+export function store<T>(Store): UtilityUsable & T {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
+    // console.log('on store mount', this, args)
     const store = new DecoratedStore(...args)
     storeOptions.onStoreMount(Store.constructor.name, store, args[0])
     return store
@@ -58,5 +76,6 @@ export function store(Store) {
       ProxyStore[key] = Store[key]
     }
   }
+  // @ts-ignore
   return ProxyStore
 }

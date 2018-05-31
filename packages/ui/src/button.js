@@ -1,15 +1,11 @@
-import React from 'react'
-import SizedSurface from './sizedSurface'
-import injectTheme from './helpers/injectTheme'
-import { inject } from '@mcro/react-tunnel'
+import * as React from 'react'
+import { SizedSurface } from './sizedSurface'
+import { injectTheme } from './helpers/injectTheme'
 import { view } from '@mcro/black'
 
-@inject(context => ({ uiContext: context.uiContext }))
-@injectTheme
 @view.ui
-export default class Button extends React.Component {
+class ButtonPlain extends React.Component {
   render({
-    uiContext,
     badge,
     children,
     theme,
@@ -22,15 +18,6 @@ export default class Button extends React.Component {
     hovered,
     ...props
   }) {
-    // patch until figure out why this doesnt trigger onSubmit
-    // if (type === 'submit') {
-    //   const ogOnClick = onClick
-    //   onClick = function(...args) {
-    //     uiContext.form.submit()
-    //     return (ogOnClick && ogOnClick(...args)) || null
-    //   }
-    // }
-
     return (
       <SizedSurface
         tagName="button"
@@ -118,5 +105,7 @@ export default class Button extends React.Component {
     },
   }
 }
+
+export const Button = injectTheme(view.ui(ButtonPlain))
 
 Button.acceptsHovered = true

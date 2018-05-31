@@ -1,8 +1,9 @@
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
-import '@mcro/black/mlog'
+import '@mcro/black/mlog.js'
 import * as Mobx from 'mobx'
 import debug from '@mcro/debug'
+import root from 'global'
 
 require('module-alias').addAlias('~', __dirname + '/')
 
@@ -14,26 +15,20 @@ console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
-  // @ts-ignore
-  global.Mobx = Mobx
-  // @ts-ignore
-  global.require = require
-  // @ts-ignore
-  global.Path = require('path')
-  // @ts-ignore
-  global._ = require('lodash')
-  // @ts-ignore
-  global.r2 = require('@mcro/r2')
-  // @ts-ignore
-  global.Constants = require('./constants')
+  root.Mobx = Mobx
+  root.require = require
+  root.Path = require('path')
+  root._ = require('lodash')
+  root.r2 = require('@mcro/r2')
+  root.Constants = require('./constants')
 }
 
-const Desktop = require('./desktop').default
-const rootStore = new Desktop()
+const { Root } = require('./root')
+const appRoot = new Root()
 
 const exitHandler = async (code?: any) => {
   console.log('handling exit', code)
-  if (await rootStore.dispose()) {
+  if (await appRoot.dispose()) {
     // otherwise it wont exit :/
     process.kill(process.pid)
   }
@@ -67,7 +62,7 @@ process.on('unhandledRejection', function(reason, promise) {
 
 export async function run() {
   try {
-    await rootStore.start()
+    await appRoot.start()
   } catch (err) {
     log('error', err)
   }

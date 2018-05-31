@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import ControlButton from '~/views/controlButton'
+import { ControlButton } from '~/views/controlButton'
 
 @view
-export default class WindowControls {
+export class WindowControls {
   render({ onClose, onMax, onMin, style }) {
     return (
       <buttons $$row style={style}>

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export default class WebView {
+export class WebView {
   render({ getRef, ...props }) {
     return (
       <webview

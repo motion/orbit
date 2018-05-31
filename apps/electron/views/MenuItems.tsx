@@ -1,11 +1,18 @@
 import * as React from 'react'
-import { Menu, SubMenu, MenuItem, MenuItems } from '@mcro/reactron'
-import { view } from '@mcro/black'
+import {
+  Menu,
+  SubMenu,
+  MenuItem,
+  MenuItems as ElMenuItems,
+} from '@mcro/reactron'
+import { view, Component } from '@mcro/black'
 import { Electron } from '@mcro/all'
 
 @view.attach('electronStore')
 @view.electron
-export default class MenuEl {
+export class MenuItems extends Component<{}> {
+  isClosing = false
+
   toggleDevTools = appName => () => {
     Electron.setShowDevTools({
       [appName]: !Electron.state.showDevTools[appName],
@@ -18,7 +25,7 @@ export default class MenuEl {
 
   handleClose = () => {
     if (Electron.state.showSettings) {
-      this.handleSettingsVisibility(false)
+      // this.handleSettingsVisibility(false)
     }
   }
 
@@ -30,35 +37,35 @@ export default class MenuEl {
     return (
       <Menu>
         <SubMenu label="Orbit">
-          <MenuItems.About />
+          <ElMenuItems.About />
           <MenuItem
             label="Preferences"
             accelerator="CmdOrCtrl+,"
             onClick={this.handlePreferences}
           />
-          <MenuItems.Separator />
-          <MenuItems.Hide />
-          <MenuItems.HideOthers />
-          <MenuItems.Unhide />
-          <MenuItems.Separator />
-          <MenuItems.Quit onClick={this.handleQuit} />
+          <ElMenuItems.Separator />
+          <ElMenuItems.Hide />
+          <ElMenuItems.HideOthers />
+          <ElMenuItems.Unhide />
+          <ElMenuItems.Separator />
+          <ElMenuItems.Quit onClick={this.handleQuit} />
         </SubMenu>
         <SubMenu label="Edit">
-          <MenuItems.Undo />
-          <MenuItems.Redo />
-          <MenuItems.Separator />
-          <MenuItems.Cut />
-          <MenuItems.Copy />
-          <MenuItems.Paste />
-          <MenuItems.SelectAll />
+          <ElMenuItems.Undo />
+          <ElMenuItems.Redo />
+          <ElMenuItems.Separator />
+          <ElMenuItems.Cut />
+          <ElMenuItems.Copy />
+          <ElMenuItems.Paste />
+          <ElMenuItems.SelectAll />
         </SubMenu>
         <SubMenu label="Window">
-          <MenuItems.ToggleFullscreen />
-          <MenuItems.Close
+          <ElMenuItems.ToggleFullscreen />
+          <ElMenuItems.Close
             accelerator="CmdOrCtrl+w"
             onClick={this.handleClose}
           />
-          <MenuItems.Minimize />
+          <ElMenuItems.Minimize />
           <MenuItem
             label="Refresh"
             accelerator="CmdOrCtrl+r"

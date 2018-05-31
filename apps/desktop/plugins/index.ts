@@ -7,7 +7,6 @@ import * as FilesPlugin from './files'
 import * as CalculatorPlugin from './calculator'
 import * as ConversionPlugin from './conversion'
 import * as RipGrep from './ripgrep'
-import debug from '@mcro/debug'
 
 type Plugin = {
   initialize?: Function
@@ -21,10 +20,9 @@ const plugins: Plugin[] = [
   ConversionPlugin,
   RipGrep,
 ]
-const log = debug('Plugins')
 
 @store
-export default class Plugins {
+export class Plugins {
   plugins = plugins
   searchId = 0
   server: any
@@ -46,10 +44,9 @@ export default class Plugins {
     )
   }
 
-  @react({ fireImmediately: true, log: false })
-  results = [
-    () => App.state.query,
-    async (query, { sleep }) => {
+  results = react(
+    () => [App.state.query, Desktop.state.lastBitUpdatedAt],
+    async ([query], { sleep }) => {
       await sleep(150) // debounce to not be too aggressive during type
       const results = await this.search(query)
       await sleep()
@@ -65,7 +62,8 @@ export default class Plugins {
       Desktop.setSearchState({ pluginResults, pluginResultsId: _.uniqueId() })
       return pluginResults
     },
-  ]
+    { immediate: true, log: false },
+  )
 
   search = async term => {
     return _.flatten(

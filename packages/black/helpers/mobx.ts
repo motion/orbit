@@ -3,7 +3,6 @@ import { comparer } from 'mobx'
 export {
   fromStream,
   toStream,
-  whenAsync,
   now,
   fromPromise,
   fromResource,

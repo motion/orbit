@@ -1,18 +1,18 @@
 import { react } from '@mcro/black'
 import { App } from '@mcro/all'
 import { throttle } from 'lodash'
-import AppReactions from '~/stores/AppReactions'
+import { AppReactions } from '~/stores/AppReactions'
 
 export default class OrbitStore {
   query = ''
 
-  @react
-  updateAppQuery = [
+  updateAppQuery = react(
     () => this.query,
     throttle(query => {
       App.setQuery(query)
-    }, 100),
-  ]
+    }, 32),
+    { log: false },
+  )
 
   lastPinKey = ''
 
@@ -32,35 +32,32 @@ export default class OrbitStore {
         this.lastPinKey = key
       },
     })
+    console.log('willmount orbitstore')
     this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))
   }
 
+  willUnmount() {
+    this.appReactions.subscriptions.dispose()
+  }
+
   handleKeyDown = code => {
-    const {
-      results,
-      activeIndex,
-      pinSelected,
-      showSettings,
-    } = this.props.appStore
+    console.log('keydown', code)
+    const { results, activeIndex, toggleSelected } = this.props.appStore
     const increment = (by = 1) =>
-      pinSelected(Math.min(results.length - 1, activeIndex + by))
-    const decrement = (by = 1) => pinSelected(Math.max(-1, activeIndex - by))
+      toggleSelected(Math.min(results.length - 1, activeIndex + by))
+    const decrement = (by = 1) => toggleSelected(Math.max(-1, activeIndex - by))
     switch (code) {
       case 37: // left
-        if (showSettings) {
-          decrement()
-        }
+        this.emit('key', 'left')
         return
       case 39: // right
-        if (showSettings) {
-          increment()
-        }
+        this.emit('key', 'right')
         return
       case 40: // down
-        increment(showSettings ? 2 : 1)
+        increment()
         return
       case 38: // up
-        decrement(showSettings ? 2 : 1)
+        decrement()
         return
       case 13: // enter
         this.props.appStore.open(results[activeIndex])

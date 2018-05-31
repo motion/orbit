@@ -66,8 +66,8 @@ export default class SlackMessagesSync {
     this.setting.values.lastMessageSync = {}
     await this.setting.save()
     await Promise.all(
-      Job.find({ where: { type: 'slack', action: 'messages' } }).map(j =>
-        j.remove(),
+      (await Job.find({ where: { type: 'slack', action: 'messages' } })).map(
+        j => j.remove(),
       ),
     )
   }

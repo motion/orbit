@@ -1,8 +1,8 @@
-import React from 'react'
+import * as React from 'react'
 import { object, string } from 'prop-types'
-import getThemeFromContext from './getThemeFromContext'
+import { getThemeFromContext } from './getThemeFromContext'
 
-export default class Theme extends React.Component {
+export class Theme extends React.Component {
   static contextTypes = {
     uiActiveThemeName: string,
     uiActiveTheme: object,
@@ -15,7 +15,7 @@ export default class Theme extends React.Component {
     uiThemes: object,
   }
 
-  theme = getThemeFromContext('name')
+  theme = getThemeFromContext('name', 'theme')
 
   getChildContext() {
     const context = this.theme()

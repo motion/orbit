@@ -1,5 +1,6 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "../../tsconfig.tspackage",
+  "types": "./types.d.ts",
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": "./",
@@ -7,6 +8,6 @@
       "~/*": ["*"]
     }
   },
-  "include": ["/**/*"],
+  "include": ["**/*"],
   "exclude": ["_", "node_modules", "tmp", "*.js"]
 }

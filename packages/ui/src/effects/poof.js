@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { observable } from 'mobx'
 
@@ -7,7 +7,7 @@ const FRAMES = 5
 const HEIGHT = 240 / FRAMES
 
 @view.ui
-export default class Poof extends React.Component {
+export class Poof extends React.Component {
   static defaultProps = {
     top: 0,
     left: 0,

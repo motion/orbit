@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/all'
 import { Bit, Job } from '@mcro/models'
-import PeekHeader from '../peekHeader'
+import { PeekHeader } from '../peekHeader'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
@@ -41,24 +41,39 @@ const EmptyPane = () => <div>no setting pane</div>
     }
   },
 })
-export class SettingView {
+export class Setting extends React.Component {
+  handleRefresh = async () => {
+    const store = this.props.store
+    const job = new Job()
+    job.type = store.bit.integration
+    job.action = 'mail'
+    job.status = Job.statuses.PENDING
+    await job.save()
+    console.log('created new job', job)
+    store.update()
+    this.props.appStore.getSettings()
+  }
+
+  removeIntegration = async () => {
+    const { store } = this.props
+    store.setting.values = {}
+    store.setting.token = ''
+    await store.setting.save()
+    store.update()
+  }
+
   render({ appStore, store }) {
-    console.log('MOUNTING A SETTING VIEW')
     if (!store.setting || !store.setting.token) {
       console.log('no setting or token', store.setting)
       return null
     }
     store.version
     const { setting, bit } = store
-    const { integration, type } = bit
-    // tries googleMail
-    // falls back to google
+    const { integration } = bit
     const SettingPane =
-      SettingPanes[`${integration}${capitalize(type)}`] ||
-      SettingPanes[integration] ||
-      EmptyPane
+      SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
-      <React.Fragment>
+      <>
         <PeekHeader
           title={capitalize(integration)}
           subtitle={
@@ -71,20 +86,11 @@ export class SettingView {
             </div>
           }
           after={
-            <UI.Row $$flex css={{ opacity: 0.2 }}>
+            <UI.Row $$flex $actions>
               <UI.Button
                 icon="refresh"
                 tooltip="Refresh"
-                onClick={async () => {
-                  const job = new Job()
-                  job.type = integration
-                  job.action = 'mail'
-                  job.status = Job.statuses.PENDING
-                  await job.save()
-                  console.log('created new job', job)
-                  store.update()
-                  appStore.getSettings()
-                }}
+                onClick={this.handleRefresh}
               />
               <UI.Popover
                 openOnHover
@@ -96,12 +102,7 @@ export class SettingView {
                   <UI.ListItem primary="hello3" />
                   <UI.ListItem
                     primary="remove integration"
-                    onClick={async () => {
-                      store.setting.values = {}
-                      store.setting.token = ''
-                      await store.setting.save()
-                      store.update()
-                    }}
+                    onClick={this.removeIntegration}
                   />
                 </UI.List>
               </UI.Popover>
@@ -114,11 +115,8 @@ export class SettingView {
             setting={setting}
             update={store.update}
           />
-          <pre if={false} css={{ opacity: 0.5 }}>
-            {JSON.stringify(store.setting.values.oauth || null, 0, 2)}
-          </pre>
         </body>
-      </React.Fragment>
+      </>
     )
   }
 
@@ -127,5 +125,6 @@ export class SettingView {
       padding: 20,
       flex: 1,
     },
+    actions: { opacity: 0.2 },
   }
 }

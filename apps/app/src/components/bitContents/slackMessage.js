@@ -17,8 +17,8 @@ const getSlackDate = message => {
 }
 
 @view
-export default class BitSlackMessage {
-  render({ bit, message, previousMessage, appStore, contentStyle }) {
+export class BitSlackMessage extends React.Component {
+  render({ bit, message, previousMessage, contentStyle }) {
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -52,7 +52,7 @@ export default class BitSlackMessage {
             onClick={e => {
               e.stopPropagation()
               App.setPeekState({
-                item: {
+                bit: {
                   id: person.id,
                   icon: avatar,
                   title: message.name,
@@ -61,7 +61,6 @@ export default class BitSlackMessage {
                   integration: '',
                 },
               })
-              appStore.pinSelected(-1, person)
             }}
           >
             <inner>

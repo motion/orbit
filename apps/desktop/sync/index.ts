@@ -1,4 +1,4 @@
-import { store, watch, react } from '@mcro/black'
+import { store, react, watch } from '@mcro/black'
 import * as Syncers from './syncers'
 import { Job, remove } from '@mcro/models'
 import debug from '@mcro/debug'
@@ -8,7 +8,7 @@ debug.quiet('sync')
 
 // @ts-ignore
 @store
-export default class Sync {
+export class Sync {
   locks: Set<string> = new Set()
   jobs = []
   syncers?: Object = null
@@ -30,16 +30,14 @@ export default class Sync {
 
   // save in 3.2.s
 
-  @watch({ log: false })
-  syncLog = () => {
+  syncLog = watch(() => {
     const title = this.enabled
       ? 'SYNC ENABLED ✅ (Root.sync.disable())'
       : 'SYNC DISABLED (Root.sync.enable())'
     console.log(`----${title}----`)
-  }
+  })
 
-  @react
-  processJobs = [
+  processJobs = react(
     () => this.jobs,
     async jobs => {
       if (!this.enabled) {
@@ -59,7 +57,7 @@ export default class Sync {
         this.completeJob(job)
       }
     },
-  ]
+  )
 
   completeJob = async (job: Job) => {
     this.locks.add(job.lock)
@@ -91,11 +89,11 @@ export default class Sync {
     }
   }
 
-  run(integration?: string, action?: string) {
-    if (!integration) {
+  run(name?: string, action?: string) {
+    if (!name) {
       console.log('Needs parameters')
     } else {
-      this.syncers[integration][action ? 'run' : 'runAll'](action)
+      this.syncers[name][action ? 'run' : 'runAll'](action)
     }
   }
 

@@ -1,65 +1,62 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import ListItem from './listItem'
-import { List as VirtualList } from 'react-virtualized'
-import parentSize from '~/helpers/parentSize'
-import type { Props as ItemProps } from './listItem'
-import Separator from './separator'
+import { ListItem } from './listItem'
+// import { List as VirtualList } from 'react-virtualized'
+import { parentSize } from './helpers/parentSize'
+import { Separator } from './separator'
 import { isArrayLike } from 'mobx'
-import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+// import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 import { throttle, debounce } from 'lodash'
 
 const idFn = _ => _
 const SCROLL_BAR_WIDTH = 16
 
-export type Props = {
-  defaultSelected?: number,
-  children?: React.Element<any>,
-  controlled?: boolean,
-  flex?: boolean | number,
-  getItem?: Function,
-  getRef?: Function,
-  height?: number,
-  horizontal?: boolean,
-  itemProps?: Object,
-  items?: Array<ItemProps | React.Element<any>>,
-  onHighlight: Function,
-  onItemMount?: Function,
-  onSelect: Function,
-  parentSize?: Object,
-  rowHeight?: number,
-  scrollable?: boolean,
-  segmented?: boolean,
-  size?: number,
-  style?: Object,
-  width?: number,
-  groupBy?: string,
-  selected?: number,
-  separatorHeight: number,
-  isSelected?: Function,
-  virtualized?: { rowHeight: number | ((a: number) => number) },
-  // force update children
-  updateChildren?: boolean,
-  captureClickEvents?: boolean,
-  separatorProps?: Object,
-  // row to scroll to after render
-  // only tries if different than last scrolled to row
-  scrollToRow?: number,
-  // passes react-virtualized onScroll to here
-  onScroll?: Function,
-}
+// export type Props = {
+//   defaultSelected?: number,
+//   children?: React.Element<any>,
+//   controlled?: boolean,
+//   flex?: boolean | number,
+//   getItem?: Function,
+//   getRef?: Function,
+//   height?: number,
+//   horizontal?: boolean,
+//   itemProps?: Object,
+//   items?: Array<ItemProps | React.Element<any>>,
+//   onHighlight: Function,
+//   onItemMount?: Function,
+//   onSelect: Function,
+//   parentSize?: Object,
+//   rowHeight?: number,
+//   scrollable?: boolean,
+//   segmented?: boolean,
+//   size?: number,
+//   style?: Object,
+//   width?: number,
+//   groupBy?: string,
+//   selected?: number,
+//   separatorHeight: number,
+//   isSelected?: Function,
+//   virtualized?: { rowHeight: number | ((a: number) => number) },
+//   // force update children
+//   updateChildren?: boolean,
+//   captureClickEvents?: boolean,
+//   separatorProps?: Object,
+//   // row to scroll to after render
+//   // only tries if different than last scrolled to row
+//   scrollToRow?: number,
+//   // passes react-virtualized onScroll to here
+//   onScroll?: Function,
+// }
 
-type VirtualItemProps = {
-  index: number,
-  key: string,
-  style: Object,
-  parent: any,
-}
+// type VirtualItemProps = {
+//   index: number,
+//   key: string,
+//   style: Object,
+//   parent: any,
+// }
 
-@parentSize('virtualized', 'parentSize')
 @view.ui
-class List extends React.PureComponent<Props, { selected: number }> {
+class ListUI extends React.PureComponent {
   static Item = ListItem
 
   static defaultProps = {
@@ -73,30 +70,22 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   // for tracking list resizing for virtual lists
   onRef = []
-  children: ?Array<any>
   totalItems = null
-  itemRefs: Array<HTMLElement> = []
-  lastDidReceivePropsDate: ?number
-  virtualListRef: ?VirtualList = null
-  lastSelectionDate: ?number
-  realIndex: ?Array<number>
-  groupedIndex: ?Array<number>
-  totalGroups: number = 0
+  itemRefs = []
+  virtualListRef = null
+  totalGroups = 0
 
-  componentWillMount() {
+  constructor(a, b) {
+    super(a, b)
     this.totalItems = this.getTotalItems(this.props)
-
     if (typeof this.props.defaultSelected !== 'undefined') {
       this.setState({ selected: this.props.defaultSelected })
     }
-
     if (this.props.getRef) {
       this.props.getRef(this)
     }
-
     this.updateChildren()
-
-    this.setTimeout(() => {
+    setTimeout(() => {
       // TODO stupid ass bugfix, for some reason lists started flickering
       // likely a bug with our cellmeasurer, or maybe even gloss
       // this seems to fix for now
@@ -118,7 +107,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (
       typeof this.props.scrollToRow === 'number' &&
       this.props.scrollToRow !== this.lastScrolledToRow
@@ -131,46 +120,38 @@ class List extends React.PureComponent<Props, { selected: number }> {
       this.scrollToRow(this.lastScrolledToRow)
       this.didUpdateChildren = false
     }
-  }
 
-  // willUpdate only runs when PureComponent has new props
-  componentWillUpdate(nextProps: Props) {
-    const totalItems = this.getTotalItems(nextProps)
+    // migrated from cWU
+    const { virtualized, selected } = prevProps
+    const totalItems = this.getTotalItems(prevProps)
     const hasNeverSetChildren = !this.childrenVersion
     const hasNewSelected =
-      typeof nextProps.selected === 'number' && this.state.selected !== selected
+      typeof prevProps.selected === 'number' && this.state.selected !== selected
     const hasNewItems = this.totalItems !== totalItems
     const hasNewItemsKey =
-      typeof nextProps.itemsKey !== 'undefined' &&
-      nextProps.itemsKey !== this.props.itemsKey
-
+      typeof prevProps.itemsKey !== 'undefined' &&
+      prevProps.itemsKey !== this.props.itemsKey
     this.totalItems = totalItems
-
-    const { virtualized, selected } = nextProps
-
     const shouldUpdateChildren =
       hasNeverSetChildren ||
       hasNewSelected ||
       !virtualized ||
-      nextProps.updateChildren ||
+      prevProps.updateChildren ||
       hasNewItems ||
       hasNewItemsKey
-
     if (shouldUpdateChildren) {
-      this.props = nextProps
+      this.props = prevProps
       this.updateChildren()
     }
-
     if (typeof selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
       if (selected !== this.state.selected) {
         this.setState({ selected })
       }
     }
-
     if (
-      nextProps.virtualized &&
-      nextProps.virtualized.measure &&
+      prevProps.virtualized &&
+      prevProps.virtualized.measure &&
       ((this.props.virtualized && !this.props.virtualized.measure) ||
         !this.props.virtualized)
     ) {
@@ -191,7 +172,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   // sitrep
-  scrollToRow = debounce((index: number) => {
+  scrollToRow = debounce(index => {
     if (!this.virtualListRef) {
       this.onRef.push(() => this.scrollToRow(index))
       return
@@ -220,20 +201,20 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }, 6)
 
-  gatherRefs = (index: number) => (ref: ?HTMLElement) => {
+  gatherRefs = index => ref => {
     if (ref) {
       this.itemRefs[index] = ref
     }
   }
 
-  getTotalItems = (props: Props) =>
+  getTotalItems = props =>
     props.items ? props.items.length : React.Children.count(props.children)
 
-  isSelected = (fn: Function) => (...args) =>
+  isSelected = fn => (...args) =>
     typeof this.state.selected === 'number' ? fn(...args) : null
 
   // wrap weird signature
-  select = (selector: number | Function) => {
+  select = selector => {
     if (typeof selector === 'number') {
       this.highlightItem(() => selector)
     } else if (typeof selector === 'function' && this.props.items) {
@@ -241,7 +222,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  highlightItem(setter: (a: number) => number, event?: Event) {
+  highlightItem(setter, event) {
     const selected = setter(this.state.selected)
     const hasSelectCb = !!this.props.onSelect
     if (hasSelectCb && event && this.props.captureClickEvents) {
@@ -265,7 +246,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return selected
   }
 
-  get selected(): ?Object {
+  get selected() {
     const { selected } = this.state
     if (selected === null || !this.props.items) {
       return null
@@ -284,7 +265,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
-  rowRenderer = ({ index, key, style, parent }: VirtualItemProps) => {
+  rowRenderer = ({ index, key, style, parent }) => {
     if (!this.children || !this.children[index]) {
       console.log('no child', index, this)
       return null
@@ -306,7 +287,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     )
   }
 
-  getItemProps(index: number, rowProps: Object, isListItem: boolean) {
+  getItemProps(index, rowProps, isListItem) {
     const {
       onItemMount,
       size,
@@ -382,7 +363,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (React.isValidElement(item)) {
       return React.cloneElement(
         item,
-        this.getItemProps(index, rowProps, item.type.isListItem)
+        this.getItemProps(index, rowProps, item.type.isListItem),
       )
     }
     // pass object to ListItem
@@ -401,9 +382,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
       item
         ? React.cloneElement(
             item,
-            this.getItemProps(index, rowProps, item.type.isListItem)
+            this.getItemProps(index, rowProps, item.type.isListItem),
           )
-        : null
+        : null,
     )
 
   // mutative which is odd
@@ -468,7 +449,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       realIndex = realIndex.filter(x => typeof x !== 'undefined')
 
       for (const { index, name } of groups) {
-        let child = (extraProps: Object) => (
+        let child = extraProps => (
           <Separator
             $firstSeparator={index === 0}
             key={name}
@@ -485,10 +466,10 @@ class List extends React.PureComponent<Props, { selected: number }> {
       }
     }
 
-    this.cache = new CellMeasurerCache({
-      defaultHeight: 50,
-      fixedWidth: true,
-    })
+    // this.cache = new CellMeasurerCache({
+    //   defaultHeight: 50,
+    //   fixedWidth: true,
+    // })
 
     this.didUpdateChildren = true
     this.children = children
@@ -596,4 +577,4 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 }
 
-export default List
+export const List = parentSize('virtualized', 'parentSize')(ListUI)

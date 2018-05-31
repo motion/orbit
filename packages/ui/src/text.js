@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
-import { pick } from 'lodash'
 
 const wrapHighlights = (text, highlightWordsColor, highlightWords) => {
   let result = text
@@ -24,19 +23,24 @@ const getTextProperties = props => {
   }
   let lineHeight = props.lineHeight
   if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
-    lineHeight = fontSize + 5 * (fontSize / 14)
+    lineHeight = Math.log(fontSize * 500) * 2.5 + fontSize / 1.4 - 8
     if (props.sizeLineHeight) {
       lineHeight = lineHeight * props.sizeLineHeight
     }
   }
   // round
   if (typeof fontSize === 'number') {
-    fontSizeNum = Math.round(fontSize * 100) / 100
-    fontSize = `${fontSizeNum}px`
+    fontSizeNum = Math.round(fontSize * 10) / 10
   }
   if (typeof lineHeight === 'number') {
-    lineHeightNum = Math.round(lineHeight * 100) / 100
+    lineHeightNum = Math.round(lineHeight * 10) / 10
+  }
+  if (typeof props.sizeMethod === 'undefined') {
     lineHeight = `${lineHeightNum}px`
+    fontSize = `${fontSizeNum}px`
+  } else if (props.sizeMethod === 'vw') {
+    lineHeight = `${lineHeightNum / 12}vw`
+    fontSize = `${fontSizeNum / 12}vw`
   }
   return { fontSize, fontSizeNum, lineHeight, lineHeightNum }
 }
@@ -57,7 +61,7 @@ const getTextProperties = props => {
 
 // click away from edit clears it
 @view.ui
-export default class Text {
+export class Text extends React.Component {
   selected = false
   editable = false
   node = null
@@ -77,7 +81,8 @@ export default class Text {
     return this.props.ellipse > 1 || this.props.ellipse === true
   }
 
-  componentWillMount() {
+  constructor(a, b) {
+    super(a, b)
     this.handleProps(this.props)
   }
 
@@ -86,11 +91,8 @@ export default class Text {
     this.measure()
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.handleProps(nextProps)
-  }
-
   componentDidUpdate() {
+    this.handleProps(this.props)
     if (
       this.node &&
       this.props.autoselect &&
@@ -223,11 +225,13 @@ export default class Text {
     placeholder,
     lineHeight,
     highlightWords,
+    sizeLineHeight,
     highlightWordsColor,
     className,
     measure,
     debug,
     onMeasure,
+    sizeMethod,
     ...props
   }) {
     const { multiLineEllipse } = this

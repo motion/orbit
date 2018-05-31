@@ -1,0 +1,12 @@
+{
+  "env": {
+    "development": {
+      "presets": [
+        ["@mcro/babel-preset-motion", { "disable": ["@babel/preset-env"] }]
+      ]
+    },
+    "production": {
+      "presets": [["@mcro/babel-preset-motion"]]
+    }
+  }
+}

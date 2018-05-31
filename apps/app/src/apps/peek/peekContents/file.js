@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import PeekHeader from '../peekHeader'
+import { PeekHeader } from '../peekHeader'
 
 @view
-export class File {
+export class File extends React.Component {
   render({ bit }) {
     return (
-      <React.Fragment>
+      <>
         <PeekHeader title={bit.title} />
         <content>{bit.body}</content>
-      </React.Fragment>
+      </>
     )
   }
 

@@ -1,5 +1,5 @@
 import { view } from '../view'
-import { observable, autorunAsync } from 'mobx'
+import { observable, autorun } from 'mobx'
 
 // allows easy tracking of all views/stores
 export function debugState(callback) {
@@ -41,12 +41,15 @@ export function debugState(callback) {
       }
     }, {})
   // watch things
-  autorunAsync(() => {
-    state.mountedVersion
-    const stores = reduced(state.mounted.stores)
-    const views = reduced(state.mounted.views)
-    callback({ stores, views })
-  }, 100)
+  autorun(
+    () => {
+      state.mountedVersion
+      const stores = reduced(state.mounted.stores)
+      const views = reduced(state.mounted.views)
+      callback({ stores, views })
+    },
+    { delay: 100 },
+  )
   view.on('store.mount', mount('stores'))
   view.on('store.unmount', unmount('stores'))
   view.provide.on('store.mount', mount('stores'))

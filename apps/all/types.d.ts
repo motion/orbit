@@ -30,10 +30,10 @@ export type DesktopState = {
     mouseDown?: { x: number; y: number; at: number }
   }
   keyboardState: {
-    option?: Date
-    optionUp?: Date
-    shiftUp?: Date
-    space?: Date
+    option?: number
+    optionUp?: number
+    shiftUp?: number
+    space?: number
   }
   ocrState: {
     words?: Array<OCRItem>
@@ -43,6 +43,7 @@ export type DesktopState = {
   }
   focusedOnOrbit: boolean
   appStateUpdatedAt: number
+  lastBitUpdatedAt: number
   searchState: {
     pluginResults: Array<{}>
     indexStatus: string

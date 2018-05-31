@@ -3,7 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/all'
 import * as Constants from '~/constants'
-import ControlButton from '~/views/controlButton'
+import { ControlButton } from '~/views/controlButton'
 
 class HeaderStore {
   inputRef = null
@@ -14,8 +14,7 @@ class HeaderStore {
     this.inputRef && this.inputRef.focus()
   }
 
-  @react({ log: false })
-  focusInput = [
+  focusInput = react(
     () => [
       App.orbitState.pinned || App.orbitState.docked,
       App.isMouseInActiveArea,
@@ -26,7 +25,8 @@ class HeaderStore {
       await when(() => !App.isAnimatingOrbit)
       this.focus()
     },
-  ]
+    { log: false },
+  )
 
   onClickInput = () => {
     if (!App.orbitState.pinned && Desktop.isHoldingOption) {
@@ -40,7 +40,7 @@ class HeaderStore {
 @view({
   headerStore: HeaderStore,
 })
-export default class OrbitHeader {
+export class OrbitHeader extends React.Component {
   handleKeyDown = e => {
     // up/down
     const { keyCode } = e
@@ -49,16 +49,12 @@ export default class OrbitHeader {
     }
   }
 
-  _hoverProps = null
-  get hoverProps() {
-    if (this._hoverProps) return this._hoverProps
-    this._hoverProps = this.props.appStore.getHoverProps({
-      onHover: this.props.headerStore.hover,
-    })
-    return this._hoverProps
-  }
+  hoverSettler = this.props.appStore.getHoverSettler({
+    onHover: this.props.headerStore.hover,
+  })
 
-  render({ orbitStore, headerStore, theme, headerBg }) {
+  render({ orbitStore, headerStore, after, theme }) {
+    const headerBg = theme.base.background
     return (
       <orbitHeader
         $headerBg={headerBg}
@@ -72,27 +68,14 @@ export default class OrbitHeader {
               ? 0
               : Constants.BORDER_RADIUS,
         }}
-        {...this.hoverProps}
+        {...this.hoverSettler.props}
       >
-        <bottomBorder
-          css={{
-            position: 'absolute',
-            bottom: 0,
-            height: 1,
-            zIndex: 1,
-            right: App.orbitOnLeft ? 20 : -1,
-            left: App.orbitOnLeft ? -1 : 20,
-            background: `linear-gradient(to right, ${
-              theme.base.background
-            }, ${theme.active.background.darken(0.05)})`,
-          }}
-        />
         <title>
           <UI.Icon
             $searchIcon
             name="ui-1_zoom"
-            size={15}
-            color={theme.active.background.darken(0.15).desaturate(0.4)}
+            size={18}
+            color={theme.base.color.alpha(0.3)}
           />
           <input
             value={orbitStore.query}
@@ -103,9 +86,13 @@ export default class OrbitHeader {
             onKeyDown={this.handleKeyDown}
             ref={headerStore.setInputRef}
             onClick={headerStore.onClickInput}
+            css={{
+              color: theme.base.color.alpha(0.8),
+            }}
           />
           <inputLn />
         </title>
+        <after if={after}>{after}</after>
         <ControlButton
           if={!App.orbitState.docked}
           onClick={App.togglePinned}
@@ -131,14 +118,23 @@ export default class OrbitHeader {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [3, 2],
+      padding: 2,
       transition: 'all ease-in 300ms',
+      zIndex: 10000000,
     },
-    headerBg: background => ({
-      background: `linear-gradient(${background
-        .darken(0.03)
-        .desaturate(0.5)}, transparent)`,
-    }),
+    after: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: 'center',
+      flexFlow: 'row',
+    },
+    // headerBg: background => ({
+    //   background: `linear-gradient(${background
+    //     .darken(0.03)
+    //     .desaturate(0.5)}, transparent)`,
+    // }),
     inputLn: {
       width: 10,
       height: 2,
@@ -155,12 +151,12 @@ export default class OrbitHeader {
     },
     input: {
       width: '100%',
-      fontWeight: 300,
-      fontSize: 22,
-      padding: [10, 10, 10, 30],
-      height: 54,
-      border: 'none',
       background: 'transparent',
+      fontWeight: 300,
+      fontSize: 24,
+      padding: [20, 10, 20, 36],
+      // height: 54,
+      border: 'none',
     },
     pinnedIcon: {
       position: 'relative',

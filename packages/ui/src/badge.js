@@ -1,27 +1,25 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import type { Color } from '@mcro/gloss'
-import Surface from './surface'
-import Text from './text'
-import Icon from './icon'
+import { Surface } from './surface'
+import { Text } from './text'
+import { Icon } from './icon'
 
-type Props = {
-  background?: Color,
-  color?: Color,
-  children?: string | Object,
-  icon?: string,
-  borderRadius?: number,
-  className?: string,
-  attach?: Object,
-  iconProps?: Object,
-  label?: string | HTMLElement,
-  labelBefore?: boolean,
-  fontSize?: number,
-}
+// type Props = {
+//   background?: Color,
+//   color?: Color,
+//   children?: string | Object,
+//   icon?: string,
+//   borderRadius?: number,
+//   className?: string,
+//   attach?: Object,
+//   iconProps?: Object,
+//   label?: string | HTMLElement,
+//   labelBefore?: boolean,
+//   fontSize?: number,
+// }
 
 @view.ui
-export default class Badge extends React.Component<Props> {
+export class Badge extends React.Component {
   static defaultProps = {
     background: [0, 0, 0, 0.1],
     borderRadius: 30,
@@ -40,7 +38,7 @@ export default class Badge extends React.Component<Props> {
     labelBefore,
     fontSize,
     ...props
-  }: Props) {
+  }) {
     const fontSizeNum = +fontSize
 
     return (

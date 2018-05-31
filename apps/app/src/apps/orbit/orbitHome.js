@@ -1,69 +1,85 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
-import OrbitCard from './orbitCard'
-import OrbitHomeHeader from './orbitHome/orbitHomeHeader'
-import Masonry from '~/views/masonry'
+import { Bit } from '@mcro/models'
+import { OrbitCard } from './orbitCard'
+import { Masonry } from '~/views/masonry'
+import { OrbitDockedPane } from './orbitDockedPane'
+
+const findType = (integration, type, skip = 0) =>
+  Bit.findOne({
+    skip,
+    take: 1,
+    where: {
+      type,
+      integration,
+    },
+    relations: ['people'],
+    order: { bitCreatedAt: 'DESC' },
+  })
 
 class OrbitHomeStore {
-  @react({ fireImmediately: true })
-  setExploreResults = [
-    () => !!App.state.query,
-    hasQuery => {
-      if (this.props.appStore.selectedPane !== 'summary') {
-        return
+  setGetResults = react(
+    () => this.props.paneStore.activePane === this.props.name,
+    isActive => {
+      if (!isActive) {
+        throw react.cancel
       }
-      const { appStore } = this.props
-      if (hasQuery) {
-        appStore.setGetResults(null)
-      } else {
-        appStore.setGetResults(() => appStore.summaryResults)
-      }
+      log('set get results')
+      this.props.appStore.setGetResults(() => this.results)
     },
-  ]
+    { immediate: true },
+  )
+
+  results = react(
+    async () => {
+      return (await Promise.all([
+        findType('slack', 'conversation'),
+        findType('slack', 'conversation', 1),
+        findType('slack', 'conversation', 2),
+        findType('google', 'document'),
+        findType('google', 'mail'),
+        findType('google', 'mail', 1),
+        findType('slack', 'conversation'),
+        findType('slack', 'conversation'),
+        findType('slack', 'conversation'),
+      ])).filter(Boolean)
+    },
+    {
+      defaultValue: [],
+    },
+  )
 }
 
-@view.provide({
+const selectedTheme = { color: 'rgb(42.4%, 24.8%, 96%)', background: '#fff' }
+
+@view({
   store: OrbitHomeStore,
 })
-@UI.injectTheme
-@view
-export default class OrbitHome {
-  render({ appStore, theme }) {
-    return (
-      <pane css={{ background: theme.base.background }}>
-        <OrbitHomeHeader theme={theme} />
-        <summary>
-          <Masonry>
-            {appStore.summaryResults.map((bit, index) => (
-              <OrbitCard
-                pane="summary"
-                key={index}
-                index={index}
-                bit={bit}
-                total={appStore.summaryResults.length}
-                hoverToSelect
-                expanded
-                getRef={appStore.setDockedResultRef(index)}
-              />
-            ))}
-          </Masonry>
-        </summary>
-      </pane>
-    )
+export class OrbitHome {
+  span2 = {
+    gridColumnEnd: 'span 2',
   }
 
-  static style = {
-    pane: {
-      flex: 1,
-    },
-    summary: {
-      flex: 1,
-      position: 'relative',
-      transition: 'opacity ease-in-out 150ms',
-      overflowY: 'scroll',
-      padding: [0, 12],
-    },
+  render({ store }) {
+    log('HOME---------------')
+    return (
+      <OrbitDockedPane name="home">
+        <Masonry>
+          {store.results.map((bit, index) => (
+            <OrbitCard
+              pane="summary"
+              selectedTheme={selectedTheme}
+              key={`${bit.id}${index}`}
+              index={index}
+              bit={bit}
+              total={store.results.length}
+              hoverToSelect
+              expanded
+              style={index < 2 && this.span2}
+            />
+          ))}
+        </Masonry>
+      </OrbitDockedPane>
+    )
   }
 }

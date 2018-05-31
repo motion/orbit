@@ -11,16 +11,20 @@ const getName = x =>
 export default class Icons {
   cache = {}
 
-  async getIcon(path, opts = {}) {
+  async getIcon(path, opts = { size: 64 }) {
     const name = `${getName(path)}.png`
     const destination = Path.join(TMP_DIR, name)
     if (this.cache[name]) {
       return name
     }
-    await fileIcon.file(path, {
-      size: opts.size || 64,
-      destination,
-    })
+    try {
+      await fileIcon.file(path, {
+        size: opts.size || 64,
+        destination,
+      })
+    } catch {
+      console.log('error getting icon')
+    }
     this.cache[name] = true
     return name
   }

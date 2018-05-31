@@ -9,7 +9,7 @@ function collectGetterPropertyDescriptors(proto) {
   )
 }
 
-export default function logClass(klass) {
+export function logClass(klass) {
   const descriptors = {
     ...Object.getOwnPropertyDescriptors(klass),
     ...collectGetterPropertyDescriptors(Object.getPrototypeOf(klass)),
@@ -61,5 +61,3 @@ function logClassMethod(target, method, descriptor) {
     target[method] = newValue
   }
 }
-
-window.logClass = logClass

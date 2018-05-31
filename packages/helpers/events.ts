@@ -1,28 +1,40 @@
-import { CompositeDisposable } from 'sb-event-kit'
-import global from 'global'
+import { CompositeDisposable } from 'event-kit'
+import root from 'global'
 import _on from './on'
 import _requestAnimationFrame from './requestAnimationFrame'
 
-const ogSetTimeout = global.setTimeout
-const ogSetInterval = global.setInterval
+const ogSetTimeout = root.setTimeout
+const ogSetInterval = root.setInterval
 
 function _setTimeout(givenCallback: Function, duration: number): number {
+  if (!this) {
+    console.warn('weird no this')
+    return 0
+  }
   let subscription
   const callback = () => {
     if (subscription) subscription.dispose()
     givenCallback.call(this)
   }
   const timeoutId = ogSetTimeout(callback, duration)
-  subscription = this.subscriptions.add(() => {
-    clearTimeout(timeoutId)
+  subscription = this.subscriptions.add({
+    dispose() {
+      clearTimeout(timeoutId)
+    },
   })
   return timeoutId
 }
 
 function _setInterval(givenCallback: Function, duration: number): number {
   const intervalId = ogSetInterval(givenCallback, duration)
-  this.subscriptions.add(() => {
-    clearInterval(intervalId)
+  if (!this) {
+    console.warn('weird no this')
+    return 0
+  }
+  this.subscriptions.add({
+    dispose() {
+      clearInterval(intervalId)
+    },
   })
   return intervalId
 }
@@ -30,7 +42,9 @@ function _setInterval(givenCallback: Function, duration: number): number {
 // adds this.subscriptions to a class at call-time
 function patchSubscribers(fn) {
   return function(...args: Array<any>) {
-    if (!this.subscriptions) {
+    if (!this) {
+      console.warn('weird no this')
+    } else if (!this.subscriptions) {
       this.subscriptions = new CompositeDisposable()
       // dispose
       const oComponentWillUnmount = this.componentWillUnmount

@@ -1,4 +1,4 @@
-import { screen } from 'electron'
+import * as Electron from 'electron'
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -9,8 +9,8 @@ const MAX_WIDTH = 1450
 const MAX_WIDTH_TO_HEIGHT = 1.15
 const TOPBAR_HEIGHT = 30
 
-export default function getAppSize() {
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+export function getAppSize() {
+  const { width, height } = Electron.screen.getPrimaryDisplay().workAreaSize
 
   const boundedHeight = Math.min(MAX_HEIGHT, height - 100)
   const maxWidthByPercentOfHeight = boundedHeight * MAX_WIDTH_TO_HEIGHT // at most x width of height

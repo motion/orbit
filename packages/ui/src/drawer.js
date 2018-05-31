@@ -1,8 +1,6 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import type { Color } from '@mcro/gloss'
-import Surface from './surface'
+import { Surface } from './surface'
 
 const opposite = direction =>
   ({
@@ -12,31 +10,31 @@ const opposite = direction =>
     top: 'bottom',
   }[direction])
 
-type Props = {
-  attach?: Object,
-  background?: Color,
-  bordered?: boolean,
-  children?: React.Element<any> | string,
-  className?: string,
-  from: 'top' | 'bottom' | 'left' | 'right',
-  onClickOverlay: Function,
-  open?: boolean,
-  overlayBlur?: number,
-  percent?: number | string,
-  boxShadow?: boolean | 'string',
-  size: number,
-  style: Object,
-  theme?: string,
-  transition?: boolean,
-  transitionDuration?: number,
-  transparent?: boolean,
-  zIndex: number,
-  scrollable?: boolean,
-  containerProps?: Object,
-}
+// type Props = {
+//   attach?: Object,
+//   background?: Color,
+//   bordered?: boolean,
+//   children?: React.Element<any> | string,
+//   className?: string,
+//   from: 'top' | 'bottom' | 'left' | 'right',
+//   onClickOverlay: Function,
+//   open?: boolean,
+//   overlayBlur?: number,
+//   percent?: number | string,
+//   boxShadow?: boolean | 'string',
+//   size: number,
+//   style: Object,
+//   theme?: string,
+//   transition?: boolean,
+//   transitionDuration?: number,
+//   transparent?: boolean,
+//   zIndex: number,
+//   scrollable?: boolean,
+//   containerProps?: Object,
+// }
 
 @view.ui
-export default class Drawer extends React.PureComponent<Props> {
+export class Drawer extends React.PureComponent {
   static defaultProps = {
     size: 400,
     from: 'left',
@@ -65,7 +63,7 @@ export default class Drawer extends React.PureComponent<Props> {
     overlayBackground,
     containerProps,
     ...props
-  }: Props) {
+  }) {
     const unit = +percent ? '%' : 'px'
     const flip = /right|bottom/.test(from) ? 1 : -1
     const translate = `${(open ? 0 : size) * flip}${unit}`

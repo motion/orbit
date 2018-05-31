@@ -84,6 +84,10 @@ export default class GithubIssueSync {
   setting: Setting
   helpers = getHelpers({})
 
+  get token() {
+    return this.setting.token
+  }
+
   constructor(setting: Setting) {
     this.setting = setting
     this.helpers = getHelpers(setting)
@@ -121,7 +125,6 @@ export default class GithubIssueSync {
   }
 
   syncRepo = async (org: string, name: string): Promise<any> => {
-    console.log('getting', org, name)
     const results = await this.graphFetch({
       query: `
       query AllIssues {
@@ -149,7 +152,7 @@ export default class GithubIssueSync {
     )
   }
 
-  getIssuesForRepo = (repository: Object) => {
+  getIssuesForRepo = (repository: any) => {
     return repository.issues.edges.map(edge => ({
       ...edge.node,
       repositoryName: repository.name,

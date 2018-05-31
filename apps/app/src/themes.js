@@ -1,19 +1,13 @@
 import { ThemeMaker, color } from '@mcro/ui'
-import * as Constants from '~/constants'
 
 const Theme = new ThemeMaker()
 
 const highlightColor = '#fff'
-const highlightBackground = Constants.ORBIT_COLOR
 
-const blank = {
-  highlightBackground: 'transparent',
-  highlightColor: 'transparent',
-  background: 'transparent',
-  color: '#fff',
-  borderColor: 'transparent',
-  buttonBackground: 'transparent',
-}
+const greyBg = color('#f2f2f2')
+const greyHoverBg = greyBg.darken(0.02)
+const greyActiveBg = greyHoverBg.darken(0.05)
+const greyActiveHoverBg = greyHoverBg.darken(0.06)
 
 const tanBg = color('rgb(255,255,245)')
 const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
@@ -26,7 +20,28 @@ const dbActiveBg = dbHoverBg.darken(0.05).desaturate(0.3)
 const dbActiveHoverBg = dbHoverBg.darken(0.06).desaturate(0.3)
 
 const Themes = {
+  grey: Theme.fromStyles({
+    highlightBackground: [0, 0, 0, 0.05],
+    highlightColor,
+    background: greyBg,
+    color: '#666',
+    borderColor: greyActiveBg,
+    hover: {
+      background: greyHoverBg,
+    },
+    selected: {
+      background: color('#fff'),
+    },
+    active: {
+      background: greyActiveBg,
+    },
+    activeHover: {
+      background: greyActiveHoverBg,
+    },
+  }),
   tan: Theme.fromStyles({
+    highlightBackground: [0, 0, 0, 0.05],
+    highlightColor,
     background: tanBg,
     color: '#656141',
     borderColor: tanActiveBg,
@@ -44,6 +59,8 @@ const Themes = {
     },
   }),
   darkBlue: Theme.fromStyles({
+    highlightBackground: [0, 0, 0, 0.05],
+    highlightColor,
     background: dbBg,
     color: '#fff',
     borderColor: dbActiveBg,
@@ -66,8 +83,22 @@ const Themes = {
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
     borderColor: '#222',
+    hover: {
+      background: color([255, 255, 255, 0.01]),
+    },
+    selected: {
+      background: color([255, 255, 255, 0.02]),
+    },
+    active: {
+      background: color([255, 255, 255, 0.03]),
+    },
+    activeHover: {
+      background: color([255, 255, 255, 0.025]),
+    },
   }),
   light: Theme.fromStyles({
+    highlightBackground: [0, 0, 0, 0.05],
+    highlightColor,
     background: color('#fff'),
     color: color('#444'),
     borderColor: color('#999'),
@@ -84,30 +115,6 @@ const Themes = {
       background: color('#ccc'),
     },
   }),
-  blank: {
-    base: blank,
-    hover: blank,
-    active: blank,
-    focus: blank,
-    highlight: blank,
-  },
-  clear: {
-    button: {
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-      borderRightWidth: 0,
-    },
-    glow: {
-      color: [255, 255, 255, 0.1],
-    },
-    ...Theme.fromStyles({
-      highlightBackground,
-      highlightColor,
-      background: [255, 255, 255, 1],
-      color: '#555',
-      borderColor: [0, 0, 0, 0.1],
-    }),
-  },
 }
 
 window.Themes = Themes

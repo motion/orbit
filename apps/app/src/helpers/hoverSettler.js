@@ -1,7 +1,5 @@
 import { isEqual, throttle } from 'lodash'
 
-const log = debug('hoverSettler')
-
 // isEqual but works with dom nodes (lodash doesnt)
 function isReallyEqual(a, b) {
   if (a && a.isEqualNode) {
@@ -10,7 +8,7 @@ function isReallyEqual(a, b) {
   return isEqual(a, b)
 }
 
-export default function hoverSettler({
+export function hoverSettler({
   enterDelay = 0,
   leaveDelay = 32,
   betweenDelay = 0,
@@ -35,11 +33,12 @@ export default function hoverSettler({
     }
   }, 16)
 
-  return ({ onHover, onBlur, ...extraProps }) => {
+  return ({ onHover, onBlur } = {}) => {
     let itemLastEnterTm
     let itemLastLeaveTm
     let fullyLeaveTm
     let betweenTm
+    let itemProps
 
     function handleHover(target) {
       // remove any other enters/leaves
@@ -47,7 +46,6 @@ export default function hoverSettler({
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)
       clearTimeout(betweenTm)
-
       const updateHover = () => {
         if (isReallyEqual(currentNode, target)) {
           return
@@ -62,7 +60,7 @@ export default function hoverSettler({
             left: target.offsetLeft,
             width: target.clientWidth,
             height: target.clientHeight,
-            ...extraProps,
+            ...itemProps,
           },
           onHover,
         )
@@ -71,7 +69,6 @@ export default function hoverSettler({
           lastEnter = null
         }
       }
-
       // dont delay enter at all if were already hovering other node
       const isAlreadyHovering = !!currentNode
       if (isAlreadyHovering || enterDelay === 0) {
@@ -87,7 +84,6 @@ export default function hoverSettler({
 
     function onMouseEnter(e) {
       clearTimeout(itemLastLeaveTm)
-
       const target = e.currentTarget
       handleHover(target)
     }
@@ -121,9 +117,14 @@ export default function hoverSettler({
     }
 
     return {
-      onMouseEnter,
-      onMouseLeave,
-      onMouseMove,
+      setItem(props) {
+        itemProps = props
+      },
+      props: {
+        onMouseEnter,
+        onMouseLeave,
+        onMouseMove,
+      },
     }
   }
 }

@@ -1,26 +1,23 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Tilt from 'react-tilt'
-import HoverGlow from './hoverGlow'
+import { HoverGlow } from './hoverGlow'
 
-type Props = {
-  width: number,
-  height: number,
-  tiltOptions?: Object,
-  children?: React$Element<any>,
-  css?: Object,
-}
+// type Props = {
+//   width: number,
+//   height: number,
+//   tiltOptions?: Object,
+//   children?: React$Element<any>,
+//   css?: Object,
+// }
 
 @view.ui
-export default class TiltHoverGlow extends React.PureComponent<Props> {
-  static defaultProps: {}
-
+export class TiltHoverGlow extends React.PureComponent {
   version() {
     return 1
   }
 
-  render({ width, height, tiltOptions, children, css, ...props }: Props) {
+  render({ width, height, tiltOptions, children, css, ...props }) {
     return (
       <Tilt
         options={{

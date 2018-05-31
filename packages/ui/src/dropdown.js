@@ -1,24 +1,23 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import List from './list'
-import Button from './button'
-import Popover from './popover'
-import Arrow from './arrow'
-import type { Color } from '@mcro/gloss'
+import { List } from './list'
+import { Button } from './button'
+import { Popover } from './popover'
+import { Arrow } from './arrow'
 
-export type Props = {
-  children: React$Element<any> | string,
-  onChange?: Function,
-  color?: Color,
-  width?: number,
-  items?: Array<string>,
-  popoverProps?: Object,
-  noWrap?: boolean,
-}
+// export type Props = {
+//   children: React$Element<any> | string,
+//   onChange?: Function,
+//   color?: Color,
+//   width?: number,
+//   items?: Array<string>,
+//   popoverProps?: Object,
+//   noWrap?: boolean,
+// }
 
 @view.ui
-export default class Dropdown extends React.Component<Props> {
+export class Dropdown extends React.Component {
   static defaultProps = {
     width: 100,
   }
@@ -34,7 +33,7 @@ export default class Dropdown extends React.Component<Props> {
     theme,
     noWrap,
     ...props
-  }: Props) {
+  }) {
     const arrow = (
       <icon $arrow>
         <Arrow color="#000" size={8} />

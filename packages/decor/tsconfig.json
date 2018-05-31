@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.tspackage",
+  "types": "./index.d.ts",
+  "compilerOptions": {
+    "outDir": "_",
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["*"]
+    }
+  },
+  "include": ["**/*"],
+  "exclude": ["_", "node_modules", "tmp", "*.js"]
+}

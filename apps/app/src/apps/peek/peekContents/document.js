@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import PeekHeader from '../peekHeader'
+import { PeekHeader } from '../peekHeader'
 
 @view
-export class Document {
+export class Document extends React.Component {
   render({ bit }) {
     if (!bit) {
       return null
     }
     return (
-      <React.Fragment>
+      <>
         <PeekHeader title={bit.title} />
         <content>
           <bodyContents
@@ -18,7 +18,7 @@ export class Document {
             }}
           />
         </content>
-      </React.Fragment>
+      </>
     )
   }
 

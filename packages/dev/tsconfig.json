@@ -1,12 +1,13 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
+    "module": "CommonJS",
     "outDir": "_",
     "baseUrl": "./",
     "paths": {
       "~/*": ["*"]
     }
   },
-  "include": ["/**/*"],
-  "exclude": ["_", "node_modules", "tmp"]
+  "include": ["**/*"],
+  "exclude": ["_", "node_modules", "tmp", "*.js"]
 }

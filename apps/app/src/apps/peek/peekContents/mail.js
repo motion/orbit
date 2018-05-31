@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import PeekHeader from '../peekHeader'
+import { PeekHeader } from '../peekHeader'
 // import { Bit } from '@mcro/models'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
@@ -10,14 +10,14 @@ const parseBody = body =>
   !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
 
 @view
-export class Mail {
+export class Mail extends React.Component {
   render({ bit }) {
-    if (!bit) {
+    if (!bit || !bit.data) {
       return null
     }
     const { messages } = bit.data
     return (
-      <React.Fragment>
+      <>
         <PeekHeader icon="email" title={bit.title} date={bit.createdAt} />
         <body>
           <messages if={messages}>
@@ -75,7 +75,7 @@ export class Mail {
             })}
           </messages>
         </body>
-      </React.Fragment>
+      </>
     )
   }
 

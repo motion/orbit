@@ -41,7 +41,5 @@ packages/electron-build/app
 **/*/Index
 
 # keep these folders because these are babel plugins
-!packages/hmr/es6
-!packages/hmr-view/es6
 !packages/gloss/es6
 !packages/css/_

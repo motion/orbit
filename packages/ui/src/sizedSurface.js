@@ -1,19 +1,18 @@
-// @flow
 import * as React from 'react'
-import Surface from './surface'
+import { Surface } from './surface'
 
 const LINE_HEIGHT = 30
 
-type Props = {
-  size: number,
-  sizeHeight?: boolean | number,
-  sizeFont?: boolean | number,
-  sizePadding?: boolean | number,
-  sizeMargin?: boolean | number,
-  sizeRadius?: boolean | number,
-}
+// type Props = {
+//   size: number,
+//   sizeHeight?: boolean | number,
+//   sizeFont?: boolean | number,
+//   sizePadding?: boolean | number,
+//   sizeMargin?: boolean | number,
+//   sizeRadius?: boolean | number,
+// }
 
-export default function SizedSurface(props: Props) {
+export function SizedSurface(props) {
   const {
     sizeHeight,
     sizeMargin,
@@ -23,22 +22,18 @@ export default function SizedSurface(props: Props) {
     sizeIcon,
     ...rest
   } = props
-
   const size = props.size === true ? 1 : props.size || 1
   const num = x => (x === true ? size : x * size)
   const base = size * LINE_HEIGHT
-
   // sizes
   let height =
     typeof sizeHeight !== 'undefined'
       ? Math.round(base * num(sizeHeight))
       : props.height || undefined
-
   // adjust for border x 2 (just looks good)
   if (props.inline) {
     height = height - 4
   }
-
   const pass = {}
   if (sizeHeight) {
     pass.height = height
@@ -67,6 +62,5 @@ export default function SizedSurface(props: Props) {
     const iconSize = (sizeIcon && num(sizeIcon)) || 1
     pass.sizeIcon = iconSize
   }
-
   return <Surface {...pass} {...rest} />
 }

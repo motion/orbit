@@ -1,1 +1,2 @@
-_/mlog.js
+// @ts-ignore
+require('global').mlog = require('./_/mlog').mlog

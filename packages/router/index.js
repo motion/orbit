@@ -98,6 +98,13 @@ export class ObservableRouter {
     this.history.goForward()
   }
 
+  link = where => e => {
+    if (e && e.preventDefault) {
+      e.preventDefault()
+    }
+    this.go(where || (e && e.target.href))
+  }
+
   @action
   go = (...segments) => {
     let path = segments.join('/')
@@ -153,7 +160,7 @@ export class ObservableRouter {
   }
 
   isActive = path => {
-    return !!this.router.getMatch(path)
+    return this.path === path
   }
 }
 

@@ -1,28 +1,35 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import PeekHeader from '../peekHeader'
+import { PeekHeader } from '../peekHeader'
 import bitContents from '~/components/bitContents'
-import OrbitIcon from '~/apps/orbit/orbitIcon'
-import Carousel from '~/components/carousel'
+import { OrbitIcon } from '~/apps/orbit/orbitIcon'
+import { Carousel } from '~/components/carousel'
 import { SubTitle } from '~/views'
-import OrbitDivider from '~/apps/orbit/orbitDivider'
+import { OrbitDivider } from '~/apps/orbit/orbitDivider'
 import { Bit, Person } from '@mcro/models'
+import * as UI from '@mcro/ui'
+
+// delays here help ensure it doesn't jitter
 
 class ConversationPeek {
-  @react({ defaultValue: [] })
-  related = async () => {
-    const people = await Person.find({ take: 3, skip: 7 })
-    const bits = await Bit.find({ take: 3, relations: ['people'] })
-    return [...people, ...bits]
-  }
+  related = react(
+    async () => {
+      const people = await Person.find({ take: 3, skip: 7 })
+      const bits = await Bit.find({ take: 3, relations: ['people'] })
+      return [...people, ...bits]
+    },
+    { defaultValue: [], delay: 40 },
+  )
 
-  @react({ defaultValue: [] })
-  relatedConversations = async () =>
-    await Bit.find({
-      relations: ['people'],
-      where: { integration: 'slack', type: 'conversation' },
-      take: 3,
-    })
+  relatedConversations = react(
+    async () =>
+      await Bit.find({
+        relations: ['people'],
+        where: { integration: 'slack', type: 'conversation' },
+        take: 3,
+      }),
+    { defaultValue: [], delay: 40 },
+  )
 }
 
 const slackConvoBitContentStyle = {
@@ -34,7 +41,7 @@ const slackConvoBitContentStyle = {
 @view({
   store: ConversationPeek,
 })
-export class Conversation {
+export class Conversation extends React.Component {
   render({ store, bit, appStore }) {
     if (!bit) {
       return null
@@ -49,7 +56,7 @@ export class Conversation {
       >
         {({ permalink, location, title, icon, content }) => {
           return (
-            <React.Fragment>
+            <>
               <PeekHeader
                 if={bit}
                 title={title}
@@ -64,7 +71,13 @@ export class Conversation {
               />
               <main>
                 <mainInner>
-                  <content>{content}</content>
+                  <content>
+                    <UI.Text selectable css={{ margin: [5, 0, 20] }} size={1.2}>
+                      <strong>Key points</strong>: a16z partners, orbit domain,
+                      mock-up, Formidable and refactor.
+                    </UI.Text>
+                    {content}
+                  </content>
                   <OrbitDivider />
                   <section>
                     <SubTitle>Related</SubTitle>
@@ -99,7 +112,7 @@ export class Conversation {
                   </section>
                 </mainInner>
               </main>
-            </React.Fragment>
+            </>
           )
         }}
       </BitContent>

@@ -4,5 +4,11 @@
   "description": "",
   "main": "index.js",
   "author": "Motion",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "webpack-cli": "^2.1.3"
+  }
 }

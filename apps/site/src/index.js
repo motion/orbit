@@ -1,20 +1,19 @@
-import 'babel-polyfill'
-import React from 'react'
+// import 'babel-polyfill'
+import '~/../public/styles/siteBase.css'
+import './createElement'
+import 'intersection-observer'
+import * as React from 'react'
 import ReactDOM from 'react-dom'
-import createElement from '@mcro/black/_/createElement'
 import Themes from '~/themes'
 import { ThemeProvide } from '@mcro/ui'
-import * as Black from '@mcro/black'
 import * as Constants from '~/constants'
 
+// for hmr
+import '~/router'
+
 window.Constants = Constants
-// for hmr clearing
-Black.view.on('hmr', main)
 
-// Gloss: all <tag />s can use $$styleProps or css={{}}
-React.createElement = createElement
-
-function main() {
+function render() {
   const RootNode = document.querySelector('#app')
   const Root = require('./root').default
   ReactDOM.render(
@@ -25,4 +24,8 @@ function main() {
   )
 }
 
-main()
+render()
+
+if (module.hot) {
+  module.hot.accept(render)
+}

@@ -1,12 +1,10 @@
 import { store } from '@mcro/black/store'
 import { App } from './App'
 import { Electron } from './Electron'
-import debug from '@mcro/debug'
-
-const log = debug('ElectronReactions')
+import { Desktop } from './Desktop'
 
 @store
-export default class ElectronReactions {
+export class ElectronReactions {
   onShortcut = async shortcut => {
     if (shortcut === 'CommandOrControl+Space') {
       console.log('send toggle docked')
@@ -20,8 +18,9 @@ export default class ElectronReactions {
         return
       }
       if (App.orbitState.pinned) {
-        this.togglePinned()
-        this.toggleVisible()
+        Electron.sendMessage(Desktop, Desktop.messages.CLEAR_OPTION)
+        Electron.sendMessage(App, App.messages.HIDE)
+        Electron.sendMessage(App, App.messages.UNPIN)
         return
       } else {
         // !pinned

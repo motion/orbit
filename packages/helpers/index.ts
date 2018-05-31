@@ -1,19 +1,18 @@
-import * as EventKit from 'sb-event-kit'
-import * as Events from './events'
-import ref_ from './ref'
+import * as EventKit from 'event-kit'
+export * from './events'
+export * from './ref'
 
 export { Helpers } from './types'
 export const { CompositeDisposable } = EventKit
-export const { requestAnimationFrame, setTimeout, setInterval, on } = Events
-export const ref = ref_
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 import { comparer } from 'mobx'
 export const isEqual = comparer.structural
 
-type ReactionOptions = {
+export type ReactionOptions = {
   fireImmediately?: boolean
+  immediate?: boolean
   equals?: Function
   log?: boolean | 'state'
   delay?: number
@@ -26,6 +25,10 @@ type ReactionOptions = {
 export function getReactionOptions(userOptions?: ReactionOptions) {
   let options: ReactionOptions = {
     equals: comparer.structural,
+  }
+  if (userOptions.immediate) {
+    options.fireImmediately = true
+    delete userOptions.immediate
   }
   if (userOptions === true) {
     options.fireImmediately = true

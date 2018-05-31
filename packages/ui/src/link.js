@@ -1,13 +1,12 @@
-// @flow
 import * as React from 'react'
 import { view, Constants } from '@mcro/black'
 
-type Props = {
-  router?: { path: string, go: Function },
-}
+// type Props = {
+//   router?: { path: string, go: Function },
+// }
 
-@view
-export default class Link extends React.Component<Props> {
+@view.ui
+export class Link extends React.Component {
   isActive = false
 
   componentDidMount() {
@@ -19,7 +18,7 @@ export default class Link extends React.Component<Props> {
     })
   }
 
-  onClick = (e: Event) => {
+  onClick = e => {
     e.preventDefault()
     this.props.router.go(this.props.to)
     if (this.props.onClick) {

@@ -10,12 +10,17 @@ const darken = {
 }
 const str = x => `${x}`
 const adjust = (color, adjuster, opposite = false) => {
-  const isLight = color.lightness() > 50
+  const isLight = color.isLight()
   const direction = isLight ? darken[str(opposite)] : lighten[str(opposite)]
   return color[direction](adjuster(color))
 }
 
-export default class ThemeMaker {
+const MIN_ADJUST = 0.1
+const smallAmt = color =>
+  Math.min(0.5, Math.max(MIN_ADJUST, 2 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
+const largeAmt = color => smallAmt(color) * 1.25
+
+export class ThemeMaker {
   cache = {}
 
   colorize = obj =>
@@ -65,6 +70,9 @@ export default class ThemeMaker {
     borderColor,
     ...rest
   }) => {
+    if (!background || !color) {
+      throw new Error(`Themes require at least background or color`)
+    }
     const base = this.colorize({
       highlightColor,
       highlightBackground,
@@ -72,13 +80,9 @@ export default class ThemeMaker {
       color,
       borderColor,
     })
-    const MIN_ADJUST = 0.1
-    const smallAmt = color =>
-      Math.min(0.5, Math.max(MIN_ADJUST, 2 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
-    const largeAmt = color => smallAmt(color) * 1.25
     const focused = {
-      background: adjust(base.background, largeAmt, true),
-      borderColor: adjust(base.borderColor, largeAmt, true),
+      background: base.background && adjust(base.background, largeAmt, true),
+      borderColor: base.borderColor && adjust(base.borderColor, largeAmt, true),
     }
     return this.colorize({
       ...rest,
@@ -87,7 +91,7 @@ export default class ThemeMaker {
         ...base,
         color: adjust(base.color, smallAmt),
         background: adjust(base.background, smallAmt),
-        borderColor: adjust(base.borderColor, smallAmt),
+        borderColor: base.borderColor && adjust(base.borderColor, smallAmt),
         ...rest.hover,
       },
       active: {

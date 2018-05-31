@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import { partition } from 'lodash'
-import SettingCard from './orbitSettingCard'
+import { OrbitSettingCard } from './orbitSettingCard'
+import { OrbitDockedPane } from './orbitDockedPane'
 import * as UI from '@mcro/ui'
 
 const Title = props => (
@@ -10,7 +11,7 @@ const Title = props => (
 @UI.injectTheme
 @view.attach('appStore')
 @view
-export default class OrbitSettings {
+export class OrbitSettings {
   isActive = integration =>
     this.props.appStore.settings[integration.id] &&
     this.props.appStore.settings[integration.id].token
@@ -60,16 +61,14 @@ export default class OrbitSettings {
     return [...activeIntegrations, ...inactiveIntegrations]
   }
 
-  componentWillMount() {
-    // this.props.appStore.setGetResults(this.getResults)
-    // const updateInt = setInterval(() => {
-    //   if (this.mounted) {
-    //     this.props.appStore.setGetResults(this.getResults)
-    //   } else {
-    //     clearInterval(updateInt)
-    //   }
-    // }, 1000)
-  }
+  // this.props.appStore.setGetResults(this.getResults)
+  // const updateInt = setInterval(() => {
+  //   if (this.mounted) {
+  //     this.props.appStore.setGetResults(this.getResults)
+  //   } else {
+  //     clearInterval(updateInt)
+  //   }
+  // }, 1000)
 
   componentWillUnmount() {
     this.mounted = false
@@ -81,26 +80,19 @@ export default class OrbitSettings {
       return null
     }
     const { activeIntegrations, inactiveIntegrations } = this.splitActiveResults
-    const integrationCard = all => (integration, index, offset) => (
-      <SettingCard
+    const integrationCard = all => (setting, index, offset) => (
+      <OrbitSettingCard
         key={index}
         index={index}
         offset={offset}
         appStore={appStore}
         length={all.length}
-        isActive={this.isActive(integration)}
-        {...integration}
+        isActive={this.isActive(setting)}
+        setting={setting}
       />
     )
     return (
-      <pane
-        css={{
-          background: theme.base.background,
-          opacity: appStore.showSettings ? 1 : 0,
-          zIndex: appStore.showSettings ? 1000000 : -1,
-          pointerEvents: appStore.showSettings ? 'auto' : 'none',
-        }}
-      >
+      <OrbitDockedPane name="settings">
         <section if={activeIntegrations.length}>
           <Title>Active</Title>
           <cards>
@@ -121,7 +113,7 @@ export default class OrbitSettings {
             )}
           </cards>
         </section>
-      </pane>
+      </OrbitDockedPane>
     )
   }
 

@@ -1,8 +1,7 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import Popover from './popover'
+import { Popover } from './popover'
 import iconNames from './iconNames'
-import iconsDetailed from './iconsDetailed'
 import fuzzy from 'fuzzy'
 
 const widthPadding = x => {
@@ -44,7 +43,7 @@ const findMatch = name => {
 // }
 
 @view.ui
-export default class Icon extends React.PureComponent {
+export class Icon extends React.PureComponent {
   static defaultProps = {
     size: 16,
     type: 'mini',
@@ -71,15 +70,12 @@ export default class Icon extends React.PureComponent {
     ...props
   }) {
     let content
-    if (type === 'detailed') {
-      content = (
-        <div $detailedIcon css={{ transform: { scale: 0.01 * size } }}>
-          {iconsDetailed[name]}
-        </div>
-      )
-    }
     if (name[0] === '/') {
       return <img $icon src={name} {...props} />
+    }
+    if (!name) {
+      console.warn('no name given for icon')
+      return null
     }
     const iconName = findMatch(name)
     content = content || children
@@ -150,7 +146,7 @@ export default class Icon extends React.PureComponent {
         color: color || (theme && theme.color) || '#000',
         width,
         height,
-        fontSize: size * 1.2,
+        fontSize: width,
         lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
         '&:hover': {
           color: (hover && hover.color) || theme.color || color,

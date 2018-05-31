@@ -1,23 +1,22 @@
-import React from 'react'
-import { view } from '@mcro/black'
-import Redbox from 'redbox-react'
+import * as React from 'react'
 import * as UI from '@mcro/ui'
-import NotFound from '~/views/404'
-import Router from '~/router'
+import { NotFound } from '~/views/notFound'
+import { hot } from 'react-hot-loader'
+import Router from './router'
+// import { view } from '@mcro/black'
 
-@view
-export default class AppRoot extends React.Component {
+class Root extends React.Component {
   state = {
     error: null,
   }
 
   componentDidMount() {
-    this.on(view, 'hmr', () => this.clearErrors())
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
   }
 
   componentDidCatch(error) {
+    console.warn('did catch', error)
     this.setState({ error })
   }
 
@@ -25,12 +24,8 @@ export default class AppRoot extends React.Component {
     this.setState({ error: null })
   }
 
-  clearHmr = async () => {
-    await window.start()
-    view.emit('hmr')
-  }
-
   render() {
+    console.log('hi')
     if (this.state.error) {
       return (
         <aboveredbox
@@ -76,9 +71,27 @@ export default class AppRoot extends React.Component {
     }
     const CurrentPage = Router.activeView || NotFound
     return (
-      <UI.Theme name="tan">
+      <UI.Theme name="light">
         <CurrentPage key={Router.key} {...Router.params} />
       </UI.Theme>
     )
   }
 }
+
+// make hmr state preserve
+
+// if (module.hot.addStatusHandler) {
+//   if (module.hot.status() === 'idle') {
+//     module.hot.addStatusHandler(status => {
+//       console.log('hottt', status)
+//       if (status === 'prepare') {
+//         view.emit('will-hmr')
+//       }
+//       if (status === 'apply') {
+//         view.emit('hmr')
+//       }
+//     })
+//   }
+// }
+
+export default hot(module)(Root)

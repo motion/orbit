@@ -1,8 +1,6 @@
-import { screen } from 'electron'
+import * as Electron from 'electron'
 
-const TOPBAR_HEIGHT = 30
-
-export default function getScreenSize() {
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+export function getScreenSize() {
+  const { width, height } = Electron.screen.getPrimaryDisplay().workAreaSize
   return [width, height]
 }

@@ -1,6 +1,6 @@
-import Bridge from './helpers/Bridge'
-import { proxySetters, setGlobal } from './helpers'
-import { store, react } from '@mcro/black/store'
+import Bridge, { proxySetters } from '@mcro/mobx-bridge'
+import { setGlobal } from './helpers'
+import { store, react, deep } from '@mcro/black/store'
 import { Desktop } from './Desktop'
 
 export let App
@@ -29,7 +29,7 @@ class AppStore {
   bridge: any
   source = 'App'
 
-  state = {
+  state = deep({
     query: '',
     screenSize: [0, 0],
     orbitState: {
@@ -56,7 +56,7 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
-  }
+  })
 
   get isShowingOrbit() {
     return !App.orbitState.hidden
@@ -69,45 +69,44 @@ class AppStore {
   animationDuration = 90
   dockedWidth = 550
 
-  @react({ log: false })
-  isAnimatingOrbit = [
+  isAnimatingOrbit = react(
     () => [App.isShowingOrbit, App.orbitState.docked],
     async (_, { sleep, setValue }) => {
       setValue(true)
       await sleep(App.animationDuration)
       setValue(false)
     },
-  ]
+    { log: false },
+  )
 
   // debounced a little to prevent aggressive reactions
-  @react({ delay: 32, log: isOrbit })
-  isFullyHidden = [
+  isFullyHidden = react(
     () =>
       !App.isShowingOrbit && !App.orbitState.docked && !App.isAnimatingOrbit,
     _ => _,
-  ]
+    { delay: 32, log: isOrbit },
+  )
 
-  @react({ delay: 32, log: isOrbit })
-  isFullyShown = [
+  isFullyShown = react(
     () =>
       (App.isShowingOrbit || App.orbitState.docked) && !App.isAnimatingOrbit,
     _ => _,
-  ]
+    { delay: 32, log: isOrbit },
+  )
 
   // runs in every app independently
-  @react({ fireImmediately: true, log: false })
-  isMouseInActiveArea = [
+  isMouseInActiveArea = react(
     () => !!(Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered),
     async (over, { sleep, setValue }) => {
       await sleep(over ? 0 : 100)
       setValue(over)
     },
-  ]
+    { immediate: true, log: false },
+  )
 
   last: Boolean
 
-  @react({ log: false })
-  wasShowingPeek = [
+  wasShowingPeek = react(
     () => App.isShowingPeek,
     is => {
       if (is === false) {
@@ -117,7 +116,8 @@ class AppStore {
       this.last = is
       return is || last || false
     },
-  ]
+    { log: false },
+  )
 
   get orbitOnLeft() {
     if (App.orbitState.orbitDocked) {

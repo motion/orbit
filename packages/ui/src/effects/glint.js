@@ -1,29 +1,27 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import type { Color } from '@mcro/gloss'
 
 const isUndef = x => typeof x === 'undefined'
 
-type Props = {
-  color: Color,
-  size: number,
-  borderRadius?: number,
-  borderLeftRadius?: number,
-  borderRightRadius?: number,
-  attach?: Object,
-  top?: number,
-  bottom?: number,
-}
+// type Props = {
+//   color: Color,
+//   size: number,
+//   borderRadius?: number,
+//   borderLeftRadius?: number,
+//   borderRightRadius?: number,
+//   attach?: Object,
+//   top?: number,
+//   bottom?: number,
+// }
 
 @view.ui
-export default class Glint extends React.Component<Props> {
+export class Glint extends React.Component {
   static defaultProps = {
     color: [255, 255, 255, 0.09],
     size: 1,
   }
 
-  render({ className, attach, style }: Props) {
+  render({ className, attach, style }) {
     return <glint className={className} style={style} {...attach} />
   }
 

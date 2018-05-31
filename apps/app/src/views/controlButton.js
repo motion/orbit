@@ -12,7 +12,7 @@ const icons = {
 }
 
 @view
-export default class ControlButton {
+export class ControlButton {
   static defaultProps = {
     background: '#ED6A5F',
     borderWidth: 0.5,

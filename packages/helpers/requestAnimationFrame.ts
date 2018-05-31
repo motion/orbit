@@ -1,7 +1,6 @@
-import global from 'global'
+import root from 'global'
 
-const ogRequestAnimationFrame =
-  global.requestAnimationFrame || global.setInterval
+const ogRequestAnimationFrame = root.requestAnimationFrame || root.setInterval
 
 export default function requestAnimationFrame(
   givenCallback: Function,

@@ -1,41 +1,17 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { object } from 'prop-types'
-import Surface from '../surface'
+import { Surface } from '../surface'
+import { UIContext } from '../contexts'
 
 const resolveFormValues = obj =>
   Object.keys(obj).reduce(
     (acc, key) => ({ ...acc, [key]: obj[key] && obj[key]() }),
-    {}
+    {},
   )
 
-export default class Form extends React.Component {
-  static contextTypes = {
-    provided: object,
-  }
-  static childContextTypes = {
-    provided: object,
-  }
-
-  getChildContext() {
-    return {
-      provided: {
-        ...this.context.provided,
-        uiContext: {
-          inForm: true,
-          formValues: {},
-        },
-      },
-    }
-  }
-
-  render() {
-    return <FormInner {...this.props} />
-  }
-}
-
 @view.ui
-class FormInner extends React.Component {
+class FormPlain extends React.Component {
   static defaultProps = {
     onSubmit: _ => _,
   }
@@ -97,3 +73,14 @@ class FormInner extends React.Component {
     },
   }
 }
+
+export const Form = () => (
+  <UIContext.Provider
+    value={{
+      inForm: true,
+      formValues: {},
+    }}
+  >
+    <FormPlain {...this.props} />
+  </UIContext.Provider>
+)

@@ -7,7 +7,7 @@ import open from 'opn'
 const getAuthUrl = id => `${Constants.APP_URL}/auth?service=` + id
 
 @store
-export default class Auth {
+export class Auth {
   constructor() {
     Desktop.onMessage(Desktop.messages.OPEN_AUTH, type => {
       console.log('got message', type)

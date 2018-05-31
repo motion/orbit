@@ -2,23 +2,23 @@
   "name": "@mcro/reactron",
   "version": "1.5.1",
   "description": "React renderer for Electron apps",
-  "main": "es6/index.js",
+  "main": "_/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "build es6",
+    "build": "tsc",
     "watch": "npm run build -- --watch",
     "test": "electron lib/tests"
   },
   "peerDependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "electron": "*"
+    "electron": "*",
+    "react": "16.4.0",
+    "react-dom": "16.4.0"
   },
   "dependencies": {
-    "react-reconciler": "^0.7.0",
-    "fbjs": "^0.8.16",
+    "debug": "^3.1.0",
+    "fbjs": "0.8.16",
     "lodash.isequal": "^4.5.0",
-    "debug": "^3.1.0"
+    "react-reconciler": "0.11.0"
   },
   "publishConfig": {
     "access": "public"

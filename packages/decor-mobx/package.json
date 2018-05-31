@@ -1,0 +1,21 @@
+{
+  "name": "@mcro/decor-mobx",
+  "main": "_/decor-mobx.js",
+  "types": "decor-mobx.d.ts",
+  "version": "1.5.1",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch"
+  },
+  "dependencies": {
+    "@mcro/decor": "^1.5.1",
+    "@mcro/helpers": "^1.5.1",
+    "mobx-react": "^5.1.2"
+  },
+  "peerDependencies": {
+    "mobx": "^4.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,37 +1,35 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import inject from '../helpers/inject'
-import SizedSurface from '../sizedSurface'
-import Button from '../button'
-import Checkbox from './checkbox'
+import { SizedSurface } from '../sizedSurface'
+import { Button } from '../button'
+import { Checkbox } from './checkbox'
+import { UIContext } from '../contexts'
 
-type Props = {
-  uiContext: Object,
-  sync?: Object,
-  onEnter?: Function,
-  getRef?: Function,
-  type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password',
-  name?: string,
-  form?: Object,
-  elementProps?: Object,
-  onClick?: Function,
-}
+// type Props = {
+//   uiContext: Object,
+//   sync?: Object,
+//   onEnter?: Function,
+//   getRef?: Function,
+//   type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password',
+//   name?: string,
+//   form?: Object,
+//   elementProps?: Object,
+//   onClick?: Function,
+// }
 
 const TAG_MAP = {
   password: 'input',
 }
 
-@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Input extends React.PureComponent<Props> {
+class InputPlain extends React.PureComponent {
   static defaultProps = {
     size: 1,
     type: 'input',
     elementProps: {},
   }
 
-  node: ?HTMLInputElement = null
+  node = null
 
   componentDidMount() {
     this.setValues()
@@ -53,7 +51,7 @@ export default class Input extends React.PureComponent<Props> {
     }
   }
 
-  onNode = (node: ?HTMLInputElement) => {
+  onNode = node => {
     this.node = node
     if (this.props.getRef) {
       this.props.getRef(node)
@@ -122,6 +120,7 @@ export default class Input extends React.PureComponent<Props> {
         wrapElement
         tagName={TAG_MAP[type] || type}
         className="input"
+        tagName="input"
         name={name}
         type={type}
         elementProps={{
@@ -129,6 +128,7 @@ export default class Input extends React.PureComponent<Props> {
           onChange,
           style: {
             width: '100%',
+            pointerEvents: 'auto',
             padding: `0 ${10 * size}px`,
             ...style,
           },
@@ -140,3 +140,9 @@ export default class Input extends React.PureComponent<Props> {
     )
   }
 }
+
+export const Input = props => (
+  <UIContext.Consumer>
+    {uiContext => <InputPlain uiContext={uiContext} {...props} />}
+  </UIContext.Consumer>
+)

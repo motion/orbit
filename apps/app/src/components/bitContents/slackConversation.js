@@ -1,30 +1,56 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import BitSlackMessage from './slackMessage'
+import { BitSlackMessage } from './slackMessage'
 import * as UI from '@mcro/ui'
-import { RoundButton } from '~/views'
+import { RoundButton } from '~/views/roundButton'
 
 // const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
-const exampleTitles = [
-  `Context and TSNE`,
-  `Superhuman and funny`,
-  `Search and nlp`,
-  `Sketching and creatively`,
+const exampleContent = [
+  {
+    title: 'Steel, Jacob, Nick & 3 more',
+    preview: 'a16z, venture, Formidable, coffee',
+  },
+  {
+    title: 'Nate and Nick',
+    preview: 'cosal, sketchy, hardcode, spectrum, fit, scaling, overkill',
+  },
+  {
+    title: 'Kevin, Mehak & 4 more',
+    preview: 'ml, nlp, formidable, client',
+  },
+  {
+    title: 'Julie and Cam',
+    preview: '10%, 60-80k, rallyinteractive.com, re-sign, loan',
+  },
+  {
+    title: 'James, Jungwon and Evan',
+    preview: 'jitter, searches, peek, design',
+  },
+  {
+    title: 'Stephanie, Drew & 10 more',
+    preview: 'broke, docked, arrows, aligning',
+  },
+  {
+    title: 'Ben',
+    preview: 'related, conversations, glitches',
+  },
 ]
 const uids = {}
+let curId = 0
 
-@UI.injectTheme
 @view
-export default class BitSlackConversation {
+export class BitSlackConversation extends React.Component {
   static defaultProps = {
     shownLimit: 5,
   }
 
-  render({ children, bit, appStore, shownLimit, theme, contentStyle }) {
-    const uid = uids[bit.id] || Math.floor(Math.random() * exampleTitles.length)
+  render({ children, bit, appStore, shownLimit, contentStyle }) {
+    const uid = uids[bit.id] || curId++ % (exampleContent.length - 1)
     uids[bit.id] = uid
+    const { title, preview } = exampleContent[uid]
     return children({
-      title: exampleTitles[uid],
+      title,
+      preview,
       icon: 'slack',
       location: (
         <RoundButton
@@ -41,9 +67,8 @@ export default class BitSlackConversation {
         <UI.Button
           circular
           icon="link69"
-          color={theme.active.color}
           size={0.8}
-          opacity={0.6}
+          alpha={0.6}
           onClick={e => {
             e.stopPropagation()
             appStore.open(bit)
@@ -56,11 +81,7 @@ export default class BitSlackConversation {
         </UI.Text>
       ),
       bottomAfter: (
-        <row
-          if={bit.people && bit.people.length > 1}
-          $meta
-          css={{ color: theme.active.color }}
-        >
+        <row if={bit.people && bit.people.length > 1} $meta>
           {bit.people.length}
           &nbsp;
           <UI.Icon
@@ -71,8 +92,6 @@ export default class BitSlackConversation {
           />
         </row>
       ),
-      // via: bit.title,
-      preview: bit.body,
       content: (bit.data.messages || [])
         .slice(0, shownLimit)
         .map((message, index) => (

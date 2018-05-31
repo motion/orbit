@@ -1,20 +1,22 @@
 import 'source-map-support/register'
 import 'raf/polyfill'
 import '@mcro/debug/inject'
-import '@mcro/black/mlog'
+import '@mcro/black/mlog.js'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
-import { extras } from 'mobx'
 import waitPort from 'wait-port'
+import root from 'global'
+
+root.__dom = React.createElement
 
 require('module-alias').addAlias('~', __dirname + '/')
 
 // now stuff that uses relative paths
 require('./helpers/handlePromiseErrors')
 require('./helpers/updateChecker')
-const Electron = require('./Electron').default
+const { Electron } = require('./Electron')
 
 Error.stackTraceLimit = Infinity
 
@@ -30,14 +32,11 @@ process.stdin.resume()
 // do something when app is closing
 process.on('exit', exitHandler)
 process.on('SIGINT', () => exitHandler(0))
-process.on('SIGUSR1', exitHandler)
-process.on('SIGUSR2', exitHandler)
+process.on('SIGUSR1', () => exitHandler(0))
+process.on('SIGUSR2', () => exitHandler(0))
 process.on('uncaughtException', err => {
   console.log('uncaughtException', err.stack)
 })
-
-// share state because node loads multiple copies
-extras.shareGlobalState()
 
 let started = false
 
@@ -62,7 +61,7 @@ if (process.env.NODE_ENV === 'development') {
   const int = setInterval(async () => {
     const webRunning = await check(3002, '127.0.0.1')
     if (!webRunning && !shouldRestart) {
-      console.log('parcel down, will restart on next start')
+      console.log('app down, will restart on next app startup')
       shouldRestart = true
     }
     if (shouldRestart && webRunning) {

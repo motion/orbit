@@ -1,6 +1,6 @@
 // 🐛 note: dont import router or app here
 // it causes the entire app to be imported before boot
-import '@mcro/black/mlog'
+import '@mcro/black/mlog.js'
 import * as React from 'react'
 import * as Mobx from 'mobx'
 import * as MobxUtils from 'mobx-utils'
@@ -31,12 +31,14 @@ console.warn = function(...args) {
   return ogWarn.call(this, ...args)
 }
 
-Object.defineProperty(Object.prototype, 'toJS', {
-  enumerable: false,
-  value: function() {
-    return Mobx.toJS(this)
-  },
-})
+if (!Object.prototype.toJS) {
+  Object.defineProperty(Object.prototype, 'toJS', {
+    enumerable: false,
+    value: function() {
+      return Mobx.toJS(this)
+    },
+  })
+}
 
 // the heavy hitters
 window.React = React

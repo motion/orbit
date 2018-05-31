@@ -1,0 +1,32 @@
+{
+  "name": "@mcro/mobx-bridge",
+  "main": "_/bridge.js",
+  "version": "1.5.1",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@mcro/black": "*",
+    "@mcro/constants": "*",
+    "@mcro/debug": "*",
+    "@mcro/models": "*",
+    "html5-websocket": "^2.0.2",
+    "kill-port": "^1.1.0",
+    "lodash": "4.17.10",
+    "reconnecting-websocket": "^3.2.2",
+    "stringify-object": "^3.2.2",
+    "wait-port": "0.2.2",
+    "ws": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/reconnectingwebsocket": "^1.0.1",
+    "@types/ws": "^4.0.2"
+  },
+  "peerDependencies": {
+    "mobx": "*"
+  }
+}

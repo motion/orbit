@@ -4,20 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import * as _ from 'lodash'
-import peekPosition from './helpers/peekPosition'
-
-const findType = (integration, type, skip = 0) =>
-  Bit.findOne({
-    skip,
-    take: 1,
-    where: {
-      type,
-      integration,
-    },
-    relations: ['people'],
-    order: { bitCreatedAt: 'DESC' },
-  })
+import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -70,7 +57,7 @@ const matchSort = (query, results) => {
 const getResults = async query => {
   if (!query) {
     return await Bit.find({
-      take: 8,
+      take: 6,
       relations: ['people'],
       order: { bitCreatedAt: 'DESC' },
     })
@@ -80,7 +67,7 @@ const getResults = async query => {
     where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
     relations: ['people'],
     order: { bitCreatedAt: 'DESC' },
-    take: 8,
+    take: 6,
   })
 }
 
@@ -102,16 +89,16 @@ const parseQuery = query => {
       rest: query.replace(prefix, '').trim(),
       conditions: Object.keys(q).reduce(
         (query, key) => `${query} AND ${key} = "${q[key]}"`,
-        ``,
+        '',
       ),
     }
   }
   return { rest: query, conditions: '' }
 }
 
-export default class AppStore {
-  refreshInterval = Date.now()
-  activeIndex = -1
+export class AppStore {
+  nextIndex = -1
+  activeIndex = 0
   showSettings = false
   settings = {}
   services = {}
@@ -124,6 +111,15 @@ export default class AppStore {
     return App.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
   }
 
+  lastSelectedPane = ''
+
+  updateLastSelectedPane = react(
+    () => this.selectedPane,
+    val => {
+      this.lastSelectedPane = val
+    },
+  )
+
   get selectedPane() {
     if (App.orbitState.docked) {
       if (App.state.query) {
@@ -131,24 +127,19 @@ export default class AppStore {
       }
       return 'summary'
     }
-    if (Desktop.hoverState.peekHovered) {
-      return 'carousel'
-    }
     if (!App.orbitState.hidden) {
       if (App.state.query) {
         return 'context-search'
       }
       return 'context'
     }
+    return this.lastSelectedPane
   }
 
   async willMount() {
     this.updateScreenSize()
     this.getSettings()
     this.setInterval(this.getSettings, 2000)
-    this.setInterval(() => {
-      this.refreshInterval = Date.now()
-    }, 1000)
   }
 
   updateScreenSize() {
@@ -159,38 +150,48 @@ export default class AppStore {
     }, 1000)
   }
 
-  @react({ log: 'state' })
-  resetActiveIndexOnSearch = [
+  updateResults = react(
+    () => [Desktop.state.lastBitUpdatedAt, Desktop.searchState.pluginResultId],
+    () => {
+      if (this.searchState.results && this.searchState.results.length) {
+        throw react.cancel
+      }
+      return Math.random()
+    },
+  )
+
+  resetActiveIndexOnSearch = react(
     () => App.state.query,
     () => {
       this.activeIndex = 0
       App.clearPeek()
     },
-  ]
+    { log: 'state' },
+  )
 
   bitResultsId = 0
-  @react({
-    fireImmediately: true,
-    defaultValue: [],
-    onlyUpdateIfChanged: true,
-    log: false,
-  })
-  bitResults = [
-    () => [App.state.query, Desktop.appState.id, this.refreshInterval],
+  bitResults = react(
+    () => [
+      App.state.query,
+      Desktop.appState.id,
+      Desktop.state.lastBitUpdatedAt,
+    ],
     async ([query], { sleep }) => {
       // debounce enough for medium-speed typer
       await sleep(120)
       const results = await getResults(query)
-      this.bitResultsId = (this.bitResultsId + 1) % Number.MAX_VALUE
+      this.bitResultsId = Math.random()
       return results
     },
-  ]
+    {
+      immediate: true,
+      defaultValue: [],
+      onlyUpdateIfChanged: true,
+      log: false,
+    },
+  )
 
-  @react({
-    fireImmediately: true,
-    defaultValue: [],
-  })
-  contextResults = [
+  contextResults = react(
     () => 0,
     async () => {
       return await Bit.find({
@@ -199,17 +200,24 @@ export default class AppStore {
         order: { bitCreatedAt: 'DESC' },
       })
     },
-  ]
+    {
+      immediate: true,
+      defaultValue: [],
+    },
+  )
 
-  @react({ log: false, delay: 32 })
-  selectedBit = [
+  selectedBit = react(
     () => App.peekState.bit,
     async bit => {
       if (!bit) {
         return null
       }
+      console.log('selectedBit', bit.type)
       if (bit.type === 'person') {
         return await Person.findOne({ id: bit.id })
+      }
+      if (bit.type === 'setting') {
+        return bit
       }
       const res = await Bit.findOne({
         where: {
@@ -219,29 +227,31 @@ export default class AppStore {
       })
       return res
     },
-  ]
+    { log: false, delay: 32 },
+  )
 
   get results() {
-    if (this.selectedPane === 'summary') {
-      return this.summaryResults
+    if (this.selectedPane.indexOf('-search') > 0) {
+      return this.searchState.results
+    }
+    if (this.getResults) {
+      return this.getResults()
     }
     return this.searchState.results || []
   }
 
-  @react({
-    defaultValue: { results: [], query: '' },
-    fireImmediately: true,
-    log: false,
-  })
-  searchState = [
-    () => [App.state.query, this.getResults],
-    async ([query, getResults], { sleep, when }) => {
+  searchState = react(
+    () => [App.state.query, this.getResults, this.updateResults],
+    async ([query, thisGetResults], { when }) => {
+      if (!query) {
+        return { query, results: [] }
+      }
       // these are all specialized searches, see below for main search logic
-      if (getResults && this.showSettings) {
+      if (thisGetResults && this.showSettings) {
         return {
           query,
           message: 'Settings',
-          results: Helpers.fuzzy(query, getResults()),
+          results: Helpers.fuzzy(query, thisGetResults()),
         }
       }
       let results
@@ -272,8 +282,13 @@ export default class AppStore {
         const pluginResultId = Desktop.searchState.pluginResultsId
         const bitResultsId = this.bitResultsId
         // no jitter - wait for everything to finish
+        let howfar = 0
+        let toolong = setTimeout(() => console.log('took long: ', howfar), 1000)
         await when(() => pluginResultId !== Desktop.searchState.pluginResultId)
+        howfar++
         await when(() => bitResultsId !== this.bitResultsId)
+        howfar++
+        clearTimeout(toolong)
         const allResultsUnsorted = [
           ...this.bitResults,
           ...Desktop.searchState.pluginResults,
@@ -289,128 +304,77 @@ export default class AppStore {
         results,
       }
     },
-  ]
-
-  @react({
-    defaultValue: [],
-  })
-  summaryResults = async () => {
-    return (await Promise.all([
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation', 1),
-      findType('slack', 'conversation', 2),
-      findType('google', 'document'),
-      findType('google', 'mail'),
-      findType('google', 'mail', 1),
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation'),
-      findType('slack', 'conversation'),
-    ])).filter(Boolean)
-  }
-
-  setResultRef = _.memoize(index => ref => {
-    this.resultRefs[index] = ref
-  })
-
-  setDockedResultRef = _.memoize(index => ref => {
-    this.dockedResultRefs[index] = ref
-  })
-
-  getTargetPosition = index => {
-    if (index === -1) {
-      return null
-    }
-    const ref = App.orbitState.docked
-      ? this.dockedResultRefs[index]
-      : this.resultRefs[index]
-    if (!ref) {
-      throw `no result ref for index ${index} docked? ${App.orbitState.docked}`
-    }
-    const { top, left, height } = ref.getBoundingClientRect()
-    return {
-      top,
-      left: left,
-      width: App.orbitState.size[0],
-      height,
-    }
-  }
+    {
+      defaultValue: { results: [], query: '' },
+      immediate: true,
+      log: false,
+    },
+  )
 
   clearSelected = () => {
-    if (!App.isMouseInActiveArea) {
-      App.clearPeek()
-    }
+    App.clearPeek()
   }
 
   lastSelectAt = 0
 
-  setActive = index => {
-    if (index !== this.activeIndex) {
-      this.lastSelectAt = Date.now()
-      this.activeIndex = index
-    }
-  }
+  hoverOutTm = 0
+  getHoverSettler = Helpers.hoverSettler({
+    enterDelay: 80,
+    betweenDelay: 30,
+    onHovered: res => {
+      clearTimeout(this.hoverOutTm)
+      if (!res) {
+        log('should clear peek')
+        // interval because hoversettler is confused when going back from peek
+        // this.hoverOutTm = setInterval(() => {
+        //   if (!Desktop.hoverState.peekHovered) {
+        //     log(`no target`)
+        //     this.clearSelected()
+        //   }
+        // }, 200)
+        return
+      }
+      this.toggleSelected(res.index)
+    },
+  })
 
-  toggleSelected = (index, bit) => {
+  toggleSelected = index => {
     const isSame = this.activeIndex === index
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks
-        return
+        return isSame
       }
       App.clearPeek()
     } else {
-      this.pinSelected(index, bit)
+      this.nextIndex = index
     }
+    return false
   }
 
-  pinSelected = (index, setBit) => {
-    const bit = setBit || this.results[index]
-    this.setActive(index)
-    const target = this.getTargetPosition(index)
-    const position = peekPosition(target)
-    App.setPeekState({
-      id: Math.random(),
-      target,
-      bit: this.getPeekItem(bit),
-      ...position,
-    })
+  setTarget = (item, target) => {
+    OrbitHelpers.setPeekTarget(item, target)
+    if (this.nextIndex !== this.activeIndex) {
+      this.lastSelectAt = Date.now()
+      this.activeIndex = this.nextIndex
+    }
   }
 
   setGetResults = fn => {
     this.getResults = fn
   }
 
-  getHoverProps = Helpers.hoverSettler({
-    enterDelay: 80,
-    betweenDelay: 30,
-    onHovered: res => {
-      if (!res) {
-        this.clearSelected()
-      } else {
-        this.pinSelected(res.id, res.bit)
-      }
-    },
-  })
-
-  @react.if
-  hoverWordToActiveIndex = [
+  hoverWordToActiveIndex = react(
     () => App.state.hoveredWord,
-    word => this.pinSelected(word.index),
-  ]
+    word => word && this.pinSelected(word.index),
+  )
 
   getPeekItem = item => {
     if (!item) {
       console.log('none found')
       return null
     }
-    return {
-      id: item.id || '',
-      icon: item.icon || '',
-      title: item.title || '',
-      body: item.body || '',
-      type: item.type || '',
-      integration: item.integration || '',
-    }
+    return
   }
 
   getSettings = async () => {

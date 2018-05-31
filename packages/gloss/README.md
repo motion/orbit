@@ -10,14 +10,12 @@ full-featured example:
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Gloss, { color as $, Theme, ThemeProvide } from '@mcro/gloss'
-import type { Color } from '@mcro/gloss'
 import Icon from './icon'
 import Popover from './popover'
 
 const LINE_HEIGHT = 30
 
 const { decorator } = new Gloss({
-  themeProp: 'theme',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,
   toColor: color => color.toString(),
@@ -29,7 +27,7 @@ ReactDOM.render(
       <Surface icon="name" />
     </Theme>
   </ThemeProvide>,
-  document.querySelector('#app')
+  document.querySelector('#app'),
 )
 
 @decorator
@@ -217,7 +215,9 @@ export default class Surface implements ViewType<Props> {
     const padding =
       typeof props.padding !== 'undefined'
         ? props.padding
-        : props.wrapElement ? 0 : [0, height / 4]
+        : props.wrapElement
+          ? 0
+          : [0, height / 4]
     const fontSize = props.fontSize || height * 0.5
     const flex = props.flex === true ? 1 : props.flex
 
@@ -235,7 +235,9 @@ export default class Surface implements ViewType<Props> {
     const borderColor = props.borderColor || theme.base.borderColor
     const color = props.highlight
       ? props.highlightColor || theme.highlight.color || props.color
-      : props.active ? theme.active.color : props.color || theme.base.color
+      : props.active
+        ? theme.active.color
+        : props.color || theme.base.color
     const hoverColor =
       (props.highlight && $(color).lighten(0.2)) ||
       props.hoverColor ||

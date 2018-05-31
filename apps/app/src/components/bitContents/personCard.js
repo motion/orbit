@@ -3,9 +3,10 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 @view
-export default class BitSlackConversation {
+export class PersonCard {
   render({ children, bit }) {
     return children({
+      // preview: bit.data.profile.email,
       preview: (
         <test>
           <img $avatar src={bit.data.profile.image_512} />

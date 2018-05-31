@@ -1,15 +1,21 @@
 {
   "env": {
     "development": {
-      "presets": [["@mcro/babel-preset-motion"]]
+      "presets": [
+        [
+          "@mcro/babel-preset-motion",
+          {
+            "disable": ["react-hot-loader/babel"]
+          }
+        ]
+      ]
     },
     "es6": {
       "presets": [
         [
           "@mcro/babel-preset-motion",
           {
-            "nodeTarget": 8,
-            "disable": ["@mcro/gloss/transform", "@mcro/hmr", "@mcro/hmr-view"]
+            "disable": ["@mcro/gloss/transform", "react-hot-loader/babel"]
           }
         ]
       ]
@@ -19,7 +25,7 @@
         [
           "@mcro/babel-preset-motion",
           {
-            "disable": ["@mcro/hmr", "@mcro/hmr-view"]
+            "disable": ["react-hot-loader/babel"]
           }
         ]
       ]

@@ -6,7 +6,7 @@ import { Thing } from '~/app'
 // import * as BannerStore from '~/stores/oraBannerStore'
 
 @store
-export default class Crawler {
+export class Crawler {
   results = null
   settings = null
   status = null

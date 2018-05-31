@@ -1,6 +1,6 @@
-import Bridge from './helpers/Bridge'
-import { setGlobal, proxySetters } from './helpers'
-import { store, react } from '@mcro/black/store'
+import Bridge, { proxySetters } from '@mcro/mobx-bridge'
+import { setGlobal } from './helpers'
+import { store, react, deep } from '@mcro/black/store'
 import { DesktopState } from './types'
 
 export let Desktop
@@ -15,6 +15,7 @@ class DesktopStore {
     OPEN_AUTH: 'OPEN_AUTH',
     CLOSE_AUTH: 'CLOSE_AUTH',
     OPEN: 'OPEN',
+    CLEAR_OPTION: 'CLEAR_OPTION',
   }
 
   setState: typeof Bridge.setState
@@ -22,7 +23,7 @@ class DesktopStore {
   onMessage = Bridge.onMessage
   source = 'Desktop'
 
-  state: DesktopState = {
+  state: DesktopState = deep({
     screenSize: [0, 0],
     appState: {
       selectedText: '',
@@ -43,7 +44,12 @@ class DesktopStore {
       searchResults: [],
       pluginResults: [],
     },
-    keyboardState: {},
+    keyboardState: {
+      option: 0,
+      optionUp: 1,
+      space: 0,
+      shiftUp: 0,
+    },
     hoverState: {
       orbitHovered: false,
       peekHovered: false,
@@ -54,22 +60,26 @@ class DesktopStore {
     paused: true,
     focusedOnOrbit: true,
     appStateUpdatedAt: Date.now(),
+    lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
-  }
+  })
 
   results = []
 
-  @react({ log: false })
-  memoizedResults = [
+  memoizedResults = react(
     () => [
       ...Desktop.searchState.searchResults,
       ...Desktop.searchState.pluginResults,
     ],
     x => (this.results = x),
-  ]
+    { log: false },
+  )
 
   get isHoldingOption(): Boolean {
+    if (Desktop.mouseState.mouseDown) {
+      return false
+    }
     const { option, optionUp } = Desktop.state.keyboardState
     return (option || 0) > (optionUp || 1)
   }
@@ -117,9 +127,6 @@ class DesktopStore {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
   }
-
-  // only clear if necessary
-  clearOption = () => Desktop.setKeyboardState({ optionUp: Date.now() })
 }
 
 Desktop = proxySetters(new DesktopStore())

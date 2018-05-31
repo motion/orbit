@@ -1,22 +1,20 @@
 {
   "name": "@mcro/automagical",
-  "main": "_/index.js",
-  "module": "_/index.js",
-  "module:production": "dist/index.js",
+  "main": "_/automagical.js",
   "version": "1.5.1",
   "scripts": {
     "build": "tsc",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mcro/helpers": "*",
     "@mcro/debug": "*",
+    "@mcro/helpers": "*",
     "@types/webpack-env": "*",
-    "global": "^4.3.2",
-    "mobx-utils": "^3.2.1"
+    "global": "^4.3.2"
   },
   "peerDependencies": {
-    "mobx": "^3.5.0"
+    "mobx-utils": "^4.0.1",
+    "mobx": "^4.3.0"
   },
   "publishConfig": {
     "access": "public"

@@ -2,16 +2,15 @@ import { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactDom from 'react-dom'
 
-window.ReactDom = ReactDom
-
 const useCreatePortal = typeof ReactDom.createPortal === 'function'
 
-export default class Portal extends Component {
+export class Portal extends Component {
   static propTypes = {
     children: PropTypes.node,
   }
 
-  componentWillMount() {
+  constructor(a, b) {
+    super(a, b)
     this.popup = document.createElement('div')
     document.body.appendChild(this.popup)
     this.renderLayer()
@@ -33,7 +32,7 @@ export default class Portal extends Component {
       ReactDom.unstable_renderSubtreeIntoContainer(
         this,
         this.props.children,
-        this.popup
+        this.popup,
       )
     }
   }

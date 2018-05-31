@@ -1,18 +1,16 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import Portal from './helpers/portal'
+import { Portal } from './helpers/portal'
 
 @view.ui
-export default class Modal {
+export class Modal extends React.Component {
   render() {
     const { portalProps, bgProps, children, ...props } = this.props
 
     return (
       <Portal {...portalProps}>
         <bg {...bgProps}>
-          <modal {...props}>
-            {children}
-          </modal>
+          <modal {...props}>{children}</modal>
         </bg>
       </Portal>
     )

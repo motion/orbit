@@ -172,7 +172,7 @@ export default class GoogleDriveSync {
     ids: Array<string>,
     fileQuery?: Object,
   ): Promise<Array<any>> {
-    return new Promise(async (res, rej) => {
+    return new Promise(async res => {
       const timeout = setTimeout(() => {
         console.log('timeout getting all files')
         res(ids.map(() => null))
@@ -258,7 +258,7 @@ export default class GoogleDriveSync {
   }
 
   getFileContents(id: string) {
-    return new Promise(async (res, rej) => {
+    return new Promise(async res => {
       const timeout = setTimeout(() => {
         console.log('timeout getting file contents', id)
         res(null)

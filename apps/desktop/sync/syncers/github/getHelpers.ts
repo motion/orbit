@@ -1,5 +1,10 @@
 const allSyncs = {}
 
+export const objectToQS = obj =>
+  Object.entries(obj)
+    .map(pair => pair.map(encodeURIComponent).join('='))
+    .join('&')
+
 export default setting => ({
   fetchHeaders(uri: string, extraHeaders: Object = {}) {
     const lastSync = setting.values.lastSyncs[uri]
@@ -16,7 +21,7 @@ export default setting => ({
     // @ts-ignore
     return new Headers(extraHeaders)
   },
-  async fetch(path: string, options: Object = {}) {
+  async fetch(path: string, options: any = {}) {
     if (!this.token) {
       console.log('no App.sync.github.feed.token')
       return null
@@ -26,7 +31,7 @@ export default setting => ({
     // setup options
     const syncDate = Date.now()
     const requestSearch = new URLSearchParams(
-      Object.entries({ ...search, access_token: this.token }),
+      objectToQS({ ...search, access_token: this.token }),
     )
     const uri = `https://api.github.com${path}?${requestSearch.toString()}`
     // ensure lastsyncs
@@ -57,7 +62,7 @@ export default setting => ({
   epochToGMTDate: (epochDate: number | string): string => {
     const date = new Date(0)
     date.setUTCSeconds(+epochDate)
-    return date.toGMTString()
+    return date.toUTCString()
   },
   async writeLastSyncs(lastSyncs = allSyncs) {
     setting.values = {

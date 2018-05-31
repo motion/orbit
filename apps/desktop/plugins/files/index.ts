@@ -9,10 +9,7 @@ const readDir = path =>
 
 const DIR_REGEXP = /^([a-z]:)?[\\/](.*[\\/])*(.*)/i
 const HOME_DIR_REGEXP = /^~/
-const USER_PATH = os
-  .homedir()
-  .trim('/')
-  .trim('\\')
+const USER_PATH = os.homedir()
 
 const ignoreFile = fileName => fileName.match(/^\./)
 

@@ -4,7 +4,7 @@ import { Helpers } from '@mcro/all'
 import { LINE_Y_ADJ, TOP_BAR_PAD } from './helpers'
 
 @view
-export default class OCRLine {
+export class OCRLine {
   render({ item, store: { hoveredLine } }) {
     const [x, y, width, height] = item
     const key = Helpers.wordKey(item)

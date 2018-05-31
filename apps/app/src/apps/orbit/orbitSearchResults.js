@@ -1,55 +1,59 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
-import OrbitCard from './orbitCard'
+import { view, react } from '@mcro/black'
 import { App } from '@mcro/all'
-import * as UI from '@mcro/ui'
+import { OrbitCard } from './orbitCard'
+import { OrbitDockedPane } from './orbitDockedPane'
 
-@UI.injectTheme
+class SearchStore {
+  state = react(
+    () => this.props.appStore.searchState,
+    state => {
+      if (this.props.appStore.selectedPane !== this.props.name) {
+        throw react.cancel
+      }
+      return state
+    },
+    { immediate: true },
+  )
+
+  hasQuery() {
+    return !!App.state.query
+  }
+}
+
 @view.attach('appStore')
-@view
-export default class OrbitSearchResults {
-  render({ appStore, theme, parentPane }) {
-    const pane = `${parentPane}-search`
-    const { query, results, message } = appStore.searchState
-    const hasQuery = !!App.state.query
-    // prevent renders when searching in other pane
-    if (appStore.selectedPane !== pane && hasQuery) {
+@view({
+  searchStore: SearchStore,
+})
+export class OrbitSearchResults {
+  render({ searchStore, name }) {
+    if (!searchStore.state) {
       return null
     }
+    const { query, results, message } = searchStore.state
     const isChanging = App.state.query !== query
+    log(`SEARCH ${name} --------------`)
     return (
-      <orbitSearchResults
-        css={{
-          background: theme.base.background,
-          opacity: hasQuery ? 1 : 0,
-          pointerEvents: !hasQuery ? 'none' : 'auto',
-          zIndex: !hasQuery ? -1 : 10000,
-        }}
-        $visible={hasQuery}
-        $isChanging={isChanging}
-      >
-        <message if={message}>{message}</message>
-        <results
-          if={results.length}
-          css={{
-            opacity: !isChanging ? 1 : 0.5,
-          }}
-        >
-          {results.map((bit, index) => (
-            <OrbitCard
-              pane={pane}
-              key={`${index}${bit.identifier || bit.id}`}
-              index={index}
-              total={results.length}
-              bit={bit}
-              listItem
-              expanded={false}
-              hoverToSelect
-            />
-          ))}
-        </results>
-        <space css={{ height: 20 }} />
-      </orbitSearchResults>
+      <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
+        <contents $$flex $isChanging={isChanging}>
+          <message if={message}>{message}</message>
+          <results if={results.length}>
+            {results.map((bit, index) => (
+              <OrbitCard
+                pane={name}
+                key={`${index}${bit.identifier || bit.id}`}
+                index={index}
+                total={results.length}
+                bit={bit}
+                listItem
+                expanded={false}
+                hoverToSelect
+              />
+            ))}
+          </results>
+          <space css={{ height: 20 }} />
+        </contents>
+      </OrbitDockedPane>
     )
   }
 

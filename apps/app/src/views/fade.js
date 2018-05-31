@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export default class Fade extends React.Component {
+export class Fade extends React.Component {
   state = {
     isEntering: this.props.isActive,
     isActive: false,
@@ -20,13 +20,6 @@ export default class Fade extends React.Component {
     const movingBack = previousIndex > currentIndex
     const movingForward = previousIndex < currentIndex
     const x = (index - currentIndex) * width / 5
-
-    // console.log(
-    //   'Fade:',
-    //   index,
-    //   x,
-    //   movingBack ? 'BACK' : movingForward ? 'FORWARD' : ''
-    // )
 
     return (
       <fade

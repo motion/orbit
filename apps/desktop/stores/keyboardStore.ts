@@ -1,6 +1,6 @@
 import { store, react, isEqual } from '@mcro/black/store'
 import iohook from 'iohook'
-import { Desktop, App, Electron } from '@mcro/all'
+import { Desktop, App } from '@mcro/all'
 // import debug from '@mcro/debug'
 // const log = debug('KeyboardStore')
 
@@ -29,7 +29,7 @@ const DOUBLE_TAP_OPTION = [
 let lastKeys = []
 
 @store
-export default class KeyboardStore {
+export class KeyboardStore {
   // this is imperfect, iohook doesn't always match events perfectly
   // so in cases of errors, we clear it after a little delay
   keysDown = new Set()
@@ -38,13 +38,17 @@ export default class KeyboardStore {
 
   constructor(opts: { onKeyClear?: Function } = {}) {
     this.onKeyClear = opts.onKeyClear
+    Desktop.onMessage(Desktop.messages.CLEAR_OPTION, this.clearOption)
+  }
+
+  clearOption = () => {
+    Desktop.setKeyboardState({ optionUp: Date.now() })
   }
 
   key = null
   keyAt = 0
 
-  @react({ log: false })
-  onKey = [
+  onKey = react(
     () => [this.key, this.keyAt],
     ([keycode]) => {
       this.clearDownKeysAfterPause()
@@ -59,6 +63,9 @@ export default class KeyboardStore {
         if (!App.orbitState.docked && !App.isMouseInActiveArea) {
           return
         }
+        if (App.orbitState.docked && !Desktop.state.focusedOnOrbit) {
+          return
+        }
         Desktop.sendMessage(App, App.messages.HIDE)
         return
       }
@@ -67,7 +74,7 @@ export default class KeyboardStore {
       const holdingKeys = this.keysDown.size
       // clears:
       if (holdingKeys > 1 && isOption) {
-        return Desktop.clearOption()
+        return this.clearOption()
       }
       const isHoldingOption = this.keysDown.has(codes.option)
       // holding option + press key === pin
@@ -78,10 +85,11 @@ export default class KeyboardStore {
         }
       }
       if (isOption) {
+        console.log('setting it up')
         return Desktop.setKeyboardState({ option: Date.now() })
       }
       if (this.keysDown.has(codes.option)) {
-        return Desktop.clearOption()
+        return this.clearOption()
       }
       switch (keycode) {
         // case codes.shift:
@@ -97,7 +105,8 @@ export default class KeyboardStore {
           }
       }
     },
-  ]
+    { log: false },
+  )
 
   keyDown = keycode => {
     this.key = keycode
@@ -129,7 +138,7 @@ export default class KeyboardStore {
         //   Desktop.setKeyboardState({ shiftUp: Date.now() })
         //   break
         case codes.option:
-          Desktop.clearOption()
+          this.clearOption()
           break
         // case codes.space:
         //   Desktop.setKeyboardState({ spaceUp: Date.now() })

@@ -1,32 +1,28 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Button from './button'
-import { Provider } from '@mcro/react-tunnel'
-import inject from './helpers/inject'
-import type { Color } from '@mcro/gloss'
-import Surface from './surface'
+import { Button } from './button'
+import { Surface } from './surface'
+import { UIContext } from './contexts'
 
-type Props = {
-  active?: number,
-  defaultActive?: number,
-  controlled?: boolean,
-  items: Array<React.Element<any> | Object>,
-  children: React.Element<any>,
-  label: React.Element<any>,
-  onChange?: Function,
-  onlyIcons?: boolean,
-  stretch?: boolean,
-  sync?: { get(): number, set(value: number): void },
-  color: Color,
-  uiContext?: Object,
-  itemProps?: Object,
-  spaced?: boolean,
-}
+// type Props = {
+//   active?: number,
+//   defaultActive?: number,
+//   controlled?: boolean,
+//   items: Array<React.Element<any> | Object>,
+//   children: React.Element<any>,
+//   label: React.Element<any>,
+//   onChange?: Function,
+//   onlyIcons?: boolean,
+//   stretch?: boolean,
+//   sync?: { get(): number, set(value: number): void },
+//   color: Color,
+//   uiContext?: Object,
+//   itemProps?: Object,
+//   spaced?: boolean,
+// }
 
-@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Row extends React.Component<Props> {
+class RowPlain extends React.Component {
   state = {
     active: null,
   }
@@ -38,7 +34,7 @@ export default class Row extends React.Component<Props> {
     }
   }
 
-  get active(): number {
+  get active() {
     const hasState = this.state.active !== null
     if (this.props.sync) {
       return this.props.sync.get()
@@ -62,11 +58,11 @@ export default class Row extends React.Component<Props> {
     itemProps: itemProps_,
     spaced,
     ...props
-  }: Props) {
+  }) {
     let itemProps = itemProps_
     let children = children_
     const ACTIVE = typeof active === 'undefined' ? this.active : active
-    const getContext = (index: number, length: number) =>
+    const getContext = (index, length) =>
       spaced
         ? {}
         : {
@@ -102,9 +98,9 @@ export default class Row extends React.Component<Props> {
             typeof child === 'string' ? <span>{child}</span> : child
 
           return (
-            <Provider
+            <UIContext.Provider
               key={index}
-              provide={getContext(index, realChildren.length)}
+              value={getContext(index, realChildren.length)}
             >
               {itemProps
                 ? React.cloneElement(finalChild, {
@@ -112,7 +108,7 @@ export default class Row extends React.Component<Props> {
                     ...finalChild.props,
                   }) /* merge child props so they can override */
                 : finalChild}
-            </Provider>
+            </UIContext.Provider>
           )
         })
         .filter(Boolean)
@@ -185,3 +181,9 @@ export default class Row extends React.Component<Props> {
     },
   })
 }
+
+export const Row = props => (
+  <UIContext.Consumer>
+    {uiContext => <RowPlain uiContext={uiContext} {...props} />}
+  </UIContext.Consumer>
+)

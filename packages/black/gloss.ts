@@ -4,7 +4,6 @@ import baseStyles from './baseStyles'
 const gloss = new Gloss({
   baseStyles,
   glossProp: 'css',
-  themeProp: 'theme',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,
   toColor: obj => {
@@ -30,5 +29,5 @@ const gloss = new Gloss({
   },
 })
 
-export default gloss
 export const { decorator, createElement } = gloss
+export default gloss

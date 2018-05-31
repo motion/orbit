@@ -12,13 +12,13 @@
     "@mcro/black": "*",
     "@mcro/debug": "*",
     "global": "^4.3.2",
+    "lodash": "4.17.10",
+    "octokat": "0.10.0",
     "reflect-metadata": "^0.1.12",
-    "lodash": "^4.17.4",
-    "slack": "^11.0.0",
-    "octokat": "0.10.0"
+    "slack": "^11.0.0"
   },
   "peerDependencies": {
-    "typeorm": "*",
-    "mobx": "*"
+    "mobx": "*",
+    "typeorm": "*"
   }
 }

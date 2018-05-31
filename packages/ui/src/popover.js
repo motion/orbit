@@ -1,65 +1,64 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import getTarget from './helpers/getTarget'
-import Portal from './helpers/portal'
+import { getTarget } from './helpers/getTarget'
+import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
-import Arrow from './arrow'
-import SizedSurface from './sizedSurface'
-import Theme from './helpers/theme'
+import { Arrow } from './arrow'
+import { SizedSurface } from './sizedSurface'
 import * as PropTypes from 'prop-types'
+import isEqual from 'react-fast-compare'
 
-export type Props = {
-  // can pass function to get isOpen passed in
-  children?: React.Element<any> | Function,
-  // element or function that returns element, or querySelector to element
-  target?: React.Element<any> | (() => React.Element<any>) | string,
-  open?: boolean,
-  // the amount of space around popover you can move mouse
-  // before it triggers it to close
-  forgiveness: number,
-  // show a background over content
-  overlay?: boolean,
-  left?: number,
-  top?: number,
-  // the distance the popover is from the target
-  // so it displays nicely spaced away
-  distance: number,
-  // open when target is clicked
-  openOnClick?: boolean,
-  // open automatically when target is hovered
-  openOnHover?: boolean,
-  // delay until openOnHover
-  delay: number,
-  // prevent popover itself from catching pointer events
-  noHover?: boolean,
-  // size of shown arrow
-  arrowSize?: number,
-  closeOnClick?: boolean,
-  closeOnEsc?: boolean,
-  // which direction it shows towards
-  // default determine direction automatically
-  towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
-  padding?: Array | number,
-  onMouseEnter?: Function,
-  onMouseLeave?: Function,
-  onClose?: Function,
-  animation?: string,
-  // lets you adjust position after target is positioned
-  adjust?: Array,
-  // hide arrow
-  noArrow?: boolean,
-  // DEBUG: helps you see forgiveness zone
-  showForgiveness?: boolean,
-  // padding from edge of window
-  edgePadding: number,
-  // pretty much what it says, for use with closeOnClick
-  keepOpenOnClickTarget?: boolean,
-  // callback after close
-  onDidClose?: Function,
-  // callback after open
-  onDidOpen?: Function,
-}
+// export type Props = {
+//   // can pass function to get isOpen passed in
+//   children?: React.Element<any> | Function,
+//   // element or function that returns element, or querySelector to element
+//   target?: React.Element<any> | (() => React.Element<any>) | string,
+//   open?: boolean,
+//   // the amount of space around popover you can move mouse
+//   // before it triggers it to close
+//   forgiveness: number,
+//   // show a background over content
+//   overlay?: boolean,
+//   left?: number,
+//   top?: number,
+//   // the distance the popover is from the target
+//   // so it displays nicely spaced away
+//   distance: number,
+//   // open when target is clicked
+//   openOnClick?: boolean,
+//   // open automatically when target is hovered
+//   openOnHover?: boolean,
+//   // delay until openOnHover
+//   delay: number,
+//   // prevent popover itself from catching pointer events
+//   noHover?: boolean,
+//   // size of shown arrow
+//   arrowSize?: number,
+//   closeOnClick?: boolean,
+//   closeOnEsc?: boolean,
+//   // which direction it shows towards
+//   // default determine direction automatically
+//   towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
+//   padding?: Array | number,
+//   onMouseEnter?: Function,
+//   onMouseLeave?: Function,
+//   onClose?: Function,
+//   animation?: string,
+//   // lets you adjust position after target is positioned
+//   adjust?: Array,
+//   // hide arrow
+//   noArrow?: boolean,
+//   // DEBUG: helps you see forgiveness zone
+//   showForgiveness?: boolean,
+//   // padding from edge of window
+//   edgePadding: number,
+//   // pretty much what it says, for use with closeOnClick
+//   keepOpenOnClickTarget?: boolean,
+//   // callback after close
+//   onDidClose?: Function,
+//   // callback after open
+//   onDidOpen?: Function,
+// }
 
 const INVERSE = {
   top: 'bottom',
@@ -82,7 +81,7 @@ const getShadow = (shadow, elevation) => {
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @view.ui
-class Popover extends React.PureComponent<Props> {
+export class Popover extends React.PureComponent {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,
@@ -94,11 +93,11 @@ class Popover extends React.PureComponent<Props> {
     adjust: [0, 0],
     delay: 16,
   }
-  static contextTypes = {
-    uiThemes: PropTypes.object,
+
+  get curProps() {
+    return this.state.props
   }
 
-  curProps = {}
   popoverRef = null
   targetRef = null
 
@@ -119,28 +118,24 @@ class Popover extends React.PureComponent<Props> {
   // curProps is always up to date, so we dont have to thread props around a ton
   // also, nicely lets us define get fn helpers
 
-  componentWillMount() {
-    this.curProps = this.props
-  }
-
-  componentWillReceiveProps = nextProps => {
-    this.curProps = nextProps
-    this.setPosition()
-  }
-
-  componentWillUpdate = nextProps => {
-    this.setOpenOrClosed(nextProps)
-    this.setTarget()
+  static getDerivedStateFromProps(props, state) {
+    if (!isEqual(props, state.props)) {
+      return {
+        setPosition: true,
+        props,
+      }
+    }
+    return {
+      setPosition: false,
+    }
   }
 
   componentDidMount() {
     this.mounted = true
     const { openOnClick, closeOnClick, closeOnEsc, open } = this.curProps
-
     this.listenForResize()
     this.setTarget()
     this.listenForHover()
-
     if (openOnClick) {
       this.listenForClick()
     }
@@ -200,7 +195,7 @@ class Popover extends React.PureComponent<Props> {
     })
   }
 
-  close = (): Promise => {
+  close = () => {
     return new Promise(resolve => {
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {
@@ -210,7 +205,7 @@ class Popover extends React.PureComponent<Props> {
         this.closingTimeout = this.setTimeout(() => {
           this.setState(
             { closing: false, isOpen: false },
-            this.props.onDidClose
+            this.props.onDidClose,
           )
           resolve()
         }, 300)
@@ -272,7 +267,7 @@ class Popover extends React.PureComponent<Props> {
 
   clearHovered() {
     return new Promise(resolve =>
-      this.setState({ menuHovered: false, targetHovered: false }, resolve)
+      this.setState({ menuHovered: false, targetHovered: false }, resolve),
     )
   }
 
@@ -310,19 +305,16 @@ class Popover extends React.PureComponent<Props> {
     }
   }
 
-  setPosition(callback?: Function) {
+  setPosition(callback) {
     if (!this.popoverRef) {
       return
     }
-    clearTimeout(this.positionTimeout)
-    this.positionTimeout = this.setTimeout(() => {
-      if (!this.unmounted) {
-        this.setState(this.positionState, callback)
-      }
-    })
+    if (!this.unmounted) {
+      this.setState(this.positionState, callback)
+    }
   }
 
-  get forgiveness(): number {
+  get forgiveness() {
     return calcForgiveness(this.curProps.forgiveness, this.curProps.distance)
   }
 
@@ -341,11 +333,9 @@ class Popover extends React.PureComponent<Props> {
 
   get targetBounds() {
     const { top, left } = this.curProps
-    const bounds = {}
+    const bounds = { top: 0, left: 0, width: 0, height: 0 }
     // find target dimensions
     if (this.isManuallyPositioned) {
-      bounds.width = 0
-      bounds.height = 0
       bounds.left = left
       bounds.top = top
     } else {
@@ -376,7 +366,7 @@ class Popover extends React.PureComponent<Props> {
         'target:',
         this.target,
         'this.props:',
-        this.props
+        this.props,
       )
       return {}
     }
@@ -393,7 +383,7 @@ class Popover extends React.PureComponent<Props> {
   get direction() {
     const { forgiveness, popoverSize, targetBounds } = this
     const { towards } = this.curProps
-    if (towards !== 'auto') {
+    if (!targetBounds || towards !== 'auto') {
       return towards
     }
     const popoverY = popoverSize.height + forgiveness
@@ -407,15 +397,17 @@ class Popover extends React.PureComponent<Props> {
       // upper limit
       windowSize - this.curProps.edgePadding - popoverSize,
       // lower limit
-      Math.max(this.curProps.edgePadding, currentPosition)
+      Math.max(this.curProps.edgePadding, currentPosition),
     )
   }
 
   get x() {
     const { direction, popoverSize, targetBounds } = this
+    if (!targetBounds) {
+      return 0
+    }
     const VERTICAL = direction === 'top' || direction === 'bottom'
     const { adjust, distance, arrowSize, forgiveness } = this.curProps
-
     // measurements
     const popoverHalfWidth = popoverSize.width / 2
     const targetCenter = targetBounds.left + targetBounds.width / 2
@@ -423,16 +415,14 @@ class Popover extends React.PureComponent<Props> {
 
     let left
     let arrowLeft = 0 // defaults to 0
-
     // auto for now will just be top/bottom
     // in future it needs to measure target and then determine
     if (VERTICAL) {
       left = this.edgePad(
         targetCenter - popoverHalfWidth,
         window.innerWidth,
-        popoverSize.width
+        popoverSize.width,
       )
-
       // arrow
       if (targetCenter < popoverHalfWidth) {
         // ON LEFT SIDE
@@ -443,13 +433,11 @@ class Popover extends React.PureComponent<Props> {
         const edgeAdjustment = window.innerWidth - (left + popoverSize.width)
         arrowLeft = targetCenter - arrowCenter + edgeAdjustment
       }
-
       // arrowLeft bounds
       const max = Math.max(0, popoverHalfWidth - arrowSize * 0.75)
       const min = -popoverHalfWidth + arrowSize * 0.5 + distance
       arrowLeft = Math.max(min, Math.min(max, arrowLeft))
       arrowLeft = -(arrowSize / 2) + arrowLeft
-
       // adjust arrows off in this case
       // TODO: this isnt quite right
       if (distance > forgiveness) {
@@ -465,11 +453,9 @@ class Popover extends React.PureComponent<Props> {
         arrowLeft = -popoverHalfWidth - arrowSize
       }
     }
-
     // adjustments
     left += adjust[0]
     arrowLeft -= adjust[0]
-
     return { arrowLeft, left }
   }
 
@@ -530,7 +516,7 @@ class Popover extends React.PureComponent<Props> {
     return { arrowTop, top, maxHeight }
   }
 
-  handleOverlayClick(event: MouseEvent) {
+  handleOverlayClick(event) {
     event.stopPropagation()
     this.close()
   }
@@ -552,7 +538,8 @@ class Popover extends React.PureComponent<Props> {
 
   removeListenForHover() {
     for (const listener of this.listeners) {
-      listener.dispose()
+      console.log('listener', listener)
+      listener()
     }
     this.listeners = []
   }
@@ -617,7 +604,7 @@ class Popover extends React.PureComponent<Props> {
         if (this.curProps.target) {
           this.setTimeout(onLeave, 150)
         }
-      })
+      }),
     )
     // if noHover it reduces bugs to just not check hovered state
     const onMouseLeave = noHover ? setUnhovered : onLeave
@@ -647,10 +634,10 @@ class Popover extends React.PureComponent<Props> {
     return isHovered
   }
 
-  isNodeHovered = (node: HTMLElement): boolean => {
+  isNodeHovered = node => {
     const childSelector = `${node.tagName.toLowerCase()}.${node.className.replace(
       /\s+/g,
-      '.'
+      '.',
     )}:hover`
     return (
       !!node.parentNode.querySelector(childSelector) ||
@@ -700,7 +687,6 @@ class Popover extends React.PureComponent<Props> {
     showForgiveness,
     style,
     target,
-    theme,
     top: _top,
     towards,
     width,
@@ -709,7 +695,12 @@ class Popover extends React.PureComponent<Props> {
     onDidOpen,
     closeOnEsc,
     ...props
-  }: Props) {
+  }) {
+    if (this.state.setPosition) {
+      this.setPosition()
+      this.setOpenOrClosed(this.props)
+      this.setTarget()
+    }
     const {
       bottom,
       top,
@@ -779,31 +770,29 @@ class Popover extends React.PureComponent<Props> {
                 }}
               >
                 <Arrow
-                  theme={
-                    this.context.uiThemes &&
-                    this.context.uiThemes[theme] &&
-                    this.context.uiThemes[theme].base
+                  background={
+                    typeof background === 'string' &&
+                    background !== 'transparent'
+                      ? background
+                      : null
                   }
-                  background={background !== 'transparent' ? background : null}
                   size={arrowSize}
                   towards={INVERSE[direction]}
                   boxShadow={getShadow(shadow, elevation)}
                 />
               </arrowContain>
-              <Theme name={theme}>
-                <SizedSurface
-                  sizeRadius
-                  ignoreSegment
-                  flex={1}
-                  {...props}
-                  elevation={elevation}
-                  background={background}
-                >
-                  {typeof children === 'function'
-                    ? children(showPopover)
-                    : children}
-                </SizedSurface>
-              </Theme>
+              <SizedSurface
+                sizeRadius
+                ignoreSegment
+                flex={1}
+                {...props}
+                elevation={elevation}
+                background={background}
+              >
+                {typeof children === 'function'
+                  ? children(showPopover)
+                  : children}
+              </SizedSurface>
             </popover>
           </container>
         </Portal>
@@ -900,5 +889,3 @@ class Popover extends React.PureComponent<Props> {
 }
 
 Popover.acceptsHovered = 'open'
-
-export default Popover

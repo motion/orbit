@@ -1,10 +1,11 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
-import Icon from './icon'
-import Theme from './helpers/theme'
-import Title from './title'
+import { Icon } from './icon'
+import { Theme } from './helpers/theme'
+import { Title } from './title'
 
 @view.ui
-export default class Card {
+export class Card extends React.Component {
   static defaultProps = {
     theme: 'light',
   }

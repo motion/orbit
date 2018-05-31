@@ -1,94 +1,94 @@
-// @flow
 import * as React from 'react'
-import Theme from './helpers/theme'
+import { Theme } from './helpers/theme'
 import { view } from '@mcro/black'
 import $ from 'color'
-import Icon from './icon'
-import HoverGlow from './effects/hoverGlow'
-import Glint from './effects/glint'
-import Popover from './popover'
-import type { Color } from '@mcro/gloss'
+import { Icon } from './icon'
+import { HoverGlow } from './effects/hoverGlow'
+import { Glint } from './effects/glint'
+import { Popover } from './popover'
 import { object } from 'prop-types'
 
-export type Props = {
-  active?: boolean,
-  after?: Element | string,
-  align?: string,
-  alignSelf?: string,
-  background?: Color,
-  badge?: React.Element<any>,
-  badgeProps?: Object,
-  border?: Array<any> | Object,
-  borderBottom?: Array<any> | Object,
-  borderBottomRadius?: number,
-  borderLeft?: Array<any> | Object,
-  borderLeftRadius?: number,
-  borderRadius: number,
-  borderRight?: Array<any> | Object,
-  borderRightRadius?: number,
-  borderStyle?: 'solid' | 'dotted',
-  borderTop?: Array<any> | Object,
-  borderTopRadius?: number,
-  borderWidth?: number | string,
-  boxShadow?: Array<any> | string,
-  children?: Element | string,
-  chromeless?: boolean,
-  circular?: boolean,
-  className?: string,
-  clickable?: boolean,
-  color?: Color,
-  dim?: boolean,
-  elementProps?: Object,
-  elevation?: number,
-  flex?: boolean | number,
-  focusable?: boolean,
-  getRef?: Function,
-  glint?: boolean,
-  glow?: boolean,
-  glowProps?: Object,
-  height?: number,
-  highlight?: boolean,
-  hoverable?: boolean,
-  hovered?: boolean,
-  icon?: React.Element<any> | string,
-  iconAfter?: boolean,
-  iconColor?: Color,
-  iconProps?: Object,
-  iconSize?: number,
-  inline?: boolean,
-  justify?: string,
-  lineHeight?: number | string,
-  margin?: number | Array<number>,
-  marginBottom?: number,
-  marginLeft?: number,
-  marginRight?: number,
-  marginTop?: number,
-  maxWidth?: number,
-  minWidth?: number,
-  noElement?: boolean,
-  noWrap?: boolean,
-  onClick?: Function,
-  opacity?: number,
-  overflow?: 'hidden' | 'visible' | 'scroll' | 'default',
-  padding?: number | Array<number>,
-  paddingBottom?: number,
-  paddingLeft?: number,
-  paddingRight?: number,
-  paddingTop?: number,
-  row?: boolean,
-  size?: number,
-  sizeIcon?: number,
-  spaced?: boolean,
-  stretch?: boolean,
-  tagName: string,
-  theme?: string,
-  tooltip?: string,
-  tooltipProps?: Object,
-  uiContext?: boolean,
-  width?: number,
-  wrapElement?: boolean,
-  borderRadius?: number,
-}
+const POPOVER_PROPS = { style: { fontSize: 12 } }
+
+// export type Props = {
+//   active?: boolean,
+//   after?: Element | string,
+//   align?: string,
+//   alignSelf?: string,
+//   background?: Color,
+//   badge?: React.Element<any>,
+//   badgeProps?: Object,
+//   border?: Array<any> | Object,
+//   borderBottom?: Array<any> | Object,
+//   borderBottomRadius?: number,
+//   borderLeft?: Array<any> | Object,
+//   borderLeftRadius?: number,
+//   borderRadius: number,
+//   borderRight?: Array<any> | Object,
+//   borderRightRadius?: number,
+//   borderStyle?: 'solid' | 'dotted',
+//   borderTop?: Array<any> | Object,
+//   borderTopRadius?: number,
+//   borderWidth?: number | string,
+//   boxShadow?: Array<any> | string,
+//   children?: Element | string,
+//   chromeless?: boolean,
+//   circular?: boolean,
+//   className?: string,
+//   clickable?: boolean,
+//   color?: Color,
+//   dim?: boolean,
+//   elementProps?: Object,
+//   elevation?: number,
+//   flex?: boolean | number,
+//   focusable?: boolean,
+//   getRef?: Function,
+//   glint?: boolean,
+//   glow?: boolean,
+//   glowProps?: Object,
+//   height?: number,
+//   highlight?: boolean,
+//   hoverable?: boolean,
+//   hovered?: boolean,
+//   icon?: React.Element<any> | string,
+//   iconAfter?: boolean,
+//   iconColor?: Color,
+//   iconProps?: Object,
+//   iconSize?: number,
+//   inline?: boolean,
+//   justify?: string,
+//   lineHeight?: number | string,
+//   margin?: number | Array<number>,
+//   marginBottom?: number,
+//   marginLeft?: number,
+//   marginRight?: number,
+//   marginTop?: number,
+//   maxWidth?: number,
+//   minWidth?: number,
+//   noElement?: boolean,
+//   noWrap?: boolean,
+//   onClick?: Function,
+//   opacity?: number,
+//   overflow?: 'hidden' | 'visible' | 'scroll' | 'default',
+//   padding?: number | Array<number>,
+//   paddingBottom?: number,
+//   paddingLeft?: number,
+//   paddingRight?: number,
+//   paddingTop?: number,
+//   row?: boolean,
+//   size?: number,
+//   sizeIcon?: number,
+//   spaced?: boolean,
+//   stretch?: boolean,
+//   tagName: string,
+//   theme?: string,
+//   tooltip?: string,
+//   tooltipProps?: Object,
+//   uiContext?: boolean,
+//   width?: number,
+//   wrapElement?: boolean,
+//   borderRadius?: number,
+// }
 
 const ICON_SCALE = 12
 // TODO: make this dynamic with size (move into theme)
@@ -102,13 +102,13 @@ const BORDER_RADIUS_SIDES = [
   'borderRightRadius',
 ]
 
-const hasChildren = (children: any): boolean =>
+const hasChildren = children =>
   Array.isArray(children)
     ? children.reduce((a, b) => a || !!b, false)
     : !!children
 
 @view.ui
-export default class Surface extends React.PureComponent<Props> {
+class SurfacePlain extends React.Component {
   static contextTypes = {
     provided: object,
   }
@@ -171,7 +171,7 @@ export default class Surface extends React.PureComponent<Props> {
       highlight,
       highlightBackground,
       highlightColor,
-      hover,
+      hoverStyle,
       hoverable,
       hovered,
       icon,
@@ -216,6 +216,7 @@ export default class Surface extends React.PureComponent<Props> {
       alignItems,
       justifyContent,
       backgroundAlpha,
+      activeStyle,
       ...props
     } = this.props
     const hasIconBefore = icon && !iconAfter
@@ -224,7 +225,7 @@ export default class Surface extends React.PureComponent<Props> {
     const { themeValues } = this
 
     if (!themeValues) {
-      console.warn('this is weird')
+      console.warn('this is weird', this, 'sure you set a theme?', this.context)
       return null
     }
 
@@ -248,7 +249,7 @@ export default class Surface extends React.PureComponent<Props> {
     const glowColor = (this.theme && themeValues.color) || DEFAULT_GLOW_COLOR
 
     const contents = (
-      <React.Fragment>
+      <>
         <Glint
           if={glint}
           key={0}
@@ -292,28 +293,27 @@ export default class Surface extends React.PureComponent<Props> {
           {children}
         </element>
         {noElement && noWrap && hasChildren(children) && children}
-        <Popover
-          if={tooltip}
-          theme="dark"
-          background
-          openOnHover
-          closeOnClick
-          noHover
-          noArrow
-          animation="bounce 150ms"
-          target={`.${this.uniq}`}
-          padding={[2, 7]}
-          borderRadius={5}
-          distance={8}
-          forgiveness={8}
-          arrowSize={10}
-          delay={100}
-          popoverProps={{ style: { fontSize: 12 } }}
-          {...tooltipProps}
-        >
-          {tooltip}
-        </Popover>
-      </React.Fragment>
+        <Theme if={tooltip} name="dark">
+          <Popover
+            background
+            openOnHover
+            closeOnClick
+            noHover
+            animation="bounce 150ms"
+            target={`.${this.uniq}`}
+            padding={[2, 7]}
+            borderRadius={5}
+            distance={8}
+            forgiveness={8}
+            arrowSize={10}
+            delay={100}
+            popoverProps={POPOVER_PROPS}
+            {...tooltipProps}
+          >
+            {tooltip}
+          </Popover>
+        </Theme>
+      </>
     )
 
     const surface = (
@@ -506,7 +506,9 @@ export default class Surface extends React.PureComponent<Props> {
     if (props.glint) {
       glintColor =
         props.glint === true
-          ? colorfulBg ? background.lighten(0.1) : [255, 255, 255, 0.2]
+          ? colorfulBg
+            ? background.lighten(0.1)
+            : [255, 255, 255, 0.2]
           : props.glint
       // boxShadow.push(['inset', 0, 0, 0, glintColor])
     }
@@ -567,14 +569,25 @@ export default class Surface extends React.PureComponent<Props> {
       color: hoverColor,
       borderColor: hoverBorderColor,
       background: hoverBackground,
-      ...props.hover,
+      ...props.hoverStyle,
     }
 
-    const activeStyle = !props.chromeless && {
+    let activeStyle = !props.chromeless && {
       position: 'relative',
       zIndex: props.zIndex || 1000,
-      ...(props.clickable && theme[STATE]),
-      ...(props.clickable && { '&:hover': theme[STATE] }),
+    }
+
+    if (props.active) {
+      const userActiveStyle =
+        props.activeStyle || (props.clickable && theme.active)
+      if (userActiveStyle) {
+        activeStyle = {
+          ...activeStyle,
+          ...userActiveStyle,
+          '&:hover':
+            userActiveStyle['&:hover'] || userActiveStyle || activeStyle,
+        }
+      }
     }
 
     const chromelessStyle = props.chromeless && {
@@ -605,7 +618,9 @@ export default class Surface extends React.PureComponent<Props> {
     const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
     const undoPadding = {
       margin: padding
-        ? typeof padding === 'number' ? -padding : padding.map(x => -x)
+        ? typeof padding === 'number'
+          ? -padding
+          : padding.map(x => -x)
         : 0,
       padding,
     }
@@ -624,7 +639,7 @@ export default class Surface extends React.PureComponent<Props> {
         ...borderRadius,
         ...elementGlowProps,
         overflow: props.overflow || 'visible',
-        flexFlow: props.noElement ? 'column' : flexFlow,
+        flexFlow,
         fontSize: props.fontSize,
         fontWeight: props.fontWeight,
         lineHeight: props.lineHeight,
@@ -637,7 +652,9 @@ export default class Surface extends React.PureComponent<Props> {
       wrapContents: undoPadding,
       after: {
         marginTop: padding
-          ? Array.isArray(padding) ? padding[0] : padding
+          ? Array.isArray(padding)
+            ? padding[0]
+            : padding
           : 0,
       },
       surface: {
@@ -709,3 +726,5 @@ export default class Surface extends React.PureComponent<Props> {
     return result
   }
 }
+
+export const Surface = view.ui(SurfacePlain)

@@ -1,13 +1,13 @@
-import SlackConversation from './slackConversation'
+import { BitSlackConversation } from './slackConversation'
 import Document from './document'
 import Mail from './mail'
 import App from './app'
-import PersonCard from './personCard'
+import { PersonCard } from './personCard'
 import { Person } from '@mcro/models'
 
 const results = {
   slack: {
-    conversation: SlackConversation,
+    conversation: BitSlackConversation,
   },
   google: {
     mail: Mail,

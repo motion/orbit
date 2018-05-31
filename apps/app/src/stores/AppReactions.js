@@ -1,6 +1,6 @@
 import { store, react } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
-import orbitPosition from './helpers/orbitPosition'
+import orbitPosition from '~/helpers/orbitPosition'
 import debug from '@mcro/debug'
 
 const log = debug('AppReactions')
@@ -13,50 +13,47 @@ const appTarget = ({ offset, bounds }) => {
   return { top, left, width, height }
 }
 
-let reactionStore
-
-if (!window.messageAttached) {
-  window.messageAttached = true
-  App.onMessage(async msg => {
-    console.log('appmsg', msg)
-    switch (msg) {
-      case App.messages.TOGGLE_SHOWN:
-        reactionStore.toggle()
-        return
-      case App.messages.TOGGLE_DOCKED:
-        App.setOrbitState({ docked: !App.orbitState.docked })
-        return
-      case App.messages.HIDE:
-        reactionStore.hide()
-        return
-      case App.messages.SHOW:
-        reactionStore.show()
-        return
-      case App.messages.HIDE_PEEK:
-        return App.clearPeek()
-      case App.messages.PIN:
-        App.setOrbitState({ pinned: true })
-        return
-      case App.messages.UNPIN:
-        App.setOrbitState({ pinned: false })
-        return
-      case App.messages.TOGGLE_PINNED:
-        App.setOrbitState({ pinned: !App.orbitState.pinned })
-        return
-    }
-    if (msg.indexOf(App.messages.PIN) === 0) {
-      const key = msg.split('-')[1]
-      App.setOrbitState({ pinned: true })
-      reactionStore.onPinKey(key.toLowerCase())
-    }
-  })
-}
-
 @store
-export default class AppReactions {
+export class AppReactions {
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
-    reactionStore = this
+    if (window.messageAttached) {
+      return
+    }
+    window.messageAttached = true
+    App.onMessage(async msg => {
+      console.log('appmsg', msg)
+      switch (msg) {
+        case App.messages.TOGGLE_SHOWN:
+          this.toggle()
+          return
+        case App.messages.TOGGLE_DOCKED:
+          App.setOrbitState({ docked: !App.orbitState.docked })
+          return
+        case App.messages.HIDE:
+          this.hide()
+          return
+        case App.messages.SHOW:
+          this.show()
+          return
+        case App.messages.HIDE_PEEK:
+          return App.clearPeek()
+        case App.messages.PIN:
+          App.setOrbitState({ pinned: true })
+          return
+        case App.messages.UNPIN:
+          App.setOrbitState({ pinned: false })
+          return
+        case App.messages.TOGGLE_PINNED:
+          App.setOrbitState({ pinned: !App.orbitState.pinned })
+          return
+      }
+      if (msg.indexOf(App.messages.PIN) === 0) {
+        const key = msg.split('-')[1]
+        App.setOrbitState({ pinned: true })
+        this.onPinKey(key.toLowerCase())
+      }
+    })
   }
 
   toggle() {
@@ -84,8 +81,7 @@ export default class AppReactions {
     App.setOrbitState({ hidden: true })
   }
 
-  @react({ log: 'state' })
-  handleHoldingOption = [
+  handleHoldingOption = react(
     () => Desktop.isHoldingOption,
     async (isHoldingOption, { sleep }) => {
       if (App.orbitState.pinned || App.orbitState.docked) {
@@ -104,21 +100,21 @@ export default class AppReactions {
       // await sleep(3500)
       // this.updatePinned(true)
     },
-  ]
+    { log: 'state' },
+  )
 
-  @react({ log: 'state' })
-  clearPeekOnOrbitClose = [
-    () => !App.isShowingOrbit,
+  clearPeekOnOrbitClose = react(
+    () => App.isFullyHidden,
     hidden => {
       if (!hidden) {
         throw react.cancel
       }
       App.clearPeek()
     },
-  ]
+    { log: 'state' },
+  )
 
-  @react({ log: 'state' })
-  onPinned = [
+  onPinned = react(
     () => App.orbitState.pinned,
     pinned => {
       if (pinned) {
@@ -127,10 +123,10 @@ export default class AppReactions {
         App.setOrbitState({ hidden: true })
       }
     },
-  ]
+    { log: 'state' },
+  )
 
-  @react
-  unPinOnHidden = [
+  unPinOnHidden = react(
     () => App.isFullyHidden,
     hidden => {
       if (!hidden) {
@@ -138,13 +134,15 @@ export default class AppReactions {
       }
       App.setOrbitState({ pinned: false })
     },
-  ]
+    { log: 'state' },
+  )
 
-  @react({ log: 'state' })
-  clearPeekOnReposition = [() => App.orbitState.position, App.clearPeek]
+  clearPeekOnReposition = react(() => App.orbitState.position, App.clearPeek, {
+    log: 'state',
+  })
 
   // disabled during testing, reenable
-  // @react
+  // react
   // clearPeekOnMouseOut = [
   //   () => Desktop.hoverState.peekHovered,
   //   async (mouseOver, { sleep }) => {
@@ -157,11 +155,19 @@ export default class AppReactions {
   //   },
   // ]
 
-  @react({
-    delay: 32,
-    log: 'state',
-  })
-  hideOrbitOnMouseOut = [
+  showOrbitOnHoverWord = react(
+    () => App.hoveredWordName,
+    async (word, { sleep }) => {
+      if (Desktop.isHoldingOption) {
+        throw react.cancel
+      }
+      const hidden = !word
+      await sleep(hidden ? 50 : 500)
+      App.setOrbitState({ hidden })
+    },
+  )
+
+  hideOrbitOnMouseOut = react(
     () => [
       Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered,
       App.peekState.target,
@@ -176,26 +182,16 @@ export default class AppReactions {
       if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
         throw react.cancel
       }
-      console.log(`hiding orbit from mouseout`)
+      console.log('hiding orbit from mouseout')
       App.setOrbitState({ hidden: true })
     },
-  ]
-
-  @react
-  showOrbitOnHoverWord = [
-    () => App.hoveredWordName,
-    async (word, { sleep }) => {
-      if (Desktop.isHoldingOption) {
-        throw react.cancel
-      }
-      const hidden = !word
-      await sleep(hidden ? 50 : 500)
-      App.setOrbitState({ hidden })
+    {
+      delay: 32,
+      log: 'state',
     },
-  ]
+  )
 
-  @react({ fireImmediately: true, log: false })
-  repositioningFromAppState = [
+  repositioningFromAppState = react(
     () => [appTarget(Desktop.appState || {}), Desktop.linesBoundingBox],
     ([appBB, linesBB]) => {
       // prefer using lines bounding box, fall back to app
@@ -218,5 +214,6 @@ export default class AppReactions {
         orbitDocked,
       })
     },
-  ]
+    { immediate: true, log: false },
+  )
 }

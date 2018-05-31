@@ -1,9 +1,10 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view } from '@mcro/black'
+import { view, Component, isEqual } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
 import { Electron, Desktop } from '@mcro/all'
+import { ElectronStore } from '~/stores/ElectronStore'
 
 class MainStore {
   get mouseInActiveArea() {
@@ -16,14 +17,32 @@ class MainStore {
   store: MainStore,
 })
 @view.electron
-export default class MainWindow extends React.Component {
+export class MainWindow extends Component<{
+  store: MainStore
+  electronStore: ElectronStore
+  onRef?: Function
+}> {
   state = {
     show: false,
     position: [0, 0],
+    size: null,
+  }
+
+  componentDidMount() {
+    this.handleReadyToShow()
+    console.log('MOUNTED')
+    this.setInterval(() => {
+      const size = Helpers.getScreenSize()
+      if (!isEqual(size, this.state.size)) {
+        this.setState({ size })
+      }
+    }, 1000)
   }
 
   handleReadyToShow = () => {
+    console.log('Helpers.getScreenSize()', Helpers.getScreenSize())
     this.setState({
+      size: Helpers.getScreenSize(),
       show: true,
     })
   }
@@ -32,7 +51,11 @@ export default class MainWindow extends React.Component {
     this.setState({ position })
   }
 
-  render({ store, electronStore, onRef }) {
+  render() {
+    const { store, electronStore, onRef } = this.props
+    if (!this.state.size) {
+      return null
+    }
     return (
       <Window
         alwaysOnTop
@@ -47,9 +70,8 @@ export default class MainWindow extends React.Component {
         transparent
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
-        onReadyToShow={this.handleReadyToShow}
         position={this.state.position}
-        size={Helpers.getScreenSize()}
+        size={this.state.size}
         onMove={this.handleMove}
       />
     )

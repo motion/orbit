@@ -1,76 +1,39 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitFrame from './orbitFrame'
-import OrbitSearchResults from './orbitSearchResults'
-import OrbitHeader from './orbitHeader'
-import { App, Desktop } from '@mcro/all'
-import { throttle } from 'lodash'
-import { Title, SubTitle } from '~/views'
-import Results from '~/apps/results/results'
+import { OrbitFrame } from './orbitFrame'
+import { OrbitSearchResults } from './orbitSearchResults'
+import { OrbitHeader } from './orbitHeader'
+import { App } from '@mcro/all'
+import { OrbitContextHome } from './orbitContextHome'
 import * as Constants from '~/constants'
 
-@UI.injectTheme
-@view.attach('appStore', 'orbitPage')
-@view
-export default class Orbit {
-  state = {
-    resultsRef: null,
-    isScrolled: false,
-  }
-
-  setRef = resultsRef => {
-    if (resultsRef) {
-      this.setState({ resultsRef })
-      this.on(
-        resultsRef,
-        'scroll',
-        throttle(() => {
-          if (resultsRef.scrollTop > 0) {
-            if (!this.state.isScrolled) {
-              this.setState({ isScrolled: true })
-            }
-          } else {
-            if (this.state.isScrolled) {
-              this.setState({ isScrolled: false })
-            }
-          }
-        }, 16),
-      )
+class PaneStore {
+  get activePane() {
+    if (App.state.query) {
+      return 'search'
     }
+    return 'context'
   }
+}
 
-  render({ appStore, orbitPage, theme }) {
+@UI.injectTheme
+@view.attach('orbitPage')
+@view.provide({
+  paneStore: PaneStore,
+})
+@view
+class Orbit extends React.Component {
+  render({ orbitPage, theme }) {
     const headerBg = theme.base.background
-    const { orbitOnLeft } = App
     return (
-      <UI.Theme name="tan">
-        <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
-          <OrbitHeader headerBg={headerBg} />
-          <orbitInner>
-            <orbitContext
-              css={{
-                background: theme.base.background,
-              }}
-            >
-              <fadeNotifications
-                $$untouchable
-                $fadeVisible={appStore.activeIndex >= 0}
-              />
-              <contextHeader
-                css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}
-              >
-                <Title ellipse={1}>{Desktop.appState.name}</Title>
-                <SubTitle if={Desktop.appState.title} ellipse={2}>
-                  {Desktop.appState.title}
-                </SubTitle>
-              </contextHeader>
-              <Results isContext />
-            </orbitContext>
-            <OrbitSearchResults parentPane="context" />
-          </orbitInner>
-        </OrbitFrame>
-      </UI.Theme>
+      <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
+        <OrbitHeader headerBg={headerBg} />
+        <orbitInner>
+          <OrbitContextHome />
+          <OrbitSearchResults name="context-search" parentPane="context" />
+        </orbitInner>
+      </OrbitFrame>
     )
   }
 
@@ -103,16 +66,6 @@ export default class Orbit {
       zIndex: 100000,
       transition: 'opacity ease-in-out 150ms',
     },
-    fadeNotifications: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: -40,
-      height: 40,
-      zIndex: -1,
-      opacity: 0,
-      transition: 'opacity ease-in 150ms',
-    },
     fadeVisible: {
       zIndex: 10000,
       opacity: 1,
@@ -134,3 +87,9 @@ export default class Orbit {
     }
   }
 }
+
+export default props => (
+  <UI.Theme name="dark">
+    <Orbit {...props} />
+  </UI.Theme>
+)

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class Splash extends React.Component {
+export class Splash extends React.Component {
   render() {
     return (
       <div

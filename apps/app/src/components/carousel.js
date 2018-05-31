@@ -1,9 +1,9 @@
 import { view } from '@mcro/black'
-import OrbitCard from '~/apps/orbit/orbitCard'
+import { OrbitCard } from '~/apps/orbit/orbitCard'
 
 @view.attach('appStore')
 @view
-export default class Carousel {
+export class Carousel {
   render({ items, appStore }) {
     return (
       <carousel>
@@ -29,7 +29,7 @@ export default class Carousel {
   static style = {
     carousel: {
       flexFlow: 'row',
-      padding: [0, 20],
+      // padding: [0, 20],
       overflowX: 'scroll',
     },
   }

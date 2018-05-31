@@ -1,21 +1,8 @@
-import { App } from '@mcro/all'
+import { App as AppAll } from '@mcro/all'
 import { sleep, debugState } from '@mcro/black'
-import { ThemeProvide } from '@mcro/ui'
-import * as React from 'react'
-import ReactDOM from 'react-dom'
-import Themes from './themes'
 import { uniqBy } from 'lodash'
-import * as Constants from '~/constants'
-import * as UI from '@mcro/ui'
 import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
-
-// HMR
-if (module && module.hot) {
-  module.hot.accept('.', async () => {
-    await start(true)
-  })
-}
 
 const onPort = async cb => {
   await sleep(200)
@@ -27,7 +14,7 @@ const onPort = async cb => {
   }
 }
 
-class AppRoot {
+export class App {
   started = false
   stores = null
   views = null
@@ -45,32 +32,14 @@ class AppRoot {
   async start() {
     if (window.location.pathname !== '/auth') {
       await connectModels(modelsList)
-      await App.start()
+      await AppAll.start()
     }
-    this.render()
     this.catchErrors()
     this.started = true
   }
 
   async restart() {
     onPort(() => (window.location = window.location))
-  }
-
-  async dispose() {}
-
-  render() {
-    const isResults = window.location.pathname === '/results'
-    const RootComponent = isResults
-      ? require('./apps/results/results').default
-      : require('./root').default
-    ReactDOM.render(
-      <ThemeProvide {...Themes}>
-        <UI.Theme name="tan">
-          <RootComponent />
-        </UI.Theme>
-      </ThemeProvide>,
-      document.querySelector('#app'),
-    )
   }
 
   handleError = (...errors) => {
@@ -98,23 +67,3 @@ class AppRoot {
     this.errors = []
   }
 }
-
-let app = window.Root
-
-export async function start(recreate) {
-  if (window.Root || window._isDisposing) return
-  window._isDisposing = true
-  if (app) {
-    await app.dispose()
-  }
-  if (recreate || !app) {
-    app = new AppRoot()
-    await app.start({ quiet: recreate })
-  }
-  window._isDisposing = false
-}
-
-// start!
-start()
-
-export default app

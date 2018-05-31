@@ -24,7 +24,7 @@ const adjust = name => {
   if (name === 'slack') {
     return {
       transform: {
-        y: 1,
+        y: -1,
         scale: 0.95,
       },
     }
@@ -38,7 +38,7 @@ const adjust = name => {
   }
 }
 
-export default ({ icon, size = 25, style, ...props }) => {
+export const OrbitIcon = ({ icon, size = 25, style, ...props }) => {
   const sizeProps = {
     width: size,
     height: size,

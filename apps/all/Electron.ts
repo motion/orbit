@@ -1,7 +1,7 @@
-import Bridge from './helpers/Bridge'
-import { setGlobal, proxySetters } from './helpers'
-import { store, react } from '@mcro/black/store'
-import ElectronReactions from './ElectronReactions'
+import Bridge, { proxySetters } from '@mcro/mobx-bridge'
+import { setGlobal } from './helpers'
+import { store, deep } from '@mcro/black/store'
+import { ElectronReactions } from './ElectronReactions'
 // import debug from '@mcro/debug'
 
 // const log = debug('ElectronStore')
@@ -12,6 +12,8 @@ export let Electron
 class ElectronStore {
   messages = {
     CLEAR: 'CLEAR',
+    DEFOCUS: 'DEFOCUS',
+    FOCUS: 'FOCUS',
   }
 
   setState: typeof Bridge.setState
@@ -23,21 +25,21 @@ class ElectronStore {
   onClear = null
   lastAction = null
 
-  state = {
+  state = deep({
     settingsPosition: [], // todo: settingsState.position
     showDevTools: {
       orbit: false,
       peek: false,
       highlights: false,
     },
-  }
+  })
 
   start = options => {
     Bridge.start(this, this.state, options)
     this.setState = Bridge.setState
     this.sendMessage = Bridge.sendMessage
     this.onMessage = Bridge.onMessage
-    const ElectronReactions = eval(`require('./ElectronReactions')`).default
+    const { ElectronReactions } = eval(`require('./ElectronReactions')`)
     this.reactions = new ElectronReactions()
   }
 }

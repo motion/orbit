@@ -1,19 +1,37 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import OrbitIcon from './orbitIcon'
+import { OrbitIcon } from './orbitIcon'
 import { App } from '@mcro/all'
 
 @view.attach('appStore')
 @UI.injectTheme
 @view
-export default class Card {
-  render({ id, icon, title, index, subtitle, isActive, appStore, oauth }) {
+export class OrbitSettingCard extends React.Component {
+  hoverSettler = this.props.appStore.getHoverSettler()
+
+  setRef = ref => {
+    this.ref = ref
+    if (!ref) return
+    this.hoverSettler.setItem({
+      item: {
+        type: 'setting',
+        integration: this.props.setting.integration,
+      },
+      ref,
+    })
+  }
+
+  render({ setting, index, subtitle, isActive, appStore, oauth }) {
+    const { id, icon, title } = setting
     const isSelected =
       appStore.selectedIndex === index && !!App.peekState.target
     return (
       <card
         key={index}
+        ref={this.setRef}
         $isSelected={isSelected}
+        {...this.hoverSettler.props}
         onClick={async () => {
           if (!isActive) {
             if (oauth === false) {
@@ -26,10 +44,10 @@ export default class Card {
             }
             return
           }
-          appStore.toggleSelected(index)
+          appStore.setTarget(setting, this.ref)
         }}
       >
-        <OrbitIcon $icon $iconActive={isActive} icon={icon} />
+        <OrbitIcon $icon $iconActive={isActive} icon={icon} size={22} />
         <titles>
           <UI.Text $title fontWeight={300} size={1.4} textAlign="center">
             {title}
@@ -61,8 +79,7 @@ export default class Card {
       borderBottom: 'none',
     },
     icon: {
-      marginBottom: 10,
-      marginRight: 20,
+      margin: ['auto', 12, 'auto', 0],
       opacity: 0.5,
     },
     iconActive: {

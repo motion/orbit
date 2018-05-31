@@ -11,36 +11,18 @@ const Themes = {
     background: '#fff',
     color: '#222',
     borderColor: '#eee',
-    buttonBackground: 'linear-gradient(#fff, #fefefe)',
   }),
-  clear: {
-    button: {
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-      borderRightWidth: 0,
-    },
-    glow: {
-      color: [255, 255, 255, 0.1],
-    },
-    ...Theme.fromStyles({
-      highlightBackground,
-      highlightColor,
-      background: [255, 255, 255, 1],
-      color: '#555',
-      borderColor: [0, 0, 0, 0.1],
-    }),
-  },
-  gray: Theme.fromStyles({
+  medium: Theme.fromStyles({
     highlightBackground,
     highlightColor,
-    background: '#eee',
-    color: '#666',
+    background: '#f2f2f2',
+    color: '#222',
     borderColor: '#eee',
   }),
   dark: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,
-    background: '#333',
+    background: '#111',
     color: '#fff',
     borderColor: '#222',
   }),

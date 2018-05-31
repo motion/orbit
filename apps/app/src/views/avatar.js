@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export default class Avatar extends React.Component {
+export class Avatar extends React.Component {
   render() {
     return <img {...this.props} />
   }

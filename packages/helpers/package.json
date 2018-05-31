@@ -3,6 +3,7 @@
   "version": "1.5.1",
   "description": "",
   "main": "_/index.js",
+  "types": "_/index.d.js",
   "author": "Motion (http://motion.io)",
   "license": "MIT",
   "scripts": {
@@ -10,13 +11,16 @@
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "global": "^4.3.2",
     "disposable-event": "^1.0.3",
-    "object-path": "^0.11.3",
-    "sb-event-kit": "^3.0.0"
+    "event-kit": "^2.5.0",
+    "global": "^4.3.2",
+    "object-path": "^0.11.3"
   },
   "peerDependencies": {
     "mobx": "*"
+  },
+  "devDependencies": {
+    "@types/event-kit": "^2.4.0"
   },
   "publishConfig": {
     "access": "public"

@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class Ellipse extends React.Component {
+export class Ellipse extends React.Component {
   render() {
     return <ellipse {...this.props} />
   }

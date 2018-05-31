@@ -1,40 +1,13 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
-import WindowControls from '~/views/windowControls'
+import { WindowControls } from '~/views/windowControls'
 import * as Constants from '~/constants'
 
 const SHADOW_PAD = 50
 const borderRadius = 8
 const background = '#f9f9f9'
-
-class PeekFrameStore {
-  get curState() {
-    if (!App.peekState.target) {
-      return null
-    }
-    if (App.orbitState.docked || !App.orbitState.hidden) {
-      return App.peekState
-    }
-    return null
-  }
-
-  @react({ delay: 16, fireImmediately: true, log: false })
-  lastState = [() => this.curState, _ => _]
-
-  get willHide() {
-    return !!this.lastState && !this.curState
-  }
-
-  get willShow() {
-    return !!this.curState && !this.lastState
-  }
-
-  get willStayShown() {
-    return !!this.lastState && !!this.curState
-  }
-}
 
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
 const transitions = store => {
@@ -44,17 +17,11 @@ const transitions = store => {
   return 'all ease-in 150ms'
 }
 
-@UI.injectTheme
-@view({
-  store: PeekFrameStore,
-})
-export default class PeekFrame {
-  render({ store, children, ...props }) {
-    const { willShow, willHide, curState, lastState, willStayShown } = store
-    let state = curState
-    if (willHide) {
-      state = lastState
-    }
+@view.attach('peekStore')
+@view
+export class PeekFrame {
+  render({ peekStore, children, ...props }) {
+    const { willShow, willHide, state, willStayShown } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
     }
@@ -68,14 +35,11 @@ export default class PeekFrame {
       !onRight ? SHADOW_PAD : 0,
     ]
     const margin = padding.map(x => -x)
-    const boxShadow = [
-      [onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]],
-      borderShadow,
-    ]
+    const boxShadow = [[onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]]]
     const arrowSize = 30
     // determine x adjustments
     // adjust for docked not using shadow pad
-    let peekAdjustX = docked ? -18 : 0
+    let peekAdjustX = docked ? -18 - 6 : 0
     // adjust for orbit arrow blank
     if (!docked && orbitOnLeft && !onRight) {
       peekAdjustX -= Constants.SHADOW_PAD
@@ -95,7 +59,7 @@ export default class PeekFrame {
           arrowSize / 2,
       state.size[1] - borderRadius * 2 - arrowSize,
     )
-    const transition = transitions(store)
+    const transition = transitions(peekStore)
     return (
       <peekFrame
         css={{
@@ -121,6 +85,7 @@ export default class PeekFrame {
           css={{
             left: !onRight ? 'auto' : -20,
             right: !onRight ? -arrowSize : 'auto',
+            zIndex: 1000000000,
             transform: {
               y: arrowY,
               x: onRight ? 0.5 : -0.5,
@@ -146,9 +111,26 @@ export default class PeekFrame {
               }}
               onClose={App.clearPeek}
             />
+            <chrome
+              if={peekStore.hasHistory}
+              css={{ top: peekStore.headerHeight - 11 }}
+            >
+              <UI.Button
+                icon="arrowminleft"
+                circular
+                size={0.85}
+                background="#f2f2f2"
+                iconProps={{
+                  style: {
+                    transform: 'translateX(-1px) translateY(-1px)',
+                  },
+                }}
+              />
+            </chrome>
             <peekFrameBorder
               css={{
                 borderRadius,
+                boxShadow: [borderShadow],
               }}
             />
             <peekMain
@@ -187,6 +169,11 @@ export default class PeekFrame {
       top: 0,
       zIndex: 100,
       transition: 'transform ease-in 100ms',
+    },
+    chrome: {
+      position: 'absolute',
+      left: 10,
+      zIndex: 100000,
     },
     peekFrameBorder: {
       position: 'absolute',

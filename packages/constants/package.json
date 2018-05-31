@@ -1,7 +1,7 @@
 {
   "name": "@mcro/constants",
   "private": true,
-  "main": "_/constants",
+  "main": "./_/constants.js",
   "version": "1.5.1",
   "scripts": {
     "build": "tsc",

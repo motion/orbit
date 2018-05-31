@@ -1,16 +1,23 @@
-import 'regenerator-runtime/runtime'
+import '../public/styles/base.css'
+import '../public/styles/nucleo.css'
+import './createElement'
+// import 'regenerator-runtime/runtime'
 import 'isomorphic-fetch'
-import '@mcro/debug/inject'
-import createElement from '@mcro/black/_/createElement'
-// dont import * as React, we need to overwrite createElement
-import React from 'react'
+import '@mcro/debug/inject.js'
 import * as Constants from './constants'
+import { App } from './app'
+import * as UI from '@mcro/ui'
+import { ThemeProvide } from '@mcro/ui'
+import * as React from 'react'
+import ReactDOM from 'react-dom'
+import Themes from './themes'
+import { throttle } from 'lodash'
+
+import './router'
 
 process.on('uncaughtException', err => {
   console.log('App.uncaughtException', err.stack)
 })
-
-React.createElement = createElement // any <tag /> can use $$style
 
 if (Constants.IS_PROD) {
   require('./helpers/installProd')
@@ -18,12 +25,32 @@ if (Constants.IS_PROD) {
   require('./helpers/installDevTools')
 }
 
-export function start() {
+// hmr calls render twice out the gate
+// so prevent that
+const render = throttle(async () => {
   if (!window.Root) {
     console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
     console.timeEnd('splash')
+    const app = new App()
+    window.Root = app
+    await app.start()
   }
-  require('./app')
-}
+  console.log('rendering')
+  const RootComponent = require('./root').default
+  ReactDOM.render(
+    // <React.StrictMode>
+    // <React.unstable_AsyncMode>
+    <ThemeProvide {...Themes}>
+      <UI.Theme name="light">
+        <RootComponent />
+      </UI.Theme>
+    </ThemeProvide>,
+    // </React.unstable_AsyncMode>
+    // </React.StrictMode>
+    document.querySelector('#app'),
+  )
+}, 32)
 
-start()
+render()
+
+module.hot && module.hot.accept(render)

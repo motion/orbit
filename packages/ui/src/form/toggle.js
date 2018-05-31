@@ -1,14 +1,13 @@
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
-import inject from '../helpers/inject'
+import { UIContext } from '../contexts'
 
 const BAR_HEIGHT = 8
 const BAR_WIDTH = 30
 const BAR_INVISIBLE_PAD = 5
 
-@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Toggle extends React.Component {
+class TogglePlain extends React.Component {
   static defaultProps = {
     dotSize: 14,
     onChange: _ => _,
@@ -19,19 +18,19 @@ export default class Toggle extends React.Component {
     on: false,
   }
 
-  componentWillMount() {
-    this.updateValue(this.props)
-  }
-
-  componentWillReceiveProps(props) {
+  componentDidUpdate(props) {
     this.updateValue(props)
   }
 
   updateValue(props) {
-    this.setState({ on: props.value || props.defaultValue })
+    const on = props.value || props.defaultValue
+    if (on !== this.state.on) {
+      this.setState({ on })
+    }
   }
 
   componentDidMount() {
+    this.updateValue(this.props)
     this.syncToForm()
   }
 
@@ -40,6 +39,7 @@ export default class Toggle extends React.Component {
   }
 
   setOn = (on, triggerOnChange) => {
+    console.log('toggling', on)
     if (typeof on !== 'undefined') {
       this.setState({ on })
       if (triggerOnChange) {
@@ -51,7 +51,7 @@ export default class Toggle extends React.Component {
     }
   }
 
-  toggleClick = e => {
+  toggleClick = () => {
     this.setOn(!this.value, true)
   }
 
@@ -140,3 +140,9 @@ export default class Toggle extends React.Component {
     },
   })
 }
+
+export const Toggle = props => (
+  <UIContext.Consumer>
+    {uiContext => <TogglePlain uiContext={uiContext} {...props} />}
+  </UIContext.Consumer>
+)

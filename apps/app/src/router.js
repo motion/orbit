@@ -1,29 +1,19 @@
 import Router from '@mcro/router'
+import { AuthPage } from '~/apps/AuthPage'
+import { MainPage } from '~/apps/MainPage'
 
-function runRouter() {
-  return new Router({
+let AppRouter
+
+export function runRouter() {
+  AppRouter = new Router({
     routes: {
-      '/': require('./apps/main').default,
-      '/orbit': require('./apps/orbit/orbit').default,
-      '/peek': require('./apps/peek/peek').default,
-      '/highlights': require('./apps/highlights/highlights').default,
-      '/relevancy': require('./apps/relevancy').default,
-      '/auth': require('./apps/auth').default,
+      '/': MainPage,
+      '/auth': AuthPage,
     },
   })
+  window.Router = AppRouter
 }
 
-let AppRouter = runRouter()
-
-// because doing in installDevTools would break import order
-window.Router = AppRouter
-
-// for hmr
-if (module.hot) {
-  module.hot.accept('.', () => {
-    AppRouter = runRouter()
-    window.App.render()
-  })
-}
+runRouter()
 
 export default AppRouter

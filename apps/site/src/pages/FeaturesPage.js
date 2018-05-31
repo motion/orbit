@@ -42,7 +42,11 @@ const theme = {
 const slantBg = background
 
 const FeatureTitle = props => (
-  <Title italic size={3.5} css={{ marginBottom: 20 }} {...props} />
+  <Title italic size={3} css={{ marginBottom: 15 }} {...props} />
+)
+
+const FeatureSubTitle = props => (
+  <P size={1.8} alpha={0.8} css={{ marginBottom: 25 }} {...props} />
 )
 
 @UI.injectTheme
@@ -64,24 +68,21 @@ class FeaturesIntro extends React.Component {
                 css={{ zIndex: 2 }}
               />
               <HalfSection css={{ position: 'absolute', bottom: 100 }}>
-                <Title
-                  color="#111"
-                  italic
-                  size={2.3}
-                  margin={[0, '10%', 10, 0]}
-                >
-                  The intelligent agent for company operation.
+                <Title italic size={2.3} margin={[0, '10%', 10, 0]}>
+                  Intelligent company organization.
                 </Title>
                 <P2 size={1.6} alpha={0.8}>
-                  Orbit unifies knowledge from across the cloud and lets your
-                  teams use it effectively.
+                  Unifies knowledge from across the cloud to lets your teams
+                  operate more effectively.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#news')}>News</a>{' '}
+                  <a onClick={scrollTo('#news')}>Home</a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
                   <a onClick={scrollTo('#search')}>Search</a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#context')}>Answers</a>
+                  <a onClick={scrollTo('#context')}>Explore</a>
+                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                  <a onClick={scrollTo('#context')}>Answer</a>
                 </P>
               </HalfSection>
               <HalfSection />
@@ -102,7 +103,7 @@ const SearchIllustration = () => (
           position: 'absolute',
           overflow: 'hidden',
           left: '50%',
-          top: '50%',
+          top: '36%',
           marginLeft: 'calc(-5% - 520px)',
           width: 550,
           height: 380,
@@ -110,7 +111,7 @@ const SearchIllustration = () => (
           zIndex: 1,
           pointerEvents: 'none',
           transform: {
-            y: searchYOff - 190,
+            y: searchYOff - 180,
           },
         }}
       >
@@ -142,7 +143,7 @@ const SearchCallout = ({ isLarge }) => (
         isLarge && {
           width: '80%',
           position: 'absolute',
-          top: searchYOff - 75,
+          top: searchYOff - 60,
           left: '12%',
         }
       }
@@ -220,11 +221,6 @@ export class SectionFeatureNewsSearch extends React.Component {
               css={!isLarge && { paddingBottom: 0, overflow: 'visible' }}
               fullscreen={isLarge}
             >
-              <Glow
-                if={false}
-                style={{ transform: { y: '-10%', x: '-40%' } }}
-              />
-              <Glow if={false} style={{ transform: { y: '130%', x: '60%' } }} />
               <Slant
                 inverseSlant
                 slantSize={14}
@@ -238,7 +234,10 @@ export class SectionFeatureNewsSearch extends React.Component {
                       marginTop: isLarge ? newsTopOffPct : 0,
                     }}
                   >
-                    <FeatureTitle>Company news</FeatureTitle>
+                    <FeatureTitle>A sorted home</FeatureTitle>
+                    <FeatureSubTitle>
+                      Unified, summarized feed of your company
+                    </FeatureSubTitle>
                     <UI.Theme name="light">
                       <Callout
                         css={{
@@ -402,11 +401,14 @@ export class SectionFeatureNewsSearch extends React.Component {
                       display: 'block',
                       position: 'relative',
                       zIndex: 1000,
-                      marginTop: -145 + searchYOff,
+                      marginTop: -195 + searchYOff,
                     }
                   }
                 >
-                  <FeatureTitle>Unified search</FeatureTitle>
+                  <FeatureTitle>Smart unified search</FeatureTitle>
+                  <FeatureSubTitle>
+                    Summaries of conversations at hand
+                  </FeatureSubTitle>
                 </content>
                 <Media
                   query={Constants.screen.small}
@@ -456,7 +458,10 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <FeatureTitle>Realtime answers</FeatureTitle>
+                  <FeatureTitle>Projects and profiles</FeatureTitle>
+                  <FeatureSubTitle>
+                    Automatically collation keeps your team in sync
+                  </FeatureSubTitle>
                   <UI.Theme name="light">
                     <Callout
                       css={{
@@ -559,6 +564,134 @@ export class SectionFeatureIntelligence extends React.Component {
   }
 }
 
+@UI.injectTheme
+@view
+export class SectionSmartSidebar extends React.Component {
+  render() {
+    const { theme } = this.props
+    return (
+      <Media query={Constants.screen.large}>
+        {isLarge => (
+          <Section
+            css={{
+              background: 'transparent',
+              marginBottom: -window.innerHeight * 0.333,
+            }}
+            inverse
+          >
+            <SectionContent
+              id="intelligence"
+              padded={!isLarge}
+              css={!isLarge && { paddingBottom: 0, overflow: 'visible' }}
+              fullscreen={isLarge}
+            >
+              <Slant
+                inverseSlant
+                slantSize={14}
+                slantBackground={slantBg.darken(0.05)}
+              />
+              <LeftSide css={{ top: 0 }}>
+                <verticalSpace css={{ height: '11%' }} />
+                <FeatureTitle>Augmented operation</FeatureTitle>
+                <FeatureSubTitle>
+                  A smart sidebar for every app.
+                </FeatureSubTitle>
+                <UI.Theme name="light">
+                  <Callout
+                    css={{
+                      textAlign: 'left',
+                      ...(isLarge
+                        ? {
+                            width: '95%',
+                            position: 'absolute',
+                            right: '6%',
+                          }
+                        : null),
+                    }}
+                  >
+                    <P size={1.6}>
+                      A heads up display for all your incoming. Sorted by what
+                      you've been interested in recently.
+                      <br />
+                      <br />
+                      With novel on-device ML, Orbit adjusts to what you care
+                      about and the custom terminology your team uses.
+                    </P>
+                  </Callout>
+                </UI.Theme>
+              </LeftSide>
+
+              <RightSide
+                inverse
+                css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
+              >
+                <section
+                  if={isLarge}
+                  css={{
+                    position: 'absolute',
+                    top: '5%',
+                    right: 0,
+                    left: '16%',
+                    height: '60%',
+                    maxHeight: 800,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <img
+                    src={newsImg}
+                    css={{
+                      position: 'absolute',
+                      top: 0,
+                      transformOrigin: 'top left',
+                      border: [1, '#ddd'],
+                      transform: {
+                        scale: 0.5,
+                      },
+                      boxShadow: [[0, 15, 150, [200, 200, 200, 0.1]]],
+                    }}
+                  />
+                  <fadeRight
+                    css={{
+                      position: 'absolute',
+                      top: 0,
+                      bottom: 0,
+                      right: 0,
+                      width: '10%',
+                      zIndex: 100,
+                      background: `linear-gradient(to right, transparent, ${
+                        theme.base.background
+                      })`,
+                    }}
+                  />
+                  <fadeawayfadeawayfadeaway
+                    css={{
+                      position: 'absolute',
+                      bottom: -300,
+                      right: -250,
+                      width: 900,
+                      height: 450,
+                      background: theme.base.background,
+                      borderRadius: 1000,
+                      filter: {
+                        blur: 30,
+                      },
+                      transform: {
+                        z: 0,
+                      },
+                      zIndex: 2,
+                    }}
+                  />
+                </section>
+                <div if={isLarge} css={{ height: '100%' }} />
+              </RightSide>
+            </SectionContent>
+          </Section>
+        )}
+      </Media>
+    )
+  }
+}
+
 @view
 export class FeaturesPage extends React.Component {
   render() {
@@ -572,6 +705,7 @@ export class FeaturesPage extends React.Component {
             <SectionFeatureNewsSearch />
             <SearchIllustration />
             <SectionFeatureIntelligence />
+            <SectionSmartSidebar />
           </surround>
           <Footer />
         </UI.Theme>

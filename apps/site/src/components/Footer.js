@@ -58,6 +58,7 @@ export class Footer extends React.Component {
   static style = {
     footer: {
       overflow: 'hidden',
+      zIndex: 1000,
     },
     nav: {
       flex: 1,
@@ -66,5 +67,11 @@ export class Footer extends React.Component {
     link: {
       margin: [0, 0, 10],
     },
+  }
+
+  static theme = (_, theme) => {
+    return {
+      background: theme.base.background,
+    }
   }
 }

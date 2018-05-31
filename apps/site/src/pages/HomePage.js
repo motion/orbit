@@ -72,11 +72,11 @@ class HomeStore {
 const Pitch = ({ isLarge }) => (
   <>
     <Title italic size={2.7} margin={[0, 0, 20, 0]}>
-      Smarter<br />Knowledge<br />Management
+      Automated<br />company intranet
     </Title>
     <P size={1.6} sizeLineHeight={1.15} fontWeight={300} alpha={0.9}>
-      Augment team knowledge with an intelligent desktop app that organizes your
-      company.
+      A home for your company. Team news, search, and exploration automatically,
+      with no install.
     </P>
     <actions
       $$row
@@ -327,25 +327,25 @@ class HomeFooter extends React.Component {
                 <div css={{ height: '22%' }} />
                 <below css={{ margin: [15, 0, 0, 0] }}>
                   <Title size={2.3} css={{ marginBottom: 20 }}>
-                    Your company<br />operating system.
+                    Knowledge management, redefined.
                   </Title>
                   <UI.PassProps size={1.3} sizeLineHeight={1.1} alpha={0.85}>
                     <P2>
-                      Conversations, tickets, emails, and wiki. Your knowledge
-                      lives all over the place.
+                      Conversations, tickets, emails, docs, wiki. Your team
+                      operates in many places.
                     </P2>
                     <P2>
-                      Orbit sorts team knowledge autonomously on the desktop.
-                      It's a modern OS for company knowledge. It sorts and
-                      summarizes everything using state of the art NLP. And it{' '}
+                      Orbit sorts team knowledge on the desktop. It's a modern
+                      way to operate a company with project collation, profiles,
+                      summarized events, and search. All powered by state of the
+                      art NLP.
+                    </P2>
+                    <P2>
+                      It also{' '}
                       <span css={{ fontWeight: 400, fontStyle: 'italic' }}>
-                        works across all your integrations, and contextually
-                        with every app
-                      </span>.
-                    </P2>
-                    <P2>
-                      It's also fundamentally private, with no cloud or on prem
-                      install. Your data never leaves the firewall.
+                        works across every integration, privately on your device
+                      </span>{' '}
+                      and can search real-time next to any app you use.
                     </P2>
                     <P2>
                       It's a new way to operate. Currently in private beta.

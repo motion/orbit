@@ -34,10 +34,9 @@ export class Join extends React.Component {
                 value=""
               />
             </div>
-            <UI.Theme theme={Constants.colorMain.toString()}>
+            <UI.Theme theme="rgb(10.8%, 34.7%, 81.2%)">
               <UI.Button
                 size={1.1}
-                theme="rgb(3.5%, 44.5%, 23.6%)"
                 sizeRadius={3}
                 margin={[0, 0, 0, 'auto']}
                 type="submit"

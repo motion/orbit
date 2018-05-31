@@ -111,7 +111,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                 css={{ zIndex: 2 }}
               />
               <LeftSide inverse>
-                <SubTitle size={5} italic>
+                <SubTitle size={4.5} italic>
                   Remote<br />
                   teams
                 </SubTitle>
@@ -266,7 +266,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
               </LeftSide>
               <RightSide css={{ top: 0 }}>
                 <div if={isLarge} $$flex css={{ marginTop: '5%' }} />
-                <SubTitle size={5} italic>
+                <SubTitle size={4.5} italic>
                   Customer<br />Success
                 </SubTitle>
                 <div if={isLarge} $$flex css={{ marginTop: '10%' }} />
@@ -341,7 +341,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 css={{ zIndex: 2 }}
               />
               <LeftSide>
-                <SubTitle size={5} italic>
+                <SubTitle size={4.5} italic>
                   Workplace<br />
                   operations
                 </SubTitle>

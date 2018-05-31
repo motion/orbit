@@ -103,9 +103,7 @@ export const LeftSide = ({
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <leftSide css={{ padding: [sidePadSmall, sidePadSmall / 2] }}>
-          {children}
-        </leftSide>
+        <leftSide css={{ padding: [sidePadSmall, 0] }}>{children}</leftSide>
       ) : (
         <outer css={{ flex: 1, width: '50%', position: 'relative', zIndex: 3 }}>
           <leftSide
@@ -145,9 +143,7 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall =>
       isSmall ? (
-        <rightSide css={{ padding: [sidePadSmall, sidePadSmall / 2] }}>
-          {children}
-        </rightSide>
+        <rightSide css={{ padding: [sidePadSmall, 0] }}>{children}</rightSide>
       ) : (
         <rightSide
           css={{

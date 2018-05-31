@@ -12,25 +12,12 @@ import * as UI from '@mcro/ui'
 @view
 export class Header extends React.Component {
   render({ linkStyle, linkStyleHover, theme }) {
-    const color = theme.base.color.desaturate(0.2).alpha(0.6)
+    const color = theme.base.color.desaturate(0.2).alpha(0.7)
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
           <>
-            <header
-              css={
-                {
-                  // background: theme.base.background,
-                  // borderBottom: [
-                  //   1,
-                  //   theme.base.background
-                  //     .darken(0.2)
-                  //     .desaturate(0.3)
-                  //     .alpha(0.2),
-                  // ],
-                }
-              }
-            >
+            <header>
               <SectionContent>
                 <headerInner>
                   <BrandLogo

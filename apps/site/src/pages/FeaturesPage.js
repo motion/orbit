@@ -572,7 +572,7 @@ export class SectionSmartSidebar extends React.Component {
                     }}
                   >
                     <P size={1.6}>
-                      From Intercom to Word to Email, put your knowledge to
+                      From Intercom to docs to email, put your knowledge to
                       work. It's realtime search as you work across all your
                       knowledge.
                       <br />

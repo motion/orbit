@@ -68,7 +68,12 @@ class FeaturesIntro extends React.Component {
                 css={{ zIndex: 2 }}
               />
               <HalfSection css={{ position: 'absolute', bottom: 100 }}>
-                <Title italic size={2.3} margin={[0, '10%', 10, 0]}>
+                <Title
+                  color="#111"
+                  italic
+                  size={2.3}
+                  margin={[0, '10%', 10, 0]}
+                >
                   Intelligent company organization.
                 </Title>
                 <P2 size={1.6} alpha={0.8}>

@@ -14,7 +14,8 @@ import {
   AppleLogo,
   TopoBg,
 } from '~/views'
-import { HomePlay } from './home/HomePlay'
+// import { HomePlay } from './home/HomePlay'
+import screenImg from '~/../public/screen.jpg'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Router from '~/router'
@@ -76,12 +77,12 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={2.3} margin={[0, 0, 15, 0]}>
-      Automatic intranet
+    <Title italic size={2.4} margin={[0, 0, 15, 0]}>
+      Autonomous intranet
     </Title>
-    <P size={1.5} sizeLineHeight={1.1} fontWeight={300} alpha={0.9}>
-      An autonomous home for company knowledge with news, search, and more
-      installed in 3 minutes.
+    <P size={1.7} sizeLineHeight={1.1} fontWeight={300} alpha={0.9}>
+      Your home for company knowledge with news, search, and more. Installed in
+      3 minutes.
     </P>
     <actions
       $$row
@@ -182,21 +183,42 @@ class HomeHeader extends React.Component {
                   query={Constants.screen.large}
                   render={() => (
                     <>
-                      <leftSide
-                        css={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          bottom: 0,
-                          width: '50%',
-                        }}
-                      >
-                        <HomePlay />
-                      </leftSide>
-                      <RightSide>
-                        <inner $$fullscreen css={{ padding: [0, 30, 0, 45] }}>
+                      <LeftSide noEdge>
+                        <inner
+                          $$fullscreen
+                          css={{
+                            textAlign: 'left',
+                            padding: [0, 80, 0, 0],
+                          }}
+                        >
                           <div $$flex={1.2} />
                           <Pitch isLarge />
+                          <div $$flex />
+                        </inner>
+                      </LeftSide>
+                      <RightSide noEdge>
+                        <inner
+                          $$fullscreen
+                          css={{
+                            overflow: 'hidden',
+                            right: -80,
+                            left: 80,
+                            borderBottom: [1, borderize(topBg)],
+                          }}
+                        >
+                          <div $$flex />
+                          <img
+                            src={screenImg}
+                            css={{
+                              width: 1100 / 2,
+                              borderRadius: 16,
+                              boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
+                              transform: {
+                                x: 20,
+                                y: 100,
+                              },
+                            }}
+                          />
                           <div $$flex />
                         </inner>
                       </RightSide>
@@ -299,7 +321,7 @@ class HomeFooter extends React.Component {
                   <div $$flex />
                   <content css={isLarge && { marginRight: 40 }}>
                     <Title size={2.3} css={{ marginBottom: 20 }}>
-                      Knowledge management, redone.
+                      Knowledge management 2.0
                     </Title>
                     <UI.PassProps size={1.3} sizeLineHeight={1} alpha={0.85}>
                       <P2>

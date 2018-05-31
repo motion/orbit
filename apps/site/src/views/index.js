@@ -469,6 +469,7 @@ export const Link = ({ to, ...props }) => (
 
 export const TopoBg = () => (
   <topoBg
+    if={false}
     $$fullscreen
     css={{
       zIndex: 0,

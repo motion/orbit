@@ -39,7 +39,7 @@ class PlayMessagesStore {
 
   animate = async sleep => {
     console.log('starting animation')
-    await sleep(13200)
+    await sleep(11200)
     // await this.chatText(Spring, {
     //   from: { opacity: 0 },
     //   to: { opacity: 1 },

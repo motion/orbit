@@ -22,20 +22,20 @@ class PlayChatsStore {
     await sleep(800)
     await this.chats(DurationTrail, {
       delays: [
-        500,
+        0,
         800,
-        900,
-        700,
-        500,
+        400,
         600,
-        400,
-        450,
-        350,
-        400,
-        300,
-        350,
-        350,
         200,
+        100,
+        200,
+        250,
+        150,
+        200,
+        300,
+        150,
+        250,
+        100,
         250,
         300,
       ],
@@ -49,12 +49,11 @@ class PlayChatsStore {
   }
 
   animateChatsAway = async sleep => {
-    await sleep(3000)
     await this.chatFrame(Spring, {
       impl: TimingAnimation,
       config: {
         delay: 0,
-        duration: 3500,
+        duration: 2500,
         easing: Easing.easeOut,
       },
       to: { scale: 0.6, opacity: 0.6, y: -700 },

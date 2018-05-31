@@ -49,7 +49,7 @@ export const Title = UI.injectTheme(
           size={size * (isSmall ? 0.7 : 1)}
           color={theme.titleColor || theme.base.color}
           css={{
-            fontFamily: 'OPTIsupAuvantGothicBold', //'"Mercury Display A", "Mercury Display B"',
+            fontFamily: 'Auvant', //'"Mercury Display A", "Mercury Display B"',
             fontStyle: italic ? 'normal' : 'normal',
           }}
           {...props}

@@ -59,7 +59,7 @@ class FeaturesIntro extends React.Component {
           <Section
             css={{
               background: 'transparent',
-              marginTop: -window.innerHeight / 2.2,
+              marginTop: -window.innerHeight / 2.5,
             }}
           >
             <SectionContent padded fullscreen>
@@ -77,8 +77,7 @@ class FeaturesIntro extends React.Component {
                   Intelligent company organization.
                 </Title>
                 <P2 size={1.6} alpha={0.8}>
-                  Unifies knowledge from across the cloud to lets your teams
-                  operate more effectively.
+                  Unify knowledge from across the cloud so your teams can focus.
                 </P2>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>Home</a>{' '}

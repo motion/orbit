@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Auvant';
+  src: url('../font/optisupauvantgothicbold-webfont.woff2') format('woff2'),
+    url('../font/optisupauvantgothicbold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @keyframes orbit {
   from {
     transform: rotate(-0deg) translateY(250px) rotate(-0deg);

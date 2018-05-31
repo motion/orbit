@@ -93,7 +93,7 @@ class DockPlayStore {
     }
     await sleep(1500)
     bounceIcons()
-    await sleep(6000)
+    await sleep(4000)
     this.bounce.slack = 2
     this.bounce.dropbox = 2
     this.bounce.mail = 2

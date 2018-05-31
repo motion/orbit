@@ -77,11 +77,11 @@ class HomeStore {
 const Pitch = ({ isLarge }) => (
   <>
     <Title italic size={2.3} margin={[0, 0, 15, 0]}>
-      Automatic<br />company intranet
+      Automatic intranet
     </Title>
-    <P size={1.6} sizeLineHeight={1.15} fontWeight={300} alpha={0.9}>
-      A home for your company with team news, search, and exploration.
-      Automatically, with no install.
+    <P size={1.5} sizeLineHeight={1.1} fontWeight={300} alpha={0.9}>
+      An autonomous home for company knowledge with news, search, and more
+      installed in 3 minutes.
     </P>
     <actions
       $$row
@@ -91,8 +91,9 @@ const Pitch = ({ isLarge }) => (
       }}
     >
       <UI.Button
+        color={[0, 0, 0]}
         background="transparent"
-        borderColor={[255, 255, 255, 0.45]}
+        borderColor={[0, 0, 0, 0.15]}
         size={1.1}
         onClick={scrollTo('#join')}
         $smallInstallBtn={!isLarge}
@@ -108,10 +109,7 @@ const Pitch = ({ isLarge }) => (
           width={20}
           height={20}
           css={{
-            fill: topBg
-              .darken(0.25)
-              .desaturate(0.2)
-              .toString(),
+            fill: '#444',
             display: 'inline-block',
             margin: [-2, 0, 0, 4],
             // opacity: 0.32,
@@ -195,33 +193,13 @@ class HomeHeader extends React.Component {
                       >
                         <HomePlay />
                       </leftSide>
-                      <inner
-                        css={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: '50%',
-                          right: '-100%',
-                          padding: [180, 0, '10%', 55],
-                          transformOrigin: 'top left',
-                          transform: {
-                            y: firstSlant.slantSize,
-                            x: firstSlant.slantSize + 10,
-                            rotate: '4.1deg',
-                          },
-                        }}
-                      >
-                        <innerInner
-                          css={{
-                            width: 460,
-                            marginLeft: 20,
-                            transform: {
-                              rotate: '-4.1deg',
-                            },
-                          }}
-                        >
+                      <RightSide>
+                        <inner $$fullscreen css={{ padding: [0, 30, 0, 45] }}>
+                          <div $$flex={1.2} />
                           <Pitch isLarge />
-                        </innerInner>
-                      </inner>
+                          <div $$flex />
+                        </inner>
+                      </RightSide>
                     </>
                   )}
                 />
@@ -310,39 +288,37 @@ class HomeFooter extends React.Component {
   render() {
     return (
       <Media query={Constants.screen.large}>
-        {() => (
+        {isLarge => (
           <Section inverse css={{ background: 'transparent' }}>
             <SectionContent padded fullscreen fullscreenFs>
               <Slant inverseSlant {...firstSlant} {...bottomSlants} />
               <Slant {...secondSlant} {...bottomSlants} />
               <Slant inverseSlant {...thirdSlant} {...bottomSlants} />
               <LeftSide css={{ textAlign: 'left' }}>
-                <div css={{ height: '22%' }} />
-                <below css={{ margin: [15, 0, 0, 0] }}>
-                  <Title size={2.3} css={{ marginBottom: 20 }}>
-                    Knowledge management, redone.
-                  </Title>
-                  <UI.PassProps size={1.3} sizeLineHeight={1.1} alpha={0.85}>
-                    <P2>
-                      Conversations, tickets, emails, docs, wiki. Your team
-                      works in many places.
-                    </P2>
-                    <P2>
-                      Orbit sorts knowledge on the desktop. It's a modern way to
-                      operate a company with collated projects and profiles,
-                      summarized news, and search. All powered by novel NLP
-                      summarization and relevancy.
-                    </P2>
-                    <P2>
-                      It works across every integration, privately on your
-                      device and can attach realtime to any app to provide
-                      context.
-                    </P2>
-                    <P2>
-                      It's a new way to operate. Currently in private beta.
-                    </P2>
-                  </UI.PassProps>
-                </below>
+                <inner $$fullscreen>
+                  <div $$flex />
+                  <content css={isLarge && { marginRight: 40 }}>
+                    <Title size={2.3} css={{ marginBottom: 20 }}>
+                      Knowledge management, redone.
+                    </Title>
+                    <UI.PassProps size={1.3} sizeLineHeight={1} alpha={0.85}>
+                      <P2>
+                        Conversations, tickets, emails, docs, wiki. Your team
+                        works in many places.
+                      </P2>
+                      <P2>
+                        Orbit sorts knowledge on your desktop. It's a modern way
+                        to operate a company with summarized projects and
+                        profiles, news, and search. All powered by novel NLP.
+                      </P2>
+                      <P2>
+                        It works across every integration, privately on your
+                        device. Currently in private beta.
+                      </P2>
+                    </UI.PassProps>
+                  </content>
+                  <div $$flex />
+                </inner>
               </LeftSide>
               <RightSide noEdge $$centered>
                 <UI.Theme name="light">

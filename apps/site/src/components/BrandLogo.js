@@ -1,23 +1,20 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Logo from '~/views/logo'
+import { Logo } from '~/views/logo'
 import * as UI from '@mcro/ui'
 
 @UI.injectTheme
 @view
 export class BrandLogo extends React.Component {
   render({ theme, white, ...props }) {
+    const fill = theme.base.background
+      .darken(0.35)
+      .desaturate(0.7)
+      .toString()
     return (
       <brandMark {...props}>
         <orbit />
-        <Logo
-          fill={theme.base.background
-            .darken(0.35)
-            .desaturate(0.7)
-            .toString()}
-          size={0.23}
-          white={white}
-        />
+        <Logo iconFill={fill} fill={fill} size={0.2} white={white} />
       </brandMark>
     )
   }

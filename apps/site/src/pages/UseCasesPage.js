@@ -56,7 +56,8 @@ class UseCasesIntro extends React.Component {
                 slantBackground={altBg.darken(0.05)}
                 css={{ zIndex: 2 }}
               />
-              <HalfSection css={{ position: 'absolute', bottom: 100 }}>
+              <HalfSection>
+                <div $$flex />
                 <Title
                   color="#111"
                   italic
@@ -70,12 +71,11 @@ class UseCasesIntro extends React.Component {
                     Customer Success
                   </a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#reduce-interrupts')}>Deep work</a>
+                  <a onClick={scrollTo('#reduce-interrupts')}>Deep Work</a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#remote-teams')}>Wiki replacement</a>
+                  <a onClick={scrollTo('#remote-teams')}>Better Wiki</a>
                 </P>
               </HalfSection>
-              <HalfSection />
             </SectionContent>
           </Section>
         )}

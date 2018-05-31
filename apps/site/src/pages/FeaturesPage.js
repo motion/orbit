@@ -64,7 +64,8 @@ class FeaturesIntro extends React.Component {
                 slantBackground={slantBg.darken(0.05)}
                 css={{ zIndex: 2 }}
               />
-              <HalfSection css={{ position: 'absolute', bottom: 100 }}>
+              <HalfSection>
+                <div $$flex />
                 <Title
                   color="#111"
                   italic
@@ -83,7 +84,6 @@ class FeaturesIntro extends React.Component {
                   <a onClick={scrollTo('#context')}>Answer</a>
                 </P>
               </HalfSection>
-              <HalfSection />
             </SectionContent>
           </Section>
         )}

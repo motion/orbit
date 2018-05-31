@@ -68,7 +68,7 @@ class SectionContent extends React.Component {
         height: 'auto',
         minWidth: 'auto',
         maxWidth: 'auto',
-        padding: [0, Constants.sidePad],
+        padding: [0, '5%'],
       },
     },
     halfscreen: {
@@ -81,7 +81,7 @@ class SectionContent extends React.Component {
     padded: {
       padding: [80, Constants.sidePad],
       [Constants.screen.smallQuery]: {
-        padding: [80, Constants.sidePad],
+        padding: [80, '5%'],
       },
     },
   }

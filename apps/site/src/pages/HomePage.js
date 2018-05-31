@@ -329,10 +329,9 @@ class HomeFooter extends React.Component {
                         all over, often chaotically.
                       </P2>
                       <P2>
-                        Orbit unifies knowledge on your desktop and sorts
-                        through it all. Summarized projects and profiles,
-                        personal news, and natural language search. Without any
-                        cloud or on-prem install, and{' '}
+                        Orbit unifies team knowledge on your desktop. Summarized
+                        projects and profiles, news, and natural language
+                        search. With no cloud or on-prem install, running{' '}
                         <em>completely private on your device</em>.
                       </P2>
                       <P2>Currently in private beta.</P2>

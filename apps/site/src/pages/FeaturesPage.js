@@ -32,7 +32,7 @@ import { scrollTo } from '~/helpers'
 import profileImg from '~/../public/screen-profile.png'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-const background = UI.color('#F5E2D5')
+const background = UI.color('#F2DCCE')
 const theme = {
   background: background,
   color: background.darken(0.5).desaturate(0.9),

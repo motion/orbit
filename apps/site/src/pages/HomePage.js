@@ -90,7 +90,7 @@ const Pitch = ({ isLarge }) => (
       sizeLineHeight={1.1}
       fontWeight={300}
       color={'#000'}
-      alpha={0.8}
+      alpha={0.7}
     >
       Company knowledge, sorted. News, search, profiles and more. Installed in 3
       minutes.
@@ -323,7 +323,7 @@ class HomeFooter extends React.Component {
                     <Title size={2.3} css={{ marginBottom: 20 }}>
                       A new way to manage knowledge.
                     </Title>
-                    <UI.PassProps size={1.35} sizeLineHeight={1} alpha={0.9}>
+                    <UI.PassProps size={1.6} sizeLineHeight={1} alpha={0.7}>
                       <P2>
                         Conversations, tickets, emails, docs, wiki. Work happens
                         all over, often chaotically.
@@ -332,7 +332,7 @@ class HomeFooter extends React.Component {
                         Orbit unifies team knowledge on your desktop. Summarized
                         projects and profiles, news, and natural language
                         search. With no cloud or on-prem install, running{' '}
-                        <em>completely private on your device</em>.
+                        <em>private on your device</em>.
                       </P2>
                       <P2>Currently in private beta.</P2>
                     </UI.PassProps>
@@ -366,7 +366,7 @@ export const HomePage = () => (
           <UI.Theme
             theme={{
               background: bottomBg,
-              color: bottomBg.darken(0.6).desaturate(0.3),
+              color: bottomBg.darken(0.8).desaturate(0.4),
             }}
           >
             <HomeFooter isMedium={isMedium} />

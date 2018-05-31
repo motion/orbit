@@ -11,7 +11,7 @@ import * as UI from '@mcro/ui'
 @UI.injectTheme
 @view
 export class Header extends React.Component {
-  render({ linkStyle, linkStyleHover, theme }) {
+  render({ linkStyle, theme }) {
     const color = theme.base.color.desaturate(0.2).alpha(0.8)
     return (
       <Media query={Constants.screen.large}>
@@ -26,25 +26,13 @@ export class Header extends React.Component {
                   />
                   <div $$flex />
                   <nav>
-                    <Link
-                      css={{ color, ...linkStyle }}
-                      hoverStyle={linkStyleHover}
-                      to="/features"
-                    >
+                    <Link color={color} css={linkStyle} to="/features">
                       {isLarge ? 'Features' : 'What'}
                     </Link>
-                    <Link
-                      css={{ color, ...linkStyle }}
-                      hoverStyle={linkStyleHover}
-                      to="/use-cases"
-                    >
+                    <Link color={color} css={linkStyle} to="/use-cases">
                       {isLarge ? 'Use Cases' : 'Why'}
                     </Link>
-                    <Link
-                      css={{ color, ...linkStyle }}
-                      hoverStyle={linkStyleHover}
-                      to="/about"
-                    >
+                    <Link color={color} css={linkStyle} to="/about">
                       {isLarge ? 'About' : 'Who'}
                     </Link>
                   </nav>

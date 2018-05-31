@@ -6,13 +6,19 @@ import * as UI from '@mcro/ui'
 @UI.injectTheme
 @view
 export class BrandLogo extends React.Component {
-  render({ theme, white, ...props }) {
+  state = { hovered: false }
+  leave = () => this.setState({ hovered: false })
+  hover = () => this.setState({ hovered: true })
+
+  render({ theme, white, ...props }, { hovered }) {
     const fill = theme.base.background
       .darken(0.55)
-      .desaturate(0.6)
+      .desaturate(0.7)
+      .rotate(-90)
+      .alpha(hovered ? 0.8 : 1)
       .toString()
     return (
-      <brandMark {...props}>
+      <brandMark {...props} onMouseEnter={this.hover} onMouseLeave={this.leave}>
         <orbit />
         <Logo iconFill={fill} fill={fill} size={0.2} white={white} />
       </brandMark>

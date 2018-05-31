@@ -47,7 +47,9 @@ export const Title = UI.injectTheme(
           fontWeight={500}
           margin={[0, 0, 5]}
           size={size * (isSmall ? 0.7 : 1)}
-          color={theme.titleColor || theme.base.color.desaturate(0.3).alpha(0.8)}
+          color={
+            theme.titleColor || theme.base.color.desaturate(0.3).alpha(0.8)
+          }
           css={{
             fontFamily: 'Auvant', //'"Mercury Display A", "Mercury Display B"',
             fontStyle: italic ? 'normal' : 'normal',
@@ -423,7 +425,7 @@ export const HalfSection = view('section', {
 
 @view.ui
 export class A extends React.Component {
-  render({ hoverStyle, active, ...props }) {
+  render({ color, active, ...props }) {
     return <a $active={active} {...props} />
   }
 
@@ -440,17 +442,19 @@ export class A extends React.Component {
 
   static theme = (props, theme) => {
     const bg = theme.base.background.darken(0.1).desaturate(0.1)
+    const color = UI.color(props.color || theme.base.color)
     return {
       a: {
+        color,
         '&:hover': {
-          ...props.hoverStyle,
-          borderBottom: [2, bg.alpha(0.3)],
+          color: color.alpha(0.6),
+          borderBottom: [2, bg.alpha(0.4)],
         },
       },
       active: {
         borderBottom: [2, bg],
         '&:hover': {
-          ...props.hoverStyle,
+          color,
           borderBottom: [2, bg],
         },
       },

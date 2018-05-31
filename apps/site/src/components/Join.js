@@ -68,7 +68,7 @@ export class Join extends React.Component {
                 value=""
               />
             </div>
-            <end $$row $$align="center">
+            <end $$row>
               <message
                 if={success || error}
                 $success={success && !error}

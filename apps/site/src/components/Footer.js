@@ -7,11 +7,12 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
 
+@UI.injectTheme
 @view
 export class Footer extends React.Component {
-  render() {
+  render({ theme }) {
     return (
-      <footer>
+      <footer css={{ background: theme.base.background }}>
         <Media query={Constants.screen.large}>
           {isLarge => (
             <Section css={{ borderTop: [1, [255, 255, 255, 0.2]] }}>
@@ -67,11 +68,5 @@ export class Footer extends React.Component {
     link: {
       margin: [0, 0, 10],
     },
-  }
-
-  static theme = (_, theme) => {
-    return {
-      background: theme.base.background,
-    }
   }
 }

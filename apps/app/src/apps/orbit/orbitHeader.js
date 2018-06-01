@@ -24,11 +24,10 @@ class HeaderStore {
       App.orbitState.pinned || App.orbitState.docked,
       App.isMouseInActiveArea,
     ],
-    async ([shown], { when, sleep }) => {
+    async ([shown], { when }) => {
       if (!shown) throw react.cancel
       await when(() => Desktop.state.focusedOnOrbit)
       await when(() => !App.isAnimatingOrbit)
-      log('focusing the input')
       this.focus()
     },
     { log: false },

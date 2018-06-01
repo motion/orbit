@@ -26,6 +26,13 @@ import bg from '~/../public/girl.svg'
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
 
+const scrollToTrack = (to, track) => {
+  return () => {
+    window.ga('send', 'event', 'Home', 'download', track)
+    scrollTo(to)()
+  }
+}
+
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
   slantGradient: [topBg, bottomBg.mix(topBg)].map(borderize),
@@ -103,14 +110,13 @@ const Pitch = ({ isLarge }) => (
         alignItems: 'center',
       }}
     >
-      Download:
+      for
       <space css={{ width: 10 }} />
       <UI.PassProps
         color={[0, 0, 0]}
         background="transparent"
         borderColor={[0, 0, 0, 0.15]}
         size={1.1}
-        onClick={scrollTo('#join')}
         $smallInstallBtn={!isLarge}
         alpha={0.6}
         css={{
@@ -121,6 +127,7 @@ const Pitch = ({ isLarge }) => (
       >
         <UI.Button>
           <AppleLogo
+            onClick={scrollToTrack('#join', 'Mac')}
             width={20}
             height={20}
             css={{
@@ -133,6 +140,7 @@ const Pitch = ({ isLarge }) => (
         </UI.Button>
         <UI.Button>
           <WindowsLogo
+            onClick={scrollToTrack('#join', 'Windows')}
             width={18}
             height={18}
             css={{

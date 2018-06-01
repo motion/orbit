@@ -54,26 +54,6 @@ const matchSort = (query, results) => {
   return uniq([...strongTitleMatches, ...results].slice(0, 10))
 }
 
-const getResults = async query => {
-  if (!query) {
-    return await Bit.find({
-      take: 6,
-      relations: ['people'],
-      order: { bitCreatedAt: 'DESC' },
-    })
-  }
-  const { conditions, rest } = parseQuery(query)
-  const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
-  const where = `title like "${titleLike}%"${conditions}`
-  console.log('searching', where, conditions, rest)
-  return await Bit.find({
-    where,
-    relations: ['people'],
-    order: { bitCreatedAt: 'DESC' },
-    take: 6,
-  })
-}
-
 const prefixes = {
   gh: { integration: 'github' },
   gd: { integration: 'google', type: 'document' },
@@ -182,8 +162,10 @@ export class AppStore {
     async ([query], { sleep }) => {
       // debounce a little for fast typer
       await sleep(40)
-      const results = await getResults(query)
-      this.bitResultsId = Math.random()
+      const results = await this.searchBits(query)
+      setTimeout(() => {
+        this.bitResultsId = Math.random()
+      })
       return results
     },
     {
@@ -193,6 +175,29 @@ export class AppStore {
       log: false,
     },
   )
+
+  searchBits = async query => {
+    if (!query) {
+      return await Bit.find({
+        take: 6,
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
+      })
+    }
+    console.time('bitSearch')
+    const { conditions, rest } = parseQuery(query)
+    const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
+    const where = `title like "${titleLike}%"${conditions}`
+    console.log('searching', where, conditions, rest)
+    const res = await Bit.find({
+      where,
+      relations: ['people'],
+      order: { bitCreatedAt: 'DESC' },
+      take: 6,
+    })
+    console.timeEnd('bitSearch')
+    return res
+  }
 
   contextResults = react(
     () => 0,

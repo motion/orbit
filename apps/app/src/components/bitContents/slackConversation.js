@@ -48,7 +48,7 @@ export class BitSlackConversation extends React.Component {
     const uid = uids[bit.id] || curId++ % (exampleContent.length - 1)
     uids[bit.id] = uid
     const { title, preview } = exampleContent[uid]
-    console.log('bit is', bit)
+    // console.log('bit is', bit)
     return children({
       title,
       preview,

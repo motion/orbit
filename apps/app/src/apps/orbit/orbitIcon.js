@@ -20,21 +20,24 @@ const icons = {
   githubWhite: iconGithubWhite,
 }
 
+const SLACK_SCALE = {
+  transform: {
+    y: -1,
+    scale: 0.95,
+  },
+}
+const GMAIL_SCALE = {
+  transform: {
+    scale: 0.95,
+  },
+}
+
 const adjust = name => {
   if (name === 'slack') {
-    return {
-      transform: {
-        y: -1,
-        scale: 0.95,
-      },
-    }
+    return SLACK_SCALE
   }
   if (name === 'gmail') {
-    return {
-      transform: {
-        scale: 0.95,
-      },
-    }
+    return GMAIL_SCALE
   }
 }
 

@@ -48,10 +48,9 @@ export class AboutPage extends React.Component {
           <AboutIntro />
           <Section>
             <Border css={{ top: 0 }} />
-            <Border css={{ bottom: -4 }} />
             <SectionContent padded>
-              <inner css={{ padding: [100, '20%'] }}>
-                <P size={2} css={{ lineHeight: '44px' }} alpha={0.75}>
+              <inner css={{ padding: [100, '10%'] }}>
+                <P size={1.5} css={{ lineHeight: '44px' }} alpha={0.75}>
                   Orbit runs intimately in your everyday. That means it has to
                   work for you, the individual.
                   <br />

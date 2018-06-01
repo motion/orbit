@@ -15,7 +15,17 @@ export class Footer extends React.Component {
       <footer css={{ background: theme.base.background }}>
         <Media query={Constants.screen.large}>
           {isLarge => (
-            <Section css={{ borderTop: [1, [255, 255, 255, 0.2]] }}>
+            <Section
+              css={{
+                borderTop: [
+                  1,
+                  theme.base.background
+                    .darken(0.2)
+                    .desaturate(0.2)
+                    .alpha(0.4),
+                ],
+              }}
+            >
               <SectionContent padded>
                 <left
                   $$row

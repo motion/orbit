@@ -101,12 +101,12 @@ const SearchIllustration = () => (
           position: 'absolute',
           overflow: 'hidden',
           left: '50%',
-          top: '32%',
-          marginLeft: 'calc(-5% - 520px)',
-          width: '45%',
+          top: '31%',
+          marginLeft: 'calc(-5% - 500px)',
+          width: '43%',
+          maxWidth: 570,
           height: '22%',
-          marginBottom: -450,
-          zIndex: 1000,
+          zIndex: 1,
           pointerEvents: 'none',
           transform: {
             y: searchYOff - 180,
@@ -464,13 +464,17 @@ export class SectionFeatureIntelligence extends React.Component {
                       }}
                     >
                       <P2 size={1.6}>
-                        A sidebar that shows relevant answers from your
-                        knowledgebase alongside every app.
+                        Every person is moving fast. Solve N<sup
+                          css={{ display: 'inline' }}
+                        >
+                          2
+                        </sup>{' '}
+                        communication problems with ease with smart aggregated
+                        profiles that show actual relevant information.
                       </P2>
                       <P2 size={1.6}>
-                        Simply hold <Cmd>Option</Cmd> or press{' '}
-                        <Cmd>Option+Space</Cmd>. Important terms, people, and
-                        conversations are highlighted and summarized, instantly.
+                        Orbit also learns your project structure and builds an
+                        exploratory interface for whats going on in the company.
                       </P2>
                     </Callout>
                   </UI.Theme>
@@ -560,10 +564,10 @@ export class SectionSmartSidebar extends React.Component {
                   if={isLarge}
                   css={{
                     position: 'absolute',
-                    top: '5%',
-                    right: '8%',
+                    top: '9%',
+                    right: '7%',
                     left: '2%',
-                    height: '60%',
+                    height: '65%',
                     maxHeight: 800,
                     overflow: 'hidden',
                   }}

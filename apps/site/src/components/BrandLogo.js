@@ -12,15 +12,14 @@ export class BrandLogo extends React.Component {
 
   render({ theme, white, ...props }, { hovered }) {
     const fill = theme.base.background
-      .darken(0.55)
-      .desaturate(0.7)
-      .rotate(-90)
-      .alpha(hovered ? 0.8 : 1)
+      .darken(0.5)
+      .desaturate(0.65)
+      .alpha(hovered ? 0.9 : 1)
       .toString()
     return (
       <brandMark {...props} onMouseEnter={this.hover} onMouseLeave={this.leave}>
         <orbit />
-        <Logo iconFill={fill} fill={fill} size={0.2} white={white} />
+        <Logo fill={fill} size={0.2} white={white} />
       </brandMark>
     )
   }

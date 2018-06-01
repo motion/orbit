@@ -26,7 +26,7 @@ import profileImg from '~/../public/screen-profile.png'
 import chatImg from '~/../public/chat.svg'
 import { scrollTo } from '~/helpers'
 
-const altBg = UI.color('#F7DFE5')
+const altBg = UI.color('#FAE6EB')
 const peachTheme = {
   background: altBg,
   color: altBg.darken(0.8).desaturate(0.1),
@@ -47,7 +47,7 @@ class UseCasesIntro extends React.Component {
           <Section
             css={{
               background: 'transparent',
-              marginTop: -window.innerHeight / 2.5,
+              marginTop: -window.innerHeight / 2.2,
             }}
           >
             <SectionContent padded fullscreen>

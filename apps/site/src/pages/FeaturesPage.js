@@ -32,7 +32,7 @@ import { scrollTo } from '~/helpers'
 import profileImg from '~/../public/screen-profile.png'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-const background = UI.color('#F2DCCE')
+const background = UI.color('#FAECE3')
 const theme = {
   background: background,
   color: background.darken(0.5).desaturate(0.9),
@@ -56,7 +56,7 @@ class FeaturesIntro extends React.Component {
           <Section
             css={{
               background: 'transparent',
-              marginTop: -window.innerHeight / 2.5,
+              marginTop: -window.innerHeight / 2.2,
             }}
           >
             <SectionContent padded fullscreen>
@@ -72,7 +72,7 @@ class FeaturesIntro extends React.Component {
                   size={2.3}
                   margin={[0, '10%', 10, 0]}
                 >
-                  Organization organization.
+                  Your organizational organization.
                 </Title>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>Home</a>{' '}
@@ -103,17 +103,17 @@ const SearchIllustration = () => (
           left: '50%',
           top: '32%',
           marginLeft: 'calc(-5% - 520px)',
-          width: 550,
-          height: '18%',
+          width: '45%',
+          height: '22%',
           marginBottom: -450,
-          zIndex: 1,
+          zIndex: 1000,
           pointerEvents: 'none',
           transform: {
             y: searchYOff - 180,
           },
         }}
       >
-        <FadedArea fadeRight fadeDown>
+        <FadedArea fadeDown>
           <img
             src={searchImg}
             css={{
@@ -121,7 +121,7 @@ const SearchIllustration = () => (
               marginTop: 0,
               height: 'auto',
               transformOrigin: 'top left',
-              transform: { scale: 0.5, x: 0, y: 20 },
+              transform: { scale: 0.5, x: 120, y: 140 },
             }}
           />
         </FadedArea>
@@ -437,7 +437,7 @@ export class SectionFeatureIntelligence extends React.Component {
                 slantSize={14}
                 slantBackground={slantBg.darken(0.05)}
               />
-              <LeftSide inverse innerStyle={{ paddingTop: '50%' }}>
+              <LeftSide inverse innerStyle={{ paddingTop: '58%' }}>
                 <div
                   css={
                     isLarge && {
@@ -491,11 +491,11 @@ export class SectionFeatureIntelligence extends React.Component {
                       css={{
                         zIndex: 0,
                         position: 'absolute',
-                        width: 500,
-                        height: '55%',
+                        width: '45%',
+                        height: '58%',
                         marginTop: -340 + contextYOff,
-                        top: '48%',
-                        left: '50%',
+                        top: '56%',
+                        left: '47%',
                         marginLeft: 50,
                         overflow: 'hidden',
                       }}
@@ -510,7 +510,7 @@ export class SectionFeatureIntelligence extends React.Component {
                             transformOrigin: 'top left',
                             transform: {
                               scale: 0.5,
-                              x: 0,
+                              x: 50,
                               y: 130,
                             },
                           }}
@@ -553,8 +553,46 @@ export class SectionSmartSidebar extends React.Component {
                 inverseSlant
                 slantSize={14}
                 slantBackground={slantBg.darken(0.05)}
+                css={{ zIndex: 1 }}
               />
-              <LeftSide css={{ top: 0 }}>
+              <LeftSide css={{ top: 0, zIndex: 0 }}>
+                <section
+                  if={isLarge}
+                  css={{
+                    position: 'absolute',
+                    top: '5%',
+                    right: '8%',
+                    left: '2%',
+                    height: '60%',
+                    maxHeight: 800,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <FadedArea fadeDown>
+                    <img
+                      src={intelligenceImg}
+                      css={{
+                        position: 'absolute',
+                        width: 1634,
+                        zIndex: 0,
+                        height: 'auto',
+                        transformOrigin: 'top left',
+                        transform: {
+                          scale: 0.4,
+                          x: -590,
+                          y: 200,
+                        },
+                      }}
+                    />
+                  </FadedArea>
+                </section>
+                <div if={isLarge} css={{ height: '100%' }} />
+              </LeftSide>
+
+              <RightSide
+                inverse
+                css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
+              >
                 <verticalSpace if={isLarge} css={{ height: '11%' }} />
                 <FeatureTitle>Augmented operation</FeatureTitle>
                 <FeatureSubTitle>A smart sidebar for every app</FeatureSubTitle>
@@ -586,43 +624,6 @@ export class SectionSmartSidebar extends React.Component {
                     </P>
                   </Callout>
                 </UI.Theme>
-              </LeftSide>
-
-              <RightSide
-                inverse
-                css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
-              >
-                <section
-                  if={isLarge}
-                  css={{
-                    position: 'absolute',
-                    top: '5%',
-                    right: 0,
-                    left: '16%',
-                    height: '60%',
-                    maxHeight: 800,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <FadedArea fadeLeft fadeDown>
-                    <img
-                      src={intelligenceImg}
-                      css={{
-                        position: 'absolute',
-                        width: 1634,
-                        zIndex: 0,
-                        height: 'auto',
-                        transformOrigin: 'top left',
-                        transform: {
-                          scale: 0.4,
-                          x: -530,
-                          y: 100,
-                        },
-                      }}
-                    />
-                  </FadedArea>
-                </section>
-                <div if={isLarge} css={{ height: '100%' }} />
               </RightSide>
             </SectionContent>
           </Section>

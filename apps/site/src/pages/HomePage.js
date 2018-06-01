@@ -14,6 +14,7 @@ import {
   AppleLogo,
   TopoBg,
   HomeImg,
+  WindowsLogo,
 } from '~/views'
 // import { HomePlay } from './home/HomePlay'
 import * as Constants from '~/constants'
@@ -102,7 +103,9 @@ const Pitch = ({ isLarge }) => (
         alignItems: 'center',
       }}
     >
-      <UI.Button
+      Download:
+      <space css={{ width: 10 }} />
+      <UI.PassProps
         color={[0, 0, 0]}
         background="transparent"
         borderColor={[0, 0, 0, 0.15]}
@@ -111,35 +114,34 @@ const Pitch = ({ isLarge }) => (
         $smallInstallBtn={!isLarge}
         alpha={0.6}
         css={{
-          margin: [0, 10, 0, -10],
+          margin: [0, 10, 0, 0],
           cursor: 'pointer',
           lineHeight: '1.1rem',
         }}
       >
-        Coming soon for{' '}
-        <AppleLogo
-          width={20}
-          height={20}
-          css={{
-            fill: '#444',
-            display: 'inline-block',
-            margin: [-2, 0, 0, 4],
-            // opacity: 0.32,
-          }}
-        />
-      </UI.Button>
-      <UI.Button
-        if={false}
-        chromeless
-        alpha={0.4}
-        onClick={Router.link('/features')}
-        margin={[0, 0, 0, 10]}
-        css={{
-          cursor: 'pointer',
-        }}
-      >
-        Learn more
-      </UI.Button>
+        <UI.Button>
+          <AppleLogo
+            width={20}
+            height={20}
+            css={{
+              fill: '#444',
+              display: 'inline-block',
+              margin: [-2, 0, 0, -1],
+              // opacity: 0.32,
+            }}
+          />
+        </UI.Button>
+        <UI.Button>
+          <WindowsLogo
+            width={18}
+            height={18}
+            css={{
+              fill: '#444',
+              display: 'inline-block',
+            }}
+          />
+        </UI.Button>
+      </UI.PassProps>
     </actions>
   </>
 )

@@ -13,8 +13,10 @@ class HeaderStore {
       console.error('no input')
       return
     }
-    this.inputRef.current.focus()
+    // weirdly this doesnt work but the querySelector does...
+    // this.inputRef.current.focus()
     document.execCommand('selectAll', false, null)
+    document.querySelector('input').focus()
   }
 
   focusInput = react(
@@ -22,7 +24,7 @@ class HeaderStore {
       App.orbitState.pinned || App.orbitState.docked,
       App.isMouseInActiveArea,
     ],
-    async ([shown], { when }) => {
+    async ([shown], { when, sleep }) => {
       if (!shown) throw react.cancel
       await when(() => Desktop.state.focusedOnOrbit)
       await when(() => !App.isAnimatingOrbit)

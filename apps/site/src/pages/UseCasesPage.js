@@ -47,7 +47,7 @@ class UseCasesIntro extends React.Component {
           <Section
             css={{
               background: 'transparent',
-              marginTop: -window.innerHeight / 2.2,
+              marginTop: -window.innerHeight / 2,
             }}
           >
             <SectionContent padded fullscreen>

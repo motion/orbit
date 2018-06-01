@@ -259,8 +259,15 @@ export class Screen {
 
   mouseOverShowDelay: any = 0
 
+  updateMouseMoveAt = throttle(() => {
+    Desktop.setMouseState({
+      mouseMove: Date.now(),
+    })
+  }, 100)
+
   handleMousePosition = async mousePos => {
     clearTimeout(this.mouseOverShowDelay)
+    this.updateMouseMoveAt()
     const { hidden, position, docked } = App.orbitState
     const { target } = App.peekState
     const peekHovered = target && isMouseOver(App.peekState, mousePos)

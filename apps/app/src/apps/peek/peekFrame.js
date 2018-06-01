@@ -83,7 +83,7 @@ export class PeekFrame {
           ]}
           $arrow
           css={{
-            left: !onRight ? 'auto' : -20,
+            left: !onRight ? 'auto' : -14,
             right: !onRight ? -arrowSize : 'auto',
             zIndex: 1000000000,
             transform: {

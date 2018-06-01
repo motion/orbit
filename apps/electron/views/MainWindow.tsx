@@ -1,15 +1,27 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { view, Component, isEqual } from '@mcro/black'
+import { view, Component, isEqual, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '~/helpers'
-import { Electron, Desktop } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/all'
 import { ElectronStore } from '~/stores/ElectronStore'
 
 class MainStore {
   get mouseInActiveArea() {
     return Desktop.hoverState.peekHovered || Desktop.hoverState.orbitHovered
   }
+
+  openedOrbitButNotMovedMouseYet = react(
+    () => App.orbitState.docked,
+    async (justOpened, { setValue, whenChanged }) => {
+      if (!justOpened) {
+        throw react.cancel
+      }
+      setValue(true)
+      await whenChanged(() => Desktop.mouseState.mouseMove)
+      setValue(false)
+    },
+  )
 }
 
 @view.attach('electronStore')
@@ -56,10 +68,18 @@ export class MainWindow extends Component<{
     if (!this.state.size) {
       return null
     }
+    console.log(
+      'store.openedOrbitButNotMovedMouseYet',
+      store.openedOrbitButNotMovedMouseYet,
+    )
     return (
       <Window
         alwaysOnTop
-        ignoreMouseEvents={!store.mouseInActiveArea}
+        ignoreMouseEvents={
+          // store.openedOrbitButNotMovedMouseYet
+          //   ? false :
+          !store.mouseInActiveArea
+        }
         ref={ref => ref && onRef(ref.window)}
         file={Constants.APP_URL}
         show={electronStore.show ? this.state.show : false}

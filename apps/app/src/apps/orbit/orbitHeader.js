@@ -6,12 +6,15 @@ import * as Constants from '~/constants'
 import { ControlButton } from '~/views/controlButton'
 
 class HeaderStore {
-  inputRef = null
-
-  setInputRef = ref => (this.input = ref)
+  inputRef = React.createRef()
 
   focus = () => {
-    this.inputRef && this.inputRef.focus()
+    if (!this.inputRef || !this.inputRef.current) {
+      console.error('no input')
+      return
+    }
+    this.inputRef.current.focus()
+    document.execCommand('selectAll', false, null)
   }
 
   focusInput = react(
@@ -23,6 +26,7 @@ class HeaderStore {
       if (!shown) throw react.cancel
       await when(() => Desktop.state.focusedOnOrbit)
       await when(() => !App.isAnimatingOrbit)
+      log('focusing the input')
       this.focus()
     },
     { log: false },
@@ -84,7 +88,7 @@ export class OrbitHeader extends React.Component {
             background="transparent"
             onChange={orbitStore.onChangeQuery}
             onKeyDown={this.handleKeyDown}
-            ref={headerStore.setInputRef}
+            ref={headerStore.inputRef}
             onClick={headerStore.onClickInput}
             css={{
               color: theme.base.color.alpha(0.8),

@@ -89,19 +89,14 @@ const Pitch = ({ isLarge }) => (
       italic
       size={isLarge ? 2.4 : 3}
       margin={[0, 0, 15, 0]}
-      color={'#222'}
+      alpha={1}
+      color="#222"
     >
-      Autonomous intranet
+      The Autonomous Intranet
     </Title>
-    <P
-      size={1.6}
-      sizeLineHeight={1.1}
-      fontWeight={300}
-      color={'#000'}
-      alpha={0.7}
-    >
-      Company knowledge, sorted. News, search, profiles and more. Installed in 3
-      minutes.
+    <P size={1.6} sizeLineHeight={1.1} fontWeight={300}>
+      A new way to manage company knowledge. News, search, profile and project
+      aggregation (and more). Installed in 3 minutes.
     </P>
     <actions
       $$row

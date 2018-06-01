@@ -36,7 +36,7 @@ export class PeekFrame {
     ]
     const margin = padding.map(x => -x)
     const boxShadow = [[onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]]]
-    const arrowSize = 30
+    const arrowSize = 24
     // determine x adjustments
     // adjust for docked not using shadow pad
     let peekAdjustX = docked ? -18 - 6 : 0
@@ -49,7 +49,7 @@ export class PeekFrame {
     const x = state.position[0] + peekAdjustX
     const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
     const y = state.position[1] + animationAdjust
-    const ARROW_CARD_TOP_OFFSET = 60
+    const ARROW_CARD_TOP_OFFSET = 32
     const arrowY = Math.min(
       isHidden
         ? 0

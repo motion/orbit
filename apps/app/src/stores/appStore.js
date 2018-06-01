@@ -63,8 +63,11 @@ const getResults = async query => {
     })
   }
   const { conditions, rest } = parseQuery(query)
+  const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
+  const where = `title like "${titleLike}%"${conditions}`
+  console.log('searching', where, conditions, rest)
   return await Bit.find({
-    where: `title like "%${rest.replace(/\s+/g, '%')}%"${conditions}`,
+    where,
     relations: ['people'],
     order: { bitCreatedAt: 'DESC' },
     take: 6,
@@ -177,8 +180,8 @@ export class AppStore {
       Desktop.state.lastBitUpdatedAt,
     ],
     async ([query], { sleep }) => {
-      // debounce enough for medium-speed typer
-      await sleep(120)
+      // debounce a little for fast typer
+      await sleep(40)
       const results = await getResults(query)
       this.bitResultsId = Math.random()
       return results
@@ -282,13 +285,12 @@ export class AppStore {
         const pluginResultId = Desktop.searchState.pluginResultsId
         const bitResultsId = this.bitResultsId
         // no jitter - wait for everything to finish
-        let howfar = 0
-        let toolong = setTimeout(() => console.log('took long: ', howfar), 1000)
+        console.time('searchPlugins')
+        console.time('searchPluginsAndBitResults')
         await when(() => pluginResultId !== Desktop.searchState.pluginResultId)
-        howfar++
+        console.timeEnd('searchPlugins')
         await when(() => bitResultsId !== this.bitResultsId)
-        howfar++
-        clearTimeout(toolong)
+        console.timeEnd('searchPluginsAndBitResults')
         const allResultsUnsorted = [
           ...this.bitResults,
           ...Desktop.searchState.pluginResults,

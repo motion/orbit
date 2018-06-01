@@ -159,13 +159,13 @@ select:-webkit-autofill:focus {
 }
 
 ::selection {
-  background: blue;
+  background: rgba(0, 0, 0, 0.2);
   color: #fff;
   text-shadow: none;
 }
 
 *::selection {
-  background: blue;
+  background: rgba(0, 0, 0, 0.2);
   color: #fff;
   text-shadow: none;
 }

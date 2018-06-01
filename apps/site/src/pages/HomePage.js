@@ -96,7 +96,7 @@ const Pitch = ({ isLarge }) => (
     </Title>
     <P size={1.6} sizeLineHeight={1.1} fontWeight={300}>
       A new way to manage company knowledge. News, search, profile and project
-      aggregation (and more). Installed in 3 minutes.
+      aggregation, and more. Installed in 3 minutes.
     </P>
     <actions
       $$row

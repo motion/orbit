@@ -10,7 +10,7 @@ import * as UI from '@mcro/ui'
 @UI.injectTheme
 @view
 export class Footer extends React.Component {
-  render({ theme }) {
+  render({ theme, noCallToAction }) {
     return (
       <footer css={{ background: theme.base.background }}>
         <Media query={Constants.screen.large}>
@@ -28,6 +28,7 @@ export class Footer extends React.Component {
             >
               <SectionContent padded>
                 <left
+                  if={!noCallToAction}
                   $$row
                   css={
                     isLarge

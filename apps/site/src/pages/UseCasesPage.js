@@ -26,7 +26,7 @@ import profileImg from '~/../public/screen-profile.png'
 import chatImg from '~/../public/chat.svg'
 import { scrollTo } from '~/helpers'
 
-const altBg = UI.color('#FAE6EB')
+const altBg = UI.color('#FAEBEF')
 const peachTheme = {
   background: altBg,
   color: altBg.darken(0.8).desaturate(0.1),

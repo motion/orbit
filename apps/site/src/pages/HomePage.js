@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Header, Join } from '~/components'
+import { Header, Footer, Join } from '~/components'
 import SectionContent from '~/views/sectionContent'
 import {
   Section,
@@ -92,11 +92,11 @@ const Pitch = ({ isLarge }) => (
       alpha={1}
       color="#222"
     >
-      The Autonomous Intranet
+      Autonomous Intranet
     </Title>
     <P size={1.35} sizeLineHeight={1.1} fontWeight={300}>
-      A new way to manage company knowledge. News, search, profile and project
-      aggregation, and more. Installed in 3 minutes.
+      A new way to manage company knowledge. News, search, profiles, project
+      aggregation and more. Installed&nbsp;in 3 minutes.
     </P>
     <actions
       $$row
@@ -325,21 +325,24 @@ class HomeFooter extends React.Component {
                 <inner $$fullscreen={isLarge}>
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
-                    <Title size={2.3} css={{ marginBottom: 20 }}>
+                    <Title size={2.3} css={{ marginBottom: 25 }}>
                       A new way to manage knowledge.
                     </Title>
-                    <UI.PassProps size={1.6} sizeLineHeight={1} alpha={0.7}>
+                    <UI.PassProps size={1.35} sizeLineHeight={1} alpha={0.7}>
                       <P2>
-                        Conversations, tickets, emails, docs, wiki. Work happens
-                        all over, often chaotically.
+                        Conversations, tickets, emails, docs, wiki: your teams
+                        knowledge is all over the place.
                       </P2>
                       <P2>
-                        Orbit unifies team knowledge on your desktop. Summarized
-                        projects and profiles, news, and natural language
-                        search. With no cloud or on-prem install, running{' '}
-                        <em>private on your device</em>.
+                        Orbit unifies the cloud on your desktop with smart
+                        features. Summarized projects and profiles, news, and
+                        natural language powered search to start.
                       </P2>
-                      <P2>Currently in private beta.</P2>
+                      <P2>
+                        There's no cloud or on-prem install. It runs completely{' '}
+                        privately on your device using novel NLP.
+                      </P2>
+                      <P2>Now going into beta.</P2>
                     </UI.PassProps>
                   </content>
                   <div $$flex />
@@ -364,7 +367,7 @@ export const HomePage = () => (
   >
     <Media query={Constants.screen.medium}>
       {isMedium => (
-        <home $$flex $$background={`linear-gradient(${topBg}, ${bottomBg})`}>
+        <home $$flex $$background={topBg}>
           <TopoBg />
           <Header white />
           <HomeHeader isMedium={isMedium} />
@@ -376,6 +379,7 @@ export const HomePage = () => (
           >
             <HomeFooter isMedium={isMedium} />
           </UI.Theme>
+          <Footer if={false} noCallToAction />
         </home>
       )}
     </Media>

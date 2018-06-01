@@ -12,23 +12,34 @@ export class Join extends React.Component {
   }
 
   form = React.createRef()
+  email = React.createRef()
 
   submit = async e => {
     e.preventDefault()
     try {
       this.setState({ error: null, success: null })
       const form = this.form.current
-      const json = new URLSearchParams(new FormData(form)).toString()
-      const { result, msg } = await r2.post(form.getAttribute('action'), {
-        json,
+      const query = {
+        u: '019909d3efb283014d35674e5',
+        id: '015e5a3442',
+        EMAIL: this.email.current.value,
+        b_019909d3efb283014d35674e5_015e5a3442: '',
+      }
+      const result = await r2.post(form.getAttribute('action'), {
+        query,
         mode: 'no-cors',
-      }).json
-      if (result === 'error') {
-        throw msg
+      }).text
+      if (result.indexOf('error')) {
+        if (result.indexOf('already subscribed')) {
+          this.setState({ success: 'Already subscribed!', error: null })
+          return
+        }
+        this.setState({ error: result, success: null })
       } else {
-        this.setState({ error: null, success: `${msg}` })
+        this.setState({ error: null, success: 'You\'re on the list!' })
       }
     } catch (error) {
+      console.error(error)
       this.setState({ error: 'Error submitting, did you enter an email?' })
     }
   }
@@ -46,7 +57,7 @@ export class Join extends React.Component {
           </P2>
           <form
             ref={this.form}
-            action="https://tryorbit.us18.list-manage.com/subscribe/post-json?u=019909d3efb283014d35674e5&amp;id=015e5a3442"
+            action="https://tryorbit.us18.list-manage.com/subscribe/post-json"
             method="post"
             id="mc-embedded-subscribe-form"
             name="mc-embedded-subscribe-form"
@@ -55,19 +66,12 @@ export class Join extends React.Component {
             onSubmit={this.submit}
           >
             <input
+              ref={this.email}
               type="email"
               name="EMAIL"
               id="mce-EMAIL"
               placeholder="Email address..."
             />
-            <div $$hidden aria-hidden="true">
-              <input
-                type="text"
-                name="b_019909d3efb283014d35674e5_015e5a3442"
-                tabIndex="-1"
-                value=""
-              />
-            </div>
             <end $$row>
               <message
                 if={success || error}

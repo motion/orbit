@@ -11,11 +11,11 @@ export class BrandLogo extends React.Component {
   hover = () => this.setState({ hovered: true })
 
   render({ theme, white, ...props }, { hovered }) {
-    const fill = theme.base.background
-      .darken(0.5)
-      .desaturate(0.65)
-      .alpha(hovered ? 0.9 : 1)
+    const coloredFill = theme.base.background
+      .darken(0.7)
+      .desaturate(0.75)
       .toString()
+    const fill = hovered ? coloredFill : '#000'
     return (
       <brandMark {...props} onMouseEnter={this.hover} onMouseLeave={this.leave}>
         <orbit />

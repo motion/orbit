@@ -44,10 +44,10 @@ export const Logo = ({
         fillRule="evenodd"
       >
         <g id="Group-3" transform="translate(32.000000, 67.000000)" />
-        <g id="orbit" transform="translate(-7.945312, 0.511719)">
+        <g id="orbit" transform="translate(-6.945312, 0.511719)">
           <g
             id="Group-5"
-            transform="translate(80.000000, 0.000000)"
+            transform="translate(71.000000, 0.000000)"
             fill={fill}
           >
             <path

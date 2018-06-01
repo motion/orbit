@@ -123,7 +123,7 @@ export class Conversation extends React.Component {
     main: {
       flex: 1,
       overflowY: 'scroll',
-      margin: 10,
+      margin: [15, 10],
     },
     mainInner: {
       margin: [0, -10, -5],

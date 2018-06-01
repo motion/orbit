@@ -326,21 +326,21 @@ class HomeFooter extends React.Component {
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
                     <Title size={2.3} css={{ marginBottom: 25 }}>
-                      A new way to manage knowledge.
+                      Answers for your team.
                     </Title>
                     <UI.PassProps size={1.35} sizeLineHeight={1} alpha={0.7}>
                       <P2>
-                        Conversations, tickets, emails, docs, wiki: your teams
-                        knowledge is all over the place.
+                        Conversations, tickets, emails, docs, wiki: knowledge
+                        lives all over the place.
                       </P2>
                       <P2>
-                        Orbit unifies the cloud on your desktop with smart
-                        features. Summarized projects and profiles, news, and
-                        natural language powered search to start.
+                        Orbit unifies the cloud on your desktop to power up your
+                        team. Search across the cloud, explore unified projects
+                        and profiles and see recent news custom to you.
                       </P2>
                       <P2>
-                        There's no cloud or on-prem install. It runs completely{' '}
-                        privately on your device using novel NLP.
+                        There's no cloud or on-prem install, it just run{' '}
+                        privately on your device.
                       </P2>
                       <P2>Now going into beta.</P2>
                     </UI.PassProps>

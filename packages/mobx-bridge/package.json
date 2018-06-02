@@ -1,7 +1,7 @@
 {
   "name": "@mcro/mobx-bridge",
   "main": "_/bridge.js",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "scripts": {
     "build": "tsc",
     "watch": "npm run build -- --watch"
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@mcro/black": "^2.0.0",
-    "@mcro/constants": "^2.0.0",
+    "@mcro/constants": "^2.0.3",
     "@mcro/debug": "^2.0.0",
     "@mcro/models": "^2.0.2",
     "html5-websocket": "^2.0.2",

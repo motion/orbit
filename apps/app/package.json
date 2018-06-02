@@ -1,7 +1,7 @@
 {
   "name": "@mcro/app",
   "private": true,
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "src/index.js",
   "scripts": {
     "start": "./start.sh",
@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.47",
-    "@mcro/all": "^2.0.2",
+    "@mcro/all": "^2.0.3",
     "@mcro/black": "^2.0.0",
     "@mcro/build": "^2.0.0",
-    "@mcro/constants": "^2.0.0",
+    "@mcro/constants": "^2.0.3",
     "@mcro/debug": "^2.0.0",
     "@mcro/gloss": "^2.0.0",
     "@mcro/models": "^2.0.2",

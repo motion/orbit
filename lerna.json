@@ -4,7 +4,7 @@
     "apps/*",
     "packages/*"
   ],
-  "version": "2.0.2",
+  "version": "2.0.3",
   "command": {
     "public": {
       "registry": "http://localhost:4873"

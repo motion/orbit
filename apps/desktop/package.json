@@ -1,7 +1,7 @@
 {
   "name": "@mcro/desktop",
   "private": true,
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "./_/index.js",
   "scripts": {
     "build": "tsc",
@@ -11,12 +11,11 @@
     "start-prod": "NODE_ENV=production node index.js"
   },
   "dependencies": {
-    "@mcro/all": "^2.0.2",
+    "@mcro/all": "^2.0.3",
     "@mcro/black": "^2.0.0",
-    "@mcro/constants": "^2.0.0",
+    "@mcro/constants": "^2.0.3",
     "@mcro/crawler": "^2.0.0",
     "@mcro/debug": "^2.0.0",
-    "@mcro/examples": "^2.0.0",
     "@mcro/helpers": "^2.0.0",
     "@mcro/models": "^2.0.2",
     "@mcro/oracle": "^2.0.2",

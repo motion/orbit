@@ -2,7 +2,7 @@
   "name": "@mcro/debug",
   "version": "1.5.1",
   "description": "",
-  "main": "_/debug.js",
+  "main": "./_/debug.js",
   "author": "Motion",
   "license": "MIT",
   "scripts": {

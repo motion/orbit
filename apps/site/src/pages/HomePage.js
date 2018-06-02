@@ -342,14 +342,14 @@ class HomeFooter extends React.Component {
                         knowledge is distributed and always changing.
                       </P2>
                       <P2>
-                        Orbit syncs to all your cloud services and sorts the
-                        noise using novel machine learning that runs on-device.
-                        Search, exploration, and summarized relevant news,
-                        installed in just 3 minutes.
+                        Orbit syncs every cloud service and sorts it all using
+                        novel on-device machine learning. It provides smart
+                        features for keeping everyone up to date and questions
+                        answered.
                       </P2>
                       <P2>
-                        There's no cloud or on-prem install, so there's no worry
-                        of data leaks. Your data stays private to you.
+                        With a three minute no-cloud install that's completely
+                        private to your device, your data stays safe.
                       </P2>
                       <P2>Now going into beta.</P2>
                     </UI.PassProps>

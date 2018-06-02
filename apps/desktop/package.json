@@ -2,10 +2,11 @@
   "name": "@mcro/desktop",
   "private": true,
   "version": "1.5.1",
-  "main": "_/index.js",
+  "main": "./_/index.js",
   "scripts": {
     "build": "tsc",
     "watch": "npm run build -- --watch",
+    "build-app": "NODE_ENV=production mcro-build --prod --target node",
     "start": "./start.sh",
     "start-prod": "NODE_ENV=production node index.js"
   },
@@ -70,6 +71,7 @@
   },
   "devDependencies": {
     "@mcro/dev": "*",
+    "@mcro/build": "*",
     "nodemon": "^1.15.0",
     "touch": "^3.1.0",
     "watch": "^1.0.2"

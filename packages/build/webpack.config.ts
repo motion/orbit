@@ -1,22 +1,47 @@
 // @ts-ignore
 import webpack from 'webpack'
 import * as Path from 'path'
+import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 // import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 
+const readEntry = () => {
+  try {
+    console.log('ok', Path.join(process.cwd(), 'package.json'))
+    const packageJson = Fs.readFileSync(
+      Path.join(process.cwd(), 'package.json'),
+    )
+    const pkg = JSON.parse(packageJson.toString())
+    return pkg.main
+  } catch {
+    return null
+  }
+}
+
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const entry = process.env.ENTRY || './src'
+const entry = process.env.ENTRY || readEntry() || './src'
 const path = Path.join(process.cwd(), 'dist')
 const buildNodeModules =
   process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
 
+const getFlag = flag => {
+  const matcher = new RegExp(`${flag} ([a-z0-9]+)`, 'i')
+  const found = process.argv.join(' ').match(matcher)
+  return (found && found.length >= 2 && found[1]) || null
+}
+
+const target = getFlag('--target')
+
 console.log('outputting to', path)
+console.log('target', target)
+console.log('isProd', isProd)
 
 const config = {
+  target,
   mode,
   entry,
   output: {

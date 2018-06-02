@@ -17,6 +17,7 @@ const ROOT = __dirname
 const ELECTRON_DIR = Path.join(ROOT, '..', '..', 'apps', 'electron')
 const ignorePaths = [
   // exclude extra dirs for xcode
+  'oracle/train',
   'oracle/pyocr',
   'oracle/swindler',
   'oracle/orbit/Carthage',
@@ -75,8 +76,7 @@ async function bundle() {
     overwrite: true,
     tmpdir: false,
     derefSymlinks: true,
-    prune: false,
-    packageManager: false,
+    prune: true,
     ignore: path => {
       // paths are relative to the current dir but weird
       // so "/app/something" is referring to the "orbit/apps/electron/app/something"

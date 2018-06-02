@@ -7,7 +7,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
 
-const blueBg = UI.color('#FCFCFF')
+const blueBg = UI.color('#F5FAF9')
 const blueTheme = {
   background: blueBg,
   color: '#222',

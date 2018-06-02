@@ -464,7 +464,7 @@ export const HalfSection = view('section', {
 
 @view.ui
 export class A extends React.Component {
-  render({ color, active, ...props }) {
+  render({ color, isLarge, active, ...props }) {
     return <a $active={active} {...props} />
   }
 
@@ -474,7 +474,6 @@ export class A extends React.Component {
       color: [0, 0, 0, 0.6],
       fontWeight: 700,
       padding: [5, 5],
-      margin: [0, 0, 0, 20],
       borderBottom: [2, 'transparent'],
     },
   }
@@ -484,6 +483,7 @@ export class A extends React.Component {
     const color = UI.color(props.color || theme.base.color)
     return {
       a: {
+        margin: props.isLarge ? [0, 0, 0, 30] : [0, 0, 0, 15],
         color,
         '&:hover': {
           color: color.alpha(0.6),

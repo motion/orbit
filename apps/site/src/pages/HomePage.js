@@ -15,6 +15,7 @@ import {
   TopoBg,
   HomeImg,
   WindowsLogo,
+  Glow,
 } from '~/views'
 // import { HomePlay } from './home/HomePlay'
 import * as Constants from '~/constants'
@@ -35,10 +36,10 @@ const scrollToTrack = (to, track) => {
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
-  slantGradient: [topBg, bottomBg.mix(topBg)].map(borderize),
+  slantGradient: [topBg, borderize(bottomBg.mix(topBg))],
 }
 const bottomSlants = {
-  slantGradient: [bottomBg.mix(topBg), bottomBg].map(borderize),
+  slantGradient: [borderize(bottomBg.mix(topBg)), topBg],
 }
 
 const firstSlant = {
@@ -95,8 +96,8 @@ const Pitch = ({ isLarge }) => (
       Autonomous Intranet
     </Title>
     <P size={1.35} sizeLineHeight={1.1} fontWeight={300}>
-      A new way to manage company knowledge. News, search, profiles, project
-      aggregation and more. Installed&nbsp;in 3 minutes.
+      A smarter way to manage company knowledge. News,&nbsp;search, profiles,
+      project aggregation and more. Installed&nbsp;in 3 minutes.
     </P>
     <actions
       $$row
@@ -185,6 +186,13 @@ class HomeHeader extends React.Component {
               <Slant inverseSlant {...secondSlant} {...topSlants} />
               <Slant {...thirdSlant} {...topSlants} />
               <SectionContent padded fullscreen fullscreenFs>
+                <Glow
+                  style={{
+                    background: '#fff',
+                    opacity: 0.5,
+                    transform: { x: '-45%', y: '0%', scale: 0.65 },
+                  }}
+                />
                 <Media
                   query={Constants.screen.small}
                   render={() => (
@@ -325,22 +333,23 @@ class HomeFooter extends React.Component {
                 <inner $$fullscreen={isLarge}>
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
-                    <Title size={2.3} css={{ marginBottom: 25 }}>
-                      Answers for your team.
+                    <Title size={2} color="#333" css={{ marginBottom: 25 }}>
+                      More time in the know.
                     </Title>
-                    <UI.PassProps size={1.35} sizeLineHeight={1} alpha={0.7}>
+                    <UI.PassProps size={1.35} sizeLineHeight={1.1} alpha={0.7}>
                       <P2>
-                        Conversations, tickets, emails, docs, wiki: knowledge
-                        lives all over the place.
+                        Conversations, tickets, emails, docs, wiki: your company
+                        knowledge is distributed and always changing.
                       </P2>
                       <P2>
-                        Orbit unifies the cloud on your desktop to power up your
-                        team. Search across the cloud, explore unified projects
-                        and profiles and see recent news custom to you.
+                        Orbit syncs any cloud services and sorts it all using
+                        novel machine learning that runs on-device. Smart
+                        search, exploration, and summarized news relevant to
+                        you, installed in just 3 minutes.
                       </P2>
                       <P2>
-                        There's no cloud or on-prem install, it just run{' '}
-                        privately on your device.
+                        There's no cloud or on-prem install, so there's no worry
+                        of data leaks. Your data stays private to you.
                       </P2>
                       <P2>Now going into beta.</P2>
                     </UI.PassProps>

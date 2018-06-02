@@ -26,13 +26,28 @@ export class Header extends React.Component {
                   />
                   <div $$flex />
                   <nav>
-                    <Link color={color} css={linkStyle} to="/features">
+                    <Link
+                      isLarge={isLarge}
+                      color={color}
+                      css={linkStyle}
+                      to="/features"
+                    >
                       {isLarge ? 'Features' : 'What'}
                     </Link>
-                    <Link color={color} css={linkStyle} to="/use-cases">
+                    <Link
+                      isLarge={isLarge}
+                      color={color}
+                      css={linkStyle}
+                      to="/use-cases"
+                    >
                       {isLarge ? 'Use Cases' : 'Why'}
                     </Link>
-                    <Link color={color} css={linkStyle} to="/about">
+                    <Link
+                      isLarge={isLarge}
+                      color={color}
+                      css={linkStyle}
+                      to="/about"
+                    >
                       {isLarge ? 'About' : 'Who'}
                     </Link>
                   </nav>

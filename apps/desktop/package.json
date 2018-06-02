@@ -1,7 +1,7 @@
 {
   "name": "@mcro/desktop",
   "private": true,
-  "version": "2.0.3",
+  "version": "2.0.4",
   "main": "./_/index.js",
   "scripts": {
     "build": "tsc",
@@ -11,7 +11,7 @@
     "start-prod": "NODE_ENV=production node index.js"
   },
   "dependencies": {
-    "@mcro/all": "^2.0.3",
+    "@mcro/all": "^2.0.4",
     "@mcro/black": "^2.0.0",
     "@mcro/constants": "^2.0.3",
     "@mcro/crawler": "^2.0.0",

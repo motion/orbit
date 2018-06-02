@@ -1,7 +1,7 @@
 {
   "name": "@mcro/app",
   "private": true,
-  "version": "1.5.40",
+  "version": "2.0.0",
   "main": "src/index.js",
   "scripts": {
     "start": "./start.sh",
@@ -10,19 +10,19 @@
     "deploy": "./deploy.sh"
   },
   "dependencies": {
-    "@mcro/all": "*",
-    "@mcro/black": "^1.5.1",
-    "@mcro/constants": "^1.5.1",
-    "@mcro/debug": "*",
-    "@mcro/gloss": "^1.5.1",
-    "@mcro/models": "^1.5.1",
-    "@mcro/r2": "^1.5.1",
-    "@mcro/router": "^1.5.1",
-    "@mcro/services": "*",
-    "@mcro/slackdown": "*",
-    "@mcro/ui": "^1.5.1",
-    "@mcro/build": "^1.5.1",
     "@babel/runtime": "7.0.0-beta.47",
+    "@mcro/all": "^2.0.0",
+    "@mcro/black": "^2.0.0",
+    "@mcro/build": "^2.0.0",
+    "@mcro/constants": "^2.0.0",
+    "@mcro/debug": "^2.0.0",
+    "@mcro/gloss": "^2.0.0",
+    "@mcro/models": "^2.0.0",
+    "@mcro/r2": "^2.0.0",
+    "@mcro/router": "^2.0.0",
+    "@mcro/services": "^2.0.0",
+    "@mcro/slackdown": "^2.0.0",
+    "@mcro/ui": "^2.0.0",
     "color": "^3.0.0",
     "date-fns": "^2.0.0-alpha.7",
     "event-kit": "^2.5.0",
@@ -45,7 +45,7 @@
     "time-ago": "^0.1.0"
   },
   "devDependencies": {
-    "@mcro/dev": "*"
+    "@mcro/dev": "^2.0.0"
   },
   "peerDependencies": {
     "mobx": "^4.3.0",

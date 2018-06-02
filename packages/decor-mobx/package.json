@@ -3,14 +3,14 @@
   "main": "_/decor-mobx.js",
   "types": "decor-mobx.d.ts",
   "sideEffects": false,
-  "version": "1.5.1",
+  "version": "2.0.0",
   "scripts": {
     "build": "tsc",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mcro/decor": "^1.5.1",
-    "@mcro/helpers": "^1.5.1",
+    "@mcro/decor": "^2.0.0",
+    "@mcro/helpers": "^2.0.0",
     "mobx-react": "^5.1.2"
   },
   "peerDependencies": {

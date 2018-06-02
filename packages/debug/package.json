@@ -1,6 +1,6 @@
 {
   "name": "@mcro/debug",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "",
   "main": "./_/debug.js",
   "author": "Motion",

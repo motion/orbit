@@ -2,7 +2,7 @@
   "name": "@mcro/constants",
   "private": true,
   "main": "./_/constants.js",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "scripts": {
     "build": "tsc",
     "watch": "npm run build -- --watch"

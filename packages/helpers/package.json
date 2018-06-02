@@ -1,6 +1,6 @@
 {
   "name": "@mcro/helpers",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "",
   "main": "_/index.js",
   "types": "_/index.d.js",

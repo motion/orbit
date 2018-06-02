@@ -1,6 +1,6 @@
 {
   "name": "@mcro/passport-slack",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "main": "es6/index.js",
   "scripts": {
     "build": "build es6",

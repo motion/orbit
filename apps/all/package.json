@@ -1,7 +1,7 @@
 {
   "name": "@mcro/all",
   "private": true,
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "_/index",
   "types": "./index.d.ts",
   "scripts": {
@@ -12,8 +12,8 @@
     "@mcro/black": "^2.0.0",
     "@mcro/constants": "^2.0.0",
     "@mcro/debug": "^2.0.0",
-    "@mcro/mobx-bridge": "^2.0.1",
-    "@mcro/models": "^2.0.1",
+    "@mcro/mobx-bridge": "^2.0.2",
+    "@mcro/models": "^2.0.2",
     "global": "^4.3.2",
     "lodash": "4.17.10"
   },

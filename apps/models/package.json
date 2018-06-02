@@ -1,7 +1,6 @@
 {
   "name": "@mcro/models",
-  "private": true,
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "_/index.js",
   "module": "_/index.js",
   "scripts": {
@@ -20,8 +19,5 @@
   "peerDependencies": {
     "mobx": "*",
     "typeorm": "*"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

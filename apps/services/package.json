@@ -1,7 +1,6 @@
 {
   "name": "@mcro/services",
-  "private": true,
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "_/index.js",
   "module": "_/index.js",
   "scripts": {
@@ -12,7 +11,7 @@
     "@mcro/black": "^2.0.0",
     "@mcro/debug": "^2.0.0",
     "@mcro/helpers": "^2.0.0",
-    "@mcro/models": "^2.0.1",
+    "@mcro/models": "^2.0.2",
     "global": "^4.3.2",
     "lodash": "4.17.10",
     "octokat": "0.10.0",
@@ -20,8 +19,5 @@
   },
   "peerDependencies": {
     "mobx": "*"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

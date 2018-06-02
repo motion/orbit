@@ -1,22 +1,31 @@
+# next
+
+* weekend:
+  * biz:
+    * setup list of people to reach out to cold
+      * spacex, bloomberg, bigger finance cos in ny
+  * dev:
+    * real titles
+    * polish app for productionize a little
+    * productionize app for matt/kevin
+    * reach: auto-update
+
 # biz
 
-* nick agreement
 * demo/talk to spacex
 * demo/talk to bloomberg
-* demo/talk to vc fund
 * cofounder find
 
 # website
 
-* simpler italian theme and better messaging / new font
-* Mobile fixes
+* have a layer/producthunt like landing page for mailing list
+* fossa/expensify logo/quote
 * Blog - one post: noise or customer success
-* purchase page
 * company logos (after sending to people)
-* <Parallax> move Search and Augmented Intelligence sections
 
 # dev
 
+* some small explore page improvements
 * fix directory showing profile card
 * hmr dehydrate/hydrate
 * types for .provide, .attach, and view()
@@ -32,15 +41,9 @@
 
 --- me
 
-* peek needs a "pin" button like orbit context
-  * then make esc clear peek always, even not mouseover
-* clear peek on scroll
 * [ ] intercept all a=href and open in native browser (slack)
-* [ ] themes or surfaces really need well thought lighten/darken functionality
 * [ ] slack emojis
 * [ ] only close peek on esc if electron focused
-* [ ] search jitter
-* [ ] fix keyboard movement bugs
 * [ ] slack unread/read sql
 * [ ] slack various formatting issues: backticks ``, inline html
 * [ ] setting pane improvements

@@ -1,6 +1,6 @@
 {
   "name": "@mcro/desktop",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "main": "./index.js",
   "scripts": {
     "build": "tsc",
@@ -10,16 +10,16 @@
     "start-prod": "NODE_ENV=production node index.js"
   },
   "dependencies": {
-    "@mcro/all": "^2.0.8",
-    "@mcro/black": "^2.0.8",
+    "@mcro/all": "^2.0.9",
+    "@mcro/black": "^2.0.9",
     "@mcro/constants": "^2.0.3",
     "@mcro/debug": "^2.0.0",
     "@mcro/helpers": "^2.0.0",
-    "@mcro/models": "^2.0.8",
-    "@mcro/oracle": "^2.0.8",
+    "@mcro/models": "^2.0.9",
+    "@mcro/oracle": "^2.0.9",
     "@mcro/passport-slack": "^2.0.0",
     "@mcro/r2": "^2.0.0",
-    "@mcro/services": "^2.0.8",
+    "@mcro/services": "^2.0.9",
     "apollo-fetch": "^0.7.0",
     "babel-polyfill": "7.0.0-beta.3",
     "body-parser": "^1.16.1",

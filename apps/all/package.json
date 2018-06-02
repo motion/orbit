@@ -1,6 +1,6 @@
 {
   "name": "@mcro/all",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "main": "_/index",
   "types": "./index.d.ts",
   "scripts": {
@@ -8,11 +8,11 @@
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mcro/black": "^2.0.6",
+    "@mcro/black": "^2.0.7",
     "@mcro/constants": "^2.0.3",
     "@mcro/debug": "^2.0.0",
-    "@mcro/mobx-bridge": "^2.0.6",
-    "@mcro/models": "^2.0.6",
+    "@mcro/mobx-bridge": "^2.0.7",
+    "@mcro/models": "^2.0.7",
     "global": "^4.3.2",
     "lodash": "4.17.10"
   },

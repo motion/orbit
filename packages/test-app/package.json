@@ -2,7 +2,7 @@
   "name": "@mcro/test-app",
   "private": true,
   "sideEffects": false,
-  "version": "2.0.6",
+  "version": "2.0.7",
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi",
@@ -10,10 +10,10 @@
     "build-app": "NODE_ENV=production mcro-build --prod --report"
   },
   "dependencies": {
-    "@mcro/black": "^2.0.6",
+    "@mcro/black": "^2.0.7",
     "@mcro/build": "^2.0.0",
     "@mcro/gloss": "^2.0.0",
-    "@mcro/ui": "^2.0.6"
+    "@mcro/ui": "^2.0.7"
   },
   "peerDependencies": {
     "react": "16.4.0",

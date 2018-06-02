@@ -34,7 +34,7 @@ const getFlag = flag => {
   return (found && found.length >= 2 && found[1]) || null
 }
 
-const target = getFlag('--target')
+const target = getFlag('--target') || 'web'
 
 console.log('outputting to', path)
 console.log('target', target)

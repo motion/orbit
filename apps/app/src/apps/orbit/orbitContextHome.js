@@ -110,7 +110,6 @@ export class OrbitContextHome {
     log('CONTEXT HOME---------------')
     Mobx.trace()
     const total = store.results.length
-    console.log('appStore.selectedPane', appStore.selectedPane)
     return (
       <OrbitDockedPane name="context">
         <OrbitContextHeader />

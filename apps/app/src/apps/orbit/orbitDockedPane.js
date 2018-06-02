@@ -18,7 +18,7 @@ class DockedPaneStore {
 })
 export class OrbitDockedPane {
   render({ name, children, store, style }) {
-    log(`dockedpane active ${name} ${store.isActive}`)
+    Mobx.trace()
     return (
       <pane $isActive={store.isActive} style={style}>
         {children}

@@ -3,9 +3,9 @@
   "productName": "Orbit",
   "description": "Description",
   "author": "Orbit",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "private": true,
-  "main": "_/index.js",
+  "main": "electron.js",
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
@@ -32,12 +32,12 @@
     ]
   },
   "dependencies": {
-    "@mcro/all": "^2.0.4",
-    "@mcro/black": "^2.0.0",
+    "@mcro/all": "^2.0.6",
+    "@mcro/black": "^2.0.6",
     "@mcro/chrome-extensions": "^2.0.0",
     "@mcro/constants": "^2.0.3",
     "@mcro/debug": "^2.0.0",
-    "@mcro/desktop": "^2.0.5",
+    "@mcro/desktop": "^2.0.6",
     "@mcro/r2": "^2.0.0",
     "@mcro/reactron": "^2.0.0",
     "babel-polyfill": "7.0.0-beta.3",

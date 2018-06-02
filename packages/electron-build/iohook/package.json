@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "electron-rebuild -v 1.8.2"
+    "postinstall": "electron-rebuild -v 2.0.2"
   },
   "license": "MIT",
   "dependencies": {
@@ -13,7 +13,7 @@
   "iohook": {
     "targets": [
       "node-59",
-      "electron-54"
+      "electron-57"
     ],
     "platforms": [
       "darwin"

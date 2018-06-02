@@ -96,8 +96,8 @@ const Pitch = ({ isLarge }) => (
       Autonomous Intranet
     </Title>
     <P size={1.35} sizeLineHeight={1.1} fontWeight={300}>
-      A smarter way to manage company knowledge. News,&nbsp;search, profiles,
-      project aggregation and more. Installed&nbsp;in 3 minutes.
+      Solve your "we need to organize" problem in 3 minutes. Automatic news,
+      search, profiles, answers and more for your team.
     </P>
     <actions
       $$row

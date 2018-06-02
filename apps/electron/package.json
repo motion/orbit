@@ -18,11 +18,11 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "2.0.0-beta.7"
+    "runtimeVersion": "2.0.2"
   },
   "iohook": {
     "targets": [
-      "electron-54"
+      "electron-57"
     ],
     "platforms": [
       "darwin"
@@ -62,8 +62,8 @@
     "@types/react": "16.3.14",
     "@types/react-dom": "16.0.5",
     "@types/electron": "1.6.10",
-    "electron": "^2.0.1",
-    "electron-rebuild": "^1.7.3",
+    "electron": "2.0.2",
+    "electron-rebuild": "1.7.3",
     "node-loader": "^0.6.0",
     "nodemon": "^1.15.1",
     "tcp-port-used": "0.1.2",

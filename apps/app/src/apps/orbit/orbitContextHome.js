@@ -110,6 +110,7 @@ export class OrbitContextHome {
     log('CONTEXT HOME---------------')
     Mobx.trace()
     const total = store.results.length
+    console.log('appStore.selectedPane', appStore.selectedPane)
     return (
       <OrbitDockedPane name="context">
         <OrbitContextHeader />
@@ -122,7 +123,7 @@ export class OrbitContextHome {
                 <OrbitCard
                   key={`${i}${bit.id}`}
                   pane="context"
-                  subPane="home"
+                  subPane="context"
                   parentElement={resultsRef}
                   appStore={appStore}
                   bit={bit}

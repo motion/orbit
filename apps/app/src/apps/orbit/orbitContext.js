@@ -13,7 +13,7 @@ class PaneStore {
     if (App.state.query) {
       return 'search'
     }
-    return 'home'
+    return 'context'
   }
 }
 

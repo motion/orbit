@@ -37,6 +37,16 @@ plus: augmented OS that helps people see whats going on
 
 it's essentially AI for your company, running private on-device being the big key to making it work.
 
+## secret
+
+on-device/no-cloud
+
+means three big things:
+
+1.  10x faster development (and 10x simpler deploy/infra, and 0 cost of infra)
+2.  100x easier install process (literally download app and done, no on-prem, no signup)
+3.  Infinitely better data security - we dont touch their data, no risk of leaks (100x easier to pitch to individual employees)
+
 ## features
 
 * Home: news for your company

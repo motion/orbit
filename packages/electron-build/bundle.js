@@ -13,8 +13,8 @@ const log = {
   copy: debug('electron-build:copy'),
 }
 
-const ROOT = Path.join(__dirname, '..')
-const ELECTRON_DIR = Path.join(ROOT, '..', 'electron')
+const ROOT = __dirname
+const ELECTRON_DIR = Path.join(ROOT, '..', '..', 'apps', 'electron')
 const ignorePaths = [
   // exclude extra dirs for xcode
   'oracle/pyocr',

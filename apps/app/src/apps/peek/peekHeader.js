@@ -7,7 +7,10 @@ import * as UI from '@mcro/ui'
 export class PeekHeader extends React.Component {
   onHeader = ref => {
     if (!ref) return
-    this.props.peekStore.setHeaderHeight(ref.clientHeight)
+    console.log('setting client height', ref.clientHeight)
+    setTimeout(() => {
+      this.props.peekStore.setHeaderHeight(ref.clientHeight)
+    })
   }
 
   render({ peekStore, title, date, subtitle, after }) {

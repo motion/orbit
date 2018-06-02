@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { partition } from 'lodash'
 import { OrbitSettingCard } from './orbitSettingCard'
 import { OrbitDockedPane } from './orbitDockedPane'
@@ -8,15 +8,31 @@ const Title = props => (
   <UI.Title size={1.2} fontWeight={600} margin={[10, 20]} {...props} />
 )
 
-@UI.injectTheme
-@view.attach('appStore')
-@view
-export class OrbitSettings {
+class OrbitSettingsStore {
+  isPaneActive = false
+
+  setGetResults = react(
+    () => [
+      this.props.paneStore.activePane === this.props.name,
+      this.splitActiveResults,
+    ],
+    ([isActive]) => {
+      this.isPaneActive = isActive
+      if (!isActive) {
+        throw react.cancel
+      }
+      this.props.appStore.setGetResults(
+        () => this.splitActiveResults.activeIntegrations,
+      )
+    },
+    { immediate: true },
+  )
+
   isActive = integration =>
     this.props.appStore.settings[integration.id] &&
     this.props.appStore.settings[integration.id].token
 
-  rawResults = [
+  allResults = [
     {
       id: 'google',
       type: 'setting',
@@ -50,36 +66,27 @@ export class OrbitSettings {
 
   get splitActiveResults() {
     const [activeIntegrations, inactiveIntegrations] = partition(
-      this.rawResults,
+      this.allResults,
       this.isActive,
     )
     return { activeIntegrations, inactiveIntegrations }
   }
+}
 
-  getResults = () => {
-    const { activeIntegrations, inactiveIntegrations } = this.splitActiveResults
-    return [...activeIntegrations, ...inactiveIntegrations]
-  }
-
-  // this.props.appStore.setGetResults(this.getResults)
-  // const updateInt = setInterval(() => {
-  //   if (this.mounted) {
-  //     this.props.appStore.setGetResults(this.getResults)
-  //   } else {
-  //     clearInterval(updateInt)
-  //   }
-  // }, 1000)
-
-  componentWillUnmount() {
-    this.mounted = false
-    // this.props.appStore.setGetResults(null)
-  }
-
-  render({ appStore, theme }) {
+@view.attach('appStore', 'paneStore')
+@view({
+  store: OrbitSettingsStore,
+})
+export class OrbitSettings {
+  render({ name, store, appStore }) {
     if (!appStore.settings) {
       return null
     }
-    const { activeIntegrations, inactiveIntegrations } = this.splitActiveResults
+    console.log('store.isPaneActive', store.isPaneActive)
+    const {
+      activeIntegrations,
+      inactiveIntegrations,
+    } = store.splitActiveResults
     const integrationCard = all => (setting, index, offset) => (
       <OrbitSettingCard
         key={index}
@@ -87,12 +94,13 @@ export class OrbitSettings {
         offset={offset}
         appStore={appStore}
         length={all.length}
-        isActive={this.isActive(setting)}
+        isActive={store.isActive(setting)}
+        isPaneActive={store.isPaneActive}
         setting={setting}
       />
     )
     return (
-      <OrbitDockedPane name="settings">
+      <OrbitDockedPane name={name}>
         <section if={activeIntegrations.length}>
           <Title>Active</Title>
           <cards>
@@ -118,14 +126,6 @@ export class OrbitSettings {
   }
 
   static style = {
-    pane: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      padding: [10, 0],
-    },
     cards: {
       userSelect: 'none',
       marginBottom: 10,

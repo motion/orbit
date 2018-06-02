@@ -103,6 +103,14 @@ export class AppStore {
     },
   )
 
+  clearPeekOnSelectedPaneChange = react(
+    () => this.selectedPane,
+    App.clearPeek,
+    {
+      log: 'state',
+    },
+  )
+
   get selectedPane() {
     if (App.orbitState.docked) {
       if (App.state.query) {

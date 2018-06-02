@@ -28,7 +28,13 @@ class OrbitCardStore {
   }
 
   get isPaneSelected() {
-    return this.props.appStore.selectedPane === this.props.pane
+    if (!this.props.subPane) {
+      return false
+    }
+    const isPaneActive = this.props.appStore.selectedPane === this.props.pane
+    const isSubPaneActive =
+      this.props.paneStore.activePane === this.props.subPane
+    return isPaneActive && isSubPaneActive
   }
 
   handleClick = () => {
@@ -44,9 +50,10 @@ class OrbitCardStore {
   }
 
   setPeekTargetOnNextIndex = react(
-    () => this.props.appStore.nextIndex === this.props.index,
+    () =>
+      this.isPaneSelected && this.props.appStore.nextIndex === this.props.index,
     shouldSelect => {
-      if (!this.isPaneSelected || !shouldSelect) {
+      if (!shouldSelect) {
         throw react.cancel
       }
       this.props.appStore.setTarget(this.props.bit, this.ref)
@@ -85,7 +92,7 @@ const tinyProps = {
   },
 }
 
-@view.attach('appStore')
+@view.attach('appStore', 'paneStore')
 @view({
   store: OrbitCardStore,
 })

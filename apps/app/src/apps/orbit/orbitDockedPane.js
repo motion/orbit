@@ -2,11 +2,9 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 class DockedPaneStore {
+  // prevents uncessary and expensive OrbitCard re-renders
   get isActive() {
     const { extraCondition, name, paneStore } = this.props
-    if (name === 'search') {
-      log(`dockedis active ${name} ${paneStore.activePane}`)
-    }
     return (
       name === paneStore.activePane &&
       (extraCondition ? extraCondition() : true)

@@ -7,6 +7,7 @@ import { SlackChannel } from './slackPanes/slackChannel'
 
 class SlackSettingStore {
   search = ''
+  hasShown = false
 
   get service() {
     return this.props.appStore.services.slack
@@ -14,6 +15,12 @@ class SlackSettingStore {
 
   willUnmount() {
     this.service.dispose()
+  }
+
+  didMount() {
+    this.setTimeout(() => {
+      this.hasShown = true
+    })
   }
 
   get sortedChannels() {
@@ -52,6 +59,7 @@ export class SlackSetting extends React.Component {
         />
         <content if={store.service}>
           <UI.List
+            if={store.hasShown}
             scrollable
             height="100%"
             itemsKey={store.search + store.channels && store.channels.length}

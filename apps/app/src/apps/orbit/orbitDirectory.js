@@ -36,6 +36,7 @@ export class OrbitDirectory {
           {store.results.map((bit, index) => (
             <OrbitCard
               pane="home-directory"
+              subPane="directory"
               key={`${bit.id}${index}`}
               index={index}
               bit={bit}

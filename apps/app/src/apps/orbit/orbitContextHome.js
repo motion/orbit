@@ -114,6 +114,7 @@ export class OrbitContextHome {
                 <OrbitCard
                   key={`${i}${bit.id}`}
                   pane="context"
+                  subPane="home"
                   parentElement={resultsRef}
                   appStore={appStore}
                   bit={bit}

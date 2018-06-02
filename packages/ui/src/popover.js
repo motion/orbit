@@ -538,7 +538,6 @@ export class Popover extends React.PureComponent {
 
   removeListenForHover() {
     for (const listener of this.listeners) {
-      console.log('listener', listener)
       listener()
     }
     this.listeners = []
@@ -728,7 +727,6 @@ export class Popover extends React.PureComponent {
       }
       return React.cloneElement(target, targetProps)
     }
-
     return (
       <root>
         {React.isValidElement(target) && controlledTarget(target)}

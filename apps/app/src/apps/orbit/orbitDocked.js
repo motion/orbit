@@ -29,10 +29,6 @@ class PaneStore {
     })
   }
 
-  get isShowingDocked() {
-    return this.props.appStore.selectedPane === 'summary'
-  }
-
   setActivePane = name => {
     this.paneIndex = this.panes.findIndex(val => val === name)
   }
@@ -46,6 +42,10 @@ class PaneStore {
     }
     return this.panes[this.paneIndex]
   }
+
+  clearPeekOnActivePaneChange = react(() => this.activePane, App.clearPeek, {
+    log: 'state',
+  })
 
   animationState = react(
     () => App.orbitState.docked,
@@ -98,7 +98,7 @@ class OrbitDocked {
               paneStore={paneStore}
             />
             <OrbitSearchResults name="summary-search" parentPane="summary" />
-            <OrbitSettings />
+            <OrbitSettings name="settings" />
           </orbitInner>
         </container>
       </frame>

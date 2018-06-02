@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "description": "Description",
   "author": "Orbit",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "private": true,
   "main": "electron.js",
   "updater": {
@@ -32,12 +32,12 @@
     ]
   },
   "dependencies": {
-    "@mcro/all": "^2.0.7",
-    "@mcro/black": "^2.0.7",
+    "@mcro/all": "^2.0.8",
+    "@mcro/black": "^2.0.8",
     "@mcro/chrome-extensions": "^2.0.0",
     "@mcro/constants": "^2.0.3",
     "@mcro/debug": "^2.0.0",
-    "@mcro/desktop": "^2.0.7",
+    "@mcro/desktop": "^2.0.8",
     "@mcro/r2": "^2.0.0",
     "@mcro/reactron": "^2.0.0",
     "babel-polyfill": "7.0.0-beta.3",

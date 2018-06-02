@@ -1,6 +1,6 @@
 {
   "name": "@mcro/models",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "main": "_/index.js",
   "module": "_/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mcro/black": "^2.0.7",
+    "@mcro/black": "^2.0.8",
     "@mcro/debug": "^2.0.0",
     "global": "^4.3.2",
     "lodash": "4.17.10",

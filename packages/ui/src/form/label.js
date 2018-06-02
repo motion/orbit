@@ -2,7 +2,7 @@ import * as React from 'react'
 import { SizedSurface } from '../sizedSurface'
 import { Text } from '../text'
 
-export default ({
+export const Label = ({
   children,
   alignItems = 'center',
   justifyContent = 'center',

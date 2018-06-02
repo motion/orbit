@@ -5,6 +5,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 // import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
+import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
@@ -76,6 +77,7 @@ const config = {
     ],
   },
   plugins: [
+    new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),

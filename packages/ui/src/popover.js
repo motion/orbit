@@ -5,7 +5,6 @@ import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import { Arrow } from './arrow'
 import { SizedSurface } from './sizedSurface'
-import * as PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
 // export type Props = {

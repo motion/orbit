@@ -3,6 +3,7 @@
   "types": "./types.d.ts",
   "main": "_/index.js",
   "module": "_/index.js",
+  "sideEffects": false,
   "version": "1.5.1",
   "scripts": {
     "build": "tsc",

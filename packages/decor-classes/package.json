@@ -2,6 +2,7 @@
   "name": "@mcro/decor-classes",
   "main": "_/decor-classes.js",
   "types": "./decor-classes.d.ts",
+  "sideEffects": false,
   "version": "1.5.1",
   "scripts": {
     "build": "tsc",

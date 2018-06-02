@@ -57,9 +57,6 @@ export class ListItem extends React.Component {
     if (this.props.onItemMount) {
       this.props.onItemMount(this)
     }
-    if (this.props.measure) {
-      this.props.measure()
-    }
   }
 
   getRef = ref => {

@@ -65,9 +65,9 @@ const prefixes = {
 }
 
 const parseQuery = query => {
-  const prefix = query.split(' ')[0]
+  const [prefix, rest] = query.split(' ')
   const q = prefixes[prefix]
-  if (q) {
+  if (q && rest) {
     return {
       rest: query.replace(prefix, '').trim(),
       conditions: Object.keys(q).reduce(

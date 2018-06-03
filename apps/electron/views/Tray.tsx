@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Tray } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import Path from 'path'
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 import { Electron, Desktop, App } from '@mcro/all'
 
 @view.electron

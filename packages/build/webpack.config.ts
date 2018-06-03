@@ -49,6 +49,8 @@ const config = {
     publicPath: '/',
   },
   devServer: {
+    historyApiFallback: true,
+    hot: true,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },

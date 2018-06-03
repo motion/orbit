@@ -454,7 +454,7 @@ export const Notification = ({ title, body, ...props }) => (
 export const HalfSection = view('section', {
   flex: 1,
   width: '50%',
-  padding: [0, 150, 0, 0],
+  padding: [0, 50, 0, 0],
   justifyContent: 'flex-end',
   [Constants.screen.smallQuery]: {
     width: '100%',

@@ -22,6 +22,7 @@ import * as Constants from '~/constants'
 import Media from 'react-media'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
+import { Bauhaus } from '~/views/bauhaus'
 
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -159,7 +160,6 @@ class HomeHeader extends React.Component {
         {isLarge => {
           return (
             <Section css={{ background: 'transparent' }}>
-              {/* <SpaceFabric /> */}
               {/* <parallax css={{ overflow: 'hidden' }} $$fullscreen>
                 <parallaxContain $$fullscreen>
                   <Keyframes native script={ref => (store.stars = ref)}>
@@ -326,6 +326,7 @@ class HomeFooter extends React.Component {
         {isLarge => (
           <Section inverse css={{ background: 'transparent' }}>
             <SectionContent padded fullscreen fullscreenFs>
+              <Bauhaus />
               <Slant inverseSlant {...firstSlant} {...bottomSlants} />
               <Slant {...secondSlant} {...bottomSlants} />
               <Slant inverseSlant {...thirdSlant} {...bottomSlants} />

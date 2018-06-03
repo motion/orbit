@@ -96,8 +96,8 @@ const Pitch = ({ isLarge }) => (
       Autonomous Intranet
     </Title>
     <P size={1.35} sizeLineHeight={1.1} fontWeight={300}>
-      A smarter way to organize your company knowledge. News, search, profiles
-      and answers installed 3 minutes.
+      A smarter way to organize company knowledge. News,&nbsp;search, profiles &
+      answers, installed 3 minutes.
     </P>
     <actions
       $$row
@@ -349,13 +349,13 @@ class HomeFooter extends React.Component {
                     </Title>
                     <UI.PassProps size={1.35} sizeLineHeight={1.1} alpha={0.7}>
                       <P2>
-                        Conversations, tickets, emails, docs and wiki: your
-                        company knowledge is always moving.
+                        Conversations, tickets, emails, docs and a wiki: your
+                        company knowledge is dynamic.
                       </P2>
                       <P2>
                         Orbit syncs every cloud service and sorts it all using
                         novel on-device machine learning. With smart features to
-                        keep everyone up to date.
+                        keep everyone in the know.
                       </P2>
                       <P2>
                         It's installed in three minutes with no cloud or on-prem

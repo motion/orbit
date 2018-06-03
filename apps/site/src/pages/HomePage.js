@@ -225,8 +225,8 @@ class HomeHeader extends React.Component {
                           $$fullscreen
                           css={{
                             overflow: 'hidden',
-                            right: -180,
-                            left: 0,
+                            right: -160,
+                            left: 20,
                             borderBottom: [1, borderize(topBg)],
                           }}
                         >

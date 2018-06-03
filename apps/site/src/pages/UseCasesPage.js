@@ -64,16 +64,16 @@ class UseCasesIntro extends React.Component {
                   size={2.3}
                   margin={[0, '10%', 10, 0]}
                 >
-                  A new way to manage knowledge.
+                  Powerful answers for teams.
                 </Title>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#customer-success')}>
                     Customer Success
                   </a>{' '}
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#reduce-interrupts')}>Deep Work</a>
+                  <a onClick={scrollTo('#reduce-interrupts')}>Developers</a>
                   &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#remote-teams')}>Better Wiki</a>
+                  <a onClick={scrollTo('#remote-teams')}>Onboarding</a>
                 </P>
               </HalfSection>
             </SectionContent>
@@ -109,8 +109,8 @@ class SectionUseCaseRemoteTeams extends React.Component {
               />
               <LeftSide inverse>
                 <SubTitle size={4.5} italic>
-                  Knowledge<br />
-                  managed
+                  Your org,<br />
+                  organized
                 </SubTitle>
                 <div if={isLarge} css={{ height: '26%' }} />
                 <section
@@ -320,8 +320,8 @@ class SectionUseCaseReduceInterrupts extends React.Component {
               />
               <LeftSide>
                 <SubTitle size={4.5} italic>
-                  Workplace<br />
-                  operations
+                  Focus &<br />
+                  understand
                 </SubTitle>
                 <Notification
                   if={isLarge}

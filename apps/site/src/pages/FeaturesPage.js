@@ -72,7 +72,7 @@ class FeaturesIntro extends React.Component {
                   size={2.3}
                   margin={[0, '10%', 10, 0]}
                 >
-                  Your organizational organization.
+                  Make knowledge work.
                 </Title>
                 <P size={1.2} alpha={0.9} fontWeight={500}>
                   <a onClick={scrollTo('#news')}>Home</a>{' '}

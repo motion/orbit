@@ -64,12 +64,14 @@ export class HoverGlow extends React.PureComponent {
   rootRef = React.createRef()
 
   componentDidMount() {
-    this.follow()
+    // @ts-ignore
+    this.setTimeout(() => {
+      this.follow()
+    })
   }
 
   follow() {
     let parentNode
-    console.log('follow()', this.props, this.rootRef)
     if (this.props.parent) {
       parentNode = this.props.parent()
     } else if (this.rootRef) {
@@ -169,7 +171,14 @@ export class HoverGlow extends React.PureComponent {
     const { track } = this.state
     if (!this.state.mounted) {
       console.log('return empty')
-      return <div $overlay key="hoverglow" ref={this.rootRef} style={{ opacity: 0 }} />
+      return (
+        <div
+          $overlay
+          key="hoverglow"
+          ref={this.rootRef}
+          style={{ opacity: 0 }}
+        />
+      )
     }
     // find width / height (full == match size of container)
     let width = size || propWidth
@@ -247,7 +256,7 @@ export class HoverGlow extends React.PureComponent {
             width={width}
             style={{
               transform: `scale(${scale * extraScale})`,
-              opacity: track || hide ? 0 : opacity,
+              opacity: hide ? 0 : opacity,
               width,
               height,
               marginLeft: -width / 2,

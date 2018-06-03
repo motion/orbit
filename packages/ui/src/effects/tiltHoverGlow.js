@@ -13,22 +13,23 @@ import { HoverGlow } from './hoverGlow'
 
 @view.ui
 export class TiltHoverGlow extends React.PureComponent {
+  static defaultProps = {
+    tiltOptions: {
+      max: 15,
+      perspective: 1000,
+      scale: 1.025,
+      speed: 400,
+      reverse: true,
+    },
+  }
+
   version() {
     return 1
   }
 
   render({ width, height, tiltOptions, children, css, ...props }) {
     return (
-      <Tilt
-        options={{
-          max: 15,
-          perspective: 1000,
-          scale: 1.025,
-          speed: 400,
-          //reverse: true,
-          ...tiltOptions,
-        }}
-      >
+      <Tilt options={tiltOptions}>
         <div
           $tiltglow
           css={{
@@ -46,28 +47,29 @@ export class TiltHoverGlow extends React.PureComponent {
           <HoverGlow
             full
             scale={0.5}
-            resist={20}
-            color="red"
-            overflow="hidden"
-            borderRadius={8}
+            resist={72}
+            blur={130}
+            color="#fff"
+            borderRadius={20}
             zIndex={100000}
-            opacity={1}
+            opacity={0.4}
             duration={30}
           />
           <HoverGlow
             behind
+            color="#000"
             resist={93}
-            scale={1.1}
+            scale={0.95}
             width={width}
-            offsetTop={2}
-            offsetLeft={-12}
-            blur={3}
+            offsetTop={80}
+            offsetLeft={-15}
+            full
+            blur={20}
             inverse
-            color={[0, 0, 0]}
-            opacity={0.08}
-            borderRadius={5}
+            opacity={0.04}
+            borderRadius={20}
           />
-        </tiltglow>
+        </div>
       </Tilt>
     )
   }

@@ -133,7 +133,11 @@ export class HoverGlow extends React.PureComponent {
 
   trackMouse = track => {
     if (this.unmounted) return
-    this.setState({ track })
+    this.setState({ willTrack: true })
+    // @ts-ignore
+    this.setTimeout(() => {
+      this.setState({ track })
+    })
   }
 
   render({
@@ -249,6 +253,8 @@ export class HoverGlow extends React.PureComponent {
           style={{
             zIndex: behind ? -1 : 1,
             opacity: 1,
+            willChange:
+              this.state.willTrack || this.state.track ? 'transform' : '',
             transition: `
               transform linear ${duration}ms
             `,

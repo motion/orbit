@@ -18,7 +18,7 @@ export class TiltHoverGlow extends React.PureComponent {
       max: 15,
       perspective: 1000,
       scale: 1.025,
-      speed: 400,
+      speed: 200,
       reverse: true,
     },
   }
@@ -32,12 +32,12 @@ export class TiltHoverGlow extends React.PureComponent {
     height,
     tiltOptions,
     children,
-    restingMousePosition,
+    restingPosition,
     css,
     ...props
   }) {
     return (
-      <Tilt options={tiltOptions}>
+      <Tilt options={tiltOptions} restingPosition={restingPosition}>
         <div
           $tiltglow
           css={{
@@ -63,7 +63,7 @@ export class TiltHoverGlow extends React.PureComponent {
             zIndex={100000}
             opacity={0.35}
             duration={30}
-            restingMousePosition={restingMousePosition}
+            restingPosition={restingPosition}
             overflow="hidden"
           />
           <HoverGlow
@@ -73,13 +73,13 @@ export class TiltHoverGlow extends React.PureComponent {
             scale={0.95}
             width={width}
             offsetTop={0}
-            offsetLeft={10}
+            offsetLeft={0}
             full
             blur={25}
             inverse
             opacity={0.14}
             borderRadius={20}
-            restingMousePosition={restingMousePosition}
+            restingPosition={restingPosition}
           />
         </div>
       </Tilt>

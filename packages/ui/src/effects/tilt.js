@@ -8,7 +8,7 @@ const defaultSettings = {
   perspective: 1000,
   easing: 'cubic-bezier(.03,.98,.52,.99)',
   scale: '1.1',
-  speed: '1000',
+  speed: 300,
   transition: true,
   axis: null,
   reset: true,
@@ -53,6 +53,14 @@ export class Tilt extends React.Component {
 
   componentDidMount() {
     this.element = findDOMNode(this)
+    if (this.props.restingPosition) {
+      this.setTransition()
+      this.updateElementPosition()
+      setTimeout(() => {
+        this.setState({ mounted: true })
+        this.update(this.props.restingPosition)
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -84,8 +92,11 @@ export class Tilt extends React.Component {
         ...this.state.style,
         willChange: 'transform',
       },
+      entering: true,
     })
     this.setTransition()
+    this.event = e
+    setTimeout(this.update)
     return this.props.onMouseEnter(e)
   }
 
@@ -94,14 +105,23 @@ export class Tilt extends React.Component {
     if (this.updateCall !== null) {
       window.cancelAnimationFrame(this.updateCall)
     }
+    if (this.state.entering) {
+      console.log('avoid while initially transitioning')
+      return
+    }
     this.event = e
-    this.updateCall = requestAnimationFrame(this.update.bind(this, e))
+    this.updateCall = requestAnimationFrame(() => this.update())
     return this.props.onMouseMove(e)
   }
 
   onMouseLeave = e => {
     this.setTransition()
-    if (this.settings.reset) {
+    if (this.props.restingPosition) {
+      // settimeout so it comes after setTransition
+      setTimeout(() => {
+        this.update(this.props.restingPosition)
+      })
+    } else if (this.settings.reset) {
       this.reset()
     }
     return this.props.onMouseLeave(e)
@@ -119,15 +139,17 @@ export class Tilt extends React.Component {
       this.setState({
         style: {
           ...this.state.style,
+          willChange: '',
           transition: '',
         },
+        entering: false,
       })
     }, this.settings.speed)
   }
 
-  getValues(e) {
-    const x = (e.nativeEvent.clientX - this.left) / this.width
-    const y = (e.nativeEvent.clientY - this.top) / this.height
+  getValues(clientX, clientY) {
+    const x = (clientX - this.left) / this.width
+    const y = (clientY - this.top) / this.height
     const _x = Math.min(Math.max(x, 0), 1)
     const _y = Math.min(Math.max(y, 0), 1)
     const tiltX = (
@@ -156,8 +178,14 @@ export class Tilt extends React.Component {
     this.top = rect.top
   }
 
-  update(e) {
-    let values = this.getValues(e)
+  update = position => {
+    let values
+    if (position) {
+      values = this.getValues(position[0], position[1])
+    } else {
+      const e = this.event.nativeEvent
+      values = this.getValues(e.clientX, e.clientY)
+    }
     this.setState({
       style: {
         ...this.state.style,
@@ -184,7 +212,15 @@ export class Tilt extends React.Component {
   }
 
   render() {
-    const style = { ...this.props.style, ...this.state.style }
+    const willFadeIn = this.props.restingPosition && !this.state.mounted
+    const style = {
+      ...this.props.style,
+      ...this.state.style,
+      opacity: willFadeIn ? 0 : 1,
+    }
+    if (willFadeIn) {
+      style.transition = `all ${this.settings.easing} ${this.settings.speed}`
+    }
     return (
       <div
         style={style}

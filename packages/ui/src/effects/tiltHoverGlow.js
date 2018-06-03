@@ -29,7 +29,8 @@ export class TiltHoverGlow extends React.PureComponent {
           ...tiltOptions,
         }}
       >
-        <tiltglow
+        <div
+          $tiltglow
           css={{
             cursor: 'default',
             width,
@@ -44,10 +45,9 @@ export class TiltHoverGlow extends React.PureComponent {
           {children}
           <HoverGlow
             full
-            show
-            scale={2}
+            scale={0.5}
             resist={20}
-            color={[255, 255, 255]}
+            color="red"
             overflow="hidden"
             borderRadius={8}
             zIndex={100000}
@@ -55,7 +55,6 @@ export class TiltHoverGlow extends React.PureComponent {
             duration={30}
           />
           <HoverGlow
-            show
             behind
             resist={93}
             scale={1.1}

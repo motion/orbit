@@ -225,14 +225,24 @@ class HomeHeader extends React.Component {
                           $$fullscreen
                           css={{
                             overflow: 'hidden',
-                            right: -80,
-                            left: 80,
+                            right: -180,
+                            left: 0,
                             borderBottom: [1, borderize(topBg)],
                           }}
                         >
-                          <div $$flex />
-                          <HomeImg />
-                          <div $$flex />
+                          <inner
+                            css={{
+                              position: 'absolute',
+                              right: 100,
+                              left: 100,
+                              top: 0,
+                              bottom: 0,
+                            }}
+                          >
+                            <UI.TiltHoverGlow>
+                              <HomeImg />
+                            </UI.TiltHoverGlow>
+                          </inner>
                         </inner>
                       </RightSide>
                     </>

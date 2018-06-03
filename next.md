@@ -1,6 +1,9 @@
 # next
 
 * weekend:
+  * for monday:
+    * make site really great to show ken
+      * improve homepage and update screenshot
   * biz:
     * setup list of people to reach out to cold
       * spacex, bloomberg, bigger finance cos in ny

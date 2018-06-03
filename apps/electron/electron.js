@@ -1,7 +1,12 @@
 const app = require('electron').app
 
-// bugfix something weird with esm and startup
 app.once('ready', () => {
+  // bugfix something weird with esm and startup
   require = require('esm')(module)
-  module.exports = require('./_/index.js')
+
+  if (process.env.NODE_ENV === 'development') {
+    module.exports = require('./_/start-app.js')
+  } else {
+    module.exports = require('./_/index.js')
+  }
 })

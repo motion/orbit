@@ -1,7 +1,7 @@
 {
   "name": "@mcro/electron-build",
   "productName": "Orbit",
-  "version": "2.0.11",
+  "version": "2.0.16",
   "private": true,
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
@@ -29,6 +29,7 @@
     "electron-packager": "12.1.0",
     "electron-rebuild": "^1.7.3",
     "electron-simple-publisher": "^0.4.9",
+    "node-abi": "2.4.1",
     "esm": "^3.0.37",
     "execa": "^0.9.0",
     "read-pkg-up": "3.0.0",

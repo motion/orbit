@@ -14,7 +14,9 @@ const log = {
 }
 
 const ROOT = __dirname
-const ELECTRON_DIR = Path.join(ROOT, '..', '..', 'apps', 'electron')
+const APPS_DIR = Path.join(ROOT, '..', '..', 'apps')
+const ELECTRON_DIR = Path.join(APPS_DIR, 'electron')
+const DESKTOP_DIR = Path.join(APPS_DIR, 'electron')
 const ignorePaths = [
   // exclude extra dirs for xcode
   'oracle/train',
@@ -68,6 +70,18 @@ async function bundle() {
     ),
   )
   await new Promise(resolve => rm(Path.join(ROOT, 'app', 'Orbit.dmg'), resolve))
+  console.log('npm install in ./iohook')
+  await execa('npm', ['install'], {
+    cwd: Path.join(__dirname, 'iohook'),
+  })
+  console.log('npm install --production in desktop')
+  await execa('npm', ['install', '--production'], {
+    cwd: DESKTOP_DIR,
+  })
+  console.log('npm install --production in electron')
+  await execa('npm', ['install', '--production'], {
+    cwd: ELECTRON_DIR,
+  })
   console.log('bundle new app')
   const paths = await electronPackager({
     dir: ELECTRON_DIR,
@@ -102,9 +116,18 @@ async function bundle() {
   await execa('xattr', ['-cr', 'Orbit.app'], {
     cwd: Path.join(ROOT, 'app', 'Orbit-darwin-x64'),
   })
+  finish()
 }
 
-bundle()
+try {
+  bundle()
+} catch (err) {
+  finish()
+}
+
+function finish() {
+  console.log('all done! to resume development run bootstrap')
+}
 
 process.on('uncaughtException', err => {
   console.log('uncaughtException', err.stack)

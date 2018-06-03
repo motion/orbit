@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "electron-rebuild -v 2.0.2"
+    "postinstall": "../node_modules/.bin/electron-rebuild -v 2.0.2"
   },
   "license": "MIT",
   "dependencies": {

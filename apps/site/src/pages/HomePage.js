@@ -338,18 +338,18 @@ class HomeFooter extends React.Component {
                     </Title>
                     <UI.PassProps size={1.35} sizeLineHeight={1.1} alpha={0.7}>
                       <P2>
-                        Conversations, tickets, emails, docs, wiki: your company
-                        knowledge is distributed and always changing.
+                        Conversations, tickets, emails, docs and wiki: your
+                        company knowledge is always moving.
                       </P2>
                       <P2>
                         Orbit syncs every cloud service and sorts it all using
-                        novel on-device machine learning. It provides smart
-                        features for keeping everyone up to date and questions
-                        answered.
+                        novel on-device machine learning. With smart features to
+                        keep everyone up to date.
                       </P2>
                       <P2>
-                        With a three minute no-cloud install that's completely
-                        private to your device, your data stays safe.
+                        It's installed in three minutes with no cloud or on-prem
+                        install. Private, on your device, so your data stays
+                        safe.
                       </P2>
                       <P2>Now going into beta.</P2>
                     </UI.PassProps>

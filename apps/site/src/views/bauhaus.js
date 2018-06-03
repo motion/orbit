@@ -6,17 +6,28 @@ export class Bauhaus extends React.Component {
     const svg = document.getElementById('svg-element')
     const warp = new Warp(svg)
     // Need to interpolate first, so angles remain sharp
-    warp.interpolate(4)
-    warp.transform(([x, y]) => [x, y + 4 * Math.sin(x / 30)])
+    warp.interpolate(2)
+    warp.transform(([x, y]) => [
+      x + 4 * Math.sin(x / 50),
+      y - 4 * -Math.sin(x / 20),
+    ])
   }
 
   render() {
     return (
       <bahaus
         $$fullscreen
-        css={{ transform: { scale: 0.54, x: '50%', y: '-13%' }, opacity: 0.2 }}
+        css={{
+          transform: { scale: 0.52, x: '52%', y: '-8%' },
+          opacity: 0.1,
+          zIndex: 0,
+        }}
       >
-        <svg id="svg-element" viewBox="0 0 303 251">
+        <svg
+          id="svg-element"
+          viewBox="0 0 303 251"
+          css={{ overflow: 'visible' }}
+        >
           <circle
             cx="88.784"
             cy="141.382"

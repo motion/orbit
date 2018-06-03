@@ -21,7 +21,7 @@ export class Header extends React.Component {
               <SectionContent>
                 <headerInner>
                   <BrandLogo
-                    css={{ cursor: 'pointer' }}
+                    css={{ cursor: 'pointer', marginLeft: -12 }}
                     onClick={Router.link('/')}
                   />
                   <div $$flex />

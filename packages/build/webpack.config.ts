@@ -48,6 +48,11 @@ const config = {
     filename: 'bundle.js',
     publicPath: '/',
   },
+  devServer: {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  },
   devtool: isProd ? 'source-map' : 'cheap-module-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],

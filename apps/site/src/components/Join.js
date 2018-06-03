@@ -3,12 +3,14 @@ import { view } from '@mcro/black'
 import { P, P2, Callout } from '~/views'
 import * as UI from '@mcro/ui'
 import * as r2 from '@mcro/r2'
+import sanitize from 'sanitize-html'
 
 @view
 export class Join extends React.Component {
   state = {
     error: null,
     success: null,
+    submitting: false,
   }
 
   form = React.createRef()
@@ -16,8 +18,10 @@ export class Join extends React.Component {
 
   submit = async e => {
     e.preventDefault()
+    let error
+    let success
     try {
-      this.setState({ error: null, success: null })
+      this.setState({ error: null, success: null, submitting: true })
       const form = this.form.current
       const query = {
         u: '019909d3efb283014d35674e5',
@@ -25,34 +29,30 @@ export class Join extends React.Component {
         EMAIL: this.email.current.value,
         b_019909d3efb283014d35674e5_015e5a3442: '',
       }
-      const result = await r2.post(form.getAttribute('action'), {
-        query,
-        mode: 'no-cors',
-      }).text
-      // mailchimp can return malformed json
-      let resObject
       try {
-        resObject = JSON.parse(result)
-        console.log(resObject)
-      } catch {
-        console.log('malformed', result)
-      }
-      if (result.indexOf('error')) {
-        if (result.indexOf('already subscribed') > -1) {
-          this.setState({ success: 'Already subscribed!', error: null })
-          return
+        const result = await r2.post(form.getAttribute('action'), {
+          query,
+        }).json
+        if (result.result === 'error') {
+          error = result.msg
+        } else {
+          success = result.msg
         }
-        this.setState({ error: result, success: null })
-      } else {
-        this.setState({ error: null, success: resObject.msg })
+      } catch (err) {
+        error = err.message
       }
-    } catch (error) {
-      console.error(error)
-      this.setState({ error: 'Error submitting, did you enter an email?' })
+    } catch (err) {
+      console.error(err)
+      error = err.message
     }
+    this.setState({
+      error,
+      success,
+      submitting: false,
+    })
   }
 
-  render({ ...props }, { success, error }) {
+  render({ ...props }, { success, error, submitting }) {
     return (
       <section id="join" {...props}>
         <Callout>
@@ -85,17 +85,19 @@ export class Join extends React.Component {
                 if={success || error}
                 $success={success && !error}
                 css={{ maxWidth: '70%' }}
-              >
-                {success || error || ''}
-              </message>
+                dangerouslySetInnerHTML={{
+                  __html: sanitize(success || error || ''),
+                }}
+              />
               <UI.Theme theme="rgb(10.8%, 34.7%, 81.2%)">
                 <UI.Button
                   size={1.1}
                   sizeRadius={3}
                   margin={[0, 0, 0, 'auto']}
                   type="submit"
+                  disabled={submitting}
                 >
-                  Signup
+                  {submitting ? 'Signing up...' : 'Signup'}
                 </UI.Button>
               </UI.Theme>
             </end>

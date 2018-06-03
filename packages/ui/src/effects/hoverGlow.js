@@ -50,6 +50,7 @@ export class HoverGlow extends React.PureComponent {
     overlayZIndex: 1,
     blur: 15,
     backdropFilter: 'contrast(100%)',
+    restingMousePosition: null,
   }
 
   state = {
@@ -95,6 +96,12 @@ export class HoverGlow extends React.PureComponent {
     if (!this.props.hide) {
       // trigger it to show
       this.setState({ mounted: true })
+    }
+    const { restingMousePosition } = this.props
+    if (restingMousePosition) {
+      this.setState({
+        position: { x: -restingMousePosition[0], y: -restingMousePosition[1] },
+      })
     }
   }
 
@@ -163,6 +170,7 @@ export class HoverGlow extends React.PureComponent {
     overlayZIndex,
     blur,
     hide,
+    restingMousePosition,
     ...props
   }) {
     const show = !hide

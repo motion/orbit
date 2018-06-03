@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Tilt from 'react-tilt'
+import { Tilt } from './tilt'
 import { HoverGlow } from './hoverGlow'
 
 // type Props = {
@@ -27,7 +27,15 @@ export class TiltHoverGlow extends React.PureComponent {
     return 1
   }
 
-  render({ width, height, tiltOptions, children, css, ...props }) {
+  render({
+    width,
+    height,
+    tiltOptions,
+    children,
+    restingMousePosition,
+    css,
+    ...props
+  }) {
     return (
       <Tilt options={tiltOptions}>
         <div
@@ -54,6 +62,7 @@ export class TiltHoverGlow extends React.PureComponent {
             zIndex={100000}
             opacity={0.4}
             duration={30}
+            restingMousePosition={restingMousePosition}
           />
           <HoverGlow
             behind
@@ -68,6 +77,7 @@ export class TiltHoverGlow extends React.PureComponent {
             inverse
             opacity={0.04}
             borderRadius={20}
+            restingMousePosition={restingMousePosition}
           />
         </div>
       </Tilt>

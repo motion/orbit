@@ -239,7 +239,9 @@ class HomeHeader extends React.Component {
                               bottom: 0,
                             }}
                           >
-                            <UI.TiltHoverGlow>
+                            <UI.TiltHoverGlow
+                              restingMousePosition={[200, 1800]}
+                            >
                               <HomeImg />
                             </UI.TiltHoverGlow>
                           </inner>

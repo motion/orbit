@@ -55,27 +55,29 @@ export class TiltHoverGlow extends React.PureComponent {
           <HoverGlow
             full
             scale={0.5}
-            resist={72}
+            resist={52}
+            offsetTop={-80}
             blur={130}
             color="#fff"
             borderRadius={20}
             zIndex={100000}
-            opacity={0.4}
+            opacity={0.35}
             duration={30}
             restingMousePosition={restingMousePosition}
+            overflow="hidden"
           />
           <HoverGlow
             behind
             color="#000"
-            resist={93}
+            resist={96}
             scale={0.95}
             width={width}
-            offsetTop={80}
-            offsetLeft={-15}
+            offsetTop={0}
+            offsetLeft={10}
             full
-            blur={20}
+            blur={25}
             inverse
-            opacity={0.04}
+            opacity={0.14}
             borderRadius={20}
             restingMousePosition={restingMousePosition}
           />

@@ -531,10 +531,6 @@ export const HomeImg = props => (
       borderRadius: 19,
       // boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
       border: [2, '#eee'],
-      transform: {
-        x: 20,
-        y: 100,
-      },
     }}
     {...props}
   />

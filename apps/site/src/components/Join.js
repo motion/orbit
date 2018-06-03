@@ -29,14 +29,22 @@ export class Join extends React.Component {
         query,
         mode: 'no-cors',
       }).text
+      // mailchimp can return malformed json
+      let resObject
+      try {
+        resObject = JSON.parse(result)
+        console.log(resObject)
+      } catch {
+        console.log('malformed', result)
+      }
       if (result.indexOf('error')) {
-        if (result.indexOf('already subscribed')) {
+        if (result.indexOf('already subscribed') > -1) {
           this.setState({ success: 'Already subscribed!', error: null })
           return
         }
         this.setState({ error: result, success: null })
       } else {
-        this.setState({ error: null, success: 'You\'re on the list!' })
+        this.setState({ error: null, success: resObject.msg })
       }
     } catch (error) {
       console.error(error)

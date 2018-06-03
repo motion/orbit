@@ -99,7 +99,6 @@ export class OrbitHeader extends React.Component {
         </title>
         <after if={after}>{after}</after>
         <ControlButton
-          if={!App.orbitState.docked}
           onClick={App.togglePinned}
           borderWidth={App.orbitState.pinned ? 0.5 : 2}
           $pinnedIcon
@@ -112,6 +111,9 @@ export class OrbitHeader extends React.Component {
               ? null
               : theme.base.background.darken(0.4).desaturate(0.6)
           }
+          css={{
+            opacity: App.orbitState.hidden ? 0 : 1,
+          }}
         />
       </orbitHeader>
     )

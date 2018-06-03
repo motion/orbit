@@ -8,12 +8,11 @@ import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 // import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 
+const cwd = process.cwd()
 const readEntry = () => {
   try {
-    console.log('ok', Path.join(process.cwd(), 'package.json'))
-    const packageJson = Fs.readFileSync(
-      Path.join(process.cwd(), 'package.json'),
-    )
+    console.log('ok', Path.join(cwd, 'package.json'))
+    const packageJson = Fs.readFileSync(Path.join(cwd, 'package.json'))
     const pkg = JSON.parse(packageJson.toString())
     return pkg.main
   } catch {
@@ -24,7 +23,7 @@ const readEntry = () => {
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 const entry = process.env.ENTRY || readEntry() || './src'
-const path = Path.join(process.cwd(), 'dist')
+const path = Path.join(cwd, 'dist')
 const buildNodeModules =
   process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
 
@@ -54,6 +53,10 @@ const config = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
+    alias: {
+      '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
+      'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
+    },
   },
   resolveLoader: {
     modules: [buildNodeModules],

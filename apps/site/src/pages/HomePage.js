@@ -20,7 +20,6 @@ import {
 // import { HomePlay } from './home/HomePlay'
 import * as Constants from '~/constants'
 import Media from 'react-media'
-import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 
@@ -96,8 +95,8 @@ const Pitch = ({ isLarge }) => (
       Autonomous Intranet
     </Title>
     <P size={1.35} sizeLineHeight={1.1} fontWeight={300}>
-      The smarter intranet to organize your company. News, search, profiles,
-      answers and more installed 3 minutes.
+      A smarter way to organize your company knowledge. News, search, profiles
+      and answers installed 3 minutes.
     </P>
     <actions
       $$row
@@ -160,8 +159,9 @@ class HomeHeader extends React.Component {
         {isLarge => {
           return (
             <Section css={{ background: 'transparent' }}>
-              {/* <paintingOverflow css={{ overflow: 'hidden' }} $$fullscreen>
-                <paintingWrap $$fullscreen>
+              {/* <SpaceFabric /> */}
+              {/* <parallax css={{ overflow: 'hidden' }} $$fullscreen>
+                <parallaxContain $$fullscreen>
                   <Keyframes native script={ref => (store.stars = ref)}>
                     {({ y }) => (
                       <animated.div
@@ -176,12 +176,12 @@ class HomeHeader extends React.Component {
                           ),
                         }}
                       >
-                        <painting $$fullscreen />
+                        <inner $$fullscreen />
                       </animated.div>
                     )}
                   </Keyframes>
-                </paintingWrap>
-              </paintingOverflow> */}
+                </parallaxContain>
+              </parallax> */}
               <Slant {...firstSlant} {...topSlants} />
               <Slant inverseSlant {...secondSlant} {...topSlants} />
               <Slant {...thirdSlant} {...topSlants} />

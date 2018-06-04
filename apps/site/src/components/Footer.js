@@ -35,14 +35,14 @@ export class Footer extends React.Component {
             </SectionContent>
           </Section>
         </UI.Theme>
-        <footer css={{ background: theme.base.background }}>
+        <footer
+          css={{
+            background: theme.base.background.darken(0.05).desaturate(0.05),
+          }}
+        >
           <Media query={Constants.screen.large}>
             {isLarge => (
-              <Section
-                css={{
-                  borderTop: [1, [0, 0, 0, 0.05]],
-                }}
-              >
+              <Section>
                 <SectionContent padded={120}>
                   <sections>
                     <startSection if={!noCallToAction}>

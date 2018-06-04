@@ -18,6 +18,7 @@ nearest neighbors:
 
 * guru (guru flux) - https://www.getguru.com/solutions/flux/
 * cresta - https://www.cresta.ai/
+* slab, carrot.io, tipihub.com, getnifty.io
 * startups - diamond.io, layer
 * openfin
 * stripe home

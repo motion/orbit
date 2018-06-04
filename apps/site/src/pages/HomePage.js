@@ -360,8 +360,8 @@ class HomeFooter extends React.Component {
                     </Title>
                     <UI.PassProps size={1.35} sizeLineHeight={1.1} alpha={0.7}>
                       <P2>
-                        Conversations, tickets, emails, docs and a wiki: your
-                        company knowledge is dynamic.
+                        Conversations, tickets, emails, docs and a wiki: company
+                        knowledge is distributed and chaotic.
                       </P2>
                       <P2>
                         Orbit syncs every cloud service and sorts it all using

@@ -46,7 +46,8 @@ export const Title = UI.injectTheme(
         <P
           fontWeight={500}
           margin={[0, 0, 5]}
-          size={size * (isSmall ? 0.7 : 1)}
+          size={size * (isSmall ? 0.8 : 1)}
+          sizeLineHeight={1.1}
           color={
             theme.titleColor ||
             theme.base.color

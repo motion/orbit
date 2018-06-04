@@ -202,7 +202,7 @@ export class SectionFeatureNewsSearch extends React.Component {
       return
     }
     this.setState({ showNotifs: false })
-    await sleep(900)
+    await sleep(1300)
     this.setState({ showOrbit: true })
   }
 
@@ -290,6 +290,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                   }}
                 >
                   <notifications
+                    if={isLarge}
                     css={{
                       position: 'absolute',
                       top: 50,
@@ -297,12 +298,11 @@ export class SectionFeatureNewsSearch extends React.Component {
                       right: 0,
                       bottom: 0,
                     }}
-                    if={isLarge}
                   >
                     <Trail
                       native
                       from={{ opacity: 1, x: 0 }}
-                      config={{ duration: 100 }}
+                      config={{ duration: 130 }}
                       to={{
                         opacity: showNotifs ? 1 : 0,
                         x: showNotifs ? 0 : 100,
@@ -328,9 +328,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                   <Spring
                     if={showOrbit}
                     native
-                    from={{ opacity: 0, x: 100 }}
+                    from={{ opacity: 0, x: 50 }}
                     to={{ opacity: 1, x: 0 }}
-                    config={config.slow}
+                    config={{ friction: 20, tension: 6 }}
                   >
                     {({ opacity, x }) => (
                       <animated.div
@@ -395,9 +395,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
-                  <FeatureTitle>Smart unified search</FeatureTitle>
+                  <FeatureTitle>Unified cloud search</FeatureTitle>
                   <FeatureSubTitle>
-                    Fast, smart, and summarized cloud search
+                    Faster, summarized search with relevancy
                   </FeatureSubTitle>
                 </content>
                 <Media
@@ -450,7 +450,7 @@ export class SectionFeatureIntelligence extends React.Component {
                 >
                   <FeatureTitle>Projects and profiles</FeatureTitle>
                   <FeatureSubTitle>
-                    Automatic visiblity into your teams
+                    Automatic visiblity into teams
                   </FeatureSubTitle>
                   <UI.Theme name="lighter">
                     <Callout
@@ -606,7 +606,7 @@ export class SectionSmartSidebar extends React.Component {
                 css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
               >
                 <verticalSpace if={isLarge} css={{ height: '14%' }} />
-                <FeatureTitle>Augmented operation</FeatureTitle>
+                <FeatureTitle>Answers as you work</FeatureTitle>
                 <FeatureSubTitle>
                   Automatic contextual answers in realtime
                 </FeatureSubTitle>
@@ -616,21 +616,22 @@ export class SectionSmartSidebar extends React.Component {
                       textAlign: 'left',
                       ...(isLarge
                         ? {
-                            width: '95%',
                             position: 'absolute',
-                            right: '6%',
+                            left: '3%',
+                            right: '3%',
                           }
                         : null),
                     }}
                   >
                     <P size={1.6}>
-                      Put your cloud to work with a smart sidebar for every app.
-                      With realtime search as you work across all your
-                      knowledge, scanning as you chat and browse.
+                      Put your cloud to work with a smart sidebar for every app
+                      that uses realtime search to augment intelligence as you'd
+                      normally chat and browse.
                       <br />
                       <br />
                       Orbit uses custom on-device OCR that's 100x faster than
-                      the current best. Simply hold <Cmd>Option</Cmd> or{' '}
+                      the current best and answers are shown highlighted inline.
+                      Simply hold <Cmd>Option</Cmd> or keep on always with{' '}
                       <Cmd>Option+Space</Cmd>.
                     </P>
                   </Callout>

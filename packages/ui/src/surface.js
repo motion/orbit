@@ -235,19 +235,20 @@ class SurfacePlain extends React.Component {
       style,
       ...props,
     }
-
+    // get border radius
     let borderLeftRadius =
-      _borderLeftRadius || themeValues.borderRadius.borderLeftRadius
+      typeof _borderLeftRadius === 'number'
+        ? _borderLeftRadius
+        : themeValues.borderRadius.borderLeftRadius
     let borderRightRadius =
-      _borderRightRadius || themeValues.borderRadius.borderRightRadius
-
+      typeof _borderRightRadius === 'number'
+        ? _borderRightRadius
+        : themeValues.borderRadius.borderRightRadius
     if (typeof borderLeftRadius === 'undefined') {
       borderLeftRadius = themeValues.borderRadiusSize
       borderRightRadius = themeValues.borderRadiusSize
     }
-
     const glowColor = (this.theme && themeValues.color) || DEFAULT_GLOW_COLOR
-
     const contents = (
       <>
         <Glint
@@ -527,13 +528,16 @@ class SurfacePlain extends React.Component {
     } else {
       let hasSidesDefined = false
       for (const side of BORDER_RADIUS_SIDES) {
-        if (props[side]) {
+        const isDefined = typeof props[side] === 'number'
+        if (isDefined) {
           hasSidesDefined = true
           if (props[side] === true) {
             borderRadius[side] = radius
           } else {
             borderRadius[side] = props[side]
           }
+        } else {
+          borderRadius[side] = radius
         }
       }
       if (!hasSidesDefined && radius) {

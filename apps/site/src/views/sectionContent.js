@@ -78,12 +78,12 @@ class SectionContent extends React.Component {
         flexFlow: 'column',
       },
     },
-    padded: {
-      padding: [80, Constants.sidePad],
+    padded: padding => ({
+      padding: [padding !== true ? padding : 80, Constants.sidePad],
       [Constants.screen.smallQuery]: {
-        padding: [80, '5%'],
+        padding: [padding !== true ? padding : 80, '5%'],
       },
-    },
+    }),
   }
 }
 

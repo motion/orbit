@@ -25,8 +25,6 @@ export class Join extends React.Component {
 
   submit = async e => {
     e.preventDefault()
-    let error
-    let success
     try {
       this.setState({ error: null, success: null, submitting: true })
       const finish = state => {
@@ -57,34 +55,22 @@ export class Join extends React.Component {
     } catch (err) {
       console.log('errrr', err)
     }
-    this.setState({
-      error,
-      success,
-      submitting: false,
-    })
   }
 
   render({ ...props }, { success, error, submitting }) {
     return (
       <section id="join" {...props}>
-        <Callout>
-          <P size={2} fontWeight={600} css={{ marginBottom: 5 }}>
-            Early access
-          </P>
-          <P2 alpha={0.7} size={1.2} margin={[5, 0, 10]}>
-            We're rolling Orbit into beta. We'll send invites to early signups
-            first!
-          </P2>
-          <form
-            ref={this.form}
-            action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
-            method="post"
-            id="mc-embedded-subscribe-form"
-            name="mc-embedded-subscribe-form"
-            target="_blank"
-            noValidate
-            onSubmit={this.submit}
-          >
+        <form
+          ref={this.form}
+          action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+          noValidate
+          onSubmit={this.submit}
+        >
+          <UI.Row>
             <input
               ref={this.email}
               type="email"
@@ -92,29 +78,30 @@ export class Join extends React.Component {
               id="mce-EMAIL"
               placeholder="Email address..."
             />
-            <end $$row>
-              <message
-                if={success || error}
-                $success={success && !error}
-                css={{ maxWidth: '70%' }}
-                dangerouslySetInnerHTML={{
-                  __html: sanitize(success || error || ''),
-                }}
-              />
-              <UI.Theme theme="rgb(10.8%, 34.7%, 81.2%)">
-                <UI.Button
-                  size={1.1}
-                  sizeRadius={3}
-                  margin={[0, 0, 0, 'auto']}
-                  type="submit"
-                  disabled={submitting}
-                >
-                  {submitting ? 'Signing up...' : 'Signup'}
-                </UI.Button>
-              </UI.Theme>
-            </end>
-          </form>
-        </Callout>
+            <UI.Theme theme="rgb(10.8%, 34.7%, 81.2%)">
+              <UI.Button
+                size={1.1}
+                height={46}
+                sizeRadius={3}
+                sizePadding={2}
+                borderLeftRadius={0}
+                margin={[-10, 0, 0, 'auto']}
+                type="submit"
+                disabled={submitting}
+                css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
+              >
+                {submitting ? 'Signing up...' : 'Get early access'}
+              </UI.Button>
+            </UI.Theme>
+          </UI.Row>
+          <message
+            $success={success && !error}
+            css={{ maxWidth: '70%', height: 30, marginBottom: -20 }}
+            dangerouslySetInnerHTML={{
+              __html: sanitize(success || error || ''),
+            }}
+          />
+        </form>
       </section>
     )
   }
@@ -124,7 +111,7 @@ export class Join extends React.Component {
       textAlign: 'left',
       minWidth: 300,
       width: '100%',
-      maxWidth: 450,
+      maxWidth: 520,
       margin: [0, 'auto'],
       padding: [5, 10],
     },
@@ -132,10 +119,11 @@ export class Join extends React.Component {
       display: 'flex',
       width: '100%',
       flex: 1,
-      padding: [12, 16],
+      padding: [12, 20],
       margin: [10, 0, 20],
       fontSize: 18,
       border: [1, 'red'],
+      borderLeftRadius: 100,
     },
     message: {
       paddingRight: 40,

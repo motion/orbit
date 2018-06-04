@@ -473,8 +473,8 @@ export class A extends React.Component {
     a: {
       fontSize: 14,
       color: [0, 0, 0, 0.6],
-      fontWeight: 700,
-      padding: [5, 5],
+      fontWeight: 600,
+      padding: [3, 2],
       borderBottom: [2, 'transparent'],
     },
   }

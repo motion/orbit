@@ -17,6 +17,7 @@ shrinkwrap.yaml
 values.yaml
 *.tgz
 kubeconfig
+.cache-loader
 
 common/temp/**
 

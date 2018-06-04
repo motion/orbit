@@ -108,7 +108,6 @@ export class OrbitContextHome {
 
   render({ appStore, store }, { resultsRef, isScrolled, isOverflowing }) {
     log('CONTEXT HOME---------------')
-    Mobx.trace()
     const total = store.results.length
     return (
       <OrbitDockedPane name="context">

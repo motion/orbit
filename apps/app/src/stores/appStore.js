@@ -4,7 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -142,7 +142,10 @@ export class AppStore {
   }
 
   updateResults = react(
-    () => [Desktop.state.lastBitUpdatedAt, Desktop.searchState.pluginResultId],
+    () => [
+      Desktop.state.lastBitUpdatedAt,
+      Desktop.searchState.pluginResultId || 0,
+    ],
     () => {
       if (this.searchState.results && this.searchState.results.length) {
         throw react.cancel
@@ -368,7 +371,11 @@ export class AppStore {
   }
 
   setTarget = (item, target) => {
-    OrbitHelpers.setPeekTarget(item, target)
+    if (!target) {
+      console.error('no target', item, target, this.nextIndex, this.activeIndex)
+      return
+    }
+    PeekStateActions.selectItem(item, target)
     if (this.nextIndex !== this.activeIndex) {
       this.lastSelectAt = Date.now()
       this.activeIndex = this.nextIndex

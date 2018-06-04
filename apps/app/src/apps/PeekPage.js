@@ -17,12 +17,14 @@ class PeekStore {
   updateHistory = react(
     () => this.curState,
     state => {
+      console.log('adding history', this.history, state)
       if (state) {
         this.history.push(state)
       } else {
         this.history = []
       }
     },
+    { delay: 32 },
   )
 
   setHeaderHeight = height => {

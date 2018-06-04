@@ -56,6 +56,7 @@ class OrbitCardStore {
       if (!shouldSelect) {
         throw react.cancel
       }
+      console.log('selecting', this.props, this)
       this.props.appStore.setTarget(this.props.bit, this.ref)
     },
   )

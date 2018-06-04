@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
-import { offset } from '../helpers/offset'
 import throttle from 'raf-throttle'
 
 // type Props = {
@@ -84,8 +83,8 @@ export class HoverGlow extends React.PureComponent {
       parentNode = node.parentNode
     }
     if (parentNode) {
+      this.setState({ parentRect: parentNode.getBoundingClientRect() })
       const bounds = parentNode.getBoundingClientRect()
-      console.log('see bounds', parentNode, bounds)
       this.setState({ parentNode, bounds })
       const trackMouseTrue = throttle(() => this.trackMouse(true))
       const trackMouseFalse = throttle(() => this.trackMouse(false))
@@ -114,7 +113,8 @@ export class HoverGlow extends React.PureComponent {
 
   // offset gives us offset without scroll, just based on parent
   move = e => {
-    const [x, y] = offset(e, this.state.parentNode)
+    const x = e.clientX - this.state.parentRect.left
+    const y = e.clientY - this.state.parentRect.top
     if (this.unmounted || !this.state.bounds) {
       return
     }

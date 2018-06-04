@@ -50,7 +50,7 @@ export class HoverGlow extends React.PureComponent {
     overlayZIndex: 1,
     blur: 15,
     backdropFilter: 'contrast(100%)',
-    restingMousePosition: null,
+    restingPosition: null,
   }
 
   state = {
@@ -68,7 +68,7 @@ export class HoverGlow extends React.PureComponent {
     // @ts-ignore
     this.setTimeout(() => {
       this.follow()
-    })
+    }, 100)
   }
 
   follow() {
@@ -78,12 +78,15 @@ export class HoverGlow extends React.PureComponent {
     } else if (this.rootRef) {
       const node = this.rootRef.current
       if (!node) {
+        console.warn('no node?')
         return
       }
       parentNode = node.parentNode
     }
     if (parentNode) {
-      this.setState({ parentNode, bounds: parentNode.getBoundingClientRect() })
+      const bounds = parentNode.getBoundingClientRect()
+      console.log('see bounds', parentNode, bounds)
+      this.setState({ parentNode, bounds })
       const trackMouseTrue = throttle(() => this.trackMouse(true))
       const trackMouseFalse = throttle(() => this.trackMouse(false))
       this.on(parentNode, 'mouseenter', trackMouseTrue)
@@ -97,10 +100,10 @@ export class HoverGlow extends React.PureComponent {
       // trigger it to show
       this.setState({ mounted: true })
     }
-    const { restingMousePosition } = this.props
-    if (restingMousePosition) {
+    const { restingPosition } = this.props
+    if (restingPosition) {
       this.setState({
-        position: { x: -restingMousePosition[0], y: -restingMousePosition[1] },
+        position: { x: -restingPosition[0], y: -restingPosition[1] },
       })
     }
   }
@@ -174,7 +177,7 @@ export class HoverGlow extends React.PureComponent {
     overlayZIndex,
     blur,
     hide,
-    restingMousePosition,
+    restingPosition,
     ...props
   }) {
     const show = !hide

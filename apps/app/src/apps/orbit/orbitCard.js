@@ -135,7 +135,6 @@ export class OrbitCard extends React.Component {
     location,
     subtitle,
     permalink,
-    date,
   }) {
     const {
       store,
@@ -239,8 +238,12 @@ export class OrbitCard extends React.Component {
     )
   }
 
-  render({ pane, appStore, bit, store, itemProps }) {
-    debounceLog(`${bit.id}.${pane} ${store.isSelected}`)
+  render({ pane, appStore, bit, store, itemProps, ...props }) {
+    debounceLog(`${bit && bit.id}.${pane} ${store.isSelected}`)
+    if (!bit) {
+      console.log('no bit given, rendering plainly/directly')
+      return this.getOrbitCard(props)
+    }
     const BitContent = bitContents(bit)
     store.isSelected
     if (typeof BitContent !== 'function') {

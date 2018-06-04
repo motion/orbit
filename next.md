@@ -1,17 +1,8 @@
 # next
 
-* weekend:
-  * for monday:
-    * make site really great to show ken
-      * improve homepage and update screenshot
-  * biz:
-    * setup list of people to reach out to cold
-      * spacex, bloomberg, bigger finance cos in ny
-  * dev:
-    * real titles
-    * polish app for productionize a little
-    * productionize app for matt/kevin
-    * reach: auto-update
+* biz:
+  * setup list of people to reach out to cold
+    * spacex, bloomberg, bigger finance cos in ny
 
 # biz
 

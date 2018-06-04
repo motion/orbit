@@ -5,6 +5,7 @@ import { Person } from '@mcro/models'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitCard } from './orbitCard'
 import { Masonry } from '~/views/masonry'
+import { SubTitle } from '~/views'
 
 class OrbitDirectoryStore {
   setGetResults = react(
@@ -29,9 +30,44 @@ class OrbitDirectoryStore {
 })
 export class OrbitDirectory {
   render({ store }) {
-    log(`DIRECTORY --------`)
+    log('DIRECTORY --------')
     return (
       <OrbitDockedPane name="directory">
+        <SubTitle>Lists</SubTitle>
+        <Masonry>
+          <OrbitCard
+            pane="home-directory"
+            subPane="directory"
+            style={{
+              gridColumnEnd: 'span 2',
+            }}
+            total={10}
+            title="Onboarding"
+          />
+          <OrbitCard
+            pane="home-directory"
+            subPane="directory"
+            style={{
+              gridColumnEnd: 'span 2',
+            }}
+            total={10}
+            title="Dev: Getting started"
+          />
+          <OrbitCard
+            pane="home-directory"
+            subPane="directory"
+            style={{
+              gridColumnEnd: 'span 2',
+            }}
+            total={10}
+            title="Success: links"
+          />
+        </Masonry>
+
+        <br />
+        <br />
+
+        <SubTitle>People</SubTitle>
         <Masonry>
           {store.results.map((bit, index) => (
             <OrbitCard

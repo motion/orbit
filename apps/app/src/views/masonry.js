@@ -74,7 +74,7 @@ export class Masonry extends React.Component {
 
   static style = {
     grid: {
-      height: '100%',
+      // maxHeight: '100%',
       // overflowY: 'scroll',
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',

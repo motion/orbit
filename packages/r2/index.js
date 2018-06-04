@@ -117,7 +117,7 @@ class R2 {
     if (query && Object.keys(query).length) {
       const esc = encodeURIComponent
       const queryString = Object.keys(query)
-        .map(k => `${esc(k)}=${esc(query[k])}`)
+        .map(k => `${esc(k)}=${k === 'c' ? query[k] : esc(query[k])}`)
         .join('&')
       url = url + `?${queryString}`
     }

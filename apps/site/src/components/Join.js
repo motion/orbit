@@ -2,8 +2,15 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { P, P2, Callout } from '~/views'
 import * as UI from '@mcro/ui'
-import * as r2 from '@mcro/r2'
 import sanitize from 'sanitize-html'
+import jsonp from 'jsonp'
+
+const queryString = query => {
+  const esc = encodeURIComponent
+  return Object.keys(query)
+    .map(k => `${esc(k)}=${k === 'c' ? query[k] : esc(query[k])}`)
+    .join('&')
+}
 
 @view
 export class Join extends React.Component {
@@ -22,28 +29,33 @@ export class Join extends React.Component {
     let success
     try {
       this.setState({ error: null, success: null, submitting: true })
+      const finish = state => {
+        this.setState({
+          error: null,
+          success: null,
+          submitting: false,
+          ...state,
+        })
+      }
       const form = this.form.current
       const query = {
-        u: '019909d3efb283014d35674e5',
         id: '015e5a3442',
         EMAIL: this.email.current.value,
         b_019909d3efb283014d35674e5_015e5a3442: '',
       }
-      try {
-        const result = await r2.post(form.getAttribute('action'), {
-          query,
-        }).json
-        if (result.result === 'error') {
-          error = result.msg
-        } else {
-          success = result.msg
+      let url = form.getAttribute('action').replace('/post', '/post-json')
+      url = `${url}&${queryString(query)}`
+      jsonp(url, { param: 'c' }, (error, data) => {
+        if (error) {
+          return finish({ error })
         }
-      } catch (err) {
-        error = err.message
-      }
+        if (data && data.result === 'error') {
+          return finish({ error: data.msg })
+        }
+        return finish({ success: data.msg })
+      })
     } catch (err) {
-      console.error(err)
-      error = err.message
+      console.log('errrr', err)
     }
     this.setState({
       error,
@@ -65,7 +77,7 @@ export class Join extends React.Component {
           </P2>
           <form
             ref={this.form}
-            action="https://tryorbit.us18.list-manage.com/subscribe/post-json"
+            action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
             method="post"
             id="mc-embedded-subscribe-form"
             name="mc-embedded-subscribe-form"

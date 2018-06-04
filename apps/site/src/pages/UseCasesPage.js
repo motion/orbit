@@ -100,7 +100,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
               <Glow
                 style={{
                   background: altBg.lighten(0.015),
-                  transform: { x: '-30%', y: '-15%' },
+                  transform: { x: '-555%', y: '-20%' },
                 }}
               />
               <Slant
@@ -163,9 +163,11 @@ class SectionUseCaseRemoteTeams extends React.Component {
                   css={{
                     position: 'absolute',
                     top: '38%',
-                    left: 50,
+                    marginTop: 40,
+                    left: '10%',
                     height: '35%',
-                    width: 450,
+                    minHeight: 420,
+                    width: 400,
                     overflow: 'hidden',
                   }}
                 >
@@ -231,8 +233,9 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                     Reduce onboarding time by 1/3
                   </FeatureSubTitle>
                   <P2 size={1.6} css={{ margin: isLarge ? [0, 0, 35, 0] : 0 }}>
-                    Onboarding is hard, and ties up your experienced people.
-                    Orbit's automatic realtime contextual search speeds it up.
+                    Onboarding is hard and requires many hands on deck. Make it
+                    easier and more effective with Orbit's realtime contextual
+                    search.
                   </P2>
                 </section>
                 <Callout
@@ -244,7 +247,8 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                   }}
                 >
                   <P2 size={2} margin={0}>
-                    A smarter way to build your team knowledge.
+                    Expert answers are automatically at hand as your teams
+                    operate.
                   </P2>
                 </Callout>
               </LeftSide>
@@ -259,7 +263,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 </React.Fragment>
                 <P2 size={1.6} css={isLarge && { marginRight: '15%' }}>
                   Sales chat requires intimate knowledge of your product. Orbit
-                  sits side by side with your success team as they chat on
+                  sits side by side with your success team as they chat,
                   providing realtime answers.
                 </P2>
                 <Callout
@@ -320,8 +324,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
               />
               <LeftSide>
                 <SubTitle size={4.5} italic>
-                  Focus &<br />
-                  understand
+                  A team home
                 </SubTitle>
                 <Notification
                   if={isLarge}
@@ -333,18 +336,19 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                     marginBottom: -40,
                   }}
                 />
-                <div if={isLarge} css={{ height: '26%' }} />
+                <div if={isLarge} css={{ height: '30%' }} />
                 <section
                   css={{
                     textAlign: 'left',
                     display: 'block',
-                    margin: isLarge ? [-70, 0, 0, '12%'] : 0,
+                    margin: isLarge ? [-30, 0, 0, '12%'] : 0,
                   }}
                 >
                   <FeatureSubTitle>Smarter unified knowledge</FeatureSubTitle>
                   <P2 size={1.6}>
                     Profiles and project information keep people from pinging
-                    each other. Stop losing links, discussions, and more.
+                    each other. Orbit builds a map of your company so everyone
+                    can see what's going on.
                   </P2>
                 </section>
                 <Callout
@@ -358,12 +362,12 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                   }
                 >
                   <P2 size={2} margin={0}>
-                    A sense of unity and better insight for your teams.
+                    A sense of unity and better insight for large teams.
                   </P2>
                 </Callout>
               </LeftSide>
               <RightSide inverse css={{ bottom: 0 }}>
-                <div if={isLarge} $$flex css={{ marginTop: '20%' }} />
+                <div if={isLarge} $$flex css={{ marginTop: '25%' }} />
                 <FeatureSubTitle>Enabling deep work</FeatureSubTitle>
                 <P2 size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
                   Do Not Disturb Slack without losing synchronicity. Orbit Home

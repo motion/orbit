@@ -55,8 +55,8 @@ export class Tilt extends React.Component {
     this.element = findDOMNode(this)
     if (this.props.restingPosition) {
       this.setTransition()
-      this.updateElementPosition()
       setTimeout(() => {
+        this.updateElementPosition()
         this.setState({ mounted: true })
         this.update(this.props.restingPosition)
       })

@@ -33,7 +33,10 @@ export class TiltHoverGlow extends React.PureComponent {
     tiltOptions,
     children,
     restingPosition,
-    css,
+    hideShadow,
+    hideGlow,
+    shadowProps,
+    glowProps,
     ...props
   }) {
     return (
@@ -47,12 +50,12 @@ export class TiltHoverGlow extends React.PureComponent {
             borderRadius: 0,
             overflow: 'hidden',
             transition: 'transform 50ms ease-in',
-            ...css,
           }}
           {...props}
         >
           {children}
           <HoverGlow
+            if={!hideGlow}
             full
             scale={0.5}
             resist={52}
@@ -65,8 +68,10 @@ export class TiltHoverGlow extends React.PureComponent {
             duration={30}
             restingPosition={restingPosition}
             overflow="hidden"
+            {...glowProps}
           />
           <HoverGlow
+            if={!hideShadow}
             behind
             color="#000"
             resist={96}
@@ -80,6 +85,7 @@ export class TiltHoverGlow extends React.PureComponent {
             opacity={0.14}
             borderRadius={20}
             restingPosition={restingPosition}
+            {...shadowProps}
           />
         </div>
       </Tilt>

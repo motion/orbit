@@ -11,7 +11,7 @@ export class BrandLogo extends React.Component {
   hover = () => this.setState({ hovered: true })
 
   render({ theme, white, ...props }, { hovered }) {
-    const coloredFill = theme.base.background.darken(0.5).desaturate(0.7)
+    const coloredFill = theme.base.background.darken(0.5).desaturate(0.65)
     const fill = hovered ? coloredFill.alpha(0.9) : coloredFill
     return (
       <brandMark {...props} onMouseEnter={this.hover} onMouseLeave={this.leave}>
@@ -26,6 +26,7 @@ export class BrandLogo extends React.Component {
       alignItems: 'center',
       textAlign: 'center',
       margin: [-12, 0],
+      opacity: 0.8,
     },
     orbit: {
       width: 250,

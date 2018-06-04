@@ -43,7 +43,7 @@ const theme = {
 const slantBg = background
 
 const FeatureTitle = props => (
-  <Title italic size={2.6} css={{ marginBottom: 15 }} {...props} />
+  <Title italic size={2.6} css={{ marginBottom: 10 }} {...props} />
 )
 
 @UI.injectTheme
@@ -101,18 +101,20 @@ const SearchIllustration = () => (
           position: 'absolute',
           overflow: 'hidden',
           left: '50%',
-          top: '31%',
+          top: '33%',
           marginLeft: 'calc(-5% - 500px)',
           width: '43%',
           maxWidth: 570,
           height: '22%',
-          zIndex: 1,
-          pointerEvents: 'none',
+          zIndex: 10000,
+          padding: 10,
+          // pointerEvents: 'none',
           transform: {
             y: searchYOff - 180,
           },
         }}
       >
+        {/* <UI.TiltHoverGlow hideShadow restingPosition={[420, 20]}> */}
         <FadedArea fadeDown>
           <img
             src={searchImg}
@@ -125,6 +127,7 @@ const SearchIllustration = () => (
             }}
           />
         </FadedArea>
+        {/* </UI.TiltHoverGlow> */}
       </searchIllustration>
     )}
   />
@@ -192,16 +195,14 @@ export class SectionFeatureNewsSearch extends React.Component {
   }
 
   handleIntersect = async ({ isIntersecting }) => {
-    console.log('brief intersect', isIntersecting)
     if (!isIntersecting) {
       return
     }
     if (!this.state.showNotifs || this.state.showOrbit) {
       return
     }
-    await sleep(1200)
     this.setState({ showNotifs: false })
-    await sleep(1500)
+    await sleep(900)
     this.setState({ showOrbit: true })
   }
 
@@ -225,49 +226,50 @@ export class SectionFeatureNewsSearch extends React.Component {
                 slantBackground={slantBg.darken(0.05)}
               />
               <LeftSide css={{ top: 0 }}>
-                <Observer onChange={this.handleIntersect}>
-                  <content
-                    css={{
-                      display: 'block',
-                      marginTop: isLarge ? newsTopOffPct : 0,
-                    }}
-                  >
-                    <FeatureTitle>A heads up for you</FeatureTitle>
-                    <FeatureSubTitle>
-                      Smart news for your company
-                    </FeatureSubTitle>
-                    <UI.Theme name="lighter">
-                      <Callout
+                <content
+                  css={{
+                    display: 'block',
+                    marginTop: isLarge ? newsTopOffPct : 0,
+                  }}
+                >
+                  <FeatureTitle>A heads up for you</FeatureTitle>
+                  <FeatureSubTitle>
+                    Simplified news to summarize your day
+                  </FeatureSubTitle>
+                  <UI.Theme name="lighter">
+                    <Callout
+                      css={{
+                        textAlign: 'left',
+                        ...(isLarge
+                          ? {
+                              width: '95%',
+                              position: 'absolute',
+                              right: '6%',
+                            }
+                          : null),
+                      }}
+                    >
+                      <P size={1.6}>
+                        Reduce notification noise and don't miss out on
+                        important conversations. Sorted news for your team.
+                        <br />
+                        <br />
+                        Orbit adjusts to what you care about and the custom
+                        terminology your team uses.
+                      </P>
+                      <DottedButton
                         css={{
-                          textAlign: 'left',
-                          ...(isLarge
-                            ? {
-                                width: '95%',
-                                position: 'absolute',
-                                right: '6%',
-                              }
-                            : null),
+                          margin: [0, 0, 0, 'auto'],
                         }}
                       >
-                        <P size={1.6}>
-                          Reduce notification noise and don't miss out on
-                          important conversations. Sorted news for your team.
-                          <br />
-                          <br />
-                          Orbit adjusts to what you care about and the custom
-                          terminology your team uses.
-                        </P>
-                        <DottedButton
-                          css={{
-                            margin: [0, 0, 0, 'auto'],
-                          }}
-                        >
-                          Learn more
-                        </DottedButton>
-                      </Callout>
-                    </UI.Theme>
-                  </content>
-                </Observer>
+                        Learn more
+                      </DottedButton>
+                      <Observer onChange={this.handleIntersect}>
+                        <span />
+                      </Observer>
+                    </Callout>
+                  </UI.Theme>
+                </content>
               </LeftSide>
 
               <RightSide
@@ -300,7 +302,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     <Trail
                       native
                       from={{ opacity: 1, x: 0 }}
-                      config={config.fast}
+                      config={{ duration: 100 }}
                       to={{
                         opacity: showNotifs ? 1 : 0,
                         x: showNotifs ? 0 : 100,
@@ -354,11 +356,11 @@ export class SectionFeatureNewsSearch extends React.Component {
                       top: 0,
                       bottom: 0,
                       right: 0,
-                      width: '10%',
+                      width: '30%',
                       zIndex: 100,
                       background: `linear-gradient(to right, transparent, ${
                         theme.base.background
-                      })`,
+                      } 80%)`,
                     }}
                   />
                   <fadeawayfadeawayfadeaway
@@ -395,7 +397,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                 >
                   <FeatureTitle>Smart unified search</FeatureTitle>
                   <FeatureSubTitle>
-                    Search with a summary of everything
+                    Fast, smart, and summarized cloud search
                   </FeatureSubTitle>
                 </content>
                 <Media
@@ -493,33 +495,37 @@ export class SectionFeatureIntelligence extends React.Component {
                     </RightSide>
                     <section
                       css={{
-                        zIndex: 0,
+                        zIndex: 1000,
                         position: 'absolute',
                         width: '45%',
-                        height: '58%',
+                        maxWidth: 520,
+                        height: '53%',
                         marginTop: -340 + contextYOff,
                         top: '56%',
-                        left: '47%',
+                        left: '48%',
                         marginLeft: 50,
+                        padding: 20,
                         overflow: 'hidden',
+                        pointerEvents: 'all',
                       }}
                     >
+                      {/* <UI.TiltHoverGlow hideShadow restingPosition={[0, 300]}> */}
                       <FadedArea fadeDown fadeRight>
                         <img
                           src={profileImg}
                           css={{
                             position: 'absolute',
-                            width: 1199,
+                            width: 1199 / 2,
                             height: 'auto',
                             transformOrigin: 'top left',
                             transform: {
-                              scale: 0.5,
                               x: 50,
-                              y: 130,
+                              y: 50,
                             },
                           }}
                         />
                       </FadedArea>
+                      {/* </UI.TiltHoverGlow> */}
                     </section>
                   </>
                 )}
@@ -567,11 +573,12 @@ export class SectionSmartSidebar extends React.Component {
                     top: '9%',
                     right: '7%',
                     left: '2%',
-                    height: '65%',
+                    height: '60%',
                     maxHeight: 800,
                     overflow: 'hidden',
                   }}
                 >
+                  {/* <UI.TiltHoverGlow hideShadow restingPosition={[600, 300]}> */}
                   <FadedArea fadeDown>
                     <img
                       src={intelligenceImg}
@@ -589,6 +596,7 @@ export class SectionSmartSidebar extends React.Component {
                       }}
                     />
                   </FadedArea>
+                  {/* </UI.TiltHoverGlow> */}
                 </section>
                 <div if={isLarge} css={{ height: '100%' }} />
               </LeftSide>
@@ -597,9 +605,11 @@ export class SectionSmartSidebar extends React.Component {
                 inverse
                 css={{ zIndex: 1, overflow: 'hidden', top: 0, bottom: 0 }}
               >
-                <verticalSpace if={isLarge} css={{ height: '11%' }} />
+                <verticalSpace if={isLarge} css={{ height: '14%' }} />
                 <FeatureTitle>Augmented operation</FeatureTitle>
-                <FeatureSubTitle>A smart sidebar for every app</FeatureSubTitle>
+                <FeatureSubTitle>
+                  Automatic contextual answers in realtime
+                </FeatureSubTitle>
                 <UI.Theme name="lighter">
                   <Callout
                     css={{
@@ -614,16 +624,13 @@ export class SectionSmartSidebar extends React.Component {
                     }}
                   >
                     <P size={1.6}>
-                      From Intercom to docs to email, put your knowledge to
-                      work. It's realtime search as you work across all your
-                      knowledge.
+                      Put your cloud to work with a smart sidebar for every app.
+                      With realtime search as you work across all your
+                      knowledge, scanning as you chat and browse.
                       <br />
                       <br />
                       Orbit uses custom on-device OCR that's 100x faster than
-                      the current best.
-                      <br />
-                      <br />
-                      Simply hold <Cmd>Option</Cmd> or press{' '}
+                      the current best. Simply hold <Cmd>Option</Cmd> or{' '}
                       <Cmd>Option+Space</Cmd>.
                     </P>
                   </Callout>

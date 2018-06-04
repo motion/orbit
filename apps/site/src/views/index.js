@@ -262,12 +262,13 @@ export const FadedArea = UI.injectTheme(
         }}
       />
       <circleWrap $$fullscreen css={{ zIndex: 1000 }}>
-        <circle
+        <div
+          $circle
           css={{
             width: '100%',
             paddingBottom: '100%',
             borderRadius: 1000,
-            boxShadow: [[0, 0, 0, 1000, theme.base.background]],
+            boxShadow: [[0, 0, 0, 250, theme.base.background]],
             border: [
               [
                 3,
@@ -350,7 +351,7 @@ export class Callout extends React.Component {
               <Lines width={1000} height={2000} $lines />
               <innerSection
                 css={{
-                  background: theme.base.background.lighten(0.028),
+                  background: theme.base.background.lighten(0.028).alpha(0.8),
                 }}
                 {...props}
               />
@@ -541,30 +542,11 @@ export const FeatureSubTitle = props => (
     {isLarge => (
       <P
         if={isLarge}
-        size={2}
+        size={1.9}
         alpha={0.7}
         css={{ marginBottom: 20 }}
         {...props}
       />
     )}
   </Media>
-)
-
-export const Bauhaus = props => (
-  <svg viewBox="0 0 303 251" {...props}>
-    <circle
-      cx="88.784"
-      cy="141.382"
-      r="88.784"
-      style="fill: #00fbd1; mix-blend-mode: multiply;"
-    />
-    <path
-      d="M278.078,26.195l-161.04,-26.195l-26.195,161.04l161.04,26.195l26.195,-161.04Z"
-      style="fill: #d867ff; mix-blend-mode: multiply;"
-    />
-    <path
-      d="M170.608,63.772l131.392,155.722l-213.216,30.874l81.824,-186.596Z"
-      style="fill: #fffa2a; mix-blend-mode: multiply;"
-    />
-  </svg>
 )

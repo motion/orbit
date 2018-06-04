@@ -18,7 +18,7 @@ export class Bauhaus extends React.Component {
       <bahaus
         $$fullscreen
         css={{
-          transform: { scale: 0.52, x: '52%', y: '-8%' },
+          transform: { scale: 0.48, x: '52%', y: '-8%' },
           opacity: 0.1,
           zIndex: 0,
         }}
@@ -32,15 +32,30 @@ export class Bauhaus extends React.Component {
             cx="88.784"
             cy="141.382"
             r="88.784"
-            style={{ fill: '#00fbd1', mixBlendMode: 'multiply' }}
+            style={{
+              fill: '#1bf5dc',
+              stroke: '#fff',
+              strokeWidth: 2,
+              mixBlendMode: 'multiply',
+            }}
           />
           <path
             d="M278.078,26.195l-161.04,-26.195l-26.195,161.04l161.04,26.195l26.195,-161.04Z"
-            style={{ fill: '#d867ff', mixBlendMode: 'multiply' }}
+            style={{
+              fill: '#a949f8',
+              stroke: '#fff',
+              strokeWidth: 2,
+              mixBlendMode: 'multiply',
+            }}
           />
           <path
             d="M170.608,63.772l131.392,155.722l-213.216,30.874l81.824,-186.596Z"
-            style={{ fill: '#fffa2a', mixBlendMode: 'multiply' }}
+            style={{
+              fill: '#facc11',
+              stroke: '#fff',
+              strokeWidth: 2,
+              mixBlendMode: 'multiply',
+            }}
           />
         </svg>
       </bahaus>

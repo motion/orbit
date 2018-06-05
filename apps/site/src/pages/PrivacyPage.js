@@ -1,5 +1,5 @@
-import { Header, Footer } from '~/components'
-import { Title, P2, Section } from '~/views'
+import { Header, Footer, PostTemplate } from '~/components'
+import { P2, Section } from '~/views'
 import SectionContent from '~/views/sectionContent'
 import * as React from 'react'
 import { view } from '@mcro/black'
@@ -39,7 +39,7 @@ If you feel that we are not abiding by this privacy policy, you should contact u
 
 We use "cookies" on this site. A cookie is a piece of data stored on a site visitor's hard drive to help us improve your access to our site and identify repeat visitors to our site. For instance, when we use a cookie to identify you, you would not have to log in a password more than once, thereby saving time while on our site. Cookies can also enable us to track and target the interests of our users to enhance the experience on our site. Usage of a cookie is in no way linked to any personally identifiable information on our site.`
 
-@view
+@view.ui
 export class PrivacyPage extends React.Component {
   render() {
     return (
@@ -48,49 +48,17 @@ export class PrivacyPage extends React.Component {
           <Header />
           <Section>
             <SectionContent padded>
-              <header>
-                <Title italic size={2.7} margin={[0, 0, 10, 0]}>
-                  Privacy Policy
-                </Title>
-              </header>
-              <card>
-                <UI.PassProps
-                  size={1.7}
-                  sizeLineHeight={1.25}
-                  alpha={0.8}
-                  margin={[0, 0, 50]}
-                >
-                  {text
-                    .split('\n\n')
-                    .map((paragraph, i) => <P2 key={i}>{paragraph}</P2>)}
-                </UI.PassProps>
-              </card>
+              <PostTemplate
+                sectionTitle="Privacy Policy"
+                paragraphs={text
+                  .split('\n\n')
+                  .map((paragraph, i) => <P2 key={i}>{paragraph}</P2>)}
+              />
             </SectionContent>
           </Section>
           <Footer noMission />
         </UI.Theme>
       </page>
     )
-  }
-
-  static style = {
-    header: {
-      padding: [150, 150, 50],
-      textAlign: 'center',
-      [Constants.screen.smallQuery]: {
-        padding: [0, 0, 20],
-      },
-    },
-    card: {
-      background: '#fff',
-      borderRadius: 6,
-      padding: ['7%', '10%'],
-      margin: [0, '10%', 50],
-      boxShadow: [[0, 3, 14, [0, 0, 0, 0.1]]],
-      [Constants.screen.smallQuery]: {
-        margin: [0, -50],
-        padding: [40, '10%'],
-      },
-    },
   }
 }

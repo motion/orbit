@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Footer, Join } from '~/components'
 import SectionContent from '~/views/sectionContent'
+import Router from '~/router'
 import {
   Section,
   Slant,
@@ -16,6 +17,7 @@ import {
   HomeImg,
   WindowsLogo,
   Glow,
+  Card,
 } from '~/views'
 // import { HomePlay } from './home/HomePlay'
 import * as Constants from '~/constants'
@@ -86,13 +88,7 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title
-      italic
-      size={isLarge ? 2.4 : 3}
-      margin={[0, 0, 15, 0]}
-      alpha={1}
-      color="#222"
-    >
+    <Title italic size={2.8} margin={[0, 0, 15, 0]} alpha={1} color="#222">
       Autonomous Intranet
     </Title>
     <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
@@ -106,47 +102,45 @@ const Pitch = ({ isLarge }) => (
         alignItems: 'center',
       }}
     >
-      for
-      <space css={{ width: 10 }} />
-      <UI.PassProps
-        color={[0, 0, 0]}
-        background="transparent"
-        borderColor={[0, 0, 0, 0.15]}
-        size={1.1}
-        $smallInstallBtn={!isLarge}
-        alpha={0.6}
-        css={{
-          margin: [0, 10, 0, 0],
-          cursor: 'pointer',
-          lineHeight: '1.1rem',
-        }}
+      <UI.Text alpha={0.8}>
+        Coming soon for
+        <AppleLogo
+          onClick={scrollToTrack('#join', 'Mac')}
+          width={15}
+          height={15}
+          css={{
+            fill: '#999',
+            display: 'inline-block',
+            margin: [-3, 4, 0],
+            opacity: 0.9,
+          }}
+        />
+        and
+        <WindowsLogo
+          onClick={scrollToTrack('#join', 'Windows')}
+          width={13}
+          height={13}
+          css={{
+            opacity: 0.9,
+            display: 'inline-block',
+            margin: [-1, 3, 0, 6],
+            filter: 'grayscale(100%)',
+          }}
+        />
+        .
+      </UI.Text>
+      <space css={{ width: 15 }} />
+      <UI.Button
+        href="/about"
+        onClick={Router.link('/about')}
+        css={{ cursor: 'pointer' }}
       >
-        <UI.Button>
-          <AppleLogo
-            onClick={scrollToTrack('#join', 'Mac')}
-            width={20}
-            height={20}
-            css={{
-              fill: '#444',
-              display: 'inline-block',
-              margin: [-2, 0, 0, -1],
-              // opacity: 0.32,
-            }}
-          />
-        </UI.Button>
-        <UI.Button>
-          <WindowsLogo
-            onClick={scrollToTrack('#join', 'Windows')}
-            width={18}
-            height={18}
-            css={{
-              fill: '#444',
-              display: 'inline-block',
-            }}
-          />
-        </UI.Button>
-      </UI.PassProps>
+        Learn more.
+      </UI.Button>
     </actions>
+    <homeJoin css={{ margin: [20, -15, -40] }}>
+      <Join />
+    </homeJoin>
   </>
 )
 
@@ -360,20 +354,30 @@ class HomeFooter extends React.Component {
                     </Title>
                     <UI.PassProps size={1.35} sizeLineHeight={1.1} alpha={0.7}>
                       <P2>
-                        Conversations, tickets, emails, docs and a wiki: company
-                        knowledge is distributed and chaotic.
+                        Company knowledge takes many forms. From conversations
+                        to tickets, emails, docs and a wiki.
                       </P2>
                       <P2>
-                        Orbit syncs every cloud service and sorts it all using
-                        novel on-device machine learning. With smart features to
-                        keep everyone in the know.
+                        Orbit syncs every cloud service and sorts it all on your
+                        device with smart features to keep everyone up to date.
                       </P2>
                       <P2>
-                        It's installed in three minutes with no cloud or on-prem
-                        install. Private, on your device, so your data stays
-                        safe.
+                        The app installs in three minutes with no cloud. Private
+                        to your device, so your data stays safe.
                       </P2>
-                      <P2>Now going into beta.</P2>
+                      <P2>
+                        <a
+                          href="/about"
+                          onClick={Router.link('about')}
+                          css={{
+                            textDecoration: 'none',
+                            color: '#6858D3',
+                            fontWeight: 500,
+                          }}
+                        >
+                          Read more on how we're thinking about it.
+                        </a>
+                      </P2>
                     </UI.PassProps>
                   </content>
                   <div $$flex />
@@ -381,7 +385,27 @@ class HomeFooter extends React.Component {
               </LeftSide>
               <RightSide noEdge $$centered>
                 <UI.Theme name="light">
-                  <Join />
+                  <Card>
+                    <Card.Title>Unify your knowledge</Card.Title>
+                    <Card.Body>
+                      Slack, GSuite, Asana, Dropbox and more. Put existing
+                      knowledge to work. No new sources of truth.
+                    </Card.Body>
+                  </Card>
+                  <Card css={isLarge && { transform: { x: 100 } }}>
+                    <Card.Title>3 minute secure install</Card.Title>
+                    <Card.Body>
+                      Orbit is private to your computer. It summarizes what's
+                      going on with NLP that understands company vocab.
+                    </Card.Body>
+                  </Card>
+                  <Card>
+                    <Card.Title>Always at hand</Card.Title>
+                    <Card.Body>
+                      A new OCR engine scans what you're looking at in under
+                      250ms and provides contextual answers to any app.
+                    </Card.Body>
+                  </Card>
                 </UI.Theme>
               </RightSide>
             </SectionContent>

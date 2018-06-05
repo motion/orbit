@@ -43,7 +43,7 @@ export class AboutPage extends React.Component {
                     <P2>
                       <strong>It has to understand what you're doing.</strong>
                       <br />
-                      You chat interally using one service, your support chats
+                      You chat internally using one service, your support chats
                       on another one. Your team emails and works using any
                       number of clients and services. Orbit provides
                       contextually relevant answers wherever you work. With

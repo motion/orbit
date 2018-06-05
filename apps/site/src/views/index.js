@@ -272,7 +272,7 @@ export const FadedArea = UI.injectTheme(
             boxShadow: [[0, 0, 0, 250, theme.base.background]],
             border: [
               [
-                3,
+                2,
                 theme.base.background
                   .darken(0.2)
                   .desaturate(0.4)
@@ -551,4 +551,31 @@ export const FeatureSubTitle = props => (
       />
     )}
   </Media>
+)
+
+export const Card = view('div', {
+  textAlign: 'left',
+  background: '#fff',
+  borderRadius: 6,
+  padding: ['7%', '8%'],
+  margin: [10, '12%'],
+  boxShadow: [[0, 7, 20, [0, 0, 0, 0.04]]],
+  [Constants.screen.smallQuery]: {
+    margin: [0, -50],
+    padding: [40, '10%'],
+  },
+})
+
+Card.Title = props => (
+  <P2
+    sizeLineHeight={1.2}
+    margin={[0, 0, 10]}
+    size={1.5}
+    fontWeight={400}
+    alpha={1}
+    {...props}
+  />
+)
+Card.Body = props => (
+  <P2 sizeLineHeight={1.2} margin={0} size={1.4} {...props} />
 )

@@ -12,7 +12,6 @@ class ButtonPlain extends React.Component {
     chromeless,
     type,
     glow,
-    glint,
     glowProps,
     badgeProps,
     hovered,
@@ -31,7 +30,6 @@ class ButtonPlain extends React.Component {
         sizeHeight
         sizeIcon={1.1}
         borderWidth={1}
-        glint={typeof glint === 'undefined' ? !chromeless : glint}
         chromeless={chromeless}
         row
         align="center"

@@ -78,14 +78,15 @@ export class Join extends React.Component {
               id="mce-EMAIL"
               placeholder="Email address..."
             />
-            <UI.Theme theme="rgb(10.8%, 34.7%, 81.2%)">
+            <UI.Theme theme="#7238C0">
               <UI.Button
-                size={1.1}
+                size={1.05}
                 height={46}
                 sizeRadius={3}
-                sizePadding={2}
+                sizePadding={1.8}
                 borderLeftRadius={0}
                 margin={[-10, 0, 0, 'auto']}
+                fontWeight={600}
                 type="submit"
                 disabled={submitting}
                 css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
@@ -111,7 +112,7 @@ export class Join extends React.Component {
       textAlign: 'left',
       minWidth: 300,
       width: '100%',
-      maxWidth: 520,
+      maxWidth: 540,
       margin: [0, 'auto'],
       padding: [5, 10],
     },

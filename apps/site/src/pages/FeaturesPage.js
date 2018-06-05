@@ -307,7 +307,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     <Trail
                       native
                       from={{ opacity: 1, x: 0 }}
-                      config={{ duration: 130 }}
+                      config={{ duration: 100 }}
                       to={{
                         opacity: showNotifs ? 1 : 0,
                         x: showNotifs ? 0 : 100,
@@ -335,7 +335,7 @@ export class SectionFeatureNewsSearch extends React.Component {
                     native
                     from={{ opacity: 0, x: 50 }}
                     to={{ opacity: 1, x: 0 }}
-                    config={{ friction: 20, tension: 6 }}
+                    config={config.slow}
                   >
                     {({ opacity, x }) => (
                       <animated.div

@@ -1,18 +1,18 @@
 # next
 
-* biz:
-  * setup list of people to reach out to cold
-    * spacex, bloomberg, bigger finance cos in ny
-
-# biz
-
-* demo/talk to spacex
-* demo/talk to bloomberg
-* cofounder find
+* product sprint for 3 weeks
+  * need to flesh out stripe home completely for demo
+  * goal is make home header have a slick video
+* also need to write three articles from write.md
+* then:
+  * 1 week
+    * update site with video intro
+    * update site with blog posts
+    * polish everything to better explain (features use cases)
+    * post articles to HN, PH, dev twitter, etc
 
 # website
 
-* have a layer/producthunt like landing page for mailing list
 * fossa/expensify logo/quote
 * Blog - one post: noise or customer success
 * company logos (after sending to people)

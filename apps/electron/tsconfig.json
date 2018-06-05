@@ -1,10 +1,12 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "module": "CommonJS",
     "outDir": "_",
     "baseUrl": "./",
     "paths": {
-      "~/*": ["*"]
+      "~/*": ["*"],
+      "*": []
     }
   },
   "include": ["**/*"],

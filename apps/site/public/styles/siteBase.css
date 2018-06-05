@@ -193,7 +193,8 @@ body * {
 }
 
 a {
-  text-decoration: none;
+  color: lightblue;
+  text-decoration: underline;
   color: inherit;
   cursor: pointer;
 }

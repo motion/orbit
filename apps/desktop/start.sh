@@ -22,7 +22,7 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/decor)/_  \
   --exec 'npx kill-port 3001 && \
     npx kill-port 9000 && \
-    NODE_ENV=development node -r esm --inspect=127.0.0.1:9000 _/index.js'
+    NODE_ENV=development node --inspect=127.0.0.1:9000 desktop.js'
 
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT > /dev/null
 echo "done done"

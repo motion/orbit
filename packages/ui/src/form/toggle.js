@@ -130,7 +130,7 @@ class TogglePlain extends React.Component {
 
   static theme = ({ dotSize, color, barColor }, theme) => ({
     bar: {
-      background: barColor || theme.base.background,
+      background: barColor || theme.hover.background,
     },
     dot: {
       background: color || theme.base.color,

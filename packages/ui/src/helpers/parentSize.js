@@ -1,37 +1,17 @@
 import * as React from 'react'
 import hoistStatics from 'hoist-non-react-statics'
-import resizer from 'element-resize-detector'
-
-const Resize = resizer({ strategy: 'scroll' })
+import ReactResizeDetector from 'react-resize-detector'
 
 export const parentSize = (...props) => Child => {
   class ParentSize extends React.PureComponent {
     state = {
-      dimensions: null,
+      width: null,
+      height: null,
+      measured: false,
     }
 
-    componentWillUnmount() {
-      if (this.node) {
-        Resize.removeAllListeners(this.node)
-      }
-      this.unmounted = true
-    }
-
-    measure(parent) {
-      if (this.unmounted) {
-        return null
-      }
-      const node = parent || this.node
-      if (!node) {
-        return null
-      }
-      const { offsetWidth, offsetHeight } = node
-      const dimensions = {
-        width: offsetWidth,
-        height: offsetHeight,
-      }
-      this.setState({ dimensions })
-      return dimensions
+    onResize = (width, height) => {
+      this.setState({ width, height, measured: true })
     }
 
     get isActive() {
@@ -43,41 +23,26 @@ export const parentSize = (...props) => Child => {
       )
     }
 
-    setParent(ref) {
-      if (!this.node && ref && this.isActive) {
-        this.node = ref
-        Resize.listenTo(this.node, () => this.measure(this.node))
-        this.measure(this.node)
-      }
-    }
-
     render() {
       if (!this.isActive) {
         return <Child {...this.props} parentSize={null} />
       }
-      const { dimensions } = this.state
-      let parentSize
-      if (dimensions) {
-        parentSize = {
-          measure: (...args) => this.measure(...args),
-          height: this.state.dimensions.height,
-          width: this.state.dimensions.width,
-        }
-      }
-      const { className, style, ...props } = this.props
+      const { width, height, measured } = this.state
       return (
-        <div
-          className={className}
-          style={{ ...style, flex: 1 }}
-          ref={x => this.setParent(x)}
-        >
-          <Child {...props} parentSize={parentSize} />
-        </div>
+        <>
+          <ReactResizeDetector
+            handleWidth
+            handleHeight
+            onResize={this.onResize}
+          />
+          <Child
+            {...this.props}
+            parentSize={measured ? { width, height } : null}
+          />
+        </>
       )
     }
   }
-
   hoistStatics(ParentSize, Child)
-
   return ParentSize
 }

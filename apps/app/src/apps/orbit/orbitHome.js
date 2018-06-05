@@ -68,6 +68,7 @@ export class OrbitHome {
           {store.results.map((bit, index) => (
             <OrbitCard
               pane="summary"
+              subPane="home"
               selectedTheme={selectedTheme}
               key={`${bit.id}${index}`}
               index={index}

@@ -18,6 +18,9 @@ export class Person extends T.BaseEntity {
     name: string
     email: string
     phone: string
+    profile?: {
+      image_48?: string
+    }
   }
 }
 

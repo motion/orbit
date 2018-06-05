@@ -29,7 +29,6 @@ export class SlackChannel extends React.Component {
       return null
     }
     const { channels = {} } = slackService.setting.values
-    console.log('slack.channels', channels)
     return (
       <channel>
         <info>

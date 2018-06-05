@@ -11,8 +11,6 @@ import root from 'global'
 
 root.__dom = React.createElement
 
-require('module-alias').addAlias('~', __dirname + '/')
-
 // now stuff that uses relative paths
 require('./helpers/handlePromiseErrors')
 require('./helpers/updateChecker')

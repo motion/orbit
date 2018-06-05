@@ -1,1 +1,2 @@
-_/storeExports.js
+// @ts-ignore
+Object.assign(module.exports, require('./_/storeExports'))

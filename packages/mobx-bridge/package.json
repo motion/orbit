@@ -1,7 +1,7 @@
 {
   "name": "@mcro/mobx-bridge",
   "main": "_/bridge.js",
-  "version": "1.5.1",
+  "version": "2.0.11",
   "scripts": {
     "build": "tsc",
     "watch": "npm run build -- --watch"
@@ -10,10 +10,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@mcro/black": "*",
-    "@mcro/constants": "*",
-    "@mcro/debug": "*",
-    "@mcro/models": "*",
+    "@mcro/black": "^2.0.11",
+    "@mcro/constants": "^2.0.3",
+    "@mcro/debug": "^2.0.0",
+    "@mcro/models": "^2.0.11",
     "html5-websocket": "^2.0.2",
     "kill-port": "^1.1.0",
     "lodash": "4.17.10",

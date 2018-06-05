@@ -1,22 +1,25 @@
-# biz
+# next
 
-* nick agreement
-* demo/talk to spacex
-* demo/talk to bloomberg
-* demo/talk to vc fund
-* cofounder find
+* product sprint for 3 weeks
+  * need to flesh out stripe home completely for demo
+  * goal is make home header have a slick video
+* also need to write three articles from write.md
+* then:
+  * 1 week
+    * update site with video intro
+    * update site with blog posts
+    * polish everything to better explain (features use cases)
+    * post articles to HN, PH, dev twitter, etc
 
 # website
 
-* simpler italian theme and better messaging / new font
-* Mobile fixes
+* fossa/expensify logo/quote
 * Blog - one post: noise or customer success
-* purchase page
 * company logos (after sending to people)
-* <Parallax> move Search and Augmented Intelligence sections
 
 # dev
 
+* some small explore page improvements
 * fix directory showing profile card
 * hmr dehydrate/hydrate
 * types for .provide, .attach, and view()
@@ -32,15 +35,9 @@
 
 --- me
 
-* peek needs a "pin" button like orbit context
-  * then make esc clear peek always, even not mouseover
-* clear peek on scroll
 * [ ] intercept all a=href and open in native browser (slack)
-* [ ] themes or surfaces really need well thought lighten/darken functionality
 * [ ] slack emojis
 * [ ] only close peek on esc if electron focused
-* [ ] search jitter
-* [ ] fix keyboard movement bugs
 * [ ] slack unread/read sql
 * [ ] slack various formatting issues: backticks ``, inline html
 * [ ] setting pane improvements

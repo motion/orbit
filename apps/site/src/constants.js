@@ -10,7 +10,7 @@ export const smallMin = smallSize
 export const PAGE_WIDTH = smallSize
 export const SECTION_HEIGHT = 1100 //Math.max(980, Math.min(1300, window.innerHeight))
 
-export const colorMain = UI.color('#E9F0E4')
+export const colorMain = UI.color('#F5F7F9')
 export const colorSecondary = UI.color('rgb(94.5%, 80.1%, 12.3%)')
 export const colorTeal = UI.color('#49ceac')
 export const colorBlue = UI.color('#133cca')
@@ -34,4 +34,12 @@ export const screen = {
   large: { minWidth: smallSize - 1 },
   medium: { maxWidth: smallSize * 1.1 },
   tall: { minHeight: sectionMaxHeight * 1.6 },
+}
+
+const blueBg = UI.color('#F5FAF9')
+export const blueTheme = {
+  background: blueBg,
+  color: '#222',
+  titleColor: blueBg.darken(0.75).desaturate(0.3),
+  subTitleColor: blueBg.darken(0.7).desaturate(0.8),
 }

@@ -1,37 +1,65 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import { App } from '@mcro/all'
 
-@view.attach('appStore')
-@UI.injectTheme
-@view
-export class OrbitSettingCard extends React.Component {
-  hoverSettler = this.props.appStore.getHoverSettler()
+class OrbitSettingCardStore {
+  cardRef = React.createRef()
 
-  setRef = ref => {
-    this.ref = ref
-    if (!ref) return
-    this.hoverSettler.setItem({
-      item: {
-        type: 'setting',
-        integration: this.props.setting.integration,
-      },
-      ref,
-    })
+  setPeekTargetOnNextIndex = react(
+    () =>
+      this.props.isPaneActive &&
+      this.props.appStore.nextIndex === this.props.index,
+    shouldSelect => {
+      if (!shouldSelect) throw react.cancel
+      this.props.appStore.setTarget(
+        {
+          type: 'setting',
+          integration: this.props.setting.integration,
+        },
+        this.cardRef.current,
+      )
+    },
+  )
+}
+
+@view.attach('appStore')
+@view({
+  store: OrbitSettingCardStore,
+})
+export class OrbitSettingCard extends React.Component {
+  state = {
+    hoverSettle: false,
   }
 
-  render({ setting, index, subtitle, isActive, appStore, oauth }) {
+  hoverSettler = this.props.appStore.getHoverSettler()
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.isPaneActive && this.props.isPaneActive) {
+      this.hoverSettler.setItem({ index: this.props.index })
+    }
+    const hoverSettle = this.props.isPaneActive
+    if (hoverSettle !== this.state.hoverSettle) {
+      this.setState({ hoverSettle })
+    }
+  }
+
+  render(
+    { store, setting, index, subtitle, isActive, appStore, oauth },
+    { hoverSettle },
+  ) {
     const { id, icon, title } = setting
     const isSelected =
       appStore.selectedIndex === index && !!App.peekState.target
+    const hoverSettleProps = hoverSettle && this.hoverSettler.props
+    console.log('hoverSettleProps', hoverSettleProps)
     return (
       <card
         key={index}
-        ref={this.setRef}
+        ref={store.cardRef}
         $isSelected={isSelected}
-        {...this.hoverSettler.props}
+        {...hoverSettleProps}
         onClick={async () => {
           if (!isActive) {
             if (oauth === false) {

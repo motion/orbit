@@ -1,4 +1,4 @@
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 import updater from 'electron-simple-updater'
 
 // update checker

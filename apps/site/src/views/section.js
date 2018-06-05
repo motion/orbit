@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
+import { view } from '@mcro/black'
 
 export const Slant = ({
   inverse,
@@ -82,6 +83,7 @@ export const Slant = ({
   )
 }
 
+@view.ui
 export class Section extends React.Component {
   render() {
     const { leftBackground, inverse, children, ...props } = this.props
@@ -105,5 +107,13 @@ export class Section extends React.Component {
         {children}
       </section>
     )
+  }
+
+  static theme = ({ withBackground }, theme) => {
+    return {
+      section: {
+        background: withBackground ? theme.base.background : 'transparent',
+      },
+    }
   }
 }

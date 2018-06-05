@@ -5,7 +5,6 @@ import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import { Arrow } from './arrow'
 import { SizedSurface } from './sizedSurface'
-import * as PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
 // export type Props = {
@@ -538,7 +537,6 @@ export class Popover extends React.PureComponent {
 
   removeListenForHover() {
     for (const listener of this.listeners) {
-      console.log('listener', listener)
       listener()
     }
     this.listeners = []
@@ -728,7 +726,6 @@ export class Popover extends React.PureComponent {
       }
       return React.cloneElement(target, targetProps)
     }
-
     return (
       <root>
         {React.isValidElement(target) && controlledTarget(target)}

@@ -1,9 +1,0 @@
-title: none
-integration: slack
-type: chat
-data:
-  messages:
-    - user: john
-      msg: had a meeting earlier today to discuss our plans to get a new office. We still don't know if we actually need to get a new office, but it's worth at least looking so we know roughly what the market looks like, particularly at the size we're interested in
-queries:
-  - getting a new office

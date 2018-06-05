@@ -4,7 +4,7 @@ import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
 import * as Constants from '~/constants'
 import * as r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
-import * as OrbitHelpers from '~/apps/orbit/orbitHelpers'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -54,26 +54,6 @@ const matchSort = (query, results) => {
   return uniq([...strongTitleMatches, ...results].slice(0, 10))
 }
 
-const getResults = async query => {
-  if (!query) {
-    return await Bit.find({
-      take: 6,
-      relations: ['people'],
-      order: { bitCreatedAt: 'DESC' },
-    })
-  }
-  const { conditions, rest } = parseQuery(query)
-  const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
-  const where = `title like "${titleLike}%"${conditions}`
-  console.log('searching', where, conditions, rest)
-  return await Bit.find({
-    where,
-    relations: ['people'],
-    order: { bitCreatedAt: 'DESC' },
-    take: 6,
-  })
-}
-
 const prefixes = {
   gh: { integration: 'github' },
   gd: { integration: 'google', type: 'document' },
@@ -85,9 +65,9 @@ const prefixes = {
 }
 
 const parseQuery = query => {
-  const prefix = query.split(' ')[0]
+  const [prefix, rest] = query.split(' ')
   const q = prefixes[prefix]
-  if (q) {
+  if (q && rest) {
     return {
       rest: query.replace(prefix, '').trim(),
       conditions: Object.keys(q).reduce(
@@ -123,6 +103,14 @@ export class AppStore {
     },
   )
 
+  clearPeekOnSelectedPaneChange = react(
+    () => this.selectedPane,
+    App.clearPeek,
+    {
+      log: 'state',
+    },
+  )
+
   get selectedPane() {
     if (App.orbitState.docked) {
       if (App.state.query) {
@@ -154,7 +142,10 @@ export class AppStore {
   }
 
   updateResults = react(
-    () => [Desktop.state.lastBitUpdatedAt, Desktop.searchState.pluginResultId],
+    () => [
+      Desktop.state.lastBitUpdatedAt,
+      Desktop.searchState.pluginResultId || 0,
+    ],
     () => {
       if (this.searchState.results && this.searchState.results.length) {
         throw react.cancel
@@ -182,8 +173,10 @@ export class AppStore {
     async ([query], { sleep }) => {
       // debounce a little for fast typer
       await sleep(40)
-      const results = await getResults(query)
-      this.bitResultsId = Math.random()
+      const results = await this.searchBits(query)
+      setTimeout(() => {
+        this.bitResultsId = Math.random()
+      })
       return results
     },
     {
@@ -193,6 +186,29 @@ export class AppStore {
       log: false,
     },
   )
+
+  searchBits = async query => {
+    if (!query) {
+      return await Bit.find({
+        take: 6,
+        relations: ['people'],
+        order: { bitCreatedAt: 'DESC' },
+      })
+    }
+    console.time('bitSearch')
+    const { conditions, rest } = parseQuery(query)
+    const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
+    const where = `title like "${titleLike}%"${conditions}`
+    console.log('searching', where, conditions, rest)
+    const res = await Bit.find({
+      where,
+      relations: ['people'],
+      order: { bitCreatedAt: 'DESC' },
+      take: 6,
+    })
+    console.timeEnd('bitSearch')
+    return res
+  }
 
   contextResults = react(
     () => 0,
@@ -355,7 +371,11 @@ export class AppStore {
   }
 
   setTarget = (item, target) => {
-    OrbitHelpers.setPeekTarget(item, target)
+    if (!target) {
+      console.error('no target', item, target, this.nextIndex, this.activeIndex)
+      return
+    }
+    PeekStateActions.selectItem(item, target)
     if (this.nextIndex !== this.activeIndex) {
       this.lastSelectAt = Date.now()
       this.activeIndex = this.nextIndex

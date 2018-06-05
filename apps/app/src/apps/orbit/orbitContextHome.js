@@ -5,7 +5,16 @@ import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '~/views'
-import { Desktop } from '@mcro/all'
+import { Desktop, App } from '@mcro/all'
+
+const OrbitContextHeader = () => (
+  <contextHeader css={{ textAlign: App.orbitOnLeft ? 'right' : 'left' }}>
+    <Title ellipse={1}>{Desktop.appState.name}</Title>
+    <SubTitle if={Desktop.appState.title} ellipse={2}>
+      {Desktop.appState.title}
+    </SubTitle>
+  </contextHeader>
+)
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -21,7 +30,9 @@ const findType = (integration, type, skip = 0) =>
 
 class OrbitContextHomeStore {
   setGetResults = react(
-    () => this.props.paneStore.activePane === this.props.name,
+    () =>
+      this.props.appStore.selectedPane.indexOf('context') === 0 &&
+      this.props.paneStore.activePane === this.props.name,
     isActive => {
       if (!isActive) {
         throw react.cancel
@@ -51,6 +62,8 @@ class OrbitContextHomeStore {
     },
   )
 }
+
+import * as Mobx from 'mobx'
 
 @view.attach('appStore', 'paneStore')
 @view({
@@ -95,16 +108,10 @@ export class OrbitContextHome {
 
   render({ appStore, store }, { resultsRef, isScrolled, isOverflowing }) {
     log('CONTEXT HOME---------------')
-    const { orbitOnLeft } = App
     const total = store.results.length
     return (
       <OrbitDockedPane name="context">
-        <contextHeader css={{ textAlign: orbitOnLeft ? 'right' : 'left' }}>
-          <Title ellipse={1}>{Desktop.appState.name}</Title>
-          <SubTitle if={Desktop.appState.title} ellipse={2}>
-            {Desktop.appState.title}
-          </SubTitle>
-        </contextHeader>
+        <OrbitContextHeader />
         <resultsFrame ref={this.setResultsFrame}>
           <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
           <resultsScroller>
@@ -114,6 +121,7 @@ export class OrbitContextHome {
                 <OrbitCard
                   key={`${i}${bit.id}`}
                   pane="context"
+                  subPane="context"
                   parentElement={resultsRef}
                   appStore={appStore}
                   bit={bit}

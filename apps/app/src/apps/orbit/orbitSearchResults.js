@@ -41,6 +41,7 @@ export class OrbitSearchResults {
             {results.map((bit, index) => (
               <OrbitCard
                 pane={name}
+                subPane="search"
                 key={`${index}${bit.identifier || bit.id}`}
                 index={index}
                 total={results.length}

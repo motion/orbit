@@ -46,7 +46,8 @@ export const Title = UI.injectTheme(
         <P
           fontWeight={500}
           margin={[0, 0, 5]}
-          size={size * (isSmall ? 0.7 : 1)}
+          size={size * (isSmall ? 0.8 : 1)}
+          sizeLineHeight={1.1}
           color={
             theme.titleColor ||
             theme.base.color
@@ -262,15 +263,16 @@ export const FadedArea = UI.injectTheme(
         }}
       />
       <circleWrap $$fullscreen css={{ zIndex: 1000 }}>
-        <circle
+        <div
+          $circle
           css={{
             width: '100%',
             paddingBottom: '100%',
             borderRadius: 1000,
-            boxShadow: [[0, 0, 0, 1000, theme.base.background]],
+            boxShadow: [[0, 0, 0, 250, theme.base.background]],
             border: [
               [
-                3,
+                2,
                 theme.base.background
                   .darken(0.2)
                   .desaturate(0.4)
@@ -350,7 +352,7 @@ export class Callout extends React.Component {
               <Lines width={1000} height={2000} $lines />
               <innerSection
                 css={{
-                  background: theme.base.background.lighten(0.028),
+                  background: theme.base.background.lighten(0.028).alpha(0.8),
                 }}
                 {...props}
               />
@@ -454,7 +456,7 @@ export const Notification = ({ title, body, ...props }) => (
 export const HalfSection = view('section', {
   flex: 1,
   width: '50%',
-  padding: [0, 150, 0, 0],
+  padding: [0, 50, 0, 0],
   justifyContent: 'flex-end',
   [Constants.screen.smallQuery]: {
     width: '100%',
@@ -464,17 +466,17 @@ export const HalfSection = view('section', {
 
 @view.ui
 export class A extends React.Component {
-  render({ color, active, ...props }) {
+  render({ color, isLarge, active, ...props }) {
     return <a $active={active} {...props} />
   }
 
   static style = {
     a: {
+      textDecoration: 'none',
       fontSize: 14,
       color: [0, 0, 0, 0.6],
-      fontWeight: 700,
-      padding: [5, 5],
-      margin: [0, 0, 0, 20],
+      fontWeight: 600,
+      padding: [3, 2],
       borderBottom: [2, 'transparent'],
     },
   }
@@ -484,6 +486,7 @@ export class A extends React.Component {
     const color = UI.color(props.color || theme.base.color)
     return {
       a: {
+        margin: props.isLarge ? [0, 0, 0, 30] : [0, 0, 0, 15],
         color,
         '&:hover': {
           color: color.alpha(0.6),
@@ -528,12 +531,9 @@ export const HomeImg = props => (
     src={screenImg}
     css={{
       width: 1100 / 2,
-      borderRadius: 16,
-      boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
-      transform: {
-        x: 20,
-        y: 100,
-      },
+      borderRadius: 19,
+      // boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
+      border: [2, '#eee'],
     }}
     {...props}
   />
@@ -544,11 +544,38 @@ export const FeatureSubTitle = props => (
     {isLarge => (
       <P
         if={isLarge}
-        size={2}
+        size={1.9}
         alpha={0.7}
         css={{ marginBottom: 20 }}
         {...props}
       />
     )}
   </Media>
+)
+
+export const Card = view('div', {
+  textAlign: 'left',
+  background: '#fff',
+  borderRadius: 6,
+  padding: ['7%', '8%'],
+  margin: [10, '12%'],
+  boxShadow: [[0, 7, 20, [0, 0, 0, 0.04]]],
+  [Constants.screen.smallQuery]: {
+    margin: [0, -50],
+    padding: [40, '10%'],
+  },
+})
+
+Card.Title = props => (
+  <P2
+    sizeLineHeight={1.2}
+    margin={[0, 0, 10]}
+    size={1.5}
+    fontWeight={400}
+    alpha={1}
+    {...props}
+  />
+)
+Card.Body = props => (
+  <P2 sizeLineHeight={1.2} margin={0} size={1.4} {...props} />
 )

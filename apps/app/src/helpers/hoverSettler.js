@@ -119,6 +119,7 @@ export function hoverSettler({
     return {
       setItem(props) {
         itemProps = props
+        return this
       },
       props: {
         onMouseEnter,

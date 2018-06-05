@@ -1,5 +1,4 @@
 import * as React from 'react'
-import pickBy from 'lodash/pickBy'
 import { StoreContext } from './contexts'
 
 export interface ContextAttacher {}
@@ -11,14 +10,15 @@ export function storeAttachable(options): ContextAttacher {
     decorator: View => {
       const ContextAttacher = props => (
         <StoreContext.Consumer>
-          {stores => {
+          {allStores => {
+            let stores = {}
+            for (const name of options.stores) {
+              stores[name] = allStores[name]
+            }
             return (
               <View
                 {...props}
-                {...pickBy(
-                  stores,
-                  (_, key) => options.stores.indexOf(key) >= 0,
-                )}
+                {...stores}
               />
             )
           }}

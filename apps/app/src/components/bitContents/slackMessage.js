@@ -2,8 +2,8 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { RoundButton } from '~/views'
-import { App } from '@mcro/all'
 import slackDown from '@mcro/slackdown'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const getSlackDate = message => {
   if (!message.ts) {
@@ -51,16 +51,7 @@ export class BitSlackMessage extends React.Component {
           <RoundButton
             onClick={e => {
               e.stopPropagation()
-              App.setPeekState({
-                bit: {
-                  id: person.id,
-                  icon: avatar,
-                  title: message.name,
-                  body: '',
-                  type: 'person',
-                  integration: '',
-                },
-              })
+              PeekStateActions.selectPerson(person)
             }}
           >
             <inner>

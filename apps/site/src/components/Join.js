@@ -2,13 +2,22 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { P, P2, Callout } from '~/views'
 import * as UI from '@mcro/ui'
-import * as r2 from '@mcro/r2'
+import sanitize from 'sanitize-html'
+import jsonp from 'jsonp'
+
+const queryString = query => {
+  const esc = encodeURIComponent
+  return Object.keys(query)
+    .map(k => `${esc(k)}=${k === 'c' ? query[k] : esc(query[k])}`)
+    .join('&')
+}
 
 @view
 export class Join extends React.Component {
   state = {
     error: null,
     success: null,
+    submitting: false,
   }
 
   form = React.createRef()
@@ -17,54 +26,51 @@ export class Join extends React.Component {
   submit = async e => {
     e.preventDefault()
     try {
-      this.setState({ error: null, success: null })
+      this.setState({ error: null, success: null, submitting: true })
+      const finish = state => {
+        this.setState({
+          error: null,
+          success: null,
+          submitting: false,
+          ...state,
+        })
+      }
       const form = this.form.current
       const query = {
-        u: '019909d3efb283014d35674e5',
         id: '015e5a3442',
         EMAIL: this.email.current.value,
         b_019909d3efb283014d35674e5_015e5a3442: '',
       }
-      const result = await r2.post(form.getAttribute('action'), {
-        query,
-        mode: 'no-cors',
-      }).text
-      if (result.indexOf('error')) {
-        if (result.indexOf('already subscribed')) {
-          this.setState({ success: 'Already subscribed!', error: null })
-          return
+      let url = form.getAttribute('action').replace('/post', '/post-json')
+      url = `${url}&${queryString(query)}`
+      jsonp(url, { param: 'c' }, (error, data) => {
+        if (error) {
+          return finish({ error })
         }
-        this.setState({ error: result, success: null })
-      } else {
-        this.setState({ error: null, success: 'You\'re on the list!' })
-      }
-    } catch (error) {
-      console.error(error)
-      this.setState({ error: 'Error submitting, did you enter an email?' })
+        if (data && data.result === 'error') {
+          return finish({ error: data.msg })
+        }
+        return finish({ success: data.msg })
+      })
+    } catch (err) {
+      console.log('errrr', err)
     }
   }
 
-  render({ ...props }, { success, error }) {
+  render({ ...props }, { success, error, submitting }) {
     return (
       <section id="join" {...props}>
-        <Callout>
-          <P size={2} fontWeight={600} css={{ marginBottom: 5 }}>
-            Early access
-          </P>
-          <P2 alpha={0.7} size={1.2} margin={[5, 0, 10]}>
-            We're rolling Orbit into beta. We'll send invites to early signups
-            first!
-          </P2>
-          <form
-            ref={this.form}
-            action="https://tryorbit.us18.list-manage.com/subscribe/post-json"
-            method="post"
-            id="mc-embedded-subscribe-form"
-            name="mc-embedded-subscribe-form"
-            target="_blank"
-            noValidate
-            onSubmit={this.submit}
-          >
+        <form
+          ref={this.form}
+          action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+          noValidate
+          onSubmit={this.submit}
+        >
+          <UI.Row>
             <input
               ref={this.email}
               type="email"
@@ -72,27 +78,31 @@ export class Join extends React.Component {
               id="mce-EMAIL"
               placeholder="Email address..."
             />
-            <end $$row>
-              <message
-                if={success || error}
-                $success={success && !error}
-                css={{ maxWidth: '70%' }}
+            <UI.Theme theme="#46CB62">
+              <UI.Button
+                size={1.05}
+                height={46}
+                sizeRadius={3}
+                sizePadding={1.8}
+                borderLeftRadius={0}
+                margin={[-10, 0, 0, 'auto']}
+                fontWeight={600}
+                type="submit"
+                disabled={submitting}
+                css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
               >
-                {success || error || ''}
-              </message>
-              <UI.Theme theme="rgb(10.8%, 34.7%, 81.2%)">
-                <UI.Button
-                  size={1.1}
-                  sizeRadius={3}
-                  margin={[0, 0, 0, 'auto']}
-                  type="submit"
-                >
-                  Signup
-                </UI.Button>
-              </UI.Theme>
-            </end>
-          </form>
-        </Callout>
+                {submitting ? 'Signing up...' : 'Get Early Access'}
+              </UI.Button>
+            </UI.Theme>
+          </UI.Row>
+          <message
+            $success={success && !error}
+            css={{ maxWidth: '70%', height: 30, marginBottom: -20 }}
+            dangerouslySetInnerHTML={{
+              __html: sanitize(success || error || ''),
+            }}
+          />
+        </form>
       </section>
     )
   }
@@ -102,7 +112,7 @@ export class Join extends React.Component {
       textAlign: 'left',
       minWidth: 300,
       width: '100%',
-      maxWidth: 450,
+      maxWidth: 540,
       margin: [0, 'auto'],
       padding: [5, 10],
     },
@@ -110,10 +120,11 @@ export class Join extends React.Component {
       display: 'flex',
       width: '100%',
       flex: 1,
-      padding: [12, 16],
+      padding: [12, 20],
       margin: [10, 0, 20],
       fontSize: 18,
       border: [1, 'red'],
+      borderLeftRadius: 100,
     },
     message: {
       paddingRight: 40,

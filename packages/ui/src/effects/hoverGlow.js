@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
-import { offset } from '../helpers/offset'
 import throttle from 'raf-throttle'
 
 // type Props = {
@@ -50,85 +49,89 @@ export class HoverGlow extends React.PureComponent {
     overlayZIndex: 1,
     blur: 15,
     backdropFilter: 'contrast(100%)',
+    restingPosition: null,
   }
 
   state = {
+    mounted: false,
     track: false,
+    parentNode: null,
     position: {},
+    bounds: { width: 0, height: 0 },
   }
 
   parentNode = null
-  rootRef = null
-  bounds = {}
+  rootRef = React.createRef()
 
   componentDidMount() {
-    this.setState = this.setState.bind(this)
+    // @ts-ignore
     this.setTimeout(() => {
       this.follow()
-    })
+    }, 100)
   }
 
   follow() {
     let parentNode
-
     if (this.props.parent) {
       parentNode = this.props.parent()
     } else if (this.rootRef) {
-      parentNode = this.rootRef.parentNode
+      const node = this.rootRef.current
+      if (!node) {
+        console.warn('no node?')
+        return
+      }
+      parentNode = node.parentNode
     }
-
     if (parentNode) {
-      this.parentNode = parentNode
-      this.setBounds()
-
+      this.setState({ parentRect: parentNode.getBoundingClientRect() })
+      const bounds = parentNode.getBoundingClientRect()
+      this.setState({ parentNode, bounds })
       const trackMouseTrue = throttle(() => this.trackMouse(true))
       const trackMouseFalse = throttle(() => this.trackMouse(false))
-      const move = throttle(this.move.bind(this))
-
       this.on(parentNode, 'mouseenter', trackMouseTrue)
-      this.on(parentNode, 'mousemove', move)
+      this.on(parentNode, 'mousemove', this.move)
       this.on(parentNode, 'mouseleave', trackMouseFalse)
-      // Resize.listenTo(parentNode, this.setBounds)
-
       if (this.props.clickable) {
-        this.on(parentNode, 'mousedown', event => {
-          this.mouseDown(event)
-        })
+        this.on(parentNode, 'mousedown', this.mouseDown)
+      }
+      const { restingPosition } = this.props
+      if (restingPosition) {
+        const [x, y] = restingPosition
+        this.setMouseTo(x + bounds.left, y + bounds.top)
       }
     }
-
     if (!this.props.hide) {
       // trigger it to show
-      this.setState({})
+      this.setState({ mounted: true })
     }
   }
 
   componentWillUnmount() {
     this.unmounted = true
-    if (this.parentNode) {
-      // Resize.removeAllListeners(this.parentNode)
-    }
-  }
-
-  setBounds() {
-    this.bounds = this.parentNode.getBoundingClientRect()
   }
 
   // offset gives us offset without scroll, just based on parent
-  move(e) {
-    const [x, y] = offset(e, this.parentNode)
-    if (this.unmounted || !this.bounds) {
+  move = e => {
+    console.log('e.clientX, e.clientY', e.clientX, e.clientY)
+    this.setMouseTo(e.clientX, e.clientY)
+  }
+
+  setMouseTo = (x1, y1) => {
+    const x = x1 - this.state.parentRect.left
+    const y = y1 - this.state.parentRect.top
+    if (this.unmounted || !this.state.bounds) {
+      console.log('bad')
       return
     }
     this.setState({
       position: {
-        x: x - this.bounds.width / 2,
-        y: y - this.bounds.height / 2,
+        x: x - this.state.bounds.width / 2,
+        y: y - this.state.bounds.height / 2,
       },
     })
   }
 
-  mouseDown() {
+  mouseDown = () => {
     this.setState({ clicked: true }, () => {
       this.setTimeout(() => {
         this.setState({ clicked: false })
@@ -136,11 +139,13 @@ export class HoverGlow extends React.PureComponent {
     })
   }
 
-  trackMouse(track) {
-    if (this.unmounted) {
-      return
-    }
-    this.setState({ track })
+  trackMouse = track => {
+    if (this.unmounted) return
+    this.setState({ willTrack: true })
+    // @ts-ignore
+    this.setTimeout(() => {
+      this.setState({ track })
+    })
   }
 
   render({
@@ -177,25 +182,33 @@ export class HoverGlow extends React.PureComponent {
     overlayZIndex,
     blur,
     hide,
+    restingPosition,
     ...props
   }) {
     const show = !hide
     const durationArg = show ? durationOut : durationIn
     const duration = durationArg >= 0 ? durationArg : _duration
-    const setRootRef = this.ref('rootRef').set
     const { track } = this.state
-    if (!show && !duration && ((!track && !children) || !track)) {
-      return <overlay ref={setRootRef} style={{ opacity: 0 }} />
+    if (!this.state.mounted) {
+      console.log('return empty')
+      return (
+        <div
+          $overlay
+          key="hoverglow"
+          ref={this.rootRef}
+          style={{ opacity: 0 }}
+        />
+      )
     }
     // find width / height (full == match size of container)
     let width = size || propWidth
     let height = size || propHeight
     if (full) {
-      width = this.bounds.width
-      height = this.bounds.height
+      width = this.state.bounds.width
+      height = this.state.bounds.height
     }
     if (isNaN(width) || isNaN(height)) {
-      console.log('hoverglow NaN width or height', this.parentNode, this.bounds)
+      console.warn('hoverglow NaN width or height', this.state)
       return null
     }
     const { position, clicked } = this.state
@@ -222,16 +235,18 @@ export class HoverGlow extends React.PureComponent {
     }
     const colorRGB = $(color).toString()
     const translateX = inversed(
-      bounded(resisted(x), width * scale, this.bounds.width),
+      bounded(resisted(x), width * scale, this.state.bounds.width),
     )
     const translateY = inversed(
-      bounded(resisted(y), height * scale, this.bounds.height),
+      bounded(resisted(y), height * scale, this.state.bounds.height),
     )
     const extraScale = clicked ? clickScale : 1
+    console.log(width, height)
     const glow = (
       <div
+        key="hoverglow"
         $overlay
-        ref={setRootRef}
+        ref={this.rootRef}
         $$draggable={draggable}
         css={{
           borderLeftRadius: borderLeftRadius || borderRadius,
@@ -246,6 +261,8 @@ export class HoverGlow extends React.PureComponent {
           style={{
             zIndex: behind ? -1 : 1,
             opacity: 1,
+            willChange:
+              this.state.willTrack || this.state.track ? 'transform' : '',
             transition: `
               transform linear ${duration}ms
             `,
@@ -261,7 +278,7 @@ export class HoverGlow extends React.PureComponent {
             width={width}
             style={{
               transform: `scale(${scale * extraScale})`,
-              opacity: track || hide ? 0 : opacity,
+              opacity: hide ? 0 : opacity,
               width,
               height,
               marginLeft: -width / 2,
@@ -282,11 +299,9 @@ export class HoverGlow extends React.PureComponent {
         </div>
       </div>
     )
-
     if (!children) {
       return glow
     }
-
     // allow passthrough
     return children({
       translateX,

@@ -21,5 +21,4 @@ const Themes = {
   }),
 }
 
-window.Themes = Themes
 export default Themes

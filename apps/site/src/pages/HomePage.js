@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Footer, Join } from '~/components'
 import SectionContent from '~/views/sectionContent'
+import Router from '~/router'
 import {
   Section,
   Slant,
@@ -15,13 +16,15 @@ import {
   TopoBg,
   HomeImg,
   WindowsLogo,
+  Glow,
+  Card,
 } from '~/views'
 // import { HomePlay } from './home/HomePlay'
 import * as Constants from '~/constants'
 import Media from 'react-media'
-import Router from '~/router'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
+import { Bauhaus } from '~/views/bauhaus'
 
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -35,10 +38,10 @@ const scrollToTrack = (to, track) => {
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
-  slantGradient: [topBg, bottomBg.mix(topBg)].map(borderize),
+  slantGradient: [topBg, borderize(bottomBg.mix(topBg))],
 }
 const bottomSlants = {
-  slantGradient: [bottomBg.mix(topBg), bottomBg].map(borderize),
+  slantGradient: [borderize(bottomBg.mix(topBg)), topBg],
 }
 
 const firstSlant = {
@@ -85,18 +88,12 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title
-      italic
-      size={isLarge ? 2.4 : 3}
-      margin={[0, 0, 15, 0]}
-      alpha={1}
-      color="#222"
-    >
+    <Title italic size={2.8} margin={[0, 0, 15, 0]} alpha={1} color="#222">
       Autonomous Intranet
     </Title>
-    <P size={1.35} sizeLineHeight={1.1} fontWeight={300}>
-      A new way to manage company knowledge. News, search, profiles, project
-      aggregation and more. Installed&nbsp;in 3 minutes.
+    <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
+      A smarter way to manage company knowledge. Summarized news,&nbsp;unified
+      search, profiles and more. Installed in just 3 minutes.
     </P>
     <actions
       $$row
@@ -105,47 +102,45 @@ const Pitch = ({ isLarge }) => (
         alignItems: 'center',
       }}
     >
-      for
-      <space css={{ width: 10 }} />
-      <UI.PassProps
-        color={[0, 0, 0]}
-        background="transparent"
-        borderColor={[0, 0, 0, 0.15]}
-        size={1.1}
-        $smallInstallBtn={!isLarge}
-        alpha={0.6}
-        css={{
-          margin: [0, 10, 0, 0],
-          cursor: 'pointer',
-          lineHeight: '1.1rem',
-        }}
+      <UI.Text alpha={0.8}>
+        Coming soon for
+        <AppleLogo
+          onClick={scrollToTrack('#join', 'Mac')}
+          width={15}
+          height={15}
+          css={{
+            fill: '#999',
+            display: 'inline-block',
+            margin: [-3, 4, 0],
+            opacity: 0.9,
+          }}
+        />
+        and
+        <WindowsLogo
+          onClick={scrollToTrack('#join', 'Windows')}
+          width={13}
+          height={13}
+          css={{
+            opacity: 0.9,
+            display: 'inline-block',
+            margin: [-1, 3, 0, 6],
+            filter: 'grayscale(100%)',
+          }}
+        />
+        .
+      </UI.Text>
+      <space css={{ width: 15 }} />
+      <UI.Button
+        href="/about"
+        onClick={Router.link('/about')}
+        css={{ cursor: 'pointer' }}
       >
-        <UI.Button>
-          <AppleLogo
-            onClick={scrollToTrack('#join', 'Mac')}
-            width={20}
-            height={20}
-            css={{
-              fill: '#444',
-              display: 'inline-block',
-              margin: [-2, 0, 0, -1],
-              // opacity: 0.32,
-            }}
-          />
-        </UI.Button>
-        <UI.Button>
-          <WindowsLogo
-            onClick={scrollToTrack('#join', 'Windows')}
-            width={18}
-            height={18}
-            css={{
-              fill: '#444',
-              display: 'inline-block',
-            }}
-          />
-        </UI.Button>
-      </UI.PassProps>
+        Learn more.
+      </UI.Button>
     </actions>
+    <homeJoin css={{ margin: [20, -15, -40] }}>
+      <Join />
+    </homeJoin>
   </>
 )
 
@@ -159,8 +154,8 @@ class HomeHeader extends React.Component {
         {isLarge => {
           return (
             <Section css={{ background: 'transparent' }}>
-              {/* <paintingOverflow css={{ overflow: 'hidden' }} $$fullscreen>
-                <paintingWrap $$fullscreen>
+              {/* <parallax css={{ overflow: 'hidden' }} $$fullscreen>
+                <parallaxContain $$fullscreen>
                   <Keyframes native script={ref => (store.stars = ref)}>
                     {({ y }) => (
                       <animated.div
@@ -175,16 +170,30 @@ class HomeHeader extends React.Component {
                           ),
                         }}
                       >
-                        <painting $$fullscreen />
+                        <inner $$fullscreen />
                       </animated.div>
                     )}
                   </Keyframes>
-                </paintingWrap>
-              </paintingOverflow> */}
+                </parallaxContain>
+              </parallax> */}
               <Slant {...firstSlant} {...topSlants} />
               <Slant inverseSlant {...secondSlant} {...topSlants} />
               <Slant {...thirdSlant} {...topSlants} />
               <SectionContent padded fullscreen fullscreenFs>
+                <Glow
+                  style={{
+                    background: '#fff',
+                    opacity: 0.5,
+                    transform: { x: '-45%', y: '0%', scale: 0.65 },
+                  }}
+                />
+                <Bauhaus
+                  hideTriangle
+                  hideSquare
+                  circleColor="#F7C7FF"
+                  css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
+                  warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
+                />
                 <Media
                   query={Constants.screen.small}
                   render={() => (
@@ -217,14 +226,35 @@ class HomeHeader extends React.Component {
                           $$fullscreen
                           css={{
                             overflow: 'hidden',
-                            right: -80,
-                            left: 80,
+                            right: -160,
+                            left: 20,
                             borderBottom: [1, borderize(topBg)],
                           }}
                         >
-                          <div $$flex />
-                          <HomeImg />
-                          <div $$flex />
+                          <inner
+                            css={{
+                              position: 'absolute',
+                              right: 100,
+                              left: 100,
+                              top: 0,
+                              bottom: 0,
+                            }}
+                          >
+                            <wrap
+                              css={{
+                                width: 1100 / 2,
+                                height: 2016 / 2,
+                                transform: {
+                                  x: 20,
+                                  y: 100,
+                                },
+                              }}
+                            >
+                              <UI.TiltHoverGlow restingPosition={[100, 100]}>
+                                <HomeImg />
+                              </UI.TiltHoverGlow>
+                            </wrap>
+                          </inner>
                         </inner>
                       </RightSide>
                     </>
@@ -318,6 +348,7 @@ class HomeFooter extends React.Component {
         {isLarge => (
           <Section inverse css={{ background: 'transparent' }}>
             <SectionContent padded fullscreen fullscreenFs>
+              <Bauhaus />
               <Slant inverseSlant {...firstSlant} {...bottomSlants} />
               <Slant {...secondSlant} {...bottomSlants} />
               <Slant inverseSlant {...thirdSlant} {...bottomSlants} />
@@ -325,24 +356,35 @@ class HomeFooter extends React.Component {
                 <inner $$fullscreen={isLarge}>
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
-                    <Title size={2.3} css={{ marginBottom: 25 }}>
-                      Answers for your team.
+                    <Title size={2} color="#333" css={{ marginBottom: 25 }}>
+                      More time in the know.
                     </Title>
-                    <UI.PassProps size={1.35} sizeLineHeight={1} alpha={0.7}>
+                    <UI.PassProps size={1.35} sizeLineHeight={1.1} alpha={0.7}>
                       <P2>
-                        Conversations, tickets, emails, docs, wiki: knowledge
-                        lives all over the place.
+                        Company knowledge takes many forms. From conversations
+                        to tickets, emails, docs and a wiki.
                       </P2>
                       <P2>
-                        Orbit unifies the cloud on your desktop to power up your
-                        team. Search across the cloud, explore unified projects
-                        and profiles and see recent news custom to you.
+                        Orbit syncs every cloud service and sorts it all on your
+                        device with smart features to keep everyone up to date.
                       </P2>
                       <P2>
-                        There's no cloud or on-prem install, it just run{' '}
-                        privately on your device.
+                        The app installs in three minutes with no cloud. Private
+                        to your device, so your data stays safe.
                       </P2>
-                      <P2>Now going into beta.</P2>
+                      <P2>
+                        <a
+                          href="/about"
+                          onClick={Router.link('about')}
+                          css={{
+                            textDecoration: 'none',
+                            color: '#6858D3',
+                            fontWeight: 500,
+                          }}
+                        >
+                          Read more on how we're thinking about it.
+                        </a>
+                      </P2>
                     </UI.PassProps>
                   </content>
                   <div $$flex />
@@ -350,7 +392,27 @@ class HomeFooter extends React.Component {
               </LeftSide>
               <RightSide noEdge $$centered>
                 <UI.Theme name="light">
-                  <Join />
+                  <Card css={isLarge && { transform: { x: -30 } }}>
+                    <Card.Title>Unify your knowledge</Card.Title>
+                    <Card.Body>
+                      Slack, GSuite, Asana, Dropbox and more. Put existing
+                      knowledge to work. No new sources of truth.
+                    </Card.Body>
+                  </Card>
+                  <Card css={isLarge && { transform: { x: 30 } }}>
+                    <Card.Title>3 minute secure install</Card.Title>
+                    <Card.Body>
+                      Orbit is private to your computer. It summarizes what's
+                      going on with NLP that understands company vocab.
+                    </Card.Body>
+                  </Card>
+                  <Card css={isLarge && { transform: { x: -30 } }}>
+                    <Card.Title>Always at hand</Card.Title>
+                    <Card.Body>
+                      A new OCR engine scans what you're looking at in under
+                      250ms and provides contextual answers to any app.
+                    </Card.Body>
+                  </Card>
                 </UI.Theme>
               </RightSide>
             </SectionContent>
@@ -379,7 +441,7 @@ export const HomePage = () => (
           >
             <HomeFooter isMedium={isMedium} />
           </UI.Theme>
-          <Footer if={false} noCallToAction />
+          <Footer />
         </home>
       )}
     </Media>

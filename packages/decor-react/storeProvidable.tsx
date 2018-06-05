@@ -1,8 +1,7 @@
 import * as React from 'react'
 import * as Mobx from 'mobx'
-import pickBy from 'lodash/pickBy'
 import difference from 'lodash/difference'
-import isEqual from 'lodash/isEqual'
+import isEqual from 'react-fast-compare'
 import root from 'global'
 import { DecorPlugin } from '@mcro/decor'
 import { StoreContext } from './contexts'
@@ -259,9 +258,13 @@ storeProvidable = function(options, Helpers) {
             })
           }
           const names = Object.keys(Stores)
+          const childStores = {}
+          for (const name of names) {
+            childStores[name] = this.stores[name]
+          }
           const stores = {
             ...parentStores,
-            ...pickBy(this.stores, (_, key) => names.indexOf(key) >= 0),
+            ...childStores,
           }
           return stores
         }

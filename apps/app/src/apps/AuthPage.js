@@ -26,16 +26,17 @@ export class AuthPage {
   render() {
     return (
       <wrap>
-        <UI.Button
-          size={1.5}
-          theme="#4C36C4"
-          $button
-          id="link"
-          onClick={this.link}
-          onMouseUp={this.link}
-        >
-          Link {capitalize(service)}
-        </UI.Button>
+        <UI.Theme theme="#4C36C4">
+          <UI.Button
+            size={1.5}
+            $button
+            id="link"
+            onClick={this.link}
+            onMouseUp={this.link}
+          >
+            Link {capitalize(service)}
+          </UI.Button>
+        </UI.Theme>
 
         <message>
           <UI.Text fontWeight={500} size={1.2}>

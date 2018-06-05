@@ -9,6 +9,16 @@
           }
         ]
       ]
+    },
+    "production": {
+      "presets": [
+        [
+          "@mcro/babel-preset-motion",
+          {
+            "disable": ["react-hot-loader/babel"]
+          }
+        ]
+      ]
     }
   }
 }

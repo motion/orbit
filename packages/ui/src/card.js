@@ -54,7 +54,6 @@ export class Card extends React.Component {
       boxShadow: 'none',
     },
     heading: {
-      borderBottom: [1, [0, 0, 0, 0.05]],
       paddingBottom: 5,
       padding: [0, 10],
       width: '100%',

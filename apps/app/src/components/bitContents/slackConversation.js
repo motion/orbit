@@ -3,6 +3,15 @@ import * as React from 'react'
 import { BitSlackMessage } from './slackMessage'
 import * as UI from '@mcro/ui'
 import { RoundButton } from '~/views/roundButton'
+import keywordExtract from 'keyword-extractor'
+import arrford from 'arrford'
+
+const options = {
+  language: 'english',
+  remove_digits: true,
+  return_changed_case: true,
+  remove_duplicates: false,
+}
 
 // const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
 const exampleContent = [
@@ -47,11 +56,9 @@ export class BitSlackConversation extends React.Component {
   render({ children, bit, appStore, shownLimit, contentStyle }) {
     const uid = uids[bit.id] || curId++ % (exampleContent.length - 1)
     uids[bit.id] = uid
-    const { title, preview } = exampleContent[uid]
-    console.log('bit is', bit)
     return children({
-      title,
-      preview,
+      title: arrford(bit.people.map(person => person.name), false, '&'),
+      preview: arrford(keywordExtract.extract(bit.body, options), false),
       icon: 'slack',
       location: (
         <RoundButton

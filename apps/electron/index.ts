@@ -1,8 +1,4 @@
-// this is what starts in built app
-// runs both api and electron
-
 import 'babel-polyfill'
-// @ts-ignore
 import { setTimeout } from 'core-js/library/web/timers'
 
 // @ts-ignore

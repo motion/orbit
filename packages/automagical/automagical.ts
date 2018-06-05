@@ -273,7 +273,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
   const name = `${getReactionName(obj)} | ${method} | ${delayLog}`
   let preventLog = options.log === false
-  let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE)
+  let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE, { name })
   let prev
   let curDisposable = null
   let curObservable = null

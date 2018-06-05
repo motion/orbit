@@ -1,8 +1,0 @@
-title: Performance for multiple images stack on top of each other
-author: Nick Cammarata
-integration: github
-type: issue
-text: If you have two images on top of each other in the editor right now, it slows the CPU by quite a lot. This might have something to do with the shaders we’re using in WebGL. We can easily fix this by using multiple canvases, but there might be a more elegant solution here.
-queries:
-  - multiples images slows
-  - multiple images performance

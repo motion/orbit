@@ -18,6 +18,7 @@ nearest neighbors:
 
 * guru (guru flux) - https://www.getguru.com/solutions/flux/
 * cresta - https://www.cresta.ai/
+* slab, carrot.io, tipihub.com, getnifty.io, tettra
 * startups - diamond.io, layer
 * openfin
 * stripe home
@@ -36,6 +37,21 @@ plus: unified company search, profiles
 plus: augmented OS that helps people see whats going on
 
 it's essentially AI for your company, running private on-device being the big key to making it work.
+
+## secret
+
+on-device/no-cloud
+
+means three big things:
+
+1.  10x faster development (and 10x simpler deploy/infra, and 0 cost of infra)
+
+* its actually great in two ways:
+  * it requires a bigger initial investment, which we've had: 3yr flint/devtools
+  * once invested, it pays back much more: point were at now
+
+2.  100x easier install process (literally download app and done, no on-prem, no signup)
+3.  Perfect data security - 100x easier pitch to individual employees
 
 ## features
 

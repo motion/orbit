@@ -2,6 +2,9 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { Logo } from '~/views/logo'
 import * as UI from '@mcro/ui'
+import Router from '~/router'
+import * as Constants from '~/constants'
+import Media from 'react-media'
 
 @UI.injectTheme
 @view
@@ -11,24 +14,29 @@ export class BrandLogo extends React.Component {
   hover = () => this.setState({ hovered: true })
 
   render({ theme, white, ...props }, { hovered }) {
-    const coloredFill = theme.base.background
-      .darken(0.7)
-      .desaturate(0.75)
-      .toString()
-    const fill = hovered ? coloredFill : '#000'
+    const coloredFill = UI.color('#000') //theme.base.background.darken(0.5).desaturate(0.65)
+    const fill = hovered ? coloredFill.alpha(0.9) : coloredFill
     return (
-      <brandMark {...props} onMouseEnter={this.hover} onMouseLeave={this.leave}>
-        <orbit />
-        <Logo fill={fill} size={0.2} white={white} />
-      </brandMark>
+      <Media query={Constants.screen.large}>
+        {isLarge => (
+          <brandMark
+            {...props}
+            onMouseEnter={this.hover}
+            onMouseLeave={this.leave}
+            css={{ cursor: 'pointer', marginLeft: isLarge ? -12 : 0 }}
+            onClick={Router.link('/')}
+          >
+            <orbit />
+            <Logo fill={`${fill}`} size={0.2} white={white} />
+          </brandMark>
+        )}
+      </Media>
     )
   }
 
   static style = {
     brandMark: {
-      alignItems: 'center',
-      textAlign: 'center',
-      margin: [-12, 0],
+      opacity: 0.8,
     },
     orbit: {
       width: 250,

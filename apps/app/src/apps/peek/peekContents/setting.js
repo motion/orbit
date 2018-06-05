@@ -30,14 +30,21 @@ const EmptyPane = () => <div>no setting pane</div>
 
     update = async () => {
       const { integration } = this.bit
-      this.job = await Job.findOne({
+      const job = await Job.findOne({
         where: { type: integration },
         order: { createdAt: 'DESC' },
       })
-      this.bitsCount = await Bit.createQueryBuilder()
+      if (!this.job || JSON.stringify(job) !== JSON.stringify(this.job)) {
+        this.job = job
+        this.version += 1
+      }
+      const bitsCount = await Bit.createQueryBuilder()
         .where({ integration })
         .getCount()
-      this.version += 1
+      if (bitsCount !== this.bitsCount) {
+        this.bitsCount = bitsCount
+        this.version += 1
+      }
     }
   },
 })
@@ -77,12 +84,15 @@ export class Setting extends React.Component {
         <PeekHeader
           title={capitalize(integration)}
           subtitle={
-            <div $$row if={store.job}>
-              {store.bitsCount} total{' '}
-              <UI.Text>&nbsp;| {store.job.status}</UI.Text>
-              <UI.Text>
-                &nbsp;| <UI.Date>{store.job.updatedAt}</UI.Date>
-              </UI.Text>
+            <div $$row>
+              <jobStatus $$row if={store.job}>
+                {store.bitsCount} total{' '}
+                <UI.Text>&nbsp;| {store.job.status}</UI.Text>
+                <UI.Text if={store.job.updatedAt}>
+                  &nbsp;| <UI.Date>{store.job.updatedAt}</UI.Date>
+                </UI.Text>
+              </jobStatus>
+              <load if={!store.job}>Loading...</load>
             </div>
           }
           after={

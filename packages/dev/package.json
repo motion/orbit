@@ -1,7 +1,7 @@
 {
   "name": "@mcro/dev",
   "private": true,
-  "version": "1.5.40",
+  "version": "2.0.0",
   "bin": {
     "dev-apps": "./_/dev-apps.js"
   },
@@ -15,7 +15,7 @@
     "watch": "npm run build -- --watch"
   },
   "devDependencies": {
-    "@mcro/debug-apps": "*",
+    "@mcro/debug-apps": "^2.0.0",
     "execa": "^0.9.0"
   },
   "publishConfig": {

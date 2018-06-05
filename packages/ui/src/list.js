@@ -98,10 +98,6 @@ class ListUI extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (this.props.virtualized && this.props.virtualized.measure) {
-      this.measure()
-    }
-
     if (typeof this.props.scrollToRow === 'number') {
       this.scrollToRow(this.props.scrollToRow)
     }
@@ -148,14 +144,6 @@ class ListUI extends React.PureComponent {
       if (selected !== this.state.selected) {
         this.setState({ selected })
       }
-    }
-    if (
-      prevProps.virtualized &&
-      prevProps.virtualized.measure &&
-      ((this.props.virtualized && !this.props.virtualized.measure) ||
-        !this.props.virtualized)
-    ) {
-      this.measure()
     }
   }
 

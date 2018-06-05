@@ -111,6 +111,10 @@ export class ObservableRouter {
     if (path.indexOf(window.location.origin) === 0) {
       path = path.replace(window.location.origin, '')
     } else {
+      if (path.indexOf('http') === 0) {
+        window.location = path
+        return
+      }
       path = path[0] === '/' ? path : `/${path}`
     }
     if (path === this.path) {

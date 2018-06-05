@@ -4,7 +4,7 @@ import * as React from 'react'
 import Tray from './views/Tray'
 import { MenuItems } from './views/MenuItems'
 import { MainWindow } from './views/MainWindow'
-import { ElectronStore } from '~/stores/ElectronStore'
+import { ElectronStore } from './stores/ElectronStore'
 
 @view.provide({
   electronStore: ElectronStore,

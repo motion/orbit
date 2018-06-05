@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Label from './label'
+import { Label } from './label'
 import { Row } from '../row'
 
 // fields

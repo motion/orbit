@@ -11,6 +11,7 @@ import {
   Callout,
   FadedArea,
   Glow,
+  SmallTitle,
   Notification,
   HalfSection,
   Section,
@@ -25,8 +26,9 @@ import Media from 'react-media'
 import profileImg from '~/../public/screen-profile.png'
 import chatImg from '~/../public/chat.svg'
 import { scrollTo } from '~/helpers'
+import { Bauhaus } from '~/views/bauhaus'
 
-const altBg = UI.color('#FAEBEF')
+const altBg = UI.color('#F6F5FA')
 const peachTheme = {
   background: altBg,
   color: altBg.darken(0.8).desaturate(0.1),
@@ -42,45 +44,53 @@ export const ChatIcon = props => (
 class UseCasesIntro extends React.Component {
   render() {
     return (
-      <Media query={Constants.screen.large}>
-        {isLarge => (
-          <Section
-            css={{
-              background: 'transparent',
-              marginTop: -window.innerHeight / 2,
-            }}
-          >
-            <SectionContent padded fullscreen>
-              <Slant
-                inverseSlant
-                slantBackground={altBg.darken(0.05)}
-                css={{ zIndex: 2 }}
-              />
-              <HalfSection>
-                <div $$flex />
-                <Title
-                  color="#111"
-                  italic
-                  size={2.3}
-                  margin={[0, '10%', 10, 0]}
-                >
-                  A new way to manage knowledge.
-                </Title>
-                <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#customer-success')}>
-                    Customer Success
-                  </a>{' '}
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#reduce-interrupts')}>Deep Work</a>
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#remote-teams')}>Better Wiki</a>
-                </P>
-              </HalfSection>
-            </SectionContent>
-          </Section>
-        )}
-      </Media>
+      <Section
+        css={{
+          background: 'transparent',
+          marginTop: -window.innerHeight / 2,
+        }}
+      >
+        <SectionContent padded fullscreen>
+          <Slant
+            slantSize={6}
+            inverseSlant
+            slantGradient={['transparent', altBg.darken(0.05)]}
+            css={{ zIndex: 2 }}
+          />
+          <Bauhaus
+            hideTriangle
+            css={{ transform: { scale: 0.4, y: '92%', x: '73%' } }}
+            warp={([x, y]) => [x, y - 4 * -Math.sin(x / 25)]}
+          />
+          <HalfSection>
+            <div $$flex />
+            <SmallTitle>Use Cases</SmallTitle>
+            <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
+              Powerful answers for teams.
+            </Title>
+            <P size={1.2} alpha={0.9} fontWeight={500}>
+              <a $link onClick={scrollTo('#customer-success')}>
+                Customer Success
+              </a>{' '}
+              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              <a $link onClick={scrollTo('#reduce-interrupts')}>
+                Developers
+              </a>
+              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              <a $link onClick={scrollTo('#remote-teams')}>
+                Onboarding
+              </a>
+            </P>
+          </HalfSection>
+        </SectionContent>
+      </Section>
     )
+  }
+
+  static style = {
+    link: {
+      textDecoration: 'none',
+    },
   }
 }
 
@@ -100,17 +110,25 @@ class SectionUseCaseRemoteTeams extends React.Component {
               <Glow
                 style={{
                   background: altBg.lighten(0.015),
-                  transform: { x: '-30%', y: '-15%' },
+                  transform: { x: '-555%', y: '-20%' },
                 }}
               />
+              <Bauhaus
+                hideSquare
+                hideCircle
+                circleColor="#F7C7FF"
+                css={{ transform: { scale: 0.4, y: -1800, x: '44%' } }}
+                warp={([x, y]) => [x, y - 4 * -Math.sin(x / 25)]}
+              />
               <Slant
-                slantGradient={[Constants.useCasesSlantBg2, altBg]}
+                slantSize={6}
+                slantGradient={[altBg.darken(0.1), altBg]}
                 css={{ zIndex: 2 }}
               />
               <LeftSide inverse>
-                <SubTitle size={4.5} italic>
-                  Knowledge<br />
-                  managed
+                <SubTitle size={3.5} italic>
+                  Your org,<br />
+                  organized
                 </SubTitle>
                 <div if={isLarge} css={{ height: '26%' }} />
                 <section
@@ -163,9 +181,11 @@ class SectionUseCaseRemoteTeams extends React.Component {
                   css={{
                     position: 'absolute',
                     top: '38%',
-                    left: 50,
+                    marginTop: 40,
+                    left: '10%',
                     height: '35%',
-                    width: 450,
+                    minHeight: 420,
+                    width: 400,
                     overflow: 'hidden',
                   }}
                 >
@@ -210,13 +230,14 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 }}
               />
               <Slant
-                slantGradient={[altBg.darken(0.05), Constants.useCasesSlantBg2]}
+                slantSize={6}
+                slantGradient={[altBg.darken(0.05), altBg.darken(0.1)]}
               />
-              <chat>
+              <chat if={false}>
                 <ChatIcon />
               </chat>
               <LeftSide inverse>
-                <div if={isLarge} css={{ height: '48%' }} />
+                <div if={isLarge} css={{ height: '58%' }} />
                 <section
                   css={{
                     textAlign: 'left',
@@ -224,15 +245,16 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                     margin: isLarge ? [0, 0, 0, '12%'] : 0,
                   }}
                 >
-                  <SubTitle if={!isLarge} size={4.5} italic>
+                  <SubTitle if={!isLarge} size={3.5} italic>
                     Customer<br />Success
                   </SubTitle>
                   <FeatureSubTitle>
                     Reduce onboarding time by 1/3
                   </FeatureSubTitle>
                   <P2 size={1.6} css={{ margin: isLarge ? [0, 0, 35, 0] : 0 }}>
-                    Onboarding is hard, and ties up your experienced people.
-                    Orbit's automatic realtime contextual search speeds it up.
+                    Onboarding is hard and requires many hands on deck. Make it
+                    easier and more effective with Orbit's realtime contextual
+                    search.
                   </P2>
                 </section>
                 <Callout
@@ -244,14 +266,15 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                   }}
                 >
                   <P2 size={2} margin={0}>
-                    A smarter way to build your team knowledge.
+                    Expert answers are automatically at hand as your teams
+                    operate.
                   </P2>
                 </Callout>
               </LeftSide>
               <RightSide css={{ top: 0 }}>
                 <React.Fragment if={isLarge}>
-                  <div $$flex css={{ marginTop: '5%' }} />
-                  <SubTitle size={4.5} italic>
+                  <div $$flex css={{ marginTop: '25%' }} />
+                  <SubTitle size={3.5} italic>
                     Customer<br />Success
                   </SubTitle>
                   <div $$flex css={{ marginTop: '10%' }} />
@@ -259,7 +282,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 </React.Fragment>
                 <P2 size={1.6} css={isLarge && { marginRight: '15%' }}>
                   Sales chat requires intimate knowledge of your product. Orbit
-                  sits side by side with your success team as they chat on
+                  sits side by side with your success team as they chat,
                   providing realtime answers.
                 </P2>
                 <Callout
@@ -311,17 +334,14 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 }}
               />
               <Slant
+                slantSize={6}
                 inverseSlant
-                slantGradient={[
-                  Constants.useCasesSlantBg2,
-                  Constants.useCasesSlantBg2,
-                ]}
+                slantGradient={[altBg.darken(0.1), altBg.darken(0.1)]}
                 css={{ zIndex: 2 }}
               />
               <LeftSide>
-                <SubTitle size={4.5} italic>
-                  Workplace<br />
-                  operations
+                <SubTitle size={3.5} italic>
+                  A team home
                 </SubTitle>
                 <Notification
                   if={isLarge}
@@ -333,18 +353,19 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                     marginBottom: -40,
                   }}
                 />
-                <div if={isLarge} css={{ height: '26%' }} />
+                <div if={isLarge} css={{ height: '45%' }} />
                 <section
                   css={{
                     textAlign: 'left',
                     display: 'block',
-                    margin: isLarge ? [-70, 0, 0, '12%'] : 0,
+                    margin: isLarge ? [-30, 0, 0, '12%'] : 0,
                   }}
                 >
                   <FeatureSubTitle>Smarter unified knowledge</FeatureSubTitle>
                   <P2 size={1.6}>
                     Profiles and project information keep people from pinging
-                    each other. Stop losing links, discussions, and more.
+                    each other. Orbit builds a map of your company so everyone
+                    can see what's going on.
                   </P2>
                 </section>
                 <Callout
@@ -358,12 +379,13 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                   }
                 >
                   <P2 size={2} margin={0}>
-                    A sense of unity and better insight for your teams.
+                    A sense of unity and better project visiblity for large
+                    teams.
                   </P2>
                 </Callout>
               </LeftSide>
               <RightSide inverse css={{ bottom: 0 }}>
-                <div if={isLarge} $$flex css={{ marginTop: '20%' }} />
+                <div if={isLarge} $$flex css={{ marginTop: '25%' }} />
                 <FeatureSubTitle>Enabling deep work</FeatureSubTitle>
                 <P2 size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
                   Do Not Disturb Slack without losing synchronicity. Orbit Home

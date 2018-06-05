@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Tilt from 'react-tilt'
+import { Tilt } from './tilt'
 import { HoverGlow } from './hoverGlow'
 
 // type Props = {
@@ -13,23 +13,36 @@ import { HoverGlow } from './hoverGlow'
 
 @view.ui
 export class TiltHoverGlow extends React.PureComponent {
+  static defaultProps = {
+    tiltOptions: {
+      max: 15,
+      perspective: 1000,
+      scale: 1.025,
+      speed: 200,
+      reverse: true,
+    },
+  }
+
   version() {
     return 1
   }
 
-  render({ width, height, tiltOptions, children, css, ...props }) {
+  render({
+    width,
+    height,
+    tiltOptions,
+    children,
+    restingPosition,
+    hideShadow,
+    hideGlow,
+    shadowProps,
+    glowProps,
+    ...props
+  }) {
     return (
-      <Tilt
-        options={{
-          max: 15,
-          perspective: 1000,
-          scale: 1.025,
-          speed: 400,
-          //reverse: true,
-          ...tiltOptions,
-        }}
-      >
-        <tiltglow
+      <Tilt options={tiltOptions} restingPosition={restingPosition}>
+        <div
+          $tiltglow
           css={{
             cursor: 'default',
             width,
@@ -37,38 +50,44 @@ export class TiltHoverGlow extends React.PureComponent {
             borderRadius: 0,
             overflow: 'hidden',
             transition: 'transform 50ms ease-in',
-            ...css,
           }}
           {...props}
         >
           {children}
           <HoverGlow
+            if={!hideGlow}
             full
-            show
-            scale={2}
-            resist={20}
-            color={[255, 255, 255]}
-            overflow="hidden"
-            borderRadius={8}
+            scale={0.5}
+            resist={52}
+            offsetTop={-80}
+            blur={130}
+            color="#fff"
+            borderRadius={20}
             zIndex={100000}
-            opacity={1}
+            opacity={0.45}
             duration={30}
+            restingPosition={restingPosition}
+            overflow="hidden"
+            {...glowProps}
           />
           <HoverGlow
-            show
+            if={!hideShadow}
             behind
-            resist={93}
-            scale={1.1}
+            color="#000"
+            resist={96}
+            scale={1}
             width={width}
-            offsetTop={2}
-            offsetLeft={-12}
-            blur={3}
+            offsetTop={20}
+            offsetLeft={2}
+            full
+            blur={25}
             inverse
-            color={[0, 0, 0]}
-            opacity={0.08}
-            borderRadius={5}
+            opacity={0.14}
+            borderRadius={20}
+            restingPosition={restingPosition}
+            {...shadowProps}
           />
-        </tiltglow>
+        </div>
       </Tilt>
     )
   }

@@ -68,3 +68,7 @@ Orbit does that.
 * but it leaves room for companies doing intelligent software
 * and especially for work related tooling
 * desktop software doesnt work with us
+
+---
+
+Anti-SaaS / No-Cloud

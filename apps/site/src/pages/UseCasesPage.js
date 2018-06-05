@@ -26,6 +26,7 @@ import Media from 'react-media'
 import profileImg from '~/../public/screen-profile.png'
 import chatImg from '~/../public/chat.svg'
 import { scrollTo } from '~/helpers'
+import { Bauhaus } from '~/views/bauhaus'
 
 const altBg = UI.color('#F6F5FA')
 const peachTheme = {
@@ -55,6 +56,11 @@ class UseCasesIntro extends React.Component {
             inverseSlant
             slantGradient={['transparent', altBg.darken(0.05)]}
             css={{ zIndex: 2 }}
+          />
+          <Bauhaus
+            hideTriangle
+            css={{ transform: { scale: 0.4, y: '92%', x: '73%' } }}
+            warp={([x, y]) => [x, y - 4 * -Math.sin(x / 25)]}
           />
           <HalfSection>
             <div $$flex />
@@ -107,13 +113,20 @@ class SectionUseCaseRemoteTeams extends React.Component {
                   transform: { x: '-555%', y: '-20%' },
                 }}
               />
+              <Bauhaus
+                hideSquare
+                hideCircle
+                circleColor="#F7C7FF"
+                css={{ transform: { scale: 0.4, y: -1800, x: '44%' } }}
+                warp={([x, y]) => [x, y - 4 * -Math.sin(x / 25)]}
+              />
               <Slant
                 slantSize={6}
-                slantGradient={[Constants.useCasesSlantBg2, altBg]}
+                slantGradient={[altBg.darken(0.1), altBg]}
                 css={{ zIndex: 2 }}
               />
               <LeftSide inverse>
-                <SubTitle size={4.5} italic>
+                <SubTitle size={3.5} italic>
                   Your org,<br />
                   organized
                 </SubTitle>
@@ -218,13 +231,13 @@ class SectionUseCaseCustomerSuccess extends React.Component {
               />
               <Slant
                 slantSize={6}
-                slantGradient={[altBg.darken(0.05), Constants.useCasesSlantBg2]}
+                slantGradient={[altBg.darken(0.05), altBg.darken(0.1)]}
               />
-              <chat>
+              <chat if={false}>
                 <ChatIcon />
               </chat>
               <LeftSide inverse>
-                <div if={isLarge} css={{ height: '48%' }} />
+                <div if={isLarge} css={{ height: '58%' }} />
                 <section
                   css={{
                     textAlign: 'left',
@@ -232,7 +245,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                     margin: isLarge ? [0, 0, 0, '12%'] : 0,
                   }}
                 >
-                  <SubTitle if={!isLarge} size={4.5} italic>
+                  <SubTitle if={!isLarge} size={3.5} italic>
                     Customer<br />Success
                   </SubTitle>
                   <FeatureSubTitle>
@@ -260,8 +273,8 @@ class SectionUseCaseCustomerSuccess extends React.Component {
               </LeftSide>
               <RightSide css={{ top: 0 }}>
                 <React.Fragment if={isLarge}>
-                  <div $$flex css={{ marginTop: '5%' }} />
-                  <SubTitle size={4.5} italic>
+                  <div $$flex css={{ marginTop: '25%' }} />
+                  <SubTitle size={3.5} italic>
                     Customer<br />Success
                   </SubTitle>
                   <div $$flex css={{ marginTop: '10%' }} />
@@ -323,14 +336,11 @@ class SectionUseCaseReduceInterrupts extends React.Component {
               <Slant
                 slantSize={6}
                 inverseSlant
-                slantGradient={[
-                  Constants.useCasesSlantBg2,
-                  Constants.useCasesSlantBg2,
-                ]}
+                slantGradient={[altBg.darken(0.1), altBg.darken(0.1)]}
                 css={{ zIndex: 2 }}
               />
               <LeftSide>
-                <SubTitle size={4.5} italic>
+                <SubTitle size={3.5} italic>
                   A team home
                 </SubTitle>
                 <Notification
@@ -343,7 +353,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                     marginBottom: -40,
                   }}
                 />
-                <div if={isLarge} css={{ height: '30%' }} />
+                <div if={isLarge} css={{ height: '45%' }} />
                 <section
                   css={{
                     textAlign: 'left',
@@ -369,7 +379,8 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                   }
                 >
                   <P2 size={2} margin={0}>
-                    A sense of unity and better insight for large teams.
+                    A sense of unity and better project visiblity for large
+                    teams.
                   </P2>
                 </Callout>
               </LeftSide>

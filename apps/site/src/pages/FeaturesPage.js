@@ -31,6 +31,7 @@ import intelligenceImg from '~/../public/screen-context-word.png'
 import searchImg from '~/../public/screen-slack-search.png'
 import { scrollTo } from '~/helpers'
 import profileImg from '~/../public/screen-profile.png'
+import { Bauhaus } from '~/views/bauhaus'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 const background = UI.color('#FBFAF5')
@@ -62,6 +63,12 @@ class FeaturesIntro extends React.Component {
             slantSize={6}
             slantGradient={['transparent', slantBg.darken(0.05)]}
             css={{ zIndex: 2 }}
+          />
+          <Bauhaus
+            hideSquare
+            circleColor="#F7C7FF"
+            css={{ transform: { scale: 0.4, y: '74%', x: '65%' } }}
+            warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
           />
           <HalfSection>
             <div $$flex />

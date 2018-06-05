@@ -94,16 +94,15 @@ export class HoverGlow extends React.PureComponent {
       if (this.props.clickable) {
         this.on(parentNode, 'mousedown', this.mouseDown)
       }
+      const { restingPosition } = this.props
+      if (restingPosition) {
+        const [x, y] = restingPosition
+        this.setMouseTo(x + bounds.left, y + bounds.top)
+      }
     }
     if (!this.props.hide) {
       // trigger it to show
       this.setState({ mounted: true })
-    }
-    const { restingPosition } = this.props
-    if (restingPosition) {
-      this.setState({
-        position: { x: -restingPosition[0], y: -restingPosition[1] },
-      })
     }
   }
 
@@ -113,9 +112,15 @@ export class HoverGlow extends React.PureComponent {
 
   // offset gives us offset without scroll, just based on parent
   move = e => {
-    const x = e.clientX - this.state.parentRect.left
-    const y = e.clientY - this.state.parentRect.top
+    console.log('e.clientX, e.clientY', e.clientX, e.clientY)
+    this.setMouseTo(e.clientX, e.clientY)
+  }
+
+  setMouseTo = (x1, y1) => {
+    const x = x1 - this.state.parentRect.left
+    const y = y1 - this.state.parentRect.top
     if (this.unmounted || !this.state.bounds) {
+      console.log('bad')
       return
     }
     this.setState({

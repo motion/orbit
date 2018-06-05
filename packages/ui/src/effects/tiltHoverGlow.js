@@ -64,7 +64,7 @@ export class TiltHoverGlow extends React.PureComponent {
             color="#fff"
             borderRadius={20}
             zIndex={100000}
-            opacity={0.35}
+            opacity={0.45}
             duration={30}
             restingPosition={restingPosition}
             overflow="hidden"
@@ -75,10 +75,10 @@ export class TiltHoverGlow extends React.PureComponent {
             behind
             color="#000"
             resist={96}
-            scale={0.95}
+            scale={1}
             width={width}
-            offsetTop={0}
-            offsetLeft={0}
+            offsetTop={20}
+            offsetLeft={2}
             full
             blur={25}
             inverse

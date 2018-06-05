@@ -78,7 +78,7 @@ export class Join extends React.Component {
               id="mce-EMAIL"
               placeholder="Email address..."
             />
-            <UI.Theme theme="#7238C0">
+            <UI.Theme theme="#46CB62">
               <UI.Button
                 size={1.05}
                 height={46}

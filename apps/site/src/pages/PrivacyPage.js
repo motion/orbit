@@ -6,7 +6,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
-const text = `This privacy notice discloses the privacy practices for (website address). This privacy notice applies solely to information collected by this website. It will notify you of the following:
+const text = `This privacy notice discloses the privacy practices for tryorbit.com. This privacy notice applies solely to information collected by this website. It will notify you of the following:
 
 1. What personally identifiable information is collected from you through the website, how it is used and with whom it may be shared.
 2. What choices are available to you regarding the use of your data.
@@ -35,7 +35,7 @@ Wherever we collect sensitive information (such as credit card data), that infor
 
 While we use encryption to protect sensitive information transmitted online, we also protect your information offline. Only employees who need the information to perform a specific job (for example, billing or customer service) are granted access to personally identifiable information. The computers/servers in which we store personally identifiable information are kept in a secure environment.
 
-If you feel that we are not abiding by this privacy policy, you should contact us immediately via telephone at XXX YYY-ZZZZ or via email.
+If you feel that we are not abiding by this privacy policy, you should contact us immediately via via email at hello@tryorbit.com.
 
 We use "cookies" on this site. A cookie is a piece of data stored on a site visitor's hard drive to help us improve your access to our site and identify repeat visitors to our site. For instance, when we use a cookie to identify you, you would not have to log in a password more than once, thereby saving time while on our site. Cookies can also enable us to track and target the interests of our users to enhance the experience on our site. Usage of a cookie is in no way linked to any personally identifiable information on our site.`
 
@@ -48,12 +48,7 @@ export class PrivacyPage extends React.Component {
           <Header />
           <Section>
             <SectionContent padded>
-              <PostTemplate
-                sectionTitle="Privacy Policy"
-                paragraphs={text
-                  .split('\n\n')
-                  .map((paragraph, i) => <P2 key={i}>{paragraph}</P2>)}
-              />
+              <PostTemplate title="Privacy Policy" body={text} />
             </SectionContent>
           </Section>
           <Footer noMission />

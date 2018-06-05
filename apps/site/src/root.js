@@ -6,9 +6,18 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import { hot } from 'react-hot-loader'
+import { scrollTo } from '~/helpers'
 
 @view
 class Root extends React.Component {
+  componentDidMount() {
+    Router.onNavigate(() => {
+      setTimeout(() => {
+        scrollTo('#app')()
+      })
+    })
+  }
+
   render() {
     const CurrentPage = Router.activeView || NotFoundPage
     const width = window.innerWidth

@@ -68,7 +68,7 @@ export const Title = UI.injectTheme(
   ),
 )
 
-export const SubTitle = UI.injectTheme(({ theme, size = 3.5, ...props }) => (
+export const SubTitle = UI.injectTheme(({ theme, size = 3, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall => (
       <Title

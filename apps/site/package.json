@@ -31,7 +31,8 @@
     "warpjs": "1.0.8",
     "sanitize-html": "^1.18.2",
     "jsonp": "^0.2.1",
-    "remark-react": "4.0.3"
+    "remark-react": "4.0.3",
+    "remark": "9.0.0"
   },
   "peerDependencies": {
     "react": "16.4.0",

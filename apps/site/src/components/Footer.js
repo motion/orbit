@@ -24,12 +24,12 @@ export class Footer extends React.Component {
     return (
       <bottom>
         <UI.Theme name="light">
-          <Section withBackground css={{ borderTop: [1, [0, 0, 0, 0.05]] }}>
+          <Section withBackground>
             <SectionContent
               css={{ textAlign: 'center', padding: [150, 0, 150 - 20] }}
             >
               <Title size={2.5} css={{ marginBottom: 20 }}>
-                Keep everyone in the know without adding overhead.
+                Keep everyone in sync without overhead.
               </Title>
               <Join />
             </SectionContent>
@@ -37,7 +37,7 @@ export class Footer extends React.Component {
         </UI.Theme>
         <footer
           css={{
-            background: theme.base.background.darken(0.05).desaturate(0.05),
+            background: theme.base.background,
           }}
         >
           <Media query={Constants.screen.large}>
@@ -49,7 +49,7 @@ export class Footer extends React.Component {
                       <BrandLogo />
                       <br />
                       <a
-                        css={{ fontWeight: 500 }}
+                        css={{ fontWeight: 500, textDecoration: 'none' }}
                         href="mailto:natewienert@gmail.com"
                       >
                         Get in touch

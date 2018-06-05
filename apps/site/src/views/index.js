@@ -472,6 +472,7 @@ export class A extends React.Component {
 
   static style = {
     a: {
+      textDecoration: 'none',
       fontSize: 14,
       color: [0, 0, 0, 0.6],
       fontWeight: 600,

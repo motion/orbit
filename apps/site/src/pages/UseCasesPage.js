@@ -26,7 +26,7 @@ import profileImg from '~/../public/screen-profile.png'
 import chatImg from '~/../public/chat.svg'
 import { scrollTo } from '~/helpers'
 
-const altBg = UI.color('#fff') // F9F5FA
+const altBg = UI.color('#F6F5FA')
 const peachTheme = {
   background: altBg,
   color: altBg.darken(0.8).desaturate(0.1),
@@ -42,45 +42,47 @@ export const ChatIcon = props => (
 class UseCasesIntro extends React.Component {
   render() {
     return (
-      <Media query={Constants.screen.large}>
-        {isLarge => (
-          <Section
-            css={{
-              background: 'transparent',
-              marginTop: -window.innerHeight / 2,
-            }}
-          >
-            <SectionContent padded fullscreen>
-              <Slant
-                inverseSlant
-                slantBackground={altBg.darken(0.05)}
-                css={{ zIndex: 2 }}
-              />
-              <HalfSection>
-                <div $$flex />
-                <Title
-                  color="#111"
-                  italic
-                  size={2.3}
-                  margin={[0, '10%', 10, 0]}
-                >
-                  Powerful answers for teams.
-                </Title>
-                <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#customer-success')}>
-                    Customer Success
-                  </a>{' '}
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#reduce-interrupts')}>Developers</a>
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#remote-teams')}>Onboarding</a>
-                </P>
-              </HalfSection>
-            </SectionContent>
-          </Section>
-        )}
-      </Media>
+      <Section
+        css={{
+          background: 'transparent',
+          marginTop: -window.innerHeight / 2,
+        }}
+      >
+        <SectionContent padded fullscreen>
+          <Slant
+            slantSize={6}
+            inverseSlant
+            slantGradient={['transparent', altBg.darken(0.05)]}
+            css={{ zIndex: 2 }}
+          />
+          <HalfSection>
+            <div $$flex />
+            <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
+              Powerful answers for teams.
+            </Title>
+            <P size={1.2} alpha={0.9} fontWeight={500}>
+              <a $link onClick={scrollTo('#customer-success')}>
+                Customer Success
+              </a>{' '}
+              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              <a $link onClick={scrollTo('#reduce-interrupts')}>
+                Developers
+              </a>
+              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              <a $link onClick={scrollTo('#remote-teams')}>
+                Onboarding
+              </a>
+            </P>
+          </HalfSection>
+        </SectionContent>
+      </Section>
     )
+  }
+
+  static style = {
+    link: {
+      textDecoration: 'none',
+    },
   }
 }
 
@@ -104,6 +106,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                 }}
               />
               <Slant
+                slantSize={6}
                 slantGradient={[Constants.useCasesSlantBg2, altBg]}
                 css={{ zIndex: 2 }}
               />
@@ -212,6 +215,7 @@ class SectionUseCaseCustomerSuccess extends React.Component {
                 }}
               />
               <Slant
+                slantSize={6}
                 slantGradient={[altBg.darken(0.05), Constants.useCasesSlantBg2]}
               />
               <chat>
@@ -315,6 +319,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 }}
               />
               <Slant
+                slantSize={6}
                 inverseSlant
                 slantGradient={[
                   Constants.useCasesSlantBg2,

@@ -39,7 +39,7 @@ export class AboutPage extends React.Component {
                 }}
               >
                 <UI.PassProps
-                  size={1.75}
+                  size={1.7}
                   sizeLineHeight={1.25}
                   alpha={0.8}
                   margin={[0, 0, 50]}
@@ -58,42 +58,46 @@ export class AboutPage extends React.Component {
                   <P2>
                     <strong>It has to be on device.</strong>
                     <br />
-                    It's not just a better user experience. On device solves two
-                    things at once. First, it means your sensitive data never
-                    leaves your company firewall. Second, it allows Orbit to be
-                    dramatically more effective in dissemenation. More on that
-                    later.
+                    You don't want a cloud service to be managing{' '}
+                    <em>all your sensitive data</em>. On device is a no-risk,
+                    no-hassle solution with the easiest possible onboarding:
+                    just download an app. Your sensitive data absolutely never
+                    leaves your company firewall.
+                  </P2>
+                  <P2>
+                    <strong>It has to understand what you're doing.</strong>
+                    <br />
+                    You chat interally using one service, your support chats on
+                    another one. Your team emails and works using any number of
+                    clients and services. Orbit provides contextually relevant
+                    answers wherever you work. With on-device private scanning
+                    that knows what you're looking at anywhere on your OS and
+                    shows inline information: from answers to questions, to
+                    experts in your company.
                   </P2>
                   <P2>
                     <strong>It can't add yet another source of truth.</strong>
                     <br />
-                    There are two reasons why wiki and intranet systems are
-                    places where knowledge goes stale. The obvious one is that
-                    they require a lot of curation and time investment because
-                    they add a new place to manage. But the other is that they
-                    are never at hand and easy to use. This leads to shoulder
-                    taps and ad-hoc knowledge never being codified.
-                  </P2>
-                  <P2>
-                    <strong>It has to sort things out for you.</strong>
-                    <br />
-                    Once you've synced down data and set up knowledge, it
-                    doesn't help if it doesn't get to you at the right time.
-                    Orbit works contextually with a novel OCR system that
-                    privately understands what you're doing. It puts relevant
-                    knowledge in your hands exactly when it matters.
+                    Is a stale wiki a universal constant, or can we do better?
+                    Whether you use a wiki or not, Orbit helps your knowledge
+                    stay up to date. Unifying all your services with smart
+                    sorting means people can trust answers from it to be the
+                    most recent available: whether from a Slack conversation,
+                    document, ticket, or your knowledgebase.
                   </P2>
                   <SubTitle>A unique approach</SubTitle>
                   <P2>
-                    Orbit aims to reinvent intranet systems, solving the
-                    problems they aim at but in ways that integrate with a
-                    modern workplace. To do that, we rethought knowledge
-                    management from the ground up.
+                    Orbit aims to reinvent the way companies operate by giving
+                    them an on device brain. It gives you a beautiful intranet
+                    without infrastructure. We're rethinking knowledge
+                    management from the ground up and we're excited to share it
+                    with the world.
                   </P2>
                   <P2>
-                    We're excited to share it with the world. Signup below for
-                    more information as we develop it, and early access once
-                    it's ready.
+                    Signup for early access, and{' '}
+                    <a href="mailto:natewienert@gmail.com">
+                      let us know what you think
+                    </a>.
                   </P2>
                 </UI.PassProps>
               </card>

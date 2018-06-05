@@ -14,7 +14,7 @@ export class BrandLogo extends React.Component {
   hover = () => this.setState({ hovered: true })
 
   render({ theme, white, ...props }, { hovered }) {
-    const coloredFill = theme.base.background.darken(0.5).desaturate(0.65)
+    const coloredFill = UI.color('#000') //theme.base.background.darken(0.5).desaturate(0.65)
     const fill = hovered ? coloredFill.alpha(0.9) : coloredFill
     return (
       <Media query={Constants.screen.large}>

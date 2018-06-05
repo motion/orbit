@@ -32,7 +32,7 @@ import { scrollTo } from '~/helpers'
 import profileImg from '~/../public/screen-profile.png'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-const background = UI.color('#fff') // F6F5FA
+const background = UI.color('#FBFAF5')
 const theme = {
   background: background,
   color: background.darken(0.5).desaturate(0.9),
@@ -46,49 +46,54 @@ const FeatureTitle = props => (
   <Title italic size={2.6} css={{ marginBottom: 10 }} {...props} />
 )
 
-@UI.injectTheme
 @view
 class FeaturesIntro extends React.Component {
-  render({ theme }) {
+  render() {
     return (
-      <Media query={Constants.screen.large}>
-        {isLarge => (
-          <Section
-            css={{
-              background: 'transparent',
-              marginTop: -window.innerHeight / 2,
-            }}
-          >
-            <SectionContent padded fullscreen>
-              <Slant
-                slantBackground={slantBg.darken(0.05)}
-                css={{ zIndex: 2 }}
-              />
-              <HalfSection>
-                <div $$flex />
-                <Title
-                  color="#111"
-                  italic
-                  size={2.3}
-                  margin={[0, '10%', 10, 0]}
-                >
-                  Make knowledge work.
-                </Title>
-                <P size={1.2} alpha={0.9} fontWeight={500}>
-                  <a onClick={scrollTo('#news')}>Home</a>{' '}
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#search')}>Search</a>
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#context')}>Explore</a>
-                  &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                  <a onClick={scrollTo('#context')}>Answer</a>
-                </P>
-              </HalfSection>
-            </SectionContent>
-          </Section>
-        )}
-      </Media>
+      <Section
+        css={{
+          background: 'transparent',
+          marginTop: -window.innerHeight / 2,
+        }}
+      >
+        <SectionContent padded fullscreen>
+          <Slant
+            slantSize={6}
+            slantGradient={['transparent', slantBg.darken(0.05)]}
+            css={{ zIndex: 2 }}
+          />
+          <HalfSection>
+            <div $$flex />
+            <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
+              Make knowledge work.
+            </Title>
+            <P size={1.2} alpha={0.9} fontWeight={500}>
+              <a $link onClick={scrollTo('#news')}>
+                Home
+              </a>{' '}
+              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              <a $link onClick={scrollTo('#search')}>
+                Search
+              </a>
+              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              <a $link onClick={scrollTo('#context')}>
+                Explore
+              </a>
+              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              <a $link onClick={scrollTo('#context')}>
+                Answer
+              </a>
+            </P>
+          </HalfSection>
+        </SectionContent>
+      </Section>
     )
+  }
+
+  static style = {
+    link: {
+      textDecoration: 'none',
+    },
   }
 }
 
@@ -222,7 +227,7 @@ export class SectionFeatureNewsSearch extends React.Component {
             >
               <Slant
                 inverseSlant
-                slantSize={14}
+                slantSize={6}
                 slantBackground={slantBg.darken(0.05)}
               />
               <LeftSide css={{ top: 0 }}>
@@ -436,7 +441,7 @@ export class SectionFeatureIntelligence extends React.Component {
               <Glow if={false} style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
                 css={{ zIndex: 2 }}
-                slantSize={14}
+                slantSize={6}
                 slantBackground={slantBg.darken(0.05)}
               />
               <LeftSide inverse innerStyle={{ paddingTop: '58%' }}>
@@ -561,7 +566,7 @@ export class SectionSmartSidebar extends React.Component {
             >
               <Slant
                 inverseSlant
-                slantSize={14}
+                slantSize={6}
                 slantBackground={slantBg.darken(0.05)}
                 css={{ zIndex: 1 }}
               />

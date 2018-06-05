@@ -531,6 +531,7 @@ export const HomeImg = props => (
     src={screenImg}
     css={{
       width: 1100 / 2,
+      height: 2016 / 2,
       borderRadius: 19,
       // boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
       border: [2, '#eee'],

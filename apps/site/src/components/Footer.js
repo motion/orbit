@@ -49,7 +49,11 @@ export class Footer extends React.Component {
                       <BrandLogo />
                       <br />
                       <a
-                        css={{ fontWeight: 500, textDecoration: 'none' }}
+                        $contact
+                        css={{
+                          fontWeight: 500,
+                          textDecoration: 'none',
+                        }}
                         href="mailto:natewienert@gmail.com"
                       >
                         Get in touch
@@ -134,7 +138,13 @@ export class Footer extends React.Component {
     startSection: {
       maxWidth: '50%',
       flex: 1,
-      [Constants.screen.smallQuery]: { padding: [0, 0, 50] },
+      [Constants.screen.smallQuery]: {
+        padding: [0, 0, 50],
+        textAlign: 'center',
+        order: 2,
+        margin: [50, 'auto', 0],
+        alignItems: 'center',
+      },
     },
     endSections: {
       flex: 2,
@@ -147,6 +157,14 @@ export class Footer extends React.Component {
     },
     section: {
       margin: [0, '10%'],
+      [Constants.screen.smallQuery]: {
+        margin: [0, -40, 40],
+      },
+    },
+    contact: {
+      [Constants.screen.smallQuery]: {
+        margin: 'auto',
+      },
     },
   }
 }

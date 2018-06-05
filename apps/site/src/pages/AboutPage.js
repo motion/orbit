@@ -4,6 +4,7 @@ import SectionContent from '~/views/sectionContent'
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
 
 const blueBg = UI.color('#F5FAF9')
 const blueTheme = {
@@ -22,22 +23,14 @@ export class AboutPage extends React.Component {
           <Header />
           <Section>
             <SectionContent padded>
-              <header css={{ padding: [150, 150, 50], textAlign: 'center' }}>
+              <header>
                 <SmallTitle>About Us</SmallTitle>
                 <Title italic size={2.7} margin={[0, 0, 10, 0]}>
                   Passionate about making our tools more intelligent and
                   intuitive.
                 </Title>
               </header>
-              <card
-                css={{
-                  background: '#fff',
-                  borderRadius: 6,
-                  padding: ['7%', '10%'],
-                  margin: [0, '10%', 50],
-                  boxShadow: [[0, 3, 14, [0, 0, 0, 0.1]]],
-                }}
-              >
+              <card>
                 <UI.PassProps
                   size={1.7}
                   sizeLineHeight={1.25}
@@ -107,5 +100,26 @@ export class AboutPage extends React.Component {
         </UI.Theme>
       </page>
     )
+  }
+
+  static style = {
+    header: {
+      padding: [150, 150, 50],
+      textAlign: 'center',
+      [Constants.screen.smallQuery]: {
+        padding: [0, 0, 20],
+      },
+    },
+    card: {
+      background: '#fff',
+      borderRadius: 6,
+      padding: ['7%', '10%'],
+      margin: [0, '10%', 50],
+      boxShadow: [[0, 3, 14, [0, 0, 0, 0.1]]],
+      [Constants.screen.smallQuery]: {
+        margin: [0, -50],
+        padding: [40, '10%'],
+      },
+    },
   }
 }

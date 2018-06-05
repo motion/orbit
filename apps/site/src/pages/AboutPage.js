@@ -6,20 +6,12 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
-const blueBg = UI.color('#F5FAF9')
-const blueTheme = {
-  background: blueBg,
-  color: '#222',
-  titleColor: blueBg.darken(0.75).desaturate(0.3),
-  subTitleColor: blueBg.darken(0.7).desaturate(0.8),
-}
-
 @view
 export class AboutPage extends React.Component {
   render() {
     return (
-      <page $$flex $$background={blueTheme.background}>
-        <UI.Theme theme={blueTheme}>
+      <page $$flex $$background={Constants.blueTheme.background}>
+        <UI.Theme theme={Constants.blueTheme}>
           <Header />
           <Section>
             <SectionContent padded>

@@ -35,3 +35,11 @@ export const screen = {
   medium: { maxWidth: smallSize * 1.1 },
   tall: { minHeight: sectionMaxHeight * 1.6 },
 }
+
+const blueBg = UI.color('#F5FAF9')
+export const blueTheme = {
+  background: blueBg,
+  color: '#222',
+  titleColor: blueBg.darken(0.75).desaturate(0.3),
+  subTitleColor: blueBg.darken(0.7).desaturate(0.8),
+}

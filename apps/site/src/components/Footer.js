@@ -126,7 +126,8 @@ export class Footer extends React.Component {
       height: '100%',
     },
     link: {
-      margin: [0, 0, 10],
+      margin: [0, 0, 5],
+      color: [0, 0, 0, 0.5],
     },
     sections: {
       flex: 1,

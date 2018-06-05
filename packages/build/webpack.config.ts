@@ -26,6 +26,7 @@ const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 const entry = process.env.ENTRY || readEntry() || './src'
 const tsConfig = Path.join(cwd, 'tsconfig.json')
+const tsConfigExists = Fs.existsSync(tsConfig)
 const outputPath = Path.join(cwd, 'dist')
 const buildNodeModules =
   process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
@@ -133,7 +134,7 @@ const config = {
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
-    new TsconfigPathsPlugin({ configFile: tsConfig }),
+    tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
     new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),

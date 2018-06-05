@@ -72,3 +72,29 @@ Orbit does that.
 ---
 
 Anti-SaaS / No-Cloud
+
+---
+
+Knowledge Management is Broken
+
+* Confluence, MediaWiki -- Slow, Stale, Cumbersome
+* Notion and other newcomers -- Just copying the old players with a slightly better interface
+* Knowledge still has big problems:
+  * It's hidden
+  * It goes stale
+  * It doesn't source Slack, Github, etc
+  * It requires active searching
+  * It sacrifices privacy or requires a huge install
+* We're building orbit to fix all of that, [here's how it does it[(#10).
+
+---
+
+10
+
+Software 2.0, The Anti-Cloud, and Revolutionizing Knowledge Management
+
+* On desktop: at hand, upgrading Spotlight
+* Stale: Unifying sources, topic based grouping, cosal
+* Passive search, not always active
+* Aggregation of knowledge: Experts, Projects
+* Private, no install

@@ -11,6 +11,7 @@ import {
   Callout,
   FadedArea,
   Glow,
+  SmallTitle,
   Notification,
   HalfSection,
   Section,
@@ -57,6 +58,7 @@ class UseCasesIntro extends React.Component {
           />
           <HalfSection>
             <div $$flex />
+            <SmallTitle>Use Cases</SmallTitle>
             <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
               Powerful answers for teams.
             </Title>

@@ -16,6 +16,7 @@ import {
   HalfSection,
   Section,
   Slant,
+  SmallTitle,
   HomeImg,
 } from '~/views'
 import SectionContent from '~/views/sectionContent'
@@ -64,6 +65,7 @@ class FeaturesIntro extends React.Component {
           />
           <HalfSection>
             <div $$flex />
+            <SmallTitle>Features</SmallTitle>
             <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
               Make knowledge work.
             </Title>

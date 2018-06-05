@@ -91,7 +91,7 @@ export class Join extends React.Component {
                 disabled={submitting}
                 css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
               >
-                {submitting ? 'Signing up...' : 'Get early access'}
+                {submitting ? 'Signing up...' : 'Get Early Access'}
               </UI.Button>
             </UI.Theme>
           </UI.Row>

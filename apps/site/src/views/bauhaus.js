@@ -7,13 +7,14 @@ export class Bauhaus extends React.Component {
     const warp = new Warp(svg)
     // Need to interpolate first, so angles remain sharp
     warp.interpolate(2)
-    warp.transform(([x, y]) => [
-      x + 4 * Math.sin(x / 50),
-      y - 4 * -Math.sin(x / 20),
-    ])
+    warp.transform(
+      this.props.warp ||
+        (([x, y]) => [x + 4 * Math.sin(x / 50), y - 4 * -Math.sin(x / 20)]),
+    )
   }
 
   render() {
+    const { hideTriangle, hideSquare, circleColor, ...props } = this.props
     return (
       <bahaus
         $$fullscreen
@@ -22,6 +23,7 @@ export class Bauhaus extends React.Component {
           opacity: 0.1,
           zIndex: 0,
         }}
+        {...props}
       >
         <svg
           id="svg-element"
@@ -33,13 +35,14 @@ export class Bauhaus extends React.Component {
             cy="141.382"
             r="88.784"
             style={{
-              fill: '#1bf5dc',
+              fill: circleColor || '#1bf5dc',
               stroke: '#fff',
               strokeWidth: 2,
               mixBlendMode: 'multiply',
             }}
           />
           <path
+            if={!hideTriangle}
             d="M278.078,26.195l-161.04,-26.195l-26.195,161.04l161.04,26.195l26.195,-161.04Z"
             style={{
               fill: '#a949f8',
@@ -49,6 +52,7 @@ export class Bauhaus extends React.Component {
             }}
           />
           <path
+            if={!hideSquare}
             d="M170.608,63.772l131.392,155.722l-213.216,30.874l81.824,-186.596Z"
             style={{
               fill: '#facc11',

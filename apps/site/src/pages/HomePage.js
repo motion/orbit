@@ -187,6 +187,13 @@ class HomeHeader extends React.Component {
                     transform: { x: '-45%', y: '0%', scale: 0.65 },
                   }}
                 />
+                <Bauhaus
+                  hideTriangle
+                  hideSquare
+                  circleColor="#F7C7FF"
+                  css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
+                  warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
+                />
                 <Media
                   query={Constants.screen.small}
                   render={() => (
@@ -385,21 +392,21 @@ class HomeFooter extends React.Component {
               </LeftSide>
               <RightSide noEdge $$centered>
                 <UI.Theme name="light">
-                  <Card>
+                  <Card css={isLarge && { transform: { x: -30 } }}>
                     <Card.Title>Unify your knowledge</Card.Title>
                     <Card.Body>
                       Slack, GSuite, Asana, Dropbox and more. Put existing
                       knowledge to work. No new sources of truth.
                     </Card.Body>
                   </Card>
-                  <Card css={isLarge && { transform: { x: 100 } }}>
+                  <Card css={isLarge && { transform: { x: 30 } }}>
                     <Card.Title>3 minute secure install</Card.Title>
                     <Card.Body>
                       Orbit is private to your computer. It summarizes what's
                       going on with NLP that understands company vocab.
                     </Card.Body>
                   </Card>
-                  <Card>
+                  <Card css={isLarge && { transform: { x: -30 } }}>
                     <Card.Title>Always at hand</Card.Title>
                     <Card.Body>
                       A new OCR engine scans what you're looking at in under

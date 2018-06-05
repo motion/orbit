@@ -88,10 +88,10 @@ class FeaturesIntro extends React.Component {
               <a $link onClick={scrollTo('#context')}>
                 Explore
               </a>
-              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              {/* &nbsp;&nbsp;&middot;&nbsp;&nbsp;
               <a $link onClick={scrollTo('#context')}>
                 Answer
-              </a>
+              </a> */}
             </P>
           </HalfSection>
         </SectionContent>
@@ -115,11 +115,11 @@ const SearchIllustration = () => (
           position: 'absolute',
           overflow: 'hidden',
           left: '50%',
-          top: '33%',
+          bottom: '23%',
+          height: '32%',
           marginLeft: 'calc(-5% - 500px)',
           width: '43%',
           maxWidth: 570,
-          height: '22%',
           zIndex: 10000,
           padding: 10,
           // pointerEvents: 'none',
@@ -672,7 +672,7 @@ export class FeaturesPage extends React.Component {
             <SectionFeatureNewsSearch />
             <SearchIllustration />
             <SectionFeatureIntelligence />
-            <SectionSmartSidebar />
+            {/* <SectionSmartSidebar /> */}
           </surround>
           <Footer />
         </UI.Theme>

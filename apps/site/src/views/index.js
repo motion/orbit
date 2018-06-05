@@ -570,13 +570,23 @@ export const Card = view('div', {
 Card.Title = props => (
   <P2
     sizeLineHeight={1.2}
-    margin={[0, 0, 10]}
+    margin={[0, 0, 5]}
     size={1.5}
     fontWeight={400}
     alpha={1}
     {...props}
   />
 )
+
 Card.Body = props => (
-  <P2 sizeLineHeight={1.2} margin={0} size={1.4} {...props} />
+  <P2 sizeLineHeight={1.15} margin={0} size={1.4} {...props} />
+)
+
+Card.Icon = props => (
+  <UI.Icon
+    size={40}
+    color="black"
+    css={{ position: 'absolute', top: 30, right: 30, opacity: 0.5, zIndex: -1 }}
+    {...props}
+  />
 )

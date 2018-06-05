@@ -98,3 +98,18 @@ Software 2.0, The Anti-Cloud, and Revolutionizing Knowledge Management
 * Passive search, not always active
 * Aggregation of knowledge: Experts, Projects
 * Private, no install
+
+---
+
+Why MVPs no Longer Work for Most Things
+
+* very Thiel article
+* hard things become more important
+* You can still fake the general pitch
+* but as software 2.0 becomes more prevalent the quality of the product bar goes higher
+* machine learning becomes more used
+* interfaces are becoming more complex and require more thought
+* problem sets have to integrate lots of data, bigger data, more disparate
+* saturation for typical products is so high
+  * can you imagine another trello coming into pm tools now?
+* now startups must tackle big problems

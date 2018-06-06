@@ -68,18 +68,10 @@ export class MainWindow extends Component<{
     if (!this.state.size) {
       return null
     }
-    console.log(
-      'store.openedOrbitButNotMovedMouseYet',
-      store.openedOrbitButNotMovedMouseYet,
-    )
     return (
       <Window
         alwaysOnTop
-        ignoreMouseEvents={
-          // store.openedOrbitButNotMovedMouseYet
-          //   ? false :
-          !store.mouseInActiveArea
-        }
+        ignoreMouseEvents={!store.mouseInActiveArea}
         ref={ref => ref && onRef(ref.window)}
         file={Constants.APP_URL}
         show={electronStore.show ? this.state.show : false}

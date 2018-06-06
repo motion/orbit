@@ -50,10 +50,9 @@ class OrbitCardStore {
   }
 
   setPeekTargetOnNextIndex = react(
-    () =>
-      this.isPaneSelected && this.props.appStore.nextIndex === this.props.index,
+    () => this.props.appStore.nextIndex === this.props.index,
     shouldSelect => {
-      if (!shouldSelect) {
+      if (!shouldSelect || !this.isPaneSelected) {
         throw react.cancel
       }
       console.log('selecting', this.props, this)

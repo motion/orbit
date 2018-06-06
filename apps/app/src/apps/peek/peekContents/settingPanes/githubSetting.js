@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { GithubService } from '@mcro/services'
 import { Bits } from '~/views/bits'
+import { GithubOrg } from './githubPanes/githubOrg'
 
 class GithubStore {
   get setting() {
@@ -10,19 +11,15 @@ class GithubStore {
   }
 
   issues = Bit.find({ where: { integration: 'github', type: 'task' } })
-  githubService = new GithubService(this.setting)
+  service = new GithubService(this.setting)
   active = 'repos'
   syncing = {}
   syncVersion = 0
   userOrgs = []
 
-  get allOrgs() {
-    return []
-    // return (
-    //   (App.services.Github.allOrgs &&
-    //     App.services.Github.allOrgs.map(org => org.login)) ||
-    //   []
-    // )
+  get orgsList() {
+    const { allOrgs } = this.service
+    return (allOrgs && allOrgs.map(org => org.login)) || []
   }
 
   onSync = async (repo, val) => {
@@ -53,12 +50,13 @@ class GithubStore {
 
 @view.provide({ githubStore: GithubStore })
 @view
-export default class Github {
+export class GithubSetting {
   render({ githubStore: store }) {
     const active = { background: 'rgba(0,0,0,0.15)' }
     if (!store.issues) {
-      return null
+      return <div>no issues</div>
     }
+    console.log('store', store)
     return (
       <container>
         <UI.Row css={{ margin: [10, 0] }}>
@@ -78,7 +76,11 @@ export default class Github {
           </UI.Button>
         </UI.Row>
         <repos if={store.active === 'repos'}>
-          <orgs>{store.allOrgs.map(org => <Org key={org} name={org} />)}</orgs>
+          <orgs>
+            {store.orgsList.map(org => (
+              <GithubOrg githubStore={store} key={org} name={org} />
+            ))}
+          </orgs>
           <add>
             <UI.Input
               width={200}

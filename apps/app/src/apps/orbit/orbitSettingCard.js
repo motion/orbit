@@ -8,11 +8,12 @@ class OrbitSettingCardStore {
   cardRef = React.createRef()
 
   setPeekTargetOnNextIndex = react(
-    () =>
-      this.props.isPaneActive &&
-      this.props.appStore.nextIndex === this.props.index,
+    () => this.props.appStore.nextIndex === this.props.index,
     shouldSelect => {
-      if (!shouldSelect) throw react.cancel
+      if (!shouldSelect || !this.props.isPaneActive) {
+        throw react.cancel
+      }
+      console.log('set target')
       this.props.appStore.setTarget(
         {
           type: 'setting',

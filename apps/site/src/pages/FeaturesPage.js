@@ -163,12 +163,9 @@ const SearchCallout = ({ isLarge }) => (
         }
       }
     >
-      <P size={1.6}>
-        Search the entire cloud with keyword summaries of all conversations,
-        adjusted to important terms specific to your company.
-        <br />
-        <br />
-        Find documents, links, conversations, projects, and more instantly.
+      <P size={1.8} sizeLineHeight={1.1}>
+        Topic search the entire cloud with summaries of all related
+        conversations, documents and tickets combined.
       </P>
     </Callout>
   </UI.Theme>
@@ -246,9 +243,9 @@ export class SectionFeatureNewsSearch extends React.Component {
                     marginTop: isLarge ? newsTopOffPct : 0,
                   }}
                 >
-                  <FeatureTitle>A heads up for you</FeatureTitle>
+                  <FeatureTitle>News</FeatureTitle>
                   <FeatureSubTitle>
-                    Simplified news to summarize your day
+                    The daily digest for your cloud
                   </FeatureSubTitle>
                   <UI.Theme name="lighter">
                     <Callout
@@ -263,15 +260,14 @@ export class SectionFeatureNewsSearch extends React.Component {
                           : null),
                       }}
                     >
-                      <P size={1.6}>
-                        Reduce notification noise and don't miss out on
-                        important conversations. Sorted news for your team.
-                        <br />
-                        <br />
-                        Orbit adjusts to what you care about and the custom
-                        terminology your team uses.
+                      <P size={1.8} sizeLineHeight={1.1}>
+                        A smart digest that's always a tap away. Orbit finds
+                        conversations you missed from Slack and your project
+                        management tool and summarizes them into an easy to read
+                        newspaper.
                       </P>
                       <DottedButton
+                        if={false}
                         css={{
                           margin: [0, 0, 0, 'auto'],
                         }}
@@ -462,9 +458,9 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <FeatureTitle>Projects and profiles</FeatureTitle>
+                  <FeatureTitle>Teams and profiles</FeatureTitle>
                   <FeatureSubTitle>
-                    Automatic visiblity into teams
+                    Give your team an automatic knowledgebase
                   </FeatureSubTitle>
                   <UI.Theme name="lighter">
                     <Callout
@@ -479,19 +475,11 @@ export class SectionFeatureIntelligence extends React.Component {
                           : null),
                       }}
                     >
-                      <P2 size={1.6}>
-                        Every person is moving fast. Solve N<sup
-                          css={{ display: 'inline' }}
-                        >
-                          2
-                        </sup>{' '}
-                        communication problems with ease with smart aggregated
-                        profiles that show actual relevant information.
-                      </P2>
-                      <P2 size={1.6}>
-                        Orbit also learns your project structure and builds an
-                        exploratory interface for whats going on in the company.
-                      </P2>
+                      <P size={1.8} sizeLineHeight={1.1}>
+                        With simple naming conventions, turn a document folder
+                        into your team documentation. Link in a chat room and
+                        group from your code to generate an even better profile.
+                      </P>
                     </Callout>
                   </UI.Theme>
                   <Observer onChange={this.handleIntersect}>

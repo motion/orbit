@@ -573,7 +573,7 @@ export const Card = view('div', {
   boxShadow: [[0, 7, 20, [0, 0, 0, 0.04]]],
   [Constants.screen.smallQuery]: {
     margin: [0, -50],
-    padding: [40, '10%'],
+    padding: [40, '20%'],
   },
 })
 

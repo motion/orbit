@@ -67,10 +67,9 @@ class FeaturesIntro extends React.Component {
           <Bauhaus
             hideSquare
             hideCircle
-            circleColor="#F7C7FF"
             css={{
               opacity: 0.1,
-              transform: { rotate: '20deg', scale: 0.8, y: '150%', x: '90%' },
+              transform: { scale: 1.2, y: '-40%', x: '30%' },
             }}
           />
           <Bauhaus

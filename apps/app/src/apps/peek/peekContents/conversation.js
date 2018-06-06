@@ -11,7 +11,7 @@ import * as UI from '@mcro/ui'
 
 // delays here help ensure it doesn't jitter
 
-class ConversationPeek {
+class ConversationPeekStore {
   related = react(
     async () => {
       const people = await Person.find({ take: 3, skip: 7 })
@@ -39,9 +39,9 @@ const slackConvoBitContentStyle = {
 }
 
 @view({
-  store: ConversationPeek,
+  store: ConversationPeekStore,
 })
-export class Conversation extends React.Component {
+export class ConversationPeek extends React.Component {
   render({ store, bit, appStore }) {
     if (!bit) {
       return null

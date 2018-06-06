@@ -4,6 +4,7 @@ import Mail from './mail'
 import App from './app'
 import { PersonCard } from './personCard'
 import { Person } from '@mcro/models'
+import * as React from 'react'
 
 const results = {
   slack: {
@@ -18,7 +19,7 @@ const results = {
   },
 }
 
-export default function getBitContentView(bit) {
+export default function getBitContentView(bit): Function {
   if (bit instanceof Person) {
     return PersonCard
   }

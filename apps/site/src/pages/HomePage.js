@@ -252,7 +252,10 @@ class HomeHeader extends React.Component {
                                 },
                               }}
                             >
-                              <UI.TiltHoverGlow restingPosition={[100, 100]}>
+                              <UI.TiltHoverGlow
+                                restingPosition={[100, 100]}
+                                tiltOptions={{ perspective: 2000 }}
+                              >
                                 <HomeImg />
                               </UI.TiltHoverGlow>
                             </wrap>
@@ -396,34 +399,70 @@ class HomeFooter extends React.Component {
               <RightSide noEdge $$centered>
                 <cards>
                   <UI.Theme name="light">
-                    <Card css={isLarge && { transform: { x: -30 } }}>
-                      <Card.Icon
-                        name="business_bulb-61"
-                        color="rgb(91.3%, 87%, 16.8%)"
-                      />
-                      <Card.Title>Works how you do</Card.Title>
-                      <Card.Body>
-                        Orbit works with your existing tools to build an
-                        automatic knowledgebase that doesn't go stale.
-                      </Card.Body>
-                    </Card>
-                    <Card css={isLarge && { transform: { x: 30 } }}>
-                      <Card.Icon name="users_single" color="blue" />
-                      <Card.Title>Made for teams</Card.Title>
-                      <Card.Body>
-                        Beautiful profiles of people and teams that summarize
-                        what's going on. Curation to expose important things.
-                      </Card.Body>
-                    </Card>
-                    <Card css={isLarge && { transform: { x: -30 } }}>
-                      <Card.Icon name="chat" color="green" />
-                      <Card.Title>Understands Slack</Card.Title>
-                      <Card.Body>
-                        Slack is part of your knowledge, too. Relevant
-                        conversations you missed are summarized in your daily
-                        digest.
-                      </Card.Body>
-                    </Card>
+                    <UI.TiltHoverGlow
+                      restingPosition={[0, 400]}
+                      shadowProps={{
+                        opacity: 0.1,
+                        scale: 0.6,
+                        blur: 40,
+                        resist: 100,
+                        offsetLeft: 0,
+                      }}
+                      tiltOptions={{ max: 10, perspective: 2000 }}
+                    >
+                      <Card css={isLarge && { transform: { x: -30 } }}>
+                        <Card.Icon
+                          name="business_bulb-61"
+                          color="rgb(91.3%, 87%, 16.8%)"
+                        />
+                        <Card.Title>Works how you do</Card.Title>
+                        <Card.Body>
+                          Orbit works with your existing tools to build an
+                          automatic knowledgebase that doesn't go stale.
+                        </Card.Body>
+                      </Card>
+                    </UI.TiltHoverGlow>
+                    <UI.TiltHoverGlow
+                      restingPosition={[2000, 50]}
+                      shadowProps={{
+                        opacity: 0.1,
+                        scale: 0.6,
+                        blur: 40,
+                        resist: 100,
+                        offsetLeft: 0,
+                      }}
+                      tiltOptions={{ max: 10, perspective: 2000 }}
+                    >
+                      <Card css={isLarge && { transform: { x: 30 } }}>
+                        <Card.Icon name="users_single" color="blue" />
+                        <Card.Title>Made for teams</Card.Title>
+                        <Card.Body>
+                          Beautiful profiles of people and teams that summarize
+                          what's going on. Curation to expose important things.
+                        </Card.Body>
+                      </Card>
+                    </UI.TiltHoverGlow>
+                    <UI.TiltHoverGlow
+                      restingPosition={[0, 0]}
+                      shadowProps={{
+                        opacity: 0.1,
+                        scale: 0.6,
+                        blur: 40,
+                        resist: 99,
+                        offsetLeft: -40,
+                      }}
+                      tiltOptions={{ max: 10, perspective: 2000 }}
+                    >
+                      <Card css={isLarge && { transform: { x: -30 } }}>
+                        <Card.Icon name="chat" color="green" />
+                        <Card.Title>Understands Slack</Card.Title>
+                        <Card.Body>
+                          Slack conversations move quickly. Don't miss relevant
+                          conversations with your relevant summarized daily
+                          digest.
+                        </Card.Body>
+                      </Card>
+                    </UI.TiltHoverGlow>
                   </UI.Theme>
                 </cards>
               </RightSide>

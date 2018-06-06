@@ -20,6 +20,7 @@ export const P = ({ size, ...props }) => (
     )}
   </Media>
 )
+
 export const P2 = props => (
   <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
 )
@@ -68,7 +69,7 @@ export const Title = UI.injectTheme(
   ),
 )
 
-export const SubTitle = UI.injectTheme(({ theme, size = 3.5, ...props }) => (
+export const SubTitle = UI.injectTheme(({ theme, size = 3, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall => (
       <Title
@@ -262,7 +263,7 @@ export const FadedArea = UI.injectTheme(
             theme.base.background})`,
         }}
       />
-      <circleWrap $$fullscreen css={{ zIndex: 1000 }}>
+      <circleWrap $$fullscreen css={{ zIndex: 1000, overflow: 'hidden' }}>
         <div
           $circle
           css={{
@@ -513,6 +514,15 @@ export const Link = ({ to, ...props }) => (
   />
 )
 
+export const LinkSimple = ({ to, ...props }) => (
+  <a
+    active={Router.isActive(to)}
+    href={to}
+    onClick={Router.link(to)}
+    {...props}
+  />
+)
+
 export const TopoBg = () => (
   <topoBg
     if={false}
@@ -531,6 +541,7 @@ export const HomeImg = props => (
     src={screenImg}
     css={{
       width: 1100 / 2,
+      height: 2016 / 2,
       borderRadius: 19,
       // boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
       border: [2, '#eee'],
@@ -562,20 +573,30 @@ export const Card = view('div', {
   boxShadow: [[0, 7, 20, [0, 0, 0, 0.04]]],
   [Constants.screen.smallQuery]: {
     margin: [0, -50],
-    padding: [40, '10%'],
+    padding: [40, '20%'],
   },
 })
 
 Card.Title = props => (
   <P2
     sizeLineHeight={1.2}
-    margin={[0, 0, 10]}
+    margin={[0, 0, 5]}
     size={1.5}
     fontWeight={400}
     alpha={1}
     {...props}
   />
 )
+
 Card.Body = props => (
-  <P2 sizeLineHeight={1.2} margin={0} size={1.4} {...props} />
+  <P2 sizeLineHeight={1.15} margin={0} size={1.4} {...props} />
+)
+
+Card.Icon = props => (
+  <UI.Icon
+    size={40}
+    color="black"
+    css={{ position: 'absolute', top: 30, right: 30, opacity: 0.5, zIndex: -1 }}
+    {...props}
+  />
 )

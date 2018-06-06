@@ -83,7 +83,7 @@ export class Footer extends React.Component {
                       <section>
                         <SmallTitle>Follow</SmallTitle>
                         <nav>
-                          <Link $link to="https://medium.com/orbit">
+                          <Link $link to="/blog">
                             Blog
                           </Link>
                           <Link $link to="https://twitter.com/tryorbit">

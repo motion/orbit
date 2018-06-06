@@ -85,8 +85,7 @@ export const Slant = ({
 
 @view.ui
 export class Section extends React.Component {
-  render() {
-    const { leftBackground, inverse, children, ...props } = this.props
+  render({ withBackground, leftBackground, inverse, children, ...props }) {
     return (
       <section css={{ position: 'relative' }} {...props}>
         <bgTest

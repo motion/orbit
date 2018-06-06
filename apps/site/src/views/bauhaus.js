@@ -19,6 +19,7 @@ export class Bauhaus extends React.Component {
       hideSquare,
       hideCircle,
       circleColor,
+      warp,
       ...props
     } = this.props
     return (

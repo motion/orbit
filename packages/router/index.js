@@ -19,8 +19,8 @@ export class ObservableRouter {
   @observable.ref params = {}
   @observable forceUpdate = false
   @observable version = 0
-
   _id = Math.random()
+  onNavigateCallback = null
 
   constructor({ routes, history }) {
     this.routes = routes
@@ -49,6 +49,9 @@ export class ObservableRouter {
         historyDirection(1)
         this.history.push(this.path)
         this.forceUpdate = false
+        if (this.onNavigateCallback) {
+          this.onNavigateCallback(this.path)
+        }
       }
     })
   }
@@ -136,6 +139,11 @@ export class ObservableRouter {
     if (newPath !== this.path) {
       this.path = newPath
     }
+  }
+
+  @action
+  onNavigate = callback => {
+    this.onNavigateCallback = callback
   }
 
   normalizeParams = params => {

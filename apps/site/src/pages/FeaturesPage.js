@@ -38,7 +38,7 @@ const background = UI.color('#FBFAF5')
 const theme = {
   background: background,
   color: background.darken(0.5).desaturate(0.9),
-  titleColor: background.darken(0.65).desaturate(0.7),
+  titleColor: background.darken(0.7).desaturate(0.8),
   subTitleColor: '#111',
 }
 
@@ -65,20 +65,33 @@ class FeaturesIntro extends React.Component {
             css={{ zIndex: 2 }}
           />
           <Bauhaus
+            if={false}
             hideSquare
+            hideCircle
+            css={{
+              opacity: 0.1,
+              transform: { scale: 1.2, y: '-40%', x: '30%' },
+            }}
+          />
+          <Bauhaus
+            hideSquare
+            hideTriangle
             circleColor="#F7C7FF"
-            css={{ transform: { scale: 0.4, y: '74%', x: '65%' } }}
-            warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
+            css={{
+              opacity: 0.1,
+              transform: { scale: 0.8, y: '40%', x: '-20%' },
+            }}
           />
           <HalfSection>
             <div $$flex />
             <SmallTitle>Features</SmallTitle>
+            <Glow style={{ transform: { y: '180%', x: '55%' } }} />
             <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
               Make knowledge work.
             </Title>
             <P size={1.2} alpha={0.9} fontWeight={500}>
               <a $link onClick={scrollTo('#news')}>
-                Home
+                Daily Digest
               </a>{' '}
               &nbsp;&nbsp;&middot;&nbsp;&nbsp;
               <a $link onClick={scrollTo('#search')}>
@@ -88,10 +101,10 @@ class FeaturesIntro extends React.Component {
               <a $link onClick={scrollTo('#context')}>
                 Explore
               </a>
-              &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+              {/* &nbsp;&nbsp;&middot;&nbsp;&nbsp;
               <a $link onClick={scrollTo('#context')}>
                 Answer
-              </a>
+              </a> */}
             </P>
           </HalfSection>
         </SectionContent>
@@ -115,11 +128,11 @@ const SearchIllustration = () => (
           position: 'absolute',
           overflow: 'hidden',
           left: '50%',
-          top: '33%',
-          marginLeft: 'calc(-5% - 500px)',
+          bottom: '23%',
+          height: '32%',
+          marginLeft: 'calc(-7% - 500px)',
           width: '43%',
           maxWidth: 570,
-          height: '22%',
           zIndex: 10000,
           padding: 10,
           // pointerEvents: 'none',
@@ -163,12 +176,9 @@ const SearchCallout = ({ isLarge }) => (
         }
       }
     >
-      <P size={1.6}>
-        Search the entire cloud with keyword summaries of all conversations,
-        adjusted to important terms specific to your company.
-        <br />
-        <br />
-        Find documents, links, conversations, projects, and more instantly.
+      <P size={1.8} sizeLineHeight={1.1}>
+        Topic search the entire cloud with summaries of all related
+        conversations, documents and tickets combined.
       </P>
     </Callout>
   </UI.Theme>
@@ -246,10 +256,8 @@ export class SectionFeatureNewsSearch extends React.Component {
                     marginTop: isLarge ? newsTopOffPct : 0,
                   }}
                 >
-                  <FeatureTitle>A heads up for you</FeatureTitle>
-                  <FeatureSubTitle>
-                    Simplified news to summarize your day
-                  </FeatureSubTitle>
+                  <FeatureTitle>Daily Digest</FeatureTitle>
+                  <FeatureSubTitle>Everything you missed today</FeatureSubTitle>
                   <UI.Theme name="lighter">
                     <Callout
                       css={{
@@ -263,15 +271,14 @@ export class SectionFeatureNewsSearch extends React.Component {
                           : null),
                       }}
                     >
-                      <P size={1.6}>
-                        Reduce notification noise and don't miss out on
-                        important conversations. Sorted news for your team.
-                        <br />
-                        <br />
-                        Orbit adjusts to what you care about and the custom
-                        terminology your team uses.
+                      <P size={1.8} sizeLineHeight={1.1}>
+                        A smart digest that's always a tap away. Orbit finds
+                        conversations you missed from Slack and your project
+                        management tool and summarizes them into an easy to read
+                        newspaper.
                       </P>
                       <DottedButton
+                        if={false}
                         css={{
                           margin: [0, 0, 0, 'auto'],
                         }}
@@ -409,6 +416,11 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
+                  <Glow
+                    style={{
+                      transform: { y: '20%', x: '5%', scale: 2 },
+                    }}
+                  />
                   <FeatureTitle>Unified cloud search</FeatureTitle>
                   <FeatureSubTitle>
                     Faster, summarized search with relevancy
@@ -447,7 +459,6 @@ export class SectionFeatureIntelligence extends React.Component {
         {isLarge => (
           <Section css={{ background: 'transparent' }}>
             <SectionContent id="context" fullscreen={isLarge} padded={isLarge}>
-              <Glow if={false} style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
                 css={{ zIndex: 2 }}
                 slantSize={6}
@@ -462,9 +473,9 @@ export class SectionFeatureIntelligence extends React.Component {
                     }
                   }
                 >
-                  <FeatureTitle>Projects and profiles</FeatureTitle>
+                  <FeatureTitle>Teams and profiles</FeatureTitle>
                   <FeatureSubTitle>
-                    Automatic visiblity into teams
+                    Give your team an automatic knowledgebase
                   </FeatureSubTitle>
                   <UI.Theme name="lighter">
                     <Callout
@@ -479,19 +490,11 @@ export class SectionFeatureIntelligence extends React.Component {
                           : null),
                       }}
                     >
-                      <P2 size={1.6}>
-                        Every person is moving fast. Solve N<sup
-                          css={{ display: 'inline' }}
-                        >
-                          2
-                        </sup>{' '}
-                        communication problems with ease with smart aggregated
-                        profiles that show actual relevant information.
-                      </P2>
-                      <P2 size={1.6}>
-                        Orbit also learns your project structure and builds an
-                        exploratory interface for whats going on in the company.
-                      </P2>
+                      <P size={1.8} sizeLineHeight={1.1}>
+                        With simple naming conventions, turn a document folder
+                        into your team documentation. Smart collation means it's
+                        easy to see what's happening across teams and people.
+                      </P>
                     </Callout>
                   </UI.Theme>
                   <Observer onChange={this.handleIntersect}>
@@ -516,8 +519,8 @@ export class SectionFeatureIntelligence extends React.Component {
                         height: '53%',
                         marginTop: -340 + contextYOff,
                         top: '56%',
-                        left: '48%',
-                        marginLeft: 50,
+                        left: '50%',
+                        marginLeft: '5%',
                         padding: 20,
                         overflow: 'hidden',
                         pointerEvents: 'all',
@@ -672,7 +675,7 @@ export class FeaturesPage extends React.Component {
             <SectionFeatureNewsSearch />
             <SearchIllustration />
             <SectionFeatureIntelligence />
-            <SectionSmartSidebar />
+            {/* <SectionSmartSidebar /> */}
           </surround>
           <Footer />
         </UI.Theme>

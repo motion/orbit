@@ -87,12 +87,7 @@ export class TermsPage extends React.Component {
           <Header />
           <Section>
             <SectionContent padded>
-              <PostTemplate
-                title="Terms of Use"
-                paragraphs={text
-                  .split('\n\n')
-                  .map((paragraph, i) => <P2 key={i}>{paragraph}</P2>)}
-              />
+              <PostTemplate title="Terms of Use" body={text} />
             </SectionContent>
           </Section>
           <Footer noMission />

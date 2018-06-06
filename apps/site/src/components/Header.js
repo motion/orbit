@@ -30,14 +30,14 @@ export class Header extends React.Component {
                     >
                       {isLarge ? 'Features' : 'What'}
                     </Link>
-                    <Link
+                    {/* <Link
                       isLarge={isLarge}
                       color={color}
                       css={linkStyle}
                       to="/use-cases"
                     >
                       {isLarge ? 'Use Cases' : 'Why'}
-                    </Link>
+                    </Link> */}
                     <Link
                       isLarge={isLarge}
                       color={color}

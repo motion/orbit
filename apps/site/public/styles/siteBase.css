@@ -199,6 +199,10 @@ a {
   cursor: pointer;
 }
 
+a:hover {
+  color: #b7f3f3;
+}
+
 /* reset elements from flex */
 
 a,

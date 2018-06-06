@@ -88,13 +88,17 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={2.8} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      Autonomous Intranet
+    <Title italic size={3.8} margin={[0, 0, 15, 0]} alpha={1} color="#222">
+      Work doesn't have to be so chaotic
     </Title>
-    <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      A smarter way to manage company knowledge. Summarized news,&nbsp;unified
-      search, profiles and more. Installed in just 3 minutes.
+    <P size={1.38} sizeLineHeight={1.2} fontWeight={300}>
+      Automatically turn your chats, docs and tickets into a knowledgebase with
+      a daily digest, profiles and search.<br />
+      Installed in 3 minutes.
     </P>
+    <homeJoin css={{ margin: [20, -15, -30] }}>
+      <Join />
+    </homeJoin>
     <actions
       $$row
       css={{
@@ -138,9 +142,6 @@ const Pitch = ({ isLarge }) => (
         Learn more.
       </UI.Button>
     </actions>
-    <homeJoin css={{ margin: [20, -15, -40] }}>
-      <Join />
-    </homeJoin>
   </>
 )
 
@@ -148,123 +149,120 @@ const Pitch = ({ isLarge }) => (
   store: HomeStore,
 })
 class HomeHeader extends React.Component {
-  render({ isMedium }) {
+  render() {
     return (
-      <Media query={Constants.screen.large}>
-        {isLarge => {
-          return (
-            <Section css={{ background: 'transparent' }}>
-              {/* <parallax css={{ overflow: 'hidden' }} $$fullscreen>
-                <parallaxContain $$fullscreen>
-                  <Keyframes native script={ref => (store.stars = ref)}>
-                    {({ y }) => (
-                      <animated.div
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          transform: y.interpolate(
-                            y => `translate3d(0,${y}%,0)`,
-                          ),
+      <Section css={{ background: 'transparent' }}>
+        {/* <parallax css={{ overflow: 'hidden' }} $$fullscreen>
+          <parallaxContain $$fullscreen>
+            <Keyframes native script={ref => (store.stars = ref)}>
+              {({ y }) => (
+                <animated.div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    transform: y.interpolate(
+                      y => `translate3d(0,${y}%,0)`,
+                    ),
+                  }}
+                >
+                  <inner $$fullscreen />
+                </animated.div>
+              )}
+            </Keyframes>
+          </parallaxContain>
+        </parallax> */}
+        <Slant {...firstSlant} {...topSlants} />
+        <Slant inverseSlant {...secondSlant} {...topSlants} />
+        <Slant {...thirdSlant} {...topSlants} />
+        <SectionContent padded fullscreen fullscreenFs>
+          <Glow
+            style={{
+              background: '#fff',
+              opacity: 0.5,
+              transform: { x: '-45%', y: '0%', scale: 0.65 },
+            }}
+          />
+          <Bauhaus
+            hideTriangle
+            hideSquare
+            circleColor="#F7C7FF"
+            css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
+            warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
+          />
+          <Media
+            query={Constants.screen.small}
+            render={() => (
+              <>
+                <div $$flex />
+                <Pitch />
+                <div $$flex />
+              </>
+            )}
+          />
+          <Media
+            query={Constants.screen.large}
+            render={() => (
+              <>
+                <LeftSide noEdge>
+                  <inner
+                    $$fullscreen
+                    css={{
+                      textAlign: 'left',
+                      padding: [0, 80, 0, 0],
+                    }}
+                  >
+                    <div $$flex={1.2} />
+                    <Pitch isLarge />
+                    <div $$flex />
+                  </inner>
+                </LeftSide>
+                <RightSide noEdge>
+                  <inner
+                    $$fullscreen
+                    css={{
+                      overflow: 'hidden',
+                      right: -160,
+                      left: 20,
+                      borderBottom: [1, borderize(topBg)],
+                    }}
+                  >
+                    <inner
+                      css={{
+                        position: 'absolute',
+                        right: 100,
+                        left: 100,
+                        top: 0,
+                        bottom: 0,
+                      }}
+                    >
+                      <wrap
+                        css={{
+                          width: 1100 / 2,
+                          height: 2016 / 2,
+                          transform: {
+                            x: 20,
+                            y: 100,
+                          },
                         }}
                       >
-                        <inner $$fullscreen />
-                      </animated.div>
-                    )}
-                  </Keyframes>
-                </parallaxContain>
-              </parallax> */}
-              <Slant {...firstSlant} {...topSlants} />
-              <Slant inverseSlant {...secondSlant} {...topSlants} />
-              <Slant {...thirdSlant} {...topSlants} />
-              <SectionContent padded fullscreen fullscreenFs>
-                <Glow
-                  style={{
-                    background: '#fff',
-                    opacity: 0.5,
-                    transform: { x: '-45%', y: '0%', scale: 0.65 },
-                  }}
-                />
-                <Bauhaus
-                  hideTriangle
-                  hideSquare
-                  circleColor="#F7C7FF"
-                  css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
-                  warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
-                />
-                <Media
-                  query={Constants.screen.small}
-                  render={() => (
-                    <>
-                      <div $$flex />
-                      <Pitch />
-                      <div $$flex />
-                    </>
-                  )}
-                />
-                <Media
-                  query={Constants.screen.large}
-                  render={() => (
-                    <>
-                      <LeftSide noEdge>
-                        <inner
-                          $$fullscreen
-                          css={{
-                            textAlign: 'left',
-                            padding: [0, 80, 0, 0],
-                          }}
+                        <UI.TiltHoverGlow
+                          restingPosition={[100, 100]}
+                          tiltOptions={{ perspective: 2000 }}
                         >
-                          <div $$flex={1.2} />
-                          <Pitch isLarge />
-                          <div $$flex />
-                        </inner>
-                      </LeftSide>
-                      <RightSide noEdge>
-                        <inner
-                          $$fullscreen
-                          css={{
-                            overflow: 'hidden',
-                            right: -160,
-                            left: 20,
-                            borderBottom: [1, borderize(topBg)],
-                          }}
-                        >
-                          <inner
-                            css={{
-                              position: 'absolute',
-                              right: 100,
-                              left: 100,
-                              top: 0,
-                              bottom: 0,
-                            }}
-                          >
-                            <wrap
-                              css={{
-                                width: 1100 / 2,
-                                height: 2016 / 2,
-                                transform: {
-                                  x: 20,
-                                  y: 100,
-                                },
-                              }}
-                            >
-                              <UI.TiltHoverGlow restingPosition={[100, 100]}>
-                                <HomeImg />
-                              </UI.TiltHoverGlow>
-                            </wrap>
-                          </inner>
-                        </inner>
-                      </RightSide>
-                    </>
-                  )}
-                />
-              </SectionContent>
-            </Section>
-          )
-        }}
-      </Media>
+                          <HomeImg />
+                        </UI.TiltHoverGlow>
+                      </wrap>
+                    </inner>
+                  </inner>
+                </RightSide>
+              </>
+            )}
+          />
+        </SectionContent>
+      </Section>
     )
   }
 
@@ -342,83 +340,136 @@ class HomeHeader extends React.Component {
 
 @view
 class HomeFooter extends React.Component {
-  render() {
+  render({ isLarge }) {
+    const card1 = (
+      <Card css={isLarge && { transform: { x: -30 } }}>
+        <Card.Icon name="business_bulb-61" color="rgb(91.3%, 87%, 16.8%)" />
+        <Card.Title>Works how you do</Card.Title>
+        <Card.Body>
+          Orbit works with your existing tools to build an automatic
+          knowledgebase that doesn't go stale.
+        </Card.Body>
+      </Card>
+    )
+
+    const card2 = (
+      <Card css={isLarge && { transform: { x: 30 } }}>
+        <Card.Icon name="users_single" color="blue" />
+        <Card.Title>Made for teams</Card.Title>
+        <Card.Body>
+          Beautiful profiles of people and teams that summarize what's going on.
+          Curation to expose important things.
+        </Card.Body>
+      </Card>
+    )
+
+    const card3 = (
+      <Card css={isLarge && { transform: { x: -30 } }}>
+        <Card.Icon name="chat" color="green" />
+        <Card.Title>Understands Slack</Card.Title>
+        <Card.Body>
+          Slack conversations move quickly. Don't miss relevant conversations
+          with your relevant summarized daily digest.
+        </Card.Body>
+      </Card>
+    )
     return (
-      <Media query={Constants.screen.large}>
-        {isLarge => (
-          <Section inverse css={{ background: 'transparent' }}>
-            <SectionContent padded fullscreen fullscreenFs>
-              <Bauhaus />
-              <Slant inverseSlant {...firstSlant} {...bottomSlants} />
-              <Slant {...secondSlant} {...bottomSlants} />
-              <Slant inverseSlant {...thirdSlant} {...bottomSlants} />
-              <LeftSide css={{ textAlign: 'left' }}>
-                <inner $$fullscreen={isLarge}>
-                  <div $$flex />
-                  <content css={isLarge && { marginRight: 80 }}>
-                    <Title size={2} color="#333" css={{ marginBottom: 25 }}>
-                      More time in the know.
-                    </Title>
-                    <UI.PassProps size={1.35} sizeLineHeight={1.1} alpha={0.7}>
-                      <P2>
-                        Company knowledge takes many forms. From conversations
-                        to tickets, emails, docs and a wiki.
-                      </P2>
-                      <P2>
-                        Orbit syncs every cloud service and sorts it all on your
-                        device with smart features to keep everyone up to date.
-                      </P2>
-                      <P2>
-                        The app installs in three minutes with no cloud. Private
-                        to your device, so your data stays safe.
-                      </P2>
-                      <P2>
-                        <a
-                          href="/about"
-                          onClick={Router.link('about')}
-                          css={{
-                            textDecoration: 'none',
-                            color: '#6858D3',
-                            fontWeight: 500,
-                          }}
-                        >
-                          Read more on how we're thinking about it.
-                        </a>
-                      </P2>
-                    </UI.PassProps>
-                  </content>
-                  <div $$flex />
-                </inner>
-              </LeftSide>
-              <RightSide noEdge $$centered>
-                <UI.Theme name="light">
-                  <Card css={isLarge && { transform: { x: -30 } }}>
-                    <Card.Title>Unify your knowledge</Card.Title>
-                    <Card.Body>
-                      Slack, GSuite, Asana, Dropbox and more. Put existing
-                      knowledge to work. No new sources of truth.
-                    </Card.Body>
-                  </Card>
-                  <Card css={isLarge && { transform: { x: 30 } }}>
-                    <Card.Title>3 minute secure install</Card.Title>
-                    <Card.Body>
-                      Orbit is private to your computer. It summarizes what's
-                      going on with NLP that understands company vocab.
-                    </Card.Body>
-                  </Card>
-                  <Card css={isLarge && { transform: { x: -30 } }}>
-                    <Card.Title>Always at hand</Card.Title>
-                    <Card.Body>
-                      A new OCR engine scans what you're looking at in under
-                      250ms and provides contextual answers to any app.
-                    </Card.Body>
-                  </Card>
-                </UI.Theme>
-              </RightSide>
-            </SectionContent>
-          </Section>
-        )}
-      </Media>
+      <Section inverse css={{ background: 'transparent' }}>
+        <SectionContent padded fullscreen fullscreenFs>
+          <Bauhaus />
+          <Slant inverseSlant {...firstSlant} {...bottomSlants} />
+          <Slant {...secondSlant} {...bottomSlants} />
+          <Slant inverseSlant {...thirdSlant} {...bottomSlants} />
+          <LeftSide css={{ textAlign: 'left' }}>
+            <inner $$fullscreen={isLarge}>
+              <div $$flex />
+              <content css={isLarge && { marginRight: 80 }}>
+                <Title size={2.3} color="#333" css={{ marginBottom: 25 }}>
+                  A beautiful and secure intranet in just&nbsp;a few minutes.
+                </Title>
+                <UI.PassProps size={1.8} sizeLineHeight={1.2} alpha={0.7}>
+                  <P2>
+                    Your team talks, documents and tickets at lightspeed. It's
+                    hard to keep up.
+                  </P2>
+                  <P2>
+                    Orbit makes it easy to understand by sorting the cloud into
+                    news, teams, profiles and search.
+                  </P2>
+                  <P2>
+                    It works privately on the desktop so there's no complex
+                    install or data security issues.
+                  </P2>
+                  <P2 size={1.6} css={{ marginTop: 5 }}>
+                    <a
+                      href="/about"
+                      onClick={Router.link('about')}
+                      css={{
+                        textDecoration: 'none',
+                        color: '#6858D3',
+                        fontWeight: 500,
+                      }}
+                    >
+                      Read more on how we're building it.
+                    </a>
+                  </P2>
+                </UI.PassProps>
+              </content>
+              <div $$flex />
+            </inner>
+          </LeftSide>
+          <RightSide noEdge $$centered>
+            <card if={!isLarge}>
+              {card1}
+              {card2}
+              {card3}
+            </card>
+            <cards if={isLarge}>
+              <UI.Theme name="light">
+                <UI.TiltHoverGlow
+                  restingPosition={[0, 400]}
+                  shadowProps={{
+                    opacity: 0.1,
+                    scale: 0.6,
+                    blur: 40,
+                    resist: 100,
+                    offsetLeft: 0,
+                  }}
+                  tiltOptions={{ max: 10, perspective: 2000 }}
+                >
+                  {card1}
+                </UI.TiltHoverGlow>
+                <UI.TiltHoverGlow
+                  restingPosition={[2000, 50]}
+                  shadowProps={{
+                    opacity: 0.1,
+                    scale: 0.6,
+                    blur: 40,
+                    resist: 100,
+                    offsetLeft: 0,
+                  }}
+                  tiltOptions={{ max: 10, perspective: 2000 }}
+                >
+                  {card2}
+                </UI.TiltHoverGlow>
+                <UI.TiltHoverGlow
+                  restingPosition={[0, 0]}
+                  shadowProps={{
+                    opacity: 0.1,
+                    scale: 0.6,
+                    blur: 40,
+                    resist: 99,
+                    offsetLeft: -40,
+                  }}
+                  tiltOptions={{ max: 10, perspective: 2000 }}
+                >
+                  {card3}
+                </UI.TiltHoverGlow>
+              </UI.Theme>
+            </cards>
+          </RightSide>
+        </SectionContent>
+      </Section>
     )
   }
 }
@@ -427,22 +478,26 @@ export const HomePage = () => (
   <UI.Theme
     theme={{ background: topBg, color: topBg.darken(0.6).desaturate(0.5) }}
   >
-    <Media query={Constants.screen.medium}>
-      {isMedium => (
-        <home $$flex $$background={topBg}>
-          <TopoBg />
-          <Header white />
-          <HomeHeader isMedium={isMedium} />
-          <UI.Theme
-            theme={{
-              background: bottomBg,
-              color: bottomBg.darken(0.8).desaturate(0.4),
-            }}
-          >
-            <HomeFooter isMedium={isMedium} />
-          </UI.Theme>
-          <Footer />
-        </home>
+    <Media query={Constants.screen.large}>
+      {isLarge => (
+        <Media query={Constants.screen.medium}>
+          {isMedium => (
+            <home $$flex $$background={topBg}>
+              <TopoBg />
+              <Header white />
+              <HomeHeader isLarge={isLarge} isMedium={isMedium} />
+              <UI.Theme
+                theme={{
+                  background: bottomBg,
+                  color: bottomBg.darken(0.8).desaturate(0.4),
+                }}
+              >
+                <HomeFooter isLarge={isLarge} isMedium={isMedium} />
+              </UI.Theme>
+              <Footer />
+            </home>
+          )}
+        </Media>
       )}
     </Media>
   </UI.Theme>

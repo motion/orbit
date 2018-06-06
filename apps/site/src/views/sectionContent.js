@@ -45,7 +45,8 @@ class SectionContent extends React.Component {
     const style = isSmall ? { minHeight: height } : { height }
     return (
       <section
-        $padded={padded}
+        $padVertical={padded}
+        $padHorizontal={!!padded}
         $halfscreen={halfscreen}
         $fullscreen={fullscreen}
         $fullscreenFixed={fullscreenFixed}
@@ -78,12 +79,18 @@ class SectionContent extends React.Component {
         flexFlow: 'column',
       },
     },
-    padded: padding => ({
-      padding: [padding !== true ? padding : 80, Constants.sidePad],
-      [Constants.screen.smallQuery]: {
-        padding: [padding !== true ? padding : 80, '5%'],
-      },
+    padVertical: padding => ({
+      paddingTop: padding !== true ? padding : 80,
+      paddingBottom: padding !== true ? padding : 80,
     }),
+    padHorizontal: {
+      paddingLeft: Constants.sidePad,
+      paddingRight: Constants.sidePad,
+      [Constants.screen.smallQuery]: {
+        paddingLeft: '5%',
+        paddingRight: '5%',
+      },
+    },
   }
 }
 

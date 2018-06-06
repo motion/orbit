@@ -147,7 +147,7 @@ export class Icon extends React.PureComponent {
         width,
         height,
         fontSize: width,
-        lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
+        lineHeight: `${size / 12}rem`, // scale where 1 when 14
         '&:hover': {
           color: (hover && hover.color) || theme.color || color,
           ...hover,

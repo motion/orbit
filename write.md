@@ -113,3 +113,24 @@ Why MVPs no Longer Work for Most Things
 * saturation for typical products is so high
   * can you imagine another trello coming into pm tools now?
 * now startups must tackle big problems
+
+---
+
+The Great Cloud Blind Spot
+
+* on how SaaS has become over-done, and desktop software is now under-valued
+* patio11 wrote an article about why desktop wasn't as good (for bingo creator)
+* but his article is unpersuasive:
+  * mac app store has improved and is improving more and more
+  * now has easier payment story
+  * so his 2x conversion is likely not as relevant
+  * also some apps are great for web, but some arent
+* the desktop has some big advantages:
+  * better user experience
+  * can be always on
+  * easier to integrate with notifications
+  * better shortcuts, cross-app communication
+  * more power with files
+  * more stickiness long term
+  * easier multiprocess
+  * can use python, go, rust, swift as needed

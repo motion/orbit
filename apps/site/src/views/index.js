@@ -263,7 +263,7 @@ export const FadedArea = UI.injectTheme(
             theme.base.background})`,
         }}
       />
-      <circleWrap $$fullscreen css={{ zIndex: 1000 }}>
+      <circleWrap $$fullscreen css={{ zIndex: 1000, overflow: 'hidden' }}>
         <div
           $circle
           css={{

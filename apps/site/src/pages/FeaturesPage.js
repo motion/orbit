@@ -66,9 +66,21 @@ class FeaturesIntro extends React.Component {
           />
           <Bauhaus
             hideSquare
+            hideCircle
             circleColor="#F7C7FF"
-            css={{ transform: { scale: 0.4, y: '74%', x: '65%' } }}
-            warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
+            css={{
+              opacity: 0.1,
+              transform: { rotate: '20deg', scale: 0.8, y: '150%', x: '90%' },
+            }}
+          />
+          <Bauhaus
+            hideSquare
+            hideTriangle
+            circleColor="#F7C7FF"
+            css={{
+              opacity: 0.1,
+              transform: { scale: 0.8, y: '40%', x: '-20%' },
+            }}
           />
           <HalfSection>
             <div $$flex />

@@ -358,7 +358,7 @@ class HomeFooter extends React.Component {
                 <inner $$fullscreen={isLarge}>
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
-                    <Title size={2.5} color="#333" css={{ marginBottom: 25 }}>
+                    <Title size={2.3} color="#333" css={{ marginBottom: 25 }}>
                       A beautiful and secure intranet in just&nbsp;a few
                       minutes.
                     </Title>

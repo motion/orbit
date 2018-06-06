@@ -5,6 +5,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
+import { Bauhaus } from '~/views/bauhaus'
 
 @view.ui
 export class AboutPage extends React.Component {
@@ -15,6 +16,31 @@ export class AboutPage extends React.Component {
           <Header />
           <Section>
             <SectionContent padded>
+              <Bauhaus
+                hideTriangle
+                hideSquare
+                circleColor="#F7C7FF"
+                css={{
+                  transform: { scale: 0.8, y: '-45%', x: '65%' },
+                  zIndex: 0,
+                }}
+              />
+              <Bauhaus
+                hideTriangle
+                hideSquare
+                css={{
+                  transform: { scale: 0.57, y: '91%', x: '84%' },
+                  zIndex: 0,
+                }}
+              />
+              <Bauhaus
+                hideCircle
+                css={{
+                  opacity: 0.05,
+                  transform: { scale: 1, y: '25%', x: '-34%' },
+                  zIndex: 0,
+                }}
+              />
               <PostTemplate
                 sectionTitle="About Us"
                 title="Passionate about making our tools more intelligent and intuitive."

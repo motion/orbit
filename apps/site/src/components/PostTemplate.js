@@ -18,7 +18,7 @@ export class PostTemplate extends React.Component {
     children,
   }) {
     return (
-      <>
+      <post>
         <header>
           <SmallTitle if={sectionTitle} {...sectionTitleProps}>
             {sectionTitle}
@@ -34,11 +34,15 @@ export class PostTemplate extends React.Component {
           </UI.PassProps>
           {children}
         </card>
-      </>
+      </post>
     )
   }
 
   static style = {
+    post: {
+      position: 'relative',
+      zIndex: 100,
+    },
     header: {
       padding: [150, 150, 50],
       textAlign: 'center',

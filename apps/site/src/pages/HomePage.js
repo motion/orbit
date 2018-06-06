@@ -88,12 +88,12 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={3.7} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      Org(anizational) Excellence
+    <Title italic size={3.8} margin={[0, 0, 15, 0]} alpha={1} color="#222">
+      Work doesn't have to be so chaotic
     </Title>
     <P size={1.38} sizeLineHeight={1.2} fontWeight={300}>
-      Turn docs, tickets and chats into a knowledgebase with a daily digest,
-      teams, people and unified search.<br />
+      Automatically turn your chats, docs and tickets into a knowledgebase with
+      a daily digest, profiles and search.<br />
       Installed in 3 minutes.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
@@ -362,14 +362,14 @@ class HomeFooter extends React.Component {
                       A beautiful and secure intranet in just&nbsp;a few
                       minutes.
                     </Title>
-                    <UI.PassProps size={1.9} sizeLineHeight={1.2} alpha={0.7}>
+                    <UI.PassProps size={1.8} sizeLineHeight={1.2} alpha={0.7}>
                       <P2>
                         Your team talks, documents and tickets at lightspeed.
                         It's hard to keep up.
                       </P2>
                       <P2>
-                        Orbit makes everything easy to understand, sorting it
-                        all into news, teams and profiles.
+                        Orbit makes it easy to understand by sorting the cloud
+                        into news, teams, profiles and search.
                       </P2>
                       <P2>
                         It works privately on the desktop so there's no complex
@@ -401,7 +401,7 @@ class HomeFooter extends React.Component {
                         name="business_bulb-61"
                         color="rgb(91.3%, 87%, 16.8%)"
                       />
-                      <Card.Title>Works with you</Card.Title>
+                      <Card.Title>Works how you do</Card.Title>
                       <Card.Body>
                         Orbit works with your existing tools to build an
                         automatic knowledgebase that doesn't go stale.
@@ -411,8 +411,8 @@ class HomeFooter extends React.Component {
                       <Card.Icon name="users_single" color="blue" />
                       <Card.Title>Made for teams</Card.Title>
                       <Card.Body>
-                        Beautiful profiles for people and teams that summarize
-                        what's going on with tools to expose important things.
+                        Beautiful profiles of people and teams that summarize
+                        what's going on. Curation to expose important things.
                       </Card.Body>
                     </Card>
                     <Card css={isLarge && { transform: { x: -30 } }}>

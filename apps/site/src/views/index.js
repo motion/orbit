@@ -20,6 +20,7 @@ export const P = ({ size, ...props }) => (
     )}
   </Media>
 )
+
 export const P2 = props => (
   <P size={2} alpha={0.9} margin={[0, 0, 20]} {...props} />
 )
@@ -506,6 +507,15 @@ export class A extends React.Component {
 
 export const Link = ({ to, ...props }) => (
   <A
+    active={Router.isActive(to)}
+    href={to}
+    onClick={Router.link(to)}
+    {...props}
+  />
+)
+
+export const LinkSimple = ({ to, ...props }) => (
+  <a
     active={Router.isActive(to)}
     href={to}
     onClick={Router.link(to)}

@@ -334,7 +334,7 @@ export class Text extends React.Component {
     },
     selectable: {
       userSelect: 'auto',
-      cursor: 'text',
+      cursor: 'inherit',
     },
   }
 

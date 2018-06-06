@@ -20,7 +20,7 @@ export class Body extends React.Component {
   render({ open, children }) {
     console.log('height', this.state)
     return (
-      <container css={{ height: this.state.height }}>
+      <container css={{ height: !open ? 0 : this.state.height }}>
         <inner ref={this.innerRef} $hidden={!open}>
           {children}
         </inner>

@@ -100,7 +100,6 @@ const Pitch = ({ isLarge }) => (
       <Join />
     </homeJoin>
     <actions
-      if={false}
       $$row
       css={{
         margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],

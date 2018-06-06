@@ -11,7 +11,7 @@ const debounceLog = (...args) => {
   loggers.push([...args])
   clearTimeout(nextLog)
   nextLog = setTimeout(() => {
-    log('**', loggers.length, loggers.join(' -- '))
+    log('render cards:', loggers.length, loggers.slice(0, 2).join(' -- '))
     loggers = []
     nextLog = null
   }, 16)
@@ -242,7 +242,6 @@ export class OrbitCard extends React.Component {
   render({ pane, appStore, bit, store, itemProps, ...props }) {
     debounceLog(`${bit && bit.id}.${pane} ${store.isSelected}`)
     if (!bit) {
-      console.log('no bit given, rendering plainly/directly')
       return this.getOrbitCard(props)
     }
     const BitContent = bitContents(bit)

@@ -25,7 +25,6 @@ class Root extends React.Component {
   }
 
   render() {
-    console.log('hi')
     if (this.state.error) {
       return (
         <aboveredbox

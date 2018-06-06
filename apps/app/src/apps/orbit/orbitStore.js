@@ -17,6 +17,7 @@ export default class OrbitStore {
   lastPinKey = ''
 
   willMount() {
+    console.log('willmount orbitstore')
     this.appReactions = new AppReactions({
       onPinKey: key => {
         if (key === 'Delete') {
@@ -32,7 +33,6 @@ export default class OrbitStore {
         this.lastPinKey = key
       },
     })
-    console.log('willmount orbitstore')
     this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))
   }
 

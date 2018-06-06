@@ -50,6 +50,10 @@ class PaneStore {
   animationState = react(
     () => App.orbitState.docked,
     async (visible, { sleep, setValue }) => {
+      // hmr already showing
+      if (visible && this.animationState.visible) {
+        throw react.cancel
+      }
       // old value first to setup for transition
       setValue({ willAnimate: true, visible: !visible })
       await sleep(32)
@@ -66,7 +70,7 @@ class PaneStore {
     {
       immediate: true,
       log: false,
-      defaultValue: { willAnimate: false, visible: false },
+      defaultValue: { willAnimate: false, visible: App.orbitState.docked },
     },
   )
 }
@@ -81,7 +85,7 @@ const borderRadius = 14
 @view
 class OrbitDocked {
   render({ paneStore, appStore, theme }) {
-    log('DOCKED ------------')
+    log('DOCKED ------------', paneStore.animationState)
     const { visible, willAnimate } = paneStore.animationState
     return (
       <frame $willAnimate={willAnimate} $visible={visible}>

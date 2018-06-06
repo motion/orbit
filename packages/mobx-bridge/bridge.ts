@@ -335,11 +335,15 @@ class Bridge {
     return changed
   }
 
-  onMessage = (type, listener) => {
+  onMessage = (type, listener): Function => {
+    let subscription = { type, listener }
     if (!listener) {
-      this.messageListeners.add({ type: null, listener: type })
-    } else {
-      this.messageListeners.add({ type, listener })
+      subscription = { type: null, listener: type }
+    }
+    this.messageListeners.add(subscription)
+    // return disposable
+    return () => {
+      this.messageListeners.delete(subscription)
     }
   }
 

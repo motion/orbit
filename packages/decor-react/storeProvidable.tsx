@@ -289,7 +289,12 @@ storeProvidable = function(options, Helpers) {
       if (context) {
         StoreProviderWithContext = props => (
           <StoreContext.Consumer>
-            {stores => <StoreProvider __contextualStores={stores} {...props} />}
+            {stores => {
+              const contextProps = stores
+                ? { __contextualStores: stores }
+                : null
+              return <StoreProvider {...contextProps} {...props} />
+            }}
           </StoreContext.Consumer>
         )
       }

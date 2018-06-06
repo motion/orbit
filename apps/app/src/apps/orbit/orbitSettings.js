@@ -82,7 +82,6 @@ export class OrbitSettings {
     if (!appStore.settings) {
       return null
     }
-    console.log('store.isPaneActive', store.isPaneActive)
     const {
       activeIntegrations,
       inactiveIntegrations,

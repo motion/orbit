@@ -35,18 +35,15 @@ const render = throttle(async () => {
     window.Root = app
     await app.start()
   }
-  console.log('rendering')
   const RootComponent = require('./root').default
+  // <React.unstable_AsyncMode>
+  // </React.unstable_AsyncMode>
   ReactDOM.render(
-    // <React.StrictMode>
-    // <React.unstable_AsyncMode>
     <ThemeProvide {...Themes}>
       <UI.Theme name="light">
         <RootComponent />
       </UI.Theme>
     </ThemeProvide>,
-    // </React.unstable_AsyncMode>
-    // </React.StrictMode>
     document.querySelector('#app'),
   )
 }, 32)

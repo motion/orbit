@@ -53,7 +53,6 @@ export class OrbitSettingCard extends React.Component {
     const isSelected =
       appStore.selectedIndex === index && !!App.peekState.target
     const hoverSettleProps = hoverSettle && this.hoverSettler.props
-    console.log('hoverSettleProps', hoverSettleProps)
     return (
       <card
         key={index}

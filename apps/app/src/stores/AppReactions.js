@@ -17,11 +17,7 @@ const appTarget = ({ offset, bounds }) => {
 export class AppReactions {
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
-    if (window.messageAttached) {
-      return
-    }
-    window.messageAttached = true
-    App.onMessage(async msg => {
+    const dispose = App.onMessage(async msg => {
       console.log('appmsg', msg)
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
@@ -53,6 +49,12 @@ export class AppReactions {
         App.setOrbitState({ pinned: true })
         this.onPinKey(key.toLowerCase())
       }
+    })
+    this.subscriptions.add({
+      dispose: () => {
+        console.log('disposing app onMessage')
+        dispose()
+      },
     })
   }
 

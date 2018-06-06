@@ -1,9 +1,9 @@
 import { view } from '@mcro/black'
-// import * as React from 'react'
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 
 @view
-export class PersonCard {
+export class PersonCard extends React.Component {
   render({ children, bit }) {
     return children({
       // preview: bit.data.profile.email,

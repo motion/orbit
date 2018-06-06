@@ -65,6 +65,7 @@ class FeaturesIntro extends React.Component {
             css={{ zIndex: 2 }}
           />
           <Bauhaus
+            if={false}
             hideSquare
             hideCircle
             css={{

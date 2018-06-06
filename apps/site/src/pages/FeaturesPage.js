@@ -477,8 +477,8 @@ export class SectionFeatureIntelligence extends React.Component {
                     >
                       <P size={1.8} sizeLineHeight={1.1}>
                         With simple naming conventions, turn a document folder
-                        into your team documentation. Link in a chat room and
-                        group from your code to generate an even better profile.
+                        into your team documentation. Smart collation means it's
+                        easy to see what's happening across teams and people.
                       </P>
                     </Callout>
                   </UI.Theme>

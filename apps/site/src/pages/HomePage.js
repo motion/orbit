@@ -88,14 +88,19 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={2.8} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      Autonomous Intranet
+    <Title italic size={3.7} margin={[0, 0, 15, 0]} alpha={1} color="#222">
+      Org(anizational) Excellence
     </Title>
-    <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      A smart way to manage company knowledge. Automatic&nbsp;team overview,
-      profiles, search and more. Installed in just 3 minutes.
+    <P size={1.38} sizeLineHeight={1.2} fontWeight={300}>
+      Turn docs, tickets and chats into a knowledgebase with a daily digest,
+      teams, people and unified search.<br />
+      Installed in 3 minutes.
     </P>
+    <homeJoin css={{ margin: [20, -15, -30] }}>
+      <Join />
+    </homeJoin>
     <actions
+      if={false}
       $$row
       css={{
         margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
@@ -138,9 +143,6 @@ const Pitch = ({ isLarge }) => (
         Learn more.
       </UI.Button>
     </actions>
-    <homeJoin css={{ margin: [20, -15, -40] }}>
-      <Join />
-    </homeJoin>
   </>
 )
 
@@ -356,25 +358,25 @@ class HomeFooter extends React.Component {
                 <inner $$fullscreen={isLarge}>
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
-                    <Title size={3.5} color="#333" css={{ marginBottom: 25 }}>
+                    <Title size={2.8} color="#333" css={{ marginBottom: 25 }}>
                       A beautiful and secure intranet in just&nbsp;a few
                       minutes.
                     </Title>
-                    <UI.PassProps size={1.8} sizeLineHeight={1.1} alpha={0.7}>
+                    <UI.PassProps size={2} sizeLineHeight={1.1} alpha={0.7}>
                       <P2>
-                        Your company has emails, tickets, conversations and
-                        documents moving at lightspeed.
+                        Your team emails, tickets, talks and documents at
+                        lightspeed.
                       </P2>
                       <P2>
-                        Orbit syncs every cloud service and sorts it
-                        automatically into news, teams and profiles.
+                        Orbit syncs your services and sorts them into news,
+                        teams and profiles.
                       </P2>
                       <P2>
-                        It works on your desktop without a cloud. No complex
-                        install or data privacy issues.
+                        It works on your desktop without a cloud so there's no
+                        complex install or data privacy issues.
                       </P2>
                       <br />
-                      <P2>
+                      <P2 size={1.6}>
                         <a
                           href="/about"
                           onClick={Router.link('about')}
@@ -403,23 +405,23 @@ class HomeFooter extends React.Component {
                       <Card.Title>Works with you</Card.Title>
                       <Card.Body>
                         Orbit unifies existing tools to build an automatic
-                        knowledgebase for teams.
+                        knowledgebase for teams that doesn't go stale.
                       </Card.Body>
                     </Card>
                     <Card css={isLarge && { transform: { x: 30 } }}>
                       <Card.Icon name="users_single" color="blue" />
                       <Card.Title>Made for teams</Card.Title>
                       <Card.Body>
-                        Beautiful profiles for people and teams that collate and
-                        summarize what's going on.
+                        Beautiful profiles for people and teams that summarize
+                        what's going on with easy ways to pin important things.
                       </Card.Body>
                     </Card>
                     <Card css={isLarge && { transform: { x: -30 } }}>
                       <Card.Icon name="chat" color="green" />
                       <Card.Title>Understands Slack</Card.Title>
                       <Card.Body>
-                        Stop missing out on conversations and attachments. A
-                        summarized daily digest of what you missed.
+                        Slack is part of your knowledge so relevant
+                        conversations you missed show in your daily digest.
                       </Card.Body>
                     </Card>
                   </UI.Theme>

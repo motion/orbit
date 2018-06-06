@@ -80,8 +80,8 @@ export class Join extends React.Component {
             />
             <UI.Theme theme="#46CB62">
               <UI.Button
-                size={1.05}
-                height={46}
+                size={1.1}
+                height={53}
                 sizeRadius={3}
                 sizePadding={1.8}
                 borderLeftRadius={0}
@@ -120,9 +120,9 @@ export class Join extends React.Component {
       display: 'flex',
       width: '100%',
       flex: 1,
-      padding: [12, 20],
+      padding: [14, 22],
       margin: [10, 0, 20],
-      fontSize: 18,
+      fontSize: 20,
       border: [1, 'red'],
       borderLeftRadius: 100,
     },

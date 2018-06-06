@@ -358,25 +358,24 @@ class HomeFooter extends React.Component {
                 <inner $$fullscreen={isLarge}>
                   <div $$flex />
                   <content css={isLarge && { marginRight: 80 }}>
-                    <Title size={2.8} color="#333" css={{ marginBottom: 25 }}>
+                    <Title size={2.5} color="#333" css={{ marginBottom: 25 }}>
                       A beautiful and secure intranet in just&nbsp;a few
                       minutes.
                     </Title>
-                    <UI.PassProps size={2} sizeLineHeight={1.1} alpha={0.7}>
+                    <UI.PassProps size={1.9} sizeLineHeight={1.2} alpha={0.7}>
                       <P2>
-                        Your team emails, tickets, talks and documents at
-                        lightspeed.
+                        Your team talks, documents and tickets at lightspeed.
+                        It's hard to keep up.
                       </P2>
                       <P2>
-                        Orbit syncs your services and sorts them into news,
-                        teams and profiles.
+                        Orbit makes everything easy to understand, sorting it
+                        all into news, teams and profiles.
                       </P2>
                       <P2>
-                        It works on your desktop without a cloud so there's no
-                        complex install or data privacy issues.
+                        It works privately on the desktop so there's no complex
+                        install or data security issues.
                       </P2>
-                      <br />
-                      <P2 size={1.6}>
+                      <P2 size={1.6} css={{ marginTop: 5 }}>
                         <a
                           href="/about"
                           onClick={Router.link('about')}
@@ -386,7 +385,7 @@ class HomeFooter extends React.Component {
                             fontWeight: 500,
                           }}
                         >
-                          Read more on how we're thinking about it.
+                          Read more on how we're building it.
                         </a>
                       </P2>
                     </UI.PassProps>
@@ -404,8 +403,8 @@ class HomeFooter extends React.Component {
                       />
                       <Card.Title>Works with you</Card.Title>
                       <Card.Body>
-                        Orbit unifies existing tools to build an automatic
-                        knowledgebase for teams that doesn't go stale.
+                        Orbit works with your existing tools to build an
+                        automatic knowledgebase that doesn't go stale.
                       </Card.Body>
                     </Card>
                     <Card css={isLarge && { transform: { x: 30 } }}>
@@ -413,15 +412,16 @@ class HomeFooter extends React.Component {
                       <Card.Title>Made for teams</Card.Title>
                       <Card.Body>
                         Beautiful profiles for people and teams that summarize
-                        what's going on with easy ways to pin important things.
+                        what's going on with tools to expose important things.
                       </Card.Body>
                     </Card>
                     <Card css={isLarge && { transform: { x: -30 } }}>
                       <Card.Icon name="chat" color="green" />
                       <Card.Title>Understands Slack</Card.Title>
                       <Card.Body>
-                        Slack is part of your knowledge so relevant
-                        conversations you missed show in your daily digest.
+                        Slack is part of your knowledge, too. Relevant
+                        conversations you missed are summarized in your daily
+                        digest.
                       </Card.Body>
                     </Card>
                   </UI.Theme>

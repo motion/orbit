@@ -38,7 +38,7 @@ const background = UI.color('#FBFAF5')
 const theme = {
   background: background,
   color: background.darken(0.5).desaturate(0.9),
-  titleColor: background.darken(0.65).desaturate(0.7),
+  titleColor: background.darken(0.7).desaturate(0.8),
   subTitleColor: '#111',
 }
 
@@ -84,12 +84,13 @@ class FeaturesIntro extends React.Component {
           <HalfSection>
             <div $$flex />
             <SmallTitle>Features</SmallTitle>
+            <Glow style={{ transform: { y: '180%', x: '55%' } }} />
             <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
               Make knowledge work.
             </Title>
             <P size={1.2} alpha={0.9} fontWeight={500}>
               <a $link onClick={scrollTo('#news')}>
-                Home
+                Daily Digest
               </a>{' '}
               &nbsp;&nbsp;&middot;&nbsp;&nbsp;
               <a $link onClick={scrollTo('#search')}>
@@ -128,7 +129,7 @@ const SearchIllustration = () => (
           left: '50%',
           bottom: '23%',
           height: '32%',
-          marginLeft: 'calc(-5% - 500px)',
+          marginLeft: 'calc(-7% - 500px)',
           width: '43%',
           maxWidth: 570,
           zIndex: 10000,
@@ -254,10 +255,8 @@ export class SectionFeatureNewsSearch extends React.Component {
                     marginTop: isLarge ? newsTopOffPct : 0,
                   }}
                 >
-                  <FeatureTitle>News</FeatureTitle>
-                  <FeatureSubTitle>
-                    The daily digest for your cloud
-                  </FeatureSubTitle>
+                  <FeatureTitle>Daily Digest</FeatureTitle>
+                  <FeatureSubTitle>Everything you missed today</FeatureSubTitle>
                   <UI.Theme name="lighter">
                     <Callout
                       css={{
@@ -416,6 +415,11 @@ export class SectionFeatureNewsSearch extends React.Component {
                     }
                   }
                 >
+                  <Glow
+                    style={{
+                      transform: { y: '20%', x: '5%', scale: 2 },
+                    }}
+                  />
                   <FeatureTitle>Unified cloud search</FeatureTitle>
                   <FeatureSubTitle>
                     Faster, summarized search with relevancy
@@ -454,7 +458,6 @@ export class SectionFeatureIntelligence extends React.Component {
         {isLarge => (
           <Section css={{ background: 'transparent' }}>
             <SectionContent id="context" fullscreen={isLarge} padded={isLarge}>
-              <Glow if={false} style={{ transform: { y: '10%', x: '-55%' } }} />
               <Slant
                 css={{ zIndex: 2 }}
                 slantSize={6}
@@ -515,8 +518,8 @@ export class SectionFeatureIntelligence extends React.Component {
                         height: '53%',
                         marginTop: -340 + contextYOff,
                         top: '56%',
-                        left: '48%',
-                        marginLeft: 50,
+                        left: '50%',
+                        marginLeft: '5%',
                         padding: 20,
                         overflow: 'hidden',
                         pointerEvents: 'all',

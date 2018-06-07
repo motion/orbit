@@ -10,7 +10,7 @@ import { OrbitDirectory } from './orbitDirectory'
 import { App, Electron } from '@mcro/all'
 
 const SHADOW_PAD = 85
-const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
+const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
 
 class PaneStore {
   filters = ['all', 'general', 'status', 'showoff']
@@ -88,43 +88,52 @@ class OrbitDocked {
     log('DOCKED ------------', paneStore.animationState)
     const { visible, willAnimate } = paneStore.animationState
     return (
-      <frame $willAnimate={willAnimate} $visible={visible}>
-        <border $$fullscreen />
-        <container>
-          <OrbitHeader
-            after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
-          />
-          <orbitInner>
-            <OrbitHome appStore={appStore} paneStore={paneStore} />
-            <OrbitDirectory
-              name="directory"
-              appStore={appStore}
-              paneStore={paneStore}
+      <>
+        <bgGradient if={false} $$fullscreen $visible={visible} />
+        <frame $willAnimate={willAnimate} $visible={visible}>
+          <border $$fullscreen />
+          <container>
+            <OrbitHeader
+              after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
-            <OrbitSearchResults name="summary-search" parentPane="summary" />
-            <OrbitSettings name="settings" />
-          </orbitInner>
-        </container>
-      </frame>
+            <orbitInner>
+              <OrbitHome appStore={appStore} paneStore={paneStore} />
+              <OrbitDirectory
+                name="directory"
+                appStore={appStore}
+                paneStore={paneStore}
+              />
+              <OrbitSearchResults name="summary-search" parentPane="summary" />
+              <OrbitSettings name="settings" />
+            </orbitInner>
+          </container>
+        </frame>
+      </>
     )
   }
 
   static theme = (props, theme) => {
     const background = theme.base.background
-    const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
+    const borderColor = theme.base.background.darken(0.35).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     return {
       frame: {
         background,
       },
       border: {
-        borderRadius: borderRadius + 1,
+        borderRadius: borderRadius,
         boxShadow: [borderShadow, DOCKED_SHADOW],
       },
     }
   }
 
   static style = {
+    bgGradient: {
+      background: 'linear-gradient(to right, transparent 20%, rgba(0,0,0,0.6))',
+      zIndex: -1,
+      opacity: 0,
+      transition: 'all ease-in 100ms',
+    },
     frame: {
       position: 'absolute',
       top: 10,

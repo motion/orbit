@@ -491,9 +491,10 @@ export class SectionFeatureIntelligence extends React.Component {
                       }}
                     >
                       <P size={1.8} sizeLineHeight={1.1}>
-                        With simple naming conventions, turn a document folder
-                        into your team documentation. Smart collation means it's
-                        easy to see what's happening across teams and people.
+                        A simple way to explore teams and people in your
+                        company. Smart aggregation makes it's easy explore, find
+                        experts in your company, and see how teams and projects
+                        are moving.
                       </P>
                     </Callout>
                   </UI.Theme>

@@ -25,7 +25,7 @@ class PersonPeek {
 })
 export class Person extends React.Component {
   render({ store, person, appStore }) {
-    if (!person || !person.data.profile) {
+    if (!person || !person.data || !person.data.profile) {
       log('no person', person)
       return null
     }

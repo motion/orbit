@@ -76,21 +76,23 @@ class Root extends React.Component {
   }
 }
 
-// if (module.hot && module.hot.addStatusHandler) {
-//   if (module.hot.status() === 'idle') {
-//     module.hot.addStatusHandler(status => {
-//       console.log('hottt', status)
-//       if (status === 'prepare') {
-//         view.emit('will-hmr')
-//       }
-//       if (status === 'apply') {
-//         setTimeout(() => {
-//           console.log('sending did hmr')
-//           require('@mcro/black').view.emit('did-hmr')
-//         }, 1000)
-//       }
-//     })
-//   }
-// }
+if (module.hot && module.hot.addStatusHandler) {
+  if (module.hot.status() === 'idle') {
+    module.hot.addStatusHandler(status => {
+      console.log('hottt', status)
+      if (status === 'prepare') {
+        view.emit('will-hmr')
+        view.provide.emit('will-hmr')
+      }
+      if (status === 'apply') {
+        setTimeout(() => {
+          console.log('sending did hmr')
+          require('@mcro/black').view.emit('did-hmr')
+          require('@mcro/black').view.provide.emit('did-hmr')
+        }, 1000)
+      }
+    })
+  }
+}
 
 export default Root

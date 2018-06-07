@@ -87,9 +87,9 @@ if (module.hot && module.hot.addStatusHandler) {
       if (status === 'apply') {
         setTimeout(() => {
           console.log('sending did hmr')
-          require('@mcro/black').view.emit('did-hmr')
-          require('@mcro/black').view.provide.emit('did-hmr')
-        }, 1000)
+          view.emit('did-hmr')
+          view.provide.emit('did-hmr')
+        })
       }
     })
   }

@@ -25,6 +25,7 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
 // @ts-ignore
 root.loadedStores = new Set()
 const storeHMRCache = {}
+root.storeHMRCache = storeHMRCache
 
 export interface StoreProvidable {}
 
@@ -79,7 +80,6 @@ storeProvidable = function(options, Helpers) {
         }
 
         allStores = allStores
-        storeHMRCache = {}
 
         // onWillReload() {
         //   this.onWillReloadStores()
@@ -206,7 +206,7 @@ storeProvidable = function(options, Helpers) {
           }
         }
 
-        onWillReloadStores() {
+        onWillReloadStores = () => {
           console.log('will reload, dehydrating')
           if (!this.stores) {
             return
@@ -214,6 +214,7 @@ storeProvidable = function(options, Helpers) {
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             // pass in state + auto dehydrate
+            // to get real key: findDOMNode(this) + serialize dom position into key
             storeHMRCache[name] = {
               state: store.dehydrate(),
             }
@@ -223,7 +224,7 @@ storeProvidable = function(options, Helpers) {
           }
         }
 
-        onReloadStores() {
+        onReloadStores = () => {
           console.log('did reload, rehydrating')
           if (!this.stores) {
             return
@@ -236,6 +237,7 @@ storeProvidable = function(options, Helpers) {
             }
             // auto rehydrate
             if (storeHMRCache[name].state) {
+              console.log('hydrate', name, storeHMRCache[name].state)
               store.hydrate(storeHMRCache[name].state)
             }
             if (store.onReload) {

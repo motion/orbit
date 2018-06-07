@@ -35,7 +35,7 @@ export class OrbitDirectory {
     log('DIRECTORY --------')
     return (
       <OrbitDockedPane name="directory">
-        <SubTitle>Lists</SubTitle>
+        <SubTitle>Lists 1232222</SubTitle>
         <items>
           <UI.PassProps
             pane="summary"

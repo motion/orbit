@@ -1,9 +1,8 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { NotFound } from '~/views/notFound'
-import { hot } from 'react-hot-loader'
 import Router from './router'
-// import { view } from '@mcro/black'
+import { view } from '@mcro/black'
 
 class Root extends React.Component {
   state = {
@@ -77,9 +76,7 @@ class Root extends React.Component {
   }
 }
 
-// make hmr state preserve
-
-// if (module.hot.addStatusHandler) {
+// if (module.hot && module.hot.addStatusHandler) {
 //   if (module.hot.status() === 'idle') {
 //     module.hot.addStatusHandler(status => {
 //       console.log('hottt', status)
@@ -87,10 +84,13 @@ class Root extends React.Component {
 //         view.emit('will-hmr')
 //       }
 //       if (status === 'apply') {
-//         view.emit('hmr')
+//         setTimeout(() => {
+//           console.log('sending did hmr')
+//           require('@mcro/black').view.emit('did-hmr')
+//         }, 1000)
 //       }
 //     })
 //   }
 // }
 
-export default hot(module)(Root)
+export default Root

@@ -1,19 +1,12 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekPage } from './PeekPage'
+import { OrbitPage } from './OrbitPage'
 import { AppStore } from '~/stores/appStore'
 import * as PeekStateActions from '~/actions/PeekStateActions'
+import { App } from '@mcro/all'
 
-// todo: set this up so we can easily load in:
-//   setting card
-//   profile
-//   bit
-//   project
-
-@view.provide({
-  appStore: AppStore,
-})
-export class IsolatePage extends React.Component {
+export class IsolatePeek extends React.Component {
   async componentDidMount() {
     console.log('isolating')
     PeekStateActions.selectItem(
@@ -32,5 +25,24 @@ export class IsolatePage extends React.Component {
 
   render() {
     return <PeekPage fixed />
+  }
+}
+
+export class IsolateHome extends React.Component {
+  componentDidMount() {
+    App.setOrbitState({ docked: true })
+  }
+
+  render() {
+    return <OrbitPage />
+  }
+}
+
+@view.provide({
+  appStore: AppStore,
+})
+export class IsolatePage extends React.Component {
+  render() {
+    return <IsolateHome />
   }
 }

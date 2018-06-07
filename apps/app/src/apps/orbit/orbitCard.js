@@ -135,6 +135,7 @@ export class OrbitCard extends React.Component {
     location,
     subtitle,
     permalink,
+    children,
   }) {
     const {
       store,
@@ -221,6 +222,7 @@ export class OrbitCard extends React.Component {
                 {Math.floor(Math.random() * 5) + 1}m&nbsp;ago
               </UI.Text>
             </subtitle>
+            {children}
             <bottom if={false && !tiny && (bottom || permalink || via)}>
               <permalink if={isExpanded}>{permalink}</permalink>
               <space if={permalink} />

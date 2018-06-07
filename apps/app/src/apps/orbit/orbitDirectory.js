@@ -35,7 +35,7 @@ export class OrbitDirectory {
     log('DIRECTORY --------')
     return (
       <OrbitDockedPane name="directory">
-        <SubTitle>Lists</SubTitle>
+        <SubTitle>Teams</SubTitle>
         <items>
           <UI.PassProps
             pane="summary"
@@ -44,11 +44,10 @@ export class OrbitDirectory {
               gridColumnEnd: 'span 2',
             }}
             total={10}
-            listItem
           >
-            <OrbitCard title="Onboarding" />
-            <OrbitCard title="Dev: Getting started" />
-            <OrbitCard title="Success: links" />
+            <OrbitCard title="Onboarding" index={0}>
+              hello world
+            </OrbitCard>
           </UI.PassProps>
         </items>
 

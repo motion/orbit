@@ -73,7 +73,7 @@ class PeekStore {
   peekStore: PeekStore,
 })
 @view
-export class PeekPage {
+export class PeekPage extends React.Component {
   render({ peekStore, appStore }) {
     if (!peekStore.state) {
       return null
@@ -99,5 +99,4 @@ export class PeekPage {
       </UI.Theme>
     )
   }
-  ß
 }

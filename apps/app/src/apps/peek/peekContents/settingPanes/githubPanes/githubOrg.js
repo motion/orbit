@@ -5,7 +5,7 @@ import * as Collapse from '~/views/collapse'
 import { GithubRepos } from './githubRepos'
 
 class OrgStore {
-  open = false
+  open = true
   repos = react(() => {
     return this.props.githubStore.service.github
       .orgs(this.props.name)

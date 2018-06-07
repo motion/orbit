@@ -45,72 +45,60 @@ export class KeyboardStore {
     Desktop.setKeyboardState({ optionUp: Date.now() })
   }
 
-  key = null
-  keyAt = 0
-
-  onKey = react(
-    () => [this.key, this.keyAt],
-    ([keycode]) => {
-      this.clearDownKeysAfterPause()
-      if (keycode === codes.esc) {
-        if (
-          App.peekState.target &&
-          (App.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
-        ) {
-          Desktop.sendMessage(App, App.messages.HIDE_PEEK)
-          return
-        }
-        if (!App.orbitState.docked && !App.isMouseInActiveArea) {
-          return
-        }
-        if (App.orbitState.docked && !Desktop.state.focusedOnOrbit) {
-          return
-        }
-        Desktop.sendMessage(App, App.messages.HIDE)
+  onKey = keycode => {
+    this.clearDownKeysAfterPause()
+    if (keycode === codes.esc) {
+      if (
+        App.peekState.target &&
+        (App.isMouseInActiveArea || Desktop.state.focusedOnOrbit)
+      ) {
+        Desktop.sendMessage(App, App.messages.HIDE_PEEK)
         return
       }
-      const isOption = keycode === codes.option || keycode === codes.optionRight
-      // const isShift = keycode === codes.shift || keycode === codes.shiftRight
-      const holdingKeys = this.keysDown.size
-      // clears:
-      if (holdingKeys > 1 && isOption) {
-        return this.clearOption()
+      if (!App.orbitState.docked && !App.isMouseInActiveArea) {
+        return
       }
-      const isHoldingOption = this.keysDown.has(codes.option)
-      // holding option + press key === pin
-      if (isHoldingOption && App.isShowingOrbit) {
-        // a - z, our secret pin keys, let them go
-        if (keycode >= 14 && keycode <= 49) {
-          return
+      if (App.orbitState.docked && !Desktop.state.focusedOnOrbit) {
+        return
+      }
+      Desktop.sendMessage(App, App.messages.HIDE)
+      return
+    }
+    const isOption = keycode === codes.option || keycode === codes.optionRight
+    // const isShift = keycode === codes.shift || keycode === codes.shiftRight
+    const holdingKeys = this.keysDown.size
+    // clears:
+    if (holdingKeys > 1 && isOption) {
+      return this.clearOption()
+    }
+    const isHoldingOption = this.keysDown.has(codes.option)
+    // holding option + press key === pin
+    if (isHoldingOption && App.isShowingOrbit) {
+      // a - z, our secret pin keys, let them go
+      if (keycode >= 14 && keycode <= 49) {
+        return
+      }
+    }
+    if (isOption) {
+      console.log('setting it up')
+      return Desktop.setKeyboardState({ option: Date.now() })
+    }
+    if (this.keysDown.has(codes.option)) {
+      return this.clearOption()
+    }
+    switch (keycode) {
+      // case codes.shift:
+      //   return Desktop.setKeyboardState({ shift: Date.now() })
+      // case codes.space:
+      //   return Desktop.setKeyboardState({ space: Date.now() })
+      case codes.up:
+      case codes.down:
+      case codes.pgUp:
+      case codes.pgDown:
+        if (this.onKeyClear) {
+          this.onKeyClear()
         }
-      }
-      if (isOption) {
-        console.log('setting it up')
-        return Desktop.setKeyboardState({ option: Date.now() })
-      }
-      if (this.keysDown.has(codes.option)) {
-        return this.clearOption()
-      }
-      switch (keycode) {
-        // case codes.shift:
-        //   return Desktop.setKeyboardState({ shift: Date.now() })
-        // case codes.space:
-        //   return Desktop.setKeyboardState({ space: Date.now() })
-        case codes.up:
-        case codes.down:
-        case codes.pgUp:
-        case codes.pgDown:
-          if (this.onKeyClear) {
-            this.onKeyClear()
-          }
-      }
-    },
-    { log: false },
-  )
-
-  keyDown = keycode => {
-    this.key = keycode
-    this.keyAt = Date.now()
+    }
   }
 
   start = () => {
@@ -120,7 +108,7 @@ export class KeyboardStore {
     iohook.on('keydown', ({ keycode }) => {
       this.keysDown.add(keycode)
       lastKeys.push(['down', keycode])
-      this.keyDown(keycode)
+      this.onKey(keycode)
     })
 
     // keyup

@@ -21,7 +21,7 @@ export class GithubOrg {
   render({ store, githubStore, name }) {
     const repos = reverse(sortBy(store.repos || [], 'updatedAt'))
     githubStore.syncVersion
-    console.log('repos are', repos)
+    console.log('repos are2', repos)
     return (
       <org>
         <bar onClick={() => (store.open = !store.open)} $$row>

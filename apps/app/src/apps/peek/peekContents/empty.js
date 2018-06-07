@@ -1,11 +1,12 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 
-export const Empty = ({ bit }) => (
-  <contents
-    if={bit}
-    css={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
-  >
+const EMPTY_BIT = {
+  title: 'nothign found',
+}
+
+export const Empty = ({ bit = EMPTY_BIT }) => (
+  <contents css={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
     <img
       if={bit && bit.icon}
       src={`/icons/${bit.icon}`}

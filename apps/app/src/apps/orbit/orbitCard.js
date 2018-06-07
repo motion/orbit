@@ -145,6 +145,7 @@ export class OrbitCard extends React.Component {
       hoverToSelect,
       bit,
       selectedTheme,
+      afterTitle,
     } = this.props
     const isExpanded = this.isExpanded
     const hasSubtitle = !tiny && (subtitle || location)
@@ -190,6 +191,7 @@ export class OrbitCard extends React.Component {
                 {title}
               </UI.Text>
               {!hasSubtitle && orbitIcon}
+              {afterTitle}
             </title>
             <preview if={preview}>
               {typeof preview !== 'string' && preview}

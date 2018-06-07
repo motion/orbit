@@ -1,9 +1,44 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
+import { SubTitle } from '~/views'
 import { OrbitCard } from './orbitCard'
 import { Masonry } from '~/views/masonry'
 import { OrbitDockedPane } from './orbitDockedPane'
+
+const postfix = [
+  'st',
+  'nd',
+  'rd',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'st',
+  'nd',
+  'rd',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'th',
+  'st',
+]
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -62,8 +97,22 @@ export class OrbitHome {
 
   render({ store }) {
     log('HOME---------------')
+    const locale = 'en-US'
+    const now = new Date()
+    const day = now.toLocaleDateString(locale, { weekday: 'short' })
+    const month = now.toLocaleDateString(locale, { month: 'short' })
+    const dayNum = now.getMonth()
     return (
       <OrbitDockedPane name="home">
+        <header>
+          <title>
+            <SubTitle $niceDate>
+              {day} {month} {dayNum}
+              <span $super>{postfix[dayNum - 1]}</span>
+            </SubTitle>
+          </title>
+          <div $$flex />
+        </header>
         <Masonry>
           {store.results.map((bit, index) => (
             <OrbitCard
@@ -82,5 +131,25 @@ export class OrbitHome {
         </Masonry>
       </OrbitDockedPane>
     )
+  }
+
+  static style = {
+    header: {
+      padding: [0, 0, 5, 5],
+    },
+    niceDate: {
+      fontSize: 16,
+      fontWeight: 300,
+      lineHeight: '1.5rem',
+      margin: 0,
+      padding: 0,
+      flexFlow: 'row',
+    },
+    super: {
+      verticalAlign: 'super',
+      marginLeft: 1,
+      fontSize: 11,
+      opacity: 0.6,
+    },
   }
 }

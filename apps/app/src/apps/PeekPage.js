@@ -14,6 +14,19 @@ class PeekStore {
     return this.history.length
   }
 
+  get curState() {
+    if (this.props.fixed) {
+      return App.peekState
+    }
+    if (!App.peekState.target) {
+      return null
+    }
+    if (App.orbitState.docked || !App.orbitState.hidden) {
+      return App.peekState
+    }
+    return null
+  }
+
   updateHistory = react(
     () => this.curState,
     state => {
@@ -37,16 +50,6 @@ class PeekStore {
       state = this.lastState
     }
     return state
-  }
-
-  get curState() {
-    if (!App.peekState.target) {
-      return null
-    }
-    if (App.orbitState.docked || !App.orbitState.hidden) {
-      return App.peekState
-    }
-    return null
   }
 
   lastState = react(() => this.curState, _ => _, {

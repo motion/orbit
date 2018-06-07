@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekPage } from './PeekPage'
 import { AppStore } from '~/stores/appStore'
-// import * as PeekStateActions from '~/actions/PeekStateActions'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
 // todo: set this up so we can easily load in:
 //   setting card
@@ -15,10 +15,22 @@ import { AppStore } from '~/stores/appStore'
 })
 export class IsolatePage extends React.Component {
   async componentDidMount() {
-    // PeekStateActions.selectItem({}, target)
+    console.log('isolating')
+    PeekStateActions.selectItem(
+      {
+        type: 'setting',
+        integration: 'github',
+      },
+      {
+        top: 200,
+        left: 100,
+        width: 100,
+        height: 100,
+      },
+    )
   }
 
   render() {
-    return <PeekPage />
+    return <PeekPage fixed />
   }
 }

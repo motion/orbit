@@ -21,10 +21,9 @@ const uid = () => id++ % Number.MAX_VALUE
 
 root.__trackStateChanges = {}
 
-const log = debug('-> ')
-const logState = debug('+> ')
+const log = debug('react')
+const logState = debug('react+')
 const logInfo = debug('automagical')
-debug.quiet('automagical')
 
 const RejectReactionSymbol = '___REJECT_REACTION___'
 
@@ -272,7 +271,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const delayLog =
     options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
   const name = `${getReactionName(obj)} | ${method} | ${delayLog}`
-  let preventLog = options.log === false
+  let preventLog = false // || options.log === false
   let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE, { name })
   let prev
   let curDisposable = null

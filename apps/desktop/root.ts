@@ -89,7 +89,7 @@ export class Root {
       if (lastBit && lastBit.updatedAt !== Desktop.state.lastBitUpdatedAt) {
         Desktop.setLastBitUpdatedAt(lastBit.updatedAt)
       }
-    }, 1000)
+    }, 10000)
   }
 
   restart() {

@@ -28,6 +28,7 @@ class ButtonPlain extends React.Component {
         sizePadding={1.5}
         sizeRadius
         sizeHeight
+        sizeLineHeight
         sizeIcon={1.1}
         borderWidth={1}
         chromeless={chromeless}

@@ -29,6 +29,10 @@ const RELEASE_PATH = appPath('Release')
 const DEBUG_PATH = appPath('Debug')
 
 export default class Oracle {
+  wss: Server
+  process: any
+
+  debugBuild =  false
   settings = null
   changedIds = null
   restoredIds = null
@@ -176,7 +180,7 @@ export default class Oracle {
     this.onErrorCB = cb
   }
 
-  async socketSend(action, data) {
+  async socketSend(action, data?) {
     if (!this.listeners.length) {
       this.awaitingSocket.push({ action, data })
       return

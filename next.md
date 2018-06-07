@@ -38,6 +38,7 @@
 
 ## low level
 
+* [ ] cpu on desktop gets pegged at 100%
 * [ ] intercept all a=href and open in native browser (slack)
 * [ ] slack emojis
 * [ ] only close peek on esc if electron focused

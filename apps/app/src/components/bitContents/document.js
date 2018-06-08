@@ -5,5 +5,5 @@ export default ({ bit, children }) =>
     location: bit.data.spaces[0],
     date: Date.now(),
     content: bit.body,
-    preview: `KPIs, Google docs, Trello, workflow`,
+    preview: 'KPIs Google docs Trello workflow',
   })

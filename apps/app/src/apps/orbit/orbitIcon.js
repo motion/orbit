@@ -22,7 +22,6 @@ const icons = {
 
 const SLACK_SCALE = {
   transform: {
-    y: -1,
     scale: 0.95,
   },
 }

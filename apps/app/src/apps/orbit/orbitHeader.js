@@ -79,7 +79,7 @@ export class OrbitHeader extends React.Component {
           <UI.Icon
             $searchIcon
             name="ui-1_zoom"
-            size={16}
+            size={20}
             color={theme.base.color.alpha(0.3)}
           />
           <input
@@ -125,7 +125,7 @@ export class OrbitHeader extends React.Component {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [0, 6],
+      padding: [0, 12],
       transition: 'all ease-in 300ms',
       zIndex: 10000000,
     },
@@ -153,7 +153,7 @@ export class OrbitHeader extends React.Component {
       transition: 'all ease-in 300ms',
     },
     searchIcon: {
-      paddingLeft: 32,
+      paddingLeft: 16,
       margin: 0,
     },
     input: {

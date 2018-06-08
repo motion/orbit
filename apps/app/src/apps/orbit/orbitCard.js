@@ -161,7 +161,8 @@ export class OrbitCard extends React.Component {
         {...tiny && tinyProps.iconProps}
       />
     )
-    const childTheme = store.isSelected && selectedTheme ? selectedTheme : null
+    const { isSelected } = store
+    const childTheme = isSelected && selectedTheme ? selectedTheme : null
     const background =
       (childTheme && childTheme.background) || theme.base.background
     return (
@@ -182,13 +183,14 @@ export class OrbitCard extends React.Component {
           >
             <title>
               <UI.Text
-                size={1.35}
-                sizeLineHeight={0.9}
+                size={1.2}
+                sizeLineHeight={0.75}
                 ellipse={2}
+                alpha={isSelected ? 1 : 0.8}
                 fontWeight={400}
                 css={{
                   maxWidth: 'calc(100% - 30px)',
-                  margin: [-1, 0, 3],
+                  margin: [-1, 0, 0],
                 }}
                 {...tiny && tinyProps.titleProps}
               >
@@ -203,16 +205,14 @@ export class OrbitCard extends React.Component {
                 $$fullscreen
                 css={{
                   background: `linear-gradient(transparent 160px, ${background})`,
-                  opacity: store.isSelected ? 1 : 0,
-                  transition: store.isSelected
-                    ? 'all ease-in 160ms 160ms'
-                    : 'none',
+                  opacity: isSelected ? 1 : 0,
+                  transition: isSelected ? 'all ease-in 160ms 160ms' : 'none',
                 }}
               />
               {typeof preview !== 'string' && preview}
               <UI.Text
                 if={typeof preview === 'string'}
-                alpha={0.6}
+                alpha={isSelected ? 0.75 : 0.5}
                 ellipse={5}
                 size={listItem ? 1.1 : 1.4}
                 sizeLineHeight={0.9}
@@ -222,10 +222,9 @@ export class OrbitCard extends React.Component {
             </preview>
             <subtitle if={hasSubtitle}>
               {orbitIcon}
-              <UI.Text if={typeof location === 'string'} opacity={0.7}>
+              <UI.Text if={location} opacity={0.7}>
                 {location}&nbsp;&nbsp;
               </UI.Text>
-              {typeof location !== 'string' && location}
               <UI.Text
                 if={typeof subtitle === 'string'}
                 ellipse={1}
@@ -313,6 +312,8 @@ export class OrbitCard extends React.Component {
     },
     orbitIcon: {
       margin: [0, 6, 0, 0],
+      filter: 'grayscale(90%)',
+      opacity: 0.8,
     },
     bottom: {
       opacity: 0.5,

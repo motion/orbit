@@ -416,11 +416,14 @@ class SurfacePlain extends React.Component {
       (props.highlight && 'highlight') || (props.active && 'active') || 'base'
 
     // colors
-    let color = $(
-      props.color ||
-        (props.highlight && props.highlightColor) ||
-        theme[STATE].color,
-    )
+    let color =
+      props.color === false
+        ? 'inherit'
+        : $(
+            props.color ||
+              (props.highlight && props.highlightColor) ||
+              theme[STATE].color,
+          )
     if (typeof props.alpha === 'number') {
       color = color.alpha(props.alpha)
     }
@@ -471,11 +474,14 @@ class SurfacePlain extends React.Component {
         ? theme[STATE].borderColor
         : props.borderColor || 'transparent',
     )
-    let hoverColor = $(
-      (props.hover && props.hover.color) ||
-        theme[STATE].color.lighten(0.2) ||
-        props.color,
-    )
+    let hoverColor =
+      props.color === false
+        ? 'inherit'
+        : $(
+            (props.hover && props.hover.color) ||
+              theme[STATE].color.lighten(0.2) ||
+              props.color,
+          )
     if (props.hover && typeof props.hover.alpha === 'number') {
       hoverColor = hoverColor.alpha(props.hover.alpha)
     }

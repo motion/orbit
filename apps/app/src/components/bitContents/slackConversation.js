@@ -5,6 +5,7 @@ import * as UI from '@mcro/ui'
 import { RoundButton } from '~/views/roundButton'
 import keywordExtract from 'keyword-extractor'
 import arrford from 'arrford'
+import { getSlackDate } from '~/helpers'
 
 const options = {
   language: 'english',
@@ -13,40 +14,6 @@ const options = {
   remove_duplicates: false,
 }
 
-// const isntAttachment = x => !x.text || !x.text.match(/\<([a-z]+:\/\/[^>]+)\>/g)
-const exampleContent = [
-  {
-    title: 'Steel, Jacob, Nick & 3 more',
-    preview: 'a16z venture Formidable coffee',
-  },
-  {
-    title: 'Nate and Nick',
-    preview: 'cosal sketchy hardcode spectrum fit scaling overkill',
-  },
-  {
-    title: 'Kevin, Mehak & 4 more',
-    preview: 'ml nlp formidable client',
-  },
-  {
-    title: 'Julie and Cam',
-    preview: '10% 60-80k rallyinteractive.com re-sign loan',
-  },
-  {
-    title: 'James, Jungwon and Evan',
-    preview: 'jitter searches peek design',
-  },
-  {
-    title: 'Stephanie, Drew & 10 more',
-    preview: 'broke docked arrows aligning',
-  },
-  {
-    title: 'Ben',
-    preview: 'related conversations glitches',
-  },
-]
-const uids = {}
-let curId = 0
-
 @view
 export class BitSlackConversation extends React.Component {
   static defaultProps = {
@@ -54,8 +21,6 @@ export class BitSlackConversation extends React.Component {
   }
 
   render({ children, bit, appStore, shownLimit, contentStyle }) {
-    const uid = uids[bit.id] || curId++ % (exampleContent.length - 1)
-    uids[bit.id] = uid
     const content = (bit.data.messages || [])
       .slice(0, shownLimit)
       .map((message, index) => (
@@ -69,11 +34,12 @@ export class BitSlackConversation extends React.Component {
         />
       ))
     return children({
-      title: keywordExtract
+      title: arrford((bit.people || []).map(p => p.name), false),
+      date: getSlackDate(bit.bitUpdatedAt),
+      preview: keywordExtract
         .extract(bit.body, options)
         .slice(0, 4)
         .join(' '),
-      preview: <preview css={{ margin: [3, 0, 5] }}>{content}</preview>,
       icon: 'slack',
       location: (
         <RoundButton

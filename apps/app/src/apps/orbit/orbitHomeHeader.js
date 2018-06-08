@@ -11,6 +11,7 @@ export class OrbitHomeHeader {
       size: 1.2,
       circular: true,
       borderWidth: 1,
+      margin: [0, 0, 0, 5],
       borderColor: 'transparent',
       background: 'transparent',
       iconProps: {

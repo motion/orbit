@@ -146,9 +146,6 @@ export class OrbitHome {
   }
 
   static style = {
-    header: {
-      padding: [0, 0, 5, 5],
-    },
     super: {
       verticalAlign: 'super',
       marginLeft: 1,

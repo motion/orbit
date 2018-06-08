@@ -5,7 +5,7 @@ import { App } from '@mcro/all'
 import { WindowControls } from '~/views/windowControls'
 import * as Constants from '~/constants'
 
-const SHADOW_PAD = 50
+const SHADOW_PAD = 80
 const borderRadius = 8
 const background = '#f9f9f9'
 

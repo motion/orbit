@@ -19,7 +19,13 @@ export class PeekHeader extends React.Component {
         <title if={title}>
           <chromeSpace if={peekStore.hasHistory} />
           <titles>
-            <UI.Title $titleMain size={1.3} fontWeight={700}>
+            <UI.Title
+              $titleMain
+              size={1.3}
+              fontWeight={700}
+              margin={0}
+              lineHeight="1.5rem"
+            >
               {title}
             </UI.Title>
             <UI.Title if={subtitle} size={1} $subtitle>
@@ -40,8 +46,7 @@ export class PeekHeader extends React.Component {
       position: 'relative',
       zIndex: 100,
       borderBottom: [1, [0, 0, 0, 0.05]],
-      padding: [15, 0, 14],
-      margin: [0, 15],
+      padding: 15,
     },
     chromeSpace: {
       // width: 30,

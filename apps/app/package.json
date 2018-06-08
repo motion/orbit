@@ -24,7 +24,7 @@
     "@mcro/slackdown": "^2.0.0",
     "@mcro/ui": "^2.0.11",
     "color": "^3.0.0",
-    "date-fns": "^2.0.0-alpha.7",
+    "date-fns": "1.29.0",
     "event-kit": "^2.5.0",
     "fuzzysort": "^1.1.1",
     "keycode": "^2.1.9",

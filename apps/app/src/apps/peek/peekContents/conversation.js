@@ -72,7 +72,12 @@ export class Conversation extends React.Component {
               <main>
                 <mainInner>
                   <content>
-                    <UI.Text selectable css={{ margin: [5, 0, 20] }} size={1.2}>
+                    <UI.Text
+                      if={false}
+                      selectable
+                      css={{ margin: [5, 0, 20] }}
+                      size={1.2}
+                    >
                       <strong>Key points</strong>: a16z partners, orbit domain,
                       mock-up, Formidable and refactor.
                     </UI.Text>

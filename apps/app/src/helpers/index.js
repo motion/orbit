@@ -1,5 +1,13 @@
 import fuzzySort from 'fuzzysort'
 
+export const getSlackDate = ts => {
+  const split = ts.split('.')
+  if (!split.length) {
+    return null
+  }
+  return new Date(split[0] * 1000)
+}
+
 export const fuzzy = (query, results, extraOpts) =>
   !query
     ? results

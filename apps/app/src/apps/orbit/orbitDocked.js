@@ -75,7 +75,7 @@ class PaneStore {
   )
 }
 
-const borderRadius = 14
+const borderRadius = 22
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitStore')
@@ -136,9 +136,9 @@ class OrbitDocked {
     },
     frame: {
       position: 'absolute',
-      top: 5,
-      right: 5,
-      bottom: 5,
+      top: 8,
+      right: 8,
+      bottom: 8,
       borderRadius,
       zIndex: 2,
       flex: 1,

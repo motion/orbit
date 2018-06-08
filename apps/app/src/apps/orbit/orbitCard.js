@@ -3,7 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
-import { App } from '@mcro/all'
+import { TimeAgo } from '~/views/TimeAgo'
 
 let loggers = []
 let nextLog = null
@@ -51,32 +51,32 @@ class OrbitCardStore {
 
   setPeekTargetOnNextIndex = react(
     () => this.props.appStore.nextIndex === this.props.index,
-    shouldSelect => {
+    async (shouldSelect, { sleep }) => {
       if (!shouldSelect || !this.isPaneSelected) {
+        this._isSelected = false
         throw react.cancel
       }
+      this._isSelected = true
+      await sleep()
       console.log('selecting', this.props, this)
       this.props.appStore.setTarget(this.props.bit, this.ref)
     },
   )
 
-  updateIsSelected = react(
-    () => [
-      this.isPaneSelected,
-      this.props.appStore.activeIndex,
-      App.state.peekState.target,
-    ],
-    ([paneSelected, index]) => {
-      if (!paneSelected) {
-        throw react.cancel
-      }
-      const isSelected = index === this.props.index
-      if (isSelected !== this._isSelected) {
-        this._isSelected = isSelected
-      }
-    },
-    { immediate: true, log: false },
-  )
+  // updateIsSelected = react(
+  //   () => [
+  //     this.isPaneSelected,
+  //     this.props.appStore.activeIndex,
+  //     App.state.peekState.target,
+  //   ],
+  //   ([paneSelected, index]) => {
+  //     if (!paneSelected) {
+  //       throw react.cancel
+  //     }
+
+  //   },
+  //   { immediate: true, log: false },
+  // )
 }
 
 const tinyProps = {
@@ -99,7 +99,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 4,
+    borderRadius: 8,
   }
 
   constructor(...args) {
@@ -136,6 +136,7 @@ export class OrbitCard extends React.Component {
     location,
     subtitle,
     permalink,
+    date,
   }) {
     const {
       store,
@@ -198,6 +199,7 @@ export class OrbitCard extends React.Component {
             </title>
             <preview if={preview}>
               <previewOverflow
+                if={false}
                 $$fullscreen
                 css={{
                   background: `linear-gradient(transparent 160px, ${background})`,
@@ -233,8 +235,8 @@ export class OrbitCard extends React.Component {
               </UI.Text>
               {typeof subtitle !== 'string' && subtitle}
               <space $$flex />
-              <UI.Text alpha={0.5} size={0.95}>
-                {Math.floor(Math.random() * 5) + 1}m&nbsp;ago
+              <UI.Text if={date} alpha={0.5} size={0.95}>
+                <TimeAgo date={date} />
               </UI.Text>
             </subtitle>
             {children}
@@ -290,7 +292,7 @@ export class OrbitCard extends React.Component {
       overflow: 'hidden',
       position: 'relative',
       maxHeight: '100%',
-      transition: 'all ease-in 160ms',
+      transition: 'all ease-in 120ms',
     },
     title: {
       maxWidth: '100%',

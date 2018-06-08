@@ -15,8 +15,8 @@ export class OrbitCardTeam {
       <OrbitCard
         title={title}
         afterTitle={
-          <div $$row>
-            <UI.PassProps size={24} css={{ margin: [0, 0, 0, 12] }}>
+          <div $$row css={{ padding: 5 }}>
+            <UI.PassProps size={20} css={{ margin: [0, 0, 0, 12] }}>
               <OrbitIcon icon="slack" />
               <OrbitIcon icon="github" />
               <OrbitIcon icon="gdocs" />
@@ -95,8 +95,11 @@ export class OrbitCardTeam {
                 <item key={index} css={{ padding: [2, 4] }} $$row $$centered>
                   <OrbitIcon
                     icon={item.type}
-                    size={18}
-                    css={{ marginRight: 6 }}
+                    size={16}
+                    css={{
+                      marginRight: 6,
+                      filter: 'grayscale(100%)',
+                    }}
                   />
                   {item.title}
                 </item>

@@ -1,19 +1,29 @@
 # next
 
-* product sprint for 3 weeks
-  * need to flesh out stripe home completely for demo
-  * go for flash
-  * goal is make home header have a slick video
-  * show:
-    * unifying integrations in settings
-    * searching through stuff
-    * summarized conversation
-    * profile
-    * possibly:
-      * clip in new knowledge piece + posts to slack and google doc folder?
-      * project overview rich card
-      * pin to top of search
-      * mark as stale
+## demo
+
+* home
+  * show a github ticket with replies as bigger card
+  * show a team card with inline update
+  * peek conversation and "Pin to Team"
+    * react-spring peek move
+* search
+  * slack:
+    * list all links, then filter by room, then by person
+    * list all attachments, see in grid
+    * shows topic summarized convos nicely
+  * topic search would be nice
+  * "pin to search"
+* directory
+  * show profile
+  * show team peek card
+* apps
+
+  * final wow
+  * click "create app", paste in some code
+  * realtime HMR edit
+  * shows up in Home
+
 * write three articles from write.md
 * site:
   * 1 week

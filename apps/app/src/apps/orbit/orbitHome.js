@@ -68,6 +68,7 @@ class OrbitHomeStore {
   results = react(
     async () => {
       return (await Promise.all([
+        // { type: 'team', title: 'Engineering' },
         findType('slack', 'conversation'),
         findType('slack', 'conversation', 1),
         findType('slack', 'conversation', 2),
@@ -85,7 +86,7 @@ class OrbitHomeStore {
   )
 }
 
-const selectedTheme = { color: 'rgb(42.4%, 24.8%, 96%)', background: '#fff' }
+const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
 
 @view({
   store: OrbitHomeStore,
@@ -124,6 +125,19 @@ export class OrbitHome {
               hoverToSelect
               expanded
               style={index < 2 && this.span2}
+              itemProps={{
+                shownLimit: 3,
+                contentStyle: {
+                  maxHeight: '1.2rem',
+                  maxWidth: '100%',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  fontSize: 18,
+                  opacity: 0.8,
+                  margin: [5, 0],
+                },
+              }}
             />
           ))}
         </Masonry>

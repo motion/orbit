@@ -92,6 +92,7 @@ const tinyProps = {
   },
 }
 
+@UI.injectTheme
 @view.attach('appStore', 'paneStore')
 @view({
   store: OrbitCardStore,
@@ -146,6 +147,7 @@ export class OrbitCard extends React.Component {
       selectedTheme,
       afterTitle,
       children,
+      theme,
     } = this.props
     const isExpanded = this.isExpanded
     const hasSubtitle = !tiny && (subtitle || location)
@@ -158,10 +160,11 @@ export class OrbitCard extends React.Component {
         {...tiny && tinyProps.iconProps}
       />
     )
+    const childTheme = store.isSelected && selectedTheme ? selectedTheme : null
+    const background =
+      (childTheme && childTheme.background) || theme.base.background
     return (
-      <UI.Theme
-        theme={store.isSelected && selectedTheme ? selectedTheme : null}
-      >
+      <UI.Theme theme={childTheme}>
         <cardWrap
           css={{
             zIndex: isExpanded ? 5 : 4,
@@ -178,7 +181,7 @@ export class OrbitCard extends React.Component {
           >
             <title>
               <UI.Text
-                size={1.4}
+                size={1.35}
                 sizeLineHeight={0.9}
                 ellipse={2}
                 fontWeight={400}
@@ -194,6 +197,16 @@ export class OrbitCard extends React.Component {
               {afterTitle}
             </title>
             <preview if={preview}>
+              <previewOverflow
+                $$fullscreen
+                css={{
+                  background: `linear-gradient(transparent 160px, ${background})`,
+                  opacity: store.isSelected ? 1 : 0,
+                  transition: store.isSelected
+                    ? 'all ease-in 160ms 160ms'
+                    : 'none',
+                }}
+              />
               {typeof preview !== 'string' && preview}
               <UI.Text
                 if={typeof preview === 'string'}
@@ -288,6 +301,12 @@ export class OrbitCard extends React.Component {
     cardHovered: {},
     preview: {
       flex: 1,
+      maxHeight: 180,
+      overflow: 'hidden',
+    },
+    previewOverflow: {
+      zIndex: 10,
+      bottom: 40,
     },
     orbitIcon: {
       margin: [0, 6, 0, 0],

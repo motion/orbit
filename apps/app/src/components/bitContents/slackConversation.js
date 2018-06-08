@@ -17,31 +17,31 @@ const options = {
 const exampleContent = [
   {
     title: 'Steel, Jacob, Nick & 3 more',
-    preview: 'a16z, venture, Formidable, coffee',
+    preview: 'a16z venture Formidable coffee',
   },
   {
     title: 'Nate and Nick',
-    preview: 'cosal, sketchy, hardcode, spectrum, fit, scaling, overkill',
+    preview: 'cosal sketchy hardcode spectrum fit scaling overkill',
   },
   {
     title: 'Kevin, Mehak & 4 more',
-    preview: 'ml, nlp, formidable, client',
+    preview: 'ml nlp formidable client',
   },
   {
     title: 'Julie and Cam',
-    preview: '10%, 60-80k, rallyinteractive.com, re-sign, loan',
+    preview: '10% 60-80k rallyinteractive.com re-sign loan',
   },
   {
     title: 'James, Jungwon and Evan',
-    preview: 'jitter, searches, peek, design',
+    preview: 'jitter searches peek design',
   },
   {
     title: 'Stephanie, Drew & 10 more',
-    preview: 'broke, docked, arrows, aligning',
+    preview: 'broke docked arrows aligning',
   },
   {
     title: 'Ben',
-    preview: 'related, conversations, glitches',
+    preview: 'related conversations glitches',
   },
 ]
 const uids = {}
@@ -56,9 +56,24 @@ export class BitSlackConversation extends React.Component {
   render({ children, bit, appStore, shownLimit, contentStyle }) {
     const uid = uids[bit.id] || curId++ % (exampleContent.length - 1)
     uids[bit.id] = uid
+    const content = (bit.data.messages || [])
+      .slice(0, shownLimit)
+      .map((message, index) => (
+        <BitSlackMessage
+          key={index}
+          message={message}
+          previousMessage={bit.data.messages[index - 1]}
+          bit={bit}
+          appStore={appStore}
+          contentStyle={contentStyle}
+        />
+      ))
     return children({
-      title: arrford(bit.people.map(person => person.name), false, '&'),
-      preview: arrford(keywordExtract.extract(bit.body, options), false),
+      title: keywordExtract
+        .extract(bit.body, options)
+        .slice(0, 4)
+        .join(' '),
+      preview: <preview css={{ margin: [3, 0, 5] }}>{content}</preview>,
       icon: 'slack',
       location: (
         <RoundButton
@@ -100,18 +115,7 @@ export class BitSlackConversation extends React.Component {
           />
         </row>
       ),
-      content: (bit.data.messages || [])
-        .slice(0, shownLimit)
-        .map((message, index) => (
-          <BitSlackMessage
-            key={index}
-            message={message}
-            previousMessage={bit.data.messages[index - 1]}
-            bit={bit}
-            appStore={appStore}
-            contentStyle={contentStyle}
-          />
-        )),
+      content,
     })
   }
 

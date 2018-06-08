@@ -136,9 +136,9 @@ class OrbitDocked {
     },
     frame: {
       position: 'absolute',
-      top: 10,
-      right: 10,
-      bottom: 10,
+      top: 5,
+      right: 5,
+      bottom: 5,
       borderRadius,
       zIndex: 2,
       flex: 1,

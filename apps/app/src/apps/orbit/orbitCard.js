@@ -190,7 +190,6 @@ export class OrbitCard extends React.Component {
                 fontWeight={500}
                 css={{
                   maxWidth: 'calc(100% - 30px)',
-                  margin: [-1, 0, 0],
                 }}
                 {...tiny && tinyProps.titleProps}
               >
@@ -303,7 +302,7 @@ export class OrbitCard extends React.Component {
     preview: {
       flex: 1,
       maxHeight: 180,
-      margin: [5, 0],
+      margin: [7, 0],
       overflow: 'hidden',
     },
     previewOverflow: {

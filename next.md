@@ -3,7 +3,8 @@
 ## demo
 
 * home
-  * show a github ticket with replies as bigger card
+  * show a github ticket
+    * show the most recent action preview there
   * show a team card with inline update
   * peek conversation and "Pin to Team"
     * react-spring peek move

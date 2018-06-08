@@ -135,7 +135,6 @@ export class OrbitCard extends React.Component {
     location,
     subtitle,
     permalink,
-    children,
   }) {
     const {
       store,
@@ -146,6 +145,7 @@ export class OrbitCard extends React.Component {
       bit,
       selectedTheme,
       afterTitle,
+      children,
     } = this.props
     const isExpanded = this.isExpanded
     const hasSubtitle = !tiny && (subtitle || location)

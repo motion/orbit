@@ -68,6 +68,7 @@ export class OrbitDirectory {
               index={index}
               total={total}
               store={store}
+              bit={{ title: team.title, type: 'team' }}
               {...team}
             />
           ))}

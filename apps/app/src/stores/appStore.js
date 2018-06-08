@@ -330,7 +330,6 @@ export class AppStore {
   )
 
   clearSelected = () => {
-    console.trace('clearing selected')
     clearTimeout(this.hoverOutTm)
     this.nextIndex = -1
     App.clearPeek()

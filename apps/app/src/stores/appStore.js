@@ -105,7 +105,7 @@ export class AppStore {
 
   clearPeekOnSelectedPaneChange = react(
     () => this.selectedPane,
-    App.clearPeek,
+    this.clearSelected,
     {
       log: 'state',
     },
@@ -158,7 +158,7 @@ export class AppStore {
     () => App.state.query,
     () => {
       this.activeIndex = 0
-      App.clearPeek()
+      this.clearSelected()
     },
     { log: 'state' },
   )
@@ -330,6 +330,9 @@ export class AppStore {
   )
 
   clearSelected = () => {
+    console.trace('clearing selected')
+    clearTimeout(this.hoverOutTm)
+    this.nextIndex = -1
     App.clearPeek()
   }
 
@@ -340,16 +343,16 @@ export class AppStore {
     enterDelay: 80,
     betweenDelay: 30,
     onHovered: res => {
+      log('onhvoered', res)
       clearTimeout(this.hoverOutTm)
       if (!res) {
-        log('should clear peek')
         // interval because hoversettler is confused when going back from peek
-        // this.hoverOutTm = setInterval(() => {
-        //   if (!Desktop.hoverState.peekHovered) {
-        //     log(`no target`)
-        //     this.clearSelected()
-        //   }
-        // }, 200)
+        this.hoverOutTm = setInterval(() => {
+          if (!Desktop.hoverState.peekHovered) {
+            log('should clear peek')
+            this.clearSelected()
+          }
+        }, 200)
         return
       }
       this.toggleSelected(res.index)
@@ -363,7 +366,7 @@ export class AppStore {
         // ignore double clicks
         return isSame
       }
-      App.clearPeek()
+      this.clearSelected()
     } else {
       this.nextIndex = index
     }
@@ -371,6 +374,7 @@ export class AppStore {
   }
 
   setTarget = (item, target) => {
+    clearTimeout(this.hoverOutTm)
     if (!target) {
       console.error('no target', item, target, this.nextIndex, this.activeIndex)
       return

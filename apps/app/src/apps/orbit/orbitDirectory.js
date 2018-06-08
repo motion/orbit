@@ -69,6 +69,7 @@ export class OrbitDirectory {
               total={total}
               store={store}
               bit={{ title: team.title, type: 'team' }}
+              hoverToSelect
               {...team}
             />
           ))}

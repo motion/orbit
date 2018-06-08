@@ -177,7 +177,7 @@ export class OrbitCard extends React.Component {
         >
           <card
             css={{
-              padding: listItem ? 15 : tiny ? [6, 8] : [12, 14],
+              padding: listItem ? 15 : tiny ? [6, 8] : [12, 12],
             }}
           >
             <title>
@@ -188,7 +188,7 @@ export class OrbitCard extends React.Component {
                 fontWeight={400}
                 css={{
                   maxWidth: 'calc(100% - 30px)',
-                  marginBottom: 3,
+                  margin: [-1, 0, 3],
                 }}
                 {...tiny && tinyProps.titleProps}
               >
@@ -215,6 +215,7 @@ export class OrbitCard extends React.Component {
                 alpha={0.6}
                 ellipse={5}
                 size={listItem ? 1.1 : 1.4}
+                sizeLineHeight={0.9}
               >
                 {preview}
               </UI.Text>
@@ -300,10 +301,10 @@ export class OrbitCard extends React.Component {
       flexFlow: 'row',
       justifyContent: 'space-between',
     },
-    cardHovered: {},
     preview: {
       flex: 1,
       maxHeight: 180,
+      margin: [5, 0],
       overflow: 'hidden',
     },
     previewOverflow: {

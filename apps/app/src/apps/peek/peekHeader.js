@@ -23,12 +23,13 @@ export class PeekHeader extends React.Component {
               $titleMain
               size={1.3}
               fontWeight={700}
+              ellipse={2}
               margin={0}
               lineHeight="1.5rem"
             >
               {title}
             </UI.Title>
-            <UI.Title if={subtitle} size={1} $subtitle>
+            <UI.Title if={subtitle} size={1} ellipse={1} $subtitle>
               {subtitle} <UI.Date>{date}</UI.Date>
             </UI.Title>
           </titles>
@@ -48,6 +49,9 @@ export class PeekHeader extends React.Component {
       borderBottom: [1, [0, 0, 0, 0.05]],
       padding: 15,
     },
+    titles: {
+      marginRight: 25,
+    },
     chromeSpace: {
       // width: 30,
     },
@@ -61,6 +65,7 @@ export class PeekHeader extends React.Component {
     },
     titleMain: {
       flex: 1,
+      maxWidth: '100%',
       marginBottom: 5,
     },
     subtitle: {

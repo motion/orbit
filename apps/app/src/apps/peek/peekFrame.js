@@ -102,8 +102,8 @@ export class PeekFrame {
             <WindowControls
               css={{
                 position: 'absolute',
-                top: 11,
-                right: 0,
+                top: 13,
+                right: 2,
                 zIndex: 10000,
                 transform: {
                   scale: 0.9,

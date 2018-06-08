@@ -56,7 +56,10 @@ export class TimeAgo extends Component {
         addSuffix: this.props.addSuffix,
         includeSeconds: this.props.includeSeconds,
       }
-      return distanceInWordsToNow(this.props.date, options)
+      return distanceInWordsToNow(this.props.date, options).replace(
+        'about ',
+        '',
+      )
     }
   }
 

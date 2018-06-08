@@ -178,7 +178,7 @@ export class OrbitCard extends React.Component {
         >
           <card
             css={{
-              padding: listItem ? 15 : tiny ? [6, 8] : [12, 12],
+              padding: listItem ? 15 : tiny ? [6, 8] : 14,
             }}
           >
             <title>
@@ -222,7 +222,7 @@ export class OrbitCard extends React.Component {
             </preview>
             <subtitle if={hasSubtitle}>
               {orbitIcon}
-              <UI.Text if={location} opacity={0.7}>
+              <UI.Text if={location} opacity={0.7} alpha={0.8}>
                 {location}&nbsp;&nbsp;
               </UI.Text>
               <UI.Text
@@ -317,7 +317,6 @@ export class OrbitCard extends React.Component {
     },
     bottom: {
       opacity: 0.5,
-      marginTop: 5,
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',
@@ -325,7 +324,6 @@ export class OrbitCard extends React.Component {
       // flex: 1,
     },
     subtitle: {
-      margin: [8, 0, 0],
       height: 20,
       flexFlow: 'row',
       alignItems: 'center',

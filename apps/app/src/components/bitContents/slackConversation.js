@@ -6,6 +6,7 @@ import { RoundButton } from '~/views/roundButton'
 import keywordExtract from 'keyword-extractor'
 import arrford from 'arrford'
 import { getSlackDate } from '~/helpers'
+import { capitalize } from 'lodash'
 
 const options = {
   language: 'english',
@@ -34,7 +35,7 @@ export class BitSlackConversation extends React.Component {
         />
       ))
     return children({
-      title: arrford((bit.people || []).map(p => p.name), false),
+      title: arrford((bit.people || []).map(p => capitalize(p.name)), false),
       date: getSlackDate(bit.bitUpdatedAt),
       preview: keywordExtract
         .extract(bit.body, options)
@@ -43,7 +44,7 @@ export class BitSlackConversation extends React.Component {
       icon: 'slack',
       location: (
         <RoundButton
-          style={{ marginLeft: -3 }}
+          style={{ marginLeft: -4 }}
           onClick={e => {
             e.stopPropagation()
             appStore.open(bit, 'channel')

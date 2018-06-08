@@ -127,6 +127,8 @@ export default class Gloss {
     let hasTheme = false
     const attachTheme = () => {
       themeSheet = JSS.createStyleSheet().attach()
+      // caching because addRules takes 10x more than cache check + prevents layout reflows
+      let activeThemeKey = {}
       Child.prototype.glossUpdateTheme = function(props) {
         this.theme = this.theme || themeSheet
         const activeTheme =
@@ -135,15 +137,24 @@ export default class Gloss {
         if (activeTheme) {
           const childTheme = Child.theme(props, activeTheme, this)
           const rules = {}
+          let hasRules = false
           for (const name of Object.keys(childTheme)) {
             const style = css(childTheme[name])
+            const key = JSON.stringify(style)
+            if (key === activeThemeKey[name]) {
+              continue
+            }
+            activeThemeKey[name] = key
             const selector = `${name}--${Child.glossUID}--theme`
+            hasRules = true
             rules[selector] = style
             if (this.theme.classes[selector]) {
               this.theme.deleteRule(selector)
             }
           }
-          this.theme.addRules(rules)
+          if (hasRules) {
+            this.theme.addRules(rules)
+          }
         }
       }
     }

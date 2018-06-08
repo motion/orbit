@@ -105,12 +105,10 @@ export class OrbitHome {
     return (
       <OrbitDockedPane name="home">
         <header>
-          <title>
-            <SubTitle $niceDate>
-              {day} {month} {dayNum}
-              <span $super>{postfix[dayNum - 1]}</span>
-            </SubTitle>
-          </title>
+          <SubTitle>
+            {day} {month} {dayNum}
+            <span $super>{postfix[dayNum - 1]}</span>
+          </SubTitle>
           <div $$flex />
         </header>
         <Masonry>
@@ -136,14 +134,6 @@ export class OrbitHome {
   static style = {
     header: {
       padding: [0, 0, 5, 5],
-    },
-    niceDate: {
-      fontSize: 16,
-      fontWeight: 300,
-      lineHeight: '1.5rem',
-      margin: 0,
-      padding: 0,
-      flexFlow: 'row',
     },
     super: {
       verticalAlign: 'super',

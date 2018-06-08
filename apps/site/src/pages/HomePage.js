@@ -88,13 +88,12 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={3.6} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      Work doesn't have to&nbsp;be so chaotic
+    <Title italic size={3.3} margin={[0, 0, 15, 0]} alpha={1} color="#222">
+      Work doesn't have to&nbsp;be chaotic
     </Title>
     <P size={1.38} sizeLineHeight={1.2} fontWeight={300}>
-      Automatically turn your chats, docs and tickets into a knowledgebase with
-      a daily digest, profiles and search.<br />
-      Installed in 3 minutes.
+      Turn chat, docs and tickets into a knowledgebase for your team. Search,
+      profiles, daily digest and more installed in 3 minutes.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />

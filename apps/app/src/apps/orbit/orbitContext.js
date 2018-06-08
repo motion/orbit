@@ -28,7 +28,7 @@ class Orbit extends React.Component {
     const headerBg = theme.base.background
     return (
       <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
-        <OrbitHeader headerBg={headerBg} />
+        <OrbitHeader showPin headerBg={headerBg} />
         <orbitInner>
           <OrbitContextHome />
           <OrbitSearchResults name="context-search" parentPane="context" />

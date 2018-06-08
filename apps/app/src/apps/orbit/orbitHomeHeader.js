@@ -18,11 +18,11 @@ export class OrbitHomeHeader {
         color: buttonColor,
         size: 16,
       },
-      opacity: 0.4,
+      opacity: 0.3,
       activeStyle: {
         background: 'transparent',
         borderColor: '#ddd',
-        opacity: 0.8,
+        opacity: 0.7,
       },
       hoverStyle: {
         background: 'transparent',
@@ -88,7 +88,7 @@ export class OrbitHomeHeader {
     explore: {
       width: '100%',
       flexFlow: 'row',
-      padding: [7, 10, 10, 12],
+      padding: [7, 0, 10, 12],
       alignItems: 'center',
     },
     filters: {

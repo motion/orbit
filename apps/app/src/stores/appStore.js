@@ -339,7 +339,7 @@ export class AppStore {
 
   hoverOutTm = 0
   getHoverSettler = Helpers.hoverSettler({
-    enterDelay: 80,
+    enterDelay: 50,
     betweenDelay: 30,
     onHovered: res => {
       log('onhvoered', res)

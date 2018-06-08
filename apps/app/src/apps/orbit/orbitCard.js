@@ -57,7 +57,7 @@ class OrbitCardStore {
         throw react.cancel
       }
       this._isSelected = true
-      await sleep()
+      await sleep(10)
       console.log('selecting', this.props, this)
       this.props.appStore.setTarget(this.props.bit, this.ref)
     },
@@ -99,7 +99,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 8,
+    borderRadius: 6,
   }
 
   constructor(...args) {
@@ -187,7 +187,7 @@ export class OrbitCard extends React.Component {
                 sizeLineHeight={0.75}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}
-                fontWeight={400}
+                fontWeight={500}
                 css={{
                   maxWidth: 'calc(100% - 30px)',
                   margin: [-1, 0, 0],

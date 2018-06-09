@@ -264,11 +264,11 @@ export class AppStore {
   )
 
   get results() {
-    if (this.selectedPane.indexOf('-search') > 0) {
-      return this.searchState.results
-    }
     if (this.getResults) {
       return this.getResults()
+    }
+    if (this.selectedPane.indexOf('-search') > 0) {
+      return this.searchState.results
     }
     return this.searchState.results || []
   }
@@ -281,10 +281,9 @@ export class AppStore {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
       // these are all specialized searches, see below for main search logic
-      if (thisGetResults && this.showSettings) {
+      if (thisGetResults) {
         return {
           query,
-          message: 'Settings',
           results: Helpers.fuzzy(query, thisGetResults()),
         }
       }

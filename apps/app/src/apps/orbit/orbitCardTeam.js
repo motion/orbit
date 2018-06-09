@@ -9,21 +9,28 @@ const itemSize = 32
 
 @view.ui
 export class OrbitCardTeam {
-  render({ store, title, topics, people, recently, ...props }) {
-    const results = store.results.slice(0, 8)
+  render({ store, bit, expanded, ...props }) {
+    const { topics, people, recently } = bit.data
+    const results = store.results.slice(8, 18)
+    const connections = (
+      <div $$row css={{ padding: 5 }}>
+        <UI.PassProps
+          size={expanded ? 20 : 16}
+          css={expanded ? { margin: [0, 0, 0, 12] } : { margin: [0, 12, 0, 0] }}
+        >
+          <OrbitIcon icon="slack" />
+          <OrbitIcon icon="github" />
+          <OrbitIcon icon="gdocs" />
+          <OrbitIcon icon="gmail" />
+        </UI.PassProps>
+      </div>
+    )
     return (
       <OrbitCard
-        title={title}
-        afterTitle={
-          <div $$row css={{ padding: 5 }}>
-            <UI.PassProps size={20} css={{ margin: [0, 0, 0, 12] }}>
-              <OrbitIcon icon="slack" />
-              <OrbitIcon icon="github" />
-              <OrbitIcon icon="gdocs" />
-              <OrbitIcon icon="gmail" />
-            </UI.PassProps>
-          </div>
-        }
+        title={bit.title}
+        titleProps={{ ellipse: 1 }}
+        bit={bit}
+        afterTitle={expanded && connections}
         index={0}
         {...props}
       >
@@ -31,9 +38,13 @@ export class OrbitCardTeam {
           <people
             css={{
               position: 'relative',
+              margin: [0, 'auto'],
               width: diameter,
               height: diameter,
               flexFlow: 'row',
+              transform: {
+                scale: expanded ? 1 : 0.85,
+              },
             }}
           >
             <info $$centered $$flex css={{ zIndex: 11 }}>
@@ -81,7 +92,7 @@ export class OrbitCardTeam {
               )
             })}
           </people>
-          <preview css={{ padding: [0, 15] }}>
+          <preview if={expanded} css={{ padding: [0, 15] }}>
             <UI.Text css={{ marginBottom: 3 }} fontWeight={800} color="#000">
               Topics
             </UI.Text>
@@ -107,6 +118,7 @@ export class OrbitCardTeam {
             </section>
           </preview>
         </content>
+        {!expanded && connections}
       </OrbitCard>
     )
   }

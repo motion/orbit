@@ -134,6 +134,7 @@ export class OrbitCard extends React.Component {
       afterTitle,
       children,
       theme,
+      titleProps,
     } = this.props
     const isExpanded = this.isExpanded
     const hasSubtitle = !tiny && (subtitle || location)
@@ -177,6 +178,7 @@ export class OrbitCard extends React.Component {
                   maxWidth: 'calc(100% - 30px)',
                 }}
                 {...tiny && tinyProps.titleProps}
+                {...titleProps}
               >
                 {title}
               </UI.Text>

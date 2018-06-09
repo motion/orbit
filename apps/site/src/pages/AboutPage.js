@@ -67,33 +67,30 @@ export class AboutPage extends React.Component {
                       leaves your company firewall.
                     </P2>
                     <P2>
-                      <strong>It has to understand what you're doing.</strong>
-                      <br />
-                      You chat internally using one service, your support chats
-                      on another one. Your team emails and works using any
-                      number of clients and services. Orbit provides
-                      contextually relevant answers wherever you work. With
-                      on-device private scanning that knows what you're looking
-                      at anywhere on your OS and shows inline information: from
-                      answers to questions, to experts in your company.
-                    </P2>
-                    <P2>
                       <strong>It can't add yet another source of truth.</strong>
                       <br />
                       Is a stale wiki a universal constant, or can we do better?
-                      Whether you use a wiki or not, Orbit helps your knowledge
-                      stay up to date. Unifying all your services with smart
+                      Whether you use a wiki or not, Orbit makes your knowledge
+                      much more useful. Unifying all your services with smart
                       sorting means people can trust answers from it to be the
                       most recent available: whether from a Slack conversation,
-                      document, ticket, or your knowledgebase.
+                      document, ticket, or knowledgebase.
+                    </P2>
+                    <P2>
+                      <strong>It has to be a pleasant part of your day.</strong>
+                      <br />
+                      In order to be useful Orbit has to be a place people want
+                      to check in with. It has to work with the tools you
+                      already have, be always at hand on your desktop, and never
+                      get in the way. Design is of the highest importance.
                     </P2>
                     <SubTitle>A unique approach</SubTitle>
                     <P2>
                       Orbit aims to reinvent the way companies operate by giving
-                      them an on device brain. It gives you a beautiful intranet
-                      without infrastructure. We're rethinking knowledge
-                      management from the ground up and we're excited to share
-                      it with the world.
+                      them an on device brain. It's a beautiful intranet system
+                      for today, without any infrastructure necessary. We're
+                      rethinking knowledge management from the ground up and
+                      we're excited to share it with the world.
                     </P2>
                     <P2>
                       Signup for early access, and{' '}

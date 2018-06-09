@@ -34,7 +34,15 @@
     * polish everything to better explain (features use cases)
     * post articles to HN, PH, dev twitter, etc
 * start twitter and tweeting, follow a bunch of good and similar accounts
+
   * setup tweetbot or something to manage
+
+* hire:
+  * start with syncers + panes
+    * do one syncer/pane at a time
+    * google docs
+    * google mail
+    * slack
 
 # dev
 

@@ -29,6 +29,7 @@ function tag(tag, attributes, payload = '') {
 function matchTag(match) {
   let action = match[1].substr(0, 1)
   let p
+  console.log('matchTag', match)
   switch (action) {
     case '!':
       return tag('span', { class: 'slack-cmd' }, payloads(match[1], 1)[0])
@@ -43,6 +44,7 @@ function matchTag(match) {
       p = payloads(match[1], 2)
       return tag('span', { class: 'slack-user' }, p.length === 1 ? p[0] : p[1])
     default:
+      console.log('match', match)
       p = payloads(match[1])
       return tag('a', { href: p[0] }, p.length === 1 ? p[0] : p[1])
   }

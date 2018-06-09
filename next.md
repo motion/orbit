@@ -1,4 +1,15 @@
+Questions for Daniel:
+
+* How were you thinking of Cue as a startup at the end
+  * your P/M research probably looks a lot like my own
+* Types of companies you felt were best fit
+* How to do research with a bigger company
+* Reach outs to COO of mid-size tech company in SF ~500ppl seem good strategy?
+* Getting feedback in many directions
+
 # next
+
+* jonathan set up ticket
 
 ## demo
 

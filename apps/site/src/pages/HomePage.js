@@ -88,12 +88,12 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={3.3} margin={[0, 0, 15, 0]} alpha={1} color="#222">
+    <Title italic size={3.2} margin={[0, 0, 15, 0]} alpha={1} color="#222">
       Work doesn't have to&nbsp;be chaotic
     </Title>
     <P size={1.38} sizeLineHeight={1.2} fontWeight={300}>
-      Turn chat, docs and tickets into a knowledgebase for your team. Search,
-      profiles, daily digest and more installed in 3 minutes.
+      A company operating system that lets teams autonomously coordinate without
+      changing how they normally work. Installed in 3 minutes.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />
@@ -342,33 +342,34 @@ class HomeFooter extends React.Component {
   render({ isLarge }) {
     const card1 = (
       <Card css={isLarge && { transform: { x: -30 } }}>
-        <Card.Icon name="business_bulb-61" color="rgb(91.3%, 87%, 16.8%)" />
-        <Card.Title>Works how you do</Card.Title>
+        <Card.Icon name="transportation_car" color="rgb(91.3%, 87%, 16.8%)" />
+        <Card.Title>Autonomous</Card.Title>
         <Card.Body>
-          Orbit works with your existing tools to build an automatic
-          knowledgebase that doesn't go stale.
+          Machine learning unifies your cloud to generate news without staleness
+          or manual curation. On-device means it's both secure and easy to
+          install.
         </Card.Body>
       </Card>
     )
 
     const card2 = (
       <Card css={isLarge && { transform: { x: 30 } }}>
-        <Card.Icon name="users_single" color="blue" />
+        <Card.Icon name="users_multiple" color="blue" />
         <Card.Title>Made for teams</Card.Title>
         <Card.Body>
-          Beautiful profiles of people and teams that summarize what's going on.
-          Curation to expose important things.
+          Beautiful profiles for teams and people keep everyone in sync,
+          minimizing duplicate work and interruptions.
         </Card.Body>
       </Card>
     )
 
     const card3 = (
       <Card css={isLarge && { transform: { x: -30 } }}>
-        <Card.Icon name="chat" color="green" />
+        <Card.Icon name="social_logo-slack" color="green" />
         <Card.Title>Understands Slack</Card.Title>
         <Card.Body>
-          Slack conversations move quickly. Don't miss relevant conversations
-          with your relevant summarized daily digest.
+          Slack conversations move quickly. Cut the noise with a personal
+          summarized daily digest.
         </Card.Body>
       </Card>
     )
@@ -384,22 +385,35 @@ class HomeFooter extends React.Component {
               <div $$flex />
               <content css={isLarge && { marginRight: 80 }}>
                 <Title size={2.3} color="#333" css={{ marginBottom: 25 }}>
-                  A beautiful and secure intranet in just&nbsp;a few minutes.
+                  A new way to operate.
                 </Title>
-                <UI.PassProps size={1.8} sizeLineHeight={1.2} alpha={0.7}>
+                <UI.PassProps size={1.35} sizeLineHeight={1.2} alpha={0.7}>
                   <P2>
-                    Your team talks, documents and tickets at lightspeed. It's
-                    hard to keep up.
+                    As more and more people join your company, it gets harder to
+                    coordinate and distribute knowledge.
                   </P2>
                   <P2>
-                    Orbit makes it easy to understand by sorting the cloud into
-                    news, teams, profiles and search.
+                    Orbit is a smart desktop home base that sorts activity into
+                    news for every team and person, automatically.
                   </P2>
                   <P2>
-                    It works privately on the desktop so there's no complex
-                    install or data security issues.
+                    With easy search and automatic profiles, it's your secret
+                    weapon for coordinating internal knowledge.
                   </P2>
-                  <P2 size={1.6} css={{ marginTop: 5 }}>
+                  <P2 css={{ marginTop: 5 }}>
+                    Read more to learn about{' '}
+                    <a
+                      href="/features"
+                      onClick={Router.link('features')}
+                      css={{
+                        textDecoration: 'none',
+                        color: '#6858D3',
+                        fontWeight: 500,
+                      }}
+                    >
+                      how it solves problems
+                    </a>{' '}
+                    and{' '}
                     <a
                       href="/about"
                       onClick={Router.link('about')}
@@ -409,8 +423,8 @@ class HomeFooter extends React.Component {
                         fontWeight: 500,
                       }}
                     >
-                      Read more on how we're building it.
-                    </a>
+                      how we're building it
+                    </a>, or sign up for early access below.
                   </P2>
                 </UI.PassProps>
               </content>

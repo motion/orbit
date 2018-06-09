@@ -8,6 +8,7 @@ import { OrbitHeader } from './orbitHeader'
 import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitDirectory } from './orbitDirectory'
 import { App, Electron } from '@mcro/all'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const SHADOW_PAD = 85
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
@@ -43,7 +44,7 @@ class PaneStore {
     return this.panes[this.paneIndex]
   }
 
-  clearPeekOnActivePaneChange = react(() => this.activePane, App.clearPeek, {
+  clearPeekOnActivePaneChange = react(() => this.activePane, PeekStateActions.clearPeek, {
     log: 'state',
   })
 

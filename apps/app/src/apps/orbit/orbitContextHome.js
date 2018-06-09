@@ -153,7 +153,7 @@ export class OrbitContextHome {
     resultsScroller: {
       flex: 1,
       overflowY: 'scroll',
-      pointerEvents: 'all',
+      pointerEvents: 'inherit',
     },
     fade: {
       position: 'fixed',

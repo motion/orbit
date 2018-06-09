@@ -166,13 +166,6 @@ class AppStore {
   openSettings = () => {
     App.setState({ openSettings: Date.now() })
   }
-
-  clearPeek = () => {
-    App.setPeekState({
-      id: null,
-      target: null,
-    })
-  }
 }
 
 App = proxySetters(new AppStore())

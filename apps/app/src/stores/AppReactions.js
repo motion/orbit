@@ -2,6 +2,7 @@ import { store, react } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/all'
 import orbitPosition from '~/helpers/orbitPosition'
 import debug from '@mcro/debug'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const log = debug('AppReactions')
 
@@ -33,7 +34,7 @@ export class AppReactions {
           this.show()
           return
         case App.messages.HIDE_PEEK:
-          return App.clearPeek()
+          return PeekStateActions.clearPeek()
         case App.messages.PIN:
           App.setOrbitState({ pinned: true })
           return
@@ -71,8 +72,8 @@ export class AppReactions {
   }
 
   hide = async () => {
-    if (App.peekState.target) {
-      App.clearPeek()
+    if (App.peekState.target && !App.peekState.pinned) {
+      PeekStateActions.clearPeek()
       await new Promise(res => setTimeout(res, 80)) // sleep 80
       return
     }
@@ -111,7 +112,7 @@ export class AppReactions {
       if (!hidden) {
         throw react.cancel
       }
-      App.clearPeek()
+      PeekStateActions.clearPeek()
     },
     { log: 'state' },
   )
@@ -139,7 +140,7 @@ export class AppReactions {
     { log: 'state' },
   )
 
-  clearPeekOnReposition = react(() => App.orbitState.position, App.clearPeek, {
+  clearPeekOnReposition = react(() => App.orbitState.position, PeekStateActions.clearPeek, {
     log: 'state',
   })
 

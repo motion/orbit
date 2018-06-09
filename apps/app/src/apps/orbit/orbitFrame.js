@@ -73,7 +73,7 @@ export class OrbitFrame {
     return (
       <orbitFrame
         css={{
-          pointerEvents: hidden ? 'none' : 'auto',
+          pointerEvents: hidden ? ' none' : 'auto',
           width: size[0],
           // TODO HACKINESS fix the size/y calc in orbitPosition.js
           height: size[1] - 5,

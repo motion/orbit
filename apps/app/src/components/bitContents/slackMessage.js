@@ -1,5 +1,5 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
+// import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { RoundButton } from '~/views'
 import slackDown from '@mcro/slackdown'

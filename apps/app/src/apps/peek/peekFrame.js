@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import { WindowControls } from '~/views/windowControls'
 import * as Constants from '~/constants'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const SHADOW_PAD = 80
 const borderRadius = 8
@@ -99,7 +100,13 @@ export class PeekFrame {
         >
           <peek>
             <WindowControls
+              itemProps={{
+                style: {
+                  marginLeft: 1,
+                },
+              }}
               css={{
+                flexFlow: 'row-reverse',
                 position: 'absolute',
                 top: 13,
                 right: 2,
@@ -108,7 +115,13 @@ export class PeekFrame {
                   scale: 0.9,
                 },
               }}
-              onClose={App.clearPeek}
+              onClose={PeekStateActions.clearPeek}
+              onMax={() => {
+                App.setPeekState({ pinned: !App.peekState.pinned })
+              }}
+              maxProps={{
+                background: '#ccc',
+              }}
             />
             <chrome
               if={peekStore.hasHistory}

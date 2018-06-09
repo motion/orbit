@@ -76,3 +76,14 @@ function getTargetPosition(node: PositionObject) {
   }
   return node
 }
+
+export function clearPeek() {
+  if (App.peekState.pinned) {
+    console.log('Peek pinned, ignore')
+    return
+  }
+  App.setPeekState({
+    id: null,
+    target: null,
+  })
+}

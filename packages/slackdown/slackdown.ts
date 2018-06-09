@@ -30,11 +30,6 @@ function tag(tag, attributes, payload = '') {
 
 function matchTag(match) {
   let action = match[1].substr(0, 1)
-  const imgMatch = match[1].match(/(http[^|]+\.(png|jpe?g|gif))|.*/g)
-  if (imgMatch && imgMatch.length === 2) {
-    console.log(`<img src="${imgMatch[0]}" />`)
-    return tag('img', { src: imgMatch[1] })
-  }
   let p
   switch (action) {
     case '!':
@@ -50,7 +45,12 @@ function matchTag(match) {
       p = payloads(match[1], 2)
       return tag('span', { class: 'slack-user' }, p.length === 1 ? p[0] : p[1])
     default:
-      console.log('match', match)
+      const imgMatch = match[1].match(/(http[^|]+\.(png|jpe?g|gif))|.*/g)
+      console.log('match', match, 'imgMatch', imgMatch)
+      if (imgMatch && imgMatch.length === 3) {
+        console.log(`<img src="${imgMatch[0]}" />`)
+        return `<img src="${imgMatch[0]}" />`
+      }
       p = payloads(match[1])
       return tag('a', { href: p[0] }, p.length === 1 ? p[0] : p[1])
   }

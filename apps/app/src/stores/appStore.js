@@ -347,7 +347,7 @@ export class AppStore {
   clearSelected = () => {
     clearTimeout(this.hoverOutTm)
     this.nextIndex = -1
-    App.clearPeek()
+    PeekStateActions.clearPeek()
   }
 
   lastSelectAt = 0
@@ -361,12 +361,12 @@ export class AppStore {
       clearTimeout(this.hoverOutTm)
       if (!res) {
         // interval because hoversettler is confused when going back from peek
-        this.hoverOutTm = setInterval(() => {
-          if (!Desktop.hoverState.peekHovered) {
-            log('should clear peek')
-            this.clearSelected()
-          }
-        }, 200)
+        // this.hoverOutTm = setInterval(() => {
+        //   if (!Desktop.hoverState.peekHovered) {
+        //     log('should clear peek')
+        //     this.clearSelected()
+        //   }
+        // }, 200)
         return
       }
       this.toggleSelected(res.index)

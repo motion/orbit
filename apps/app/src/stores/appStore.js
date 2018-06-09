@@ -277,11 +277,10 @@ export class AppStore {
     () => [App.state.query, this.getResults, this.updateResults],
     async ([query, thisGetResults], { when }) => {
       if (!query) {
-        console.log('what', thisGetResults)
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
       // these are all specialized searches, see below for main search logic
-      if (thisGetResults) {
+      if (thisGetResults && thisGetResults.shouldFilter) {
         return {
           query,
           results: Helpers.fuzzy(query, thisGetResults()),

@@ -16,7 +16,9 @@ class OrbitDirectoryStore {
       if (!isActive) {
         throw react.cancel
       }
-      this.props.appStore.setGetResults(() => this.results)
+      const getResults = () => this.results
+      getResults.shouldFilter = true
+      this.props.appStore.setGetResults()
     },
     { immediate: true },
   )

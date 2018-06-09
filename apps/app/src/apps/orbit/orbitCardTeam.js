@@ -8,10 +8,8 @@ const diameter = 100
 const itemSize = 32
 
 @view.ui
-export class OrbitCardTeam {
+export class OrbitCardTeam extends React.Component {
   render({ store, bit, expanded, ...props }) {
-    const { topics, people, recently } = bit.data
-    const results = store.results.slice(8, 18)
     const connections = (
       <div $$row css={{ padding: 5 }}>
         <UI.PassProps
@@ -34,6 +32,25 @@ export class OrbitCardTeam {
         index={0}
         {...props}
       >
+        {({ background }) => (
+          <OrbitCardTeamContent
+            connections={connections}
+            background={background}
+            {...this.props}
+          />
+        )}
+      </OrbitCard>
+    )
+  }
+}
+
+@view.ui
+class OrbitCardTeamContent extends React.Component {
+  render({ background, store, bit, expanded, connections }) {
+    const { topics, people, recently } = bit.data
+    const results = store.results.slice(8, 18)
+    return (
+      <React.Fragment>
         <content css={{ flexFlow: 'row', padding: [15, 0] }}>
           <people
             css={{
@@ -57,8 +74,9 @@ export class OrbitCardTeam {
               $$fullscreen
               css={{
                 // border: [12, [255, 255, 255, 0.3]],
+                // not updating...
+                background: '#fff' || background,
                 borderRadius: diameter,
-                background: '#fff',
                 zIndex: 10,
                 margin: 10,
               }}
@@ -119,7 +137,7 @@ export class OrbitCardTeam {
           </preview>
         </content>
         {!expanded && connections}
-      </OrbitCard>
+      </React.Fragment>
     )
   }
 }

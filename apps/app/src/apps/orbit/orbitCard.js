@@ -225,7 +225,9 @@ export class OrbitCard extends React.Component {
                 <TimeAgo date={date} />
               </UI.Text>
             </subtitle>
-            {children}
+            {typeof children === 'function'
+              ? children({ background })
+              : children}
             <bottom if={false && !tiny && (bottom || permalink || via)}>
               <permalink if={isExpanded}>{permalink}</permalink>
               <space if={permalink} />

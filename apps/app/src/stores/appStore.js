@@ -80,8 +80,8 @@ const parseQuery = query => {
 }
 
 export class AppStore {
-  nextIndex = -1
-  activeIndex = 0
+  nextIndex = 0
+  activeIndex = -1
   showSettings = false
   settings = {}
   services = {}
@@ -154,10 +154,24 @@ export class AppStore {
     },
   )
 
+  resetActiveIndexOnKeyPastEnds = react(
+    () => this.nextIndex,
+    index => {
+      // if card selected, let card do its thing
+      if (index >= 0 && index < this.searchState.results.length) {
+        throw react.cancel
+      }
+      console.log('updating')
+      // otherwise set it
+      this.clearSelected()
+      this.updateActiveIndex()
+    },
+  )
+
   resetActiveIndexOnSearch = react(
     () => App.state.query,
     () => {
-      this.activeIndex = 0
+      this.activeIndex = -1
       this.clearSelected()
     },
     { log: 'state' },
@@ -263,7 +277,8 @@ export class AppStore {
     () => [App.state.query, this.getResults, this.updateResults],
     async ([query, thisGetResults], { when }) => {
       if (!query) {
-        return { query, results: [] }
+        console.log('what', thisGetResults)
+        return { query, results: thisGetResults ? thisGetResults() : [] }
       }
       // these are all specialized searches, see below for main search logic
       if (thisGetResults && this.showSettings) {
@@ -358,8 +373,9 @@ export class AppStore {
     },
   })
 
+  // sitrep
   toggleSelected = index => {
-    const isSame = this.activeIndex === index
+    const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks
@@ -379,10 +395,15 @@ export class AppStore {
       return
     }
     PeekStateActions.selectItem(item, target)
-    if (this.nextIndex !== this.activeIndex) {
-      this.lastSelectAt = Date.now()
-      this.activeIndex = this.nextIndex
+    this.updateActiveIndex()
+  }
+
+  updateActiveIndex = () => {
+    if (this.nextIndex === this.activeIndex) {
+      return
     }
+    this.lastSelectAt = Date.now()
+    this.activeIndex = this.nextIndex
   }
 
   setGetResults = fn => {

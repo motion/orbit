@@ -62,21 +62,6 @@ class OrbitCardStore {
       this.props.appStore.setTarget(this.props.bit, this.ref)
     },
   )
-
-  // updateIsSelected = react(
-  //   () => [
-  //     this.isPaneSelected,
-  //     this.props.appStore.activeIndex,
-  //     App.state.peekState.target,
-  //   ],
-  //   ([paneSelected, index]) => {
-  //     if (!paneSelected) {
-  //       throw react.cancel
-  //     }
-
-  //   },
-  //   { immediate: true, log: false },
-  // )
 }
 
 const tinyProps = {

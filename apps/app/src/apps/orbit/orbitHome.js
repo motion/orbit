@@ -54,12 +54,11 @@ const findType = (integration, type, skip = 0) =>
 
 class OrbitHomeStore {
   setGetResults = react(
-    () => this.props.paneStore.activePane === this.props.name,
-    isActive => {
+    () => [this.props.paneStore.activePane === this.props.name, this.results],
+    ([isActive]) => {
       if (!isActive) {
         throw react.cancel
       }
-      log('set get results')
       this.props.appStore.setGetResults(() => this.results)
     },
     { immediate: true },

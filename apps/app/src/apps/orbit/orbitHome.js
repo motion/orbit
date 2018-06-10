@@ -124,7 +124,7 @@ export class OrbitHome {
                 bit={bit}
                 total={store.results.length}
                 hoverToSelect
-                isExpanded={isExpanded}
+                isExpanded={false && isExpanded}
                 style={isExpanded && this.span2}
                 itemProps={{
                   shownLimit: 3,
@@ -140,7 +140,8 @@ export class OrbitHome {
                   },
                 }}
               >
-                {isExpanded &&
+                {false &&
+                  isExpanded &&
                   (({ content }) => (
                     <inner css={{ margin: [6, 0] }}>{content}</inner>
                   ))}

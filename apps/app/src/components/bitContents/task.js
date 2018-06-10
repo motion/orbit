@@ -1,4 +1,6 @@
 import keywordExtract from 'keyword-extractor'
+import slackDown from '@mcro/slackdown'
+import * as UI from '@mcro/ui'
 
 const options = {
   language: 'english',
@@ -11,14 +13,25 @@ const BitGithubTaskComment = ({ comment }) => {
   return <comment>{JSON.stringify(comment)}</comment>
 }
 
+const getContents = ({ bit, shownLimit }) => {
+  const { comments } = bit.data
+  if (comments && comments.length) {
+    return comments
+      .slice(0, shownLimit)
+      .map((comment, index) => (
+        <BitGithubTaskComment key={index} comment={comment} bit={bit} />
+      ))
+  }
+  return (
+    <UI.Text size={1.2}>
+      <div dangerouslySetInnerHTML={{ __html: slackDown(bit.body) }} />
+    </UI.Text>
+  )
+}
+
 export default ({ bit, children, isExpanded, shownLimit }) => {
-  const content = isExpanded
-    ? (bit.data.comments || [])
-        .slice(0, shownLimit)
-        .map((comment, index) => (
-          <BitGithubTaskComment key={index} comment={comment} bit={bit} />
-        ))
-    : null
+  console.log('github task', bit.data)
+  const content = isExpanded ? getContents({ bit, shownLimit }) : null
   return children({
     title: bit.title,
     icon: 'github',

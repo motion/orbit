@@ -185,8 +185,8 @@ export class OrbitCard extends React.Component {
                 size={1.55}
                 sizeLineHeight={0.8}
                 ellipse={2}
-                alpha={isSelected ? 1 : 0.8}
-                fontWeight={isSelected ? 500 : 300}
+                alpha={isSelected ? 1 : 0.7}
+                fontWeight={500}
                 css={{
                   maxWidth: 'calc(100% - 30px)',
                 }}
@@ -215,7 +215,7 @@ export class OrbitCard extends React.Component {
                 <TimeAgo date={date} />
               </UI.Text>
             </subtitle>
-            <preview if={preview}>
+            <preview if={preview && !children}>
               <previewOverflow
                 if={false}
                 $$fullscreen
@@ -228,7 +228,7 @@ export class OrbitCard extends React.Component {
               {typeof preview !== 'string' && preview}
               <UI.Text
                 if={typeof preview === 'string'}
-                alpha={isSelected ? 0.75 : 0.6}
+                alpha={isSelected ? 0.75 : 0.55}
                 ellipse={5}
                 size={listItem ? 1.1 : 1.4}
                 sizeLineHeight={0.85}

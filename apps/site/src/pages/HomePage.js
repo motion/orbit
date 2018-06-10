@@ -91,9 +91,9 @@ const Pitch = ({ isLarge }) => (
     <Title italic size={3.2} margin={[0, 0, 15, 0]} alpha={1} color="#222">
       A new way to coordinate teams
     </Title>
-    <P size={1.38} sizeLineHeight={1.2} fontWeight={300}>
-      A team operating system that autonomously distributes knowledge without
-      changing how you normally work.
+    <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
+      Give your company an operating system that coordinates knowledge without
+      disrupting how you work.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />

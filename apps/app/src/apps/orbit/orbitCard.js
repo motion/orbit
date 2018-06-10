@@ -170,7 +170,7 @@ export class OrbitCard extends React.Component {
           >
             <title>
               <UI.Text
-                size={1.3}
+                size={1.4}
                 sizeLineHeight={0.8}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}

@@ -174,23 +174,22 @@ export default class GithubIssueSync {
     }
     const id = `${issue.number}`
     // ensure if one is set, the other gets set too
-    const created = issue.createdAt || issue.updatedAt || ''
-    const updated = issue.updatedAt || created
-    return await createOrUpdate(
-      Bit,
-      {
-        id,
-        integration: 'github',
-        type: 'task',
-        title: issue.title,
-        body: issue.bodyText,
-        data,
-        author: issue.author.login,
-        created,
-        updated,
-      },
-      Bit.identifyingKeys,
-    )
+    const bitCreatedAt = issue.createdAt || issue.updatedAt || ''
+    const bitUpdatedAt = issue.updatedAt || created
+    const body = {
+      id,
+      integration: 'github',
+      identifier: `${id}${bitUpdatedAt}`,
+      type: 'task',
+      title: issue.title,
+      body: issue.bodyText,
+      data,
+      author: issue.author.login,
+      bitCreatedAt,
+      bitUpdatedAt,
+    }
+    console.log('creating', id, body)
+    return await createOrUpdate(Bit, body, Bit.identifyingKeys)
   }
 
   getRepositoriesForOrg = async (

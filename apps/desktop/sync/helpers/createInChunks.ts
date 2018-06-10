@@ -14,7 +14,7 @@ export async function createInChunks(
       finished = [...finished, ...successful]
       creating = []
     } catch (err) {
-      console.log('error creating', err)
+      console.trace('error creating', err)
       return false
     }
     return true
@@ -22,7 +22,7 @@ export async function createInChunks(
   for (const item of items) {
     // pause for every 10 to finish
     if (creating.length === chunk) {
-      if (!await waitForCreating()) {
+      if (!(await waitForCreating())) {
         break
       }
     }

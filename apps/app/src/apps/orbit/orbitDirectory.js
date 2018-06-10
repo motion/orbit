@@ -119,7 +119,7 @@ export class OrbitDirectory {
                 key={index}
                 pane="summary"
                 subPane="directory"
-                index={index + 1}
+                index={index + 2}
                 total={total}
                 store={store}
                 bit={team}

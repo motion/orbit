@@ -10,7 +10,7 @@ const options = {
 export default ({ bit, children }) =>
   children({
     title: bit.title,
-    icon: 'gdocs',
+    icon: 'github',
     location: ' ', //bit.data.spaces[0],
     date: Date.now(),
     content: bit.body,

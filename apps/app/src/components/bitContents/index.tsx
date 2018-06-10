@@ -1,6 +1,7 @@
 import { BitSlackConversation } from './slackConversation'
 import Document from './document'
 import Mail from './mail'
+import Task from './task'
 import App from './app'
 import { PersonCard } from './personCard'
 import { Person } from '@mcro/models'
@@ -13,6 +14,9 @@ const results = {
   google: {
     mail: Mail,
     document: Document,
+  },
+  github: {
+    task: Task,
   },
   apps: {
     app: App,

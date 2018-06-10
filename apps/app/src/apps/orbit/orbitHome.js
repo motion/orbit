@@ -69,7 +69,7 @@ class OrbitHomeStore {
       return (await Promise.all([
         // { type: 'team', title: 'Engineering' },
         findType('slack', 'conversation'),
-        findType('github', 'issue'),
+        findType('github', 'task'),
         findType('slack', 'conversation', 2),
         findType('google', 'document'),
         findType('google', 'mail'),

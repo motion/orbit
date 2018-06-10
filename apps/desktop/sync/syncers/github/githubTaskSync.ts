@@ -175,7 +175,7 @@ export default class GithubIssueSync {
     const id = `${issue.number}`
     // ensure if one is set, the other gets set too
     const bitCreatedAt = issue.createdAt || issue.updatedAt || ''
-    const bitUpdatedAt = issue.updatedAt || created
+    const bitUpdatedAt = issue.updatedAt || bitCreatedAt
     const body = {
       id,
       integration: 'github',

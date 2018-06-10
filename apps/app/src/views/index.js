@@ -45,7 +45,7 @@ export const SubTitle = props => (
     alpha={0.6}
     css={{
       fontWeight: 300,
-      fontSize: 18,
+      fontSize: 16,
       alignItems: 'center',
       flexFlow: 'row',
       padding: [3, 13, 5],

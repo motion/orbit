@@ -16,7 +16,7 @@ export class OrbitHomeHeader {
       background: 'transparent',
       iconProps: {
         color: buttonColor,
-        size: 16,
+        size: 15,
       },
       opacity: 0.3,
       activeStyle: {

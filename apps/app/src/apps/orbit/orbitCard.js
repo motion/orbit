@@ -17,6 +17,16 @@ const debounceLog = (...args) => {
   }, 16)
 }
 
+const imageStyle = {
+  transformOrigin: 'bottom right',
+  transform: {
+    y: -8,
+    x: 16,
+    scale: 2.5,
+    rotate: '-45deg',
+  },
+}
+
 class OrbitCardStore {
   _isSelected = false
   ref = null
@@ -145,6 +155,7 @@ export class OrbitCard extends React.Component {
         icon={icon}
         size={hasSubtitle ? 14 : 18}
         $orbitIcon
+        imageStyle={imageStyle}
         {...tiny && tinyProps.iconProps}
       />
     )
@@ -165,12 +176,12 @@ export class OrbitCard extends React.Component {
         >
           <card
             css={{
-              padding: listItem ? 15 : tiny ? [6, 8] : [12, 14],
+              padding: listItem ? 15 : tiny ? [6, 8] : [10, 14],
             }}
           >
             <title>
               <UI.Text
-                size={1.4}
+                size={1.55}
                 sizeLineHeight={0.8}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}
@@ -300,8 +311,11 @@ export class OrbitCard extends React.Component {
       bottom: 40,
     },
     orbitIcon: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
       margin: [0, 6, 0, 0],
-      filter: 'grayscale(100%)',
+      // filter: 'grayscale(100%)',
       opacity: 0.8,
     },
     bottom: {
@@ -314,6 +328,7 @@ export class OrbitCard extends React.Component {
     },
     subtitle: {
       height: 18,
+      paddingLeft: 12,
       flexFlow: 'row',
       alignItems: 'center',
     },
@@ -384,7 +399,7 @@ export class OrbitCard extends React.Component {
         opacity: isSelected ? 1 : 0.5,
       },
       preview: {
-        margin: inGrid ? ['auto', 0] : [10, 0, 12],
+        margin: inGrid ? ['auto', 0] : [14, 0],
       },
       previewText: {
         margin: inGrid ? ['auto', 0] : 0,

@@ -30,29 +30,23 @@ correllated / parallel products of past:
 
 ## secret
 
-on-device/no-cloud
+on-device/no-cloud/p2p
 
 means three big things:
 
 1.  10x faster development (and 10x simpler deploy/infra, and 0 cost of infra)
-
-* its actually great in two ways:
-  * it requires a bigger initial investment, which we've had: 3yr flint/devtools
-  * once invested, it pays back much more: point were at now
-
 2.  100x easier install process (literally download app and done, no on-prem, no signup)
 3.  Perfect data security - 100x easier pitch to individual employees
+
+Allows it to side-load into companies organically. Easy to test as a node user.
 
 ## features
 
 * Home: news for your company
 * Search: smarter unified cloud search w summarized convos
-* Intelligence: realtime contextual agent
-
-Later:
-
-* Explore: project aggreation, profiles of everyone + simple curation features
-* Deploy: deploy custom apps for your company
+* Direct: Team and Person profiles
+* later: Answer: Realtime contextual search
+* later: Deploy: deploy custom apps for your company
 
 ## pitch
 

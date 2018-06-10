@@ -4,9 +4,6 @@
 
 starting with:
 
-(Enterprise early edition)
-
-Customer success agent that realtime answers using knowledge base
 Search across your cloud with aggregated projects/profiles
 News for everything happening in your company
 
@@ -26,17 +23,10 @@ nearest neighbors:
 
 correllated / parallel products of past:
 
+* greplin / cue
 * "inline related info" for any app on your OS
   * clippy (product)
   * rapportive (product)
-
-## short pitch:
-
-distribute company knowledge 10x better than a wiki.
-plus: unified company search, profiles
-plus: augmented OS that helps people see whats going on
-
-it's essentially AI for your company, running private on-device being the big key to making it work.
 
 ## secret
 

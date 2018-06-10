@@ -15,6 +15,32 @@ Questions for Daniel:
 
 ## demo
 
+1.  News
+
+* has nice github update with newest comment
+* highlight slack conversation
+* shows inline attachment
+* shows relevant people nicely
+* shows related conversations collapsed and expandable nicely
+
+2.  Search
+
+* shows topic based search
+* shows summarized and nice meta info for things
+* is fast and fluid
+* pin to top of search (or drag to order it)
+* pin to news
+
+3.  Directory
+
+* show teams
+* peek to see a team
+* search to filter a person
+* peek to show person
+* aggregates a few things
+
+last demo:
+
 * home
   * show a github ticket
     * show the most recent action preview there

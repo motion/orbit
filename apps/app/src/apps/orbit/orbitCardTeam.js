@@ -6,6 +6,7 @@ import { OrbitIcon } from './orbitIcon'
 
 const diameter = 100
 const itemSize = 32
+const adjustIn = 8
 
 @view.ui
 export class OrbitCardTeam extends React.Component {
@@ -48,7 +49,7 @@ export class OrbitCardTeam extends React.Component {
 class OrbitCardTeamContent extends React.Component {
   render({ background, store, bit, expanded, connections }) {
     const { topics, people, recently } = bit.data
-    const results = store.results.slice(8, 18)
+    const results = store.results.slice(8, 28)
     return (
       <React.Fragment>
         <content css={{ flexFlow: 'row', padding: [15, 0] }}>
@@ -88,9 +89,9 @@ class OrbitCardTeamContent extends React.Component {
                   key={index}
                   css={{
                     position: 'absolute',
-                    top: 0,
+                    top: adjustIn / 2,
                     left: diameter / 2 - itemSize / 2,
-                    height: diameter,
+                    height: diameter - adjustIn,
                     transform: {
                       rotate: `${angle * index}deg`,
                       x: diameter / 4 - itemSize / 2,

@@ -89,11 +89,11 @@ class HomeStore {
 const Pitch = ({ isLarge }) => (
   <>
     <Title italic size={3.2} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      Work doesn't have to&nbsp;be chaotic
+      A new way to coordinate teams
     </Title>
     <P size={1.38} sizeLineHeight={1.2} fontWeight={300}>
-      A company operating system that lets teams autonomously coordinate without
-      changing how they normally work. Installed in 3 minutes.
+      A team operating system that autonomously distributes knowledge without
+      changing how you normally work.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />
@@ -343,11 +343,10 @@ class HomeFooter extends React.Component {
     const card1 = (
       <Card css={isLarge && { transform: { x: -30 } }}>
         <Card.Icon name="transportation_car" color="rgb(91.3%, 87%, 16.8%)" />
-        <Card.Title>Autonomous</Card.Title>
+        <Card.Title>Smart & automatic</Card.Title>
         <Card.Body>
-          Machine learning unifies your cloud to generate news without staleness
-          or manual curation. On-device means it's both secure and easy to
-          install.
+          Orbit runs on-device, using novel machine learning to sort the cloud.
+          That means less stale knowledge and less overhead.
         </Card.Body>
       </Card>
     )
@@ -355,10 +354,10 @@ class HomeFooter extends React.Component {
     const card2 = (
       <Card css={isLarge && { transform: { x: 30 } }}>
         <Card.Icon name="users_multiple" color="blue" />
-        <Card.Title>Made for teams</Card.Title>
+        <Card.Title>Easy & secure</Card.Title>
         <Card.Body>
-          Beautiful profiles for teams and people keep everyone in sync,
-          minimizing duplicate work and interruptions.
+          Without a cloud or on-premise install, Orbit installs securely in 3
+          minutes.
         </Card.Body>
       </Card>
     )
@@ -366,10 +365,10 @@ class HomeFooter extends React.Component {
     const card3 = (
       <Card css={isLarge && { transform: { x: -30 } }}>
         <Card.Icon name="social_logo-slack" color="green" />
-        <Card.Title>Understands Slack</Card.Title>
+        <Card.Title>Works with chat</Card.Title>
         <Card.Body>
-          Slack conversations move quickly. Cut the noise with a personal
-          summarized daily digest.
+          Slack is helpful, but messy. Cut the noise with a personal summarized
+          daily digest for everyone.
         </Card.Body>
       </Card>
     )
@@ -385,20 +384,21 @@ class HomeFooter extends React.Component {
               <div $$flex />
               <content css={isLarge && { marginRight: 80 }}>
                 <Title size={2.3} color="#333" css={{ marginBottom: 25 }}>
-                  A new way to operate.
+                  Autonomous coordination
                 </Title>
                 <UI.PassProps size={1.35} sizeLineHeight={1.2} alpha={0.7}>
                   <P2>
-                    As more and more people join your company, it gets harder to
-                    coordinate and distribute knowledge.
+                    As more people join a company it gets harder to coordinate
+                    and distribute knowledge.
                   </P2>
                   <P2>
-                    Orbit is a smart desktop home base that sorts activity into
-                    news for every team and person, automatically.
+                    Orbit is a smart desktop app that sorts cloud activity into
+                    search, news, and a directory.
                   </P2>
                   <P2>
-                    With easy search and automatic profiles, it's your secret
-                    weapon for coordinating internal knowledge.
+                    It integrates with existing services instead of adding more
+                    overhead. It's your secret weapon for coordinating internal
+                    knowledge.
                   </P2>
                   <P2 css={{ marginTop: 5 }}>
                     Read more to learn about{' '}
@@ -411,7 +411,7 @@ class HomeFooter extends React.Component {
                         fontWeight: 500,
                       }}
                     >
-                      how it solves problems
+                      how we're solving problems
                     </a>{' '}
                     and{' '}
                     <a

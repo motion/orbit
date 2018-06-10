@@ -113,7 +113,7 @@ export class OrbitHome {
         </header>
         <Masonry>
           {store.results.map((bit, index) => {
-            const expanded = index < 2
+            const isExpanded = index < 2
             return (
               <OrbitCard
                 pane="summary"
@@ -124,8 +124,8 @@ export class OrbitHome {
                 bit={bit}
                 total={store.results.length}
                 hoverToSelect
-                expanded={expanded}
-                style={expanded && this.span2}
+                isExpanded={isExpanded}
+                style={isExpanded && this.span2}
                 itemProps={{
                   shownLimit: 3,
                   contentStyle: {
@@ -140,8 +140,7 @@ export class OrbitHome {
                   },
                 }}
               >
-                {false &&
-                  expanded &&
+                {isExpanded &&
                   (({ content }) => (
                     <inner css={{ margin: [6, 0] }}>{content}</inner>
                   ))}

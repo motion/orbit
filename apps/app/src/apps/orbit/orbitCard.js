@@ -20,8 +20,8 @@ const debounceLog = (...args) => {
 const imageStyle = {
   transformOrigin: 'bottom right',
   transform: {
-    y: -8,
-    x: 16,
+    y: -6 - 3,
+    x: 20 + 3,
     scale: 2.5,
     rotate: '-45deg',
   },
@@ -111,9 +111,9 @@ export class OrbitCard extends React.Component {
 
   get isExpanded() {
     this.props.store.isSelected
-    const expanded = this.props.expanded
-    if (typeof expanded === 'boolean') {
-      return expanded
+    const { isExpanded } = this.props
+    if (typeof isExpanded === 'boolean') {
+      return isExpanded
     }
     return (
       (this.props.store.isSelected && !this.props.tiny) ||
@@ -147,7 +147,7 @@ export class OrbitCard extends React.Component {
       theme,
       titleProps,
     } = this.props
-    const isExpanded = this.isExpanded
+    const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
       <OrbitIcon
@@ -176,9 +176,10 @@ export class OrbitCard extends React.Component {
         >
           <card
             css={{
-              padding: listItem ? 15 : tiny ? [6, 8] : [10, 14],
+              padding: listItem ? 15 : tiny ? [6, 8] : [12, 14, 10],
             }}
           >
+            {orbitIcon}
             <title>
               <UI.Text
                 size={1.55}
@@ -194,9 +195,26 @@ export class OrbitCard extends React.Component {
               >
                 {title}
               </UI.Text>
-              {!hasSubtitle && orbitIcon}
               {afterTitle}
             </title>
+            <subtitle if={hasSubtitle}>
+              <UI.Text if={location} opacity={0.7} alpha={0.8}>
+                in {location}&nbsp;&nbsp;
+              </UI.Text>
+              <UI.Text
+                if={typeof subtitle === 'string'}
+                ellipse={1}
+                alpha={0.7}
+                css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
+              >
+                {subtitle}
+              </UI.Text>
+              {typeof subtitle !== 'string' && subtitle}
+              <space $$flex />
+              <UI.Text if={date} alpha={0.5} size={0.95}>
+                <TimeAgo date={date} />
+              </UI.Text>
+            </subtitle>
             <preview if={preview}>
               <previewOverflow
                 if={false}
@@ -222,25 +240,6 @@ export class OrbitCard extends React.Component {
             {typeof children === 'function'
               ? children(contentProps, { background })
               : children}
-            <subtitle if={hasSubtitle}>
-              {orbitIcon}
-              <UI.Text if={location} opacity={0.7} alpha={0.8}>
-                {location}&nbsp;&nbsp;
-              </UI.Text>
-              <UI.Text
-                if={typeof subtitle === 'string'}
-                ellipse={1}
-                alpha={0.7}
-                css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
-              >
-                {subtitle}
-              </UI.Text>
-              {typeof subtitle !== 'string' && subtitle}
-              <space $$flex />
-              <UI.Text if={date} alpha={0.5} size={0.95}>
-                <TimeAgo date={date} />
-              </UI.Text>
-            </subtitle>
             <bottom if={false && !tiny && (bottom || permalink || via)}>
               <permalink if={isExpanded}>{permalink}</permalink>
               <space if={permalink} />
@@ -312,8 +311,8 @@ export class OrbitCard extends React.Component {
     },
     orbitIcon: {
       position: 'absolute',
-      bottom: 0,
-      left: 0,
+      top: 0,
+      right: 0,
       margin: [0, 6, 0, 0],
       // filter: 'grayscale(100%)',
       opacity: 0.8,
@@ -327,8 +326,8 @@ export class OrbitCard extends React.Component {
       // flex: 1,
     },
     subtitle: {
+      padding: [4, 0, 0],
       height: 18,
-      paddingLeft: 12,
       flexFlow: 'row',
       alignItems: 'center',
     },

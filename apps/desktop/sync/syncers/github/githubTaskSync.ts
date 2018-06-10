@@ -172,7 +172,7 @@ export default class GithubIssueSync {
       ...this.unwrapIssue(omit(issue, ['bodyText'])),
       orgLogin,
     }
-    const id = `${issue.number}`
+    const id = `github-${issue.number}`
     // ensure if one is set, the other gets set too
     const bitCreatedAt = issue.createdAt || issue.updatedAt || ''
     const bitUpdatedAt = issue.updatedAt || bitCreatedAt

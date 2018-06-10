@@ -102,8 +102,19 @@ export class OrbitDirectory {
             expanded
             hoverToSelect
           />
+          <space css={{ height: 12 }} />
+          <OrbitCardTeam
+            pane="summary"
+            subPane="directory"
+            index={1}
+            total={total}
+            store={store}
+            bit={teams[1]}
+            expanded
+            hoverToSelect
+          />
           <carousel css={{ margin: [12, 0, 0] }}>
-            {teams.slice(1).map((team, index) => (
+            {teams.slice(2).map((team, index) => (
               <OrbitCardTeam
                 key={index}
                 pane="summary"

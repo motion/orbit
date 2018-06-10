@@ -158,7 +158,7 @@ export class AppStore {
     () => this.nextIndex,
     index => {
       // if card selected, let card do its thing
-      if (index >= 0 && index < this.searchState.results.length) {
+      if (index >= 0 || index < this.searchState.results.length) {
         throw react.cancel
       }
       console.log('updating')

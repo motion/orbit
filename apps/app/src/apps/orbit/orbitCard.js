@@ -84,7 +84,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 6,
+    borderRadius: 8,
   }
 
   constructor(...args) {
@@ -111,18 +111,19 @@ export class OrbitCard extends React.Component {
     )
   }
 
-  getOrbitCard({
-    bottom,
-    bottomAfter,
-    title,
-    via,
-    icon,
-    preview,
-    location,
-    subtitle,
-    permalink,
-    date,
-  }) {
+  getOrbitCard(contentProps) {
+    const {
+      bottom,
+      bottomAfter,
+      title,
+      via,
+      icon,
+      preview,
+      location,
+      subtitle,
+      permalink,
+      date,
+    } = contentProps
     const {
       store,
       tiny,
@@ -164,16 +165,16 @@ export class OrbitCard extends React.Component {
         >
           <card
             css={{
-              padding: listItem ? 15 : tiny ? [6, 8] : 14,
+              padding: listItem ? 15 : tiny ? [6, 8] : [12, 14],
             }}
           >
             <title>
               <UI.Text
-                size={1.2}
-                sizeLineHeight={0.75}
+                size={1.3}
+                sizeLineHeight={0.8}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}
-                fontWeight={500}
+                fontWeight={isSelected ? 500 : 300}
                 css={{
                   maxWidth: 'calc(100% - 30px)',
                 }}
@@ -198,14 +199,18 @@ export class OrbitCard extends React.Component {
               {typeof preview !== 'string' && preview}
               <UI.Text
                 if={typeof preview === 'string'}
-                alpha={isSelected ? 0.75 : 0.5}
+                alpha={isSelected ? 0.75 : 0.6}
                 ellipse={5}
                 size={listItem ? 1.1 : 1.4}
-                sizeLineHeight={0.9}
+                sizeLineHeight={0.85}
+                $previewText
               >
                 {preview}
               </UI.Text>
             </preview>
+            {typeof children === 'function'
+              ? children(contentProps, { background })
+              : children}
             <subtitle if={hasSubtitle}>
               {orbitIcon}
               <UI.Text if={location} opacity={0.7} alpha={0.8}>
@@ -225,9 +230,6 @@ export class OrbitCard extends React.Component {
                 <TimeAgo date={date} />
               </UI.Text>
             </subtitle>
-            {typeof children === 'function'
-              ? children({ background })
-              : children}
             <bottom if={false && !tiny && (bottom || permalink || via)}>
               <permalink if={isExpanded}>{permalink}</permalink>
               <space if={permalink} />
@@ -245,7 +247,7 @@ export class OrbitCard extends React.Component {
     )
   }
 
-  render({ pane, appStore, bit, store, itemProps, ...props }) {
+  render({ pane, appStore, bit, store, itemProps, inGrid, ...props }) {
     debounceLog(`${bit && bit.id}.${pane} ${store.isSelected}`)
     if (!bit) {
       return this.getOrbitCard(props)
@@ -291,7 +293,6 @@ export class OrbitCard extends React.Component {
     preview: {
       flex: 1,
       maxHeight: 180,
-      margin: [7, 0],
       overflow: 'hidden',
     },
     previewOverflow: {
@@ -300,7 +301,7 @@ export class OrbitCard extends React.Component {
     },
     orbitIcon: {
       margin: [0, 6, 0, 0],
-      filter: 'grayscale(90%)',
+      filter: 'grayscale(100%)',
       opacity: 0.8,
     },
     bottom: {
@@ -312,7 +313,7 @@ export class OrbitCard extends React.Component {
       // flex: 1,
     },
     subtitle: {
-      height: 20,
+      height: 18,
       flexFlow: 'row',
       alignItems: 'center',
     },
@@ -325,7 +326,7 @@ export class OrbitCard extends React.Component {
     },
   }
 
-  static theme = ({ store, tiny, listItem, borderRadius }, theme) => {
+  static theme = ({ store, tiny, listItem, borderRadius, inGrid }, theme) => {
     const { isSelected } = store
     const radius = isSelected
       ? borderRadius * 1.333
@@ -358,28 +359,35 @@ export class OrbitCard extends React.Component {
           : theme.hover.background,
       }
       card = {
-        boxShadow: [0, 0, 0, [0, 0, 0, 0]],
-        background: 'transparent',
+        // boxShadow: [[0, 0, 0, 0.5, [0, 0, 0, 1]]],
+        // background: theme.base.background.lighten(0.1).alpha(0.5),
         '&:hover': hoveredStyle,
       }
       if (isSelected) {
         card = {
           background: '#fff',
-          boxShadow: [[0, 3, 7, [0, 0, 0, 0.08]]],
+          boxShadow: [[0, 3, 12, [0, 0, 0, 0.08]]],
         }
       }
     }
     return {
       card: {
         borderRadius: radius,
+        flex: inGrid ? 1 : 'none',
         ...card,
         border: [
           listItem ? 0 : 1,
-          isSelected ? 'transparent' : theme.hover.background,
+          isSelected ? 'transparent' : theme.hover.background.darken(0.01),
         ],
       },
       bottom: {
         opacity: isSelected ? 1 : 0.5,
+      },
+      preview: {
+        margin: inGrid ? ['auto', 0] : [10, 0, 12],
+      },
+      previewText: {
+        margin: inGrid ? ['auto', 0] : 0,
       },
     }
   }

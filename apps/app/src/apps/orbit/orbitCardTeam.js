@@ -33,7 +33,7 @@ export class OrbitCardTeam extends React.Component {
         index={0}
         {...props}
       >
-        {({ background }) => (
+        {(_, { background }) => (
           <OrbitCardTeamContent
             connections={connections}
             background={background}

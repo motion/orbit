@@ -53,6 +53,7 @@ export class Conversation extends React.Component {
         bit={bit}
         shownLimit={Infinity}
         itemProps={slackConvoBitContentStyle}
+        isExpanded
       >
         {({ permalink, location, title, icon, content }) => {
           return (
@@ -101,6 +102,7 @@ export class Conversation extends React.Component {
                           bit={relatedBit}
                           shownLimit={Infinity}
                           itemProps={slackConvoBitContentStyle}
+                          isExpanded
                         >
                           {({ content }) => content}
                         </BitContent>

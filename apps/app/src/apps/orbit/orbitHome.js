@@ -112,33 +112,42 @@ export class OrbitHome {
           <div $$flex />
         </header>
         <Masonry>
-          {store.results.map((bit, index) => (
-            <OrbitCard
-              pane="summary"
-              subPane="home"
-              selectedTheme={selectedTheme}
-              key={`${bit.id}${index}`}
-              index={index}
-              bit={bit}
-              total={store.results.length}
-              hoverToSelect
-              expanded
-              style={index < 2 && this.span2}
-              itemProps={{
-                shownLimit: 3,
-                contentStyle: {
-                  maxHeight: '1.2rem',
-                  maxWidth: '100%',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  fontSize: 18,
-                  opacity: 0.8,
-                  margin: [5, 0],
-                },
-              }}
-            />
-          ))}
+          {store.results.map((bit, index) => {
+            const expanded = index < 2
+            return (
+              <OrbitCard
+                pane="summary"
+                subPane="home"
+                selectedTheme={selectedTheme}
+                key={`${bit.id}${index}`}
+                index={index}
+                bit={bit}
+                total={store.results.length}
+                hoverToSelect
+                expanded={expanded}
+                style={expanded && this.span2}
+                itemProps={{
+                  shownLimit: 3,
+                  contentStyle: {
+                    maxHeight: '1.2rem',
+                    maxWidth: '100%',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    fontSize: 18,
+                    opacity: 0.8,
+                    margin: [5, 0],
+                  },
+                }}
+              >
+                {false &&
+                  expanded &&
+                  (({ content }) => (
+                    <inner css={{ margin: [6, 0] }}>{content}</inner>
+                  ))}
+              </OrbitCard>
+            )
+          })}
         </Masonry>
       </OrbitDockedPane>
     )

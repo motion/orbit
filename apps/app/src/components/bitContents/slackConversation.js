@@ -21,19 +21,21 @@ export class BitSlackConversation extends React.Component {
     shownLimit: 5,
   }
 
-  render({ children, bit, appStore, shownLimit, contentStyle }) {
-    const content = (bit.data.messages || [])
-      .slice(0, shownLimit)
-      .map((message, index) => (
-        <BitSlackMessage
-          key={index}
-          message={message}
-          previousMessage={bit.data.messages[index - 1]}
-          bit={bit}
-          appStore={appStore}
-          contentStyle={contentStyle}
-        />
-      ))
+  render({ children, bit, appStore, shownLimit, contentStyle, isExpanded }) {
+    const content = isExpanded
+      ? (bit.data.messages || [])
+          .slice(0, shownLimit)
+          .map((message, index) => (
+            <BitSlackMessage
+              key={index}
+              message={message}
+              previousMessage={bit.data.messages[index - 1]}
+              bit={bit}
+              appStore={appStore}
+              contentStyle={contentStyle}
+            />
+          ))
+      : null
     return children({
       title: arrford((bit.people || []).map(p => capitalize(p.name)), false),
       date: getSlackDate(bit.bitUpdatedAt),

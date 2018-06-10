@@ -44,9 +44,13 @@ class PaneStore {
     return this.panes[this.paneIndex]
   }
 
-  clearPeekOnActivePaneChange = react(() => this.activePane, PeekStateActions.clearPeek, {
-    log: 'state',
-  })
+  clearPeekOnActivePaneChange = react(
+    () => this.activePane,
+    PeekStateActions.clearPeek,
+    {
+      log: 'state',
+    },
+  )
 
   animationState = react(
     () => App.orbitState.docked,
@@ -97,19 +101,27 @@ class OrbitDocked {
             <OrbitHeader
               after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
+            <glowWrap>
+              <glow />
+            </glowWrap>
             <orbitInner>
-              <OrbitHome
-                name="home"
-                appStore={appStore}
-                paneStore={paneStore}
-              />
-              <OrbitDirectory
-                name="directory"
-                appStore={appStore}
-                paneStore={paneStore}
-              />
-              <OrbitSearchResults name="summary-search" parentPane="summary" />
-              <OrbitSettings name="settings" />
+              <orbitRelativeInner>
+                <OrbitHome
+                  name="home"
+                  appStore={appStore}
+                  paneStore={paneStore}
+                />
+                <OrbitDirectory
+                  name="directory"
+                  appStore={appStore}
+                  paneStore={paneStore}
+                />
+                <OrbitSearchResults
+                  name="summary-search"
+                  parentPane="summary"
+                />
+                <OrbitSettings name="settings" />
+              </orbitRelativeInner>
             </orbitInner>
           </container>
         </frame>
@@ -177,7 +189,17 @@ class OrbitDocked {
         x: 0,
       },
     },
+    // having this have -20 margin on sides
+    // means we have nice shadows on inner content
+    // that overlap the edge of the frame and dont cut off
+    // but still hide things that go below the bottom as it should
     orbitInner: {
+      overflow: 'hidden',
+      margin: [0, -20],
+      padding: [0, 20],
+      flex: 1,
+    },
+    orbitRelativeInner: {
       position: 'relative',
       flex: 1,
     },
@@ -188,6 +210,32 @@ class OrbitDocked {
       zIndex: 10000000000,
       transform: {
         y: -16.5,
+      },
+    },
+    glowWrap: {
+      borderRadius,
+      overflow: 'hidden',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      position: 'absolute',
+    },
+    glow: {
+      background: '#fff',
+      opacity: 0.5,
+      top: 0,
+      left: 0,
+      width: 200,
+      height: 200,
+      position: 'absolute',
+      transform: {
+        y: -100,
+        x: 150,
+        scale: 2,
+      },
+      filter: {
+        blur: 100,
       },
     },
   }

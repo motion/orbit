@@ -387,9 +387,9 @@ class HomeFooter extends React.Component {
                   Autonomous coordination
                 </Title>
                 <UI.PassProps size={1.35} sizeLineHeight={1.2} alpha={0.7}>
-                  <P2>
-                    As more people join a company it gets harder to coordinate
-                    and distribute knowledge.
+                  <P2 size={1.6}>
+                    As more people join your company it gets harder to
+                    coordinate and distribute knowledge.
                   </P2>
                   <P2>
                     Orbit is a smart desktop app that sorts cloud activity into
@@ -400,7 +400,7 @@ class HomeFooter extends React.Component {
                     overhead. It's your secret weapon for coordinating internal
                     knowledge.
                   </P2>
-                  <P2 css={{ marginTop: 5 }}>
+                  <P2 size={1.2} css={{ marginTop: 5 }}>
                     Read more to learn about{' '}
                     <a
                       href="/features"
@@ -411,7 +411,7 @@ class HomeFooter extends React.Component {
                         fontWeight: 500,
                       }}
                     >
-                      how we're solving problems
+                      how it works
                     </a>{' '}
                     and{' '}
                     <a
@@ -423,7 +423,7 @@ class HomeFooter extends React.Component {
                         fontWeight: 500,
                       }}
                     >
-                      how we're building it
+                      how we're thinking about it
                     </a>, or sign up for early access below.
                   </P2>
                 </UI.PassProps>

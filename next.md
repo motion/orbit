@@ -9,11 +9,7 @@ Questions for Daniel:
 * Selling to apple (he wont like this question)
 *
 
-# next
-
-* jonathan set up ticket
-
-## demo
+## demo - 1 month
 
 1.  News
 
@@ -22,14 +18,16 @@ Questions for Daniel:
 * shows inline attachment
 * shows relevant people nicely
 * shows related conversations collapsed and expandable nicely
+* click a keyword that goes into:
 
 2.  Search
 
-* shows topic based search
+* a nice grid/news like search result
 * shows summarized and nice meta info for things
-* is fast and fluid
-* pin to top of search (or drag to order it)
+* type something else - is fast and fluid
+* pin to top of search (or drag to order it?)
 * pin to news
+  * this highlights asynchronous communication
 
 3.  Directory
 

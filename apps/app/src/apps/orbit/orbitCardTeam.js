@@ -11,9 +11,9 @@ const adjustIn = 8
 const imageStyle = {
   transformOrigin: 'bottom right',
   transform: {
-    y: -6 - 3,
-    x: 20 + 3,
-    scale: 2.5,
+    y: -6 - 5,
+    x: 20 + 5,
+    scale: 2.3,
     rotate: '-45deg',
   },
 }

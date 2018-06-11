@@ -65,7 +65,9 @@ class OrbitCardTeamContent extends React.Component {
     const extraHeight = 20
     return (
       <React.Fragment>
-        <content css={{ flexFlow: 'row', padding: [10 + extraHeight, 0] }}>
+        <content
+          css={{ flexFlow: 'row', padding: [10 + extraHeight, 0, extraHeight] }}
+        >
           <people
             css={{
               position: 'relative',

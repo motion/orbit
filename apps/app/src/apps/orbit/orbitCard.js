@@ -5,6 +5,7 @@ import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
+import * as _ from 'lodash'
 
 @view.ui
 class PeopleRow extends React.Component {
@@ -26,10 +27,10 @@ class PeopleRow extends React.Component {
           ))}
         </images>
         <names>
-          <UI.Text size={0.9} color={'rgb(31.7%, 50.4%, 90.9%)'} alpha={0.5}>
+          <UI.Text size={0.95} alpha={0.5}>
             {people.map((person, i) => (
               <span $person key={i}>
-                {person.name}
+                {_.capitalize(person.name)}
               </span>
             ))}
           </UI.Text>
@@ -41,7 +42,7 @@ class PeopleRow extends React.Component {
   static style = {
     row: {
       flexFlow: 'row',
-      padding: [6, 0, 0],
+      padding: [8, 0, 0],
     },
     images: {
       flexFlow: 'row',

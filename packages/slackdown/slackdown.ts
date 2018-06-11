@@ -46,7 +46,6 @@ function matchTag(match) {
       return tag('span', { class: 'slack-user' }, p.length === 1 ? p[0] : p[1])
     default:
       const imgMatch = match[1].match(/(http[^|]+\.(png|jpe?g|gif))|.*/g)
-      console.log('match', match, 'imgMatch', imgMatch)
       if (imgMatch && imgMatch.length === 3) {
         console.log(`<img src="${imgMatch[0]}" />`)
         return `<img src="${imgMatch[0]}" />`

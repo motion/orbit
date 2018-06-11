@@ -305,7 +305,7 @@ export class OrbitCard extends React.Component {
       position: 'relative',
       maxHeight: '100%',
       transition: 'all ease-in 120ms',
-      padding: [20, 16],
+      padding: [20, 12],
     },
     title: {
       maxWidth: '100%',

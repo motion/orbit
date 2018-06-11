@@ -111,7 +111,7 @@ export class OrbitHome {
           </SubTitle>
           <div $$flex />
         </header>
-        <content css={{ margin: [0, -6] }}>
+        <content css={{ margin: [0, -4] }}>
           <Masonry if={store.results.length}>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2

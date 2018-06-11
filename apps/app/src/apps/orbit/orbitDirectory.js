@@ -99,7 +99,7 @@ export class OrbitDirectory {
             total={total}
             store={store}
             bit={teams[0]}
-            expanded
+            isExpanded
             hoverToSelect
           />
           <space css={{ height: 12 }} />
@@ -110,7 +110,7 @@ export class OrbitDirectory {
             total={total}
             store={store}
             bit={teams[1]}
-            expanded
+            isExpanded
             hoverToSelect
           />
           <carousel css={{ margin: [12, 0, 0] }}>

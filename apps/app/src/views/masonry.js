@@ -3,8 +3,8 @@ import { view, sleep } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
 const rowHeight = 2
-const gridGap = 10
-const gridColumnGap = 10
+const gridGap = 6
+const gridColumnGap = 6
 
 @view.ui
 export class Masonry extends React.Component {
@@ -27,16 +27,13 @@ export class Masonry extends React.Component {
     if (this.state.measured) return
     this.styles = []
     await sleep(30)
-    let i = 0
     for (const item of Array.from(grid.children)) {
       const content = item.firstChild
       const contentHeight = content.clientHeight
       const rowSpan = Math.ceil(
         (contentHeight + gridGap) / (rowHeight + gridGap),
       )
-      console.log('contentHeight', i, contentHeight, rowSpan, content)
       this.styles.push({ gridRowEnd: `span ${rowSpan}` })
-      i++
     }
     const gridChildren = React.Children.map(
       this.props.children,

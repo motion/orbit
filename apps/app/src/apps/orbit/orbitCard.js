@@ -114,7 +114,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 8,
+    borderRadius: 4,
   }
 
   constructor(...args) {
@@ -199,19 +199,14 @@ export class OrbitCard extends React.Component {
           {...hoverToSelect && this.hoverSettler.props}
           style={style}
         >
-          <card
-            onDoubleClick={this.handleDoubleClick}
-            css={{
-              padding: listItem ? 15 : tiny ? [6, 8] : [12, 14, 10],
-            }}
-          >
+          <card onDoubleClick={this.handleDoubleClick}>
             {orbitIcon}
             <title>
               <UI.Text
-                size={1.45}
+                size={1.35}
                 sizeLineHeight={0.8}
                 ellipse={2}
-                alpha={isSelected ? 1 : 0.7}
+                alpha={isSelected ? 1 : 0.8}
                 fontWeight={500}
                 css={{
                   maxWidth: 'calc(100% - 30px)',
@@ -224,39 +219,27 @@ export class OrbitCard extends React.Component {
               {afterTitle}
             </title>
             <subtitle if={hasSubtitle}>
-              <UI.Text if={location} opacity={0.7} alpha={0.8}>
-                in {location}&nbsp;&nbsp;
-              </UI.Text>
+              <UI.Text if={location}>in {location}&nbsp;&nbsp;</UI.Text>
               <UI.Text
                 if={typeof subtitle === 'string'}
                 ellipse={1}
-                alpha={0.7}
-                css={{ maxWidth: 'calc(100% - 115px)', opacity: 0.8 }}
+                css={{ maxWidth: 'calc(100% - 115px)' }}
               >
                 {subtitle}
               </UI.Text>
               {typeof subtitle !== 'string' && subtitle}
               <space $$flex />
-              <UI.Text if={date} alpha={0.5} size={0.95}>
+              <UI.Text if={date} size={0.95}>
                 <TimeAgo date={date} />
               </UI.Text>
             </subtitle>
             <preview if={preview && !children}>
-              <previewOverflow
-                if={false}
-                $$fullscreen
-                css={{
-                  background: `linear-gradient(transparent 160px, ${background})`,
-                  opacity: isSelected ? 1 : 0,
-                  transition: isSelected ? 'all ease-in 160ms 160ms' : 'none',
-                }}
-              />
               {typeof preview !== 'string' && preview}
               <UI.Text
                 if={typeof preview === 'string'}
-                alpha={isSelected ? 0.75 : 0.55}
+                alpha={isSelected ? 0.85 : 0.65}
                 size={listItem ? 1.1 : 1.6}
-                sizeLineHeight={0.85}
+                sizeLineHeight={0.9}
                 $previewText
               >
                 {preview.split(' ').map((word, i) => (
@@ -322,6 +305,7 @@ export class OrbitCard extends React.Component {
       position: 'relative',
       maxHeight: '100%',
       transition: 'all ease-in 120ms',
+      padding: [20, 16],
     },
     title: {
       maxWidth: '100%',
@@ -353,7 +337,8 @@ export class OrbitCard extends React.Component {
       // flex: 1,
     },
     subtitle: {
-      padding: [3, 0, 0],
+      margin: [-1, 0, 0],
+      opacity: 0.4,
       flexFlow: 'row',
       alignItems: 'center',
     },
@@ -366,28 +351,23 @@ export class OrbitCard extends React.Component {
     },
   }
 
-  static theme = ({ store, tiny, listItem, borderRadius, inGrid }, theme) => {
+  static theme = ({ store, listItem, borderRadius, inGrid }, theme) => {
     const { isSelected } = store
-    const radius = isSelected
-      ? borderRadius * 1.333
-      : listItem && tiny
-        ? 4
-        : listItem
-          ? 0
-          : borderRadius
     let hoveredStyle
     let card
-    if (listItem || tiny) {
+    if (listItem) {
       hoveredStyle = {
-        background: theme.activeHover.background,
+        background: theme.selected.background,
       }
       const listCardStyle = {
-        marginBottom: 8,
+        margin: [0, -12],
+        padding: [18, 20],
+        borderTop: [1, theme.hover.background],
       }
       card = isSelected
         ? {
             ...listCardStyle,
-            background: theme.active.background,
+            background: theme.selected.background,
             '&:hover': hoveredStyle,
           }
         : {
@@ -398,18 +378,20 @@ export class OrbitCard extends React.Component {
             },
           }
     } else {
+      const borderTop = [1, isSelected ? 'transparent' : theme.hover.background]
       hoveredStyle = {
         background: isSelected
           ? theme.selected.background
           : theme.hover.background,
       }
       card = {
-        // boxShadow: [[0, 0, 0, 0.5, [0, 0, 0, 1]]],
-        // background: theme.base.background.lighten(0.1).alpha(0.5),
+        // background: theme.base.background,
+        borderTop,
         '&:hover': hoveredStyle,
       }
       if (isSelected) {
         card = {
+          borderTop,
           background: '#fff',
           boxShadow: [[0, 3, 12, [0, 0, 0, 0.08]]],
         }
@@ -417,20 +399,16 @@ export class OrbitCard extends React.Component {
     }
     return {
       card: {
-        borderRadius: radius,
+        borderRadius,
         flex: inGrid ? 1 : 'none',
         ...card,
-        border: [
-          listItem ? 0 : 1,
-          isSelected ? 'transparent' : theme.hover.background.darken(0.01),
-        ],
       },
       bottom: {
         opacity: isSelected ? 1 : 0.5,
       },
       preview: {
         margin: inGrid ? ['auto', 0] : 0,
-        padding: inGrid ? 0 : [4, 0],
+        padding: [10, 0, 0],
       },
       previewText: {
         margin: inGrid ? ['auto', 0] : 0,

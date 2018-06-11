@@ -22,8 +22,8 @@ export default class Icons {
         size: opts.size || 64,
         destination,
       })
-    } catch {
-      console.log('error getting icon')
+    } catch (err) {
+      console.log('error getting icon', path, err)
     }
     this.cache[name] = true
     return name

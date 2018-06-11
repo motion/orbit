@@ -111,44 +111,46 @@ export class OrbitHome {
           </SubTitle>
           <div $$flex />
         </header>
-        <Masonry if={store.results.length}>
-          {store.results.map((bit, index) => {
-            const isExpanded = index < 2
-            return (
-              <OrbitCard
-                pane="summary"
-                subPane="home"
-                selectedTheme={selectedTheme}
-                key={`${bit.id}${index}`}
-                index={index}
-                bit={bit}
-                total={store.results.length}
-                hoverToSelect
-                isExpanded={false && isExpanded}
-                style={isExpanded && this.span2}
-                itemProps={{
-                  shownLimit: 3,
-                  contentStyle: {
-                    maxHeight: '1.2rem',
-                    maxWidth: '100%',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    fontSize: 18,
-                    opacity: 0.8,
-                    margin: [5, 0],
-                  },
-                }}
-              >
-                {false &&
-                  isExpanded &&
-                  (({ content }) => (
-                    <inner css={{ margin: [6, 0] }}>{content}</inner>
-                  ))}
-              </OrbitCard>
-            )
-          })}
-        </Masonry>
+        <content css={{ margin: [0, -6] }}>
+          <Masonry if={store.results.length}>
+            {store.results.map((bit, index) => {
+              const isExpanded = index < 2
+              return (
+                <OrbitCard
+                  pane="summary"
+                  subPane="home"
+                  selectedTheme={selectedTheme}
+                  key={`${bit.id}${index}`}
+                  index={index}
+                  bit={bit}
+                  total={store.results.length}
+                  hoverToSelect
+                  isExpanded={false && isExpanded}
+                  style={isExpanded && this.span2}
+                  itemProps={{
+                    shownLimit: 3,
+                    contentStyle: {
+                      maxHeight: '1.2rem',
+                      maxWidth: '100%',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      fontSize: 18,
+                      opacity: 0.8,
+                      margin: [5, 0],
+                    },
+                  }}
+                >
+                  {false &&
+                    isExpanded &&
+                    (({ content }) => (
+                      <inner css={{ margin: [6, 0] }}>{content}</inner>
+                    ))}
+                </OrbitCard>
+              )
+            })}
+          </Masonry>
+        </content>
       </OrbitDockedPane>
     )
   }

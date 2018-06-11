@@ -65,7 +65,7 @@ export const OrbitIcon = ({ icon, imageStyle, size = 25, ...props }) => {
       <UI.Icon
         if={!icons[icon]}
         name={icon}
-        css={{ display: 'inline', ...sizeProps }}
+        css={{ display: 'inline', ...sizeProps, ...imageStyle }}
         size={size}
       />
     </icon>

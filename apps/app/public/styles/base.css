@@ -462,12 +462,12 @@ html {
  */
 
 ::selection {
-  background: #e9cd88;
+  background: #ccc;
   color: #222;
   text-shadow: none;
 }
 *::selection {
-  background: #e9cd88;
+  background: #ccc;
   color: #222;
   text-shadow: none;
 }

@@ -80,7 +80,7 @@ class PaneStore {
   )
 }
 
-const borderRadius = 16
+const borderRadius = 18
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitStore')

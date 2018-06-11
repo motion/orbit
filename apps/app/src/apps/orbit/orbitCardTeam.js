@@ -62,7 +62,7 @@ class OrbitCardTeamContent extends React.Component {
   render({ background, store, bit, isExpanded, connections }) {
     const { topics, people, recently } = bit.data
     const results = store.results.slice(8, 28)
-    const extraHeight = 20
+    const extraHeight = isExpanded ? 20 : 5
     return (
       <React.Fragment>
         <content

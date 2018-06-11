@@ -168,13 +168,23 @@ export class AppStore {
     },
   )
 
-  resetActiveIndexOnSearch = react(
+  resetActiveIndexOnSearchStart = react(
     () => App.state.query,
     () => {
       this.activeIndex = -1
       this.clearSelected()
     },
     { log: 'state' },
+  )
+
+  resetActiveIndexOnSearchComplete = react(
+    () => this.searchState && Math.random(),
+    async (_, { sleep }) => {
+      await sleep(16)
+      this.nextIndex = 0
+      this.activeIndex = -1
+      // this.updateActiveIndex()
+    },
   )
 
   bitResultsId = 0
@@ -184,14 +194,13 @@ export class AppStore {
       Desktop.appState.id,
       Desktop.state.lastBitUpdatedAt,
     ],
-    async ([query], { sleep }) => {
+    async ([query], { sleep, setValue }) => {
       // debounce a little for fast typer
       await sleep(40)
       const results = await this.searchBits(query)
-      setTimeout(() => {
-        this.bitResultsId = Math.random()
-      })
-      return results
+      setValue(results)
+      await sleep()
+      this.bitResultsId = Math.random()
     },
     {
       immediate: true,
@@ -329,6 +338,7 @@ export class AppStore {
         // sort
         results = matchSort(rest, allResultsUnsorted)
       }
+      console.log('returning new searchState')
       return {
         query,
         message,

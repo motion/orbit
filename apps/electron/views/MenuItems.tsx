@@ -6,7 +6,7 @@ import {
   MenuItems as ElMenuItems,
 } from '@mcro/reactron'
 import { view, Component } from '@mcro/black'
-import { Electron } from '@mcro/all'
+import { Electron, App } from '@mcro/all'
 
 @view.attach('electronStore')
 @view.electron
@@ -30,7 +30,7 @@ export class MenuItems extends Component<{}> {
   }
 
   handlePreferences = () => {
-    Electron.setShouldShowSettings(Date.now())
+    Electron.sendMessage(App, App.messages.TOGGLE_SETTINGS)
   }
 
   render({ electronStore }) {

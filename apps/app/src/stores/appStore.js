@@ -457,14 +457,6 @@ export class AppStore {
     }
   }
 
-  toggleSettings = () => {
-    this.showSettings = !this.showSettings
-    // pin if not pinned
-    if (this.showSettings && !App.orbitState.pinned) {
-      App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
-    }
-  }
-
   checkAuths = async () => {
     const { error, ...authorizations } = await r2.get(
       `${Constants.API_URL}/getCreds`,

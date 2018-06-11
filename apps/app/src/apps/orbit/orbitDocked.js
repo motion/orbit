@@ -28,6 +28,12 @@ class PaneStore {
         this.paneIndex = Math.max(0, this.paneIndex - 1)
       }
     })
+
+    App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+      console.log('got message toggle settings')
+      this.setActivePane('settings')
+      App.setOrbitState({ docked: true })
+    })
   }
 
   setActivePane = name => {

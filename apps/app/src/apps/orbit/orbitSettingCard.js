@@ -59,7 +59,7 @@ export class OrbitSettingCard extends React.Component {
         key={index}
         ref={store.cardRef}
         $isSelected={isSelected}
-        {...hoverSettleProps}
+        {...isActive && hoverSettleProps}
         onClick={async () => {
           if (!isActive) {
             if (oauth === false) {
@@ -75,9 +75,9 @@ export class OrbitSettingCard extends React.Component {
           appStore.setTarget(setting, this.ref)
         }}
       >
-        <OrbitIcon $icon $iconActive={isActive} icon={icon} size={22} />
+        <OrbitIcon $icon $iconActive={isActive} icon={icon} size={18} />
         <titles>
-          <UI.Text $title fontWeight={300} size={1.4} textAlign="center">
+          <UI.Text $title fontWeight={500} size={1.2} textAlign="center">
             {title}
           </UI.Text>
           <UI.Text if={subtitle} $subtitle size={0.9} textAlign="center">
@@ -94,7 +94,7 @@ export class OrbitSettingCard extends React.Component {
       flex: 1,
       alignItems: 'center',
       position: 'relative',
-      padding: [10, 20],
+      padding: [12, 22],
       '&:hover': {
         background: [255, 255, 255, 0.1],
       },
@@ -107,8 +107,10 @@ export class OrbitSettingCard extends React.Component {
       borderBottom: 'none',
     },
     icon: {
-      margin: ['auto', 12, 'auto', 0],
-      opacity: 0.5,
+      margin: ['auto', 10, 'auto', -8],
+      transform: {
+        y: -1,
+      },
     },
     iconActive: {
       filter: 'none',

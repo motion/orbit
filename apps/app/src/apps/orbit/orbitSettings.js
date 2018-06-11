@@ -2,11 +2,7 @@ import { view, react } from '@mcro/black'
 import { partition } from 'lodash'
 import { OrbitSettingCard } from './orbitSettingCard'
 import { OrbitDockedPane } from './orbitDockedPane'
-import * as UI from '@mcro/ui'
-
-const Title = props => (
-  <UI.Title size={1.2} fontWeight={600} margin={[10, 20]} {...props} />
-)
+import { SubTitle } from '~/views'
 
 class OrbitSettingsStore {
   isPaneActive = false
@@ -101,7 +97,7 @@ export class OrbitSettings {
     return (
       <OrbitDockedPane name={name}>
         <section if={activeIntegrations.length}>
-          <Title>Active</Title>
+          <SubTitle>Integrations</SubTitle>
           <cards>
             {activeIntegrations.map((item, index) =>
               integrationCard(activeIntegrations)(item, index, index),
@@ -109,7 +105,7 @@ export class OrbitSettings {
           </cards>
         </section>
         <section if={inactiveIntegrations.length}>
-          <Title>Inactive</Title>
+          <SubTitle>Add Integration</SubTitle>
           <cards>
             {inactiveIntegrations.map((item, index) =>
               integrationCard(inactiveIntegrations)(
@@ -128,6 +124,9 @@ export class OrbitSettings {
     cards: {
       userSelect: 'none',
       marginBottom: 10,
+    },
+    section: {
+      margin: [0, -4],
     },
   }
 }

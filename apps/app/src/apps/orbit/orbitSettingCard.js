@@ -102,7 +102,6 @@ export class OrbitSettingCard extends React.Component {
         background: [255, 255, 255, 0.15],
       },
     },
-    isSelected: {},
     lastRow: {
       borderBottom: 'none',
     },
@@ -118,7 +117,7 @@ export class OrbitSettingCard extends React.Component {
     },
   }
 
-  static theme = ({ isActive }, theme) => {
+  static theme = (_, theme) => {
     return {
       card: {
         background: 'transparent',

@@ -114,7 +114,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 4,
+    borderRadius: 6,
   }
 
   constructor(...args) {
@@ -305,7 +305,7 @@ export class OrbitCard extends React.Component {
       position: 'relative',
       maxHeight: '100%',
       transition: 'all ease-in 120ms',
-      padding: [20, 12],
+      padding: [18, 12],
     },
     title: {
       maxWidth: '100%',
@@ -408,7 +408,7 @@ export class OrbitCard extends React.Component {
       },
       preview: {
         margin: inGrid ? ['auto', 0] : 0,
-        padding: [10, 0, 0],
+        padding: [8, 0, 0],
       },
       previewText: {
         margin: inGrid ? ['auto', 0] : 0,

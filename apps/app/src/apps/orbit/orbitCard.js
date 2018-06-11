@@ -7,8 +7,12 @@ import { TimeAgo } from '~/views/TimeAgo'
 
 @view.ui
 class Link extends React.Component {
+  handleClick = () => {
+    this.props.orbitStore.setQuery(this.props.children)
+  }
+
   render({ children }) {
-    return <span>{children}</span>
+    return <span onClick={this.handleClick}>{children}</span>
   }
   static style = {
     span: {
@@ -103,7 +107,7 @@ const tinyProps = {
 }
 
 @UI.injectTheme
-@view.attach('appStore', 'paneStore')
+@view.attach('appStore', 'paneStore', 'orbitStore')
 @view({
   store: OrbitCardStore,
 })
@@ -161,6 +165,7 @@ export class OrbitCard extends React.Component {
       children,
       theme,
       titleProps,
+      orbitStore,
     } = this.props
     const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
@@ -250,7 +255,7 @@ export class OrbitCard extends React.Component {
               >
                 {preview.split(' ').map((word, i) => (
                   <React.Fragment key={i}>
-                    <Link>{word}</Link>{' '}
+                    <Link orbitStore={orbitStore}>{word}</Link>{' '}
                   </React.Fragment>
                 ))}
               </UI.Text>

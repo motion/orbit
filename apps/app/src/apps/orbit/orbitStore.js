@@ -66,6 +66,10 @@ export default class OrbitStore {
     }
   }
 
+  setQuery = value => {
+    this.query = value
+  }
+
   onChangeQuery = e => {
     this.query = e.target.value
   }

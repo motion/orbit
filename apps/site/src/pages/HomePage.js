@@ -92,8 +92,8 @@ const Pitch = ({ isLarge }) => (
       A new way to coordinate teams
     </Title>
     <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      Give your company an operating system that coordinates knowledge without
-      disrupting how you work.
+      Automatic unified cloud search, news, and profiles for teams. Installed in
+      3 minutes.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />
@@ -345,8 +345,8 @@ class HomeFooter extends React.Component {
         <Card.Icon name="transportation_car" color="rgb(91.3%, 87%, 16.8%)" />
         <Card.Title>Smart & automatic</Card.Title>
         <Card.Body>
-          Orbit runs on-device, using novel machine learning to sort the cloud.
-          That means less stale knowledge and less overhead.
+          Orbit runs on-device, using simple machine learning to sort your cloud
+          for instant, accurate results.
         </Card.Body>
       </Card>
     )
@@ -356,8 +356,8 @@ class HomeFooter extends React.Component {
         <Card.Icon name="users_multiple" color="blue" />
         <Card.Title>Easy & secure</Card.Title>
         <Card.Body>
-          Without a cloud or on-premise install, Orbit installs securely in 3
-          minutes.
+          On device means no cloud or on-prem install so you can try Orbit
+          securely in minutes.
         </Card.Body>
       </Card>
     )
@@ -367,8 +367,8 @@ class HomeFooter extends React.Component {
         <Card.Icon name="social_logo-slack" color="green" />
         <Card.Title>Works with chat</Card.Title>
         <Card.Body>
-          Slack is helpful, but messy. Cut the noise with a personal summarized
-          daily digest for everyone.
+          Slack is helpful, but messy. Cut the noise with summarized
+          conversation search and news.
         </Card.Body>
       </Card>
     )

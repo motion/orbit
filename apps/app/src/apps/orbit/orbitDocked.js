@@ -8,9 +8,10 @@ import { OrbitHeader } from './orbitHeader'
 import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitDirectory } from './orbitDirectory'
 import { App, Electron } from '@mcro/all'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const SHADOW_PAD = 85
-const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.2]]
+const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
 
 class PaneStore {
   filters = ['all', 'general', 'status', 'showoff']
@@ -43,13 +44,21 @@ class PaneStore {
     return this.panes[this.paneIndex]
   }
 
-  clearPeekOnActivePaneChange = react(() => this.activePane, App.clearPeek, {
-    log: 'state',
-  })
+  clearPeekOnActivePaneChange = react(
+    () => this.activePane,
+    PeekStateActions.clearPeek,
+    {
+      log: 'state',
+    },
+  )
 
   animationState = react(
     () => App.orbitState.docked,
     async (visible, { sleep, setValue }) => {
+      // hmr already showing
+      if (visible && this.animationState.visible) {
+        throw react.cancel
+      }
       // old value first to setup for transition
       setValue({ willAnimate: true, visible: !visible })
       await sleep(32)
@@ -66,12 +75,12 @@ class PaneStore {
     {
       immediate: true,
       log: false,
-      defaultValue: { willAnimate: false, visible: false },
+      defaultValue: { willAnimate: false, visible: App.orbitState.docked },
     },
   )
 }
 
-const borderRadius = 14
+const borderRadius = 18
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitStore')
@@ -81,46 +90,67 @@ const borderRadius = 14
 @view
 class OrbitDocked {
   render({ paneStore, appStore, theme }) {
-    log('DOCKED ------------')
+    log('DOCKED ------------', paneStore.animationState)
     const { visible, willAnimate } = paneStore.animationState
     return (
-      <frame $willAnimate={willAnimate} $visible={visible}>
-        <border $$fullscreen />
-        <container>
-          <OrbitHeader
-            after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
-          />
-          <orbitInner>
-            <OrbitHome appStore={appStore} paneStore={paneStore} />
-            <OrbitDirectory
-              name="directory"
-              appStore={appStore}
-              paneStore={paneStore}
+      <>
+        <bgGradient if={false} $$fullscreen $visible={visible} />
+        <frame $willAnimate={willAnimate} $visible={visible}>
+          <border $$fullscreen />
+          <container>
+            <OrbitHeader
+              after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
-            <OrbitSearchResults name="summary-search" parentPane="summary" />
-            <OrbitSettings name="settings" />
-          </orbitInner>
-        </container>
-      </frame>
+            <glowWrap>
+              <glow />
+            </glowWrap>
+            <orbitInner>
+              <orbitRelativeInner>
+                <OrbitHome
+                  name="home"
+                  appStore={appStore}
+                  paneStore={paneStore}
+                />
+                <OrbitDirectory
+                  name="directory"
+                  appStore={appStore}
+                  paneStore={paneStore}
+                />
+                <OrbitSearchResults
+                  name="summary-search"
+                  parentPane="summary"
+                />
+                <OrbitSettings name="settings" />
+              </orbitRelativeInner>
+            </orbitInner>
+          </container>
+        </frame>
+      </>
     )
   }
 
   static theme = (props, theme) => {
     const background = theme.base.background
-    const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
+    const borderColor = theme.base.background.darken(0.35).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     return {
       frame: {
         background,
       },
       border: {
-        borderRadius: borderRadius + 1,
+        borderRadius: borderRadius,
         boxShadow: [borderShadow, DOCKED_SHADOW],
       },
     }
   }
 
   static style = {
+    bgGradient: {
+      background: 'linear-gradient(to right, transparent 20%, rgba(0,0,0,0.6))',
+      zIndex: -1,
+      opacity: 0,
+      transition: 'all ease-in 100ms',
+    },
     frame: {
       position: 'absolute',
       top: 10,
@@ -159,7 +189,17 @@ class OrbitDocked {
         x: 0,
       },
     },
+    // having this have -20 margin on sides
+    // means we have nice shadows on inner content
+    // that overlap the edge of the frame and dont cut off
+    // but still hide things that go below the bottom as it should
     orbitInner: {
+      overflow: 'hidden',
+      margin: [0, -20],
+      padding: [0, 20],
+      flex: 1,
+    },
+    orbitRelativeInner: {
       position: 'relative',
       flex: 1,
     },
@@ -170,6 +210,32 @@ class OrbitDocked {
       zIndex: 10000000000,
       transform: {
         y: -16.5,
+      },
+    },
+    glowWrap: {
+      borderRadius,
+      overflow: 'hidden',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      position: 'absolute',
+    },
+    glow: {
+      background: '#fff',
+      opacity: 1,
+      top: 0,
+      left: 0,
+      width: 200,
+      height: 200,
+      position: 'absolute',
+      transform: {
+        y: -100,
+        x: 150,
+        scale: 2,
+      },
+      filter: {
+        blur: 200,
       },
     },
   }

@@ -1,26 +1,42 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import * as UI from '@mcro/ui'
 import { ControlButton } from '~/views/controlButton'
 
-@view
-export class WindowControls {
-  render({ onClose, onMax, onMin, style }) {
-    return (
-      <buttons $$row style={style}>
-        <ControlButton if={onClose} icon="x" onClick={onClose} />
-        <ControlButton
-          if={onMax}
-          onClick={onMax}
-          icon="y"
-          background="#F6BE4F"
-        />
-        <ControlButton
-          if={onMin}
-          onClick={onMin}
-          icon="z"
-          background="#62C554"
-        />
-      </buttons>
-    )
-  }
+export const WindowControls = ({
+  onClose,
+  onMax,
+  onMin,
+  maxProps,
+  closeProps,
+  minProps,
+  itemProps,
+  ...props
+}) => {
+  return (
+    <buttons $$row {...props}>
+      <ControlButton
+        if={onClose}
+        icon="x"
+        onClick={onClose}
+        {...itemProps}
+        {...closeProps}
+      />
+      <ControlButton
+        if={onMax}
+        onClick={onMax}
+        icon="y"
+        background="#F6BE4F"
+        {...itemProps}
+        {...maxProps}
+      />
+      <ControlButton
+        if={onMin}
+        onClick={onMin}
+        icon="z"
+        background="#62C554"
+        {...itemProps}
+        {...minProps}
+      />
+    </buttons>
+  )
 }

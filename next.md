@@ -1,19 +1,67 @@
-# next
+Questions for Daniel:
 
-* product sprint for 3 weeks
-  * need to flesh out stripe home completely for demo
-  * go for flash
-  * goal is make home header have a slick video
-  * show:
-    * unifying integrations in settings
-    * searching through stuff
-    * summarized conversation
-    * profile
-    * possibly:
-      * clip in new knowledge piece + posts to slack and google doc folder?
-      * project overview rich card
-      * pin to top of search
-      * mark as stale
+* How were you thinking of Cue as a startup at the end
+  * your P/M research probably looks a lot like my own
+* Types of companies you felt were best fit
+* Reach outs to COO of mid-size tech company in SF ~500ppl seem good strategy?
+* Getting feedback in many directions
+* Building the right team
+* Selling to apple (he wont like this question)
+*
+
+## demo - 1 month
+
+1.  News
+
+* has nice github update with newest comment
+* highlight slack conversation
+* shows inline attachment
+* shows relevant people nicely
+* shows related conversations collapsed and expandable nicely
+* click a keyword that goes into:
+
+2.  Search
+
+* a nice grid/news like search result
+* shows summarized and nice meta info for things
+* type something else - is fast and fluid
+* pin to top of search (or drag to order it?)
+* pin to news
+  * this highlights asynchronous communication
+
+3.  Directory
+
+* show teams
+* peek to see a team
+* search to filter a person
+* peek to show person
+* aggregates a few things
+
+last demo:
+
+* home
+  * show a github ticket
+    * show the most recent action preview there
+  * show a team card with inline update
+  * peek conversation and "Pin to Team"
+    * react-spring peek move
+* search
+  * slack:
+    * list all links, then filter by room, then by person
+    * list all attachments, see in grid
+    * shows topic summarized convos nicely
+  * topic search would be nice
+  * "pin to search"
+* directory
+  * show profile
+  * show team peek card
+* apps
+
+  * final wow
+  * click "create app", paste in some code
+  * realtime HMR edit
+  * shows up in Home
+
 * write three articles from write.md
 * site:
   * 1 week
@@ -23,7 +71,15 @@
     * polish everything to better explain (features use cases)
     * post articles to HN, PH, dev twitter, etc
 * start twitter and tweeting, follow a bunch of good and similar accounts
+
   * setup tweetbot or something to manage
+
+* hire:
+  * start with syncers + panes
+    * do one syncer/pane at a time
+    * google docs
+    * google mail
+    * slack
 
 # dev
 
@@ -38,6 +94,7 @@
 
 ## low level
 
+* [ ] cpu on desktop gets pegged at 100%
 * [ ] intercept all a=href and open in native browser (slack)
 * [ ] slack emojis
 * [ ] only close peek on esc if electron focused

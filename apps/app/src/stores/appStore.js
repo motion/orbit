@@ -80,8 +80,8 @@ const parseQuery = query => {
 }
 
 export class AppStore {
-  nextIndex = -1
-  activeIndex = 0
+  nextIndex = 0
+  activeIndex = -1
   showSettings = false
   settings = {}
   services = {}
@@ -105,7 +105,7 @@ export class AppStore {
 
   clearPeekOnSelectedPaneChange = react(
     () => this.selectedPane,
-    App.clearPeek,
+    this.clearSelected,
     {
       log: 'state',
     },
@@ -154,13 +154,37 @@ export class AppStore {
     },
   )
 
-  resetActiveIndexOnSearch = react(
+  resetActiveIndexOnKeyPastEnds = react(
+    () => this.nextIndex,
+    index => {
+      // if card selected, let card do its thing
+      if (index >= 0 || index < this.searchState.results.length) {
+        throw react.cancel
+      }
+      console.log('updating')
+      // otherwise set it
+      this.clearSelected()
+      this.updateActiveIndex()
+    },
+  )
+
+  resetActiveIndexOnSearchStart = react(
     () => App.state.query,
     () => {
-      this.activeIndex = 0
-      App.clearPeek()
+      this.activeIndex = -1
+      this.clearSelected()
     },
     { log: 'state' },
+  )
+
+  resetActiveIndexOnSearchComplete = react(
+    () => this.searchState && Math.random(),
+    async (_, { sleep }) => {
+      await sleep(16)
+      this.nextIndex = 0
+      this.activeIndex = -1
+      // this.updateActiveIndex()
+    },
   )
 
   bitResultsId = 0
@@ -170,14 +194,13 @@ export class AppStore {
       Desktop.appState.id,
       Desktop.state.lastBitUpdatedAt,
     ],
-    async ([query], { sleep }) => {
+    async ([query], { sleep, setValue }) => {
       // debounce a little for fast typer
       await sleep(40)
       const results = await this.searchBits(query)
-      setTimeout(() => {
-        this.bitResultsId = Math.random()
-      })
-      return results
+      setValue(results)
+      await sleep()
+      this.bitResultsId = Math.random()
     },
     {
       immediate: true,
@@ -250,11 +273,11 @@ export class AppStore {
   )
 
   get results() {
-    if (this.selectedPane.indexOf('-search') > 0) {
-      return this.searchState.results
-    }
     if (this.getResults) {
       return this.getResults()
+    }
+    if (this.selectedPane.indexOf('-search') > 0) {
+      return this.searchState.results
     }
     return this.searchState.results || []
   }
@@ -263,13 +286,12 @@ export class AppStore {
     () => [App.state.query, this.getResults, this.updateResults],
     async ([query, thisGetResults], { when }) => {
       if (!query) {
-        return { query, results: [] }
+        return { query, results: thisGetResults ? thisGetResults() : [] }
       }
       // these are all specialized searches, see below for main search logic
-      if (thisGetResults && this.showSettings) {
+      if (thisGetResults && thisGetResults.shouldFilter) {
         return {
           query,
-          message: 'Settings',
           results: Helpers.fuzzy(query, thisGetResults()),
         }
       }
@@ -316,6 +338,7 @@ export class AppStore {
         // sort
         results = matchSort(rest, allResultsUnsorted)
       }
+      console.log('returning new searchState')
       return {
         query,
         message,
@@ -330,23 +353,25 @@ export class AppStore {
   )
 
   clearSelected = () => {
-    App.clearPeek()
+    clearTimeout(this.hoverOutTm)
+    this.nextIndex = -1
+    PeekStateActions.clearPeek()
   }
 
   lastSelectAt = 0
 
   hoverOutTm = 0
   getHoverSettler = Helpers.hoverSettler({
-    enterDelay: 80,
+    enterDelay: 50,
     betweenDelay: 30,
     onHovered: res => {
+      log('onhvoered', res)
       clearTimeout(this.hoverOutTm)
       if (!res) {
-        log('should clear peek')
         // interval because hoversettler is confused when going back from peek
         // this.hoverOutTm = setInterval(() => {
         //   if (!Desktop.hoverState.peekHovered) {
-        //     log(`no target`)
+        //     log('should clear peek')
         //     this.clearSelected()
         //   }
         // }, 200)
@@ -356,14 +381,15 @@ export class AppStore {
     },
   })
 
+  // sitrep
   toggleSelected = index => {
-    const isSame = this.activeIndex === index
+    const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks
         return isSame
       }
-      App.clearPeek()
+      this.clearSelected()
     } else {
       this.nextIndex = index
     }
@@ -371,15 +397,21 @@ export class AppStore {
   }
 
   setTarget = (item, target) => {
+    clearTimeout(this.hoverOutTm)
     if (!target) {
       console.error('no target', item, target, this.nextIndex, this.activeIndex)
       return
     }
     PeekStateActions.selectItem(item, target)
-    if (this.nextIndex !== this.activeIndex) {
-      this.lastSelectAt = Date.now()
-      this.activeIndex = this.nextIndex
+    this.updateActiveIndex()
+  }
+
+  updateActiveIndex = () => {
+    if (this.nextIndex === this.activeIndex) {
+      return
     }
+    this.lastSelectAt = Date.now()
+    this.activeIndex = this.nextIndex
   }
 
   setGetResults = fn => {

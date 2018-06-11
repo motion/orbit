@@ -58,7 +58,7 @@ export class OrbitHeader extends React.Component {
     onHover: this.props.headerStore.hover,
   })
 
-  render({ orbitStore, headerStore, after, theme }) {
+  render({ orbitStore, headerStore, after, theme, showPin }) {
     const headerBg = theme.base.background
     return (
       <orbitHeader
@@ -79,12 +79,12 @@ export class OrbitHeader extends React.Component {
           <UI.Icon
             $searchIcon
             name="ui-1_zoom"
-            size={18}
-            color={theme.base.color.alpha(0.3)}
+            size={20}
+            color={theme.base.color.alpha(0.2)}
           />
           <input
             value={orbitStore.query}
-            size={1.3}
+            size={1.25}
             $input
             background="transparent"
             onChange={orbitStore.onChangeQuery}
@@ -99,6 +99,7 @@ export class OrbitHeader extends React.Component {
         </title>
         <after if={after}>{after}</after>
         <ControlButton
+          if={showPin}
           onClick={App.togglePinned}
           borderWidth={App.orbitState.pinned ? 0.5 : 2}
           $pinnedIcon
@@ -125,15 +126,11 @@ export class OrbitHeader extends React.Component {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 2,
+      padding: [0, 16],
       transition: 'all ease-in 300ms',
       zIndex: 10000000,
     },
     after: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
       alignItems: 'center',
       flexFlow: 'row',
     },
@@ -153,7 +150,7 @@ export class OrbitHeader extends React.Component {
       transition: 'all ease-in 300ms',
     },
     searchIcon: {
-      paddingLeft: 32,
+      paddingLeft: 16,
       margin: 0,
     },
     input: {

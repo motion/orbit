@@ -1,25 +1,19 @@
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
-import { Bit } from '~/app'
-import * as Collapse from '../views/collapse'
+import * as Collapse from '~/views/collapse'
 import { GithubRepos } from './githubRepos'
 
 class OrgStore {
-  open = false
-  get api() {
-    return GithubService.github
-  }
-  repos = react(
-    () =>
-      this.api &&
-      this.api
-        .orgs(this.props.name)
-        .repos.fetch({ per_page: 100 })
-        .then(res => res.items),
-  )
+  open = true
+  repos = react(() => {
+    return this.props.githubStore.service.github
+      .orgs(this.props.name)
+      .repos.fetch({ per_page: 100 })
+      .then(res => res.items)
+  })
 }
-@view.attach('githubStore')
+
 @view({
   store: OrgStore,
 })
@@ -27,7 +21,7 @@ export class GithubOrg {
   render({ store, githubStore, name }) {
     const repos = reverse(sortBy(store.repos || [], 'updatedAt'))
     githubStore.syncVersion
-
+    console.log('repos are2', repos)
     return (
       <org>
         <bar onClick={() => (store.open = !store.open)} $$row>

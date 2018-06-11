@@ -1,75 +1,28 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { SubTitle, RoundButton } from '~/views'
 import * as UI from '@mcro/ui'
-
-const roundBtnProps = {
-  fontSize: 15,
-  sizePadding: 1.5,
-  sizeHeight: 1,
-  sizeRadius: 0.9,
-  margin: [0, 1],
-}
-
-const postfix = [
-  'st',
-  'nd',
-  'rd',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'st',
-  'nd',
-  'rd',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'st',
-]
 
 @UI.injectTheme
 @view
 export class OrbitHomeHeader {
   render({ paneStore, theme }) {
-    const locale = 'en-US'
-    const now = new Date()
-    const day = now.toLocaleDateString(locale, { weekday: 'short' })
-    const month = now.toLocaleDateString(locale, { month: 'short' })
-    const dayNum = now.getMonth()
     const buttonColor = theme.base.color.lighten(0.2)
     const exploreButton = {
       size: 1.2,
       circular: true,
       borderWidth: 1,
+      margin: [0, 0, 0, 5],
       borderColor: 'transparent',
       background: 'transparent',
       iconProps: {
         color: buttonColor,
-        size: 16,
+        size: 15,
       },
-      opacity: 0.5,
+      opacity: 0.3,
       activeStyle: {
         background: 'transparent',
         borderColor: '#ddd',
-        opacity: 1,
+        opacity: 0.7,
       },
       hoverStyle: {
         background: 'transparent',
@@ -95,6 +48,7 @@ export class OrbitHomeHeader {
             {...exploreButton}
           />
           <UI.Button
+            if={false}
             icon="gear"
             tooltip="Settings"
             $exploreButton
@@ -126,56 +80,16 @@ export class OrbitHomeHeader {
             />
           </filters> */}
         </section>
-        <section if={false} $subSection>
-          <title>
-            <SubTitle $niceDate>
-              {day} {month} {dayNum}
-              <span $super>{postfix[dayNum - 1]}</span>
-            </SubTitle>
-          </title>
-          <div $$flex />
-        </section>
       </>
     )
   }
 
   static style = {
-    super: {
-      verticalAlign: 'super',
-      marginLeft: 1,
-      fontSize: 11,
-      opacity: 0.6,
-    },
-    cards: {
-      flexFlow: 'row',
-      flexWrap: 'wrap',
-      userSelect: 'none',
-      marginBottom: 20,
-    },
     explore: {
       width: '100%',
       flexFlow: 'row',
-      padding: [7, 10, 10, 12],
+      padding: [7, 0, 10, 12],
       alignItems: 'center',
-    },
-    exploreButton: {
-      margin: [0, 6, 0, 0],
-    },
-    subSection: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      padding: [0, 15, 10],
-    },
-    title: {
-      padding: [0, 15, 0, 0],
-    },
-    niceDate: {
-      fontSize: 16,
-      fontWeight: 300,
-      lineHeight: '1.5rem',
-      margin: 0,
-      padding: 0,
-      flexFlow: 'row',
     },
     filters: {
       flexFlow: 'row',

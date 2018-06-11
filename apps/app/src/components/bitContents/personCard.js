@@ -1,16 +1,16 @@
 import { view } from '@mcro/black'
-// import * as React from 'react'
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 
 @view
-export class PersonCard {
+export class PersonCard extends React.Component {
   render({ children, bit }) {
     return children({
       // preview: bit.data.profile.email,
       preview: (
         <test>
           <img $avatar src={bit.data.profile.image_512} />
-          <UI.Text fontWeight={800} color="#000">
+          <UI.Text fontWeight={800} alpha={1}>
             {bit.name}
           </UI.Text>
           <subtitles>

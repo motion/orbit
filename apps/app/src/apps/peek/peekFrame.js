@@ -4,8 +4,9 @@ import * as UI from '@mcro/ui'
 import { App } from '@mcro/all'
 import { WindowControls } from '~/views/windowControls'
 import * as Constants from '~/constants'
+import * as PeekStateActions from '~/actions/PeekStateActions'
 
-const SHADOW_PAD = 50
+const SHADOW_PAD = 80
 const borderRadius = 8
 const background = '#f9f9f9'
 
@@ -38,8 +39,7 @@ export class PeekFrame {
     const boxShadow = [[onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]]]
     const arrowSize = 24
     // determine x adjustments
-    // adjust for docked not using shadow pad
-    let peekAdjustX = docked ? -18 - 6 : 0
+    let peekAdjustX = 0
     // adjust for orbit arrow blank
     if (!docked && orbitOnLeft && !onRight) {
       peekAdjustX -= Constants.SHADOW_PAD
@@ -100,16 +100,28 @@ export class PeekFrame {
         >
           <peek>
             <WindowControls
+              itemProps={{
+                style: {
+                  marginLeft: 1,
+                },
+              }}
               css={{
+                flexFlow: 'row-reverse',
                 position: 'absolute',
-                top: 11,
-                right: 0,
+                top: 13,
+                right: 2,
                 zIndex: 10000,
                 transform: {
                   scale: 0.9,
                 },
               }}
-              onClose={App.clearPeek}
+              onClose={PeekStateActions.clearPeek}
+              onMax={() => {
+                App.setPeekState({ pinned: !App.peekState.pinned })
+              }}
+              maxProps={{
+                background: '#ccc',
+              }}
             />
             <chrome
               if={peekStore.hasHistory}

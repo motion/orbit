@@ -4,6 +4,8 @@ const RE_BOLD = new RegExp('\\*([^\\*]+?)\\*', 'g')
 const RE_ITALIC = new RegExp('_([^_]+?)_', 'g')
 const RE_FIXED = new RegExp('`([^`]+?)`', 'g')
 
+// TODO sanitize
+
 function payloads(tag, start = 0) {
   return pipeSplit(tag.substr(start, tag.length - start))
 }
@@ -43,6 +45,11 @@ function matchTag(match) {
       p = payloads(match[1], 2)
       return tag('span', { class: 'slack-user' }, p.length === 1 ? p[0] : p[1])
     default:
+      const imgMatch = match[1].match(/(http[^|]+\.(png|jpe?g|gif))|.*/g)
+      if (imgMatch && imgMatch.length === 3) {
+        console.log(`<img src="${imgMatch[0]}" />`)
+        return `<img src="${imgMatch[0]}" />`
+      }
       p = payloads(match[1])
       return tag('a', { href: p[0] }, p.length === 1 ? p[0] : p[1])
   }

@@ -23,7 +23,15 @@ export async function createOrUpdate(
   returnIfUnchanged = false,
 ) {
   const finalFields = findFields ? pick(values, findFields) : values
-  let item = (await Model.findOne({ where: finalFields })) || new Model()
+  let item
+  const found = await Model.findOne({ where: finalFields })
+  if (found) {
+    console.log('found existing')
+    item = found
+  } else {
+    console.log('creating new', values)
+    item = new Model()
+  }
   const itemVals = Object.keys(values).reduce(
     (a, b) => ({ ...a, [b]: item[b] }),
     {},
@@ -33,8 +41,15 @@ export async function createOrUpdate(
     return null
   }
   if (changed) {
-    Object.assign(item, values)
-    await item.save()
+    for (const key of Object.keys(values)) {
+      item[key] = values[key]
+    }
+    try {
+      await item.save()
+    } catch (err) {
+      console.trace('error', err)
+      throw err
+    }
   }
   return item
 }

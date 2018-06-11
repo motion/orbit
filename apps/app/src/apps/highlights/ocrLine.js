@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Helpers } from '@mcro/all'
+import * as Helpers from '@mcro/constants'
 import { LINE_Y_ADJ, TOP_BAR_PAD } from './helpers'
 
 @view

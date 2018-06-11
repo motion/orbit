@@ -87,7 +87,7 @@ class FeaturesIntro extends React.Component {
             <SmallTitle>Features</SmallTitle>
             <Glow style={{ transform: { y: '180%', x: '55%' } }} />
             <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
-              Make knowledge work.
+              The autonomous intranet.
             </Title>
             <P size={1.2} alpha={0.9} fontWeight={500}>
               <a $link onClick={scrollTo('#news')}>
@@ -491,9 +491,10 @@ export class SectionFeatureIntelligence extends React.Component {
                       }}
                     >
                       <P size={1.8} sizeLineHeight={1.1}>
-                        With simple naming conventions, turn a document folder
-                        into your team documentation. Smart collation means it's
-                        easy to see what's happening across teams and people.
+                        A simple way to explore teams and people in your
+                        company. Smart aggregation makes it's easy explore, find
+                        experts in your company, and see how teams and projects
+                        are moving.
                       </P>
                     </Callout>
                   </UI.Theme>

@@ -22,8 +22,9 @@ const icons = {
 
 const SLACK_SCALE = {
   transform: {
-    y: -1,
+    y: 1.5,
     scale: 0.95,
+    rotate: '20deg',
   },
 }
 const GMAIL_SCALE = {
@@ -41,7 +42,7 @@ const adjust = name => {
   }
 }
 
-export const OrbitIcon = ({ icon, size = 25, style, ...props }) => {
+export const OrbitIcon = ({ icon, imageStyle, size = 25, ...props }) => {
   const sizeProps = {
     width: size,
     height: size,
@@ -53,19 +54,18 @@ export const OrbitIcon = ({ icon, size = 25, style, ...props }) => {
         textAlign: 'center',
         ...adjust(icon),
         ...sizeProps,
-        ...style,
       }}
       {...props}
     >
       <img
         if={icons[icon]}
         src={icons[icon]}
-        css={{ width: '100%', height: '100%' }}
+        css={{ width: '100%', height: '100%', ...imageStyle }}
       />
       <UI.Icon
         if={!icons[icon]}
         name={icon}
-        css={{ display: 'inline', ...sizeProps }}
+        css={{ display: 'inline', ...sizeProps, ...imageStyle }}
         size={size}
       />
     </icon>

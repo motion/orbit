@@ -58,6 +58,10 @@ export default function peekPosition(target) {
   if (!orbitOnLeft && peekOnLeft) {
     x += Constants.ARROW_PAD
   }
+  // adjust for docked
+  if (App.orbitState.docked) {
+    x -= 24
+  }
   return {
     position: [Math.round(x), Math.round(y)],
     size: [pW, pH],

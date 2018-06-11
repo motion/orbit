@@ -2,18 +2,27 @@ import { Person, Bit } from '@mcro/models'
 import { App } from '@mcro/all'
 import peekPosition from '../helpers/peekPosition'
 
-export function selectItem(item: Person | Bit, ref?: any) {
+type PositionObject =
+  | HTMLElement
+  | {
+      top: number
+      left: number
+      width: number
+      height: number
+    }
+
+export function selectItem(item: Person | Bit, target?: PositionObject) {
   if (item instanceof Person) {
-    selectPerson(item, ref)
+    selectPerson(item, target)
   } else {
-    selectBit(item, ref)
+    selectBit(item, target)
   }
 }
 
-export function selectPerson(person: Person, ref) {
+export function selectPerson(person: Person, target?: PositionObject) {
   const avatar = person.data.profile.image_48
   App.setPeekState({
-    ...withPosition(ref),
+    ...withPosition(target),
     id: person.id,
     bit: {
       id: person.id,
@@ -26,9 +35,9 @@ export function selectPerson(person: Person, ref) {
   })
 }
 
-export function selectBit(bit, ref) {
+export function selectBit(bit: Bit, node?: PositionObject) {
   App.setPeekState({
-    ...withPosition(ref),
+    ...withPosition(node),
     id: Math.random(),
     bit: {
       id: bit.id,
@@ -41,26 +50,40 @@ export function selectBit(bit, ref) {
   })
 }
 
-function withPosition(ref) {
-  if (!ref) {
+function withPosition(node?: PositionObject) {
+  if (!node) {
     return null
   }
-  const target = getTargetPosition(ref)
+  const target = getTargetPosition(node)
   return {
     ...peekPosition(target),
     target,
   }
 }
 
-function getTargetPosition(ref) {
-  if (!ref) {
-    throw `no result ref ${ref}`
+function getTargetPosition(node: PositionObject) {
+  if (!node) {
+    throw `no result node ${node}`
   }
-  const { top, left, height } = ref.getBoundingClientRect()
-  return {
-    top,
-    left: left,
-    width: App.orbitState.size[0],
-    height,
+  if (node instanceof HTMLElement) {
+    const { top, left, height } = node.getBoundingClientRect()
+    return {
+      top,
+      left: left,
+      width: App.orbitState.size[0],
+      height,
+    }
   }
+  return node
+}
+
+export function clearPeek() {
+  if (App.peekState.pinned) {
+    console.log('Peek pinned, ignore')
+    return
+  }
+  App.setPeekState({
+    id: null,
+    target: null,
+  })
 }

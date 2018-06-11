@@ -1,9 +1,8 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { NotFound } from '~/views/notFound'
-import { hot } from 'react-hot-loader'
 import Router from './router'
-// import { view } from '@mcro/black'
+import { view } from '@mcro/black'
 
 class Root extends React.Component {
   state = {
@@ -25,7 +24,6 @@ class Root extends React.Component {
   }
 
   render() {
-    console.log('hi')
     if (this.state.error) {
       return (
         <aboveredbox
@@ -78,20 +76,23 @@ class Root extends React.Component {
   }
 }
 
-// make hmr state preserve
+if (module.hot && module.hot.addStatusHandler) {
+  if (module.hot.status() === 'idle') {
+    module.hot.addStatusHandler(status => {
+      console.log('hottt', status)
+      if (status === 'prepare') {
+        view.emit('will-hmr')
+        view.provide.emit('will-hmr')
+      }
+      if (status === 'apply') {
+        setTimeout(() => {
+          console.log('sending did hmr')
+          view.emit('did-hmr')
+          view.provide.emit('did-hmr')
+        })
+      }
+    })
+  }
+}
 
-// if (module.hot.addStatusHandler) {
-//   if (module.hot.status() === 'idle') {
-//     module.hot.addStatusHandler(status => {
-//       console.log('hottt', status)
-//       if (status === 'prepare') {
-//         view.emit('will-hmr')
-//       }
-//       if (status === 'apply') {
-//         view.emit('hmr')
-//       }
-//     })
-//   }
-// }
-
-export default hot(module)(Root)
+export default Root

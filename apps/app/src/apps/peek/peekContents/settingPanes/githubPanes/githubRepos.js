@@ -1,13 +1,13 @@
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 
 @view.attach('githubStore')
 @view
-class Repo {
+class Repo extends React.Component {
   render({ githubStore, repo }) {
     githubStore.syncVersion
-
     return (
       <container $$row>
         <left $$row>
@@ -44,7 +44,6 @@ class Repo {
             </info>
           </repo>
         </left>
-
         <syncers>
           <content $$row>
             <UI.Text>{repo.openIssuesCount} open issues</UI.Text>
@@ -85,7 +84,7 @@ class Repo {
     showAll = false
   },
 })
-export class GithubRepos {
+export class GithubRepos extends React.Component {
   render({ repos, store }) {
     const oneMonth = 2628000000
     const recent = store.showAll

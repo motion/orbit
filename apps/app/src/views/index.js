@@ -42,15 +42,15 @@ export const Title = ({ center, children, ...props }) => (
 
 export const SubTitle = props => (
   <UI.Text
+    alpha={0.6}
     css={{
       fontWeight: 300,
       fontSize: 16,
       alignItems: 'center',
       flexFlow: 'row',
-      padding: [5, 13, 5],
+      padding: [3, 13, 5],
       opacity: 0.75,
       marginBottom: 5,
-      color: highlightColor,
     }}
     {...props}
   />

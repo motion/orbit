@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { findDOMNode } from 'react-dom'
 import * as Mobx from 'mobx'
 import difference from 'lodash/difference'
 import isEqual from 'react-fast-compare'
@@ -22,9 +23,33 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
   }
 })
 
+function getElementIndex(node: Element) {
+  var index = 0
+  while ((node = node.previousElementSibling)) {
+    index++
+  }
+  return index
+}
+
+function getName(mountedComponent) {
+  const node = findDOMNode(mountedComponent) as HTMLElement
+  let name = `${mountedComponent.name}`
+  let parent = node
+  while (parent && parent.tagName !== 'HTML') {
+    const className = (parent.getAttribute('class') || '').split(' ')
+    name +=
+      parent.nodeName +
+      className[className.length - 1] +
+      getElementIndex(parent)
+    parent = parent.parentNode as HTMLElement
+  }
+  return name
+}
+
 // @ts-ignore
 root.loadedStores = new Set()
 const storeHMRCache = {}
+root.storeHMRCache = storeHMRCache
 
 export interface StoreProvidable {}
 
@@ -63,6 +88,9 @@ storeProvidable = function(options, Helpers) {
         isSetup = false
         id = Math.random()
 
+        willHmrListen: any
+        didHmrListen: any
+        mountName: string
         props: any | { __contextualStores?: Object }
         hmrDispose: any
         _props: any
@@ -79,7 +107,6 @@ storeProvidable = function(options, Helpers) {
         }
 
         allStores = allStores
-        storeHMRCache = {}
 
         // onWillReload() {
         //   this.onWillReloadStores()
@@ -106,13 +133,16 @@ storeProvidable = function(options, Helpers) {
           if (this.stores === null) {
             return
           }
+          this.mountName = getName(this)
           root.loadedStores.add(this)
           this.mountStores()
-          Helpers.on('will-hmr', this.onWillReloadStores)
-          Helpers.on('did-hmr', this.onReloadStores)
+          this.willHmrListen = Helpers.on('will-hmr', this.onWillReloadStores)
+          this.didHmrListen = Helpers.on('did-hmr', this.onReloadStores)
         }
 
         componentWillUnmount() {
+          this.willHmrListen.dispose()
+          this.didHmrListen.dispose()
           root.loadedStores.delete(this)
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
@@ -206,15 +236,15 @@ storeProvidable = function(options, Helpers) {
           }
         }
 
-        onWillReloadStores() {
-          console.log('will reload, dehydrating')
+        onWillReloadStores = () => {
           if (!this.stores) {
             return
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             // pass in state + auto dehydrate
-            storeHMRCache[name] = {
+            // to get real key: findDOMNode(this) + serialize dom position into key
+            storeHMRCache[`${this.mountName}${name}`] = {
               state: store.dehydrate(),
             }
             if (store.onWillReload) {
@@ -223,20 +253,20 @@ storeProvidable = function(options, Helpers) {
           }
         }
 
-        onReloadStores() {
-          console.log('did reload, rehydrating')
+        onReloadStores = () => {
           if (!this.stores) {
             return
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            if (!storeHMRCache[name]) {
+            const key = `${this.mountName}${name}`
+            if (!storeHMRCache[key]) {
               console.log('no hmr state for', name)
               continue
             }
             // auto rehydrate
-            if (storeHMRCache[name].state) {
-              store.hydrate(storeHMRCache[name].state)
+            if (storeHMRCache[key].state) {
+              store.hydrate(storeHMRCache[key].state)
             }
             if (store.onReload) {
               store.onReload()
@@ -289,7 +319,12 @@ storeProvidable = function(options, Helpers) {
       if (context) {
         StoreProviderWithContext = props => (
           <StoreContext.Consumer>
-            {stores => <StoreProvider __contextualStores={stores} {...props} />}
+            {stores => {
+              const contextProps = stores
+                ? { __contextualStores: stores }
+                : null
+              return <StoreProvider {...contextProps} {...props} />
+            }}
           </StoreContext.Consumer>
         )
       }

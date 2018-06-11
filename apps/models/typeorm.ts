@@ -5,6 +5,7 @@ const typeorm = isBrowser
 
 const {
   BaseEntity,
+  Index,
   Entity,
   Column,
   PrimaryGeneratedColumn,
@@ -24,6 +25,7 @@ export {
   UpdateDateColumn,
   VersionColumn,
   BaseEntity,
+  Index,
   Entity,
   Column,
   PrimaryGeneratedColumn,

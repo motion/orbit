@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import quadtree from 'simple-quadtree'
-import { Helpers, App, Desktop, Swift } from '@mcro/all'
+import { Desktop, Swift } from '@mcro/all'
+import * as Helpers from '@mcro/constants'
 // import { LINE_Y_ADJ, toTarget } from './helpers'
 import { OCRWord } from './highlights/ocrWord'
 import { OCRLine } from './highlights/ocrLine'
 
-const log = debug('highlights')
+// const log = debug('highlights')
 
 @view({
   store: class HighlightsStore {

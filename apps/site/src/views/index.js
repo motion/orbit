@@ -589,7 +589,7 @@ Card.Title = props => (
 )
 
 Card.Body = props => (
-  <P2 sizeLineHeight={1.15} margin={0} size={1.4} {...props} />
+  <P2 sizeLineHeight={1.1} margin={0} size={1.3} {...props} />
 )
 
 Card.Icon = props => (

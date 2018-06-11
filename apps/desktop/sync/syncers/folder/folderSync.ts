@@ -19,12 +19,6 @@ class FolderSync {
 
   get folders() {
     return this.setting.values.folders || []
-    // const defaultPath = Path.join(
-    //   require.resolve('@mcro/examples'),
-    //   '..',
-    //   'test',
-    // )
-    // return this.setting.values.folders || [defaultPath]
   }
 
   run = async () => {

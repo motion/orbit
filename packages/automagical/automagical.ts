@@ -21,10 +21,9 @@ const uid = () => id++ % Number.MAX_VALUE
 
 root.__trackStateChanges = {}
 
-const log = debug('-> ')
-const logState = debug('+> ')
+const log = debug('react')
+const logState = debug('react+')
 const logInfo = debug('automagical')
-debug.quiet('automagical')
 
 const RejectReactionSymbol = '___REJECT_REACTION___'
 

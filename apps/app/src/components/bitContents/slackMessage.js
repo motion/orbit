@@ -1,20 +1,11 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
+// import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { RoundButton } from '~/views'
 import slackDown from '@mcro/slackdown'
 import * as PeekStateActions from '~/actions/PeekStateActions'
-
-const getSlackDate = message => {
-  if (!message.ts) {
-    return null
-  }
-  const split = message.ts.split('.')
-  if (!split.length) {
-    return null
-  }
-  return new Date(split[0] * 1000)
-}
+import { getSlackDate } from '~/helpers'
+import { TimeAgo } from '~/views/TimeAgo'
 
 @view
 export class BitSlackMessage extends React.Component {
@@ -61,7 +52,7 @@ export class BitSlackMessage extends React.Component {
           </RoundButton>
           <space />
           <date if={!previousMessage || !previousWithinOneMinute}>
-            <UI.Date>{getSlackDate(message)}</UI.Date>
+            <TimeAgo if={message.ts}>{getSlackDate(message.ts)}</TimeAgo>
           </date>
         </header>
         <content
@@ -79,7 +70,7 @@ export class BitSlackMessage extends React.Component {
     header: {
       flexFlow: 'row',
       alignItems: 'center',
-      margin: [1, 0, 2, -4],
+      margin: [0, 0, 2, -2],
       userSelect: 'none',
       cursor: 'default',
     },

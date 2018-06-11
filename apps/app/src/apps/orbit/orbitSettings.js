@@ -21,9 +21,9 @@ class OrbitSettingsStore {
       if (!isActive) {
         throw react.cancel
       }
-      this.props.appStore.setGetResults(
-        () => this.splitActiveResults.activeIntegrations,
-      )
+      const getResults = () => this.splitActiveResults.activeIntegrations
+      getResults.shouldFilter = true
+      this.props.appStore.setGetResults(getResults)
     },
     { immediate: true },
   )
@@ -82,7 +82,6 @@ export class OrbitSettings {
     if (!appStore.settings) {
       return null
     }
-    console.log('store.isPaneActive', store.isPaneActive)
     const {
       activeIntegrations,
       inactiveIntegrations,

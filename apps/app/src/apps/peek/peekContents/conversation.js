@@ -11,7 +11,7 @@ import * as UI from '@mcro/ui'
 
 // delays here help ensure it doesn't jitter
 
-class ConversationPeek {
+class ConversationPeekStore {
   related = react(
     async () => {
       const people = await Person.find({ take: 3, skip: 7 })
@@ -39,7 +39,7 @@ const slackConvoBitContentStyle = {
 }
 
 @view({
-  store: ConversationPeek,
+  store: ConversationPeekStore,
 })
 export class Conversation extends React.Component {
   render({ store, bit, appStore }) {
@@ -53,6 +53,7 @@ export class Conversation extends React.Component {
         bit={bit}
         shownLimit={Infinity}
         itemProps={slackConvoBitContentStyle}
+        isExpanded
       >
         {({ permalink, location, title, icon, content }) => {
           return (
@@ -72,7 +73,12 @@ export class Conversation extends React.Component {
               <main>
                 <mainInner>
                   <content>
-                    <UI.Text selectable css={{ margin: [5, 0, 20] }} size={1.2}>
+                    <UI.Text
+                      if={false}
+                      selectable
+                      css={{ margin: [5, 0, 20] }}
+                      size={1.2}
+                    >
                       <strong>Key points</strong>: a16z partners, orbit domain,
                       mock-up, Formidable and refactor.
                     </UI.Text>
@@ -96,6 +102,7 @@ export class Conversation extends React.Component {
                           bit={relatedBit}
                           shownLimit={Infinity}
                           itemProps={slackConvoBitContentStyle}
+                          isExpanded
                         >
                           {({ content }) => content}
                         </BitContent>

@@ -217,18 +217,17 @@ class SurfacePlain extends React.Component {
       justifyContent,
       backgroundAlpha,
       activeStyle,
+      sizeLineHeight,
       ...props
     } = this.props
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
     const { themeValues } = this
-
     if (!themeValues) {
       console.warn('this is weird', this, 'sure you set a theme?', this.context)
       return null
     }
-
     const passProps = {
       tagName,
       ref: getRef,
@@ -417,11 +416,14 @@ class SurfacePlain extends React.Component {
       (props.highlight && 'highlight') || (props.active && 'active') || 'base'
 
     // colors
-    let color = $(
-      props.color ||
-        (props.highlight && props.highlightColor) ||
-        theme[STATE].color,
-    )
+    let color =
+      props.color === false
+        ? 'inherit'
+        : $(
+            props.color ||
+              (props.highlight && props.highlightColor) ||
+              theme[STATE].color,
+          )
     if (typeof props.alpha === 'number') {
       color = color.alpha(props.alpha)
     }
@@ -472,11 +474,14 @@ class SurfacePlain extends React.Component {
         ? theme[STATE].borderColor
         : props.borderColor || 'transparent',
     )
-    let hoverColor = $(
-      (props.hover && props.hover.color) ||
-        theme[STATE].color.lighten(0.2) ||
-        props.color,
-    )
+    let hoverColor =
+      props.color === false
+        ? 'inherit'
+        : $(
+            (props.hover && props.hover.color) ||
+              theme[STATE].color.lighten(0.2) ||
+              props.color,
+          )
     if (props.hover && typeof props.hover.alpha === 'number') {
       hoverColor = hoverColor.alpha(props.hover.alpha)
     }
@@ -551,13 +556,11 @@ class SurfacePlain extends React.Component {
     if (props.debug) {
       console.log(borderRadius)
     }
-
     // circular
     const circularStyles = props.circular && {
       padding: 0,
       width: height,
     }
-
     // icon
     const iconStyle = {
       color: iconColor,
@@ -565,7 +568,6 @@ class SurfacePlain extends React.Component {
     const hoverIconStyle = {
       color: props.iconHoverColor || hoverColor,
     }
-
     // state styles
     const hoverStyle = (props.hover ||
       (!props.chromeless && !props.disabled && props.hoverable)) && {
@@ -575,12 +577,10 @@ class SurfacePlain extends React.Component {
       background: hoverBackground,
       ...props.hoverStyle,
     }
-
     let activeStyle = !props.chromeless && {
       position: 'relative',
       zIndex: props.zIndex || 1000,
     }
-
     if (props.active) {
       const userActiveStyle =
         props.activeStyle || (props.clickable && theme.active)
@@ -593,22 +593,18 @@ class SurfacePlain extends React.Component {
         }
       }
     }
-
     const chromelessStyle = props.chromeless && {
       borderWidth: 0,
       background: 'transparent',
     }
-
     const focusable = props.focusable || (uiContext && uiContext.inForm)
     const focusStyle = !props.chromeless && {
       ...theme.focus,
       boxShadow: [...boxShadow, [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)]],
     }
-
     const iconSize =
       props.iconSize ||
       Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
-
     // TODO figure out better pattern for this
     self.themeValues = {
       iconSize,
@@ -617,7 +613,6 @@ class SurfacePlain extends React.Component {
       glintColor,
       color,
     }
-
     const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
     const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
     const undoPadding = {
@@ -628,7 +623,6 @@ class SurfacePlain extends React.Component {
         : 0,
       padding,
     }
-
     let elementGlowProps
     if (props.glow) {
       elementGlowProps = {
@@ -636,7 +630,72 @@ class SurfacePlain extends React.Component {
         zIndex: 1,
       }
     }
-
+    let surfaceStyles = {
+      ...(props.inline && self.constructor.inlineStyle),
+      transform: props.transform,
+      position: props.position,
+      zIndex: props.zIndex,
+      opacity: props.opacity,
+      minWidth: props.minWidth,
+      maxWidth: props.maxWidth,
+      color,
+      overflow: props.overflow || props.glow ? 'hidden' : props.overflow,
+      height,
+      width,
+      flex,
+      padding,
+      borderColor,
+      background,
+      boxShadow,
+      fontWeight: props.fontWeight,
+      justifyContent: props.justify || props.justifyContent,
+      alignItems: props.align || props.alignItems,
+      alignSelf: props.alignSelf,
+      flexFlow,
+      ...borderRadius,
+      margin: props.margin,
+      borderWidth: props.borderWidth,
+      borderStyle: props.borderStyle || props.borderWidth ? 'solid' : undefined,
+      border: props.border,
+      borderBottom: props.borderBottom,
+      borderTop: props.borderTop,
+      borderLeft: props.borderLeft,
+      borderRight: props.borderRight,
+      marginBottom: props.marginBottom,
+      marginTop: props.marginTop,
+      marginLeft:
+        uiContext && uiContext.inSegment && !uiContext.inSegment.first
+          ? -1
+          : props.marginLeft,
+      marginRight: props.marginRight,
+      paddingBottom: props.paddingBottom,
+      paddingTop: props.paddingTop,
+      paddingLeft: props.paddingLeft,
+      paddingRight: props.paddingRight,
+      ...circularStyles,
+      '& > icon': props.hovered ? hoverIconStyle : iconStyle,
+      '&:hover > icon': hoverIconStyle,
+      '&:hover': hoverStyle,
+      ...(props.wrapElement && {
+        '& > :focus': focusable && focusStyle,
+        '& > :active': activeStyle,
+      }),
+      ...(!props.wrapElement && {
+        '&:focus': focusable && focusStyle,
+        '&:active': activeStyle,
+      }),
+      ...(props.hovered && hoverStyle),
+      ...(props.dimmed && self.constructor.dimmedStyle),
+      ...(props.dim && self.constructor.dimStyle),
+      ...(props.spaced && self.constructor.spacedStyle),
+      ...chromelessStyle,
+      ...(props.active && activeStyle),
+      // // so you can override
+      // ...props.style,
+    }
+    if (props.sizeLineHeight) {
+      surfaceStyles.lineHeight = `${surfaceStyles.height - 1}px`
+    }
     const result = {
       element: {
         // height,
@@ -661,70 +720,7 @@ class SurfacePlain extends React.Component {
             : padding
           : 0,
       },
-      surface: {
-        ...(props.inline && self.constructor.inlineStyle),
-        transform: props.transform,
-        position: props.position,
-        zIndex: props.zIndex,
-        opacity: props.opacity,
-        minWidth: props.minWidth,
-        maxWidth: props.maxWidth,
-        color,
-        overflow: props.overflow || props.glow ? 'hidden' : props.overflow,
-        height,
-        width,
-        flex,
-        padding,
-        borderColor,
-        background,
-        boxShadow,
-        fontWeight: props.fontWeight,
-        justifyContent: props.justify || props.justifyContent,
-        alignItems: props.align || props.alignItems,
-        alignSelf: props.alignSelf,
-        flexFlow,
-        ...borderRadius,
-        margin: props.margin,
-        borderWidth: props.borderWidth,
-        borderStyle:
-          props.borderStyle || props.borderWidth ? 'solid' : undefined,
-        border: props.border,
-        borderBottom: props.borderBottom,
-        borderTop: props.borderTop,
-        borderLeft: props.borderLeft,
-        borderRight: props.borderRight,
-        marginBottom: props.marginBottom,
-        marginTop: props.marginTop,
-        marginLeft:
-          uiContext && uiContext.inSegment && !uiContext.inSegment.first
-            ? -1
-            : props.marginLeft,
-        marginRight: props.marginRight,
-        paddingBottom: props.paddingBottom,
-        paddingTop: props.paddingTop,
-        paddingLeft: props.paddingLeft,
-        paddingRight: props.paddingRight,
-        ...circularStyles,
-        '& > icon': props.hovered ? hoverIconStyle : iconStyle,
-        '&:hover > icon': hoverIconStyle,
-        '&:hover': hoverStyle,
-        ...(props.wrapElement && {
-          '& > :focus': focusable && focusStyle,
-          '& > :active': activeStyle,
-        }),
-        ...(!props.wrapElement && {
-          '&:focus': focusable && focusStyle,
-          '&:active': activeStyle,
-        }),
-        ...(props.hovered && hoverStyle),
-        ...(props.dimmed && self.constructor.dimmedStyle),
-        ...(props.dim && self.constructor.dimStyle),
-        ...(props.spaced && self.constructor.spacedStyle),
-        ...chromelessStyle,
-        ...(props.active && activeStyle),
-        // so you can override
-        ...props.style,
-      },
+      surface: surfaceStyles,
     }
 
     return result

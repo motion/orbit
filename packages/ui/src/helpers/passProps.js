@@ -4,7 +4,7 @@ export class PassProps extends React.Component {
   render() {
     const { children, ...props } = this.props
     const getChild = child => {
-      if (typeof child === 'string') {
+      if (!child || typeof child === 'string') {
         return child
       }
       if (React.isValidElement(child)) {

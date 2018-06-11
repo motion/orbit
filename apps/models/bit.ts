@@ -14,7 +14,9 @@ export class Bit extends T.BaseEntity {
   @T.Column() type: string
   @T.Column() bitCreatedAt: string
   @T.Column() bitUpdatedAt: string
+  @T.Index()
   @T.CreateDateColumn() createdAt: Date
+  @T.Index()
   @T.UpdateDateColumn() updatedAt: Date
 
   @T.Column({ nullable: true })

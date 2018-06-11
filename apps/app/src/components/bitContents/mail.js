@@ -1,13 +1,27 @@
-import * as UI from '@mcro/ui'
 import * as Helpers from '~/helpers'
+import keywordExtract from 'keyword-extractor'
+import * as _ from 'lodash'
+
+const options = {
+  language: 'english',
+  remove_digits: true,
+  return_changed_case: true,
+  remove_duplicates: false,
+}
 
 export default ({ bit, children }) =>
   children({
-    title: bit.title,
+    title: keywordExtract
+      .extract(bit.title, options)
+      .slice(0, 4)
+      .map(_.capitalize)
+      .join(' '),
     icon: 'gmail',
     location: Helpers.getHeaderFromShort(bit),
     date: Date.now(),
-    subtitle: <UI.Date>{new Date(bit.bitUpdatedAt)}</UI.Date>,
     content: bit.body,
-    preview: `electronic invoice, April 1, April 30`,
+    preview: keywordExtract
+      .extract(bit.body, options)
+      .slice(0, 6)
+      .join(' '),
   })

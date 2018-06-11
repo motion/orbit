@@ -1,11 +1,13 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import * as UI from '@mcro/ui'
 import { Person } from '@mcro/models'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitCard } from './orbitCard'
 import { Masonry } from '~/views/masonry'
 import { SubTitle } from '~/views'
+import { OrbitCardTeam } from './orbitCardTeam'
+import * as _ from 'lodash'
+// import { Carousel } from '~/components/carousel'
 
 class OrbitDirectoryStore {
   setGetResults = react(
@@ -14,14 +16,65 @@ class OrbitDirectoryStore {
       if (!isActive) {
         throw react.cancel
       }
-      this.props.appStore.setGetResults(() => this.results)
+      const getResults = () => this.results
+      getResults.shouldFilter = true
+      this.props.appStore.setGetResults()
     },
     { immediate: true },
   )
 
   results = react(
     async () => {
-      return await Person.find({ take: 10 })
+      return [
+        {
+          title: 'Engineering',
+          type: 'team',
+          data: {
+            people: '19',
+            topics: 'Cosal, pTSNE, memorial, left',
+            recently: [
+              { title: 'Stores, hmr', type: 'github' },
+              { title: 'Foxwoods Sprint', type: 'gdocs' },
+              { title: 'ux checkout #pp', type: 'slack' },
+            ],
+          },
+        },
+        {
+          title: 'Design',
+          type: 'team',
+          data: {
+            people: '5',
+            topics: 'Checkout, sketch, interaction, fix',
+            recently: [
+              { title: '360 stage design', type: 'gdocs' },
+              { title: 'Kit v2', type: 'github' },
+              { title: 'checkout, bug', type: 'slack' },
+            ],
+          },
+        },
+        {
+          title: 'Marketing',
+          type: 'team',
+          data: {
+            people: '12',
+          },
+        },
+        {
+          title: 'Buyers',
+          type: 'team',
+          data: {
+            people: '15',
+          },
+        },
+        {
+          title: 'Sales',
+          type: 'team',
+          data: {
+            people: '5',
+          },
+        },
+        ...(await Person.find({ take: 10 })),
+      ]
     },
     { defaultValue: [] },
   )
@@ -33,43 +86,77 @@ class OrbitDirectoryStore {
 export class OrbitDirectory {
   render({ store }) {
     log('DIRECTORY --------')
+    const [teams, people] = _.partition(store.results, x => x.type === 'team')
+    const total = store.results.length
     return (
       <OrbitDockedPane name="directory">
-        <SubTitle>Lists</SubTitle>
-        <items>
-          <UI.PassProps
+        <SubTitle>Teams</SubTitle>
+        <React.Fragment if={teams.length}>
+          <OrbitCardTeam
             pane="summary"
             subPane="directory"
-            style={{
-              gridColumnEnd: 'span 2',
-            }}
-            total={10}
-            listItem
-          >
-            <OrbitCard title="Onboarding" />
-            <OrbitCard title="Dev: Getting started" />
-            <OrbitCard title="Success: links" />
-          </UI.PassProps>
-        </items>
-
+            index={0}
+            total={total}
+            store={store}
+            bit={teams[0]}
+            isExpanded
+            hoverToSelect
+          />
+          <space css={{ height: 12 }} />
+          <OrbitCardTeam
+            pane="summary"
+            subPane="directory"
+            index={1}
+            total={total}
+            store={store}
+            bit={teams[1]}
+            isExpanded
+            hoverToSelect
+          />
+          <carousel css={{ margin: [12, 0, 0] }}>
+            {teams.slice(2).map((team, index) => (
+              <OrbitCardTeam
+                key={index}
+                pane="summary"
+                subPane="directory"
+                index={index + 2}
+                total={total}
+                store={store}
+                bit={team}
+                hoverToSelect
+                css={{
+                  width: 140,
+                  marginRight: 12,
+                }}
+              />
+            ))}
+          </carousel>
+        </React.Fragment>
         <br />
         <br />
-
-        <SubTitle>People</SubTitle>
-        <Masonry>
-          {store.results.map((bit, index) => (
-            <OrbitCard
-              pane="summary"
-              subPane="directory"
-              key={`${bit.id}${index}`}
-              index={index}
-              bit={bit}
-              total={store.results.length}
-              hoverToSelect
-            />
-          ))}
-        </Masonry>
+        <React.Fragment if={people.length}>
+          <SubTitle>People</SubTitle>
+          <Masonry>
+            {people.map((bit, index) => (
+              <OrbitCard
+                pane="summary"
+                subPane="directory"
+                key={`${bit.id}${index}`}
+                index={index + teams.length}
+                bit={bit}
+                total={total}
+                hoverToSelect
+              />
+            ))}
+          </Masonry>
+        </React.Fragment>
       </OrbitDockedPane>
     )
+  }
+
+  static style = {
+    carousel: {
+      flexFlow: 'row',
+    },
   }
 }

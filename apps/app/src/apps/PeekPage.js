@@ -14,6 +14,19 @@ class PeekStore {
     return this.history.length
   }
 
+  get curState() {
+    if (this.props.fixed) {
+      return App.peekState
+    }
+    if (!App.peekState.target) {
+      return null
+    }
+    if (App.orbitState.docked || !App.orbitState.hidden) {
+      return App.peekState
+    }
+    return null
+  }
+
   updateHistory = react(
     () => this.curState,
     state => {
@@ -37,16 +50,6 @@ class PeekStore {
       state = this.lastState
     }
     return state
-  }
-
-  get curState() {
-    if (!App.peekState.target) {
-      return null
-    }
-    if (App.orbitState.docked || !App.orbitState.hidden) {
-      return App.peekState
-    }
-    return null
   }
 
   lastState = react(() => this.curState, _ => _, {
@@ -73,7 +76,7 @@ class PeekStore {
   peekStore: PeekStore,
 })
 @view
-export class PeekPage {
+export class PeekPage extends React.Component {
   render({ peekStore, appStore }) {
     if (!peekStore.state) {
       return null
@@ -81,6 +84,7 @@ export class PeekPage {
     const { bit } = peekStore.state
     const type = (bit && capitalize(bit.type)) || 'Empty'
     const PeekContentsView = PeekContents[type] || PeekContents['Empty']
+    console.log('bit', bit)
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>
@@ -99,5 +103,4 @@ export class PeekPage {
       </UI.Theme>
     )
   }
-  ß
 }

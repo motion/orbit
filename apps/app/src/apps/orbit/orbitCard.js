@@ -5,6 +5,21 @@ import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
 import { TimeAgo } from '~/views/TimeAgo'
 
+@view.ui
+class Link extends React.Component {
+  render({ children }) {
+    return <span>{children}</span>
+  }
+  static style = {
+    span: {
+      borderBottom: [2, 'transparent'],
+      '&:hover': {
+        borderBottom: [2, 'solid', [0, 0, 0, 0.1]],
+      },
+    },
+  }
+}
+
 let loggers = []
 let nextLog = null
 const debounceLog = (...args) => {
@@ -182,7 +197,7 @@ export class OrbitCard extends React.Component {
             {orbitIcon}
             <title>
               <UI.Text
-                size={1.55}
+                size={1.6}
                 sizeLineHeight={0.8}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.7}
@@ -229,12 +244,15 @@ export class OrbitCard extends React.Component {
               <UI.Text
                 if={typeof preview === 'string'}
                 alpha={isSelected ? 0.75 : 0.55}
-                ellipse={5}
-                size={listItem ? 1.1 : 1.4}
+                size={listItem ? 1.1 : 1.6}
                 sizeLineHeight={0.85}
                 $previewText
               >
-                {preview}
+                {preview.split(' ').map((word, i) => (
+                  <React.Fragment key={i}>
+                    <Link>{word}</Link>{' '}
+                  </React.Fragment>
+                ))}
               </UI.Text>
             </preview>
             {typeof children === 'function'

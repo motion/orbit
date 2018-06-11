@@ -22,16 +22,21 @@ export class Masonry extends React.Component {
   }
 
   async setGrid(grid) {
+    console.log('set grid', grid, this.state)
     if (!grid) return
     if (this.state.measured) return
     this.styles = []
-    await sleep(20)
+    await sleep(30)
+    let i = 0
     for (const item of Array.from(grid.children)) {
-      const content = item.querySelector('.card')
+      const content = item.firstChild
       const contentHeight = content.clientHeight
-      const rowSpan = Math.ceil(contentHeight / (rowHeight + gridGap))
-      console.log('contentHeight', contentHeight)
+      const rowSpan = Math.ceil(
+        (contentHeight + gridGap) / (rowHeight + gridGap),
+      )
+      console.log('contentHeight', i, contentHeight, rowSpan, content)
       this.styles.push({ gridRowEnd: `span ${rowSpan}` })
+      i++
     }
     const gridChildren = React.Children.map(
       this.props.children,
@@ -60,7 +65,11 @@ export class Masonry extends React.Component {
     const { children, ...props } = this.props
     if (!measured) {
       return (
-        <grid ref={this.handleGridRef} {...props} css={{ opacity: 0 }}>
+        <grid
+          ref={this.handleGridRef}
+          {...props}
+          css={{ opacity: 0, gridColumnGap }}
+        >
           {children}
         </grid>
       )

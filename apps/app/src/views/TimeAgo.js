@@ -10,24 +10,25 @@ export class TimeAgo extends Component {
     isLive: true,
     addSuffix: true,
     includeSeconds: true,
+    timeInterval: 20000,
   }
 
   componentDidMount() {
     if (this.props.isLive) {
+      setInterval(this.updateTime, this.props.timeInterval)
       this.updateTime()
     }
   }
 
   componentWillUnmount() {
-    if (this.timeInterval) {
-      clearInterval(this.timeInterval)
+    if (this.props.timeInterval) {
+      clearInterval(this.props.timeInterval)
     }
   }
 
   updateTime = () => {
     const interval = this.getInterval()
     if (interval > 0) {
-      setTimeout(this.updateTime, interval)
       this.forceUpdate()
     }
   }

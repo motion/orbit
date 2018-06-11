@@ -302,8 +302,6 @@ export class OrbitCard extends React.Component {
     },
     preview: {
       flex: 1,
-      maxHeight: 180,
-      overflow: 'hidden',
     },
     previewOverflow: {
       zIndex: 10,
@@ -326,8 +324,7 @@ export class OrbitCard extends React.Component {
       // flex: 1,
     },
     subtitle: {
-      padding: [4, 0, 0],
-      height: 18,
+      padding: [3, 0, 0],
       flexFlow: 'row',
       alignItems: 'center',
     },
@@ -398,7 +395,8 @@ export class OrbitCard extends React.Component {
         opacity: isSelected ? 1 : 0.5,
       },
       preview: {
-        margin: inGrid ? ['auto', 0] : [14, 0],
+        margin: inGrid ? ['auto', 0] : 0,
+        padding: inGrid ? 0 : [4, 0],
       },
       previewText: {
         margin: inGrid ? ['auto', 0] : 0,

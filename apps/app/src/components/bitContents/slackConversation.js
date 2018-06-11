@@ -46,7 +46,7 @@ export class BitSlackConversation extends React.Component {
       icon: 'slack',
       location: (
         <RoundButton
-          style={{ marginLeft: -4, marginTop: 5 }}
+          style={{ marginLeft: -4 }}
           onClick={e => {
             e.stopPropagation()
             appStore.open(bit, 'channel')

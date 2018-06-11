@@ -30,12 +30,11 @@ const getContents = ({ bit, shownLimit }) => {
 }
 
 export default ({ bit, children, isExpanded, shownLimit }) => {
-  console.log('github task', bit.data)
   const content = isExpanded ? getContents({ bit, shownLimit }) : null
   return children({
     title: bit.title,
     icon: 'github',
-    location: ' ', //bit.data.spaces[0],
+    location: `${bit.data.orgLogin}/${bit.data.repositoryName}`,
     date: bit.bitUpdatedAt,
     content,
     preview: keywordExtract

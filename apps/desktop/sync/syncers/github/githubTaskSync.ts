@@ -1,7 +1,6 @@
 import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
-import { omit, flatten } from 'lodash'
-import { createInChunks } from '~/sync/helpers'
+import * as _ from 'lodash'
 import debug from '@mcro/debug'
 import getHelpers from './getHelpers'
 
@@ -94,9 +93,13 @@ export default class GithubIssueSync {
   }
 
   run = async () => {
-    console.log('running github task')
-    const res = await this.syncRepos()
-    console.log('Created', res ? res.length : 0, 'issues', res)
+    try {
+      console.log('running github task')
+      const res = await this.syncRepos()
+      console.log('Created', res ? res.length : 0, 'issues', res)
+    } catch (err) {
+      console.log('Error in github task sync', err.message, err.stack)
+    }
   }
 
   syncOrgs = async (orgs: Array<string> = this.setting.activeOrgs) => {
@@ -104,23 +107,25 @@ export default class GithubIssueSync {
       return null
     }
     const issues = await Promise.all(orgs.map(this.syncOrg))
-    return flatten(issues).filter(Boolean)
+    return _.flatten(issues).filter(Boolean)
   }
 
-  syncRepos = (repos?: Array<string>) => {
+  syncRepos = async (repos?: Array<string>) => {
     const repoSettings = this.setting.values.repos
     const repoNames = repos || Object.keys(repoSettings || {})
-    return Promise.all(
-      repoNames.map((repo: string) => {
-        const split = repo.split('/')
-        return this.syncRepo(split[0], split[1])
-      }),
-    )
+    return _.flatten(
+      await Promise.all(
+        repoNames.map((repo: string) => {
+          const split = repo.split('/')
+          return this.syncRepo(split[0], split[1])
+        }),
+      ),
+    ).filter(Boolean)
   }
 
   syncOrg = async (org: string): Promise<Array<Object>> => {
     const repositories = await this.getRepositoriesForOrg(org)
-    const issues = flatten(repositories.map(this.getIssuesForRepo))
+    const issues = _.flatten(repositories.map(this.getIssuesForRepo))
     return await this.createIssues(org, issues)
   }
 
@@ -144,12 +149,8 @@ export default class GithubIssueSync {
     return await this.createIssues(org, this.getIssuesForRepo(repository))
   }
 
-  createIssues = async (org: string, issues: Array<Object>, chunk = 10) => {
-    return await createInChunks(
-      issues,
-      item => this.createIssue(item, org),
-      chunk,
-    )
+  createIssues = async (org: string, issues: Array<GithubIssue>) => {
+    return Promise.all(issues.map(issue => this.createIssue(issue, org)))
   }
 
   getIssuesForRepo = (repository: any) => {
@@ -169,17 +170,15 @@ export default class GithubIssueSync {
 
   createIssue = async (issue: GithubIssue, orgLogin: string) => {
     const data = {
-      ...this.unwrapIssue(omit(issue, ['bodyText'])),
+      ...this.unwrapIssue(_.omit(issue, ['bodyText'])),
       orgLogin,
     }
-    const id = `github-${issue.number}`
     // ensure if one is set, the other gets set too
     const bitCreatedAt = issue.createdAt || issue.updatedAt || ''
     const bitUpdatedAt = issue.updatedAt || bitCreatedAt
     const body = {
-      id,
       integration: 'github',
-      identifier: `${id}${bitUpdatedAt}`,
+      identifier: `${issue.number}${bitUpdatedAt}`,
       type: 'task',
       title: issue.title,
       body: issue.bodyText,
@@ -188,7 +187,6 @@ export default class GithubIssueSync {
       bitCreatedAt,
       bitUpdatedAt,
     }
-    console.log('creating', id, body)
     return await createOrUpdate(Bit, body, Bit.identifyingKeys)
   }
 

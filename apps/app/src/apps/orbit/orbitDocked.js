@@ -223,7 +223,7 @@ class OrbitDocked {
     },
     glow: {
       background: '#fff',
-      opacity: 0.5,
+      opacity: 1,
       top: 0,
       left: 0,
       width: 200,
@@ -235,7 +235,7 @@ class OrbitDocked {
         scale: 2,
       },
       filter: {
-        blur: 100,
+        blur: 200,
       },
     },
   }

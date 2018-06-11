@@ -13,11 +13,10 @@ export async function createInChunks(
       const successful = (await Promise.all(creating)).filter(Boolean)
       finished = [...finished, ...successful]
       creating = []
+      return true
     } catch (err) {
-      console.trace('error creating', err)
-      return false
+      throw new Error(`Error in createInChunks ${err.message} ${err.stack}`)
     }
-    return true
   }
   for (const item of items) {
     // pause for every 10 to finish

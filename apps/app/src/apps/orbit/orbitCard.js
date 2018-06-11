@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
 import { TimeAgo } from '~/views/TimeAgo'
+import * as BitActions from '~/actions/BitActions'
 
 @view.ui
 class Link extends React.Component {
@@ -140,6 +141,10 @@ export class OrbitCard extends React.Component {
     )
   }
 
+  handleDoubleClick = () => {
+    BitActions.open(this.props.bit)
+  }
+
   getOrbitCard(contentProps) {
     const {
       bottom,
@@ -195,6 +200,7 @@ export class OrbitCard extends React.Component {
           style={style}
         >
           <card
+            onDoubleClick={this.handleDoubleClick}
             css={{
               padding: listItem ? 15 : tiny ? [6, 8] : [12, 14, 10],
             }}
@@ -375,12 +381,17 @@ export class OrbitCard extends React.Component {
       hoveredStyle = {
         background: theme.activeHover.background,
       }
+      const listCardStyle = {
+        marginBottom: 8,
+      }
       card = isSelected
         ? {
+            ...listCardStyle,
             background: theme.active.background,
             '&:hover': hoveredStyle,
           }
         : {
+            ...listCardStyle,
             background: 'transparent',
             '&:hover': {
               background: theme.hover.background,

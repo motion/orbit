@@ -26,10 +26,8 @@ export async function createOrUpdate(
   let item
   const found = await Model.findOne({ where: finalFields })
   if (found) {
-    console.log('found existing')
     item = found
   } else {
-    console.log('creating new', values)
     item = new Model()
   }
   const itemVals = Object.keys(values).reduce(

@@ -17,6 +17,7 @@ class PeopleRow extends React.Component {
         <images>
           {people.map((person, i) => (
             <img
+              key={i}
               css={{
                 transform: {
                   rotate: `${(i + half - total / total) * 12}deg`,

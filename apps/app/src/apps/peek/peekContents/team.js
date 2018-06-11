@@ -14,7 +14,7 @@ export class Team extends React.Component {
     }
     return (
       <>
-        <PeekHeader title={bit.title} subtitle={bit.people} />
+        <PeekHeader title={bit.title} subtitle="Team" />
       </>
     )
     // const BitContent = bitContents(bit)

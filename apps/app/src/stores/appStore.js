@@ -261,6 +261,9 @@ export class AppStore {
       if (bit.type === 'setting') {
         return bit
       }
+      if (bit.type === 'team') {
+        return bit
+      }
       const res = await Bit.findOne({
         where: {
           id: bit.id,

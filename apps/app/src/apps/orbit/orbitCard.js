@@ -7,6 +7,70 @@ import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 
 @view.ui
+class PeopleRow extends React.Component {
+  render({ people }) {
+    const total = people.length
+    const half = total / 2
+    return (
+      <row>
+        <images>
+          {people.map((person, i) => (
+            <img
+              css={{
+                transform: {
+                  rotate: `${(i + half - total / total) * 12}deg`,
+                },
+              }}
+              src={person.data.profile.image_512}
+            />
+          ))}
+        </images>
+        <names>
+          <UI.Text size={0.9} color={'rgb(31.7%, 50.4%, 90.9%)'} alpha={0.5}>
+            {people.map((person, i) => (
+              <span $person key={i}>
+                {person.name}
+              </span>
+            ))}
+          </UI.Text>
+        </names>
+      </row>
+    )
+  }
+
+  static style = {
+    row: {
+      flexFlow: 'row',
+      padding: [6, 0, 0],
+    },
+    images: {
+      flexFlow: 'row',
+      marginRight: 14,
+    },
+    img: {
+      width: 20,
+      height: 20,
+      marginRight: -10,
+      borderRadius: 100,
+    },
+    person: {
+      marginRight: 4,
+    },
+    names: {
+      flexFlow: 'row',
+    },
+  }
+
+  static theme = (_, theme) => {
+    return {
+      img: {
+        border: [2, theme.base.background],
+      },
+    }
+  }
+}
+
+@view.ui
 class Link extends React.Component {
   handleClick = () => {
     this.props.orbitStore.setQuery(this.props.children)
@@ -88,7 +152,7 @@ class OrbitCardStore {
       }
       this._isSelected = true
       await sleep(10)
-      console.log('selecting', this.props, this)
+      log('selecting', this.props)
       this.props.appStore.setTarget(this.props.bit, this.ref)
     },
   )
@@ -147,8 +211,6 @@ export class OrbitCard extends React.Component {
 
   getOrbitCard(contentProps) {
     const {
-      bottom,
-      bottomAfter,
       title,
       via,
       icon,
@@ -157,6 +219,7 @@ export class OrbitCard extends React.Component {
       subtitle,
       permalink,
       date,
+      people,
     } = contentProps
     const {
       store,
@@ -232,6 +295,7 @@ export class OrbitCard extends React.Component {
               <UI.Text if={date} size={0.95}>
                 <TimeAgo date={date} />
               </UI.Text>
+              <permalink if={permalink}>{permalink}</permalink>
             </subtitle>
             <preview if={preview && !children}>
               {typeof preview !== 'string' && preview}
@@ -252,16 +316,8 @@ export class OrbitCard extends React.Component {
             {typeof children === 'function'
               ? children(contentProps, { background })
               : children}
-            <bottom if={false && !tiny && (bottom || permalink || via)}>
-              <permalink if={isExpanded}>{permalink}</permalink>
-              <space if={permalink} />
-              {bottom}
-              <UI.Date>{bit.bitUpdatedAt}</UI.Date>
-              <Text if={via} opacity={0.5} size={0.9}>
-                {via}
-              </Text>
-              <div $$flex />
-              {bottomAfter}
+            <bottom if={people && people.length && people[0].data.profile}>
+              <PeopleRow people={people} />
             </bottom>
           </card>
         </cardWrap>
@@ -316,9 +372,8 @@ export class OrbitCard extends React.Component {
     preview: {
       flex: 1,
     },
-    previewOverflow: {
-      zIndex: 10,
-      bottom: 40,
+    permalink: {
+      margin: [-2, -2, 0, 8],
     },
     orbitIcon: {
       position: 'absolute',
@@ -327,14 +382,6 @@ export class OrbitCard extends React.Component {
       margin: [0, 6, 0, 0],
       // filter: 'grayscale(100%)',
       opacity: 0.8,
-    },
-    bottom: {
-      opacity: 0.5,
-      flexFlow: 'row',
-      alignItems: 'center',
-      userSelect: 'none',
-      // justifyContent: 'center',
-      // flex: 1,
     },
     subtitle: {
       margin: [-1, 0, 0],
@@ -402,9 +449,6 @@ export class OrbitCard extends React.Component {
         borderRadius,
         flex: inGrid ? 1 : 'none',
         ...card,
-      },
-      bottom: {
-        opacity: isSelected ? 1 : 0.5,
       },
       preview: {
         margin: inGrid ? ['auto', 0] : 0,

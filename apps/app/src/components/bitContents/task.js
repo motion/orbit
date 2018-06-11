@@ -35,6 +35,7 @@ export default ({ bit, children, isExpanded, shownLimit }) => {
     title: bit.title,
     icon: 'github',
     location: `${bit.data.orgLogin}/${bit.data.repositoryName}`,
+    people: bit.people,
     date: bit.bitUpdatedAt,
     content,
     preview: keywordExtract

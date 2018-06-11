@@ -38,6 +38,7 @@ export class BitSlackConversation extends React.Component {
       : null
     return children({
       title: arrford((bit.people || []).map(p => capitalize(p.name)), false),
+      people: bit.people,
       date: getSlackDate(bit.bitUpdatedAt),
       preview: keywordExtract
         .extract(bit.body, options)
@@ -66,23 +67,6 @@ export class BitSlackConversation extends React.Component {
             appStore.open(bit)
           }}
         />
-      ),
-      bottom: (
-        <UI.Text size={0.85} if={bit.data.messages.length > 3}>
-          + {bit.data.messages.length - 3}&nbsp;more&nbsp;
-        </UI.Text>
-      ),
-      bottomAfter: (
-        <row if={bit.people && bit.people.length > 1} $meta>
-          {bit.people.length}
-          &nbsp;
-          <UI.Icon
-            color="inherit"
-            size={10}
-            opacity={0.35}
-            name="users_single-01"
-          />
-        </row>
       ),
       content,
     })

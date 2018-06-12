@@ -3,93 +3,10 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
+import { Link } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
-import * as _ from 'lodash'
-
-@view.ui
-class PeopleRow extends React.Component {
-  render({ people }) {
-    const total = people.length
-    const half = total / 2
-    return (
-      <row>
-        <images>
-          {people.map((person, i) => (
-            <img
-              key={i}
-              css={{
-                transform: {
-                  rotate: `${(i + half - total / total) * 12}deg`,
-                },
-              }}
-              src={person.data.profile.image_512}
-            />
-          ))}
-        </images>
-        <names>
-          <UI.Text size={0.95} alpha={0.5}>
-            {people.map((person, i) => (
-              <span $person key={i}>
-                {_.capitalize(person.name)}
-              </span>
-            ))}
-          </UI.Text>
-        </names>
-      </row>
-    )
-  }
-
-  static style = {
-    row: {
-      flexFlow: 'row',
-      padding: [8, 0, 0],
-    },
-    images: {
-      flexFlow: 'row',
-      marginRight: 14,
-    },
-    img: {
-      width: 20,
-      height: 20,
-      marginRight: -10,
-      borderRadius: 100,
-    },
-    person: {
-      marginRight: 4,
-    },
-    names: {
-      flexFlow: 'row',
-    },
-  }
-
-  static theme = (_, theme) => {
-    return {
-      img: {
-        border: [2, theme.base.background],
-      },
-    }
-  }
-}
-
-@view.ui
-class Link extends React.Component {
-  handleClick = () => {
-    this.props.orbitStore.setQuery(this.props.children)
-  }
-
-  render({ children }) {
-    return <span onClick={this.handleClick}>{children}</span>
-  }
-  static style = {
-    span: {
-      borderBottom: [2, 'transparent'],
-      '&:hover': {
-        borderBottom: [2, 'solid', [0, 0, 0, 0.1]],
-      },
-    },
-  }
-}
+import { PeopleRow } from '~/components/PeopleRow'
 
 let loggers = []
 let nextLog = null
@@ -134,6 +51,9 @@ class OrbitCardStore {
   }
 
   handleClick = () => {
+    if (this.props.inactive) {
+      return
+    }
     this.props.appStore.toggleSelected(this.props.index)
   }
 
@@ -236,6 +156,7 @@ export class OrbitCard extends React.Component {
       theme,
       titleProps,
       orbitStore,
+      inactive,
     } = this.props
     const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
@@ -261,7 +182,7 @@ export class OrbitCard extends React.Component {
           }}
           ref={store.setRef}
           onClick={store.handleClick}
-          {...hoverToSelect && this.hoverSettler.props}
+          {...hoverToSelect && !inactive && this.hoverSettler.props}
           style={style}
         >
           <card onDoubleClick={this.handleDoubleClick}>

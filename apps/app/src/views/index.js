@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
+import { view } from '@mcro/black'
 
 export * from './roundButton'
 
@@ -59,3 +60,22 @@ export const SubTitle = props => (
 export const Link = props => (
   <UI.Text fontWeight={400} color="#8b2bec" display="inline" {...props} />
 )
+
+@view.ui
+export class SmallLink extends React.Component {
+  handleClick = () => {
+    this.props.orbitStore.setQuery(this.props.children)
+  }
+
+  render({ children }) {
+    return <span onClick={this.handleClick}>{children}</span>
+  }
+  static style = {
+    span: {
+      borderBottom: [2, 'transparent'],
+      '&:hover': {
+        borderBottom: [2, 'solid', [0, 0, 0, 0.1]],
+      },
+    },
+  }
+}

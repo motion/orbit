@@ -2,13 +2,16 @@
 
 ```sh
 bin/bootstrap
+# only need to do this once to get everything built out
+build
 ```
 
 ## run
 
 ```sh
-build # only need to do this once
-# in separate tabs, run
+# to build sub packages and apps
+build --watch
+# once that runs in separate tabs, run
 run desktop
 run app
 run electron
@@ -32,23 +35,17 @@ deploy electron
 
 This stack is built around a few principles that guide everything in it.
 
-1.  Fewer, powerful abstractions
+1.  Few powerful abstractions
 
-@view + @store + @watch/@react
+@view + @store + @react
 
 These things together are all you really need, but with them you can build incredibly powerful, complex, reactive systems with ease.
 
-2.  Minimal, straightforward syntax
-
-You shouldn't write your most important logic in reducers. You should be able to wire things together with the absolute minimum typing.
-
-3.  Local state
+2.  Local state, simple Mobx
 
 Your state should live as close as possible to where its used, and be easy to move around.
 
-4.  Some magic is ok, with the right tools
-
-Simple syntax with powerful abstractions should let you move fast, but it requires extremely the building blocks to be easy to understand, and should have:
+3.  Have good logs/tooling/repl
 
 * types that help as you code
 * granular, adjustable, clear logging

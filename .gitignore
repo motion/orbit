@@ -44,3 +44,4 @@ packages/electron-build/app
 # keep these folders because these are babel plugins
 !packages/gloss/es6
 !packages/css/_
+!apps/desktop/tmp/.gitkeep

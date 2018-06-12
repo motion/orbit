@@ -4,12 +4,12 @@
   "license": "MIT",
   "main": "./_/oracle.js",
   "scripts": {
-    "build": "tsc",
-    "watch": "npm run build -- --watch",
+    "build": "./build.sh --if-empty && npx tsc",
+    "watch": "tsc --watch",
     "build-app": "./build.sh",
     "train": "cd ./pyocr/src && python3 train.py",
     "generate": "node ./generate",
-    "test": "DEBUG_IMAGES=true node ./test --debug",
+    "test": "DEBUG_IMAGES=true node ./test/test --debug",
     "test-fast": "node ./test",
     "test-scroll": "node ./test --scroll",
     "edit": "open ./orbit/orbit.xcodeproj"

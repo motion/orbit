@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! -f "./node_modules/iohook/electron" ]; then
+  echo "building iohook first time..."
+  npx electron-rebuild
+fi
+
 npx nodemon \
   --quiet \
   --watch _ \

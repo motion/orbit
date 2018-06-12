@@ -9,7 +9,7 @@
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi",
-    "build-app": "npm version patch && npm run bundle && npm run pack",
+    "build-app": "cd iohook && npm install && npm version patch && npm run bundle && npm run pack",
     "deploy": "npm run prepare-publish && npm run publish-app && npm run publish-clean",
     "pack": "npm run sign-app && npm run pack-app",
     "pack-app": "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
@@ -20,8 +20,7 @@
     "publish-app": "publish -p ./app",
     "prepare-publish": "if [ ! -f \"./app/Orbit-$npm_package_version.dmg\" ]; then cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r -X -8 -q ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app; fi",
     "publish-clean": "rm -r ./app/Orbit-$npm_package_version-mac.zip && mkdir -p ./app/releases && mv ./app/Orbit-$npm_package_version.dmg ./app/releases",
-    "sign-app": "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app",
-    "postinstall": "cd iohook && npm install"
+    "sign-app": "electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app"
   },
   "devDependencies": {
     "electron-installer-dmg": "^1.0.0",

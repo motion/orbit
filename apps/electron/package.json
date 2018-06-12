@@ -13,8 +13,7 @@
     "start": "./start.sh",
     "build": "tsc",
     "watch": "npm run build -- --watch",
-    "deploy": "cd ../electron-build && npm run deploy",
-    "postinstall": "electron-rebuild"
+    "deploy": "cd ../electron-build && npm run deploy"
   },
   "cmake-js": {
     "runtime": "electron",

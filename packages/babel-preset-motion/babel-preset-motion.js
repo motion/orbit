@@ -10,7 +10,7 @@ module.exports = function(context, givenOpts) {
   }
   const config = {
     plugins: [
-      plug('babel-plugin-sitrep'),
+      // plug('babel-plugin-sitrep'),
       plug('react-hot-loader/babel'),
       plug('@babel/plugin-transform-runtime', {
         polyfill: true,

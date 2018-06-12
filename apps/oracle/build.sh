@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [ "$1" = "--if-empty" ]; then
+  if [ -d "./orbit/Build" ]; then
+    echo "already built oracle once"
+    exit 0
+  fi
+fi
+
+python3 ./install.py
 (cd swindler && carthage update --platform mac)
 (cd pyocr && ./build.sh)
 

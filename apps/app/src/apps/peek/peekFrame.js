@@ -79,7 +79,7 @@ export class PeekFrame {
           background={background}
           boxShadow={[
             [0, 0, 10, [0, 0, 0, 0.05]],
-            ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.25]],
+            ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.35]],
           ]}
           $arrow
           css={{
@@ -108,8 +108,8 @@ export class PeekFrame {
               css={{
                 flexFlow: 'row-reverse',
                 position: 'absolute',
-                top: 13,
-                right: 2,
+                top: 16,
+                right: 6,
                 zIndex: 10000,
                 transform: {
                   scale: 0.9,

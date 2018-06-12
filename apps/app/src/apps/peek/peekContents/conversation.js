@@ -83,17 +83,16 @@ export class Conversation extends React.Component {
                     </UI.Text>
                     {content}
                   </content>
-                  <OrbitDivider />
+                  <br />
+                  <SubTitle>Related</SubTitle>
                   <section>
-                    <SubTitle>Related</SubTitle>
                     <carouselInner>
                       <Carousel items={store.related} />
                     </carouselInner>
                   </section>
-                  <OrbitDivider />
+                  <br />
+                  <SubTitle>Recent and Related Conversations</SubTitle>
                   <section>
-                    <SubTitle>Recent and Related Conversations</SubTitle>
-                    <br />
                     {store.relatedConversations.map((relatedBit, index) => (
                       <React.Fragment key={`${relatedBit.id}${index}`}>
                         <BitContent
@@ -141,7 +140,7 @@ export class Conversation extends React.Component {
       padding: [10, 20, 0],
     },
     carouselInner: {
-      margin: [0, -10, 10, -30],
+      margin: [0, -10, 10, 0],
     },
     after: {
       flexFlow: 'row',

@@ -28,15 +28,15 @@ export class OrbitDivider {
   static theme = (props, theme) => {
     return {
       bar: {
-        height: props.height || 3,
+        height: props.height || 1,
       },
       barOuter: {
         '& .bar': {
-          background: theme.active.background,
+          background: theme.hover.background,
         },
-        '&:hover .bar': {
-          background: theme.activeHover.background,
-        },
+        // '&:hover .bar': {
+        //   background: theme.activeHover.background,
+        // },
       },
     }
   }

@@ -250,6 +250,8 @@ export default class DebugApps {
       await sleep(50)
       await page.frames()[0].focus('body')
       await page.mouse.click(540, 10) // click out of screenshare
+      await page.mouse.click(145, 40) // click context dropdown
+      await page.mouse.click(145, 70) // click context first context item
       await page.mouse.click(145, 10) // click console
       await page.mouse.click(145, 70) // click into console
       await page.keyboard.press('PageDown') // page down to bottom

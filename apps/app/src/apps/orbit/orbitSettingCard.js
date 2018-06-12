@@ -2,17 +2,30 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitCard } from '~/apps/orbit/orbitCard'
+import { SettingInfoStore } from '~/stores/SettingInfoStore'
 
 @view.attach('appStore')
-@view
+@view({
+  store: SettingInfoStore,
+})
 export class OrbitSettingCard extends React.Component {
-  render({ result, setting, isActive, appStore, ...props }) {
+  componentWillMount() {
+    this.props.store.setBit(this.props.result)
+  }
+
+  render({ store, result, setting, isActive, appStore, ...props }) {
     return (
       <OrbitCard
         inactive={!isActive}
         $card
         $isActive={isActive}
         title={result.title}
+        subtitle={
+          store.bitsCount === null
+            ? '...'
+            : `${store.bitsCount || 'none'} synced`
+        }
+        date={store.job && store.job.updatedAt}
         icon={result.icon}
         result={result}
         onClick={

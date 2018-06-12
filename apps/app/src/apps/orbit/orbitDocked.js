@@ -10,7 +10,8 @@ import { OrbitDirectory } from './orbitDirectory'
 import { App, Electron } from '@mcro/all'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 
-const SHADOW_PAD = 85
+const borderRadius = 16
+const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
 
 class PaneStore {
@@ -60,19 +61,19 @@ class PaneStore {
 
   animationState = react(
     () => App.orbitState.docked,
-    async (visible /* { sleep, setValue }*/) => {
+    async (visible, { sleep, setValue }) => {
       // hmr already showing
       if (visible && this.animationState.visible) {
         throw react.cancel
       }
-      // // old value first to setup for transition
-      // setValue({ willAnimate: true, visible: !visible })
-      // await sleep(32)
-      // // new value, start transition
-      // setValue({ willAnimate: true, visible })
-      // await sleep(App.animationDuration * 2)
-      // // done animating, reset
-      // setValue({ willAnimate: false, visible })
+      // old value first to setup for transition
+      setValue({ willAnimate: true, visible: !visible })
+      await sleep(32)
+      // new value, start transition
+      setValue({ willAnimate: true, visible })
+      await sleep(App.animationDuration * 2)
+      // done animating, reset
+      setValue({ willAnimate: false, visible })
       App.sendMessage(
         Electron,
         visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
@@ -86,8 +87,6 @@ class PaneStore {
   )
 }
 
-const borderRadius = 0
-
 @UI.injectTheme
 @view.attach('appStore', 'orbitStore')
 @view.provide({
@@ -96,11 +95,14 @@ const borderRadius = 0
 @view
 class OrbitDocked {
   render({ paneStore, appStore, theme }) {
+    const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)
     return (
       <>
-        <bgGradient if={false} $$fullscreen $visible={App.orbitState.docked} />
-        <frame $visible={App.orbitState.docked}>
+        <frame
+          $visible={animationState.visible}
+          $willAnimate={animationState.willAnimate}
+        >
           <border $$fullscreen />
           <container>
             <OrbitHeader
@@ -169,7 +171,7 @@ class OrbitDocked {
       width: App.dockedWidth,
       opacity: 0,
       transform: {
-        x: 10,
+        x: 6,
       },
     },
     container: {
@@ -181,13 +183,13 @@ class OrbitDocked {
       zIndex: Number.MAX_SAFE_INTEGER,
       pointerEvents: 'none',
     },
-    // willAnimate: {
-    //   willChange: 'transform, opacity',
-    //   transition: `
-    //     transform ease-in ${App.animationDuration * 0.8}ms,
-    //     opacity ease-in ${App.animationDuration * 0.8}ms
-    //   `,
-    // },
+    willAnimate: {
+      willChange: 'transform, opacity',
+      transition: `
+        transform ease-in ${App.animationDuration}ms,
+        opacity ease-in ${App.animationDuration}ms
+      `,
+    },
     visible: {
       pointerEvents: 'auto',
       opacity: 1,

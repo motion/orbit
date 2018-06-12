@@ -94,6 +94,7 @@ export class PeekPage extends React.Component {
         <PeekFrame>
           <PeekContentsView
             if={appStore.selectedBit}
+            key={bit.id || Math.random()}
             bit={appStore.selectedBit}
             person={appStore.selectedBit}
             appStore={appStore}

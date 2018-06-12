@@ -61,15 +61,11 @@ export class TimeAgo extends Component {
       return distanceInWordsToNow(this.props.date, options)
         .replace('about ', '')
         .replace('less than ', '')
-        .replace(' ago', this.props.postfix)
+        .replace(' ago', this.props.postfix ? ` ${this.props.postfix}` : '')
     }
   }
 
   render() {
-    return React.createElement(
-      this.props.element,
-      { className: this.props.className ? this.props.className : '' },
-      this.getParsedDate(),
-    )
+    return this.getParsedDate()
   }
 }

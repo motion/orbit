@@ -70,27 +70,10 @@ class AppStore {
   animationDuration = 100
   dockedWidth = 550
 
-  isAnimatingOrbit = react(
-    () => [App.isShowingOrbit, App.orbitState.docked],
-    async (_, { sleep, setValue }) => {
-      setValue(true)
-      await sleep(App.animationDuration)
-      setValue(false)
-    },
-    { log: false },
-  )
-
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(
     () =>
-      !App.isShowingOrbit && !App.orbitState.docked && !App.isAnimatingOrbit,
-    _ => _,
-    { delay: 32, log: isOrbit },
-  )
-
-  isFullyShown = react(
-    () =>
-      (App.isShowingOrbit || App.orbitState.docked) && !App.isAnimatingOrbit,
+      !App.isShowingOrbit && !App.orbitState.docked,
     _ => _,
     { delay: 32, log: isOrbit },
   )

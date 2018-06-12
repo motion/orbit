@@ -57,33 +57,6 @@ class PaneStore {
       log: 'state',
     },
   )
-
-  animationState = react(
-    () => App.orbitState.docked,
-    async (visible, { sleep, setValue }) => {
-      // hmr already showing
-      if (visible && this.animationState.visible) {
-        throw react.cancel
-      }
-      // old value first to setup for transition
-      setValue({ willAnimate: true, visible: !visible })
-      await sleep(32)
-      // new value, start transition
-      setValue({ willAnimate: true, visible })
-      await sleep(App.animationDuration * 2)
-      // done animating, reset
-      setValue({ willAnimate: false, visible })
-      App.sendMessage(
-        Electron,
-        visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
-      )
-    },
-    {
-      immediate: true,
-      log: false,
-      defaultValue: { willAnimate: false, visible: App.orbitState.docked },
-    },
-  )
 }
 
 const borderRadius = 0
@@ -96,12 +69,11 @@ const borderRadius = 0
 @view
 class OrbitDocked {
   render({ paneStore, appStore, theme }) {
-    log('DOCKED ------------', paneStore.animationState)
-    const { visible, willAnimate } = paneStore.animationState
+    log('DOCKED ------------', App.orbitState.docked)
     return (
       <>
-        <bgGradient if={false} $$fullscreen $visible={visible} />
-        <frame $willAnimate={willAnimate} $visible={visible}>
+        <bgGradient if={false} $$fullscreen $visible={App.orbitState.docked} />
+        <frame $visible={App.orbitState.docked}>
           <border $$fullscreen />
           <container>
             <OrbitHeader
@@ -181,13 +153,13 @@ class OrbitDocked {
       zIndex: Number.MAX_SAFE_INTEGER,
       pointerEvents: 'none',
     },
-    willAnimate: {
-      willChange: 'transform, opacity',
-      transition: `
-        transform ease-in ${App.animationDuration * 0.8}ms,
-        opacity ease-in ${App.animationDuration * 0.8}ms
-      `,
-    },
+    // willAnimate: {
+    //   willChange: 'transform, opacity',
+    //   transition: `
+    //     transform ease-in ${App.animationDuration * 0.8}ms,
+    //     opacity ease-in ${App.animationDuration * 0.8}ms
+    //   `,
+    // },
     visible: {
       pointerEvents: 'auto',
       opacity: 1,

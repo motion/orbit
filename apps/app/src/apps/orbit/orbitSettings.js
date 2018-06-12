@@ -120,7 +120,7 @@ export class OrbitSettings {
               : ''}
           </UI.Text>
           <CheckBoxRow checked>Start on Login</CheckBoxRow>
-          <CheckBoxRow>Automatically manage disk space</CheckBoxRow>
+          <CheckBoxRow checked>Automatically manage disk space</CheckBoxRow>
         </OrbitCard>
         <section if={activeIntegrations.length}>
           <SubTitle>Integrations</SubTitle>

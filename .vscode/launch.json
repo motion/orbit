@@ -7,7 +7,7 @@
       "name": "Attach to Desktop",
       "port": 9000,
       "localRoot": "${workspaceFolder}/apps/desktop",
-      "outFiles": ["${workspaceRoot}/apps/desktop/lib/**/*.js"]
+      "outFiles": ["${workspaceRoot}/apps/desktop/_/**/*.js"]
     },
     {
       "type": "node",
@@ -15,7 +15,7 @@
       "name": "Electron: Main",
       "port": 9001,
       "localRoot": "${workspaceFolder}/apps/electron",
-      "outFiles": ["${workspaceRoot}/apps/electron/lib/**/*.js"]
+      "outFiles": ["${workspaceRoot}/apps/electron/_/**/*.js"]
     },
     {
       "name": "Electron: Renderer",

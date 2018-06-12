@@ -35,7 +35,7 @@ export class Setting extends React.Component {
     await job.save()
     console.log('created new job', job)
     store.update()
-    this.props.appStore.getSettings()
+    this.props.appStore.updateSettings()
   }
 
   removeIntegration = async () => {

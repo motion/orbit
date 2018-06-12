@@ -34,7 +34,7 @@ export class OrbitSettingCard extends React.Component {
             if (result.oauth === false) {
               setting.token = 'good'
               await setting.save()
-              appStore.getSettings()
+              appStore.updateSettings()
             } else {
               appStore.startOauth(result.id)
             }

@@ -209,7 +209,6 @@ export class AppStore {
             when(() => id1 !== this.bitResultsId, 200),
           ])
         } catch (err) {
-          console.log('caught err', err)
           if (err instanceof ReactionTimeoutError) {
             console.log('timed out!, waht to do now?????????????')
           } else {

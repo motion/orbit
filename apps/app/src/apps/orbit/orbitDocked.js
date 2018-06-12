@@ -138,13 +138,14 @@ class OrbitDocked {
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.35).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
+    const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.5]]
     return {
       frame: {
         background,
       },
       border: {
         borderRadius: borderRadius,
-        boxShadow: [borderShadow, DOCKED_SHADOW],
+        boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
       },
     }
   }
@@ -240,7 +241,7 @@ class OrbitDocked {
         scale: 2,
       },
       filter: {
-        blur: 200,
+        blur: 150,
       },
     },
   }

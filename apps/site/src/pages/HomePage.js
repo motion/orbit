@@ -345,8 +345,8 @@ class HomeFooter extends React.Component {
         <Card.Icon name="transportation_car" color="rgb(91.3%, 87%, 16.8%)" />
         <Card.Title>Smart & automatic</Card.Title>
         <Card.Body>
-          Orbit runs on-device, using simple machine learning to sort your cloud
-          for instant, accurate results.
+          Orbit runs on-device, using simple machine learning to sort your
+          cloud.
         </Card.Body>
       </Card>
     )
@@ -356,8 +356,8 @@ class HomeFooter extends React.Component {
         <Card.Icon name="users_multiple" color="blue" />
         <Card.Title>Easy & secure</Card.Title>
         <Card.Body>
-          On device means no cloud or on-prem install so you can try Orbit
-          securely in minutes.
+          No cloud or on-prem install means you can try Orbit securely in
+          minutes.
         </Card.Body>
       </Card>
     )
@@ -367,8 +367,8 @@ class HomeFooter extends React.Component {
         <Card.Icon name="social_logo-slack" color="green" />
         <Card.Title>Works with chat</Card.Title>
         <Card.Body>
-          Slack is helpful, but messy. Cut the noise with summarized
-          conversation search and news.
+          Slack is helpful, but noisy. Get better results with summarized
+          conversations.
         </Card.Body>
       </Card>
     )

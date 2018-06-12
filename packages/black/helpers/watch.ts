@@ -1,6 +1,4 @@
-import { Reaction } from '@mcro/automagical'
-
-const RejectReactionSymbol = '___REJECT_REACTION___'
+import { Reaction, ReactionRejectionError } from '@mcro/automagical'
 
 function validWatch(val) {
   return Array.isArray(val) || typeof val === 'function'
@@ -58,7 +56,7 @@ export function watch(a, b?, c?, opts?) {
 export const react = watch
 
 // @ts-ignore
-watch.cancel = RejectReactionSymbol
+watch.cancel = new ReactionRejectionError()
 
 function doWatch(target, _, descriptor, userOptions) {
   // non-decorator

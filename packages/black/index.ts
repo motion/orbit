@@ -13,3 +13,5 @@ export { DecorPlugins, DecorCompiledDecorator } from '@mcro/decor'
 
 import * as React from 'react'
 export const Component = React.Component
+
+export { ReactionRejectionError, ReactionTimeoutError } from '@mcro/automagical'

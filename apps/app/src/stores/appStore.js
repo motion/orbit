@@ -1,4 +1,4 @@
-import { react, isEqual } from '@mcro/black'
+import { react, isEqual, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/all'
 import { Bit, Setting, findOrCreate } from '@mcro/models'
 import * as Helpers from '~/helpers'
@@ -163,7 +163,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when }) => {
+    async ([query, thisGetResults], { when, cancel }) => {
       if (!query) {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
@@ -199,14 +199,23 @@ export class AppStore {
         results = channelResults
       } else {
         // 🔍 REGULAR SEARCHES GO THROUGH HERE
-        const pluginResultId = Desktop.searchState.pluginResultsId
-        const bitResultsId = this.bitResultsId
         // no jitter - wait for everything to finish
-        console.time('searchPlugins')
         console.time('searchPluginsAndBitResults')
-        await when(() => pluginResultId !== Desktop.searchState.pluginResultId)
-        console.timeEnd('searchPlugins')
-        await when(() => bitResultsId !== this.bitResultsId)
+        try {
+          const id0 = Desktop.searchState.pluginResultsId
+          const id1 = this.bitResultsId
+          await Promise.all([
+            when(() => id0 !== Desktop.searchState.pluginResultId, 200),
+            when(() => id1 !== this.bitResultsId, 200),
+          ])
+        } catch (err) {
+          console.log('caught err', err)
+          if (err instanceof ReactionTimeoutError) {
+            console.log('timed out!, waht to do now?????????????')
+          } else {
+            throw err
+          }
+        }
         console.timeEnd('searchPluginsAndBitResults')
         const allResultsUnsorted = [
           ...this.bitResults,

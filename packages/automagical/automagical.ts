@@ -25,7 +25,8 @@ const log = debug('react')
 const logState = debug('react+')
 const logInfo = debug('automagical')
 
-const RejectReactionSymbol = '___REJECT_REACTION___'
+export class ReactionRejectionError extends Error {}
+export class ReactionTimeoutError extends Error {}
 
 const PREFIX = `=>`
 const logRes = (res: any) => {
@@ -406,12 +407,15 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     reactionID = null
   }
 
-  const preventLogging = () => (preventLog = true)
+  const preventLogging = () => {
+    preventLog = true
+  }
+
   const sleep = ms => {
     // log(`${name} sleeping for ${ms}`)
     return new Promise((resolve, reject) => {
       if (!reactionID) {
-        return reject(RejectReactionSymbol)
+        return reject(new ReactionRejectionError())
       }
       if (typeof ms === 'undefined') {
         resolve()
@@ -420,35 +424,52 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       const sleepTimeout = setTimeout(resolve, ms)
       rejections.push(() => {
         clearTimeout(sleepTimeout)
-        reject(RejectReactionSymbol)
+        reject(new ReactionRejectionError())
       })
     })
   }
-  const when = condition => {
+
+  const when = (condition, timeout) => {
     // log(`${name} sleeping for ${ms}`)
-    return new Promise((resolve, reject) => {
+    const whenPromise = new Promise((resolve, reject) => {
+      let cancelTm
       if (!reactionID) {
-        return reject(RejectReactionSymbol)
+        return reject(new ReactionRejectionError())
       }
       let cancelWhen = false
       Mobx.when(condition)
         .then((val: any) => {
           if (cancelWhen) return
+          clearTimeout(cancelTm)
           resolve(val)
         })
-        .catch(reject)
-      rejections.push(() => {
+        .catch(() => {
+          clearTimeout(cancelTm)
+          reject()
+        })
+
+      if (timeout) {
+        cancelTm = setTimeout(() => {
+          console.log('automagical, when timed out!')
+          reject(new ReactionTimeoutError())
+        }, timeout)
+      }
+      const cancel = () => {
+        clearTimeout(cancelTm)
         cancelWhen = true
-        reject(RejectReactionSymbol)
-      })
+        reject(new ReactionRejectionError())
+      }
+      rejections.push(cancel)
     })
+    return whenPromise
   }
+
   const whenChanged = (condition, dontCompare) => {
     let oldVal
     let curVal
     return new Promise((resolve, reject) => {
       if (!reactionID) {
-        return reject(RejectReactionSymbol)
+        return reject(new ReactionRejectionError())
       }
       let cancelWhen = false
       Mobx.when(() => {
@@ -469,7 +490,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         .catch(reject)
       rejections.push(() => {
         cancelWhen = true
-        reject(RejectReactionSymbol)
+        reject(new ReactionRejectionError())
       })
     })
   }
@@ -530,12 +551,15 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             },
             sleep,
             when,
-            whenChanged,
+            whenChanged
           },
         )
       } catch (err) {
         // got a nice cancel!
-        if (err === RejectReactionSymbol) {
+        if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
+          if (!IS_PROD && options.log === 'all') {
+            log(`${name} [${curID}] cancelled`)
+          }
           return
         }
         console.error(err)
@@ -560,7 +584,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             }
           })
           .catch(err => {
-            if (err === RejectReactionSymbol) {
+            if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
               if (!IS_PROD && options.log === 'all') {
                 log(`${name} [${curID}] cancelled`)
               }

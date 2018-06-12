@@ -17,7 +17,7 @@ class OrbitSettingCardStore {
       this.props.appStore.setTarget(
         {
           type: 'setting',
-          integration: this.props.setting.integration,
+          integration: this.props.result.integration,
         },
         this.cardRef.current,
       )
@@ -30,40 +30,35 @@ class OrbitSettingCardStore {
   store: OrbitSettingCardStore,
 })
 export class OrbitSettingCard extends React.Component {
-  state = {
-    hoverSettle: false,
-  }
-
   hoverSettler = this.props.appStore.getHoverSettler()
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.isPaneActive && this.props.isPaneActive) {
-      this.hoverSettler.setItem({ index: this.props.index })
-    }
-    const hoverSettle = this.props.isPaneActive
-    if (hoverSettle !== this.state.hoverSettle) {
-      this.setState({ hoverSettle })
-    }
-  }
-
-  render(
-    { store, setting, index, subtitle, isActive, appStore, oauth },
-    { hoverSettle },
-  ) {
-    const { id, icon, title } = setting
+  render({
+    isPaneActive,
+    store,
+    result,
+    setting,
+    index,
+    subtitle,
+    isActive,
+    appStore,
+  }) {
+    const { id, icon, title } = result
     const isSelected =
       appStore.selectedIndex === index && !!App.peekState.target
-    const hoverSettleProps = hoverSettle && this.hoverSettler.props
+    if (isPaneActive) {
+      this.hoverSettler.setItem({ index: this.props.index })
+    }
     return (
       <card
         key={index}
         ref={store.cardRef}
         $isSelected={isSelected}
-        {...isActive && hoverSettleProps}
+        $isActive={isActive}
+        {...isActive && isPaneActive && this.hoverSettler.props}
         onClick={async () => {
+          console.log('clicked setting', isActive, result.oauth)
           if (!isActive) {
-            if (oauth === false) {
-              const setting = appStore.settings[id]
+            if (result.oauth === false) {
               setting.token = 'good'
               await setting.save()
               appStore.getSettings()
@@ -72,10 +67,10 @@ export class OrbitSettingCard extends React.Component {
             }
             return
           }
-          appStore.setTarget(setting, this.ref)
+          appStore.setTarget(result, this.ref)
         }}
       >
-        <OrbitIcon $icon $iconActive={isActive} icon={icon} size={18} />
+        <OrbitIcon $icon icon={icon} size={18} />
         <titles>
           <UI.Text $title fontWeight={500} size={1.2} textAlign="center">
             {title}
@@ -84,12 +79,19 @@ export class OrbitSettingCard extends React.Component {
             {subtitle}
           </UI.Text>
         </titles>
+        <div $$flex />
+        <actions>
+          <React.Fragment if={!isActive}>
+            <UI.Button>Add</UI.Button>
+          </React.Fragment>
+        </actions>
       </card>
     )
   }
 
   static style = {
     card: {
+      opacity: 0.7,
       flexFlow: 'row',
       flex: 1,
       alignItems: 'center',
@@ -102,6 +104,9 @@ export class OrbitSettingCard extends React.Component {
         background: [255, 255, 255, 0.15],
       },
     },
+    isActive: {
+      opacity: 1,
+    },
     lastRow: {
       borderBottom: 'none',
     },
@@ -110,10 +115,6 @@ export class OrbitSettingCard extends React.Component {
       transform: {
         y: -1,
       },
-    },
-    iconActive: {
-      filter: 'none',
-      opacity: 1,
     },
   }
 

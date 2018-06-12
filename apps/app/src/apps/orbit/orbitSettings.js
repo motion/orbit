@@ -24,9 +24,9 @@ class OrbitSettingsStore {
     { immediate: true },
   )
 
-  isActive = integration =>
-    this.props.appStore.settings[integration.id] &&
-    this.props.appStore.settings[integration.id].token
+  isActive = result =>
+    this.props.appStore.settings[result.id] &&
+    this.props.appStore.settings[result.id].token
 
   allResults = [
     {
@@ -82,16 +82,17 @@ export class OrbitSettings {
       activeIntegrations,
       inactiveIntegrations,
     } = store.splitActiveResults
-    const integrationCard = all => (setting, index, offset) => (
+    const integrationCard = all => (result, index, offset) => (
       <OrbitSettingCard
         key={index}
         index={index}
         offset={offset}
         appStore={appStore}
         length={all.length}
-        isActive={store.isActive(setting)}
+        isActive={store.isActive(result)}
         isPaneActive={store.isPaneActive}
-        setting={setting}
+        setting={appStore.settings[result.id]}
+        result={result}
       />
     )
     return (

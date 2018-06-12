@@ -54,7 +54,7 @@ class OrbitSettingsStore {
       id: 'folder',
       type: 'setting',
       integration: 'folder',
-      title: 'Folder',
+      title: 'Local Files',
       icon: 'folder',
       oauth: false,
     },
@@ -82,17 +82,19 @@ export class OrbitSettings {
       activeIntegrations,
       inactiveIntegrations,
     } = store.splitActiveResults
-    const integrationCard = all => (result, index, offset) => (
+    const integrationCard = (result, index) => (
       <OrbitSettingCard
+        pane="summary"
+        subPane="settings"
+        hoverToSelect
         key={index}
         index={index}
-        offset={offset}
+        total={store.allResults.length}
         appStore={appStore}
-        length={all.length}
         isActive={store.isActive(result)}
-        isPaneActive={store.isPaneActive}
         setting={appStore.settings[result.id]}
         result={result}
+        listItem
       />
     )
     return (
@@ -101,7 +103,7 @@ export class OrbitSettings {
           <SubTitle>Integrations</SubTitle>
           <cards>
             {activeIntegrations.map((item, index) =>
-              integrationCard(activeIntegrations)(item, index, index),
+              integrationCard(item, index),
             )}
           </cards>
         </section>
@@ -109,11 +111,7 @@ export class OrbitSettings {
           <SubTitle>Add Integration</SubTitle>
           <cards>
             {inactiveIntegrations.map((item, index) =>
-              integrationCard(inactiveIntegrations)(
-                item,
-                index + activeIntegrations.length,
-                index,
-              ),
+              integrationCard(item, index + activeIntegrations.length),
             )}
           </cards>
         </section>
@@ -125,9 +123,6 @@ export class OrbitSettings {
     cards: {
       userSelect: 'none',
       marginBottom: 10,
-    },
-    section: {
-      margin: [0, -4],
     },
   }
 }

@@ -7,12 +7,14 @@ import { OrbitCard } from '~/apps/orbit/orbitCard'
 @view
 export class OrbitSettingCard extends React.Component {
   render({ result, setting, isActive, appStore, ...props }) {
-    const { id, icon, title } = result
     return (
       <OrbitCard
         inactive={!isActive}
         $card
         $isActive={isActive}
+        title={result.title}
+        icon={result.icon}
+        result={result}
         onClick={
           !isActive &&
           (async () => {
@@ -21,23 +23,21 @@ export class OrbitSettingCard extends React.Component {
               await setting.save()
               appStore.getSettings()
             } else {
-              appStore.startOauth(id)
+              appStore.startOauth(result.id)
             }
             return
           })
         }
-        title={title}
         afterTitle={
-          <>
+          <after css={{ flexFlow: 'row', margin: [-5, 0] }}>
             <React.Fragment if={!isActive}>
               <UI.Button>Add</UI.Button>
             </React.Fragment>
             <React.Fragment if={isActive}>
               <UI.Button>Remove</UI.Button>
             </React.Fragment>
-          </>
+          </after>
         }
-        icon={icon}
         {...props}
       />
     )

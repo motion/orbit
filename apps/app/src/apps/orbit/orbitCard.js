@@ -3,7 +3,7 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
-import { Link } from '~/views'
+import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 import { PeopleRow } from '~/components/PeopleRow'
@@ -50,7 +50,10 @@ class OrbitCardStore {
     return isPaneActive && isSubPaneActive
   }
 
-  handleClick = () => {
+  handleClick = e => {
+    if (this.props.onClick) {
+      this.props.onClick(e)
+    }
     if (this.props.inactive) {
       return
     }
@@ -75,7 +78,10 @@ class OrbitCardStore {
       this._isSelected = true
       await sleep(10)
       log('selecting', this.props)
-      this.props.appStore.setTarget(this.props.bit, this.ref)
+      this.props.appStore.setTarget(
+        this.props.bit || this.props.result,
+        this.ref,
+      )
     },
   )
 }
@@ -128,6 +134,9 @@ export class OrbitCard extends React.Component {
   }
 
   handleDoubleClick = () => {
+    if (!this.props.bit) {
+      return
+    }
     BitActions.open(this.props.bit)
   }
 
@@ -149,7 +158,6 @@ export class OrbitCard extends React.Component {
       listItem,
       style,
       hoverToSelect,
-      bit,
       selectedTheme,
       afterTitle,
       children,
@@ -157,6 +165,7 @@ export class OrbitCard extends React.Component {
       titleProps,
       orbitStore,
       inactive,
+      iconProps,
     } = this.props
     const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
@@ -168,6 +177,7 @@ export class OrbitCard extends React.Component {
         $orbitIcon
         imageStyle={imageStyle}
         {...tiny && tinyProps.iconProps}
+        {...iconProps}
       />
     )
     const { isSelected } = store
@@ -231,7 +241,7 @@ export class OrbitCard extends React.Component {
               >
                 {preview.split(' ').map((word, i) => (
                   <React.Fragment key={i}>
-                    <Link orbitStore={orbitStore}>{word}</Link>{' '}
+                    <SmallLink orbitStore={orbitStore}>{word}</SmallLink>{' '}
                   </React.Fragment>
                 ))}
               </UI.Text>
@@ -288,7 +298,6 @@ export class OrbitCard extends React.Component {
     },
     title: {
       maxWidth: '100%',
-      overflow: 'hidden',
       flexFlow: 'row',
       justifyContent: 'space-between',
     },

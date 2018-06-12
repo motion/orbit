@@ -1268,9 +1268,9 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "http://localhost:4873/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
-iohook@^0.1.11:
-  version "0.1.16"
-  resolved "http://localhost:4873/iohook/-/iohook-0.1.16.tgz#97a60246d4950243ba866da2274a67e6caaf6265"
+iohook@0.2.0:
+  version "0.2.0"
+  resolved "http://localhost:4873/iohook/-/iohook-0.2.0.tgz#7a60c776b0e277bd2eeadd09a0644e920e9b6a73"
   dependencies:
     "@types/node" "^7.0.62"
     bindings "^1.3.0"

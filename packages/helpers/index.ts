@@ -14,7 +14,7 @@ export type ReactionOptions = {
   fireImmediately?: boolean
   immediate?: boolean
   equals?: Function
-  log?: boolean | 'state'
+  log?: boolean | 'state' | 'all'
   delay?: number
   isIf?: boolean
   delayValue?: boolean

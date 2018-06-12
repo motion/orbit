@@ -561,7 +561,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           })
           .catch(err => {
             if (err === RejectReactionSymbol) {
-              if (!IS_PROD && !preventLog && options.log !== 'state') {
+              if (!IS_PROD && options.log === 'all') {
                 log(`${name} [${curID}] cancelled`)
               }
             } else {

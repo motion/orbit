@@ -42,11 +42,7 @@ export default class OrbitStore {
 
   handleKeyDown = code => {
     console.log('keydown', code)
-    const { searchState, activeIndex, toggleSelected } = this.props.appStore
-    console.log('active is', activeIndex, searchState.results.length)
-    const increment = (by = 1) =>
-      toggleSelected(Math.min(searchState.results.length - 1, activeIndex + by))
-    const decrement = (by = 1) => toggleSelected(Math.max(-1, activeIndex - by))
+    const { openSelected, increment, decrement } = this.props.appStore
     switch (code) {
       case 37: // left
         this.emit('key', 'left')
@@ -61,7 +57,7 @@ export default class OrbitStore {
         decrement()
         return
       case 13: // enter
-        this.props.appStore.open(results[activeIndex])
+        openSelected()
         return
     }
   }

@@ -1,6 +1,7 @@
 export { Transform, Color } from './types';
 export * from './helpers';
-export default function motionStyle(options?: Object): (styles: Object, opts?: {
+declare type Opts = {
     errorMessage?: string;
     snakeCase?: boolean;
-}) => Object;
+};
+export default function motionStyle(options?: Object): (styles: Object, opts?: Opts) => Object;

@@ -13,8 +13,7 @@
     "start": "./start.sh",
     "build": "tsc",
     "watch": "npm run build -- --watch",
-    "deploy": "cd ../electron-build && npm run deploy",
-    "postinstall": "electron-rebuild"
+    "deploy": "cd ../electron-build && npm run deploy"
   },
   "cmake-js": {
     "runtime": "electron",
@@ -45,7 +44,7 @@
     "electron-debug": "^1.5.0",
     "electron-simple-updater": "^1.2.3",
     "esm": "3.0.37",
-    "iohook": "^0.1.11",
+    "iohook": "0.2.0",
     "kill-port": "^1.1.0",
     "lodash": "4.17.10",
     "module-alias": "^2.0.6",

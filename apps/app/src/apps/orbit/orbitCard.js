@@ -235,7 +235,7 @@ export class OrbitCard extends React.Component {
               <UI.Text
                 if={typeof preview === 'string'}
                 alpha={isSelected ? 0.85 : 0.65}
-                size={listItem ? 1.1 : 1.6}
+                size={listItem ? 1.1 : 1.5}
                 sizeLineHeight={0.9}
                 $previewText
               >

@@ -90,50 +90,52 @@ export class OrbitDirectory {
     const total = store.results.length
     return (
       <OrbitDockedPane name="directory">
-        <SubTitle>Teams</SubTitle>
-        <React.Fragment if={teams.length}>
-          <OrbitCardTeam
-            pane="summary"
-            subPane="directory"
-            index={0}
-            total={total}
-            store={store}
-            bit={teams[0]}
-            isExpanded
-            hoverToSelect
-          />
-          <space css={{ height: 12 }} />
-          <OrbitCardTeam
-            pane="summary"
-            subPane="directory"
-            index={1}
-            total={total}
-            store={store}
-            bit={teams[1]}
-            isExpanded
-            hoverToSelect
-          />
-          <carousel css={{ margin: [12, 0, 0] }}>
-            {teams.slice(2).map((team, index) => (
-              <OrbitCardTeam
-                key={index}
-                pane="summary"
-                subPane="directory"
-                index={index + 2}
-                total={total}
-                store={store}
-                bit={team}
-                hoverToSelect
-                css={{
-                  width: 140,
-                  marginRight: 12,
-                }}
-              />
-            ))}
-          </carousel>
-        </React.Fragment>
-        <br />
-        <br />
+        <teams if={false}>
+          <SubTitle>Teams</SubTitle>
+          <React.Fragment if={teams.length}>
+            <OrbitCardTeam
+              pane="summary"
+              subPane="directory"
+              index={0}
+              total={total}
+              store={store}
+              bit={teams[0]}
+              isExpanded
+              hoverToSelect
+            />
+            <space css={{ height: 12 }} />
+            <OrbitCardTeam
+              pane="summary"
+              subPane="directory"
+              index={1}
+              total={total}
+              store={store}
+              bit={teams[1]}
+              isExpanded
+              hoverToSelect
+            />
+            <carousel css={{ margin: [12, 0, 0] }}>
+              {teams.slice(2).map((team, index) => (
+                <OrbitCardTeam
+                  key={index}
+                  pane="summary"
+                  subPane="directory"
+                  index={index + 2}
+                  total={total}
+                  store={store}
+                  bit={team}
+                  hoverToSelect
+                  css={{
+                    width: 140,
+                    marginRight: 12,
+                  }}
+                />
+              ))}
+            </carousel>
+          </React.Fragment>
+          <br />
+          <br />
+        </teams>
         <React.Fragment if={people.length}>
           <SubTitle>People</SubTitle>
           <Masonry>

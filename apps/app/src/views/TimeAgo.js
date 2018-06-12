@@ -5,6 +5,7 @@ import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 export class TimeAgo extends Component {
   static defaultProps = {
     element: 'p',
+    postfix: '',
     date: new Date(),
     className: undefined,
     isLive: true,
@@ -60,6 +61,7 @@ export class TimeAgo extends Component {
       return distanceInWordsToNow(this.props.date, options)
         .replace('about ', '')
         .replace('less than ', '')
+        .replace(' ago', this.props.postfix)
     }
   }
 

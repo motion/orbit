@@ -1,54 +1,23 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/all'
-import { Bit, Job } from '@mcro/models'
+import { Job } from '@mcro/models'
 import { PeekHeader } from '../peekHeader'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
+import { SettingInfoStore } from '~/stores/SettingInfoStore'
 
 const EmptyPane = () => <div>no setting pane</div>
 
 @view({
-  store: class SettingStore {
-    version = 0
-    job = null
-    bitsCount = null
-
-    get setting() {
-      return this.props.appStore.settings[this.bit.integration]
-    }
-
-    get bit() {
-      return App.peekState.bit
-    }
-
-    async willMount() {
-      this.setInterval(this.update, 1000)
-      this.update()
-    }
-
-    update = async () => {
-      const { integration } = this.bit
-      const job = await Job.findOne({
-        where: { type: integration },
-        order: { createdAt: 'DESC' },
-      })
-      if (!this.job || JSON.stringify(job) !== JSON.stringify(this.job)) {
-        this.job = job
-        this.version += 1
-      }
-      const bitsCount = await Bit.createQueryBuilder()
-        .where({ integration })
-        .getCount()
-      if (bitsCount !== this.bitsCount) {
-        this.bitsCount = bitsCount
-        this.version += 1
-      }
-    }
-  },
+  store: SettingInfoStore,
 })
 export class Setting extends React.Component {
+  componentDidMount() {
+    this.props.store.setBit(App.peekState.bit)
+  }
+
   handleRefresh = async () => {
     const store = this.props.store
     const job = new Job()

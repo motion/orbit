@@ -1,11 +1,16 @@
 import { view, react } from '@mcro/black'
 import { partition } from 'lodash'
 import { OrbitSettingCard } from './orbitSettingCard'
+import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
+import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
 
-const Title = props => (
-  <UI.Title size={1.2} fontWeight={600} margin={[10, 20]} {...props} />
+const CheckBoxRow = ({ children, checked }) => (
+  <row css={{ flexFlow: 'row', padding: [8, 0], alignItems: 'center' }}>
+    <input checked={checked} css={{ margin: ['auto', 4] }} type="checkbox" />{' '}
+    <label css={{ padding: [0, 4], fontWeight: 400 }}>{children}</label>
+  </row>
 )
 
 class OrbitSettingsStore {
@@ -28,9 +33,9 @@ class OrbitSettingsStore {
     { immediate: true },
   )
 
-  isActive = integration =>
-    this.props.appStore.settings[integration.id] &&
-    this.props.appStore.settings[integration.id].token
+  isActive = result =>
+    this.props.appStore.settings[result.id] &&
+    this.props.appStore.settings[result.id].token
 
   allResults = [
     {
@@ -58,7 +63,7 @@ class OrbitSettingsStore {
       id: 'folder',
       type: 'setting',
       integration: 'folder',
-      title: 'Folder',
+      title: 'Local Files',
       icon: 'folder',
       oauth: false,
     },
@@ -86,37 +91,50 @@ export class OrbitSettings {
       activeIntegrations,
       inactiveIntegrations,
     } = store.splitActiveResults
-    const integrationCard = all => (setting, index, offset) => (
+    const integrationCard = (result, index) => (
       <OrbitSettingCard
+        pane="summary"
+        subPane="settings"
+        hoverToSelect
         key={index}
         index={index}
-        offset={offset}
+        total={store.allResults.length}
         appStore={appStore}
-        length={all.length}
-        isActive={store.isActive(setting)}
-        isPaneActive={store.isPaneActive}
-        setting={setting}
+        isActive={store.isActive(result)}
+        setting={appStore.settings[result.id]}
+        result={result}
+        listItem
       />
     )
     return (
       <OrbitDockedPane name={name}>
+        <SubTitle>Settings</SubTitle>
+        <OrbitCard>
+          <UI.Text css={{ marginBottom: 10 }}>
+            You've added {activeIntegrations.length} integration{activeIntegrations.length ===
+            '1'
+              ? ''
+              : 's'}.{' '}
+            {activeIntegrations.length === 0
+              ? 'Add some integrations below to get started with Orbit.'
+              : ''}
+          </UI.Text>
+          <CheckBoxRow checked>Start on Login</CheckBoxRow>
+          <CheckBoxRow checked>Automatically manage disk space</CheckBoxRow>
+        </OrbitCard>
         <section if={activeIntegrations.length}>
-          <Title>Active</Title>
+          <SubTitle>Integrations</SubTitle>
           <cards>
             {activeIntegrations.map((item, index) =>
-              integrationCard(activeIntegrations)(item, index, index),
+              integrationCard(item, index),
             )}
           </cards>
         </section>
         <section if={inactiveIntegrations.length}>
-          <Title>Inactive</Title>
+          <SubTitle>Add Integration</SubTitle>
           <cards>
             {inactiveIntegrations.map((item, index) =>
-              integrationCard(inactiveIntegrations)(
-                item,
-                index + activeIntegrations.length,
-                index,
-              ),
+              integrationCard(item, index + activeIntegrations.length),
             )}
           </cards>
         </section>

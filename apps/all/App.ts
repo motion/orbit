@@ -13,6 +13,7 @@ const isOrbit = isBrowser && window.location.pathname === '/orbit'
 @store
 class AppStore {
   messages = {
+    TOGGLE_SETTINGS: 'TOGGLE_SETTINGS',
     TOGGLE_DOCKED: 'TOGGLE_DOCKED',
     TOGGLE_SHOWN: 'TOGGLE_SHOWN',
     SHOW: 'SHOW',
@@ -66,7 +67,7 @@ class AppStore {
     return !!App.peekState.target
   }
 
-  animationDuration = 90
+  animationDuration = 100
   dockedWidth = 550
 
   isAnimatingOrbit = react(

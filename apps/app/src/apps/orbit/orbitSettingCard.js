@@ -1,135 +1,73 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from './orbitIcon'
-import { App } from '@mcro/all'
-
-class OrbitSettingCardStore {
-  cardRef = React.createRef()
-
-  setPeekTargetOnNextIndex = react(
-    () => this.props.appStore.nextIndex === this.props.index,
-    shouldSelect => {
-      if (!shouldSelect || !this.props.isPaneActive) {
-        throw react.cancel
-      }
-      console.log('set target')
-      this.props.appStore.setTarget(
-        {
-          type: 'setting',
-          integration: this.props.setting.integration,
-        },
-        this.cardRef.current,
-      )
-    },
-  )
-}
+import { OrbitCard } from '~/apps/orbit/orbitCard'
+import { SettingInfoStore } from '~/stores/SettingInfoStore'
 
 @view.attach('appStore')
 @view({
-  store: OrbitSettingCardStore,
+  store: SettingInfoStore,
 })
 export class OrbitSettingCard extends React.Component {
-  state = {
-    hoverSettle: false,
+  componentWillMount() {
+    this.props.store.setBit(this.props.result)
   }
 
-  hoverSettler = this.props.appStore.getHoverSettler()
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.isPaneActive && this.props.isPaneActive) {
-      this.hoverSettler.setItem({ index: this.props.index })
-    }
-    const hoverSettle = this.props.isPaneActive
-    if (hoverSettle !== this.state.hoverSettle) {
-      this.setState({ hoverSettle })
-    }
-  }
-
-  render(
-    { store, setting, index, subtitle, isActive, appStore, oauth },
-    { hoverSettle },
-  ) {
-    const { id, icon, title } = setting
-    const isSelected =
-      appStore.selectedIndex === index && !!App.peekState.target
-    const hoverSettleProps = hoverSettle && this.hoverSettler.props
+  render({ store, result, setting, isActive, appStore, ...props }) {
     return (
-      <card
-        key={index}
-        ref={store.cardRef}
-        $isSelected={isSelected}
-        {...hoverSettleProps}
-        onClick={async () => {
-          if (!isActive) {
-            if (oauth === false) {
-              const setting = appStore.settings[id]
+      <OrbitCard
+        inactive={!isActive}
+        $card
+        $isActive={isActive}
+        title={result.title}
+        subtitle={
+          store.bitsCount === null
+            ? '...'
+            : `${store.bitsCount || 'none'} synced`
+        }
+        date={store.job && store.job.updatedAt}
+        icon={result.icon}
+        result={result}
+        onClick={
+          !isActive &&
+          (async () => {
+            if (result.oauth === false) {
               setting.token = 'good'
               await setting.save()
               appStore.getSettings()
             } else {
-              appStore.startOauth(id)
+              appStore.startOauth(result.id)
             }
             return
-          }
-          appStore.setTarget(setting, this.ref)
-        }}
-      >
-        <OrbitIcon $icon $iconActive={isActive} icon={icon} size={22} />
-        <titles>
-          <UI.Text $title fontWeight={300} size={1.4} textAlign="center">
-            {title}
-          </UI.Text>
-          <UI.Text if={subtitle} $subtitle size={0.9} textAlign="center">
-            {subtitle}
-          </UI.Text>
-        </titles>
-      </card>
+          })
+        }
+        afterTitle={
+          <after css={{ flexFlow: 'row', margin: [-5, 0] }}>
+            <React.Fragment if={!isActive}>
+              <UI.Button>Add</UI.Button>
+            </React.Fragment>
+            <React.Fragment if={isActive}>
+              <UI.Button>Remove</UI.Button>
+            </React.Fragment>
+          </after>
+        }
+        {...props}
+      />
     )
   }
 
   static style = {
     card: {
-      flexFlow: 'row',
-      flex: 1,
-      alignItems: 'center',
-      position: 'relative',
-      padding: [10, 20],
-      '&:hover': {
-        background: [255, 255, 255, 0.1],
-      },
-      '&:active': {
-        background: [255, 255, 255, 0.15],
-      },
+      opacity: 0.7,
     },
-    isSelected: {},
-    lastRow: {
-      borderBottom: 'none',
-    },
-    icon: {
-      margin: ['auto', 12, 'auto', 0],
-      opacity: 0.5,
-    },
-    iconActive: {
-      filter: 'none',
+    isActive: {
       opacity: 1,
     },
-  }
-
-  static theme = ({ isActive }, theme) => {
-    return {
-      card: {
-        background: 'transparent',
-        '&:hover': {
-          background: theme.hover.background,
-        },
+    icon: {
+      margin: ['auto', 10, 'auto', -8],
+      transform: {
+        y: -1,
       },
-      isSelected: {
-        background: theme.active.background,
-        '&:hover': {
-          background: theme.activeHover.background,
-        },
-      },
-    }
+    },
   }
 }

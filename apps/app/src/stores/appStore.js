@@ -261,6 +261,9 @@ export class AppStore {
       if (bit.type === 'setting') {
         return bit
       }
+      if (bit.type === 'team') {
+        return bit
+      }
       const res = await Bit.findOne({
         where: {
           id: bit.id,
@@ -451,14 +454,6 @@ export class AppStore {
           }
         }
       }
-    }
-  }
-
-  toggleSettings = () => {
-    this.showSettings = !this.showSettings
-    // pin if not pinned
-    if (this.showSettings && !App.orbitState.pinned) {
-      App.sendMessage(Electron, Electron.messages.TOGGLE_PINNED)
     }
   }
 

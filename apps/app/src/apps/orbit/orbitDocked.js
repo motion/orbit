@@ -28,6 +28,12 @@ class PaneStore {
         this.paneIndex = Math.max(0, this.paneIndex - 1)
       }
     })
+
+    App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+      console.log('got message toggle settings')
+      this.setActivePane('settings')
+      App.setOrbitState({ docked: true })
+    })
   }
 
   setActivePane = name => {
@@ -80,7 +86,7 @@ class PaneStore {
   )
 }
 
-const borderRadius = 18
+const borderRadius = 0
 
 @UI.injectTheme
 @view.attach('appStore', 'orbitStore')

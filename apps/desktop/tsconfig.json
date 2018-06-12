@@ -9,5 +9,5 @@
     }
   },
   "include": ["**/*"],
-  "exclude": ["_", "node_modules", "tmp"]
+  "exclude": ["_", "node_modules", "tmp", "desktop.js"]
 }

@@ -3,7 +3,9 @@ import * as T from './typeorm'
 @T.Entity()
 export class Job extends T.BaseEntity {
   @T.PrimaryGeneratedColumn() id: number
-  @T.Column() type: string
+  @T.Index()
+  @T.Column()
+  type: string
   @T.Column() action: string
   @T.Column({ nullable: true })
   lastError: string
@@ -15,8 +17,12 @@ export class Job extends T.BaseEntity {
   tries: number
   @T.Column({ default: 0 })
   percent: number
-  @T.CreateDateColumn() createdAt: Date
-  @T.UpdateDateColumn() updatedAt: Date
+  @T.Index()
+  @T.CreateDateColumn()
+  createdAt: Date
+  @T.Index()
+  @T.UpdateDateColumn()
+  updatedAt: Date
 
   get lock() {
     return `${this.type}`

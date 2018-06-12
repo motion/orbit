@@ -3,27 +3,10 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import bitContents from '~/components/bitContents'
+import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
-
-@view.ui
-class Link extends React.Component {
-  handleClick = () => {
-    this.props.orbitStore.setQuery(this.props.children)
-  }
-
-  render({ children }) {
-    return <span onClick={this.handleClick}>{children}</span>
-  }
-  static style = {
-    span: {
-      borderBottom: [2, 'transparent'],
-      '&:hover': {
-        borderBottom: [2, 'solid', [0, 0, 0, 0.1]],
-      },
-    },
-  }
-}
+import { PeopleRow } from '~/components/PeopleRow'
 
 let loggers = []
 let nextLog = null
@@ -67,7 +50,13 @@ class OrbitCardStore {
     return isPaneActive && isSubPaneActive
   }
 
-  handleClick = () => {
+  handleClick = e => {
+    if (this.props.onClick) {
+      this.props.onClick(e)
+    }
+    if (this.props.inactive) {
+      return
+    }
     this.props.appStore.toggleSelected(this.props.index)
   }
 
@@ -88,8 +77,11 @@ class OrbitCardStore {
       }
       this._isSelected = true
       await sleep(10)
-      console.log('selecting', this.props, this)
-      this.props.appStore.setTarget(this.props.bit, this.ref)
+      log('selecting', this.props)
+      this.props.appStore.setTarget(
+        this.props.bit || this.props.result,
+        this.ref,
+      )
     },
   )
 }
@@ -142,13 +134,14 @@ export class OrbitCard extends React.Component {
   }
 
   handleDoubleClick = () => {
+    if (!this.props.bit) {
+      return
+    }
     BitActions.open(this.props.bit)
   }
 
   getOrbitCard(contentProps) {
     const {
-      bottom,
-      bottomAfter,
       title,
       via,
       icon,
@@ -157,6 +150,7 @@ export class OrbitCard extends React.Component {
       subtitle,
       permalink,
       date,
+      people,
     } = contentProps
     const {
       store,
@@ -164,13 +158,14 @@ export class OrbitCard extends React.Component {
       listItem,
       style,
       hoverToSelect,
-      bit,
       selectedTheme,
       afterTitle,
       children,
       theme,
       titleProps,
       orbitStore,
+      inactive,
+      iconProps,
     } = this.props
     const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
@@ -182,6 +177,7 @@ export class OrbitCard extends React.Component {
         $orbitIcon
         imageStyle={imageStyle}
         {...tiny && tinyProps.iconProps}
+        {...iconProps}
       />
     )
     const { isSelected } = store
@@ -196,7 +192,7 @@ export class OrbitCard extends React.Component {
           }}
           ref={store.setRef}
           onClick={store.handleClick}
-          {...hoverToSelect && this.hoverSettler.props}
+          {...hoverToSelect && !inactive && this.hoverSettler.props}
           style={style}
         >
           <card onDoubleClick={this.handleDoubleClick}>
@@ -232,19 +228,20 @@ export class OrbitCard extends React.Component {
               <UI.Text if={date} size={0.95}>
                 <TimeAgo date={date} />
               </UI.Text>
+              <permalink if={permalink}>{permalink}</permalink>
             </subtitle>
             <preview if={preview && !children}>
               {typeof preview !== 'string' && preview}
               <UI.Text
                 if={typeof preview === 'string'}
-                alpha={isSelected ? 0.85 : 0.65}
-                size={listItem ? 1.1 : 1.6}
+                alpha={isSelected ? 0.85 : 0.6}
+                size={listItem ? 1.1 : 1.3}
                 sizeLineHeight={0.9}
                 $previewText
               >
                 {preview.split(' ').map((word, i) => (
                   <React.Fragment key={i}>
-                    <Link orbitStore={orbitStore}>{word}</Link>{' '}
+                    <SmallLink orbitStore={orbitStore}>{word}</SmallLink>{' '}
                   </React.Fragment>
                 ))}
               </UI.Text>
@@ -252,16 +249,8 @@ export class OrbitCard extends React.Component {
             {typeof children === 'function'
               ? children(contentProps, { background })
               : children}
-            <bottom if={false && !tiny && (bottom || permalink || via)}>
-              <permalink if={isExpanded}>{permalink}</permalink>
-              <space if={permalink} />
-              {bottom}
-              <UI.Date>{bit.bitUpdatedAt}</UI.Date>
-              <Text if={via} opacity={0.5} size={0.9}>
-                {via}
-              </Text>
-              <div $$flex />
-              {bottomAfter}
+            <bottom if={people && people.length && people[0].data.profile}>
+              <PeopleRow people={people} />
             </bottom>
           </card>
         </cardWrap>
@@ -309,16 +298,14 @@ export class OrbitCard extends React.Component {
     },
     title: {
       maxWidth: '100%',
-      overflow: 'hidden',
       flexFlow: 'row',
       justifyContent: 'space-between',
     },
     preview: {
       flex: 1,
     },
-    previewOverflow: {
-      zIndex: 10,
-      bottom: 40,
+    permalink: {
+      margin: [-2, -2, 0, 8],
     },
     orbitIcon: {
       position: 'absolute',
@@ -327,14 +314,6 @@ export class OrbitCard extends React.Component {
       margin: [0, 6, 0, 0],
       // filter: 'grayscale(100%)',
       opacity: 0.8,
-    },
-    bottom: {
-      opacity: 0.5,
-      flexFlow: 'row',
-      alignItems: 'center',
-      userSelect: 'none',
-      // justifyContent: 'center',
-      // flex: 1,
     },
     subtitle: {
       margin: [-1, 0, 0],
@@ -402,9 +381,6 @@ export class OrbitCard extends React.Component {
         borderRadius,
         flex: inGrid ? 1 : 'none',
         ...card,
-      },
-      bottom: {
-        opacity: isSelected ? 1 : 0.5,
       },
       preview: {
         margin: inGrid ? ['auto', 0] : 0,

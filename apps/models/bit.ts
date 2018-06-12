@@ -11,13 +11,17 @@ export class Bit extends T.BaseEntity {
   @T.Column() integration: string
   @T.Column() title: string
   @T.Column() body: string
-  @T.Column() type: string
+  @T.Index()
+  @T.Column()
+  type: string
   @T.Column() bitCreatedAt: string
   @T.Column() bitUpdatedAt: string
   @T.Index()
-  @T.CreateDateColumn() createdAt: Date
+  @T.CreateDateColumn()
+  createdAt: Date
   @T.Index()
-  @T.UpdateDateColumn() updatedAt: Date
+  @T.UpdateDateColumn()
+  updatedAt: Date
 
   @T.Column({ nullable: true })
   author: string

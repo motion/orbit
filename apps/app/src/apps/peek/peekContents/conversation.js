@@ -59,7 +59,6 @@ export class Conversation extends React.Component {
           return (
             <>
               <PeekHeader
-                if={bit}
                 title={title}
                 subtitle={location}
                 after={

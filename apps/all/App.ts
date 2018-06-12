@@ -67,7 +67,7 @@ class AppStore {
     return !!App.peekState.target
   }
 
-  animationDuration = 90
+  animationDuration = 60
   dockedWidth = 550
 
   isAnimatingOrbit = react(

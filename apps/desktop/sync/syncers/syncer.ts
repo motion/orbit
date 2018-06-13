@@ -1,6 +1,6 @@
 import * as Helpers from '../helpers'
 import debug from '@mcro/debug'
-import { Setting, findOrCreate } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import { watchModel } from '@mcro/helpers'
 
 const log = debug('syncer')

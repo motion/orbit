@@ -55,8 +55,9 @@ class OrbitSettingsStore {
 export class OrbitSettings {
   render({ name, store, appStore }) {
     const { activeSettings } = store
-    const isActive = a =>
-      activeSettings.indexOf(setting => setting.type === a.type) > -1
+    const isActive = result => {
+      return !!activeSettings.find(setting => setting.type === result.id)
+    }
     const IntegrationCard = props => (
       <OrbitSettingCard
         pane="summary"
@@ -103,7 +104,7 @@ export class OrbitSettings {
           <SubTitle>Add Integration</SubTitle>
           <cards>
             {allIntegrations
-              .sort((a, b) => (isActive(a) && !isActive(b) ? 1 : -1))
+              .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
               .map((item, index) => (
                 <IntegrationCard
                   key={index}

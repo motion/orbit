@@ -5,7 +5,7 @@
  * @format
  */
 
-import Logger from '../fb-stubs/Logger.js';
+import Logger from '../fb-stubs/Logger'
 
 export function reportInteraction(
   componentType: string,

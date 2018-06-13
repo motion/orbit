@@ -20,15 +20,15 @@ import {
   TableBodyRow,
   TableRows,
   TableOnAddFilter,
-} from './types.js'
+} from './types'
 import { PureComponent } from 'react'
-import FlexColumn from '../FlexColumn.js'
-import TableHead from './TableHead.js'
-import TableBody from './TableBody.js'
-import FlexBox from '../FlexBox.js'
-import createPaste from '../../../utils/createPaste.js'
-import textContent from '../../../utils/textContent.js'
-import { clipboard } from 'electron'
+import FlexColumn from '../FlexColumn'
+import TableHead from './TableHead'
+import TableBody from './TableBody'
+import FlexBox from '../FlexBox'
+// import createPaste from '../../../utils/createPaste'
+import textContent from '../../../utils/textContent'
+// import { clipboard } from 'electron'
 
 const TableInner = FlexColumn.extends(
   {
@@ -489,11 +489,11 @@ export default class Table extends PureComponent<TableProps, TableState> {
   }
 
   onCopyRows = () => {
-    clipboard.writeText(this.getRowText())
+    // clipboard.writeText(this.getRowText())
   }
 
   onCreatePaste = () => {
-    createPaste(this.getRowText())
+    // createPaste(this.getRowText())
   }
 
   onHighlight = (newHighlightedRows: TableHighlightedRows, e: any) => {

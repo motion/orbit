@@ -19,7 +19,7 @@ type PasteResponse =
       dateCreated: number,
       language: string,
       uri: string,
-      parentPHID: ?number,
+      parentPHID: number | void,
       content: string,
     }
   | {

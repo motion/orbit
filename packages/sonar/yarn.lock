@@ -25,6 +25,10 @@ core-js@^2.4.0:
   version "2.5.7"
   resolved "http://localhost:4873/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
 
+dashify@1.0.0:
+  version "1.0.0"
+  resolved "http://localhost:4873/dashify/-/dashify-1.0.0.tgz#faa9365fbe72a688bcb5d6f2b270d370c96d575e"
+
 "dom-helpers@^2.4.0 || ^3.0.0":
   version "3.3.1"
   resolved "http://localhost:4873/dom-helpers/-/dom-helpers-3.3.1.tgz#fc1a4e15ffdf60ddde03a480a9c0fece821dd4a6"

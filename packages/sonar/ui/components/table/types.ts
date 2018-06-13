@@ -5,82 +5,82 @@
  * @format
  */
 
-import type {Filter} from '../filter/types.js';
+import { Filter } from '../filter/types'
 
-export const MINIMUM_COLUMN_WIDTH = 100;
-export const DEFAULT_COLUMN_WIDTH = 200;
-export const DEFAULT_ROW_HEIGHT = 23;
+export const MINIMUM_COLUMN_WIDTH = 100
+export const DEFAULT_COLUMN_WIDTH = 200
+export const DEFAULT_ROW_HEIGHT = 23
 
 type TableColumnOrderVal = {
-  key: string,
-  visible: boolean,
-};
+  key: string
+  visible: boolean
+}
 
-export type TableColumnRawOrder = Array<string | TableColumnOrderVal>;
+export type TableColumnRawOrder = Array<string | TableColumnOrderVal>
 
-export type TableColumnOrder = Array<TableColumnOrderVal>;
+export type TableColumnOrder = Array<TableColumnOrderVal>
 
 export type TableColumnSizes = {
-  [key: string]: string | number,
-};
+  [key: string]: string | number
+}
 
-export type TableHighlightedRows = Array<string>;
+export type TableHighlightedRows = Array<string>
 
-export type TableColumnKeys = Array<string>;
+export type TableColumnKeys = Array<string>
 
-export type TableOnColumnResize = (sizes: TableColumnSizes) => void;
-export type TableOnColumnOrder = (order: TableColumnOrder) => void;
-export type TableOnSort = (order: TableRowSortOrder) => void;
+export type TableOnColumnResize = (sizes: TableColumnSizes) => void
+export type TableOnColumnOrder = (order: TableColumnOrder) => void
+export type TableOnSort = (order: TableRowSortOrder) => void
 export type TableOnHighlight = (
   highlightedRows: TableHighlightedRows,
   e: SyntheticUIEvent<>,
-) => void;
+) => void
 
-export type TableHeaderColumn = {|
-  value: string,
-  sortable?: boolean,
-  resizable?: boolean,
-|};
+export type TableHeaderColumn = {
+  value: string
+  sortable?: boolean
+  resizable?: boolean
+}
 
-export type TableBodyRow = {|
-  key: string,
-  height?: ?number,
-  filterValue?: ?string,
-  backgroundColor?: ?string,
-  sortKey?: string | number,
-  style?: Object,
-  type?: ?string,
-  highlightedBackgroundColor?: ?string,
-  onDoubleClick?: (e: SyntheticMouseEvent<>) => void,
-  copyText?: string,
-  highlightOnHover?: boolean,
+export type TableBodyRow = {
+  key: string
+  height?: number | void
+  filterValue?: string | void
+  backgroundColor?: string | void
+  sortKey?: string | number
+  style?: Object
+  type?: string | void
+  highlightedBackgroundColor?: string | void
+  onDoubleClick?: (e: MouseEvent) => void
+  copyText?: string
+  highlightOnHover?: boolean
   columns: {
-    [key: string]: TableBodyColumn,
-  },
-|};
+    [key: string]: TableBodyColumn
+  }
+}
 
-export type TableBodyColumn = {|
-  sortValue?: string | number,
-  isFilterable?: boolean,
-  value: any,
-  title?: string,
-|};
+export type TableBodyColumn = {
+  sortValue?: string | number
+  isFilterable?: boolean
+  value: any
+  title?: string
+}
 
 export type TableColumns = {
-  [key: string]: TableHeaderColumn,
-};
+  [key: string]: TableHeaderColumn
+}
 
-export type TableRows = Array<TableBodyRow>;
+export type TableRows = Array<TableBodyRow>
 
-export type TableRowSortOrder = {|
-  key: string,
-  direction: 'up' | 'down',
-|};
+export type TableRowSortOrder = {
+  key: string
+  direction: 'up' | 'down'
+}
 
 export type TableOnDragSelect = (
-  e: SyntheticMouseEvent<>,
+  e: MouseEvent,
   key: string,
   index: number,
-) => void;
+) => void
 
-export type TableOnAddFilter = (filter: Filter) => void;
+export type TableOnAddFilter = (filter: Filter) => void

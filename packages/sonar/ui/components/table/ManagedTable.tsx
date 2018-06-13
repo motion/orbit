@@ -15,9 +15,9 @@ import {
   TableRows,
   TableBodyRow,
   TableOnAddFilter,
-} from './types.js'
-import styled from '../../styled/index.js'
-import Table from './Table.js'
+} from './types'
+import styled from '../../styled/index'
+import Table from './Table'
 
 export type ManagedTableProps = {
   /**

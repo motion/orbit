@@ -36,7 +36,7 @@ export function toggleDynamicPluginLoading() {
   app.exit(0);
 }
 
-export function dynamicPluginPath(): ?string {
+export function dynamicPluginPath(): string | void {
   const index = _argv.findIndex(arg => arg.startsWith(DP_ARG));
 
   if (index > -1) {

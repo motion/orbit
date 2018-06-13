@@ -14,19 +14,19 @@ import {
   TableOnHighlight,
   TableRows,
   TableOnAddFilter,
-} from './types.js'
-import { FixedList, DynamicList } from '../../../ui/virtualized/index.js'
-import { normaliseColumnWidth } from './utils.js'
+} from './types'
+import { FixedList, DynamicList } from '../../../ui/virtualized/index'
+import { normaliseColumnWidth } from './utils'
 import { PureComponent } from 'react'
 
-import FilterRow from '../filter/FilterRow.js'
-import { DEFAULT_ROW_HEIGHT } from './types.js'
-import styled from '../../styled/index.js'
-import FlexColumn from '../FlexColumn.js'
-import { ContextMenu } from 'sonar'
+import FilterRow from '../filter/FilterRow'
+import { DEFAULT_ROW_HEIGHT } from './types'
+import styled from '../../styled/index'
+import FlexColumn from '../FlexColumn'
+import ContextMenu from '../ContextMenu'
 
-import FlexRow from '../FlexRow.js'
-import { colors } from '../colors.js'
+import FlexRow from '../FlexRow'
+import { colors } from '../colors'
 
 const TableBodyContainer = FlexColumn.extends(
   {

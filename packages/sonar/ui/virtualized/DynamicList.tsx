@@ -7,7 +7,7 @@
 
 import { RowRenderer, OnScroll, KeyMapper } from './types.js'
 import { PureComponent, Component } from 'react'
-import { ResizeSensor } from '../index.js'
+import ResizeSensor from '../components/ResizeSensor'
 import { findDOMNode } from 'react-dom'
 
 type RowMeasureProps = {

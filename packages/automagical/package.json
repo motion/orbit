@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "@mcro/debug": "^2.0.0",
-    "@mcro/helpers": "^2.0.0",
     "global": "^4.3.2",
     "mobx-utils": "5.0.0"
   },

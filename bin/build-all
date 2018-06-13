@@ -79,8 +79,8 @@ async function main() {
       for (const dir of packageDirs) {
         buildPackage(Path.basename(dir), dir)
         // sleep a bit every 10 processes started
-        if (i % 5 === 0) {
-          await sleep(3000)
+        if (i % 10 === 0) {
+          await sleep(2000)
         }
         i++
       }

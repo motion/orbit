@@ -1,4 +1,4 @@
-import { react } from '@mcro/automagical'
+import { react, ReactionOptions } from '@mcro/automagical'
 import { now } from 'mobx-utils'
 import * as EventKit from 'event-kit'
 export * from './events'
@@ -12,35 +12,6 @@ export const idFn = _ => _
 
 import { comparer } from 'mobx'
 export const isEqual = comparer.structural
-
-export type ReactionOptions = {
-  fireImmediately?: boolean
-  immediate?: boolean
-  equals?: Function
-  log?: false | 'state' | 'all'
-  delay?: number
-  isIf?: boolean
-  delayValue?: boolean
-  onlyUpdateIfChanged?: boolean
-  defaultValue?: any
-}
-
-export function getReactionOptions(userOptions?: ReactionOptions) {
-  let options: ReactionOptions = {
-    equals: comparer.structural,
-  }
-  if (userOptions.immediate) {
-    options.fireImmediately = true
-    delete userOptions.immediate
-  }
-  if (userOptions === true) {
-    options.fireImmediately = true
-  }
-  if (userOptions instanceof Object) {
-    options = { ...options, ...userOptions }
-  }
-  return options
-}
 
 type ReactModelQueryOpts = ReactionOptions & {
   condition: Function

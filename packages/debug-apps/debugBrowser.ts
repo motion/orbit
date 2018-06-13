@@ -3,10 +3,6 @@ import puppeteer from 'puppeteer'
 import * as _ from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-// import getExtensions from '@mcro/chrome-extensions'
-// const extNames = getExtensions(['mobx', 'react'])
-// const extensions = extNames.map(ext => `--load-extension=${ext}`)
-
 const onFocus = page => {
   return page.evaluate(() => {
     return new Promise(res => {

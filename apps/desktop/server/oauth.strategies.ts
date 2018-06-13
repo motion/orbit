@@ -47,11 +47,11 @@ export default {
       },
     },
   },
-  google: {
+  gmail: {
     strategy: GoogleStrategy,
     config: {
       credentials: {
-        callbackURL: '/auth/google/callback',
+        callbackURL: '/auth/gmail/callback',
         clientID:
           '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com',
         clientSecret: 'LLXP2Vq36socQtgXy_XQqLOW',
@@ -61,8 +61,25 @@ export default {
       scope: [
         'profile',
         'https://www.googleapis.com/auth/gmail.readonly',
+      ],
+      accessType: 'offline',
+      prompt: 'consent',
+    },
+  },
+  gdocs: {
+    strategy: GoogleStrategy,
+    config: {
+      credentials: {
+        callbackURL: '/auth/gdocs/callback',
+        clientID:
+          '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com',
+        clientSecret: 'LLXP2Vq36socQtgXy_XQqLOW',
+      },
+    },
+    options: {
+      scope: [
+        'profile',
         'https://www.googleapis.com/auth/drive',
-        'https://www.googleapis.com/auth/calendar',
       ],
       accessType: 'offline',
       prompt: 'consent',

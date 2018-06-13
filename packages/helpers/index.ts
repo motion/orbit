@@ -50,9 +50,14 @@ export function watchModel(
   let refreshInterval
   Model.findOne({ where }).then(first => {
     setting = first
-    onChange(setting)
+    if (setting) {
+      onChange(setting)
+    }
     refreshInterval = setInterval(async () => {
       const next = await Model.findOne({ where })
+      if (!next) {
+        return
+      }
       if (Date.parse(next.updatedAt) === Date.parse(setting.updatedAt)) {
         return
       }

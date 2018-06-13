@@ -18,11 +18,18 @@ const settingToResult = setting => ({
 
 const allIntegrations = [
   {
-    id: 'google',
+    id: 'gmail',
     type: 'setting',
-    integration: 'google',
-    title: 'Google',
-    icon: 'google',
+    integration: 'gmail',
+    title: 'Google Mail',
+    icon: 'gmail',
+  },
+  {
+    id: 'gdocs',
+    type: 'setting',
+    integration: 'gdocs',
+    title: 'Google Docs',
+    icon: 'gdocs',
   },
   {
     id: 'github',

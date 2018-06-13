@@ -7,53 +7,8 @@ import * as UI from '@mcro/ui'
 import { now } from 'mobx-utils'
 import { Setting, isAllEqual, Not, IsNull } from '@mcro/models'
 import * as _ from 'lodash'
-
-const settingToResult = setting => ({
-  id: setting.type,
-  type: 'setting',
-  integration: setting.type,
-  icon: setting.type,
-  title: _.capitalize(setting.type),
-})
-
-const allIntegrations = [
-  {
-    id: 'gmail',
-    type: 'setting',
-    integration: 'gmail',
-    title: 'Google Mail',
-    icon: 'gmail',
-  },
-  {
-    id: 'gdocs',
-    type: 'setting',
-    integration: 'gdocs',
-    title: 'Google Docs',
-    icon: 'gdocs',
-  },
-  {
-    id: 'github',
-    type: 'setting',
-    integration: 'github',
-    title: 'Github',
-    icon: 'github',
-  },
-  {
-    id: 'slack',
-    type: 'setting',
-    integration: 'slack',
-    title: 'Slack',
-    icon: 'slack',
-  },
-  {
-    id: 'folder',
-    type: 'setting',
-    integration: 'folder',
-    title: 'Folder',
-    icon: 'folder',
-    oauth: false,
-  },
-]
+import { allIntegrations } from '~/constants'
+import { settingToResult } from '~/helpers'
 
 const CheckBoxRow = ({ children, checked }) => (
   <row css={{ flexFlow: 'row', padding: [8, 0], alignItems: 'center' }}>

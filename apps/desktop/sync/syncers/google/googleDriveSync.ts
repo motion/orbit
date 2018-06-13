@@ -32,7 +32,7 @@ export default class GoogleDriveSync {
   }
 
   updateSetting = async (setting?) => {
-    this.setting = setting || (await Setting.findOne({ type: 'google' }))
+    this.setting = setting || (await Setting.findOne({ type: 'gdocs' }))
     this.helpers = getHelpers(this.setting)
   }
 
@@ -78,7 +78,7 @@ export default class GoogleDriveSync {
     return await createOrUpdate(
       Bit,
       {
-        integration: 'google',
+        integration: 'gdocs',
         identifier: Helpers.hash({
           contents,
           id: info.id,

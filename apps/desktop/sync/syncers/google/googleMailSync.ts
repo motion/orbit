@@ -44,7 +44,7 @@ export default class GoogleMailSync {
   }
 
   updateSetting = async (setting?) => {
-    this.setting = setting || (await Setting.findOne({ type: 'google' }))
+    this.setting = setting || (await Setting.findOne({ type: 'gmail' }))
     this.helpers = getHelpers(this.setting)
   }
 
@@ -156,7 +156,7 @@ export default class GoogleMailSync {
           })
           try {
             await processQueue()
-          } catch(err) {
+          } catch (err) {
             console.error('got an err processing', err)
           }
           res(newHistoryId || null)
@@ -219,7 +219,7 @@ export default class GoogleMailSync {
     )
     return {
       identifier: id,
-      integration: 'google',
+      integration: 'gmail',
       type: 'mail',
       title: (subjectHeader && subjectHeader.value) || '',
       body: firstMessage.snippet,

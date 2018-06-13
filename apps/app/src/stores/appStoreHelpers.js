@@ -1,17 +1,5 @@
 import { Setting } from '@mcro/models'
 import * as Helpers from '~/helpers'
-import * as Constants from '~/constants'
-import * as r2 from '@mcro/r2'
-
-export const checkAuths = async () => {
-  const { error, ...authorizations } = await r2.get(
-    `${Constants.API_URL}/getCreds`,
-  ).json
-  if (error) {
-    console.log('no creds')
-  }
-  return authorizations
-}
 
 export const getPermalink = async (result, type) => {
   if (result.type === 'app') {

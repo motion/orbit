@@ -22,7 +22,6 @@ export class Masonry extends React.Component {
   }
 
   async setGrid(grid) {
-    console.log('set grid', grid, this.state)
     if (!grid) return
     if (this.state.measured) return
     this.styles = []

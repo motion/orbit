@@ -3,6 +3,7 @@ import * as T from './typeorm'
 @T.Entity()
 export class Setting extends T.BaseEntity {
   @T.PrimaryGeneratedColumn() id: number
+  @T.Column() category: string
   @T.Column() type: string
   @T.Column({ nullable: true })
   token: string
@@ -18,6 +19,7 @@ export class Setting extends T.BaseEntity {
     channels?: Array<string>
     lastAttachmentSync?: { [key: string]: string }
     lastMessageSync?: { [key: string]: string }
+    oauth: Object
   }
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date

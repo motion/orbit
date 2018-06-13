@@ -1,6 +1,6 @@
 import { react, isEqual, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/all'
-import { Bit, Setting, findOrCreate } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 import * as AppStoreHelpers from './appStoreHelpers'
@@ -328,28 +328,6 @@ export class AppStore {
         }
       }
     }
-  }
-
-  startOauth = type => {
-    App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
-    const checker = this.setInterval(async () => {
-      const auth = await this.checkAuths()
-      const oauth = auth && auth[type]
-      if (!oauth) return
-      clearInterval(checker)
-      let setting = await findOrCreate(Setting, { type })
-      if (!oauth.token) {
-        throw new Error(`No token returned ${JSON.stringify(oauth)}`)
-      }
-      setting.token = oauth.token
-      setting.values = {
-        ...setting.values,
-        oauth,
-      }
-      await setting.save()
-      this.updateSettings()
-      App.sendMessage(Desktop, Desktop.messages.CLOSE_AUTH, type)
-    }, 1000)
   }
 
   openSelected = () => {

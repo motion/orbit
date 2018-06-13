@@ -17,7 +17,6 @@ export default class OrbitStore {
   lastPinKey = ''
 
   willMount() {
-    console.log('willmount orbitstore')
     this.appReactions = new AppReactions({
       onPinKey: key => {
         if (key === 'Delete') {

@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitCard } from '~/apps/orbit/orbitCard'
 import { SettingInfoStore } from '~/stores/SettingInfoStore'
+import * as OauthActions from '~/actions/OauthActions'
 
 @view.attach('appStore')
 @view({
@@ -45,7 +46,7 @@ export class OrbitSettingCard extends React.Component {
               await setting.save()
               appStore.updateSettings()
             } else {
-              appStore.startOauth(result.id)
+              OauthActions.startOauth(result.id)
             }
             return
           })
@@ -55,7 +56,7 @@ export class OrbitSettingCard extends React.Component {
             <React.Fragment if={!isActive}>
               <UI.Button>Add</UI.Button>
             </React.Fragment>
-            <React.Fragment if={isActive}>
+            <React.Fragment if={false && isActive}>
               <UI.Button>Remove</UI.Button>
             </React.Fragment>
           </after>

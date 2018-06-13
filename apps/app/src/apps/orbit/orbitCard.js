@@ -7,6 +7,7 @@ import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 import { PeopleRow } from '~/components/PeopleRow'
+import { Desktop } from '@mcro/all'
 
 let loggers = []
 let nextLog = null
@@ -74,6 +75,9 @@ class OrbitCardStore {
       this.isPaneSelected,
     ],
     async ([shouldSelect, isPaneSelected], { sleep }) => {
+      if (!Desktop.hoverState.orbitHovered) {
+        throw react.cancel
+      }
       if (
         !shouldSelect ||
         !isPaneSelected ||

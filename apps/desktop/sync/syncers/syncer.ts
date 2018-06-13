@@ -24,7 +24,7 @@ export default class Syncer {
   }
 
   async start() {
-    await findOrCreate(Setting, { type: this.type })
+    await findOrCreate(Setting, { type: this.type, category: 'integration' })
     const watch = watchModel(Setting, { type: this.type }, async setting => {
       if (setting.token) {
         watch.cancel()

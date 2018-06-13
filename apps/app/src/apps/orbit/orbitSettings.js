@@ -5,7 +5,7 @@ import { OrbitDockedPane } from './orbitDockedPane'
 import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
 import { now } from 'mobx-utils'
-import { Setting } from '@mcro/models'
+import { Setting, isAllEqual } from '@mcro/models'
 
 const allIntegrations = [
   {
@@ -72,14 +72,8 @@ class OrbitSettingsStore {
     async () => {
       const next = await Setting.find({ where: { type: 'integration' } })
       const current = this.activeIntegrations
-      const notUpdated =
-        !current ||
-        !current.length ||
-        next.reduce(
-          (a, b, i) => a && `${current[i].updatedAt}` === `${b[i].updatedAt}`,
-          true,
-        )
-      if (notUpdated) {
+      if (isAllEqual(current, next)) {
+        console.log('all equal', current, next)
         throw react.cancel
       }
       return next

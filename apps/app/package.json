@@ -46,7 +46,7 @@
     "keyword-extractor": "0.0.15",
     "arrford": "2.0.1",
     "react-spring": "5.3.11",
-    "react-addons-perf": "15.4.2"
+    "invariant": "2.2.4"
   },
   "devDependencies": {
     "@mcro/dev": "^2.0.0"

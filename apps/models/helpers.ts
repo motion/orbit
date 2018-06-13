@@ -6,6 +6,33 @@ export const sleep = ms => new Promise(res => setTimeout(res, ms))
 export * from './typeorm'
 // import { BaseEntity } from 'typeorm'
 
+export function isAllEqual(a: any[], b: any[], keys?) {
+  for (const [index, aItem] of a.entries()) {
+    if (!isEqual(aItem, b[index], keys)) {
+      return false
+    }
+  }
+  return true
+}
+
+// compare model
+export function isOneEqual(a: any, b: any, keys = ['updatedAt']) {
+  const aKeys = Object.keys(a)
+  const bKeys = Object.keys(b)
+  if (!isEqual(aKeys, bKeys)) {
+    return false
+  }
+  for (const key of aKeys) {
+    if (keys.indexOf(key) === -1) {
+      continue
+    }
+    if (b[key] !== a[key]) {
+      return false
+    }
+  }
+  return true
+}
+
 export async function findOrCreate(Model: any, values: Object) {
   let item = await Model.findOne({ where: values })
   if (item) {

@@ -2,18 +2,24 @@ import { Setting } from '@mcro/models'
 import { App, Desktop } from '@mcro/all'
 import * as Constants from '../constants'
 import * as r2 from '@mcro/r2'
+import debug from '@mcro/debug'
+import invariant from 'invariant'
+
+const log = debug('OauthActions')
 
 export const checkAuths = async () => {
   const { error, ...authorizations } = await r2.get(
     `${Constants.API_URL}/getCreds`,
   ).json
   if (error) {
-    console.log('no creds')
+    console.log('no creds', error)
   }
   return authorizations
 }
 
 export const startOauth = type => {
+  log(`Start oauth ${type}`)
+  invariant(typeof type === 'string', 'Type is not a string')
   App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
   const checker = setInterval(async () => {
     const auth = await checkAuths()

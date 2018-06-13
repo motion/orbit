@@ -51,16 +51,13 @@ const trueFn = () => true
 
 // a helper to watch model queries and only trigger reactions when the model changes
 // because our models dont implement a nice comparison, which we could probably do later
-export function modelQueryReaction(
-  query,
-  { condition = trueFn, poll, ...options }: ReactModelQueryOpts = {
-    condition: trueFn,
-  },
-) {
+export function modelQueryReaction(query, options?: ReactModelQueryOpts) {
+  const condition = (options && options.condition) || trueFn
+  const poll = (options && options.poll) || 2000
   const finalOptions = {
-    ...options,
     defaultValue: [],
     log: false,
+    ...options,
   }
   return react(
     () => condition() && now(poll || 2000),

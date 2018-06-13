@@ -16,6 +16,8 @@ const CheckBoxRow = ({ children, checked }) => (
   </row>
 )
 
+console.log('modelQueryReaction', modelQueryReaction)
+
 class OrbitSettingsStore {
   isPaneActive = false
 
@@ -46,19 +48,6 @@ class OrbitSettingsStore {
       condition: () => this.isPaneActive,
     },
   )
-
-  // react(
-  //   () => this.isPaneActive && now(2000),
-  //   async () => {
-  //     const next = await
-  //     const current = this.activeIntegrations
-  //     if (areAllEqual(current, next)) {
-  //       throw react.cancel
-  //     }
-  //     return next
-  //   },
-  //   { defaultValue: [], log: false },
-  // )
 }
 
 @view.attach('appStore', 'paneStore')

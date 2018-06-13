@@ -32,7 +32,6 @@ export class OrbitHomeHeader {
       <>
         <section $explore>
           <UI.Button
-            if={false}
             icon="home"
             tooltip="Home"
             $exploreButton

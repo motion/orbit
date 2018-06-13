@@ -46,6 +46,10 @@ export default class Syncer {
     if (!action) {
       throw new Error('Must provide action')
     }
+    if (action == 'all') {
+      await this.runAll()
+      return
+    }
     if (!this.actions[action]) {
       throw new Error(`NO SYNCER FOUND ${this.type} ${action}`)
     }

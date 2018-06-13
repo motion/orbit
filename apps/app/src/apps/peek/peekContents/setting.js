@@ -30,7 +30,7 @@ export class Setting extends React.Component {
     const store = this.props.store
     const job = new Job()
     job.type = store.bit.integration
-    job.action = 'mail'
+    job.action = 'all'
     job.status = Job.statuses.PENDING
     await job.save()
     console.log('created new job', job)

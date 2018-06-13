@@ -58,6 +58,11 @@ export function watchModel(
       if (!next) {
         return
       }
+      if (!setting) {
+        setting = next
+        onChange(setting)
+        return
+      }
       if (Date.parse(next.updatedAt) === Date.parse(setting.updatedAt)) {
         return
       }

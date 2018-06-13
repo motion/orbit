@@ -1,4 +1,4 @@
-import { react, isEqual, ReactionTimeoutError } from '@mcro/black'
+import { react, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/all'
 import { Bit, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
@@ -37,6 +37,12 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
+  settings = modelQueryReaction(
+    () => Setting.find(),
+    settings =>
+      settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {}),
+  )
+
   services = modelQueryReaction(
     () =>
       Setting.find({
@@ -46,7 +52,6 @@ export class AppStore {
       const services = {}
       for (const setting of settings) {
         const { type } = setting
-        log(`looking to set up service ${type}`)
         if (!setting.token || this.services[type]) {
           continue
         }
@@ -99,7 +104,6 @@ export class AppStore {
       if (index >= 0 || index < this.searchState.results.length) {
         throw react.cancel
       }
-      console.log('updating')
       // otherwise set it
       this.clearSelected()
       this.updateActiveIndex()
@@ -296,8 +300,9 @@ export class AppStore {
       }
       this.clearSelected()
     } else {
-      console.log('next index', index)
-      this.nextIndex = index
+      if (typeof index === 'number') {
+        this.nextIndex = index
+      }
     }
     return false
   }

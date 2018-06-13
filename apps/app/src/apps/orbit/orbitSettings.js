@@ -29,7 +29,7 @@ class OrbitSettingsStore {
       if (!isActive) {
         throw react.cancel
       }
-      const getResults = () => this.activeIntegrations
+      const getResults = () => this.activeSettings
       getResults.shouldFilter = true
       this.props.appStore.setGetResults(getResults)
     },
@@ -37,7 +37,7 @@ class OrbitSettingsStore {
   )
 
   // poll every 2 seconds while active
-  activeIntegrations = modelQueryReaction(
+  activeSettings = modelQueryReaction(
     () =>
       Setting.find({
         where: { category: 'integration', token: Not(IsNull()) },
@@ -54,7 +54,9 @@ class OrbitSettingsStore {
 })
 export class OrbitSettings {
   render({ name, store, appStore }) {
-    const { activeIntegrations } = store
+    const { activeSettings } = store
+    const isActive = a =>
+      activeSettings.indexOf(setting => setting.type === a.type) > -1
     const IntegrationCard = props => (
       <OrbitSettingCard
         pane="summary"
@@ -71,11 +73,11 @@ export class OrbitSettings {
         <SubTitle>Settings</SubTitle>
         <OrbitCard>
           <UI.Text css={{ marginBottom: 10 }}>
-            You've added {activeIntegrations.length} integration{activeIntegrations.length ===
+            You've added {activeSettings.length} integration{activeSettings.length ===
             '1'
               ? ''
               : 's'}.{' '}
-            {activeIntegrations.length === 0
+            {activeSettings.length === 0
               ? 'Add some integrations below to get started with Orbit.'
               : ''}
           </UI.Text>
@@ -84,10 +86,10 @@ export class OrbitSettings {
             Automatically manage disk space
           </CheckBoxRow>
         </OrbitCard>
-        <section if={activeIntegrations.length}>
+        <section if={activeSettings.length}>
           <SubTitle>Active Integrations</SubTitle>
           <cards>
-            {activeIntegrations.map((setting, index) => (
+            {activeSettings.map((setting, index) => (
               <IntegrationCard
                 key={setting.id}
                 result={settingToResult(setting)}
@@ -100,16 +102,18 @@ export class OrbitSettings {
         <section>
           <SubTitle>Add Integration</SubTitle>
           <cards>
-            {allIntegrations.map((item, index) => (
-              <IntegrationCard
-                key={index}
-                result={item}
-                index={index + activeIntegrations.length}
-                titleProps={{
-                  fontWeight: 300,
-                }}
-              />
-            ))}
+            {allIntegrations
+              .sort((a, b) => (isActive(a) && !isActive(b) ? 1 : -1))
+              .map((item, index) => (
+                <IntegrationCard
+                  key={index}
+                  result={item}
+                  index={index + activeSettings.length}
+                  titleProps={{
+                    fontWeight: 300,
+                  }}
+                />
+              ))}
           </cards>
         </section>
       </OrbitDockedPane>

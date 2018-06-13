@@ -46,9 +46,8 @@ function getName(mountedComponent) {
   return name
 }
 
-// @ts-ignore
 root.loadedStores = new Set()
-const storeHMRCache = {}
+const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
 
 export interface StoreProvidable {}

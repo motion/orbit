@@ -88,10 +88,8 @@ class OrbitCardStore {
         }
         throw react.cancel
       }
-      console.log('setTargetNow', this.props.subPane, this.props.index)
       this._isSelected = true
       await sleep(10)
-      log('selecting', this.props)
       this.props.appStore.setTarget(
         this.props.bit || this.props.result,
         this.ref,

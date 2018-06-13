@@ -1,13 +1,32 @@
 import * as Mobx from 'mobx'
 
+const defaultFilter = (obj, key, val) => {
+  if (typeof val === 'function') {
+    return true
+  }
+  if (key.indexOf('_') === 0) {
+    return true
+  }
+  if (Mobx.isComputedProp(obj, key)) {
+    return true
+  }
+  if (Mobx.isAction(val)) {
+    return true
+  }
+  const descriptor = Object.getOwnPropertyDescriptor(obj, key)
+  if (descriptor.writable === false || (descriptor.get && !descriptor.set)) {
+    return true
+  }
+}
+
 export function hydratable() {
   return {
     name: 'hydratable',
     once: true,
     onlyClass: true,
-    decorator: (Klass, { filter = x => x !== 'props' } = {}) => {
+    decorator: (Klass, { filter = defaultFilter } = {}) => {
       Klass.prototype.hydrate = function hydrate(state) {
-        for (const key of Object.keys(state).filter(filter)) {
+        for (const key of Object.keys(state)) {
           // changed to computed, ignore
           if (Mobx.isComputedProp(this, key)) {
             continue
@@ -17,21 +36,14 @@ export function hydratable() {
       }
 
       Klass.prototype.dehydrate = function dehydrate() {
-        if (this.$mobx) {
-          let state = {}
-          const storeKeys = Object.keys(this.$mobx.values).filter(filter)
-          for (const key of storeKeys) {
-            if (Mobx.isComputedProp(this, key)) {
-              continue
-            }
-            if (Mobx.isAction(this[key])) {
-              continue
-            }
-            state[key] = this[key]
+        let state = {}
+        for (const key of Object.keys(this)) {
+          if (filter(this, key, this[key])) {
+            continue
           }
-          return state
+          state[key] = this[key]
         }
-        return null
+        return state
       }
     },
   }

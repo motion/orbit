@@ -5,13 +5,13 @@
  * @format
  */
 
-import {Filter} from 'sonar';
-import {PureComponent} from 'react';
+import { Filter } from '../filter/types'
+import { PureComponent } from 'react'
 import Text from '../Text'
 import styled from '../../styled/index'
-import {findDOMNode} from 'react-dom';
-import {colors} from '../colors'
-import electron from 'electron';
+import { findDOMNode } from 'react-dom'
+import { colors } from '../colors'
+// import electron from 'electron'
 
 const Token = Text.extends(
   {
@@ -38,7 +38,7 @@ const Token = Text.extends(
   {
     ignoreAttributes: ['focused', 'color'],
   },
-);
+)
 
 const Key = Text.extends(
   {
@@ -62,7 +62,7 @@ const Key = Text.extends(
   {
     ignoreAttributes: ['type', 'focused'],
   },
-);
+)
 
 const Value = Text.extends({
   whiteSpace: 'nowrap',
@@ -71,7 +71,7 @@ const Value = Text.extends({
   textOverflow: 'ellipsis',
   lineHeight: '21px',
   paddingLeft: 3,
-});
+})
 
 const Chevron = styled.view(
   {
@@ -95,43 +95,44 @@ const Chevron = styled.view(
   {
     ignoreAttributes: ['focused'],
   },
-);
+)
 
-type Props = {|
-  filter: Filter,
-  focused: boolean,
-  index: number,
-  onFocus: (focusedToken: number) => void,
-  onBlur: () => void,
-  onDelete: (deletedToken: number) => void,
-  onReplace: (index: number, filter: Filter) => void,
-|};
+type Props = {
+  filter: Filter
+  focused: boolean
+  index: number
+  onFocus: (focusedToken: number) => void
+  onBlur: () => void
+  onDelete: (deletedToken: number) => void
+  onReplace: (index: number, filter: Filter) => void
+}
 
-export default class FilterToken extends PureComponent<Props> {
-  _ref: Element | void;
+export default class FilterToken extends PureComponent {
+  props: Props
+  _ref: Element | void
 
   onMouseDown = () => {
     if (
       this.props.filter.persistent == null ||
       this.props.filter.persistent === false
     ) {
-      this.props.onFocus(this.props.index);
+      this.props.onFocus(this.props.index)
     }
-    this.showDetails();
-  };
+    this.showDetails()
+  }
 
   showDetails = () => {
-    const menuTemplate = [];
+    const menuTemplate = []
 
     if (this.props.filter.type === 'enum') {
       menuTemplate.push(
-        ...this.props.filter.enum.map(({value, label}) => ({
+        ...this.props.filter.enum.map(({ value, label }) => ({
           label,
           click: () => this.changeEnum(value),
           type: 'checkbox',
           checked: this.props.filter.value.indexOf(value) > -1,
         })),
-      );
+      )
     } else {
       if (this.props.filter.value.length > 23) {
         menuTemplate.push(
@@ -142,7 +143,7 @@ export default class FilterToken extends PureComponent<Props> {
           {
             type: 'separator',
           },
-        );
+        )
       }
 
       menuTemplate.push(
@@ -157,77 +158,77 @@ export default class FilterToken extends PureComponent<Props> {
           label: 'Remove this filter',
           click: () => this.props.onDelete(this.props.index),
         },
-      );
+      )
     }
-    const menu = electron.remote.Menu.buildFromTemplate(menuTemplate);
-    const {bottom, left} = this._ref ? this._ref.getBoundingClientRect() : {};
-    menu.popup(electron.remote.getCurrentWindow(), {
-      async: true,
-      x: parseInt(left, 10),
-      y: parseInt(bottom, 10) + 8,
-    });
-  };
+    // const menu = electron.remote.Menu.buildFromTemplate(menuTemplate)
+    // const { bottom, left } = this._ref ? this._ref.getBoundingClientRect() : {}
+    // menu.popup(electron.remote.getCurrentWindow(), {
+    //   async: true,
+    //   x: parseInt(left, 10),
+    //   y: parseInt(bottom, 10) + 8,
+    // })
+  }
 
   toggleFilter = () => {
-    const {filter, index} = this.props;
+    const { filter, index } = this.props
     if (filter.type !== 'enum') {
       const newFilter: Filter = {
         ...filter,
         type: filter.type === 'include' ? 'exclude' : 'include',
-      };
-      this.props.onReplace(index, newFilter);
+      }
+      this.props.onReplace(index, newFilter)
     }
-  };
+  }
 
   changeEnum = (newValue: string) => {
-    const {filter, index} = this.props;
+    const { filter, index } = this.props
     if (filter.type === 'enum') {
-      let {value} = filter;
+      let { value } = filter
       if (value.indexOf(newValue) > -1) {
-        value = value.filter(v => v !== newValue);
+        value = value.filter(v => v !== newValue)
       } else {
-        value = value.concat([newValue]);
+        value = value.concat([newValue])
       }
       if (value.length === filter.enum.length) {
-        value = [];
+        value = []
       }
       const newFilter: Filter = {
         type: 'enum',
         ...filter,
         value,
-      };
-      this.props.onReplace(index, newFilter);
+      }
+      this.props.onReplace(index, newFilter)
     }
-  };
+  }
 
-  setRef = (ref: React.ElementRef<*>) => {
-    const element = findDOMNode(ref);
+  setRef = (ref: any) => {
+    const element = findDOMNode(ref)
     if (element instanceof HTMLElement) {
-      this._ref = element;
+      this._ref = element
     }
-  };
+  }
 
   render() {
-    const {filter} = this.props;
-    let color;
-    let value = '';
+    const { filter } = this.props
+    let color
+    let value = ''
 
     if (filter.type === 'enum') {
-      const getEnum = value => filter.enum.find(e => e.value === value);
-      const firstValue = getEnum(filter.value[0]);
-      const secondValue = getEnum(filter.value[1]);
+      const getEnum = value => filter.enum.find(e => e.value === value)
+      const firstValue = getEnum(filter.value[0])
+      const secondValue = getEnum(filter.value[1])
       if (filter.value.length === 0) {
-        value = 'All';
+        value = 'All'
       } else if (filter.value.length === 2 && firstValue && secondValue) {
-        value = `${firstValue.label} or ${secondValue.label}`;
+        value = `${firstValue.label} or ${secondValue.label}`
       } else if (filter.value.length === 1 && firstValue) {
-        value = firstValue.label;
-        color = firstValue.color;
+        value = firstValue.label
+        color = firstValue.color
       } else if (firstValue) {
-        value = `${firstValue.label} or ${filter.value.length - 1} others`;
+        value = `${firstValue.label} or ${filter.value.length - 1} others`
       }
     } else {
-      value = filter.value;
+      value = filter.value
     }
 
     return (
@@ -237,7 +238,8 @@ export default class FilterToken extends PureComponent<Props> {
         onMouseDown={this.onMouseDown}
         focused={this.props.focused}
         color={color}
-        innerRef={this.setRef}>
+        innerRef={this.setRef}
+      >
         <Key type={this.props.filter.type} focused={this.props.focused}>
           {filter.key}
         </Key>
@@ -246,6 +248,6 @@ export default class FilterToken extends PureComponent<Props> {
           &#8964;
         </Chevron>
       </Token>
-    );
+    )
   }
 }

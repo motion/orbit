@@ -57,7 +57,8 @@ export default class Gloss {
     maybeStyle?: Object,
     maybePropStyles?: Object,
   ) => {
-    // Short style component --  view('tagName', {})
+    // TODO: make themes work here
+    // Shorthand views --  view('tagName', {}, theme)
     if (typeof eitherNameOrChild === 'string') {
       const tagName = eitherNameOrChild
       const styles = maybeStyle

@@ -1,3 +1,4 @@
+import '~/../public/testBase.css'
 import './createElement'
 import * as React from 'react'
 import ReactDOM from 'react-dom'

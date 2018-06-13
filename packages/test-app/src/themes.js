@@ -6,6 +6,7 @@ const highlightBackground = 'rgb(114, 121, 167)'
 
 const Themes = {
   light: Theme.fromStyles({
+    toolBarBackground: 'rgb(90.6%, 94.2%, 99.9%)',
     highlightBackground,
     highlightColor,
     background: '#fff',

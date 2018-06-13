@@ -13,7 +13,7 @@ import {
   TableOnColumnResize,
   TableOnSort,
   TableRowSortOrder,
-} from './types.js'
+} from './types'
 import { normaliseColumnWidth, isPercentage } from './utils.js'
 import * as React from 'react'
 import ContextMenu from '../ContextMenu.js'

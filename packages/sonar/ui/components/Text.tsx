@@ -5,7 +5,7 @@
  * @format
  */
 
-import {StyledComponent} from '../styled/index'
+import { StyledComponent } from '../styled/index'
 import styled from '../styled/index'
 
 /**
@@ -15,19 +15,19 @@ const Text: StyledComponent<{
   /**
    * Color of text.
    */
-  color?: string,
+  color?: string
   /**
    * Whether this text is bold. Equivalent to the following CSS:
    *
    *  font-weight: bold;
    */
-  bold?: boolean,
+  bold?: boolean
   /**
    * Whether this text is italic. Equivalent to the following CSS:
    *
    *  font-style: italic;
    */
-  italic?: boolean,
+  italic?: boolean
   /**
    * Whether to format the text as code. Equivalent to the following CSS:
    *
@@ -37,45 +37,45 @@ const Text: StyledComponent<{
    *  white-space: pre-wrap;
    *  word-wrap: break-word;
    */
-  code?: boolean,
+  code?: boolean
   /**
    * Whether this text is underlined. Equivalent to the following CSS:
    *
    *  text-decoration: underline;
    */
-  underline?: boolean,
+  underline?: boolean
   /**
    * Whether this text is striked. Equivalent to the following CSS:
    *
    *  text-decoration: line-through;
    */
-  strike?: boolean,
+  strike?: boolean
   /**
    * Whether this text is selectable by the cursor. Equivalent to the following CSS:
    *
    *  user-select: text;
    */
-  selectable?: boolean,
+  selectable?: boolean
   /**
    * Alignment of the text. Equivalent to the `text-align` CSS rule.
    */
-  align?: 'left' | 'center' | 'right',
+  align?: 'left' | 'center' | 'right'
   /**
    * Font size to use. Equivalent to the `font-size` CSS rule.
    */
-  size?: string | number,
+  size?: string | number
   /**
    * Font family to use. Equivalent to the `font-family` CSS rule.
    */
-  family?: string,
+  family?: string
   /**
    * Word wrap to use. Equivalent to the `word-wrap` CSS rule.
    */
-  wordWrap?: string,
+  wordWrap?: string
   /**
    * White space to use. Equivalent to the `white-space` CSS rule.
    */
-  whiteSpace?: string,
+  whiteSpace?: string
 }> = styled.text(
   {
     color: props => (props.color ? props.color : 'inherit'),
@@ -85,32 +85,32 @@ const Text: StyledComponent<{
     textAlign: props => props.align || 'left',
     fontSize: props => {
       if (props.size == null && props.code) {
-        return 12;
+        return 12
       } else {
-        return props.size;
+        return props.size
       }
     },
     fontFamily: props => {
       if (props.code) {
-        return 'SF Mono, Monaco, Andale Mono, monospace';
+        return 'SF Mono, Monaco, Andale Mono, monospace'
       } else {
-        return props.family;
+        return props.family
       }
     },
     overflow: props => {
       if (props.code) {
-        return 'auto';
+        return 'auto'
       } else {
-        return 'visible';
+        return 'visible'
       }
     },
     textDecoration: props => {
       if (props.underline) {
-        return 'underline';
+        return 'underline'
       } else if (props.strike) {
-        return 'line-through';
+        return 'line-through'
       } else {
-        return 'none';
+        return 'none'
       }
     },
     userSelect: props => {
@@ -118,23 +118,23 @@ const Text: StyledComponent<{
         props.selectable ||
         (props.code && typeof props.selectable === 'undefined')
       ) {
-        return 'text';
+        return 'text'
       } else {
-        return 'none';
+        return 'none'
       }
     },
     wordWrap: props => {
       if (props.code) {
-        return 'break-word';
+        return 'break-word'
       } else {
-        return props.wordWrap;
+        return props.wordWrap
       }
     },
     whiteSpace: props => {
       if (props.code && typeof props.whiteSpace === 'undefined') {
-        return 'pre';
+        return 'pre'
       } else {
-        return props.whiteSpace;
+        return props.whiteSpace
       }
     },
   },
@@ -154,6 +154,6 @@ const Text: StyledComponent<{
       'color',
     ],
   },
-);
+)
 
-export default Text;
+export default Text

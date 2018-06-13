@@ -2,6 +2,15 @@ import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import * as McroHelpers from '@mcro/helpers'
 import debug from '@mcro/debug'
+import {
+  Reaction,
+  ReactionRejectionError,
+  ReactionTimeoutError,
+} from './constants'
+
+// export @react decorator
+export { react } from './react'
+export * from './constants'
 
 const root = typeof window !== 'undefined' ? window : require('global')
 const IS_PROD = process.env.NODE_ENV === 'production'
@@ -24,9 +33,6 @@ root.__trackStateChanges = {}
 const log = debug('react')
 const logState = debug('react+')
 const logInfo = debug('automagical')
-
-export class ReactionRejectionError extends Error {}
-export class ReactionTimeoutError extends Error {}
 
 const PREFIX = `=>`
 const logRes = (res: any) => {
@@ -69,22 +75,6 @@ const isObservableLike = val =>
   (val && (val.isntConnected || val.isObservable || isObservable(val))) || false
 
 const DEFAULT_VALUE = undefined
-
-export class Reaction {
-  options = null
-  reaction = null
-  constructor(a, b, c) {
-    if (!b || typeof b === 'object') {
-      // watch
-      this.reaction = a
-      this.options = b
-    } else {
-      // react
-      this.reaction = [a, b]
-      this.options = c
-    }
-  }
-}
 
 export default function automagical() {
   return {
@@ -549,14 +539,18 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
               hasCalledSetValue = true
               updateAsyncValue(val)
             },
+            getValue: getCurrentValue,
             sleep,
             when,
-            whenChanged
+            whenChanged,
           },
         )
       } catch (err) {
         // got a nice cancel!
-        if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
+        if (
+          err instanceof ReactionRejectionError ||
+          err instanceof ReactionTimeoutError
+        ) {
           if (!IS_PROD && options.log === 'all') {
             log(`${name} [${curID}] cancelled`)
           }
@@ -584,7 +578,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
             }
           })
           .catch(err => {
-            if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
+            if (
+              err instanceof ReactionRejectionError ||
+              err instanceof ReactionTimeoutError
+            ) {
               if (!IS_PROD && options.log === 'all') {
                 log(`${name} [${curID}] cancelled`)
               }

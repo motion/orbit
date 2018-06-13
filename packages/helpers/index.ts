@@ -1,3 +1,5 @@
+import { react } from '@mcro/automagical'
+import { now } from 'mobx-utils'
 import * as EventKit from 'event-kit'
 export * from './events'
 export * from './ref'
@@ -6,6 +8,7 @@ export { Helpers } from './types'
 export const { CompositeDisposable } = EventKit
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
+export const idFn = _ => _
 
 import { comparer } from 'mobx'
 export const isEqual = comparer.structural
@@ -37,6 +40,45 @@ export function getReactionOptions(userOptions?: ReactionOptions) {
     options = { ...options, ...userOptions }
   }
   return options
+}
+
+type ReactModelQueryOpts = ReactionOptions & {
+  condition: Function
+  poll?: number
+}
+
+const trueFn = () => true
+
+// a helper to watch model queries and only trigger reactions when the model changes
+// because our models dont implement a nice comparison, which we could probably do later
+export function modelQueryReaction(
+  query,
+  { condition = trueFn, poll, ...options }: ReactModelQueryOpts = {
+    condition: trueFn,
+  },
+) {
+  const finalOptions = {
+    ...options,
+    defaultValue: [],
+    log: false,
+  }
+  return react(
+    () => condition() && now(poll || 2000),
+    async (_, { getValue }) => {
+      const next = await query()
+      if (Array.isArray(next)) {
+        if (modelsEqual(getValue(), next)) {
+          throw react.cancel
+        }
+      } else {
+        if (modelEqual(getValue(), next)) {
+          throw react.cancel
+        }
+      }
+      return next
+    },
+    finalOptions,
+  )
 }
 
 export function watchModel(
@@ -75,4 +117,34 @@ export function watchModel(
       clearInterval(refreshInterval)
     },
   }
+}
+
+export function modelsEqual(a: any[], b: any[], keys?) {
+  if (a.length !== b.length) {
+    return false
+  }
+  for (const [index, aItem] of a.entries()) {
+    if (!modelEqual(aItem, b[index], keys)) {
+      return false
+    }
+  }
+  return true
+}
+
+// compare model
+export function modelEqual(a: any, b: any, keys = ['updatedAt']) {
+  const aKeys = Object.keys(a)
+  const bKeys = Object.keys(b)
+  if (!isEqual(aKeys, bKeys)) {
+    return false
+  }
+  for (const key of aKeys) {
+    if (keys.indexOf(key) === -1) {
+      continue
+    }
+    if (b[key] !== a[key]) {
+      return false
+    }
+  }
+  return true
 }

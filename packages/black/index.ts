@@ -1,7 +1,6 @@
 export * from './view'
 export * from './storeDecorator'
 export * from './helpers/log'
-export * from './helpers/watch'
 export * from './helpers/mobx'
 export * from './helpers/deep'
 import * as Constants_ from './constants'
@@ -14,4 +13,4 @@ export { DecorPlugins, DecorCompiledDecorator } from '@mcro/decor'
 import * as React from 'react'
 export const Component = React.Component
 
-export { ReactionRejectionError, ReactionTimeoutError } from '@mcro/automagical'
+export * from '@mcro/automagical'

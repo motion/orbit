@@ -36,7 +36,7 @@ export type ReactionFunction = (...args: any[]) => any
 
 export function react<B extends ReactionFunction>(
   a: Function,
-  b: B,
+  b?: B,
   c?: Object,
 ): ReturnType<B>
 

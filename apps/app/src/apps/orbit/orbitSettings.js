@@ -4,11 +4,10 @@ import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
-import { now } from 'mobx-utils'
-import { Setting, isAllEqual, Not, IsNull } from '@mcro/models'
-import * as _ from 'lodash'
+import { Setting, Not, IsNull } from '@mcro/models'
 import { allIntegrations } from '~/constants'
 import { settingToResult } from '~/helpers'
+import { modelQueryReaction } from '@mcro/helpers'
 
 const CheckBoxRow = ({ children, checked }) => (
   <row css={{ flexFlow: 'row', padding: [8, 0], alignItems: 'center' }}>
@@ -38,20 +37,28 @@ class OrbitSettingsStore {
   )
 
   // poll every 2 seconds while active
-  activeIntegrations = react(
-    () => this.isPaneActive && now(2000),
-    async () => {
-      const next = await Setting.find({
+  activeIntegrations = modelQueryReaction(
+    () =>
+      Setting.find({
         where: { category: 'integration', token: Not(IsNull()) },
-      })
-      const current = this.activeIntegrations
-      if (isAllEqual(current, next)) {
-        throw react.cancel
-      }
-      return next
+      }),
+    {
+      condition: () => this.isPaneActive,
     },
-    { defaultValue: [], log: false },
   )
+
+  // react(
+  //   () => this.isPaneActive && now(2000),
+  //   async () => {
+  //     const next = await
+  //     const current = this.activeIntegrations
+  //     if (areAllEqual(current, next)) {
+  //       throw react.cancel
+  //     }
+  //     return next
+  //   },
+  //   { defaultValue: [], log: false },
+  // )
 }
 
 @view.attach('appStore', 'paneStore')

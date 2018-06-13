@@ -2,9 +2,162 @@
 # yarn lockfile v1
 
 
+"@mcro/automagical@^1.5.1":
+  version "1.5.1"
+  resolved "http://localhost:4873/@mcro%2fautomagical/-/automagical-1.5.1.tgz#89efca1e5807f740778623cee0ee40643b592bc6"
+  dependencies:
+    global "^4.3.2"
+    mobx "^3.3.1"
+    mobx-utils "^3.2.1"
+    rxjs "^5.4.3"
+
+"@mcro/black@1.5.1":
+  version "1.5.1"
+  resolved "http://localhost:4873/@mcro%2fblack/-/black-1.5.1.tgz#b03eabf27a57b975577af186833b4f48a2d728fe"
+  dependencies:
+    "@mcro/automagical" "^1.5.1"
+    "@mcro/decor" "^1.5.1"
+    "@mcro/gloss" "^1.5.1"
+    color "^2.0.0"
+    global "^4.3.0"
+    kontur "^0.2.0"
+    pouchdb-core "^6.3.0"
+    prop-types "^15.5.10"
+    rxjs "^5.4.3"
+
+"@mcro/css@^1.5.1":
+  version "1.5.1"
+  resolved "http://localhost:4873/@mcro%2fcss/-/css-1.5.1.tgz#7f6017e3d2c4f9ccd59756df09cbe8e816bcad2f"
+
+"@mcro/decor@^1.5.1":
+  version "1.5.1"
+  resolved "http://localhost:4873/@mcro%2fdecor/-/decor-1.5.1.tgz#e899293c68d6ba7c1bb193b8997360593be77696"
+  dependencies:
+    "@mcro/helpers" "^1.5.1"
+    autobind-decorator "^2.1.0"
+    hoist-non-react-statics "^2.3.1"
+    lodash "^4.17.4"
+    mobx "^3.3.1"
+    mobx-react "^4.3.3"
+    mobx-utils "^3.2.1"
+    motion-mobx-helpers "*"
+    prop-types "^15.5.10"
+    react-mixin "^3.0.5"
+    redbox-react "^1.5.0"
+    sb-event-kit "^3.0.0"
+
+"@mcro/gloss@^1.5.1":
+  version "1.5.1"
+  resolved "http://localhost:4873/@mcro%2fgloss/-/gloss-1.5.1.tgz#f4f5a962644f655fece284e852a7dec7f43acd80"
+  dependencies:
+    "@mcro/css" "^1.5.1"
+    babel-helper-builder-react-jsx "^6.24.1"
+    deep-extend "^0.5.0"
+    html-tags "^2.0.0"
+    jss "^9.0.0"
+    jss-cache "^3.0.0"
+    jss-default-unit "^8.0.0"
+    jss-global "^3.0.0"
+    jss-nested "^6.0.0"
+    jss-props-sort "^6.0.0"
+
+"@mcro/helpers@^1.5.1":
+  version "1.5.1"
+  resolved "http://localhost:4873/@mcro%2fhelpers/-/helpers-1.5.1.tgz#1fb87c875be597ccb0de6add7f7b05877fbe9045"
+  dependencies:
+    disposable-event "^1.0.3"
+    object-path "^0.11.3"
+    sb-event-kit "^3.0.0"
+
 "@types/event-kit@^2.4.0":
   version "2.4.0"
   resolved "http://localhost:4873/@types%2fevent-kit/-/event-kit-2.4.0.tgz#d470e1e9b5ee1ad574ca4efc65093aa116277ff4"
+
+argsarray@0.0.1:
+  version "0.0.1"
+  resolved "http://localhost:4873/argsarray/-/argsarray-0.0.1.tgz#6e7207b4ecdb39b0af88303fa5ae22bda8df61cb"
+
+asap@~2.0.3:
+  version "2.0.6"
+  resolved "http://localhost:4873/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
+
+autobind-decorator@^2.1.0:
+  version "2.1.0"
+  resolved "http://localhost:4873/autobind-decorator/-/autobind-decorator-2.1.0.tgz#4451240dbfeff46361c506575a63ed40f0e5bc68"
+
+babel-helper-builder-react-jsx@^6.24.1:
+  version "6.26.0"
+  resolved "http://localhost:4873/babel-helper-builder-react-jsx/-/babel-helper-builder-react-jsx-6.26.0.tgz#39ff8313b75c8b65dceff1f31d383e0ff2a408a0"
+  dependencies:
+    babel-runtime "^6.26.0"
+    babel-types "^6.26.0"
+    esutils "^2.0.2"
+
+babel-runtime@^6.26.0:
+  version "6.26.0"
+  resolved "http://localhost:4873/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
+  dependencies:
+    core-js "^2.4.0"
+    regenerator-runtime "^0.11.0"
+
+babel-types@^6.26.0:
+  version "6.26.0"
+  resolved "http://localhost:4873/babel-types/-/babel-types-6.26.0.tgz#a3b073f94ab49eb6fa55cd65227a334380632497"
+  dependencies:
+    babel-runtime "^6.26.0"
+    esutils "^2.0.2"
+    lodash "^4.17.4"
+    to-fast-properties "^1.0.3"
+
+clone-buffer@1.0.0:
+  version "1.0.0"
+  resolved "http://localhost:4873/clone-buffer/-/clone-buffer-1.0.0.tgz#e3e25b207ac4e701af721e2cb5a16792cac3dc58"
+
+color-convert@^1.9.1:
+  version "1.9.2"
+  resolved "http://localhost:4873/color-convert/-/color-convert-1.9.2.tgz#49881b8fba67df12a96bdf3f56c0aab9e7913147"
+  dependencies:
+    color-name "1.1.1"
+
+color-name@1.1.1:
+  version "1.1.1"
+  resolved "http://localhost:4873/color-name/-/color-name-1.1.1.tgz#4b1415304cf50028ea81643643bd82ea05803689"
+
+color-name@^1.0.0:
+  version "1.1.3"
+  resolved "http://localhost:4873/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
+
+color-string@^1.5.2:
+  version "1.5.2"
+  resolved "http://localhost:4873/color-string/-/color-string-1.5.2.tgz#26e45814bc3c9a7cbd6751648a41434514a773a9"
+  dependencies:
+    color-name "^1.0.0"
+    simple-swizzle "^0.2.2"
+
+color@^2.0.0:
+  version "2.0.1"
+  resolved "http://localhost:4873/color/-/color-2.0.1.tgz#e4ed78a3c4603d0891eba5430b04b86314f4c839"
+  dependencies:
+    color-convert "^1.9.1"
+    color-string "^1.5.2"
+
+core-js@^1.0.0:
+  version "1.2.7"
+  resolved "http://localhost:4873/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
+
+core-js@^2.4.0:
+  version "2.5.7"
+  resolved "http://localhost:4873/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
+
+debug@3.1.0:
+  version "3.1.0"
+  resolved "http://localhost:4873/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
+  dependencies:
+    ms "2.0.0"
+
+deep-extend@^0.5.0:
+  version "0.5.1"
+  resolved "http://localhost:4873/deep-extend/-/deep-extend-0.5.1.tgz#b894a9dd90d3023fbf1c55a394fb858eb2066f1f"
 
 disposable-event@^1.0.3:
   version "1.0.3"
@@ -16,16 +169,139 @@ dom-walk@^0.1.0:
   version "0.1.1"
   resolved "http://localhost:4873/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
 
+encoding@^0.1.11:
+  version "0.1.12"
+  resolved "http://localhost:4873/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"
+  dependencies:
+    iconv-lite "~0.4.13"
+
+error-stack-parser@^1.3.6:
+  version "1.3.6"
+  resolved "http://localhost:4873/error-stack-parser/-/error-stack-parser-1.3.6.tgz#e0e73b93e417138d1cd7c0b746b1a4a14854c292"
+  dependencies:
+    stackframe "^0.3.1"
+
+esutils@^2.0.2:
+  version "2.0.2"
+  resolved "http://localhost:4873/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
+
 event-kit@^2.5.0:
   version "2.5.0"
   resolved "http://localhost:4873/event-kit/-/event-kit-2.5.0.tgz#2f72b11e2b5f533cc1c950387040624a4a025fe8"
 
-global@^4.3.2:
+fbjs@^0.8.16:
+  version "0.8.17"
+  resolved "http://localhost:4873/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
+  dependencies:
+    core-js "^1.0.0"
+    isomorphic-fetch "^2.1.1"
+    loose-envify "^1.0.0"
+    object-assign "^4.1.0"
+    promise "^7.1.1"
+    setimmediate "^1.0.5"
+    ua-parser-js "^0.7.18"
+
+global@^4.3.0, global@^4.3.2:
   version "4.3.2"
   resolved "http://localhost:4873/global/-/global-4.3.2.tgz#e76989268a6c74c38908b1305b10fc0e394e9d0f"
   dependencies:
     min-document "^2.19.0"
     process "~0.5.1"
+
+hoist-non-react-statics@^2.3.1:
+  version "2.5.4"
+  resolved "http://localhost:4873/hoist-non-react-statics/-/hoist-non-react-statics-2.5.4.tgz#fc3b1ac05d2ae3abedec84eba846511b0d4fcc4f"
+
+html-tags@^2.0.0:
+  version "2.0.0"
+  resolved "http://localhost:4873/html-tags/-/html-tags-2.0.0.tgz#10b30a386085f43cede353cc8fa7cb0deeea668b"
+
+iconv-lite@~0.4.13:
+  version "0.4.23"
+  resolved "http://localhost:4873/iconv-lite/-/iconv-lite-0.4.23.tgz#297871f63be507adcfbfca715d0cd0eed84e9a63"
+  dependencies:
+    safer-buffer ">= 2.1.2 < 3"
+
+immediate@3.0.6, immediate@~3.0.5:
+  version "3.0.6"
+  resolved "http://localhost:4873/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
+
+inherits@2.0.3:
+  version "2.0.3"
+  resolved "http://localhost:4873/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
+
+is-arrayish@^0.3.1:
+  version "0.3.1"
+  resolved "http://localhost:4873/is-arrayish/-/is-arrayish-0.3.1.tgz#c2dfc386abaa0c3e33c48db3fe87059e69065efd"
+
+is-in-browser@^1.1.3:
+  version "1.1.3"
+  resolved "http://localhost:4873/is-in-browser/-/is-in-browser-1.1.3.tgz#56ff4db683a078c6082eb95dad7dc62e1d04f835"
+
+is-stream@^1.0.1:
+  version "1.1.0"
+  resolved "http://localhost:4873/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
+
+isomorphic-fetch@^2.1.1:
+  version "2.2.1"
+  resolved "http://localhost:4873/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
+  dependencies:
+    node-fetch "^1.0.1"
+    whatwg-fetch ">=0.10.0"
+
+js-tokens@^3.0.0:
+  version "3.0.2"
+  resolved "http://localhost:4873/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
+
+jss-cache@^3.0.0:
+  version "3.0.0"
+  resolved "http://localhost:4873/jss-cache/-/jss-cache-3.0.0.tgz#c76848a486e6a00730d0996297db588ef265914f"
+
+jss-default-unit@^8.0.0:
+  version "8.0.2"
+  resolved "http://localhost:4873/jss-default-unit/-/jss-default-unit-8.0.2.tgz#cc1e889bae4c0b9419327b314ab1c8e2826890e6"
+
+jss-global@^3.0.0:
+  version "3.0.0"
+  resolved "http://localhost:4873/jss-global/-/jss-global-3.0.0.tgz#e19e5c91ab2b96353c227e30aa2cbd938cdaafa2"
+
+jss-nested@^6.0.0:
+  version "6.0.1"
+  resolved "http://localhost:4873/jss-nested/-/jss-nested-6.0.1.tgz#ef992b79d6e8f63d939c4397b9d99b5cbbe824ca"
+  dependencies:
+    warning "^3.0.0"
+
+jss-props-sort@^6.0.0:
+  version "6.0.0"
+  resolved "http://localhost:4873/jss-props-sort/-/jss-props-sort-6.0.0.tgz#9105101a3b5071fab61e2d85ea74cc22e9b16323"
+
+jss@^9.0.0:
+  version "9.8.3"
+  resolved "http://localhost:4873/jss/-/jss-9.8.3.tgz#399da571c4b2c8f4cf418ca7e8627e44fc287fc8"
+  dependencies:
+    is-in-browser "^1.1.3"
+    symbol-observable "^1.1.0"
+    warning "^3.0.0"
+
+kontur@^0.2.0:
+  version "0.2.0"
+  resolved "http://localhost:4873/kontur/-/kontur-0.2.0.tgz#90665fb2528da37430988ed2e98823ff20a285a0"
+
+lie@3.1.1:
+  version "3.1.1"
+  resolved "http://localhost:4873/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
+  dependencies:
+    immediate "~3.0.5"
+
+lodash@^4.17.4:
+  version "4.17.10"
+  resolved "http://localhost:4873/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+
+loose-envify@^1.0.0, loose-envify@^1.3.1:
+  version "1.3.1"
+  resolved "http://localhost:4873/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
+  dependencies:
+    js-tokens "^3.0.0"
 
 min-document@^2.19.0:
   version "2.19.0"
@@ -33,14 +309,227 @@ min-document@^2.19.0:
   dependencies:
     dom-walk "^0.1.0"
 
+mobx-react@^4.3.3:
+  version "4.4.3"
+  resolved "http://localhost:4873/mobx-react/-/mobx-react-4.4.3.tgz#baa9ec41165ee35ae7b9df19bca10190f36f117e"
+  dependencies:
+    hoist-non-react-statics "^2.3.1"
+
+mobx-utils@^3.2.1:
+  version "3.2.2"
+  resolved "http://localhost:4873/mobx-utils/-/mobx-utils-3.2.2.tgz#1979fe85a27df496d4f17af288813ac4fd356fd5"
+
+mobx@^3.0.0, mobx@^3.3.1:
+  version "3.6.2"
+  resolved "http://localhost:4873/mobx/-/mobx-3.6.2.tgz#fb9f5ff5090539a1ad54e75dc4c098b602693320"
+
+motion-mobx-helpers@*:
+  version "1.1.3"
+  resolved "http://localhost:4873/motion-mobx-helpers/-/motion-mobx-helpers-1.1.3.tgz#8a0446ddbc6a35a7b5f5719512004f10713dda49"
+  dependencies:
+    mobx "^3.0.0"
+
+ms@2.0.0:
+  version "2.0.0"
+  resolved "http://localhost:4873/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
+
+node-fetch@^1.0.1:
+  version "1.7.3"
+  resolved "http://localhost:4873/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
+  dependencies:
+    encoding "^0.1.11"
+    is-stream "^1.0.1"
+
+object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
+  version "4.1.1"
+  resolved "http://localhost:4873/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
+
 object-path@^0.11.3:
   version "0.11.4"
   resolved "http://localhost:4873/object-path/-/object-path-0.11.4.tgz#370ae752fbf37de3ea70a861c23bba8915691949"
+
+pouchdb-changes-filter@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-changes-filter/-/pouchdb-changes-filter-6.4.3.tgz#01fcf9dbc9d742fe5060624bb39bc459a3d11a1a"
+  dependencies:
+    pouchdb-errors "6.4.3"
+    pouchdb-selector-core "6.4.3"
+    pouchdb-utils "6.4.3"
+
+pouchdb-collate@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-collate/-/pouchdb-collate-6.4.3.tgz#55a77a1a3e1c2cf86fe4d02aea171e10c2a3f944"
+
+pouchdb-collections@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-collections/-/pouchdb-collections-6.4.3.tgz#2b70ca3143134c361dba6e466518b4f4d8e92ff4"
+
+pouchdb-core@^6.3.0:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-core/-/pouchdb-core-6.4.3.tgz#8a25d60f95b6861191228327e56c04a661389426"
+  dependencies:
+    argsarray "0.0.1"
+    inherits "2.0.3"
+    pouchdb-changes-filter "6.4.3"
+    pouchdb-collections "6.4.3"
+    pouchdb-debug "6.4.3"
+    pouchdb-errors "6.4.3"
+    pouchdb-merge "6.4.3"
+    pouchdb-promise "6.4.3"
+    pouchdb-utils "6.4.3"
+
+pouchdb-debug@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-debug/-/pouchdb-debug-6.4.3.tgz#d5ee0d0f638c455ef947fe6658030db1480c72c0"
+  dependencies:
+    debug "3.1.0"
+
+pouchdb-errors@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-errors/-/pouchdb-errors-6.4.3.tgz#9fa4a13f64ee50c8d593e3235b18b1458977f8d1"
+  dependencies:
+    inherits "2.0.3"
+
+pouchdb-merge@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-merge/-/pouchdb-merge-6.4.3.tgz#4ef901f4aaa27be6aec0108998a127fe55bb0628"
+
+pouchdb-promise@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-promise/-/pouchdb-promise-6.4.3.tgz#74516f4acf74957b54debd0fb2c0e5b5a68ca7b3"
+  dependencies:
+    lie "3.1.1"
+
+pouchdb-selector-core@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-selector-core/-/pouchdb-selector-core-6.4.3.tgz#03a9cfd9284589baf836f3005ff15cf5e0eaf705"
+  dependencies:
+    pouchdb-collate "6.4.3"
+    pouchdb-utils "6.4.3"
+
+pouchdb-utils@6.4.3:
+  version "6.4.3"
+  resolved "http://localhost:4873/pouchdb-utils/-/pouchdb-utils-6.4.3.tgz#aeb6bb8cbd8cf2d9f04e499bc3b70d1ce2a6c78a"
+  dependencies:
+    argsarray "0.0.1"
+    clone-buffer "1.0.0"
+    immediate "3.0.6"
+    inherits "2.0.3"
+    pouchdb-collections "6.4.3"
+    pouchdb-errors "6.4.3"
+    pouchdb-promise "6.4.3"
+    uuid "3.2.1"
 
 process@~0.5.1:
   version "0.5.2"
   resolved "http://localhost:4873/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
 
+promise@^7.1.1:
+  version "7.3.1"
+  resolved "http://localhost:4873/promise/-/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
+  dependencies:
+    asap "~2.0.3"
+
+prop-types@^15.5.10, prop-types@^15.5.4:
+  version "15.6.1"
+  resolved "http://localhost:4873/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
+  dependencies:
+    fbjs "^0.8.16"
+    loose-envify "^1.3.1"
+    object-assign "^4.1.1"
+
+react-mixin@^3.0.5:
+  version "3.1.1"
+  resolved "http://localhost:4873/react-mixin/-/react-mixin-3.1.1.tgz#68749756bfe32699e561372a4aeecb926db72b7f"
+  dependencies:
+    object-assign "^4.0.1"
+    smart-mixin "^2.0.0"
+
+redbox-react@^1.5.0:
+  version "1.6.0"
+  resolved "http://localhost:4873/redbox-react/-/redbox-react-1.6.0.tgz#e753ac02595bc1bf695b3935889a4f5b1b5a21a1"
+  dependencies:
+    error-stack-parser "^1.3.6"
+    object-assign "^4.0.1"
+    prop-types "^15.5.4"
+    sourcemapped-stacktrace "^1.1.6"
+
+regenerator-runtime@^0.11.0:
+  version "0.11.1"
+  resolved "http://localhost:4873/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
+
+rxjs@^5.4.3:
+  version "5.5.11"
+  resolved "http://localhost:4873/rxjs/-/rxjs-5.5.11.tgz#f733027ca43e3bec6b994473be4ab98ad43ced87"
+  dependencies:
+    symbol-observable "1.0.1"
+
+"safer-buffer@>= 2.1.2 < 3":
+  version "2.1.2"
+  resolved "http://localhost:4873/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
+
 sb-event-kit@^2.0.0:
   version "2.0.0"
   resolved "http://localhost:4873/sb-event-kit/-/sb-event-kit-2.0.0.tgz#10b736812f13a37a473aa6eaa3089b66ab725a7f"
+
+sb-event-kit@^3.0.0:
+  version "3.0.0"
+  resolved "http://localhost:4873/sb-event-kit/-/sb-event-kit-3.0.0.tgz#0deab6e8a2d9ddad73375e7b83da80bfc9105d24"
+
+setimmediate@^1.0.5:
+  version "1.0.5"
+  resolved "http://localhost:4873/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
+
+simple-swizzle@^0.2.2:
+  version "0.2.2"
+  resolved "http://localhost:4873/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
+  dependencies:
+    is-arrayish "^0.3.1"
+
+smart-mixin@^2.0.0:
+  version "2.0.0"
+  resolved "http://localhost:4873/smart-mixin/-/smart-mixin-2.0.0.tgz#a34a1055e32a75b30d2b4e3ca323dc99cb53f437"
+
+source-map@0.5.6:
+  version "0.5.6"
+  resolved "http://localhost:4873/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
+
+sourcemapped-stacktrace@^1.1.6:
+  version "1.1.8"
+  resolved "http://localhost:4873/sourcemapped-stacktrace/-/sourcemapped-stacktrace-1.1.8.tgz#6b7a3f1a6fb15f6d40e701e23ce404553480d688"
+  dependencies:
+    source-map "0.5.6"
+
+stackframe@^0.3.1:
+  version "0.3.1"
+  resolved "http://localhost:4873/stackframe/-/stackframe-0.3.1.tgz#33aa84f1177a5548c8935533cbfeb3420975f5a4"
+
+symbol-observable@1.0.1:
+  version "1.0.1"
+  resolved "http://localhost:4873/symbol-observable/-/symbol-observable-1.0.1.tgz#8340fc4702c3122df5d22288f88283f513d3fdd4"
+
+symbol-observable@^1.1.0:
+  version "1.2.0"
+  resolved "http://localhost:4873/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
+
+to-fast-properties@^1.0.3:
+  version "1.0.3"
+  resolved "http://localhost:4873/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
+
+ua-parser-js@^0.7.18:
+  version "0.7.18"
+  resolved "http://localhost:4873/ua-parser-js/-/ua-parser-js-0.7.18.tgz#a7bfd92f56edfb117083b69e31d2aa8882d4b1ed"
+
+uuid@3.2.1:
+  version "3.2.1"
+  resolved "http://localhost:4873/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
+
+warning@^3.0.0:
+  version "3.0.0"
+  resolved "http://localhost:4873/warning/-/warning-3.0.0.tgz#32e5377cb572de4ab04753bdf8821c01ed605b7c"
+  dependencies:
+    loose-envify "^1.0.0"
+
+whatwg-fetch@>=0.10.0:
+  version "2.0.4"
+  resolved "http://localhost:4873/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"

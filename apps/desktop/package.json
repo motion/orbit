@@ -66,6 +66,10 @@
     "sudo-prompt": "^7.1.1",
     "ws": "^3.3.3"
   },
+  "peerDependencies": {
+    "mobx": "*",
+    "mobx-utils": "*"
+  },
   "devDependencies": {
     "@types/passport": "0.4.5",
     "@mcro/build": "^2.0.11",

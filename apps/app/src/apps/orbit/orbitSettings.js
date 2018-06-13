@@ -70,10 +70,9 @@ class OrbitSettingsStore {
   activeIntegrations = react(
     () => this.isPaneActive && now(2000),
     async () => {
-      const next = await Setting.find({ where: { type: 'integration' } })
+      const next = await Setting.find({ where: { category: 'integration' } })
       const current = this.activeIntegrations
       if (isAllEqual(current, next)) {
-        console.log('all equal', current, next)
         throw react.cancel
       }
       return next

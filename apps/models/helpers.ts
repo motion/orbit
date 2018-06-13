@@ -7,6 +7,9 @@ export * from './typeorm'
 // import { BaseEntity } from 'typeorm'
 
 export function isAllEqual(a: any[], b: any[], keys?) {
+  if (a.length !== b.length) {
+    return false
+  }
   for (const [index, aItem] of a.entries()) {
     if (!isEqual(aItem, b[index], keys)) {
       return false

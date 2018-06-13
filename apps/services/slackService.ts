@@ -4,8 +4,8 @@ import { watchModel } from '@mcro/helpers'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-type SlackOpts = { oldest?: number; count: number }
-type ChannelInfo = {
+export type SlackOpts = { oldest?: number; count: number }
+export type ChannelInfo = {
   id: string
   name: string
   name_normalized: string

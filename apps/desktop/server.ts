@@ -152,8 +152,8 @@ export default class Server {
       '/auth', // TODO change secret
       session({ secret: 'orbit', resave: false, saveUninitialized: true }),
     )
-    this.app.use('/auth', Passport.initialize({}))
-    this.app.use('/auth', Passport.session({}))
+    this.app.use('/auth', Passport.initialize({ userProperty: 'currentUser' }))
+    this.app.use('/auth', Passport.session({ pauseStream: false }))
     this.setupAuthRefreshRoutes()
     this.setupAuthReplyRoutes()
   }

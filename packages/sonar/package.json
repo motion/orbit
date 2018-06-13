@@ -7,8 +7,8 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc",
-    "watch": "npm run build -- --watch"
+    "build": "echo hi",
+    "watch": "npm run build -- --watch --preserveWatchOutput"
   },
   "dependencies": {
     "prop-types": "^15.6.0",

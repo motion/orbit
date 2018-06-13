@@ -1,4 +1,4 @@
-import { store, react, isEqual } from '@mcro/black/store'
+import { store, isEqual } from '@mcro/black/store'
 import iohook from 'iohook'
 import { Desktop, App } from '@mcro/all'
 // import debug from '@mcro/debug'

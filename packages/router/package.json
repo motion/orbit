@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch --preserveWatchOutput"
   },
   "dependencies": {
     "history": "^4.7.2",

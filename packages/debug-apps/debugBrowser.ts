@@ -46,7 +46,8 @@ export default class DebugApps {
         headless: false,
         args: [
           `--window-size=${800},${680}`,
-          `--no-startup-window`,
+          '--disable-infobars',
+          // `--no-startup-window`,
           // `--enable-slim-navigation-manager`,
           // `--top-controls-hide-threshold=0.5`,
           // `--disable-extensions-except=${extNames.join(',')}`,

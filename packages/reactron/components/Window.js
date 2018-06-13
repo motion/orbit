@@ -57,7 +57,6 @@ export class Window extends BaseComponent {
       ),
       opacity: this.handleSetProp('opacity'),
       alwaysOnTop: this.handleSetProp('alwaysOnTop', x => !!x),
-      devToolsExtensions: () => configureExtensions.call(this, this.props),
       showDevTools: propVal => {
         if (propVal) {
           this.window.webContents.openDevTools()
@@ -146,24 +145,25 @@ export class Window extends BaseComponent {
   }
 }
 
-function configureExtensions({ devToolsExtensions }) {
-  if (this.unmounted) return
-  const incoming = new Set(devToolsExtensions)
-  const newExtensions = new Set(
-    [...incoming].filter(x => !ALL_EXTENSIONS.has(x)),
-  )
-  const oldExtensions = [...ALL_EXTENSIONS].filter(x => !incoming.has(x))
-  for (const path of oldExtensions) {
-    BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
-    ALL_EXTENSIONS.delete(path)
-    delete this.extensionNames[path]
-  }
-  for (const path of newExtensions) {
-    const name = BrowserWindow.addDevToolsExtension(path)
-    ALL_EXTENSIONS.add(path)
-    this.extensionNames[path] = name
-  }
-}
+// function configureExtensions({ devToolsExtensions }) {
+//   if (this.unmounted) return
+//   const incoming = new Set(devToolsExtensions)
+//   const newExtensions = new Set(
+//     [...incoming].filter(x => !ALL_EXTENSIONS.has(x)),
+//   )
+//   const oldExtensions = [...ALL_EXTENSIONS].filter(x => !incoming.has(x))
+//   for (const path of oldExtensions) {
+//     BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
+//     ALL_EXTENSIONS.delete(path)
+//     delete this.extensionNames[path]
+//   }
+//   for (const path of newExtensions) {
+//     console.log('adding dev tool', path)
+//     const name = BrowserWindow.addDevToolsExtension(path)
+//     ALL_EXTENSIONS.add(path)
+//     this.extensionNames[path] = name
+//   }
+// }
 
 function configureFile({ file }) {
   if (file) {

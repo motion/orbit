@@ -5,7 +5,16 @@ import { OrbitDockedPane } from './orbitDockedPane'
 import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
 import { now } from 'mobx-utils'
-import { Setting, isAllEqual } from '@mcro/models'
+import { Setting, isAllEqual, Not, IsNull } from '@mcro/models'
+import * as _ from 'lodash'
+
+const settingToResult = setting => ({
+  id: setting.type,
+  type: 'setting',
+  integration: setting.type,
+  icon: setting.type,
+  title: _.capitalize(setting.type),
+})
 
 const allIntegrations = [
   {
@@ -70,7 +79,9 @@ class OrbitSettingsStore {
   activeIntegrations = react(
     () => this.isPaneActive && now(2000),
     async () => {
-      const next = await Setting.find({ where: { category: 'integration' } })
+      const next = await Setting.find({
+        where: { category: 'integration', token: Not(IsNull()) },
+      })
       const current = this.activeIntegrations
       if (isAllEqual(current, next)) {
         throw react.cancel
@@ -120,10 +131,10 @@ export class OrbitSettings {
         <section if={activeIntegrations.length}>
           <SubTitle>Active Integrations</SubTitle>
           <cards>
-            {activeIntegrations.map((item, index) => (
+            {activeIntegrations.map((setting, index) => (
               <IntegrationCard
-                key={`${index}-${item.id}`}
-                result={item}
+                key={setting.id}
+                result={settingToResult(setting)}
                 index={index}
                 isActive
               />

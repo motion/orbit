@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome'
 import { OrbitSettings } from './orbitSettings'
@@ -7,90 +7,17 @@ import { OrbitHomeHeader } from './orbitHomeHeader'
 import { OrbitHeader } from './orbitHeader'
 import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitDirectory } from './orbitDirectory'
-import { App, Electron } from '@mcro/all'
-import * as PeekStateActions from '~/actions/PeekStateActions'
+import { App } from '@mcro/all'
+import { OrbitDockedPaneStore } from './orbitDockedPaneStore'
 
 const borderRadius = 16
 const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
 
-class PaneStore {
-  filters = ['all', 'general', 'status', 'showoff']
-  mainPanes = ['home', 'directory', 'settings']
-  paneIndex = 0
-  panes = [...this.mainPanes, ...this.filters]
-
-  willMount() {
-    this.on(this.props.orbitStore, 'key', key => {
-      if (key === 'right') {
-        this.paneIndex = Math.min(this.panes.length - 1, this.paneIndex + 1)
-      }
-      if (key === 'left') {
-        this.paneIndex = Math.max(0, this.paneIndex - 1)
-      }
-    })
-
-    App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
-      console.log('got message toggle settings')
-      this.setActivePane('settings')
-      App.setOrbitState({ docked: true })
-    })
-  }
-
-  setActivePane = name => {
-    this.paneIndex = this.panes.findIndex(val => val === name)
-  }
-
-  get activePane() {
-    if (!App.orbitState.docked) {
-      return this.panes[this.paneIndex]
-    }
-    if (App.state.query) {
-      return 'search'
-    }
-    return this.panes[this.paneIndex]
-  }
-
-  clearPeekOnActivePaneChange = react(
-    () => this.activePane,
-    PeekStateActions.clearPeek,
-    {
-      log: 'state',
-    },
-  )
-
-  animationState = react(
-    () => App.orbitState.docked,
-    async (visible, { sleep, setValue }) => {
-      // hmr already showing
-      if (visible && this.animationState.visible) {
-        throw react.cancel
-      }
-      // old value first to setup for transition
-      setValue({ willAnimate: true, visible: !visible })
-      await sleep(32)
-      // new value, start transition
-      setValue({ willAnimate: true, visible })
-      await sleep(App.animationDuration * 2)
-      // done animating, reset
-      setValue({ willAnimate: false, visible })
-      App.sendMessage(
-        Electron,
-        visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
-      )
-    },
-    {
-      immediate: true,
-      log: false,
-      defaultValue: { willAnimate: false, visible: App.orbitState.docked },
-    },
-  )
-}
-
 @UI.injectTheme
 @view.attach('appStore', 'orbitStore')
 @view.provide({
-  paneStore: PaneStore,
+  paneStore: OrbitDockedPaneStore,
 })
 @view
 class OrbitDocked {

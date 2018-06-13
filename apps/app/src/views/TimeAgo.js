@@ -14,17 +14,17 @@ export class TimeAgo extends Component {
     timeInterval: 20000,
   }
 
+  interval = 0
+
   componentDidMount() {
     if (this.props.isLive) {
-      setInterval(this.updateTime, this.props.timeInterval)
+      this.interval = setInterval(this.updateTime, this.props.timeInterval)
       this.updateTime()
     }
   }
 
   componentWillUnmount() {
-    if (this.props.timeInterval) {
-      clearInterval(this.props.timeInterval)
-    }
+    clearInterval(this.interval)
   }
 
   updateTime = () => {

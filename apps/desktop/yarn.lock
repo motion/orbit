@@ -2037,6 +2037,10 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
+mobx-utils@5.0.0:
+  version "5.0.0"
+  resolved "http://localhost:4873/mobx-utils/-/mobx-utils-5.0.0.tgz#384e805064c237b9a9446788a9e68278a3437610"
+
 module-alias@^2.0.6:
   version "2.0.6"
   resolved "http://localhost:4873/module-alias/-/module-alias-2.0.6.tgz#abb2cfa07014f503514ad5061c6f03d79b591889"

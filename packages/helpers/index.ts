@@ -63,14 +63,13 @@ export function modelQueryReaction(query, options?: ReactModelQueryOpts) {
     () => condition() && now(poll || 2000),
     async (_, { getValue }) => {
       const next = await query()
+      const current = getValue()
       if (Array.isArray(next)) {
-        if (modelsEqual(getValue(), next)) {
+        if (modelsEqual(current, next)) {
           throw react.cancel
         }
-      } else {
-        if (modelEqual(getValue(), next)) {
-          throw react.cancel
-        }
+      } else if (modelEqual(current, next)) {
+        throw react.cancel
       }
       return next
     },
@@ -139,7 +138,7 @@ export function modelEqual(a: any, b: any, keys = ['updatedAt']) {
     if (keys.indexOf(key) === -1) {
       continue
     }
-    if (b[key] !== a[key]) {
+    if (!isEqual(b[key], a[key])) {
       return false
     }
   }

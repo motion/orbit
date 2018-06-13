@@ -7,10 +7,11 @@ import * as MobxUtils from 'mobx-utils'
 import ReactDOM from 'react-dom'
 import * as Constants from '~/constants'
 import mobxFormatters from 'mobx-formatters'
-import _ from 'lodash'
+import * as _ from 'lodash'
 import * as Black from '@mcro/black'
 import r2 from '@mcro/r2'
 import * as Helpers from '~/helpers'
+import * as McroHelpers from '@mcro/helpers'
 import * as MobxReact from 'mobx-react-devtools'
 
 // Mobx.useStrict(true)
@@ -53,3 +54,4 @@ window.log = Black.log
 window.Black = Black
 window.r2 = r2
 window.Helpers = Helpers
+window.McroHelpers = McroHelpers

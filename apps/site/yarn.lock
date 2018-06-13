@@ -426,9 +426,9 @@ min-document@^2.19.0:
   dependencies:
     dom-walk "^0.1.0"
 
-mobx@^4.3.0:
-  version "4.3.1"
-  resolved "http://localhost:4873/mobx/-/mobx-4.3.1.tgz#334e5aab4916b1d43f0faf3605a64b1b4b3ccb8d"
+mobx@^5.0.2:
+  version "5.0.2"
+  resolved "http://localhost:4873/mobx/-/mobx-5.0.2.tgz#ea8d208eb36e9443707230d77a250f2fdd295dfb"
 
 ms@2.0.0:
   version "2.0.0"

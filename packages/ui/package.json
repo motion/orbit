@@ -34,7 +34,7 @@
   "peerDependencies": {
     "@babel/runtime": "*",
     "lodash": "*",
-    "mobx": "^4.3.0",
+    "mobx": "^5.0.2",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },

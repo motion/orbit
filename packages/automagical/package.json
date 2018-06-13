@@ -10,13 +10,13 @@
     "@mcro/debug": "^2.0.0",
     "@mcro/helpers": "^2.0.0",
     "global": "^4.3.2",
-    "mobx-utils": "^4.0.1"
+    "mobx-utils": "5.0.0"
   },
   "devDependencies": {
     "@types/webpack-env": "*"
   },
   "peerDependencies": {
-    "mobx": "^4.3.0"
+    "mobx": "^5.0.2"
   },
   "publishConfig": {
     "access": "public"

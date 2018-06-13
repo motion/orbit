@@ -154,7 +154,11 @@ export default class GoogleMailSync {
               syncing = false
             }
           })
-          await processQueue()
+          try {
+            await processQueue()
+          } catch(err) {
+            console.error('got an err processing', err)
+          }
           res(newHistoryId || null)
           async function processQueue() {
             while (syncing || threads.length) {

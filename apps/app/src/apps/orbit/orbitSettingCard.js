@@ -21,12 +21,21 @@ export class OrbitSettingCard extends React.Component {
         $isActive={isActive}
         title={result.title}
         subtitle={
-          store.bitsCount === null
-            ? '...'
-            : `${store.bitsCount || 'none'} synced`
+          !isActive
+            ? ''
+            : store.bitsCount === null
+              ? '...'
+              : `${store.bitsCount || 'none'} synced`
         }
         date={store.job && store.job.updatedAt}
         icon={result.icon}
+        iconProps={
+          !isActive && {
+            style: {
+              opacity: 0.5,
+            },
+          }
+        }
         result={result}
         onClick={
           !isActive &&
@@ -57,12 +66,6 @@ export class OrbitSettingCard extends React.Component {
   }
 
   static style = {
-    card: {
-      opacity: 0.7,
-    },
-    isActive: {
-      opacity: 1,
-    },
     icon: {
       margin: ['auto', 10, 'auto', -8],
       transform: {

@@ -87,11 +87,8 @@ export class OrbitSettings {
     if (!appStore.settings) {
       return null
     }
-    const {
-      activeIntegrations,
-      inactiveIntegrations,
-    } = store.splitActiveResults
-    const integrationCard = (result, index) => (
+    const { activeIntegrations } = store.splitActiveResults
+    const integrationCard = (result, { index, ...props }) => (
       <OrbitSettingCard
         pane="summary"
         subPane="settings"
@@ -104,6 +101,7 @@ export class OrbitSettings {
         setting={appStore.settings[result.id]}
         result={result}
         listItem
+        {...props}
       />
     )
     return (
@@ -123,18 +121,24 @@ export class OrbitSettings {
           <CheckBoxRow checked>Automatically manage disk space</CheckBoxRow>
         </OrbitCard>
         <section if={activeIntegrations.length}>
-          <SubTitle>Integrations</SubTitle>
+          <SubTitle>Active Integrations</SubTitle>
           <cards>
             {activeIntegrations.map((item, index) =>
-              integrationCard(item, index),
+              integrationCard(item, { index }),
             )}
           </cards>
         </section>
-        <section if={inactiveIntegrations.length}>
+        <section>
           <SubTitle>Add Integration</SubTitle>
           <cards>
-            {inactiveIntegrations.map((item, index) =>
-              integrationCard(item, index + activeIntegrations.length),
+            {store.allResults.map((item, index) =>
+              integrationCard(item, {
+                index: index + activeIntegrations.length,
+                isActive: false,
+                titleProps: {
+                  fontWeight: 300,
+                },
+              }),
             )}
           </cards>
         </section>

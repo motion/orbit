@@ -89,11 +89,11 @@ class HomeStore {
 const Pitch = ({ isLarge }) => (
   <>
     <Title italic size={3.2} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      A new way to coordinate teams
+      A better way to coordinate teams
     </Title>
     <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      Automatic unified cloud search, news, and profiles for teams. Installed in
-      3 minutes.
+      Make team knowledge useful with on-device search and exploration. 3 minute
+      install.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />

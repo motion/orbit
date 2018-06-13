@@ -80,7 +80,6 @@ export class KeyboardStore {
       }
     }
     if (isOption) {
-      console.log('setting it up')
       return Desktop.setKeyboardState({ option: Date.now() })
     }
     if (this.keysDown.has(codes.option)) {

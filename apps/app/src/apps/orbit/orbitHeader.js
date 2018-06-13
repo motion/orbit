@@ -15,7 +15,7 @@ class HeaderStore {
     }
     // weirdly this doesnt work but the querySelector does...
     // this.inputRef.current.focus()
-    document.execCommand('selectAll', false, null)
+    // document.execCommand('selectAll', false, null)
     document.querySelector('input').focus()
   }
 
@@ -27,7 +27,6 @@ class HeaderStore {
     async ([shown], { when }) => {
       if (!shown) throw react.cancel
       await when(() => Desktop.state.focusedOnOrbit)
-      await when(() => !App.isAnimatingOrbit)
       this.focus()
     },
     { log: false },
@@ -150,7 +149,7 @@ export class OrbitHeader extends React.Component {
       transition: 'all ease-in 300ms',
     },
     searchIcon: {
-      paddingLeft: 16,
+      paddingLeft: 14,
       margin: 0,
     },
     input: {
@@ -158,7 +157,7 @@ export class OrbitHeader extends React.Component {
       background: 'transparent',
       fontWeight: 300,
       fontSize: 24,
-      padding: [20, 10, 20, 36],
+      padding: [20, 10, 20, 30],
       // height: 54,
       border: 'none',
     },

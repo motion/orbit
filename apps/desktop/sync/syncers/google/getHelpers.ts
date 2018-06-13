@@ -27,8 +27,8 @@ export default setting => ({
       },
       formData: {
         refresh_token: setting.values.oauth.refreshToken,
-        client_id: Strategies.google.config.credentials.clientID,
-        client_secret: Strategies.google.config.credentials.clientSecret,
+        client_id: Strategies.gmail.config.credentials.clientID,
+        client_secret: Strategies.gmail.config.credentials.clientSecret,
         grant_type: 'refresh_token',
       },
     }).json

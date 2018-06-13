@@ -10,22 +10,16 @@
   version "10.3.2"
   resolved "http://localhost:4873/@types%2fnode/-/node-10.3.2.tgz#3840ec6c12556fdda6e0e6d036df853101d732a4"
 
-"@types/react-dom@16.0.5":
-  version "16.0.5"
-  resolved "http://localhost:4873/@types%2freact-dom/-/react-dom-16.0.5.tgz#a757457662e3819409229e8f86795ff37b371f96"
+"@types/react-dom@16.0.6":
+  version "16.0.6"
+  resolved "http://localhost:4873/@types%2freact-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
   dependencies:
     "@types/node" "*"
     "@types/react" "*"
 
-"@types/react@*":
+"@types/react@*", "@types/react@16.3.17":
   version "16.3.17"
   resolved "http://localhost:4873/@types%2freact/-/react-16.3.17.tgz#d59d1a632570b0713946ed9c2949d994773633c5"
-  dependencies:
-    csstype "^2.2.0"
-
-"@types/react@16.3.14":
-  version "16.3.14"
-  resolved "http://localhost:4873/@types%2freact/-/react-16.3.14.tgz#f90ac6834de172e13ecca430dcb6814744225d36"
   dependencies:
     csstype "^2.2.0"
 

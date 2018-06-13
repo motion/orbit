@@ -18,8 +18,11 @@ const appTarget = ({ offset, bounds }) => {
 export class AppReactions {
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
+    if (window.setupAppReactions) {
+      console.warn('!!!!!!!!!!!!!!!!!!!!! setting up app reactions')
+    }
     const dispose = App.onMessage(async msg => {
-      console.log('appmsg', msg)
+      window.setupAppReactions = true
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
           this.toggle()
@@ -140,9 +143,13 @@ export class AppReactions {
     { log: 'state' },
   )
 
-  clearPeekOnReposition = react(() => App.orbitState.position, PeekStateActions.clearPeek, {
-    log: 'state',
-  })
+  clearPeekOnReposition = react(
+    () => App.orbitState.position,
+    PeekStateActions.clearPeek,
+    {
+      log: 'state',
+    },
+  )
 
   // disabled during testing, reenable
   // react

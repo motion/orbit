@@ -23,6 +23,9 @@ export class SettingInfoStore {
   }
 
   update = async () => {
+    if (!this.bit) {
+      return
+    }
     const { integration } = this.bit
     const job = await Job.findOne({
       where: { type: integration },

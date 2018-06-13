@@ -89,11 +89,11 @@ class HomeStore {
 const Pitch = ({ isLarge }) => (
   <>
     <Title italic size={3.2} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      A new way to coordinate teams
+      A better way to coordinate teams
     </Title>
     <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      Automatic unified cloud search, news, and profiles for teams. Installed in
-      3 minutes.
+      Unify your team knowledge to make it useful and easy to find. A completely
+      secure, no 😅 intranet that takes just seconds to setup.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />
@@ -384,7 +384,7 @@ class HomeFooter extends React.Component {
               <div $$flex />
               <content css={isLarge && { marginRight: 80 }}>
                 <Title size={2.3} color="#333" css={{ marginBottom: 25 }}>
-                  Autonomous coordination
+                  Unified search that works.
                 </Title>
                 <UI.PassProps size={1.35} sizeLineHeight={1.2} alpha={0.7}>
                   <P2 size={1.6}>
@@ -393,12 +393,8 @@ class HomeFooter extends React.Component {
                   </P2>
                   <P2>
                     Orbit is a smart desktop app that sorts cloud activity into
-                    search, news, and a directory.
-                  </P2>
-                  <P2>
-                    It integrates with existing services instead of adding more
-                    overhead. It's your secret weapon for coordinating internal
-                    knowledge.
+                    search with smart features. We're making a secret weapon for
+                    coordinating company knowledge.
                   </P2>
                   <P2 size={1.2} css={{ marginTop: 5 }}>
                     Read more to learn about{' '}

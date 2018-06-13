@@ -4,7 +4,7 @@
     "outDir": "_",
     "baseUrl": "./src",
     "paths": {
-      "~/*": ["*"]
+      "~/*": ["./src/*"]
     }
   },
   "exclude": ["_", "node_modules", "tmp"]

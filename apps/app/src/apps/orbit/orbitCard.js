@@ -7,6 +7,7 @@ import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 import { PeopleRow } from '~/components/PeopleRow'
+import { Desktop } from '@mcro/all'
 
 let loggers = []
 let nextLog = null
@@ -69,12 +70,25 @@ class OrbitCardStore {
   }
 
   setPeekTargetOnNextIndex = react(
-    () => this.props.appStore.nextIndex === this.props.index,
-    async (shouldSelect, { sleep }) => {
-      if (!shouldSelect || !this.isPaneSelected) {
-        this._isSelected = false
+    () => [
+      this.props.appStore.nextIndex === this.props.index,
+      this.isPaneSelected,
+    ],
+    async ([shouldSelect, isPaneSelected], { sleep }) => {
+      if (!Desktop.hoverState.orbitHovered) {
         throw react.cancel
       }
+      if (
+        !shouldSelect ||
+        !isPaneSelected ||
+        typeof this.props.index === 'undefined'
+      ) {
+        if (this._isSelected) {
+          this._isSelected = false
+        }
+        throw react.cancel
+      }
+      console.log('setTargetNow', this.props.subPane, this.props.index)
       this._isSelected = true
       await sleep(10)
       log('selecting', this.props)
@@ -83,6 +97,7 @@ class OrbitCardStore {
         this.ref,
       )
     },
+    { immediate: true },
   )
 }
 

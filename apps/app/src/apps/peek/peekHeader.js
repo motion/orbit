@@ -55,9 +55,6 @@ export class PeekHeader extends React.Component {
     chromeSpace: {
       // width: 30,
     },
-    icon: {
-      padding: [0, 5, 0, 18],
-    },
     title: {
       flex: 1,
       flexFlow: 'row',
@@ -74,6 +71,9 @@ export class PeekHeader extends React.Component {
     orbitInput: {
       width: '100%',
       // background: 'red',
+    },
+    after: {
+      alignSelf: 'flex-end',
     },
   }
 }

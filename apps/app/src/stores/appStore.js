@@ -1,115 +1,27 @@
-import { react, isEqual } from '@mcro/black'
-import { App, Desktop, Electron } from '@mcro/all'
-import { Bit, Person, Setting, findOrCreate } from '@mcro/models'
-import * as Constants from '~/constants'
-import * as r2 from '@mcro/r2'
+import { react, isEqual, ReactionTimeoutError } from '@mcro/black'
+import { App, Desktop } from '@mcro/all'
+import { Bit, Setting } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'
-
-const getPermalink = async (result, type) => {
-  if (result.type === 'app') {
-    return result.id
-  }
-  if (result.integration === 'slack') {
-    const setting = await Setting.findOne({ type: 'slack' })
-    let url = `slack://channel?id=${result.data.channel.id}&team=${
-      setting.values.oauth.info.team.id
-    }`
-    if (type === 'channel') {
-      return url
-    }
-    return `${url}&message=${result.data.messages[0].ts}`
-  }
-  return result.id
-}
-
-// note: importing services causes hell for some reason
-const allServices = {
-  slack: () => require('@mcro/services').SlackService,
-  drive: () => require('@mcro/services').DriveService,
-  github: () => require('@mcro/services').GithubService,
-}
-
-// const log = debug('root')
-
-const uniq = arr => {
-  const added = {}
-  const final = []
-  for (const item of arr) {
-    if (!added[item.identifier || item.title]) {
-      final.push(item)
-      added[item.title] = true
-    }
-  }
-  return final
-}
-
-const matchSort = (query, results) => {
-  if (!results.length) {
-    return results
-  }
-  const strongTitleMatches = Helpers.fuzzy(query, results, {
-    threshold: -40,
-  })
-  return uniq([...strongTitleMatches, ...results].slice(0, 10))
-}
-
-const prefixes = {
-  gh: { integration: 'github' },
-  gd: { integration: 'google', type: 'document' },
-  gm: { integration: 'google', type: 'mail' },
-  sl: { integration: 'slack' },
-  m: { type: 'mail' },
-  d: { type: 'document' },
-  c: { type: 'conversation' },
-}
-
-const parseQuery = query => {
-  const [prefix, rest] = query.split(' ')
-  const q = prefixes[prefix]
-  if (q && rest) {
-    return {
-      rest: query.replace(prefix, '').trim(),
-      conditions: Object.keys(q).reduce(
-        (query, key) => `${query} AND ${key} = "${q[key]}"`,
-        '',
-      ),
-    }
-  }
-  return { rest: query, conditions: '' }
-}
+import * as AppStoreHelpers from './appStoreHelpers'
+import * as AppStoreReactions from './appStoreReactions'
 
 export class AppStore {
   nextIndex = 0
   activeIndex = -1
-  showSettings = false
   settings = {}
   services = {}
   getResults = null
-  resultRefs = {}
-  dockedResultRefs = {}
-
-  get innerHeight() {
-    const HEADER_HEIGHT = 90
-    return App.orbitState.size[1] - Constants.SHADOW_PAD * 2 - HEADER_HEIGHT
-  }
-
   lastSelectedPane = ''
 
-  updateLastSelectedPane = react(
-    () => this.selectedPane,
-    val => {
-      this.lastSelectedPane = val
-    },
-  )
+  async willMount() {
+    this.updateScreenSize()
+    this.updateSettings()
+    this.setInterval(this.updateSettings, 2000)
+  }
 
-  clearPeekOnSelectedPaneChange = react(
-    () => this.selectedPane,
-    this.clearSelected,
-    {
-      log: 'state',
-    },
-  )
+  // reactive values
+  selectedBit = AppStoreReactions.selectedBitReaction
 
   get selectedPane() {
     if (App.orbitState.docked) {
@@ -127,11 +39,17 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
-  async willMount() {
-    this.updateScreenSize()
-    this.getSettings()
-    this.setInterval(this.getSettings, 2000)
-  }
+  updateLastSelectedPane = react(
+    () => this.selectedPane,
+    val => {
+      this.lastSelectedPane = val
+    },
+  )
+
+  clearPeekOnSelectedPaneChange = react(
+    () => this.selectedPane,
+    this.clearSelected,
+  )
 
   updateScreenSize() {
     this.setInterval(() => {
@@ -219,7 +137,7 @@ export class AppStore {
       })
     }
     console.time('bitSearch')
-    const { conditions, rest } = parseQuery(query)
+    const { conditions, rest } = AppStoreHelpers.parseQuery(query)
     const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
     const where = `title like "${titleLike}%"${conditions}`
     console.log('searching', where, conditions, rest)
@@ -233,48 +151,6 @@ export class AppStore {
     return res
   }
 
-  contextResults = react(
-    () => 0,
-    async () => {
-      return await Bit.find({
-        take: 6,
-        relations: ['people'],
-        order: { bitCreatedAt: 'DESC' },
-      })
-    },
-    {
-      immediate: true,
-      defaultValue: [],
-    },
-  )
-
-  selectedBit = react(
-    () => App.peekState.bit,
-    async bit => {
-      if (!bit) {
-        return null
-      }
-      console.log('selectedBit', bit.type)
-      if (bit.type === 'person') {
-        return await Person.findOne({ id: bit.id })
-      }
-      if (bit.type === 'setting') {
-        return bit
-      }
-      if (bit.type === 'team') {
-        return bit
-      }
-      const res = await Bit.findOne({
-        where: {
-          id: bit.id,
-        },
-        relations: ['people'],
-      })
-      return res
-    },
-    { log: false, delay: 32 },
-  )
-
   get results() {
     if (this.getResults) {
       return this.getResults()
@@ -287,7 +163,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when }) => {
+    async ([query, thisGetResults], { when, cancel }) => {
       if (!query) {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
@@ -305,7 +181,7 @@ export class AppStore {
       const isFilteringSlack = query[0] === '#'
       const isFilteringChannel = isFilteringSlack && query.indexOf(' ') === -1
       if (isFilteringSlack) {
-        channelResults = matchSort(
+        channelResults = AppStoreHelpers.matchSort(
           query.split(' ')[0],
           this.services.slack.activeChannels.map(channel => ({
             id: channel.id,
@@ -323,23 +199,31 @@ export class AppStore {
         results = channelResults
       } else {
         // 🔍 REGULAR SEARCHES GO THROUGH HERE
-        const pluginResultId = Desktop.searchState.pluginResultsId
-        const bitResultsId = this.bitResultsId
         // no jitter - wait for everything to finish
-        console.time('searchPlugins')
         console.time('searchPluginsAndBitResults')
-        await when(() => pluginResultId !== Desktop.searchState.pluginResultId)
-        console.timeEnd('searchPlugins')
-        await when(() => bitResultsId !== this.bitResultsId)
+        try {
+          const id0 = Desktop.searchState.pluginResultsId
+          const id1 = this.bitResultsId
+          await Promise.all([
+            when(() => id0 !== Desktop.searchState.pluginResultId, 200),
+            when(() => id1 !== this.bitResultsId, 200),
+          ])
+        } catch (err) {
+          if (err instanceof ReactionTimeoutError) {
+            console.log('timed out!, waht to do now?????????????')
+          } else {
+            throw err
+          }
+        }
         console.timeEnd('searchPluginsAndBitResults')
         const allResultsUnsorted = [
           ...this.bitResults,
           ...Desktop.searchState.pluginResults,
         ]
         // remove prefixes
-        const { rest } = parseQuery(query)
+        const { rest } = AppStoreHelpers.parseQuery(query)
         // sort
-        results = matchSort(rest, allResultsUnsorted)
+        results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
       }
       console.log('returning new searchState')
       return {
@@ -362,13 +246,11 @@ export class AppStore {
   }
 
   lastSelectAt = 0
-
   hoverOutTm = 0
   getHoverSettler = Helpers.hoverSettler({
     enterDelay: 50,
     betweenDelay: 30,
     onHovered: res => {
-      log('onhvoered', res)
       clearTimeout(this.hoverOutTm)
       if (!res) {
         // interval because hoversettler is confused when going back from peek
@@ -394,6 +276,7 @@ export class AppStore {
       }
       this.clearSelected()
     } else {
+      console.log('next index', index)
       this.nextIndex = index
     }
     return false
@@ -401,18 +284,21 @@ export class AppStore {
 
   setTarget = (item, target) => {
     clearTimeout(this.hoverOutTm)
-    if (!target) {
-      console.error('no target', item, target, this.nextIndex, this.activeIndex)
-      return
-    }
     PeekStateActions.selectItem(item, target)
     this.updateActiveIndex()
   }
 
+  increment = (by = 1) => {
+    this.toggleSelected(
+      Math.min(this.searchState.results.length - 1, this.activeIndex + by),
+    )
+  }
+
+  decrement = (by = 1) => {
+    this.toggleSelected(Math.max(-1, this.activeIndex - by))
+  }
+
   updateActiveIndex = () => {
-    if (this.nextIndex === this.activeIndex) {
-      return
-    }
     this.lastSelectAt = Date.now()
     this.activeIndex = this.nextIndex
   }
@@ -421,20 +307,7 @@ export class AppStore {
     this.getResults = fn
   }
 
-  hoverWordToActiveIndex = react(
-    () => App.state.hoveredWord,
-    word => word && this.pinSelected(word.index),
-  )
-
-  getPeekItem = item => {
-    if (!item) {
-      console.log('none found')
-      return null
-    }
-    return
-  }
-
-  getSettings = async () => {
+  updateSettings = async () => {
     const settings = await Setting.find()
     if (settings) {
       const nextSettings = settings.reduce(
@@ -448,8 +321,8 @@ export class AppStore {
           if (!setting.token) {
             continue
           }
-          if (!this.services[name] && allServices[name]) {
-            const ServiceConstructor = allServices[name]()
+          if (!this.services[name] && AppStoreHelpers.allServices[name]) {
+            const ServiceConstructor = AppStoreHelpers.allServices[name]()
             this.services[name] = new ServiceConstructor(setting)
           }
         }
@@ -457,46 +330,12 @@ export class AppStore {
     }
   }
 
-  checkAuths = async () => {
-    const { error, ...authorizations } = await r2.get(
-      `${Constants.API_URL}/getCreds`,
-    ).json
-    if (error) {
-      console.log('no creds')
-    }
-    return authorizations
-  }
-
-  startOauth = type => {
-    App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
-    const checker = this.setInterval(async () => {
-      const auth = await this.checkAuths()
-      const oauth = auth && auth[type]
-      if (!oauth) return
-      clearInterval(checker)
-      let setting = await findOrCreate(Setting, { type })
-      if (!oauth.token) {
-        throw new Error(`No token returned ${JSON.stringify(oauth)}`)
-      }
-      setting.token = oauth.token
-      setting.values = {
-        ...setting.values,
-        oauth,
-      }
-      await setting.save()
-      this.getSettings()
-      App.sendMessage(Desktop, Desktop.messages.CLOSE_AUTH, type)
-    }, 1000)
+  openSelected = () => {
+    this.open(this.searchState.results[this.activeIndex])
   }
 
   open = async (result, openType) => {
-    const url = await getPermalink(result, openType)
+    const url = await AppStoreHelpers.getPermalink(result, openType)
     App.open(url)
-  }
-
-  handleLink = e => {
-    e.preventDefault()
-    e.stopPropagation()
-    App.open(e.target.href)
   }
 }

@@ -23,9 +23,9 @@ min-document@^2.19.0:
   dependencies:
     dom-walk "^0.1.0"
 
-mobx-utils@^4.0.1:
-  version "4.0.1"
-  resolved "http://localhost:4873/mobx-utils/-/mobx-utils-4.0.1.tgz#1bd8648332be7ca83d7023aaa0ba24bbf389a300"
+mobx-utils@5.0.0:
+  version "5.0.0"
+  resolved "http://localhost:4873/mobx-utils/-/mobx-utils-5.0.0.tgz#384e805064c237b9a9446788a9e68278a3437610"
 
 process@~0.5.1:
   version "0.5.2"

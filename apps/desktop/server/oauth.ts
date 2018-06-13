@@ -50,7 +50,7 @@ export default class Oauth {
         },
       )
 
-      Passport.use(strategy)
+      Passport.use(name, strategy)
       Refresh.use(strategy)
     }
   }

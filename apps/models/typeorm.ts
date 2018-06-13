@@ -18,6 +18,16 @@ const {
   ManyToMany,
   JoinColumn,
   JoinTable,
+  Not,
+  Equal,
+  MoreThan,
+  Raw,
+  IsNull,
+  Any,
+  In,
+  Between,
+  Like,
+  LessThan
 } = typeorm
 
 export {
@@ -35,6 +45,16 @@ export {
   ManyToMany,
   JoinColumn,
   JoinTable,
+  Not,
+  Equal,
+  MoreThan,
+  Raw,
+  IsNull,
+  Any,
+  In,
+  Between,
+  Like,
+  LessThan
 }
 
 // globals

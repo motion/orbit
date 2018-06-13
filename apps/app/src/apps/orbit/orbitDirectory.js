@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
+import { modelQueryReaction } from '@mcro/helpers'
 import { Person } from '@mcro/models'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitCard } from './orbitCard'
@@ -8,6 +9,54 @@ import { SubTitle } from '~/views'
 import { OrbitCardTeam } from './orbitCardTeam'
 import * as _ from 'lodash'
 // import { Carousel } from '~/components/carousel'
+
+// {
+//   title: 'Engineering',
+//   type: 'team',
+//   data: {
+//     people: '19',
+//     topics: 'Cosal, pTSNE, memorial, left',
+//     recently: [
+//       { title: 'Stores, hmr', type: 'github' },
+//       { title: 'Foxwoods Sprint', type: 'gdocs' },
+//       { title: 'ux checkout #pp', type: 'slack' },
+//     ],
+//   },
+// },
+// {
+//   title: 'Design',
+//   type: 'team',
+//   data: {
+//     people: '5',
+//     topics: 'Checkout, sketch, interaction, fix',
+//     recently: [
+//       { title: '360 stage design', type: 'gdocs' },
+//       { title: 'Kit v2', type: 'github' },
+//       { title: 'checkout, bug', type: 'slack' },
+//     ],
+//   },
+// },
+// {
+//   title: 'Marketing',
+//   type: 'team',
+//   data: {
+//     people: '12',
+//   },
+// },
+// {
+//   title: 'Buyers',
+//   type: 'team',
+//   data: {
+//     people: '15',
+//   },
+// },
+// {
+//   title: 'Sales',
+//   type: 'team',
+//   data: {
+//     people: '5',
+//   },
+// },
 
 class OrbitDirectoryStore {
   setGetResults = react(
@@ -23,61 +72,8 @@ class OrbitDirectoryStore {
     { immediate: true },
   )
 
-  results = react(
-    async () => {
-      return [
-        {
-          title: 'Engineering',
-          type: 'team',
-          data: {
-            people: '19',
-            topics: 'Cosal, pTSNE, memorial, left',
-            recently: [
-              { title: 'Stores, hmr', type: 'github' },
-              { title: 'Foxwoods Sprint', type: 'gdocs' },
-              { title: 'ux checkout #pp', type: 'slack' },
-            ],
-          },
-        },
-        {
-          title: 'Design',
-          type: 'team',
-          data: {
-            people: '5',
-            topics: 'Checkout, sketch, interaction, fix',
-            recently: [
-              { title: '360 stage design', type: 'gdocs' },
-              { title: 'Kit v2', type: 'github' },
-              { title: 'checkout, bug', type: 'slack' },
-            ],
-          },
-        },
-        {
-          title: 'Marketing',
-          type: 'team',
-          data: {
-            people: '12',
-          },
-        },
-        {
-          title: 'Buyers',
-          type: 'team',
-          data: {
-            people: '15',
-          },
-        },
-        {
-          title: 'Sales',
-          type: 'team',
-          data: {
-            people: '5',
-          },
-        },
-        ...(await Person.find({ take: 10 })),
-      ]
-    },
-    { defaultValue: [] },
-  )
+  // poll every 2 seconds while active
+  results = modelQueryReaction(() => Person.find({ take: 10 }))
 }
 
 @view({

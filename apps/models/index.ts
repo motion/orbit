@@ -3,6 +3,7 @@ import 'reflect-metadata'
 // export all helpers
 
 export * from './helpers'
+export * from './typeorm'
 
 // ⭐️ ADD MODELS HERE:
 

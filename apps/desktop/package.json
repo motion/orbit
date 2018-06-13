@@ -64,9 +64,14 @@
     "source-map-support": "^0.4.16",
     "sqlite": "2.9.2",
     "sudo-prompt": "^7.1.1",
-    "ws": "^3.3.3"
+    "ws": "^3.3.3",
+    "mobx-utils": "5.0.0"
+  },
+  "peerDependencies": {
+    "mobx": "*"
   },
   "devDependencies": {
+    "@types/passport": "0.4.5",
     "@mcro/build": "^2.0.11",
     "@mcro/dev": "^2.0.0",
     "nodemon": "^1.15.0",

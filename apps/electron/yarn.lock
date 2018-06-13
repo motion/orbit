@@ -14,22 +14,16 @@
   version "8.10.19"
   resolved "http://localhost:4873/@types%2fnode/-/node-8.10.19.tgz#66b5b6325c048cbf4512b7a88b0e79c2ee99d3d2"
 
-"@types/react-dom@16.0.5":
-  version "16.0.5"
-  resolved "http://localhost:4873/@types%2freact-dom/-/react-dom-16.0.5.tgz#a757457662e3819409229e8f86795ff37b371f96"
+"@types/react-dom@16.0.6":
+  version "16.0.6"
+  resolved "http://localhost:4873/@types%2freact-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
   dependencies:
     "@types/node" "*"
     "@types/react" "*"
 
-"@types/react@*":
+"@types/react@*", "@types/react@16.3.17":
   version "16.3.17"
   resolved "http://localhost:4873/@types%2freact/-/react-16.3.17.tgz#d59d1a632570b0713946ed9c2949d994773633c5"
-  dependencies:
-    csstype "^2.2.0"
-
-"@types/react@16.3.14":
-  version "16.3.14"
-  resolved "http://localhost:4873/@types%2freact/-/react-16.3.14.tgz#f90ac6834de172e13ecca430dcb6814744225d36"
   dependencies:
     csstype "^2.2.0"
 
@@ -1789,9 +1783,9 @@ mkdirp@0.5.1, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mobx@^4.3.0:
-  version "4.3.1"
-  resolved "http://localhost:4873/mobx/-/mobx-4.3.1.tgz#334e5aab4916b1d43f0faf3605a64b1b4b3ccb8d"
+mobx@^5.0.2:
+  version "5.0.2"
+  resolved "http://localhost:4873/mobx/-/mobx-5.0.2.tgz#ea8d208eb36e9443707230d77a250f2fdd295dfb"
 
 modify-filename@^1.1.0:
   version "1.1.0"

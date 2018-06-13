@@ -11,10 +11,10 @@
   "dependencies": {
     "@mcro/decor": "^2.0.0",
     "@mcro/helpers": "^2.0.0",
-    "mobx-react": "^5.1.2"
+    "mobx-react": "5.2.3"
   },
   "peerDependencies": {
-    "mobx": "^4.3.0"
+    "mobx": "^5.0.2"
   },
   "publishConfig": {
     "access": "public"

@@ -14,17 +14,17 @@ export class TimeAgo extends Component {
     timeInterval: 20000,
   }
 
+  interval = 0
+
   componentDidMount() {
     if (this.props.isLive) {
-      setInterval(this.updateTime, this.props.timeInterval)
+      this.interval = setInterval(this.updateTime, this.props.timeInterval)
       this.updateTime()
     }
   }
 
   componentWillUnmount() {
-    if (this.props.timeInterval) {
-      clearInterval(this.props.timeInterval)
-    }
+    clearInterval(this.interval)
   }
 
   updateTime = () => {
@@ -61,15 +61,11 @@ export class TimeAgo extends Component {
       return distanceInWordsToNow(this.props.date, options)
         .replace('about ', '')
         .replace('less than ', '')
-        .replace(' ago', this.props.postfix)
+        .replace(' ago', this.props.postfix ? ` ${this.props.postfix}` : '')
     }
   }
 
   render() {
-    return React.createElement(
-      this.props.element,
-      { className: this.props.className ? this.props.className : '' },
-      this.getParsedDate(),
-    )
+    return this.getParsedDate()
   }
 }

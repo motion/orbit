@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitCard } from '~/apps/orbit/orbitCard'
 import { SettingInfoStore } from '~/stores/SettingInfoStore'
+import * as OauthActions from '~/actions/OauthActions'
 
 @view.attach('appStore')
 @view({
@@ -21,12 +22,21 @@ export class OrbitSettingCard extends React.Component {
         $isActive={isActive}
         title={result.title}
         subtitle={
-          store.bitsCount === null
-            ? '...'
-            : `${store.bitsCount || 'none'} synced`
+          !isActive
+            ? ''
+            : store.bitsCount === null
+              ? '...'
+              : `${store.bitsCount || 'none'} synced`
         }
         date={store.job && store.job.updatedAt}
         icon={result.icon}
+        iconProps={
+          !isActive && {
+            style: {
+              opacity: 0.5,
+            },
+          }
+        }
         result={result}
         onClick={
           !isActive &&
@@ -34,9 +44,9 @@ export class OrbitSettingCard extends React.Component {
             if (result.oauth === false) {
               setting.token = 'good'
               await setting.save()
-              appStore.getSettings()
+              appStore.updateSettings()
             } else {
-              appStore.startOauth(result.id)
+              OauthActions.startOauth(result.id)
             }
             return
           })
@@ -46,7 +56,7 @@ export class OrbitSettingCard extends React.Component {
             <React.Fragment if={!isActive}>
               <UI.Button>Add</UI.Button>
             </React.Fragment>
-            <React.Fragment if={isActive}>
+            <React.Fragment if={false && isActive}>
               <UI.Button>Remove</UI.Button>
             </React.Fragment>
           </after>
@@ -57,12 +67,6 @@ export class OrbitSettingCard extends React.Component {
   }
 
   static style = {
-    card: {
-      opacity: 0.7,
-    },
-    isActive: {
-      opacity: 1,
-    },
     icon: {
       margin: ['auto', 10, 'auto', -8],
       transform: {

@@ -33,7 +33,7 @@ export default function getBitContentView(bit): Function {
   const resolveIntegration = results[bit.integration]
   const resolver = resolveIntegration && resolveIntegration[bit.type]
   if (!resolver) {
-    console.warn('no resolver for', bit.integration, bit.type)
+    console.log('no resolver for', bit.integration, bit.type)
     return () => <div>no resolver</div>
   }
   return resolver

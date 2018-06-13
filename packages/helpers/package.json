@@ -11,6 +11,8 @@
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
+    "@mcro/automagical": "^1.5.1",
+    "mobx-utils": "5.0.0",
     "disposable-event": "^1.0.3",
     "event-kit": "^2.5.0",
     "global": "^4.3.2",

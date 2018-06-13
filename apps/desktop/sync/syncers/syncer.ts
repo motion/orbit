@@ -1,6 +1,6 @@
 import * as Helpers from '../helpers'
 import debug from '@mcro/debug'
-import { Setting, findOrCreate } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import { watchModel } from '@mcro/helpers'
 
 const log = debug('syncer')
@@ -24,7 +24,6 @@ export default class Syncer {
   }
 
   async start() {
-    await findOrCreate(Setting, { type: this.type })
     const watch = watchModel(Setting, { type: this.type }, async setting => {
       if (setting.token) {
         watch.cancel()
@@ -46,6 +45,10 @@ export default class Syncer {
   run = async action => {
     if (!action) {
       throw new Error('Must provide action')
+    }
+    if (action == 'all') {
+      await this.runAll()
+      return
     }
     if (!this.actions[action]) {
       throw new Error(`NO SYNCER FOUND ${this.type} ${action}`)

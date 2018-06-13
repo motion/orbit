@@ -7,8 +7,16 @@ import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '~/stores/SettingInfoStore'
+import { TimeAgo } from '~/views/TimeAgo'
+// import * as _ from 'lodash'
 
 const EmptyPane = () => <div>no setting pane</div>
+const statusIcons = {
+  PENDING: { name: 'check', color: '#999' },
+  FAILED: { name: 'remove', color: 'darkred' },
+  PROCESSING: { name: 'sport_user-run', color: 'darkblue' },
+  COMPLETE: { name: 'check', color: 'darkgreen' },
+}
 
 @view({
   store: SettingInfoStore,
@@ -22,12 +30,12 @@ export class Setting extends React.Component {
     const store = this.props.store
     const job = new Job()
     job.type = store.bit.integration
-    job.action = 'mail'
+    job.action = 'all'
     job.status = Job.statuses.PENDING
     await job.save()
     console.log('created new job', job)
     store.update()
-    this.props.appStore.getSettings()
+    this.props.appStore.updateSettings()
   }
 
   removeIntegration = async () => {
@@ -56,9 +64,14 @@ export class Setting extends React.Component {
             <div $$row>
               <jobStatus $$row if={store.job}>
                 {store.bitsCount} total{' '}
-                <UI.Text>&nbsp;| {store.job.status}</UI.Text>
                 <UI.Text if={store.job.updatedAt}>
-                  &nbsp;| <UI.Date>{store.job.updatedAt}</UI.Date>
+                  &nbsp;&middot; Last run:{' '}
+                  <UI.Icon
+                    size={14}
+                    css={{ display: 'inline-block' }}
+                    {...statusIcons[store.job.status]}
+                  />{' '}
+                  <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
                 </UI.Text>
               </jobStatus>
               <load if={!store.job}>Loading...</load>
@@ -71,20 +84,7 @@ export class Setting extends React.Component {
                 tooltip="Refresh"
                 onClick={this.handleRefresh}
               />
-              <UI.Popover
-                openOnHover
-                openOnClick
-                target={<UI.Button icon="gear" />}
-              >
-                <UI.List background>
-                  <UI.ListItem primary="hello2" />
-                  <UI.ListItem primary="hello3" />
-                  <UI.ListItem
-                    primary="remove integration"
-                    onClick={this.removeIntegration}
-                  />
-                </UI.List>
-              </UI.Popover>
+              <UI.Button id="settings" icon="gear" />
             </UI.Row>
           }
         />
@@ -95,6 +95,16 @@ export class Setting extends React.Component {
             update={store.update}
           />
         </body>
+        <UI.Popover openOnHover openOnClick target="#settings">
+          <UI.List background>
+            <UI.ListItem primary="hello2" />
+            <UI.ListItem primary="hello3" />
+            <UI.ListItem
+              primary="remove integration"
+              onClick={this.removeIntegration}
+            />
+          </UI.List>
+        </UI.Popover>
       </>
     )
   }
@@ -104,6 +114,8 @@ export class Setting extends React.Component {
       padding: 20,
       flex: 1,
     },
-    actions: { opacity: 0.2 },
+    actions: {
+      // opacity: 0.9,
+    },
   }
 }

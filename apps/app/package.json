@@ -23,6 +23,7 @@
     "@mcro/services": "^2.0.11",
     "@mcro/slackdown": "^2.0.0",
     "@mcro/ui": "^2.0.11",
+    "@mcro/helpers": "*",
     "color": "^3.0.0",
     "date-fns": "1.29.0",
     "event-kit": "^2.5.0",
@@ -34,7 +35,7 @@
     "mobx-formatters": "^1.0.2",
     "mobx-react": "^5.1.2",
     "mobx-react-devtools": "^5.0.1",
-    "mobx-utils": "4.0.1",
+    "mobx-utils": "5.0.0",
     "pluralize": "^7.0.0",
     "primus": "^7.1.1",
     "react-fast-compare": "^1.0.0",
@@ -46,13 +47,13 @@
     "keyword-extractor": "0.0.15",
     "arrford": "2.0.1",
     "react-spring": "5.3.11",
-    "react-addons-perf": "15.4.2"
+    "invariant": "2.2.4"
   },
   "devDependencies": {
     "@mcro/dev": "^2.0.0"
   },
   "peerDependencies": {
-    "mobx": "^4.3.0",
+    "mobx": "^5.0.2",
     "react": "16.4.0",
     "react-dom": "16.4.0"
   }

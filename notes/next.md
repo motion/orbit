@@ -1,15 +1,17 @@
 # next
 
 * website fixes: better demo video image, mobile image, mobile features images, mobile padding tweaks
+* hmr fix: peek windows dont clear content (immedate: true somewhere)
+* settings panes: gmail/gdocs split, github, slack, folder
+* interaction: keyboard, highlighting
+* peek fix: gdocs, gmail, slack formatting
+* perf: searching
+* look into jira/confluence
+* potentially crawler
 
-1.  News
+bugs:
 
-* has nice github update with newest comment
-* highlight slack conversation
-* shows inline attachment
-* shows relevant people nicely
-* shows related conversations collapsed and expandable nicely
-* click a keyword that goes into:
+* SQLITE_BUSY: database is locked
 
 2.  Search
 

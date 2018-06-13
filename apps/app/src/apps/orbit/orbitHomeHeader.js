@@ -48,7 +48,6 @@ export class OrbitHomeHeader {
             {...exploreButton}
           />
           <UI.Button
-            if={false}
             icon="gear"
             tooltip="Settings"
             $exploreButton

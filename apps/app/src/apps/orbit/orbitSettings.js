@@ -16,8 +16,6 @@ const CheckBoxRow = ({ children, checked }) => (
   </row>
 )
 
-console.log('modelQueryReaction', modelQueryReaction)
-
 class OrbitSettingsStore {
   isPaneActive = false
 

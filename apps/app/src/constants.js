@@ -65,6 +65,14 @@ export const allIntegrations = [
     icon: 'slack',
   },
   {
+    id: 'website',
+    type: 'setting',
+    integration: 'website',
+    title: 'Website',
+    icon: 'webpage',
+    oauth: false,
+  },
+  {
     id: 'folder',
     type: 'setting',
     integration: 'folder',

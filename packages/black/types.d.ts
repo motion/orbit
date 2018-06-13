@@ -32,23 +32,6 @@ export interface Proppable {
 
 export function store<T>(a: T): T & UtilityUsable & Proppable
 
-export type ReactionFunction = (...args: any[]) => any
-
-export function react<B extends ReactionFunction>(
-  a: Function,
-  b?: B,
-  c?: Object,
-): ReturnType<B>
-
-export namespace react {
-  export const cancel: any
-}
-
-export function watch<A extends ReactionFunction>(
-  a: A,
-  b?: Object,
-): ReturnType<A>
-
 export function debugState(cb: Function): void
 
 import * as React from 'react'

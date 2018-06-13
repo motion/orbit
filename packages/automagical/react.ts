@@ -26,8 +26,18 @@ function tsWatch(options) {
   }
 }
 
+// type ReactionFunction<B> = {
+//   (a: Function, b?: Function, c?: Object): ReturnType<B>
+//   cancel: Error
+// }
+
 // @watch decorator
-export function react(a, b?, c?, opts?) {
+export const react = /*<ReactionFunction<any>>*/ function react(
+  a,
+  b?,
+  c?,
+  opts?,
+) {
   if (typeof a === 'function') {
     if (typeof b === 'function') {
       return new Reaction(a, b, c)

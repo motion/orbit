@@ -51,7 +51,13 @@ const trueFn = () => true
 
 // a helper to watch model queries and only trigger reactions when the model changes
 // because our models dont implement a nice comparison, which we could probably do later
-export function modelQueryReaction(query, options?: ReactModelQueryOpts) {
+export function modelQueryReaction(query, b, c?: ReactModelQueryOpts) {
+  let options = b
+  let returnVal = null
+  if (typeof b === 'function') {
+    returnVal = b
+    options = c
+  }
   const condition = (options && options.condition) || trueFn
   const poll = (options && options.poll) || 2000
   const finalOptions = {
@@ -59,18 +65,30 @@ export function modelQueryReaction(query, options?: ReactModelQueryOpts) {
     log: false,
     ...options,
   }
+  let currentVal
   return react(
     () => condition() && now(poll || 2000),
-    async (_, { getValue }) => {
+    async () => {
       const next = await query()
-      const current = getValue()
-      if (Array.isArray(next)) {
-        if (modelsEqual(current, next)) {
+      if (next && currentVal) {
+        if (Array.isArray(next)) {
+          if (modelsEqual(currentVal, next)) {
+            throw react.cancel
+          }
+        } else if (modelEqual(currentVal, next)) {
           throw react.cancel
         }
-      } else if (modelEqual(current, next)) {
-        throw react.cancel
       }
+      currentVal = next
+      // if given explicit reaction, use that as return val
+      if (returnVal) {
+        const res = returnVal(next)
+        if (res instanceof Promise) {
+          return await res
+        }
+        return res
+      }
+      // else just return the new models
       return next
     },
     finalOptions,

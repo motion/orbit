@@ -1,23 +1,21 @@
 import { react, isEqual, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/all'
-import { Bit, Setting } from '@mcro/models'
+import { Bit, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 import * as AppStoreHelpers from './appStoreHelpers'
 import * as AppStoreReactions from './appStoreReactions'
+import { modelQueryReaction } from '@mcro/helpers'
 
 export class AppStore {
   nextIndex = 0
   activeIndex = -1
   settings = {}
-  services = {}
   getResults = null
   lastSelectedPane = ''
 
   async willMount() {
     this.updateScreenSize()
-    this.updateSettings()
-    this.setInterval(this.updateSettings, 2000)
   }
 
   // reactive values
@@ -38,6 +36,28 @@ export class AppStore {
     }
     return this.lastSelectedPane
   }
+
+  services = modelQueryReaction(
+    () =>
+      Setting.find({
+        where: { category: 'integration', token: Not(Equal('good')) },
+      }),
+    settings => {
+      const services = {}
+      for (const setting of settings) {
+        const { type } = setting
+        log(`looking to set up service ${type}`)
+        if (!setting.token || this.services[type]) {
+          continue
+        }
+        if (AppStoreHelpers.allServices[type]) {
+          const ServiceConstructor = AppStoreHelpers.allServices[type]()
+          services[type] = new ServiceConstructor(setting)
+        }
+      }
+      return services
+    },
+  )
 
   updateLastSelectedPane = react(
     () => this.selectedPane,
@@ -305,29 +325,6 @@ export class AppStore {
 
   setGetResults = fn => {
     this.getResults = fn
-  }
-
-  updateSettings = async () => {
-    const settings = await Setting.find()
-    if (settings) {
-      const nextSettings = settings.reduce(
-        (a, b) => ({ ...a, [b.type]: b }),
-        {},
-      )
-      if (!isEqual(this.settings, nextSettings)) {
-        this.settings = nextSettings
-        for (const name of Object.keys(nextSettings)) {
-          const setting = nextSettings[name]
-          if (!setting.token) {
-            continue
-          }
-          if (!this.services[name] && AppStoreHelpers.allServices[name]) {
-            const ServiceConstructor = AppStoreHelpers.allServices[name]()
-            this.services[name] = new ServiceConstructor(setting)
-          }
-        }
-      }
-    }
   }
 
   openSelected = () => {

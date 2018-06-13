@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { OrbitCard } from '~/apps/orbit/orbitCard'
 import { SettingInfoStore } from '~/stores/SettingInfoStore'
 import * as OauthActions from '~/actions/OauthActions'
+import { Setting } from '@mcro/models'
 
 @view.attach('appStore')
 @view({
@@ -14,7 +15,7 @@ export class OrbitSettingCard extends React.Component {
     this.props.store.setBit(this.props.result)
   }
 
-  render({ store, result, setting, isActive, appStore, ...props }) {
+  render({ store, result, isActive, ...props }) {
     return (
       <OrbitCard
         inactive={!isActive}
@@ -42,9 +43,11 @@ export class OrbitSettingCard extends React.Component {
           !isActive &&
           (async () => {
             if (result.oauth === false) {
+              const setting = new Setting()
+              setting.category = 'integration'
+              setting.type = result.type
               setting.token = 'good'
               await setting.save()
-              appStore.updateSettings()
             } else {
               OauthActions.startOauth(result.id)
             }

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@mcro/black": "^2.0.11",
+    "@mcro/constants": "*",
     "@mcro/debug": "^2.0.0",
     "@mcro/helpers": "^2.0.0",
     "@mcro/models": "^2.0.11",

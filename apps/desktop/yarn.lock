@@ -2357,18 +2357,6 @@ passport-facebook@^2.1.1:
   dependencies:
     passport-oauth2 "1.x.x"
 
-passport-github@^1.1.0:
-  version "1.1.0"
-  resolved "http://localhost:4873/passport-github/-/passport-github-1.1.0.tgz#8ce1e3fcd61ad7578eb1df595839e4aea12355d4"
-  dependencies:
-    passport-oauth2 "1.x.x"
-
-passport-google-oauth20@^1.0.0:
-  version "1.0.0"
-  resolved "http://localhost:4873/passport-google-oauth20/-/passport-google-oauth20-1.0.0.tgz#3b960e8a1d70d1dbe794615c827c68c40392a5d0"
-  dependencies:
-    passport-oauth2 "1.x.x"
-
 passport-oauth1@1.x.x:
   version "1.1.0"
   resolved "http://localhost:4873/passport-oauth1/-/passport-oauth1-1.1.0.tgz#a7de988a211f9cf4687377130ea74df32730c918"
@@ -2397,14 +2385,7 @@ passport-oauth@^1.0.0:
     passport-oauth1 "1.x.x"
     passport-oauth2 "1.x.x"
 
-passport-slack-ponycode@0.0.2:
-  version "0.0.2"
-  resolved "http://localhost:4873/passport-slack-ponycode/-/passport-slack-ponycode-0.0.2.tgz#a855adf1136b274344e63384496f0b8c6b00e29a"
-  dependencies:
-    passport-oauth "^1.0.0"
-    passport-strategy "1.0.0"
-
-passport-strategy@1.0.0, passport-strategy@1.x.x:
+passport-strategy@1.x.x:
   version "1.0.0"
   resolved "http://localhost:4873/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
 
@@ -2547,6 +2528,10 @@ randomatic@^3.0.0:
     is-number "^4.0.0"
     kind-of "^6.0.0"
     math-random "^1.0.1"
+
+randomcolor@^0.5.3:
+  version "0.5.3"
+  resolved "http://localhost:4873/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
 
 range-parser@~1.2.0:
   version "1.2.0"

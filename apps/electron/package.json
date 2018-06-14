@@ -46,16 +46,16 @@
     "iohook": "0.2.0",
     "kill-port": "^1.1.0",
     "lodash": "4.17.10",
+    "mobx": "^5.0.2",
     "module-alias": "^2.0.6",
     "raf": "^3.4.0",
     "react": "16.4.0",
     "react-dom": "16.4.0",
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.5.0",
+    "typeorm": "0.2.7",
     "usage": "^0.7.1",
-    "wait-port": "^0.2.2",
-    "mobx": "^5.0.2",
-    "typeorm": "0.2.7"
+    "wait-port": "^0.2.2"
   },
   "devDependencies": {
     "@types/react": "16.3.17",

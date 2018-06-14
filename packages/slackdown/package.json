@@ -9,7 +9,6 @@
     "build": "tsc",
     "watch": "npm run build -- --watch --preserveWatchOutput"
   },
-  "dependencies": {},
   "publishConfig": {
     "access": "public"
   }

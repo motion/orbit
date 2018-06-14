@@ -1,12 +1,34 @@
 #!/bin/bash
 
+. $(dirname $0)/__/common
+
 ARGS=${@:1}
+
+if [ "$(pwd)" = "$ROOT" ]; then
+  if [ -z "$ARGS" ]; then
+    $ROOT/node_modules/.bin/lerna bootstrap
+  else
+    echo ""
+    echo "You're in the root folder! try:"
+    echo ""
+    echo "  install all:      install"
+    echo "  add to package:   in packagename install xyz"
+    echo "  add to package:   cd packages/packagename && install xyz"
+    echo ""
+  fi
+  exit 0
+fi
+
+if [ ! ("$(realpath ../..)" = "$ROOT") ]; then
+  echo "not in a package or app..."
+  exit 1
+fi
 
 echo "install: $ARGS"
 
 if [ -z "$ARGS" ]; then
-  npx lerna bootstrap
+  $ROOT/node_modules/.bin/lerna bootstrap
 else
-  npx lerna add $ARGS
+  $ROOT/node_modules/.bin/lerna add $ARGS
 fi
 

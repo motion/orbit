@@ -337,6 +337,10 @@ puppeteer@1.5.0:
     rimraf "^2.6.1"
     ws "^5.1.1"
 
+randomcolor@^0.5.3:
+  version "0.5.3"
+  resolved "http://localhost:4873/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
+
 readability-from-string@^2.0.0:
   version "2.0.0"
   resolved "http://localhost:4873/readability-from-string/-/readability-from-string-2.0.0.tgz#1a921e66cf0a61a3eff20ef8a829562c0c8f6d81"

@@ -4,17 +4,18 @@
 
 # TODO move this into each package and just have this npm run build in each
 
-# build
-if [ "$1" = "" ]; then
-  cd $ROOT
-  build-all
-  exit 0
-fi
-
-# build --watch
-if [ "$1" = "--watch" ]; then
-  cd $ROOT
-  build-all --watch
+# if in root
+if [ "$(realpath .)" = "$ROOT" ]; then
+  # build
+  if [ "$1" = "" ]; then
+    cd $ROOT
+    build-all
+  fi
+  # build --watch
+  if [ "$1" = "--watch" ]; then
+    cd $ROOT
+    build-all --watch
+  fi
   exit 0
 fi
 

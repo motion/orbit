@@ -498,6 +498,10 @@ property-information@^3.0.0:
   version "3.2.0"
   resolved "http://localhost:4873/property-information/-/property-information-3.2.0.tgz#fd1483c8fbac61808f5fe359e7693a1f48a58331"
 
+randomcolor@^0.5.3:
+  version "0.5.3"
+  resolved "http://localhost:4873/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
+
 react-countup@3.0.3:
   version "3.0.3"
   resolved "http://localhost:4873/react-countup/-/react-countup-3.0.3.tgz#e698a4e28964fe0322a925f52929e3b08db714fd"

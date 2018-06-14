@@ -16,11 +16,10 @@
     "@mcro/debug": "^2.0.0",
     "@mcro/helpers": "^2.0.0",
     "@mcro/models": "^2.0.11",
+    "@mcro/oauth-strategies": "*",
     "@mcro/oracle": "^2.0.11",
-    "@mcro/passport-slack": "^2.0.0",
     "@mcro/r2": "^2.0.0",
     "@mcro/services": "^2.0.11",
-    "@mcro/oauth-strategies": "*",
     "apollo-fetch": "^0.7.0",
     "babel-polyfill": "7.0.0-beta.3",
     "body-parser": "^1.16.1",
@@ -46,6 +45,7 @@
     "kill-port": "^1.1.0",
     "lodash": "4.17.10",
     "math-expression-evaluator": "^1.2.17",
+    "mobx-utils": "5.0.0",
     "module-alias": "^2.0.6",
     "morgan": "^1.8.2",
     "node-gmail-api": "^0.6.1",
@@ -62,16 +62,15 @@
     "source-map-support": "^0.4.16",
     "sqlite": "2.9.2",
     "sudo-prompt": "^7.1.1",
-    "ws": "^3.3.3",
-    "mobx-utils": "5.0.0"
+    "ws": "^3.3.3"
   },
   "peerDependencies": {
     "mobx": "*"
   },
   "devDependencies": {
-    "@types/passport": "0.4.5",
     "@mcro/build": "^2.0.11",
     "@mcro/dev": "^2.0.0",
+    "@types/passport": "0.4.5",
     "nodemon": "^1.15.0",
     "touch": "^3.1.0",
     "watch": "^1.0.2"

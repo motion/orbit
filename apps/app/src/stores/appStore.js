@@ -103,7 +103,10 @@ export class AppStore {
       if (index === -1) {
         this.activeIndex = -1
       }
-      if (index >= this.searchState.result.length) {
+      if (!this.searchState.result.length) {
+        throw react.cancel
+      }
+      if (index >= this.searchState.result) {
         this.activeIndex = this.nextIndex
       }
       throw react.cancel

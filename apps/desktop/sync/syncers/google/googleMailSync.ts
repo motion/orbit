@@ -48,7 +48,7 @@ export default class GoogleMailSync {
   updateSetting = async (setting?) => {
     this.setting = setting || (await Setting.findOne({ type: 'gmail' }))
     this.service = new DriveService(this.setting)
-    this.gmail = new Gmail(setting.token),
+    this.gmail = new Gmail(setting.token)
   }
 
   run = async () => {

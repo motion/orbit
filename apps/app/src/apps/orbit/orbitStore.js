@@ -32,11 +32,10 @@ export default class OrbitStore {
         this.lastPinKey = key
       },
     })
+    this.subscriptions.add({
+      dispose: () => this.appReactions.subscriptions.dispose(),
+    })
     this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))
-  }
-
-  willUnmount() {
-    this.appReactions.subscriptions.dispose()
   }
 
   handleKeyDown = code => {

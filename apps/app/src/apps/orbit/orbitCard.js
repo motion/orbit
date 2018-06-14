@@ -69,14 +69,6 @@ class OrbitCardStore {
     }
   }
 
-  get isOnDeck() {
-    return (
-      this.props.index === 0 &&
-      this.isPaneSelected &&
-      this.props.appStore.activeIndex === -1
-    )
-  }
-
   setPeekTargetOnNextIndex = react(
     () => [
       this.props.appStore.nextIndex === this.props.index,
@@ -286,7 +278,6 @@ export class OrbitCard extends React.Component {
     }
     const BitContent = bitContents(bit)
     store.isSelected
-    store.isOnDeck
     if (typeof BitContent !== 'function') {
       console.error('got a weird one', BitContent)
       return null
@@ -316,7 +307,7 @@ export class OrbitCard extends React.Component {
       position: 'relative',
       maxHeight: '100%',
       transition: 'all ease-in 120ms',
-      padding: [18, 12],
+      padding: [15, 16],
     },
     title: {
       maxWidth: '100%',
@@ -353,7 +344,7 @@ export class OrbitCard extends React.Component {
   }
 
   static theme = ({ store, listItem, borderRadius, inGrid }, theme) => {
-    const { isSelected, isOnDeck } = store
+    const { isSelected } = store
     let hoveredStyle
     let card
     if (listItem) {
@@ -361,12 +352,7 @@ export class OrbitCard extends React.Component {
         background: theme.selected.background,
       }
       let listStateStyle
-      if (isOnDeck) {
-        listStateStyle = {
-          background: theme.base.background.darken(0.01),
-          '&:hover': hoveredStyle,
-        }
-      } else if (isSelected) {
+      if (isSelected) {
         listStateStyle = {
           background: theme.selected.background,
           '&:hover': hoveredStyle,
@@ -386,7 +372,7 @@ export class OrbitCard extends React.Component {
         borderTop: [1, theme.hover.background],
       }
     } else {
-      const borderTop = [1, isSelected ? 'transparent' : theme.hover.background]
+      const border = [1, isSelected ? 'transparent' : theme.hover.background]
       hoveredStyle = {
         background: isSelected
           ? theme.selected.background
@@ -394,12 +380,12 @@ export class OrbitCard extends React.Component {
       }
       card = {
         // background: theme.base.background,
-        borderTop,
+        border,
         '&:hover': hoveredStyle,
       }
       if (isSelected) {
         card = {
-          borderTop,
+          border,
           background: '#fff',
           boxShadow: [[0, 3, 12, [0, 0, 0, 0.08]]],
         }

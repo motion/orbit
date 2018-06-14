@@ -9,7 +9,6 @@ import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitDirectory } from './orbitDirectory'
 import { App } from '@mcro/all'
 import { OrbitDockedPaneStore } from './orbitDockedPaneStore'
-import { OrbitQuickSearch } from './OrbitQuickSearch'
 
 const borderRadius = 16
 const SHADOW_PAD = 120
@@ -40,7 +39,6 @@ class OrbitDocked {
               <glow />
             </glowWrap>
             <orbitInner>
-              <OrbitQuickSearch />
               <orbitRelativeInner>
                 <OrbitHome
                   name="home"

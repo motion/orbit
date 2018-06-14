@@ -10,7 +10,8 @@ const pad = 0
 @view
 class OrbitQuickItem {
   render({ item, appStore, index }) {
-    const active = appStore.quickSearchIndex === index
+    const active =
+      appStore.quickSearchIndex === index && appStore.activeIndex === -1
     return (
       <quickItem $active={active} $inactive={!active}>
         <OrbitIcon icon={`/icons/${item.icon}`} size={iconSize} />
@@ -36,11 +37,8 @@ class OrbitQuickItem {
       },
     },
     inactive: {
-      // opacity: 0.25,
+      opacity: 0.3,
       // filter: 'grayscale(100%)',
-    },
-    active: {
-      background: [0, 0, 0, 0.03],
     },
     description: {
       margin: ['auto', 0],
@@ -49,7 +47,7 @@ class OrbitQuickItem {
       padding: [0, 10],
     },
     main: {
-      fontSize: 14,
+      fontSize: 16,
       fontWeight: 500,
     },
     secondary: {
@@ -63,6 +61,13 @@ class OrbitQuickItem {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
     },
+  }
+  static theme = (_, theme) => {
+    return {
+      active: {
+        background: theme.hover.background,
+      },
+    }
   }
 }
 
@@ -94,6 +99,13 @@ export class OrbitQuickSearch {
       overflowX: 'scroll',
       position: 'relative',
       zIndex: 10,
+      // undo pane
+      margin: [0, -8],
     },
+  }
+  static theme = (_, theme) => {
+    return {
+      borderBottom: [1, theme.hover.background],
+    }
   }
 }

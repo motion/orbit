@@ -278,10 +278,9 @@ export class AppStore {
   quickSearchResults = react(
     () => App.state.query,
     async (_, { whenChanged }) => {
-      if (!this.quickSearchResults.length) {
-        return Desktop.searchState.pluginResults
+      if (this.quickSearchResults.length) {
+        await whenChanged(() => Desktop.searchState.pluginResultsId)
       }
-      await whenChanged(() => Desktop.searchState.pluginResultsId)
       return Desktop.searchState.pluginResults
     },
     { defaultValue: [], immediate: true },

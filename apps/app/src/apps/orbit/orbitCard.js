@@ -69,6 +69,14 @@ class OrbitCardStore {
     }
   }
 
+  get isOnDeck() {
+    return (
+      this.props.index === 0 &&
+      this.isPaneSelected &&
+      this.props.appStore.activeIndex === -1
+    )
+  }
+
   setPeekTargetOnNextIndex = react(
     () => [
       this.props.appStore.nextIndex === this.props.index,
@@ -278,6 +286,7 @@ export class OrbitCard extends React.Component {
     }
     const BitContent = bitContents(bit)
     store.isSelected
+    store.isOnDeck
     if (typeof BitContent !== 'function') {
       console.error('got a weird one', BitContent)
       return null
@@ -344,31 +353,38 @@ export class OrbitCard extends React.Component {
   }
 
   static theme = ({ store, listItem, borderRadius, inGrid }, theme) => {
-    const { isSelected } = store
+    const { isSelected, isOnDeck } = store
     let hoveredStyle
     let card
     if (listItem) {
       hoveredStyle = {
         background: theme.selected.background,
       }
-      const listCardStyle = {
+      let listStateStyle
+      if (isOnDeck) {
+        listStateStyle = {
+          background: theme.base.background.darken(0.015),
+          '&:hover': hoveredStyle,
+        }
+      } else if (isSelected) {
+        listStateStyle = {
+          background: theme.selected.background,
+          '&:hover': hoveredStyle,
+        }
+      } else {
+        listStateStyle = {
+          background: 'transparent',
+          '&:hover': {
+            background: theme.hover.background,
+          },
+        }
+      }
+      card = {
+        ...listStateStyle,
         margin: [0, -12],
         padding: [18, 20],
         borderTop: [1, theme.hover.background],
       }
-      card = isSelected
-        ? {
-            ...listCardStyle,
-            background: theme.selected.background,
-            '&:hover': hoveredStyle,
-          }
-        : {
-            ...listCardStyle,
-            background: 'transparent',
-            '&:hover': {
-              background: theme.hover.background,
-            },
-          }
     } else {
       const borderTop = [1, isSelected ? 'transparent' : theme.hover.background]
       hoveredStyle = {

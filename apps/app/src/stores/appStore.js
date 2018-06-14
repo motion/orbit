@@ -100,13 +100,13 @@ export class AppStore {
   resetActiveIndexOnKeyPastEnds = react(
     () => this.nextIndex,
     index => {
-      // if card selected, let card do its thing
-      if (index >= 0 || index < this.searchState.results.length) {
-        throw react.cancel
+      if (index === -1) {
+        this.activeIndex = -1
       }
-      // otherwise set it
-      this.clearSelected()
-      this.updateActiveIndex()
+      if (index >= this.searchState.result.length) {
+        this.activeIndex = this.nextIndex
+      }
+      throw react.cancel
     },
   )
 
@@ -123,7 +123,7 @@ export class AppStore {
     () => this.searchState && Math.random(),
     async (_, { sleep }) => {
       await sleep(16)
-      this.nextIndex = 0
+      this.nextIndex = -1
       this.activeIndex = -1
       // this.updateActiveIndex()
     },

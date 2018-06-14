@@ -1,6 +1,6 @@
 import { store } from '@mcro/black/store'
 import { Setting } from '@mcro/models'
-import driveServiceHelpers from './driveServiceHelpers'
+import driveServiceHelpers, { DriveServiceHelpers } from './driveServiceHelpers'
 import { sleep } from '@mcro/helpers'
 
 export type DriveFileObject = {
@@ -13,17 +13,17 @@ export type DriveFileObject = {
   modifiedTime: string
 }
 
-type PageQuery = {
+export type PageQuery = {
   pageToken?: string
 }
 
 @store
 export class DriveService {
-  helpers = driveServiceHelpers({})
+  helpers: DriveServiceHelpers
   setting: Setting
 
-  fetch2 = (path, ...rest) => this.helpers.fetch(`/drive/v2${path}`, ...rest)
-  fetch = (path, ...rest) => this.helpers.fetch(`/drive/v3${path}`, ...rest)
+  fetch2 = (path, options?) => this.helpers.fetch(`/drive/v2${path}`, options)
+  fetch = (path, options?) => this.helpers.fetch(`/drive/v3${path}`, options)
 
   constructor(setting) {
     this.updateSetting(setting)
@@ -59,7 +59,7 @@ export class DriveService {
     while (changes.length < max && requests < maxRequests) {
       requests++
       newStartPageToken--
-      const next = await this.fetchChanges(newStartPageToken)
+      const next = await this.fetchChanges(`${newStartPageToken}`)
       changes = [...changes, ...next.changes]
     }
     return changes

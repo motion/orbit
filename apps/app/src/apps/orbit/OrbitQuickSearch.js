@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 // import { App } from '@mcro/all'
 import { OrbitIcon } from './orbitIcon'
 
-const iconSize = 42
+const iconSize = 38
 const iconPad = 15
 const pad = 0
 
@@ -12,9 +12,9 @@ class OrbitQuickItem {
   render({ item, appStore, index }) {
     const active = appStore.quickSearchIndex === index
     return (
-      <quickItem $active={active}>
+      <quickItem $active={active} $inactive={!active}>
         <OrbitIcon icon={`/icons/${item.icon}`} size={iconSize} />
-        <description if={active}>
+        <description>
           <main $ellipse>{item.title}</main>
           <secondary $ellipse>{item.id}</secondary>
         </description>
@@ -24,7 +24,9 @@ class OrbitQuickItem {
 
   static style = {
     quickItem: {
+      width: 240,
       flexFlow: 'row',
+      overflow: 'hidden',
       padding: iconPad,
       '&:hover': {
         background: [0, 0, 0, 0.025],
@@ -33,20 +35,29 @@ class OrbitQuickItem {
         background: [0, 0, 0, 0.035],
       },
     },
+    inactive: {
+      // opacity: 0.25,
+      // filter: 'grayscale(100%)',
+    },
     active: {
       background: [0, 0, 0, 0.03],
-      width: 200,
-      overflow: 'hidden',
     },
     description: {
+      margin: ['auto', 0],
       flex: 1,
       overflow: 'hidden',
       padding: [0, 10],
     },
+    main: {
+      fontSize: 14,
+      fontWeight: 500,
+    },
     secondary: {
       opacity: 0.3,
+      fontSize: 12,
     },
     ellipse: {
+      display: 'block',
       width: '100%',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -79,6 +90,10 @@ export class OrbitQuickSearch {
       paddingLeft: pad,
       height: iconSize + pad * 2 + iconPad * 2,
       alignItems: 'center',
+      width: '100%',
+      overflowX: 'scroll',
+      position: 'relative',
+      zIndex: 10,
     },
   }
 }

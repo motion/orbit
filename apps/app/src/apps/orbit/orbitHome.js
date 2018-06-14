@@ -106,14 +106,14 @@ export class OrbitHome {
     const dayNum = now.getMonth()
     return (
       <OrbitDockedPane name="home">
-        <header>
+        <header if={false}>
           <SubTitle>
             {day} {month} {dayNum}
             <span $super>{postfix[dayNum - 1]}</span>
           </SubTitle>
           <div $$flex />
         </header>
-        <content>
+        <content css={{ paddingTop: 12 }}>
           <Masonry if={store.results.length}>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2

@@ -42,11 +42,20 @@ const adjust = name => {
   }
 }
 
-export const OrbitIcon = ({ icon, imageStyle, size = 25, ...props }) => {
+export const OrbitIcon = ({
+  icon,
+  imageStyle,
+  orbitIconStyle,
+  size = 25,
+  color,
+  ...props
+}) => {
   const sizeProps = {
     width: size,
     height: size,
   }
+  const extImg = icon.indexOf('http') === 0 ? icon : null
+  const iconImg = icons[icon] ? icons[icon] : extImg
   return (
     <icon
       css={{
@@ -54,19 +63,25 @@ export const OrbitIcon = ({ icon, imageStyle, size = 25, ...props }) => {
         textAlign: 'center',
         ...adjust(icon),
         ...sizeProps,
+        ...(iconImg && orbitIconStyle),
       }}
       {...props}
     >
       <img
-        if={icons[icon]}
-        src={icons[icon]}
-        css={{ width: '100%', height: '100%', ...imageStyle }}
+        if={iconImg}
+        src={iconImg}
+        css={{
+          width: '100%',
+          height: '100%',
+          ...imageStyle,
+        }}
       />
       <UI.Icon
-        if={!icons[icon]}
+        if={!iconImg}
         name={icon}
         css={{ display: 'inline-block', ...sizeProps, ...imageStyle }}
-        size={size}
+        size={size * 0.65}
+        color={color}
       />
     </icon>
   )

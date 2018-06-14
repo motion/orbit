@@ -7,6 +7,8 @@ import * as AppStoreHelpers from './appStoreHelpers'
 import * as AppStoreReactions from './appStoreReactions'
 import { modelQueryReaction } from '@mcro/helpers'
 
+let hasRun = false
+
 export class AppStore {
   quickSearchIndex = 0
   nextIndex = 0
@@ -241,8 +243,11 @@ export class AppStore {
           const id0 = Desktop.searchState.pluginResultsId
           const id1 = this.bitResultsId
           await Promise.all([
-            when(() => id0 !== Desktop.searchState.pluginResultsId, 200),
-            when(() => id1 !== this.bitResultsId, 200),
+            when(
+              () => id0 !== Desktop.searchState.pluginResultsId,
+              hasRun ? 200 : 2000,
+            ),
+            when(() => id1 !== this.bitResultsId, hasRun ? 200 : 2000),
           ])
         } catch (err) {
           if (err instanceof ReactionTimeoutError) {
@@ -261,6 +266,7 @@ export class AppStore {
         // sort
         results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
       }
+      hasRun = true
       console.log('returning new searchState')
       return {
         query,

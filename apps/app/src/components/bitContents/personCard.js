@@ -7,12 +7,14 @@ export class PersonCard extends React.Component {
   render({ children, bit }) {
     return children({
       // preview: bit.data.profile.email,
+      title: bit.name,
+      icon: 'users_square',
+      iconProps: {
+        color: '#ccc',
+      },
       preview: (
         <test>
           <img $avatar src={bit.data.profile.image_512} />
-          <UI.Text fontWeight={800} alpha={1}>
-            {bit.name}
-          </UI.Text>
           <subtitles>
             <location>{bit.data.tz}</location>
             <a href={`mailto:${bit.data.profile.email}`}>

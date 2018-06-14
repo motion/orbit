@@ -164,6 +164,7 @@ export class OrbitCard extends React.Component {
       permalink,
       date,
       people,
+      iconProps: contentIconProps,
     } = contentProps
     const {
       store,
@@ -189,7 +190,9 @@ export class OrbitCard extends React.Component {
         size={hasSubtitle ? 14 : 18}
         $orbitIcon
         imageStyle={imageStyle}
+        orbitIconStyle={{ marginRight: 6 }}
         {...tiny && tinyProps.iconProps}
+        {...contentIconProps}
         {...iconProps}
       />
     )
@@ -238,10 +241,9 @@ export class OrbitCard extends React.Component {
               </UI.Text>
               {typeof subtitle !== 'string' && subtitle}
               <space $$flex />
-              <UI.Text if={date} size={0.95}>
+              <UI.Text if={date} onClick={permalink} size={0.95}>
                 <TimeAgo date={date} />
               </UI.Text>
-              <permalink if={permalink}>{permalink}</permalink>
             </subtitle>
             <preview if={preview && !children}>
               {typeof preview !== 'string' && preview}
@@ -307,7 +309,7 @@ export class OrbitCard extends React.Component {
       position: 'relative',
       maxHeight: '100%',
       transition: 'all ease-in 120ms',
-      padding: [15, 16],
+      padding: 18,
     },
     title: {
       maxWidth: '100%',
@@ -324,7 +326,6 @@ export class OrbitCard extends React.Component {
       position: 'absolute',
       top: 0,
       right: 0,
-      margin: [0, 6, 0, 0],
       // filter: 'grayscale(100%)',
       opacity: 0.8,
     },

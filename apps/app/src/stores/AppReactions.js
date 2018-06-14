@@ -56,10 +56,7 @@ export class AppReactions {
       }
     })
     this.subscriptions.add({
-      dispose: () => {
-        console.log('disposing app onMessage')
-        dispose()
-      },
+      dispose,
     })
   }
 

@@ -107,11 +107,14 @@ function getSortedRows(
   let sortedRows = rows.sort((a, b) => {
     const aVal = a.columns[sortOrder.key].sortValue
     const bVal = b.columns[sortOrder.key].sortValue
-
-    if (typeof aVal === 'string' && typeof bVal === 'string') {
+    const aType = typeof aVal
+    const bType = typeof bVal
+    if (aType === 'string' && bType === 'string') {
       return aVal.localeCompare(bVal)
-    } else if (typeof aVal === 'number' && typeof bVal === 'number') {
+    } else if (aType === 'number' && bType === 'number') {
       return aVal - bVal
+    } else if (aType === 'function' && bType === 'function') {
+      return aVal() - bVal()
     } else {
       throw new Error('Unsure how to sort this')
     }

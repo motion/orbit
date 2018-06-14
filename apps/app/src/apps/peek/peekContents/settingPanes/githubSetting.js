@@ -9,13 +9,9 @@ import * as _ from 'lodash'
 
 @view
 class CheckBox {
-  render({ name, getValue, onChange }) {
+  render({ isActive, onChange }) {
     return (
-      <input
-        type="checkbox"
-        onChange={onChange}
-        defaultChecked={getValue(name)}
-      />
+      <input type="checkbox" onChange={onChange} defaultChecked={isActive()} />
     )
   }
   static style = {
@@ -36,18 +32,27 @@ const columnSizes = {
 const columns = {
   repo: {
     value: 'Repository',
+    sortable: true,
+    resizable: true,
   },
   org: {
     value: 'Organization',
+    sortable: true,
+    resizable: true,
   },
   lastCommit: {
     value: 'Last Commit',
+    sortable: true,
+    resizable: true,
   },
   numIssues: {
     value: 'Issues',
+    sortable: true,
+    resizable: true,
   },
   active: {
     value: 'Active',
+    sortable: true,
   },
 }
 
@@ -88,27 +93,33 @@ class GithubStore {
     repos => {
       log('react to all repos')
       return repos.map((repo, index) => {
+        const orgName = repo.fullName.split('/')[0]
+        const isActive = () => this.isSyncing(repo.fullName)
         return {
           key: `${repo.org}${repo.name}${index}`,
           columns: {
             org: {
-              value: repo.fullName.split('/')[0],
+              sortValue: orgName,
+              value: orgName,
             },
             repo: {
+              sortValue: repo.name,
               value: repo.name,
             },
             lastCommit: {
+              sortValue: repo.pushedAt.getTime(),
               value: <TimeAgo>{repo.pushedAt}</TimeAgo>,
             },
             numIssues: {
+              sortValue: repo.openIssuesCount,
               value: repo.openIssuesCount,
             },
             active: {
+              sortValue: isActive,
               value: (
                 <CheckBox
                   onChange={this.onSync(repo.fullName)}
-                  getValue={this.isSyncing}
-                  name={repo.fullName}
+                  isActive={isActive}
                 />
               ),
             },

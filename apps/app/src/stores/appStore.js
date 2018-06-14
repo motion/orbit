@@ -8,6 +8,7 @@ import * as AppStoreReactions from './appStoreReactions'
 import { modelQueryReaction } from '@mcro/helpers'
 
 export class AppStore {
+  quickSearchIndex = 0
   nextIndex = 0
   activeIndex = -1
   settings = {}
@@ -97,7 +98,7 @@ export class AppStore {
   updateResults = react(
     () => [
       Desktop.state.lastBitUpdatedAt,
-      Desktop.searchState.pluginResultId || 0,
+      Desktop.searchState.pluginResultsId || 0,
     ],
     () => {
       if (this.searchState.results && this.searchState.results.length) {
@@ -198,7 +199,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when, cancel }) => {
+    async ([query, thisGetResults], { when }) => {
       if (!query) {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
@@ -240,7 +241,7 @@ export class AppStore {
           const id0 = Desktop.searchState.pluginResultsId
           const id1 = this.bitResultsId
           await Promise.all([
-            when(() => id0 !== Desktop.searchState.pluginResultId, 200),
+            when(() => id0 !== Desktop.searchState.pluginResultsId, 200),
             when(() => id1 !== this.bitResultsId, 200),
           ])
         } catch (err) {
@@ -272,6 +273,18 @@ export class AppStore {
       immediate: true,
       log: false,
     },
+  )
+
+  quickSearchResults = react(
+    () => App.state.query,
+    async (_, { whenChanged }) => {
+      if (!this.quickSearchResults.length) {
+        return Desktop.searchState.pluginResults
+      }
+      await whenChanged(() => Desktop.searchState.pluginResultsId)
+      return Desktop.searchState.pluginResults
+    },
+    { defaultValue: [], immediate: true },
   )
 
   clearSelected = () => {

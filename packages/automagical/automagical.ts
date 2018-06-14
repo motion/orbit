@@ -482,7 +482,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   }
 
   const whenChanged = (condition, dontCompare) => {
-    let oldVal
+    let oldVal = condition()
     let curVal
     return new Promise((resolve, reject) => {
       if (!reactionID) {
@@ -490,10 +490,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       let cancelWhen = false
       Mobx.when(() => {
-        if (typeof oldVal === 'undefined') {
-          oldVal = condition()
-          return false
-        }
         curVal = condition()
         if (dontCompare) {
           return true
@@ -501,7 +497,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return !Mobx.comparer.structural(curVal, oldVal)
       })
         .then(() => {
-          if (cancelWhen) return
+          if (cancelWhen) {
+            return
+          }
           resolve(curVal)
         })
         .catch(reject)

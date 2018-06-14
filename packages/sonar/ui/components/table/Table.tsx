@@ -49,7 +49,7 @@ const TableOuter = FlexBox.extends(
     border: props => (props.floating ? '1px solid #c9ced4' : 'none'),
     borderRadius: props => (props.floating ? 2 : 'none'),
     height: props => (props.autoHeight ? 'auto' : '100%'),
-    overflow: props => (props.autoHeight ? 'visible' : 'auto'),
+    overflow: props => (props.autoHeight ? 'hidden' : 'auto'),
   },
   {
     ignoreAttributes: ['floating', 'autoHeight'],

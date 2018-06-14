@@ -8,9 +8,10 @@ import { TimeAgo } from '~/views/TimeAgo'
 
 const columnSizes = {
   org: 'flex',
-  repo: '30%',
+  repo: '25%',
   lastCommit: '20%',
-  numIssues: '10%',
+  numIssues: '12%',
+  active: '10%',
 }
 
 const columns = {
@@ -24,7 +25,10 @@ const columns = {
     value: 'Last Commit',
   },
   numIssues: {
-    value: '# Issues',
+    value: 'Issues',
+  },
+  active: {
+    value: 'Active',
   },
 }
 
@@ -65,7 +69,6 @@ class GithubStore {
     () => this.allRepos,
     repos => {
       return repos.map((repo, index) => {
-        console.log('repo', repo)
         return {
           key: `${repo.org}${repo.name}${index}`,
           columns: {
@@ -80,6 +83,9 @@ class GithubStore {
             },
             numIssues: {
               value: repo.openIssuesCount,
+            },
+            active: {
+              value: <input type="checkbox" />,
             },
           },
         }
@@ -137,14 +143,12 @@ export class GithubSetting {
               if={store.rows}
               rowLineHeight={28}
               floating={false}
-              autoHeight
               multiline
               columnSizes={columnSizes}
               columns={columns}
               onRowHighlighted={this.onRowHighlighted}
               multiHighlight
               rows={store.rows}
-              stickyBottom
               actions={<button onClick={this.clear}>Clear Table</button>}
             />
           </section>
@@ -171,6 +175,9 @@ export class GithubSetting {
   }
 
   static style = {
+    container: {
+      flex: 1,
+    },
     add: {
       marginLeft: 15,
       marginTop: 15,

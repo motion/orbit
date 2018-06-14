@@ -36,7 +36,7 @@ const TableBodyContainer = FlexColumn.extends(
     flexGrow: props => (props.autoHeight ? 0 : 1),
     flexShrink: props => (props.autoHeight ? 0 : 1),
     flexBasis: props => (props.autoHeight ? 'content' : 0),
-    overflow: props => (props.autoHeight ? 'hidden' : 'auto'),
+    overflow: props => (props.autoHeight ? 'hidden' : 'visible'),
     maxWidth: '100%',
   },
   {

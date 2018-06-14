@@ -111,7 +111,7 @@ export class Setting extends React.Component {
 
   static style = {
     body: {
-      // padding: 20,
+      overflow: 'hidden',
       flex: 1,
     },
     actions: {

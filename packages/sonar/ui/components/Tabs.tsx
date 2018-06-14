@@ -12,6 +12,10 @@ import FlexRow from './FlexRow'
 import { colors } from './colors'
 import Tab from './Tab'
 
+const TabContainer = FlexColumn.extends({
+  height: 'auto'
+})
+
 const TabList = FlexRow.extends({
   alignItems: 'stretch',
 })
@@ -73,7 +77,7 @@ const OrderableContainer = styled.view({
 })
 
 const TabContent = styled.view({
-  height: '100%',
+  height 'auto',
   overflow: 'auto',
   width: '100%',
 })
@@ -259,7 +263,7 @@ export default function Tabs(props: {
   }
 
   return (
-    <FlexColumn fill={true}>
+    <TabContainer fill={true}>
       <TabList>
         {before}
         {tabList}
@@ -267,6 +271,6 @@ export default function Tabs(props: {
       </TabList>
       {tabContents}
       {tabSiblings}
-    </FlexColumn>
+    </TabContainer>
   )
 }

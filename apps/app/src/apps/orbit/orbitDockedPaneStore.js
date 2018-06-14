@@ -26,6 +26,17 @@ export class OrbitDockedPaneStore {
     })
   }
 
+  setDirectoryOnAt = react(
+    () => App.state.query[0] === '@',
+    isDir => {
+      if (isDir) {
+        this.setActivePane('directory')
+      } else if (this.activePane === 'directory') {
+        this.setActivePane(this.lastActivePane)
+      }
+    },
+  )
+
   setActivePane = name => {
     this.paneIndex = this.panes.findIndex(val => val === name)
   }
@@ -34,11 +45,14 @@ export class OrbitDockedPaneStore {
     if (!App.orbitState.docked) {
       return this.panes[this.paneIndex]
     }
-    if (App.state.query) {
+    const active = this.panes[this.paneIndex]
+    if (active === 'home' && App.state.query) {
       return 'search'
     }
-    return this.panes[this.paneIndex]
+    return active
   }
+
+  lastActivePane = react(() => this.activePane, _ => _, { delayValue: 1 })
 
   clearPeekOnActivePaneChange = react(
     () => this.activePane,

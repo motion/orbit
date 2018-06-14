@@ -1,6 +1,7 @@
 import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import debug from '@mcro/debug'
+import { ReactionOptions } from './types'
 import {
   Reaction,
   ReactionRejectionError,
@@ -13,18 +14,6 @@ export * from './constants'
 
 const root = typeof window !== 'undefined' ? window : require('global')
 const IS_PROD = process.env.NODE_ENV === 'production'
-
-export type ReactionOptions = {
-  fireImmediately?: boolean
-  immediate?: boolean
-  equals?: Function
-  log?: false | 'state' | 'all'
-  delay?: number
-  isIf?: boolean
-  delayValue?: boolean
-  onlyUpdateIfChanged?: boolean
-  defaultValue?: any
-}
 
 export function getReactionOptions(userOptions?: ReactionOptions) {
   let options: ReactionOptions = {

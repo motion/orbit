@@ -1,5 +1,5 @@
-import { Bit } from '@mcro/models'
-import { SlackService } from '@mcro/services'
+import { Bit, Setting } from '@mcro/models'
+import { SlackService, Slack } from '@mcro/services'
 import * as _ from 'lodash'
 import * as r2 from '@mcro/r2'
 import { createInChunks } from '~/sync/helpers'
@@ -9,14 +9,12 @@ import debug from '@mcro/debug'
 const log = debug('sync slackAttachment')
 
 export default class SlackAttachmentSync {
+  setting: Setting
   service: SlackService
 
-  constructor(service: SlackService) {
-    this.service = service
-  }
-
-  get setting() {
-    return this.service.setting
+  constructor(setting: Setting) {
+    this.setting = setting
+    this.service = new SlackService(this.setting)
   }
 
   get lastSync() {

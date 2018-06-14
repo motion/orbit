@@ -6,8 +6,9 @@ export const settingToResult = setting => ({
   type: 'setting',
   integration: setting.type,
   icon: setting.type,
-  title: Constants.allIntegrations.find(x => x.integration === setting.type)
-    .title,
+  title: (
+    Constants.allIntegrations.find(x => x.integration === setting.type) || {}
+  ).title,
 })
 
 export const getSlackDate = ts => {

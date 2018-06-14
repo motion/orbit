@@ -129,6 +129,9 @@ export class OrbitHome {
                   hoverToSelect
                   isExpanded={false && isExpanded}
                   style={isExpanded && this.span2}
+                  css={{
+                    opacity: index > 5 ? 0.7 : index > 8 ? 0.5 : 1,
+                  }}
                   itemProps={{
                     shownLimit: 3,
                     contentStyle: {

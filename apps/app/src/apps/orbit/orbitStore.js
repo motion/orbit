@@ -33,7 +33,10 @@ export default class OrbitStore {
       },
     })
     this.subscriptions.add({
-      dispose: () => this.appReactions.subscriptions.dispose(),
+      dispose: () => {
+        console.log('dispose me')
+        this.appReactions.subscriptions.dispose()
+      },
     })
     this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))
   }

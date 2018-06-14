@@ -21,7 +21,6 @@ export class AppReactions {
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
     if (window.setupAppReactions) {
-      debugger
       console.warn('!!!!!!!!!!!!!!!!!!!!! setting up app reactions')
     }
     const dispose = App.onMessage(async msg => {

@@ -167,12 +167,11 @@ class OrbitDocked {
       height: 200,
       position: 'absolute',
       transform: {
-        y: -100,
-        x: 150,
-        scale: 2,
+        x: '89%',
+        scale: 2.5,
       },
       filter: {
-        blur: 150,
+        blur: 100,
       },
     },
   }

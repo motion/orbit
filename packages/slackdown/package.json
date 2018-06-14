@@ -7,9 +7,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch --preserveWatchOutput"
   },
-  "dependencies": {},
   "publishConfig": {
     "access": "public"
   }

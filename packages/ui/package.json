@@ -21,7 +21,7 @@
     "prop-types": "^15.6.0",
     "raf-throttle": "^2.0.3",
     "react-fast-compare": "^1.0.0",
-    "react-hot-loader": "^4.2.0",
+    "react-hot-loader": "4.3.2",
     "react-resize-detector": "^2.3.0",
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.13.0",

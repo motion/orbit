@@ -1,23 +1,21 @@
-import { react, isEqual, ReactionTimeoutError } from '@mcro/black'
+import { react, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/all'
-import { Bit, Setting } from '@mcro/models'
+import { Bit, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 import * as AppStoreHelpers from './appStoreHelpers'
 import * as AppStoreReactions from './appStoreReactions'
+import { modelQueryReaction } from '@mcro/helpers'
 
 export class AppStore {
   nextIndex = 0
   activeIndex = -1
   settings = {}
-  services = {}
   getResults = null
   lastSelectedPane = ''
 
   async willMount() {
     this.updateScreenSize()
-    this.updateSettings()
-    this.setInterval(this.updateSettings, 2000)
   }
 
   // reactive values
@@ -39,6 +37,33 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
+  settings = modelQueryReaction(
+    () => Setting.find(),
+    settings =>
+      settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {}),
+  )
+
+  services = modelQueryReaction(
+    () =>
+      Setting.find({
+        where: { category: 'integration', token: Not(Equal('good')) },
+      }),
+    settings => {
+      const services = {}
+      for (const setting of settings) {
+        const { type } = setting
+        if (!setting.token || this.services[type]) {
+          continue
+        }
+        if (AppStoreHelpers.allServices[type]) {
+          const ServiceConstructor = AppStoreHelpers.allServices[type]()
+          services[type] = new ServiceConstructor(setting)
+        }
+      }
+      return services
+    },
+  )
+
   updateLastSelectedPane = react(
     () => this.selectedPane,
     val => {
@@ -49,6 +74,16 @@ export class AppStore {
   clearPeekOnSelectedPaneChange = react(
     () => this.selectedPane,
     this.clearSelected,
+  )
+
+  clearPeekOnInactiveIndex = react(
+    () => this.activeIndex,
+    index => {
+      if (index >= 0 && index < this.searchState.results.length) {
+        throw react.cancel
+      }
+      this.clearSelected()
+    },
   )
 
   updateScreenSize() {
@@ -75,14 +110,14 @@ export class AppStore {
   resetActiveIndexOnKeyPastEnds = react(
     () => this.nextIndex,
     index => {
-      // if card selected, let card do its thing
-      if (index >= 0 || index < this.searchState.results.length) {
-        throw react.cancel
+      console.log('nextIndex', index)
+      if (index === -1) {
+        this.activeIndex = -1
       }
-      console.log('updating')
-      // otherwise set it
-      this.clearSelected()
-      this.updateActiveIndex()
+      if (index >= this.searchState.results.length) {
+        this.activeIndex = this.nextIndex
+      }
+      throw react.cancel
     },
   )
 
@@ -99,7 +134,7 @@ export class AppStore {
     () => this.searchState && Math.random(),
     async (_, { sleep }) => {
       await sleep(16)
-      this.nextIndex = 0
+      this.nextIndex = -1
       this.activeIndex = -1
       // this.updateActiveIndex()
     },
@@ -276,8 +311,9 @@ export class AppStore {
       }
       this.clearSelected()
     } else {
-      console.log('next index', index)
-      this.nextIndex = index
+      if (typeof index === 'number') {
+        this.nextIndex = index
+      }
     }
     return false
   }
@@ -305,29 +341,6 @@ export class AppStore {
 
   setGetResults = fn => {
     this.getResults = fn
-  }
-
-  updateSettings = async () => {
-    const settings = await Setting.find()
-    if (settings) {
-      const nextSettings = settings.reduce(
-        (a, b) => ({ ...a, [b.type]: b }),
-        {},
-      )
-      if (!isEqual(this.settings, nextSettings)) {
-        this.settings = nextSettings
-        for (const name of Object.keys(nextSettings)) {
-          const setting = nextSettings[name]
-          if (!setting.token) {
-            continue
-          }
-          if (!this.services[name] && AppStoreHelpers.allServices[name]) {
-            const ServiceConstructor = AppStoreHelpers.allServices[name]()
-            this.services[name] = new ServiceConstructor(setting)
-          }
-        }
-      }
-    }
   }
 
   openSelected = () => {

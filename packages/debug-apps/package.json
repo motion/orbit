@@ -7,11 +7,10 @@
   },
   "scripts": {
     "build": "tsc",
-    "watch": "npm run build -- --watch",
+    "watch": "npm run build -- --watch --preserveWatchOutput",
     "start": "node --max_old_space_size=4096 ./_/index"
   },
   "dependencies": {
-    "@mcro/chrome-extensions": "^2.0.0",
     "@mcro/r2": "^2.0.0",
     "debug": "^3.1.0",
     "express": "^4.12.3",

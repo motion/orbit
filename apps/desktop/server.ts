@@ -6,7 +6,7 @@ import session from 'express-session'
 import bodyParser from 'body-parser'
 import * as Constants from '~/constants'
 import OAuth from './server/oauth'
-import OAuthStrategies from './server/oauth.strategies'
+import OAuthStrategies from '@mcro/oauth-strategies'
 import Passport from 'passport'
 import killPort from 'kill-port'
 import Fs from 'fs'
@@ -152,8 +152,8 @@ export default class Server {
       '/auth', // TODO change secret
       session({ secret: 'orbit', resave: false, saveUninitialized: true }),
     )
-    this.app.use('/auth', Passport.initialize({}))
-    this.app.use('/auth', Passport.session({}))
+    this.app.use('/auth', Passport.initialize({ userProperty: 'currentUser' }))
+    this.app.use('/auth', Passport.session({ pauseStream: false }))
     this.setupAuthRefreshRoutes()
     this.setupAuthReplyRoutes()
   }

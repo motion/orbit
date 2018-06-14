@@ -1,4 +1,4 @@
-import { react } from '@mcro/automagical'
+import { react, ReactionOptions } from '@mcro/automagical'
 import { now } from 'mobx-utils'
 import * as EventKit from 'event-kit'
 export * from './events'
@@ -13,35 +13,6 @@ export const idFn = _ => _
 import { comparer } from 'mobx'
 export const isEqual = comparer.structural
 
-export type ReactionOptions = {
-  fireImmediately?: boolean
-  immediate?: boolean
-  equals?: Function
-  log?: false | 'state' | 'all'
-  delay?: number
-  isIf?: boolean
-  delayValue?: boolean
-  onlyUpdateIfChanged?: boolean
-  defaultValue?: any
-}
-
-export function getReactionOptions(userOptions?: ReactionOptions) {
-  let options: ReactionOptions = {
-    equals: comparer.structural,
-  }
-  if (userOptions.immediate) {
-    options.fireImmediately = true
-    delete userOptions.immediate
-  }
-  if (userOptions === true) {
-    options.fireImmediately = true
-  }
-  if (userOptions instanceof Object) {
-    options = { ...options, ...userOptions }
-  }
-  return options
-}
-
 type ReactModelQueryOpts = ReactionOptions & {
   condition: Function
   poll?: number
@@ -51,7 +22,13 @@ const trueFn = () => true
 
 // a helper to watch model queries and only trigger reactions when the model changes
 // because our models dont implement a nice comparison, which we could probably do later
-export function modelQueryReaction(query, options?: ReactModelQueryOpts) {
+export function modelQueryReaction(query, b, c?: ReactModelQueryOpts) {
+  let options = b
+  let returnVal = null
+  if (typeof b === 'function') {
+    returnVal = b
+    options = c
+  }
   const condition = (options && options.condition) || trueFn
   const poll = (options && options.poll) || 2000
   const finalOptions = {
@@ -59,18 +36,30 @@ export function modelQueryReaction(query, options?: ReactModelQueryOpts) {
     log: false,
     ...options,
   }
+  let currentVal
   return react(
     () => condition() && now(poll || 2000),
-    async (_, { getValue }) => {
+    async () => {
       const next = await query()
-      const current = getValue()
-      if (Array.isArray(next)) {
-        if (modelsEqual(current, next)) {
+      if (next && currentVal) {
+        if (Array.isArray(next)) {
+          if (modelsEqual(currentVal, next)) {
+            throw react.cancel
+          }
+        } else if (modelEqual(currentVal, next)) {
           throw react.cancel
         }
-      } else if (modelEqual(current, next)) {
-        throw react.cancel
       }
+      currentVal = next
+      // if given explicit reaction, use that as return val
+      if (returnVal) {
+        const res = returnVal(next)
+        if (res instanceof Promise) {
+          return await res
+        }
+        return res
+      }
+      // else just return the new models
       return next
     },
     finalOptions,

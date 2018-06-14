@@ -10,9 +10,11 @@
     "build-app": "NODE_ENV=production mcro-build --prod --report"
   },
   "dependencies": {
+    "@babel/runtime": "7.0.0-beta.47",
     "@mcro/black": "^2.0.11",
     "@mcro/build": "^2.0.11",
     "@mcro/gloss": "^2.0.0",
+    "@mcro/sonar": "*",
     "@mcro/ui": "^2.0.11"
   },
   "peerDependencies": {

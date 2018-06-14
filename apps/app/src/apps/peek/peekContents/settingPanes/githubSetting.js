@@ -1,20 +1,76 @@
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { GithubService } from '@mcro/services'
 import { Bits } from '~/views/bits'
-import { GithubOrg } from './githubPanes/githubOrg'
+import { Tabs, Tab, SearchableTable } from '@mcro/sonar'
+import { TimeAgo } from '~/views/TimeAgo'
+import * as _ from 'lodash'
+
+@view
+class CheckBox {
+  render({ isActive, onChange }) {
+    return (
+      <input type="checkbox" onChange={onChange} defaultChecked={isActive()} />
+    )
+  }
+  static style = {
+    input: {
+      margin: 'auto',
+    },
+  }
+}
+
+const columnSizes = {
+  repo: 'flex',
+  org: 'flex',
+  lastCommit: '20%',
+  numIssues: '12%',
+  active: '10%',
+}
+
+const columns = {
+  repo: {
+    value: 'Repository',
+    sortable: true,
+    resizable: true,
+  },
+  org: {
+    value: 'Organization',
+    sortable: true,
+    resizable: true,
+  },
+  lastCommit: {
+    value: 'Last Commit',
+    sortable: true,
+    resizable: true,
+  },
+  numIssues: {
+    value: 'Issues',
+    sortable: true,
+    resizable: true,
+  },
+  active: {
+    value: 'Active',
+    sortable: true,
+  },
+}
 
 class GithubStore {
   get setting() {
     return this.props.appStore.settings.github
   }
 
-  issues = Bit.find({ where: { integration: 'github', type: 'task' } })
-  service = new GithubService(this.setting)
+  get service() {
+    return this.props.appStore.services.github
+  }
+
+  issues = react(() =>
+    Bit.find({ where: { integration: 'github', type: 'task' } }),
+  )
+
   active = 'repos'
   syncing = {}
-  syncVersion = 0
   userOrgs = []
 
   get orgsList() {
@@ -22,23 +78,76 @@ class GithubStore {
     return (allOrgs && allOrgs.map(org => org.login)) || []
   }
 
-  onSync = async (repo, val) => {
-    this.syncVersion++
+  allRepos = react(async () => {
+    return _.flatten(
+      await Promise.all(
+        this.orgsList.map(async org => {
+          return await this.service.github
+            .orgs(org)
+            .repos.fetch({ per_page: 100 })
+            .then(res => res.items)
+        }),
+      ),
+    )
+  })
+
+  rows = react(
+    () => this.allRepos,
+    repos => {
+      log('react to all repos')
+      return repos.map((repo, index) => {
+        const orgName = repo.fullName.split('/')[0]
+        const isActive = () => this.isSyncing(repo.fullName)
+        return {
+          key: `${repo.org}${repo.name}${index}`,
+          columns: {
+            org: {
+              sortValue: orgName,
+              value: orgName,
+            },
+            repo: {
+              sortValue: repo.name,
+              value: repo.name,
+            },
+            lastCommit: {
+              sortValue: repo.pushedAt.getTime(),
+              value: <TimeAgo>{repo.pushedAt}</TimeAgo>,
+            },
+            numIssues: {
+              sortValue: repo.openIssuesCount,
+              value: repo.openIssuesCount,
+            },
+            active: {
+              sortValue: isActive,
+              value: (
+                <CheckBox
+                  onChange={this.onSync(repo.fullName)}
+                  isActive={isActive}
+                />
+              ),
+            },
+          },
+        }
+      })
+    },
+  )
+
+  onSync = fullName => async e => {
     this.setting.values = {
       ...this.setting.values,
       repos: {
         ...this.setting.values.repos,
-        [repo.fullName]: val,
+        [fullName]: e.target.checked,
       },
     }
     await this.setting.save()
   }
 
-  isSyncing = repo => {
+  isSyncing = fullName => {
     if (!this.setting || !this.setting.values.repos) {
       return false
     }
-    return this.setting.values.repos[repo.fullName] || false
+    return this.setting.values.repos[fullName] || false
   }
 
   newOrg = ''
@@ -52,36 +161,35 @@ class GithubStore {
 @view
 export class GithubSetting {
   render({ githubStore: store }) {
-    const active = { background: 'rgba(0,0,0,0.15)' }
     if (!store.issues) {
       return <div>no issues</div>
     }
-    console.log('store', store)
     return (
       <container>
-        <UI.Row css={{ margin: [10, 0] }}>
-          <UI.Button
-            onClick={() => (store.active = 'repos')}
-            color={[0, 0, 0, 0.8]}
-            {...(store.active === 'repos' ? active : {})}
-          >
-            Repos
-          </UI.Button>
-          <UI.Button
-            {...(store.active === 'issues' ? active : {})}
-            onClick={() => (store.active = 'issues')}
-            color={[0, 0, 0, 0.8]}
-          >
-            Issues ({store.issues.length})
-          </UI.Button>
-        </UI.Row>
-        <repos if={store.active === 'repos'}>
-          <orgs>
-            {store.orgsList.map(org => (
-              <GithubOrg githubStore={store} key={org} name={org} />
-            ))}
-          </orgs>
-          <add>
+        <Tabs active={store.active} onActive={key => (store.active = key)}>
+          <Tab key="repos" width="50%" label="Repos" />
+          <Tab
+            key="issues"
+            width="50%"
+            label={`Issues (${store.issues.length})`}
+          />
+        </Tabs>
+
+        <section if={store.active === 'repos'}>
+          <section>
+            <SearchableTable
+              if={store.rows}
+              rowLineHeight={28}
+              floating={false}
+              multiline
+              columnSizes={columnSizes}
+              columns={columns}
+              onRowHighlighted={this.onRowHighlighted}
+              multiHighlight
+              rows={store.rows}
+            />
+          </section>
+          <add if={false}>
             <UI.Input
               width={200}
               size={1}
@@ -95,18 +203,20 @@ export class GithubSetting {
               onChange={e => (store.newOrg = e.target.value)}
             />
           </add>
-        </repos>
-        <issues if={store.active === 'issues'}>
-          <Bits bits={store.issues} />
-        </issues>
+        </section>
+        <section if={store.active === 'issues'}>
+          <Bits bits={store.section} />
+        </section>
       </container>
     )
   }
 
   static style = {
-    add: {
-      marginLeft: 15,
-      marginTop: 15,
+    container: {
+      flex: 1,
+    },
+    section: {
+      flex: 1,
     },
   }
 }

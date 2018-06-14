@@ -17,7 +17,7 @@ import * as MobxReact from 'mobx-react-devtools'
 // Mobx.useStrict(true)
 
 // install console formatters
-mobxFormatters(Mobx)
+// mobxFormatters(Mobx)
 
 const ogWarn = console.warn.bind(console)
 console.warn = function(...args) {

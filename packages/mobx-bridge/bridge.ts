@@ -118,6 +118,7 @@ class Bridge {
         return
       }
       if (data[0] === '-') {
+        console.log('got msg', data)
         this.handleMessage(data.slice(1))
         return
       }

@@ -1,3 +1,4 @@
-export * from './slackSetting'
-export * from './githubSetting'
-export * from './googleSetting'
+export * from './SlackSetting'
+export * from './GithubSetting'
+export * from './GmailSetting'
+export * from './GdocsSetting'

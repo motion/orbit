@@ -5,7 +5,7 @@
   "main": "./_/oracle.js",
   "scripts": {
     "build": "./build.sh --if-empty && npx tsc",
-    "watch": "tsc --watch",
+    "watch": "tsc --watch --preserveWatchOutput",
     "build-app": "./build.sh",
     "train": "cd ./pyocr/src && python3 train.py",
     "generate": "node ./generate",

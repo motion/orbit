@@ -1,8 +1,9 @@
 import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
-import getHelpers from './getHelpers'
 import * as _ from 'lodash'
+import Gmail from 'node-gmail-api'
+import { DriveService } from '@mcro/services'
 
 const log = debug('googleMail')
 const timeCancel = (asyncFn, ms) => {
@@ -34,10 +35,11 @@ type ThreadObject = {
 }
 
 export default class GoogleMailSync {
-  helpers = getHelpers({})
   setting: Setting
+  service: DriveService
+  gmail: Gmail
 
-  fetch = (path, ...rest) => this.helpers.fetch(`/gmail/v1${path}`, ...rest)
+  fetch = (path, ...rest) => this.service.fetch(`/gmail/v1${path}`, ...rest)
 
   constructor(setting) {
     this.updateSetting(setting)
@@ -45,7 +47,8 @@ export default class GoogleMailSync {
 
   updateSetting = async (setting?) => {
     this.setting = setting || (await Setting.findOne({ type: 'gmail' }))
-    this.helpers = getHelpers(this.setting)
+    this.service = new DriveService(this.setting)
+    this.gmail = new Gmail(setting.token)
   }
 
   run = async () => {
@@ -99,7 +102,7 @@ export default class GoogleMailSync {
       if (err.message === 'Invalid Credentials') {
         // refresh and try again
         console.log('refreshing token...')
-        if (await this.helpers.refreshToken()) {
+        if (await this.service.refreshToken()) {
           return await this.syncMail(options)
         }
         return
@@ -130,7 +133,7 @@ export default class GoogleMailSync {
 
   streamThreads(query, options): Promise<string | null> {
     return new Promise((res, rej) => {
-      this.helpers.batch.estimatedThreads(
+      this.gmail.batch.estimatedThreads(
         query,
         options,
         async (err, estimate) => {
@@ -138,7 +141,7 @@ export default class GoogleMailSync {
           if (err) {
             return rej(err)
           }
-          const threadSyncer = this.helpers.batch.threads(query, options)
+          const threadSyncer = this.gmail.batch.threads(query, options)
           let newHistoryId
           let fetched = 0
           let threads = []

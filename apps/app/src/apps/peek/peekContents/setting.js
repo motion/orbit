@@ -10,7 +10,9 @@ import { SettingInfoStore } from '~/stores/SettingInfoStore'
 import { TimeAgo } from '~/views/TimeAgo'
 // import * as _ from 'lodash'
 
-const EmptyPane = () => <div>no setting pane</div>
+const EmptyPane = ({ setting }) => (
+  <div>no setting {JSON.stringify(setting)} pane</div>
+)
 const statusIcons = {
   PENDING: { name: 'check', color: '#999' },
   FAILED: { name: 'remove', color: 'darkred' },
@@ -33,9 +35,7 @@ export class Setting extends React.Component {
     job.action = 'all'
     job.status = Job.statuses.PENDING
     await job.save()
-    console.log('created new job', job)
     store.update()
-    this.props.appStore.updateSettings()
   }
 
   removeIntegration = async () => {
@@ -48,7 +48,6 @@ export class Setting extends React.Component {
 
   render({ appStore, store }) {
     if (!store.setting || !store.setting.token) {
-      console.log('no setting or token', store.setting)
       return null
     }
     store.version
@@ -78,13 +77,26 @@ export class Setting extends React.Component {
             </div>
           }
           after={
-            <UI.Row $$flex $actions>
+            <UI.Row
+              $$flex
+              css={{ margin: [0, -8, -5, 0] }}
+              itemProps={{
+                size: 0.9,
+                chromeless: true,
+                opacity: 0.7,
+                margin: [0, 0, 0, 5],
+              }}
+            >
               <UI.Button
                 icon="refresh"
                 tooltip="Refresh"
                 onClick={this.handleRefresh}
               />
-              <UI.Button id="settings" icon="gear" />
+              <UI.Button
+                icon="remove"
+                tooltip="Remove"
+                onClick={this.removeIntegration}
+              />
             </UI.Row>
           }
         />
@@ -95,27 +107,14 @@ export class Setting extends React.Component {
             update={store.update}
           />
         </body>
-        <UI.Popover openOnHover openOnClick target="#settings">
-          <UI.List background>
-            <UI.ListItem primary="hello2" />
-            <UI.ListItem primary="hello3" />
-            <UI.ListItem
-              primary="remove integration"
-              onClick={this.removeIntegration}
-            />
-          </UI.List>
-        </UI.Popover>
       </>
     )
   }
 
   static style = {
     body: {
-      padding: 20,
+      overflow: 'hidden',
       flex: 1,
-    },
-    actions: {
-      // opacity: 0.9,
     },
   }
 }

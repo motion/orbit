@@ -1,12 +1,13 @@
+import '~/../public/testBase.css'
 import './createElement'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from '~/themes'
 import * as UI from '@mcro/ui'
+import Root from './root'
 
-function render() {
+export function render() {
   const RootNode = document.querySelector('#app')
-  const { Root } = require('./root')
   ReactDOM.render(
     <UI.ThemeProvide {...Themes}>
       <UI.Theme name="light">

@@ -2,7 +2,6 @@ import Syncer from '../syncer'
 import SlackAttachmentSync from './slackAttachmentSync'
 import SlackMessagesSync from './slackMessagesSync'
 import SlackPeopleSync from './slackPeopleSync'
-import { SlackService } from '@mcro/services'
 
 export const slack = new Syncer('slack', {
   actions: {
@@ -11,11 +10,10 @@ export const slack = new Syncer('slack', {
     // attachments: { secondsBetween: 60 * 60 * 24 },
   },
   getSyncers: setting => {
-    const slackService = new SlackService(setting)
     return {
-      attachments: new SlackAttachmentSync(slackService),
-      messages: new SlackMessagesSync(slackService),
-      people: new SlackPeopleSync(slackService),
+      attachments: new SlackAttachmentSync(setting),
+      messages: new SlackMessagesSync(setting),
+      people: new SlackPeopleSync(setting),
     }
   },
 })

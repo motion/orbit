@@ -9,6 +9,7 @@ export class Setting extends T.BaseEntity {
   token: string
   @T.Column('simple-json', { default: '{}' })
   values: {
+    oauth?: Object
     repos?: Object
     calendarsActive?: Object
     syncTokens?: Object
@@ -19,7 +20,6 @@ export class Setting extends T.BaseEntity {
     channels?: Array<string>
     lastAttachmentSync?: { [key: string]: string }
     lastMessageSync?: { [key: string]: string }
-    oauth: Object
   }
   @T.CreateDateColumn() createdAt: Date
   @T.UpdateDateColumn() updatedAt: Date

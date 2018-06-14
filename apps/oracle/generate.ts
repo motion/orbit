@@ -163,7 +163,7 @@ async function train() {
     await execa(`open`, [`http://localhost:3003/${font}`])
     await sleep(1000)
     await new Promise(resolve => {
-      oracle.onWords(async data => {
+      oracle.onWords(async () => {
         oracle.pause()
         await sleep(350) // wait for fs to write all files
         const fontDir = Path.join(trainDir, font)

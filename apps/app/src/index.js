@@ -15,6 +15,8 @@ import { throttle } from 'lodash'
 
 import './router'
 
+Error.stackTraceLimit = Infinity
+
 process.on('uncaughtException', err => {
   console.log('App.uncaughtException', err.stack)
 })

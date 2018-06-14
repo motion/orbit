@@ -1,6 +1,5 @@
 import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
-import * as McroHelpers from '@mcro/helpers'
 import debug from '@mcro/debug'
 import {
   Reaction,
@@ -14,6 +13,35 @@ export * from './constants'
 
 const root = typeof window !== 'undefined' ? window : require('global')
 const IS_PROD = process.env.NODE_ENV === 'production'
+
+export type ReactionOptions = {
+  fireImmediately?: boolean
+  immediate?: boolean
+  equals?: Function
+  log?: false | 'state' | 'all'
+  delay?: number
+  isIf?: boolean
+  delayValue?: boolean
+  onlyUpdateIfChanged?: boolean
+  defaultValue?: any
+}
+
+export function getReactionOptions(userOptions?: ReactionOptions) {
+  let options: ReactionOptions = {
+    equals: Mobx.comparer.structural,
+  }
+  if (userOptions.immediate) {
+    options.fireImmediately = true
+    delete userOptions.immediate
+  }
+  if (userOptions === true) {
+    options.fireImmediately = true
+  }
+  if (userOptions instanceof Object) {
+    options = { ...options, ...userOptions }
+  }
+  return options
+}
 
 type MagicalObject = {
   subscriptions: { add: ({ dispose: Function }) => void }
@@ -255,7 +283,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     defaultValue,
     onlyUpdateIfChanged,
     ...options
-  } = McroHelpers.getReactionOptions({
+  } = getReactionOptions({
     name: method,
     ...userOptions,
   })
@@ -312,7 +340,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       onlyUpdateIfChanged &&
       Mobx.comparer.structural(getCurrentValue(), newValue)
     ) {
-      logInfo(`${name} didnt change, avoid update`)
       return
     }
     if (Mobx.isObservable(value)) {

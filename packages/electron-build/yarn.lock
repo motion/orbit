@@ -1645,6 +1645,10 @@ random-path@^0.1.0:
     base32-encode "^0.1.0"
     murmur-32 "^0.1.0"
 
+randomcolor@^0.5.3:
+  version "0.5.3"
+  resolved "http://localhost:4873/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
+
 rc@^1.1.2:
   version "1.2.8"
   resolved "http://localhost:4873/rc/-/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"

@@ -1,0 +1,19 @@
+{
+  "name": "@mcro/oauth-strategies",
+  "main": "./_/oauthStrategies.js",
+  "version": "2.0.0",
+  "dependencies": {
+    "@mcro/constants": "*",
+    "passport-github": "^1.1.0",
+    "passport-google-oauth20": "^1.0.0",
+    "passport-oauth": "^1.0.0"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch --preserveWatchOutput"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

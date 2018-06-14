@@ -5,7 +5,7 @@
   "types": "./index.d.ts",
   "scripts": {
     "build": "tsc",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@mcro/black": "^2.0.11",

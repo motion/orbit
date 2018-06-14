@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "prebuild": "tsc",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch --preserveWatchOutput"
   },
   "repository": {
     "type": "git",
@@ -20,12 +20,12 @@
     "deep-extend": "^0.6.0",
     "html-tags": "^2.0.0",
     "jss": "^9.8.2",
+    "jss-cache": "^3.0.0",
     "jss-default-unit": "^8.0.2",
     "jss-increase-specificity": "^0.3.5",
     "jss-isolate": "^5.1.0",
     "jss-nested": "^6.0.1",
     "jss-props-sort": "^6.0.0",
-    "jss-cache": "^3.0.0",
     "prop-types": "^15.6.0"
   },
   "peerDependencies": {

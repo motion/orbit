@@ -1,5 +1,5 @@
-import { Bit, Person, createOrUpdate, Job } from '@mcro/models'
 import { SlackService } from '@mcro/services'
+import { Bit, Setting, Person, createOrUpdate, Job } from '@mcro/models'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
@@ -21,19 +21,17 @@ type ChannelInfo = {
   name_normalized: string
   purpose: { value: string }
   topic: { value: string }
-  members: Array<string>
+  members: string[]
 }
 
 export default class SlackMessagesSync {
   service: SlackService
+  setting: Setting
   userInfo = {}
 
-  get setting() {
-    return this.service.setting
-  }
-
-  constructor(service: SlackService) {
-    this.service = service
+  constructor(setting: Setting) {
+    this.setting = setting
+    this.service = new SlackService(this.setting)
   }
 
   get lastSync() {
@@ -47,10 +45,12 @@ export default class SlackMessagesSync {
   }
 
   run = async () => {
-    if (await Job.lastProcessing()) {
+    const runningJob = await Job.lastProcessing({ type: 'slack' })
+    if (runningJob) {
       log(
         `Already processing! Try .reset() to clear TODO: check if really old and clear`,
       )
+      console.log('runningJob:', runningJob)
       return
     }
     await this.setupSetting()

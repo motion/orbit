@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import differenceInSeconds from 'date-fns/difference_in_seconds'
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 
@@ -6,12 +6,11 @@ export class TimeAgo extends Component {
   static defaultProps = {
     element: 'p',
     postfix: '',
-    date: new Date(),
     className: undefined,
     isLive: true,
     addSuffix: true,
     includeSeconds: true,
-    timeInterval: 20000,
+    timeInterval: 60 * 1000,
   }
 
   interval = 0
@@ -34,8 +33,12 @@ export class TimeAgo extends Component {
     }
   }
 
+  get date() {
+    return this.props.date || this.props.children
+  }
+
   getDifference() {
-    return differenceInSeconds(new Date(), this.props.date)
+    return differenceInSeconds(new Date(), this.date)
   }
 
   getInterval() {
@@ -58,7 +61,7 @@ export class TimeAgo extends Component {
         addSuffix: this.props.addSuffix,
         includeSeconds: this.props.includeSeconds,
       }
-      return distanceInWordsToNow(this.props.date, options)
+      return distanceInWordsToNow(this.date, options)
         .replace('about ', '')
         .replace('less than ', '')
         .replace(' ago', this.props.postfix ? ` ${this.props.postfix}` : '')

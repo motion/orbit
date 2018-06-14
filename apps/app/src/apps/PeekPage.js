@@ -83,8 +83,7 @@ export class PeekPage extends React.Component {
     }
     const { bit } = peekStore.state
     const type = (bit && capitalize(bit.type)) || 'Empty'
-    const PeekContentsView = PeekContents[type] || PeekContents['Empty']
-    log.full('peekbit', bit)
+    const PeekContentsView = PeekContents[type]
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>
@@ -93,8 +92,7 @@ export class PeekPage extends React.Component {
       <UI.Theme name="light">
         <PeekFrame>
           <PeekContentsView
-            if={appStore.selectedBit}
-            key={bit.id || Math.random()}
+            key={(bit && bit.id) || Math.random()}
             bit={appStore.selectedBit}
             person={appStore.selectedBit}
             appStore={appStore}

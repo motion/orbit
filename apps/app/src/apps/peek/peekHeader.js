@@ -46,7 +46,7 @@ export class PeekHeader extends React.Component {
       justifyContent: 'center',
       position: 'relative',
       zIndex: 100,
-      borderBottom: [1, [0, 0, 0, 0.025]],
+      // borderBottom: [1, [0, 0, 0, 0.025]],
       padding: 15,
     },
     titles: {

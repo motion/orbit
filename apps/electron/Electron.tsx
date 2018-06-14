@@ -1,4 +1,4 @@
-import { App as AppWindow } from '@mcro/reactron'
+import { App as AppWindow, DevTools } from '@mcro/reactron'
 import { view, Component } from '@mcro/black'
 import * as React from 'react'
 import Tray from './views/Tray'
@@ -30,6 +30,7 @@ export class Electron extends Component<{
         onBeforeQuit={electronStore.handleBeforeQuit}
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
+        devTools={[DevTools.mobx, DevTools.react, DevTools.reactPerf]}
       >
         <MenuItems el />
         <MainWindow onRef={electronStore.windowFocusStore.setOrbitRef} />

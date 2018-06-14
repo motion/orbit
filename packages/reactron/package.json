@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "watch": "npm run build -- --watch",
+    "watch": "npm run build -- --watch --preserveWatchOutput",
     "test": "electron lib/tests"
   },
   "peerDependencies": {
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "debug": "^3.1.0",
+    "electron-devtools-installer": "^2.2.4",
     "fbjs": "0.8.16",
     "lodash.isequal": "^4.5.0",
     "react-reconciler": "0.11.0"

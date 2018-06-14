@@ -76,6 +76,16 @@ export class AppStore {
     this.clearSelected,
   )
 
+  clearPeekOnInactiveIndex = react(
+    () => this.activeIndex,
+    index => {
+      if (index >= 0 && index < this.searchState.results.length) {
+        throw react.cancel
+      }
+      this.clearSelected()
+    },
+  )
+
   updateScreenSize() {
     this.setInterval(() => {
       App.setState({
@@ -100,6 +110,7 @@ export class AppStore {
   resetActiveIndexOnKeyPastEnds = react(
     () => this.nextIndex,
     index => {
+      console.log('nextIndex', index)
       if (index === -1) {
         this.activeIndex = -1
       }

@@ -363,7 +363,7 @@ export class OrbitCard extends React.Component {
       let listStateStyle
       if (isOnDeck) {
         listStateStyle = {
-          background: theme.base.background.darken(0.015),
+          background: theme.base.background.darken(0.01),
           '&:hover': hoveredStyle,
         }
       } else if (isSelected) {

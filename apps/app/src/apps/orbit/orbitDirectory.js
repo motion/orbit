@@ -67,7 +67,7 @@ class OrbitDirectoryStore {
       }
       const getResults = () => this.results
       getResults.shouldFilter = true
-      this.props.appStore.setGetResults()
+      this.props.appStore.setGetResults(getResults)
     },
     { immediate: true },
   )

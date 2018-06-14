@@ -6,7 +6,7 @@
  */
 
 import { Filter } from '../filter/types'
-import { PureComponent } from 'react'
+import * as React from 'react'
 import Toolbar from '../Toolbar'
 import FlexRow from '../FlexRow'
 import Input from '../Input'
@@ -25,6 +25,7 @@ const SearchBar = Toolbar.extends({
 })
 
 export const SearchBox = FlexBox.extends({
+  flexFlow: 'row',
   backgroundColor: colors.white,
   borderRadius: '999em',
   border: `1px solid ${colors.light15}`,
@@ -39,10 +40,11 @@ export const SearchInput = Input.extends({
   padding: 0,
   fontSize: '1em',
   flexGrow: 1,
-  height: 'auto',
+  background: 'transparent',
+  height: '100%',
+  flex: 1,
   lineHeight: '100%',
   marginLeft: 2,
-  width: '100%',
   '&::-webkit-input-placeholder': {
     color: colors.placeholder,
     fontWeight: 300,
@@ -102,7 +104,7 @@ type State = {
 }
 
 const Searchable = (Component: any) =>
-  class extends PureComponent {
+  class extends React.PureComponent {
     props: Props
 
     static defaultProps = {

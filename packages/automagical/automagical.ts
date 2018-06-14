@@ -43,7 +43,6 @@ export function getReactionOptions(userOptions?: ReactionOptions) {
   return options
 }
 
-
 type MagicalObject = {
   subscriptions: { add: ({ dispose: Function }) => void }
   __automagical: {
@@ -341,7 +340,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       onlyUpdateIfChanged &&
       Mobx.comparer.structural(getCurrentValue(), newValue)
     ) {
-      logInfo(`${name} didnt change, avoid update`)
       return
     }
     if (Mobx.isObservable(value)) {

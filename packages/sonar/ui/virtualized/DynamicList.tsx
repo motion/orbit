@@ -5,6 +5,7 @@
  * @format
  */
 
+import * as React from 'react'
 import { RowRenderer, OnScroll, KeyMapper } from './types.js'
 import { PureComponent, Component } from 'react'
 import ResizeSensor from '../components/ResizeSensor'

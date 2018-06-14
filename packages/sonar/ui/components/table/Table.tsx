@@ -5,6 +5,7 @@
  * @format
  */
 
+import * as React from 'react'
 import {
   TableColumnRawOrder,
   TableColumnKeys,

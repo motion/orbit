@@ -15,7 +15,7 @@ export class IsolatePeek extends React.Component {
         integration: 'github',
       },
       {
-        top: 200,
+        top: 300,
         left: 100,
         width: 100,
         height: 100,
@@ -43,6 +43,6 @@ export class IsolateHome extends React.Component {
 })
 export class IsolatePage extends React.Component {
   render() {
-    return <IsolateHome />
+    return <IsolatePeek />
   }
 }

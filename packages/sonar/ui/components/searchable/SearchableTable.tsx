@@ -5,6 +5,7 @@
  * @format
  */
 
+import * as React from 'react'
 import { Filter } from '../filter/types'
 import { TableBodyRow } from '../table/types'
 import { ManagedTableProps } from '../table/ManagedTable'

@@ -5,6 +5,7 @@
  * @format
  */
 
+import * as React from 'react'
 import styled from '../styled/index'
 import { Component } from 'react'
 

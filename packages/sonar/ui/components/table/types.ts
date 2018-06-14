@@ -33,7 +33,7 @@ export type TableOnColumnOrder = (order: TableColumnOrder) => void
 export type TableOnSort = (order: TableRowSortOrder) => void
 export type TableOnHighlight = (
   highlightedRows: TableHighlightedRows,
-  e: SyntheticUIEvent<>,
+  e: Event,
 ) => void
 
 export type TableHeaderColumn = {

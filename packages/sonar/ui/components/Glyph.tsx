@@ -5,9 +5,10 @@
  * @format
  */
 
+import * as React from 'react'
 import styled from '../styled/index'
-const PropTypes = require('prop-types');
-import {getIconUrl} from '../../utils/icons'
+const PropTypes = require('prop-types')
+import { getIconUrl } from '../../utils/icons'
 
 const ColoredIconBlack = styled.image(
   {
@@ -18,7 +19,7 @@ const ColoredIconBlack = styled.image(
   {
     ignoreAttributes: ['size'],
   },
-);
+)
 
 const ColoredIconCustom = styled.view(
   {
@@ -37,27 +38,27 @@ const ColoredIconCustom = styled.view(
   {
     ignoreAttributes: ['color', 'size', 'src'],
   },
-);
+)
 
 export function ColoredIcon(
-  props: {|
-    name: string,
-    src: string,
-    size?: number,
-    className?: string,
-    color?: string,
-  |},
-  context: {|
-    glyphColor?: string,
-  |},
+  props: {
+    name: string
+    src: string
+    size?: number
+    className?: string
+    color?: string
+  },
+  context: {
+    glyphColor?: string
+  },
 ) {
-  const {color = context.glyphColor, name, size = 16, src} = props;
+  const { color = context.glyphColor, name, size = 16, src } = props
 
   const isBlack =
     color == null ||
     color === '#000' ||
     color === 'black' ||
-    color === '#000000';
+    color === '#000000'
 
   if (isBlack) {
     return (
@@ -67,7 +68,7 @@ export function ColoredIcon(
         size={size}
         className={props.className}
       />
-    );
+    )
   } else {
     return (
       <ColoredIconCustom
@@ -76,23 +77,25 @@ export function ColoredIcon(
         src={src}
         className={props.className}
       />
-    );
+    )
   }
 }
 
 ColoredIcon.contextTypes = {
   glyphColor: PropTypes.string,
-};
+}
 
-export default class Glyph extends styled.StylablePureComponent<{
-  name: string,
-  size?: 8 | 10 | 12 | 16 | 18 | 20 | 24 | 32,
-  variant?: 'filled' | 'outline',
-  className?: string,
-  color?: string,
-}> {
+export default class Glyph extends styled.StylablePureComponent {
+  props: {
+    name: string
+    size?: 8 | 10 | 12 | 16 | 18 | 20 | 24 | 32
+    variant?: 'filled' | 'outline'
+    className?: string
+    color?: string
+  }
+
   render() {
-    const {name, size, variant, color, className} = this.props;
+    const { name, size, variant, color, className } = this.props
 
     return (
       <ColoredIcon
@@ -102,6 +105,6 @@ export default class Glyph extends styled.StylablePureComponent<{
         size={size}
         src={getIconUrl(name, size, variant)}
       />
-    );
+    )
   }
 }

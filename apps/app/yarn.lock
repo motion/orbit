@@ -321,11 +321,11 @@ mobx-formatters@^1.0.2:
   version "1.0.2"
   resolved "http://localhost:4873/mobx-formatters/-/mobx-formatters-1.0.2.tgz#7eac3957adab1eeaca1c4a9c25da058b5765ee2a"
 
-mobx-react-devtools@5.0.1:
+mobx-react-devtools@^5.0.1:
   version "5.0.1"
   resolved "http://localhost:4873/mobx-react-devtools/-/mobx-react-devtools-5.0.1.tgz#9473c85929b2fc0c95086430419028cebd96fb3b"
 
-mobx-react@5.2.3:
+mobx-react@^5.1.2:
   version "5.2.3"
   resolved "http://localhost:4873/mobx-react/-/mobx-react-5.2.3.tgz#cdf6141c2fe63377c5813cbd254e8ce0d4676631"
   dependencies:
@@ -416,9 +416,9 @@ react-fast-compare@^1.0.0:
   version "1.0.0"
   resolved "http://localhost:4873/react-fast-compare/-/react-fast-compare-1.0.0.tgz#813a039155e49b43ceffe99528fe5e9d97a6c938"
 
-react-hot-loader@^4.2.0:
-  version "4.3.1"
-  resolved "http://localhost:4873/react-hot-loader/-/react-hot-loader-4.3.1.tgz#47f59fe09b97ec655e77a1f90819785eda513a86"
+react-hot-loader@4.3.2:
+  version "4.3.2"
+  resolved "http://localhost:4873/react-hot-loader/-/react-hot-loader-4.3.2.tgz#42d629a541d12c84df5e8333534ea6ef99b7ae49"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"

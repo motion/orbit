@@ -217,7 +217,7 @@ export class OrbitCard extends React.Component {
             {orbitIcon}
             <title>
               <UI.Text
-                size={1.35}
+                size={1.3}
                 sizeLineHeight={0.8}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}
@@ -346,10 +346,14 @@ export class OrbitCard extends React.Component {
     },
   }
 
-  static theme = ({ store, listItem, borderRadius, inGrid }, theme) => {
+  static theme = ({ style, store, listItem, borderRadius, inGrid }, theme) => {
     const { isSelected } = store
     let hoveredStyle
-    let card
+    let card = {
+      borderRadius,
+      flex: inGrid ? 1 : 'none',
+      height: (style && style.height) || 'auto',
+    }
     if (listItem) {
       hoveredStyle = {
         background: theme.selected.background,
@@ -369,6 +373,7 @@ export class OrbitCard extends React.Component {
         }
       }
       card = {
+        ...card,
         ...listStateStyle,
         margin: [0, -12],
         padding: [18, 20],
@@ -381,25 +386,24 @@ export class OrbitCard extends React.Component {
           ? theme.selected.background
           : theme.hover.background,
       }
-      card = {
-        // background: theme.base.background,
-        border,
-        '&:hover': hoveredStyle,
-      }
       if (isSelected) {
         card = {
+          ...card,
           border,
           background: '#fff',
           boxShadow: [[0, 3, 12, [0, 0, 0, 0.08]]],
         }
+      } else {
+        card = {
+          ...card,
+          // background: theme.base.background,
+          border,
+          '&:hover': hoveredStyle,
+        }
       }
     }
     return {
-      card: {
-        borderRadius,
-        flex: inGrid ? 1 : 'none',
-        ...card,
-      },
+      card,
       preview: {
         margin: inGrid ? ['auto', 0] : 0,
         padding: [8, 0, 0],

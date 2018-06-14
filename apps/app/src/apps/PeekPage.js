@@ -11,7 +11,7 @@ class PeekStore {
   history = []
 
   get hasHistory() {
-    return this.history.length
+    return this.history.length > 1
   }
 
   get curState() {

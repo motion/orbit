@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { PeekHeader } from '../peekHeader'
+import { PeekContent } from '../PeekContent'
 import bitContents from '~/components/bitContents'
 import { OrbitIcon } from '~/apps/orbit/orbitIcon'
 import { Carousel } from '~/components/carousel'
@@ -35,6 +36,7 @@ class ConversationPeekStore {
 const slackConvoBitContentStyle = {
   contentStyle: {
     paddingLeft: 17,
+    fontSize: 18,
   },
 }
 
@@ -69,7 +71,7 @@ export class Conversation extends React.Component {
                   </after>
                 }
               />
-              <main>
+              <PeekContent>
                 <mainInner>
                   <content>
                     <UI.Text
@@ -116,7 +118,7 @@ export class Conversation extends React.Component {
                     <br />
                   </section>
                 </mainInner>
-              </main>
+              </PeekContent>
             </>
           )
         }}
@@ -125,11 +127,6 @@ export class Conversation extends React.Component {
   }
 
   static style = {
-    main: {
-      flex: 1,
-      overflowY: 'scroll',
-      margin: [15, 10],
-    },
     mainInner: {
       margin: [0, -10, -5],
     },

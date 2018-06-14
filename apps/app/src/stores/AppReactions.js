@@ -28,6 +28,7 @@ export class AppReactions {
           this.toggle()
           return
         case App.messages.TOGGLE_DOCKED:
+          console.log('toggle docked')
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:

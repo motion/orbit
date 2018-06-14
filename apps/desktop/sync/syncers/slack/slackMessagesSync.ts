@@ -47,10 +47,12 @@ export default class SlackMessagesSync {
   }
 
   run = async () => {
-    if (await Job.lastProcessing()) {
+    const runningJob = await Job.lastProcessing({ type: 'slack' })
+    if (runningJob) {
       log(
         `Already processing! Try .reset() to clear TODO: check if really old and clear`,
       )
+      console.log('runningJob:', runningJob)
       return
     }
     await this.setupSetting()

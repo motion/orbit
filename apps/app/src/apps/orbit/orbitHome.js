@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { Bit } from '@mcro/models'
+import { Bit, Person } from '@mcro/models'
 import { SubTitle } from '~/views'
 import { OrbitCard } from './orbitCard'
 import { Masonry } from '~/views/masonry'
@@ -72,6 +72,8 @@ class OrbitHomeStore {
         findType('github', 'task'),
         findType('slack', 'conversation', 2),
         findType('google', 'document'),
+        Person.findOne({ name: 'adhsu' }),
+        Person.findOne({ name: 'javivelasco' }),
         findType('google', 'mail'),
         findType('google', 'mail', 1),
         findType('slack', 'conversation'),

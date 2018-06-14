@@ -120,6 +120,7 @@ const tinyProps = {
 export class OrbitCard extends React.Component {
   static defaultProps = {
     borderRadius: 6,
+    hide: {},
   }
 
   constructor(...args) {
@@ -180,12 +181,13 @@ export class OrbitCard extends React.Component {
       orbitStore,
       inactive,
       iconProps,
+      hide,
     } = this.props
     const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
       <OrbitIcon
-        if={icon}
+        if={icon && !hide.icon}
         icon={icon}
         size={hasSubtitle ? 14 : 18}
         $orbitIcon

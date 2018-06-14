@@ -51,6 +51,9 @@ export class OrbitDirectory {
                 bit={bit}
                 total={total}
                 hoverToSelect
+                hide={{
+                  icon: true,
+                }}
               />
             ))}
           </Masonry>

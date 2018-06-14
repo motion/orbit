@@ -17,7 +17,7 @@ import { OrbitIcon } from '~/apps/orbit/orbitIcon'
     }
   },
 })
-export class GoogleMail extends React.Component {
+export class GmailSetting extends React.Component {
   render({ store, setting, update }) {
     const { syncSettings } = setting.values
     return (

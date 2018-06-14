@@ -151,7 +151,7 @@ class Calendars {
     active = 'calendars'
   },
 })
-export class GoogleCalendar {
+export class GcalSetting {
   componentDidMount() {
     setTimeout(() => {
       App.sync.google.cal.setupSettings()

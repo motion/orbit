@@ -10,7 +10,9 @@ import { SettingInfoStore } from '~/stores/SettingInfoStore'
 import { TimeAgo } from '~/views/TimeAgo'
 // import * as _ from 'lodash'
 
-const EmptyPane = () => <div>no setting pane</div>
+const EmptyPane = ({ setting }) => (
+  <div>no setting {JSON.stringify(setting)} pane</div>
+)
 const statusIcons = {
   PENDING: { name: 'check', color: '#999' },
   FAILED: { name: 'remove', color: 'darkred' },

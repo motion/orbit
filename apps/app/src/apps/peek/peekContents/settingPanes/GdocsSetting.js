@@ -1,8 +1,7 @@
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import App from '~/app'
-import * as Collapse from './views/collapse'
 import { formatDistance } from 'date-fns'
 
 const baseId = '0AKfTFZu-thXbUk9PVA'
@@ -14,7 +13,6 @@ class Folder {
   state = { open: false, showAllFiles: false }
 
   render({ id = baseId, folders, files }) {
-    console.log('folders', folders)
     const current = folders.filter(f => f.id === id)
     const { name } = current.length > 0 ? current[0] : { name: 'home' }
     const { open, showAllFiles } = this.state
@@ -26,7 +24,6 @@ class Folder {
       ),
     )
     const isBase = id === baseId
-
     const yearInMs = 3.154e10
     const showFiles = showAllFiles
       ? childFiles
@@ -35,13 +32,10 @@ class Folder {
             index < 10 ||
             +Date.now() - +new Date(item.data.modifiedTime) < yearInMs,
         )
-
     const moreFiles = childFiles.length - showFiles.length
-
     return (
       <folder>
         <bar onClick={() => this.setState({ open: !open })} $$row>
-          <Collapse.Arrow if={!isBase} width={20} open={open} iconSize={18} />
           <UI.Text fontWeight={500} css={{ userSelect: 'none' }}>
             {name}
           </UI.Text>
@@ -49,7 +43,7 @@ class Folder {
             <b>{childFolders.length + childFiles.length}</b> items
           </UI.Text>
         </bar>
-        <Collapse.Body open={isBase ? true : open}>
+        <content open={isBase ? true : open}>
           <content>
             <folders>
               {childFolders.map(folder => (
@@ -95,7 +89,7 @@ class Folder {
               </UI.Button>
             </more>
           </content>
-        </Collapse.Body>
+        </content>
       </folder>
     )
   }
@@ -121,18 +115,17 @@ class Folder {
 }
 
 @view({
-  store: class DriveStore {
-    folders = App.sync.google.drive.getFiles()
+  store: class GDocsSettingStore {
+    folders = react(() => App.sync.google.drive.getFiles())
 
     get files() {
       return (this.things || []).filter(t => t.type === 'doc')
     }
   },
 })
-export class GoogleDrive {
+export class GdocsSetting {
   render({ store }) {
     const loading = !store.folders
-
     return (
       <container>
         <loading if={loading}>loading</loading>

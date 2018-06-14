@@ -1,8 +1,6 @@
-import * as Constants from '~/constants'
-// import { URLSearchParams } from 'url'
+import * as Constants from '@mcro/constants'
 import r2 from '@mcro/r2'
-import Strategies from '~/server/oauth.strategies'
-import Gmail from 'node-gmail-api'
+import Strategies from '@mcro/oauth-strategies'
 
 type FetchOptions =
   | undefined
@@ -15,7 +13,6 @@ type FetchOptions =
     }
 
 export default setting => ({
-  // clientId: Constants.GOOGLE_CLIENT_ID,
   baseUrl: 'https://content.googleapis.com',
   async refreshToken() {
     if (!setting.values.oauth.refreshToken) {
@@ -39,7 +36,6 @@ export default setting => ({
     }
     return false
   },
-  batch: setting.token && new Gmail(setting.token),
   async fetch(path, options: FetchOptions = {}) {
     const { headers, body, type = 'json', isRetrying, ...rest } = options
     const fetcher = r2.get(`${this.baseUrl}${path}`, {

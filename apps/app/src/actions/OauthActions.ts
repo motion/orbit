@@ -23,7 +23,7 @@ export const startOauth = type => {
   App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
   const checker = setInterval(async () => {
     const auth = await checkAuths()
-    const oauth = auth && auth[type]
+    const oauth = auth && auth[type] || {}
     if (!oauth) return
     clearInterval(checker)
     if (!oauth.token) {
@@ -35,10 +35,9 @@ export const startOauth = type => {
     setting.token = oauth.token
     setting.values = {
       ...setting.values,
-      oauth,
+      oauth: { ...oauth },
     }
     await setting.save()
-    // updateSettings()
     App.sendMessage(Desktop, Desktop.messages.CLOSE_AUTH, type)
     // show settings again
     App.sendMessage(App, App.messages.TOGGLE_SETTINGS)

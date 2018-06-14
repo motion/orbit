@@ -35,9 +35,7 @@ export class Setting extends React.Component {
     job.action = 'all'
     job.status = Job.statuses.PENDING
     await job.save()
-    console.log('created new job', job)
     store.update()
-    this.props.appStore.updateSettings()
   }
 
   removeIntegration = async () => {

@@ -61,11 +61,14 @@ class GithubStore {
     return this.props.appStore.settings.github
   }
 
+  get service() {
+    return this.props.appStore.services.github
+  }
+
   issues = react(() =>
     Bit.find({ where: { integration: 'github', type: 'task' } }),
   )
 
-  service = new GithubService(this.setting)
   active = 'repos'
   syncing = {}
   userOrgs = []

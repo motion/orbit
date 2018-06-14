@@ -48,7 +48,6 @@ export class Setting extends React.Component {
 
   render({ appStore, store }) {
     if (!store.setting || !store.setting.token) {
-      console.log('no setting or token', store.setting)
       return null
     }
     store.version

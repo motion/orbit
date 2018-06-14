@@ -5,21 +5,40 @@ import { GithubService } from '@mcro/services'
 import { Bits } from '~/views/bits'
 import { Tabs, Tab, SearchableTable } from '@mcro/sonar'
 import { TimeAgo } from '~/views/TimeAgo'
+import * as _ from 'lodash'
+
+@view
+class CheckBox {
+  render({ name, getValue, onChange }) {
+    return (
+      <input
+        type="checkbox"
+        onChange={onChange}
+        defaultChecked={getValue(name)}
+      />
+    )
+  }
+  static style = {
+    input: {
+      margin: 'auto',
+    },
+  }
+}
 
 const columnSizes = {
+  repo: 'flex',
   org: 'flex',
-  repo: '25%',
   lastCommit: '20%',
   numIssues: '12%',
   active: '10%',
 }
 
 const columns = {
-  org: {
-    value: 'Organization',
-  },
   repo: {
     value: 'Repository',
+  },
+  org: {
+    value: 'Organization',
   },
   lastCommit: {
     value: 'Last Commit',
@@ -44,7 +63,6 @@ class GithubStore {
   service = new GithubService(this.setting)
   active = 'repos'
   syncing = {}
-  syncVersion = 0
   userOrgs = []
 
   get orgsList() {
@@ -53,27 +71,28 @@ class GithubStore {
   }
 
   allRepos = react(async () => {
-    let repos = []
-    // TODO can make parallel
-    for (const org of this.orgsList) {
-      const newRepos = await this.service.github
-        .orgs(org)
-        .repos.fetch({ per_page: 100 })
-        .then(res => res.items.map(i => ({ ...i, org })))
-      repos = [...repos, ...newRepos]
-    }
-    return repos
+    return _.flatten(
+      await Promise.all(
+        this.orgsList.map(async org => {
+          return await this.service.github
+            .orgs(org)
+            .repos.fetch({ per_page: 100 })
+            .then(res => res.items)
+        }),
+      ),
+    )
   })
 
   rows = react(
     () => this.allRepos,
     repos => {
+      log('react to all repos')
       return repos.map((repo, index) => {
         return {
           key: `${repo.org}${repo.name}${index}`,
           columns: {
             org: {
-              value: repo.org,
+              value: repo.fullName.split('/')[0],
             },
             repo: {
               value: repo.name,
@@ -85,7 +104,13 @@ class GithubStore {
               value: repo.openIssuesCount,
             },
             active: {
-              value: <input type="checkbox" />,
+              value: (
+                <CheckBox
+                  onChange={this.onSync(repo.fullName)}
+                  getValue={this.isSyncing}
+                  name={repo.fullName}
+                />
+              ),
             },
           },
         }
@@ -93,23 +118,22 @@ class GithubStore {
     },
   )
 
-  onSync = async (repo, val) => {
-    this.syncVersion++
+  onSync = fullName => async e => {
     this.setting.values = {
       ...this.setting.values,
       repos: {
         ...this.setting.values.repos,
-        [repo.fullName]: val,
+        [fullName]: e.target.checked,
       },
     }
     await this.setting.save()
   }
 
-  isSyncing = repo => {
+  isSyncing = fullName => {
     if (!this.setting || !this.setting.values.repos) {
       return false
     }
-    return this.setting.values.repos[repo.fullName] || false
+    return this.setting.values.repos[fullName] || false
   }
 
   newOrg = ''
@@ -149,10 +173,9 @@ export class GithubSetting {
               onRowHighlighted={this.onRowHighlighted}
               multiHighlight
               rows={store.rows}
-              actions={<button onClick={this.clear}>Clear Table</button>}
             />
           </section>
-          <add>
+          <add if={false}>
             <UI.Input
               width={200}
               size={1}
@@ -177,10 +200,6 @@ export class GithubSetting {
   static style = {
     container: {
       flex: 1,
-    },
-    add: {
-      marginLeft: 15,
-      marginTop: 15,
     },
     section: {
       flex: 1,

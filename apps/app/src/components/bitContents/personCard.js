@@ -29,23 +29,24 @@ export class PersonCard extends React.Component {
   static style = {
     test: {
       flex: 1,
-      alignItems: 'center',
-      overflow: 'hidden',
     },
     avatar: {
       borderRadius: 100,
       width: 70,
       height: 70,
       margin: [10, 0],
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      transform: {
+        scale: 2,
+        y: -5,
+        rotate: '40deg',
+      },
     },
     subtitles: {
       fontSize: 13,
       opacity: 0.5,
-      alignItems: 'center',
-    },
-    a: {
-      textAlign: 'center',
-      alignSelf: 'center',
     },
   }
 }

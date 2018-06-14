@@ -2,7 +2,7 @@
   "name": "@mcro/sonar",
   "private": true,
   "version": "2.0.11",
-  "main": "_/index.js",
+  "main": "_/sonar.js",
   "license": "MIT",
   "sideEffects": false,
   "scripts": {

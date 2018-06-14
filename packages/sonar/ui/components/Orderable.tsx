@@ -5,8 +5,8 @@
  * @format
  */
 
-import { Rect } from '../../utils/geometry.js'
-import styled from '../styled/index.js'
+import { Rect } from '../../utils/geometry'
+import styled from '../styled/index'
 import { Component } from 'react'
 
 const React = require('react')

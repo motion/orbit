@@ -24,6 +24,7 @@
     "@mcro/slackdown": "^2.0.0",
     "@mcro/ui": "^2.0.11",
     "@mcro/helpers": "*",
+    "@mcro/sonar": "*",
     "color": "^3.0.0",
     "date-fns": "1.29.0",
     "event-kit": "^2.5.0",

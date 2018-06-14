@@ -9,21 +9,20 @@ import FlexColumn from './FlexColumn'
 import styled from '../styled/index'
 import Orderable from './Orderable'
 import FlexRow from './FlexRow'
-import {colors} from './colors'
+import { colors } from './colors'
 import Tab from './Tab'
 
 const TabList = FlexRow.extends({
   alignItems: 'stretch',
-});
+})
 
 const TabListItem = styled.view(
   {
     backgroundColor: props => (props.active ? colors.light15 : colors.light02),
     borderBottom: '1px solid #dddfe2',
-    boxShadow: props =>
-      props.active ? 'inset 0px 0px 3px rgba(0,0,0,0.25)' : 'none',
     color: colors.dark80,
     flex: 1,
+    flexFlow: 'row',
     fontSize: 13,
     lineHeight: '28px',
     overflow: 'hidden',
@@ -41,14 +40,14 @@ const TabListItem = styled.view(
   {
     ignoreAttributes: ['active'],
   },
-);
+)
 
 const TabListAddItem = TabListItem.extends({
   borderRight: 'none',
   flex: 0,
   flexGrow: 0,
   fontWeight: 'bold',
-});
+})
 
 const CloseButton = styled.view({
   color: '#000',
@@ -67,131 +66,131 @@ const CloseButton = styled.view({
     backgroundColor: colors.cherry,
     color: '#fff',
   },
-});
+})
 
 const OrderableContainer = styled.view({
   display: 'inline-block',
-});
+})
 
 const TabContent = styled.view({
   height: '100%',
   overflow: 'auto',
   width: '100%',
-});
+})
 
 /**
  * A Tabs component.
  */
-export default function Tabs(props: {|
+export default function Tabs(props: {
   /**
    * Callback for when the active tab has changed.
    */
-  onActive?: (key: string | void) => void,
+  onActive?: (key: string | void) => void
   /**
    * The key of the default active tab.
    */
-  defaultActive?: string,
+  defaultActive?: string
   /**
    * The key of the currently active tab.
    */
-  active?: string | void,
+  active?: string | void
   /**
    * Tab elements.
    */
-  children?: Array<React$Element<any>>,
+  children?: Array<any>
   /**
    * Whether the tabs can be reordered by the user.
    */
-  orderable?: boolean,
+  orderable?: boolean
   /**
    * Callback when the tab order changes.
    */
-  onOrder?: (order: Array<string>) => void,
+  onOrder?: (order: Array<string>) => void
   /**
    * Order of tabs.
    */
-  order?: Array<string>,
+  order?: Array<string>
   /**
    * Whether to include the contents of every tab in the DOM and just toggle
    * it's visibility.
    */
-  persist?: boolean,
+  persist?: boolean
   /**
    * Whether to include a button to create additional items.
    */
-  newable?: boolean,
+  newable?: boolean
   /**
    * Callback for when the new button is clicked.
    */
-  onNew?: () => void,
+  onNew?: () => void
   /**
    * Elements to insert before all tabs in the tab list.
    */
-  before?: Array<React$Node>,
+  before?: Array<React$Node>
   /**
    * Elements to insert after all tabs in the tab list.
    */
-  after?: Array<React$Node>,
-|}) {
-  const {onActive} = props;
+  after?: Array<React$Node>
+}) {
+  const { onActive } = props
   const active: string | void =
-    props.active == null ? props.defaultActive : props.active;
+    props.active == null ? props.defaultActive : props.active
 
   // array of other components that aren't tabs
-  const before = props.before || [];
-  const after = props.after || [];
+  const before = props.before || []
+  const after = props.after || []
 
   //
-  const tabs = {};
+  const tabs = {}
 
   // a list of keys
-  const keys = props.order ? props.order.slice() : [];
+  const keys = props.order ? props.order.slice() : []
 
-  const tabContents = [];
-  const tabSiblings = [];
+  const tabContents = []
+  const tabSiblings = []
 
   function add(comps) {
     for (const comp of [].concat(comps || [])) {
       if (Array.isArray(comp)) {
-        add(comp);
-        continue;
+        add(comp)
+        continue
       }
 
       if (!comp) {
-        continue;
+        continue
       }
 
       if (comp.type !== Tab) {
         // if element isn't a tab then just push it into the tab list
-        tabSiblings.push(comp);
-        continue;
+        tabSiblings.push(comp)
+        continue
       }
 
-      const {children, closable, label, onClose, width} = comp.props;
+      const { children, closable, label, onClose, width } = comp.props
 
-      const key = comp.key == null ? label : comp.key;
+      const key = comp.key == null ? label : comp.key
       if (typeof key !== 'string') {
-        throw new Error('tab needs a string key or a label');
+        throw new Error('tab needs a string key or a label')
       }
       if (!keys.includes(key)) {
-        keys.push(key);
+        keys.push(key)
       }
 
-      const isActive: boolean = active === key;
+      const isActive: boolean = active === key
       if (isActive || props.persist === true || comp.props.persist === true) {
         tabContents.push(
           <TabContent key={key} hidden={!isActive}>
             {children}
           </TabContent>,
-        );
+        )
       }
 
       // this tab has been hidden from the tab bar but can still be selected if it's key is active
       if (comp.props.hidden) {
-        continue;
+        continue
       }
 
-      let closeButton;
+      let closeButton
 
       tabs[key] = (
         <TabListItem
@@ -199,38 +198,40 @@ export default function Tabs(props: {|
           width={width}
           active={isActive}
           onMouseDown={
-            !isActive &&
-            onActive &&
-            ((event: MouseEvent) => {
-              if (event.target !== closeButton) {
-                onActive(key);
-              }
-            })
-          }>
+            !isActive && onActive
+              ? (event: MouseEvent) => {
+                  if (event.target !== closeButton) {
+                    onActive(key)
+                  }
+                }
+              : undefined
+          }
+        >
           {comp.props.label}
           {closable && (
             <CloseButton // eslint-disable-next-line react/jsx-no-bind
               innerRef={ref => (closeButton = ref)} // eslint-disable-next-line react/jsx-no-bind
               onMouseDown={() => {
                 if (isActive && onActive) {
-                  const index = keys.indexOf(key);
-                  const newActive = keys[index + 1] || keys[index - 1] || null;
-                  onActive(newActive);
+                  const index = keys.indexOf(key)
+                  const newActive = keys[index + 1] || keys[index - 1] || null
+                  onActive(newActive)
                 }
 
-                onClose();
-              }}>
+                onClose()
+              }}
+            >
               X
             </CloseButton>
           )}
         </TabListItem>
-      );
+      )
     }
   }
 
-  add(props.children);
+  add(props.children)
 
-  let tabList;
+  let tabList
   if (props.orderable === true) {
     tabList = (
       <OrderableContainer key="orderable-list">
@@ -241,11 +242,11 @@ export default function Tabs(props: {|
           order={keys}
         />
       </OrderableContainer>
-    );
+    )
   } else {
-    tabList = [];
+    tabList = []
     for (const key in tabs) {
-      tabList.push(tabs[key]);
+      tabList.push(tabs[key])
     }
   }
 
@@ -254,7 +255,7 @@ export default function Tabs(props: {|
       <TabListAddItem key={keys.length} onMouseDown={props.onNew}>
         +
       </TabListAddItem>,
-    );
+    )
   }
 
   return (
@@ -267,5 +268,5 @@ export default function Tabs(props: {|
       {tabContents}
       {tabSiblings}
     </FlexColumn>
-  );
+  )
 }

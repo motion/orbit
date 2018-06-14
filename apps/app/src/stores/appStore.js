@@ -284,6 +284,7 @@ export class AppStore {
   quickSearchResults = react(
     () => App.state.query,
     async (_, { whenChanged }) => {
+      log(`quick search ${_}`)
       if (this.quickSearchResults.length) {
         await whenChanged(() => Desktop.searchState.pluginResultsId)
       }

@@ -16,9 +16,12 @@ const appTarget = ({ offset, bounds }) => {
 
 @store
 export class AppReactions {
+  id = Math.random()
+
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
     if (window.setupAppReactions) {
+      debugger
       console.warn('!!!!!!!!!!!!!!!!!!!!! setting up app reactions')
     }
     const dispose = App.onMessage(async msg => {
@@ -28,7 +31,7 @@ export class AppReactions {
           this.toggle()
           return
         case App.messages.TOGGLE_DOCKED:
-          console.log('toggle docked')
+          console.log('toggle docked', this.id, this)
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:

@@ -22,7 +22,7 @@ const TabList = FlexRow.extends({
 
 const TabListItem = styled.view(
   {
-    backgroundColor: props => (props.active ? colors.light15 : colors.light02),
+    backgroundColor: props => (props.active ? 'rgb(249, 249, 249)' : '#edeef0'),
     borderBottom: '1px solid #dddfe2',
     color: colors.dark80,
     flex: 1,
@@ -35,10 +35,11 @@ const TabListItem = styled.view(
     textAlign: 'center',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+    userSelect: 'none',
 
     '&:hover': {
       backgroundColor: props =>
-        props.active ? colors.light15 : colors.light05,
+        props.active ? 'rgb(249, 249, 249)' : colors.light05,
     },
   },
   {

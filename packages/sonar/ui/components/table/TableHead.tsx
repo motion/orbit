@@ -63,6 +63,7 @@ const TableHeadColumnContainer = styled.view(
     lineHeight: '23px',
     fontSize: '0.85em',
     fontWeight: 500,
+    userSelect: 'none',
     width: props => (props.width === 'flex' ? '100%' : props.width),
     '&::after': {
       position: 'absolute',

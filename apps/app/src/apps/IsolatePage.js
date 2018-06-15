@@ -9,7 +9,7 @@ import { Bit } from '@mcro/models'
 
 const set = async () => {
   console.log('setting up')
-  const bit = await Bit.findOne({ where: { integration: 'github' }, skip: 3 })
+  const bit = await Bit.findOne({ where: { integration: 'github' }, skip: 6 })
   PeekStateActions.selectItem(
     bit,
     // {

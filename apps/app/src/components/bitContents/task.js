@@ -1,6 +1,7 @@
 import keywordExtract from 'keyword-extractor'
 import markdown from 'marky-markdown'
 import * as UI from '@mcro/ui'
+import { TimeAgo } from '~/views/TimeAgo'
 
 const options = {
   language: 'english',
@@ -10,7 +11,28 @@ const options = {
 }
 
 const BitGithubTaskComment = ({ comment }) => {
-  return <comment>{JSON.stringify(comment)}</comment>
+  const {
+    author: { avatarUrl, login },
+    createdAt,
+    body,
+  } = comment
+  return (
+    <comment>
+      <user $$row>
+        <img
+          css={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
+          src={avatarUrl}
+        />
+        {login}
+        <TimeAgo if={createdAt}>{createdAt}</TimeAgo>
+      </user>
+      <body
+        dangerouslySetInnerHTML={{
+          __html: markdown(body),
+        }}
+      />
+    </comment>
+  )
 }
 
 const parseGithubContents = ({ bit, shownLimit }) => {

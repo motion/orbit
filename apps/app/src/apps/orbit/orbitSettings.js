@@ -87,6 +87,7 @@ export class OrbitSettings {
             Automatically manage disk space
           </CheckBoxRow>
         </OrbitCard>
+        <br />
         <section if={activeSettings.length}>
           <SubTitle>Active Integrations</SubTitle>
           <cards>

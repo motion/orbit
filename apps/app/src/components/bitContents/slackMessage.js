@@ -104,8 +104,6 @@ export class BitSlackMessage extends React.Component {
       marginLeft: -1,
     },
     content: {
-      fontSize: 15,
-      lineHeight: '1.25rem',
       display: 'block',
       position: 'relative',
       margin: [1, 0, 0],

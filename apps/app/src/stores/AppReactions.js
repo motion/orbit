@@ -143,15 +143,13 @@ export class AppReactions {
     { log: 'state' },
   )
 
-  clearPeekOnReposition = react(
-    () => App.orbitState.position,
-    PeekStateActions.clearPeek,
-    {
-      log: 'state',
-    },
-  )
+  // TODO: re-enable
+  // clearPeekOnReposition = react(
+  //   () => App.orbitState.position,
+  //   PeekStateActions.clearPeek,
+  // )
 
-  // disabled during testing, reenable
+  // TODO: re-enable
   // react
   // clearPeekOnMouseOut = [
   //   () => Desktop.hoverState.peekHovered,

@@ -292,7 +292,7 @@ export class AppStore {
       if (!results.length) {
         throw react.cancel
       }
-      return results
+      return results.slice(0, 5)
     },
     { defaultValue: [], immediate: true },
   )

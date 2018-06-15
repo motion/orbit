@@ -129,6 +129,8 @@ export class Conversation extends React.Component {
   static style = {
     mainInner: {
       margin: [0, -10, -5],
+      fontSize: 18,
+      lineHeight: '1.5rem',
     },
     content: {
       padding: [10, 20],

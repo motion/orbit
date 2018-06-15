@@ -113,7 +113,7 @@ export class OrbitHome {
           </SubTitle>
           <div $$flex />
         </header>
-        <content css={{ paddingTop: 12 }}>
+        <content>
           <Masonry if={store.results.length}>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2

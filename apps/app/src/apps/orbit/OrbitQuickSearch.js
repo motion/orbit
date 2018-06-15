@@ -90,7 +90,7 @@ export class OrbitQuickSearch {
   }
   static style = {
     quickSearch: {
-      pointerEvents: 'all',
+      // pointerEvents: 'all',
       flexFlow: 'row',
       paddingLeft: pad,
       height: iconSize + pad * 2 + iconPad * 2,

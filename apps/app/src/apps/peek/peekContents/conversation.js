@@ -136,7 +136,6 @@ export class Conversation extends React.Component {
                       </React.Fragment>
                     ))}
                     <br />
-                    123
                     <br />
                     <br />
                   </section>

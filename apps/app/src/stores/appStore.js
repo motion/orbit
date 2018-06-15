@@ -76,7 +76,7 @@ export class AppStore {
 
   clearPeekOnSelectedPaneChange = react(
     () => this.selectedPane,
-    this.clearSelected,
+    () => this.clearSelected(),
   )
 
   clearPeekOnInactiveIndex = react(

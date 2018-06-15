@@ -84,6 +84,7 @@ export class PeekPage extends React.Component {
     const { bit } = peekStore.state
     const type = (bit && capitalize(bit.type)) || 'Empty'
     const PeekContentsView = PeekContents[type]
+    console.log('peek type', type, PeekContentsView)
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>

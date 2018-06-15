@@ -541,7 +541,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
       let reactionResult
 
-      // to allow cancels!
+      // to allow cancels
       try {
         reactionResult = reactionFn.call(
           obj,

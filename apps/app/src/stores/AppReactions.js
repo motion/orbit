@@ -16,11 +16,10 @@ const appTarget = ({ offset, bounds }) => {
 
 @store
 export class AppReactions {
+  id = Math.random()
+
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
-    if (window.setupAppReactions) {
-      console.warn('!!!!!!!!!!!!!!!!!!!!! setting up app reactions')
-    }
     const dispose = App.onMessage(async msg => {
       window.setupAppReactions = true
       switch (msg) {
@@ -28,7 +27,7 @@ export class AppReactions {
           this.toggle()
           return
         case App.messages.TOGGLE_DOCKED:
-          console.log('toggle docked')
+          console.log('toggle docked', this.id, this)
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:
@@ -56,10 +55,7 @@ export class AppReactions {
       }
     })
     this.subscriptions.add({
-      dispose: () => {
-        console.log('disposing app onMessage')
-        dispose()
-      },
+      dispose,
     })
   }
 
@@ -144,15 +140,13 @@ export class AppReactions {
     { log: 'state' },
   )
 
-  clearPeekOnReposition = react(
-    () => App.orbitState.position,
-    PeekStateActions.clearPeek,
-    {
-      log: 'state',
-    },
-  )
+  // TODO: re-enable
+  // clearPeekOnReposition = react(
+  //   () => App.orbitState.position,
+  //   PeekStateActions.clearPeek,
+  // )
 
-  // disabled during testing, reenable
+  // TODO: re-enable
   // react
   // clearPeekOnMouseOut = [
   //   () => Desktop.hoverState.peekHovered,

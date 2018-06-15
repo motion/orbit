@@ -7,7 +7,10 @@ import * as AppStoreHelpers from './appStoreHelpers'
 import * as AppStoreReactions from './appStoreReactions'
 import { modelQueryReaction } from '@mcro/helpers'
 
+let hasRun = false
+
 export class AppStore {
+  quickSearchIndex = 0
   nextIndex = 0
   activeIndex = -1
   settings = {}
@@ -73,7 +76,7 @@ export class AppStore {
 
   clearPeekOnSelectedPaneChange = react(
     () => this.selectedPane,
-    this.clearSelected,
+    () => this.clearSelected(),
   )
 
   clearPeekOnInactiveIndex = react(
@@ -97,7 +100,7 @@ export class AppStore {
   updateResults = react(
     () => [
       Desktop.state.lastBitUpdatedAt,
-      Desktop.searchState.pluginResultId || 0,
+      Desktop.searchState.pluginResultsId || 0,
     ],
     () => {
       if (this.searchState.results && this.searchState.results.length) {
@@ -198,7 +201,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when, cancel }) => {
+    async ([query, thisGetResults], { when }) => {
       if (!query) {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
@@ -240,8 +243,11 @@ export class AppStore {
           const id0 = Desktop.searchState.pluginResultsId
           const id1 = this.bitResultsId
           await Promise.all([
-            when(() => id0 !== Desktop.searchState.pluginResultId, 200),
-            when(() => id1 !== this.bitResultsId, 200),
+            when(
+              () => id0 !== Desktop.searchState.pluginResultsId,
+              hasRun ? 200 : 2000,
+            ),
+            when(() => id1 !== this.bitResultsId, hasRun ? 200 : 2000),
           ])
         } catch (err) {
           if (err instanceof ReactionTimeoutError) {
@@ -260,6 +266,7 @@ export class AppStore {
         // sort
         results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
       }
+      hasRun = true
       console.log('returning new searchState')
       return {
         query,
@@ -272,6 +279,22 @@ export class AppStore {
       immediate: true,
       log: false,
     },
+  )
+
+  quickSearchResults = react(
+    () => App.state.query,
+    async (_, { whenChanged }) => {
+      log(`quick search ${_}`)
+      if (this.quickSearchResults.length) {
+        await whenChanged(() => Desktop.searchState.pluginResultsId)
+      }
+      const results = Desktop.searchState.pluginResults
+      if (!results.length) {
+        throw react.cancel
+      }
+      return results.slice(0, 5)
+    },
+    { defaultValue: [], immediate: true },
   )
 
   clearSelected = () => {

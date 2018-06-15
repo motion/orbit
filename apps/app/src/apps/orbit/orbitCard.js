@@ -69,14 +69,6 @@ class OrbitCardStore {
     }
   }
 
-  get isOnDeck() {
-    return (
-      this.props.index === 0 &&
-      this.isPaneSelected &&
-      this.props.appStore.activeIndex === -1
-    )
-  }
-
   setPeekTargetOnNextIndex = react(
     () => [
       this.props.appStore.nextIndex === this.props.index,
@@ -128,6 +120,7 @@ const tinyProps = {
 export class OrbitCard extends React.Component {
   static defaultProps = {
     borderRadius: 6,
+    hide: {},
   }
 
   constructor(...args) {
@@ -172,6 +165,7 @@ export class OrbitCard extends React.Component {
       permalink,
       date,
       people,
+      iconProps: contentIconProps,
     } = contentProps
     const {
       store,
@@ -187,17 +181,20 @@ export class OrbitCard extends React.Component {
       orbitStore,
       inactive,
       iconProps,
+      hide,
     } = this.props
     const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
       <OrbitIcon
-        if={icon}
+        if={icon && !hide.icon}
         icon={icon}
         size={hasSubtitle ? 14 : 18}
         $orbitIcon
         imageStyle={imageStyle}
+        orbitIconStyle={{ marginRight: 6 }}
         {...tiny && tinyProps.iconProps}
+        {...contentIconProps}
         {...iconProps}
       />
     )
@@ -220,7 +217,7 @@ export class OrbitCard extends React.Component {
             {orbitIcon}
             <title>
               <UI.Text
-                size={1.35}
+                size={1.3}
                 sizeLineHeight={0.8}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}
@@ -246,10 +243,9 @@ export class OrbitCard extends React.Component {
               </UI.Text>
               {typeof subtitle !== 'string' && subtitle}
               <space $$flex />
-              <UI.Text if={date} size={0.95}>
+              <UI.Text if={date} onClick={permalink} size={0.95}>
                 <TimeAgo date={date} />
               </UI.Text>
-              <permalink if={permalink}>{permalink}</permalink>
             </subtitle>
             <preview if={preview && !children}>
               {typeof preview !== 'string' && preview}
@@ -286,7 +282,6 @@ export class OrbitCard extends React.Component {
     }
     const BitContent = bitContents(bit)
     store.isSelected
-    store.isOnDeck
     if (typeof BitContent !== 'function') {
       console.error('got a weird one', BitContent)
       return null
@@ -316,7 +311,7 @@ export class OrbitCard extends React.Component {
       position: 'relative',
       maxHeight: '100%',
       transition: 'all ease-in 120ms',
-      padding: [18, 12],
+      padding: 18,
     },
     title: {
       maxWidth: '100%',
@@ -333,7 +328,6 @@ export class OrbitCard extends React.Component {
       position: 'absolute',
       top: 0,
       right: 0,
-      margin: [0, 6, 0, 0],
       // filter: 'grayscale(100%)',
       opacity: 0.8,
     },
@@ -352,21 +346,20 @@ export class OrbitCard extends React.Component {
     },
   }
 
-  static theme = ({ store, listItem, borderRadius, inGrid }, theme) => {
-    const { isSelected, isOnDeck } = store
+  static theme = ({ style, store, listItem, borderRadius, inGrid }, theme) => {
+    const { isSelected } = store
     let hoveredStyle
-    let card
+    let card = {
+      borderRadius,
+      flex: inGrid ? 1 : 'none',
+      height: (style && style.height) || 'auto',
+    }
     if (listItem) {
       hoveredStyle = {
         background: theme.selected.background,
       }
       let listStateStyle
-      if (isOnDeck) {
-        listStateStyle = {
-          background: theme.base.background.darken(0.01),
-          '&:hover': hoveredStyle,
-        }
-      } else if (isSelected) {
+      if (isSelected) {
         listStateStyle = {
           background: theme.selected.background,
           '&:hover': hoveredStyle,
@@ -380,37 +373,37 @@ export class OrbitCard extends React.Component {
         }
       }
       card = {
+        ...card,
         ...listStateStyle,
         margin: [0, -12],
         padding: [18, 20],
         borderTop: [1, theme.hover.background],
       }
     } else {
-      const borderTop = [1, isSelected ? 'transparent' : theme.hover.background]
+      const border = [1, isSelected ? 'transparent' : theme.hover.background]
       hoveredStyle = {
         background: isSelected
           ? theme.selected.background
           : theme.hover.background,
       }
-      card = {
-        // background: theme.base.background,
-        borderTop,
-        '&:hover': hoveredStyle,
-      }
       if (isSelected) {
         card = {
-          borderTop,
+          ...card,
+          border,
           background: '#fff',
           boxShadow: [[0, 3, 12, [0, 0, 0, 0.08]]],
+        }
+      } else {
+        card = {
+          ...card,
+          // background: theme.base.background,
+          border,
+          '&:hover': hoveredStyle,
         }
       }
     }
     return {
-      card: {
-        borderRadius,
-        flex: inGrid ? 1 : 'none',
-        ...card,
-      },
+      card,
       preview: {
         margin: inGrid ? ['auto', 0] : 0,
         padding: [8, 0, 0],

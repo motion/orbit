@@ -1,62 +1,13 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
+import { App } from '@mcro/all'
 import { Person } from '@mcro/models'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitCard } from './orbitCard'
 import { Masonry } from '~/views/masonry'
 import { SubTitle } from '~/views'
-import { OrbitCardTeam } from './orbitCardTeam'
-import * as _ from 'lodash'
-// import { Carousel } from '~/components/carousel'
-
-// {
-//   title: 'Engineering',
-//   type: 'team',
-//   data: {
-//     people: '19',
-//     topics: 'Cosal, pTSNE, memorial, left',
-//     recently: [
-//       { title: 'Stores, hmr', type: 'github' },
-//       { title: 'Foxwoods Sprint', type: 'gdocs' },
-//       { title: 'ux checkout #pp', type: 'slack' },
-//     ],
-//   },
-// },
-// {
-//   title: 'Design',
-//   type: 'team',
-//   data: {
-//     people: '5',
-//     topics: 'Checkout, sketch, interaction, fix',
-//     recently: [
-//       { title: '360 stage design', type: 'gdocs' },
-//       { title: 'Kit v2', type: 'github' },
-//       { title: 'checkout, bug', type: 'slack' },
-//     ],
-//   },
-// },
-// {
-//   title: 'Marketing',
-//   type: 'team',
-//   data: {
-//     people: '12',
-//   },
-// },
-// {
-//   title: 'Buyers',
-//   type: 'team',
-//   data: {
-//     people: '15',
-//   },
-// },
-// {
-//   title: 'Sales',
-//   type: 'team',
-//   data: {
-//     people: '5',
-//   },
-// },
+import * as Helpers from '~/helpers'
 
 class OrbitDirectoryStore {
   setGetResults = react(
@@ -82,56 +33,12 @@ class OrbitDirectoryStore {
 export class OrbitDirectory {
   render({ store }) {
     log('DIRECTORY --------')
-    const [teams, people] = _.partition(store.results, x => x.type === 'team')
+    const people = Helpers.fuzzy(App.state.query.slice(1), store.results, {
+      key: 'name',
+    })
     const total = store.results.length
     return (
       <OrbitDockedPane name="directory">
-        <teams if={false}>
-          <SubTitle>Teams</SubTitle>
-          <React.Fragment if={teams.length}>
-            <OrbitCardTeam
-              pane="summary"
-              subPane="directory"
-              index={0}
-              total={total}
-              store={store}
-              bit={teams[0]}
-              isExpanded
-              hoverToSelect
-            />
-            <space css={{ height: 12 }} />
-            <OrbitCardTeam
-              pane="summary"
-              subPane="directory"
-              index={1}
-              total={total}
-              store={store}
-              bit={teams[1]}
-              isExpanded
-              hoverToSelect
-            />
-            <carousel css={{ margin: [12, 0, 0] }}>
-              {teams.slice(2).map((team, index) => (
-                <OrbitCardTeam
-                  key={index}
-                  pane="summary"
-                  subPane="directory"
-                  index={index + 2}
-                  total={total}
-                  store={store}
-                  bit={team}
-                  hoverToSelect
-                  css={{
-                    width: 140,
-                    marginRight: 12,
-                  }}
-                />
-              ))}
-            </carousel>
-          </React.Fragment>
-          <br />
-          <br />
-        </teams>
         <React.Fragment if={people.length}>
           <SubTitle>People</SubTitle>
           <Masonry>
@@ -139,11 +46,14 @@ export class OrbitDirectory {
               <OrbitCard
                 pane="summary"
                 subPane="directory"
-                key={`${bit.id}${index}`}
-                index={index + teams.length}
+                key={bit.id}
+                index={index}
                 bit={bit}
                 total={total}
                 hoverToSelect
+                hide={{
+                  icon: true,
+                }}
               />
             ))}
           </Masonry>

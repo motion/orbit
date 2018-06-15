@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { PeekHeader } from '../peekHeader'
+import { PeekContent } from '../PeekContent'
 import bitContents from '~/components/bitContents'
 import { OrbitIcon } from '~/apps/orbit/orbitIcon'
 import { Carousel } from '~/components/carousel'
@@ -35,6 +36,7 @@ class ConversationPeekStore {
 const slackConvoBitContentStyle = {
   contentStyle: {
     paddingLeft: 17,
+    fontSize: 18,
   },
 }
 
@@ -63,13 +65,35 @@ export class Conversation extends React.Component {
                 subtitle={location}
                 after={
                   <after>
-                    <permalink>{permalink}</permalink>
+                    <permalink>
+                      <UI.Button
+                        size={0.9}
+                        icon="link"
+                        circular
+                        onClick={permalink}
+                      />
+                    </permalink>
                     <space />
-                    <OrbitIcon if={icon} icon={icon} size={16} />
+                    <OrbitIcon
+                      if={icon}
+                      icon={icon}
+                      size={16}
+                      css={
+                        {
+                          // position: 'absolute',
+                          // top: 30,
+                          // right: -20,
+                          // transform: {
+                          //   scale: 2,
+                          //   rotate: '45deg',
+                          // },
+                        }
+                      }
+                    />
                   </after>
                 }
               />
-              <main>
+              <PeekContent>
                 <mainInner>
                   <content>
                     <UI.Text
@@ -116,7 +140,7 @@ export class Conversation extends React.Component {
                     <br />
                   </section>
                 </mainInner>
-              </main>
+              </PeekContent>
             </>
           )
         }}
@@ -125,13 +149,10 @@ export class Conversation extends React.Component {
   }
 
   static style = {
-    main: {
-      flex: 1,
-      overflowY: 'scroll',
-      margin: [15, 10],
-    },
     mainInner: {
       margin: [0, -10, -5],
+      fontSize: 18,
+      lineHeight: '1.6rem',
     },
     content: {
       padding: [10, 20],
@@ -145,6 +166,7 @@ export class Conversation extends React.Component {
     after: {
       flexFlow: 'row',
       alignItems: 'center',
+      position: 'relative',
     },
     space: {
       width: 7,

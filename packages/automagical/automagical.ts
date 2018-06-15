@@ -1,6 +1,7 @@
 import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import debug from '@mcro/debug'
+import { ReactionOptions } from './types'
 import {
   Reaction,
   ReactionRejectionError,
@@ -13,18 +14,6 @@ export * from './constants'
 
 const root = typeof window !== 'undefined' ? window : require('global')
 const IS_PROD = process.env.NODE_ENV === 'production'
-
-export type ReactionOptions = {
-  fireImmediately?: boolean
-  immediate?: boolean
-  equals?: Function
-  log?: false | 'state' | 'all'
-  delay?: number
-  isIf?: boolean
-  delayValue?: boolean
-  onlyUpdateIfChanged?: boolean
-  defaultValue?: any
-}
 
 export function getReactionOptions(userOptions?: ReactionOptions) {
   let options: ReactionOptions = {
@@ -482,7 +471,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   }
 
   const whenChanged = (condition, dontCompare) => {
-    let oldVal
+    let oldVal = condition()
     let curVal
     return new Promise((resolve, reject) => {
       if (!reactionID) {
@@ -490,10 +479,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       let cancelWhen = false
       Mobx.when(() => {
-        if (typeof oldVal === 'undefined') {
-          oldVal = condition()
-          return false
-        }
         curVal = condition()
         if (dontCompare) {
           return true
@@ -501,7 +486,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return !Mobx.comparer.structural(curVal, oldVal)
       })
         .then(() => {
-          if (cancelWhen) return
+          if (cancelWhen) {
+            return
+          }
           resolve(curVal)
         })
         .catch(reject)
@@ -554,7 +541,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
       let reactionResult
 
-      // to allow cancels!
+      // to allow cancels
       try {
         reactionResult = reactionFn.call(
           obj,

@@ -56,18 +56,7 @@ export class BitSlackConversation extends React.Component {
           {bit.title.slice(1)}
         </RoundButton>
       ),
-      permalink: (
-        <UI.Button
-          circular
-          icon="link69"
-          size={0.8}
-          alpha={0.6}
-          onClick={e => {
-            e.stopPropagation()
-            appStore.open(bit)
-          }}
-        />
-      ),
+      permalink: () => appStore.open(bit),
       content,
     })
   }

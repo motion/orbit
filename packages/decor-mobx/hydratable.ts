@@ -1,6 +1,10 @@
 import * as Mobx from 'mobx'
 
 const defaultFilter = (obj, key, val) => {
+  // avoid classes
+  if (val && typeof val.constructor === 'function') {
+    return true
+  }
   if (typeof val === 'function') {
     return true
   }

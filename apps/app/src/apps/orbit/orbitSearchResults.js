@@ -3,6 +3,7 @@ import { view, react } from '@mcro/black'
 import { App } from '@mcro/all'
 import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
+import { OrbitQuickSearch } from './OrbitQuickSearch'
 
 class SearchStore {
   state = react(
@@ -35,9 +36,10 @@ export class OrbitSearchResults {
     log(`SEARCH ${name} --------------`)
     return (
       <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
-        <contents $$flex $isChanging={isChanging}>
+        <contents $$flex>
           <message if={message}>{message}</message>
-          <results if={results.length}>
+          <OrbitQuickSearch />
+          <results $isChanging={isChanging} if={results.length}>
             {results.map((bit, index) => (
               <OrbitCard
                 pane={name}
@@ -81,6 +83,7 @@ export class OrbitSearchResults {
       opacity: 0.3,
     },
     results: {
+      opacity: 1,
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
     },

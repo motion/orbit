@@ -1,4 +1,5 @@
 import { Reaction, ReactionRejectionError } from './constants'
+import { ReactionOptions } from './types'
 
 // decorator to do reactions
 
@@ -34,9 +35,9 @@ function tsWatch(options) {
 // @watch decorator
 export const react = /*<ReactionFunction<any>>*/ function react(
   a,
-  b?,
-  c?,
-  opts?,
+  b?: ReactionOptions | Function,
+  c?: ReactionOptions,
+  opts?: ReactionOptions,
 ) {
   if (typeof a === 'function') {
     if (typeof b === 'function') {

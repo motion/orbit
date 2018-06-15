@@ -11,7 +11,7 @@ class PeekStore {
   history = []
 
   get hasHistory() {
-    return this.history.length
+    return this.history.length > 1
   }
 
   get curState() {
@@ -30,7 +30,6 @@ class PeekStore {
   updateHistory = react(
     () => this.curState,
     state => {
-      console.log('adding history', this.history, state)
       if (state) {
         this.history.push(state)
       } else {

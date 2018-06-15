@@ -19,7 +19,7 @@ if [ "$(pwd)" = "$ROOT" ]; then
   exit 0
 fi
 
-if [ ! ("$(realpath ../..)" = "$ROOT") ]; then
+if [ "$(realpath ../..)" != "$ROOT" ]; then
   echo "not in a package or app..."
   exit 1
 fi
@@ -29,6 +29,6 @@ echo "install: $ARGS"
 if [ -z "$ARGS" ]; then
   $ROOT/node_modules/.bin/lerna bootstrap
 else
-  $ROOT/node_modules/.bin/lerna add $ARGS
+  $ROOT/node_modules/.bin/lerna add $ARGS --scope @mcro/$(basename  $(pwd))
 fi
 

@@ -118,7 +118,6 @@ class Bridge {
         return
       }
       if (data[0] === '-') {
-        console.log('got msg', data)
         this.handleMessage(data.slice(1))
         return
       }
@@ -344,7 +343,8 @@ class Bridge {
     this.messageListeners.add(subscription)
     // return disposable
     return () => {
-      this.messageListeners.delete(subscription)
+      console.log('disposing listener', subscription)
+      console.log(this.messageListeners.delete(subscription))
     }
   }
 

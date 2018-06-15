@@ -19,7 +19,7 @@ if [ "$(pwd)" = "$ROOT" ]; then
   exit 0
 fi
 
-if [ ! ("$(realpath ../..)" = "$ROOT") ]; then
+if [ "$(realpath ../..)" != "$ROOT" ]; then
   echo "not in a package or app..."
   exit 1
 fi

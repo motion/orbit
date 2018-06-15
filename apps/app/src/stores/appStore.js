@@ -288,7 +288,11 @@ export class AppStore {
       if (this.quickSearchResults.length) {
         await whenChanged(() => Desktop.searchState.pluginResultsId)
       }
-      return Desktop.searchState.pluginResults
+      const results = Desktop.searchState.pluginResults
+      if (!results.length) {
+        throw react.cancel
+      }
+      return results
     },
     { defaultValue: [], immediate: true },
   )

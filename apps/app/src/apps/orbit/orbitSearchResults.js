@@ -36,10 +36,10 @@ export class OrbitSearchResults {
     log(`SEARCH ${name} --------------`)
     return (
       <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
-        <contents $$flex $isChanging={isChanging}>
+        <contents $$flex>
           <message if={message}>{message}</message>
           <OrbitQuickSearch />
-          <results if={results.length}>
+          <results $isChanging={isChanging} if={results.length}>
             {results.map((bit, index) => (
               <OrbitCard
                 pane={name}
@@ -83,6 +83,7 @@ export class OrbitSearchResults {
       opacity: 0.3,
     },
     results: {
+      opacity: 1,
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
     },

@@ -46,7 +46,7 @@ export class OrbitDirectory {
               <OrbitCard
                 pane="summary"
                 subPane="directory"
-                key={`${bit.id}${index}`}
+                key={bit.id}
                 index={index}
                 bit={bit}
                 total={total}

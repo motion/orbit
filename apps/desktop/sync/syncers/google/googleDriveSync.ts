@@ -29,6 +29,7 @@ export default class GoogleDriveSync {
 
   async syncFeed() {
     const changes = await this.service.getChanges()
+    // @ts-ignore
     if (changes && changes.changes) {
       for (const change of changes) {
         console.log('change:', change.fileId, change)

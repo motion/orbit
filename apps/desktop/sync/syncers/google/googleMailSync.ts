@@ -81,10 +81,13 @@ export default class GoogleMailSync {
       const history = await this.fetch('/users/me/history', {
         query: { startHistoryId: historyId },
       })
+      // @ts-ignore
       if (!history.history || !history.history.length) {
         return
       }
+      // @ts-ignore
       if (history.history.length < max) {
+        // @ts-ignore
         this.syncThreads({ max: history.history.length })
         return
       }
@@ -253,6 +256,7 @@ export default class GoogleMailSync {
       )
       const res = await this.fetchThreads(query_)
       if (res) {
+        // @ts-ignore
         threads = [...threads, ...res.threads]
         lastPageToken = res.nextPageToken
       } else {

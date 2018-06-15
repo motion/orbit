@@ -15,7 +15,7 @@ export * from './types'
 
 const root = typeof window !== 'undefined' ? window : require('global')
 const IS_PROD = process.env.NODE_ENV === 'production'
-const voidFn = _ => void
+const voidFn = () => void 0
 
 export function getReactionOptions(userOptions?: ReactionOptions) {
   let options: ReactionOptions = {

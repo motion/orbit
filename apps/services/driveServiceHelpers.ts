@@ -1,38 +1,9 @@
 import * as Constants from '@mcro/constants'
 import r2 from '@mcro/r2'
 import Strategies from '@mcro/oauth-strategies'
+import { DriveServiceHelpers, FetchOptions } from './types'
 
-export type Revision = {
-  id: string
-}
-
-export type DriveServiceHelpers = {
-  baseUrl: string
-  refreshToken: () => Promise<boolean>
-  fetch(
-    path: string,
-    options?: FetchOptions,
-  ): Promise<{
-    startPageToken?: string
-    revisions?: Revision[]
-    newStartPageToken?: number
-    nextPageToken?: string
-    files?: any[]
-    changes: any[]
-  }>
-}
-
-export type FetchOptions =
-  | undefined
-  | {
-      isRetrying?: boolean
-      type?: string
-      query?: Object
-      headers?: Object
-      body?: Object
-    }
-
-export default (setting): DriveServiceHelpers => ({
+export const getHelpers = (setting): DriveServiceHelpers => ({
   baseUrl: 'https://content.googleapis.com',
   async refreshToken() {
     if (!setting.values.oauth.refreshToken) {

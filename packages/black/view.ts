@@ -12,7 +12,6 @@ import { subscribable } from '@mcro/decor-classes'
 import { utilityUsable, reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
-// import { catchesRenderErrors } from './catchesRenderErrors'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
@@ -29,9 +28,6 @@ const uiContext = [
 
 const glossPlugin = () => ({ decorator })
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
-  // process.env.NODE_ENV === 'development' &&
-  //   typeof window !== 'undefined' &&
-  //   catchesRenderErrors,
   extendsReact,
   subscribable,
   utilityUsable,
@@ -44,6 +40,7 @@ const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
 ]
 
 export const blackDecorator: DecorCompiledDecorator<any> = decor(
+  // @ts-ignore
   decorations({ mobx: true, ui: true }),
 )
 
@@ -76,12 +73,15 @@ function createViewDecorator(): ViewDecorator {
   view.on = blackDecorator.on
   view.emit = blackDecorator.emit
   // other decorators
+  // @ts-ignore
   view.ui = decor(decorations({ ui: true }))
+  // @ts-ignore
   view.electron = decor(decorations({ mobx: true, ui: false }))
   const providable = decor([[storeProvidable, storeOptions]])
   view.provide = stores => providable({ stores, context: true })
   view.provide.on = providable.on
   view.provide.emit = providable.emit
+  // @ts-ignore
   view.attach = (...stores) => decor([[storeAttachable, { stores }]])
   return view
 }

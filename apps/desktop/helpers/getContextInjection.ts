@@ -14,7 +14,7 @@ export default function getContextInjection() {
       .toString()
       .trim()
     if (!selection) {
-      let anchorNode = document.getSelection().anchorNode
+      let anchorNode = document.getSelection().anchorNode as HTMLElement
       if (anchorNode) {
         if (anchorNode.querySelector) {
           anchorNode =
@@ -24,6 +24,7 @@ export default function getContextInjection() {
         }
         if (anchorNode) {
           // works with contentEditable + textarea/input
+          // @ts-ignore
           selection = anchorNode.textContent || anchorNode.value
         }
       }
@@ -38,6 +39,7 @@ export default function getContextInjection() {
       script: () => {
         // for some reason there can sometimes be multiple subject fields
         const subjects = document.querySelectorAll('input[name=subject]')
+        // @ts-ignore
         const title = (subjects[subjects.length] - 1).value
         return {
           title,
@@ -50,6 +52,7 @@ export default function getContextInjection() {
       regex: /.+mail.google.com.+inbox\/.+/,
       script: () => {
         return {
+          // @ts-ignore
           title: document.querySelector('h2.hP').innerText,
           selection: contentEditableValue(),
         }

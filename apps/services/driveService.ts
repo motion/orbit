@@ -1,6 +1,7 @@
 import { store } from '@mcro/black/store'
 import { Setting } from '@mcro/models'
-import driveHelpers, { DriveServiceHelpers } from './driveServiceHelpers'
+import { getHelpers } from './driveServiceHelpers'
+import { DriveServiceHelpers } from './types'
 import { sleep } from '@mcro/helpers'
 
 export type DriveFileObject = {
@@ -35,7 +36,7 @@ export class DriveService {
 
   updateSetting = async (setting?) => {
     this.setting = setting || (await Setting.findOne({ type: 'gdocs' }))
-    this.helpers = driveHelpers(this.setting)
+    this.helpers = getHelpers(this.setting)
   }
 
   async getRevisions(fileId: string) {

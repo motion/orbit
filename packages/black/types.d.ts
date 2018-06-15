@@ -3,6 +3,7 @@ import { UtilityUsable } from '@mcro/decor-mobx'
 
 export { react } from '@mcro/automagical'
 
+export { Component } from './Component'
 export { DecorCompiledDecorator } from '@mcro/decor'
 
 export type DecorView = DecorCompiledDecorator<any>
@@ -35,19 +36,5 @@ export interface Proppable {
 export function store<T>(a: T): T & UtilityUsable & Proppable
 
 export function debugState(cb: Function): void
-
-import * as React from 'react'
-
-export class Component<T> extends React.Component<T, {}> {
-  props: T
-  state?: Object
-  context?: Object
-  refs?: Object
-  setState: Function
-  forceUpdate: Function
-  render(props: T): JSX.Element | string | null
-  setInterval: Function
-  setTimeout: Function
-}
 
 export function isEqual(a: any, b: any): boolean

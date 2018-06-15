@@ -1,5 +1,5 @@
 import { store, react } from '@mcro/black/store'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop } from '@mcro/stores'
 import Icons from './icons'
 import * as _ from 'lodash'
 import * as MacAppsPlugin from './macApps'

@@ -1,4 +1,4 @@
-import { App, Electron, Desktop } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/stores'
 import { isEqual, store, react, debugState } from '@mcro/black'
 import { ShortcutsStore } from '../stores/shortcutsStore'
 import { WindowFocusStore } from '../stores/windowFocusStore'

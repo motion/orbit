@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { App, Electron } from '@mcro/all'
+import { App, Electron } from '@mcro/stores'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 
 // filters = ['all', 'general', 'status', 'showoff']

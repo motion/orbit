@@ -2,7 +2,7 @@ import Oracle from '@mcro/oracle'
 import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import { store, isEqual, react } from '@mcro/black/store'
-import { App, Desktop, Electron, Swift } from '@mcro/all'
+import { App, Desktop, Electron, Swift } from '@mcro/stores'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
 

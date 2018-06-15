@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import { OrbitFrame } from './orbitFrame'
 import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitHeader } from './orbitHeader'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { OrbitContextHome } from './orbitContextHome'
 import * as Constants from '~/constants'
 

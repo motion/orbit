@@ -13,7 +13,7 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/models)/_ \
   --watch $(realpath node_modules/@mcro/debug) \
   --watch $(realpath node_modules/@mcro/dev)/_ \
-  --watch $(realpath node_modules/@mcro/all)/_ \
+  --watch $(realpath node_modules/@mcro/stores)/_ \
   --watch $(realpath node_modules/@mcro/oracle)/lib \
   --watch $(realpath node_modules/@mcro/automagical)/_ \
   --watch $(realpath node_modules/@mcro/decor-mobx)/_  \

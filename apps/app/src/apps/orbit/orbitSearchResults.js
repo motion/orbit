@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitQuickSearch } from './OrbitQuickSearch'

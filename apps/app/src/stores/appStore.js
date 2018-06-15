@@ -1,5 +1,5 @@
 import { react, ReactionTimeoutError } from '@mcro/black'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop } from '@mcro/stores'
 import { Bit, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'

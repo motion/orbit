@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { Job } from '@mcro/models'
 import { PeekHeader } from '../peekHeader'
 import { capitalize } from 'lodash'

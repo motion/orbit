@@ -1100,9 +1100,9 @@ react-fast-compare@^1.0.0:
   version "1.0.0"
   resolved "http://localhost:4873/react-fast-compare/-/react-fast-compare-1.0.0.tgz#813a039155e49b43ceffe99528fe5e9d97a6c938"
 
-react-hot-loader@4.3.2:
-  version "4.3.2"
-  resolved "http://localhost:4873/react-hot-loader/-/react-hot-loader-4.3.2.tgz#42d629a541d12c84df5e8333534ea6ef99b7ae49"
+react-hot-loader@4.3.3:
+  version "4.3.3"
+  resolved "http://localhost:4873/react-hot-loader/-/react-hot-loader-4.3.3.tgz#37409a3341c7787563d0972007ba02521f82f5d5"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"

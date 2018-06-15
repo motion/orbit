@@ -1,7 +1,7 @@
 import * as Constants from '~/constants'
 import * as Injections from '~/helpers/injections'
 import { store } from '@mcro/black/store'
-import { Desktop } from '@mcro/all'
+import { Desktop } from '@mcro/stores'
 import open from 'opn'
 
 const getAuthUrl = id => `${Constants.APP_URL}/auth?service=` + id

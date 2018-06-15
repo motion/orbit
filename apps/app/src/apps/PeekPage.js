@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import * as PeekContents from './peek/peekContents'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './peek/peekFrame'

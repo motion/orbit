@@ -1,5 +1,5 @@
 import * as Constants from '@mcro/constants'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 
 const SHADOW_PAD = 15
 const EDGE_PAD = 20

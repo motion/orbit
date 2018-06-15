@@ -1,5 +1,5 @@
 import { Person, Bit } from '@mcro/models'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import peekPosition from '../helpers/peekPosition'
 
 type PositionObject =

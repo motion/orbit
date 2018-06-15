@@ -1,5 +1,5 @@
 import { Setting } from '@mcro/models'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop } from '@mcro/stores'
 import * as Constants from '../constants'
 import * as r2 from '@mcro/r2'
 import debug from '@mcro/debug'

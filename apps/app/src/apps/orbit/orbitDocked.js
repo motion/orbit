@@ -7,7 +7,7 @@ import { OrbitHomeHeader } from './orbitHomeHeader'
 import { OrbitHeader } from './orbitHeader'
 import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitDirectory } from './orbitDirectory'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './orbitDockedPaneStore'
 
 const borderRadius = 16

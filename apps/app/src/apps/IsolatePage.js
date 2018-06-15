@@ -4,7 +4,7 @@ import { PeekPage } from './PeekPage'
 import { OrbitPage } from './OrbitPage'
 import { AppStore } from '~/stores/appStore'
 import * as PeekStateActions from '~/actions/PeekStateActions'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { Bit } from '@mcro/models'
 
 @view

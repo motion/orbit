@@ -1,5 +1,5 @@
 import { Reaction, ReactionRejectionError } from './constants'
-import { ReactionOptions } from './types'
+import { ReactionOptions, ReactionHelpers } from './types'
 
 // decorator to do reactions
 
@@ -27,46 +27,50 @@ function tsWatch(options) {
   }
 }
 
-// type ReactionFunction<B> = {
-//   (a: Function, b?: Function, c?: Object): ReturnType<B>
-//   cancel: Error
-// }
-
-// @watch decorator
-export const react = /*<ReactionFunction<any>>*/ function react(
-  a,
-  b?: ReactionOptions | Function,
-  c?: ReactionOptions,
-  opts?: ReactionOptions,
-) {
-  if (typeof a === 'function') {
-    if (typeof b === 'function') {
-      return new Reaction(a, b, c)
-    }
-    if (typeof b === 'object' || !b) {
-      return new Reaction(a, b, null)
-    }
-  }
-
-  // passing options
-  if (!b) {
-    const options = { ...a, ...opts }
-    return (target, method, descriptor) => {
-      if (!descriptor) {
-        return tsWatch(options)
-      }
-      return doWatch(target, method, descriptor, options)
-    }
-  } else {
-    // typescript
-    if (!c) {
-      return tsWatch(a)
-    }
-    return doWatch(a, b, c, opts)
-  }
+export type ReactionFunction<A, B> = {
+  (
+    a: () => A,
+    b?: ((a: A, helpers: ReactionHelpers) => B | Promise<B>) | ReactionOptions,
+    c?: ReactionOptions,
+  ): B
+  cancel: Error
 }
 
-// @ts-ignore
+// @watch decorator
+export const react = <ReactionFunction<any, any>>(
+  function react(
+    a,
+    b?: ReactionOptions | Function,
+    c?: ReactionOptions,
+    opts?: ReactionOptions,
+  ) {
+    if (typeof a === 'function') {
+      if (typeof b === 'function') {
+        return new Reaction(a, b, c)
+      }
+      if (typeof b === 'object' || !b) {
+        return new Reaction(a, b, null)
+      }
+    }
+    // passing options
+    if (!b) {
+      const options = { ...a, ...opts }
+      return (target, method, descriptor) => {
+        if (!descriptor) {
+          return tsWatch(options)
+        }
+        return doWatch(target, method, descriptor, options)
+      }
+    } else {
+      // typescript
+      if (!c) {
+        return tsWatch(a)
+      }
+      return doWatch(a, b, c, opts)
+    }
+  }
+)
+
 react.cancel = new ReactionRejectionError()
 
 function doWatch(target, _, descriptor, userOptions) {

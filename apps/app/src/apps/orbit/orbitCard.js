@@ -7,7 +7,7 @@ import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 import { PeopleRow } from '~/components/PeopleRow'
-import { Desktop } from '@mcro/all'
+import { Desktop } from '@mcro/stores'
 
 let loggers = []
 let nextLog = null

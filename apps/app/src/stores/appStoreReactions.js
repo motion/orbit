@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { Bit, Person } from '@mcro/models'
 
 export const selectedBitReaction = react(

@@ -91,6 +91,7 @@ export class AppStore {
 
   updateScreenSize() {
     this.setInterval(() => {
+      if (!App.setState) return
       App.setState({
         screenSize: [window.innerWidth, window.innerHeight],
       })

@@ -1,8 +1,12 @@
 import * as Mobx from 'mobx'
 
+const isClass = fn =>
+  fn && fn.constructor && fn.constructor.toString().indexOf('class') === 0
+
 const defaultFilter = (obj, key, val) => {
   // avoid classes
-  if (val && typeof val.constructor === 'function') {
+  if (isClass(val)) {
+    console.log('skipping', val)
     return true
   }
   if (typeof val === 'function') {

@@ -343,7 +343,8 @@ class Bridge {
     this.messageListeners.add(subscription)
     // return disposable
     return () => {
-      this.messageListeners.delete(subscription)
+      console.log('disposing listener', subscription)
+      console.log(this.messageListeners.delete(subscription))
     }
   }
 

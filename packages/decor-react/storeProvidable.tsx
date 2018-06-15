@@ -35,7 +35,7 @@ function getName(mountedComponent) {
   const node = findDOMNode(mountedComponent) as HTMLElement
   let name = `${mountedComponent.name}`
   let parent = node
-  while (parent && parent.tagName !== 'HTML') {
+  while (parent && parent instanceof HTMLElement && parent.tagName !== 'HTML') {
     const className = (parent.getAttribute('class') || '').split(' ')
     name +=
       parent.nodeName +
@@ -140,8 +140,13 @@ storeProvidable = function(options, Helpers) {
         }
 
         componentWillUnmount() {
-          this.willHmrListen.dispose()
-          this.didHmrListen.dispose()
+          if (Klass.name === 'OrbitStore') {
+            console.log('unmounting', this, this.disposeStores)
+          }
+          if (this.willHmrListen) {
+            this.willHmrListen.dispose()
+            this.didHmrListen.dispose()
+          }
           root.loadedStores.delete(this)
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
@@ -250,6 +255,7 @@ storeProvidable = function(options, Helpers) {
               store.willReload(storeHMRCache[name])
             }
           }
+          this.disposeStores()
         }
 
         onReloadStores = () => {
@@ -260,7 +266,7 @@ storeProvidable = function(options, Helpers) {
             const store = this.stores[name]
             const key = `${this.mountName}${name}`
             if (!storeHMRCache[key]) {
-              console.log('no hmr state for', name)
+              console.log('no hmr state for', name, key, storeHMRCache)
               continue
             }
             // auto rehydrate

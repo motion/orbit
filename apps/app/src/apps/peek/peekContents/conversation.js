@@ -65,9 +65,31 @@ export class Conversation extends React.Component {
                 subtitle={location}
                 after={
                   <after>
-                    <permalink>{permalink}</permalink>
+                    <permalink>
+                      <UI.Button
+                        size={0.9}
+                        icon="link"
+                        circular
+                        onClick={permalink}
+                      />
+                    </permalink>
                     <space />
-                    <OrbitIcon if={icon} icon={icon} size={16} />
+                    <OrbitIcon
+                      if={icon}
+                      icon={icon}
+                      size={16}
+                      css={
+                        {
+                          // position: 'absolute',
+                          // top: 30,
+                          // right: -20,
+                          // transform: {
+                          //   scale: 2,
+                          //   rotate: '45deg',
+                          // },
+                        }
+                      }
+                    />
                   </after>
                 }
               />
@@ -114,6 +136,7 @@ export class Conversation extends React.Component {
                       </React.Fragment>
                     ))}
                     <br />
+                    123
                     <br />
                     <br />
                   </section>
@@ -130,7 +153,7 @@ export class Conversation extends React.Component {
     mainInner: {
       margin: [0, -10, -5],
       fontSize: 18,
-      lineHeight: '1.5rem',
+      lineHeight: '1.6rem',
     },
     content: {
       padding: [10, 20],
@@ -144,6 +167,7 @@ export class Conversation extends React.Component {
     after: {
       flexFlow: 'row',
       alignItems: 'center',
+      position: 'relative',
     },
     space: {
       width: 7,

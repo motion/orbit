@@ -45,7 +45,7 @@
     "pluralize": "^7.0.0",
     "primus": "^7.1.1",
     "react-fast-compare": "^1.0.0",
-    "react-hot-loader": "4.3.2",
+    "react-hot-loader": "4.3.3",
     "react-spring": "5.3.11",
     "reconnecting-websocket": "^3.2.2",
     "regenerator-runtime": "0.11.1",

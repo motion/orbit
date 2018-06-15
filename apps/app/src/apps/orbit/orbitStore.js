@@ -34,7 +34,7 @@ export default class OrbitStore {
     })
     this.subscriptions.add({
       dispose: () => {
-        console.log('dispose me')
+        console.log('disposing', this.appReactions.id)
         this.appReactions.subscriptions.dispose()
       },
     })

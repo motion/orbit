@@ -19,11 +19,12 @@ export class OrbitDockedPaneStore {
       }
     })
 
-    App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+    const dispose = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       console.log('got message toggle settings')
       this.setActivePane('settings')
       App.setOrbitState({ docked: true })
     })
+    this.subscriptions.add({ dispose })
   }
 
   setDirectoryOnAt = react(

@@ -29,6 +29,6 @@ echo "install: $ARGS"
 if [ -z "$ARGS" ]; then
   $ROOT/node_modules/.bin/lerna bootstrap
 else
-  $ROOT/node_modules/.bin/lerna add $ARGS
+  $ROOT/node_modules/.bin/lerna add $ARGS --scope @mcro/$(basename  $(pwd))
 fi
 

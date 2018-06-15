@@ -190,16 +190,6 @@ export class AppStore {
     return res
   }
 
-  get results() {
-    if (this.getResults) {
-      return this.getResults()
-    }
-    if (this.selectedPane.indexOf('-search') > 0) {
-      return this.searchState.results
-    }
-    return this.searchState.results || []
-  }
-
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
     async ([query, thisGetResults], { when }) => {
@@ -278,7 +268,6 @@ export class AppStore {
     {
       defaultValue: { results: [], query: '' },
       immediate: true,
-      log: false,
     },
   )
 

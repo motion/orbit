@@ -22,14 +22,14 @@ class OrbitSettingsStore {
   setGetResults = react(
     () => [
       this.props.paneStore.activePane === this.props.name,
-      this.splitActiveResults,
+      this.activeSettings,
     ],
-    ([isActive]) => {
+    ([isActive, activeSettings]) => {
       this.isPaneActive = isActive
       if (!isActive) {
         throw react.cancel
       }
-      const getResults = () => this.activeSettings
+      const getResults = () => activeSettings
       getResults.shouldFilter = true
       this.props.appStore.setGetResults(getResults)
     },

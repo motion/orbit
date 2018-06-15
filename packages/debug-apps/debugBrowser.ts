@@ -172,18 +172,18 @@ export default class DebugApps {
   }
 
   openUrlsInTabs = async (sessions, pages, updateTabs) => {
-    await Promise.all(
-      updateTabs.map(async (shouldUpdate, index) => {
-        if (!shouldUpdate) return
-        const page = pages[index]
-        if (!page) return
-        page.goto(sessions[index].debugUrl)
-        await page.waitForNavigation({
-          timeout: 0,
+    let opens = []
+    for (const [index, update] of updateTabs.entries()) {
+      const page = pages[index]
+      if (!page || !update) continue
+      opens.push(
+        page.goto(sessions[index].debugUrl, {
           waitUntil: 'domcontentloaded',
-        })
-      }),
-    )
+          timeout: 0,
+        }),
+      )
+    }
+    return await Promise.all(opens)
   }
 
   removeExtraTabs = async sessions => {
@@ -243,6 +243,7 @@ export default class DebugApps {
     })
     clearInterval(this.intervals[index])
     this.intervals[index] = setInterval(injectTitle, 5000)
+    injectTitle()
     onFocus(page).then(async () => {
       await sleep(50)
       await page.frames()[0].focus('body')
@@ -271,8 +272,10 @@ export default class DebugApps {
       const pages = await this.getPages()
       console.log('updating', shouldUpdate)
       await this.openUrlsInTabs(sessions, pages, shouldUpdate)
+      await sleep(300)
       // synchronously
-      for (const [index] of shouldUpdate.entries()) {
+      for (const [index, update] of shouldUpdate.entries()) {
+        if (!update) continue
         const { url, port } = sessions[index]
         await this.finishLoadingPage(index, pages[index], { url, port })
       }

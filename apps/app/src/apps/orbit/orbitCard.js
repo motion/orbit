@@ -69,6 +69,10 @@ class OrbitCardStore {
     }
   }
 
+  get target() {
+    return this.props.bit || this.props.result
+  }
+
   setPeekTargetOnNextIndex = react(
     () => [
       this.props.appStore.nextIndex === this.props.index,
@@ -89,11 +93,15 @@ class OrbitCardStore {
         throw react.cancel
       }
       this._isSelected = true
-      await sleep(10)
-      this.props.appStore.setTarget(
-        this.props.bit || this.props.result,
-        this.ref,
-      )
+      await sleep()
+      if (!this.target) {
+        throw new Error(
+          `No target! ${this.props.pane} ${this.props.subPane} ${
+            this.props.index
+          }`,
+        )
+      }
+      this.props.appStore.setTarget(this.target, this.ref)
     },
     { immediate: true },
   )

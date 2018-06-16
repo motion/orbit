@@ -52,9 +52,8 @@ class PeekStore {
   }
 
   lastState = react(() => this.curState, _ => _, {
-    delay: 16,
+    delayValue: true,
     immediate: true,
-    log: false,
   })
 
   get willHide() {
@@ -65,9 +64,9 @@ class PeekStore {
     return !!this.curState && !this.lastState
   }
 
-  get willStayShown() {
-    return !!this.lastState && !!this.curState
-  }
+  willStayShown = react(() => this.willShow, _ => _, {
+    delay: 16,
+  })
 }
 
 @view.attach('appStore')

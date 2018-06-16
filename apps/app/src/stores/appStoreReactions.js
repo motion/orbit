@@ -8,7 +8,7 @@ export const selectedBitReaction = react(
     if (!bit) {
       return null
     }
-    console.log('selectedBit', bit.type)
+    console.log('selectedBit', bit.type, bit.id)
     if (bit.type === 'person') {
       return await Person.findOne({ id: bit.id })
     }

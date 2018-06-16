@@ -39,7 +39,6 @@ export class Task extends React.Component {
         isExpanded
       >
         {({ title, content, comments }) => {
-          console.log('got', title, content, comments)
           return (
             <>
               <PeekHeader title={title} />

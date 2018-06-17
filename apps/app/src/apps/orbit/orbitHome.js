@@ -167,5 +167,8 @@ export class OrbitHome {
       fontSize: 11,
       opacity: 0.6,
     },
+    content: {
+      margin: [0, -2],
+    },
   }
 }

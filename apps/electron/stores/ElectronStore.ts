@@ -3,7 +3,7 @@ import { isEqual, store, react, debugState } from '@mcro/black'
 import { ShortcutsStore } from '../stores/shortcutsStore'
 import { WindowFocusStore } from '../stores/windowFocusStore'
 import root from 'global'
-import { sleep } from '~/helpers'
+import { sleep } from '../helpers'
 
 @store
 export class ElectronStore {

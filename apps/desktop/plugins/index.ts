@@ -47,11 +47,9 @@ export class Plugins {
   results = react(
     () => [App.state.query, Desktop.state.lastBitUpdatedAt],
     async ([query], { sleep }) => {
-      await sleep(150) // debounce to not be too aggressive during type
       const results = await this.search(query)
-      await sleep()
       const pluginResults = await Promise.all(
-        results.slice(0, 25).map(async result => ({
+        results.slice(0, 10).map(async result => ({
           ...result,
           // @ts-ignore
           icon: result.icon ? await this.icons.getIcon(result.icon) : null,
@@ -62,7 +60,7 @@ export class Plugins {
       Desktop.setSearchState({ pluginResults, pluginResultsId: _.uniqueId() })
       return pluginResults
     },
-    { immediate: true, log: false },
+    { immediate: true },
   )
 
   search = async term => {

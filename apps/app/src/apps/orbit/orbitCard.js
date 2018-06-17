@@ -388,25 +388,17 @@ export class OrbitCard extends React.Component {
         borderTop: [1, theme.hover.background],
       }
     } else {
-      const border = [1, isSelected ? 'transparent' : theme.hover.background]
-      hoveredStyle = {
-        background: isSelected
-          ? theme.selected.background
-          : theme.hover.background,
-      }
       if (isSelected) {
         card = {
           ...card,
-          border,
           background: '#fff',
           boxShadow: [[0, 3, 12, [0, 0, 0, 0.08]]],
         }
       } else {
         card = {
           ...card,
-          // background: theme.base.background,
-          border,
-          '&:hover': hoveredStyle,
+          background: '#fff',
+          boxShadow: [[0, 2, 6, [0, 0, 0, 0.04]]],
         }
       }
     }

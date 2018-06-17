@@ -14,7 +14,7 @@ export class PersonCard extends React.Component {
       },
       preview: (
         <test>
-          <img $avatar src={bit.data.profile.image_512} />
+          <img if={bit.data.profile} $avatar src={bit.data.profile.image_512} />
           <subtitles>
             <location>{bit.data.tz}</location>
             <a href={`mailto:${bit.data.profile.email}`}>
@@ -36,10 +36,10 @@ export class PersonCard extends React.Component {
       height: 70,
       margin: [10, 0],
       position: 'absolute',
-      top: 0,
-      right: 0,
+      top: -15,
+      right: -15,
       transform: {
-        scale: 2,
+        scale: 1.4,
         y: -5,
         rotate: '40deg',
       },

@@ -101,7 +101,7 @@ export class AppStore {
   updateResults = react(
     () => [
       Desktop.state.lastBitUpdatedAt,
-      Desktop.searchState.pluginResultsId || 0,
+      // Desktop.searchState.pluginResultsId || 0,
     ],
     () => {
       if (this.searchState.results && this.searchState.results.length) {
@@ -231,14 +231,11 @@ export class AppStore {
         // no jitter - wait for everything to finish
         console.time('searchPluginsAndBitResults')
         try {
-          const id0 = Desktop.searchState.pluginResultsId
+          const waitMax = hasRun ? 200 : 2000
           const id1 = this.bitResultsId
           await Promise.all([
-            when(
-              () => id0 !== Desktop.searchState.pluginResultsId,
-              hasRun ? 200 : 2000,
-            ),
-            when(() => id1 !== this.bitResultsId, hasRun ? 200 : 2000),
+            when(() => query === Desktop.searchState.pluginResultsId, waitMax),
+            when(() => id1 !== this.bitResultsId, waitMax),
           ])
         } catch (err) {
           if (err instanceof ReactionTimeoutError) {
@@ -273,10 +270,10 @@ export class AppStore {
 
   quickSearchResults = react(
     () => App.state.query,
-    async (query, { whenChanged }) => {
-      log(`quick search ${_}`)
-      if (this.quickSearchResults.length) {
-        await whenChanged(() => Desktop.searchState.pluginResultsId)
+    async (query, { when }) => {
+      const hasLoaded = !!this.quickSearchResults.length
+      if (hasLoaded) {
+        await when(() => query === Desktop.searchState.pluginResultsId)
       }
       const results = Desktop.searchState.pluginResults
       if (!results.length) {

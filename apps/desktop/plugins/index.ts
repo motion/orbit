@@ -57,7 +57,7 @@ export class Plugins {
         })),
       )
       await sleep()
-      Desktop.setSearchState({ pluginResults, pluginResultsId: _.uniqueId() })
+      Desktop.setSearchState({ pluginResults, pluginResultsId: query })
       return pluginResults
     },
     { immediate: true },

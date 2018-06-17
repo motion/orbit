@@ -392,7 +392,7 @@ export class OrbitCard extends React.Component {
         card = {
           ...card,
           background: '#fff',
-          boxShadow: [[0, 3, 12, [0, 0, 0, 0.08]]],
+          boxShadow: [[0, 5, 42, [0, 0, 0, 0.09]]],
         }
       } else {
         card = {

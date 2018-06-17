@@ -92,7 +92,8 @@ const Pitch = ({ isLarge }) => (
       A better way to organize knowledge
     </Title>
     <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      Coming soon, a smarter, faster more flexible way to unify your knowledge.
+      A smarter, faster way to manage team knowledge and keep it useful. With
+      the easiest onboarding around.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />

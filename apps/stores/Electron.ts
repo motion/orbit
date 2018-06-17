@@ -1,7 +1,6 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
 import { setGlobal } from './helpers'
 import { store, deep } from '@mcro/black/store'
-import { ElectronReactions } from './ElectronReactions'
 // import debug from '@mcro/debug'
 
 // const log = debug('ElectronStore')
@@ -39,8 +38,6 @@ class ElectronStore {
     this.setState = Bridge.setState
     this.sendMessage = Bridge.sendMessage
     this.onMessage = Bridge.onMessage
-    const { ElectronReactions } = eval(`require('./ElectronReactions')`)
-    this.reactions = new ElectronReactions()
   }
 }
 

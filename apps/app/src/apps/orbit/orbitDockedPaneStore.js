@@ -78,10 +78,11 @@ export class OrbitDockedPaneStore {
       await sleep(App.animationDuration * 2)
       // done animating, reset
       setValue({ willAnimate: false, visible })
-      App.sendMessage(
-        Electron,
-        visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
-      )
+      // this would do the toggle after the animation, trying out doing it before to see if its faster
+      // App.sendMessage(
+      //   Electron,
+      //   visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
+      // )
     },
     {
       immediate: true,

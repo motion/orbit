@@ -238,7 +238,6 @@ export class HoverGlow extends React.PureComponent {
       bounded(resisted(y), height * scale, this.state.bounds.height),
     )
     const extraScale = clicked ? clickScale : 1
-    console.log(width, height)
     const glow = (
       <div
         key="hoverglow"

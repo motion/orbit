@@ -226,13 +226,13 @@ export class OrbitCard extends React.Component {
           <UI.HoverGlow
             behind
             color="#000"
-            resist={90}
+            resist={93}
             scale={0.98}
-            offsetTop={30}
+            offsetTop={18}
             full
             blur={8}
             inverse
-            opacity={isSelected ? 0.06 : 0}
+            opacity={isSelected ? 0.07 : 0}
             borderRadius={20}
           />
           <card onDoubleClick={this.handleDoubleClick}>
@@ -410,8 +410,9 @@ export class OrbitCard extends React.Component {
         card = {
           ...card,
           border,
+          // border: [1, '#ddd'],
           background: '#fff',
-          boxShadow: [[0, 2, 3, [0, 0, 0, 0.03]]],
+          boxShadow: [[[0, 2, 3, [0, 0, 0, 0.03]]]],
         }
       } else {
         card = {

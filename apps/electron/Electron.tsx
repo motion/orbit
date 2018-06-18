@@ -30,7 +30,7 @@ export class Electron extends Component<{
         onBeforeQuit={electronStore.handleBeforeQuit}
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
-        devTools={[DevTools.mobx, DevTools.react, DevTools.reactPerf]}
+        devTools={[DevTools.mobx, /*DevTools.react, */ DevTools.reactPerf]}
       >
         <MenuItems el />
         <MainWindow onRef={electronStore.windowFocusStore.setOrbitRef} />

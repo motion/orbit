@@ -6,6 +6,17 @@ import * as PeekContents from './peek/peekContents'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './peek/peekFrame'
 
+const deepClone = obj =>
+  obj
+    ? Object.keys(obj).reduce(
+        (acc, cur) => ({
+          ...acc,
+          [cur]: JSON.parse(JSON.stringify(obj[cur])),
+        }),
+        {},
+      )
+    : obj
+
 class PeekStore {
   headerHeight = 20
   history = []
@@ -30,6 +41,10 @@ class PeekStore {
   updateHistory = react(
     () => this.curState,
     state => {
+      console.log(
+        'STATE IS',
+        state && state.toJS() && state.toJS().bit && state.toJS().bit.id,
+      )
       if (state) {
         this.history.push(state)
       } else {
@@ -51,7 +66,7 @@ class PeekStore {
     return state
   }
 
-  lastState = react(() => this.curState, _ => _, {
+  lastState = react(() => this.curState, deepClone, {
     delayValue: true,
     immediate: true,
   })

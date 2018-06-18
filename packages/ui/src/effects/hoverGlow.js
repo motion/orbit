@@ -112,7 +112,6 @@ export class HoverGlow extends React.PureComponent {
 
   // offset gives us offset without scroll, just based on parent
   move = e => {
-    console.log('e.clientX, e.clientY', e.clientX, e.clientY)
     this.setMouseTo(e.clientX, e.clientY)
   }
 
@@ -225,7 +224,7 @@ export class HoverGlow extends React.PureComponent {
       if (boundPct === null || boundPct > 100) return coord
       const difference = parentSize - glowSize
       const direction = coord / Math.abs(coord)
-      const max = difference * (boundPct / 100) / 2
+      const max = (difference * (boundPct / 100)) / 2
       const cur = Math.abs(coord)
       return Math.min(max, cur) * direction
     }

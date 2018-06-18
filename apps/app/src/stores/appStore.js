@@ -12,7 +12,8 @@ let hasRun = false
 export class AppStore {
   quickSearchIndex = 0
   nextIndex = 0
-  activeIndex = -1
+  lastSelectAt = 0
+  _activeIndex = -1
   settings = {}
   getResults = null
   lastSelectedPane = ''
@@ -23,6 +24,16 @@ export class AppStore {
 
   // reactive values
   selectedBit = AppStoreReactions.selectedBitReaction
+
+  get activeIndex() {
+    this.lastSelectAt
+    return this._activeIndex
+  }
+
+  set activeIndex(val) {
+    this.lastSelectAt = Date.now()
+    this._activeIndex = val
+  }
 
   get selectedPane() {
     if (App.orbitState.docked) {
@@ -309,7 +320,6 @@ export class AppStore {
     PeekStateActions.clearPeek()
   }
 
-  lastSelectAt = 0
   hoverOutTm = 0
   getHoverSettler = Helpers.hoverSettler({
     enterDelay: 50,
@@ -336,8 +346,10 @@ export class AppStore {
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks
+        console.log('isSame, ignore', index, this.activeIndex)
         return isSame
       }
+      console.log('clearing')
       this.clearSelected()
     } else {
       if (typeof index === 'number') {
@@ -364,7 +376,6 @@ export class AppStore {
   }
 
   updateActiveIndex = () => {
-    this.lastSelectAt = Date.now()
     this.activeIndex = this.nextIndex
   }
 

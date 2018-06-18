@@ -48,8 +48,16 @@ const config = {
   target,
   mode,
   entry,
+  optimization: isProd
+    ? {}
+    : {
+        removeAvailableModules: false,
+        removeEmptyChunks: false,
+        splitChunks: false,
+      },
   output: {
     path: outputPath,
+    pathinfo: false,
     filename: 'bundle.js',
     publicPath: '/',
   },
@@ -96,6 +104,8 @@ const config = {
             loader: 'ts-loader',
             options: {
               happyPackMode: true, // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
+              transpileOnly: true,
+              experimentalWatchApi: true,
             },
           },
         ],

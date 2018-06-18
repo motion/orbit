@@ -18,7 +18,7 @@ export class PersonCard extends React.Component {
       preview: (
         <test>
           <img if={bit.data.profile} $avatar src={bit.data.profile.image_512} />
-          <subtitles>
+          <subtitles if={bit.data.profile}>
             <location>{bit.data.tz}</location>
             <a href={`mailto:${bit.data.profile.email}`}>
               {bit.data.profile.email}

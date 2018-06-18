@@ -36,7 +36,7 @@ export class PeekFrame {
       !onRight ? SHADOW_PAD : 0,
     ]
     const margin = padding.map(x => -x)
-    const boxShadow = [[onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]]]
+    const boxShadow = [[onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.2]]]
     const arrowSize = 24
     // determine x adjustments
     let peekAdjustX = 0

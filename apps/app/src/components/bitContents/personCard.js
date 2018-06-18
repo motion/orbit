@@ -5,6 +5,9 @@ import * as UI from '@mcro/ui'
 @view
 export class PersonCard extends React.Component {
   render({ children, bit }) {
+    if (!bit) {
+      return null
+    }
     return children({
       // preview: bit.data.profile.email,
       title: bit.name,

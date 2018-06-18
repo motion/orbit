@@ -187,9 +187,7 @@ export class HoverGlow extends React.PureComponent {
     const show = !hide
     const durationArg = show ? durationOut : durationIn
     const duration = durationArg >= 0 ? durationArg : _duration
-    const { track } = this.state
     if (!this.state.mounted) {
-      console.log('return empty')
       return (
         <div
           $overlay

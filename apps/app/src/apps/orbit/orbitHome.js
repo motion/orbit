@@ -110,7 +110,7 @@ export class OrbitHome {
     const dayNum = now.getMonth()
     const total = store.results.length
     return (
-      <OrbitDockedPane name="home">
+      <OrbitDockedPane name="home" after={<overflowFade />}>
         <header if={false}>
           <SubTitle>
             {day} {month} {dayNum}
@@ -172,5 +172,23 @@ export class OrbitHome {
     content: {
       // margin: [0, -2],
     },
+    overflowFade: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 200,
+      zIndex: 10000000,
+      borderRadius: 20,
+      overflow: 'hidden',
+    },
+  }
+
+  static theme = (_, theme) => {
+    return {
+      overflowFade: {
+        background: `linear-gradient(transparent, ${theme.base.background})`,
+      },
+    }
   }
 }

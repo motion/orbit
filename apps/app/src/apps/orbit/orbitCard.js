@@ -130,7 +130,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 6,
+    borderRadius: 8,
     hide: {},
   }
 
@@ -226,14 +226,13 @@ export class OrbitCard extends React.Component {
           <UI.HoverGlow
             behind
             color="#000"
-            resist={80}
-            scale={1}
+            resist={90}
+            scale={0.98}
             offsetTop={30}
-            offsetLeft={2}
             full
-            blur={10}
+            blur={8}
             inverse
-            opacity={isSelected ? 0.1 : 0}
+            opacity={isSelected ? 0.06 : 0}
             borderRadius={20}
           />
           <card onDoubleClick={this.handleDoubleClick}>
@@ -412,14 +411,14 @@ export class OrbitCard extends React.Component {
           ...card,
           border,
           background: '#fff',
-          boxShadow: [[0, 5, 42, [0, 0, 0, 0.09]]],
+          boxShadow: [[0, 2, 3, [0, 0, 0, 0.03]]],
         }
       } else {
         card = {
           ...card,
           border,
           background: '#fff',
-          boxShadow: [[0, 2, 3, [0, 0, 0, 0.05]]],
+          boxShadow: [[0, 2, 3, [0, 0, 0, 0.03]]],
         }
       }
     }

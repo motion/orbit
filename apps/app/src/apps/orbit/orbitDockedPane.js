@@ -17,11 +17,14 @@ class DockedPaneStore {
   store: DockedPaneStore,
 })
 export class OrbitDockedPane {
-  render({ name, children, store, style }) {
+  render({ name, children, store, style, after }) {
     return (
-      <pane $isActive={store.isActive} style={style}>
-        {children}
-      </pane>
+      <>
+        <pane $isActive={store.isActive} style={style}>
+          {children}
+        </pane>
+        {after}
+      </>
     )
   }
 
@@ -34,8 +37,8 @@ export class OrbitDockedPane {
       left: 0,
       transition: 'all ease-in-out 150ms',
       overflowY: 'scroll',
-      padding: [40, 8],
-      margin: [-40, 0],
+      padding: [40, 8, 0],
+      margin: [-40, 0, 0],
       pointerEvents: 'none',
       opacity: 0,
       transform: {

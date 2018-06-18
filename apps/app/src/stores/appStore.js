@@ -40,6 +40,13 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
+  get hasActiveIndex() {
+    return (
+      this.activeIndex > -1 &&
+      this.activeIndex < this.searchState.results.length
+    )
+  }
+
   settings = modelQueryReaction(
     () => Setting.find(),
     settings =>
@@ -74,18 +81,19 @@ export class AppStore {
     },
   )
 
-  clearPeekOnSelectedPaneChange = react(
+  clearSelectedOnSelectedPaneChange = react(
     () => this.selectedPane,
     () => this.clearSelected(),
   )
 
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,
-    index => {
-      if (index >= 0 && index < this.searchState.results.length) {
+    () => {
+      log(`active ${this.hasActiveIndex}`)
+      if (this.hasActiveIndex) {
         throw react.cancel
       }
-      this.clearSelected()
+      PeekStateActions.clearPeek()
     },
   )
 
@@ -108,6 +116,17 @@ export class AppStore {
         throw react.cancel
       }
       return Math.random()
+    },
+  )
+
+  resetActiveIndexOnPeekTarget = react(
+    () => App.peekState.target,
+    target => {
+      if (target || !this.hasActiveIndex) {
+        throw react.cancel
+      }
+      log(`ok clearing ${target} ${this.hasActiveIndex} ${this.activeIndex}`)
+      this.clearSelected()
     },
   )
 

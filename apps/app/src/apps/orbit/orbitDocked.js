@@ -130,8 +130,8 @@ class OrbitDocked {
     // but still hide things that go below the bottom as it should
     orbitInner: {
       overflow: 'hidden',
-      margin: [0, -20],
-      padding: [0, 20],
+      margin: -20,
+      padding: 20,
       flex: 1,
     },
     orbitRelativeInner: {

@@ -6,6 +6,10 @@ import { OrbitCard } from './orbitCard'
 import { Masonry } from '~/views/masonry'
 import { OrbitDockedPane } from './orbitDockedPane'
 
+// css={{
+//   opacity: index > 3 ? (total / index / total) * 3 : 1,
+// }}
+
 const postfix = [
   'st',
   'nd',
@@ -104,6 +108,7 @@ export class OrbitHome {
     const day = now.toLocaleDateString(locale, { weekday: 'short' })
     const month = now.toLocaleDateString(locale, { month: 'short' })
     const dayNum = now.getMonth()
+    const total = store.results.length
     return (
       <OrbitDockedPane name="home">
         <header if={false}>
@@ -114,7 +119,7 @@ export class OrbitHome {
           <div $$flex />
         </header>
         <content>
-          <Masonry if={store.results.length}>
+          <Masonry if={total}>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2
               return (
@@ -125,13 +130,10 @@ export class OrbitHome {
                   key={`${bit.id}${index}`}
                   index={index}
                   bit={bit}
-                  total={store.results.length}
+                  total={total}
                   hoverToSelect
                   isExpanded={false && isExpanded}
                   style={isExpanded && this.span2}
-                  css={{
-                    opacity: index > 5 ? 0.7 : index > 8 ? 0.5 : 1,
-                  }}
                   itemProps={{
                     shownLimit: 3,
                     contentStyle: {
@@ -168,7 +170,7 @@ export class OrbitHome {
       opacity: 0.6,
     },
     content: {
-      margin: [0, -2],
+      // margin: [0, -2],
     },
   }
 }

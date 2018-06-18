@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare'
 
 const rowHeight = 2
 const gridGap = 8
-const gridColumnGap = 6
+const gridColumnGap = 8
 
 @view.ui
 export class Masonry extends React.Component {

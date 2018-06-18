@@ -21,14 +21,17 @@ const debounceLog = (...args) => {
   }, 16)
 }
 
-const imageStyle = {
-  transformOrigin: 'bottom right',
-  transform: {
-    y: -6 - 3,
-    x: 20 + 3,
-    scale: 2.5,
-    rotate: '-45deg',
+const orbitIconProps = {
+  imageStyle: {
+    transformOrigin: 'bottom right',
+    transform: {
+      y: -6 - 3,
+      x: 20 + 3,
+      scale: 2.5,
+      rotate: '-45deg',
+    },
   },
+  orbitIconStyle: { marginRight: 6 },
 }
 
 class OrbitCardStore {
@@ -199,8 +202,7 @@ export class OrbitCard extends React.Component {
         icon={icon}
         size={hasSubtitle ? 14 : 18}
         $orbitIcon
-        imageStyle={imageStyle}
-        orbitIconStyle={{ marginRight: 6 }}
+        {...orbitIconProps}
         {...tiny && tinyProps.iconProps}
         {...contentIconProps}
         {...iconProps}
@@ -214,13 +216,26 @@ export class OrbitCard extends React.Component {
       <UI.Theme theme={childTheme}>
         <cardWrap
           css={{
-            zIndex: isExpanded ? 5 : 4,
+            zIndex: isSelected ? 5 : 4,
           }}
           ref={store.setRef}
           onClick={store.handleClick}
           {...hoverToSelect && !inactive && this.hoverSettler.props}
           style={style}
         >
+          <UI.HoverGlow
+            behind
+            color="#000"
+            resist={80}
+            scale={1}
+            offsetTop={30}
+            offsetLeft={2}
+            full
+            blur={10}
+            inverse
+            opacity={isSelected ? 0.1 : 0}
+            borderRadius={20}
+          />
           <card onDoubleClick={this.handleDoubleClick}>
             {orbitIcon}
             <title>
@@ -320,6 +335,9 @@ export class OrbitCard extends React.Component {
       maxHeight: '100%',
       transition: 'all ease-in 120ms',
       padding: 18,
+      transform: {
+        z: 0,
+      },
     },
     title: {
       maxWidth: '100%',
@@ -388,17 +406,20 @@ export class OrbitCard extends React.Component {
         borderTop: [1, theme.hover.background],
       }
     } else {
+      const border = [1, '#fff']
       if (isSelected) {
         card = {
           ...card,
+          border,
           background: '#fff',
           boxShadow: [[0, 5, 42, [0, 0, 0, 0.09]]],
         }
       } else {
         card = {
           ...card,
+          border,
           background: '#fff',
-          boxShadow: [[0, 2, 6, [0, 0, 0, 0.04]]],
+          boxShadow: [[0, 2, 3, [0, 0, 0, 0.05]]],
         }
       }
     }

@@ -1,7 +1,9 @@
 import keywordExtract from 'keyword-extractor'
 import markdown from 'marky-markdown'
-import * as UI from '@mcro/ui'
 import { TimeAgo } from '~/views/TimeAgo'
+
+// const converter = new Showdown.Converter()
+// const markdown = text => converter.makeHtml(text)
 
 const options = {
   language: 'english',
@@ -45,7 +47,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
       ))
   }
   return {
-    content: markdown(bit.body),
+    content: markdown(bit.data.body),
     comments,
   }
 }

@@ -41,10 +41,6 @@ class PeekStore {
   updateHistory = react(
     () => this.curState,
     state => {
-      console.log(
-        'STATE IS',
-        state && state.toJS() && state.toJS().bit && state.toJS().bit.id,
-      )
       if (state) {
         this.history.push(state)
       } else {

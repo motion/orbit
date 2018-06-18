@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.47",
-    "@mcro/stores": "^2.0.11",
     "@mcro/black": "^2.0.11",
     "@mcro/build": "^2.0.11",
     "@mcro/constants": "^2.0.3",
@@ -24,6 +23,7 @@
     "@mcro/services": "^2.0.11",
     "@mcro/slackdown": "^2.0.0",
     "@mcro/sonar": "*",
+    "@mcro/stores": "^2.0.11",
     "@mcro/ui": "^2.0.11",
     "arrford": "2.0.1",
     "color": "^3.0.0",

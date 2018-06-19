@@ -77,34 +77,26 @@ class OrbitCardStore {
   }
 
   setPeekTargetOnNextIndex = react(
-    () => [
-      this.props.appStore.nextIndex === this.props.index,
-      this.isPaneSelected,
-    ],
-    async ([shouldSelect, isPaneSelected], { sleep }) => {
-      if (!Desktop.hoverState.orbitHovered) {
+    () => [this.props.appStore.nextIndex, this.isPaneSelected],
+    async ([nextIndex, isPaneSelected], { sleep }) => {
+      if (!isPaneSelected) {
         throw react.cancel
       }
-      if (
-        !shouldSelect ||
-        !isPaneSelected ||
-        typeof this.props.index === 'undefined'
-      ) {
-        if (this._isSelected) {
-          this._isSelected = false
+      const shouldSelect = nextIndex === this.props.index
+      if (shouldSelect !== this._isSelected) {
+        this._isSelected = shouldSelect
+        if (shouldSelect) {
+          await sleep()
+          if (!this.target) {
+            throw new Error(
+              `No target! ${this.props.pane} ${this.props.subPane} ${
+                this.props.index
+              }`,
+            )
+          }
+          this.props.appStore.setTarget(this.target, this.ref)
         }
-        throw react.cancel
       }
-      this._isSelected = true
-      await sleep()
-      if (!this.target) {
-        throw new Error(
-          `No target! ${this.props.pane} ${this.props.subPane} ${
-            this.props.index
-          }`,
-        )
-      }
-      this.props.appStore.setTarget(this.target, this.ref)
     },
     { immediate: true },
   )

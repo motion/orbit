@@ -327,6 +327,7 @@ export class AppStore {
   clearSelected = () => {
     clearTimeout(this.hoverOutTm)
     this.nextIndex = -1
+    this.activeIndex = -1
     PeekStateActions.clearPeek()
   }
 

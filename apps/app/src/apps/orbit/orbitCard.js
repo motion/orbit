@@ -381,6 +381,9 @@ export class OrbitCard extends React.Component {
           '&:hover': {
             background: theme.hover.background,
           },
+          '&:active': {
+            background: theme.active.background,
+          },
         }
       }
       card = {

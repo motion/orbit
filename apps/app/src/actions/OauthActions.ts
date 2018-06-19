@@ -1,4 +1,4 @@
-import { Setting } from '@mcro/models'
+import { Setting, findOrCreate } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import * as Constants from '../constants'
 import * as r2 from '@mcro/r2'
@@ -30,7 +30,15 @@ export const startOauth = type => {
       console.log('got', auth)
       throw new Error(`No token returned ${JSON.stringify(oauth)}`)
     }
-    const setting = new Setting()
+    // todo: have a resolver for identifiers based on integration
+    const identifier = oauth.info && oauth.info.id
+    let setting
+    // update if its the same identifier from the oauth
+    if (identifier) {
+      setting = await findOrCreate(Setting, { identifier })
+    } else {
+      setting = new Setting()
+    }
     setting.category = 'integration'
     setting.type = type
     setting.token = oauth.token

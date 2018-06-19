@@ -55,6 +55,6 @@ export default function passportLink(path, options = {}) {
           return reject('Authorization cancelled')
         }
       }
-    })
+    }, 100)
   })
 }

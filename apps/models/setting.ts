@@ -3,6 +3,9 @@ import * as T from './typeorm'
 @T.Entity()
 export class Setting extends T.BaseEntity {
   @T.PrimaryGeneratedColumn() id: number
+  // use for determining if oauth is from same account as previous one
+  @T.Column({ nullable: true })
+  identifier: string
   @T.Column() category: string
   @T.Column() type: string
   @T.Column({ nullable: true })

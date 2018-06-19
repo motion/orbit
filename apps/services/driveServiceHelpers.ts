@@ -50,7 +50,7 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
             isRetrying: true,
           })
         } else {
-          console.error('Couldnt refresh access toekn :(')
+          console.error('Couldnt refresh access toekn :(', res)
           return null
         }
       }

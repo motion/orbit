@@ -17,6 +17,20 @@ export class PeekHeader extends React.Component {
   render({ peekStore, title, date, subtitle, after, permalink, icon }) {
     return (
       <header ref={this.onHeader}>
+        <OrbitIcon
+          if={icon}
+          icon={icon}
+          size={16}
+          css={{
+            position: 'absolute',
+            top: -2,
+            right: 70,
+            transform: {
+              scale: 3,
+              rotate: '45deg',
+            },
+          }}
+        />
         <title if={title}>
           <chromeSpace if={peekStore.hasHistory} />
           <titles>
@@ -41,22 +55,6 @@ export class PeekHeader extends React.Component {
               <UI.Button size={0.9} icon="link" circular onClick={permalink} />
             </permalink>
             <space if={permalink && icon} />
-            <OrbitIcon
-              if={icon}
-              icon={icon}
-              size={16}
-              css={
-                {
-                  // position: 'absolute',
-                  // top: 30,
-                  // right: -20,
-                  // transform: {
-                  //   scale: 2,
-                  //   rotate: '45deg',
-                  // },
-                }
-              }
-            />
           </afterInner>
           {after}
         </after>

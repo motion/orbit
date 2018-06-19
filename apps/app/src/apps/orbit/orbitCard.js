@@ -2,12 +2,11 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
-import bitContents from '~/components/bitContents'
+import { BitResolver } from '~/components/BitResolver'
 import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 import { PeopleRow } from '~/components/PeopleRow'
-import { Desktop } from '@mcro/stores'
 
 let loggers = []
 let nextLog = null
@@ -219,13 +218,13 @@ export class OrbitCard extends React.Component {
             if={!listItem}
             behind
             color="#000"
-            resist={93}
-            scale={0.98}
+            resist={90}
+            scale={0.99}
             offsetTop={18}
             full
             blur={8}
             inverse
-            opacity={isSelected ? 0.07 : 0}
+            opacity={isSelected ? 0.075 : 0}
             borderRadius={20}
           />
           <card onDoubleClick={this.handleDoubleClick}>
@@ -295,21 +294,16 @@ export class OrbitCard extends React.Component {
     if (!bit) {
       return this.getOrbitCard(props)
     }
-    const BitContent = bitContents(bit)
     store.isSelected
-    if (typeof BitContent !== 'function') {
-      console.error('got a weird one', BitContent)
-      return null
-    }
     return (
-      <BitContent
+      <BitResolver
         appStore={appStore}
         bit={bit}
         isExpanded={this.isExpanded}
         {...itemProps}
       >
         {this.getOrbitCard}
-      </BitContent>
+      </BitResolver>
     )
   }
 
@@ -368,7 +362,6 @@ export class OrbitCard extends React.Component {
     const { isSelected } = store
     let hoveredStyle
     let card = {
-      borderRadius,
       flex: inGrid ? 1 : 'none',
       height: (style && style.height) || 'auto',
     }
@@ -393,8 +386,8 @@ export class OrbitCard extends React.Component {
       card = {
         ...card,
         ...listStateStyle,
-        margin: [0, -12],
-        padding: [18, 20],
+        margin: [0, -8],
+        padding: [16, 20],
         borderTop: [1, theme.hover.background],
       }
     } else {
@@ -403,6 +396,7 @@ export class OrbitCard extends React.Component {
         card = {
           ...card,
           border,
+          borderRadius,
           // border: [1, '#ddd'],
           background: '#fff',
           boxShadow: [[[0, 2, 3, [0, 0, 0, 0.03]]]],
@@ -411,6 +405,7 @@ export class OrbitCard extends React.Component {
         card = {
           ...card,
           border,
+          borderRadius,
           background: '#fff',
           boxShadow: [[0, 2, 3, [0, 0, 0, 0.03]]],
         }

@@ -503,7 +503,7 @@ class SurfacePlain extends React.Component {
         0,
         (Math.log(props.elevation) + 1) * 3 + 1,
         (Math.log(props.elevation) + 1) * 10,
-        [0, 0, 0, 1 / Math.log(props.elevation) * 0.15],
+        [0, 0, 0, (1 / Math.log(props.elevation)) * 0.15],
       ])
     }
 
@@ -521,7 +521,7 @@ class SurfacePlain extends React.Component {
 
     // borderRadius
     let radius = props.circular ? height / 2 : props.borderRadius
-    radius = radius === true ? height / 3.4 * size : radius
+    radius = radius === true ? (height / 3.4) * size : radius
     radius = typeof radius === 'number' ? Math.round(radius) : radius
 
     const borderRadius = {}
@@ -703,7 +703,7 @@ class SurfacePlain extends React.Component {
         ...elementGlowProps,
         overflow: props.overflow || 'visible',
         flexFlow,
-        fontSize: props.fontSize,
+        fontSize: props.fontSize || 'inherit',
         fontWeight: props.fontWeight,
         lineHeight: props.lineHeight,
         justifyContent: props.justify || props.justifyContent,

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Job } from '@mcro/models'
-import { PeekHeader } from '../peekHeader'
+import { PeekHeader, PeekContent } from '../PeekHeader'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
@@ -98,21 +98,14 @@ export class Setting extends React.Component {
             </UI.Row>
           }
         />
-        <body>
+        <PeekContent>
           <SettingPane
             appStore={appStore}
             setting={setting}
             update={store.update}
           />
-        </body>
+        </PeekContent>
       </>
     )
-  }
-
-  static style = {
-    body: {
-      overflow: 'hidden',
-      flex: 1,
-    },
   }
 }

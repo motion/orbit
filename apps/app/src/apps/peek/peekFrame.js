@@ -116,15 +116,18 @@ export class PeekFrame {
                 },
               }}
               onClose={PeekStateActions.clearPeek}
-              onMax={() => {
-                App.setPeekState({ pinned: !App.peekState.pinned })
-              }}
+              onMax={
+                false &&
+                (() => {
+                  App.setPeekState({ pinned: !App.peekState.pinned })
+                })
+              }
               maxProps={{
                 background: '#ccc',
               }}
             />
             <chrome
-              if={peekStore.hasHistory}
+              if={false && peekStore.hasHistory}
               css={{ top: peekStore.headerHeight - 11 }}
             >
               <UI.Button

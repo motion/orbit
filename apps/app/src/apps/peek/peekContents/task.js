@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekHeader } from '../peekHeader'
-import { PeekContent } from '../PeekContent'
-import bitContents from '~/components/bitContents'
+import { PeekBitResolver, PeekHeader, PeekContent } from '../index'
 
 // bit.body =
 // {
@@ -29,15 +27,8 @@ export class Task extends React.Component {
       console.warn('no bit for task123')
       return null
     }
-    console.log('rendering yo', bit)
-    const BitContent = bitContents(bit)
     return (
-      <BitContent
-        appStore={appStore}
-        bit={bit}
-        shownLimit={Infinity}
-        isExpanded
-      >
+      <PeekBitResolver appStore={appStore} bit={bit}>
         {({ title, location, content, comments, icon, permalink }) => {
           return (
             <>
@@ -58,7 +49,7 @@ export class Task extends React.Component {
             </>
           )
         }}
-      </BitContent>
+      </PeekBitResolver>
     )
   }
 
@@ -67,7 +58,6 @@ export class Task extends React.Component {
       whiteSpace: 'pre-line',
       padding: 10,
       overflow: 'hidden',
-      lineHeight: '1.4rem',
     },
   }
 }

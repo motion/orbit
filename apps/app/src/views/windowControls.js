@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { ControlButton } from '~/views/controlButton'
 
 export const WindowControls = ({

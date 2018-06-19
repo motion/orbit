@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { PeekHeader } from '../peekHeader'
-import { PeekContent } from '../PeekContent'
-import bitContents from '~/components/bitContents'
+import { PeekBitResolver, PeekHeader, PeekContent } from '../index'
+import { BitResolver } from '~/components/BitResolver'
 import { Carousel } from '~/components/carousel'
 import { SubTitle } from '~/views'
 import { OrbitDivider } from '~/apps/orbit/orbitDivider'
@@ -47,14 +46,11 @@ export class Conversation extends React.Component {
     if (!bit) {
       return null
     }
-    const BitContent = bitContents(bit)
     return (
-      <BitContent
+      <PeekBitResolver
         appStore={appStore}
         bit={bit}
-        shownLimit={Infinity}
         itemProps={slackConvoBitContentStyle}
-        isExpanded
       >
         {({ permalink, location, title, icon, content }) => {
           return (
@@ -66,68 +62,61 @@ export class Conversation extends React.Component {
                 permalink={permalink}
               />
               <PeekContent>
-                <mainInner>
-                  <content>
-                    <UI.Text
-                      if={false}
-                      selectable
-                      css={{ margin: [5, 0, 20] }}
-                      size={1.2}
-                    >
-                      <strong>Key points</strong>: a16z partners, orbit domain,
-                      mock-up, Formidable and refactor.
-                    </UI.Text>
-                    {content}
-                  </content>
+                <content>
+                  <UI.Text
+                    if={false}
+                    selectable
+                    css={{ margin: [5, 0, 20] }}
+                    size={1.2}
+                  >
+                    <strong>Key points</strong>: a16z partners, orbit domain,
+                    mock-up, Formidable and refactor.
+                  </UI.Text>
+                  {content}
+                </content>
+                <br />
+                <SubTitle>Related</SubTitle>
+                <section>
+                  <carouselInner>
+                    <Carousel items={store.related} />
+                  </carouselInner>
+                </section>
+                <br />
+                <SubTitle>Related Conversations</SubTitle>
+                <section>
+                  {store.relatedConversations.map((relatedBit, index) => (
+                    <React.Fragment key={`${relatedBit.id}${index}`}>
+                      <BitResolver
+                        appStore={appStore}
+                        bit={relatedBit}
+                        shownLimit={Infinity}
+                        itemProps={slackConvoBitContentStyle}
+                        isExpanded
+                      >
+                        {({ content }) => content}
+                      </BitResolver>
+                      <OrbitDivider
+                        if={index < 2}
+                        height={2}
+                        css={{ margin: [20, 0, 10] }}
+                      />
+                    </React.Fragment>
+                  ))}
                   <br />
-                  <SubTitle>Related</SubTitle>
-                  <section>
-                    <carouselInner>
-                      <Carousel items={store.related} />
-                    </carouselInner>
-                  </section>
                   <br />
-                  <SubTitle>2Related Conversations</SubTitle>
-                  <section>
-                    {store.relatedConversations.map((relatedBit, index) => (
-                      <React.Fragment key={`${relatedBit.id}${index}`}>
-                        <BitContent
-                          appStore={appStore}
-                          bit={relatedBit}
-                          shownLimit={Infinity}
-                          itemProps={slackConvoBitContentStyle}
-                          isExpanded
-                        >
-                          {({ content }) => content}
-                        </BitContent>
-                        <OrbitDivider
-                          if={index < 2}
-                          height={2}
-                          css={{ margin: [20, 0, 10] }}
-                        />
-                      </React.Fragment>
-                    ))}
-                    <br />
-                    <br />
-                    <br />
-                  </section>
-                </mainInner>
+                  <br />
+                </section>
               </PeekContent>
             </>
           )
         }}
-      </BitContent>
+      </PeekBitResolver>
     )
   }
 
   static style = {
-    mainInner: {
-      margin: [0, -10, -5],
-      fontSize: 18,
-      lineHeight: '1.6rem',
-    },
     content: {
-      padding: [0, 20, 40],
+      padding: [0, 10, 40],
     },
     section: {
       padding: [10, 20, 0],

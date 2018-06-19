@@ -34,7 +34,8 @@ export class PeekContent extends React.Component {
       overflowY: 'scroll',
       padding: [10 + 15, 0, 15],
       flex: 1,
-      fontSize: 18,
+      fontSize: 16,
+      lineHeight: '1.6rem',
       wordBreak: 'break-word',
     },
   }

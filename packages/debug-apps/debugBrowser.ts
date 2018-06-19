@@ -271,6 +271,9 @@ export default class DebugApps {
       await this.ensureEnoughTabs(sessions)
       const pages = await this.getPages()
       console.log('updating', shouldUpdate)
+      if (shouldUpdate.length > this.options.expectTabs) {
+        throw 'inspecting inside electron, pause'
+      }
       await this.openUrlsInTabs(sessions, pages, shouldUpdate)
       await sleep(300)
       // synchronously

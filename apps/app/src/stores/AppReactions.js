@@ -140,13 +140,13 @@ export class AppReactions {
     { log: 'state' },
   )
 
-  // TODO: re-enable
+  // TODO: re-enable these
+
   // clearPeekOnReposition = react(
   //   () => App.orbitState.position,
   //   PeekStateActions.clearPeek,
   // )
 
-  // TODO: re-enable
   // react
   // clearPeekOnMouseOut = [
   //   () => Desktop.hoverState.peekHovered,
@@ -159,6 +159,16 @@ export class AppReactions {
   //     App.clearPeek()
   //   },
   // ]
+
+  // hide orbit on unfocus
+  // focusedOnOrbit = react(
+  //   () => Desktop.state.focusedOnOrbit,
+  //   willBeFocusedOnOrbit => {
+  //     if (this.focusedOnOrbit && !willBeFocusedOnOrbit) {
+  //       App.setOrbitState({ orbitDocked: false })
+  //     }
+  //   }
+  // )
 
   showOrbitOnHoverWord = react(
     () => App.hoveredWordName,

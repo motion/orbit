@@ -53,7 +53,7 @@ export class Plugins {
       console.timeEnd('searchPlugins')
       console.time('searchPlugins2')
       const pluginResults = await Promise.all(
-        results.slice(0, 10).map(async result => ({
+        results.slice(0, 5).map(async result => ({
           ...result,
           // @ts-ignore
           icon: result.icon ? await this.icons.getIcon(result.icon) : null,

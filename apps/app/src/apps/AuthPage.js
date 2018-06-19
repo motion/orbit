@@ -13,6 +13,7 @@ export class AuthPage {
   link = async () => {
     console.log('linking service...', service)
     const info = await passportLink(`${Constants.API_URL}/auth/${service}`)
+    console.log('got em', info)
     await r2.post(`${Constants.API_URL}/setCreds`, {
       json: {
         [service]: {

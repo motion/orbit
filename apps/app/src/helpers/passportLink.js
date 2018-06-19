@@ -27,6 +27,7 @@ export default function passportLink(path, options = {}) {
     let resolved = false
     window.passport = {}
     window.passport.oauthSession = info => {
+      console.log('GOT OAUTH', info)
       if (!info.error && info.token) {
         resolved = true
         return resolve(info)
@@ -52,7 +53,7 @@ export default function passportLink(path, options = {}) {
           if (resolved) {
             return
           }
-          return reject('Authorization cancelled')
+          reject('Authorization cancelled')
         }
       }
     }, 100)

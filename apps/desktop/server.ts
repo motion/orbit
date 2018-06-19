@@ -205,6 +205,8 @@ export default class Server {
     }
     if (window.opener.passport && window.opener.passport.oauthSession) {
       window.opener.passport.oauthSession(info)
+    } else {
+      alert('closed original window!')
     }
   }
   window.close()

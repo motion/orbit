@@ -23,8 +23,11 @@ export const startOauth = type => {
   App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
   const checker = setInterval(async () => {
     const auth = await checkAuths()
-    const oauth = (auth && auth[type]) || {}
-    if (!oauth) return
+    console.log('checking for', type)
+    const oauth = auth && auth[type]
+    if (!oauth) {
+      return
+    }
     clearInterval(checker)
     if (!oauth.token) {
       console.log('got', auth)

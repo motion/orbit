@@ -7,6 +7,7 @@ export class SettingInfoStore {
   job = null
   bitsCount = null
   bit = null
+  updateJob = 0
 
   get setting() {
     if (!this.bit) return
@@ -17,17 +18,20 @@ export class SettingInfoStore {
     this.bit = bit
   }
 
-  job = modelQueryReaction(() => async () => {
-    if (this.bit) {
-      return await Job.findOne({
-        where: { type: this.bit.integration },
-        order: { createdAt: 'DESC' },
-      })
-    }
-  })
+  job = modelQueryReaction(
+    () => [now(2000), this.updateJob],
+    async () => {
+      if (this.bit) {
+        return await Job.findOne({
+          where: { type: this.bit.integration },
+          order: { createdAt: 'DESC' },
+        })
+      }
+    },
+  )
 
   bitsCount = react(
-    () => now(4000) && this.bit,
+    () => [now(4000), this.bit],
     bit =>
       bit &&
       Bit.createQueryBuilder()

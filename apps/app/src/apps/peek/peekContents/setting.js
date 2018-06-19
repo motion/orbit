@@ -35,7 +35,7 @@ export class Setting extends React.Component {
     job.action = 'all'
     job.status = Job.statuses.PENDING
     await job.save()
-    store.update()
+    store.update = Math.random()
   }
 
   removeIntegration = async () => {

@@ -167,7 +167,7 @@ export class GithubSetting {
           <Tab
             key="issues"
             width="50%"
-            label={`Issues (${store.issues.length})`}
+            label={`Issues (${store.issues ? store.issues.length : 0})`}
           />
         </Tabs>
         <section if={store.active === 'repos'}>

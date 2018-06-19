@@ -23,6 +23,7 @@ export default async function connectModels(models) {
       }
       WebSqlClient.onError(async err => {
         if (!started) {
+          console.log('SQL Error before started', err)
           return
         }
         console.error('SQL Error', err)

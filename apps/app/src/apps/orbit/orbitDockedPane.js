@@ -1,7 +1,29 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import * as _ from 'lodash'
 
 class DockedPaneStore {
+  paneRef = React.createRef()
+  isAtBottom = false
+
+  didMount() {
+    this.on(
+      this.paneRef.current,
+      'scroll',
+      _.throttle(() => {
+        const node = this.paneRef.current
+        const lastNode = _.last(Array.from(node.children))
+        const innerHeight = lastNode.offsetTop + lastNode.clientHeight
+        const scrolledTo = node.scrollTop + node.clientHeight
+        if (scrolledTo === innerHeight) {
+          this.isAtBottom = true
+        } else {
+          this.isAtBottom = false
+        }
+      }, 100),
+    )
+  }
+
   // prevents uncessary and expensive OrbitCard re-renders
   get isActive() {
     const { extraCondition, name, paneStore } = this.props
@@ -17,10 +39,11 @@ class DockedPaneStore {
   store: DockedPaneStore,
 })
 export class OrbitDockedPane {
-  render({ name, children, store, style, after }) {
+  render({ children, store, style, after, fadeBottom }) {
     return (
       <>
-        <pane $isActive={store.isActive} style={style}>
+        <overflowFade if={fadeBottom} $invisible={store.isAtBottom} />
+        <pane $isActive={store.isActive} style={style} ref={store.paneRef}>
           {children}
         </pane>
         {after}
@@ -35,7 +58,7 @@ export class OrbitDockedPane {
       right: 0,
       bottom: 0,
       left: 0,
-      transition: 'all ease-in-out 80ms',
+      transition: 'all ease-in-out 100ms',
       overflowY: 'scroll',
       padding: [40, 8, 0],
       margin: [-40, 0, 0],
@@ -52,13 +75,29 @@ export class OrbitDockedPane {
         x: 0,
       },
     },
+    overflowFade: {
+      pointerEvents: 'none',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 200,
+      zIndex: 10000000,
+      borderRadius: 20,
+      overflow: 'hidden',
+      opacity: 1,
+      transition: 'all ease-in 250ms',
+    },
+    invisible: {
+      opacity: 0,
+    },
   }
 
-  // static theme = (props, theme) => {
-  //   return {
-  //     pane: {
-  //       background: theme.base.background,
-  //     },
-  //   }
-  // }
+  static theme = (_, theme) => {
+    return {
+      overflowFade: {
+        background: `linear-gradient(transparent, ${theme.base.background})`,
+      },
+    }
+  }
 }

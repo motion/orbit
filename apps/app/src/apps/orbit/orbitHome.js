@@ -110,7 +110,7 @@ export class OrbitHome {
     const dayNum = now.getMonth()
     const total = store.results.length
     return (
-      <OrbitDockedPane name="home" after={<overflowFade />}>
+      <OrbitDockedPane name="home" fadeBottom>
         <header if={false}>
           <SubTitle>
             {day} {month} {dayNum}

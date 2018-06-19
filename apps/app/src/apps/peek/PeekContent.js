@@ -26,7 +26,7 @@ export class PeekContent extends React.Component {
       top: 0,
       left: 0,
       right: 0,
-      height: 50,
+      height: 30,
       background: 'linear-gradient(#f9f9f9, transparent)',
       zIndex: 1000,
     },

@@ -63,7 +63,7 @@ class PeekStore {
   }
 
   lastState = react(() => this.curState, deepClone, {
-    delayValue: true,
+    delay: 16,
     immediate: true,
   })
 

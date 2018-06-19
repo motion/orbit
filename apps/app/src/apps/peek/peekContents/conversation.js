@@ -87,7 +87,7 @@ export class Conversation extends React.Component {
                     </carouselInner>
                   </section>
                   <br />
-                  <SubTitle>Recent and Related Conversations</SubTitle>
+                  <SubTitle>2Related Conversations</SubTitle>
                   <section>
                     {store.relatedConversations.map((relatedBit, index) => (
                       <React.Fragment key={`${relatedBit.id}${index}`}>
@@ -127,7 +127,7 @@ export class Conversation extends React.Component {
       lineHeight: '1.6rem',
     },
     content: {
-      padding: [10, 20],
+      padding: [0, 20, 40],
     },
     section: {
       padding: [10, 20, 0],

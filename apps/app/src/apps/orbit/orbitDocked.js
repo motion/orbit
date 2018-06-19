@@ -33,6 +33,7 @@ class OrbitDocked {
           <border $$fullscreen />
           <container>
             <OrbitHeader
+              borderRadius={borderRadius}
               after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
             <glowWrap>

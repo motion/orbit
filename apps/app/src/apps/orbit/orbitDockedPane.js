@@ -42,7 +42,10 @@ export class OrbitDockedPane {
   render({ children, store, style, after, fadeBottom }) {
     return (
       <>
-        <overflowFade if={fadeBottom} $invisible={store.isAtBottom} />
+        <overflowFade
+          if={fadeBottom}
+          $invisible={store.isAtBottom || !store.isActive}
+        />
         <pane $isActive={store.isActive} style={style} ref={store.paneRef}>
           {children}
         </pane>

@@ -83,7 +83,7 @@ export class OrbitSettings {
       />
     )
     return (
-      <OrbitDockedPane name={name}>
+      <OrbitDockedPane name={name} fadeBottom>
         <SubTitle>Settings</SubTitle>
         <OrbitCard>
           <UI.Text css={{ marginBottom: 10 }}>

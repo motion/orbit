@@ -187,4 +187,13 @@ export class OrbitHeader extends React.Component {
       alignItems: 'center',
     },
   }
+
+  static theme = ({ borderRadius }, theme) => {
+    return {
+      orbitHeader: {
+        borderTopRadius: borderRadius,
+        background: theme.base.background,
+      },
+    }
+  }
 }

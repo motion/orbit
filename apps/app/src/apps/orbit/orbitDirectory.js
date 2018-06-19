@@ -38,7 +38,7 @@ export class OrbitDirectory {
     })
     const total = store.results.length
     return (
-      <OrbitDockedPane name="directory">
+      <OrbitDockedPane name="directory" fadeBottom>
         <React.Fragment if={people.length}>
           <SubTitle>People</SubTitle>
           <Masonry>

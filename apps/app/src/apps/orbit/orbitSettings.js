@@ -9,11 +9,24 @@ import { allIntegrations } from '~/constants'
 import { settingToResult } from '~/helpers'
 import { modelQueryReaction } from '@mcro/helpers'
 
+const Row = view('section', {
+  flexFlow: 'row',
+  padding: [8, 0],
+  alignItems: 'center',
+})
+
+const InputRow = ({ label }) => (
+  <Row>
+    <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
+    <input css={{ fontSize: 14, padding: [4, 6], margin: ['auto', 8] }} />{' '}
+  </Row>
+)
+
 const CheckBoxRow = ({ children, checked }) => (
-  <row css={{ flexFlow: 'row', padding: [8, 0], alignItems: 'center' }}>
+  <Row>
     <input checked={checked} css={{ margin: ['auto', 4] }} type="checkbox" />{' '}
     <label css={{ padding: [0, 4], fontWeight: 400 }}>{children}</label>
-  </row>
+  </Row>
 )
 
 class OrbitSettingsStore {
@@ -22,14 +35,14 @@ class OrbitSettingsStore {
   setGetResults = react(
     () => [
       this.props.paneStore.activePane === this.props.name,
-      this.splitActiveResults,
+      this.activeSettings,
     ],
-    ([isActive]) => {
+    ([isActive, activeSettings]) => {
       this.isPaneActive = isActive
       if (!isActive) {
         throw react.cancel
       }
-      const getResults = () => this.activeSettings
+      const getResults = () => activeSettings
       getResults.shouldFilter = true
       this.props.appStore.setGetResults(getResults)
     },
@@ -70,7 +83,7 @@ export class OrbitSettings {
       />
     )
     return (
-      <OrbitDockedPane name={name}>
+      <OrbitDockedPane name={name} fadeBottom>
         <SubTitle>Settings</SubTitle>
         <OrbitCard>
           <UI.Text css={{ marginBottom: 10 }}>
@@ -83,10 +96,12 @@ export class OrbitSettings {
               : ''}
           </UI.Text>
           <CheckBoxRow defaultChecked>Start on Login</CheckBoxRow>
-          <CheckBoxRow defaultChecked>
+          <CheckBoxRow if={false} defaultChecked>
             Automatically manage disk space
           </CheckBoxRow>
+          <InputRow label="Open shortcut" />
         </OrbitCard>
+        <br />
         <section if={activeSettings.length}>
           <SubTitle>Active Integrations</SubTitle>
           <cards>

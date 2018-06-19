@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import * as Constants from '~/constants'
 
 const { SHADOW_PAD } = Constants

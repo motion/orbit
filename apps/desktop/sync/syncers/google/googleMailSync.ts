@@ -48,7 +48,7 @@ export default class GoogleMailSync {
   updateSetting = async (setting?) => {
     this.setting = setting || (await Setting.findOne({ type: 'gmail' }))
     this.service = new DriveService(this.setting)
-    this.gmail = new Gmail(setting.token)
+    this.gmail = new Gmail(this.setting.token)
   }
 
   run = async () => {
@@ -66,7 +66,7 @@ export default class GoogleMailSync {
     }
   }
 
-  async syncMail(options = { fullUpdate: false }) {
+  syncMail = async (options = { fullUpdate: false }) => {
     await this.updateSetting()
     const { syncSettings } = this
     const { lastSyncSettings = {} } = this.setting.values
@@ -81,10 +81,13 @@ export default class GoogleMailSync {
       const history = await this.fetch('/users/me/history', {
         query: { startHistoryId: historyId },
       })
+      // @ts-ignore
       if (!history.history || !history.history.length) {
         return
       }
+      // @ts-ignore
       if (history.history.length < max) {
+        // @ts-ignore
         this.syncThreads({ max: history.history.length })
         return
       }
@@ -253,6 +256,7 @@ export default class GoogleMailSync {
       )
       const res = await this.fetchThreads(query_)
       if (res) {
+        // @ts-ignore
         threads = [...threads, ...res.threads]
         lastPageToken = res.nextPageToken
       } else {

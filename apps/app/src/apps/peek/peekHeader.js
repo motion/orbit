@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { OrbitIcon } from '~/apps/orbit/orbitIcon'
 
 @view.attach('peekStore')
 @view
@@ -13,7 +14,7 @@ export class PeekHeader extends React.Component {
     })
   }
 
-  render({ peekStore, title, date, subtitle, after }) {
+  render({ peekStore, title, date, subtitle, after, permalink, icon }) {
     return (
       <header ref={this.onHeader}>
         <title if={title}>
@@ -34,7 +35,31 @@ export class PeekHeader extends React.Component {
             </UI.Title>
           </titles>
         </title>
-        <after if={after}>{after}</after>
+        <after>
+          <afterInner>
+            <permalink if={permalink}>
+              <UI.Button size={0.9} icon="link" circular onClick={permalink} />
+            </permalink>
+            <space if={permalink && icon} />
+            <OrbitIcon
+              if={icon}
+              icon={icon}
+              size={16}
+              css={
+                {
+                  // position: 'absolute',
+                  // top: 30,
+                  // right: -20,
+                  // transform: {
+                  //   scale: 2,
+                  //   rotate: '45deg',
+                  // },
+                }
+              }
+            />
+          </afterInner>
+          {after}
+        </after>
       </header>
     )
   }
@@ -74,6 +99,17 @@ export class PeekHeader extends React.Component {
     },
     after: {
       alignSelf: 'flex-end',
+    },
+    afterInner: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      position: 'relative',
+    },
+    space: {
+      width: 7,
+    },
+    permalink: {
+      opacity: 0.5,
     },
   }
 }

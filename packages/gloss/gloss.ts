@@ -11,8 +11,9 @@ export * from './components/theme'
 
 export type Options = {
   dontTheme?: boolean
+  glossProp?: string
   baseStyles?: Object
-  tagName?: boolean
+  tagName?: string
   toColor?: Function
   isColor?: Function
 }

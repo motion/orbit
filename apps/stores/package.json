@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/all",
+  "name": "@mcro/stores",
   "version": "2.0.11",
   "main": "_/index",
   "types": "./index.d.ts",

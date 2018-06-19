@@ -88,12 +88,12 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={3.2} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      A better way to coordinate teams
+    <Title italic size={3} margin={[0, 0, 15, 0]} alpha={1} color="#222">
+      A better way to organize knowledge
     </Title>
     <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      Unify your team knowledge to make it useful and easy to find. A completely
-      secure, no 😅 intranet that takes just seconds to setup.
+      Keep your team knowledge at hand with an incredible new way to search your
+      cloud.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />

@@ -25,7 +25,10 @@ export const fn = ({ term, display }) => {
         ])
         return
       }
-    } catch (err) {}
+    } catch (err) {
+      display([])
+      return
+    }
   }
   display([])
 }

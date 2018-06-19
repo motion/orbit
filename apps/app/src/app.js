@@ -1,4 +1,4 @@
-import { App as AppAll } from '@mcro/all'
+import { App as AppAll } from '@mcro/stores'
 import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import { modelsList } from '@mcro/models'

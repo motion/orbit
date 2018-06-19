@@ -47,7 +47,6 @@ function matchTag(match) {
     default:
       const imgMatch = match[1].match(/(http[^|]+\.(png|jpe?g|gif))|.*/g)
       if (imgMatch && imgMatch.length === 3) {
-        console.log(`<img src="${imgMatch[0]}" />`)
         return `<img src="${imgMatch[0]}" />`
       }
       p = payloads(match[1])

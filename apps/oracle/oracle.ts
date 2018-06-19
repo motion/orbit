@@ -32,14 +32,14 @@ export default class Oracle {
   wss: Server
   process: any
 
-  debugBuild =  false
+  debugBuild = false
   settings = null
   changedIds = null
   restoredIds = null
   awaitingSocket = []
   listeners = []
   onLinesCB = _ => _
-  onWindowChangeCB = _ => _
+  onWindowChangeCB: (a: string, b: any) => any = _ => _
   onWordsCB = _ => _
   onBoxChangedCB = _ => _
   onRestoredCB = _ => _
@@ -271,7 +271,7 @@ export default class Oracle {
       })
       // handle events
       socket.on('close', () => {
-        this.removeSocket()
+        this.removeSocket(id)
       })
       socket.onerror = err => {
         if (err.message.indexOf('ECONNRESET')) return
@@ -281,7 +281,7 @@ export default class Oracle {
         if (err.code !== 'ECONNRESET') {
           throw err
         }
-        this.removeSocket()
+        this.removeSocket(id)
       })
     })
     this.wss.on('error', (...args) => {

@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { Bit, Person } from '@mcro/models'
 
 export const selectedBitReaction = react(
@@ -8,7 +8,7 @@ export const selectedBitReaction = react(
     if (!bit) {
       return null
     }
-    console.log('selectedBit', bit.type)
+    console.log('selectedBit', bit.type, bit.id)
     if (bit.type === 'person') {
       return await Person.findOne({ id: bit.id })
     }

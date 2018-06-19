@@ -354,7 +354,7 @@ br {
 
 ol,
 ul {
-  margin: 0;
+  margin: 20px 0 0 20px;
   padding: 0;
 }
 
@@ -388,6 +388,7 @@ img {
 
 li {
   display: list-item;
+  margin-left: 20px;
 }
 
 p code {

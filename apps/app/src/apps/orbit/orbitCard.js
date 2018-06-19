@@ -7,7 +7,7 @@ import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 import { PeopleRow } from '~/components/PeopleRow'
-import { Desktop } from '@mcro/all'
+import { Desktop } from '@mcro/stores'
 
 let loggers = []
 let nextLog = null
@@ -21,14 +21,17 @@ const debounceLog = (...args) => {
   }, 16)
 }
 
-const imageStyle = {
-  transformOrigin: 'bottom right',
-  transform: {
-    y: -6 - 3,
-    x: 20 + 3,
-    scale: 2.5,
-    rotate: '-45deg',
+const orbitIconProps = {
+  imageStyle: {
+    transformOrigin: 'bottom right',
+    transform: {
+      y: -6 - 3,
+      x: 20 + 3,
+      scale: 2.5,
+      rotate: '-45deg',
+    },
   },
+  orbitIconStyle: { marginRight: 6 },
 }
 
 class OrbitCardStore {
@@ -69,31 +72,31 @@ class OrbitCardStore {
     }
   }
 
+  get target() {
+    return this.props.bit || this.props.result
+  }
+
   setPeekTargetOnNextIndex = react(
-    () => [
-      this.props.appStore.nextIndex === this.props.index,
-      this.isPaneSelected,
-    ],
-    async ([shouldSelect, isPaneSelected], { sleep }) => {
-      if (!Desktop.hoverState.orbitHovered) {
+    () => [this.props.appStore.nextIndex, this.isPaneSelected],
+    async ([nextIndex, isPaneSelected], { sleep }) => {
+      if (!isPaneSelected) {
         throw react.cancel
       }
-      if (
-        !shouldSelect ||
-        !isPaneSelected ||
-        typeof this.props.index === 'undefined'
-      ) {
-        if (this._isSelected) {
-          this._isSelected = false
+      const shouldSelect = nextIndex === this.props.index
+      if (shouldSelect !== this._isSelected) {
+        this._isSelected = shouldSelect
+        if (shouldSelect) {
+          await sleep()
+          if (!this.target) {
+            throw new Error(
+              `No target! ${this.props.pane} ${this.props.subPane} ${
+                this.props.index
+              }`,
+            )
+          }
+          this.props.appStore.setTarget(this.target, this.ref)
         }
-        throw react.cancel
       }
-      this._isSelected = true
-      await sleep(10)
-      this.props.appStore.setTarget(
-        this.props.bit || this.props.result,
-        this.ref,
-      )
     },
     { immediate: true },
   )
@@ -119,7 +122,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 6,
+    borderRadius: 8,
     hide: {},
   }
 
@@ -191,8 +194,7 @@ export class OrbitCard extends React.Component {
         icon={icon}
         size={hasSubtitle ? 14 : 18}
         $orbitIcon
-        imageStyle={imageStyle}
-        orbitIconStyle={{ marginRight: 6 }}
+        {...orbitIconProps}
         {...tiny && tinyProps.iconProps}
         {...contentIconProps}
         {...iconProps}
@@ -206,13 +208,26 @@ export class OrbitCard extends React.Component {
       <UI.Theme theme={childTheme}>
         <cardWrap
           css={{
-            zIndex: isExpanded ? 5 : 4,
+            zIndex: isSelected ? 5 : 4,
           }}
           ref={store.setRef}
           onClick={store.handleClick}
           {...hoverToSelect && !inactive && this.hoverSettler.props}
           style={style}
         >
+          <UI.HoverGlow
+            if={!listItem}
+            behind
+            color="#000"
+            resist={93}
+            scale={0.98}
+            offsetTop={18}
+            full
+            blur={8}
+            inverse
+            opacity={isSelected ? 0.07 : 0}
+            borderRadius={20}
+          />
           <card onDoubleClick={this.handleDoubleClick}>
             {orbitIcon}
             <title>
@@ -311,7 +326,10 @@ export class OrbitCard extends React.Component {
       position: 'relative',
       maxHeight: '100%',
       transition: 'all ease-in 120ms',
-      padding: 18,
+      padding: [17, 18],
+      transform: {
+        z: 0,
+      },
     },
     title: {
       maxWidth: '100%',
@@ -380,25 +398,21 @@ export class OrbitCard extends React.Component {
         borderTop: [1, theme.hover.background],
       }
     } else {
-      const border = [1, isSelected ? 'transparent' : theme.hover.background]
-      hoveredStyle = {
-        background: isSelected
-          ? theme.selected.background
-          : theme.hover.background,
-      }
+      const border = [1, '#fff']
       if (isSelected) {
         card = {
           ...card,
           border,
+          // border: [1, '#ddd'],
           background: '#fff',
-          boxShadow: [[0, 3, 12, [0, 0, 0, 0.08]]],
+          boxShadow: [[[0, 2, 3, [0, 0, 0, 0.03]]]],
         }
       } else {
         card = {
           ...card,
-          // background: theme.base.background,
           border,
-          '&:hover': hoveredStyle,
+          background: '#fff',
+          boxShadow: [[0, 2, 3, [0, 0, 0, 0.03]]],
         }
       }
     }

@@ -1,7 +1,7 @@
 import { fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import debug from '@mcro/debug'
-import { ReactionOptions } from './types'
+import { ReactionOptions, ReactionHelpers } from './types'
 import {
   Reaction,
   ReactionRejectionError,
@@ -11,9 +11,11 @@ import {
 // export @react decorator
 export { react } from './react'
 export * from './constants'
+export * from './types'
 
 const root = typeof window !== 'undefined' ? window : require('global')
 const IS_PROD = process.env.NODE_ENV === 'production'
+const voidFn = () => void 0
 
 export function getReactionOptions(userOptions?: ReactionOptions) {
   let options: ReactionOptions = {
@@ -417,17 +419,17 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     preventLog = true
   }
 
-  const sleep = ms => {
-    // log(`${name} sleeping for ${ms}`)
+  const sleep = (ms: number): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!reactionID) {
-        return reject(new ReactionRejectionError())
+        reject(new ReactionRejectionError())
+        return
       }
       if (typeof ms === 'undefined') {
         resolve()
         return
       }
-      const sleepTimeout = setTimeout(resolve, ms)
+      const sleepTimeout = setTimeout(() => resolve(), ms)
       rejections.push(() => {
         clearTimeout(sleepTimeout)
         reject(new ReactionRejectionError())
@@ -435,25 +437,23 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     })
   }
 
-  const when = (condition, timeout) => {
-    // log(`${name} sleeping for ${ms}`)
-    const whenPromise = new Promise((resolve, reject) => {
+  const when = (condition: () => boolean, timeout?: number): Promise<void> => {
+    return new Promise((resolve, reject) => {
       let cancelTm
       if (!reactionID) {
         return reject(new ReactionRejectionError())
       }
       let cancelWhen = false
       Mobx.when(condition)
-        .then((val: any) => {
+        .then(() => {
           if (cancelWhen) return
           clearTimeout(cancelTm)
-          resolve(val)
+          resolve()
         })
         .catch(() => {
           clearTimeout(cancelTm)
           reject()
         })
-
       if (timeout) {
         cancelTm = setTimeout(() => {
           console.log('automagical, when timed out!')
@@ -467,10 +467,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       rejections.push(cancel)
     })
-    return whenPromise
   }
 
-  const whenChanged = (condition, dontCompare) => {
+  const whenChanged = <A>(condition: () => A, dontCompare?): Promise<A> => {
     let oldVal = condition()
     let curVal
     return new Promise((resolve, reject) => {
@@ -509,6 +508,15 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     }
   }
 
+  const reactionHelpers: ReactionHelpers = {
+    preventLogging,
+    getValue: getCurrentValue,
+    setValue: voidFn,
+    sleep,
+    when,
+    whenChanged,
+  }
+
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
       reset()
@@ -540,24 +548,17 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       root.__trackStateChanges.isActive = true
 
       let reactionResult
+      reactionHelpers.setValue = val => {
+        hasCalledSetValue = true
+        updateAsyncValue(val)
+      }
 
       // to allow cancels
       try {
         reactionResult = reactionFn.call(
           obj,
           isReaction ? reactValArg : obj.props,
-          {
-            preventLogging,
-            // allows setting multiple values in a reaction
-            setValue: val => {
-              hasCalledSetValue = true
-              updateAsyncValue(val)
-            },
-            getValue: getCurrentValue,
-            sleep,
-            when,
-            whenChanged,
-          },
+          reactionHelpers,
         )
       } catch (err) {
         // got a nice cancel!

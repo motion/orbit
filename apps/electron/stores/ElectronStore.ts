@@ -1,9 +1,9 @@
-import { App, Electron, Desktop } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/stores'
 import { isEqual, store, react, debugState } from '@mcro/black'
 import { ShortcutsStore } from '../stores/shortcutsStore'
 import { WindowFocusStore } from '../stores/windowFocusStore'
-import {} from '@mcro/black'
 import root from 'global'
+import { sleep } from '../helpers'
 
 @store
 export class ElectronStore {
@@ -35,7 +35,7 @@ export class ElectronStore {
       'CommandOrControl+Space',
     ])
     // @ts-ignore
-    this.shortcutStore.emitter.on('shortcut', Electron.reactions.onShortcut)
+    this.shortcutStore.on('shortcut', this.onShortcut)
     Electron.onMessage(msg => {
       switch (msg) {
         case Electron.messages.CLEAR:
@@ -55,6 +55,53 @@ export class ElectronStore {
     }
     // clear to start
     Electron.onClear()
+  }
+
+  onShortcut = async shortcut => {
+    console.log('shortcut', shortcut)
+    if (shortcut === 'CommandOrControl+Space') {
+      this.toggleDocked()
+      return
+    }
+    // if (shortcut === 'Option+Space') {
+    //   if (App.orbitState.hidden) {
+    //     this.toggleVisible()
+    //     Electron.sendMessage(App, App.messages.PIN)
+    //     return
+    //   }
+    //   if (App.orbitState.pinned) {
+    //     Electron.sendMessage(Desktop, Desktop.messages.CLEAR_OPTION)
+    //     Electron.sendMessage(App, App.messages.HIDE)
+    //     Electron.sendMessage(App, App.messages.UNPIN)
+    //     return
+    //   } else {
+    //     // !pinned
+    //     this.togglePinned()
+    //   }
+    // }
+  }
+
+  toggleDocked = async () => {
+    console.log('toggling docked')
+    if (!App.orbitState.docked) {
+      this.windowFocusStore.focusOrbit()
+    } else {
+      this.windowFocusStore.defocusOrbit()
+    }
+    await sleep(40)
+    Electron.sendMessage(App, App.messages.TOGGLE_DOCKED)
+  }
+
+  toggleVisible = () => {
+    if (App.orbitState.hidden) {
+      Electron.sendMessage(App, App.messages.HIDE)
+    } else {
+      Electron.sendMessage(App, App.messages.SHOW)
+    }
+  }
+
+  togglePinned = () => {
+    Electron.sendMessage(App, App.messages.TOGGLE_PINNED)
   }
 
   clearApp = react(

@@ -38,11 +38,15 @@ export class Task extends React.Component {
         shownLimit={Infinity}
         isExpanded
       >
-        {({ title, content, comments }) => {
-          console.log('got', title, content, comments)
+        {({ title, location, content, comments, icon, permalink }) => {
           return (
             <>
-              <PeekHeader title={title} />
+              <PeekHeader
+                title={title}
+                subtitle={location}
+                icon={icon}
+                permalink={permalink}
+              />
               <PeekContent>
                 <bodyContents
                   dangerouslySetInnerHTML={{

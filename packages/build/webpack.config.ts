@@ -48,8 +48,16 @@ const config = {
   target,
   mode,
   entry,
+  optimization: isProd
+    ? {}
+    : {
+        removeAvailableModules: false,
+        removeEmptyChunks: false,
+        splitChunks: false,
+      },
   output: {
     path: outputPath,
+    pathinfo: false,
     filename: 'bundle.js',
     publicPath: '/',
   },
@@ -89,13 +97,15 @@ const config = {
             loader: 'thread-loader',
             options: {
               // there should be 1 cpu for the fork-ts-checker-webpack-plugin
-              workers: require('os').cpus().length - 1,
+              workers: require('os').cpus().length - (isProd ? 0 : 1),
             },
           },
           {
             loader: 'ts-loader',
             options: {
               happyPackMode: true, // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
+              transpileOnly: isProd,
+              experimentalWatchApi: true,
             },
           },
         ],
@@ -137,7 +147,7 @@ const config = {
     ],
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
+    new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: !isProd }),
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
     new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({

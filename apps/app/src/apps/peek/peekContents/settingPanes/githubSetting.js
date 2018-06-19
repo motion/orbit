@@ -1,7 +1,6 @@
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
-import { GithubService } from '@mcro/services'
 import { Bits } from '~/views/bits'
 import { Tabs, Tab, SearchableTable } from '@mcro/sonar'
 import { TimeAgo } from '~/views/TimeAgo'
@@ -161,9 +160,6 @@ class GithubStore {
 @view
 export class GithubSetting {
   render({ githubStore: store }) {
-    if (!store.issues) {
-      return <div>no issues</div>
-    }
     return (
       <container>
         <Tabs active={store.active} onActive={key => (store.active = key)}>
@@ -171,10 +167,9 @@ export class GithubSetting {
           <Tab
             key="issues"
             width="50%"
-            label={`Issues (${store.issues.length})`}
+            label={`Issues (${store.issues ? store.issues.length : 0})`}
           />
         </Tabs>
-
         <section if={store.active === 'repos'}>
           <section>
             <SearchableTable

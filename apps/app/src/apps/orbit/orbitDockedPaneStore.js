@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { App, Electron } from '@mcro/all'
+import { App, Electron } from '@mcro/stores'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 
 // filters = ['all', 'general', 'status', 'showoff']
@@ -78,10 +78,11 @@ export class OrbitDockedPaneStore {
       await sleep(App.animationDuration * 2)
       // done animating, reset
       setValue({ willAnimate: false, visible })
-      App.sendMessage(
-        Electron,
-        visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
-      )
+      // this would do the toggle after the animation, trying out doing it before to see if its faster
+      // App.sendMessage(
+      //   Electron,
+      //   visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
+      // )
     },
     {
       immediate: true,

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-// import { App } from '@mcro/all'
+// import { App } from '@mcro/stores'
 import { OrbitIcon } from './orbitIcon'
 
 const iconSize = 38
@@ -75,6 +75,7 @@ class OrbitQuickItem {
 @view
 export class OrbitQuickSearch {
   render({ appStore }) {
+    console.log('quick search it up', appStore.quickSearchResults)
     return (
       <quickSearch>
         {appStore.quickSearchResults.map((item, index) => (

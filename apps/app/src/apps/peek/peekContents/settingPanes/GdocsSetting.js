@@ -116,7 +116,15 @@ class Folder {
 
 @view({
   store: class GDocsSettingStore {
-    folders = react(() => App.sync.google.drive.getFiles())
+    get setting() {
+      return this.props.appStore.settings.gdocs
+    }
+
+    get service() {
+      return this.props.appStore.services.gdocs
+    }
+
+    folders = react(() => this.service && this.service.getFilesBasic())
 
     get files() {
       return (this.things || []).filter(t => t.type === 'doc')

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { Person } from '@mcro/models'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitCard } from './orbitCard'
@@ -38,7 +38,7 @@ export class OrbitDirectory {
     })
     const total = store.results.length
     return (
-      <OrbitDockedPane name="directory">
+      <OrbitDockedPane name="directory" fadeBottom>
         <React.Fragment if={people.length}>
           <SubTitle>People</SubTitle>
           <Masonry>

@@ -4131,10 +4131,6 @@ randomatic@^3.0.0:
     kind-of "^6.0.0"
     math-random "^1.0.1"
 
-randomcolor@^0.5.3:
-  version "0.5.3"
-  resolved "http://localhost:4873/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
-
 range-parser@~1.2.0:
   version "1.2.0"
   resolved "http://localhost:4873/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
@@ -4188,9 +4184,9 @@ react-error-overlay@^4.0.0:
   version "4.0.0"
   resolved "http://localhost:4873/react-error-overlay/-/react-error-overlay-4.0.0.tgz#d198408a85b4070937a98667f500c832f86bd5d4"
 
-react-hot-loader@4.3.2:
-  version "4.3.2"
-  resolved "http://localhost:4873/react-hot-loader/-/react-hot-loader-4.3.2.tgz#42d629a541d12c84df5e8333534ea6ef99b7ae49"
+react-hot-loader@4.3.3:
+  version "4.3.3"
+  resolved "http://localhost:4873/react-hot-loader/-/react-hot-loader-4.3.3.tgz#37409a3341c7787563d0972007ba02521f82f5d5"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"

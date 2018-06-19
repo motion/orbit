@@ -2,7 +2,8 @@ import Mexp from 'math-expression-evaluator'
 
 export const fn = ({ term, display }) => {
   if (!term) {
-    return display([])
+    display([])
+    return
   }
   let res
   try {

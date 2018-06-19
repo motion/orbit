@@ -6,6 +6,10 @@ import { OrbitCard } from './orbitCard'
 import { Masonry } from '~/views/masonry'
 import { OrbitDockedPane } from './orbitDockedPane'
 
+// css={{
+//   opacity: index > 3 ? (total / index / total) * 3 : 1,
+// }}
+
 const postfix = [
   'st',
   'nd',
@@ -104,8 +108,9 @@ export class OrbitHome {
     const day = now.toLocaleDateString(locale, { weekday: 'short' })
     const month = now.toLocaleDateString(locale, { month: 'short' })
     const dayNum = now.getMonth()
+    const total = store.results.length
     return (
-      <OrbitDockedPane name="home">
+      <OrbitDockedPane name="home" fadeBottom>
         <header if={false}>
           <SubTitle>
             {day} {month} {dayNum}
@@ -114,7 +119,7 @@ export class OrbitHome {
           <div $$flex />
         </header>
         <content>
-          <Masonry if={store.results.length}>
+          <Masonry if={total}>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2
               return (
@@ -125,13 +130,10 @@ export class OrbitHome {
                   key={`${bit.id}${index}`}
                   index={index}
                   bit={bit}
-                  total={store.results.length}
+                  total={total}
                   hoverToSelect
                   isExpanded={false && isExpanded}
                   style={isExpanded && this.span2}
-                  css={{
-                    opacity: index > 5 ? 0.7 : index > 8 ? 0.5 : 1,
-                  }}
                   itemProps={{
                     shownLimit: 3,
                     contentStyle: {
@@ -167,5 +169,27 @@ export class OrbitHome {
       fontSize: 11,
       opacity: 0.6,
     },
+    content: {
+      // margin: [0, -2],
+    },
+    overflowFade: {
+      pointerEvents: 'none',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 200,
+      zIndex: 10000000,
+      borderRadius: 20,
+      overflow: 'hidden',
+    },
+  }
+
+  static theme = (_, theme) => {
+    return {
+      overflowFade: {
+        background: `linear-gradient(transparent, ${theme.base.background})`,
+      },
+    }
   }
 }

@@ -2,6 +2,7 @@ import { memoize, search } from 'cerebro-tools'
 import { orderBy, lowerCase } from 'lodash'
 import getAppsList from './getApps'
 import fs from 'fs'
+import * as _ from 'lodash'
 
 const getAbbr = name =>
   lowerCase(name)
@@ -26,6 +27,8 @@ const toString = app =>
   `${app.name} ${app.filename.replace(/\.app$/, '')} ${getAbbr(app.name)}`
 
 export const fn = ({ term, display }) => {
+  const searchId = `search-${_.uniqueId()}`
+  console.time(searchId)
   cachedAppsList().then(items => {
     const result = orderBy(
       search(items, term, toString),
@@ -46,6 +49,7 @@ export const fn = ({ term, display }) => {
         integration: 'apps',
       }
     })
+    console.timeEnd(searchId)
     display(result)
   })
 }

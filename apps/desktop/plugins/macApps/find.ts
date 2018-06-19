@@ -59,7 +59,6 @@ export default function mdfind({
   const attrArgs = makeArgs(attributes, '-attr')
   const interpretArgs = interpret ? ['-interpret'] : []
   const queryArgs = query ? [query] : []
-
   const args = ['-0'].concat(
     dirArgs,
     nameArgs,
@@ -68,16 +67,12 @@ export default function mdfind({
     live ? ['-live', '-reprint'] : [],
     queryArgs,
   )
-
   const child = spawn('mdfind', args)
-
   let times = 0
-
   return {
     output: child.stdout
       .pipe(split('\0'))
       .pipe(map(filterEmpty))
-      // eslint-disable-next-line func-names
       .pipe(
         through(function(data) {
           times += 1

@@ -2,7 +2,7 @@ import { Bit, Setting } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 import * as _ from 'lodash'
 import debug from '@mcro/debug'
-import getHelpers from './getHelpers'
+import { DriveService } from '@mcro/services'
 
 const log = debug('sync.googleCal')
 
@@ -17,14 +17,14 @@ type GoogleCalItem = {
 
 export default class GoogleCalSync {
   setting: Setting
-  helpers = getHelpers({})
+  service: DriveService
 
-  fetch = (path, opts = {}) => this.helpers.fetch(`/calendar/v3${path}`, opts)
+  fetch = (path, opts = {}) => this.service.fetch(`/calendar/v3${path}`, opts)
   lastSyncTokens = {}
 
   constructor(setting) {
     this.setting = setting
-    this.helpers = getHelpers(setting)
+    this.service = new DriveService(setting)
   }
 
   get activeCals() {
@@ -63,7 +63,8 @@ export default class GoogleCalSync {
   }
 
   async setupSettings() {
-    const { items } = await this.fetch(`/users/me/calendarList`)
+    // @ts-ignore
+    const { items } = await this.service.fetch(`/users/me/calendarList`)
     _.merge(this.setting.values, {
       calendars: items,
       calendarsActive: this.setting.values.calendarsActive || {},
@@ -127,7 +128,7 @@ export default class GoogleCalSync {
     let results = []
 
     try {
-      lastQuery = await this.fetch(path, {
+      lastQuery = await this.service.fetch(path, {
         query: {
           maxResults: 2500,
           singleEvents: true,

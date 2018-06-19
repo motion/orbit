@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { WindowControls } from '~/views/windowControls'
 import * as Constants from '~/constants'
 import * as PeekStateActions from '~/actions/PeekStateActions'
@@ -36,7 +36,7 @@ export class PeekFrame {
       !onRight ? SHADOW_PAD : 0,
     ]
     const margin = padding.map(x => -x)
-    const boxShadow = [[onRight ? 6 : -6, 3, SHADOW_PAD, [0, 0, 0, 0.15]]]
+    const boxShadow = [[onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.2]]]
     const arrowSize = 24
     // determine x adjustments
     let peekAdjustX = 0

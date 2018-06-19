@@ -1,6 +1,7 @@
 import { store } from '@mcro/black/store'
 import { Setting } from '@mcro/models'
-import driveServiceHelpers, { DriveServiceHelpers } from './driveServiceHelpers'
+import { getHelpers } from './driveServiceHelpers'
+import { DriveServiceHelpers } from './types'
 import { sleep } from '@mcro/helpers'
 
 export type DriveFileObject = {
@@ -15,6 +16,7 @@ export type DriveFileObject = {
 
 export type PageQuery = {
   pageToken?: string
+  mimeType?: string
 }
 
 @store
@@ -29,9 +31,13 @@ export class DriveService {
     this.updateSetting(setting)
   }
 
+  get refreshToken() {
+    return this.helpers.refreshToken
+  }
+
   updateSetting = async (setting?) => {
     this.setting = setting || (await Setting.findOne({ type: 'gdocs' }))
-    this.helpers = driveServiceHelpers(this.setting)
+    this.helpers = getHelpers(this.setting)
   }
 
   async getRevisions(fileId: string) {
@@ -88,7 +94,7 @@ export class DriveService {
 
   async getFiles(
     pages = 1,
-    query?: PageQuery,
+    query: PageQuery = { mimeType: 'application/vnd.google-apps.document' },
     fileQuery?: Object,
   ): Promise<DriveFileObject[]> {
     const files = await this.getFilesBasic(pages, query)
@@ -206,11 +212,20 @@ export class DriveService {
         console.log('timeout getting file contents', id)
         res(null)
       }, 2000)
+      const x = this.fetch(`/files/${id}/export`, {
+        type: 'text',
+        query: {
+          mimeType: 'text/html',
+          // alt: 'media',
+        },
+      })
+      console.log('x', x, this)
+      debugger
       const result = await this.fetch(`/files/${id}/export`, {
         type: 'text',
         query: {
-          mimeType: 'text/plain',
-          alt: 'media',
+          mimeType: 'text/html',
+          // alt: 'media',
         },
       })
       clearTimeout(timeout)

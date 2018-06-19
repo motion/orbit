@@ -7,7 +7,7 @@ import { OrbitHomeHeader } from './orbitHomeHeader'
 import { OrbitHeader } from './orbitHeader'
 import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitDirectory } from './orbitDirectory'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './orbitDockedPaneStore'
 
 const borderRadius = 16
@@ -33,9 +33,10 @@ class OrbitDocked {
           <border $$fullscreen />
           <container>
             <OrbitHeader
+              borderRadius={borderRadius}
               after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
-            <glowWrap>
+            <glowWrap if={false}>
               <glow />
             </glowWrap>
             <orbitInner>
@@ -129,9 +130,11 @@ class OrbitDocked {
     // that overlap the edge of the frame and dont cut off
     // but still hide things that go below the bottom as it should
     orbitInner: {
+      position: 'relative',
+      zIndex: 3,
       overflow: 'hidden',
-      margin: [0, -20],
-      padding: [0, 20],
+      margin: [-20, -20, 0, -20],
+      padding: [20, 20, 0, 20],
       flex: 1,
     },
     orbitRelativeInner: {
@@ -149,7 +152,7 @@ class OrbitDocked {
     },
     glowWrap: {
       pointerEvents: 'none',
-      zIndex: -1,
+      zIndex: 3,
       borderRadius,
       overflow: 'hidden',
       top: 0,

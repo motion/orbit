@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop } from '@mcro/stores'
 import * as Constants from '~/constants'
 import { ControlButton } from '~/views/controlButton'
 
@@ -60,20 +60,7 @@ export class OrbitHeader extends React.Component {
   render({ orbitStore, headerStore, after, theme, showPin }) {
     const headerBg = theme.base.background
     return (
-      <orbitHeader
-        $headerBg={headerBg}
-        css={{
-          borderTopLeftRadius:
-            !App.orbitOnLeft || App.orbitState.docked
-              ? 0
-              : Constants.BORDER_RADIUS,
-          borderTopRightRadius:
-            App.orbitOnLeft || App.orbitState.docked
-              ? 0
-              : Constants.BORDER_RADIUS,
-        }}
-        {...this.hoverSettler.props}
-      >
+      <orbitHeader $headerBg={headerBg} {...this.hoverSettler.props}>
         <title>
           <UI.Icon
             $searchIcon
@@ -127,7 +114,7 @@ export class OrbitHeader extends React.Component {
       justifyContent: 'center',
       padding: [0, 16],
       transition: 'all ease-in 300ms',
-      zIndex: 10000000,
+      zIndex: 4,
     },
     after: {
       alignItems: 'center',
@@ -186,5 +173,15 @@ export class OrbitHeader extends React.Component {
       justifyContent: 'center',
       alignItems: 'center',
     },
+  }
+
+  static theme = ({ borderRadius }, theme) => {
+    console.log('borderRadius', borderRadius)
+    return {
+      orbitHeader: {
+        borderTopRadius: borderRadius,
+        background: theme.base.background,
+      },
+    }
   }
 }

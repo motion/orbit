@@ -181,7 +181,10 @@ export default class Server {
         `/auth/${name}/callback`,
         Passport.authenticate(name, options, null),
         (req, res) => {
-          const { user } = req
+          console.log('passport req', req)
+          // @ts-ignore
+          const { user, currentUser } = req
+          const realUser = user || currentUser
           res.send(`
 <!DOCTYPE html>
 <html lang="en">
@@ -195,10 +198,10 @@ export default class Server {
   if (window.opener) {
     window.opener.focus()
     const info = {
-      refreshToken: ${JSON.stringify(user.refreshToken)},
-      token: ${JSON.stringify(user.token)},
-      error: ${JSON.stringify(user.error)},
-      info: ${JSON.stringify(user.info)},
+      refreshToken: ${JSON.stringify(realUser.refreshToken)},
+      token: ${JSON.stringify(realUser.token)},
+      error: ${JSON.stringify(realUser.error)},
+      info: ${JSON.stringify(realUser.info)},
     }
     if (window.opener.passport && window.opener.passport.oauthSession) {
       window.opener.passport.oauthSession(info)

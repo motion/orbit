@@ -21,7 +21,8 @@ export const getPermalink = async (result, type) => {
 // note: importing services causes hell for some reason
 export const allServices = {
   slack: () => require('@mcro/services').SlackService,
-  drive: () => require('@mcro/services').DriveService,
+  gdocs: () => require('@mcro/services').DriveService,
+  gmail: () => require('@mcro/services').DriveService,
   github: () => require('@mcro/services').GithubService,
 }
 

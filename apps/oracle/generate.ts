@@ -204,7 +204,6 @@ try {
 
 process.on('SIGINT', async () => {
   console.log('stopping oracle')
-  await screen.stop()
-  console.log('stoped')
+  await oracle.stop()
   process.exit(0)
 })

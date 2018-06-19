@@ -11,7 +11,7 @@ export class OrbitHomeHeader {
       size: 1.2,
       circular: true,
       borderWidth: 1,
-      margin: [0, 0, 0, 5],
+      margin: [0, 0, 0, 4],
       borderColor: 'transparent',
       background: 'transparent',
       iconProps: {
@@ -21,11 +21,12 @@ export class OrbitHomeHeader {
       opacity: 0.3,
       activeStyle: {
         background: 'transparent',
-        borderColor: '#ddd',
-        opacity: 0.7,
+        borderColor: 'transparent',
+        opacity: 1,
       },
       hoverStyle: {
         background: 'transparent',
+        borderColor: [0, 0, 0, 0.1],
       },
     }
     return (

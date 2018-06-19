@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { HL_PAD, TOP_BAR_PAD } from './helpers'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import * as Helpers from '@mcro/constants'
 
 @view

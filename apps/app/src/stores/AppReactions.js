@@ -1,5 +1,5 @@
 import { store, react } from '@mcro/black/store'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop } from '@mcro/stores'
 import orbitPosition from '~/helpers/orbitPosition'
 import debug from '@mcro/debug'
 import * as PeekStateActions from '~/actions/PeekStateActions'

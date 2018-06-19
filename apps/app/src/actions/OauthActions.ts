@@ -1,5 +1,5 @@
 import { Setting } from '@mcro/models'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop } from '@mcro/stores'
 import * as Constants from '../constants'
 import * as r2 from '@mcro/r2'
 import debug from '@mcro/debug'
@@ -23,10 +23,11 @@ export const startOauth = type => {
   App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
   const checker = setInterval(async () => {
     const auth = await checkAuths()
-    const oauth = auth && auth[type] || {}
+    const oauth = (auth && auth[type]) || {}
     if (!oauth) return
     clearInterval(checker)
     if (!oauth.token) {
+      console.log('got', auth)
       throw new Error(`No token returned ${JSON.stringify(oauth)}`)
     }
     const setting = new Setting()

@@ -19,6 +19,10 @@ export const fn = ({ term, display }) => {
   if (path.match(HOME_DIR_REGEXP)) {
     path = path.replace(HOME_DIR_REGEXP, USER_PATH)
     replaceHomePath = true
+  } else {
+    // only work for home for now
+    display([])
+    return
   }
   const match = path.match(DIR_REGEXP)
   if (match) {
@@ -38,7 +42,7 @@ export const fn = ({ term, display }) => {
           if (fs.statSync(filePath).isDirectory()) {
             autocomplete += os.platform() === 'win32' ? '\\' : '/'
           }
-          if (result.length == 10) {
+          if (result.length == 5) {
             return
           }
           result.push({

@@ -3,7 +3,7 @@ import * as Constants from '../constants'
 import { view, Component, isEqual, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '../helpers'
-import { App, Electron, Desktop } from '@mcro/all'
+import { App, Electron, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 
 class MainStore {

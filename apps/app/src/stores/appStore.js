@@ -1,5 +1,5 @@
 import { react, ReactionTimeoutError } from '@mcro/black'
-import { App, Desktop } from '@mcro/all'
+import { App, Desktop } from '@mcro/stores'
 import { Bit, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'
@@ -12,7 +12,8 @@ let hasRun = false
 export class AppStore {
   quickSearchIndex = 0
   nextIndex = 0
-  activeIndex = -1
+  lastSelectAt = 0
+  _activeIndex = -1
   settings = {}
   getResults = null
   lastSelectedPane = ''
@@ -23,6 +24,16 @@ export class AppStore {
 
   // reactive values
   selectedBit = AppStoreReactions.selectedBitReaction
+
+  get activeIndex() {
+    this.lastSelectAt
+    return this._activeIndex
+  }
+
+  set activeIndex(val) {
+    this.lastSelectAt = Date.now()
+    this._activeIndex = val
+  }
 
   get selectedPane() {
     if (App.orbitState.docked) {
@@ -38,6 +49,20 @@ export class AppStore {
       return 'context'
     }
     return this.lastSelectedPane
+  }
+
+  get selectedItem() {
+    if (this.activeIndex === -1) {
+      return this.quickSearchResults[this.quickSearchIndex]
+    }
+    return this.searchState.results[this.activeIndex]
+  }
+
+  get hasActiveIndex() {
+    return (
+      this.activeIndex > -1 &&
+      this.activeIndex < this.searchState.results.length
+    )
   }
 
   settings = modelQueryReaction(
@@ -61,6 +86,8 @@ export class AppStore {
         if (AppStoreHelpers.allServices[type]) {
           const ServiceConstructor = AppStoreHelpers.allServices[type]()
           services[type] = new ServiceConstructor(setting)
+        } else {
+          console.warn('no service for', type, AppStoreHelpers.allServices)
         }
       }
       return services
@@ -74,23 +101,25 @@ export class AppStore {
     },
   )
 
-  clearPeekOnSelectedPaneChange = react(
+  clearSelectedOnSelectedPaneChange = react(
     () => this.selectedPane,
     () => this.clearSelected(),
   )
 
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,
-    index => {
-      if (index >= 0 && index < this.searchState.results.length) {
+    () => {
+      log(`active ${this.hasActiveIndex}`)
+      if (this.hasActiveIndex) {
         throw react.cancel
       }
-      this.clearSelected()
+      PeekStateActions.clearPeek()
     },
   )
 
   updateScreenSize() {
     this.setInterval(() => {
+      if (!App.setState) return
       App.setState({
         screenSize: [window.innerWidth, window.innerHeight],
       })
@@ -100,13 +129,24 @@ export class AppStore {
   updateResults = react(
     () => [
       Desktop.state.lastBitUpdatedAt,
-      Desktop.searchState.pluginResultsId || 0,
+      // Desktop.searchState.pluginResultsId || 0,
     ],
     () => {
       if (this.searchState.results && this.searchState.results.length) {
         throw react.cancel
       }
       return Math.random()
+    },
+  )
+
+  resetActiveIndexOnPeekTarget = react(
+    () => App.peekState.target,
+    target => {
+      if (target || !this.hasActiveIndex) {
+        throw react.cancel
+      }
+      log(`ok clearing ${target} ${this.hasActiveIndex} ${this.activeIndex}`)
+      this.clearSelected()
     },
   )
 
@@ -189,19 +229,9 @@ export class AppStore {
     return res
   }
 
-  get results() {
-    if (this.getResults) {
-      return this.getResults()
-    }
-    if (this.selectedPane.indexOf('-search') > 0) {
-      return this.searchState.results
-    }
-    return this.searchState.results || []
-  }
-
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when }) => {
+    async ([query, thisGetResults], { when, sleep }) => {
       if (!query) {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
@@ -236,18 +266,16 @@ export class AppStore {
         message = 'SPACE to search selected channel'
         results = channelResults
       } else {
+        // await sleep(1000)
         // 🔍 REGULAR SEARCHES GO THROUGH HERE
         // no jitter - wait for everything to finish
         console.time('searchPluginsAndBitResults')
         try {
-          const id0 = Desktop.searchState.pluginResultsId
+          const waitMax = hasRun ? 200 : 2000
           const id1 = this.bitResultsId
           await Promise.all([
-            when(
-              () => id0 !== Desktop.searchState.pluginResultsId,
-              hasRun ? 200 : 2000,
-            ),
-            when(() => id1 !== this.bitResultsId, hasRun ? 200 : 2000),
+            when(() => query === Desktop.searchState.pluginResultsId, waitMax),
+            when(() => id1 !== this.bitResultsId, waitMax),
           ])
         } catch (err) {
           if (err instanceof ReactionTimeoutError) {
@@ -277,22 +305,21 @@ export class AppStore {
     {
       defaultValue: { results: [], query: '' },
       immediate: true,
-      log: false,
     },
   )
 
   quickSearchResults = react(
     () => App.state.query,
-    async (_, { whenChanged }) => {
-      log(`quick search ${_}`)
-      if (this.quickSearchResults.length) {
-        await whenChanged(() => Desktop.searchState.pluginResultsId)
+    async (query, { when }) => {
+      const hasLoaded = !!this.quickSearchResults.length
+      if (hasLoaded) {
+        await when(() => query === Desktop.searchState.pluginResultsId)
       }
       const results = Desktop.searchState.pluginResults
       if (!results.length) {
         throw react.cancel
       }
-      return results.slice(0, 5)
+      return AppStoreHelpers.matchSort(query, results)
     },
     { defaultValue: [], immediate: true },
   )
@@ -300,10 +327,10 @@ export class AppStore {
   clearSelected = () => {
     clearTimeout(this.hoverOutTm)
     this.nextIndex = -1
+    this.activeIndex = -1
     PeekStateActions.clearPeek()
   }
 
-  lastSelectAt = 0
   hoverOutTm = 0
   getHoverSettler = Helpers.hoverSettler({
     enterDelay: 50,
@@ -330,8 +357,10 @@ export class AppStore {
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
         // ignore double clicks
+        console.log('isSame, ignore', index, this.activeIndex)
         return isSame
       }
+      console.log('clearing')
       this.clearSelected()
     } else {
       if (typeof index === 'number') {
@@ -358,7 +387,6 @@ export class AppStore {
   }
 
   updateActiveIndex = () => {
-    this.lastSelectAt = Date.now()
     this.activeIndex = this.nextIndex
   }
 
@@ -367,7 +395,7 @@ export class AppStore {
   }
 
   openSelected = () => {
-    this.open(this.searchState.results[this.activeIndex])
+    this.open(this.selectedItem)
   }
 
   open = async (result, openType) => {

@@ -1,10 +1,21 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/all'
+import { App } from '@mcro/stores'
 import * as PeekContents from './peek/peekContents'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './peek/peekFrame'
+
+const deepClone = obj =>
+  obj
+    ? Object.keys(obj).reduce(
+        (acc, cur) => ({
+          ...acc,
+          [cur]: JSON.parse(JSON.stringify(obj[cur])),
+        }),
+        {},
+      )
+    : obj
 
 class PeekStore {
   headerHeight = 20
@@ -51,10 +62,9 @@ class PeekStore {
     return state
   }
 
-  lastState = react(() => this.curState, _ => _, {
-    delay: 16,
+  lastState = react(() => this.curState, deepClone, {
+    delayValue: true,
     immediate: true,
-    log: false,
   })
 
   get willHide() {
@@ -65,9 +75,9 @@ class PeekStore {
     return !!this.curState && !this.lastState
   }
 
-  get willStayShown() {
-    return !!this.lastState && !!this.curState
-  }
+  willStayShown = react(() => this.willShow, _ => _, {
+    delay: 16,
+  })
 }
 
 @view.attach('appStore')

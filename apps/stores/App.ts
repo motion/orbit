@@ -67,13 +67,12 @@ class AppStore {
     return !!App.peekState.target
   }
 
-  animationDuration = 100
+  animationDuration = 160
   dockedWidth = 550
 
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(
-    () =>
-      !App.isShowingOrbit && !App.orbitState.docked,
+    () => !App.isShowingOrbit && !App.orbitState.docked,
     _ => _,
     { delay: 32, log: isOrbit },
   )

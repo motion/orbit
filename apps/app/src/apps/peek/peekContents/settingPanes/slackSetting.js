@@ -13,10 +13,6 @@ class SlackSettingStore {
     return this.props.appStore.services.slack
   }
 
-  willUnmount() {
-    this.service.dispose()
-  }
-
   didMount() {
     this.setTimeout(() => {
       this.hasShown = true

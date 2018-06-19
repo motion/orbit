@@ -6,7 +6,7 @@ import {
   MenuItems as ElMenuItems,
 } from '@mcro/reactron'
 import { view, Component } from '@mcro/black'
-import { Electron, App } from '@mcro/all'
+import { Electron, App } from '@mcro/stores'
 
 @view.attach('electronStore')
 @view.electron

@@ -5,6 +5,9 @@ import * as UI from '@mcro/ui'
 @view
 export class PersonCard extends React.Component {
   render({ children, bit }) {
+    if (!bit) {
+      return null
+    }
     return children({
       // preview: bit.data.profile.email,
       title: bit.name,
@@ -14,8 +17,8 @@ export class PersonCard extends React.Component {
       },
       preview: (
         <test>
-          <img $avatar src={bit.data.profile.image_512} />
-          <subtitles>
+          <img if={bit.data.profile} $avatar src={bit.data.profile.image_512} />
+          <subtitles if={bit.data.profile}>
             <location>{bit.data.tz}</location>
             <a href={`mailto:${bit.data.profile.email}`}>
               {bit.data.profile.email}
@@ -36,10 +39,10 @@ export class PersonCard extends React.Component {
       height: 70,
       margin: [10, 0],
       position: 'absolute',
-      top: 0,
-      right: 0,
+      top: -15,
+      right: -15,
       transform: {
-        scale: 2,
+        scale: 1.4,
         y: -5,
         rotate: '40deg',
       },

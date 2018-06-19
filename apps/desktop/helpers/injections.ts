@@ -1,7 +1,7 @@
-import * as Helpers from '~/helpers'
+import runAppleScript from './runAppleScript'
 
 export const closeChromeTabWithUrl = async url => {
-  await Helpers.runAppleScript(`
+  await runAppleScript(`
   -- Closes google tab that matches checkUrl
   set checkUrl to "${url}"
   tell application "Google Chrome"

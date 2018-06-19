@@ -60,20 +60,7 @@ export class OrbitHeader extends React.Component {
   render({ orbitStore, headerStore, after, theme, showPin }) {
     const headerBg = theme.base.background
     return (
-      <orbitHeader
-        $headerBg={headerBg}
-        css={{
-          borderTopLeftRadius:
-            !App.orbitOnLeft || App.orbitState.docked
-              ? 0
-              : Constants.BORDER_RADIUS,
-          borderTopRightRadius:
-            App.orbitOnLeft || App.orbitState.docked
-              ? 0
-              : Constants.BORDER_RADIUS,
-        }}
-        {...this.hoverSettler.props}
-      >
+      <orbitHeader $headerBg={headerBg} {...this.hoverSettler.props}>
         <title>
           <UI.Icon
             $searchIcon
@@ -127,7 +114,7 @@ export class OrbitHeader extends React.Component {
       justifyContent: 'center',
       padding: [0, 16],
       transition: 'all ease-in 300ms',
-      zIndex: 10000000,
+      zIndex: 2,
     },
     after: {
       alignItems: 'center',
@@ -189,6 +176,7 @@ export class OrbitHeader extends React.Component {
   }
 
   static theme = ({ borderRadius }, theme) => {
+    console.log('borderRadius', borderRadius)
     return {
       orbitHeader: {
         borderTopRadius: borderRadius,

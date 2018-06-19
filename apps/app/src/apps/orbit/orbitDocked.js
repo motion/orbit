@@ -32,13 +32,13 @@ class OrbitDocked {
         >
           <border $$fullscreen />
           <container>
+            <glowWrap>
+              <glow />
+            </glowWrap>
             <OrbitHeader
               borderRadius={borderRadius}
               after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
-            <glowWrap>
-              <glow />
-            </glowWrap>
             <orbitInner>
               <orbitRelativeInner>
                 <OrbitHome
@@ -150,7 +150,7 @@ class OrbitDocked {
     },
     glowWrap: {
       pointerEvents: 'none',
-      zIndex: -1,
+      zIndex: 3,
       borderRadius,
       overflow: 'hidden',
       top: 0,

@@ -114,7 +114,7 @@ export class OrbitHeader extends React.Component {
       justifyContent: 'center',
       padding: [0, 16],
       transition: 'all ease-in 300ms',
-      zIndex: 2,
+      zIndex: 4,
     },
     after: {
       alignItems: 'center',

@@ -32,13 +32,13 @@ class OrbitDocked {
         >
           <border $$fullscreen />
           <container>
-            <glowWrap>
-              <glow />
-            </glowWrap>
             <OrbitHeader
               borderRadius={borderRadius}
               after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
+            <glowWrap if={false}>
+              <glow />
+            </glowWrap>
             <orbitInner>
               <orbitRelativeInner>
                 <OrbitHome
@@ -130,6 +130,8 @@ class OrbitDocked {
     // that overlap the edge of the frame and dont cut off
     // but still hide things that go below the bottom as it should
     orbitInner: {
+      position: 'relative',
+      zIndex: 3,
       overflow: 'hidden',
       margin: [-20, -20, 0, -20],
       padding: [20, 20, 0, 20],

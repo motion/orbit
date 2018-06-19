@@ -51,6 +51,13 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
+  get selectedItem() {
+    if (this.activeIndex === -1) {
+      return this.quickSearchResults[this.quickSearchIndex]
+    }
+    return this.searchState.results[this.activeIndex]
+  }
+
   get hasActiveIndex() {
     return (
       this.activeIndex > -1 &&
@@ -224,7 +231,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when }) => {
+    async ([query, thisGetResults], { when, sleep }) => {
       if (!query) {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
@@ -259,6 +266,7 @@ export class AppStore {
         message = 'SPACE to search selected channel'
         results = channelResults
       } else {
+        await sleep(1000)
         // 🔍 REGULAR SEARCHES GO THROUGH HERE
         // no jitter - wait for everything to finish
         console.time('searchPluginsAndBitResults')
@@ -386,7 +394,7 @@ export class AppStore {
   }
 
   openSelected = () => {
-    this.open(this.searchState.results[this.activeIndex])
+    this.open(this.selectedItem)
   }
 
   open = async (result, openType) => {

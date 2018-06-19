@@ -75,6 +75,7 @@ class OrbitQuickItem {
 @view
 export class OrbitQuickSearch {
   render({ appStore }) {
+    console.log('quick search it up', appStore.quickSearchResults)
     return (
       <quickSearch>
         {appStore.quickSearchResults.map((item, index) => (

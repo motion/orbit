@@ -22,6 +22,7 @@ export const fn = ({ term, display }) => {
   } else {
     // only work for home for now
     display([])
+    return
   }
   const match = path.match(DIR_REGEXP)
   if (match) {

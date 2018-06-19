@@ -48,7 +48,7 @@ export default class GoogleMailSync {
   updateSetting = async (setting?) => {
     this.setting = setting || (await Setting.findOne({ type: 'gmail' }))
     this.service = new DriveService(this.setting)
-    this.gmail = new Gmail(setting.token)
+    this.gmail = new Gmail(this.setting.token)
   }
 
   run = async () => {
@@ -66,7 +66,7 @@ export default class GoogleMailSync {
     }
   }
 
-  async syncMail(options = { fullUpdate: false }) {
+  syncMail = async (options = { fullUpdate: false }) => {
     await this.updateSetting()
     const { syncSettings } = this
     const { lastSyncSettings = {} } = this.setting.values

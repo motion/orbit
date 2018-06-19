@@ -160,9 +160,6 @@ class GithubStore {
 @view
 export class GithubSetting {
   render({ githubStore: store }) {
-    if (!store.issues) {
-      return <div>no issues</div>
-    }
     return (
       <container>
         <Tabs active={store.active} onActive={key => (store.active = key)}>
@@ -173,7 +170,6 @@ export class GithubSetting {
             label={`Issues (${store.issues.length})`}
           />
         </Tabs>
-
         <section if={store.active === 'repos'}>
           <section>
             <SearchableTable

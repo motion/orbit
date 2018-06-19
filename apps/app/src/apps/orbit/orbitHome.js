@@ -173,6 +173,7 @@ export class OrbitHome {
       // margin: [0, -2],
     },
     overflowFade: {
+      pointerEvents: 'none',
       position: 'absolute',
       bottom: 0,
       left: 0,

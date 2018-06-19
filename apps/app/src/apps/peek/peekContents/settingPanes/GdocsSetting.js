@@ -124,7 +124,7 @@ class Folder {
       return this.props.appStore.services.gdocs
     }
 
-    folders = react(() => this.service && this.service.getFiles())
+    folders = react(() => this.service && this.service.getFilesBasic())
 
     get files() {
       return (this.things || []).filter(t => t.type === 'doc')

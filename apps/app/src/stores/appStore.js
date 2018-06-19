@@ -79,6 +79,8 @@ export class AppStore {
         if (AppStoreHelpers.allServices[type]) {
           const ServiceConstructor = AppStoreHelpers.allServices[type]()
           services[type] = new ServiceConstructor(setting)
+        } else {
+          console.warn('no service for', type, AppStoreHelpers.allServices)
         }
       }
       return services

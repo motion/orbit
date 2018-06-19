@@ -1,7 +1,6 @@
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
-import { GithubService } from '@mcro/services'
 import { Bits } from '~/views/bits'
 import { Tabs, Tab, SearchableTable } from '@mcro/sonar'
 import { TimeAgo } from '~/views/TimeAgo'

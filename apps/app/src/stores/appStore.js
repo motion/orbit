@@ -266,7 +266,7 @@ export class AppStore {
         message = 'SPACE to search selected channel'
         results = channelResults
       } else {
-        await sleep(1000)
+        // await sleep(1000)
         // 🔍 REGULAR SEARCHES GO THROUGH HERE
         // no jitter - wait for everything to finish
         console.time('searchPluginsAndBitResults')

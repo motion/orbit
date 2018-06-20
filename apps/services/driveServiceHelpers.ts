@@ -27,7 +27,7 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
     }
     return false
   },
-  async fetch(path, options: FetchOptions = {}) {
+  async fetch(path, options: FetchOptions = {}): Promise<any> {
     const { headers, mode, body, type = 'json', isRetrying, ...rest } = options
     const fetchOpts = {
       ...rest,

@@ -61,16 +61,17 @@ export default class GoogleDriveSync {
       console.log('no info given')
       return null
     }
-    const { name, contents, ...data } = info
+    const { name, text, html, ...data } = info
     return await createOrUpdateBit(Bit, {
       integration: 'gdocs',
       identifier: info.id,
       type: 'document',
       title: name,
-      body: contents ? htmlToMarkdown(contents) : 'empty',
+      body: html ? htmlToMarkdown(html) : text || '',
       data: {
         ...data,
-        htmlBody: contents,
+        htmlBody: html,
+        textBody: text,
       },
       bitCreatedAt: new Date(info.createdTime),
       bitUpdatedAt: new Date(info.modifiedTime),

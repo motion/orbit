@@ -1,18 +1,7 @@
 export type DriveServiceHelpers = {
   baseUrl: string
   refreshToken: () => Promise<boolean>
-  fetch(
-    path: string,
-    options?: FetchOptions,
-  ): Promise<{
-    startPageToken?: string
-    revisions?: Array<{ [id: string]: string }>
-    newStartPageToken?: number
-    nextPageToken?: string
-    files?: any[]
-    changes: any[]
-    error?: string
-  }>
+  fetch(path: string, options?: FetchOptions): Promise<any>
 }
 
 export type FetchOptions =

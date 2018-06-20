@@ -21,7 +21,7 @@ export type PageQuery = {
 }
 
 function stripDriveHtml(rawHtml) {
-  return rawHtml.replace(/@import.*[\n]+/, '')
+  return rawHtml ? rawHtml.replace(/@import.*[\n]+/, '') : rawHtml
 }
 
 @store
@@ -218,7 +218,7 @@ export class DriveService {
   getFileContents(
     id: string,
     mimeType = 'text/plain',
-    timeout = 5000,
+    timeout = 2000,
   ): Promise<string> {
     return new Promise(async res => {
       let result

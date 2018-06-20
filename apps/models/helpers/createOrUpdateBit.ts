@@ -7,13 +7,13 @@ export const hash = x =>
     .update(x instanceof Object ? JSON.stringify(x) : `${x}`)
     .digest('hex')
 
-export function createOrUpdateBit(
+export async function createOrUpdateBit(
   Model: any,
   values: Object,
   options?: CreateOrUpdateOpts,
 ) {
   const contentHash = hash(values)
-  return createOrUpdate(
+  return await createOrUpdate(
     Model,
     {
       ...values,

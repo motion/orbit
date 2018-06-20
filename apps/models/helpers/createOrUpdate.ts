@@ -33,6 +33,8 @@ export async function createOrUpdate(
     {},
   )
   const changed = !isEqual(itemVals, values)
+  // return null on no update by default
+  //   if returnIfUnchanged = true, skip this
   if (!returnIfUnchanged && !changed) {
     return null
   }

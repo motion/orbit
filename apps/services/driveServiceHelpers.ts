@@ -44,7 +44,6 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
       fetchOpts.mode = mode || 'cors'
     }
     const url = `${this.baseUrl}${path}`
-    console.log('running fetch with', url, fetchOpts)
     const fetcher = r2.get(url, fetchOpts)
     const res = await fetcher[type]
     if (res.error) {

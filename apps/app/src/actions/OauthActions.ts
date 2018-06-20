@@ -1,4 +1,4 @@
-import { Setting, findOrCreate } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import * as Constants from '../constants'
 import * as r2 from '@mcro/r2'
@@ -13,6 +13,7 @@ export const checkAuths = async () => {
   ).json
   if (error) {
     console.log('no creds', error)
+    throw new Error(error)
   }
   return authorizations
 }
@@ -38,11 +39,13 @@ export const startOauth = type => {
     let setting
     // update if its the same identifier from the oauth
     if (identifier) {
-      setting = await findOrCreate(Setting, { identifier })
-    } else {
+      setting = await Setting.findOne({ identifier })
+    }
+    if (!setting) {
       setting = new Setting()
     }
     setting.category = 'integration'
+    setting.identifier = identifier
     setting.type = type
     setting.token = oauth.token
     setting.values = {

@@ -33,7 +33,6 @@ export class AuthPage {
             $button
             id="link"
             onClick={this.link}
-            onMouseUp={this.link}
           >
             Link {capitalize(service)}
           </UI.Button>

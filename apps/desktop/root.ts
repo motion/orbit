@@ -21,6 +21,7 @@ import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
 import { Bit } from '@mcro/models'
+import { Connection } from 'typeorm'
 
 const log = debug('desktop')
 
@@ -29,6 +30,8 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 
 @store
 export class Root {
+  isReconnecting = false
+  connection?: Connection
   disposed = false
   sync: Sync
   screen: Screen
@@ -52,7 +55,7 @@ export class Root {
       },
     })
     Desktop.onMessage(Desktop.messages.OPEN, open)
-    await connectModels(Object.keys(Models).map(x => Models[x]))
+    await this.connect()
     this.sync = new Sync()
     this.sync.start()
     this.screen = new Screen()
@@ -80,6 +83,12 @@ export class Root {
     }, 3000)
   }
 
+  async connect() {
+    this.connection = await connectModels(
+      Object.keys(Models).map(x => Models[x]),
+    )
+  }
+
   watchLastBit() {
     // @ts-ignore
     this.setInterval(async () => {
@@ -94,6 +103,19 @@ export class Root {
 
   restart() {
     require('touch')(Path.join(__dirname, '..', '_', 'index.js'))
+  }
+
+  async reconnect() {
+    if (this.isReconnecting) {
+      return
+    }
+    this.isReconnecting = true
+    if (this.connection) {
+      console.log('closing old connection...')
+      this.connection.close()
+    }
+    await this.connect()
+    this.isReconnecting = false
   }
 
   dispose = async () => {

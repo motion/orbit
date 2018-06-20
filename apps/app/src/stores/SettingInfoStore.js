@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+// import { react } from '@mcro/black'
 import { Bit, Job } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
 import { now } from 'mobx-utils'
@@ -30,9 +30,9 @@ export class SettingInfoStore {
     },
   )
 
-  bitsCount = react(
-    () => [now(4000), this.bit],
-    bit =>
+  bitsCount = modelQueryReaction(
+    () => [this.bit, now(4000)],
+    ([bit]) =>
       bit &&
       Bit.createQueryBuilder()
         .where({ integration: this.bit.integration })

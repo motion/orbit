@@ -5,7 +5,7 @@ import * as Path from 'path'
 
 export default async function connectModels(models) {
   try {
-    await createConnection({
+    return await createConnection({
       name: 'default',
       type: 'sqlite',
       database: Path.join(Constants.ROOT_DIR, 'data', 'database'),

@@ -51,6 +51,12 @@ process.on('uncaughtException', err => {
 })
 // promise exceptions
 process.on('unhandledRejection', function(reason, promise) {
+  if (reason) {
+    if (reason.code === 'SQLITE_BUSY') {
+      appRoot.reconnect()
+    }
+  }
+
   console.log(
     'Desktop: Possibly Unhandled Rejection at: Promise ',
     promise,

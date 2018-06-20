@@ -63,11 +63,7 @@ export default class GoogleDriveSync {
       Bit,
       {
         integration: 'gdocs',
-        identifier: Helpers.hash({
-          contents,
-          id: info.id,
-          modifiedTime: info.modifiedTime,
-        }),
+        identifier: info.id,
         type: 'document',
         title: name,
         body: contents || 'empty',

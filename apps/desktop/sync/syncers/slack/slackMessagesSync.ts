@@ -1,5 +1,5 @@
 import { SlackService } from '@mcro/services'
-import { Bit, Setting, Person, createOrUpdate, Job } from '@mcro/models'
+import { Bit, Setting, Person, createOrUpdateBit, Job } from '@mcro/models'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
@@ -186,23 +186,19 @@ export default class SlackMessagesSync {
       },
       messages,
     }
-    return await createOrUpdate(
-      Bit,
-      {
-        title: `#${channelInfo.name}`,
-        body: messages
-          .map(message => message.text)
-          .join(' ... ')
-          .slice(0, 255),
-        identifier: Helpers.hash(data),
-        data,
-        bitCreatedAt: slackDate(_.first(messages).ts),
-        bitUpdatedAt: slackDate(_.last(messages).ts),
-        people,
-        type: 'conversation',
-        integration: 'slack',
-      },
-      ['identifier'],
-    )
+    return await createOrUpdateBit(Bit, {
+      title: `#${channelInfo.name}`,
+      body: messages
+        .map(message => message.text)
+        .join(' ... ')
+        .slice(0, 255),
+      identifier: Helpers.hash(data),
+      data,
+      bitCreatedAt: slackDate(_.first(messages).ts),
+      bitUpdatedAt: slackDate(_.last(messages).ts),
+      people,
+      type: 'conversation',
+      integration: 'slack',
+    })
   }
 }

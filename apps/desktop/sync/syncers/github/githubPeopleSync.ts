@@ -66,7 +66,7 @@ export default class GithubPeopleSync {
           ...person,
         },
       },
-      Person.identifyingKeys,
+      { matching: Person.identifyingKeys },
     )
   }
 }

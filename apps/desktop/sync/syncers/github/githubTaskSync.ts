@@ -1,4 +1,4 @@
-import { Bit, Setting, createOrUpdate } from '@mcro/models'
+import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
 import * as _ from 'lodash'
 import debug from '@mcro/debug'
@@ -176,7 +176,7 @@ export default class GithubIssueSync {
     // ensure if one is set, the other gets set too
     const bitCreatedAt = issue.createdAt || issue.updatedAt || ''
     const bitUpdatedAt = issue.updatedAt || bitCreatedAt
-    const body = {
+    return await createOrUpdateBit(Bit, {
       integration: 'github',
       identifier: `${issue.number}${bitUpdatedAt}`,
       type: 'task',
@@ -186,8 +186,7 @@ export default class GithubIssueSync {
       author: issue.author.login,
       bitCreatedAt,
       bitUpdatedAt,
-    }
-    return await createOrUpdate(Bit, body, Bit.identifyingKeys)
+    })
   }
 
   getRepositoriesForOrg = async (

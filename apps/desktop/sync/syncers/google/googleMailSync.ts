@@ -1,4 +1,4 @@
-import { Bit, Setting, createOrUpdate } from '@mcro/models'
+import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import * as _ from 'lodash'
@@ -208,11 +208,7 @@ export default class GoogleMailSync {
   }
 
   createThread = async (data: ThreadObject) => {
-    return await createOrUpdate(
-      Bit,
-      this.createThreadObject(data),
-      Bit.identifyingKeys,
-    )
+    return await createOrUpdateBit(Bit, this.createThreadObject(data))
   }
 
   createThreadObject = (data: ThreadObject) => {

@@ -25,6 +25,8 @@
     "@mcro/sonar": "*",
     "@mcro/stores": "^2.0.11",
     "@mcro/ui": "^2.0.11",
+    "nodejs-text-summarizer": "2.0.3",
+    "turndown": "4.0.2",
     "arrford": "2.0.1",
     "color": "^3.0.0",
     "date-fns": "1.29.0",

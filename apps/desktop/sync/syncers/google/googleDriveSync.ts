@@ -1,6 +1,10 @@
-import { Bit, Setting, createOrUpdate } from '@mcro/models'
+import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 import debug from '@mcro/debug'
 import { DriveService, DriveFileObject } from '@mcro/services'
+import TurndownService from 'turndown'
+
+const turndown = new TurndownService()
+const htmlToMarkdown = html => turndown.turndown(html)
 
 const log = debug('googleDrive')
 
@@ -58,19 +62,18 @@ export default class GoogleDriveSync {
       return null
     }
     const { name, contents, ...data } = info
-    return await createOrUpdate(
-      Bit,
-      {
-        integration: 'gdocs',
-        identifier: info.id,
-        type: 'document',
-        title: name,
-        body: contents || 'empty',
-        data,
-        bitCreatedAt: new Date(info.createdTime),
-        bitUpdatedAt: new Date(info.modifiedTime),
+    return await createOrUpdateBit(Bit, {
+      integration: 'gdocs',
+      identifier: info.id,
+      type: 'document',
+      title: name,
+      body: contents ? htmlToMarkdown(contents) : 'empty',
+      data: {
+        ...data,
+        htmlBody: contents,
       },
-      Bit.identifyingKeys,
-    )
+      bitCreatedAt: new Date(info.createdTime),
+      bitUpdatedAt: new Date(info.modifiedTime),
+    })
   }
 }

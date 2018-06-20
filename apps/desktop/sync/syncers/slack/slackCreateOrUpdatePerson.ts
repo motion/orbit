@@ -14,7 +14,6 @@ export default async (person: SlackPerson, returnIfUnchanged = false) => {
         ...person,
       },
     },
-    Person.identifyingKeys,
-    returnIfUnchanged,
+    { matching: Person.identifyingKeys, returnIfUnchanged },
   )
 }

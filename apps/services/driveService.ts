@@ -121,10 +121,10 @@ export class DriveService {
     ids: Array<string>,
     fileQuery?: Object,
   ): Promise<Array<any>> {
-    return new Promise(async res => {
+    return new Promise(async resolve => {
       const timeout = setTimeout(() => {
         console.log('timeout getting all files')
-        res(ids.map(() => null))
+        resolve(ids.map(() => null))
       }, 5000)
       const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
       const contents = await Promise.all(
@@ -132,7 +132,12 @@ export class DriveService {
       )
       // zip
       clearTimeout(timeout)
-      res(meta.map((file, i) => ({ ...file, contents: contents[i] })))
+      const filesWithInfo = meta.map((file, i) => ({
+        ...file,
+        contents: contents[i],
+      }))
+      const result = filesWithInfo.filter(x => !!x.contents)
+      resolve(result)
     })
   }
 
@@ -211,7 +216,7 @@ export class DriveService {
       const timeout = setTimeout(() => {
         console.log('timeout getting file contents', id)
         res(null)
-      }, 2000)
+      }, 5000)
       let result = await this.fetch(`/files/${id}/export`, {
         type: 'text',
         query: {

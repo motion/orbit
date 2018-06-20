@@ -7,7 +7,11 @@ export class Bit extends T.BaseEntity {
 
   @T.PrimaryGeneratedColumn() id: number
   @T.Column({ unique: true })
+  // this is for finding the same document, should be stable as content changes
   identifier: string
+  @T.Column({ unique: true })
+  // this is for once you found the document, checking if it needs to update
+  contentHash: string
   @T.Column() integration: string
   @T.Index()
   @T.Column()

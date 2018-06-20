@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
+import { modelQueryReaction } from '@mcro/helpers'
 import { Bit, Person } from '@mcro/models'
 import { SubTitle } from '~/views'
 import { OrbitCard } from './orbitCard'
@@ -68,18 +69,18 @@ class OrbitHomeStore {
     { immediate: true },
   )
 
-  results = react(
+  results = modelQueryReaction(
     async () => {
       return (await Promise.all([
         // { type: 'team', title: 'Engineering' },
         findType('slack', 'conversation'),
         findType('github', 'task'),
         findType('slack', 'conversation', 2),
-        findType('google', 'document'),
+        findType('gdocs', 'document'),
         Person.findOne({ name: 'adhsu' }),
         Person.findOne({ name: 'javivelasco' }),
-        findType('google', 'mail'),
-        findType('google', 'mail', 1),
+        findType('gmail', 'mail'),
+        findType('gmail', 'mail', 1),
         findType('slack', 'conversation'),
         findType('slack', 'conversation'),
         findType('slack', 'conversation'),

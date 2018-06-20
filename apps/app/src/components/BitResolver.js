@@ -11,9 +11,11 @@ const results = {
   slack: {
     conversation: BitSlackConversation,
   },
-  google: {
-    mail: Mail,
+  gdocs: {
     document: Document,
+  },
+  gmail: {
+    mail: Mail,
   },
   github: {
     task: Task,

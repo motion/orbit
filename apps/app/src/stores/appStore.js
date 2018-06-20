@@ -80,7 +80,7 @@ export class AppStore {
       const services = {}
       for (const setting of settings) {
         const { type } = setting
-        if (!setting.token || this.services[type]) {
+        if (!setting.token) {
           continue
         }
         if (AppStoreHelpers.allServices[type]) {

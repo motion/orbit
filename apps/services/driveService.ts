@@ -212,15 +212,6 @@ export class DriveService {
         console.log('timeout getting file contents', id)
         res(null)
       }, 2000)
-      const x = this.fetch(`/files/${id}/export`, {
-        type: 'text',
-        query: {
-          mimeType: 'text/html',
-          // alt: 'media',
-        },
-      })
-      console.log('x', x, this)
-      debugger
       const result = await this.fetch(`/files/${id}/export`, {
         type: 'text',
         query: {

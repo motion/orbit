@@ -9,6 +9,17 @@ import { allIntegrations } from '~/constants'
 import { settingToResult } from '~/helpers'
 import { modelQueryReaction } from '@mcro/helpers'
 
+const IntegrationCard = props => (
+  <OrbitSettingCard
+    pane="summary"
+    subPane="settings"
+    hoverToSelect
+    total={allIntegrations.length}
+    listItem
+    {...props}
+  />
+)
+
 const Row = view('section', {
   flexFlow: 'row',
   padding: [8, 0],
@@ -30,15 +41,13 @@ const CheckBoxRow = ({ children, checked }) => (
 )
 
 class OrbitSettingsStore {
-  isPaneActive = false
+  get isPaneActive() {
+    return this.props.paneStore.activePane === this.props.name
+  }
 
   setGetResults = react(
-    () => [
-      this.props.paneStore.activePane === this.props.name,
-      this.activeSettings,
-    ],
+    () => [this.isPaneActive, this.activeSettings],
     ([isActive, activeSettings]) => {
-      this.isPaneActive = isActive
       if (!isActive) {
         throw react.cancel
       }
@@ -71,17 +80,7 @@ export class OrbitSettings {
     const isActive = result => {
       return !!activeSettings.find(setting => setting.type === result.id)
     }
-    const IntegrationCard = props => (
-      <OrbitSettingCard
-        pane="summary"
-        subPane="settings"
-        hoverToSelect
-        total={allIntegrations.length}
-        appStore={appStore}
-        listItem
-        {...props}
-      />
-    )
+    console.log('rendering with settings', activeSettings.map(s => s.id))
     return (
       <OrbitDockedPane name={name} fadeBottom>
         <SubTitle>Settings</SubTitle>
@@ -107,9 +106,10 @@ export class OrbitSettings {
           <cards>
             {activeSettings.map((setting, index) => (
               <IntegrationCard
-                key={setting.id}
+                key={`${setting.id}`}
                 result={settingToResult(setting)}
                 index={index}
+                appStore={appStore}
                 isActive
               />
             ))}
@@ -122,9 +122,10 @@ export class OrbitSettings {
               .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
               .map((item, index) => (
                 <IntegrationCard
-                  key={index}
+                  key={`${item.id}`}
                   result={item}
                   index={index + activeSettings.length}
+                  appStore={appStore}
                   titleProps={{
                     fontWeight: 300,
                   }}

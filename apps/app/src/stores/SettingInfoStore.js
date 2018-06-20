@@ -1,12 +1,12 @@
-import { react } from '@mcro/black'
+// import { react } from '@mcro/black'
 import { Bit, Job } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
-import { now } from 'mobx-utils'
 
 export class SettingInfoStore {
   job = null
   bitsCount = null
   bit = null
+  updateJob = 1
 
   get setting() {
     if (!this.bit) return
@@ -17,22 +17,31 @@ export class SettingInfoStore {
     this.bit = bit
   }
 
-  job = modelQueryReaction(() => async () => {
-    if (this.bit) {
-      return await Job.findOne({
-        where: { type: this.bit.integration },
-        order: { createdAt: 'DESC' },
-      })
-    }
-  })
+  job = modelQueryReaction(
+    async () => {
+      return (
+        this.bit &&
+        (await Job.findOne({
+          where: { type: this.bit.integration },
+          order: { createdAt: 'DESC' },
+        }))
+      )
+    },
+    {
+      immediate: true,
+      condition: () => this.updateJob,
+    },
+  )
 
-  bitsCount = react(
-    () => now(4000) && this.bit,
-    bit =>
-      bit &&
+  bitsCount = modelQueryReaction(
+    () =>
+      this.bit &&
       Bit.createQueryBuilder()
         .where({ integration: this.bit.integration })
         .getCount(),
-    { immediate: true },
+    {
+      immediate: true,
+      condition: () => this.bit,
+    },
   )
 }

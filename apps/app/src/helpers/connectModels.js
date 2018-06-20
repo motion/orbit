@@ -9,6 +9,9 @@ export default async function connectModels(models) {
 
     let started = true
     try {
+      let connectTm = setTimeout(() => {
+        console.log('took too long, we should handle this: restart desktop?')
+      }, 2000)
       const connection = await createConnection({
         type: 'cordova',
         database: 'database',
@@ -18,6 +21,7 @@ export default async function connectModels(models) {
         autoSchemaSync: true,
         synchronize: true,
       })
+      clearTimeout(connectTm)
       for (const model of models) {
         model.useConnection(connection)
       }
@@ -27,6 +31,7 @@ export default async function connectModels(models) {
           return
         }
         console.error('SQL Error', err)
+        // window.location = window.location
       })
       return connection
     } catch (err) {

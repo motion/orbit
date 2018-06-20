@@ -45,7 +45,7 @@ export async function createOrUpdate(
     try {
       await item.save()
     } catch (err) {
-      console.trace('error', err)
+      console.trace('createOrUpdate Error', err, values)
       throw err
     }
   }

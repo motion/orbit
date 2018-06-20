@@ -9,7 +9,13 @@ export class Bit extends T.BaseEntity {
   @T.Column({ unique: true })
   identifier: string
   @T.Column() integration: string
-  @T.Column() title: string
+  @T.Index()
+  @T.Column()
+  title: string
+  // row used for filtering: slack room, github repo, google doc folder, etc
+  @T.Index()
+  @T.Column({ nullable: true })
+  location: string
   @T.Column() body: string
   @T.Index()
   @T.Column()

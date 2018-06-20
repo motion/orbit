@@ -26,5 +26,5 @@ export const selectedBitReaction = react(
     })
     return res
   },
-  { log: false, delay: 32 },
+  { log: false, delay: 32, immediate: true },
 )

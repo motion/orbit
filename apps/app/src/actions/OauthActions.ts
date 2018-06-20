@@ -13,6 +13,7 @@ export const checkAuths = async () => {
   ).json
   if (error) {
     console.log('no creds', error)
+    throw new Error(error)
   }
   return authorizations
 }
@@ -23,15 +24,28 @@ export const startOauth = type => {
   App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
   const checker = setInterval(async () => {
     const auth = await checkAuths()
-    const oauth = (auth && auth[type]) || {}
-    if (!oauth) return
+    console.log('checking for', type)
+    const oauth = auth && auth[type]
+    if (!oauth) {
+      return
+    }
     clearInterval(checker)
     if (!oauth.token) {
       console.log('got', auth)
       throw new Error(`No token returned ${JSON.stringify(oauth)}`)
     }
-    const setting = new Setting()
+    // todo: have a resolver for identifiers based on integration
+    const identifier = oauth.info && oauth.info.id
+    let setting
+    // update if its the same identifier from the oauth
+    if (identifier) {
+      setting = await Setting.findOne({ identifier })
+    }
+    if (!setting) {
+      setting = new Setting()
+    }
     setting.category = 'integration'
+    setting.identifier = identifier
     setting.type = type
     setting.token = oauth.token
     setting.values = {

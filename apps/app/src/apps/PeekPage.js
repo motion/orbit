@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
 import * as PeekContents from './peek/peekContents'
 import { capitalize } from 'lodash'
-import { PeekFrame } from './peek/peekFrame'
+import { PeekFrame } from './peek/PeekFrame'
 
 const deepClone = obj =>
   obj
@@ -63,7 +63,7 @@ class PeekStore {
   }
 
   lastState = react(() => this.curState, deepClone, {
-    delayValue: true,
+    delay: 16,
     immediate: true,
   })
 

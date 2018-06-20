@@ -9,6 +9,30 @@ import { modelQueryReaction } from '@mcro/helpers'
 
 let hasRun = false
 
+const searchBits = async query => {
+  if (!query) {
+    return await Bit.find({
+      take: 6,
+      relations: ['people'],
+      order: { bitCreatedAt: 'DESC' },
+    })
+  }
+  console.time('bitSearch')
+  const { conditions, rest } = AppStoreHelpers.parseQuery(query)
+  const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
+  const where = `title like "${titleLike}%"${conditions}`
+  const queryParams = {
+    where,
+    relations: ['people'],
+    order: { bitCreatedAt: 'DESC' },
+    take: 6,
+  }
+  console.log('queryParams', queryParams)
+  const res = await Bit.find(queryParams)
+  console.timeEnd('bitSearch')
+  return res
+}
+
 export class AppStore {
   quickSearchIndex = 0
   nextIndex = 0
@@ -80,7 +104,7 @@ export class AppStore {
       const services = {}
       for (const setting of settings) {
         const { type } = setting
-        if (!setting.token || this.services[type]) {
+        if (!setting.token) {
           continue
         }
         if (AppStoreHelpers.allServices[type]) {
@@ -173,8 +197,8 @@ export class AppStore {
     { log: 'state' },
   )
 
-  resetActiveIndexOnSearchComplete = react(
-    () => this.searchState && Math.random(),
+  resetActiveIndexOnNewSearchValue = react(
+    () => this.searchState.query,
     async (_, { sleep }) => {
       await sleep(16)
       this.nextIndex = -1
@@ -183,55 +207,33 @@ export class AppStore {
     },
   )
 
-  bitResultsId = 0
-  bitResults = react(
+  bitSearch = react(
     () => [
       App.state.query,
       Desktop.appState.id,
       Desktop.state.lastBitUpdatedAt,
     ],
-    async ([query], { sleep, setValue }) => {
+    async ([query], { sleep }) => {
       // debounce a little for fast typer
       await sleep(40)
-      const results = await this.searchBits(query)
-      setValue(results)
+      const results = await searchBits(query)
       await sleep()
-      this.bitResultsId = Math.random()
+      return {
+        results,
+        query,
+      }
     },
     {
       immediate: true,
-      defaultValue: [],
+      defaultValue: { results: [] },
       onlyUpdateIfChanged: true,
       log: false,
     },
   )
 
-  searchBits = async query => {
-    if (!query) {
-      return await Bit.find({
-        take: 6,
-        relations: ['people'],
-        order: { bitCreatedAt: 'DESC' },
-      })
-    }
-    console.time('bitSearch')
-    const { conditions, rest } = AppStoreHelpers.parseQuery(query)
-    const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
-    const where = `title like "${titleLike}%"${conditions}`
-    console.log('searching', where, conditions, rest)
-    const res = await Bit.find({
-      where,
-      relations: ['people'],
-      order: { bitCreatedAt: 'DESC' },
-      take: 6,
-    })
-    console.timeEnd('bitSearch')
-    return res
-  }
-
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when, sleep }) => {
+    async ([query, thisGetResults], { when }) => {
       if (!query) {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }
@@ -271,11 +273,10 @@ export class AppStore {
         // no jitter - wait for everything to finish
         console.time('searchPluginsAndBitResults')
         try {
-          const waitMax = hasRun ? 200 : 2000
-          const id1 = this.bitResultsId
+          const waitMax = hasRun ? 500 : 2000
           await Promise.all([
             when(() => query === Desktop.searchState.pluginResultsId, waitMax),
-            when(() => id1 !== this.bitResultsId, waitMax),
+            when(() => query === this.bitSearch.query, waitMax),
           ])
         } catch (err) {
           if (err instanceof ReactionTimeoutError) {
@@ -286,16 +287,16 @@ export class AppStore {
         }
         console.timeEnd('searchPluginsAndBitResults')
         const allResultsUnsorted = [
-          ...this.bitResults,
+          ...this.bitSearch.results,
           ...Desktop.searchState.pluginResults,
         ]
+        console.log('allResultsUnsorted', allResultsUnsorted)
         // remove prefixes
         const { rest } = AppStoreHelpers.parseQuery(query)
         // sort
         results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
       }
       hasRun = true
-      console.log('returning new searchState')
       return {
         query,
         message,

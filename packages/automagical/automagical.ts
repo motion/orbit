@@ -336,7 +336,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     if (Mobx.isObservable(value)) {
       value = Mobx.toJS(value)
     }
-    current.set(Mobx.observable.box(value))
+    current.set(Mobx.observable.box(value, { name }))
   }
 
   function runObservable() {
@@ -602,7 +602,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
               }
             } else {
               console.log('throwing err', err)
-              throw err
+              throw new Error(err)
             }
           })
         return

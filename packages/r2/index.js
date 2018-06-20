@@ -76,7 +76,9 @@ class R2 {
     if (typeof args[0] === 'object') {
       opts = Object.assign(opts, args.shift())
     }
-    if (opts.headers) this.setHeaders(opts.headers)
+    if (opts.headers) {
+      this.setHeaders(opts.headers)
+    }
     this.opts = opts
   }
   put(...args) {

@@ -11,6 +11,7 @@ export type DriveServiceHelpers = {
     nextPageToken?: string
     files?: any[]
     changes: any[]
+    error?: string
   }>
 }
 

@@ -207,27 +207,27 @@ export class DriveService {
   }
 
   getFileContents(id: string) {
-    return new Promise(async res => {
+    return new Promise(async (res, rej) => {
       const timeout = setTimeout(() => {
         console.log('timeout getting file contents', id)
         res(null)
       }, 2000)
-      const x = this.fetch(`/files/${id}/export`, {
+      let result = await this.fetch(`/files/${id}/export`, {
         type: 'text',
         query: {
           mimeType: 'text/html',
           // alt: 'media',
         },
       })
-      console.log('x', x, this)
-      debugger
-      const result = await this.fetch(`/files/${id}/export`, {
-        type: 'text',
-        query: {
-          mimeType: 'text/html',
-          // alt: 'media',
-        },
-      })
+      if (!result) {
+        throw new Error('No result')
+      }
+      if (result[0] === '{') {
+        result = JSON.parse(`${result}`)
+      }
+      if (result.error) {
+        rej(result ? result.error : 'weird drive error')
+      }
       clearTimeout(timeout)
       res(result)
     })

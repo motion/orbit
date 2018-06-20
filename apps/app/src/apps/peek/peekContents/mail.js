@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { PeekHeader } from '../peekHeader'
+import { PeekHeader } from '../index'
 // import { Bit } from '@mcro/models'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'

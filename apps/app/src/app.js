@@ -1,4 +1,4 @@
-import { App as AppAll } from '@mcro/stores'
+import { App as _App } from '@mcro/stores'
 import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import { modelsList } from '@mcro/models'
@@ -32,7 +32,7 @@ export class App {
   async start() {
     if (window.location.pathname !== '/auth') {
       await connectModels(modelsList)
-      await AppAll.start()
+      await _App.start()
     }
     this.catchErrors()
     this.started = true

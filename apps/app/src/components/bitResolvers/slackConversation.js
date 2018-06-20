@@ -1,7 +1,6 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import { BitSlackMessage } from './slackMessage'
-import * as UI from '@mcro/ui'
 import { RoundButton } from '~/views/roundButton'
 import keywordExtract from 'keyword-extractor'
 import arrford from 'arrford'
@@ -22,6 +21,10 @@ export class BitSlackConversation extends React.Component {
   }
 
   render({ children, bit, appStore, shownLimit, contentStyle, isExpanded }) {
+    if (!bit) {
+      console.log('no bit :/')
+      return null
+    }
     const content = isExpanded
       ? (bit.data.messages || [])
           .slice(0, shownLimit)

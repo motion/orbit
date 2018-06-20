@@ -16,6 +16,8 @@ function popup(url, title, win, w, h) {
 }
 
 export default function passportLink(path, options = {}) {
+  console.log('calling passportLink')
+  let resolved = false
   return new Promise((resolve, reject) => {
     const opts = {
       windowName: 'Login',
@@ -23,10 +25,9 @@ export default function passportLink(path, options = {}) {
       height: 600,
       ...options,
     }
-    // setup new response object
-    let resolved = false
     window.passport = {}
     window.passport.oauthSession = info => {
+      console.log('GOT OAUTH', info)
       if (!info.error && info.token) {
         resolved = true
         return resolve(info)
@@ -52,9 +53,9 @@ export default function passportLink(path, options = {}) {
           if (resolved) {
             return
           }
-          return reject('Authorization cancelled')
+          reject('Authorization cancelled')
         }
       }
-    })
+    }, 100)
   })
 }

@@ -40,6 +40,7 @@ export class BitSlackMessage extends React.Component {
         <topSpace if={!hideHeader && previousMessage} css={{ height: 14 }} />
         <header if={!hideHeader}>
           <RoundButton
+            size={1.1}
             onClick={e => {
               e.stopPropagation()
               PeekStateActions.selectPerson(person)
@@ -80,13 +81,13 @@ export class BitSlackMessage extends React.Component {
     },
     username: {
       fontWeight: 400,
-      fontSize: 14,
+      fontSize: '95%',
       color: '#000',
       margin: [0, 0, 1],
       alignItems: 'center',
     },
     date: {
-      fontSize: 12,
+      fontSize: '75%',
       fontWeight: 300,
       opacity: 0.45,
       marginTop: 1,

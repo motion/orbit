@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom'
 import Themes from './themes'
 import { throttle } from 'lodash'
 
+// fixes hmr
 import './router'
 
 Error.stackTraceLimit = Infinity
@@ -30,6 +31,7 @@ if (Constants.IS_PROD) {
 // hmr calls render twice out the gate
 // so prevent that
 const render = throttle(async () => {
+  console.log('starting', window.Root)
   if (!window.Root) {
     console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
     console.timeEnd('splash')

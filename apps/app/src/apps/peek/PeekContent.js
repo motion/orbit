@@ -26,7 +26,7 @@ export class PeekContent extends React.Component {
       top: 0,
       left: 0,
       right: 0,
-      height: 50,
+      height: 30,
       background: 'linear-gradient(#f9f9f9, transparent)',
       zIndex: 1000,
     },
@@ -34,7 +34,8 @@ export class PeekContent extends React.Component {
       overflowY: 'scroll',
       padding: [10 + 15, 0, 15],
       flex: 1,
-      fontSize: 18,
+      fontSize: 16,
+      lineHeight: '1.6rem',
       wordBreak: 'break-word',
     },
   }

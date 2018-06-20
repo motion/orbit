@@ -176,7 +176,6 @@ export class OrbitHeader extends React.Component {
   }
 
   static theme = ({ borderRadius }, theme) => {
-    console.log('borderRadius', borderRadius)
     return {
       orbitHeader: {
         borderTopRadius: borderRadius,

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekHeader } from '../peekHeader'
+import { PeekHeader, PeekContent } from '../index'
 
 @view
 export class File extends React.Component {
@@ -8,7 +8,7 @@ export class File extends React.Component {
     return (
       <>
         <PeekHeader title={bit.title} />
-        <content>{bit.body}</content>
+        <PeekContent>{bit.body}</PeekContent>
       </>
     )
   }

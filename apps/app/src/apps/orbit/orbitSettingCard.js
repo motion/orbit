@@ -56,9 +56,6 @@ export class OrbitSettingCard extends React.Component {
         }
         afterTitle={
           <after css={{ flexFlow: 'row', margin: [-5, 0] }}>
-            <React.Fragment if={!isActive}>
-              <UI.Button>Add</UI.Button>
-            </React.Fragment>
             <React.Fragment if={false && isActive}>
               <UI.Button>Remove</UI.Button>
             </React.Fragment>

@@ -181,10 +181,10 @@ export default class Server {
         `/auth/${name}/callback`,
         Passport.authenticate(name, options, null),
         (req, res) => {
-          console.log('passport req', req)
           // @ts-ignore
           const { user, currentUser } = req
           const realUser = user || currentUser
+          log('auth reply, user', realUser)
           res.send(`
 <!DOCTYPE html>
 <html lang="en">
@@ -205,6 +205,8 @@ export default class Server {
     }
     if (window.opener.passport && window.opener.passport.oauthSession) {
       window.opener.passport.oauthSession(info)
+    } else {
+      alert('closed original window!')
     }
   }
   window.close()

@@ -1,3 +1,10 @@
+/* more reset */
+
+button,
+input {
+  font-size: inherit;
+}
+
 /* for markdown content in tasks */
 .innerContent ul,
 .innerContent ol {

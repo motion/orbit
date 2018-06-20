@@ -28,9 +28,16 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
     return false
   },
   async fetch(path, options: FetchOptions = {}) {
-    const { headers, body, type = 'json', isRetrying, ...rest } = options
+    const {
+      headers,
+      mode = 'cors',
+      body,
+      type = 'json',
+      isRetrying,
+      ...rest
+    } = options
     const fetcher = r2.get(`${this.baseUrl}${path}`, {
-      mode: 'cors',
+      mode,
       ...rest,
       headers: {
         Authorization: `Bearer ${setting.token}`,

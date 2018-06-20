@@ -57,7 +57,7 @@ export default class SlackAttachmentSync {
           for (const entries of _.chunk(links, 10)) {
             console.log('crawling chunk', entries)
             const { results } = await r2.post(
-              `${Constants.APP_URL}/crawler/exact`,
+              `${Constants.API_URL}/crawler/exact`,
               {
                 json: {
                   options: { entries },

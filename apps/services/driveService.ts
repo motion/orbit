@@ -125,7 +125,7 @@ export class DriveService {
       const timeout = setTimeout(() => {
         console.log('timeout getting all files')
         resolve(ids.map(() => null))
-      }, 5000)
+      }, 10000)
       const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
       const contents = await Promise.all(
         ids.map(id => this.getFileContents(id)),
@@ -211,16 +211,12 @@ export class DriveService {
     })
   }
 
-  getFileContents(id: string) {
+  getFileContents(id: string, mimeType = 'text/html') {
     return new Promise(async (res, rej) => {
-      const timeout = setTimeout(() => {
-        console.log('timeout getting file contents', id)
-        res(null)
-      }, 5000)
       let result = await this.fetch(`/files/${id}/export`, {
         type: 'text',
         query: {
-          mimeType: 'text/html',
+          mimeType,
           // alt: 'media',
         },
       })
@@ -233,7 +229,6 @@ export class DriveService {
       if (result.error) {
         rej(result ? result.error : 'weird drive error')
       }
-      clearTimeout(timeout)
       res(result)
     })
   }

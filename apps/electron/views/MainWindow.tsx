@@ -73,7 +73,7 @@ export class MainWindow extends Component<{
         alwaysOnTop
         ignoreMouseEvents={!store.mouseInActiveArea}
         ref={ref => ref && onRef(ref.window)}
-        file={Constants.APP_URL}
+        file={Constants.API_URL}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}

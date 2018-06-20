@@ -20,6 +20,7 @@ export type FetchOptions =
   | {
       isRetrying?: boolean
       type?: string
+      mode?: string
       query?: Object
       headers?: Object
       body?: Object

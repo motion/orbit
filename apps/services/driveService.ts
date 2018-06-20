@@ -123,9 +123,9 @@ export class DriveService {
   ): Promise<Array<any>> {
     return new Promise(async resolve => {
       const timeout = setTimeout(() => {
-        console.log('timeout getting all files')
+        console.log('timeout getting all files', ids, this)
         resolve(ids.map(() => null))
-      }, 10000)
+      }, 15000)
       const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
       const contents = await Promise.all(
         ids.map(id => this.getFileContents(id)),
@@ -211,7 +211,7 @@ export class DriveService {
     })
   }
 
-  getFileContents(id: string, mimeType = 'text/html') {
+  getFileContents(id: string, mimeType = 'text/plain') {
     return new Promise(async (res, rej) => {
       let result = await this.fetch(`/files/${id}/export`, {
         type: 'text',

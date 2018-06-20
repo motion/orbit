@@ -28,25 +28,24 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
     return false
   },
   async fetch(path, options: FetchOptions = {}) {
-    const {
-      headers,
-      mode = 'cors',
-      body,
-      type = 'json',
-      isRetrying,
-      ...rest
-    } = options
-    const fetcher = r2.get(`${this.baseUrl}${path}`, {
-      mode,
+    const { headers, mode, body, type = 'json', isRetrying, ...rest } = options
+    const fetchOpts = {
       ...rest,
       headers: {
         Authorization: `Bearer ${setting.token}`,
-        'Access-Control-Allow-Origin': Constants.API_HOST,
+        'Access-Control-Allow-Origin': Constants.API_URL,
         'Access-Control-Allow-Methods': 'GET',
         ...headers,
       },
       body: body ? JSON.stringify(body) : null,
-    })
+    }
+    if (type === 'json') {
+      // @ts-ignore
+      fetchOpts.mode = mode || 'cors'
+    }
+    const url = `${this.baseUrl}${path}`
+    console.log('running fetch with', url, fetchOpts)
+    const fetcher = r2.get(url, fetchOpts)
     const res = await fetcher[type]
     if (res.error) {
       if (res.error.code === 401 && !isRetrying) {

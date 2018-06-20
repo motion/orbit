@@ -231,7 +231,7 @@ export class OrbitCard extends React.Component {
             {orbitIcon}
             <title>
               <UI.Text
-                size={1.3}
+                size={listItem ? 1.15 : 1.3}
                 sizeLineHeight={0.8}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}

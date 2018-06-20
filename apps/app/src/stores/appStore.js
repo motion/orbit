@@ -173,8 +173,8 @@ export class AppStore {
     { log: 'state' },
   )
 
-  resetActiveIndexOnSearchComplete = react(
-    () => this.searchState && Math.random(),
+  resetActiveIndexOnNewSearchValue = react(
+    () => this.searchState.query,
     async (_, { sleep }) => {
       await sleep(16)
       this.nextIndex = -1
@@ -231,7 +231,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when, sleep }) => {
+    async ([query, thisGetResults], { when }) => {
       if (!query) {
         return { query, results: thisGetResults ? thisGetResults() : [] }
       }

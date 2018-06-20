@@ -336,7 +336,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     if (Mobx.isObservable(value)) {
       value = Mobx.toJS(value)
     }
-    current.set(Mobx.observable.box(value))
+    current.set(Mobx.observable.box(value, { name }))
   }
 
   function runObservable() {

@@ -20,6 +20,10 @@ export type PageQuery = {
   mimeType?: string
 }
 
+function stripDriveHtml(rawHtml) {
+  return rawHtml.replace(/@import.*[\n]+/, '')
+}
+
 @store
 export class DriveService {
   helpers: DriveServiceHelpers
@@ -133,7 +137,7 @@ export class DriveService {
       const filesWithInfo = meta.map((file, i) => ({
         ...file,
         text: contents[i][0],
-        html: contents[i][1],
+        html: stripDriveHtml(contents[i][1]),
       }))
       // filter out ones that couldnt download contents
       const result = filesWithInfo.filter(x => !!(x.text || x.html))
@@ -220,7 +224,7 @@ export class DriveService {
       let result
       setTimeout(() => {
         if (!result) {
-          console.log('timed out getting', id)
+          console.log('timed out getting', mimeType, id)
           res(null)
         }
       }, timeout)

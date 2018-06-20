@@ -6,6 +6,10 @@ import TurndownService from 'turndown'
 const turndown = new TurndownService()
 const htmlToMarkdown = html => turndown.turndown(html)
 
+function stripeHtmlImports(rawHtml) {
+  return rawHtml ? rawHtml.replace(/@import.*[\n]+/, '') : rawHtml
+}
+
 const log = debug('googleDrive')
 
 export default class GoogleDriveSync {
@@ -67,7 +71,7 @@ export default class GoogleDriveSync {
       identifier: info.id,
       type: 'document',
       title: name,
-      body: html ? htmlToMarkdown(html) : text || '',
+      body: html ? stripeHtmlImports(htmlToMarkdown(html)) : text || '',
       data: {
         ...data,
         htmlBody: html,

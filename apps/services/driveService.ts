@@ -20,10 +20,6 @@ export type PageQuery = {
   mimeType?: string
 }
 
-function stripDriveHtml(rawHtml) {
-  return rawHtml ? rawHtml.replace(/@import.*[\n]+/, '') : rawHtml
-}
-
 @store
 export class DriveService {
   helpers: DriveServiceHelpers
@@ -137,7 +133,7 @@ export class DriveService {
       const filesWithInfo = meta.map((file, i) => ({
         ...file,
         text: contents[i][0],
-        html: stripDriveHtml(contents[i][1]),
+        html: contents[i][1],
       }))
       // filter out ones that couldnt download contents
       const result = filesWithInfo.filter(x => !!(x.text || x.html))

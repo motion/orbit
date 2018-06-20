@@ -10,9 +10,11 @@ import { ElectronStore } from './stores/ElectronStore'
   electronStore: ElectronStore,
 })
 @view.electron
-export class Electron extends Component<{
-  electronStore: ElectronStore
-}> {
+export class Electron extends Component {
+  props: {
+    electronStore: ElectronStore
+  }
+
   componentDidCatch(error) {
     this.props.electronStore.error = error
     console.error(error)

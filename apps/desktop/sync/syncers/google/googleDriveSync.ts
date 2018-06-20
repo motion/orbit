@@ -1,7 +1,6 @@
 import { Bit, Setting, createOrUpdate } from '@mcro/models'
 import debug from '@mcro/debug'
 import { DriveService, DriveFileObject } from '@mcro/services'
-import * as Helpers from '~/helpers'
 
 const log = debug('googleDrive')
 

@@ -51,7 +51,6 @@ root.__trackStateChanges = {}
 
 const log = debug('react')
 const logState = debug('react+')
-const logInfo = debug('automagical')
 
 const PREFIX = `=>`
 const logRes = (res: any) => {

@@ -39,6 +39,7 @@ export default class GoogleDriveSync {
 
   async syncFiles() {
     const files = await this.service.getFiles()
+    log(`got ${files.length} files`)
     let created = []
     for (const file of files) {
       const result = await this.createFile(file)

@@ -212,14 +212,20 @@ export class DriveService {
         console.log('timeout getting file contents', id)
         res(null)
       }, 2000)
-      const result = await this.fetch(`/files/${id}/export`, {
+      let result = await this.fetch(`/files/${id}/export`, {
         type: 'text',
         query: {
           mimeType: 'text/html',
           // alt: 'media',
         },
       })
-      if (!result || result.error) {
+      if (!result) {
+        throw new Error('No result')
+      }
+      if (result[0] === '{') {
+        result = JSON.parse(`${result}`)
+      }
+      if (result.error) {
         rej(result ? result.error : 'weird drive error')
       }
       clearTimeout(timeout)

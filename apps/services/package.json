@@ -14,7 +14,7 @@
     "@mcro/helpers": "^2.0.0",
     "@mcro/models": "^2.0.11",
     "@mcro/oauth-strategies": "*",
-    "@mcro/r2": "1.5.1",
+    "@mcro/r2": "*",
     "global": "^4.3.2",
     "lodash": "4.17.10",
     "octokat": "0.10.0",

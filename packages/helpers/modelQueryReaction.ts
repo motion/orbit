@@ -42,6 +42,9 @@ export function modelQueryReaction(query, b, c?: ReactModelQueryOpts) {
           throw react.cancel
         }
       }
+      if (!next) {
+        throw react.cancel
+      }
       currentVal = next
       // if given explicit reaction, use that as return val
       if (returnVal) {

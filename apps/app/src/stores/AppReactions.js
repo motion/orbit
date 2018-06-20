@@ -1,4 +1,4 @@
-import { store, react } from '@mcro/black/store'
+import { store, react, sleep } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/stores'
 import orbitPosition from '~/helpers/orbitPosition'
 import debug from '@mcro/debug'
@@ -20,6 +20,14 @@ export class AppReactions {
 
   constructor({ onPinKey }) {
     this.onPinKey = onPinKey
+    this.setupReactions()
+  }
+
+  async setupReactions() {
+    if (typeof App.onMessage !== 'function') {
+      console.log('weird app on hmr', App)
+      await sleep(100)
+    }
     const dispose = App.onMessage(async msg => {
       window.setupAppReactions = true
       switch (msg) {

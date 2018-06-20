@@ -602,7 +602,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
               }
             } else {
               console.log('throwing err', err)
-              throw err
+              throw new Error(err)
             }
           })
         return

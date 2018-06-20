@@ -1,7 +1,6 @@
 // import { react } from '@mcro/black'
 import { Bit, Job } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
-import { now } from 'mobx-utils'
 
 export class SettingInfoStore {
   job = null
@@ -19,7 +18,6 @@ export class SettingInfoStore {
   }
 
   job = modelQueryReaction(
-    () => [now(2000), this.updateJob],
     async () => {
       if (this.bit) {
         return await Job.findOne({
@@ -28,15 +26,17 @@ export class SettingInfoStore {
         })
       }
     },
+    {
+      condition: () => this.updateJob,
+    },
   )
 
   bitsCount = modelQueryReaction(
-    () => [this.bit, now(4000)],
-    ([bit]) =>
-      bit &&
+    () =>
+      this.bit &&
       Bit.createQueryBuilder()
         .where({ integration: this.bit.integration })
         .getCount(),
-    { immediate: true },
+    { immediate: true, condition: () => this.bit },
   )
 }

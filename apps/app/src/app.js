@@ -31,11 +31,8 @@ export class App {
 
   async start() {
     if (window.location.pathname !== '/auth') {
-      console.log(1)
       await connectModels(modelsList)
-      console.log(2)
       await _App.start()
-      console.log(3)
     }
     this.catchErrors()
     this.started = true

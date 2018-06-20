@@ -207,7 +207,7 @@ export class DriveService {
   }
 
   getFileContents(id: string) {
-    return new Promise(async res => {
+    return new Promise(async (res, rej) => {
       const timeout = setTimeout(() => {
         console.log('timeout getting file contents', id)
         res(null)
@@ -219,6 +219,9 @@ export class DriveService {
           // alt: 'media',
         },
       })
+      if (!result || result.error) {
+        rej(result ? result.error : 'weird drive error')
+      }
       clearTimeout(timeout)
       res(result)
     })

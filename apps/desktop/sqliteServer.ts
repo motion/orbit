@@ -6,7 +6,6 @@ import recoverDB from '~/helpers/recoverDB'
 import debug from '@mcro/debug'
 
 const log = debug('sqliteServer')
-debug.quiet('sqliteServer')
 
 var databaseID = 0
 var databaseList = []

@@ -5,6 +5,9 @@ import WS from './websocket'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
+import debug from '@mcro/debug'
+
+const log = debug('bridge')
 
 // exports
 export * from './proxySetters'
@@ -32,6 +35,7 @@ type Options = {
 class Bridge {
   store: any
   socketManager: T_SocketManager
+  started = false
   _awaitingSocket = []
   _store = null
   _options: Options
@@ -58,6 +62,8 @@ class Bridge {
       console.warn(`Already started ${this._source}`)
       return
     }
+    store.bridge = this
+    this.started = true
     if (options.master) {
       // TODO: once parcel can ignore requires
       const SocketManager = eval(`require('./socketManager')`).default
@@ -66,6 +72,7 @@ class Bridge {
         masterSource: 'Desktop',
         port: 40510,
         onState: (source, state) => {
+          log(`onState ${JSON.stringify(state)}`)
           this._update(stores[source].state, state)
         },
         actions: {
@@ -223,6 +230,11 @@ class Bridge {
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
   setState = (newState, ignoreSocketSend) => {
+    if (!this.started) {
+      throw new Error(
+        `Not started, can only call setState on the app that starts it.`,
+      )
+    }
     if (!this._store) {
       console.warn('waht is this', this, this._source, this._store)
       throw new Error(
@@ -332,10 +344,16 @@ class Bridge {
     if (root.__trackStateChanges && root.__trackStateChanges.isActive) {
       root.__trackStateChanges.changed = changed
     }
+    // log(`_update ${JSON.stringify(changed)}`)
     return changed
   }
 
   onMessage = (type, listener): Function => {
+    if (!this.started) {
+      throw new Error(
+        `Not started, can only call onMessage on the app that starts it.`,
+      )
+    }
     let subscription = { type, listener }
     if (!listener) {
       subscription = { type: null, listener: type }
@@ -348,6 +366,11 @@ class Bridge {
   }
 
   sendMessage = async (Store: any, ogMessage: string, value: string) => {
+    if (!this.started) {
+      throw new Error(
+        `Not started, can only call sendMessage on the app that starts it.`,
+      )
+    }
     if (!Store || !ogMessage) {
       throw `no store || message ${Store} ${ogMessage} ${value}`
     }

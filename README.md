@@ -99,3 +99,103 @@ Bootstrap sort of checks a lot of stuff, but its really fast, so you can general
 
 - `clean` remove all node_modules
 - `run` just does npm start in an app
+
+## Developing
+
+In each app you have a few things. Here are some globals:
+
+### debug from @mcro/debug
+
+The global `debug` is set. This lets you control logs.
+
+```js
+debug.list() // list things that log
+debug.loud() // log everything, pass argument to narrow
+debug.quiet() // quiet everything, argument to narrow
+```
+
+It may be helpful to run `debug.list()` and `debug.loud()` in each app just to get an idea of what's going on there.
+
+### log from @black/helpers/log
+
+This is a nice helper function. It returns whatever is passed into it, so you can easily wrap it in weird places and have it log for you:
+
+```
+{
+  some: {
+    big: [object, of, log(things)]
+  }
+}
+```
+
+It will also colorful log by default, and prevent massive blocks of text. It tries to stringify things recursively, etc.
+
+```
+log.full() // will log the entire thing not cut it short
+```
+
+### mlog from @black/mlog
+
+This is a mobx logger. Use it like so:
+
+```js
+mlog(() => Desktop.state.hoverState) // Because Desktop.state is reactive, this will log whenever it changes
+mlog.clear() // stop logging things
+```
+
+Saves you from typing:
+
+```js
+const off = Mobx.autorun(() => console.log(Desktop.state.hoverState))
+off()
+```
+
+### Root
+
+Every app exports it's base level View or Class as Root. In web you can do:
+
+```js
+Root.stores // Every mounted store attached to any view
+```
+
+In desktop you can do
+
+```js
+Root.sync.gdocs.runAll() // run the gdocs syncer
+```
+
+### App, Desktop, Electron
+
+These are the base singleton stores that contain the app state synced between every app. This is really nice to have in the REPL.
+
+These all have a special `state` object that syncs across to all the others.
+
+So if you do this in the web app:
+
+```js
+App.setState({ query: 'Hello world' })
+```
+
+You'll be able to run this instantly in the Desktop or Electron REPL:
+
+```js
+App.state.query === 'Hello world'
+```
+
+Apps can only set their own state and it syncs to the other apps. They can also send pre-defined messages to each other.
+
+```js
+import { App, Desktop, Electron } from '@mcro/stores'
+
+App.messages // list of messages it supports
+
+// in Desktop
+Desktop.sendMessage(App, App.messages.TOGGLE_SHOWN)
+
+// in App
+App.sendMessage(Electron, Electron.messages.SOME_MESSAGE, 'hello world')
+```
+
+### The Models
+
+We set up models to be globals so you can use them easily in REPL as well. So for now `Bit`, `Setting`, `Person`, and `Job`.

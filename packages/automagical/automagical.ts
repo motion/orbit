@@ -90,7 +90,7 @@ const isFunction = val => typeof val === 'function'
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
 const isObservableLike = val =>
-  (val && (val.isntConnected || val.isObservable || isObservable(val))) || false
+  (val && (val.isObservable || isObservable(val))) || false
 
 const DEFAULT_VALUE = undefined
 
@@ -289,7 +289,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   let stopReaction
   let disposed = false
   let result
-  let isntConnected = false
   const stopAutoObserve = () => autoObserveDispose && autoObserveDispose()
 
   function getCurrentValue() {
@@ -302,10 +301,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         return undefined
       }
     }
-    if (result && result.isMobXObservableValue) {
-      // @ts-ignore
-      return result.get()
-    }
     return result
   }
 
@@ -313,9 +308,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     if (typeof val === 'undefined') {
       // HELP this may be bad idea, but in practice we never ever set something undefined
       // testing this out essentially
-      return
-    }
-    if (isntConnected) {
       return
     }
     let value = newValue
@@ -335,7 +327,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     if (Mobx.isObservable(value)) {
       value = Mobx.toJS(value)
     }
-    current.set(Mobx.observable.box(value, { name }))
+    current.set(value)
   }
 
   function runObservable() {
@@ -606,6 +598,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
           })
         return
       }
+
       // store result as observable
       result = specialValueToObservable(reactionResult)
       if (!IS_PROD && !preventLog && !delayValue) {
@@ -629,19 +622,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       stopAutoObserve()
 
       if (observableLike) {
-        if (result.isntConnected) {
-          // re-run after connect
-          console.warn(obj.constructor.name, method, 'not connected')
-          isntConnected = true
-          result.onConnection().then(() => {
-            console.warn(obj.constructor.name, method, 'is now reconnected')
-            isntConnected = false
-            dispose()
-            disposed = false
-            run()
-          })
-          return false
-        }
         const isSameObservable =
           curObservable && curObservable[AID] === result[AID]
         if (isSameObservable && curObservable) {

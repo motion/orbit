@@ -12,9 +12,9 @@ class ElectronStore {
     FOCUS: 'FOCUS',
   }
 
-  setState: typeof Bridge.setState
-  sendMessage: typeof Bridge.sendMessage
-  onMessage: typeof Bridge.onMessage
+  setState = Bridge.setState
+  sendMessage = Bridge.sendMessage
+  onMessage = Bridge.onMessage
   source = 'Electron'
 
   onClear = null
@@ -31,9 +31,6 @@ class ElectronStore {
 
   start = options => {
     Bridge.start(this, this.state, options)
-    this.setState = Bridge.setState
-    this.sendMessage = Bridge.sendMessage
-    this.onMessage = Bridge.onMessage
   }
 }
 

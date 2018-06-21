@@ -6,29 +6,39 @@ export class Bit extends T.BaseEntity {
   static identifyingKeys = ['identifier', 'type', 'integration']
 
   @T.PrimaryGeneratedColumn() id: number
-  @T.Column({ unique: true })
+
   // this is for finding the same document, should be stable as content changes
-  identifier: string
   @T.Column({ unique: true })
-  // this is for once you found the document, checking if it needs to update
+  identifier: string
+
+  // for cheaper find if needing update
+  @T.Column({ unique: true })
   contentHash: string
+
+  @T.Column({ nullable: true })
+  summary: string
+
   @T.Column() integration: string
   @T.Index()
   @T.Column()
   title: string
+
   // row used for filtering: slack room, github repo, google doc folder, etc
   @T.Index()
   @T.Column({ nullable: true })
   location: string
+
   @T.Column() body: string
   @T.Index()
   @T.Column()
   type: string
+
   @T.Column() bitCreatedAt: string
   @T.Column() bitUpdatedAt: string
   @T.Index()
   @T.CreateDateColumn()
   createdAt: Date
+
   @T.Index()
   @T.UpdateDateColumn()
   updatedAt: Date

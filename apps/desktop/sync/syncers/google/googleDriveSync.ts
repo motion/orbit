@@ -2,6 +2,7 @@ import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 import debug from '@mcro/debug'
 import { DriveService, DriveFileObject } from '@mcro/services'
 import TurndownService from 'turndown'
+import summarize from 'nodejs-text-summarizer'
 
 const turndown = new TurndownService()
 const htmlToMarkdown = html => turndown.turndown(html)
@@ -66,15 +67,20 @@ export default class GoogleDriveSync {
       return null
     }
     const { name, text, html, ...data } = info
+    const markdowned = html
+      ? stripeHtmlImports(htmlToMarkdown(html))
+      : text || ''
     return await createOrUpdateBit(Bit, {
       integration: 'gdocs',
       identifier: info.id,
       type: 'document',
       title: name,
-      body: html ? stripeHtmlImports(htmlToMarkdown(html)) : text || '',
+      body: summarize(markdowned),
       data: {
         ...data,
+        // storing too much for now just to have flexibility
         htmlBody: html,
+        markdownBody: markdowned,
         textBody: text,
       },
       bitCreatedAt: new Date(info.createdTime),

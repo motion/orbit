@@ -4,6 +4,8 @@ import { App } from '@mcro/stores'
 import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitQuickSearch } from './OrbitQuickSearch'
+import * as UI from '@mcro/ui'
+import sanitize from 'sanitize-html'
 
 class SearchStore {
   state = react(
@@ -31,7 +33,6 @@ export class OrbitSearchResults {
     if (!searchStore.state) {
       return null
     }
-    console.log('searchStore', searchStore)
     const { query, results, message } = searchStore.state
     const isChanging = App.state.query !== query
     log(`SEARCH ${name} --------------`)
@@ -50,9 +51,12 @@ export class OrbitSearchResults {
                 total={results.length}
                 bit={bit}
                 listItem
-                expanded={false}
                 hoverToSelect
-              />
+              >
+                <UI.Text highlightWords={searchStore.state.query.split(' ')}>
+                  {sanitize(bit.body)}
+                </UI.Text>
+              </OrbitCard>
             ))}
           </results>
           <space css={{ height: 20 }} />

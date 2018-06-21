@@ -3,7 +3,11 @@ import { view } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
 
-const wrapHighlights = (text, highlightWordsColor, highlightWords) => {
+const wrapHighlights = (
+  text,
+  highlightWordsColor = 'yellow',
+  highlightWords,
+) => {
   let result = text
   for (const word of highlightWords) {
     result = result.replace(
@@ -260,6 +264,7 @@ export class Text extends React.Component {
         console.warn('Expected chidlren to be string for highlighting')
       }
     }
+    const showEllipse = highlightWords || ellipse
     return (
       <text
         className={className}
@@ -280,9 +285,9 @@ export class Text extends React.Component {
           onBlur,
         }}
       >
-        {!ellipse && children}
+        {!showEllipse && children}
         <span
-          if={ellipse}
+          if={showEllipse}
           $ellipseLines={multiLineEllipse}
           $ellipseSingle={oneLineEllipse}
           style={

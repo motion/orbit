@@ -7,10 +7,12 @@ class DockedPaneStore {
   isAtBottom = false
 
   didMount() {
-    setTimeout(() => {
-      this.setOverflow()
-    })
     this.on(this.paneRef.current, 'scroll', _.throttle(this.setOverflow, 100))
+    const observer = new MutationObserver(this.setOverflow)
+    observer.observe(this.paneRef.current, { childList: true })
+    this.subscriptions.add({
+      dispose: () => observer.disconnect(),
+    })
   }
 
   setOverflow = () => {

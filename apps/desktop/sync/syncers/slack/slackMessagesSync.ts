@@ -55,6 +55,7 @@ export default class SlackMessagesSync {
         log(
           `Already processing! Try .reset() to clear TODO: check if really old and clear`,
         )
+        return
       }
     }
     await this.setupSetting()

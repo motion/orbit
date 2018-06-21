@@ -31,6 +31,7 @@ export class OrbitSearchResults {
     if (!searchStore.state) {
       return null
     }
+    console.log('searchStore', searchStore)
     const { query, results, message } = searchStore.state
     const isChanging = App.state.query !== query
     log(`SEARCH ${name} --------------`)

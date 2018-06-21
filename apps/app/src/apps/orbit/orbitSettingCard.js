@@ -44,7 +44,7 @@ export class OrbitSettingCard extends React.Component {
             ? ''
             : store.bitsCount === null
               ? '...'
-              : `${store.bitsCount || 'none'} synced`
+              : `${store.bitsCount || '0'} total`
         }
         date={store.job && store.job.updatedAt}
         icon={result.icon}

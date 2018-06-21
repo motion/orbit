@@ -19,13 +19,12 @@ export class SettingInfoStore {
 
   job = modelQueryReaction(
     async () => {
-      return (
-        this.bit &&
-        (await Job.findOne({
+      if (this.bit) {
+        return await Job.findOne({
           where: { type: this.bit.integration },
           order: { createdAt: 'DESC' },
-        }))
-      )
+        })
+      }
     },
     {
       immediate: true,
@@ -35,13 +34,12 @@ export class SettingInfoStore {
 
   bitsCount = modelQueryReaction(
     () =>
-      this.bit &&
       Bit.createQueryBuilder()
         .where({ integration: this.bit.integration })
         .getCount(),
     {
       immediate: true,
-      condition: () => this.bit,
+      condition: () => !!this.bit,
     },
   )
 }

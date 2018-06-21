@@ -45,7 +45,18 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
     }
     const url = `${this.baseUrl}${path}`
     const fetcher = r2.get(url, fetchOpts)
-    const res = await fetcher[type]
+    let res
+    try {
+      res = await fetcher[type]
+    } catch (err) {
+      console.log('got a fetch err', err)
+      if (err.type === 'invalid-json') {
+        // lets try again and get a good error
+        const fullError = await fetcher.text
+        console.log('fullError', fullError)
+      }
+      throw err
+    }
     if (res.error) {
       if (res.error.code === 401 && !isRetrying) {
         const didRefresh = await this.refreshToken()

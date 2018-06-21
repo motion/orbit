@@ -23,6 +23,7 @@ export function modelQueryReaction(query, b, c?: ReactModelQueryOpts) {
   const poll = (options && options.poll) || 2000
   const finalOptions = {
     defaultValue: [],
+    // because these poll all the time
     log: false,
     ...options,
   }

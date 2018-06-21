@@ -86,7 +86,6 @@ export class OrbitDockedPaneStore {
     },
     {
       immediate: true,
-      log: false,
       defaultValue: { willAnimate: false, visible: App.orbitState.docked },
     },
   )

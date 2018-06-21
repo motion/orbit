@@ -73,8 +73,7 @@ class DesktopStore {
       ...Desktop.searchState.searchResults,
       ...Desktop.searchState.pluginResults,
     ],
-    x => (this.results = x),
-    { log: false },
+    x => (this.results = x)
   )
 
   get isHoldingOption(): Boolean {

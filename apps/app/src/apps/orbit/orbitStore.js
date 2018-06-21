@@ -11,7 +11,6 @@ export default class OrbitStore {
     throttle(query => {
       App.setQuery(query)
     }, 32),
-    { log: false },
   )
 
   lastPinKey = ''

@@ -28,8 +28,7 @@ class HeaderStore {
       if (!shown) throw react.cancel
       await when(() => Desktop.state.focusedOnOrbit)
       this.focus()
-    },
-    { log: false },
+    }
   )
 
   onClickInput = () => {

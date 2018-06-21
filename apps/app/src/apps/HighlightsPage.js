@@ -81,13 +81,13 @@ import { OCRLine } from './highlights/ocrLine'
     hoverOCRLines = react(
       () => Desktop.ocrState.lines,
       this.setupHover('line'),
-      { immediate: true, log: false },
+      { immediate: true },
     )
 
     hoverOCRWords = react(
       () => this.ocrWords, //Desktop.ocrState.words,
       this.setupHover('word'),
-      { immediate: true, log: false },
+      { immediate: true },
     )
 
     get showAll() {

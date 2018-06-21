@@ -227,7 +227,6 @@ export class AppStore {
       immediate: true,
       defaultValue: { results: [] },
       onlyUpdateIfChanged: true,
-      log: false,
     },
   )
 

@@ -237,6 +237,6 @@ export class AppReactions {
         orbitDocked,
       })
     },
-    { immediate: true, log: false },
+    { immediate: true },
   )
 }

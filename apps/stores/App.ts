@@ -24,9 +24,9 @@ class AppStore {
     TOGGLE_PINNED: 'TOGGLE_PINNED',
   }
 
-  setState: typeof Bridge.setState
-  sendMessage: typeof Bridge.sendMessage
-  onMessage: typeof Bridge.onMessage
+  setState = Bridge.setState
+  sendMessage = Bridge.sendMessage
+  onMessage = Bridge.onMessage
   bridge: any
   source = 'App'
 
@@ -123,10 +123,6 @@ class AppStore {
 
   start = options => {
     Bridge.start(this, this.state, options)
-    this.setState = Bridge.setState
-    this.sendMessage = Bridge.sendMessage
-    this.onMessage = Bridge.onMessage
-    this.bridge = Bridge
   }
 
   open = async url => {

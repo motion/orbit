@@ -18,7 +18,7 @@ class DesktopStore {
     CLEAR_OPTION: 'CLEAR_OPTION',
   }
 
-  setState: typeof Bridge.setState
+  setState = Bridge.setState
   sendMessage = Bridge.sendMessage
   onMessage = Bridge.onMessage
   source = 'Desktop'
@@ -126,7 +126,6 @@ class DesktopStore {
 
   start = options => {
     Bridge.start(this, this.state, options)
-    this.setState = Bridge.setState
   }
 }
 

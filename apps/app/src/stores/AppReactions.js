@@ -25,7 +25,7 @@ export class AppReactions {
 
   async setupReactions() {
     if (typeof App.onMessage !== 'function') {
-      console.log('weird app on hmr', App)
+      console.log('weird app on hmr', App, App.onMessage)
       await sleep(100)
     }
     const dispose = App.onMessage(async msg => {

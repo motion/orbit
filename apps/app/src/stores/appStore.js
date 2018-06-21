@@ -20,7 +20,7 @@ const searchBits = async query => {
   console.time('bitSearch')
   const { conditions, rest } = AppStoreHelpers.parseQuery(query)
   const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
-  const where = `title like "${titleLike}%"${conditions}`
+  const where = `title like "%${titleLike}%" and body like "%${titleLike}%" ${conditions}`
   const queryParams = {
     where,
     relations: ['people'],

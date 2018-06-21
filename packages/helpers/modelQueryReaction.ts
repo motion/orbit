@@ -30,7 +30,7 @@ export function modelQueryReaction(query, b, c?: ReactModelQueryOpts) {
   let currentVal
   return react(
     () => [condition(), now(poll)],
-    async ([condition]) => {
+    async ([condition], { setValue }) => {
       if (!condition) {
         throw react.cancel
       }
@@ -59,7 +59,8 @@ export function modelQueryReaction(query, b, c?: ReactModelQueryOpts) {
         return res
       }
       // else just return the new models
-      return next
+      setValue(next)
+      // return next
     },
     finalOptions,
   )

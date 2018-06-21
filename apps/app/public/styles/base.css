@@ -1,3 +1,39 @@
+/* for marky-markdown contnet */
+
+a.anchor {
+  display: none;
+}
+
+/* hacky harcdoded styles for demo */
+
+.markdown {
+  line-height: 1.45rem;
+}
+
+.markdown h1 {
+  display: none;
+}
+
+.markdown ul {
+  margin: 0px 0 10px 10px;
+}
+
+.markdown p {
+  margin: 0 0 10px 0;
+}
+
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  margin: 10px 0;
+}
+
+.markdown hr {
+  border: none;
+  height: 1px;
+  background: #eee;
+}
+
 /* more reset */
 
 button,

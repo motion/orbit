@@ -21,10 +21,9 @@ export class Electron extends Component {
   }
 
   render({ electronStore }) {
-    if (electronStore.error) {
-      return null
-    }
-    if (!electronStore.windowFocusStore) {
+    console.log('wahts going on')
+    if (electronStore.error || !electronStore.windowFocusStore) {
+      console.log('ran into error')
       return null
     }
     return (

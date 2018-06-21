@@ -1,7 +1,15 @@
-import { Bit, Setting, createOrUpdate } from '@mcro/models'
+import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 import debug from '@mcro/debug'
 import { DriveService, DriveFileObject } from '@mcro/services'
-import * as Helpers from '~/helpers'
+import TurndownService from 'turndown'
+import summarize from 'nodejs-text-summarizer'
+
+const turndown = new TurndownService()
+const htmlToMarkdown = html => turndown.turndown(html)
+
+function stripeHtmlImports(rawHtml) {
+  return rawHtml ? rawHtml.replace(/@import.*[\n]+/, '') : rawHtml
+}
 
 const log = debug('googleDrive')
 
@@ -58,20 +66,25 @@ export default class GoogleDriveSync {
       console.log('no info given')
       return null
     }
-    const { name, contents, ...data } = info
-    return await createOrUpdate(
-      Bit,
-      {
-        integration: 'gdocs',
-        identifier: info.id,
-        type: 'document',
-        title: name,
-        body: contents || 'empty',
-        data,
-        bitCreatedAt: new Date(info.createdTime),
-        bitUpdatedAt: new Date(info.modifiedTime),
+    const { name, text, html, ...data } = info
+    const markdowned = html
+      ? stripeHtmlImports(htmlToMarkdown(html))
+      : text || ''
+    return await createOrUpdateBit(Bit, {
+      integration: 'gdocs',
+      identifier: info.id,
+      type: 'document',
+      title: name,
+      body: summarize(markdowned),
+      data: {
+        ...data,
+        // storing too much for now just to have flexibility
+        htmlBody: html,
+        markdownBody: markdowned,
+        textBody: text,
       },
-      Bit.identifyingKeys,
-    )
+      bitCreatedAt: new Date(info.createdTime),
+      bitUpdatedAt: new Date(info.modifiedTime),
+    })
   }
 }

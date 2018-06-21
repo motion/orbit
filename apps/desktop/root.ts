@@ -90,15 +90,16 @@ export class Root {
   }
 
   watchLastBit() {
-    // @ts-ignore
-    this.setInterval(async () => {
+    async function updateLastBit() {
       const lastBit = await Bit.findOne({
         order: { updatedAt: 'DESC' },
       })
-      if (lastBit && lastBit.updatedAt !== Desktop.state.lastBitUpdatedAt) {
-        Desktop.setLastBitUpdatedAt(lastBit.updatedAt)
-      }
-    }, 10000)
+      const updatedAt = `${lastBit ? lastBit.updatedAt : ''}`
+      Desktop.setLastBitUpdatedAt(updatedAt)
+    }
+    // @ts-ignore
+    this.setInterval(updateLastBit, 10000)
+    updateLastBit()
   }
 
   restart() {

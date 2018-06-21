@@ -214,19 +214,6 @@ export class OrbitCard extends React.Component {
           {...hoverToSelect && !inactive && this.hoverSettler.props}
           style={style}
         >
-          <UI.HoverGlow
-            if={!listItem}
-            behind
-            color="#000"
-            resist={90}
-            scale={0.99}
-            offsetTop={18}
-            full
-            blur={8}
-            inverse
-            opacity={isSelected ? 0.075 : 0}
-            borderRadius={20}
-          />
           <card onDoubleClick={this.handleDoubleClick}>
             {orbitIcon}
             <title>
@@ -284,6 +271,19 @@ export class OrbitCard extends React.Component {
               <PeopleRow people={people} />
             </bottom>
           </card>
+          <UI.HoverGlow
+            if={!listItem}
+            behind
+            color="#000"
+            resist={90}
+            scale={0.99}
+            offsetTop={18}
+            full
+            blur={8}
+            inverse
+            opacity={isSelected ? 0.075 : 0}
+            borderRadius={20}
+          />
         </cardWrap>
       </UI.Theme>
     )

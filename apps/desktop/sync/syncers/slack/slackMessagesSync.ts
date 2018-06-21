@@ -1,5 +1,5 @@
 import { SlackService } from '@mcro/services'
-import { Bit, Setting, Person, createOrUpdate, Job } from '@mcro/models'
+import { Bit, Setting, Person, createOrUpdateBit, Job } from '@mcro/models'
 import debug from '@mcro/debug'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
@@ -47,11 +47,15 @@ export default class SlackMessagesSync {
   run = async () => {
     const runningJob = await Job.lastProcessing({ type: 'slack' })
     if (runningJob) {
-      log(
-        `Already processing! Try .reset() to clear TODO: check if really old and clear`,
-      )
-      console.log('runningJob:', runningJob)
-      return
+      // over 1.5minutes old
+      if ((Date.now() - runningJob.createdAt) / 1000 > 90) {
+        log(`removing old job, may be too aggressive...`)
+        await runningJob.remove()
+      } else {
+        log(
+          `Already processing! Try .reset() to clear TODO: check if really old and clear`,
+        )
+      }
     }
     await this.setupSetting()
     const updated = await this.syncMessages()
@@ -186,23 +190,19 @@ export default class SlackMessagesSync {
       },
       messages,
     }
-    return await createOrUpdate(
-      Bit,
-      {
-        title: `#${channelInfo.name}`,
-        body: messages
-          .map(message => message.text)
-          .join(' ... ')
-          .slice(0, 255),
-        identifier: Helpers.hash(data),
-        data,
-        bitCreatedAt: slackDate(_.first(messages).ts),
-        bitUpdatedAt: slackDate(_.last(messages).ts),
-        people,
-        type: 'conversation',
-        integration: 'slack',
-      },
-      ['identifier'],
-    )
+    return await createOrUpdateBit(Bit, {
+      title: `#${channelInfo.name}`,
+      body: messages
+        .map(message => message.text)
+        .join(' ... ')
+        .slice(0, 255),
+      identifier: Helpers.hash(data),
+      data,
+      bitCreatedAt: slackDate(_.first(messages).ts),
+      bitUpdatedAt: slackDate(_.last(messages).ts),
+      people,
+      type: 'conversation',
+      integration: 'slack',
+    })
   }
 }

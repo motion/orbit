@@ -1,6 +1,7 @@
 import { react, ReactionOptions } from '@mcro/automagical'
 import { now } from 'mobx-utils'
 import { modelEqual, modelsEqual } from './modelsEqual'
+import * as _ from 'lodash'
 
 type ReactModelQueryOpts = ReactionOptions & {
   condition: Function
@@ -38,11 +39,13 @@ export function modelQueryReaction(query, b, c?: ReactModelQueryOpts) {
           if (modelsEqual(currentVal, next)) {
             throw react.cancel
           }
+        } else if (_.isEqual(currentVal, next)) {
+          throw react.cancel
         } else if (modelEqual(currentVal, next)) {
           throw react.cancel
         }
       }
-      if (!next) {
+      if (typeof next === 'undefined') {
         throw react.cancel
       }
       currentVal = next

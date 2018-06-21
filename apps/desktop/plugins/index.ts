@@ -61,10 +61,8 @@ export class Plugins {
         })),
       )
       console.timeEnd('searchPlugins2')
-      console.time('searchPlugins3')
       await sleep()
       Desktop.setSearchState({ pluginResults, pluginResultsId: query })
-      console.timeEnd('searchPlugins3')
     },
     { immediate: true },
   )

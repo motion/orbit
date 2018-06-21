@@ -1,10 +1,9 @@
-import { pick, isEqual } from 'lodash'
 import { getConnection } from './typeorm'
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
-
 export * from './typeorm'
-// import { BaseEntity } from 'typeorm'
+export * from './helpers/createOrUpdate'
+export * from './helpers/createOrUpdateBit'
 
 export async function findOrCreate(Model: any, values: Object) {
   let item = await Model.findOne({ where: values })
@@ -14,42 +13,6 @@ export async function findOrCreate(Model: any, values: Object) {
   item = new Model()
   Object.assign(item, values)
   return await item.save()
-}
-
-export async function createOrUpdate(
-  Model: any,
-  values: Object,
-  findFields?: Array<string>,
-  returnIfUnchanged = false,
-) {
-  const finalFields = findFields ? pick(values, findFields) : values
-  let item
-  const found = await Model.findOne({ where: finalFields })
-  if (found) {
-    item = found
-  } else {
-    item = new Model()
-  }
-  const itemVals = Object.keys(values).reduce(
-    (a, b) => ({ ...a, [b]: item[b] }),
-    {},
-  )
-  const changed = !isEqual(itemVals, values)
-  if (!returnIfUnchanged && !changed) {
-    return null
-  }
-  if (changed) {
-    for (const key of Object.keys(values)) {
-      item[key] = values[key]
-    }
-    try {
-      await item.save()
-    } catch (err) {
-      console.trace('createOrUpdate Error', err, values)
-      throw err
-    }
-  }
-  return item
 }
 
 // helpers for queryBuilder

@@ -7,21 +7,22 @@ class DockedPaneStore {
   isAtBottom = false
 
   didMount() {
-    this.on(
-      this.paneRef.current,
-      'scroll',
-      _.throttle(() => {
-        const node = this.paneRef.current
-        const lastNode = _.last(Array.from(node.children))
-        const innerHeight = lastNode.offsetTop + lastNode.clientHeight
-        const scrolledTo = node.scrollTop + node.clientHeight
-        if (scrolledTo === innerHeight) {
-          this.isAtBottom = true
-        } else {
-          this.isAtBottom = false
-        }
-      }, 100),
-    )
+    setTimeout(() => {
+      this.setOverflow()
+    })
+    this.on(this.paneRef.current, 'scroll', _.throttle(this.setOverflow, 100))
+  }
+
+  setOverflow = () => {
+    const node = this.paneRef.current
+    const lastNode = _.last(Array.from(node.children))
+    const innerHeight = lastNode.offsetTop + lastNode.clientHeight
+    const scrolledTo = node.scrollTop + node.clientHeight
+    if (scrolledTo === innerHeight) {
+      this.isAtBottom = true
+    } else {
+      this.isAtBottom = false
+    }
   }
 
   // prevents uncessary and expensive OrbitCard re-renders

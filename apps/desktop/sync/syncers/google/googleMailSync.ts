@@ -1,4 +1,4 @@
-import { Bit, Setting, createOrUpdate } from '@mcro/models'
+import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import * as _ from 'lodash'
@@ -78,9 +78,14 @@ export default class GoogleMailSync {
     }
     const { historyId } = this.setting.values || { historyId: null }
     if (partialUpdate && historyId) {
-      const history = await this.fetch('/users/me/history', {
-        query: { startHistoryId: historyId },
-      })
+      const history = await this.fetch(
+        '/users/me/history',
+        historyId
+          ? {
+              query: { startHistoryId: historyId },
+            }
+          : {},
+      )
       // @ts-ignore
       if (!history.history || !history.history.length) {
         return
@@ -136,65 +141,61 @@ export default class GoogleMailSync {
 
   streamThreads(query, options): Promise<string | null> {
     return new Promise((res, rej) => {
-      this.gmail.batch.estimatedThreads(
-        query,
-        options,
-        async (err, estimate) => {
-          const max = Math.min(options.max || 0, estimate)
-          if (err) {
-            return rej(err)
+      this.gmail.estimatedThreads(query, options, async (err, estimate) => {
+        const max = Math.min(options.max || 0, estimate)
+        if (err) {
+          return rej(err)
+        }
+        const threadSyncer = this.gmail.threads(query, options)
+        let newHistoryId
+        let fetched = 0
+        let threads = []
+        let syncing = true
+        threadSyncer.on('data', async (thread: ThreadObject) => {
+          fetched++
+          if (!newHistoryId) {
+            newHistoryId = thread.historyId
           }
-          const threadSyncer = this.gmail.batch.threads(query, options)
-          let newHistoryId
-          let fetched = 0
-          let threads = []
-          let syncing = true
-          threadSyncer.on('data', async (thread: ThreadObject) => {
-            fetched++
-            if (!newHistoryId) {
-              newHistoryId = thread.historyId
-            }
-            threads.push(this.createThreadObject(thread))
-            if (fetched === max) {
-              log('synced total threads', fetched, 'of', max)
-              syncing = false
-            }
-          })
-          try {
-            await processQueue()
-          } catch (err) {
-            console.error('got an err processing', err)
+          threads.push(this.createThreadObject(thread))
+          if (fetched === max) {
+            log('synced total threads', fetched, 'of', max)
+            syncing = false
           }
-          res(newHistoryId || null)
-          async function processQueue() {
-            while (syncing || threads.length) {
-              await sleep(500) // dont destroy resources
-              if (!threads.length) {
-                continue
-              }
-              const rows = _.take(threads, 50)
-              threads = threads.slice(rows.length)
-              const updateKeys = Object.keys(rows[0])
-              for (const row of rows) {
-                // insert, ignore, update
-                let bit = await Bit.findOne(_.pick(row, Bit.identifyingKeys))
-                if (bit) {
-                  const cur = _.pick(bit, updateKeys)
-                  if (_.isEqual(cur, row)) {
-                    continue
-                  }
-                  log(`!equal, update`, cur, row)
+        })
+        try {
+          await processQueue()
+        } catch (err) {
+          console.error('got an err processing', err)
+        }
+        res(newHistoryId || null)
+        async function processQueue() {
+          while (syncing || threads.length) {
+            await sleep(500) // dont destroy resources
+            if (!threads.length) {
+              continue
+            }
+            const rows = _.take(threads, 50)
+            threads = threads.slice(rows.length)
+            const updateKeys = Object.keys(rows[0])
+            for (const row of rows) {
+              // insert, ignore, update
+              let bit = await Bit.findOne(_.pick(row, Bit.identifyingKeys))
+              if (bit) {
+                const cur = _.pick(bit, updateKeys)
+                if (_.isEqual(cur, row)) {
+                  continue
                 }
-                if (!bit) {
-                  bit = new Bit()
-                }
-                Object.assign(bit, row)
-                await bit.save()
+                log(`!equal, update`, cur, row)
               }
+              if (!bit) {
+                bit = new Bit()
+              }
+              Object.assign(bit, row)
+              await bit.save()
             }
           }
-        },
-      )
+        }
+      })
     })
   }
 
@@ -208,11 +209,7 @@ export default class GoogleMailSync {
   }
 
   createThread = async (data: ThreadObject) => {
-    return await createOrUpdate(
-      Bit,
-      this.createThreadObject(data),
-      Bit.identifyingKeys,
-    )
+    return await createOrUpdateBit(Bit, this.createThreadObject(data))
   }
 
   createThreadObject = (data: ThreadObject) => {

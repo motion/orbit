@@ -27,20 +27,35 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
     }
     return false
   },
-  async fetch(path, options: FetchOptions = {}) {
-    const { headers, body, type = 'json', isRetrying, ...rest } = options
-    const fetcher = r2.get(`${this.baseUrl}${path}`, {
-      mode: 'cors',
+  async fetch(path, options: FetchOptions = {}): Promise<any> {
+    const { headers, mode, body, type = 'json', isRetrying, ...rest } = options
+    const fetchOpts = {
       ...rest,
       headers: {
         Authorization: `Bearer ${setting.token}`,
-        'Access-Control-Allow-Origin': Constants.API_HOST,
+        'Access-Control-Allow-Origin': Constants.API_URL,
         'Access-Control-Allow-Methods': 'GET',
         ...headers,
       },
       body: body ? JSON.stringify(body) : null,
-    })
-    const res = await fetcher[type]
+    }
+    if (type === 'json') {
+      // @ts-ignore
+      fetchOpts.mode = mode || 'cors'
+    }
+    const url = `${this.baseUrl}${path}`
+    const fetcher = r2.get(url, fetchOpts)
+    let res
+    try {
+      res = await fetcher[type]
+    } catch (err) {
+      if (err.type === 'invalid-json') {
+        // lets try again and get a good error
+        const fullError = await fetcher.text
+        console.log('fetch JSON parse error, text response:', fullError)
+      }
+      throw err
+    }
     if (res.error) {
       if (res.error.code === 401 && !isRetrying) {
         const didRefresh = await this.refreshToken()

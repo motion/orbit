@@ -18,7 +18,7 @@ export const PUBLIC_URL = IS_DEV
   ? 'http://localhost:3002'
   : 'http://seemirai.com'
 
-export const APP_URL = IS_DEV
+export const API_URL = IS_DEV
   ? 'http://localhost:3001'
   : 'http://app.seemirai.com:3009'
 

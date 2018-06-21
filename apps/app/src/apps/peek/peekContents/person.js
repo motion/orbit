@@ -25,11 +25,12 @@ class PersonPeek {
 })
 export class Person extends React.Component {
   render({ store, person, appStore }) {
-    if (!person || !person.data || !person.data.profile) {
+    const setting = appStore.settings.slack
+    if (!setting || !person || !person.data || !person.data.profile) {
       log('no person', person)
       return null
     }
-    const setting = appStore.settings.slack
+
     return (
       <frame>
         <cardContent>

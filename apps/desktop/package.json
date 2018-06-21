@@ -20,6 +20,8 @@
     "@mcro/oracle": "^2.0.11",
     "@mcro/r2": "^2.0.0",
     "@mcro/services": "^2.0.11",
+    "nodejs-text-summarizer": "2.0.3",
+    "turndown": "4.0.2",
     "apollo-fetch": "^0.7.0",
     "babel-polyfill": "7.0.0-beta.3",
     "body-parser": "^1.16.1",

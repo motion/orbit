@@ -35,7 +35,8 @@ export const startOauth = type => {
       throw new Error(`No token returned ${JSON.stringify(oauth)}`)
     }
     // todo: have a resolver for identifiers based on integration
-    const identifier = oauth.info && oauth.info.id
+    const oauthid = (oauth.info && oauth.info.id) || 'none'
+    const identifier = `${oauthid}-${type}`
     let setting
     // update if its the same identifier from the oauth
     if (identifier) {

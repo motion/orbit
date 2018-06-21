@@ -10,19 +10,20 @@ import { ElectronStore } from './stores/ElectronStore'
   electronStore: ElectronStore,
 })
 @view.electron
-export class Electron extends Component<{
-  electronStore: ElectronStore
-}> {
+export class Electron extends Component {
+  props: {
+    electronStore: ElectronStore
+  }
+
   componentDidCatch(error) {
     this.props.electronStore.error = error
     console.error(error)
   }
 
   render({ electronStore }) {
-    if (electronStore.error) {
-      return null
-    }
-    if (!electronStore.windowFocusStore) {
+    console.log('wahts going on')
+    if (electronStore.error || !electronStore.windowFocusStore) {
+      console.log('ran into error')
       return null
     }
     return (

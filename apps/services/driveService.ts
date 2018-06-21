@@ -6,7 +6,8 @@ import { sleep } from '@mcro/helpers'
 
 export type DriveFileObject = {
   name: string
-  contents: string
+  html?: string
+  text?: string
   id: string
   spaces?: [string]
   parents?: [string]
@@ -98,10 +99,8 @@ export class DriveService {
     fileQuery?: Object,
   ): Promise<DriveFileObject[]> {
     const files = await this.getFilesBasic(pages, query)
-    // just docs
-    const docs = files.filter(
-      file => file.mimeType === 'application/vnd.google-apps.document',
-    )
+    // ensure just docs
+    const docs = files.filter(file => file.mimeType === query.mimeType)
     const fileIds = docs.map(file => file.id)
     const perSecond = 5
     let fetched = 0
@@ -112,7 +111,7 @@ export class DriveService {
       response = [...response, ...next]
       fetched = response.length
       // log('getFiles', next, fetched, 'out of', fileIds.length)
-      await sleep(2000)
+      await sleep(3500)
     }
     return response
   }
@@ -120,19 +119,25 @@ export class DriveService {
   getFilesWithAllInfo(
     ids: Array<string>,
     fileQuery?: Object,
-  ): Promise<Array<any>> {
-    return new Promise(async res => {
-      const timeout = setTimeout(() => {
-        console.log('timeout getting all files')
-        res(ids.map(() => null))
-      }, 5000)
+  ): Promise<DriveFileObject[]> {
+    return new Promise(async resolve => {
       const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
       const contents = await Promise.all(
-        ids.map(id => this.getFileContents(id)),
+        ids.map(async id => {
+          return Promise.all([
+            this.getFileContents(id, 'text/plain'),
+            this.getFileContents(id, 'text/html'),
+          ])
+        }),
       )
-      // zip
-      clearTimeout(timeout)
-      res(meta.map((file, i) => ({ ...file, contents: contents[i] })))
+      const filesWithInfo = meta.map((file, i) => ({
+        ...file,
+        text: contents[i][0],
+        html: contents[i][1],
+      }))
+      // filter out ones that couldnt download contents
+      const result = filesWithInfo.filter(x => !!(x.text || x.html))
+      resolve(result)
     })
   }
 
@@ -168,7 +173,7 @@ export class DriveService {
     })
   }
 
-  async getFile(id: string, query?: Object) {
+  async getFile(id: string, query?: Object): Promise<DriveFileObject> {
     return await this.fetch(`/files/${id}`, {
       query: {
         fields: [
@@ -206,29 +211,39 @@ export class DriveService {
     })
   }
 
-  getFileContents(id: string) {
-    return new Promise(async (res, rej) => {
-      const timeout = setTimeout(() => {
-        console.log('timeout getting file contents', id)
-        res(null)
-      }, 2000)
-      let result = await this.fetch(`/files/${id}/export`, {
+  getFileContents(
+    id: string,
+    mimeType = 'text/plain',
+    timeout = 2000,
+  ): Promise<string> {
+    return new Promise(async res => {
+      let result
+      setTimeout(() => {
+        if (!result) {
+          console.log('timed out getting', mimeType, id)
+          res(null)
+        }
+      }, timeout)
+      result = await this.fetch(`/files/${id}/export`, {
         type: 'text',
         query: {
-          mimeType: 'text/html',
+          mimeType,
           // alt: 'media',
         },
       })
       if (!result) {
-        throw new Error('No result')
+        console.log('no results returned for', id)
+        res(null)
+        return
       }
       if (result[0] === '{') {
         result = JSON.parse(`${result}`)
       }
       if (result.error) {
-        rej(result ? result.error : 'weird drive error')
+        console.log('error getting result for', id, result.error)
+        res(null)
+        return
       }
-      clearTimeout(timeout)
       res(result)
     })
   }

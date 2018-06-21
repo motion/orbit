@@ -78,9 +78,14 @@ export default class GoogleMailSync {
     }
     const { historyId } = this.setting.values || { historyId: null }
     if (partialUpdate && historyId) {
-      const history = await this.fetch('/users/me/history', {
-        query: { startHistoryId: historyId },
-      })
+      const history = await this.fetch(
+        '/users/me/history',
+        historyId
+          ? {
+              query: { startHistoryId: historyId },
+            }
+          : {},
+      )
       // @ts-ignore
       if (!history.history || !history.history.length) {
         return

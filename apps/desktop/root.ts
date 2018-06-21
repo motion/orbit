@@ -37,8 +37,8 @@ export class Root {
   screen: Screen
   plugins: Plugins
   keyboardStore: KeyboardStore
+  auth: Auth
   server = new Server()
-  auth = new Auth()
   sqlite = new SQLiteServer()
   stores = null
 
@@ -54,6 +54,8 @@ export class Root {
         Desktop,
       },
     })
+    // requires desktop to be started
+    this.auth = new Auth()
     Desktop.onMessage(Desktop.messages.OPEN, open)
     await this.connect()
     this.sync = new Sync()

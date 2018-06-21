@@ -49,11 +49,10 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
     try {
       res = await fetcher[type]
     } catch (err) {
-      console.log('got a fetch err', err)
       if (err.type === 'invalid-json') {
         // lets try again and get a good error
         const fullError = await fetcher.text
-        console.log('fullError', fullError)
+        console.log('fetch JSON parse error, text response:', fullError)
       }
       throw err
     }

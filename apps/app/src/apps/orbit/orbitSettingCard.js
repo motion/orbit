@@ -15,6 +15,23 @@ export class OrbitSettingCard extends React.Component {
     this.props.store.setBit(this.props.result)
   }
 
+  handleClick = async () => {
+    const { isActive, result } = this.props
+    if (isActive) {
+      return
+    }
+    if (result.oauth === false) {
+      const setting = new Setting()
+      setting.category = 'integration'
+      setting.type = result.type
+      setting.token = 'good'
+      await setting.save()
+    } else {
+      OauthActions.startOauth(result.id)
+    }
+    return
+  }
+
   render({ store, result, isActive, ...props }) {
     return (
       <OrbitCard
@@ -39,21 +56,7 @@ export class OrbitSettingCard extends React.Component {
           }
         }
         result={result}
-        onClick={
-          !isActive &&
-          (async () => {
-            if (result.oauth === false) {
-              const setting = new Setting()
-              setting.category = 'integration'
-              setting.type = result.type
-              setting.token = 'good'
-              await setting.save()
-            } else {
-              OauthActions.startOauth(result.id)
-            }
-            return
-          })
-        }
+        onClick={this.handleClick}
         afterTitle={
           <after css={{ flexFlow: 'row', margin: [-5, 0] }}>
             <React.Fragment if={false && isActive}>

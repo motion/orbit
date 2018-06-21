@@ -43,12 +43,12 @@ export class OrbitDockedPaneStore {
   }
 
   get activePane() {
-    if (!App.orbitState.docked) {
-      return this.panes[this.paneIndex]
-    }
     const active = this.panes[this.paneIndex]
     if (active === 'home' && App.state.query) {
       return 'search'
+    }
+    if (!App.orbitState.docked) {
+      return this.panes[this.paneIndex]
     }
     return active
   }

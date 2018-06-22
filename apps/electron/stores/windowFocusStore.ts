@@ -1,6 +1,7 @@
 import { react, store } from '@mcro/black'
 import { App, Electron, Desktop, Swift } from '@mcro/stores'
-import * as ElectronNode from 'electron'
+// @ts-ignore
+import ElectronNode from 'electron'
 
 @store
 export class WindowFocusStore {

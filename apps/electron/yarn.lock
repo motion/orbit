@@ -712,7 +712,7 @@ electron-localshortcut@^3.0.0:
     keyboardevent-from-electron-accelerator "^1.1.0"
     keyboardevents-areequal "^0.2.1"
 
-electron-rebuild@^1.7.3:
+electron-rebuild@1.7.3:
   version "1.7.3"
   resolved "http://localhost:4873/electron-rebuild/-/electron-rebuild-1.7.3.tgz#24ae06ad9dd61cb7e4d688961f49118c40a110eb"
   dependencies:
@@ -1840,6 +1840,12 @@ nice-try@^1.0.4:
   version "1.0.4"
   resolved "http://localhost:4873/nice-try/-/nice-try-1.0.4.tgz#d93962f6c52f2c1558c0fbda6d512819f1efe1c4"
 
+node-abi@2.4.3:
+  version "2.4.3"
+  resolved "http://localhost:4873/node-abi/-/node-abi-2.4.3.tgz#43666b7b17e57863e572409edbb82115ac7af28b"
+  dependencies:
+    semver "^5.4.1"
+
 node-abi@^2.0.0, node-abi@^2.4.0:
   version "2.4.1"
   resolved "http://localhost:4873/node-abi/-/node-abi-2.4.1.tgz#7628c4d4ec4e9cd3764ceb3652f36b2e7f8d4923"
@@ -2269,10 +2275,6 @@ raf@^3.4.0:
   resolved "http://localhost:4873/raf/-/raf-3.4.0.tgz#a28876881b4bc2ca9117d4138163ddb80f781575"
   dependencies:
     performance-now "^2.1.0"
-
-randomcolor@^0.5.3:
-  version "0.5.3"
-  resolved "http://localhost:4873/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
 
 rc@^1.0.1, rc@^1.1.2, rc@^1.1.6, rc@^1.1.7:
   version "1.2.8"

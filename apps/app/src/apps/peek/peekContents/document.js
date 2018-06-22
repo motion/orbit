@@ -1,12 +1,26 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekBitResolver, PeekHeader, PeekContent } from '../index'
+import markdown from 'marky-markdown'
+
+const options = {
+  language: 'english',
+  remove_digits: true,
+  return_changed_case: true,
+  remove_duplicates: false,
+}
 
 @view
 export class Document extends React.Component {
   render({ bit, appStore }) {
     if (!bit) {
       return null
+    }
+    let bodyContents
+    if (bit.data.markdownBody) {
+      bodyContents = markdown(bit.data.markdownBody, options)
+    } else {
+      bodyContents = bit.data.htmlBody || ''
     }
     return (
       <PeekBitResolver bit={bit} appStore={appStore}>
@@ -16,8 +30,9 @@ export class Document extends React.Component {
               <PeekHeader title={title} icon={icon} />
               <PeekContent>
                 <bodyContents
+                  className="markdown"
                   dangerouslySetInnerHTML={{
-                    __html: (bit.body || '').replace('\n', '<br />'),
+                    __html: bodyContents,
                   }}
                 />
               </PeekContent>
@@ -33,6 +48,7 @@ export class Document extends React.Component {
       whiteSpace: 'pre-line',
       width: '100%',
       overflow: 'hidden',
+      padding: [0, 10],
     },
   }
 }

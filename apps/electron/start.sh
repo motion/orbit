@@ -2,6 +2,7 @@
 
 if [ ! -d "./node_modules/iohook/builds/node-v59-darwin-x64" ]; then
   echo "building iohook first time..."
+  rm -r node_modules/electron-rebuild/node_modules/node-abi
   npx electron-rebuild
 fi
 

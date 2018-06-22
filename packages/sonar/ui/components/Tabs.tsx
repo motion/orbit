@@ -13,7 +13,7 @@ import { colors } from './colors'
 import Tab from './Tab'
 
 const TabContainer = FlexColumn.extends({
-  height: 'auto'
+  height: 'auto',
 })
 
 const TabList = FlexRow.extends({
@@ -78,7 +78,7 @@ const OrderableContainer = styled.view({
 })
 
 const TabContent = styled.view({
-  height 'auto',
+  height: 'auto',
   overflow: 'auto',
   width: '100%',
 })

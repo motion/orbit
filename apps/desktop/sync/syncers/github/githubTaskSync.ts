@@ -178,7 +178,7 @@ export default class GithubIssueSync {
     const bitUpdatedAt = issue.updatedAt || bitCreatedAt
     return await createOrUpdateBit(Bit, {
       integration: 'github',
-      identifier: `${issue.number}${bitUpdatedAt}`,
+      identifier: data.id,
       type: 'task',
       title: issue.title,
       body: issue.bodyText,

@@ -4,6 +4,8 @@ import { App } from '@mcro/stores'
 import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitQuickSearch } from './OrbitQuickSearch'
+import * as UI from '@mcro/ui'
+import sanitize from 'sanitize-html'
 
 class SearchStore {
   state = react(
@@ -31,10 +33,12 @@ export class OrbitSearchResults {
     if (!searchStore.state) {
       return null
     }
-    console.log('searchStore', searchStore)
     const { query, results, message } = searchStore.state
     const isChanging = App.state.query !== query
     log(`SEARCH ${name} --------------`)
+    const highlightWords = searchStore.state.query
+      .split(' ')
+      .filter(x => x.length > 2)
     return (
       <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
         <contents $$flex>
@@ -50,9 +54,23 @@ export class OrbitSearchResults {
                 total={results.length}
                 bit={bit}
                 listItem
-                expanded={false}
                 hoverToSelect
-              />
+              >
+                <content>
+                  <UI.Text
+                    size={1.2}
+                    alpha={0.7}
+                    highlight={{
+                      words: highlightWords,
+                      maxChars: Math.max(400, 2000 / results.length),
+                      maxSurroundChars: Math.max(80, 500 / results.length),
+                      trimWhitespace: true,
+                    }}
+                  >
+                    {sanitize(bit.body)}
+                  </UI.Text>
+                </content>
+              </OrbitCard>
             ))}
           </results>
           <space css={{ height: 20 }} />
@@ -87,6 +105,9 @@ export class OrbitSearchResults {
       opacity: 1,
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
+    },
+    content: {
+      padding: [10, 0],
     },
   }
 }

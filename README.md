@@ -150,6 +150,10 @@ const off = Mobx.autorun(() => console.log(Desktop.state.hoverState))
 off()
 ```
 
+### require
+
+In web app, you can do `require` from the console. Also see `installDevTools` for other helpers.
+
 ### Root
 
 Every app exports it's base level View or Class as Root. In web you can do:

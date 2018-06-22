@@ -2,16 +2,91 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
+import * as _ from 'lodash'
 
-const wrapHighlights = (text, highlightWordsColor, highlightWords) => {
-  let result = text
-  for (const word of highlightWords) {
-    result = result.replace(
-      new RegExp(`(${word})`, 'g'),
-      `<span style="color: ${highlightWordsColor}; font-weight: 500;">$1</span>`,
+// cut text down using highlight words
+// not a wonderfully efficient
+// but still great for not too long text
+// and pretty easy to follow
+const highlightText = ({
+  text,
+  words,
+  trimWhitespace,
+  maxChars = 500,
+  maxSurroundChars = 50,
+  style = 'font-weight: 600; color: #000;',
+}) => {
+  let parts = [text]
+  if (trimWhitespace) {
+    parts[0] = parts[0].replace(
+      /(\s{2,}|\n)/g,
+      '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
     )
   }
-  return result
+  const wordFinders = words.map(word => new RegExp(`(${word})`, 'gi'))
+  // split all the highlight words:
+  for (const [index] of words.entries()) {
+    const regex = wordFinders[index]
+    parts = _.flatten(parts.map(piece => piece.split(regex)))
+  }
+  // find maximum length of surrounding text snippet
+  const numSurrounds = parts.length / 2
+  const wordsLen = words.reduce((a, b) => a + b.length, 0)
+  const restLen = maxChars - wordsLen
+  const surroundMax = Math.min(maxSurroundChars, restLen / numSurrounds / 2)
+  // trim it down
+  const filtered = []
+  let prev
+  for (const [index, part] of parts.entries()) {
+    const highlighted = words.indexOf(part) > -1
+    const prevHighlighted = prev
+    prev = highlighted
+    if (highlighted) {
+      filtered.push(part)
+      continue
+    }
+    const nextHighlighted = words.indexOf(parts[index + 1]) > -1
+    // if not close, ignore
+    if (!prevHighlighted && !nextHighlighted) {
+      continue
+    }
+    if (prevHighlighted && !nextHighlighted) {
+      if (part.length > surroundMax) {
+        filtered.push(part.slice(0, surroundMax)) + '...'
+      } else {
+        filtered.push(part)
+      }
+      continue
+    }
+    if (!prevHighlighted && nextHighlighted) {
+      if (part.length > surroundMax) {
+        filtered.push('...' + part.slice(part.length - surroundMax))
+      } else {
+        filtered.push(part)
+      }
+      continue
+    }
+    if (prevHighlighted && nextHighlighted) {
+      if (part.length > surroundMax * 2) {
+        filtered.push(
+          part.slice(0, surroundMax) +
+            '...' +
+            part.slice(part.length - surroundMax),
+        )
+      } else {
+        filtered.push(part)
+      }
+    }
+  }
+  let final = []
+  for (const part of filtered) {
+    if (words.indexOf(part) > -1) {
+      final.push(`<span style="${style}">${part}</span>`)
+    } else {
+      final.push(part)
+    }
+  }
+  return final.join('')
 }
 
 const getTextProperties = props => {
@@ -224,14 +299,13 @@ export class Text extends React.Component {
     style,
     placeholder,
     lineHeight,
-    highlightWords,
     sizeLineHeight,
-    highlightWordsColor,
     className,
     measure,
     debug,
     onMeasure,
     sizeMethod,
+    highlight,
     ...props
   }) {
     const { multiLineEllipse } = this
@@ -245,21 +319,21 @@ export class Text extends React.Component {
         : 'auto'
     const oneLineEllipse = ellipse === 1
     let ellipseProps = { children }
-    if (highlightWords) {
+    if (highlight) {
       if (typeof children === 'string') {
         ellipseProps = {
           dangerouslySetInnerHTML: {
-            __html: wrapHighlights(
-              children,
-              highlightWordsColor,
-              highlightWords,
-            ),
+            __html: highlightText({
+              text: children,
+              ...highlight,
+            }),
           },
         }
       } else {
         console.warn('Expected chidlren to be string for highlighting')
       }
     }
+    const showEllipse = highlight || ellipse
     return (
       <text
         className={className}
@@ -280,9 +354,9 @@ export class Text extends React.Component {
           onBlur,
         }}
       >
-        {!ellipse && children}
+        {!showEllipse && children}
         <span
-          if={ellipse}
+          if={showEllipse}
           $ellipseLines={multiLineEllipse}
           $ellipseSingle={oneLineEllipse}
           style={

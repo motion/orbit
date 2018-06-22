@@ -20,7 +20,7 @@ const searchBits = async query => {
   console.time('bitSearch')
   const { conditions, rest } = AppStoreHelpers.parseQuery(query)
   const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
-  const where = `title like "${titleLike}%"${conditions}`
+  const where = `(title like "%${titleLike}%" or body like "%${titleLike}%") ${conditions}`
   const queryParams = {
     where,
     relations: ['people'],
@@ -179,9 +179,11 @@ export class AppStore {
     index => {
       console.log('nextIndex', index)
       if (index === -1) {
-        this.activeIndex = -1
+        this.activeIndex = this.nextIndex
       }
-      if (index >= this.searchState.results.length) {
+      const len = this.searchState.results.length
+      if (index >= len) {
+        this.nextIndex = len - 1
         this.activeIndex = this.nextIndex
       }
       throw react.cancel
@@ -190,11 +192,15 @@ export class AppStore {
 
   resetActiveIndexOnSearchStart = react(
     () => App.state.query,
-    () => {
+    async (query, { sleep }) => {
       this.activeIndex = -1
       this.clearSelected()
+      // auto select after delay
+      if (query) {
+        await sleep(1000)
+        this.nextIndex = 0
+      }
     },
-    { log: 'state' },
   )
 
   resetActiveIndexOnNewSearchValue = react(
@@ -215,9 +221,11 @@ export class AppStore {
     ],
     async ([query], { sleep }) => {
       // debounce a little for fast typer
-      await sleep(40)
+      // do the query sooner because it goes over wire to backend
+      // so it doesnt obstruct view responsiveness
+      await sleep(30)
       const results = await searchBits(query)
-      await sleep()
+      await sleep(30)
       return {
         results,
         query,
@@ -227,7 +235,6 @@ export class AppStore {
       immediate: true,
       defaultValue: { results: [] },
       onlyUpdateIfChanged: true,
-      log: false,
     },
   )
 
@@ -273,9 +280,9 @@ export class AppStore {
         // no jitter - wait for everything to finish
         console.time('searchPluginsAndBitResults')
         try {
-          const waitMax = hasRun ? 500 : 2000
+          const waitMax = hasRun ? 700 : 2000
           await Promise.all([
-            when(() => query === Desktop.searchState.pluginResultsId, waitMax),
+            // when(() => query === Desktop.searchState.pluginResultsId, waitMax),
             when(() => query === this.bitSearch.query, waitMax),
           ])
         } catch (err) {
@@ -288,7 +295,7 @@ export class AppStore {
         console.timeEnd('searchPluginsAndBitResults')
         const allResultsUnsorted = [
           ...this.bitSearch.results,
-          ...Desktop.searchState.pluginResults,
+          // ...Desktop.searchState.pluginResults,
         ]
         console.log('allResultsUnsorted', allResultsUnsorted)
         // remove prefixes

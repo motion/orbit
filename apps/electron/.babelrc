@@ -1,25 +1,25 @@
 {
-  "env": {
-    "development": {
-      "presets": [
+  env: {
+    development: {
+      presets: [
         [
-          "@mcro/babel-preset-motion",
+          '@mcro/babel-preset-motion',
           {
-            "disable": ["@mcro/gloss/transform"]
-          }
-        ]
-      ]
+            disable: ['@mcro/gloss/transform'],
+          },
+        ],
+      ],
     },
-    "production": {
-      "presets": [
+    production: {
+      presets: [
         [
-          "@mcro/babel-preset-motion",
+          '@mcro/babel-preset-motion',
           {
-            "targets": { "electron": "1.8.2" },
-            "disable": ["@mcro/gloss/transform"]
-          }
-        ]
-      ]
-    }
-  }
+            targets: { electron: '2.0.0' },
+            disable: ['@mcro/gloss/transform'],
+          },
+        ],
+      ],
+    },
+  },
 }

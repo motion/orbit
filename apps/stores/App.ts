@@ -84,7 +84,7 @@ class AppStore {
       await sleep(over ? 0 : 100)
       setValue(over)
     },
-    { immediate: true, log: false },
+    { immediate: true },
   )
 
   last: Boolean
@@ -99,7 +99,6 @@ class AppStore {
       this.last = is
       return is || last || false
     },
-    { log: false },
   )
 
   get orbitOnLeft() {

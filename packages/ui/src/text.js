@@ -2,20 +2,73 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
+import * as _ from 'lodash'
 
-const wrapHighlights = (
-  text,
-  highlightWordsColor = 'yellow',
-  highlightWords,
-) => {
-  let result = text
-  for (const word of highlightWords) {
-    result = result.replace(
-      new RegExp(`(${word})`, 'gi'),
-      `<span style="color: ${highlightWordsColor}; font-weight: 500;">$1</span>`,
-    )
+// cut text down using highlight words
+// not a wonderfully efficient
+// but still great for not too long text
+// and pretty easy to follow
+const highlightText = ({ text, words, color = 'yellow', surround = 20 }) => {
+  let parts = [text]
+  const wordFinders = words.map(word => new RegExp(`(${word})`, 'gi'))
+  // split all the highlight words:
+  for (const [index] of words.entries()) {
+    const regex = wordFinders[index]
+    parts = _.flatten(parts.map(piece => piece.split(regex)))
   }
-  return result
+  // trim it down
+  const filtered = []
+  let prev
+  for (const [index, part] of parts.entries()) {
+    const highlighted = words.indexOf(part) > -1
+    const prevHighlighted = prev
+    prev = highlighted
+    if (highlighted) {
+      filtered.push(part)
+      continue
+    }
+    const nextHighlighted = words.indexOf(parts[index + 1]) > -1
+    // if not close, ignore
+    if (!prevHighlighted && !nextHighlighted) {
+      continue
+    }
+    if (prevHighlighted && !nextHighlighted) {
+      if (part.length > surround) {
+        filtered.push(part.slice(0, surround)) + '...'
+      } else {
+        filtered.push(part)
+      }
+      continue
+    }
+    if (!prevHighlighted && nextHighlighted) {
+      if (part.length > surround) {
+        filtered.push('...' + part.slice(part.length - surround))
+      } else {
+        filtered.push(part)
+      }
+      continue
+    }
+    if (prevHighlighted && nextHighlighted) {
+      if (part.length > surround * 2) {
+        filtered.push(
+          part.slice(0, surround) + '...' + part.slice(part.length - surround),
+        )
+      } else {
+        filtered.push(part)
+      }
+    }
+  }
+  let final = []
+  for (const part of filtered) {
+    if (words.indexOf(part) > -1) {
+      final.push(
+        `<span style="color: ${color}; font-weight: 500;">${part}</span>`,
+      )
+    } else {
+      final.push(part)
+    }
+  }
+  return final.join('')
 }
 
 const getTextProperties = props => {
@@ -236,6 +289,7 @@ export class Text extends React.Component {
     debug,
     onMeasure,
     sizeMethod,
+    highlightTrimSurrounding,
     ...props
   }) {
     const { multiLineEllipse } = this
@@ -253,11 +307,12 @@ export class Text extends React.Component {
       if (typeof children === 'string') {
         ellipseProps = {
           dangerouslySetInnerHTML: {
-            __html: wrapHighlights(
-              children,
-              highlightWordsColor,
-              highlightWords,
-            ),
+            __html: highlightText({
+              text: children,
+              words: highlightWords,
+              color: highlightWordsColor,
+              surround: highlightTrimSurrounding,
+            }),
           },
         }
       } else {

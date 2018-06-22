@@ -53,7 +53,10 @@ export class OrbitSearchResults {
                 listItem
                 hoverToSelect
               >
-                <UI.Text highlightWords={searchStore.state.query.split(' ')}>
+                <UI.Text
+                  highlightWords={searchStore.state.query.split(' ')}
+                  highlightTrimSurrounding={20}
+                >
                   {sanitize(bit.body)}
                 </UI.Text>
               </OrbitCard>

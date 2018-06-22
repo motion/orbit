@@ -36,6 +36,9 @@ export class OrbitSearchResults {
     const { query, results, message } = searchStore.state
     const isChanging = App.state.query !== query
     log(`SEARCH ${name} --------------`)
+    const highlightWords = searchStore.state.query
+      .split(' ')
+      .filter(x => x.length > 2)
     return (
       <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
         <contents $$flex>
@@ -53,12 +56,20 @@ export class OrbitSearchResults {
                 listItem
                 hoverToSelect
               >
-                <UI.Text
-                  highlightWords={searchStore.state.query.split(' ')}
-                  highlightTrimSurrounding={20}
-                >
-                  {sanitize(bit.body)}
-                </UI.Text>
+                <content>
+                  <UI.Text
+                    size={1.2}
+                    alpha={0.7}
+                    highlight={{
+                      words: highlightWords,
+                      maxChars: Math.max(400, 2000 / results.length),
+                      maxSurroundChars: Math.max(80, 500 / results.length),
+                      trimWhitespace: true,
+                    }}
+                  >
+                    {sanitize(bit.body)}
+                  </UI.Text>
+                </content>
               </OrbitCard>
             ))}
           </results>
@@ -94,6 +105,9 @@ export class OrbitSearchResults {
       opacity: 1,
       position: 'relative',
       transition: 'opacity ease-in-out 150ms',
+    },
+    content: {
+      padding: [10, 0],
     },
   }
 }

@@ -221,9 +221,11 @@ export class AppStore {
     ],
     async ([query], { sleep }) => {
       // debounce a little for fast typer
-      await sleep(40)
+      // do the query sooner because it goes over wire to backend
+      // so it doesnt obstruct view responsiveness
+      await sleep(30)
       const results = await searchBits(query)
-      await sleep()
+      await sleep(30)
       return {
         results,
         query,
@@ -278,7 +280,7 @@ export class AppStore {
         // no jitter - wait for everything to finish
         console.time('searchPluginsAndBitResults')
         try {
-          const waitMax = hasRun ? 500 : 2000
+          const waitMax = hasRun ? 700 : 2000
           await Promise.all([
             // when(() => query === Desktop.searchState.pluginResultsId, waitMax),
             when(() => query === this.bitSearch.query, waitMax),

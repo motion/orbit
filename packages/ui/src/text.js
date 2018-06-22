@@ -8,14 +8,32 @@ import * as _ from 'lodash'
 // not a wonderfully efficient
 // but still great for not too long text
 // and pretty easy to follow
-const highlightText = ({ text, words, color = 'yellow', surround = 20 }) => {
+const highlightText = ({
+  text,
+  words,
+  trimWhitespace,
+  maxChars = 500,
+  maxSurroundChars = 50,
+  style = 'font-weight: 600; color: #000;',
+}) => {
   let parts = [text]
+  if (trimWhitespace) {
+    parts[0] = parts[0].replace(
+      /(\s{2,}|\n)/g,
+      '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
+    )
+  }
   const wordFinders = words.map(word => new RegExp(`(${word})`, 'gi'))
   // split all the highlight words:
   for (const [index] of words.entries()) {
     const regex = wordFinders[index]
     parts = _.flatten(parts.map(piece => piece.split(regex)))
   }
+  // find maximum length of surrounding text snippet
+  const numSurrounds = parts.length / 2
+  const wordsLen = words.reduce((a, b) => a + b.length, 0)
+  const restLen = maxChars - wordsLen
+  const surroundMax = Math.min(maxSurroundChars, restLen / numSurrounds / 2)
   // trim it down
   const filtered = []
   let prev
@@ -33,25 +51,27 @@ const highlightText = ({ text, words, color = 'yellow', surround = 20 }) => {
       continue
     }
     if (prevHighlighted && !nextHighlighted) {
-      if (part.length > surround) {
-        filtered.push(part.slice(0, surround)) + '...'
+      if (part.length > surroundMax) {
+        filtered.push(part.slice(0, surroundMax)) + '...'
       } else {
         filtered.push(part)
       }
       continue
     }
     if (!prevHighlighted && nextHighlighted) {
-      if (part.length > surround) {
-        filtered.push('...' + part.slice(part.length - surround))
+      if (part.length > surroundMax) {
+        filtered.push('...' + part.slice(part.length - surroundMax))
       } else {
         filtered.push(part)
       }
       continue
     }
     if (prevHighlighted && nextHighlighted) {
-      if (part.length > surround * 2) {
+      if (part.length > surroundMax * 2) {
         filtered.push(
-          part.slice(0, surround) + '...' + part.slice(part.length - surround),
+          part.slice(0, surroundMax) +
+            '...' +
+            part.slice(part.length - surroundMax),
         )
       } else {
         filtered.push(part)
@@ -61,9 +81,7 @@ const highlightText = ({ text, words, color = 'yellow', surround = 20 }) => {
   let final = []
   for (const part of filtered) {
     if (words.indexOf(part) > -1) {
-      final.push(
-        `<span style="color: ${color}; font-weight: 500;">${part}</span>`,
-      )
+      final.push(`<span style="${style}">${part}</span>`)
     } else {
       final.push(part)
     }
@@ -281,15 +299,13 @@ export class Text extends React.Component {
     style,
     placeholder,
     lineHeight,
-    highlightWords,
     sizeLineHeight,
-    highlightWordsColor,
     className,
     measure,
     debug,
     onMeasure,
     sizeMethod,
-    highlightTrimSurrounding,
+    highlight,
     ...props
   }) {
     const { multiLineEllipse } = this
@@ -303,15 +319,13 @@ export class Text extends React.Component {
         : 'auto'
     const oneLineEllipse = ellipse === 1
     let ellipseProps = { children }
-    if (highlightWords) {
+    if (highlight) {
       if (typeof children === 'string') {
         ellipseProps = {
           dangerouslySetInnerHTML: {
             __html: highlightText({
               text: children,
-              words: highlightWords,
-              color: highlightWordsColor,
-              surround: highlightTrimSurrounding,
+              ...highlight,
             }),
           },
         }
@@ -319,7 +333,7 @@ export class Text extends React.Component {
         console.warn('Expected chidlren to be string for highlighting')
       }
     }
-    const showEllipse = highlightWords || ellipse
+    const showEllipse = highlight || ellipse
     return (
       <text
         className={className}

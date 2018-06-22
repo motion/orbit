@@ -17,9 +17,6 @@ const EVENT_KEYS = {
 
 const properCase = str => `${str[0].toUpperCase()}${str.slice(1)}`
 
-// these should only load once, even across many windows
-const ALL_EXTENSIONS = new Set()
-
 export class Window extends BaseComponent {
   mount() {
     this.extensionNames = {}

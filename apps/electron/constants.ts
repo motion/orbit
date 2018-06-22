@@ -13,10 +13,10 @@ export const ROOT_PATH = Path.join(__dirname, '..')
 
 export const WEB_PREFERENCES = {
   nativeWindowOpen: true,
-  experimentalFeatures: false,
+  experimentalFeatures: true,
   transparentVisuals: true,
   allowRunningInsecureContent: false,
-  plugins: true,
-  scrollBounce: true,
+  // plugins: true,
+  // scrollBounce: true,
   // offscreen: true,
 }

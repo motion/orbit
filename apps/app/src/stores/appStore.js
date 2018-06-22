@@ -179,9 +179,11 @@ export class AppStore {
     index => {
       console.log('nextIndex', index)
       if (index === -1) {
-        this.activeIndex = -1
+        this.activeIndex = this.nextIndex
       }
-      if (index >= this.searchState.results.length) {
+      const len = this.searchState.results.length
+      if (index >= len) {
+        this.nextIndex = len - 1
         this.activeIndex = this.nextIndex
       }
       throw react.cancel
@@ -190,11 +192,15 @@ export class AppStore {
 
   resetActiveIndexOnSearchStart = react(
     () => App.state.query,
-    () => {
+    async (query, { sleep }) => {
       this.activeIndex = -1
       this.clearSelected()
+      // auto select after delay
+      if (query) {
+        await sleep(1000)
+        this.nextIndex = 0
+      }
     },
-    { log: 'state' },
   )
 
   resetActiveIndexOnNewSearchValue = react(

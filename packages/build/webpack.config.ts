@@ -53,11 +53,22 @@ const config = {
     : {
         removeAvailableModules: false,
         removeEmptyChunks: false,
-        splitChunks: false,
+        namedModules: true,
+        splitChunks: {
+          cacheGroups: {
+            vendor: {
+              test: /node_modules/,
+              chunks: 'initial',
+              name: 'vendor',
+              priority: 10,
+              enforce: true,
+            },
+          },
+        },
       },
   output: {
     path: outputPath,
-    pathinfo: false,
+    pathinfo: !isProd,
     filename: 'bundle.js',
     publicPath: '/',
   },

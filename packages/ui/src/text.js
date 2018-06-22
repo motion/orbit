@@ -11,7 +11,7 @@ const wrapHighlights = (
   let result = text
   for (const word of highlightWords) {
     result = result.replace(
-      new RegExp(`(${word})`, 'g'),
+      new RegExp(`(${word})`, 'gi'),
       `<span style="color: ${highlightWordsColor}; font-weight: 500;">$1</span>`,
     )
   }

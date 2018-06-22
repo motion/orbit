@@ -274,7 +274,7 @@ export class AppStore {
         try {
           const waitMax = hasRun ? 500 : 2000
           await Promise.all([
-            when(() => query === Desktop.searchState.pluginResultsId, waitMax),
+            // when(() => query === Desktop.searchState.pluginResultsId, waitMax),
             when(() => query === this.bitSearch.query, waitMax),
           ])
         } catch (err) {
@@ -287,7 +287,7 @@ export class AppStore {
         console.timeEnd('searchPluginsAndBitResults')
         const allResultsUnsorted = [
           ...this.bitSearch.results,
-          ...Desktop.searchState.pluginResults,
+          // ...Desktop.searchState.pluginResults,
         ]
         console.log('allResultsUnsorted', allResultsUnsorted)
         // remove prefixes

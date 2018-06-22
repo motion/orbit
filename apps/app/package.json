@@ -26,6 +26,7 @@
     "@mcro/stores": "^2.0.11",
     "@mcro/ui": "^2.0.11",
     "sanitize-html": "1.18.2",
+    "webpack-runtime-require": "0.3.0",
     "turndown": "4.0.2",
     "arrford": "2.0.1",
     "color": "^3.0.0",

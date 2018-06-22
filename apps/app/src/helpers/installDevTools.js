@@ -14,6 +14,9 @@ import * as Helpers from '~/helpers'
 import * as McroHelpers from '@mcro/helpers'
 import * as MobxReact from 'mobx-react-devtools'
 
+window.webpackData = __webpack_require__
+window.require = require('webpack-runtime-require').Require
+
 // Mobx.useStrict(true)
 
 // install console formatters

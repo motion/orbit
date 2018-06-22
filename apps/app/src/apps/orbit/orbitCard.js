@@ -272,7 +272,7 @@ export class OrbitCard extends React.Component {
             </bottom>
           </card>
           <UI.HoverGlow
-            if={!listItem}
+            if={false && !listItem}
             behind
             color="#000"
             resist={90}

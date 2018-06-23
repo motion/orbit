@@ -88,12 +88,20 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={3} margin={[0, 0, 15, 0]} alpha={1} color="#222">
-      A better way to organize knowledge
+    <Title
+      italic
+      size={3.8}
+      sizeLineHeight={1.1}
+      margin={[0, 0, 15, 0]}
+      alpha={1}
+      color="#222"
+    >
+      Knowledge Management that&nbsp;Works
     </Title>
     <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      Keep your team knowledge at hand with an incredible new way to search your
-      cloud.
+      Upgrade your Mac with powerful unified cloud search and exploration for
+      teams. Completely private & on-device so it works for you and installs in
+      seconds.
     </P>
     <homeJoin css={{ margin: [20, -15, -30] }}>
       <Join />
@@ -343,10 +351,10 @@ class HomeFooter extends React.Component {
     const card1 = (
       <Card css={isLarge && { transform: { x: -30 } }}>
         <Card.Icon name="transportation_car" color="rgb(91.3%, 87%, 16.8%)" />
-        <Card.Title>Smart & automatic</Card.Title>
+        <Card.Title>A new approach</Card.Title>
         <Card.Body>
-          Orbit runs on-device, using simple machine learning to sort your
-          cloud.
+          Orbit uses novel machine learning to enable fast, efficient and
+          effective on-device search.
         </Card.Body>
       </Card>
     )
@@ -354,10 +362,10 @@ class HomeFooter extends React.Component {
     const card2 = (
       <Card css={isLarge && { transform: { x: 30 } }}>
         <Card.Icon name="users_multiple" color="blue" />
-        <Card.Title>Easy & secure</Card.Title>
+        <Card.Title>Dramatically more simple</Card.Title>
         <Card.Body>
-          No cloud or on-prem install means you can try Orbit securely in
-          minutes.
+          No cloud or on-premise install means you can try Orbit completely
+          securely in minutes.
         </Card.Body>
       </Card>
     )
@@ -367,8 +375,8 @@ class HomeFooter extends React.Component {
         <Card.Icon name="social_logo-slack" color="green" />
         <Card.Title>Works with chat</Card.Title>
         <Card.Body>
-          Slack is helpful, but noisy. Get better results with summarized
-          conversations.
+          Slack is awesome, but noisy. Search with AI and peek into summarized
+          and related conversations.
         </Card.Body>
       </Card>
     )
@@ -384,17 +392,17 @@ class HomeFooter extends React.Component {
               <div $$flex />
               <content css={isLarge && { marginRight: 80 }}>
                 <Title size={2.3} color="#333" css={{ marginBottom: 25 }}>
-                  Unified search that works.
+                  A new way to coordinate.
                 </Title>
                 <UI.PassProps size={1.35} sizeLineHeight={1.2} alpha={0.7}>
-                  <P2 size={1.6}>
-                    As more people join your company it gets harder to
-                    coordinate and distribute knowledge.
+                  <P2>
+                    As more people join your company it gets harder and harder
+                    to keep everyone on the same page.
                   </P2>
                   <P2>
-                    Orbit is a smart desktop app that sorts cloud activity into
-                    search with smart features. We're making a secret weapon for
-                    coordinating company knowledge.
+                    Orbit is a smart desktop app that sorts your cloud into
+                    samrt search and exploration. We're making a secret weapon
+                    for coordinating company knowledge.
                   </P2>
                   <P2 size={1.2} css={{ marginTop: 5 }}>
                     Read more to learn about{' '}

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, sleep } from '@mcro/black'
+import { view } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
 const rowHeight = 2
@@ -21,18 +21,28 @@ export class Masonry extends React.Component {
     return null
   }
 
-  async setGrid(grid) {
-    if (!grid) return
+  gridNode = null
+
+  async setGrid(gridRef) {
+    if (!gridRef) return
     if (this.state.measured) return
-    this.styles = []
-    await sleep(30)
-    for (const item of Array.from(grid.children)) {
+    this.gridNode = gridRef
+    // small delay fixes bug that happens sometimes, low confidence
+    this.setTimeout(this.measureGrid, 30)
+  }
+
+  measureGrid = () => {
+    if (!this.gridNode) {
+      return
+    }
+    const styles = []
+    for (const item of Array.from(this.gridNode.children)) {
       const content = item.firstChild
       const contentHeight = content.clientHeight
       const rowSpan = Math.ceil(
         (contentHeight + gridGap) / (rowHeight + gridGap),
       )
-      this.styles.push({ gridRowEnd: `span ${rowSpan}` })
+      styles.push({ gridRowEnd: `span ${rowSpan}` })
     }
     const gridChildren = React.Children.map(
       this.props.children,
@@ -40,7 +50,7 @@ export class Masonry extends React.Component {
         return React.cloneElement(child, {
           inGrid: true,
           style: {
-            ...this.styles[index],
+            ...styles[index],
             ...child.props.style,
           },
         })

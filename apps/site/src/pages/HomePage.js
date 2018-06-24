@@ -345,6 +345,69 @@ class HomeHeader extends React.Component {
   }
 }
 
+const Monitor = props => (
+  <svg viewBox="0 0 1708 1119" {...props}>
+    <g
+      id="Page-1"
+      stroke="none"
+      stroke-width="1"
+      fill="none"
+      fill-rule="evenodd"
+    >
+      <g id="Group" fill="#818181">
+        <rect
+          id="Rectangle"
+          x="0.121018695"
+          y="0.041015625"
+          width="1707.75796"
+          height="1081.91797"
+          rx="15"
+        />
+        <polygon
+          id="Rectangle-2"
+          points="654.5 1078.95898 1053.5 1078.95898 1073.5 1115.95898 634.5 1115.95898"
+        />
+      </g>
+    </g>
+  </svg>
+)
+
+@view
+class SectionDesktop extends React.Component {
+  render({ isLarge }) {
+    return (
+      <Section inverse css={{ background: 'transparent' }}>
+        <SectionContent padded fullscreen fullscreenFs>
+          <desktop>
+            <Monitor $monitor />
+            <img src={require('~/../public/desktop.jpg')} $background />
+          </desktop>
+        </SectionContent>
+      </Section>
+    )
+  }
+  static style = {
+    desktop: {
+      width: '100%',
+      position: 'relative',
+    },
+    monitor: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      zIndex: 0,
+    },
+    background: {
+      width: 'calc(100% - 20px)',
+      height: 'auto',
+      margin: 'auto',
+      marginTop: 10,
+      zIndex: 2,
+    },
+  }
+}
+
 @view
 class HomeFooter extends React.Component {
   render({ isLarge }) {
@@ -503,6 +566,7 @@ export const HomePage = () => (
               <TopoBg />
               <Header white />
               <HomeHeader isLarge={isLarge} isMedium={isMedium} />
+              <SectionDesktop isLarge={isLarge} isMedium={isMedium} />
               <UI.Theme
                 theme={{
                   background: bottomBg,

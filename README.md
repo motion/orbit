@@ -1,5 +1,7 @@
 ## install
 
+Currenly using Node 9.11.1.
+
 ```sh
 bin/bootstrap
 # only need to do this once to get everything built out
@@ -9,50 +11,107 @@ build
 ## run
 
 ```sh
-# to build sub packages and apps
+# once per shell (or use dotenv)
+source .env
+# run once to start building all sub packages and apps
 build --watch
-# once that runs in separate tabs, run
+# run the three apps
 run desktop
 run app
 run electron
 ```
 
-## deploy
+## Stores and views with light helpers
 
+We have a simple system for building compiled aggregated decorators called `@mcro/decor`. With it we put together two main decorators (`@store` and `@view`), which are both in `@mcro/black`. They are:
+
+### Views with `@view`
+
+See `@mcro/black/view`. Basically has:
+
+- Add `this.subscriptions` using npm `event-kit` so you can avoid messy tracking on cpWU
+- Add `this.setInterval`, `this.setTimeout`, and `this.on`, which all use `this.subscriptions`, again to prevent messy tracking of intervals, timeouts, and event listeners respectively.
+- Add props as the first argument to `render()`, so you can do `render({ children })`
+- Add `mobx-react` automatically
+- Adds gloss
+
+Most of this is really simple. The only interesting thing for views is the style system. It uses our own, which is called Gloss. See [the gloss README.md](packages/gloss/README.md) for details.
+
+Basically gloss gives you a nice style system that just works:
+
+```js
+import { view } from '@mcro/black'
+
+@view
+class MyView {
+  render({ color = 'green' }) {
+    return (
+      <section>
+        <h1 $alternate $color={color} css={{ fontWeight: 500 }}>
+          Hello World
+        </h1>
+      </section>
+    )
+  }
+  static style = {
+    section: { background: [0, 0, 0] }, // black
+    h1: { background: 'green' },
+    alternate: { background: 'red' },
+    color: color => ({ color }),
+  }
+}
 ```
-# deploy app to public web
-build app
-deploy app
-# build production electron + desktop app
-build electron
-# test it with:
-run electron --prod
-# push it to release servers
-deploy electron
+
+There's also `@view.ui` for leaf-views. The only diff is it just doesn't wrap `mobx-react`, which may be heavy for simple views.
+
+### Stores with `@store` and `react`
+
+Stores are just classes. The `@store` decorator will automatically mobx decorate them for you. This is essentially exactly what Mobx 5 `decorate`. It also has a few of the same `@mcro/decor` plugins with the same ideas:
+
+- Add `willMount()` `didMount()` and `willUnmount()` for when using with views
+- Add `this.setInterval`, `this.setTimeout`, and `this.on` just like views
+- Adds some hmr and other nice stuff
+
+The big thing here is `react`, which is really the only unique thing here beyond minor helpers, and really is the most powerful part of the kit. It's essentially Mobx `reaction`, but we found ourselves repeating and adding tons of boilerplate for many things, which `react` simplifies into one thing. Here's `react` in a nutshell, [see the automagical README.md](packages/automagical/README.md) for more information.
+
+```js
+import { store, react } from '@mcro/black'
+
+@store
+class MyStore {
+  val = 0
+
+  // automatically decorated into Mobx.computed
+  get calculatedVal() { return this.val + 1 }
+
+  // automatically turned into a named action, `MyStore.increment`
+  increment(by = 1) { this.val += by }
+
+  valAfterASecond = react(
+    () => this.val,
+    async (val, { sleep } => {
+      await sleep(1000)
+      return val
+    }
+  )
+
+  describeState = react(
+    () => this.val,
+    async (val, { when, setValue }) => {
+      if (val !== this.valAfterASecond) {
+        setValue('Not in sync')
+        await when(() => val === this.valAfterASecond)
+        setValue('In sync!')
+      }
+    },
+    { defaultValue: 'Just started' }
+  )
+}
 ```
 
-## principles
+### Attaching stores to views with `@view()`, `@view.provide` and `@view.attach`
 
-This stack is built around a few principles that guide everything in it.
-
-1.  Few powerful abstractions
-
-@view + @store + react
-
-These things together are all you really need, but with them you can build incredibly powerful, complex, reactive systems with ease.
-
-See automagical README.md
-
-2.  Local state, simple Mobx
-
-Your state should live as close as possible to where its used, and be easy to move around.
-
-3.  Have good logs/tooling/repl
-
-- types that help as you code
-- granular, adjustable, clear logging
-- an always-on REPL with all relevant things available as variables
-- hot reload that maintains state
+This is the final piece, which ties the two together (importantly). You can attach a store easily to a view with either of the above. The only difference is `provide` will also pass the store through context, and likewise `@view.attach` will attach it back. As a convenience, the store attach
 
 ## using the monorepo
 

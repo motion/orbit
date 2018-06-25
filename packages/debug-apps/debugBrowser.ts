@@ -11,6 +11,9 @@ const onFocus = page => {
       } else {
         window.onfocus = () => res()
       }
+      setTimeout(() => {
+        res()
+      }, 3000)
     })
   })
 }

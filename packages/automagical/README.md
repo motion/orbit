@@ -139,3 +139,12 @@ class MyStore {
 Note: you can't mix `setValue` and using `return` to return a value. Automagical will throw an error if it detects this.
 
 Similarly, `getValue` exists which helps out when abstracting react functions. Otherwise you can get the current value usually by just referencing the variable name within the reaction.
+
+### todo
+
+Document:
+
+- ReactionOptions
+  - delayValue
+  - remove or fix isIf
+  - onlyUpdateIfChanged

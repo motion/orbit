@@ -6,7 +6,6 @@ export default async function connectModels(models) {
     // reset this on each connect
     const WebSqlClient = createClient()
     window.sqlitePlugin = WebSqlClient.sqlitePlugin
-
     let started = true
     try {
       let connectTm = setTimeout(() => {

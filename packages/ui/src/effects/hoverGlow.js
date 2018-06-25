@@ -118,10 +118,10 @@ export class HoverGlow extends React.PureComponent {
   setMouseTo = (x1, y1) => {
     const x = x1 - this.state.parentRect.left
     const y = y1 - this.state.parentRect.top
-    if (this.unmounted || !this.state.bounds) {
-      console.log('bad')
-      return
-    }
+    // if (this.unmounted || !this.state.bounds) {
+    //   console.log('bad')
+    //   return
+    // }
     this.setState({
       position: {
         x: x - this.state.bounds.width / 2,
@@ -256,7 +256,6 @@ export class HoverGlow extends React.PureComponent {
           $glow
           style={{
             zIndex: behind ? -1 : 1,
-            opacity: 1,
             willChange:
               this.state.willTrack || this.state.track ? 'transform' : '',
             transition: `
@@ -265,22 +264,21 @@ export class HoverGlow extends React.PureComponent {
             transform: `
                 translateX(${translateX + offsetLeft}px)
                 translateY(${translateY + offsetTop}px)
+                translateZ(0px)
               `,
           }}
         >
           <div
-            $blur
-            height={height}
-            width={width}
             style={{
-              transform: `scale(${scale * extraScale})`,
+              transform:
+                scale * extraScale !== 1 ? `scale(${scale * extraScale})` : '',
               opacity: hide ? 0 : opacity,
               width,
               height,
               marginLeft: -width / 2,
               marginTop: -height / 2,
               filter: blur ? `blur(${blur}px)` : '',
-              backdropFilter,
+              // backdropFilter,
               zIndex,
               background:
                 background || gradient
@@ -318,6 +316,7 @@ export class HoverGlow extends React.PureComponent {
       // pointerEvents: 'none',
     },
     glow: {
+      opacity: 1,
       pointerEvents: 'none',
       position: 'absolute',
       top: '50%',

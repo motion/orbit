@@ -15,6 +15,7 @@ const onPort = async cb => {
 }
 
 export class App {
+  connection = null
   started = false
   stores = null
   views = null
@@ -31,7 +32,7 @@ export class App {
 
   async start() {
     if (window.location.pathname !== '/auth') {
-      await connectModels(modelsList)
+      this.connection = await connectModels(modelsList)
       await _App.start()
     }
     this.catchErrors()

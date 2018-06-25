@@ -271,8 +271,9 @@ export class OrbitCard extends React.Component {
               <PeopleRow people={people} />
             </bottom>
           </card>
+          {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
           <UI.HoverGlow
-            if={false && !listItem}
+            if={!listItem}
             behind
             color="#000"
             resist={90}

@@ -127,16 +127,12 @@ const FILTER_KEYS = {
   props: true,
   ref: true,
   render: true,
-  requestAnimationFrame: true,
   setInterval: true,
   setTimeout: true,
   subscriptions: true,
-  $mobx: true,
   emitter: true,
   emit: true,
   on: true,
-  CompositeDisposable: true,
-  glossElement: true,
 }
 
 function collectGetterPropertyDescriptors(proto) {

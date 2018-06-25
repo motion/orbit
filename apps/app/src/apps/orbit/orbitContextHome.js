@@ -63,8 +63,6 @@ class OrbitContextHomeStore {
   )
 }
 
-import * as Mobx from 'mobx'
-
 @view.attach('appStore', 'paneStore')
 @view({
   store: OrbitContextHomeStore,

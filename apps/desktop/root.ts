@@ -16,12 +16,12 @@ import { App, Electron, Desktop } from '@mcro/stores'
 import { store, debugState } from '@mcro/black'
 import root from 'global'
 import Path from 'path'
-import { getChromeContext } from './helpers/getContext'
 import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
 import { Bit } from '@mcro/models'
 import { Connection } from 'typeorm'
+import { GeneralSettingManager } from './settingManagers/generalSettingManager'
 
 const log = debug('desktop')
 
@@ -37,6 +37,7 @@ export class Root {
   screen: Screen
   plugins: Plugins
   keyboardStore: KeyboardStore
+  generalSettingManager: GeneralSettingManager
   auth: Auth
   server = new Server()
   sqlite = new SQLiteServer()
@@ -58,6 +59,7 @@ export class Root {
     this.auth = new Auth()
     Desktop.onMessage(Desktop.messages.OPEN, open)
     await this.connect()
+    this.generalSettingManager = new GeneralSettingManager()
     this.sync = new Sync()
     this.sync.start()
     this.screen = new Screen()
@@ -77,12 +79,12 @@ export class Root {
       this.stores = stores
     })
     // temp: get context
-    setInterval(async () => {
-      if (Desktop.appState.name === 'Chrome') {
-        const { selection } = await getChromeContext()
-        Desktop.setAppState({ selectedText: selection })
-      }
-    }, 3000)
+    // setInterval(async () => {
+    //   if (Desktop.appState.name === 'Chrome') {
+    //     const { selection } = await getChromeContext()
+    //     Desktop.setAppState({ selectedText: selection })
+    //   }
+    // }, 3000)
   }
 
   async connect() {

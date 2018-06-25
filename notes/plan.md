@@ -20,7 +20,7 @@ nearest neighbors:
 
 ## secret
 
-distrbution and product: on-device (no cloud)
+distribution and product: on-device (no cloud)
 
 1.  10x faster development (10x simpler deploy, 0 cost of infra, 0 permissions complexity)
 2.  100x easier onboarding (download app and done, no on-prem, no signup)

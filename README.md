@@ -21,9 +21,164 @@ run app
 run electron
 ```
 
-## Stores and views with light helpers
+## using the monorepo
 
-We have a simple system for building compiled aggregated decorators called `@mcro/decor`. With it we put together two main decorators (`@store` and `@view`), which are both in `@mcro/black`. They are:
+Because lerna links things together it can cause some weirdness with installing packages. There are a few ways to do it. All examples start at the root directory.
+
+1.  `install`
+
+```
+cd apps/desktop
+install randomcolor
+```
+
+2.  Using the `in` command
+
+The `in` command finds the sub-package or app and just cd's into it before doing something. So you can do something like:
+
+```
+in desktop install randomcolor
+```
+
+likewise you can do other things:
+
+```
+in models npm start
+```
+
+3.  Using lerna
+
+The lerna command supports this:
+
+```
+npx lerna add packagename --scope @mcro/desktop
+```
+
+4.  modify the package.json directly, and then:
+
+```
+bootstrap
+```
+
+Bootstrap sort of checks a lot of stuff, but its really fast, so you can generally just modify a lot of package.json's and then run `bootstrap` after.
+
+### Other commands
+
+- `clean` remove all node_modules
+- `run` just does npm start in an app
+
+## Developing / REPL tools
+
+When you start the apps you'll see a Chromium instance pop up and hook into each running app. Right now there are three: Desktop (Node), Electron, and App (Web). They share a few small helpers:
+
+### `debug` from @mcro/debug
+
+In dev mode we expose `debug` from @mcro/debug so you can control logs:
+
+```js
+debug.list() // list things that log
+debug.loud() // log everything, pass argument to narrow
+debug.quiet() // quiet everything, argument to narrow
+```
+
+It may be helpful to run `debug.list()` and `debug.loud()` in each app just to get an idea of what's going on there.
+
+### `log` from @mcro/black
+
+This is a nice helper to log things. It returns the first argument passed into it, so you can easily wrap it in weird places and have it log for you:
+
+```
+{
+  some: {
+    big: [object, of, log(things)]
+  }
+}
+```
+
+It will also colorful log by default, and prevent massive blocks of text. It tries to stringify things recursively, etc.
+
+```
+log.full() // will log the entire thing not cut it short
+```
+
+### `mlog` from @mcro/black
+
+This is a mobx logger we have just becausse we used this pattern so often. Use it like so:
+
+```js
+mlog(() => Desktop.state.hoverState) // Because Desktop.state is reactive, this will log whenever it changes
+mlog.clear() // stop logging things
+```
+
+Saves you from typing:
+
+```js
+const off = Mobx.autorun(() => console.log(Desktop.state.hoverState))
+off()
+```
+
+### `require`
+
+In the web app, you can do `require` from the console. Also see `installDevTools` for other helpers.
+
+### `Root`
+
+Every app exports it's base level View or Class as Root. In web you can do:
+
+```js
+Root.stores // to access every mounted store attached to any view
+```
+
+In desktop you can do, for example:
+
+```js
+Root.sync.gdocs.runAll() // run the gdocs syncer
+```
+
+### The root level stores `App`, `Desktop` and `Electron` from `@mcro/stores`
+
+These are the base singleton stores that contain the app state for each app. The `.state` part of these stores is synced between every app. This is really nice to have in the REPL.
+
+A quick example of how they work. So if you do this in the web app:
+
+```js
+App.setState({ query: 'Hello world' })
+App.state.query === 'Hello world'
+```
+
+You'll be able to run this instantly in the Desktop or Electron REPL as well:
+
+```js
+// in Desktop or Electron
+App.state.query === 'Hello world'
+```
+
+Apps can only set their own state. They can also send pre-defined messages to each other. See `X.messages` for each store to see. It's recommended to check out the three stores to get an idea for what state they manage.
+
+```js
+// Message example
+import { App, Desktop, Electron } from '@mcro/stores'
+
+App.messages // list of messages it supports
+
+// in Desktop
+Desktop.sendMessage(App, App.messages.TOGGLE_SHOWN)
+
+// in App
+App.sendMessage(Electron, Electron.messages.SOME_MESSAGE, 'hello world')
+```
+
+### TypeORM Models from `@mcro/models`
+
+In dev mode we set up models to be globals so you can use them easily in REPL as well. So for now `Bit`, `Setting`, `Person`, and `Job`.
+
+```js
+await Bit.find()
+```
+
+## Store/View abstractions
+
+We have a simple system for building compiled aggregated decorators called `@mcro/decor`. With it we put together two main decorators (`@store` and `@view`), which are both in defined in `@mcro/black`.
 
 ### Views with `@view`
 
@@ -111,154 +266,46 @@ class MyStore {
 
 ### Attaching stores to views with `@view()`, `@view.provide` and `@view.attach`
 
-This is the final piece, which ties the two together (importantly). You can attach a store easily to a view with either of the above. The only difference is `provide` will also pass the store through context, and likewise `@view.attach` will attach it back. As a convenience, the store attach
-
-## using the monorepo
-
-Because lerna links things together it can cause some weirdness with installing packages. There are a few ways to do it. All examples start at the root directory.
-
-1.  `install`
-
-```
-cd apps/desktop
-install randomcolor
-```
-
-2.  Using the `in` command
-
-The `in` command finds the sub-package or app and just cd's into it before doing something. So you can do something like:
-
-```
-in desktop install randomcolor
-```
-
-likewise you can do other things:
-
-```
-in models npm start
-```
-
-3.  Using lerna
-
-The lerna command supports this:
-
-```
-npx lerna add packagename --scope @mcro/desktop
-```
-
-4.  modify the package.json directly, and then:
-
-```
-bootstrap
-```
-
-Bootstrap sort of checks a lot of stuff, but its really fast, so you can generally just modify a lot of package.json's and then run `bootstrap` after.
-
-## Other commands
-
-- `clean` remove all node_modules
-- `run` just does npm start in an app
-
-## Developing
-
-In each app you have a few things. Here are some globals:
-
-### debug from @mcro/debug
-
-The global `debug` is set. This lets you control logs.
+This is the final piece, which ties the two together (importantly). You can attach a store easily to a view with either of the above. The only difference is `provide` will also pass the store through context, and likewise `@view.attach` will attach it back. As a convenience, the store attach. We need to make these better typed and not use strings, but for now they are like so.
 
 ```js
-debug.list() // list things that log
-debug.loud() // log everything, pass argument to narrow
-debug.quiet() // quiet everything, argument to narrow
-```
-
-It may be helpful to run `debug.list()` and `debug.loud()` in each app just to get an idea of what's going on there.
-
-### log from @black/helpers/log
-
-This is a nice helper function. It returns whatever is passed into it, so you can easily wrap it in weird places and have it log for you:
-
-```
-{
-  some: {
-    big: [object, of, log(things)]
+@view({
+  store: class MyStore {
+    title = 'hello world'
+  },
+})
+class MyView extends React.Component {
+  render({ store }) {
+    return <div>{store.title}</div>
   }
 }
 ```
 
-It will also colorful log by default, and prevent massive blocks of text. It tries to stringify things recursively, etc.
-
-```
-log.full() // will log the entire thing not cut it short
-```
-
-### mlog from @black/mlog
-
-This is a mobx logger. Use it like so:
+Or to pass it down long distance:
 
 ```js
-mlog(() => Desktop.state.hoverState) // Because Desktop.state is reactive, this will log whenever it changes
-mlog.clear() // stop logging things
+@view.provide({
+  storeName: class MyStore {
+    title = 'hello world'
+  },
+})
+@view
+class MyView extends React.Component {
+  render({ storeName }) {
+    return (
+      <div>
+        {storeName.title}
+        <SubStore />
+      </div>
+    )
+  }
+}
+
+@view.attach('storeName')
+@view
+class SubStore extends React.Component {
+  render({ storeName }) {
+    return <div>I can read too: {storeName.title}</div>
+  }
+}
 ```
-
-Saves you from typing:
-
-```js
-const off = Mobx.autorun(() => console.log(Desktop.state.hoverState))
-off()
-```
-
-### require
-
-In web app, you can do `require` from the console. Also see `installDevTools` for other helpers.
-
-### Root
-
-Every app exports it's base level View or Class as Root. In web you can do:
-
-```js
-Root.stores // Every mounted store attached to any view
-```
-
-In desktop you can do
-
-```js
-Root.sync.gdocs.runAll() // run the gdocs syncer
-```
-
-### App, Desktop, Electron
-
-These are the base singleton stores that contain the app state synced between every app. This is really nice to have in the REPL.
-
-These all have a special `state` object that syncs across to all the others.
-
-So if you do this in the web app:
-
-```js
-App.setState({ query: 'Hello world' })
-```
-
-You'll be able to run this instantly in the Desktop or Electron REPL:
-
-```js
-App.state.query === 'Hello world'
-```
-
-Apps can only set their own state and it syncs to the other apps. They can also send pre-defined messages to each other.
-
-```js
-import { App, Desktop, Electron } from '@mcro/stores'
-
-App.messages // list of messages it supports
-
-// in Desktop
-Desktop.sendMessage(App, App.messages.TOGGLE_SHOWN)
-
-// in App
-App.sendMessage(Electron, Electron.messages.SOME_MESSAGE, 'hello world')
-```
-
-### The Models
-
-We set up models to be globals so you can use them easily in REPL as well. So for now `Bit`, `Setting`, `Person`, and `Job`.

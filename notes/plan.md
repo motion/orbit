@@ -1,47 +1,51 @@
-Search across your cloud with aggregated projects/profiles
-Evolving into a smart intranet for teams
+Goal: Deliver a beautiful website and initial beta app by Sept 1
 
-# Competition
+- Jon is part-time and may increase if goes well
+- Umed is joining full time with a trial for first couple weeks
 
-nearest neighbors:
+# Product strategy
 
-- big companies: coveo, swiftype
-- guru (guru flux) - https://www.getguru.com/solutions/flux/
-- cresta - https://www.cresta.ai/
-- slab, carrot.io, tipihub.com, getnifty.io, tettra
-- startups - diamond.io, layer
-- openfin
-- stripe home
-- advanced tech companies' internal intranet, microsoft start menu meets ms365, google for work
-- greplin / cue
-- "inline related info" for any app on your OS
-  - clippy (product)
-  - rapportive (product)
-
-## secret
-
-distribution and product: on-device (no cloud)
-
-1.  10x faster development (10x simpler deploy, 0 cost of infra, 0 permissions complexity)
-2.  100x easier onboarding (download app and done, no on-prem, no signup)
-3.  Perfect data security - 100x easier pitch to individual employees
-
-Allows it to side-load into companies organically. Easy to test as a node user.
-
-Also allows us to go really far with UX and platform-like features which cements us as a high engagement, core feature that people use constantly all day and for a wide variety of tasks. This goes hand-in-hand with replacing intranet systems as they should be flexible and core to everything you do.
-
-## features
-
-initially:
-
-- Search: smarter unified cloud search w summarized convos
-- Profiles: a smart profile card for everyone in the company
-
-potential future pieces:
-
-- Search+: searches as you work, especially great for realtime chat
-- Notify: cloud notifications, with smarts
-- Triggers: pin notes, documents, to certain keywords or pages for your team
-  - pin Jira ticket to the part of the page it happens on automatically
-- Apps: custom apps you can deploy with one click to everyone
-- Teams: control your team home page and knowledge base
+- Syncers
+  - sync a lot more (stable up to 5-10k each)
+  - handle updates, removals
+  - store recent activity in consistent manner
+  - sync People from various integrations
+  - stabilize and debug generally
+  - add confluence and jira
+  - ? add crawler
+  - ? add custom API
+  - ? add maybe salesforce
+- Settings
+  - finish all settings panes
+  - keyboard shortcut settings
+  - start at login settings
+- Search
+  - hts5 based search
+  - - eventually cosal search
+  - need some basic "x in y" search
+  - needs performance and visual work
+  - keyboard movement needs to scroll up/down
+- Improve Peek and OrbitCard for various integrations
+  - they all need quite a bit of work data/design wise
+  - showing updates from recent activity
+- Profiles
+  - need to first have them aggregating
+  - then need to design out profile cards
+  - need to figure out featureset too for expert topics
+- Bugfixing
+  - all over
+  - handle desktop changes
+- Productionizing
+  - smooth build to prod process
+  - auto updates in app
+- Onboarding
+  - need better story for setting up and sharing integrations
+- Website
+  - needs to redesign to better show everything
+  - signup process
+- Setting up your team
+  - Once you download app you can set up and invite people
+  - Shows a modal saying "hey this will sync some basic stuff, not private data"
+  - How does it handle integrations for various people
+  - Would need to prompt for various integations
+  - Would need to sync crawler settings

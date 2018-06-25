@@ -32,11 +32,15 @@ export class App {
 
   async start() {
     if (window.location.pathname !== '/auth') {
-      this.connection = await connectModels(modelsList)
+      await this.connectModels()
       await _App.start()
     }
     this.catchErrors()
     this.started = true
+  }
+
+  async connectModels() {
+    this.connection = await connectModels(modelsList)
   }
 
   async restart() {

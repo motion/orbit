@@ -1,6 +1,6 @@
 import { view, react } from '@mcro/black'
 import { OrbitSettingCard } from './orbitSettingCard'
-import { OrbitCard } from './orbitCard'
+import { OrbitGeneralSettings } from './orbitSettings/orbitGeneralSettings'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
@@ -20,52 +20,32 @@ const IntegrationCard = props => (
   />
 )
 
-const Row = view('section', {
-  flexFlow: 'row',
-  padding: [8, 0],
-  alignItems: 'center',
-})
-
-const InputRow = ({ label }) => (
-  <Row>
-    <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
-    <input css={{ fontSize: 14, padding: [4, 6], margin: ['auto', 8] }} />{' '}
-  </Row>
-)
-
-const CheckBoxRow = ({ children, checked }) => (
-  <Row>
-    <input checked={checked} css={{ margin: ['auto', 4] }} type="checkbox" />{' '}
-    <label css={{ padding: [0, 4], fontWeight: 400 }}>{children}</label>
-  </Row>
-)
-
 class OrbitSettingsStore {
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
   }
 
   setGetResults = react(
-    () => [this.isPaneActive, this.activeSettings],
-    ([isActive, activeSettings]) => {
+    () => [this.isPaneActive, this.integrationSettings],
+    ([isActive, integrationSettings]) => {
       if (!isActive) {
         throw react.cancel
       }
-      const getResults = () => activeSettings
+      const getResults = () => integrationSettings
       getResults.shouldFilter = true
       this.props.appStore.setGetResults(getResults)
     },
     { immediate: true },
   )
 
-  // poll every 2 seconds while active
-  activeSettings = modelQueryReaction(
+  integrationSettings = modelQueryReaction(
     () =>
       Setting.find({
         where: { category: 'integration', token: Not(IsNull()) },
       }),
     {
       condition: () => this.isPaneActive,
+      defaultValue: [],
     },
   )
 }
@@ -76,35 +56,19 @@ class OrbitSettingsStore {
 })
 export class OrbitSettings {
   render({ name, store, appStore }) {
-    const { activeSettings } = store
+    const { integrationSettings } = store
     const isActive = result => {
-      return !!activeSettings.find(setting => setting.type === result.id)
+      return !!integrationSettings.find(setting => setting.type === result.id)
     }
-    console.log('rendering with settings', activeSettings.map(s => s.id))
+    console.log('rendering with settings', integrationSettings.map(s => s.id))
     return (
       <OrbitDockedPane name={name} fadeBottom>
-        <SubTitle>Settings</SubTitle>
-        <OrbitCard>
-          <UI.Text css={{ marginBottom: 10 }}>
-            You've added {activeSettings.length} integration{activeSettings.length ===
-            '1'
-              ? ''
-              : 's'}.{' '}
-            {activeSettings.length === 0
-              ? 'Add some integrations below to get started with Orbit.'
-              : ''}
-          </UI.Text>
-          <CheckBoxRow defaultChecked>Start on Login</CheckBoxRow>
-          <CheckBoxRow if={false} defaultChecked>
-            Automatically manage disk space
-          </CheckBoxRow>
-          <InputRow label="Open shortcut" />
-        </OrbitCard>
+        <OrbitGeneralSettings settingsStore={store} />
         <br />
-        <section if={activeSettings.length}>
+        <section if={integrationSettings.length}>
           <SubTitle>Active Integrations</SubTitle>
           <cards>
-            {activeSettings.map((setting, index) => (
+            {integrationSettings.map((setting, index) => (
               <IntegrationCard
                 key={`${setting.id}`}
                 result={settingToResult(setting)}
@@ -124,7 +88,7 @@ export class OrbitSettings {
                 <IntegrationCard
                   key={`${item.id}`}
                   result={item}
-                  index={index + activeSettings.length}
+                  index={index + integrationSettings.length}
                   appStore={appStore}
                   titleProps={{
                     fontWeight: 300,

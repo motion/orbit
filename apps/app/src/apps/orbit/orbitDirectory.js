@@ -24,7 +24,9 @@ class OrbitDirectoryStore {
   )
 
   // poll every 2 seconds while active
-  results = modelQueryReaction(() => Person.find({ take: 10 }))
+  results = modelQueryReaction(() => Person.find({ take: 10 }), {
+    defaultValue: [],
+  })
 }
 
 @view({

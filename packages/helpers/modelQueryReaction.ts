@@ -25,13 +25,12 @@ export function modelQueryReaction(
   } else if (b instanceof Object) {
     options = b
   }
-  const condition = (options && options.condition) || trueFn
-  const poll = (options && options.poll) || 2000
-  const finalOptions = {
-    defaultValue: [],
-    // because these poll all the time
-    log: false,
-    ...options,
+  const { poll = 2000, condition = trueFn, log = false, ...restOptions } =
+    options || {}
+  const finalOptions: ReactionOptions = {
+    defaultValue: null,
+    log: false, // because these poll all the time
+    ...restOptions,
   }
   let currentVal
   return react(

@@ -127,7 +127,9 @@ export class Root {
     if (this.disposed) {
       return
     }
-    await this.screen.dispose()
+    if (this.screen) {
+      await this.screen.dispose()
+    }
     this.sync.dispose()
     this.disposed = true
     return true

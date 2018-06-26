@@ -45,5 +45,7 @@ ensure-file ./packages/css/_/css.js -- build-builder-modules
 # link second
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 copy-bootstrap-hook
+# build everything once
+ensure-dir ./apps/desktop/_ -- build
 echo "bootstrapped!"
 echo "run desktop; run app; run electron"

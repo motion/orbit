@@ -36,6 +36,14 @@ A lot of stuff here, beginning by just implementing syncers and testing them up 
 
 ## product
 
+- onboarding fixes from pleerock
+
+  - building oracle
+  - bootstrap struggle to install @mcro/preset-motion
+  - iohook fails silently if accessibility doesn't work
+  - perhaps could have an electron shell pre-build and symlink things in
+    - that would also give you a single .app to run?
+
 - open bit on keyboard enter after search
 - improve github peek design
 - improve gdocs card and peek design

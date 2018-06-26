@@ -45,3 +45,6 @@ packages/electron-build/app
 !packages/gloss/es6
 !packages/css/_
 !apps/desktop/tmp/.gitkeep
+
+# keep the built oracle for now
+!apps/oracle/orbit/Build/Products/Release/orbit.app/Contents/MacOS/orbit

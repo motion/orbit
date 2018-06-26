@@ -14,4 +14,6 @@ python3 ./install.py
 cd orbit
 carthage update --cache-builds --platform mac
 xcodebuild -configuration Release -derivedDataPath $(mktemp -d) -scheme orbit
-touch ../desktop/src/index.js
+
+# trigger restart
+touch ../desktop/package.json

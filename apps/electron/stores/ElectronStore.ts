@@ -32,7 +32,7 @@ export class ElectronStore {
     this.shortcutStore = new ShortcutsStore([
       'Option+Space',
       'Option+Shift+Space',
-      'CommandOrControl+Space',
+      'CommandOrControl+Option+Space',
     ])
     // @ts-ignore
     this.shortcutStore.on('shortcut', this.onShortcut)
@@ -59,7 +59,7 @@ export class ElectronStore {
 
   onShortcut = async shortcut => {
     console.log('shortcut', shortcut)
-    if (shortcut === 'CommandOrControl+Space') {
+    if (shortcut === 'CommandOrControl+Option+Space') {
       this.toggleDocked()
       return
     }

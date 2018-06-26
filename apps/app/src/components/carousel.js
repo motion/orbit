@@ -18,7 +18,7 @@ export class Carousel {
             expanded={false}
             style={{
               width: 200,
-              height: 150,
+              height: 175,
               marginRight: 12,
             }}
           />

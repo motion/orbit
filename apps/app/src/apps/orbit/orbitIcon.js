@@ -48,6 +48,7 @@ export const OrbitIcon = ({
   orbitIconStyle,
   size = 25,
   color,
+  preventAdjust,
   ...props
 }) => {
   const sizeProps = {
@@ -80,7 +81,7 @@ export const OrbitIcon = ({
         if={!iconImg}
         name={icon}
         css={{ display: 'inline-block', ...sizeProps, ...imageStyle }}
-        size={size * 0.65}
+        size={size * (preventAdjust ? 1 : 0.65)}
         color={color}
       />
     </icon>

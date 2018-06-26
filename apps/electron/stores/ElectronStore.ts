@@ -59,7 +59,7 @@ export class ElectronStore {
 
   onShortcut = async shortcut => {
     console.log('shortcut', shortcut)
-    if (shortcut === 'CommandOrControl+Option+Space') {
+    if (shortcut === 'CommandOrControl+Shift+Space') {
       this.toggleDocked()
       return
     }

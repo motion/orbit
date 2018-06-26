@@ -41,7 +41,7 @@ export class GeneralSettingManager {
     }
     log('New setting, set defaults...')
     setting.values = {
-      openShortcut: 'CommandOrControl+Option+Space',
+      openShortcut: 'CommandOrControl+Shift+Space',
       autoLaunch: true,
     }
     await setting.save()

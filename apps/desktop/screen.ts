@@ -1,4 +1,4 @@
-import Oracle from '@mcro/oracle'
+// import Oracle from '@mcro/oracle'
 import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import { store, isEqual, react } from '@mcro/black/store'
@@ -58,7 +58,7 @@ export class Screen {
   curAppID = ''
   curAppName = ''
   watchSettings = { name: '', settings: {} }
-  oracle = new Oracle()
+  // oracle = new Oracle()
 
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 

@@ -66,11 +66,11 @@ export class Root {
     this.plugins = new Plugins({
       server: this.server,
     })
+    iohook.start(false)
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,
     })
     this.keyboardStore.start()
-    iohook.start(false)
     this.watchLastBit()
     this.setupHosts()
     await this.server.start()

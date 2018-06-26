@@ -8,6 +8,7 @@
     "typeorm": "0.2.7"
   },
   "scripts": {
+    "test": "jest",
     "eslint": "eslint . --cache --cache-location node_modules/.cache/eslint --ignore-path .gitignore",
     "tsc-check": "tsc --noEmit --project ."
   },
@@ -19,7 +20,10 @@
     "@babel/plugin-syntax-typescript": "7.0.0-beta.47",
     "@babel/runtime": "7.0.0-beta.47",
     "@mcro/babel-preset-motion": "*",
+    "@types/jest": "^23.1.2",
     "babel-eslint": "^8.2.3",
+    "babel-jest": "^23.2.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "chalk": "^2.3.1",
     "check-dependencies": "^1.0.1",
     "eslint": "^4.19.1",
@@ -35,6 +39,7 @@
     "prettier": "^1.12.1",
     "sb-promisify": "^2.0.2",
     "strong-log-transformer": "^1.0.6",
+    "ts-jest": "^22.4.6",
     "typescript": "2.9.1",
     "webpack": "^4.8.3",
     "webpack-cli": "2.1.3",
@@ -42,6 +47,7 @@
   },
   "jest": {
     "transform": {
+      "^.+\\.jsx?$": "babel-jest",
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",

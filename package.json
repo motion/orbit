@@ -9,8 +9,7 @@
   },
   "scripts": {
     "test": "jest",
-    "eslint": "eslint . --cache --cache-location node_modules/.cache/eslint --ignore-path .gitignore",
-    "tsc-check": "tsc --noEmit --project ."
+    "eslint": "eslint . --cache --cache-location node_modules/.cache/eslint --ignore-path .gitignore"
   },
   "devDependencies": {
     "@babel/cli": "7.0.0-beta.47",

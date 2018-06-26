@@ -44,7 +44,7 @@ export class Root {
   stores = null
 
   async start() {
-    iohook.start(true)
+    iohook.start(false)
     root.Root = this
     root.restart = this.restart
     await Desktop.start({

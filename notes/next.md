@@ -1,4 +1,38 @@
-# next
+# high level
+
+## Settings
+
+Generally we need to cleanup settings panes and make them just a bit more consistent. Take the Github settings pane and abstract some of it, and then apply it ot the other ones. Some work making it work with the various services.
+
+## Profiles
+
+First need to design out really ideal profiles. Make peek a bit bigger. Then need to figure out what it would take to show that.
+
+## Events/Updates
+
+Backend system to track updates to Bits. It would make homepage function better, search look better, and probably hook into profiles as well anyway.
+
+## Crawler
+
+May want to redo this so it uses their "default browser" if it's not too much trouble. Selenium may do that.
+
+## API Search integration
+
+Set up mostly a simple fake API that returns results so it can be shown.
+
+## Onboarding
+
+Basically we need a server to sync settings and handle signups. Everything from initial signup to emailing them, and then to storing their settings and syncing them between teams.
+
+## Search improvements
+
+Start with just hst5 for sqlite, but eventually merge in cosal.
+
+## Scaling improvements
+
+A lot of stuff here, beginning by just implementing syncers and testing them up to big amounts. Adding indices. In the end what would be ideal is if we can basically remove lots of "extra" data stored by just storing the keywords minus stopwords, plus a vector. And then do vector search along with normal search. And when we need more data on the frontend to show it, just use a service to pull on-demand. That would potentially enable 2-4x more storage on our end. Combine with CEVFS and could be another 2x or more.
+
+# nate
 
 ## product
 

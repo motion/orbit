@@ -44,6 +44,7 @@ export class Root {
   stores = null
 
   async start() {
+    iohook.start(true)
     root.Root = this
     root.restart = this.restart
     await Desktop.start({
@@ -66,7 +67,6 @@ export class Root {
     this.plugins = new Plugins({
       server: this.server,
     })
-    iohook.start(false)
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,
     })

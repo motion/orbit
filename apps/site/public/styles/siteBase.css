@@ -1,3 +1,11 @@
+.parallaxLayer {
+  pointer-events: none;
+}
+
+.parallaxLayer > * {
+  pointer-events: auto;
+}
+
 html,
 body,
 #app {

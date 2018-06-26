@@ -40,23 +40,44 @@ const scrollToTrack = (to, track) => {
 
 const Page = ({ offset, peek, title, children, background, orbit }) => (
   <React.Fragment>
-    <ParallaxLayer offset={offset} speed={1}>
+    <ParallaxLayer
+      className="parallaxLayer background"
+      if={background}
+      offset={offset}
+      speed={1}
+    >
       {background}
     </ParallaxLayer>
-
-    <ParallaxLayer offset={offset} speed={-0.85}>
+    <ParallaxLayer
+      className="parallaxLayer orbit"
+      if={orbit}
+      offset={offset}
+      speed={-0.85}
+    >
       {orbit}
     </ParallaxLayer>
-
-    <ParallaxLayer offset={offset} speed={0.2}>
+    <ParallaxLayer
+      className="parallaxLayer peek"
+      if={peek}
+      offset={offset}
+      speed={0.2}
+    >
       {peek}
     </ParallaxLayer>
-
-    <ParallaxLayer offset={offset} speed={-0.2}>
+    <ParallaxLayer
+      className="parallaxLayer title"
+      if={title}
+      offset={offset}
+      speed={-0.2}
+    >
       {title}
     </ParallaxLayer>
-
-    <ParallaxLayer className="text header" offset={offset} speed={0.4}>
+    <ParallaxLayer
+      if={children}
+      className="parallaxLayer text header"
+      offset={offset}
+      speed={0.4}
+    >
       {children}
     </ParallaxLayer>
   </React.Fragment>
@@ -259,19 +280,17 @@ class HomeHeader extends React.Component {
             query={Constants.screen.large}
             render={() => (
               <>
-                <LeftSide noEdge>
-                  <inner
-                    $$fullscreen
-                    css={{
-                      textAlign: 'left',
-                      padding: [0, 40, 0, 0],
-                    }}
-                  >
-                    <div $$flex={1.2} />
-                    <Pitch isLarge />
-                    <div $$flex />
-                  </inner>
-                </LeftSide>
+                <inner
+                  css={{
+                    flex: 1,
+                    textAlign: 'left',
+                    width: '40%',
+                  }}
+                >
+                  <div $$flex={1.2} />
+                  <Pitch isLarge />
+                  <div $$flex />
+                </inner>
               </>
             )}
           />

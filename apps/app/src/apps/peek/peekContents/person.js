@@ -1,17 +1,19 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
+import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '~/apps/orbit/orbitIcon'
 import * as UI from '@mcro/ui'
 import { Carousel } from '~/components/carousel'
 import { Bit } from '@mcro/models'
+import { SubTitle } from '~/views'
 
 const mapW = 700
 const mapH = 300
 
 class PersonPeek {
-  relatedConversations = react(
-    async () =>
-      await Bit.find({
+  relatedConversations = modelQueryReaction(
+    () =>
+      Bit.find({
         relations: ['people'],
         where: { integration: 'slack', type: 'conversation' },
         take: 3,
@@ -25,6 +27,9 @@ class PersonPeek {
 })
 export class Person extends React.Component {
   render({ store, person, appStore }) {
+    if (!appStore.settings) {
+      return null
+    }
     const setting = appStore.settings.slack
     if (!setting || !person || !person.data || !person.data.profile) {
       log('no person', person)
@@ -42,17 +47,25 @@ export class Person extends React.Component {
               {person.data.profile.email}
             </a>
             <br />
-            <icons>
+            <links>
               <a
                 $intButton
                 href={`slack://user?team=${
                   setting.values.oauth.info.team.id
                 }&id=${person.data.id}`}
               >
-                <OrbitIcon $intIcon icon="slack" size={18} />
+                <OrbitIcon preventAdjust $intIcon icon="slack" size={14} />
                 Slack
               </a>
-            </icons>
+              <a $intButton>
+                <OrbitIcon preventAdjust $intIcon icon="zoom" size={14} />
+                Documents
+              </a>
+              <a $intButton>
+                <OrbitIcon preventAdjust $intIcon icon="zoom" size={14} />
+                Tasks
+              </a>
+            </links>
           </info>
         </cardContent>
         <map>
@@ -66,29 +79,46 @@ export class Person extends React.Component {
           />
         </map>
         <content>
-          <card>
-            <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
-              Spends time in...
-            </UI.Title>
-            <row $$row>
-              <item>
-                <itemTitle>#general</itemTitle>
-              </item>
-              <item>
-                <itemTitle>#status</itemTitle>
-              </item>
-              <item>
-                <itemTitle>#showoff</itemTitle>
-              </item>
-            </row>
-          </card>
+          <contentInner>
+            <card>
+              <SubTitle>Spends time in...</SubTitle>
+              <UI.Row
+                itemProps={{
+                  size: 1.05,
+                  background: 'transparent',
+                  borderRadius: 5,
+                  margin: [0, 10, 0, -5],
+                }}
+              >
+                <UI.Button>#general</UI.Button>
+                <UI.Button>#status</UI.Button>
+                <UI.Button icon="github">motion/orbit</UI.Button>
+                <UI.Button>#showoff</UI.Button>
+              </UI.Row>
+            </card>
 
-          <card>
-            <UI.Title fontWeight={800} css={{ margin: [0, 0, 5] }}>
-              Recently relevant conversations
-            </UI.Title>
-            <Carousel items={store.relatedConversations} />
-          </card>
+            <card>
+              <SubTitle>Interested in...</SubTitle>
+              <UI.Row
+                itemProps={{
+                  size: 1.05,
+                  background: 'transparent',
+                  borderRadius: 5,
+                  margin: [0, 10, 0, -5],
+                }}
+              >
+                <UI.Button>ui kit</UI.Button>
+                <UI.Button>size props</UI.Button>
+                <UI.Button>interface</UI.Button>
+                <UI.Button>React</UI.Button>
+              </UI.Row>
+            </card>
+
+            <card>
+              <SubTitle>Recently relevant conversations</SubTitle>
+              <Carousel items={store.relatedConversations} />
+            </card>
+          </contentInner>
         </content>
       </frame>
     )
@@ -102,11 +132,14 @@ export class Person extends React.Component {
       position: 'relative',
     },
     content: {
-      padding: [10, 30],
+      padding: [10, 0],
       overflowY: 'scroll',
       flex: 1,
       position: 'relative',
       zIndex: 100,
+    },
+    contentInner: {
+      padding: [0, 15],
     },
     cardContent: {
       position: 'relative',
@@ -150,43 +183,45 @@ export class Person extends React.Component {
       display: 'block',
       position: 'absolute',
       top: 60,
-      left: 120,
+      left: 130,
     },
     name: {
       display: 'inline-block',
       fontSize: 30,
       fontWeight: 800,
       padding: [10, 12],
-      background: '#fff',
+      background: [255, 255, 255, 0.75],
     },
     email: {
       display: 'inline-block',
-      background: '#000',
+      background: [0, 0, 0, 0.75],
       color: '#fff',
       fontWeight: 600,
       padding: [4, 8],
       marginLeft: 10,
     },
     avatar: {
-      margin: [-20, 0, 20, -70],
+      margin: [-40, 0, 15, -65],
       width: 256,
       height: 256,
       borderRadius: 1000,
     },
     card: {
-      marginBottom: 25,
+      marginBottom: 15,
     },
-    icons: {
+    links: {
       position: 'relative',
-      top: 35,
+      top: 25,
       left: 90,
       flexFlow: 'row',
     },
     intButton: {
-      padding: 5,
+      padding: [4, 5],
+      marginRight: 6,
+      borderRadius: 4,
       flexFlow: 'row',
       fontSize: 14,
-      fontWeight: 600,
+      fontWeight: 500,
       background: '#fff',
     },
     intIcon: {

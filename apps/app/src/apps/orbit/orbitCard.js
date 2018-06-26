@@ -257,11 +257,14 @@ export class OrbitCard extends React.Component {
                 sizeLineHeight={0.9}
                 $previewText
               >
-                {preview.split(' ').map((word, i) => (
-                  <React.Fragment key={i}>
-                    <SmallLink orbitStore={orbitStore}>{word}</SmallLink>{' '}
-                  </React.Fragment>
-                ))}
+                {preview
+                  .slice(0, 220)
+                  .split(' ')
+                  .map((word, i) => (
+                    <React.Fragment key={i}>
+                      <SmallLink orbitStore={orbitStore}>{word}</SmallLink>{' '}
+                    </React.Fragment>
+                  ))}
               </UI.Text>
             </preview>
             {typeof children === 'function'
@@ -390,7 +393,7 @@ export class OrbitCard extends React.Component {
       card = {
         ...card,
         ...listStateStyle,
-        margin: [0, -8],
+        margin: [0, -14],
         padding: [16, 20],
         borderTop: [1, theme.hover.background],
       }

@@ -18,7 +18,7 @@ export class Carousel {
             expanded={false}
             style={{
               width: 200,
-              height: 150,
+              height: 175,
               marginRight: 12,
             }}
           />
@@ -31,6 +31,7 @@ export class Carousel {
     carousel: {
       flexFlow: 'row',
       // padding: [0, 20],
+      overflow: 'hidden',
       overflowX: 'scroll',
     },
   }

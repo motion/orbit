@@ -89,8 +89,6 @@ export class Masonry extends React.Component {
 
   static style = {
     grid: {
-      // hacky hardcoded
-      padding: [0, 2],
       // maxHeight: '100%',
       // overflowY: 'scroll',
       display: 'grid',

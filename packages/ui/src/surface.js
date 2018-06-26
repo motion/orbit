@@ -549,10 +549,6 @@ class SurfacePlain extends React.Component {
         borderRadius.borderRadius = radius
       }
     }
-    if (Object.keys(borderRadius).length) {
-      // always add hidden for things with radius
-      borderRadius.overflow = props.overflow || 'hidden'
-    }
     if (props.debug) {
       console.log(borderRadius)
     }
@@ -639,7 +635,10 @@ class SurfacePlain extends React.Component {
       minWidth: props.minWidth,
       maxWidth: props.maxWidth,
       color,
-      overflow: props.overflow || props.glow ? 'hidden' : props.overflow,
+      overflow:
+        props.overflow || props.glow
+          ? props.overflow || 'hidden'
+          : props.overflow,
       height,
       width,
       flex,

@@ -1,8 +1,6 @@
 import { DecorCompiledDecorator } from '@mcro/decor'
 import { UtilityUsable } from '@mcro/decor-mobx'
 
-export { react } from '@mcro/automagical'
-
 export { Component } from './Component'
 export { DecorCompiledDecorator } from '@mcro/decor'
 

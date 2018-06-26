@@ -25,12 +25,15 @@ final class Windo {
   private var lastSent = ""
   @IBOutlet weak var window: NSWindow!
   private weak var accessibilityTimer: Timer?
+  private var hasPromptedAccessibility = false
   
   init(emit: @escaping (String)->Void) {
     self.emit = emit
     self.swindler = Swindler.state
 
     self.checkAccessibility()
+    // TODO: prompt again in certain cases, ideally make this prompt controllable from oracle.ts
+    self.hasPromptedAccessibility = true
     self.accessibilityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
       if self != nil {
         self!.checkAccessibility()
@@ -48,26 +51,27 @@ final class Windo {
   }
 
   @objc private func checkAccessibility() {
-    if !AXSwift.checkIsProcessTrusted(prompt: true) {
+    if !AXSwift.checkIsProcessTrusted(prompt: !self.hasPromptedAccessibility) {
       if started {
         self.stop()
       }
       print("Not trusted as an AX process; please authorize and re-launch")
-      self.emit("{ \"action\": \"AccessibilityEvent\", \"value\": false }")
+      self.emit("{ \"action\": \"accessible\", \"value\": false }")
     } else {
       if !started {
         self.start()
       }
-      self.emit("{ \"action\": \"AccessibilityEvent\", \"value\": true }")
+      self.emit("{ \"action\": \"accessible\", \"value\": true }")
     }
   }
   
   private func stop() {
+    self.started = false
     print("Need to figure out how to stop Swindler cleanly...")
   }
   
   private func start() {
-    print("obs")
+    self.started = true
     let app = NSWorkspace.shared.frontmostApplication!
     let x = try? Observer(processID: app.processIdentifier, callback: { (a: Observer, b: UIElement, c: AXNotification, d: [String : AnyObject]?) in
       let x = try? b.attributesAsStrings()

@@ -186,6 +186,24 @@ export default class Oracle {
     this.onAccessibleCB = cb
   }
 
+  lastAccessibility = null
+
+  handleAccessibility = async value => {
+    // we just got access, need to restart the oracle process (until we can figure out cleaner way)
+    if (this.lastAccessibility === false && value === true) {
+      console.log(
+        'Just got accesibility access, restarting Swift process cleanly...',
+      )
+      await this.restart()
+    }
+    this.lastAccessibility = value
+    // only send on new value
+    const newValue = value !== this.lastAccessibility
+    if (newValue) {
+      this.onAccessibleCB(value)
+    }
+  }
+
   async socketSend(action, data?) {
     if (!this.listeners.length) {
       this.awaitingSocket.push({ action, data })
@@ -246,9 +264,7 @@ export default class Oracle {
         restoredIds: value => {
           this.restoredIds = value
         },
-        accessible: value => {
-          this.onAccessibleCB = value
-        },
+        accessible: this.handleAccessibility,
         // up to listeners of this class
         clear: this.onClearCB,
         words: this.onWordsCB,

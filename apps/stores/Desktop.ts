@@ -64,6 +64,7 @@ class DesktopStore {
     lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
+    isAccessible: false,
   })
 
   results = []
@@ -73,7 +74,7 @@ class DesktopStore {
       ...Desktop.searchState.searchResults,
       ...Desktop.searchState.pluginResults,
     ],
-    x => (this.results = x)
+    x => (this.results = x),
   )
 
   get isHoldingOption(): Boolean {

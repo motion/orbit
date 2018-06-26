@@ -104,9 +104,11 @@ export class Screen {
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
-      console.log('is accessible, start watching stuff')
+      console.log('is accessible, start watching stuff', isAccessible)
       Desktop.setState({ isAccessible })
-      this.watchMouse()
+      if (isAccessible) {
+        this.watchMouse()
+      }
     })
     // OCR words
     this.oracle.onWords(words => {
@@ -252,18 +254,27 @@ export class Screen {
     })
   }, 32)
 
+  mouseHookIds = []
   watchMouse = () => {
-    iohook.on('mousemove', throttle(this.handleMousePosition, 32))
-    iohook.on('mousedown', ({ button, x, y }) => {
-      if (button === 1) {
-        Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
-      }
-    })
-    iohook.on('mouseup', ({ button }) => {
-      if (button === 1) {
-        Desktop.setMouseState({ mouseDown: null })
-      }
-    })
+    this.unWatchMouse()
+    this.mouseHookIds = [
+      iohook.on('mousemove', throttle(this.handleMousePosition, 32)),
+      iohook.on('mousedown', ({ button, x, y }) => {
+        if (button === 1) {
+          Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
+        }
+      }),
+      iohook.on('mouseup', ({ button }) => {
+        if (button === 1) {
+          Desktop.setMouseState({ mouseDown: null })
+        }
+      }),
+    ]
+  }
+
+  unWatchMouse = () => {
+    this.mouseHookIds.map(id => iohook.unregisterShortcut(id))
+    this.mouseHookIds = []
   }
 
   mouseOverShowDelay: any = 0
@@ -367,6 +378,7 @@ export class Screen {
   }
 
   async dispose() {
+    this.unWatchMouse()
     if (this.oracle) {
       await this.oracle.stop()
     }

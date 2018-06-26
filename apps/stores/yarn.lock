@@ -45,7 +45,3 @@ min-document@^2.19.0:
 process@~0.5.1:
   version "0.5.2"
   resolved "http://localhost:4873/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
-
-randomcolor@^0.5.3:
-  version "0.5.3"
-  resolved "http://localhost:4873/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"

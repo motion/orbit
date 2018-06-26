@@ -1,9 +1,22 @@
 # next
 
-- website fixes: better demo video image, mobile image, mobile features images, mobile padding tweaks
+## product
+
+- open bit on keyboard enter after search
+- improve github peek design
+- improve gdocs card and peek design
+- gdocs strip out css stuff in header
+- fix some github tickets not showing bodies
+- run through a few searches and bugfix (duplicates)
+- hover highlighted snippet in search to scroll to part in peek
+
+## website
+
+- start 2.0
+
+## dev
+
 - hmr fix: flash on orbit with no data for a bit
-- interaction: keyboard, highlighting
-- peek fix: gdocs, gmail, slack formatting
 - look into jira/confluence
 - potentially crawler
 - settings panes: slack, folder

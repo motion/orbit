@@ -29,6 +29,7 @@ export class Setting extends T.BaseEntity {
     lastAttachmentSync?: { [key: string]: string }
     lastMessageSync?: { [key: string]: string }
     autoLaunch?: boolean
+    openShortcut?: string
   }
 
   @T.CreateDateColumn() createdAt: Date

@@ -11,10 +11,14 @@ const Row = view('section', {
   alignItems: 'center',
 })
 
-const InputRow = ({ label }) => (
+const InputRow = ({ label, value, onChange }) => (
   <Row>
     <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
-    <input css={{ fontSize: 14, padding: [4, 6], margin: ['auto', 8] }} />{' '}
+    <input
+      css={{ fontSize: 14, padding: [4, 6], margin: ['auto', 8] }}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+    />{' '}
   </Row>
 )
 
@@ -87,10 +91,11 @@ export class OrbitGeneralSettings {
           >
             Start on Login
           </CheckBoxRow>
-          <CheckBoxRow if={false} defaultChecked>
-            Automatically manage disk space
-          </CheckBoxRow>
-          <InputRow label="Open shortcut" />
+          <InputRow
+            label="Open shortcut"
+            value={generalSetting.values.openShortcut}
+            onChange={store.handleChange('openShortcut')}
+          />
         </OrbitCard>
       </>
     )

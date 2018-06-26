@@ -31,6 +31,7 @@ export class Carousel {
     carousel: {
       flexFlow: 'row',
       // padding: [0, 20],
+      overflow: 'hidden',
       overflowX: 'scroll',
     },
   }

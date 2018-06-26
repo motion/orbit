@@ -25,6 +25,7 @@ apps/oracle/train
 apps/oracle/orbit/orbit.xcodeproj/project.xcworkspace
 apps/oracle/orbit/Carthage
 apps/oracle/orbit/Build
+!apps/oracle/orbit/Build/Products/Release
 apps/oracle/swindler/Carthage
 apps/oracle/swindler/Build
 apps/app/build
@@ -45,6 +46,3 @@ packages/electron-build/app
 !packages/gloss/es6
 !packages/css/_
 !apps/desktop/tmp/.gitkeep
-
-# keep the built oracle for now
-!apps/oracle/orbit/Build/Products/Release/orbit.app/Contents/MacOS/orbit

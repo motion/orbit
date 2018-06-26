@@ -31,7 +31,7 @@ run electron
 /apps               # top level apps
   /app              # web app (webpack, electron loads it)
   /desktop          # node app (syncers, oauth server, ...)
-  /electron         # controls electron
+  /electron         # electron app (very light for now, powered by reactron)
   /models           # TypeORM models, shared by all apps ^^
   /oracle           # Swift, gives us deep hooks into OS state
   /services         # Oauth integration helpers (Github.getRepos, GDrive.getFiles...)

@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
+    jest: true,
   },
   extends: ['eslint:recommended', 'prettier', 'prettier/react'],
   plugins: ['babel', 'react', 'prettier'],

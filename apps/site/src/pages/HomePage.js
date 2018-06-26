@@ -57,7 +57,7 @@ const Page = ({ offset, peek, title, children, background, orbit }) => (
       className="parallaxLayer title"
       if={title}
       offset={offset}
-      speed={0.1}
+      speed={-0.05}
     >
       <SectionContentParallax>{title}</SectionContentParallax>
     </ParallaxLayer>

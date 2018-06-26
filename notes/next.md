@@ -39,7 +39,6 @@ A lot of stuff here, beginning by just implementing syncers and testing them up 
 - onboarding fixes from pleerock
 
   - building oracle
-  - bootstrap struggle to install @mcro/preset-motion
   - iohook fails silently if accessibility doesn't work
   - perhaps could have an electron shell pre-build and symlink things in
     - that would also give you a single .app to run?

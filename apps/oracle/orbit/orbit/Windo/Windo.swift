@@ -17,16 +17,25 @@ final class Windo {
   var emit: (String)->Void
   var swindler: Swindler.State
   var observer: Observer!
+  private var started = false
   private var currentId = ""
   private var lastApp: NSRunningApplication?
   private var currentApp: NSRunningApplication?
   private var currentFrontWindow: Window?
   private var lastSent = ""
   @IBOutlet weak var window: NSWindow!
+  private weak var accessibilityTimer: Timer?
   
   init(emit: @escaping (String)->Void) {
     self.emit = emit
     self.swindler = Swindler.state
+
+    self.checkAccessibility()
+    self.accessibilityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+      if self != nil {
+        self!.checkAccessibility()
+      }
+    }
 
     var lastScroll = DispatchTime.now()
     NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in
@@ -36,7 +45,28 @@ final class Windo {
         lastScroll = DispatchTime.now()
       }
     })
-    
+  }
+
+  @objc private func checkAccessibility() {
+    if !AXSwift.checkIsProcessTrusted(prompt: true) {
+      if started {
+        self.stop()
+      }
+      print("Not trusted as an AX process; please authorize and re-launch")
+      self.emit("{ \"action\": \"AccessibilityEvent\", \"value\": false }")
+    } else {
+      if !started {
+        self.start()
+      }
+      self.emit("{ \"action\": \"AccessibilityEvent\", \"value\": true }")
+    }
+  }
+  
+  private func stop() {
+    print("Need to figure out how to stop Swindler cleanly...")
+  }
+  
+  private func start() {
     print("obs")
     let app = NSWorkspace.shared.frontmostApplication!
     let x = try? Observer(processID: app.processIdentifier, callback: { (a: Observer, b: UIElement, c: AXNotification, d: [String : AnyObject]?) in

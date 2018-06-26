@@ -11,6 +11,7 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 // and the swiftBridge
 // both connect to here:
 const ORACLE_ROOT = 40512
+const idFn = _ => _
 
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
 const appPath = bundle =>
@@ -38,13 +39,14 @@ export default class Oracle {
   restoredIds = null
   awaitingSocket = []
   listeners = []
-  onLinesCB = _ => _
-  onWindowChangeCB: (a: string, b: any) => any = _ => _
-  onWordsCB = _ => _
-  onBoxChangedCB = _ => _
-  onRestoredCB = _ => _
-  onErrorCB = _ => _
-  onClearCB = _ => _
+  onWindowChangeCB: (a: string, b: any) => any = idFn
+  onLinesCB = idFn
+  onWordsCB = idFn
+  onBoxChangedCB = idFn
+  onRestoredCB = idFn
+  onErrorCB = idFn
+  onClearCB = idFn
+  onAccessibleCB = idFn
   state = {
     isPaused: false,
   }
@@ -180,6 +182,10 @@ export default class Oracle {
     this.onErrorCB = cb
   }
 
+  onAccessible = cb => {
+    this.onAccessibleCB = cb
+  }
+
   async socketSend(action, data?) {
     if (!this.listeners.length) {
       this.awaitingSocket.push({ action, data })
@@ -239,6 +245,9 @@ export default class Oracle {
         },
         restoredIds: value => {
           this.restoredIds = value
+        },
+        accessible: value => {
+          this.onAccessibleCB = value
         },
         // up to listeners of this class
         clear: this.onClearCB,

@@ -36,7 +36,7 @@ class AppStore {
     orbitState: {
       hidden: true,
       pinned: false,
-      docked: false,
+      docked: true,
       orbitOnLeft: false,
       position: [0, 0],
       size: [0, 0],

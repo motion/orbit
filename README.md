@@ -2,7 +2,11 @@
 
 Currenly using Node 9.11.1.
 
+First time:
+
 ```sh
+# bootstrap will ensure a couple deps from brew are installed, requires homebrew
+brew update
 bin/bootstrap
 # only need to do this once to get everything built out
 build
@@ -19,6 +23,40 @@ build --watch
 run desktop
 run app
 run electron
+```
+
+## Structure of this repo
+
+```sh
+/apps               # top level apps
+  /app              # web app (webpack, electron loads it)
+  /desktop          # node app (syncers, oauth server, ...)
+  /electron         # controls electron
+  /models           # TypeORM models, shared by all apps ^^
+  /oracle           # Swift, gives us deep hooks into OS state
+  /services         # Oauth integration helpers (Github.getRepos, GDrive.getFiles...)
+  /site             # public facing website
+  /stores           # Singleton top level stores, one per app (App, Desktop, Electron)
+
+/assets             # various files for design elements, etc
+
+/bin                # monorepo scripts (bootstrap, build, run, deploy, etc)
+
+/notes              # ongoing notes related to project
+
+/packages           # all packages we maintain
+
+# note: only documenting interesting packages, the rest extermely minor
+
+/automagical        # powers @store and react()
+/black              # compiles and exports @view and @store decorator
+/constants          # shared static variables between apps
+/crawler            # website crawler for custom search
+/debug              # simple logger - require('@mcro/debug')('myApp')('hello world')
+/debug-apps         # the Chromium app that gives us REPL into every app
+/gloss              # our CSS-in-JS solution, see README
+/reactron           # fork of react-ionize with more features and up to date React
+/ui                 # our UI kit, built with gloss
 ```
 
 ## using the monorepo
@@ -46,15 +84,7 @@ likewise you can do other things:
 in models npm start
 ```
 
-3.  Using lerna
-
-The lerna command supports this:
-
-```
-npx lerna add packagename --scope @mcro/desktop
-```
-
-4.  modify the package.json directly, and then:
+3.  modify the package.json directly, and then:
 
 ```
 bootstrap

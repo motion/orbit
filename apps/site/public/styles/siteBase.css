@@ -1,3 +1,9 @@
+html,
+body,
+#app {
+  height: 100%;
+}
+
 @font-face {
   font-family: 'Eesti Pro';
   src: url('../font/gt-eesti-pro-display-trial-light-webfont.woff2')

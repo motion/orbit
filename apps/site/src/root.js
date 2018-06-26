@@ -26,10 +26,7 @@ class Root extends React.Component {
       <UI.Theme name="light">
         <Media query={Constants.screen.tall}>
           {isTall => (
-            <root
-              $scaledUp={isTall}
-              css={{ background: Constants.backgroundColor }}
-            >
+            <root css={{ background: Constants.backgroundColor }}>
               <CurrentPage
                 width={width}
                 isSmall={isSmall}
@@ -47,6 +44,7 @@ class Root extends React.Component {
     root: {
       position: 'relative',
       overflow: 'hidden',
+      minHeight: '100%',
     },
     scaledUp: {
       transformOrigin: 'top center',

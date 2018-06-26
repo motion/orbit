@@ -25,6 +25,8 @@ import Media from 'react-media'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 import { Bauhaus } from '~/views/bauhaus'
+import { Parallax, ParallaxLayer } from 'react-spring'
+import * as _ from 'lodash'
 
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -35,6 +37,30 @@ const scrollToTrack = (to, track) => {
     scrollTo(to)()
   }
 }
+
+const Page = ({ offset, peek, title, children, background, orbit }) => (
+  <React.Fragment>
+    <ParallaxLayer offset={offset} speed={1}>
+      {background}
+    </ParallaxLayer>
+
+    <ParallaxLayer offset={offset} speed={-0.85}>
+      {orbit}
+    </ParallaxLayer>
+
+    <ParallaxLayer offset={offset} speed={0.2}>
+      {peek}
+    </ParallaxLayer>
+
+    <ParallaxLayer offset={offset} speed={-0.2}>
+      {title}
+    </ParallaxLayer>
+
+    <ParallaxLayer className="text header" offset={offset} speed={0.4}>
+      {children}
+    </ParallaxLayer>
+  </React.Fragment>
+)
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
@@ -153,47 +179,72 @@ const Pitch = ({ isLarge }) => (
 class HomeHeader extends React.Component {
   render() {
     return (
-      <Section css={{ background: 'transparent' }}>
-        {/* <parallax css={{ overflow: 'hidden' }} $$fullscreen>
-          <parallaxContain $$fullscreen>
-            <Keyframes native script={ref => (store.stars = ref)}>
-              {({ y }) => (
-                <animated.div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    transform: y.interpolate(
-                      y => `translate3d(0,${y}%,0)`,
-                    ),
+      <Page
+        offset={0}
+        background={
+          <>
+            <Slant {...firstSlant} {...topSlants} />
+            <Slant inverseSlant {...secondSlant} {...topSlants} />
+            <Slant {...thirdSlant} {...topSlants} />
+            <Glow
+              style={{
+                background: '#fff',
+                opacity: 0.5,
+                transform: { x: '-45%', y: '0%', scale: 0.65 },
+              }}
+            />
+            <Bauhaus
+              hideTriangle
+              hideSquare
+              circleColor="#F7C7FF"
+              css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
+              warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
+            />
+          </>
+        }
+        orbit={
+          <RightSide noEdge>
+            <inner
+              $$fullscreen
+              css={{
+                overflow: 'hidden',
+                right: -160,
+                left: 20,
+                borderBottom: [1, borderize(topBg)],
+              }}
+            >
+              <inner
+                css={{
+                  position: 'absolute',
+                  right: 100,
+                  left: 100,
+                  top: 0,
+                  bottom: 0,
+                }}
+              >
+                <wrap
+                  css={{
+                    width: 1100 / 2,
+                    height: 2016 / 2,
+                    transform: {
+                      x: 20,
+                      y: 100,
+                    },
                   }}
                 >
-                  <inner $$fullscreen />
-                </animated.div>
-              )}
-            </Keyframes>
-          </parallaxContain>
-        </parallax> */}
-        <Slant {...firstSlant} {...topSlants} />
-        <Slant inverseSlant {...secondSlant} {...topSlants} />
-        <Slant {...thirdSlant} {...topSlants} />
+                  <UI.TiltHoverGlow
+                    restingPosition={[100, 100]}
+                    tiltOptions={{ perspective: 2000 }}
+                  >
+                    <HomeImg />
+                  </UI.TiltHoverGlow>
+                </wrap>
+              </inner>
+            </inner>
+          </RightSide>
+        }
+      >
         <SectionContent padded fullscreen fullscreenFs>
-          <Glow
-            style={{
-              background: '#fff',
-              opacity: 0.5,
-              transform: { x: '-45%', y: '0%', scale: 0.65 },
-            }}
-          />
-          <Bauhaus
-            hideTriangle
-            hideSquare
-            circleColor="#F7C7FF"
-            css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
-            warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
-          />
           <Media
             query={Constants.screen.small}
             render={() => (
@@ -221,50 +272,11 @@ class HomeHeader extends React.Component {
                     <div $$flex />
                   </inner>
                 </LeftSide>
-                <RightSide noEdge>
-                  <inner
-                    $$fullscreen
-                    css={{
-                      overflow: 'hidden',
-                      right: -160,
-                      left: 20,
-                      borderBottom: [1, borderize(topBg)],
-                    }}
-                  >
-                    <inner
-                      css={{
-                        position: 'absolute',
-                        right: 100,
-                        left: 100,
-                        top: 0,
-                        bottom: 0,
-                      }}
-                    >
-                      <wrap
-                        css={{
-                          width: 1100 / 2,
-                          height: 2016 / 2,
-                          transform: {
-                            x: 20,
-                            y: 100,
-                          },
-                        }}
-                      >
-                        <UI.TiltHoverGlow
-                          restingPosition={[100, 100]}
-                          tiltOptions={{ perspective: 2000 }}
-                        >
-                          <HomeImg />
-                        </UI.TiltHoverGlow>
-                      </wrap>
-                    </inner>
-                  </inner>
-                </RightSide>
               </>
             )}
           />
         </SectionContent>
-      </Section>
+      </Page>
     )
   }
 
@@ -342,13 +354,7 @@ class HomeHeader extends React.Component {
 
 const Monitor = props => (
   <svg viewBox="0 0 1708 1119" {...props}>
-    <g
-      id="Page-1"
-      stroke="none"
-      stroke-width="1"
-      fill="none"
-      fill-rule="evenodd"
-    >
+    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Group" fill="#818181">
         <rect
           id="Rectangle"
@@ -371,14 +377,14 @@ const Monitor = props => (
 class SectionDesktop extends React.Component {
   render({ isLarge }) {
     return (
-      <Section inverse css={{ background: 'transparent' }}>
+      <Page offset={1}>
         <SectionContent padded fullscreen fullscreenFs>
           <desktop>
             <Monitor $monitor />
             <img src={require('~/../public/desktop.jpg')} $background />
           </desktop>
         </SectionContent>
-      </Section>
+      </Page>
     )
   }
   static style = {
@@ -439,7 +445,7 @@ class HomeFooter extends React.Component {
       </Card>
     )
     return (
-      <Section inverse css={{ background: 'transparent' }}>
+      <Page offset={2}>
         <SectionContent padded fullscreen fullscreenFs>
           <Bauhaus />
           <Slant inverseSlant {...firstSlant} {...bottomSlants} />
@@ -544,37 +550,60 @@ class HomeFooter extends React.Component {
             </cards>
           </RightSide>
         </SectionContent>
-      </Section>
+      </Page>
     )
   }
 }
 
-export const HomePage = () => (
-  <UI.Theme
-    theme={{ background: topBg, color: topBg.darken(0.6).desaturate(0.5) }}
-  >
-    <Media query={Constants.screen.large}>
-      {isLarge => (
-        <Media query={Constants.screen.medium}>
-          {isMedium => (
-            <home $$flex $$background={topBg}>
-              <TopoBg />
-              <Header white />
-              <HomeHeader isLarge={isLarge} isMedium={isMedium} />
-              <SectionDesktop isLarge={isLarge} isMedium={isMedium} />
-              <UI.Theme
-                theme={{
-                  background: bottomBg,
-                  color: bottomBg.darken(0.8).desaturate(0.4),
-                }}
-              >
-                <HomeFooter isLarge={isLarge} isMedium={isMedium} />
-              </UI.Theme>
-              <Footer />
-            </home>
-          )}
-        </Media>
-      )}
-    </Media>
-  </UI.Theme>
-)
+@view
+export class HomePage extends React.Component {
+  parallax = null
+
+  componentDidMount() {
+    this.on(window, 'scroll', _.throttle(this.handleScroll, 32))
+  }
+
+  handleScroll = () => {
+    const offset = window.scrollTop
+    console.log('offset', offset)
+  }
+
+  render() {
+    return (
+      <Parallax ref={node => (this.parallax = node)} pages={4}>
+        <UI.Theme
+          theme={{
+            background: topBg,
+            color: topBg.darken(0.6).desaturate(0.5),
+          }}
+        >
+          <Media query={Constants.screen.large}>
+            {isLarge => (
+              <Media query={Constants.screen.medium}>
+                {isMedium => (
+                  <home $$flex $$background={topBg}>
+                    <TopoBg />
+                    <Header white />
+                    <HomeHeader isLarge={isLarge} isMedium={isMedium} />
+                    <SectionDesktop isLarge={isLarge} isMedium={isMedium} />
+                    <UI.Theme
+                      theme={{
+                        background: bottomBg,
+                        color: bottomBg.darken(0.8).desaturate(0.4),
+                      }}
+                    >
+                      <HomeFooter isLarge={isLarge} isMedium={isMedium} />
+                    </UI.Theme>
+                    <Page offset={3}>
+                      <Footer />
+                    </Page>
+                  </home>
+                )}
+              </Media>
+            )}
+          </Media>
+        </UI.Theme>
+      </Parallax>
+    )
+  }
+}

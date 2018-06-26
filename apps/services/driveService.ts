@@ -240,7 +240,12 @@ export class DriveService {
         result = JSON.parse(`${result}`)
       }
       if (result.error) {
-        console.log('error getting result for', id, result.error)
+        const { errors } = result.error
+        console.log(
+          'error getting result for',
+          id,
+          errors.map(err => err.reason),
+        )
         res(null)
         return
       }

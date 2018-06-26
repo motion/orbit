@@ -53,6 +53,7 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
         // lets try again and get a good error
         const fullError = await fetcher.text
         console.log('fetch JSON parse error, text response:', fullError)
+        return null
       }
       throw err
     }

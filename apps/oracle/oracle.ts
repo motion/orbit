@@ -196,9 +196,9 @@ export default class Oracle {
       )
       await this.restart()
     }
-    this.lastAccessibility = value
     // only send on new value
     const newValue = value !== this.lastAccessibility
+    this.lastAccessibility = value
     if (newValue) {
       this.onAccessibleCB(value)
     }

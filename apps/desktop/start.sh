@@ -11,6 +11,7 @@ npx nodemon \
   --watch _ \
   --watch $(realpath node_modules/@mcro/black)/_ \
   --watch $(realpath node_modules/@mcro/models)/_ \
+  --watch $(realpath node_modules/@mcro/services)/_ \
   --watch $(realpath node_modules/@mcro/debug) \
   --watch $(realpath node_modules/@mcro/dev)/_ \
   --watch $(realpath node_modules/@mcro/stores)/_ \

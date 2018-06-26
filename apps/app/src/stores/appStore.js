@@ -190,18 +190,20 @@ export class AppStore {
     },
   )
 
-  resetActiveIndexOnSearchStart = react(
-    () => App.state.query,
-    async (query, { sleep }) => {
-      this.activeIndex = -1
-      this.clearSelected()
-      // auto select after delay
-      if (query) {
-        await sleep(1000)
-        this.nextIndex = 0
-      }
-    },
-  )
+  // this does "auto-select of first result after search"
+  // but it can be pretty annoying
+  // resetActiveIndexOnSearchStart = react(
+  //   () => App.state.query,
+  //   async (query, { sleep }) => {
+  //     this.activeIndex = -1
+  //     this.clearSelected()
+  //     // auto select after delay
+  //     if (query) {
+  //       await sleep(1000)
+  //       this.nextIndex = 0
+  //     }
+  //   },
+  // )
 
   resetActiveIndexOnNewSearchValue = react(
     () => this.searchState.query,

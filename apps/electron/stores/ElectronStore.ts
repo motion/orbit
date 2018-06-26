@@ -32,7 +32,7 @@ export class ElectronStore {
     this.shortcutStore = new ShortcutsStore([
       'Option+Space',
       'Option+Shift+Space',
-      'CommandOrControl+Option+Space',
+      'CommandOrControl+Shift+Space',
     ])
     // @ts-ignore
     this.shortcutStore.on('shortcut', this.onShortcut)

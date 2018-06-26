@@ -22,7 +22,7 @@ const EVENT_KEYS = {
 export class Tray extends BaseComponent {
   mount() {
     if (!this.props.image) {
-      throw new Error(`Expects an image prop with path to image file`)
+      throw new Error('Expects an image prop with path to image file')
     }
     this.tray = new ElectronTray(this.props.image)
   }

@@ -39,7 +39,7 @@ const validEntity = (word, options = { numberOkay: false }) => {
 }
 
 const alphaNumeric = s => s.replace(/[^a-z0-9\']/gi, '')
-const isPossessive = s => s.slice(-2) === `'s` || s.slice(-1) === `'`
+const isPossessive = s => s.slice(-2) === '\'s' || s.slice(-1) === '\''
 
 const sentenceToEntities = text => {
   let index = 1

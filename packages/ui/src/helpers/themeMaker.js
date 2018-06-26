@@ -71,7 +71,7 @@ export class ThemeMaker {
     ...rest
   }) => {
     if (!background || !color) {
-      throw new Error(`Themes require at least background or color`)
+      throw new Error('Themes require at least background or color')
     }
     const base = this.colorize({
       highlightColor,

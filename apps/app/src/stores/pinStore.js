@@ -8,7 +8,7 @@ import * as Constants from '~/constants'
 export class PinStore {
   add = async ({ url } = {}) => {
     if (!url) {
-      throw new Error(`No url provided to context`)
+      throw new Error('No url provided to context')
     }
     // BannerStore.note({ message: 'Pinning...' })
     const response = await r2.post(`${Constants.API_URL}/crawler/single`, {

@@ -193,7 +193,7 @@ export default class Crawler {
         return { title: titles[0].innerText, content }
       }, this.selectors)
       if (!selectorResults) {
-        log.page(`skip: didn't find content with selectors`)
+        log.page('skip: didn\'t find content with selectors')
         return null
       }
     }
@@ -213,13 +213,13 @@ export default class Crawler {
         }
       )
       if (!result) {
-        log.page(`Readability didn't find anything`)
+        log.page('Readability didn\'t find anything')
         return null
       }
     }
     let content
     if (!result.content) {
-      log.page(`Readability didn't find any content`)
+      log.page('Readability didn\'t find any content')
     } else {
       try {
         content = await new Promise((resolve, reject) => {
@@ -242,7 +242,7 @@ export default class Crawler {
       }
     }
     if (!content) {
-      log.page(`No content, looks like a dud`)
+      log.page('No content, looks like a dud')
       return null
     }
     if (!options.disableStructureFinding && !this.selectors) {
@@ -396,13 +396,13 @@ export default class Crawler {
       log.page(`now: ${target.url}`)
       try {
         if (urlMatchesExtensions(target.url, filterUrlExtensions)) {
-          log.page(`Looks like an image, avoid`)
+          log.page('Looks like an image, avoid')
           return null
         } else if (target.radius >= maxRadius) {
           log.page(`Maximum radius reached. Radius: ${target.radius}`)
           return null
         } else if (!matchesDepth(target.url)) {
-          log.page(`Path is not at same depth:`)
+          log.page('Path is not at same depth:')
           log.page(`  ${parse(target.url).pathname}`)
           log.page(`  ${depth}`)
           return null
@@ -415,12 +415,12 @@ export default class Crawler {
           waitUntil: 'domcontentloaded',
         })
         if (this.cancelled) {
-          log.page(`Cancelled during page process`)
+          log.page('Cancelled during page process')
           return null
         }
         const contents = await this.parseContents(page, target.url, options)
         if (this.cancelled) {
-          log.page(`Cancelled during page process`)
+          log.page('Cancelled during page process')
           return null
         }
         let outboundUrls
@@ -441,7 +441,7 @@ export default class Crawler {
             } length`
           )
         } else {
-          log.page(`No contents found`)
+          log.page('No contents found')
         }
         // store crawl results
         return {

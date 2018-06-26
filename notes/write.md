@@ -132,3 +132,28 @@ Orbit does that.
   - more stickiness long term
   - easier multiprocess
   - can use python, go, rust, swift as needed
+
+---
+
+# The Tension between Vision and Research
+
+- pitching something requires showing the "dream"
+  - crafting a reality people want and resonate with
+  - "resonation" is a super-dimensional thing
+  - its hitting a dream state that is strongly desired for many reasons
+- meanwhile doing market research is dividing a space
+  - want to really slice which pieces you want best
+- these are essentially polar opposites
+- painting vs checkboxes
+- some things work well as checkboxes:
+  - dropbox
+  - airbnb
+- some things are horrible as checkboxes, but great paintings:
+  - high ux: webos / ios
+  - multi-featured: meteor / notion
+- painting-like ideas are harder to validate
+- they are also harder to execute
+  - getting just a few pieces wrong can ruin a painting
+- but they are also likely undervalued/underexplored
+- and its a lost value in modern society due to MVP-culture
+  - requires leonardo da vinci / steve jobs "many-talented execution"

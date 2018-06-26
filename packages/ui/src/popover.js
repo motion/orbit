@@ -727,7 +727,7 @@ export class Popover extends React.PureComponent {
       return React.cloneElement(target, targetProps)
     }
     return (
-      <root>
+      <>
         {React.isValidElement(target) && controlledTarget(target)}
         <Portal>
           <container
@@ -793,7 +793,7 @@ export class Popover extends React.PureComponent {
             </popover>
           </container>
         </Portal>
-      </root>
+      </>
     )
   }
 

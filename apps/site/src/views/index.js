@@ -8,13 +8,18 @@ import Router from '~/router'
 
 export * from './section'
 
-export const P = ({ size, ...props }) => (
+const TITLE_FONT_FAMILY = '"Eesti Pro"'
+
+export const P = ({ size, titleFont, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall => (
       <UI.Text
         size={size * (isSmall ? 0.9 : 1)}
         selectable
-        css={{ display: 'block' }}
+        css={{
+          display: 'block',
+          fontFamily: titleFont ? TITLE_FONT_FAMILY : 'inherit',
+        }}
         {...props}
       />
     )}
@@ -45,7 +50,7 @@ export const Title = UI.injectTheme(
     <Media query={Constants.screen.small}>
       {isSmall => (
         <P
-          fontWeight={500}
+          fontWeight={600}
           margin={[0, 0, 5]}
           size={size * (isSmall ? 0.8 : 1)}
           sizeLineHeight={1.1}
@@ -57,7 +62,7 @@ export const Title = UI.injectTheme(
               .alpha(0.8)
           }
           css={{
-            fontFamily: 'Auvant', //'"Mercury Display A", "Mercury Display B"',
+            fontFamily: TITLE_FONT_FAMILY,
             fontStyle: italic ? 'normal' : 'normal',
           }}
           {...props}

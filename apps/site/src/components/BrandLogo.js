@@ -27,7 +27,7 @@ export class BrandLogo extends React.Component {
             onClick={Router.link('/')}
           >
             <orbit />
-            <Logo fill={`${fill}`} size={0.2} white={white} />
+            <Logo fill={`${fill}`} size={0.175} white={white} />
           </brandMark>
         )}
       </Media>

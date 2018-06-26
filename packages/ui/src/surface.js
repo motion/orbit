@@ -310,7 +310,7 @@ class SurfacePlain extends React.Component {
             popoverProps={POPOVER_PROPS}
             {...tooltipProps}
           >
-            {tooltip}
+            <span css={{ maxWidth: 200 }}>{tooltip}</span>
           </Popover>
         </Theme>
       </>

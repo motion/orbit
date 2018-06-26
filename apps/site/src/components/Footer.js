@@ -9,10 +9,11 @@ import * as UI from '@mcro/ui'
 
 const SmallTitle = props => (
   <P
-    size={1}
+    size={1.1}
     alpha={1}
     color="#111"
     css={{ textTransform: 'uppercase', fontWeight: 600, marginBottom: 10 }}
+    titleFont
     {...props}
   />
 )

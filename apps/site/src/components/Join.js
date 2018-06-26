@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { P, P2, Callout } from '~/views'
+import { P } from '~/views'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import jsonp from 'jsonp'
@@ -57,7 +57,8 @@ export class Join extends React.Component {
     }
   }
 
-  render({ ...props }, { success, error, submitting }) {
+  render({ sizeButton, ...props }, { success, error, submitting }) {
+    const height = 40
     return (
       <section id="join" {...props}>
         <form
@@ -77,21 +78,26 @@ export class Join extends React.Component {
               name="EMAIL"
               id="mce-EMAIL"
               placeholder="Email address..."
+              css={{
+                height,
+              }}
             />
-            <UI.Theme theme="#46CB62">
+            <UI.Theme theme="#37C457">
               <UI.Button
-                size={1.1}
-                height={53}
+                size={1.1 * (sizeButton || 1)}
+                height={height}
                 sizeRadius={3}
-                sizePadding={1.8}
+                sizePadding={1.7}
                 borderLeftRadius={0}
-                margin={[-10, 0, 0, 'auto']}
-                fontWeight={600}
+                margin={[0, 0, 0, 'auto']}
+                fontWeight={500}
                 type="submit"
                 disabled={submitting}
                 css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
               >
-                {submitting ? 'Signing up...' : 'Get early access'}
+                <P titleFont css={{ marginTop: 1 }}>
+                  {submitting ? 'Signing up...' : 'Early access'}
+                </P>
               </UI.Button>
             </UI.Theme>
           </UI.Row>
@@ -114,15 +120,13 @@ export class Join extends React.Component {
       width: '100%',
       maxWidth: 540,
       margin: [0, 'auto'],
-      padding: [5, 10],
     },
     input: {
       display: 'flex',
       width: '100%',
       flex: 1,
-      padding: [14, 22],
-      margin: [10, 0, 20],
-      fontSize: 20,
+      padding: [12, 16],
+      fontSize: 17,
       border: [1, 'red'],
       borderLeftRadius: 100,
     },

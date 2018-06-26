@@ -88,24 +88,19 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title
-      italic
-      size={3.8}
-      sizeLineHeight={1.1}
-      margin={[0, 0, 15, 0]}
-      alpha={1}
-      color="#222"
-    >
-      Knowledge Management that&nbsp;Works
+    <Title italic size={6.2} sizeLineHeight={1.1} alpha={1} color="#222">
+      Orderly Conduct
     </Title>
-    <P size={1.35} sizeLineHeight={1.2} fontWeight={300}>
-      Upgrade your Mac with powerful unified cloud search and exploration for
-      teams. Completely private & on-device so it works for you and installs in
-      seconds.
+    <P size={2.1} sizeLineHeight={1.1} titleFont alpha={0.65} fontWeight={400}>
+      Unified cloud search and profiles installed in just a minute with{' '}
+      <UI.Surface
+        inline
+        background="transparent"
+        tooltip="Orbit never sends any data to the cloud. It runs entirely privately on your device. That's peace of mind for keeping minds in sync."
+      >
+        complete&nbsp;privacy
+      </UI.Surface>.
     </P>
-    <homeJoin css={{ margin: [20, -15, -30] }}>
-      <Join />
-    </homeJoin>
     <actions
       $$row
       css={{
@@ -218,7 +213,7 @@ class HomeHeader extends React.Component {
                     $$fullscreen
                     css={{
                       textAlign: 'left',
-                      padding: [0, 80, 0, 0],
+                      padding: [0, 40, 0, 0],
                     }}
                   >
                     <div $$flex={1.2} />

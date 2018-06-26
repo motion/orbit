@@ -10,7 +10,7 @@ import Media from 'react-media'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 import { Bauhaus } from '~/views/bauhaus'
-import { Parallax, ParallaxLayer } from 'react-spring'
+import { Parallax, ParallaxLayer } from '~/components/Parallax'
 import * as _ from 'lodash'
 
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
@@ -27,7 +27,15 @@ const scrollToTrack = (to, track) => {
   }
 }
 
-const Page = ({ offset, peek, title, children, background, orbit }) => (
+const Page = ({
+  offset,
+  peek,
+  title,
+  titleProps,
+  children,
+  background,
+  orbit,
+}) => (
   <React.Fragment>
     <ParallaxLayer
       className="parallaxLayer background"
@@ -58,6 +66,12 @@ const Page = ({ offset, peek, title, children, background, orbit }) => (
       if={title}
       offset={offset}
       speed={-0.05}
+      effects={
+        {
+          // opacity: val
+        }
+      }
+      {...titleProps}
     >
       <SectionContentParallax>{title}</SectionContentParallax>
     </ParallaxLayer>

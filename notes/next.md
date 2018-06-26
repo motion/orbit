@@ -1,17 +1,26 @@
 # next
 
-- search: lots of interaction
-- search fix finding various things (sqllite search plugin)
-- search bigger previews
-- website fixes: better demo video image, mobile image, mobile features images, mobile padding tweaks
-- hmr fix: peek windows dont clear content (immedate: true somewhere)
+## product
+
+- open bit on keyboard enter after search
+- improve github peek design
+- improve gdocs card and peek design
+- gdocs strip out css stuff in header
+- fix some github tickets not showing bodies
+- run through a few searches and bugfix (duplicates)
+- hover highlighted snippet in search to scroll to part in peek
+- profile design 2.0: make it worth keeping open
+
+## website
+
+- start 2.0
+
+## dev
+
 - hmr fix: flash on orbit with no data for a bit
-- interaction: keyboard, highlighting
-- peek fix: gdocs, gmail, slack formatting
-- perf: searching
 - look into jira/confluence
 - potentially crawler
-- settings panes: gmail/gdocs split, github, slack, folder
+- settings panes: slack, folder
 
 bugs:
 
@@ -101,7 +110,6 @@ last demo:
 - [ ] home animations
 - [ ] productionize
 - interaction
-  - [ ] slightly faster orbit hide on mouseout
   - [ ] space to peek
     - appStore.hasNavigated = false on new query, true on keydown
     - use that to make space open peek

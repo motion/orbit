@@ -2,7 +2,6 @@ import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 import debug from '@mcro/debug'
 import { DriveService, DriveFileObject } from '@mcro/services'
 import TurndownService from 'turndown'
-import summarize from 'nodejs-text-summarizer'
 
 const turndown = new TurndownService()
 const htmlToMarkdown = html => turndown.turndown(html)
@@ -75,7 +74,7 @@ export default class GoogleDriveSync {
       identifier: info.id,
       type: 'document',
       title: name,
-      body: summarize(markdowned),
+      body: text,
       data: {
         ...data,
         // storing too much for now just to have flexibility

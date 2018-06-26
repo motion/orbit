@@ -1,5 +1,4 @@
 // import keywordExtract from 'keyword-extractor'
-// import summarize from 'nodejs-text-summarizer'
 
 // const options = {
 //   language: 'english',

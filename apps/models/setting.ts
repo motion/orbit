@@ -28,6 +28,7 @@ export class Setting extends T.BaseEntity {
     channels?: Array<string>
     lastAttachmentSync?: { [key: string]: string }
     lastMessageSync?: { [key: string]: string }
+    autoLaunch?: boolean
   }
 
   @T.CreateDateColumn() createdAt: Date

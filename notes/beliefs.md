@@ -19,3 +19,16 @@ After talking to daniel (YC/Greplin) and stuart and charlie (Workday):
   - Need to figure out good strategy for mobile
 - Need to have good story for larger companies
   - May need to see about doing some cloud stuff
+
+# Jun 25th
+
+Talked to Rahul (Uber), Jeff (Deloitte), Ariel (Hulu):
+
+- They have issues with internal search
+- They built their own custom intranet systems (DeloitteNet)
+- Rahul thinks Docs especially seeing updates is the hardest
+  - he consistently has to keep 10 tabs open to track docs
+- Rahul also thinks after that hooking into APIs would be best
+  - this is actually a huge advantage for Orbit, building a custom API search integration doesn't seem easy with a big cloud or on prem service, even if only for feedback loop of development. Plus firewall issues.
+  - We can basically let them query whatever endpoint they want and return it in a format we set up to help us rank.
+- Jeff and Ariel both hate the intranets but didn't get too much more from them, it's perhaps a minor positive that they seem pretty interested overall.

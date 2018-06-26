@@ -9,6 +9,7 @@
 - fix some github tickets not showing bodies
 - run through a few searches and bugfix (duplicates)
 - hover highlighted snippet in search to scroll to part in peek
+- profile design 2.0: make it worth keeping open
 
 ## website
 

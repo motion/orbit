@@ -1,80 +1,50 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
-import SearchableTable from '@mcro/sonar/_/ui/components/searchable/SearchableTable'
-import { hot } from 'react-hot-loader'
+import { view, react } from '@mcro/black'
 
-console.log('SearchableTable', SearchableTable)
+@view({
+  store: class MyStore {
+    x = 0
 
-const columnSizes = {
-  time: '15%',
-  module: '20%',
-  name: 'flex',
-}
+    name = react(
+      () => [this.props.value, this.x],
+      async ([val, x], { sleep }) => {
+        if (x % 2 === 0) {
+          await sleep(1000)
+        }
+        if (x % 5 === 0) {
+          throw react.cancel
+        }
+        return `${val} -- ${x}`
+      },
+    )
 
-const columns = {
-  time: {
-    value: 'Column1',
+    increment = () => {
+      this.x++
+    }
   },
-  module: {
-    value: 'Column22',
-  },
-  name: {
-    value: 'Column3',
-  },
-}
-
-const rows = [
-  {
-    key: 0,
-    columns: {
-      time: {
-        value: 10,
-      },
-      module: {
-        value: 'Ok',
-      },
-      name: {
-        value: 'Hello world',
-      },
-    },
-  },
-  {
-    key: 1,
-    columns: {
-      time: {
-        value: 10,
-      },
-      module: {
-        value: 'Ok',
-      },
-      name: {
-        value: 'Hello world',
-      },
-    },
-  },
-]
-
-export default class Root extends React.Component {
-  render() {
+})
+class Counter extends React.Component {
+  render({ store }) {
     return (
       <root css={{ pointerEvents: 'all' }}>
-        <SearchableTable
-          rowLineHeight={28}
-          floating={false}
-          autoHeight
-          multiline
-          columnSizes={columnSizes}
-          columns={columns}
-          onRowHighlighted={this.onRowHighlighted}
-          multiHighlight
-          rows={rows}
-          stickyBottom
-          actions={<button onClick={this.clear}>Clear Table</button>}
-        />
+        <div>my name is {store.name}</div>
+        <button onClick={store.increment}>up</button>
       </root>
     )
   }
 }
 
-// export default hot(module)(Root)
+export class Root extends React.Component {
+  state = {
+    value: '',
+  }
+
+  render() {
+    return (
+      <div css={{ pointerEvents: 'all' }}>
+        <input onChange={e => this.setState({ value: e.target.value })} />
+        <Counter value={this.state.value} />
+      </div>
+    )
+  }
+}

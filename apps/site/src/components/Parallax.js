@@ -52,7 +52,12 @@ export class ParallaxLayer extends React.PureComponent {
     const offset = height * this.props.offset + targetScroll * this.props.speed
     const to = parseFloat(-(scrollTop * this.props.speed) + offset)
     this.updateEffect(this.animatedTranslate, to, immediate)
-    this.updateCustomEffects(to / height, immediate)
+    const distanceFromTarget = scrollTop + height - targetScroll
+    const toPlain = distanceFromTarget / (height * this.props.offset)
+    if (this.props.debug) {
+      console.log(this.props.debug, distanceFromTarget, toPlain)
+    }
+    this.updateCustomEffects(toPlain, immediate)
   }
 
   setHeight(height, immediate = false) {
@@ -70,10 +75,12 @@ export class ParallaxLayer extends React.PureComponent {
   }
 
   updateCustomEffects(to, immediate) {
-    if (!this.props.effects) {
+    if (!this.effects) {
       return
     }
-    this.updateEffect(this.animatedOpacity, to, immediate)
+    for (const key of Object.keys(this.effects)) {
+      this.updateEffect(this.effects[key], to, immediate)
+    }
   }
 
   initialize() {
@@ -85,8 +92,10 @@ export class ParallaxLayer extends React.PureComponent {
     this.animatedTranslate = new AnimatedValue(to)
     this.animatedSpace = new AnimatedValue(parent.space * props.factor)
     if (this.props.effects) {
-      this.animatedOpacity = new AnimatedValue(to)
-      // this.effects =  ?
+      this.effects = {}
+      for (const key of Object.keys(this.props.effects)) {
+        this.effects[key] = new AnimatedValue(to)
+      }
     }
   }
 
@@ -110,10 +119,9 @@ export class ParallaxLayer extends React.PureComponent {
     })
     const customEffects = {}
     if (effects) {
-      customEffects.opacity = this.animatedOpacity.interpolate({
-        range: [0, 1],
-        output: [0, 1],
-      })
+      for (const key of Object.keys(effects)) {
+        customEffects[key] = this.effects[key].interpolate(effects[key])
+      }
     }
     return (
       <AnimatedDiv

@@ -66,11 +66,15 @@ const Page = ({
       if={title}
       offset={offset}
       speed={-0.05}
-      effects={
-        {
-          // opacity: val
-        }
-      }
+      effects={{
+        opacity: x => {
+          const fadeAfter = 0.9
+          if (x < fadeAfter) {
+            return x * Math.log(x * 10)
+          }
+          return fadeAfter * 2 - x
+        },
+      }}
       {...titleProps}
     >
       <SectionContentParallax>{title}</SectionContentParallax>
@@ -401,6 +405,7 @@ class SectionSearch extends React.Component {
     return (
       <Page
         offset={1}
+        titleProps={{ debug: 1 }}
         title={
           <inner css={{ width: '50%' }}>
             <Title
@@ -436,6 +441,7 @@ class SectionProfiles extends React.Component {
     return (
       <Page
         offset={2}
+        titleProps={{ debug: 2 }}
         title={
           <inner css={{ width: '50%' }}>
             <Title

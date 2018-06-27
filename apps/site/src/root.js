@@ -4,7 +4,6 @@ import Router from './router'
 import { NotFoundPage } from '~/pages/NotFoundPage'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
-import Media from 'react-media'
 import { hot } from 'react-hot-loader'
 import { scrollTo } from '~/helpers'
 
@@ -24,36 +23,14 @@ class Root extends React.Component {
     const isSmall = width < Constants.smallSize
     return (
       <UI.Theme name="light">
-        <Media query={Constants.screen.tall}>
-          {isTall => (
-            <root
-              $scaledUp={isTall}
-              css={{ background: Constants.backgroundColor }}
-            >
-              <CurrentPage
-                width={width}
-                isSmall={isSmall}
-                key={Router.key}
-                {...Router.params}
-              />
-            </root>
-          )}
-        </Media>
+        <CurrentPage
+          width={width}
+          isSmall={isSmall}
+          key={Router.key}
+          {...Router.params}
+        />
       </UI.Theme>
     )
-  }
-
-  static style = {
-    root: {
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    scaledUp: {
-      transformOrigin: 'top center',
-      transform: {
-        scale: 1.1,
-      },
-    },
   }
 }
 

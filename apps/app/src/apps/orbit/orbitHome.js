@@ -48,7 +48,6 @@ const postfix = [
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
     skip,
-    take: 1,
     where: {
       type,
       integration,
@@ -81,9 +80,9 @@ class OrbitHomeStore {
         Person.findOne({ name: 'javivelasco' }),
         findType('gmail', 'mail'),
         findType('gmail', 'mail', 1),
-        findType('slack', 'conversation'),
-        findType('slack', 'conversation'),
-        findType('slack', 'conversation'),
+        findType('slack', 'conversation', 1),
+        findType('slack', 'conversation', 2),
+        findType('slack', 'conversation', 3),
       ])).filter(Boolean)
     },
     {

@@ -88,7 +88,7 @@ export default class GoogleMailSync {
       )
       console.log('got history for gmail', history)
       // @ts-ignore
-      if (!history.history || !history.history.length) {
+      if (!history || !history.history || !history.history.length) {
         return
       }
       // @ts-ignore

@@ -15,8 +15,19 @@ export const Slant = ({
   ...props
 }) => {
   const slant =
-    Math.atan(amount / (Constants.SECTION_HEIGHT / 2)) * 180 / Math.PI
+    (Math.atan(amount / (Constants.SECTION_HEIGHT / 2)) * 180) / Math.PI
   const rotate = `${(inverse ? -1 : 1) * (inverseSlant ? -1 : 1) * slant}deg`
+  let gradients = []
+  if (slantGradient) {
+    const all = [...slantGradient]
+    // first
+    gradients[0] = all.shift()
+    // last
+    gradients[2] = all.pop()
+    // middle
+    gradients[1] = all
+    console.log('gradients', gradients)
+  }
   return (
     <Media
       query={Constants.screen.large}
@@ -43,9 +54,9 @@ export const Slant = ({
               css={{
                 position: 'absolute',
                 background: slantGradient
-                  ? `linear-gradient(200deg, ${slantGradient[0]} 5%, ${
-                      slantGradient[1]
-                    } 95%)`
+                  ? `linear-gradient(200deg, ${gradients[0]} 5%, ${
+                      gradients[1].length ? gradients[1].join(', ') + ',' : ''
+                    } ${gradients[2]} 95%)`
                   : slantBackground,
                 top: -slant * 3,
                 bottom: -slant * 3,

@@ -6,6 +6,7 @@ import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
+import { Join } from '~/components/Join'
 
 @UI.injectTheme
 @view
@@ -21,8 +22,12 @@ export class Header extends React.Component {
                 <headerInner>
                   <BrandLogo />
                   <div $$flex />
+                  <join css={{ margin: [-25, 0] }}>
+                    <Join />
+                  </join>
                   <nav>
                     <Link
+                      if={false}
                       isLarge={isLarge}
                       color={color}
                       css={linkStyle}

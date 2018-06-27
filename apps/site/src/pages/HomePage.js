@@ -188,9 +188,9 @@ const Pitch = ({ isLarge }) => (
       Instant-on Intranet
     </Title>
     <P size={2.1} sizeLineHeight={1.1} titleFont alpha={0.65} fontWeight={400}>
-      Unified cloud search and more installed in just a minute with{' '}
+      Unified cloud search and more. Installed in just a minute with{' '}
       <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
-        next level&nbsp;privacy
+        next&nbsp;level&nbsp;privacy
       </ToolTip>.
     </P>
     <actions
@@ -294,7 +294,7 @@ class HomeHeader extends React.Component {
                     height: 2016 / 2,
                     transform: {
                       x: 20,
-                      y: 100,
+                      y: '20%',
                     },
                   }}
                 >
@@ -476,9 +476,8 @@ class SectionSearch extends React.Component {
               alpha={0.65}
               fontWeight={300}
             >
-              Orbit runs completely behind your firewall. With{' '}
-              <ToolTip>novel NLP</ToolTip> and compression, it searches
-              everything, fast.
+              Orbit runs completely behind your firewall. With many integrations
+              and <ToolTip>novel NLP</ToolTip> it searches everything, fast.
             </P>
             <br />
             <P

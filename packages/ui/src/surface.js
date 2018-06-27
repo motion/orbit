@@ -347,7 +347,6 @@ class SurfacePlain extends React.Component {
     element: {
       border: 'none',
       background: 'transparent',
-      userSelect: 'none',
       height: '100%',
       flex: 1,
       color: 'inherit',
@@ -381,9 +380,7 @@ class SurfacePlain extends React.Component {
   }
 
   static inlineStyle = {
-    display: 'inline-block',
-    margin: [-2, 0],
-    borderRadius: 1000,
+    display: 'inline',
   }
 
   static dimmedStyle = {
@@ -697,6 +694,7 @@ class SurfacePlain extends React.Component {
     }
     const result = {
       element: {
+        ...(props.inline && self.constructor.inlineStyle),
         // height,
         ...borderRadius,
         ...elementGlowProps,

@@ -208,11 +208,15 @@ export class Parallax extends React.PureComponent {
     const scrollType = getScrollType(horizontal)
     if (!this.container) return
     this.space = this.container[horizontal ? 'clientWidth' : 'clientHeight']
-    if (scrolling) this.current = this.container[scrollType]
-    else this.container[scrollType] = this.current = this.offset * this.space
-    if (this.content)
+    if (scrolling) {
+      this.current = this.container[scrollType]
+    } else {
+      this.container[scrollType] = this.current = this.offset * this.space
+    }
+    if (this.content) {
       this.content.style[horizontal ? 'width' : 'height'] = `${this.space *
         this.props.pages}px`
+    }
     this.layers.forEach(layer => {
       layer.setHeight(this.space, true)
       layer.setPosition(this.space, this.current, true)

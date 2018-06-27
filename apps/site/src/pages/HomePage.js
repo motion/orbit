@@ -4,7 +4,16 @@ import * as UI from '@mcro/ui'
 import { Header, Footer } from '~/components'
 import SectionContent from '~/views/sectionContent'
 import Router from '~/router'
-import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo, Glow } from '~/views'
+import {
+  Slant,
+  Title,
+  P,
+  AppleLogo,
+  HomeImg,
+  WindowsLogo,
+  Glow,
+  FadedArea,
+} from '~/views'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import { scrollTo } from '~/helpers'
@@ -12,6 +21,8 @@ import bg from '~/../public/girl.svg'
 import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
 import peekImg from '~/../public/peek.png'
+import { SlackIcon, DriveIcon, DropboxIcon, GithubIcon } from '~/views/icons'
+import profileImg from '~/../public/screen-profile.png'
 
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -65,6 +76,7 @@ class Page extends React.Component {
     orbit,
     backgroundProps,
     orbitProps,
+    zIndex = 0,
   }) {
     return (
       <React.Fragment>
@@ -74,6 +86,9 @@ class Page extends React.Component {
           if={background}
           offset={offset}
           speed={0.2}
+          css={{
+            zIndex: 0 + zIndex,
+          }}
           {...backgroundProps}
         >
           {background}
@@ -84,21 +99,18 @@ class Page extends React.Component {
           if={orbit}
           offset={offset}
           speed={-0.85}
+          css={{
+            zIndex: 1 + zIndex,
+          }}
           {...orbitProps}
         >
           {orbit}
         </ParallaxLayer>
         <ParallaxLayer
-          className="parallaxLayer peek"
-          if={peek}
-          offset={offset}
-          speed={0.2}
-        >
-          {peek}
-        </ParallaxLayer>
-        <ParallaxLayer
           className="parallaxLayer title"
-          $above
+          css={{
+            zIndex: 2 + zIndex,
+          }}
           if={title}
           offset={offset}
           speed={-0.05}
@@ -107,9 +119,11 @@ class Page extends React.Component {
           <SectionContentParallax>{title}</SectionContentParallax>
         </ParallaxLayer>
         <ParallaxLayer
-          $above
+          css={{
+            zIndex: 2 + zIndex,
+          }}
           if={children}
-          className="parallaxLayer text header"
+          className="parallaxLayer children"
           offset={offset}
           speed={0.4}
         >
@@ -117,18 +131,6 @@ class Page extends React.Component {
         </ParallaxLayer>
       </React.Fragment>
     )
-  }
-
-  static style = {
-    background: {
-      zIndex: 0,
-    },
-    orbit: {
-      zIndex: 1,
-    },
-    above: {
-      zIndex: 2,
-    },
   }
 }
 
@@ -234,8 +236,8 @@ class HomeHeader extends React.Component {
             <Glow
               style={{
                 background: '#fff',
-                opacity: 0.5,
-                transform: { x: '-45%', y: '0%', scale: 0.65 },
+                opacity: 1,
+                transform: { x: '-65%', y: '-20%', scale: 0.65 },
               }}
             />
             <Bauhaus
@@ -470,20 +472,25 @@ const SectionSubP = props => (
     sizeLineHeight={1.1}
     titleFont
     color="#fff"
-    alpha={0.8}
+    alpha={0.9}
     {...props}
   />
 )
 
+const waveColor = '#CECEF4'
+
 @view
 class SectionSearch extends React.Component {
   render() {
+    const iconProps = {
+      size: 0.15,
+    }
     return (
       <Page
         offset={1}
         background={
           <>
-            <WaveBanner fill="#CECEF4" />
+            <WaveBanner fill={waveColor} />
             <Bauhaus
               showTriangle
               css={{
@@ -494,7 +501,6 @@ class SectionSearch extends React.Component {
           </>
         }
         titleProps={{
-          speed: -0.2,
           effects: {
             opacity: x => {
               const fadeAfter = 0.9
@@ -510,18 +516,48 @@ class SectionSearch extends React.Component {
             <SectionTitle>Unified search that works</SectionTitle>
             <VertSpace />
             <SectionP>
-              Orbit runs completely behind your firewall. With many integrations
-              and <ToolTip>novel NLP</ToolTip> it searches everything, fast.
+              Orbit runs entirely behind your firewall giving your integrations{' '}
+              <ToolTip>novel NLP</ToolTip> search and relevancy.
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              Make your intranet wiki, private databases, and internal APIs
-              searchable by everyone in your company.
+              Easily search anything from Slack to intranet wikis, private
+              databases, internal APIs and more.
             </SectionSubP>
+            <VertSpace />
+            <VertSpace />
+            <icons>
+              <icon>
+                <SlackIcon {...iconProps} />
+              </icon>
+              <icon>
+                <DriveIcon {...iconProps} />
+              </icon>
+              <icon>
+                <DropboxIcon {...iconProps} />
+              </icon>
+              <icon>
+                <GithubIcon {...iconProps} />
+              </icon>
+            </icons>
           </inner>
         }
       />
     )
+  }
+
+  static style = {
+    icons: {
+      flexFlow: 'row',
+    },
+    icon: {
+      margin: [0, 20, 0, 0],
+      background: UI.color(waveColor)
+        .darken(0.2)
+        .alpha(0.1),
+      borderRadius: 10,
+      padding: 20,
+    },
   }
 }
 
@@ -529,21 +565,46 @@ class SectionSearch extends React.Component {
 class SectionProfiles extends React.Component {
   render() {
     return (
-      <Page offset={2}>
-        <img
-          src={peekImg}
-          css={{
-            position: 'absolute',
-            top: -600,
-            left: '20%',
-            width: 1319 / 2,
-            height: 'auto',
-            zIndex: 100,
-            transform:
-              'perspective(1000px) rotateY(5deg) rotateX(10deg) scale(0.95)',
-          }}
-        />
-      </Page>
+      <Page
+        offset={2}
+        title={
+          <inner css={{ width: '45%' }}>
+            <SectionTitle>A more personal homebase</SectionTitle>
+            <VertSpace />
+            <SectionP color="#111">
+              Beautiful profiles for everyone in your company. Find experts, see
+              updates, recent collaborations, and more.
+            </SectionP>
+            <VertSpace />
+            <VertSpace />
+            <profileImg
+              css={{
+                width: 500,
+                height: 500,
+                margin: [0, 0, 0, 100],
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <FadedArea fadeDown fadeRight>
+                <img
+                  src={profileImg}
+                  css={{
+                    position: 'absolute',
+                    width: 1199 / 2,
+                    height: 'auto',
+                    transformOrigin: 'top left',
+                    transform: {
+                      x: 50,
+                      y: 50,
+                    },
+                  }}
+                />
+              </FadedArea>
+            </profileImg>
+          </inner>
+        }
+      />
     )
   }
 }
@@ -554,31 +615,16 @@ class SectionIntegrations extends React.Component {
     return (
       <Page
         offset={3}
-        titleProps={{
-          speed: -0.2,
-        }}
+        zIndex={2}
+        background={<WaveBanner fill="#111" />}
         title={
-          <inner css={{ width: '50%', marginTop: '-10%' }}>
-            <Title
-              italic
-              size={4.2}
-              sizeLineHeight={1.1}
-              alpha={1}
-              color="#222"
-            >
-              Fourth section
-            </Title>
-            <P
-              size={2.1}
-              sizeLineHeight={1.1}
-              titleFont
-              alpha={0.65}
-              fontWeight={400}
-            >
-              Running private to your device means you can integrate everything
-              in one. Search databases, internal APIs, and internal wikis with
-              ease.
-            </P>
+          <inner css={{ width: '45%', marginTop: '20%' }}>
+            <SectionTitle color="#fff">Security that works too</SectionTitle>
+            <VertSpace />
+            <SectionP>
+              Lorem Beautiful profiles for everyone in your company. Find
+              experts, see updates, recent collaborations, and more.
+            </SectionP>
           </inner>
         }
       />

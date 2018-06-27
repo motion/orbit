@@ -74,7 +74,8 @@ export class Root {
     this.watchLastBit()
     this.setupHosts()
     await this.server.start()
-    this.screen.start()
+    // this.screen.start()
+    this.screen.watchMouse()
     debugState(({ stores }) => {
       this.stores = stores
     })

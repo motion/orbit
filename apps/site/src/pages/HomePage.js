@@ -503,7 +503,7 @@ const SectionSubP = props => (
   />
 )
 
-const waveColor = '#CECEF4'
+const waveColor = '#C4C4F4'
 
 @view
 class SectionSearch extends React.Component {

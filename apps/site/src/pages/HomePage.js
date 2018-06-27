@@ -129,7 +129,7 @@ class Page extends React.Component {
           offset={offset}
           speed={-0.85}
           css={{
-            zIndex: 1 + zIndex,
+            zIndex: 2 + zIndex,
           }}
           {...orbitProps}
         >
@@ -147,7 +147,9 @@ class Page extends React.Component {
         >
           <SectionContentParallax>{title}</SectionContentParallax>
         </ParallaxLayer>
-        <NormalLayer>{children}</NormalLayer>
+        <NormalLayer css={{ position: 'relative', zIndex: 1 + zIndex }}>
+          {children}
+        </NormalLayer>
       </React.Fragment>
     )
   }
@@ -278,8 +280,8 @@ class HomeHeader extends React.Component {
                 transform: { scale: 0.97, y: '-11%', x: '54%' },
               }}
               warp={([x, y]) => [
-                x - 4 * -Math.sin(x / 50),
-                y - 4 * -Math.sin(x / 50),
+                x - 4 * -Math.sin(x / 30),
+                y - 4 * -Math.sin(x / 30),
               ]}
             />
             {/* <Bauhaus
@@ -485,10 +487,13 @@ const SectionTitle = props => (
   />
 )
 
+const SectionTitleSmall = props => <SectionTitle size={3.1} {...props} />
+
 const SectionP = props => (
   <P
     size={2.1}
     sizeLineHeight={1.1}
+    fontWeight={400}
     titleFont
     color="#fff"
     alpha={1}
@@ -500,6 +505,7 @@ const SectionSubP = props => (
   <P
     size={1.8}
     sizeLineHeight={1.1}
+    fontWeight={300}
     titleFont
     color="#fff"
     alpha={0.9}
@@ -541,12 +547,16 @@ class SectionSearch extends React.Component {
           },
         }}
         title={
-          <inner css={{ width: '45%', marginTop: '3%' }}>
+          <inner css={{ width: '45%', margin: ['auto', 0] }}>
             <SectionTitle>Unified search that works</SectionTitle>
             <VertSpace />
             <SectionP>
-              Orbit runs entirely behind your firewall giving your integrations{' '}
-              <ToolTip>novel NLP</ToolTip> search and relevancy.
+              Orbit runs entirely behind your firewall giving your cloud and
+              private data instant{' '}
+              <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
+                NLP
+              </ToolTip>{' '}
+              search.
             </SectionP>
             <VertSpace />
             <SectionSubP>
@@ -572,7 +582,7 @@ class SectionSearch extends React.Component {
           </inner>
         }
       >
-        <WaveBanner fill={waveColor} css={{ transform: { y: -100 } }} />
+        <WaveBanner fill={waveColor} />
       </Page>
     )
   }
@@ -598,47 +608,53 @@ class SectionProfiles extends React.Component {
     return (
       <Page
         offset={2}
+        background={
+          <>
+            <Slant {...firstSlant} {...topSlants} />
+            <Slant inverseSlant {...secondSlant} {...topSlants} />
+            <Slant {...thirdSlant} {...topSlants} />
+          </>
+        }
         title={
-          <inner css={{ width: '45%' }}>
-            <SectionTitle>A more personal homebase</SectionTitle>
+          <inner css={{ width: '48%', margin: [100, 0, 0] }}>
+            <SectionTitleSmall>A more personal home</SectionTitleSmall>
             <VertSpace />
             <SectionSubTitle>
-              Beautiful profiles for everyone in your company. Find experts, see
-              updates, recent collaborations, and more.
+              Beautiful profiles for everyone with information that keeps you in
+              sync.
             </SectionSubTitle>
             <VertSpace />
             <VertSpace />
-            <profileImg
-              css={{
-                width: 500,
-                height: 500,
-                margin: [0, 0, 0, 100],
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <FadedArea fadeDown fadeRight>
-                <img
-                  src={profileImg}
-                  css={{
-                    position: 'absolute',
-                    width: 1199 / 2,
-                    height: 'auto',
-                    transformOrigin: 'top left',
-                    transform: {
-                      x: 50,
-                      y: 50,
-                    },
-                  }}
-                />
-              </FadedArea>
-            </profileImg>
           </inner>
         }
       />
     )
   }
 }
+
+const Card = ({ title, children, icon }) => (
+  <card
+    css={{
+      flexFlow: 'row',
+      padding: 30,
+      background: [255, 255, 255, 0.05],
+      margin: [0, 0, 25],
+      borderRadius: 10,
+      alignItems: 'center',
+    }}
+  >
+    <UI.Icon
+      name={icon}
+      size={46}
+      color="#fff"
+      css={{ margin: [0, 40, 0, 0] }}
+    />
+    <content css={{ flex: 1 }}>
+      <SectionP css={{ flex: 1 }}>{title}</SectionP>
+      <SectionSubP css={{ flex: 1 }}>{children}</SectionSubP>
+    </content>
+  </card>
+)
 
 @view
 class SectionIntegrations extends React.Component {
@@ -647,16 +663,31 @@ class SectionIntegrations extends React.Component {
       <Page
         offset={3}
         zIndex={4}
-        background={<WaveBanner fill="#111" />}
+        background={<WaveBanner fill="#AE2E73" />}
         title={
-          <inner css={{ width: '45%', marginTop: '20%' }}>
-            <SectionTitle color="#fff">Security that works too</SectionTitle>
-            <VertSpace />
-            <SectionP>
-              Lorem Beautiful profiles for everyone in your company. Find
-              experts, see updates, recent collaborations, and more.
-            </SectionP>
-          </inner>
+          <div
+            css={{ flexFlow: 'row', justifyContent: 'space-around', flex: 1 }}
+          >
+            <inner css={{ width: '42%', margin: ['auto', 0] }}>
+              <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
+              <VertSpace />
+              <SectionSubTitle color="#fff">
+                We've rethought the intranet from the ground up. It starts by
+                putting users and privacy first.
+              </SectionSubTitle>
+            </inner>
+            <inner css={{ width: '45%', margin: ['auto', 0] }}>
+              <Card icon="fire" title="Secure">
+                Your data never leaves your firewall.
+              </Card>
+              <Card icon="time" title="Easy">
+                From download to setup in just a couple of minutes.
+              </Card>
+              <Card icon="sport_user-run" title="Useful">
+                Instant cloud search is now right in your OS, always at hand.
+              </Card>
+            </inner>
+          </div>
         }
       />
     )

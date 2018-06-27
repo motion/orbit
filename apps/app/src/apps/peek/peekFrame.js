@@ -20,7 +20,7 @@ const transitions = store => {
 
 @view.attach('peekStore')
 @view
-export class PeekFrame {
+export class PeekFrame extends React.Component {
   render({ peekStore, children, ...props }) {
     const { willShow, willHide, state, willStayShown } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {

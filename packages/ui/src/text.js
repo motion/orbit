@@ -15,13 +15,11 @@ const highlightText = ({
   maxChars = 500,
   maxSurroundChars = 50,
   style = 'font-weight: 600; color: #000;',
+  separator = '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
 }) => {
   let parts = [text]
   if (trimWhitespace) {
-    parts[0] = parts[0].replace(
-      /(\s{2,}|\n)/g,
-      '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
-    )
+    parts[0] = parts[0].replace(/(\s{2,}|\n)/g, separator)
   }
   const wordFinders = words.map(word => new RegExp(`(${word})`, 'gi'))
   // split all the highlight words:
@@ -34,18 +32,20 @@ const highlightText = ({
   const wordsLen = words.reduce((a, b) => a + b.length, 0)
   const restLen = maxChars - wordsLen
   const surroundMax = Math.min(maxSurroundChars, restLen / numSurrounds / 2)
+  const isHighlightWord = str =>
+    str ? words.indexOf(str.toLowerCase()) > -1 : false
   // trim it down
   const filtered = []
   let prev
   for (const [index, part] of parts.entries()) {
-    const highlighted = words.indexOf(part) > -1
+    const highlighted = isHighlightWord(part)
     const prevHighlighted = prev
     prev = highlighted
     if (highlighted) {
       filtered.push(part)
       continue
     }
-    const nextHighlighted = words.indexOf(parts[index + 1]) > -1
+    const nextHighlighted = isHighlightWord(parts[index + 1])
     // if not close, ignore
     if (!prevHighlighted && !nextHighlighted) {
       continue
@@ -306,6 +306,7 @@ export class Text extends React.Component {
     onMeasure,
     sizeMethod,
     highlight,
+    wordBreak,
     ...props
   }) {
     const { multiLineEllipse } = this
@@ -439,6 +440,7 @@ export class Text extends React.Component {
         paddingLeft: props.paddingLeft,
         paddingRight: props.paddingRight,
         paddingTop: props.paddingTop,
+        wordBreak: props.wordBreak,
       },
       ellipse: {
         color,

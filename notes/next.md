@@ -1,5 +1,6 @@
 - record simple search video
   - border less strong
+  - x in y with nice coloring
   - see if can do app isolated record
   - debounce results a bit more
   - run webpack in prod mode

@@ -53,7 +53,7 @@ const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
       </UI.Text>
     }
     css={{
-      margin: [0, -6],
+      margin: [0, -5],
     }}
     {...props}
   />
@@ -538,7 +538,7 @@ class SectionSearch extends React.Component {
         titleProps={{
           effects: {
             opacity: x => {
-              const fadeAfter = 0.95
+              const fadeAfter = 1
               if (x < fadeAfter) {
                 return x * Math.log(x * 10)
               }
@@ -550,8 +550,8 @@ class SectionSearch extends React.Component {
           <inner css={{ width: '45%', margin: ['auto', 0] }}>
             <SectionTitle
               color={UI.color(waveColor)
-                .darken(0.5)
-                .desaturate(0.5)}
+                .darken(0.6)
+                .desaturate(0.6)}
             >
               Unified search that works
             </SectionTitle>
@@ -566,9 +566,8 @@ class SectionSearch extends React.Component {
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              Easily search and stay up to date on everything from Slack and
-              Google Docs to intranet wikis, private databases, and internal
-              APIs.
+              Stay up to date on everything from Slack and Google Docs to
+              intranet wikis, private databases, and internal APIs.
             </SectionSubP>
             <VertSpace />
             <VertSpace />

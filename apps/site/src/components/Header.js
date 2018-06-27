@@ -22,9 +22,9 @@ export class Header extends React.Component {
                 <headerInner>
                   <BrandLogo />
                   <div $$flex />
-                  <join css={{ margin: [-25, 0] }}>
+                  {/* <join css={{ margin: [-25, 0] }}>
                     <Join />
-                  </join>
+                  </join> */}
                   <nav>
                     <Link
                       if={false}

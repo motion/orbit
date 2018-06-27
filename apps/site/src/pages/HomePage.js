@@ -24,11 +24,17 @@ import peekImg from '~/../public/peek.png'
 import { SlackIcon, DriveIcon, DropboxIcon, GithubIcon } from '~/views/icons'
 import profileImg from '~/../public/screen-profile.png'
 
-const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
+const bodyBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
 
 const WaveBanner = ({ fill = '#000', ...props }) => (
-  <svg viewBox="0 0 3701 2273">
+  <svg
+    preserveAspectRatio="none"
+    viewBox="0 0 3701 2273"
+    width="100%"
+    height="100%"
+    {...props}
+  >
     <path
       d="M0,55.59375 C212.979167,113.239583 555.390625,138.213542 1027.23438,130.515625 C1735,118.96875 2001.85938,27.1875 2637.45312,6.890625 C3061.18229,-6.640625 3415.69792,1.0625 3701,30 L3701,2197 C3532.39583,2141.58333 3222.74479,2116.04167 2772.04687,2120.375 C2096,2126.875 1777.21875,2273.0625 1131.75,2273.17188 C701.4375,2273.24479 324.1875,2247.85417 0,2197 L0,55.59375 Z"
       id="Rectangle"
@@ -61,6 +67,29 @@ const scrollToTrack = (to, track) => {
   return () => {
     window.ga('send', 'event', 'Home', 'download', track)
     scrollTo(to)()
+  }
+}
+
+class NormalLayer extends React.Component {
+  state = {
+    height: window.innerHeight,
+  }
+
+  resize = () => {
+    this.setState({ height: window.innerHeight })
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize, false)
+    this.resize()
+  }
+
+  componentWillUnmount() {
+    window.addEventListener('resize', this.resize, false)
+  }
+
+  render() {
+    return <layer css={{ height: this.state.height }} {...this.props} />
   }
 }
 
@@ -118,17 +147,7 @@ class Page extends React.Component {
         >
           <SectionContentParallax>{title}</SectionContentParallax>
         </ParallaxLayer>
-        <ParallaxLayer
-          css={{
-            zIndex: 2 + zIndex,
-          }}
-          if={children}
-          className="parallaxLayer children"
-          offset={offset}
-          speed={0.4}
-        >
-          {children}
-        </ParallaxLayer>
+        <NormalLayer>{children}</NormalLayer>
       </React.Fragment>
     )
   }
@@ -136,7 +155,7 @@ class Page extends React.Component {
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
-  slantGradient: [topBg, borderize(bottomBg.mix(topBg)), topBg],
+  slantGradient: [bodyBg, borderize(bottomBg.mix(bodyBg)), bodyBg],
 }
 
 const firstSlant = {
@@ -160,19 +179,30 @@ const VertSpace = view('div', {
   height: 20,
 })
 
+const SectionSubTitle = props => (
+  <P
+    size={2.1}
+    sizeLineHeight={1.1}
+    titleFont
+    alpha={0.65}
+    fontWeight={400}
+    {...props}
+  />
+)
+
 const Pitch = ({ isLarge }) => (
   <>
     <Title italic size={5.5} sizeLineHeight={1.1} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
     <VertSpace />
-    <P size={2.1} sizeLineHeight={1.1} titleFont alpha={0.65} fontWeight={400}>
+    <SectionSubTitle>
       Unified cloud search for things and people. Installed in just a minute,
       with{' '}
       <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
         next&nbsp;level&nbsp;privacy
       </ToolTip>.
-    </P>
+    </SectionSubTitle>
     <VertSpace />
     <Join />
     <VertSpace />
@@ -490,12 +520,11 @@ class SectionSearch extends React.Component {
         offset={1}
         background={
           <>
-            <WaveBanner fill={waveColor} />
             <Bauhaus
               showTriangle
               css={{
                 transform: { scale: 0.6, y: '-111%', x: '-80%' },
-                opacity: 0.04,
+                opacity: 0.05,
               }}
             />
           </>
@@ -503,7 +532,7 @@ class SectionSearch extends React.Component {
         titleProps={{
           effects: {
             opacity: x => {
-              const fadeAfter = 0.9
+              const fadeAfter = 0.95
               if (x < fadeAfter) {
                 return x * Math.log(x * 10)
               }
@@ -512,7 +541,7 @@ class SectionSearch extends React.Component {
           },
         }}
         title={
-          <inner css={{ width: '45%' }}>
+          <inner css={{ width: '45%', marginTop: '3%' }}>
             <SectionTitle>Unified search that works</SectionTitle>
             <VertSpace />
             <SectionP>
@@ -542,7 +571,9 @@ class SectionSearch extends React.Component {
             </icons>
           </inner>
         }
-      />
+      >
+        <WaveBanner fill={waveColor} css={{ transform: { y: -100 } }} />
+      </Page>
     )
   }
 
@@ -571,10 +602,10 @@ class SectionProfiles extends React.Component {
           <inner css={{ width: '45%' }}>
             <SectionTitle>A more personal homebase</SectionTitle>
             <VertSpace />
-            <SectionP color="#111">
+            <SectionSubTitle>
               Beautiful profiles for everyone in your company. Find experts, see
               updates, recent collaborations, and more.
-            </SectionP>
+            </SectionSubTitle>
             <VertSpace />
             <VertSpace />
             <profileImg
@@ -615,7 +646,7 @@ class SectionIntegrations extends React.Component {
     return (
       <Page
         offset={3}
-        zIndex={2}
+        zIndex={4}
         background={<WaveBanner fill="#111" />}
         title={
           <inner css={{ width: '45%', marginTop: '20%' }}>
@@ -662,11 +693,15 @@ export class HomePage extends React.Component {
         scrolling={false}
         ref={node => (this.parallax = node)}
         pages={pages}
+        config={{
+          tension: 210,
+          friction: 20,
+        }}
       >
         <UI.Theme
           theme={{
-            background: topBg,
-            color: topBg.darken(0.6).desaturate(0.5),
+            background: bodyBg,
+            color: bodyBg.darken(0.6).desaturate(0.5),
           }}
         >
           <Media query={Constants.screen.large}>
@@ -679,9 +714,20 @@ export class HomePage extends React.Component {
                     <SectionSearch isLarge={isLarge} isMedium={isMedium} />
                     <SectionProfiles />
                     <SectionIntegrations />
-                    <Page offset={4}>
+                    <footer css={{ position: 'relative', zIndex: 3 }}>
+                      <hideOrbit
+                        css={{
+                          background: `linear-gradient(transparent, ${bodyBg} 20%)`,
+                          height: 1000,
+                          position: 'absolute',
+                          top: -1000,
+                          left: 0,
+                          right: 0,
+                          zIndex: -1,
+                        }}
+                      />
                       <Footer />
-                    </Page>
+                    </footer>
                   </>
                 )}
               </Media>

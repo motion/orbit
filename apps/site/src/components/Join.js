@@ -58,6 +58,7 @@ export class Join extends React.Component {
   }
 
   render({ ...props }, { success, error, submitting }) {
+    const style = { fontFamily: '"Eesti Pro"' }
     return (
       <section id="join" {...props}>
         <form
@@ -70,35 +71,37 @@ export class Join extends React.Component {
           noValidate
           onSubmit={this.submit}
         >
-          <span css={{ fontFamily: '"Eesti Pro"' }}>
-            <UI.Row>
-              <UI.Input
-                $input
+          <UI.Row>
+            <UI.Input
+              $input
+              size={1.1}
+              sizeRadius={1}
+              sizePadding={1.5}
+              ref={this.email}
+              type="email"
+              name="EMAIL"
+              id="mce-EMAIL"
+              placeholder="Email address..."
+              style={style}
+            />
+            <UI.Theme theme="#37C457">
+              <UI.Button
                 size={1.1}
                 sizeRadius={1}
                 sizePadding={1.5}
-                ref={this.email}
-                type="email"
-                name="EMAIL"
-                id="mce-EMAIL"
-                placeholder="Email address..."
-              />
-              <UI.Theme theme="#37C457">
-                <UI.Button
-                  size={1.1}
-                  sizeRadius={1}
-                  sizePadding={1.5}
-                  margin={[0, 0, 0, 12]}
-                  fontWeight={500}
-                  type="submit"
-                  disabled={submitting}
-                  css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
-                >
-                  {submitting ? 'Signing up...' : 'Early access'}
-                </UI.Button>
-              </UI.Theme>
-            </UI.Row>
-          </span>
+                margin={[0, 0, 0, 12]}
+                fontWeight={500}
+                type="submit"
+                disabled={submitting}
+                style={{
+                  ...style,
+                  ...(submitting && { opacity: 0.5, pointerEvents: 'none' }),
+                }}
+              >
+                {submitting ? 'Signing up...' : 'Early access'}
+              </UI.Button>
+            </UI.Theme>
+          </UI.Row>
           <message
             $success={success && !error}
             css={{ maxWidth: '70%', height: 30, marginBottom: -20 }}

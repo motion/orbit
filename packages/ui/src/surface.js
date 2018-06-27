@@ -693,7 +693,7 @@ class SurfacePlain extends React.Component {
       // ...props.style,
     }
     if (props.sizeLineHeight) {
-      surfaceStyles.lineHeight = `${surfaceStyles.height - 1}px`
+      surfaceStyles.lineHeight = `${surfaceStyles.height}px`
     }
     const result = {
       element: {
@@ -705,7 +705,7 @@ class SurfacePlain extends React.Component {
         flexFlow,
         fontSize: props.fontSize || 'inherit',
         fontWeight: props.fontWeight,
-        lineHeight: props.lineHeight,
+        lineHeight: 'inherit',
         justifyContent: props.justify || props.justifyContent,
         maxWidth: `calc(100% ${iconPad})`,
         // maxHeight: '100%',

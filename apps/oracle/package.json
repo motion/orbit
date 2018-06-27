@@ -10,8 +10,8 @@
     "train": "cd ./pyocr/src && python3 train.py",
     "generate": "node ./generate",
     "test": "DEBUG_IMAGES=true node ./test/test --debug",
-    "test-fast": "node ./test",
-    "test-scroll": "node ./test --scroll",
+    "test-fast": "node ./test/test",
+    "test-scroll": "node ./test/test --scroll",
     "edit": "open ./orbit/orbit.xcodeproj"
   },
   "files": [

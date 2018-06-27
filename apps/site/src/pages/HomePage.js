@@ -11,8 +11,8 @@ import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
-import { SlackIcon, DriveIcon, DropboxIcon, GithubIcon } from '~/views/icons'
 import profileImg from '~/../public/profileimg.png'
+import { Icon } from '~/views/icon'
 
 const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -119,7 +119,7 @@ class Page extends React.Component {
           offset={offset}
           speed={-0.85}
           css={{
-            zIndex: 2 + zIndex,
+            zIndex: 4 + zIndex,
           }}
           {...orbitProps}
         >
@@ -509,7 +509,7 @@ const waveColor = '#C4C4F4'
 class SectionSearch extends React.Component {
   render() {
     const iconProps = {
-      size: 0.15,
+      size: 40,
     }
     return (
       <Page
@@ -563,16 +563,28 @@ class SectionSearch extends React.Component {
             <VertSpace />
             <icons>
               <icon>
-                <SlackIcon {...iconProps} />
+                <Icon name="slack" {...iconProps} />
               </icon>
               <icon>
-                <DriveIcon {...iconProps} />
+                <Icon name="gdocs" {...iconProps} />
               </icon>
               <icon>
-                <DropboxIcon {...iconProps} />
+                <Icon name="gmail" {...iconProps} />
               </icon>
               <icon>
-                <GithubIcon {...iconProps} />
+                <Icon name="github" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="gcalendar" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="confluence" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="jira" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="dropbox" {...iconProps} />
               </icon>
             </icons>
           </inner>
@@ -629,7 +641,14 @@ class SectionProfiles extends React.Component {
           css={{
             width: 1283 / 2,
             height: 'auto',
-            transform: { y: 300, x: 100 },
+            transform: {
+              y: 300,
+              x: 100,
+              perspective: 1000,
+              rotateY: '3deg',
+              rotateX: '4deg',
+              rotateZ: '-1deg',
+            },
           }}
         />
       </Page>
@@ -667,7 +686,7 @@ class SectionIntegrations extends React.Component {
     return (
       <Page
         offset={3}
-        zIndex={4}
+        zIndex={5}
         background={<WaveBanner fill="#AE2E73" />}
         title={
           <div
@@ -750,13 +769,13 @@ export class HomePage extends React.Component {
                     <SectionSearch isLarge={isLarge} isMedium={isMedium} />
                     <SectionProfiles />
                     <SectionIntegrations />
-                    <footer css={{ position: 'relative', zIndex: 3 }}>
+                    <footer css={{ position: 'relative', zIndex: 4 }}>
                       <hideOrbit
                         css={{
                           background: `linear-gradient(transparent, ${bodyBg} 20%)`,
-                          height: 1000,
+                          height: 800,
                           position: 'absolute',
-                          top: -1000,
+                          top: -800,
                           left: 0,
                           right: 0,
                           zIndex: -1,

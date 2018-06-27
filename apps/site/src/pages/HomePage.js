@@ -11,7 +11,6 @@ import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
-import * as _ from 'lodash'
 import peekImg from '~/../public/peek.png'
 
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
@@ -136,9 +135,6 @@ const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
   slantGradient: [topBg, borderize(bottomBg.mix(topBg)), topBg],
 }
-// const bottomSlants = {
-//   slantGradient: [borderize(bottomBg.mix(topBg)), topBg],
-// }
 
 const firstSlant = {
   slantSize: 1,
@@ -155,40 +151,13 @@ const thirdSlant = {
   amount: 18,
 }
 
-class HomeStore {
-  stars = null
-
-  didMount() {
-    // this.on(
-    //   window,
-    //   'scroll',
-    //   throttle(() => {
-    //     const max = window.innerHeight * 3
-    //     // 0 - 1 of how far down we are
-    //     const pctDown =
-    //       (max - (max - document.scrollingElement.scrollTop)) / max
-    //     const offset = pctDown * 30
-    //     // this.stars.stopAnimation()
-    //     this.stars(Spring, {
-    //       to: { y: -offset },
-    //     })
-    //   }, 100),
-    // )
-    // setTimeout(() => {
-    //   this.stars(Spring, {
-    //     to: { y: 0 },
-    //   })
-    // })
-  }
-}
-
 const Pitch = ({ isLarge }) => (
   <>
     <Title italic size={6} sizeLineHeight={1.1} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
     <P size={2.1} sizeLineHeight={1.1} titleFont alpha={0.65} fontWeight={400}>
-      Unified cloud search and more. Installed in just a minute with{' '}
+      Unified cloud search a company directory installed in just a minute with{' '}
       <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
         next&nbsp;level&nbsp;privacy
       </ToolTip>.
@@ -239,9 +208,7 @@ const Pitch = ({ isLarge }) => (
   </>
 )
 
-@view({
-  store: HomeStore,
-})
+@view
 class HomeHeader extends React.Component {
   render() {
     return (
@@ -260,12 +227,28 @@ class HomeHeader extends React.Component {
               }}
             />
             <Bauhaus
-              hideTriangle
-              hideSquare
+              showCircle
               circleColor="#F7C7FF"
               css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
               warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
             />
+            {/* <Bauhaus
+              showTriangle
+              css={{
+                transform: { scale: 0.2, y: '91%', x: '-34%', rotate: '20deg' },
+              }}
+              warp={([x, y]) => [x, y - 4 * -Math.sin(x / 20)]}
+            />
+            <Bauhaus
+              showSquare
+              css={{
+                transform: { scale: 0.1, y: '251%', x: '-184%' },
+              }}
+              warp={([x, y]) => [
+                x * Math.sin(x / 200),
+                y - 4 * -Math.sin(x / 20),
+              ]}
+            /> */}
           </>
         }
         orbit={
@@ -449,8 +432,7 @@ class SectionSearch extends React.Component {
         titleProps={{ debug: 1 }}
         background={
           <Bauhaus
-            hideSquare
-            hideCircle
+            showTriangle
             css={{
               transform: { scale: 0.6, y: '-111%', x: '-80%' },
               opacity: 0.04,

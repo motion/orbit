@@ -1,12 +1,10 @@
 import * as Constants from '~/constants'
 import * as Injections from '~/helpers/injections'
-import { store } from '@mcro/black/store'
 import { Desktop } from '@mcro/stores'
 import open from 'opn'
 
 const getAuthUrl = id => `${Constants.API_URL}/auth?service=` + id
 
-@store
 export class Auth {
   constructor() {
     Desktop.onMessage(Desktop.messages.OPEN_AUTH, type => {

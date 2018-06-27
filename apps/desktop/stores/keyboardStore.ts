@@ -1,8 +1,6 @@
-import { store, isEqual } from '@mcro/black/store'
+import { isEqual } from '@mcro/black/store'
 import iohook from 'iohook'
 import { Desktop, App } from '@mcro/stores'
-// import debug from '@mcro/debug'
-// const log = debug('KeyboardStore')
 
 const codes = {
   esc: 1,
@@ -28,7 +26,6 @@ const DOUBLE_TAP_OPTION = [
 // but clears after a little, so it only stores "purposeful sequences"
 let lastKeys = []
 
-@store
 export class KeyboardStore {
   // this is imperfect, iohook doesn't always match events perfectly
   // so in cases of errors, we clear it after a little delay

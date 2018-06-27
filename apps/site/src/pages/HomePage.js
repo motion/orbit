@@ -548,7 +548,13 @@ class SectionSearch extends React.Component {
         }}
         title={
           <inner css={{ width: '45%', margin: ['auto', 0] }}>
-            <SectionTitle>Unified search that works</SectionTitle>
+            <SectionTitle
+              color={UI.color(waveColor)
+                .darken(0.5)
+                .desaturate(0.5)}
+            >
+              Unified search that works
+            </SectionTitle>
             <VertSpace />
             <SectionP>
               Orbit runs entirely behind your firewall giving your cloud and
@@ -560,8 +566,9 @@ class SectionSearch extends React.Component {
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              Easily search anything from Slack to intranet wikis, private
-              databases, internal APIs and more.
+              Easily search and stay up to date on everything from Slack and
+              Google Docs to intranet wikis, private databases, and internal
+              APIs.
             </SectionSubP>
             <VertSpace />
             <VertSpace />

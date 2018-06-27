@@ -55,7 +55,7 @@ export class ParallaxLayer extends React.PureComponent {
     const distanceFromTarget = scrollTop + height - targetScroll
     const toPlain = distanceFromTarget / (height * this.props.offset)
     if (this.props.debug) {
-      console.log(this.props.debug, distanceFromTarget, toPlain)
+      // console.log(this.props.debug, distanceFromTarget, toPlain)
     }
     this.updateCustomEffects(toPlain, immediate)
   }
@@ -269,44 +269,47 @@ export class Parallax extends React.PureComponent {
     } = this.props
     const overflow = scrolling ? 'scroll' : 'hidden'
     return (
-      <div
-        ref={node => (this.container = node)}
-        onScroll={this.onScroll}
-        onWheel={scrolling ? this.scrollStop : null}
-        onTouchStart={scrolling ? this.scrollStop : null}
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          overflow,
-          overflowY: horizontal ? 'hidden' : overflow,
-          overflowX: horizontal ? overflow : 'hidden',
-          WebkitOverflowScrolling: 'touch',
-          WebkitTransform: START_TRANSLATE,
-          MsTransform: START_TRANSLATE,
-          transform: START_TRANSLATE_3D,
-          ...style,
-        }}
-        className={className}
-      >
-        {this.state.ready && (
-          <div
-            ref={node => (this.content = node)}
-            style={{
-              position: 'absolute',
-              [horizontal ? 'height' : 'width']: '100%',
-              WebkitTransform: START_TRANSLATE,
-              MsTransform: START_TRANSLATE,
-              transform: START_TRANSLATE_3D,
-              overflow: 'hidden',
-              [horizontal ? 'width' : 'height']: this.space * pages,
-              ...innerStyle,
-            }}
-          >
-            <Provider value={this}>{children}</Provider>
-          </div>
-        )}
-      </div>
+      <>
+        <div
+          ref={node => (this.container = node)}
+          onScroll={this.onScroll}
+          onWheel={scrolling ? this.scrollStop : null}
+          onTouchStart={scrolling ? this.scrollStop : null}
+          style={{
+            position: 'fixed',
+            width: '100%',
+            height: '100%',
+            overflow,
+            overflowY: horizontal ? 'hidden' : overflow,
+            overflowX: horizontal ? overflow : 'hidden',
+            WebkitOverflowScrolling: 'touch',
+            WebkitTransform: START_TRANSLATE,
+            MsTransform: START_TRANSLATE,
+            transform: START_TRANSLATE_3D,
+            ...style,
+          }}
+          className={className}
+        >
+          {this.state.ready && (
+            <div
+              ref={node => (this.content = node)}
+              style={{
+                position: 'absolute',
+                [horizontal ? 'height' : 'width']: '100%',
+                WebkitTransform: START_TRANSLATE,
+                MsTransform: START_TRANSLATE,
+                transform: START_TRANSLATE_3D,
+                overflow: 'hidden',
+                [horizontal ? 'width' : 'height']: this.space * pages,
+                ...innerStyle,
+              }}
+            >
+              <Provider value={this}>{children}</Provider>
+            </div>
+          )}
+        </div>
+        <div style={{ height: window.innerHeight * pages }} />
+      </>
     )
   }
 }

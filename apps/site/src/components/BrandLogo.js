@@ -6,14 +6,13 @@ import Router from '~/router'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 
-@UI.injectTheme
 @view
 export class BrandLogo extends React.Component {
   state = { hovered: false }
   leave = () => this.setState({ hovered: false })
   hover = () => this.setState({ hovered: true })
 
-  render({ theme, white, ...props }, { hovered }) {
+  render({ white, ...props }, { hovered }) {
     const coloredFill = UI.color('#000') //theme.base.background.darken(0.5).desaturate(0.65)
     const fill = hovered ? coloredFill.alpha(0.9) : coloredFill
     return (
@@ -27,7 +26,7 @@ export class BrandLogo extends React.Component {
             onClick={Router.link('/')}
           >
             <orbit />
-            <Logo fill={`${fill}`} size={0.175} white={white} />
+            <Logo fill={`${fill}`} size={0.19} white={white} />
           </brandMark>
         )}
       </Media>
@@ -53,7 +52,7 @@ export class BrandLogo extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = () => {
     return {
       orbit: {
         // border: [1, theme.base.background.darken(0.1)],

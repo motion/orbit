@@ -540,16 +540,15 @@ export const TopoBg = () => (
   />
 )
 
-import screenImg from '~/../public/screen.jpg'
+import screenImg from '~/../public/home.jpg'
 export const HomeImg = props => (
   <img
     src={screenImg}
     css={{
-      width: 1100 / 2,
+      width: 1101 / 2,
       height: 2016 / 2,
-      borderRadius: 19,
-      // boxShadow: [[0, 0, 30, [0, 0, 0, 0.1]]],
-      border: [2, '#eee'],
+      borderRadius: 17,
+      userSelect: 'none',
     }}
     {...props}
   />

@@ -12,9 +12,26 @@ import bg from '~/../public/girl.svg'
 import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
 import * as _ from 'lodash'
+import peekImg from '~/../public/peek.png'
 
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
+
+const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
+  <UI.Surface
+    inline
+    background="transparent"
+    tooltip={
+      <UI.Text size={1.2} {...tooltipProps}>
+        {tooltip}
+      </UI.Text>
+    }
+    css={{
+      margin: [0, -6],
+    }}
+    {...props}
+  />
+)
 
 const SectionContentParallax = props => (
   <SectionContent css={{ height: '100%' }} {...props} />
@@ -27,76 +44,101 @@ const scrollToTrack = (to, track) => {
   }
 }
 
-const Page = ({
-  offset,
-  peek,
-  title,
-  titleProps,
-  children,
-  background,
-  orbit,
-}) => (
-  <React.Fragment>
-    <ParallaxLayer
-      className="parallaxLayer background"
-      if={background}
-      offset={offset}
-      speed={1}
-    >
-      {background}
-    </ParallaxLayer>
-    <ParallaxLayer
-      className="parallaxLayer orbit"
-      if={orbit}
-      offset={offset}
-      speed={-0.85}
-    >
-      {orbit}
-    </ParallaxLayer>
-    <ParallaxLayer
-      className="parallaxLayer peek"
-      if={peek}
-      offset={offset}
-      speed={0.2}
-    >
-      {peek}
-    </ParallaxLayer>
-    <ParallaxLayer
-      className="parallaxLayer title"
-      if={title}
-      offset={offset}
-      speed={-0.05}
-      effects={{
-        opacity: x => {
-          const fadeAfter = 0.9
-          if (x < fadeAfter) {
-            return x * Math.log(x * 10)
-          }
-          return fadeAfter * 2 - x
-        },
-      }}
-      {...titleProps}
-    >
-      <SectionContentParallax>{title}</SectionContentParallax>
-    </ParallaxLayer>
-    <ParallaxLayer
-      if={children}
-      className="parallaxLayer text header"
-      offset={offset}
-      speed={0.4}
-    >
-      {children}
-    </ParallaxLayer>
-  </React.Fragment>
-)
+@view
+class Page {
+  render({
+    offset,
+    peek,
+    title,
+    titleProps,
+    children,
+    background,
+    orbit,
+    backgroundProps,
+    orbitProps,
+  }) {
+    return (
+      <React.Fragment>
+        <ParallaxLayer
+          className="parallaxLayer background"
+          $background
+          if={background}
+          offset={offset}
+          speed={0.2}
+          {...backgroundProps}
+        >
+          {background}
+        </ParallaxLayer>
+        <ParallaxLayer
+          className="parallaxLayer orbit"
+          $orbit
+          if={orbit}
+          offset={offset}
+          speed={-0.85}
+          {...orbitProps}
+        >
+          {orbit}
+        </ParallaxLayer>
+        <ParallaxLayer
+          className="parallaxLayer peek"
+          if={peek}
+          offset={offset}
+          speed={0.2}
+        >
+          {peek}
+        </ParallaxLayer>
+        <ParallaxLayer
+          className="parallaxLayer title"
+          $above
+          if={title}
+          offset={offset}
+          speed={-0.05}
+          effects={{
+            opacity: x => {
+              const fadeAfter = 0.9
+              if (x < fadeAfter) {
+                return x * Math.log(x * 10)
+              }
+              return fadeAfter * 2 - x
+            },
+          }}
+          {...titleProps}
+        >
+          <SectionContentParallax>{title}</SectionContentParallax>
+        </ParallaxLayer>
+        <ParallaxLayer
+          $above
+          if={children}
+          className="parallaxLayer text header"
+          offset={offset}
+          speed={0.4}
+        >
+          {children}
+        </ParallaxLayer>
+      </React.Fragment>
+    )
+  }
+
+  static style = {
+    background: {
+      zIndex: 0,
+    },
+    orbit: {
+      zIndex: 1,
+    },
+    above: {
+      zIndex: 2,
+    },
+  }
+}
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
-  slantGradient: [topBg, borderize(bottomBg.mix(topBg))],
+  slantGradient: [topBg, borderize(bottomBg.mix(topBg)), topBg],
 }
-const bottomSlants = {
-  slantGradient: [borderize(bottomBg.mix(topBg)), topBg],
-}
+// const bottomSlants = {
+//   slantGradient: [borderize(bottomBg.mix(topBg)), topBg],
+// }
 
 const firstSlant = {
   slantSize: 1,
@@ -142,18 +184,14 @@ class HomeStore {
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={6.2} sizeLineHeight={1.1} alpha={1} color="#222">
-      Orderly Conduct
+    <Title italic size={6} sizeLineHeight={1.1} alpha={1} color="#222">
+      Instant-on Intranet
     </Title>
     <P size={2.1} sizeLineHeight={1.1} titleFont alpha={0.65} fontWeight={400}>
-      Unified cloud search and profiles installed in just a minute with{' '}
-      <UI.Surface
-        inline
-        background="transparent"
-        tooltip="Orbit never sends any data to the cloud. It runs entirely privately on your device. That's peace of mind for keeping minds in sync."
-      >
-        complete&nbsp;privacy
-      </UI.Surface>.
+      Unified cloud search and more installed in just a minute with{' '}
+      <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
+        next level&nbsp;privacy
+      </ToolTip>.
     </P>
     <actions
       $$row
@@ -252,7 +290,7 @@ class HomeHeader extends React.Component {
               >
                 <wrap
                   css={{
-                    width: 1100 / 2,
+                    width: 1101 / 2,
                     height: 2016 / 2,
                     transform: {
                       x: 20,
@@ -263,6 +301,9 @@ class HomeHeader extends React.Component {
                   <UI.TiltHoverGlow
                     restingPosition={[100, 100]}
                     tiltOptions={{ perspective: 2000 }}
+                    glowProps={{
+                      opacity: 0.6,
+                    }}
                   >
                     <HomeImg />
                   </UI.TiltHoverGlow>
@@ -406,27 +447,50 @@ class SectionSearch extends React.Component {
       <Page
         offset={1}
         titleProps={{ debug: 1 }}
+        background={
+          <Bauhaus
+            hideSquare
+            hideCircle
+            css={{
+              transform: { scale: 0.6, y: '-111%', x: '-80%' },
+              opacity: 0.04,
+            }}
+          />
+        }
         title={
-          <inner css={{ width: '50%' }}>
+          <inner css={{ width: '45%' }}>
             <Title
+              css={{ marginRight: 100 }}
               italic
-              size={4.2}
+              size={4}
               sizeLineHeight={1.1}
               alpha={1}
               color="#222"
             >
-              Search that works
+              Unified search that works
             </Title>
             <P
               size={2.1}
               sizeLineHeight={1.1}
               titleFont
               alpha={0.65}
-              fontWeight={400}
+              fontWeight={300}
             >
-              Running private to your device means you can integrate everything
-              in one. Search databases, internal APIs, and internal wikis with
-              ease.
+              Orbit runs completely behind your firewall. With{' '}
+              <ToolTip>novel NLP</ToolTip> and compression, it searches
+              everything, fast.
+            </P>
+            <br />
+            <P
+              size={1.5}
+              sizeLineHeight={1.1}
+              titleFont
+              alpha={0.65}
+              fontWeight={300}
+            >
+              Search sensitive data from your intranet wikis to private
+              databases or APIs with ease. It's flexible, powerful search
+              wherever you need it.
             </P>
           </inner>
         }
@@ -439,34 +503,21 @@ class SectionSearch extends React.Component {
 class SectionProfiles extends React.Component {
   render() {
     return (
-      <Page
-        offset={2}
-        titleProps={{ debug: 2 }}
-        title={
-          <inner css={{ width: '50%' }}>
-            <Title
-              italic
-              size={4.2}
-              sizeLineHeight={1.1}
-              alpha={1}
-              color="#222"
-            >
-              Search that works
-            </Title>
-            <P
-              size={2.1}
-              sizeLineHeight={1.1}
-              titleFont
-              alpha={0.65}
-              fontWeight={400}
-            >
-              Running private to your device means you can integrate everything
-              in one. Search databases, internal APIs, and internal wikis with
-              ease.
-            </P>
-          </inner>
-        }
-      />
+      <Page offset={2} titleProps={{ debug: 2 }}>
+        <img
+          src={peekImg}
+          css={{
+            position: 'absolute',
+            top: -600,
+            left: '20%',
+            width: 1319 / 2,
+            height: 'auto',
+            zIndex: 100,
+            transform:
+              'perspective(1000px) rotateY(5deg) rotateX(10deg) scale(0.95)',
+          }}
+        />
+      </Page>
     )
   }
 }
@@ -506,22 +557,37 @@ class SectionIntegrations extends React.Component {
   }
 }
 
+const pages = 5
+
 @view
 export class HomePage extends React.Component {
   parallax = null
 
   componentDidMount() {
-    this.on(window, 'scroll', _.throttle(this.handleScroll, 32))
+    const dispose = this.handleScroll()
+    this.subscriptions.add({ dispose })
   }
 
   handleScroll = () => {
-    const offset = window.scrollTop
-    console.log('offset', offset)
+    let frameID
+    const render = () => {
+      const offset = document.documentElement.scrollTop
+      const cur = offset + window.innerHeight
+      const page = cur / window.innerHeight - 1
+      this.parallax.scrollTo(page)
+      frameID = requestAnimationFrame(render)
+    }
+    render()
+    return () => cancelAnimationFrame(frameID)
   }
 
   render() {
     return (
-      <Parallax ref={node => (this.parallax = node)} pages={5}>
+      <Parallax
+        scrolling={false}
+        ref={node => (this.parallax = node)}
+        pages={pages}
+      >
         <UI.Theme
           theme={{
             background: topBg,
@@ -532,7 +598,7 @@ export class HomePage extends React.Component {
             {isLarge => (
               <Media query={Constants.screen.medium}>
                 {isMedium => (
-                  <home $$flex $$background={topBg}>
+                  <>
                     <Header white />
                     <HomeHeader isLarge={isLarge} isMedium={isMedium} />
                     <SectionSearch isLarge={isLarge} isMedium={isMedium} />
@@ -541,7 +607,7 @@ export class HomePage extends React.Component {
                     <Page offset={4}>
                       <Footer />
                     </Page>
-                  </home>
+                  </>
                 )}
               </Media>
             )}

@@ -44,8 +44,8 @@ export class Bauhaus extends React.Component {
             r="88.784"
             style={{
               fill: circleColor || '#1bf5dc',
-              stroke: '#fff',
-              strokeWidth: 2,
+              // stroke: '#fff',
+              // strokeWidth: 2,
               mixBlendMode: 'multiply',
             }}
           />

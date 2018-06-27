@@ -1,15 +1,10 @@
 .parallaxLayer {
   pointer-events: none;
+  position: relative;
 }
 
 .parallaxLayer > * {
   pointer-events: auto;
-}
-
-html,
-body,
-#app {
-  height: 100%;
 }
 
 @font-face {
@@ -175,7 +170,7 @@ body {
   margin: 0;
   padding: 0;
   color: #333;
-  background: #fff;
+  background: #f5f7f9;
   font-size: 14px;
   line-height: 1.3rem;
   font-weight: 300;

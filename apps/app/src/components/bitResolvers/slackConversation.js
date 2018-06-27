@@ -45,7 +45,7 @@ export class BitSlackConversation extends React.Component {
       date: getSlackDate(bit.bitUpdatedAt),
       preview: keywordExtract
         .extract(bit.body, options)
-        .slice(0, 4)
+        .slice(0, 8)
         .join(' '),
       icon: 'slack',
       location: (

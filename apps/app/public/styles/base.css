@@ -1,3 +1,13 @@
+#app code {
+  background: #fff;
+  padding: 10px 18px;
+  border: 1px solid #eee;
+  margin: 10px -5px;
+  border-radius: 7px;
+  white-space: pre;
+  overflow-x: scroll;
+}
+
 anonymous {
   display: inline;
 }

@@ -157,7 +157,8 @@ const Pitch = ({ isLarge }) => (
       Instant-on Intranet
     </Title>
     <P size={2.1} sizeLineHeight={1.1} titleFont alpha={0.65} fontWeight={400}>
-      Unified cloud search a company directory installed in just a minute with{' '}
+      Unified cloud search for things and people. Installed in just a minute,
+      with{' '}
       <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
         next&nbsp;level&nbsp;privacy
       </ToolTip>.

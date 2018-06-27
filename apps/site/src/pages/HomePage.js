@@ -16,6 +16,16 @@ import peekImg from '~/../public/peek.png'
 const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
 
+const WaveBanner = ({ fill = '#000', ...props }) => (
+  <svg viewBox="0 0 3701 2273">
+    <path
+      d="M0,55.59375 C212.979167,113.239583 555.390625,138.213542 1027.23438,130.515625 C1735,118.96875 2001.85938,27.1875 2637.45312,6.890625 C3061.18229,-6.640625 3415.69792,1.0625 3701,30 L3701,2197 C3532.39583,2141.58333 3222.74479,2116.04167 2772.04687,2120.375 C2096,2126.875 1777.21875,2273.0625 1131.75,2273.17188 C701.4375,2273.24479 324.1875,2247.85417 0,2197 L0,55.59375 Z"
+      id="Rectangle"
+      fill={fill}
+    />
+  </svg>
+)
+
 const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
   <UI.Surface
     inline
@@ -448,13 +458,16 @@ class SectionSearch extends React.Component {
         offset={1}
         titleProps={{ debug: 1 }}
         background={
-          <Bauhaus
-            showTriangle
-            css={{
-              transform: { scale: 0.6, y: '-111%', x: '-80%' },
-              opacity: 0.04,
-            }}
-          />
+          <>
+            <WaveBanner fill="#CECEF4" />
+            <Bauhaus
+              showTriangle
+              css={{
+                transform: { scale: 0.6, y: '-111%', x: '-80%' },
+                opacity: 0.04,
+              }}
+            />
+          </>
         }
         title={
           <inner css={{ width: '45%' }}>
@@ -468,27 +481,21 @@ class SectionSearch extends React.Component {
             >
               Unified search that works
             </Title>
-            <P
-              size={2.1}
-              sizeLineHeight={1.1}
-              titleFont
-              alpha={0.65}
-              fontWeight={300}
-            >
+            <VertSpace />
+            <P size={2.1} sizeLineHeight={1.1} titleFont color="#fff" alpha={1}>
               Orbit runs completely behind your firewall. With many integrations
               and <ToolTip>novel NLP</ToolTip> it searches everything, fast.
             </P>
-            <br />
+            <VertSpace />
             <P
-              size={1.5}
+              size={1.8}
               sizeLineHeight={1.1}
               titleFont
-              alpha={0.65}
-              fontWeight={300}
+              color="#fff"
+              alpha={0.8}
             >
-              Search sensitive data from your intranet wikis to private
-              databases or APIs with ease. It's flexible, powerful search
-              wherever you need it.
+              Make your intranet wiki, private databases, and internal APIs
+              searchable by everyone in your company.
             </P>
           </inner>
         }

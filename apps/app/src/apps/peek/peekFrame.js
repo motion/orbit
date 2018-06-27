@@ -7,7 +7,7 @@ import * as Constants from '~/constants'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const SHADOW_PAD = 80
-const borderRadius = 8
+const borderRadius = 12
 const background = '#f9f9f9'
 
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]

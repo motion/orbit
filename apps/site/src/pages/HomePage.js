@@ -4,27 +4,17 @@ import * as UI from '@mcro/ui'
 import { Header, Footer } from '~/components'
 import SectionContent from '~/views/sectionContent'
 import Router from '~/router'
-import {
-  Slant,
-  Title,
-  P,
-  AppleLogo,
-  HomeImg,
-  WindowsLogo,
-  Glow,
-  FadedArea,
-} from '~/views'
+import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo, Glow } from '~/views'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
-import peekImg from '~/../public/peek.png'
 import { SlackIcon, DriveIcon, DropboxIcon, GithubIcon } from '~/views/icons'
-import profileImg from '~/../public/screen-profile.png'
+import profileImg from '~/../public/profileimg.png'
 
-const bodyBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
+const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
 
 const WaveBanner = ({ fill = '#000', ...props }) => (
@@ -622,18 +612,27 @@ class SectionProfiles extends React.Component {
           </>
         }
         title={
-          <inner css={{ width: '48%', margin: [100, 0, 0] }}>
-            <SectionTitleSmall>A more personal home</SectionTitleSmall>
+          <inner css={{ width: '45%', margin: [100, 0, 0] }}>
+            <SectionTitleSmall>More personal</SectionTitleSmall>
             <VertSpace />
             <SectionSubTitle>
-              Beautiful profiles for everyone with information that keeps you in
-              sync.
+              Beautiful cards for everyone on your team combined from all your
+              integrations .
             </SectionSubTitle>
             <VertSpace />
             <VertSpace />
           </inner>
         }
-      />
+      >
+        <img
+          src={profileImg}
+          css={{
+            width: 1283 / 2,
+            height: 'auto',
+            transform: { y: 300, x: 100 },
+          }}
+        />
+      </Page>
     )
   }
 }

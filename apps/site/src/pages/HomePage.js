@@ -102,15 +102,6 @@ class Page extends React.Component {
           if={title}
           offset={offset}
           speed={-0.05}
-          effects={{
-            opacity: x => {
-              const fadeAfter = 0.9
-              if (x < fadeAfter) {
-                return x * Math.log(x * 10)
-              }
-              return fadeAfter * 2 - x
-            },
-          }}
           {...titleProps}
         >
           <SectionContentParallax>{title}</SectionContentParallax>
@@ -450,13 +441,46 @@ const Monitor = props => (
   </svg>
 )
 
+const SectionTitle = props => (
+  <Title
+    css={{ marginRight: 100 }}
+    italic
+    size={4}
+    sizeLineHeight={1.1}
+    alpha={1}
+    color="#222"
+    {...props}
+  />
+)
+
+const SectionP = props => (
+  <P
+    size={2.1}
+    sizeLineHeight={1.1}
+    titleFont
+    color="#fff"
+    alpha={1}
+    {...props}
+  />
+)
+
+const SectionSubP = props => (
+  <P
+    size={1.8}
+    sizeLineHeight={1.1}
+    titleFont
+    color="#fff"
+    alpha={0.8}
+    {...props}
+  />
+)
+
 @view
 class SectionSearch extends React.Component {
   render() {
     return (
       <Page
         offset={1}
-        titleProps={{ debug: 1 }}
         background={
           <>
             <WaveBanner fill="#CECEF4" />
@@ -469,34 +493,31 @@ class SectionSearch extends React.Component {
             />
           </>
         }
+        titleProps={{
+          speed: -0.2,
+          effects: {
+            opacity: x => {
+              const fadeAfter = 0.9
+              if (x < fadeAfter) {
+                return x * Math.log(x * 10)
+              }
+              return fadeAfter * 2 - x
+            },
+          },
+        }}
         title={
           <inner css={{ width: '45%' }}>
-            <Title
-              css={{ marginRight: 100 }}
-              italic
-              size={4}
-              sizeLineHeight={1.1}
-              alpha={1}
-              color="#222"
-            >
-              Unified search that works
-            </Title>
+            <SectionTitle>Unified search that works</SectionTitle>
             <VertSpace />
-            <P size={2.1} sizeLineHeight={1.1} titleFont color="#fff" alpha={1}>
+            <SectionP>
               Orbit runs completely behind your firewall. With many integrations
               and <ToolTip>novel NLP</ToolTip> it searches everything, fast.
-            </P>
+            </SectionP>
             <VertSpace />
-            <P
-              size={1.8}
-              sizeLineHeight={1.1}
-              titleFont
-              color="#fff"
-              alpha={0.8}
-            >
+            <SectionSubP>
               Make your intranet wiki, private databases, and internal APIs
               searchable by everyone in your company.
-            </P>
+            </SectionSubP>
           </inner>
         }
       />
@@ -508,7 +529,7 @@ class SectionSearch extends React.Component {
 class SectionProfiles extends React.Component {
   render() {
     return (
-      <Page offset={2} titleProps={{ debug: 2 }}>
+      <Page offset={2}>
         <img
           src={peekImg}
           css={{
@@ -533,8 +554,11 @@ class SectionIntegrations extends React.Component {
     return (
       <Page
         offset={3}
+        titleProps={{
+          speed: -0.2,
+        }}
         title={
-          <inner css={{ width: '50%' }}>
+          <inner css={{ width: '50%', marginTop: '-10%' }}>
             <Title
               italic
               size={4.2}
@@ -542,7 +566,7 @@ class SectionIntegrations extends React.Component {
               alpha={1}
               color="#222"
             >
-              Search that works
+              Fourth section
             </Title>
             <P
               size={2.1}

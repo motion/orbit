@@ -54,7 +54,7 @@ const scrollToTrack = (to, track) => {
 }
 
 @view
-class Page {
+class Page extends React.Component {
   render({
     offset,
     peek,

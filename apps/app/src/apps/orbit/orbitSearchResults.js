@@ -28,7 +28,7 @@ class SearchStore {
 @view({
   searchStore: SearchStore,
 })
-export class OrbitSearchResults {
+export class OrbitSearchResults extends React.Component {
   render({ searchStore, name }) {
     if (!searchStore.state) {
       return null

@@ -96,7 +96,7 @@ const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
 @view({
   store: OrbitHomeStore,
 })
-export class OrbitHome {
+export class OrbitHome extends React.Component {
   span2 = {
     gridColumnEnd: 'span 2',
   }

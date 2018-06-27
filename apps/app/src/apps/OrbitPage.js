@@ -9,7 +9,7 @@ import OrbitStore from './orbit/orbitStore'
   orbitStore: OrbitStore,
 })
 @view
-export class OrbitPage {
+export class OrbitPage extends React.Component {
   render() {
     return (
       <>

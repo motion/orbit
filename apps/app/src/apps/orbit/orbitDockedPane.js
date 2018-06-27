@@ -41,7 +41,7 @@ class DockedPaneStore {
 @view({
   store: DockedPaneStore,
 })
-export class OrbitDockedPane {
+export class OrbitDockedPane extends React.Component {
   render({ children, store, style, after, fadeBottom }) {
     return (
       <>

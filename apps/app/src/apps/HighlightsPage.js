@@ -120,7 +120,7 @@ import { OCRLine } from './highlights/ocrLine'
     }
   },
 })
-export class HighlightsPage {
+export class HighlightsPage extends React.Component {
   render({ store }) {
     return (
       <frame if={store.showAll}>

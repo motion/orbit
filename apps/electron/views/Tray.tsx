@@ -6,7 +6,7 @@ import * as Constants from '../constants'
 import { Electron, Desktop, App } from '@mcro/stores'
 
 @view.electron
-export default class TrayEl {
+export default class TrayEl extends React.Component {
   render() {
     return (
       <Tray

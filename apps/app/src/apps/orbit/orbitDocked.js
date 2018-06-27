@@ -20,7 +20,7 @@ const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
   paneStore: OrbitDockedPaneStore,
 })
 @view
-class OrbitDocked {
+class OrbitDocked extends React.Component {
   render({ paneStore, appStore, theme }) {
     const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)

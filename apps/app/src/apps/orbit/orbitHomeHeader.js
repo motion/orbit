@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 
 @UI.injectTheme
 @view
-export class OrbitHomeHeader {
+export class OrbitHomeHeader extends React.Component {
   render({ paneStore, theme }) {
     const buttonColor = theme.base.color.lighten(0.2)
     const exploreButton = {

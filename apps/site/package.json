@@ -8,7 +8,8 @@
     "start": "mcro-build --port 4000",
     "build-app": "NODE_ENV=production mcro-build --prod",
     "serve-prod": "static-server -p 4001 -n dist/index.html dist",
-    "deploy": "./surge-fix.sh && cd dist && surge . tryorbit.com"
+    "deploy": "./surge-fix.sh && cd dist && surge . tryorbit.com",
+    "deploy-test": "./surge-fix.sh && cd dist && surge ."
   },
   "dependencies": {
     "@mcro/black": "^2.0.11",

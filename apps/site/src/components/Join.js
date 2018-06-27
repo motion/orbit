@@ -57,8 +57,7 @@ export class Join extends React.Component {
     }
   }
 
-  render({ sizeButton, ...props }, { success, error, submitting }) {
-    const height = 40
+  render({ ...props }, { success, error, submitting }) {
     return (
       <section id="join" {...props}>
         <form
@@ -71,36 +70,35 @@ export class Join extends React.Component {
           noValidate
           onSubmit={this.submit}
         >
-          <UI.Row>
-            <input
-              ref={this.email}
-              type="email"
-              name="EMAIL"
-              id="mce-EMAIL"
-              placeholder="Email address..."
-              css={{
-                height,
-              }}
-            />
-            <UI.Theme theme="#37C457">
-              <UI.Button
-                size={1.1 * (sizeButton || 1)}
-                height={height}
-                sizeRadius={3}
-                sizePadding={1.7}
-                borderLeftRadius={0}
-                margin={[0, 0, 0, 'auto']}
-                fontWeight={500}
-                type="submit"
-                disabled={submitting}
-                css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
-              >
-                <P titleFont css={{ marginTop: 1 }}>
+          <span css={{ fontFamily: '"Eesti Pro"' }}>
+            <UI.Row>
+              <UI.Input
+                $input
+                size={1.1}
+                sizeRadius={1}
+                sizePadding={1.5}
+                ref={this.email}
+                type="email"
+                name="EMAIL"
+                id="mce-EMAIL"
+                placeholder="Email address..."
+              />
+              <UI.Theme theme="#37C457">
+                <UI.Button
+                  size={1.1}
+                  sizeRadius={1}
+                  sizePadding={1.5}
+                  margin={[0, 0, 0, 12]}
+                  fontWeight={500}
+                  type="submit"
+                  disabled={submitting}
+                  css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
+                >
                   {submitting ? 'Signing up...' : 'Early access'}
-                </P>
-              </UI.Button>
-            </UI.Theme>
-          </UI.Row>
+                </UI.Button>
+              </UI.Theme>
+            </UI.Row>
+          </span>
           <message
             $success={success && !error}
             css={{ maxWidth: '70%', height: 30, marginBottom: -20 }}
@@ -119,16 +117,11 @@ export class Join extends React.Component {
       minWidth: 300,
       width: '100%',
       maxWidth: 540,
-      margin: [0, 'auto'],
     },
     input: {
       display: 'flex',
       width: '100%',
       flex: 1,
-      padding: [12, 16],
-      fontSize: 17,
-      border: [1, 'red'],
-      borderLeftRadius: 100,
     },
     message: {
       paddingRight: 40,
@@ -140,16 +133,14 @@ export class Join extends React.Component {
   }
 
   static theme = (props, theme) => {
-    const bg = theme.base.background
-    const isLight = bg.isLight()
-    const adjust = isLight ? 'darken' : 'lighten'
-    const amt = isLight ? 0.1 : 1
+    // const bg = theme.base.background
+    // const isLight = bg.isLight()
+    // const adjust = isLight ? 'darken' : 'lighten'
+    // const amt = isLight ? 0.1 : 1
     return {
       input: {
         color: theme.base.color,
         WebkitTextFillColor: `${theme.base.color.alpha(0.7)} !important`,
-        background: bg[adjust](0.3 * amt),
-        border: [1, bg[adjust](1.2 * amt)],
       },
     }
   }

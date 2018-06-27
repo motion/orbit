@@ -30,7 +30,6 @@ export class Bauhaus extends React.Component {
         $$fullscreen
         css={{
           transform: { scale: 0.48, x: '52%', y: '-8%' },
-          opacity: 0.1,
           zIndex: 0,
         }}
         {...props}

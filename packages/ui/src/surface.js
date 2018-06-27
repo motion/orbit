@@ -341,10 +341,13 @@ class SurfacePlain extends React.Component {
   }
 
   static style = {
+    // fontFamily: inherit on both fixes noElement elements
     surface: {
+      fontFamily: 'inherit',
       position: 'relative',
     },
     element: {
+      fontFamily: 'inherit',
       border: 'none',
       background: 'transparent',
       height: '100%',

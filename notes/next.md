@@ -1,3 +1,13 @@
+- record simple search video
+  - border less strong
+  - see if can do app isolated record
+  - debounce results a bit more
+  - run webpack in prod mode
+  - github preview show latest comment
+  - fix gmail sync?
+  - practice search a few times / find good query
+  - cut video and embed
+
 # high level
 
 ## Settings

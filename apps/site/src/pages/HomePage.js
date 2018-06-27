@@ -151,11 +151,18 @@ const thirdSlant = {
   amount: 18,
 }
 
+import { Join } from '~/components/Join'
+
+const VertSpace = view('div', {
+  height: 20,
+})
+
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={6} sizeLineHeight={1.1} alpha={1} color="#222">
+    <Title italic size={5.5} sizeLineHeight={1.1} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
+    <VertSpace />
     <P size={2.1} sizeLineHeight={1.1} titleFont alpha={0.65} fontWeight={400}>
       Unified cloud search for things and people. Installed in just a minute,
       with{' '}
@@ -163,10 +170,13 @@ const Pitch = ({ isLarge }) => (
         next&nbsp;level&nbsp;privacy
       </ToolTip>.
     </P>
+    <VertSpace />
+    <Join />
+    <VertSpace />
     <actions
       $$row
       css={{
-        margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
+        margin: isLarge ? [0, 'auto', 0, 0] : [20, 0, 0, 0],
         alignItems: 'center',
       }}
     >
@@ -230,8 +240,14 @@ class HomeHeader extends React.Component {
             <Bauhaus
               showCircle
               circleColor="#F7C7FF"
-              css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
-              warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
+              css={{
+                opacity: 0.25,
+                transform: { scale: 0.97, y: '-11%', x: '54%' },
+              }}
+              warp={([x, y]) => [
+                x - 4 * -Math.sin(x / 50),
+                y - 4 * -Math.sin(x / 50),
+              ]}
             />
             {/* <Bauhaus
               showTriangle

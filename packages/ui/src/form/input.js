@@ -119,9 +119,8 @@ class InputPlain extends React.PureComponent {
         sizeLineHeight
         borderWidth={1}
         wrapElement
-        tagName={TAG_MAP[type] || type}
-        className="input"
         tagName="input"
+        className="input"
         name={name}
         type={type}
         elementProps={{

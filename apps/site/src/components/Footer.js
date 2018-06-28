@@ -32,7 +32,7 @@ export class Footer extends React.Component {
               <Title size={2.5} css={{ marginBottom: 20 }}>
                 Keep everyone in sync, without overhead.
               </Title>
-              <div css={{ margin: [30, 'auto'] }}>
+              <div css={{ margin: [40, 0] }}>
                 <Join size={2} />
               </div>
             </SectionContent>

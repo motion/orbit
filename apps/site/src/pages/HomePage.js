@@ -192,7 +192,7 @@ const Pitch = ({ isLarge }) => (
       Unified cloud search for things and people. Installed in just a minute,
       with{' '}
       <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
-        next&nbsp;level&nbsp;privacy
+        complete&nbsp;privacy
       </ToolTip>.
     </SectionSubTitle>
     <VertSpace />
@@ -327,7 +327,7 @@ class HomeHeader extends React.Component {
                     restingPosition={[100, 100]}
                     tiltOptions={{ perspective: 2000 }}
                     glowProps={{
-                      opacity: 0.6,
+                      opacity: 0.5,
                     }}
                   >
                     <HomeImg />

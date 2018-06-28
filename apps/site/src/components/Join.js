@@ -59,6 +59,12 @@ export class Join extends React.Component {
 
   render({ ...props }, { success, error, submitting }) {
     const style = { fontFamily: '"Eesti Pro"' }
+    const sizeProps = {
+      size: 1.2,
+      sizeRadius: 1,
+      sizePadding: 1.5,
+      sizeHeight: 1.1,
+    }
     return (
       <section id="join" {...props}>
         <form
@@ -74,9 +80,8 @@ export class Join extends React.Component {
           <UI.Row>
             <UI.Input
               $input
-              size={1.1}
-              sizeRadius={1}
-              sizePadding={1.5}
+              flex
+              {...sizeProps}
               ref={this.email}
               type="email"
               name="EMAIL"
@@ -86,9 +91,7 @@ export class Join extends React.Component {
             />
             <UI.Theme theme="#37C457">
               <UI.Button
-                size={1.1}
-                sizeRadius={1}
-                sizePadding={1.5}
+                {...sizeProps}
                 margin={[0, 0, 0, 12]}
                 fontWeight={500}
                 type="submit"
@@ -115,16 +118,20 @@ export class Join extends React.Component {
   }
 
   static style = {
+    form: {
+      flex: 1,
+    },
     section: {
       textAlign: 'left',
       minWidth: 300,
       width: '100%',
       maxWidth: 540,
+      margin: [0, 'auto'],
     },
     input: {
-      display: 'flex',
+      background: [0, 0, 0, 0.025],
       width: '100%',
-      flex: 1,
+      minWidth: 235,
     },
     message: {
       paddingRight: 40,

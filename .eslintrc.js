@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
+    jest: true,
   },
   extends: ['eslint:recommended', 'prettier', 'prettier/react'],
   plugins: ['babel', 'react', 'prettier'],
@@ -15,7 +16,7 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     semi: ['error', 'never'],
     'no-console': 'off',
-    'no-unused-vars': 'error',
+    'no-unused-vars': 'off',
     // 'no-undef': 'off',
     'no-constant-condition': 'off',
     'react/jsx-uses-vars': 2,

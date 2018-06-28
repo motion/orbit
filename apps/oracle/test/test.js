@@ -45,7 +45,7 @@ const settings = {
   ],
 }
 
-async function test() {
+test('it', async function test() {
   const oracle = new Oracle({ debugBuild: debug })
   await oracle.start()
 
@@ -78,10 +78,4 @@ async function test() {
   oracle.onWindowChange((name, value) => {
     console.log('window change', name, value)
   })
-}
-
-try {
-  test()
-} catch (err) {
-  console.log('error', err)
-}
+})

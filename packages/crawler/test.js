@@ -1,5 +1,5 @@
 const Path = require('path')
-const Crawler = require('./lib/index.js').default
+const Crawler = require('./src/index.js').default
 
 // attempt to use regular chrome, no luck
 

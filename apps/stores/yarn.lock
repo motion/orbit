@@ -4,44 +4,44 @@
 
 "@types/events@*":
   version "1.2.0"
-  resolved "http://localhost:4873/@types%2fevents/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
+  resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
 
 "@types/node@*":
-  version "10.3.2"
-  resolved "http://localhost:4873/@types%2fnode/-/node-10.3.2.tgz#3840ec6c12556fdda6e0e6d036df853101d732a4"
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.0.tgz#f5b61395c09b47ac46aaa1452750c9a72b3d3673"
 
 "@types/reconnectingwebsocket@^1.0.1":
   version "1.0.1"
-  resolved "http://localhost:4873/@types%2freconnectingwebsocket/-/reconnectingwebsocket-1.0.1.tgz#56c6f19136ba265c16e7b2dc1bfbb97960a869d5"
+  resolved "https://registry.yarnpkg.com/@types/reconnectingwebsocket/-/reconnectingwebsocket-1.0.1.tgz#56c6f19136ba265c16e7b2dc1bfbb97960a869d5"
 
 "@types/ws@^4.0.2":
   version "4.0.2"
-  resolved "http://localhost:4873/@types%2fws/-/ws-4.0.2.tgz#b29037627dd7ba31ec49a4f1584840422efb856f"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-4.0.2.tgz#b29037627dd7ba31ec49a4f1584840422efb856f"
   dependencies:
     "@types/events" "*"
     "@types/node" "*"
 
 dom-walk@^0.1.0:
   version "0.1.1"
-  resolved "http://localhost:4873/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
+  resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
 
 global@^4.3.2:
   version "4.3.2"
-  resolved "http://localhost:4873/global/-/global-4.3.2.tgz#e76989268a6c74c38908b1305b10fc0e394e9d0f"
+  resolved "https://registry.yarnpkg.com/global/-/global-4.3.2.tgz#e76989268a6c74c38908b1305b10fc0e394e9d0f"
   dependencies:
     min-document "^2.19.0"
     process "~0.5.1"
 
 lodash@4.17.10:
   version "4.17.10"
-  resolved "http://localhost:4873/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
 min-document@^2.19.0:
   version "2.19.0"
-  resolved "http://localhost:4873/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
+  resolved "https://registry.yarnpkg.com/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
   dependencies:
     dom-walk "^0.1.0"
 
 process@~0.5.1:
   version "0.5.2"
-  resolved "http://localhost:4873/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
+  resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"

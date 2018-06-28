@@ -19,10 +19,17 @@ const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
 
 const WaveBanner = ({ fill = '#000', ...props }) => (
   <svg
+    className="wavebanner"
     preserveAspectRatio="none"
     viewBox="0 0 3701 2273"
     width="100%"
     height="100%"
+    css={{
+      transform: {
+        scaleY: 0.98,
+        y: '-2%',
+      },
+    }}
     {...props}
   >
     <path
@@ -656,7 +663,7 @@ class SectionProfiles extends React.Component {
       >
         <SectionContent css={{ flex: 1 }}>
           <inner css={isLarge && { width: '45%', margin: [100, 0, 0] }}>
-            <SectionTitleSmall>More personal search</SectionTitleSmall>
+            <SectionTitleSmall>Operate personally</SectionTitleSmall>
             <VertSpace />
             <SectionSubTitle>
               Beautiful automatic profile cards keep you up to date with
@@ -769,7 +776,7 @@ export class HomePage extends React.Component {
     return (
       <Parallax
         scrollingElement={window}
-        container={document.body}
+        container={document.documentElement}
         pages={pages}
         config={{ tension: 170, friction: 26 }}
       >

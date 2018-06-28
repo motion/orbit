@@ -55,7 +55,6 @@ export class ParallaxLayer extends React.PureComponent {
     const distanceFromTarget = scrollTop + height - targetScroll
     const toPlain = distanceFromTarget / (height * this.props.offset)
     if (this.props.debug) {
-      // console.log(this.props.debug, distanceFromTarget, toPlain)
     }
     this.updateCustomEffects(toPlain, immediate)
   }
@@ -193,20 +192,31 @@ export class Parallax extends React.PureComponent {
   scrollerRaf = () => requestAnimationFrame(this.moveItems)
 
   componentDidMount() {
-    this.scrollingElement.addEventListener('scroll', this.onScroll)
+    window.addEventListener('resize', this.updateRaf, false)
+    this.props.scrollingElement.addEventListener('scroll', this.onScroll, false)
+    this.update()
+    this.setState({ ready: true })
   }
 
   componentWillUnmount() {
-    this.scrollingElement.removeEventListener('scroll', this.onScroll)
+    window.removeEventListener('resize', this.updateRaf, false)
+    this.props.scrollingElement.removeEventListener(
+      'scroll',
+      this.onScroll,
+      false,
+    )
   }
 
-  onScroll = event => {
+  componentDidUpdate() {
+    this.update()
+  }
+
+  onScroll = () => {
     const { horizontal } = this.props
-    console.log('scroll')
     if (!this.busy) {
       this.busy = true
       this.scrollerRaf()
-      this.current = event.target[getScrollType(horizontal)]
+      this.current = this.props.container[getScrollType(horizontal)]
     }
   }
 
@@ -255,20 +265,6 @@ export class Parallax extends React.PureComponent {
       { to: offset * this.space, ...config },
       impl,
     ).start()
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.updateRaf, false)
-    this.update()
-    this.setState({ ready: true })
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateRaf, false)
-  }
-
-  componentDidUpdate() {
-    this.update()
   }
 
   render() {

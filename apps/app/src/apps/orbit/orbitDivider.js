@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export class OrbitDivider {
+export class OrbitDivider extends React.Component {
   render({ height, ...props }) {
     return (
       <barOuter {...props}>

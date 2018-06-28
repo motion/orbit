@@ -299,7 +299,6 @@ export class AppStore {
           ...this.bitSearch.results,
           // ...Desktop.searchState.pluginResults,
         ]
-        console.log('allResultsUnsorted', allResultsUnsorted)
         // remove prefixes
         const { rest } = AppStoreHelpers.parseQuery(query)
         // sort

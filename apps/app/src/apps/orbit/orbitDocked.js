@@ -20,7 +20,7 @@ const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
   paneStore: OrbitDockedPaneStore,
 })
 @view
-class OrbitDocked {
+class OrbitDocked extends React.Component {
   render({ paneStore, appStore, theme }) {
     const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)
@@ -66,7 +66,7 @@ class OrbitDocked {
 
   static theme = (props, theme) => {
     const background = theme.base.background
-    const borderColor = theme.base.background.darken(0.35).desaturate(0.6)
+    const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
     const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.5]]
     return {

@@ -1,9 +1,10 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitCard } from '~/apps/orbit/orbitCard'
 
 @view.attach('appStore')
 @view
-export class Carousel {
+export class Carousel extends React.Component {
   render({ items, appStore }) {
     return (
       <carousel>

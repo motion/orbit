@@ -341,21 +341,23 @@ class SurfacePlain extends React.Component {
   }
 
   static style = {
+    // fontFamily: inherit on both fixes noElement elements
     surface: {
+      fontFamily: 'inherit',
       position: 'relative',
     },
     element: {
+      fontFamily: 'inherit',
       border: 'none',
       background: 'transparent',
       height: '100%',
-      flex: 1,
       color: 'inherit',
-      marginBottom: -0.5,
+      marginBottom: '-3%',
     },
     icon: {
       pointerEvents: 'none',
       height: '1.4rem',
-      marginBottom: -0.5,
+      marginBottom: '-3%',
     },
     hasIconBefore: {
       // this adjusts for height
@@ -408,7 +410,10 @@ class SurfacePlain extends React.Component {
     const height = props.height || (props.style && props.style.height)
     const width = props.width
     const padding = props.padding
-    const flex = props.flex === true ? 1 : props.flex
+    const flex =
+      props.flex === true
+        ? 1
+        : props.flex || (props.style && props.style.flex) || 'none'
     const STATE =
       (props.highlight && 'highlight') || (props.active && 'active') || 'base'
 
@@ -606,7 +611,7 @@ class SurfacePlain extends React.Component {
       glintColor,
       color,
     }
-    const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
+    const flexFlow = props.flexFlow || 'row'
     const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
     const undoPadding = {
       margin: padding
@@ -690,19 +695,20 @@ class SurfacePlain extends React.Component {
       // ...props.style,
     }
     if (props.sizeLineHeight) {
-      surfaceStyles.lineHeight = `${surfaceStyles.height - 1}px`
+      surfaceStyles.lineHeight = `${surfaceStyles.height}px`
     }
     const result = {
       element: {
         ...(props.inline && self.constructor.inlineStyle),
-        // height,
+        // this fixes inputs but may break other things, need to test
+        height,
         ...borderRadius,
         ...elementGlowProps,
         overflow: props.overflow || 'visible',
         flexFlow,
         fontSize: props.fontSize || 'inherit',
         fontWeight: props.fontWeight,
-        lineHeight: props.lineHeight,
+        lineHeight: 'inherit',
         justifyContent: props.justify || props.justifyContent,
         maxWidth: `calc(100% ${iconPad})`,
         // maxHeight: '100%',

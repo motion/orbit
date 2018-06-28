@@ -3,7 +3,6 @@ import * as PropTypes from 'prop-types'
 import {
   storeProvidable,
   storeAttachable,
-  extendsReact,
   contextual,
   renderArgumentable,
   emitsMount,
@@ -28,7 +27,6 @@ const uiContext = [
 
 const glossPlugin = () => ({ decorator })
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
-  extendsReact,
   subscribable,
   utilityUsable,
   enable.ui && uiContext,

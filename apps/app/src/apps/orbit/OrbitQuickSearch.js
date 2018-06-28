@@ -8,7 +8,7 @@ const iconPad = 15
 const pad = 0
 
 @view
-class OrbitQuickItem {
+class OrbitQuickItem extends React.Component {
   render({ item, appStore, index }) {
     const active =
       appStore.quickSearchIndex === index && appStore.activeIndex === -1
@@ -73,7 +73,7 @@ class OrbitQuickItem {
 
 @view.attach('appStore')
 @view
-export class OrbitQuickSearch {
+export class OrbitQuickSearch extends React.Component {
   render({ appStore }) {
     console.log('quick search it up', appStore.quickSearchResults)
     return (
@@ -101,7 +101,7 @@ export class OrbitQuickSearch {
       position: 'relative',
       zIndex: 10,
       // undo pane
-      margin: [0, -8],
+      margin: [0, -14],
     },
   }
   static theme = (_, theme) => {

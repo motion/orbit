@@ -57,8 +57,14 @@ export class Join extends React.Component {
     }
   }
 
-  render({ sizeButton, ...props }, { success, error, submitting }) {
-    const height = 40
+  render({ ...props }, { success, error, submitting }) {
+    const style = { fontFamily: '"Eesti Pro"' }
+    const sizeProps = {
+      size: 1.2,
+      sizeRadius: 1,
+      sizePadding: 1.5,
+      sizeHeight: 1.1,
+    }
     return (
       <section id="join" {...props}>
         <form
@@ -72,32 +78,30 @@ export class Join extends React.Component {
           onSubmit={this.submit}
         >
           <UI.Row>
-            <input
+            <UI.Input
+              $input
+              flex
+              {...sizeProps}
               ref={this.email}
               type="email"
               name="EMAIL"
               id="mce-EMAIL"
               placeholder="Email address..."
-              css={{
-                height,
-              }}
+              style={style}
             />
             <UI.Theme theme="#37C457">
               <UI.Button
-                size={1.1 * (sizeButton || 1)}
-                height={height}
-                sizeRadius={3}
-                sizePadding={1.7}
-                borderLeftRadius={0}
-                margin={[0, 0, 0, 'auto']}
+                {...sizeProps}
+                margin={[0, 0, 0, 12]}
                 fontWeight={500}
                 type="submit"
                 disabled={submitting}
-                css={submitting && { opacity: 0.5, pointerEvents: 'none' }}
+                style={{
+                  ...style,
+                  ...(submitting && { opacity: 0.5, pointerEvents: 'none' }),
+                }}
               >
-                <P titleFont css={{ marginTop: 1 }}>
-                  {submitting ? 'Signing up...' : 'Early access'}
-                </P>
+                {submitting ? 'Signing up...' : 'Early access'}
               </UI.Button>
             </UI.Theme>
           </UI.Row>
@@ -114,6 +118,9 @@ export class Join extends React.Component {
   }
 
   static style = {
+    form: {
+      flex: 1,
+    },
     section: {
       textAlign: 'left',
       minWidth: 300,
@@ -122,13 +129,9 @@ export class Join extends React.Component {
       margin: [0, 'auto'],
     },
     input: {
-      display: 'flex',
+      background: [0, 0, 0, 0.025],
       width: '100%',
-      flex: 1,
-      padding: [12, 16],
-      fontSize: 17,
-      border: [1, 'red'],
-      borderLeftRadius: 100,
+      minWidth: 235,
     },
     message: {
       paddingRight: 40,
@@ -140,16 +143,14 @@ export class Join extends React.Component {
   }
 
   static theme = (props, theme) => {
-    const bg = theme.base.background
-    const isLight = bg.isLight()
-    const adjust = isLight ? 'darken' : 'lighten'
-    const amt = isLight ? 0.1 : 1
+    // const bg = theme.base.background
+    // const isLight = bg.isLight()
+    // const adjust = isLight ? 'darken' : 'lighten'
+    // const amt = isLight ? 0.1 : 1
     return {
       input: {
         color: theme.base.color,
         WebkitTextFillColor: `${theme.base.color.alpha(0.7)} !important`,
-        background: bg[adjust](0.3 * amt),
-        border: [1, bg[adjust](1.2 * amt)],
       },
     }
   }

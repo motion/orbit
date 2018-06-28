@@ -44,9 +44,9 @@ export const Title = ({ center, children, ...props }) => (
 export const SubTitle = props => (
   <UI.Text
     alpha={0.65}
+    fontWeight={300}
+    fontSize={16}
     css={{
-      fontWeight: 300,
-      fontSize: 16,
       alignItems: 'center',
       flexFlow: 'row',
       padding: [3, 0, 5],

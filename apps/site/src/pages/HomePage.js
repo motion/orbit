@@ -11,11 +11,27 @@ import { scrollTo } from '~/helpers'
 import bg from '~/../public/girl.svg'
 import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
-import * as _ from 'lodash'
-import peekImg from '~/../public/peek.png'
+import profileImg from '~/../public/profileimg.png'
+import { Icon } from '~/views/icon'
 
-const topBg = Constants.colorMain // '#D6B190' //'#E1D1C8'
+const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
+
+const WaveBanner = ({ fill = '#000', ...props }) => (
+  <svg
+    preserveAspectRatio="none"
+    viewBox="0 0 3701 2273"
+    width="100%"
+    height="100%"
+    {...props}
+  >
+    <path
+      d="M0,55.59375 C212.979167,113.239583 555.390625,138.213542 1027.23438,130.515625 C1735,118.96875 2001.85938,27.1875 2637.45312,6.890625 C3061.18229,-6.640625 3415.69792,1.0625 3701,30 L3701,2197 C3532.39583,2141.58333 3222.74479,2116.04167 2772.04687,2120.375 C2096,2126.875 1777.21875,2273.0625 1131.75,2273.17188 C701.4375,2273.24479 324.1875,2247.85417 0,2197 L0,55.59375 Z"
+      id="Rectangle"
+      fill={fill}
+    />
+  </svg>
+)
 
 const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
   <UI.Surface
@@ -27,7 +43,7 @@ const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
       </UI.Text>
     }
     css={{
-      margin: [0, -6],
+      margin: [0, -5],
     }}
     {...props}
   />
@@ -44,8 +60,31 @@ const scrollToTrack = (to, track) => {
   }
 }
 
+class NormalLayer extends React.Component {
+  state = {
+    height: window.innerHeight,
+  }
+
+  resize = () => {
+    this.setState({ height: window.innerHeight })
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize, false)
+    this.resize()
+  }
+
+  componentWillUnmount() {
+    window.addEventListener('resize', this.resize, false)
+  }
+
+  render() {
+    return <layer css={{ height: this.state.height }} {...this.props} />
+  }
+}
+
 @view
-class Page {
+class Page extends React.Component {
   render({
     offset,
     peek,
@@ -56,6 +95,7 @@ class Page {
     orbit,
     backgroundProps,
     orbitProps,
+    zIndex = 0,
   }) {
     return (
       <React.Fragment>
@@ -64,7 +104,10 @@ class Page {
           $background
           if={background}
           offset={offset}
-          speed={0.2}
+          speed={0.05}
+          css={{
+            zIndex: 0 + zIndex,
+          }}
           {...backgroundProps}
         >
           {background}
@@ -74,71 +117,38 @@ class Page {
           $orbit
           if={orbit}
           offset={offset}
-          speed={-0.85}
+          speed={-0.8}
+          css={{
+            zIndex: 4 + zIndex,
+          }}
           {...orbitProps}
         >
           {orbit}
         </ParallaxLayer>
         <ParallaxLayer
-          className="parallaxLayer peek"
-          if={peek}
-          offset={offset}
-          speed={0.2}
-        >
-          {peek}
-        </ParallaxLayer>
-        <ParallaxLayer
           className="parallaxLayer title"
-          $above
+          css={{
+            zIndex: 2 + zIndex,
+          }}
           if={title}
           offset={offset}
           speed={-0.05}
-          effects={{
-            opacity: x => {
-              const fadeAfter = 0.9
-              if (x < fadeAfter) {
-                return x * Math.log(x * 10)
-              }
-              return fadeAfter * 2 - x
-            },
-          }}
           {...titleProps}
         >
           <SectionContentParallax>{title}</SectionContentParallax>
         </ParallaxLayer>
-        <ParallaxLayer
-          $above
-          if={children}
-          className="parallaxLayer text header"
-          offset={offset}
-          speed={0.4}
-        >
+        <NormalLayer css={{ position: 'relative', zIndex: 1 + zIndex }}>
           {children}
-        </ParallaxLayer>
+        </NormalLayer>
       </React.Fragment>
     )
-  }
-
-  static style = {
-    background: {
-      zIndex: 0,
-    },
-    orbit: {
-      zIndex: 1,
-    },
-    above: {
-      zIndex: 2,
-    },
   }
 }
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
-  slantGradient: [topBg, borderize(bottomBg.mix(topBg)), topBg],
+  slantGradient: [bodyBg, borderize(bottomBg.mix(bodyBg)), bodyBg],
 }
-// const bottomSlants = {
-//   slantGradient: [borderize(bottomBg.mix(topBg)), topBg],
-// }
 
 const firstSlant = {
   slantSize: 1,
@@ -155,48 +165,43 @@ const thirdSlant = {
   amount: 18,
 }
 
-class HomeStore {
-  stars = null
+import { Join } from '~/components/Join'
 
-  didMount() {
-    // this.on(
-    //   window,
-    //   'scroll',
-    //   throttle(() => {
-    //     const max = window.innerHeight * 3
-    //     // 0 - 1 of how far down we are
-    //     const pctDown =
-    //       (max - (max - document.scrollingElement.scrollTop)) / max
-    //     const offset = pctDown * 30
-    //     // this.stars.stopAnimation()
-    //     this.stars(Spring, {
-    //       to: { y: -offset },
-    //     })
-    //   }, 100),
-    // )
-    // setTimeout(() => {
-    //   this.stars(Spring, {
-    //     to: { y: 0 },
-    //   })
-    // })
-  }
-}
+const VertSpace = view('div', {
+  height: 20,
+})
+
+const SectionSubTitle = props => (
+  <P
+    size={2.1}
+    sizeLineHeight={1.1}
+    titleFont
+    alpha={0.65}
+    fontWeight={400}
+    {...props}
+  />
+)
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={6} sizeLineHeight={1.1} alpha={1} color="#222">
+    <Title italic size={5.5} sizeLineHeight={1.1} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
-    <P size={2.1} sizeLineHeight={1.1} titleFont alpha={0.65} fontWeight={400}>
-      Unified cloud search and more. Installed in just a minute with{' '}
+    <VertSpace />
+    <SectionSubTitle>
+      Unified cloud search for things and people. Installed in just a minute,
+      with{' '}
       <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
-        next&nbsp;level&nbsp;privacy
+        complete&nbsp;privacy
       </ToolTip>.
-    </P>
+    </SectionSubTitle>
+    <VertSpace />
+    <Join />
+    <VertSpace />
     <actions
       $$row
       css={{
-        margin: isLarge ? [25, 'auto', 0, 0] : [20, 0, 0, 0],
+        margin: isLarge ? [0, 'auto', 0, 0] : [20, 0, 0, 0],
         alignItems: 'center',
       }}
     >
@@ -239,9 +244,7 @@ const Pitch = ({ isLarge }) => (
   </>
 )
 
-@view({
-  store: HomeStore,
-})
+@view
 class HomeHeader extends React.Component {
   render() {
     return (
@@ -255,17 +258,39 @@ class HomeHeader extends React.Component {
             <Glow
               style={{
                 background: '#fff',
-                opacity: 0.5,
-                transform: { x: '-45%', y: '0%', scale: 0.65 },
+                opacity: 1,
+                transform: { x: '-65%', y: '-20%', scale: 0.65 },
               }}
             />
             <Bauhaus
-              hideTriangle
-              hideSquare
+              showCircle
               circleColor="#F7C7FF"
-              css={{ transform: { scale: 0.97, y: '-11%', x: '54%' } }}
-              warp={([x, y]) => [x, y - 4 * -Math.sin(x / 50)]}
+              css={{
+                opacity: 0.25,
+                transform: { scale: 0.97, y: '-11%', x: '54%' },
+              }}
+              warp={([x, y]) => [
+                x - 4 * -Math.sin(x / 30),
+                y - 4 * -Math.sin(x / 30),
+              ]}
             />
+            {/* <Bauhaus
+              showTriangle
+              css={{
+                transform: { scale: 0.2, y: '91%', x: '-34%', rotate: '20deg' },
+              }}
+              warp={([x, y]) => [x, y - 4 * -Math.sin(x / 20)]}
+            />
+            <Bauhaus
+              showSquare
+              css={{
+                transform: { scale: 0.1, y: '251%', x: '-184%' },
+              }}
+              warp={([x, y]) => [
+                x * Math.sin(x / 200),
+                y - 4 * -Math.sin(x / 20),
+              ]}
+            /> */}
           </>
         }
         orbit={
@@ -302,7 +327,7 @@ class HomeHeader extends React.Component {
                     restingPosition={[100, 100]}
                     tiltOptions={{ perspective: 2000 }}
                     glowProps={{
-                      opacity: 0.6,
+                      opacity: 0.5,
                     }}
                   >
                     <HomeImg />
@@ -440,61 +465,148 @@ const Monitor = props => (
   </svg>
 )
 
+const SectionTitle = props => (
+  <Title
+    css={{ marginRight: 100 }}
+    italic
+    size={4}
+    sizeLineHeight={1.1}
+    alpha={1}
+    color="#222"
+    {...props}
+  />
+)
+
+const SectionTitleSmall = props => <SectionTitle size={3.1} {...props} />
+
+const SectionP = props => (
+  <P
+    size={2.1}
+    sizeLineHeight={1.1}
+    fontWeight={400}
+    titleFont
+    color="#fff"
+    alpha={1}
+    {...props}
+  />
+)
+
+const SectionSubP = props => (
+  <P
+    size={1.8}
+    sizeLineHeight={1.1}
+    fontWeight={300}
+    titleFont
+    color="#fff"
+    alpha={0.9}
+    {...props}
+  />
+)
+
+const waveColor = '#C4C4F4'
+
 @view
 class SectionSearch extends React.Component {
   render() {
+    const iconProps = {
+      size: 40,
+    }
     return (
       <Page
         offset={1}
-        titleProps={{ debug: 1 }}
         background={
-          <Bauhaus
-            hideSquare
-            hideCircle
-            css={{
-              transform: { scale: 0.6, y: '-111%', x: '-80%' },
-              opacity: 0.04,
-            }}
-          />
+          <>
+            <WaveBanner fill={waveColor} />
+            <Bauhaus
+              showTriangle
+              css={{
+                transform: { scale: 0.6, y: '-111%', x: '-80%' },
+                opacity: 0.05,
+              }}
+            />
+          </>
         }
-        title={
-          <inner css={{ width: '45%' }}>
-            <Title
-              css={{ marginRight: 100 }}
-              italic
-              size={4}
-              sizeLineHeight={1.1}
-              alpha={1}
-              color="#222"
+        titleProps={{
+          effects: {
+            opacity: x => {
+              const fadeAfter = 1
+              if (x < fadeAfter) {
+                return x * Math.log(x * 10)
+              }
+              return fadeAfter * 2 - x
+            },
+          },
+        }}
+      >
+        <SectionContent css={{ flex: 1 }}>
+          <inner css={{ width: '45%', margin: ['auto', 0] }}>
+            <SectionTitle
+              color={UI.color(waveColor)
+                .darken(0.6)
+                .desaturate(0.6)}
             >
               Unified search that works
-            </Title>
-            <P
-              size={2.1}
-              sizeLineHeight={1.1}
-              titleFont
-              alpha={0.65}
-              fontWeight={300}
-            >
-              Orbit runs completely behind your firewall. With many integrations
-              and <ToolTip>novel NLP</ToolTip> it searches everything, fast.
-            </P>
-            <br />
-            <P
-              size={1.5}
-              sizeLineHeight={1.1}
-              titleFont
-              alpha={0.65}
-              fontWeight={300}
-            >
-              Search sensitive data from your intranet wikis to private
-              databases or APIs with ease. It's flexible, powerful search
-              wherever you need it.
-            </P>
+            </SectionTitle>
+            <VertSpace />
+            <SectionP>
+              Orbit runs entirely behind your firewall giving your cloud and
+              private data instant{' '}
+              <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
+                NLP
+              </ToolTip>{' '}
+              search.
+            </SectionP>
+            <VertSpace />
+            <SectionSubP>
+              Stay up to date on everything from Slack and Google Docs to
+              intranet wikis, private databases, and internal APIs.
+            </SectionSubP>
+            <VertSpace />
+            <VertSpace />
+            <icons>
+              <icon>
+                <Icon name="slack" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="gdocs" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="gmail" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="github" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="gcalendar" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="confluence" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="jira" {...iconProps} />
+              </icon>
+              <icon>
+                <Icon name="dropbox" {...iconProps} />
+              </icon>
+            </icons>
           </inner>
-        }
-      />
+        </SectionContent>
+      </Page>
     )
+  }
+
+  static style = {
+    icons: {
+      flexFlow: 'row',
+    },
+    icon: {
+      margin: [0, 20, 0, 0],
+      background: UI.color(waveColor)
+        .darken(0.2)
+        .alpha(0.1),
+      borderRadius: 10,
+      padding: 20,
+    },
   }
 }
 
@@ -502,24 +614,71 @@ class SectionSearch extends React.Component {
 class SectionProfiles extends React.Component {
   render() {
     return (
-      <Page offset={2} titleProps={{ debug: 2 }}>
-        <img
-          src={peekImg}
-          css={{
-            position: 'absolute',
-            top: -600,
-            left: '20%',
-            width: 1319 / 2,
-            height: 'auto',
-            zIndex: 100,
-            transform:
-              'perspective(1000px) rotateY(5deg) rotateX(10deg) scale(0.95)',
-          }}
-        />
+      <Page
+        offset={2}
+        background={
+          <>
+            <Slant {...firstSlant} {...topSlants} />
+            <Slant inverseSlant {...secondSlant} {...topSlants} />
+            <Slant {...thirdSlant} {...topSlants} />
+          </>
+        }
+      >
+        <SectionContent css={{ flex: 1 }}>
+          <inner css={{ width: '45%', margin: [100, 0, 0] }}>
+            <SectionTitleSmall>More personal</SectionTitleSmall>
+            <VertSpace />
+            <SectionSubTitle>
+              Beautiful cards keep everyone on your team in sync, interruption
+              free.
+            </SectionSubTitle>
+            <VertSpace />
+            <VertSpace />
+          </inner>
+          <img
+            src={profileImg}
+            css={{
+              width: 1283 / 2,
+              height: 'auto',
+              transform: {
+                y: 0,
+                x: 60,
+                perspective: 1000,
+                rotateY: '3deg',
+                rotateX: '4deg',
+                rotateZ: '-1deg',
+              },
+            }}
+          />
+        </SectionContent>
       </Page>
     )
   }
 }
+
+const Card = ({ title, children, icon }) => (
+  <card
+    css={{
+      flexFlow: 'row',
+      padding: 30,
+      background: [255, 255, 255, 0.05],
+      margin: [0, 0, 25],
+      borderRadius: 10,
+      alignItems: 'center',
+    }}
+  >
+    <UI.Icon
+      name={icon}
+      size={46}
+      color="#fff"
+      css={{ margin: [0, 40, 0, 0] }}
+    />
+    <content css={{ flex: 1 }}>
+      <SectionP css={{ flex: 1 }}>{title}</SectionP>
+      <SectionSubP css={{ flex: 1 }}>{children}</SectionSubP>
+    </content>
+  </card>
+)
 
 @view
 class SectionIntegrations extends React.Component {
@@ -527,31 +686,42 @@ class SectionIntegrations extends React.Component {
     return (
       <Page
         offset={3}
+        zIndex={5}
+        background={<WaveBanner fill="#AE2E73" />}
         title={
-          <inner css={{ width: '50%' }}>
-            <Title
-              italic
-              size={4.2}
-              sizeLineHeight={1.1}
-              alpha={1}
-              color="#222"
-            >
-              Search that works
-            </Title>
-            <P
-              size={2.1}
-              sizeLineHeight={1.1}
-              titleFont
-              alpha={0.65}
-              fontWeight={400}
-            >
-              Running private to your device means you can integrate everything
-              in one. Search databases, internal APIs, and internal wikis with
-              ease.
-            </P>
-          </inner>
+          <Bauhaus
+            if={false}
+            showCircle
+            css={{ opacity: 0.1, transform: { y: 300, x: 200 } }}
+          />
         }
-      />
+      >
+        <SectionContent css={{ flex: 1 }}>
+          <div
+            css={{ flexFlow: 'row', justifyContent: 'space-around', flex: 1 }}
+          >
+            <inner css={{ width: '42%', margin: ['auto', 0] }}>
+              <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
+              <VertSpace />
+              <SectionSubTitle color="#fff">
+                We've rethought the intranet from the ground up. It starts by
+                putting users and privacy first.
+              </SectionSubTitle>
+            </inner>
+            <inner css={{ width: '45%', margin: ['auto', 0] }}>
+              <Card icon="fire" title="Secure">
+                Your data never leaves your firewall.
+              </Card>
+              <Card icon="time" title="Easy">
+                From download to setup in just a couple of minutes.
+              </Card>
+              <Card icon="sport_user-run" title="Useful">
+                Instant cloud search is now right in your OS, always at hand.
+              </Card>
+            </inner>
+          </div>
+        </SectionContent>
+      </Page>
     )
   }
 }
@@ -586,11 +756,15 @@ export class HomePage extends React.Component {
         scrolling={false}
         ref={node => (this.parallax = node)}
         pages={pages}
+        config={{
+          tension: 210,
+          friction: 20,
+        }}
       >
         <UI.Theme
           theme={{
-            background: topBg,
-            color: topBg.darken(0.6).desaturate(0.5),
+            background: bodyBg,
+            color: bodyBg.darken(0.6).desaturate(0.5),
           }}
         >
           <Media query={Constants.screen.large}>
@@ -603,9 +777,20 @@ export class HomePage extends React.Component {
                     <SectionSearch isLarge={isLarge} isMedium={isMedium} />
                     <SectionProfiles />
                     <SectionIntegrations />
-                    <Page offset={4}>
+                    <footer css={{ position: 'relative', zIndex: 4 }}>
+                      <hideOrbit
+                        css={{
+                          background: `linear-gradient(transparent, ${bodyBg} 20%)`,
+                          height: 800,
+                          position: 'absolute',
+                          top: -800,
+                          left: 0,
+                          right: 0,
+                          zIndex: -1,
+                        }}
+                      />
                       <Footer />
-                    </Page>
+                    </footer>
                   </>
                 )}
               </Media>

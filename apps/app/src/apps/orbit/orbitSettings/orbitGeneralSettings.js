@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitCard } from '../orbitCard'
 import { SubTitle } from '~/views'
@@ -64,7 +65,7 @@ class OrbitGeneralSettingsStore {
 @view({
   store: OrbitGeneralSettingsStore,
 })
-export class OrbitGeneralSettings {
+export class OrbitGeneralSettings extends React.Component {
   render({ store, settingsStore }) {
     const { integrationSettings } = settingsStore
     const { generalSetting } = store

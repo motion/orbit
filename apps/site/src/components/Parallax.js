@@ -229,8 +229,9 @@ export class Parallax extends React.PureComponent {
     setTimeout(this.update, 150)
   }
 
-  scrollStop = event =>
+  scrollStop = () => {
     this.animatedScroll && this.animatedScroll.stopAnimation()
+  }
 
   scrollTo(offset) {
     const { horizontal, config, impl } = this.props
@@ -239,7 +240,9 @@ export class Parallax extends React.PureComponent {
     this.offset = offset
     const target = this.container
     this.animatedScroll = new AnimatedValue(target[scrollType])
-    this.animatedScroll.addListener(({ value }) => (target[scrollType] = value))
+    this.animatedScroll.addListener(({ value }) => {
+      target[scrollType] = value
+    })
     controller(
       this.animatedScroll,
       { to: offset * this.space, ...config },

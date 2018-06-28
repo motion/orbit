@@ -150,7 +150,7 @@ Orbit does that.
   - airbnb
 - some things are horrible as checkboxes, but great paintings:
   - high ux: webos / ios
-  - multi-featured: meteor / notion
+  - multi-featured: slack / airtable
 - painting-like ideas are harder to validate
 - they are also harder to execute
   - getting just a few pieces wrong can ruin a painting

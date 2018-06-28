@@ -12,7 +12,7 @@ const icons = {
 }
 
 @view
-export class ControlButton {
+export class ControlButton extends React.Component {
   static defaultProps = {
     background: '#ED6A5F',
     borderWidth: 0.5,

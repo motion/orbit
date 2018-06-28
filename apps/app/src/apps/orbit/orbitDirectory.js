@@ -32,7 +32,7 @@ class OrbitDirectoryStore {
 @view({
   store: OrbitDirectoryStore,
 })
-export class OrbitDirectory {
+export class OrbitDirectory extends React.Component {
   render({ store }) {
     log('DIRECTORY --------')
     const people = Helpers.fuzzy(App.state.query.slice(1), store.results, {

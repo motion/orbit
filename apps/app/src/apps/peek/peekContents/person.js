@@ -7,6 +7,10 @@ import { Carousel } from '~/components/carousel'
 import { Bit } from '@mcro/models'
 import { SubTitle } from '~/views'
 
+const StrongSubTitle = props => (
+  <SubTitle fontWeight={500} fontSize={16} {...props} />
+)
+
 const mapW = 700
 const mapH = 300
 
@@ -58,11 +62,23 @@ export class Person extends React.Component {
                 Slack
               </a>
               <a $intButton>
-                <OrbitIcon preventAdjust $intIcon icon="zoom" size={14} />
+                <OrbitIcon
+                  preventAdjust
+                  $intIcon
+                  icon="zoom"
+                  size={12}
+                  color="#777"
+                />
                 Documents
               </a>
               <a $intButton>
-                <OrbitIcon preventAdjust $intIcon icon="zoom" size={14} />
+                <OrbitIcon
+                  preventAdjust
+                  $intIcon
+                  icon="zoom"
+                  size={12}
+                  color="#777"
+                />
                 Tasks
               </a>
             </links>
@@ -81,10 +97,11 @@ export class Person extends React.Component {
         <content>
           <contentInner>
             <card>
-              <SubTitle>Spends time in...</SubTitle>
+              <StrongSubTitle>Where</StrongSubTitle>
               <UI.Row
                 itemProps={{
                   size: 1.05,
+                  alpha: 0.9,
                   background: 'transparent',
                   borderRadius: 5,
                   margin: [0, 10, 0, -5],
@@ -98,24 +115,25 @@ export class Person extends React.Component {
             </card>
 
             <card>
-              <SubTitle>Interested in...</SubTitle>
+              <StrongSubTitle>Topics</StrongSubTitle>
               <UI.Row
                 itemProps={{
                   size: 1.05,
+                  alpha: 0.9,
                   background: 'transparent',
                   borderRadius: 5,
                   margin: [0, 10, 0, -5],
                 }}
               >
-                <UI.Button>ui kit</UI.Button>
-                <UI.Button>size props</UI.Button>
-                <UI.Button>interface</UI.Button>
-                <UI.Button>React</UI.Button>
+                <UI.Button icon="zoom">UI Kit</UI.Button>
+                <UI.Button icon="zoom">size prop</UI.Button>
+                <UI.Button icon="zoom">async migration</UI.Button>
+                <UI.Button icon="zoom">freelance</UI.Button>
               </UI.Row>
             </card>
 
             <card>
-              <SubTitle>Recently relevant conversations</SubTitle>
+              <StrongSubTitle>Conversations</StrongSubTitle>
               <Carousel items={store.relatedConversations} />
             </card>
           </contentInner>
@@ -183,18 +201,18 @@ export class Person extends React.Component {
       display: 'block',
       position: 'absolute',
       top: 60,
-      left: 130,
+      left: 140,
     },
     name: {
       display: 'inline-block',
       fontSize: 30,
       fontWeight: 800,
       padding: [10, 12],
-      background: [255, 255, 255, 0.75],
+      background: [255, 255, 255],
     },
     email: {
       display: 'inline-block',
-      background: [0, 0, 0, 0.75],
+      background: [0, 0, 0],
       color: '#fff',
       fontWeight: 600,
       padding: [4, 8],
@@ -207,7 +225,7 @@ export class Person extends React.Component {
       borderRadius: 1000,
     },
     card: {
-      marginBottom: 15,
+      marginBottom: 20,
     },
     links: {
       position: 'relative',
@@ -216,16 +234,22 @@ export class Person extends React.Component {
       flexFlow: 'row',
     },
     intButton: {
-      padding: [4, 5],
-      marginRight: 6,
-      borderRadius: 4,
+      padding: [6, 10],
+      marginRight: 7,
+      borderRadius: 10,
       flexFlow: 'row',
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: 500,
-      background: '#fff',
+      background: 'linear-gradient(#fff, #f6f6f6 50%)',
+      boxShadow: 'inset 0 0 1px #ccc, inset 0 1px #fff',
+      border: [1, '#fff'],
+      cursor: 'normal',
+      '&:hover': {
+        background: 'linear-gradient(#fff, #f9f9f9 50%)',
+      },
     },
     intIcon: {
-      marginRight: 8,
+      marginRight: 7,
     },
     row: {
       margin: [0, -8],

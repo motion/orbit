@@ -28,7 +28,7 @@ class SearchStore {
 @view({
   searchStore: SearchStore,
 })
-export class OrbitSearchResults {
+export class OrbitSearchResults extends React.Component {
   render({ searchStore, name }) {
     if (!searchStore.state) {
       return null
@@ -60,11 +60,14 @@ export class OrbitSearchResults {
                   <UI.Text
                     size={1.2}
                     alpha={0.7}
+                    ellipse={3}
+                    wordBreak="break-all"
                     highlight={{
                       words: highlightWords,
-                      maxChars: Math.max(400, 2000 / results.length),
-                      maxSurroundChars: Math.max(80, 500 / results.length),
+                      maxChars: Math.max(400, 3500 / results.length),
+                      maxSurroundChars: Math.max(80, 850 / results.length),
                       trimWhitespace: true,
+                      separator: '&nbsp;&middot;&nbsp;',
                     }}
                   >
                     {sanitize(bit.body)}

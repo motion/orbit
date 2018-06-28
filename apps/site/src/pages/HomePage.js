@@ -642,7 +642,7 @@ class SectionProfiles extends React.Component {
               height: 'auto',
               transform: {
                 y: 0,
-                x: 0,
+                x: 60,
                 perspective: 1000,
                 rotateY: '3deg',
                 rotateX: '4deg',

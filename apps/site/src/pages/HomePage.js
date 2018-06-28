@@ -117,7 +117,7 @@ class Page extends React.Component {
           $orbit
           if={orbit}
           offset={offset}
-          speed={-0.85}
+          speed={-0.8}
           css={{
             zIndex: 4 + zIndex,
           }}
@@ -629,8 +629,8 @@ class SectionProfiles extends React.Component {
             <SectionTitleSmall>More personal</SectionTitleSmall>
             <VertSpace />
             <SectionSubTitle>
-              Beautiful cards for everyone on your team combined from all your
-              integrations .
+              Beautiful cards keep everyone on your team in sync, interruption
+              free.
             </SectionSubTitle>
             <VertSpace />
             <VertSpace />

@@ -549,18 +549,19 @@ class SectionSearch extends React.Component {
             </SectionTitle>
             <VertSpace />
             <SectionP>
-              Orbit runs entirely behind your firewall giving your cloud and
-              private data instant{' '}
+              The power of on-device{' '}
               <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
                 NLP
               </ToolTip>{' '}
-              search.
+              lets you search your cloud and private data without anything
+              leaving the firewall.
             </SectionP>
             <VertSpace />
             <SectionSubP>
               Stay up to date on everything from Slack and Google Docs to
               intranet wikis, private databases, and internal APIs.
             </SectionSubP>
+            <VertSpace />
             <VertSpace />
             <VertSpace />
             <icons>
@@ -618,6 +619,7 @@ class SectionProfiles extends React.Component {
         offset={2}
         background={
           <>
+            <Bauhaus showSqaure css={{ opacity: 1 }} />
             <Slant {...firstSlant} {...topSlants} />
             <Slant inverseSlant {...secondSlant} {...topSlants} />
             <Slant {...thirdSlant} {...topSlants} />
@@ -626,11 +628,11 @@ class SectionProfiles extends React.Component {
       >
         <SectionContent css={{ flex: 1 }}>
           <inner css={{ width: '45%', margin: [100, 0, 0] }}>
-            <SectionTitleSmall>More personal</SectionTitleSmall>
+            <SectionTitleSmall>A new way to stay up to date</SectionTitleSmall>
             <VertSpace />
             <SectionSubTitle>
-              Beautiful cards keep everyone on your team in sync, interruption
-              free.
+              Reduce interruptions and add clarity to your org chart with
+              beautiful auto generated profiles.
             </SectionSubTitle>
             <VertSpace />
             <VertSpace />
@@ -690,9 +692,8 @@ class SectionIntegrations extends React.Component {
         background={<WaveBanner fill="#AE2E73" />}
         title={
           <Bauhaus
-            if={false}
             showCircle
-            css={{ opacity: 0.1, transform: { y: 300, x: 200 } }}
+            css={{ opacity: 0.1, transform: { y: '50%', x: '-80%' } }}
           />
         }
       >
@@ -733,6 +734,7 @@ export class HomePage extends React.Component {
   parallax = null
 
   componentDidMount() {
+    console.log('this.parallax', this.parallax)
     const dispose = this.handleScroll()
     this.subscriptions.add({ dispose })
   }
@@ -756,10 +758,7 @@ export class HomePage extends React.Component {
         scrolling={false}
         ref={node => (this.parallax = node)}
         pages={pages}
-        config={{
-          tension: 210,
-          friction: 20,
-        }}
+        config={{ tension: 170, friction: 26 }}
       >
         <UI.Theme
           theme={{
@@ -780,7 +779,7 @@ export class HomePage extends React.Component {
                     <footer css={{ position: 'relative', zIndex: 4 }}>
                       <hideOrbit
                         css={{
-                          background: `linear-gradient(transparent, ${bodyBg} 20%)`,
+                          background: 'linear-gradient(transparent, #fff 20%)',
                           height: 800,
                           position: 'absolute',
                           top: -800,

@@ -38,7 +38,12 @@ const adjust = {
   },
   jira: {
     transform: {
-      scale: 1.7,
+      scale: 1.5,
+    },
+  },
+  confluence: {
+    transform: {
+      scale: 1.6,
     },
   },
 }

@@ -29,7 +29,7 @@ export class Footer extends React.Component {
             <SectionContent
               css={{ textAlign: 'center', padding: [150, 0, 150 - 20] }}
             >
-              <Title size={2.5} css={{ marginBottom: 20 }}>
+              <Title size={3} css={{ marginBottom: 20 }}>
                 Keep everyone in sync, without overhead.
               </Title>
               <div css={{ margin: [40, 0] }}>

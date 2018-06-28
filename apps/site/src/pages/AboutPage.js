@@ -11,14 +11,19 @@ import { Bauhaus } from '~/views/bauhaus'
 export class AboutPage extends React.Component {
   render() {
     return (
-      <page $$flex $$background={Constants.blueTheme.background}>
+      <page
+        css={{
+          overflow: 'hidden',
+          flex: 1,
+          background: Constants.blueTheme.background,
+        }}
+      >
         <UI.Theme theme={Constants.blueTheme}>
           <Header />
           <Section>
             <SectionContent padded>
               <Bauhaus
-                hideTriangle
-                hideSquare
+                showCircle
                 circleColor="#F7C7FF"
                 css={{
                   transform: { scale: 0.8, y: '-45%', x: '65%' },
@@ -26,15 +31,15 @@ export class AboutPage extends React.Component {
                 }}
               />
               <Bauhaus
-                hideTriangle
-                hideSquare
+                showCircle
                 css={{
                   transform: { scale: 0.57, y: '91%', x: '84%' },
                   zIndex: 0,
                 }}
               />
               <Bauhaus
-                hideCircle
+                showTriangle
+                showSquare
                 css={{
                   opacity: 0.05,
                   transform: { scale: 1, y: '25%', x: '-34%' },

@@ -14,7 +14,13 @@ console.log('posts', posts)
 export class BlogPage extends React.Component {
   render() {
     return (
-      <page $$flex $$background={Constants.blueTheme.background}>
+      <page
+        css={{
+          overflow: 'hidden',
+          flex: 1,
+          background: Constants.blueTheme.background,
+        }}
+      >
         <UI.Theme theme={Constants.blueTheme}>
           <Header />
           <V.Section>

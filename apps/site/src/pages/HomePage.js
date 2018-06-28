@@ -104,7 +104,7 @@ class Page extends React.Component {
           $background
           if={background}
           offset={offset}
-          speed={0.1}
+          speed={0.05}
           css={{
             zIndex: 0 + zIndex,
           }}

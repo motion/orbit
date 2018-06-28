@@ -120,6 +120,7 @@ export class Join extends React.Component {
   static style = {
     form: {
       flex: 1,
+      position: 'relative',
     },
     section: {
       textAlign: 'left',
@@ -134,7 +135,10 @@ export class Join extends React.Component {
       minWidth: 235,
     },
     message: {
-      paddingRight: 40,
+      position: 'absolute',
+      bottom: -100,
+      left: 0,
+      right: 0,
       color: 'darkred',
     },
     success: {

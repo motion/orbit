@@ -91,6 +91,7 @@ class Page extends React.Component {
     title,
     titleProps,
     children,
+    childrenProps,
     background,
     orbit,
     backgroundProps,
@@ -137,7 +138,10 @@ class Page extends React.Component {
         >
           <SectionContentParallax>{title}</SectionContentParallax>
         </ParallaxLayer>
-        <NormalLayer css={{ position: 'relative', zIndex: 1 + zIndex }}>
+        <NormalLayer
+          css={{ position: 'relative', zIndex: 1 + zIndex }}
+          {...childrenProps}
+        >
           {children}
         </NormalLayer>
       </React.Fragment>
@@ -174,19 +178,12 @@ const VertSpace = () => (
 )
 
 const SectionSubTitle = props => (
-  <P
-    size={2}
-    sizeLineHeight={1.1}
-    titleFont
-    alpha={0.65}
-    fontWeight={400}
-    {...props}
-  />
+  <P size={2} titleFont alpha={0.65} fontWeight={400} {...props} />
 )
 
 const Pitch = ({ isLarge }) => (
   <>
-    <Title italic size={5.5} sizeLineHeight={1.1} alpha={1} color="#222">
+    <Title italic size={5.2} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
     <VertSpace />
@@ -241,7 +238,7 @@ const Pitch = ({ isLarge }) => (
       <UI.Button
         href="/about"
         onClick={Router.link('/about')}
-        css={{ cursor: 'pointer' }}
+        css={{ cursor: 'pointer', margin: [-2, 0] }}
       >
         Learn more.
       </UI.Button>
@@ -527,7 +524,7 @@ const waveColor = '#C4C4F4'
 class SectionSearch extends React.Component {
   render({ isLarge }) {
     const iconProps = {
-      size: 40,
+      size: isLarge ? 55 : 40,
     }
     return (
       <Page
@@ -577,13 +574,13 @@ class SectionSearch extends React.Component {
               <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
                 NLP
               </ToolTip>{' '}
-              lets you search your cloud and private data without anything
-              leaving the firewall.
+              for powerful cloud and private search with nothing leaving your
+              firewall.
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              Stay up to date on services like Slack and Google Docs to internal
-              folders, wikis, databases, and APIs.
+              From services like Slack and Google Docs to internal folders,
+              wikis, databases, and APIs.
             </SectionSubP>
             <VertSpace />
             <VertSpace />
@@ -649,14 +646,19 @@ class SectionProfiles extends React.Component {
             <Slant {...thirdSlant} {...topSlants} />
           </>
         }
+        childrenProps={{
+          style: {
+            zIndex: 4,
+          },
+        }}
       >
         <SectionContent css={{ flex: 1 }}>
           <inner css={isLarge && { width: '45%', margin: [100, 0, 0] }}>
-            <SectionTitleSmall>A more personal search</SectionTitleSmall>
+            <SectionTitleSmall>More personal search</SectionTitleSmall>
             <VertSpace />
             <SectionSubTitle>
-              Beautiful automatic profile cards let you explore what's going on,
-              reduce interruptions and add clarity to your day.
+              Beautiful automatic profile cards keep you up to date with
+              teammates and reduce constant interruption.
             </SectionSubTitle>
             <VertSpace />
             <VertSpace />

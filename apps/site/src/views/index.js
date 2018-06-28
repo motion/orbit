@@ -63,6 +63,8 @@ export const Title = UI.injectTheme(
           css={{
             fontFamily: TITLE_FONT_FAMILY,
             fontStyle: italic ? 'normal' : 'normal',
+            // Eesti font adds space at bottom
+            marginBottom: '-1%',
           }}
           {...props}
         >

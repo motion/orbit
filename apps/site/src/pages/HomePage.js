@@ -17,6 +17,21 @@ import { Icon } from '~/views/icon'
 const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
 
+const Half = props => (
+  <Media query={Constants.screen.large}>
+    {isLarge => (
+      <half
+        css={
+          isLarge
+            ? { width: '45%', margin: ['auto', 0] }
+            : { width: '100%', margin: ['auto', 0] }
+        }
+        {...props}
+      />
+    )}
+  </Media>
+)
+
 const WaveBanner = ({ fill = '#000', ...props }) => (
   <svg
     className="wavebanner"
@@ -90,11 +105,17 @@ class NormalLayer extends React.Component {
   }
 }
 
+const layers = {
+  slower: { speed: -0.2 },
+  slow: { speed: -0.1 },
+  fast: { speed: 0.1 },
+  faster: { speed: 0.2 },
+}
+
 @view
 class Page extends React.Component {
   render({
     offset,
-    peek,
     title,
     titleProps,
     children,
@@ -103,14 +124,14 @@ class Page extends React.Component {
     orbit,
     backgroundProps,
     orbitProps,
+    banner,
     zIndex = 0,
   }) {
     return (
       <React.Fragment>
         <ParallaxLayer
-          className="parallaxLayer background"
-          $background
-          if={background}
+          if={banner}
+          className="parallaxLayer banner"
           offset={offset}
           speed={0.05}
           css={{
@@ -118,11 +139,22 @@ class Page extends React.Component {
           }}
           {...backgroundProps}
         >
+          <WaveBanner fill={banner} />
+        </ParallaxLayer>
+        <ParallaxLayer
+          className="parallaxLayer background"
+          if={background}
+          offset={offset}
+          speed={0.1}
+          css={{
+            zIndex: -1 + zIndex,
+          }}
+          {...backgroundProps}
+        >
           {background}
         </ParallaxLayer>
         <ParallaxLayer
           className="parallaxLayer orbit"
-          $orbit
           if={orbit}
           offset={offset}
           speed={-0.8}
@@ -283,23 +315,6 @@ class HomeHeader extends React.Component {
                 y - 4 * -Math.sin(x / 30),
               ]}
             />
-            {/* <Bauhaus
-              showTriangle
-              css={{
-                transform: { scale: 0.2, y: '91%', x: '-34%', rotate: '20deg' },
-              }}
-              warp={([x, y]) => [x, y - 4 * -Math.sin(x / 20)]}
-            />
-            <Bauhaus
-              showSquare
-              css={{
-                transform: { scale: 0.1, y: '251%', x: '-184%' },
-              }}
-              warp={([x, y]) => [
-                x * Math.sin(x / 200),
-                y - 4 * -Math.sin(x / 20),
-              ]}
-            /> */}
           </>
         }
         orbit={
@@ -538,14 +553,14 @@ class SectionSearch extends React.Component {
     return (
       <Page
         offset={1}
+        banner={waveColor}
         background={
           <>
-            <WaveBanner fill={waveColor} />
             <Bauhaus
               showTriangle
               css={{
                 transform: { scale: 0.6, y: '-111%', x: '-80%' },
-                opacity: 0.05,
+                opacity: 0.1,
               }}
             />
           </>
@@ -561,15 +576,8 @@ class SectionSearch extends React.Component {
             },
           },
         }}
-      >
-        <SectionContent css={{ flex: 1 }}>
-          <inner
-            css={
-              isLarge
-                ? { width: '45%', margin: ['auto', 0] }
-                : { width: '100%', margin: ['auto', 0] }
-            }
-          >
+        title={
+          <Half>
             <SectionTitle
               color={UI.color(waveColor)
                 .darken(0.6)
@@ -593,7 +601,13 @@ class SectionSearch extends React.Component {
             </SectionSubP>
             <VertSpace />
             <VertSpace />
-            <VertSpace />
+            <div css={{ height: 200 }} />
+          </Half>
+        }
+      >
+        <SectionContent css={{ flex: 1 }}>
+          <div $$flex={3} />
+          <Half>
             <icons>
               <icon>
                 <Icon name="slack" {...iconProps} />
@@ -620,7 +634,8 @@ class SectionSearch extends React.Component {
                 <Icon name="dropbox" {...iconProps} />
               </icon>
             </icons>
-          </inner>
+          </Half>
+          <div $$flex />
         </SectionContent>
       </Page>
     )
@@ -649,7 +664,7 @@ class SectionProfiles extends React.Component {
         offset={2}
         background={
           <>
-            <Bauhaus showSqaure css={{ opacity: 1 }} />
+            <Bauhaus showSquare css={{ opacity: 1 }} />
             <Slant {...firstSlant} {...topSlants} />
             <Slant inverseSlant {...secondSlant} {...topSlants} />
             <Slant {...thirdSlant} {...topSlants} />
@@ -724,7 +739,7 @@ class SectionIntegrations extends React.Component {
       <Page
         offset={3}
         zIndex={5}
-        background={<WaveBanner fill="#AE2E73" />}
+        banner="#AE2E73"
         title={
           <Bauhaus
             showCircle
@@ -747,6 +762,7 @@ class SectionIntegrations extends React.Component {
                 We've rethought the intranet from the ground up. It starts by
                 putting users and privacy first.
               </SectionSubTitle>
+              {/* <Bauhaus showCircle showTriangle showSquare /> */}
               <VertSpace />
               <VertSpace />
             </inner>

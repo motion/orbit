@@ -13,6 +13,7 @@ import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
 import profileImg from '~/../public/profileimg.png'
 import { Icon } from '~/views/icon'
+import Observer from '@researchgate/react-intersection-observer'
 
 const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -217,7 +218,14 @@ const VertSpace = () => (
 )
 
 const SectionSubTitle = props => (
-  <P size={2} titleFont alpha={0.65} fontWeight={400} {...props} />
+  <P
+    size={2}
+    sizeLineHeight={1.1}
+    titleFont
+    alpha={0.65}
+    fontWeight={400}
+    {...props}
+  />
 )
 
 const Pitch = ({ isLarge }) => (
@@ -339,7 +347,7 @@ class HomeHeader extends React.Component {
                       height: 2016 / 2,
                       transform: {
                         x: 20,
-                        y: '20%',
+                        y: '25%',
                       },
                     }}
                   >
@@ -658,6 +666,10 @@ class SectionSearch extends React.Component {
 
 @view
 class SectionProfiles extends React.Component {
+  handleIntersection = ({ isIntersecting }) => {
+    this.props.freeze(isIntersecting)
+  }
+
   render({ isLarge }) {
     return (
       <Page
@@ -676,33 +688,35 @@ class SectionProfiles extends React.Component {
           },
         }}
       >
-        <SectionContent css={{ flex: 1 }}>
-          <inner css={isLarge && { width: '45%', margin: [100, 0, 0] }}>
-            <SectionTitleSmall>Operate personally</SectionTitleSmall>
-            <VertSpace />
-            <SectionSubTitle>
-              Beautiful automatic profile cards keep you up to date with
-              teammates and reduce constant interruption.
-            </SectionSubTitle>
-            <VertSpace />
-            <VertSpace />
-          </inner>
-          <img
-            src={profileImg}
-            css={{
-              width: 1283 / 2,
-              height: 'auto',
-              transform: {
-                y: 0,
-                x: 60,
-                perspective: 1000,
-                rotateY: '3deg',
-                rotateX: '4deg',
-                rotateZ: '-1deg',
-              },
-            }}
-          />
-        </SectionContent>
+        <Observer rootMargin="0% 0% -80%" onChange={this.handleIntersection}>
+          <SectionContent css={{ flex: 1 }}>
+            <inner css={isLarge && { width: '45%', margin: [100, 0, 0] }}>
+              <SectionTitleSmall>Operate personally</SectionTitleSmall>
+              <VertSpace />
+              <SectionSubTitle>
+                Beautiful automatic profile cards keep you up to date with
+                teammates and reduce constant interruption.
+              </SectionSubTitle>
+              <VertSpace />
+              <VertSpace />
+            </inner>
+            <img
+              src={profileImg}
+              css={{
+                width: 1283 / 2,
+                height: 'auto',
+                transform: {
+                  y: 0,
+                  x: 60,
+                  perspective: 1000,
+                  rotateY: '3deg',
+                  rotateX: '4deg',
+                  rotateZ: '-1deg',
+                },
+              }}
+            />
+          </SectionContent>
+        </Observer>
       </Page>
     )
   }
@@ -733,7 +747,7 @@ const Card = ({ title, children, icon }) => (
 )
 
 @view
-class SectionIntegrations extends React.Component {
+class SectionNoCloud extends React.Component {
   render({ isLarge }) {
     return (
       <Page
@@ -791,6 +805,7 @@ export class HomePage extends React.Component {
   render() {
     return (
       <Parallax
+        ref={ref => (this.parallax = ref)}
         scrollingElement={window}
         container={document.documentElement}
         pages={pages}
@@ -808,8 +823,20 @@ export class HomePage extends React.Component {
                 <Header scrollTo={page => this.parallax.scrollTo(page)} white />
                 <HomeHeader isLarge={isLarge} />
                 <SectionSearch isLarge={isLarge} />
-                <SectionProfiles isLarge={isLarge} />
-                <SectionIntegrations isLarge={isLarge} />
+                <SectionProfiles
+                  isLarge={isLarge}
+                  freeze={paused => {
+                    if (
+                      document.documentElement.scrollTop >
+                      window.innerHeight * 3
+                    ) {
+                      console.log('avoid at bottom')
+                      return
+                    }
+                    this.parallax.paused = paused
+                  }}
+                />
+                <SectionNoCloud isLarge={isLarge} />
                 <Page offset={4} zIndex={3}>
                   <hideOrbit
                     css={{

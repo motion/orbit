@@ -54,8 +54,6 @@ export class ParallaxLayer extends React.PureComponent {
     this.updateEffect(this.animatedTranslate, to, immediate)
     const distanceFromTarget = scrollTop + height - targetScroll
     const toPlain = distanceFromTarget / (height * this.props.offset)
-    if (this.props.debug) {
-    }
     this.updateCustomEffects(toPlain, immediate)
   }
 
@@ -212,6 +210,9 @@ export class Parallax extends React.PureComponent {
   }
 
   onScroll = () => {
+    if (this.paused) {
+      return
+    }
     const { horizontal } = this.props
     if (!this.busy) {
       this.busy = true

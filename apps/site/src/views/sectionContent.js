@@ -25,6 +25,7 @@ class SectionContent extends React.Component {
     fullscreen,
     fullscreenFs,
     fullscreenFixed,
+    forwardRef,
     ...props
   }) {
     const isSmall = window.innerWidth <= Constants.screen.small.maxWidth
@@ -45,6 +46,7 @@ class SectionContent extends React.Component {
     const style = isSmall ? { minHeight: height } : { height }
     return (
       <section
+        ref={forwardRef}
         $padVertical={padded}
         $padHorizontal={!!padded}
         $halfscreen={halfscreen}
@@ -98,4 +100,6 @@ class SectionContent extends React.Component {
   }
 }
 
-export default SectionContent
+export default React.forwardRef((props, ref) => (
+  <SectionContent forwardRef={ref} {...props} />
+))

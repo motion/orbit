@@ -16,7 +16,8 @@ class SwiftStore {
 
   constructor(props = { onStateChange: _ => _ }) {
     this.onStateChange = props.onStateChange
-    this._setupLink()
+    // disable until oracle is re-enabled
+    // this._setupLink()
   }
 
   clear = () => {

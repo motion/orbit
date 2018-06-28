@@ -410,7 +410,10 @@ class SurfacePlain extends React.Component {
     const height = props.height || (props.style && props.style.height)
     const width = props.width
     const padding = props.padding
-    const flex = props.flex === true ? 1 : props.flex || props.style.flex
+    const flex =
+      props.flex === true
+        ? 1
+        : props.flex || (props.style && props.style.flex) || 'none'
     const STATE =
       (props.highlight && 'highlight') || (props.active && 'active') || 'base'
 

@@ -9,7 +9,12 @@ export class SettingInfoStore {
   updateJob = 1
 
   get setting() {
-    if (!this.bit) return
+    if (!this.bit) {
+      return
+    }
+    if (!this.props.appStore.settings) {
+      return
+    }
     return this.props.appStore.settings[this.bit.integration]
   }
 

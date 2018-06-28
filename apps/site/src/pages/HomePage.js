@@ -104,7 +104,7 @@ class Page extends React.Component {
           $background
           if={background}
           offset={offset}
-          speed={0.2}
+          speed={0.1}
           css={{
             zIndex: 0 + zIndex,
           }}
@@ -516,6 +516,7 @@ class SectionSearch extends React.Component {
         offset={1}
         background={
           <>
+            <WaveBanner fill={waveColor} />
             <Bauhaus
               showTriangle
               css={{
@@ -536,7 +537,8 @@ class SectionSearch extends React.Component {
             },
           },
         }}
-        title={
+      >
+        <SectionContent css={{ flex: 1 }}>
           <inner css={{ width: '45%', margin: ['auto', 0] }}>
             <SectionTitle
               color={UI.color(waveColor)
@@ -588,9 +590,7 @@ class SectionSearch extends React.Component {
               </icon>
             </icons>
           </inner>
-        }
-      >
-        <WaveBanner fill={waveColor} />
+        </SectionContent>
       </Page>
     )
   }
@@ -623,7 +623,8 @@ class SectionProfiles extends React.Component {
             <Slant {...thirdSlant} {...topSlants} />
           </>
         }
-        title={
+      >
+        <SectionContent css={{ flex: 1 }}>
           <inner css={{ width: '45%', margin: [100, 0, 0] }}>
             <SectionTitleSmall>More personal</SectionTitleSmall>
             <VertSpace />
@@ -634,23 +635,22 @@ class SectionProfiles extends React.Component {
             <VertSpace />
             <VertSpace />
           </inner>
-        }
-      >
-        <img
-          src={profileImg}
-          css={{
-            width: 1283 / 2,
-            height: 'auto',
-            transform: {
-              y: 300,
-              x: 100,
-              perspective: 1000,
-              rotateY: '3deg',
-              rotateX: '4deg',
-              rotateZ: '-1deg',
-            },
-          }}
-        />
+          <img
+            src={profileImg}
+            css={{
+              width: 1283 / 2,
+              height: 'auto',
+              transform: {
+                y: 0,
+                x: 0,
+                perspective: 1000,
+                rotateY: '3deg',
+                rotateX: '4deg',
+                rotateZ: '-1deg',
+              },
+            }}
+          />
+        </SectionContent>
       </Page>
     )
   }
@@ -689,6 +689,14 @@ class SectionIntegrations extends React.Component {
         zIndex={5}
         background={<WaveBanner fill="#AE2E73" />}
         title={
+          <Bauhaus
+            if={false}
+            showCircle
+            css={{ opacity: 0.1, transform: { y: 300, x: 200 } }}
+          />
+        }
+      >
+        <SectionContent css={{ flex: 1 }}>
           <div
             css={{ flexFlow: 'row', justifyContent: 'space-around', flex: 1 }}
           >
@@ -712,8 +720,8 @@ class SectionIntegrations extends React.Component {
               </Card>
             </inner>
           </div>
-        }
-      />
+        </SectionContent>
+      </Page>
     )
   }
 }

@@ -33,7 +33,7 @@ export const screen = {
   small: { maxWidth: smallSize },
   large: { minWidth: smallSize - 1 },
   medium: { maxWidth: smallSize * 1.1 },
-  tall: { minHeight: sectionMaxHeight * 1.6 },
+  tall: { minHeight: sectionMaxHeight * 0.7 },
 }
 
 const blueBg = UI.color('#F5FAF9')

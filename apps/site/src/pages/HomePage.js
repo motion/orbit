@@ -167,13 +167,15 @@ const thirdSlant = {
 
 import { Join } from '~/components/Join'
 
-const VertSpace = view('div', {
-  height: 20,
-})
+const VertSpace = () => (
+  <Media query={Constants.screen.tall}>
+    {isTall => <div css={{ height: isTall ? 20 : 10 }} />}
+  </Media>
+)
 
 const SectionSubTitle = props => (
   <P
-    size={2.1}
+    size={2}
     sizeLineHeight={1.1}
     titleFont
     alpha={0.65}
@@ -196,7 +198,10 @@ const Pitch = ({ isLarge }) => (
       </ToolTip>.
     </SectionSubTitle>
     <VertSpace />
-    <Join />
+    <row $$row>
+      <Join />
+      <div $$flex />
+    </row>
     <VertSpace />
     <actions
       $$row
@@ -294,48 +299,43 @@ class HomeHeader extends React.Component {
           </>
         }
         orbit={
-          <SectionContentParallax>
-            <inner
-              css={{
-                position: 'absolute',
-                right: 40,
-                bottom: 0,
-                top: 40,
-                width: '50%',
-              }}
-            >
-              <inner
-                css={{
-                  position: 'absolute',
-                  right: 100,
-                  left: 100,
-                  top: 0,
-                  bottom: 0,
-                }}
-              >
-                <wrap
+          <Media
+            query={Constants.screen.large}
+            render={() => (
+              <SectionContentParallax>
+                <inner
                   css={{
-                    width: 1101 / 2,
-                    height: 2016 / 2,
-                    transform: {
-                      x: 20,
-                      y: '20%',
-                    },
+                    position: 'absolute',
+                    right: -50,
+                    bottom: 0,
+                    top: 0,
+                    width: '50%',
                   }}
                 >
-                  <UI.TiltHoverGlow
-                    restingPosition={[100, 100]}
-                    tiltOptions={{ perspective: 2000 }}
-                    glowProps={{
-                      opacity: 0.5,
+                  <wrap
+                    css={{
+                      width: 1101 / 2,
+                      height: 2016 / 2,
+                      transform: {
+                        x: 20,
+                        y: '20%',
+                      },
                     }}
                   >
-                    <HomeImg />
-                  </UI.TiltHoverGlow>
-                </wrap>
-              </inner>
-            </inner>
-          </SectionContentParallax>
+                    <UI.TiltHoverGlow
+                      restingPosition={[100, 100]}
+                      tiltOptions={{ perspective: 2000 }}
+                      glowProps={{
+                        opacity: 0.5,
+                      }}
+                    >
+                      <HomeImg />
+                    </UI.TiltHoverGlow>
+                  </wrap>
+                </inner>
+              </SectionContentParallax>
+            )}
+          />
         }
       >
         <SectionContentParallax>
@@ -345,7 +345,26 @@ class HomeHeader extends React.Component {
               <>
                 <div $$flex />
                 <Pitch />
-                <div $$flex />
+                <div $$flex={2.5} />
+                <orbit
+                  css={{
+                    zIndex: -1,
+                    position: 'absolute',
+                    bottom: '-10%',
+                    margin: [0, 'auto'],
+                    transformOrigin: 'bottom center',
+                    transform: { scale: 0.5 },
+                  }}
+                >
+                  <UI.TiltHoverGlow
+                    restingPosition={[100, 100]}
+                    glowProps={{
+                      opacity: 0.5,
+                    }}
+                  >
+                    <HomeImg />
+                  </UI.TiltHoverGlow>
+                </orbit>
               </>
             )}
           />
@@ -470,7 +489,6 @@ const SectionTitle = props => (
     css={{ marginRight: 100 }}
     italic
     size={4}
-    sizeLineHeight={1.1}
     alpha={1}
     color="#222"
     {...props}
@@ -507,7 +525,7 @@ const waveColor = '#C4C4F4'
 
 @view
 class SectionSearch extends React.Component {
-  render() {
+  render({ isLarge }) {
     const iconProps = {
       size: 40,
     }
@@ -539,7 +557,13 @@ class SectionSearch extends React.Component {
         }}
       >
         <SectionContent css={{ flex: 1 }}>
-          <inner css={{ width: '45%', margin: ['auto', 0] }}>
+          <inner
+            css={
+              isLarge
+                ? { width: '45%', margin: ['auto', 0] }
+                : { width: '100%', margin: ['auto', 0] }
+            }
+          >
             <SectionTitle
               color={UI.color(waveColor)
                 .darken(0.6)
@@ -558,8 +582,8 @@ class SectionSearch extends React.Component {
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              Stay up to date on everything from Slack and Google Docs to
-              intranet wikis, private databases, and internal APIs.
+              Stay up to date on services like Slack and Google Docs to internal
+              folders, wikis, databases, and APIs.
             </SectionSubP>
             <VertSpace />
             <VertSpace />
@@ -613,7 +637,7 @@ class SectionSearch extends React.Component {
 
 @view
 class SectionProfiles extends React.Component {
-  render() {
+  render({ isLarge }) {
     return (
       <Page
         offset={2}
@@ -627,12 +651,12 @@ class SectionProfiles extends React.Component {
         }
       >
         <SectionContent css={{ flex: 1 }}>
-          <inner css={{ width: '45%', margin: [100, 0, 0] }}>
-            <SectionTitleSmall>A new way to stay up to date</SectionTitleSmall>
+          <inner css={isLarge && { width: '45%', margin: [100, 0, 0] }}>
+            <SectionTitleSmall>A more personal search</SectionTitleSmall>
             <VertSpace />
             <SectionSubTitle>
-              Reduce interruptions and add clarity to your org chart with
-              beautiful auto generated profiles.
+              Beautiful automatic profile cards let you explore what's going on,
+              reduce interruptions and add clarity to your day.
             </SectionSubTitle>
             <VertSpace />
             <VertSpace />
@@ -684,7 +708,7 @@ const Card = ({ title, children, icon }) => (
 
 @view
 class SectionIntegrations extends React.Component {
-  render() {
+  render({ isLarge }) {
     return (
       <Page
         offset={3}
@@ -699,17 +723,23 @@ class SectionIntegrations extends React.Component {
       >
         <SectionContent css={{ flex: 1 }}>
           <div
-            css={{ flexFlow: 'row', justifyContent: 'space-around', flex: 1 }}
+            css={{
+              flexFlow: isLarge ? 'row' : 'column',
+              justifyContent: isLarge ? 'space-around' : 'center',
+              flex: 1,
+            }}
           >
-            <inner css={{ width: '42%', margin: ['auto', 0] }}>
+            <inner css={isLarge && { width: '42%', margin: ['auto', 0] }}>
               <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff">
                 We've rethought the intranet from the ground up. It starts by
                 putting users and privacy first.
               </SectionSubTitle>
+              <VertSpace />
+              <VertSpace />
             </inner>
-            <inner css={{ width: '45%', margin: ['auto', 0] }}>
+            <inner css={isLarge && { width: '45%', margin: ['auto', 0] }}>
               <Card icon="fire" title="Secure">
                 Your data never leaves your firewall.
               </Card>
@@ -768,31 +798,27 @@ export class HomePage extends React.Component {
         >
           <Media query={Constants.screen.large}>
             {isLarge => (
-              <Media query={Constants.screen.medium}>
-                {isMedium => (
-                  <>
-                    <Header white />
-                    <HomeHeader isLarge={isLarge} isMedium={isMedium} />
-                    <SectionSearch isLarge={isLarge} isMedium={isMedium} />
-                    <SectionProfiles />
-                    <SectionIntegrations />
-                    <footer css={{ position: 'relative', zIndex: 4 }}>
-                      <hideOrbit
-                        css={{
-                          background: 'linear-gradient(transparent, #fff 20%)',
-                          height: 800,
-                          position: 'absolute',
-                          top: -800,
-                          left: 0,
-                          right: 0,
-                          zIndex: -1,
-                        }}
-                      />
-                      <Footer />
-                    </footer>
-                  </>
-                )}
-              </Media>
+              <>
+                <Header white />
+                <HomeHeader isLarge={isLarge} />
+                <SectionSearch isLarge={isLarge} />
+                <SectionProfiles isLarge={isLarge} />
+                <SectionIntegrations isLarge={isLarge} />
+                <Page offset={4} zIndex={3}>
+                  <hideOrbit
+                    css={{
+                      background: `linear-gradient(transparent, ${bodyBg} 20%)`,
+                      height: 800,
+                      position: 'absolute',
+                      top: -800,
+                      left: 0,
+                      right: 0,
+                      zIndex: -1,
+                    }}
+                  />
+                  <Footer />
+                </Page>
+              </>
             )}
           </Media>
         </UI.Theme>

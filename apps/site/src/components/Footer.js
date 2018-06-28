@@ -4,7 +4,6 @@ import SectionContent from '~/views/sectionContent'
 import { Section, Link, Title, P } from '~/views'
 import { BrandLogo, Join } from '~/components'
 import * as Constants from '~/constants'
-import Media from 'react-media'
 import * as UI from '@mcro/ui'
 
 const SmallTitle = props => (
@@ -23,98 +22,91 @@ const SmallTitle = props => (
 export class Footer extends React.Component {
   render({ theme, noCallToAction }) {
     return (
-      <bottom>
+      <bottom css={{ background: theme.base.background, flex: 1 }}>
         <UI.Theme name="light">
-          <Section withBackground>
-            <SectionContent
-              css={{ textAlign: 'center', padding: [150, 0, 150 - 20] }}
+          <SectionContent css={{ flex: 1 }}>
+            <callToAction
+              css={{
+                flex: 2,
+                textAlign: 'center',
+                padding: [150, 0, 150 - 20],
+                justifyContent: 'center',
+              }}
             >
-              <Title size={3} css={{ marginBottom: 20 }}>
+              <Title color="#AE2E73" size={3} css={{ marginBottom: 20 }}>
                 Keep everyone in sync, without overhead.
               </Title>
-              <div css={{ margin: [40, 0] }}>
+              <div css={{ margin: [40, 0], transform: { scale: 1.2 } }}>
                 <Join size={2} />
               </div>
-            </SectionContent>
-          </Section>
+            </callToAction>
+            <footer css={{ padding: [50, 0, 100, 0] }}>
+              <sections>
+                <startSection if={!noCallToAction}>
+                  <BrandLogo />
+                  <br />
+                  <a
+                    $contact
+                    css={{
+                      fontWeight: 500,
+                      textDecoration: 'none',
+                    }}
+                    href="mailto:natewienert@gmail.com"
+                  >
+                    Get in touch
+                  </a>
+                  <br />
+                  <br />
+                  <br />
+                  <small css={{ opacity: 0.5 }}>
+                    © Orbit 2018, all rights reserved.
+                  </small>
+                </startSection>
+                <endSections>
+                  <section>
+                    <SmallTitle>Company</SmallTitle>
+                    <nav>
+                      <Link $link to="/features">
+                        Features
+                      </Link>
+                      <Link $link to="/use-cases">
+                        Use Cases
+                      </Link>
+                      <Link $link to="/about">
+                        About Us
+                      </Link>
+                    </nav>
+                  </section>
+                  <section>
+                    <SmallTitle>Follow</SmallTitle>
+                    <nav>
+                      <Link $link to="/blog">
+                        Blog
+                      </Link>
+                      <Link $link to="https://twitter.com/tryorbit">
+                        Twitter
+                      </Link>
+                      <Link $link to="https://github.com/motion">
+                        Github
+                      </Link>
+                    </nav>
+                  </section>
+                  <section>
+                    <SmallTitle>More</SmallTitle>
+                    <nav>
+                      <Link $link to="/privacy">
+                        Privacy Policy
+                      </Link>
+                      <Link $link to="/terms">
+                        Terms of Use
+                      </Link>
+                    </nav>
+                  </section>
+                </endSections>
+              </sections>
+            </footer>
+          </SectionContent>
         </UI.Theme>
-        <footer
-          css={{
-            background: theme.base.background,
-          }}
-        >
-          <Media query={Constants.screen.large}>
-            {isLarge => (
-              <Section>
-                <SectionContent padded={120}>
-                  <sections>
-                    <startSection if={!noCallToAction}>
-                      <BrandLogo />
-                      <br />
-                      <a
-                        $contact
-                        css={{
-                          fontWeight: 500,
-                          textDecoration: 'none',
-                        }}
-                        href="mailto:natewienert@gmail.com"
-                      >
-                        Get in touch
-                      </a>
-                      <br />
-                      <br />
-                      <br />
-                      <small css={{ opacity: 0.5 }}>
-                        © Orbit 2018, all rights reserved.
-                      </small>
-                    </startSection>
-                    <endSections>
-                      <section>
-                        <SmallTitle>Company</SmallTitle>
-                        <nav>
-                          <Link $link to="/features">
-                            Features
-                          </Link>
-                          <Link $link to="/use-cases">
-                            Use Cases
-                          </Link>
-                          <Link $link to="/about">
-                            About Us
-                          </Link>
-                        </nav>
-                      </section>
-                      <section>
-                        <SmallTitle>Follow</SmallTitle>
-                        <nav>
-                          <Link $link to="/blog">
-                            Blog
-                          </Link>
-                          <Link $link to="https://twitter.com/tryorbit">
-                            Twitter
-                          </Link>
-                          <Link $link to="https://github.com/motion">
-                            Github
-                          </Link>
-                        </nav>
-                      </section>
-                      <section>
-                        <SmallTitle>More</SmallTitle>
-                        <nav>
-                          <Link $link to="/privacy">
-                            Privacy Policy
-                          </Link>
-                          <Link $link to="/terms">
-                            Terms of Use
-                          </Link>
-                        </nav>
-                      </section>
-                    </endSections>
-                  </sections>
-                </SectionContent>
-              </Section>
-            )}
-          </Media>
-        </footer>
       </bottom>
     )
   }

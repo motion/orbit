@@ -774,6 +774,9 @@ export class HomePage extends React.Component {
   handleScroll = () => {
     let frameID
     const render = () => {
+      if (!this.parallax) {
+        return
+      }
       const offset = document.documentElement.scrollTop
       const cur = offset + window.innerHeight
       const page = cur / window.innerHeight - 1

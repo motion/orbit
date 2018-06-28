@@ -9,7 +9,6 @@ import { UIContext } from '../contexts'
 //   uiContext: Object,
 //   sync?: Object,
 //   onEnter?: Function,
-//   getRef?: Function,
 //   type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password',
 //   name?: string,
 //   form?: Object,
@@ -17,19 +16,14 @@ import { UIContext } from '../contexts'
 //   onClick?: Function,
 // }
 
-const TAG_MAP = {
-  password: 'input',
-}
-
 @view.ui
 class InputPlain extends React.PureComponent {
   static defaultProps = {
     size: 1,
     type: 'input',
     elementProps: {},
+    forwardRef: React.createRef(),
   }
-
-  node = null
 
   componentDidMount() {
     this.setValues()
@@ -44,30 +38,14 @@ class InputPlain extends React.PureComponent {
     return uiContext && uiContext.inForm && !sync
   }
 
-  setValues = () => {
-    if (this.shouldSyncToForm && this.node) {
-      this.props.uiContext.formValues[this.props.name] = () =>
-        this.node && this.node.value
-    }
+  get inputNode() {
+    return this.props.forwardRef.current
   }
 
-  onNode = node => {
-    this.node = node
-    if (this.props.getRef) {
-      this.props.getRef(node)
-    }
-
-    if (node) {
-      this.on(node, 'keydown', e => {
-        const isEnter = e.keyCode === 13
-        if (isEnter) {
-          if (this.props.onEnter) {
-            if (isEnter) {
-              this.props.onEnter(e)
-            }
-          }
-        }
-      })
+  setValues = () => {
+    if (this.shouldSyncToForm && this.inputNode) {
+      this.props.uiContext.formValues[this.props.name] = () =>
+        this.inputNode && this.inputNode.value
     }
   }
 
@@ -95,8 +73,10 @@ class InputPlain extends React.PureComponent {
     onChange,
     size,
     value,
+    forwardRef,
     ...props
   }) {
+    console.log('forwardRef', forwardRef)
     const finalProps = { ...elementProps }
     if (sync && elementProps) {
       finalProps.value = sync.get()
@@ -132,7 +112,7 @@ class InputPlain extends React.PureComponent {
             padding: `0 ${10 * size}px`,
             ...style,
           },
-          ref: this.onNode,
+          ref: forwardRef,
           ...finalProps,
         }}
         {...props}
@@ -141,8 +121,12 @@ class InputPlain extends React.PureComponent {
   }
 }
 
-export const Input = props => (
-  <UIContext.Consumer>
-    {uiContext => <InputPlain uiContext={uiContext} {...props} />}
-  </UIContext.Consumer>
-)
+export const Input = React.forwardRef((props, ref) => {
+  return (
+    <UIContext.Consumer>
+      {uiContext => (
+        <InputPlain uiContext={uiContext} forwardRef={ref} {...props} />
+      )}
+    </UIContext.Consumer>
+  )
+})

@@ -11,7 +11,7 @@ import { Join } from '~/components/Join'
 @UI.injectTheme
 @view
 export class Header extends React.Component {
-  render({ linkStyle, theme }) {
+  render({ linkStyle, theme, scrollTo }) {
     const color = theme.base.color.desaturate(0.2).alpha(0.8)
     return (
       <Media query={Constants.screen.large}>
@@ -27,29 +27,28 @@ export class Header extends React.Component {
                   </join> */}
                   <nav>
                     <Link
-                      if={false}
                       isLarge={isLarge}
                       color={color}
                       css={linkStyle}
-                      to="/features"
+                      onClick={() => scrollTo(1)}
                     >
-                      {isLarge ? 'Features' : 'What'}
+                      Search
                     </Link>
-                    {/* <Link
+                    <Link
                       isLarge={isLarge}
                       color={color}
                       css={linkStyle}
-                      to="/use-cases"
+                      onClick={() => scrollTo(2)}
                     >
-                      {isLarge ? 'Use Cases' : 'Why'}
-                    </Link> */}
+                      Profiles
+                    </Link>
                     <Link
                       isLarge={isLarge}
                       color={color}
                       css={linkStyle}
                       to="/about"
                     >
-                      {isLarge ? 'About' : 'Who'}
+                      About
                     </Link>
                   </nav>
                 </headerInner>

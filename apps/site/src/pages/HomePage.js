@@ -302,6 +302,7 @@ class HomeHeader extends React.Component {
               <SectionContentParallax>
                 <inner
                   css={{
+                    pointerEvents: 'none',
                     position: 'absolute',
                     right: -50,
                     bottom: 0,
@@ -311,6 +312,7 @@ class HomeHeader extends React.Component {
                 >
                   <wrap
                     css={{
+                      pointerEvents: 'all',
                       width: 1101 / 2,
                       height: 2016 / 2,
                       transform: {
@@ -763,35 +765,11 @@ const pages = 5
 
 @view
 export class HomePage extends React.Component {
-  parallax = null
-
-  componentDidMount() {
-    console.log('this.parallax', this.parallax)
-    const dispose = this.handleScroll()
-    this.subscriptions.add({ dispose })
-  }
-
-  handleScroll = () => {
-    let frameID
-    const render = () => {
-      if (!this.parallax) {
-        return
-      }
-      const offset = document.documentElement.scrollTop
-      const cur = offset + window.innerHeight
-      const page = cur / window.innerHeight - 1
-      this.parallax.scrollTo(page)
-      frameID = requestAnimationFrame(render)
-    }
-    render()
-    return () => cancelAnimationFrame(frameID)
-  }
-
   render() {
     return (
       <Parallax
-        scrolling={false}
-        ref={node => (this.parallax = node)}
+        scrollingElement={window}
+        container={document.body}
         pages={pages}
         config={{ tension: 170, friction: 26 }}
       >
@@ -804,7 +782,7 @@ export class HomePage extends React.Component {
           <Media query={Constants.screen.large}>
             {isLarge => (
               <>
-                <Header white />
+                <Header scrollTo={page => this.parallax.scrollTo(page)} white />
                 <HomeHeader isLarge={isLarge} />
                 <SectionSearch isLarge={isLarge} />
                 <SectionProfiles isLarge={isLarge} />

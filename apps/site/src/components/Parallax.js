@@ -168,14 +168,12 @@ export class Parallax extends React.PureComponent {
   static propTypes = {
     pages: PropTypes.number.isRequired,
     config: PropTypes.object,
-    scrolling: PropTypes.bool,
     horizontal: PropTypes.bool,
     impl: PropTypes.func,
   }
 
   static defaultProps = {
     config: config.slow,
-    scrolling: true,
     horizontal: false,
     impl: SpringAnimation,
   }
@@ -194,8 +192,17 @@ export class Parallax extends React.PureComponent {
 
   scrollerRaf = () => requestAnimationFrame(this.moveItems)
 
+  componentDidMount() {
+    this.scrollingElement.addEventListener('scroll', this.onScroll)
+  }
+
+  componentWillUnmount() {
+    this.scrollingElement.removeEventListener('scroll', this.onScroll)
+  }
+
   onScroll = event => {
     const { horizontal } = this.props
+    console.log('scroll')
     if (!this.busy) {
       this.busy = true
       this.scrollerRaf()
@@ -206,12 +213,12 @@ export class Parallax extends React.PureComponent {
   update = () => {
     const { scrolling, horizontal } = this.props
     const scrollType = getScrollType(horizontal)
-    if (!this.container) return
-    this.space = this.container[horizontal ? 'clientWidth' : 'clientHeight']
+    if (!this.props.container) return
+    this.space = window.innerHeight
     if (scrolling) {
-      this.current = this.container[scrollType]
+      this.current = this.props.container[scrollType]
     } else {
-      this.container[scrollType] = this.current = this.offset * this.space
+      this.props.container[scrollType] = this.current = this.offset * this.space
     }
     if (this.content) {
       this.content.style[horizontal ? 'width' : 'height'] = `${this.space *
@@ -238,7 +245,7 @@ export class Parallax extends React.PureComponent {
     const scrollType = getScrollType(horizontal)
     this.scrollStop()
     this.offset = offset
-    const target = this.container
+    const target = this.props.container
     this.animatedScroll = new AnimatedValue(target[scrollType])
     this.animatedScroll.addListener(({ value }) => {
       target[scrollType] = value
@@ -270,26 +277,13 @@ export class Parallax extends React.PureComponent {
       innerStyle,
       pages,
       className,
-      scrolling,
       children,
       horizontal,
     } = this.props
-    const overflow = scrolling ? 'scroll' : 'hidden'
     return (
       <>
         <div
-          ref={node => (this.container = node)}
-          onScroll={this.onScroll}
-          onWheel={scrolling ? this.scrollStop : null}
-          onTouchStart={scrolling ? this.scrollStop : null}
           style={{
-            position: 'fixed',
-            width: '100%',
-            height: '100%',
-            overflow,
-            overflowY: horizontal ? 'hidden' : overflow,
-            overflowX: horizontal ? overflow : 'hidden',
-            WebkitOverflowScrolling: 'touch',
             WebkitTransform: START_TRANSLATE,
             MsTransform: START_TRANSLATE,
             transform: START_TRANSLATE_3D,

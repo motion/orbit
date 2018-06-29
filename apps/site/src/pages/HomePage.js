@@ -14,6 +14,7 @@ import { Parallax, ParallaxLayer } from '~/components/Parallax'
 import profileImg from '~/../public/profileimg.png'
 import { Icon } from '~/views/icon'
 import Observer from '@researchgate/react-intersection-observer'
+import orbitVideo from '~/../public/orbit.mp4'
 
 const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -338,13 +339,16 @@ class HomeHeader extends React.Component {
                     bottom: 0,
                     top: 0,
                     width: '50%',
+                    transform: {
+                      z: 0,
+                    },
                   }}
                 >
                   <wrap
                     css={{
                       pointerEvents: 'all',
                       width: 1101 / 2,
-                      height: 2016 / 2,
+                      maxHeight: 1240,
                       transform: {
                         x: 20,
                         y: '25%',
@@ -354,11 +358,24 @@ class HomeHeader extends React.Component {
                     <UI.TiltHoverGlow
                       restingPosition={[100, 100]}
                       tiltOptions={{ perspective: 2000 }}
+                      css={{
+                        borderRadius: 20,
+                      }}
                       glowProps={{
                         opacity: 0.5,
                       }}
                     >
-                      <HomeImg />
+                      <video
+                        src={orbitVideo}
+                        autoPlay={false}
+                        loop
+                        css={{
+                          width: 'calc(100% + 12px)',
+                          height: '100%',
+                          transform: { x: -6.5, y: -2 },
+                          marginBottom: -10,
+                        }}
+                      />
                     </UI.TiltHoverGlow>
                   </wrap>
                 </inner>
@@ -802,6 +819,26 @@ const pages = 5
 
 @view
 export class HomePage extends React.Component {
+  get video() {
+    return document.querySelector('video')
+  }
+
+  intersectState = {}
+
+  intersect = type => ({ isIntersecting }) => {
+    console.log('instersect', type, isIntersecting)
+    this.intersectState[type] = isIntersecting
+    const oneActive = Object.keys(this.intersectState).reduce(
+      (a, b) => a || this.intersectState[b],
+      false,
+    )
+    if (oneActive) {
+      this.video.play()
+    } else {
+      this.video.pause()
+    }
+  }
+
   render() {
     return (
       <Parallax
@@ -821,21 +858,36 @@ export class HomePage extends React.Component {
             {isLarge => (
               <>
                 <Header scrollTo={page => this.parallax.scrollTo(page)} white />
-                <HomeHeader isLarge={isLarge} />
-                <SectionSearch isLarge={isLarge} />
-                <SectionProfiles
-                  isLarge={isLarge}
-                  freeze={paused => {
-                    if (
-                      document.documentElement.scrollTop >
-                      window.innerHeight * 3
-                    ) {
-                      console.log('avoid at bottom')
-                      return
-                    }
-                    this.parallax.paused = paused
-                  }}
-                />
+                <Observer
+                  rootMargin="-95% 0% 0%"
+                  onChange={this.intersect('header')}
+                >
+                  <HomeHeader isLarge={isLarge} />
+                </Observer>
+                <Observer
+                  rootMargin="0% 0% -95%"
+                  onChange={this.intersect('search')}
+                >
+                  <SectionSearch isLarge={isLarge} />
+                </Observer>
+                <Observer
+                  rootMargin="0% 0% -95%"
+                  onChange={this.intersect('profile')}
+                >
+                  <SectionProfiles
+                    isLarge={isLarge}
+                    freeze={paused => {
+                      if (
+                        document.documentElement.scrollTop >
+                        window.innerHeight * 3
+                      ) {
+                        console.log('avoid at bottom')
+                        return
+                      }
+                      this.parallax.paused = paused
+                    }}
+                  />
+                </Observer>
                 <SectionNoCloud isLarge={isLarge} />
                 <Page offset={4} zIndex={3}>
                   <hideOrbit

@@ -16,6 +16,10 @@ export class Document extends React.Component {
     if (!bit) {
       return null
     }
+    if (!bit.data) {
+      console.log('no data...')
+      return null
+    }
     let bodyContents
     if (bit.data.markdownBody) {
       bodyContents = markdown(bit.data.markdownBody, options)

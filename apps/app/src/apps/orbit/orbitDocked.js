@@ -91,7 +91,7 @@ class OrbitDocked extends React.Component {
       position: 'absolute',
       top: 10,
       right: 10,
-      bottom: 10,
+      bottom: 100,
       borderRadius,
       zIndex: 2,
       flex: 1,

@@ -9,7 +9,7 @@ import { capitalize } from 'lodash'
 const service = (window.location + '').split('service=')[1]
 
 @view
-export class AuthPage {
+export class AuthPage extends React.Component {
   link = async () => {
     console.log('linking service...', service)
     const info = await passportLink(`${Constants.API_URL}/auth/${service}`)
@@ -28,12 +28,7 @@ export class AuthPage {
     return (
       <wrap>
         <UI.Theme theme="#4C36C4">
-          <UI.Button
-            size={1.5}
-            $button
-            id="link"
-            onClick={this.link}
-          >
+          <UI.Button size={1.5} $button id="link" onClick={this.link}>
             Link {capitalize(service)}
           </UI.Button>
         </UI.Theme>

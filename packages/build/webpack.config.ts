@@ -152,6 +152,10 @@ const config = {
         ],
       },
       {
+        test: /\.(mp4)$/,
+        use: ['file-loader'],
+      },
+      {
         test: /\.(md)$/,
         use: 'raw-loader',
       },

@@ -77,14 +77,15 @@ export default class SlackMessagesSync {
     )
   }
 
-  syncMessages = async () => {
+  syncMessages = async (): Promise<Object[]> => {
     if (!this.service.activeChannels) {
       log(`Slack no active channels selected`)
       return
     }
+    let allCreated = []
     for (const channelInfo of this.service.activeChannels) {
       if (!channelInfo) {
-        console.log('no channel info')
+        log('no channel info')
         continue
       }
       const { id } = channelInfo
@@ -93,9 +94,10 @@ export default class SlackMessagesSync {
         oldest: this.lastSync[id],
         count: 1000,
       })
+      log(`Sync slack channel ${id} ${messages.length}`)
       if (!messages.length) {
-        log(`No new slack messages`)
-        return []
+        log(`No new slack messages ${id}`)
+        continue
       }
       try {
         let group = []
@@ -127,12 +129,13 @@ export default class SlackMessagesSync {
           },
         })
         await this.setting.save()
-        return created.filter(x => !!x)
+        allCreated = [...allCreated, ...created.filter(x => !!x)]
       } catch (err) {
         log(`Error syncing slack message ${err.message} ${err.stack}`)
-        return []
+        continue
       }
     }
+    return allCreated
   }
 
   // cache so that we can use a Set later

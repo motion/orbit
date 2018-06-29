@@ -297,11 +297,11 @@ export class AppStore {
         }
         console.timeEnd('searchPluginsAndBitResults')
         const allResultsUnsorted = [
+          ...this.bitSearch.results,
           ...(await Person.find({
             where: `(name like "%${query}%")`,
             take: 4,
           })),
-          ...this.bitSearch.results,
           // ...Desktop.searchState.pluginResults,
         ]
         // remove prefixes

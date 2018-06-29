@@ -48,10 +48,13 @@ export class Root {
     iohook.start(false)
     root.Root = this
     root.restart = this.restart
-    const db = await sqlite.open('database', {
-      cached: true,
-      promise: Promise,
-    })
+    const db = await sqlite.open(
+      Path.join(__dirname, '..', 'data', 'database'),
+      {
+        // cached: true,
+        promise: Promise,
+      },
+    )
     this.sqlite = new SQLiteServer({ db })
     await Desktop.start({
       ignoreSelf: true,

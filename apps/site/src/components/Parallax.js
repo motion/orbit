@@ -7,6 +7,7 @@ import {
   SpringAnimation,
   config,
 } from 'react-spring'
+import * as _ from 'lodash'
 
 const AnimatedDiv = createAnimatedComponent('div')
 const { Provider, Consumer } = React.createContext(null)

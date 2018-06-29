@@ -31,6 +31,7 @@ export class Bauhaus extends React.Component {
         css={{
           transform: { scale: 0.48, x: '52%', y: '-8%' },
           zIndex: 0,
+          pointerEvents: 'none',
         }}
         {...props}
       >

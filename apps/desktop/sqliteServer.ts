@@ -49,7 +49,6 @@ export default class SQLiteServer {
       case 'backgroundExecuteSqlBatch':
         const queries = data.args[0].executes
         const sql = `${queries[0].sql}`
-        console.log('sql', sql)
         if (sql === 'BEGIN TRANSACTION') {
           this.txLock = uid
         }
@@ -63,7 +62,6 @@ export default class SQLiteServer {
 
   async runQueries(id, spark, queryArray, accumAnswer) {
     if (queryArray.length < 1) {
-      console.log('empty')
       spark.write({
         command: 'backgroundExecuteSqlBatchComplete',
         err: null,

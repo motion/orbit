@@ -25,9 +25,10 @@ export function modelQueryReaction(
   } else if (b instanceof Object) {
     options = b
   }
-  const { poll = 2000, condition = trueFn, log = false, ...restOptions } =
+  const { poll = 5000, condition = trueFn, log = false, ...restOptions } =
     options || {}
   const finalOptions: ReactionOptions = {
+    immediate: true,
     defaultValue: null,
     log: false, // because these poll all the time
     ...restOptions,

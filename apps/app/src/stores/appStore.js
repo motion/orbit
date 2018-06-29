@@ -282,7 +282,9 @@ export class AppStore {
         // no jitter - wait for everything to finish
         console.time('searchPluginsAndBitResults')
         try {
-          const waitMax = hasRun ? 700 : 2000
+          // during demo disable
+          // const personSearch = await Person.find({ take: 2 })
+          const waitMax = 5000 // hasRun ? 700 : 2000
           await Promise.all([
             // when(() => query === Desktop.searchState.pluginResultsId, waitMax),
             when(() => query === this.bitSearch.query, waitMax),

@@ -40,7 +40,10 @@ export class BitSlackConversation extends React.Component {
           ))
       : null
     return children({
-      title: arrford((bit.people || []).map(p => capitalize(p.name)), false),
+      title: arrford(
+        (bit.people || []).map(p => capitalize(p.data.real_name || p.name)),
+        false,
+      ).replace('Pleerock.me', 'Umed'),
       people: bit.people,
       date: getSlackDate(bit.bitUpdatedAt),
       preview: keywordExtract

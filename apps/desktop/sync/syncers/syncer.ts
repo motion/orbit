@@ -28,10 +28,9 @@ export default class Syncer {
       if (setting.token) {
         watch.cancel()
         this.syncers = this.getSyncers(setting)
+        console.log('got setting update', this.type)
         for (const name of Object.keys(this.syncers)) {
-          if (!this[name]) {
-            this[name] = this.syncers[name]
-          }
+          this[name] = this.syncers[name]
         }
       }
     })

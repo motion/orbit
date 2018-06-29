@@ -8,7 +8,7 @@ import { TimeAgo } from '~/views/TimeAgo'
 import * as _ from 'lodash'
 
 @view
-class CheckBox {
+class CheckBox extends React.Component {
   render({ isActive, onChange }) {
     return (
       <input type="checkbox" onChange={onChange} defaultChecked={isActive()} />

@@ -558,21 +558,34 @@ class SectionProfiles extends React.Component {
               </SectionSubTitle>
               <VertSpace />
             </inner>
-            <img
-              src={profileImg}
-              css={{
-                width: 1283 / 2,
-                height: 'auto',
-                transform: {
-                  y: 0,
-                  x: 30,
-                  perspective: 1000,
-                  rotateY: '3deg',
-                  rotateX: '4deg',
-                  rotateZ: '-1deg',
-                },
-              }}
-            />
+            <wrap css={{ position: 'relative' }}>
+              <fadeBottom
+                css={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: '40%',
+                  background: `linear-gradient(transparent, ${bodyBg} 80%)`,
+                  zIndex: 100,
+                }}
+              />
+              <img
+                src={profileImg}
+                css={{
+                  width: 1283 / 2,
+                  height: 'auto',
+                  transform: {
+                    y: 0,
+                    x: 30,
+                    perspective: 1000,
+                    rotateY: '3deg',
+                    rotateX: '4deg',
+                    rotateZ: '-1deg',
+                  },
+                }}
+              />
+            </wrap>
           </SectionContent>
         </Observer>
       </Page>

@@ -31,7 +31,7 @@ export const fn = ({ term, display }) => {
   console.time(searchId)
   cachedAppsList().then(items => {
     const result = orderBy(
-      search(items, 'sl', toString),
+      search(items, term, toString),
       [
         ({ useCount }) => (useCount ? parseInt(useCount, 10) : 0),
         ({ lastUsed = '0000' }) => lastUsed,
@@ -45,7 +45,6 @@ export const fn = ({ term, display }) => {
         term: name,
         icon: path,
         subtitle: path,
-        clipboard: path,
         integration: 'apps',
       }
     })

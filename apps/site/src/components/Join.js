@@ -88,6 +88,10 @@ export class Join extends React.Component {
               id="mce-EMAIL"
               placeholder="Email address..."
               style={style}
+              css={{
+                // eesti font fix
+                padding: [4, 12, 0],
+              }}
             />
             <UI.Theme theme="#37C457">
               <UI.Button

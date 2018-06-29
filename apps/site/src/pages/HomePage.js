@@ -100,12 +100,13 @@ const WaveBanner = ({ fill = '#000', ...props }) => (
     preserveAspectRatio="none"
     viewBox="0 0 3701 2273"
     width="100%"
-    height="100%"
+    height="105%"
     css={{
       minWidth: 1000,
       margin: [
-        0,
+        '-2.5%',
         window.innerWidth < 1000 ? (window.innerWidth - 1000) / 2 : 0,
+        0,
       ],
       transform: {
         scaleX: -1,
@@ -126,7 +127,7 @@ const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
     inline
     background="transparent"
     tooltip={
-      <UI.Text size={1.2} {...tooltipProps}>
+      <UI.Text size={1.2} alpha={0.8} {...tooltipProps}>
         {tooltip}
       </UI.Text>
     }
@@ -260,8 +261,8 @@ const Pitch = ({ isLarge }) => (
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      An internal search platform for everything in your cloud and behind your
-      firewall. Installed in just a minute, with{' '}
+      The internal search platform for everything in your cloud and behind your
+      firewall. Installs in just a minute, with{' '}
       <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
         complete&nbsp;privacy
       </ToolTip>.
@@ -452,9 +453,9 @@ class SectionSearch extends React.Component {
             </SectionTitle>
             <VertSpace />
             <SectionP>
-              A new security model brings the power of on-device{' '}
+              A new security model brings the power of{' '}
               <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
-                NLP
+                on-device NLP
               </ToolTip>{' '}
               to your team.
             </SectionP>
@@ -890,7 +891,9 @@ export class HomeWrapper extends React.Component {
                     </UI.Theme>
                   </Parallax>
                   <SectionNoCloud {...sectionProps} />
-                  <footer css={{ position: 'relative' }}>
+                  <footer
+                    css={{ position: 'relative', zIndex: 10, marginTop: 50 }}
+                  >
                     <fade
                       css={{
                         position: 'absolute',

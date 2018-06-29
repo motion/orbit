@@ -1,7 +1,11 @@
-Goal: Deliver a beautiful website and initial beta app by Sept 1
+Goals:
 
-- Jon is part-time and may increase if goes well
-- Umed is joining full time with a trial for first couple weeks
+- July 1: Website 2.0 with better pitch and video
+- July 7: Cut first prod build with auto update, many search improvements
+- Aug 1: Cosal ready for merge, Reliable search and sync current integrations + Jira/Confluence + People aggregation to 10k, Re-evaluate & plan for workday demo
+- Aug 7th: Begin initial press: blog posts
+- Aug 14th: Begin beta rollout to early users
+- Sep 1: Best possible position for workday demo. As of now: Crawler, custom API, contextual/realtime search possible
 
 # Product strategy
 
@@ -41,7 +45,6 @@ Goal: Deliver a beautiful website and initial beta app by Sept 1
 - Onboarding
   - need better story for setting up and sharing integrations
 - Website
-  - needs to redesign to better show everything
   - signup process
 - Setting up your team
   - Once you download app you can set up and invite people

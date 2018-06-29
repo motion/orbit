@@ -22,6 +22,7 @@ import debug from '@mcro/debug'
 import { Bit } from '@mcro/models'
 import { Connection } from 'typeorm'
 import { GeneralSettingManager } from './settingManagers/generalSettingManager'
+import sqlite from 'sqlite'
 
 const log = debug('desktop')
 
@@ -40,13 +41,18 @@ export class Root {
   generalSettingManager: GeneralSettingManager
   auth: Auth
   server = new Server()
-  sqlite = new SQLiteServer()
+  sqlite: SQLiteServer
   stores = null
 
   async start() {
     iohook.start(false)
     root.Root = this
     root.restart = this.restart
+    const db = await sqlite.open('database', {
+      cached: true,
+      promise: Promise,
+    })
+    this.sqlite = new SQLiteServer({ db })
     await Desktop.start({
       ignoreSelf: true,
       master: true,

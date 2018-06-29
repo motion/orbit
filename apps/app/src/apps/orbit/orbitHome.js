@@ -72,17 +72,21 @@ class OrbitHomeStore {
     async () => {
       return (await Promise.all([
         // { type: 'team', title: 'Engineering' },
-        findType('slack', 'conversation'),
-        findType('github', 'task'),
         findType('slack', 'conversation', 2),
+        findType('github', 'task'),
+        findType('slack', 'conversation', 4),
         findType('gdocs', 'document'),
         Person.findOne({ name: 'adhsu' }),
         Person.findOne({ name: 'javivelasco' }),
+        findType('github', 'task', 1),
+        findType('github', 'task', 2),
         findType('gmail', 'mail'),
         findType('gmail', 'mail', 1),
-        findType('slack', 'conversation', 1),
-        findType('slack', 'conversation', 2),
-        findType('slack', 'conversation', 3),
+        findType('gdocs', 'document', 9),
+        findType('slack', 'conversation', 5),
+        findType('slack', 'conversation', 6),
+        findType('slack', 'conversation', 7),
+        findType('slack', 'conversation', 8),
       ])).filter(Boolean)
     },
     {

@@ -28,7 +28,7 @@ class HeaderStore {
       if (!shown) throw react.cancel
       await when(() => Desktop.state.focusedOnOrbit)
       this.focus()
-    }
+    },
   )
 
   onClickInput = () => {
@@ -142,7 +142,7 @@ export class OrbitHeader extends React.Component {
       width: '100%',
       background: 'transparent',
       fontWeight: 300,
-      fontSize: 24,
+      fontSize: 22,
       padding: [20, 10, 20, 30],
       // height: 54,
       border: 'none',

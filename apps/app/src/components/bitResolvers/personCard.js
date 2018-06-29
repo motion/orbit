@@ -10,7 +10,9 @@ export class PersonCard extends React.Component {
     }
     return children({
       // preview: bit.data.profile.email,
-      title: bit.name,
+      title: bit.name
+        .replace('javivelasco', 'Nick Bovee')
+        .replace('adhsu', 'Andrew Wang'),
       icon: 'users_square',
       iconProps: {
         color: '#ccc',

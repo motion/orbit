@@ -62,13 +62,15 @@ export class OrbitSearchResults extends React.Component {
                     alpha={0.7}
                     ellipse={3}
                     wordBreak="break-all"
-                    highlight={{
-                      words: highlightWords,
-                      maxChars: Math.max(400, 3500 / results.length),
-                      maxSurroundChars: Math.max(80, 850 / results.length),
-                      trimWhitespace: true,
-                      separator: '&nbsp;&middot;&nbsp;',
-                    }}
+                    highlight={
+                      highlightWords.length && {
+                        words: highlightWords,
+                        maxChars: Math.max(400, 3500 / results.length),
+                        maxSurroundChars: Math.max(80, 850 / results.length),
+                        trimWhitespace: true,
+                        separator: '&nbsp;&middot;&nbsp;',
+                      }
+                    }
                   >
                     {sanitize(bit.body)}
                   </UI.Text>

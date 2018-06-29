@@ -58,7 +58,9 @@ export class KeyboardStore {
       if (App.orbitState.docked && !Desktop.state.focusedOnOrbit) {
         return
       }
-      Desktop.sendMessage(App, App.messages.HIDE)
+      console.log('esc disabled during dev for now')
+      // disable during dev
+      // Desktop.sendMessage(App, App.messages.HIDE)
       return
     }
     const isOption = keycode === codes.option || keycode === codes.optionRight

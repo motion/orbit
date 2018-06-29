@@ -31,7 +31,7 @@ export const fn = ({ term, display }) => {
   console.time(searchId)
   cachedAppsList().then(items => {
     const result = orderBy(
-      search(items, term, toString),
+      search(items, 'sl', toString),
       [
         ({ useCount }) => (useCount ? parseInt(useCount, 10) : 0),
         ({ lastUsed = '0000' }) => lastUsed,
@@ -41,7 +41,7 @@ export const fn = ({ term, display }) => {
       const { path, name } = file
       return {
         id: path,
-        title: name,
+        title: name.replace('.app', ''),
         term: name,
         icon: path,
         subtitle: path,

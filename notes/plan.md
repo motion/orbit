@@ -5,7 +5,8 @@ Goals:
 - Aug 1: Cosal ready for merge, Reliable search and sync current integrations + Jira/Confluence + People aggregation to 10k, Re-evaluate & plan for workday demo
 - Aug 7th: Begin initial press: blog posts
 - Aug 14th: Begin beta rollout to early users
-- Sep 1: Best possible position for workday demo. As of now: Crawler, custom API, contextual/realtime search possible
+- Sep 1: Best possible position for workday demo.
+  - As of now: Crawler, custom API, updates within cards, contextual/realtime search possible
 
 # Product strategy
 

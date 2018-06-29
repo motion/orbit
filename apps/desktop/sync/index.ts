@@ -4,7 +4,6 @@ import { Job, remove } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('sync')
-debug.quiet('sync')
 
 // @ts-ignore
 @store

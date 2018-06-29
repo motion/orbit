@@ -1,6 +1,6 @@
 import { react, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { Bit, Setting, Not, Equal } from '@mcro/models'
+import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 import * as AppStoreHelpers from './appStoreHelpers'
@@ -283,7 +283,6 @@ export class AppStore {
         console.time('searchPluginsAndBitResults')
         try {
           // during demo disable
-          // const personSearch = await Person.find({ take: 2 })
           const waitMax = 5000 // hasRun ? 700 : 2000
           await Promise.all([
             // when(() => query === Desktop.searchState.pluginResultsId, waitMax),
@@ -298,6 +297,10 @@ export class AppStore {
         }
         console.timeEnd('searchPluginsAndBitResults')
         const allResultsUnsorted = [
+          ...(await Person.find({
+            where: `(name like "%${query}%")`,
+            take: 4,
+          })),
           ...this.bitSearch.results,
           // ...Desktop.searchState.pluginResults,
         ]

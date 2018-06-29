@@ -1,3 +1,4 @@
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
@@ -158,7 +159,7 @@ class GithubStore {
 
 @view.provide({ githubStore: GithubStore })
 @view
-export class GithubSetting {
+export class GithubSetting extends React.Component {
   render({ githubStore: store }) {
     return (
       <container>

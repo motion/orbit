@@ -5,10 +5,10 @@ export default async (person: SlackPerson, returnIfUnchanged = false) => {
   return await createOrUpdate(
     Person,
     {
-      identifier: `slack-person.id`,
+      identifier: `slack-person-${person.id}`,
       integrationId: person.id,
       integration: 'slack',
-      name: person.name,
+      name: person.profile.real_name || person.name,
       data: {
         ...person,
       },

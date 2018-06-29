@@ -637,7 +637,7 @@ class SectionNoCloud extends React.Component {
           css={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
           fill="#AE2E73"
         />
-        <SectionContent css={{ flex: 1, transform: { z: 0 } }}>
+        <SectionContent css={{ flex: 1 }}>
           <Bauhaus
             showCircle
             css={{ opacity: 0.1, transform: { y: '50%', x: '-80%' } }}

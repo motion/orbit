@@ -102,10 +102,11 @@ const WaveBanner = ({ fill = '#000', ...props }) => (
     width="100%"
     height="100%"
     css={{
-      transform: {
-        scaleY: 0.98,
-        y: '-2%',
-      },
+      minWidth: 1000,
+      margin: [
+        0,
+        window.innerWidth < 1000 ? (window.innerWidth - 1000) / 2 : 0,
+      ],
     }}
     {...props}
   >

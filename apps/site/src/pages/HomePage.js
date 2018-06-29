@@ -611,8 +611,12 @@ const Card = ({ title, children, icon }) => (
       css={{ margin: [0, 40, 0, 0] }}
     />
     <content css={{ flex: 1 }}>
-      <SectionP css={{ flex: 1 }}>{title}</SectionP>
-      <SectionSubP css={{ flex: 1 }}>{children}</SectionSubP>
+      <SectionP fontWeight={700} css={{ flex: 1 }}>
+        {title}
+      </SectionP>
+      <SectionSubP size={1.5} sizeLineHeight={1} css={{ flex: 1 }}>
+        {children}
+      </SectionSubP>
     </content>
   </card>
 )
@@ -644,13 +648,13 @@ class SectionNoCloud extends React.Component {
               flex: 1,
             }}
           >
-            <inner css={isLarge && { width: '50%', margin: ['auto', 0] }}>
+            <inner css={isLarge && { width: '46%', margin: ['auto', 0] }}>
               <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
               <VertSpace />
-              <SectionSubTitle color="#fff">
+              <SectionSubTitle color="#fff" alpha={0.8}>
                 Orbit is a desktop app that runs entirely behind your firewall.
-                With a powerful extension framework, it's the ultimate internal
-                tool.
+                With a powerful extension framework, it's your killer internal
+                knowledge tool.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP alpha={0.5}>

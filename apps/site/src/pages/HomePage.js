@@ -790,6 +790,9 @@ export class HomePage extends React.Component {
     if (this.intersectState.search) {
       this.video.currentTime = 5
     }
+    if (this.intersectState.header) {
+      this.video.currentTime = 0
+    }
     if (oneActive) {
       this.video.play()
     } else {

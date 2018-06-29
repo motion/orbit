@@ -28,6 +28,7 @@ export function modelQueryReaction(
   const { poll = 5000, condition = trueFn, log = false, ...restOptions } =
     options || {}
   const finalOptions: ReactionOptions = {
+    immediate: true,
     defaultValue: null,
     log: false, // because these poll all the time
     ...restOptions,

@@ -91,6 +91,7 @@ class OrbitHomeStore {
     },
     {
       defaultValue: [],
+      poll: 60 * 1000,
     },
   )
 }

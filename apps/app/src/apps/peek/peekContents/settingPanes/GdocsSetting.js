@@ -1,14 +1,14 @@
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
-import App from '~/app'
 import { formatDistance } from 'date-fns'
 
 const baseId = '0AKfTFZu-thXbUk9PVA'
 const truncate = (s, n) => (s.length > n ? s.substring(0, n) + '...' : s)
 
 @view
-class Folder {
+class Folder extends React.Component {
   // recursive use of stores was raising issues
   state = { open: false, showAllFiles: false }
 
@@ -131,7 +131,7 @@ class Folder {
     }
   },
 })
-export class GdocsSetting {
+export class GdocsSetting extends React.Component {
   render({ store }) {
     const loading = !store.folders
     return (

@@ -28,6 +28,7 @@ export default class SlackPeopleSync {
 
   syncPeople = async () => {
     const { members, cache_ts } = await this.service.slack.users.list()
+    console.log('found', members)
     log(`cachets ${cache_ts}`)
     const created = []
     for (const member of members) {

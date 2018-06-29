@@ -24,7 +24,7 @@ export const fuzzy = (query, results, extraOpts) =>
     ? results
     : fuzzySort
         .go(query, results, {
-          key: 'title',
+          keys: ['title', 'name'],
           // threshold: -25,
           limit: 8,
           ...extraOpts,

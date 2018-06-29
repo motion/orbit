@@ -113,10 +113,6 @@ class SurfacePlain extends React.Component {
     provided: object,
   }
 
-  static defaultProps = {
-    borderStyle: 'solid',
-  }
-
   uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
 
   get uiContext() {

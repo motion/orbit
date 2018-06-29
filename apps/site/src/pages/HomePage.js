@@ -114,9 +114,11 @@ const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
         {tooltip}
       </UI.Text>
     }
-    css={{
-      margin: [0, -5],
-    }}
+    css={
+      {
+        // margin: [0, -5],
+      }
+    }
     {...props}
   />
 )
@@ -333,6 +335,7 @@ class HomeHeader extends React.Component {
             <Slant inverseSlant {...secondSlant} {...topSlants} />
             <Slant {...thirdSlant} {...topSlants} />
             <Glow
+              if={false}
               style={{
                 background: '#fff',
                 opacity: 1,
@@ -629,9 +632,7 @@ class SectionNoCloud extends React.Component {
             }}
           >
             <inner css={isLarge && { width: '50%', margin: ['auto', 0] }}>
-              <SectionTitle color="#fff">
-                The No-Cloud 🙅‍♀️☁️ Advantage
-              </SectionTitle>
+              <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff">
                 Orbit is a desktop app that runs entirely behind your firewall.
@@ -643,6 +644,8 @@ class SectionNoCloud extends React.Component {
                 We've rethought the intranet from the ground up. It starts by
                 putting users and privacy first.
               </SectionSubP>
+              <VertSpace />
+              <SectionSubP>🙅‍♀️☁️ </SectionSubP>
               {/* <Bauhaus showCircle showTriangle showSquare /> */}
               <VertSpace />
               <VertSpace />

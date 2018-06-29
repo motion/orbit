@@ -4,16 +4,7 @@ import * as UI from '@mcro/ui'
 import { Header, Footer } from '~/components'
 import SectionContent from '~/views/sectionContent'
 import Router from '~/router'
-import {
-  Slant,
-  Section,
-  Title,
-  P,
-  AppleLogo,
-  HomeImg,
-  WindowsLogo,
-  Glow,
-} from '~/views'
+import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo, Glow } from '~/views'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import { scrollTo } from '~/helpers'
@@ -29,6 +20,27 @@ import * as _ from 'lodash'
 const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
 const waveColor = '#C4C4F4'
+
+class WindowResize extends React.Component {
+  componentDidMount() {
+    document.documentElement.addEventListener('resize', this.handleResize)
+    this.handleResizeFast()
+  }
+
+  componentWillUnmount() {
+    document.documentElement.removeEventListener('resize', this.handleResize)
+  }
+
+  handleResizeFast = () => {
+    this.setState({ width: window.innerWidth, height: window.innerHeight })
+  }
+
+  handleResize = _.debounce(this.handleResizeFast, 64)
+
+  render() {
+    return this.props.children(this.state)
+  }
+}
 
 const SectionTitle = props => (
   <Title
@@ -134,28 +146,9 @@ const scrollToTrack = (to, track) => {
   }
 }
 
-class NormalLayer extends React.Component {
-  state = {
-    height: window.innerHeight,
-  }
-
-  resize = () => {
-    this.setState({ height: window.innerHeight })
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.resize, false)
-    this.resize()
-  }
-
-  componentWillUnmount() {
-    window.addEventListener('resize', this.resize, false)
-  }
-
-  render() {
-    return <layer css={{ height: this.state.height }} {...this.props} />
-  }
-}
+const NormalLayer = view.attach('homeStore')(({ homeStore, ...props }) => {
+  return <layer css={{ height: homeStore.maxSectionHeight }} {...props} />
+})
 
 @view
 class Page extends React.Component {
@@ -166,9 +159,7 @@ class Page extends React.Component {
     children,
     childrenProps,
     background,
-    orbit,
     backgroundProps,
-    orbitProps,
     banner,
     zIndex = 0,
   }) {
@@ -205,7 +196,7 @@ class Page extends React.Component {
           }}
           if={title}
           offset={offset}
-          speed={-0.05}
+          speed={-0.02}
           {...titleProps}
         >
           <SectionContentParallax>{title}</SectionContentParallax>
@@ -413,7 +404,7 @@ class HomeHeader extends React.Component {
 
 @view
 class SectionSearch extends React.Component {
-  render({ isLarge }) {
+  render({ isTall, isLarge }) {
     const iconProps = {
       size: isLarge ? 55 : 40,
     }
@@ -432,17 +423,20 @@ class SectionSearch extends React.Component {
             />
           </>
         }
-        titleProps={{
-          effects: {
-            opacity: x => {
-              const fadeAfter = 1
-              if (x < fadeAfter) {
-                return x * Math.log(x * 10)
-              }
-              return fadeAfter * 2 - x
-            },
-          },
-        }}
+        titleProps={
+          {
+            // seems opacity effect causes paints... shouldnt be bad test uncomment in fuutre
+            // effects: {
+            //   opacity: x => {
+            //     const fadeAfter = 1.2
+            //     if (x < fadeAfter) {
+            //       return x * Math.log(x * 10)
+            //     }
+            //     return fadeAfter * 2 - x
+            //   },
+            // },
+          }
+        }
         title={
           <Half>
             <SectionTitle
@@ -475,7 +469,14 @@ class SectionSearch extends React.Component {
         <SectionContent css={{ flex: 1 }}>
           <div $$flex={3} />
           <Half>
-            <icons>
+            <icons
+              css={{
+                transformOrigin: 'bottom left',
+                transform: {
+                  scale: isTall ? 1.4 : 1,
+                },
+              }}
+            >
               <icon>
                 <Icon name="slack" {...iconProps} />
               </icon>
@@ -623,11 +624,11 @@ const Card = ({ title, children, icon }) => (
 
 @view
 class SectionNoCloud extends React.Component {
-  render({ isLarge }) {
+  render({ homeStore, isLarge }) {
     return (
       <section
         css={{
-          height: window.innerHeight,
+          height: homeStore.maxSectionHeight,
           position: 'relative',
           zIndex: 1000,
         }}
@@ -653,7 +654,7 @@ class SectionNoCloud extends React.Component {
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
                 Orbit is a desktop app that runs entirely behind your firewall.
-                With a powerful extension framework, it's your killer internal
+                A powerful extension framework makes it your killer internal
                 knowledge tool.
               </SectionSubTitle>
               <VertSpace />
@@ -687,11 +688,11 @@ class SectionNoCloud extends React.Component {
 
 const pages = 3
 
-@view.attach('videoStore')
+@view.attach('homeStore')
 @view
 class Video extends React.Component {
-  render({ videoStore }) {
-    const { stopVideoAt } = videoStore
+  render({ homeStore }) {
+    const { stopVideoAt } = homeStore
     return (
       <Media
         query={Constants.screen.large}
@@ -731,10 +732,6 @@ class Video extends React.Component {
                 tiltOptions={{ perspective: 2000 }}
                 css={{
                   borderRadius: 20,
-                  // height: stopVideoAt ? window.innerHeight : 'auto',
-                  // marginBottom: stopVideoAt
-                  //   ? Math.max(0, 1240 - window.innerHeight)
-                  //   : 0,
                 }}
                 glowProps={{
                   opacity: 0.5,
@@ -762,12 +759,16 @@ class Video extends React.Component {
 }
 
 @view.provide({
-  videoStore: class VideoStore {
+  homeStore: class VideoStore {
+    get maxSectionHeight() {
+      return this.props.maxSectionHeight
+    }
+
     stopVideoAt = false
   },
 })
 @view
-export class HomePage extends React.Component {
+export class HomeWrapper extends React.Component {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll)
   }
@@ -778,11 +779,11 @@ export class HomePage extends React.Component {
 
   resume = null
 
-  handleScroll = _.throttle(() => {
+  handleScroll = () => {
     clearTimeout(this.resume)
     this.video.pause()
     this.resume = setTimeout(this.update, 100)
-  }, 16)
+  }
 
   get video() {
     return document.querySelector('video')
@@ -820,82 +821,99 @@ export class HomePage extends React.Component {
     }
   }
 
-  render({ videoStore }) {
+  render({ homeStore, maxSectionHeight }) {
     return (
-      <Media query={Constants.screen.large}>
-        {isLarge => (
-          <>
-            <Video />
-            <Parallax
-              ref={ref => (this.parallax = ref)}
-              scrollingElement={window}
-              container={document.documentElement}
-              pages={pages}
-              config={{ tension: 170, friction: 26 }}
-            >
-              <UI.Theme
-                theme={{
-                  background: bodyBg,
-                  color: bodyBg.darken(0.6).desaturate(0.5),
-                }}
-              >
+      <Media query={Constants.screen.tall}>
+        {isTall => (
+          <Media query={Constants.screen.large}>
+            {isLarge => {
+              const sectionProps = { isTall, isLarge, homeStore }
+              return (
                 <>
-                  <Header
-                    scrollTo={page => this.parallax.scrollTo(page)}
-                    white
-                  />
-                  <Observer
-                    rootMargin="-95% 0% 0%"
-                    onChange={this.intersect('header')}
+                  <Video />
+                  <Parallax
+                    ref={ref => (this.parallax = ref)}
+                    scrollingElement={window}
+                    container={document.documentElement}
+                    pages={pages}
+                    pageHeight={maxSectionHeight}
+                    config={{ tension: 170, friction: 26 }}
                   >
-                    <HomeHeader isLarge={isLarge} />
-                  </Observer>
-                  <Observer
-                    rootMargin="0% 0% -95%"
-                    onChange={this.intersect('search')}
-                  >
-                    <SectionSearch isLarge={isLarge} />
-                  </Observer>
-                  <Observer
-                    rootMargin="0% 0% -95%"
-                    onChange={this.intersect('profile')}
-                  >
-                    <SectionProfiles
-                      isLarge={isLarge}
-                      freeze={shouldStop => {
-                        const { scrollTop } = document.documentElement
-                        if (scrollTop > window.innerHeight * 2.5) {
-                          console.log('avoid at bottom')
-                          return
-                        }
-                        if (!shouldStop) {
-                          videoStore.stopVideoAt = false
-                          return
-                        }
-                        videoStore.stopVideoAt = scrollTop
+                    <UI.Theme
+                      theme={{
+                        background: bodyBg,
+                        color: bodyBg.darken(0.6).desaturate(0.5),
+                      }}
+                    >
+                      <>
+                        <Header
+                          scrollTo={page => this.parallax.scrollTo(page)}
+                          white
+                        />
+                        <Observer
+                          rootMargin="-95% 0% 0%"
+                          onChange={this.intersect('header')}
+                        >
+                          <HomeHeader {...sectionProps} />
+                        </Observer>
+                        <Observer
+                          rootMargin="0% 0% -95%"
+                          onChange={this.intersect('search')}
+                        >
+                          <SectionSearch {...sectionProps} />
+                        </Observer>
+                        <Observer
+                          rootMargin="0% 0% -95%"
+                          onChange={this.intersect('profile')}
+                        >
+                          <SectionProfiles
+                            {...sectionProps}
+                            freeze={shouldStop => {
+                              const { scrollTop } = document.documentElement
+                              if (scrollTop > maxSectionHeight * 2.5) {
+                                console.log('avoid at bottom')
+                                return
+                              }
+                              if (!shouldStop) {
+                                homeStore.stopVideoAt = false
+                                return
+                              }
+                              homeStore.stopVideoAt = scrollTop
+                            }}
+                          />
+                        </Observer>
+                      </>
+                    </UI.Theme>
+                  </Parallax>
+                  <SectionNoCloud {...sectionProps} />
+                  <footer css={{ position: 'relative' }}>
+                    <fade
+                      css={{
+                        position: 'absolute',
+                        top: -500,
+                        left: 0,
+                        height: 500,
+                        right: 0,
+                        background: '#fff',
                       }}
                     />
-                  </Observer>
+                    <Footer />
+                  </footer>
                 </>
-              </UI.Theme>
-            </Parallax>
-            <SectionNoCloud isLarge={isLarge} />
-            <footer css={{ position: 'relative' }}>
-              <fade
-                css={{
-                  position: 'absolute',
-                  top: -500,
-                  left: 0,
-                  height: 500,
-                  right: 0,
-                  background: '#fff',
-                }}
-              />
-              <Footer />
-            </footer>
-          </>
+              )
+            }}
+          </Media>
         )}
       </Media>
     )
   }
 }
+
+export const HomePage = () => (
+  <WindowResize>
+    {() => {
+      const maxSectionHeight = Math.min(1250, Math.max(600, window.innerHeight))
+      return <HomeWrapper maxSectionHeight={maxSectionHeight} />
+    }}
+  </WindowResize>
+)

@@ -44,7 +44,7 @@ export class ParallaxLayer extends React.PureComponent {
     const parent = this.parent
     if (parent) {
       parent.layers = parent.layers.filter(layer => layer !== this)
-      parent.update()
+      // parent.update()
     }
   }
 
@@ -193,6 +193,8 @@ export class Parallax extends React.PureComponent {
   componentDidMount() {
     window.addEventListener('resize', this.updateRaf, false)
     this.props.scrollingElement.addEventListener('scroll', this.onScroll, false)
+    this.current = this.props.container[getScrollType(this.props.horizontal)]
+    this.offset = this.current / this.props.pageHeight
     this.update()
     this.setState({ ready: true })
   }
@@ -226,7 +228,7 @@ export class Parallax extends React.PureComponent {
     const { scrolling, horizontal } = this.props
     const scrollType = getScrollType(horizontal)
     if (!this.props.container) return
-    this.space = window.innerHeight
+    this.space = this.props.pageHeight
     if (scrolling) {
       this.current = this.props.container[scrollType]
     } else {
@@ -307,7 +309,7 @@ export class Parallax extends React.PureComponent {
             </div>
           )}
         </div>
-        <div style={{ height: window.innerHeight * pages }} />
+        <div style={{ height: this.props.pageHeight * pages }} />
       </>
     )
   }

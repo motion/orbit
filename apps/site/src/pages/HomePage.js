@@ -107,6 +107,9 @@ const WaveBanner = ({ fill = '#000', ...props }) => (
         0,
         window.innerWidth < 1000 ? (window.innerWidth - 1000) / 2 : 0,
       ],
+      transform: {
+        scaleX: -1,
+      },
     }}
     {...props}
   >
@@ -257,8 +260,8 @@ const Pitch = ({ isLarge }) => (
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      Unified cloud search for things and people. Installed in just a minute,
-      with{' '}
+      An internal search platform for everything in your cloud and behind your
+      firewall. Installed in just a minute, with{' '}
       <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
         complete&nbsp;privacy
       </ToolTip>.
@@ -449,16 +452,16 @@ class SectionSearch extends React.Component {
             </SectionTitle>
             <VertSpace />
             <SectionP>
-              The power of on-device{' '}
+              A new security model brings the power of on-device{' '}
               <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
                 NLP
               </ToolTip>{' '}
-              for powerful cloud and private search with nothing leaving your
-              firewall.
+              to your team.
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              From services like Slack and Google Docs to internal folders,
+              Internal search doesn't have to be a pain. Search cloud services
+              like Slack and Google Docs, as well as private internal folders,
               wikis, databases, and APIs.
             </SectionSubP>
             <VertSpace />

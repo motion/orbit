@@ -8,6 +8,7 @@ import { MyStore } from './MyStore'
 
 // 1. default to not-naming stores
 // 2. encourage common practice passing one store at a time which shows how to nest them easily
+// 3. remove this.emit()
 
 @view.provide(MyStore)
 @view.provide(OtherStore)

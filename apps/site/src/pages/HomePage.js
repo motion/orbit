@@ -150,7 +150,7 @@ const scrollToTrack = (to, track) => {
 }
 
 const NormalLayer = view.attach('homeStore')(({ homeStore, ...props }) => {
-  return <layer css={{ height: homeStore.maxSectionHeight }} {...props} />
+  return <layer css={{ height: homeStore.sectionHeight }} {...props} />
 })
 
 @view
@@ -631,7 +631,7 @@ class SectionNoCloud extends React.Component {
     return (
       <section
         css={{
-          height: homeStore.maxSectionHeight,
+          height: homeStore.sectionHeight,
           position: 'relative',
           zIndex: 1000,
         }}
@@ -720,15 +720,13 @@ class Video extends React.Component {
           position: 'fixed',
           zIndex: 10,
           right: -50,
-          bottom: 0,
+          height: window.innerHeight,
           top: 0,
           width: '50%',
           ...(videoStopped && {
             position: 'absolute',
-            bottom: 'auto',
             top: videoStopAt,
           }),
-          transition: 'all ease-in 200ms',
           transform: {
             z: 0,
             y: homeStore.videoOffsetY,
@@ -802,8 +800,8 @@ const objReduce = (obj, fn) =>
   homeStore: class VideoStore {
     visible = {}
 
-    get maxSectionHeight() {
-      return this.props.maxSectionHeight
+    get sectionHeight() {
+      return this.props.sectionHeight
     }
 
     videoStopped = false
@@ -825,9 +823,11 @@ const objReduce = (obj, fn) =>
 
     didMount() {
       setTimeout(() => {
-        const profiles = document.querySelector('#home-profiles')
-        const { height, y } = profiles.getBoundingClientRect()
-        this.videoStopAt = y + height * 0.8
+        const { offsetTop } = document.querySelector(
+          '#home-profiles',
+        ).parentNode
+        // const { sectionHeight } = this
+        this.videoStopAt = offsetTop
       })
     }
 
@@ -837,10 +837,10 @@ const objReduce = (obj, fn) =>
         search: document.querySelector('#home-search'),
         profile: document.querySelector('#home-profiles'),
       }
-      if (document.documentElement.scrollTop > this.videoStopAt) {
-        this.videoStopAt = true
+      if (document.documentElement.scrollTop >= this.videoStopAt) {
+        this.videoStopped = true
       } else {
-        this.videoStopAt = false
+        this.videoStopped = false
       }
       this.updatePosition(nodes)
       this.updateVideo()
@@ -898,7 +898,7 @@ export class HomeWrapper extends React.Component {
     this.props.homeStore.update()
   }
 
-  render({ homeStore, maxSectionHeight }) {
+  render({ homeStore, sectionHeight }) {
     return (
       <Media query={Constants.screen.tall}>
         {isTall => (
@@ -914,7 +914,7 @@ export class HomeWrapper extends React.Component {
                     scrollingElement={window}
                     container={document.documentElement}
                     pages={pages}
-                    pageHeight={maxSectionHeight}
+                    pageHeight={sectionHeight}
                     config={{ tension: 170, friction: 26 }}
                   >
                     <UI.Theme
@@ -960,8 +960,8 @@ export class HomeWrapper extends React.Component {
 export const HomePage = () => (
   <WindowResize>
     {() => {
-      const maxSectionHeight = Math.min(1250, Math.max(600, window.innerHeight))
-      return <HomeWrapper maxSectionHeight={maxSectionHeight} />
+      const sectionHeight = Math.min(1250, Math.max(600, window.innerHeight))
+      return <HomeWrapper sectionHeight={sectionHeight} />
     }}
   </WindowResize>
 )

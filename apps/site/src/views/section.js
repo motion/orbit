@@ -26,7 +26,6 @@ export const Slant = ({
     gradients[2] = all.pop()
     // middle
     gradients[1] = all
-    console.log('gradients', gradients)
   }
   return (
     <Media

@@ -76,7 +76,6 @@ class InputPlain extends React.PureComponent {
     forwardRef,
     ...props
   }) {
-    console.log('forwardRef', forwardRef)
     const finalProps = { ...elementProps }
     if (sync && elementProps) {
       finalProps.value = sync.get()

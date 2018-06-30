@@ -158,7 +158,7 @@ export class Join extends React.Component {
     return {
       input: {
         color: theme.base.color,
-        WebkitTextFillColor: `${theme.base.color.alpha(0.7)} !important`,
+        // WebkitTextFillColor: `${theme.base.color.alpha(0.7)} !important`,
       },
     }
   }

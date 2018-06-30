@@ -671,8 +671,8 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                No servers, no setup. Your data never leaves your device.
-                Integrate knowledge sources and deploy internal apps one click.
+                No servers, no setup. Your data never leaves your device but you
+                can still share integrations and apps with your team.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP alpha={0.7}>

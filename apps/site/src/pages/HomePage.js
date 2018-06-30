@@ -731,11 +731,11 @@ class VideoStore {
   }
 
   animateOrbit = react(
-    () => this.props.homeStore.videoOffsetY,
-    y => {
+    () => this.props.homeStore.visibleIndex,
+    index => {
       this.run(Spring, {
         from: { y: 0 },
-        to: { y },
+        to: { y: index * this.props.homeStore.sectionHeight },
         config: config.slow,
       })
     },
@@ -754,7 +754,7 @@ class Video extends React.Component {
         css={{
           zIndex: 10,
           pointerEvents: 'none',
-          position: 'fixed',
+          position: 'absolute',
           right: -50,
           height: '100vh',
           perspective: 2,
@@ -846,6 +846,7 @@ const objReduce = (obj, fn) =>
 @view.provide({
   homeStore: class VideoStore {
     visible = {}
+    visibleIndex = 0
 
     get sectionHeight() {
       return this.props.sectionHeight
@@ -903,6 +904,13 @@ const objReduce = (obj, fn) =>
     updatePosition = nodes => {
       this.wasVisible = this.visible
       this.visible = objReduce(nodes, visiblePosition)
+      if (this.visible.header) {
+        this.visibleIndex = 0
+      } else if (this.visible.search) {
+        this.visibleIndex = 1
+      } else if (this.visible.profile) {
+        this.visibleIndex = 2
+      }
     }
 
     updateVideo = _.debounce(() => {

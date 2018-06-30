@@ -1,6 +1,7 @@
 ```ts
-import { store } from 'black'
+import { store, automagic } from 'black'
 import { SomeOtherStore } from './SomeOtherStore'
+import * as Actions from './actions'
 
 // 1. need to fix using constructor() as well in stores naturally
 
@@ -25,5 +26,8 @@ class MyStore {
       // ...
     }
   )
+
+  // allows exporting actions off the store
+  actions = automagic(Actions)
 }
 ```

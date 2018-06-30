@@ -127,15 +127,14 @@ const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
     inline
     background="transparent"
     tooltip={
-      <UI.Text size={1.2} alpha={0.8} {...tooltipProps}>
+      <UI.Text if={tooltip} size={1.2} alpha={0.8} {...tooltipProps}>
         {tooltip}
       </UI.Text>
     }
-    css={
-      {
-        // margin: [0, -5],
-      }
-    }
+    css={{
+      cursor: 'pointer',
+      // margin: [0, -5],
+    }}
     {...props}
   />
 )
@@ -254,7 +253,7 @@ const SectionSubTitle = props => (
   />
 )
 
-const Pitch = ({ isLarge }) => (
+const Pitch = ({ isLarge, scrollTo }) => (
   <>
     <Title italic size={5} alpha={1} color="#222">
       Instant-on Intranet
@@ -263,9 +262,7 @@ const Pitch = ({ isLarge }) => (
     <SectionSubTitle>
       The internal search platform for everything in your cloud and behind your
       firewall. Installs in just a minute, with{' '}
-      <ToolTip tooltip="Orbit runs privately on your device, never risking your data.">
-        complete&nbsp;privacy
-      </ToolTip>.
+      <ToolTip onClick={() => scrollTo(3)}>complete&nbsp;privacy</ToolTip>.
     </SectionSubTitle>
     <VertSpace />
     <row $$row css={{ margin: [2, 0, 10] }}>
@@ -321,7 +318,7 @@ const Pitch = ({ isLarge }) => (
 
 @view
 class HomeHeader extends React.Component {
-  render() {
+  render({ scrollTo }) {
     return (
       <Page
         offset={0}
@@ -359,7 +356,7 @@ class HomeHeader extends React.Component {
             render={() => (
               <>
                 <div $$flex />
-                <Pitch />
+                <Pitch scrollTo={scrollTo} />
                 <div $$flex={2.5} />
                 <orbit
                   css={{
@@ -395,7 +392,7 @@ class HomeHeader extends React.Component {
                   }}
                 >
                   <div $$flex={1.2} />
-                  <Pitch isLarge />
+                  <Pitch isLarge scrollTo={scrollTo} />
                   <div $$flex />
                 </inner>
               </>
@@ -608,7 +605,7 @@ const Card = ({ title, children, icon }) => (
   <card
     css={{
       flexFlow: 'row',
-      padding: 30,
+      padding: [28, 32],
       background: [0, 0, 0, 0.05],
       margin: [0, 0, 25],
       borderRadius: 10,
@@ -848,7 +845,8 @@ export class HomeWrapper extends React.Component {
         {isTall => (
           <Media query={Constants.screen.large}>
             {isLarge => {
-              const sectionProps = { isTall, isLarge, homeStore }
+              const scrollTo = page => this.parallax.scrollTo(page)
+              const sectionProps = { isTall, isLarge, homeStore, scrollTo }
               return (
                 <>
                   <Video />
@@ -867,10 +865,7 @@ export class HomeWrapper extends React.Component {
                       }}
                     >
                       <>
-                        <Header
-                          scrollTo={page => this.parallax.scrollTo(page)}
-                          white
-                        />
+                        <Header {...sectionProps} white />
                         <Observer
                           rootMargin="-95% 0% 0%"
                           onChange={this.intersect('header')}

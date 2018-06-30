@@ -671,14 +671,13 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                Give your teams a unifying force for company knowledge. With no
-                servers or setup teams can integrate knowledge sources and
-                deploy apps with one click.
+                No servers, no setup. Your data never leaves your device.
+                Integrate knowledge sources and deploy internal apps one click.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP alpha={0.7}>
-                We've rethought the intranet from the ground up. It starts by
-                putting users and privacy first.
+                We've rethought the intranet from the ground up by putting users
+                and privacy first.
               </SectionSubP>
               <VertSpace />
               <SectionSubP>🙅‍♀️☁️ </SectionSubP>

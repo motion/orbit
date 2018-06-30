@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Footer } from '~/components'
 import SectionContent from '~/views/sectionContent'
@@ -15,6 +15,7 @@ import profileImg from '~/../public/profileimg.png'
 import { Icon } from '~/views/icon'
 import orbitVideo from '~/../public/orbit.mp4'
 import * as _ from 'lodash'
+import { Keyframes, Spring, animated, config } from 'react-spring'
 
 const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -166,6 +167,15 @@ class Page extends React.Component {
     banner,
     zIndex = 0,
   }) {
+    const baseZIndex = zIndex
+    const Parallax = ({ zIndex = 0, ...props }) => (
+      <ParallaxLayer
+        offset={offset}
+        speed={0.2}
+        css={{ zIndex: zIndex + baseZIndex }}
+        {...props}
+      />
+    )
     return (
       <React.Fragment>
         <ParallaxLayer
@@ -208,7 +218,7 @@ class Page extends React.Component {
           css={{ position: 'relative', zIndex: 1 + zIndex }}
           {...childrenProps}
         >
-          {children}
+          {typeof children === 'function' ? children(Parallax) : children}
         </NormalLayer>
       </React.Fragment>
     )
@@ -259,9 +269,9 @@ const Pitch = ({ isLarge, scrollTo }) => (
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      The internal search platform for everything in your cloud and behind your
-      firewall. Installs in just a minute with{' '}
-      <ToolTip onClick={() => scrollTo(3)}>no&nbsp;cloud</ToolTip>.
+      The search platform for anything in your cloud or behind your firewall.
+      Installs in a minute with{' '}
+      <ToolTip onClick={() => scrollTo(3)}>total&nbsp;privacy</ToolTip>.
     </SectionSubTitle>
     <VertSpace />
     <row $$row css={{ margin: [2, 0, 10] }}>
@@ -317,87 +327,90 @@ const Pitch = ({ isLarge, scrollTo }) => (
 
 @view
 class HomeHeader extends React.Component {
-  render({ homeStore, scrollTo }) {
+  render({ scrollTo }) {
     return (
-      <Page
-        offset={0}
-        background={
+      <Page offset={0}>
+        {Parallax => (
           <>
-            <Slant {...firstSlant} {...topSlants} />
-            <Slant inverseSlant {...secondSlant} {...topSlants} />
-            <Slant {...thirdSlant} {...topSlants} />
-            <Glow
-              if={false}
-              style={{
-                background: '#fff',
-                opacity: 1,
-                transform: { x: '-65%', y: '-20%', scale: 0.65 },
-              }}
-            />
-            <Bauhaus
-              showCircle
-              circleColor="#F7C7FF"
-              css={{
-                opacity: 0.25,
-                transform: { scale: 0.97, y: '-11%', x: '54%' },
-              }}
-              warp={([x, y]) => [
-                x - 4 * -Math.sin(x / 30),
-                y - 4 * -Math.sin(x / 30),
-              ]}
-            />
+            <Parallax speed={1}>
+              <Slant {...firstSlant} {...topSlants} />
+              <Slant inverseSlant {...secondSlant} {...topSlants} />
+              <Slant {...thirdSlant} {...topSlants} />
+            </Parallax>
+            <Parallax speed={0.5}>
+              <Glow
+                style={{
+                  background: '#fff',
+                  opacity: 0.8,
+                  transform: { x: '-65%', y: '-20%', scale: 0.65 },
+                }}
+              />
+            </Parallax>
+            <Parallax speed={0.6}>
+              <Bauhaus
+                showCircle
+                circleColor="#F7C7FF"
+                css={{
+                  opacity: 0.25,
+                  transform: { scale: 0.97, y: '-11%', x: '54%' },
+                }}
+                warp={([x, y]) => [
+                  x - 4 * -Math.sin(x / 30),
+                  y - 4 * -Math.sin(x / 30),
+                ]}
+              />
+            </Parallax>
+            <SectionContentParallax id="home-header">
+              <Media
+                query={Constants.screen.small}
+                render={() => (
+                  <>
+                    <div $$flex />
+                    <Pitch scrollTo={scrollTo} />
+                    <div $$flex={2.5} />
+                    <orbit
+                      css={{
+                        zIndex: -1,
+                        position: 'absolute',
+                        bottom: '-10%',
+                        margin: [0, 'auto'],
+                        transformOrigin: 'bottom center',
+                        transform: { scale: 0.6 },
+                      }}
+                    >
+                      <UI.TiltHoverGlow
+                        restingPosition={[100, 100]}
+                        glowProps={{
+                          opacity: 0.5,
+                        }}
+                      >
+                        <HomeImg />
+                      </UI.TiltHoverGlow>
+                    </orbit>
+                  </>
+                )}
+              />
+              <Media
+                query={Constants.screen.large}
+                render={() => (
+                  <>
+                    <inner
+                      css={{
+                        flex: 1,
+                        textAlign: 'left',
+                        width: '40%',
+                      }}
+                    >
+                      <div $$flex={1.2} />
+                      <Pitch isLarge scrollTo={scrollTo} />
+                      <div $$flex />
+                    </inner>
+                  </>
+                )}
+              />
+            </SectionContentParallax>
           </>
-        }
-      >
-        <SectionContentParallax id="home-header">
-          <Media
-            query={Constants.screen.small}
-            render={() => (
-              <>
-                <div $$flex />
-                <Pitch scrollTo={scrollTo} />
-                <div $$flex={2.5} />
-                <orbit
-                  css={{
-                    zIndex: -1,
-                    position: 'absolute',
-                    bottom: '-10%',
-                    margin: [0, 'auto'],
-                    transformOrigin: 'bottom center',
-                    transform: { scale: 0.6 },
-                  }}
-                >
-                  <UI.TiltHoverGlow
-                    restingPosition={[100, 100]}
-                    glowProps={{
-                      opacity: 0.5,
-                    }}
-                  >
-                    <HomeImg />
-                  </UI.TiltHoverGlow>
-                </orbit>
-              </>
-            )}
-          />
-          <Media
-            query={Constants.screen.large}
-            render={() => (
-              <>
-                <inner
-                  css={{
-                    flex: 1,
-                    textAlign: 'left',
-                    width: '40%',
-                  }}
-                >
-                  <div $$flex={1.2} />
-                  <Pitch isLarge scrollTo={scrollTo} />
-                  <div $$flex />
-                </inner>
-              </>
-            )}
-          />
-        </SectionContentParallax>
+        )}
       </Page>
     )
   }
@@ -683,7 +696,9 @@ class SectionNoCloud extends React.Component {
               <VertSpace />
               <VertSpace />
               <VertSpace />
-              <SectionSubP size={4}>🙅‍♀️☁️ </SectionSubP>
+              <space css={{ margin: [0, 'auto'] }}>
+                <SectionSubP size={3}>🙅‍ ☁️ = 🙅‍♂️ 😅</SectionSubP>
+              </space>
               {/* <Bauhaus showCircle showTriangle showSquare /> */}
               <VertSpace />
               <VertSpace />
@@ -708,67 +723,95 @@ class SectionNoCloud extends React.Component {
 
 const pages = 3
 
+class VideoStore {
+  run = null
+
+  onKeyframes = run => {
+    this.run = run
+    this.run(Spring, {
+      from: { y: 0 },
+      to: { y: 0 },
+    })
+  }
+
+  animateOrbit = react(
+    () => this.props.homeStore.videoOffsetY,
+    y => {
+      this.run(Spring, {
+        from: { y: 0 },
+        to: { y },
+        config: config.slow,
+      })
+    },
+  )
+}
+
 @view.attach('homeStore')
-@view
+@view({
+  store: VideoStore,
+})
 class Video extends React.Component {
-  render({ homeStore }) {
+  render({ homeStore, store }) {
     const { videoStopped, videoStopAt } = homeStore
     return (
-      <inner
-        css={{
-          pointerEvents: 'none',
-          position: 'fixed',
-          zIndex: 10,
-          right: -50,
-          height: window.innerHeight,
-          top: 0,
-          width: '50%',
-          ...(videoStopped && {
-            position: 'absolute',
-            top: videoStopAt,
-          }),
-          transform: {
-            z: 0,
-            y: homeStore.videoOffsetY,
-          },
-        }}
-      >
-        <wrap
-          css={{
-            pointerEvents: 'all',
-            width: 1101 / 2,
-            height: 1240,
-            transform: {
-              x: 20,
-              y: '15%',
-            },
-          }}
-        >
-          <UI.TiltHoverGlow
-            restingPosition={[100, 100]}
-            tiltOptions={{ perspective: 2000 }}
-            css={{
-              borderRadius: 20,
-            }}
-            glowProps={{
-              opacity: 0.5,
+      <Keyframes native script={store.onKeyframes}>
+        {({ y }) => (
+          <animated.div
+            style={{
+              pointerEvents: 'none',
+              position: 'fixed',
+              right: -50,
+              height: window.innerHeight,
+              top: 0,
+              width: '50%',
+              ...(videoStopped && {
+                position: 'absolute',
+                top: videoStopAt,
+              }),
+              zIndex: 10,
+              transform: y
+                ? y.interpolate(y => `translate3d(0,${y}px,0)`)
+                : null,
             }}
           >
-            <video
-              src={orbitVideo}
-              autoPlay
-              muted
-              loop
+            <wrap
               css={{
-                width: 590,
-                height: 1325,
-                transform: { x: -21, y: -2 },
-                marginBottom: -10,
+                pointerEvents: 'all',
+                width: 1101 / 2,
+                height: 1240,
+                transform: {
+                  x: 20,
+                  y: '15%',
+                },
               }}
-            />
-          </UI.TiltHoverGlow>
-        </wrap>
-      </inner>
+            >
+              <UI.TiltHoverGlow
+                restingPosition={[100, 100]}
+                tiltOptions={{ perspective: 2000 }}
+                css={{
+                  borderRadius: 20,
+                }}
+                glowProps={{
+                  opacity: 0.5,
+                }}
+              >
+                <video
+                  src={orbitVideo}
+                  autoPlay
+                  muted
+                  loop
+                  css={{
+                    width: 590,
+                    height: 1325,
+                    transform: { x: -21, y: -2 },
+                    marginBottom: -10,
+                  }}
+                />
+              </UI.TiltHoverGlow>
+            </wrap>
+          </animated.div>
+        )}
+      </Keyframes>
     )
   }
 }
@@ -831,6 +874,13 @@ const objReduce = (obj, fn) =>
       })
     }
 
+    onScroll = () => {
+      clearTimeout(this.scrollTm)
+      this.video.pause()
+      this.isScrolling = true
+      this.update()
+    }
+
     update = _.throttle(() => {
       const nodes = {
         header: document.querySelector('#home-header'),
@@ -877,7 +927,7 @@ const objReduce = (obj, fn) =>
       }
       // else
       this.video.pause()
-    }, 64)
+    }, 350)
   },
 })
 @view
@@ -893,9 +943,7 @@ export class HomeWrapper extends React.Component {
   resume = null
 
   handleScroll = () => {
-    clearTimeout(this.resume)
-    this.props.homeStore.video.pause()
-    this.props.homeStore.update()
+    this.props.homeStore.onScroll()
   }
 
   render({ homeStore, sectionHeight }) {

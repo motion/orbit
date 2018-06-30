@@ -555,15 +555,20 @@ class SectionProfiles extends React.Component {
       >
         <Observer rootMargin="0% 0% -75%" onChange={this.handleIntersection}>
           <SectionContent css={{ flex: 1 }}>
-            <inner css={isLarge && { width: '45%', margin: [100, 0, 0] }}>
-              <SectionTitleSmall>Operate personally</SectionTitleSmall>
+            <inner css={isLarge && { width: '45%', margin: ['6%', 0, 0] }}>
+              <SectionTitleSmall size={2}>
+                A more personal approach to coordination.
+              </SectionTitleSmall>
               <VertSpace />
-              <SectionSubTitle>
-                Beautiful automatic profile cards keep you up to date with
-                teammates and reduce constant interruption.
-              </SectionSubTitle>
+              <SectionSubP color="#111" alpha={0.5}>
+                Beautiful automatic profiles keep you up to date with teammates.
+                Find where people work, what they care about, recent things
+                they've been active on and more.
+              </SectionSubP>
+              <VertSpace />
               <VertSpace />
             </inner>
+            <div $$flex />
             <wrap css={{ position: 'relative' }}>
               <fadeBottom
                 css={{
@@ -571,8 +576,8 @@ class SectionProfiles extends React.Component {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: '40%',
-                  background: `linear-gradient(transparent, ${bodyBg} 80%)`,
+                  height: '70%',
+                  background: `linear-gradient(transparent, ${bodyBg} 70%)`,
                   zIndex: 100,
                 }}
               />
@@ -617,10 +622,10 @@ const Card = ({ title, children, icon }) => (
       css={{ margin: [0, 40, 0, 0] }}
     />
     <content css={{ flex: 1 }}>
-      <SectionP fontWeight={700} css={{ flex: 1 }}>
+      <SectionP size={1.7} fontWeight={700} css={{ flex: 1 }}>
         {title}
       </SectionP>
-      <SectionSubP size={1.5} sizeLineHeight={1} css={{ flex: 1 }}>
+      <SectionSubP size={2} sizeLineHeight={1} css={{ flex: 1 }}>
         {children}
       </SectionSubP>
     </content>
@@ -639,13 +644,24 @@ class SectionNoCloud extends React.Component {
         }}
       >
         <WaveBanner
-          css={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-          fill="#AE2E73"
+          css={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
+          }}
+          fill="#79bdd1"
         />
         <SectionContent css={{ flex: 1 }}>
           <Bauhaus
             showCircle
-            css={{ opacity: 0.1, transform: { y: '50%', x: '-80%' } }}
+            css={{
+              zIndex: 0,
+              opacity: 0.2,
+              transform: { y: '40%', x: '80%', scale: 0.7 },
+            }}
           />
           <div
             css={{
@@ -658,12 +674,12 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                Orbit is a desktop app that runs entirely behind your firewall.
-                A powerful extension framework makes it your killer internal
-                knowledge tool.
+                Give your teams a unifying force for company knowledge. With no
+                servers or setup teams can integrate knowledge sources and
+                deploy apps with one click.
               </SectionSubTitle>
               <VertSpace />
-              <SectionSubP alpha={0.5}>
+              <SectionSubP alpha={0.7}>
                 We've rethought the intranet from the ground up. It starts by
                 putting users and privacy first.
               </SectionSubP>
@@ -678,10 +694,10 @@ class SectionNoCloud extends React.Component {
                 Your data never leaves your firewall.
               </Card>
               <Card icon="userrun" title="Instant">
-                From download to setup in just a couple of minutes.
+                Download to setup in just a couple minutes.
               </Card>
               <Card icon="business_plug" title="Extendable">
-                One-click deploy custom apps to your entire team.
+                One-click deploy custom private apps.
               </Card>
             </inner>
           </div>

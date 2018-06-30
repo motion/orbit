@@ -1,42 +1,24 @@
-Plugins for Orbit
-
-How you'd turn everything we have now into a platform.
-
-Structure:
+Platform
 
 ```
-index.ts
-/views
-  Card.tsx
-  App.tsx
+npm i -g orbit
+orbit new
 ```
 
-index.ts
-
-```ts
-import { Card } from './views'
-import { App } from './views'
-
-const initialize = async ({ setting, user }) => {
-  return {
-    card: props => <Card {...props} setting={setting} />,
-    app: props => <App {...props} setting={setting} />,
-  }
-}
-
-export default {
-  title: '',
-  icon: '',
-  client: {
-    onSearch: query => {
-
+```
+app.json
+  name, icon, etc
+/frontend
+  index.ts
+    export class Setting {}
+    export class Card {}
+    export class App {}
+/backend
+  index.ts
+    export class Main {
+      start() {}
+      dispose() {}
     }
-  },
-  server: {
-    onSearch: query => {
-
-    }
-  }
-  initialize,
-}
+    export const oauth
+    export class Sync {}
 ```

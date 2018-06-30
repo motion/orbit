@@ -13,7 +13,6 @@ import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
 import profileImg from '~/../public/profileimg.png'
 import { Icon } from '~/views/icon'
-import Observer from '@researchgate/react-intersection-observer'
 import orbitVideo from '~/../public/orbit.mp4'
 import * as _ from 'lodash'
 
@@ -261,8 +260,8 @@ const Pitch = ({ isLarge, scrollTo }) => (
     <VertSpace />
     <SectionSubTitle>
       The internal search platform for everything in your cloud and behind your
-      firewall. Installs in just a minute, with{' '}
-      <ToolTip onClick={() => scrollTo(3)}>complete&nbsp;privacy</ToolTip>.
+      firewall. Installs in just a minute with{' '}
+      <ToolTip onClick={() => scrollTo(3)}>no&nbsp;cloud</ToolTip>.
     </SectionSubTitle>
     <VertSpace />
     <row $$row css={{ margin: [2, 0, 10] }}>
@@ -318,7 +317,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
 
 @view
 class HomeHeader extends React.Component {
-  render({ scrollTo }) {
+  render({ homeStore, scrollTo }) {
     return (
       <Page
         offset={0}
@@ -350,7 +349,7 @@ class HomeHeader extends React.Component {
           </>
         }
       >
-        <SectionContentParallax>
+        <SectionContentParallax id="home-header">
           <Media
             query={Constants.screen.small}
             render={() => (
@@ -365,7 +364,7 @@ class HomeHeader extends React.Component {
                     bottom: '-10%',
                     margin: [0, 'auto'],
                     transformOrigin: 'bottom center',
-                    transform: { scale: 0.5 },
+                    transform: { scale: 0.6 },
                   }}
                 >
                   <UI.TiltHoverGlow
@@ -468,7 +467,7 @@ class SectionSearch extends React.Component {
           </Half>
         }
       >
-        <SectionContent css={{ flex: 1 }}>
+        <SectionContent id="home-search" css={{ flex: 1 }}>
           <div $$flex={3} />
           <Half>
             <icons
@@ -528,10 +527,6 @@ class SectionSearch extends React.Component {
 
 @view
 class SectionProfiles extends React.Component {
-  handleIntersection = ({ isIntersecting }) => {
-    this.props.freeze(isIntersecting)
-  }
-
   render({ isLarge }) {
     return (
       <Page
@@ -550,52 +545,53 @@ class SectionProfiles extends React.Component {
           },
         }}
       >
-        <Observer rootMargin="0% 0% -75%" onChange={this.handleIntersection}>
-          <SectionContent css={{ flex: 1 }}>
-            <inner css={isLarge && { width: '45%', margin: ['6%', 0, 0] }}>
-              <SectionTitleSmall size={2}>
-                A more personal approach to coordination.
-              </SectionTitleSmall>
-              <VertSpace />
-              <SectionSubP color="#111" alpha={0.5}>
-                Beautiful automatic profiles keep you up to date with teammates.
-                Find where people work, what they care about, recent things
-                they've been active on and more.
-              </SectionSubP>
-              <VertSpace />
-              <VertSpace />
-            </inner>
-            <div $$flex />
-            <wrap css={{ position: 'relative' }}>
-              <fadeBottom
-                css={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: '70%',
-                  background: `linear-gradient(transparent, ${bodyBg} 70%)`,
-                  zIndex: 100,
-                }}
-              />
-              <img
-                src={profileImg}
-                css={{
-                  width: 1283 / 2,
-                  height: 'auto',
-                  transform: {
-                    y: 0,
-                    x: 30,
-                    perspective: 1000,
-                    rotateY: '3deg',
-                    rotateX: '4deg',
-                    rotateZ: '-1deg',
-                  },
-                }}
-              />
-            </wrap>
-          </SectionContent>
-        </Observer>
+        <SectionContent id="home-profiles" css={{ flex: 1 }}>
+          <inner
+            className="profiles"
+            css={isLarge && { width: '45%', margin: ['6%', 0, 0] }}
+          >
+            <SectionTitleSmall size={2.2}>
+              A more personal way to coordinate teams.
+            </SectionTitleSmall>
+            <VertSpace />
+            <SectionSubP color="#111" alpha={0.5}>
+              Search anyone from across your cloud with automatic aggregated
+              profiles. Find where people work, what they care about, recent
+              things they've been active on and more.
+            </SectionSubP>
+            <VertSpace />
+            <VertSpace />
+          </inner>
+          <div $$flex />
+          <wrap css={{ position: 'relative' }}>
+            <fadeBottom
+              css={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '70%',
+                background: `linear-gradient(transparent, ${bodyBg} 70%)`,
+                zIndex: 100,
+              }}
+            />
+            <img
+              src={profileImg}
+              css={{
+                width: 1283 / 2,
+                height: 'auto',
+                transform: {
+                  y: 0,
+                  x: 30,
+                  perspective: 1000,
+                  rotateY: '3deg',
+                  rotateX: '4deg',
+                  rotateZ: '-1deg',
+                },
+              }}
+            />
+          </wrap>
+        </SectionContent>
       </Page>
     )
   }
@@ -622,7 +618,7 @@ const Card = ({ title, children, icon }) => (
       <SectionP size={1.7} fontWeight={700} css={{ flex: 1 }}>
         {title}
       </SectionP>
-      <SectionSubP size={2} sizeLineHeight={1} css={{ flex: 1 }}>
+      <SectionSubP size={1.8} sizeLineHeight={1} css={{ flex: 1 }}>
         {children}
       </SectionSubP>
     </content>
@@ -671,16 +667,23 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                No servers, no setup. Your data never leaves your device but you
-                can still share integrations and apps with your team.
+                No servers, no setup. That means absolute data security,
+                sweat-free.
               </SectionSubTitle>
+              <VertSpace />
+              <SectionSubP>
+                An extensible platform that keeps all your data on device means
+                you can truly build amazing internal tools for your team.
+              </SectionSubP>
               <VertSpace />
               <SectionSubP alpha={0.7}>
                 We've rethought the intranet from the ground up by putting users
                 and privacy first.
               </SectionSubP>
               <VertSpace />
-              <SectionSubP>🙅‍♀️☁️ </SectionSubP>
+              <VertSpace />
+              <VertSpace />
+              <SectionSubP size={4}>🙅‍♀️☁️ </SectionSubP>
               {/* <Bauhaus showCircle showTriangle showSquare /> */}
               <VertSpace />
               <VertSpace />
@@ -709,79 +712,172 @@ const pages = 3
 @view
 class Video extends React.Component {
   render({ homeStore }) {
-    const { stopVideoAt } = homeStore
+    const { videoStopped, videoStopAt } = homeStore
     return (
-      <Media
-        query={Constants.screen.large}
-        render={() => (
-          <inner
+      <inner
+        css={{
+          pointerEvents: 'none',
+          position: 'fixed',
+          zIndex: 10,
+          right: -50,
+          bottom: 0,
+          top: 0,
+          width: '50%',
+          ...(videoStopped && {
+            position: 'absolute',
+            bottom: 'auto',
+            top: videoStopAt,
+          }),
+          transition: 'all ease-in 200ms',
+          transform: {
+            z: 0,
+            y: homeStore.videoOffsetY,
+          },
+        }}
+      >
+        <wrap
+          css={{
+            pointerEvents: 'all',
+            width: 1101 / 2,
+            height: 1240,
+            transform: {
+              x: 20,
+              y: '15%',
+            },
+          }}
+        >
+          <UI.TiltHoverGlow
+            restingPosition={[100, 100]}
+            tiltOptions={{ perspective: 2000 }}
             css={{
-              pointerEvents: 'none',
-              position: 'fixed',
-              zIndex: 10,
-              right: -50,
-              bottom: 0,
-              top: 0,
-              width: '50%',
-              ...(stopVideoAt && {
-                position: 'absolute',
-                bottom: 'auto',
-                top: stopVideoAt,
-              }),
-              transform: {
-                z: 0,
-              },
+              borderRadius: 20,
+            }}
+            glowProps={{
+              opacity: 0.5,
             }}
           >
-            <wrap
+            <video
+              src={orbitVideo}
+              autoPlay
+              muted
+              loop
               css={{
-                pointerEvents: 'all',
-                width: 1101 / 2,
-                height: 1240,
-                transform: {
-                  x: 20,
-                  y: '15%',
-                },
+                width: 590,
+                height: 1325,
+                transform: { x: -21, y: -2 },
+                marginBottom: -10,
               }}
-            >
-              <UI.TiltHoverGlow
-                restingPosition={[100, 100]}
-                tiltOptions={{ perspective: 2000 }}
-                css={{
-                  borderRadius: 20,
-                }}
-                glowProps={{
-                  opacity: 0.5,
-                }}
-              >
-                <video
-                  src={orbitVideo}
-                  autoPlay
-                  muted
-                  loop
-                  css={{
-                    width: 590,
-                    height: 1325,
-                    transform: { x: -21, y: -2 },
-                    marginBottom: -10,
-                  }}
-                />
-              </UI.TiltHoverGlow>
-            </wrap>
-          </inner>
-        )}
-      />
+            />
+          </UI.TiltHoverGlow>
+        </wrap>
+      </inner>
     )
   }
 }
 
+const visiblePosition = (node, pct = 0.8) => {
+  const { y } = node.getBoundingClientRect()
+  const max = node.clientHeight - node.clientHeight * pct
+  // active
+  if (Math.abs(y) <= max) {
+    return 1
+  }
+  // past
+  if (y < 0) {
+    return 2
+  }
+  return 0
+}
+
+const objReduce = (obj, fn) =>
+  Object.keys(obj).reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: fn(obj[key]),
+    }),
+    {},
+  )
+
 @view.provide({
   homeStore: class VideoStore {
+    visible = {}
+
     get maxSectionHeight() {
       return this.props.maxSectionHeight
     }
 
-    stopVideoAt = false
+    videoStopped = false
+    videoStopAt = null
+
+    get videoOffsetY() {
+      if (this.videoStopped || this.visible.profile) {
+        return -200
+      }
+      if (this.visible.search) {
+        return -100
+      }
+      return 0
+    }
+
+    get video() {
+      return document.querySelector('video')
+    }
+
+    didMount() {
+      setTimeout(() => {
+        const profiles = document.querySelector('#home-profiles')
+        const { height, y } = profiles.getBoundingClientRect()
+        this.videoStopAt = y + height * 0.8
+      })
+    }
+
+    update = _.throttle(() => {
+      const nodes = {
+        header: document.querySelector('#home-header'),
+        search: document.querySelector('#home-search'),
+        profile: document.querySelector('#home-profiles'),
+      }
+      if (document.documentElement.scrollTop > this.videoStopAt) {
+        this.videoStopAt = true
+      } else {
+        this.videoStopAt = false
+      }
+      this.updatePosition(nodes)
+      this.updateVideo()
+    }, 64)
+
+    updatePosition = nodes => {
+      this.wasVisible = this.visible
+      this.visible = objReduce(nodes, visiblePosition)
+    }
+
+    updateVideo = _.debounce(() => {
+      const { visible, wasVisible } = this
+      if (visible.profile === 1) {
+        // go to point
+        if (!wasVisible.profile === 1) {
+          this.video.currentTime = 0
+        }
+        this.video.pause()
+        return
+      }
+      if (visible.search === 1) {
+        if (wasVisible.search === 1) {
+          this.video.currentTime = 5
+        }
+        this.video.play()
+        return
+      }
+      if (visible.header === 1) {
+        if (!wasVisible.header === 1) {
+          this.video.currentTime = 0
+        }
+        this.video.play()
+        return
+      }
+      // else
+      this.video.pause()
+    }, 64)
   },
 })
 @view
@@ -798,44 +894,8 @@ export class HomeWrapper extends React.Component {
 
   handleScroll = () => {
     clearTimeout(this.resume)
-    this.video.pause()
-    this.resume = setTimeout(this.update, 100)
-  }
-
-  get video() {
-    return document.querySelector('video')
-  }
-
-  intersectState = {}
-
-  intersect = type => ({ isIntersecting }) => {
-    console.log('instersect', type, isIntersecting)
-    this.intersectState[type] = isIntersecting
-    this.update()
-  }
-
-  update = () => {
-    const oneActive = Object.keys(this.intersectState).reduce(
-      (a, b) => a || this.intersectState[b],
-      false,
-    )
-    if (this.intersectState.profile) {
-      // go to point
-      this.video.currentTime = 0
-      this.video.pause()
-      return
-    }
-    if (this.intersectState.search) {
-      this.video.currentTime = 5
-    }
-    if (this.intersectState.header) {
-      this.video.currentTime = 0
-    }
-    if (oneActive) {
-      this.video.play()
-    } else {
-      this.video.pause()
-    }
+    this.props.homeStore.video.pause()
+    this.props.homeStore.update()
   }
 
   render({ homeStore, maxSectionHeight }) {
@@ -848,7 +908,7 @@ export class HomeWrapper extends React.Component {
               const sectionProps = { isTall, isLarge, homeStore, scrollTo }
               return (
                 <>
-                  <Video />
+                  <Video if={isLarge} />
                   <Parallax
                     ref={ref => (this.parallax = ref)}
                     scrollingElement={window}
@@ -865,38 +925,9 @@ export class HomeWrapper extends React.Component {
                     >
                       <>
                         <Header {...sectionProps} white />
-                        <Observer
-                          rootMargin="-95% 0% 0%"
-                          onChange={this.intersect('header')}
-                        >
-                          <HomeHeader {...sectionProps} />
-                        </Observer>
-                        <Observer
-                          rootMargin="0% 0% -95%"
-                          onChange={this.intersect('search')}
-                        >
-                          <SectionSearch {...sectionProps} />
-                        </Observer>
-                        <Observer
-                          rootMargin="0% 0% -95%"
-                          onChange={this.intersect('profile')}
-                        >
-                          <SectionProfiles
-                            {...sectionProps}
-                            freeze={shouldStop => {
-                              const { scrollTop } = document.documentElement
-                              if (scrollTop > maxSectionHeight * 2.5) {
-                                console.log('avoid at bottom')
-                                return
-                              }
-                              if (!shouldStop) {
-                                homeStore.stopVideoAt = false
-                                return
-                              }
-                              homeStore.stopVideoAt = scrollTop
-                            }}
-                          />
-                        </Observer>
+                        <HomeHeader {...sectionProps} />
+                        <SectionSearch {...sectionProps} />
+                        <SectionProfiles {...sectionProps} />
                       </>
                     </UI.Theme>
                   </Parallax>

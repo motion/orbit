@@ -332,21 +332,17 @@ class HomeHeader extends React.Component {
       <Page offset={0}>
         {Parallax => (
           <>
-            <Parallax speed={1}>
-              <Slant {...firstSlant} {...topSlants} />
-              <Slant inverseSlant {...secondSlant} {...topSlants} />
-              <Slant {...thirdSlant} {...topSlants} />
-            </Parallax>
-            <Parallax speed={0.5}>
-              <Glow
-                style={{
-                  background: '#fff',
-                  opacity: 0.8,
-                  transform: { x: '-65%', y: '-20%', scale: 0.65 },
-                }}
-              />
-            </Parallax>
-            <Parallax speed={0.6}>
+            <Slant {...firstSlant} {...topSlants} />
+            <Slant inverseSlant {...secondSlant} {...topSlants} />
+            <Slant {...thirdSlant} {...topSlants} />
+            <Glow
+              style={{
+                background: '#fff',
+                opacity: 0.8,
+                transform: { x: '-65%', y: '-20%', scale: 0.65 },
+              }}
+            />
+            <Parallax speed={0.1}>
               <Bauhaus
                 showCircle
                 circleColor="#F7C7FF"
@@ -754,64 +750,72 @@ class Video extends React.Component {
   render({ homeStore, store }) {
     const { videoStopped, videoStopAt } = homeStore
     return (
-      <Keyframes native script={store.onKeyframes}>
-        {({ y }) => (
-          <animated.div
-            style={{
-              pointerEvents: 'none',
-              position: 'fixed',
-              right: -50,
-              height: window.innerHeight,
-              top: 0,
-              width: '50%',
-              ...(videoStopped && {
-                position: 'absolute',
-                top: videoStopAt,
-              }),
-              zIndex: 10,
-              transform: y
-                ? y.interpolate(y => `translate3d(0,${y}px,0)`)
-                : null,
-            }}
-          >
-            <wrap
-              css={{
-                pointerEvents: 'all',
-                width: 1101 / 2,
-                height: 1240,
-                transform: {
-                  x: 20,
-                  y: '15%',
-                },
+      <div
+        css={{
+          zIndex: 10,
+          pointerEvents: 'none',
+          position: 'fixed',
+          right: -50,
+          height: '100vh',
+          perspective: 2,
+          top: 0,
+          width: '50%',
+          ...(videoStopped && {
+            position: 'absolute',
+            transform: {
+              y: videoStopAt,
+            },
+          }),
+        }}
+      >
+        <Keyframes native script={store.onKeyframes}>
+          {({ y }) => (
+            <animated.div
+              style={{
+                transform: y
+                  ? y.interpolate(y => `translate3d(0,${y}px,-1px) scale(1.5)`)
+                  : null,
               }}
             >
-              <UI.TiltHoverGlow
-                restingPosition={[100, 100]}
-                tiltOptions={{ perspective: 2000 }}
+              <wrap
                 css={{
-                  borderRadius: 20,
-                }}
-                glowProps={{
-                  opacity: 0.5,
+                  pointerEvents: 'all',
+                  width: 1101 / 2,
+                  height: 1240,
+                  transform: {
+                    x: 20,
+                    y: '15%',
+                  },
                 }}
               >
-                <video
-                  src={orbitVideo}
-                  autoPlay
-                  muted
-                  loop
+                <UI.TiltHoverGlow
+                  restingPosition={[100, 100]}
+                  tiltOptions={{ perspective: 2000 }}
                   css={{
-                    width: 590,
-                    height: 1325,
-                    transform: { x: -21, y: -2 },
-                    marginBottom: -10,
+                    borderRadius: 20,
                   }}
-                />
-              </UI.TiltHoverGlow>
-            </wrap>
-          </animated.div>
-        )}
-      </Keyframes>
+                  glowProps={{
+                    opacity: 0.5,
+                  }}
+                >
+                  <video
+                    src={orbitVideo}
+                    autoPlay
+                    muted
+                    loop
+                    css={{
+                      width: 590,
+                      height: 1325,
+                      transform: { x: -21, y: -2 },
+                      marginBottom: -10,
+                    }}
+                  />
+                </UI.TiltHoverGlow>
+              </wrap>
+            </animated.div>
+          )}
+        </Keyframes>
+      </div>
     )
   }
 }

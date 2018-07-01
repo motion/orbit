@@ -1,4 +1,7 @@
-- record simple search video
+- make willChange actually only do before scroll
+- no pointer events on parllax layer just below by default
+
+* record simple search video
   - border less strong
   - x in y with nice coloring
   - see if can do app isolated record

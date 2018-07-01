@@ -271,7 +271,9 @@ export class HoverGlow extends React.PureComponent {
           <div
             style={{
               transform:
-                scale * extraScale !== 1 ? `scale(${scale * extraScale})` : '',
+                scale * extraScale !== 1
+                  ? `scale(${scale * extraScale}) translateZ(0px)`
+                  : 'translateZ(0px)',
               opacity: hide ? 0 : opacity,
               width,
               height,

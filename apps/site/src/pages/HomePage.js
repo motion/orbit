@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Footer } from '~/components'
 import SectionContent from '~/views/sectionContent'
@@ -13,9 +13,16 @@ import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
 import profileImg from '~/../public/profileimg.png'
 import { Icon } from '~/views/icon'
-import orbitVideo from '~/../public/orbit.mp4'
+// import orbitVideo from '~/../public/orbit.mp4'
 import * as _ from 'lodash'
-import { Keyframes, Spring, animated, config } from 'react-spring'
+import { Spring } from 'react-spring'
+import { SVGToImage } from '~/views/svgToImage'
+
+const forwardRef = Component => {
+  return React.forwardRef((props, ref) => (
+    <Component {...props} forwardRef={ref} />
+  ))
+}
 
 const bodyBg = Constants.colorMain
 const bottomBg = Constants.colorMain.lighten(0.1).desaturate(0.1)
@@ -94,8 +101,9 @@ const Half = props => (
   </Media>
 )
 
-const WaveBanner = ({ fill = '#000', ...props }) => (
+const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
   <svg
+    ref={forwardRef}
     className="wavebanner"
     preserveAspectRatio="none"
     viewBox="0 0 3701 2273"
@@ -110,6 +118,7 @@ const WaveBanner = ({ fill = '#000', ...props }) => (
       ],
       transform: {
         scaleX: -1,
+        z: 0,
       },
     }}
     {...props}
@@ -120,7 +129,7 @@ const WaveBanner = ({ fill = '#000', ...props }) => (
       fill={fill}
     />
   </svg>
-)
+))
 
 const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
   <UI.Surface
@@ -151,7 +160,7 @@ const scrollToTrack = (to, track) => {
 }
 
 const NormalLayer = view.attach('homeStore')(({ homeStore, ...props }) => {
-  return <layer css={{ height: homeStore.sectionHeight }} {...props} />
+  return <SectionContent css={{ height: homeStore.sectionHeight }} {...props} />
 })
 
 @view
@@ -173,6 +182,12 @@ class Page extends React.Component {
         offset={offset}
         speed={0.2}
         css={{ zIndex: zIndex + baseZIndex }}
+        {...props}
+      />
+    )
+    const Content = props => (
+      <NormalLayer
+        css={{ position: 'relative', zIndex: 1 + zIndex }}
         {...props}
       />
     )
@@ -214,12 +229,11 @@ class Page extends React.Component {
         >
           <SectionContentParallax>{title}</SectionContentParallax>
         </ParallaxLayer>
-        <NormalLayer
-          css={{ position: 'relative', zIndex: 1 + zIndex }}
-          {...childrenProps}
-        >
-          {typeof children === 'function' ? children(Parallax) : children}
-        </NormalLayer>
+        {typeof children === 'function' ? (
+          children({ Parallax, Content })
+        ) : (
+          <Content>{children}</Content>
+        )}
       </React.Fragment>
     )
   }
@@ -227,7 +241,11 @@ class Page extends React.Component {
 
 const borderize = bg => bg.darken(0.2).alpha(0.5)
 const topSlants = {
-  slantGradient: [bodyBg, borderize(bottomBg.mix(bodyBg)), bodyBg],
+  slantGradient: [
+    'transparent',
+    borderize(bottomBg.mix(bodyBg)),
+    'transparent',
+  ],
 }
 
 const firstSlant = {
@@ -330,18 +348,15 @@ class HomeHeader extends React.Component {
   render({ scrollTo }) {
     return (
       <Page offset={0}>
-        {Parallax => (
+        {({ Parallax, Content }) => (
           <>
-            <Slant {...firstSlant} {...topSlants} />
-            <Slant inverseSlant {...secondSlant} {...topSlants} />
-            <Slant {...thirdSlant} {...topSlants} />
-            <Glow
+            {/* <Glow
               style={{
                 background: '#fff',
                 opacity: 0.8,
-                transform: { x: '-65%', y: '-20%', scale: 0.65 },
+                transform: { x: '-65%', y: '-20%', scale: 1 },
               }}
-            />
+            /> */}
             <Parallax speed={0.1}>
               <Bauhaus
                 showCircle
@@ -356,7 +371,10 @@ class HomeHeader extends React.Component {
                 ]}
               />
             </Parallax>
-            <SectionContentParallax id="home-header">
+            <Content id="home-header">
+              <Slant {...firstSlant} {...topSlants} />
+              <Slant inverseSlant {...secondSlant} {...topSlants} />
+              <Slant {...thirdSlant} {...topSlants} />
               <Media
                 query={Constants.screen.small}
                 render={() => (
@@ -404,7 +422,7 @@ class HomeHeader extends React.Component {
                   </>
                 )}
               />
-            </SectionContentParallax>
+            </Content>
           </>
         )}
       </Page>
@@ -414,7 +432,7 @@ class HomeHeader extends React.Component {
 
 @view
 class SectionSearch extends React.Component {
-  render({ isTall, isLarge }) {
+  render({ isTall, isLarge, sectionHeight }) {
     const iconProps = {
       size: isLarge ? 55 : 40,
     }
@@ -422,31 +440,18 @@ class SectionSearch extends React.Component {
       <Page
         offset={1}
         banner={waveColor}
-        background={
-          <>
-            <Bauhaus
-              showTriangle
-              css={{
-                transform: { scale: 0.6, y: '-111%', x: '-80%' },
-                opacity: 0.1,
-              }}
-            />
-          </>
-        }
-        titleProps={
-          {
-            // seems opacity effect causes paints... shouldnt be bad test uncomment in fuutre
-            // effects: {
-            //   opacity: x => {
-            //     const fadeAfter = 1.2
-            //     if (x < fadeAfter) {
-            //       return x * Math.log(x * 10)
-            //     }
-            //     return fadeAfter * 2 - x
-            //   },
-            // },
-          }
-        }
+        titleProps={{
+          // seems opacity effect causes paints... shouldnt be bad test uncomment in fuutre
+          effects: {
+            opacity: x => {
+              const fadeAfter = 1.2
+              if (x < fadeAfter) {
+                return x * Math.log(x * 10)
+              }
+              return fadeAfter * 2 - x
+            },
+          },
+        }}
         title={
           <Half>
             <SectionTitle
@@ -476,45 +481,60 @@ class SectionSearch extends React.Component {
           </Half>
         }
       >
-        <SectionContent id="home-search" css={{ flex: 1 }}>
-          <div $$flex={3} />
-          <Half>
-            <icons
-              css={{
-                transformOrigin: 'bottom left',
-                transform: {
-                  scale: isTall ? 1.4 : 1,
-                },
-              }}
-            >
-              <icon>
-                <Icon name="slack" {...iconProps} />
-              </icon>
-              <icon>
-                <Icon name="gdocs" {...iconProps} />
-              </icon>
-              <icon>
-                <Icon name="gmail" {...iconProps} />
-              </icon>
-              <icon>
-                <Icon name="github" {...iconProps} />
-              </icon>
-              <icon>
-                <Icon name="gcalendar" {...iconProps} />
-              </icon>
-              <icon>
-                <Icon name="confluence" {...iconProps} />
-              </icon>
-              <icon>
-                <Icon name="jira" {...iconProps} />
-              </icon>
-              <icon>
-                <Icon name="dropbox" {...iconProps} />
-              </icon>
-            </icons>
-          </Half>
-          <div $$flex />
-        </SectionContent>
+        {({ Parallax, Content }) => (
+          <>
+            <Parallax speed={0.3}>
+              <Bauhaus
+                showTriangle
+                css={{
+                  transformOrigin: 'top left',
+                  transform: { scale: 0.4, y: -sectionHeight / 2, x: '20%' },
+                  opacity: 0.1,
+                }}
+              />
+            </Parallax>
+            <Content id="home-search">
+              <div $$flex={3} />
+              <Half>
+                <icons
+                  css={{
+                    transformOrigin: 'bottom left',
+                    transform: {
+                      scale: isTall ? 1.4 : 1,
+                      z: 0,
+                    },
+                  }}
+                >
+                  <icon>
+                    <Icon name="slack" {...iconProps} />
+                  </icon>
+                  <icon>
+                    <Icon name="gdocs" {...iconProps} />
+                  </icon>
+                  <icon>
+                    <Icon name="gmail" {...iconProps} />
+                  </icon>
+                  <icon>
+                    <Icon name="github" {...iconProps} />
+                  </icon>
+                  <icon>
+                    <Icon name="gcalendar" {...iconProps} />
+                  </icon>
+                  <icon>
+                    <Icon name="confluence" {...iconProps} />
+                  </icon>
+                  <icon>
+                    <Icon name="jira" {...iconProps} />
+                  </icon>
+                  <icon>
+                    <Icon name="dropbox" {...iconProps} />
+                  </icon>
+                </icons>
+              </Half>
+              <div $$flex />
+            </Content>
+          </>
+        )}
       </Page>
     )
   }
@@ -645,17 +665,19 @@ class SectionNoCloud extends React.Component {
           zIndex: 1000,
         }}
       >
-        <WaveBanner
-          css={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 0,
-          }}
-          fill="#79bdd1"
-        />
+        <SVGToImage>
+          <WaveBanner
+            css={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 0,
+            }}
+            fill="#79bdd1"
+          />
+        </SVGToImage>
         <SectionContent css={{ flex: 1 }}>
           <Bauhaus
             showCircle
@@ -730,16 +752,16 @@ class VideoStore {
     })
   }
 
-  animateOrbit = react(
-    () => this.props.homeStore.visibleIndex,
-    index => {
-      this.run(Spring, {
-        from: { y: 0 },
-        to: { y: index * this.props.homeStore.sectionHeight },
-        config: config.slow,
-      })
-    },
-  )
+  // animateOrbit = react(
+  //   () => this.props.homeStore.visibleIndex,
+  //   index => {
+  //     this.run(Spring, {
+  //       from: { y: 0 },
+  //       to: { y: index * this.props.homeStore.sectionHeight },
+  //       config: config.slow,
+  //     })
+  //   },
+  // )
 }
 
 @view.attach('homeStore')
@@ -747,75 +769,53 @@ class VideoStore {
   store: VideoStore,
 })
 class Video extends React.Component {
-  render({ homeStore, store }) {
+  render({ homeStore }) {
     const { videoStopped, videoStopAt } = homeStore
     return (
-      <div
-        css={{
-          zIndex: 10,
-          pointerEvents: 'none',
-          position: 'absolute',
-          right: -50,
-          height: '100vh',
-          perspective: 2,
-          top: 0,
-          width: '50%',
-          ...(videoStopped && {
-            position: 'absolute',
-            transform: {
-              y: videoStopAt,
-            },
-          }),
-        }}
+      <ParallaxLayer
+        offset={0}
+        speed={-0.85}
+        scrollTop={videoStopped ? 1500 : false}
+        css={{ zIndex: 1000 }}
       >
-        <Keyframes native script={store.onKeyframes}>
-          {({ y }) => (
-            <animated.div
-              style={{
-                transform: y
-                  ? y.interpolate(y => `translate3d(0,${y}px,-1px) scale(1.5)`)
-                  : null,
+        <div
+          css={{
+            zIndex: 10,
+            pointerEvents: 'none',
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: '50%',
+          }}
+        >
+          <wrap
+            css={{
+              pointerEvents: 'all',
+              width: 1101 / 2,
+              height: 1240,
+              transform: {
+                x: 70,
+                y: '15%',
+                z: 0,
+              },
+            }}
+          >
+            <UI.TiltHoverGlow
+              restingPosition={[100, 100]}
+              tiltOptions={{ perspective: 1500 }}
+              css={{
+                borderRadius: 20,
+                boxShadow: [0, 0, 10, [0, 0, 0, 0.1]],
+              }}
+              glowProps={{
+                opacity: 0.5,
               }}
             >
-              <wrap
-                css={{
-                  pointerEvents: 'all',
-                  width: 1101 / 2,
-                  height: 1240,
-                  transform: {
-                    x: 20,
-                    y: '15%',
-                  },
-                }}
-              >
-                <UI.TiltHoverGlow
-                  restingPosition={[100, 100]}
-                  tiltOptions={{ perspective: 2000 }}
-                  css={{
-                    borderRadius: 20,
-                  }}
-                  glowProps={{
-                    opacity: 0.5,
-                  }}
-                >
-                  <video
-                    src={orbitVideo}
-                    autoPlay
-                    muted
-                    loop
-                    css={{
-                      width: 590,
-                      height: 1325,
-                      transform: { x: -21, y: -2 },
-                      marginBottom: -10,
-                    }}
-                  />
-                </UI.TiltHoverGlow>
-              </wrap>
-            </animated.div>
-          )}
-        </Keyframes>
-      </div>
+              <HomeImg />
+            </UI.TiltHoverGlow>
+          </wrap>
+        </div>
+      </ParallaxLayer>
     )
   }
 }
@@ -847,6 +847,7 @@ const objReduce = (obj, fn) =>
   homeStore: class VideoStore {
     visible = {}
     visibleIndex = 0
+    videoPlay = false
 
     get sectionHeight() {
       return this.props.sectionHeight
@@ -881,8 +882,7 @@ const objReduce = (obj, fn) =>
 
     onScroll = () => {
       clearTimeout(this.scrollTm)
-      this.video.pause()
-      this.isScrolling = true
+      this.videoPlay = false
       this.update()
     }
 
@@ -916,29 +916,27 @@ const objReduce = (obj, fn) =>
     updateVideo = _.debounce(() => {
       const { visible, wasVisible } = this
       if (visible.profile === 1) {
-        // go to point
         if (!wasVisible.profile === 1) {
-          this.video.currentTime = 0
+          this.videoPlay = 1
+          // this.video.currentTime = 0
         }
-        this.video.pause()
         return
       }
       if (visible.search === 1) {
         if (wasVisible.search === 1) {
-          this.video.currentTime = 5
+          this.videoPlay = 2
+          // this.video.currentTime = 5
         }
-        this.video.play()
         return
       }
       if (visible.header === 1) {
         if (!wasVisible.header === 1) {
-          this.video.currentTime = 0
+          this.videoPlay = 3
         }
-        this.video.play()
         return
       }
       // else
-      this.video.pause()
+      this.videoPlay = false
     }, 350)
   },
 })
@@ -965,10 +963,15 @@ export class HomeWrapper extends React.Component {
           <Media query={Constants.screen.large}>
             {isLarge => {
               const scrollTo = page => this.parallax.scrollTo(page)
-              const sectionProps = { isTall, isLarge, homeStore, scrollTo }
+              const sectionProps = {
+                isTall,
+                isLarge,
+                homeStore,
+                scrollTo,
+                sectionHeight,
+              }
               return (
                 <>
-                  <Video if={isLarge} />
                   <Parallax
                     ref={ref => (this.parallax = ref)}
                     scrollingElement={window}
@@ -977,19 +980,11 @@ export class HomeWrapper extends React.Component {
                     pageHeight={sectionHeight}
                     config={{ tension: 170, friction: 26 }}
                   >
-                    <UI.Theme
-                      theme={{
-                        background: bodyBg,
-                        color: bodyBg.darken(0.6).desaturate(0.5),
-                      }}
-                    >
-                      <>
-                        <Header {...sectionProps} white />
-                        <HomeHeader {...sectionProps} />
-                        <SectionSearch {...sectionProps} />
-                        <SectionProfiles {...sectionProps} />
-                      </>
-                    </UI.Theme>
+                    <Video if={isLarge} />
+                    <Header {...sectionProps} white />
+                    <HomeHeader {...sectionProps} />
+                    <SectionSearch {...sectionProps} />
+                    <SectionProfiles {...sectionProps} />
                   </Parallax>
                   <SectionNoCloud {...sectionProps} />
                   <footer
@@ -1018,10 +1013,17 @@ export class HomeWrapper extends React.Component {
 }
 
 export const HomePage = () => (
-  <WindowResize>
-    {() => {
-      const sectionHeight = Math.min(1250, Math.max(600, window.innerHeight))
-      return <HomeWrapper sectionHeight={sectionHeight} />
+  <UI.Theme
+    theme={{
+      background: bodyBg,
+      color: bodyBg.darken(0.6).desaturate(0.5),
     }}
-  </WindowResize>
+  >
+    <WindowResize>
+      {() => {
+        const sectionHeight = Math.min(1250, Math.max(600, window.innerHeight))
+        return <HomeWrapper sectionHeight={sectionHeight} />
+      }}
+    </WindowResize>
+  </UI.Theme>
 )

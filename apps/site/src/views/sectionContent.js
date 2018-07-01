@@ -1,58 +1,19 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import * as Constants from '~/constants'
-import { debounce } from 'lodash'
 
 @view
 class SectionContent extends React.Component {
-  state = {
-    resize: false,
-  }
-
-  componentDidMount() {
-    this.on(
-      window,
-      'resize',
-      debounce(() => {
-        this.setState({ resize: Math.random() })
-      }, 300),
-    )
-  }
-
   render({
     padded,
-    halfscreen,
-    fullscreen,
-    fullscreenFs,
-    fullscreenFixed,
     forwardRef,
     ...props
   }) {
-    const isSmall = window.innerWidth <= Constants.screen.small.maxWidth
-    let height = 'auto'
-    if (fullscreenFixed) {
-      height = Math.max(800, window.innerHeight)
-    }
-    if (halfscreen || fullscreen) {
-      height = Math.max(
-        isSmall || fullscreenFs ? 500 : 1000,
-        Math.min(Constants.sectionMaxHeight, window.innerHeight),
-      )
-    }
-    if (halfscreen) {
-      height = height / 2.3
-      height = Math.max(420, height)
-    }
-    const style = isSmall ? { minHeight: height } : { height }
     return (
       <section
         ref={forwardRef}
         $padVertical={padded}
         $padHorizontal={!!padded}
-        $halfscreen={halfscreen}
-        $fullscreen={fullscreen}
-        $fullscreenFixed={fullscreenFixed}
-        css={style}
         {...props}
       />
     )
@@ -76,13 +37,6 @@ class SectionContent extends React.Component {
         minWidth: 'auto',
         maxWidth: 'auto',
         padding: [0, '5%'],
-      },
-    },
-    halfscreen: {
-      flexFlow: 'row',
-      padding: [80 + 60, 0, 60],
-      [Constants.screen.smallQuery]: {
-        flexFlow: 'column',
       },
     },
     padVertical: padding => ({

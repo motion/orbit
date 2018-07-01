@@ -3,6 +3,8 @@ Platform
 ```
 npm i -g orbit
 orbit new
+orbit test
+orbit deploy
 ```
 
 ```

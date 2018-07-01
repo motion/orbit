@@ -403,8 +403,11 @@ export class Callout extends React.Component {
   }
 }
 
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+
 export const Glow = ({ below, style = {}, ...props }) => (
   <Media
+    if={!isSafari}
     query={Constants.screen.large}
     render={() => (
       <glow
@@ -414,11 +417,10 @@ export const Glow = ({ below, style = {}, ...props }) => (
           background: '#fff',
           ...style,
           filter: {
-            blur: 180,
+            blur: 200,
             ...style.filter,
           },
           transform: {
-            scale: 0.38,
             y: '-20%',
             ...style.transform,
           },

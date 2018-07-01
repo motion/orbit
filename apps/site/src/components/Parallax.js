@@ -48,7 +48,8 @@ export class ParallaxLayer extends React.PureComponent {
     }
   }
 
-  setPosition(height, scrollTop, immediate = false) {
+  setPosition(height, parentScrollTop, immediate = false) {
+    const scrollTop = this.props.scrollTop || parentScrollTop
     const targetScroll = Math.floor(this.props.offset) * height
     const offset = height * this.props.offset + targetScroll * this.props.speed
     const to = parseFloat(-(scrollTop * this.props.speed) + offset)
@@ -213,7 +214,7 @@ export class Parallax extends React.PureComponent {
   }
 
   onScroll = () => {
-    if (this.paused) {
+    if (this.props.paused) {
       return
     }
     const { horizontal } = this.props
@@ -279,6 +280,7 @@ export class Parallax extends React.PureComponent {
       className,
       children,
       horizontal,
+      showAbsolute,
     } = this.props
     return (
       <>
@@ -309,7 +311,10 @@ export class Parallax extends React.PureComponent {
             </div>
           )}
         </div>
-        <div style={{ height: this.props.pageHeight * pages }} />
+        <div
+          if={!showAbsolute}
+          style={{ height: this.props.pageHeight * pages }}
+        />
       </>
     )
   }

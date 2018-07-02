@@ -9,6 +9,7 @@ import Router from '~/router'
 export * from './section'
 
 const TITLE_FONT_FAMILY = '"Eesti Pro"'
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export const P = ({ size, titleFont, ...props }) => (
   <Media query={Constants.screen.small}>
@@ -402,8 +403,6 @@ export class Callout extends React.Component {
     },
   }
 }
-
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export const Glow = ({ below, style = {}, ...props }) => (
   <Media

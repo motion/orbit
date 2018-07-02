@@ -21,6 +21,7 @@ import homeImg from '~/../public/orbit.jpg'
 import searchImg from '~/../public/orbit-search.jpg'
 import avatarCardImg from '~/../public/javi.png'
 
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 const forwardRef = Component => {
   return React.forwardRef((props, ref) => (
     <Component {...props} forwardRef={ref} />
@@ -377,7 +378,7 @@ class HomeHeader extends React.Component {
                 left: 0,
                 right: 0,
                 background:
-                  'linear-gradient(-190deg, rgba(255,255,255,0.5), transparent)',
+                  'linear-gradient(-190deg, rgba(255,255,255,0.5), rgba(255,255,255,0))',
               }}
             />
             <Content id="home-header">
@@ -453,18 +454,20 @@ class SectionSearch extends React.Component {
       <Page
         offset={1}
         banner={waveColor}
-        titleProps={{
-          // seems opacity effect causes paints... shouldnt be bad test uncomment in fuutre
-          effects: {
-            opacity: x => {
-              const fadeAfter = 1.2
-              if (x < fadeAfter) {
-                return x * Math.log(x * 10)
-              }
-              return fadeAfter * 2 - x
+        titleProps={
+          !isSafari && {
+            // seems opacity effect causes paints... shouldnt be bad test uncomment in fuutre
+            effects: {
+              opacity: x => {
+                const fadeAfter = 1.2
+                if (x < fadeAfter) {
+                  return x * Math.log(x * 10)
+                }
+                return fadeAfter * 2 - x
+              },
             },
-          },
-        }}
+          }
+        }
         title={
           <Half>
             <SectionTitle
@@ -615,8 +618,13 @@ class SectionProfiles extends React.Component {
                   left: '-10%',
                   right: '-20%',
                   height: '50%',
-                  background: `linear-gradient(transparent, ${bodyBg} 70%)`,
+                  background: `linear-gradient(${bodyBg.alpha(
+                    0,
+                  )}, ${bodyBg} 70%)`,
                   zIndex: 100,
+                  transform: {
+                    z: 1000,
+                  },
                 }}
               />
               <img

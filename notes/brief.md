@@ -45,3 +45,14 @@ potential future pieces:
   - pin Jira ticket to the part of the page it happens on automatically
 - Apps: custom apps you can deploy with one click to everyone
 - Teams: control your team home page and knowledge base
+
+## acquisition targets
+
+- slack
+- dropbox
+- atlassian
+- workday
+- salesforce
+- apple
+- google
+- microsoft

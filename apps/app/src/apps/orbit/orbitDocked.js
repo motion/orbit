@@ -181,7 +181,7 @@ class OrbitDocked extends React.Component {
 }
 
 export default props => (
-  <UI.Theme name="grey">
+  <UI.Theme name="dark">
     <OrbitDocked {...props} />
   </UI.Theme>
 )

@@ -1,3 +1,7 @@
+#app {
+  overflow: hidden;
+}
+
 .parallaxLayer {
   pointer-events: none;
   position: relative;

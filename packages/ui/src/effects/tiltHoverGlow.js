@@ -29,11 +29,12 @@ export class TiltHoverGlow extends React.PureComponent {
     glowProps,
     ...props
   }) {
+    console.log('render me')
     return (
       <Tilt
         options={{
           max: 20,
-          perspective: 1000,
+          perspective: 2000,
           scale: 1,
           speed: 200,
           reverse: true,
@@ -42,7 +43,6 @@ export class TiltHoverGlow extends React.PureComponent {
         restingPosition={restingPosition}
       >
         <div
-          $tiltglow
           css={{
             cursor: 'default',
             width,

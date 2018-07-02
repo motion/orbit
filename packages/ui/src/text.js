@@ -86,7 +86,13 @@ const highlightText = ({
       final.push(part)
     }
   }
-  return final.join('')
+  const result = final.join('')
+  if (result.length) {
+    return result
+  }
+  return text.length < maxChars
+    ? text
+    : text.replace(/(\s{2,}|\n)/g, separator).slice(0, maxChars - 3) + '...'
 }
 
 const getTextProperties = props => {

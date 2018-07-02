@@ -403,8 +403,11 @@ export class Callout extends React.Component {
   }
 }
 
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+
 export const Glow = ({ below, style = {}, ...props }) => (
   <Media
+    if={!isSafari}
     query={Constants.screen.large}
     render={() => (
       <glow
@@ -414,11 +417,10 @@ export const Glow = ({ below, style = {}, ...props }) => (
           background: '#fff',
           ...style,
           filter: {
-            blur: 180,
+            blur: 200,
             ...style.filter,
           },
           transform: {
-            scale: 0.38,
             y: '-20%',
             ...style.transform,
           },
@@ -525,6 +527,9 @@ export const LinkSimple = ({ to, ...props }) => (
     active={Router.isActive(to)}
     href={to}
     onClick={Router.link(to)}
+    css={{
+      textDecoration: 'none',
+    }}
     {...props}
   />
 )
@@ -541,18 +546,31 @@ export const TopoBg = () => (
   />
 )
 
-import screenImg from '~/../public/home.jpg'
 export const HomeImg = props => (
-  <img
-    src={screenImg}
-    css={{
-      width: 1101 / 2,
-      height: 2016 / 2,
-      borderRadius: 17,
-      userSelect: 'none',
-    }}
-    {...props}
-  />
+  <>
+    <img
+      css={{
+        width: 1100 / 2,
+        height: 2014 / 2,
+        overflow: 'hidden',
+        borderRadius: 17,
+        userSelect: 'none',
+        border: [1, '#ddd'],
+      }}
+      {...props}
+    />
+    <border
+      css={{
+        position: 'absolute',
+        borderRadius: 17,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        border: [2, '#ddd'],
+      }}
+    />
+  </>
 )
 
 export const FeatureSubTitle = props => (

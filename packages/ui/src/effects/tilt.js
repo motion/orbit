@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
+import { isEqual } from 'lodash'
 
 const idFn = _ => _
 const defaultSettings = {
@@ -53,6 +54,16 @@ export class Tilt extends React.Component {
 
   componentDidMount() {
     this.element = findDOMNode(this)
+    this.updateRestingPosition()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.restingPosition, this.props.restingPosition)) {
+      this.updateRestingPosition()
+    }
+  }
+
+  updateRestingPosition = () => {
     if (this.props.restingPosition) {
       this.setTransition()
       setTimeout(() => {

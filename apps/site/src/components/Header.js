@@ -6,7 +6,6 @@ import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import * as UI from '@mcro/ui'
-import { Join } from '~/components/Join'
 
 @UI.injectTheme
 @view

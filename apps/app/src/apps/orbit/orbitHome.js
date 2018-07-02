@@ -77,7 +77,7 @@ class OrbitHomeStore {
         findType('slack', 'conversation', 4),
         findType('gdocs', 'document'),
         Person.findOne({ name: 'Andrew Hsu' }),
-        Person.findOne({ name: 'Javi Lasco' }),
+        Person.findOne({ name: 'Javi Bovee' }),
         findType('github', 'task', 1),
         findType('github', 'task', 2),
         findType('gmail', 'mail'),

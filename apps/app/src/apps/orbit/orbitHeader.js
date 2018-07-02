@@ -38,6 +38,14 @@ class HeaderStore {
   }
 }
 
+const Hl = view('span', {
+  display: 'inline',
+  background: '#C4C4F4',
+  padding: [3, 4],
+  margin: [-3, 0],
+  borderRadius: 6,
+})
+
 @UI.injectTheme
 @view.attach('orbitStore', 'appStore')
 @view({
@@ -146,6 +154,7 @@ export class OrbitHeader extends React.Component {
       padding: [20, 10, 20, 30],
       // height: 54,
       border: 'none',
+      display: 'block',
     },
     pinnedIcon: {
       position: 'relative',

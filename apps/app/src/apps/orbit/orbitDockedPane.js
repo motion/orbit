@@ -17,6 +17,9 @@ class DockedPaneStore {
 
   setOverflow = () => {
     const node = this.paneRef.current
+    if (!node) {
+      return
+    }
     const lastNode = _.last(Array.from(node.children))
     const innerHeight = lastNode.offsetTop + lastNode.clientHeight
     const scrolledTo = node.scrollTop + node.clientHeight

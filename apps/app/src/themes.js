@@ -87,7 +87,7 @@ const Themes = {
       background: color([255, 255, 255, 0.01]),
     },
     selected: {
-      background: color([255, 255, 255, 0.02]),
+      background: color([10, 10, 10]),
     },
     active: {
       background: color([255, 255, 255, 0.03]),

@@ -75,7 +75,7 @@ export class OrbitHeader extends React.Component {
             size={20}
             color={theme.base.color.alpha(0.2)}
           />
-          <div
+          <input
             value={orbitStore.query}
             size={1.25}
             $input
@@ -87,9 +87,7 @@ export class OrbitHeader extends React.Component {
             css={{
               color: theme.base.color.alpha(0.8),
             }}
-          >
-            <Hl>plan</Hl> with <Hl>andrew</Hl>
-          </div>
+          />
           <inputLn />
         </title>
         <after if={after}>{after}</after>

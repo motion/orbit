@@ -91,7 +91,7 @@ class OrbitDocked extends React.Component {
       position: 'absolute',
       top: 10,
       right: 10,
-      bottom: 10, // 100
+      bottom: 100,
       borderRadius,
       zIndex: 2,
       flex: 1,
@@ -181,7 +181,7 @@ class OrbitDocked extends React.Component {
 }
 
 export default props => (
-  <UI.Theme name="grey">
+  <UI.Theme name="dark">
     <OrbitDocked {...props} />
   </UI.Theme>
 )

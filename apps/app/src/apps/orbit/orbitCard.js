@@ -416,7 +416,7 @@ export class OrbitCard extends React.Component {
           border,
           borderRadius,
           // border: [1, '#ddd'],
-          background: '#fff',
+          background: theme.selected.background,
           boxShadow: [[[0, 2, 3, [0, 0, 0, 0.03]]]],
         }
       } else {
@@ -424,7 +424,7 @@ export class OrbitCard extends React.Component {
           ...card,
           border,
           borderRadius,
-          background: '#fff',
+          background: theme.selected.background,
           boxShadow: [[0, 2, 3, [0, 0, 0, 0.03]]],
         }
       }

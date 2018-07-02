@@ -3,6 +3,12 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as _ from 'lodash'
 
+const shortName = name => {
+  const names = name.split(' ')
+  const lastInitial = names[1] ? ` ${_.capitalize(names[1])[0]}.` : ''
+  return `${_.capitalize(names[0])}${lastInitial}`
+}
+
 @view.ui
 export class PeopleRow extends React.Component {
   render({ people }) {
@@ -27,7 +33,7 @@ export class PeopleRow extends React.Component {
           <UI.Text size={0.95} alpha={0.5}>
             {people.map((person, i) => (
               <span $person key={i}>
-                {_.capitalize(person.name)}
+                {shortName(person.name)}
               </span>
             ))}
           </UI.Text>

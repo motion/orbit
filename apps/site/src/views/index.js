@@ -546,18 +546,33 @@ export const TopoBg = () => (
   />
 )
 
-import screenImg from '~/../public/home.jpg'
+import screenImg from '~/../public/orbit.jpg'
 export const HomeImg = props => (
-  <img
-    src={screenImg}
-    css={{
-      width: 1101 / 2,
-      height: 2016 / 2,
-      borderRadius: 17,
-      userSelect: 'none',
-    }}
-    {...props}
-  />
+  <>
+    <img
+      src={screenImg}
+      css={{
+        width: 1100 / 2,
+        height: 2014 / 2,
+        overflow: 'hidden',
+        borderRadius: 17,
+        userSelect: 'none',
+        border: [1, '#ddd'],
+      }}
+      {...props}
+    />
+    <border
+      css={{
+        position: 'absolute',
+        borderRadius: 17,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        border: [2, '#ddd'],
+      }}
+    />
+  </>
 )
 
 export const FeatureSubTitle = props => (

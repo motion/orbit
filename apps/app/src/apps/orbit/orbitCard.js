@@ -258,6 +258,17 @@ export class OrbitCard extends React.Component {
                 $previewText
               >
                 {preview
+                  // .replace('feeling sick /', 'feeling better need actor')
+                  // .replace('site remove site', 'site update logo fix')
+                  // .replace(
+                  //   'day stack generally set',
+                  //   'good day setup stack generally familiar',
+                  // )
+                  // .replace('bit found', 'longer than expected found it')
+                  // .replace(
+                  //   'happening database',
+                  //   'happening twice only database',
+                  // )
                   .slice(0, 220)
                   .split(' ')
                   .map((word, i) => (

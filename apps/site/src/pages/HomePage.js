@@ -288,7 +288,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      The search platform for anything in your cloud or behind your firewall.
+      The search platform for everything in your cloud and behind your firewall.
       Installed in a minute with{' '}
       <ToolTip onClick={() => scrollTo(3)}>total&nbsp;privacy</ToolTip>.
     </SectionSubTitle>
@@ -801,8 +801,8 @@ class Video extends React.Component {
           <wrap
             css={{
               pointerEvents: 'all',
-              width: 1101 / 2,
-              height: 1240,
+              width: 1100 / 2,
+              height: 2014 / 2,
               transform: {
                 x: 70,
                 y: '15%',
@@ -815,8 +815,8 @@ class Video extends React.Component {
               restingPosition={[100, 100]}
               tiltOptions={{ perspective: 1500 }}
               css={{
-                borderRadius: 16,
-                boxShadow: [[15, 10, 80, [0, 0, 0, 0.2]]],
+                borderRadius: 17,
+                boxShadow: [[12, 23, 80, [0, 0, 0, 0.15]]],
               }}
               glowProps={{
                 opacity: 0.5,

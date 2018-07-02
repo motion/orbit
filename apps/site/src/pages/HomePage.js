@@ -4,7 +4,8 @@ import * as UI from '@mcro/ui'
 import { Header, Footer } from '~/components'
 import SectionContent from '~/views/sectionContent'
 import Router from '~/router'
-import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo, Glow } from '~/views'
+import * as View from '~/views'
+import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo } from '~/views'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import { scrollTo } from '~/helpers'
@@ -436,7 +437,7 @@ class HomeHeader extends React.Component {
 class SectionSearch extends React.Component {
   render({ isTall, isLarge, sectionHeight }) {
     const iconProps = {
-      size: isLarge ? 55 : 40,
+      size: isLarge ? 50 : 40,
     }
     return (
       <Page
@@ -469,12 +470,18 @@ class SectionSearch extends React.Component {
               <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
                 on-device NLP
               </ToolTip>{' '}
-              means your team can be searching smarter, today.
+              means your internal search platform is really yours.
             </SectionP>
             <VertSpace />
             <SectionSubP>
               Search cloud services like Slack and Google Drive just as easily
               as internal APIs, databases and files.
+            </SectionSubP>
+            <VertSpace />
+            <SectionSubP size={1.3} alpha={0.8}>
+              <View.LinkSimple to="/about">
+                Learn more about how it works.
+              </View.LinkSimple>
             </SectionSubP>
             <VertSpace />
             <VertSpace />
@@ -585,8 +592,9 @@ class SectionProfiles extends React.Component {
             </SectionTitleSmall>
             <VertSpace />
             <SectionSubP color="#111" alpha={0.5}>
-              A beautiful profile for all your teammates. See recent
-              collaborations, expert topics, relevant activity and more.
+              Beautiful profiles to keep everyone in sync. See recent
+              collaborations, expert topics, and relevant activity from across
+              your cloud.
             </SectionSubP>
             <VertSpace />
             <VertSpace />

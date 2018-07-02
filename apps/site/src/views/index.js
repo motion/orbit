@@ -527,6 +527,9 @@ export const LinkSimple = ({ to, ...props }) => (
     active={Router.isActive(to)}
     href={to}
     onClick={Router.link(to)}
+    css={{
+      textDecoration: 'none',
+    }}
     {...props}
   />
 )

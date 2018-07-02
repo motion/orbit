@@ -473,8 +473,8 @@ class SectionSearch extends React.Component {
             </SectionTitle>
             <VertSpace />
             <SectionP>
-              Don't expose sensitive data. The power of on-device NLP means your
-              internal search platform is actually internal.
+              Don't trust all your data to us. The power of on-device NLP means
+              your internal search platform is actually internal.
             </SectionP>
             <VertSpace />
             <SectionSubP>

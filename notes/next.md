@@ -1,17 +1,3 @@
-- make willChange actually only do before scroll
-- no pointer events on parllax layer just below by default
-
-* record simple search video
-  - border less strong
-  - x in y with nice coloring
-  - see if can do app isolated record
-  - debounce results a bit more
-  - run webpack in prod mode
-  - github preview show latest comment
-  - fix gmail sync?
-  - practice search a few times / find good query
-  - cut video and embed
-
 # high level
 
 ## Settings
@@ -81,7 +67,7 @@ bugs:
 
 - SQLITE_BUSY: database is locked
 
-2.  Search
+1.  Search
 
 - shows summarized and nice meta info for things
 - type something else - is fast and fluid

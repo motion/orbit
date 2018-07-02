@@ -36,7 +36,7 @@ export class Footer extends React.Component {
               <Title color="#AE2E73" size={3} css={{ marginBottom: 20 }}>
                 Keep everyone in sync, without overhead.
               </Title>
-              <div css={{ margin: [40, 0], transform: { scale: 1.2 } }}>
+              <div css={{ margin: [40, 40], transform: { scale: 1.2 } }}>
                 <Join size={2} />
               </div>
             </callToAction>

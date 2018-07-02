@@ -274,7 +274,7 @@ const VertSpace = () => (
 )
 
 const SectionSubTitle = props => (
-  <P
+  <Title
     size={1.9}
     sizeLineHeight={1.1}
     titleFont
@@ -388,10 +388,13 @@ class HomeHeader extends React.Component {
                 query={Constants.screen.small}
                 render={() => (
                   <>
+                    <div $$flex={1.2} />
+                    <inner>
+                      <Pitch scrollTo={scrollTo} />
+                    </inner>
                     <div $$flex />
-                    <Pitch scrollTo={scrollTo} />
-                    <div $$flex={2.5} />
                     <orbit
+                      if={false}
                       css={{
                         zIndex: -1,
                         position: 'absolute',
@@ -473,8 +476,8 @@ class SectionSearch extends React.Component {
             </SectionTitle>
             <VertSpace />
             <SectionP>
-              Don't trust all your data to us. The power of on-device NLP means
-              your internal search platform is actually internal.
+              The power of on-device NLP means your internal search is actually
+              internal.
             </SectionP>
             <VertSpace />
             <SectionSubP>
@@ -585,9 +588,13 @@ class SectionProfiles extends React.Component {
         <SectionContent id="home-profiles" css={{ flex: 1 }}>
           <inner
             className="profiles"
-            css={isLarge && { width: '45%', margin: ['6%', 0, 0] }}
+            css={
+              isLarge
+                ? { width: '45%', margin: ['auto', 0] }
+                : { margin: ['auto', 0] }
+            }
           >
-            <SectionTitle size={2.5}>Give your team a home</SectionTitle>
+            <SectionTitle>Give your team a home</SectionTitle>
             <VertSpace />
             <SectionSubTitle>
               Stay better in sync with automatic profiles that show relevant
@@ -600,39 +607,40 @@ class SectionProfiles extends React.Component {
             </SectionSubP>
             <VertSpace />
             <VertSpace />
+            <wrap css={{ position: 'relative' }}>
+              <fadeBottom
+                css={{
+                  position: 'absolute',
+                  bottom: '-10%',
+                  left: '-10%',
+                  right: '-20%',
+                  height: '50%',
+                  background: `linear-gradient(transparent, ${bodyBg} 70%)`,
+                  zIndex: 100,
+                }}
+              />
+              <img
+                src={profileImg}
+                css={{
+                  width: '40vw',
+                  minWidth: 400,
+                  maxWidth: 1100 / 2,
+                  height: 'auto',
+                  borderRadius: 10,
+                  overflow: 'hidden',
+                  boxShadow: '0 0 60px rgba(0,0,0,0.05)',
+                  transform: {
+                    y: 0,
+                    x: 0,
+                    perspective: 1000,
+                    rotateY: '3deg',
+                    rotateX: '4deg',
+                    rotateZ: '-1deg',
+                  },
+                }}
+              />
+            </wrap>
           </inner>
-          <div $$flex />
-          <wrap css={{ position: 'absolute', bottom: '2%', right: '50%' }}>
-            <fadeBottom
-              css={{
-                position: 'absolute',
-                bottom: '-10%',
-                left: '-10%',
-                right: '-10%',
-                height: '50%',
-                background: `linear-gradient(transparent, ${bodyBg} 70%)`,
-                zIndex: 100,
-              }}
-            />
-            <img
-              src={profileImg}
-              css={{
-                width: 1100 / 2,
-                height: 'auto',
-                borderRadius: 12,
-                overflow: 'hidden',
-                boxShadow: '0 0 60px rgba(0,0,0,0.05)',
-                transform: {
-                  y: 0,
-                  x: 0,
-                  perspective: 1000,
-                  rotateY: '3deg',
-                  rotateX: '4deg',
-                  rotateZ: '-1deg',
-                },
-              }}
-            />
-          </wrap>
         </SectionContent>
       </Page>
     )
@@ -673,7 +681,8 @@ class SectionNoCloud extends React.Component {
     return (
       <section
         css={{
-          height: homeStore.sectionHeight,
+          minHeight: homeStore.sectionHeight,
+          padding: [100, 0],
           position: 'relative',
           zIndex: 1000,
         }}
@@ -708,29 +717,32 @@ class SectionNoCloud extends React.Component {
             <inner css={isLarge && { width: '46%', margin: ['auto', 0] }}>
               <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
               <VertSpace />
-              <SectionSubTitle color="#fff" alpha={0.8}>
+              <SectionSubTitle
+                color="#fff"
+                alpha={0.8}
+                size={3.5}
+                fontWeight={300}
+              >
                 No servers and no setup means absolute data security,
                 sweat-free.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP>
-                Orbit is a new type of internal tool that keeps your data
-                completely on-device. It's a powerful platform for internal
-                knowledge, entirely behind your firewall.
+                Orbit keeps your data completely on-device but gives you the
+                power to integrate with any cloud service. It's a powerful
+                platform for internal knowledge that lives behind your firewall.
               </SectionSubP>
               <VertSpace />
               <SectionSubP if={isLarge}>
-                We've rethought the intranet from the ground up. It starts by
-                putting users and privacy first.
+                It's not just security but speed. Custom integrations are
+                painless when you can deploy them instantly to any team, with no
+                risk.
               </SectionSubP>
               <VertSpace />
               <VertSpace />
               <space if={false} css={{ margin: [0, 'auto'] }}>
                 <SectionSubP size={3}>🙅‍ ☁️ = 🙅‍♂️ 😅</SectionSubP>
               </space>
-              {/* <Bauhaus showCircle showTriangle showSquare /> */}
-              <VertSpace />
-              <VertSpace />
             </inner>
             <inner css={isLarge && { width: '38%', margin: ['auto', 0] }}>
               <Card icon="lock" title="Complete Security">
@@ -782,7 +794,11 @@ class VideoStore {
 class Video extends React.Component {
   render({ homeStore }) {
     const { orbitStopAt, lockedIndex, lastLockedIndex } = homeStore
-    const restingPosition = [[100, 100], [1200, 100], [200, 700]][lockedIndex]
+    const restingIndex = lockedIndex === -1 ? lastLockedIndex : lockedIndex
+    const restingPosition = [[100, 100], [window.innerWidth, 100], [200, 700]][
+      restingIndex
+    ]
+    console.log('lockedIndex', lockedIndex)
     const imgProps = {
       position: 'absolute',
       top: 0,
@@ -793,7 +809,7 @@ class Video extends React.Component {
       <ParallaxLayer
         className="parallaxLayer"
         offset={0}
-        speed={-0.9}
+        speed={-1}
         scrollTop={typeof orbitStopAt !== 'number' ? false : orbitStopAt}
         css={{ zIndex: 1000 }}
       >
@@ -825,7 +841,9 @@ class Video extends React.Component {
               tiltOptions={{ perspective: 1500 }}
               css={{
                 borderRadius: 17,
-                boxShadow: [[12, 23, 80, [0, 0, 0, 0.15]]],
+                boxShadow: [
+                  [12 * (restingIndex === 1 ? -1 : 1), 23, 80, [0, 0, 0, 0.15]],
+                ],
               }}
               glowProps={{
                 opacity: 0.5,
@@ -951,11 +969,11 @@ const notNeg = x => (x < 0 ? 0 : x)
         lockedIndex = lastIndex
       }
       // free scroll
-      if (lockedIndex === -1 || lockedIndex === 0) {
+      if (lockedIndex === -1) {
         return false
       }
       // pin orbit to section
-      return this.nodeOffsets[lockedIndex] + 50
+      return this.nodeOffsets[lockedIndex]
     }
 
     get video() {

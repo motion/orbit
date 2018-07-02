@@ -28,10 +28,12 @@ export const mainLight = UI.color(colorMain)
   .lighten(0.65)
   .hex()
 
+const largeSize = smallSize - 1
 export const screen = {
   smallQuery: `@media (max-width: ${smallSize}px)`,
+  largeQuery: `@media (max-width: ${largeSize}px)`,
   small: { maxWidth: smallSize },
-  large: { minWidth: smallSize - 1 },
+  large: { minWidth: largeSize },
   medium: { maxWidth: smallSize * 1.1 },
   tall: { minHeight: sectionMaxHeight },
 }

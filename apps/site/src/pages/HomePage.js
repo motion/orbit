@@ -960,7 +960,7 @@ export class HomeWrapper extends React.Component {
                   </Parallax>
                   <SectionNoCloud {...sectionProps} />
                   <footer
-                    css={{ position: 'relative', zIndex: 10, marginTop: 50 }}
+                    css={{ position: 'relative', zIndex: 999, marginTop: 50 }}
                   >
                     <fade
                       css={{
@@ -969,7 +969,7 @@ export class HomeWrapper extends React.Component {
                         left: 0,
                         height: 500,
                         right: 0,
-                        background: '#fff',
+                        background: bodyBg,
                       }}
                     />
                     <Footer />

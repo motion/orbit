@@ -731,14 +731,14 @@ class SectionNoCloud extends React.Component {
               <VertSpace />
             </inner>
             <inner css={isLarge && { width: '38%', margin: ['auto', 0] }}>
-              <Card icon="lock" title="Secure">
+              <Card icon="lock" title="Complete Security">
                 Your data never leaves your firewall.
               </Card>
-              <Card icon="userrun" title="Instant">
+              <Card icon="userrun" title="Instant Setup">
                 Download to setup in just a couple minutes.
               </Card>
-              <Card icon="business_plug" title="Extendable">
-                One-click deploy custom private apps.
+              <Card icon="business_plug" title="Your Control">
+                One-click to deploy custom private apps.
               </Card>
             </inner>
           </div>

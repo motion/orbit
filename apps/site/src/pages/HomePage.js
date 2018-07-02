@@ -18,6 +18,8 @@ import { Icon } from '~/views/icon'
 import * as _ from 'lodash'
 import { Spring } from 'react-spring'
 import { SVGToImage } from '~/views/svgToImage'
+import homeImg from '~/../public/orbit.jpg'
+import searchImg from '~/../public/orbit-search.jpg'
 
 const forwardRef = Component => {
   return React.forwardRef((props, ref) => (
@@ -60,8 +62,6 @@ const SectionTitle = props => (
     {...props}
   />
 )
-
-const SectionTitleSmall = props => <SectionTitle size={3.1} {...props} />
 
 const SectionP = props => (
   <P
@@ -193,7 +193,7 @@ class Page extends React.Component {
       />
     )
     return (
-      <React.Fragment>
+      <>
         <ParallaxLayer
           if={banner}
           className="parallaxLayer banner"
@@ -235,7 +235,7 @@ class Page extends React.Component {
         ) : (
           <Content>{children}</Content>
         )}
-      </React.Fragment>
+      </>
     )
   }
 }
@@ -394,7 +394,7 @@ class HomeHeader extends React.Component {
                           opacity: 0.5,
                         }}
                       >
-                        <HomeImg />
+                        <HomeImg src={homeImg} />
                       </UI.TiltHoverGlow>
                     </orbit>
                   </>
@@ -463,12 +463,12 @@ class SectionSearch extends React.Component {
               <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
                 on-device NLP
               </ToolTip>{' '}
-              means your internal search platform is really yours.
+              means your internal search platform is really internal.
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              Search cloud services like Slack and Google Drive just as easily
-              as internal APIs, databases and files.
+              Search cloud services like Slack and Google Drive to internal APIs
+              and databases with peace of mind.
             </SectionSubP>
             <VertSpace />
             <SectionSubP size={1.3} alpha={0.8}>
@@ -580,7 +580,7 @@ class SectionProfiles extends React.Component {
             className="profiles"
             css={isLarge && { width: '45%', margin: ['6%', 0, 0] }}
           >
-            <SectionTitle size={3}>Smart team sync</SectionTitle>
+            <SectionTitle size={2.5}>Give your team a home</SectionTitle>
             <VertSpace />
             <SectionSubP color="#111" alpha={0.5}>
               Beautiful profiles for a clearer day to day. See&nbsp;recent
@@ -753,7 +753,7 @@ class VideoStore {
   }
 
   // animateOrbit = react(
-  //   () => this.props.homeStore.visibleIndex,
+  //   () => this.props.homeStore.lockedIndex,
   //   index => {
   //     this.run(Spring, {
   //       from: { y: 0 },
@@ -770,7 +770,14 @@ class VideoStore {
 })
 class Video extends React.Component {
   render({ homeStore }) {
-    const { orbitStopAt } = homeStore
+    const { orbitStopAt, lockedIndex, lastLockedIndex } = homeStore
+    const restingPosition = [[100, 100], [1200, 100], [200, 800]][lockedIndex]
+    const imgProps = {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      transition: 'opacity ease-in 500ms',
+    }
     return (
       <ParallaxLayer
         className="parallaxLayer"
@@ -803,7 +810,7 @@ class Video extends React.Component {
           >
             <UI.TiltHoverGlow
               hideShadow
-              restingPosition={[100, 100]}
+              restingPosition={restingPosition}
               tiltOptions={{ perspective: 1500 }}
               css={{
                 borderRadius: 17,
@@ -813,7 +820,37 @@ class Video extends React.Component {
                 opacity: 0.5,
               }}
             >
-              <HomeImg />
+              <heightEnsure
+                css={{
+                  width: 1100 / 2,
+                  height: 2014 / 2,
+                  background: '#F3F3F3',
+                }}
+              />
+              <HomeImg
+                src={homeImg}
+                css={{
+                  ...imgProps,
+                  zIndex: 3,
+                  opacity: lastLockedIndex === 0 ? 1 : 0,
+                }}
+              />
+              <HomeImg
+                src={searchImg}
+                css={{
+                  ...imgProps,
+                  zIndex: 2,
+                  opacity: lastLockedIndex === 1 ? 1 : 0,
+                }}
+              />
+              <HomeImg
+                src={homeImg}
+                css={{
+                  ...imgProps,
+                  zIndex: 1,
+                  opacity: lastLockedIndex === 2 ? 1 : 0,
+                }}
+              />
             </UI.TiltHoverGlow>
           </wrap>
         </div>
@@ -822,7 +859,7 @@ class Video extends React.Component {
   }
 }
 
-const visiblePosition = (node, pct = 0.65) => {
+const lockedPosition = (node, pct = 0.7) => {
   const { y } = node.getBoundingClientRect()
   const max = node.clientHeight - node.clientHeight * pct
   // active
@@ -845,11 +882,13 @@ const visiblePosition = (node, pct = 0.65) => {
 //     {},
 //   )
 
+const notNeg = x => (x < 0 ? 0 : x)
+
 @view.provide({
   homeStore: class VideoStore {
     nodes = []
     nodeOffsets = []
-    visible = []
+    locked = []
     scrollTop = document.documentElement.scrollTop
 
     get sectionHeight() {
@@ -858,19 +897,31 @@ const visiblePosition = (node, pct = 0.65) => {
 
     orbitStopAfter = null
 
+    get lastLockedIndex() {
+      return (
+        notNeg(_.lastIndexOf(this.locked, 1)) ||
+        notNeg(_.lastIndexOf(this.locked, 2)) ||
+        0
+      )
+    }
+
+    get lockedIndex() {
+      return this.locked.indexOf(1) || 0
+    }
+
     get orbitStopAt() {
-      let visibleIndex = this.visible.indexOf(1)
-      const lastIndex = this.visible.length - 1
+      let { lockedIndex } = this
+      const lastIndex = this.locked.length - 1
       // stop scrolling after section 2
-      if (this.visible[lastIndex] === 2) {
-        visibleIndex = lastIndex
+      if (this.locked[lastIndex] === 2) {
+        lockedIndex = lastIndex
       }
       // free scroll
-      if (visibleIndex === -1 || visibleIndex === 0) {
+      if (lockedIndex === -1 || lockedIndex === 0) {
         return false
       }
       // pin orbit to section
-      return this.nodeOffsets[visibleIndex] - this.sectionHeight * 0.12
+      return this.nodeOffsets[lockedIndex] - this.sectionHeight * 0.12
     }
 
     get video() {
@@ -906,9 +957,8 @@ const visiblePosition = (node, pct = 0.65) => {
     }, 64)
 
     updatePosition = () => {
-      this.wasVisible = this.visible
       this.scrollTop = document.documentElement.scrollTop
-      this.visible = this.nodes.map(x => visiblePosition(x))
+      this.locked = this.nodes.map(x => lockedPosition(x))
     }
   },
 })

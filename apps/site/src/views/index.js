@@ -546,11 +546,9 @@ export const TopoBg = () => (
   />
 )
 
-import screenImg from '~/../public/orbit.jpg'
 export const HomeImg = props => (
   <>
     <img
-      src={screenImg}
       css={{
         width: 1100 / 2,
         height: 2014 / 2,

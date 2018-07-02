@@ -170,7 +170,6 @@ class Page extends React.Component {
     title,
     titleProps,
     children,
-    childrenProps,
     background,
     backgroundProps,
     banner,
@@ -179,6 +178,7 @@ class Page extends React.Component {
     const baseZIndex = zIndex
     const Parallax = ({ zIndex = 0, ...props }) => (
       <ParallaxLayer
+        className="parallaxLayer"
         offset={offset}
         speed={0.2}
         css={{ zIndex: zIndex + baseZIndex }}
@@ -392,6 +392,7 @@ class HomeHeader extends React.Component {
                         transform: { scale: 0.6 },
                       }}
                     >
+                      {/* small */}
                       <UI.TiltHoverGlow
                         restingPosition={[100, 100]}
                         glowProps={{
@@ -483,12 +484,12 @@ class SectionSearch extends React.Component {
       >
         {({ Parallax, Content }) => (
           <>
-            <Parallax speed={0.3}>
+            <Parallax speed={0.3} zIndex={-1}>
               <Bauhaus
                 showTriangle
                 css={{
                   transformOrigin: 'top left',
-                  transform: { scale: 0.4, y: -sectionHeight / 2, x: '20%' },
+                  transform: { scale: 0.4, y: -sectionHeight * 0.75, x: '0%' },
                   opacity: 0.1,
                 }}
               />
@@ -770,12 +771,13 @@ class VideoStore {
 })
 class Video extends React.Component {
   render({ homeStore }) {
-    const { videoStopped, videoStopAt } = homeStore
+    const { orbitStopAt } = homeStore
     return (
       <ParallaxLayer
+        className="parallaxLayer"
         offset={0}
-        speed={-0.85}
-        scrollTop={videoStopped ? 1500 : false}
+        speed={-0.9}
+        scrollTop={typeof orbitStopAt !== 'number' ? false : orbitStopAt}
         css={{ zIndex: 1000 }}
       >
         <div
@@ -801,11 +803,12 @@ class Video extends React.Component {
             }}
           >
             <UI.TiltHoverGlow
+              hideShadow
               restingPosition={[100, 100]}
               tiltOptions={{ perspective: 1500 }}
               css={{
-                borderRadius: 20,
-                boxShadow: [0, 0, 10, [0, 0, 0, 0.1]],
+                borderRadius: 16,
+                boxShadow: [[15, 10, 80, [0, 0, 0, 0.2]]],
               }}
               glowProps={{
                 opacity: 0.5,
@@ -834,36 +837,40 @@ const visiblePosition = (node, pct = 0.8) => {
   return 0
 }
 
-const objReduce = (obj, fn) =>
-  Object.keys(obj).reduce(
-    (acc, key) => ({
-      ...acc,
-      [key]: fn(obj[key]),
-    }),
-    {},
-  )
+// const objMap = (obj, fn) =>
+//   Object.keys(obj).reduce(
+//     (acc, key) => ({
+//       ...acc,
+//       [key]: fn(obj[key]),
+//     }),
+//     {},
+//   )
 
 @view.provide({
   homeStore: class VideoStore {
-    visible = {}
-    visibleIndex = 0
-    videoPlay = false
+    nodes = []
+    nodeOffsets = []
+    visible = []
+    scrollTop = document.documentElement.scrollTop
 
     get sectionHeight() {
       return this.props.sectionHeight
     }
 
-    videoStopped = false
-    videoStopAt = null
+    orbitStopAfter = null
 
-    get videoOffsetY() {
-      if (this.videoStopped || this.visible.profile) {
-        return -200
+    get orbitStopAt() {
+      // stop after point
+      if (this.scrollTop >= this.orbitStopAfter) {
+        return this.orbitStopAfter
       }
-      if (this.visible.search) {
-        return -100
+      const visibleIndex = this.visible.indexOf(1)
+      // free scroll
+      if (visibleIndex === -1 || visibleIndex === 0) {
+        return false
       }
-      return 0
+      // pin orbit to section
+      return this.nodeOffsets[visibleIndex] - this.sectionHeight * 0.12
     }
 
     get video() {
@@ -872,72 +879,37 @@ const objReduce = (obj, fn) =>
 
     didMount() {
       setTimeout(() => {
+        this.nodes = [
+          document.querySelector('#home-header'),
+          document.querySelector('#home-search'),
+          document.querySelector('#home-profiles'),
+        ]
+        this.nodeOffsets = this.nodes.map(node => {
+          return (
+            document.documentElement.scrollTop + node.getBoundingClientRect().y
+          )
+        })
         const { offsetTop } = document.querySelector(
           '#home-profiles',
         ).parentNode
-        // const { sectionHeight } = this
-        this.videoStopAt = offsetTop
+        this.orbitStopAfter = offsetTop
+        this.updatePosition()
       })
     }
 
     onScroll = () => {
-      clearTimeout(this.scrollTm)
-      this.videoPlay = false
       this.update()
     }
 
     update = _.throttle(() => {
-      const nodes = {
-        header: document.querySelector('#home-header'),
-        search: document.querySelector('#home-search'),
-        profile: document.querySelector('#home-profiles'),
-      }
-      if (document.documentElement.scrollTop >= this.videoStopAt) {
-        this.videoStopped = true
-      } else {
-        this.videoStopped = false
-      }
-      this.updatePosition(nodes)
-      this.updateVideo()
+      this.updatePosition()
     }, 64)
 
-    updatePosition = nodes => {
+    updatePosition = () => {
       this.wasVisible = this.visible
-      this.visible = objReduce(nodes, visiblePosition)
-      if (this.visible.header) {
-        this.visibleIndex = 0
-      } else if (this.visible.search) {
-        this.visibleIndex = 1
-      } else if (this.visible.profile) {
-        this.visibleIndex = 2
-      }
+      this.scrollTop = document.documentElement.scrollTop
+      this.visible = this.nodes.map(x => visiblePosition(x))
     }
-
-    updateVideo = _.debounce(() => {
-      const { visible, wasVisible } = this
-      if (visible.profile === 1) {
-        if (!wasVisible.profile === 1) {
-          this.videoPlay = 1
-          // this.video.currentTime = 0
-        }
-        return
-      }
-      if (visible.search === 1) {
-        if (wasVisible.search === 1) {
-          this.videoPlay = 2
-          // this.video.currentTime = 5
-        }
-        return
-      }
-      if (visible.header === 1) {
-        if (!wasVisible.header === 1) {
-          this.videoPlay = 3
-        }
-        return
-      }
-      // else
-      this.videoPlay = false
-    }, 350)
   },
 })
 @view

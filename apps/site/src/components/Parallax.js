@@ -49,7 +49,10 @@ export class ParallaxLayer extends React.PureComponent {
   }
 
   setPosition(height, parentScrollTop, immediate = false) {
-    const scrollTop = this.props.scrollTop || parentScrollTop
+    const scrollTop =
+      typeof this.props.scrollTop === 'number'
+        ? this.props.scrollTop
+        : parentScrollTop
     const targetScroll = Math.floor(this.props.offset) * height
     const offset = height * this.props.offset + targetScroll * this.props.speed
     const to = parseFloat(-(scrollTop * this.props.speed) + offset)

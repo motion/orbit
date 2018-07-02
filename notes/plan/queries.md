@@ -13,7 +13,7 @@ export const lateJobs = extraOptions => {
 // @mcro/queries/index.ts
 
 ```ts
-export const Jobs = new Jobs()
+export * as Jobs from './jobs'
 ```
 
 // in the app...

@@ -75,6 +75,7 @@ class OrbitQuickItem extends React.Component {
 @view
 export class OrbitQuickSearch extends React.Component {
   render({ appStore }) {
+    return null
     console.log('quick search it up', appStore.quickSearchResults)
     return (
       <quickSearch>

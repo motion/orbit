@@ -74,7 +74,7 @@ export default class GoogleDriveSync {
       identifier: info.id,
       type: 'document',
       title: name,
-      body: text,
+      body: text || 'empty',
       data: {
         ...data,
         // storing too much for now just to have flexibility

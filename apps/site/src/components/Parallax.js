@@ -110,12 +110,13 @@ export class ParallaxLayer extends React.PureComponent {
       factor,
       className,
       effects,
+      horizontal,
       ...props
     } = this.props
-    const horizontal = this.parent.props.horizontal
+    const isHoriztonal = horizontal || this.parent.props.horizontal
     const translate3d = this.animatedTranslate.interpolate({
       range: [0, 1],
-      output: horizontal
+      output: isHoriztonal
         ? [START_TRANSLATE_3D, 'translate3d(1px,0,0)']
         : [START_TRANSLATE_3D, 'translate3d(0,1px,0)'],
     })

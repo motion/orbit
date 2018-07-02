@@ -24,3 +24,11 @@ app.json
     export const oauth
     export class Sync {}
 ```
+
+## Platform
+
+Export `orbit-app` to the various apps.
+
+Has:
+
+- `Model.*`

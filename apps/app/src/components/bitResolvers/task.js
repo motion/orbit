@@ -64,9 +64,10 @@ export default ({ bit, children, isExpanded, shownLimit }) => {
     date: bit.bitUpdatedAt,
     content,
     comments,
-    preview: keywordExtract
-      .extract(bit.body, options)
-      .slice(0, 4)
-      .join(' '),
+    preview:
+      keywordExtract
+        .extract(bit.body, options)
+        .slice(0, 4)
+        .join(' ') || bit.body.slice(0, 400),
   })
 }

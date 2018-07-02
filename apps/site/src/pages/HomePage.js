@@ -352,13 +352,6 @@ class HomeHeader extends React.Component {
       <Page offset={0}>
         {({ Parallax, Content }) => (
           <>
-            {/* <Glow
-              style={{
-                background: '#fff',
-                opacity: 0.8,
-                transform: { x: '-65%', y: '-20%', scale: 1 },
-              }}
-            /> */}
             <Parallax speed={0.1}>
               <Bauhaus
                 showCircle
@@ -587,14 +580,12 @@ class SectionProfiles extends React.Component {
             className="profiles"
             css={isLarge && { width: '45%', margin: ['6%', 0, 0] }}
           >
-            <SectionTitleSmall size={2.5}>
-              People first exploration
-            </SectionTitleSmall>
+            <SectionTitle size={3}>Smart team sync</SectionTitle>
             <VertSpace />
             <SectionSubP color="#111" alpha={0.5}>
-              Beautiful profiles to keep everyone in sync. See recent
-              collaborations, expert topics, and relevant activity from across
-              your cloud.
+              Beautiful profiles for a clearer day to day. See&nbsp;recent
+              collaborations, expert topics, and team activity from across your
+              cloud.
             </SectionSubP>
             <VertSpace />
             <VertSpace />
@@ -831,7 +822,7 @@ class Video extends React.Component {
   }
 }
 
-const visiblePosition = (node, pct = 0.8) => {
+const visiblePosition = (node, pct = 0.65) => {
   const { y } = node.getBoundingClientRect()
   const max = node.clientHeight - node.clientHeight * pct
   // active

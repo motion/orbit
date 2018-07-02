@@ -6,7 +6,6 @@ export class SettingInfoStore {
   job = null
   bitsCount = null
   bit = null
-  updateJob = 1
 
   get setting() {
     if (!this.bit) {
@@ -33,7 +32,7 @@ export class SettingInfoStore {
     },
     {
       immediate: true,
-      condition: () => this.updateJob,
+      condition: () => !!this.bit,
     },
   )
 

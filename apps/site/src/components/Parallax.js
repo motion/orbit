@@ -67,9 +67,6 @@ export class ParallaxLayer extends React.PureComponent {
 
   updateEffect(effect, to, immediate) {
     const { config, impl } = this.parent.props
-    if (this.props.scrollTop) {
-      console.log('update', this.props.scrollTop, config, to, immediate)
-    }
     if (!immediate) {
       controller(effect, { to, ...config }, impl).start()
     } else {
@@ -112,6 +109,7 @@ export class ParallaxLayer extends React.PureComponent {
       className,
       effects,
       horizontal,
+      scrollTop,
       ...props
     } = this.props
     const isHoriztonal = horizontal || this.parent.props.horizontal

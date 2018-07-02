@@ -415,7 +415,7 @@ class SurfacePlain extends React.Component {
 
     // colors
     let color =
-      props.color === false
+      props.color === false || props.color === 'inherit'
         ? 'inherit'
         : $(
             props.color ||

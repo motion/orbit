@@ -12,12 +12,11 @@ import { scrollTo } from '~/helpers'
 import { Join } from '~/components/Join'
 import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
-import profileImg from '~/../public/profileimg.png'
+import profileImg from '~/../public/profileimg.jpg'
 import { Icon } from '~/views/icon'
 // import orbitVideo from '~/../public/orbit.mp4'
 import * as _ from 'lodash'
 import { Spring } from 'react-spring'
-import { SVGToImage } from '~/views/svgToImage'
 import homeImg from '~/../public/orbit.jpg'
 import searchImg from '~/../public/orbit-search.jpg'
 import avatarCardImg from '~/../public/javi.png'
@@ -137,6 +136,9 @@ const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
   <UI.Surface
     inline
     background="transparent"
+    color="inherit"
+    background="transparent"
+    opacity={0.8}
     tooltip={
       <UI.Text if={tooltip} size={1.2} alpha={0.8} {...tooltipProps}>
         {tooltip}
@@ -267,7 +269,7 @@ const thirdSlant = {
 
 const VertSpace = () => (
   <Media query={Constants.screen.tall}>
-    {isTall => <div css={{ height: isTall ? 20 : 10 }} />}
+    {isTall => <div css={{ height: isTall ? 25 : 20 }} />}
   </Media>
 )
 
@@ -442,7 +444,7 @@ class HomeHeader extends React.Component {
 class SectionSearch extends React.Component {
   render({ isTall, isLarge, sectionHeight }) {
     const iconProps = {
-      size: isLarge ? 50 : 40,
+      size: isLarge ? 55 : 50,
     }
     return (
       <Page
@@ -471,24 +473,17 @@ class SectionSearch extends React.Component {
             </SectionTitle>
             <VertSpace />
             <SectionP>
-              Don't trust your data to us. The power of novel{' '}
-              <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
-                on-device NLP
-              </ToolTip>{' '}
-              means your internal search platform is really internal.
+              Don't expose sensitive data. The power of on-device NLP means your
+              internal search platform is actually internal.
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              Search cloud services like Slack and Google Drive to internal APIs
-              and databases with peace of mind.
-            </SectionSubP>
-            <VertSpace />
-            <SectionSubP size={1.3} alpha={0.8}>
+              Search everything from cloud services like Slack and Google Drive
+              to internal APIs, databases and more.{' '}
               <View.LinkSimple to="/about">
                 Learn more about how it works.
               </View.LinkSimple>
             </SectionSubP>
-            <VertSpace />
             <VertSpace />
             <div css={{ height: 200 }} />
           </Half>
@@ -594,22 +589,26 @@ class SectionProfiles extends React.Component {
           >
             <SectionTitle size={2.5}>Give your team a home</SectionTitle>
             <VertSpace />
-            <SectionSubP color="#111" alpha={0.5}>
-              Beautiful profiles for a clearer day to day. See&nbsp;recent
-              collaborations, expert topics, and team activity from across your
-              cloud.
+            <SectionSubTitle>
+              Stay better in sync with automatic profiles that show relevant
+              activity from across your integrations.
+            </SectionSubTitle>
+            <VertSpace />
+            <SectionSubP if={false} color="#111" alpha={0.5}>
+              See recent collaborations, relevant activity, expert topics, and
+              more.
             </SectionSubP>
             <VertSpace />
             <VertSpace />
           </inner>
           <div $$flex />
-          <wrap css={{ position: 'absolute', bottom: 0, left: 0 }}>
+          <wrap css={{ position: 'absolute', bottom: '2%', right: '50%' }}>
             <fadeBottom
               css={{
                 position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
+                bottom: '-10%',
+                left: '-10%',
+                right: '-10%',
                 height: '50%',
                 background: `linear-gradient(transparent, ${bodyBg} 70%)`,
                 zIndex: 100,
@@ -618,8 +617,11 @@ class SectionProfiles extends React.Component {
             <img
               src={profileImg}
               css={{
-                width: 1283 / 2,
+                width: 1100 / 2,
                 height: 'auto',
+                borderRadius: 12,
+                overflow: 'hidden',
+                boxShadow: '0 0 60px rgba(0,0,0,0.05)',
                 transform: {
                   y: 0,
                   x: 0,
@@ -676,19 +678,17 @@ class SectionNoCloud extends React.Component {
           zIndex: 1000,
         }}
       >
-        <SVGToImage>
-          <WaveBanner
-            css={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 0,
-            }}
-            fill="#79bdd1"
-          />
-        </SVGToImage>
+        <WaveBanner
+          css={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
+          }}
+          fill="#79bdd1"
+        />
         <SectionContent css={{ flex: 1 }}>
           <Bauhaus
             showCircle
@@ -719,14 +719,13 @@ class SectionNoCloud extends React.Component {
                 knowledge, entirely behind your firewall.
               </SectionSubP>
               <VertSpace />
-              <SectionSubP if={isLarge} alpha={0.7}>
+              <SectionSubP if={isLarge}>
                 We've rethought the intranet from the ground up. It starts by
                 putting users and privacy first.
               </SectionSubP>
               <VertSpace />
               <VertSpace />
-              <VertSpace />
-              <space css={{ margin: [0, 'auto'] }}>
+              <space if={false} css={{ margin: [0, 'auto'] }}>
                 <SectionSubP size={3}>🙅‍ ☁️ = 🙅‍♂️ 😅</SectionSubP>
               </space>
               {/* <Bauhaus showCircle showTriangle showSquare /> */}
@@ -797,7 +796,6 @@ class Video extends React.Component {
         speed={-0.9}
         scrollTop={typeof orbitStopAt !== 'number' ? false : orbitStopAt}
         css={{ zIndex: 1000 }}
-        debug
       >
         <div
           css={{
@@ -957,7 +955,7 @@ const notNeg = x => (x < 0 ? 0 : x)
         return false
       }
       // pin orbit to section
-      return this.nodeOffsets[lockedIndex]
+      return this.nodeOffsets[lockedIndex] + 50
     }
 
     get video() {

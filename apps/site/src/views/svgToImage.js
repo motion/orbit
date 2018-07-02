@@ -1,16 +1,24 @@
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export class SVGToImage extends React.Component {
+  static defaultProps = {
+    after: 40,
+  }
   state = {}
-  async componentDidMount() {
-    if (this.props.after) {
-      await sleep(this.props.after)
+  componentDidMount() {
+    this.update()
+  }
+  componentDidUpdate() {
+    this.update()
+  }
+  update = () => {
+    if (!this.props.convert || this.state.imgSrc || this.state.src) {
+      return
     }
-    const svg = findDOMNode(this).querySelector('svg')
+    const svg = findDOMNode(this).parentNode.querySelector('svg')
     if (!svg) {
-      console.log('no svg', this, svg)
+      console.log('no svg', this, svg, findDOMNode(this))
       return
     }
     const svgString = new XMLSerializer().serializeToString(svg)
@@ -31,7 +39,7 @@ export class SVGToImage extends React.Component {
     })
   }
   render() {
-    if (!this.state.imgSrc) {
+    if (!this.state.imgSrc && !this.state.src) {
       return this.props.children
     }
     if (!this.state.src) {

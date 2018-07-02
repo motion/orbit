@@ -19,6 +19,7 @@ import homeImg from '~/../public/orbit.jpg'
 import searchImg from '~/../public/orbit-search.jpg'
 import avatarCardImg from '~/../public/javi.png'
 import { Page } from '~/views/Page'
+import { config } from 'react-spring'
 
 const forwardRef = Component => {
   return React.forwardRef((props, ref) => (
@@ -378,7 +379,7 @@ class SectionSearch extends React.Component {
       <Page offset={1}>
         {({ Parallax, Content }) => (
           <>
-            <Parallax>
+            <Parallax speed={0.1}>
               <WaveBanner fill={waveColor} />
             </Parallax>
             <Parallax
@@ -686,23 +687,6 @@ class SectionNoCloud extends React.Component {
 
 const pages = 3
 
-class OrbitStore {
-  get stopAt() {
-    let { lockedIndex, locked, nodeOffsets } = this.props.homeStore
-    const lastIndex = locked.length - 1
-    // stop scrolling after section 2
-    if (locked[lastIndex] === 2) {
-      lockedIndex = lastIndex
-    }
-    // free scroll
-    if (lockedIndex === -1 || lockedIndex === 0) {
-      return false
-    }
-    // pin orbit to section
-    return nodeOffsets[lockedIndex] - 25
-  }
-}
-
 const imgProps = {
   position: 'absolute',
   top: 0,
@@ -716,12 +700,7 @@ class OrbitPure extends React.Component {
   }
 
   render() {
-    const {
-      scrollTop,
-      restingPosition,
-      restingIndex,
-      lastLockedIndex,
-    } = this.props
+    const { scrollTop, restingPosition, lastLockedIndex } = this.props
     return (
       <ParallaxLayer
         ref={ref => (window.orbit = ref)}
@@ -759,9 +738,7 @@ class OrbitPure extends React.Component {
               tiltOptions={{ perspective: 1500 }}
               css={{
                 borderRadius: 17,
-                boxShadow: [
-                  [12 * (restingIndex === 1 ? -1 : 1), 23, 80, [0, 0, 0, 0.15]],
-                ],
+                boxShadow: [[0, 23, 80, [0, 0, 0, 0.15]]],
               }}
               glowProps={{
                 opacity: 0.5,
@@ -829,6 +806,23 @@ class OrbitPure extends React.Component {
   }
 }
 
+class OrbitStore {
+  get stopAt() {
+    let { lockedIndex, locked, nodeOffsets } = this.props.homeStore
+    const lastIndex = locked.length - 1
+    // stop scrolling after section 2
+    if (locked[lastIndex] === 2) {
+      lockedIndex = lastIndex
+    }
+    // free scroll
+    if (lockedIndex === -1 || lockedIndex === 0) {
+      return false
+    }
+    // pin orbit to section
+    return nodeOffsets[lockedIndex] - (lockedIndex === 2 ? 80 : 30)
+  }
+}
+
 @view.attach('homeStore')
 @view({
   orbitStore: OrbitStore,
@@ -845,7 +839,6 @@ class Orbit extends React.Component {
     const orbitProps = {
       scrollTop,
       restingPosition,
-      restingIndex,
       lastLockedIndex,
     }
     return <OrbitPure {...orbitProps} />
@@ -970,7 +963,7 @@ export class HomeWrapper extends React.Component {
                     container={document.documentElement}
                     pages={pages}
                     pageHeight={sectionHeight}
-                    config={{ tension: 170, friction: 26 }}
+                    config={config.slow} // { tension: 170, friction: 26 }
                   >
                     <Orbit if={isLarge} />
                     <Header {...sectionProps} white />

@@ -14,14 +14,12 @@ import { Bauhaus } from '~/views/bauhaus'
 import { Parallax, ParallaxLayer } from '~/components/Parallax'
 import profileImg from '~/../public/profileimg.jpg'
 import { Icon } from '~/views/icon'
-// import orbitVideo from '~/../public/orbit.mp4'
 import * as _ from 'lodash'
-import { Spring } from 'react-spring'
 import homeImg from '~/../public/orbit.jpg'
 import searchImg from '~/../public/orbit-search.jpg'
 import avatarCardImg from '~/../public/javi.png'
+import { Page } from '~/views/Page'
 
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 const forwardRef = Component => {
   return React.forwardRef((props, ref) => (
     <Component {...props} forwardRef={ref} />
@@ -112,6 +110,12 @@ const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
     width="100%"
     height="105%"
     css={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 0,
       minWidth: 1000,
       margin: [
         '-2.5%',
@@ -161,86 +165,6 @@ const scrollToTrack = (to, track) => {
   return () => {
     window.ga('send', 'event', 'Home', 'download', track)
     scrollTo(to)()
-  }
-}
-
-const NormalLayer = view.attach('homeStore')(({ homeStore, ...props }) => {
-  return <SectionContent css={{ height: homeStore.sectionHeight }} {...props} />
-})
-
-@view
-class Page extends React.Component {
-  render({
-    offset,
-    title,
-    titleProps,
-    children,
-    background,
-    backgroundProps,
-    banner,
-    zIndex = 0,
-  }) {
-    const baseZIndex = zIndex
-    const Parallax = ({ zIndex = 0, ...props }) => (
-      <ParallaxLayer
-        className="parallaxLayer"
-        offset={offset}
-        speed={0.2}
-        css={{ zIndex: zIndex + baseZIndex }}
-        {...props}
-      />
-    )
-    const Content = props => (
-      <NormalLayer
-        css={{ position: 'relative', zIndex: 1 + zIndex }}
-        {...props}
-      />
-    )
-    return (
-      <>
-        <ParallaxLayer
-          if={banner}
-          className="parallaxLayer banner"
-          offset={offset}
-          speed={0.05}
-          css={{
-            zIndex: 0 + zIndex,
-          }}
-          {...backgroundProps}
-        >
-          <WaveBanner fill={banner} />
-        </ParallaxLayer>
-        <ParallaxLayer
-          className="parallaxLayer background"
-          if={background}
-          offset={offset}
-          speed={0.1}
-          css={{
-            zIndex: -1 + zIndex,
-          }}
-          {...backgroundProps}
-        >
-          {background}
-        </ParallaxLayer>
-        <ParallaxLayer
-          className="parallaxLayer title"
-          css={{
-            zIndex: 2 + zIndex,
-          }}
-          if={title}
-          offset={offset}
-          speed={-0.02}
-          {...titleProps}
-        >
-          <SectionContentParallax>{title}</SectionContentParallax>
-        </ParallaxLayer>
-        {typeof children === 'function' ? (
-          children({ Parallax, Content })
-        ) : (
-          <Content>{children}</Content>
-        )}
-      </>
-    )
   }
 }
 
@@ -451,52 +375,56 @@ class SectionSearch extends React.Component {
       size: isLarge ? 55 : 50,
     }
     return (
-      <Page
-        offset={1}
-        banner={waveColor}
-        titleProps={
-          !isSafari && {
-            // seems opacity effect causes paints... shouldnt be bad test uncomment in fuutre
-            effects: {
-              opacity: x => {
-                const fadeAfter = 1.2
-                if (x < fadeAfter) {
-                  return x * Math.log(x * 10)
-                }
-                return fadeAfter * 2 - x
-              },
-            },
-          }
-        }
-        title={
-          <Half>
-            <SectionTitle
-              color={UI.color(waveColor)
-                .darken(0.6)
-                .desaturate(0.6)}
-            >
-              Unified search that works
-            </SectionTitle>
-            <VertSpace />
-            <SectionP>
-              The power of on-device NLP means your internal search is actually
-              internal.
-            </SectionP>
-            <VertSpace />
-            <SectionSubP>
-              Search everything from cloud services like Slack and Google Drive
-              to internal APIs, databases and more.{' '}
-              <View.LinkSimple to="/about">
-                Learn more about how it works.
-              </View.LinkSimple>
-            </SectionSubP>
-            <VertSpace />
-            <div css={{ height: sectionHeight * 0.25 }} />
-          </Half>
-        }
-      >
+      <Page offset={1}>
         {({ Parallax, Content }) => (
           <>
+            <Parallax>
+              <WaveBanner fill={waveColor} />
+            </Parallax>
+            <Parallax
+              speed={-0.02}
+              zIndex={2}
+              effects={
+                !Constants.isSafari && {
+                  // seems opacity effect causes paints... shouldnt be bad test uncomment in fuutre
+                  opacity: x => {
+                    const fadeAfter = 1.2
+                    if (x < fadeAfter) {
+                      return x * Math.log(x * 10)
+                    }
+                    return fadeAfter * 2 - x
+                  },
+                }
+              }
+            >
+              <SectionContentParallax>
+                <Half css={{ flex: 1 }}>
+                  <div $$flex />
+                  <SectionTitle
+                    color={UI.color(waveColor)
+                      .darken(0.6)
+                      .desaturate(0.6)}
+                  >
+                    Unified search that works
+                  </SectionTitle>
+                  <VertSpace />
+                  <SectionP>
+                    The power of on-device NLP means your internal search is
+                    actually internal.
+                  </SectionP>
+                  <VertSpace />
+                  <SectionSubP>
+                    Search everything from cloud services like Slack and Google
+                    Drive to internal APIs, databases and more.{' '}
+                    <View.LinkSimple to="/about">
+                      Learn more about how it works.
+                    </View.LinkSimple>
+                  </SectionSubP>
+                  <VertSpace />
+                  <div $$flex={2.5} />
+                </Half>
+              </SectionContentParallax>
+            </Parallax>
             <Parallax speed={0.3} zIndex={-1}>
               <Bauhaus
                 showTriangle
@@ -574,82 +502,83 @@ class SectionProfiles extends React.Component {
     return (
       <Page
         offset={2}
-        background={
-          <>
-            {/* <Bauhaus showSquare css={{ opacity: 1 }} /> */}
-            <Slant {...firstSlant} {...topSlants} />
-            <Slant inverseSlant {...secondSlant} {...topSlants} />
-            <Slant {...thirdSlant} {...topSlants} />
-          </>
-        }
         childrenProps={{
           style: {
             zIndex: 4,
           },
         }}
       >
-        <SectionContent id="home-profiles" css={{ flex: 1 }}>
-          <inner
-            className="profiles"
-            css={
-              isLarge
-                ? { width: '45%', margin: ['auto', 0] }
-                : { margin: ['auto', 0] }
-            }
-          >
-            <SectionTitle>Give your team a home</SectionTitle>
-            <VertSpace />
-            <SectionSubTitle>
-              Stay better in sync with automatic profiles that show relevant
-              activity from across your integrations.
-            </SectionSubTitle>
-            <VertSpace />
-            <SectionSubP if={false} color="#111" alpha={0.5}>
-              See recent collaborations, relevant activity, expert topics, and
-              more.
-            </SectionSubP>
-            <VertSpace />
-            <VertSpace />
-            <wrap css={{ position: 'relative' }}>
-              <fadeBottom
-                css={{
-                  position: 'absolute',
-                  bottom: '-10%',
-                  left: '-10%',
-                  right: '-20%',
-                  height: '50%',
-                  background: `linear-gradient(${bodyBg.alpha(
-                    0,
-                  )}, ${bodyBg} 70%)`,
-                  zIndex: 100,
-                  transform: {
-                    z: 1000,
-                  },
-                }}
-              />
-              <img
-                src={profileImg}
-                css={{
-                  width: '40vw',
-                  minWidth: 400,
-                  maxWidth: 1100 / 2,
-                  height: 'auto',
-                  borderRadius: 10,
-                  overflow: 'hidden',
-                  boxShadow: '0 0 60px rgba(0,0,0,0.05)',
-                  transform: {
-                    y: 0,
-                    x: 0,
-                    perspective: 1000,
-                    rotateY: '3deg',
-                    rotateX: '4deg',
-                    rotateZ: '-1deg',
-                  },
-                }}
-              />
-            </wrap>
-          </inner>
-        </SectionContent>
+        {({ Parallax, Content }) => (
+          <>
+            <Parallax speed={0.1} zIndex={-1}>
+              <Slant {...firstSlant} {...topSlants} />
+              <Slant inverseSlant {...secondSlant} {...topSlants} />
+              <Slant {...thirdSlant} {...topSlants} />
+            </Parallax>
+            <Content id="home-profiles" css={{ flex: 1 }}>
+              <inner
+                className="profiles"
+                css={
+                  isLarge
+                    ? { width: '45%', margin: ['auto', 0] }
+                    : { margin: ['auto', 0] }
+                }
+              >
+                <SectionTitle size={2.8}>Give your team a home</SectionTitle>
+                <VertSpace />
+                <SectionSubTitle>
+                  Stay better in sync with automatic profiles that show relevant
+                  activity from across your integrations.
+                </SectionSubTitle>
+                <VertSpace />
+                <SectionSubP if={false} color="#111" alpha={0.5}>
+                  See recent collaborations, relevant activity, expert topics,
+                  and more.
+                </SectionSubP>
+                <VertSpace />
+                <VertSpace />
+                <wrap css={{ position: 'relative' }}>
+                  <fadeBottom
+                    css={{
+                      position: 'absolute',
+                      bottom: '-10%',
+                      left: '-10%',
+                      right: '-20%',
+                      height: '50%',
+                      background: `linear-gradient(${bodyBg.alpha(
+                        0,
+                      )}, ${bodyBg} 70%)`,
+                      zIndex: 100,
+                      transform: {
+                        z: 1000,
+                      },
+                    }}
+                  />
+                  <img
+                    src={profileImg}
+                    css={{
+                      width: '40vw',
+                      minWidth: 400,
+                      maxWidth: 1100 / 2,
+                      height: 'auto',
+                      borderRadius: 10,
+                      overflow: 'hidden',
+                      boxShadow: '0 0 60px rgba(0,0,0,0.05)',
+                      transform: {
+                        y: 0,
+                        x: 0,
+                        perspective: 1000,
+                        rotateY: '3deg',
+                        rotateX: '4deg',
+                        rotateZ: '-1deg',
+                      },
+                    }}
+                  />
+                </wrap>
+              </inner>
+            </Content>
+          </>
+        )}
       </Page>
     )
   }
@@ -695,17 +624,7 @@ class SectionNoCloud extends React.Component {
           zIndex: 1000,
         }}
       >
-        <WaveBanner
-          css={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 0,
-          }}
-          fill="#79bdd1"
-        />
+        <WaveBanner fill="#79bdd1" />
         <SectionContent css={{ flex: 1 }}>
           <Bauhaus
             showCircle
@@ -725,18 +644,13 @@ class SectionNoCloud extends React.Component {
             <inner css={isLarge && { width: '46%', margin: ['auto', 0] }}>
               <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
               <VertSpace />
-              <SectionSubTitle
-                color="#fff"
-                alpha={0.8}
-                size={3.5}
-                fontWeight={300}
-              >
-                No servers and no setup means absolute data security,
-                sweat-free.
+              <SectionSubTitle color="#fff" alpha={0.8}>
+                No servers and no setup means instant onboarding and complete
+                data security, sweat-free.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP>
-                Orbit keeps your data completely on-device but gives you the
+                Orbit keeps your sensitive data on-device but gives you the
                 power to integrate with any cloud service. It's a powerful
                 platform for internal knowledge that lives behind your firewall.
               </SectionSubP>
@@ -772,52 +686,49 @@ class SectionNoCloud extends React.Component {
 
 const pages = 3
 
-class VideoStore {
-  run = null
-
-  onKeyframes = run => {
-    this.run = run
-    this.run(Spring, {
-      from: { y: 0 },
-      to: { y: 0 },
-    })
+class OrbitStore {
+  get stopAt() {
+    let { lockedIndex, locked, nodeOffsets } = this.props.homeStore
+    const lastIndex = locked.length - 1
+    // stop scrolling after section 2
+    if (locked[lastIndex] === 2) {
+      lockedIndex = lastIndex
+    }
+    // free scroll
+    if (lockedIndex === -1 || lockedIndex === 0) {
+      return false
+    }
+    // pin orbit to section
+    return nodeOffsets[lockedIndex] - 25
   }
-
-  // animateOrbit = react(
-  //   () => this.props.homeStore.lockedIndex,
-  //   index => {
-  //     this.run(Spring, {
-  //       from: { y: 0 },
-  //       to: { y: index * this.props.homeStore.sectionHeight },
-  //       config: config.slow,
-  //     })
-  //   },
-  // )
 }
 
-@view.attach('homeStore')
-@view({
-  store: VideoStore,
-})
-class Video extends React.Component {
-  render({ homeStore }) {
-    const { orbitStopAt, lockedIndex, lastLockedIndex } = homeStore
-    const restingIndex = lockedIndex === -1 ? lastLockedIndex : lockedIndex
-    const restingPosition = [[100, 100], [window.innerWidth, 100], [200, 700]][
-      restingIndex
-    ]
-    const imgProps = {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      transition: 'opacity ease-in 500ms',
-    }
+const imgProps = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  transition: 'opacity ease-in 500ms',
+}
+
+class OrbitPure extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !_.isEqual(nextProps, this.props)
+  }
+
+  render() {
+    const {
+      scrollTop,
+      restingPosition,
+      restingIndex,
+      lastLockedIndex,
+    } = this.props
     return (
       <ParallaxLayer
+        ref={ref => (window.orbit = ref)}
         className="parallaxLayer"
         offset={0}
         speed={-1}
-        scrollTop={typeof orbitStopAt !== 'number' ? false : orbitStopAt}
+        scrollTop={scrollTop}
         css={{ zIndex: 1000 }}
       >
         <div
@@ -918,6 +829,29 @@ class Video extends React.Component {
   }
 }
 
+@view.attach('homeStore')
+@view({
+  orbitStore: OrbitStore,
+})
+class Orbit extends React.Component {
+  render({ homeStore, orbitStore }) {
+    const { stopAt } = orbitStore
+    const { lockedIndex, lastLockedIndex } = homeStore
+    const restingIndex = lockedIndex === -1 ? lastLockedIndex : lockedIndex
+    const restingPosition = [[100, 100], [window.innerWidth, 100], [200, 700]][
+      restingIndex
+    ]
+    const scrollTop = typeof stopAt !== 'number' ? false : stopAt
+    const orbitProps = {
+      scrollTop,
+      restingPosition,
+      restingIndex,
+      lastLockedIndex,
+    }
+    return <OrbitPure {...orbitProps} />
+  }
+}
+
 const lockedPosition = (node, pct = 0.65) => {
   const { y } = node.getBoundingClientRect()
   const max = node.clientHeight - node.clientHeight * pct
@@ -932,19 +866,10 @@ const lockedPosition = (node, pct = 0.65) => {
   return 0
 }
 
-// const objMap = (obj, fn) =>
-//   Object.keys(obj).reduce(
-//     (acc, key) => ({
-//       ...acc,
-//       [key]: fn(obj[key]),
-//     }),
-//     {},
-//   )
-
 const notNeg = x => (x < 0 ? 0 : x)
 
 @view.provide({
-  homeStore: class VideoStore {
+  homeStore: class HomeStore {
     nodes = []
     nodeOffsets = []
     locked = []
@@ -968,26 +893,12 @@ const notNeg = x => (x < 0 ? 0 : x)
       return this.locked.indexOf(1) || 0
     }
 
-    get orbitStopAt() {
-      let { lockedIndex } = this
-      const lastIndex = this.locked.length - 1
-      // stop scrolling after section 2
-      if (this.locked[lastIndex] === 2) {
-        lockedIndex = lastIndex
-      }
-      // free scroll
-      if (lockedIndex === -1 || lockedIndex === 0) {
-        return false
-      }
-      // pin orbit to section
-      return this.nodeOffsets[lockedIndex]
-    }
-
     get video() {
       return document.querySelector('video')
     }
 
     didMount() {
+      window.Root = this
       setTimeout(() => {
         this.nodes = [
           document.querySelector('#home-header'),
@@ -1061,7 +972,7 @@ export class HomeWrapper extends React.Component {
                     pageHeight={sectionHeight}
                     config={{ tension: 170, friction: 26 }}
                   >
-                    <Video if={isLarge} />
+                    <Orbit if={isLarge} />
                     <Header {...sectionProps} white />
                     <HomeHeader {...sectionProps} />
                     <SectionSearch {...sectionProps} />

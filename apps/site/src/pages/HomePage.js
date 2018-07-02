@@ -488,7 +488,7 @@ class SectionSearch extends React.Component {
               </View.LinkSimple>
             </SectionSubP>
             <VertSpace />
-            <div css={{ height: 200 }} />
+            <div css={{ height: sectionHeight * 0.25 }} />
           </Half>
         }
       >
@@ -505,7 +505,7 @@ class SectionSearch extends React.Component {
               />
             </Parallax>
             <Content id="home-search">
-              <div $$flex={3} />
+              <div $$flex={2.5} />
               <Half>
                 <icons
                   css={{
@@ -798,7 +798,6 @@ class Video extends React.Component {
     const restingPosition = [[100, 100], [window.innerWidth, 100], [200, 700]][
       restingIndex
     ]
-    console.log('lockedIndex', lockedIndex)
     const imgProps = {
       position: 'absolute',
       top: 0,
@@ -969,7 +968,7 @@ const notNeg = x => (x < 0 ? 0 : x)
         lockedIndex = lastIndex
       }
       // free scroll
-      if (lockedIndex === -1) {
+      if (lockedIndex === -1 || lockedIndex === 0) {
         return false
       }
       // pin orbit to section

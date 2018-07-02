@@ -367,6 +367,17 @@ class HomeHeader extends React.Component {
                 ]}
               />
             </Parallax>
+            <bg
+              css={{
+                height: sectionHeight,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                background:
+                  'linear-gradient(-190deg, rgba(255,255,255,0.5), transparent)',
+              }}
+            />
             <Content id="home-header">
               <Slant {...firstSlant} {...topSlants} />
               <Slant inverseSlant {...secondSlant} {...topSlants} />
@@ -786,6 +797,7 @@ class Video extends React.Component {
         speed={-0.9}
         scrollTop={typeof orbitStopAt !== 'number' ? false : orbitStopAt}
         css={{ zIndex: 1000 }}
+        debug
       >
         <div
           css={{

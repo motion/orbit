@@ -524,7 +524,6 @@ export const Link = ({ to, ...props }) => (
 
 export const LinkSimple = ({ to, ...props }) => (
   <a
-    active={Router.isActive(to)}
     href={to}
     onClick={Router.link(to)}
     css={{

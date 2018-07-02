@@ -49,10 +49,8 @@ export class ParallaxLayer extends React.PureComponent {
   }
 
   setPosition(height, parentScrollTop, immediate = false) {
-    const scrollTop =
-      typeof this.props.scrollTop === 'number'
-        ? this.props.scrollTop
-        : parentScrollTop
+    const isFixed = typeof this.props.scrollTop === 'number'
+    const scrollTop = isFixed ? this.props.scrollTop : parentScrollTop
     const targetScroll = Math.floor(this.props.offset) * height
     const offset = height * this.props.offset + targetScroll * this.props.speed
     const to = parseFloat(-(scrollTop * this.props.speed) + offset)
@@ -69,6 +67,9 @@ export class ParallaxLayer extends React.PureComponent {
 
   updateEffect(effect, to, immediate) {
     const { config, impl } = this.parent.props
+    if (this.props.scrollTop) {
+      console.log('update', this.props.scrollTop, config, to, immediate)
+    }
     if (!immediate) {
       controller(effect, { to, ...config }, impl).start()
     } else {

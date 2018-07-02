@@ -9,6 +9,10 @@ export class SVGToImage extends React.Component {
       await sleep(this.props.after)
     }
     const svg = findDOMNode(this).querySelector('svg')
+    if (!svg) {
+      console.log('no svg', this, svg)
+      return
+    }
     const svgString = new XMLSerializer().serializeToString(svg)
     const svgEncodedString = btoa(svgString)
     this.setState({ imgSrc: 'data:image/svg+xml;base64,' + svgEncodedString })

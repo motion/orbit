@@ -34,7 +34,7 @@ export class TiltHoverGlow extends React.PureComponent {
       <Tilt
         options={{
           max: 20,
-          perspective: 1000,
+          perspective: 2000,
           scale: 1,
           speed: 200,
           reverse: true,

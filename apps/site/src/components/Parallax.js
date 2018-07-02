@@ -305,7 +305,6 @@ export class Parallax extends React.PureComponent {
                 WebkitTransform: START_TRANSLATE,
                 MsTransform: START_TRANSLATE,
                 transform: START_TRANSLATE_3D,
-                overflow: 'hidden',
                 [horizontal ? 'width' : 'height']: this.space * pages,
                 ...innerStyle,
               }}

@@ -76,7 +76,7 @@ const SectionP = props => (
 
 const SectionSubP = props => (
   <P
-    size={1.8}
+    size={1.7}
     sizeLineHeight={1.1}
     fontWeight={300}
     titleFont
@@ -271,7 +271,7 @@ const VertSpace = () => (
 
 const SectionSubTitle = props => (
   <P
-    size={2}
+    size={1.9}
     sizeLineHeight={1.1}
     titleFont
     alpha={0.65}
@@ -288,9 +288,10 @@ const Pitch = ({ isLarge, scrollTo }) => (
     <VertSpace />
     <SectionSubTitle>
       The search platform for anything in your cloud or behind your firewall.
-      Installs in a minute with{' '}
+      Installed in a minute with{' '}
       <ToolTip onClick={() => scrollTo(3)}>total&nbsp;privacy</ToolTip>.
     </SectionSubTitle>
+    <VertSpace />
     <VertSpace />
     <row $$row css={{ margin: [2, 0, 10] }}>
       <Join />
@@ -464,17 +465,16 @@ class SectionSearch extends React.Component {
             </SectionTitle>
             <VertSpace />
             <SectionP>
-              A new security model brings the power of{' '}
+              Don't trust your data to us. The power of novel{' '}
               <ToolTip tooltip="Orbit uses novel on-device machine learning to power conceptural, summarized search.">
                 on-device NLP
               </ToolTip>{' '}
-              to your team.
+              means your team can be searching smarter, today.
             </SectionP>
             <VertSpace />
             <SectionSubP>
-              Internal search doesn't have to be a pain. Search cloud services
-              like Slack and Google Docs, as well as private internal folders,
-              wikis, databases, and APIs.
+              Search cloud services like Slack and Google Drive just as easily
+              as internal APIs, databases and files.
             </SectionSubP>
             <VertSpace />
             <VertSpace />
@@ -580,14 +580,13 @@ class SectionProfiles extends React.Component {
             className="profiles"
             css={isLarge && { width: '45%', margin: ['6%', 0, 0] }}
           >
-            <SectionTitleSmall size={2.2}>
-              A more personal way to coordinate teams.
+            <SectionTitleSmall size={2.5}>
+              People first exploration
             </SectionTitleSmall>
             <VertSpace />
             <SectionSubP color="#111" alpha={0.5}>
-              Search anyone from across your cloud with automatic aggregated
-              profiles. Find where people work, what they care about, recent
-              things they've been active on and more.
+              A beautiful profile for all your teammates. See recent
+              collaborations, expert topics, relevant activity and more.
             </SectionSubP>
             <VertSpace />
             <VertSpace />
@@ -600,7 +599,7 @@ class SectionProfiles extends React.Component {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: '70%',
+                height: '50%',
                 background: `linear-gradient(transparent, ${bodyBg} 70%)`,
                 zIndex: 100,
               }}
@@ -612,7 +611,7 @@ class SectionProfiles extends React.Component {
                 height: 'auto',
                 transform: {
                   y: 0,
-                  x: 30,
+                  x: 0,
                   perspective: 1000,
                   rotateY: '3deg',
                   rotateX: '4deg',
@@ -696,21 +695,22 @@ class SectionNoCloud extends React.Component {
             }}
           >
             <inner css={isLarge && { width: '46%', margin: ['auto', 0] }}>
-              <SectionTitle color="#fff">The No-Cloud Advantage</SectionTitle>
+              <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                No servers, no setup. That means absolute data security,
+                No servers and no setup means absolute data security,
                 sweat-free.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP>
-                An extensible platform that keeps all your data on device means
-                you can truly build amazing internal tools for your team.
+                Orbit is a new type of internal tool that keeps your data
+                completely on-device. It's a powerful platform for internal
+                knowledge and apps, entirely behind your firewall.
               </SectionSubP>
               <VertSpace />
               <SectionSubP alpha={0.7}>
-                We've rethought the intranet from the ground up by putting users
-                and privacy first.
+                We've rethought the intranet from the ground up. It starts by
+                putting users and privacy first.
               </SectionSubP>
               <VertSpace />
               <VertSpace />
@@ -860,11 +860,12 @@ const visiblePosition = (node, pct = 0.8) => {
     orbitStopAfter = null
 
     get orbitStopAt() {
-      // stop after point
-      if (this.scrollTop >= this.orbitStopAfter) {
-        return this.orbitStopAfter
+      let visibleIndex = this.visible.indexOf(1)
+      const lastIndex = this.visible.length - 1
+      // stop scrolling after section 2
+      if (this.visible[lastIndex] === 2) {
+        visibleIndex = lastIndex
       }
-      const visibleIndex = this.visible.indexOf(1)
       // free scroll
       if (visibleIndex === -1 || visibleIndex === 0) {
         return false
@@ -993,7 +994,7 @@ export const HomePage = () => (
   >
     <WindowResize>
       {() => {
-        const sectionHeight = Math.min(1250, Math.max(600, window.innerHeight))
+        const sectionHeight = Math.min(1250, Math.max(800, window.innerHeight))
         return <HomeWrapper sectionHeight={sectionHeight} />
       }}
     </WindowResize>

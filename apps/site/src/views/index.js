@@ -546,7 +546,7 @@ export const TopoBg = () => (
   />
 )
 
-export const HomeImg = props => (
+export const HomeImg = ({ children, style, borderProps, ...props }) => (
   <>
     <img
       css={{
@@ -557,6 +557,7 @@ export const HomeImg = props => (
         userSelect: 'none',
         border: [1, '#ddd'],
       }}
+      style={style}
       {...props}
     />
     <border
@@ -568,8 +569,12 @@ export const HomeImg = props => (
         right: 0,
         bottom: 0,
         border: [2, '#ddd'],
+        opacity: style ? style.opacity : 1,
       }}
-    />
+      {...borderProps}
+    >
+      {children}
+    </border>
   </>
 )
 

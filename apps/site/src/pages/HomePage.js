@@ -20,6 +20,7 @@ import { Spring } from 'react-spring'
 import { SVGToImage } from '~/views/svgToImage'
 import homeImg from '~/../public/orbit.jpg'
 import searchImg from '~/../public/orbit-search.jpg'
+import avatarCardImg from '~/../public/javi.png'
 
 const forwardRef = Component => {
   return React.forwardRef((props, ref) => (
@@ -347,7 +348,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
 
 @view
 class HomeHeader extends React.Component {
-  render({ scrollTo }) {
+  render({ scrollTo, sectionHeight }) {
     return (
       <Page offset={0}>
         {({ Parallax, Content }) => (
@@ -381,10 +382,10 @@ class HomeHeader extends React.Component {
                       css={{
                         zIndex: -1,
                         position: 'absolute',
-                        bottom: '-10%',
+                        bottom: -2014 / 2 / 8,
                         margin: [0, 'auto'],
                         transformOrigin: 'bottom center',
-                        transform: { scale: 0.6 },
+                        transform: { scale: 0.5 },
                       }}
                     >
                       {/* small */}
@@ -591,7 +592,7 @@ class SectionProfiles extends React.Component {
             <VertSpace />
           </inner>
           <div $$flex />
-          <wrap css={{ position: 'relative' }}>
+          <wrap css={{ position: 'absolute', bottom: 0, left: 0 }}>
             <fadeBottom
               css={{
                 position: 'absolute',
@@ -704,10 +705,10 @@ class SectionNoCloud extends React.Component {
               <SectionSubP>
                 Orbit is a new type of internal tool that keeps your data
                 completely on-device. It's a powerful platform for internal
-                knowledge and apps, entirely behind your firewall.
+                knowledge, entirely behind your firewall.
               </SectionSubP>
               <VertSpace />
-              <SectionSubP alpha={0.7}>
+              <SectionSubP if={isLarge} alpha={0.7}>
                 We've rethought the intranet from the ground up. It starts by
                 putting users and privacy first.
               </SectionSubP>
@@ -771,7 +772,7 @@ class VideoStore {
 class Video extends React.Component {
   render({ homeStore }) {
     const { orbitStopAt, lockedIndex, lastLockedIndex } = homeStore
-    const restingPosition = [[100, 100], [1200, 100], [200, 800]][lockedIndex]
+    const restingPosition = [[100, 100], [1200, 100], [200, 700]][lockedIndex]
     const imgProps = {
       position: 'absolute',
       top: 0,
@@ -850,7 +851,30 @@ class Video extends React.Component {
                   zIndex: 1,
                   opacity: lastLockedIndex === 2 ? 1 : 0,
                 }}
-              />
+                borderProps={{
+                  style: {
+                    perspective: 2000,
+                    zIndex: 1000,
+                  },
+                }}
+              >
+                <img
+                  src={avatarCardImg}
+                  css={{
+                    width: 629 / 2,
+                    height: 'auto',
+                    position: 'absolute',
+                    top: 618,
+                    left: 5,
+                    zIndex: 1000,
+                    transition: 'all ease-in 400ms 300ms',
+                    opacity: lastLockedIndex === 2 ? 1 : 0,
+                    transform: `translate3d(0,0,${
+                      lastLockedIndex === 2 ? 240 : 0
+                    }px)`,
+                  }}
+                />
+              </HomeImg>
             </UI.TiltHoverGlow>
           </wrap>
         </div>
@@ -859,7 +883,7 @@ class Video extends React.Component {
   }
 }
 
-const lockedPosition = (node, pct = 0.7) => {
+const lockedPosition = (node, pct = 0.65) => {
   const { y } = node.getBoundingClientRect()
   const max = node.clientHeight - node.clientHeight * pct
   // active
@@ -921,7 +945,7 @@ const notNeg = x => (x < 0 ? 0 : x)
         return false
       }
       // pin orbit to section
-      return this.nodeOffsets[lockedIndex] - this.sectionHeight * 0.12
+      return this.nodeOffsets[lockedIndex]
     }
 
     get video() {

@@ -23,7 +23,7 @@ class DockedPaneStore {
     const lastNode = _.last(Array.from(node.children))
     const innerHeight = lastNode.offsetTop + lastNode.clientHeight
     const scrolledTo = node.scrollTop + node.clientHeight
-    if (scrolledTo === innerHeight) {
+    if (innerHeight <= scrolledTo) {
       this.isAtBottom = true
     } else {
       this.isAtBottom = false

@@ -334,7 +334,7 @@ export class OrbitCard extends React.Component {
       overflow: 'hidden',
       position: 'relative',
       maxHeight: '100%',
-      transition: 'all ease-in 120ms',
+      transition: 'all ease-in 80ms',
       padding: [17, 18],
       transform: {
         z: 0,

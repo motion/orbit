@@ -20,12 +20,15 @@ export class OrbitSettingCard extends React.Component {
     if (isActive) {
       return
     }
-    if (result.oauth === false) {
+    if (result.auth === false) {
       const setting = new Setting()
       setting.category = 'integration'
       setting.type = result.type
       setting.token = 'good'
       await setting.save()
+    } else if (result.auth) {
+      console.log('should select auth view')
+      return
     } else {
       OauthActions.startOauth(result.id)
     }
@@ -50,8 +53,9 @@ export class OrbitSettingCard extends React.Component {
         icon={result.icon}
         iconProps={
           !isActive && {
+            color: '#999',
             style: {
-              opacity: 0.5,
+              opacity: 0.6,
             },
           }
         }

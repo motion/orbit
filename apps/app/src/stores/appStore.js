@@ -7,8 +7,6 @@ import * as AppStoreHelpers from './appStoreHelpers'
 import * as AppStoreReactions from './appStoreReactions'
 import { modelQueryReaction } from '@mcro/helpers'
 
-let hasRun = false
-
 const searchBits = async query => {
   if (!query) {
     return await Bit.find({

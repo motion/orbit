@@ -12,7 +12,9 @@ export const checkAuths = async () => {
     `${Constants.API_URL}/getCreds`,
   ).json
   if (error) {
-    console.log('no creds', error)
+    if (error === 'no creds') {
+      return
+    }
     throw new Error(error)
   }
   return authorizations

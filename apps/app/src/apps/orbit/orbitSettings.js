@@ -4,10 +4,11 @@ import { OrbitSettingCard } from './orbitSettingCard'
 import { OrbitGeneralSettings } from './orbitSettings/orbitGeneralSettings'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { SubTitle } from '~/views'
-import * as UI from '@mcro/ui'
 import { Setting, Not, IsNull } from '@mcro/models'
-import { allIntegrations } from '~/constants'
-import { settingToResult } from '~/helpers'
+import {
+  settingToResult,
+  allIntegrations,
+} from './orbitSettings/orbitSettingsIntegrations'
 import { modelQueryReaction } from '@mcro/helpers'
 
 const IntegrationCard = props => (
@@ -91,9 +92,6 @@ export class OrbitSettings extends React.Component {
                   result={item}
                   index={index + integrationSettings.length}
                   appStore={appStore}
-                  titleProps={{
-                    fontWeight: 300,
-                  }}
                 />
               ))}
           </cards>

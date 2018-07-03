@@ -13,6 +13,9 @@ export default async function connectModels(models) {
       entities: models,
       // logging: true,
       synchronize: true,
+    }).then(connection => {
+      models.forEach(model => model.useConnection(connection));
+      return connection;
     })
   } catch (err) {
     console.log('connectModels Error: ', err)

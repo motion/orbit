@@ -1,6 +1,6 @@
 import Syncer from '../syncer'
 // import GithubFeedSync from './githubFeedSync'
-import GithubTaskSync from './githubTaskSync'
+import {GithubIssueSync} from './githubTaskSync'
 import GithubPeopleSync from './githubPeopleSync'
 
 export const github = new Syncer('github', {
@@ -10,7 +10,7 @@ export const github = new Syncer('github', {
     // feed: { secondsBetween: 30 },
   },
   getSyncers: setting => ({
-    task: new GithubTaskSync(setting),
+    task: new GithubIssueSync(setting),
     people: new GithubPeopleSync(setting),
     // feed: new GithubFeedSync(setting, helpers),
   }),

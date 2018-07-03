@@ -1,4 +1,3 @@
-import * as Models from '@mcro/models'
 import connectModels from './helpers/connectModels'
 import Server from './server'
 import { Plugins } from './plugins'
@@ -19,7 +18,7 @@ import Path from 'path'
 import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
-import { Bit } from '@mcro/models'
+import { Bit, modelsList } from '@mcro/models'
 import { Connection } from 'typeorm'
 import { GeneralSettingManager } from './settingManagers/generalSettingManager'
 import sqlite from 'sqlite'
@@ -98,9 +97,7 @@ export class Root {
   }
 
   async connect() {
-    this.connection = await connectModels(
-      Object.keys(Models).map(x => Models[x]),
-    )
+    this.connection = await connectModels(modelsList)
   }
 
   watchLastBit() {

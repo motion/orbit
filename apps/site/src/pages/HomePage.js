@@ -382,7 +382,7 @@ class SectionSearch extends React.Component {
             <Parallax speed={0.1}>
               <WaveBanner fill={waveColor} />
             </Parallax>
-            <Parallax
+            {/* <Parallax
               speed={-0.02}
               zIndex={2}
               effects={
@@ -399,33 +399,9 @@ class SectionSearch extends React.Component {
               }
             >
               <SectionContentParallax>
-                <Half css={{ flex: 1 }}>
-                  <div $$flex />
-                  <SectionTitle
-                    color={UI.color(waveColor)
-                      .darken(0.6)
-                      .desaturate(0.6)}
-                  >
-                    Unified search that works
-                  </SectionTitle>
-                  <VertSpace />
-                  <SectionP>
-                    The power of on-device NLP means your internal search is
-                    actually internal.
-                  </SectionP>
-                  <VertSpace />
-                  <SectionSubP>
-                    Search everything from cloud services like Slack and Google
-                    Drive to internal APIs, databases and more.{' '}
-                    <View.LinkSimple to="/about">
-                      Learn more about how it works.
-                    </View.LinkSimple>
-                  </SectionSubP>
-                  <VertSpace />
-                  <div $$flex={2.5} />
-                </Half>
+
               </SectionContentParallax>
-            </Parallax>
+            </Parallax> */}
             <Parallax speed={0.3} zIndex={-1}>
               <Bauhaus
                 showTriangle
@@ -436,9 +412,45 @@ class SectionSearch extends React.Component {
                 }}
               />
             </Parallax>
+            <Parallax speed={0.4} zIndex={1}>
+              <Bauhaus
+                showCircle
+                warp={([x, y]) => [
+                  x - 4 * -Math.sin(x / 30),
+                  y - 4 * -Math.sin(x / 30),
+                ]}
+                css={{
+                  transformOrigin: 'bottom left',
+                  transform: { scale: 0.4, y: sectionHeight * 0.8, x: '-10%' },
+                  opacity: 0.1,
+                }}
+              />
+            </Parallax>
             <Content id="home-search">
-              <div $$flex={2.5} />
-              <Half>
+              <Half css={{ flex: 1 }}>
+                <div $$flex={1.5} />
+                <SectionTitle
+                  color={UI.color(waveColor)
+                    .darken(0.6)
+                    .desaturate(0.6)}
+                >
+                  Unified search that works
+                </SectionTitle>
+                <VertSpace />
+                <SectionP>
+                  The power of on-device NLP means your internal search is
+                  actually internal.
+                </SectionP>
+                <VertSpace />
+                <SectionSubP>
+                  Search everything from cloud services like Slack and Google
+                  Drive to internal APIs, databases and more.{' '}
+                  <View.LinkSimple to="/about">
+                    Learn more about how it works.
+                  </View.LinkSimple>
+                </SectionSubP>
+                <VertSpace />
+                <div $$flex={0.5} />
                 <icons
                   css={{
                     transformOrigin: 'bottom left',
@@ -473,8 +485,8 @@ class SectionSearch extends React.Component {
                     <Icon name="dropbox" {...iconProps} />
                   </icon>
                 </icons>
+                <div $$flex={1.5} />
               </Half>
-              <div $$flex />
             </Content>
           </>
         )}
@@ -525,11 +537,12 @@ class SectionProfiles extends React.Component {
                     : { margin: ['auto', 0] }
                 }
               >
-                <SectionTitle size={2.8}>Give your team a home</SectionTitle>
+                <SectionTitle size={2.8}>A home for teams</SectionTitle>
                 <VertSpace />
                 <SectionSubTitle>
-                  Stay better in sync with automatic profiles that show relevant
-                  activity from across your integrations.
+                  Stay in sync with automatic profiles. It's the most relevant
+                  information on everyone from across your cloud, always at
+                  hand.
                 </SectionSubTitle>
                 <VertSpace />
                 <SectionSubP if={false} color="#111" alpha={0.5}>

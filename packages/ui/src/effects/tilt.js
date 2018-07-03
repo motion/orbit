@@ -7,8 +7,8 @@ const defaultSettings = {
   reverse: false,
   max: 35,
   perspective: 1000,
-  easing: 'cubic-bezier(.03,.98,.52,.99)',
-  scale: '1.1',
+  easing: 'ease-in', //'cubic-bezier(.03,.98,.52,.99)',
+  scale: 1,
   speed: 300,
   transition: true,
   axis: null,
@@ -55,6 +55,8 @@ export class Tilt extends React.Component {
   componentDidMount() {
     this.element = findDOMNode(this)
     this.updateRestingPosition()
+    this.updateElementPosition()
+    setTimeout(() => this.setState({ mounted: true }))
   }
 
   componentDidUpdate(prevProps) {
@@ -65,12 +67,7 @@ export class Tilt extends React.Component {
 
   updateRestingPosition = () => {
     if (this.props.restingPosition) {
-      this.setTransition()
-      setTimeout(() => {
-        this.updateElementPosition()
-        this.setState({ mounted: true })
-        this.update(this.props.restingPosition)
-      })
+      this.setTransition(() => this.update(this.props.restingPosition))
     }
   }
 
@@ -80,7 +77,7 @@ export class Tilt extends React.Component {
   }
 
   reset() {
-    window.requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       this.setState({
         style: {
           ...this.state.style,
@@ -126,26 +123,30 @@ export class Tilt extends React.Component {
   }
 
   onMouseLeave = e => {
-    this.setTransition()
-    if (this.props.restingPosition) {
-      // settimeout so it comes after setTransition
-      setTimeout(() => {
+    this.setTransition(() => {
+      if (this.props.restingPosition) {
         this.update(this.props.restingPosition)
-      })
-    } else if (this.settings.reset) {
-      this.reset()
-    }
+      } else if (this.settings.reset) {
+        this.reset()
+      }
+    })
     return this.props.onMouseLeave(e)
   }
 
-  setTransition() {
+  setTransition(cb) {
     clearTimeout(this.transitionTimeout)
-    this.setState({
-      style: {
-        ...this.state.style,
-        transition: this.settings.speed + 'ms ' + this.settings.easing,
+    this.setState(
+      {
+        style: {
+          ...this.state.style,
+          willChange: 'transform',
+          transition: `transform ${this.settings.speed}ms ${
+            this.settings.easing
+          }`,
+        },
       },
-    })
+      cb,
+    )
     this.transitionTimeout = setTimeout(() => {
       this.setState({
         style: {
@@ -230,7 +231,7 @@ export class Tilt extends React.Component {
       opacity: willFadeIn ? 0 : 1,
     }
     if (willFadeIn) {
-      style.transition = `all ${this.settings.easing} ${this.settings.speed}`
+      style.transition = `all ${this.settings.easing}ms ${this.settings.speed}`
     }
     return (
       <div

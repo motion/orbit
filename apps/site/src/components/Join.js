@@ -4,6 +4,7 @@ import { P } from '~/views'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import jsonp from 'jsonp'
+import * as Constants from '~/constants'
 
 const queryString = query => {
   const esc = encodeURIComponent
@@ -77,26 +78,29 @@ export class Join extends React.Component {
           noValidate
           onSubmit={this.submit}
         >
-          <UI.Row>
-            <UI.Input
-              $input
-              flex
-              {...sizeProps}
-              ref={this.email}
-              type="email"
-              name="EMAIL"
-              id="mce-EMAIL"
-              placeholder="Email address..."
-              style={style}
-              css={{
-                // eesti font fix
-                padding: [4, 12, 0],
-              }}
-            />
+          <div $inner>
+            <wrapInput>
+              <UI.Input
+                $input
+                flex
+                {...sizeProps}
+                ref={this.email}
+                type="email"
+                name="EMAIL"
+                id="mce-EMAIL"
+                placeholder="Email address..."
+                style={style}
+                css={{
+                  // eesti font fix
+                  padding: [4, 12, 0],
+                }}
+              />
+            </wrapInput>
+            <space css={{ height: 20 }} />
             <UI.Theme theme="#37C457">
               <UI.Button
+                $button
                 {...sizeProps}
-                margin={[0, 0, 0, 12]}
                 fontWeight={500}
                 type="submit"
                 disabled={submitting}
@@ -108,7 +112,7 @@ export class Join extends React.Component {
                 {submitting ? 'Signing up...' : 'Early access'}
               </UI.Button>
             </UI.Theme>
-          </UI.Row>
+          </div>
           <message
             $success={success && !error}
             css={{ maxWidth: '70%', height: 30, marginBottom: -20 }}
@@ -126,17 +130,28 @@ export class Join extends React.Component {
       flex: 1,
       position: 'relative',
     },
+    inner: {
+      flexFlow: 'row',
+      [Constants.screen.smallQuery]: {
+        flexFlow: 'column',
+      },
+    },
     section: {
       textAlign: 'left',
-      minWidth: 300,
       width: '100%',
       maxWidth: 540,
       margin: [0, 'auto'],
     },
+    button: {
+      margin: [10, 12],
+    },
+    wrapInput: {
+      margin: [10, 0],
+      flex: 1,
+      minWidth: 235,
+    },
     input: {
       background: [0, 0, 0, 0.025],
-      width: '100%',
-      minWidth: 235,
     },
     message: {
       position: 'absolute',

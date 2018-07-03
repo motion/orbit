@@ -29,7 +29,6 @@ export class TiltHoverGlow extends React.PureComponent {
     glowProps,
     ...props
   }) {
-    console.log('render me')
     return (
       <Tilt
         options={{
@@ -48,7 +47,6 @@ export class TiltHoverGlow extends React.PureComponent {
             width,
             height,
             overflow: 'hidden',
-            transition: 'transform 50ms ease-in',
           }}
           {...props}
         >

@@ -1,5 +1,9 @@
 import * as UI from '@mcro/ui'
 
+export const isSafari = /^((?!chrome|android).)*safari/i.test(
+  navigator.userAgent,
+)
+
 export const sectionMaxHeight = 1250
 export const sidePad = 40
 export const smallSize = 980
@@ -28,12 +32,14 @@ export const mainLight = UI.color(colorMain)
   .lighten(0.65)
   .hex()
 
+const largeSize = smallSize - 1
 export const screen = {
   smallQuery: `@media (max-width: ${smallSize}px)`,
+  largeQuery: `@media (max-width: ${largeSize}px)`,
   small: { maxWidth: smallSize },
-  large: { minWidth: smallSize - 1 },
+  large: { minWidth: largeSize },
   medium: { maxWidth: smallSize * 1.1 },
-  tall: { minHeight: sectionMaxHeight * 0.7 },
+  tall: { minHeight: sectionMaxHeight },
 }
 
 const blueBg = UI.color('#F5FAF9')

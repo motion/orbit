@@ -48,11 +48,19 @@ export class ParallaxLayer extends React.PureComponent {
     }
   }
 
+  lastFixedAt = false
+
   setPosition(height, parentScrollTop, immediate = false) {
-    const scrollTop =
-      typeof this.props.scrollTop === 'number'
-        ? this.props.scrollTop
-        : parentScrollTop
+    const isFixed = typeof this.props.scrollTop === 'number'
+    if (isFixed && this.lastFixedAt === parentScrollTop) {
+      return
+    }
+    if (isFixed) {
+      this.lastFixedAt = parentScrollTop
+    } else {
+      this.lastFixedAt = false
+    }
+    const scrollTop = isFixed ? this.props.scrollTop : parentScrollTop
     const targetScroll = Math.floor(this.props.offset) * height
     const offset = height * this.props.offset + targetScroll * this.props.speed
     const to = parseFloat(-(scrollTop * this.props.speed) + offset)
@@ -111,6 +119,7 @@ export class ParallaxLayer extends React.PureComponent {
       className,
       effects,
       horizontal,
+      scrollTop,
       ...props
     } = this.props
     const isHoriztonal = horizontal || this.parent.props.horizontal

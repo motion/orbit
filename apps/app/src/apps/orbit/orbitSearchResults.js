@@ -44,7 +44,14 @@ export class OrbitSearchResults extends React.Component {
         <contents $$flex>
           <message if={message}>{message}</message>
           <OrbitQuickSearch />
-          <results $isChanging={isChanging} if={results.length}>
+          <results
+            if={results.length}
+            css={{
+              position: 'relative',
+              transition: 'opacity ease-in-out 150ms',
+              opacity: isChanging ? 0.7 : 1,
+            }}
+          >
             {results.map((bit, index) => (
               <OrbitCard
                 pane={name}
@@ -94,10 +101,6 @@ export class OrbitSearchResults extends React.Component {
       right: 0,
       bottom: 0,
     },
-    visible: {
-      opacity: 1,
-      pointerEvents: 'all',
-    },
     isChanging: {
       opacity: 0.7,
     },
@@ -105,11 +108,6 @@ export class OrbitSearchResults extends React.Component {
       padding: [5, 10],
       fontSize: 12,
       opacity: 0.3,
-    },
-    results: {
-      opacity: 1,
-      position: 'relative',
-      transition: 'opacity ease-in-out 150ms',
     },
     content: {
       padding: [10, 0],

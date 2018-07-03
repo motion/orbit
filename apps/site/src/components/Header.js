@@ -39,7 +39,7 @@ export class Header extends React.Component {
                       css={linkStyle}
                       onClick={() => scrollTo(2)}
                     >
-                      Profiles
+                      Explore
                     </Link>
                     <Link
                       isLarge={isLarge}
@@ -68,18 +68,12 @@ export class Header extends React.Component {
       position: 'absolute',
       zIndex: 4,
       userSelect: 'none',
-      [Constants.screen.smallQuery]: {
-        position: 'relative',
-      },
     },
     headerInner: {
       padding: [25, 0],
       flexFlow: 'row',
       zIndex: 100,
       alignItems: 'center',
-      [Constants.screen.smallQuery]: {
-        padding: [25, 0],
-      },
     },
     nav: {
       flexFlow: 'row',

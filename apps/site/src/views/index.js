@@ -9,6 +9,7 @@ import Router from '~/router'
 export * from './section'
 
 const TITLE_FONT_FAMILY = '"Eesti Pro"'
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export const P = ({ size, titleFont, ...props }) => (
   <Media query={Constants.screen.small}>
@@ -51,7 +52,7 @@ export const Title = UI.injectTheme(
       {isSmall => (
         <P
           fontWeight={600}
-          size={size * (isSmall ? 0.8 : 1)}
+          size={size * (isSmall ? 0.75 : 1)}
           sizeLineHeight={1.1}
           color={
             theme.titleColor ||
@@ -403,8 +404,6 @@ export class Callout extends React.Component {
   }
 }
 
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-
 export const Glow = ({ below, style = {}, ...props }) => (
   <Media
     if={!isSafari}
@@ -524,7 +523,6 @@ export const Link = ({ to, ...props }) => (
 
 export const LinkSimple = ({ to, ...props }) => (
   <a
-    active={Router.isActive(to)}
     href={to}
     onClick={Router.link(to)}
     css={{
@@ -546,7 +544,7 @@ export const TopoBg = () => (
   />
 )
 
-export const HomeImg = props => (
+export const HomeImg = ({ children, style, borderProps, ...props }) => (
   <>
     <img
       css={{
@@ -557,6 +555,7 @@ export const HomeImg = props => (
         userSelect: 'none',
         border: [1, '#ddd'],
       }}
+      style={style}
       {...props}
     />
     <border
@@ -568,8 +567,12 @@ export const HomeImg = props => (
         right: 0,
         bottom: 0,
         border: [2, '#ddd'],
+        opacity: style ? style.opacity : 1,
       }}
-    />
+      {...borderProps}
+    >
+      {children}
+    </border>
   </>
 )
 

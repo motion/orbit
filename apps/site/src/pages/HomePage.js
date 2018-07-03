@@ -428,7 +428,7 @@ class SectionSearch extends React.Component {
             </Parallax>
             <Content id="home-search">
               <Half css={{ flex: 1 }}>
-                <div $$flex={1.5} />
+                <div $$flex={isLarge ? 1.5 : 3} />
                 <SectionTitle
                   color={UI.color(waveColor)
                     .darken(0.6)
@@ -529,6 +529,7 @@ class SectionProfiles extends React.Component {
               <Slant {...thirdSlant} {...topSlants} />
             </Parallax>
             <Content id="home-profiles" css={{ flex: 1 }}>
+              <div if={!isLarge} $$flex />
               <inner
                 className="profiles"
                 css={

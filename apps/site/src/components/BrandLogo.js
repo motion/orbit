@@ -22,7 +22,7 @@ export class BrandLogo extends React.Component {
             {...props}
             onMouseEnter={this.hover}
             onMouseLeave={this.leave}
-            css={{ cursor: 'pointer', marginLeft: isLarge ? -12 : 0 }}
+            css={{ cursor: 'pointer', marginLeft: isLarge ? 0 : 0 }}
             onClick={Router.link('/')}
           >
             <orbit />
@@ -31,25 +31,6 @@ export class BrandLogo extends React.Component {
         )}
       </Media>
     )
-  }
-
-  static style = {
-    brandMark: {
-      opacity: 0.8,
-    },
-    orbit: {
-      width: 250,
-      height: 250,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      borderRadius: 1000,
-      zIndex: -1,
-      transform: {
-        x: -90,
-        y: -120,
-      },
-    },
   }
 
   static theme = () => {

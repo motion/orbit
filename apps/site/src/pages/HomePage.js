@@ -739,6 +739,8 @@ class OrbitPure extends React.Component {
               css={{
                 borderRadius: 17,
                 boxShadow: [[0, 23, 80, [0, 0, 0, 0.15]]],
+                // WebkitMaskImage:
+                //   '-webkit-linear-gradient(top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%)',
               }}
               glowProps={{
                 opacity: 0.5,

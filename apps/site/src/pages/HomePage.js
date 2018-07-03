@@ -33,12 +33,12 @@ const waveColor = '#C4C4F4'
 
 class WindowResize extends React.Component {
   componentDidMount() {
-    document.documentElement.addEventListener('resize', this.handleResize)
+    window.addEventListener('resize', this.handleResize)
     this.handleResizeFast()
   }
 
   componentWillUnmount() {
-    document.documentElement.removeEventListener('resize', this.handleResize)
+    window.removeEventListener('resize', this.handleResize)
   }
 
   handleResizeFast = () => {
@@ -713,7 +713,12 @@ class OrbitPure extends React.Component {
   }
 
   render() {
-    const { scrollTop, restingPosition, lastLockedIndex } = this.props
+    const {
+      scrollTop,
+      restingPosition,
+      lastLockedIndex,
+      sectionHeight,
+    } = this.props
     return (
       <ParallaxLayer
         ref={ref => (window.orbit = ref)}
@@ -738,10 +743,21 @@ class OrbitPure extends React.Component {
               pointerEvents: 'all',
               width: 1100 / 2,
               height: 2014 / 2,
+              transformOrigin: 'top center',
               transform: {
-                x: 70,
-                y: '15%',
+                x: '5%',
+                y: '10%',
                 z: 0,
+                scale:
+                  sectionHeight < 1100
+                    ? Math.min(
+                        1,
+                        Math.max(
+                          0.75,
+                          Math.log(1 / ((1300 - sectionHeight) / 1000)),
+                        ) / 1.15,
+                      )
+                    : 1,
               },
             }}
           >
@@ -855,6 +871,7 @@ class Orbit extends React.Component {
       scrollTop,
       restingPosition,
       lastLockedIndex,
+      sectionHeight: homeStore.sectionHeight,
     }
     return <OrbitPure {...orbitProps} />
   }

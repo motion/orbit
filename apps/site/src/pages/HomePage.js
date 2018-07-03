@@ -877,7 +877,7 @@ class Orbit extends React.Component {
   }
 }
 
-const lockedPosition = (node, pct = 0.65) => {
+const lockedPosition = (node, pct = 0.6) => {
   const { y } = node.getBoundingClientRect()
   const max = node.clientHeight - node.clientHeight * pct
   // active

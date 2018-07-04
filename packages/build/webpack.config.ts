@@ -9,6 +9,7 @@ import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 
 const cwd = process.cwd()
 const readEntry = () => {
@@ -162,6 +163,7 @@ const config = {
     ],
   },
   plugins: [
+    // new ProfilingPlugin(),
     new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: !isProd }),
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
     new DuplicatePackageCheckerPlugin(),

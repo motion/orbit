@@ -60,6 +60,7 @@ class OrbitCardStore {
     }
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
+      return
     }
     if (this.props.inactive) {
       return

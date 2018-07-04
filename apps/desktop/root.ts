@@ -19,7 +19,7 @@ import Path from 'path'
 import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
-import { Bit } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
 import { Connection } from 'typeorm'
 import { GeneralSettingManager } from './settingManagers/generalSettingManager'
 import sqlite from 'sqlite'
@@ -69,6 +69,23 @@ export class Root {
     this.auth = new Auth()
     Desktop.onMessage(Desktop.messages.OPEN, open)
     await this.connect()
+
+    // rtemp
+    if (!(await Setting.findOne({ type: 'confluence' }))) {
+      const setting = new Setting()
+      setting.type = 'confluence'
+      setting.category = 'integration'
+      setting.token = 'good'
+      setting.values = {
+        atlassian: {
+          username: 'natewienert@gmail.com',
+          password: 'AtlOrbit123',
+          domain: 'https://tryorbit2.atlassian.net',
+        },
+      }
+      await setting.save()
+    }
+
     this.generalSettingManager = new GeneralSettingManager()
     this.sync = new Sync()
     this.sync.start()

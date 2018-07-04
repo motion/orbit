@@ -15,11 +15,9 @@ export default class ConfluencePersonSync {
   }
 
   run = async () => {
-    const orgs = this.setting.orgs
-    if (orgs) {
-      await Promise.all(orgs.map(this.syncPeople))
-    } else {
-      log('No orgs selected')
+    const res = await this.syncPeople()
+    if (res.length) {
+      console.log('synced')
     }
   }
 

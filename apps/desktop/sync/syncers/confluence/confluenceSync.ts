@@ -2,13 +2,15 @@ import Syncer from '../syncer'
 import ConfluenceBitSync from './ConfluenceBitSync'
 import ConfluencePersonSync from './ConfluencePersonSync'
 
-export const github = new Syncer('confluence', {
+export const confluence = new Syncer('confluence', {
   actions: {
-    task: { secondsBetween: 60 * 5 },
-    people: { secondsBetween: 60 * 5 },
+    bit: { secondsBetween: 60 * 5 },
+    person: { secondsBetween: 60 * 5 },
   },
-  getSyncers: setting => ({
-    task: new ConfluenceBitSync(setting),
-    people: new ConfluencePersonSync(setting),
-  }),
+  getSyncers: setting => {
+    return {
+      bit: new ConfluenceBitSync(setting),
+      person: new ConfluencePersonSync(setting),
+    }
+  },
 })

@@ -17,6 +17,11 @@ export class Setting extends T.BaseEntity {
 
   @T.Column('simple-json', { default: '{}' })
   values: {
+    atlassian?: {
+      username: string
+      password: string
+      domain: string
+    }
     oauth?: Object
     repos?: Object
     calendarsActive?: Object

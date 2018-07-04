@@ -1,35 +1,21 @@
 import decor from '@mcro/decor'
-import * as PropTypes from 'prop-types'
 import {
   storeProvidable,
   storeAttachable,
-  contextual,
   renderArgumentable,
   emitsMount,
 } from '@mcro/decor-react'
 import { subscribable } from '@mcro/decor-classes'
-import { utilityUsable, reactObservable } from '@mcro/decor-mobx'
+import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 
-const uiContext = [
-  contextual,
-  {
-    uiActiveThemeName: PropTypes.string,
-    uiActiveTheme: PropTypes.object,
-    uiThemes: PropTypes.object,
-    ui: PropTypes.object,
-  },
-]
-
 const glossPlugin = () => ({ decorator })
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
-  utilityUsable,
-  enable.ui && uiContext,
   renderArgumentable,
   enable.ui && glossPlugin,
   enable.mobx && reactObservable,

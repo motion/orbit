@@ -1,7 +1,7 @@
 import { DecorCompiledDecorator } from '@mcro/decor'
-import { UtilityUsable } from '@mcro/decor-mobx'
 
 export { react } from '@mcro/automagical'
+export { on } from '@mcro/helpers'
 
 export { Component } from './Component'
 export { DecorCompiledDecorator } from '@mcro/decor'
@@ -11,10 +11,10 @@ export type DecorView = DecorCompiledDecorator<any>
 import { Emitter } from 'event-kit'
 
 export interface ViewDecorator {
-  <A>(a: A): A & UtilityUsable
+  <A>(a: A): A
 }
 
-export function view<T>(a: T): T & UtilityUsable
+export function view<T>(a: T): T
 export namespace view {
   export function on(
     name: string | Object,
@@ -33,7 +33,7 @@ export interface Proppable {
   props: any
 }
 
-export function store<T>(a: T): T & UtilityUsable & Proppable
+export function store<T>(a: T): T & Proppable
 
 export function debugState(cb: Function): void
 

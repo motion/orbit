@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
 const rowHeight = 2
@@ -28,7 +28,7 @@ export class Masonry extends React.Component {
     if (this.state.measured) return
     this.gridNode = gridRef
     // small delay fixes bug that happens sometimes, low confidence
-    this.setTimeout(this.measureGrid, 30)
+    on(this, setTimeout(this.measureGrid, 30))
   }
 
   measureGrid = () => {

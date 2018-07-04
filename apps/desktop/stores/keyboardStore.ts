@@ -1,4 +1,4 @@
-import { isEqual } from '@mcro/black/store'
+import { isEqual } from 'lodash'
 import iohook from 'iohook'
 import { Desktop, App } from '@mcro/stores'
 

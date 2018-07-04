@@ -315,7 +315,6 @@ class SurfacePlain extends React.Component {
     const surface = (
       <surface
         className={`${this.uniq} ${className || ''}`}
-        ref={this.ref('surfaceRef').set}
         onClick={onClick}
         {...!wrapElement && passProps}
       >

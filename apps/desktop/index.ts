@@ -2,14 +2,11 @@ import 'isomorphic-fetch'
 import '@mcro/debug/inject'
 import '@mcro/black/mlog.js'
 import * as Mobx from 'mobx'
-import debug from '@mcro/debug'
 import root from 'global'
 
 require('module-alias').addAlias('~', __dirname + '/')
 
 Error.stackTraceLimit = Infinity
-
-const log = debug('index')
 
 console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
@@ -45,24 +42,22 @@ process.on('SIGSEGV', () => {
   console.log('Segmentation fault on exit')
   exitHandler(1)
 })
+
 // uncaught exceptions
 process.on('uncaughtException', err => {
-  console.log('uncaughtException', err.stack)
+  console.log('uncaughtException', err)
 })
+
 // promise exceptions
 process.on('unhandledRejection', function(reason, promise) {
   if (reason) {
     if (reason.code === 'SQLITE_BUSY') {
+      console.log('sqlite busy, reconnecting...')
       appRoot.reconnect()
     }
   }
-
-  console.log(
-    'Desktop: Possibly Unhandled Rejection at: Promise ',
-    promise,
-    ' reason: ',
-    reason,
-  )
+  console.log('Desktop: Possibly Unhandled Rejection')
+  console.log(promise, reason)
   console.log(reason.stack)
 })
 
@@ -70,7 +65,7 @@ export async function run() {
   try {
     await appRoot.start()
   } catch (err) {
-    log('error', err)
+    console.log('error', err)
   }
 }
 

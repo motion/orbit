@@ -97,8 +97,16 @@ export class Popover extends React.PureComponent {
     return this.state.props
   }
 
-  popoverRef = null
-  targetRef = null
+  _popoverRef = React.createRef()
+  _targetRef = React.createRef()
+
+  get targetRef() {
+    return this._targetRef.current
+  }
+
+  get popoverRef() {
+    return this._popoverRef.current
+  }
 
   state = {
     targetHovered: null,
@@ -201,13 +209,16 @@ export class Popover extends React.PureComponent {
           this.curProps.onClose()
         }
 
-        this.closingTimeout = this.setTimeout(() => {
-          this.setState(
-            { closing: false, isOpen: false },
-            this.props.onDidClose,
-          )
-          resolve()
-        }, 300)
+        on(
+          this,
+          setTimeout(() => {
+            this.setState(
+              { closing: false, isOpen: false },
+              this.props.onDidClose,
+            )
+            resolve()
+          }, 300),
+        )
       })
     })
   }
@@ -228,9 +239,12 @@ export class Popover extends React.PureComponent {
           this.open()
         }
       }
-      this.setTimeout(() => {
-        this.isClickingTarget = false
-      })
+      on(
+        this,
+        setTimeout(() => {
+          this.isClickingTarget = false
+        }),
+      )
     })
   }
 
@@ -261,7 +275,7 @@ export class Popover extends React.PureComponent {
     await this.clearHovered()
     this.removeListenForHover()
     this.close()
-    this.setTimeout(this.listenForHover, 100)
+    on(this, setTimeout(this.listenForHover, 100))
   }
 
   clearHovered() {
@@ -576,11 +590,14 @@ export class Popover extends React.PureComponent {
       }
       // ensure check if we have a delay open
       if (delay && isTarget) {
-        this.setTimeout(() => {
-          if (!this.isNodeHovered(node)) {
-            setUnhovered()
-          }
-        }, delay)
+        on(
+          this,
+          setTimeout(() => {
+            if (!this.isNodeHovered(node)) {
+              setUnhovered()
+            }
+          }, delay),
+        )
       }
     }
     const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
@@ -600,7 +617,7 @@ export class Popover extends React.PureComponent {
         onEnter()
         // insanity, but mouseleave is horrible
         if (this.curProps.target) {
-          this.setTimeout(onLeave, 150)
+          on(this, setTimeout(onLeave, 150))
         }
       }),
     )
@@ -713,7 +730,7 @@ export class Popover extends React.PureComponent {
     const { showPopover } = this
     const controlledTarget = target => {
       const targetProps = {
-        ref: this.ref('targetRef').set,
+        ref: this.targetRef,
       }
       if (passActive) {
         targetProps.active = isOpen && !closing
@@ -744,7 +761,7 @@ export class Popover extends React.PureComponent {
             <popover
               {...popoverProps}
               $popoverOpen={!closing && showPopover}
-              ref={this.ref('popoverRef').set}
+              ref={this.popoverRef}
               style={{
                 ...style,
                 top: top || 'auto',

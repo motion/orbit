@@ -215,7 +215,6 @@ We have a simple system for building compiled aggregated decorators called `@mcr
 See `@mcro/black/view`. Basically has:
 
 - Add `this.subscriptions` using npm `event-kit` so you can avoid messy tracking on cpWU
-- Add `this.setInterval`, `this.setTimeout`, and `this.on`, which all use `this.subscriptions`, again to prevent messy tracking of intervals, timeouts, and event listeners respectively.
 - Add props as the first argument to `render()`, so you can do `render({ children })`
 - Add `mobx-react` automatically
 - Adds gloss
@@ -254,7 +253,6 @@ There's also `@view.ui` for leaf-views. The only diff is it just doesn't wrap `m
 Stores are just classes. The `@store` decorator will automatically mobx decorate them for you. This is essentially exactly what Mobx 5 `decorate`. It also has a few of the same `@mcro/decor` plugins with the same ideas:
 
 - Add `willMount()` `didMount()` and `willUnmount()` for when using with views
-- Add `this.setInterval`, `this.setTimeout`, and `this.on` just like views
 - Adds some hmr and other nice stuff
 
 The big thing here is `react`, which is really the only unique thing here beyond minor helpers, and really is the most powerful part of the kit. It's essentially Mobx `reaction`, but we found ourselves repeating and adding tons of boilerplate for many things, which `react` simplifies into one thing. Here's `react` in a nutshell, [see the automagical README.md](packages/automagical/README.md) for more information.

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import { ListItem } from './listItem'
 // import { List as VirtualList } from 'react-virtualized'
 import { parentSize } from './helpers/parentSize'
@@ -468,7 +468,7 @@ class ListUI extends React.PureComponent {
     }
     this.childrenVersion = Math.random()
     if (virtualized) {
-      this.setTimeout(this.forceUpdateGrid)
+      on(this, setTimeout(this.forceUpdateGrid))
     }
   }
 

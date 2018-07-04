@@ -1,7 +1,7 @@
 import Oracle from '@mcro/oracle'
 import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
-import { store, isEqual, react } from '@mcro/black/store'
+import { store, isEqual, react, on } from '@mcro/black/store'
 import { App, Desktop, Electron, Swift } from '@mcro/stores'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
@@ -100,6 +100,8 @@ export class Screen {
     }
   }
 
+  clearTimeout?: Function
+
   start = async () => {
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
     // accessiblity check
@@ -186,11 +188,15 @@ export class Screen {
       if (!Desktop.state.paused) {
         this.oracle.resume()
       }
-      clearTimeout(this.appStateTm)
-      // @ts-ignore
-      this.appStateTm = this.setTimeout(() => {
-        Desktop.setState(state)
-      }, 4)
+      if (this.clearTimeout) {
+        this.clearTimeout()
+      }
+      this.clearTimeout = on(
+        this,
+        setTimeout(() => {
+          Desktop.setState(state)
+        }, 4),
+      )
     })
     // OCR work clear
     this.oracle.onBoxChanged(count => {

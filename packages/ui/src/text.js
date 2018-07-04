@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
 import * as _ from 'lodash'
@@ -208,11 +208,14 @@ export class Text extends React.Component {
       ((!!props.ellipse || props.ellipse > 0) &&
         props.ellipse !== this.props.ellipse)
     ) {
-      this.setTimeout(() => {
-        this.setState({ clamp: false }, () => {
-          this.measure()
-        })
-      })
+      on(
+        this,
+        setTimeout(() => {
+          this.setState({ clamp: false }, () => {
+            this.measure()
+          })
+        }),
+      )
     }
     // setup reaction for editing if necessary
     // if (!this.editableReaction && props.editable) {

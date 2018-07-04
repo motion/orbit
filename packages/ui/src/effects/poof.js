@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import { observable } from 'mobx'
 
 const TOTAL_TIME = 200
@@ -23,15 +23,21 @@ export class Poof extends React.Component {
   start = () => {
     this.show = true
     this.iter = 0
-    this.setTimeout(() => {
-      this.show = false
-    }, TOTAL_TIME)
+    on(
+      this,
+      setTimeout(() => {
+        this.show = false
+      }, TOTAL_TIME),
+    )
 
-    this.setInterval(() => {
-      if (this.show) {
-        this.iter = (this.iter + 1) % FRAMES
-      }
-    }, TOTAL_TIME / FRAMES)
+    on(
+      this,
+      setInterval(() => {
+        if (this.show) {
+          this.iter = (this.iter + 1) % FRAMES
+        }
+      }, TOTAL_TIME / FRAMES),
+    )
   }
 
   puff() {

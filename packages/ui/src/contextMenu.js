@@ -48,7 +48,11 @@ class ContextMenuStore {
   store: ContextMenuStore,
 })
 export class ContextMenu extends React.Component {
-  node = null
+  nodeRef = React.createRef()
+
+  get node() {
+    return this.nodeRef.current
+  }
 
   static defaultProps = {
     width: 135,
@@ -87,7 +91,7 @@ export class ContextMenu extends React.Component {
 
   render({ inactive, width, children, options, store, ...props }) {
     return (
-      <contextmenu ref={this.ref('node').set} {...props}>
+      <contextmenu ref={this.node} {...props}>
         {children}
         <Popover
           if={store.event}

@@ -64,10 +64,12 @@ export class HoverGlow extends React.PureComponent {
   rootRef = React.createRef()
 
   componentDidMount() {
-    // @ts-ignore
-    this.setTimeout(() => {
-      this.follow()
-    }, 100)
+    on(
+      this,
+      setTimeout(() => {
+        this.follow()
+      }, 100),
+    )
   }
 
   follow() {
@@ -132,19 +134,24 @@ export class HoverGlow extends React.PureComponent {
 
   mouseDown = () => {
     this.setState({ clicked: true }, () => {
-      this.setTimeout(() => {
-        this.setState({ clicked: false })
-      }, this.props.clickDuration)
+      on(
+        this,
+        setTimeout(() => {
+          this.setState({ clicked: false })
+        }, this.props.clickDuration),
+      )
     })
   }
 
   trackMouse = track => {
     if (this.unmounted) return
     this.setState({ willTrack: true })
-    // @ts-ignore
-    this.setTimeout(() => {
-      this.setState({ track })
-    })
+    on(
+      this,
+      setTimeout(() => {
+        this.setState({ track })
+      }),
+    )
   }
 
   render({

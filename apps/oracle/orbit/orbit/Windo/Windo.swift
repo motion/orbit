@@ -142,6 +142,7 @@ final class Windo {
   
   // sends focus to last app besides our app
   public func defocus() {
+    print("docus \(self.currentId)")
     if self.currentId != orbitAppId {
       return
     }

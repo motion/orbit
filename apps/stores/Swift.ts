@@ -1,5 +1,6 @@
 import { store } from '@mcro/black/store'
 import { WebSocket, ReconnectingWebSocket } from '@mcro/mobx-bridge'
+import { setGlobal } from './helpers'
 
 export let Swift
 
@@ -16,24 +17,23 @@ class SwiftStore {
 
   constructor(props = { onStateChange: _ => _ }) {
     this.onStateChange = props.onStateChange
-    // disable until oracle is re-enabled
-    // this._setupLink()
+    this.setupLink()
   }
 
   clear = () => {
-    this._send({ action: 'clear' })
+    this.send({ action: 'clear' })
   }
 
   pause = () => {
-    this._send({ action: 'pause' })
+    this.send({ action: 'pause' })
   }
 
   resume = () => {
-    this._send({ action: 'resume' })
+    this.send({ action: 'resume' })
   }
 
   defocus = () => {
-    this._send({ action: 'defocus' })
+    this.send({ action: 'defocus' })
   }
 
   toggle = () => {
@@ -45,7 +45,7 @@ class SwiftStore {
     }
   }
 
-  _setupLink() {
+  private setupLink() {
     this.ws = new ReconnectingWebSocket('ws://localhost:40512', undefined, {
       constructor: WebSocket,
     })
@@ -67,7 +67,7 @@ class SwiftStore {
       this.isOpen = true
       if (this.queuedMessages.length) {
         for (const message of this.queuedMessages) {
-          this._send(message)
+          this.send(message)
         }
         this.queuedMessages = []
       }
@@ -88,13 +88,15 @@ class SwiftStore {
     }
   }
 
-  _send(object) {
+  private send(object) {
     if (this.isOpen) {
       this.ws.send(JSON.stringify(object))
     } else {
+      console.log('not open queue', object)
       this.queuedMessages.push(object)
     }
   }
 }
 
 Swift = new SwiftStore()
+setGlobal('Swift', Swift)

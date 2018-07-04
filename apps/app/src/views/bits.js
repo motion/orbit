@@ -5,7 +5,7 @@ import { capitalize } from 'lodash'
 import { format, formatDistance } from 'date-fns'
 
 @view
-export class Bits {
+export class Bits extends React.Component {
   getTask = task => {
     const { title, id } = task.data
     return {

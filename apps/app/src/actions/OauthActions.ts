@@ -12,7 +12,9 @@ export const checkAuths = async () => {
     `${Constants.API_URL}/getCreds`,
   ).json
   if (error) {
-    console.log('no creds', error)
+    if (error === 'no creds') {
+      return
+    }
     throw new Error(error)
   }
   return authorizations
@@ -24,7 +26,6 @@ export const startOauth = type => {
   App.sendMessage(Desktop, Desktop.messages.OPEN_AUTH, type)
   const checker = setInterval(async () => {
     const auth = await checkAuths()
-    console.log('checking for', type)
     const oauth = auth && auth[type]
     if (!oauth) {
       return

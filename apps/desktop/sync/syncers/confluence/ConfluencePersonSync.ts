@@ -1,20 +1,11 @@
 import { Person, Setting, createOrUpdate } from '@mcro/models'
 import getHelpers from './getHelpers'
-import * as Helpers from '~/helpers'
 import debug from '@mcro/debug'
+import { flatten } from 'lodash'
 
-const log = debug('sync githubPeople')
+const log = debug('sync confluencePerson')
 
-type GithubPerson = {
-  id: string
-  login: string
-  location: string
-  bio: string
-  avatar_url: string
-  email: string
-}
-
-export default class GithubPeopleSync {
+export default class ConfluencePersonSync {
   setting: Setting
   helpers = getHelpers({})
 
@@ -24,28 +15,33 @@ export default class GithubPeopleSync {
   }
 
   run = async () => {
-    const orgs = this.setting.orgs
-    if (orgs) {
-      await Promise.all(orgs.map(this.syncMembers))
-    } else {
-      log('No orgs selected')
+    const res = await this.syncPeople()
+    if (res.length) {
+      console.log('synced')
     }
   }
 
-  syncMembers = async (org: string) => {
-    const people = await this.helpers.fetch(`/orgs/${org}/members`)
-    if (!people) {
-      console.log('no people found')
+  syncPeople = async () => {
+    const groups = await this.helpers.fetchAll(`/wiki/rest/api/group`)
+    console.log('groups', groups)
+    if (!groups) {
+      console.log('no groups found')
       return null
     }
-    const fullPeople = await Promise.all(
-      people.map(person => this.helpers.fetch(`/users/${person.login}`)),
+    const people = flatten(
+      await Promise.all(
+        groups.map(group =>
+          this.helpers.fetchAll(`/wiki/rest/api/group/${group.id}/member`),
+        ),
+      ),
     )
-    const created = await Promise.all(fullPeople.map(this.createPerson))
+    console.log('people', people)
+    const created = await Promise.all(people.map(this.createPerson))
     return created.filter(x => !!x)
   }
 
-  createPerson = async (info: GithubPerson) => {
+  createPerson = async info => {
+    console.log('createPerson', info)
     const person = {
       location: info.location || '',
       bio: info.bio || '',

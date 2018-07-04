@@ -7,6 +7,7 @@ import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 import { PeopleRow } from '~/components/PeopleRow'
+import { selectItem } from '../../actions/PeekStateActions'
 
 let loggers = []
 let nextLog = null
@@ -57,6 +58,10 @@ class OrbitCardStore {
     if (this.props.onClick) {
       this.props.onClick(e)
     }
+    if (this.props.onSelect) {
+      this.props.onSelect(e.currentTarget)
+      return
+    }
     if (this.props.inactive) {
       return
     }
@@ -85,6 +90,7 @@ class OrbitCardStore {
       if (shouldSelect !== this._isSelected) {
         this._isSelected = shouldSelect
         if (shouldSelect) {
+          // visual smoothness
           await sleep()
           if (!this.target) {
             throw new Error(
@@ -93,7 +99,7 @@ class OrbitCardStore {
               }`,
             )
           }
-          this.props.appStore.setTarget(this.target, this.ref)
+          selectItem(this.target, this.ref)
         }
       }
     },
@@ -185,7 +191,6 @@ export class OrbitCard extends React.Component {
       iconProps,
       hide,
     } = this.props
-    const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
       <OrbitIcon
@@ -334,7 +339,7 @@ export class OrbitCard extends React.Component {
       overflow: 'hidden',
       position: 'relative',
       maxHeight: '100%',
-      transition: 'all ease-in 120ms',
+      transition: 'all ease-in 80ms',
       padding: [17, 18],
       transform: {
         z: 0,

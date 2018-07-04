@@ -12,12 +12,4 @@ export class File extends React.Component {
       </>
     )
   }
-
-  static style = {
-    content: {
-      padding: 20,
-      overflowY: 'scroll',
-      flex: 1,
-    },
-  }
 }

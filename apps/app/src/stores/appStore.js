@@ -4,10 +4,12 @@ import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 import * as AppStoreHelpers from './appStoreHelpers'
-import * as AppStoreReactions from './appStoreReactions'
 import { modelQueryReaction } from '@mcro/helpers'
+import debug from '@mcro/debug'
 
+// this is *not* unused
 let hasRun = false
+const log = debug('appStore')
 
 const searchBits = async query => {
   if (!query) {
@@ -36,6 +38,7 @@ const searchBits = async query => {
 export class AppStore {
   quickSearchIndex = 0
   nextIndex = 0
+  leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
   settings = {}
@@ -45,9 +48,6 @@ export class AppStore {
   async willMount() {
     this.updateScreenSize()
   }
-
-  // reactive values
-  selectedBit = AppStoreReactions.selectedBitReaction
 
   get activeIndex() {
     this.lastSelectAt
@@ -115,6 +115,21 @@ export class AppStore {
         }
       }
       return services
+    },
+  )
+
+  clearSelectedOnLeave = react(
+    () => [this.leaveIndex, Desktop.hoverState.peekHovered],
+    async ([leaveIndex, peekHovered], { sleep, when }) => {
+      if (!peekHovered) {
+        await sleep(100)
+      }
+      await when(() => !peekHovered)
+      await sleep(100)
+      if (leaveIndex === -1) {
+        throw react.cancel
+      }
+      this.clearSelected()
     },
   )
 
@@ -190,6 +205,15 @@ export class AppStore {
     },
   )
 
+  // one frame after for speed of rendering
+  updateActiveIndexToNextIndex = react(
+    () => this.nextIndex,
+    async (i, { sleep }) => {
+      await sleep(0)
+      this.activeIndex = i
+    },
+  )
+
   // this does "auto-select of first result after search"
   // but it can be pretty annoying
   // resetActiveIndexOnSearchStart = react(
@@ -211,7 +235,6 @@ export class AppStore {
       await sleep(16)
       this.nextIndex = -1
       this.activeIndex = -1
-      // this.updateActiveIndex()
     },
   )
 
@@ -339,28 +362,24 @@ export class AppStore {
   )
 
   clearSelected = () => {
-    clearTimeout(this.hoverOutTm)
+    this.leaveIndex = -1
     this.nextIndex = -1
     this.activeIndex = -1
     PeekStateActions.clearPeek()
   }
 
-  hoverOutTm = 0
   getHoverSettler = Helpers.hoverSettler({
     enterDelay: 50,
     betweenDelay: 30,
     onHovered: res => {
-      clearTimeout(this.hoverOutTm)
+      // leave
       if (!res) {
-        // interval because hoversettler is confused when going back from peek
-        // this.hoverOutTm = setInterval(() => {
-        //   if (!Desktop.hoverState.peekHovered) {
-        //     log('should clear peek')
-        //     this.clearSelected()
-        //   }
-        // }, 200)
+        if (this.activeIndex !== -1) {
+          this.leaveIndex = this.activeIndex
+        }
         return
       }
+      this.leaveIndex = -1
       this.toggleSelected(res.index)
     },
   })
@@ -384,11 +403,15 @@ export class AppStore {
     return false
   }
 
-  setTarget = (item, target) => {
-    clearTimeout(this.hoverOutTm)
-    PeekStateActions.selectItem(item, target)
-    this.updateActiveIndex()
-  }
+  clearIndexOnTarget = react(
+    () => App.peekState.target,
+    target => {
+      if (target) {
+        throw react.cancel
+      }
+      this.nextIndex = -1
+    },
+  )
 
   increment = (by = 1) => {
     this.toggleSelected(
@@ -398,10 +421,6 @@ export class AppStore {
 
   decrement = (by = 1) => {
     this.toggleSelected(Math.max(-1, this.activeIndex - by))
-  }
-
-  updateActiveIndex = () => {
-    this.activeIndex = this.nextIndex
   }
 
   setGetResults = fn => {

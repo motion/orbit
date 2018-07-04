@@ -116,12 +116,9 @@ export class PeekFrame extends React.Component {
                 },
               }}
               onClose={PeekStateActions.clearPeek}
-              onMax={
-                false &&
-                (() => {
-                  App.setPeekState({ pinned: !App.peekState.pinned })
-                })
-              }
+              onMax={() => {
+                App.setPeekState({ pinned: !App.peekState.pinned })
+              }}
               maxProps={{
                 background: '#ccc',
               }}

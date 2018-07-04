@@ -16,7 +16,7 @@ const InputRow = ({ label, value, onChange }) => (
   <Row>
     <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
     <input
-      css={{ fontSize: 14, padding: [4, 6], margin: ['auto', 8] }}
+      css={{ fontSize: 14, padding: [5, 6], margin: ['auto', 8], flex: 1 }}
       value={value}
       onChange={e => onChange(e.target.value)}
     />{' '}

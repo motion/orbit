@@ -297,7 +297,7 @@ class SurfacePlain extends React.Component {
             noHover
             animation="bounce 150ms"
             target={`.${this.uniq}`}
-            padding={[2, 7]}
+            padding={[2, 7, 4]}
             borderRadius={5}
             distance={8}
             forgiveness={8}

@@ -26,7 +26,7 @@ export class BitSlackConversation extends React.Component {
       return null
     }
     const content = isExpanded
-      ? (bit.data.messages || [])
+      ? ((bit.data && bit.data.messages) || [])
           .slice(0, shownLimit)
           .map((message, index) => (
             <BitSlackMessage
@@ -41,7 +41,7 @@ export class BitSlackConversation extends React.Component {
       : null
     return children({
       title: arrford(
-        (bit.people || []).map(p => capitalize(p.name.split(' ')[0])),
+        (bit.people || []).map(p => capitalize((p.name || '').split(' ')[0])),
         false,
       ),
       people: bit.people,

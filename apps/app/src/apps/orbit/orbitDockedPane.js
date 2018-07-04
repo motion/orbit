@@ -93,7 +93,7 @@ export class OrbitDockedPane extends React.Component {
       bottom: 0,
       left: 0,
       right: 0,
-      height: 200,
+      height: 100,
       zIndex: 10000000,
       borderRadius: 20,
       overflow: 'hidden',

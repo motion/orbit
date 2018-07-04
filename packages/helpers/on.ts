@@ -1,10 +1,13 @@
 import event from 'disposable-event'
 import { Disposable } from 'event-kit'
 
-// @ts-ignore
-const MutationObserver =
+const RealMutationObserver =
+  // @ts-ignore
+  typeof window !== 'undefined' && window.MutationObserver
+
+const IsomorphicMutationObserver: typeof MutationObserver =
   typeof window !== 'undefined'
-    ? window.MutationObserver
+    ? RealMutationObserver
     : class FakeMutationObserver {}
 
 export default function on(...args): Disposable {
@@ -17,7 +20,10 @@ export default function on(...args): Disposable {
   // allows calling with just on('eventName', callback) and using this
   if (args.length === 2) {
     // duck type observables for now
-    if ((args[0] && args[0].subscribe) || args[0] instanceof MutationObserver) {
+    if (
+      (args[0] && args[0].subscribe) ||
+      args[0] instanceof IsomorphicMutationObserver
+    ) {
       return onSomething.call(this, ...args)
     }
     if (typeof args[0] !== 'string') {
@@ -34,10 +40,12 @@ export default function on(...args): Disposable {
 }
 
 type OnAble =
+  | Disposable
   | MutationObserver
   | {
       subscribe?: Function
       emitter?: Function
+      dispose?: Function
     }
 
 // 1. listens to a lots of things:
@@ -53,10 +61,14 @@ function onSomething(
   callback: Function,
 ) {
   // MutationObserver
-  if (target instanceof MutationObserver) {
+  if (target instanceof IsomorphicMutationObserver) {
     const dispose = () => target.disconnect()
     this.subscriptions.add({ dispose })
     return dispose
+  }
+  if (target instanceof Disposable || typeof target.dispose === 'function') {
+    this.subscriptions.add(target)
+    return target
   }
   // subscribable
   if (target.subscribe) {

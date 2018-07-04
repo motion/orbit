@@ -5,7 +5,6 @@ import { WindowFocusStore } from '../stores/windowFocusStore'
 import root from 'global'
 import { sleep } from '../helpers'
 
-@store
 export class ElectronStore {
   shortcutStore?: ShortcutsStore = null
   windowFocusStore?: WindowFocusStore = null

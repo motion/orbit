@@ -4,6 +4,7 @@ import { on, view, Component, isEqual, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '../helpers'
 import { App, Electron, Desktop } from '@mcro/stores'
+import { ElectronStore } from '../stores/ElectronStore'
 
 class MainStore {
   get mouseInActiveArea() {
@@ -28,11 +29,13 @@ class MainStore {
   store: MainStore,
 })
 @view.electron
-export class MainWindow extends Component<{
-  store: MainStore
-  electronStore: ElectronStore
-  onRef?: Function
-}> {
+export class MainWindow extends Component {
+  props: {
+    store: MainStore
+    electronStore: ElectronStore
+    onRef?: Function
+  }
+
   state = {
     show: false,
     position: [0, 0],
@@ -41,7 +44,6 @@ export class MainWindow extends Component<{
 
   componentDidMount() {
     this.handleReadyToShow()
-    console.log('MOUNTED')
     on(
       this,
       setInterval(() => {

@@ -1,11 +1,11 @@
 import Syncer from '../syncer'
 // import GithubFeedSync from './githubFeedSync'
-import {GithubIssueSync} from './githubTaskSync'
+import {GithubIssueSync} from './github-issue-sync'
 import GithubPeopleSync from './githubPeopleSync'
 
 export const github = new Syncer('github', {
   actions: {
-    task: { secondsBetween: 60 * 5 },
+    task: { secondsBetween: 20 },
     people: { secondsBetween: 60 * 5 },
     // feed: { secondsBetween: 30 },
   },

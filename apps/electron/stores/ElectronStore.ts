@@ -1,5 +1,5 @@
 import { App, Electron, Desktop } from '@mcro/stores'
-import { isEqual, store, react, debugState } from '@mcro/black'
+import { isEqual, store, react, debugState, on } from '@mcro/black'
 import { ShortcutsStore } from '../stores/shortcutsStore'
 import { WindowFocusStore } from '../stores/windowFocusStore'
 import root from 'global'
@@ -29,13 +29,8 @@ export class ElectronStore {
     })
     root.el = Electron
     this.windowFocusStore = new WindowFocusStore()
-    this.shortcutStore = new ShortcutsStore([
-      'Option+Space',
-      'Option+Shift+Space',
-      'CommandOrControl+Shift+Space',
-    ])
-    // @ts-ignore
-    this.shortcutStore.on('shortcut', this.onShortcut)
+    this.shortcutStore = new ShortcutsStore(['Option+Space'])
+    this.shortcutStore.onShortcut(this.onShortcut)
     Electron.onMessage(msg => {
       switch (msg) {
         case Electron.messages.CLEAR:
@@ -59,7 +54,7 @@ export class ElectronStore {
 
   onShortcut = async shortcut => {
     console.log('shortcut', shortcut)
-    if (shortcut === 'CommandOrControl+Shift+Space') {
+    if (shortcut === 'Option+Space') {
       this.toggleDocked()
       return
     }

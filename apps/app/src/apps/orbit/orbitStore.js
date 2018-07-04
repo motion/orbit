@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { throttle } from 'lodash'
 import { AppReactions } from '~/stores/AppReactions'
@@ -37,7 +37,7 @@ export default class OrbitStore {
         this.appReactions.subscriptions.dispose()
       },
     })
-    this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))
+    on(this, window, 'keydown', x => this.handleKeyDown(x.keyCode))
   }
 
   handleKeyDown = code => {

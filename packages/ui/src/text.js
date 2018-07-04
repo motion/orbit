@@ -223,7 +223,7 @@ export class Text extends React.Component {
     //         this.clickaway()
     //       }
     //       if (editable) {
-    //         // this.clickaway = this.on(window, 'click', (event: Event) => {
+    //         // this.clickaway = on(this, window, 'click', (event: Event) => {
     //         //   if (this.props.onFinishEdit) {
     //         //     this.props.onFinishEdit(this.value)
     //         //   }

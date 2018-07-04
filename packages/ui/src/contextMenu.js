@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
 import { List } from './list'
@@ -13,7 +13,7 @@ class ContextMenuTarget extends React.Component {
 
   componentDidMount() {
     const node = findDOMNode(this)
-    this.on(node, 'contextmenu', () => {
+    on(this, node, 'contextmenu', () => {
       this.context.contextMenu.setData(this.props.data)
     })
   }
@@ -69,7 +69,7 @@ export class ContextMenu extends React.Component {
   }
 
   componentDidMount() {
-    this.on(window, 'click', event => {
+    on(this, window, 'click', event => {
       if (this.props.inactive) return
       if (this.props.store.event) {
         event.preventDefault()
@@ -77,7 +77,7 @@ export class ContextMenu extends React.Component {
       }
     })
 
-    this.on(this.node, 'contextmenu', event => {
+    on(this, this.node, 'contextmenu', event => {
       if (this.props.inactive) return
       event.preventDefault()
       event.stopPropagation()

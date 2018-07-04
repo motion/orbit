@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, on } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
@@ -82,7 +82,7 @@ export class OrbitContextHome {
   setResultsFrame = frameRef => {
     if (!frameRef) return
     this.frameRef = frameRef
-    this.on(frameRef, 'scroll', this.handleScroll)
+    on(this, frameRef, 'scroll', this.handleScroll)
   }
 
   handleScroll = throttle(() => {

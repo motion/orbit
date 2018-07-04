@@ -1,11 +1,23 @@
 import event from 'disposable-event'
 import { Disposable } from 'event-kit'
 
+// @ts-ignore
+const MutationObserver =
+  typeof window !== 'undefined'
+    ? window.MutationObserver
+    : class FakeMutationObserver {}
+
 export default function on(...args): Disposable {
+  // this allows custom `this` binding
+  // instanceof CompositeDisposable not working...
+  if (typeof this === 'undefined') {
+    const [subject, object, eventName, eventCb] = args
+    return onSomething.call(subject, object, eventName, eventCb)
+  }
   // allows calling with just on('eventName', callback) and using this
   if (args.length === 2) {
     // duck type observables for now
-    if (args[0] && args[0].subscribe) {
+    if ((args[0] && args[0].subscribe) || args[0] instanceof MutationObserver) {
       return onSomething.call(this, ...args)
     }
     if (typeof args[0] !== 'string') {
@@ -21,34 +33,49 @@ export default function on(...args): Disposable {
   return onSomething.call(this, ...args)
 }
 
-type OnAble = {
-  subscribe?: Function
-  emitter?: Function
-}
+type OnAble =
+  | MutationObserver
+  | {
+      subscribe?: Function
+      emitter?: Function
+    }
 
-// listens to a three types of things:
+// 1. listens to a lots of things:
+//    MutationObserver
 //    Rx.Subject / Rx.Observer
 //    Emitter
 //    eventListeners (addEventListener, removeEventListener)
-// returns an off function
+// 2. adds it onto this.subscriptions
+// 3. returns an off function
 function onSomething(
   target: OnAble,
   eventName: String | Function,
   callback: Function,
 ) {
-  let disposable
+  // MutationObserver
+  if (target instanceof MutationObserver) {
+    const dispose = () => target.disconnect()
+    this.subscriptions.add({ dispose })
+    return dispose
+  }
+  // subscribable
   if (target.subscribe) {
     if (typeof eventName !== 'function') {
       throw new Error(`Should pass in (Observable, callback) for Observables`)
     }
     const subscription = target.subscribe(eventName)
-    disposable = () => subscription.unsubscribe()
-  } else if (target && target.emitter) {
-    return on.call(this, target.emitter, eventName, callback)
-  } else {
-    disposable = event(target, eventName, callback)
+    const dispose = () => subscription.unsubscribe()
+    this.subscriptions.add({ dispose })
+    return dispose
   }
-  this.subscriptions.add(disposable)
-  // return just the function that unsubscribes
-  return disposable.dispose ? disposable.dispose.bind(disposable) : disposable
+  let dispose: Disposable
+  if (target && target.emitter) {
+    // emitter
+    dispose = event(target.emitter, eventName, callback)
+  } else {
+    // addEventListener
+    dispose = event(target, eventName, callback)
+  }
+  this.subscriptions.add(dispose)
+  return dispose
 }

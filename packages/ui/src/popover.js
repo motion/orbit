@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
@@ -145,7 +145,7 @@ export class Popover extends React.PureComponent {
       this.open()
     }
     if (closeOnEsc) {
-      this.on(window, 'keyup', e => {
+      on(this, window, 'keyup', e => {
         if (e.keyCode === 27 && this.showPopover) {
           e.preventDefault()
           e.stopPropagation()
@@ -175,7 +175,7 @@ export class Popover extends React.PureComponent {
   listenForResize() {
     const updatePosition = throttle(() => this.setPosition(), 32)
     const updatePositionInactive = debounce(() => this.setPosition(), 300)
-    this.on(window, 'resize', () => {
+    on(this, window, 'resize', () => {
       if (this.showPopover) {
         updatePosition()
       } else {
@@ -218,7 +218,7 @@ export class Popover extends React.PureComponent {
       return
     }
     // click away to close
-    this.on(this.target, 'click', e => {
+    on(this, this.target, 'click', e => {
       e.stopPropagation()
       this.isClickingTarget = true
       if (typeof this.curProps.open === 'undefined') {
@@ -235,7 +235,7 @@ export class Popover extends React.PureComponent {
   }
 
   listenForClickAway() {
-    this.on(window, 'click', e => {
+    on(this, window, 'click', e => {
       const { showPopover, isClickingTarget, keepOpenOnClickTarget } = this
       const { open, closeOnClick } = this.curProps
       // forced open or hidden
@@ -596,7 +596,7 @@ export class Popover extends React.PureComponent {
     const onLeave = isTarget ? debounce(closeIfOut, 80) : closeIfOut
     // logic for enter/leave
     listeners.push(
-      this.on(node, 'mouseenter', () => {
+      on(this, node, 'mouseenter', () => {
         onEnter()
         // insanity, but mouseleave is horrible
         if (this.curProps.target) {
@@ -606,7 +606,7 @@ export class Popover extends React.PureComponent {
     )
     // if noHover it reduces bugs to just not check hovered state
     const onMouseLeave = noHover ? setUnhovered : onLeave
-    listeners.push(this.on(node, 'mouseleave', onMouseLeave))
+    listeners.push(on(this, node, 'mouseleave', onMouseLeave))
     return listeners
   }
 
@@ -645,7 +645,7 @@ export class Popover extends React.PureComponent {
 
   overlayRef = ref => {
     if (ref) {
-      this.on(ref, 'contextmenu', e => this.handleOverlayClick(e))
+      on(this, ref, 'contextmenu', e => this.handleOverlayClick(e))
     }
   }
 

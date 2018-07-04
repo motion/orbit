@@ -59,7 +59,7 @@ class OrbitCardStore {
       this.props.onClick(e)
     }
     if (this.props.onSelect) {
-      this.props.onSelect(this.ref)
+      this.props.onSelect(e.currentTarget)
       return
     }
     if (this.props.inactive) {
@@ -191,7 +191,6 @@ export class OrbitCard extends React.Component {
       iconProps,
       hide,
     } = this.props
-    const { isExpanded } = this
     const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
       <OrbitIcon

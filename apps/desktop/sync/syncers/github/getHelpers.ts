@@ -22,7 +22,7 @@ export default setting => ({
     return new Headers(extraHeaders)
   },
   async fetch(path: string, options: any = {}) {
-    if (!this.token) {
+    if (!setting.token) {
       console.log('no App.sync.github.feed.token')
       return null
     }
@@ -31,7 +31,7 @@ export default setting => ({
     // setup options
     const syncDate = Date.now()
     const requestSearch = new URLSearchParams(
-      objectToQS({ ...search, access_token: this.token }),
+      objectToQS({ ...search, access_token: setting.token }),
     )
     const uri = `https://api.github.com${path}?${requestSearch.toString()}`
     // ensure lastsyncs

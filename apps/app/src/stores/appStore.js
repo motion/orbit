@@ -435,6 +435,9 @@ export class AppStore {
   }
 
   open = async (result, openType) => {
+    if (!result) {
+      throw new Error('No result given to open')
+    }
     const url = await AppStoreHelpers.getPermalink(result, openType)
     App.open(url)
   }

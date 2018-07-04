@@ -63,7 +63,6 @@ export class WindowFocusStore {
       await sleep(App.animationDuration * 2)
       await when(() => !App.isAnimatingOrbit)
       if (!showing) {
-        console.log('DEFOCUS')
         Swift.defocus()
         return
       }

@@ -22,7 +22,7 @@ export default class ConfluencePersonSync {
   }
 
   syncPeople = async () => {
-    const groups = await this.helpers.fetch(`/wiki/rest/api/group`)
+    const groups = await this.helpers.fetchAll(`/wiki/rest/api/group`)
     console.log('groups', groups)
     if (!groups) {
       console.log('no groups found')
@@ -31,7 +31,7 @@ export default class ConfluencePersonSync {
     const people = flatten(
       await Promise.all(
         groups.map(group =>
-          this.helpers.fetch(`/wiki/rest/api/group/${group.id}/member`),
+          this.helpers.fetchAll(`/wiki/rest/api/group/${group.id}/member`),
         ),
       ),
     )

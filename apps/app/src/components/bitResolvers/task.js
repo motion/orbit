@@ -39,7 +39,7 @@ const BitGithubTaskComment = ({ comment }) => {
 
 const parseGithubContents = ({ bit, shownLimit }) => {
   let comments
-  if (bit.data.comments) {
+  if (bit.data && bit.data.comments) {
     comments = bit.data.comments
       .slice(0, shownLimit)
       .map((comment, index) => (
@@ -47,7 +47,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
       ))
   }
   return {
-    content: markdown(bit.data.body),
+    content: markdown(bit.data ? bit.data.body : ''),
     comments,
   }
 }

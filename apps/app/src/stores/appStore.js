@@ -4,7 +4,6 @@ import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import * as PeekStateActions from '~/actions/PeekStateActions'
 import * as AppStoreHelpers from './appStoreHelpers'
-import * as AppStoreReactions from './appStoreReactions'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
 
@@ -49,9 +48,6 @@ export class AppStore {
   async willMount() {
     this.updateScreenSize()
   }
-
-  // reactive values
-  selectedBit = AppStoreReactions.selectedBitReaction
 
   get activeIndex() {
     this.lastSelectAt
@@ -209,6 +205,15 @@ export class AppStore {
     },
   )
 
+  // one frame after for speed of rendering
+  updateActiveIndexToNextIndex = react(
+    () => this.nextIndex,
+    async (i, { sleep }) => {
+      await sleep(0)
+      this.activeIndex = i
+    },
+  )
+
   // this does "auto-select of first result after search"
   // but it can be pretty annoying
   // resetActiveIndexOnSearchStart = react(
@@ -230,7 +235,6 @@ export class AppStore {
       await sleep(16)
       this.nextIndex = -1
       this.activeIndex = -1
-      // this.updateActiveIndex()
     },
   )
 
@@ -417,10 +421,6 @@ export class AppStore {
 
   decrement = (by = 1) => {
     this.toggleSelected(Math.max(-1, this.activeIndex - by))
-  }
-
-  updateActiveIndex = () => {
-    this.activeIndex = this.nextIndex
   }
 
   setGetResults = fn => {

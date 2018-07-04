@@ -5,6 +5,7 @@ import { App } from '@mcro/stores'
 import * as PeekContents from './peek/peekContents'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './peek/PeekFrame'
+import { Person, Bit } from '@mcro/models'
 
 const deepClone = obj =>
   obj
@@ -24,6 +25,35 @@ class PeekStore {
   get hasHistory() {
     return this.history.length > 1
   }
+
+  selectedBit = react(
+    () => App.peekState.bit,
+    async bit => {
+      if (!bit) {
+        return null
+      }
+      if (bit.type === 'person') {
+        return await Person.findOne({ id: bit.id })
+      }
+      if (bit.type === 'setting') {
+        return bit
+      }
+      if (bit.type === 'team') {
+        return bit
+      }
+      const res = await Bit.findOne({
+        where: {
+          id: bit.id,
+        },
+        relations: ['people'],
+      })
+      if (!res) {
+        return bit
+      }
+      return res
+    },
+    { delay: 32, immediate: true },
+  )
 
   get curState() {
     if (this.props.fixed) {
@@ -102,8 +132,8 @@ export class PeekPage extends React.Component {
         <PeekFrame>
           <PeekContentsView
             key={(bit && bit.id) || Math.random()}
-            bit={appStore.selectedBit || peekStore.state.bit}
-            person={appStore.selectedBit}
+            bit={peekStore.selectedBit}
+            person={peekStore.selectedBit}
             appStore={appStore}
             peekStore={peekStore}
           />

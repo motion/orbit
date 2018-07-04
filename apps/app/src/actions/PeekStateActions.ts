@@ -11,11 +11,33 @@ type PositionObject =
       height: number
     }
 
-export function selectItem(item: Person | Bit, target?: PositionObject) {
+type GenericPeekItem = {
+  id: string
+  type: string
+  title?: string
+}
+
+export function selectItem(
+  item: Person | Bit | GenericPeekItem,
+  target?: PositionObject,
+) {
   if (item instanceof Person) {
     selectPerson(item, target)
-  } else {
+  } else if (item instanceof Bit) {
     selectBit(item, target)
+  } else {
+    App.setPeekState({
+      ...withPosition(target),
+      bit: {
+        id: item.id,
+        title: item.title,
+        type: item.type,
+        // because were doing deep merging, we reset extra fields
+        body: '',
+        integration: '',
+        icon: '',
+      },
+    })
   }
 }
 

@@ -396,10 +396,15 @@ export class AppStore {
     return false
   }
 
-  setTarget = (item, target) => {
-    PeekStateActions.selectItem(item, target)
-    this.updateActiveIndex()
-  }
+  clearIndexOnTarget = react(
+    () => App.peekState.target,
+    target => {
+      if (target) {
+        throw react.cancel
+      }
+      this.nextIndex = -1
+    },
+  )
 
   increment = (by = 1) => {
     this.toggleSelected(

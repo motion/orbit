@@ -7,6 +7,7 @@ import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
 import { PeopleRow } from '~/components/PeopleRow'
+import { selectItem } from '../../actions/PeekStateActions'
 
 let loggers = []
 let nextLog = null
@@ -57,6 +58,9 @@ class OrbitCardStore {
     if (this.props.onClick) {
       this.props.onClick(e)
     }
+    if (this.props.onSelect) {
+      this.props.onSelect(this.ref)
+    }
     if (this.props.inactive) {
       return
     }
@@ -85,6 +89,7 @@ class OrbitCardStore {
       if (shouldSelect !== this._isSelected) {
         this._isSelected = shouldSelect
         if (shouldSelect) {
+          // visual smoothness
           await sleep()
           if (!this.target) {
             throw new Error(
@@ -93,7 +98,7 @@ class OrbitCardStore {
               }`,
             )
           }
-          this.props.appStore.setTarget(this.target, this.ref)
+          selectItem(this.target, this.ref)
         }
       }
     },

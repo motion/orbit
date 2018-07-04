@@ -10,6 +10,7 @@ import {
   allIntegrations,
 } from './orbitSettings/orbitSettingsIntegrations'
 import { modelQueryReaction } from '@mcro/helpers'
+import { selectItem } from '../../actions/PeekStateActions'
 
 const IntegrationCard = props => (
   <OrbitSettingCard
@@ -92,6 +93,12 @@ export class OrbitSettings extends React.Component {
                   result={item}
                   index={index + integrationSettings.length}
                   appStore={appStore}
+                  onSelect={
+                    item.auth &&
+                    (target => {
+                      selectItem({ id: item.id, type: 'view' }, target)
+                    })
+                  }
                 />
               ))}
           </cards>

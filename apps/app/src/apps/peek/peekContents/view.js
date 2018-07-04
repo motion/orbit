@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { PeekHeader, PeekContent } from '../index'
 
 @view
-export class File extends React.Component {
+export class View extends React.Component {
   render({ bit }) {
     return (
       <>

@@ -1,13 +1,43 @@
 import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 // import debug from '@mcro/debug'
 import getHelpers from './getHelpers'
-import { flatten } from 'lodash'
 import TurndownService from 'turndown'
 
 const turndown = new TurndownService()
 const htmlToMarkdown = html => turndown.turndown(html)
 
 // const log = debug('sync confluenceBit')
+
+type AtlassianUser = {
+  accountId: string
+  userKey: string
+  username: string
+  displayName: string
+  profilePicture: { path: string; height: number; width: number }
+  latest: boolean
+}
+
+type AtlassianContent = {
+  body: { storage: { value: string } }
+  history: {
+    createdDate: string
+    createdBy: AtlassianUser
+    lastUpdated: {
+      by: AtlassianUser
+      when: string
+    }
+  }
+  extensions: Object
+  id: string
+  status: string
+  title: string
+  type: 'page'
+}
+
+type AtlassianObj = {
+  response: AtlassianContent
+  markdown: string
+}
 
 export default class ConfluenceBitSync {
   setting: Setting
@@ -22,59 +52,67 @@ export default class ConfluenceBitSync {
     this.helpers = getHelpers(setting)
   }
 
-  run = async () => {
+  run = async (): Promise<Bit[]> => {
     try {
-      console.log('running confluence task')
-      const res = await this.syncBits()
-      console.log('Created', res ? res.length : 0, 'issues', res)
+      console.log('running confluence')
+      const result = await this.syncBits()
+      console.log(
+        'Created',
+        result ? result.length : 0,
+        'confluence items',
+        result,
+      )
+      return result
     } catch (err) {
       console.log('Error in confluence task sync', err.message, err.stack)
+      return []
     }
   }
 
-  syncBits = async () => {
+  syncBits = async (): Promise<Bit[]> => {
     const contentList = await this.helpers.fetchAll(`/wiki/rest/api/content`)
-    console.log('contentList', contentList)
     if (!contentList) {
       console.log('no content found')
       return null
     }
-    const contents = flatten(
-      await Promise.all(
-        contentList.map(content =>
-          this.helpers.fetch(`/wiki/rest/api/content/${content.id}`, {
-            expand: 'body.storage',
-          }),
-        ),
+    console.log('contentList', contentList)
+    const contents = await Promise.all(
+      contentList.map(content =>
+        this.helpers.fetch(`/wiki/rest/api/content/${content.id}`, {
+          expand: 'body.storage,history,history.lastUpdated',
+        }),
       ),
     )
     console.log('contents', contents)
-    console.log(
-      contents.map(content => {
-        return htmlToMarkdown(content.body.storage.value)
-      }),
-    )
-    return []
+    const contentsRendered = contents.map(response => {
+      return {
+        markdown: htmlToMarkdown(response.body.storage.value),
+        response,
+      }
+    })
+    return await this.createIssues(contentsRendered)
   }
 
-  createIssues = async issues => {
-    return Promise.all(issues.map(this.createIssue))
+  createIssues = async (issues: AtlassianObj[]): Promise<Bit[]> => {
+    const results = await Promise.all(issues.map(this.createIssue))
+    return results.filter(Boolean)
   }
 
-  createIssue = async () => {
-    // ensure if one is set, the other gets set too
-    // const bitCreatedAt = issue.createdAt || issue.updatedAt || ''
-    // const bitUpdatedAt = issue.updatedAt || bitCreatedAt
-    // return await createOrUpdateBit(Bit, {
-    //   integration: 'github',
-    //   identifier: data.id,
-    //   type: 'task',
-    //   title: issue.title,
-    //   body: issue.bodyText,
-    //   data,
-    //   author: issue.author.login,
-    //   bitCreatedAt,
-    //   bitUpdatedAt,
-    // })
+  createIssue = async ({ response, markdown }: AtlassianObj): Promise<Bit> => {
+    const bitCreatedAt = response.history.createdDate || ''
+    const bitUpdatedAt = response.history.lastUpdated.when || ''
+    return await createOrUpdateBit(Bit, {
+      integration: 'confluence',
+      identifier: response.id,
+      type: 'document',
+      title: response.title,
+      body: markdown,
+      data: response,
+      author:
+        response.history.createdBy.displayName ||
+        response.history.createdBy.username,
+      bitCreatedAt,
+      bitUpdatedAt,
+    })
   }
 }

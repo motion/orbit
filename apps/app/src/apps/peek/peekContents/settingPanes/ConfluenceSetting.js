@@ -5,7 +5,6 @@ import { Bit } from '@mcro/models'
 import { Bits } from '~/views/bits'
 import { Tabs, Tab, SearchableTable } from '@mcro/sonar'
 import { TimeAgo } from '~/views/TimeAgo'
-import * as _ from 'lodash'
 import { ReactiveCheckBox } from '~/views/ReactiveCheckBox'
 
 const columnSizes = {
@@ -43,7 +42,7 @@ const columns = {
   },
 }
 
-class GithubStore {
+class ConfluenceStore {
   get setting() {
     return this.props.appStore.settings.github
   }
@@ -53,35 +52,14 @@ class GithubStore {
   }
 
   issues = react(() =>
-    Bit.find({ where: { integration: 'github', type: 'task' } }),
+    Bit.find({ where: { integration: 'confluence', type: 'wiki' } }),
   )
 
   active = 'repos'
-  syncing = {}
-  userOrgs = []
-
-  get orgsList() {
-    const { allOrgs } = this.service
-    return (allOrgs && allOrgs.map(org => org.login)) || []
-  }
-
-  allRepos = react(async () => {
-    return _.flatten(
-      await Promise.all(
-        this.orgsList.map(async org => {
-          return await this.service.github
-            .orgs(org)
-            .repos.fetch({ per_page: 100 })
-            .then(res => res.items)
-        }),
-      ),
-    )
-  })
 
   rows = react(
     () => this.allRepos,
     repos => {
-      log('react to all repos')
       return repos.map((repo, index) => {
         const orgName = repo.fullName.split('/')[0]
         const isActive = () => this.isSyncing(repo.fullName)
@@ -144,10 +122,10 @@ class GithubStore {
   }
 }
 
-@view.provide({ githubStore: GithubStore })
+@view.provide({ store: ConfluenceStore })
 @view
-export class GithubSetting extends React.Component {
-  render({ githubStore: store }) {
+export class ConfluenceSetting extends React.Component {
+  render({ store }) {
     return (
       <container>
         <Tabs active={store.active} onActive={key => (store.active = key)}>

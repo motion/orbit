@@ -14,7 +14,7 @@ export default setting => ({
     let finished = false
     let start = query.start || 0
     while (!finished) {
-      const cur = await this.fetch(path, { start }, options)
+      const cur = await this.fetch(path, { ...query, start }, options)
       if (!cur.results) {
         console.log('error', cur)
         throw new Error('No results')

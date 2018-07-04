@@ -1,7 +1,11 @@
 import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
-import * as _ from 'lodash'
 // import debug from '@mcro/debug'
 import getHelpers from './getHelpers'
+import { flatten } from 'lodash'
+import TurndownService from 'turndown'
+
+const turndown = new TurndownService()
+const htmlToMarkdown = html => turndown.turndown(html)
 
 // const log = debug('sync confluenceBit')
 
@@ -29,7 +33,28 @@ export default class ConfluenceBitSync {
   }
 
   syncBits = async () => {
-    console.log('do it')
+    const contentList = await this.helpers.fetchAll(`/wiki/rest/api/content`)
+    console.log('contentList', contentList)
+    if (!contentList) {
+      console.log('no content found')
+      return null
+    }
+    const contents = flatten(
+      await Promise.all(
+        contentList.map(content =>
+          this.helpers.fetch(`/wiki/rest/api/content/${content.id}`, {
+            expand: 'body.storage',
+          }),
+        ),
+      ),
+    )
+    console.log('contents', contents)
+    console.log(
+      contents.map(content => {
+        return htmlToMarkdown(content.body.storage.value)
+      }),
+    )
+    return []
   }
 
   createIssues = async issues => {

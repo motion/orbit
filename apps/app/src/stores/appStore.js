@@ -8,6 +8,8 @@ import * as AppStoreReactions from './appStoreReactions'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
 
+// this is *not* unused
+let hasRun = false
 const log = debug('appStore')
 
 const searchBits = async query => {

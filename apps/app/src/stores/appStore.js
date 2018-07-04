@@ -1,4 +1,4 @@
-import { react, ReactionTimeoutError } from '@mcro/black'
+import { on, react, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
@@ -157,12 +157,15 @@ export class AppStore {
   )
 
   updateScreenSize() {
-    this.setInterval(() => {
-      if (!App.setState) return
-      App.setState({
-        screenSize: [window.innerWidth, window.innerHeight],
-      })
-    }, 1000)
+    on(
+      this,
+      setInterval(() => {
+        if (!App.setState) return
+        App.setState({
+          screenSize: [window.innerWidth, window.innerHeight],
+        })
+      }, 1000),
+    )
   }
 
   updateResults = react(

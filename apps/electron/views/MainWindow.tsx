@@ -1,10 +1,9 @@
 import * as React from 'react'
 import * as Constants from '../constants'
-import { view, Component, isEqual, react } from '@mcro/black'
+import { on, view, Component, isEqual, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '../helpers'
 import { App, Electron, Desktop } from '@mcro/stores'
-import { ElectronStore } from '../stores/ElectronStore'
 
 class MainStore {
   get mouseInActiveArea() {
@@ -43,12 +42,15 @@ export class MainWindow extends Component<{
   componentDidMount() {
     this.handleReadyToShow()
     console.log('MOUNTED')
-    this.setInterval(() => {
-      const size = Helpers.getScreenSize()
-      if (!isEqual(size, this.state.size)) {
-        this.setState({ size })
-      }
-    }, 1000)
+    on(
+      this,
+      setInterval(() => {
+        const size = Helpers.getScreenSize()
+        if (!isEqual(size, this.state.size)) {
+          this.setState({ size })
+        }
+      }, 1000),
+    )
   }
 
   handleReadyToShow = () => {

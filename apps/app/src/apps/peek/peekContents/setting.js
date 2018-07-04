@@ -45,6 +45,7 @@ export class Setting extends React.Component {
   }
 
   render({ appStore, store }) {
+    console.log('what thef uc', store.setting)
     if (!store.setting || !store.setting.token) {
       return null
     }

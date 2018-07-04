@@ -14,6 +14,9 @@ export class SettingInfoStore {
     if (!this.props.appStore.settings) {
       return
     }
+    if (!this.bit.integration) {
+      console.error('No integration!', this.bit)
+    }
     return this.props.appStore.settings[this.bit.integration]
   }
 

@@ -15,12 +15,14 @@ type GenericPeekItem = {
   id: string
   type: string
   title?: string
+  integration?: string
 }
 
 export function selectItem(
   item: Person | Bit | GenericPeekItem,
   target?: PositionObject,
 ) {
+  console.log('selecting', item.toJS())
   if (item instanceof Person) {
     selectPerson(item, target)
   } else if (item instanceof Bit) {
@@ -34,7 +36,7 @@ export function selectItem(
         type: item.type,
         // because were doing deep merging, we reset extra fields
         body: '',
-        integration: '',
+        integration: item.integration || '',
         icon: '',
       },
     })

@@ -368,8 +368,9 @@ export class AppStore {
     onHovered: res => {
       // leave
       if (!res) {
-        console.log('leave', this.activeIndex)
-        this.leaveIndex = this.activeIndex
+        if (this.activeIndex !== -1) {
+          this.leaveIndex = this.activeIndex
+        }
         return
       }
       this.leaveIndex = -1

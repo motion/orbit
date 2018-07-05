@@ -8,7 +8,6 @@ import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '~/stores/SettingInfoStore'
 import { TimeAgo } from '~/views/TimeAgo'
-import * as PeekStateActions from '~/actions/PeekStateActions'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -41,7 +40,7 @@ export class Setting extends React.Component {
   removeIntegration = async () => {
     const { store } = this.props
     await store.setting.remove()
-    PeekStateActions.clearPeek()
+    App.actions.clearPeek()
   }
 
   render({ appStore, store }) {

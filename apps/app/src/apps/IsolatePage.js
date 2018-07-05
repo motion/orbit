@@ -3,7 +3,6 @@ import { view } from '@mcro/black'
 import { PeekPage } from './PeekPage'
 import { OrbitPage } from './OrbitPage'
 import { AppStore } from '~/stores/AppStore'
-import * as PeekStateActions from '~/actions/PeekStateActions'
 import { App } from '@mcro/stores'
 import { Bit } from '@mcro/models'
 
@@ -16,7 +15,7 @@ const getItem = {
 export class IsolatePeek extends React.Component {
   render() {
     getItem.gdocsSetting().then(bit => {
-      PeekStateActions.selectItem(bit, {
+      App.actions.selectItem(bit, {
         top: window.innerHeight,
         left: window.innerHeight - 350,
         width: 0,

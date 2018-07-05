@@ -2,7 +2,6 @@ import { on, react, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '~/helpers'
-import * as PeekStateActions from '~/actions/PeekStateActions'
 import * as AppStoreHelpers from './appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
@@ -152,7 +151,7 @@ export class AppStore {
       if (this.hasActiveIndex) {
         throw react.cancel
       }
-      PeekStateActions.clearPeek()
+      App.actions.clearPeek()
     },
   )
 
@@ -368,7 +367,7 @@ export class AppStore {
     this.leaveIndex = -1
     this.nextIndex = -1
     this.activeIndex = -1
-    PeekStateActions.clearPeek()
+    App.actions.clearPeek()
   }
 
   getHoverSettler = Helpers.hoverSettler({

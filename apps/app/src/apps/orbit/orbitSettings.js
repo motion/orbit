@@ -10,9 +10,9 @@ import {
   allIntegrations,
 } from './orbitSettings/orbitSettingsIntegrations'
 import { modelQueryReaction } from '@mcro/helpers'
-import { selectItem } from '../../actions/PeekStateActions'
 import * as GeneralSettings from './orbitSettings/general'
 import { Masonry } from '~/views/masonry'
+import { App } from '@mcro/stores'
 
 const generalSettings = [
   {
@@ -139,7 +139,10 @@ export class OrbitSettings extends React.Component {
                 onSelect={
                   item.auth &&
                   (target => {
-                    selectItem({ id: item.id, type: 'view' }, target)
+                    App.actions.selectItem(
+                      { id: item.id, type: 'view' },
+                      target,
+                    )
                   })
                 }
               />

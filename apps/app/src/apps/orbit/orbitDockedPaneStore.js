@@ -1,6 +1,5 @@
 import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import * as PeekStateActions from '~/actions/PeekStateActions'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
@@ -57,10 +56,7 @@ export class OrbitDockedPaneStore {
 
   clearPeekOnActivePaneChange = react(
     () => this.activePane,
-    PeekStateActions.clearPeek,
-    {
-      log: 'state',
-    },
+    () => App.actions.clearPeek(),
   )
 
   animationState = react(

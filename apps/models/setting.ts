@@ -17,6 +17,7 @@ export class Setting extends T.BaseEntity {
 
   @T.Column('simple-json', { default: '{}' })
   values: {
+    // TODO: umberalla other settings into objects like this, or split this into individual simple-json fields
     atlassian?: {
       username: string
       password: string

@@ -6,6 +6,45 @@ export * from './roundButton'
 
 export const highlightColor = UI.color('#696549')
 
+export const Row = view('section', {
+  flexFlow: 'row',
+  padding: [8, 0],
+  alignItems: 'center',
+})
+
+export const InputRow = ({ label, type, value, onChange }) => (
+  <Row>
+    <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
+    <input
+      css={{ fontSize: 14, padding: [5, 6], margin: ['auto', 8], flex: 1 }}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      type={type}
+    />{' '}
+  </Row>
+)
+
+export const CheckBoxRow = ({
+  name = `checkbox-${Math.random()}`,
+  children,
+  checked,
+  onChange,
+}) => (
+  <Row>
+    <input
+      id={name}
+      name={name}
+      checked={checked}
+      onChange={onChange && (e => onChange(e.target.checked))}
+      css={{ margin: ['auto', 4] }}
+      type="checkbox"
+    />{' '}
+    <label htmlFor={name} css={{ padding: [0, 4], fontWeight: 400 }}>
+      {children}
+    </label>
+  </Row>
+)
+
 export const Circle = props => (
   <circle
     css={{

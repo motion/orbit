@@ -1,48 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitCard } from '../orbitCard'
-import { SubTitle } from '~/views'
 import * as UI from '@mcro/ui'
 import { Setting } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
-
-const Row = view('section', {
-  flexFlow: 'row',
-  padding: [8, 0],
-  alignItems: 'center',
-})
-
-const InputRow = ({ label, value, onChange }) => (
-  <Row>
-    <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
-    <input
-      css={{ fontSize: 14, padding: [5, 6], margin: ['auto', 8], flex: 1 }}
-      value={value}
-      onChange={e => onChange(e.target.value)}
-    />{' '}
-  </Row>
-)
-
-const CheckBoxRow = ({
-  name = `checkbox-${Math.random()}`,
-  children,
-  checked,
-  onChange,
-}) => (
-  <Row>
-    <input
-      id={name}
-      name={name}
-      checked={checked}
-      onChange={onChange && (e => onChange(e.target.checked))}
-      css={{ margin: ['auto', 4] }}
-      type="checkbox"
-    />{' '}
-    <label htmlFor={name} css={{ padding: [0, 4], fontWeight: 400 }}>
-      {children}
-    </label>
-  </Row>
-)
+import * as Views from '~/views'
 
 class OrbitGeneralSettingsStore {
   generalSetting = modelQueryReaction(
@@ -75,7 +37,7 @@ export class OrbitGeneralSettings extends React.Component {
     console.log('generalSetting', generalSetting)
     return (
       <>
-        <SubTitle>Settings</SubTitle>
+        <Views.SubTitle>Settings</Views.SubTitle>
         <OrbitCard>
           <UI.Text css={{ marginBottom: 10 }}>
             You've added {integrationSettings.length} integration{integrationSettings.length ===
@@ -86,13 +48,13 @@ export class OrbitGeneralSettings extends React.Component {
               ? 'Add some integrations below to get started with Orbit.'
               : ''}
           </UI.Text>
-          <CheckBoxRow
+          <Views.CheckBoxRow
             checked={generalSetting.values.autoLaunch}
             onChange={store.handleChange('autoLaunch')}
           >
             Start on Login
-          </CheckBoxRow>
-          <InputRow
+          </Views.CheckBoxRow>
+          <Views.InputRow
             label="Open shortcut"
             value={generalSetting.values.openShortcut}
             onChange={store.handleChange('openShortcut')}

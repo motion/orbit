@@ -110,12 +110,8 @@ class PeekStore {
   })
 }
 
-@view.attach('appStore')
-@view.provide({
-  peekStore: PeekStore,
-})
 @view
-export class PeekPage extends React.Component {
+class PeekPageInner extends React.Component {
   render({ peekStore, appStore }) {
     if (!peekStore.state) {
       return null
@@ -127,16 +123,32 @@ export class PeekPage extends React.Component {
       console.error('none', type)
       return <peek>no pane found</peek>
     }
+    if (!peekStore.selectedBit) {
+      console.warn('no selected bit')
+      return <peek>no selected bit</peek>
+    }
+    return (
+      <PeekContentsView
+        key={(bit && bit.id) || Math.random()}
+        bit={peekStore.selectedBit}
+        person={peekStore.selectedBit}
+        appStore={appStore}
+        peekStore={peekStore}
+      />
+    )
+  }
+}
+
+@view.attach('appStore')
+@view.provide({
+  peekStore: PeekStore,
+})
+export class PeekPage extends React.Component {
+  render() {
     return (
       <UI.Theme name="light">
         <PeekFrame>
-          <PeekContentsView
-            key={(bit && bit.id) || Math.random()}
-            bit={peekStore.selectedBit}
-            person={peekStore.selectedBit}
-            appStore={appStore}
-            peekStore={peekStore}
-          />
+          <PeekPageInner />
         </PeekFrame>
       </UI.Theme>
     )

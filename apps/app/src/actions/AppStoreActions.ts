@@ -109,5 +109,6 @@ export function clearPeek() {
   App.setPeekState({
     id: null,
     target: null,
+    item: null,
   })
 }

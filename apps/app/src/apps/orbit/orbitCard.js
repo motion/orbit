@@ -6,8 +6,8 @@ import { BitResolver } from '~/components/BitResolver'
 import { SmallLink } from '~/views'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as BitActions from '~/actions/BitActions'
+import { App } from '@mcro/stores'
 import { PeopleRow } from '~/components/PeopleRow'
-import { selectItem } from '../../actions/PeekStateActions'
 
 let loggers = []
 let nextLog = null
@@ -99,7 +99,7 @@ class OrbitCardStore {
               }`,
             )
           }
-          selectItem(this.target, this.ref)
+          App.actions.selectItem(this.target, this.ref)
         }
       }
     },
@@ -422,9 +422,8 @@ export class OrbitCard extends React.Component {
           ...card,
           border,
           borderRadius,
-          // border: [1, '#ddd'],
           background: theme.selected.background,
-          boxShadow: [[[0, 2, 3, [0, 0, 0, 0.03]]]],
+          boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
         }
       } else {
         card = {
@@ -432,7 +431,7 @@ export class OrbitCard extends React.Component {
           border,
           borderRadius,
           background: theme.selected.background,
-          boxShadow: [[0, 2, 3, [0, 0, 0, 0.03]]],
+          boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
         }
       }
     }

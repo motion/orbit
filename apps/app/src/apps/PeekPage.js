@@ -145,10 +145,11 @@ class PeekPageInner extends React.Component {
 })
 export class PeekPage extends React.Component {
   render() {
+    const { appStore, peekStore } = this.props
     return (
       <UI.Theme name="light">
         <PeekFrame>
-          <PeekPageInner />
+          <PeekPageInner appStore={appStore} peekStore={peekStore} />
         </PeekFrame>
       </UI.Theme>
     )

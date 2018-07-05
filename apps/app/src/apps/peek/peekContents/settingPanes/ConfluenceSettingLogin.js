@@ -10,6 +10,8 @@ class ConfluenceSettingLoginStore {
 
   willMount() {
     this.setting = new Setting()
+    this.setting.category = 'integration'
+    this.setting.type = 'confluence'
     this.setting.values = {
       atlassian: {
         username: '',

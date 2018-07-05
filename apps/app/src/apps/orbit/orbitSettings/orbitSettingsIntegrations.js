@@ -1,5 +1,3 @@
-import { ConfluenceAuth } from './authViews/confluenceAuth'
-
 export const allIntegrations = [
   {
     id: 'gmail',
@@ -35,7 +33,7 @@ export const allIntegrations = [
     integration: 'confluence',
     title: 'Confluence',
     icon: 'confluence',
-    auth: ConfluenceAuth,
+    auth: true,
   },
   {
     id: 'website',

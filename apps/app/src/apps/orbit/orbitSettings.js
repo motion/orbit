@@ -97,7 +97,7 @@ export class OrbitSettings extends React.Component {
     }
     return (
       <OrbitDockedPane name={name} fadeBottom>
-        <Views.SubTitle>Active Integrations</Views.SubTitle>
+        <Views.SubTitle>Settings</Views.SubTitle>
         <Masonry>
           {generalSettings.map((result, index) => (
             <Store.IntegrationCard

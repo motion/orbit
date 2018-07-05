@@ -18,7 +18,7 @@ export class PeekContent extends React.Component {
       position: 'relative',
       marginTop: -10,
       zIndex: 0,
-      padding: [0, 10],
+      // padding: [0, 10],
     },
     fadeTop: {
       pointerEvents: 'none',

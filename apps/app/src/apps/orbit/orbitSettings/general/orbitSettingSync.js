@@ -4,6 +4,6 @@ import { view } from '@mcro/black'
 @view
 export class OrbitSettingSync extends React.Component {
   render() {
-    return <div>hi OrbitSettingSync</div>
+    return <div>hi OrbitSettingSyncok</div>
   }
 }

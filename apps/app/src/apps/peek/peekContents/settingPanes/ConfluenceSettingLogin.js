@@ -49,12 +49,24 @@ class ConfluenceSettingLoginStore {
       if (!values.username || !values.password || !values.domain) {
         throw react.cancel
       }
+      if (values.domain.indexOf('http') !== 0) {
+        throw react.cancel
+      }
       setValue(Statuses.LOADING)
       this.setting.values.atlassian = values
       const service = new AtlassianService(this.setting)
       let res
       try {
         res = await service.fetch('/wiki/rest/api/content')
+        if (!res) {
+          // do something
+          throw react.cancel
+        }
+        if (res.error) {
+          this.error = `Failed to fetch from domain: ${values.domain}`
+          setValue(Statuses.FAIL)
+          return
+        }
         if (res) {
           console.log('confluence got res', res)
           setValue(Statuses.SUCCESS)

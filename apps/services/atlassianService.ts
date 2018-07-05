@@ -63,8 +63,8 @@ export class AtlassianService {
     try {
       return await doFetch().json
     } catch (err) {
-      console.log('err', err)
-      return await doFetch().text
+      console.log('atlassian fetch err', err)
+      return { error: true, response: await doFetch().text }
     }
   }
 }

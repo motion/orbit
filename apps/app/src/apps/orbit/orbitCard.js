@@ -127,7 +127,7 @@ const tinyProps = {
 })
 export class OrbitCard extends React.Component {
   static defaultProps = {
-    borderRadius: 8,
+    borderRadius: 7,
     hide: {},
   }
 
@@ -223,8 +223,8 @@ export class OrbitCard extends React.Component {
             {orbitIcon}
             <title>
               <UI.Text
-                size={listItem ? 1.15 : 1.3}
-                sizeLineHeight={0.8}
+                size={listItem ? 1.15 : 1.25}
+                sizeLineHeight={0.85}
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}
                 fontWeight={500}
@@ -340,7 +340,7 @@ export class OrbitCard extends React.Component {
       position: 'relative',
       maxHeight: '100%',
       transition: 'all ease-in 80ms',
-      padding: [17, 18],
+      padding: [16, 18],
       transform: {
         z: 0,
       },
@@ -386,6 +386,7 @@ export class OrbitCard extends React.Component {
       height: (style && style.height) || 'auto',
     }
     if (listItem) {
+      // LIST ITEM
       hoveredStyle = {
         background: theme.selected.background,
       }
@@ -414,6 +415,7 @@ export class OrbitCard extends React.Component {
         borderTop: [1, theme.hover.background],
       }
     } else {
+      // CARD
       const border = [1, '#fff']
       if (isSelected) {
         card = {

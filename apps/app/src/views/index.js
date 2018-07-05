@@ -6,22 +6,69 @@ export * from './roundButton'
 
 export const highlightColor = UI.color('#696549')
 
-export const Row = view('section', {
-  flexFlow: 'row',
-  padding: [8, 0],
-  alignItems: 'center',
+export const Message = view('div', {
+  display: 'block',
+  width: '100%',
+  borderRadius: 8,
+  border: [1, '#eee'],
+  background: '#fff',
+  padding: [10, 10],
+  margin: [0, 0, 20],
+  color: '#666',
 })
 
+export const Table = view('div', {
+  display: 'table',
+  width: '100%',
+})
+
+export const TableCell = view('div', {
+  display: 'table-cell',
+})
+
+export const FormTableRow = view('section', {
+  display: 'table-row',
+  height: 40,
+})
+
+const inputCellProps = {
+  css: {
+    width: '70%',
+  },
+}
+
+const labelCellProps = {
+  css: {
+    width: '30%',
+  },
+}
+
+export const FormTableLabel = ({ children }) => (
+  <TableCell {...labelCellProps}>{children}</TableCell>
+)
+
+export const FormTableValue = ({ children }) => (
+  <TableCell {...inputCellProps}>{children}</TableCell>
+)
+
+// export const FormTableRow = view(TableRow, {
+
+// })
+
 export const InputRow = ({ label, type, value, onChange }) => (
-  <Row>
-    <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
-    <input
-      css={{ fontSize: 14, padding: [5, 6], margin: ['auto', 8], flex: 1 }}
-      value={value}
-      onChange={e => onChange(e.target.value)}
-      type={type}
-    />{' '}
-  </Row>
+  <FormTableRow>
+    <FormTableLabel>
+      <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
+    </FormTableLabel>
+    <FormTableValue>
+      <input
+        css={{ fontSize: 16, padding: [7, 8], width: '100%' }}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        type={type}
+      />
+    </FormTableValue>
+  </FormTableRow>
 )
 
 export const CheckBoxRow = ({
@@ -30,19 +77,23 @@ export const CheckBoxRow = ({
   checked,
   onChange,
 }) => (
-  <Row>
-    <input
-      id={name}
-      name={name}
-      checked={checked}
-      onChange={onChange && (e => onChange(e.target.checked))}
-      css={{ margin: ['auto', 4] }}
-      type="checkbox"
-    />{' '}
-    <label htmlFor={name} css={{ padding: [0, 4], fontWeight: 400 }}>
-      {children}
-    </label>
-  </Row>
+  <FormTableRow>
+    <FormTableLabel>
+      <label htmlFor={name} css={{ padding: [0, 4], fontWeight: 400 }}>
+        {children}
+      </label>
+    </FormTableLabel>
+    <FormTableValue>
+      <input
+        id={name}
+        name={name}
+        checked={checked}
+        onChange={onChange && (e => onChange(e.target.checked))}
+        css={{ margin: ['auto', 4] }}
+        type="checkbox"
+      />
+    </FormTableValue>
+  </FormTableRow>
 )
 
 export const Circle = props => (

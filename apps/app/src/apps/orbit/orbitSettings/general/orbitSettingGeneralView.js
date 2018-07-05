@@ -34,7 +34,6 @@ export class OrbitGeneralSettings extends React.Component {
     if (!generalSetting) {
       return null
     }
-    console.log('generalSetting', generalSetting)
     return (
       <>
         <Views.SubTitle>Settings</Views.SubTitle>

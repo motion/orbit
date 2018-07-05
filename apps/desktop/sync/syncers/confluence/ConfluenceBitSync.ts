@@ -1,7 +1,7 @@
 import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
 // import debug from '@mcro/debug'
-import getHelpers from './getHelpers'
 import TurndownService from 'turndown'
+import { AtlassianService } from '@mcro/services'
 
 const turndown = new TurndownService()
 const htmlToMarkdown = html => turndown.turndown(html)
@@ -41,7 +41,7 @@ type AtlassianObj = {
 
 export default class ConfluenceBitSync {
   setting: Setting
-  helpers = getHelpers({})
+  service: AtlassianService
 
   get token() {
     return this.setting.token
@@ -49,7 +49,7 @@ export default class ConfluenceBitSync {
 
   constructor(setting: Setting) {
     this.setting = setting
-    this.helpers = getHelpers(setting)
+    this.service = new AtlassianService(setting)
   }
 
   run = async (): Promise<Bit[]> => {
@@ -70,7 +70,7 @@ export default class ConfluenceBitSync {
   }
 
   syncBits = async (): Promise<Bit[]> => {
-    const contentList = await this.helpers.fetchAll(`/wiki/rest/api/content`)
+    const contentList = await this.service.fetchAll(`/wiki/rest/api/content`)
     if (!contentList) {
       console.log('no content found')
       return null
@@ -78,7 +78,7 @@ export default class ConfluenceBitSync {
     console.log('contentList', contentList)
     const contents = await Promise.all(
       contentList.map(content =>
-        this.helpers.fetch(`/wiki/rest/api/content/${content.id}`, {
+        this.service.fetch(`/wiki/rest/api/content/${content.id}`, {
           expand: 'body.storage,history,history.lastUpdated',
         }),
       ),

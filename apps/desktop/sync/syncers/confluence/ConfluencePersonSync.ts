@@ -1,17 +1,17 @@
 import { Person, Setting, createOrUpdate } from '@mcro/models'
-import getHelpers from './getHelpers'
-import debug from '@mcro/debug'
+// import debug from '@mcro/debug'
 import { flatten } from 'lodash'
+import { AtlassianService } from '@mcro/services'
 
-const log = debug('sync confluencePerson')
+// const log = debug('sync confluencePerson')
 
 export default class ConfluencePersonSync {
   setting: Setting
-  helpers = getHelpers({})
+  service: AtlassianService
 
   constructor(setting) {
     this.setting = setting
-    this.helpers = getHelpers(setting)
+    this.service = new AtlassianService(setting)
   }
 
   run = async () => {
@@ -22,7 +22,7 @@ export default class ConfluencePersonSync {
   }
 
   syncPeople = async () => {
-    const groups = await this.helpers.fetchAll(`/wiki/rest/api/group`)
+    const groups = await this.service.fetchAll(`/wiki/rest/api/group`)
     console.log('groups', groups)
     if (!groups) {
       console.log('no groups found')
@@ -31,7 +31,7 @@ export default class ConfluencePersonSync {
     const people = flatten(
       await Promise.all(
         groups.map(group =>
-          this.helpers.fetchAll(`/wiki/rest/api/group/${group.id}/member`),
+          this.service.fetchAll(`/wiki/rest/api/group/${group.id}/member`),
         ),
       ),
     )

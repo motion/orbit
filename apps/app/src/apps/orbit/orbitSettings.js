@@ -140,7 +140,7 @@ export class OrbitSettings extends React.Component {
                   item.auth &&
                   (target => {
                     App.actions.selectItem(
-                      { id: item.id, type: 'view' },
+                      { id: item.id, type: 'view', title: item.title },
                       target,
                     )
                   })

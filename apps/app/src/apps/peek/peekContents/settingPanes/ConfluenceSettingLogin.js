@@ -22,11 +22,11 @@ class ConfluenceSettingLoginStore {
   setting = null
   retry = null
   error = null
-  values = deep({
+  values = {
     username: '',
     password: '',
     domain: '',
-  })
+  }
 
   willMount() {
     this.setting = findOrCreate(Setting, {
@@ -45,6 +45,7 @@ class ConfluenceSettingLoginStore {
   status = react(
     () => this.values,
     async (values, { setValue }) => {
+      console.log('reactin to vlaues', values)
       if (!values.username || !values.password || !values.domain) {
         throw react.cancel
       }
@@ -68,7 +69,10 @@ class ConfluenceSettingLoginStore {
   )
 
   handleChange = prop => val => {
-    this.values[prop] = val
+    this.values = {
+      ...this.values,
+      [prop]: val,
+    }
     // this.autoSave()
   }
 

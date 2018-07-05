@@ -2,32 +2,38 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Views from '~/views'
-import { Setting } from '@mcro/models'
+import { Setting, findOrCreate } from '@mcro/models'
 import { debounce } from 'lodash'
 
 class ConfluenceSettingLoginStore {
   setting = null
 
   willMount() {
-    this.setting = new Setting()
-    this.setting.category = 'integration'
-    this.setting.type = 'confluence'
-    this.setting.values = {
+    this.setting = findOrCreate(Setting, {
+      category: 'integration',
+      type: 'confluence',
+    })
+    this.setting.values = this.setting.values || {
       atlassian: {
         username: '',
         password: '',
+        domain: '',
       },
     }
   }
 
   handleChange = prop => val => {
     this.setting.values.atlassian[prop] = val
-    this.saveSetting()
+    // this.saveSetting()
   }
 
-  saveSetting = debounce(() => {
+  save = () => {
     this.setting.save()
-  }, 100)
+  }
+
+  // saveSetting = debounce(() => {
+  //   this.setting.save()
+  // }, 100)
 }
 
 @view({
@@ -48,10 +54,15 @@ export class ConfluenceSettingLogin extends React.Component {
           value={store.setting.values.password}
           onChange={store.handleChange('password')}
         />
+        <Views.InputRow
+          label="Domain"
+          value={store.setting.values.domain}
+          onChange={store.handleChange('domain')}
+        />
         <UI.Row>
           <div $$flex />
           <UI.Theme theme="#4C36C4">
-            <UI.Button>Submit</UI.Button>
+            <UI.Button>Save</UI.Button>
           </UI.Theme>
         </UI.Row>
       </auth>

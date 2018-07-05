@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
-import * as Constants from '~/constants'
 import { ControlButton } from '~/views/controlButton'
 
 class HeaderStore {
@@ -72,7 +71,7 @@ export class OrbitHeader extends React.Component {
           <UI.Icon
             $searchIcon
             name="ui-1_zoom"
-            size={20}
+            size={18}
             color={theme.base.color.alpha(0.2)}
           />
           <input
@@ -119,7 +118,7 @@ export class OrbitHeader extends React.Component {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [0, 16],
+      padding: [3, 16],
       transition: 'all ease-in 300ms',
       zIndex: 4,
     },
@@ -127,11 +126,6 @@ export class OrbitHeader extends React.Component {
       alignItems: 'center',
       flexFlow: 'row',
     },
-    // headerBg: background => ({
-    //   background: `linear-gradient(${background
-    //     .darken(0.03)
-    //     .desaturate(0.5)}, transparent)`,
-    // }),
     inputLn: {
       width: 10,
       height: 2,
@@ -143,7 +137,7 @@ export class OrbitHeader extends React.Component {
       transition: 'all ease-in 300ms',
     },
     searchIcon: {
-      paddingLeft: 14,
+      paddingLeft: 12,
       margin: 0,
     },
     input: {
@@ -151,8 +145,8 @@ export class OrbitHeader extends React.Component {
       background: 'transparent',
       fontWeight: 300,
       fontSize: 22,
-      padding: [20, 10, 20, 30],
-      // height: 54,
+      padding: 10,
+      paddingLeft: 26,
       border: 'none',
       display: 'block',
     },

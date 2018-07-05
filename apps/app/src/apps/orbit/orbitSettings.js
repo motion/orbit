@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { OrbitSettingCard } from './orbitSettingCard'
-import { OrbitGeneralSettings } from './orbitSettings/orbitGeneralSettings'
+// import { OrbitGeneralSettings } from './orbitSettings/orbitGeneralSettings'
 import { OrbitDockedPane } from './orbitDockedPane'
-import { SubTitle } from '~/views'
+import * as Views from '~/views'
 import { Setting, Not, IsNull } from '@mcro/models'
 import {
   settingToResult,
@@ -11,17 +11,35 @@ import {
 } from './orbitSettings/orbitSettingsIntegrations'
 import { modelQueryReaction } from '@mcro/helpers'
 import { selectItem } from '../../actions/PeekStateActions'
+import * as GeneralSettings from './orbitSettings/general'
+import { Masonry } from '~/views/masonry'
 
-const IntegrationCard = props => (
-  <OrbitSettingCard
-    pane="summary"
-    subPane="settings"
-    hoverToSelect
-    total={allIntegrations.length}
-    listItem
-    {...props}
-  />
-)
+const generalSettings = [
+  {
+    id: 'general-account',
+    type: 'setting',
+    integration: 'general-account',
+    title: 'Account',
+    icon: 'users_single',
+    auth: GeneralSettings.OrbitSettingAccount,
+  },
+  {
+    id: 'general-general',
+    type: 'setting',
+    integration: 'general-general',
+    title: 'General',
+    icon: 'gear',
+    auth: GeneralSettings.OrbitSettingGeneral,
+  },
+  {
+    id: 'general-sync',
+    type: 'setting',
+    integration: 'general-sync',
+    title: 'Sync',
+    icon: 'sync',
+    auth: GeneralSettings.OrbitSettingSync,
+  },
+]
 
 class OrbitSettingsStore {
   get isPaneActive() {
@@ -36,9 +54,23 @@ class OrbitSettingsStore {
       }
       const getResults = () => integrationSettings
       getResults.shouldFilter = true
-      this.props.appStore.setGetResults(getResults)
+      this.props.appStore.setGetResults(() => this.allResults)
     },
     { immediate: true },
+  )
+
+  get allResults() {
+    return [...generalSettings, ...this.integrationSettings]
+  }
+
+  IntegrationCard = props => (
+    <OrbitSettingCard
+      pane="summary"
+      subPane="settings"
+      hoverToSelect
+      total={this.allResults.length}
+      {...props}
+    />
   )
 
   integrationSettings = modelQueryReaction(
@@ -55,54 +87,64 @@ class OrbitSettingsStore {
 
 @view.attach('appStore', 'paneStore')
 @view({
-  store: OrbitSettingsStore,
+  Store: OrbitSettingsStore,
 })
 export class OrbitSettings extends React.Component {
-  render({ name, store, appStore }) {
-    const { integrationSettings } = store
+  render({ name, Store, appStore }) {
+    const { integrationSettings } = Store
     const isActive = result => {
       return !!integrationSettings.find(setting => setting.type === result.id)
     }
-    console.log('rendering with settings', integrationSettings.map(s => s.id))
     return (
       <OrbitDockedPane name={name} fadeBottom>
-        <OrbitGeneralSettings settingsStore={store} />
-        <br />
+        <Views.SubTitle>Active Integrations</Views.SubTitle>
+        <Masonry>
+          {generalSettings.map((result, index) => (
+            <Store.IntegrationCard
+              key={`${result.id}`}
+              result={result}
+              index={index}
+              appStore={appStore}
+              isActive
+            />
+          ))}
+        </Masonry>
+        {/* <OrbitGeneralSettings settingsStore={store} /> */}
+        <Views.VertSpace />
         <section if={integrationSettings.length}>
-          <SubTitle>Active Integrations</SubTitle>
-          <cards>
+          <Views.SubTitle>Active Integrations</Views.SubTitle>
+          <Masonry>
             {integrationSettings.map((setting, index) => (
-              <IntegrationCard
+              <Store.IntegrationCard
                 key={`${setting.id}`}
                 result={settingToResult(setting)}
-                index={index}
+                index={index + generalSettings.length}
                 appStore={appStore}
                 isActive
               />
             ))}
-          </cards>
+          </Masonry>
+          <Views.VertSpace />
         </section>
-        <section>
-          <SubTitle>Add Integration</SubTitle>
-          <cards>
-            {allIntegrations
-              .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
-              .map((item, index) => (
-                <IntegrationCard
-                  key={`${item.id}`}
-                  result={item}
-                  index={index + integrationSettings.length}
-                  appStore={appStore}
-                  onSelect={
-                    item.auth &&
-                    (target => {
-                      selectItem({ id: item.id, type: 'view' }, target)
-                    })
-                  }
-                />
-              ))}
-          </cards>
-        </section>
+        <Views.SubTitle>Add Integration</Views.SubTitle>
+        <Masonry>
+          {allIntegrations
+            .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
+            .map((item, index) => (
+              <Store.IntegrationCard
+                key={`${item.id}`}
+                result={item}
+                index={index + Store.allResults.length}
+                appStore={appStore}
+                onSelect={
+                  item.auth &&
+                  (target => {
+                    selectItem({ id: item.id, type: 'view' }, target)
+                  })
+                }
+              />
+            ))}
+        </Masonry>
       </OrbitDockedPane>
     )
   }

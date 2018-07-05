@@ -570,6 +570,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         isAsyncReaction = true
         reactionResult
           .then(val => {
+            if (!reactionID) {
+              // cancelled before finishing
+              return
+            }
             if (typeof val !== 'undefined') {
               if (hasCalledSetValue) {
                 throw new Error(

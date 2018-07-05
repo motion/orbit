@@ -41,6 +41,10 @@ export const Title = ({ center, children, ...props }) => (
   </UI.Title>
 )
 
+export const VertSpace = view('div', {
+  height: 20,
+})
+
 export const SubTitle = props => (
   <UI.Text
     alpha={0.65}

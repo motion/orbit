@@ -3,6 +3,8 @@ import { App } from '@mcro/stores'
 import { throttle } from 'lodash'
 import { AppReactions } from '~/stores/AppReactions'
 
+// some comment test
+
 export default class OrbitStore {
   query = ''
 

@@ -303,7 +303,7 @@ class SurfacePlain extends React.Component {
             distance={8}
             forgiveness={8}
             arrowSize={10}
-            delay={100}
+            delay={400}
             popoverProps={POPOVER_PROPS}
             {...tooltipProps}
           >

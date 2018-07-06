@@ -1,8 +1,8 @@
+- slack card:
+  - if it was a post in #status, show other posts by that person in #status
+  - fix people cards
+
 # high level
-
-## Settings
-
-Generally we need to cleanup settings panes and make them just a bit more consistent. Take the Github settings pane and abstract some of it, and then apply it ot the other ones. Some work making it work with the various services.
 
 ## Profiles
 

@@ -10,7 +10,7 @@ import { OrbitDirectory } from './orbitDirectory'
 import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './orbitDockedPaneStore'
 
-const borderRadius = 16
+const borderRadius = 14
 const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
 

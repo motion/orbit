@@ -137,6 +137,7 @@ export class OrbitSettings extends React.Component {
                 result={item}
                 index={index + Store.allResults.length}
                 appStore={appStore}
+                hoverable
                 onSelect={
                   item.auth &&
                   (target => {
@@ -157,6 +158,13 @@ export class OrbitSettings extends React.Component {
     cards: {
       userSelect: 'none',
       marginBottom: 10,
+    },
+    inactive: {
+      opacity: 0.7,
+      transition: 'all ease-in 300ms',
+      '&:hover': {
+        opacity: 1,
+      },
     },
   }
 }

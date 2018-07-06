@@ -190,6 +190,7 @@ export class OrbitCard extends React.Component {
       inactive,
       iconProps,
       hide,
+      className,
     } = this.props
     const hasSubtitle = !tiny && (subtitle || location)
     const orbitIcon = (
@@ -218,6 +219,7 @@ export class OrbitCard extends React.Component {
           onClick={store.handleClick}
           {...hoverToSelect && !inactive && this.hoverSettler.props}
           style={style}
+          className={className}
         >
           <card onDoubleClick={this.handleDoubleClick}>
             {orbitIcon}
@@ -378,7 +380,10 @@ export class OrbitCard extends React.Component {
     },
   }
 
-  static theme = ({ style, store, listItem, borderRadius, inGrid }, theme) => {
+  static theme = (
+    { style, store, listItem, borderRadius, inGrid, hoverable },
+    theme,
+  ) => {
     const { isSelected } = store
     let hoveredStyle
     let card = {
@@ -433,6 +438,13 @@ export class OrbitCard extends React.Component {
           background: theme.selected.background,
           boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
         }
+      }
+    }
+    if (hoverable) {
+      card.opacity = 0.7
+      card.transition = card.transition || 'opacity ease-in 300ms'
+      card['&:hover'] = {
+        opacity: 1,
       }
     }
     return {

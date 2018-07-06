@@ -21,7 +21,7 @@ import iohook from 'iohook'
 import debug from '@mcro/debug'
 import { Bit, Setting } from '@mcro/models'
 import { Connection } from 'typeorm'
-import { GeneralSettingManager } from './settingManagers/generalSettingManager'
+import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
 import sqlite from 'sqlite'
 
 const log = debug('desktop')
@@ -50,6 +50,7 @@ export class Root {
     const db = await sqlite.open(
       Path.join(__dirname, '..', 'data', 'database'),
       {
+        // @ts-ignore
         cached: true,
         promise: Promise,
       },

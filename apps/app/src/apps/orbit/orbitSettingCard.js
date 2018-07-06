@@ -31,20 +31,20 @@ export class OrbitSettingCard extends React.Component {
     return
   }
 
-  render({ store, result, isActive, setting, ...props }) {
+  render({ store, result, isActive, setting, subtitle, ...props }) {
+    const countSubtitle = !isActive
+      ? ''
+      : store.bitsCount === null
+        ? '...'
+        : `${store.bitsCount || '0'} total`
+    const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard
         inactive={!isActive}
         $card
         $isActive={isActive}
         title={result.title}
-        subtitle={
-          !isActive
-            ? ''
-            : store.bitsCount === null
-              ? '...'
-              : `${store.bitsCount || '0'} total`
-        }
+        subtitle={subtitleDisplay}
         date={store.job && store.job.updatedAt}
         icon={result.icon}
         iconProps={

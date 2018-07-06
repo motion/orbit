@@ -12,14 +12,14 @@ export default function peekPosition(target) {
   }
   const [screenW, screenH] = screenSize()
   let { orbitOnLeft } = App
-  let width = App.orbitState.size[0]
+  let orbitWidth = App.orbitState.size[0]
   if (App.orbitState.docked) {
     orbitOnLeft = false
-    width = App.dockedWidth
+    orbitWidth = App.dockedWidth
   }
   const { left, top } = target
   const leftSpace = left
-  const rightSpace = screenW - (left + width)
+  const rightSpace = screenW - (left + orbitWidth)
   // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
   let [pW, pH] = Constants.PEEK_SIZE
@@ -42,7 +42,7 @@ export default function peekPosition(target) {
       x = 0
     }
   } else {
-    x = left + width
+    x = left + orbitWidth
     if (pW > rightSpace) {
       pW = rightSpace
     }

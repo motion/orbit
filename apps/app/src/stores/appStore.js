@@ -92,7 +92,7 @@ export class AppStore {
     () =>
       Setting.find({
         where: {
-          token: Not(Equal(null)),
+          token: Not(Equal('')),
         },
       }),
     settings =>

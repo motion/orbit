@@ -1,4 +1,4 @@
-export const PEEK_SIZE = [580, 700]
+export const PEEK_SIZE = [600, 800]
 export const FORCE_FULLSCREEN = false
 export const ORBIT_WIDTH = 340
 export const ARROW_PAD = 15

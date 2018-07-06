@@ -42,9 +42,12 @@ export class SettingContent extends React.Component {
   }
 
   render({ appStore, store }) {
-    if (!store.setting || !store.setting.token) {
-      console.error('no setting', this, store.setting)
+    if (!store.setting) {
+      console.log('no setting', App.peekState.item.id, App.peekState.toJS())
       return null
+    }
+    if (!store.setting.token) {
+      console.warn('no token, general setting?')
     }
     const { setting } = store
     const integration = setting.type
@@ -126,8 +129,7 @@ export class SettingContent extends React.Component {
 })
 export class Setting extends React.Component {
   render({ store, ...props }) {
-    if (!store.setting || !store.setting.token) {
-      console.error('no setting', store.setting)
+    if (!store.setting) {
       return null
     }
     return <SettingContent setting={store.setting} {...props} />

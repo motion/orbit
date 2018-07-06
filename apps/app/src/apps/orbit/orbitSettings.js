@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { OrbitSettingCard } from './orbitSettingCard'
-// import { OrbitGeneralSettings } from './orbitSettings/orbitGeneralSettings'
 import { OrbitDockedPane } from './orbitDockedPane'
 import * as Views from '~/views'
-import { Setting, Not, IsNull } from '@mcro/models'
+import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import {
   settingToResult,
   allIntegrations,
@@ -13,27 +12,43 @@ import { modelQueryReaction } from '@mcro/helpers'
 import { Masonry } from '~/views/masonry'
 import { App } from '@mcro/stores'
 
-const generalSettings = [
-  {
-    id: 'account',
-    type: 'setting',
-    integration: 'general-account',
-    title: 'Account',
-    icon: 'users_single',
-  },
-  {
-    id: 'general',
-    type: 'setting',
-    integration: 'general-general',
-    title: 'General',
-    icon: 'gear',
-  },
-]
-
 class OrbitSettingsStore {
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
   }
+
+  generalSettings = react(
+    async () => {
+      console.log('ensuring models are in place all over, remove me plz')
+      const settingQuery = [
+        { type: 'general', category: 'general' },
+        { type: 'account', category: 'general' },
+      ]
+      await findOrCreate(Setting, settingQuery[0])
+      await findOrCreate(Setting, settingQuery[1])
+      const settings = await Promise.all([
+        Setting.findOne(settingQuery[0]),
+        Setting.findOne(settingQuery[1]),
+      ])
+      return [
+        {
+          id: settings[0].id,
+          type: 'setting',
+          title: 'General',
+          icon: 'gear',
+          subtitle: 'Shortcuts, login and sync',
+        },
+        {
+          id: settings[1].id,
+          type: 'setting',
+          title: 'Account',
+          icon: 'users_single',
+          subtitle: 'Login, invite your team',
+        },
+      ]
+    },
+    { defaultValue: [] },
+  )
 
   setGetResults = react(
     () => [this.isPaneActive, this.integrationSettings],
@@ -49,7 +64,7 @@ class OrbitSettingsStore {
   )
 
   get allResults() {
-    return [...generalSettings, ...this.integrationSettings]
+    return [...this.generalSettings, ...this.integrationSettings]
   }
 
   IntegrationCard = props => (
@@ -80,34 +95,35 @@ class OrbitSettingsStore {
 })
 export class OrbitSettings extends React.Component {
   render({ name, Store, appStore }) {
-    const { integrationSettings } = Store
     const isActive = result => {
-      return !!integrationSettings.find(setting => setting.type === result.id)
+      return !!Store.integrationSettings.find(
+        setting => setting.type === result.id,
+      )
     }
     return (
       <OrbitDockedPane name={name} fadeBottom>
         <Views.SubTitle>Settings</Views.SubTitle>
         <Masonry>
-          {generalSettings.map((result, index) => (
+          {Store.generalSettings.map((result, index) => (
             <Store.IntegrationCard
               key={`${result.id}`}
               result={result}
               index={index}
               appStore={appStore}
+              subtitle={result.subtitle}
               isActive
             />
           ))}
         </Masonry>
-        {/* <OrbitGeneralSettings settingsStore={store} /> */}
         <Views.VertSpace />
-        <section if={integrationSettings.length}>
+        <section if={Store.integrationSettings.length}>
           <Views.SubTitle>Active Integrations</Views.SubTitle>
           <Masonry>
-            {integrationSettings.map((setting, index) => (
+            {Store.integrationSettings.map((setting, index) => (
               <Store.IntegrationCard
                 key={`${setting.id}`}
                 result={settingToResult(setting)}
-                index={index + generalSettings.length}
+                index={index + Store.generalSettings.length}
                 appStore={appStore}
                 setting={setting}
                 isActive

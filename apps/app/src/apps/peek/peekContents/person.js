@@ -36,7 +36,7 @@ export class Person extends React.Component {
     }
     const setting = appStore.settings.slack
     if (!setting || !person || !person.data || !person.data.profile) {
-      log('no person', person)
+      console.log('no person', person)
       return null
     }
 

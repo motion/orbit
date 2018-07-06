@@ -26,10 +26,11 @@ class PeekStore {
     return this.history.length > 1
   }
 
-  selectedBit = react(
+  model = react(
     () => App.peekState.item,
     async item => {
       if (!item) {
+        log('no item for peek')
         return null
       }
       if (item.type === 'person') {
@@ -123,15 +124,15 @@ class PeekPageInner extends React.Component {
       console.error('none', type)
       return <peek>no pane found</peek>
     }
-    if (!peekStore.selectedBit) {
-      console.warn('no selected bit')
-      return <peek>no selected bit</peek>
+    if (!peekStore.model) {
+      console.warn('no selected model')
+      return <peek>no selected model</peek>
     }
     return (
       <PeekContentsView
         key={peekId}
-        bit={peekStore.selectedBit}
-        person={peekStore.selectedBit}
+        bit={peekStore.model}
+        person={peekStore.model}
         appStore={appStore}
         peekStore={peekStore}
       />

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitCard } from '~/apps/orbit/orbitCard'
-import * as UI from '@mcro/ui'
+// import * as UI from '@mcro/ui'
 import * as Views from '~/views'
 
 class OrbitGeneralSettingsStore {
@@ -16,8 +16,7 @@ class OrbitGeneralSettingsStore {
   store: OrbitGeneralSettingsStore,
 })
 export class GeneralSetting extends React.Component {
-  render({ store, setting, settingsStore }) {
-    const { integrationSettings } = settingsStore
+  render({ store, setting }) {
     if (!setting) {
       return null
     }
@@ -25,15 +24,6 @@ export class GeneralSetting extends React.Component {
       <>
         <Views.SubTitle>Settings</Views.SubTitle>
         <OrbitCard>
-          <UI.Text css={{ marginBottom: 10 }}>
-            You've added {integrationSettings.length} integration{integrationSettings.length ===
-            '1'
-              ? ''
-              : 's'}.{' '}
-            {integrationSettings.length === 0
-              ? 'Add some integrations below to get started with Orbit.'
-              : ''}
-          </UI.Text>
           <Views.CheckBoxRow
             checked={setting.values.autoLaunch}
             onChange={store.handleChange('autoLaunch')}

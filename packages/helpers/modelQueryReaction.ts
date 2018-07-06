@@ -36,7 +36,7 @@ export function modelQueryReaction(
   let currentVal
   return react(
     () => [condition(), now(poll)],
-    async ([condition], { setValue }) => {
+    async ([condition]) => {
       if (!condition) {
         throw react.cancel
       }
@@ -65,8 +65,7 @@ export function modelQueryReaction(
         return res
       }
       // else just return the new models
-      setValue(next)
-      // return next
+      return next
     },
     finalOptions,
   )

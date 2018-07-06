@@ -30,7 +30,7 @@ import isEqual from 'react-fast-compare'
 //   // delay until openOnHover
 //   delay: number,
 //   // prevent popover itself from catching pointer events
-//   noHover?: boolean,
+//   noHoverOnChildren?: boolean,
 //   // size of shown arrow
 //   arrowSize?: number,
 //   closeOnClick?: boolean,
@@ -97,20 +97,18 @@ export class Popover extends React.PureComponent {
     return this.state.props
   }
 
-  _popoverRef = React.createRef()
-  _targetRef = React.createRef()
-
-  get targetRef() {
-    return this._targetRef.current
+  targetRef = null
+  popoverRef = null
+  setTargetRef = ref => {
+    this.targetRef = ref
   }
-
-  get popoverRef() {
-    return this._popoverRef.current
+  setPopoverRef = ref => {
+    this.popoverRef = ref
   }
 
   state = {
-    targetHovered: null,
-    menuHovered: false,
+    targetHovered: 0,
+    menuHovered: 0,
     top: 0,
     left: 0,
     bottom: 0,
@@ -275,12 +273,12 @@ export class Popover extends React.PureComponent {
     await this.clearHovered()
     this.removeListenForHover()
     this.close()
-    on(this, setTimeout(this.listenForHover, 100))
+    on(this, setTimeout(() => this.listenForHover(), 100))
   }
 
   clearHovered() {
     return new Promise(resolve =>
-      this.setState({ menuHovered: false, targetHovered: false }, resolve),
+      this.setState({ menuHovered: 0, targetHovered: 0 }, resolve),
     )
   }
 
@@ -293,8 +291,8 @@ export class Popover extends React.PureComponent {
     if (!target) {
       return false
     }
-    const { noHover, targetHovered, menuHovered } = this.state
-    if (noHover) {
+    const { noHoverOnChildren, targetHovered, menuHovered } = this.state
+    if (noHoverOnChildren) {
       return targetHovered
     }
     return targetHovered || menuHovered
@@ -541,7 +539,8 @@ export class Popover extends React.PureComponent {
       return
     }
     this.listeners = this.addHoverListeners('target', this.target)
-    if (!this.curProps.noHover) {
+    // noHoverOnChildren === no hover on the actual popover child element
+    if (!this.curProps.noHoverOnChildren) {
       this.listeners = [
         ...this.listeners,
         ...this.addHoverListeners('menu', this.popoverRef),
@@ -564,14 +563,18 @@ export class Popover extends React.PureComponent {
   addHoverListeners(name, node) {
     if (!(node instanceof HTMLElement)) {
       console.log('no node!', name)
-      return
+      return null
     }
     const listeners = []
-    const { delay, noHover } = this.curProps
+    const { delay, noHoverOnChildren } = this.curProps
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
-    const setHovered = () => this.hoverStateSet(name, true)
-    const setUnhovered = () => this.hoverStateSet(name, false)
+    const setHovered = () => {
+      this.hoverStateSet(name, true)
+    }
+    const setUnhovered = () => {
+      this.hoverStateSet(name, false)
+    }
     const openIfOver = () => {
       if (this.isNodeHovered(node)) {
         setHovered()
@@ -579,7 +582,8 @@ export class Popover extends React.PureComponent {
     }
     const closeIfOut = () => {
       if (isPopover && Date.now() - this.state.menuHovered < 200) {
-        return
+        console.log('avoid popover too soon??')
+        return null
       }
       if (!this.isNodeHovered(node)) {
         setUnhovered()
@@ -621,8 +625,8 @@ export class Popover extends React.PureComponent {
         }
       }),
     )
-    // if noHover it reduces bugs to just not check hovered state
-    const onMouseLeave = noHover ? setUnhovered : onLeave
+    // if noHoverOnChildren it reduces bugs to just not check hovered state
+    const onMouseLeave = noHoverOnChildren ? setUnhovered : onLeave
     listeners.push(on(this, node, 'mouseleave', onMouseLeave))
     return listeners
   }
@@ -632,7 +636,8 @@ export class Popover extends React.PureComponent {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
       // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
-      this.setState({ [`${name}Hovered`]: isHovered ? Date.now() : false })
+      const key = `${name}Hovered`
+      this.setState({ [key]: isHovered ? Date.now() : false })
     }
     if (isHovered) {
       if (openOnHover) {
@@ -690,7 +695,7 @@ export class Popover extends React.PureComponent {
     height,
     left: _left,
     noArrow,
-    noHover,
+    noHoverOnChildren,
     onClose,
     open,
     openOnClick,
@@ -730,7 +735,7 @@ export class Popover extends React.PureComponent {
     const { showPopover } = this
     const controlledTarget = target => {
       const targetProps = {
-        ref: this.targetRef,
+        ref: this.setTargetRef,
       }
       if (passActive) {
         targetProps.active = isOpen && !closing
@@ -747,21 +752,24 @@ export class Popover extends React.PureComponent {
       <>
         {React.isValidElement(target) && controlledTarget(target)}
         <Portal>
-          <container
+          <div
+            $container
             data-towards={direction}
             $open={showPopover}
             $closing={closing}
           >
-            <background
+            <div
+              $background
               if={overlay}
               ref={this.overlayRef}
               $overlayShown={showPopover && !closing}
               onClick={e => this.handleOverlayClick(e)}
             />
-            <popover
+            <div
+              $popover
               {...popoverProps}
               $popoverOpen={!closing && showPopover}
-              ref={this.popoverRef}
+              ref={this.setPopoverRef}
               style={{
                 ...style,
                 top: top || 'auto',
@@ -775,7 +783,8 @@ export class Popover extends React.PureComponent {
                 maxHeight,
               }}
             >
-              <arrowContain
+              <div
+                $arrowContain
                 if={!noArrow}
                 css={{
                   top: arrowTop,
@@ -794,7 +803,7 @@ export class Popover extends React.PureComponent {
                   towards={INVERSE[direction]}
                   boxShadow={getShadow(shadow, elevation)}
                 />
-              </arrowContain>
+              </div>
               <SizedSurface
                 sizeRadius
                 ignoreSegment
@@ -807,8 +816,8 @@ export class Popover extends React.PureComponent {
                   ? children(showPopover)
                   : children}
               </SizedSurface>
-            </popover>
-          </container>
+            </div>
+          </div>
         </Portal>
       </>
     )

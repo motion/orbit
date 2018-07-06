@@ -1,18 +1,19 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { Job } from '@mcro/models'
+import { Job, Setting as SettingModel } from '@mcro/models'
 import { PeekHeader, PeekContent } from '../index'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '~/stores/SettingInfoStore'
 import { TimeAgo } from '~/views/TimeAgo'
-import * as PeekStateActions from '~/actions/PeekStateActions'
+import { modelQueryReaction } from '@mcro/helpers'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
 )
+
 const statusIcons = {
   PENDING: { name: 'check', color: '#999' },
   FAILED: { name: 'remove', color: 'darkred' },
@@ -23,15 +24,11 @@ const statusIcons = {
 @view({
   store: SettingInfoStore,
 })
-export class Setting extends React.Component {
-  componentDidMount() {
-    this.props.store.setBit(App.peekState.bit)
-  }
-
+export class SettingContent extends React.Component {
   handleRefresh = async () => {
     const store = this.props.store
     const job = new Job()
-    job.type = store.bit.integration
+    job.type = store.setting.type
     job.action = 'all'
     job.status = Job.statuses.PENDING
     await job.save()
@@ -41,17 +38,19 @@ export class Setting extends React.Component {
   removeIntegration = async () => {
     const { store } = this.props
     await store.setting.remove()
-    PeekStateActions.clearPeek()
+    App.actions.clearPeek()
   }
 
   render({ appStore, store }) {
-    if (!store.setting || !store.setting.token) {
-      console.error('no setting', this)
+    if (!store.setting) {
+      console.log('no setting', App.peekState.item.id, App.peekState.toJS())
       return null
     }
-    store.version
-    const { setting, bit } = store
-    const { integration } = bit
+    if (!store.setting.token) {
+      console.warn('no token, general setting?')
+    }
+    const { setting } = store
+    const integration = setting.type
     const SettingPane =
       SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
@@ -108,5 +107,31 @@ export class Setting extends React.Component {
         </PeekContent>
       </>
     )
+  }
+}
+
+@view({
+  store: class LoadSettingStore {
+    get setting() {
+      return this.idSetting || this.typeSetting
+    }
+
+    idSetting = modelQueryReaction(() =>
+      SettingModel.findOne({ id: App.peekState.item.id }),
+    )
+
+    // hackkkkky for now because look at OrbitSettings.generalsettings
+    // need a migration to insert the settings first and then make them just like integrationSettingsd
+    typeSetting = modelQueryReaction(() =>
+      SettingModel.findOne({ type: App.peekState.item.id }),
+    )
+  },
+})
+export class Setting extends React.Component {
+  render({ store, ...props }) {
+    if (!store.setting) {
+      return null
+    }
+    return <SettingContent setting={store.setting} {...props} />
   }
 }

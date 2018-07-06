@@ -253,12 +253,12 @@ class SurfacePlain extends React.Component {
           borderLeftRadius={borderLeftRadius - 1}
           borderRightRadius={borderRightRadius - 1}
         />
-        <badge if={badge} {...badgeProps}>
+        <div $badge if={badge} {...badgeProps}>
           {typeof badge !== 'boolean' ? badge : ''}
-        </badge>
-        <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+        </div>
+        <div $icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
-        </icon>
+        </div>
         <Icon
           if={icon && stringIcon}
           $icon
@@ -278,7 +278,8 @@ class SurfacePlain extends React.Component {
           borderRightRadius={borderRightRadius - 1}
           {...glowProps}
         />
-        <element
+        <div
+          $element
           if={!noElement || (noElement && !noWrap && hasChildren(children))}
           {...wrapElement && passProps}
           {...elementProps}
@@ -287,14 +288,14 @@ class SurfacePlain extends React.Component {
           $hasIconAfter={hasIconAfter}
         >
           {children}
-        </element>
+        </div>
         {noElement && noWrap && hasChildren(children) && children}
         <Theme if={tooltip} name="dark">
           <Popover
             background
             openOnHover
             closeOnClick
-            noHover
+            noHoverOnChildren
             animation="bounce 150ms"
             target={`.${this.uniq}`}
             padding={[2, 7, 4]}
@@ -302,7 +303,7 @@ class SurfacePlain extends React.Component {
             distance={8}
             forgiveness={8}
             arrowSize={10}
-            delay={100}
+            delay={400}
             popoverProps={POPOVER_PROPS}
             {...tooltipProps}
           >

@@ -1,5 +1,3 @@
-import { ConfluenceAuth } from './authViews/confluenceAuth'
-
 export const allIntegrations = [
   {
     id: 'gmail',
@@ -35,7 +33,15 @@ export const allIntegrations = [
     integration: 'confluence',
     title: 'Confluence',
     icon: 'confluence',
-    auth: ConfluenceAuth,
+    auth: true,
+  },
+  {
+    id: 'jira',
+    type: 'setting',
+    integration: 'jira',
+    title: 'Jira',
+    icon: 'jira',
+    auth: true,
   },
   {
     id: 'website',
@@ -56,7 +62,7 @@ export const allIntegrations = [
 ]
 
 export const settingToResult = setting => ({
-  id: setting.type,
+  id: setting.id,
   type: 'setting',
   integration: setting.type,
   icon: setting.type,

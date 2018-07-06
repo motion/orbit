@@ -117,7 +117,7 @@ class Folder extends React.Component {
 @view({
   store: class GDocsSettingStore {
     get setting() {
-      return this.props.appStore.settings.gdocs
+      return this.props.setting
     }
 
     get service() {

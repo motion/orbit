@@ -538,12 +538,13 @@ class SectionProfiles extends React.Component {
                     : { margin: ['auto', 0] }
                 }
               >
-                <SectionTitle size={2.8}>A home for teams</SectionTitle>
+                <SectionTitle size={2.8}>
+                  Be the ultimate insider in your company
+                </SectionTitle>
                 <VertSpace />
                 <SectionSubTitle>
-                  Stay in sync with automatic profiles. It's the most relevant
-                  information on everyone from across your cloud, always at
-                  hand.
+                  See recent and relevant information on everyone in your
+                  company, without needing them to sign up.
                 </SectionSubTitle>
                 <VertSpace />
                 <SectionSubP if={false} color="#111" alpha={0.5}>
@@ -660,20 +661,17 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                No servers and no setup means instant onboarding and complete
-                data security, sweat-free.
+                Your data never leaves your computer.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP>
-                Orbit keeps your sensitive data on-device but gives you the
-                power to integrate with any cloud service. It's a powerful
-                platform for internal knowledge that lives behind your firewall.
+                Orbit gives you and your team superpowers without scaring
+                security.
               </SectionSubP>
               <VertSpace />
               <SectionSubP if={isLarge}>
-                It's not just security but speed. Custom integrations are
-                painless when you can deploy them instantly to any team, with no
-                risk.
+                With a powerful hook system for any API, you can put knowledge
+                clearly at hand.
               </SectionSubP>
               <VertSpace />
               <VertSpace />

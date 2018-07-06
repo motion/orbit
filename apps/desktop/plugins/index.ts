@@ -70,7 +70,7 @@ export class Plugins {
   search = async term => {
     return _.flatten(
       await Promise.all(
-        this.plugins.map((plugin, index) => {
+        this.plugins.map(plugin => {
           // const timer = `plugin-${index}`
           // console.time(timer)
           return new Promise(res =>

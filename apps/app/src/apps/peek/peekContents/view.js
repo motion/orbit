@@ -2,9 +2,11 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekHeader, PeekContent } from '../index'
 import { ConfluenceSetupPane } from './settingSetupPanes/ConfluenceSetupPane'
+import { JiraSetupPane } from './settingSetupPanes/JiraSetupPane'
 
 const views = {
   confluence: ConfluenceSetupPane,
+  jira: JiraSetupPane,
 }
 
 @view

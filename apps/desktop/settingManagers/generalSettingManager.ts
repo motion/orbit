@@ -5,9 +5,9 @@ import AutoLaunch from 'auto-launch'
 import * as Constants from '~/constants'
 import debug from '@mcro/debug'
 
-const log = debug('generalSettingManager')
+const log = debug('GeneralSettingManager')
 
-const generalSettingQuery = { type: 'setting', category: 'general' }
+const generalSettingQuery = { type: 'general', category: 'general' }
 
 @store
 export class GeneralSettingManager {
@@ -17,6 +17,7 @@ export class GeneralSettingManager {
         'Note, autolaunch froze before, so check if it freezes after this log...',
       )
     }
+    console.log('ensuring models are in place all over, remove me plz')
     findOrCreate(Setting, generalSettingQuery)
   }
 

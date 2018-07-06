@@ -16,6 +16,7 @@ export const WEB_PREFERENCES = {
   experimentalFeatures: true,
   transparentVisuals: true,
   allowRunningInsecureContent: false,
+  webSecurity: false,
   // plugins: true,
   // scrollBounce: true,
   // offscreen: true,

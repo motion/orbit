@@ -1,8 +1,8 @@
+- slack card:
+  - if it was a post in #status, show other posts by that person in #status
+  - fix people cards
+
 # high level
-
-## Settings
-
-Generally we need to cleanup settings panes and make them just a bit more consistent. Take the Github settings pane and abstract some of it, and then apply it ot the other ones. Some work making it work with the various services.
 
 ## Profiles
 
@@ -36,13 +36,9 @@ A lot of stuff here, beginning by just implementing syncers and testing them up 
 
 ## product
 
-- onboarding fixes from pleerock
-
-  - building oracle
-  - iohook fails silently if accessibility doesn't work
-  - perhaps could have an electron shell pre-build and symlink things in
-    - that would also give you a single .app to run?
-
+- umed: building oracle
+- perhaps could have an electron shell pre-build and symlink things in
+- that would also give you a single .app to run?
 - open bit on keyboard enter after search
 - improve github peek design
 - improve gdocs card and peek design
@@ -51,15 +47,18 @@ A lot of stuff here, beginning by just implementing syncers and testing them up 
 - run through a few searches and bugfix (duplicates)
 - hover highlighted snippet in search to scroll to part in peek
 - profile design 2.0: make it worth keeping open
-
-## website
-
-- start 2.0
+- part parser of searches:
+  - initially:
+    - [integration] xyz
+    - xyz in [integration]
+    - @person
+    - [integration] @person
+    - @person [integration] xyz
+    - xyz @person @person [integration]
 
 ## dev
 
 - hmr fix: flash on orbit with no data for a bit
-- look into jira/confluence
 - potentially crawler
 - settings panes: slack, folder
 
@@ -74,6 +73,9 @@ bugs:
 - pin to top of search (or drag to order it?)
 - pin to news
   - this highlights asynchronous communication
+- keyboard nav: should scroll down as you move down so its easier to see
+  - after you click down one, have it expand to full screen
+  - before you go down, have it be limited height
 
 3.  Directory
 

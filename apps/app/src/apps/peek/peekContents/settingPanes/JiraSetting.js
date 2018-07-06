@@ -5,16 +5,15 @@ import { SubTitle } from '../../../../views'
 import { Tabs, Tab } from '@mcro/sonar'
 import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 
-class ConfluenceSettingStore {
+class JiraSettingStore {
   active = 'general'
 }
 
 @view({
-  store: ConfluenceSettingStore,
+  store: JiraSettingStore,
 })
-export class ConfluenceSetting extends React.Component {
-  render({ store, setting }) {
-    console.log('confluencesetting', setting)
+export class JiraSetting extends React.Component {
+  render({ store }) {
     return (
       <container>
         <Tabs
@@ -32,7 +31,7 @@ export class ConfluenceSetting extends React.Component {
           </inner>
         </section>
         <section if={store.active === 'account'}>
-          <AtlassianSettingLogin setting={setting} />
+          <AtlassianSettingLogin setting={this.props.setting} />
         </section>
       </container>
     )

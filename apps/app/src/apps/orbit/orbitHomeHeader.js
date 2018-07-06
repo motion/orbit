@@ -8,7 +8,7 @@ export class OrbitHomeHeader extends React.Component {
   render({ paneStore, theme }) {
     const buttonColor = theme.base.color.lighten(0.2)
     const exploreButton = {
-      size: 1.2,
+      size: 1.1,
       circular: true,
       borderWidth: 1,
       margin: [0, 0, 0, 4],
@@ -88,7 +88,7 @@ export class OrbitHomeHeader extends React.Component {
     explore: {
       width: '100%',
       flexFlow: 'row',
-      padding: [7, 0, 10, 12],
+      padding: [7, 0, 7, 12],
       alignItems: 'center',
     },
     filters: {

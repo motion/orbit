@@ -13,6 +13,9 @@ export { react } from './react'
 export * from './constants'
 export * from './types'
 
+// TODO: fix deep() wrapper doesnt trigger reactions when mutating objects
+// so basically this.reactiveObj.x = 1, wont trigger react(() => this.reactiveObj)
+
 const root = typeof window !== 'undefined' ? window : require('global')
 const IS_PROD = process.env.NODE_ENV === 'production'
 const voidFn = () => void 0
@@ -570,6 +573,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         isAsyncReaction = true
         reactionResult
           .then(val => {
+            if (!reactionID) {
+              // cancelled before finishing
+              return
+            }
             if (typeof val !== 'undefined') {
               if (hasCalledSetValue) {
                 throw new Error(

@@ -1,6 +1,5 @@
 import { Person, Setting, createOrUpdate } from '@mcro/models'
 import getHelpers from './getHelpers'
-import * as Helpers from '~/helpers'
 import debug from '@mcro/debug'
 
 const log = debug('sync githubPeople')

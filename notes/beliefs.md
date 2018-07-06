@@ -32,3 +32,17 @@ Talked to Rahul (Uber), Jeff (Deloitte), Ariel (Hulu):
   - this is actually a huge advantage for Orbit, building a custom API search integration doesn't seem easy with a big cloud or on prem service, even if only for feedback loop of development. Plus firewall issues.
   - We can basically let them query whatever endpoint they want and return it in a format we set up to help us rank.
 - Jeff and Ariel both hate the intranets but didn't get too much more from them, it's perhaps a minor positive that they seem pretty interested overall.
+
+# Jul 6th
+
+Talked to James (Juul):
+
+- Profiles are really big especially for onboarding
+- Showing recent collaborations
+- Making it easy to explore whats going on with people
+- Not much slack search important for them
+- Our platform play is very much closer to windows/ios than to slack
+  - Slack integrations have no access to _other_ data within a company
+  - Slack integrations have no security
+  - Slack integrations can't really query internal database/apis
+  - Slack integrations can't have any custom interface

@@ -26,29 +26,30 @@ class PeekStore {
     return this.history.length > 1
   }
 
-  selectedBit = react(
-    () => App.peekState.bit,
-    async bit => {
-      if (!bit) {
+  model = react(
+    () => App.peekState.item,
+    async item => {
+      if (!item) {
+        log('no item for peek')
         return null
       }
-      if (bit.type === 'person') {
-        return await Person.findOne({ id: bit.id })
+      if (item.type === 'person') {
+        return await Person.findOne({ id: item.id })
       }
-      if (bit.type === 'setting') {
-        return bit
+      if (item.type === 'setting') {
+        return item
       }
-      if (bit.type === 'team') {
-        return bit
+      if (item.type === 'team') {
+        return item
       }
       const res = await Bit.findOne({
         where: {
-          id: bit.id,
+          id: item.id,
         },
         relations: ['people'],
       })
       if (!res) {
-        return bit
+        return item
       }
       return res
     },
@@ -110,33 +111,46 @@ class PeekStore {
   })
 }
 
-@view.attach('appStore')
-@view.provide({
-  peekStore: PeekStore,
-})
 @view
-export class PeekPage extends React.Component {
+class PeekPageInner extends React.Component {
   render({ peekStore, appStore }) {
     if (!peekStore.state) {
       return null
     }
-    const { bit } = peekStore.state
-    const type = (bit && capitalize(bit.type)) || 'Empty'
+    const { item, peekId } = peekStore.state
+    const type = (item && capitalize(item.type)) || 'Empty'
     const PeekContentsView = PeekContents[type]
     if (!PeekContentsView) {
       console.error('none', type)
       return <peek>no pane found</peek>
     }
+    if (!peekStore.model) {
+      console.warn('no selected model')
+      return <peek>no selected model</peek>
+    }
+    return (
+      <PeekContentsView
+        key={peekId}
+        bit={peekStore.model}
+        person={peekStore.model}
+        appStore={appStore}
+        peekStore={peekStore}
+      />
+    )
+  }
+}
+
+@view.attach('appStore')
+@view.provide({
+  peekStore: PeekStore,
+})
+export class PeekPage extends React.Component {
+  render() {
+    const { appStore, peekStore } = this.props
     return (
       <UI.Theme name="light">
         <PeekFrame>
-          <PeekContentsView
-            key={(bit && bit.id) || Math.random()}
-            bit={peekStore.selectedBit}
-            person={peekStore.selectedBit}
-            appStore={appStore}
-            peekStore={peekStore}
-          />
+          <PeekPageInner appStore={appStore} peekStore={peekStore} />
         </PeekFrame>
       </UI.Theme>
     )

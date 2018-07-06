@@ -120,7 +120,7 @@ export class OrbitHeader extends React.Component {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: [3, 16],
+      padding: [5, 16],
       transition: 'all ease-in 300ms',
       zIndex: 4,
     },

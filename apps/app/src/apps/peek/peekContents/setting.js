@@ -109,8 +109,18 @@ export class SettingContent extends React.Component {
 
 @view({
   store: class LoadSettingStore {
-    setting = modelQueryReaction(() =>
+    get setting() {
+      return this.idSetting || this.typeSetting
+    }
+
+    idSetting = modelQueryReaction(() =>
       SettingModel.findOne({ id: App.peekState.item.id }),
+    )
+
+    // hackkkkky for now because look at OrbitSettings.generalsettings
+    // need a migration to insert the settings first and then make them just like integrationSettingsd
+    typeSetting = modelQueryReaction(() =>
+      SettingModel.findOne({ type: App.peekState.item.id }),
     )
   },
 })

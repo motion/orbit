@@ -1,4 +1,6 @@
 ```ts
+// generally supporting hoverStyle activeStyle
+
 import { view } from 'black'
 
 const Button = view(

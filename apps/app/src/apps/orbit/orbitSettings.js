@@ -10,35 +10,24 @@ import {
   allIntegrations,
 } from './orbitSettings/orbitSettingsIntegrations'
 import { modelQueryReaction } from '@mcro/helpers'
-import * as GeneralSettings from './orbitSettings/general'
 import { Masonry } from '~/views/masonry'
 import { App } from '@mcro/stores'
 
 const generalSettings = [
   {
-    id: 'general-account',
+    id: 'account',
     type: 'setting',
     integration: 'general-account',
     title: 'Account',
     icon: 'users_single',
-    auth: GeneralSettings.OrbitSettingAccount,
   },
   {
-    id: 'general-general',
+    id: 'general',
     type: 'setting',
     integration: 'general-general',
     title: 'General',
     icon: 'gear',
-    auth: GeneralSettings.OrbitSettingGeneral,
   },
-  // {
-  //   id: 'general-sync',
-  //   type: 'setting',
-  //   integration: 'general-sync',
-  //   title: 'Sync',
-  //   icon: 'sync',
-  //   auth: GeneralSettings.OrbitSettingSync,
-  // },
 ]
 
 class OrbitSettingsStore {

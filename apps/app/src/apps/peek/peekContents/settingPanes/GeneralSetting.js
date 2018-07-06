@@ -1,37 +1,24 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { OrbitCard } from '../orbitCard'
+import { OrbitCard } from '~/apps/orbit/orbitCard'
 import * as UI from '@mcro/ui'
-import { Setting } from '@mcro/models'
-import { modelQueryReaction } from '@mcro/helpers'
 import * as Views from '~/views'
 
 class OrbitGeneralSettingsStore {
-  generalSetting = modelQueryReaction(
-    () =>
-      Setting.findOne({
-        where: { type: 'setting', category: 'general' },
-      }),
-    {
-      condition: () => this.props.settingsStore.isPaneActive,
-    },
-  )
-
   handleChange = prop => val => {
     console.log('handleChange', prop, val)
-    this.generalSetting.values[prop] = val
-    this.generalSetting.save()
+    this.props.setting.values[prop] = val
+    this.props.setting.save()
   }
 }
 
 @view({
   store: OrbitGeneralSettingsStore,
 })
-export class OrbitGeneralSettings extends React.Component {
-  render({ store, settingsStore }) {
+export class GeneralSetting extends React.Component {
+  render({ store, setting, settingsStore }) {
     const { integrationSettings } = settingsStore
-    const { generalSetting } = store
-    if (!generalSetting) {
+    if (!setting) {
       return null
     }
     return (
@@ -48,14 +35,14 @@ export class OrbitGeneralSettings extends React.Component {
               : ''}
           </UI.Text>
           <Views.CheckBoxRow
-            checked={generalSetting.values.autoLaunch}
+            checked={setting.values.autoLaunch}
             onChange={store.handleChange('autoLaunch')}
           >
             Start on Login
           </Views.CheckBoxRow>
           <Views.InputRow
             label="Open shortcut"
-            value={generalSetting.values.openShortcut}
+            value={setting.values.openShortcut}
             onChange={store.handleChange('openShortcut')}
           />
         </OrbitCard>

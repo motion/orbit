@@ -134,7 +134,6 @@ storeProvidable = function(options, Helpers) {
           if (this.stores === null) {
             return
           }
-          this.mountName = getName(this)
           root.loadedStores.add(this)
           this.mountStores()
           this.willHmrListen = Helpers.on('will-hmr', this.onWillReloadStores)
@@ -250,7 +249,7 @@ storeProvidable = function(options, Helpers) {
             const store = this.stores[name]
             // pass in state + auto dehydrate
             // to get real key: findDOMNode(this) + serialize dom position into key
-            storeHMRCache[`${this.mountName}${name}`] = {
+            storeHMRCache[`${getName(this)}${name}`] = {
               state: store.dehydrate(),
             }
             if (store.onWillReload) {
@@ -273,8 +272,9 @@ storeProvidable = function(options, Helpers) {
           StoreDisposals = new Set()
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            const key = `${this.mountName}${name}`
+            const key = `${getName(this)}${name}`
             if (!storeHMRCache[key]) {
+              // try again a bit later, perhaps it wasnt mounted
               console.log('no hmr state for', name, key, storeHMRCache)
               continue
             }

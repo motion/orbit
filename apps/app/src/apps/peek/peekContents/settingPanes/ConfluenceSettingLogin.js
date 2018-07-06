@@ -28,8 +28,8 @@ class ConfluenceSettingLoginStore {
     domain: '',
   }
 
-  willMount() {
-    this.setting = findOrCreate(Setting, {
+  async willMount() {
+    this.setting = await findOrCreate(Setting, {
       category: 'integration',
       type: 'confluence',
     })
@@ -45,7 +45,6 @@ class ConfluenceSettingLoginStore {
   status = react(
     () => this.values,
     async (values, { setValue, sleep }) => {
-      console.log('reactin to vlaues', values)
       if (!values.username || !values.password || !values.domain) {
         throw react.cancel
       }

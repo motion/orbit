@@ -11,7 +11,7 @@ export class OrbitDockedPaneStore {
   willMount() {
     on(this, this.props.orbitStore, 'key', key => {
       // no keyshortcuts when peek is open
-      if (App.orbitState.inputFocused) {
+      if (!App.orbitState.inputFocused) {
         console.log('not input focused')
         return
       }

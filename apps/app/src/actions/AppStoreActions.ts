@@ -25,10 +25,10 @@ export function selectItem(
 ) {
   invariant(item, 'Must pass item')
   if (item instanceof Person) {
-    invariant(item.title, 'Must pass item title')
+    invariant(item.name, 'Must pass Person name')
     selectPerson(item, target)
   } else if (item instanceof Bit) {
-    invariant(item.name, 'Must pass item title')
+    invariant(item.title, 'Must pass Bit title')
     selectBit(item, target)
   } else {
     invariant(item.title, 'Must pass item title')

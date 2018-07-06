@@ -54,7 +54,7 @@ export const allIntegrations = [
 ]
 
 export const settingToResult = setting => ({
-  id: setting.type,
+  id: setting.id,
   type: 'setting',
   integration: setting.type,
   icon: setting.type,

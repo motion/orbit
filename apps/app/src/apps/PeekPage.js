@@ -116,7 +116,7 @@ class PeekPageInner extends React.Component {
     if (!peekStore.state) {
       return null
     }
-    const { item } = peekStore.state
+    const { item, peekId } = peekStore.state
     const type = (item && capitalize(item.type)) || 'Empty'
     const PeekContentsView = PeekContents[type]
     if (!PeekContentsView) {
@@ -129,7 +129,7 @@ class PeekPageInner extends React.Component {
     }
     return (
       <PeekContentsView
-        key={(item && item.id) || Math.random()}
+        key={peekId}
         bit={peekStore.selectedBit}
         person={peekStore.selectedBit}
         appStore={appStore}

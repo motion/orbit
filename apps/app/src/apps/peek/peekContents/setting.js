@@ -28,7 +28,7 @@ export class SettingContent extends React.Component {
   handleRefresh = async () => {
     const store = this.props.store
     const job = new Job()
-    job.type = store.bit.integration
+    job.type = store.setting.type
     job.action = 'all'
     job.status = Job.statuses.PENDING
     await job.save()
@@ -46,8 +46,8 @@ export class SettingContent extends React.Component {
       console.error('no setting', this, store.setting)
       return null
     }
-    const { setting, bit } = store
-    const { integration } = bit
+    const { setting } = store
+    const integration = setting.type
     const SettingPane =
       SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
@@ -110,7 +110,7 @@ export class SettingContent extends React.Component {
 @view({
   store: class LoadSettingStore {
     setting = modelQueryReaction(() =>
-      SettingModel.findOne({ id: App.peekState.id }),
+      SettingModel.findOne({ id: App.peekState.item.id }),
     )
   },
 })

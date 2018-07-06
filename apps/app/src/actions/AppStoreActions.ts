@@ -36,7 +36,8 @@ export function selectItem(
     invariant(item.id, 'Must pass item id')
     App.setPeekState({
       ...withPosition(target),
-      bit: {
+      id: item.id,
+      item: {
         id: item.id,
         title: item.title,
         type: item.type || '',
@@ -54,7 +55,7 @@ export function selectPerson(person: Person, target?: PositionObject) {
   App.setPeekState({
     ...withPosition(target),
     id: person.id,
-    bit: {
+    item: {
       id: person.id,
       icon: avatar,
       title: person.name,
@@ -69,7 +70,7 @@ export function selectBit(bit: Bit, node?: PositionObject) {
   App.setPeekState({
     ...withPosition(node),
     id: Math.random(),
-    bit: {
+    item: {
       id: bit.id,
       icon: bit.icon,
       title: bit.title,

@@ -27,28 +27,28 @@ class PeekStore {
   }
 
   selectedBit = react(
-    () => App.peekState.bit,
-    async bit => {
-      if (!bit) {
+    () => App.peekState.item,
+    async item => {
+      if (!item) {
         return null
       }
-      if (bit.type === 'person') {
-        return await Person.findOne({ id: bit.id })
+      if (item.type === 'person') {
+        return await Person.findOne({ id: item.id })
       }
-      if (bit.type === 'setting') {
-        return bit
+      if (item.type === 'setting') {
+        return item
       }
-      if (bit.type === 'team') {
-        return bit
+      if (item.type === 'team') {
+        return item
       }
       const res = await Bit.findOne({
         where: {
-          id: bit.id,
+          id: item.id,
         },
         relations: ['people'],
       })
       if (!res) {
-        return bit
+        return item
       }
       return res
     },
@@ -116,8 +116,8 @@ class PeekPageInner extends React.Component {
     if (!peekStore.state) {
       return null
     }
-    const { bit } = peekStore.state
-    const type = (bit && capitalize(bit.type)) || 'Empty'
+    const { item } = peekStore.state
+    const type = (item && capitalize(item.type)) || 'Empty'
     const PeekContentsView = PeekContents[type]
     if (!PeekContentsView) {
       console.error('none', type)
@@ -129,7 +129,7 @@ class PeekPageInner extends React.Component {
     }
     return (
       <PeekContentsView
-        key={(bit && bit.id) || Math.random()}
+        key={(item && item.id) || Math.random()}
         bit={peekStore.selectedBit}
         person={peekStore.selectedBit}
         appStore={appStore}

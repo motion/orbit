@@ -22,7 +22,7 @@ export class SettingInfoStore {
     },
     {
       immediate: true,
-      condition: () => !!this.bit,
+      condition: () => !!this.setting,
     },
   )
 
@@ -33,7 +33,7 @@ export class SettingInfoStore {
         .getCount(),
     {
       immediate: true,
-      condition: () => !!this.bit,
+      condition: () => !!this.setting,
     },
   )
 }

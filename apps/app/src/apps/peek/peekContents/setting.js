@@ -110,7 +110,7 @@ export class SettingContent extends React.Component {
 @view({
   store: class LoadSettingStore {
     setting = modelQueryReaction(() =>
-      SettingModel.findOne({ id: App.peekState.bit.id }),
+      SettingModel.findOne({ id: App.peekState.id }),
     )
   },
 })

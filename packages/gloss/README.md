@@ -126,7 +126,7 @@ export default class Surface implements ViewType<Props> {
           theme="dark"
           background
           openOnHover
-          noHover
+          noHoverOnChildren
           animation="bounce 150ms"
           target={`.${this.uniq}`}
           padding={[0, 6]}

@@ -97,7 +97,7 @@ export class Icon extends React.PureComponent {
             background
             openOnHover
             noArrow
-            noHover
+            noHoverOnChildren
             target={`.${this.uniq}`}
             padding={[0, 5]}
             distance={10}

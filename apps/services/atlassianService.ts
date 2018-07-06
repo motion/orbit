@@ -1,5 +1,5 @@
 import * as r2 from '@mcro/r2'
-// https://tryorbit2.atlassian.net/wiki/rest/api/content
+// https://tryorbit2.atlassian.net
 
 type AtlassianOptions = {
   start?: number

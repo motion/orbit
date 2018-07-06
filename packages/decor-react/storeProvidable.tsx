@@ -46,6 +46,8 @@ function getName(mountedComponent) {
   return name
 }
 
+let StoreDisposals = new Set()
+
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
@@ -224,7 +226,7 @@ storeProvidable = function(options, Helpers) {
           }
         }
 
-        disposeStores() {
+        disposeStores = () => {
           if (!this.stores) {
             console.log('no stores to dispose')
             return
@@ -255,13 +257,20 @@ storeProvidable = function(options, Helpers) {
               store.willReload(storeHMRCache[name])
             }
           }
-          this.disposeStores()
+          // save these for later because webpack may not actually HMR
+          // if there is "nothing to update", it will not call `onReloadStores`
+          // so we don't want to dispose prematurely
+          StoreDisposals.add(this.disposeStores)
         }
 
         onReloadStores = () => {
           if (!this.stores) {
             return
           }
+          for (const disposer of StoreDisposals) {
+            disposer()
+          }
+          StoreDisposals = new Set()
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             const key = `${this.mountName}${name}`

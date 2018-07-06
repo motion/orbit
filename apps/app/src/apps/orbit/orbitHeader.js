@@ -80,6 +80,8 @@ export class OrbitHeader extends React.Component {
             $input
             background="transparent"
             onChange={orbitStore.onChangeQuery}
+            onFocus={orbitStore.onFocus}
+            onBlur={orbitStore.onBlur}
             onKeyDown={this.handleKeyDown}
             ref={headerStore.inputRef}
             onClick={headerStore.onClickInput}

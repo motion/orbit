@@ -71,4 +71,16 @@ export default class OrbitStore {
   onChangeQuery = e => {
     this.query = e.target.value
   }
+
+  onFocus = () => {
+    App.setOrbitState({
+      inputFocused: true,
+    })
+  }
+
+  onBlur = () => {
+    App.setOrbitState({
+      inputFocused: false,
+    })
+  }
 }

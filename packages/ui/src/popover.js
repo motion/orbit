@@ -318,7 +318,6 @@ export class Popover extends React.PureComponent {
 
   setPosition(callback) {
     if (!this.popoverRef) {
-      console.log('no popover ref', this)
       return
     }
     if (!this.unmounted) {

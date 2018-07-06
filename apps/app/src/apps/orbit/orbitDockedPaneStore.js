@@ -10,6 +10,11 @@ export class OrbitDockedPaneStore {
 
   willMount() {
     on(this, this.props.orbitStore, 'key', key => {
+      // no keyshortcuts when peek is open
+      if (App.orbitState.inputFocused) {
+        console.log('not input focused')
+        return
+      }
       if (key === 'right') {
         this.paneIndex = Math.min(this.panes.length - 1, this.paneIndex + 1)
       }

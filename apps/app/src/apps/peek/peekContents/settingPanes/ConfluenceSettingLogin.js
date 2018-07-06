@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { view, react, deep } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Views from '~/views'
 import { Setting, findOrCreate } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
-import { debounce } from 'lodash'
+import { App } from '@mcro/stores'
 
 const Statuses = {
   LOADING: 'LOADING',
@@ -44,7 +44,7 @@ class ConfluenceSettingLoginStore {
 
   status = react(
     () => this.values,
-    async (values, { setValue }) => {
+    async (values, { setValue, sleep }) => {
       console.log('reactin to vlaues', values)
       if (!values.username || !values.password || !values.domain) {
         throw react.cancel
@@ -52,6 +52,8 @@ class ConfluenceSettingLoginStore {
       if (values.domain.indexOf('http') !== 0) {
         throw react.cancel
       }
+      // delay before running checks
+      await sleep(700)
       setValue(Statuses.LOADING)
       this.setting.values.atlassian = values
       const service = new AtlassianService(this.setting)
@@ -85,11 +87,15 @@ class ConfluenceSettingLoginStore {
       ...this.values,
       [prop]: val,
     }
-    // this.autoSave()
   }
 
   save = async () => {
     this.retry = Date.now()
+  }
+
+  addIntegration = () => {
+    this.setting.save()
+    App.actions.clearPeek()
   }
 
   // autoSave = debounce(this.save, 400)
@@ -141,12 +147,18 @@ export class ConfluenceSettingLogin extends React.Component {
                 <UI.Button if={store.status === Statuses.LOADING}>
                   Saving...
                 </UI.Button>
-                <UI.Button if={store.status === Statuses.SUCCESS}>
-                  Looks good!
+                <UI.Button
+                  if={store.status === Statuses.SUCCESS}
+                  onClick={store.addIntegration}
+                >
+                  Add Integration
                 </UI.Button>
               </UI.Theme>
             </UI.Row>
             <Views.Message if={store.error}>{store.error}</Views.Message>
+            <Views.Message if={store.status === Statuses.SUCCESS}>
+              Looks good! We can login to your account successfully.
+            </Views.Message>
           </inner>
         </auth>
       </page>

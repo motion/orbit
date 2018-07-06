@@ -31,7 +31,7 @@ export class ConfluenceSetting extends React.Component {
           </inner>
         </section>
         <section if={store.active === 'account'}>
-          <ConfluenceSettingLogin />
+          <ConfluenceSettingLogin setting={this.props.setting} />
         </section>
       </container>
     )

@@ -29,9 +29,15 @@ class ConfluenceSettingLoginStore {
   }
 
   async willMount() {
+    if (this.props.setting) {
+      this.setting = this.props.setting
+      this.values = this.setting.values.atlassian
+      return
+    }
     this.setting = await findOrCreate(Setting, {
       category: 'integration',
       type: 'confluence',
+      token: null,
     })
     this.setting.values = this.setting.values || {
       atlassian: {

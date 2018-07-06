@@ -3,8 +3,8 @@ import { view } from '@mcro/black'
 import { AtlassianSettingLogin } from '../settingPanes/AtlassianSettingLogin'
 
 @view
-export class ConfluenceSetupPane extends React.Component {
+export class JiraSetupPane extends React.Component {
   render() {
-    return <AtlassianSettingLogin type="confluence" />
+    return <AtlassianSettingLogin type="jira" />
   }
 }

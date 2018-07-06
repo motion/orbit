@@ -5,14 +5,14 @@ import { SubTitle } from '../../../../views'
 import { Tabs, Tab } from '@mcro/sonar'
 import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 
-class ConfluenceSettingStore {
+class JiraSettingStore {
   active = 'general'
 }
 
 @view({
-  store: ConfluenceSettingStore,
+  store: JiraSettingStore,
 })
-export class ConfluenceSetting extends React.Component {
+export class JiraSetting extends React.Component {
   render({ store }) {
     return (
       <container>

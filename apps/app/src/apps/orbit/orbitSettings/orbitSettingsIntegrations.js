@@ -36,6 +36,14 @@ export const allIntegrations = [
     auth: true,
   },
   {
+    id: 'jira',
+    type: 'setting',
+    integration: 'jira',
+    title: 'Jira',
+    icon: 'jira',
+    auth: true,
+  },
+  {
     id: 'website',
     type: 'setting',
     integration: 'website',

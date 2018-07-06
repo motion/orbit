@@ -18,7 +18,7 @@ const buttonThemes = {
   [Statuses.FAIL]: 'darkred',
 }
 
-class ConfluenceSettingLoginStore {
+class AtlassianSettingLoginStore {
   setting = null
   retry = null
   error = null
@@ -29,6 +29,9 @@ class ConfluenceSettingLoginStore {
   }
 
   async willMount() {
+    if (!this.props.type) {
+      throw new Error('No props.type')
+    }
     if (this.props.setting) {
       this.setting = this.props.setting
       this.values = this.setting.values.atlassian
@@ -36,7 +39,7 @@ class ConfluenceSettingLoginStore {
     }
     this.setting = await findOrCreate(Setting, {
       category: 'integration',
-      type: 'confluence',
+      type: this.props.type,
       token: null,
     })
     this.setting.values = this.setting.values || {
@@ -75,12 +78,12 @@ class ConfluenceSettingLoginStore {
           return
         }
         if (res) {
-          console.log('confluence got res', res)
+          console.log('atlassian got res', res)
           setValue(Statuses.SUCCESS)
           return
         }
       } catch (err) {
-        console.log('confluence setting err', err)
+        console.log('atlassian setting err', err)
         this.error = `${err.message || 'Some Error'}`
       }
       setValue(Statuses.FAIL)
@@ -107,14 +110,14 @@ class ConfluenceSettingLoginStore {
 }
 
 @view({
-  store: ConfluenceSettingLoginStore,
+  store: AtlassianSettingLoginStore,
 })
-export class ConfluenceSettingLogin extends React.Component {
+export class AtlassianSettingLogin extends React.Component {
   render({ store }) {
     return (
       <page css={{ padding: 20 }}>
         <Views.Message>
-          Confluence requires username and password as their OAuth requires
+          Atlassian requires username and password as their OAuth requires
           administrator permissions. As always with Orbit, this information is{' '}
           <strong>completely private</strong> to you.
         </Views.Message>

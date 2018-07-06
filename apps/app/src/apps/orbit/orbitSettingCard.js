@@ -35,7 +35,7 @@ export class OrbitSettingCard extends React.Component {
     return
   }
 
-  render({ store, result, isActive, ...props }) {
+  render({ store, result, isActive, setting, ...props }) {
     return (
       <OrbitCard
         inactive={!isActive}

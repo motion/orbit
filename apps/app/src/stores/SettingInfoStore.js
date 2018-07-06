@@ -8,11 +8,14 @@ export class SettingInfoStore {
   bit = null
 
   get setting() {
+    if (this.props.setting) {
+      return this.props.setting
+    }
     if (!this.bit) {
-      return
+      return null
     }
     if (!this.props.appStore.settings) {
-      return
+      return null
     }
     if (!this.bit.integration) {
       console.error('No integration!', this.bit)

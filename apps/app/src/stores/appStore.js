@@ -89,7 +89,12 @@ export class AppStore {
   }
 
   settings = modelQueryReaction(
-    () => Setting.find(),
+    () =>
+      Setting.find({
+        where: {
+          token: Not(Equal(null)),
+        },
+      }),
     settings =>
       settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {}),
   )

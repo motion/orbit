@@ -120,6 +120,7 @@ export class OrbitSettings extends React.Component {
                 result={settingToResult(setting)}
                 index={index + generalSettings.length}
                 appStore={appStore}
+                setting={setting}
                 isActive
               />
             ))}

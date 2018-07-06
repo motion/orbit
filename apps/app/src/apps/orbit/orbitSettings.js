@@ -31,14 +31,14 @@ const generalSettings = [
     icon: 'gear',
     auth: GeneralSettings.OrbitSettingGeneral,
   },
-  {
-    id: 'general-sync',
-    type: 'setting',
-    integration: 'general-sync',
-    title: 'Sync',
-    icon: 'sync',
-    auth: GeneralSettings.OrbitSettingSync,
-  },
+  // {
+  //   id: 'general-sync',
+  //   type: 'setting',
+  //   integration: 'general-sync',
+  //   title: 'Sync',
+  //   icon: 'sync',
+  //   auth: GeneralSettings.OrbitSettingSync,
+  // },
 ]
 
 class OrbitSettingsStore {

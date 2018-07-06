@@ -570,16 +570,13 @@ export class Popover extends React.PureComponent {
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
     const setHovered = () => {
-      console.log('set hovered')
       this.hoverStateSet(name, true)
     }
     const setUnhovered = () => {
-      console.log('set unhovered')
       this.hoverStateSet(name, false)
     }
     const openIfOver = () => {
       if (this.isNodeHovered(node)) {
-        console.log('should be setting hovered')
         setHovered()
       }
     }
@@ -637,7 +634,6 @@ export class Popover extends React.PureComponent {
   // hover helpers
   hoverStateSet(name, isHovered) {
     const { openOnHover, onMouseEnter } = this.curProps
-    console.log('setting state', openOnHover, isHovered)
     const setter = () => {
       // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
       const key = `${name}Hovered`

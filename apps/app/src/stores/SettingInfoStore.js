@@ -2,39 +2,23 @@
 import { Bit, Job } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
 
+// TODO: we can have multiple of the same integration added in
+// this just assumes one of each
+
 export class SettingInfoStore {
   job = null
   bitsCount = null
-  bit = null
 
   get setting() {
-    if (this.props.setting) {
-      return this.props.setting
-    }
-    if (!this.bit) {
-      return null
-    }
-    if (!this.props.appStore.settings) {
-      return null
-    }
-    if (!this.bit.integration) {
-      console.error('No integration!', this.bit)
-    }
-    return this.props.appStore.settings[this.bit.integration]
-  }
-
-  setBit = bit => {
-    this.bit = bit
+    return this.props.setting
   }
 
   job = modelQueryReaction(
     async () => {
-      if (this.bit) {
-        return await Job.findOne({
-          where: { type: this.bit.integration },
-          order: { createdAt: 'DESC' },
-        })
-      }
+      return await Job.findOne({
+        where: { type: this.setting.type },
+        order: { createdAt: 'DESC' },
+      })
     },
     {
       immediate: true,
@@ -45,7 +29,7 @@ export class SettingInfoStore {
   bitsCount = modelQueryReaction(
     () =>
       Bit.createQueryBuilder()
-        .where({ integration: this.bit.integration })
+        .where({ integration: this.setting.type })
         .getCount(),
     {
       immediate: true,

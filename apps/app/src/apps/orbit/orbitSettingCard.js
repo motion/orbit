@@ -11,10 +11,6 @@ import { Setting } from '@mcro/models'
   store: SettingInfoStore,
 })
 export class OrbitSettingCard extends React.Component {
-  componentWillMount() {
-    this.props.store.setBit(this.props.result)
-  }
-
   handleClick = async () => {
     const { isActive, result } = this.props
     if (isActive) {

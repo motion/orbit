@@ -15,17 +15,14 @@ type Subject = {
   subscriptions: CompositeDisposable
 }
 
-type OnAble =
-  | number
-  | NodeJS.Timer
-  | Disposable
-  | MutationObserver
-  | {
-      subscribe?: Function
-      emitter?: Function
-      dispose?: Function
-      _idleTimeout?: number
-    }
+type Watchable = {
+  subscribe?: Function
+  emitter?: Function
+  dispose?: Function
+  _idleTimeout?: number
+}
+
+type OnAble = number | NodeJS.Timer | Disposable | MutationObserver | Watchable
 
 // fuck electron doesnt have timers
 const looksLikeTimeout = thing => !!thing._idleTimeout
@@ -35,11 +32,6 @@ const looksLikeDisposable = thing =>
   typeof thing.dispose === 'function' && !thing.subscribe && !thing.emitter
 
 // 1. listens to a lots of things:
-//    setTimeout numbers
-//    MutationObservers
-//    Rx.Subject / Rx.Observer
-//    Emitter
-//    eventListeners (addEventListener, removeEventListener)
 // 2. adds it onto this.subscriptions
 // 3. returns an off function
 export default function on(
@@ -48,21 +40,27 @@ export default function on(
   eventName: String | Function,
   callback: Function,
 ) {
+  // Timer
   if (typeof target === 'number' || looksLikeTimeout(target)) {
     const dispose = () => clearTimeout(target as NodeJS.Timer)
     subject.subscriptions.add({ dispose })
     return dispose
   }
+  // MutationObserver
   if (target instanceof IsomorphicMutationObserver) {
-    // MutationObserver
-    const dispose = () => target.disconnect()
+    const result = target as MutationObserver
+    const dispose = () => result.disconnect()
     subject.subscriptions.add({ dispose })
     return dispose
   }
+  // Disposable
   if (target instanceof Disposable || looksLikeDisposable(target)) {
-    subject.subscriptions.add(target as Disposable)
-    return target
+    const disposable = target as Disposable
+    subject.subscriptions.add(disposable)
+    return () => disposable.dispose()
   }
+  // cast to Watchable because can't use NodeJS.Timer above
+  target = target as Watchable
   // subscribable
   if (target.subscribe) {
     if (typeof eventName !== 'function') {
@@ -82,5 +80,5 @@ export default function on(
     dispose = event(target, eventName, callback)
   }
   subject.subscriptions.add(dispose)
-  return dispose
+  return () => dispose.dispose()
 }

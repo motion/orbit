@@ -1,17 +1,19 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { Job } from '@mcro/models'
+import { Job, Setting as SettingModel } from '@mcro/models'
 import { PeekHeader, PeekContent } from '../index'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '~/stores/SettingInfoStore'
 import { TimeAgo } from '~/views/TimeAgo'
+import { modelQueryReaction } from '@mcro/helpers'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
 )
+
 const statusIcons = {
   PENDING: { name: 'check', color: '#999' },
   FAILED: { name: 'remove', color: 'darkred' },
@@ -22,11 +24,7 @@ const statusIcons = {
 @view({
   store: SettingInfoStore,
 })
-export class Setting extends React.Component {
-  componentDidMount() {
-    this.props.store.setBit(App.peekState.bit)
-  }
-
+export class SettingContent extends React.Component {
   handleRefresh = async () => {
     const store = this.props.store
     const job = new Job()
@@ -48,7 +46,6 @@ export class Setting extends React.Component {
       console.error('no setting', this, store.setting)
       return null
     }
-    store.version
     const { setting, bit } = store
     const { integration } = bit
     const SettingPane =
@@ -107,5 +104,22 @@ export class Setting extends React.Component {
         </PeekContent>
       </>
     )
+  }
+}
+
+@view({
+  store: class LoadSettingStore {
+    setting = modelQueryReaction(() =>
+      SettingModel.findOne({ id: App.peekState.bit.id }),
+    )
+  },
+})
+export class Setting extends React.Component {
+  render({ store, ...props }) {
+    if (!store.setting || !store.setting.token) {
+      console.error('no setting', store.setting)
+      return null
+    }
+    return <SettingContent setting={store.setting} {...props} />
   }
 }

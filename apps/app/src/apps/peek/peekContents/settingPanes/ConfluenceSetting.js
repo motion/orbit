@@ -13,7 +13,8 @@ class ConfluenceSettingStore {
   store: ConfluenceSettingStore,
 })
 export class ConfluenceSetting extends React.Component {
-  render({ store }) {
+  render({ store, setting }) {
+    console.log('confluencesetting', setting)
     return (
       <container>
         <Tabs
@@ -31,7 +32,7 @@ export class ConfluenceSetting extends React.Component {
           </inner>
         </section>
         <section if={store.active === 'account'}>
-          <AtlassianSettingLogin setting={this.props.setting} />
+          <AtlassianSettingLogin setting={setting} />
         </section>
       </container>
     )

@@ -60,6 +60,17 @@ export class Screen {
   watchSettings = { name: '', settings: {} }
   oracle = new Oracle()
 
+  unsetOrbitHoveredOnHide = react(
+    () => App.orbitState.docked,
+    docked => {
+      if (!docked) {
+        Desktop.setHoverState({ orbitHovered: false })
+        return
+      }
+      throw react.cancel
+    },
+  )
+
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 
   handleOCRWords = react(

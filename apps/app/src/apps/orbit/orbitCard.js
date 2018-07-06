@@ -27,7 +27,7 @@ const orbitIconProps = {
     transform: {
       y: -6 - 3,
       x: 20 + 3,
-      scale: 2.5,
+      scale: 2.7,
       rotate: '-45deg',
     },
   },
@@ -241,18 +241,17 @@ export class OrbitCard extends React.Component {
               {afterTitle}
             </title>
             <subtitle if={hasSubtitle}>
-              <UI.Text if={location}>in {location}&nbsp;&nbsp;</UI.Text>
+              <UI.Text if={location}>in&nbsp;{location}</UI.Text>
               <UI.Text
                 if={typeof subtitle === 'string'}
                 ellipse={1}
-                css={{ maxWidth: 'calc(100% - 115px)' }}
+                css={{ maxWidth: 'calc(100% - 40px)' }}
               >
                 {subtitle}
               </UI.Text>
               {typeof subtitle !== 'string' && subtitle}
-              <space $$flex />
               <UI.Text if={date} onClick={permalink} size={0.95}>
-                <TimeAgo date={date} />
+                <strong> &middot;</strong> <TimeAgo date={date} />
               </UI.Text>
             </subtitle>
             <preview if={preview && !children}>

@@ -55,7 +55,7 @@ export class ThemeMaker {
     const theme = this.fromStyles({
       highlightColor: base,
       background: base,
-      color: opposite.lighten(1.4),
+      color: opposite.lighten(1.6),
       borderColor: opposite.darken(0.5),
     })
     this.cache[colorName] = theme // cache
@@ -71,7 +71,7 @@ export class ThemeMaker {
     ...rest
   }) => {
     if (!background || !color) {
-      throw new Error(`Themes require at least background or color`)
+      throw new Error('Themes require at least background or color')
     }
     const base = this.colorize({
       highlightColor,

@@ -152,7 +152,13 @@ export const SubTitle = props => (
 )
 
 export const Link = props => (
-  <UI.Text fontWeight={400} color="#8b2bec" display="inline" {...props} />
+  <UI.Text
+    css={{ cursor: 'pointer' }}
+    fontWeight={400}
+    color="#8b2bec"
+    display="inline"
+    {...props}
+  />
 )
 
 @view.ui

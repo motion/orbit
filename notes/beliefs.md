@@ -41,3 +41,8 @@ Talked to James (Juul):
 - Showing recent collaborations
 - Making it easy to explore whats going on with people
 - Not much slack search important for them
+- Our platform play is very much closer to windows/ios than to slack
+  - Slack integrations have no access to _other_ data within a company
+  - Slack integrations have no security
+  - Slack integrations can't really query internal database/apis
+  - Slack integrations can't have any custom interface

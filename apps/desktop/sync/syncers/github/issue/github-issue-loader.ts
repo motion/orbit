@@ -1,5 +1,5 @@
 import { GithubIssueQuery, GithubIssueQueryResult } from './github-issue-query'
-import { fetchFromGitHub } from './github-utils'
+import { fetchFromGitHub } from '../github-utils'
 
 /**
  * Loads GitHub issues for a single repository.
@@ -21,9 +21,9 @@ export class GithubIssueLoader {
   }
 
   async load() {
-    console.log(`Syncing ${this.organization}/${this.repository}`);
+    console.log(`Loading ${this.organization}/${this.repository} github issues`);
     const issues = await this.loadByCursor();
-    console.log(`Syncing is done. Loaded ${issues.length} issues. Total query cost: ${this.totalCost}/${this.remainingCost}`);
+    console.log(`Loading is finished. Loaded ${issues.length} issues. Total query cost: ${this.totalCost}/${this.remainingCost}`);
     return issues;
   }
 
@@ -41,7 +41,8 @@ export class GithubIssueLoader {
     this.totalCost += results.rateLimit.cost;
     this.remainingCost = results.rateLimit.remaining;
 
-    const issues = results.repository.issues.edges.map(edge => edge.node)
+    const edges = results.repository.issues.edges;
+    const issues = edges.map(edge => edge.node)
     if (!cursor) {
       console.log(`${issues.length} issues were loaded`);
       console.log(`There are ${results.repository.issues.totalCount} issues in the repository`);
@@ -54,7 +55,7 @@ export class GithubIssueLoader {
     // and tell github to load issues "after" that cursor
     // cursor basically is a token github returns
     if (results.repository.issues.pageInfo.hasNextPage) {
-      const lastEdgeCursor = results.repository.issues.edges[results.repository.issues.edges.length - 1].cursor;
+      const lastEdgeCursor = edges[edges.length - 1].cursor;
       const nextPageIssues = await this.loadByCursor(lastEdgeCursor);
       return [...issues, ...nextPageIssues];
     }

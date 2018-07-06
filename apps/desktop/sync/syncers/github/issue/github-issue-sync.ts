@@ -2,17 +2,14 @@ import { Bit, createOrUpdateBit, Setting } from '@mcro/models'
 import { flatten, omit } from 'lodash'
 import { GithubIssue } from './github-issue-query'
 import { GithubIssueLoader } from './github-issue-loader'
-import { sequence } from '../../../utils'
-import getHelpers from './getHelpers'
+import { sequence } from '../../../../utils'
 
 export class GithubIssueSync {
 
   setting: Setting
-  helpers = getHelpers({})
 
   constructor(setting: Setting) {
     this.setting = setting
-    this.helpers = getHelpers(setting)
   }
 
   run = async () => {
@@ -33,7 +30,7 @@ export class GithubIssueSync {
         const [organization, repository] = repositoryPath.split('/')
         const loader = new GithubIssueLoader(organization, repository, this.setting.token);
         const issues = await loader.load();
-        return Promise.all(issues.map(issue => this.createIssue(issue, organization, repositoryPath)))
+        return Promise.all(issues.map(issue => this.createIssue(issue, organization, repository)))
       })
     )
   }

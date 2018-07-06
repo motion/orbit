@@ -43,6 +43,7 @@ export class Window extends BaseComponent {
     this.updatePosition = () => configurePosition.call(this, this.props)
 
     this.propHandlers = {
+      nodeIntegration: this.handleSetProp('nodeIntegration'),
       kiosk: this.handleSetProp('kiosk'),
       fullScreen: this.handleSetProp('fullScreen'),
       visibleOnAllWorkspaces: this.handleSetProp('visibleOnAllWorkspaces'),

@@ -1,5 +1,5 @@
-import { GithubIssueQuery, GithubIssueQueryResult } from './github-issue-query'
-import { fetchFromGitHub } from '../github-utils'
+import { GithubIssueQuery, GithubIssueQueryResult } from './GithubIssueQuery'
+import { fetchFromGitHub } from '../GithubUtils'
 
 /**
  * Loads GitHub issues for a single repository.

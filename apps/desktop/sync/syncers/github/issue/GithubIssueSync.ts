@@ -1,7 +1,7 @@
 import { Bit, createOrUpdateBit, Setting } from '@mcro/models'
 import { flatten, omit } from 'lodash'
-import { GithubIssue } from './github-issue-query'
-import { GithubIssueLoader } from './github-issue-loader'
+import { GithubIssue } from './GithubIssueQuery'
+import { GithubIssueLoader } from './GithubIssueLoader'
 import { sequence } from '../../../../utils'
 
 export class GithubIssueSync {

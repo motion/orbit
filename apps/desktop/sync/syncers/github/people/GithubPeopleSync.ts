@@ -1,8 +1,8 @@
 import { Setting, createOrUpdate, Person } from '@mcro/models'
 import { flatten, uniq } from 'lodash'
 import * as Helpers from '~/helpers'
-import { GithubPeopleLoader } from './github-people-loader'
-import { GithubPerson } from './github-people-query'
+import { GithubPeopleLoader } from './GithubPeopleLoader'
+import { GithubPerson } from './GithubPeopleQuery'
 import { sequence } from '../../../../utils'
 
 export class GithubPeopleSync {

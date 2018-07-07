@@ -1,6 +1,6 @@
 import Syncer from '../syncer'
-import {GithubIssueSync} from './issue/github-issue-sync'
-import {GithubPeopleSync} from './people/github-people-sync'
+import {GithubIssueSync} from './issue/GithubIssueSync'
+import {GithubPeopleSync} from './people/GithubPeopleSync'
 
 export const github = new Syncer('github', {
   actions: {

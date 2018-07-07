@@ -1,6 +1,6 @@
 // map job.type <=> JobModel
 
-export * from './github/github-sync'
+export * from './github/GithubSyncer'
 export * from './google/gmailSync'
 export * from './google/gdocsSync'
 export * from './slack/slackSync'

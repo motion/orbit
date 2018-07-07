@@ -1,5 +1,5 @@
-import { GithubPeopleQuery, GithubPeopleQueryResult } from './github-people-query'
-import { fetchFromGitHub } from '../github-utils'
+import { GithubPeopleQuery, GithubPeopleQueryResult } from './GithubPeopleQuery'
+import { fetchFromGitHub } from '../GithubUtils'
 
 /**
  * Loads GitHub people for a single organization.

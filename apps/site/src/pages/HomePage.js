@@ -539,12 +539,12 @@ class SectionProfiles extends React.Component {
                 }
               >
                 <SectionTitle size={2.8}>
-                  Be the ultimate insider in your company
+                  The ultimate insight into your org
                 </SectionTitle>
                 <VertSpace />
                 <SectionSubTitle>
-                  See recent and relevant information on everyone in your
-                  company, without needing them to sign up.
+                  See profiles of everyone in your company generated
+                  automatically.
                 </SectionSubTitle>
                 <VertSpace />
                 <SectionSubP if={false} color="#111" alpha={0.5}>
@@ -661,17 +661,14 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                Your data never leaves your computer.
+                Complete privacy + powerful tools for your company intranet. Add
+                custom integrations with ease.
               </SectionSubTitle>
               <VertSpace />
-              <SectionSubP>
+              <SectionSubP size={1.45} if={isLarge}>
                 Orbit gives you and your team superpowers without scaring
-                security.
-              </SectionSubP>
-              <VertSpace />
-              <SectionSubP if={isLarge}>
-                With a powerful hook system for any API, you can put knowledge
-                clearly at hand.
+                security. It's a powerful new app platform for keeping teams in
+                sync.
               </SectionSubP>
               <VertSpace />
               <VertSpace />

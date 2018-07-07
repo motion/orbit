@@ -1,5 +1,8 @@
 let errorCb
 
+// temproray to debug locks
+window.lastQueryQueue = []
+
 function createWebSQLPlugin() {
   var PrimusAdaptor,
     SQLiteFactory,
@@ -193,6 +196,7 @@ function createWebSQLPlugin() {
       }
     }
     myfn = function(tx) {
+      window.lastQueryQueue.push([statement, params])
       tx.executeSql(statement, params, mysuccess, myerror)
     }
     this.addTransaction(

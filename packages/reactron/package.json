@@ -1,6 +1,6 @@
 {
   "name": "@mcro/reactron",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "React renderer for Electron apps",
   "main": "_/index.js",
   "license": "MIT",

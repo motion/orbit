@@ -539,12 +539,12 @@ class SectionProfiles extends React.Component {
                 }
               >
                 <SectionTitle size={2.8}>
-                  Be the ultimate insider in your company
+                  The ultimate insight into your org
                 </SectionTitle>
                 <VertSpace />
                 <SectionSubTitle>
-                  See recent and relevant information on everyone in your
-                  company, without needing them to sign up.
+                  See profiles of everyone in your company generated
+                  automatically.
                 </SectionSubTitle>
                 <VertSpace />
                 <SectionSubP if={false} color="#111" alpha={0.5}>

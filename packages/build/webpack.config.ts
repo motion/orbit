@@ -105,8 +105,7 @@ const config = {
     rules: [
       {
         test: /\.[jt]sx?$/,
-        //'cache-loader',
-        use: ['thread-loader', 'babel-loader'],
+        use: ['cache-loader', 'thread-loader', 'babel-loader'],
         exclude: ['node_modules'],
       },
       // {

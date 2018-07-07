@@ -420,26 +420,18 @@ export class OrbitCard extends React.Component {
       }
     } else {
       // CARD
-      const border = [1, '#fff']
+      card = {
+        ...card,
+        border: [1, '#fff'],
+        borderRadius,
+        background: theme.selected.background,
+        boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
+        '&:hover': {
+          border: [1, 'rgb(51.3%, 65.7%, 88.6%)'],
+        },
+      }
       if (isSelected) {
-        card = {
-          ...card,
-          border,
-          borderRadius,
-          background: theme.selected.background,
-          boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
-        }
-      } else {
-        card = {
-          ...card,
-          border,
-          borderRadius,
-          background: theme.selected.background,
-          boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
-          '&:hover': {
-            border: [1, 'blue']
-          }
-        }
+        // can add selected styles...
       }
     }
     if (hoverable) {

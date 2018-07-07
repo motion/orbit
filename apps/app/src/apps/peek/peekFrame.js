@@ -6,7 +6,7 @@ import { WindowControls } from '~/views/windowControls'
 import * as Constants from '~/constants'
 
 const SHADOW_PAD = 80
-const borderRadius = 6
+const borderRadius = 8
 const background = '#f9f9f9'
 
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
@@ -36,7 +36,7 @@ export class PeekFrame extends React.Component {
     ]
     const margin = padding.map(x => -x)
     const boxShadow = [[onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.2]]]
-    const arrowSize = 24
+    const arrowSize = 20
     // determine x adjustments
     let peekAdjustX = 0
     // adjust for orbit arrow blank

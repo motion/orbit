@@ -81,7 +81,6 @@ class GithubStore {
   rows = react(
     () => this.allRepos,
     repos => {
-      log('react to all repos')
       return repos.map((repo, index) => {
         const orgName = repo.fullName.split('/')[0]
         const isActive = () => this.isSyncing(repo.fullName)
@@ -116,6 +115,9 @@ class GithubStore {
           },
         }
       })
+    },
+    {
+      defaultValue: [],
     },
   )
 
@@ -161,7 +163,6 @@ export class GithubSetting extends React.Component {
         <section if={store.active === 'repos'}>
           <section>
             <SearchableTable
-              if={store.rows}
               rowLineHeight={28}
               floating={false}
               multiline
@@ -170,6 +171,11 @@ export class GithubSetting extends React.Component {
               onRowHighlighted={this.onRowHighlighted}
               multiHighlight
               rows={store.rows}
+              bodyPlaceholder={
+                <div css={{ margin: 'auto' }}>
+                  <UI.Text size={1.2}>Loading...</UI.Text>
+                </div>
+              }
             />
           </section>
           <add if={false}>

@@ -197,7 +197,9 @@ export default class ManagedTable extends styled.StylablePureComponent<
 
   render() {
     const { props, state } = this
-
+    if ((!props.rows || !props.rows.length) && props.bodyPlaceholder) {
+      return props.bodyPlaceholder
+    }
     return (
       <Table
         ref={this.setRef}

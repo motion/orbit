@@ -30,6 +30,8 @@ export default async function connectModels(models) {
           return
         }
         console.error('SQL Error', err)
+        // temp to debug locks
+        console.log('Last query queue:', window.lastQueryQueue)
         // window.location = window.location
       })
       return connection

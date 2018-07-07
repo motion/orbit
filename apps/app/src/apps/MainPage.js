@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { HighlightsPage } from './HighlightsPage'
+// import { HighlightsPage } from './HighlightsPage'
 import { OrbitPage } from './OrbitPage'
 import { PeekPage } from './PeekPage'
 import { AppStore } from '~/stores/AppStore'
@@ -13,7 +13,7 @@ export class MainPage extends React.Component {
   render() {
     return (
       <main>
-        <HighlightsPage />
+        {/* <HighlightsPage /> */}
         <OrbitPage />
         <PeekPage />
       </main>

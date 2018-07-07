@@ -30,7 +30,6 @@ class PeekStore {
     () => App.peekState.item,
     async item => {
       if (!item) {
-        log('no item for peek')
         return null
       }
       if (item.type === 'person') {

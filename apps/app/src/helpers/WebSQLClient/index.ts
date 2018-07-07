@@ -1,4 +1,5 @@
 import { SQLitePlugin } from './SQLitePlugin'
+import { PrimusAdaptor } from './PrimusAdaptor'
 
 // temproray to debug locks
 window.lastQueryQueue = []
@@ -6,10 +7,20 @@ window.lastQueryQueue = []
 export class WebSQLClient {
   nextTick = setImmediate
   txLocks = {}
+  errorCb = () => {}
+  dblocations = ['docs', 'libs', 'nosync']
+  primusAdaptor = new PrimusAdaptor()
+
+  onError(userErrorCb) {
+    this.errorCb = userErrorCb
+  }
 
   getPlugin() {
     return {
-      opendb: (...args) => {
+      sqliteFeatures: {
+        isSQLitePlugin: true,
+      },
+      openDatabase: (...args) => {
         let openargs = null
         let okcb = null
         let errorcb = null
@@ -54,7 +65,7 @@ export class WebSQLClient {
         )
       },
 
-      deleteDb: (first, success, error) => {
+      deleteDatabase: (first, success, error) => {
         const args = {
           path: null,
           dblocation: null,
@@ -74,9 +85,5 @@ export class WebSQLClient {
         return this.primusAdaptor['delete'](success, error, [args])
       },
     }
-  }
-
-  onError(userErrorCb) {
-    this.errorCb = userErrorCb
   }
 }

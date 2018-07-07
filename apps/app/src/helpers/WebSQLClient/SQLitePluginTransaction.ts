@@ -1,21 +1,22 @@
+import { PrimusAdaptor } from './PrimusAdaptor'
 const READ_ONLY_REGEX = /^\s*(?:drop|delete|insert|update|create)\s/i
 
 export class SQLitePluginTransaction {
+  primusAdaptor: PrimusAdaptor
   txLocks
   db
-  fn
-  error
-  success
+  execute: Function
+  error?: Function
+  success?: Function
   txlock
   errorCb: Function
   readOnly: boolean
   finalized = false
   executes = []
-  primusAdaptor
 
   constructor(
     db,
-    fn,
+    execute,
     error,
     success,
     txlock,
@@ -24,32 +25,29 @@ export class SQLitePluginTransaction {
     txLocks,
     errorCb,
   ) {
-    if (typeof fn !== 'function') {
-      // This is consistent with the implementation in Chrome -- it
-      // throws if you pass anything other than a function. This also
-      // prevents us from stalling our txQueue if somebody passes a
-      // false value for fn.
-      throw new Error('transaction expected a function')
+    if (typeof execute !== 'function') {
+      // This is consistent with the implementation in Chrome
+      throw new Error('transaction expected an execute function')
     }
     this.errorCb = errorCb
     this.txLocks = txLocks
     this.primusAdaptor = primusAdaptor
     this.db = db
-    this.fn = fn
+    this.execute = execute
     this.error = error
     this.success = success
     this.txlock = txlock
     this.readOnly = readOnly
     if (txlock) {
-      this.executeSql('BEGIN', [], null, function(tx, err) {
+      this.executeSql('BEGIN', [], null, (_, err) => {
         throw new Error('unable to begin transaction: ' + err.message)
       })
     }
   }
 
-  start() {
+  start = () => {
     try {
-      this.fn(this)
+      this.execute(this)
       this.run()
     } catch (err) {
       // If "fn" throws, we must report the whole transaction as failed.
@@ -61,7 +59,7 @@ export class SQLitePluginTransaction {
     }
   }
 
-  executeSql(sql, values, success, error) {
+  executeSql = (sql, values, success, error) => {
     if (this.readOnly && READ_ONLY_REGEX.test(sql)) {
       this.handleStatementFailure(error, {
         message: 'invalid sql for a read-only transaction',
@@ -77,16 +75,14 @@ export class SQLitePluginTransaction {
     })
   }
 
-  handleStatementSuccess(handler, response) {
+  handleStatementSuccess = (handler, response) => {
     if (!handler) {
       return
     }
     const rows = response.rows || []
     handler(this, {
       rows: {
-        item: function(i) {
-          return rows[i]
-        },
+        item: i => rows[i],
         length: rows.length,
       },
       rowsAffected: response.rowsAffected || 0,
@@ -94,7 +90,7 @@ export class SQLitePluginTransaction {
     })
   }
 
-  handleStatementFailure(handler, response) {
+  handleStatementFailure = (handler, response) => {
     if (!handler) {
       throw new Error(
         'a statement with no error handler failed: ' + response.message,
@@ -105,7 +101,7 @@ export class SQLitePluginTransaction {
     }
   }
 
-  run() {
+  run = () => {
     let qid = -1
     const batchExecutes = this.executes
     let txFailure = null
@@ -114,7 +110,7 @@ export class SQLitePluginTransaction {
     this.executes = []
 
     const handlerFor = (index, didSucceed) => {
-      return function(response) {
+      return response => {
         try {
           if (didSucceed) {
             this.handleStatementSuccess(batchExecutes[index].success, response)
@@ -141,12 +137,12 @@ export class SQLitePluginTransaction {
     }
 
     let i = 0
-    const mycbmap = {}
+    const runCallbacks = {}
     let request
     while (i < batchExecutes.length) {
       request = batchExecutes[i]
       qid = request.qid
-      mycbmap[qid] = {
+      runCallbacks[qid] = {
         success: handlerFor(i, true),
         error: handlerFor(i, false),
       }
@@ -158,7 +154,7 @@ export class SQLitePluginTransaction {
       i++
     }
 
-    function mycb(result) {
+    const runCb = result => {
       let j = 0
       let len1 = result.length
       for (; j < len1; j++) {
@@ -166,28 +162,21 @@ export class SQLitePluginTransaction {
         const type = r.type
         const qid = r.qid
         const res = r.result
-        const q = mycbmap[qid]
-        if (q) {
-          if (q[type]) {
-            q[type](res)
+        const runCb = runCallbacks[qid]
+        if (runCb) {
+          if (runCb[type]) {
+            runCb[type](res)
           }
         }
       }
     }
 
-    const errcb = () => {
-      return err => {
-        this.error = function(err) {
-          if (this.errorCb) {
-            this.errorCb(err)
-          }
-          console.warn(err)
-        }
-        return this.abort(new Error(err))
-      }
+    const errCb = err => {
+      this.errorCb(err)
+      return this.abort(new Error(err))
     }
 
-    this.primusAdaptor.backgroundExecuteSqlBatch(mycb, errcb, [
+    this.primusAdaptor.backgroundExecuteSqlBatch(runCb, errCb, [
       {
         dbargs: {
           dbname: this.db.dbname,
@@ -197,7 +186,7 @@ export class SQLitePluginTransaction {
     ])
   }
 
-  abort(txFailure) {
+  abort = txFailure => {
     if (this.finalized) {
       return
     }
@@ -224,7 +213,7 @@ export class SQLitePluginTransaction {
     }
   }
 
-  finish() {
+  finish = () => {
     if (this.finalized) {
       return
     }

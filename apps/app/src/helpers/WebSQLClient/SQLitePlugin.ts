@@ -85,7 +85,14 @@ export class SQLitePlugin {
         ) {
           openargs.createFromResource = '1'
         }
-        return new SQLitePlugin(openargs, okcb, errorcb, this.primusAdaptor)
+        return new SQLitePlugin(
+          this.txLocks,
+          this.nextTick,
+          openargs,
+          okcb,
+          errorcb,
+          this.primusAdaptor,
+        )
       },
 
       deleteDb: (first, success, error) => {

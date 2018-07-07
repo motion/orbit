@@ -661,17 +661,15 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                Your data never leaves your computer.
+                Custom integrations access your unified data and the private
+                context of every team member. Deploy instantly to the Orbit
+                decentralized intranet.
               </SectionSubTitle>
               <VertSpace />
-              <SectionSubP>
+              <SectionSubP size={1.45} if={isLarge}>
                 Orbit gives you and your team superpowers without scaring
-                security.
-              </SectionSubP>
-              <VertSpace />
-              <SectionSubP if={isLarge}>
-                With a powerful hook system for any API, you can put knowledge
-                clearly at hand.
+                security. It's a powerful new app platform for keeping teams in
+                sync.
               </SectionSubP>
               <VertSpace />
               <VertSpace />

@@ -1,7 +1,7 @@
 {
   "name": "@mcro/site",
   "private": true,
-  "version": "2.0.11",
+  "version": "2.1.0",
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi",
@@ -12,12 +12,12 @@
     "deploy-test": "./surge-fix.sh && cd dist && surge ."
   },
   "dependencies": {
-    "@mcro/black": "^2.0.11",
-    "@mcro/build": "^2.0.11",
-    "@mcro/gloss": "^2.0.0",
-    "@mcro/r2": "^2.0.0",
-    "@mcro/router": "^2.0.0",
-    "@mcro/ui": "^2.0.11",
+    "@mcro/black": "^2.1.0",
+    "@mcro/build": "^2.1.0",
+    "@mcro/gloss": "^2.1.0",
+    "@mcro/r2": "^2.1.0",
+    "@mcro/router": "^2.1.0",
+    "@mcro/ui": "^2.1.0",
     "@researchgate/react-intersection-observer": "0.7.3",
     "intersection-observer": "^0.5.0",
     "jsonp": "^0.2.1",

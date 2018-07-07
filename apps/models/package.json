@@ -1,6 +1,7 @@
 {
   "name": "@mcro/models",
-  "version": "2.0.11",
+  "version": "2.1.0",
+  "private": true,
   "main": "_/index.js",
   "module": "_/index.js",
   "scripts": {
@@ -8,8 +9,8 @@
     "watch": "npm run build -- --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/black": "^2.0.11",
-    "@mcro/debug": "^2.0.0",
+    "@mcro/black": "^2.1.0",
+    "@mcro/debug": "^2.1.0",
     "global": "^4.3.2",
     "lodash": "4.17.10",
     "octokat": "0.10.0",

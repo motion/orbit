@@ -1,9 +1,10 @@
 {
   "name": "@mcro/oauth-strategies",
   "main": "./_/oauthStrategies.js",
-  "version": "2.0.0",
+  "private": true,
+  "version": "2.1.0",
   "dependencies": {
-    "@mcro/constants": "*",
+    "@mcro/constants": "^2.1.0",
     "passport-github": "^1.1.0",
     "passport-google-oauth20": "^1.0.0",
     "passport-oauth": "^1.0.0"

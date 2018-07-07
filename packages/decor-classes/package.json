@@ -3,13 +3,13 @@
   "main": "_/decor-classes.js",
   "types": "./decor-classes.d.ts",
   "sideEffects": false,
-  "version": "2.0.0",
+  "version": "2.1.0",
   "scripts": {
     "build": "tsc",
     "watch": "npm run build -- --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/decor": "^2.0.0",
+    "@mcro/decor": "^2.1.0",
     "autobind-decorator": "^2.1.0",
     "event-kit": "^2.5.0"
   },

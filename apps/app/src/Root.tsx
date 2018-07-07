@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { NotFound } from '~/views/notFound'
+import { NotFound } from './views/notFound'
 import Router from './router'
 import { view } from '@mcro/black'
 
@@ -26,7 +26,7 @@ class Root extends React.Component {
   render() {
     if (this.state.error) {
       return (
-        <aboveredbox
+        <div
           css={{
             background: [255, 0, 0, 0.025],
             position: 'absolute',
@@ -37,7 +37,7 @@ class Root extends React.Component {
             zIndex: Number.MAX_SAFE_INTEGER,
           }}
         >
-          <error
+          <div
             css={{
               position: 'absolute',
               bottom: 0,
@@ -63,8 +63,8 @@ class Root extends React.Component {
             >
               {this.state.error.stack}
             </pre>
-          </error>
-        </aboveredbox>
+          </div>
+        </div>
       )
     }
     const CurrentPage = Router.activeView || NotFound

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Warp from 'warpjs'
-import { SVGToImage } from '~/views/svgToImage'
 import { findDOMNode } from 'react-dom'
 
 export class Bauhaus extends React.Component {

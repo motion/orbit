@@ -46,28 +46,33 @@ console.log('target', target)
 console.log('isProd', isProd)
 console.log('tsConfig', tsConfig)
 
+const optimization = {
+  prod: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          chunks: 'initial',
+          name: 'vendor',
+          priority: 10,
+          enforce: true,
+        },
+      },
+    },
+  },
+  dev: {
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    namedModules: true,
+    splitChunks: false,
+  },
+}
+
 const config = {
   target,
   mode,
   entry,
-  optimization: isProd
-    ? {}
-    : {
-        removeAvailableModules: false,
-        removeEmptyChunks: false,
-        namedModules: true,
-        splitChunks: {
-          cacheGroups: {
-            vendor: {
-              test: /node_modules/,
-              chunks: 'initial',
-              name: 'vendor',
-              priority: 10,
-              enforce: true,
-            },
-          },
-        },
-      },
+  optimization: optimization[isProd ? 'prod' : 'dev'],
   output: {
     path: outputPath,
     pathinfo: !isProd,
@@ -81,7 +86,9 @@ const config = {
       'Access-Control-Allow-Origin': '*',
     },
   },
-  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
+  // inline source map allows chrome remote debugger to access it
+  // see: https://stackoverflow.com/questions/27671390/why-inline-source-maps
+  devtool: isProd ? 'source-map' : 'inline-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
@@ -97,33 +104,36 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: ['cache-loader', 'thread-loader', 'babel-loader'],
+        test: /\.[jt]sx?$/,
+        //'cache-loader',
+        use: ['thread-loader', 'babel-loader'],
         exclude: ['node_modules'],
       },
-      {
-        test: /\.tsx?$/,
-        use: [
-          'cache-loader',
-          'babel-loader',
-          {
-            loader: 'thread-loader',
-            options: {
-              // there should be 1 cpu for the fork-ts-checker-webpack-plugin
-              workers: require('os').cpus().length - (isProd ? 0 : 1),
-            },
-          },
-          {
-            loader: 'ts-loader',
-            options: {
-              happyPackMode: true, // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
-              transpileOnly: isProd,
-              experimentalWatchApi: true,
-            },
-          },
-        ],
-        exclude: ['node_modules'],
-      },
+      // {
+      //   test: /\.tsx?$/,
+      //   use: [
+      //     'cache-loader',
+      //     'babel-loader',
+      //     {
+      //       loader: 'thread-loader',
+      //       options: {
+      //         // there should be 1 cpu for the fork-ts-checker-webpack-plugin
+      //         workers: require('os').cpus().length,
+      //       },
+      //     },
+      //     {
+      //       loader: 'ts-loader',
+      //       options: {
+      //         // speed-up compilation and reduce errors reported to webpack
+      //         happyPackMode: true,
+      //         // no checking of types in webpack in dev, just use your IDE
+      //         transpileOnly: !isProd,
+      //         experimentalWatchApi: true,
+      //       },
+      //     },
+      //   ],
+      //   exclude: ['node_modules'],
+      // },
       {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],

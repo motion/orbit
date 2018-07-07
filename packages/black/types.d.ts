@@ -38,3 +38,5 @@ export function store<T>(a: T): T & Proppable
 export function debugState(cb: Function): void
 
 export function isEqual(a: any, b: any): boolean
+
+export function sleep(a: number): Promise<void>

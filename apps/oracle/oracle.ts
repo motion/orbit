@@ -58,7 +58,7 @@ export default class Oracle {
 
   constructor({ debugBuild = false } = {}) {
     this.debugBuild = debugBuild
-    macosVersion.assertGreaterThanOrEqualTo('10.12')
+    macosVersion.assertGreaterThanOrEqualTo('10.11')
   }
 
   start = async () => {

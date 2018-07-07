@@ -13,6 +13,10 @@ export default {
       },
     },
     options: {
+      // we need this option to make this slack plugin to work without
+      // adding identity.basic and other scopes
+      // more info in https://github.com/mjpearson/passport-slack/issues/10#issuecomment-185813869
+      skipUserProfile: true,
       scope: [
         // 'identity.basic',
         // 'identity.email',

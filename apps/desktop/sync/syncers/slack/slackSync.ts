@@ -1,7 +1,7 @@
 import Syncer from '../syncer'
-import SlackAttachmentSync from './slackAttachmentSync'
-import SlackMessagesSync from './slackMessagesSync'
-import SlackPeopleSync from './slackPeopleSync'
+import SlackAttachmentSync from './SlackAttachmentSync'
+import SlackMessagesSync from './SlackMessagesSync'
+import SlackPeopleSync from './SlackPeopleSync'
 
 export const slack = new Syncer('slack', {
   actions: {

@@ -61,7 +61,6 @@ export class OrbitSearchResults extends React.Component {
                 total={results.length}
                 bit={bit}
                 listItem
-                hoverToSelect
               >
                 <content>
                   <UI.Text

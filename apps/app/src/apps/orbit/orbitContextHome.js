@@ -127,7 +127,6 @@ export class OrbitContextHome {
                   total={total}
                   listItem
                   expanded
-                  hoverToSelect
                 />
               ))}
               <lastResultSpace $$untouchable css={{ height: 12 }} />

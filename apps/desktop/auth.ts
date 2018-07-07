@@ -1,4 +1,4 @@
-import * as Constants from '~/constants'
+import * as Constants from './constants'
 import * as Injections from '~/helpers/injections'
 import { Desktop } from '@mcro/stores'
 import open from 'opn'

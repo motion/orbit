@@ -1,5 +1,5 @@
 import fileIcon from 'file-icon'
-import { TMP_DIR } from '~/constants'
+import { TMP_DIR } from '../constants'
 import Path from 'path'
 import Crypto from 'crypto'
 

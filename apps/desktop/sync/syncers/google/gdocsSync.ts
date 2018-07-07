@@ -1,5 +1,5 @@
 import Syncer from '../syncer'
-import GoogleDriveSync from './googleDriveSync'
+import GoogleDriveSync from './GoogleDriveSync'
 
 export const gdocs = new Syncer('gdocs', {
   actions: {

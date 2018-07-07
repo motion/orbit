@@ -2,7 +2,7 @@ import { store } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Setting, findOrCreate } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 import debug from '@mcro/debug'
 
 const log = debug('GeneralSettingManager')

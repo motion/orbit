@@ -52,7 +52,6 @@ export class OrbitDirectory extends React.Component {
                 index={index}
                 bit={bit}
                 total={total}
-                hoverToSelect
                 hide={{
                   icon: true,
                 }}

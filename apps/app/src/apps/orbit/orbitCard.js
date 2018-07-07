@@ -436,6 +436,9 @@ export class OrbitCard extends React.Component {
           borderRadius,
           background: theme.selected.background,
           boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
+          '&:hover': {
+            border: [1, 'blue']
+          }
         }
       }
     }
@@ -443,6 +446,7 @@ export class OrbitCard extends React.Component {
       card.opacity = 0.7
       card.transition = card.transition || 'opacity ease-in 300ms'
       card['&:hover'] = {
+        ...card['&:hover'],
         opacity: 1,
       }
     }

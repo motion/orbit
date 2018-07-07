@@ -1,4 +1,4 @@
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 
 export default async function getCrawler() {
   try {

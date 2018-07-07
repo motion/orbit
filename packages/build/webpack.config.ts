@@ -27,6 +27,7 @@ const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 const entry = process.env.ENTRY || readEntry() || './src'
 const tsConfig = Path.join(cwd, 'tsconfig.json')
+console.log('using tsConfig', tsConfig)
 const tsConfigExists = Fs.existsSync(tsConfig)
 const outputPath = Path.join(cwd, 'dist')
 const buildNodeModules =
@@ -104,7 +105,7 @@ const config = {
         test: /\.tsx?$/,
         use: [
           'cache-loader',
-          // 'babel-loader'  this could work to have babel 7 features in ts
+          'babel-loader',
           {
             loader: 'thread-loader',
             options: {
@@ -164,12 +165,14 @@ const config = {
   },
   plugins: [
     // new ProfilingPlugin(),
-    new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: !isProd }),
+    // this runs a checker in a process, but reduces the number of processes that run
+    // new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: !isProd }),
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
     new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
+    // adds cache based on source of files
     new HardSourceWebpackPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({

@@ -139,7 +139,6 @@ export class OrbitHome extends React.Component {
                   index={index}
                   bit={bit}
                   total={total}
-                  hoverToSelect
                   isExpanded={false && isExpanded}
                   style={isExpanded && this.span2}
                   itemProps={{

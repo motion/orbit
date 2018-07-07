@@ -71,7 +71,6 @@ class OrbitSettingsStore {
     <OrbitSettingCard
       pane="summary"
       subPane="settings"
-      hoverToSelect
       total={this.allResults.length}
       {...props}
     />

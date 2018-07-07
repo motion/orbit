@@ -1,5 +1,5 @@
 import Syncer from '../syncer'
-import GoogleMailSync from './googleMailSync'
+import GoogleMailSync from './GoogleMailSync'
 
 export const gmail = new Syncer('gmail', {
   actions: {

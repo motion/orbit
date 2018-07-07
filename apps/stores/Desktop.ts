@@ -56,7 +56,10 @@ class DesktopStore {
     },
     mouseState: {
       mouseDown: null,
-      mouseMove: null,
+    },
+    operatingSystem: {
+      isAccessible: false,
+      macVersion: null,
     },
     paused: true,
     focusedOnOrbit: true,
@@ -64,7 +67,6 @@ class DesktopStore {
     lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
-    isAccessible: false,
   })
 
   results = []

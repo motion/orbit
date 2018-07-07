@@ -1,8 +1,5 @@
 ```ts
-// generally supporting hoverStyle activeStyle
-
-import { view } from 'black'
-
+// Shorthand ideas
 const Button = view(
   {
     background: 'black',
@@ -17,8 +14,13 @@ const Button = view(
 const SmallButton = view(Button, {
   fontSize: 11,
 })
+```
 
-const style = style()
+```ts
+import { view } from 'black'
+
+// instantiate it
+const $ = style()
 
 // move to css prop only means no type errors
 @view
@@ -28,7 +30,7 @@ class ComplexButton {
       <div>
         <button
           css={{
-            ...style.red,
+            ...$.red,
             background: 'blue',
           }}
         />
@@ -37,9 +39,15 @@ class ComplexButton {
   }
 }
 
-style({
+$.red = {
+  background: 'red',
+}
+
+$.blue = {}
+
+$((props, theme) => ({
   red: {
-    background: 'red',
+    background: theme.background,
   },
-})
+}))
 ```

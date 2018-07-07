@@ -5,6 +5,7 @@ import { store, isEqual, react, on } from '@mcro/black/store'
 import { App, Desktop, Electron, Swift } from '@mcro/stores'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
+import macosVersion from 'macos-version'
 
 const isMouseOver = (bounds, mousePosition) => {
   if (!bounds || !mousePosition) {
@@ -115,12 +116,17 @@ export class Screen {
 
   start = async () => {
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
-    this.watchMouse()
-    return
+    if (macosVersion.is('10.12')) {
+      this.watchMouse()
+      console.log('older mac version, just watching mouse')
+      return
+    }
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
       console.log('is accessible, start watching stuff', isAccessible)
-      Desktop.setState({ isAccessible })
+      Desktop.setState({
+        operatingSystem: { isAccessible },
+      })
       if (isAccessible) {
         this.watchMouse()
       }

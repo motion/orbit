@@ -29,6 +29,10 @@ export type DesktopState = {
   mouseState: {
     mouseDown?: { x: number; y: number; at: number }
   }
+  operatingSystem: {
+    isAccessible: boolean
+    macVersion?: string
+  }
   keyboardState: {
     option?: number
     optionUp?: number

@@ -1,6 +1,7 @@
-import { store } from '@mcro/black/store'
+import { store, react } from '@mcro/black/store'
 import { WebSocket, ReconnectingWebSocket } from '@mcro/mobx-bridge'
 import { setGlobal } from './helpers'
+import { Desktop } from './Desktop'
 
 export let Swift
 
@@ -17,8 +18,21 @@ class SwiftStore {
 
   constructor(props = { onStateChange: _ => _ }) {
     this.onStateChange = props.onStateChange
-    this.setupLink()
   }
+
+  setupOnVersion = react(
+    () => Desktop.state.operatingSystem.macVersion || '',
+    version => {
+      if (version.indexOf('10') !== 0) {
+        throw react.cancel
+      }
+      if (+version.split('.')[1] < 12) {
+        throw react.cancel
+      }
+      this.setupLink()
+    },
+    { immediate: true },
+  )
 
   clear = () => {
     this.send({ action: 'clear' })

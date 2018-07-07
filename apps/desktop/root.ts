@@ -22,6 +22,7 @@ import { Bit, Setting, modelsList } from '@mcro/models'
 import { Connection } from 'typeorm'
 import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
 import sqlite from 'sqlite'
+import macosVersion from 'macos-version'
 
 const log = debug('desktop')
 const hostile = promisifyAll(hostile_)
@@ -62,6 +63,12 @@ export class Root {
         App,
         Electron,
         Desktop,
+      },
+    })
+    // set some initial state on desktop
+    Desktop.setState({
+      operatingSystem: {
+        macVersion: macosVersion(),
       },
     })
     // requires desktop to be started

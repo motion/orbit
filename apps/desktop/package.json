@@ -21,6 +21,7 @@
     "@mcro/r2": "^2.1.0",
     "@mcro/services": "^2.1.0",
     "@mcro/stores": "^2.1.0",
+    "macos-version": "4.1.0",
     "apollo-fetch": "^0.7.0",
     "auto-launch": "5.0.5",
     "babel-polyfill": "7.0.0-beta.3",

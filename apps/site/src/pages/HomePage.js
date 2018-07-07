@@ -661,9 +661,8 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                Custom integrations access your unified data and the private
-                context of every team member. Deploy instantly to the Orbit
-                decentralized intranet.
+                Complete privacy + powerful tools for your company intranet. Add
+                custom integrations with ease.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP size={1.45} if={isLarge}>

@@ -1,11 +1,13 @@
-import createClient from './websqlClient'
+import { WebSQLClient } from './WebSQLClient'
 import { createConnection } from 'typeorm/browser'
 
 export default async function connectModels(models) {
   const connect = async () => {
-    // reset this on each connect
-    const WebSqlClient = createClient()
-    window.sqlitePlugin = WebSqlClient.sqlitePlugin
+    const Client = new WebSQLClient()
+    // we patch this
+    window.sqlitePlugin = Client.getPlugin()
+    // just to test
+    window.Client = Client
     let started = true
     try {
       let connectTm = setTimeout(() => {
@@ -24,7 +26,7 @@ export default async function connectModels(models) {
       for (const model of models) {
         model.useConnection(connection)
       }
-      WebSqlClient.onError(async err => {
+      Client.onError(async err => {
         if (!started) {
           console.log('SQL Error before started', err)
           return

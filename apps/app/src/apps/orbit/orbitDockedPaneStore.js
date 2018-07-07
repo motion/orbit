@@ -1,6 +1,5 @@
-import { react } from '@mcro/black'
-import { App, Electron } from '@mcro/stores'
-import * as PeekStateActions from '~/actions/PeekStateActions'
+import { react, on } from '@mcro/black'
+import { App } from '@mcro/stores'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
@@ -10,7 +9,12 @@ export class OrbitDockedPaneStore {
   paneIndex = 0
 
   willMount() {
-    this.on(this.props.orbitStore, 'key', key => {
+    on(this, this.props.orbitStore, 'key', key => {
+      // no keyshortcuts when peek is open
+      if (!App.orbitState.inputFocused) {
+        console.log('not input focused')
+        return
+      }
       if (key === 'right') {
         this.paneIndex = Math.min(this.panes.length - 1, this.paneIndex + 1)
       }
@@ -57,10 +61,7 @@ export class OrbitDockedPaneStore {
 
   clearPeekOnActivePaneChange = react(
     () => this.activePane,
-    PeekStateActions.clearPeek,
-    {
-      log: 'state',
-    },
+    () => App.actions.clearPeek(),
   )
 
   animationState = react(

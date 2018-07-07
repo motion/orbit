@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
@@ -30,7 +30,7 @@ import isEqual from 'react-fast-compare'
 //   // delay until openOnHover
 //   delay: number,
 //   // prevent popover itself from catching pointer events
-//   noHover?: boolean,
+//   noHoverOnChildren?: boolean,
 //   // size of shown arrow
 //   arrowSize?: number,
 //   closeOnClick?: boolean,
@@ -97,12 +97,18 @@ export class Popover extends React.PureComponent {
     return this.state.props
   }
 
-  popoverRef = null
   targetRef = null
+  popoverRef = null
+  setTargetRef = ref => {
+    this.targetRef = ref
+  }
+  setPopoverRef = ref => {
+    this.popoverRef = ref
+  }
 
   state = {
-    targetHovered: null,
-    menuHovered: false,
+    targetHovered: 0,
+    menuHovered: 0,
     top: 0,
     left: 0,
     bottom: 0,
@@ -145,7 +151,7 @@ export class Popover extends React.PureComponent {
       this.open()
     }
     if (closeOnEsc) {
-      this.on(window, 'keyup', e => {
+      on(this, window, 'keyup', e => {
         if (e.keyCode === 27 && this.showPopover) {
           e.preventDefault()
           e.stopPropagation()
@@ -175,7 +181,7 @@ export class Popover extends React.PureComponent {
   listenForResize() {
     const updatePosition = throttle(() => this.setPosition(), 32)
     const updatePositionInactive = debounce(() => this.setPosition(), 300)
-    this.on(window, 'resize', () => {
+    on(this, window, 'resize', () => {
       if (this.showPopover) {
         updatePosition()
       } else {
@@ -201,13 +207,16 @@ export class Popover extends React.PureComponent {
           this.curProps.onClose()
         }
 
-        this.closingTimeout = this.setTimeout(() => {
-          this.setState(
-            { closing: false, isOpen: false },
-            this.props.onDidClose,
-          )
-          resolve()
-        }, 300)
+        on(
+          this,
+          setTimeout(() => {
+            this.setState(
+              { closing: false, isOpen: false },
+              this.props.onDidClose,
+            )
+            resolve()
+          }, 300),
+        )
       })
     })
   }
@@ -218,7 +227,7 @@ export class Popover extends React.PureComponent {
       return
     }
     // click away to close
-    this.on(this.target, 'click', e => {
+    on(this, this.target, 'click', e => {
       e.stopPropagation()
       this.isClickingTarget = true
       if (typeof this.curProps.open === 'undefined') {
@@ -228,14 +237,17 @@ export class Popover extends React.PureComponent {
           this.open()
         }
       }
-      this.setTimeout(() => {
-        this.isClickingTarget = false
-      })
+      on(
+        this,
+        setTimeout(() => {
+          this.isClickingTarget = false
+        }),
+      )
     })
   }
 
   listenForClickAway() {
-    this.on(window, 'click', e => {
+    on(this, window, 'click', e => {
       const { showPopover, isClickingTarget, keepOpenOnClickTarget } = this
       const { open, closeOnClick } = this.curProps
       // forced open or hidden
@@ -261,12 +273,12 @@ export class Popover extends React.PureComponent {
     await this.clearHovered()
     this.removeListenForHover()
     this.close()
-    this.setTimeout(this.listenForHover, 100)
+    on(this, setTimeout(() => this.listenForHover(), 100))
   }
 
   clearHovered() {
     return new Promise(resolve =>
-      this.setState({ menuHovered: false, targetHovered: false }, resolve),
+      this.setState({ menuHovered: 0, targetHovered: 0 }, resolve),
     )
   }
 
@@ -279,8 +291,8 @@ export class Popover extends React.PureComponent {
     if (!target) {
       return false
     }
-    const { noHover, targetHovered, menuHovered } = this.state
-    if (noHover) {
+    const { noHoverOnChildren, targetHovered, menuHovered } = this.state
+    if (noHoverOnChildren) {
       return targetHovered
     }
     return targetHovered || menuHovered
@@ -527,7 +539,8 @@ export class Popover extends React.PureComponent {
       return
     }
     this.listeners = this.addHoverListeners('target', this.target)
-    if (!this.curProps.noHover) {
+    // noHoverOnChildren === no hover on the actual popover child element
+    if (!this.curProps.noHoverOnChildren) {
       this.listeners = [
         ...this.listeners,
         ...this.addHoverListeners('menu', this.popoverRef),
@@ -550,14 +563,18 @@ export class Popover extends React.PureComponent {
   addHoverListeners(name, node) {
     if (!(node instanceof HTMLElement)) {
       console.log('no node!', name)
-      return
+      return null
     }
     const listeners = []
-    const { delay, noHover } = this.curProps
+    const { delay, noHoverOnChildren } = this.curProps
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
-    const setHovered = () => this.hoverStateSet(name, true)
-    const setUnhovered = () => this.hoverStateSet(name, false)
+    const setHovered = () => {
+      this.hoverStateSet(name, true)
+    }
+    const setUnhovered = () => {
+      this.hoverStateSet(name, false)
+    }
     const openIfOver = () => {
       if (this.isNodeHovered(node)) {
         setHovered()
@@ -565,7 +582,8 @@ export class Popover extends React.PureComponent {
     }
     const closeIfOut = () => {
       if (isPopover && Date.now() - this.state.menuHovered < 200) {
-        return
+        console.log('avoid popover too soon??')
+        return null
       }
       if (!this.isNodeHovered(node)) {
         setUnhovered()
@@ -576,11 +594,14 @@ export class Popover extends React.PureComponent {
       }
       // ensure check if we have a delay open
       if (delay && isTarget) {
-        this.setTimeout(() => {
-          if (!this.isNodeHovered(node)) {
-            setUnhovered()
-          }
-        }, delay)
+        on(
+          this,
+          setTimeout(() => {
+            if (!this.isNodeHovered(node)) {
+              setUnhovered()
+            }
+          }, delay),
+        )
       }
     }
     const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
@@ -596,17 +617,17 @@ export class Popover extends React.PureComponent {
     const onLeave = isTarget ? debounce(closeIfOut, 80) : closeIfOut
     // logic for enter/leave
     listeners.push(
-      this.on(node, 'mouseenter', () => {
+      on(this, node, 'mouseenter', () => {
         onEnter()
         // insanity, but mouseleave is horrible
         if (this.curProps.target) {
-          this.setTimeout(onLeave, 150)
+          on(this, setTimeout(onLeave, 150))
         }
       }),
     )
-    // if noHover it reduces bugs to just not check hovered state
-    const onMouseLeave = noHover ? setUnhovered : onLeave
-    listeners.push(this.on(node, 'mouseleave', onMouseLeave))
+    // if noHoverOnChildren it reduces bugs to just not check hovered state
+    const onMouseLeave = noHoverOnChildren ? setUnhovered : onLeave
+    listeners.push(on(this, node, 'mouseleave', onMouseLeave))
     return listeners
   }
 
@@ -615,7 +636,8 @@ export class Popover extends React.PureComponent {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
       // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
-      this.setState({ [`${name}Hovered`]: isHovered ? Date.now() : false })
+      const key = `${name}Hovered`
+      this.setState({ [key]: isHovered ? Date.now() : false })
     }
     if (isHovered) {
       if (openOnHover) {
@@ -645,7 +667,7 @@ export class Popover extends React.PureComponent {
 
   overlayRef = ref => {
     if (ref) {
-      this.on(ref, 'contextmenu', e => this.handleOverlayClick(e))
+      on(this, ref, 'contextmenu', e => this.handleOverlayClick(e))
     }
   }
 
@@ -673,7 +695,7 @@ export class Popover extends React.PureComponent {
     height,
     left: _left,
     noArrow,
-    noHover,
+    noHoverOnChildren,
     onClose,
     open,
     openOnClick,
@@ -713,7 +735,7 @@ export class Popover extends React.PureComponent {
     const { showPopover } = this
     const controlledTarget = target => {
       const targetProps = {
-        ref: this.ref('targetRef').set,
+        ref: this.setTargetRef,
       }
       if (passActive) {
         targetProps.active = isOpen && !closing
@@ -730,21 +752,24 @@ export class Popover extends React.PureComponent {
       <>
         {React.isValidElement(target) && controlledTarget(target)}
         <Portal>
-          <container
+          <div
+            $container
             data-towards={direction}
             $open={showPopover}
             $closing={closing}
           >
-            <background
+            <div
+              $background
               if={overlay}
               ref={this.overlayRef}
               $overlayShown={showPopover && !closing}
               onClick={e => this.handleOverlayClick(e)}
             />
-            <popover
+            <div
+              $popover
               {...popoverProps}
               $popoverOpen={!closing && showPopover}
-              ref={this.ref('popoverRef').set}
+              ref={this.setPopoverRef}
               style={{
                 ...style,
                 top: top || 'auto',
@@ -758,7 +783,8 @@ export class Popover extends React.PureComponent {
                 maxHeight,
               }}
             >
-              <arrowContain
+              <div
+                $arrowContain
                 if={!noArrow}
                 css={{
                   top: arrowTop,
@@ -777,7 +803,7 @@ export class Popover extends React.PureComponent {
                   towards={INVERSE[direction]}
                   boxShadow={getShadow(shadow, elevation)}
                 />
-              </arrowContain>
+              </div>
               <SizedSurface
                 sizeRadius
                 ignoreSegment
@@ -790,8 +816,8 @@ export class Popover extends React.PureComponent {
                   ? children(showPopover)
                   : children}
               </SizedSurface>
-            </popover>
-          </container>
+            </div>
+          </div>
         </Portal>
       </>
     )

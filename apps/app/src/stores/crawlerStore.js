@@ -1,5 +1,5 @@
 import r2 from '@mcro/r2'
-import { store } from '@mcro/black'
+import { store, on } from '@mcro/black'
 import { API_URL } from '~/constants'
 import { createInChunks } from '~/sync/helpers'
 import { Thing } from '~/app'
@@ -39,7 +39,7 @@ export class Crawler {
     await r2.post(`${API_URL}/crawler/start`, {
       json: { options: this.settings },
     })
-    this.setTimeout(this.onCheckStatus, 2500)
+    on(this, setTimeout(this.onCheckStatus, 2500))
   }
 
   stop = async () => {
@@ -81,7 +81,7 @@ export class Crawler {
       this.finish()
     }
     if (this.isRunning) {
-      this.setTimeout(this.onCheckStatus, 300)
+      on(this, setTimeout(this.onCheckStatus, 300))
     }
   }
 }

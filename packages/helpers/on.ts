@@ -1,54 +1,84 @@
 import event from 'disposable-event'
-import { Disposable } from 'event-kit'
+import { Disposable, CompositeDisposable } from 'event-kit'
 
-export default function on(...args): Disposable {
-  // allows calling with just on('eventName', callback) and using this
-  if (args.length === 2) {
-    // duck type observables for now
-    if (args[0] && args[0].subscribe) {
-      return onSomething.call(this, ...args)
-    }
-    if (typeof args[0] !== 'string') {
-      throw new Error(`String required as first arg when only two args passed`)
-    }
-    if (typeof args[1] !== 'function') {
-      throw new Error(
-        `Function callback required as second arg when only two args passed`,
-      )
-    }
-    return onSomething.call(this, this, ...args)
-  }
-  return onSomething.call(this, ...args)
+const isBrowser = typeof window !== 'undefined'
+
+const RealMutationObserver =
+  // @ts-ignore
+  isBrowser && window.MutationObserver
+
+const IsomorphicMutationObserver: typeof MutationObserver = isBrowser
+  ? RealMutationObserver
+  : class FakeMutationObserver {}
+
+type Subject = {
+  subscriptions: CompositeDisposable
 }
 
-type OnAble = {
+type Watchable = {
   subscribe?: Function
   emitter?: Function
+  dispose?: Function
+  _idleTimeout?: number
 }
 
-// listens to a three types of things:
-//    Rx.Subject / Rx.Observer
-//    Emitter
-//    eventListeners (addEventListener, removeEventListener)
-// returns an off function
-function onSomething(
+type OnAble = number | NodeJS.Timer | Disposable | MutationObserver | Watchable
+
+// fuck electron doesnt have timers
+const looksLikeTimeout = thing => !!thing._idleTimeout
+
+// because instanceof breaks idk
+const looksLikeDisposable = thing =>
+  typeof thing.dispose === 'function' && !thing.subscribe && !thing.emitter
+
+// 1. listens to a lots of things:
+// 2. adds it onto this.subscriptions
+// 3. returns an off function
+export default function on(
+  subject: Subject,
   target: OnAble,
   eventName: String | Function,
   callback: Function,
 ) {
-  let disposable
+  // Timer
+  if (typeof target === 'number' || looksLikeTimeout(target)) {
+    const dispose = () => clearTimeout(target as NodeJS.Timer)
+    subject.subscriptions.add({ dispose })
+    return dispose
+  }
+  // MutationObserver
+  if (target instanceof IsomorphicMutationObserver) {
+    const result = target as MutationObserver
+    const dispose = () => result.disconnect()
+    subject.subscriptions.add({ dispose })
+    return dispose
+  }
+  // Disposable
+  if (target instanceof Disposable || looksLikeDisposable(target)) {
+    const disposable = target as Disposable
+    subject.subscriptions.add(disposable)
+    return () => disposable.dispose()
+  }
+  // cast to Watchable because can't use NodeJS.Timer above
+  target = target as Watchable
+  // subscribable
   if (target.subscribe) {
     if (typeof eventName !== 'function') {
       throw new Error(`Should pass in (Observable, callback) for Observables`)
     }
     const subscription = target.subscribe(eventName)
-    disposable = () => subscription.unsubscribe()
-  } else if (target && target.emitter) {
-    return on.call(this, target.emitter, eventName, callback)
-  } else {
-    disposable = event(target, eventName, callback)
+    const dispose = () => subscription.unsubscribe()
+    subject.subscriptions.add({ dispose })
+    return dispose
   }
-  this.subscriptions.add(disposable)
-  // return just the function that unsubscribes
-  return disposable.dispose ? disposable.dispose.bind(disposable) : disposable
+  let dispose: Disposable
+  if (target && target.emitter) {
+    // emitter
+    dispose = event(target.emitter, eventName, callback)
+  } else {
+    // addEventListener
+    dispose = event(target, eventName, callback)
+  }
+  subject.subscriptions.add(dispose)
+  return () => dispose.dispose()
 }

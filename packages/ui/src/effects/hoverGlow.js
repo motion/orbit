@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import $ from 'color'
 import throttle from 'raf-throttle'
 
@@ -64,10 +64,12 @@ export class HoverGlow extends React.PureComponent {
   rootRef = React.createRef()
 
   componentDidMount() {
-    // @ts-ignore
-    this.setTimeout(() => {
-      this.follow()
-    }, 100)
+    on(
+      this,
+      setTimeout(() => {
+        this.follow()
+      }, 100),
+    )
   }
 
   follow() {
@@ -88,11 +90,11 @@ export class HoverGlow extends React.PureComponent {
       this.setState({ parentNode, bounds })
       const trackMouseTrue = throttle(() => this.trackMouse(true))
       const trackMouseFalse = throttle(() => this.trackMouse(false))
-      this.on(parentNode, 'mouseenter', trackMouseTrue)
-      this.on(parentNode, 'mousemove', this.move)
-      this.on(parentNode, 'mouseleave', trackMouseFalse)
+      on(this, parentNode, 'mouseenter', trackMouseTrue)
+      on(this, parentNode, 'mousemove', this.move)
+      on(this, parentNode, 'mouseleave', trackMouseFalse)
       if (this.props.clickable) {
-        this.on(parentNode, 'mousedown', this.mouseDown)
+        on(this, parentNode, 'mousedown', this.mouseDown)
       }
       const { restingPosition } = this.props
       if (restingPosition) {
@@ -132,19 +134,24 @@ export class HoverGlow extends React.PureComponent {
 
   mouseDown = () => {
     this.setState({ clicked: true }, () => {
-      this.setTimeout(() => {
-        this.setState({ clicked: false })
-      }, this.props.clickDuration)
+      on(
+        this,
+        setTimeout(() => {
+          this.setState({ clicked: false })
+        }, this.props.clickDuration),
+      )
     })
   }
 
   trackMouse = track => {
     if (this.unmounted) return
     this.setState({ willTrack: true })
-    // @ts-ignore
-    this.setTimeout(() => {
-      this.setState({ track })
-    })
+    on(
+      this,
+      setTimeout(() => {
+        this.setState({ track })
+      }),
+    )
   }
 
   render({

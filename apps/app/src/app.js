@@ -3,6 +3,7 @@ import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
+import * as AppStoreActions from './actions/AppStoreActions'
 
 const onPort = async cb => {
   await sleep(200)
@@ -33,7 +34,9 @@ export class App {
   async start() {
     if (window.location.pathname !== '/auth') {
       await this.connectModels()
-      await _App.start()
+      await _App.start({
+        actions: AppStoreActions,
+      })
     }
     this.catchErrors()
     this.started = true

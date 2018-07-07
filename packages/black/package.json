@@ -16,6 +16,7 @@
     "@mcro/decor-mobx": "^2.0.0",
     "@mcro/decor-react": "^2.0.0",
     "@mcro/gloss": "^2.0.0",
+    "@mcro/helpers": "*",
     "event-kit": "^2.5.0",
     "global": "^4.3.0",
     "mobx-deep-observer": "^0.0.4",

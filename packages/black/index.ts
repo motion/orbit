@@ -3,6 +3,7 @@ export * from './storeDecorator'
 export * from './helpers/log'
 export * from './helpers/mobx'
 export * from './helpers/deep'
+export { on } from '@mcro/helpers'
 import * as Constants_ from './constants'
 export const Constants = Constants_
 export * from './helpers/debugState'

@@ -40,6 +40,7 @@ class AppStore {
       orbitOnLeft: false,
       position: [0, 0],
       size: [0, 0],
+      inputFocused: false,
     },
     peekState: {
       target: null,

@@ -8,6 +8,8 @@ import iconGSheets from '~/../public/icons/gsheets.svg'
 import iconSlack from '~/../public/icons/slack.svg'
 import iconGithub from '~/../public/icons/github.svg'
 import iconGithubWhite from '~/../public/icons/github-white.svg'
+import iconConfluence from '~/../public/icons/confluence.svg'
+import iconJira from '~/../public/icons/jira.svg'
 
 const icons = {
   gcalendar: iconGCalendar,
@@ -18,6 +20,8 @@ const icons = {
   slack: iconSlack,
   github: iconGithub,
   githubWhite: iconGithubWhite,
+  confluence: iconConfluence,
+  jira: iconJira,
 }
 
 const SLACK_SCALE = {

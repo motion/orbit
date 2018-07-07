@@ -1,17 +1,15 @@
-// @ts-ignore
-import decor, { DecorPlugin } from '@mcro/decor'
-import { hydratable, utilityUsable, UtilityUsable } from '@mcro/decor-mobx'
+import decor from '@mcro/decor'
+import { hydratable } from '@mcro/decor-mobx'
 import { subscribable, emittable } from '@mcro/decor-classes'
 import automagical from '@mcro/automagical'
 import { CompositeDisposable } from 'event-kit'
 
 // import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
+export { on } from '@mcro/helpers'
 
-// DecorCompiledDecorator<UtilityUsable>
 export const storeDecorator: any = decor([
   subscribable,
-  utilityUsable,
   emittable,
   automagical,
   hydratable,
@@ -61,7 +59,7 @@ export const storeOptions = {
   },
 }
 
-export function store<T>(Store): UtilityUsable & T {
+export function store<T>(Store): T {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     // console.log('on store mount', this, args)

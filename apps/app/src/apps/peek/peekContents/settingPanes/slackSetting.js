@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import { fuzzy } from '~/helpers'
 import * as _ from 'lodash'
 import { SlackChannel } from './slackPanes/slackChannel'
@@ -14,9 +14,12 @@ class SlackSettingStore {
   }
 
   didMount() {
-    this.setTimeout(() => {
-      this.hasShown = true
-    })
+    on(
+      this,
+      setTimeout(() => {
+        this.hasShown = true
+      }),
+    )
   }
 
   get sortedChannels() {

@@ -6,20 +6,7 @@ import { Bits } from '~/views/bits'
 import { Tabs, Tab, SearchableTable } from '@mcro/sonar'
 import { TimeAgo } from '~/views/TimeAgo'
 import * as _ from 'lodash'
-
-@view
-class CheckBox extends React.Component {
-  render({ isActive, onChange }) {
-    return (
-      <input type="checkbox" onChange={onChange} defaultChecked={isActive()} />
-    )
-  }
-  static style = {
-    input: {
-      margin: 'auto',
-    },
-  }
-}
+import { ReactiveCheckBox } from '~/views/ReactiveCheckBox'
 
 const columnSizes = {
   repo: 'flex',
@@ -120,7 +107,7 @@ class GithubStore {
             active: {
               sortValue: isActive,
               value: (
-                <CheckBox
+                <ReactiveCheckBox
                   onChange={this.onSync(repo.fullName)}
                   isActive={isActive}
                 />

@@ -70,7 +70,8 @@ class OrbitHomeStore {
 
   results = modelQueryReaction(
     async () => {
-      return (await Promise.all([
+      console.time('homeSearch')
+      const result = await Promise.all([
         // { type: 'team', title: 'Engineering' },
         findType('slack', 'conversation', 2),
         findType('github', 'task'),
@@ -87,7 +88,9 @@ class OrbitHomeStore {
         findType('slack', 'conversation', 6),
         findType('slack', 'conversation', 7),
         findType('slack', 'conversation', 8),
-      ])).filter(Boolean)
+      ])
+      console.timeEnd('homeSearch')
+      return result.filter(Boolean)
     },
     {
       defaultValue: [],

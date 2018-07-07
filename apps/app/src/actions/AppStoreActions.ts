@@ -1,6 +1,7 @@
 import { Person, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import peekPosition from '../helpers/peekPosition'
+import invariant from 'invariant'
 
 type PositionObject =
   | HTMLElement
@@ -11,11 +12,41 @@ type PositionObject =
       height: number
     }
 
-export function selectItem(item: Person | Bit, target?: PositionObject) {
+type GenericPeekItem = {
+  id: string
+  type: string
+  title?: string
+  integration?: string
+}
+
+export function selectItem(
+  item: Person | Bit | GenericPeekItem,
+  target?: PositionObject,
+) {
+  invariant(item, 'Must pass item')
   if (item instanceof Person) {
+    invariant(item.name, 'Must pass Person name')
     selectPerson(item, target)
-  } else {
+  } else if (item instanceof Bit) {
+    invariant(item.title, 'Must pass Bit title')
     selectBit(item, target)
+  } else {
+    invariant(item.title, 'Must pass item title')
+    invariant(item.type, 'Must pass item type')
+    invariant(item.id, 'Must pass item id')
+    App.setPeekState({
+      ...withPosition(target),
+      peekId: Math.random(),
+      item: {
+        id: item.id,
+        title: item.title,
+        type: item.type || '',
+        // because were doing deep merging, we reset extra fields
+        body: '',
+        integration: item.integration || '',
+        icon: '',
+      },
+    })
   }
 }
 
@@ -23,8 +54,8 @@ export function selectPerson(person: Person, target?: PositionObject) {
   const avatar = person.data.profile.image_48
   App.setPeekState({
     ...withPosition(target),
-    id: person.id,
-    bit: {
+    peekId: Math.random(),
+    item: {
       id: person.id,
       icon: avatar,
       title: person.name,
@@ -38,8 +69,8 @@ export function selectPerson(person: Person, target?: PositionObject) {
 export function selectBit(bit: Bit, node?: PositionObject) {
   App.setPeekState({
     ...withPosition(node),
-    id: Math.random(),
-    bit: {
+    peekId: Math.random(),
+    item: {
       id: bit.id,
       icon: bit.icon,
       title: bit.title,
@@ -85,5 +116,6 @@ export function clearPeek() {
   App.setPeekState({
     id: null,
     target: null,
+    item: null,
   })
 }

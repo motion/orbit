@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import * as _ from 'lodash'
 
 class DockedPaneStore {
@@ -7,12 +7,15 @@ class DockedPaneStore {
   isAtBottom = false
 
   didMount() {
-    this.on(this.paneRef.current, 'scroll', _.throttle(this.setOverflow, 100))
+    on(
+      this,
+      this.paneRef.current,
+      'scroll',
+      _.throttle(this.setOverflow, 16 * 3),
+    )
     const observer = new MutationObserver(this.setOverflow)
     observer.observe(this.paneRef.current, { childList: true })
-    this.subscriptions.add({
-      dispose: () => observer.disconnect(),
-    })
+    on(this, observer)
   }
 
   setOverflow = () => {
@@ -23,7 +26,7 @@ class DockedPaneStore {
     const lastNode = _.last(Array.from(node.children))
     const innerHeight = lastNode.offsetTop + lastNode.clientHeight
     const scrolledTo = node.scrollTop + node.clientHeight
-    if (scrolledTo === innerHeight) {
+    if (innerHeight <= scrolledTo) {
       this.isAtBottom = true
     } else {
       this.isAtBottom = false
@@ -90,7 +93,7 @@ export class OrbitDockedPane extends React.Component {
       bottom: 0,
       left: 0,
       right: 0,
-      height: 200,
+      height: 100,
       zIndex: 10000000,
       borderRadius: 20,
       overflow: 'hidden',

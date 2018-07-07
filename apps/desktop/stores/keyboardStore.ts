@@ -1,4 +1,4 @@
-import { isEqual } from '@mcro/black/store'
+import { isEqual } from 'lodash'
 import iohook from 'iohook'
 import { Desktop, App } from '@mcro/stores'
 
@@ -58,9 +58,12 @@ export class KeyboardStore {
       if (App.orbitState.docked && !Desktop.state.focusedOnOrbit) {
         return
       }
-      console.log('esc disabled during dev for now')
-      // disable during dev
-      // Desktop.sendMessage(App, App.messages.HIDE)
+      // during dev only when focused
+      if (Desktop.state.focusedOnOrbit) {
+        Desktop.sendMessage(App, App.messages.HIDE)
+        console.log('esc disabled during dev for now')
+        return
+      }
       return
     }
     const isOption = keycode === codes.option || keycode === codes.optionRight

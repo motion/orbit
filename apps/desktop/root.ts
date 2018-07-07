@@ -12,19 +12,18 @@ import { Sync } from './sync'
 import SQLiteServer from './sqliteServer'
 import { App, Electron, Desktop } from '@mcro/stores'
 // import { sleep } from '@mcro/helpers'
-import { store, debugState } from '@mcro/black'
+import { store, debugState, on } from '@mcro/black'
 import root from 'global'
 import Path from 'path'
 import open from 'opn'
 import iohook from 'iohook'
 import debug from '@mcro/debug'
-import { Bit, modelsList } from '@mcro/models'
+import { Bit, Setting, modelsList } from '@mcro/models'
 import { Connection } from 'typeorm'
-import { GeneralSettingManager } from './settingManagers/generalSettingManager'
+import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
 import sqlite from 'sqlite'
 
 const log = debug('desktop')
-
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
 
@@ -43,13 +42,14 @@ export class Root {
   sqlite: SQLiteServer
   stores = null
 
-  async start() {
+  start = async () => {
     iohook.start(false)
     root.Root = this
     root.restart = this.restart
     const db = await sqlite.open(
       Path.join(__dirname, '..', 'data', 'database'),
       {
+        // @ts-ignore
         cached: true,
         promise: Promise,
       },
@@ -68,6 +68,23 @@ export class Root {
     this.auth = new Auth()
     Desktop.onMessage(Desktop.messages.OPEN, open)
     await this.connect()
+
+    // rtemp
+    if (!(await Setting.findOne({ type: 'confluence' }))) {
+      const setting = new Setting()
+      setting.type = 'confluence'
+      setting.category = 'integration'
+      setting.token = 'good'
+      setting.values = {
+        atlassian: {
+          username: 'natewienert@gmail.com',
+          password: 'AtlOrbit123',
+          domain: 'https://tryorbit2.atlassian.net',
+        },
+      }
+      await setting.save()
+    }
+
     this.generalSettingManager = new GeneralSettingManager()
     this.sync = new Sync()
     this.sync.start()
@@ -82,8 +99,7 @@ export class Root {
     this.watchLastBit()
     this.setupHosts()
     await this.server.start()
-    // this.screen.start()
-    this.screen.watchMouse()
+    this.screen.start()
     debugState(({ stores }) => {
       this.stores = stores
     })
@@ -100,7 +116,7 @@ export class Root {
     this.connection = await connectModels(modelsList)
   }
 
-  watchLastBit() {
+  watchLastBit = () => {
     async function updateLastBit() {
       const lastBit = await Bit.findOne({
         order: { updatedAt: 'DESC' },
@@ -108,16 +124,15 @@ export class Root {
       const updatedAt = `${lastBit ? lastBit.updatedAt : ''}`
       Desktop.setLastBitUpdatedAt(updatedAt)
     }
-    // @ts-ignore
-    this.setInterval(updateLastBit, 10000)
+    on(this, setInterval(updateLastBit, 10000))
     updateLastBit()
   }
 
-  restart() {
+  restart = () => {
     require('touch')(Path.join(__dirname, '..', '_', 'index.js'))
   }
 
-  async reconnect() {
+  reconnect = async () => {
     if (this.isReconnecting) {
       return
     }
@@ -142,7 +157,7 @@ export class Root {
     return true
   }
 
-  async setupHosts() {
+  setupHosts = async () => {
     const lines = await hostile.get(true)
     const exists = lines.map(line => line[1]).indexOf(Constants.API_HOST) > -1
     if (!exists) {

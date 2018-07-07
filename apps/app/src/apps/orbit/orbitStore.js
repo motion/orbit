@@ -1,7 +1,9 @@
-import { react } from '@mcro/black'
+import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { throttle } from 'lodash'
 import { AppReactions } from '~/stores/AppReactions'
+
+// some comment test
 
 export default class OrbitStore {
   query = ''
@@ -37,7 +39,7 @@ export default class OrbitStore {
         this.appReactions.subscriptions.dispose()
       },
     })
-    this.on(window, 'keydown', x => this.handleKeyDown(x.keyCode))
+    on(this, window, 'keydown', x => this.handleKeyDown(x.keyCode))
   }
 
   handleKeyDown = code => {
@@ -68,5 +70,17 @@ export default class OrbitStore {
 
   onChangeQuery = e => {
     this.query = e.target.value
+  }
+
+  onFocus = () => {
+    App.setOrbitState({
+      inputFocused: true,
+    })
+  }
+
+  onBlur = () => {
+    App.setOrbitState({
+      inputFocused: false,
+    })
   }
 }

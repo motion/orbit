@@ -1,7 +1,7 @@
-// import Oracle from '@mcro/oracle'
+import Oracle from '@mcro/oracle'
 import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
-import { store, isEqual, react } from '@mcro/black/store'
+import { store, isEqual, react, on } from '@mcro/black/store'
 import { App, Desktop, Electron, Swift } from '@mcro/stores'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
@@ -58,7 +58,18 @@ export class Screen {
   curAppID = ''
   curAppName = ''
   watchSettings = { name: '', settings: {} }
-  // oracle = new Oracle()
+  oracle = new Oracle()
+
+  unsetOrbitHoveredOnHide = react(
+    () => App.orbitState.docked,
+    docked => {
+      if (!docked) {
+        Desktop.setHoverState({ orbitHovered: false })
+        return
+      }
+      throw react.cancel
+    },
+  )
 
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 
@@ -100,143 +111,149 @@ export class Screen {
     }
   }
 
-  // start = async () => {
-  //   Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
-  //   // accessiblity check
-  //   this.oracle.onAccessible(isAccessible => {
-  //     console.log('is accessible, start watching stuff', isAccessible)
-  //     Desktop.setState({ isAccessible })
-  //     if (isAccessible) {
-  //       this.watchMouse()
-  //     }
-  //   })
-  //   // OCR words
-  //   this.oracle.onWords(words => {
-  //     this.hasResolvedOCR = true
-  //     Desktop.setOcrState({
-  //       words,
-  //       updatedAt: Date.now(),
-  //     })
-  //   })
-  //   // OCR lines
-  //   this.oracle.onLines(lines => {
-  //     Desktop.setOcrState({
-  //       lines,
-  //     })
-  //   })
-  //   // window movements
-  //   this.oracle.onWindowChange((event, value) => {
-  //     if (event === 'ScrollEvent') {
-  //       this.rescanApp()
-  //       return
-  //     }
-  //     // console.log(`got event ${event} ${JSON.stringify(value)}`)
-  //     const lastState = Mobx.toJS(Desktop.appState)
-  //     let nextState: any = {}
-  //     let id = this.curAppID
-  //     const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
-  //     switch (event) {
-  //       case 'FrontmostWindowChangedEvent':
-  //         id = value.id
-  //         nextState = {
-  //           id,
-  //           title: value.title,
-  //           offset: value.position,
-  //           bounds: value.size,
-  //           name: id ? last(id.split('.')) : value.title,
-  //         }
-  //         // update these now so we can use to track
-  //         this.curAppID = id
-  //         this.curAppName = nextState.name
-  //         break
-  //       case 'WindowPosChangedEvent':
-  //         nextState.bounds = value.size
-  //         nextState.offset = value.position
-  //     }
-  //     // no change
-  //     if (isEqual(nextState, lastState)) {
-  //       return
-  //     }
-  //     const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
-  //     Desktop.setFocusedOnOrbit(focusedOnOrbit)
-  //     // @ts-ignore
-  //     const state: Partial<DesktopState> = {
-  //       appState: nextState,
-  //     }
-  //     // when were moving into focus prevent app, store its appName, pause then return
-  //     if (PREVENT_APP_STATE[this.curAppName]) {
-  //       this.oracle.pause()
-  //       return
-  //     }
-  //     state.appStateUpdatedAt = Date.now()
-  //     if (
-  //       !wasFocusedOnOrbit &&
-  //       !PREVENT_CLEAR[this.curAppName] &&
-  //       !PREVENT_CLEAR[nextState.name]
-  //     ) {
-  //       const { appState } = Desktop.state
-  //       if (
-  //         !isEqual(nextState.bounds, appState.bounds) ||
-  //         !isEqual(nextState.offset, appState.offset)
-  //       ) {
-  //         // immediate clear for moving
-  //         Desktop.sendMessage(Electron, Electron.messages.CLEAR)
-  //       }
-  //     }
-  //     if (!Desktop.state.paused) {
-  //       this.oracle.resume()
-  //     }
-  //     clearTimeout(this.appStateTm)
-  //     // @ts-ignore
-  //     this.appStateTm = this.setTimeout(() => {
-  //       Desktop.setState(state)
-  //     }, 4)
-  //   })
-  //   // OCR work clear
-  //   this.oracle.onBoxChanged(count => {
-  //     if (!Desktop.ocrState.words) {
-  //       log('RESET oracle boxChanged (App)')
-  //       this.lastScreenChange()
-  //       if (this.isWatching === 'OCR') {
-  //         log('reset is watching ocr to set back to app')
-  //         this.rescanApp()
-  //       }
-  //     } else {
-  //       // for not many clears, try it
-  //       if (count < 20) {
-  //         // Desktop.setState({
-  //         //   clearWord: this.oracle.changedIds,
-  //         // })
-  //       } else {
-  //         // else just clear it all
-  //         log('RESET oracle boxChanged (NOTTTTTTT App)')
-  //         this.lastScreenChange()
-  //         this.rescanApp()
-  //       }
-  //     }
-  //   })
-  //   // OCR word restore
-  //   this.oracle.onRestored(count => {
-  //     log('restore', count)
-  //     Desktop.setOcrState({
-  //       restoreWords: this.oracle.restoredIds,
-  //     })
-  //   })
-  //   // general errors
-  //   this.oracle.onError(async error => {
-  //     log('screen ran into err, restart', error)
-  //     this.restartScreen()
-  //   })
-  //   await this.oracle.start()
-  // }
+  clearTimeout?: Function
 
-  // async restartScreen() {
-  //   log('restartScreen')
-  //   this.lastScreenChange()
-  //   await this.oracle.stop()
-  //   this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
-  //   await this.oracle.start()
-  // }
+  start = async () => {
+    Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
+    // accessiblity check
+    this.oracle.onAccessible(isAccessible => {
+      console.log('is accessible, start watching stuff', isAccessible)
+      Desktop.setState({ isAccessible })
+      if (isAccessible) {
+        this.watchMouse()
+      }
+    })
+    // OCR words
+    this.oracle.onWords(words => {
+      this.hasResolvedOCR = true
+      Desktop.setOcrState({
+        words,
+        updatedAt: Date.now(),
+      })
+    })
+    // OCR lines
+    this.oracle.onLines(lines => {
+      Desktop.setOcrState({
+        lines,
+      })
+    })
+    // window movements
+    this.oracle.onWindowChange((event, value) => {
+      if (event === 'ScrollEvent') {
+        this.rescanApp()
+        return
+      }
+      // console.log(`got event ${event} ${JSON.stringify(value)}`)
+      const lastState = Mobx.toJS(Desktop.appState)
+      let nextState: any = {}
+      let id = this.curAppID
+      const wasFocusedOnOrbit = this.curAppID === ORBIT_APP_ID
+      switch (event) {
+        case 'FrontmostWindowChangedEvent':
+          id = value.id
+          nextState = {
+            id,
+            title: value.title,
+            offset: value.position,
+            bounds: value.size,
+            name: id ? last(id.split('.')) : value.title,
+          }
+          // update these now so we can use to track
+          this.curAppID = id
+          this.curAppName = nextState.name
+          break
+        case 'WindowPosChangedEvent':
+          nextState.bounds = value.size
+          nextState.offset = value.position
+      }
+      // no change
+      if (isEqual(nextState, lastState)) {
+        return
+      }
+      const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
+      Desktop.setFocusedOnOrbit(focusedOnOrbit)
+      // @ts-ignore
+      const state: Partial<DesktopState> = {
+        appState: nextState,
+      }
+      // when were moving into focus prevent app, store its appName, pause then return
+      if (PREVENT_APP_STATE[this.curAppName]) {
+        this.oracle.pause()
+        return
+      }
+      state.appStateUpdatedAt = Date.now()
+      if (
+        !wasFocusedOnOrbit &&
+        !PREVENT_CLEAR[this.curAppName] &&
+        !PREVENT_CLEAR[nextState.name]
+      ) {
+        const { appState } = Desktop.state
+        if (
+          !isEqual(nextState.bounds, appState.bounds) ||
+          !isEqual(nextState.offset, appState.offset)
+        ) {
+          // immediate clear for moving
+          Desktop.sendMessage(Electron, Electron.messages.CLEAR)
+        }
+      }
+      if (!Desktop.state.paused) {
+        this.oracle.resume()
+      }
+      if (this.clearTimeout) {
+        this.clearTimeout()
+      }
+      this.clearTimeout = on(
+        this,
+        setTimeout(() => {
+          Desktop.setState(state)
+        }, 4),
+      )
+    })
+    // OCR work clear
+    this.oracle.onBoxChanged(count => {
+      if (!Desktop.ocrState.words) {
+        log('RESET oracle boxChanged (App)')
+        this.lastScreenChange()
+        if (this.isWatching === 'OCR') {
+          log('reset is watching ocr to set back to app')
+          this.rescanApp()
+        }
+      } else {
+        // for not many clears, try it
+        if (count < 20) {
+          // Desktop.setState({
+          //   clearWord: this.oracle.changedIds,
+          // })
+        } else {
+          // else just clear it all
+          log('RESET oracle boxChanged (NOTTTTTTT App)')
+          this.lastScreenChange()
+          this.rescanApp()
+        }
+      }
+    })
+    // OCR word restore
+    this.oracle.onRestored(count => {
+      log('restore', count)
+      Desktop.setOcrState({
+        restoreWords: this.oracle.restoredIds,
+      })
+    })
+    // general errors
+    this.oracle.onError(async error => {
+      log('screen ran into err, restart', error)
+      this.restartScreen()
+    })
+    await this.oracle.start()
+  }
+
+  async restartScreen() {
+    log('restartScreen')
+    this.lastScreenChange()
+    await this.oracle.stop()
+    this.watchBounds(this.watchSettings.name, this.watchSettings.settings)
+    await this.oracle.start()
+  }
 
   lastScreenChange = () => {
     if (PREVENT_CLEAR[Desktop.state.appState.name]) {

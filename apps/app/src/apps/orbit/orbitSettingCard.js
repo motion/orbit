@@ -11,47 +11,47 @@ import { Setting } from '@mcro/models'
   store: SettingInfoStore,
 })
 export class OrbitSettingCard extends React.Component {
-  componentWillMount() {
-    this.props.store.setBit(this.props.result)
-  }
-
   handleClick = async () => {
     const { isActive, result } = this.props
     if (isActive) {
       return
     }
-    if (result.oauth === false) {
+    if (result.auth === false) {
       const setting = new Setting()
       setting.category = 'integration'
       setting.type = result.type
       setting.token = 'good'
       await setting.save()
+    } else if (result.auth) {
+      console.log('should select auth view')
+      return
     } else {
       OauthActions.startOauth(result.id)
     }
     return
   }
 
-  render({ store, result, isActive, ...props }) {
+  render({ store, result, isActive, setting, subtitle, ...props }) {
+    const countSubtitle = !isActive
+      ? ''
+      : store.bitsCount === null
+        ? '...'
+        : `${store.bitsCount || '0'} total`
+    const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard
         inactive={!isActive}
         $card
         $isActive={isActive}
         title={result.title}
-        subtitle={
-          !isActive
-            ? ''
-            : store.bitsCount === null
-              ? '...'
-              : `${store.bitsCount || '0'} total`
-        }
+        subtitle={subtitleDisplay}
         date={store.job && store.job.updatedAt}
         icon={result.icon}
         iconProps={
           !isActive && {
+            color: '#999',
             style: {
-              opacity: 0.5,
+              opacity: 0.6,
             },
           }
         }

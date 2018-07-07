@@ -3,9 +3,9 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { RoundButton } from '~/views'
 import slackDown from '@mcro/slackdown'
-import * as PeekStateActions from '~/actions/PeekStateActions'
 import { getSlackDate } from '~/helpers'
 import { TimeAgo } from '~/views/TimeAgo'
+import { App } from '@mcro/stores'
 
 @view
 export class BitSlackMessage extends React.Component {
@@ -43,7 +43,7 @@ export class BitSlackMessage extends React.Component {
             size={1.1}
             onClick={e => {
               e.stopPropagation()
-              PeekStateActions.selectPerson(person)
+              App.actions.selectPerson(person)
             }}
           >
             <inner>

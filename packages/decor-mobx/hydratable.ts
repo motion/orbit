@@ -6,7 +6,6 @@ const isClass = fn =>
 const defaultFilter = (obj, key, val) => {
   // avoid classes
   if (isClass(val)) {
-    console.log('skipping', obj.toString(), key, val)
     return true
   }
   if (typeof val === 'function') {

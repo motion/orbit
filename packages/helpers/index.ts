@@ -1,6 +1,7 @@
 import * as EventKit from 'event-kit'
 export * from './events'
 export * from './ref'
+export * from './on'
 
 export { Helpers } from './types'
 export const { CompositeDisposable } = EventKit

@@ -23,7 +23,7 @@ export default async function connectModels(models) {
     switch (errorType) {
       case 'SQLITE_CORRUPT':
         console.log('corrupted db, recreate from last backup...')
-        recoverDB()
+        // recoverDB()
     }
   }
 }

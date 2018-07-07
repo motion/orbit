@@ -29,6 +29,9 @@ type Options = {
   master?: Boolean
   ignoreSelf?: Boolean
   stores?: Object
+  actions?: {
+    [key: string]: Function
+  }
 }
 
 // we want non-granular updates on state changes
@@ -103,6 +106,21 @@ class Bridge {
     this._source = store.source
     this._store = store
     this._options = options
+    // define actions onto the store
+    // wrap them in mobx actions so we get logging
+    if (options.actions) {
+      if (store.actions) {
+        throw new Error('Actions should be defined through Store.start()')
+      }
+      store.actions = {}
+      for (const key of Object.keys(options.actions)) {
+        const boundAction = options.actions[key].bind(store)
+        store.actions[key] = Mobx.action(
+          `${store.constructor.name}`,
+          boundAction,
+        )
+      }
+    }
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {

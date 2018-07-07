@@ -1,17 +1,9 @@
 import fuzzySort from 'fuzzysort'
-import * as Constants from '~/constants'
-
-export const settingToResult = setting => ({
-  id: setting.type,
-  type: 'setting',
-  integration: setting.type,
-  icon: setting.type,
-  title: (
-    Constants.allIntegrations.find(x => x.integration === setting.type) || {}
-  ).title,
-})
 
 export const getSlackDate = ts => {
+  if (!ts) {
+    return null
+  }
   const split = ts.split('.')
   if (!split.length) {
     return null

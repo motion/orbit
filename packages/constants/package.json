@@ -4,6 +4,6 @@
   "version": "2.0.3",
   "scripts": {
     "build": "tsc",
-    "watch": "npm run build --  --preserveWatchOutput"
+    "watch": "npm run build -- --watch  --preserveWatchOutput"
   }
 }

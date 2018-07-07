@@ -1,14 +1,14 @@
 import decor from '@mcro/decor'
 import * as PropTypes from 'prop-types'
 import {
+  contextual,
   storeProvidable,
   storeAttachable,
-  contextual,
   renderArgumentable,
   emitsMount,
 } from '@mcro/decor-react'
 import { subscribable } from '@mcro/decor-classes'
-import { utilityUsable, reactObservable } from '@mcro/decor-mobx'
+import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
 
@@ -28,7 +28,6 @@ const uiContext = [
 const glossPlugin = () => ({ decorator })
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
-  utilityUsable,
   enable.ui && uiContext,
   renderArgumentable,
   enable.ui && glossPlugin,

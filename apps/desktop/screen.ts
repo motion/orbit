@@ -116,7 +116,7 @@ export class Screen {
 
   start = async () => {
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
-    if (macosVersion.is('10.12')) {
+    if (macosVersion.is('<10.12')) {
       this.watchMouse()
       console.log('older mac version, just watching mouse')
       return

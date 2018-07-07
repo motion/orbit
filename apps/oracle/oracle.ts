@@ -77,7 +77,7 @@ export default class Oracle {
     await this.setState({ isPaused: false })
     await this._runScreenProcess()
     await this._connectToScreenProcess()
-    monitorScreenProcess(this.process, this.restart)
+    // monitorScreenProcess(this.process, this.restart)
   }
 
   stop = async () => {

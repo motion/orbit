@@ -115,6 +115,8 @@ export class Screen {
 
   start = async () => {
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
+    this.watchMouse()
+    return
     // accessiblity check
     this.oracle.onAccessible(isAccessible => {
       console.log('is accessible, start watching stuff', isAccessible)

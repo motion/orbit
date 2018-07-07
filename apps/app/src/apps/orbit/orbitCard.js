@@ -420,14 +420,19 @@ export class OrbitCard extends React.Component {
       }
     } else {
       // CARD
+      const borderHover = UI.color('rgb(51.3%, 65.7%, 88.6%)')
+      const borderActive = borderHover.lighten(0.1)
       card = {
         ...card,
-        border: [1, '#fff'],
         borderRadius,
         background: theme.selected.background,
         boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
+        border: [2, '#fff'],
         '&:hover': {
-          border: [1, 'rgb(51.3%, 65.7%, 88.6%)'],
+          border: [2, borderHover],
+        },
+        '&:active': {
+          border: [2, borderActive],
         },
       }
       if (isSelected) {

@@ -46,25 +46,30 @@ console.log('target', target)
 console.log('isProd', isProd)
 console.log('tsConfig', tsConfig)
 
-const optimization = {
-  prod: {
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /node_modules/,
-          chunks: 'initial',
-          name: 'vendor',
-          priority: 10,
-          enforce: true,
-        },
+// this really helps hmr speed
+const optimizeSplit = {
+  splitChunks: {
+    cacheGroups: {
+      vendor: {
+        test: /node_modules/,
+        chunks: 'initial',
+        name: 'vendor',
+        priority: 10,
+        enforce: true,
       },
     },
+  },
+}
+
+const optimization = {
+  prod: {
+    ...optimizeSplit,
   },
   dev: {
     removeAvailableModules: false,
     removeEmptyChunks: false,
     namedModules: true,
-    splitChunks: false,
+    ...optimizeSplit,
   },
 }
 

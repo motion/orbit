@@ -1,11 +1,25 @@
-import createClient from './websqlClient'
+import { WebSQLClient } from './WebSQLClient'
 import { createConnection } from 'typeorm/browser'
 
 export default async function connectModels(models) {
   const connect = async () => {
-    // reset this on each connect
-    const WebSqlClient = createClient()
-    window.sqlitePlugin = WebSqlClient.sqlitePlugin
+    const Client = new WebSQLClient()
+
+    // we patch this to get typeorm to communicate with backend
+    // see desktop/sqliteServer.ts
+    window.sqlitePlugin = Client.getPlugin()
+
+    // ensure on refresh we close out transactions{}
+    window.onbeforeunload = () => {
+      const locks = Object.keys(Client.txLocks)
+        .map(k => Client.txLocks[k])
+        .filter(lock => lock.inProgress)
+      if (locks.length) {
+        console.log('LOCKS STILL ACTIVE', locks, window.lastQueryQueue)
+        debugger
+      }
+    }
+
     let started = true
     try {
       let connectTm = setTimeout(() => {
@@ -24,7 +38,7 @@ export default async function connectModels(models) {
       for (const model of models) {
         model.useConnection(connection)
       }
-      WebSqlClient.onError(async err => {
+      Client.onError(async err => {
         if (!started) {
           console.log('SQL Error before started', err)
           return

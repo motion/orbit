@@ -6,8 +6,8 @@ import { PeekHeader, PeekContent } from '../index'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
-import { SettingInfoStore } from '~/stores/SettingInfoStore'
-import { TimeAgo } from '~/views/TimeAgo'
+import { SettingInfoStore } from '../../../stores/SettingInfoStore'
+import { TimeAgo } from '../../../views/TimeAgo'
 import { modelQueryReaction } from '@mcro/helpers'
 
 const EmptyPane = ({ setting }) => (

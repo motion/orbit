@@ -1,7 +1,10 @@
 #!/bin/bash
-./start-debug.sh &
+
+./scripts/start-debug.sh &
+
 debugPID=$!
 
+# kill previous app, watch for app crashes
 npx kill-port 3002
 until npx mcro-build --port 3002 ${@:1}; do
   echo "app crashed, restarting..." >&2

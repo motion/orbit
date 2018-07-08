@@ -2,9 +2,9 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Bit, Person } from '@mcro/models'
-import { SubTitle } from '~/views'
+import { SubTitle } from '../../views'
 import { OrbitCard } from './orbitCard'
-import { Masonry } from '~/views/masonry'
+import { Masonry } from '../../views/Masonry'
 import { OrbitDockedPane } from './orbitDockedPane'
 
 // css={{

@@ -10,7 +10,6 @@ ln -s $index ./index.html
 ln -s .$index ./settings.html
 ln -s .$index ./peek.html
 ln -s .$index ./highlights.html
-ln -s .$index ./relevancy.html
 ln -s .$index ./auth.html
 
 surge . seemirai.com

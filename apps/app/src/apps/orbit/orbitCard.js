@@ -2,12 +2,12 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
-import { BitResolver } from '~/components/BitResolver'
-import { SmallLink } from '~/views'
-import { TimeAgo } from '~/views/TimeAgo'
-import * as BitActions from '~/actions/BitActions'
+import { BitResolver } from '../../components/BitResolver'
+import { SmallLink } from '../../views'
+import { TimeAgo } from '../../views/TimeAgo'
+import * as BitActions from '../../actions/BitActions'
 import { App } from '@mcro/stores'
-import { PeopleRow } from '~/components/PeopleRow'
+import { PeopleRow } from '../../components/PeopleRow'
 
 let loggers = []
 let nextLog = null
@@ -427,12 +427,12 @@ export class OrbitCard extends React.Component {
         borderRadius,
         background: theme.selected.background,
         boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
-        border: [2, '#fff'],
+        border: [1, '#fff'],
         '&:hover': {
-          border: [2, borderHover],
+          border: [1, borderHover],
         },
         '&:active': {
-          border: [2, borderActive],
+          border: [1, borderActive],
         },
       }
       if (isSelected) {

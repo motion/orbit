@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import passportLink from '~/helpers/passportLink'
+import passportLink from '../helpers/passportLink'
 import r2 from '@mcro/r2'
-import * as Constants from '~/constants'
+import * as Constants from '../constants'
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
 

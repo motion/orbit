@@ -11,7 +11,7 @@ export const getSlackDate = ts => {
   return new Date(split[0] * 1000)
 }
 
-export const fuzzy = (query, results, extraOpts) =>
+export const fuzzy = (query, results, extraOpts?) =>
   !query
     ? results
     : fuzzySort
@@ -23,26 +23,9 @@ export const fuzzy = (query, results, extraOpts) =>
         })
         .map(x => x.obj)
 
-import latinize from 'latinize'
-import * as React from 'react'
-
 export * from './hoverSettler'
-export * from './logClass'
 
-export const trimSingleLine = str => str.trim().replace(/\s{2,}/g, ' ')
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
-export const Component = React.Component
-
-// alphanumeric and spacse
-export const cleanText = s => {
-  if (s.toLowerCase) {
-    return latinize(s || '')
-      .toLowerCase()
-      .replace(/[^0-9a-zA-Z\ ]/g, '')
-  } else {
-    return ''
-  }
-}
 
 export const getHeader = (message, key) =>
   (

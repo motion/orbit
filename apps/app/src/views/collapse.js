@@ -62,10 +62,6 @@ export class Arrow extends React.Component {
   }
 
   static style = {
-    container: {
-      // need enough room for the rotation
-      // height: 26,
-    },
     arrow: {
       transition: 'transform ease-in 100ms',
       marginRight: 3,

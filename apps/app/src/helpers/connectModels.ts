@@ -3,10 +3,22 @@ import { createConnection } from 'typeorm/browser'
 
 export default async function connectModels(models) {
   const connect = async () => {
-    const Client = new WebSQLClient()
+    const Client = new WebSQLClient({
+      onError: async err => {
+        if (!started) {
+          console.log('SQL Error before started', err)
+          return
+        }
+        console.error('SQL Error', err)
+        // temp to debug locks
+        console.log('Last query queue:', window.lastQueryQueue)
+        // window.location = window.location
+      },
+    })
 
     // we patch this to get typeorm to communicate with backend
     // see desktop/sqliteServer.ts
+    // @ts-ignore
     window.sqlitePlugin = Client.getPlugin()
 
     // ensure on refresh we close out transactions{}
@@ -31,24 +43,13 @@ export default async function connectModels(models) {
         location: 'default',
         entities: models,
         // logging: true,
-        autoSchemaSync: true,
         synchronize: true,
       })
       clearTimeout(connectTm)
       for (const model of models) {
         model.useConnection(connection)
       }
-      Client.onError(async err => {
-        if (!started) {
-          console.log('SQL Error before started', err)
-          return
-        }
-        console.error('SQL Error', err)
-        // temp to debug locks
-        console.log('Last query queue:', window.lastQueryQueue)
-        // window.location = window.location
-      })
-      return connection
+      return { connection, client: Client }
     } catch (err) {
       console.log('connectModels Error: ', err)
     }

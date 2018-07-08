@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Views from '~/views'
+import * as Views from '../../../../views'
 import { Setting, findOrCreate } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import { App } from '@mcro/stores'

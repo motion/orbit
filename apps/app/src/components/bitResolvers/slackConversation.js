@@ -1,10 +1,10 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import { BitSlackMessage } from './slackMessage'
-import { RoundButton } from '~/views/roundButton'
+import { RoundButton } from '../../views/roundButton'
 import keywordExtract from 'keyword-extractor'
 import arrford from 'arrford'
-import { getSlackDate } from '~/helpers'
+import { getSlackDate } from '../../helpers'
 import { capitalize } from 'lodash'
 
 const options = {

@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
-import { OrbitIcon } from '~/apps/orbit/orbitIcon'
+import { OrbitIcon } from '../../../apps/orbit/orbitIcon'
 import * as UI from '@mcro/ui'
-import { Carousel } from '~/components/carousel'
+import { Carousel } from '../../../components/carousel'
 import { Bit } from '@mcro/models'
-import { SubTitle } from '~/views'
+import { SubTitle } from '../../../views'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} {...props} />

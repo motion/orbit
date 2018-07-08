@@ -10,7 +10,11 @@ import {
 
 // export @react decorator
 export { react } from './react'
-export * from './constants'
+export {
+  Reaction,
+  ReactionRejectionError,
+  ReactionTimeoutError,
+} from './constants'
 export * from './types'
 
 // TODO: fix deep() wrapper doesnt trigger reactions when mutating objects

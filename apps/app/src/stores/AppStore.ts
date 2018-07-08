@@ -1,7 +1,7 @@
 import { on, react, ReactionTimeoutError } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
-import * as Helpers from '~/helpers'
+import * as Helpers from '../helpers'
 import * as AppStoreHelpers from './appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'

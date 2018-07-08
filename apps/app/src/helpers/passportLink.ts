@@ -25,7 +25,9 @@ export default function passportLink(path, options = {}) {
       height: 600,
       ...options,
     }
+    // @ts-ignore
     window.passport = {}
+    // @ts-ignore
     window.passport.oauthSession = info => {
       console.log('GOT OAUTH', info)
       if (!info.error && info.token) {

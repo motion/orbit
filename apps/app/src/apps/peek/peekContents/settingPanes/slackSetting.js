@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, on } from '@mcro/black'
-import { fuzzy } from '~/helpers'
+import { fuzzy } from '../../../../helpers'
 import * as _ from 'lodash'
 import { SlackChannel } from './slackPanes/slackChannel'
 

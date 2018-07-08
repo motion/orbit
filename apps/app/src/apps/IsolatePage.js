@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekPage } from './PeekPage'
 import { OrbitPage } from './OrbitPage'
-import { AppStore } from '~/stores/AppStore'
+import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import { Bit } from '@mcro/models'
 

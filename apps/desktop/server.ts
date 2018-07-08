@@ -24,7 +24,6 @@ export default class Server {
   app: express.Application
 
   constructor() {
-    console.log('setting up strategies', Object.keys(OAuthStrategies))
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
       onSuccess: async (service, token, refreshToken, info) => {

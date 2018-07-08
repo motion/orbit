@@ -1,9 +1,9 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { CurrentUser } from '@mcro/models'
-import App from '~/app'
+import App from '../../../../app'
 import Things from './views/things'
-import * as Collapse from './views/collapse'
+import * as Collapse from '../../../../views/Collapse'
 
 @view
 class Calendar {
@@ -32,14 +32,14 @@ class Calendar {
               <block
                 css={{ marginRight: 10, background: cal.backgroundColor }}
               />
-              <UI.Title
+              <UI.Text
                 size={1.2}
                 fontWeight={300}
                 color="#000"
                 marginBottom={1}
               >
                 {cal.summary}
-              </UI.Title>
+              </UI.Text>
             </name>
             <info $$row>
               <left $$row if={false}>
@@ -116,9 +116,9 @@ class Calendars {
       <calendars>
         <title $$row onClick={() => (store.open = !store.open)}>
           <Collapse.Arrow open={store.open} />
-          <UI.Title size={1.2} fontWeight={600}>
+          <UI.Text size={1.2} fontWeight={600}>
             {title} ({items.length})
-          </UI.Title>
+          </UI.Text>
         </title>
         <Collapse.Body open={store.open}>
           <content>

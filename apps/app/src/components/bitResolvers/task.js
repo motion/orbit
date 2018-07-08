@@ -1,6 +1,6 @@
 import keywordExtract from 'keyword-extractor'
 import markdown from 'marky-markdown'
-import { TimeAgo } from '~/views/TimeAgo'
+import { TimeAgo } from '../../views/TimeAgo'
 
 // const converter = new Showdown.Converter()
 // const markdown = text => converter.makeHtml(text)

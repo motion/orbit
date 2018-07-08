@@ -118,7 +118,7 @@ export const Circle = props => (
 )
 
 export const Title = ({ center, children, ...props }) => (
-  <UI.Title
+  <UI.Text
     size={1.4}
     fontWeight={300}
     css={{
@@ -128,7 +128,7 @@ export const Title = ({ center, children, ...props }) => (
     {...props}
   >
     {children}
-  </UI.Title>
+  </UI.Text>
 )
 
 export const VertSpace = view('div', {

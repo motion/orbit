@@ -2,6 +2,7 @@ import { SQLitePluginTransaction } from './SQLitePluginTransaction'
 import { PrimusAdaptor } from './PrimusAdaptor'
 
 export class SQLitePlugin {
+  lastQueryQueue = []
   txLocks: Object
   nextTick = setImmediate
   dbname: string
@@ -26,11 +27,13 @@ export class SQLitePlugin {
     openSuccess,
     openError,
     primusAdaptor,
+    errorCb,
   ) {
     if (!(openargs && openargs.name)) {
       throw new Error('Cannot create a SQLitePlugin instance without a db name')
     }
     const dbname = openargs.name
+    this.errorCb = errorCb
     this.txLocks = txLocks
     this.nextTick = nextTick
     this.primusAdaptor = primusAdaptor
@@ -146,7 +149,7 @@ export class SQLitePlugin {
       }
     }
     const execute = tx => {
-      window.lastQueryQueue.push([statement, params])
+      this.lastQueryQueue.push([statement, params])
       tx.executeSql(statement, params, mysuccess, myerror)
     }
     this.addTransaction(

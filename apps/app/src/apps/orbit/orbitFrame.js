@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Electron } from '@mcro/stores'
-import * as Constants from '~/constants'
+import * as Constants from '../../constants'
 import { OrbitArrow } from './orbitArrow'
 import { OrbitIndicator } from './orbitIndicator'
 

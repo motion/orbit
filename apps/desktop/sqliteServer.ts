@@ -1,5 +1,6 @@
 import Primus from 'primus'
 import recoverDB from '~/helpers/recoverDB'
+import { Desktop } from '@mcro/stores'
 
 export default class SQLiteServer {
   id = 0
@@ -81,7 +82,11 @@ export default class SQLiteServer {
       })
       await this.runQueries(id, spark, queryArray, accumAnswer)
     } catch (err) {
-      console.log('sqlite server err', err)
+      console.error('sqlite server err at', Date.now())
+      Desktop.setState({
+        lastSQLError: Date.now(),
+      })
+      console.log(err)
       if (err.message && err.message.indexOf('SQLITE_IOERR')) {
         recoverDB()
       }

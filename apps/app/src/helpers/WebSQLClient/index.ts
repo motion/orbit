@@ -1,21 +1,25 @@
 import { SQLitePlugin } from './SQLitePlugin'
 import { PrimusAdaptor } from './PrimusAdaptor'
 
-// temproray to debug locks
-window.lastQueryQueue = []
-
 export class WebSQLClient {
   nextTick = setImmediate
   txLocks = {}
   errorCb = () => {}
   dblocations = ['docs', 'libs', 'nosync']
   primusAdaptor = new PrimusAdaptor()
+  lastPlugin = null
+  lastOpenedDatabase?: SQLitePlugin
 
   onError(userErrorCb) {
     this.errorCb = userErrorCb
   }
 
   getPlugin() {
+    this.lastPlugin = this.plugin
+    return this.lastPlugin
+  }
+
+  private get plugin() {
     return {
       sqliteFeatures: {
         isSQLitePlugin: true,
@@ -55,7 +59,7 @@ export class WebSQLClient {
         ) {
           openargs.createFromResource = '1'
         }
-        return new SQLitePlugin(
+        this.lastOpenedDatabase = new SQLitePlugin(
           this.txLocks,
           this.nextTick,
           openargs,
@@ -63,6 +67,7 @@ export class WebSQLClient {
           errorcb,
           this.primusAdaptor,
         )
+        return this.lastOpenedDatabase
       },
 
       deleteDatabase: (first, success, error) => {

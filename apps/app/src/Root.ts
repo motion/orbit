@@ -1,9 +1,11 @@
-import { App } from '@mcro/stores'
+import { store, react } from '@mcro/black'
+import { App, Desktop } from '@mcro/stores'
 import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import { modelsList } from '@mcro/models'
 import connectModels from './helpers/connectModels'
 import * as AppStoreActions from './actions/AppStoreActions'
+import { WebSQLClient } from './helpers/WebSQLClient'
 
 const onPort = async cb => {
   await sleep(200)
@@ -15,7 +17,9 @@ const onPort = async cb => {
   }
 }
 
+@store
 export class Root {
+  client: WebSQLClient
   connection = null
   started = false
   stores = null
@@ -42,8 +46,19 @@ export class Root {
     this.started = true
   }
 
+  // for debugging why queries are locking
+  logQueriesBeforeError = react(
+    () => Desktop.state.lastSQLError,
+    () => {
+      console.log('last queries before error!!!!')
+      console.log(this.client.lastOpenedDatabase.lastQueryQueue)
+    },
+  )
+
   async connectModels() {
-    this.connection = await connectModels(modelsList)
+    const { client, connection } = await connectModels(modelsList)
+    this.connection = connection
+    this.client = client
   }
 
   async restart() {

@@ -2,6 +2,7 @@ import { SQLitePluginTransaction } from './SQLitePluginTransaction'
 import { PrimusAdaptor } from './PrimusAdaptor'
 
 export class SQLitePlugin {
+  lastQueryQueue = []
   txLocks: Object
   nextTick = setImmediate
   dbname: string
@@ -146,7 +147,7 @@ export class SQLitePlugin {
       }
     }
     const execute = tx => {
-      window.lastQueryQueue.push([statement, params])
+      this.lastQueryQueue.push([statement, params])
       tx.executeSql(statement, params, mysuccess, myerror)
     }
     this.addTransaction(

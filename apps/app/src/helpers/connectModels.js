@@ -48,7 +48,7 @@ export default async function connectModels(models) {
         console.log('Last query queue:', window.lastQueryQueue)
         // window.location = window.location
       })
-      return connection
+      return { connection, client: Client }
     } catch (err) {
       console.log('connectModels Error: ', err)
     }

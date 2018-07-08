@@ -4,7 +4,7 @@
 
 "@babel/cli@7.0.0-beta.47":
   version "7.0.0-beta.47"
-  resolved "http://registry.npmjs.org/@babel%2fcli/-/cli-7.0.0-beta.47.tgz#e00cc40ffd9084a5243c8fbded3f5049bc970e4c"
+  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.0.0-beta.47.tgz#e00cc40ffd9084a5243c8fbded3f5049bc970e4c"
   dependencies:
     commander "^2.8.1"
     convert-source-map "^1.1.0"
@@ -31,7 +31,7 @@
 
 "@babel/core@7.0.0-beta.47":
   version "7.0.0-beta.47"
-  resolved "http://registry.npmjs.org/@babel%2fcore/-/core-7.0.0-beta.47.tgz#b9c164fb9a1e1083f067c236a9da1d7a7d759271"
+  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.0.0-beta.47.tgz#b9c164fb9a1e1083f067c236a9da1d7a7d759271"
   dependencies:
     "@babel/code-frame" "7.0.0-beta.47"
     "@babel/generator" "7.0.0-beta.47"
@@ -243,7 +243,7 @@
 
 "@babel/helpers@7.0.0-beta.47":
   version "7.0.0-beta.47"
-  resolved "http://registry.npmjs.org/@babel%2fhelpers/-/helpers-7.0.0-beta.47.tgz#f9b42ed2e4d5f75ec0fb2e792c173e451e8d40fd"
+  resolved "https://registry.yarnpkg.com/@babel/helpers/-/helpers-7.0.0-beta.47.tgz#f9b42ed2e4d5f75ec0fb2e792c173e451e8d40fd"
   dependencies:
     "@babel/template" "7.0.0-beta.47"
     "@babel/traverse" "7.0.0-beta.47"
@@ -750,7 +750,7 @@
 
 "@babel/runtime@7.0.0-beta.47":
   version "7.0.0-beta.47"
-  resolved "http://registry.npmjs.org/@babel%2fruntime/-/runtime-7.0.0-beta.47.tgz#273f5e71629e80f6cbcd7507503848615e59f7e0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.47.tgz#273f5e71629e80f6cbcd7507503848615e59f7e0"
   dependencies:
     core-js "^2.5.3"
     regenerator-runtime "^0.11.1"
@@ -5286,7 +5286,7 @@ methods@~1.1.2:
 
 micromatch@^2.3.11, micromatch@^2.3.7:
   version "2.3.11"
-  resolved "http://registry.npmjs.org/micromatch/-/micromatch-2.3.11.tgz#86677c97d1720b363431d04d0d15293bd38c1565"
+  resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-2.3.11.tgz#86677c97d1720b363431d04d0d15293bd38c1565"
   dependencies:
     arr-diff "^2.0.0"
     array-unique "^0.2.1"

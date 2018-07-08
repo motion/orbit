@@ -714,6 +714,7 @@ export class Popover extends React.PureComponent {
     keepOpenOnClickTarget,
     onDidOpen,
     closeOnEsc,
+    theme,
     ...props
   }) {
     if (this.state.setPosition) {

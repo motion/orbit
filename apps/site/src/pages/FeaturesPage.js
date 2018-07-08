@@ -22,7 +22,7 @@ import {
 import SectionContent from '~/views/sectionContent'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as Constants from '~/constants'
 import Media from 'react-media'
 import Observer from '@researchgate/react-intersection-observer'
@@ -184,7 +184,7 @@ const SearchCallout = ({ isLarge }) => (
   </UI.Theme>
 )
 
-@UI.injectTheme
+@attachTheme
 @view
 export class SectionFeatureNewsSearch extends React.Component {
   state = {
@@ -439,7 +439,7 @@ export class SectionFeatureNewsSearch extends React.Component {
   }
 }
 
-@UI.injectTheme
+@attachTheme
 @view
 export class SectionFeatureIntelligence extends React.Component {
   state = {
@@ -556,7 +556,7 @@ export class SectionFeatureIntelligence extends React.Component {
   }
 }
 
-@UI.injectTheme
+@attachTheme
 @view
 export class SectionSmartSidebar extends React.Component {
   render() {

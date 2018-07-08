@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
-import * as UI from '@mcro/ui'
+import { view, react, attachTheme } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import * as Constants from '../../constants'
 import { OrbitArrow } from './orbitArrow'
@@ -44,7 +43,7 @@ const showingAnimation = {
   },
 }
 
-@UI.injectTheme
+@attachTheme
 @view({
   store: FrameStore,
 })

@@ -1,13 +1,12 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import { Link } from '~/views'
 import SectionContent from '~/views/sectionContent'
 import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
-import * as UI from '@mcro/ui'
 
-@UI.injectTheme
+@attachTheme
 @view
 export class Header extends React.Component {
   render({ linkStyle, theme, scrollTo }) {

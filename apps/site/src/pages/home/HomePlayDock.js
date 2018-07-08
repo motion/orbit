@@ -1,6 +1,6 @@
 import * as React from 'react'
 import CountUp from 'react-countup'
-import { view, react, deep } from '@mcro/black'
+import { view, attachTheme, react, deep } from '@mcro/black'
 import * as Icons from '~/views/icons'
 import * as Constants from '~/constants'
 import { dockIcons } from './stageItems'
@@ -104,6 +104,7 @@ class DockPlayStore {
   }
 }
 
+@attachTheme
 @view({
   store: DockPlayStore,
 })

@@ -49,6 +49,10 @@ export default class SQLiteServer {
         break
       case 'backgroundExecuteSqlBatch':
         const queries = data.args[0].executes
+        if (!queries[0]) {
+          console.log('no queries')
+          return
+        }
         const sql = `${queries[0].sql}`
         if (sql === 'BEGIN TRANSACTION') {
           this.txLock = uid

@@ -65,7 +65,7 @@ setTimeout(() => {
 }, 100)
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(Gloss, styles) {
+export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
   const { baseStyles, options, css } = Gloss
   const tagNameOption = options.tagName
 
@@ -82,10 +82,10 @@ export default function fancyElementFactory(Gloss, styles) {
     return newStyle
   }
 
-  const addStyle = (finalStyles, theme, obj, key, val, checkTheme) => {
-    let style = obj[key]
+  const addStyle = (finalStyles, key, val, checkTheme) => {
+    let style = styleSheet[key]
     if (!style) {
-      style = obj.getRule ? obj.getRule(key) : obj[key]
+      style = styleSheet.getRule ? styleSheet.getRule(key) : styleSheet[key]
     }
     // dynamic
     if (style) {
@@ -95,9 +95,9 @@ export default function fancyElementFactory(Gloss, styles) {
         finalStyles.push(style)
       }
     }
-    if (checkTheme && theme) {
+    if (checkTheme && themeSheet) {
       const themeKey = `${key}--theme`
-      const themeStyle = theme.getRule(themeKey)
+      const themeStyle = themeSheet.getRule(themeKey)
       if (themeStyle) {
         finalStyles.push(themeStyle)
       }
@@ -122,10 +122,9 @@ export default function fancyElementFactory(Gloss, styles) {
     const name = !isTag ? `${type.name}` : `${type}`
     const finalProps: any = {}
     const finalStyles = []
-    const theme = this && this.theme
 
     if (name) {
-      addStyle(finalStyles, theme, styles, `${name}--${glossUID}`, null, true)
+      addStyle(finalStyles, `${name}--${glossUID}`, null, true)
     }
 
     let style
@@ -183,14 +182,7 @@ export default function fancyElementFactory(Gloss, styles) {
         if (baseStyles) {
           const isParentStyle = prop[1] === $
           if (isParentStyle) {
-            const inlineStyle = addStyle(
-              finalStyles,
-              theme,
-              styles,
-              prop.slice(2),
-              val,
-              false,
-            )
+            const inlineStyle = addStyle(finalStyles, prop.slice(2), val, false)
             if (inlineStyle) {
               style = { ...style, ...inlineStyle }
             }
@@ -198,11 +190,9 @@ export default function fancyElementFactory(Gloss, styles) {
           }
         }
         // $style={}
-        if (styles) {
+        if (styleSheet) {
           const inlineStyle = addStyle(
             finalStyles,
-            theme,
-            styles,
             `${prop.slice(1)}--${glossUID}`,
             val,
             true,

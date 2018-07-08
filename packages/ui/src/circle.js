@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 
-@view
+@view.ui
 export class Circle extends React.Component {
   static defaultProps = {
     size: 30,
@@ -18,6 +18,7 @@ export class Circle extends React.Component {
     onMouseEnter,
     onMouseLeave,
     getRef,
+    theme,
     ...props
   }) {
     const elProps = {
@@ -29,7 +30,6 @@ export class Circle extends React.Component {
       onMouseLeave,
       children,
     }
-
     return <circle ref={getRef} {...elProps} css={props} />
   }
 

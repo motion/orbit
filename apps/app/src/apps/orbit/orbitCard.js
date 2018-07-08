@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import { BitResolver } from '../../components/BitResolver'
@@ -120,7 +120,7 @@ const tinyProps = {
   },
 }
 
-@UI.injectTheme
+@attachTheme
 @view.attach('appStore', 'paneStore', 'orbitStore')
 @view({
   store: OrbitCardStore,

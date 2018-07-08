@@ -57,6 +57,7 @@ class RowPlain extends React.Component {
     color,
     itemProps: itemProps_,
     spaced,
+    theme,
     ...props
   }) {
     let itemProps = itemProps_

@@ -8,7 +8,7 @@ export class Avatar {
   }
 
   render() {
-    const { image, size, ...props } = this.props
+    const { image, size, theme, ...props } = this.props
 
     return (
       <avatar {...props}>

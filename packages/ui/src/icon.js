@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as React from 'react'
 import { Popover } from './popover'
 import iconNames from './iconNames'
@@ -42,6 +42,7 @@ const findMatch = name => {
 //   opacity?: number,
 // }
 
+@attachTheme
 @view.ui
 export class Icon extends React.PureComponent {
   static defaultProps = {
@@ -67,6 +68,7 @@ export class Icon extends React.PureComponent {
     width,
     height,
     padding,
+    theme,
     ...props
   }) {
     let content

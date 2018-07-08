@@ -73,31 +73,36 @@ export default function decor(
     allPlugins.push(plugin)
   }
 
-  const decorDecorator = <DecorCompiledDecorator<any>>function decorDecorator(
-    KlassOrOpts: Function | Object,
-    opts?: Object,
-  ) {
-    // optional: decorator-side props
-    if (typeof KlassOrOpts === 'object') {
-      return (NextKlass: Function) => decorDecorator(NextKlass, KlassOrOpts)
+  const decorDecorator = <DecorCompiledDecorator<any>>(
+    function decorDecorator(KlassOrOpts: Function | Object, opts?: Object) {
+      // BUGIFX: wrapHOC the component comes through again!
+      // @ts-ignore
+      if (KlassOrOpts._isHOC) {
+        return KlassOrOpts
+      }
+      // optional: decorator-side props
+      if (typeof KlassOrOpts === 'object') {
+        return (NextKlass: Function) => decorDecorator(NextKlass, KlassOrOpts)
+      }
+      let decoratedClass = KlassOrOpts
+      if (!decoratedClass) {
+        throw new Error('No class/function passed to decorator')
+      }
+      for (const plugin of allPlugins) {
+        decoratedClass =
+          plugin.decorator(decoratedClass, opts) || decoratedClass
+      }
+      // @ts-ignore
+      decoratedClass._isDecoratedClass = true
+      const ProxiedClass = new Proxy(decoratedClass, {
+        set(_, method, value) {
+          KlassOrOpts[method] = value
+          return true
+        },
+      })
+      return ProxiedClass
     }
-    let decoratedClass = KlassOrOpts
-    if (!decoratedClass) {
-      throw new Error('No class/function passed to decorator')
-    }
-    for (const plugin of allPlugins) {
-      decoratedClass = plugin.decorator(decoratedClass, opts) || decoratedClass
-    }
-    // @ts-ignore
-    decoratedClass._isDecoratedClass = true
-    const ProxiedClass = new Proxy(decoratedClass, {
-      set(_, method, value) {
-        KlassOrOpts[method] = value
-        return true
-      },
-    })
-    return ProxiedClass
-  }
+  )
 
   // to listen to plugin events
   decorDecorator.on = (a, b) => emitter.on(a, b)

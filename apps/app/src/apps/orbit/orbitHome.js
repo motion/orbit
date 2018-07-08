@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attachTheme } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Bit, Person } from '@mcro/models'
 import { SubTitle } from '../../views'
@@ -101,6 +101,7 @@ class OrbitHomeStore {
 
 const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
 
+@attachTheme
 @view({
   store: OrbitHomeStore,
 })

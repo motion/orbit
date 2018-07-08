@@ -4,6 +4,7 @@ export * from './helpers/log'
 export * from './helpers/mobx'
 export * from './helpers/deep'
 export { on } from '@mcro/helpers'
+export { attachTheme } from '@mcro/gloss'
 import * as Constants_ from './constants'
 export const Constants = Constants_
 export * from './helpers/debugState'

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, on } from '@mcro/black'
+import { view, on, attachTheme } from '@mcro/black'
 import * as _ from 'lodash'
 
 class DockedPaneStore {
@@ -46,6 +46,7 @@ class DockedPaneStore {
   }
 }
 
+@attachTheme
 @view.attach('paneStore')
 @view({
   store: DockedPaneStore,

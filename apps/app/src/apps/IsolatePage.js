@@ -14,7 +14,7 @@ const getItem = {
 @view
 export class IsolatePeek extends React.Component {
   render() {
-    getItem.gdocsSetting().then(bit => {
+    getItem.githubItem().then(bit => {
       App.actions.selectItem(bit, {
         top: window.innerHeight,
         left: window.innerHeight - 350,

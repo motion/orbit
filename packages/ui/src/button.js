@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { SizedSurface } from './sizedSurface'
-import { injectTheme } from './helpers/injectTheme'
 import { view } from '@mcro/black'
 
 @view.ui
-class ButtonPlain extends React.Component {
+export class Button extends React.Component {
+  static acceptsHovered = true
+
   render({
     badge,
     children,
@@ -104,7 +105,3 @@ class ButtonPlain extends React.Component {
     },
   }
 }
-
-export const Button = injectTheme(view.ui(ButtonPlain))
-
-Button.acceptsHovered = true

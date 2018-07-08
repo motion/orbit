@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import Media from 'react-media'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
@@ -46,7 +46,7 @@ const changeCaps = (str, reducePct) =>
         )
     : str
 
-export const Title = UI.injectTheme(
+export const Title = attachTheme(
   ({ theme, children, reduceCapsPct, italic, size = 4, ...props }) => (
     <Media query={Constants.screen.small}>
       {isSmall => (
@@ -76,7 +76,7 @@ export const Title = UI.injectTheme(
   ),
 )
 
-export const SubTitle = UI.injectTheme(({ theme, size = 3, ...props }) => (
+export const SubTitle = attachTheme(({ theme, size = 3, ...props }) => (
   <Media query={Constants.screen.small}>
     {isSmall => (
       <Title
@@ -211,7 +211,7 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
   </Media>
 )
 
-export const Border = UI.injectTheme(
+export const Border = attachTheme(
   ({ theme, width = 4, color, type = 'dotted', ...props }) => (
     <border
       css={{
@@ -233,7 +233,7 @@ export const Border = UI.injectTheme(
   ),
 )
 
-export const FadedArea = UI.injectTheme(
+export const FadedArea = attachTheme(
   ({ theme, fadeRight, fadeDown, fadeLeft, fadeBackground, children }) => (
     <>
       {children}
@@ -346,7 +346,7 @@ const Lines = ({ width = 100, height = 100, style }) => (
   </svg>
 )
 
-@UI.injectTheme
+@attachTheme
 @view
 export class Callout extends React.Component {
   render({ style, theme, ...props }) {
@@ -472,9 +472,10 @@ export const HalfSection = view('section', {
   },
 })
 
+@attachTheme
 @view.ui
 export class A extends React.Component {
-  render({ color, isLarge, active, ...props }) {
+  render({ color, isLarge, active, theme, ...props }) {
     return <a $active={active} {...props} />
   }
 

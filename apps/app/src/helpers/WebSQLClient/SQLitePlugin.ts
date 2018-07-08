@@ -22,7 +22,6 @@ export class SQLitePlugin {
 
   constructor(
     txLocks,
-    nextTick,
     openargs,
     openSuccess,
     openError,
@@ -35,7 +34,6 @@ export class SQLitePlugin {
     const dbname = openargs.name
     this.errorCb = errorCb
     this.txLocks = txLocks
-    this.nextTick = nextTick
     this.primusAdaptor = primusAdaptor
     this.openargs = openargs
     this.dbname = dbname

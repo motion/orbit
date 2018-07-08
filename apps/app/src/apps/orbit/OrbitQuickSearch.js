@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 // import { App } from '@mcro/stores'
 import { OrbitIcon } from './orbitIcon'
 
@@ -7,6 +7,7 @@ const iconSize = 38
 const iconPad = 15
 const pad = 0
 
+@attachTheme
 @view
 class OrbitQuickItem extends React.Component {
   render({ item, appStore, index }) {
@@ -62,6 +63,7 @@ class OrbitQuickItem extends React.Component {
       whiteSpace: 'nowrap',
     },
   }
+
   static theme = (_, theme) => {
     return {
       active: {
@@ -71,6 +73,7 @@ class OrbitQuickItem extends React.Component {
   }
 }
 
+@attachTheme
 @view.attach('appStore')
 @view
 export class OrbitQuickSearch extends React.Component {
@@ -78,7 +81,7 @@ export class OrbitQuickSearch extends React.Component {
     return null
     console.log('quick search it up', appStore.quickSearchResults)
     return (
-      <quickSearch>
+      <div $quickSearch>
         {appStore.quickSearchResults.map((item, index) => (
           <OrbitQuickItem
             key={`${item.id}${index}`}
@@ -87,7 +90,7 @@ export class OrbitQuickSearch extends React.Component {
             index={index}
           />
         ))}
-      </quickSearch>
+      </div>
     )
   }
   static style = {
@@ -105,6 +108,7 @@ export class OrbitQuickSearch extends React.Component {
       margin: [0, -14],
     },
   }
+
   static theme = (_, theme) => {
     return {
       borderBottom: [1, theme.hover.background],

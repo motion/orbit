@@ -17,6 +17,7 @@ export class Select extends React.Component {
       className,
       background,
       sync,
+      theme,
       ...props
     } = this.props
 

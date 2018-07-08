@@ -1,11 +1,21 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/orbitIcon'
 
-@view.attach('peekStore')
+const TitleBar = view(
+  'div',
+  {
+    background: 'yellow',
+  },
+  (props, theme) => ({
+    background: theme.base.background,
+  }),
+)
+
+@attachTheme
 @view
-export class PeekHeader extends React.Component {
+export class PeekHeaderContent extends React.Component {
   onHeader = ref => {
     if (!ref) return
     console.log('setting client height', ref.clientHeight)
@@ -31,6 +41,7 @@ export class PeekHeader extends React.Component {
             },
           }}
         />
+        <TitleBar>{title}</TitleBar>
         <title if={title}>
           <chromeSpace if={peekStore.hasHistory} />
           <titles>
@@ -69,14 +80,9 @@ export class PeekHeader extends React.Component {
       justifyContent: 'center',
       position: 'relative',
       zIndex: 100,
-      // borderBottom: [1, [0, 0, 0, 0.025]],
-      padding: 15,
     },
     titles: {
       marginRight: 25,
-    },
-    chromeSpace: {
-      // width: 30,
     },
     title: {
       flex: 1,
@@ -91,10 +97,6 @@ export class PeekHeader extends React.Component {
       opacity: 0.8,
     },
     date: { opacity: 0.5, fontSize: 14 },
-    orbitInput: {
-      width: '100%',
-      // background: 'red',
-    },
     after: {
       alignSelf: 'flex-end',
     },
@@ -107,7 +109,25 @@ export class PeekHeader extends React.Component {
       width: 7,
     },
     permalink: {
-      opacity: 0.5,
+      opacity: 0.75,
     },
   }
+
+  static theme = (props, theme) => {
+    console.log('peek theme is', theme)
+    return {
+      header: {
+        background: theme.base.background,
+        '&:hover': {
+          background: theme.active.background,
+        },
+      },
+    }
+  }
 }
+
+export const PeekHeader = view.attach('peekStore')(props => (
+  <UI.Theme theme={props.peekStore.theme || 'blue'}>
+    <PeekHeaderContent {...props} />
+  </UI.Theme>
+))

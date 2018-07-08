@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, on } from '@mcro/black'
+import { view, react, on, attachTheme } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
@@ -63,6 +63,7 @@ class OrbitContextHomeStore {
   )
 }
 
+@attachTheme
 @view.attach('appStore', 'paneStore')
 @view({
   store: OrbitContextHomeStore,

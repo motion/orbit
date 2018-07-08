@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Theme } from './helpers/theme'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import $ from 'color'
 import { Icon } from './icon'
 import { HoverGlow } from './effects/hoverGlow'
@@ -107,8 +107,9 @@ const hasChildren = children =>
     ? children.reduce((a, b) => a || !!b, false)
     : !!children
 
+@attachTheme
 @view.ui
-class SurfacePlain extends React.Component {
+export class Surface extends React.Component {
   static contextTypes = {
     provided: object,
   }
@@ -203,7 +204,6 @@ class SurfacePlain extends React.Component {
       style,
       tagName,
       textAlign,
-      theme,
       tooltip,
       tooltipProps,
       width,
@@ -214,6 +214,7 @@ class SurfacePlain extends React.Component {
       backgroundAlpha,
       activeStyle,
       sizeLineHeight,
+      theme,
       ...props
     } = this.props
     const hasIconBefore = icon && !iconAfter
@@ -312,8 +313,7 @@ class SurfacePlain extends React.Component {
         </Theme>
       </>
     )
-
-    const surface = (
+    return (
       <surface
         className={`${this.uniq} ${className || ''}`}
         onClick={onClick}
@@ -328,12 +328,6 @@ class SurfacePlain extends React.Component {
         {!after && contents}
       </surface>
     )
-
-    if (theme) {
-      return <Theme name={theme}>{surface}</Theme>
-    }
-
-    return surface
   }
 
   static style = {
@@ -399,8 +393,7 @@ class SurfacePlain extends React.Component {
   }
 
   static theme = (props, theme, self) => {
-    const uiContext = self.uiContext
-
+    const uiContext = null
     // sizes
     const size = props.size === true ? 1 : props.size || 1
     const height = props.height || (props.style && props.style.height)
@@ -725,5 +718,3 @@ class SurfacePlain extends React.Component {
     return result
   }
 }
-
-export const Surface = view.ui(SurfacePlain)

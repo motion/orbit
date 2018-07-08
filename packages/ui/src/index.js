@@ -1,6 +1,6 @@
 // helpers
 export { default as color } from 'color'
-export { ThemeProvide } from '@mcro/gloss'
+export { ThemeProvide, ThemeContext } from '@mcro/gloss'
 
 export * from './helpers/parentSize'
 export * from './helpers/themeMaker'
@@ -8,7 +8,6 @@ export * from './helpers/theme'
 export * from './helpers/passProps'
 export * from './helpers/offset'
 export * from './helpers/portal'
-export * from './helpers/injectTheme'
 export * from './helpers/getTarget'
 export * from './helpers/keycode'
 

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome'
 import { OrbitSettings } from './orbitSettings'
@@ -14,7 +14,7 @@ const borderRadius = 14
 const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.3]]
 
-@UI.injectTheme
+@attachTheme
 @view.attach('appStore', 'orbitStore')
 @view.provide({
   paneStore: OrbitDockedPaneStore,

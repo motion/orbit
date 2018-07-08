@@ -340,7 +340,6 @@ export class OrbitCard extends React.Component {
       overflow: 'hidden',
       position: 'relative',
       maxHeight: '100%',
-      transition: 'all ease-in 80ms',
       padding: [16, 18],
       transform: {
         z: 0,
@@ -420,8 +419,8 @@ export class OrbitCard extends React.Component {
       }
     } else {
       // CARD
-      const borderHover = UI.color('rgb(51.3%, 65.7%, 88.6%)')
-      const borderActive = borderHover.lighten(0.1)
+      const borderHover = UI.color('rgb(64.8%, 74%, 88.6%)')
+      const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
       card = {
         ...card,
         borderRadius,
@@ -451,7 +450,7 @@ export class OrbitCard extends React.Component {
       card,
       preview: {
         margin: inGrid ? ['auto', 0] : 0,
-        padding: [8, 0, 0],
+        padding: [8, 0],
       },
       previewText: {
         margin: inGrid ? ['auto', 0] : 0,

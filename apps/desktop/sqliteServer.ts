@@ -82,7 +82,7 @@ export default class SQLiteServer {
       })
       await this.runQueries(id, spark, queryArray, accumAnswer)
     } catch (err) {
-      console.error('sqlite server err at', Date.now())
+      console.error('sqlite server err')
       Desktop.setState({
         lastSQLError: Date.now(),
       })

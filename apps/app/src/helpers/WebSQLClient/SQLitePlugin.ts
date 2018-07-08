@@ -27,11 +27,13 @@ export class SQLitePlugin {
     openSuccess,
     openError,
     primusAdaptor,
+    errorCb,
   ) {
     if (!(openargs && openargs.name)) {
       throw new Error('Cannot create a SQLitePlugin instance without a db name')
     }
     const dbname = openargs.name
+    this.errorCb = errorCb
     this.txLocks = txLocks
     this.nextTick = nextTick
     this.primusAdaptor = primusAdaptor

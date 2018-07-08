@@ -24,6 +24,9 @@ class DockedPaneStore {
       return
     }
     const lastNode = _.last(Array.from(node.children))
+    if (!lastNode) {
+      return
+    }
     const innerHeight = lastNode.offsetTop + lastNode.clientHeight
     const scrolledTo = node.scrollTop + node.clientHeight
     if (innerHeight <= scrolledTo) {

@@ -4,8 +4,11 @@ import macosVersion from 'macos-version'
 import electronUtil from 'electron-util/node'
 import { Server } from 'ws'
 import killPort from 'kill-port'
-import monitorScreenProcess from './monitorProcess'
+// import monitorScreenProcess from './monitorProcess'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
+import debug from '@mcro/debug'
+
+const log = debug('oracle')
 
 // swift itself
 // and the swiftBridge
@@ -349,7 +352,7 @@ export default class Oracle {
       const out = data.trim()
       const isPurposefulLog = out[0] === '!'
       if (isPurposefulLog || isLikelyError) {
-        console.log('swift >', out.slice(1))
+        log('swift >', out.slice(1))
         return
       }
       if (data.indexOf('<Notice>')) {

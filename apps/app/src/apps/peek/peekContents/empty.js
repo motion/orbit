@@ -12,12 +12,12 @@ export const Empty = ({ bit = EMPTY_BIT }) => (
       src={`/icons/${bit.icon}`}
       css={{ width: 64, height: 64 }}
     />
-    <UI.Title size={2} fontWeight={600}>
+    <UI.Text size={2} fontWeight={600}>
       {bit.title}
-    </UI.Title>
-    <UI.Title if={bit.subtitle} size={1}>
+    </UI.Text>
+    <UI.Text if={bit.subtitle} size={1}>
       {bit.subtitle}
-    </UI.Title>
+    </UI.Text>
     <UI.Text if={bit.content} css={{ marginTop: 20 }} size={1}>
       {bit.context.map(({ active, text }) => (
         <UI.Text $sentence opacity={active ? 1 : 0.2}>

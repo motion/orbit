@@ -18,6 +18,7 @@ export default async function connectModels(models) {
 
     // we patch this to get typeorm to communicate with backend
     // see desktop/sqliteServer.ts
+    // @ts-ignore
     window.sqlitePlugin = Client.getPlugin()
 
     // ensure on refresh we close out transactions{}
@@ -42,7 +43,6 @@ export default async function connectModels(models) {
         location: 'default',
         entities: models,
         // logging: true,
-        autoSchemaSync: true,
         synchronize: true,
       })
       clearTimeout(connectTm)

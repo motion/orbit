@@ -34,7 +34,7 @@ export class PeekHeader extends React.Component {
         <title if={title}>
           <chromeSpace if={peekStore.hasHistory} />
           <titles>
-            <UI.Title
+            <UI.Text
               $titleMain
               size={1.3}
               fontWeight={700}
@@ -43,10 +43,10 @@ export class PeekHeader extends React.Component {
               lineHeight="1.5rem"
             >
               {title}
-            </UI.Title>
-            <UI.Title if={subtitle} size={1} ellipse={1} $subtitle>
+            </UI.Text>
+            <UI.Text if={subtitle} size={1} ellipse={1} $subtitle>
               {subtitle} <UI.Date>{date}</UI.Date>
-            </UI.Title>
+            </UI.Text>
           </titles>
         </title>
         <after>

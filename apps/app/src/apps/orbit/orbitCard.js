@@ -427,12 +427,12 @@ export class OrbitCard extends React.Component {
         borderRadius,
         background: theme.selected.background,
         boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
-        border: [2, '#fff'],
+        border: [1, '#fff'],
         '&:hover': {
-          border: [2, borderHover],
+          border: [1, borderHover],
         },
         '&:active': {
-          border: [2, borderActive],
+          border: [1, borderActive],
         },
       }
       if (isSelected) {

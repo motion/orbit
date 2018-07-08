@@ -111,7 +111,6 @@ export default class Gloss {
       return () => this.createElement('div', { children: 'Error Component' })
     }
     if (!Child.prototype || !Child.prototype.render) {
-      console.log('not a class', Child)
       return
     }
     const { css, attachStyles } = this

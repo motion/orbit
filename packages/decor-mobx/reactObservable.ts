@@ -4,7 +4,7 @@ export function reactObservable() {
   return {
     name: 'observer',
     once: true,
-    onlyClass: true,
+    // onlyClass: true,
     decorator: Klass => {
       return observer(Klass)
     },

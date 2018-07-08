@@ -25,7 +25,11 @@ const uiContext = [
   },
 ]
 
-const glossPlugin = () => ({ decorator })
+const glossPlugin = () => ({
+  onlyClass: true,
+  decorator,
+})
+
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
   enable.ui && uiContext,
@@ -54,6 +58,7 @@ export interface ViewDecorator {
 
 function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(item, ...args) {
+    // view('div', { ...styles })
     if (typeof item === 'string') {
       return decorator(item, ...args)
     }

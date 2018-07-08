@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ControlButton } from '~/views/controlButton'
+import { ControlButton } from '~/views/ControlButton'
 
 export const WindowControls = ({
   onClose,

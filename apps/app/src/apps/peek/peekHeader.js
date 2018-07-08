@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from '~/apps/orbit/orbitIcon'
+import { OrbitIcon } from '../../apps/orbit/orbitIcon'
 
 @view.attach('peekStore')
 @view

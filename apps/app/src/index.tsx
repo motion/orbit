@@ -1,10 +1,10 @@
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
-import './createElement'
+import './helpers/createElement'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject.js'
 import * as Constants from './constants'
-import { App } from './App'
+import { Root } from './Root'
 import * as UI from '@mcro/ui'
 import { ThemeProvide } from '@mcro/ui'
 import * as React from 'react'
@@ -30,20 +30,22 @@ if (Constants.IS_PROD) {
 // hmr calls render twice out the gate
 // so prevent that
 const render = throttle(async () => {
+  // Root is the topmost store essentially
+  // We export it so you can access a number of helpers
   if (!window['Root']) {
     console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
     console.timeEnd('splash')
-    const app = new App()
-    window['Root'] = app
-    await app.start()
+    const rootStore = new Root()
+    window['Root'] = rootStore
+    await rootStore.start()
   }
-  const RootComponent = require('./root').default
+  const { RootViewHMR } = require('./RootViewHMR')
   // <React.unstable_AsyncMode>
   // </React.unstable_AsyncMode>
   ReactDOM.render(
     <ThemeProvide {...Themes}>
       <UI.Theme name="light">
-        <RootComponent />
+        <RootViewHMR />
       </UI.Theme>
     </ThemeProvide>,
     document.querySelector('#app'),

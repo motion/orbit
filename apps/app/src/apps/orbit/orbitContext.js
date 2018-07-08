@@ -6,7 +6,7 @@ import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitHeader } from './orbitHeader'
 import { App } from '@mcro/stores'
 import { OrbitContextHome } from './orbitContextHome'
-import * as Constants from '~/constants'
+import * as Constants from '../../constants'
 
 class PaneStore {
   get activePane() {

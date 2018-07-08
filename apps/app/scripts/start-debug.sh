@@ -1,4 +1,5 @@
 #!/bin/bash
+
 npx nodemon \
   --quiet \
   --watch $(realpath node_modules/@mcro/dev) \

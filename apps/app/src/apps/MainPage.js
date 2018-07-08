@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 // import { HighlightsPage } from './HighlightsPage'
 import { OrbitPage } from './OrbitPage'
 import { PeekPage } from './PeekPage'
-import { AppStore } from '~/stores/AppStore'
+import { AppStore } from '../stores/AppStore'
 
 @view.provide({
   appStore: AppStore,

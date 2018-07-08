@@ -4,7 +4,7 @@ import { Bit } from '@mcro/models'
 import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { throttle } from 'lodash'
-import { Title, SubTitle } from '~/views'
+import { Title, SubTitle } from '../../views'
 import { Desktop, App } from '@mcro/stores'
 
 const OrbitContextHeader = () => (

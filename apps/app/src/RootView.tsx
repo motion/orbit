@@ -4,7 +4,7 @@ import { NotFound } from './views/notFound'
 import Router from './router'
 import { view } from '@mcro/black'
 
-class Root extends React.Component {
+export class RootView extends React.Component {
   state = {
     error: null,
   }
@@ -92,5 +92,3 @@ if (module.hot && module.hot.addStatusHandler) {
     })
   }
 }
-
-export default Root

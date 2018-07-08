@@ -4,10 +4,10 @@
   "version": "2.1.0",
   "main": "src/index.js",
   "scripts": {
-    "start": "./start.sh",
+    "start": "./scripts/start.sh",
     "start-prod": "static-server -p 3002 -n dist/index.html dist",
     "build-app": "NODE_ENV=production mcro-build --prod",
-    "deploy": "./deploy.sh"
+    "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.47",

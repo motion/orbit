@@ -2,12 +2,12 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
-import { BitResolver } from '~/components/BitResolver'
-import { SmallLink } from '~/views'
-import { TimeAgo } from '~/views/TimeAgo'
-import * as BitActions from '~/actions/BitActions'
+import { BitResolver } from '../../components/BitResolver'
+import { SmallLink } from '../../views'
+import { TimeAgo } from '../../views/TimeAgo'
+import * as BitActions from '../../actions/BitActions'
 import { App } from '@mcro/stores'
-import { PeopleRow } from '~/components/PeopleRow'
+import { PeopleRow } from '../../components/PeopleRow'
 
 let loggers = []
 let nextLog = null

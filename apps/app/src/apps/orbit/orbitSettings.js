@@ -2,14 +2,14 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { OrbitSettingCard } from './orbitSettingCard'
 import { OrbitDockedPane } from './orbitDockedPane'
-import * as Views from '~/views'
+import * as Views from '../../views'
 import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import {
   settingToResult,
   allIntegrations,
 } from './orbitSettings/orbitSettingsIntegrations'
 import { modelQueryReaction } from '@mcro/helpers'
-import { Masonry } from '~/views/masonry'
+import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
 
 class OrbitSettingsStore {

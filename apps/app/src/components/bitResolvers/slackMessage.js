@@ -1,10 +1,10 @@
 import * as React from 'react'
 // import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { RoundButton } from '~/views'
+import { RoundButton } from '../../views'
 import slackDown from '@mcro/slackdown'
-import { getSlackDate } from '~/helpers'
-import { TimeAgo } from '~/views/TimeAgo'
+import { getSlackDate } from '../../helpers'
+import { TimeAgo } from '../../views/TimeAgo'
 import { App } from '@mcro/stores'
 
 @view

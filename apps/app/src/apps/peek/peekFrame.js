@@ -2,8 +2,8 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
-import { WindowControls } from '~/views/windowControls'
-import * as Constants from '~/constants'
+import { WindowControls } from '../../views/WindowControls'
+import * as Constants from '../../constants'
 
 const SHADOW_PAD = 80
 const borderRadius = 10

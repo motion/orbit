@@ -18,4 +18,6 @@ export function runRouter() {
 
 runRouter()
 
+// is something you can import directly
+// TODO clean this up a lot
 export default AppRouter

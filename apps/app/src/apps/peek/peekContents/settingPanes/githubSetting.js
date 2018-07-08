@@ -2,11 +2,11 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
-import { Bits } from '~/views/bits'
+import { Bits } from '../../../../views/Bits'
 import { Tabs, Tab, SearchableTable } from '@mcro/sonar'
-import { TimeAgo } from '~/views/TimeAgo'
+import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
-import { ReactiveCheckBox } from '~/views/ReactiveCheckBox'
+import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 
 const columnSizes = {
   repo: 'flex',

@@ -5,9 +5,9 @@ import { App } from '@mcro/stores'
 import { Person } from '@mcro/models'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitCard } from './orbitCard'
-import { Masonry } from '~/views/masonry'
-import { SubTitle } from '~/views'
-import * as Helpers from '~/helpers'
+import { Masonry } from '../../views/Masonry'
+import { SubTitle } from '../../views'
+import * as Helpers from '../../helpers'
 
 class OrbitDirectoryStore {
   setGetResults = react(

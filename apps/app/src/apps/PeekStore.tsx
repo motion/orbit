@@ -1,7 +1,8 @@
-import { react } from '@mcro/black'
+import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../helpers'
+import * as Constants from '../constants'
 
 const TYPE_THEMES = {
   person: 'orange',
@@ -19,7 +20,7 @@ const INTEGRATION_THEMES = {
 
 export class PeekStore {
   tornState = null
-  moving = false
+  dragOffset: [number, number] = null
   history = []
 
   get theme() {
@@ -76,9 +77,6 @@ export class PeekStore {
   )
 
   get curState() {
-    if (this.tornState) {
-      return this.tornState
-    }
     if (this.props.fixed) {
       return App.peekState
     }
@@ -89,6 +87,36 @@ export class PeekStore {
       return App.peekState
     }
     return null
+  }
+
+  get framePosition() {
+    const { willShow, willStayShown, willHide, state } = this
+    if (!state) {
+      return [0, 0]
+    }
+    const { docked, orbitOnLeft } = App.orbitState
+    const onRight = state && !state.peekOnLeft
+    // determine x adjustments
+    let peekAdjustX = 0
+    // adjust for orbit arrow blank
+    if (!docked && orbitOnLeft && !onRight) {
+      peekAdjustX -= Constants.SHADOW_PAD
+    }
+    // small adjust to overlap
+    peekAdjustX += onRight ? -2 : 2
+    const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
+    let position = state.position
+    if (this.tornState) {
+      position = this.tornState.position
+    }
+    let x = position[0] + peekAdjustX
+    let y = position[1] + animationAdjust
+    if (this.dragOffset) {
+      const [xOff, yOff] = this.dragOffset
+      x += xOff
+      y += yOff
+    }
+    return [x, y]
   }
 
   updateHistory = react(
@@ -130,21 +158,19 @@ export class PeekStore {
 
   onDragStart = e => {
     e.preventDefault()
-    this.tornState = {
-      ...this.state,
-    }
-    this.moving = true
-  }
-
-  onDrag = e => {
-    e.preventDefault()
-    e.persist()
-    console.log('e', e.clientX, e.clientY)
-    // this.tornPosition = [100, 100]
-  }
-
-  onDragEnd = e => {
-    e.preventDefault()
-    this.moving = false
+    this.tornState = { ...this.state }
+    let dragAdjust = null
+    const offMove = on(this, window, 'mousemove', e => {
+      // set initial offset of mouse from frame
+      if (!dragAdjust) {
+        dragAdjust = [e.clientX, e.clientY]
+      }
+      const [adjX, adjY] = dragAdjust
+      this.dragOffset = [e.clientX - adjX, e.clientY - adjY]
+    })
+    const offUp = on(this, window, 'mouseup', e => {
+      offMove()
+      offUp()
+    })
   }
 }

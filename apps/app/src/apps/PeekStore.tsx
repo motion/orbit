@@ -4,11 +4,22 @@ import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../helpers'
 
 export class PeekStore {
+  torn = false
+  moving = false
+  tornPosition = []
   history = []
 
   get hasHistory() {
     return this.history.length > 1
   }
+
+  unTear = react(
+    () => this.willHide,
+    async (_, { sleep }) => {
+      await sleep(100)
+      this.torn = false
+    },
+  )
 
   model = react(
     () => App.peekState.item,
@@ -51,6 +62,7 @@ export class PeekStore {
     }
     return null
   }
+
   updateHistory = react(
     () => this.curState,
     state => {
@@ -67,6 +79,12 @@ export class PeekStore {
     let state = this.curState
     if (this.willHide) {
       state = this.lastState
+    }
+    if (this.torn) {
+      return {
+        ...state,
+        position: this.tornPosition,
+      }
     }
     return state
   }
@@ -87,4 +105,20 @@ export class PeekStore {
   willStayShown = react(() => this.willShow, _ => _, {
     delay: 16,
   })
+
+  onDragStart = () => {
+    this.torn = true
+    this.moving = true
+    this.tornPosition = [...this.curState.position]
+  }
+
+  onDrag = e => {
+    e.persist()
+    console.log('e', e.clientX, e.clientY)
+    // this.tornPosition = [100, 100]
+  }
+
+  onDragEnd = () => {
+    this.moving = false
+  }
 }

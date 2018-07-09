@@ -41,14 +41,13 @@ const PeekChrome = view({
   zIndex: 100000,
 })
 
-@view.attach('peekStore')
-@view
-export class PeekFrame extends React.Component {
-  props: {
-    peekStore: PeekStore
-  }
+type PeekFrameProps = {
+  peekStore: PeekStore
+  children: any
+}
 
-  render({ peekStore, children, ...props }) {
+export const PeekFrame = view.attach('peekStore')(
+  view(({ peekStore, children, ...props }: PeekFrameProps) => {
     const { willShow, willHide, state, willStayShown } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {
       return null
@@ -126,7 +125,15 @@ export class PeekFrame extends React.Component {
           }}
         />
         <UI.Col flex={1} padding={padding} margin={margin}>
-          <UI.Col pointerEvents="all !important" position="relative" flex={1}>
+          <UI.Col
+            draggable
+            onDragStart={peekStore.onDragStart}
+            onDrag={peekStore.onDrag}
+            onDragEnd={peekStore.onDragEnd}
+            pointerEvents="all !important"
+            position="relative"
+            flex={1}
+          >
             <WindowControls
               itemProps={{
                 style: {
@@ -184,5 +191,5 @@ export class PeekFrame extends React.Component {
         </UI.Col>
       </UI.Col>
     )
-  }
-}
+  }),
+)

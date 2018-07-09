@@ -125,14 +125,12 @@ export default class Gloss {
     const elementCache = new WeakMap()
     let themeUpdate
     const View = <GlossView>attachTheme(props => {
-      console.log('check em', props, View, View.theme)
       // basically PureRender for stylsheet updates
       if (elementCache.has(props)) {
         return elementCache.get(props)
       }
       // attach theme on first use
       if (View.theme && !themeUpdate) {
-        console.log('has a theme!', View.theme)
         themeUpdate = this.createThemeManager(id, View.theme)
       }
       // update theme
@@ -159,6 +157,7 @@ export default class Gloss {
     const selectors = {}
     return (props, self) => {
       if (!props.theme) {
+        console('no theme', props)
         return
       }
       const childTheme = getTheme(props, self)

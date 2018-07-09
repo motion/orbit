@@ -14,7 +14,13 @@ export interface ViewDecorator {
   <A>(a: A): A
 }
 
-export function view<T>(a: T): T
+export interface PotentiallyView {
+  new (a: Object): any
+}
+
+export function view<T>(
+  a: T,
+): T & { theme?: Object; displayName?: string } & PotentiallyView
 export namespace view {
   export function on(
     name: string | Object,

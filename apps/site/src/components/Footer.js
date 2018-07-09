@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import SectionContent from '~/views/sectionContent'
-import { Section, Link, Title, P } from '~/views'
+import { Link, Title, P } from '~/views'
 import { BrandLogo, Join } from '~/components'
 import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
@@ -17,7 +17,7 @@ const SmallTitle = props => (
   />
 )
 
-@UI.injectTheme
+@attachTheme
 @view
 export class Footer extends React.Component {
   render({ theme, noCallToAction }) {

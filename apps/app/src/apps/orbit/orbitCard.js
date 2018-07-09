@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './orbitIcon'
 import { BitResolver } from '../../components/BitResolver'
@@ -120,11 +120,12 @@ const tinyProps = {
   },
 }
 
-@UI.injectTheme
+@attachTheme
 @view.attach('appStore', 'paneStore', 'orbitStore')
-@view({
+@view.attach({
   store: OrbitCardStore,
 })
+@view
 export class OrbitCard extends React.Component {
   static defaultProps = {
     borderRadius: 7,
@@ -340,7 +341,6 @@ export class OrbitCard extends React.Component {
       overflow: 'hidden',
       position: 'relative',
       maxHeight: '100%',
-      transition: 'all ease-in 80ms',
       padding: [16, 18],
       transform: {
         z: 0,
@@ -379,10 +379,15 @@ export class OrbitCard extends React.Component {
     },
   }
 
-  static theme = (
-    { style, store, listItem, borderRadius, inGrid, hoverable },
+  static theme = ({
+    style,
+    store,
+    listItem,
+    borderRadius,
+    inGrid,
+    hoverable,
     theme,
-  ) => {
+  }) => {
     const { isSelected } = store
     let hoveredStyle
     let card = {
@@ -420,8 +425,8 @@ export class OrbitCard extends React.Component {
       }
     } else {
       // CARD
-      const borderHover = UI.color('rgb(51.3%, 65.7%, 88.6%)')
-      const borderActive = borderHover.lighten(0.1)
+      const borderHover = UI.color('rgb(64.8%, 74%, 88.6%)')
+      const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
       card = {
         ...card,
         borderRadius,
@@ -451,7 +456,7 @@ export class OrbitCard extends React.Component {
       card,
       preview: {
         margin: inGrid ? ['auto', 0] : 0,
-        padding: [8, 0, 0],
+        padding: [8, 0],
       },
       previewText: {
         margin: inGrid ? ['auto', 0] : 0,

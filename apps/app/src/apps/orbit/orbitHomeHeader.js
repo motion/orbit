@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-@UI.injectTheme
+@attachTheme
 @view
 export class OrbitHomeHeader extends React.Component {
   render({ paneStore, theme }) {
@@ -11,7 +11,7 @@ export class OrbitHomeHeader extends React.Component {
       size: 1.1,
       circular: true,
       borderWidth: 1,
-      margin: [0, 0, 0, 4],
+      margin: [0, 0, 0, 6],
       borderColor: 'transparent',
       background: 'transparent',
       iconProps: {

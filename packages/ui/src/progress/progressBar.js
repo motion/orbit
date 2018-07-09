@@ -16,7 +16,7 @@ export class ProgressBar extends React.Component {
     percent: 0,
   }
 
-  render({ percent, color, background, width, ...props }) {
+  render({ percent, color, background, width, theme, ...props }) {
     return (
       <outer $width={width} {...props}>
         <inner $percent={+percent} $color={color} />
@@ -44,7 +44,7 @@ export class ProgressBar extends React.Component {
     }),
   }
 
-  static theme = ({ color, background }, theme) => ({
+  static theme = ({ color, background, theme }) => ({
     outer: {
       background:
         background || theme.base.background

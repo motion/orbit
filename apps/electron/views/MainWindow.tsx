@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as Constants from '../constants'
-import { on, view, Component, isEqual, react } from '@mcro/black'
+import { on, view, isEqual, react } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '../helpers'
 import { App, Electron, Desktop } from '@mcro/stores'
@@ -29,7 +29,7 @@ class MainStore {
   store: MainStore,
 })
 @view.electron
-export class MainWindow extends Component {
+export class MainWindow extends React.Component {
   props: {
     store: MainStore
     electronStore: ElectronStore

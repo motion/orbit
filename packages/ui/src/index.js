@@ -1,6 +1,6 @@
 // helpers
 export { default as color } from 'color'
-export { ThemeProvide } from '@mcro/gloss'
+export { ThemeProvide, ThemeContext } from '@mcro/gloss'
 
 export * from './helpers/parentSize'
 export * from './helpers/themeMaker'
@@ -8,9 +8,16 @@ export * from './helpers/theme'
 export * from './helpers/passProps'
 export * from './helpers/offset'
 export * from './helpers/portal'
-export * from './helpers/injectTheme'
 export * from './helpers/getTarget'
 export * from './helpers/keycode'
+
+// building blocks
+export * from './blocks/block'
+export * from './blocks/col'
+export * from './blocks/grid'
+export * from './blocks/inline'
+export * from './blocks/inlineBlock'
+export * from './blocks/row'
 
 // base
 export * from './arrow'
@@ -21,11 +28,11 @@ export * from './drawer'
 export * from './dropdown'
 export * from './ellipse'
 export * from './contextMenu'
+export * from './listRow'
 export * from './list'
 export * from './listItem'
 export * from './icon'
 export * from './modal'
-export * from './row'
 export * from './text'
 export * from './popover'
 export * from './progress'

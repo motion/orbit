@@ -8,6 +8,8 @@ import {
 import { Color } from './types'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 
+export const cssNameMap = CAMEL_TO_SNAKE
+
 // exports
 export { Transform, Color } from './types'
 export * from './helpers'

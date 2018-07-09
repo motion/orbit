@@ -142,9 +142,10 @@ class AtlassianSettingLoginStore {
   // autoSave = debounce(this.save, 400)
 }
 
-@view({
+@view.attach({
   store: AtlassianSettingLoginStore,
 })
+@view
 export class AtlassianSettingLogin extends React.Component {
   render({ store }) {
     return (
@@ -176,7 +177,7 @@ export class AtlassianSettingLogin extends React.Component {
               />
             </Views.Table>
             <Views.VertSpace />
-            <UI.Row>
+            <UI.ListRow>
               <div $$flex>
                 <Views.Link
                   if={store.existingSetting}
@@ -202,7 +203,7 @@ export class AtlassianSettingLogin extends React.Component {
                   Add Integration
                 </UI.Button>
               </UI.Theme>
-            </UI.Row>
+            </UI.ListRow>
             <Views.VertSpace />
             <Views.Message if={store.error}>{store.error}</Views.Message>
             <Views.Message if={store.status === Statuses.SUCCESS}>

@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { OrbitIcon } from '../../../../apps/orbit/orbitIcon'
 
-@view({
+@view.attach({
   store: class {
     max = ''
 
@@ -17,6 +17,7 @@ import { OrbitIcon } from '../../../../apps/orbit/orbitIcon'
     }
   },
 })
+@view
 export class GmailSetting extends React.Component {
   render({ store, setting, update }) {
     const { syncSettings } = setting.values

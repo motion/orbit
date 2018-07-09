@@ -1,5 +1,5 @@
 import { App as AppWindow, DevTools } from '@mcro/reactron'
-import { view, Component } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as React from 'react'
 import Tray from './views/Tray'
 import { MenuItems } from './views/MenuItems'
@@ -10,7 +10,7 @@ import { ElectronStore } from './stores/ElectronStore'
   electronStore: ElectronStore,
 })
 @view.electron
-export class Electron extends Component {
+export class Electron extends React.Component {
   props: {
     electronStore: ElectronStore
   }

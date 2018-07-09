@@ -26,9 +26,10 @@ class PersonPeek {
   )
 }
 
-@view({
+@view.attach({
   store: PersonPeek,
 })
+@view
 export class Person extends React.Component {
   render({ store, person, appStore }) {
     if (!appStore.settings) {
@@ -98,7 +99,7 @@ export class Person extends React.Component {
           <contentInner>
             <card>
               <StrongSubTitle>Where</StrongSubTitle>
-              <UI.Row
+              <UI.ListRow
                 itemProps={{
                   size: 1.05,
                   alpha: 0.9,
@@ -111,12 +112,12 @@ export class Person extends React.Component {
                 <UI.Button>#status</UI.Button>
                 <UI.Button icon="github">motion/orbit</UI.Button>
                 <UI.Button>#showoff</UI.Button>
-              </UI.Row>
+              </UI.ListRow>
             </card>
 
             <card>
               <StrongSubTitle>Topics</StrongSubTitle>
-              <UI.Row
+              <UI.ListRow
                 itemProps={{
                   size: 1.05,
                   alpha: 0.9,
@@ -129,7 +130,7 @@ export class Person extends React.Component {
                 <UI.Button icon="zoom">size prop</UI.Button>
                 <UI.Button icon="zoom">async migration</UI.Button>
                 <UI.Button icon="zoom">freelance</UI.Button>
-              </UI.Row>
+              </UI.ListRow>
             </card>
 
             <card>

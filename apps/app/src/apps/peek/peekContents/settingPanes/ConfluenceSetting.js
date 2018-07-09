@@ -9,9 +9,10 @@ class ConfluenceSettingStore {
   active = 'general'
 }
 
-@view({
+@view.attach({
   store: ConfluenceSettingStore,
 })
+@view
 export class ConfluenceSetting extends React.Component {
   render({ store, setting }) {
     console.log('confluencesetting', setting)

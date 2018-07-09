@@ -29,9 +29,10 @@ class OrbitDirectoryStore {
   })
 }
 
-@view({
+@view.attach({
   store: OrbitDirectoryStore,
 })
+@view
 export class OrbitDirectory extends React.Component {
   render({ store }) {
     log('DIRECTORY --------')

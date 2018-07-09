@@ -851,9 +851,10 @@ class OrbitStore {
 }
 
 @view.attach('homeStore')
-@view({
+@view.attach({
   orbitStore: OrbitStore,
 })
+@view
 class Orbit extends React.Component {
   render({ homeStore, orbitStore }) {
     const { stopAt } = orbitStore
@@ -970,6 +971,7 @@ export class HomeWrapper extends React.Component {
   }
 
   render({ homeStore, sectionHeight }) {
+    console.log('props', this.props)
     return (
       <Media query={Constants.screen.tall}>
         {isTall => (

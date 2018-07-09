@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
-import { P } from '~/views'
+import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import jsonp from 'jsonp'
@@ -13,6 +12,7 @@ const queryString = query => {
     .join('&')
 }
 
+@attachTheme
 @view
 export class Join extends React.Component {
   state = {
@@ -58,7 +58,7 @@ export class Join extends React.Component {
     }
   }
 
-  render({ ...props }, { success, error, submitting }) {
+  render({ theme, ...props }, { success, error, submitting }) {
     const style = { fontFamily: '"Eesti Pro"' }
     const sizeProps = {
       size: 1.2,
@@ -165,7 +165,7 @@ export class Join extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme }) => {
     // const bg = theme.base.background
     // const isLight = bg.isLight()
     // const adjust = isLight ? 'darken' : 'lighten'

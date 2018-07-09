@@ -66,9 +66,10 @@ class PlayChatsStore {
   }
 }
 
-@view({
+@view.attach({
   store: PlayChatsStore,
 })
+@view
 export class HomePlayChats extends React.Component {
   render({ store }) {
     return (

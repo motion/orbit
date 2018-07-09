@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, on } from '@mcro/black'
+import { view, on, attachTheme } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
 import * as _ from 'lodash'
@@ -141,6 +141,7 @@ const getTextProperties = props => {
 // }
 
 // click away from edit clears it
+@attachTheme
 @view.ui
 export class Text extends React.Component {
   selected = false
@@ -316,6 +317,7 @@ export class Text extends React.Component {
     sizeMethod,
     highlight,
     wordBreak,
+    theme,
     ...props
   }) {
     const { multiLineEllipse } = this
@@ -422,7 +424,7 @@ export class Text extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme, ...props }) => {
     const { fontSize, lineHeight } = getTextProperties(props)
     let color = props.color || theme.base.color
     // allow alpha adjustments

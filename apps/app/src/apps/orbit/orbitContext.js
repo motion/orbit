@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitFrame } from './orbitFrame'
 import { OrbitSearchResults } from './orbitSearchResults'
@@ -17,7 +17,7 @@ class PaneStore {
   }
 }
 
-@UI.injectTheme
+@attachTheme
 @view.attach('orbitPage')
 @view.provide({
   paneStore: PaneStore,
@@ -72,7 +72,7 @@ class Orbit extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme }) => {
     return {
       fade: {
         background: `linear-gradient(${

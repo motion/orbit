@@ -44,9 +44,10 @@ class ContextMenuStore {
   }
 }
 
-@view({
+@view.attach({
   store: ContextMenuStore,
 })
+@view
 export class ContextMenu extends React.Component {
   nodeRef = React.createRef()
 

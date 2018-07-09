@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attachTheme } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Bit, Person } from '@mcro/models'
 import { SubTitle } from '../../views'
@@ -101,9 +101,11 @@ class OrbitHomeStore {
 
 const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
 
-@view({
+@attachTheme
+@view.attach({
   store: OrbitHomeStore,
 })
+@view
 export class OrbitHome extends React.Component {
   span2 = {
     gridColumnEnd: 'span 2',
@@ -192,7 +194,7 @@ export class OrbitHome extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = ({ theme }) => {
     return {
       overflowFade: {
         background: `linear-gradient(transparent, ${theme.base.background})`,

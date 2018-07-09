@@ -1,7 +1,5 @@
 import decor from '@mcro/decor'
-import * as PropTypes from 'prop-types'
 import {
-  contextual,
   storeProvidable,
   storeAttachable,
   renderArgumentable,
@@ -14,21 +12,15 @@ import { decorator } from './gloss'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
+import { isGlossyFirstArg } from '@mcro/gloss'
 
-const uiContext = [
-  contextual,
-  {
-    uiActiveThemeName: PropTypes.string,
-    uiActiveTheme: PropTypes.object,
-    uiThemes: PropTypes.object,
-    ui: PropTypes.object,
-  },
-]
+const glossPlugin = () => ({
+  onlyClass: true,
+  decorator,
+})
 
-const glossPlugin = () => ({ decorator })
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
-  enable.ui && uiContext,
   renderArgumentable,
   enable.ui && glossPlugin,
   enable.mobx && reactObservable,
@@ -54,16 +46,12 @@ export interface ViewDecorator {
 
 function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(item, ...args) {
-    if (typeof item === 'string') {
+    // short: view({ ...styles }), view('div', {}) view(OtherView, {})
+    if (isGlossyFirstArg(item)) {
       return decorator(item, ...args)
     }
-    // @view({ ...stores }) shorthand
-    if (typeof item === 'object') {
-      const res = blackDecorator({ stores: item })
-      return res
-    }
-    const res = blackDecorator(item)
-    return res
+    // class/function
+    return blackDecorator(item)
   }
   // pass on emitter
   view.emitter = blackDecorator.emitter
@@ -78,8 +66,15 @@ function createViewDecorator(): ViewDecorator {
   view.provide = stores => providable({ stores, context: true })
   view.provide.on = providable.on
   view.provide.emit = providable.emit
-  // @ts-ignore
-  view.attach = (...stores) => decor([[storeAttachable, { stores }]])
+  view.attach = (...stores) => {
+    // this allows attaching stores locally
+    if (typeof stores[0] === 'object') {
+      return blackDecorator({ stores: stores[0] })
+    }
+    // and this allows attaching contextual stores
+    // @ts-ignore
+    return decor([[storeAttachable, { stores }]])
+  }
   return view
 }
 

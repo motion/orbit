@@ -1,6 +1,6 @@
 import * as React from 'react'
 import CountUp from 'react-countup'
-import { view, react, deep } from '@mcro/black'
+import { view, attachTheme, react, deep } from '@mcro/black'
 import * as Icons from '~/views/icons'
 import * as Constants from '~/constants'
 import { dockIcons } from './stageItems'
@@ -104,9 +104,11 @@ class DockPlayStore {
   }
 }
 
-@view({
+@attachTheme
+@view.attach({
   store: DockPlayStore,
 })
+@view
 export class HomePlayDock extends React.Component {
   render({ store, animate }) {
     const dom = this.glossElement.bind(this)
@@ -225,7 +227,7 @@ export class HomePlayDock extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = ({ theme }) => {
     return {
       dockContain: {
         background: `linear-gradient(transparent, ${theme.base.background})`,

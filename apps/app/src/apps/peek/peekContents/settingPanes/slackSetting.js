@@ -38,9 +38,10 @@ class SlackSettingStore {
 }
 
 @view.attach('appStore')
-@view({
+@view.attach({
   store: SlackSettingStore,
 })
+@view
 export class SlackSetting extends React.Component {
   render({ store, setting }) {
     console.log('rendering slack')

@@ -1,5 +1,16 @@
 import fuzzySort from 'fuzzysort'
 
+export const deepClone = obj =>
+  obj
+    ? Object.keys(obj).reduce(
+        (acc, cur) => ({
+          ...acc,
+          [cur]: JSON.parse(JSON.stringify(obj[cur])),
+        }),
+        {},
+      )
+    : obj
+
 export const getSlackDate = ts => {
   if (!ts) {
     return null

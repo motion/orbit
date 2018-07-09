@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 
+@attachTheme
 @view
 export class OrbitDivider extends React.Component {
-  render({ height, ...props }) {
+  render({ height, theme, ...props }) {
     return (
       <barOuter {...props}>
         <bar />
@@ -25,10 +26,10 @@ export class OrbitDivider extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme, height }) => {
     return {
       bar: {
-        height: props.height || 1,
+        height: height || 1,
       },
       barOuter: {
         '& .bar': {

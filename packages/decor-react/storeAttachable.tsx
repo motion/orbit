@@ -12,15 +12,22 @@ export function storeAttachable(options): ContextAttacher {
         <StoreContext.Consumer>
           {allStores => {
             let stores = {}
-            for (const name of options.stores) {
-              stores[name] = allStores[name]
+            if (
+              options.stores.length === 1 &&
+              typeof options.stores[0] === 'object'
+            ) {
+              // allow object attach style:
+              // @view.attach({ name: StoreReference })
+              for (const name of Object.keys(options.stores[0])) {
+                stores[name] = allStores[name]
+              }
+            } else {
+              // or use string @view.attach('appStore')
+              for (const name of options.stores) {
+                stores[name] = allStores[name]
+              }
             }
-            return (
-              <View
-                {...props}
-                {...stores}
-              />
-            )
+            return <View {...props} {...stores} />
           }}
         </StoreContext.Consumer>
       )

@@ -95,7 +95,14 @@ export const Slant = ({
 
 @view.ui
 export class Section extends React.Component {
-  render({ withBackground, leftBackground, inverse, children, ...props }) {
+  render({
+    withBackground,
+    leftBackground,
+    inverse,
+    children,
+    theme,
+    ...props
+  }) {
     return (
       <section css={{ position: 'relative' }} {...props}>
         <bgTest
@@ -118,7 +125,7 @@ export class Section extends React.Component {
     )
   }
 
-  static theme = ({ withBackground }, theme) => {
+  static theme = ({ withBackground, theme }) => {
     return {
       section: {
         background: withBackground ? theme.base.background : 'transparent',

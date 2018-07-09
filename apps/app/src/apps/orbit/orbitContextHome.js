@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, on } from '@mcro/black'
+import { view, react, on, attachTheme } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { OrbitCard } from './orbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
@@ -63,10 +63,12 @@ class OrbitContextHomeStore {
   )
 }
 
+@attachTheme
 @view.attach('appStore', 'paneStore')
-@view({
+@view.attach({
   store: OrbitContextHomeStore,
 })
+@view
 export class OrbitContextHome {
   frameRef = null
   state = {
@@ -176,7 +178,7 @@ export class OrbitContextHome {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme }) => {
     return {
       fadeTop: {
         background: `linear-gradient(${

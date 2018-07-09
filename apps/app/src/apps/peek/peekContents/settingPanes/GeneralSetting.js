@@ -12,9 +12,10 @@ class OrbitGeneralSettingsStore {
   }
 }
 
-@view({
+@view.attach({
   store: OrbitGeneralSettingsStore,
 })
+@view
 export class GeneralSetting extends React.Component {
   render({ store, setting }) {
     if (!setting) {

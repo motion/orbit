@@ -208,7 +208,7 @@ export default class Surface implements ViewType<Props> {
     borderRightWidth: 1,
   }
 
-  static theme = (props, theme, self) => {
+  static theme = ({ theme, ...props }, self) => {
     // sizes
     const height = props.size * LINE_HEIGHT
     const width = props.width

@@ -89,9 +89,10 @@ class OrbitSettingsStore {
 }
 
 @view.attach('appStore', 'paneStore')
-@view({
+@view.attach({
   Store: OrbitSettingsStore,
 })
+@view
 export class OrbitSettings extends React.Component {
   render({ name, Store, appStore }) {
     const isActive = result => {

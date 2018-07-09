@@ -6,20 +6,10 @@ import * as PeekContents from './peek/PeekContents'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './peek/PeekFrame'
 import { Person, Bit } from '@mcro/models'
-
-const deepClone = obj =>
-  obj
-    ? Object.keys(obj).reduce(
-        (acc, cur) => ({
-          ...acc,
-          [cur]: JSON.parse(JSON.stringify(obj[cur])),
-        }),
-        {},
-      )
-    : obj
+import { deepClone } from '../helpers'
+import { AppStore } from '../stores/AppStore'
 
 class PeekStore {
-  headerHeight = 20
   history = []
 
   get hasHistory() {
@@ -80,10 +70,6 @@ class PeekStore {
     { delay: 32 },
   )
 
-  setHeaderHeight = height => {
-    this.headerHeight = height
-  }
-
   get state() {
     let state = this.curState
     if (this.willHide) {
@@ -110,36 +96,35 @@ class PeekStore {
   })
 }
 
-@view
-class PeekPageInner extends React.Component {
-  render({ peekStore, appStore }) {
-    if (!peekStore.state) {
-      return null
-    }
-    const { item, peekId } = peekStore.state
-    const type = (item && capitalize(item.type)) || 'Empty'
-    const PeekContentsView = PeekContents[type]
-    if (!PeekContentsView) {
-      console.error('none', type)
-      return <peek>no pane found</peek>
-    }
-    if (!peekStore.model) {
-      console.warn('no selected model')
-      return <peek>no selected model</peek>
-    }
-    return (
-      <PeekContentsView
-        key={peekId}
-        bit={peekStore.model}
-        person={peekStore.model}
-        appStore={appStore}
-        peekStore={peekStore}
-      />
-    )
+const PeekPageInner = view(({ peekStore, appStore }) => {
+  if (!peekStore.state) {
+    return null
   }
-}
+  const { item, peekId } = peekStore.state
+  const type = (item && capitalize(item.type)) || 'Empty'
+  const PeekContentsView = PeekContents[type]
+  if (!PeekContentsView) {
+    console.error('none', type)
+    return <div>no pane found</div>
+  }
+  if (!peekStore.model) {
+    console.warn('no selected model')
+    return <div>no selected model</div>
+  }
+  return (
+    <PeekContentsView
+      key={peekId}
+      bit={peekStore.model}
+      person={peekStore.model}
+      appStore={appStore}
+      peekStore={peekStore}
+    />
+  )
+})
 
-@view.attach('appStore')
+@view.attach({
+  appStore: AppStore,
+})
 @view.provide({
   peekStore: PeekStore,
 })

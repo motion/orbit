@@ -32,13 +32,4 @@ export class BrandLogo extends React.Component {
       </Media>
     )
   }
-
-  static theme = () => {
-    return {
-      orbit: {
-        // border: [1, theme.base.background.darken(0.1)],
-        // background: theme.base.background.darken(0.05).alpha(0.5),
-      },
-    }
-  }
 }

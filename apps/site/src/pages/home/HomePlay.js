@@ -22,9 +22,10 @@ class HomePlayStore {
   }
 }
 
-@view({
+@view.attach({
   store: HomePlayStore,
 })
+@view
 export class HomePlay extends React.Component {
   render({ store }) {
     const hasAnimated = window.hasAnimated

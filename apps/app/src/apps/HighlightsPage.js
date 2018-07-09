@@ -9,7 +9,7 @@ import { OCRLine } from './highlights/ocrLine'
 
 // const log = debug('highlights')
 
-@view({
+@view.attach({
   store: class HighlightsStore {
     trees = {
       word: quadtree(0, 0, window.innerWidth, window.innerHeight),
@@ -120,6 +120,7 @@ import { OCRLine } from './highlights/ocrLine'
     }
   },
 })
+@view
 export class HighlightsPage extends React.Component {
   render({ store }) {
     return (

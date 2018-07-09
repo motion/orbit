@@ -114,7 +114,7 @@ class Folder extends React.Component {
   }
 }
 
-@view({
+@view.attach({
   store: class GDocsSettingStore {
     get setting() {
       return this.props.setting
@@ -131,6 +131,7 @@ class Folder extends React.Component {
     }
   },
 })
+@view
 export class GdocsSetting extends React.Component {
   render({ store }) {
     const loading = !store.folders

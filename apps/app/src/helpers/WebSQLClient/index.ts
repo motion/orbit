@@ -2,13 +2,12 @@ import { SQLitePlugin } from './SQLitePlugin'
 import { PrimusAdaptor } from './PrimusAdaptor'
 
 export class WebSQLClient {
-  nextTick = setImmediate
-  txLocks = {}
-  onError = null
-  dblocations = ['docs', 'libs', 'nosync']
-  primusAdaptor = new PrimusAdaptor()
-  plugin = null
-  lastOpenedDatabase?: SQLitePlugin
+  private txLocks = {}
+  private onError = null
+  private dblocations = ['docs', 'libs', 'nosync']
+  private primusAdaptor = new PrimusAdaptor()
+  private webSqlPlugin = null
+  sqlLitePlugin?: SQLitePlugin
 
   constructor({ onError }) {
     this.onError =
@@ -16,7 +15,15 @@ export class WebSQLClient {
       (err => {
         console.log('WebSQLClienterror', err)
       })
-    this.plugin = {
+    this.webSqlPlugin = this.getWebSqlPlugin()
+  }
+
+  getPlugin() {
+    return this.webSqlPlugin
+  }
+
+  private getWebSqlPlugin() {
+    return {
       sqliteFeatures: {
         isSQLitePlugin: true,
       },
@@ -55,16 +62,15 @@ export class WebSQLClient {
         ) {
           openargs.createFromResource = '1'
         }
-        this.lastOpenedDatabase = new SQLitePlugin(
+        this.sqlLitePlugin = new SQLitePlugin(
           this.txLocks,
-          this.nextTick,
           openargs,
           okcb,
           errorcb,
           this.primusAdaptor,
           this.onError,
         )
-        return this.lastOpenedDatabase
+        return this.sqlLitePlugin
       },
 
       deleteDatabase: (first, success, error) => {
@@ -87,9 +93,5 @@ export class WebSQLClient {
         return this.primusAdaptor['delete'](success, error, [args])
       },
     }
-  }
-
-  getPlugin() {
-    return this.plugin
   }
 }

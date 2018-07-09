@@ -1,19 +1,11 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/orbitIcon'
 
-@view.attach('peekStore')
+@attachTheme
 @view
-export class PeekHeader extends React.Component {
-  onHeader = ref => {
-    if (!ref) return
-    console.log('setting client height', ref.clientHeight)
-    setTimeout(() => {
-      this.props.peekStore.setHeaderHeight(ref.clientHeight)
-    })
-  }
-
+export class PeekHeaderContent extends React.Component {
   render({ peekStore, title, date, subtitle, after, permalink, icon }) {
     return (
       <header ref={this.onHeader}>
@@ -69,14 +61,9 @@ export class PeekHeader extends React.Component {
       justifyContent: 'center',
       position: 'relative',
       zIndex: 100,
-      // borderBottom: [1, [0, 0, 0, 0.025]],
-      padding: 15,
     },
     titles: {
       marginRight: 25,
-    },
-    chromeSpace: {
-      // width: 30,
     },
     title: {
       flex: 1,
@@ -91,10 +78,6 @@ export class PeekHeader extends React.Component {
       opacity: 0.8,
     },
     date: { opacity: 0.5, fontSize: 14 },
-    orbitInput: {
-      width: '100%',
-      // background: 'red',
-    },
     after: {
       alignSelf: 'flex-end',
     },
@@ -107,7 +90,24 @@ export class PeekHeader extends React.Component {
       width: 7,
     },
     permalink: {
-      opacity: 0.5,
+      opacity: 0.75,
     },
   }
+
+  static theme = ({ theme }) => {
+    return {
+      header: {
+        background: theme.base.background,
+        '&:hover': {
+          background: theme.active.background,
+        },
+      },
+    }
+  }
 }
+
+export const PeekHeader = view.attach('peekStore')(props => (
+  <UI.Theme theme={props.peekStore.theme || false}>
+    <PeekHeaderContent {...props} />
+  </UI.Theme>
+))

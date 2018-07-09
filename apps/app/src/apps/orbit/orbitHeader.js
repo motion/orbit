@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
@@ -45,11 +45,12 @@ const Hl = view('span', {
   borderRadius: 6,
 })
 
-@UI.injectTheme
+@attachTheme
 @view.attach('orbitStore', 'appStore')
-@view({
+@view.attach({
   headerStore: HeaderStore,
 })
+@view
 export class OrbitHeader extends React.Component {
   handleKeyDown = e => {
     // up/down
@@ -179,7 +180,7 @@ export class OrbitHeader extends React.Component {
     },
   }
 
-  static theme = ({ borderRadius }, theme) => {
+  static theme = ({ borderRadius, theme }) => {
     return {
       orbitHeader: {
         borderTopRadius: borderRadius,

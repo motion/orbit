@@ -21,9 +21,10 @@ const statusIcons = {
   COMPLETE: { name: 'check', color: 'darkgreen' },
 }
 
-@view({
+@view.attach({
   store: SettingInfoStore,
 })
+@view
 export class SettingContent extends React.Component {
   handleRefresh = async () => {
     const store = this.props.store
@@ -75,7 +76,7 @@ export class SettingContent extends React.Component {
             </div>
           }
           after={
-            <UI.Row
+            <UI.ListRow
               $$flex
               css={{ margin: [0, -8, -5, 0] }}
               itemProps={{
@@ -95,7 +96,7 @@ export class SettingContent extends React.Component {
                 tooltip="Remove"
                 onClick={this.removeIntegration}
               />
-            </UI.Row>
+            </UI.ListRow>
           }
         />
         <PeekContent>
@@ -110,7 +111,7 @@ export class SettingContent extends React.Component {
   }
 }
 
-@view({
+@view.attach({
   store: class LoadSettingStore {
     get setting() {
       return this.idSetting || this.typeSetting
@@ -127,6 +128,7 @@ export class SettingContent extends React.Component {
     )
   },
 })
+@view
 export class Setting extends React.Component {
   render({ store, ...props }) {
     if (!store.setting) {

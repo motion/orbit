@@ -65,9 +65,10 @@ class PlayMessagesStore {
   }
 }
 
-@view({
+@view.attach({
   store: PlayMessagesStore,
 })
+@view
 export class HomePlayMessages extends React.Component {
   render({ store }) {
     store.showOrbitals
@@ -89,7 +90,7 @@ export class HomePlayMessages extends React.Component {
               <message>
                 <msgBlur if={false} />
                 Stay in sync, stress free.
-                <UI.Row
+                <UI.ListRow
                   if={false}
                   spaced
                   itemProps={{
@@ -114,7 +115,7 @@ export class HomePlayMessages extends React.Component {
                   <UI.Button onClick={Router.link('/use-cases')}>
                     Use Cases
                   </UI.Button>
-                </UI.Row>
+                </UI.ListRow>
               </message>
             </animated.div>
           )}

@@ -22,7 +22,7 @@ import { UIContext } from './contexts'
 // }
 
 @view.ui
-class RowPlain extends React.Component {
+export class ListRow extends React.Component {
   state = {
     active: null,
   }
@@ -57,6 +57,7 @@ class RowPlain extends React.Component {
     color,
     itemProps: itemProps_,
     spaced,
+    theme,
     ...props
   }) {
     let itemProps = itemProps_
@@ -181,9 +182,3 @@ class RowPlain extends React.Component {
     },
   })
 }
-
-export const Row = props => (
-  <UIContext.Consumer>
-    {uiContext => <RowPlain uiContext={uiContext} {...props} />}
-  </UIContext.Consumer>
-)

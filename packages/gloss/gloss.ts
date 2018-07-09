@@ -131,7 +131,7 @@ export default class Gloss {
       }
       // attach theme on first use
       if (View.theme && !themeUpdate) {
-        themeUpdate = this.createThemeManager(id, View.theme)
+        themeUpdate = this.createThemeManager(id, View.theme, tagName)
       }
       // update theme
       if (themeUpdate) {
@@ -151,23 +151,22 @@ export default class Gloss {
     return View
   }
 
-  createThemeManager = (uid, getTheme) => {
+  createThemeManager = (uid, getTheme, forKey?: string) => {
     const activeThemeKey = {}
     const cssProcessor = this.css
     const selectors = {}
     return (props, self) => {
       if (!props.theme) {
-        console('no theme', props)
+        console.log('no theme', props, getTheme)
         return
       }
-      const childTheme = getTheme(props, self)
       const rules = {}
       let hasRules = false
-      for (const name of Object.keys(childTheme)) {
-        const style = cssProcessor(childTheme[name])
+      const attachThemeStyle = (name, styles) => {
+        const style = cssProcessor(styles)
         const key = JSON.stringify(style)
         if (key === activeThemeKey[name]) {
-          continue
+          return
         }
         activeThemeKey[name] = key
         if (!selectors[name]) {
@@ -178,6 +177,15 @@ export default class Gloss {
         rules[selector] = style
         if (this.themeSheet.classes[selector]) {
           this.themeSheet.deleteRule(selector)
+        }
+      }
+      // attach themes
+      const childTheme = getTheme(props, self)
+      if (forKey) {
+        attachThemeStyle(forKey, childTheme)
+      } else {
+        for (const name of Object.keys(childTheme)) {
+          attachThemeStyle(name, childTheme[name])
         }
       }
       if (hasRules) {

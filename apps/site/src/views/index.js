@@ -481,24 +481,24 @@ export const A = view('a', {
   borderBottom: [2, 'transparent'],
 })
 
-A.theme = ({ theme, ...props }) => {
+A.theme = ({ theme, active, ...props }) => {
   const bg = theme.base.background.darken(0.1).desaturate(0.1)
   const color = UI.color(props.color || theme.base.color)
+  const activeStyle = active && {
+    borderBottom: [2, bg],
+  }
+  const activeHover = active && {
+    color,
+    borderBottom: [2, bg],
+  }
   return {
-    a: {
-      margin: props.isLarge ? [0, 0, 0, 30] : [0, 0, 0, 15],
-      color,
-      '&:hover': {
-        color: color.alpha(0.6),
-        borderBottom: [2, bg.alpha(0.4)],
-      },
-    },
-    active: {
-      borderBottom: [2, bg],
-      '&:hover': {
-        color,
-        borderBottom: [2, bg],
-      },
+    margin: props.isLarge ? [0, 0, 0, 30] : [0, 0, 0, 15],
+    color,
+    ...activeStyle,
+    '&:hover': {
+      color: color.alpha(0.6),
+      borderBottom: [2, bg.alpha(0.4)],
+      ...activeHover,
     },
   }
 }

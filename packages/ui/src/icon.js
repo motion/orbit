@@ -63,7 +63,6 @@ IconInner.theme = ({
   background,
   theme,
 }) => {
-  console.log('OK!!!!!!!!!!')
   const width = (propWidth || size) + widthPadding(padding)
   const height = (propHeight || size) + heightPadding(padding)
   return {

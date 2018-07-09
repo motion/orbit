@@ -1,4 +1,3 @@
-// import 'babel-polyfill'
 import '~/../public/styles/siteBase.css'
 import '~/../public/styles/nucleo.css'
 import './createElement'
@@ -8,11 +7,13 @@ import ReactDOM from 'react-dom'
 import Themes from '~/themes'
 import { ThemeProvide } from '@mcro/ui'
 import * as Constants from '~/constants'
+import * as Black from '@mcro/black'
 
 // for hmr
 import '~/router'
 
 window.Constants = Constants
+window.Black = Black
 
 function render() {
   const RootNode = document.querySelector('#app')

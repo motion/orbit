@@ -64,7 +64,7 @@ class OrbitQuickItem extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = ({ theme }) => {
     return {
       active: {
         background: theme.hover.background,
@@ -109,7 +109,7 @@ export class OrbitQuickSearch extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = ({ theme }) => {
     return {
       borderBottom: [1, theme.hover.background],
     }

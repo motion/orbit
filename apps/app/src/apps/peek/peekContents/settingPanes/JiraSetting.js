@@ -9,9 +9,10 @@ class JiraSettingStore {
   active = 'general'
 }
 
-@view({
+@view.attach({
   store: JiraSettingStore,
 })
+@view
 export class JiraSetting extends React.Component {
   render({ store }) {
     return (

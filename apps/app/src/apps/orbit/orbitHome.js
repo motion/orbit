@@ -102,9 +102,10 @@ class OrbitHomeStore {
 const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
 
 @attachTheme
-@view({
+@view.attach({
   store: OrbitHomeStore,
 })
+@view
 export class OrbitHome extends React.Component {
   span2 = {
     gridColumnEnd: 'span 2',
@@ -193,7 +194,7 @@ export class OrbitHome extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = ({ theme }) => {
     return {
       overflowFade: {
         background: `linear-gradient(transparent, ${theme.base.background})`,

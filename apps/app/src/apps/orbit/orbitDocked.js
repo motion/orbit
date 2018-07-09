@@ -64,7 +64,7 @@ class OrbitDocked extends React.Component {
     )
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme }) => {
     const background = theme.base.background
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
     const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]

@@ -122,7 +122,7 @@ export class Field extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme, ...props }) => {
     const inactiveStyle = {
       field: {
         opacity: 0.5,

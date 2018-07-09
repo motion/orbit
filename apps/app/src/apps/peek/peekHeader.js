@@ -113,7 +113,7 @@ export class PeekHeaderContent extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme }) => {
     console.log('peek theme is', theme)
     return {
       header: {

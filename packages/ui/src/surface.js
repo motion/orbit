@@ -392,7 +392,7 @@ export class Surface extends React.Component {
     borderRightWidth: 1,
   }
 
-  static theme = (props, theme, self) => {
+  static theme = ({ theme, ...props }, self) => {
     const uiContext = null
     // sizes
     const size = props.size === true ? 1 : props.size || 1

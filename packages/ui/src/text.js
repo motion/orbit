@@ -424,13 +424,12 @@ export class Text extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme, ...props }) => {
     const { fontSize, lineHeight } = getTextProperties(props)
     let color = props.color || theme.base.color
     // allow alpha adjustments
     if (typeof props.alpha === 'number' && color !== 'inherit') {
       color = $(color).alpha(props.alpha)
-      console.log('alpha colored', color, props.alpha)
     }
     return {
       text: {

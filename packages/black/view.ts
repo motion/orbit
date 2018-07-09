@@ -47,17 +47,12 @@ export interface ViewDecorator {
 
 function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(item, ...args) {
-    // view('div', { ...styles })
-    if (typeof item === 'string') {
+    // short: view({ ...styles }), view('div', { ...styles })
+    if (typeof item === 'string' || typeof item === 'object') {
       return decorator(item, ...args)
     }
-    // @view({ ...stores }) shorthand
-    if (typeof item === 'object') {
-      const res = blackDecorator({ stores: item })
-      return res
-    }
-    const res = blackDecorator(item)
-    return res
+    // class/function
+    return blackDecorator(item)
   }
   // pass on emitter
   view.emitter = blackDecorator.emitter
@@ -72,8 +67,15 @@ function createViewDecorator(): ViewDecorator {
   view.provide = stores => providable({ stores, context: true })
   view.provide.on = providable.on
   view.provide.emit = providable.emit
-  // @ts-ignore
-  view.attach = (...stores) => decor([[storeAttachable, { stores }]])
+  view.attach = (...stores) => {
+    // this allows attaching stores locally
+    if (typeof stores[0] === 'object') {
+      return blackDecorator({ stores: stores[0] })
+    }
+    // and this allows attaching contextual stores
+    // @ts-ignore
+    return decor([[storeAttachable, { stores }]])
+  }
   return view
 }
 

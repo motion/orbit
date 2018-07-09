@@ -46,7 +46,7 @@ export class Select extends React.Component {
     },
   }
 
-  static theme = ({ height, width, background }, theme) => ({
+  static theme = ({ height, width, background, theme }) => ({
     root: {
       height,
       width,

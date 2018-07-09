@@ -125,7 +125,7 @@ export class Section extends React.Component {
     )
   }
 
-  static theme = ({ withBackground }, theme) => {
+  static theme = ({ withBackground, theme }) => {
     return {
       section: {
         background: withBackground ? theme.base.background : 'transparent',

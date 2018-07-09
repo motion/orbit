@@ -44,9 +44,10 @@ const showingAnimation = {
 }
 
 @attachTheme
-@view({
+@view.attach({
   store: FrameStore,
 })
+@view
 export class OrbitFrame {
   render({ store, children, theme, headerBg }) {
     if (!store.animationState) {
@@ -248,7 +249,7 @@ export class OrbitFrame {
     },
   }
 
-  static theme = (props, theme) => ({
+  static theme = ({ theme }) => ({
     orbitFrame: {
       color: theme.base.color,
     },

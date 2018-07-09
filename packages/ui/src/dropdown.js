@@ -23,14 +23,11 @@ export class Dropdown extends React.Component {
   }
 
   render({
-    color,
     children,
-    onChange,
     width,
     items,
     popoverProps,
     buttonProps,
-    theme,
     noWrap,
     ...props
   }) {

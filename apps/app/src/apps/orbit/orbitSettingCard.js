@@ -7,9 +7,10 @@ import * as OauthActions from '../../actions/OauthActions'
 import { Setting } from '@mcro/models'
 
 @view.attach('appStore')
-@view({
+@view.attach({
   store: SettingInfoStore,
 })
+@view
 export class OrbitSettingCard extends React.Component {
   handleClick = async () => {
     const { isActive, result } = this.props

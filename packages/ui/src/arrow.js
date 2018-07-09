@@ -86,7 +86,7 @@ export class Arrow extends React.Component {
     },
   }
 
-  static theme = ({ background }, theme) => {
+  static theme = ({ background, theme }) => {
     return {
       arrowInner: {
         background: background || theme.base.background,

@@ -44,7 +44,7 @@ export class ProgressBar extends React.Component {
     }),
   }
 
-  static theme = ({ color, background }, theme) => ({
+  static theme = ({ color, background, theme }) => ({
     outer: {
       background:
         background || theme.base.background

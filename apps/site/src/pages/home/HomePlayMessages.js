@@ -65,9 +65,10 @@ class PlayMessagesStore {
   }
 }
 
-@view({
+@view.attach({
   store: PlayMessagesStore,
 })
+@view
 export class HomePlayMessages extends React.Component {
   render({ store }) {
     store.showOrbitals

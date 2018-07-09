@@ -2,6 +2,7 @@ import * as React from 'react'
 import deepExtend from 'deep-extend'
 import tags from 'html-tags'
 import svgTags from './svgTags'
+import validProp from './validProp'
 
 const electronTags = ['webview']
 
@@ -171,7 +172,10 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
         const notStyle = prop[0] !== $
         if (notStyle) {
           // pass props down if not glossProp style prop
-          finalProps[prop] = val
+          // we just exclude invalid props!!!!!!!!!! yay!!!!!!!
+          if (!isTag || validProp(prop)) {
+            finalProps[prop] = val
+          }
           continue
         }
         // ignore most falsy values (except 0)

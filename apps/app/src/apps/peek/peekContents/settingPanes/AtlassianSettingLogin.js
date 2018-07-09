@@ -142,9 +142,10 @@ class AtlassianSettingLoginStore {
   // autoSave = debounce(this.save, 400)
 }
 
-@view({
+@view.attach({
   store: AtlassianSettingLoginStore,
 })
+@view
 export class AtlassianSettingLogin extends React.Component {
   render({ store }) {
     return (

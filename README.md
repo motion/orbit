@@ -292,16 +292,17 @@ class MyStore {
 }
 ```
 
-### Attaching stores to views with `@view()`, `@view.provide` and `@view.attach`
+### Attaching stores to views with `@view.attach`, `@view.provide`
 
 This is the final piece, which ties the two together (importantly). You can attach a store easily to a view with either of the above. The only difference is `provide` will also pass the store through context, and likewise `@view.attach` will attach it back. As a convenience, the store attach. We need to make these better typed and not use strings, but for now they are like so.
 
 ```js
-@view({
+@view.attach({
   store: class MyStore {
     title = 'hello world'
   },
 })
+@view
 class MyView extends React.Component {
   render({ store }) {
     return <div>{store.title}</div>

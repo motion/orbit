@@ -15,6 +15,8 @@ export const attachTheme = Klass => {
   return new Proxy(AttachedKlass, {
     set(_, method, value) {
       Klass[method] = value
+      console.log('setting on', Klass, method, value)
+      AttachedKlass[method] = value
       return true
     },
   })

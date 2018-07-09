@@ -1,4 +1,4 @@
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as React from 'react'
 import { Popover } from './popover'
 import iconNames from './iconNames'
@@ -42,8 +42,48 @@ const findMatch = name => {
 //   opacity?: number,
 // }
 
-@attachTheme
-@view.ui
+const IconInner = view({
+  userSelect: 'none',
+  alignItems: 'center',
+  justifyContent: 'center',
+})
+
+IconInner.displayName = 'hi'
+
+IconInner.theme = ({
+  margin,
+  padding,
+  opacity,
+  alignSelf,
+  color,
+  width: propWidth,
+  height: propHeight,
+  size,
+  hover,
+  background,
+  theme,
+}) => {
+  console.log('OK!!!!!!!!!!')
+  const width = (propWidth || size) + widthPadding(padding)
+  const height = (propHeight || size) + heightPadding(padding)
+  return {
+    margin,
+    padding,
+    opacity,
+    alignSelf,
+    background,
+    color: color || (theme && theme.color) || '#000',
+    width,
+    height,
+    fontSize: width,
+    lineHeight: `${size / 12}rem`, // scale where 1 when 14
+    '&:hover': {
+      color: (hover && hover.color) || theme.color || color,
+      ...hover,
+    },
+  }
+}
+
 export class Icon extends React.PureComponent {
   static defaultProps = {
     size: 16,
@@ -53,27 +93,11 @@ export class Icon extends React.PureComponent {
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
-  render({
-    color,
-    hover,
-    size,
-    tooltip,
-    tooltipProps,
-    name,
-    type,
-    children,
-    margin,
-    opacity,
-    alignSelf,
-    width,
-    height,
-    padding,
-    theme,
-    ...props
-  }) {
+  render() {
+    const { tooltip, tooltipProps, name, type, children, ...props } = this.props
     let content
     if (name[0] === '/') {
-      return <img $icon src={name} {...props} />
+      return <img src={name} {...props} />
     }
     if (!name) {
       console.warn('no name given for icon')
@@ -82,8 +106,7 @@ export class Icon extends React.PureComponent {
     const iconName = findMatch(name)
     content = content || children
     return (
-      // @ts-ignore
-      <div $icon {...props}>
+      <IconInner {...props}>
         <div
           className={`nc-icon-${type} ${iconName}`}
           style={{
@@ -109,52 +132,7 @@ export class Icon extends React.PureComponent {
             {tooltip}
           </Popover>
         )}
-      </div>
+      </IconInner>
     )
-  }
-
-  static style = {
-    icon: {
-      userSelect: 'none',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  }
-
-  static theme = (
-    {
-      margin,
-      padding,
-      opacity,
-      alignSelf,
-      color,
-      width: propWidth,
-      height: propHeight,
-      size,
-      hover,
-      background,
-    },
-    theme,
-  ) => {
-    const width = (propWidth || size) + widthPadding(padding)
-    const height = (propHeight || size) + heightPadding(padding)
-    return {
-      icon: {
-        margin,
-        padding,
-        opacity,
-        alignSelf,
-        background,
-        color: color || (theme && theme.color) || '#000',
-        width,
-        height,
-        fontSize: width,
-        lineHeight: `${size / 12}rem`, // scale where 1 when 14
-        '&:hover': {
-          color: (hover && hover.color) || theme.color || color,
-          ...hover,
-        },
-      },
-    }
   }
 }

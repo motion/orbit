@@ -1,10 +1,13 @@
-import * as React from 'react'
-import { view } from '@mcro/black'
 import timeago from 'time-ago'
 
 const { ago } = timeago()
+
 export const format = text => {
-  const date = new Date(text)
+  if (!text) {
+    return null
+  }
+  // @ts-ignore
+  const date = new window.Date(text)
   const dateWords = ago(date)
   if (dateWords.indexOf('NaN') === 0) {
     console.log('got nan date', ago, text, date, dateWords)
@@ -13,14 +16,4 @@ export const format = text => {
   return dateWords
 }
 
-@view.ui
-export class Date extends React.PureComponent {
-  static format = format
-
-  render({ children }) {
-    if (children) {
-      return format(children)
-    }
-    return null
-  }
-}
+export const Date = ({ children }) => format(children)

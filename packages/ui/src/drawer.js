@@ -43,22 +43,14 @@ export class Drawer extends React.PureComponent {
   }
 
   render({
-    transparent,
-    transition,
-    transitionDuration,
     open,
     children,
     from,
     size,
     percent,
     onClickOverlay,
-    bordered,
-    zIndex,
     className,
     overlayBlur,
-    theme,
-    scrollable,
-    closePortal,
     style,
     overlayBackground,
     containerProps,
@@ -177,7 +169,7 @@ export class Drawer extends React.PureComponent {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme, ...props }) => {
     return {
       drawer: {
         zIndex: props.zIndex,

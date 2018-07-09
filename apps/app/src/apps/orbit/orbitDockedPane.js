@@ -48,9 +48,10 @@ class DockedPaneStore {
 
 @attachTheme
 @view.attach('paneStore')
-@view({
+@view.attach({
   store: DockedPaneStore,
 })
+@view
 export class OrbitDockedPane extends React.Component {
   render({ children, store, style, after, fadeBottom }) {
     return (
@@ -109,7 +110,7 @@ export class OrbitDockedPane extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = ({ theme }) => {
     return {
       overflowFade: {
         background: `linear-gradient(transparent, ${theme.base.background})`,

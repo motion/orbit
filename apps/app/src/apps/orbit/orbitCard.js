@@ -122,9 +122,10 @@ const tinyProps = {
 
 @attachTheme
 @view.attach('appStore', 'paneStore', 'orbitStore')
-@view({
+@view.attach({
   store: OrbitCardStore,
 })
+@view
 export class OrbitCard extends React.Component {
   static defaultProps = {
     borderRadius: 7,

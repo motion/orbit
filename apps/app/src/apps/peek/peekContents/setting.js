@@ -21,9 +21,10 @@ const statusIcons = {
   COMPLETE: { name: 'check', color: 'darkgreen' },
 }
 
-@view({
+@view.attach({
   store: SettingInfoStore,
 })
+@view
 export class SettingContent extends React.Component {
   handleRefresh = async () => {
     const store = this.props.store
@@ -110,7 +111,7 @@ export class SettingContent extends React.Component {
   }
 }
 
-@view({
+@view.attach({
   store: class LoadSettingStore {
     get setting() {
       return this.idSetting || this.typeSetting
@@ -127,6 +128,7 @@ export class SettingContent extends React.Component {
     )
   },
 })
+@view
 export class Setting extends React.Component {
   render({ store, ...props }) {
     if (!store.setting) {

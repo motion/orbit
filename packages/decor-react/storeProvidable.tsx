@@ -149,7 +149,7 @@ storeProvidable = function(options, Helpers) {
             this.didHmrListen.dispose()
           }
           root.loadedStores.delete(this)
-          // if you remove @view({ store: ... }) it tries to remove it here but its gone
+          // if you remove @view.attach({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()
             this.unmounted = true

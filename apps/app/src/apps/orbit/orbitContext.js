@@ -72,7 +72,7 @@ class Orbit extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme }) => {
     return {
       fade: {
         background: `linear-gradient(${

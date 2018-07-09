@@ -20,6 +20,13 @@ export type Options = {
   isColor?: Function
 }
 
+interface GlossView {
+  (props: Object): any
+  theme?: Object
+  style?: Object
+  displayName?: string
+}
+
 const DEFAULT_OPTS = {}
 
 let idCounter = 1
@@ -56,26 +63,22 @@ export default class Gloss {
     this.decorator.createElement = this.createElement
   }
 
-  decorator = (
-    maybeNameOrComponent: any,
-    // these are only used for shorthand views
-    styles?: Object,
-    theme?: Object,
-  ) => {
-    // TODO: make themes work here
-    // Shorthand views --  view('tagName', {}, theme)
-    if (typeof maybeNameOrComponent === 'string') {
-      return this.createSimpleGlossComponent(
-        maybeNameOrComponent,
-        styles,
-        theme,
-      )
-    }
-    const Child = maybeNameOrComponent
-    if (!Child) {
+  decorator = (maybeNameOrComponent: any, shortStyles?: Object) => {
+    if (!maybeNameOrComponent) {
       console.error('invalid view given to gloss', arguments)
       return () => this.createElement('div', { children: 'Error Component' })
     }
+    // Shorthand views --
+    // view({})
+    if (typeof maybeNameOrComponent === 'object') {
+      return this.createSimpleGlossComponent('div', maybeNameOrComponent)
+    }
+    // view('div', {})
+    if (typeof maybeNameOrComponent === 'string') {
+      return this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
+    }
+    // @view class MyView {}
+    const Child = maybeNameOrComponent
     if (!Child.prototype || !Child.prototype.render) {
       console.log('not a class')
       return Child
@@ -117,18 +120,26 @@ export default class Gloss {
     }
   }
 
-  createSimpleGlossComponent = (tagName, styles, theme) => {
+  createSimpleGlossComponent = (tagName, styles) => {
     const id = uid()
     const elementCache = new WeakMap()
     let themeUpdate
-    const glossComponent = attachTheme(props => {
+    const View = <GlossView>attachTheme(props => {
+      console.log('check em', props, View, View.theme)
       // basically PureRender for stylsheet updates
       if (elementCache.has(props)) {
         return elementCache.get(props)
       }
+      // attach theme on first use
+      if (View.theme && !themeUpdate) {
+        console.log('has a theme!', View.theme)
+        themeUpdate = this.createThemeManager(id, View.theme)
+      }
+      // update theme
       if (themeUpdate) {
         themeUpdate(props)
       }
+      // TODO: probably can avoid passing through props
       const element = this.createElement(tagName, {
         glossUID: id,
         ...props,
@@ -136,24 +147,21 @@ export default class Gloss {
       elementCache.set(props, element)
       return element
     })
-    if (theme) {
-      themeUpdate = this.createThemeManager(id, theme)
-    }
     this.attachStyles(`${id}`, { [tagName]: styles })
-    // @ts-ignore
-    glossComponent.displayName = tagName
-    return glossComponent
+    View.displayName = tagName
+    View.style = styles
+    return View
   }
 
   createThemeManager = (uid, getTheme) => {
     const activeThemeKey = {}
     const cssProcessor = this.css
     const selectors = {}
-    return ({ theme, ...props }, self) => {
-      if (!theme) {
+    return (props, self) => {
+      if (!props.theme) {
         return
       }
-      const childTheme = getTheme(props, theme, self)
+      const childTheme = getTheme(props, self)
       const rules = {}
       let hasRules = false
       for (const name of Object.keys(childTheme)) {
@@ -167,14 +175,12 @@ export default class Gloss {
           selectors[name] = `${name}--${uid}--theme`
         }
         const selector = selectors[name]
-        console.log('selector', selector)
         hasRules = true
         rules[selector] = style
         if (this.themeSheet.classes[selector]) {
           this.themeSheet.deleteRule(selector)
         }
       }
-      console.log('hasRules', hasRules, rules)
       if (hasRules) {
         this.themeSheet.addRules(rules)
       }

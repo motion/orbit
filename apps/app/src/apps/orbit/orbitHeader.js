@@ -47,9 +47,10 @@ const Hl = view('span', {
 
 @attachTheme
 @view.attach('orbitStore', 'appStore')
-@view({
+@view.attach({
   headerStore: HeaderStore,
 })
+@view
 export class OrbitHeader extends React.Component {
   handleKeyDown = e => {
     // up/down
@@ -179,7 +180,7 @@ export class OrbitHeader extends React.Component {
     },
   }
 
-  static theme = ({ borderRadius }, theme) => {
+  static theme = ({ borderRadius, theme }) => {
     return {
       orbitHeader: {
         borderTopRadius: borderRadius,

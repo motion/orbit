@@ -851,9 +851,10 @@ class OrbitStore {
 }
 
 @view.attach('homeStore')
-@view({
+@view.attach({
   orbitStore: OrbitStore,
 })
+@view
 class Orbit extends React.Component {
   render({ homeStore, orbitStore }) {
     const { stopAt } = orbitStore

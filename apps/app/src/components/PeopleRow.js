@@ -65,7 +65,7 @@ export class PeopleRow extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = ({ theme }) => {
     return {
       img: {
         border: [2, theme.base.background],

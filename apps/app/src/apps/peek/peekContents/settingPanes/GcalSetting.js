@@ -1,3 +1,4 @@
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { CurrentUser } from '@mcro/models'
@@ -102,11 +103,12 @@ class Calendar {
   }
 }
 
-@view({
+@view.attach({
   store: class CalendarsStore {
     open = this.props.openDefault
   },
 })
+@view
 class Calendars {
   render({ title, store, items }) {
     const Setting = CurrentUser.setting.google
@@ -144,14 +146,15 @@ class Calendars {
   }
 }
 
-@view({
+@view.attach({
   store: class CalSettingsStore {
     events = Event.find({ type: 'calendar' })
 
     active = 'calendars'
   },
 })
-export class GcalSetting {
+@view
+export class GcalSetting extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       App.sync.google.cal.setupSettings()

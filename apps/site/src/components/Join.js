@@ -165,7 +165,7 @@ export class Join extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme }) => {
     // const bg = theme.base.background
     // const isLight = bg.isLight()
     // const adjust = isLight ? 'darken' : 'lighten'

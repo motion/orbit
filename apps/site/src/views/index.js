@@ -472,44 +472,34 @@ export const HalfSection = view('section', {
   },
 })
 
-@attachTheme
-@view.ui
-export class A extends React.Component {
-  render({ color, isLarge, active, theme, ...props }) {
-    return <a $active={active} {...props} />
-  }
+export const A = view('a', {
+  textDecoration: 'none',
+  fontSize: 14,
+  color: [0, 0, 0, 0.6],
+  fontWeight: 600,
+  padding: [3, 2],
+  borderBottom: [2, 'transparent'],
+})
 
-  static style = {
+A.theme = ({ theme, ...props }) => {
+  const bg = theme.base.background.darken(0.1).desaturate(0.1)
+  const color = UI.color(props.color || theme.base.color)
+  return {
     a: {
-      textDecoration: 'none',
-      fontSize: 14,
-      color: [0, 0, 0, 0.6],
-      fontWeight: 600,
-      padding: [3, 2],
-      borderBottom: [2, 'transparent'],
+      margin: props.isLarge ? [0, 0, 0, 30] : [0, 0, 0, 15],
+      color,
+      '&:hover': {
+        color: color.alpha(0.6),
+        borderBottom: [2, bg.alpha(0.4)],
+      },
     },
-  }
-
-  static theme = (props, theme) => {
-    const bg = theme.base.background.darken(0.1).desaturate(0.1)
-    const color = UI.color(props.color || theme.base.color)
-    return {
-      a: {
-        margin: props.isLarge ? [0, 0, 0, 30] : [0, 0, 0, 15],
+    active: {
+      borderBottom: [2, bg],
+      '&:hover': {
         color,
-        '&:hover': {
-          color: color.alpha(0.6),
-          borderBottom: [2, bg.alpha(0.4)],
-        },
-      },
-      active: {
         borderBottom: [2, bg],
-        '&:hover': {
-          color,
-          borderBottom: [2, bg],
-        },
       },
-    }
+    },
   }
 }
 

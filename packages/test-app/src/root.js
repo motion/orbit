@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 
-@view({
+@view.attach({
   store: class MyStore {
     x = 0
 
@@ -23,6 +23,7 @@ import { view, react } from '@mcro/black'
     }
   },
 })
+@view
 class Counter extends React.Component {
   render({ store }) {
     return (

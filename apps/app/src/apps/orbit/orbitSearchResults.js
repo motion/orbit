@@ -25,9 +25,10 @@ class SearchStore {
 }
 
 @view.attach('appStore')
-@view({
+@view.attach({
   searchStore: SearchStore,
 })
+@view
 export class OrbitSearchResults extends React.Component {
   render({ searchStore, name }) {
     if (!searchStore.state) {

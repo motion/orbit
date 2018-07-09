@@ -26,9 +26,10 @@ class PersonPeek {
   )
 }
 
-@view({
+@view.attach({
   store: PersonPeek,
 })
+@view
 export class Person extends React.Component {
   render({ store, person, appStore }) {
     if (!appStore.settings) {

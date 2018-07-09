@@ -26,10 +26,10 @@ export class OrbitDivider extends React.Component {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme, height }) => {
     return {
       bar: {
-        height: props.height || 1,
+        height: height || 1,
       },
       barOuter: {
         '& .bar': {

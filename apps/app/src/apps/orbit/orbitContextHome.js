@@ -65,9 +65,10 @@ class OrbitContextHomeStore {
 
 @attachTheme
 @view.attach('appStore', 'paneStore')
-@view({
+@view.attach({
   store: OrbitContextHomeStore,
 })
+@view
 export class OrbitContextHome {
   frameRef = null
   state = {
@@ -177,7 +178,7 @@ export class OrbitContextHome {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = ({ theme }) => {
     return {
       fadeTop: {
         background: `linear-gradient(${

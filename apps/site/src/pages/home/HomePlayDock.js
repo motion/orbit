@@ -105,9 +105,10 @@ class DockPlayStore {
 }
 
 @attachTheme
-@view({
+@view.attach({
   store: DockPlayStore,
 })
+@view
 export class HomePlayDock extends React.Component {
   render({ store, animate }) {
     const dom = this.glossElement.bind(this)
@@ -226,7 +227,7 @@ export class HomePlayDock extends React.Component {
     },
   }
 
-  static theme = (_, theme) => {
+  static theme = ({ theme }) => {
     return {
       dockContain: {
         background: `linear-gradient(transparent, ${theme.base.background})`,

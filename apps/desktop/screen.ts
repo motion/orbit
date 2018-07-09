@@ -317,8 +317,9 @@ export class Screen {
     clearTimeout(this.mouseOverShowDelay)
     // this.updateMouseMoveAt()
     const { hidden, position, docked } = App.orbitState
-    const { target } = App.peekState
-    const peekHovered = target && isMouseOver(App.peekState, mousePos)
+    const { target, pinned } = App.peekState
+    const peekHovered =
+      (target || pinned) && isMouseOver(App.peekState, mousePos)
     if (docked) {
       if (mousePos.x > App.state.screenSize[0] - App.dockedWidth) {
         Desktop.setHoverState({ orbitHovered: true, peekHovered })
@@ -327,20 +328,29 @@ export class Screen {
       }
       return
     }
-    if (hidden) {
-      if (Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered) {
-        Desktop.setHoverState({
-          orbitHovered: false,
-          peekHovered: false,
-        })
-      }
-      this.checkHoverIndicator(mousePos, position)
+    if (pinned) {
+      Desktop.setHoverState({ peekHovered })
       return
     }
-    const orbitHovered = position && isMouseOver(App.orbitState, mousePos)
-    Desktop.setHoverState({ orbitHovered, peekHovered })
+    if (!hidden) {
+      // contextual orbit sidebar
+      const orbitHovered = position && isMouseOver(App.orbitState, mousePos)
+      Desktop.setHoverState({ orbitHovered, peekHovered })
+      return
+    }
+    // nothing showing
+    if (Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered) {
+      Desktop.setHoverState({
+        orbitHovered: false,
+        peekHovered: false,
+      })
+    }
+    this.checkHoverIndicator(mousePos, position)
   }
 
+  // this aws for a little orbit indicator that follows windows
+  // was an experiment that is off now can likely remove once we
+  // re-enable sidebar and decide if we want it
   checkHoverIndicator = (mousePos, position) => {
     const [oX, oY] = position
     // TODO: Constants.ORBIT_WIDTH

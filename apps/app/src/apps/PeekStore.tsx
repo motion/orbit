@@ -176,6 +176,11 @@ export class PeekStore {
     const offUp = on(this, window, 'mouseup', e => {
       offMove()
       offUp()
+      // now that it's pinned, update position
+      App.setPeekState({
+        pinned: true,
+        position: this.framePosition
+      })
     })
   }
 }

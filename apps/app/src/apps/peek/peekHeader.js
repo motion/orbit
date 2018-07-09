@@ -119,7 +119,9 @@ export class PeekHeaderContent extends React.Component {
                   }}
                   onClose={App.actions.clearPeek}
                   onMax={() => {
-                    App.setPeekState({ pinned: !App.peekState.pinned })
+                    App.setPeekState({
+                      devModeStick: !App.peekState.devModeStick,
+                    })
                   }}
                   maxProps={{
                     background: '#ccc',

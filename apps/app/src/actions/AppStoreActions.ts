@@ -109,7 +109,7 @@ function getTargetPosition(node: PositionObject) {
 }
 
 export function clearPeek() {
-  if (App.peekState.pinned) {
+  if (App.peekState.devModeStick) {
     console.log('Peek pinned, ignore')
     return
   }

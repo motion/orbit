@@ -3,44 +3,65 @@ import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/orbitIcon'
 
+const TitleBarTitle = props => (
+  <UI.Text
+    size={1.3}
+    fontWeight={700}
+    ellipse={2}
+    margin={0}
+    lineHeight="1.5rem"
+    {...props}
+  />
+)
+
+const TitleBarContain = view({
+  flex: 1,
+  maxWidth: '100%',
+  marginBottom: 5,
+})
+
+const TitleBarSubTitle = ({ children, date }) => (
+  <UI.Text size={1} ellipse={1}>
+    {children} <UI.Date>{date}</UI.Date>
+  </UI.Text>
+)
+
+const TitleBar = ({ children, subtitle, date, icon, ...props }) => (
+  <TitleBarContain {...props}>
+    <TitleBarTitle>{children}</TitleBarTitle>
+    <TitleBarSubTitle date={date}>{subtitle}</TitleBarSubTitle>
+    {icon}
+  </TitleBarContain>
+)
+
 @attachTheme
 @view
 export class PeekHeaderContent extends React.Component {
   render({ peekStore, title, date, subtitle, after, permalink, icon }) {
     return (
       <header ref={this.onHeader}>
-        <OrbitIcon
-          if={icon}
-          icon={icon}
-          size={16}
-          css={{
-            position: 'absolute',
-            top: -2,
-            right: 70,
-            transform: {
-              scale: 3,
-              rotate: '45deg',
-            },
-          }}
-        />
-        <title if={title}>
-          <chromeSpace if={peekStore.hasHistory} />
-          <titles>
-            <UI.Text
-              $titleMain
-              size={1.3}
-              fontWeight={700}
-              ellipse={2}
-              margin={0}
-              lineHeight="1.5rem"
-            >
-              {title}
-            </UI.Text>
-            <UI.Text if={subtitle} size={1} ellipse={1} $subtitle>
-              {subtitle} <UI.Date>{date}</UI.Date>
-            </UI.Text>
-          </titles>
-        </title>
+        <TitleBar
+          subTitle={subtitle}
+          date={date}
+          icon={
+            <OrbitIcon
+              if={icon}
+              icon={icon}
+              size={16}
+              css={{
+                position: 'absolute',
+                top: -2,
+                right: 70,
+                transform: {
+                  scale: 3,
+                  rotate: '45deg',
+                },
+              }}
+            />
+          }
+        >
+          {title}
+        </TitleBar>
         <after>
           <afterInner>
             <permalink if={permalink}>
@@ -68,11 +89,6 @@ export class PeekHeaderContent extends React.Component {
     title: {
       flex: 1,
       flexFlow: 'row',
-    },
-    titleMain: {
-      flex: 1,
-      maxWidth: '100%',
-      marginBottom: 5,
     },
     subtitle: {
       opacity: 0.8,

@@ -3,6 +3,7 @@ import { view, on, attachTheme } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
 import * as _ from 'lodash'
+import { InlineBlock } from './blocks/inlineBlock'
 
 // cut text down using highlight words
 // not a wonderfully efficient
@@ -347,7 +348,8 @@ export class Text extends React.Component {
     }
     const showEllipse = highlight || ellipse
     return (
-      <text
+      <InlineBlock
+        $text
         className={className}
         tagName={tagName}
         contentEditable={editable}
@@ -384,7 +386,7 @@ export class Text extends React.Component {
           }
           {...ellipseProps}
         />
-      </text>
+      </InlineBlock>
     )
   }
 

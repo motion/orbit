@@ -92,7 +92,7 @@ export function selectBit(bit: Bit, target?: PositionObject) {
 
 function getTargetPosition(node: PositionObject) {
   if (!node) {
-    throw new Error(`no result node ${node}`)
+    return null
   }
   if (node instanceof HTMLElement) {
     const { top, left, height } = node.getBoundingClientRect()

@@ -1,6 +1,6 @@
 {
   "name": "@mcro/stores",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "main": "_/index",
   "types": "./index.d.ts",
@@ -9,11 +9,11 @@
     "watch": "npm run build -- --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/black": "^2.1.0",
-    "@mcro/constants": "^2.1.0",
-    "@mcro/debug": "^2.1.0",
-    "@mcro/mobx-bridge": "^2.1.0",
-    "@mcro/models": "^2.1.0",
+    "@mcro/black": "^2.2.0",
+    "@mcro/constants": "^2.2.0",
+    "@mcro/debug": "^2.2.0",
+    "@mcro/mobx-bridge": "^2.2.0",
+    "@mcro/models": "^2.2.0",
     "global": "^4.3.2",
     "lodash": "4.17.10"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@mcro/gloss",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Higher order component for nicer component styles",
   "main": "_/gloss.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
-    "@mcro/css": "^2.0.2",
+    "@mcro/css": "^2.2.0",
     "deep-extend": "^0.6.0",
     "html-tags": "^2.0.0",
     "jss": "^9.8.2",

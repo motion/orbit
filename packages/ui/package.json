@@ -1,7 +1,7 @@
 {
   "name": "@mcro/ui",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "lib/index.js",
   "module": "dist/index.js",
   "license": "MIT",
@@ -11,8 +11,8 @@
     "watch": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mcro/black": "^2.1.0",
-    "@mcro/gloss": "^2.1.0",
+    "@mcro/black": "^2.2.0",
+    "@mcro/gloss": "^2.2.0",
     "batch-processor": "^1.0.0",
     "color": "^3.0.0",
     "fuzzy": "^0.1.3",

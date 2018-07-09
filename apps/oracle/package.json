@@ -1,6 +1,6 @@
 {
   "name": "@mcro/oracle",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "main": "./_/oracle.js",
   "scripts": {
@@ -18,8 +18,8 @@
     "_/**/*"
   ],
   "dependencies": {
-    "@mcro/black": "^2.1.0",
-    "@mcro/debug": "^2.1.0",
+    "@mcro/black": "^2.2.0",
+    "@mcro/debug": "^2.2.0",
     "electron-util": "^0.2.1",
     "execa": "^0.8.0",
     "express": "^4.16.2",

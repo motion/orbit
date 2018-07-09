@@ -1,7 +1,7 @@
 {
   "name": "@mcro/app",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "src/index.js",
   "scripts": {
     "start": "./scripts/start.sh",
@@ -11,20 +11,20 @@
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.47",
-    "@mcro/black": "^2.1.0",
-    "@mcro/build": "^2.1.0",
-    "@mcro/constants": "^2.1.0",
-    "@mcro/debug": "^2.1.0",
-    "@mcro/gloss": "^2.1.0",
-    "@mcro/helpers": "^2.1.0",
-    "@mcro/models": "^2.1.0",
-    "@mcro/r2": "^2.1.0",
-    "@mcro/router": "^2.1.0",
-    "@mcro/services": "^2.1.0",
-    "@mcro/slackdown": "^2.1.0",
-    "@mcro/sonar": "^2.1.0",
-    "@mcro/stores": "^2.1.0",
-    "@mcro/ui": "^2.1.0",
+    "@mcro/black": "^2.2.0",
+    "@mcro/build": "^2.2.0",
+    "@mcro/constants": "^2.2.0",
+    "@mcro/debug": "^2.2.0",
+    "@mcro/gloss": "^2.2.0",
+    "@mcro/helpers": "^2.2.0",
+    "@mcro/models": "^2.2.0",
+    "@mcro/r2": "^2.2.0",
+    "@mcro/router": "^2.2.0",
+    "@mcro/services": "^2.2.0",
+    "@mcro/slackdown": "^2.2.0",
+    "@mcro/sonar": "^2.2.0",
+    "@mcro/stores": "^2.2.0",
+    "@mcro/ui": "^2.2.0",
     "arrford": "2.0.1",
     "color": "^3.0.0",
     "date-fns": "1.29.0",
@@ -56,10 +56,10 @@
     "webpack-runtime-require": "0.3.0"
   },
   "devDependencies": {
-    "@mcro/dev": "^2.1.0",
-    "@types/webpack-env": "1.13.6",
+    "@mcro/dev": "^2.2.0",
     "@types/react": "16.4.6",
-    "@types/react-dom": "16.0.6"
+    "@types/react-dom": "16.0.6",
+    "@types/webpack-env": "1.13.6"
   },
   "peerDependencies": {
     "mobx": "^5.0.2",

@@ -8,7 +8,7 @@
     "typeorm": "0.2.7"
   },
   "devDependencies": {
-    "@mcro/babel-preset-motion": "*",
+    "@mcro/babel-preset-motion": "2.1.0",
     "@babel/cli": "7.0.0-beta.47",
     "@babel/core": "7.0.0-beta.47",
     "@babel/plugin-syntax-decorators": "7.0.0-beta.47",

@@ -26,7 +26,7 @@ export class RootView extends React.Component {
   render() {
     if (this.state.error) {
       return (
-        <div
+        <UI.Col
           css={{
             background: [255, 0, 0, 0.025],
             position: 'absolute',
@@ -37,7 +37,7 @@ export class RootView extends React.Component {
             zIndex: Number.MAX_SAFE_INTEGER,
           }}
         >
-          <div
+          <UI.Col
             css={{
               position: 'absolute',
               bottom: 0,
@@ -54,7 +54,8 @@ export class RootView extends React.Component {
           >
             <h1>Orbit Error</h1>
             <h2>{this.state.error.message}</h2>
-            <pre
+            <UI.Block
+              tagName="pre"
               css={{
                 lineHeight: '1.4rem',
                 fontSize: 16,
@@ -62,9 +63,9 @@ export class RootView extends React.Component {
               }}
             >
               {this.state.error.stack}
-            </pre>
-          </div>
-        </div>
+            </UI.Block>
+          </UI.Col>
+        </UI.Col>
       )
     }
     const CurrentPage = Router.activeView || NotFound

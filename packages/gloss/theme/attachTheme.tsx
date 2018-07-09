@@ -5,13 +5,18 @@ import { ThemeContext } from './ThemeContext'
 
 export const attachTheme = Klass => {
   Klass._hasTheme = true
-  const AttachedKlass = props => (
-    <ThemeContext.Consumer>
-      {({ allThemes, activeThemeName }) => {
-        return <Klass {...props} theme={allThemes[activeThemeName]} />
-      }}
-    </ThemeContext.Consumer>
-  )
+  const AttachedKlass = props => {
+    if (props.theme) {
+      return <Klass {...props} />
+    }
+    return (
+      <ThemeContext.Consumer>
+        {({ allThemes, activeThemeName }) => {
+          return <Klass {...props} theme={allThemes[activeThemeName]} />
+        }}
+      </ThemeContext.Consumer>
+    )
+  }
   return new Proxy(AttachedKlass, {
     set(_, method, value) {
       Klass[method] = value

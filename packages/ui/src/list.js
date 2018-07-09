@@ -11,6 +11,16 @@ import { throttle, debounce } from 'lodash'
 const idFn = _ => _
 const SCROLL_BAR_WIDTH = 16
 
+const ListContain = view({
+  alignItems: 'stretch',
+  overflowX: 'visible',
+})
+
+ListContain.theme = props => ({
+  visibility: props.visible ? 'visible' : 'hidden',
+  marginRight: props.hideScrollBar ? -SCROLL_BAR_WIDTH : 0,
+})
+
 // export type Props = {
 //   defaultSelected?: number,
 //   children?: React.Element<any>,
@@ -439,7 +449,9 @@ class ListUI extends React.PureComponent {
       for (const { index, name } of groups) {
         let child = extraProps => (
           <Separator
-            $firstSeparator={index === 0}
+            css={{
+              paddingTop: index === 0 ? 10 : 0,
+            }}
             key={name}
             {...separatorProps}
             {...extraProps}
@@ -510,9 +522,9 @@ class ListUI extends React.PureComponent {
     }
     const { totalItems, totalGroups, realIndex } = this
     return (
-      <list
-        $visible={!virtualized || this.state.started}
-        $hideScrollBar={hideScrollBar}
+      <ListContain
+        visible={!virtualized || this.state.started}
+        hideScrollBar={hideScrollBar}
         onScroll={!virtualized && onScroll}
         style={{
           height: height || virtualized ? '100%' : 'auto',
@@ -539,29 +551,11 @@ class ListUI extends React.PureComponent {
           onScroll={onScroll}
           {...virtualized}
         />
-        <listinner if={!virtualized}>{children}</listinner>
-      </list>
+        <listinner css={{ height: 'auto' }} if={!virtualized}>
+          {children}
+        </listinner>
+      </ListContain>
     )
-  }
-
-  static style = {
-    list: {
-      alignItems: 'stretch',
-      overflowX: 'visible',
-      visibility: 'hidden',
-    },
-    listinner: {
-      height: 'auto',
-    },
-    hideScrollBar: {
-      marginRight: -SCROLL_BAR_WIDTH,
-    },
-    visible: {
-      visibility: 'visible',
-    },
-    firstSeparator: {
-      paddingTop: 10,
-    },
   }
 }
 

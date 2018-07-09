@@ -7,6 +7,7 @@ import { HoverGlow } from './effects/hoverGlow'
 import { Glint } from './effects/glint'
 import { Popover } from './popover'
 import { object } from 'prop-types'
+import { Badge } from './badge'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -254,9 +255,11 @@ export class Surface extends React.Component {
           borderLeftRadius={borderLeftRadius - 1}
           borderRightRadius={borderRightRadius - 1}
         />
-        <div $badge if={badge} {...badgeProps}>
-          {typeof badge !== 'boolean' ? badge : ''}
-        </div>
+        {badge && (
+          <Badge {...badgeProps}>
+            {typeof badge !== 'boolean' ? badge : ''}
+          </Badge>
+        )}
         <div $icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </div>

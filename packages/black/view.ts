@@ -12,6 +12,7 @@ import { decorator } from './gloss'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
+import { isGlossyFirstArg } from '@mcro/gloss'
 
 const glossPlugin = () => ({
   onlyClass: true,
@@ -45,8 +46,8 @@ export interface ViewDecorator {
 
 function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(item, ...args) {
-    // short: view({ ...styles }), view('div', { ...styles })
-    if (typeof item === 'string' || typeof item === 'object') {
+    // short: view({ ...styles }), view('div', {}) view(OtherView, {})
+    if (isGlossyFirstArg(item)) {
       return decorator(item, ...args)
     }
     // class/function

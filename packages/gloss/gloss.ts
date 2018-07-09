@@ -11,6 +11,20 @@ export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 
+export const isGlossyFirstArg = arg => {
+  if (!arg) {
+    return false
+  }
+  if (typeof arg === 'string' || typeof arg === 'object') {
+    return true
+  }
+  // its a existing simple component
+  if (typeof arg.style === 'object') {
+    return true
+  }
+  return false
+}
+
 export type Options = {
   dontTheme?: boolean
   glossProp?: string
@@ -73,8 +87,8 @@ export default class Gloss {
     if (typeof maybeNameOrComponent === 'object') {
       return this.createSimpleGlossComponent('div', maybeNameOrComponent)
     }
-    // view('div', {})
-    if (typeof maybeNameOrComponent === 'string') {
+    // view('div', {}) or view(OtherView, {})
+    if (isGlossyFirstArg(maybeNameOrComponent)) {
       return this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
     }
     // @view class MyView {}
@@ -120,8 +134,9 @@ export default class Gloss {
     }
   }
 
-  createSimpleGlossComponent = (tagName, styles) => {
+  createSimpleGlossComponent = (target, styles) => {
     const id = uid()
+    const name = target.name || target
     const elementCache = new WeakMap()
     let themeUpdate
     const View = <GlossView>attachTheme(props => {
@@ -131,22 +146,22 @@ export default class Gloss {
       }
       // attach theme on first use
       if (View.theme && !themeUpdate) {
-        themeUpdate = this.createThemeManager(id, View.theme, tagName)
+        themeUpdate = this.createThemeManager(id, View.theme, name)
       }
       // update theme
       if (themeUpdate) {
         themeUpdate(props)
       }
       // TODO: probably can avoid passing through props
-      const element = this.createElement(tagName, {
+      const element = this.createElement(target, {
         glossUID: id,
         ...props,
       })
       elementCache.set(props, element)
       return element
     })
-    this.attachStyles(`${id}`, { [tagName]: styles })
-    View.displayName = tagName
+    this.attachStyles(`${id}`, { [name]: styles })
+    View.displayName = name
     View.style = styles
     return View
   }

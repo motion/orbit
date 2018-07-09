@@ -118,11 +118,7 @@ export class PeekHeaderContent extends React.Component {
                     },
                   }}
                   onClose={App.actions.clearPeek}
-                  onMax={() => {
-                    App.setPeekState({
-                      devModeStick: !App.peekState.devModeStick,
-                    })
-                  }}
+                  onMax={() => App.actions.toggleDevModeStick()}
                   maxProps={{
                     background: '#ccc',
                   }}

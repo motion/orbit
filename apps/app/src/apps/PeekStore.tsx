@@ -180,10 +180,7 @@ export class PeekStore {
       offMove()
       offUp()
       // now that it's pinned, update position
-      App.setPeekState({
-        pinned: true,
-        position: this.framePosition,
-      })
+      App.actions.finishPeekDrag(this.framePosition)
     })
   }
 }

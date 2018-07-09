@@ -14,15 +14,15 @@ export class GithubIssueSync {
 
   run = async () => {
     try {
-      console.log('running github task')
-      const repositories = await this.syncRepos()
-      console.log('Created', repositories ? repositories.length : 0, 'issues', repositories)
+      console.log('synchronizing github issues')
+      const issues = await this.syncIssues()
+      console.log(`created ${issues.length} issues`, issues)
     } catch (err) {
-      console.log('Error in github task sync', err.message, err.stack)
+      console.log('error in github issues synchronization', err.message, err.stack)
     }
   }
 
-  private syncRepos = async (repos?: string[]) => {
+  private async syncIssues(repos?: string[]): Promise<Bit[]> {
     const repoSettings = this.setting.values.repos
     const repositoryPaths = repos || Object.keys(repoSettings || {})
     return flatten(
@@ -35,7 +35,7 @@ export class GithubIssueSync {
     )
   }
 
-  private createIssue = async (issue: GithubIssue, organization: string, repository: string): Promise<Bit> => {
+  private async createIssue(issue: GithubIssue, organization: string, repository: string): Promise<Bit> {
     const data /* : create type for it */ = {
       ...omit(issue, ['bodyText']),
       labels: issue.labels.edges.map(edge => edge.node),

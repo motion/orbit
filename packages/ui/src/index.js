@@ -20,6 +20,7 @@ export * from './blocks/inlineBlock'
 export * from './blocks/row'
 
 // base
+export * from './image'
 export * from './arrow'
 export * from './badge'
 export * from './button'

@@ -20,6 +20,7 @@ export interface PotentiallyView {
 
 export function view<T>(
   a: T,
+  b?: any,
 ): T & { theme?: Object; displayName?: string } & PotentiallyView
 export namespace view {
   export function on(

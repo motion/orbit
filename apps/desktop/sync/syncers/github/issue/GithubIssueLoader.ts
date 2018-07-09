@@ -21,10 +21,10 @@ export class GithubIssueLoader {
   }
 
   async load() {
-    log(`Loading ${this.organization}/${this.repository} github issues`)
+    log(`loading ${this.organization}/${this.repository} github issues`)
     const issues = await this.loadByCursor()
     log(
-      `Loading is finished. Loaded ${issues.length} issues. Total query cost: ${
+      `loading is finished. Loaded ${issues.length} issues. Total query cost: ${
         this.totalCost
       }/${this.remainingCost}`,
     )
@@ -33,7 +33,7 @@ export class GithubIssueLoader {
 
   private async loadByCursor(cursor?: string) {
     // send a request to the github and load first/next 100 issues
-    log(`Loading ${cursor ? 'next' : 'first'} 100 github issues`)
+    log(`loading ${cursor ? 'next' : 'first'} 100 github issues`)
     const results = await fetchFromGitHub<GithubIssueQueryResult>(
       this.token,
       GithubIssueQuery,
@@ -53,12 +53,12 @@ export class GithubIssueLoader {
     if (!cursor) {
       log(`${issues.length} issues were loaded`)
       log(
-        `There are ${
+        `there are ${
           results.repository.issues.totalCount
         } issues in the repository`,
       )
     } else {
-      log(`Next ${issues.length} issues were loaded`)
+      log(`next ${issues.length} issues were loaded`)
     }
 
     // if there is a next page we execute next query to api to get all repository issues

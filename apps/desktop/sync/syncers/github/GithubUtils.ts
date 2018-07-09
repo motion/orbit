@@ -1,6 +1,7 @@
 import { createApolloFetch } from 'apollo-fetch'
 
 export const fetchFromGitHub = async <T>(token: string, query: string, variables: object): Promise<T> => {
+  // todo: replace with fetch here
   const results = createApolloFetch({
     uri: 'https://api.github.com/graphql',
   }).use(({ options }, next) => {

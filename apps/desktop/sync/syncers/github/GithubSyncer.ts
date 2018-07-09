@@ -5,7 +5,7 @@ import {GithubPeopleSync} from './people/GithubPeopleSync'
 export const github = new Syncer('github', {
   actions: {
     task: { secondsBetween: 60 * 5 },
-    people: { secondsBetween: 20 },
+    people: { secondsBetween: 60 * 5 },
   },
   getSyncers: setting => ({
     task: new GithubIssueSync(setting),

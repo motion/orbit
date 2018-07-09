@@ -54,6 +54,26 @@ const BORDER_KEY = {
   borderTop: true,
 }
 
+const PSEUDO = {
+  // pseudoclasses
+  hover: '&:hover',
+  active: '&:active',
+  checked: '&:checked',
+  focus: '&:focus',
+  enabled: '&:enabled',
+  disabled: '&:disabled',
+  empty: '&:empty',
+  target: '&:target',
+  required: '&:required',
+  valid: '&:valid',
+  invalid: '&:invalid',
+  // psuedoelements
+  before: '&:before',
+  after: '&:after',
+  placeholder: '&:placeholder',
+  selection: '&:selection',
+}
+
 // helpers
 const px = (x: number | string) =>
   typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x
@@ -235,8 +255,13 @@ export default function motionStyle(options: Object = {}) {
         firstChar === '&' ||
         firstChar === '@' ||
         key === 'from' ||
-        key === 'to'
+        key === 'to' ||
+        PSEUDO[key]
       ) {
+        // nice pseudos
+        if (PSEUDO[key]) {
+          finalKey = PSEUDO[key]
+        }
         // recurse into psuedo or media query
         toReturn[finalKey] = processStyles(value, opts)
         respond = true

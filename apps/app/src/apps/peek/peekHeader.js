@@ -2,14 +2,24 @@ import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/orbitIcon'
+import { WindowControls } from '../../views/WindowControls'
+import { App } from '@mcro/stores'
+
+const PeekHeaderContain = view({
+  background: '#fff',
+  position: 'relative',
+  zIndex: 100,
+})
 
 const TitleBarTitle = props => (
   <UI.Text
-    size={1.3}
+    size={1.1}
     fontWeight={700}
-    ellipse={2}
+    ellipse
     margin={0}
+    padding={[4, 0]}
     lineHeight="1.5rem"
+    textAlign="center"
     {...props}
   />
 )
@@ -17,32 +27,50 @@ const TitleBarTitle = props => (
 const TitleBarContain = view({
   flex: 1,
   maxWidth: '100%',
-  marginBottom: 5,
+  padding: [0, 60],
 })
 
-const TitleBarSubTitle = ({ children, date }) => (
-  <UI.Text size={1} ellipse={1}>
-    {children} <UI.Date>{date}</UI.Date>
-  </UI.Text>
+TitleBarContain.theme = ({ theme }) => ({
+  hover: {
+    background: theme.hover.background.lighten(0.05),
+  },
+})
+
+const SubTitle = ({ children, date, theme }) => (
+  <UI.Row
+    padding={[4, 12]}
+    borderBottom={[1, theme.base.background.darken(0.1)]}
+  >
+    <UI.Text size={1} ellipse={1} alpha={0.8}>
+      {children} <UI.Date>{date}</UI.Date>
+    </UI.Text>
+  </UI.Row>
 )
 
-const TitleBar = ({ children, subtitle, date, icon, ...props }) => (
+const TitleBar = ({ children, after, ...props }) => (
   <TitleBarContain {...props}>
     <TitleBarTitle>{children}</TitleBarTitle>
-    <TitleBarSubTitle date={date}>{subtitle}</TitleBarSubTitle>
-    {icon}
+    {after}
   </TitleBarContain>
 )
 
 @attachTheme
 @view
 export class PeekHeaderContent extends React.Component {
-  render({ peekStore, title, date, subtitle, after, permalink, icon }) {
+  render({
+    peekStore,
+    title,
+    date,
+    subtitle,
+    after,
+    permalink,
+    icon,
+    theme,
+    ...props
+  }) {
     return (
-      <header ref={this.onHeader}>
+      <PeekHeaderContain ref={this.onHeader} theme={theme} {...props}>
         <TitleBar
-          subTitle={subtitle}
-          date={date}
           icon={
             <OrbitIcon
               if={icon}
@@ -59,9 +87,48 @@ export class PeekHeaderContent extends React.Component {
               }}
             />
           }
+          after={
+            <UI.Row
+              flexFlow="row"
+              position="absolute"
+              top={0}
+              left={6}
+              height={27}
+              zIndex={10000}
+              alignItems="center"
+              transform={{
+                scale: 0.9,
+              }}
+            >
+              <WindowControls
+                itemProps={{
+                  style: {
+                    marginLeft: 1,
+                  },
+                }}
+                onClose={App.actions.clearPeek}
+                onMax={() => {
+                  App.setPeekState({ pinned: !App.peekState.pinned })
+                }}
+                maxProps={{
+                  background: '#ccc',
+                }}
+              />
+              <UI.Button
+                if={peekStore.hasHistory}
+                icon="arrowminleft"
+                circular
+                size={0.8}
+                background="#f2f2f2"
+              />
+            </UI.Row>
+          }
         >
           {title}
         </TitleBar>
+        <SubTitle date={date} theme={theme}>
+          {subtitle}
+        </SubTitle>
         <after>
           <afterInner>
             <permalink if={permalink}>
@@ -71,28 +138,11 @@ export class PeekHeaderContent extends React.Component {
           </afterInner>
           {after}
         </after>
-      </header>
+      </PeekHeaderContain>
     )
   }
 
   static style = {
-    header: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-      zIndex: 100,
-    },
-    titles: {
-      marginRight: 25,
-    },
-    title: {
-      flex: 1,
-      flexFlow: 'row',
-    },
-    subtitle: {
-      opacity: 0.8,
-    },
     date: { opacity: 0.5, fontSize: 14 },
     after: {
       alignSelf: 'flex-end',
@@ -108,17 +158,6 @@ export class PeekHeaderContent extends React.Component {
     permalink: {
       opacity: 0.75,
     },
-  }
-
-  static theme = ({ theme }) => {
-    return {
-      header: {
-        background: theme.base.background,
-        '&:hover': {
-          background: theme.active.background,
-        },
-      },
-    }
   }
 }
 

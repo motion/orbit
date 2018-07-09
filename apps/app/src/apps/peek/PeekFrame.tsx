@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
-import { WindowControls } from '../../views/WindowControls'
 import * as Constants from '../../constants'
 import { PeekStore } from '../PeekStore'
 
@@ -33,12 +32,6 @@ const PeekMain = view({
   overflow: 'hidden',
   opacity: 1,
   transition: 'background ease-in 200ms',
-})
-
-const PeekChrome = view({
-  position: 'absolute',
-  left: 10,
-  zIndex: 100000,
 })
 
 type PeekFrameProps = {
@@ -135,43 +128,6 @@ export const PeekFrame = view.attach('peekStore')(
             position="relative"
             flex={1}
           >
-            <WindowControls
-              itemProps={{
-                style: {
-                  marginLeft: 1,
-                },
-              }}
-              css={{
-                flexFlow: 'row-reverse',
-                position: 'absolute',
-                top: 16,
-                right: 6,
-                zIndex: 10000,
-                transform: {
-                  scale: 0.9,
-                },
-              }}
-              onClose={App.actions.clearPeek}
-              onMax={() => {
-                App.setPeekState({ pinned: !App.peekState.pinned })
-              }}
-              maxProps={{
-                background: '#ccc',
-              }}
-            />
-            <PeekChrome if={false && peekStore.hasHistory}>
-              <UI.Button
-                icon="arrowminleft"
-                circular
-                size={0.85}
-                background="#f2f2f2"
-                iconProps={{
-                  style: {
-                    transform: 'translateX(-1px) translateY(-1px)',
-                  },
-                }}
-              />
-            </PeekChrome>
             <PeekFrameBorder
               css={{
                 borderRadius,

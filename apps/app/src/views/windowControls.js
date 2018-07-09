@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { ControlButton } from '~/views/ControlButton'
-import * as UI from '@mcro/ui'
 
 export const WindowControls = ({
   onClose,
@@ -10,10 +9,9 @@ export const WindowControls = ({
   closeProps,
   minProps,
   itemProps,
-  ...props
 }) => {
   return (
-    <UI.Row {...props}>
+    <>
       <ControlButton
         if={onClose}
         icon="x"
@@ -37,6 +35,6 @@ export const WindowControls = ({
         {...itemProps}
         {...minProps}
       />
-    </UI.Row>
+    </>
   )
 }

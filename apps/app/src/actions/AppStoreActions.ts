@@ -19,6 +19,14 @@ type GenericPeekItem = {
   integration?: string
 }
 
+function setPeekState(props, target?) {
+  App.setPeekState({
+    target,
+    ...getPosition(target),
+    ...props,
+  })
+}
+
 export function selectItem(
   item: Person | Bit | GenericPeekItem,
   target?: PositionObject,
@@ -34,62 +42,65 @@ export function selectItem(
     invariant(item.title, 'Must pass item title')
     invariant(item.type, 'Must pass item type')
     invariant(item.id, 'Must pass item id')
-    App.setPeekState({
-      ...withPosition(target),
-      peekId: Math.random(),
-      item: {
-        id: item.id,
-        title: item.title,
-        type: item.type || '',
-        // because were doing deep merging, we reset extra fields
-        body: '',
-        integration: item.integration || '',
-        icon: '',
+    setPeekState(
+      {
+        peekId: Math.random(),
+        item: {
+          id: item.id,
+          title: item.title,
+          type: item.type || '',
+          // because were doing deep merging, we reset extra fields
+          body: '',
+          integration: item.integration || '',
+          icon: '',
+        },
       },
-    })
+      target,
+    )
   }
 }
 
 export function selectPerson(person: Person, target?: PositionObject) {
   const avatar = person.data.profile.image_48
-  App.setPeekState({
-    ...withPosition(target),
-    peekId: Math.random(),
-    item: {
-      id: person.id,
-      icon: avatar,
-      title: person.name,
-      body: '',
-      type: 'person',
-      integration: '',
+  setPeekState(
+    {
+      peekId: Math.random(),
+      item: {
+        id: person.id,
+        icon: avatar,
+        title: person.name,
+        body: '',
+        type: 'person',
+        integration: '',
+      },
     },
-  })
+    target,
+  )
 }
 
-export function selectBit(bit: Bit, node?: PositionObject) {
-  App.setPeekState({
-    ...withPosition(node),
-    peekId: Math.random(),
-    item: {
-      id: bit.id,
-      icon: bit.icon,
-      title: bit.title,
-      body: bit.body,
-      type: bit.type,
-      integration: bit.integration,
+export function selectBit(bit: Bit, target?: PositionObject) {
+  setPeekState(
+    {
+      peekId: Math.random(),
+      item: {
+        id: bit.id,
+        icon: bit.icon,
+        title: bit.title,
+        body: bit.body,
+        type: bit.type,
+        integration: bit.integration,
+      },
     },
-  })
+    target,
+  )
 }
 
-function withPosition(node?: PositionObject) {
+function getPosition(node?: PositionObject) {
   if (!node) {
     return null
   }
   const target = getTargetPosition(node)
-  return {
-    ...peekPosition(target),
-    target,
-  }
+  return peekPosition(target)
 }
 
 function getTargetPosition(node: PositionObject) {
@@ -113,9 +124,10 @@ export function clearPeek() {
     console.log('Peek pinned, ignore')
     return
   }
-  App.setPeekState({
-    id: null,
+  setPeekState({
+    peekId: null,
     target: null,
     item: null,
+    pinned: false,
   })
 }

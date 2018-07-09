@@ -40,16 +40,19 @@ export class PeekStore {
   }
 
   unTear = react(
-    () => App.peekState.id || (App.peekState.item && App.peekState.item.id),
-    id => {
-      if (!id) {
+    () => App.peekState.pinned,
+    pinned => {
+      if (pinned) {
         throw react.cancel
       }
-      console.log('new id removing torn state')
-      this.dragOffset = null
-      this.tornState = null
+      this.clearTorn()
     },
   )
+
+  clearTorn = () => {
+    this.dragOffset = null
+    this.tornState = null
+  }
 
   model = react(
     () => App.peekState.item,
@@ -179,7 +182,7 @@ export class PeekStore {
       // now that it's pinned, update position
       App.setPeekState({
         pinned: true,
-        position: this.framePosition
+        position: this.framePosition,
       })
     })
   }

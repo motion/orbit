@@ -88,6 +88,7 @@ export const Button = ({
         <Badge
           if={badge}
           size={props.size === true ? 1 : props.size || 1}
+          {...props}
           {...badgeProps}
         >
           <BadgeContents>{badge}</BadgeContents>

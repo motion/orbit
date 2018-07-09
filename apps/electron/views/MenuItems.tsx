@@ -5,12 +5,12 @@ import {
   MenuItem,
   MenuItems as ElMenuItems,
 } from '@mcro/reactron'
-import { view, Component } from '@mcro/black'
+import { view } from '@mcro/black'
 import { Electron, App } from '@mcro/stores'
 
 @view.attach('electronStore')
 @view.electron
-export class MenuItems extends Component<{}> {
+export class MenuItems extends React.Component {
   isClosing = false
 
   toggleDevTools = appName => () => {

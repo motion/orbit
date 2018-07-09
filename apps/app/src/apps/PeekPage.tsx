@@ -10,7 +10,6 @@ import { deepClone } from '../helpers'
 import { AppStore } from '../stores/AppStore'
 
 class PeekStore {
-  headerHeight = 20
   history = []
 
   get hasHistory() {
@@ -70,10 +69,6 @@ class PeekStore {
     },
     { delay: 32 },
   )
-
-  setHeaderHeight = height => {
-    this.headerHeight = height
-  }
 
   get state() {
     let state = this.curState

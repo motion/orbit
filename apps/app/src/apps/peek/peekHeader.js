@@ -3,19 +3,9 @@ import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/orbitIcon'
 
-const TitleBar = props => <UI.Block background="red">{props.children}</UI.Block>
-
 @attachTheme
 @view
 export class PeekHeaderContent extends React.Component {
-  onHeader = ref => {
-    if (!ref) return
-    console.log('setting client height', ref.clientHeight)
-    setTimeout(() => {
-      this.props.peekStore.setHeaderHeight(ref.clientHeight)
-    })
-  }
-
   render({ peekStore, title, date, subtitle, after, permalink, icon }) {
     return (
       <header ref={this.onHeader}>
@@ -33,7 +23,6 @@ export class PeekHeaderContent extends React.Component {
             },
           }}
         />
-        <TitleBar>{title}</TitleBar>
         <title if={title}>
           <chromeSpace if={peekStore.hasHistory} />
           <titles>
@@ -106,7 +95,6 @@ export class PeekHeaderContent extends React.Component {
   }
 
   static theme = ({ theme }) => {
-    console.log('peek theme is', theme)
     return {
       header: {
         background: theme.base.background,
@@ -119,7 +107,7 @@ export class PeekHeaderContent extends React.Component {
 }
 
 export const PeekHeader = view.attach('peekStore')(props => (
-  <UI.Theme theme={props.peekStore.theme || 'blue'}>
+  <UI.Theme theme={props.peekStore.theme || false}>
     <PeekHeaderContent {...props} />
   </UI.Theme>
 ))

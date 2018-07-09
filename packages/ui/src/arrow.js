@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 
 // export type Props = {
 //   size: number,
@@ -9,6 +9,7 @@ import { view } from '@mcro/black'
 //   background?: Color,
 // }
 
+@attachTheme
 @view.ui
 export class Arrow extends React.Component {
   static defaultProps = {

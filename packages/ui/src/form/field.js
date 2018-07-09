@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import { Label } from './label'
-import { Row } from '../listRow'
+import { ListRow } from '../listRow'
 
 // fields
 import { Input } from './input'
@@ -38,6 +38,7 @@ const TYPE_TO_ELEMENT_MAP = {
 //   element?: React$Element<any>,
 // }
 
+@attachTheme
 @view.ui
 export class Field extends React.Component {
   static defaultProps = {
@@ -107,7 +108,7 @@ export class Field extends React.Component {
       </>
     )
     if (row) {
-      return <Row $field>{contents}</Row>
+      return <ListRow $field>{contents}</ListRow>
     }
     return <field css={props}>{contents}</field>
   }

@@ -379,10 +379,15 @@ export class OrbitCard extends React.Component {
     },
   }
 
-  static theme = (
-    { style, store, listItem, borderRadius, inGrid, hoverable },
+  static theme = ({
+    style,
+    store,
+    listItem,
+    borderRadius,
+    inGrid,
+    hoverable,
     theme,
-  ) => {
+  }) => {
     const { isSelected } = store
     let hoveredStyle
     let card = {

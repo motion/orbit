@@ -122,10 +122,7 @@ export class PeekFrame extends React.Component {
                 background: '#ccc',
               }}
             />
-            <chrome
-              if={false && peekStore.hasHistory}
-              css={{ top: peekStore.headerHeight - 11 }}
-            >
+            <chrome if={false && peekStore.hasHistory}>
               <UI.Button
                 icon="arrowminleft"
                 circular

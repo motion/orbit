@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as _ from 'lodash'
 
@@ -9,6 +9,7 @@ const shortName = name => {
   return `${_.capitalize(names[0])}${lastInitial}`
 }
 
+@attachTheme
 @view.ui
 export class PeopleRow extends React.Component {
   render({ people }) {

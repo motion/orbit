@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, on } from '@mcro/black'
+import { view, on, attachTheme } from '@mcro/black'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
@@ -79,6 +79,7 @@ const getShadow = (shadow, elevation) => {
 }
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
+@attachTheme
 @view.ui
 export class Popover extends React.PureComponent {
   static acceptsHovered = 'open'

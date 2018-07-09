@@ -126,7 +126,8 @@ export const PeekFrame = view.attach('peekStore')(
         />
         <UI.Col flex={1} padding={padding} margin={margin}>
           <UI.Col
-            draggable
+            // disable drag for now
+            draggable={false}
             onDragStart={peekStore.onDragStart}
             onDrag={peekStore.onDrag}
             onDragEnd={peekStore.onDragEnd}

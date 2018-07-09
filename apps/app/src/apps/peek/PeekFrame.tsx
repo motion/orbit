@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { WindowControls } from '../../views/WindowControls'
 import * as Constants from '../../constants'
+import { PeekStore } from '../PeekStore'
 
 const SHADOW_PAD = 80
 const borderRadius = 10
@@ -17,9 +18,36 @@ const transitions = store => {
   return 'all ease-in 150ms'
 }
 
+const PeekFrameBorder = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 10000,
+  pointerEvents: 'none',
+})
+
+const PeekMain = view({
+  flex: 1,
+  overflow: 'hidden',
+  opacity: 1,
+  transition: 'background ease-in 200ms',
+})
+
+const PeekChrome = view({
+  position: 'absolute',
+  left: 10,
+  zIndex: 100000,
+})
+
 @view.attach('peekStore')
 @view
 export class PeekFrame extends React.Component {
+  props: {
+    peekStore: PeekStore
+  }
+
   render({ peekStore, children, ...props }) {
     const { willShow, willHide, state, willStayShown } = peekStore
     if (!state || !state.position || !state.position.length || !state.target) {
@@ -60,8 +88,11 @@ export class PeekFrame extends React.Component {
     )
     const transition = transitions(peekStore)
     return (
-      <peekFrame
-        css={{
+      <UI.Col
+        position="absolute"
+        left={0}
+        zIndex={2}
+        {...{
           transition,
           opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
           width: state.size[0],
@@ -73,6 +104,10 @@ export class PeekFrame extends React.Component {
         }}
       >
         <UI.Arrow
+          position="absolute"
+          top={0}
+          zIndex={100}
+          transition="transform ease-in 100ms"
           size={arrowSize}
           towards={onRight ? 'left' : 'right'}
           background={background}
@@ -80,7 +115,6 @@ export class PeekFrame extends React.Component {
             [0, 0, 10, [0, 0, 0, 0.05]],
             ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.35]],
           ]}
-          $arrow
           css={{
             left: !onRight ? 'auto' : -14,
             right: !onRight ? -arrowSize : 'auto',
@@ -91,13 +125,8 @@ export class PeekFrame extends React.Component {
             },
           }}
         />
-        <crop
-          css={{
-            padding,
-            margin,
-          }}
-        >
-          <peek>
+        <UI.Col flex={1} padding={padding} margin={margin}>
+          <UI.Col pointerEvents="all !important" position="relative" flex={1}>
             <WindowControls
               itemProps={{
                 style: {
@@ -122,7 +151,7 @@ export class PeekFrame extends React.Component {
                 background: '#ccc',
               }}
             />
-            <chrome if={false && peekStore.hasHistory}>
+            <PeekChrome if={false && peekStore.hasHistory}>
               <UI.Button
                 icon="arrowminleft"
                 circular
@@ -134,14 +163,14 @@ export class PeekFrame extends React.Component {
                   },
                 }}
               />
-            </chrome>
-            <peekFrameBorder
+            </PeekChrome>
+            <PeekFrameBorder
               css={{
                 borderRadius,
                 boxShadow: [borderShadow],
               }}
             />
-            <peekMain
+            <PeekMain
               css={{
                 boxShadow,
                 borderRadius,
@@ -150,53 +179,10 @@ export class PeekFrame extends React.Component {
               {...props}
             >
               {children}
-            </peekMain>
-          </peek>
-        </crop>
-      </peekFrame>
+            </PeekMain>
+          </UI.Col>
+        </UI.Col>
+      </UI.Col>
     )
-  }
-
-  static style = {
-    peekFrame: {
-      position: 'absolute',
-      left: 0,
-      zIndex: 2,
-    },
-    peek: {
-      pointerEvents: 'all !important',
-      position: 'relative',
-      flex: 1,
-    },
-    crop: {
-      // overflow: 'hidden',
-      flex: 1,
-    },
-    arrow: {
-      position: 'absolute',
-      top: 0,
-      zIndex: 100,
-      transition: 'transform ease-in 100ms',
-    },
-    chrome: {
-      position: 'absolute',
-      left: 10,
-      zIndex: 100000,
-    },
-    peekFrameBorder: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 10000,
-      pointerEvents: 'none',
-    },
-    peekMain: {
-      flex: 1,
-      overflow: 'hidden',
-      opacity: 1,
-      transition: 'background ease-in 200ms',
-    },
   }
 }

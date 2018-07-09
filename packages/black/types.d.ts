@@ -47,3 +47,5 @@ export function debugState(cb: Function): void
 export function isEqual(a: any, b: any): boolean
 
 export function sleep(a: number): Promise<void>
+
+export function attachTheme<T>(a: T): T

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
+import { Col } from './blocks/col'
 
 // export type Props = {
 //   size: number,
@@ -9,24 +10,30 @@ import { view, attachTheme } from '@mcro/black'
 //   background?: Color,
 // }
 
-@attachTheme
-@view.ui
-export class Arrow extends React.Component {
-  static defaultProps = {
-    size: 16,
-    towards: 'bottom',
-  }
+// why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
+const ArrowOuter = view({
+  position: 'relative',
+  overflow: 'hidden',
+})
 
-  render({
-    size,
-    towards,
-    onClick,
-    background,
+const ArrowInner = view({
+  position: 'absolute',
+  left: 0,
+  borderRadius: 1,
+  transform: { rotate: '45deg' },
+})
+
+export const Arrow = attachTheme(
+  ({
+    size = 16,
+    towards = 'bottom',
     boxShadow,
     opacity,
-    style,
     border,
-  }) {
+    background,
+    theme,
+    ...props
+  }) => {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
     const transform = {
@@ -42,24 +49,16 @@ export class Arrow extends React.Component {
       top: '0deg',
     }[towards]
     return (
-      <div onClick={onClick} style={style}>
-        <div
-          $arrowOuter
-          css={{ transform }}
-          style={{
-            width: size,
-            height: size,
-          }}
-        >
-          <div
+      <Col {...props}>
+        <ArrowOuter css={{ transform, width: size, height: size }}>
+          <Col
             css={{
               transform: { rotate: rotate },
               width: size,
               height: size,
             }}
           >
-            <div
-              $arrowInner
+            <ArrowInner
               css={{
                 top: innerTop * 0.75,
                 width: size,
@@ -67,33 +66,12 @@ export class Arrow extends React.Component {
                 boxShadow,
                 opacity,
                 border,
+                background: background || theme.base.background,
               }}
             />
-          </div>
-        </div>
-      </div>
+          </Col>
+        </ArrowOuter>
+      </Col>
     )
-  }
-
-  static style = {
-    // why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
-    arrowOuter: {
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    arrowInner: {
-      position: 'absolute',
-      left: 0,
-      borderRadius: 1,
-      transform: { rotate: '45deg' },
-    },
-  }
-
-  static theme = ({ background, theme }) => {
-    return {
-      arrowInner: {
-        background: background || theme.base.background,
-      },
-    }
-  }
-}
+  },
+)

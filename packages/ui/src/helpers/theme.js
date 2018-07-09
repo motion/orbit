@@ -12,9 +12,10 @@ export const Theme = ({ theme, name, children }) => {
     return <GlossTheme name={name}>{children}</GlossTheme>
   }
   // pass through if no theme
-  if (!theme || !name) {
+  if (!theme) {
     return children
   }
+  console.log('making theme from', theme)
   const nextTheme =
     typeof theme === 'string'
       ? MakeTheme.fromColor(theme)

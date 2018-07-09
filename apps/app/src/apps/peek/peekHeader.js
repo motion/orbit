@@ -11,6 +11,10 @@ const PeekHeaderContain = view({
   zIndex: 100,
 })
 
+PeekHeaderContain.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
+
 const TitleBarTitle = props => (
   <UI.Text
     size={1.1}
@@ -31,6 +35,7 @@ const TitleBarContain = view({
 })
 
 TitleBarContain.theme = ({ theme }) => ({
+  // background: theme.base.background,
   hover: {
     background: theme.hover.background.lighten(0.05),
   },
@@ -78,57 +83,57 @@ export class PeekHeaderContent extends React.Component {
     return (
       <PeekHeaderContain ref={this.onHeader} theme={theme} {...props}>
         <TitleBar
-          icon={
-            <OrbitIcon
-              if={icon}
-              icon={icon}
-              size={16}
-              css={{
-                position: 'absolute',
-                top: -2,
-                right: 70,
-                transform: {
-                  scale: 3,
-                  rotate: '45deg',
-                },
-              }}
-            />
-          }
           after={
-            <UI.Row
-              flexFlow="row"
-              position="absolute"
-              top={0}
-              left={6}
-              height={27}
-              zIndex={10000}
-              alignItems="center"
-              transform={{
-                scale: 0.9,
-              }}
-            >
-              <WindowControls
-                itemProps={{
-                  style: {
-                    marginLeft: 1,
+            <>
+              <OrbitIcon
+                if={icon}
+                icon={icon}
+                size={16}
+                css={{
+                  position: 'absolute',
+                  top: -2,
+                  right: 70,
+                  transform: {
+                    scale: 3,
+                    rotate: '45deg',
                   },
                 }}
-                onClose={App.actions.clearPeek}
-                onMax={() => {
-                  App.setPeekState({ pinned: !App.peekState.pinned })
-                }}
-                maxProps={{
-                  background: '#ccc',
-                }}
               />
-              <UI.Button
-                if={peekStore.hasHistory}
-                icon="arrowminleft"
-                circular
-                size={0.8}
-                background="#f2f2f2"
-              />
-            </UI.Row>
+              <UI.Row
+                flexFlow="row"
+                position="absolute"
+                top={0}
+                left={6}
+                height={27}
+                zIndex={10000}
+                alignItems="center"
+                transform={{
+                  scale: 0.9,
+                }}
+              >
+                <WindowControls
+                  itemProps={{
+                    style: {
+                      marginLeft: 1,
+                    },
+                  }}
+                  onClose={App.actions.clearPeek}
+                  onMax={() => {
+                    App.setPeekState({ pinned: !App.peekState.pinned })
+                  }}
+                  maxProps={{
+                    background: '#ccc',
+                  }}
+                />
+                <UI.Button
+                  if={peekStore.hasHistory}
+                  icon="arrowminleft"
+                  circular
+                  size={0.8}
+                  background="#f2f2f2"
+                />
+              </UI.Row>
+            </>
           }
         >
           {title}
@@ -141,8 +146,10 @@ export class PeekHeaderContent extends React.Component {
   }
 }
 
-export const PeekHeader = view.attach('peekStore')(props => (
-  <UI.Theme theme={props.peekStore.theme || false}>
-    <PeekHeaderContent {...props} />
-  </UI.Theme>
-))
+export const PeekHeader = view.attach('peekStore')(
+  view(props => (
+    <UI.Theme theme={props.peekStore.theme || false}>
+      <PeekHeaderContent {...props} />
+    </UI.Theme>
+  )),
+)

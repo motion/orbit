@@ -3,10 +3,36 @@ import { App } from '@mcro/stores'
 import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../helpers'
 
+const TYPE_THEMES = {
+  person: 'orange',
+  setting: 'gray',
+}
+
+const INTEGRATION_THEMES = {
+  slack: { background: '#FDDE64' },
+  github: { background: '#333', color: 'white' },
+  gdocs: '#7DA5F4',
+  jira: 'darkblue',
+  confluence: 'darkblue',
+  gmail: 'red',
+}
+
 export class PeekStore {
   tornState = null
   moving = false
   history = []
+
+  get theme() {
+    if (!this.model) {
+      return null
+    }
+    const item = App.peekState.item
+    if (TYPE_THEMES[item]) {
+      return TYPE_THEMES[item]
+    }
+    const intTheme = INTEGRATION_THEMES[this.model.integration]
+    return intTheme || null
+  }
 
   get hasHistory() {
     return this.history.length > 1

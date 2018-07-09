@@ -79,15 +79,16 @@ class OrbitHomeStore {
         findType('gdocs', 'document'),
         Person.findOne({ name: 'Andrew Hsu' }),
         Person.findOne({ name: 'Javi Bovee' }),
-        findType('github', 'task', 1),
-        findType('github', 'task', 2),
-        findType('gmail', 'mail'),
-        findType('gmail', 'mail', 1),
-        findType('gdocs', 'document', 9),
-        findType('slack', 'conversation', 5),
-        findType('slack', 'conversation', 6),
-        findType('slack', 'conversation', 7),
-        findType('slack', 'conversation', 8),
+        // limit due to slowness for now
+        // findType('github', 'task', 1),
+        // findType('github', 'task', 2),
+        // findType('gmail', 'mail'),
+        // findType('gmail', 'mail', 1),
+        // findType('gdocs', 'document', 9),
+        // findType('slack', 'conversation', 5),
+        // findType('slack', 'conversation', 6),
+        // findType('slack', 'conversation', 7),
+        // findType('slack', 'conversation', 8),
       ])
       console.timeEnd('homeSearch')
       return result.filter(Boolean)

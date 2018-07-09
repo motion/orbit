@@ -1,5 +1,5 @@
 import { react, on } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../helpers'
 import * as Constants from '../constants'
@@ -40,9 +40,13 @@ export class PeekStore {
   }
 
   unTear = react(
-    () => this.willHide,
-    async (_, { sleep }) => {
-      await sleep(100)
+    () => App.peekState.id || (App.peekState.item && App.peekState.item.id),
+    id => {
+      if (!id) {
+        throw react.cancel
+      }
+      console.log('new id removing torn state')
+      this.dragOffset = null
       this.tornState = null
     },
   )
@@ -50,6 +54,9 @@ export class PeekStore {
   model = react(
     () => App.peekState.item,
     async item => {
+      if (this.tornState) {
+        throw react.cancel
+      }
       if (!item) {
         return null
       }
@@ -77,6 +84,9 @@ export class PeekStore {
   )
 
   get curState() {
+    if (this.tornState) {
+      return this.tornState
+    }
     if (this.props.fixed) {
       return App.peekState
     }
@@ -105,10 +115,7 @@ export class PeekStore {
     // small adjust to overlap
     peekAdjustX += onRight ? -2 : 2
     const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
-    let position = state.position
-    if (this.tornState) {
-      position = this.tornState.position
-    }
+    const position = state.position
     let x = position[0] + peekAdjustX
     let y = position[1] + animationAdjust
     if (this.dragOffset) {
@@ -159,14 +166,12 @@ export class PeekStore {
   onDragStart = e => {
     e.preventDefault()
     this.tornState = { ...this.state }
-    let dragAdjust = null
+    // set initial offset of mouse from frame
+    let mouseDown
     const offMove = on(this, window, 'mousemove', e => {
-      // set initial offset of mouse from frame
-      if (!dragAdjust) {
-        dragAdjust = [e.clientX, e.clientY]
-      }
-      const [adjX, adjY] = dragAdjust
-      this.dragOffset = [e.clientX - adjX, e.clientY - adjY]
+      mouseDown = mouseDown || Desktop.mouseState.mouseDown
+      const { x, y } = mouseDown
+      this.dragOffset = [e.clientX - x, e.clientY - y]
     })
     const offUp = on(this, window, 'mouseup', e => {
       offMove()

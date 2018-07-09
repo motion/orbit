@@ -286,7 +286,10 @@ export class Screen {
       iohook.on('mousemove', throttle(this.handleMousePosition, 32)),
       iohook.on('mousedown', ({ button, x, y }) => {
         if (button === 1) {
-          Desktop.setMouseState({ mouseDown: { x, y, at: Date.now() } })
+          const TITLE_BAR_HEIGHT = 23
+          Desktop.setMouseState({
+            mouseDown: { x, y: y - TITLE_BAR_HEIGHT, at: Date.now() },
+          })
         }
       }),
       iohook.on('mouseup', ({ button }) => {

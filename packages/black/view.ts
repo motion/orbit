@@ -9,7 +9,6 @@ import { subscribable } from '@mcro/decor-classes'
 import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
 import { decorator } from './gloss'
-// import { uiContext } from './uiContext'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
@@ -26,7 +25,6 @@ const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   enable.mobx && reactObservable,
   [storeProvidable, storeOptions],
   !enable.ui && emitsMount,
-  // enable.ui && uiContext, // last as it wraps a HOC
 ]
 
 export const blackDecorator: DecorCompiledDecorator<any> = decor(

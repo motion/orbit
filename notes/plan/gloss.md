@@ -1,4 +1,3 @@
 - view(SomeView, {}) extension style syntax
 - begin importing Sonar into UI
 - make fancyElement attach data-name="SomeView" for <SomeView />
-- accept view({ hover:{} })

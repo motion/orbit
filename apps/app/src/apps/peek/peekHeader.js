@@ -36,7 +36,7 @@ TitleBarContain.theme = ({ theme }) => ({
   },
 })
 
-const SubTitle = ({ children, date, theme }) => (
+const SubTitle = ({ children, date, theme, permalink }) => (
   <UI.Row
     padding={[4, 12]}
     borderBottom={[1, theme.base.background.darken(0.1)]}
@@ -44,6 +44,14 @@ const SubTitle = ({ children, date, theme }) => (
     <UI.Text size={1} ellipse={1} alpha={0.8}>
       {children} <UI.Date>{date}</UI.Date>
     </UI.Text>
+    <UI.Col if={permalink} flex={1} />
+    <UI.Button
+      if={permalink}
+      size={0.9}
+      icon="link"
+      circular
+      onClick={permalink}
+    />
   </UI.Row>
 )
 
@@ -62,7 +70,6 @@ export class PeekHeaderContent extends React.Component {
     title,
     date,
     subtitle,
-    after,
     permalink,
     icon,
     theme,
@@ -126,38 +133,11 @@ export class PeekHeaderContent extends React.Component {
         >
           {title}
         </TitleBar>
-        <SubTitle date={date} theme={theme}>
+        <SubTitle date={date} theme={theme} permalink={permalink}>
           {subtitle}
         </SubTitle>
-        <after>
-          <afterInner>
-            <permalink if={permalink}>
-              <UI.Button size={0.9} icon="link" circular onClick={permalink} />
-            </permalink>
-            <space if={permalink && icon} />
-          </afterInner>
-          {after}
-        </after>
       </PeekHeaderContain>
     )
-  }
-
-  static style = {
-    date: { opacity: 0.5, fontSize: 14 },
-    after: {
-      alignSelf: 'flex-end',
-    },
-    afterInner: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      position: 'relative',
-    },
-    space: {
-      width: 7,
-    },
-    permalink: {
-      opacity: 0.75,
-    },
   }
 }
 

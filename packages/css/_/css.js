@@ -5,6 +5,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = require("./helpers");
 const cssNameMap_1 = require("./cssNameMap");
+exports.cssNameMap = cssNameMap_1.CAMEL_TO_SNAKE;
 __export(require("./helpers"));
 const UNDEFINED = 'undefined';
 const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor']);

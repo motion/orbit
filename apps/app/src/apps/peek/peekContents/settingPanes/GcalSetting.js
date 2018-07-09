@@ -171,7 +171,7 @@ export class GcalSetting extends React.Component {
 
     return (
       <content>
-        <UI.Row css={{ margin: [10, 0] }}>
+        <UI.ListRow css={{ margin: [10, 0] }}>
           <UI.Button
             onClick={() => (store.active = 'calendars')}
             color={[0, 0, 0, 0.8]}
@@ -186,7 +186,7 @@ export class GcalSetting extends React.Component {
           >
             Events ({(store.events || []).length})
           </UI.Button>
-        </UI.Row>
+        </UI.ListRow>
         <UI.Form $noSelect if={calendars && store.active === 'calendars'}>
           <Calendars
             title="Yours"

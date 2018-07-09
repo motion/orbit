@@ -10,6 +10,7 @@ export { Theme } from './theme/Theme'
 export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
+export { cssNameMap } from '@mcro/css'
 
 export const isGlossyFirstArg = arg => {
   if (!arg) {

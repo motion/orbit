@@ -3,15 +3,7 @@ import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/orbitIcon'
 
-const TitleBar = view(
-  'div',
-  {
-    background: 'yellow',
-  },
-  (props, theme) => ({
-    background: theme.base.background,
-  }),
-)
+const TitleBar = props => <UI.Block background="red">{props.children}</UI.Block>
 
 @attachTheme
 @view

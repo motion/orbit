@@ -76,7 +76,7 @@ export class SettingContent extends React.Component {
             </div>
           }
           after={
-            <UI.Row
+            <UI.ListRow
               $$flex
               css={{ margin: [0, -8, -5, 0] }}
               itemProps={{
@@ -96,7 +96,7 @@ export class SettingContent extends React.Component {
                 tooltip="Remove"
                 onClick={this.removeIntegration}
               />
-            </UI.Row>
+            </UI.ListRow>
           }
         />
         <PeekContent>

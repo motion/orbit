@@ -2,7 +2,7 @@ import { SQLitePlugin } from './SQLitePlugin'
 import { PrimusAdaptor } from './PrimusAdaptor'
 
 export class WebSQLClient {
-  private txLocks = {}
+  txLocks = {}
   private onError = null
   private dblocations = ['docs', 'libs', 'nosync']
   private primusAdaptor = new PrimusAdaptor()

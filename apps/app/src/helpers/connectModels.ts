@@ -11,7 +11,7 @@ export default async function connectModels(models) {
         }
         console.error('SQL Error', err)
         // temp to debug locks
-        console.log('Last query queue:', window.lastQueryQueue)
+        console.log('Last query queue:', Client.sqlLitePlugin.lastQueryQueue)
         // window.location = window.location
       },
     })
@@ -27,7 +27,11 @@ export default async function connectModels(models) {
         .map(k => Client.txLocks[k])
         .filter(lock => lock.inProgress)
       if (locks.length) {
-        console.log('LOCKS STILL ACTIVE', locks, window.lastQueryQueue)
+        console.log(
+          'LOCKS STILL ACTIVE',
+          locks,
+          Client.sqlLitePlugin.lastQueryQueue,
+        )
         debugger
       }
     }

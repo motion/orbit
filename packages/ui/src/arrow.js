@@ -42,22 +42,24 @@ export class Arrow extends React.Component {
       top: '0deg',
     }[towards]
     return (
-      <arrowContain onClick={onClick} style={style}>
-        <arrowOuter
+      <div onClick={onClick} style={style}>
+        <div
+          $arrowOuter
           css={{ transform }}
           style={{
             width: size,
             height: size,
           }}
         >
-          <arrow
+          <div
             css={{
               transform: { rotate: rotate },
               width: size,
               height: size,
             }}
           >
-            <arrowInner
+            <div
+              $arrowInner
               css={{
                 top: innerTop * 0.75,
                 width: size,
@@ -67,9 +69,9 @@ export class Arrow extends React.Component {
                 border,
               }}
             />
-          </arrow>
-        </arrowOuter>
-      </arrowContain>
+          </div>
+        </div>
+      </div>
     )
   }
 

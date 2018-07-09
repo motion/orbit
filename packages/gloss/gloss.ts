@@ -161,7 +161,11 @@ export default class Gloss {
       elementCache.set(props, element)
       return element
     })
-    this.attachStyles(`${id}`, { [name]: styles })
+    try {
+      this.attachStyles(`${id}`, { [name]: styles })
+    } catch (err) {
+      console.log('error attaching styles', target, name, styles)
+    }
     View.displayName = name
     View.style = styles
     return View

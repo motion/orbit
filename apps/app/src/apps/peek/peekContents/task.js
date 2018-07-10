@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekBitResolver, PeekHeader, PeekContent } from '../index'
+import { PeekBitResolver } from '../index'
 
 // bit.body =
 // {
@@ -22,32 +22,26 @@ import { PeekBitResolver, PeekHeader, PeekContent } from '../index'
 
 @view
 export class Task extends React.Component {
-  render({ bit, appStore }) {
-    if (!bit) {
-      console.warn('no bit for task123')
-      return null
-    }
+  render({ bit, appStore, children }) {
     return (
       <PeekBitResolver appStore={appStore} bit={bit}>
         {({ title, location, content, comments, icon, permalink }) => {
-          return (
-            <>
-              <PeekHeader
-                title={title}
-                subtitle={location}
-                icon={icon}
-                permalink={permalink}
-              />
-              <PeekContent>
+          return children({
+            title,
+            subtitle: location,
+            icon,
+            permalink,
+            content: (
+              <>
                 <bodyContents
                   dangerouslySetInnerHTML={{
                     __html: content,
                   }}
                 />
                 <comments>{comments}</comments>
-              </PeekContent>
-            </>
-          )
+              </>
+            ),
+          })
         }}
       </PeekBitResolver>
     )

@@ -1,100 +1,13 @@
+import { PeekStore } from './PeekStore'
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/stores'
 import * as PeekContents from './peek/PeekContents'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './peek/PeekFrame'
-import { Person, Bit } from '@mcro/models'
-import { deepClone } from '../helpers'
 import { AppStore } from '../stores/AppStore'
-
-class PeekStore {
-  history = []
-
-  get hasHistory() {
-    return this.history.length > 1
-  }
-
-  model = react(
-    () => App.peekState.item,
-    async item => {
-      if (!item) {
-        return null
-      }
-      if (item.type === 'person') {
-        return await Person.findOne({ id: item.id })
-      }
-      if (item.type === 'setting') {
-        return item
-      }
-      if (item.type === 'team') {
-        return item
-      }
-      const res = await Bit.findOne({
-        where: {
-          id: item.id,
-        },
-        relations: ['people'],
-      })
-      if (!res) {
-        return item
-      }
-      return res
-    },
-    { delay: 32, immediate: true },
-  )
-
-  get curState() {
-    if (this.props.fixed) {
-      return App.peekState
-    }
-    if (!App.peekState.target) {
-      return null
-    }
-    if (App.orbitState.docked || !App.orbitState.hidden) {
-      return App.peekState
-    }
-    return null
-  }
-
-  updateHistory = react(
-    () => this.curState,
-    state => {
-      if (state) {
-        this.history.push(state)
-      } else {
-        this.history = []
-      }
-    },
-    { delay: 32 },
-  )
-
-  get state() {
-    let state = this.curState
-    if (this.willHide) {
-      state = this.lastState
-    }
-    return state
-  }
-
-  lastState = react(() => this.curState, deepClone, {
-    delay: 16,
-    immediate: true,
-  })
-
-  get willHide() {
-    return !!this.lastState && !this.curState
-  }
-
-  get willShow() {
-    return !!this.curState && !this.lastState
-  }
-
-  willStayShown = react(() => this.willShow, _ => _, {
-    delay: 16,
-  })
-}
+import { PeekContent } from './peek/PeekContent'
+import { PeekHeader } from './peek/PeekHeader'
 
 const PeekPageInner = view(({ peekStore, appStore }) => {
   if (!peekStore.state) {
@@ -107,10 +20,10 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
     console.error('none', type)
     return <div>no pane found</div>
   }
-  if (!peekStore.model) {
-    console.warn('no selected model')
-    return <div>no selected model</div>
-  }
+  // if (!peekStore.model) {
+  //   console.warn('no selected model')
+  //   return <div>no selected model</div>
+  // }
   return (
     <PeekContentsView
       key={peekId}
@@ -118,17 +31,34 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
       person={peekStore.model}
       appStore={appStore}
       peekStore={peekStore}
-    />
+    >
+      {({ title, icon, date, subhead, subtitle, after, content }) => (
+        <>
+          <PeekHeader
+            title={title}
+            subtitle={subtitle}
+            after={after}
+            icon={icon}
+            date={date}
+            subhead={subhead}
+          />
+          <PeekContent>{content}</PeekContent>
+        </>
+      )}
+    </PeekContentsView>
   )
 })
 
-@view.attach({
-  appStore: AppStore,
-})
+@view.attach('appStore')
 @view.provide({
   peekStore: PeekStore,
 })
 export class PeekPage extends React.Component {
+  props: {
+    appStore: AppStore
+    peekStore: PeekStore
+  }
+
   render() {
     const { appStore, peekStore } = this.props
     return (

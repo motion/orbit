@@ -46,7 +46,7 @@ export class ControlButton extends React.Component {
       width: 12,
       height: 12,
       padding: 4,
-      margin: -4,
+      // margin: -4,
       marginRight: 8,
       borderRadius: 100,
       // border: [2, '#fff'],

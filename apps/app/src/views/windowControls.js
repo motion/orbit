@@ -9,10 +9,9 @@ export const WindowControls = ({
   closeProps,
   minProps,
   itemProps,
-  ...props
 }) => {
   return (
-    <buttons $$row {...props}>
+    <>
       <ControlButton
         if={onClose}
         icon="x"
@@ -36,6 +35,6 @@ export const WindowControls = ({
         {...itemProps}
         {...minProps}
       />
-    </buttons>
+    </>
   )
 }

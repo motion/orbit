@@ -20,6 +20,7 @@ export interface PotentiallyView {
 
 export function view<T>(
   a: T,
+  b?: any,
 ): T & { theme?: Object; displayName?: string } & PotentiallyView
 export namespace view {
   export function on(
@@ -46,3 +47,5 @@ export function debugState(cb: Function): void
 export function isEqual(a: any, b: any): boolean
 
 export function sleep(a: number): Promise<void>
+
+export function attachTheme<T>(a: T): T

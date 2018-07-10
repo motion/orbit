@@ -271,10 +271,10 @@ const observableId = () => `__ID_${Math.random()}__`
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const {
-    isIf,
     delayValue,
     defaultValue,
     onlyUpdateIfChanged,
+    trace,
     ...options
   } = getReactionOptions({
     name: method,
@@ -513,14 +513,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
   function watcher(reactionFn) {
     return function watcherCb(reactValArg) {
+      if (trace) {
+        Mobx.trace()
+      }
       reset()
-      // @react.if check. avoids 0 bugs
-      if (isIf && !reactValArg && reactValArg !== 0) {
-        return
-      }
-      if (isIf) {
-        console.log('reactinf', reactValArg)
-      }
       reactionID = uid()
       const curID = reactionID
       const updateAsyncValue = val => {
@@ -551,7 +547,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       try {
         reactionResult = reactionFn.call(
           obj,
-          isReaction ? reactValArg : obj.props,
+          // single function reactions get helpers directly
+          // value reactions get the value and helpers second
+          isReaction ? reactValArg : reactionHelpers,
           reactionHelpers,
         )
       } catch (err) {

@@ -51,7 +51,7 @@ export class Root {
     () => Desktop.state.lastSQLError,
     () => {
       console.log('last queries before error!!!!')
-      console.log(this.client.lastOpenedDatabase.lastQueryQueue)
+      console.log(this.client.sqlLitePlugin.lastQueryQueue)
     },
   )
 

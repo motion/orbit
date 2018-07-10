@@ -119,6 +119,10 @@ export class AppReactions {
       if (!hidden) {
         throw react.cancel
       }
+      // dont close peek when pinned
+      if (App.peekState.pinned) {
+        throw react.cancel
+      }
       App.actions.clearPeek()
     },
     { log: 'state' },

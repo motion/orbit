@@ -119,16 +119,19 @@ export class OrbitSettings extends React.Component {
         <section if={Store.integrationSettings.length}>
           <Views.SubTitle>Active Integrations</Views.SubTitle>
           <Masonry>
-            {Store.integrationSettings.map((setting, index) => (
-              <Store.IntegrationCard
-                key={`${setting.id}`}
-                result={settingToResult(setting)}
-                index={index + Store.generalSettings.length}
-                appStore={appStore}
-                setting={setting}
-                isActive
-              />
-            ))}
+            {Store.integrationSettings
+              .map((setting, index) => (
+                <Store.IntegrationCard
+                  if={settingToResult(setting).title}
+                  key={`${setting.id}`}
+                  result={settingToResult(setting)}
+                  index={index + Store.generalSettings.length}
+                  appStore={appStore}
+                  setting={setting}
+                  isActive
+                />
+              ))
+              .filter(Boolean)}
           </Masonry>
           <Views.VertSpace />
         </section>

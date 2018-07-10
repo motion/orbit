@@ -70,14 +70,18 @@ export class ThemeMaker {
     borderColor,
     ...rest
   }) => {
-    if (!background || !color) {
+    if (!background && !color) {
       throw new Error('Themes require at least background or color')
     }
+    const backgroundColored = $(background)
+    const backgroundOpposite = backgroundColored.mix(
+      backgroundColored.lighten(1),
+    )
     const base = this.colorize({
       highlightColor,
       highlightBackground,
-      background,
-      color,
+      background: backgroundColored,
+      color: color || backgroundOpposite,
       borderColor,
     })
     const focused = {

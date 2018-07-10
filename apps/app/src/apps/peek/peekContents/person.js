@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '../../../apps/orbit/orbitIcon'
 import * as UI from '@mcro/ui'
-import { Carousel } from '../../../components/carousel'
+import { Carousel } from '../../../components/Carousel'
 import { Bit } from '@mcro/models'
 import { SubTitle } from '../../../views'
 
@@ -31,16 +31,15 @@ class PersonPeek {
 })
 @view
 export class Person extends React.Component {
-  render({ store, person, appStore }) {
+  render({ store, person, appStore, children }) {
     if (!appStore.settings) {
-      return null
+      return children({})
     }
     const setting = appStore.settings.slack
     if (!setting || !person || !person.data || !person.data.profile) {
-      console.log('no person', person)
-      return null
+      console.log('no person or person.data.profile', person)
+      return children({})
     }
-
     return (
       <frame>
         <cardContent>

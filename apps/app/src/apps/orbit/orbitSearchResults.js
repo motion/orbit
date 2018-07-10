@@ -6,22 +6,22 @@ import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitQuickSearch } from './OrbitQuickSearch'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
+import { stateOnlyWhenActive } from './stateOnlyWhenActive'
 
 class SearchStore {
-  state = react(
-    () => this.props.appStore.searchState,
-    state => {
-      if (this.props.appStore.selectedPane !== this.props.name) {
-        throw react.cancel
-      }
-      return state
-    },
-    { immediate: true },
-  )
+  // this isn't a computed val because it persists the last state
+  state = stateOnlyWhenActive(this)
+
+  get isActive() {
+    return this.props.appStore.selectedPane === this.props.name
+  }
 
   hasQuery() {
     return !!App.state.query
   }
+
+  // delay just a tiny bit to prevent input delay
+  currentQuery = react(() => App.state.query, _ => _, { delay: 32 })
 }
 
 @view.attach('appStore')
@@ -31,15 +31,16 @@ class SearchStore {
 @view
 export class OrbitSearchResults extends React.Component {
   render({ searchStore, name }) {
-    if (!searchStore.state) {
+    if (!searchStore.state.results) {
       return null
     }
     const { query, results, message } = searchStore.state
-    const isChanging = App.state.query !== query
-    log(`SEARCH ${name} --------------`)
+    const isChanging = searchStore.currentQuery !== query
+    log(`SEARCH OrbitSearchResults ${name} --------------`)
     const highlightWords = searchStore.state.query
       .split(' ')
       .filter(x => x.length > 2)
+    console.log('OrbitSearchResults', highlightWords, results, query, message)
     return (
       <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
         <contents $$flex>
@@ -67,13 +68,12 @@ export class OrbitSearchResults extends React.Component {
                   <UI.Text
                     size={1.2}
                     alpha={0.7}
-                    ellipse={3}
                     wordBreak="break-all"
                     highlight={
                       highlightWords.length && {
                         words: highlightWords,
-                        maxChars: Math.max(400, 3500 / results.length),
-                        maxSurroundChars: Math.max(80, 850 / results.length),
+                        maxChars: 380,
+                        maxSurroundChars: 120,
                         trimWhitespace: true,
                         separator: '&nbsp;&middot;&nbsp;',
                       }
@@ -92,18 +92,6 @@ export class OrbitSearchResults extends React.Component {
   }
 
   static style = {
-    orbitSearchResults: {
-      opacity: 0,
-      pointerEvents: 'none',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
-    isChanging: {
-      opacity: 0.7,
-    },
     message: {
       padding: [5, 10],
       fontSize: 12,

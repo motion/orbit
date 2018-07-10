@@ -1,4 +1,4 @@
-import { on, react, ReactionTimeoutError } from '@mcro/black'
+import { on, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '../helpers'
@@ -6,11 +6,10 @@ import * as AppStoreHelpers from './appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
 
-// this is *not* unused
-let hasRun = false
 const log = debug('appStore')
+const TYPE_DEBOUNCE = 30
 
-const searchBits = async query => {
+const searchBits = async (query, params?) => {
   if (!query) {
     return await Bit.find({
       take: 6,
@@ -26,9 +25,9 @@ const searchBits = async query => {
     where,
     relations: ['people'],
     order: { bitCreatedAt: 'DESC' },
-    take: 6,
+    ...params,
   }
-  console.log('queryParams', queryParams)
+  console.log('searchBits', queryParams)
   const res = await Bit.find(queryParams)
   console.timeEnd('bitSearch')
   return res
@@ -144,10 +143,11 @@ export class AppStore {
     },
   )
 
-  clearSelectedOnSelectedPaneChange = react(
-    () => this.selectedPane,
-    () => this.clearSelected(),
-  )
+  // TODO disable until context re-enabled
+  // clearSelectedOnSelectedPaneChange = react(
+  //   () => this.selectedPane,
+  //   () => this.clearSelected(),
+  // )
 
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,
@@ -251,37 +251,65 @@ export class AppStore {
       Desktop.appState.id,
       Desktop.state.lastBitUpdatedAt,
     ],
-    async ([query], { sleep }) => {
+    async ([query], { sleep, setValue }) => {
+      log(`bitsearch ${query}`)
       // debounce a little for fast typer
-      // do the query sooner because it goes over wire to backend
-      // so it doesnt obstruct view responsiveness
-      await sleep(30)
-      const results = await searchBits(query)
-      await sleep(30)
-      return {
+      await sleep(TYPE_DEBOUNCE)
+      // get first page results
+      const results = await searchBits(query, { take: 6 })
+      setValue({
+        restResults: null,
         results,
         query,
+      })
+      // get next page results
+      await sleep(300)
+      const restResults = await searchBits(query, { skip: 6, take: 32 })
+      setValue({
+        results,
+        restResults,
+        query,
+      })
+    },
+    {
+      immediate: true,
+      defaultValue: { results: [] },
+    },
+  )
+
+  peopleSearch = react(
+    () => [App.state.query, Desktop.state.lastBitUpdatedAt],
+    async ([query], { sleep }) => {
+      await sleep(TYPE_DEBOUNCE)
+      return {
+        query,
+        results: await Person.find({
+          where: `(name like "%${query}%")`,
+          take: 4,
+        }),
       }
     },
     {
       immediate: true,
       defaultValue: { results: [] },
-      onlyUpdateIfChanged: true,
     },
   )
 
   searchState = react(
-    () => [App.state.query, this.getResults, this.updateResults],
-    async ([query, thisGetResults], { when }) => {
+    () => [App.state.query, this.getResults],
+    async ([query], { when, setValue }) => {
       if (!query) {
-        return { query, results: thisGetResults ? thisGetResults() : [] }
+        return setValue({
+          query,
+          results: this.getResults ? this.getResults() : [],
+        })
       }
       // these are all specialized searches, see below for main search logic
-      if (thisGetResults && thisGetResults.shouldFilter) {
-        return {
+      if (this.getResults && this.getResults.shouldFilter) {
+        return setValue({
           query,
-          results: Helpers.fuzzy(query, thisGetResults()),
-        }
+          results: Helpers.fuzzy(query, this.getResults()),
+        })
       }
       let results
       let channelResults
@@ -302,49 +330,39 @@ export class AppStore {
       if (isFilteringSlack && !isFilteringChannel) {
         message = `Searching ${channelResults[0].title}`
       }
-      // do stuff to get results....
+      // filtered search
       if (isFilteringChannel && this.services.slack) {
         message = 'SPACE to search selected channel'
         results = channelResults
-      } else {
-        // await sleep(1000)
-        // 🔍 REGULAR SEARCHES GO THROUGH HERE
-        // no jitter - wait for everything to finish
-        console.time('searchPluginsAndBitResults')
-        try {
-          // during demo disable
-          const waitMax = 5000 // hasRun ? 700 : 2000
-          await Promise.all([
-            // when(() => query === Desktop.searchState.pluginResultsId, waitMax),
-            when(() => query === this.bitSearch.query, waitMax),
-          ])
-        } catch (err) {
-          if (err instanceof ReactionTimeoutError) {
-            console.log('timed out!, waht to do now?????????????')
-          } else {
-            throw err
-          }
-        }
-        console.timeEnd('searchPluginsAndBitResults')
+      }
+      // regular search
+      if (!results) {
+        await Promise.all([
+          when(() => this.bitSearch.query === query),
+          when(() => this.peopleSearch.query === query),
+        ])
         const allResultsUnsorted = [
           ...this.bitSearch.results,
-          ...(await Person.find({
-            where: `(name like "%${query}%")`,
-            take: 4,
-          })),
+          ...this.peopleSearch.results,
           // ...Desktop.searchState.pluginResults,
         ]
-        // remove prefixes
+        // return first page fast results
         const { rest } = AppStoreHelpers.parseQuery(query)
-        // sort
         results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
+        setValue({
+          query,
+          message,
+          results,
+        })
+        // then return full results
+        await when(() => this.bitSearch.restResults)
+        results = [...results, ...this.bitSearch.restResults]
       }
-      hasRun = true
-      return {
+      return setValue({
         query,
         message,
         results,
-      }
+      })
     },
     {
       defaultValue: { results: [], query: '' },

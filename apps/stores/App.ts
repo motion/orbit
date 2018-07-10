@@ -43,9 +43,11 @@ class AppStore {
       inputFocused: false,
     },
     peekState: {
+      pinned: false,
+      devModeStick: false,
       target: null,
       item: null,
-      id: 0,
+      peekId: 0,
       peekOnLeft: false,
       position: [0, 0],
       size: [0, 0],

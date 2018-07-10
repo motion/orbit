@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Job, Setting as SettingModel } from '@mcro/models'
-import { PeekHeader, PeekContent } from '../index'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
@@ -42,72 +41,64 @@ export class SettingContent extends React.Component {
     App.actions.clearPeek()
   }
 
-  render({ appStore, store }) {
-    if (!store.setting) {
-      console.log('no setting', App.peekState.item.id, App.peekState.toJS())
-      return null
-    }
-    if (!store.setting.token) {
-      console.warn('no token, general setting?')
-    }
+  render({ appStore, store, children }) {
     const { setting } = store
+    if (!setting) {
+      return children({})
+    }
     const integration = setting.type
     const SettingPane =
       SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
-    return (
-      <>
-        <PeekHeader
-          title={capitalize(integration)}
-          subtitle={
-            <div $$row>
-              <jobStatus $$row if={store.job}>
-                {store.bitsCount} total{' '}
-                <UI.Text if={store.job.updatedAt}>
-                  &nbsp;&middot; Last run:{' '}
-                  <UI.Icon
-                    size={14}
-                    css={{ display: 'inline-block' }}
-                    {...statusIcons[store.job.status]}
-                  />{' '}
-                  <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-                </UI.Text>
-              </jobStatus>
-              <load if={!store.job}>Loading...</load>
-            </div>
-          }
-          after={
-            <UI.ListRow
-              $$flex
-              css={{ margin: [0, -8, -5, 0] }}
-              itemProps={{
-                size: 0.9,
-                chromeless: true,
-                opacity: 0.7,
-                margin: [0, 0, 0, 5],
-              }}
-            >
-              <UI.Button
-                icon="refresh"
-                tooltip="Refresh"
-                onClick={this.handleRefresh}
-              />
-              <UI.Button
-                icon="remove"
-                tooltip="Remove"
-                onClick={this.removeIntegration}
-              />
-            </UI.ListRow>
-          }
+    return children({
+      title: capitalize(integration),
+      content: (
+        <SettingPane
+          appStore={appStore}
+          setting={setting}
+          update={store.update}
         />
-        <PeekContent>
-          <SettingPane
-            appStore={appStore}
-            setting={setting}
-            update={store.update}
+      ),
+      subtitle: (
+        <div $$row>
+          <jobStatus $$row if={store.job}>
+            {store.bitsCount} total{' '}
+            <UI.Text if={store.job.updatedAt}>
+              &nbsp;&middot; Last run:{' '}
+              <UI.Icon
+                size={14}
+                css={{ display: 'inline-block' }}
+                {...statusIcons[store.job.status]}
+              />{' '}
+              <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
+            </UI.Text>
+          </jobStatus>
+          <load if={!store.job}>Loading...</load>
+        </div>
+      ),
+      after: (
+        <UI.ListRow
+          $$flex
+          css={{ margin: [0, -8, -5, 0] }}
+          itemProps={{
+            size: 0.9,
+            chromeless: true,
+            opacity: 0.7,
+            margin: [0, 0, 0, 5],
+          }}
+        >
+          <UI.Button
+            icon="refresh"
+            tooltip="Refresh"
+            onClick={this.handleRefresh}
           />
-        </PeekContent>
-      </>
-    )
+          <UI.Button
+            icon="remove"
+            tooltip="Remove"
+            onClick={this.removeIntegration}
+          />
+        </UI.ListRow>
+      ),
+    })
   }
 }
 

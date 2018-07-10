@@ -3,7 +3,7 @@ import propStyles from '../helpers/propStyles'
 
 export const Col = view({
   display: 'flex',
-  flexFlow: 'row',
+  flexFlow: 'column',
 })
 
 Col.theme = propStyles

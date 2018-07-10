@@ -37,6 +37,23 @@ const BORDER_KEY = {
     borderBottom: true,
     borderTop: true,
 };
+const PSEUDO = {
+    hover: '&:hover',
+    active: '&:active',
+    checked: '&:checked',
+    focus: '&:focus',
+    enabled: '&:enabled',
+    disabled: '&:disabled',
+    empty: '&:empty',
+    target: '&:target',
+    required: '&:required',
+    valid: '&:valid',
+    invalid: '&:invalid',
+    before: '&:before',
+    after: '&:after',
+    placeholder: '&:placeholder',
+    selection: '&:selection',
+};
 const px = (x) => typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x;
 function motionStyle(options = {}) {
     const isColor = (color) => helpers_1.isColorLike(color, options);
@@ -186,7 +203,11 @@ function motionStyle(options = {}) {
             else if (firstChar === '&' ||
                 firstChar === '@' ||
                 key === 'from' ||
-                key === 'to') {
+                key === 'to' ||
+                PSEUDO[key]) {
+                if (PSEUDO[key]) {
+                    finalKey = PSEUDO[key];
+                }
                 toReturn[finalKey] = processStyles(value, opts);
                 respond = true;
             }

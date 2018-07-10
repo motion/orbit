@@ -1,3 +1,12 @@
+- search run:
+
+  - show github people in search results
+  - figure out a way to show multiple highlighted areas in search results
+  - hover highlight the areas
+  - click highlight area to see in peek
+
+- saving appstoreactions breaking hmr
+
 - slack card:
   - if it was a post in #status, show other posts by that person in #status
   - fix people cards

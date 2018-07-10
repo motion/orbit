@@ -3,20 +3,22 @@ import { view, on, attachTheme } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
 import * as _ from 'lodash'
+import { InlineBlock } from './blocks/inlineBlock'
 
 // cut text down using highlight words
 // not a wonderfully efficient
 // but still great for not too long text
 // and pretty easy to follow
-const highlightText = ({
-  text,
-  words,
-  trimWhitespace,
-  maxChars = 500,
-  maxSurroundChars = 50,
-  style = 'font-weight: 600; color: #000;',
-  separator = '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
-}) => {
+const highlightText = options => {
+  const {
+    text,
+    words,
+    trimWhitespace,
+    maxChars = 500,
+    maxSurroundChars = 50,
+    style = 'font-weight: 600; color: #000;',
+    separator = '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
+  } = options
   let parts = [text]
   if (trimWhitespace) {
     parts[0] = parts[0].replace(/(\s{2,}|\n)/g, separator)
@@ -333,12 +335,13 @@ export class Text extends React.Component {
     let ellipseProps = { children }
     if (highlight) {
       if (typeof children === 'string') {
+        const __html = highlightText({
+          text: children,
+          ...highlight,
+        })
         ellipseProps = {
           dangerouslySetInnerHTML: {
-            __html: highlightText({
-              text: children,
-              ...highlight,
-            }),
+            __html,
           },
         }
       } else {
@@ -347,7 +350,8 @@ export class Text extends React.Component {
     }
     const showEllipse = highlight || ellipse
     return (
-      <text
+      <InlineBlock
+        $text
         className={className}
         tagName={tagName}
         contentEditable={editable}
@@ -384,7 +388,7 @@ export class Text extends React.Component {
           }
           {...ellipseProps}
         />
-      </text>
+      </InlineBlock>
     )
   }
 

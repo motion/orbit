@@ -8,6 +8,7 @@ export type ReactionHelpers = {
 }
 
 export type ReactionOptions = {
+  trace?: boolean
   fireImmediately?: boolean
   immediate?: boolean
   equals?: Function

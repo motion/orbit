@@ -8,8 +8,8 @@ import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 // import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
+// import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+// import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 
 const cwd = process.cwd()
 const readEntry = () => {
@@ -93,7 +93,7 @@ const config = {
   },
   // inline source map allows chrome remote debugger to access it
   // see: https://stackoverflow.com/questions/27671390/why-inline-source-maps
-  devtool: isProd ? 'source-map' : 'inline-source-map',
+  devtool: isProd ? 'source-map' : 'inline-cheap-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

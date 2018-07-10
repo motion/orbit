@@ -20,7 +20,7 @@ export class BitSlackConversation extends React.Component {
     shownLimit: 5,
   }
 
-  render({ children, bit, appStore, shownLimit, contentStyle, isExpanded }) {
+  render({ children, bit, appStore, shownLimit, itemProps, isExpanded }) {
     if (!bit) {
       console.log('no bit :/')
       return null
@@ -35,7 +35,7 @@ export class BitSlackConversation extends React.Component {
               previousMessage={bit.data.messages[index - 1]}
               bit={bit}
               appStore={appStore}
-              contentStyle={contentStyle}
+              itemProps={itemProps}
             />
           ))
       : null

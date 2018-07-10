@@ -588,7 +588,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
               }
               updateAsyncValue(val)
             }
-            if (!IS_PROD) {
+            if (!IS_PROD && !preventLog) {
               log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(val))
             }
           })

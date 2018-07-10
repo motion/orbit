@@ -14,7 +14,9 @@ export const ResolveDocument = ({ bit, children, isExpanded }) =>
     location: ' ', //bit.data.spaces[0],
     date: Date.now(),
     content: isExpanded
-      ? bit.data.markdownBody || bit.data.body || bit.body
+      ? bit.data.markdownBody ||
+        (typeof bit.data.body === 'string' && bit.data.body) ||
+        bit.body
       : null,
     preview: bit.body,
   })

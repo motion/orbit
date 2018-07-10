@@ -15,6 +15,7 @@ const appTarget = ({ offset, bounds }) => {
 
 @store
 export class AppReactions {
+  onPinKey = null
   id = Math.random()
 
   constructor({ onPinKey }) {

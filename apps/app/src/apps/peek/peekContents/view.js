@@ -12,7 +12,7 @@ const views = {
 export class View extends React.Component {
   render({ bit, children }) {
     if (!bit || !views[bit.id]) {
-      console.error('no view or bit', bit.toJS(), views)
+      console.log('no view or bit', bit, views)
       return children({})
     }
     const View = views[bit.id]

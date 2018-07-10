@@ -78,7 +78,7 @@ class OrbitHomeStore {
       const result = await Promise.all([
         // { type: 'team', title: 'Engineering' },
         findType('slack', 'conversation', 2),
-        findType('github', 'task'),
+        findType('github', 'task', 1),
         findType('slack', 'conversation', 4),
         findType('gdocs', 'document'),
         Person.findOne({ name: 'Andrew Hsu' }),

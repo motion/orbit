@@ -3,7 +3,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 
 @view
-export class PersonCard extends React.Component {
+export class ResolvePerson extends React.Component {
   render({ children, bit }) {
     if (!bit) {
       return null

@@ -36,7 +36,8 @@ type AtlassianContent = {
 
 type AtlassianObj = {
   response: AtlassianContent
-  markdown: string
+  markdownBody: string
+  body: string
 }
 
 export default class ConfluenceBitSync {
@@ -75,7 +76,6 @@ export default class ConfluenceBitSync {
       console.log('no content found')
       return null
     }
-    console.log('contentList', contentList)
     const contents = await Promise.all(
       contentList.map(content =>
         this.service.fetch(`/wiki/rest/api/content/${content.id}`, {
@@ -83,10 +83,12 @@ export default class ConfluenceBitSync {
         }),
       ),
     )
-    console.log('contents', contents)
     const contentsRendered = contents.map(response => {
+      const markdownBody = htmlToMarkdown(response.body.storage.value)
       return {
-        markdown: htmlToMarkdown(response.body.storage.value),
+        // simple body for preview/search, no spaces
+        body: markdownBody.replace(/\s\s+/g, ' '),
+        markdownBody,
         response,
       }
     })
@@ -98,7 +100,11 @@ export default class ConfluenceBitSync {
     return results.filter(Boolean)
   }
 
-  createIssue = async ({ response, markdown }: AtlassianObj): Promise<Bit> => {
+  createIssue = async ({
+    response,
+    markdownBody,
+    body,
+  }: AtlassianObj): Promise<Bit> => {
     const bitCreatedAt = response.history.createdDate || ''
     const bitUpdatedAt = response.history.lastUpdated.when || ''
     return await createOrUpdateBit(Bit, {
@@ -106,8 +112,11 @@ export default class ConfluenceBitSync {
       identifier: response.id,
       type: 'document',
       title: response.title,
-      body: markdown,
-      data: response,
+      body,
+      data: {
+        ...response,
+        markdownBody,
+      },
       author:
         response.history.createdBy.displayName ||
         response.history.createdBy.username,

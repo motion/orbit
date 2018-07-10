@@ -199,16 +199,17 @@ export class AppStore {
   resetActiveIndexOnKeyPastEnds = react(
     () => this.nextIndex,
     index => {
-      console.log('nextIndex', index)
       if (index === -1) {
         this.activeIndex = this.nextIndex
+      } else {
+        const len = this.searchState.results.length
+        if (index >= len) {
+          this.nextIndex = len - 1
+          this.activeIndex = this.nextIndex
+        } else {
+          throw react.cancel
+        }
       }
-      const len = this.searchState.results.length
-      if (index >= len) {
-        this.nextIndex = len - 1
-        this.activeIndex = this.nextIndex
-      }
-      throw react.cancel
     },
   )
 
@@ -252,7 +253,7 @@ export class AppStore {
       Desktop.state.lastBitUpdatedAt,
     ],
     async ([query], { sleep, setValue }) => {
-      log(`bitsearch ${query}`)
+      log(`bitsearch "${query}"`)
       // debounce a little for fast typer
       await sleep(TYPE_DEBOUNCE)
       // get first page results
@@ -386,11 +387,13 @@ export class AppStore {
     { defaultValue: [], immediate: true },
   )
 
-  clearSelected = () => {
+  clearSelected = (clearPeek = true) => {
     this.leaveIndex = -1
     this.nextIndex = -1
     this.activeIndex = -1
-    App.actions.clearPeek()
+    if (clearPeek) {
+      App.actions.clearPeek()
+    }
   }
 
   getHoverSettler = Helpers.hoverSettler({

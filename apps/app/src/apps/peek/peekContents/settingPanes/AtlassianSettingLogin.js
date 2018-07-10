@@ -135,6 +135,7 @@ class AtlassianSettingLoginStore {
   }
 
   addIntegration = () => {
+    this.setting.token = 'good'
     this.setting.save()
     App.actions.clearPeek()
   }

@@ -8,7 +8,7 @@ import { TimeAgo } from '../../views/TimeAgo'
 import { App } from '@mcro/stores'
 
 @view
-export class BitSlackMessage extends React.Component {
+export class SlackMessage extends React.Component {
   render({ bit, message, previousMessage, itemProps }) {
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
@@ -36,14 +36,14 @@ export class BitSlackMessage extends React.Component {
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     const avatar = person.data.profile.image_48
     return (
-      <message>
-        <topSpace if={!hideHeader && previousMessage} css={{ height: 14 }} />
+      <UI.Col {...itemProps}>
+        {/* <topSpace if={!hideHeader && previousMessage} css={{ height: 14 }} /> */}
         <UI.Row
           if={!hideHeader}
-          {...itemProps}
           flexFlow="row"
           alignItems="center"
           margin={[0, 0, 2, -2]}
+          padding={[5, 0]}
           userSelect="none"
           cursor="default"
         >
@@ -64,17 +64,14 @@ export class BitSlackMessage extends React.Component {
             <TimeAgo if={message.ts}>{getSlackDate(message.ts)}</TimeAgo>
           </date>
         </UI.Row>
-        <UI.Row {...itemProps}>
+        <UI.Row>
           <content dangerouslySetInnerHTML={{ __html: htmlText }} />
         </UI.Row>
-      </message>
+      </UI.Col>
     )
   }
 
   static style = {
-    message: {
-      padding: [2, 0, 0],
-    },
     inner: {
       flexFlow: 'row',
       alignItems: 'center',
@@ -105,6 +102,7 @@ export class BitSlackMessage extends React.Component {
       marginLeft: -1,
     },
     content: {
+      width: '100%',
       display: 'block',
       position: 'relative',
       margin: [1, 0, 0],

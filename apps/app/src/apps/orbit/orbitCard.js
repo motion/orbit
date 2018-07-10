@@ -87,20 +87,21 @@ class OrbitCardStore {
         throw react.cancel
       }
       const shouldSelect = nextIndex === this.props.index
-      if (shouldSelect !== this._isSelected) {
-        this._isSelected = shouldSelect
-        if (shouldSelect) {
-          // visual smoothness
-          await sleep()
-          if (!this.target) {
-            throw new Error(
-              `No target! ${this.props.pane} ${this.props.subPane} ${
-                this.props.index
-              }`,
-            )
-          }
-          App.actions.selectItem(this.target, this.ref)
+      if (shouldSelect === this._isSelected) {
+        throw react.cancel
+      }
+      this._isSelected = shouldSelect
+      if (shouldSelect) {
+        // visual smoothness
+        await sleep()
+        if (!this.target) {
+          throw new Error(
+            `No target! ${this.props.pane} ${this.props.subPane} ${
+              this.props.index
+            }`,
+          )
         }
+        App.actions.selectItem(this.target, this.ref)
       }
     },
     { immediate: true },
@@ -156,7 +157,18 @@ export class OrbitCard extends React.Component {
     )
   }
 
-  handleDoubleClick = () => {
+  clickAt = 0
+
+  handleClick = e => {
+    // so we can control the speed of double clicks
+    if (Date.now() - this.clickAt < 150) {
+      this.open()
+      e.stopPropagation()
+    }
+    this.clickAt = Date.now()
+  }
+
+  open = () => {
     if (!this.props.bit) {
       return
     }
@@ -166,7 +178,6 @@ export class OrbitCard extends React.Component {
   getOrbitCard(contentProps) {
     const {
       title,
-      via,
       icon,
       preview,
       location,
@@ -222,7 +233,7 @@ export class OrbitCard extends React.Component {
           style={style}
           className={className}
         >
-          <card onDoubleClick={this.handleDoubleClick}>
+          <card onClick={this.handleClick}>
             {orbitIcon}
             <title>
               <UI.Text
@@ -441,7 +452,10 @@ export class OrbitCard extends React.Component {
         },
       }
       if (isSelected) {
-        // can add selected styles...
+        card = {
+          ...card,
+          border: [1, borderHover],
+        }
       }
     }
     if (hoverable) {

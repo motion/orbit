@@ -568,6 +568,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
 
       const changed = root.__trackStateChanges.changed
+      const prefix = `${name} ${isReaction ? `@r` : `@w`}`
       root.__trackStateChanges = {}
 
       // handle promises
@@ -586,6 +587,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
                 )
               }
               updateAsyncValue(val)
+            }
+            if (!IS_PROD && !preventLog) {
+              log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(val))
             }
           })
           .catch(err => {
@@ -607,7 +611,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       // store result as observable
       result = specialValueToObservable(reactionResult)
       if (!IS_PROD && !preventLog && !delayValue) {
-        const prefix = `${name} ${isReaction ? `@r` : `@w`}`
         if (changed && Object.keys(changed).length) {
           logState(
             `${prefix}`,

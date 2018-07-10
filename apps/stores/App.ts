@@ -81,10 +81,12 @@ class AppStore {
   )
 
   // runs in every app independently
+  // this won't trigger until the app is actually finished showing
+  // to be more precise for enabling mouse events
   isMouseInActiveArea = react(
     () => !!(Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered),
     async (over, { sleep, setValue }) => {
-      await sleep(over ? 0 : 100)
+      await sleep(over ? 0 : App.animationDuration)
       setValue(over)
     },
     { immediate: true },

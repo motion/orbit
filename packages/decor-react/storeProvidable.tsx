@@ -6,6 +6,7 @@ import isEqual from 'react-fast-compare'
 import root from 'global'
 import { DecorPlugin } from '@mcro/decor'
 import { StoreContext } from './contexts'
+import { Disposable } from 'event-kit'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
@@ -36,11 +37,7 @@ function getName(mountedComponent) {
   let name = `${mountedComponent.name}`
   let parent = node
   while (parent && parent instanceof HTMLElement && parent.tagName !== 'HTML') {
-    const className = (parent.getAttribute('class') || '').split(' ')
-    name +=
-      parent.nodeName +
-      className[className.length - 1] +
-      getElementIndex(parent)
+    name += parent.nodeName + getElementIndex(parent)
     parent = parent.parentNode as HTMLElement
   }
   return name
@@ -57,6 +54,21 @@ export interface StoreProvidable {}
 export let storeProvidable: DecorPlugin<StoreProvidable>
 
 storeProvidable = function(options, Helpers) {
+  let recentHMR = false
+  let recentHMRTm = null
+
+  // let things re-mount after queries and such
+  const setRecentHMR = () => {
+    console.log('set recent HMR')
+    clearTimeout(recentHMRTm)
+    recentHMR = true
+    recentHMRTm = setTimeout(() => {
+      recentHMR = false
+    }, 2000)
+  }
+
+  Helpers.on('did-hmr', setRecentHMR)
+
   return {
     name: 'store-providable',
     once: true,
@@ -89,14 +101,12 @@ storeProvidable = function(options, Helpers) {
         isSetup = false
         id = Math.random()
 
-        willHmrListen: any
-        didHmrListen: any
-        mountName: string
         props: any | { __contextualStores?: Object }
         hmrDispose: any
         _props: any
         stores: any
         unmounted: boolean
+        willReloadListener: Disposable
 
         // @ts-ignore
         static get name() {
@@ -109,15 +119,6 @@ storeProvidable = function(options, Helpers) {
 
         allStores = allStores
 
-        // onWillReload() {
-        //   this.onWillReloadStores()
-        //   this.disposeStores()
-        //   this.setupProps()
-        //   this.setupStores()
-        //   this.mountStores()
-        //   this.forceUpdate()
-        // }
-
         constructor(a, b) {
           super(a, b)
           this.setupProps()
@@ -128,6 +129,10 @@ storeProvidable = function(options, Helpers) {
         // PureComponent means this is only called when props are not shallow equal
         componentDidUpdate() {
           updateProps(this._props, this.props)
+          // update even later because the hydrations change props and renders, changing the key path
+          if (recentHMR) {
+            this.onReloadStores()
+          }
         }
 
         componentDidMount() {
@@ -136,18 +141,23 @@ storeProvidable = function(options, Helpers) {
           }
           root.loadedStores.add(this)
           this.mountStores()
-          this.willHmrListen = Helpers.on('will-hmr', this.onWillReloadStores)
-          this.didHmrListen = Helpers.on('did-hmr', this.onReloadStores)
+          this.willReloadListener = Helpers.on('will-hmr', () => {
+            if (this.stores.peekStore) {
+              console.log('WILL UNMOUNT')
+            }
+            setRecentHMR()
+            this.onWillReloadStores()
+          })
+          if (this.stores.peekStore) {
+            console.log('DID MOUNT', recentHMR)
+          }
+          if (recentHMR) {
+            this.onReloadStores()
+          }
         }
 
         componentWillUnmount() {
-          if (Klass.name === 'OrbitStore') {
-            console.log('unmounting', this, this.disposeStores)
-          }
-          if (this.willHmrListen) {
-            this.willHmrListen.dispose()
-            this.didHmrListen.dispose()
-          }
+          this.willReloadListener.dispose()
           root.loadedStores.delete(this)
           // if you remove @view.attach({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
@@ -273,6 +283,10 @@ storeProvidable = function(options, Helpers) {
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             const key = `${getName(this)}${name}`
+            if (name === 'peekStore') {
+              console.log('RELOADING')
+              console.log(key, storeHMRCache[key])
+            }
             if (!storeHMRCache[key]) {
               // try again a bit later, perhaps it wasnt mounted
               console.log('no hmr state for', name, key, storeHMRCache)

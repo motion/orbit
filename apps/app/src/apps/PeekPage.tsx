@@ -62,11 +62,13 @@ export class PeekPage extends React.Component {
   render() {
     const { appStore, peekStore } = this.props
     return (
-      <UI.Theme name="light">
-        <PeekFrame>
-          <PeekPageInner appStore={appStore} peekStore={peekStore} />
-        </PeekFrame>
-      </UI.Theme>
+      <div>
+        <UI.Theme name="light">
+          <PeekFrame>
+            <PeekPageInner appStore={appStore} peekStore={peekStore} />
+          </PeekFrame>
+        </UI.Theme>
+      </div>
     )
   }
 }

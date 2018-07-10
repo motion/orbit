@@ -21,6 +21,7 @@ class HeaderStore {
   focusInput = react(
     () => [
       App.orbitState.pinned || App.orbitState.docked,
+      // use this because otherwise input may not focus
       App.isMouseInActiveArea,
     ],
     async ([shown], { when }) => {
@@ -37,13 +38,13 @@ class HeaderStore {
   }
 }
 
-const Hl = view('span', {
-  display: 'inline',
-  background: '#C4C4F4',
-  padding: [3, 4],
-  margin: [-3, 0],
-  borderRadius: 6,
-})
+// const Hl = view('span', {
+//   display: 'inline',
+//   background: '#C4C4F4',
+//   padding: [3, 4],
+//   margin: [-3, 0],
+//   borderRadius: 6,
+// })
 
 @attachTheme
 @view.attach('orbitStore', 'appStore')

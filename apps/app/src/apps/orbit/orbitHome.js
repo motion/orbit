@@ -58,7 +58,7 @@ const findType = (integration, type, skip = 0) =>
 
 class OrbitHomeStore {
   setGetResults = react(
-    () => [this.props.paneStore.activePane === this.props.name, this.results],
+    () => [this.isActive, this.results],
     ([isActive]) => {
       if (!isActive) {
         throw react.cancel
@@ -68,20 +68,24 @@ class OrbitHomeStore {
     { immediate: true },
   )
 
+  get isActive() {
+    return this.props.paneStore.activePane === this.props.name
+  }
+
   results = modelQueryReaction(
     async () => {
       console.time('homeSearch')
       const result = await Promise.all([
         // { type: 'team', title: 'Engineering' },
         findType('slack', 'conversation', 2),
-        findType('github', 'task'),
+        findType('github', 'task', 1),
         findType('slack', 'conversation', 4),
         findType('gdocs', 'document'),
         Person.findOne({ name: 'Andrew Hsu' }),
-        Person.findOne({ name: 'Javi Bovee' }),
+        Person.findOne({ name: 'Nick Bovee' }),
         // limit due to slowness for now
-        // findType('github', 'task', 1),
-        // findType('github', 'task', 2),
+        findType('confluence', 'document'),
+        findType('jira', 'document'),
         // findType('gmail', 'mail'),
         // findType('gmail', 'mail', 1),
         // findType('gdocs', 'document', 9),
@@ -101,6 +105,19 @@ class OrbitHomeStore {
 }
 
 const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
+const itemProps = {
+  shownLimit: 3,
+  contentStyle: {
+    maxHeight: '1.2rem',
+    maxWidth: '100%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontSize: 18,
+    opacity: 0.8,
+    margin: [5, 0],
+  },
+}
 
 @attachTheme
 @view.attach({
@@ -125,7 +142,16 @@ export class OrbitHome extends React.Component {
         <header if={false}>
           <SubTitle>
             {day} {month} {dayNum}
-            <span $super>{postfix[dayNum - 1]}</span>
+            <span
+              css={{
+                verticalAlign: 'super',
+                marginLeft: 1,
+                fontSize: 11,
+                opacity: 0.6,
+              }}
+            >
+              {postfix[dayNum - 1]}
+            </span>
           </SubTitle>
           <div $$flex />
         </header>
@@ -144,19 +170,7 @@ export class OrbitHome extends React.Component {
                   total={total}
                   isExpanded={false && isExpanded}
                   style={isExpanded && this.span2}
-                  itemProps={{
-                    shownLimit: 3,
-                    contentStyle: {
-                      maxHeight: '1.2rem',
-                      maxWidth: '100%',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      fontSize: 18,
-                      opacity: 0.8,
-                      margin: [5, 0],
-                    },
-                  }}
+                  itemProps={itemProps}
                 >
                   {false &&
                     isExpanded &&
@@ -170,36 +184,5 @@ export class OrbitHome extends React.Component {
         </content>
       </OrbitDockedPane>
     )
-  }
-
-  static style = {
-    super: {
-      verticalAlign: 'super',
-      marginLeft: 1,
-      fontSize: 11,
-      opacity: 0.6,
-    },
-    content: {
-      // margin: [0, -2],
-    },
-    overflowFade: {
-      pointerEvents: 'none',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: 200,
-      zIndex: 10000000,
-      borderRadius: 20,
-      overflow: 'hidden',
-    },
-  }
-
-  static theme = ({ theme }) => {
-    return {
-      overflowFade: {
-        background: `linear-gradient(transparent, ${theme.base.background})`,
-      },
-    }
   }
 }

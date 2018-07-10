@@ -9,7 +9,7 @@ const options = {
   remove_duplicates: false,
 }
 
-export default ({ bit, children }) =>
+export const ResolveMail = ({ bit, children }) =>
   children({
     title: keywordExtract
       .extract(bit.title, options)

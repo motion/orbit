@@ -6,7 +6,7 @@ import { AppReactions } from '../../stores/AppReactions'
 // some comment test
 
 export default class OrbitStore {
-  query = ''
+  query = App.state.query
 
   updateAppQuery = react(
     () => this.query,
@@ -39,13 +39,13 @@ export default class OrbitStore {
         this.appReactions.subscriptions.dispose()
       },
     })
-    on(this, window, 'keydown', x => this.handleKeyDown(x.keyCode))
+    on(this, window, 'keydown', this.handleKeyDown)
   }
 
-  handleKeyDown = code => {
-    console.log('keydown', code)
+  handleKeyDown = ({ keyCode }) => {
+    console.log('keydown', keyCode)
     const { openSelected, increment, decrement } = this.props.appStore
-    switch (code) {
+    switch (keyCode) {
       case 37: // left
         this.emit('key', 'left')
         return

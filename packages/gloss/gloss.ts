@@ -1,3 +1,4 @@
+import * as React from 'react'
 import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import JSS from './stylesheet'
@@ -5,6 +6,7 @@ import { attachTheme } from './theme/attachTheme'
 
 import * as Helpers_ from '@mcro/css'
 export const Helpers = Helpers_
+export const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 
 export { Theme } from './theme/Theme'
 export { ThemeProvide } from './theme/themeProvide'
@@ -17,10 +19,6 @@ export const isGlossyFirstArg = arg => {
     return false
   }
   if (typeof arg === 'string' || typeof arg === 'object') {
-    return true
-  }
-  // its a existing simple component
-  if (typeof arg.style === 'object') {
     return true
   }
   return false
@@ -84,8 +82,11 @@ export default class Gloss {
       return () => this.createElement('div', { children: 'Error Component' })
     }
     // Shorthand views --
-    // view({})
-    if (typeof maybeNameOrComponent === 'object') {
+    // just object view({})
+    if (
+      typeof maybeNameOrComponent === 'object' &&
+      !maybeNameOrComponent[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+    ) {
       return this.createSimpleGlossComponent('div', maybeNameOrComponent)
     }
     // view('div', {}) or view(OtherView, {})
@@ -137,37 +138,70 @@ export default class Gloss {
 
   createSimpleGlossComponent = (target, styles) => {
     const id = uid()
-    const name = target.name || target
+    let name = target.name || target
     const elementCache = new WeakMap()
     let themeUpdate
-    const View = <GlossView>attachTheme(props => {
-      // basically PureRender for stylsheet updates
+    const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+    let targetElement = isParentComponent ? target.displayName : target
+    if (isParentComponent) {
+      name = targetElement
+    }
+    const InnerView = <GlossView>attachTheme(({ forwardRef, ...props }) => {
+      // basically PureRender
       if (elementCache.has(props)) {
         return elementCache.get(props)
       }
       // attach theme on first use
-      if (View.theme && !themeUpdate) {
-        themeUpdate = this.createThemeManager(id, View.theme, name)
+      // detect child or parent theme
+      const hasTheme = View.theme || target.theme
+      if (hasTheme && !themeUpdate) {
+        let getTheme = View.theme
+        // extend child theme if necessary
+        if (isParentComponent && target.theme) {
+          getTheme = props => ({
+            ...(View.theme && View.theme(props)),
+            ...target.theme(props),
+          })
+        }
+        themeUpdate = this.createThemeManager(id, getTheme, name)
       }
       // update theme
       if (themeUpdate) {
         themeUpdate(props)
       }
-      // TODO: probably can avoid passing through props
-      const element = this.createElement(target, {
+      // TODO: probably can avoid passing glossUID through props
+      const element = this.createElement(targetElement, {
         glossUID: id,
+        ref: forwardRef,
         ...props,
       })
       elementCache.set(props, element)
       return element
     })
+    // forward ref
+    const View = React.forwardRef((props, ref) =>
+      React.createElement(InnerView, { ...props, forwardRef: ref }),
+    )
     try {
-      this.attachStyles(`${id}`, { [name]: styles })
+      let finalStyles = styles
+      if (isParentComponent) {
+        // extend child styles
+        finalStyles = {
+          ...target.style,
+          ...styles,
+        }
+        console.log('finalStyles', finalStyles)
+      }
+      this.attachStyles(`${id}`, { [name]: finalStyles })
     } catch (err) {
       console.log('error attaching styles', target, name, styles)
+      console.log('err', err)
     }
+    // TODO: babel transform to auto attach name?
     View.displayName = name
     View.style = styles
+    View[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+    // forward ref
     return View
   }
 

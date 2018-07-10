@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { NotFound } from './views/notFound'
+import { NotFound } from './views/NotFound'
 import Router from './router'
 import { view } from '@mcro/black'
 

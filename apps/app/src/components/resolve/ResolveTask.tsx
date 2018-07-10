@@ -1,5 +1,6 @@
+import * as React from 'react'
 import keywordExtract from 'keyword-extractor'
-import markdown from 'marky-markdown'
+import markdown from '@mcro/marky-markdown'
 import { TimeAgo } from '../../views/TimeAgo'
 
 // const converter = new Showdown.Converter()
@@ -19,7 +20,7 @@ const BitGithubTaskComment = ({ comment }) => {
     body,
   } = comment
   return (
-    <comment>
+    <div>
       <user $$row>
         <img
           css={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
@@ -33,7 +34,7 @@ const BitGithubTaskComment = ({ comment }) => {
           __html: markdown(body),
         }}
       />
-    </comment>
+    </div>
   )
 }
 
@@ -52,7 +53,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
   }
 }
 
-export default ({ bit, children, isExpanded, shownLimit }) => {
+export const ResolveTask = ({ bit, children, isExpanded, shownLimit }) => {
   const { content, comments } = isExpanded
     ? parseGithubContents({ bit, shownLimit })
     : {}

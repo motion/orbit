@@ -114,11 +114,13 @@ class Bridge {
       }
       store.actions = {}
       for (const key of Object.keys(options.actions)) {
+        const actionName = `${store.constructor.name}.${key}`
         const boundAction = options.actions[key].bind(store)
-        store.actions[key] = Mobx.action(
-          `${store.constructor.name}`,
-          boundAction,
-        )
+        const finalAction = (...args) => {
+          log(`ACTION: ${actionName}`)
+          return boundAction(...args)
+        }
+        store.actions[key] = Mobx.action(actionName, finalAction)
       }
     }
     // set initial state synchronously before
@@ -272,6 +274,7 @@ class Bridge {
       return changedState
     }
     if (Object.keys(changedState).length) {
+      log(`changedState:\n\n ${JSON.stringify(changedState, null, 2)}`)
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
       } else {
@@ -368,9 +371,11 @@ class Bridge {
 
   onMessage = (type, listener): Function => {
     if (!this.started) {
-      throw new Error(
+      // avoid bailing out here as sometimes hmr may interfere
+      console.error(
         `Not started, can only call onMessage on the app that starts it.`,
       )
+      return
     }
     let subscription = { type, listener }
     if (!listener) {

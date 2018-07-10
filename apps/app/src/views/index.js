@@ -2,11 +2,11 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 
-export * from './roundButton'
+export * from './RoundButton'
 
 export const highlightColor = UI.color('#696549')
 
-export const Message = view('div', {
+export const Message = view({
   display: 'block',
   width: '100%',
   borderRadius: 8,
@@ -17,12 +17,12 @@ export const Message = view('div', {
   color: '#666',
 })
 
-export const Table = view('div', {
+export const Table = view({
   display: 'table',
   width: '100%',
 })
 
-export const TableCell = view('div', {
+export const TableCell = view({
   display: 'table-cell',
 })
 
@@ -50,10 +50,6 @@ export const FormTableLabel = ({ children }) => (
 export const FormTableValue = ({ children }) => (
   <TableCell {...inputCellProps}>{children}</TableCell>
 )
-
-// export const FormTableRow = view(TableRow, {
-
-// })
 
 export const InputRow = ({ label, type, value, onChange }) => (
   <FormTableRow>
@@ -131,7 +127,7 @@ export const Title = ({ center, children, ...props }) => (
   </UI.Text>
 )
 
-export const VertSpace = view('div', {
+export const VertSpace = view({
   height: 20,
 })
 

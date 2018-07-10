@@ -1,4 +1,4 @@
-export async function fetchFromAtlassian(atlassian: any, path: string) {
+export async function fetchFromAtlassian<T = any>(atlassian: any, path: string): Promise<T> {
 
   const { username, password, domain } = atlassian
   const credentials = Buffer

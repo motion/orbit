@@ -5,7 +5,7 @@ import {JiraPersonSync} from './JiraPersonSync'
 export const jira = new Syncer('jira', {
   actions: {
     bit: { secondsBetween: 60 * 5 },
-    person: { secondsBetween: 20 },
+    person: { secondsBetween: 60 * 5 },
   },
   getSyncers: setting => {
     return {

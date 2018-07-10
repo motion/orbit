@@ -1,68 +1,75 @@
 import { Person, Setting, createOrUpdate } from '@mcro/models'
-// import debug from '@mcro/debug'
 import { flatten } from 'lodash'
-import { AtlassianService } from '@mcro/services'
-
-// const log = debug('sync confluencePerson')
+import { fetchFromAtlassian } from '../jira/JiraUtils'
+import {
+  ConfluenceGroupMember,
+  ConfluenceGroupMembersResponse,
+  ConfluenceGroupResponse,
+} from './ConfluenceTypes'
 
 export default class ConfluencePersonSync {
   setting: Setting
-  service: AtlassianService
 
   constructor(setting) {
     this.setting = setting
-    this.service = new AtlassianService(setting)
   }
 
-  run = async () => {
-    const res = await this.syncPeople()
-    if (res.length) {
-      console.log('synced')
+  async run(): Promise<Person[]> {
+    try {
+      console.log('synchronizing confluence people')
+      const people = await this.syncPeople()
+      console.log(`created ${people.length} confluence people`, people)
+      return people
+    } catch (err) {
+      console.log('error in confluence people sync', err.message, err.stack)
+      return []
     }
   }
 
-  syncPeople = async () => {
-    const groups = await this.service.fetchAll(`/wiki/rest/api/group`)
-    console.log('groups', groups)
-    if (!groups) {
-      console.log('no groups found')
-      return null
-    }
-    const people = flatten(
+  private async syncPeople(): Promise<Person[]> {
+
+    // load groups where from we will extract users
+    const url = `/wiki/rest/api/group`;
+    console.log('loading confluence groups')
+    const groups: ConfluenceGroupResponse = await fetchFromAtlassian(this.setting.values.atlassian, url)
+    console.log('confluence groups are loaded', groups.results)
+
+    // now load group members from which we will create people
+    console.log('loading confluence members')
+    const members: ConfluenceGroupMember[] = flatten(
       await Promise.all(
-        groups.map(group =>
-          this.service.fetchAll(`/wiki/rest/api/group/${group.id}/member`),
-        ),
-      ),
+        groups.results.map(async group => {
+          const url = `/wiki/rest/api/group/${group.name}/member`
+          const response = await fetchFromAtlassian<ConfluenceGroupMembersResponse>(this.setting.values.atlassian, url);
+          return response.results;
+        })
+      )
     )
-    console.log('people', people)
-    const created = await Promise.all(people.map(this.createPerson))
-    return created.filter(x => !!x)
+    console.log('confluence members are loaded', members)
+
+    // create people for each loaded member
+    const people = await Promise.all(members.map(person => this.createPerson(person)))
+    return people.filter(x => !!x)
   }
 
-  createPerson = async info => {
-    console.log('createPerson', info)
-    const person = {
-      location: info.location || '',
-      bio: info.bio || '',
-      avatar: info.avatar_url || '',
-      emails: info.email ? [info.email] : [],
-      data: {
-        github: info,
-      },
-    }
+  private async createPerson(member: ConfluenceGroupMember): Promise<Person|null> {
     return await createOrUpdate(
       Person,
       {
-        identifier: `github-${info.id}`,
-        integrationId: info.id,
-        integration: 'github',
-        name: info.login,
+        identifier: `confluence-${member.accountId}`,
+        integrationId: member.accountId,
+        integration: 'confluence',
+        name: member.displayName,
         data: {
-          ...person,
+          avatar: member.profilePicture.path || '',
+          emails: [],
+          data: {
+            github: member,
+          },
         },
       },
       { matching: Person.identifyingKeys },
     )
   }
+
 }

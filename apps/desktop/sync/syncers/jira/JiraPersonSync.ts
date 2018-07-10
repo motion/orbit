@@ -24,23 +24,22 @@ export class JiraPersonSync {
 
   private async syncPeople(startAt: number): Promise<Person[]> {
 
-    const maxResults = 100;
+    const maxResults = 1000;
     const url = `/rest/api/2/user/search?maxResults=${maxResults}&startAt=${startAt}&username=_`;
 
     // loading people from atlassian server
     console.log(`loading ${startAt === 0 ? 'first' : 'next'} ${maxResults} people`);
     const result: JiraPeopleResponse = await fetchFromAtlassian(this.setting.values.atlassian, url)
-    console.log(result)
-    console.log(`${startAt + result.length} people were loaded`);
+    console.log(`${startAt + result.length} people were loaded`, result);
 
     // create people for each loaded issue
     const people = (await Promise.all(
       result.map(person => this.createPerson(person))
     )).filter(person => !!person)
 
-    // since we can only load max 100 people per request, we check if we have more people to load
-    // then execute recursive call to load next 100 people. Since users API does not return total
-    // number of users we do recursive queries until it returns less then 100 people (means end of people)
+    // since we can only load max 1000 people per request, we check if we have more people to load
+    // then execute recursive call to load next 1000 people. Since users API does not return total
+    // number of users we do recursive queries until it returns less then 1000 people (means end of people)
     if (result.length >= maxResults) {
       const nextPagePeople = await this.syncPeople(startAt + maxResults);
       return [...people, ...nextPagePeople];

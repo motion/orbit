@@ -1,5 +1,5 @@
 import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
-import { JiraIssue, JiraIssueResponse } from './JiraIssueType'
+import { JiraIssue, JiraIssueResponse } from './JiraIssueTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 
 export class JiraIssueSync {
@@ -23,7 +23,7 @@ export class JiraIssueSync {
 
   private async syncIssues(startAt: number): Promise<Bit[]> {
 
-    const maxResults = 5;
+    const maxResults = 100;
     const url = `/rest/api/2/search?maxResults=${maxResults}&startAt=${startAt}`;
 
     // loading issues from atlassian server
@@ -32,18 +32,18 @@ export class JiraIssueSync {
     console.log(`${startAt + searchResult.issues.length} of total ${searchResult.total} issues were loaded`);
 
     // create bits for each loaded issue
-    const results = await Promise.all(
+    const issues = await Promise.all(
       searchResult.issues.map(issue => this.createIssue(issue))
     )
 
     // since we can only load max 100 issues per request, we check if we have more issues to load
     // then execute recursive call to load next 100 issues. Do it until we reach the end (total)
     if (searchResult.total > startAt + maxResults) {
-      const nextPageResults = await this.syncIssues(startAt + maxResults);
-      return [...results, ...nextPageResults];
+      const nextPageIssues = await this.syncIssues(startAt + maxResults);
+      return [...issues, ...nextPageIssues];
     }
 
-    return results;
+    return issues;
   }
 
   private createIssue(issue: JiraIssue): Promise<Bit> {

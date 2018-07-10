@@ -6,8 +6,14 @@ import TurndownService from 'turndown'
 const turndown = new TurndownService()
 const htmlToMarkdown = html => turndown.turndown(html)
 
-function stripeHtmlImports(rawHtml) {
-  return rawHtml ? rawHtml.replace(/@import.*[\n]+/, '') : rawHtml
+function stripHtmlImports(rawHtml) {
+  let res = rawHtml ? rawHtml.replace(/@import.*[\n]+/, '') : rawHtml
+  if (res.indexOf('li:before')) {
+    // remove first line
+    const splits = res.split('\n')
+    res = splits.slice(1).join('\n')
+  }
+  return res
 }
 
 const log = debug('googleDrive')
@@ -67,7 +73,7 @@ export default class GoogleDriveSync {
     }
     const { name, text, html, ...data } = info
     const markdowned = html
-      ? stripeHtmlImports(htmlToMarkdown(html))
+      ? stripHtmlImports(htmlToMarkdown(html))
       : text || ''
     return await createOrUpdateBit(Bit, {
       integration: 'gdocs',

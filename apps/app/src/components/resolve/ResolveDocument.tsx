@@ -7,18 +7,14 @@
 //   remove_duplicates: false,
 // }
 
-const replace = {
-  'reply to chris': 'Draft Reply to Angela',
-}
-
-export const ResolveDocument = ({ bit, children }) =>
+export const ResolveDocument = ({ bit, children, isExpanded }) =>
   children({
-    title: replace[bit.title] || bit.title,
-    icon: 'gdocs',
+    title: bit.title,
+    icon: bit.integration || 'gdocs',
     location: ' ', //bit.data.spaces[0],
     date: Date.now(),
-    content: bit.data.markdown,
-    preview: replace[bit.title]
-      ? 'Hey Angela - hope you\'re doing well - wanted to give an update and ask for advice.\n\nWe are continuing to explore the space of...'
-      : bit.body.replace('123', ''),
+    content: isExpanded
+      ? bit.data.markdownBody || bit.data.body || bit.body
+      : null,
+    preview: bit.body,
   })

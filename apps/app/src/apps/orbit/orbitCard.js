@@ -178,7 +178,6 @@ export class OrbitCard extends React.Component {
   getOrbitCard(contentProps) {
     const {
       title,
-      via,
       icon,
       preview,
       location,

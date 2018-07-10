@@ -19,7 +19,7 @@ const TitleBarTitle = props => (
   <UI.Text
     size={1.1}
     fontWeight={700}
-    ellipse
+    ellipse={1}
     margin={0}
     padding={[4, 0]}
     lineHeight="1.5rem"

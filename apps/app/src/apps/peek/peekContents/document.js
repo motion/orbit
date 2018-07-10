@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekBitResolver, PeekHeader, PeekContent } from '../index'
+import { PeekBitResolver } from '../index'
 import markdown from 'marky-markdown'
 
 const options = {
@@ -16,15 +16,13 @@ export class Document extends React.Component {
     if (!bit || !bit.data) {
       return children({})
     }
-    let bodyContents
-    if (bit.data.markdownBody) {
-      bodyContents = markdown(bit.data.markdownBody, options)
-    } else {
-      bodyContents = bit.data.htmlBody || ''
-    }
     return (
       <PeekBitResolver bit={bit} appStore={appStore}>
-        {({ title, icon }) => {
+        {({ title, icon, content }) => {
+          let bodyContents = content
+          if (bit.data.markdownBody) {
+            bodyContents = markdown(content, options)
+          }
           return children({
             title,
             icon,

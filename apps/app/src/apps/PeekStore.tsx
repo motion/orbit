@@ -13,9 +13,9 @@ const INTEGRATION_THEMES = {
   slack: { background: '#FDDE64' },
   github: { background: '#333', color: 'white' },
   gdocs: { background: '#7DA5F4' },
-  jira: { background: 'darkblue' },
+  jira: { background: 'darkblue', color: 'white' },
   confluence: { background: 'darkblue', color: 'white' },
-  gmail: { background: 'red' },
+  gmail: { background: 'darkred', color: 'white' },
 }
 
 export class PeekStore {

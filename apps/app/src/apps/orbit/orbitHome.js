@@ -125,7 +125,16 @@ export class OrbitHome extends React.Component {
         <header if={false}>
           <SubTitle>
             {day} {month} {dayNum}
-            <span $super>{postfix[dayNum - 1]}</span>
+            <span
+              css={{
+                verticalAlign: 'super',
+                marginLeft: 1,
+                fontSize: 11,
+                opacity: 0.6,
+              }}
+            >
+              {postfix[dayNum - 1]}
+            </span>
           </SubTitle>
           <div $$flex />
         </header>
@@ -170,36 +179,5 @@ export class OrbitHome extends React.Component {
         </content>
       </OrbitDockedPane>
     )
-  }
-
-  static style = {
-    super: {
-      verticalAlign: 'super',
-      marginLeft: 1,
-      fontSize: 11,
-      opacity: 0.6,
-    },
-    content: {
-      // margin: [0, -2],
-    },
-    overflowFade: {
-      pointerEvents: 'none',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: 200,
-      zIndex: 10000000,
-      borderRadius: 20,
-      overflow: 'hidden',
-    },
-  }
-
-  static theme = ({ theme }) => {
-    return {
-      overflowFade: {
-        background: `linear-gradient(transparent, ${theme.base.background})`,
-      },
-    }
   }
 }

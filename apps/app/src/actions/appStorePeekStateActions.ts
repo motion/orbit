@@ -32,6 +32,7 @@ export function selectItem(
   item: Person | Bit | GenericPeekItem,
   target?: PositionObject,
 ) {
+  console.trace('selecting')
   invariant(item, 'Must pass item')
   if (item instanceof Person) {
     invariant(item.name, 'Must pass Person name')

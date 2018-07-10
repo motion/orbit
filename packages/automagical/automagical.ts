@@ -568,6 +568,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
 
       const changed = root.__trackStateChanges.changed
+      const prefix = `${name} ${isReaction ? `@r` : `@w`}`
       root.__trackStateChanges = {}
 
       // handle promises
@@ -583,6 +584,13 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
               if (hasCalledSetValue) {
                 throw new Error(
                   `In ${name}, invalid operation: called setValue, then returned a value. Use one or the other for sanity`,
+                )
+              }
+              if (options.log !== 'state') {
+                log(
+                  `${prefix}`,
+                  isReaction ? reactValArg : '',
+                  ...logRes(result),
                 )
               }
               updateAsyncValue(val)
@@ -607,7 +615,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       // store result as observable
       result = specialValueToObservable(reactionResult)
       if (!IS_PROD && !preventLog && !delayValue) {
-        const prefix = `${name} ${isReaction ? `@r` : `@w`}`
         if (changed && Object.keys(changed).length) {
           logState(
             `${prefix}`,

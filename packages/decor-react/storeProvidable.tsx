@@ -6,6 +6,7 @@ import isEqual from 'react-fast-compare'
 import root from 'global'
 import { DecorPlugin } from '@mcro/decor'
 import { StoreContext } from './contexts'
+import { Disposable } from 'event-kit'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
@@ -57,6 +58,20 @@ export interface StoreProvidable {}
 export let storeProvidable: DecorPlugin<StoreProvidable>
 
 storeProvidable = function(options, Helpers) {
+  let recentHMR = false
+  let recentHMRTm = null
+
+  // let things re-mount after queries and such
+  const setRecentHMR = () => {
+    clearTimeout(recentHMRTm)
+    recentHMR = true
+    recentHMRTm = setTimeout(() => {
+      recentHMR = false
+    }, 2000)
+  }
+
+  Helpers.on('did-hmr', setRecentHMR)
+
   return {
     name: 'store-providable',
     once: true,
@@ -89,14 +104,13 @@ storeProvidable = function(options, Helpers) {
         isSetup = false
         id = Math.random()
 
-        willHmrListen: any
-        didHmrListen: any
         mountName: string
         props: any | { __contextualStores?: Object }
         hmrDispose: any
         _props: any
         stores: any
         unmounted: boolean
+        willReloadListener: Disposable
 
         // @ts-ignore
         static get name() {
@@ -108,15 +122,6 @@ storeProvidable = function(options, Helpers) {
         }
 
         allStores = allStores
-
-        // onWillReload() {
-        //   this.onWillReloadStores()
-        //   this.disposeStores()
-        //   this.setupProps()
-        //   this.setupStores()
-        //   this.mountStores()
-        //   this.forceUpdate()
-        // }
 
         constructor(a, b) {
           super(a, b)
@@ -136,18 +141,21 @@ storeProvidable = function(options, Helpers) {
           }
           root.loadedStores.add(this)
           this.mountStores()
-          this.willHmrListen = Helpers.on('will-hmr', this.onWillReloadStores)
-          this.didHmrListen = Helpers.on('did-hmr', this.onReloadStores)
+          this.willReloadListener = Helpers.on('will-hmr', () => {
+            this.onWillReloadStores()
+            setRecentHMR()
+          })
+          console.log('check hmr', recentHMR)
+          if (recentHMR) {
+            this.onReloadStores()
+          }
         }
 
         componentWillUnmount() {
           if (Klass.name === 'OrbitStore') {
             console.log('unmounting', this, this.disposeStores)
           }
-          if (this.willHmrListen) {
-            this.willHmrListen.dispose()
-            this.didHmrListen.dispose()
-          }
+          this.willReloadListener.dispose()
           root.loadedStores.delete(this)
           // if you remove @view.attach({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {

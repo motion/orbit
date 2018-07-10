@@ -1,12 +1,16 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { PeekBitResolver, PeekHeader, PeekContent } from '../index'
+import { PeekBitResolver } from '../index'
 import { BitResolver } from '../../../components/BitResolver'
-import { Carousel } from '../../../components/Carousel'
+import { OrbitCardMasonry } from '../../../apps/orbit/OrbitCardMasonry'
 import { SubTitle } from '../../../views'
 import { OrbitDivider } from '../../../apps/orbit/orbitDivider'
 import { Bit, Person } from '@mcro/models'
 import * as UI from '@mcro/ui'
+
+const Section = view({
+  padding: 20,
+})
 
 // delays here help ensure it doesn't jitter
 
@@ -58,12 +62,10 @@ export class Conversation extends React.Component {
             content: (
               <>
                 {content}
-                <SubTitle>Related</SubTitle>
-                <carouselInner>
-                  <UI.Theme name="light">
-                    <Carousel items={store.related} />
-                  </UI.Theme>
-                </carouselInner>
+                <Section>
+                  <SubTitle>Related 2123232</SubTitle>
+                  <OrbitCardMasonry items={store.related} />
+                </Section>
                 <SubTitle>Related Conversations</SubTitle>
                 {store.relatedConversations.map((relatedBit, index) => (
                   <React.Fragment key={`${relatedBit.id}${index}`}>

@@ -26,6 +26,9 @@ const results = {
   confluence: {
     document: Document,
   },
+  jira: {
+    document: Document,
+  },
 }
 
 const EmptyResolver = ({ children }) =>

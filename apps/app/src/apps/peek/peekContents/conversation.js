@@ -63,7 +63,7 @@ export class Conversation extends React.Component {
               <>
                 {content}
                 <Section>
-                  <SubTitle>Related 2123232</SubTitle>
+                  <SubTitle>Related</SubTitle>
                   <OrbitCardMasonry items={store.related} />
                 </Section>
                 <SubTitle>Related Conversations</SubTitle>

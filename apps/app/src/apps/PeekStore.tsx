@@ -23,10 +23,6 @@ export class PeekStore {
   dragOffset: [number, number] = null
   history = []
 
-  willMount() {
-    log('MOUNT PEEK STORE')
-  }
-
   get theme() {
     if (!this.model) {
       return null
@@ -174,10 +170,15 @@ export class PeekStore {
   onDragStart = e => {
     e.preventDefault()
     this.tornState = { ...this.state }
+    this.props.appStore.clearSelected(false)
     // set initial offset of mouse from frame
     let mouseDown
     const offMove = on(this, window, 'mousemove', e => {
-      mouseDown = mouseDown || Desktop.mouseState.mouseDown
+      if (!mouseDown) {
+        // Desktop.mouseState.mouseDown is a bit better because its from before you start dragging
+        mouseDown = mouseDown ||
+          Desktop.mouseState.mouseDown || [e.clientX, e.clientY]
+      }
       const { x, y } = mouseDown
       this.dragOffset = [e.clientX - x, e.clientY - y]
     })

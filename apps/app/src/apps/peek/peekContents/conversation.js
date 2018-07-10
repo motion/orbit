@@ -49,7 +49,7 @@ export class Conversation extends React.Component {
     }
     return (
       <PeekBitResolver appStore={appStore} bit={bit} itemProps={itemProps}>
-        {({ permalink, location, title, icon, content }) => {
+        {({ permalink, location, title, icon, content, itemProps }) => {
           return (
             <>
               <PeekHeader
@@ -60,14 +60,12 @@ export class Conversation extends React.Component {
               />
               <PeekContent>
                 {content}
-
                 <SubTitle>Related</SubTitle>
                 <carouselInner>
                   <UI.Theme name="light">
                     <Carousel items={store.related} />
                   </UI.Theme>
                 </carouselInner>
-
                 <SubTitle>Related Conversations</SubTitle>
                 {store.relatedConversations.map((relatedBit, index) => (
                   <React.Fragment key={`${relatedBit.id}${index}`}>
@@ -75,7 +73,7 @@ export class Conversation extends React.Component {
                       appStore={appStore}
                       bit={relatedBit}
                       shownLimit={Infinity}
-                      itemProps={slackConvoBitContentStyle}
+                      itemProps={itemProps}
                       isExpanded
                     >
                       {({ content }) => content}

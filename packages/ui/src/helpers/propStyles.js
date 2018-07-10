@@ -45,9 +45,10 @@ export default props => {
       const getStateVal = valFor(key)
       const val = props[key]
       for (const subKey of Object.keys(val)) {
-        if (validCSSAttr(key)) {
+        if (validCSSAttr(subKey)) {
           styles[stateKey][subKey] = getStateVal(props, subKey)
         } else {
+          console.log('propStyles error info', styles, props)
           throw new Error(`Invalid name for css key: ${key}`)
         }
       }

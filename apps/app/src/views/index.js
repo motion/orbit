@@ -168,7 +168,7 @@ export class SmallLink extends React.Component {
   }
 
   render({ children }) {
-    return <span onClick={this.handleClick}>{children}</span>
+    return <span onDoubleClick={this.handleClick}>{children}</span>
   }
   static style = {
     span: {

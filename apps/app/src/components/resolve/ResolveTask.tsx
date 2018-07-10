@@ -1,6 +1,6 @@
 import * as React from 'react'
 import keywordExtract from 'keyword-extractor'
-import markdown from 'marky-markdown'
+import markdown from '@mcro/marky-markdown'
 import { TimeAgo } from '../../views/TimeAgo'
 
 // const converter = new Showdown.Converter()

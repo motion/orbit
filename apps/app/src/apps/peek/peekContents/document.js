@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekBitResolver } from '../index'
-import markdown from 'marky-markdown'
+import markdown from '@mcro/marky-markdown'
 
 const options = {
   language: 'english',

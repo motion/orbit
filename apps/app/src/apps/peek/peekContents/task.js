@@ -34,6 +34,7 @@ export class Task extends React.Component {
             content: (
               <>
                 <bodyContents
+                  className="markdown"
                   dangerouslySetInnerHTML={{
                     __html: content,
                   }}

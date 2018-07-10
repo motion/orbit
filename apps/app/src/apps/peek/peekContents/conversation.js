@@ -43,22 +43,20 @@ const itemProps = {
 })
 @view
 export class Conversation extends React.Component {
-  render({ store, bit, appStore }) {
+  render({ store, bit, appStore, children }) {
     if (!bit) {
-      return null
+      return children({})
     }
     return (
       <PeekBitResolver appStore={appStore} bit={bit} itemProps={itemProps}>
         {({ permalink, location, title, icon, content, itemProps }) => {
-          return (
-            <>
-              <PeekHeader
-                title={title}
-                subtitle={location}
-                icon={icon}
-                permalink={permalink}
-              />
-              <PeekContent>
+          return children({
+            title,
+            subtitle: location,
+            icon,
+            permalink,
+            content: (
+              <>
                 {content}
                 <SubTitle>Related</SubTitle>
                 <carouselInner>
@@ -87,9 +85,9 @@ export class Conversation extends React.Component {
                 ))}
                 <br />
                 <br />
-              </PeekContent>
-            </>
-          )
+              </>
+            ),
+          })
         }}
       </PeekBitResolver>
     )

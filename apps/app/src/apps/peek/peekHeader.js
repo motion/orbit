@@ -78,6 +78,7 @@ export class PeekHeaderContent extends React.Component {
     permalink,
     icon,
     theme,
+    subhead,
     ...props
   }) {
     return (
@@ -147,6 +148,7 @@ export class PeekHeaderContent extends React.Component {
         <SubTitle date={date} theme={theme} permalink={permalink}>
           {subtitle}
         </SubTitle>
+        {subhead}
       </PeekHeaderContain>
     )
   }

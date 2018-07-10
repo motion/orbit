@@ -12,10 +12,10 @@ const TYPE_THEMES = {
 const INTEGRATION_THEMES = {
   slack: { background: '#FDDE64' },
   github: { background: '#333', color: 'white' },
-  gdocs: '#7DA5F4',
-  jira: 'darkblue',
-  confluence: 'darkblue',
-  gmail: 'red',
+  gdocs: { background: '#7DA5F4' },
+  jira: { background: 'darkblue' },
+  confluence: { background: 'darkblue', color: 'white' },
+  gmail: { background: 'red' },
 }
 
 export class PeekStore {

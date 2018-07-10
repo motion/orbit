@@ -12,13 +12,9 @@ const options = {
 
 @view
 export class Document extends React.Component {
-  render({ bit, appStore }) {
-    if (!bit) {
-      return null
-    }
-    if (!bit.data) {
-      console.log('no data...')
-      return null
+  render({ bit, appStore, children }) {
+    if (!bit || !bit.data) {
+      return children({})
     }
     let bodyContents
     if (bit.data.markdownBody) {
@@ -29,19 +25,18 @@ export class Document extends React.Component {
     return (
       <PeekBitResolver bit={bit} appStore={appStore}>
         {({ title, icon }) => {
-          return (
-            <>
-              <PeekHeader title={title} icon={icon} />
-              <PeekContent>
-                <bodyContents
-                  className="markdown"
-                  dangerouslySetInnerHTML={{
-                    __html: bodyContents,
-                  }}
-                />
-              </PeekContent>
-            </>
-          )
+          return children({
+            title,
+            icon,
+            content: (
+              <bodyContents
+                className="markdown"
+                dangerouslySetInnerHTML={{
+                  __html: bodyContents,
+                }}
+              />
+            ),
+          })
         }}
       </PeekBitResolver>
     )

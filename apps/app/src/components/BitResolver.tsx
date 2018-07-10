@@ -28,8 +28,20 @@ const results = {
   },
 }
 
+const EmptyResolver = ({ children }) =>
+  children({
+    title: '',
+    body: '',
+    subtitle: '',
+    location: '',
+    icon: '',
+  })
+
 export function BitResolver({ bit, ...props }) {
   let Resolver
+  if (!bit) {
+    return EmptyResolver
+  }
   if (bit instanceof Person) {
     Resolver = PersonCard
   } else if (!bit.integration || !bit.type) {

@@ -6,6 +6,8 @@ import * as PeekContents from './peek/PeekContents'
 import { capitalize } from 'lodash'
 import { PeekFrame } from './peek/PeekFrame'
 import { AppStore } from '../stores/AppStore'
+import { PeekContent } from './peek/PeekContent'
+import { PeekHeader } from './peek/PeekHeader'
 
 const PeekPageInner = view(({ peekStore, appStore }) => {
   if (!peekStore.state) {
@@ -18,10 +20,10 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
     console.error('none', type)
     return <div>no pane found</div>
   }
-  if (!peekStore.model) {
-    console.warn('no selected model')
-    return <div>no selected model</div>
-  }
+  // if (!peekStore.model) {
+  //   console.warn('no selected model')
+  //   return <div>no selected model</div>
+  // }
   return (
     <PeekContentsView
       key={peekId}
@@ -29,7 +31,21 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
       person={peekStore.model}
       appStore={appStore}
       peekStore={peekStore}
-    />
+    >
+      {({ title, icon, date, subhead, subtitle, after, content }) => (
+        <>
+          <PeekHeader
+            title={title}
+            subtitle={subtitle}
+            after={after}
+            icon={icon}
+            date={date}
+            subhead={subhead}
+          />
+          <PeekContent>{content}</PeekContent>
+        </>
+      )}
+    </PeekContentsView>
   )
 })
 

@@ -31,16 +31,15 @@ class PersonPeek {
 })
 @view
 export class Person extends React.Component {
-  render({ store, person, appStore }) {
+  render({ store, person, appStore, children }) {
     if (!appStore.settings) {
-      return null
+      return children({})
     }
     const setting = appStore.settings.slack
     if (!setting || !person || !person.data || !person.data.profile) {
-      console.log('no person', person)
-      return null
+      console.log('no person or person.data.profile', person)
+      return children({})
     }
-
     return (
       <frame>
         <cardContent>

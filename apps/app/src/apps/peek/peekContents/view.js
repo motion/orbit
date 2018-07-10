@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekHeader, PeekContent } from '../index'
 import { ConfluenceSetupPane } from './settingSetupPanes/ConfluenceSetupPane'
 import { JiraSetupPane } from './settingSetupPanes/JiraSetupPane'
 
@@ -11,19 +10,15 @@ const views = {
 
 @view
 export class View extends React.Component {
-  render({ bit }) {
+  render({ bit, children }) {
     const View = views[bit.id]
     if (!View) {
       console.error('no view', bit.toJS())
-      return null
+      return children({})
     }
-    return (
-      <>
-        <PeekHeader title={bit.title} />
-        <PeekContent>
-          <View bit={bit} />
-        </PeekContent>
-      </>
-    )
+    return children({
+      title: bit.title,
+      content: <View bit={bit} />,
+    })
   }
 }

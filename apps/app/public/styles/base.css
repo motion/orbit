@@ -32,6 +32,11 @@ a.anchor {
   user-select: auto;
 }
 
+.markdown a {
+  color: #2a78de;
+  text-decoration: underline;
+}
+
 .markdown {
   line-height: 1.45rem;
 }

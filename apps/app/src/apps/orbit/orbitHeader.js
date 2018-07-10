@@ -21,6 +21,7 @@ class HeaderStore {
   focusInput = react(
     () => [
       App.orbitState.pinned || App.orbitState.docked,
+      // use this because otherwise input may not focus
       App.isMouseInActiveArea,
     ],
     async ([shown], { when }) => {

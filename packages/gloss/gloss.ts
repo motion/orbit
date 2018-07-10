@@ -1,3 +1,4 @@
+import * as React from 'react'
 import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import JSS from './stylesheet'
@@ -20,7 +21,7 @@ export const isGlossyFirstArg = arg => {
     return true
   }
   // its a existing simple component
-  if (typeof arg.style === 'object') {
+  if (typeof arg === 'function' && typeof arg.style === 'object') {
     return true
   }
   return false
@@ -140,8 +141,8 @@ export default class Gloss {
     const name = target.name || target
     const elementCache = new WeakMap()
     let themeUpdate
-    const View = <GlossView>attachTheme(props => {
-      // basically PureRender for stylsheet updates
+    const InnerView = <GlossView>attachTheme(({ forwardRef, ...props }) => {
+      // basically PureRender
       if (elementCache.has(props)) {
         return elementCache.get(props)
       }
@@ -156,18 +157,25 @@ export default class Gloss {
       // TODO: probably can avoid passing through props
       const element = this.createElement(target, {
         glossUID: id,
+        ref: forwardRef,
         ...props,
       })
       elementCache.set(props, element)
       return element
     })
+    // forward ref
+    const View = React.forwardRef((props, ref) =>
+      React.createElement(InnerView, { ...props, forwardRef: ref }),
+    )
     try {
       this.attachStyles(`${id}`, { [name]: styles })
     } catch (err) {
       console.log('error attaching styles', target, name, styles)
     }
+    // TODO: babel transform to auto attach name?
     View.displayName = name
     View.style = styles
+    // forward ref
     return View
   }
 

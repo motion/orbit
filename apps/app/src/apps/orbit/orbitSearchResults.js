@@ -38,10 +38,11 @@ export class OrbitSearchResults extends React.Component {
     }
     const { query, results, message } = searchStore.state
     const isChanging = App.state.query !== query
-    log(`SEARCH ${name} --------------`)
+    log(`SEARCH OrbitSearchResults ${name} --------------`)
     const highlightWords = searchStore.state.query
       .split(' ')
       .filter(x => x.length > 2)
+    console.log('OrbitSearchResults', highlightWords, results, query, message)
     return (
       <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
         <contents $$flex>
@@ -69,13 +70,12 @@ export class OrbitSearchResults extends React.Component {
                   <UI.Text
                     size={1.2}
                     alpha={0.7}
-                    ellipse={3}
                     wordBreak="break-all"
                     highlight={
                       highlightWords.length && {
                         words: highlightWords,
-                        maxChars: Math.max(400, 3500 / results.length),
-                        maxSurroundChars: Math.max(80, 850 / results.length),
+                        maxChars: 380,
+                        maxSurroundChars: 120,
                         trimWhitespace: true,
                         separator: '&nbsp;&middot;&nbsp;',
                       }
@@ -94,18 +94,6 @@ export class OrbitSearchResults extends React.Component {
   }
 
   static style = {
-    orbitSearchResults: {
-      opacity: 0,
-      pointerEvents: 'none',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
-    isChanging: {
-      opacity: 0.7,
-    },
     message: {
       padding: [5, 10],
       fontSize: 12,

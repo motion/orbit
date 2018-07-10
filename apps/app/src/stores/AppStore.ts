@@ -1,13 +1,13 @@
-import { on, react, ReactionTimeoutError, sleep } from '@mcro/black'
+import { on, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '../helpers'
 import * as AppStoreHelpers from './appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
-import { trace } from 'mobx'
 
 const log = debug('appStore')
+const TYPE_DEBOUNCE = 30
 
 const searchBits = async (query, params?) => {
   if (!query) {
@@ -254,10 +254,11 @@ export class AppStore {
     async ([query], { sleep, setValue }) => {
       log(`bitsearch ${query}`)
       // debounce a little for fast typer
-      await sleep(30)
+      await sleep(TYPE_DEBOUNCE)
       // get first page results
       const results = await searchBits(query, { take: 6 })
       setValue({
+        restResults: null,
         results,
         query,
       })
@@ -279,7 +280,7 @@ export class AppStore {
   peopleSearch = react(
     () => [App.state.query, Desktop.state.lastBitUpdatedAt],
     async ([query], { sleep }) => {
-      await sleep(40)
+      await sleep(TYPE_DEBOUNCE)
       return {
         query,
         results: await Person.find({
@@ -295,24 +296,20 @@ export class AppStore {
   )
 
   searchState = react(
-    () => [App.state.query, this.getResults, this.bitSearch, this.peopleSearch],
-    async ([query]) => {
-      // conditions
-      if (this.bitSearch.query !== query || this.peopleSearch.query !== query) {
-        throw react.cancel
-      }
+    () => [App.state.query, this.getResults],
+    async ([query], { when, setValue }) => {
       if (!query) {
-        return {
+        return setValue({
           query,
           results: this.getResults ? this.getResults() : [],
-        }
+        })
       }
       // these are all specialized searches, see below for main search logic
       if (this.getResults && this.getResults.shouldFilter) {
-        return {
+        return setValue({
           query,
           results: Helpers.fuzzy(query, this.getResults()),
-        }
+        })
       }
       let results
       let channelResults
@@ -340,25 +337,32 @@ export class AppStore {
       }
       // regular search
       if (!results) {
+        await Promise.all([
+          when(() => this.bitSearch.query === query),
+          when(() => this.peopleSearch.query === query),
+        ])
         const allResultsUnsorted = [
           ...this.bitSearch.results,
           ...this.peopleSearch.results,
           // ...Desktop.searchState.pluginResults,
         ]
-        // remove prefixes
+        // return first page fast results
         const { rest } = AppStoreHelpers.parseQuery(query)
-        console.log('allResultsUnsorted', rest, allResultsUnsorted)
-        // sort
-        results = [
-          ...AppStoreHelpers.matchSort(rest, allResultsUnsorted),
-          ...(this.bitSearch.restResults || []),
-        ]
+        results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
+        setValue({
+          query,
+          message,
+          results,
+        })
+        // then return full results
+        await when(() => this.bitSearch.restResults)
+        results = [...results, ...this.bitSearch.restResults]
       }
-      return {
+      return setValue({
         query,
         message,
         results,
-      }
+      })
     },
     {
       defaultValue: { results: [], query: '' },

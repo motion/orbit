@@ -452,7 +452,10 @@ export class OrbitCard extends React.Component {
         },
       }
       if (isSelected) {
-        // can add selected styles...
+        card = {
+          ...card,
+          border: [1, borderHover],
+        }
       }
     }
     if (hoverable) {

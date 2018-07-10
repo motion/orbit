@@ -23,6 +23,9 @@ const results = {
   apps: {
     app: App,
   },
+  confluence: {
+    document: Document,
+  },
 }
 
 export function BitResolver({ bit, ...props }) {

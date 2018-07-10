@@ -6,24 +6,22 @@ import { OrbitDockedPane } from './orbitDockedPane'
 import { OrbitQuickSearch } from './OrbitQuickSearch'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
+import { stateOnlyWhenActive } from './stateOnlyWhenActive'
 
 class SearchStore {
   // this isn't a computed val because it persists the last state
-  //
-  state = react(
-    () => this.props.appStore.searchState,
-    state => {
-      if (this.props.appStore.selectedPane !== this.props.name) {
-        throw react.cancel
-      }
-      return state
-    },
-    { immediate: true },
-  )
+  state = stateOnlyWhenActive(this)
+
+  get isActive() {
+    return this.props.appStore.selectedPane === this.props.name
+  }
 
   hasQuery() {
     return !!App.state.query
   }
+
+  // delay just a tiny bit to prevent input delay
+  currentQuery = react(() => App.state.query, _ => _, { delay: 32 })
 }
 
 @view.attach('appStore')
@@ -33,11 +31,11 @@ class SearchStore {
 @view
 export class OrbitSearchResults extends React.Component {
   render({ searchStore, name }) {
-    if (!searchStore.state) {
+    if (!searchStore.state.results) {
       return null
     }
     const { query, results, message } = searchStore.state
-    const isChanging = App.state.query !== query
+    const isChanging = searchStore.currentQuery !== query
     log(`SEARCH OrbitSearchResults ${name} --------------`)
     const highlightWords = searchStore.state.query
       .split(' ')

@@ -6,14 +6,15 @@ import TurndownService from 'turndown'
 const turndown = new TurndownService()
 const htmlToMarkdown = html => turndown.turndown(html)
 
-function stripHtmlImports(rawHtml) {
-  let res = rawHtml ? rawHtml.replace(/@import.*[\n]+/, '') : rawHtml
-  if (res.indexOf('li:before')) {
-    // remove first line
-    const splits = res.split('\n')
-    res = splits.slice(1).join('\n')
-  }
-  return res
+// TODO: gdocs doesnt rally give us enough for nice markdown
+// but we could use the style="" attributes to discern titles from subtitle, paragraphs
+
+function stripHead(rawHtml) {
+  return rawHtml.replace(/<head>.*<\/head>/g, '')
+}
+
+function stripStyles(rawHtml) {
+  return rawHtml.replace(/ style="[^"]+"/g, '')
 }
 
 const log = debug('googleDrive')
@@ -73,7 +74,7 @@ export default class GoogleDriveSync {
     }
     const { name, text, html, ...data } = info
     const markdowned = html
-      ? stripHtmlImports(htmlToMarkdown(html))
+      ? htmlToMarkdown(stripStyles(stripHead(html)))
       : text || ''
     return await createOrUpdateBit(Bit, {
       integration: 'gdocs',

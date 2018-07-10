@@ -144,10 +144,11 @@ export class AppStore {
     },
   )
 
-  clearSelectedOnSelectedPaneChange = react(
-    () => this.selectedPane,
-    () => this.clearSelected(),
-  )
+  // TODO disable until context re-enabled
+  // clearSelectedOnSelectedPaneChange = react(
+  //   () => this.selectedPane,
+  //   () => this.clearSelected(),
+  // )
 
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,

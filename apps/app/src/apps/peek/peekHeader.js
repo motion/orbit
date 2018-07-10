@@ -81,7 +81,15 @@ export class PeekHeaderContent extends React.Component {
     ...props
   }) {
     return (
-      <PeekHeaderContain ref={this.onHeader} theme={theme} {...props}>
+      <PeekHeaderContain
+        draggable={true}
+        onDragStart={peekStore.onDragStart}
+        onDrag={peekStore.onDrag}
+        onDragEnd={peekStore.onDragEnd}
+        ref={this.onHeader}
+        theme={theme}
+        {...props}
+      >
         <TitleBar
           after={
             <>

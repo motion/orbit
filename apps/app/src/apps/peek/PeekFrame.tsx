@@ -122,15 +122,7 @@ export const PeekFrame = view.attach('peekStore')(
             }}
           />
           <UI.Col flex={1} padding={padding} margin={margin}>
-            <UI.Col
-              draggable={true}
-              onDragStart={peekStore.onDragStart}
-              onDrag={peekStore.onDrag}
-              onDragEnd={peekStore.onDragEnd}
-              pointerEvents="all !important"
-              position="relative"
-              flex={1}
-            >
+            <UI.Col pointerEvents="all !important" position="relative" flex={1}>
               <PeekFrameBorder
                 css={{
                   borderRadius,

@@ -32,13 +32,17 @@ export class OrbitSettingCard extends React.Component {
     return
   }
 
-  render({ store, result, isActive, setting, subtitle, ...props }) {
+  render({ store, result, isActive, subtitle, ...props }) {
     const countSubtitle = !isActive
       ? ''
       : store.bitsCount === null
         ? '...'
         : `${store.bitsCount || '0'} total`
     const subtitleDisplay = subtitle || countSubtitle
+    if (!result.title) {
+      console.log('no title for', result)
+      return null
+    }
     return (
       <OrbitCard
         inactive={!isActive}

@@ -1,5 +1,5 @@
 import * as React from 'react'
-// import * as UI from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { RoundButton } from '../../views'
 import slackDown from '@mcro/slackdown'
@@ -9,7 +9,7 @@ import { App } from '@mcro/stores'
 
 @view
 export class BitSlackMessage extends React.Component {
-  render({ bit, message, previousMessage, contentStyle }) {
+  render({ bit, message, previousMessage, itemProps }) {
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -38,7 +38,15 @@ export class BitSlackMessage extends React.Component {
     return (
       <message>
         <topSpace if={!hideHeader && previousMessage} css={{ height: 14 }} />
-        <header if={!hideHeader}>
+        <UI.Row
+          if={!hideHeader}
+          {...itemProps}
+          flexFlow="row"
+          alignItems="center"
+          margin={[0, 0, 2, -2]}
+          userSelect="none"
+          cursor="default"
+        >
           <RoundButton
             size={1.1}
             onClick={e => {
@@ -55,11 +63,10 @@ export class BitSlackMessage extends React.Component {
           <date if={!previousMessage || !previousWithinOneMinute}>
             <TimeAgo if={message.ts}>{getSlackDate(message.ts)}</TimeAgo>
           </date>
-        </header>
-        <content
-          css={contentStyle}
-          dangerouslySetInnerHTML={{ __html: htmlText }}
-        />
+        </UI.Row>
+        <UI.Row {...itemProps}>
+          <content dangerouslySetInnerHTML={{ __html: htmlText }} />
+        </UI.Row>
       </message>
     )
   }
@@ -67,13 +74,6 @@ export class BitSlackMessage extends React.Component {
   static style = {
     message: {
       padding: [2, 0, 0],
-    },
-    header: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      margin: [0, 0, 2, -2],
-      userSelect: 'none',
-      cursor: 'default',
     },
     inner: {
       flexFlow: 'row',

@@ -23,6 +23,10 @@ export class PeekStore {
   dragOffset: [number, number] = null
   history = []
 
+  willMount() {
+    log('MOUNT PEEK STORE')
+  }
+
   get theme() {
     if (!this.model) {
       return null
@@ -31,7 +35,8 @@ export class PeekStore {
     if (TYPE_THEMES[item]) {
       return TYPE_THEMES[item]
     }
-    const intTheme = INTEGRATION_THEMES[this.model.integration]
+    const intTheme =
+      INTEGRATION_THEMES[this.model.integration || this.model.type]
     return intTheme || null
   }
 

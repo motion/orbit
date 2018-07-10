@@ -31,10 +31,10 @@ class ConversationPeekStore {
   )
 }
 
-const slackConvoBitContentStyle = {
-  contentStyle: {
-    paddingLeft: 17,
-    fontSize: 18,
+const itemProps = {
+  padding: [2, 10],
+  hover: {
+    background: 'red',
   },
 }
 
@@ -48,11 +48,7 @@ export class Conversation extends React.Component {
       return null
     }
     return (
-      <PeekBitResolver
-        appStore={appStore}
-        bit={bit}
-        itemProps={slackConvoBitContentStyle}
-      >
+      <PeekBitResolver appStore={appStore} bit={bit} itemProps={itemProps}>
         {({ permalink, location, title, icon, content }) => {
           return (
             <>
@@ -63,67 +59,41 @@ export class Conversation extends React.Component {
                 permalink={permalink}
               />
               <PeekContent>
-                <content>
-                  <UI.Text
-                    if={false}
-                    selectable
-                    css={{ margin: [5, 0, 20] }}
-                    size={1.2}
-                  >
-                    <strong>Key points</strong>: a16z partners, orbit domain,
-                    mock-up, Formidable and refactor.
-                  </UI.Text>
-                  {content}
-                </content>
-                <br />
+                {content}
+
                 <SubTitle>Related</SubTitle>
-                <section>
-                  <carouselInner>
+                <carouselInner>
+                  <UI.Theme name="light">
                     <Carousel items={store.related} />
-                  </carouselInner>
-                </section>
-                <br />
+                  </UI.Theme>
+                </carouselInner>
+
                 <SubTitle>Related Conversations</SubTitle>
-                <section>
-                  {store.relatedConversations.map((relatedBit, index) => (
-                    <React.Fragment key={`${relatedBit.id}${index}`}>
-                      <BitResolver
-                        appStore={appStore}
-                        bit={relatedBit}
-                        shownLimit={Infinity}
-                        itemProps={slackConvoBitContentStyle}
-                        isExpanded
-                      >
-                        {({ content }) => content}
-                      </BitResolver>
-                      <OrbitDivider
-                        if={index < 2}
-                        height={2}
-                        css={{ margin: [20, 0, 10] }}
-                      />
-                    </React.Fragment>
-                  ))}
-                  <br />
-                  <br />
-                  <br />
-                </section>
+                {store.relatedConversations.map((relatedBit, index) => (
+                  <React.Fragment key={`${relatedBit.id}${index}`}>
+                    <BitResolver
+                      appStore={appStore}
+                      bit={relatedBit}
+                      shownLimit={Infinity}
+                      itemProps={slackConvoBitContentStyle}
+                      isExpanded
+                    >
+                      {({ content }) => content}
+                    </BitResolver>
+                    <OrbitDivider
+                      if={index < 2}
+                      height={2}
+                      css={{ margin: [20, 0, 10] }}
+                    />
+                  </React.Fragment>
+                ))}
+                <br />
+                <br />
               </PeekContent>
             </>
           )
         }}
       </PeekBitResolver>
     )
-  }
-
-  static style = {
-    content: {
-      padding: [0, 10, 40],
-    },
-    section: {
-      padding: [10, 20, 0],
-    },
-    carouselInner: {
-      margin: [0, -10, 10, 0],
-    },
   }
 }

@@ -45,8 +45,11 @@ class SlackSettingStore {
 export class SlackSetting extends React.Component {
   render({ store, setting }) {
     console.log('rendering slack')
+    if (!setting) {
+      return null
+    }
     return (
-      <slack if={setting}>
+      <UI.Col flex={1}>
         <UI.Input
           marginBottom={10}
           sizeRadius
@@ -57,7 +60,7 @@ export class SlackSetting extends React.Component {
           onChange={e => (store.search = e.target.value)}
           value={store.search}
         />
-        <content if={store.service}>
+        <UI.Col if={store.service} flex={1}>
           <UI.List
             if={store.hasShown}
             scrollable
@@ -72,17 +75,8 @@ export class SlackSetting extends React.Component {
               />
             )}
           />
-        </content>
-      </slack>
+        </UI.Col>
+      </UI.Col>
     )
-  }
-
-  static style = {
-    slack: {
-      flex: 1,
-    },
-    content: {
-      flex: 1,
-    },
   }
 }

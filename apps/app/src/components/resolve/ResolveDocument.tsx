@@ -11,7 +11,7 @@ const replace = {
   'reply to chris': 'Draft Reply to Angela',
 }
 
-export default ({ bit, children }) =>
+export const ResolveDocument = ({ bit, children }) =>
   children({
     title: replace[bit.title] || bit.title,
     icon: 'gdocs',

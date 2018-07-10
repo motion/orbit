@@ -1,33 +1,33 @@
-import { BitSlackConversation } from './bitResolvers/slackConversation'
-import Document from './bitResolvers/document'
-import Mail from './bitResolvers/mail'
-import Task from './bitResolvers/task'
-import App from './bitResolvers/app'
-import { PersonCard } from './bitResolvers/personCard'
+import { ResolveConversation } from './resolve/ResolveConversation'
+import { ResolveDocument } from './resolve/ResolveDocument'
+import { ResolveMail } from './resolve/ResolveMail'
+import { ResolveTask } from './resolve/ResolveTask'
+import { ResolveApp } from './resolve/ResolveApp'
+import { ResolvePerson } from './resolve/ResolvePerson'
 import { Person } from '@mcro/models'
 import * as React from 'react'
 
 const results = {
   slack: {
-    conversation: BitSlackConversation,
+    conversation: ResolveConversation,
   },
   gdocs: {
-    document: Document,
+    document: ResolveDocument,
   },
   gmail: {
-    mail: Mail,
+    mail: ResolveMail,
   },
   github: {
-    task: Task,
+    task: ResolveTask,
   },
   apps: {
-    app: App,
+    app: ResolveApp,
   },
   confluence: {
-    document: Document,
+    document: ResolveDocument,
   },
   jira: {
-    document: Document,
+    document: ResolveDocument,
   },
 }
 
@@ -46,7 +46,7 @@ export function BitResolver({ bit, ...props }) {
     return EmptyResolver
   }
   if (bit instanceof Person) {
-    Resolver = PersonCard
+    Resolver = ResolvePerson
   } else if (!bit.integration || !bit.type) {
     Resolver = ({ children }) => children(bit)
   } else {

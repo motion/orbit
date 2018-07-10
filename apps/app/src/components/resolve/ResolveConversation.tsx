@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import { BitSlackMessage } from './slackMessage'
-import { RoundButton } from '../../views/roundButton'
+import { SlackMessage } from './SlackMessage'
+import { RoundButton } from '../../views/RoundButton'
 import keywordExtract from 'keyword-extractor'
 import arrford from 'arrford'
 import { getSlackDate } from '../../helpers'
@@ -15,7 +15,7 @@ const options = {
 }
 
 @view
-export class BitSlackConversation extends React.Component {
+export class ResolveConversation extends React.Component {
   static defaultProps = {
     shownLimit: 5,
   }
@@ -29,7 +29,7 @@ export class BitSlackConversation extends React.Component {
       ? ((bit.data && bit.data.messages) || [])
           .slice(0, shownLimit)
           .map((message, index) => (
-            <BitSlackMessage
+            <SlackMessage
               key={index}
               message={message}
               previousMessage={bit.data.messages[index - 1]}

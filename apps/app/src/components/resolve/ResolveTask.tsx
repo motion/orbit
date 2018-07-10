@@ -52,7 +52,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
   }
 }
 
-export default ({ bit, children, isExpanded, shownLimit }) => {
+export const ResolveTask = ({ bit, children, isExpanded, shownLimit }) => {
   const { content, comments } = isExpanded
     ? parseGithubContents({ bit, shownLimit })
     : {}

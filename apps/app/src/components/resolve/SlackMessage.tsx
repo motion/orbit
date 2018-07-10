@@ -8,7 +8,7 @@ import { TimeAgo } from '../../views/TimeAgo'
 import { App } from '@mcro/stores'
 
 @view
-export class BitSlackMessage extends React.Component {
+export class SlackMessage extends React.Component {
   render({ bit, message, previousMessage, itemProps }) {
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)

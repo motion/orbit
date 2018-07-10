@@ -8,6 +8,8 @@ import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 
 class SearchStore {
+  // this isn't a computed val because it persists the last state
+  //
   state = react(
     () => this.props.appStore.searchState,
     state => {

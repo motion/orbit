@@ -33,9 +33,7 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
   )
 })
 
-@view.attach({
-  appStore: AppStore,
-})
+@view.attach('appStore')
 @view.provide({
   peekStore: PeekStore,
 })

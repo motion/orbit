@@ -47,7 +47,7 @@ export const matchSort = (query, results) => {
   const strongTitleMatches = Helpers.fuzzy(query, results, {
     threshold: -40,
   })
-  return uniq([...strongTitleMatches, ...results].slice(0, 10))
+  return uniq([...strongTitleMatches, ...results])
 }
 
 export const prefixes = {

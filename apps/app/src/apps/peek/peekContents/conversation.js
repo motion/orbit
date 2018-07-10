@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { PeekBitResolver } from '../index'
-import { BitResolver } from '../../../components/BitResolver'
 import { OrbitCardMasonry } from '../../../apps/orbit/OrbitCardMasonry'
 import { SubTitle } from '../../../views'
 import { OrbitDivider } from '../../../apps/orbit/orbitDivider'
@@ -18,7 +17,7 @@ class ConversationPeekStore {
   related = react(
     async () => {
       const people = await Person.find({ take: 3, skip: 7 })
-      const bits = await Bit.find({ take: 3, relations: ['people'] })
+      const bits = await Bit.find({ take: 3, skip: 2, relations: ['people'] })
       return [...people, ...bits]
     },
     { defaultValue: [], delay: 40 },
@@ -30,15 +29,16 @@ class ConversationPeekStore {
         relations: ['people'],
         where: { integration: 'slack', type: 'conversation' },
         take: 3,
+        skip: 2,
       }),
     { defaultValue: [], delay: 40 },
   )
 }
 
 const itemProps = {
-  padding: [2, 10],
+  padding: [5, 15],
   hover: {
-    background: 'red',
+    background: [0, 0, 0, 0.02],
   },
 }
 
@@ -53,7 +53,7 @@ export class Conversation extends React.Component {
     }
     return (
       <PeekBitResolver appStore={appStore} bit={bit} itemProps={itemProps}>
-        {({ permalink, location, title, icon, content, itemProps }) => {
+        {({ permalink, location, title, icon, content }) => {
           return children({
             title,
             subtitle: location,
@@ -64,20 +64,22 @@ export class Conversation extends React.Component {
                 {content}
                 <Section>
                   <SubTitle>Related</SubTitle>
-                  <OrbitCardMasonry items={store.related} />
+                  <UI.Theme name="grey">
+                    <OrbitCardMasonry items={store.related} />
+                  </UI.Theme>
                 </Section>
-                <SubTitle>Related Conversations</SubTitle>
+                <Section>
+                  <SubTitle>Related Conversations</SubTitle>
+                </Section>
                 {store.relatedConversations.map((relatedBit, index) => (
                   <React.Fragment key={`${relatedBit.id}${index}`}>
-                    <BitResolver
+                    <PeekBitResolver
                       appStore={appStore}
                       bit={relatedBit}
-                      shownLimit={Infinity}
                       itemProps={itemProps}
-                      isExpanded
                     >
                       {({ content }) => content}
-                    </BitResolver>
+                    </PeekBitResolver>
                     <OrbitDivider
                       if={index < 2}
                       height={2}

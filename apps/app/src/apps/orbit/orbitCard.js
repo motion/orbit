@@ -87,20 +87,21 @@ class OrbitCardStore {
         throw react.cancel
       }
       const shouldSelect = nextIndex === this.props.index
-      if (shouldSelect !== this._isSelected) {
-        this._isSelected = shouldSelect
-        if (shouldSelect) {
-          // visual smoothness
-          await sleep()
-          if (!this.target) {
-            throw new Error(
-              `No target! ${this.props.pane} ${this.props.subPane} ${
-                this.props.index
-              }`,
-            )
-          }
-          App.actions.selectItem(this.target, this.ref)
+      if (shouldSelect === this._isSelected) {
+        throw react.cancel
+      }
+      this._isSelected = shouldSelect
+      if (shouldSelect) {
+        // visual smoothness
+        await sleep()
+        if (!this.target) {
+          throw new Error(
+            `No target! ${this.props.pane} ${this.props.subPane} ${
+              this.props.index
+            }`,
+          )
         }
+        App.actions.selectItem(this.target, this.ref)
       }
     },
     { immediate: true },

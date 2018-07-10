@@ -586,14 +586,10 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
                   `In ${name}, invalid operation: called setValue, then returned a value. Use one or the other for sanity`,
                 )
               }
-              if (options.log !== 'state') {
-                log(
-                  `${prefix}`,
-                  isReaction ? reactValArg : '',
-                  ...logRes(result),
-                )
-              }
               updateAsyncValue(val)
+            }
+            if (!IS_PROD) {
+              log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(val))
             }
           })
           .catch(err => {

@@ -55,10 +55,14 @@ export class PeekStore {
     this.tornState = null
   }
 
+  get peekItem() {
+    return this.tornState ? this.tornState.item : App.peekState.item
+  }
+
   model = react(
-    () => App.peekState.item,
+    () => this.peekItem,
     async item => {
-      if (this.tornState) {
+      if (this.model && this.tornState) {
         throw react.cancel
       }
       if (!item) {

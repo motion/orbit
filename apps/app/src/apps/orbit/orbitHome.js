@@ -101,6 +101,19 @@ class OrbitHomeStore {
 }
 
 const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
+const itemProps = {
+  shownLimit: 3,
+  contentStyle: {
+    maxHeight: '1.2rem',
+    maxWidth: '100%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontSize: 18,
+    opacity: 0.8,
+    margin: [5, 0],
+  },
+}
 
 @attachTheme
 @view.attach({
@@ -153,19 +166,7 @@ export class OrbitHome extends React.Component {
                   total={total}
                   isExpanded={false && isExpanded}
                   style={isExpanded && this.span2}
-                  itemProps={{
-                    shownLimit: 3,
-                    contentStyle: {
-                      maxHeight: '1.2rem',
-                      maxWidth: '100%',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      fontSize: 18,
-                      opacity: 0.8,
-                      margin: [5, 0],
-                    },
-                  }}
+                  itemProps={itemProps}
                 >
                   {false &&
                     isExpanded &&

@@ -37,11 +37,7 @@ function getName(mountedComponent) {
   let name = `${mountedComponent.name}`
   let parent = node
   while (parent && parent instanceof HTMLElement && parent.tagName !== 'HTML') {
-    const className = (parent.getAttribute('class') || '').split(' ')
-    name +=
-      parent.nodeName +
-      className[className.length - 1] +
-      getElementIndex(parent)
+    name += parent.nodeName + getElementIndex(parent)
     parent = parent.parentNode as HTMLElement
   }
   return name

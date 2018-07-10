@@ -9,12 +9,10 @@ export const OrbitCardMasonry = view.attach('appStore')(
       {items.map((result, index) => (
         <OrbitCard
           key={`${result.id}`}
-          result={result}
+          bit={result}
           index={index}
           total={items.length}
           appStore={appStore}
-          subtitle={result.subtitle}
-          isActive
         />
       ))}
     </Masonry>

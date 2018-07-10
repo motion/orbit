@@ -156,7 +156,18 @@ export class OrbitCard extends React.Component {
     )
   }
 
-  handleDoubleClick = () => {
+  clickAt = 0
+
+  handleClick = e => {
+    // so we can control the speed of double clicks
+    if (Date.now() - this.clickAt < 150) {
+      this.open()
+      e.stopPropagation()
+    }
+    this.clickAt = Date.now()
+  }
+
+  open = () => {
     if (!this.props.bit) {
       return
     }
@@ -222,7 +233,7 @@ export class OrbitCard extends React.Component {
           style={style}
           className={className}
         >
-          <card onDoubleClick={this.handleDoubleClick}>
+          <card onClick={this.handleClick}>
             {orbitIcon}
             <title>
               <UI.Text

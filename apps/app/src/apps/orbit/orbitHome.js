@@ -78,10 +78,10 @@ class OrbitHomeStore {
         findType('slack', 'conversation', 4),
         findType('gdocs', 'document'),
         Person.findOne({ name: 'Andrew Hsu' }),
-        Person.findOne({ name: 'Javi Bovee' }),
+        Person.findOne({ name: 'Nick Bovee' }),
         // limit due to slowness for now
-        // findType('github', 'task', 1),
-        // findType('github', 'task', 2),
+        findType('confluence', 'document'),
+        findType('jira', 'document'),
         // findType('gmail', 'mail'),
         // findType('gmail', 'mail', 1),
         // findType('gdocs', 'document', 9),

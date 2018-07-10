@@ -199,16 +199,17 @@ export class AppStore {
   resetActiveIndexOnKeyPastEnds = react(
     () => this.nextIndex,
     index => {
-      console.log('nextIndex', index)
       if (index === -1) {
         this.activeIndex = this.nextIndex
+      } else {
+        const len = this.searchState.results.length
+        if (index >= len) {
+          this.nextIndex = len - 1
+          this.activeIndex = this.nextIndex
+        } else {
+          throw react.cancel
+        }
       }
-      const len = this.searchState.results.length
-      if (index >= len) {
-        this.nextIndex = len - 1
-        this.activeIndex = this.nextIndex
-      }
-      throw react.cancel
     },
   )
 

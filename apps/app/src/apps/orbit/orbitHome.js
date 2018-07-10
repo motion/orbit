@@ -58,7 +58,7 @@ const findType = (integration, type, skip = 0) =>
 
 class OrbitHomeStore {
   setGetResults = react(
-    () => [this.props.paneStore.activePane === this.props.name, this.results],
+    () => [this.isActive, this.results],
     ([isActive]) => {
       if (!isActive) {
         throw react.cancel
@@ -67,6 +67,10 @@ class OrbitHomeStore {
     },
     { immediate: true },
   )
+
+  get isActive() {
+    return this.props.paneStore.activePane === this.props.name
+  }
 
   results = modelQueryReaction(
     async () => {

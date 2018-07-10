@@ -11,7 +11,7 @@ import { stateOnlyWhenActive } from './stateOnlyWhenActive'
 
 class OrbitDirectoryStore {
   setGetResults = react(
-    () => [this.props.paneStore.activePane === this.props.name, this.results],
+    () => [this.isActive, this.results],
     ([isActive]) => {
       if (!isActive) {
         throw react.cancel
@@ -26,7 +26,7 @@ class OrbitDirectoryStore {
   state = stateOnlyWhenActive(this)
 
   get isActive() {
-    return this.props.appStore.selectedPane === this.props.name
+    return this.props.paneStore.activePane === this.props.name
   }
 
   get peopleQuery() {

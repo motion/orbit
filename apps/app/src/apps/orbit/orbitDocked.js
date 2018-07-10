@@ -81,12 +81,6 @@ class OrbitDocked extends React.Component {
   }
 
   static style = {
-    bgGradient: {
-      background: 'linear-gradient(to right, transparent 20%, rgba(0,0,0,0.6))',
-      zIndex: -1,
-      opacity: 0,
-      transition: 'all ease-in 100ms',
-    },
     frame: {
       position: 'absolute',
       top: 10,

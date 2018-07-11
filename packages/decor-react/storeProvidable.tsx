@@ -289,7 +289,7 @@ storeProvidable = function(options, Helpers) {
             }
             if (!storeHMRCache[key]) {
               // try again a bit later, perhaps it wasnt mounted
-              console.log('no hmr state for', name, key, storeHMRCache)
+              // console.log('no hmr state for', name, key, storeHMRCache)
               continue
             }
             // auto rehydrate

@@ -29,7 +29,7 @@ const validCSSAttr = key => typeof cssAttributeNames[key] === 'string'
 // resolves props into styles for valid css
 // supports hover={{ background: 'green' }} and other states as well
 
-export default props => {
+export const propStyles = props => {
   const styles = {}
   const getVal = valFor('base')
   // loop over props turning into styles

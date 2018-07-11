@@ -140,7 +140,7 @@ export default class Gloss {
     const id = uid()
     const elementCache = new WeakMap()
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-    let name = target
+    let name = target.name || target
     let themeUpdate
     let targetElement = isParentComponent ? target.displayName : target
     if (isParentComponent) {

@@ -236,10 +236,6 @@ export class Text extends React.Component<TextProps> {
       color,
       opacity,
       size,
-      onClick,
-      onMouseEnter,
-      onMouseLeave,
-      onFocus,
       onBlur,
       style,
       placeholder,
@@ -265,7 +261,7 @@ export class Text extends React.Component<TextProps> {
         ? `${ellipse * text.lineHeightNum}px`
         : 'auto'
     const oneLineEllipse = ellipse === 1
-    let ellipseProps = { children }
+    let ellipseProps
     if (highlight) {
       if (typeof children === 'string') {
         const __html = highlightText({
@@ -292,35 +288,31 @@ export class Text extends React.Component<TextProps> {
         suppressContentEditableWarning={editable}
         onKeyDown={e => this.handleKeydown(e)}
         ref={n => this.getRef(n)}
-        css={props}
         style={style}
         $oneLineEllipse={oneLineEllipse}
-        {...{
-          onClick,
-          onMouseEnter,
-          onMouseLeave,
-          onFocus,
-          onBlur,
-        }}
+        {...props}
       >
         {!showEllipse && children}
-        <span
-          if={showEllipse}
-          $ellipseLines={multiLineEllipse}
-          $ellipseSingle={oneLineEllipse}
-          css={
-            multiLineEllipse
-              ? {
-                  WebkitLineClamp:
-                    ellipse === true ? numLinesToShow || 10000 : ellipse,
-                  maxHeight,
-                  width: doClamp ? '100%' : '100.001%',
-                  opacity: doClamp ? 1 : 0,
-                }
-              : null
-          }
-          {...ellipseProps}
-        />
+        {showEllipse && (
+          <span
+            $ellipseLines={multiLineEllipse}
+            $ellipseSingle={oneLineEllipse}
+            css={
+              multiLineEllipse
+                ? {
+                    WebkitLineClamp:
+                      ellipse === true ? numLinesToShow || 10000 : ellipse,
+                    maxHeight,
+                    width: doClamp ? '100%' : '100.001%',
+                    opacity: doClamp ? 1 : 0,
+                  }
+                : null
+            }
+            {...ellipseProps}
+          >
+            {!ellipseProps ? children : null}
+          </span>
+        )}
       </InlineBlock>
     )
   }

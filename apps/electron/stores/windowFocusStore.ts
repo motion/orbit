@@ -17,29 +17,30 @@ export class WindowFocusStore {
     'Delete',
   ].map(key => ({ key, shortcut: `Option+${key}` }))
 
-  easyPinWithLetter = react(
-    () => Desktop.isHoldingOption && App.isShowingOrbit,
-    async (down, { when }) => {
-      await when(() => !App.isAnimatingOrbit)
-      if (down) {
-        for (const { key, shortcut } of this.keyShortcuts) {
-          // @ts-ignore
-          ElectronNode.globalShortcut.register(shortcut, async () => {
-            // TYPE THE KEY
-            Electron.sendMessage(App, `${App.messages.PIN}-${key}`)
-            // FOCUS
-            this.focusOrbit()
-            // then register shortcuts
-            await when(() => !Desktop.isHoldingOption)
-            this.unRegisterKeyShortcuts()
-          })
-        }
-      } else {
-        await when(() => !Desktop.isHoldingOption)
-        this.unRegisterKeyShortcuts()
-      }
-    },
-  )
+  // disable easy pin with letter while sidebar disabled
+  // easyPinWithLetter = react(
+  //   () => Desktop.isHoldingOption && App.isShowingOrbit,
+  //   async (down, { when }) => {
+  //     await when(() => !App.isAnimatingOrbit)
+  //     if (down) {
+  //       for (const { key, shortcut } of this.keyShortcuts) {
+  //         // @ts-ignore
+  //         ElectronNode.globalShortcut.register(shortcut, async () => {
+  //           // TYPE THE KEY
+  //           Electron.sendMessage(App, `${App.messages.PIN}-${key}`)
+  //           // FOCUS
+  //           this.focusOrbit()
+  //           // then register shortcuts
+  //           await when(() => !Desktop.isHoldingOption)
+  //           this.unRegisterKeyShortcuts()
+  //         })
+  //       }
+  //     } else {
+  //       await when(() => !Desktop.isHoldingOption)
+  //       this.unRegisterKeyShortcuts()
+  //     }
+  //   },
+  // )
 
   unRegisterKeyShortcuts = () => {
     for (const { shortcut } of this.keyShortcuts) {

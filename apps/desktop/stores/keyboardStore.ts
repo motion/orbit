@@ -133,9 +133,10 @@ export class KeyboardStore {
         //   Desktop.setKeyboardState({ spaceUp: Date.now() })
         // break
       }
-      if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
-        Desktop.sendMessage(App, App.messages.TOGGLE_PINNED)
-      }
+      // disable double tap to pin for now
+      // if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
+      //   Desktop.sendMessage(App, App.messages.TOGGLE_PINNED)
+      // }
       // be sure its a fast action not slow
       clearLastKeys = setTimeout(() => {
         lastKeys = []

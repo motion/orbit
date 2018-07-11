@@ -3,7 +3,7 @@ import debug from '@mcro/debug'
 import { sleep } from '@mcro/helpers'
 import * as _ from 'lodash'
 import Gmail from 'node-gmail-api'
-import { DriveService } from '@mcro/services'
+import { gmailHelpers } from './gmailHelpers'
 
 const log = debug('googleMail')
 const timeCancel = (asyncFn, ms) => {
@@ -36,10 +36,10 @@ type ThreadObject = {
 
 export default class GoogleMailSync {
   setting: Setting
-  service: DriveService
   gmail: Gmail
+  helpers: any
 
-  fetch = (path, ...rest) => this.service.fetch(`/gmail/v1${path}`, ...rest)
+  fetch = (path, ...rest) => this.helpers.fetch(`/gmail/v1${path}`, ...rest)
 
   constructor(setting) {
     this.updateSetting(setting)
@@ -47,7 +47,7 @@ export default class GoogleMailSync {
 
   updateSetting = async (setting?) => {
     this.setting = setting || (await Setting.findOne({ type: 'gmail' }))
-    this.service = new DriveService(this.setting)
+    this.helpers = gmailHelpers(this.setting)
     this.gmail = new Gmail(this.setting.token)
   }
 
@@ -111,7 +111,7 @@ export default class GoogleMailSync {
       if (err.message === 'Invalid Credentials') {
         // refresh and try again
         console.log('refreshing token...')
-        if (await this.service.refreshToken()) {
+        if (await this.helpers.refreshToken()) {
           return await this.syncMail(options)
         }
         return
@@ -163,44 +163,47 @@ export default class GoogleMailSync {
             syncing = false
           }
         })
+        // this is a really ugly function to slowly process threads
+        const processQueue = async () => {
+          while (syncing || threads.length) {
+            await sleep(500) // dont destroy resources
+            if (!threads.length) {
+              continue
+            }
+            const curThreads = _.take(threads, 50)
+            // mutate threads
+            threads = threads.slice(curThreads.length)
+            const updateKeys = Object.keys(curThreads[0])
+            for (const thread of curThreads) {
+              // insert, ignore, update
+              let bit = await Bit.findOne(_.pick(thread, Bit.identifyingKeys))
+              if (bit) {
+                const cur = _.pick(bit, updateKeys)
+                if (_.isEqual(cur, thread)) {
+                  continue
+                }
+                log(`!equal, update`, cur, thread)
+              }
+              if (!bit) {
+                await this.createThread(thread.data)
+              }
+            }
+          }
+        }
         try {
           await processQueue()
         } catch (err) {
           console.error('got an err processing', err)
         }
         res(newHistoryId || null)
-        async function processQueue() {
-          while (syncing || threads.length) {
-            await sleep(500) // dont destroy resources
-            if (!threads.length) {
-              continue
-            }
-            const rows = _.take(threads, 50)
-            threads = threads.slice(rows.length)
-            const updateKeys = Object.keys(rows[0])
-            for (const row of rows) {
-              // insert, ignore, update
-              let bit = await Bit.findOne(_.pick(row, Bit.identifyingKeys))
-              if (bit) {
-                const cur = _.pick(bit, updateKeys)
-                if (_.isEqual(cur, row)) {
-                  continue
-                }
-                log(`!equal, update`, cur, row)
-              }
-              if (!bit) {
-                bit = new Bit()
-              }
-              Object.assign(bit, row)
-              await bit.save()
-            }
-          }
-        }
       })
     })
   }
 
   getDateFromThread = (message: Message) => {
+    if (!message) {
+      return 0
+    }
     const dateHeader = message.payload.headers.find(x => x.name === 'Date')
     const date = dateHeader && dateHeader.value
     if (date) {
@@ -210,23 +213,31 @@ export default class GoogleMailSync {
   }
 
   createThread = async (data: ThreadObject) => {
-    return await createOrUpdateBit(Bit, this.createThreadObject(data))
+    const values = this.createThreadObject(data)
+    if (values) {
+      return await createOrUpdateBit(Bit, values)
+    }
+    return null
   }
 
   createThreadObject = (data: ThreadObject) => {
     const { id, messages } = data
+    if (!id) {
+      console.error('woah no id?', data)
+      return null
+    }
     const firstMessage = _.first(messages)
     const bitCreatedAt = this.getDateFromThread(firstMessage)
     const bitUpdatedAt = this.getDateFromThread(_.last(messages))
-    const subjectHeader = firstMessage.payload.headers.find(
-      x => x.name === 'Subject',
-    )
+    const subjectHeader = firstMessage
+      ? firstMessage.payload.headers.find(x => x.name === 'Subject')
+      : ''
     return {
       identifier: id,
       integration: 'gmail',
       type: 'mail',
       title: (subjectHeader && subjectHeader.value) || '',
-      body: firstMessage.snippet,
+      body: firstMessage ? firstMessage.snippet : '',
       data,
       bitCreatedAt,
       bitUpdatedAt,

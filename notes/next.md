@@ -1,12 +1,20 @@
-- search run:
+- filters
+  - one bar for integrations - can easily toggle many on/off
+  - one bar for type: people, attachment, document, task
+  - one bar for time: 2 days, 2 weeks, 2 months
+  - one bar for people: shows people within current set and lets you filter
+- pull nlp pieces in search into filters (compromis)
+- better search result UX
+  - pass search term to a \*Resolver and the resolver returns items
+  - have the concept of a "item" in \*Resolver
+    - in slack: message, in docs: sentence
+  - use resolver to return top items, show them each on a line
+  - for slack that would include the message + name nicely
+  - hover highlight the areas effect
+- corresponding peek UX for search results
 
-  - pull out nlp pieces in search
-  - filters
-    - people, type etc
-  - multiple highlights
-    - figure out a way to show multiple highlighted areas in search results
-    - hover highlight the areas effect
-    - click highlight area to see in peek
+  - make all peeks work like slack and deal with "item"
+  - click highlight to open directly to that item in the peek
 
 - saving peekstateactions breaking hmr
 - saving appstoreactions breaking hmr
@@ -15,6 +23,8 @@
   - if it was a post in #status, show other posts by that person in #status
   - fix people cards
 
+* make search icon change into home if not at home
+  - change into close if at home
 * auto setup
 * p2p
 

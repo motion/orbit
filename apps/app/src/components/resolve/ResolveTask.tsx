@@ -82,9 +82,12 @@ export const ResolveTask = ({
         {bit.data.orgLogin}/{bit.data.repositoryName}
       </RoundButton>
     ),
-    permalink: `https://github.com/${bit.data.orgLogin}/${
-      bit.data.repositoryName
-    }/issues/${bit.data.number}`,
+    permalink: () =>
+      appStore.open(
+        `https://github.com/${bit.data.orgLogin}/${
+          bit.data.repositoryName
+        }/issues/${bit.data.number}`,
+      ),
     people: bit.people,
     date: bit.bitUpdatedAt,
     content,

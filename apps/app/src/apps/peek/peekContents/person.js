@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
-import { OrbitIcon } from '../../../apps/orbit/orbitIcon'
+import { OrbitIcon } from '../../../apps/orbit/OrbitIcon'
 import * as UI from '@mcro/ui'
 import { Carousel } from '../../../components/Carousel'
 import { Bit } from '@mcro/models'

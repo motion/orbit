@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 // import { App } from '@mcro/stores'
-import { OrbitIcon } from './orbitIcon'
+import { OrbitIcon } from './OrbitIcon'
 
 const iconSize = 38
 const iconPad = 15

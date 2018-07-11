@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from '../../apps/orbit/orbitIcon'
+import { OrbitIcon } from '../../apps/orbit/OrbitIcon'
 import { WindowControls } from '../../views/WindowControls'
 import { App } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../constants'

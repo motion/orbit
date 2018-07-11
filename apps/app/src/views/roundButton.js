@@ -8,7 +8,7 @@ export const RoundButton = props => (
     sizePadding={1.2}
     borderWidth={0}
     fontWeight={300}
-    inline
+    display="inline-flex"
     backgroundAlpha={0.4}
     {...props}
   />

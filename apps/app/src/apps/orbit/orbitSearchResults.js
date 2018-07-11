@@ -42,7 +42,6 @@ export class OrbitSearchResults extends React.Component {
     const highlightWords = searchStore.state.query
       .split(' ')
       .filter(x => x.length > 2)
-    console.log('OrbitSearchResults', highlightWords, results, query, message)
     return (
       <OrbitDockedPane name="search" extraCondition={searchStore.hasQuery}>
         <contents $$flex>

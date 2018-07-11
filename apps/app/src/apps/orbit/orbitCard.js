@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from './orbitIcon'
+import { OrbitIcon } from './OrbitIcon'
 import { BitResolver } from '../../components/BitResolver'
 import { SmallLink } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'

@@ -32,7 +32,7 @@ export default async function connectModels(models) {
           locks,
           Client.sqlLitePlugin.lastQueryQueue,
         )
-        debugger
+        // debugger
       }
     }
 

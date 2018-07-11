@@ -2,8 +2,8 @@ import * as React from 'react'
 import { view, on } from '@mcro/black'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
-import { List } from './list'
-import { Popover } from './popover'
+import { List } from './List'
+import { Popover } from './Popover'
 
 @view.ui
 class ContextMenuTarget extends React.Component {

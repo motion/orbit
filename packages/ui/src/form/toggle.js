@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { UIContext } from '../contexts'
+import { UIContext } from '../helpers/contexts'
 
 const BAR_HEIGHT = 8
 const BAR_WIDTH = 30

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Surface } from './surface'
+import { Surface } from './Surface'
+import { Color } from '@mcro/css'
 
 const opposite = direction =>
   ({
@@ -10,31 +11,32 @@ const opposite = direction =>
     top: 'bottom',
   }[direction])
 
-// type Props = {
-//   attach?: Object,
-//   background?: Color,
-//   bordered?: boolean,
-//   children?: React.Element<any> | string,
-//   className?: string,
-//   from: 'top' | 'bottom' | 'left' | 'right',
-//   onClickOverlay: Function,
-//   open?: boolean,
-//   overlayBlur?: number,
-//   percent?: number | string,
-//   boxShadow?: boolean | 'string',
-//   size: number,
-//   style: Object,
-//   theme?: string,
-//   transition?: boolean,
-//   transitionDuration?: number,
-//   transparent?: boolean,
-//   zIndex: number,
-//   scrollable?: boolean,
-//   containerProps?: Object,
-// }
+type Props = {
+  attach?: Object
+  background?: Color
+  bordered?: boolean
+  children?: any
+  className?: string
+  from: 'top' | 'bottom' | 'left' | 'right'
+  onClickOverlay: Function
+  open?: boolean
+  overlayBlur?: number
+  percent?: number | string
+  boxShadow?: boolean | 'string'
+  size: number
+  style: Object
+  theme?: string
+  transition?: boolean
+  transitionDuration?: number
+  transparent?: boolean
+  zIndex: number
+  scrollable?: boolean
+  containerProps?: Object
+  overlayBackground?: boolean
+}
 
 @view.ui
-export class Drawer extends React.PureComponent {
+export class Drawer extends React.PureComponent<Props> {
   static defaultProps = {
     size: 400,
     from: 'left',
@@ -42,20 +44,21 @@ export class Drawer extends React.PureComponent {
     transitionDuration: 500,
   }
 
-  render({
-    open,
-    children,
-    from,
-    size,
-    percent,
-    onClickOverlay,
-    className,
-    overlayBlur,
-    style,
-    overlayBackground,
-    containerProps,
-    ...props
-  }) {
+  render() {
+    const {
+      open,
+      children,
+      from,
+      size,
+      percent,
+      onClickOverlay,
+      className,
+      overlayBlur,
+      style,
+      overlayBackground,
+      containerProps,
+      ...props
+    } = this.props
     const unit = +percent ? '%' : 'px'
     const flip = /right|bottom/.test(from) ? 1 : -1
     const translate = `${(open ? 0 : size) * flip}${unit}`
@@ -81,8 +84,9 @@ export class Drawer extends React.PureComponent {
         >
           {children}
         </Surface>
-        <overlay
+        <div
           if={overlayBackground}
+          $overlay
           $overlayOpen={open}
           $overlayBlur={overlayBlur}
           $overlayBackground={overlayBackground}

@@ -2,94 +2,113 @@ import * as React from 'react'
 import { Theme } from './helpers/theme'
 import { view, attachTheme } from '@mcro/black'
 import $ from 'color'
-import { Icon } from './icon'
+import { Icon } from './Icon'
 import { HoverGlow } from './effects/hoverGlow'
 import { Glint } from './effects/glint'
-import { Popover } from './popover'
+import { Popover } from './Popover'
 import { object } from 'prop-types'
-import { Badge } from './badge'
+import { Badge } from './Badge'
+import { Color } from '@mcro/css'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
-// export type Props = {
-//   active?: boolean,
-//   after?: Element | string,
-//   align?: string,
-//   alignSelf?: string,
-//   background?: Color,
-//   badge?: React.Element<any>,
-//   badgeProps?: Object,
-//   border?: Array<any> | Object,
-//   borderBottom?: Array<any> | Object,
-//   borderBottomRadius?: number,
-//   borderLeft?: Array<any> | Object,
-//   borderLeftRadius?: number,
-//   borderRadius: number,
-//   borderRight?: Array<any> | Object,
-//   borderRightRadius?: number,
-//   borderStyle?: 'solid' | 'dotted',
-//   borderTop?: Array<any> | Object,
-//   borderTopRadius?: number,
-//   borderWidth?: number | string,
-//   boxShadow?: Array<any> | string,
-//   children?: Element | string,
-//   chromeless?: boolean,
-//   circular?: boolean,
-//   className?: string,
-//   clickable?: boolean,
-//   color?: Color,
-//   dim?: boolean,
-//   elementProps?: Object,
-//   elevation?: number,
-//   flex?: boolean | number,
-//   focusable?: boolean,
-//   getRef?: Function,
-//   glint?: boolean,
-//   glow?: boolean,
-//   glowProps?: Object,
-//   height?: number,
-//   highlight?: boolean,
-//   hoverable?: boolean,
-//   hovered?: boolean,
-//   icon?: React.Element<any> | string,
-//   iconAfter?: boolean,
-//   iconColor?: Color,
-//   iconProps?: Object,
-//   iconSize?: number,
-//   inline?: boolean,
-//   justify?: string,
-//   lineHeight?: number | string,
-//   margin?: number | Array<number>,
-//   marginBottom?: number,
-//   marginLeft?: number,
-//   marginRight?: number,
-//   marginTop?: number,
-//   maxWidth?: number,
-//   minWidth?: number,
-//   noElement?: boolean,
-//   noWrap?: boolean,
-//   onClick?: Function,
-//   opacity?: number,
-//   overflow?: 'hidden' | 'visible' | 'scroll' | 'default',
-//   padding?: number | Array<number>,
-//   paddingBottom?: number,
-//   paddingLeft?: number,
-//   paddingRight?: number,
-//   paddingTop?: number,
-//   row?: boolean,
-//   size?: number,
-//   sizeIcon?: number,
-//   spaced?: boolean,
-//   stretch?: boolean,
-//   tagName: string,
-//   theme?: string,
-//   tooltip?: string,
-//   tooltipProps?: Object,
-//   uiContext?: boolean,
-//   width?: number,
-//   wrapElement?: boolean,
-//   borderRadius?: number,
-// }
+export type SurfaceProps = {
+  active?: boolean
+  after?: Element | string
+  align?: string
+  alignSelf?: string
+  background?: Color
+  badge?: React.ReactNode
+  badgeProps?: Object
+  border?: Array<any> | Object
+  borderBottom?: Array<any> | Object
+  borderBottomRadius?: number
+  borderLeft?: Array<any> | Object
+  borderLeftRadius?: number
+  borderRight?: Array<any> | Object
+  borderRightRadius?: number
+  borderStyle?: 'solid' | 'dotted'
+  borderTop?: Array<any> | Object
+  borderTopRadius?: number
+  borderWidth?: number | string
+  boxShadow?: Array<any> | string
+  children?: Element | string
+  chromeless?: boolean
+  circular?: boolean
+  className?: string
+  clickable?: boolean
+  color?: Color
+  dim?: boolean
+  elementProps?: Object
+  elevation?: number
+  flex?: boolean | number
+  focusable?: boolean
+  getRef?: Function
+  glint?: boolean
+  glow?: boolean
+  glowProps?: Object
+  height?: number
+  highlight?: boolean
+  hoverable?: boolean
+  hovered?: boolean
+  icon?: React.ReactNode | string
+  iconAfter?: boolean
+  iconColor?: Color
+  iconProps?: Object
+  iconSize?: number
+  inline?: boolean
+  justify?: string
+  lineHeight?: number | string
+  margin?: number | Array<number>
+  marginBottom?: number
+  marginLeft?: number
+  marginRight?: number
+  marginTop?: number
+  maxWidth?: number
+  minWidth?: number
+  noElement?: boolean
+  noWrap?: boolean
+  onClick?: Function
+  opacity?: number
+  overflow?: 'hidden' | 'visible' | 'scroll' | 'default'
+  padding?: number | Array<number>
+  paddingBottom?: number
+  paddingLeft?: number
+  paddingRight?: number
+  paddingTop?: number
+  row?: boolean
+  size?: number
+  sizeIcon?: number
+  spaced?: boolean
+  stretch?: boolean
+  tagName: string
+  theme?: string
+  tooltip?: string
+  tooltipProps?: Object
+  uiContext?: boolean
+  width?: number
+  wrapElement?: boolean
+  borderRadius?: number
+  alpha?: number
+  dimmed?: boolean
+  disabled?: boolean
+  flexFlow?: string
+  borderColor?: Color
+  fontSize?: number | string
+  fontWeight?: number
+  placeholderColor?: Color
+  highlightBackground?: Color
+  highlightColor?: Color
+  hoverStyle?: Object
+  style?: Object
+  textAlign?: string
+  ignoreSegment?: boolean
+  alignItems?: string
+  justifyContent?: string
+  backgroundAlpha?: number
+  activeStyle?: Object
+  sizeLineHeight?: boolean | number
+}
 
 const ICON_SCALE = 12
 // TODO: make this dynamic with size (move into theme)
@@ -110,11 +129,12 @@ const hasChildren = children =>
 
 @attachTheme
 @view.ui
-export class Surface extends React.Component {
+export class Surface extends React.Component<SurfaceProps> {
   static contextTypes = {
     provided: object,
   }
 
+  themeValues = null
   uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
 
   get uiContext() {

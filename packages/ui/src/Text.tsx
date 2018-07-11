@@ -3,99 +3,9 @@ import { view, on, attachTheme } from '@mcro/black'
 import keycode from 'keycode'
 import $ from 'color'
 import * as _ from 'lodash'
-import { InlineBlock } from './blocks/inlineBlock'
-
-// cut text down using highlight words
-// not a wonderfully efficient
-// but still great for not too long text
-// and pretty easy to follow
-const highlightText = options => {
-  const {
-    text,
-    words,
-    trimWhitespace,
-    maxChars = 500,
-    maxSurroundChars = 50,
-    style = 'font-weight: 600; color: #000;',
-    separator = '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
-  } = options
-  let parts = [text]
-  if (trimWhitespace) {
-    parts[0] = parts[0].replace(/(\s{2,}|\n)/g, separator)
-  }
-  const wordFinders = words.map(word => new RegExp(`(${word})`, 'gi'))
-  // split all the highlight words:
-  for (const [index] of words.entries()) {
-    const regex = wordFinders[index]
-    parts = _.flatten(parts.map(piece => piece.split(regex)))
-  }
-  // find maximum length of surrounding text snippet
-  const numSurrounds = parts.length / 2
-  const wordsLen = words.reduce((a, b) => a + b.length, 0)
-  const restLen = maxChars - wordsLen
-  const surroundMax = Math.min(maxSurroundChars, restLen / numSurrounds / 2)
-  const isHighlightWord = str =>
-    str ? words.indexOf(str.toLowerCase()) > -1 : false
-  // trim it down
-  const filtered = []
-  let prev
-  for (const [index, part] of parts.entries()) {
-    const highlighted = isHighlightWord(part)
-    const prevHighlighted = prev
-    prev = highlighted
-    if (highlighted) {
-      filtered.push(part)
-      continue
-    }
-    const nextHighlighted = isHighlightWord(parts[index + 1])
-    // if not close, ignore
-    if (!prevHighlighted && !nextHighlighted) {
-      continue
-    }
-    if (prevHighlighted && !nextHighlighted) {
-      if (part.length > surroundMax) {
-        filtered.push(part.slice(0, surroundMax)) + '...'
-      } else {
-        filtered.push(part)
-      }
-      continue
-    }
-    if (!prevHighlighted && nextHighlighted) {
-      if (part.length > surroundMax) {
-        filtered.push('...' + part.slice(part.length - surroundMax))
-      } else {
-        filtered.push(part)
-      }
-      continue
-    }
-    if (prevHighlighted && nextHighlighted) {
-      if (part.length > surroundMax * 2) {
-        filtered.push(
-          part.slice(0, surroundMax) +
-            '...' +
-            part.slice(part.length - surroundMax),
-        )
-      } else {
-        filtered.push(part)
-      }
-    }
-  }
-  let final = []
-  for (const part of filtered) {
-    if (words.indexOf(part) > -1) {
-      final.push(`<span style="${style}">${part}</span>`)
-    } else {
-      final.push(part)
-    }
-  }
-  const result = final.join('')
-  if (result.length) {
-    return result
-  }
-  return text.length < maxChars
-    ? text
-    : text.replace(/(\s{2,}|\n)/g, separator).slice(0, maxChars - 3) + '...'
-}
+import { InlineBlock } from './blocks/InlineBlock'
+import { highlightText } from './helpers/highlightText'
+import { Color } from '@mcro/css'
 
 const getTextProperties = props => {
   let fontSizeNum
@@ -128,24 +38,46 @@ const getTextProperties = props => {
   return { fontSize, fontSizeNum, lineHeight, lineHeightNum }
 }
 
-// export type Props = {
-//   editable?: boolean,
-//   autoselect?: boolean,
-//   selectable?: boolean,
-//   onFinishEdit?: Function,
-//   onCancelEdit?: Function,
-//   getRef?: Function,
-//   ellipse?: boolean,
-//   tagName: string,
-//   fontWeight?: number,
-//   lines?: number,
-//   alpha?: number,
-// }
+export type TextProps = {
+  editable?: boolean
+  autoselect?: boolean
+  selectable?: boolean
+  onFinishEdit?: Function
+  onCancelEdit?: Function
+  getRef?: Function
+  ellipse?: boolean | number
+  tagName: string
+  fontWeight?: number
+  lines?: number
+  alpha?: number
+  onKeyDown?: Function
+  fontSize?: number
+  color?: Color
+  opacity?: number
+  size?: number
+  onClick?: Function
+  onMouseEnter?: Function
+  onMouseLeave?: Function
+  onFocus?: Function
+  onBlur?: Function
+  style?: Object
+  placeholder?: string
+  lineHeight?: number
+  sizeLineHeight?: number
+  className?: number
+  measure?: boolean
+  debug?: boolean
+  onMeasure?: Function
+  sizeMethod?: string
+  highlight?: Object
+  wordBreak?: string
+  theme?: Object
+}
 
 // click away from edit clears it
 @attachTheme
 @view.ui
-export class Text extends React.Component {
+export class Text extends React.Component<TextProps> {
   selected = false
   editable = false
   node = null
@@ -287,41 +219,42 @@ export class Text extends React.Component {
     }
   }
 
-  render({
-    editable,
-    autoselect,
-    onFinishEdit,
-    onCancelEdit,
-    onKeyDown,
-    selectable,
-    ellipse,
-    children,
-    fontWeight,
-    fontSize,
-    color,
-    opacity,
-    size,
-    tagName,
-    onClick,
-    onMouseEnter,
-    onMouseLeave,
-    onFocus,
-    onBlur,
-    getRef,
-    style,
-    placeholder,
-    lineHeight,
-    sizeLineHeight,
-    className,
-    measure,
-    debug,
-    onMeasure,
-    sizeMethod,
-    highlight,
-    wordBreak,
-    theme,
-    ...props
-  }) {
+  render() {
+    const {
+      editable,
+      autoselect,
+      onFinishEdit,
+      onCancelEdit,
+      selectable,
+      ellipse,
+      children,
+      fontWeight,
+      tagName,
+      getRef,
+      onKeyDown,
+      fontSize,
+      color,
+      opacity,
+      size,
+      onClick,
+      onMouseEnter,
+      onMouseLeave,
+      onFocus,
+      onBlur,
+      style,
+      placeholder,
+      lineHeight,
+      sizeLineHeight,
+      className,
+      measure,
+      debug,
+      onMeasure,
+      sizeMethod,
+      highlight,
+      wordBreak,
+      theme,
+      ...props
+    } = this.props
     const { multiLineEllipse } = this
     const { doClamp, textHeight } = this.state
     const text = getTextProperties(this.props)
@@ -375,7 +308,7 @@ export class Text extends React.Component {
           if={showEllipse}
           $ellipseLines={multiLineEllipse}
           $ellipseSingle={oneLineEllipse}
-          style={
+          css={
             multiLineEllipse
               ? {
                   WebkitLineClamp:

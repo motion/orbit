@@ -19,10 +19,10 @@ import { OrbitIcon } from '../../../../apps/orbit/orbitIcon'
 })
 @view
 export class GmailSetting extends React.Component {
-  render({ store, setting, update }) {
+  render({ store, setting, update, children }) {
     const { syncSettings } = setting.values
-    return (
-      <gmailSetting>
+    return children({
+      content: <gmailSetting>
         <OrbitIcon icon="gmail" />
         <UI.Field
           row
@@ -39,6 +39,6 @@ export class GmailSetting extends React.Component {
           }}
         />
       </gmailSetting>
-    )
+    })
   }
 }

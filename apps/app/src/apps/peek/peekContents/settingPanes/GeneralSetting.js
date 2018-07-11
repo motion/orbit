@@ -17,12 +17,12 @@ class OrbitGeneralSettingsStore {
 })
 @view
 export class GeneralSetting extends React.Component {
-  render({ store, setting }) {
+  render({ store, setting, children }) {
     if (!setting) {
       return null
     }
-    return (
-      <>
+    return children({
+      content: <>
         <Views.SubTitle>Settings</Views.SubTitle>
         <OrbitCard>
           <Views.CheckBoxRow
@@ -38,6 +38,6 @@ export class GeneralSetting extends React.Component {
           />
         </OrbitCard>
       </>
-    )
+    })
   }
 }

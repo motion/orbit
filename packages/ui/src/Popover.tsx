@@ -3,61 +3,64 @@ import { view, on, attachTheme } from '@mcro/black'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
-import { Arrow } from './arrow'
-import { SizedSurface } from './sizedSurface'
+import { Arrow } from './Arrow'
+import { SizedSurface } from './SizedSurface'
 import isEqual from 'react-fast-compare'
 
-// export type Props = {
-//   // can pass function to get isOpen passed in
-//   children?: React.Element<any> | Function,
-//   // element or function that returns element, or querySelector to element
-//   target?: React.Element<any> | (() => React.Element<any>) | string,
-//   open?: boolean,
-//   // the amount of space around popover you can move mouse
-//   // before it triggers it to close
-//   forgiveness: number,
-//   // show a background over content
-//   overlay?: boolean,
-//   left?: number,
-//   top?: number,
-//   // the distance the popover is from the target
-//   // so it displays nicely spaced away
-//   distance: number,
-//   // open when target is clicked
-//   openOnClick?: boolean,
-//   // open automatically when target is hovered
-//   openOnHover?: boolean,
-//   // delay until openOnHover
-//   delay: number,
-//   // prevent popover itself from catching pointer events
-//   noHoverOnChildren?: boolean,
-//   // size of shown arrow
-//   arrowSize?: number,
-//   closeOnClick?: boolean,
-//   closeOnEsc?: boolean,
-//   // which direction it shows towards
-//   // default determine direction automatically
-//   towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
-//   padding?: Array | number,
-//   onMouseEnter?: Function,
-//   onMouseLeave?: Function,
-//   onClose?: Function,
-//   animation?: string,
-//   // lets you adjust position after target is positioned
-//   adjust?: Array,
-//   // hide arrow
-//   noArrow?: boolean,
-//   // DEBUG: helps you see forgiveness zone
-//   showForgiveness?: boolean,
-//   // padding from edge of window
-//   edgePadding: number,
-//   // pretty much what it says, for use with closeOnClick
-//   keepOpenOnClickTarget?: boolean,
-//   // callback after close
-//   onDidClose?: Function,
-//   // callback after open
-//   onDidOpen?: Function,
-// }
+export type PopoverProps = {
+  // can pass function to get isOpen passed in
+  children?: React.ReactNode | Function
+  // element or function that returns element, or querySelector to element
+  target?: React.ReactNode | (() => React.ReactNode) | string
+  open?: boolean
+  // the amount of space around popover you can move mouse
+  // before it triggers it to close
+  forgiveness: number
+  // show a background over content
+  overlay?: boolean
+  left?: number
+  top?: number
+  // the distance the popover is from the target
+  // so it displays nicely spaced away
+  distance: number
+  // open when target is clicked
+  openOnClick?: boolean
+  // open automatically when target is hovered
+  openOnHover?: boolean
+  // delay until openOnHover
+  delay: number
+  // prevent popover itself from catching pointer events
+  noHoverOnChildren?: boolean
+  // size of shown arrow
+  arrowSize?: number
+  closeOnClick?: boolean
+  closeOnEsc?: boolean
+  // which direction it shows towards
+  // default determine direction automatically
+  towards: 'auto' | 'left' | 'right' | 'bottom' | 'top'
+  padding?: number[] | number
+  onMouseEnter?: Function
+  onMouseLeave?: Function
+  onClose?: Function
+  animation?: string
+  // lets you adjust position after target is positioned
+  adjust?: number[]
+  // hide arrow
+  noArrow?: boolean
+  // DEBUG: helps you see forgiveness zone
+  showForgiveness?: boolean
+  // padding from edge of window
+  edgePadding: number
+  // pretty much what it says, for use with closeOnClick
+  keepOpenOnClickTarget?: boolean
+  // callback after close
+  onDidClose?: Function
+  // callback after open
+  onDidOpen?: Function
+  onOpen?: Function
+  height?: number
+  width?: number
+}
 
 const INVERSE = {
   top: 'bottom',
@@ -81,7 +84,7 @@ const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @attachTheme
 @view.ui
-export class Popover extends React.PureComponent {
+export class Popover extends React.PureComponent<PopoverProps> {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,
@@ -94,10 +97,15 @@ export class Popover extends React.PureComponent {
     delay: 16,
   }
 
-  get curProps() {
+  get curProps(): PopoverProps {
     return this.state.props
   }
 
+  target = null
+  // TODO: weird unmount/mounted
+  unmounted = false
+  mounted = false
+  isClickingTarget = false
   targetRef = null
   popoverRef = null
   setTargetRef = ref => {
@@ -119,6 +127,8 @@ export class Popover extends React.PureComponent {
     isOpen: false,
     direction: null,
     delay: 16,
+    props: {} as PopoverProps,
+    setPosition: false,
   }
 
   // curProps is always up to date, so we dont have to thread props around a ton
@@ -317,7 +327,7 @@ export class Popover extends React.PureComponent {
     }
   }
 
-  setPosition(callback) {
+  setPosition(callback?) {
     if (!this.popoverRef) {
       return
     }
@@ -913,4 +923,5 @@ export class Popover extends React.PureComponent {
   }
 }
 
+// @ts-ignore
 Popover.acceptsHovered = 'open'

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { observable } from 'mobx'
-import { SizedSurface } from '../sizedSurface'
+import { SizedSurface } from '../SizedSurface'
 
 @view
 export class Checkbox extends React.Component {

@@ -1,44 +1,47 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Surface } from './surface'
-import { Text } from './text'
-import { Icon } from './icon'
+import { Surface } from './Surface'
+import { Text } from './Text'
+import { Icon } from './Icon'
+import { Color } from '@mcro/css'
 
-// type Props = {
-//   background?: Color,
-//   color?: Color,
-//   children?: string | Object,
-//   icon?: string,
-//   borderRadius?: number,
-//   className?: string,
-//   attach?: Object,
-//   iconProps?: Object,
-//   label?: string | HTMLElement,
-//   labelBefore?: boolean,
-//   fontSize?: number,
-// }
+type Props = {
+  background?: Color
+  color?: Color
+  children?: string | Object
+  icon?: string
+  borderRadius?: number
+  className?: string
+  attach?: Object
+  iconProps?: Object
+  label?: string | HTMLElement
+  labelBefore?: boolean
+  fontSize?: number
+  style?: Object
+}
 
 @view.ui
-export class Badge extends React.Component {
+export class Badge extends React.Component<Props> {
   static defaultProps = {
     background: [0, 0, 0, 0.1],
     borderRadius: 30,
     fontSize: 12,
   }
 
-  render({
-    label,
-    children,
-    color,
-    icon,
-    iconProps,
-    attach,
-    className,
-    style,
-    labelBefore,
-    fontSize,
-    ...props
-  }) {
+  render() {
+    const {
+      label,
+      children,
+      color,
+      icon,
+      iconProps,
+      attach,
+      className,
+      style,
+      labelBefore,
+      fontSize,
+      ...props
+    } = this.props
     const fontSizeNum = +fontSize
 
     return (
@@ -49,8 +52,8 @@ export class Badge extends React.Component {
         style={style}
         {...attach}
       >
-        <content $labelBefore={labelBefore} if={icon || children || label}>
-          <lbl if={label} $hasChildren={!!children}>
+        <div $content $labelBefore={labelBefore} if={icon || children || label}>
+          <div $lbl if={label} $hasChildren={!!children}>
             <Text
               fontSize={fontSizeNum}
               lineHeight={fontSizeNum + 1}
@@ -58,9 +61,9 @@ export class Badge extends React.Component {
             >
               {label}
             </Text>
-          </lbl>
+          </div>
           <Icon if={icon} size={16} name={icon} color={color} {...iconProps} />
-          <inner if={children} $hasLabel={!!label}>
+          <div $inner if={children} $hasLabel={!!label}>
             <Text
               fontSize={fontSizeNum}
               lineHeight={fontSizeNum + 1}
@@ -68,8 +71,8 @@ export class Badge extends React.Component {
             >
               {children}
             </Text>
-          </inner>
-        </content>
+          </div>
+        </div>
       </Surface>
     )
   }

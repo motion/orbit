@@ -49,56 +49,65 @@ export class SettingContent extends React.Component {
     const integration = setting.type
     const SettingPane =
       SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
-    return children({
-      title: capitalize(integration),
-      content: (
-        <SettingPane
+    return (
+      <SettingPane
           appStore={appStore}
           setting={setting}
           update={store.update}
-        />
-      ),
-      subtitle: (
-        <div $$row>
-          <jobStatus $$row if={store.job}>
-            {store.bitsCount} total{' '}
-            <UI.Text if={store.job.updatedAt}>
-              &nbsp;&middot; Last run:{' '}
-              <UI.Icon
-                size={14}
-                css={{ display: 'inline-block' }}
-                {...statusIcons[store.job.status]}
-              />{' '}
-              <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-            </UI.Text>
-          </jobStatus>
-          <load if={!store.job}>Loading...</load>
-        </div>
-      ),
-      after: (
-        <UI.ListRow
-          $$flex
-          css={{ margin: [0, -8, -5, 0] }}
-          itemProps={{
-            size: 0.9,
-            chromeless: true,
-            opacity: 0.7,
-            margin: [0, 0, 0, 5],
-          }}
-        >
-          <UI.Button
-            icon="refresh"
-            tooltip="Refresh"
-            onClick={this.handleRefresh}
-          />
-          <UI.Button
-            icon="remove"
-            tooltip="Remove"
-            onClick={this.removeIntegration}
-          />
-        </UI.ListRow>
-      ),
-    })
+      >
+        {({ subhead, content }) => {
+          // this is a bit strange, its calling up a few times and passing up props
+          // not sure i like the pattern, but it is extremely flexible
+          // basically look at PeekPageInner > setting > *Setting
+          // where they call back up and pass contents *Setting() => setting() => PeekPageInner
+          return children({
+            title: capitalize(integration),
+            subhead,
+            content,
+            subtitle: (
+              <div $$row>
+                <jobStatus $$row if={store.job}>
+                  {store.bitsCount} total{' '}
+                  <UI.Text if={store.job.updatedAt}>
+                    &nbsp;&middot; Last run:{' '}
+                    <UI.Icon
+                      size={14}
+                      css={{ display: 'inline-block' }}
+                      {...statusIcons[store.job.status]}
+                    />{' '}
+                    <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
+                  </UI.Text>
+                </jobStatus>
+                <load if={!store.job}>Loading...</load>
+              </div>
+            ),
+            after: (
+              <UI.ListRow
+                $$flex
+                css={{ margin: [0, -8, -5, 0] }}
+                itemProps={{
+                  size: 0.9,
+                  chromeless: true,
+                  opacity: 0.7,
+                  margin: [0, 0, 0, 5],
+                }}
+              >
+                <UI.Button
+                  icon="refresh"
+                  tooltip="Refresh"
+                  onClick={this.handleRefresh}
+                />
+                <UI.Button
+                  icon="remove"
+                  tooltip="Remove"
+                  onClick={this.removeIntegration}
+                />
+              </UI.ListRow>
+            ),
+          })
+        }}
+      </SettingPane>
+    )
   }
 }
 

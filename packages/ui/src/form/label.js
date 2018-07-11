@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { SizedSurface } from '../sizedSurface'
-import { Text } from '../text'
+import { SizedSurface } from '../SizedSurface'
+import { Text } from '../Text'
 
 export const Label = ({
   children,

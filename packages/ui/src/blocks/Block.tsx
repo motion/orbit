@@ -1,7 +1,8 @@
 import { view } from '@mcro/black'
 import propStyles from '../helpers/propStyles'
+import { View } from './View'
 
-export const Block = view({
+export const Block = view(View, {
   display: 'block',
 })
 

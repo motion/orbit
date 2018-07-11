@@ -1,42 +1,55 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Text } from './text'
-import { Date } from './date'
-import { SizedSurface } from './sizedSurface'
+import { Text } from './Text'
+import { Date } from './Date'
+import { SizedSurface } from './SizedSurface'
 
-// export type Props = {
-//   after?: React.Element<any>,
-//   before?: React.Element<any>,
-//   borderWidth?: number,
-//   borderRadius?: number,
-//   children?: React.Element<any>,
-//   date?: React.Element<any>,
-//   dateSize?: number,
-//   iconProps?: Object,
-//   isFirstElement?: boolean,
-//   isLastElement?: boolean,
-//   meta?: React.Element<any>,
-//   onClick?: Function,
-//   onItemMount?: Function,
-//   onToggle?: Function,
-//   primary?: React.Element<any>,
-//   row?: boolean,
-//   secondary?: React.Element<any>,
-//   ellipse?: boolean,
-//   glowProps?: Object,
-//   editable?: boolean,
-//   onFinishEdit?: Function,
-//   childrenProps?: Object,
-//   primaryEllipse?: boolean,
-//   glow?: boolean,
-//   fontWeight?: number | string,
-//   fontSize?: number | string,
-//   primaryProps?: Object,
-//   index?: number,
-// }
+export type ItemProps = {
+  after?: React.ReactNode
+  below?: React.ReactNode
+  afterProps?: Object
+  before?: React.ReactNode
+  beforeProps?: Object
+  borderWidth?: number
+  beforePrimary?: React.ReactNode
+  borderRadius?: number
+  children?: React.ReactNode
+  date?: React.ReactNode
+  dateSize?: number
+  iconProps?: Object
+  segmented?: boolean
+  isFirstElement?: boolean
+  autoselect?: boolean
+  isLastElement?: boolean
+  meta?: React.ReactNode
+  onClick?: Function
+  onItemMount?: Function
+  onToggle?: Function
+  primary?: React.ReactNode
+  row?: boolean
+  secondary?: React.ReactNode
+  ellipse?: boolean
+  glowProps?: Object
+  editable?: boolean
+  onFinishEdit?: Function
+  childrenProps?: Object
+  primaryEllipse?: boolean
+  glow?: boolean
+  fontWeight?: number | string
+  fontSize?: number | string
+  primaryProps?: Object
+  index?: number
+  secondaryProps?: Object
+  size?: number
+  style?: Object
+  childrenEllipse?: boolean
+  getRef?: Function
+  highlight?: boolean
+  selectable?: boolean
+}
 
 @view
-export class ListItem extends React.Component {
+export class ListItem extends React.Component<ItemProps> {
   static isListItem = true
 
   static defaultProps = {
@@ -157,13 +170,13 @@ export class ListItem extends React.Component {
         after={below}
         {...props}
       >
-        <before if={before} {...beforeProps}>
+        <div $before if={before} {...beforeProps}>
           {before}
-        </before>
-        <content $overflowHidden={after || before}>
-          <above if={primary || secondary || date}>
+        </div>
+        <div $content $overflowHidden={after || before}>
+          <div $above if={primary || secondary || date}>
             {beforePrimary}
-            <prop if={primary || secondary}>
+            <div $prop if={primary || secondary}>
               <Text
                 $text
                 $primaryText
@@ -189,12 +202,17 @@ export class ListItem extends React.Component {
                 <Date $date if={date}>
                   {date}
                 </Date>
-                <middot if={date && secondary}> &middot; </middot>
+                <div $middot if={date && secondary}>
+                  {' '}
+                  &middot;{' '}
+                </div>
                 {secondary}
               </Text>
-            </prop>
-          </above>
-          <children if={!areChildrenString}>{children}</children>
+            </div>
+          </div>
+          <div $children if={!areChildrenString}>
+            {children}
+          </div>
           <Text
             if={areChildrenString}
             size={size * 0.9}
@@ -204,10 +222,10 @@ export class ListItem extends React.Component {
           >
             {children}
           </Text>
-        </content>
-        <after if={after} {...afterProps}>
+        </div>
+        <div $after if={after} {...afterProps}>
           {after}
-        </after>
+        </div>
       </SizedSurface>
     )
   }

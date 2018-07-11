@@ -138,10 +138,10 @@ export default class Gloss {
 
   createSimpleGlossComponent = (target, styles) => {
     const id = uid()
-    let name = target.name || target
     const elementCache = new WeakMap()
-    let themeUpdate
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+    let name = target
+    let themeUpdate
     let targetElement = isParentComponent ? target.displayName : target
     if (isParentComponent) {
       name = targetElement
@@ -153,14 +153,14 @@ export default class Gloss {
       }
       // attach theme on first use
       // detect child or parent theme
-      const hasTheme = View.theme || target.theme
+      const hasTheme = !!(View.theme || target.theme)
       if (hasTheme && !themeUpdate) {
         let getTheme = View.theme
         // extend child theme if necessary
         if (isParentComponent && target.theme) {
           getTheme = props => ({
-            ...(View.theme && View.theme(props)),
             ...target.theme(props),
+            ...(View.theme ? View.theme(props) : null),
           })
         }
         themeUpdate = this.createThemeManager(id, getTheme, name)
@@ -190,7 +190,6 @@ export default class Gloss {
           ...target.style,
           ...styles,
         }
-        console.log('finalStyles', finalStyles)
       }
       this.attachStyles(`${id}`, { [name]: finalStyles })
     } catch (err) {

@@ -251,7 +251,14 @@ export class OrbitCard extends React.Component {
               {afterTitle}
             </title>
             <subtitle if={hasSubtitle}>
-              <UI.Text if={location}>in&nbsp;{location}</UI.Text>
+              <UI.Text
+                display="inline-flex"
+                alignItems="center"
+                flexFlow="row"
+                if={location}
+              >
+                in&nbsp;{location}
+              </UI.Text>
               <UI.Text
                 if={typeof subtitle === 'string'}
                 ellipse

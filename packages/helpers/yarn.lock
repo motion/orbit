@@ -4,47 +4,47 @@
 
 "@types/event-kit@^2.4.0":
   version "2.4.0"
-  resolved "http://https://registry.npmjs.org/@types%2fevent-kit/-/event-kit-2.4.0.tgz#d470e1e9b5ee1ad574ca4efc65093aa116277ff4"
+  resolved "https://registry.npmjs.org/@types%2fevent-kit/-/event-kit-2.4.0.tgz#d470e1e9b5ee1ad574ca4efc65093aa116277ff4"
 
 disposable-event@^1.0.3:
   version "1.0.3"
-  resolved "http://https://registry.npmjs.org/disposable-event/-/disposable-event-1.0.3.tgz#c51986ec63048237ca82472fe549f895214d0e35"
+  resolved "https://registry.npmjs.org/disposable-event/-/disposable-event-1.0.3.tgz#c51986ec63048237ca82472fe549f895214d0e35"
   dependencies:
     sb-event-kit "^2.0.0"
 
 dom-walk@^0.1.0:
   version "0.1.1"
-  resolved "http://https://registry.npmjs.org/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
+  resolved "https://registry.npmjs.org/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
 
 event-kit@^2.5.0:
   version "2.5.0"
-  resolved "http://https://registry.npmjs.org/event-kit/-/event-kit-2.5.0.tgz#2f72b11e2b5f533cc1c950387040624a4a025fe8"
+  resolved "https://registry.npmjs.org/event-kit/-/event-kit-2.5.0.tgz#2f72b11e2b5f533cc1c950387040624a4a025fe8"
 
 global@^4.3.2:
   version "4.3.2"
-  resolved "http://https://registry.npmjs.org/global/-/global-4.3.2.tgz#e76989268a6c74c38908b1305b10fc0e394e9d0f"
+  resolved "https://registry.npmjs.org/global/-/global-4.3.2.tgz#e76989268a6c74c38908b1305b10fc0e394e9d0f"
   dependencies:
     min-document "^2.19.0"
     process "~0.5.1"
 
 min-document@^2.19.0:
   version "2.19.0"
-  resolved "http://https://registry.npmjs.org/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
+  resolved "https://registry.npmjs.org/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
   dependencies:
     dom-walk "^0.1.0"
 
 mobx-utils@5.0.0:
   version "5.0.0"
-  resolved "http://https://registry.npmjs.org/mobx-utils/-/mobx-utils-5.0.0.tgz#384e805064c237b9a9446788a9e68278a3437610"
+  resolved "https://registry.npmjs.org/mobx-utils/-/mobx-utils-5.0.0.tgz#384e805064c237b9a9446788a9e68278a3437610"
 
 object-path@^0.11.3:
   version "0.11.4"
-  resolved "http://https://registry.npmjs.org/object-path/-/object-path-0.11.4.tgz#370ae752fbf37de3ea70a861c23bba8915691949"
+  resolved "https://registry.npmjs.org/object-path/-/object-path-0.11.4.tgz#370ae752fbf37de3ea70a861c23bba8915691949"
 
 process@~0.5.1:
   version "0.5.2"
-  resolved "http://https://registry.npmjs.org/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
+  resolved "https://registry.npmjs.org/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
 
 sb-event-kit@^2.0.0:
   version "2.0.0"
-  resolved "http://https://registry.npmjs.org/sb-event-kit/-/sb-event-kit-2.0.0.tgz#10b736812f13a37a473aa6eaa3089b66ab725a7f"
+  resolved "https://registry.npmjs.org/sb-event-kit/-/sb-event-kit-2.0.0.tgz#10b736812f13a37a473aa6eaa3089b66ab725a7f"

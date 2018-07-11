@@ -41,58 +41,6 @@ export class DriveService {
     this.helpers = getHelpers(this.setting)
   }
 
-  async getRevisions(fileId: string) {
-    const { revisions } = await this.fetch(`/files/${fileId}/revisions`, {
-      query: {
-        pageSize: 1000,
-      },
-    })
-    return await Promise.all(
-      revisions.map(({ id }) => this.getRevision(fileId, id)),
-    )
-  }
-
-  async getRevision(fileId: string, revisionId: string) {
-    return await this.fetch(`/files/${fileId}/revisions/${revisionId}`, {
-      query: {
-        fields: ['lastModifyingUser', 'size', 'mimeType', 'modifiedTime'],
-      },
-    })
-  }
-
-  async getChanges({ max = 5000, maxRequests = 20 } = {}) {
-    let { changes, newStartPageToken } = await this.fetchChanges()
-    let requests = 0
-    while (changes.length < max && requests < maxRequests) {
-      requests++
-      newStartPageToken--
-      const next = await this.fetchChanges(`${newStartPageToken}`)
-      changes = [...changes, ...next.changes]
-    }
-    return changes
-  }
-
-  async fetchChanges(lastPageToken?: string, total = 1000) {
-    let pageToken = lastPageToken
-    if (!pageToken) {
-      pageToken = (await this.fetch('/changes/startPageToken')).startPageToken
-    }
-    const query = {
-      supportsTeamDrives: true,
-      includeRemoved: true,
-      includeTeamDriveItems: true,
-      pageSize: Math.min(1000, total),
-      spaces: 'drive',
-      pageToken: null,
-    }
-    if (pageToken) {
-      query.pageToken = pageToken
-    }
-    return await this.fetch('/changes', {
-      query,
-    })
-  }
-
   async getFiles(
     pages = 1,
     query: PageQuery = { mimeType: 'application/vnd.google-apps.document' },
@@ -116,7 +64,7 @@ export class DriveService {
     return response
   }
 
-  getFilesWithAllInfo(
+  private getFilesWithAllInfo(
     ids: Array<string>,
     fileQuery?: Object,
   ): Promise<DriveFileObject[]> {
@@ -141,7 +89,7 @@ export class DriveService {
     })
   }
 
-  async getFilesBasic(pages = 1, query: PageQuery = {}) {
+  private async getFilesBasic(pages = 1, query: PageQuery = {}) {
     let all = []
     let fetchedPages = 0
     while (fetchedPages < pages) {
@@ -159,7 +107,7 @@ export class DriveService {
     return all
   }
 
-  async fetchFiles(query?: Object) {
+  private async fetchFiles(query?: Object) {
     return await this.fetch('/files', {
       query: {
         orderBy: [
@@ -173,7 +121,7 @@ export class DriveService {
     })
   }
 
-  async getFile(id: string, query?: Object): Promise<DriveFileObject> {
+  private async getFile(id: string, query?: Object): Promise<DriveFileObject> {
     return await this.fetch(`/files/${id}`, {
       query: {
         fields: [
@@ -211,7 +159,7 @@ export class DriveService {
     })
   }
 
-  getFileContents(
+  private getFileContents(
     id: string,
     mimeType = 'text/plain',
     timeout = 2000,
@@ -253,23 +201,4 @@ export class DriveService {
     })
   }
 
-  async getTeamDrives() {
-    return await this.fetch('/teamdrives')
-  }
-
-  async getComments(fileId: string) {
-    return await this.fetch(`/files/${fileId}/comments`, {
-      query: {
-        pageSize: 1000,
-      },
-    })
-  }
-
-  async getReplies(fileId: string, commentId: string) {
-    return await this.fetch(`/files/${fileId}/comments/${commentId}/replies`, {
-      query: {
-        pageSize: 1000,
-      },
-    })
-  }
 }

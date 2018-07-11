@@ -368,15 +368,16 @@ export class Surface extends React.Component<SurfaceProps> {
       background: 'transparent',
       height: '100%',
       color: 'inherit',
+      // this seems to maybe fix some line height stuff
       transform: {
-        y: '3%',
+        y: '1%',
       },
     },
     icon: {
       pointerEvents: 'none',
       height: '1.4rem',
       transform: {
-        y: '3%',
+        y: '1%',
       },
     },
     wrap: {

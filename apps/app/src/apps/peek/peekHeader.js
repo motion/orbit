@@ -44,8 +44,8 @@ TitleBarContain.theme = ({ theme }) => ({
 })
 
 const SubTitle = ({ children, date, permalink }) => (
-  <UI.Row padding={[4, 12]}>
-    <UI.Text size={1} ellipse={1} alpha={0.8}>
+  <UI.Row padding={[4, 12]} alignItems="center">
+    <UI.Text display="flex" flexFlow="row" alignItems="center" alpha={0.8}>
       {children}
       <span if={date}>
         {' '}

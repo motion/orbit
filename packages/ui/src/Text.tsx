@@ -15,7 +15,8 @@ const TextBlock = view(InlineBlock, {
   maxWidth: '100%',
 })
 
-TextBlock.theme = ({ selectable, oneLineEllipse }) => ({
+TextBlock.theme = ({ selectable, oneLineEllipse, display }) => ({
+  display,
   ...(selectable && {
     userSelect: 'auto',
     cursor: 'inherit',
@@ -214,6 +215,7 @@ export class Text extends React.Component<TextProps> {
       color,
       measure,
       highlight,
+      size,
       ...props
     } = this.props
     const { multiLineEllipse } = this

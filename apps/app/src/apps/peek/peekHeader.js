@@ -36,7 +36,6 @@ const TitleBarContain = view({
 })
 
 TitleBarContain.theme = ({ theme }) => ({
-  // background: theme.base.background,
   borderBottom: [1, theme.base.borderColor],
   hover: {
     background: theme.hover.background.lighten(0.05),
@@ -44,9 +43,7 @@ TitleBarContain.theme = ({ theme }) => ({
 })
 
 const SubTitle = ({ children, date, permalink }) => (
-  <UI.Row
-    padding={[4, 12]}
-  >
+  <UI.Row padding={[4, 12]}>
     <UI.Text size={1} ellipse={1} alpha={0.8}>
       {children} <UI.Date>{date}</UI.Date>
     </UI.Text>
@@ -146,7 +143,12 @@ export class PeekHeaderContent extends React.Component {
         >
           {title}
         </TitleBar>
-        <SubTitle if={subtitle || date || permalink} date={date} theme={theme} permalink={permalink}>
+        <SubTitle
+          if={subtitle || date || permalink}
+          date={date}
+          theme={theme}
+          permalink={permalink}
+        >
           {subtitle}
         </SubTitle>
         {subhead}

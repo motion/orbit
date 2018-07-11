@@ -27,8 +27,6 @@ export class Root {
   errors = []
 
   constructor() {
-    window.Root = this
-    window.restart = this.restart
     debugState(({ stores, views }) => {
       this.stores = stores
       this.views = views

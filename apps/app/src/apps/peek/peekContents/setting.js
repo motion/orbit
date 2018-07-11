@@ -50,11 +50,7 @@ export class SettingContent extends React.Component {
     const SettingPane =
       SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
-      <SettingPane
-          appStore={appStore}
-          setting={setting}
-          update={store.update}
-      >
+      <SettingPane appStore={appStore} setting={setting} update={store.update}>
         {({ subhead, content }) => {
           // this is a bit strange, its calling up a few times and passing up props
           // not sure i like the pattern, but it is extremely flexible
@@ -117,14 +113,18 @@ export class SettingContent extends React.Component {
       return this.idSetting || this.typeSetting
     }
 
+    get item() {
+      return App.peekState.item || {}
+    }
+
     idSetting = modelQueryReaction(() =>
-      SettingModel.findOne({ id: App.peekState.item.id }),
+      SettingModel.findOne({ id: this.item.id }),
     )
 
     // hackkkkky for now because look at OrbitSettings.generalsettings
     // need a migration to insert the settings first and then make them just like integrationSettingsd
     typeSetting = modelQueryReaction(() =>
-      SettingModel.findOne({ type: App.peekState.item.id }),
+      SettingModel.findOne({ type: this.item.id }),
     )
   },
 })

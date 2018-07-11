@@ -101,7 +101,7 @@ const Themes = {
     highlightColor,
     background: color('#fff'),
     color: color('#444'),
-    borderColor: color('#999'),
+    borderColor: color('#e2e2e2'),
     hover: {
       background: color('#eee'),
     },

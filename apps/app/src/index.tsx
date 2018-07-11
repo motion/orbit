@@ -1,9 +1,11 @@
+// any js thats imported here but should work with HMR
+// should also be added to ./RootViewHMR!
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import './helpers/createElement'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject.js'
-import * as Constants from './constants'
+import './helpers/installGlobals'
 import { Root } from './Root'
 import * as UI from '@mcro/ui'
 import { ThemeProvide } from '@mcro/ui'
@@ -12,20 +14,11 @@ import ReactDOM from 'react-dom'
 import Themes from './themes'
 import { throttle } from 'lodash'
 
-// fixes hmr
-import './router'
-
 Error.stackTraceLimit = Infinity
 
 process.on('uncaughtException', err => {
   console.log('App.uncaughtException', err.stack)
 })
-
-if (Constants.IS_PROD) {
-  require('./helpers/installProd')
-} else {
-  require('./helpers/installDevTools')
-}
 
 // hmr calls render twice out the gate
 // so prevent that
@@ -37,6 +30,7 @@ const render = throttle(async () => {
     console.timeEnd('splash')
     const rootStore = new Root()
     window['Root'] = rootStore
+    window['restart'] = rootStore.restart
     await rootStore.start()
   }
   const { RootViewHMR } = require('./RootViewHMR')

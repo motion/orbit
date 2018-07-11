@@ -141,7 +141,7 @@ export class PeekHeaderContent extends React.Component {
                   icon="arrowminleft"
                   circular
                   size={0.8}
-                  background="#f2f2f2"
+                  color="#fff"
                 />
               </UI.Row>
             </>

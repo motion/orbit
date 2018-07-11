@@ -2,6 +2,7 @@ import * as React from 'react'
 import keywordExtract from 'keyword-extractor'
 import markdown from '@mcro/marky-markdown'
 import { TimeAgo } from '../../views/TimeAgo'
+import { RoundButton } from '../../views/RoundButton'
 
 // const converter = new Showdown.Converter()
 // const markdown = text => converter.makeHtml(text)
@@ -53,14 +54,37 @@ const parseGithubContents = ({ bit, shownLimit }) => {
   }
 }
 
-export const ResolveTask = ({ bit, children, isExpanded, shownLimit }) => {
+export const ResolveTask = ({
+  bit,
+  children,
+  isExpanded,
+  shownLimit,
+  appStore,
+}) => {
   const { content, comments } = isExpanded
     ? parseGithubContents({ bit, shownLimit })
-    : {}
+    : { content: null, comments: null }
   return children({
     title: bit.title,
     icon: 'github',
-    location: `${bit.data.orgLogin}/${bit.data.repositoryName}`,
+    location: (
+      <RoundButton
+        onClick={e => {
+          e.stopPropagation()
+          // TODO: resolve links on all bits in one place
+          appStore.open(
+            `https://github.com/${bit.data.orgLogin}/${
+              bit.data.repositoryName
+            }`,
+          )
+        }}
+      >
+        {bit.data.orgLogin}/{bit.data.repositoryName}
+      </RoundButton>
+    ),
+    permalink: `https://github.com/${bit.data.orgLogin}/${
+      bit.data.repositoryName
+    }/issues/${bit.data.number}`,
     people: bit.people,
     date: bit.bitUpdatedAt,
     content,

@@ -24,11 +24,12 @@ export class Task extends React.Component {
     }
     return (
       <PeekBitResolver appStore={appStore} bit={bit}>
-        {({ title, location, content, comments, icon, permalink }) => {
+        {({ title, date, location, content, comments, icon, permalink }) => {
           return children({
             title,
             subtitle: location,
             icon,
+            date,
             permalink,
             content: (
               <>

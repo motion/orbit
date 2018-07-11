@@ -3,10 +3,10 @@
 rm -rf apps/*/npm-debug.log.*
 rm -rf apps/*/lib
 rm -rf apps/*/dist
-rm -rf apps/*/es6
+rm -rf apps/*/_
 rm -rf packages/*/lib
 rm -rf packages/*/dist
-rm -rf packages/*/es6
+rm -rf packages/*/_
 rm -rf packages/*/npm-debug.log.*
 rm -rf packages/*/shrinkwrap.json
 

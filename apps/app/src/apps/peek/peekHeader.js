@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/orbitIcon'
 import { WindowControls } from '../../views/WindowControls'
 import { App } from '@mcro/stores'
+import { NICE_INTEGRATION_NAMES } from '../../constants'
 
 const PeekHeaderContain = view({
   background: '#fff',
@@ -45,7 +46,11 @@ TitleBarContain.theme = ({ theme }) => ({
 const SubTitle = ({ children, date, permalink }) => (
   <UI.Row padding={[4, 12]}>
     <UI.Text size={1} ellipse={1} alpha={0.8}>
-      {children} <UI.Date>{date}</UI.Date>
+      {children}
+      <span if={date}>
+        {' '}
+        &middot;&nbsp;&nbsp; <UI.Date>{date}</UI.Date>
+      </span>
     </UI.Text>
     <UI.Col if={permalink} flex={1} />
     <UI.Button
@@ -77,6 +82,7 @@ export class PeekHeaderContent extends React.Component {
     icon,
     theme,
     subhead,
+    integration,
     ...props
   }) {
     return (
@@ -141,6 +147,7 @@ export class PeekHeaderContent extends React.Component {
             </>
           }
         >
+          {integration ? `${NICE_INTEGRATION_NAMES[integration]}: ` : ''}{' '}
           {title}
         </TitleBar>
         <SubTitle

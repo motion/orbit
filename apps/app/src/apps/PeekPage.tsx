@@ -32,7 +32,16 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
       appStore={appStore}
       peekStore={peekStore}
     >
-      {({ title, icon, date, subhead, subtitle, after, content }) => (
+      {({
+        title,
+        permalink,
+        icon,
+        date,
+        subhead,
+        subtitle,
+        after,
+        content,
+      }) => (
         <>
           <PeekHeader
             title={title}
@@ -41,6 +50,8 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
             icon={icon}
             date={date}
             subhead={subhead}
+            permalink={permalink}
+            integration={peekStore.model ? peekStore.model.integration : null}
           />
           <PeekContent>{content}</PeekContent>
         </>

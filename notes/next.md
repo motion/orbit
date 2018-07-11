@@ -10,7 +10,7 @@
 
 - saving peekstateactions breaking hmr
 - saving appstoreactions breaking hmr
-
+  sear
 - slack card:
   - if it was a post in #status, show other posts by that person in #status
   - fix people cards

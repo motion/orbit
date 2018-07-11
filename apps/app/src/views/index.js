@@ -132,8 +132,8 @@ export const SubTitle = props => (
     alpha={0.65}
     fontWeight={300}
     fontSize={16}
-    alignItems='center'
-    flexFlow='row'
+    alignItems="center"
+    flexFlow="row"
     padding={[3, 0, 5]}
     opacity={0.75}
     marginBottom={5}
@@ -154,12 +154,15 @@ export const Link = props => (
 @view.ui
 export class SmallLink extends React.Component {
   handleClick = () => {
-    this.props.orbitStore.setQuery(this.props.children)
+    if (this.props.orbitStore) {
+      this.props.orbitStore.setQuery(this.props.children)
+    }
   }
 
   render({ children }) {
     return <span onDoubleClick={this.handleClick}>{children}</span>
   }
+
   static style = {
     span: {
       borderBottom: [2, 'transparent'],

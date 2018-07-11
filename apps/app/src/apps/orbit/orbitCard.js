@@ -242,7 +242,7 @@ export class OrbitCard extends React.Component {
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}
                 fontWeight={500}
-                maxWidth='calc(100% - 30px)'
+                maxWidth="calc(100% - 30px)"
                 {...tiny && tinyProps.titleProps}
                 {...titleProps}
               >
@@ -254,8 +254,8 @@ export class OrbitCard extends React.Component {
               <UI.Text if={location}>in&nbsp;{location}</UI.Text>
               <UI.Text
                 if={typeof subtitle === 'string'}
-                ellipse={1}
-                maxWidth='calc(100% - 40px)'
+                ellipse
+                maxWidth="calc(100% - 40px)"
               >
                 {subtitle}
               </UI.Text>
@@ -274,17 +274,6 @@ export class OrbitCard extends React.Component {
                 $previewText
               >
                 {preview
-                  // .replace('feeling sick /', 'feeling better need actor')
-                  // .replace('site remove site', 'site update logo fix')
-                  // .replace(
-                  //   'day stack generally set',
-                  //   'good day setup stack generally familiar',
-                  // )
-                  // .replace('bit found', 'longer than expected found it')
-                  // .replace(
-                  //   'happening database',
-                  //   'happening twice only database',
-                  // )
                   .slice(0, 220)
                   .split(' ')
                   .map((word, i) => (

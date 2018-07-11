@@ -5,6 +5,7 @@ import { SubTitle } from '../../../views'
 import { OrbitDivider } from '../../../apps/orbit/orbitDivider'
 import { PeekRelatedStore } from './PeekRelatedStore'
 import { RelatedPeople } from './RelatedPeople'
+import { PeekBitInformation } from './PeekBitInformation'
 
 const Section = view({
   padding: 20,
@@ -30,14 +31,16 @@ export class Conversation extends React.Component {
     }
     return (
       <PeekBitResolver appStore={appStore} bit={bit} itemProps={itemProps}>
-        {({ permalink, location, title, icon, content }) => {
+        {({ permalink, location, title, icon, content, date }) => {
           return children({
             title,
             subtitle: location,
             icon,
             permalink,
+            date,
             content: (
               <>
+                <PeekBitInformation bit={bit} />
                 {content}
                 <RelatedPeople relatedStore={relatedStore} />
                 <Section>

@@ -265,12 +265,7 @@ export class Text extends React.Component<TextProps> {
       >
         {!showEllipse && children}
         {showEllipse && (
-          <TextEllipse
-            ellipseLines={multiLineEllipse}
-            ellipseSingle={oneLineEllipse}
-            color={color}
-            {...ellipseProps}
-          >
+          <TextEllipse ellipse={ellipse} color={color} {...ellipseProps}>
             {!highlight ? children : null}
           </TextEllipse>
         )}

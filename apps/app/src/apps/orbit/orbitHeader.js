@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, attachTheme } from '@mcro/black'
+import { view, react, attachTheme, on } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
@@ -17,6 +17,12 @@ class HeaderStore {
   focus = () => {
     if (!this.inputRef) return
     this.inputRef.current.focus()
+    on(
+      this,
+      setTimeout(() => {
+        this.inputRef.current.focus()
+      }),
+    )
   }
 
   focusInput = react(

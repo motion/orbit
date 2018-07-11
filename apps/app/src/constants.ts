@@ -34,3 +34,12 @@ export const AUTH_SERVICE = authService ? authService[1] : null
 
 export const GOOGLE_CLIENT_ID =
   '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com'
+
+export const NICE_INTEGRATION_NAMES = {
+  slack: 'Slack',
+  gdocs: 'Google Docs',
+  gmail: 'Gmail',
+  confluence: 'Confluence',
+  jira: 'Jira',
+  github: 'Github',
+}

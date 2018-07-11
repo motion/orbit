@@ -20,11 +20,8 @@ const TabList = view(Row, {
   alignItems: 'stretch',
 })
 
-const TabListItem = view({
-  borderBottom: '1px solid #dddfe2',
-  color: colors.dark80,
+const TabListItem = view(Row, {
   flex: 1,
-  flexFlow: 'row',
   fontSize: 13,
   lineHeight: '28px',
   overflow: 'hidden',

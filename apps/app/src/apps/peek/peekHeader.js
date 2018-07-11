@@ -13,6 +13,7 @@ const PeekHeaderContain = view({
 })
 
 PeekHeaderContain.theme = ({ theme }) => ({
+  borderBottom: [1, theme.base.borderColor],
   background: theme.base.background,
 })
 
@@ -37,7 +38,6 @@ const TitleBarContain = view({
 })
 
 TitleBarContain.theme = ({ theme }) => ({
-  borderBottom: [1, theme.base.borderColor],
   hover: {
     background: theme.hover.background.lighten(0.05),
   },

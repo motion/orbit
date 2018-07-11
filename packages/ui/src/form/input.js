@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { SizedSurface } from '../sizedSurface'
-import { Button } from '../button'
+import { SizedSurface } from '../SizedSurface'
+import { Button } from '../Button'
 import { Checkbox } from './checkbox'
 import { UIContext } from '../helpers/contexts'
 

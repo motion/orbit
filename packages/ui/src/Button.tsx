@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SizedSurface } from './sizedSurface'
+import { SizedSurface } from './SizedSurface'
 import { view } from '@mcro/black'
 
 const Badge = view({

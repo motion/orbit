@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { List } from './list'
-import { Button } from './button'
-import { Popover } from './popover'
-import { Arrow } from './arrow'
+import { List } from './List'
+import { Button } from './Button'
+import { Popover } from './Popover'
+import { Arrow } from './Arrow'
 import { Color } from '@mcro/css'
 
 type Props = {

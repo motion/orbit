@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Surface } from './surface'
+import { Surface } from './Surface'
 import { Color } from '@mcro/css'
 
 const opposite = direction =>

@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
-import { Popover } from './popover'
+import { Popover } from './Popover'
 import { iconNames } from './iconNames'
 import fuzzy from 'fuzzy'
 

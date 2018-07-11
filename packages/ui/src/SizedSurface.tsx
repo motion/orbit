@@ -66,5 +66,6 @@ export function SizedSurface(props: SizedSurfaceProps) {
     const iconSize = (sizeIcon && num(sizeIcon)) || 1
     pass.sizeIcon = iconSize
   }
-  return <Surface {...pass} {...rest} />
+  const iconPad = 8 * num(sizeHeight)
+  return <Surface {...pass} iconPad={iconPad} {...rest} />
 }

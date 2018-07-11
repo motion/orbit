@@ -111,8 +111,6 @@ export type SurfaceProps = {
 }
 
 const ICON_SCALE = 12
-// TODO: make this dynamic with size (move into theme)
-const ICON_PAD = 8
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
 const BORDER_RADIUS_SIDES = [
@@ -130,6 +128,10 @@ const hasChildren = children =>
 @attachTheme
 @view.ui
 export class Surface extends React.Component<SurfaceProps> {
+  static defaultProps = {
+    iconPad: 8,
+  }
+
   static contextTypes = {
     provided: object,
   }
@@ -238,8 +240,6 @@ export class Surface extends React.Component<SurfaceProps> {
       theme,
       ...props
     } = this.props
-    const hasIconBefore = icon && !iconAfter
-    const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
     const { themeValues } = this
     if (!themeValues) {
@@ -280,13 +280,18 @@ export class Surface extends React.Component<SurfaceProps> {
             {typeof badge !== 'boolean' ? badge : ''}
           </Badge>
         )}
-        <div $icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+        <div $icon if={icon && !stringIcon}>
           {icon}
         </div>
         <Icon
           if={icon && stringIcon}
           $icon
-          $iconAfter={hasIconAfter}
+          css={
+            icon &&
+            iconAfter && {
+              order: 3,
+            }
+          }
           name={icon}
           size={themeValues.iconSize}
           {...iconProps}
@@ -308,8 +313,6 @@ export class Surface extends React.Component<SurfaceProps> {
           {...wrapElement && passProps}
           {...elementProps}
           disabled={disabled}
-          $hasIconBefore={hasIconBefore}
-          $hasIconAfter={hasIconAfter}
         >
           {children}
         </div>
@@ -365,16 +368,16 @@ export class Surface extends React.Component<SurfaceProps> {
       background: 'transparent',
       height: '100%',
       color: 'inherit',
-      marginBottom: '-3%',
+      transform: {
+        y: '3%',
+      },
     },
     icon: {
       pointerEvents: 'none',
       height: '1.4rem',
-      marginBottom: '-3%',
-    },
-    hasIconBefore: {
-      // this adjusts for height
-      marginLeft: ICON_PAD,
+      transform: {
+        y: '3%',
+      },
     },
     wrap: {
       flex: 1,
@@ -386,16 +389,10 @@ export class Surface extends React.Component<SurfaceProps> {
       position: 'relative',
       overflow: 'hidden',
     },
-    hasIconAfter: {
-      marginRight: ICON_PAD,
-    },
-    iconAfter: {
-      order: 3,
-    },
   }
 
   static inlineStyle = {
-    display: 'inline',
+    display: 'flex-inline',
   }
 
   static dimmedStyle = {
@@ -624,7 +621,7 @@ export class Surface extends React.Component<SurfaceProps> {
       color,
     }
     const flexFlow = props.flexFlow || 'row'
-    const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
+    const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
     const undoPadding = {
       margin: padding
         ? typeof padding === 'number'
@@ -709,23 +706,34 @@ export class Surface extends React.Component<SurfaceProps> {
     if (props.sizeLineHeight) {
       surfaceStyles.lineHeight = `${surfaceStyles.height}px`
     }
+    // element styles
+    const element = {
+      ...(props.inline && self.constructor.inlineStyle),
+      // this fixes inputs but may break other things, need to test
+      height,
+      ...borderRadius,
+      ...elementGlowProps,
+      overflow: props.overflow || 'visible',
+      flexFlow,
+      fontSize: props.fontSize || 'inherit',
+      fontWeight: props.fontWeight,
+      lineHeight: 'inherit',
+      justifyContent: props.justify || props.justifyContent,
+      maxWidth: `calc(100% ${iconNegativePad})`,
+      // maxHeight: '100%',
+      textAlign: props.textAlign,
+    }
+    // spacing between icon
+    const hasIconBefore = props.icon && !props.iconAfter
+    const hasIconAfter = props.icon && props.iconAfter
+    if (hasIconBefore) {
+      element.marginLeft = props.iconPad
+    }
+    if (hasIconAfter) {
+      element.marginRight = props.iconPad
+    }
     const result = {
-      element: {
-        ...(props.inline && self.constructor.inlineStyle),
-        // this fixes inputs but may break other things, need to test
-        height,
-        ...borderRadius,
-        ...elementGlowProps,
-        overflow: props.overflow || 'visible',
-        flexFlow,
-        fontSize: props.fontSize || 'inherit',
-        fontWeight: props.fontWeight,
-        lineHeight: 'inherit',
-        justifyContent: props.justify || props.justifyContent,
-        maxWidth: `calc(100% ${iconPad})`,
-        // maxHeight: '100%',
-        textAlign: props.textAlign,
-      },
+      element,
       wrap: undoPadding,
       wrapContents: undoPadding,
       after: {

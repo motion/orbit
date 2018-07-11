@@ -11,6 +11,9 @@ const BodyContents = view({
 })
 
 export const Task = ({ bit, appStore, children }) => {
+  if (!bit) {
+    return children({})
+  }
   return (
     <PeekBitResolver appStore={appStore} bit={bit}>
       {({ title, location, content, comments, icon, permalink }) => {

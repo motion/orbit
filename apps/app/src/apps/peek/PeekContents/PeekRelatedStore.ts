@@ -3,12 +3,13 @@ import { Bit, Person } from '@mcro/models'
 
 @store
 export class PeekRelatedStore {
-  relatedPeople = react(
-    async () => {
-      const people = await Person.find({ take: 3, skip: 7 })
-      const bits = await Bit.find({ take: 3, skip: 2, relations: ['people'] })
-      return [...people, ...bits]
-    },
+  relatedPeople = react(() => Person.find({ take: 3, skip: 7 }), {
+    defaultValue: [],
+    delay: 40,
+  })
+
+  relatedBits = react(
+    () => Bit.find({ take: 3, skip: 2, relations: ['people'] }),
     { defaultValue: [], delay: 40 },
   )
 

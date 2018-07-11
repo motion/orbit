@@ -32,8 +32,7 @@ export class Task extends React.Component {
             permalink,
             content: (
               <>
-                hey you2
-                <RelatedPeople relatedStore={relatedStore} />
+                <RelatedPeople title="Assigned" relatedStore={relatedStore} />
                 <BodyContents
                   className="markdown"
                   dangerouslySetInnerHTML={{

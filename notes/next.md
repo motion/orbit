@@ -15,6 +15,9 @@
   - if it was a post in #status, show other posts by that person in #status
   - fix people cards
 
+* auto setup
+* p2p
+
 # high level
 
 ## Profiles

@@ -48,4 +48,8 @@ const render = throttle(async () => {
 
 render()
 
+// hacky for now, fixing soon, hmr needs it in RootView.tsx
+// @ts-ignore
+window.render = render
+
 module.hot && module.hot.accept(render)

@@ -20,6 +20,10 @@ const smallAmt = color =>
   Math.min(0.5, Math.max(MIN_ADJUST, 2 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
 const largeAmt = color => smallAmt(color) * 1.25
 
+const opposite = color => color.mix(
+  color.lighten(1),
+)
+
 export class ThemeMaker {
   cache = {}
 
@@ -73,16 +77,13 @@ export class ThemeMaker {
     if (!background && !color) {
       throw new Error('Themes require at least background or color')
     }
-    const backgroundColored = $(background)
-    const backgroundOpposite = backgroundColored.mix(
-      backgroundColored.lighten(1),
-    )
+    const backgroundColored = background ? $(background) : opposite($(color))
     const base = this.colorize({
       highlightColor,
       highlightBackground,
       background: backgroundColored,
-      color: color || backgroundOpposite,
-      borderColor,
+      color: color || opposite(backgroundColored),
+      borderColor: borderColor || adjust(backgroundColored, smallAmt),
     })
     const focused = {
       background: base.background && adjust(base.background, largeAmt, true),

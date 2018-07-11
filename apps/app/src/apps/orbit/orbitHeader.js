@@ -15,14 +15,8 @@ class HeaderStore {
   }
 
   focus = () => {
-    if (!this.inputRef) {
-      console.error('no input')
-      return
-    }
-    // weirdly this doesnt work but the querySelector does...
-    // this.inputRef.current.focus()
-    // document.execCommand('selectAll', false, null)
-    // document.querySelector('input').focus()
+    if (!this.inputRef) return
+    this.inputRef.current.focus()
   }
 
   focusInput = react(
@@ -44,14 +38,6 @@ class HeaderStore {
     }
   }
 }
-
-// const Hl = view('span', {
-//   display: 'inline',
-//   background: '#C4C4F4',
-//   padding: [3, 4],
-//   margin: [-3, 0],
-//   borderRadius: 6,
-// })
 
 @attachTheme
 @view.attach('orbitStore', 'appStore')

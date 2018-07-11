@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import { Button } from './Button'
 import { Surface } from './Surface'
 import { UIContext } from './helpers/contexts'
@@ -23,6 +23,7 @@ type ListRowProps = {
   theme?: Object
 }
 
+@attachTheme
 @view.ui
 export class ListRow extends React.Component<ListRowProps> {
   state = {

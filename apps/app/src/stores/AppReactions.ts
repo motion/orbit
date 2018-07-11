@@ -29,7 +29,6 @@ export class AppReactions {
       await sleep(100)
     }
     const dispose = App.onMessage(async msg => {
-      window.setupAppReactions = true
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
           this.toggle()
@@ -62,6 +61,7 @@ export class AppReactions {
         this.onPinKey(key.toLowerCase())
       }
     })
+    console.log('appreact.dispose', dispose)
     this.subscriptions.add({
       dispose,
     })

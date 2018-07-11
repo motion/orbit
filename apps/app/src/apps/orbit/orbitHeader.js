@@ -95,7 +95,7 @@ export class OrbitHeader extends React.Component {
             background="transparent"
             value={orbitStore.query}
             highlight={words => {
-              console.log('highlight', words)
+              words
               return /\w+/g
             }}
             color={theme.base.color.alpha(0.8)}

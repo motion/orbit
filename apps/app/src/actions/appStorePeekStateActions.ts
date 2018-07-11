@@ -2,6 +2,9 @@ import { Person, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import peekPosition from '../helpers/peekPosition'
 import invariant from 'invariant'
+import debug from '@mcro/debug'
+
+const log = debug('appStorePeekStateActions')
 
 type PositionObject =
   | HTMLElement
@@ -32,7 +35,7 @@ export function selectItem(
   item: Person | Bit | GenericPeekItem,
   target?: PositionObject,
 ) {
-  console.log('selecting', item, target)
+  log(item, target)
   invariant(item, 'Must pass item')
   if (item instanceof Person) {
     invariant(item.name, 'Must pass Person name')

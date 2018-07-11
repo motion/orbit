@@ -421,7 +421,6 @@ export class AppStore {
         console.log('isSame, ignore', index, this.activeIndex)
         return isSame
       }
-      console.log('clearing')
       this.clearSelected()
     } else {
       if (typeof index === 'number') {

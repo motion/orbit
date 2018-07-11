@@ -8,6 +8,7 @@
     - hover highlight the areas effect
     - click highlight area to see in peek
 
+- saving peekstateactions breaking hmr
 - saving appstoreactions breaking hmr
 
 - slack card:

@@ -274,7 +274,7 @@ class Bridge {
       return changedState
     }
     if (Object.keys(changedState).length) {
-      log(`changedState:\n\n ${JSON.stringify(changedState, null, 2)}`)
+      // log(`changedState:\n\n ${JSON.stringify(changedState, null, 2)}`)
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
       } else {

@@ -136,6 +136,10 @@ export class HighlightedTextArea extends React.Component<Props> {
           resize="none"
           {...styleProps}
           onChange={this.handleInputChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onKeyDown={onKeyDown}
+          onClick={onClick}
           onScroll={this.handleScroll}
           value={this.state.input}
         />

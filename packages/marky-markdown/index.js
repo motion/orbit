@@ -1,7 +1,7 @@
 var defaults = require('lodash.defaults')
 var isPlainObj = require('is-plain-obj')
-var render = require('./lib/render')
-var sanitize = require('./lib/sanitize')
+var render = require('./src/render')
+var sanitize = require('./src/sanitize')
 
 var defaultOptions = {
   sanitize: true,

@@ -1,3 +1,6 @@
+// @ts-ignore
+import { flatten } from 'lodash'
+
 // cut text down using highlight words
 // not a wonderfully efficient
 // but still great for not too long text
@@ -20,7 +23,7 @@ export const highlightText = options => {
   // split all the highlight words:
   for (const [index] of words.entries()) {
     const regex = wordFinders[index]
-    parts = _.flatten(parts.map(piece => piece.split(regex)))
+    parts = flatten(parts.map(piece => piece.split(regex)))
   }
   // find maximum length of surrounding text snippet
   const numSurrounds = parts.length / 2

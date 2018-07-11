@@ -108,32 +108,6 @@ tspan {
   padding: 4px !important;
 }
 
-/* for highlighting words */
-mark {
-  display: inline !important;
-  white-space: pre-wrap;
-}
-
-div[data-slate-editor='true'] > div {
-  display: block;
-}
-
-.showPlaceholder {
-  position: relative;
-}
-.showPlaceholder:before {
-  pointer-events: none;
-  position: absolute;
-  opacity: 0.6;
-  left: 0;
-  top: 0;
-  content: attr(placeholder);
-}
-
-.dark-textarea::-webkit-input-placeholder {
-  color: #ccc;
-}
-
 /* github html embed */
 .task-list-item {
   list-style: none;
@@ -503,6 +477,12 @@ caption {
 mark {
   background: none;
   color: auto;
+  display: inline-block;
+  color: transparent;
+  background: rgba(40.4%, 70.5%, 92.9%, 0.644);
+  border-radius: 6px;
+  padding: 0 2px;
+  margin: 0 -2px;
 }
 
 blockquote {

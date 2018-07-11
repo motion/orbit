@@ -3,19 +3,26 @@ import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
+import { HighlightedTextArea } from '../../views/HighlightedTextArea'
+
+window.UI = UI
 
 class HeaderStore {
-  inputRef = React.createRef()
+  inputRef = null
+
+  onInput = () => {
+    this.props.orbitStore.onChangeQuery(this.inputRef.innerText)
+  }
 
   focus = () => {
-    if (!this.inputRef || !this.inputRef.current) {
+    if (!this.inputRef) {
       console.error('no input')
       return
     }
     // weirdly this doesnt work but the querySelector does...
     // this.inputRef.current.focus()
     // document.execCommand('selectAll', false, null)
-    document.querySelector('input').focus()
+    // document.querySelector('input').focus()
   }
 
   focusInput = react(
@@ -76,22 +83,29 @@ export class OrbitHeader extends React.Component {
             size={18}
             color={theme.base.color.alpha(0.2)}
           />
-          <input
-            value={orbitStore.query}
-            size={1.25}
-            $input
+          <HighlightedTextArea
+            width="100%"
+            fontWeight={300}
+            fontSize={22}
+            lineHeight="22px"
+            padding={10}
+            paddingLeft={26}
+            border="none"
+            display="block"
             background="transparent"
+            value={orbitStore.query}
+            highlight={words => {
+              console.log('highlight', words)
+              return /\w+/g
+            }}
+            color={theme.base.color.alpha(0.8)}
             onChange={orbitStore.onChangeQuery}
             onFocus={orbitStore.onFocus}
             onBlur={orbitStore.onBlur}
             onKeyDown={this.handleKeyDown}
-            ref={headerStore.inputRef}
+            getRef={ref => (headerStore.inputRef = ref)}
             onClick={headerStore.onClickInput}
-            css={{
-              color: theme.base.color.alpha(0.8),
-            }}
           />
-          <inputLn />
         </title>
         <after if={after}>{after}</after>
         <ControlButton
@@ -120,8 +134,8 @@ export class OrbitHeader extends React.Component {
     orbitHeader: {
       position: 'relative',
       flexFlow: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: 'stretch',
+      justifyContent: 'stretch',
       padding: [5, 16],
       transition: 'all ease-in 300ms',
       zIndex: 4,
@@ -130,29 +144,9 @@ export class OrbitHeader extends React.Component {
       alignItems: 'center',
       flexFlow: 'row',
     },
-    inputLn: {
-      width: 10,
-      height: 2,
-      flex: 1,
-      opacity: 1,
-      transform: {
-        x: 0,
-      },
-      transition: 'all ease-in 300ms',
-    },
     searchIcon: {
       paddingLeft: 12,
-      margin: 0,
-    },
-    input: {
-      width: '100%',
-      background: 'transparent',
-      fontWeight: 300,
-      fontSize: 22,
-      padding: 10,
-      paddingLeft: 26,
-      border: 'none',
-      display: 'block',
+      margin: ['auto', 0],
     },
     pinnedIcon: {
       position: 'relative',
@@ -176,8 +170,8 @@ export class OrbitHeader extends React.Component {
     title: {
       flexFlow: 'row',
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'stretch',
+      alignItems: 'stretch',
     },
   }
 

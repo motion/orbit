@@ -34,7 +34,6 @@ export const psuedoShorthands = {
   selection: '&:selection',
 }
 
-
 export const isGlossyFirstArg = arg => {
   if (!arg) {
     return false
@@ -157,27 +156,58 @@ export default class Gloss {
     }
   }
 
-  private getAllThemes = View => props => {
-    let themes = []
+  private getAllThemes = View => {
+    // skipParentStyles =
+    //    store parent style keys we need to skip when applying themes
+    //    this is because themes generate inline styles that would clobber static classnames
+    //    but we can easily look up and see which static styles are above
+    //    this cache here stores the keys to skip at each level in an array of objects for perf
+    let skipParentStyleKeys = []
+    let views = []
     let curView = View
     while (curView) {
-      if (curView.theme) {
-        themes.push(curView.theme)
+      // FIND SKIPS
+      const skipsForView = {}
+      const skipIndex = skipParentStyleKeys.length
+      for (const key of Object.keys(curView.style)) {
+        skipsForView[key] = true
       }
+      // merge in the previous skips as they should cumulative as we go down
+      if (skipIndex > 0) {
+        const previousSkips = skipParentStyleKeys[skipIndex - 1]
+        for (const key of Object.keys(previousSkips)) {
+          skipsForView[key] = true
+        }
+      }
+      // END FIND SKIPS
+      skipParentStyleKeys.push(skipsForView)
+      views.push(curView)
       curView = curView.child
     }
-    let styles = {}
-    // apply bottom to top
-    for (let i = themes.length - 1; i >= 0; i--) {
-      const curTheme = themes[i](props)
-      // fast merge
-      for (const key of Object.keys(curTheme)) {
-        // do nice pseudo key transforms here so we merge them properly down the chain
-        let realKey = psuedoShorthands[key] || key
-        styles[realKey] = curTheme[key]
+    return props => {
+      let styles = {}
+      // apply bottom to top
+      for (let i = views.length - 1; i >= 0; i--) {
+        // skip empty theme views
+        if (!views[i].theme) {
+          continue
+        }
+        // fast merge
+        const curTheme = views[i].theme(props)
+        for (const key of Object.keys(curTheme)) {
+          // skip parent static styles!
+          if (i > 0) {
+            if (skipParentStyleKeys[i - 1][key]) {
+              continue
+            }
+          }
+          // do nice pseudo key transforms here so we merge them properly down the chain
+          let realKey = psuedoShorthands[key] || key
+          styles[realKey] = curTheme[key]
+        }
       }
+      return styles
     }
-    return styles
   }
 
   private getAllStyles = View => {
@@ -216,7 +246,8 @@ export default class Gloss {
       // attach theme/styles on first use
       if (!hasAttachedStyles) {
         try {
-          this.attachStyles(`${id}`, { [name]: this.getAllStyles(View) })
+          View.compiledStyles = this.getAllStyles(View)
+          this.attachStyles(`${id}`, { [name]: View.compiledStyles })
         } catch (err) {
           console.log('error attaching styles', target, name, styles)
           console.log('err', err)

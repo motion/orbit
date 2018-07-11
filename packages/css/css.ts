@@ -54,7 +54,7 @@ const BORDER_KEY = {
   borderTop: true,
 }
 
-const PSEUDO = {
+export const psuedoKeys = {
   // pseudoclasses
   hover: '&:hover',
   active: '&:active',
@@ -256,11 +256,11 @@ export default function motionStyle(options: Object = {}) {
         firstChar === '@' ||
         key === 'from' ||
         key === 'to' ||
-        PSEUDO[key]
+        psuedoKeys[key]
       ) {
         // nice pseudos
-        if (PSEUDO[key]) {
-          finalKey = PSEUDO[key]
+        if (psuedoKeys[key]) {
+          finalKey = psuedoKeys[key]
         }
         // recurse into psuedo or media query
         toReturn[finalKey] = processStyles(value, opts)

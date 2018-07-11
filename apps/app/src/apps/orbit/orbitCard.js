@@ -242,9 +242,7 @@ export class OrbitCard extends React.Component {
                 ellipse={2}
                 alpha={isSelected ? 1 : 0.8}
                 fontWeight={500}
-                css={{
-                  maxWidth: 'calc(100% - 30px)',
-                }}
+                maxWidth='calc(100% - 30px)'
                 {...tiny && tinyProps.titleProps}
                 {...titleProps}
               >
@@ -257,7 +255,7 @@ export class OrbitCard extends React.Component {
               <UI.Text
                 if={typeof subtitle === 'string'}
                 ellipse={1}
-                css={{ maxWidth: 'calc(100% - 40px)' }}
+                maxWidth='calc(100% - 40px)'
               >
                 {subtitle}
               </UI.Text>

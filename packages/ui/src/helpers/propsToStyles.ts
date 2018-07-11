@@ -1,26 +1,20 @@
-const valFor = state => (props, key) =>
-  state === 'base'
-    ? props[key]
-    : (props[state] && props[state][key]) || props.theme[state][key]
+import toColor from 'color'
+import { psuedoKeys } from '@mcro/gloss'
 
-const states = {
-  // pseudoclasses
-  hover: '&:hover',
-  active: '&:active',
-  checked: '&:checked',
-  focus: '&:focus',
-  enabled: '&:enabled',
-  disabled: '&:disabled',
-  empty: '&:empty',
-  target: '&:target',
-  required: '&:required',
-  valid: '&:valid',
-  invalid: '&:invalid',
-  // psuedoelements
-  before: '&:before',
-  after: '&:after',
-  placeholder: '&:placeholder',
-  selection: '&:selection',
+const valFor = state => (props, key) => {
+  let value = state === 'base'
+    ? props[key]
+    : (props[state] && props[state][key])
+  if (typeof value === 'undefined') {
+    value = props.theme[state][key]
+  }
+  // alpha effects on colors
+  if (key === 'color') {
+    if (typeof props.alpha === 'number' && value !== 'inherit') {
+      value = toColor(value).alpha(props.alpha)
+    }
+  }
+  return value
 }
 
 const cssAttributeNames = document.body.style
@@ -29,7 +23,7 @@ const validCSSAttr = key => typeof cssAttributeNames[key] === 'string'
 // resolves props into styles for valid css
 // supports hover={{ background: 'green' }} and other states as well
 
-export const propStyles = props => {
+export const propsToStyles = props => {
   const styles = {}
   const getVal = valFor('base')
   // loop over props turning into styles
@@ -39,7 +33,7 @@ export const propStyles = props => {
       continue
     }
     // :hover, etc
-    const stateKey = states[key]
+    const stateKey = psuedoKeys[key]
     if (stateKey) {
       styles[stateKey] = {}
       const getStateVal = valFor(key)

@@ -1,42 +1,52 @@
 import * as React from 'react'
-import { view, on, attachTheme } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import keycode from 'keycode'
-import $ from 'color'
-import * as _ from 'lodash'
 import { InlineBlock } from './blocks/InlineBlock'
+import { Inline } from './blocks/Inline'
 import { highlightText } from './helpers/highlightText'
 import { Color } from '@mcro/css'
+import { propsToTextSize } from './helpers/propsToTextSize'
 
-const getTextProperties = props => {
-  let fontSizeNum
-  let lineHeightNum
-  let fontSize = props.fontSize
-  if (typeof fontSize === 'undefined' && props.size) {
-    fontSize = props.size * 14
-  }
-  let lineHeight = props.lineHeight
-  if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
-    lineHeight = Math.log(fontSize * 500) * 2.5 + fontSize / 1.4 - 8
-    if (props.sizeLineHeight) {
-      lineHeight = lineHeight * props.sizeLineHeight
-    }
-  }
-  // round
-  if (typeof fontSize === 'number') {
-    fontSizeNum = Math.round(fontSize * 10) / 10
-  }
-  if (typeof lineHeight === 'number') {
-    lineHeightNum = Math.round(lineHeight * 10) / 10
-  }
-  if (typeof props.sizeMethod === 'undefined') {
-    lineHeight = `${lineHeightNum}px`
-    fontSize = `${fontSizeNum}px`
-  } else if (props.sizeMethod === 'vw') {
-    lineHeight = `${lineHeightNum / 12}vw`
-    fontSize = `${fontSizeNum / 12}vw`
-  }
-  return { fontSize, fontSizeNum, lineHeight, lineHeightNum }
-}
+const TextBlock = view(InlineBlock, {
+  cursor: 'pointer',
+  userSelect: 'none',
+  wordBreak: 'break-word',
+  position: 'relative',
+  maxWidth: '100%',
+})
+
+TextBlock.theme = ({ selectable, oneLineEllipse }) => ({
+  ...(selectable && {
+    userSelect: 'auto',
+    cursor: 'inherit',
+  }),
+  ...(oneLineEllipse && {
+    display: 'flex',
+    overflow: 'hidden',
+  }),
+})
+
+const TextEllipse = view(Inline, {
+  margin: ['auto', 0],
+  maxWidth: '100%',
+  wordBreak: 'inherit',
+})
+
+TextEllipse.theme = ({ ellipse }) => ({
+  ...(ellipse > 1 && {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    width: '100%',
+  }),
+  ...((ellipse === 1 || ellipse === true) && {
+    display: 'block',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+  }),
+})
 
 export type TextProps = {
   editable?: boolean
@@ -58,15 +68,12 @@ export type TextProps = {
   onClick?: Function
   onMouseEnter?: Function
   onMouseLeave?: Function
-  onFocus?: Function
-  onBlur?: Function
   style?: Object
   placeholder?: string
   lineHeight?: number
   sizeLineHeight?: number
   className?: number
   measure?: boolean
-  debug?: boolean
   onMeasure?: Function
   sizeMethod?: string
   highlight?: Object
@@ -74,8 +81,6 @@ export type TextProps = {
   theme?: Object
 }
 
-// click away from edit clears it
-@attachTheme
 @view.ui
 export class Text extends React.Component<TextProps> {
   selected = false
@@ -84,7 +89,7 @@ export class Text extends React.Component<TextProps> {
 
   static defaultProps = {
     // not a p because its nice to nest it
-    tagName: 'text',
+    tagName: 'div',
     size: 1,
   }
 
@@ -97,12 +102,8 @@ export class Text extends React.Component<TextProps> {
     return this.props.ellipse > 1 || this.props.ellipse === true
   }
 
-  constructor(a, b) {
-    super(a, b)
-    this.handleProps(this.props)
-  }
-
   componentDidMount() {
+    this.handleProps(this.props)
     // this fixes bug because clamp is hacky af and needs to re-measure to trigger
     this.measure()
   }
@@ -152,25 +153,6 @@ export class Text extends React.Component<TextProps> {
         }),
       )
     }
-    // setup reaction for editing if necessary
-    // if (!this.editableReaction && props.editable) {
-    //   this.editableReaction = this.react(
-    //     () => this.editable,
-    //     editable => {
-    //       if (this.clickaway) {
-    //         this.clickaway()
-    //       }
-    //       if (editable) {
-    //         // this.clickaway = on(this, window, 'click', (event: Event) => {
-    //         //   if (this.props.onFinishEdit) {
-    //         //     this.props.onFinishEdit(this.value)
-    //         //   }
-    //         // })
-    //       }
-    //     },
-    //     true,
-    //   )
-    // }
     // set props
     if (typeof props.editing !== 'undefined') {
       if (!props.editing && this.selected) {
@@ -192,7 +174,7 @@ export class Text extends React.Component<TextProps> {
     return (this.node && this.node.innerText) || ''
   }
 
-  handleKeydown(event) {
+  handleKeydown = event => {
     const { onFinishEdit, onCancelEdit, editable, onKeyDown } = this.props
     if (editable) {
       const code = keycode(event)
@@ -210,7 +192,7 @@ export class Text extends React.Component<TextProps> {
     }
   }
 
-  getRef(node) {
+  getRef = node => {
     if (node) {
       this.node = node
       if (this.props.getRef) {
@@ -223,37 +205,20 @@ export class Text extends React.Component<TextProps> {
     const {
       editable,
       autoselect,
-      onFinishEdit,
-      onCancelEdit,
       selectable,
       ellipse,
       children,
-      fontWeight,
       tagName,
       getRef,
       onKeyDown,
-      fontSize,
       color,
-      opacity,
-      size,
-      onBlur,
-      style,
-      placeholder,
-      lineHeight,
-      sizeLineHeight,
-      className,
       measure,
-      debug,
-      onMeasure,
-      sizeMethod,
       highlight,
-      wordBreak,
-      theme,
       ...props
     } = this.props
     const { multiLineEllipse } = this
     const { doClamp, textHeight } = this.state
-    const text = getTextProperties(this.props)
+    const text = propsToTextSize(this.props)
     const numLinesToShow =
       doClamp && Math.floor(textHeight / text.lineHeightNum)
     const maxHeight =
@@ -261,7 +226,7 @@ export class Text extends React.Component<TextProps> {
         ? `${ellipse * text.lineHeightNum}px`
         : 'auto'
     const oneLineEllipse = ellipse === 1
-    let ellipseProps
+    let ellipseProps = {}
     if (highlight) {
       if (typeof children === 'string') {
         const __html = highlightText({
@@ -277,115 +242,39 @@ export class Text extends React.Component<TextProps> {
         console.warn('Expected chidlren to be string for highlighting')
       }
     }
+    if (multiLineEllipse) {
+      ellipseProps = {
+        ...ellipseProps,
+        WebkitLineClamp: ellipse === true ? numLinesToShow || 10000 : ellipse,
+        maxHeight,
+        width: doClamp ? '100%' : '100.001%',
+        opacity: doClamp ? 1 : 0,
+      }
+    }
     const showEllipse = highlight || ellipse
     return (
-      <InlineBlock
-        $text
-        className={className}
-        tagName={tagName}
+      <TextBlock
         contentEditable={editable}
-        $selectable={selectable}
+        selectable={selectable}
+        oneLineEllipse={oneLineEllipse}
         suppressContentEditableWarning={editable}
-        onKeyDown={e => this.handleKeydown(e)}
-        ref={n => this.getRef(n)}
-        style={style}
-        $oneLineEllipse={oneLineEllipse}
+        onKeyDown={this.handleKeydown}
+        ref={this.getRef}
+        color={color}
         {...props}
       >
         {!showEllipse && children}
         {showEllipse && (
-          <span
-            $ellipseLines={multiLineEllipse}
-            $ellipseSingle={oneLineEllipse}
-            css={
-              multiLineEllipse
-                ? {
-                    WebkitLineClamp:
-                      ellipse === true ? numLinesToShow || 10000 : ellipse,
-                    maxHeight,
-                    width: doClamp ? '100%' : '100.001%',
-                    opacity: doClamp ? 1 : 0,
-                  }
-                : null
-            }
+          <TextEllipse
+            ellipseLines={multiLineEllipse}
+            ellipseSingle={oneLineEllipse}
+            color={color}
             {...ellipseProps}
           >
-            {!ellipseProps ? children : null}
-          </span>
+            {!highlight ? children : null}
+          </TextEllipse>
         )}
-      </InlineBlock>
+      </TextBlock>
     )
-  }
-
-  static style = {
-    text: {
-      display: 'inline-block',
-      userSelect: 'none',
-      cursor: 'default',
-      wordBreak: 'break-word',
-      position: 'relative',
-      maxWidth: '100%',
-    },
-    oneLineEllipse: {
-      display: 'flex',
-      overflow: 'hidden',
-    },
-    ellipseLines: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      display: '-webkit-box',
-      WebkitBoxOrient: 'vertical',
-      width: '100%',
-    },
-    ellipseSingle: {
-      display: 'block',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-    },
-    span: {
-      margin: ['auto', 0],
-      maxWidth: '100%',
-    },
-    selectable: {
-      userSelect: 'auto',
-      cursor: 'inherit',
-    },
-  }
-
-  static theme = ({ theme, ...props }) => {
-    const { fontSize, lineHeight } = getTextProperties(props)
-    let color = props.color || theme.base.color
-    // allow alpha adjustments
-    if (typeof props.alpha === 'number' && color !== 'inherit') {
-      color = $(color).alpha(props.alpha)
-    }
-    return {
-      text: {
-        color,
-        fontSize,
-        lineHeight,
-        textTransform: props.textTransform,
-        textShadow: props.textShadow,
-        display: props.display,
-        fontWeight: props.fontWeight || props.weight,
-        opacity: props.opacity,
-        margin: props.margin,
-        marginBottom: props.marginBottom,
-        marginLeft: props.marginLeft,
-        marginRight: props.marginRight,
-        marginTop: props.marginTop,
-        padding: props.padding,
-        paddingBottom: props.paddingBottom,
-        paddingLeft: props.paddingLeft,
-        paddingRight: props.paddingRight,
-        paddingTop: props.paddingTop,
-        wordBreak: props.wordBreak,
-      },
-      ellipse: {
-        color,
-        wordBreak: 'inherit',
-      },
-    }
   }
 }

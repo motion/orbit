@@ -12,7 +12,28 @@ export { Theme } from './theme/Theme'
 export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
-export { cssNameMap } from '@mcro/css'
+export { cssNameMap, psuedoKeys } from '@mcro/css'
+
+export const psuedoShorthands = {
+  // pseudoclasses
+  hover: '&:hover',
+  active: '&:active',
+  checked: '&:checked',
+  focus: '&:focus',
+  enabled: '&:enabled',
+  disabled: '&:disabled',
+  empty: '&:empty',
+  target: '&:target',
+  required: '&:required',
+  valid: '&:valid',
+  invalid: '&:invalid',
+  // psuedoelements
+  before: '&:before',
+  after: '&:after',
+  placeholder: '&:placeholder',
+  selection: '&:selection',
+}
+
 
 export const isGlossyFirstArg = arg => {
   if (!arg) {
@@ -136,7 +157,30 @@ export default class Gloss {
     }
   }
 
-  createSimpleGlossComponent = (target, styles) => {
+  private getAllThemes = View => props => {
+    let themes = []
+    let curView = View
+    while (curView) {
+      if (curView.theme) {
+        themes.push(curView.theme)
+      }
+      curView = curView.child
+    }
+    let styles = {}
+    // apply bottom to top
+    for (let i = themes.length - 1; i >= 0; i--) {
+      const curTheme = themes[i](props)
+      // fast merge
+      for (const key of Object.keys(curTheme)) {
+        // do nice pseudo key transforms here so we merge them properly down the chain
+        let realKey = psuedoShorthands[key] || key
+        styles[realKey] = curTheme[key]
+      }
+    }
+    return styles
+  }
+
+  private createSimpleGlossComponent = (target, styles) => {
     const id = uid()
     const elementCache = new WeakMap()
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
@@ -153,17 +197,8 @@ export default class Gloss {
       }
       // attach theme on first use
       // detect child or parent theme
-      const hasTheme = !!(View.theme || target.theme)
-      if (hasTheme && !themeUpdate) {
-        let getTheme = View.theme
-        // extend child theme if necessary
-        if (isParentComponent && target.theme) {
-          getTheme = props => ({
-            ...target.theme(props),
-            ...(View.theme ? View.theme(props) : null),
-          })
-        }
-        themeUpdate = this.createThemeManager(id, getTheme, name)
+      if (!themeUpdate) {
+        themeUpdate = this.createThemeManager(id, this.getAllThemes(View), name)
       }
       // update theme
       if (themeUpdate) {
@@ -199,6 +234,9 @@ export default class Gloss {
     // TODO: babel transform to auto attach name?
     View.displayName = name
     View.style = styles
+    if (isParentComponent) {
+      View.child = target
+    }
     View[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
     // forward ref
     return View

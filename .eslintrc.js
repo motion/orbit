@@ -15,7 +15,7 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     semi: ['error', 'never'],
     'no-console': 'off',
-    'no-unused-vars': 'error',
+    // 'no-unused-vars': 'error',
     // 'no-undef': 'off',
     'no-constant-condition': 'off',
     'react/jsx-uses-vars': 2,

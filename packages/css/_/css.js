@@ -37,7 +37,7 @@ const BORDER_KEY = {
     borderBottom: true,
     borderTop: true,
 };
-const PSEUDO = {
+exports.psuedoKeys = {
     hover: '&:hover',
     active: '&:active',
     checked: '&:checked',
@@ -204,9 +204,9 @@ function motionStyle(options = {}) {
                 firstChar === '@' ||
                 key === 'from' ||
                 key === 'to' ||
-                PSEUDO[key]) {
-                if (PSEUDO[key]) {
-                    finalKey = PSEUDO[key];
+                exports.psuedoKeys[key]) {
+                if (exports.psuedoKeys[key]) {
+                    finalKey = exports.psuedoKeys[key];
                 }
                 toReturn[finalKey] = processStyles(value, opts);
                 respond = true;

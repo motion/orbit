@@ -1,8 +1,6 @@
 import { view } from '@mcro/black'
-import { propStyles } from '../helpers/propStyles'
+import { View } from './View'
 
-export const InlineBlock = view({
+export const InlineBlock = view(View, {
   display: 'inline-block',
 })
-
-InlineBlock.theme = propStyles

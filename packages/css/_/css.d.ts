@@ -163,4 +163,21 @@ declare type Opts = {
     errorMessage?: string;
     snakeCase?: boolean;
 };
+export declare const psuedoKeys: {
+    hover: string;
+    active: string;
+    checked: string;
+    focus: string;
+    enabled: string;
+    disabled: string;
+    empty: string;
+    target: string;
+    required: string;
+    valid: string;
+    invalid: string;
+    before: string;
+    after: string;
+    placeholder: string;
+    selection: string;
+};
 export default function motionStyle(options?: Object): (styles: Object, opts?: Opts) => Object;

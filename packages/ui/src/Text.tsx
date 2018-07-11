@@ -22,7 +22,6 @@ TextBlock.theme = ({ selectable, oneLineEllipse, display }) => ({
     cursor: 'inherit',
   }),
   ...(oneLineEllipse && {
-    display: 'flex',
     overflow: 'hidden',
   }),
 })
@@ -215,7 +214,6 @@ export class Text extends React.Component<TextProps> {
       color,
       measure,
       highlight,
-      size,
       ...props
     } = this.props
     const { multiLineEllipse } = this

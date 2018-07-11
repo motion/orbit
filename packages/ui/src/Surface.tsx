@@ -393,7 +393,7 @@ export class Surface extends React.Component<SurfaceProps> {
   }
 
   static inlineStyle = {
-    display: 'flex-inline',
+    display: 'inline',
   }
 
   static dimmedStyle = {
@@ -684,8 +684,8 @@ export class Surface extends React.Component<SurfaceProps> {
       paddingLeft: props.paddingLeft,
       paddingRight: props.paddingRight,
       ...circularStyles,
-      '& > icon': props.hovered ? hoverIconStyle : iconStyle,
-      '&:hover > icon': hoverIconStyle,
+      '& > div > .icon': props.hovered ? hoverIconStyle : iconStyle,
+      '&:hover > div > .icon': hoverIconStyle,
       '&:hover': hoverStyle,
       ...(props.wrapElement && {
         '& > :focus': focusable && focusStyle,

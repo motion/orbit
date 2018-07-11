@@ -43,13 +43,13 @@ class SlackSettingStore {
 })
 @view
 export class SlackSetting extends React.Component {
-  render({ store, setting }) {
+  render({ store, setting, children }) {
     console.log('rendering slack')
     if (!setting) {
       return null
     }
-    return (
-      <UI.Col flex={1}>
+    return children({
+      content: <UI.Col flex={1}>
         <UI.Input
           marginBottom={10}
           sizeRadius
@@ -77,6 +77,6 @@ export class SlackSetting extends React.Component {
           />
         </UI.Col>
       </UI.Col>
-    )
+    })
   }
 }

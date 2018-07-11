@@ -36,10 +36,12 @@ const TabListItem = view({
   userSelect: 'none',
 })
 
-TabListItem.theme = ({ active }) => ({
-  backgroundColor: active ? 'rgb(249, 249, 249)' : '#edeef0',
-  '&:hover': {
-    backgroundColor: active ? 'rgb(249, 249, 249)' : colors.light05,
+TabListItem.theme = ({ theme, active }) => ({
+  color: active ? theme.active.color : theme.base.color,
+  backgroundColor: active ? theme.active.background : theme.base.background,
+  hover: {
+    color: active ? theme.active.color : theme.hover.color,
+    backgroundColor: active ? theme.active.background : theme.base.background,
   },
 })
 

@@ -161,7 +161,7 @@ export class GcalSetting extends React.Component {
     }, 100)
   }
 
-  render({ store }) {
+  render({ store, children }) {
     const Setting = CurrentUser.setting.google
     if (!Setting) {
       return <null>No google setting</null>
@@ -169,8 +169,8 @@ export class GcalSetting extends React.Component {
     const { calendars } = Setting.values
     const active = { background: 'rgba(0,0,0,0.15)' }
 
-    return (
-      <content>
+    return children({
+      content: <content>
         <UI.ListRow css={{ margin: [10, 0] }}>
           <UI.Button
             onClick={() => (store.active = 'calendars')}
@@ -200,7 +200,7 @@ export class GcalSetting extends React.Component {
         </UI.Form>
         <Things if={store.active === 'events'} things={store.events || []} />
       </content>
-    )
+    })
   }
 
   static style = {

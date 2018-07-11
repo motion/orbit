@@ -133,14 +133,14 @@ class Folder extends React.Component {
 })
 @view
 export class GdocsSetting extends React.Component {
-  render({ store }) {
+  render({ store, children }) {
     const loading = !store.folders
-    return (
-      <container>
+    return children({
+      content: <container>
         <loading if={loading}>loading</loading>
         <Folder if={!loading} folders={store.folders} files={store.files} />
       </container>
-    )
+    })
   }
 
   static style = {

@@ -149,17 +149,17 @@ class GithubStore {
 @view.provide({ githubStore: GithubStore })
 @view
 export class GithubSetting extends React.Component {
-  render({ githubStore: store }) {
-    return (
-      <container>
-        <UI.Tabs active={store.active} onActive={key => (store.active = key)}>
-          <UI.Tab key="repos" width="50%" label="Repos" />
-          <UI.Tab
-            key="issues"
-            width="50%"
-            label={`Issues (${store.issues ? store.issues.length : 0})`}
-          />
-        </UI.Tabs>
+  render({ githubStore: store, children }) {
+    return children({
+      subhead: <UI.Tabs active={store.active} onActive={key => (store.active = key)}>
+      <UI.Tab key="repos" width="50%" label="Repos" />
+      <UI.Tab
+        key="issues"
+        width="50%"
+        label={`Issues (${store.issues ? store.issues.length : 0})`}
+      />
+    </UI.Tabs>,
+      content: <container>
         <section if={store.active === 'repos'}>
           <section>
             <SearchableTable
@@ -197,7 +197,7 @@ export class GithubSetting extends React.Component {
           <Bits bits={store.section} />
         </section>
       </container>
-    )
+    })
   }
 
   static style = {

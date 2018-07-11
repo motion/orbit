@@ -3,7 +3,6 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../../orbit/orbitIcon'
 import { SubTitle } from '../../../../views'
-import { Tabs, Tab } from '@mcro/sonar'
 import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 
 class ConfluenceSettingStore {
@@ -15,10 +14,9 @@ class ConfluenceSettingStore {
 })
 @view
 export class ConfluenceSetting extends React.Component {
-  render({ store, setting }) {
-    console.log('confluencesetting', setting)
-    return (
-      <container>
+  render({ store, setting, children }) {
+    return children({
+      subhead: (
         <UI.Tabs
           $tabs
           active={store.active}
@@ -27,17 +25,21 @@ export class ConfluenceSetting extends React.Component {
           <UI.Tab key="general" width="50%" label="General" />
           <UI.Tab key="account" width="50%" label="Account" />
         </UI.Tabs>
-        <section if={store.active === 'general'}>
-          <inner $centered>
-            <SubTitle css={{ textAlign: 'center' }}>All good!</SubTitle>
-            <OrbitIcon icon="confluence" size={256} />
-          </inner>
-        </section>
-        <section if={store.active === 'account'}>
-          <AtlassianSettingLogin setting={setting} />
-        </section>
-      </container>
-    )
+      ),
+      content: (
+        <container>
+          <section if={store.active === 'general'}>
+            <inner $centered>
+              <SubTitle css={{ textAlign: 'center' }}>All good!</SubTitle>
+              <OrbitIcon icon="confluence" size={256} />
+            </inner>
+          </section>
+          <section if={store.active === 'account'}>
+            <AtlassianSettingLogin setting={setting} />
+          </section>
+        </container>
+      ),
+    })
   }
 
   static style = {

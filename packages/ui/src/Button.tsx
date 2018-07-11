@@ -101,4 +101,5 @@ export const Button = ({
   )
 }
 
+// @ts-ignore
 Button.acceptsHovered = true

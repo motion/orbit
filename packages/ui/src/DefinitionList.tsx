@@ -11,14 +11,14 @@ export class DefinitionList extends React.Component {
     return (
       <dl {...props}>
         {rows.map((item, i) => (
-          <row key={`${item}${i}`}>
+          <div $row key={`${item}${i}`}>
             <dt>{item}</dt>
             <dd>
               {typeof target[item] === 'object'
                 ? JSON.stringify(target[item])
                 : target[item]}
             </dd>
-          </row>
+          </div>
         ))}
       </dl>
     )

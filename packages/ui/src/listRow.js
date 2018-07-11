@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { Button } from './button'
 import { Surface } from './surface'
-import { UIContext } from './contexts'
+import { UIContext } from './helpers/contexts'
 
 // type Props = {
 //   active?: number,

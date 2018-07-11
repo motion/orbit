@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
-import { ListItem } from './listItem'
+import { ListItem } from './ListItem'
 // import { List as VirtualList } from 'react-virtualized'
 import { parentSize } from './helpers/parentSize'
-import { Separator } from './separator'
 import { isArrayLike } from 'mobx'
 // import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 import { throttle, debounce } from 'lodash'
+import { ItemProps } from './ListItem'
 
 const idFn = _ => _
 const SCROLL_BAR_WIDTH = 16
@@ -21,52 +21,53 @@ ListContain.theme = props => ({
   marginRight: props.hideScrollBar ? -SCROLL_BAR_WIDTH : 0,
 })
 
-// export type Props = {
-//   defaultSelected?: number,
-//   children?: React.Element<any>,
-//   controlled?: boolean,
-//   flex?: boolean | number,
-//   getItem?: Function,
-//   getRef?: Function,
-//   height?: number,
-//   horizontal?: boolean,
-//   itemProps?: Object,
-//   items?: Array<ItemProps | React.Element<any>>,
-//   onHighlight: Function,
-//   onItemMount?: Function,
-//   onSelect: Function,
-//   parentSize?: Object,
-//   rowHeight?: number,
-//   scrollable?: boolean,
-//   segmented?: boolean,
-//   size?: number,
-//   style?: Object,
-//   width?: number,
-//   groupBy?: string,
-//   selected?: number,
-//   separatorHeight: number,
-//   isSelected?: Function,
-//   virtualized?: { rowHeight: number | ((a: number) => number) },
-//   // force update children
-//   updateChildren?: boolean,
-//   captureClickEvents?: boolean,
-//   separatorProps?: Object,
-//   // row to scroll to after render
-//   // only tries if different than last scrolled to row
-//   scrollToRow?: number,
-//   // passes react-virtualized onScroll to here
-//   onScroll?: Function,
-// }
+export type ListProps = {
+  hideScrollBar?: boolean
+  defaultSelected?: number
+  children?: React.ReactNode
+  controlled?: boolean
+  flex?: boolean | number
+  getItem?: Function
+  getRef?: Function
+  height?: number
+  horizontal?: boolean
+  itemProps?: Object
+  items?: Array<ItemProps | React.ReactNode>
+  onHighlight: Function
+  onItemMount?: Function
+  onSelect: Function
+  parentSize?: Object
+  rowHeight?: number
+  scrollable?: boolean
+  segmented?: boolean
+  size?: number
+  style?: Object
+  width?: number
+  groupBy?: string
+  selected?: number
+  separatorHeight: number
+  isSelected?: Function
+  virtualized?: { rowHeight: number | ((a: number) => number) }
+  // force update children
+  updateChildren?: boolean
+  captureClickEvents?: boolean
+  separatorProps?: Object
+  // row to scroll to after render
+  // only tries if different than last scrolled to row
+  scrollToRow?: number
+  // passes react-virtualized onScroll to here
+  onScroll?: Function
+}
 
-// type VirtualItemProps = {
-//   index: number,
-//   key: string,
-//   style: Object,
-//   parent: any,
-// }
+type VirtualItemProps = {
+  index: number
+  key: string
+  style: Object
+  parent: any
+}
 
 @view.ui
-class ListUI extends React.PureComponent {
+class ListUI extends React.PureComponent<ListProps> {
   static Item = ListItem
 
   static defaultProps = {
@@ -448,8 +449,9 @@ class ListUI extends React.PureComponent {
 
       for (const { index, name } of groups) {
         let child = extraProps => (
-          <Separator
+          <div
             css={{
+              borderBottom: [1, '#000'],
               paddingTop: index === 0 ? 10 : 0,
             }}
             key={name}
@@ -457,7 +459,7 @@ class ListUI extends React.PureComponent {
             {...extraProps}
           >
             {name}
-          </Separator>
+          </div>
         )
         if (!virtualized) {
           child = child()
@@ -504,10 +506,10 @@ class ListUI extends React.PureComponent {
       parentSize,
       scrollable,
       style,
-      attach,
       horizontal,
       hideScrollBar,
       onScroll,
+      ...props
     } = this.props
     if (virtualized && !parentSize) {
       return null
@@ -533,7 +535,7 @@ class ListUI extends React.PureComponent {
           overflowY: scrollable ? 'scroll' : 'auto',
           ...style,
         }}
-        {...attach}
+        {...props}
       >
         <VirtualList
           if={virtualized}
@@ -551,9 +553,9 @@ class ListUI extends React.PureComponent {
           onScroll={onScroll}
           {...virtualized}
         />
-        <listinner css={{ height: 'auto' }} if={!virtualized}>
+        <div css={{ height: 'auto' }} if={!virtualized}>
           {children}
-        </listinner>
+        </div>
       </ListContain>
     )
   }

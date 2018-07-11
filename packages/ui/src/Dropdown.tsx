@@ -1,44 +1,46 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { List } from './list'
 import { Button } from './button'
 import { Popover } from './popover'
 import { Arrow } from './arrow'
+import { Color } from '@mcro/css'
 
-// export type Props = {
-//   children: React$Element<any> | string,
-//   onChange?: Function,
-//   color?: Color,
-//   width?: number,
-//   items?: Array<string>,
-//   popoverProps?: Object,
-//   noWrap?: boolean,
-// }
+type Props = {
+  children: any
+  onChange?: Function
+  color?: Color
+  width?: number
+  items?: Array<string>
+  popoverProps?: Object
+  noWrap?: boolean
+  buttonProps?: Object
+}
 
 @view.ui
-export class Dropdown extends React.Component {
+export class Dropdown extends React.Component<Props> {
   static defaultProps = {
     width: 100,
   }
 
-  render({
-    children,
-    width,
-    items,
-    popoverProps,
-    buttonProps,
-    noWrap,
-    ...props
-  }) {
+  render() {
+    const {
+      children,
+      width,
+      items,
+      popoverProps,
+      buttonProps,
+      noWrap,
+      ...props
+    } = this.props
     const arrow = (
-      <icon $arrow>
+      <div $icon $arrow>
         <Arrow color="#000" size={8} />
-      </icon>
+      </div>
     )
 
     return (
-      <dropdown>
+      <div>
         <Popover
           openOnClick
           openOnHover
@@ -72,7 +74,7 @@ export class Dropdown extends React.Component {
             {...props}
           />
         </Popover>
-      </dropdown>
+      </div>
     )
   }
 

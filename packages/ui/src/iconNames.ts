@@ -1,4 +1,4 @@
-export default [
+export const iconNames = [
   'ui-1_analytics-88',
   'ui-1_analytics-89',
   'ui-1_attach-86',

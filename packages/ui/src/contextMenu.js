@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, on } from '@mcro/black'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
-import { List } from './list'
+import { List } from './List'
 import { Popover } from './popover'
 
 @view.ui

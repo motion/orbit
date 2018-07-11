@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import { Popover } from './popover'
-import iconNames from './iconNames'
+import { iconNames } from './iconNames'
 import fuzzy from 'fuzzy'
 
 const widthPadding = x => {

@@ -9,7 +9,7 @@ import { view } from '@mcro/black'
 import { Col } from './blocks/col'
 import { Row } from './blocks/row'
 import { Orderable } from './Orderable'
-import { colors } from './colors'
+import { colors } from './helpers/colors'
 import { Tab } from './Tab'
 
 const TabContainer = view(Col, {

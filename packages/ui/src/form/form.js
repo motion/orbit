@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { object } from 'prop-types'
 import { Surface } from '../surface'
-import { UIContext } from '../contexts'
+import { UIContext } from '../helpers/contexts'
 
 const resolveFormValues = obj =>
   Object.keys(obj).reduce(

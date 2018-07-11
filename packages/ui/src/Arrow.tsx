@@ -1,14 +1,18 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import { Col } from './blocks/col'
+import { Color } from '@mcro/css'
 
-// export type Props = {
-//   size: number,
-//   towards: 'top' | 'right' | 'bottom' | 'left',
-//   theme?: string | Object,
-//   boxShadow?: any,
-//   background?: Color,
-// }
+type Props = {
+  size: number
+  color?: Color
+  towards?: 'top' | 'right' | 'bottom' | 'left'
+  theme?: string | Object
+  boxShadow?: any
+  background?: Color
+  opacity?: number
+  border?: Array<any> | string
+}
 
 // why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
 const ArrowOuter = view({
@@ -33,7 +37,7 @@ export const Arrow = attachTheme(
     background,
     theme,
     ...props
-  }) => {
+  }: Props) => {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
     const transform = {

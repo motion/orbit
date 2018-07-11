@@ -1,18 +1,22 @@
 import * as React from 'react'
-import { Surface } from './surface'
+import { Surface } from './Surface'
 
 const LINE_HEIGHT = 30
 
-// type Props = {
-//   size: number,
-//   sizeHeight?: boolean | number,
-//   sizeFont?: boolean | number,
-//   sizePadding?: boolean | number,
-//   sizeMargin?: boolean | number,
-//   sizeRadius?: boolean | number,
-// }
+type SizedSurfaceProps = {
+  size: boolean | number
+  sizeHeight?: boolean | number
+  sizeFont?: boolean | number
+  sizePadding?: boolean | number
+  sizeMargin?: boolean | number
+  sizeRadius?: boolean | number
+  sizeIcon?: boolean | number
+  height?: number
+  inline?: boolean
+  wrapElement?: boolean
+}
 
-export function SizedSurface(props) {
+export function SizedSurface(props: SizedSurfaceProps) {
   const {
     sizeHeight,
     sizeMargin,
@@ -34,7 +38,7 @@ export function SizedSurface(props) {
   if (props.inline) {
     height = height - 4
   }
-  const pass = {}
+  const pass = {} as any
   if (sizeHeight) {
     pass.height = height
   }

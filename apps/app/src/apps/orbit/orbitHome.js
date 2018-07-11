@@ -86,7 +86,7 @@ class OrbitHomeStore {
         // limit due to slowness for now
         findType('confluence', 'document'),
         findType('jira', 'document'),
-        // findType('gmail', 'mail'),
+        findType('gmail', 'mail'),
         // findType('gmail', 'mail', 1),
         // findType('gdocs', 'document', 9),
         // findType('slack', 'conversation', 5),

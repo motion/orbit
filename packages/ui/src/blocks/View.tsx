@@ -4,11 +4,11 @@ import { propsToTextSize } from '../helpers/propsToTextSize'
 
 export const View = view({})
 
-View.theme = ({ fill, scrollable, debug, ...props }) => {
+View.theme = ({ fill, scrollable, ...props }) => {
   return {
-    height: fill ? '100%' : 'auto',
-    overflow: scrollable ? 'auto' : 'visible',
-    width: fill ? '100%' : 'auto',
+    height: fill ? '100%' : undefined,
+    overflow: scrollable ? undefined : 'visible',
+    width: fill ? '100%' : undefined,
     ...propsToStyles(props),
     ...propsToTextSize(props),
   }

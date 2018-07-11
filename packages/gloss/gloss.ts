@@ -180,12 +180,30 @@ export default class Gloss {
     return styles
   }
 
+  private getAllStyles = View => {
+    const styles = {}
+    let curView = View
+    while (curView) {
+      if (curView.style) {
+        for (const key of Object.keys(curView.style)) {
+          // dont overwrite as we go down
+          if (typeof styles[key] === 'undefined') {
+            styles[key] = curView.style[key]
+          }
+        }
+      }
+      curView = curView.child
+    }
+    return styles
+  }
+
   private createSimpleGlossComponent = (target, styles) => {
-    const id = uid()
     const elementCache = new WeakMap()
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+    const id = uid()
     let name = target.name || target
     let themeUpdate
+    let hasAttachedStyles = false
     let targetElement = isParentComponent ? target.displayName : target
     if (isParentComponent) {
       name = targetElement
@@ -195,7 +213,16 @@ export default class Gloss {
       if (elementCache.has(props)) {
         return elementCache.get(props)
       }
-      // attach theme on first use
+      // attach theme/styles on first use
+      if (!hasAttachedStyles) {
+        try {
+          this.attachStyles(`${id}`, { [name]: this.getAllStyles(View) })
+        } catch (err) {
+          console.log('error attaching styles', target, name, styles)
+          console.log('err', err)
+        }
+        hasAttachedStyles = true
+      }
       // detect child or parent theme
       if (!themeUpdate) {
         themeUpdate = this.createThemeManager(id, this.getAllThemes(View), name)
@@ -217,20 +244,6 @@ export default class Gloss {
     const View = React.forwardRef((props, ref) =>
       React.createElement(InnerView, { ...props, forwardRef: ref }),
     )
-    try {
-      let finalStyles = styles
-      if (isParentComponent) {
-        // extend child styles
-        finalStyles = {
-          ...target.style,
-          ...styles,
-        }
-      }
-      this.attachStyles(`${id}`, { [name]: finalStyles })
-    } catch (err) {
-      console.log('error attaching styles', target, name, styles)
-      console.log('err', err)
-    }
     // TODO: babel transform to auto attach name?
     View.displayName = name
     View.style = styles
@@ -242,7 +255,7 @@ export default class Gloss {
     return View
   }
 
-  createThemeManager = (uid, getTheme, forKey?: string) => {
+  private createThemeManager = (uid, getTheme, forKey?: string) => {
     const activeThemeKey = {}
     const cssProcessor = this.css
     const selectors = {}
@@ -286,7 +299,7 @@ export default class Gloss {
   }
 
   // runs niceStyleSheet on non-function styles
-  attachStyles = (
+  private attachStyles = (
     childKey?: string,
     styles?: Object,
     force: boolean = false,

@@ -125,7 +125,7 @@ export class HighlightedTextArea extends React.Component<Props> {
       ...styleProps
     } = this.props
     return (
-      <TextAreaOuter>
+      <TextAreaOuter debug>
         <Block
           {...styleProps}
           ref={this.backdrop}

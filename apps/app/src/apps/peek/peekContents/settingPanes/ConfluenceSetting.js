@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../../orbit/orbitIcon'
 import { SubTitle } from '../../../../views'
 import { Tabs, Tab } from '@mcro/sonar'
@@ -18,14 +19,14 @@ export class ConfluenceSetting extends React.Component {
     console.log('confluencesetting', setting)
     return (
       <container>
-        <Tabs
+        <UI.Tabs
           $tabs
           active={store.active}
           onActive={key => (store.active = key)}
         >
-          <Tab key="general" width="50%" label="General" />
-          <Tab key="account" width="50%" label="Account" />
-        </Tabs>
+          <UI.Tab key="general" width="50%" label="General" />
+          <UI.Tab key="account" width="50%" label="Account" />
+        </UI.Tabs>
         <section if={store.active === 'general'}>
           <inner $centered>
             <SubTitle css={{ textAlign: 'center' }}>All good!</SubTitle>

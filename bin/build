@@ -22,13 +22,13 @@ fi
 # this runs in sub-directories
 
 function build-prod() {
-  BABEL_ENV=production babel src --out-dir dist -s true ${@:1}
+  BABEL_ENV=production babel src  --extensions '.js,.ts,.tsx' --out-dir dist -s true ${@:1}
 }
 function build-dev() {
-  babel src --out-dir lib -s true ${@:1}
+  babel src  --extensions '.js,.ts,.tsx' --out-dir lib -s true ${@:1}
 }
 function build-es6() {
-  BABEL_ENV=es6 babel src --out-dir es6 -s true ${@:1}
+  BABEL_ENV=es6 babel src  --extensions '.js,.ts,.tsx' --out-dir es6 -s true ${@:1}
 }
 
 MODES="$1"

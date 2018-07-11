@@ -19,7 +19,10 @@ export * from './blocks/inline'
 export * from './blocks/inlineBlock'
 export * from './blocks/row'
 
-// base
+// components
+export * from './Tab'
+export * from './Tabs'
+export * from './Orderable'
 export * from './image'
 export * from './arrow'
 export * from './badge'

@@ -5,56 +5,52 @@
  * @format
  */
 
-import FlexColumn from './FlexColumn'
-import styled from '../styled/index'
-import Orderable from './Orderable'
-import FlexRow from './FlexRow'
+import { view } from '@mcro/black'
+import { Col } from './blocks/col'
+import { Row } from './blocks/row'
+import { Orderable } from './Orderable'
 import { colors } from './colors'
-import Tab from './Tab'
+import { Tab } from './Tab'
 
-const TabContainer = FlexColumn.extends({
+const TabContainer = view(Col, {
   height: 'auto',
 })
 
-const TabList = FlexRow.extends({
+const TabList = view(Row, {
   alignItems: 'stretch',
 })
 
-const TabListItem = styled.view(
-  {
-    backgroundColor: props => (props.active ? 'rgb(249, 249, 249)' : '#edeef0'),
-    borderBottom: '1px solid #dddfe2',
-    color: colors.dark80,
-    flex: 1,
-    flexFlow: 'row',
-    fontSize: 13,
-    lineHeight: '28px',
-    overflow: 'hidden',
-    padding: '0 10px',
-    position: 'relative',
-    textAlign: 'center',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    userSelect: 'none',
+const TabListItem = view({
+  borderBottom: '1px solid #dddfe2',
+  color: colors.dark80,
+  flex: 1,
+  flexFlow: 'row',
+  fontSize: 13,
+  lineHeight: '28px',
+  overflow: 'hidden',
+  padding: '0 10px',
+  position: 'relative',
+  textAlign: 'center',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  userSelect: 'none',
+})
 
-    '&:hover': {
-      backgroundColor: props =>
-        props.active ? 'rgb(249, 249, 249)' : colors.light05,
-    },
+TabListItem.theme = ({ active }) => ({
+  backgroundColor: active ? 'rgb(249, 249, 249)' : '#edeef0',
+  '&:hover': {
+    backgroundColor: active ? 'rgb(249, 249, 249)' : colors.light05,
   },
-  {
-    ignoreAttributes: ['active'],
-  },
-)
+})
 
-const TabListAddItem = TabListItem.extends({
+const TabListAddItem = view(TabListItem, {
   borderRight: 'none',
   flex: 0,
   flexGrow: 0,
   fontWeight: 'bold',
 })
 
-const CloseButton = styled.view({
+const CloseButton = view({
   color: '#000',
   float: 'right',
   fontSize: 10,
@@ -66,18 +62,17 @@ const CloseButton = styled.view({
   height: 16,
   lineHeight: '16px',
   borderRadius: '50%',
-
   '&:hover': {
     backgroundColor: colors.cherry,
     color: '#fff',
   },
 })
 
-const OrderableContainer = styled.view({
+const OrderableContainer = view({
   display: 'inline-block',
 })
 
-const TabContent = styled.view({
+const TabContent = view({
   height: 'auto',
   overflow: 'auto',
   width: '100%',
@@ -86,7 +81,7 @@ const TabContent = styled.view({
 /**
  * A Tabs component.
  */
-export default function Tabs(props: {
+export function Tabs(props: {
   /**
    * Callback for when the active tab has changed.
    */
@@ -131,11 +126,11 @@ export default function Tabs(props: {
   /**
    * Elements to insert before all tabs in the tab list.
    */
-  before?: Array<React$Node>
+  before?: Array<any>
   /**
    * Elements to insert after all tabs in the tab list.
    */
-  after?: Array<React$Node>
+  after?: Array<any>
 }) {
   const { onActive } = props
   const active: string | void =
@@ -160,19 +155,15 @@ export default function Tabs(props: {
         add(comp)
         continue
       }
-
       if (!comp) {
         continue
       }
-
       if (comp.type !== Tab) {
         // if element isn't a tab then just push it into the tab list
         tabSiblings.push(comp)
         continue
       }
-
       const { children, closable, label, onClose, width } = comp.props
-
       const key = comp.key == null ? label : comp.key
       if (typeof key !== 'string') {
         throw new Error('tab needs a string key or a label')
@@ -180,7 +171,6 @@ export default function Tabs(props: {
       if (!keys.includes(key)) {
         keys.push(key)
       }
-
       const isActive: boolean = active === key
       if (isActive || props.persist === true || comp.props.persist === true) {
         tabContents.push(
@@ -189,14 +179,11 @@ export default function Tabs(props: {
           </TabContent>,
         )
       }
-
       // this tab has been hidden from the tab bar but can still be selected if it's key is active
       if (comp.props.hidden) {
         continue
       }
-
       let closeButton
-
       tabs[key] = (
         <TabListItem
           key={key}
@@ -222,7 +209,6 @@ export default function Tabs(props: {
                   const newActive = keys[index + 1] || keys[index - 1] || null
                   onActive(newActive)
                 }
-
                 onClose()
               }}
             >
@@ -254,7 +240,6 @@ export default function Tabs(props: {
       tabList.push(tabs[key])
     }
   }
-
   if (props.newable === true) {
     after.push(
       <TabListAddItem key={keys.length} onMouseDown={props.onNew}>
@@ -262,7 +247,6 @@ export default function Tabs(props: {
       </TabListAddItem>,
     )
   }
-
   return (
     <TabContainer fill={true}>
       <TabList>

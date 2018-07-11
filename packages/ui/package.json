@@ -3,11 +3,10 @@
   "private": true,
   "version": "2.2.0",
   "main": "lib/index.js",
-  "module": "dist/index.js",
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "build": "build dev,prod",
+    "build": "build dev",
     "watch": "npm run build -- --watch"
   },
   "dependencies": {

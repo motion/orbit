@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { Bits } from '../../../../views/Bits'
-import { Tabs, Tab, SearchableTable } from '@mcro/sonar'
+import { SearchableTable } from '@mcro/sonar'
 import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
@@ -152,14 +152,14 @@ export class GithubSetting extends React.Component {
   render({ githubStore: store }) {
     return (
       <container>
-        <Tabs active={store.active} onActive={key => (store.active = key)}>
-          <Tab key="repos" width="50%" label="Repos" />
-          <Tab
+        <UI.Tabs active={store.active} onActive={key => (store.active = key)}>
+          <UI.Tab key="repos" width="50%" label="Repos" />
+          <UI.Tab
             key="issues"
             width="50%"
             label={`Issues (${store.issues ? store.issues.length : 0})`}
           />
-        </Tabs>
+        </UI.Tabs>
         <section if={store.active === 'repos'}>
           <section>
             <SearchableTable

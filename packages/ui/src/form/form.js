@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { object } from 'prop-types'
-import { Surface } from '../surface'
+import { Surface } from '../Surface'
 import { UIContext } from '../helpers/contexts'
 
 const resolveFormValues = obj =>

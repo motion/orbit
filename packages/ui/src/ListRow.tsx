@@ -1,28 +1,30 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Button } from './button'
-import { Surface } from './surface'
+import { Button } from './Button'
+import { Surface } from './Surface'
 import { UIContext } from './helpers/contexts'
+import { Color } from '@mcro/css'
 
-// type Props = {
-//   active?: number,
-//   defaultActive?: number,
-//   controlled?: boolean,
-//   items: Array<React.Element<any> | Object>,
-//   children: React.Element<any>,
-//   label: React.Element<any>,
-//   onChange?: Function,
-//   onlyIcons?: boolean,
-//   stretch?: boolean,
-//   sync?: { get(): number, set(value: number): void },
-//   color: Color,
-//   uiContext?: Object,
-//   itemProps?: Object,
-//   spaced?: boolean,
-// }
+type ListRowProps = {
+  active?: number
+  defaultActive?: number
+  controlled?: boolean
+  items: Array<React.ReactNode | { text?: string; id?: string; icon?: string }>
+  children: React.ReactNode
+  label: React.ReactNode
+  onChange?: Function
+  onlyIcons?: boolean
+  stretch?: boolean
+  sync?: { get(): number; set(value: number): void }
+  color: Color
+  uiContext?: Object
+  itemProps?: Object
+  spaced?: boolean
+  theme?: Object
+}
 
 @view.ui
-export class ListRow extends React.Component {
+export class ListRow extends React.Component<ListRowProps> {
   state = {
     active: null,
   }
@@ -42,25 +44,26 @@ export class ListRow extends React.Component {
     return hasState ? this.state.active : this.props.defaultActive
   }
 
-  render({
-    items,
-    controlled,
-    onChange,
-    defaultActive,
-    onlyIcons,
-    children: children_,
-    active,
-    label,
-    stretch,
-    sync,
-    uiContext,
-    color,
-    itemProps: itemProps_,
-    spaced,
-    theme,
-    ...props
-  }) {
-    let itemProps = itemProps_
+  render() {
+    const {
+      items,
+      controlled,
+      onChange,
+      defaultActive,
+      onlyIcons,
+      children: children_,
+      active,
+      label,
+      stretch,
+      sync,
+      uiContext,
+      color,
+      itemProps: itemProps_,
+      spaced,
+      theme,
+      ...props
+    } = this.props
+    let itemProps = itemProps_ as any
     let children = children_
     const ACTIVE = typeof active === 'undefined' ? this.active : active
     const getContext = (index, length) =>

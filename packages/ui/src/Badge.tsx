@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Surface } from './surface'
-import { Text } from './text'
+import { Surface } from './Surface'
+import { Text } from './Text'
 import { Icon } from './Icon'
 import { Color } from '@mcro/css'
 

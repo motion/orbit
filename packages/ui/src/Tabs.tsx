@@ -6,8 +6,8 @@
  */
 
 import { view } from '@mcro/black'
-import { Col } from './blocks/col'
-import { Row } from './blocks/row'
+import { Col } from './blocks/Col'
+import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'

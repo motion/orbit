@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import { Label } from './label'
-import { ListRow } from '../listRow'
+import { ListRow } from '../ListRow'
 
 // fields
 import { Input } from './input'

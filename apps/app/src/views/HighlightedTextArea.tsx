@@ -43,6 +43,9 @@ export class HighlightedTextArea extends React.Component<Props> {
 
   handleInputChange = event => {
     this.setState({ input: event.target.value })
+    if (this.props.onChange) {
+      this.props.onChange(event)
+    }
   }
 
   handleScroll = event => {
@@ -130,6 +133,7 @@ export class HighlightedTextArea extends React.Component<Props> {
         />
         <Block
           tagName="textarea"
+          resize="none"
           {...styleProps}
           onChange={this.handleInputChange}
           onScroll={this.handleScroll}

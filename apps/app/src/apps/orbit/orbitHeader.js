@@ -88,8 +88,8 @@ export class OrbitHeader extends React.Component {
             fontWeight={300}
             fontSize={22}
             lineHeight="22px"
-            padding={10}
-            paddingLeft={26}
+            padding={13}
+            paddingLeft={20}
             border="none"
             display="block"
             background="transparent"
@@ -145,7 +145,7 @@ export class OrbitHeader extends React.Component {
       flexFlow: 'row',
     },
     searchIcon: {
-      paddingLeft: 12,
+      paddingLeft: 6,
       margin: ['auto', 0],
     },
     pinnedIcon: {

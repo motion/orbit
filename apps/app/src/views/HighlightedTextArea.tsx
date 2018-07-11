@@ -115,31 +115,23 @@ export class HighlightedTextArea extends React.Component<Props> {
   render() {
     const {
       onChange,
-      onFocus,
-      onBlur,
-      onKeyDown,
       getRef,
-      onClick,
       highlight,
       value,
-      ...styleProps
+      ...props
     } = this.props
     return (
       <TextAreaOuter debug>
         <Block
-          {...styleProps}
+          {...props}
           ref={this.backdrop}
           dangerouslySetInnerHTML={{ __html: this.getHighlights() }}
         />
         <Block
           tagName="textarea"
           resize="none"
-          {...styleProps}
+          {...props}
           onChange={this.handleInputChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyDown={onKeyDown}
-          onClick={onClick}
           onScroll={this.handleScroll}
           value={this.state.input}
         />

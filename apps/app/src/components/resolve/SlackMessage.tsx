@@ -6,10 +6,21 @@ import slackDown from '@mcro/slackdown'
 import { getSlackDate } from '../../helpers'
 import { TimeAgo } from '../../views/TimeAgo'
 import { App } from '@mcro/stores'
+import { Bit } from '@mcro/models'
+
+type SlackMessageObj = { name: string; text: string; user: string; ts: string }
+
+type SlackMessageProps = {
+  bit: Bit
+  message: SlackMessageObj
+  previousMessage?: SlackMessageObj
+  itemProps?: Object
+}
 
 @view
-export class SlackMessage extends React.Component {
-  render({ bit, message, previousMessage, itemProps }) {
+export class SlackMessage extends React.Component<SlackMessageProps> {
+  render() {
+    const { bit, message, previousMessage, itemProps } = this.props
     if (!message.text || !bit) {
       log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null

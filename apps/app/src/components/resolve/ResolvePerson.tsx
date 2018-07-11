@@ -24,7 +24,11 @@ export const ResolvePerson = ({ children, bit }) => {
   return children({
     title: bit.name,
     icon: 'users_square',
-    subtitle: <UI.Text ellipse>{bit.data.profile.email}</UI.Text>,
+    subtitle: (
+      <UI.Text if={bit.data.profile} ellipse>
+        {bit.data.profile.email}
+      </UI.Text>
+    ),
     date: bit.bitUpdatedAt,
     iconProps: {
       color: '#ccc',

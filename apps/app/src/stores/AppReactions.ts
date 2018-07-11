@@ -92,27 +92,28 @@ export class AppReactions {
     App.setOrbitState({ hidden: true })
   }
 
-  handleHoldingOption = react(
-    () => Desktop.isHoldingOption,
-    async (isHoldingOption, { sleep }) => {
-      if (App.orbitState.pinned || App.orbitState.docked) {
-        throw react.cancel
-      }
-      if (!isHoldingOption) {
-        if (!App.orbitState.pinned && App.isMouseInActiveArea) {
-          log('prevent hide while mouseover after release hold')
-          throw react.cancel
-        }
-        App.setOrbitState({ hidden: true })
-        throw react.cancel
-      }
-      await sleep(140)
-      App.setOrbitState({ hidden: false })
-      // await sleep(3500)
-      // this.updatePinned(true)
-    },
-    { log: 'state' },
-  )
+  // disable holding option preview for now
+  // handleHoldingOption = react(
+  //   () => Desktop.isHoldingOption,
+  //   async (isHoldingOption, { sleep }) => {
+  //     if (App.orbitState.pinned || App.orbitState.docked) {
+  //       throw react.cancel
+  //     }
+  //     if (!isHoldingOption) {
+  //       if (!App.orbitState.pinned && App.isMouseInActiveArea) {
+  //         log('prevent hide while mouseover after release hold')
+  //         throw react.cancel
+  //       }
+  //       App.setOrbitState({ hidden: true })
+  //       throw react.cancel
+  //     }
+  //     await sleep(140)
+  //     App.setOrbitState({ hidden: false })
+  //     // await sleep(3500)
+  //     // this.updatePinned(true)
+  //   },
+  //   { log: 'state' },
+  // )
 
   clearPeekOnOrbitClose = react(
     () => App.isFullyHidden,

@@ -1,9 +1,12 @@
 - search run:
 
-  - show github people in search results
-  - figure out a way to show multiple highlighted areas in search results
-  - hover highlight the areas
-  - click highlight area to see in peek
+  - pull out nlp pieces in search
+  - filters
+    - people, type etc
+  - multiple highlights
+    - figure out a way to show multiple highlighted areas in search results
+    - hover highlight the areas effect
+    - click highlight area to see in peek
 
 - saving appstoreactions breaking hmr
 

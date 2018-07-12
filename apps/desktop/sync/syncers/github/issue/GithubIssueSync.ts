@@ -36,27 +36,22 @@ export class GithubIssueSync {
   }
 
   private async createIssue(issue: GithubIssue, organization: string, repository: string): Promise<Bit> {
-    const data /* : create type for it */ = {
-      ...omit(issue, ['bodyText']),
-      labels: issue.labels.edges.map(edge => edge.node),
-      comments: issue.comments.edges.map(edge => edge.node),
-      orgLogin: organization,
-      repositoryName: repository
-    }
-    // ensure if one is set, the other gets set too
-    const bitCreatedAt = issue.createdAt || issue.updatedAt || ''
-    const bitUpdatedAt = issue.updatedAt || bitCreatedAt
-    const author = issue.author ? issue.author.login : null // github can return null author in the case if github user was removed
     return await createOrUpdateBit(Bit, {
       integration: 'github',
-      identifier: data.id,
+      identifier: issue.id,
       type: 'task',
       title: issue.title,
       body: issue.bodyText,
-      data,
-      author,
-      bitCreatedAt,
-      bitUpdatedAt
+      data: {
+        ...omit(issue, ['bodyText']),
+        labels: issue.labels.edges.map(edge => edge.node),
+        comments: issue.comments.edges.map(edge => edge.node),
+        orgLogin: organization,
+        repositoryName: repository
+      },
+      author: issue.author ? issue.author.login : null, // github can return null author in the case if github user was removed,
+      bitCreatedAt: issue.createdAt || issue.updatedAt || '',
+      bitUpdatedAt: issue.updatedAt || issue.createdAt || '',
     })
   }
 

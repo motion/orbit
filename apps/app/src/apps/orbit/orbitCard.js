@@ -90,6 +90,7 @@ class OrbitCardStore {
       if (shouldSelect === this._isSelected) {
         throw react.cancel
       }
+      console.log('select me', shouldSelect)
       this._isSelected = shouldSelect
       if (shouldSelect) {
         // visual smoothness
@@ -222,97 +223,95 @@ export class OrbitCard extends React.Component {
     const background =
       (childTheme && childTheme.background) || theme.base.background
     return (
-      <UI.Theme theme={childTheme}>
-        <cardWrap
-          css={{
-            zIndex: isSelected ? 5 : 4,
-          }}
-          ref={store.setRef}
-          onClick={store.handleClick}
-          {...hoverToSelect && !inactive && this.hoverSettler.props}
-          style={style}
-          className={className}
-        >
-          <card onClick={this.handleClick}>
-            {orbitIcon}
-            <title>
-              <UI.Text
-                size={listItem ? 1.15 : 1.25}
-                sizeLineHeight={0.85}
-                ellipse={2}
-                alpha={isSelected ? 1 : 0.8}
-                fontWeight={500}
-                maxWidth="calc(100% - 30px)"
-                {...tiny && tinyProps.titleProps}
-                {...titleProps}
-              >
-                {title}
-              </UI.Text>
-              {afterTitle}
-            </title>
-            <subtitle if={hasSubtitle}>
-              <UI.Text
-                display="inline-flex"
-                alignItems="center"
-                flexFlow="row"
-                if={location}
-              >
-                in&nbsp;{location}
-              </UI.Text>
-              <UI.Text
-                if={typeof subtitle === 'string'}
-                ellipse
-                maxWidth="calc(100% - 40px)"
-              >
-                {subtitle}
-              </UI.Text>
-              {typeof subtitle !== 'string' && subtitle}
-              <UI.Text if={date} onClick={permalink} size={0.95}>
-                <strong> &middot;</strong> <TimeAgo date={date} />
-              </UI.Text>
-            </subtitle>
-            <preview if={preview && !children}>
-              {typeof preview !== 'string' && preview}
-              <UI.Text
-                if={typeof preview === 'string'}
-                alpha={isSelected ? 0.85 : 0.6}
-                size={listItem ? 1.1 : 1.3}
-                sizeLineHeight={0.9}
-                $previewText
-              >
-                {preview
-                  .slice(0, 220)
-                  .split(' ')
-                  .map((word, i) => (
-                    <React.Fragment key={i}>
-                      <SmallLink orbitStore={orbitStore}>{word}</SmallLink>{' '}
-                    </React.Fragment>
-                  ))}
-              </UI.Text>
-            </preview>
-            {typeof children === 'function'
-              ? children(contentProps, { background })
-              : children}
-            <bottom if={people && people.length && people[0].data.profile}>
-              <PeopleRow people={people} />
-            </bottom>
-          </card>
-          {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-          <UI.HoverGlow
-            if={!listItem}
-            behind
-            color="#000"
-            resist={90}
-            scale={0.99}
-            offsetTop={18}
-            full
-            blur={8}
-            inverse
-            opacity={isSelected ? 0.075 : 0.04}
-            borderRadius={20}
-          />
-        </cardWrap>
-      </UI.Theme>
+      <cardWrap
+        ref={store.setRef}
+        onClick={store.handleClick}
+        {...hoverToSelect && !inactive && this.hoverSettler.props}
+        style={{
+          zIndex: isSelected ? 5 : 4,
+          ...style,
+        }}
+        className={className}
+      >
+        <card onClick={this.handleClick}>
+          {orbitIcon}
+          <title>
+            <UI.Text
+              size={listItem ? 1.15 : 1.25}
+              sizeLineHeight={0.85}
+              ellipse={2}
+              alpha={isSelected ? 1 : 0.8}
+              fontWeight={500}
+              maxWidth="calc(100% - 30px)"
+              {...tiny && tinyProps.titleProps}
+              {...titleProps}
+            >
+              {title}
+            </UI.Text>
+            {afterTitle}
+          </title>
+          <subtitle if={hasSubtitle}>
+            <UI.Text
+              display="inline-flex"
+              alignItems="center"
+              flexFlow="row"
+              if={location}
+            >
+              in&nbsp;{location}
+            </UI.Text>
+            <UI.Text
+              if={typeof subtitle === 'string'}
+              ellipse
+              maxWidth="calc(100% - 40px)"
+            >
+              {subtitle}
+            </UI.Text>
+            {typeof subtitle !== 'string' && subtitle}
+            <UI.Text if={date} onClick={permalink} size={0.95}>
+              <strong> &middot;</strong> <TimeAgo date={date} />
+            </UI.Text>
+          </subtitle>
+          <preview if={preview && !children}>
+            {typeof preview !== 'string' && preview}
+            <UI.Text
+              if={typeof preview === 'string'}
+              alpha={isSelected ? 0.85 : 0.6}
+              size={listItem ? 1.1 : 1.3}
+              sizeLineHeight={0.9}
+              $previewText
+            >
+              {preview
+                .slice(0, 220)
+                .split(' ')
+                .map((word, i) => (
+                  <React.Fragment key={i}>
+                    <SmallLink orbitStore={orbitStore}>{word}</SmallLink>{' '}
+                  </React.Fragment>
+                ))}
+            </UI.Text>
+          </preview>
+          {typeof children === 'function'
+            ? children(contentProps, { background })
+            : children}
+          <bottom if={people && people.length && people[0].data.profile}>
+            <PeopleRow people={people} />
+          </bottom>
+        </card>
+        {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
+        <UI.HoverGlow
+          if={!listItem}
+          behind
+          color="#000"
+          resist={90}
+          scale={0.99}
+          offsetTop={isSelected ? 18 : 10}
+          full
+          blur={isSelected ? 8 : 4}
+          inverse
+          opacity={isSelected ? 0.08 : 0.04}
+          borderRadius={20}
+        />
+      </cardWrap>
     )
   }
 

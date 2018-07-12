@@ -8,7 +8,10 @@ const themeCache = {}
 
 // takes gloss themes and adds a "generate from base object/color"
 
+// TODO: changing this causes remounts....
+
 export const Theme = ({ theme, name, children }) => {
+  console.log('theme me', theme, name, children)
   if (name) {
     return <GlossTheme name={name}>{children}</GlossTheme>
   }

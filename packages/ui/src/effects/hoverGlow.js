@@ -28,7 +28,7 @@ import throttle from 'raf-throttle'
 // }
 
 @view.ui
-export class HoverGlow extends React.PureComponent {
+export class HoverGlow extends React.Component {
   static acceptsHovered = 'show'
 
   static defaultProps = {
@@ -64,6 +64,7 @@ export class HoverGlow extends React.PureComponent {
   rootRef = React.createRef()
 
   componentDidMount() {
+    console.log('did mount', this)
     on(
       this,
       setTimeout(() => {

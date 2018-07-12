@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { SizedSurface } from './SizedSurface'
 import { view } from '@mcro/black'
+import { forwardRef } from './helpers/forwardRef'
 
 const Badge = view({
   position: 'absolute',
@@ -39,67 +40,69 @@ const BadgeContents = view({
   padding: [0, 33],
 })
 
-export const Button = ({
-  badge,
-  children,
-  theme,
-  chromeless,
-  type,
-  glow,
-  glowProps,
-  badgeProps,
-  hovered,
-  ...props
-}) => {
-  return (
-    <SizedSurface
-      tagName="button"
-      style={{
-        outline: 0,
-        flexWrap: 'nowrap',
-        whiteSpace: 'pre',
-        cursor: 'default',
-      }}
-      type={type}
-      clickable
-      hoverable
-      sizeFont
-      sizePadding={1.5}
-      sizeRadius
-      sizeHeight
-      sizeLineHeight
-      sizeIcon={1.1}
-      borderWidth={1}
-      chromeless={chromeless}
-      row
-      align="center"
-      justify="center"
-      hovered={hovered}
-      glow={glow}
-      glowProps={{
-        scale: 1.8,
-        draggable: false,
-        opacity: 0.15,
-        ...glowProps,
-        ...(theme && theme.glow),
-      }}
-      noElement
-      after={
-        <Badge
-          if={badge}
-          size={props.size === true ? 1 : props.size || 1}
-          {...props}
-          {...badgeProps}
-        >
-          <BadgeContents>{badge}</BadgeContents>
-        </Badge>
-      }
-      {...props}
-    >
-      {children}
-    </SizedSurface>
-  )
-}
+export const Button = forwardRef(
+  ({
+    badge,
+    children,
+    theme,
+    chromeless,
+    type,
+    glow,
+    glowProps,
+    badgeProps,
+    hovered,
+    ...props
+  }) => {
+    return (
+      <SizedSurface
+        tagName="button"
+        style={{
+          outline: 0,
+          flexWrap: 'nowrap',
+          whiteSpace: 'pre',
+          cursor: 'default',
+        }}
+        type={type}
+        clickable
+        hoverable
+        sizeFont
+        sizePadding={1.5}
+        sizeRadius
+        sizeHeight
+        sizeLineHeight
+        sizeIcon={1.1}
+        borderWidth={1}
+        chromeless={chromeless}
+        row
+        align="center"
+        justify="center"
+        hovered={hovered}
+        glow={glow}
+        glowProps={{
+          scale: 1.8,
+          draggable: false,
+          opacity: 0.15,
+          ...glowProps,
+          ...(theme && theme.glow),
+        }}
+        noElement
+        after={
+          <Badge
+            if={badge}
+            size={props.size === true ? 1 : props.size || 1}
+            {...props}
+            {...badgeProps}
+          >
+            <BadgeContents>{badge}</BadgeContents>
+          </Badge>
+        }
+        {...props}
+      >
+        {children}
+      </SizedSurface>
+    )
+  },
+)
 
 // @ts-ignore
 Button.acceptsHovered = true

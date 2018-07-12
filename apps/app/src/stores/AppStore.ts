@@ -17,7 +17,6 @@ const searchBits = async (query, params?) => {
       order: { bitCreatedAt: 'DESC' },
     })
   }
-  console.time('bitSearch')
   const { conditions, rest } = AppStoreHelpers.parseQuery(query)
   const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
   const where = `(title like "%${titleLike}%" or body like "%${titleLike}%") ${conditions}`
@@ -27,9 +26,7 @@ const searchBits = async (query, params?) => {
     order: { bitCreatedAt: 'DESC' },
     ...params,
   }
-  console.log('searchBits', queryParams)
   const res = await Bit.find(queryParams)
-  console.timeEnd('bitSearch')
   return res
 }
 
@@ -301,7 +298,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults],
-    async ([query], { sleep, setValue }) => {
+    async ([query], { sleep, setValue, preventLogging }) => {
       if (!query) {
         return setValue({
           query,
@@ -352,6 +349,9 @@ export class AppStore {
           const skip = i * takePer
           const nextResults = await searchBits(query, { take: takePer, skip })
           results = [...results, ...nextResults]
+          if (i > 2) {
+            preventLogging()
+          }
           setValue({
             results,
             query,

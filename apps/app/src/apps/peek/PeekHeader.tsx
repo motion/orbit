@@ -44,8 +44,18 @@ TitleBarContain.theme = ({ theme }) => ({
 })
 
 const SubTitle = ({ children, date, permalink }) => (
-  <UI.Row padding={[4, 12]} alignItems="center">
-    <UI.Text display="flex" flexFlow="row" alignItems="center" alpha={0.8}>
+  <UI.Row
+    if={children || date || permalink}
+    padding={[4, 12]}
+    alignItems="center"
+  >
+    <UI.Text
+      if={children || date}
+      display="flex"
+      flexFlow="row"
+      alignItems="center"
+      alpha={0.8}
+    >
       {children}
       <span if={date}>
         {' '}
@@ -150,12 +160,7 @@ export class PeekHeaderContent extends React.Component {
           {integration ? `${NICE_INTEGRATION_NAMES[integration]}: ` : ''}{' '}
           {title}
         </TitleBar>
-        <SubTitle
-          if={subtitle || date || permalink}
-          date={date}
-          theme={theme}
-          permalink={permalink}
-        >
+        <SubTitle date={date} permalink={permalink}>
           {subtitle}
         </SubTitle>
         {subhead}

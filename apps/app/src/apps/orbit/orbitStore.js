@@ -18,7 +18,6 @@ export class OrbitStore {
   lastPinKey = ''
 
   willMount() {
-    console.log('orbitStore123', this)
     this.appReactions = new AppReactions({
       onPinKey: key => {
         if (key === 'Delete') {

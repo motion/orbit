@@ -24,26 +24,27 @@ const icons = {
   jira: iconJira,
 }
 
-const SLACK_SCALE = {
-  transform: {
-    y: '26%',
-    scale: 0.95,
-    // rotate: '20deg',
+const adjust = {
+  slack: {
+    transform: {
+      scale: 0.95,
+    },
   },
-}
-const GMAIL_SCALE = {
-  transform: {
-    scale: 0.95,
+  gmail: {
+    transform: {
+      scale: 0.95,
+    },
   },
-}
-
-const adjust = name => {
-  if (name === 'slack') {
-    return SLACK_SCALE
-  }
-  if (name === 'gmail') {
-    return GMAIL_SCALE
-  }
+  confluence: {
+    transform: {
+      scale: 1.2,
+    },
+  },
+  jira: {
+    transform: {
+      scale: 1.1,
+    },
+  },
 }
 
 export const OrbitIcon = ({
@@ -68,7 +69,8 @@ export const OrbitIcon = ({
       css={{
         display: 'inline-block',
         textAlign: 'center',
-        ...adjust(icon),
+        justifyContent: 'center',
+        ...adjust[icon],
         ...sizeProps,
         ...(iconImg && orbitIconStyle),
       }}

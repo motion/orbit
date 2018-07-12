@@ -2,6 +2,7 @@
 export { default as color } from 'color'
 export { ThemeProvide, ThemeContext } from '@mcro/gloss'
 
+export * from './helpers/forwardRef'
 export * from './helpers/parentSize'
 export * from './helpers/themeMaker'
 export * from './helpers/theme'

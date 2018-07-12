@@ -308,7 +308,7 @@ export class OrbitCard extends React.Component {
             full
             blur={8}
             inverse
-            opacity={isSelected ? 0.075 : 0}
+            opacity={isSelected ? 0.075 : 0.04}
             borderRadius={20}
           />
         </cardWrap>

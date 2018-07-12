@@ -89,7 +89,6 @@ export class Masonry extends React.Component {
         </MasonryGrid>
       )
     }
-    console.log('this.gridStyle', this.gridStyle)
     return (
       <MasonryGrid css={this.gridStyle} {...props}>
         {this.state.gridChildren}

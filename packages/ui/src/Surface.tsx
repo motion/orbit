@@ -9,6 +9,7 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { Color } from '@mcro/css'
+// import { propsToStyles } from './helpers/propsToStyles'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -43,7 +44,7 @@ export type SurfaceProps = {
   elevation?: number
   flex?: boolean | number
   focusable?: boolean
-  getRef?: Function
+  forwardRef?: React.Ref<any>
   glint?: boolean
   glow?: boolean
   glowProps?: Object
@@ -127,7 +128,7 @@ const hasChildren = children =>
 
 @attachTheme
 @view.ui
-export class Surface extends React.Component<SurfaceProps> {
+class SurfaceInner extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,
   }
@@ -183,7 +184,7 @@ export class Surface extends React.Component<SurfaceProps> {
       focusable,
       fontSize,
       fontWeight,
-      getRef,
+      forwardRef,
       glint,
       glow,
       glowProps,
@@ -248,9 +249,12 @@ export class Surface extends React.Component<SurfaceProps> {
     }
     const passProps = {
       tagName,
-      ref: getRef,
+      ref: forwardRef,
       style,
       ...props,
+    }
+    if (this.props.debug) {
+      console.log('SurfaceProps', forwardRef, passProps)
     }
     // get border radius
     let borderLeftRadius =
@@ -375,6 +379,7 @@ export class Surface extends React.Component<SurfaceProps> {
     },
     icon: {
       pointerEvents: 'none',
+      justifyContent: 'center',
       height: '1.4rem',
       transform: {
         y: '1%',
@@ -750,3 +755,7 @@ export class Surface extends React.Component<SurfaceProps> {
     return result
   }
 }
+
+export const Surface = React.forwardRef((props, ref) => (
+  <SurfaceInner {...props} forwardRef={ref} />
+))

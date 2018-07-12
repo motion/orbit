@@ -16,7 +16,6 @@ class HeaderStore {
     if (!this.inputRef || !this.inputRef.current) {
       return
     }
-    console.log('FOCUS FOCUS', this.inputRef.current)
     this.inputRef.current.focus()
   }
 

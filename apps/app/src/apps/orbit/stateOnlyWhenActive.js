@@ -10,6 +10,6 @@ export function stateOnlyWhenActive(store) {
       }
       return state
     },
-    { immediate: true, defaultValue: {} },
+    { log: false, immediate: true, defaultValue: {} },
   )
 }

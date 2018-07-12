@@ -1,9 +1,9 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 
-export const RoundButton = props => (
+export const RoundButton = UI.forwardRef(props => (
   <UI.Button
-    sizeRadius={2}
+    sizeRadius={10}
     sizeHeight={0.83}
     sizePadding={1.2}
     borderWidth={0}
@@ -12,4 +12,4 @@ export const RoundButton = props => (
     backgroundAlpha={0.4}
     {...props}
   />
-)
+))

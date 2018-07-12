@@ -59,7 +59,6 @@ storeProvidable = function(options, Helpers) {
 
   // let things re-mount after queries and such
   const setRecentHMR = () => {
-    console.log('set recent HMR')
     clearTimeout(recentHMRTm)
     recentHMR = true
     recentHMRTm = setTimeout(() => {
@@ -142,15 +141,9 @@ storeProvidable = function(options, Helpers) {
           root.loadedStores.add(this)
           this.mountStores()
           this.willReloadListener = Helpers.on('will-hmr', () => {
-            if (this.stores.peekStore) {
-              console.log('WILL UNMOUNT')
-            }
             setRecentHMR()
             this.onWillReloadStores()
           })
-          if (this.stores.peekStore) {
-            console.log('DID MOUNT', recentHMR)
-          }
           if (recentHMR) {
             this.onReloadStores()
           }
@@ -283,10 +276,6 @@ storeProvidable = function(options, Helpers) {
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             const key = `${getName(this)}${name}`
-            if (name === 'peekStore') {
-              console.log('RELOADING')
-              console.log(key, storeHMRCache[key])
-            }
             if (!storeHMRCache[key]) {
               // try again a bit later, perhaps it wasnt mounted
               // console.log('no hmr state for', name, key, storeHMRCache)

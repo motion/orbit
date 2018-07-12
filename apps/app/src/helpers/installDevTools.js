@@ -24,7 +24,11 @@ window.require = require('webpack-runtime-require').Require
 
 // should enable eventually for safer mobx
 // really should be even safer with automagical to enforce same-store only actions
-// Mobx.useStrict(true)
+// actually hard because async actions dont have a good story in mobx
+// https://mobx.js.org/best/actions.html
+// Mobx.configure({
+//   enforceActions: true,
+// })
 
 // install console formatters
 // mobxFormatters(Mobx)

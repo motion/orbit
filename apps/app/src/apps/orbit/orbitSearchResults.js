@@ -80,7 +80,9 @@ export class OrbitSearchResults extends React.Component {
                       }
                     }
                   >
-                    {sanitize(bit.body)}
+                    {sanitize(
+                      highlightWords.length ? bit.body : bit.body.slice(0, 200),
+                    )}
                   </UI.Text>
                 </content>
               </OrbitCard>

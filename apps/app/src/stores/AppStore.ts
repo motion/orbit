@@ -253,24 +253,27 @@ export class AppStore {
       Desktop.state.lastBitUpdatedAt,
     ],
     async ([query], { sleep, setValue }) => {
-      log(`bitsearch "${query}"`)
-      // debounce a little for fast typer
-      await sleep(TYPE_DEBOUNCE)
-      // get first page results
-      const results = await searchBits(query, { take: 6 })
-      setValue({
-        restResults: null,
-        results,
-        query,
-      })
-      // get next page results
-      await sleep(300)
-      const restResults = await searchBits(query, { skip: 6, take: 32 })
-      setValue({
-        results,
-        restResults,
-        query,
-      })
+      // // debounce a little for fast typer
+      // await sleep(TYPE_DEBOUNCE)
+      // // get first page results
+      // const takePer = 1
+      // const takeMax = 50
+      // for (let i = 0; i < takeMax; i += takePer) {
+      //   const results = await searchBits(query, { take: 4 })
+      //   setValue({
+      //     results,
+      //     restResults: null,
+      //     query,
+      //   })
+      //   // get next page results
+      //   await sleep(300)
+      // }
+      // const restResults = await searchBits(query, { skip: 4, take: 4 })
+      // setValue({
+      //   results,
+      //   restResults,
+      //   query,
+      // })
     },
     {
       immediate: true,
@@ -298,7 +301,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults],
-    async ([query], { when, setValue }) => {
+    async ([query], { sleep, setValue }) => {
       if (!query) {
         return setValue({
           query,
@@ -338,26 +341,45 @@ export class AppStore {
       }
       // regular search
       if (!results) {
-        await Promise.all([
-          when(() => this.bitSearch.query === query),
-          when(() => this.peopleSearch.query === query),
-        ])
-        const allResultsUnsorted = [
-          ...this.bitSearch.results,
-          ...this.peopleSearch.results,
-          // ...Desktop.searchState.pluginResults,
-        ]
-        // return first page fast results
-        const { rest } = AppStoreHelpers.parseQuery(query)
-        results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
-        setValue({
-          query,
-          message,
-          results,
-        })
-        // then return full results
-        await when(() => this.bitSearch.restResults)
-        results = [...results, ...this.bitSearch.restResults]
+        // debounce a little for fast typer
+        await sleep(TYPE_DEBOUNCE)
+        // get first page results
+        const takePer = 3
+        const takeMax = 50
+        const sleepBtwn = 80
+        let results = []
+        for (let i = 0; i < takeMax / takePer; i += 1) {
+          const skip = i * takePer
+          const nextResults = await searchBits(query, { take: takePer, skip })
+          results = [...results, ...nextResults]
+          setValue({
+            results,
+            query,
+          })
+          // get next page results
+          await sleep(sleepBtwn)
+        }
+        return
+        // await Promise.all([
+        //   when(() => this.bitSearch.query === query),
+        //   when(() => this.peopleSearch.query === query),
+        // ])
+        // const allResultsUnsorted = [
+        //   ...this.bitSearch.results,
+        //   ...this.peopleSearch.results,
+        //   // ...Desktop.searchState.pluginResults,
+        // ]
+        // // return first page fast results
+        // const { rest } = AppStoreHelpers.parseQuery(query)
+        // results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
+        // setValue({
+        //   query,
+        //   message,
+        //   results,
+        // })
+        // // then return full results
+        // await when(() => this.bitSearch.restResults)
+        // results = [...results, ...this.bitSearch.restResults]
       }
       return setValue({
         query,

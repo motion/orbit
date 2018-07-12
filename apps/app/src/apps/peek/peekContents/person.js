@@ -40,106 +40,113 @@ export class Person extends React.Component {
       console.log('no person or person.data.profile', person)
       return children({})
     }
-    return (
-      <frame>
-        <cardContent>
-          <img $avatar src={person.data.profile.image_512} />
-          <info>
-            <name>{person.name}</name>
-            <br />
-            <a $email href={`mailto:${person.data.profile.email}`}>
-              {person.data.profile.email}
-            </a>
-            <br />
-            <links>
-              <a
-                $intButton
-                href={`slack://user?team=${
-                  setting.values.oauth.info.team.id
-                }&id=${person.data.id}`}
-              >
-                <OrbitIcon preventAdjust $intIcon icon="slack" size={14} />
-                Slack
+    return children({
+      title: person.name,
+      headerProps: {
+        // make header not push down content
+        position: 'absolute',
+      },
+      content: (
+        <frame>
+          <cardContent>
+            <img $avatar src={person.data.profile.image_512} />
+            <info>
+              <name>{person.name}</name>
+              <br />
+              <a $email href={`mailto:${person.data.profile.email}`}>
+                {person.data.profile.email}
               </a>
-              <a $intButton>
-                <OrbitIcon
-                  preventAdjust
-                  $intIcon
-                  icon="zoom"
-                  size={12}
-                  color="#777"
-                />
-                Documents
-              </a>
-              <a $intButton>
-                <OrbitIcon
-                  preventAdjust
-                  $intIcon
-                  icon="zoom"
-                  size={12}
-                  color="#777"
-                />
-                Tasks
-              </a>
-            </links>
-          </info>
-        </cardContent>
-        <map>
-          <fadeMap />
-          <fadeMapRight />
-          <img
-            $mapImg
-            src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
-              person.data.tz
-            }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
-          />
-        </map>
-        <content>
-          <contentInner>
-            <card>
-              <StrongSubTitle>Where</StrongSubTitle>
-              <UI.ListRow
-                itemProps={{
-                  size: 1.05,
-                  alpha: 0.9,
-                  background: 'transparent',
-                  borderRadius: 5,
-                  margin: [0, 10, 0, -5],
-                }}
-              >
-                <UI.Button>#general</UI.Button>
-                <UI.Button>#status</UI.Button>
-                <UI.Button icon="github">motion/orbit</UI.Button>
-                <UI.Button>#showoff</UI.Button>
-              </UI.ListRow>
-            </card>
+              <br />
+              <links>
+                <a
+                  $intButton
+                  href={`slack://user?team=${
+                    setting.values.oauth.info.team.id
+                  }&id=${person.data.id}`}
+                >
+                  <OrbitIcon preventAdjust $intIcon icon="slack" size={14} />
+                  Slack
+                </a>
+                <a $intButton>
+                  <OrbitIcon
+                    preventAdjust
+                    $intIcon
+                    icon="zoom"
+                    size={12}
+                    color="#777"
+                  />
+                  Documents
+                </a>
+                <a $intButton>
+                  <OrbitIcon
+                    preventAdjust
+                    $intIcon
+                    icon="zoom"
+                    size={12}
+                    color="#777"
+                  />
+                  Tasks
+                </a>
+              </links>
+            </info>
+          </cardContent>
+          <map>
+            <fadeMap />
+            <fadeMapRight />
+            <img
+              $mapImg
+              src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
+                person.data.tz
+              }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
+            />
+          </map>
+          <content>
+            <contentInner>
+              <card>
+                <StrongSubTitle>Where</StrongSubTitle>
+                <UI.ListRow
+                  itemProps={{
+                    size: 1.05,
+                    alpha: 0.9,
+                    background: 'transparent',
+                    borderRadius: 5,
+                    margin: [0, 10, 0, -5],
+                  }}
+                >
+                  <UI.Button>#general</UI.Button>
+                  <UI.Button>#status</UI.Button>
+                  <UI.Button icon="github">motion/orbit</UI.Button>
+                  <UI.Button>#showoff</UI.Button>
+                </UI.ListRow>
+              </card>
 
-            <card>
-              <StrongSubTitle>Topics</StrongSubTitle>
-              <UI.ListRow
-                itemProps={{
-                  size: 1.05,
-                  alpha: 0.9,
-                  background: 'transparent',
-                  borderRadius: 5,
-                  margin: [0, 10, 0, -5],
-                }}
-              >
-                <UI.Button icon="zoom">UI Kit</UI.Button>
-                <UI.Button icon="zoom">size prop</UI.Button>
-                <UI.Button icon="zoom">async migration</UI.Button>
-                <UI.Button icon="zoom">freelance</UI.Button>
-              </UI.ListRow>
-            </card>
+              <card>
+                <StrongSubTitle>Topics</StrongSubTitle>
+                <UI.ListRow
+                  itemProps={{
+                    size: 1.05,
+                    alpha: 0.9,
+                    background: 'transparent',
+                    borderRadius: 5,
+                    margin: [0, 10, 0, -5],
+                  }}
+                >
+                  <UI.Button icon="zoom">UI Kit</UI.Button>
+                  <UI.Button icon="zoom">size prop</UI.Button>
+                  <UI.Button icon="zoom">async migration</UI.Button>
+                  <UI.Button icon="zoom">freelance</UI.Button>
+                </UI.ListRow>
+              </card>
 
-            <card>
-              <StrongSubTitle>Conversations</StrongSubTitle>
-              <Carousel items={store.relatedConversations} />
-            </card>
-          </contentInner>
-        </content>
-      </frame>
-    )
+              <card>
+                <StrongSubTitle>Conversations</StrongSubTitle>
+                <Carousel items={store.relatedConversations} />
+              </card>
+            </contentInner>
+          </content>
+        </frame>
+      ),
+    })
   }
 
   static style = {

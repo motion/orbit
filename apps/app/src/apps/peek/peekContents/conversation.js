@@ -4,8 +4,6 @@ import { PeekBitResolver } from '../index'
 import { SubTitle } from '../../../views'
 import { OrbitDivider } from '../../../apps/orbit/orbitDivider'
 import { PeekRelatedStore } from './PeekRelatedStore'
-import { RelatedPeople } from './RelatedPeople'
-import { PeekBitInformation } from './PeekBitInformation'
 
 const Section = view({
   padding: 20,
@@ -15,7 +13,7 @@ const Section = view({
 
 const itemProps = {
   padding: [5, 15],
-  hover: {
+  '&:hover': {
     background: [0, 0, 0, 0.02],
   },
 }
@@ -40,30 +38,32 @@ export class Conversation extends React.Component {
             date,
             content: (
               <>
-                <PeekBitInformation bit={bit} />
                 {content}
-                <RelatedPeople relatedStore={relatedStore} />
-                <Section>
-                  <SubTitle>Related Conversations</SubTitle>
-                </Section>
-                {relatedStore.relatedConversations.map((relatedBit, index) => (
-                  <React.Fragment key={`${relatedBit.id}${index}`}>
-                    <PeekBitResolver
-                      appStore={appStore}
-                      bit={relatedBit}
-                      itemProps={itemProps}
-                    >
-                      {({ content }) => content}
-                    </PeekBitResolver>
-                    <OrbitDivider
-                      if={index < 2}
-                      height={2}
-                      css={{ margin: [20, 0, 10] }}
-                    />
-                  </React.Fragment>
-                ))}
-                <br />
-                <br />
+                <div if={relatedStore.relatedConversations.length}>
+                  <Section>
+                    <SubTitle>Related Conversations</SubTitle>
+                  </Section>
+                  {relatedStore.relatedConversations.map(
+                    (relatedBit, index) => (
+                      <React.Fragment key={`${relatedBit.id}${index}`}>
+                        <PeekBitResolver
+                          appStore={appStore}
+                          bit={relatedBit}
+                          itemProps={itemProps}
+                        >
+                          {({ content }) => content}
+                        </PeekBitResolver>
+                        <OrbitDivider
+                          if={index < 2}
+                          height={2}
+                          css={{ margin: [20, 0, 10] }}
+                        />
+                      </React.Fragment>
+                    ),
+                  )}
+                  <br />
+                  <br />
+                </div>
               </>
             ),
           })

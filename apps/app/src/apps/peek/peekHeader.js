@@ -6,7 +6,7 @@ import { WindowControls } from '../../views/WindowControls'
 import { App } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../constants'
 
-const PeekHeaderContain = view({
+const PeekHeaderContain = view(UI.View, {
   background: '#fff',
   position: 'relative',
   zIndex: 100,
@@ -33,12 +33,13 @@ const TitleBarTitle = props => (
 
 const TitleBarContain = view({
   flex: 1,
+  height: 30,
   maxWidth: '100%',
   padding: [0, 60],
 })
 
 TitleBarContain.theme = ({ theme }) => ({
-  hover: {
+  '&:hover': {
     background: theme.hover.background.lighten(0.05),
   },
 })

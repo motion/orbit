@@ -18,6 +18,11 @@ const INTEGRATION_THEMES = {
   gmail: { background: 'darkred', color: 'white' },
 }
 
+const PERSON_THEME = {
+  background: 'rgba(0,0,0,0.01)',
+  color: '#444',
+}
+
 export class PeekStore {
   tornState = null
   dragOffset: [number, number] = null
@@ -32,7 +37,9 @@ export class PeekStore {
       return TYPE_THEMES[item]
     }
     const intTheme =
-      INTEGRATION_THEMES[this.model.integration || this.model.type]
+      this.model instanceof Bit
+        ? INTEGRATION_THEMES[this.model.integration || this.model.type]
+        : PERSON_THEME
     return intTheme || null
   }
 

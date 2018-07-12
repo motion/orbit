@@ -37,7 +37,7 @@ TabListItem.theme = ({ theme, active }) => ({
   color: active ? theme.active.color : theme.base.color,
   // this is reversed because technically active tabs should match the bgcolor
   backgroundColor: active ? theme.base.background : theme.active.background,
-  hover: {
+  '&:hover': {
     color: active ? theme.active.color : theme.hover.color,
     backgroundColor: active
       ? theme.base.background

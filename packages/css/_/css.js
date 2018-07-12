@@ -38,21 +38,21 @@ const BORDER_KEY = {
     borderTop: true,
 };
 exports.psuedoKeys = {
-    hover: '&:hover',
-    active: '&:active',
-    checked: '&:checked',
-    focus: '&:focus',
-    enabled: '&:enabled',
-    disabled: '&:disabled',
-    empty: '&:empty',
-    target: '&:target',
-    required: '&:required',
-    valid: '&:valid',
-    invalid: '&:invalid',
-    before: '&:before',
-    after: '&:after',
-    placeholder: '&:placeholder',
-    selection: '&:selection',
+    '&:hover': true,
+    '&:active': true,
+    '&:checked': true,
+    '&:focus': true,
+    '&:enabled': true,
+    '&:disabled': true,
+    '&:empty': true,
+    '&:target': true,
+    '&:required': true,
+    '&:valid': true,
+    '&:invalid': true,
+    '&:before': true,
+    '&:after': true,
+    '&:placeholder': true,
+    '&:selection': true,
 };
 const px = (x) => typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x;
 function motionStyle(options = {}) {
@@ -205,9 +205,6 @@ function motionStyle(options = {}) {
                 key === 'from' ||
                 key === 'to' ||
                 exports.psuedoKeys[key]) {
-                if (exports.psuedoKeys[key]) {
-                    finalKey = exports.psuedoKeys[key];
-                }
                 toReturn[finalKey] = processStyles(value, opts);
                 respond = true;
             }

@@ -14,26 +14,6 @@ export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 export { cssNameMap, psuedoKeys } from '@mcro/css'
 
-export const psuedoShorthands = {
-  // pseudoclasses
-  hover: '&:hover',
-  active: '&:active',
-  checked: '&:checked',
-  focus: '&:focus',
-  enabled: '&:enabled',
-  disabled: '&:disabled',
-  empty: '&:empty',
-  target: '&:target',
-  required: '&:required',
-  valid: '&:valid',
-  invalid: '&:invalid',
-  // psuedoelements
-  before: '&:before',
-  after: '&:after',
-  placeholder: '&:placeholder',
-  selection: '&:selection',
-}
-
 export const isGlossyFirstArg = arg => {
   if (!arg) {
     return false
@@ -201,9 +181,7 @@ export default class Gloss {
               continue
             }
           }
-          // do nice pseudo key transforms here so we merge them properly down the chain
-          let realKey = psuedoShorthands[key] || key
-          styles[realKey] = curTheme[key]
+          styles[key] = curTheme[key]
         }
       }
       return styles

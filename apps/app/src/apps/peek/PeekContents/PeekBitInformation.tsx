@@ -2,8 +2,10 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import keywordExtract from 'keyword-extractor'
 import * as UI from '@mcro/ui'
-import { SmallLink, SubTitle } from '../../../views'
+import { SubTitle, RoundButton } from '../../../views'
 import { PeekSection } from './PeekViews'
+import { Person } from '@mcro/models'
+import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
 
 const options = {
   language: 'english',
@@ -12,19 +14,28 @@ const options = {
   remove_duplicates: false,
 }
 
-export const PeekBitInformation = view(({ bit }) => {
-  const keywords = keywordExtract.extract(bit.body, options).slice(0, 8)
+type Props = {
+  body: string
+  people: Person[]
+}
 
+export const PeekBitInformation = view(({ body, people }: Props) => {
+  const keywords = keywordExtract.extract(body, options).slice(0, 8)
   return (
-    <PeekSection>
-      <SubTitle>Topics</SubTitle>
-      <UI.Text size={1.3} sizeLineHeight={0.9}>
-        {keywords.map((word, i) => (
-          <React.Fragment key={i}>
-            <SmallLink>{word}</SmallLink>{' '}
-          </React.Fragment>
+    <PeekSection backgroundColor="#fff">
+      <UI.Row alignItems="center">
+        <SubTitle verticalSpacing={0}>Topics</SubTitle>
+        <UI.Block width={20} />
+        {keywords.map((word, i) => <RoundButton key={i}>{word}</RoundButton>)}
+      </UI.Row>
+      <UI.Block height={10} />
+      <UI.Row if={people && people.length} alignItems="center">
+        <SubTitle verticalSpacing={0}>People</SubTitle>
+        <UI.Block width={20} />
+        {people.map((person, i) => (
+          <RoundButtonPerson person={person} key={i} />
         ))}
-      </UI.Text>
+      </UI.Row>
     </PeekSection>
   )
 })

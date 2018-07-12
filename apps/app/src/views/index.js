@@ -127,16 +127,15 @@ export const VertSpace = view({
   height: 20,
 })
 
-export const SubTitle = props => (
+export const SubTitle = ({ verticalSpacing = 1, ...props }) => (
   <UI.Text
     alpha={0.65}
     fontWeight={300}
     fontSize={16}
     alignItems="center"
     flexFlow="row"
-    padding={[3, 0, 5]}
+    padding={[3 * verticalSpacing, 0, 10 * verticalSpacing]}
     opacity={0.75}
-    marginBottom={5}
     {...props}
   />
 )

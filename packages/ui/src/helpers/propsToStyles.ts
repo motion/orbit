@@ -2,9 +2,7 @@ import toColor from 'color'
 import { psuedoKeys } from '@mcro/gloss'
 
 const valFor = state => (props, key) => {
-  let value = state === 'base'
-    ? props[key]
-    : (props[state] && props[state][key])
+  let value = state === 'base' ? props[key] : props[state] && props[state][key]
   if (typeof value === 'undefined') {
     value = props.theme[state][key]
   }
@@ -32,12 +30,15 @@ export const propsToStyles = props => {
       styles[key] = getVal(props, key)
       continue
     }
-    // :hover, etc
-    const stateKey = psuedoKeys[key]
-    if (stateKey) {
+    // &:hover, etc
+    if (psuedoKeys[key]) {
+      const stateKey = key
       styles[stateKey] = {}
       const getStateVal = valFor(key)
       const val = props[key]
+      if (!val) {
+        throw new Error(`Bad val for ${key} ${JSON.stringify(val)}`)
+      }
       for (const subKey of Object.keys(val)) {
         if (validCSSAttr(subKey)) {
           styles[stateKey][subKey] = getStateVal(props, subKey)

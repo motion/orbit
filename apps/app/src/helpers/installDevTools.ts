@@ -23,17 +23,13 @@ debug.loud()
 // mobxFormatters(Mobx)
 
 console.warn(
-  'WARNING! console.warn is patched because Electron spits out 3 pages of warnings initially... need to patch before prod',
+  'WARNING! console.warn off during initial render because Electron spits out 3 pages of warnings... that we need to fix before we release app',
 )
-const ogWarn = console.warn.bind(console)
-console.warn = function(...args) {
-  if (args[0] && typeof args[0] === 'string') {
-    if (args[0].indexOf('Electron Security Warning')) {
-      return
-    }
-  }
-  return ogWarn.call(this, ...args)
-}
+const ogWarn = console.warn
+console.warn = _ => _
+setTimeout(() => {
+  console.warn = ogWarn
+})
 
 // really nice for quicker debugging...
 if (!Object.prototype.toJS) {

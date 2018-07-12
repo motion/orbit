@@ -7,6 +7,7 @@ import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
 import { Color } from '@mcro/css'
+import { findDOMNode } from 'react-dom'
 
 export type PopoverProps = {
   // can pass function to get isOpen passed in
@@ -311,10 +312,13 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   setTarget() {
-    this.target = getTarget(
-      (this.targetRef && this.targetRef.current) || this.curProps.target,
-    )
-    console.log('no set it up', this.target, this.targetRef)
+    this.target =
+      (this.targetRef && this.targetRef.current) ||
+      getTarget(this.curProps.target)
+    // couldnt forward ref...
+    if (!this.target) {
+      this.target = findDOMNode(this)
+    }
     if (this.target) {
       this.listenForClick()
       this.listenForHover()
@@ -769,7 +773,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
     } = this.state
     const { showPopover } = this
     const controlledTarget = target => {
-      console.warn('set new ref')
+      console.warn('yea')
+      window.x = this
       const targetProps = {
         ref: this.targetRef,
         active: false,

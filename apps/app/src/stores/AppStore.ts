@@ -243,41 +243,6 @@ export class AppStore {
     },
   )
 
-  bitSearch = react(
-    () => [
-      App.state.query,
-      Desktop.appState.id,
-      Desktop.state.lastBitUpdatedAt,
-    ],
-    async ([query], { sleep, setValue }) => {
-      // // debounce a little for fast typer
-      // await sleep(TYPE_DEBOUNCE)
-      // // get first page results
-      // const takePer = 1
-      // const takeMax = 50
-      // for (let i = 0; i < takeMax; i += takePer) {
-      //   const results = await searchBits(query, { take: 4 })
-      //   setValue({
-      //     results,
-      //     restResults: null,
-      //     query,
-      //   })
-      //   // get next page results
-      //   await sleep(300)
-      // }
-      // const restResults = await searchBits(query, { skip: 4, take: 4 })
-      // setValue({
-      //   results,
-      //   restResults,
-      //   query,
-      // })
-    },
-    {
-      immediate: true,
-      defaultValue: { results: [] },
-    },
-  )
-
   peopleSearch = react(
     () => [App.state.query, Desktop.state.lastBitUpdatedAt],
     async ([query], { sleep }) => {

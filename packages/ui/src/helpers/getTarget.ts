@@ -13,9 +13,5 @@ export function getTarget(target) {
     case 'function':
       return findDOMNode(target())
   }
-  try {
-    return findDOMNode(target)
-  } catch (e) {
-    return target
-  }
+  return null
 }

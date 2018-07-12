@@ -73,18 +73,19 @@ const TitleBar = ({ children, after, ...props }) => (
 @attachTheme
 @view
 export class PeekHeaderContent extends React.Component {
-  render({
-    peekStore,
-    title,
-    date,
-    subtitle,
-    permalink,
-    icon,
-    theme,
-    subhead,
-    integration,
-    ...props
-  }) {
+  render() {
+    const {
+      peekStore,
+      title,
+      date,
+      subtitle,
+      permalink,
+      icon,
+      theme,
+      subhead,
+      integration,
+      ...props
+    } = this.props
     return (
       <PeekHeaderContain
         draggable={true}

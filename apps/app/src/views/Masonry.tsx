@@ -1,10 +1,17 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
 import isEqual from 'react-fast-compare'
+import * as UI from '@mcro/ui'
 
 const rowHeight = 2
 const gridGap = 9
 const gridColumnGap = 9
+
+const Grid = view(UI.Grid, {
+  margin: [0, -5],
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
+})
 
 @view.ui
 export class Masonry extends React.Component {
@@ -71,30 +78,20 @@ export class Masonry extends React.Component {
     const { children, ...props } = this.props
     if (!measured) {
       return (
-        <grid
+        <Grid
           ref={this.handleGridRef}
           {...props}
-          css={{ opacity: 0, gridColumnGap }}
+          opacity={0}
+          gridColumnGap={gridColumnGap}
         >
           {children}
-        </grid>
+        </Grid>
       )
     }
     return (
-      <grid style={this.gridStyle} {...props}>
+      <Grid {...this.gridStyle} {...props}>
         {this.state.gridChildren}
-      </grid>
+      </Grid>
     )
-  }
-
-  static style = {
-    grid: {
-      margin: [0, -5],
-      // maxHeight: '100%',
-      // overflowY: 'scroll',
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
-      // gridAutoRows: 40,
-    },
   }
 }

@@ -1,5 +1,5 @@
 import { Header, Footer, PostTemplate } from '~/components'
-import { P2, Section } from '~/views'
+import { Section } from '~/views'
 import SectionContent from '~/views/sectionContent'
 import * as React from 'react'
 import { view } from '@mcro/black'

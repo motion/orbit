@@ -5,6 +5,7 @@ import { OrbitPage } from './OrbitPage'
 import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import { Bit } from '@mcro/models'
+import * as UI from '@mcro/ui'
 
 const getItem = {
   githubItem: () => Bit.findOne({ where: { integration: 'github' }, skip: 6 }),
@@ -42,9 +43,9 @@ export class IsolateHome extends React.Component {
 export class IsolatePage extends React.Component {
   render() {
     return (
-      <isolate $$fullscreen>
+      <UI.FullScreen>
         <IsolatePeek />
-      </isolate>
+      </UI.FullScreen>
     )
   }
 }

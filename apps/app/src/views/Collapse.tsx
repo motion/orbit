@@ -18,13 +18,12 @@ export class Body extends React.Component {
   }
 
   render({ open, children }) {
-    console.log('height', this.state)
     return (
-      <container css={{ height: 'auto' /* !open ? 0 : this.state.height */ }}>
-        <inner ref={this.innerRef} $hidden={!open}>
+      <div style={{ height: 'auto' /* !open ? 0 : this.state.height */ }}>
+        <div ref={this.innerRef} style={{ opacity: open ? 1 : 0 }}>
           {children}
-        </inner>
-      </container>
+        </div>
+      </div>
     )
   }
 
@@ -47,27 +46,23 @@ export class Body extends React.Component {
 
 @view
 export class Arrow extends React.Component {
-  render({ color, open, height, width, size }) {
+  render() {
+    const { color, open, height, width, size } = this.props
     return (
-      <container css={{ width, height }}>
+      <div style={{ width, height }}>
         <UI.Icon
           color={color || '#fff'}
           name="arrows-1_small-triangle-right"
           size={size || 24}
-          $arrow
-          $flip={open}
+          transition="transform ease-in 100ms"
+          marginRight={3}
+          transform={
+            open && {
+              rotate: '90deg',
+            }
+          }
         />
-      </container>
+      </div>
     )
-  }
-
-  static style = {
-    arrow: {
-      transition: 'transform ease-in 100ms',
-      marginRight: 3,
-    },
-    flip: {
-      transform: { rotate: '90deg' },
-    },
   }
 }

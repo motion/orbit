@@ -22,6 +22,7 @@ export * from './blocks/InlineBlock'
 export * from './blocks/InlineFlex'
 export * from './blocks/Row'
 export * from './blocks/View'
+export * from './blocks/FullScreen'
 
 // components
 export * from './Tab'

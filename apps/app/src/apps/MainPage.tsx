@@ -4,32 +4,30 @@ import { view } from '@mcro/black'
 import { OrbitPage } from './OrbitPage'
 import { PeekPage } from './PeekPage'
 import { AppStore } from '../stores/AppStore'
+import * as UI from '@mcro/ui'
+
+const Main = view(UI.Col, {
+  // background: [0, 0, 0, 0.1],
+  maxWidth: '100%',
+  maxHeight: '100%',
+  overflow: 'hidden',
+  width: '100%',
+  height: '100%',
+  userSelect: 'none',
+  position: 'relative',
+})
 
 @view.provide({
   appStore: AppStore,
 })
-@view
 export class MainPage extends React.Component {
   render() {
     return (
-      <main>
+      <Main>
         {/* <HighlightsPage /> */}
         <OrbitPage />
         <PeekPage />
-      </main>
+      </Main>
     )
-  }
-
-  static style = {
-    main: {
-      // background: [0, 0, 0, 0.1],
-      maxWidth: '100%',
-      maxHeight: '100%',
-      overflow: 'hidden',
-      width: '100%',
-      height: '100%',
-      userSelect: 'none',
-      position: 'relative',
-    },
   }
 }

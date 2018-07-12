@@ -6,8 +6,19 @@ import * as Helpers from '@mcro/constants'
 // import { LINE_Y_ADJ, toTarget } from './helpers'
 import { OCRWord } from './highlights/ocrWord'
 import { OCRLine } from './highlights/ocrLine'
+import * as UI from '@mcro/ui'
 
 // const log = debug('highlights')
+
+const Frame = view(UI.Col, {
+  width: '100%',
+  height: '100%',
+  pointerEvents: 'none',
+  userSelect: 'none',
+  position: 'relative',
+  transition: 'all ease-in 200ms',
+  // background: [0, 0, 0, 0.5],
+})
 
 @view.attach({
   store: class HighlightsStore {
@@ -122,30 +133,17 @@ import { OCRLine } from './highlights/ocrLine'
 })
 @view
 export class HighlightsPage extends React.Component {
-  render({ store }) {
+  render() {
+    const { store } = this.props
     return (
-      <frame if={store.showAll}>
+      <Frame if={store.showAll}>
         {(store.ocrWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
         {(Desktop.ocrState.lines || []).map(item => (
           <OCRLine key={Helpers.wordKey(item)} item={item} store={store} />
         ))}
-      </frame>
+      </Frame>
     )
-  }
-  static style = {
-    frame: {
-      width: '100%',
-      height: '100%',
-      pointerEvents: 'none',
-      userSelect: 'none',
-      position: 'relative',
-      transition: 'all ease-in 200ms',
-      // background: [0, 0, 0, 0.5],
-    },
-    overlay: {
-      background: [0, 0, 0, 0.15],
-    },
   }
 }

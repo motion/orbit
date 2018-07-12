@@ -5,8 +5,6 @@ import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 
-window.UI = UI
-
 class HeaderStore {
   inputRef = React.createRef()
 

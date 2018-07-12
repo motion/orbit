@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "npm run build -- --watch --preserveWatchOutput",
-    "build-app": "NODE_ENV=production mcro-build --prod --target node",
+    "build-app": "NODE_ENV=production mcro-build --build --target node",
     "start": "./start.sh",
     "start-prod": "NODE_ENV=production node desktop.js"
   },

@@ -105,8 +105,6 @@ export default class Gloss {
     // @ts-ignore
     this.createElement.glossUID = id
     Child.prototype.glossElement = this.createElement
-    Child.prototype.gloss = this
-    Child.prototype.glossStylesheet = this.stylesheet
     // @ts-ignore
     Child.glossUID = id
     let hasAttached = false

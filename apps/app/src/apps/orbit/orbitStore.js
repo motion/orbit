@@ -5,7 +5,7 @@ import { AppReactions } from '../../stores/AppReactions'
 
 // some comment test
 
-export default class OrbitStore {
+export class OrbitStore {
   query = App.state.query
 
   updateAppQuery = react(
@@ -18,6 +18,7 @@ export default class OrbitStore {
   lastPinKey = ''
 
   willMount() {
+    console.log('orbitStore123', this)
     this.appReactions = new AppReactions({
       onPinKey: key => {
         if (key === 'Delete') {

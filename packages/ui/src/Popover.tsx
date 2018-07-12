@@ -2,10 +2,10 @@ import * as React from 'react'
 import { view, on, attachTheme } from '@mcro/black'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
-import { isNumber, debounce, throttle } from 'lodash'
+import { isNumber, debounce, throttle, isEqual } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
-import isEqual from 'react-fast-compare'
+// import isEqual from 'react-fast-compare'
 
 export type PopoverProps = {
   // can pass function to get isOpen passed in
@@ -80,7 +80,7 @@ const getShadow = (shadow, elevation) => {
   }
   return base
 }
-const calcForgiveness = (forgiveness, distance) => forgiveness
+const calcForgiveness = (forgiveness, _) => forgiveness
 
 @attachTheme
 @view.ui
@@ -141,8 +141,10 @@ export class Popover extends React.PureComponent<PopoverProps> {
         props,
       }
     }
-    return {
-      setPosition: false,
+    if (state.setPosition) {
+      return {
+        setPosition: false,
+      }
     }
   }
 

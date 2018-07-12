@@ -94,7 +94,7 @@ export class Root {
 
     this.generalSettingManager = new GeneralSettingManager()
     this.sync = new Sync()
-    this.sync.start()
+    // this.sync.start()
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,
@@ -140,12 +140,14 @@ export class Root {
   }
 
   reconnect = async () => {
+    console.log('reconnect is broken')
+    return
     if (this.isReconnecting) {
       return
     }
     this.isReconnecting = true
     if (this.connection) {
-      console.log('closing old connection...')
+      console.log('!!!!!!!!!!!! closing old connection...')
       this.connection.close()
     }
     await this.connect()

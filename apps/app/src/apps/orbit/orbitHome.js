@@ -130,7 +130,7 @@ export class OrbitHome extends React.Component {
   }
 
   render({ store }) {
-    log('HOME---------------')
+    // log('HOME---------------')
     const locale = 'en-US'
     const now = new Date()
     const day = now.toLocaleDateString(locale, { weekday: 'short' })

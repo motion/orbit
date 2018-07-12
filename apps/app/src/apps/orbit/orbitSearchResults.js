@@ -38,7 +38,7 @@ export class OrbitSearchResults extends React.Component {
     }
     const { query, results, message } = searchStore.state
     const isChanging = searchStore.currentQuery !== query
-    log(`SEARCH OrbitSearchResults ${name} --------------`)
+    // log(`SEARCH OrbitSearchResults ${name} --------------`)
     const highlightWords = searchStore.state.query
       .split(' ')
       .filter(x => x.length > 2)

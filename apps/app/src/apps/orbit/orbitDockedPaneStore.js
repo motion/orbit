@@ -1,4 +1,4 @@
-import { react, on } from '@mcro/black'
+import { react, on, store } from '@mcro/black'
 import { App } from '@mcro/stores'
 
 // filters = ['all', 'general', 'status', 'showoff']

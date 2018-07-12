@@ -90,7 +90,7 @@ export default class SQLiteServer {
       Desktop.setState({
         lastSQLError: Date.now(),
       })
-      console.log(err)
+      console.log('sqlite error', err)
       if (err.message && err.message.indexOf('SQLITE_IOERR')) {
         recoverDB()
       }

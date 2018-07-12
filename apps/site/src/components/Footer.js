@@ -66,10 +66,10 @@ export class Footer extends React.Component {
                   <section>
                     <SmallTitle>Company</SmallTitle>
                     <nav>
-                      <Link $link to="/features">
+                      <Link if={false} $link to="/features">
                         Features
                       </Link>
-                      <Link $link to="/use-cases">
+                      <Link if={false} $link to="/use-cases">
                         Use Cases
                       </Link>
                       <Link $link to="/about">
@@ -77,10 +77,10 @@ export class Footer extends React.Component {
                       </Link>
                     </nav>
                   </section>
-                  <section>
+                  <section if={false}>
                     <SmallTitle>Follow</SmallTitle>
                     <nav>
-                      <Link $link to="/blog">
+                      <Link if={false} $link to="/blog">
                         Blog
                       </Link>
                       <Link $link to="https://twitter.com/tryorbit">

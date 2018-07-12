@@ -1,4 +1,15 @@
 import $ from 'color'
+import { Color } from '@mcro/css'
+
+type ColorObject = { [a: string]: Color }
+
+type SimpleStyleObject = {
+  [a: string]: Color | ColorObject
+  hover?: ColorObject
+  active?: ColorObject
+  highlight?: ColorObject
+  focus?: ColorObject
+}
 
 const lighten = {
   true: 'darken',
@@ -20,14 +31,12 @@ const smallAmt = color =>
   Math.min(0.5, Math.max(MIN_ADJUST, 2 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
 const largeAmt = color => smallAmt(color) * 1.25
 
-const opposite = color => color.mix(
-  color.lighten(1),
-)
+const opposite = color => color.mix(color.lighten(1))
 
 export class ThemeMaker {
   cache = {}
 
-  colorize = obj =>
+  colorize = (obj): SimpleStyleObject =>
     Object.keys(obj).reduce(
       (acc, cur) => ({
         ...acc,
@@ -66,17 +75,22 @@ export class ThemeMaker {
     return theme
   }
 
-  fromStyles = ({
-    highlightColor,
-    highlightBackground,
-    background,
-    color,
-    borderColor,
-    ...rest
-  }) => {
-    if (!background && !color) {
+  fromStyles = (styleObject: SimpleStyleObject) => {
+    if (!styleObject.background && !styleObject.color) {
       throw new Error('Themes require at least background or color')
     }
+    const key = JSON.stringify(styleObject)
+    if (this.cache[key]) {
+      return this.cache[key]
+    }
+    const {
+      highlightColor,
+      highlightBackground,
+      background,
+      color,
+      borderColor,
+      ...rest
+    } = styleObject
     const backgroundColored = background ? $(background) : opposite($(color))
     const base = this.colorize({
       highlightColor,
@@ -89,7 +103,7 @@ export class ThemeMaker {
       background: base.background && adjust(base.background, largeAmt, true),
       borderColor: base.borderColor && adjust(base.borderColor, largeAmt, true),
     }
-    return this.colorize({
+    const res = this.colorize({
       ...rest,
       base,
       hover: {
@@ -114,5 +128,7 @@ export class ThemeMaker {
         ...rest.highlight,
       },
     })
+    this.cache[key] = res
+    return res
   }
 }

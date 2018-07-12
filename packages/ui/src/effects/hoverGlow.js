@@ -64,7 +64,6 @@ export class HoverGlow extends React.Component {
   rootRef = React.createRef()
 
   componentDidMount() {
-    console.log('did mount', this)
     on(
       this,
       setTimeout(() => {

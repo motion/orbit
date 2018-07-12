@@ -9,12 +9,17 @@ class ConfluenceSettingStore {
   active = 'general'
 }
 
+const Section = view({
+  flex: 1,
+})
+
 @view.attach({
   store: ConfluenceSettingStore,
 })
 @view
 export class ConfluenceSetting extends React.Component {
-  render({ store, setting, children }) {
+  render() {
+    const { store, setting, children } = this.props
     return children({
       subhead: (
         <UI.Tabs
@@ -27,30 +32,18 @@ export class ConfluenceSetting extends React.Component {
         </UI.Tabs>
       ),
       content: (
-        <container>
-          <section if={store.active === 'general'}>
-            <inner $centered>
+        <UI.Col flex={1}>
+          <Section if={store.active === 'general'}>
+            <UI.Col margin="auto">
               <SubTitle css={{ textAlign: 'center' }}>All good!</SubTitle>
               <OrbitIcon icon="confluence" size={256} />
-            </inner>
-          </section>
-          <section if={store.active === 'account'}>
+            </UI.Col>
+          </Section>
+          <Section if={store.active === 'account'}>
             <AtlassianSettingLogin setting={setting} />
-          </section>
-        </container>
+          </Section>
+        </UI.Col>
       ),
     })
-  }
-
-  static style = {
-    container: {
-      flex: 1,
-    },
-    section: {
-      flex: 1,
-    },
-    centered: {
-      margin: 'auto',
-    },
   }
 }

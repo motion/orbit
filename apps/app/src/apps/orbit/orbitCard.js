@@ -15,7 +15,7 @@ const debounceLog = (...args) => {
   loggers.push([...args])
   clearTimeout(nextLog)
   nextLog = setTimeout(() => {
-    log('render cards:', loggers.length, loggers.slice(0, 2).join(' -- '))
+    // log('render cards:', loggers.length, loggers.slice(0, 2).join(' -- '))
     loggers = []
     nextLog = null
   }, 16)

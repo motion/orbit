@@ -21,7 +21,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
   render() {
     const { bit, message, previousMessage, itemProps } = this.props
     if (!message.text || !bit) {
-      log(`no messagetext/bit ${JSON.stringify(message)}`)
+      console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
     let htmlText = message.text
@@ -34,7 +34,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
       person => person.integrationId === message.user,
     )
     if (!person) {
-      log(`no person for message ${message.text}`)
+      console.log(`no person for message ${message.text}`)
       return null
     }
     let previousBySameAuthor = false

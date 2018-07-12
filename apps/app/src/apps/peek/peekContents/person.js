@@ -3,12 +3,12 @@ import { view } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '../../../apps/orbit/OrbitIcon'
 import * as UI from '@mcro/ui'
-import { Carousel } from '../../../components/Carousel'
 import { Bit } from '@mcro/models'
-import { SubTitle } from '../../../views'
+import { SubTitle, RoundButton } from '../../../views'
+import { OrbitCardMasonry } from '../../orbit/OrbitCardMasonry'
 
 const StrongSubTitle = props => (
-  <SubTitle fontWeight={500} fontSize={16} {...props} />
+  <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
 )
 
 const mapW = 700
@@ -45,6 +45,9 @@ export class Person extends React.Component {
       headerProps: {
         // make header not push down content
         position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
       },
       content: (
         <frame>
@@ -103,7 +106,7 @@ export class Person extends React.Component {
           <content>
             <contentInner>
               <card>
-                <StrongSubTitle>Where</StrongSubTitle>
+                <StrongSubTitle>Spends time in</StrongSubTitle>
                 <UI.ListRow
                   itemProps={{
                     size: 1.05,
@@ -113,34 +116,16 @@ export class Person extends React.Component {
                     margin: [0, 10, 0, -5],
                   }}
                 >
-                  <UI.Button>#general</UI.Button>
-                  <UI.Button>#status</UI.Button>
-                  <UI.Button icon="github">motion/orbit</UI.Button>
-                  <UI.Button>#showoff</UI.Button>
+                  <RoundButton>#general</RoundButton>
+                  <RoundButton>#status</RoundButton>
+                  <RoundButton icon="github">motion/orbit</RoundButton>
+                  <RoundButton>#showoff</RoundButton>
                 </UI.ListRow>
               </card>
 
               <card>
-                <StrongSubTitle>Topics</StrongSubTitle>
-                <UI.ListRow
-                  itemProps={{
-                    size: 1.05,
-                    alpha: 0.9,
-                    background: 'transparent',
-                    borderRadius: 5,
-                    margin: [0, 10, 0, -5],
-                  }}
-                >
-                  <UI.Button icon="zoom">UI Kit</UI.Button>
-                  <UI.Button icon="zoom">size prop</UI.Button>
-                  <UI.Button icon="zoom">async migration</UI.Button>
-                  <UI.Button icon="zoom">freelance</UI.Button>
-                </UI.ListRow>
-              </card>
-
-              <card>
-                <StrongSubTitle>Conversations</StrongSubTitle>
-                <Carousel items={store.relatedConversations} />
+                <StrongSubTitle>Recently</StrongSubTitle>
+                <OrbitCardMasonry items={store.relatedConversations} />
               </card>
             </contentInner>
           </content>

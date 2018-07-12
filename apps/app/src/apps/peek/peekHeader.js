@@ -7,14 +7,13 @@ import { App } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../constants'
 
 const PeekHeaderContain = view(UI.View, {
-  background: '#fff',
-  position: 'relative',
   zIndex: 100,
 })
 
-PeekHeaderContain.theme = ({ theme }) => ({
+PeekHeaderContain.theme = ({ theme, position }) => ({
+  position: position || 'relative',
   borderBottom: [1, theme.base.borderColor],
-  background: theme.base.background,
+  background: theme.base.background || '#fff',
 })
 
 const TitleBarTitle = props => (

@@ -462,7 +462,7 @@ export class Surface extends React.Component<SurfaceProps> {
     if (colorfulBg && background && !background.model) {
       background = $(background)
     }
-    if (typeof props.backgroundAlpha === 'number') {
+    if (typeof props.backgroundAlpha === 'number' && background.alpha) {
       background = background.alpha(props.backgroundAlpha)
     }
 

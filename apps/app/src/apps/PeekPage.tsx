@@ -9,8 +9,7 @@ import { AppStore } from '../stores/AppStore'
 import { PeekContent } from './peek/PeekContent'
 import { PeekHeader } from './peek/PeekHeader'
 import { PeekBitInformation } from './peek/PeekContents/PeekBitInformation'
-import { Bit } from '@mcro/models'
-import { Person } from './peek/PeekContents'
+import { Bit, Person } from '@mcro/models'
 
 const PeekPageInner = view(({ peekStore, appStore }) => {
   if (!peekStore.state) {

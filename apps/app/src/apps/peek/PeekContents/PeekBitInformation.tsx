@@ -22,14 +22,13 @@ type Props = {
 export const PeekBitInformation = view(({ body, people }: Props) => {
   const keywords = keywordExtract.extract(body, options).slice(0, 8)
   return (
-    <PeekSection backgroundColor="#fff">
+    <PeekSection backgroundColor="#fff" borderTop={[1, '#e8e8e8']}>
       <UI.Row alignItems="center">
         <SubTitle verticalSpacing={0}>Topics</SubTitle>
         <UI.Block width={20} />
         {keywords.map((word, i) => <RoundButton key={i}>{word}</RoundButton>)}
       </UI.Row>
-      <UI.Block height={10} />
-      <UI.Row if={people && people.length} alignItems="center">
+      <UI.Row if={people && people.length} marginTop={10} alignItems="center">
         <SubTitle verticalSpacing={0}>People</SubTitle>
         <UI.Block width={20} />
         {people.map((person, i) => (

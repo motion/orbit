@@ -214,11 +214,12 @@ export default class Gloss {
     if (isParentComponent) {
       name = targetElement
     }
-    const InnerView = <GlossView>attachTheme(({ forwardRef, ...props }) => {
+    const InnerView = <GlossView>attachTheme(allProps => {
       // basically PureRender
-      if (elementCache.has(props)) {
-        return elementCache.get(props)
+      if (elementCache.has(allProps)) {
+        return elementCache.get(allProps)
       }
+      const { forwardRef, ...props } = allProps
       // attach theme/styles on first use
       if (!hasAttachedStyles) {
         try {

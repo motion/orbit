@@ -8,21 +8,18 @@ import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 window.UI = UI
 
 class HeaderStore {
-  inputRef = null
+  inputRef = React.createRef()
 
   onInput = () => {
     this.props.orbitStore.onChangeQuery(this.inputRef.innerText)
   }
 
   focus = () => {
-    if (!this.inputRef) return
+    if (!this.inputRef || !this.inputRef.current) {
+      return
+    }
+    console.log('FOCUS FOCUS', this.inputRef.current)
     this.inputRef.current.focus()
-    on(
-      this,
-      setTimeout(() => {
-        this.inputRef.current.focus()
-      }),
-    )
   }
 
   focusInput = react(
@@ -32,7 +29,10 @@ class HeaderStore {
       App.isMouseInActiveArea,
     ],
     async ([shown], { when }) => {
-      if (!shown) throw react.cancel
+      if (!shown) {
+        throw react.cancel
+      }
+      this.focus()
       await when(() => Desktop.state.focusedOnOrbit)
       this.focus()
     },
@@ -95,7 +95,7 @@ export class OrbitHeader extends React.Component {
             onFocus={orbitStore.onFocus}
             onBlur={orbitStore.onBlur}
             onKeyDown={this.handleKeyDown}
-            getRef={ref => (headerStore.inputRef = ref)}
+            ref={headerStore.inputRef}
             onClick={headerStore.onClickInput}
           />
         </title>

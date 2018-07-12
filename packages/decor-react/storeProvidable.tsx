@@ -14,7 +14,6 @@ const updateProps = Mobx.action('updateProps', (props, nextProps) => {
   const nextPropsKeys = Object.keys(nextProps)
   // change granular so reactions are granular
   for (const prop of nextPropsKeys) {
-    console.log('fast compare', props[prop], nextProps[prop])
     if (!isEqual(props[prop], nextProps[prop])) {
       props[prop] = nextProps[prop]
     }

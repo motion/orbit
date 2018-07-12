@@ -138,7 +138,7 @@ export default class VirtualList extends Component<
         fill={true}
         onScroll={this.handleScroll}
         innerRef={this.setRef}
-        scrollable={true}
+        overflow="visible"
       >
         {inner}
       </View>

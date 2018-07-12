@@ -162,10 +162,11 @@ export default class Gloss {
       views.push(curView)
       curView = curView.child
     }
+    const lastViewIndex = views.length - 1
     return props => {
-      let styles = {}
+      let styles
       // apply bottom to top
-      for (let i = views.length - 1; i >= 0; i--) {
+      for (let i = lastViewIndex; i >= 0; i--) {
         // skip empty theme views
         if (!views[i].theme) {
           continue
@@ -178,6 +179,9 @@ export default class Gloss {
             if (skipParentStyleKeys[i - 1][key]) {
               continue
             }
+          }
+          if (!styles) {
+            styles = {}
           }
           styles[key] = curTheme[key]
         }

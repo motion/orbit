@@ -1,8 +1,6 @@
 import { view } from '@mcro/black'
-import { propStyles } from '../helpers/propStyles'
+import { View } from './View'
 
-export const Grid = view({
+export const Grid = view(View, {
   display: 'grid',
 })
-
-Grid.theme = propStyles

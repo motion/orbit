@@ -65,6 +65,8 @@ setTimeout(() => {
   }
 }, 100)
 
+const cssOpts = { snakeCase: false }
+
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
   const { baseStyles, options, css } = Gloss
@@ -154,7 +156,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
         if (options.glossProp && prop === options.glossProp) {
           if (val && Object.keys(val).length) {
             // css={}
-            const extraStyle = css(val, { snakeCase: false })
+            const extraStyle = css(val, cssOpts)
             style = { ...style, ...extraStyle }
           }
           continue

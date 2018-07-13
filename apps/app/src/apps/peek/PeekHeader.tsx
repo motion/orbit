@@ -18,7 +18,6 @@ PeekHeaderContain.theme = ({ theme, position }) => ({
 
 const TitleBarTitle = props => (
   <UI.Text
-    debug
     size={1.1}
     fontWeight={700}
     ellipse={1}

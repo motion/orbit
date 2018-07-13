@@ -304,7 +304,7 @@ export class OrbitCard extends React.Component {
           color="#000"
           resist={90}
           scale={0.99}
-          offsetTop={isSelected ? 18 : 10}
+          offsetTop={isSelected ? 13 : 6}
           full
           blur={isSelected ? 8 : 4}
           inverse

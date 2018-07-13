@@ -7,10 +7,13 @@ import {
 } from '@mcro/reactron'
 import { view } from '@mcro/black'
 import { Electron, App } from '@mcro/stores'
+import { ElectronStore } from '../stores/ElectronStore'
 
 @view.attach('electronStore')
 @view.electron
-export class MenuItems extends React.Component {
+export class MenuItems extends React.Component<{
+  electronStore?: ElectronStore
+}> {
   isClosing = false
 
   toggleDevTools = appName => () => {
@@ -33,7 +36,8 @@ export class MenuItems extends React.Component {
     Electron.sendMessage(App, App.messages.TOGGLE_SETTINGS)
   }
 
-  render({ electronStore }) {
+  render() {
+    const { electronStore } = this.props
     return (
       <Menu>
         <SubMenu label="Orbit">

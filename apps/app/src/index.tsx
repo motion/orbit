@@ -6,7 +6,7 @@ import './helpers/createElement'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject.js'
 import './helpers/installDevelopmentHelpers'
-import { Root } from './Root'
+import { RootStore } from './stores/RootStore'
 import * as UI from '@mcro/ui'
 import { ThemeProvide } from '@mcro/ui'
 import * as React from 'react'
@@ -28,7 +28,7 @@ const render = throttle(async () => {
   if (!window['Root']) {
     console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
     console.timeEnd('splash')
-    const rootStore = new Root()
+    const rootStore = new RootStore()
     window['Root'] = rootStore
     window['restart'] = rootStore.restart
     await rootStore.start()

@@ -2,7 +2,7 @@ import { on, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '../helpers'
-import * as AppStoreHelpers from './appStoreHelpers'
+import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
 
@@ -36,7 +36,6 @@ export class AppStore {
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
-  settings = {}
   getResults = null
   lastSelectedPane = ''
 
@@ -71,9 +70,9 @@ export class AppStore {
   }
 
   get selectedItem() {
-    if (this.activeIndex === -1) {
-      return this.quickSearchResults[this.quickSearchIndex]
-    }
+    // if (this.activeIndex === -1) {
+    //   return this.quickSearchResults[this.quickSearchIndex]
+    // }
     return this.searchState.results[this.activeIndex]
   }
 
@@ -83,17 +82,6 @@ export class AppStore {
       this.activeIndex < this.searchState.results.length
     )
   }
-
-  settings = modelQueryReaction(
-    () =>
-      Setting.find({
-        where: {
-          token: Not(Equal('')),
-        },
-      }),
-    settings =>
-      settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {}),
-  )
 
   services = modelQueryReaction(
     () =>
@@ -358,21 +346,22 @@ export class AppStore {
     },
   )
 
-  quickSearchResults = react(
-    () => App.state.query,
-    async (query, { when }) => {
-      const hasLoaded = !!this.quickSearchResults.length
-      if (hasLoaded) {
-        await when(() => query === Desktop.searchState.pluginResultsId)
-      }
-      const results = Desktop.searchState.pluginResults
-      if (!results.length) {
-        throw react.cancel
-      }
-      return AppStoreHelpers.matchSort(query, results)
-    },
-    { defaultValue: [], immediate: true },
-  )
+  // disable until app launching
+  // quickSearchResults = react(
+  //   () => App.state.query,
+  //   async (query, { when }) => {
+  //     const hasLoaded = !!this.quickSearchResults.length
+  //     if (hasLoaded) {
+  //       await when(() => query === Desktop.searchState.pluginResultsId)
+  //     }
+  //     const results = Desktop.searchState.pluginResults
+  //     if (!results.length) {
+  //       throw react.cancel
+  //     }
+  //     return AppStoreHelpers.matchSort(query, results)
+  //   },
+  //   { defaultValue: [], immediate: true },
+  // )
 
   clearSelected = (clearPeek = true) => {
     this.leaveIndex = -1

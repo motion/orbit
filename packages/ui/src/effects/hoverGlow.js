@@ -20,6 +20,11 @@ import throttle from 'raf-throttle'
 //   duration: number,
 //   overlayZIndex: number,
 //   blur: number,
+// clickable,
+//     clickDuration,
+//     parent,
+//     backdropFilter,
+//     restingPosi
 // }
 
 // type State = {
@@ -79,7 +84,6 @@ export class HoverGlow extends React.Component {
     } else if (this.rootRef) {
       const node = this.rootRef.current
       if (!node) {
-        console.warn('no node?')
         return
       }
       parentNode = node.parentNode
@@ -88,7 +92,9 @@ export class HoverGlow extends React.Component {
       this.setState({ parentRect: parentNode.getBoundingClientRect() })
       const bounds = parentNode.getBoundingClientRect()
       this.setState({ parentNode, bounds })
+      // @ts-ignore
       const trackMouseTrue = throttle(() => this.trackMouse(true))
+      // @ts-ignore
       const trackMouseFalse = throttle(() => this.trackMouse(false))
       on(this, parentNode, 'mouseenter', trackMouseTrue)
       on(this, parentNode, 'mousemove', this.move)
@@ -160,6 +166,10 @@ export class HoverGlow extends React.Component {
     scale,
     color,
     clickable,
+    clickDuration,
+    parent,
+    backdropFilter,
+    restingPosition,
     borderRadius,
     borderLeftRadius,
     borderRightRadius,
@@ -172,23 +182,19 @@ export class HoverGlow extends React.Component {
     width: propWidth,
     height: propHeight,
     size,
-    clickDuration,
     clickScale,
     draggable,
     duration: _duration,
     durationIn,
     durationOut,
-    parent,
     children,
     behind,
     background,
     gradient,
-    backdropFilter,
     overflow,
     overlayZIndex,
     blur,
     hide,
-    restingPosition,
     ...props
   }) {
     const show = !hide

@@ -32,11 +32,11 @@ setTimeout(() => {
 })
 
 // really nice for quicker debugging...
-if (!Object.prototype.toJS) {
-  Object.defineProperty(Object.prototype, 'toJS', {
-    enumerable: false,
-    value: function() {
-      return Mobx.toJS(this)
-    },
-  })
-}
+// if (!Object.prototype['toJS']) {
+//   Object.defineProperty(Object.prototype, 'toJS', {
+//     enumerable: false,
+//     value: function() {
+//       return Mobx.toJS(this)
+//     },
+//   })
+// }

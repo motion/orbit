@@ -9,13 +9,13 @@ export const OrbitSearchFilters = view(({ appStore, searchStore }) => {
   searchStore
   return (
     <UI.Row width="100%" padding={[0, 0, 10]}>
-      <UI.PassProps circular marginRight={9}>
-        <RoundButton icon={<OrbitIcon size={18} icon="slack" />} />
-        <RoundButton icon={<OrbitIcon size={18} icon="gdrive" />} />
-        <RoundButton icon={<OrbitIcon size={18} icon="gmail" />} />
-        <RoundButton icon={<OrbitIcon size={18} icon="confluence" />} />
-        <RoundButton icon={<OrbitIcon size={18} icon="jira" />} />
-        <RoundButton icon={<OrbitIcon size={18} icon="github" />} />
+      <UI.PassProps circular size={1.2} marginRight={5}>
+        <RoundButton icon={<OrbitIcon size={22} icon="slack" />} />
+        <RoundButton icon={<OrbitIcon size={22} icon="gdrive" />} />
+        <RoundButton icon={<OrbitIcon size={22} icon="gmail" />} />
+        <RoundButton icon={<OrbitIcon size={22} icon="confluence" />} />
+        <RoundButton icon={<OrbitIcon size={22} icon="jira" />} />
+        <RoundButton icon={<OrbitIcon size={22} icon="github" />} />
       </UI.PassProps>
       <UI.Col flex={1} />
       <UI.Popover

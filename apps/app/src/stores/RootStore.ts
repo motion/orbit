@@ -3,9 +3,9 @@ import { App, Desktop } from '@mcro/stores'
 import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import { modelsList } from '@mcro/models'
-import connectModels from './helpers/connectModels'
-import * as AppStoreActions from './actions/AppStoreActions'
-import { WebSQLClient } from './helpers/WebSQLClient'
+import connectModels from '../helpers/connectModels'
+import * as AppStoreActions from '../actions/AppStoreActions'
+import { WebSQLClient } from '../helpers/WebSQLClient'
 
 const onPort = async cb => {
   await sleep(200)
@@ -18,7 +18,7 @@ const onPort = async cb => {
 }
 
 @store
-export class Root {
+export class RootStore {
   client: WebSQLClient
   connection = null
   started = false

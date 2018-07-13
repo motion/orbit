@@ -623,8 +623,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
       }
     }
     const closeIfOut = () => {
+      // avoid if too soon
       if (isPopover && Date.now() - this.state.menuHovered < 200) {
-        console.log('avoid popover too soon??')
         return null
       }
       if (!this.isNodeHovered(node)) {
@@ -773,8 +773,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     } = this.state
     const { showPopover } = this
     const controlledTarget = target => {
-      console.warn('yea')
-      window.x = this
       const targetProps = {
         ref: this.targetRef,
         active: false,

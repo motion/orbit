@@ -33,6 +33,9 @@ class HeaderStore {
       await when(() => Desktop.state.focusedOnOrbit)
       this.focus()
     },
+    {
+      log: false,
+    },
   )
 
   onClickInput = () => {

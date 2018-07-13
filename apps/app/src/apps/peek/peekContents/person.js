@@ -26,16 +26,20 @@ class PersonPeek {
   )
 }
 
+@view.attach('integrationSettingsStore')
 @view.attach({
   store: PersonPeek,
 })
 @view
 export class Person extends React.Component {
-  render({ store, person, appStore, children }) {
-    if (!appStore.settings) {
+  render() {
+    const { store, integrationSettingsStore, person, children } = this.props
+    console.log('integrationSettingsStore', integrationSettingsStore)
+    const { settings } = integrationSettingsStore
+    if (!settings) {
       return children({})
     }
-    const setting = appStore.settings.slack
+    const setting = settings.slack
     if (!setting || !person || !person.data || !person.data.profile) {
       console.log('no person or person.data.profile', person)
       return children({})

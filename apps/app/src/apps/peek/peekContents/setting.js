@@ -20,6 +20,7 @@ const statusIcons = {
   COMPLETE: { name: 'check', color: 'darkgreen' },
 }
 
+@view.attach('integrationSettingsStore')
 @view.attach({
   store: SettingInfoStore,
 })
@@ -41,7 +42,7 @@ export class SettingContent extends React.Component {
     App.actions.clearPeek()
   }
 
-  render({ appStore, store, children }) {
+  render({ appStore, integrationSettingsStore, store, children }) {
     const { setting } = store
     if (!setting) {
       return children({})
@@ -50,7 +51,12 @@ export class SettingContent extends React.Component {
     const SettingPane =
       SettingPanes[`${capitalize(integration)}Setting`] || EmptyPane
     return (
-      <SettingPane appStore={appStore} setting={setting} update={store.update}>
+      <SettingPane
+        integrationSettingsStore={integrationSettingsStore}
+        appStore={appStore}
+        setting={setting}
+        update={store.update}
+      >
         {({ subhead, content }) => {
           // this is a bit strange, its calling up a few times and passing up props
           // not sure i like the pattern, but it is extremely flexible
@@ -61,7 +67,7 @@ export class SettingContent extends React.Component {
             subhead,
             content,
             subtitle: (
-              <div $$row>
+              <UI.Row>
                 <jobStatus $$row if={store.job}>
                   {store.bitsCount} total{' '}
                   <UI.Text if={store.job.updatedAt}>
@@ -75,12 +81,12 @@ export class SettingContent extends React.Component {
                   </UI.Text>
                 </jobStatus>
                 <load if={!store.job}>Loading...</load>
-              </div>
+              </UI.Row>
             ),
             after: (
               <UI.ListRow
-                $$flex
-                css={{ margin: [0, -8, -5, 0] }}
+                flex={1}
+                margin={[0, -8, -5, 0]}
                 itemProps={{
                   size: 0.9,
                   chromeless: true,

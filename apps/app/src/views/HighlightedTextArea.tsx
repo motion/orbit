@@ -120,6 +120,7 @@ class HighlightedTextAreaInner extends React.Component<Props> {
           {...props}
           ref={this.backdrop}
           dangerouslySetInnerHTML={{ __html: this.getHighlights() }}
+          color="transparent"
         />
         <Block
           tagName="textarea"

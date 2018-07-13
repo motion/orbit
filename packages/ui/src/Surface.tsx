@@ -253,9 +253,6 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       style,
       ...props,
     }
-    if (this.props.debug) {
-      console.log('SurfaceProps', forwardRef, passProps)
-    }
     // get border radius
     let borderLeftRadius =
       typeof _borderLeftRadius === 'number'
@@ -541,7 +538,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     radius = radius === true ? (height / 3.4) * size : radius
     radius = typeof radius === 'number' ? Math.round(radius) : radius
 
-    const borderRadius = {}
+    const borderRadius = {} as any
     if (uiContext && uiContext.inSegment && !props.ignoreSegment) {
       borderRadius.borderLeftRadius = uiContext.inSegment.first ? radius : 0
       borderRadius.borderRightRadius = uiContext.inSegment.last ? radius : 0
@@ -565,9 +562,6 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       if (!hasSidesDefined && radius) {
         borderRadius.borderRadius = radius
       }
-    }
-    if (props.debug) {
-      console.log(borderRadius)
     }
     // circular
     const circularStyles = props.circular && {

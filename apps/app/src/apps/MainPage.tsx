@@ -5,6 +5,8 @@ import { OrbitPage } from './OrbitPage'
 import { PeekPage } from './PeekPage'
 import { AppStore } from '../stores/AppStore'
 import * as UI from '@mcro/ui'
+import { SearchFilterStore } from '../stores/SearchFilterStore'
+import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
 
 const Main = view(UI.Col, {
   // background: [0, 0, 0, 0.1],
@@ -18,10 +20,21 @@ const Main = view(UI.Col, {
 })
 
 @view.provide({
+  integrationSettingsStore: IntegrationSettingsStore,
+  searchFilterStore: SearchFilterStore,
   appStore: AppStore,
 })
-export class MainPage extends React.Component {
+export class MainPage extends React.Component<{
+  integrationSettingsStore: IntegrationSettingsStore
+  searchFilterStore: SearchFilterStore
+  appStore: AppStore
+}> {
+  componentWillMount() {
+    // this.props.appStore.integrationSettingsStore = this.props.integrationSettingsStore
+  }
+
   render() {
+    console.log('main page', this.props)
     return (
       <Main>
         {/* <HighlightsPage /> */}

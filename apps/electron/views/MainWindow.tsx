@@ -29,13 +29,11 @@ class MainStore {
   store: MainStore,
 })
 @view.electron
-export class MainWindow extends React.Component {
-  props: {
-    store: MainStore
-    electronStore: ElectronStore
-    onRef?: Function
-  }
-
+export class MainWindow extends React.Component<{
+  store?: MainStore
+  electronStore?: ElectronStore
+  onRef?: Function
+}> {
   state = {
     show: false,
     position: [0, 0],

@@ -125,7 +125,10 @@ export class ListRow extends React.Component<ListRowProps> {
           return <div $$flex={segmentProps.flex} />
         }
         return (
-          <Provider key={index} provide={getContext(index, items.length)}>
+          <UIContext.Provider
+            key={index}
+            value={getContext(index, items.length)}
+          >
             <Button
               active={(id || icon) === ACTIVE}
               icon={onlyIcons ? text : icon}
@@ -141,7 +144,7 @@ export class ListRow extends React.Component<ListRowProps> {
             >
               {(!onlyIcons && text) || segmentProps.children}
             </Button>
-          </Provider>
+          </UIContext.Provider>
         )
       })
     }
@@ -152,10 +155,10 @@ export class ListRow extends React.Component<ListRowProps> {
         noElement
         noWrap
         background="transparent"
-        $row
+        flexFlow="row"
         {...props}
       >
-        <label if={label}>{label}</label>
+        {label && <label>{label}</label>}
         {children}
       </Surface>
     )

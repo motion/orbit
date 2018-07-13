@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Row } from './blocks/Row'
+import { FullScreen } from './blocks/FullScreen'
 import { TreeItems } from './TreeItems'
 
 export type TreeItemID = string
@@ -60,7 +60,7 @@ export class Tree extends React.Component<{
     } = this.props
 
     return (
-      <Row fill={true}>
+      <FullScreen>
         <TreeItems
           onTreeItemExpanded={onTreeItemExpanded}
           onTreeItemSelected={onTreeItemSelected}
@@ -70,7 +70,7 @@ export class Tree extends React.Component<{
           root={root}
           elements={elements}
         />
-      </Row>
+      </FullScreen>
     )
   }
 }

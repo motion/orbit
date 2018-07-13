@@ -10,6 +10,7 @@ import { RowRenderer, OnScroll, KeyMapper } from './types'
 import { PureComponent, Component } from 'react'
 import { ResizeSensor } from './helpers/ResizeSensor'
 import { findDOMNode } from 'react-dom'
+import { view } from '@mcro/black'
 
 type RowMeasureProps = {
   id: string
@@ -27,12 +28,13 @@ class RowMeasure extends PureComponent<RowMeasureProps> {
   }
 }
 
-const CONTAINER_STYLE = {
+const DynamicListContainer = view({
+  flex: 1,
   position: 'relative',
   overflow: 'auto',
   width: '100%',
   height: '100%',
-}
+})
 
 type DynamicListProps = {
   pureData: any
@@ -66,46 +68,35 @@ export default class DynamicList extends Component<
   DynamicListProps,
   DynamicListState
 > {
-  constructor(props: DynamicListProps, context: Object) {
-    super(props, context)
-
-    this.topPositionToIndex = new Map()
-    this.positions = new Map()
-    this.dimensions = new Map()
-    this.measureQueue = new Map()
-    this.state = {
-      mounted: false,
-      startIndex: -1,
-      endIndex: -1,
-      containerStyle: {},
-      innerStyle: {},
-      scrollHeight: 0,
-      scrollTop: 0,
-      height: 0,
-      width: 0,
-    }
+  state = {
+    mounted: false,
+    startIndex: -1,
+    endIndex: -1,
+    containerStyle: {},
+    innerStyle: {},
+    scrollHeight: 0,
+    scrollTop: 0,
+    height: 0,
+    width: 0,
   }
 
   containerRef: HTMLDivElement | null
-
-  measureQueue: Map<string, any>
-
-  topPositionToIndex: Map<number, number>
+  measureQueue: Map<string, any> = new Map()
+  topPositionToIndex: Map<number, number> = new Map()
   positions: Map<
     number,
     {
       top: number
       style: Object
     }
-  >
-
+  > = new Map()
   dimensions: Map<
     string,
     {
       width: number | string
       height: number
     }
-  >
+  > = new Map()
 
   scrollToIndex = (index: number, additionalOffset: number = 0) => {
     const pos = this.positions.get(index)
@@ -136,7 +127,6 @@ export default class DynamicList extends Component<
     // perform initial measurements and container dimension calculation
     this.recalculateContainerDimensions()
     this.queueMeasurements(this.props)
-
     // if onMount we didn't add any measurements then we've successfully calculated all row sizes
     if (this.measureQueue.size === 0) {
       this.onMount()
@@ -153,7 +143,7 @@ export default class DynamicList extends Component<
   }
 
   // called when the window is resized, we recalculate the positions and visibility of rows
-  onResize = (e: UIEvent) => {
+  onResize = () => {
     this.dimensions.clear()
     this.queueMeasurements(this.props)
     this.recalculateContainerDimensions()
@@ -192,7 +182,7 @@ export default class DynamicList extends Component<
 
   recalculateContainerDimensions = () => {
     const container = this.getContainerRef()
-    if (container != null) {
+    if (container) {
       this.setState({
         scrollTop: container.scrollTop,
         height: container.clientHeight,
@@ -204,7 +194,6 @@ export default class DynamicList extends Component<
   recalculateVisibleRows = (props: DynamicListProps) => {
     this.setState(state => {
       let startTop = 0
-
       // find the start index
       let startIndex = 0
       let scrollTop = state.scrollTop
@@ -218,7 +207,6 @@ export default class DynamicList extends Component<
             break
           }
         }
-
         scrollTop--
       } while (scrollTop > 0)
 
@@ -233,13 +221,11 @@ export default class DynamicList extends Component<
           endIndex = props.rowCount - 1
           break
         }
-
         const index = this.topPositionToIndex.get(scrollBottom)
         if (index != null) {
           endIndex = index
           break
         }
-
         scrollBottom++
       }
 
@@ -282,12 +268,9 @@ export default class DynamicList extends Component<
       }
       this.dimensions.set(key, dim)
     }
-
     this.measureQueue.delete(key)
-
     if (this.measureQueue.size === 0) {
       this.recalculatePositions(this.props)
-
       if (this.state.mounted === false) {
         // we triggered measurements on componentDidMount and they're now complete!
         this.onMount()
@@ -303,7 +286,6 @@ export default class DynamicList extends Component<
         scrollTop: ref.scrollTop,
       })
       this.recalculateVisibleRows(this.props)
-
       this.props.onScroll &&
         this.props.onScroll({
           clientHeight: ref.clientHeight,
@@ -316,16 +298,13 @@ export default class DynamicList extends Component<
   recalculatePositions(props: DynamicListProps) {
     this.positions.clear()
     this.topPositionToIndex.clear()
-
     let top = 0
-
     for (let i = 0; i < props.rowCount; i++) {
       const key = props.keyMapper(i)
       const dim = this.dimensions.get(key)
       if (dim == null) {
         continue
       }
-
       this.positions.set(i, {
         top,
         style: {
@@ -333,12 +312,9 @@ export default class DynamicList extends Component<
           height: dim.height,
         },
       })
-
       this.topPositionToIndex.set(top, i)
-
       top += dim.height
     }
-
     this.setState({
       scrollHeight: top,
       innerStyle: {
@@ -377,17 +353,16 @@ export default class DynamicList extends Component<
     }
 
     return (
-      <div
+      <DynamicListContainer
         ref={this.setContainerRef}
         onScroll={this.handleScroll}
-        style={CONTAINER_STYLE}
       >
         <ResizeSensor onResize={this.onResize} />
         <div style={this.state.innerStyle}>
           <div style={this.state.containerStyle}>{children}</div>
         </div>
         {measureChildren}
-      </div>
+      </DynamicListContainer>
     )
   }
 }

@@ -406,25 +406,19 @@ export class TreeItems extends React.PureComponent<
   setProps(props: TreeItemsProps) {
     const flatTreeItems: FlatTreeItems = []
     const flatKeys = []
-
     let maxDepth = 0
-
     function seed(key: TreeItemID, level: number) {
       const element = props.elements[key]
       if (!element) {
         return
       }
-
       maxDepth = Math.max(maxDepth, level)
-
       flatTreeItems.push({
         element,
         key,
         level,
       })
-
       flatKeys.push(key)
-
       if (
         element.children != null &&
         element.children.length > 0 &&
@@ -435,11 +429,9 @@ export class TreeItems extends React.PureComponent<
         }
       }
     }
-
     if (props.root != null) {
       seed(props.root, 1)
     }
-
     this.setState({ flatTreeItems, flatKeys, maxDepth })
   }
 
@@ -581,7 +573,7 @@ export class TreeItems extends React.PureComponent<
 
   render() {
     const items = this.state.flatTreeItems
-
+    console.log('items are', items)
     return (
       <TreeItemsBox>
         <TreeItemsContainer tabIndex="0" onKeyDown={this.onKeyDown}>

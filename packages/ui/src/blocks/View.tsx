@@ -4,10 +4,8 @@ import { propsToTextSize } from '../helpers/propsToTextSize'
 
 export const View = view({})
 
-View.theme = ({ fill, scrollable, ...props }) => {
+View.theme = ({ scrollable, ...props }) => {
   return {
-    height: fill ? '100%' : undefined,
-    width: fill ? '100%' : undefined,
     ...propsToStyles(props),
     ...propsToTextSize(props),
   }

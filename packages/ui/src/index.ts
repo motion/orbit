@@ -51,6 +51,9 @@ export * from './Surface'
 export * from './SizedSurface'
 export * from './Date'
 export * from './fake/fakeText'
+export * from './Tree'
+export * from './DynamicList'
+export * from './FixedList'
 
 // effects
 export * from './effects/hoverGlow'

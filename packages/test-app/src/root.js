@@ -24,13 +24,45 @@ const Test2 = view(Test, {
   },
 })
 
+// export type TreeItem = {
+//   id: TreeItemID
+//   name: string
+//   expanded: boolean
+//   children: Array<TreeItemID>
+//   attributes: Array<TreeItemAttribute>
+//   data: TreeItemData
+//   decoration: string
+// }
+
 export const Root = () => {
   return (
-    <div css={{ pointerEvents: 'all' }}>
+    <div css={{ pointerEvents: 'all', width: '100%', height: '100%' }}>
       <Test>blue</Test>
       <Test big>pink</Test>
       <Test2>red</Test2>
       <Test2 big>yellow</Test2>
+
+      <br />
+      <br />
+
+      <UI.FullScreen>
+        <UI.Tree
+          root="zero"
+          elements={{
+            zero: {
+              id: 'zero',
+              name: 'test name',
+              expanded: false,
+              children: ['one'],
+            },
+            one: {
+              id: 'one',
+              name: 'test name2',
+              expanded: false,
+            },
+          }}
+        />
+      </UI.FullScreen>
     </div>
   )
 }

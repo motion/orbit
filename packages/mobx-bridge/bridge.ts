@@ -274,7 +274,7 @@ class Bridge {
     if (ignoreSocketSend) {
       return changedState
     }
-    if (Object.keys(changedState).length) {
+    if (changedState) {
       // log(`changedState:\n\n ${JSON.stringify(changedState, null, 2)}`)
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
@@ -310,7 +310,7 @@ class Bridge {
     isInternal?: Boolean,
     // ignoreLog?: Boolean,
   ) {
-    const changed = {}
+    let changed = null
     for (const key of Object.keys(newState)) {
       if (isInternal && typeof this._initialState[key] === 'undefined') {
         console.error(
@@ -330,29 +330,20 @@ class Bridge {
       const bothObjects = a && b && isPlainObject(a) && isPlainObject(b)
       if (bothObjects) {
         // check if equal
+        const diff = {}
         let areEqual = true
-        for (const key of Object.keys(b)) {
-          if (!isEqual(a[key], b[key])) {
+        for (const subKey of Object.keys(b)) {
+          if (!isEqual(a[subKey], b[subKey])) {
+            diff[subKey] = b[subKey]
+            // deep mutate thanks mobx5
+            stateObj[key][subKey] = b[subKey]
             areEqual = false
-            break
           }
         }
         if (areEqual) {
           continue
         }
-        // merge plain objects
-        const newState = mergeWith(a, b, (prev, next) => {
-          // avoid inner array merge, just replace
-          if (Mobx.isArrayLike(prev) || Mobx.isArrayLike(next)) {
-            return next
-          }
-        })
-        // minimal change diff after merge
-        const diff = {}
-        for (const key of Object.keys(b)) {
-          diff[key] = newState[key]
-        }
-        stateObj[key] = newState
+        changed = changed || {}
         changed[key] = diff
       } else {
         // avoid on same val
@@ -360,6 +351,7 @@ class Bridge {
           continue
         }
         stateObj[key] = b
+        changed = changed || {}
         changed[key] = b
       }
     }

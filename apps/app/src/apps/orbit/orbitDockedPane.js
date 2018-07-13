@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view, on, attachTheme } from '@mcro/black'
 import * as _ from 'lodash'
+import { trace } from 'mobx'
 
 class DockedPaneStore {
   paneRef = React.createRef()
@@ -39,10 +40,11 @@ class DockedPaneStore {
   // prevents uncessary and expensive OrbitCard re-renders
   get isActive() {
     const { extraCondition, name, paneStore } = this.props
-    return (
+    const isActive =
       name === paneStore.activePane &&
-      (extraCondition ? extraCondition() : true)
-    )
+      (extraCondition ? extraCondition.hasQuery() : true)
+    console.log('return ', isActive)
+    return isActive
   }
 }
 
@@ -54,7 +56,8 @@ class DockedPaneStore {
 @view
 export class OrbitDockedPane extends React.Component {
   render({ children, store, style, after, fadeBottom, name }) {
-    log(`render docked pane ${name}`)
+    log(`render docked pane ${name} ${store.isAtBottom}`)
+    trace()
     return (
       <>
         <overflowFade

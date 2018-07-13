@@ -16,9 +16,8 @@
   - make all peeks work like slack and deal with "item"
   - click highlight to open directly to that item in the peek
 
-- saving peekstateactions breaking hmr
-- saving appstoreactions breaking hmr
   sear
+
 - slack card:
   - if it was a post in #status, show other posts by that person in #status
   - fix people cards
@@ -32,7 +31,7 @@
 
 ## Profiles
 
-First need to design out really ideal profiles. Make peek a bit bigger. Then need to figure out what it would take to show that.
+First need to design out really ideal profiles. Then need to figure out what it would take to show that.
 
 ## Events/Updates
 

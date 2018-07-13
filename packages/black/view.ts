@@ -12,7 +12,21 @@ import { decorator } from './gloss'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
-import { isGlossyFirstArg } from '@mcro/gloss'
+import {
+  glossSimpleComponentArgs,
+  GLOSS_IGNORE_COMPONENT_SYMBOL,
+} from '@mcro/gloss'
+
+export interface ViewDecorator {
+  (): any
+  on: typeof blackDecorator.on
+  emitter: typeof blackDecorator.emitter
+  emit: typeof blackDecorator.emit
+  ui: ReturnType<typeof decor>
+  electron: ReturnType<typeof decor>
+  provide: any
+  attach: any
+}
 
 const glossPlugin = () => ({
   onlyClass: true,
@@ -33,34 +47,21 @@ export const blackDecorator: DecorCompiledDecorator<any> = decor(
   decorations({ mobx: true, ui: true }),
 )
 
-export interface ViewDecorator {
-  (): any
-  on: typeof blackDecorator.on
-  emitter: typeof blackDecorator.emitter
-  emit: typeof blackDecorator.emit
-  ui: ReturnType<typeof decor>
-  electron: ReturnType<typeof decor>
-  provide: any
-  attach: any
-}
-
 function createViewDecorator(): ViewDecorator {
-  const view = <ViewDecorator>function view(item, ...args) {
+  const view = <ViewDecorator>function view(a, b) {
     // short: view({ ...styles }), view('div', {}) view(OtherView, {})
-    if (isGlossyFirstArg(item)) {
-      return decorator(item, ...args)
+    if (glossSimpleComponentArgs(a, b)) {
+      return decorator(a, b)
     }
     // class/function
-    return blackDecorator(item)
+    return blackDecorator(a)
   }
   // pass on emitter
   view.emitter = blackDecorator.emitter
   view.on = blackDecorator.on
   view.emit = blackDecorator.emit
   // other decorators
-  // @ts-ignore
   view.ui = decor(decorations({ ui: true }))
-  // @ts-ignore
   view.electron = decor(decorations({ mobx: true, ui: false }))
   const providable = decor([[storeProvidable, storeOptions]])
   view.provide = stores => providable({ stores, context: true })
@@ -69,7 +70,10 @@ function createViewDecorator(): ViewDecorator {
   view.attach = (...stores) => {
     // this allows attaching stores locally
     if (typeof stores[0] === 'object') {
-      return blackDecorator({ stores: stores[0] })
+      return blackDecorator({
+        stores: stores[0],
+        [GLOSS_IGNORE_COMPONENT_SYMBOL]: true,
+      })
     }
     // and this allows attaching contextual stores
     // @ts-ignore

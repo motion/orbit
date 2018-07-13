@@ -7,6 +7,7 @@ import { attachTheme } from './theme/attachTheme'
 import * as Helpers_ from '@mcro/css'
 export const Helpers = Helpers_
 export const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
+export const GLOSS_IGNORE_COMPONENT_SYMBOL = '__GLOSS_IGNORE_COMPONENT__'
 
 export { Theme } from './theme/Theme'
 export { ThemeProvide } from './theme/themeProvide'
@@ -14,14 +15,24 @@ export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 export { cssNameMap, psuedoKeys } from '@mcro/css'
 
-export const isGlossyFirstArg = arg => {
-  if (!arg) {
+const glossSimpleComponentFirstArg = a => {
+  if (!a) {
     return false
   }
-  if (typeof arg === 'string' || typeof arg === 'object') {
+  if (typeof a === 'string' || typeof a === 'object') {
     return true
   }
   return false
+}
+
+export const glossSimpleComponentArgs = (a, b) => {
+  if (b && b[GLOSS_IGNORE_COMPONENT_SYMBOL]) {
+    return false
+  }
+  if (typeof a === 'function' && typeof b === 'object') {
+    return true
+  }
+  return glossSimpleComponentFirstArg(a)
 }
 
 export type Options = {
@@ -93,7 +104,7 @@ export default class Gloss {
       return this.createSimpleGlossComponent('div', maybeNameOrComponent)
     }
     // view('div', {}) or view(OtherView, {})
-    if (isGlossyFirstArg(maybeNameOrComponent)) {
+    if (glossSimpleComponentArgs(maybeNameOrComponent, shortStyles)) {
       return this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
     }
     // @view class MyView {}
@@ -234,8 +245,9 @@ export default class Gloss {
     let name = target.name || target
     let themeUpdate
     let hasAttachedStyles = false
-    let targetElement = isParentComponent ? target.displayName : target
+    let targetElement = target
     if (isParentComponent) {
+      targetElement = target.displayName
       name = targetElement
     }
     const InnerView = <GlossView>attachTheme(allProps => {
@@ -243,7 +255,13 @@ export default class Gloss {
       if (elementCache.has(allProps)) {
         return elementCache.get(allProps)
       }
-      const { forwardRef, ...props } = allProps
+      // allow View.defaultProps
+      // @ts-ignore
+      console.log('View.defaultProps', View.defaultProps)
+      const { forwardRef, ...props } = {
+        ...View.defaultProps,
+        ...allProps,
+      }
       // attach theme/styles on first use
       if (!hasAttachedStyles) {
         try {
@@ -277,7 +295,7 @@ export default class Gloss {
       React.createElement(InnerView, { ...props, forwardRef: ref }),
     )
     // TODO: babel transform to auto attach name?
-    View.displayName = name
+    View.displayName = View.displayName || name
     View.style = styles
     if (isParentComponent) {
       View.child = target
@@ -293,7 +311,7 @@ export default class Gloss {
     const selectors = {}
     return (props, self) => {
       if (!props.theme) {
-        console.log('no theme', props, getTheme)
+        console.log('no theme', props)
         return
       }
       const rules = {}

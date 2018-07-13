@@ -6,8 +6,8 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc",
-    "watch": "npm run build -- --watch --preserveWatchOutput"
+    "build": "echo hi",
+    "watch": "echo hi"
   },
   "dependencies": {
     "dashify": "1.0.0",

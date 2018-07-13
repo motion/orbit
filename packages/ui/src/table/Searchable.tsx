@@ -5,26 +5,28 @@
  * @format
  */
 
+import { view } from '@mcro/black'
 import { Filter } from '../filter/types'
 import * as React from 'react'
-import Toolbar from '../Toolbar'
-import FlexRow from '../FlexRow'
-import Input from '../Input'
-import { colors } from '../colors'
-import Text from '../Text'
-import FlexBox from '../FlexBox'
-import Glyph from '../Glyph'
-import FilterToken from './FilterToken'
+import { Toolbar } from '../Toolbar'
+import { Row } from '../blocks/Row'
+import { TableInput } from './TableInput'
+import { colors } from '../helpers/colors'
+import { Text } from '../Text'
+import { View } from '../blocks/View'
+import { Icon } from '../Icon'
+// import Glyph from '../Glyph'
+import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
-const SearchBar = Toolbar.extends({
+const SearchBar = view(Toolbar, {
   height: 42,
   padding: 6,
 })
 
-export const SearchBox = FlexBox.extends({
+export const SearchBox = view(View, {
   flexFlow: 'row',
   backgroundColor: colors.white,
   borderRadius: '999em',
@@ -35,8 +37,7 @@ export const SearchBox = FlexBox.extends({
   paddingLeft: 4,
 })
 
-export const SearchInput = Input.extends({
-  border: props => (props.focus ? '1px solid black' : 0),
+export const SearchInput = view(TableInput, {
   padding: 0,
   fontSize: '1em',
   flexGrow: 1,
@@ -51,7 +52,9 @@ export const SearchInput = Input.extends({
   },
 })
 
-const Clear = Text.extends({
+// border: props => (props.focus ? '1px solid black' : 0),
+
+const Clear = view(Text, {
   position: 'absolute',
   right: 6,
   top: '50%',
@@ -70,14 +73,14 @@ const Clear = Text.extends({
   },
 })
 
-export const SearchIcon = Glyph.extends({
+export const SearchIcon = view(Icon, {
   marginRight: 3,
   marginLeft: 3,
   marginTop: -1,
   minWidth: 16,
 })
 
-const Actions = FlexRow.extends({
+const Actions = view(Row, {
   marginLeft: 8,
   flexShrink: 0,
 })
@@ -90,7 +93,7 @@ export type SearchableProps = {
 
 type Props = {
   placeholder?: string
-  actions: React.Node
+  actions: React.ReactNode
   tableKey: string
   onFilterChange: (filters: Array<Filter>) => void
   defaultFilters: Array<Filter>
@@ -103,7 +106,7 @@ type State = {
   hasFocus: boolean
 }
 
-const Searchable = (Component: any) =>
+export const Searchable = (Component: any) =>
   class extends React.PureComponent {
     props: Props
 
@@ -191,7 +194,7 @@ const Searchable = (Component: any) =>
       window.document.removeEventListener('keydown', this.onKeyDown)
     }
 
-    onKeyDown = (e: SyntheticKeyboardEvent<>) => {
+    onKeyDown = (e: React.KeyboardEvent<any>) => {
       const ctrlOrCmd = e =>
         (e.metaKey && process.platform === 'darwin') ||
         (e.ctrlKey && process.platform !== 'darwin')
@@ -227,7 +230,7 @@ const Searchable = (Component: any) =>
       }
     }
 
-    onChangeSearchTerm = (e: SyntheticInputEvent<HTMLInputElement>) =>
+    onChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) =>
       this.matchTags(e.target.value, false)
 
     matchTags = (searchTerm: string, matchEnd: boolean) => {
@@ -390,5 +393,3 @@ const Searchable = (Component: any) =>
       ]
     }
   }
-
-export default Searchable

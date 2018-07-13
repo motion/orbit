@@ -17,10 +17,10 @@ import {
   TableBodyRow,
   TableOnAddFilter,
 } from './types'
-import styled from '../../styled/index'
 import Table from './Table'
 
 export type ManagedTableProps = {
+  bodyPlaceholder?: any
   /**
    * Column definitions.
    */
@@ -112,7 +112,7 @@ type ManagedTableState = {
  * If you require lower level access to the state then use [`<Table>`]()
  * directly.
  */
-export default class ManagedTable extends styled.StylablePureComponent<
+export class ManagedTable extends React.PureComponent<
   ManagedTableProps,
   ManagedTableState
 > {

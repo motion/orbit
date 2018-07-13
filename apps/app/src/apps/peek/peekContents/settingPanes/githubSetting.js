@@ -3,10 +3,11 @@ import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { Bits } from '../../../../views/Bits'
-import { SearchableTable } from '@mcro/sonar'
 import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+
+console.log('UI', UI)
 
 const columnSizes = {
   repo: 'flex',
@@ -144,15 +145,18 @@ class GithubSettingStore {
     this.userOrgs = [...this.userOrgs, this.newOrg]
     this.newOrg = ''
   }
+
+  setActiveKey = key => (this.active = key)
 }
 
 @view.provide({ githubStore: GithubSettingStore })
 @view
 export class GithubSetting extends React.Component {
-  render({ githubStore: store, children }) {
+  render() {
+    const { githubStore: store, children } = this.props
     return children({
       subhead: (
-        <UI.Tabs active={store.active} onActive={key => (store.active = key)}>
+        <UI.Tabs active={store.active} onActive={store.setActiveKey}>
           <UI.Tab key="repos" width="50%" label="Repos" />
           <UI.Tab
             key="issues"
@@ -165,7 +169,7 @@ export class GithubSetting extends React.Component {
         <container>
           <section if={store.active === 'repos'}>
             <section>
-              <SearchableTable
+              {/* <UI.SearchableTable
                 rowLineHeight={28}
                 floating={false}
                 multiline
@@ -179,7 +183,7 @@ export class GithubSetting extends React.Component {
                     <UI.Text size={1.2}>Loading...</UI.Text>
                   </div>
                 }
-              />
+              /> */}
             </section>
             <add if={false}>
               <UI.Input

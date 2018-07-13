@@ -6,7 +6,7 @@
  */
 
 import { RowRenderer, OnScroll, KeyMapper } from './types'
-import DynamicList from './DynamicList'
+import { DynamicList } from './DynamicList'
 import * as React from 'react'
 
 type FixedListProps = {

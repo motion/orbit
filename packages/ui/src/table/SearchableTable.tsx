@@ -6,16 +6,12 @@
  */
 
 import * as React from 'react'
-import { Filter } from '../filter/types'
-import { TableBodyRow } from '../table/types'
-import { ManagedTableProps } from '../table/ManagedTable'
-import { SearchableProps } from './Searchable'
-import { PureComponent } from 'react'
-import ManagedTable from '../table/ManagedTable'
-
-import textContent from '../../../utils/textContent'
-import Searchable from './Searchable'
-import deepEqual from 'deep-equal'
+import { Filter } from './types'
+import { TableBodyRow } from './types'
+import { ManagedTable, ManagedTableProps } from './ManagedTable'
+import { Searchable, SearchableProps } from './Searchable'
+import textContent from '../helpers/textContent'
+import deepEqual from 'react-fast-compare'
 
 type Props = ManagedTableProps &
   SearchableProps & {
@@ -59,7 +55,7 @@ const filterRowsFactory = (filters: Array<Filter>, searchTerm: string) => (
         .includes(searchTerm.toLowerCase())
     : true)
 
-class SearchableManagedTable extends PureComponent {
+class SearchableManagedTable extends React.PureComponent {
   props: Props
 
   static defaultProps = {
@@ -107,4 +103,4 @@ class SearchableManagedTable extends PureComponent {
   }
 }
 
-export default Searchable(SearchableManagedTable)
+export const SearchableTable = Searchable(SearchableManagedTable)

@@ -18,6 +18,7 @@ export interface ViewDecorator {
 
 export interface PotentiallyView {
   new (a: Object): any
+  defaultProps?: Object
 }
 
 export function view<T>(

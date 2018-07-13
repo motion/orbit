@@ -5,7 +5,23 @@
  * @format
  */
 
-import { Filter } from '../filter/types'
+export type Filter =
+  | {
+      key: string
+      value: string
+      type: 'include' | 'exclude'
+    }
+  | {
+      key: string
+      value: Array<string>
+      type: 'enum'
+      enum: Array<{
+        label: string
+        color: string
+        value: string
+      }>
+      persistent?: boolean
+    }
 
 export const MINIMUM_COLUMN_WIDTH = 100
 export const DEFAULT_COLUMN_WIDTH = 200

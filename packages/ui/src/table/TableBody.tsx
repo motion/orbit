@@ -5,6 +5,7 @@
  * @format
  */
 
+import { view } from '@mcro/black'
 import * as React from 'react'
 import {
   TableBodyRow,
@@ -16,114 +17,109 @@ import {
   TableRows,
   TableOnAddFilter,
 } from './types'
-import { FixedList, DynamicList } from '../../../ui/virtualized/index'
+import { FixedList } from '../FixedList'
+import { DynamicList } from '../DynamicList'
 import { normaliseColumnWidth } from './utils'
 import { PureComponent } from 'react'
-
-import FilterRow from '../filter/FilterRow'
+import FilterRow from './FilterRow'
 import { DEFAULT_ROW_HEIGHT } from './types'
-import styled from '../../styled/index'
-import FlexColumn from '../FlexColumn'
-import ContextMenu from '../ContextMenu'
+import { Col } from '../blocks/Col'
+import { Row } from '../blocks/Row'
+// import ContextMenu from '../ContextMenu'
+import { colors } from '../helpers/colors'
 
-import FlexRow from '../FlexRow'
-import { colors } from '../colors'
+const TableBodyContainer = view(Col, {
+  backgroundColor: colors.white,
+  zIndex: 1,
+  maxWidth: '100%',
+})
 
-const TableBodyContainer = FlexColumn.extends(
-  {
-    backgroundColor: colors.white,
-    zIndex: 1,
-    flexGrow: props => (props.autoHeight ? 0 : 1),
-    flexShrink: props => (props.autoHeight ? 0 : 1),
-    flexBasis: props => (props.autoHeight ? 'content' : 0),
-    overflow: props => (props.autoHeight ? 'hidden' : 'visible'),
-    maxWidth: '100%',
-  },
-  {
-    ignoreAttributes: ['autoHeight'],
-  },
-)
+TableBodyContainer.theme = ({ autoHeight }) => ({
+  flexGrow: autoHeight ? 0 : 1,
+  flexShrink: autoHeight ? 0 : 1,
+  flexBasis: autoHeight ? 'content' : 0,
+  overflow: autoHeight ? 'hidden' : 'visible',
+})
 
-const TableBodyRowContainer = FlexRow.extends(
-  {
-    backgroundColor: props => {
-      if (props.highlighted) {
-        if (props.highlightedBackgroundColor) {
-          return props.highlightedBackgroundColor
-        } else {
-          return colors.macOSTitleBarIconSelected
-        }
-      } else {
-        if (props.backgroundColor) {
-          return props.backgroundColor
-        } else if (props.even && props.zebra) {
-          return colors.light02
-        } else {
-          return 'transparent'
-        }
-      }
-    },
-    boxShadow: props => {
-      if (props.backgroundColor || props.zebra === false) {
-        return 'inset 0 -1px #E9EBEE'
-      } else {
-        return 'none'
-      }
-    },
-    color: props =>
-      props.highlighted ? colors.white : props.color || 'inherit',
+const TableBodyRowContainer = view(Row, {
+  overflow: 'hidden',
+  width: '100%',
+  userSelect: 'none',
+  flexShrink: 0,
+})
+
+const getBackgroundColor = ({
+  highlighted,
+  highlightedBackgroundColor,
+  backgroundColor,
+  even,
+  zebra,
+}) => {
+  if (highlighted) {
+    if (highlightedBackgroundColor) {
+      return highlightedBackgroundColor
+    } else {
+      return colors.macOSTitleBarIconSelected
+    }
+  } else {
+    if (backgroundColor) {
+      return backgroundColor
+    } else if (even && zebra) {
+      return colors.light02
+    } else {
+      return 'transparent'
+    }
+  }
+}
+
+TableBodyRowContainer.theme = props => {
+  const {
+    color,
+    backgroundColor,
+    rowLineHeight,
+    highlighted,
+    multiline,
+    zebra,
+    fontWeight,
+    highlightOnHover,
+  } = props
+  return {
+    height: multiline ? 'auto' : rowLineHeight,
+    lineHeight: `${String(rowLineHeight)}px`,
+    fontWeight: fontWeight || 'inherit',
+    backgroundColor: getBackgroundColor(props),
+    boxShadow:
+      backgroundColor || zebra === false ? 'inset 0 -1px #E9EBEE' : 'none',
+    color: highlighted ? colors.white : color || 'inherit',
     '& *': {
-      color: props => (props.highlighted ? `${colors.white} !important` : null),
+      color: highlighted ? `${colors.white} !important` : null,
     },
     '& img': {
-      backgroundColor: props =>
-        props.highlighted ? `${colors.white} !important` : 'none',
+      backgroundColor: highlighted ? `${colors.white} !important` : 'none',
     },
-    height: props => (props.multiline ? 'auto' : props.rowLineHeight),
-    lineHeight: props => `${String(props.rowLineHeight)}px`,
-    fontWeight: props => props.fontWeight || 'inherit',
-    overflow: 'hidden',
-    width: '100%',
-    userSelect: 'none',
-    flexShrink: 0,
     '&:hover': {
-      backgroundColor: props =>
-        !props.highlighted && props.highlightOnHover ? colors.light02 : 'none',
+      backgroundColor:
+        highlighted && highlightOnHover ? colors.light02 : 'none',
     },
-  },
-  {
-    ignoreAttributes: [
-      'highlightedBackgroundColor',
-      'highlightOnHover',
-      'backgroundColor',
-      'rowLineHeight',
-      'highlighted',
-      'multiline',
-      'hasHover',
-      'zebra',
-      'even',
-    ],
-  },
-)
+  }
+}
 
-const TableBodyColumnContainer = styled.view(
-  {
-    display: 'flex',
-    flexShrink: props => (props.width === 'flex' ? 1 : 0),
-    overflow: 'hidden',
-    padding: '0 8px',
-    userSelect: 'none',
-    textOverflow: 'ellipsis',
-    verticalAlign: 'top',
-    whiteSpace: props => (props.multiline ? 'normal' : 'nowrap'),
-    wordWrap: props => (props.multiline ? 'break-word' : 'normal'),
-    width: props => (props.width === 'flex' ? '100%' : props.width),
-    maxWidth: '100%',
-  },
-  {
-    ignoreAttributes: ['multiline', 'width'],
-  },
-)
+const TableBodyColumnContainer = view({
+  display: 'flex',
+  overflow: 'hidden',
+  padding: '0 8px',
+  userSelect: 'none',
+  textOverflow: 'ellipsis',
+  verticalAlign: 'top',
+  maxWidth: '100%',
+})
+
+TableBodyColumnContainer.theme = ({ width, multiline }) => ({
+  flexShrink: width === 'flex' ? 1 : 0,
+  whiteSpace: multiline ? 'normal' : 'nowrap',
+  wordWrap: multiline ? 'break-word' : 'normal',
+  width: width === 'flex' ? '100%' : width,
+})
 
 type TableBodyRowElementProps = {
   columnSizes: TableColumnSizes
@@ -222,52 +218,52 @@ class TableBodyRowElement extends PureComponent<
     } = this.props
 
     return (
-      <ContextMenu buildItems={this.getContextMenu}>
-        <TableBodyRowContainer
-          rowLineHeight={rowLineHeight}
-          highlightedBackgroundColor={row.highlightedBackgroundColor}
-          backgroundColor={row.backgroundColor}
-          highlighted={highlightedRows && highlightedRows.includes(row.key)}
-          onDoubleClick={row.onDoubleClick}
-          multiline={multiline}
-          even={columnNo % 2 === 0}
-          zebra={zebra}
-          onMouseDown={this.onMouseDown}
-          onMouseEnter={onMouseEnter}
-          style={style}
-          highlightOnHover={row.highlightOnHover}
-          data-key={row.key}
-          {...row.style}
-        >
-          {columnKeys.map(key => {
-            const col = row.columns[key]
-            if (col == null) {
-              throw new Error(
-                `Trying to access column "${key}" which does not exist on row. Make sure buildRow is returning a valid row.`,
-              )
-            }
-            const isFilterable = col.isFilterable || false
-            const value = col ? col.value : ''
-            const title = col ? col.title : ''
-            return (
-              <TableBodyColumnContainer
-                key={key}
-                title={title}
-                multiline={multiline}
-                width={normaliseColumnWidth(columnSizes[key])}
-              >
-                {isFilterable && this.props.onAddFilter != null ? (
-                  <FilterRow addFilter={this.props.onAddFilter} filterKey={key}>
-                    {value}
-                  </FilterRow>
-                ) : (
-                  value
-                )}
-              </TableBodyColumnContainer>
+      // <ContextMenu buildItems={this.getContextMenu}>
+      <TableBodyRowContainer
+        rowLineHeight={rowLineHeight}
+        highlightedBackgroundColor={row.highlightedBackgroundColor}
+        backgroundColor={row.backgroundColor}
+        highlighted={highlightedRows && highlightedRows.includes(row.key)}
+        onDoubleClick={row.onDoubleClick}
+        multiline={multiline}
+        even={columnNo % 2 === 0}
+        zebra={zebra}
+        onMouseDown={this.onMouseDown}
+        onMouseEnter={onMouseEnter}
+        style={style}
+        highlightOnHover={row.highlightOnHover}
+        data-key={row.key}
+        {...row.style}
+      >
+        {columnKeys.map(key => {
+          const col = row.columns[key]
+          if (col == null) {
+            throw new Error(
+              `Trying to access column "${key}" which does not exist on row. Make sure buildRow is returning a valid row.`,
             )
-          })}
-        </TableBodyRowContainer>
-      </ContextMenu>
+          }
+          const isFilterable = col.isFilterable || false
+          const value = col ? col.value : ''
+          const title = col ? col.title : ''
+          return (
+            <TableBodyColumnContainer
+              key={key}
+              title={title}
+              multiline={multiline}
+              width={normaliseColumnWidth(columnSizes[key])}
+            >
+              {isFilterable && this.props.onAddFilter != null ? (
+                <FilterRow addFilter={this.props.onAddFilter} filterKey={key}>
+                  {value}
+                </FilterRow>
+              ) : (
+                value
+              )}
+            </TableBodyColumnContainer>
+          )
+        })}
+      </TableBodyRowContainer>
+      // </ContextMenu>
     )
   }
 }

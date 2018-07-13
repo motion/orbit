@@ -5,6 +5,7 @@
  * @format
  */
 
+import { view } from '@mcro/black'
 import * as React from 'react'
 import {
   TableColumnRawOrder,
@@ -23,38 +24,30 @@ import {
   TableOnAddFilter,
 } from './types'
 import { PureComponent } from 'react'
-import FlexColumn from '../FlexColumn'
+import { Col } from '../blocks/Col'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
-import FlexBox from '../FlexBox'
 // import createPaste from '../../../utils/createPaste'
-import textContent from '../../../utils/textContent'
+import textContent from '../helpers/textContent'
 // import { clipboard } from 'electron'
 
-const TableInner = FlexColumn.extends(
-  {
-    minWidth: props => props.minWidth || '0',
-    position: 'relative',
-    width: '100%',
-  },
-  {
-    ignoreAttributes: ['minWidth'],
-  },
-)
+const TableInner = view(Col, {
+  minWidth: 0,
+  position: 'relative',
+  width: '100%',
+})
 
-const TableOuter = FlexBox.extends(
-  {
-    width: '100%',
-    backgroundColor: '#fff',
-    border: props => (props.floating ? '1px solid #c9ced4' : 'none'),
-    borderRadius: props => (props.floating ? 2 : 'none'),
-    height: props => (props.autoHeight ? 'auto' : '100%'),
-    overflow: props => (props.autoHeight ? 'hidden' : 'auto'),
-  },
-  {
-    ignoreAttributes: ['floating', 'autoHeight'],
-  },
-)
+const TableOuter = view(Col, {
+  width: '100%',
+  backgroundColor: '#fff',
+})
+
+TableOuter.theme = ({ floating, autoHeight }) => ({
+  border: floating ? '1px solid #c9ced4' : 'none',
+  borderRadius: floating ? 2 : 'none',
+  height: autoHeight ? 'auto' : '100%',
+  overflow: autoHeight ? 'hidden' : 'auto',
+})
 
 function getColumnOrder(
   colOrder: TableColumnRawOrder | null,

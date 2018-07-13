@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { SizedSurface } from '../SizedSurface'
-import { Button } from '../Button'
-import { Checkbox } from './checkbox'
 import { UIContext } from '../helpers/contexts'
 
 // type Props = {
@@ -61,33 +59,25 @@ class InputPlain extends React.PureComponent {
 
   syncSet = e => this.props.sync.set(e.target.value)
 
-  render({
-    sync,
-    type,
-    name,
-    uiContext,
-    form,
-    elementProps,
-    style,
-    onEnter,
-    onChange,
-    size,
-    value,
-    forwardRef,
-    ...props
-  }) {
+  render() {
+    const {
+      sync,
+      type,
+      name,
+      uiContext,
+      form,
+      elementProps,
+      style,
+      onChange,
+      size,
+      value,
+      forwardRef,
+      ...props
+    } = this.props
     const finalProps = { ...elementProps }
     if (sync && elementProps) {
       finalProps.value = sync.get()
       finalProps.onChange = this.syncSet
-    }
-    if (type === 'checkbox') {
-      return <Checkbox {...props} />
-    }
-    if (type === 'submit') {
-      return (
-        <Button type="submit" noElement {...props} onClick={this.onClick} />
-      )
     }
     return (
       <SizedSurface

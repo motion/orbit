@@ -6,13 +6,13 @@
  */
 
 import { view } from '@mcro/black'
-import { Col } from './blocks/Col'
+import { FullScreen } from './blocks/FullScreen'
 import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'
 
-const TabContainer = view(Col, {
+const TabContainer = view(FullScreen, {
   height: 'auto',
 })
 
@@ -250,7 +250,7 @@ export function Tabs(props: {
     )
   }
   return (
-    <TabContainer fill={true}>
+    <TabContainer>
       <TabList>
         {before}
         {tabList}

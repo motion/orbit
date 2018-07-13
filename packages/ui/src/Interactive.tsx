@@ -5,18 +5,18 @@
  * @format
  */
 
-import { Rect } from '../../utils/geometry'
-import LowPassFilter from '../../utils/LowPassFilter'
+import * as React from 'react'
+import { view } from '@mcro/black'
+import { Rect } from './helpers/geometry'
+import LowPassFilter from './helpers/LowPassFilter'
 import {
   getDistanceTo,
   maybeSnapLeft,
   maybeSnapTop,
   SNAP_SIZE,
-} from '../../utils/snap'
-import styled from '../styled'
+} from './helpers/snap'
 
 const invariant = require('invariant')
-const React = require('react')
 
 const WINDOW_CURSOR_BOUNDARY = 5
 
@@ -86,11 +86,11 @@ type InteractiveState = {
   resizingInitialCursor: CursorState | void
 }
 
-const InteractiveContainer = styled.view({
+const InteractiveContainer = view({
   willChange: 'transform, height, width, z-index',
 })
 
-export default class Interactive extends styled.StylableComponent {
+export class Interactive extends React.Component {
   props: InteractiveProps
   state: InteractiveState
 
@@ -654,12 +654,17 @@ export default class Interactive extends styled.StylableComponent {
 
   render() {
     const { fill, height, left, movable, top, width, zIndex } = this.props
-
-    const style: Object = {
+    const style = {
       cursor: this.state.cursor,
       zIndex: zIndex == null ? 'auto' : zIndex,
+      left: null,
+      top: null,
+      transform: null,
+      right: null,
+      width: null,
+      height: null,
+      bottom: null,
     }
-
     if (movable === true || top != null || left != null) {
       if (fill === true) {
         style.left = left || 0
@@ -668,7 +673,6 @@ export default class Interactive extends styled.StylableComponent {
         style.transform = `translate3d(${left || 0}px, ${top || 0}px, 0)`
       }
     }
-
     if (fill === true) {
       style.right = 0
       style.bottom = 0
@@ -678,11 +682,9 @@ export default class Interactive extends styled.StylableComponent {
       style.width = width == null ? 'auto' : width
       style.height = height == null ? 'auto' : height
     }
-
     if (this.props.style) {
       Object.assign(style, this.props.style)
     }
-
     return (
       <InteractiveContainer
         className={this.props.className}

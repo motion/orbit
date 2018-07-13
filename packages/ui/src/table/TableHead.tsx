@@ -5,6 +5,7 @@
  * @format
  */
 
+import { view } from '@mcro/black'
 import * as React from 'react'
 import {
   TableColumnKeys,
@@ -15,21 +16,20 @@ import {
   TableOnSort,
   TableRowSortOrder,
 } from './types'
-import { normaliseColumnWidth, isPercentage } from './utils.js'
-import * as React from 'react'
-import ContextMenu from '../ContextMenu.js'
-import Interactive from '../Interactive.js'
-import styled from '../../styled/index.js'
-import { colors } from '../colors.js'
-import FlexRow from '../FlexRow.js'
+import { normaliseColumnWidth, isPercentage } from './utils'
+// import ContextMenu from '../ContextMenu.js'
+import { Interactive } from '../Interactive'
+import { colors } from '../helpers/colors'
+import { Row } from '../blocks/Row'
 
 const invariant = require('invariant')
 
-const TableHeaderArrow = styled.text({
+const TableHeaderArrow = view({
+  display: 'block',
   float: 'right',
 })
 
-const TableHeaderColumnInteractive = Interactive.extends({
+const TableHeaderColumnInteractive = view(Interactive, {
   display: 'inline-block',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -37,11 +37,11 @@ const TableHeaderColumnInteractive = Interactive.extends({
   width: '100%',
 })
 
-const TableHeaderColumnContainer = styled.view({
+const TableHeaderColumnContainer = view({
   padding: '0 8px',
 })
 
-const TableHeadContainer = FlexRow.extends({
+const TableHeadContainer = view(Row, {
   borderBottom: `1px solid ${colors.sectionHeaderBorder}`,
   color: colors.light50,
   flexShrink: 0,
@@ -54,34 +54,32 @@ const TableHeadContainer = FlexRow.extends({
   zIndex: 2,
 })
 
-const TableHeadColumnContainer = styled.view(
-  {
-    position: 'relative',
-    backgroundColor: colors.white,
-    flexShrink: props => (props.width === 'flex' ? 1 : 0),
-    height: 23,
-    lineHeight: '23px',
-    fontSize: '0.85em',
-    fontWeight: 500,
-    userSelect: 'none',
-    width: props => (props.width === 'flex' ? '100%' : props.width),
-    '&::after': {
-      position: 'absolute',
-      content: '""',
-      right: 0,
-      top: 5,
-      height: 13,
-      width: 1,
-      background: colors.light15,
-    },
-    '&:last-child::after': {
-      display: 'none',
-    },
+const TableHeadColumnContainer = view({
+  position: 'relative',
+  backgroundColor: colors.white,
+  height: 23,
+  lineHeight: '23px',
+  fontSize: '0.85em',
+  fontWeight: 500,
+  userSelect: 'none',
+  '&::after': {
+    position: 'absolute',
+    content: '""',
+    right: 0,
+    top: 5,
+    height: 13,
+    width: 1,
+    background: colors.light15,
   },
-  {
-    ignoreAttributes: ['width'],
+  '&:last-child::after': {
+    display: 'none',
   },
-)
+})
+
+TableHeadColumnContainer.theme = ({ width }) => ({
+  flexShrink: width === 'flex' ? 1 : 0,
+  width: width === 'flex' ? '100%' : width,
+})
 
 const RIGHT_RESIZABLE = { right: true }
 
@@ -303,9 +301,9 @@ export default class TableHead extends React.PureComponent {
     }
 
     return (
-      <ContextMenu buildItems={this.buildContextMenu}>
-        <TableHeadContainer>{elems}</TableHeadContainer>
-      </ContextMenu>
+      // <ContextMenu buildItems={this.buildContextMenu}>
+      <TableHeadContainer>{elems}</TableHeadContainer>
+      // </ContextMenu>
     )
   }
 }

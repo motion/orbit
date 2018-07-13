@@ -33,7 +33,8 @@ export type SurfaceProps = {
   borderTopRadius?: number
   borderWidth?: number | string
   boxShadow?: Array<any> | string
-  children?: Element | string
+  children?: React.ReactNode
+  name?: string
   chromeless?: boolean
   circular?: boolean
   className?: string
@@ -109,6 +110,7 @@ export type SurfaceProps = {
   backgroundAlpha?: number
   activeStyle?: Object
   sizeLineHeight?: boolean | number
+  type?: string
 }
 
 const ICON_SCALE = 12

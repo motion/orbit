@@ -64,10 +64,7 @@ type DynamicListState = {
   width: number
 }
 
-export default class DynamicList extends Component<
-  DynamicListProps,
-  DynamicListState
-> {
+export class DynamicList extends Component<DynamicListProps, DynamicListState> {
   state = {
     mounted: false,
     startIndex: -1,

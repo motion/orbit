@@ -5,66 +5,63 @@
  * @format
  */
 
+import { view } from '@mcro/black'
 import { Filter } from '../filter/types'
 import { PureComponent } from 'react'
-import Text from '../Text'
-import styled from '../../styled/index'
+import { Text } from '../Text'
 import { findDOMNode } from 'react-dom'
-import { colors } from '../colors'
+import { colors } from '../helpers/colors'
 // import electron from 'electron'
 
-const Token = Text.extends(
-  {
-    display: 'inline-flex',
-    alignItems: 'center',
-    backgroundColor: props =>
-      props.focused
-        ? colors.macOSHighlightActive
-        : props.color || colors.macOSHighlight,
-    borderRadius: 4,
-    marginRight: 4,
-    padding: 4,
-    paddingLeft: 6,
-    height: 21,
-    color: props => (props.focused ? 'white' : 'inherit'),
-    '&:active': {
-      backgroundColor: colors.macOSHighlightActive,
-      color: colors.white,
-    },
-    '&:first-of-type': {
-      marginLeft: 3,
-    },
+const Token = view(Text, {
+  display: 'inline-flex',
+  alignItems: 'center',
+  borderRadius: 4,
+  marginRight: 4,
+  padding: 4,
+  paddingLeft: 6,
+  height: 21,
+  '&:active': {
+    backgroundColor: colors.macOSHighlightActive,
+    color: colors.white,
   },
-  {
-    ignoreAttributes: ['focused', 'color'],
+  '&:first-of-type': {
+    marginLeft: 3,
   },
-)
+})
 
-const Key = Text.extends(
-  {
-    position: 'relative',
-    fontWeight: 500,
-    paddingRight: 12,
-    textTransform: 'capitalize',
-    lineHeight: '21px',
-    '&:after': {
-      content: props => (props.type === 'exclude' ? '"≠"' : '"="'),
-      paddingLeft: 5,
-      position: 'absolute',
-      top: -1,
-      right: 0,
-      fontSize: 14,
-    },
-    '&:active:after': {
-      backgroundColor: colors.macOSHighlightActive,
-    },
-  },
-  {
-    ignoreAttributes: ['type', 'focused'],
-  },
-)
+Token.theme = ({ focused, color }) => ({
+  backgroundColor: focused
+    ? colors.macOSHighlightActive
+    : color || colors.macOSHighlight,
+  color: focused ? 'white' : 'inherit',
+})
 
-const Value = Text.extends({
+const Key = view(Text, {
+  position: 'relative',
+  fontWeight: 500,
+  paddingRight: 12,
+  textTransform: 'capitalize',
+  lineHeight: '21px',
+  '&:after': {
+    paddingLeft: 5,
+    position: 'absolute',
+    top: -1,
+    right: 0,
+    fontSize: 14,
+  },
+  '&:active:after': {
+    backgroundColor: colors.macOSHighlightActive,
+  },
+})
+
+Key.theme = ({ type }) => ({
+  '&:after': {
+    content: type === 'exclude' ? '"≠"' : '"="',
+  },
+})
+
+const Value = view(Text, {
   whiteSpace: 'nowrap',
   maxWidth: 160,
   overflow: 'hidden',
@@ -73,7 +70,7 @@ const Value = Text.extends({
   paddingLeft: 3,
 })
 
-const Chevron = styled.view(
+const Chevron = view(
   {
     border: 0,
     paddingLeft: 3,
@@ -85,7 +82,6 @@ const Chevron = styled.view(
     top: -2,
     height: 'auto',
     lineHeight: 'initial',
-    color: props => (props.focused ? colors.white : 'inherit'),
     '&:hover, &:active, &:focus': {
       color: 'inherit',
       border: 0,
@@ -97,6 +93,10 @@ const Chevron = styled.view(
   },
 )
 
+Chevron.theme = ({ focused }) => ({
+  color: focused ? colors.white : 'inherit',
+})
+
 type Props = {
   filter: Filter
   focused: boolean
@@ -107,7 +107,7 @@ type Props = {
   onReplace: (index: number, filter: Filter) => void
 }
 
-export default class FilterToken extends PureComponent {
+export class FilterToken extends PureComponent {
   props: Props
   _ref: Element | void
 

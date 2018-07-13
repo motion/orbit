@@ -1,4 +1,4 @@
-import { react, on, store } from '@mcro/black'
+import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 
 // filters = ['all', 'general', 'status', 'showoff']
@@ -57,7 +57,7 @@ export class OrbitDockedPaneStore {
     return active
   }
 
-  lastActivePane = react(() => this.activePane, _ => _, { delayValue: 1 })
+  lastActivePane = react(() => this.activePane, _ => _, { delayValue: true })
 
   clearPeekOnActivePaneChange = react(
     () => this.activePane,

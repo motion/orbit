@@ -53,7 +53,8 @@ class DockedPaneStore {
 })
 @view
 export class OrbitDockedPane extends React.Component {
-  render({ children, store, style, after, fadeBottom }) {
+  render({ children, store, style, after, fadeBottom, name }) {
+    log(`render docked pane ${name}`)
     return (
       <>
         <overflowFade

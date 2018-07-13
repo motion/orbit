@@ -1,8 +1,8 @@
 import * as React from 'react'
 import deepExtend from 'deep-extend'
 import tags from 'html-tags'
-import svgTags from './svgTags'
-import validProp from './validProp'
+import svgTags from './helpers/svgTags'
+import validProp from './helpers/validProp'
 
 const electronTags = ['webview']
 
@@ -125,6 +125,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
     const name = !isTag ? `${type.name}` : `${type}`
     const finalProps: any = {}
     const finalStyles = []
+    const isSimple = glossUID && glossUID[0] === '_'
 
     if (name) {
       addStyle(finalStyles, `${name}--${glossUID}`, null, true)
@@ -169,6 +170,13 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
             type = val
           }
           continue
+        }
+        // simple component boolean prop styles :)
+        if (isSimple) {
+          const rule = styleSheet.getRule(`${prop}--${glossUID}`)
+          if (rule) {
+            finalStyles.push(rule)
+          }
         }
         // after tagname, css, style
         const notStyle = prop[0] !== $

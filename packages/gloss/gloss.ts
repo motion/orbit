@@ -1,6 +1,6 @@
 import * as React from 'react'
 import fancyElement from './fancyElement'
-import css from '@mcro/css'
+import css, { psuedoKeys } from '@mcro/css'
 import JSS from './stylesheet'
 import { attachTheme } from './theme/attachTheme'
 
@@ -13,6 +13,9 @@ export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 export { cssNameMap, psuedoKeys } from '@mcro/css'
+
+const cssAttributeNames = document.body.style
+const validCSSAttr = key => cssAttributeNames[key] === '' || psuedoKeys[key]
 
 export const isGlossyFirstArg = arg => {
   if (!arg) {
@@ -64,9 +67,7 @@ export default class Gloss {
     this.css = css(opts)
     this.helpers = this.css.helpers
     this.stylesheet = JSS.createStyleSheet()
-    this.stylesheet.attach()
     this.themeSheet = JSS.createStyleSheet()
-    this.themeSheet.attach()
     if (opts.baseStyles) {
       this.baseStyles = true
       this.attachStyles(null, opts.baseStyles)
@@ -74,6 +75,11 @@ export default class Gloss {
     this.createElement = fancyElement(this, this.stylesheet, this.themeSheet)
     // @ts-ignore
     this.decorator.createElement = this.createElement
+  }
+
+  attach = () => {
+    this.stylesheet.attach()
+    this.themeSheet.attach()
   }
 
   decorator = (maybeNameOrComponent: any, shortStyles?: Object) => {
@@ -190,15 +196,32 @@ export default class Gloss {
     }
   }
 
-  private getAllStyles = View => {
-    const styles = {}
+  private getAllStyles = (View, tagName) => {
+    const styles = {
+      [tagName]: {},
+    }
     let curView = View
     while (curView) {
       if (curView.style) {
         for (const key of Object.keys(curView.style)) {
-          // dont overwrite as we go down
-          if (typeof styles[key] === 'undefined') {
-            styles[key] = curView.style[key]
+          // valid attribute, treat as normal
+          if (validCSSAttr(key)) {
+            // dont overwrite as we go down
+            if (typeof styles[tagName][key] === 'undefined') {
+              styles[tagName][key] = curView.style[key]
+            }
+          } else {
+            // were defining a boolean prop style
+            //   looks like: <Component tall />
+            //   via: view({ color: 'red', tall: { height: '100%' } })
+            const prop = key
+            const styleObj = curView.style[prop]
+            if (typeof styleObj === 'object') {
+              // dont overwrite as we go down
+              if (typeof styles[prop] === 'undefined') {
+                styles[prop] = styleObj
+              }
+            }
           }
         }
       }
@@ -210,7 +233,7 @@ export default class Gloss {
   private createSimpleGlossComponent = (target, styles) => {
     const elementCache = new WeakMap()
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-    const id = uid()
+    const id = `_${uid()}`
     let name = target.name || target
     let themeUpdate
     let hasAttachedStyles = false
@@ -227,8 +250,9 @@ export default class Gloss {
       // attach theme/styles on first use
       if (!hasAttachedStyles) {
         try {
-          View.compiledStyles = this.getAllStyles(View)
-          this.attachStyles(`${id}`, { [name]: View.compiledStyles })
+          View.compiledStyles = this.getAllStyles(View, name)
+          console.log('View.compiledStyles', View.compiledStyles)
+          this.attachStyles(`${id}`, View.compiledStyles)
         } catch (err) {
           console.log('error attaching styles', target, name, styles)
           console.log('err', err)
@@ -336,6 +360,7 @@ export default class Gloss {
       }
       if (!this.stylesheet.getRule(stylesKey)) {
         const niceStyle = this.css(style)
+        console.log('before after', style, niceStyle)
         this.stylesheet.addRule(stylesKey, niceStyle)
       }
     }

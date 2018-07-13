@@ -22,7 +22,7 @@ const imageStyle = {
 export class OrbitCardTeam extends React.Component {
   render({ store, bit, isExpanded, ...props }) {
     const connections = (
-      <div $$row css={{ padding: 5, filter: 'grayscale(100%)', opacity: 0.5 }}>
+      <div css={{ flexFlow: 'row', padding: 5, filter: 'grayscale(100%)', opacity: 0.5 }}>
         <UI.PassProps
           size={16}
           css={
@@ -80,14 +80,13 @@ class OrbitCardTeamContent extends React.Component {
               },
             }}
           >
-            <info $$centered $$flex css={{ zIndex: 11 }}>
+            <info css={{ flex: 1, alignItems: 'center', justifyContent: 'center', zIndex: 11 }}>
               <UI.Text size={2} css={{ marginBottom: -4 }}>
                 {people}
               </UI.Text>
               <UI.Text size={0.9}>people</UI.Text>
             </info>
-            <ring
-              $$fullscreen
+            <UI.FullScreen
               css={{
                 // border: [12, [255, 255, 255, 0.3]],
                 // not updating...
@@ -135,7 +134,7 @@ class OrbitCardTeamContent extends React.Component {
             >
               <strong>Topics</strong>&nbsp;&nbsp;{topics}
             </UI.Text>
-            <section $$row css={{ flex: 1, margin: [-extraHeight, 0] }}>
+            <section css={{ flexFlow: 'row', flex: 1, margin: [-extraHeight, 0] }}>
               {recently.map((item, index) => (
                 <item
                   key={index}
@@ -169,7 +168,7 @@ class OrbitCardTeamContent extends React.Component {
                     {item.title}
                   </UI.Text>
                   {item.title}
-                  <div $$flex />
+                  <UI.Col flex={1} />
                   <UI.Text size={0.9} alpha={0.5}>
                     2 minutes
                   </UI.Text>

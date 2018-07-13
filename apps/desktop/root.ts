@@ -94,7 +94,7 @@ export class Root {
 
     this.generalSettingManager = new GeneralSettingManager()
     this.sync = new Sync()
-    // this.sync.start()
+    this.sync.start()
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,

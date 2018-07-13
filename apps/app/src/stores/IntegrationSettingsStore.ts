@@ -11,9 +11,12 @@ export class IntegrationSettingsStore {
   )
 
   get settings() {
-    if (!this.settings) {
+    if (!this.settingsList) {
       return null
     }
-    return this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})
+    return this.settingsList.reduce(
+      (acc, cur) => ({ ...acc, [cur.type]: cur }),
+      {},
+    )
   }
 }

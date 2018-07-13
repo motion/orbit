@@ -9,7 +9,7 @@ import { View } from './blocks/View'
 export type IconProps = {
   size: number
   color: Color
-  type: 'mini' | 'outline'
+  type?: 'mini' | 'outline'
   opacity?: number
   tooltip?: string
   tooltipProps?: Object

@@ -6,8 +6,7 @@
  */
 
 import * as React from 'react'
-import FlexColumn from './FlexColumn'
-import styled from '../styled/index'
+import { Col } from './blocks/Col'
 import PropTypes from 'prop-types'
 
 type MenuTemplate = Array<any>
@@ -19,16 +18,16 @@ type Props = {
   component: React.ComponentType<any> | string
 }
 
-export class ContextMenu extends styled.StylablePureComponent<Props> {
+export class ContextMenu extends React.PureComponent<Props> {
   static defaultProps = {
-    component: FlexColumn,
+    component: Col,
   }
 
   static contextTypes = {
     appendToContextMenu: PropTypes.func,
   }
 
-  onContextMenu = (e: MouseEvent) => {
+  onContextMenu = (_: MouseEvent) => {
     if (typeof this.context.appendToContextMenu === 'function') {
       if (this.props.items != null) {
         this.context.appendToContextMenu(this.props.items)

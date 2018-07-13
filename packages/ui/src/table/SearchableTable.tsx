@@ -55,9 +55,7 @@ const filterRowsFactory = (filters: Array<Filter>, searchTerm: string) => (
         .includes(searchTerm.toLowerCase())
     : true)
 
-class SearchableManagedTable extends React.PureComponent {
-  props: Props
-
+class SearchableManagedTable extends React.PureComponent<Props> {
   static defaultProps = {
     defaultFilters: [],
   }

@@ -521,9 +521,9 @@ export default class TableBody extends PureComponent<
     if (this.isVirtualisedDisabled()) {
       return (
         <TableBodyContainer
-          innerRef={this.setNonVirtualScrollRef}
+          ref={this.setNonVirtualScrollRef}
           onScroll={this.onScroll}
-          autoHeight={true}
+          autoHeight
         >
           {this.props.rows.map(this.buildAutoElement)}
         </TableBodyContainer>
@@ -562,6 +562,6 @@ export default class TableBody extends PureComponent<
       )
     }
 
-    return <TableBodyContainer>{children}</TableBodyContainer>
+    return <TableBodyContainer autoHeight>{children}</TableBodyContainer>
   }
 }

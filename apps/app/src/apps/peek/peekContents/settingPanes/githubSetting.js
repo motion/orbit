@@ -46,7 +46,7 @@ const columns = {
 
 class GithubSettingStore {
   get setting() {
-    return this.props.integrationSettingsStore.settings.github
+    return this.props.setting
   }
 
   get service() {
@@ -169,7 +169,7 @@ export class GithubSetting extends React.Component {
         <container>
           <section if={store.active === 'repos'}>
             <section>
-              {/* <UI.SearchableTable
+              <UI.SearchableTable
                 rowLineHeight={28}
                 floating={false}
                 multiline
@@ -183,7 +183,7 @@ export class GithubSetting extends React.Component {
                     <UI.Text size={1.2}>Loading...</UI.Text>
                   </div>
                 }
-              /> */}
+              />
             </section>
             <add if={false}>
               <UI.Input

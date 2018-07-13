@@ -6,13 +6,13 @@
  */
 
 import { view } from '@mcro/black'
-import { FullScreen } from './blocks/FullScreen'
+import { View } from './blocks/View'
 import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'
 
-const TabContainer = view(FullScreen, {
+const TabContainer = view(View, {
   height: 'auto',
 })
 

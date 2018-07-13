@@ -90,41 +90,35 @@ const InteractiveContainer = view({
   willChange: 'transform, height, width, z-index',
 })
 
-export class Interactive extends React.Component {
-  props: InteractiveProps
-  state: InteractiveState
-
-  constructor(props: InteractiveProps, context: Object) {
-    super(props, context)
-
-    this.state = {
-      couldResize: false,
-      cursor: null,
-      moving: false,
-      movingInitialCursor: null,
-      movingInitialProps: null,
-      resizing: false,
-      resizingInitialCursor: null,
-      resizingInitialRect: null,
-      resizingSides: null,
-    }
-
-    this.globalMouse = false
-  }
-
-  globalMouse: boolean
-  ref: HTMLElement
-
-  nextTop: number | void
-  nextLeft: number | void
-  nextEvent: MouseEvent | void
-
+export class Interactive extends React.Component<
+  InteractiveProps,
+  InteractiveState
+> {
   static defaultProps = {
     minHeight: 0,
     minLeft: 0,
     minTop: 0,
     minWidth: 0,
   }
+
+  ref = null
+  globalMouse = false
+
+  state = {
+    couldResize: false,
+    cursor: null,
+    moving: false,
+    movingInitialCursor: null,
+    movingInitialProps: null,
+    resizing: false,
+    resizingInitialCursor: null,
+    resizingInitialRect: null,
+    resizingSides: null,
+  }
+
+  nextTop: number | void
+  nextLeft: number | void
+  nextEvent: MouseEvent | void
 
   onMouseMove = (event: MouseEvent) => {
     if (this.state.moving) {
@@ -210,7 +204,6 @@ export class Interactive extends React.Component {
 
   getPossibleTargetWindows(rect: Rect) {
     const closeWindows = []
-
     const { siblings } = this.props
     if (siblings) {
       for (const key in siblings) {
@@ -239,12 +232,10 @@ export class Interactive extends React.Component {
   startResizeAction(event: MouseEvent) {
     event.stopPropagation()
     event.preventDefault()
-
     const { onResizeStart } = this.props
     if (onResizeStart) {
       onResizeStart()
     }
-
     this.setState({
       resizing: true,
       resizingInitialCursor: {
@@ -269,12 +260,10 @@ export class Interactive extends React.Component {
     if (onMoveEnd) {
       onMoveEnd()
     }
-
     if (this.context.os) {
       // resume os timers
       this.context.os.timers.resume()
     }
-
     this.setState({
       cursor: undefined,
       moving: false,
@@ -288,7 +277,6 @@ export class Interactive extends React.Component {
     if (onResizeEnd) {
       onResizeEnd()
     }
-
     this.setState({
       resizing: false,
       resizingInitialCursor: undefined,
@@ -303,14 +291,11 @@ export class Interactive extends React.Component {
 
   endAction = () => {
     this.globalMouse = false
-
     window.removeEventListener('pointermove', this.onMouseMove)
     window.removeEventListener('pointerup', this.endAction)
-
     if (this.state.moving) {
       this.resetMoving()
     }
-
     if (this.state.resizing) {
       this.resetResizing()
     }
@@ -326,25 +311,19 @@ export class Interactive extends React.Component {
 
   calculateMove(event: MouseEvent) {
     const { movingInitialCursor, movingInitialProps } = this.state
-
     invariant(movingInitialProps, 'TODO')
     invariant(movingInitialCursor, 'TODO')
-
     const { clientX: cursorLeft, clientY: cursorTop } = event
-
     const movedLeft = movingInitialCursor.left - cursorLeft
     const movedTop = movingInitialCursor.top - cursorTop
-
     let newLeft = (movingInitialProps.left || 0) - movedLeft
     let newTop = (movingInitialProps.top || 0) - movedTop
-
     if (event.altKey) {
       const snapProps = this.getRect()
       const windows = this.getPossibleTargetWindows(snapProps)
       newLeft = maybeSnapLeft(snapProps, windows, newLeft)
       newTop = maybeSnapTop(snapProps, windows, newTop)
     }
-
     this.nextTop = newTop
     this.nextLeft = newLeft
     this.nextEvent = event
@@ -355,15 +334,12 @@ export class Interactive extends React.Component {
       // noop
       return
     }
-
     const { onResize } = this.props
     if (!onResize) {
       return
     }
-
     width = Math.max(this.props.minWidth, width)
     height = Math.max(this.props.minHeight, height)
-
     const { maxHeight, maxWidth } = this.props
     if (maxWidth != null) {
       width = Math.min(maxWidth, width)
@@ -371,19 +347,16 @@ export class Interactive extends React.Component {
     if (maxHeight != null) {
       height = Math.min(maxHeight, height)
     }
-
     onResize(width, height)
   }
 
   move(top: number, left: number, event: MouseEvent) {
     top = Math.max(this.props.minTop, top)
     left = Math.max(this.props.minLeft, left)
-
     if (top === this.props.top && left === this.props.left) {
       // noop
       return
     }
-
     const { onMove } = this.props
     if (onMove) {
       onMove(top, left, event)
@@ -396,90 +369,71 @@ export class Interactive extends React.Component {
       resizingInitialRect,
       resizingSides,
     } = this.state
-
     invariant(resizingInitialRect, 'TODO')
     invariant(resizingInitialCursor, 'TODO')
     invariant(resizingSides, 'TODO')
-
     const deltaLeft = resizingInitialCursor.left - event.clientX
     const deltaTop = resizingInitialCursor.top - event.clientY
-
     let newLeft = resizingInitialRect.left
     let newTop = resizingInitialRect.top
-
     let newWidth = resizingInitialRect.width
     let newHeight = resizingInitialRect.height
-
     // right
     if (resizingSides.right === true) {
       newWidth -= deltaLeft
     }
-
     // bottom
     if (resizingSides.bottom === true) {
       newHeight -= deltaTop
     }
-
     const rect = this.getRect()
-
     // left
     if (resizingSides.left === true) {
       newLeft -= deltaLeft
       newWidth += deltaLeft
-
       if (this.props.movable === true) {
         // prevent from being shrunk past the minimum width
         const right = rect.left + rect.width
         const maxLeft = right - this.props.minWidth
-
         let cleanLeft = Math.max(0, newLeft)
         cleanLeft = Math.min(cleanLeft, maxLeft)
         newWidth -= Math.abs(newLeft - cleanLeft)
         newLeft = cleanLeft
       }
     }
-
     // top
     if (resizingSides.top === true) {
       newTop -= deltaTop
       newHeight += deltaTop
-
       if (this.props.movable === true) {
         // prevent from being shrunk past the minimum height
         const bottom = rect.top + rect.height
         const maxTop = bottom - this.props.minHeight
-
         let cleanTop = Math.max(0, newTop)
         cleanTop = Math.min(cleanTop, maxTop)
         newHeight += newTop - cleanTop
         newTop = cleanTop
       }
     }
-
     if (event.altKey) {
       const windows = this.getPossibleTargetWindows(rect)
-
       if (resizingSides.left === true) {
         const newLeft2 = maybeSnapLeft(rect, windows, newLeft)
         newWidth += newLeft - newLeft2
         newLeft = newLeft2
       }
-
       if (resizingSides.top === true) {
         const newTop2 = maybeSnapTop(rect, windows, newTop)
         newHeight += newTop - newTop2
         newTop = newTop2
       }
-
       if (resizingSides.bottom === true) {
         newHeight = maybeSnapTop(rect, windows, newTop + newHeight) - newTop
       }
-
       if (resizingSides.right === true) {
         newWidth = maybeSnapLeft(rect, windows, newLeft + newWidth) - newLeft
       }
     }
-
     this.move(newTop, newLeft, event)
     this.resize(newWidth, newHeight)
   }
@@ -487,7 +441,6 @@ export class Interactive extends React.Component {
   getRect(): Rect {
     const { props, ref } = this
     invariant(ref, 'expected ref')
-
     return {
       height: ref.offsetHeight || 0,
       left: props.left || 0,
@@ -498,7 +451,6 @@ export class Interactive extends React.Component {
 
   getResizable(): ResizingSides {
     const { resizable } = this.props
-
     if (resizable === true) {
       return ALL_RESIZABLE
     } else if (resizable == null || resizable === false) {
@@ -520,22 +472,17 @@ export class Interactive extends React.Component {
     if (!canResize) {
       return
     }
-
     const {
       left: offsetLeft,
       top: offsetTop,
     } = this.ref.getBoundingClientRect()
     const { height, width } = this.getRect()
-
     const x = event.clientX - offsetLeft
     const y = event.clientY - offsetTop
-
     const atTop: boolean = y <= WINDOW_CURSOR_BOUNDARY
     const atBottom: boolean = y >= height - WINDOW_CURSOR_BOUNDARY
-
     const atLeft: boolean = x <= WINDOW_CURSOR_BOUNDARY
     const atRight: boolean = x >= width - WINDOW_CURSOR_BOUNDARY
-
     return {
       bottom: canResize.bottom === true && atBottom,
       left: canResize.left === true && atLeft,
@@ -549,28 +496,22 @@ export class Interactive extends React.Component {
     if (!resizing) {
       return
     }
-
     const canResize = this.getResizable()
     if (!canResize) {
       return
     }
-
     const { bottom, left, right, top } = resizing
     let newCursor
-
     const movingHorizontal = left || right
     const movingVertical = top || left
-
     // left
     if (left) {
       newCursor = 'ew-resize'
     }
-
     // right
     if (right) {
       newCursor = 'ew-resize'
     }
-
     // if resizing vertically and one side can't be resized then use different cursor
     if (
       movingHorizontal &&
@@ -578,37 +519,30 @@ export class Interactive extends React.Component {
     ) {
       newCursor = 'col-resize'
     }
-
     // top
     if (top) {
       newCursor = 'ns-resize'
-
       // top left
       if (left) {
         newCursor = 'nwse-resize'
       }
-
       // top right
       if (right) {
         newCursor = 'nesw-resize'
       }
     }
-
     // bottom
     if (bottom) {
       newCursor = 'ns-resize'
-
       // bottom left
       if (left) {
         newCursor = 'nesw-resize'
       }
-
       // bottom right
       if (right) {
         newCursor = 'nwse-resize'
       }
     }
-
     // if resizing horziontally and one side can't be resized then use different cursor
     if (
       movingVertical &&
@@ -617,19 +551,16 @@ export class Interactive extends React.Component {
     ) {
       newCursor = 'row-resize'
     }
-
     const resizingSides = {
       bottom,
       left,
       right,
       top,
     }
-
     const { onCanResize } = this.props
     if (onCanResize) {
       onCanResize()
     }
-
     this.setState({
       couldResize: Boolean(newCursor),
       cursor: newCursor,
@@ -638,8 +569,8 @@ export class Interactive extends React.Component {
   }
 
   setRef = (ref: HTMLElement) => {
+    console.log('set ref', ref)
     this.ref = ref
-
     const { innerRef } = this.props
     if (innerRef) {
       innerRef(ref)
@@ -689,7 +620,7 @@ export class Interactive extends React.Component {
       <InteractiveContainer
         className={this.props.className}
         hidden={this.props.hidden}
-        innerRef={this.setRef}
+        ref={this.setRef}
         onMouseDown={this.startAction}
         onMouseMove={this.onLocalMouseMove}
         onMouseLeave={this.onMouseLeave} // eslint-disable-next-line

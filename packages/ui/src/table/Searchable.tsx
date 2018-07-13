@@ -27,6 +27,7 @@ const SearchBar = view(Toolbar, {
 })
 
 export const SearchBox = view(View, {
+  position: 'relative',
   flexFlow: 'row',
   backgroundColor: colors.white,
   borderRadius: '999em',
@@ -52,7 +53,9 @@ export const SearchInput = view(TableInput, {
   },
 })
 
-// border: props => (props.focus ? '1px solid black' : 0),
+SearchInput.theme = ({ focus }) => ({
+  border: focus ? '1px solid black' : 0,
+})
 
 const Clear = view(Text, {
   position: 'absolute',
@@ -353,7 +356,7 @@ export const Searchable = (Component: any) =>
         <SearchBar position="top" key="searchbar">
           <SearchBox tabIndex={-1}>
             <SearchIcon
-              name="magnifying-glass"
+              name="ui-1_zoom"
               color={colors.macOSTitleBarIcon}
               size={16}
             />

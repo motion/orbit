@@ -6,7 +6,10 @@ const EMPTY_BIT = {
 }
 
 export const Empty = ({ bit = EMPTY_BIT }) => (
-  <contents css={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+  <contents
+    if={bit}
+    css={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
+  >
     <img
       if={bit && bit.icon}
       src={`/icons/${bit.icon}`}

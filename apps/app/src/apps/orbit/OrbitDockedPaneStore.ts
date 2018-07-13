@@ -16,10 +16,10 @@ export class OrbitDockedPaneStore {
         return
       }
       if (key === 'right') {
-        this.paneIndex = Math.min(this.panes.length - 1, this.paneIndex + 1)
+        this.setPaneIndex(Math.min(this.panes.length - 1, this.paneIndex + 1))
       }
       if (key === 'left') {
-        this.paneIndex = Math.max(0, this.paneIndex - 1)
+        this.setPaneIndex(Math.max(0, this.paneIndex - 1))
       }
     })
 
@@ -43,19 +43,30 @@ export class OrbitDockedPaneStore {
   )
 
   setActivePane = name => {
-    this.paneIndex = this.panes.findIndex(val => val === name)
+    this.setPaneIndex(this.panes.findIndex(val => val === name))
   }
 
-  get activePane() {
-    const active = this.panes[this.paneIndex]
-    if (active === 'home' && App.state.query) {
-      return 'search'
+  setPaneIndex = index => {
+    if (index !== this.paneIndex) {
+      this.paneIndex = index
     }
-    if (!App.orbitState.docked) {
-      return this.panes[this.paneIndex]
-    }
-    return active
   }
+
+  id = Math.random()
+
+  activePane = react(
+    () => [this.panes, this.paneIndex, App.orbitState.docked, App.state.query],
+    () => {
+      const active = this.panes[this.paneIndex]
+      if (active === 'home' && App.state.query) {
+        return 'search'
+      }
+      if (!App.orbitState.docked) {
+        return this.panes[this.paneIndex]
+      }
+      return active
+    },
+  )
 
   lastActivePane = react(() => this.activePane, _ => _, { delayValue: true })
 

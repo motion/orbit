@@ -4,11 +4,14 @@ import * as UI from '@mcro/ui'
 import { RoundButton } from '../../views'
 import { OrbitIcon } from './OrbitIcon'
 
-export const OrbitSearchFilters = view(({ appStore, searchStore }) => {
-  appStore
-  searchStore
+export const OrbitSearchFilters = view((
+  {
+    /* appStore, searchStore */
+  },
+) => {
   return (
-    <UI.Row width="100%" padding={[0, 0, 10]}>
+    <UI.Row width="100%" padding={[0, 0, 10]} alignItems="center">
+      {/* <UI.Icon name="ui-2_filter" size={12} opacity={0.6} marginRight={12} /> */}
       <UI.PassProps circular size={1.2} marginRight={5}>
         <RoundButton icon={<OrbitIcon size={22} icon="slack" />} />
         <RoundButton icon={<OrbitIcon size={22} icon="gdrive" />} />

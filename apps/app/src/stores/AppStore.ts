@@ -294,21 +294,20 @@ export class AppStore {
         // debounce a little for fast typer
         await sleep(TYPE_DEBOUNCE)
         // get first page results
-        const takePer = 3
-        const takeMax = 50
+        const takePer = 4
+        const takeMax = takePer * 6
         const sleepBtwn = 80
         let results = []
         for (let i = 0; i < takeMax / takePer; i += 1) {
           const skip = i * takePer
           const nextResults = await searchBits(query, { take: takePer, skip })
           results = [...results, ...nextResults]
-          if (i > 2) {
-            preventLogging()
-          }
           setValue({
             results,
             query,
           })
+          // only log it once...
+          preventLogging()
           // get next page results
           await sleep(sleepBtwn)
         }

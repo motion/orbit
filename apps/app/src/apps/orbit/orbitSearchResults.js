@@ -8,7 +8,6 @@ import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import { stateOnlyWhenActive } from './stateOnlyWhenActive'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
-import { trace } from 'mobx'
 
 const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
   const { query, results, message } = searchStore.state
@@ -89,7 +88,6 @@ class SearchStore {
 @view
 export class OrbitSearchResults extends React.Component {
   render() {
-    trace()
     const { appStore, searchStore, name } = this.props
     if (!searchStore.state.results) {
       return null

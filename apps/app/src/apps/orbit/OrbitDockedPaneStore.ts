@@ -66,6 +66,9 @@ export class OrbitDockedPaneStore {
       }
       return active
     },
+    {
+      immediate: true,
+    },
   )
 
   lastActivePane = react(() => this.activePane, _ => _, { delayValue: true })

@@ -43,7 +43,6 @@ class DockedPaneStore {
     const isActive =
       name === paneStore.activePane &&
       (extraCondition ? extraCondition.hasQuery() : true)
-    console.log('return ', isActive)
     return isActive
   }
 }

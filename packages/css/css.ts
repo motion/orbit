@@ -74,6 +74,11 @@ export const psuedoKeys = {
   '&:selection': true,
 }
 
+const cssAttributeNames =
+  typeof document !== 'undefined' ? document.body.style : {}
+export const validCSSAttr = key =>
+  typeof cssAttributeNames[key] === 'string' || psuedoKeys[key]
+
 // helpers
 const px = (x: number | string) =>
   typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import fancyElement from './fancyElement'
-import css, { psuedoKeys } from '@mcro/css'
+import css, { validCSSAttr } from '@mcro/css'
 import JSS from './stylesheet'
 import { attachTheme } from './theme/attachTheme'
 
@@ -13,10 +13,6 @@ export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 export { cssNameMap, psuedoKeys } from '@mcro/css'
-
-const cssAttributeNames =
-  typeof document !== 'undefined' ? document.body.style : {}
-const validCSSAttr = key => cssAttributeNames[key] === '' || psuedoKeys[key]
 
 export const isGlossyFirstArg = arg => {
   if (!arg) {
@@ -252,7 +248,6 @@ export default class Gloss {
       if (!hasAttachedStyles) {
         try {
           View.compiledStyles = this.getAllStyles(View, name)
-          console.log('View.compiledStyles', View.compiledStyles)
           this.attachStyles(`${id}`, View.compiledStyles)
         } catch (err) {
           console.log('error attaching styles', target, name, styles)

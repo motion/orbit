@@ -54,6 +54,8 @@ exports.psuedoKeys = {
     '&:placeholder': true,
     '&:selection': true,
 };
+const cssAttributeNames = typeof document !== 'undefined' ? document.body.style : {};
+exports.validCSSAttr = key => typeof cssAttributeNames[key] === 'string' || exports.psuedoKeys[key];
 const px = (x) => typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x;
 function motionStyle(options = {}) {
     const isColor = (color) => helpers_1.isColorLike(color, options);

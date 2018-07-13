@@ -4,7 +4,6 @@ import * as UI from '@mcro/ui'
 import { Header, Footer } from '../components'
 import SectionContent from '../views/sectionContent'
 import Router from '../router'
-import * as View from '../views'
 import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo } from '../views'
 import * as Constants from '../constants'
 import Media from 'react-media'
@@ -90,7 +89,7 @@ const SectionSubP = props => (
 const Half = props => (
   <Media query={Constants.screen.large}>
     {isLarge => (
-      <half
+      <UI.Col
         css={
           isLarge
             ? { width: '45%', margin: ['auto', 0] }
@@ -102,32 +101,33 @@ const Half = props => (
   </Media>
 )
 
+const WaveSVG = view('svg', {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 0,
+  minWidth: 1000,
+  margin: [
+    '-2.5%',
+    window.innerWidth < 1000 ? (window.innerWidth - 1000) / 2 : 0,
+    0,
+  ],
+  transform: {
+    scaleX: -1,
+    z: 0,
+  },
+})
+
 const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
-  <svg
+  <WaveSVG
     ref={forwardRef}
     className="wavebanner"
     preserveAspectRatio="none"
     viewBox="0 0 3701 2273"
     width="100%"
     height="105%"
-    css={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 0,
-      minWidth: 1000,
-      margin: [
-        '-2.5%',
-        window.innerWidth < 1000 ? (window.innerWidth - 1000) / 2 : 0,
-        0,
-      ],
-      transform: {
-        scaleX: -1,
-        z: 0,
-      },
-    }}
     {...props}
   >
     <path
@@ -135,24 +135,19 @@ const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
       id="Rectangle"
       fill={fill}
     />
-  </svg>
+  </WaveSVG>
 ))
 
-const ToolTip = ({ tooltip, tooltipProps, ...props }) => (
-  <UI.Surface
-    inline
-    background="transparent"
-    color="inherit"
-    background="transparent"
+const ToolTip = ({ tooltip, tooltipProps = {}, ...props }) => (
+  <UI.InlineFlex
+    size={1.2}
+    fontWeight={300}
     opacity={0.8}
-    tooltip={
-      <UI.Text if={tooltip} size={1.2} alpha={0.8} {...tooltipProps}>
-        {tooltip}
-      </UI.Text>
-    }
-    css={{
-      cursor: 'pointer',
-      // margin: [0, -5],
+    cursor="pointer"
+    {...{
+      '&:hover': {
+        opacity: 1,
+      },
     }}
     {...props}
   />
@@ -201,7 +196,7 @@ const VertSpace = () => (
 
 const SectionSubTitle = props => (
   <Title
-    size={1.9}
+    size={1.8}
     sizeLineHeight={1.1}
     titleFont
     alpha={0.65}
@@ -212,16 +207,20 @@ const SectionSubTitle = props => (
 
 const Pitch = ({ isLarge, scrollTo }) => (
   <>
-    <Title italic size={5} alpha={1} color="#222">
+    <Title italic size={5.5} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      The search platform for everything in your cloud and behind your firewall.
-      Installed in a minute with{' '}
-      <ToolTip onClick={() => scrollTo(3)}>total&nbsp;privacy</ToolTip>.
+      The serverless internal knowledge platform. Organize and search everything
+      in your cloud and behind your firewall.
     </SectionSubTitle>
     <VertSpace />
+    <SectionSubTitle fontWeight={300} size={1.6}>
+      <ToolTip onClick={() => scrollTo(3)}>
+        Learn how on-device makes it work.
+      </ToolTip>
+    </SectionSubTitle>
     <VertSpace />
     <row $$row css={{ margin: [2, 0, 10] }}>
       <Join />
@@ -235,7 +234,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
         alignItems: 'center',
       }}
     >
-      <UI.Text alpha={0.8}>
+      <UI.Text alpha={0.5}>
         Coming soon for
         <AppleLogo
           onClick={scrollToTrack('#join', 'Mac')}
@@ -262,14 +261,6 @@ const Pitch = ({ isLarge, scrollTo }) => (
         />
         .
       </UI.Text>
-      <space css={{ width: 15 }} />
-      <UI.Button
-        href="/about"
-        onClick={Router.link('/about')}
-        css={{ cursor: 'pointer', margin: [-2, 0] }}
-      >
-        Learn more.
-      </UI.Button>
     </actions>
   </>
 )
@@ -438,16 +429,13 @@ class SectionSearch extends React.Component {
                 </SectionTitle>
                 <VertSpace />
                 <SectionP>
-                  The power of on-device NLP means your internal search is
+                  The power of serverless NLP means your internal search is
                   actually internal.
                 </SectionP>
                 <VertSpace />
                 <SectionSubP>
                   Search everything from cloud services like Slack and Google
-                  Drive to internal APIs, databases and more.{' '}
-                  <View.LinkSimple to="/about">
-                    Learn more about how it works.
-                  </View.LinkSimple>
+                  Drive to internal APIs and databases without any setup.
                 </SectionSubP>
                 <VertSpace />
                 <div $$flex={0.5} />
@@ -618,10 +606,10 @@ const Card = ({ title, children, icon }) => (
       css={{ margin: [0, 40, 0, 0] }}
     />
     <content css={{ flex: 1 }}>
-      <SectionP size={1.7} fontWeight={700} css={{ flex: 1 }}>
+      <SectionP size={1.5} fontWeight={700} css={{ flex: 1 }}>
         {title}
       </SectionP>
-      <SectionSubP size={1.8} sizeLineHeight={1} css={{ flex: 1 }}>
+      <SectionSubP size={1.7} sizeLineHeight={1} css={{ flex: 1 }}>
         {children}
       </SectionSubP>
     </content>
@@ -661,14 +649,15 @@ class SectionNoCloud extends React.Component {
               <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.8}>
-                Complete privacy + powerful tools for your company intranet. Add
-                custom integrations with ease.
+                Orbit runs entirely on your desktop with no server with a
+                powerful plugin system to sort through all your knowledge.
               </SectionSubTitle>
               <VertSpace />
               <SectionSubP size={1.45} if={isLarge}>
-                Orbit gives you and your team superpowers without scaring
-                security. It's a powerful new app platform for keeping teams in
-                sync.
+                Because it has no server, it only takes a minute to install and
+                we never see a single bit of your private data. We don't like to
+                call it decentralized, but you can think of it as a peer-to-peer
+                intranet system for your team.
               </SectionSubP>
               <VertSpace />
               <VertSpace />
@@ -683,8 +672,9 @@ class SectionNoCloud extends React.Component {
               <Card icon="userrun" title="Instant Setup">
                 Download to setup in just a couple minutes.
               </Card>
-              <Card icon="business_plug" title="Your Control">
-                One-click to deploy custom private apps.
+              <Card icon="business_plug" title="Custom apps">
+                Build custom integrations right on your computer, and deploy to
+                your teams with a click.
               </Card>
             </inner>
           </div>

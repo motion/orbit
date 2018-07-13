@@ -189,6 +189,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       this.setPosition()
       this.setOpenOrClosed(this.props)
       this.setTarget()
+      this.setState({ setPosition: false })
     }
     if (this.props.onDidOpen) {
       if (this.shouldSendDidOpen && this.showPopover) {

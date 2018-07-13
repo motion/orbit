@@ -10,7 +10,7 @@ import { stateOnlyWhenActive } from './stateOnlyWhenActive'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { trace } from 'mobx'
 
-const OrbitSearchResultsInner = view(({ appStore, searchStore }) => {
+const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
   const { query, results, message } = searchStore.state
   const isChanging = searchStore.currentQuery !== query
   const highlightWords = searchStore.state.query
@@ -104,6 +104,7 @@ export class OrbitSearchResults extends React.Component {
         <OrbitSearchResultsInner
           appStore={appStore}
           searchStore={searchStore}
+          name={name}
         />
       </OrbitDockedPane>
     )

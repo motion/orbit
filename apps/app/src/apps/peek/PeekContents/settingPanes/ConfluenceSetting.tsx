@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from '../../../orbit/orbitIcon'
+import { OrbitIcon } from '../../../orbit/OrbitIcon'
 import { SubTitle } from '../../../../views'
 import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 

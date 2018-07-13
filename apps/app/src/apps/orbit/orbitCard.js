@@ -90,7 +90,6 @@ class OrbitCardStore {
       if (shouldSelect === this._isSelected) {
         throw react.cancel
       }
-      console.log('select me', shouldSelect)
       this._isSelected = shouldSelect
       if (shouldSelect) {
         // visual smoothness

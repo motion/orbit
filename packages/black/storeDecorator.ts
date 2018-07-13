@@ -19,7 +19,6 @@ export const storeOptions = {
   storeDecorator,
   onStoreMount(_, store, props) {
     if (store._decorated) {
-      console.warn('decoarte twice', store, props)
       return
     }
     Object.defineProperty(store, '_decorated', {

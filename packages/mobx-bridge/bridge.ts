@@ -200,6 +200,7 @@ class Bridge {
       }
       // send state that hasnt been synced yet
       if (this._queuedState) {
+        console.log('opened, sending queued state now')
         this._socket.send(
           JSON.stringify({ state: this.state, source: this._source }),
         )

@@ -8,13 +8,14 @@ import React from 'react'
 import { render } from '@mcro/reactron'
 import waitPort from 'wait-port'
 import root from 'global'
+import { Electron } from '@mcro/stores'
 
 root.__dom = React.createElement
 
 // now stuff that uses relative paths
 require('./helpers/handlePromiseErrors')
 require('./helpers/updateChecker')
-const { Electron } = require('./Electron')
+const { ElectronRoot } = require('./ElectronRoot')
 
 Error.stackTraceLimit = Infinity
 
@@ -42,10 +43,12 @@ export async function start() {
   if (started) return
   await waitPort({ port: 3002 })
   await waitPort({ port: 3001 })
-  await new Promise(res => setTimeout(res, 500)) // parcels sometimes needs a bit
+  await Electron.start({
+    ignoreSelf: true,
+  })
   started = true
-  console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run electron`)
-  render(<Electron />)
+  console.log(`NODE_ENV=${process.env.NODE_ENV} run electron`)
+  render(<ElectronRoot />)
   electronContextMenu()
   electronDebug()
 }

@@ -1,27 +1,15 @@
 import * as React from 'react'
 import * as Constants from '../constants'
-import { on, view, isEqual, react } from '@mcro/black'
+import { on, view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '../helpers'
-import { App, Electron, Desktop } from '@mcro/stores'
+import { Electron, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 
 class MainStore {
   get mouseInActiveArea() {
     return Desktop.hoverState.peekHovered || Desktop.hoverState.orbitHovered
   }
-
-  openedOrbitButNotMovedMouseYet = react(
-    () => App.orbitState.docked,
-    async (justOpened, { setValue, whenChanged }) => {
-      if (!justOpened) {
-        throw react.cancel
-      }
-      setValue(true)
-      await whenChanged(() => Desktop.mouseState.mouseMove)
-      setValue(false)
-    },
-  )
 }
 
 @view.attach('electronStore')
@@ -37,26 +25,21 @@ export class MainWindow extends React.Component<{
   state = {
     show: false,
     position: [0, 0],
-    size: null,
   }
 
   componentDidMount() {
     this.handleReadyToShow()
-    on(
-      this,
-      setInterval(() => {
-        const size = Helpers.getScreenSize()
-        if (!isEqual(size, this.state.size)) {
-          this.setState({ size })
-        }
-      }, 1000),
-    )
+    on(this, setInterval(this.setScreenSize, 1000))
+  }
+
+  setScreenSize = () => {
+    const screenSize = Helpers.getScreenSize()
+    Electron.setState({ screenSize })
   }
 
   handleReadyToShow = () => {
-    console.log('Helpers.getScreenSize()', Helpers.getScreenSize())
+    this.setScreenSize()
     this.setState({
-      size: Helpers.getScreenSize(),
       show: true,
     })
   }
@@ -67,9 +50,6 @@ export class MainWindow extends React.Component<{
 
   render() {
     const { store, electronStore, onRef } = this.props
-    if (!this.state.size) {
-      return null
-    }
     return (
       <Window
         alwaysOnTop
@@ -85,7 +65,7 @@ export class MainWindow extends React.Component<{
         background="#00000000"
         webPreferences={Constants.WEB_PREFERENCES}
         position={this.state.position}
-        size={this.state.size}
+        size={Electron.state.screenSize}
         onMove={this.handleMove}
       />
     )

@@ -3,13 +3,21 @@ import { setGlobal } from './helpers'
 import { store, react, deep } from '@mcro/black/store'
 import { DesktopState } from './types'
 
-export let Desktop
+export let Desktop = null as DesktopStore
 
 // const log = debug('Desktop')
 const PAD_WINDOW = 15
 
 @store
 class DesktopStore {
+  // shortcuts
+  appState: DesktopStore['state']['appState']
+  ocrState: DesktopStore['state']['ocrState']
+  searchState: DesktopStore['state']['searchState']
+  keyboardState: DesktopStore['state']['keyboardState']
+  hoverState: DesktopStore['state']['hoverState']
+  mouseState: DesktopStore['state']['mouseState']
+
   messages = {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',
     OPEN_AUTH: 'OPEN_AUTH',
@@ -24,7 +32,6 @@ class DesktopStore {
   source = 'Desktop'
 
   state: DesktopState = deep({
-    screenSize: [0, 0],
     appState: {
       selectedText: '',
       id: null,

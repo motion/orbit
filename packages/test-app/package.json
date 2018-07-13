@@ -14,7 +14,6 @@
     "@mcro/black": "^2.2.0",
     "@mcro/build": "^2.2.0",
     "@mcro/gloss": "^2.2.0",
-    "@mcro/sonar": "^2.2.0",
     "@mcro/ui": "^2.2.0"
   },
   "peerDependencies": {

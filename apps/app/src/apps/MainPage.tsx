@@ -30,7 +30,7 @@ export class MainPage extends React.Component<{
   appStore: AppStore
 }> {
   componentWillMount() {
-    // this.props.appStore.integrationSettingsStore = this.props.integrationSettingsStore
+    this.props.searchFilterStore.integrationSettingsStore = this.props.integrationSettingsStore
   }
 
   render() {

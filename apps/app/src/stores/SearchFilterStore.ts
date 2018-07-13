@@ -1,10 +1,15 @@
 import { store } from '@mcro/black'
+import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 
 @store
 export class SearchFilterStore {
+  integrationSettingsStore?: IntegrationSettingsStore = null
+
   get settings() {
-    // @ts-ignore
-    return this.props.integrationSettingsStore.settings
+    if (!this.integrationSettingsStore) {
+      return null
+    }
+    return this.integrationSettingsStore.settingsList
   }
 
   get filters() {

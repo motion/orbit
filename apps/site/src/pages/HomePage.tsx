@@ -218,7 +218,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
     <VertSpace />
     <SectionSubTitle fontWeight={300} size={1.6}>
       <ToolTip onClick={() => scrollTo(3)}>
-        Learn how on-device makes it work.
+        Learn how serverless makes it work for you.
       </ToolTip>
     </SectionSubTitle>
     <VertSpace />
@@ -646,18 +646,19 @@ class SectionNoCloud extends React.Component {
             }}
           >
             <inner css={isLarge && { width: '46%', margin: ['auto', 0] }}>
-              <SectionTitle color="#fff">The No-Cloud Platform</SectionTitle>
+              <SectionTitle color="#fff">The Serverless Platform</SectionTitle>
               <VertSpace />
-              <SectionSubTitle color="#fff" alpha={0.8}>
-                Orbit runs entirely on your desktop with no server with a
-                powerful plugin system to sort through all your knowledge.
+              <SectionSubTitle color="#fff" alpha={0.85}>
+                Orbit runs entirely on your desktop with no server. It has a
+                powerful plugin system to unify and display any type of
+                knowledge.
               </SectionSubTitle>
               <VertSpace />
-              <SectionSubP size={1.45} if={isLarge}>
+              <SectionSubP size={1.45} alpha={0.7} if={isLarge}>
                 Because it has no server, it only takes a minute to install and
-                we never see a single bit of your private data. We don't like to
-                call it decentralized, but you can think of it as a peer-to-peer
-                intranet system for your team.
+                we never touch a single bit of your private data. We don't like
+                to call it decentralized, but you can think of it as a
+                peer-to-peer intranet system for your team.
               </SectionSubP>
               <VertSpace />
               <VertSpace />

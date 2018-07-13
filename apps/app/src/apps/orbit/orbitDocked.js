@@ -58,10 +58,8 @@ Border.theme = ({ theme }) => {
   const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
   const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.5]]
   return {
-    border: {
-      borderRadius: borderRadius,
-      boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
-    },
+    borderRadius: borderRadius,
+    boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
   }
 }
 
@@ -81,7 +79,7 @@ class OrbitDockedInner extends React.Component {
           visible={animationState.visible}
           willAnimate={animationState.willAnimate}
         >
-          <Border fullscreen />
+          <Border />
           <container>
             <OrbitHeader
               borderRadius={borderRadius}

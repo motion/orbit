@@ -8,7 +8,7 @@
 import { view } from '@mcro/black'
 import { TreeItemID, TreeItem, TreeItemSearchResultSet } from './Tree'
 import { Icon } from './Icon'
-import { ContextMenu } from './ContextMenu'
+// import { ContextMenu } from './ContextMenu'
 import * as React from 'react'
 import { Row } from './blocks/Row'
 import { Col } from './blocks/Col'
@@ -20,8 +20,9 @@ import { FixedList } from './FixedList'
 
 const ROW_HEIGHT = 23
 
-const TreeItemsRowContainer = view(ContextMenu, {
-  flexDirection: 'row',
+// .extends(ContextMenu)
+const TreeItemsRowContainer = view({
+  flexFlow: 'row',
   alignItems: 'center',
   flexShrink: 0,
   flexWrap: 'nowrap',

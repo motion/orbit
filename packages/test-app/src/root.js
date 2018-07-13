@@ -52,12 +52,22 @@ export const Root = () => {
             zero: {
               id: 'zero',
               name: 'test name',
-              expanded: false,
-              children: ['one'],
+              expanded: true,
+              children: ['one', 'two', 'three'],
             },
             one: {
               id: 'one',
               name: 'test name2',
+              expanded: false,
+            },
+            two: {
+              id: 'two',
+              name: 'test name3',
+              expanded: false,
+            },
+            three: {
+              id: 'three',
+              name: 'test name4',
               expanded: false,
             },
           }}

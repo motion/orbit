@@ -8,11 +8,11 @@ import '@mcro/debug/inject.js'
 import './helpers/installDevelopmentHelpers'
 import { RootStore } from './stores/RootStore'
 import * as UI from '@mcro/ui'
-import { ThemeProvide } from '@mcro/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Themes from './themes'
 import { throttle } from 'lodash'
+import { Gloss } from '@mcro/black'
 
 Error.stackTraceLimit = Infinity
 
@@ -36,12 +36,13 @@ const render = throttle(async () => {
   const { RootViewHMR } = require('./RootViewHMR')
   // <React.unstable_AsyncMode>
   // </React.unstable_AsyncMode>
+  Gloss.attach()
   ReactDOM.render(
-    <ThemeProvide {...Themes}>
+    <UI.ThemeProvide {...Themes}>
       <UI.Theme name="light">
         <RootViewHMR />
       </UI.Theme>
-    </ThemeProvide>,
+    </UI.ThemeProvide>,
     document.querySelector('#app'),
   )
 }, 32)

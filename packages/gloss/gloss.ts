@@ -14,7 +14,8 @@ export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 export { cssNameMap, psuedoKeys } from '@mcro/css'
 
-const cssAttributeNames = document.body.style
+const cssAttributeNames =
+  typeof document !== 'undefined' ? document.body.style : {}
 const validCSSAttr = key => cssAttributeNames[key] === '' || psuedoKeys[key]
 
 export const isGlossyFirstArg = arg => {
@@ -360,7 +361,6 @@ export default class Gloss {
       }
       if (!this.stylesheet.getRule(stylesKey)) {
         const niceStyle = this.css(style)
-        console.log('before after', style, niceStyle)
         this.stylesheet.addRule(stylesKey, niceStyle)
       }
     }

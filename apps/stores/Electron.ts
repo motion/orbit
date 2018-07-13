@@ -2,7 +2,7 @@ import Bridge, { proxySetters } from '@mcro/mobx-bridge'
 import { setGlobal } from './helpers'
 import { store, deep } from '@mcro/black/store'
 
-export let Electron
+export let Electron = null as ElectronStore
 
 @store
 class ElectronStore {
@@ -21,6 +21,7 @@ class ElectronStore {
   lastAction = null
 
   state = deep({
+    screenSize: [0, 0],
     settingsPosition: [], // todo: settingsState.position
     showDevTools: {
       orbit: false,

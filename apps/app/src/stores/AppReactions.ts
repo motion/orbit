@@ -65,24 +65,28 @@ export class AppReactions {
     })
   }
 
-  toggle() {
-    if (App.orbitState.hidden) {
-      this.show()
-    } else {
-      this.hide()
-    }
-  }
+  // disable sidebar  for now
 
-  show() {
-    App.setOrbitState({ hidden: false })
-  }
+  // toggle() {
+  //   if (App.orbitState.hidden) {
+  //     this.show()
+  //   } else {
+  //     this.hide()
+  //   }
+  // }
+
+  // show() {
+  //   App.setOrbitState({ hidden: false })
+  // }
 
   hide = async () => {
+    // hide peek first
     if (App.peekState.target && !App.peekState.pinned) {
       App.actions.clearPeek()
       await new Promise(res => setTimeout(res, 80)) // sleep 80
       return
     }
+    // hide orbit docked second
     if (App.orbitState.docked) {
       App.setOrbitState({ docked: false })
       return
@@ -90,7 +94,6 @@ export class AppReactions {
     App.setOrbitState({ hidden: true })
   }
 
-  // disable holding option preview for now
   // handleHoldingOption = react(
   //   () => Desktop.isHoldingOption,
   //   async (isHoldingOption, { sleep }) => {
@@ -128,17 +131,17 @@ export class AppReactions {
     { log: 'state' },
   )
 
-  onPinned = react(
-    () => App.orbitState.pinned,
-    pinned => {
-      if (pinned) {
-        App.setOrbitState({ hidden: false })
-      } else {
-        App.setOrbitState({ hidden: true })
-      }
-    },
-    { log: 'state' },
-  )
+  // onPinned = react(
+  //   () => App.orbitState.pinned,
+  //   pinned => {
+  //     if (pinned) {
+  //       App.setOrbitState({ hidden: false })
+  //     } else {
+  //       App.setOrbitState({ hidden: true })
+  //     }
+  //   },
+  //   { log: 'state' },
+  // )
 
   unPinOnHidden = react(
     () => App.isFullyHidden,

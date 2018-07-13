@@ -10,24 +10,29 @@ import { ElectronStore } from './stores/ElectronStore'
   electronStore: ElectronStore,
 })
 @view.electron
-export class Electron extends React.Component {
+export class ElectronRoot extends React.Component {
   props: {
     electronStore?: ElectronStore
   }
 
   componentDidCatch(error) {
     this.props.electronStore.error = error
-    console.error(error)
+    console.log('electron error', error)
   }
 
   render() {
     const { electronStore } = this.props
-    if (electronStore.error || !electronStore.windowFocusStore) {
+    if (!electronStore.windowFocusStore) {
+      console.log('no window focus store')
+      return null
+    }
+    if (electronStore.error) {
       if (electronStore.error) {
-        console.log('ran into error', electronStore.error)
+        console.log('error is', electronStore.error)
       }
       return null
     }
+    console.log('electron success, rendering...')
     return (
       <AppWindow
         onBeforeQuit={electronStore.handleBeforeQuit}

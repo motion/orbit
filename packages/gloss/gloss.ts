@@ -257,7 +257,6 @@ export default class Gloss {
       }
       // allow View.defaultProps
       // @ts-ignore
-      console.log('View.defaultProps', View.defaultProps)
       const { forwardRef, ...props } = {
         ...View.defaultProps,
         ...allProps,

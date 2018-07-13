@@ -529,9 +529,7 @@ export default class TableBody extends PureComponent<
         </TableBodyContainer>
       )
     }
-
     let children
-
     if (this.props.multiline === true) {
       // multiline has a virtual list with dynamic heights
       children = (
@@ -561,7 +559,6 @@ export default class TableBody extends PureComponent<
         />
       )
     }
-
     return <TableBodyContainer autoHeight>{children}</TableBodyContainer>
   }
 }

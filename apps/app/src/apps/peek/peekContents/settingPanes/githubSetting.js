@@ -170,9 +170,9 @@ export class GithubSetting extends React.Component {
           <section if={store.active === 'repos'}>
             <section>
               <UI.SearchableTable
+                virtual
                 rowLineHeight={28}
                 floating={false}
-                multiline
                 columnSizes={columnSizes}
                 columns={columns}
                 onRowHighlighted={this.onRowHighlighted}

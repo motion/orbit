@@ -6,6 +6,12 @@ const rowHeight = 2
 const gridGap = 9
 const gridColumnGap = 9
 
+const MasonryGrid = view({
+  display: 'grid',
+  margin: [0, -5],
+  gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
+})
+
 @view.ui
 export class Masonry extends React.Component {
   state = {
@@ -21,7 +27,7 @@ export class Masonry extends React.Component {
     return null
   }
 
-  gridNode = null
+  gridNode: HTMLElement = null
 
   async setGrid(gridRef) {
     if (!gridRef) return
@@ -71,30 +77,22 @@ export class Masonry extends React.Component {
     const { children, ...props } = this.props
     if (!measured) {
       return (
-        <grid
+        <MasonryGrid
           ref={this.handleGridRef}
           {...props}
-          css={{ opacity: 0, gridColumnGap }}
+          css={{
+            gridColumnGap,
+            opacity: 0,
+          }}
         >
           {children}
-        </grid>
+        </MasonryGrid>
       )
     }
     return (
-      <grid style={this.gridStyle} {...props}>
+      <MasonryGrid css={this.gridStyle} {...props}>
         {this.state.gridChildren}
-      </grid>
+      </MasonryGrid>
     )
-  }
-
-  static style = {
-    grid: {
-      margin: [0, -5],
-      // maxHeight: '100%',
-      // overflowY: 'scroll',
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
-      // gridAutoRows: 40,
-    },
   }
 }

@@ -12,7 +12,7 @@ import { ElectronStore } from './stores/ElectronStore'
 @view.electron
 export class Electron extends React.Component {
   props: {
-    electronStore: ElectronStore
+    electronStore?: ElectronStore
   }
 
   componentDidCatch(error) {
@@ -20,7 +20,8 @@ export class Electron extends React.Component {
     console.error(error)
   }
 
-  render({ electronStore }) {
+  render() {
+    const { electronStore } = this.props
     if (electronStore.error || !electronStore.windowFocusStore) {
       if (electronStore.error) {
         console.log('ran into error', electronStore.error)
@@ -32,9 +33,9 @@ export class Electron extends React.Component {
         onBeforeQuit={electronStore.handleBeforeQuit}
         onQuit={electronStore.handleQuit}
         ref={electronStore.handleAppRef}
-        devTools={[DevTools.mobx]}
+        devTools={[DevTools.mobx, DevTools.react]}
       >
-        <MenuItems el />
+        <MenuItems />
         <MainWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
         <Tray />
       </AppWindow>

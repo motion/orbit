@@ -8,6 +8,25 @@ import { capitalize } from 'lodash'
 
 const service = (window.location + '').split('service=')[1]
 
+const Wrap = view(UI.Col, {
+  background: '#fff',
+  flex: 1,
+  width: '100%',
+  height: '100%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  pointerEvents: 'auto',
+  padding: [0, 30],
+})
+
+const Message = view(UI.Col, {
+  width: 500,
+  padding: 20,
+  margin: 40,
+  borderRadius: 5,
+  background: '#f2f2f2',
+})
+
 @view
 export class AuthPage extends React.Component {
   link = async () => {
@@ -26,14 +45,14 @@ export class AuthPage extends React.Component {
 
   render() {
     return (
-      <wrap>
+      <Wrap>
         <UI.Theme theme="#4C36C4">
           <UI.Button size={1.5} $button id="link" onClick={this.link}>
             Link {capitalize(service)}
           </UI.Button>
         </UI.Theme>
 
-        <message>
+        <Message>
           <UI.Text fontWeight={500} size={1.2}>
             Privacy notice
           </UI.Text>
@@ -47,28 +66,8 @@ export class AuthPage extends React.Component {
             Only your local computer will use this to sync data down directly
             from {service}.
           </UI.Text>
-        </message>
-      </wrap>
+        </Message>
+      </Wrap>
     )
-  }
-
-  static style = {
-    wrap: {
-      background: '#fff',
-      flex: 1,
-      width: '100%',
-      height: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      pointerEvents: 'auto',
-      padding: [0, 30],
-    },
-    message: {
-      width: 500,
-      padding: 20,
-      margin: 40,
-      borderRadius: 5,
-      background: '#f2f2f2',
-    },
   }
 }

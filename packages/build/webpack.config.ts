@@ -5,7 +5,7 @@ import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
-// import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 // import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
@@ -64,6 +64,17 @@ const optimizeSplit = {
 const optimization = {
   prod: {
     ...optimizeSplit,
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          ecma: 8,
+          toplevel: true,
+        },
+        sourceMap: true,
+        cache: true,
+        parallel: true,
+      }),
+    ],
   },
   dev: {
     removeAvailableModules: false,
@@ -193,15 +204,6 @@ const config = {
       favicon: 'public/favicon.png',
       template: 'index.html',
     }),
-    // isProd &&
-    //   new UglifyJsPlugin({
-    //     // uglifyOptions: {
-    //     //   ecma: 8,
-    //     //   toplevel: true,
-    //     // },
-    //     sourceMap: true,
-    //     parallel: 2,
-    //   }),
     process.argv.indexOf('--report') > 0 &&
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',

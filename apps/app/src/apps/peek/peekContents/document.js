@@ -23,7 +23,6 @@ export class Document extends React.Component {
           if (bit.data.markdownBody) {
             bodyContents = markdown(content, options)
           }
-          console.log('hello', bit, content, bodyContents)
           return children({
             title,
             icon,

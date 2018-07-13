@@ -17,19 +17,19 @@ const Block = view(UI.Block, {
 })
 
 type Props = {
-  openMark: string
-  closeMark: string
-  value: string
-  highlight: (a: string) => Array<[number, number]>
+  openMark?: string
+  closeMark?: string
+  value?: string
+  highlight?: (a: string) => Array<[number, number]>
   onChange?: Function
   onFocus?: Function
   onBlur?: Function
   onKeyDown?: Function
-  getRef?: Function
   onClick?: Function
+  forwardRef?: React.Ref<any>
 }
 
-export class HighlightedTextArea extends React.Component<Props> {
+class HighlightedTextAreaInner extends React.Component<Props> {
   backdrop = React.createRef()
 
   static defaultProps = {
@@ -113,19 +113,14 @@ export class HighlightedTextArea extends React.Component<Props> {
   }
 
   render() {
-    const {
-      onChange,
-      getRef,
-      highlight,
-      value,
-      ...props
-    } = this.props
+    const { onChange, highlight, value, forwardRef, ...props } = this.props
     return (
       <TextAreaOuter debug>
         <Block
           {...props}
           ref={this.backdrop}
           dangerouslySetInnerHTML={{ __html: this.getHighlights() }}
+          color="transparent"
         />
         <Block
           tagName="textarea"
@@ -134,8 +129,13 @@ export class HighlightedTextArea extends React.Component<Props> {
           onChange={this.handleInputChange}
           onScroll={this.handleScroll}
           value={this.state.input}
+          ref={forwardRef}
         />
       </TextAreaOuter>
     )
   }
 }
+
+export const HighlightedTextArea = React.forwardRef((props, ref) => (
+  <HighlightedTextAreaInner {...props} forwardRef={ref} />
+))

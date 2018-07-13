@@ -39,7 +39,7 @@ export class ProgressCircle extends React.Component {
     `
     const pathStyle = {
       strokeDasharray: `${length}px ${length}px`,
-      strokeDashoffset: `${(100 - percent) / 100 * length}px`,
+      strokeDashoffset: `${((100 - percent) / 100) * length}px`,
       transition: 'stroke-dashoffset 0.3s ease 0s, stroke 0.3s ease',
     }
 
@@ -52,14 +52,14 @@ export class ProgressCircle extends React.Component {
       >
         <path
           d={pathString}
-          stroke={this.gloss.helpers.toColor(backgroundColor)}
+          stroke={backgroundColor}
           strokeWidth={lineWidth}
           fillOpacity="0"
         />
         <path
           d={pathString}
           strokeLinecap={lineType}
-          stroke={this.gloss.helpers.toColor(lineColor)}
+          stroke={lineColor}
           strokeWidth={lineWidth}
           fillOpacity="0"
           ref="path"

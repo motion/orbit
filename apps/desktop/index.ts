@@ -25,9 +25,13 @@ const appRoot = new Root()
 
 const exitHandler = async (code?: any) => {
   console.log('handling exit', code)
-  if (await appRoot.dispose()) {
-    // otherwise it wont exit :/
-    process.kill(process.pid)
+  try {
+    if (await appRoot.dispose()) {
+      // otherwise it wont exit :/
+      process.kill(process.pid)
+    }
+  } catch (err) {
+    console.log('error killing', err)
   }
 }
 

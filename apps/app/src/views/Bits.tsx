@@ -12,12 +12,12 @@ export class Bits extends React.Component {
       key: id,
       primary: title,
       children: [
-        <items $$row>
+        <UI.Row>
           <UI.Text>
             {formatDistance(task.data.created_at, Date.now())}{' '}
             {task.data.body.slice(0, 140)}
           </UI.Text>
-        </items>,
+        </UI.Row>,
       ],
       icon: 'social-github',
     }
@@ -29,12 +29,12 @@ export class Bits extends React.Component {
       key: cal.id,
       primary: summary,
       children: [
-        <items $$row>
+        <UI.Row>
           <UI.Text lineHeight={20} opacity={0.8}>
             <b>{format(new Date(start.dateTime), 'MM/DD/YYYY')} </b>
             {attendees.map(a => a.displayName || a.email).join(', ')}
           </UI.Text>
-        </items>,
+        </UI.Row>,
       ],
       icon: 'calendar',
     }
@@ -42,8 +42,8 @@ export class Bits extends React.Component {
 
   render({ bits }) {
     return (
-      <bits>
-        <items>
+      <UI.Col overflow="scroll" maxHeight={300}>
+        <UI.Col margin={10}>
           <UI.List
             itemProps={{
               fontSize: 18,
@@ -53,18 +53,8 @@ export class Bits extends React.Component {
             items={bits}
             getItem={bit => this['get' + capitalize(bit.type)](bit)}
           />
-        </items>
-      </bits>
+        </UI.Col>
+      </UI.Col>
     )
-  }
-
-  static style = {
-    bits: {
-      maxHeight: 300,
-      overflow: 'scroll',
-    },
-    items: {
-      margin: [10],
-    },
   }
 }

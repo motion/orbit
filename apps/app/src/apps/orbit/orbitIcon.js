@@ -24,26 +24,27 @@ const icons = {
   jira: iconJira,
 }
 
-const SLACK_SCALE = {
-  transform: {
-    y: 1.5,
-    scale: 0.95,
-    rotate: '20deg',
+const adjust = {
+  slack: {
+    transform: {
+      scale: 0.95,
+    },
   },
-}
-const GMAIL_SCALE = {
-  transform: {
-    scale: 0.95,
+  gmail: {
+    transform: {
+      scale: 0.95,
+    },
   },
-}
-
-const adjust = name => {
-  if (name === 'slack') {
-    return SLACK_SCALE
-  }
-  if (name === 'gmail') {
-    return GMAIL_SCALE
-  }
+  confluence: {
+    transform: {
+      scale: 1.4,
+    },
+  },
+  jira: {
+    transform: {
+      scale: 1.3,
+    },
+  },
 }
 
 export const OrbitIcon = ({
@@ -53,6 +54,7 @@ export const OrbitIcon = ({
   size = 25,
   color,
   preventAdjust,
+  className,
   ...props
 }) => {
   const sizeProps = {
@@ -62,25 +64,28 @@ export const OrbitIcon = ({
   const extImg = icon.indexOf('http') === 0 ? icon : null
   const iconImg = icons[icon] ? icons[icon] : extImg
   return (
-    <icon
+    <div
+      className={`icon ${className}`}
       css={{
         display: 'inline-block',
         textAlign: 'center',
-        ...adjust(icon),
+        justifyContent: 'center',
+        ...adjust[icon],
         ...sizeProps,
         ...(iconImg && orbitIconStyle),
       }}
       {...props}
     >
-      <img
-        if={iconImg}
-        src={iconImg}
-        css={{
-          width: '100%',
-          height: '100%',
-          ...imageStyle,
-        }}
-      />
+      {iconImg && (
+        <img
+          src={iconImg}
+          css={{
+            width: '100%',
+            height: '100%',
+            ...imageStyle,
+          }}
+        />
+      )}
       <UI.Icon
         if={!iconImg}
         name={icon}
@@ -88,6 +93,6 @@ export const OrbitIcon = ({
         size={size * (preventAdjust ? 1 : 0.65)}
         color={color}
       />
-    </icon>
+    </div>
   )
 }

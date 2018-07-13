@@ -20,10 +20,10 @@ const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.55]]
   paneStore: OrbitDockedPaneStore,
 })
 @view
-class OrbitDocked extends React.Component {
+class OrbitDockedInner extends React.Component {
   render({ paneStore, appStore, theme }) {
     const { animationState } = paneStore
-    log('DOCKED ------------', App.orbitState.docked)
+    // log('DOCKED ------------', App.orbitState.docked)
     return (
       <>
         <frame
@@ -174,8 +174,8 @@ class OrbitDocked extends React.Component {
   }
 }
 
-export default props => (
+export const OrbitDocked = props => (
   <UI.Theme name="grey">
-    <OrbitDocked {...props} />
+    <OrbitDockedInner {...props} />
   </UI.Theme>
 )

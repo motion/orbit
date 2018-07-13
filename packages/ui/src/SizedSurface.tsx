@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { Surface } from './Surface'
+import { Surface, SurfaceProps } from './Surface'
+import { forwardRef } from './helpers/forwardRef'
 
 const LINE_HEIGHT = 30
 
-type SizedSurfaceProps = {
+type SizedSurfaceProps = SurfaceProps & {
   size: boolean | number
   sizeHeight?: boolean | number
   sizeFont?: boolean | number
@@ -16,7 +17,7 @@ type SizedSurfaceProps = {
   wrapElement?: boolean
 }
 
-export function SizedSurface(props: SizedSurfaceProps) {
+export const SizedSurface = forwardRef((props: SizedSurfaceProps) => {
   const {
     sizeHeight,
     sizeMargin,
@@ -26,7 +27,8 @@ export function SizedSurface(props: SizedSurfaceProps) {
     sizeIcon,
     ...rest
   } = props
-  const size = props.size === true ? 1 : props.size || 1
+  const size =
+    !!props.size && typeof props.size === 'boolean' ? 1 : props.size || 1
   const num = x => (x === true ? size : x * size)
   const base = size * LINE_HEIGHT
   // sizes
@@ -66,5 +68,6 @@ export function SizedSurface(props: SizedSurfaceProps) {
     const iconSize = (sizeIcon && num(sizeIcon)) || 1
     pass.sizeIcon = iconSize
   }
-  return <Surface {...pass} {...rest} />
-}
+  const iconPad = 8 * num(sizeHeight)
+  return <Surface {...pass} iconPad={iconPad} {...rest} />
+})

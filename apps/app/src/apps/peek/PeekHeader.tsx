@@ -1,23 +1,23 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from '../../apps/orbit/orbitIcon'
+import { OrbitIcon } from '../../apps/orbit/OrbitIcon'
 import { WindowControls } from '../../views/WindowControls'
 import { App } from '@mcro/stores'
+import { NICE_INTEGRATION_NAMES } from '../../constants'
 
-const PeekHeaderContain = view({
-  background: '#fff',
-  position: 'relative',
+const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
 })
 
-PeekHeaderContain.theme = ({ theme }) => ({
-  background: theme.base.background,
+PeekHeaderContain.theme = ({ theme, position }) => ({
+  position: position || 'relative',
+  borderBottom: [1, theme.base.borderColor],
+  background: theme.base.background || '#fff',
 })
 
 const TitleBarTitle = props => (
   <UI.Text
-    debug
     size={1.1}
     fontWeight={700}
     ellipse={1}
@@ -31,24 +31,35 @@ const TitleBarTitle = props => (
 
 const TitleBarContain = view({
   flex: 1,
+  height: 30,
   maxWidth: '100%',
   padding: [0, 60],
 })
 
 TitleBarContain.theme = ({ theme }) => ({
-  // background: theme.base.background,
-  hover: {
+  '&:hover': {
     background: theme.hover.background.lighten(0.05),
   },
 })
 
-const SubTitle = ({ children, date, theme, permalink }) => (
+const SubTitle = ({ children, date, permalink }) => (
   <UI.Row
+    if={children || date || permalink}
     padding={[4, 12]}
-    borderBottom={[1, theme.base.background.darken(0.1)]}
+    alignItems="center"
   >
-    <UI.Text size={1} ellipse={1} alpha={0.8}>
-      {children} <UI.Date>{date}</UI.Date>
+    <UI.Text
+      if={children || date}
+      display="flex"
+      flexFlow="row"
+      alignItems="center"
+      alpha={0.8}
+    >
+      {children}
+      <span if={date}>
+        {' '}
+        &middot;&nbsp;&nbsp; <UI.Date>{date}</UI.Date>
+      </span>
     </UI.Text>
     <UI.Col if={permalink} flex={1} />
     <UI.Button
@@ -71,17 +82,19 @@ const TitleBar = ({ children, after, ...props }) => (
 @attachTheme
 @view
 export class PeekHeaderContent extends React.Component {
-  render({
-    peekStore,
-    title,
-    date,
-    subtitle,
-    permalink,
-    icon,
-    theme,
-    subhead,
-    ...props
-  }) {
+  render() {
+    const {
+      peekStore,
+      title,
+      date,
+      subtitle,
+      permalink,
+      icon,
+      theme,
+      subhead,
+      integration,
+      ...props
+    } = this.props
     return (
       <PeekHeaderContain
         draggable={true}
@@ -138,15 +151,15 @@ export class PeekHeaderContent extends React.Component {
                   icon="arrowminleft"
                   circular
                   size={0.8}
-                  background="#f2f2f2"
                 />
               </UI.Row>
             </>
           }
         >
+          {integration ? `${NICE_INTEGRATION_NAMES[integration]}: ` : ''}{' '}
           {title}
         </TitleBar>
-        <SubTitle date={date} theme={theme} permalink={permalink}>
+        <SubTitle date={date} permalink={permalink}>
           {subtitle}
         </SubTitle>
         {subhead}

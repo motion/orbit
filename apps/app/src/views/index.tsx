@@ -7,6 +7,7 @@ export * from './RoundButton'
 export const highlightColor = UI.color('#696549')
 
 export const Message = view({
+  cursor: 'default',
   display: 'block',
   width: '100%',
   borderRadius: 8,
@@ -92,26 +93,21 @@ export const CheckBoxRow = ({
   </FormTableRow>
 )
 
-export const Circle = props => (
-  <circle
-    css={{
-      display: 'inline-block',
-      borderRadius: 100,
-      width: 18,
-      height: 18,
-      lineHeight: '18px',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center',
-      boxShadow: [[0, 0, 0, 0.5, highlightColor]],
-      color: highlightColor,
-      fontWeight: 500,
-      fontSize: 12,
-      margin: [-3, 4, 0, -2],
-    }}
-    {...props}
-  />
-)
+export const Circle = view({
+  display: 'inline-block',
+  borderRadius: 100,
+  width: 18,
+  height: 18,
+  lineHeight: '18px',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  boxShadow: [[0, 0, 0, 0.5, highlightColor]],
+  color: highlightColor,
+  fontWeight: 500,
+  fontSize: 12,
+  margin: [-3, 4, 0, -2],
+})
 
 export const Title = ({ center, children, ...props }) => (
   <UI.Text
@@ -131,25 +127,22 @@ export const VertSpace = view({
   height: 20,
 })
 
-export const SubTitle = props => (
+export const SubTitle = ({ verticalSpacing = 1, ...props }) => (
   <UI.Text
     alpha={0.65}
     fontWeight={300}
     fontSize={16}
-    css={{
-      alignItems: 'center',
-      flexFlow: 'row',
-      padding: [3, 0, 5],
-      opacity: 0.75,
-      marginBottom: 5,
-    }}
+    alignItems="center"
+    flexFlow="row"
+    padding={[3 * verticalSpacing, 0, 10 * verticalSpacing]}
+    opacity={0.75}
     {...props}
   />
 )
 
 export const Link = props => (
   <UI.Text
-    css={{ cursor: 'pointer' }}
+    cursor="pointer"
     fontWeight={400}
     color="#8b2bec"
     display="inline"
@@ -160,12 +153,15 @@ export const Link = props => (
 @view.ui
 export class SmallLink extends React.Component {
   handleClick = () => {
-    this.props.orbitStore.setQuery(this.props.children)
+    if (this.props.orbitStore) {
+      this.props.orbitStore.setQuery(this.props.children)
+    }
   }
 
   render({ children }) {
     return <span onDoubleClick={this.handleClick}>{children}</span>
   }
+
   static style = {
     span: {
       borderBottom: [2, 'transparent'],

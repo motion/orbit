@@ -9,6 +9,7 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { Color } from '@mcro/css'
+// import { propsToStyles } from './helpers/propsToStyles'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -43,7 +44,7 @@ export type SurfaceProps = {
   elevation?: number
   flex?: boolean | number
   focusable?: boolean
-  getRef?: Function
+  forwardRef?: React.Ref<any>
   glint?: boolean
   glow?: boolean
   glowProps?: Object
@@ -111,8 +112,6 @@ export type SurfaceProps = {
 }
 
 const ICON_SCALE = 12
-// TODO: make this dynamic with size (move into theme)
-const ICON_PAD = 8
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
 const BORDER_RADIUS_SIDES = [
@@ -129,7 +128,11 @@ const hasChildren = children =>
 
 @attachTheme
 @view.ui
-export class Surface extends React.Component<SurfaceProps> {
+class SurfaceInner extends React.Component<SurfaceProps> {
+  static defaultProps = {
+    iconPad: 8,
+  }
+
   static contextTypes = {
     provided: object,
   }
@@ -181,7 +184,7 @@ export class Surface extends React.Component<SurfaceProps> {
       focusable,
       fontSize,
       fontWeight,
-      getRef,
+      forwardRef,
       glint,
       glow,
       glowProps,
@@ -238,8 +241,6 @@ export class Surface extends React.Component<SurfaceProps> {
       theme,
       ...props
     } = this.props
-    const hasIconBefore = icon && !iconAfter
-    const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
     const { themeValues } = this
     if (!themeValues) {
@@ -248,7 +249,7 @@ export class Surface extends React.Component<SurfaceProps> {
     }
     const passProps = {
       tagName,
-      ref: getRef,
+      ref: forwardRef,
       style,
       ...props,
     }
@@ -280,13 +281,18 @@ export class Surface extends React.Component<SurfaceProps> {
             {typeof badge !== 'boolean' ? badge : ''}
           </Badge>
         )}
-        <div $icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+        <div $icon if={icon && !stringIcon}>
           {icon}
         </div>
         <Icon
           if={icon && stringIcon}
           $icon
-          $iconAfter={hasIconAfter}
+          css={
+            icon &&
+            iconAfter && {
+              order: 3,
+            }
+          }
           name={icon}
           size={themeValues.iconSize}
           {...iconProps}
@@ -308,8 +314,6 @@ export class Surface extends React.Component<SurfaceProps> {
           {...wrapElement && passProps}
           {...elementProps}
           disabled={disabled}
-          $hasIconBefore={hasIconBefore}
-          $hasIconAfter={hasIconAfter}
         >
           {children}
         </div>
@@ -365,16 +369,18 @@ export class Surface extends React.Component<SurfaceProps> {
       background: 'transparent',
       height: '100%',
       color: 'inherit',
-      marginBottom: '-3%',
+      // this seems to maybe fix some line height stuff
+      transform: {
+        y: '1%',
+      },
     },
     icon: {
       pointerEvents: 'none',
+      justifyContent: 'center',
       height: '1.4rem',
-      marginBottom: '-3%',
-    },
-    hasIconBefore: {
-      // this adjusts for height
-      marginLeft: ICON_PAD,
+      transform: {
+        y: '1%',
+      },
     },
     wrap: {
       flex: 1,
@@ -385,12 +391,6 @@ export class Surface extends React.Component<SurfaceProps> {
       flex: 1,
       position: 'relative',
       overflow: 'hidden',
-    },
-    hasIconAfter: {
-      marginRight: ICON_PAD,
-    },
-    iconAfter: {
-      order: 3,
     },
   }
 
@@ -464,7 +464,7 @@ export class Surface extends React.Component<SurfaceProps> {
     if (colorfulBg && background && !background.model) {
       background = $(background)
     }
-    if (typeof props.backgroundAlpha === 'number') {
+    if (typeof props.backgroundAlpha === 'number' && background.alpha) {
       background = background.alpha(props.backgroundAlpha)
     }
 
@@ -538,7 +538,7 @@ export class Surface extends React.Component<SurfaceProps> {
     radius = radius === true ? (height / 3.4) * size : radius
     radius = typeof radius === 'number' ? Math.round(radius) : radius
 
-    const borderRadius = {}
+    const borderRadius = {} as any
     if (uiContext && uiContext.inSegment && !props.ignoreSegment) {
       borderRadius.borderLeftRadius = uiContext.inSegment.first ? radius : 0
       borderRadius.borderRightRadius = uiContext.inSegment.last ? radius : 0
@@ -562,9 +562,6 @@ export class Surface extends React.Component<SurfaceProps> {
       if (!hasSidesDefined && radius) {
         borderRadius.borderRadius = radius
       }
-    }
-    if (props.debug) {
-      console.log(borderRadius)
     }
     // circular
     const circularStyles = props.circular && {
@@ -624,7 +621,7 @@ export class Surface extends React.Component<SurfaceProps> {
       color,
     }
     const flexFlow = props.flexFlow || 'row'
-    const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
+    const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
     const undoPadding = {
       margin: padding
         ? typeof padding === 'number'
@@ -686,8 +683,8 @@ export class Surface extends React.Component<SurfaceProps> {
       paddingLeft: props.paddingLeft,
       paddingRight: props.paddingRight,
       ...circularStyles,
-      '& > icon': props.hovered ? hoverIconStyle : iconStyle,
-      '&:hover > icon': hoverIconStyle,
+      '& > div > .icon': props.hovered ? hoverIconStyle : iconStyle,
+      '&:hover > div > .icon': hoverIconStyle,
       '&:hover': hoverStyle,
       ...(props.wrapElement && {
         '& > :focus': focusable && focusStyle,
@@ -709,23 +706,34 @@ export class Surface extends React.Component<SurfaceProps> {
     if (props.sizeLineHeight) {
       surfaceStyles.lineHeight = `${surfaceStyles.height}px`
     }
+    // element styles
+    const element = {
+      ...(props.inline && self.constructor.inlineStyle),
+      // this fixes inputs but may break other things, need to test
+      height,
+      ...borderRadius,
+      ...elementGlowProps,
+      overflow: props.overflow || 'visible',
+      flexFlow,
+      fontSize: props.fontSize || 'inherit',
+      fontWeight: props.fontWeight,
+      lineHeight: 'inherit',
+      justifyContent: props.justify || props.justifyContent,
+      maxWidth: `calc(100% ${iconNegativePad})`,
+      // maxHeight: '100%',
+      textAlign: props.textAlign,
+    }
+    // spacing between icon
+    const hasIconBefore = props.icon && !props.iconAfter
+    const hasIconAfter = props.icon && props.iconAfter
+    if (hasIconBefore) {
+      element.marginLeft = props.iconPad
+    }
+    if (hasIconAfter) {
+      element.marginRight = props.iconPad
+    }
     const result = {
-      element: {
-        ...(props.inline && self.constructor.inlineStyle),
-        // this fixes inputs but may break other things, need to test
-        height,
-        ...borderRadius,
-        ...elementGlowProps,
-        overflow: props.overflow || 'visible',
-        flexFlow,
-        fontSize: props.fontSize || 'inherit',
-        fontWeight: props.fontWeight,
-        lineHeight: 'inherit',
-        justifyContent: props.justify || props.justifyContent,
-        maxWidth: `calc(100% ${iconPad})`,
-        // maxHeight: '100%',
-        textAlign: props.textAlign,
-      },
+      element,
       wrap: undoPadding,
       wrapContents: undoPadding,
       after: {
@@ -741,3 +749,7 @@ export class Surface extends React.Component<SurfaceProps> {
     return result
   }
 }
+
+export const Surface = React.forwardRef((props, ref) => (
+  <SurfaceInner {...props} forwardRef={ref} />
+))

@@ -14,67 +14,54 @@ const options = {
   remove_duplicates: false,
 }
 
-@view
-export class ResolveConversation extends React.Component {
-  static defaultProps = {
-    shownLimit: 5,
+export const ResolveConversation = ({
+  children,
+  bit,
+  appStore,
+  shownLimit = 5,
+  itemProps,
+  isExpanded,
+}) => {
+  if (!bit) {
+    console.log('no bit :/')
+    return null
   }
-
-  render({ children, bit, appStore, shownLimit, itemProps, isExpanded }) {
-    if (!bit) {
-      console.log('no bit :/')
-      return null
-    }
-    const content = isExpanded
-      ? ((bit.data && bit.data.messages) || [])
-          .slice(0, shownLimit)
-          .map((message, index) => (
-            <SlackMessage
-              key={index}
-              message={message}
-              previousMessage={bit.data.messages[index - 1]}
-              bit={bit}
-              appStore={appStore}
-              itemProps={itemProps}
-            />
-          ))
-      : null
-    return children({
-      title: arrford(
-        (bit.people || []).map(p => capitalize((p.name || '').split(' ')[0])),
-        false,
-      ),
-      people: bit.people,
-      date: getSlackDate(bit.bitUpdatedAt),
-      preview: keywordExtract
-        .extract(bit.body, options)
-        .slice(0, 8)
-        .join(' '),
-      icon: 'slack',
-      location: (
-        <RoundButton
-          style={{ marginLeft: -4 }}
-          onClick={e => {
-            e.stopPropagation()
-            appStore.open(bit, 'channel')
-          }}
-        >
-          {bit.title.slice(1)}
-        </RoundButton>
-      ),
-      permalink: () => appStore.open(bit),
-      content,
-    })
-  }
-
-  static style = {
-    meta: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      opacity: 0.5,
-    },
-    space: {
-      width: 6,
-    },
-  }
+  const content = isExpanded
+    ? ((bit.data && bit.data.messages) || [])
+        .slice(0, shownLimit)
+        .map((message, index) => (
+          <SlackMessage
+            key={index}
+            message={message}
+            previousMessage={bit.data.messages[index - 1]}
+            bit={bit}
+            itemProps={itemProps}
+          />
+        ))
+    : null
+  return children({
+    title: arrford(
+      (bit.people || []).map(p => capitalize((p.name || '').split(' ')[0])),
+      false,
+    ),
+    people: bit.people,
+    date: getSlackDate(bit.bitUpdatedAt),
+    preview: keywordExtract
+      .extract(bit.body, options)
+      .slice(0, 8)
+      .join(' '),
+    icon: 'slack',
+    location: (
+      <RoundButton
+        onClick={e => {
+          e.stopPropagation()
+          appStore.open(bit, 'channel')
+        }}
+      >
+        {bit.title.slice(1)}
+      </RoundButton>
+    ),
+    permalink: () => appStore.open(bit),
+    content,
+  })
 }

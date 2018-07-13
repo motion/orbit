@@ -14,27 +14,6 @@ export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 export { cssNameMap, psuedoKeys } from '@mcro/css'
 
-export const psuedoShorthands = {
-  // pseudoclasses
-  hover: '&:hover',
-  active: '&:active',
-  checked: '&:checked',
-  focus: '&:focus',
-  enabled: '&:enabled',
-  disabled: '&:disabled',
-  empty: '&:empty',
-  target: '&:target',
-  required: '&:required',
-  valid: '&:valid',
-  invalid: '&:invalid',
-  // psuedoelements
-  before: '&:before',
-  after: '&:after',
-  placeholder: '&:placeholder',
-  selection: '&:selection',
-}
-
-
 export const isGlossyFirstArg = arg => {
   if (!arg) {
     return false
@@ -126,8 +105,6 @@ export default class Gloss {
     // @ts-ignore
     this.createElement.glossUID = id
     Child.prototype.glossElement = this.createElement
-    Child.prototype.gloss = this
-    Child.prototype.glossStylesheet = this.stylesheet
     // @ts-ignore
     Child.glossUID = id
     let hasAttached = false
@@ -157,27 +134,60 @@ export default class Gloss {
     }
   }
 
-  private getAllThemes = View => props => {
-    let themes = []
+  private getAllThemes = View => {
+    // skipParentStyles =
+    //    store parent style keys we need to skip when applying themes
+    //    this is because themes generate inline styles that would clobber static classnames
+    //    but we can easily look up and see which static styles are above
+    //    this cache here stores the keys to skip at each level in an array of objects for perf
+    let skipParentStyleKeys = []
+    let views = []
     let curView = View
     while (curView) {
-      if (curView.theme) {
-        themes.push(curView.theme)
+      // FIND SKIPS
+      const skipsForView = {}
+      const skipIndex = skipParentStyleKeys.length
+      for (const key of Object.keys(curView.style)) {
+        skipsForView[key] = true
       }
+      // merge in the previous skips as they should cumulative as we go down
+      if (skipIndex > 0) {
+        const previousSkips = skipParentStyleKeys[skipIndex - 1]
+        for (const key of Object.keys(previousSkips)) {
+          skipsForView[key] = true
+        }
+      }
+      // END FIND SKIPS
+      skipParentStyleKeys.push(skipsForView)
+      views.push(curView)
       curView = curView.child
     }
-    let styles = {}
-    // apply bottom to top
-    for (let i = themes.length - 1; i >= 0; i--) {
-      const curTheme = themes[i](props)
-      // fast merge
-      for (const key of Object.keys(curTheme)) {
-        // do nice pseudo key transforms here so we merge them properly down the chain
-        let realKey = psuedoShorthands[key] || key
-        styles[realKey] = curTheme[key]
+    const lastViewIndex = views.length - 1
+    return props => {
+      let styles
+      // apply bottom to top
+      for (let i = lastViewIndex; i >= 0; i--) {
+        // skip empty theme views
+        if (!views[i].theme) {
+          continue
+        }
+        // fast merge
+        const curTheme = views[i].theme(props)
+        for (const key of Object.keys(curTheme)) {
+          // skip parent static styles!
+          if (i > 0) {
+            if (skipParentStyleKeys[i - 1][key]) {
+              continue
+            }
+          }
+          if (!styles) {
+            styles = {}
+          }
+          styles[key] = curTheme[key]
+        }
       }
+      return styles
     }
-    return styles
   }
 
   private getAllStyles = View => {
@@ -208,15 +218,17 @@ export default class Gloss {
     if (isParentComponent) {
       name = targetElement
     }
-    const InnerView = <GlossView>attachTheme(({ forwardRef, ...props }) => {
+    const InnerView = <GlossView>attachTheme(allProps => {
       // basically PureRender
-      if (elementCache.has(props)) {
-        return elementCache.get(props)
+      if (elementCache.has(allProps)) {
+        return elementCache.get(allProps)
       }
+      const { forwardRef, ...props } = allProps
       // attach theme/styles on first use
       if (!hasAttachedStyles) {
         try {
-          this.attachStyles(`${id}`, { [name]: this.getAllStyles(View) })
+          View.compiledStyles = this.getAllStyles(View)
+          this.attachStyles(`${id}`, { [name]: View.compiledStyles })
         } catch (err) {
           console.log('error attaching styles', target, name, styles)
           console.log('err', err)

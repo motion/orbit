@@ -8,6 +8,8 @@ import { PeekFrame } from './peek/PeekFrame'
 import { AppStore } from '../stores/AppStore'
 import { PeekContent } from './peek/PeekContent'
 import { PeekHeader } from './peek/PeekHeader'
+import { PeekBitInformation } from './peek/PeekContents/PeekBitInformation'
+import { Bit, Person } from '@mcro/models'
 
 const PeekPageInner = view(({ peekStore, appStore }) => {
   if (!peekStore.state) {
@@ -20,10 +22,6 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
     console.error('none', type)
     return <div>no pane found</div>
   }
-  // if (!peekStore.model) {
-  //   console.warn('no selected model')
-  //   return <div>no selected model</div>
-  // }
   return (
     <PeekContentsView
       key={peekId}
@@ -32,7 +30,17 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
       appStore={appStore}
       peekStore={peekStore}
     >
-      {({ title, icon, date, subhead, subtitle, after, content }) => (
+      {({
+        title,
+        permalink,
+        icon,
+        date,
+        subhead,
+        subtitle,
+        after,
+        content,
+        headerProps,
+      }) => (
         <>
           <PeekHeader
             title={title}
@@ -41,8 +49,26 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
             icon={icon}
             date={date}
             subhead={subhead}
+            permalink={permalink}
+            integration={
+              peekStore.model instanceof Bit
+                ? peekStore.model.integration
+                : null
+            }
+            {...headerProps}
           />
           <PeekContent>{content}</PeekContent>
+          <PeekBitInformation
+            if={
+              peekStore.model instanceof Bit ||
+              peekStore.model instanceof Person
+            }
+            body={
+              peekStore.model.body ||
+              'ui kit size prop async migration freelance distrbiution org integration'
+            }
+            people={peekStore.model.people}
+          />
         </>
       )}
     </PeekContentsView>

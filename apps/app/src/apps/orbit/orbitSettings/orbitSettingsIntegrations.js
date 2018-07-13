@@ -47,7 +47,7 @@ export const allIntegrations = [
     id: 'website',
     type: 'setting',
     integration: 'website',
-    title: 'Website',
+    title: 'Crawl Website',
     icon: 'webpage',
     auth: false,
   },

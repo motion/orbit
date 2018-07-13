@@ -35,7 +35,6 @@ export function selectItem(
   item: Person | Bit | GenericPeekItem,
   target?: PositionObject,
 ) {
-  log(item, target)
   invariant(item, 'Must pass item')
   if (item instanceof Person) {
     invariant(item.name, 'Must pass Person name')

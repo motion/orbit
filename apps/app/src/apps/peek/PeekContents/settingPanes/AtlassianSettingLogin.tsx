@@ -148,17 +148,18 @@ class AtlassianSettingLoginStore {
 })
 @view
 export class AtlassianSettingLogin extends React.Component {
-  render({ store }) {
+  render() {
+    const { store } = this.props
     return (
-      <page css={{ padding: 20 }}>
+      <UI.Col padding={20}>
         <Views.Message>
           Atlassian requires username and password as their OAuth requires
           administrator permissions. As always with Orbit, this information is{' '}
           <strong>completely private</strong> to you.
         </Views.Message>
         <Views.VertSpace />
-        <auth>
-          <inner css={{ padding: [0, 10] }}>
+        <UI.Col margin="auto" width={370}>
+          <UI.Col padding={[0, 10]}>
             <Views.Table>
               <Views.InputRow
                 label="Username"
@@ -210,16 +211,9 @@ export class AtlassianSettingLogin extends React.Component {
             <Views.Message if={store.status === Statuses.SUCCESS}>
               Looks good! We can login to your account successfully.
             </Views.Message>
-          </inner>
-        </auth>
-      </page>
+          </UI.Col>
+        </UI.Col>
+      </UI.Col>
     )
-  }
-
-  static style = {
-    auth: {
-      margin: 'auto',
-      width: 370,
-    },
   }
 }

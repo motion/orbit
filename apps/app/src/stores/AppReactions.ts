@@ -1,9 +1,8 @@
 import { store, react, sleep } from '@mcro/black/store'
 import { App, Desktop } from '@mcro/stores'
-import orbitPosition from '~/helpers/orbitPosition'
-import debug from '@mcro/debug'
-
-const log = debug('AppReactions')
+import orbitPosition from '../helpers/orbitPosition'
+// import debug from '@mcro/debug'
+// const log = debug('AppReactions')
 
 const SCREEN_PAD = 15
 const appTarget = ({ offset, bounds }) => {
@@ -61,7 +60,6 @@ export class AppReactions {
         this.onPinKey(key.toLowerCase())
       }
     })
-    console.log('appreact.dispose', dispose)
     this.subscriptions.add({
       dispose,
     })

@@ -43,9 +43,9 @@ const columns = {
   },
 }
 
-class GithubStore {
+class GithubSettingStore {
   get setting() {
-    return this.props.appStore.settings.github
+    return this.props.integrationSettingsStore.settings.github
   }
 
   get service() {
@@ -146,57 +146,61 @@ class GithubStore {
   }
 }
 
-@view.provide({ githubStore: GithubStore })
+@view.provide({ githubStore: GithubSettingStore })
 @view
 export class GithubSetting extends React.Component {
   render({ githubStore: store, children }) {
     return children({
-      subhead: <UI.Tabs active={store.active} onActive={key => (store.active = key)}>
-      <UI.Tab key="repos" width="50%" label="Repos" />
-      <UI.Tab
-        key="issues"
-        width="50%"
-        label={`Issues (${store.issues ? store.issues.length : 0})`}
-      />
-    </UI.Tabs>,
-      content: <container>
-        <section if={store.active === 'repos'}>
-          <section>
-            <SearchableTable
-              rowLineHeight={28}
-              floating={false}
-              multiline
-              columnSizes={columnSizes}
-              columns={columns}
-              onRowHighlighted={this.onRowHighlighted}
-              multiHighlight
-              rows={store.rows}
-              bodyPlaceholder={
-                <div css={{ margin: 'auto' }}>
-                  <UI.Text size={1.2}>Loading...</UI.Text>
-                </div>
-              }
-            />
+      subhead: (
+        <UI.Tabs active={store.active} onActive={key => (store.active = key)}>
+          <UI.Tab key="repos" width="50%" label="Repos" />
+          <UI.Tab
+            key="issues"
+            width="50%"
+            label={`Issues (${store.issues ? store.issues.length : 0})`}
+          />
+        </UI.Tabs>
+      ),
+      content: (
+        <container>
+          <section if={store.active === 'repos'}>
+            <section>
+              <SearchableTable
+                rowLineHeight={28}
+                floating={false}
+                multiline
+                columnSizes={columnSizes}
+                columns={columns}
+                onRowHighlighted={this.onRowHighlighted}
+                multiHighlight
+                rows={store.rows}
+                bodyPlaceholder={
+                  <div css={{ margin: 'auto' }}>
+                    <UI.Text size={1.2}>Loading...</UI.Text>
+                  </div>
+                }
+              />
+            </section>
+            <add if={false}>
+              <UI.Input
+                width={200}
+                size={1}
+                autoFocus
+                placeholder="Add Organization"
+                value={store.newOrg}
+                onKeyDown={e => {
+                  if (e.keyCode === 13) store.addOrg()
+                  if (e.keyCode === 27) store.newOrg = ''
+                }}
+                onChange={e => (store.newOrg = e.target.value)}
+              />
+            </add>
           </section>
-          <add if={false}>
-            <UI.Input
-              width={200}
-              size={1}
-              autoFocus
-              placeholder="Add Organization"
-              value={store.newOrg}
-              onKeyDown={e => {
-                if (e.keyCode === 13) store.addOrg()
-                if (e.keyCode === 27) store.newOrg = ''
-              }}
-              onChange={e => (store.newOrg = e.target.value)}
-            />
-          </add>
-        </section>
-        <section if={store.active === 'issues'}>
-          <Bits bits={store.section} />
-        </section>
-      </container>
+          <section if={store.active === 'issues'}>
+            <Bits bits={store.section} />
+          </section>
+        </container>
+      ),
     })
   }
 

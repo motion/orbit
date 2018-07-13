@@ -1,17 +1,27 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { RoundButton } from '../../views'
 import slackDown from '@mcro/slackdown'
 import { getSlackDate } from '../../helpers'
 import { TimeAgo } from '../../views/TimeAgo'
-import { App } from '@mcro/stores'
+import { Bit } from '@mcro/models'
+import { RoundButtonPerson } from '../../views/RoundButtonPerson'
+
+type SlackMessageObj = { name: string; text: string; user: string; ts: string }
+
+type SlackMessageProps = {
+  bit: Bit
+  message: SlackMessageObj
+  previousMessage?: SlackMessageObj
+  itemProps?: Object
+}
 
 @view
-export class SlackMessage extends React.Component {
-  render({ bit, message, previousMessage, itemProps }) {
+export class SlackMessage extends React.Component<SlackMessageProps> {
+  render() {
+    const { bit, message, previousMessage, itemProps } = this.props
     if (!message.text || !bit) {
-      log(`no messagetext/bit ${JSON.stringify(message)}`)
+      console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
     }
     let htmlText = message.text
@@ -24,7 +34,7 @@ export class SlackMessage extends React.Component {
       person => person.integrationId === message.user,
     )
     if (!person) {
-      log(`no person for message ${message.text}`)
+      console.log(`no person for message ${message.text}`)
       return null
     }
     let previousBySameAuthor = false
@@ -34,7 +44,6 @@ export class SlackMessage extends React.Component {
       previousWithinOneMinute = +message.ts - +previousMessage.ts < 1000 * 60
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
-    const avatar = person.data.profile.image_48
     return (
       <UI.Col {...itemProps}>
         {/* <topSpace if={!hideHeader && previousMessage} css={{ height: 14 }} /> */}
@@ -47,18 +56,7 @@ export class SlackMessage extends React.Component {
           userSelect="none"
           cursor="default"
         >
-          <RoundButton
-            size={1.1}
-            onClick={e => {
-              e.stopPropagation()
-              App.actions.selectPerson(person)
-            }}
-          >
-            <inner>
-              <img $avatar if={avatar} src={avatar} />
-              <username>{message.name}</username>
-            </inner>
-          </RoundButton>
+          <RoundButtonPerson person={person} />
           <space />
           <date if={!previousMessage || !previousWithinOneMinute}>
             <TimeAgo if={message.ts}>{getSlackDate(message.ts)}</TimeAgo>
@@ -72,17 +70,6 @@ export class SlackMessage extends React.Component {
   }
 
   static style = {
-    inner: {
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-    username: {
-      fontWeight: 400,
-      fontSize: '95%',
-      color: '#000',
-      margin: [0, 0, 1],
-      alignItems: 'center',
-    },
     date: {
       fontSize: '75%',
       fontWeight: 300,
@@ -93,13 +80,6 @@ export class SlackMessage extends React.Component {
     },
     space: {
       width: 6,
-    },
-    avatar: {
-      borderRadius: 100,
-      width: 15,
-      height: 15,
-      marginRight: 5,
-      marginLeft: -1,
     },
     content: {
       width: '100%',

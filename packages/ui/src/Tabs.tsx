@@ -20,11 +20,8 @@ const TabList = view(Row, {
   alignItems: 'stretch',
 })
 
-const TabListItem = view({
-  borderBottom: '1px solid #dddfe2',
-  color: colors.dark80,
+const TabListItem = view(Row, {
   flex: 1,
-  flexFlow: 'row',
   fontSize: 13,
   lineHeight: '28px',
   overflow: 'hidden',
@@ -40,7 +37,7 @@ TabListItem.theme = ({ theme, active }) => ({
   color: active ? theme.active.color : theme.base.color,
   // this is reversed because technically active tabs should match the bgcolor
   backgroundColor: active ? theme.base.background : theme.active.background,
-  hover: {
+  '&:hover': {
     color: active ? theme.active.color : theme.hover.color,
     backgroundColor: active
       ? theme.base.background

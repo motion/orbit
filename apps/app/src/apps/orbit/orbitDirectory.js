@@ -55,7 +55,7 @@ class OrbitDirectoryStore {
 @view
 export class OrbitDirectory extends React.Component {
   render({ store }) {
-    log('DIRECTORY --------')
+    // log('DIRECTORY --------')
     const total = store.results.length
     return (
       <OrbitDockedPane name="directory" fadeBottom>

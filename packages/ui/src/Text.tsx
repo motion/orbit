@@ -8,20 +8,20 @@ import { Color } from '@mcro/css'
 import { propsToTextSize } from './helpers/propsToTextSize'
 
 const TextBlock = view(InlineBlock, {
-  cursor: 'pointer',
+  cursor: 'default',
   userSelect: 'none',
   wordBreak: 'break-word',
   position: 'relative',
   maxWidth: '100%',
 })
 
-TextBlock.theme = ({ selectable, oneLineEllipse }) => ({
+TextBlock.theme = ({ selectable, oneLineEllipse, display }) => ({
+  display,
   ...(selectable && {
     userSelect: 'auto',
     cursor: 'inherit',
   }),
   ...(oneLineEllipse && {
-    display: 'flex',
     overflow: 'hidden',
   }),
 })
@@ -265,12 +265,7 @@ export class Text extends React.Component<TextProps> {
       >
         {!showEllipse && children}
         {showEllipse && (
-          <TextEllipse
-            ellipseLines={multiLineEllipse}
-            ellipseSingle={oneLineEllipse}
-            color={color}
-            {...ellipseProps}
-          >
+          <TextEllipse ellipse={ellipse} color={color} {...ellipseProps}>
             {!highlight ? children : null}
           </TextEllipse>
         )}

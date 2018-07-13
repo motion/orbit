@@ -1,28 +1,22 @@
 import * as React from 'react'
-import { view, react, attachTheme } from '@mcro/black'
+import { view, react, attachTheme, on } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 
-window.UI = UI
-
 class HeaderStore {
-  inputRef = null
+  inputRef = React.createRef()
 
   onInput = () => {
     this.props.orbitStore.onChangeQuery(this.inputRef.innerText)
   }
 
   focus = () => {
-    if (!this.inputRef) {
-      console.error('no input')
+    if (!this.inputRef || !this.inputRef.current) {
       return
     }
-    // weirdly this doesnt work but the querySelector does...
-    // this.inputRef.current.focus()
-    // document.execCommand('selectAll', false, null)
-    // document.querySelector('input').focus()
+    this.inputRef.current.focus()
   }
 
   focusInput = react(
@@ -32,9 +26,15 @@ class HeaderStore {
       App.isMouseInActiveArea,
     ],
     async ([shown], { when }) => {
-      if (!shown) throw react.cancel
+      if (!shown) {
+        throw react.cancel
+      }
+      this.focus()
       await when(() => Desktop.state.focusedOnOrbit)
       this.focus()
+    },
+    {
+      log: false,
     },
   )
 
@@ -44,14 +44,6 @@ class HeaderStore {
     }
   }
 }
-
-// const Hl = view('span', {
-//   display: 'inline',
-//   background: '#C4C4F4',
-//   padding: [3, 4],
-//   margin: [-3, 0],
-//   borderRadius: 6,
-// })
 
 @attachTheme
 @view.attach('orbitStore', 'appStore')
@@ -103,7 +95,7 @@ export class OrbitHeader extends React.Component {
             onFocus={orbitStore.onFocus}
             onBlur={orbitStore.onBlur}
             onKeyDown={this.handleKeyDown}
-            getRef={ref => (headerStore.inputRef = ref)}
+            ref={headerStore.inputRef}
             onClick={headerStore.onClickInput}
           />
         </title>

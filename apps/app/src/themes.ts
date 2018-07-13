@@ -20,6 +20,20 @@ const dbActiveBg = dbHoverBg.darken(0.05).desaturate(0.3)
 const dbActiveHoverBg = dbHoverBg.darken(0.06).desaturate(0.3)
 
 const Themes = {
+  clear: {
+    base: {
+      background: 'transparent',
+      color: '#444',
+    },
+    hover: {
+      background: [0, 0, 0, 0.05],
+      color: '#444',
+    },
+    active: {
+      background: [0, 0, 0, 0.05],
+      color: '#444',
+    },
+  },
   grey: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,
@@ -101,7 +115,7 @@ const Themes = {
     highlightColor,
     background: color('#fff'),
     color: color('#444'),
-    borderColor: color('#999'),
+    borderColor: color('#e2e2e2'),
     hover: {
       background: color('#eee'),
     },

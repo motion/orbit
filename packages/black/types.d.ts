@@ -6,6 +6,8 @@ export { on } from '@mcro/helpers'
 export { Component } from './Component'
 export { DecorCompiledDecorator } from '@mcro/decor'
 
+export type Constants = { IS_ELECTRON: boolean }
+
 export type DecorView = DecorCompiledDecorator<any>
 
 import { Emitter } from 'event-kit'

@@ -107,7 +107,7 @@ export class Icon extends React.PureComponent {
     return (
       <IconInner {...props}>
         <div
-          className={`nc-icon-${type} ${iconName}`}
+          className={`icon nc-icon-${type} ${iconName}`}
           style={{
             margin: 'auto',
             textRendering: 'geometricPrecision',

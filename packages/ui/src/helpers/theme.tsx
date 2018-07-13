@@ -8,6 +8,8 @@ const themeCache = {}
 
 // takes gloss themes and adds a "generate from base object/color"
 
+// TODO: this just re-mounts everything below it on every render (when used with an object)?....
+
 export const Theme = ({ theme, name, children }) => {
   if (name) {
     return <GlossTheme name={name}>{children}</GlossTheme>

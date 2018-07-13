@@ -37,7 +37,7 @@ class OrbitContextHomeStore {
       if (!isActive) {
         throw react.cancel
       }
-      log('set get results')
+      // log('set get results')
       this.props.appStore.setGetResults(() => this.results)
     },
     { immediate: true },

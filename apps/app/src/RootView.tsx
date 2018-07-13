@@ -88,6 +88,9 @@ if (module.hot && module.hot.addStatusHandler) {
         setTimeout(() => {
           view.emit('did-hmr')
           view.provide.emit('did-hmr')
+          console.log('[HMR] Re-render')
+          // @ts-ignore
+          window.render()
         })
       }
     })

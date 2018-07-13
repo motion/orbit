@@ -1,11 +1,9 @@
 export * from '@mcro/constants'
 
-import { Constants } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 export const IS_ORBIT = window.location.pathname === '/orbit'
 export const IS_PEEK = window.location.pathname.indexOf('/peek') === 0
-export const IS_ELECTRON = Constants.IS_ELECTRON
 export const IS_PROD =
   process.env.NODE_ENV === 'production' || process.env.IS_PROD
 export const IS_DEV = !IS_PROD
@@ -34,3 +32,12 @@ export const AUTH_SERVICE = authService ? authService[1] : null
 
 export const GOOGLE_CLIENT_ID =
   '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com'
+
+export const NICE_INTEGRATION_NAMES = {
+  slack: 'Slack',
+  gdocs: 'Google Docs',
+  gmail: 'Gmail',
+  confluence: 'Confluence',
+  jira: 'Jira',
+  github: 'Github',
+}

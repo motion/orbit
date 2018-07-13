@@ -18,7 +18,7 @@ setTimeout(() => {
   setInterval(() => {
     usage.lookup(pid, options, (err, res) => {
       if (err || !res) {
-        console.log(err)
+        console.log('monitorResourceUsageErr', err)
         return
       }
       // in percent

@@ -2,7 +2,7 @@ import { on, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '../helpers'
-import * as AppStoreHelpers from './appStoreHelpers'
+import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
 
@@ -17,7 +17,6 @@ const searchBits = async (query, params?) => {
       order: { bitCreatedAt: 'DESC' },
     })
   }
-  console.time('bitSearch')
   const { conditions, rest } = AppStoreHelpers.parseQuery(query)
   const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
   const where = `(title like "%${titleLike}%" or body like "%${titleLike}%") ${conditions}`
@@ -27,9 +26,7 @@ const searchBits = async (query, params?) => {
     order: { bitCreatedAt: 'DESC' },
     ...params,
   }
-  console.log('searchBits', queryParams)
   const res = await Bit.find(queryParams)
-  console.timeEnd('bitSearch')
   return res
 }
 
@@ -39,7 +36,6 @@ export class AppStore {
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
-  settings = {}
   getResults = null
   lastSelectedPane = ''
 
@@ -74,9 +70,9 @@ export class AppStore {
   }
 
   get selectedItem() {
-    if (this.activeIndex === -1) {
-      return this.quickSearchResults[this.quickSearchIndex]
-    }
+    // if (this.activeIndex === -1) {
+    //   return this.quickSearchResults[this.quickSearchIndex]
+    // }
     return this.searchState.results[this.activeIndex]
   }
 
@@ -86,17 +82,6 @@ export class AppStore {
       this.activeIndex < this.searchState.results.length
     )
   }
-
-  settings = modelQueryReaction(
-    () =>
-      Setting.find({
-        where: {
-          token: Not(Equal('')),
-        },
-      }),
-    settings =>
-      settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {}),
-  )
 
   services = modelQueryReaction(
     () =>
@@ -246,38 +231,6 @@ export class AppStore {
     },
   )
 
-  bitSearch = react(
-    () => [
-      App.state.query,
-      Desktop.appState.id,
-      Desktop.state.lastBitUpdatedAt,
-    ],
-    async ([query], { sleep, setValue }) => {
-      log(`bitsearch "${query}"`)
-      // debounce a little for fast typer
-      await sleep(TYPE_DEBOUNCE)
-      // get first page results
-      const results = await searchBits(query, { take: 6 })
-      setValue({
-        restResults: null,
-        results,
-        query,
-      })
-      // get next page results
-      await sleep(300)
-      const restResults = await searchBits(query, { skip: 6, take: 32 })
-      setValue({
-        results,
-        restResults,
-        query,
-      })
-    },
-    {
-      immediate: true,
-      defaultValue: { results: [] },
-    },
-  )
-
   peopleSearch = react(
     () => [App.state.query, Desktop.state.lastBitUpdatedAt],
     async ([query], { sleep }) => {
@@ -298,7 +251,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults],
-    async ([query], { when, setValue }) => {
+    async ([query], { sleep, setValue, preventLogging }) => {
       if (!query) {
         return setValue({
           query,
@@ -338,26 +291,48 @@ export class AppStore {
       }
       // regular search
       if (!results) {
-        await Promise.all([
-          when(() => this.bitSearch.query === query),
-          when(() => this.peopleSearch.query === query),
-        ])
-        const allResultsUnsorted = [
-          ...this.bitSearch.results,
-          ...this.peopleSearch.results,
-          // ...Desktop.searchState.pluginResults,
-        ]
-        // return first page fast results
-        const { rest } = AppStoreHelpers.parseQuery(query)
-        results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
-        setValue({
-          query,
-          message,
-          results,
-        })
-        // then return full results
-        await when(() => this.bitSearch.restResults)
-        results = [...results, ...this.bitSearch.restResults]
+        // debounce a little for fast typer
+        await sleep(TYPE_DEBOUNCE)
+        // get first page results
+        const takePer = 3
+        const takeMax = 50
+        const sleepBtwn = 80
+        let results = []
+        for (let i = 0; i < takeMax / takePer; i += 1) {
+          const skip = i * takePer
+          const nextResults = await searchBits(query, { take: takePer, skip })
+          results = [...results, ...nextResults]
+          if (i > 2) {
+            preventLogging()
+          }
+          setValue({
+            results,
+            query,
+          })
+          // get next page results
+          await sleep(sleepBtwn)
+        }
+        return
+        // await Promise.all([
+        //   when(() => this.bitSearch.query === query),
+        //   when(() => this.peopleSearch.query === query),
+        // ])
+        // const allResultsUnsorted = [
+        //   ...this.bitSearch.results,
+        //   ...this.peopleSearch.results,
+        //   // ...Desktop.searchState.pluginResults,
+        // ]
+        // // return first page fast results
+        // const { rest } = AppStoreHelpers.parseQuery(query)
+        // results = AppStoreHelpers.matchSort(rest, allResultsUnsorted)
+        // setValue({
+        //   query,
+        //   message,
+        //   results,
+        // })
+        // // then return full results
+        // await when(() => this.bitSearch.restResults)
+        // results = [...results, ...this.bitSearch.restResults]
       }
       return setValue({
         query,
@@ -371,21 +346,22 @@ export class AppStore {
     },
   )
 
-  quickSearchResults = react(
-    () => App.state.query,
-    async (query, { when }) => {
-      const hasLoaded = !!this.quickSearchResults.length
-      if (hasLoaded) {
-        await when(() => query === Desktop.searchState.pluginResultsId)
-      }
-      const results = Desktop.searchState.pluginResults
-      if (!results.length) {
-        throw react.cancel
-      }
-      return AppStoreHelpers.matchSort(query, results)
-    },
-    { defaultValue: [], immediate: true },
-  )
+  // disable until app launching
+  // quickSearchResults = react(
+  //   () => App.state.query,
+  //   async (query, { when }) => {
+  //     const hasLoaded = !!this.quickSearchResults.length
+  //     if (hasLoaded) {
+  //       await when(() => query === Desktop.searchState.pluginResultsId)
+  //     }
+  //     const results = Desktop.searchState.pluginResults
+  //     if (!results.length) {
+  //       throw react.cancel
+  //     }
+  //     return AppStoreHelpers.matchSort(query, results)
+  //   },
+  //   { defaultValue: [], immediate: true },
+  // )
 
   clearSelected = (clearPeek = true) => {
     this.leaveIndex = -1

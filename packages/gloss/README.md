@@ -123,7 +123,6 @@ export default class Surface implements ViewType<Props> {
         {after || null}
         <Popover
           if={tooltip}
-          theme="dark"
           background
           openOnHover
           noHoverOnChildren

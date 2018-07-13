@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 
-const isProd =
-  process.argv.indexOf('--prod') > 0 || process.env.NODE_ENV === 'production'
+const shouldBuild = process.argv.indexOf('--build') > 0
 
 if (process.argv.indexOf('--clean') > 0) {
   require('./_/helpers/clean').clean()
 }
 
-if (isProd) {
+if (shouldBuild) {
   require('./_/build.js')
 } else {
   require('./_/run.js')

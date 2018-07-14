@@ -6,7 +6,6 @@ import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitHeader } from './orbitHeader'
 import { App } from '@mcro/stores'
 import { OrbitContextHome } from './orbitContextHome'
-import * as Constants from '../../constants'
 
 class PaneStore {
   get activePane() {
@@ -35,56 +34,6 @@ class Orbit extends React.Component {
         </orbitInner>
       </OrbitFrame>
     )
-  }
-
-  static style = {
-    orbitInner: {
-      position: 'relative',
-      flex: 1,
-      zIndex: 10,
-    },
-    orbitContext: {
-      borderBottomRadius: Constants.BORDER_RADIUS,
-      position: 'relative',
-      height: 'calc(100% - 35px)',
-      transition: 'transform ease-in-out 150ms',
-      zIndex: 100,
-    },
-    contextHeader: {
-      padding: [15, 0, 0],
-    },
-    results: {
-      flex: 1,
-    },
-    fade: {
-      position: 'fixed',
-      left: 0,
-      right: 0,
-      top: 13,
-      height: 60,
-      opacity: 0,
-      zIndex: 100000,
-      transition: 'opacity ease-in-out 150ms',
-    },
-    fadeVisible: {
-      zIndex: 10000,
-      opacity: 1,
-    },
-  }
-
-  static theme = ({ theme }) => {
-    return {
-      fade: {
-        background: `linear-gradient(${
-          theme.base.background
-        } 40%, transparent)`,
-      },
-      fadeNotifications: {
-        background: `linear-gradient(transparent 45%, ${
-          theme.base.background
-        })`,
-      },
-    }
   }
 }
 

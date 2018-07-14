@@ -11,7 +11,8 @@ export class OCRWord {
     const key = Helpers.wordKey(item)
     const highlighted = App.state.highlightWords[word]
     return (
-      <word
+      <div
+        $word
         $hovered={hoveredWord && hoveredWord.key === key}
         $highlighted={highlighted}
         style={{
@@ -24,8 +25,10 @@ export class OCRWord {
           opacity: 1, //highlighted || Desktop.isHoldingOption ? 1 : 0,
         }}
       >
-        <wordInner if={!highlighted}>{word}</wordInner>
-      </word>
+        <div $wordInner if={!highlighted}>
+          {word}
+        </div>
+      </div>
     )
   }
   static style = {

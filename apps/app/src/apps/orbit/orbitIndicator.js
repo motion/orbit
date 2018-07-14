@@ -15,7 +15,8 @@ export class OrbitIndicator {
     }
     const border = [1, UI.color('#E9B73A').darken(0.2)]
     return (
-      <indicator
+      <div
+        $indicator
         css={{
           border,
           borderRight: orbitOnLeft ? 0 : border,

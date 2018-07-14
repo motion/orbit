@@ -3,15 +3,16 @@ import deepExtend from 'deep-extend'
 import tags from 'html-tags'
 import svgTags from './helpers/svgTags'
 import validProp from './helpers/validProp'
+import { snakeToCamelObject } from './helpers/snakeToCamelObject'
 
 const electronTags = ['webview']
 
 const $ = '$'
 const ogCreateElement = React.createElement.bind(React)
-const VALID_TAGS = [...tags, ...svgTags, ...electronTags].reduce(
-  (acc, cur) => ({ ...acc, [cur]: true }),
-  {},
-)
+const VALID_TAGS = [...tags, ...svgTags, ...electronTags].reduce((acc, cur) => {
+  acc[cur] = true
+  return acc
+}, {})
 
 const arrayOfObjectsToObject = arr => {
   let res = {}
@@ -72,31 +73,13 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
   const { options, css } = Gloss
   const tagNameOption = options.tagName
 
-  // Fast object reduce
-  function objToCamel(style) {
-    let newStyle = {}
-    for (const name of Object.keys(style)) {
-      if (name.indexOf('-')) {
-        newStyle[Gloss.helpers.snakeToCamel(name)] = style[name]
-      } else {
-        newStyle[name] = style[name]
-      }
-    }
-    return newStyle
-  }
-
-  const addStyle = (finalStyles, key, val, checkTheme) => {
+  const addStyle = (finalStyles, key, checkTheme) => {
     let style = styleSheet[key]
     if (!style) {
       style = styleSheet.getRule ? styleSheet.getRule(key) : styleSheet[key]
     }
-    // dynamic
     if (style) {
-      if (typeof style === 'function') {
-        return css(style(val))
-      } else {
-        finalStyles.push(style)
-      }
+      finalStyles.push(style)
     }
     if (checkTheme && themeSheet) {
       const themeKey = `${key}--theme`
@@ -126,10 +109,6 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
     const finalProps: any = {}
     const finalStyles = []
     const isSimple = glossUID && glossUID[0] === '_'
-
-    if (name) {
-      addStyle(finalStyles, `${name}--${glossUID}`, null, true)
-    }
 
     let style
 
@@ -188,21 +167,9 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
           }
           continue
         }
-        // ignore most falsy values (except 0)
-        if (val === false || val === null || val === undefined) {
-          continue
-        }
         // $style={}
         if (styleSheet) {
-          const inlineStyle = addStyle(
-            finalStyles,
-            `${prop.slice(1)}--${glossUID}`,
-            val,
-            true,
-          )
-          if (inlineStyle) {
-            style = { ...style, ...objToCamel(inlineStyle) }
-          }
+          addStyle(finalStyles, `${prop.slice(1)}--${glossUID}`, true)
         }
       }
     }
@@ -228,7 +195,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
       } else {
         // children get a style prop
         if (props) {
-          finalProps.style = objToCamel(
+          finalProps.style = snakeToCamelObject(
             arrayOfObjectsToObject([
               ...finalStyles.map(style => style && style.style),
               finalProps.style,

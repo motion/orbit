@@ -6,9 +6,9 @@ import { view, attachTheme } from '@mcro/black'
 export class OrbitDivider extends React.Component {
   render({ height, theme, ...props }) {
     return (
-      <barOuter {...props}>
-        <bar />
-      </barOuter>
+      <div $barOuter {...props}>
+        <div $bar />
+      </div>
     )
   }
 

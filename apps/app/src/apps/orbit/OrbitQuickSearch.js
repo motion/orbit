@@ -14,13 +14,17 @@ class OrbitQuickItem extends React.Component {
     const active =
       appStore.quickSearchIndex === index && appStore.activeIndex === -1
     return (
-      <quickItem $active={active} $inactive={!active}>
+      <div $quickItem $active={active} $inactive={!active}>
         <OrbitIcon icon={`/icons/${item.icon}`} size={iconSize} />
-        <description>
-          <main $ellipse>{item.title}</main>
-          <secondary $ellipse>{item.id}</secondary>
-        </description>
-      </quickItem>
+        <div $description>
+          <div $main $ellipse>
+            {item.title}
+          </div>
+          <div $secondary $ellipse>
+            {item.id}
+          </div>
+        </div>
+      </div>
     )
   }
 

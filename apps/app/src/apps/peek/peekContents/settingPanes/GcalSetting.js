@@ -163,7 +163,7 @@ export class GcalSetting extends React.Component {
 
     return children({
       content: (
-        <content>
+        <div $content>
           <UI.ListRow css={{ margin: [10, 0] }}>
             <UI.Button
               onClick={() => (store.active = 'calendars')}
@@ -192,7 +192,7 @@ export class GcalSetting extends React.Component {
             />
           </UI.Form>
           <Things if={store.active === 'events'} things={store.events || []} />
-        </content>
+        </div>
       ),
     })
   }

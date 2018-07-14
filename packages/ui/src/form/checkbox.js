@@ -45,7 +45,7 @@ export class Checkbox extends React.Component {
         }}
         {...props}
       >
-        <input type="checkbox" onChange={this.onChange} />
+        <input $input type="checkbox" onChange={this.onChange} />
       </SizedSurface>
     )
   }

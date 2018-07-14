@@ -139,7 +139,7 @@ export class OrbitHome extends React.Component {
     const total = store.results.length
     return (
       <OrbitDockedPane name="home" fadeBottom>
-        <header if={false}>
+        <div if={false}>
           <SubTitle>
             {day} {month} {dayNum}
             <span
@@ -154,7 +154,7 @@ export class OrbitHome extends React.Component {
             </span>
           </SubTitle>
           <div css={{ flex: 1 }} />
-        </header>
+        </div>
         <content>
           <Masonry if={total}>
             {store.results.map((bit, index) => {

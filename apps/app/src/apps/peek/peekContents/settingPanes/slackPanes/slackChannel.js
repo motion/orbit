@@ -30,24 +30,24 @@ export class SlackChannel extends React.Component {
     }
     const { channels = {} } = slackService.setting.values
     return (
-      <channel>
-        <info>
+      <div $channel>
+        <div $info>
           <UI.Text $title fontWeight={500} size={1.2}>
             #{channel.name} <span>({channel.num_members} Members)</span>
           </UI.Text>
           <UI.Text $description ellipse={1} size={1.1} opacity={0.6}>
             {channel.topic && channel.topic.value}
           </UI.Text>
-        </info>
-        <options>
+        </div>
+        <div $options>
           <UI.Field
             size={1.2}
             type="toggle"
             value={channels[channel.id]}
             onChange={val => this.onChange(val)}
           />
-        </options>
-      </channel>
+        </div>
+      </div>
     )
   }
 

@@ -27,9 +27,9 @@ export class Select extends React.Component {
     }
 
     return (
-      <root className={className}>
-        <select {...props} />
-      </root>
+      <div $root className={className}>
+        <select $select {...props} />
+      </div>
     )
   }
 

@@ -94,9 +94,9 @@ class TogglePlain extends React.Component {
     }
 
     return (
-      <bar onClick={this.toggleClick} {...props}>
-        <dot $dotOn={on} />
-      </bar>
+      <div $bar onClick={this.toggleClick} {...props}>
+        <div $dot $dotOn={on} />
+      </div>
     )
   }
 

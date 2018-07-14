@@ -366,7 +366,8 @@ export class Callout extends React.Component {
           ) : (
             <section $largeCallout style={style}>
               <Lines width={1000} height={2000} $lines />
-              <innerSection
+              <div
+                $innerSection
                 css={{
                   background: theme.base.background.lighten(0.028).alpha(0.8),
                 }}

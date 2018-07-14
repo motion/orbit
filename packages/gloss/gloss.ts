@@ -244,6 +244,7 @@ export default class Gloss {
       targetElement = target.displayName
       name = targetElement
     }
+    const styleProp = `$${name}`
     const InnerView = <GlossView>attachTheme(allProps => {
       // basically PureRender
       if (elementCache.has(allProps)) {
@@ -259,7 +260,7 @@ export default class Gloss {
       if (!hasAttachedStyles) {
         try {
           View.compiledStyles = this.getAllStyles(View, name)
-          this.attachStyles(`${id}`, View.compiledStyles)
+          this.attachStyles(id, View.compiledStyles)
         } catch (err) {
           console.log('error attaching styles', target, name, styles)
           console.log('err', err)
@@ -278,6 +279,7 @@ export default class Gloss {
       const element = this.createElement(targetElement, {
         glossUID: id,
         ref: forwardRef,
+        [styleProp]: true,
         ...props,
       })
       elementCache.set(props, element)

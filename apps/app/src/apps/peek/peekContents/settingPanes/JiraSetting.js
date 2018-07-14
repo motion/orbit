@@ -9,6 +9,8 @@ class JiraSettingStore {
   active = 'general'
 }
 
+const Section = view({ flex: 1 })
+
 @view.attach({
   store: JiraSettingStore,
 })
@@ -27,28 +29,22 @@ export class JiraSetting extends React.Component {
         </UI.Tabs>
       ),
       content: (
-        <container>
-          <section if={store.active === 'general'}>
-            <inner $centered>
+        <UI.View flex={1}>
+          <Section if={store.active === 'general'}>
+            <div $centered>
               <SubTitle css={{ textAlign: 'center' }}>All good!</SubTitle>
               <OrbitIcon icon="confluence" size={256} />
-            </inner>
-          </section>
-          <section if={store.active === 'account'}>
+            </div>
+          </Section>
+          <Section if={store.active === 'account'}>
             <AtlassianSettingLogin setting={this.props.setting} />
-          </section>
-        </container>
+          </Section>
+        </UI.View>
       ),
     })
   }
 
   static style = {
-    container: {
-      flex: 1,
-    },
-    section: {
-      flex: 1,
-    },
     centered: {
       margin: 'auto',
     },

@@ -343,19 +343,20 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       </>
     )
     return (
-      <surface
+      <div
+        $surface
         className={`${this.uniq} ${className || ''}`}
         onClick={onClick}
         {...!wrapElement && passProps}
       >
         {after && (
-          <wrap>
-            <wrapContents>{contents}</wrapContents>
-            <after>{after}</after>
-          </wrap>
+          <div $wrap>
+            <div $wrapContents>{contents}</div>
+            <div $after>{after}</div>
+          </div>
         )}
         {!after && contents}
-      </surface>
+      </div>
     )
   }
 

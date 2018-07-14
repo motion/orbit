@@ -16,11 +16,11 @@ export class ProgressBar extends React.Component {
     percent: 0,
   }
 
-  render({ percent, color, background, width, theme, ...props }) {
+  render({ percent, color, background, theme, ...props }) {
     return (
-      <outer $width={width} {...props}>
-        <inner $percent={+percent} $color={color} />
-      </outer>
+      <div $outer {...props}>
+        <div $inner $color={color} />
+      </div>
     )
   }
 
@@ -35,23 +35,19 @@ export class ProgressBar extends React.Component {
       height: '100%',
       borderRadius: 100,
     },
-    width: width => ({
-      minWidth: width,
-      width,
-    }),
-    percent: percent => ({
-      width: `${percent}%`,
-    }),
   }
 
-  static theme = ({ color, background, theme }) => ({
+  static theme = ({ color, background, theme, width, percent }) => ({
     outer: {
+      minWidth: width,
+      width,
       background:
         background || theme.base.background
           ? $(theme.base.background).darken(0.5)
           : '#eee',
     },
     inner: {
+      width: `${percent}%`,
       background: color || theme.base.highlightColor,
     },
   })

@@ -112,14 +112,14 @@ export class OrbitContextHome {
     return (
       <OrbitDockedPane name="context">
         <OrbitContextHeader />
-        <resultsFrame ref={this.setResultsFrame}>
+        <div $resultsFrame ref={this.setResultsFrame}>
           <fadeTop
             $fade
             style={{ pointerEvents: 'none' }}
             $fadeVisible={isScrolled}
           />
-          <resultsScroller>
-            <results if={store.results.length} ref={this.setResults}>
+          <div $resultsScroller>
+            <div $results if={store.results.length} ref={this.setResults}>
               <firstResultSpace
                 style={{ pointerEvents: 'none' }}
                 css={{ height: 6 }}
@@ -138,15 +138,16 @@ export class OrbitContextHome {
                   expanded
                 />
               ))}
-              <lastResultSpace style={{ pointerEvents: 'none', height: 12 }} />
-            </results>
-          </resultsScroller>
-          <fadeBottom
+              <div style={{ pointerEvents: 'none', height: 12 }} />
+            </div>
+          </div>
+          <div
+            $fadeBottom
             $fade
             style={{ pointerEvents: 'none' }}
             $fadeVisible={isOverflowing}
           />
-        </resultsFrame>
+        </div>
       </OrbitDockedPane>
     )
   }

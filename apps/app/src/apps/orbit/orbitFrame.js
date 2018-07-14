@@ -70,8 +70,10 @@ export class OrbitFrame {
       },
     }
     return (
-      <orbitFrame
+      <div
+        $orbitFrame
         css={{
+          position: 'absolute',
           pointerEvents: hidden ? ' none' : 'auto',
           width: size[0],
           // TODO HACKINESS fix the size/y calc in orbitPosition.js
@@ -91,7 +93,8 @@ export class OrbitFrame {
           borderColor={borderColor}
         />
         <OrbitIndicator orbitOnLeft={orbitOnLeft} />
-        <overflowWrap
+        <div
+          $overflowWrap
           css={{
             overflow: 'hidden',
             padding: SHADOW_PAD,
@@ -104,7 +107,8 @@ export class OrbitFrame {
             marginLeft: !orbitOnLeft ? 0 : -SHADOW_PAD,
           }}
         >
-          <orbit
+          <div
+            $orbit
             css={{
               width: size[0],
               borderLeftRadius,
@@ -113,7 +117,8 @@ export class OrbitFrame {
             }}
             $orbitAnimate={willAnimate}
           >
-            <orbitBorder
+            <div
+              $orbitBorder
               css={{
                 borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
                 borderRightRadius: borderRightRadius
@@ -122,7 +127,8 @@ export class OrbitFrame {
                 boxShadow: [borderShadow, [orbitLightShadow]].filter(Boolean),
               }}
             />
-            <content
+            <div
+              $content
               css={{
                 background,
                 // makes the shadow go offscreen nicely
@@ -133,8 +139,9 @@ export class OrbitFrame {
               }}
             >
               {children}
-              <expand>
-                <fade
+              <div $expand>
+                <div
+                  $fade
                   css={{
                     opacity: 1,
                     background: `linear-gradient(transparent, ${
@@ -142,18 +149,15 @@ export class OrbitFrame {
                     } 95%)`,
                   }}
                 />
-              </expand>
-            </content>
-          </orbit>
-        </overflowWrap>
-      </orbitFrame>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 
   static style = {
-    orbitFrame: {
-      position: 'absolute',
-    },
     orbitBorder: {
       pointerEvents: 'none',
       userSelect: 'none',

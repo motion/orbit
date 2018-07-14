@@ -39,14 +39,14 @@ export type appearance = 'auto' | 'none'
 export type azimuth = number | string | 'leftwards' | 'rightwards'
 export type backdropFilter = 'none' | string
 export type backfaceVisibility = 'visible' | 'hidden'
-type backgroundSyntax = Array<number> | {
+type backgroundSyntax = {
   attachment?: attachment
   color?: color
   image?: bgImage
   position?: string
   repeat?: repeatStyle
 }
-export type background = string | finalBgLayer | backgroundSyntax
+export type background = string | number[] | finalBgLayer | backgroundSyntax
 export type backgroundAttachment = attachment
 export type backgroundBlendMode = blendMode
 export type backgroundClip = box

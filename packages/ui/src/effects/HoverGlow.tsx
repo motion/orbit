@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
-import $ from 'color'
+import $ from '@mcro/color'
 import throttle from 'raf-throttle'
 import { Color } from '@mcro/css'
 

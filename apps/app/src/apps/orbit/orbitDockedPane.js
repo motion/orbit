@@ -27,7 +27,7 @@ class DockedPaneStore {
       if (!this.isActive) {
         throw react.cancel
       }
-      cardRef.scrollIntoViewIfNeeded()
+      // cardRef.scrollIntoViewIfNeeded()
       // const frameBottom = this.paneRef.current.clientHeight
       // const cardBottom = cardRef.offsetTop + cardRef.clientHeight
       // if (cardBottom <= frameBottom) {

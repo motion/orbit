@@ -1,5 +1,3 @@
-- move sonar table stuff into ui since it already works there, just needs move
-
 - filters
   - one bar for integrations - can easily toggle many on/off
   - one bar for type: people, attachment, document, task
@@ -13,21 +11,21 @@
   - use resolver to return top items, show them each on a line
   - for slack that would include the message + name nicely
   - hover highlight the areas effect
+- bit document page design
+- fix laggy typing on search
+- move sonar settings pane stuff in
+- settings panes runthrough
+- search filters <=> nlp v1
+- search highlight sections v2
+- settings panes more fixes
 - corresponding peek UX for search results
-
   - make all peeks work like slack and deal with "item"
   - click highlight to open directly to that item in the peek
-
-  sear
-
 - slack card:
   - if it was a post in #status, show other posts by that person in #status
   - fix people cards
-
-* make search icon change into home if not at home
-  - change into close if at home
-* auto setup
-* p2p
+- auto setup
+- p2p
 
 # high level
 

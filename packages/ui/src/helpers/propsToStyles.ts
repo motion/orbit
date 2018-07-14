@@ -1,4 +1,4 @@
-import toColor from 'color'
+import toColor from '@mcro/color'
 import { psuedoKeys } from '@mcro/gloss'
 
 const valFor = state => (props, key) => {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
-import SectionContent from '~/views/sectionContent'
+import { SectionContent } from '~/views/sectionContent'
 import { Link, Title, P } from '~/views'
 import { BrandLogo, Join } from '~/components'
 import * as Constants from '~/constants'

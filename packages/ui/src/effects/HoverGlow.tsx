@@ -13,7 +13,7 @@ type ChildArgs = {
 export type HoverGlowProps = {
   width: number
   height: number
-  color: Color
+  color: string
   zIndex: number
   resist: number
   scale: number
@@ -237,12 +237,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const duration = durationArg >= 0 ? durationArg : _duration
     if (!this.state.mounted) {
       return (
-        <div
-          $overlay
-          key="hoverglow"
-          ref={this.rootRef}
-          style={{ opacity: 0 }}
-        />
+        <Overlay key="hoverglow" ref={this.rootRef} style={{ opacity: 0 }} />
       )
     }
     // find width / height (full == match size of container)
@@ -278,7 +273,6 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       if (!inverse) return coord
       return -coord
     }
-    const colorRGB = $(color).toString()
     const translateX = inversed(
       bounded(resisted(x), width * scale, this.state.bounds.width),
     )
@@ -330,8 +324,8 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
               zIndex,
               background:
                 background || gradient
-                  ? `radial-gradient(${$(color).toString()}, transparent 70%)`
-                  : colorRGB,
+                  ? `radial-gradient(${color}, transparent 70%)`
+                  : color,
               borderRadius,
               transition: `
                   opacity linear ${duration}ms

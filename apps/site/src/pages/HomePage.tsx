@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Footer } from '../components'
-import SectionContent from '../views/sectionContent'
+import { SectionContent } from '../views/sectionContent'
 import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo } from '../views'
 import * as Constants from '../constants'
 import Media from 'react-media'
@@ -18,6 +18,7 @@ import searchImg from '../../public/orbit-search.jpg'
 import avatarCardImg from '../../public/javi.png'
 import { Page } from '../views/Page'
 import { config } from 'react-spring'
+import { throttle } from 'lodash'
 
 const forwardRef = Component => {
   return React.forwardRef((props, ref) => (
@@ -221,13 +222,12 @@ const Pitch = ({ isLarge, scrollTo }) => (
       </ToolTip>
     </SectionSubTitle>
     <VertSpace />
-    <row $$row css={{ margin: [2, 0, 10] }}>
+    <UI.Row css={{ margin: [2, 0, 10] }}>
       <Join />
-      <div $$flex />
-    </row>
+      <UI.View flex={1} />
+    </UI.Row>
     <VertSpace />
-    <actions
-      $$row
+    <UI.Row
       css={{
         margin: isLarge ? [0, 'auto', 0, 0] : [20, 0, 0, 0],
         alignItems: 'center',
@@ -260,7 +260,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
         />
         .
       </UI.Text>
-    </actions>
+    </UI.Row>
   </>
 )
 
@@ -304,11 +304,11 @@ class HomeHeader extends React.Component {
                 query={Constants.screen.small}
                 render={() => (
                   <>
-                    <div $$flex={1.2} />
+                    <UI.View flex={1.2} />
                     <inner>
                       <Pitch scrollTo={scrollTo} />
                     </inner>
-                    <div $$flex />
+                    <UI.View flex={1} />
                   </>
                 )}
               />
@@ -316,17 +316,17 @@ class HomeHeader extends React.Component {
                 query={Constants.screen.large}
                 render={() => (
                   <>
-                    <inner
+                    <UI.View
+                      flex={1}
                       css={{
-                        flex: 1,
                         textAlign: 'left',
                         width: '40%',
                       }}
                     >
-                      <div $$flex={1.2} />
+                      <UI.View flex={1.2} />
                       <Pitch isLarge scrollTo={scrollTo} />
-                      <div $$flex />
-                    </inner>
+                      <UI.View flex={1} />
+                    </UI.View>
                   </>
                 )}
               />
@@ -338,7 +338,7 @@ class HomeHeader extends React.Component {
   }
 }
 
-const Icon = view({
+const IntIcon = view({
   margin: [0, 20, 0, 0],
   background: UI.color(waveColor)
     .darken(0.2)
@@ -349,7 +349,8 @@ const Icon = view({
 
 @view
 class SectionSearch extends React.Component {
-  render({ isTall, isLarge, sectionHeight }) {
+  render() {
+    const { isTall, isLarge, sectionHeight } = this.props
     const iconProps = {
       size: isLarge ? 55 : 50,
     }
@@ -406,7 +407,7 @@ class SectionSearch extends React.Component {
             </Parallax>
             <Content id="home-search">
               <Half css={{ flex: 1 }}>
-                <div $$flex={isLarge ? 1.5 : 3} />
+                <UI.View flex={isLarge ? 1.5 : 3} />
                 <SectionTitle
                   color={UI.color(waveColor)
                     .darken(0.6)
@@ -425,7 +426,7 @@ class SectionSearch extends React.Component {
                   Drive to internal APIs and databases without any setup.
                 </SectionSubP>
                 <VertSpace />
-                <div $$flex={0.5} />
+                <UI.View flex={0.5} />
                 <UI.Row
                   css={{
                     transformOrigin: 'bottom left',
@@ -435,32 +436,32 @@ class SectionSearch extends React.Component {
                     },
                   }}
                 >
-                  <Icon>
+                  <IntIcon>
                     <Icon name="slack" {...iconProps} />
-                  </Icon>
-                  <Icon>
+                  </IntIcon>
+                  <IntIcon>
                     <Icon name="gdocs" {...iconProps} />
-                  </Icon>
-                  <Icon>
+                  </IntIcon>
+                  <IntIcon>
                     <Icon name="gmail" {...iconProps} />
-                  </Icon>
-                  <Icon>
+                  </IntIcon>
+                  <IntIcon>
                     <Icon name="github" {...iconProps} />
-                  </Icon>
-                  <Icon>
+                  </IntIcon>
+                  <IntIcon>
                     <Icon name="gcalendar" {...iconProps} />
-                  </Icon>
-                  <Icon>
+                  </IntIcon>
+                  <IntIcon>
                     <Icon name="confluence" {...iconProps} />
-                  </Icon>
-                  <Icon>
+                  </IntIcon>
+                  <IntIcon>
                     <Icon name="jira" {...iconProps} />
-                  </Icon>
-                  <Icon>
+                  </IntIcon>
+                  <IntIcon>
                     <Icon name="dropbox" {...iconProps} />
-                  </Icon>
+                  </IntIcon>
                 </UI.Row>
-                <div $$flex={1.5} />
+                <UI.View flex={1.5} />
               </Half>
             </Content>
           </>
@@ -490,7 +491,7 @@ class SectionProfiles extends React.Component {
               <Slant {...thirdSlant} {...topSlants} />
             </Parallax>
             <Content id="home-profiles" css={{ flex: 1 }}>
-              <div if={!isLarge} $$flex />
+              <UI.View if={!isLarge} flex={1} />
               <div
                 className="profiles"
                 css={
@@ -740,6 +741,7 @@ class OrbitPure extends React.Component {
                   width: 1100 / 2,
                   height: 2014 / 2,
                   background: '#F3F3F3',
+                  borderRadius: 17,
                 }}
               />
               <HomeImg
@@ -934,9 +936,9 @@ export class HomeWrapper extends React.Component {
 
   resume = null
 
-  handleScroll = () => {
+  handleScroll = throttle(() => {
     this.props.homeStore.onScroll()
-  }
+  }, 16)
 
   render({ homeStore, sectionHeight }) {
     console.log('props', this.props)

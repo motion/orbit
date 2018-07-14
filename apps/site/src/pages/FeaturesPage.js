@@ -19,7 +19,7 @@ import {
   SmallTitle,
   HomeImg,
 } from '~/views'
-import SectionContent from '~/views/sectionContent'
+import { SectionContent } from '~/views/sectionContent'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, attachTheme } from '@mcro/black'

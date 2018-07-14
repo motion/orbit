@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view, on, react } from '@mcro/black'
 import * as _ from 'lodash'
 import { trace } from 'mobx'
+import { BORDER_RADIUS } from '../../constants'
 
 const EXTRA_PAD = 40
 
@@ -75,6 +76,8 @@ const Pane = view({
   bottom: 0,
   left: 0,
   transition: 'all ease-in-out 100ms',
+  borderRadius: BORDER_RADIUS,
+  overflowX: 'hidden',
   overflowY: 'scroll',
   padding: [EXTRA_PAD, 14, 0],
   margin: [-EXTRA_PAD, 0, 0],

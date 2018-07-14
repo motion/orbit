@@ -9,8 +9,8 @@ import { OrbitSearchResults } from './orbitSearchResults'
 import { OrbitDirectory } from './OrbitDirectory'
 import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { BORDER_RADIUS } from '../../constants'
 
-const borderRadius = 14
 const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.55]]
 
@@ -19,7 +19,7 @@ const Frame = view(UI.Col, {
   top: 10,
   right: 10,
   bottom: 100,
-  borderRadius,
+  borderRadius: BORDER_RADIUS,
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
@@ -58,7 +58,7 @@ Border.theme = ({ theme }) => {
   const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
   const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.5]]
   return {
-    borderRadius: borderRadius,
+    borderRadius: BORDER_RADIUS,
     boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
   }
 }
@@ -95,7 +95,7 @@ class OrbitDockedInner extends React.Component {
           <Border />
           <div $container>
             <OrbitHeader
-              borderRadius={borderRadius}
+              borderRadius={BORDER_RADIUS}
               after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
             <OrbitInner>
@@ -125,7 +125,7 @@ class OrbitDockedInner extends React.Component {
 
   static style = {
     container: {
-      borderRadius: borderRadius + 1,
+      borderRadius: BORDER_RADIUS + 1,
       // overflow: 'hidden',
       flex: 1,
     },

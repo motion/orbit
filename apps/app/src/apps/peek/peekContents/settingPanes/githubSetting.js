@@ -149,6 +149,13 @@ class GithubSettingStore {
   setActiveKey = key => (this.active = key)
 }
 
+const InvisiblePane = view(UI.FullScreen, {
+  opacity: 0,
+  visible: {
+    opacity: 1,
+  },
+})
+
 @view.provide({ githubStore: GithubSettingStore })
 @view
 export class GithubSetting extends React.Component {
@@ -166,54 +173,29 @@ export class GithubSetting extends React.Component {
         </UI.Tabs>
       ),
       content: (
-        <container>
-          <section if={store.active === 'repos'}>
-            <section>
-              <UI.SearchableTable
-                virtual
-                rowLineHeight={28}
-                floating={false}
-                columnSizes={columnSizes}
-                columns={columns}
-                onRowHighlighted={this.onRowHighlighted}
-                multiHighlight
-                rows={store.rows}
-                bodyPlaceholder={
-                  <div css={{ margin: 'auto' }}>
-                    <UI.Text size={1.2}>Loading...</UI.Text>
-                  </div>
-                }
-              />
-            </section>
-            <add if={false}>
-              <UI.Input
-                width={200}
-                size={1}
-                autoFocus
-                placeholder="Add Organization"
-                value={store.newOrg}
-                onKeyDown={e => {
-                  if (e.keyCode === 13) store.addOrg()
-                  if (e.keyCode === 27) store.newOrg = ''
-                }}
-                onChange={e => (store.newOrg = e.target.value)}
-              />
-            </add>
-          </section>
-          <section if={store.active === 'issues'}>
+        <>
+          <InvisiblePane visible={store.active === 'repos'}>
+            <UI.SearchableTable
+              virtual
+              rowLineHeight={28}
+              floating={false}
+              columnSizes={columnSizes}
+              columns={columns}
+              onRowHighlighted={this.onRowHighlighted}
+              multiHighlight
+              rows={store.rows}
+              bodyPlaceholder={
+                <div css={{ margin: 'auto' }}>
+                  <UI.Text size={1.2}>Loading...</UI.Text>
+                </div>
+              }
+            />
+          </InvisiblePane>
+          <InvisiblePane visible={store.active === 'issues'}>
             <Bits bits={store.section} />
-          </section>
-        </container>
+          </InvisiblePane>
+        </>
       ),
     })
-  }
-
-  static style = {
-    container: {
-      flex: 1,
-    },
-    section: {
-      flex: 1,
-    },
   }
 }

@@ -172,7 +172,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
           continue
         }
         // simple component boolean prop styles :)
-        if (isSimple) {
+        if (isSimple && val === true) {
           const rule = styleSheet.getRule(`${prop}--${glossUID}`)
           if (rule) {
             finalStyles.push(rule)

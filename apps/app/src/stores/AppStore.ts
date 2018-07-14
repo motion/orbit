@@ -31,6 +31,7 @@ const searchBits = async (query, params?) => {
 }
 
 export class AppStore {
+  selectedCardRef = null
   quickSearchIndex = 0
   nextIndex = 0
   leaveIndex = -1
@@ -439,5 +440,9 @@ export class AppStore {
     }
     const url = await AppStoreHelpers.getPermalink(result, openType)
     App.open(url)
+  }
+
+  setSelectedCardRef = ref => {
+    this.selectedCardRef = ref
   }
 }

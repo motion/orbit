@@ -101,6 +101,7 @@ class OrbitCardStore {
             }`,
           )
         }
+        this.props.appStore.setSelectedCardRef(this.ref)
         App.actions.selectItem(this.target, this.ref)
       }
     },

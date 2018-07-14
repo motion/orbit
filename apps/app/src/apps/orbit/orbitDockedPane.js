@@ -1,7 +1,9 @@
 import * as React from 'react'
-import { view, on, attachTheme } from '@mcro/black'
+import { view, on, react } from '@mcro/black'
 import * as _ from 'lodash'
 import { trace } from 'mobx'
+
+const EXTRA_PAD = 40
 
 class DockedPaneStore {
   paneRef = React.createRef()
@@ -18,6 +20,25 @@ class DockedPaneStore {
     observer.observe(this.paneRef.current, { childList: true })
     on(this, observer)
   }
+
+  scrollToSelectedCard = react(
+    () => this.props.appStore.selectedCardRef,
+    cardRef => {
+      if (!this.isActive) {
+        throw react.cancel
+      }
+      cardRef.scrollIntoViewIfNeeded()
+      // const frameBottom = this.paneRef.current.clientHeight
+      // const cardBottom = cardRef.offsetTop + cardRef.clientHeight
+      // if (cardBottom <= frameBottom) {
+      //   throw react.cancel
+      // }
+      // this.paneRef.current.scrollTop = cardBottom - frameBottom + EXTRA_PAD
+    },
+    {
+      immediate: true,
+    },
+  )
 
   setOverflow = () => {
     const node = this.paneRef.current
@@ -47,8 +68,52 @@ class DockedPaneStore {
   }
 }
 
-@attachTheme
-@view.attach('paneStore')
+const Pane = view({
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  transition: 'all ease-in-out 100ms',
+  overflowY: 'scroll',
+  padding: [EXTRA_PAD, 14, 0],
+  margin: [-EXTRA_PAD, 0, 0],
+  pointerEvents: 'none',
+  opacity: 0,
+  transform: {
+    x: 10,
+  },
+  isActive: {
+    pointerEvents: 'auto',
+    opacity: 1,
+    transform: {
+      x: 0,
+    },
+  },
+})
+
+const OverflowFade = view({
+  pointerEvents: 'none',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: 100,
+  zIndex: 10000000,
+  borderRadius: 20,
+  overflow: 'hidden',
+  opacity: 1,
+  transition: 'all ease-in 250ms',
+  isInvisible: {
+    opacity: 0,
+  },
+})
+
+OverflowFade.theme = ({ theme }) => ({
+  background: `linear-gradient(transparent, ${theme.base.background})`,
+})
+
+@view.attach('paneStore', 'appStore')
 @view.attach({
   store: DockedPaneStore,
 })
@@ -59,65 +124,15 @@ export class OrbitDockedPane extends React.Component {
     trace()
     return (
       <>
-        <overflowFade
+        <OverflowFade
           if={fadeBottom}
-          $invisible={store.isAtBottom || !store.isActive}
+          isInvisible={store.isAtBottom || !store.isActive}
         />
-        <pane $isActive={store.isActive} style={style} ref={store.paneRef}>
+        <Pane isActive={store.isActive} style={style} ref={store.paneRef}>
           {children}
-        </pane>
+        </Pane>
         {after}
       </>
     )
-  }
-
-  static style = {
-    pane: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      transition: 'all ease-in-out 100ms',
-      overflowY: 'scroll',
-      padding: [40, 14, 0],
-      margin: [-40, 0, 0],
-      pointerEvents: 'none',
-      opacity: 0,
-      transform: {
-        x: 10,
-      },
-    },
-    isActive: {
-      pointerEvents: 'auto',
-      opacity: 1,
-      transform: {
-        x: 0,
-      },
-    },
-    overflowFade: {
-      pointerEvents: 'none',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: 100,
-      zIndex: 10000000,
-      borderRadius: 20,
-      overflow: 'hidden',
-      opacity: 1,
-      transition: 'all ease-in 250ms',
-    },
-    invisible: {
-      opacity: 0,
-    },
-  }
-
-  static theme = ({ theme }) => {
-    return {
-      overflowFade: {
-        background: `linear-gradient(transparent, ${theme.base.background})`,
-      },
-    }
   }
 }

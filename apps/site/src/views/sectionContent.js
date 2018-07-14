@@ -4,14 +4,11 @@ import * as Constants from '~/constants'
 
 @view
 class SectionContent extends React.Component {
-  render({
-    padded,
-    forwardRef,
-    ...props
-  }) {
+  render({ padded, forwardRef, ...props }) {
     return (
       <section
         ref={forwardRef}
+        $section
         $padVertical={padded}
         $padHorizontal={!!padded}
         {...props}

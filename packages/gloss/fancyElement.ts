@@ -3,15 +3,16 @@ import deepExtend from 'deep-extend'
 import tags from 'html-tags'
 import svgTags from './helpers/svgTags'
 import validProp from './helpers/validProp'
+import { snakeToCamelObject } from './helpers/snakeToCamelObject'
 
 const electronTags = ['webview']
 
 const $ = '$'
 const ogCreateElement = React.createElement.bind(React)
-const VALID_TAGS = [...tags, ...svgTags, ...electronTags].reduce(
-  (acc, cur) => ({ ...acc, [cur]: true }),
-  {},
-)
+const VALID_TAGS = [...tags, ...svgTags, ...electronTags].reduce((acc, cur) => {
+  acc[cur] = true
+  return acc
+}, {})
 
 const arrayOfObjectsToObject = arr => {
   let res = {}
@@ -71,19 +72,6 @@ const cssOpts = { snakeCase: false }
 export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
   const { options, css } = Gloss
   const tagNameOption = options.tagName
-
-  // Fast object reduce
-  function objToCamel(style) {
-    let newStyle = {}
-    for (const name of Object.keys(style)) {
-      if (name.indexOf('-')) {
-        newStyle[Gloss.helpers.snakeToCamel(name)] = style[name]
-      } else {
-        newStyle[name] = style[name]
-      }
-    }
-    return newStyle
-  }
 
   const addStyle = (finalStyles, key, val, checkTheme) => {
     let style = styleSheet[key]
@@ -201,7 +189,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
             true,
           )
           if (inlineStyle) {
-            style = { ...style, ...objToCamel(inlineStyle) }
+            style = { ...style, ...snakeToCamelObject(inlineStyle) }
           }
         }
       }
@@ -228,7 +216,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
       } else {
         // children get a style prop
         if (props) {
-          finalProps.style = objToCamel(
+          finalProps.style = snakeToCamelObject(
             arrayOfObjectsToObject([
               ...finalStyles.map(style => style && style.style),
               finalProps.style,

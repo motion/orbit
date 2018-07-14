@@ -23,7 +23,7 @@ export class GmailSetting extends React.Component {
     const { syncSettings } = setting.values
     return children({
       content: (
-        <gmailSetting>
+        <section>
           <OrbitIcon icon="gmail" />
           <UI.Field
             row
@@ -39,7 +39,7 @@ export class GmailSetting extends React.Component {
               update()
             }}
           />
-        </gmailSetting>
+        </section>
       ),
     })
   }

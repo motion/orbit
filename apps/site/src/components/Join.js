@@ -67,8 +67,9 @@ export class Join extends React.Component {
       sizeHeight: 1.1,
     }
     return (
-      <section id="join" {...props}>
+      <section $section id="join" {...props}>
         <form
+          $form
           ref={this.form}
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
           method="post"
@@ -79,7 +80,7 @@ export class Join extends React.Component {
           onSubmit={this.submit}
         >
           <div $inner>
-            <wrapInput>
+            <div $wrapInput>
               <UI.Input
                 $input
                 flex
@@ -95,7 +96,7 @@ export class Join extends React.Component {
                   padding: [4, 12, 0],
                 }}
               />
-            </wrapInput>
+            </div>
             <space css={{ height: 20 }} />
             <UI.Theme theme="#37C457">
               <UI.Button
@@ -113,7 +114,8 @@ export class Join extends React.Component {
               </UI.Button>
             </UI.Theme>
           </div>
-          <message
+          <div
+            $message
             $success={success && !error}
             css={{ maxWidth: '70%', height: 30, marginBottom: -20 }}
             dangerouslySetInnerHTML={{

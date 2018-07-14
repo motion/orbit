@@ -22,7 +22,7 @@ export class Glint extends React.Component {
   }
 
   render({ className, attach, style }) {
-    return <glint className={className} style={style} {...attach} />
+    return <div $glint className={className} style={style} {...attach} />
   }
 
   static style = {

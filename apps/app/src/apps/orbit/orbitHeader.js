@@ -100,8 +100,8 @@ export class OrbitHeader extends React.Component {
     const isHome = paneStore.activePane === 'home'
     const { iconHovered } = headerStore
     return (
-      <orbitHeader $headerBg={headerBg} {...this.hoverSettler.props}>
-        <title>
+      <div $orbitHeader $headerBg={headerBg} {...this.hoverSettler.props}>
+        <div $title>
           <UI.Icon
             name={
               isHome && iconHovered
@@ -147,8 +147,10 @@ export class OrbitHeader extends React.Component {
             ref={headerStore.inputRef}
             onClick={headerStore.onClickInput}
           />
-        </title>
-        <after if={after}>{after}</after>
+        </div>
+        <div $after if={after}>
+          {after}
+        </div>
         <ControlButton
           if={showPin}
           onClick={App.togglePinned}
@@ -167,7 +169,7 @@ export class OrbitHeader extends React.Component {
             opacity: App.orbitState.hidden ? 0 : 1,
           }}
         />
-      </orbitHeader>
+      </div>
     )
   }
 

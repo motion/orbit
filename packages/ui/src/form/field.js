@@ -110,7 +110,11 @@ export class Field extends React.Component {
     if (row) {
       return <ListRow $field>{contents}</ListRow>
     }
-    return <field css={props}>{contents}</field>
+    return (
+      <div $field css={props}>
+        {contents}
+      </div>
+    )
   }
 
   static style = {

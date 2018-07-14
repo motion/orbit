@@ -131,17 +131,11 @@ export class GdocsSetting extends React.Component {
     const loading = !store.folders
     return children({
       content: (
-        <container>
+        <section>
           <loading if={loading}>loading</loading>
           <Folder if={!loading} folders={store.folders} files={store.files} />
-        </container>
+        </section>
       ),
     })
-  }
-
-  static style = {
-    container: {
-      marginTop: 5,
-    },
   }
 }

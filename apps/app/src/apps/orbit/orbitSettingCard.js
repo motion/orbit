@@ -46,8 +46,6 @@ export class OrbitSettingCard extends React.Component {
     return (
       <OrbitCard
         inactive={!isActive}
-        $card
-        $isActive={isActive}
         title={result.title}
         subtitle={subtitleDisplay}
         date={store.job && store.job.updatedAt}
@@ -72,14 +70,5 @@ export class OrbitSettingCard extends React.Component {
         {...props}
       />
     )
-  }
-
-  static style = {
-    icon: {
-      margin: ['auto', 10, 'auto', -8],
-      transform: {
-        y: -1,
-      },
-    },
   }
 }

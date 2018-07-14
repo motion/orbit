@@ -9,7 +9,8 @@ export class OCRLine {
     const [x, y, width, height] = item
     const key = Helpers.wordKey(item)
     return (
-      <ocrLine
+      <div
+        $ocrLine
         $hoveredLine={hoveredLine && hoveredLine.string === key}
         style={{
           top: y - TOP_BAR_PAD + LINE_Y_ADJ,

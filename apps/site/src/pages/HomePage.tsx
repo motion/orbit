@@ -338,6 +338,15 @@ class HomeHeader extends React.Component {
   }
 }
 
+const Icon = view({
+  margin: [0, 20, 0, 0],
+  background: UI.color(waveColor)
+    .darken(0.2)
+    .alpha(0.1),
+  borderRadius: 10,
+  padding: 20,
+})
+
 @view
 class SectionSearch extends React.Component {
   render({ isTall, isLarge, sectionHeight }) {
@@ -417,7 +426,7 @@ class SectionSearch extends React.Component {
                 </SectionSubP>
                 <VertSpace />
                 <div $$flex={0.5} />
-                <icons
+                <UI.Row
                   css={{
                     transformOrigin: 'bottom left',
                     transform: {
@@ -426,31 +435,31 @@ class SectionSearch extends React.Component {
                     },
                   }}
                 >
-                  <icon>
+                  <Icon>
                     <Icon name="slack" {...iconProps} />
-                  </icon>
-                  <icon>
+                  </Icon>
+                  <Icon>
                     <Icon name="gdocs" {...iconProps} />
-                  </icon>
-                  <icon>
+                  </Icon>
+                  <Icon>
                     <Icon name="gmail" {...iconProps} />
-                  </icon>
-                  <icon>
+                  </Icon>
+                  <Icon>
                     <Icon name="github" {...iconProps} />
-                  </icon>
-                  <icon>
+                  </Icon>
+                  <Icon>
                     <Icon name="gcalendar" {...iconProps} />
-                  </icon>
-                  <icon>
+                  </Icon>
+                  <Icon>
                     <Icon name="confluence" {...iconProps} />
-                  </icon>
-                  <icon>
+                  </Icon>
+                  <Icon>
                     <Icon name="jira" {...iconProps} />
-                  </icon>
-                  <icon>
+                  </Icon>
+                  <Icon>
                     <Icon name="dropbox" {...iconProps} />
-                  </icon>
-                </icons>
+                  </Icon>
+                </UI.Row>
                 <div $$flex={1.5} />
               </Half>
             </Content>
@@ -458,20 +467,6 @@ class SectionSearch extends React.Component {
         )}
       </Page>
     )
-  }
-
-  static style = {
-    icons: {
-      flexFlow: 'row',
-    },
-    icon: {
-      margin: [0, 20, 0, 0],
-      background: UI.color(waveColor)
-        .darken(0.2)
-        .alpha(0.1),
-      borderRadius: 10,
-      padding: 20,
-    },
   }
 }
 
@@ -496,7 +491,7 @@ class SectionProfiles extends React.Component {
             </Parallax>
             <Content id="home-profiles" css={{ flex: 1 }}>
               <div if={!isLarge} $$flex />
-              <inner
+              <div
                 className="profiles"
                 css={
                   isLarge
@@ -519,8 +514,8 @@ class SectionProfiles extends React.Component {
                 </SectionSubP>
                 <VertSpace />
                 <VertSpace />
-                <wrap css={{ position: 'relative' }}>
-                  <fadeBottom
+                <div css={{ position: 'relative' }}>
+                  <UI.View
                     css={{
                       position: 'absolute',
                       bottom: '-10%',
@@ -536,7 +531,7 @@ class SectionProfiles extends React.Component {
                       },
                     }}
                   />
-                  <img
+                  <UI.Image
                     src={profileImg}
                     css={{
                       width: '40vw',
@@ -556,8 +551,8 @@ class SectionProfiles extends React.Component {
                       },
                     }}
                   />
-                </wrap>
-              </inner>
+                </div>
+              </div>
             </Content>
           </>
         )}
@@ -567,7 +562,7 @@ class SectionProfiles extends React.Component {
 }
 
 const Card = ({ title, children, icon }) => (
-  <card
+  <UI.View
     css={{
       flexFlow: 'row',
       padding: [28, 32],
@@ -583,22 +578,22 @@ const Card = ({ title, children, icon }) => (
       color="#fff"
       css={{ margin: [0, 40, 0, 0] }}
     />
-    <content css={{ flex: 1 }}>
+    <div style={{ flex: 1 }}>
       <SectionP size={1.5} fontWeight={700} css={{ flex: 1 }}>
         {title}
       </SectionP>
       <SectionSubP size={1.7} sizeLineHeight={1} css={{ flex: 1 }}>
         {children}
       </SectionSubP>
-    </content>
-  </card>
+    </div>
+  </UI.View>
 )
 
 @view
 class SectionNoCloud extends React.Component {
   render({ homeStore, isLarge }) {
     return (
-      <section
+      <UI.View
         css={{
           minHeight: homeStore.sectionHeight,
           padding: [100, 0],
@@ -617,13 +612,13 @@ class SectionNoCloud extends React.Component {
             }}
           />
           <div
-            css={{
+            style={{
               flexFlow: isLarge ? 'row' : 'column',
               justifyContent: isLarge ? 'space-around' : 'center',
               flex: 1,
             }}
           >
-            <inner css={isLarge && { width: '46%', margin: ['auto', 0] }}>
+            <UI.Col css={isLarge && { width: '46%', margin: ['auto', 0] }}>
               <SectionTitle color="#fff">The Serverless Platform</SectionTitle>
               <VertSpace />
               <SectionSubTitle color="#fff" alpha={0.85}>
@@ -643,8 +638,8 @@ class SectionNoCloud extends React.Component {
               <space if={false} css={{ margin: [0, 'auto'] }}>
                 <SectionSubP size={3}>🙅‍ ☁️ = 🙅‍♂️ 😅</SectionSubP>
               </space>
-            </inner>
-            <inner css={isLarge && { width: '38%', margin: ['auto', 0] }}>
+            </UI.Col>
+            <UI.Col css={isLarge && { width: '38%', margin: ['auto', 0] }}>
               <Card icon="lock" title="Complete Security">
                 Your data never leaves your firewall.
               </Card>
@@ -655,10 +650,10 @@ class SectionNoCloud extends React.Component {
                 Build custom integrations right on your computer, and deploy to
                 your teams with a click.
               </Card>
-            </inner>
+            </UI.Col>
           </div>
         </SectionContent>
-      </section>
+      </UI.View>
     )
   }
 }
@@ -693,7 +688,7 @@ class OrbitPure extends React.Component {
         scrollTop={scrollTop}
         css={{ zIndex: 1000 }}
       >
-        <div
+        <UI.Col
           css={{
             zIndex: 10,
             pointerEvents: 'none',
@@ -703,7 +698,7 @@ class OrbitPure extends React.Component {
             width: '50%',
           }}
         >
-          <wrap
+          <UI.Col
             css={{
               pointerEvents: 'all',
               width: 1100 / 2,
@@ -740,7 +735,7 @@ class OrbitPure extends React.Component {
                 opacity: 0.5,
               }}
             >
-              <heightEnsure
+              <UI.View
                 css={{
                   width: 1100 / 2,
                   height: 2014 / 2,
@@ -777,7 +772,7 @@ class OrbitPure extends React.Component {
                   },
                 }}
               >
-                <img
+                <UI.Image
                   src={avatarCardImg}
                   css={{
                     width: 629 / 2,
@@ -795,8 +790,8 @@ class OrbitPure extends React.Component {
                 />
               </HomeImg>
             </UI.TiltHoverGlow>
-          </wrap>
-        </div>
+          </UI.Col>
+        </UI.Col>
       </ParallaxLayer>
     )
   }
@@ -975,10 +970,10 @@ export class HomeWrapper extends React.Component {
                     <SectionProfiles {...sectionProps} />
                   </Parallax>
                   <SectionNoCloud {...sectionProps} />
-                  <footer
+                  <UI.View
                     css={{ position: 'relative', zIndex: 999, marginTop: 50 }}
                   >
-                    <fade
+                    <UI.View
                       css={{
                         position: 'absolute',
                         top: -500,
@@ -989,7 +984,7 @@ export class HomeWrapper extends React.Component {
                       }}
                     />
                     <Footer />
-                  </footer>
+                  </UI.View>
                 </>
               )
             }}

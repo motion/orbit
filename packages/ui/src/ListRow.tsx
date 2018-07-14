@@ -158,7 +158,7 @@ export class ListRow extends React.Component<ListRowProps> {
         flexFlow="row"
         {...props}
       >
-        {label && <label>{label}</label>}
+        {label && <label $label>{label}</label>}
         {children}
       </Surface>
     )

@@ -63,6 +63,19 @@ Border.theme = ({ theme }) => {
   }
 }
 
+// having this have -20 margin on sides
+// means we have nice shadows on inner content
+// that overlap the edge of the frame and dont cut off
+// but still hide things that go below the bottom as it should
+const OrbitInner = view({
+  position: 'relative',
+  zIndex: 3,
+  overflow: 'hidden',
+  margin: [-20, -20, 0, -20],
+  padding: [20, 20, 0, 20],
+  flex: 1,
+})
+
 @attachTheme
 @view.attach('appStore', 'orbitStore')
 @view.provide({
@@ -80,16 +93,13 @@ class OrbitDockedInner extends React.Component {
           willAnimate={animationState.willAnimate}
         >
           <Border />
-          <container>
+          <div $container>
             <OrbitHeader
               borderRadius={borderRadius}
               after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
             />
-            <glowWrap if={false}>
-              <glow />
-            </glowWrap>
-            <orbitInner>
-              <orbitRelativeInner>
+            <OrbitInner>
+              <div $orbitRelativeInner>
                 <OrbitHome
                   name="home"
                   appStore={appStore}
@@ -105,9 +115,9 @@ class OrbitDockedInner extends React.Component {
                   parentPane="summary"
                 />
                 <OrbitSettings name="settings" />
-              </orbitRelativeInner>
-            </orbitInner>
-          </container>
+              </div>
+            </OrbitInner>
+          </div>
         </Frame>
       </>
     )
@@ -119,57 +129,9 @@ class OrbitDockedInner extends React.Component {
       // overflow: 'hidden',
       flex: 1,
     },
-    // having this have -20 margin on sides
-    // means we have nice shadows on inner content
-    // that overlap the edge of the frame and dont cut off
-    // but still hide things that go below the bottom as it should
-    orbitInner: {
-      position: 'relative',
-      zIndex: 3,
-      overflow: 'hidden',
-      margin: [-20, -20, 0, -20],
-      padding: [20, 20, 0, 20],
-      flex: 1,
-    },
     orbitRelativeInner: {
       position: 'relative',
       flex: 1,
-    },
-    settingsButton: {
-      position: 'absolute',
-      top: 0,
-      right: 10,
-      zIndex: 10000000000,
-      transform: {
-        y: -16.5,
-      },
-    },
-    glowWrap: {
-      pointerEvents: 'none',
-      zIndex: 3,
-      borderRadius,
-      overflow: 'hidden',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      position: 'absolute',
-    },
-    glow: {
-      background: '#fff',
-      opacity: 1,
-      top: 0,
-      left: 0,
-      width: 200,
-      height: 200,
-      position: 'absolute',
-      transform: {
-        x: '89%',
-        scale: 2.5,
-      },
-      filter: {
-        blur: 100,
-      },
     },
   }
 }

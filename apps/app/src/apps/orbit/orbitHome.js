@@ -171,6 +171,7 @@ export class OrbitHome extends React.Component {
                   isExpanded={false && isExpanded}
                   style={isExpanded && this.span2}
                   itemProps={itemProps}
+                  hoverToSelect
                 >
                   {false &&
                     isExpanded &&

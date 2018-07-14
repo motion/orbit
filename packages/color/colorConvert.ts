@@ -20,6 +20,7 @@ function wrapRaw(fn) {
 
   // preserve .conversion property if there is one
   if ('conversion' in fn) {
+    // @ts-ignore
     wrappedFn.conversion = fn.conversion
   }
 
@@ -52,6 +53,7 @@ function wrapRounded(fn) {
 
   // preserve .conversion property if there is one
   if ('conversion' in fn) {
+    // @ts-ignore
     wrappedFn.conversion = fn.conversion
   }
 

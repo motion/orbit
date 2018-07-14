@@ -25,35 +25,15 @@ Object.keys(colorConvert).forEach(function(model) {
 var limiters = {}
 
 class Color {
+  static rgb: Function
+
   model = 'rgb'
   color = [0, 0, 0]
   valpha = 1
 
-  // conversions
-  red = getset('rgb', 0, maxfn(255))
-  green = getset('rgb', 1, maxfn(255))
-  blue = getset('rgb', 2, maxfn(255))
-  hue = getset(['hsl', 'hsv', 'hsl', 'hwb', 'hcg'], 0, function(val) {
-    return ((val % 360) + 360) % 360
-  })
-  saturationl = getset('hsl', 1, maxfn(100))
-  lightness = getset('hsl', 2, maxfn(100))
-  saturationv = getset('hsv', 1, maxfn(100))
-  value = getset('hsv', 2, maxfn(100))
-  chroma = getset('hcg', 1, maxfn(100))
-  gray = getset('hcg', 2, maxfn(100))
-  white = getset('hwb', 1, maxfn(100))
-  wblack = getset('hwb', 2, maxfn(100))
-  cyan = getset('cmyk', 0, maxfn(100))
-  magenta = getset('cmyk', 1, maxfn(100))
-  yellow = getset('cmyk', 2, maxfn(100))
-  black = getset('cmyk', 3, maxfn(100))
-  x = getset('xyz', 0, maxfn(100))
-  y = getset('xyz', 1, maxfn(100))
-  z = getset('xyz', 2, maxfn(100))
-  l = getset('lab', 0, maxfn(100))
-  a = getset('lab', 1)
-  b = getset('lab', 2)
+  rgb: Function
+  hsl: Function
+  hwb: Function
 
   constructor(obj, model?) {
     if (model && model in skippedModels) {
@@ -165,6 +145,7 @@ class Color {
       result[labels[i]] = this.color[i]
     }
     if (this.valpha !== 1) {
+      // @ts-ignore
       result.alpha = this.valpha
     }
     return result
@@ -357,6 +338,38 @@ class Color {
   }
 }
 
+// conversions
+const conversions = {
+  red: getset('rgb', 0, maxfn(255)),
+  green: getset('rgb', 1, maxfn(255)),
+  blue: getset('rgb', 2, maxfn(255)),
+  hue: getset(['hsl', 'hsv', 'hsl', 'hwb', 'hcg'], 0, function(val) {
+    return ((val % 360) + 360) % 360
+  }),
+  saturationl: getset('hsl', 1, maxfn(100)),
+  lightness: getset('hsl', 2, maxfn(100)),
+  saturationv: getset('hsv', 1, maxfn(100)),
+  value: getset('hsv', 2, maxfn(100)),
+  chroma: getset('hcg', 1, maxfn(100)),
+  gray: getset('hcg', 2, maxfn(100)),
+  white: getset('hwb', 1, maxfn(100)),
+  wblack: getset('hwb', 2, maxfn(100)),
+  cyan: getset('cmyk', 0, maxfn(100)),
+  magenta: getset('cmyk', 1, maxfn(100)),
+  yellow: getset('cmyk', 2, maxfn(100)),
+  black: getset('cmyk', 3, maxfn(100)),
+  x: getset('xyz', 0, maxfn(100)),
+  y: getset('xyz', 1, maxfn(100)),
+  z: getset('xyz', 2, maxfn(100)),
+  l: getset('lab', 0, maxfn(100)),
+  a: getset('lab', 1),
+  b: getset('lab', 2),
+}
+
+for (const key of Object.keys(conversions)) {
+  Color.prototype[key] = conversions[key]
+}
+
 // model conversion methods and static constructors
 Object.keys(colorConvert).forEach(function(model) {
   if (skippedModels.indexOf(model) !== -1) {
@@ -442,6 +455,6 @@ function zeroArray(arr, length) {
   return arr
 }
 
-export default function color(obj, model) {
+export default function color(obj, model?) {
   return new Color(obj, model)
 }

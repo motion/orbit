@@ -1,3 +1,5 @@
+import { Color } from './types'
+
 /**
  * Copyright 2018-present Facebook.
  * This source code is licensed under the MIT license found in the
@@ -74,7 +76,7 @@ export type borderBottomRightRadius = lengthPercentage
 export type borderBottomStyle = brStyle
 export type borderBottomWidth = borderWidth
 export type borderCollapse = 'collapse' | 'separate'
-export type borderColor = color
+export type borderColor = color | Array<number | string | Color>
 export type borderImage =
   | borderImageSource
   | borderImageSlice
@@ -132,7 +134,7 @@ export type boxShadow =
   | 'none'
   | string
   | boxShadowSyntax
-  | Array<string | boxShadowSyntax>
+  | Array<string | number | boxShadowSyntax | Color>
 export type boxSizing = 'content-box' | 'border-box'
 export type boxSuppress = 'show' | 'discard' | 'hide'
 export type breakAfter =

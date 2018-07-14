@@ -1,6 +1,6 @@
 import * as React from 'react'
 import fancyElement from './fancyElement'
-import css, { validCSSAttr } from '@mcro/css'
+import css, { validCSSAttr, Color } from '@mcro/css'
 import JSS from './stylesheet'
 import { attachTheme } from './theme/attachTheme'
 
@@ -14,6 +14,29 @@ export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 export { CSSPropertySet, cssNameMap, psuedoKeys } from '@mcro/css'
+
+export type ThemeObject = {
+  base: {
+    background: Color
+    borderColor: Color
+    color: Color
+  }
+  hover: {
+    background: Color
+    borderColor: Color
+    color: Color
+  }
+  active: {
+    background: Color
+    borderColor: Color
+    color: Color
+  }
+  focus: {
+    background: Color
+    borderColor: Color
+    color: Color
+  }
+}
 
 const glossSimpleComponentFirstArg = a => {
   if (!a) {

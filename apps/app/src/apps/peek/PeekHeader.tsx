@@ -5,6 +5,7 @@ import { OrbitIcon } from '../../apps/orbit/OrbitIcon'
 import { WindowControls } from '../../views/WindowControls'
 import { App } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../constants'
+import { ControlButton } from '../../views/ControlButton'
 
 const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
@@ -22,7 +23,7 @@ const TitleBarTitle = props => (
     fontWeight={700}
     ellipse={1}
     margin={0}
-    padding={[4, 0]}
+    padding={[4, 60]}
     lineHeight="1.5rem"
     textAlign="center"
     {...props}
@@ -33,7 +34,6 @@ const TitleBarContain = view({
   flex: 1,
   height: 30,
   maxWidth: '100%',
-  padding: [0, 60],
 })
 
 TitleBarContain.theme = ({ theme }) => ({
@@ -101,7 +101,6 @@ export class PeekHeaderContent extends React.Component {
         onDragStart={peekStore.onDragStart}
         onDrag={peekStore.onDrag}
         onDragEnd={peekStore.onDragEnd}
-        ref={this.onHeader}
         theme={theme}
         {...props}
       >
@@ -127,12 +126,10 @@ export class PeekHeaderContent extends React.Component {
                 position="absolute"
                 top={0}
                 left={6}
+                right={0}
                 height={27}
                 zIndex={10000}
                 alignItems="center"
-                transform={{
-                  scale: 0.9,
-                }}
               >
                 <WindowControls
                   itemProps={{
@@ -151,6 +148,13 @@ export class PeekHeaderContent extends React.Component {
                   icon="arrowminleft"
                   circular
                   size={0.8}
+                />
+                <UI.View flex={1} />
+                <ControlButton
+                  if={!peekStore.tornState}
+                  icon="z"
+                  background="#62C554"
+                  onClick={peekStore.tearPeek}
                 />
               </UI.Row>
             </>

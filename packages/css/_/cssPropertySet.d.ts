@@ -15,14 +15,14 @@ export declare type appearance = 'auto' | 'none';
 export declare type azimuth = number | string | 'leftwards' | 'rightwards';
 export declare type backdropFilter = 'none' | string;
 export declare type backfaceVisibility = 'visible' | 'hidden';
-declare type backgroundSyntax = Array<number> | {
+declare type backgroundSyntax = {
     attachment?: attachment;
     color?: color;
     image?: bgImage;
     position?: string;
     repeat?: repeatStyle;
 };
-export declare type background = string | finalBgLayer | backgroundSyntax;
+export declare type background = string | number[] | finalBgLayer | backgroundSyntax;
 export declare type backgroundAttachment = attachment;
 export declare type backgroundBlendMode = blendMode;
 export declare type backgroundClip = box;

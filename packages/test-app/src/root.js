@@ -16,7 +16,9 @@ const Test = view({
 // extend and test
 const Test2 = view(Test, {
   background: 'red',
+  opacity: 0,
   big: {
+    opacity: 1,
     background: 'yellow',
     '&:hover': {
       background: 'green',
@@ -45,7 +47,7 @@ export const Root = () => {
       <br />
       <br />
 
-      <UI.FullScreen>
+      {/* <UI.FullScreen>
         <UI.Tree
           root="zero"
           elements={{
@@ -72,7 +74,7 @@ export const Root = () => {
             },
           }}
         />
-      </UI.FullScreen>
+      </UI.FullScreen> */}
     </div>
   )
 }

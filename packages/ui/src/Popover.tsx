@@ -71,6 +71,28 @@ export type PopoverProps = {
   theme?: Object
 }
 
+const PopoverContainer = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 101,
+  pointerEvents: 'none',
+  '& > *': {
+    pointerEvents: 'none !important',
+  },
+  isOpen: {
+    zIndex: Number.MAX_SAFE_INTEGER,
+    '& > *': {
+      pointerEvents: 'all !important',
+    },
+  },
+  isClosing: {
+    zIndex: Number.MAX_SAFE_INTEGER - 1,
+  },
+})
+
 const Overlay = view({
   position: 'absolute',
   top: 0,
@@ -82,14 +104,14 @@ const Overlay = view({
   opacity: 0,
   transition: 'all ease-in 100ms',
   zIndex: -2,
-  shown: {
+  isShown: {
     opacity: 1,
     pointerEvents: 'all',
   },
 })
 
 Overlay.theme = ({ overlay }) => ({
-  background: props.overlay === true ? 'rgba(0,0,0,0.2)' : props.overlay,
+  background: overlay === true ? 'rgba(0,0,0,0.2)' : overlay,
 })
 
 const PopoverWrap = view({
@@ -751,10 +773,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   isNodeHovered = node => {
-    const childSelector = `${node.tagName.toLowerCase()}.${node.className.replace(
-      /\s+/g,
-      '.',
-    )}:hover`
+    const childSelector = `${node.tagName.toLowerCase()}.${node.className
+      .trim()
+      .replace(/\s+/g, '.')}:hover`
     return (
       !!node.parentNode.querySelector(childSelector) ||
       node.querySelector(':hover')
@@ -846,22 +867,21 @@ export class Popover extends React.PureComponent<PopoverProps> {
       <>
         {React.isValidElement(target) && controlledTarget(target)}
         <Portal>
-          <div
-            $container
+          <PopoverContainer
             data-towards={direction}
-            $open={showPopover}
-            $closing={closing}
+            isOpen={showPopover}
+            isClosing={closing}
           >
             <Overlay
               if={overlay}
               ref={this.overlayRef}
-              shown={showPopover && !closing}
+              isShown={showPopover && !closing}
               onClick={e => this.handleOverlayClick(e)}
               overlay={overlay}
             />
             <PopoverWrap
               {...popoverProps}
-              isOpen={!closing && showPopover}
+              isOpen={!closing && !!showPopover}
               ref={this.setPopoverRef}
               distance={distance}
               forgiveness={forgiveness}
@@ -914,36 +934,15 @@ export class Popover extends React.PureComponent<PopoverProps> {
                   : children}
               </SizedSurface>
             </PopoverWrap>
-          </div>
+          </PopoverContainer>
         </Portal>
       </>
     )
   }
 
   static style = {
-    container: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 101,
-      pointerEvents: 'none',
-      '& > *': {
-        pointerEvents: 'none !important',
-      },
-    },
     content: {
       flex: 1,
-    },
-    open: {
-      zIndex: Number.MAX_SAFE_INTEGER,
-      '& > *': {
-        pointerEvents: 'all !important',
-      },
-    },
-    closing: {
-      zIndex: Number.MAX_SAFE_INTEGER - 1,
     },
     item: {
       minWidth: 120,

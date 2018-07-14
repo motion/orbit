@@ -280,9 +280,6 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       bounded(resisted(y), height * scale, this.state.bounds.height),
     )
     const extraScale = clicked ? clickScale : 1
-    console.time('color')
-    $(color).toString()
-    console.timeEnd('color')
     const glow = (
       <Overlay
         key="hoverglow"

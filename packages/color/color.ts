@@ -22,6 +22,21 @@ Object.keys(colorConvert).forEach(function(model) {
   ] = model
 })
 
+class GenericMap {
+  strong = {}
+
+  get(obj) {
+    return this.strong[JSON.stringify(obj)]
+  }
+
+  set(obj, val) {
+    this.strong[JSON.stringify(obj)] = val
+  }
+}
+
+const ColorCache = new GenericMap()
+const StringCache = new WeakMap()
+
 var limiters = {}
 
 class Color {
@@ -36,6 +51,11 @@ class Color {
   hwb: Function
 
   constructor(obj, model?) {
+    // console.log(obj, model)
+    const key = [obj, model]
+    if (ColorCache.get(key)) {
+      return ColorCache.get(key)
+    }
     if (model && model in skippedModels) {
       model = null
     }
@@ -108,21 +128,24 @@ class Color {
     if (Object.freeze) {
       Object.freeze(this)
     }
+
+    ColorCache.set(key, this)
   }
 
   toString() {
     return this.string()
   }
 
-  toJSON() {
-    return this[this.model]()
-  }
-
   string(places?) {
+    if (StringCache.get(this)) {
+      return StringCache.get(this)
+    }
     var self = this.model in colorString.to ? this : this.rgb()
     self = self.round(typeof places === 'number' ? places : 1)
     var args = self.valpha === 1 ? self.color : self.color.concat(this.valpha)
-    return colorString.to[self.model](args)
+    const val = colorString.to[self.model](args)
+    StringCache.set(this, val)
+    return val
   }
 
   percentString(places) {

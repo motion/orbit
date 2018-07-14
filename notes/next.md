@@ -1,5 +1,3 @@
-- color has performance regression, adding $(color).toString() to render function of a hoverglow for example glitches now
-
 - decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
 - p2p https://github.com/mafintosh/hyperdb
 - hire https://github.com/theKashey

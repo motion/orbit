@@ -1,17 +1,22 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
+// import * as UI from '@mcro/ui'
 import { OrbitCard } from '../../apps/orbit/OrbitCard'
 import { SettingInfoStore } from '../../stores/SettingInfoStore'
 import * as OauthActions from '../../actions/OauthActions'
 import { Setting } from '@mcro/models'
+import { OrbitCardProps } from './OrbitCardProps'
 
 @view.attach('appStore')
 @view.attach({
   store: SettingInfoStore,
 })
 @view
-export class OrbitSettingCard extends React.Component {
+export class OrbitSettingCard extends React.Component<
+  OrbitCardProps & {
+    store: SettingInfoStore
+  }
+> {
   handleClick = async () => {
     const { isActive, result } = this.props
     if (isActive) {
@@ -32,7 +37,8 @@ export class OrbitSettingCard extends React.Component {
     return
   }
 
-  render({ store, result, isActive, subtitle, ...props }) {
+  render() {
+    const { store, result, isActive, subtitle, ...props } = this.props
     const countSubtitle = !isActive
       ? ''
       : store.bitsCount === null
@@ -60,13 +66,13 @@ export class OrbitSettingCard extends React.Component {
         }
         result={result}
         onClick={this.handleClick}
-        afterTitle={
-          <after css={{ flexFlow: 'row', margin: [-5, 0] }}>
-            <React.Fragment if={false && isActive}>
-              <UI.Button>Remove</UI.Button>
-            </React.Fragment>
-          </after>
-        }
+        // afterTitle={
+        //   <UI.Row margin={[-5, 0]}>
+        //     <React.Fragment if={false && isActive}>
+        //       <UI.Button>Remove</UI.Button>
+        //     </React.Fragment>
+        //   </UI.Row>
+        // }
         {...props}
       />
     )

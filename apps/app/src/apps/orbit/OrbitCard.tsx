@@ -14,12 +14,17 @@ import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { OrbitStore } from './orbitStore'
 import { Bit } from '@mcro/models'
 
-type OrbitCardProps = {
+export type OrbitCardProps = {
   hoverToSelect?: boolean
   appStore?: AppStore
   paneStore?: OrbitDockedPaneStore
   orbitStore?: OrbitStore
-  index: number
+  title?: React.ReactNode
+  subtitle?: React.ReactNode
+  date?: React.ReactNode
+  icon?: React.ReactNode
+  result?: Object
+  index?: number
   store?: OrbitCardStore
   isExpanded?: boolean
   listItem?: boolean
@@ -38,6 +43,7 @@ type OrbitCardProps = {
   bit?: Bit
   itemProps?: Object
   children?: Function | React.ReactNode
+  onClick?: Function
 }
 
 const CardWrap = view({

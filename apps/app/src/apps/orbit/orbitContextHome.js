@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react, on, attachTheme } from '@mcro/black'
 import { Bit } from '@mcro/models'
-import { OrbitCard } from './orbitCard'
+import { OrbitCard } from './OrbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '../../views'

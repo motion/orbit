@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { OrbitCard } from '../apps/orbit/orbitCard'
+import { OrbitCard } from '../apps/orbit/OrbitCard'
 import { view } from '@mcro/black'
 
 const cardStyleDefault = {

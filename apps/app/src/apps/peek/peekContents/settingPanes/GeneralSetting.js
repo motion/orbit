@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { OrbitCard } from '../../../../apps/orbit/orbitCard'
+import { OrbitCard } from '../../../../apps/orbit/OrbitCard'
 // import * as UI from '@mcro/ui'
 import * as Views from '../../../../views'
 
@@ -22,22 +22,24 @@ export class GeneralSetting extends React.Component {
       return null
     }
     return children({
-      content: <>
-        <Views.SubTitle>Settings</Views.SubTitle>
-        <OrbitCard>
-          <Views.CheckBoxRow
-            checked={setting.values.autoLaunch}
-            onChange={store.handleChange('autoLaunch')}
-          >
-            Start on Login
-          </Views.CheckBoxRow>
-          <Views.InputRow
-            label="Open shortcut"
-            value={setting.values.openShortcut}
-            onChange={store.handleChange('openShortcut')}
-          />
-        </OrbitCard>
-      </>
+      content: (
+        <>
+          <Views.SubTitle>Settings</Views.SubTitle>
+          <OrbitCard>
+            <Views.CheckBoxRow
+              checked={setting.values.autoLaunch}
+              onChange={store.handleChange('autoLaunch')}
+            >
+              Start on Login
+            </Views.CheckBoxRow>
+            <Views.InputRow
+              label="Open shortcut"
+              value={setting.values.openShortcut}
+              onChange={store.handleChange('openShortcut')}
+            />
+          </OrbitCard>
+        </>
+      ),
     })
   }
 }

@@ -35,11 +35,7 @@ export declare type backgroundPositionY = string;
 export declare type backgroundRepeat = repeatStyle;
 export declare type backgroundSize = bgSize;
 export declare type blockSize = width;
-declare type borderSyntax = {
-    width?: borderWidth;
-    style?: brStyle;
-    color?: color;
-};
+declare type borderSyntax = Array<number | string>;
 export declare type border = borderWidth | brStyle | color | borderSyntax;
 export declare type borderBlockEnd = borderWidth | borderStyle | color;
 export declare type borderBlockEndColor = color;
@@ -444,6 +440,7 @@ export declare type svgLength = string | number;
 export declare type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb';
 export declare type CSSPropertyValue<Value> = Value;
 export declare type CSSPropertySet = {
+    [key: string]: any;
     alignContent?: CSSPropertyValue<alignContent>;
     alignItems?: CSSPropertyValue<alignItems>;
     alignSelf?: CSSPropertyValue<alignSelf>;

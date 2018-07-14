@@ -59,11 +59,7 @@ export type backgroundPositionY = string
 export type backgroundRepeat = repeatStyle
 export type backgroundSize = bgSize
 export type blockSize = width
-type borderSyntax = {
-  width?: borderWidth
-  style?: brStyle
-  color?: color
-}
+type borderSyntax = Array<number | string>
 export type border = borderWidth | brStyle | color | borderSyntax
 export type borderBlockEnd = borderWidth | borderStyle | color
 export type borderBlockEndColor = color
@@ -906,6 +902,8 @@ export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 export type CSSPropertyValue<Value> = Value
 
 export type CSSPropertySet = {
+  // because we have '& > .something'
+  [key: string]: any
   alignContent?: CSSPropertyValue<alignContent>
   alignItems?: CSSPropertyValue<alignItems>
   alignSelf?: CSSPropertyValue<alignSelf>

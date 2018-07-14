@@ -8,6 +8,151 @@ import { TimeAgo } from '../../views/TimeAgo'
 import * as BitActions from '../../actions/BitActions'
 import { App } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
+import { CSSPropertySet } from '@mcro/gloss'
+import { AppStore } from '../../stores/AppStore'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { OrbitStore } from './orbitStore'
+import { Bit } from '@mcro/models'
+
+type OrbitCardProps = {
+  hoverToSelect?: boolean
+  appStore: AppStore
+  paneStore: OrbitDockedPaneStore
+  orbitStore: OrbitStore
+  index: number
+  store: OrbitCardStore
+  isExpanded?: boolean
+  listItem?: boolean
+  style?: Object
+  selectedTheme?: Object
+  afterTitle?: React.ReactNode
+  theme?: Object
+  titleProps?: Object
+  inactive?: boolean
+  iconProps?: Object
+  hide?: { icon?: boolean }
+  className?: string
+  inGrid?: boolean
+  pane?: string
+  subPane?: string
+  bit?: Bit
+  itemProps?: Object
+  children?: Function | React.ReactNode
+}
+
+const CardWrap = view({
+  position: 'relative',
+  width: '100%',
+  transform: {
+    z: 0,
+  },
+})
+
+const Card = view({
+  overflow: 'hidden',
+  position: 'relative',
+  maxHeight: '100%',
+  padding: [16, 18],
+  transform: {
+    z: 0,
+  },
+})
+
+Card.theme = ({
+  style,
+  store,
+  listItem,
+  borderRadius,
+  inGrid,
+  hoverable,
+  theme,
+}) => {
+  const { isSelected } = store
+  let hoveredStyle
+  let card: CSSPropertySet = {
+    flex: inGrid ? 1 : 'none',
+    height: (style && style.height) || 'auto',
+  }
+  if (listItem) {
+    // LIST ITEM
+    hoveredStyle = {
+      background: theme.selected.background,
+    }
+    let listStateStyle
+    if (isSelected) {
+      listStateStyle = {
+        background: theme.selected.background,
+        '&:hover': hoveredStyle,
+      }
+    } else {
+      listStateStyle = {
+        background: 'transparent',
+        '&:hover': {
+          background: theme.hover.background,
+        },
+        '&:active': {
+          background: theme.active.background,
+        },
+      }
+    }
+    card = {
+      ...card,
+      ...listStateStyle,
+      margin: [0, -14],
+      padding: [16, 20],
+      borderTop: [1, theme.hover.background],
+    }
+  } else {
+    // CARD
+    const borderHover = UI.color('#ddd')
+    const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
+    card = {
+      ...card,
+      borderRadius,
+      background: theme.selected.background,
+      boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
+      border: [1, '#fff'],
+      '&:hover': {
+        border: [1, borderHover],
+      },
+      '&:active': {
+        border: [1, borderActive],
+      },
+    }
+    if (isSelected) {
+      card = {
+        ...card,
+        border: [1, borderHover],
+      }
+    }
+  }
+  if (hoverable) {
+    card.opacity = 0.7
+    card.transition = card.transition || 'opacity ease-in 300ms'
+    card['&:hover'] = {
+      ...card['&:hover'],
+      opacity: 1,
+    }
+  }
+  return card
+}
+
+const Title = view({
+  maxWidth: '100%',
+  flexFlow: 'row',
+  justifyContent: 'space-between',
+})
+
+const Preview = view({
+  flex: 1,
+})
+
+const Subtitle = view({
+  margin: [-1, 0, 0],
+  opacity: 0.4,
+  flexFlow: 'row',
+  alignItems: 'center',
+})
 
 let loggers = []
 let nextLog = null
@@ -31,7 +176,9 @@ const orbitIconProps = {
       rotate: '-45deg',
     },
   },
-  orbitIconStyle: { marginRight: 6 },
+  orbitIconStyle: {
+    marginRight: 6,
+  },
 }
 
 class OrbitCardStore {
@@ -109,33 +256,22 @@ class OrbitCardStore {
   )
 }
 
-const tinyProps = {
-  titleProps: {
-    size: 1,
-  },
-  iconProps: {
-    size: 14,
-    style: {
-      marginTop: 1,
-      marginLeft: 15,
-    },
-  },
-}
-
 @attachTheme
 @view.attach('appStore', 'paneStore', 'orbitStore')
 @view.attach({
   store: OrbitCardStore,
 })
 @view
-export class OrbitCard extends React.Component {
+export class OrbitCard extends React.Component<OrbitCardProps> {
+  hoverSettler = null
+
   static defaultProps = {
     borderRadius: 7,
     hide: {},
   }
 
-  constructor(...args) {
-    super(...args)
+  constructor(a, b) {
+    super(a, b)
     this.getOrbitCard = this.getOrbitCard.bind(this)
     const { appStore, hoverToSelect } = this.props
     if (hoverToSelect) {
@@ -153,7 +289,7 @@ export class OrbitCard extends React.Component {
       return isExpanded
     }
     return (
-      (this.props.store.isSelected && !this.props.tiny) ||
+      this.props.store.isSelected ||
       (this.props.listItem && this.props.store.isSelected)
     )
   }
@@ -190,32 +326,34 @@ export class OrbitCard extends React.Component {
     } = contentProps
     const {
       store,
-      tiny,
       listItem,
-      style,
       hoverToSelect,
+      children,
+      orbitStore,
+      style,
       selectedTheme,
       afterTitle,
-      children,
       theme,
       titleProps,
-      orbitStore,
       inactive,
       iconProps,
       hide,
       className,
+      inGrid,
     } = this.props
-    const hasSubtitle = !tiny && (subtitle || location)
+    const hasSubtitle = subtitle || location
     const orbitIcon = (
       <OrbitIcon
         if={icon && !hide.icon}
         icon={icon}
         size={hasSubtitle ? 14 : 18}
-        $orbitIcon
         {...orbitIconProps}
-        {...tiny && tinyProps.iconProps}
         {...contentIconProps}
         {...iconProps}
+        position="absolute"
+        top={0}
+        right={0}
+        opacity={0.8}
       />
     )
     const { isSelected } = store
@@ -223,7 +361,7 @@ export class OrbitCard extends React.Component {
     const background =
       (childTheme && childTheme.background) || theme.base.background
     return (
-      <cardWrap
+      <CardWrap
         ref={store.setRef}
         onClick={store.handleClick}
         {...hoverToSelect && !inactive && this.hoverSettler.props}
@@ -233,9 +371,9 @@ export class OrbitCard extends React.Component {
         }}
         className={className}
       >
-        <card onClick={this.handleClick}>
+        <Card onClick={this.handleClick} {...this.props}>
           {orbitIcon}
-          <title>
+          <Title>
             <UI.Text
               size={listItem ? 1.15 : 1.25}
               sizeLineHeight={0.85}
@@ -243,14 +381,13 @@ export class OrbitCard extends React.Component {
               alpha={isSelected ? 1 : 0.8}
               fontWeight={500}
               maxWidth="calc(100% - 30px)"
-              {...tiny && tinyProps.titleProps}
               {...titleProps}
             >
               {title}
             </UI.Text>
             {afterTitle}
-          </title>
-          <subtitle if={hasSubtitle}>
+          </Title>
+          <Subtitle if={hasSubtitle}>
             <UI.Text
               display="inline-flex"
               alignItems="center"
@@ -270,15 +407,15 @@ export class OrbitCard extends React.Component {
             <UI.Text if={date} onClick={permalink} size={0.95}>
               <strong> &middot;</strong> <TimeAgo date={date} />
             </UI.Text>
-          </subtitle>
-          <preview if={preview && !children}>
+          </Subtitle>
+          <Preview if={preview && !children}>
             {typeof preview !== 'string' && preview}
             <UI.Text
               if={typeof preview === 'string'}
               alpha={isSelected ? 0.85 : 0.6}
               size={listItem ? 1.1 : 1.3}
               sizeLineHeight={0.9}
-              $previewText
+              margin={inGrid ? ['auto', 0] : 0}
             >
               {preview
                 .slice(0, 220)
@@ -289,14 +426,14 @@ export class OrbitCard extends React.Component {
                   </React.Fragment>
                 ))}
             </UI.Text>
-          </preview>
+          </Preview>
           {typeof children === 'function'
             ? children(contentProps, { background })
             : children}
-          <bottom if={people && people.length && people[0].data.profile}>
+          <div if={people && people.length && people[0].data.profile}>
             <PeopleRow people={people} />
-          </bottom>
-        </card>
+          </div>
+        </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         <UI.HoverGlow
           if={!listItem}
@@ -311,11 +448,20 @@ export class OrbitCard extends React.Component {
           opacity={isSelected ? 0.08 : 0.04}
           borderRadius={20}
         />
-      </cardWrap>
+      </CardWrap>
     )
   }
 
-  render({ pane, appStore, bit, store, itemProps, inGrid, ...props }) {
+  render() {
+    const {
+      appStore,
+      store,
+      pane,
+      bit,
+      itemProps,
+      inGrid,
+      ...props
+    } = this.props
     debounceLog(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
     if (!bit) {
       return this.getOrbitCard(props)
@@ -331,143 +477,5 @@ export class OrbitCard extends React.Component {
         {this.getOrbitCard}
       </BitResolver>
     )
-  }
-
-  static style = {
-    cardWrap: {
-      position: 'relative',
-      width: '100%',
-      transform: {
-        z: 0,
-      },
-    },
-    card: {
-      overflow: 'hidden',
-      position: 'relative',
-      maxHeight: '100%',
-      padding: [16, 18],
-      transform: {
-        z: 0,
-      },
-    },
-    title: {
-      maxWidth: '100%',
-      flexFlow: 'row',
-      justifyContent: 'space-between',
-    },
-    preview: {
-      flex: 1,
-    },
-    permalink: {
-      margin: [-2, -2, 0, 8],
-    },
-    orbitIcon: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      // filter: 'grayscale(100%)',
-      opacity: 0.8,
-    },
-    subtitle: {
-      margin: [-1, 0, 0],
-      opacity: 0.4,
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-    location: {
-      flexFlow: 'row',
-      opacity: 0.5,
-    },
-    space: {
-      width: 6,
-    },
-  }
-
-  static theme = ({
-    style,
-    store,
-    listItem,
-    borderRadius,
-    inGrid,
-    hoverable,
-    theme,
-  }) => {
-    const { isSelected } = store
-    let hoveredStyle
-    let card = {
-      flex: inGrid ? 1 : 'none',
-      height: (style && style.height) || 'auto',
-    }
-    if (listItem) {
-      // LIST ITEM
-      hoveredStyle = {
-        background: theme.selected.background,
-      }
-      let listStateStyle
-      if (isSelected) {
-        listStateStyle = {
-          background: theme.selected.background,
-          '&:hover': hoveredStyle,
-        }
-      } else {
-        listStateStyle = {
-          background: 'transparent',
-          '&:hover': {
-            background: theme.hover.background,
-          },
-          '&:active': {
-            background: theme.active.background,
-          },
-        }
-      }
-      card = {
-        ...card,
-        ...listStateStyle,
-        margin: [0, -14],
-        padding: [16, 20],
-        borderTop: [1, theme.hover.background],
-      }
-    } else {
-      // CARD
-      const borderHover = UI.color('#ddd')
-      const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
-      card = {
-        ...card,
-        borderRadius,
-        background: theme.selected.background,
-        boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
-        border: [1, '#fff'],
-        '&:hover': {
-          border: [1, borderHover],
-        },
-        '&:active': {
-          border: [1, borderActive],
-        },
-      }
-      if (isSelected) {
-        card = {
-          ...card,
-          border: [1, borderHover],
-        }
-      }
-    }
-    if (hoverable) {
-      card.opacity = 0.7
-      card.transition = card.transition || 'opacity ease-in 300ms'
-      card['&:hover'] = {
-        ...card['&:hover'],
-        opacity: 1,
-      }
-    }
-    return {
-      card,
-      preview: {
-        margin: inGrid ? ['auto', 0] : 0,
-        padding: [8, 0],
-      },
-      previewText: {
-        margin: inGrid ? ['auto', 0] : 0,
-      },
-    }
   }
 }

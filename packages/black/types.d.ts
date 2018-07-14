@@ -17,15 +17,19 @@ export interface ViewDecorator {
   <A>(a: A): A
 }
 
-export interface PotentiallyView {
+export interface PotentiallyView<T> {
   new (a: Object): any
   defaultProps?: Object
+  // TODO: make props flow
+  theme?: (a: any) => CSSPropertySet
+  displayName?: string
+  style: T
 }
 
 export function view<T>(
   a: T | CSSPropertySet,
   b?: CSSPropertySet,
-): T & { theme?: CSSPropertySet; displayName?: string } & PotentiallyView
+): PotentiallyView<T>
 export namespace view {
   export function on(
     name: string | Object,

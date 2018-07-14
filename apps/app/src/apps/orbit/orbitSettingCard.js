@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitCard } from '../../apps/orbit/orbitCard'
+import { OrbitCard } from '../../apps/orbit/OrbitCard'
 import { SettingInfoStore } from '../../stores/SettingInfoStore'
 import * as OauthActions from '../../actions/OauthActions'
 import { Setting } from '@mcro/models'

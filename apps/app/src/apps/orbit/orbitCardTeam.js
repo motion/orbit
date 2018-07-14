@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitCard } from './orbitCard'
+import { OrbitCard } from './OrbitCard'
 import { OrbitIcon } from './OrbitIcon'
 
 const diameter = 100
@@ -22,7 +22,14 @@ const imageStyle = {
 export class OrbitCardTeam extends React.Component {
   render({ store, bit, isExpanded, ...props }) {
     const connections = (
-      <div css={{ flexFlow: 'row', padding: 5, filter: 'grayscale(100%)', opacity: 0.5 }}>
+      <div
+        css={{
+          flexFlow: 'row',
+          padding: 5,
+          filter: 'grayscale(100%)',
+          opacity: 0.5,
+        }}
+      >
         <UI.PassProps
           size={16}
           css={
@@ -80,7 +87,14 @@ class OrbitCardTeamContent extends React.Component {
               },
             }}
           >
-            <info css={{ flex: 1, alignItems: 'center', justifyContent: 'center', zIndex: 11 }}>
+            <info
+              css={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 11,
+              }}
+            >
               <UI.Text size={2} css={{ marginBottom: -4 }}>
                 {people}
               </UI.Text>
@@ -134,7 +148,9 @@ class OrbitCardTeamContent extends React.Component {
             >
               <strong>Topics</strong>&nbsp;&nbsp;{topics}
             </UI.Text>
-            <section css={{ flexFlow: 'row', flex: 1, margin: [-extraHeight, 0] }}>
+            <section
+              css={{ flexFlow: 'row', flex: 1, margin: [-extraHeight, 0] }}
+            >
               {recently.map((item, index) => (
                 <item
                   key={index}

@@ -1,11 +1,12 @@
+import * as React from 'react'
 import { ResolveConversation } from './resolve/ResolveConversation'
 import { ResolveDocument } from './resolve/ResolveDocument'
 import { ResolveMail } from './resolve/ResolveMail'
 import { ResolveTask } from './resolve/ResolveTask'
 import { ResolveApp } from './resolve/ResolveApp'
 import { ResolvePerson } from './resolve/ResolvePerson'
-import { Person } from '@mcro/models'
-import * as React from 'react'
+import { Person, Bit } from '@mcro/models'
+import { AppStore } from '../stores/AppStore'
 
 const results = {
   slack: {
@@ -40,7 +41,13 @@ const EmptyResolver = ({ children }) =>
     icon: '',
   })
 
-export function BitResolver({ bit, ...props }) {
+type Props = {
+  bit?: Bit
+  appStore: AppStore
+  isExpanded?: boolean
+}
+
+export const BitResolver: React.SFC<Props> = ({ bit, ...props }) => {
   let Resolver
   if (!bit) {
     return EmptyResolver

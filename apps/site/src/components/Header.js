@@ -5,6 +5,7 @@ import SectionContent from '~/views/sectionContent'
 import { BrandLogo } from '~/components'
 import * as Constants from '~/constants'
 import Media from 'react-media'
+import * as UI from '@mcro/ui'
 
 @attachTheme
 @view
@@ -19,10 +20,7 @@ export class Header extends React.Component {
               <SectionContent>
                 <headerInner>
                   <BrandLogo />
-                  <div $$flex />
-                  {/* <join css={{ margin: [-25, 0] }}>
-                    <Join />
-                  </join> */}
+                  <UI.View flex={1} />
                   <nav>
                     <Link
                       isLarge={isLarge}

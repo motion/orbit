@@ -4,19 +4,28 @@ import { PeekPage } from './PeekPage'
 import { OrbitPage } from './OrbitPage'
 import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
-import { Bit } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
 import * as UI from '@mcro/ui'
+import { settingToResult } from './orbit/orbitSettings/orbitSettingsIntegrations'
 
 const getItem = {
   githubItem: () => Bit.findOne({ where: { integration: 'github' }, skip: 6 }),
-  gdocsSetting: async () => ({ type: 'setting', integration: 'gdocs' }),
+  gdocsSetting: async () => ({
+    id: 1,
+    title: 'GDocs',
+    type: 'setting',
+    integration: 'gdocs',
+  }),
+  githubSetting: async () =>
+    Setting.findOne({ where: { type: 'github' } }).then(settingToResult),
 }
 
 @view
 export class IsolatePeek extends React.Component {
   render() {
-    getItem.githubItem().then(bit => {
-      App.actions.selectItem(bit, {
+    getItem.githubSetting().then(item => {
+      console.log('got', item)
+      App.actions.selectItem(item, {
         top: window.innerHeight,
         left: window.innerHeight - 350,
         width: 0,

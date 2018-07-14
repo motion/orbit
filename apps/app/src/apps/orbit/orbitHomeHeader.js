@@ -34,7 +34,7 @@ export class OrbitHomeHeader extends React.Component {
         <section $explore>
           <UI.Button
             icon="home"
-            tooltip="Home"
+            // tooltip="Home"
             $exploreButton
             active={paneStore.activePane === 'home'}
             onClick={() => paneStore.setActivePane('home')}
@@ -42,7 +42,7 @@ export class OrbitHomeHeader extends React.Component {
           />
           <UI.Button
             icon="menu35"
-            tooltip="Directory"
+            // tooltip="Directory"
             $exploreButton
             active={paneStore.activePane === 'directory'}
             onClick={() => paneStore.setActivePane('directory')}
@@ -50,14 +50,14 @@ export class OrbitHomeHeader extends React.Component {
           />
           <UI.Button
             icon="gear"
-            tooltip="Settings"
+            // tooltip="Settings"
             $exploreButton
             sizeIcon={1.2}
             active={paneStore.activePane === 'settings'}
             onClick={() => paneStore.setActivePane('settings')}
             {...exploreButton}
           />
-          {/* <space $$flex />
+          {/*
           <filters>
             {paneStore.filters.map((name, index) => (
               <RoundButton

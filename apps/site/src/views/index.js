@@ -8,6 +8,14 @@ import Router from '~/router'
 
 export * from './section'
 
+const fullscreen = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+}
+
 const TITLE_FONT_FAMILY = '"Eesti Pro"'
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
@@ -239,8 +247,8 @@ export const FadedArea = attachTheme(
       {children}
       <fadeRight
         if={fadeRight}
-        $$fullscreen
         css={{
+          ...fullscreen,
           left: 'auto',
           width: 100,
           zIndex: 100,
@@ -250,8 +258,8 @@ export const FadedArea = attachTheme(
       />
       <fadeLeft
         if={fadeLeft}
-        $$fullscreen
         css={{
+          ...fullscreen,
           right: 'auto',
           width: 100,
           zIndex: 100,
@@ -261,8 +269,8 @@ export const FadedArea = attachTheme(
       />
       <fadeDown
         if={fadeDown}
-        $$fullscreen
         css={{
+          ...fullscreen,
           top: 'auto',
           height: 100,
           zIndex: 100,
@@ -270,7 +278,7 @@ export const FadedArea = attachTheme(
             theme.base.background})`,
         }}
       />
-      <circleWrap $$fullscreen css={{ zIndex: 1000, overflow: 'hidden' }}>
+      <circleWrap css={{ ...fullscreen, zIndex: 1000, overflow: 'hidden' }}>
         <div
           $circle
           css={{
@@ -410,8 +418,8 @@ export const Glow = ({ below, style = {}, ...props }) => (
     query={Constants.screen.large}
     render={() => (
       <glow
-        $$fullscreen
         css={{
+          ...fullscreen,
           zIndex: below ? -1 : 0,
           background: '#fff',
           ...style,
@@ -526,8 +534,8 @@ export const LinkSimple = ({ to, ...props }) => (
 export const TopoBg = () => (
   <topoBg
     if={false}
-    $$fullscreen
     css={{
+      ...fullscreen,
       zIndex: 0,
       opacity: 0.17,
       background: `url(${require('../../public/topo2.svg')})`,

@@ -3,7 +3,6 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Header, Footer } from '../components'
 import SectionContent from '../views/sectionContent'
-import Router from '../router'
 import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo } from '../views'
 import * as Constants from '../constants'
 import Media from 'react-media'
@@ -310,27 +309,6 @@ class HomeHeader extends React.Component {
                       <Pitch scrollTo={scrollTo} />
                     </inner>
                     <div $$flex />
-                    <orbit
-                      if={false}
-                      css={{
-                        zIndex: -1,
-                        position: 'absolute',
-                        bottom: -2014 / 2 / 8,
-                        margin: [0, 'auto'],
-                        transformOrigin: 'bottom center',
-                        transform: { scale: 0.5 },
-                      }}
-                    >
-                      {/* small */}
-                      <UI.TiltHoverGlow
-                        restingPosition={[100, 100]}
-                        glowProps={{
-                          opacity: 0.5,
-                        }}
-                      >
-                        <HomeImg src={homeImg} />
-                      </UI.TiltHoverGlow>
-                    </orbit>
                   </>
                 )}
               />
@@ -864,6 +842,10 @@ class Orbit extends React.Component {
     return <OrbitPure {...orbitProps} />
   }
 }
+
+setTimeout(() => {
+  console.log('Orbit', Orbit)
+})
 
 const lockedPosition = (node, pct = 0.6) => {
   const { y } = node.getBoundingClientRect()

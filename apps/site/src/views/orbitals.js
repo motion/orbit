@@ -70,7 +70,7 @@ export default ({
           zIndex: 100,
         }}
       >
-        <contain if={rings > 0} $$fullscreen>
+        <contain if={rings > 0}>
           <circle
             css={{
               margin: 'auto',
@@ -82,7 +82,7 @@ export default ({
             }}
           />
         </contain>
-        <contain if={rings > 1} $$fullscreen>
+        <contain if={rings > 1}>
           <circle
             css={{
               margin: 'auto',
@@ -94,7 +94,7 @@ export default ({
             }}
           />
         </contain>
-        <contain if={rings > 2} $$fullscreen>
+        <contain if={rings > 2}>
           <circle
             css={{
               margin: 'auto',
@@ -105,7 +105,7 @@ export default ({
             }}
           />
         </contain>
-        <contain if={rings > 3} $$fullscreen>
+        <contain if={rings > 3}>
           <circle
             css={{
               margin: 'auto',
@@ -124,7 +124,7 @@ export default ({
           }
           const scale = Math.min(1, (col + 1.5) / rings)
           return (
-            <contain $$fullscreen key={i}>
+            <contain key={i}>
               <planet
                 css={{
                   borderRadius: 100,

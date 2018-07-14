@@ -100,7 +100,7 @@ export class SpaceFabric extends React.Component {
     let angle = 0
     function run() {
       for (let i = 0; i < controlPoints.length; i++) {
-        const off = origControlPoints[i][0] * origControlPoints[i][1] / 200
+        const off = (origControlPoints[i][0] * origControlPoints[i][1]) / 200
         controlPoints[i] = [
           origControlPoints[i][0] + radius * Math.cos(angle + off),
           origControlPoints[i][1] + radius * Math.sin(angle + off),
@@ -116,7 +116,7 @@ export class SpaceFabric extends React.Component {
 
   render() {
     return (
-      <spaceFabric $$fullscreen>
+      <spaceFabric>
         <svg css={{ position: 'absolute' }} width="365" height="140">
           <path
             id="control-path"

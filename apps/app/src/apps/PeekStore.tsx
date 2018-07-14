@@ -19,7 +19,12 @@ const INTEGRATION_THEMES = {
 }
 
 const PERSON_THEME = {
-  background: 'rgba(0,0,0,0.01)',
+  background: 'rgba(0,0,0,0.013)',
+  color: '#444',
+}
+
+const BASE_THEME = {
+  background: '#fff',
   color: '#444',
 }
 
@@ -36,11 +41,14 @@ export class PeekStore {
     if (TYPE_THEMES[item]) {
       return TYPE_THEMES[item]
     }
+    if (this.model instanceof Person) {
+      return PERSON_THEME
+    }
     const intTheme =
       this.model instanceof Bit
         ? INTEGRATION_THEMES[this.model.integration || this.model.type]
-        : PERSON_THEME
-    return intTheme || null
+        : null
+    return intTheme || BASE_THEME
   }
 
   get hasHistory() {

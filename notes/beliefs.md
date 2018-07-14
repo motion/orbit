@@ -46,3 +46,9 @@ Talked to James (Juul):
   - Slack integrations have no security
   - Slack integrations can't really query internal database/apis
   - Slack integrations can't have any custom interface
+
+# Jul 13th
+
+Talked to Raymond (startup person)
+
+- https://retool.in/

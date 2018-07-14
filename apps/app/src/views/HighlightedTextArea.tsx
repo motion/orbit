@@ -37,12 +37,20 @@ class HighlightedTextAreaInner extends React.Component<Props> {
     closeMark: '</mark>',
   }
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.value !== state.value) {
+      return {
+        value: props.value,
+      }
+    }
+  }
+
   state = {
-    input: this.props.value,
+    value: this.props.value,
   }
 
   handleInputChange = event => {
-    this.setState({ input: event.target.value })
+    this.setState({ value: event.target.value })
     if (this.props.onChange) {
       this.props.onChange(event)
     }
@@ -83,7 +91,7 @@ class HighlightedTextAreaInner extends React.Component<Props> {
   }
 
   getHighlights() {
-    let highlightMarks = this.state.input
+    let highlightMarks = this.state.value
     const payload = this.props.highlight(highlightMarks)
     // escape HTML
     highlightMarks = highlightMarks
@@ -114,6 +122,7 @@ class HighlightedTextAreaInner extends React.Component<Props> {
 
   render() {
     const { onChange, highlight, value, forwardRef, ...props } = this.props
+    console.log('now value is', this.state.value)
     return (
       <TextAreaOuter debug>
         <Block
@@ -128,7 +137,7 @@ class HighlightedTextAreaInner extends React.Component<Props> {
           {...props}
           onChange={this.handleInputChange}
           onScroll={this.handleScroll}
-          value={this.state.input}
+          value={this.state.value}
           ref={forwardRef}
         />
       </TextAreaOuter>

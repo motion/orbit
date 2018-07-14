@@ -157,6 +157,7 @@ export declare const cssNameMap: {
     gridTemplateColumns: string;
     gridAutoRows: string;
 };
+export { CSSPropertySet } from './cssTypes';
 export { Transform, Color } from './types';
 export * from './helpers';
 declare type Opts = {
@@ -180,4 +181,5 @@ export declare const psuedoKeys: {
     '&:placeholder': boolean;
     '&:selection': boolean;
 };
+export declare const validCSSAttr: (key: any) => any;
 export default function motionStyle(options?: Object): (styles: Object, opts?: Opts) => Object;

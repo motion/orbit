@@ -7,6 +7,15 @@ import * as Helpers from '~/helpers'
 const parseBody = body =>
   !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
 
+const Message = view({
+  padding: [22, 35],
+  borderBottom: [1, 'dotted', '#eee'],
+})
+
+const Para = view({
+  marginBottom: '0.35rem',
+})
+
 @view
 export class Mail extends React.Component {
   render({ bit, children }) {
@@ -22,7 +31,7 @@ export class Mail extends React.Component {
         <messages if={messages}>
           {messages.map((message, index) => {
             return (
-              <message key={`${index}${message.id}`}>
+              <Message key={`${index}${message.id}`}>
                 <row
                   css={{
                     flexFlow: 'row',
@@ -45,7 +54,11 @@ export class Mail extends React.Component {
                       marginLeft: -6,
                     }}
                   />
-                  <rest if={message.payload} $$row $$centered>
+                  <UI.Row
+                    if={message.payload}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
                     <strong if={Helpers.getHeader(message, 'From')}>
                       {Helpers.getHeader(message, 'From').split(' ')[0]}
                     </strong>&nbsp;
@@ -60,30 +73,20 @@ export class Mail extends React.Component {
                     >
                       {Helpers.getHeader(message, 'Date')}
                     </UI.Date>
-                  </rest>
+                  </UI.Row>
                 </row>
                 <UI.Text if={message.snippet} size={1.1}>
                   {_.flatten(
                     (parseBody(message.payload.body.data) || message.snippet)
                       .split('\n')
-                      .map((i, idx) => <para key={idx}>{i}</para>),
+                      .map((i, idx) => <Para key={idx}>{i}</Para>),
                   )}
                 </UI.Text>
-              </message>
+              </Message>
             )
           })}
         </messages>
       ),
     })
-  }
-
-  static style = {
-    message: {
-      padding: [22, 35],
-      borderBottom: [1, 'dotted', '#eee'],
-    },
-    para: {
-      marginBottom: '0.35rem',
-    },
   }
 }

@@ -1,3 +1,5 @@
+- move sonar table stuff into ui since it already works there, just needs move
+
 - filters
   - one bar for integrations - can easily toggle many on/off
   - one bar for type: people, attachment, document, task

@@ -1,8 +1,6 @@
 import Gloss from '@mcro/gloss'
-import baseStyles from './baseStyles'
 
 const gloss = new Gloss({
-  baseStyles,
   glossProp: 'css',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,

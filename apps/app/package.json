@@ -23,7 +23,6 @@
     "@mcro/router": "^2.2.0",
     "@mcro/services": "^2.2.0",
     "@mcro/slackdown": "^2.2.0",
-    "@mcro/sonar": "^2.2.0",
     "@mcro/stores": "^2.2.0",
     "@mcro/ui": "^2.2.0",
     "@mcro/marky-markdown": "*",

@@ -1,16 +1,15 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { OrbitCard } from './orbitCard'
+import { OrbitCard } from './OrbitCard'
 import { OrbitDockedPane } from './orbitDockedPane'
 // import { OrbitQuickSearch } from './OrbitQuickSearch'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import { stateOnlyWhenActive } from './stateOnlyWhenActive'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
-import { trace } from 'mobx'
 
-const OrbitSearchResultsInner = view(({ appStore, searchStore }) => {
+const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
   const { query, results, message } = searchStore.state
   const isChanging = searchStore.currentQuery !== query
   const highlightWords = searchStore.state.query
@@ -89,7 +88,6 @@ class SearchStore {
 @view
 export class OrbitSearchResults extends React.Component {
   render() {
-    trace()
     const { appStore, searchStore, name } = this.props
     if (!searchStore.state.results) {
       return null
@@ -104,6 +102,7 @@ export class OrbitSearchResults extends React.Component {
         <OrbitSearchResultsInner
           appStore={appStore}
           searchStore={searchStore}
+          name={name}
         />
       </OrbitDockedPane>
     )

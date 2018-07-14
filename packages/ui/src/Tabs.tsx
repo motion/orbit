@@ -6,13 +6,13 @@
  */
 
 import { view } from '@mcro/black'
-import { Col } from './blocks/Col'
+import { View } from './blocks/View'
 import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'
 
-const TabContainer = view(Col, {
+const TabContainer = view(View, {
   height: 'auto',
 })
 
@@ -36,10 +36,10 @@ const TabListItem = view(Row, {
 TabListItem.theme = ({ theme, active }) => ({
   color: active ? theme.active.color : theme.base.color,
   // this is reversed because technically active tabs should match the bgcolor
-  backgroundColor: active ? theme.base.background : theme.active.background,
+  background: active ? theme.base.background : theme.active.background,
   '&:hover': {
     color: active ? theme.active.color : theme.hover.color,
-    backgroundColor: active
+    background: active
       ? theme.base.background
       : theme.active.background.lighten(0.01),
   },
@@ -65,7 +65,7 @@ const CloseButton = view({
   lineHeight: '16px',
   borderRadius: '50%',
   '&:hover': {
-    backgroundColor: colors.cherry,
+    background: colors.cherry,
     color: '#fff',
   },
 })
@@ -250,7 +250,7 @@ export function Tabs(props: {
     )
   }
   return (
-    <TabContainer fill={true}>
+    <TabContainer>
       <TabList>
         {before}
         {tabList}

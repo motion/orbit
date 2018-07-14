@@ -1,33 +1,43 @@
 import * as React from 'react'
 import fancyElement from './fancyElement'
-import css from '@mcro/css'
+import css, { validCSSAttr } from '@mcro/css'
 import JSS from './stylesheet'
 import { attachTheme } from './theme/attachTheme'
 
 import * as Helpers_ from '@mcro/css'
 export const Helpers = Helpers_
 export const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
+export const GLOSS_IGNORE_COMPONENT_SYMBOL = '__GLOSS_IGNORE_COMPONENT__'
 
 export { Theme } from './theme/Theme'
 export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
-export { cssNameMap, psuedoKeys } from '@mcro/css'
+export { CSSPropertySet, cssNameMap, psuedoKeys } from '@mcro/css'
 
-export const isGlossyFirstArg = arg => {
-  if (!arg) {
+const glossSimpleComponentFirstArg = a => {
+  if (!a) {
     return false
   }
-  if (typeof arg === 'string' || typeof arg === 'object') {
+  if (typeof a === 'string' || typeof a === 'object') {
     return true
   }
   return false
 }
 
+export const glossSimpleComponentArgs = (a, b) => {
+  if (b && b[GLOSS_IGNORE_COMPONENT_SYMBOL]) {
+    return false
+  }
+  if (typeof a === 'function' && typeof b === 'object') {
+    return true
+  }
+  return glossSimpleComponentFirstArg(a)
+}
+
 export type Options = {
   dontTheme?: boolean
   glossProp?: string
-  baseStyles?: Object
   tagName?: string
   toColor?: Function
   isColor?: Function
@@ -53,7 +63,6 @@ export default class Gloss {
   css: any
   helpers: any
   options: Options
-  baseStyles?: Object
   createElement: Function
   Helpers: Object = Helpers
   // for debug
@@ -64,16 +73,15 @@ export default class Gloss {
     this.css = css(opts)
     this.helpers = this.css.helpers
     this.stylesheet = JSS.createStyleSheet()
-    this.stylesheet.attach()
     this.themeSheet = JSS.createStyleSheet()
-    this.themeSheet.attach()
-    if (opts.baseStyles) {
-      this.baseStyles = true
-      this.attachStyles(null, opts.baseStyles)
-    }
     this.createElement = fancyElement(this, this.stylesheet, this.themeSheet)
     // @ts-ignore
     this.decorator.createElement = this.createElement
+  }
+
+  attach = () => {
+    this.stylesheet.attach()
+    this.themeSheet.attach()
   }
 
   decorator = (maybeNameOrComponent: any, shortStyles?: Object) => {
@@ -90,7 +98,7 @@ export default class Gloss {
       return this.createSimpleGlossComponent('div', maybeNameOrComponent)
     }
     // view('div', {}) or view(OtherView, {})
-    if (isGlossyFirstArg(maybeNameOrComponent)) {
+    if (glossSimpleComponentArgs(maybeNameOrComponent, shortStyles)) {
       return this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
     }
     // @view class MyView {}
@@ -190,15 +198,32 @@ export default class Gloss {
     }
   }
 
-  private getAllStyles = View => {
-    const styles = {}
+  private getAllStyles = (View, tagName) => {
+    const styles = {
+      [tagName]: {},
+    }
     let curView = View
     while (curView) {
       if (curView.style) {
         for (const key of Object.keys(curView.style)) {
-          // dont overwrite as we go down
-          if (typeof styles[key] === 'undefined') {
-            styles[key] = curView.style[key]
+          // valid attribute, treat as normal
+          if (validCSSAttr(key)) {
+            // dont overwrite as we go down
+            if (typeof styles[tagName][key] === 'undefined') {
+              styles[tagName][key] = curView.style[key]
+            }
+          } else {
+            // were defining a boolean prop style
+            //   looks like: <Component tall />
+            //   via: view({ color: 'red', tall: { height: '100%' } })
+            const prop = key
+            const styleObj = curView.style[prop]
+            if (typeof styleObj === 'object') {
+              // dont overwrite as we go down
+              if (typeof styles[prop] === 'undefined') {
+                styles[prop] = styleObj
+              }
+            }
           }
         }
       }
@@ -210,12 +235,13 @@ export default class Gloss {
   private createSimpleGlossComponent = (target, styles) => {
     const elementCache = new WeakMap()
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-    const id = uid()
+    const id = `_${uid()}`
     let name = target.name || target
     let themeUpdate
     let hasAttachedStyles = false
-    let targetElement = isParentComponent ? target.displayName : target
+    let targetElement = target
     if (isParentComponent) {
+      targetElement = target.displayName
       name = targetElement
     }
     const InnerView = <GlossView>attachTheme(allProps => {
@@ -223,12 +249,17 @@ export default class Gloss {
       if (elementCache.has(allProps)) {
         return elementCache.get(allProps)
       }
-      const { forwardRef, ...props } = allProps
+      // allow View.defaultProps
+      // @ts-ignore
+      const { forwardRef, ...props } = {
+        ...View.defaultProps,
+        ...allProps,
+      }
       // attach theme/styles on first use
       if (!hasAttachedStyles) {
         try {
-          View.compiledStyles = this.getAllStyles(View)
-          this.attachStyles(`${id}`, { [name]: View.compiledStyles })
+          View.compiledStyles = this.getAllStyles(View, name)
+          this.attachStyles(`${id}`, View.compiledStyles)
         } catch (err) {
           console.log('error attaching styles', target, name, styles)
           console.log('err', err)
@@ -257,7 +288,7 @@ export default class Gloss {
       React.createElement(InnerView, { ...props, forwardRef: ref }),
     )
     // TODO: babel transform to auto attach name?
-    View.displayName = name
+    View.displayName = View.displayName || name
     View.style = styles
     if (isParentComponent) {
       View.child = target
@@ -273,7 +304,7 @@ export default class Gloss {
     const selectors = {}
     return (props, self) => {
       if (!props.theme) {
-        console.log('no theme', props, getTheme)
+        console.log('no theme', props)
         return
       }
       const rules = {}

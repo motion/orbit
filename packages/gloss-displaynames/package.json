@@ -1,0 +1,13 @@
+{
+  "name": "@mcro/babel-plugin-gloss-displayname",
+  "version": "2.1.0",
+  "main": "_/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "npm run build -- --watch --preserveWatchOutput"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "babel-plugin-macros": "^2.1.0"
+  }
+}

@@ -3,7 +3,7 @@ import { view, react, attachTheme } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Bit, Person } from '@mcro/models'
 import { SubTitle } from '../../views'
-import { OrbitCard } from './orbitCard'
+import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { OrbitDockedPane } from './orbitDockedPane'
 
@@ -153,7 +153,7 @@ export class OrbitHome extends React.Component {
               {postfix[dayNum - 1]}
             </span>
           </SubTitle>
-          <div $$flex />
+          <div css={{ flex: 1 }} />
         </header>
         <content>
           <Masonry if={total}>

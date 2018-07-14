@@ -50,14 +50,22 @@ export * from './Circle'
 export * from './Surface'
 export * from './SizedSurface'
 export * from './Date'
-export * from './fake/fakeText'
+export * from './Tree'
+export * from './DynamicList'
+export * from './FixedList'
+export * from './Toolbar'
+
+// table
+export * from './table/TableInput'
+export * from './table/SearchableTable'
+export * from './table/Table'
+export * from './table/TableBody'
+export * from './table/TableHead'
 
 // effects
-export * from './effects/hoverGlow'
-export * from './effects/grain'
-export * from './effects/poof'
+export * from './effects/HoverGlow'
 export * from './effects/tilt'
-export * from './effects/tiltHoverGlow'
+export * from './effects/TiltHoverGlow'
 export * from './effects/glint'
 
 // form

@@ -15,6 +15,10 @@ export class OrbitStore {
     }, 32),
   )
 
+  clearQuery = () => {
+    this.query = ''
+  }
+
   lastPinKey = ''
 
   willMount() {

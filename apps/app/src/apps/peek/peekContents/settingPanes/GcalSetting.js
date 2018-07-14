@@ -10,8 +10,8 @@ import * as Collapse from '../../../../views/Collapse'
 class Calendar {
   render({ cal, isActive }) {
     return (
-      <container $$row>
-        <left $$row>
+      <UI.Row marginTop={8} justifyContent="space-between">
+        <UI.Row>
           <UI.Field
             row
             size={1.2}
@@ -29,7 +29,7 @@ class Calendar {
             }}
           />
           <repo>
-            <name $$row css={{ alignItems: 'center' }}>
+            <UI.Row css={{ alignItems: 'center' }}>
               <block
                 css={{ marginRight: 10, background: cal.backgroundColor }}
               />
@@ -41,42 +41,34 @@ class Calendar {
               >
                 {cal.summary}
               </UI.Text>
-            </name>
-            <info $$row>
-              <left $$row if={false}>
+            </UI.Row>
+            <UI.Row>
+              <UI.Row if={false}>
                 <UI.Text size={0.9}>last commit</UI.Text>
                 <UI.Date size={0.9} $updatedAt>
                   {repo.pushedAt}
                 </UI.Date>
-              </left>
-              <private
-                css={{ marginLeft: 10, alignItems: 'center' }}
-                if={false}
-                $$row
-              >
+              </UI.Row>
+              <UI.Row css={{ marginLeft: 10, alignItems: 'center' }} if={false}>
                 <UI.Icon name="lock" size={12} />
                 <UI.Text size={0.9} css={{ marginLeft: 5 }} fontWeight={500}>
                   private
                 </UI.Text>
-              </private>
-            </info>
+              </UI.Row>
+            </UI.Row>
           </repo>
-        </left>
+        </UI.Row>
 
         <syncers>
-          <content $$row if={false}>
+          <content if={false}>
             <UI.Text>{repo.openIssuesCount} open issues</UI.Text>
           </content>
         </syncers>
-      </container>
+      </UI.Row>
     )
   }
 
   static style = {
-    container: {
-      marginTop: 8,
-      justifyContent: 'space-between',
-    },
     block: {
       height: 20,
       width: 20,
@@ -116,12 +108,12 @@ class Calendars {
 
     return (
       <calendars>
-        <title $$row onClick={() => (store.open = !store.open)}>
+        <UI.Row onClick={() => (store.open = !store.open)}>
           <Collapse.Arrow open={store.open} />
           <UI.Text size={1.2} fontWeight={600}>
             {title} ({items.length})
           </UI.Text>
-        </title>
+        </UI.Row>
         <Collapse.Body open={store.open}>
           <content>
             {items.map(cal => (
@@ -170,36 +162,38 @@ export class GcalSetting extends React.Component {
     const active = { background: 'rgba(0,0,0,0.15)' }
 
     return children({
-      content: <content>
-        <UI.ListRow css={{ margin: [10, 0] }}>
-          <UI.Button
-            onClick={() => (store.active = 'calendars')}
-            color={[0, 0, 0, 0.8]}
-            {...(store.active === 'calendars' ? active : {})}
-          >
-            Active Calendars
-          </UI.Button>
-          <UI.Button
-            {...(store.active === 'events' ? active : {})}
-            onClick={() => (store.active = 'events')}
-            color={[0, 0, 0, 0.8]}
-          >
-            Events ({(store.events || []).length})
-          </UI.Button>
-        </UI.ListRow>
-        <UI.Form $noSelect if={calendars && store.active === 'calendars'}>
-          <Calendars
-            title="Yours"
-            openDefault
-            items={calendars.filter(cal => cal.accessRole === 'owner')}
-          />
-          <Calendars
-            title="Others"
-            items={calendars.filter(cal => cal.accessRole !== 'owner')}
-          />
-        </UI.Form>
-        <Things if={store.active === 'events'} things={store.events || []} />
-      </content>
+      content: (
+        <content>
+          <UI.ListRow css={{ margin: [10, 0] }}>
+            <UI.Button
+              onClick={() => (store.active = 'calendars')}
+              color={[0, 0, 0, 0.8]}
+              {...(store.active === 'calendars' ? active : {})}
+            >
+              Active Calendars
+            </UI.Button>
+            <UI.Button
+              {...(store.active === 'events' ? active : {})}
+              onClick={() => (store.active = 'events')}
+              color={[0, 0, 0, 0.8]}
+            >
+              Events ({(store.events || []).length})
+            </UI.Button>
+          </UI.ListRow>
+          <UI.Form $noSelect if={calendars && store.active === 'calendars'}>
+            <Calendars
+              title="Yours"
+              openDefault
+              items={calendars.filter(cal => cal.accessRole === 'owner')}
+            />
+            <Calendars
+              title="Others"
+              items={calendars.filter(cal => cal.accessRole !== 'owner')}
+            />
+          </UI.Form>
+          <Things if={store.active === 'events'} things={store.events || []} />
+        </content>
+      ),
     })
   }
 

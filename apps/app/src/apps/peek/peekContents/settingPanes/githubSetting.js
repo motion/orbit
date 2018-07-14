@@ -3,10 +3,11 @@ import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { Bits } from '../../../../views/Bits'
-import { SearchableTable } from '@mcro/sonar'
 import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+
+console.log('UI', UI)
 
 const columnSizes = {
   repo: 'flex',
@@ -45,7 +46,7 @@ const columns = {
 
 class GithubSettingStore {
   get setting() {
-    return this.props.integrationSettingsStore.settings.github
+    return this.props.setting
   }
 
   get service() {
@@ -144,15 +145,27 @@ class GithubSettingStore {
     this.userOrgs = [...this.userOrgs, this.newOrg]
     this.newOrg = ''
   }
+
+  setActiveKey = key => (this.active = key)
 }
+
+const InvisiblePane = view(UI.FullScreen, {
+  opacity: 0,
+  pointerEvents: 'none',
+  visible: {
+    opacity: 1,
+    pointerEvents: 'auto',
+  },
+})
 
 @view.provide({ githubStore: GithubSettingStore })
 @view
 export class GithubSetting extends React.Component {
-  render({ githubStore: store, children }) {
+  render() {
+    const { githubStore: store, children } = this.props
     return children({
       subhead: (
-        <UI.Tabs active={store.active} onActive={key => (store.active = key)}>
+        <UI.Tabs active={store.active} onActive={store.setActiveKey}>
           <UI.Tab key="repos" width="50%" label="Repos" />
           <UI.Tab
             key="issues"
@@ -162,54 +175,29 @@ export class GithubSetting extends React.Component {
         </UI.Tabs>
       ),
       content: (
-        <container>
-          <section if={store.active === 'repos'}>
-            <section>
-              <SearchableTable
-                rowLineHeight={28}
-                floating={false}
-                multiline
-                columnSizes={columnSizes}
-                columns={columns}
-                onRowHighlighted={this.onRowHighlighted}
-                multiHighlight
-                rows={store.rows}
-                bodyPlaceholder={
-                  <div css={{ margin: 'auto' }}>
-                    <UI.Text size={1.2}>Loading...</UI.Text>
-                  </div>
-                }
-              />
-            </section>
-            <add if={false}>
-              <UI.Input
-                width={200}
-                size={1}
-                autoFocus
-                placeholder="Add Organization"
-                value={store.newOrg}
-                onKeyDown={e => {
-                  if (e.keyCode === 13) store.addOrg()
-                  if (e.keyCode === 27) store.newOrg = ''
-                }}
-                onChange={e => (store.newOrg = e.target.value)}
-              />
-            </add>
-          </section>
-          <section if={store.active === 'issues'}>
+        <>
+          <InvisiblePane visible={store.active === 'repos'}>
+            <UI.SearchableTable
+              virtual
+              rowLineHeight={28}
+              floating={false}
+              columnSizes={columnSizes}
+              columns={columns}
+              onRowHighlighted={this.onRowHighlighted}
+              multiHighlight
+              rows={store.rows}
+              bodyPlaceholder={
+                <div css={{ margin: 'auto' }}>
+                  <UI.Text size={1.2}>Loading...</UI.Text>
+                </div>
+              }
+            />
+          </InvisiblePane>
+          <InvisiblePane visible={store.active === 'issues'}>
             <Bits bits={store.section} />
-          </section>
-        </container>
+          </InvisiblePane>
+        </>
       ),
     })
-  }
-
-  static style = {
-    container: {
-      flex: 1,
-    },
-    section: {
-      flex: 1,
-    },
   }
 }

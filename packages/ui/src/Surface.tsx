@@ -3,7 +3,7 @@ import { Theme } from './helpers/theme'
 import { view, attachTheme } from '@mcro/black'
 import $ from 'color'
 import { Icon } from './Icon'
-import { HoverGlow } from './effects/hoverGlow'
+import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/glint'
 import { Popover } from './Popover'
 import { object } from 'prop-types'
@@ -33,7 +33,8 @@ export type SurfaceProps = {
   borderTopRadius?: number
   borderWidth?: number | string
   boxShadow?: Array<any> | string
-  children?: Element | string
+  children?: React.ReactNode
+  name?: string
   chromeless?: boolean
   circular?: boolean
   className?: string
@@ -109,6 +110,7 @@ export type SurfaceProps = {
   backgroundAlpha?: number
   activeStyle?: Object
   sizeLineHeight?: boolean | number
+  type?: string
 }
 
 const ICON_SCALE = 12
@@ -605,10 +607,14 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       background: 'transparent',
     }
     const focusable = props.focusable || (uiContext && uiContext.inForm)
-    const focusStyle = !props.chromeless && {
-      ...theme.focus,
-      boxShadow: [...boxShadow, [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)]],
-    }
+    const focusStyle = !props.chromeless &&
+      theme.focus && {
+        ...theme.focus,
+        boxShadow: [
+          ...boxShadow,
+          [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)],
+        ],
+      }
     const iconSize =
       props.iconSize ||
       Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100

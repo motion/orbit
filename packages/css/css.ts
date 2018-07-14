@@ -11,6 +11,7 @@ import { CAMEL_TO_SNAKE } from './cssNameMap'
 export const cssNameMap = CAMEL_TO_SNAKE
 
 // exports
+export { CSSPropertySet } from './cssTypes'
 export { Transform, Color } from './types'
 export * from './helpers'
 
@@ -73,6 +74,16 @@ export const psuedoKeys = {
   '&:placeholder': true,
   '&:selection': true,
 }
+
+const cssAttributeNames =
+  typeof document !== 'undefined' ? document.body.style : {}
+
+// captures everything including nested & > * or media queries
+export const validCSSAttr = key =>
+  typeof cssAttributeNames[key] === 'string' ||
+  psuedoKeys[key] ||
+  key[0] === '&' ||
+  key[0] === '@'
 
 // helpers
 const px = (x: number | string) =>

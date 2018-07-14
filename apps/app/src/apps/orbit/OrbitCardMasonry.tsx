@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { Masonry } from '../../views/Masonry'
-import { OrbitCard } from './orbitCard'
+import { OrbitCard } from './OrbitCard'
 import * as UI from '@mcro/ui'
 
 export const OrbitCardMasonry = view.attach('appStore')(

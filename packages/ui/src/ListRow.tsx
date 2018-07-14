@@ -122,7 +122,7 @@ export class ListRow extends React.Component<ListRowProps> {
         const { text, id, icon, ...segmentProps } =
           typeof seg === 'object' ? seg : { text: seg, id: seg }
         if (segmentProps.flex) {
-          return <div $$flex={segmentProps.flex} />
+          return <div style={{ flex: segmentProps.flex }} />
         }
         return (
           <UIContext.Provider

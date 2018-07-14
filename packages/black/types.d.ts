@@ -1,4 +1,5 @@
 import { DecorCompiledDecorator } from '@mcro/decor'
+import { CSSPropertySet } from '@mcro/gloss'
 
 export { react } from '@mcro/automagical'
 export { on } from '@mcro/helpers'
@@ -16,14 +17,19 @@ export interface ViewDecorator {
   <A>(a: A): A
 }
 
-export interface PotentiallyView {
+export interface PotentiallyView<T> {
   new (a: Object): any
+  defaultProps?: Object
+  // TODO: make props flow
+  theme?: (a: any) => CSSPropertySet
+  displayName?: string
+  style: T
 }
 
 export function view<T>(
-  a: T,
-  b?: any,
-): T & { theme?: Object; displayName?: string } & PotentiallyView
+  a: T | CSSPropertySet,
+  b?: CSSPropertySet,
+): PotentiallyView<T>
 export namespace view {
   export function on(
     name: string | Object,

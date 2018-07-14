@@ -3,6 +3,7 @@ import keywordExtract from 'keyword-extractor'
 import markdown from '@mcro/marky-markdown'
 import { TimeAgo } from '../../views/TimeAgo'
 import { RoundButton } from '../../views/RoundButton'
+import * as UI from '@mcro/ui'
 
 // const converter = new Showdown.Converter()
 // const markdown = text => converter.makeHtml(text)
@@ -22,14 +23,14 @@ const BitGithubTaskComment = ({ comment }) => {
   } = comment
   return (
     <div>
-      <user $$row>
+      <UI.Row>
         <img
           css={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
           src={avatarUrl}
         />
         {login}
         <TimeAgo if={createdAt}>{createdAt}</TimeAgo>
-      </user>
+      </UI.Row>
       <body
         dangerouslySetInnerHTML={{
           __html: markdown(body),

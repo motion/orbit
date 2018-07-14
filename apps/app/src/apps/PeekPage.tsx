@@ -79,12 +79,10 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
 @view.provide({
   peekStore: PeekStore,
 })
-export class PeekPage extends React.Component {
-  props: {
-    appStore: AppStore
-    peekStore: PeekStore
-  }
-
+export class PeekPage extends React.Component<{
+  appStore?: AppStore
+  peekStore?: PeekStore
+}> {
   render() {
     const { appStore, peekStore } = this.props
     return (

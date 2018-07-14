@@ -3,6 +3,18 @@ import * as React from 'react'
 import { Popover } from './Popover'
 import { iconNames } from './iconNames'
 import fuzzy from 'fuzzy'
+import { Color } from '@mcro/css'
+import { View } from './blocks/View'
+
+export type IconProps = {
+  size: number
+  color: Color
+  type?: 'mini' | 'outline'
+  opacity?: number
+  tooltip?: string
+  tooltipProps?: Object
+  name: string
+}
 
 const widthPadding = x => {
   if (typeof x === 'number') {
@@ -34,56 +46,24 @@ const findMatch = name => {
   return match
 }
 
-// export type Props = {
-//   size: number,
-//   color: Array | string,
-//   type: 'mini' | 'outline',
-//   button?: Boolean,
-//   opacity?: number,
-// }
-
-const IconInner = view({
+const IconInner = view(View, {
   userSelect: 'none',
   alignItems: 'center',
   justifyContent: 'center',
 })
 
-IconInner.displayName = 'hi'
-
-IconInner.theme = ({
-  margin,
-  padding,
-  opacity,
-  alignSelf,
-  color,
-  width: propWidth,
-  height: propHeight,
-  size,
-  hover,
-  background,
-  theme,
-}) => {
+IconInner.theme = ({ padding, width: propWidth, height: propHeight, size }) => {
   const width = (propWidth || size) + widthPadding(padding)
   const height = (propHeight || size) + heightPadding(padding)
   return {
-    margin,
-    padding,
-    opacity,
-    alignSelf,
-    background,
-    color: color || (theme && theme.color) || '#000',
     width,
     height,
-    fontSize: width,
+    fontSize: size,
     lineHeight: `${size / 12}rem`, // scale where 1 when 14
-    '&:hover': {
-      color: (hover && hover.color) || theme.color || color,
-      ...hover,
-    },
   }
 }
 
-export class Icon extends React.PureComponent {
+export class Icon extends React.PureComponent<IconProps> {
   static defaultProps = {
     size: 16,
     type: 'mini',
@@ -93,7 +73,15 @@ export class Icon extends React.PureComponent {
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
   render() {
-    const { tooltip, tooltipProps, name, type, children, ...props } = this.props
+    const {
+      tooltip,
+      tooltipProps,
+      name,
+      type,
+      children,
+      color,
+      ...props
+    } = this.props
     let content
     if (name[0] === '/') {
       return <img src={name} {...props} />
@@ -105,7 +93,7 @@ export class Icon extends React.PureComponent {
     const iconName = findMatch(name)
     content = content || children
     return (
-      <IconInner {...props}>
+      <IconInner color={color} {...props}>
         <div
           className={`icon nc-icon-${type} ${iconName}`}
           style={{

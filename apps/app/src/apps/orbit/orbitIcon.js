@@ -64,16 +64,14 @@ export const OrbitIcon = ({
   const extImg = icon.indexOf('http') === 0 ? icon : null
   const iconImg = icons[icon] ? icons[icon] : extImg
   return (
-    <div
+    <UI.View
       className={`icon ${className}`}
-      css={{
-        display: 'inline-block',
-        textAlign: 'center',
-        justifyContent: 'center',
-        ...adjust[icon],
-        ...sizeProps,
-        ...(iconImg && orbitIconStyle),
-      }}
+      display="inline-block"
+      textAlign="center"
+      justifyContent="center"
+      {...adjust[icon]}
+      {...sizeProps}
+      {...iconImg && orbitIconStyle}
       {...props}
     >
       {iconImg && (
@@ -93,6 +91,6 @@ export const OrbitIcon = ({
         size={size * (preventAdjust ? 1 : 0.65)}
         color={color}
       />
-    </div>
+    </UI.View>
   )
 }

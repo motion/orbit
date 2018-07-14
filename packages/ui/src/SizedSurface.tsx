@@ -5,7 +5,6 @@ import { forwardRef } from './helpers/forwardRef'
 const LINE_HEIGHT = 30
 
 type SizedSurfaceProps = SurfaceProps & {
-  size: boolean | number
   sizeHeight?: boolean | number
   sizeFont?: boolean | number
   sizePadding?: boolean | number
@@ -17,7 +16,7 @@ type SizedSurfaceProps = SurfaceProps & {
   wrapElement?: boolean
 }
 
-export const SizedSurface = forwardRef((props: SizedSurfaceProps) => {
+const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
   const {
     sizeHeight,
     sizeMargin,
@@ -71,3 +70,5 @@ export const SizedSurface = forwardRef((props: SizedSurfaceProps) => {
   const iconPad = 8 * num(sizeHeight)
   return <Surface {...pass} iconPad={iconPad} {...rest} />
 })
+
+export const SizedSurface = SizedSurfaceInner as React.SFC<SizedSurfaceProps>

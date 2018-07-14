@@ -428,7 +428,7 @@ export class OrbitCard extends React.Component {
       }
     } else {
       // CARD
-      const borderHover = UI.color('rgb(64.8%, 74%, 88.6%)')
+      const borderHover = UI.color('#ddd')
       const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
       card = {
         ...card,

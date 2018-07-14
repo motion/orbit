@@ -36,10 +36,10 @@ const TabListItem = view(Row, {
 TabListItem.theme = ({ theme, active }) => ({
   color: active ? theme.active.color : theme.base.color,
   // this is reversed because technically active tabs should match the bgcolor
-  backgroundColor: active ? theme.base.background : theme.active.background,
+  background: active ? theme.base.background : theme.active.background,
   '&:hover': {
     color: active ? theme.active.color : theme.hover.color,
-    backgroundColor: active
+    background: active
       ? theme.base.background
       : theme.active.background.lighten(0.01),
   },
@@ -65,7 +65,7 @@ const CloseButton = view({
   lineHeight: '16px',
   borderRadius: '50%',
   '&:hover': {
-    backgroundColor: colors.cherry,
+    background: colors.cherry,
     color: '#fff',
   },
 })

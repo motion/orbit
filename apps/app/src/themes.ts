@@ -26,7 +26,7 @@ const Themes = {
       color: '#444',
     },
     hover: {
-      background: [0, 0, 0, 0.05],
+      background: [0, 0, 0, 0.085],
       color: '#444',
     },
     active: {

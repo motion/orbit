@@ -151,8 +151,10 @@ class GithubSettingStore {
 
 const InvisiblePane = view(UI.FullScreen, {
   opacity: 0,
+  pointerEvents: 'none',
   visible: {
     opacity: 1,
+    pointerEvents: 'auto',
   },
 })
 

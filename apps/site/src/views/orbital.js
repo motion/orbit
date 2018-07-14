@@ -30,8 +30,13 @@ export default ({
       {...props}
     >
       <contain
-        css={{ width: size, height: size, position: 'relative' }}
-        $$centered
+        css={{
+          width: size,
+          height: size,
+          position: 'relative',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
         <circle
           css={{

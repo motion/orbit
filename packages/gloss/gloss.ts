@@ -38,7 +38,6 @@ export const glossSimpleComponentArgs = (a, b) => {
 export type Options = {
   dontTheme?: boolean
   glossProp?: string
-  baseStyles?: Object
   tagName?: string
   toColor?: Function
   isColor?: Function
@@ -64,7 +63,6 @@ export default class Gloss {
   css: any
   helpers: any
   options: Options
-  baseStyles?: Object
   createElement: Function
   Helpers: Object = Helpers
   // for debug
@@ -76,10 +74,6 @@ export default class Gloss {
     this.helpers = this.css.helpers
     this.stylesheet = JSS.createStyleSheet()
     this.themeSheet = JSS.createStyleSheet()
-    if (opts.baseStyles) {
-      this.baseStyles = true
-      this.attachStyles(null, opts.baseStyles)
-    }
     this.createElement = fancyElement(this, this.stylesheet, this.themeSheet)
     // @ts-ignore
     this.decorator.createElement = this.createElement

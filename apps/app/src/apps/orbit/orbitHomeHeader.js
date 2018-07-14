@@ -57,7 +57,7 @@ export class OrbitHomeHeader extends React.Component {
             onClick={() => paneStore.setActivePane('settings')}
             {...exploreButton}
           />
-          {/* <space $$flex />
+          {/*
           <filters>
             {paneStore.filters.map((name, index) => (
               <RoundButton

@@ -49,8 +49,8 @@ export class HomeFooter extends React.Component {
           <Slant {...secondSlant} {...bottomSlants} />
           <Slant inverseSlant {...thirdSlant} {...bottomSlants} />
           <LeftSide css={{ textAlign: 'left' }}>
-            <inner $$fullscreen={isLarge}>
-              <div $$flex />
+            <inner>
+              <UI.View flex={1} />
               <content css={isLarge && { marginRight: 80 }}>
                 <Title size={2.3} color="#333" css={{ marginBottom: 25 }}>
                   A new way to coordinate.
@@ -93,10 +93,13 @@ export class HomeFooter extends React.Component {
                   </P2>
                 </UI.PassProps>
               </content>
-              <div $$flex />
+              <UI.View flex={1} />
             </inner>
           </LeftSide>
-          <RightSide noEdge $$centered>
+          <RightSide
+            noEdge
+            css={{ alignItems: 'center', justifyContent: 'center' }}
+          >
             <card if={!isLarge}>
               {card1}
               {card2}

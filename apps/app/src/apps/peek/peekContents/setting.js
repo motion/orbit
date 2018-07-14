@@ -68,7 +68,7 @@ export class SettingContent extends React.Component {
             content,
             subtitle: (
               <UI.Row>
-                <jobStatus $$row if={store.job}>
+                <UI.Row if={store.job}>
                   {store.bitsCount} total{' '}
                   <UI.Text if={store.job.updatedAt}>
                     &nbsp;&middot; Last run:{' '}
@@ -79,7 +79,7 @@ export class SettingContent extends React.Component {
                     />{' '}
                     <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
                   </UI.Text>
-                </jobStatus>
+                </UI.Row>
                 <load if={!store.job}>Loading...</load>
               </UI.Row>
             ),

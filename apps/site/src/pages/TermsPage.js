@@ -82,7 +82,7 @@ These Terms will be governed by and construed in accordance with the laws of the
 export class TermsPage extends React.Component {
   render() {
     return (
-      <page $$flex $$background={Constants.blueTheme.background}>
+      <UI.View flex={1} background={Constants.blueTheme.background}>
         <UI.Theme theme={Constants.blueTheme}>
           <Header />
           <Section>
@@ -92,7 +92,7 @@ export class TermsPage extends React.Component {
           </Section>
           <Footer noMission />
         </UI.Theme>
-      </page>
+      </UI.View>
     )
   }
 }

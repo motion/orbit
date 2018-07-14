@@ -83,7 +83,7 @@ class FeaturesIntro extends React.Component {
             }}
           />
           <HalfSection>
-            <div $$flex />
+            <UI.View flex={1} />
             <SmallTitle>Features</SmallTitle>
             <Glow style={{ transform: { y: '180%', x: '55%' } }} />
             <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
@@ -667,7 +667,7 @@ export class SectionSmartSidebar extends React.Component {
 export class FeaturesPage extends React.Component {
   render() {
     return (
-      <features $$flex $$background={background}>
+      <UI.View flex={1} background={background}>
         <UI.Theme theme={theme}>
           <TopoBg />
           <Header />
@@ -680,7 +680,7 @@ export class FeaturesPage extends React.Component {
           </surround>
           <Footer />
         </UI.Theme>
-      </features>
+      </UI.View>
     )
   }
 }

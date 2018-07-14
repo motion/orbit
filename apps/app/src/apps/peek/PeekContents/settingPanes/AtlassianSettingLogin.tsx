@@ -180,14 +180,14 @@ export class AtlassianSettingLogin extends React.Component {
             </Views.Table>
             <Views.VertSpace />
             <UI.ListRow>
-              <div $$flex>
+              <UI.View flex={1}>
                 <Views.Link
                   if={store.existingSetting}
                   onClick={store.importExisting}
                 >
                   Import from {capitalize(store.existingSetting.type)}.
                 </Views.Link>
-              </div>
+              </UI.View>
               <UI.Theme theme={buttonThemes[store.status] || '#4C36C4'}>
                 <UI.Button
                   if={!store.status || store.status === Statuses.FAIL}

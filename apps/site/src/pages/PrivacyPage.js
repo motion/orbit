@@ -43,7 +43,7 @@ We use "cookies" on this site. A cookie is a piece of data stored on a site visi
 export class PrivacyPage extends React.Component {
   render() {
     return (
-      <page $$flex $$background={Constants.blueTheme.background}>
+      <UI.View flex={1} background={Constants.blueTheme.background}>
         <UI.Theme theme={Constants.blueTheme}>
           <Header />
           <Section>
@@ -53,7 +53,7 @@ export class PrivacyPage extends React.Component {
           </Section>
           <Footer noMission />
         </UI.Theme>
-      </page>
+      </UI.View>
     )
   }
 }

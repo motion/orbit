@@ -113,10 +113,17 @@ export class OrbitContextHome {
       <OrbitDockedPane name="context">
         <OrbitContextHeader />
         <resultsFrame ref={this.setResultsFrame}>
-          <fadeTop $fade $$untouchable $fadeVisible={isScrolled} />
+          <fadeTop
+            $fade
+            style={{ pointerEvents: 'none' }}
+            $fadeVisible={isScrolled}
+          />
           <resultsScroller>
             <results if={store.results.length} ref={this.setResults}>
-              <firstResultSpace $$untouchable css={{ height: 6 }} />
+              <firstResultSpace
+                style={{ pointerEvents: 'none' }}
+                css={{ height: 6 }}
+              />
               {store.results.map((bit, i) => (
                 <OrbitCard
                   key={`${i}${bit.id}`}
@@ -131,10 +138,14 @@ export class OrbitContextHome {
                   expanded
                 />
               ))}
-              <lastResultSpace $$untouchable css={{ height: 12 }} />
+              <lastResultSpace style={{ pointerEvents: 'none', height: 12 }} />
             </results>
           </resultsScroller>
-          <fadeBottom $fade $$untouchable $fadeVisible={isOverflowing} />
+          <fadeBottom
+            $fade
+            style={{ pointerEvents: 'none' }}
+            $fadeVisible={isOverflowing}
+          />
         </resultsFrame>
       </OrbitDockedPane>
     )

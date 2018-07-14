@@ -64,7 +64,6 @@ export * from './table/TableHead'
 
 // effects
 export * from './effects/hoverGlow'
-export * from './effects/grain'
 export * from './effects/poof'
 export * from './effects/tilt'
 export * from './effects/tiltHoverGlow'

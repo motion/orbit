@@ -45,7 +45,11 @@ export class Mail extends React.Component {
                       marginLeft: -6,
                     }}
                   />
-                  <rest if={message.payload} $$row $$centered>
+                  <UI.Row
+                    if={message.payload}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
                     <strong if={Helpers.getHeader(message, 'From')}>
                       {Helpers.getHeader(message, 'From').split(' ')[0]}
                     </strong>&nbsp;
@@ -60,7 +64,7 @@ export class Mail extends React.Component {
                     >
                       {Helpers.getHeader(message, 'Date')}
                     </UI.Date>
-                  </rest>
+                  </UI.Row>
                 </row>
                 <UI.Text if={message.snippet} size={1.1}>
                   {_.flatten(

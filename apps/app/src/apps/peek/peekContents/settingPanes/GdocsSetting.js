@@ -35,14 +35,14 @@ class Folder extends React.Component {
     const moreFiles = childFiles.length - showFiles.length
     return (
       <folder>
-        <bar onClick={() => this.setState({ open: !open })} $$row>
+        <UI.Row onClick={() => this.setState({ open: !open })}>
           <UI.Text fontWeight={500} css={{ userSelect: 'none' }}>
             {name}
           </UI.Text>
           <UI.Text css={{ userSelect: 'none', marginLeft: 10 }} opacity={0.5}>
             <b>{childFolders.length + childFiles.length}</b> items
           </UI.Text>
-        </bar>
+        </UI.Row>
         <content open={isBase ? true : open}>
           <content>
             <folders>
@@ -62,7 +62,7 @@ class Folder extends React.Component {
             </noItems>
             <items>
               {showFiles.map(item => (
-                <container $$row>
+                <UI.Row alignItems="center">
                   <UI.Button
                     $item
                     chromeless
@@ -77,17 +77,17 @@ class Folder extends React.Component {
                     edited {formatDistance(item.data.modifiedTime, Date.now())}{' '}
                     ago
                   </UI.Text>
-                </container>
+                </UI.Row>
               ))}
             </items>
-            <more if={moreFiles > 0} $$row>
+            <UI.Row if={moreFiles > 0}>
               <UI.Button
-                $more
+                marginTop={5}
                 onClick={() => this.setState({ showAllFiles: true })}
               >
                 {moreFiles} files edited more than 1 year ago
               </UI.Button>
-            </more>
+            </UI.Row>
           </content>
         </content>
       </folder>
@@ -104,12 +104,6 @@ class Folder extends React.Component {
     },
     content: {
       margin: [5, 10],
-    },
-    container: {
-      alignItems: 'center',
-    },
-    more: {
-      marginTop: 5,
     },
   }
 }
@@ -136,10 +130,12 @@ export class GdocsSetting extends React.Component {
   render({ store, children }) {
     const loading = !store.folders
     return children({
-      content: <container>
-        <loading if={loading}>loading</loading>
-        <Folder if={!loading} folders={store.folders} files={store.files} />
-      </container>
+      content: (
+        <container>
+          <loading if={loading}>loading</loading>
+          <Folder if={!loading} folders={store.folders} files={store.files} />
+        </container>
+      ),
     })
   }
 

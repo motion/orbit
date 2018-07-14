@@ -31,8 +31,7 @@ export const Slant = ({
     <Media
       query={Constants.screen.large}
       render={() => (
-        <slantClip
-          $$fullscreen
+        <UI.FullScreen
           css={{
             overflow: 'hidden',
             pointerEvents: 'none',
@@ -87,7 +86,7 @@ export const Slant = ({
               }}
             />
           </slant>
-        </slantClip>
+        </UI.FullScreen>
       )}
     />
   )

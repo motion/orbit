@@ -69,7 +69,7 @@ const cssOpts = { snakeCase: false }
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
-  const { baseStyles, options, css } = Gloss
+  const { options, css } = Gloss
   const tagNameOption = options.tagName
 
   // Fast object reduce
@@ -191,17 +191,6 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
         // ignore most falsy values (except 0)
         if (val === false || val === null || val === undefined) {
           continue
-        }
-        // $$style={}
-        if (baseStyles) {
-          const isParentStyle = prop[1] === $
-          if (isParentStyle) {
-            const inlineStyle = addStyle(finalStyles, prop.slice(2), val, false)
-            if (inlineStyle) {
-              style = { ...style, ...inlineStyle }
-            }
-            continue
-          }
         }
         // $style={}
         if (styleSheet) {

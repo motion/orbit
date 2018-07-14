@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Warp from 'warpjs'
 import { findDOMNode } from 'react-dom'
+import * as UI from '@mcro/ui'
 
 export class Bauhaus extends React.Component {
   componentDidMount() {
@@ -26,8 +27,7 @@ export class Bauhaus extends React.Component {
       ...props
     } = this.props
     return (
-      <bahaus
-        $$fullscreen
+      <UI.FullScreen
         css={{
           transform: { scale: 0.5, x: '52%', y: '-8%', z: 0 },
           zIndex: 0,
@@ -69,7 +69,7 @@ export class Bauhaus extends React.Component {
             }}
           />
         </svg>
-      </bahaus>
+      </UI.FullScreen>
     )
   }
 }

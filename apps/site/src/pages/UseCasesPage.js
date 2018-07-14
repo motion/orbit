@@ -63,7 +63,7 @@ class UseCasesIntro extends React.Component {
             warp={([x, y]) => [x, y - 4 * -Math.sin(x / 25)]}
           />
           <HalfSection>
-            <div $$flex />
+            <UI.View flex={1} />
             <SmallTitle>Use Cases</SmallTitle>
             <Title color="#111" italic size={2.3} margin={[0, '10%', 10, 0]}>
               Powerful answers for teams.
@@ -165,7 +165,7 @@ class SectionUseCaseRemoteTeams extends React.Component {
                 </Callout>
               </LeftSide>
               <RightSide css={{ bottom: 0 }}>
-                <div $$flex css={{ marginTop: isLarge ? '21%' : 0 }} />
+                <div css={{ marginTop: isLarge ? '21%' : 0 }} />
                 <P2 if={false} size={1.8} css={{ margin: [5, 0, 10, 0] }}>
                   The smart way to sync
                 </P2>
@@ -273,11 +273,11 @@ class SectionUseCaseCustomerSuccess extends React.Component {
               </LeftSide>
               <RightSide css={{ top: 0 }}>
                 <React.Fragment if={isLarge}>
-                  <div $$flex css={{ marginTop: '25%' }} />
+                  <div css={{ marginTop: '25%' }} />
                   <SubTitle size={3.5} italic>
                     Customer<br />Success
                   </SubTitle>
-                  <div $$flex css={{ marginTop: '10%' }} />
+                  <div css={{ marginTop: '10%' }} />
                   <FeatureSubTitle>Your CSAT secret weapon</FeatureSubTitle>
                 </React.Fragment>
                 <P2 size={1.6} css={isLarge && { marginRight: '15%' }}>
@@ -385,7 +385,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
                 </Callout>
               </LeftSide>
               <RightSide inverse css={{ bottom: 0 }}>
-                <div if={isLarge} $$flex css={{ marginTop: '25%' }} />
+                <div if={isLarge} css={{ marginTop: '25%' }} />
                 <FeatureSubTitle>Enabling deep work</FeatureSubTitle>
                 <P2 size={1.6} css={{ marginRight: isLarge ? '20%' : 0 }}>
                   Do Not Disturb Slack without losing synchronicity. Orbit Home
@@ -413,7 +413,7 @@ class SectionUseCaseReduceInterrupts extends React.Component {
 export class UseCasesPage extends React.Component {
   render() {
     return (
-      <usecases $$flex $$background={peachTheme.background}>
+      <UI.View background={peachTheme.background}>
         <UI.Theme theme={peachTheme}>
           <TopoBg />
           <Header />
@@ -425,7 +425,7 @@ export class UseCasesPage extends React.Component {
           </surround>
           <Footer />
         </UI.Theme>
-      </usecases>
+      </UI.View>
     )
   }
 }

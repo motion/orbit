@@ -256,8 +256,8 @@ export class HoverGlow extends React.Component {
         key="hoverglow"
         $overlay
         ref={this.rootRef}
-        $$draggable={draggable}
         css={{
+          WebkitAppRegion: draggable ? 'drag' : 'no-drag',
           borderLeftRadius: borderLeftRadius || borderRadius,
           borderRightRadius: borderRightRadius || borderRadius,
           overflow,

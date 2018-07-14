@@ -115,6 +115,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
     const finalStyles = []
     const isSimple = glossUID && glossUID[0] === '_'
 
+    // this is whats attaching simple component styles, for now
     if (name) {
       addStyle(finalStyles, `${name}--${glossUID}`, null, true)
     }

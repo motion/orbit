@@ -37,7 +37,7 @@ class Orbit extends React.Component {
   }
 }
 
-export default props => (
+export const OrbitContext = props => (
   <UI.Theme name="dark">
     <Orbit {...props} />
   </UI.Theme>

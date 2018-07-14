@@ -116,14 +116,23 @@ OverflowFade.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background})`,
 })
 
+type Props = {
+  store: DockedPaneStore
+  style?: Object
+  after?: React.ReactNode
+  fadeBottom?: boolean
+  name?: string
+}
+
 @view.attach('paneStore', 'appStore')
 @view.attach({
   store: DockedPaneStore,
 })
 @view
-export class OrbitDockedPane extends React.Component {
-  render({ children, store, style, after, fadeBottom, name }) {
-    log(`render docked pane ${name} ${store.isAtBottom}`)
+export class OrbitDockedPane extends React.Component<Props> {
+  render() {
+    const { children, store, style, after, fadeBottom, name } = this.props
+    console.log(`render docked pane ${name} ${store.isAtBottom}`)
     trace()
     return (
       <>

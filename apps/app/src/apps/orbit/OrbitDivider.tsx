@@ -3,8 +3,9 @@ import { view, attachTheme } from '@mcro/black'
 
 @attachTheme
 @view
-export class OrbitDivider extends React.Component {
-  render({ height, theme, ...props }) {
+export class OrbitDivider extends React.Component<any> {
+  render() {
+    const { height, theme, ...props } = this.props
     return (
       <div $barOuter {...props}>
         <div $bar />

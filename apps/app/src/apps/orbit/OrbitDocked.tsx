@@ -10,6 +10,7 @@ import { OrbitDirectory } from './OrbitDirectory'
 import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { BORDER_RADIUS } from '../../constants'
+import { AppStore } from '../../stores/AppStore'
 
 const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.55]]
@@ -76,14 +77,17 @@ const OrbitInner = view({
   flex: 1,
 })
 
-@attachTheme
 @view.attach('appStore', 'orbitStore')
 @view.provide({
   paneStore: OrbitDockedPaneStore,
 })
 @view
-class OrbitDockedInner extends React.Component {
-  render({ paneStore, appStore, theme }) {
+class OrbitDockedInner extends React.Component<{
+  paneStore: OrbitDockedPaneStore
+  appStore: AppStore
+}> {
+  render() {
+    const { paneStore, appStore } = this.props
     const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)
     return (
@@ -93,13 +97,13 @@ class OrbitDockedInner extends React.Component {
           willAnimate={animationState.willAnimate}
         >
           <Border />
-          <div $container>
+          <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
-              after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
+              after={<OrbitHomeHeader paneStore={paneStore} />}
             />
             <OrbitInner>
-              <div $orbitRelativeInner>
+              <UI.View position="relative" flex={1}>
                 <OrbitHome
                   name="home"
                   appStore={appStore}
@@ -115,24 +119,12 @@ class OrbitDockedInner extends React.Component {
                   parentPane="summary"
                 />
                 <OrbitSettings name="settings" />
-              </div>
+              </UI.View>
             </OrbitInner>
-          </div>
+          </UI.View>
         </Frame>
       </>
     )
-  }
-
-  static style = {
-    container: {
-      borderRadius: BORDER_RADIUS + 1,
-      // overflow: 'hidden',
-      flex: 1,
-    },
-    orbitRelativeInner: {
-      position: 'relative',
-      flex: 1,
-    },
   }
 }
 

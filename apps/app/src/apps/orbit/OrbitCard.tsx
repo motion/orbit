@@ -15,6 +15,7 @@ import { OrbitStore } from './orbitStore'
 import { Bit } from '@mcro/models'
 
 export type OrbitCardProps = {
+  total?: number
   hoverToSelect?: boolean
   appStore?: AppStore
   paneStore?: OrbitDockedPaneStore

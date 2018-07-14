@@ -1,34 +1,40 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { Tilt } from './tilt'
-import { HoverGlow } from './hoverGlow'
+import { HoverGlow, HoverGlowProps } from './HoverGlow'
 
-// type Props = {
-//   width: number,
-//   height: number,
-//   tiltOptions?: Object,
-//   children?: React$Element<any>,
-//   css?: Object,
-// }
+type TiltHoverGlowProps = {
+  width: number
+  height: number
+  tiltOptions?: Object
+  children?: React.ReactNode
+  css?: Object
+  glowProps?: HoverGlowProps
+  restingPosition?: [number, number]
+  hideShadow?: boolean
+  hideGlow?: boolean
+  shadowProps?: Object
+}
 
 @view.ui
-export class TiltHoverGlow extends React.PureComponent {
+export class TiltHoverGlow extends React.PureComponent<TiltHoverGlowProps> {
   version() {
     return 1
   }
 
-  render({
-    width,
-    height,
-    tiltOptions,
-    children,
-    restingPosition,
-    hideShadow,
-    hideGlow,
-    shadowProps,
-    glowProps,
-    ...props
-  }) {
+  render() {
+    const {
+      width,
+      height,
+      tiltOptions,
+      children,
+      restingPosition,
+      hideShadow,
+      hideGlow,
+      shadowProps,
+      glowProps,
+      ...props
+    } = this.props
     return (
       <Tilt
         options={{
@@ -42,7 +48,7 @@ export class TiltHoverGlow extends React.PureComponent {
         restingPosition={restingPosition}
       >
         <div
-          css={{
+          style={{
             cursor: 'default',
             width,
             height,

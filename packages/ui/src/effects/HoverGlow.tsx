@@ -2,38 +2,70 @@ import * as React from 'react'
 import { view, on } from '@mcro/black'
 import $ from 'color'
 import throttle from 'raf-throttle'
+import { Color } from '@mcro/css'
 
-// type Props = {
-//   width: number,
-//   height: number,
-//   color: Color,
-//   zIndex: number,
-//   resist: number,
-//   scale: number,
-//   opacity: number,
-//   boundPct: number | string,
-//   offsetTop: number,
-//   offsetLeft: number,
-//   clickable: boolean,
-//   clickDuration: number,
-//   clickScale: number,
-//   duration: number,
-//   overlayZIndex: number,
-//   blur: number,
-// clickable,
-//     clickDuration,
-//     parent,
-//     backdropFilter,
-//     restingPosi
-// }
+type ChildArgs = {
+  translateX: number
+  translateY: number
+  glow: React.ReactNode
+}
 
-// type State = {
-//   track: boolean,
-//   position: Object,
-// }
+export type HoverGlowProps = {
+  width: number
+  height: number
+  color: Color
+  zIndex: number
+  resist: number
+  scale: number
+  opacity: number
+  boundPct: number | string
+  offsetTop: number
+  offsetLeft: number
+  clickable: boolean
+  clickDuration: number
+  clickScale: number
+  duration: number
+  overlayZIndex: number
+  blur: number
+  parent?: HTMLElement
+  backdropFilter?: boolean
+  restingPosition?: [number, number]
+  full?: boolean
+  borderRadius?: number
+  borderLeftRadius?: number
+  borderRightRadius?: number
+  inverse?: boolean
+  size?: number
+  draggable?: boolean
+  durationIn?: number
+  durationOut?: number
+  behind?: boolean
+  background?: Color
+  gradient?: string
+  overflow?: boolean
+  hide?: boolean
+  children?: (a: ChildArgs) => React.ReactNode
+}
+
+const Overlay = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  userSelect: 'none',
+})
+
+const Glow = view({
+  opacity: 1,
+  pointerEvents: 'none',
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+})
 
 @view.ui
-export class HoverGlow extends React.Component {
+export class HoverGlow extends React.Component<HoverGlowProps> {
   static acceptsHovered = 'show'
 
   static defaultProps = {
@@ -58,6 +90,7 @@ export class HoverGlow extends React.Component {
   }
 
   state = {
+    clicked: false,
     mounted: false,
     track: false,
     parentNode: null,
@@ -65,6 +98,7 @@ export class HoverGlow extends React.Component {
     bounds: { width: 0, height: 0 },
   }
 
+  unmounted = false
   parentNode = null
   rootRef = React.createRef()
 
@@ -160,43 +194,44 @@ export class HoverGlow extends React.Component {
     )
   }
 
-  render({
-    boundPct,
-    full,
-    scale,
-    color,
-    clickable,
-    clickDuration,
-    parent,
-    backdropFilter,
-    restingPosition,
-    borderRadius,
-    borderLeftRadius,
-    borderRightRadius,
-    zIndex,
-    resist,
-    opacity,
-    inverse,
-    offsetTop,
-    offsetLeft,
-    width: propWidth,
-    height: propHeight,
-    size,
-    clickScale,
-    draggable,
-    duration: _duration,
-    durationIn,
-    durationOut,
-    children,
-    behind,
-    background,
-    gradient,
-    overflow,
-    overlayZIndex,
-    blur,
-    hide,
-    ...props
-  }) {
+  render() {
+    const {
+      boundPct,
+      scale,
+      color,
+      clickable,
+      clickDuration,
+      parent,
+      backdropFilter,
+      restingPosition,
+      zIndex,
+      resist,
+      opacity,
+      offsetTop,
+      offsetLeft,
+      width: propWidth,
+      height: propHeight,
+      clickScale,
+      duration: _duration,
+      children,
+      overlayZIndex,
+      blur,
+      full,
+      borderRadius,
+      borderLeftRadius,
+      borderRightRadius,
+      inverse,
+      size,
+      draggable,
+      durationIn,
+      durationOut,
+      behind,
+      background,
+      gradient,
+      overflow,
+      hide,
+      ...props
+    } = this.props
     const show = !hide
     const durationArg = show ? durationOut : durationIn
     const duration = durationArg >= 0 ? durationArg : _duration
@@ -252,9 +287,8 @@ export class HoverGlow extends React.Component {
     )
     const extraScale = clicked ? clickScale : 1
     const glow = (
-      <div
+      <Overlay
         key="hoverglow"
-        $overlay
         ref={this.rootRef}
         css={{
           WebkitAppRegion: draggable ? 'drag' : 'no-drag',
@@ -265,8 +299,7 @@ export class HoverGlow extends React.Component {
         }}
         {...props}
       >
-        <div
-          $glow
+        <Glow
           style={{
             zIndex: behind ? -1 : 1,
             willChange:
@@ -305,8 +338,8 @@ export class HoverGlow extends React.Component {
                 `,
             }}
           />
-        </div>
-      </div>
+        </Glow>
+      </Overlay>
     )
     if (!children) {
       return glow
@@ -317,27 +350,6 @@ export class HoverGlow extends React.Component {
       translateY,
       glow,
     })
-  }
-
-  static style = {
-    overlay: {
-      position: 'absolute',
-      // transform: 'translateZ(0)',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      userSelect: 'none',
-      // pointerEvents: 'none',
-    },
-    glow: {
-      opacity: 1,
-      pointerEvents: 'none',
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      // transform: 'translateZ(0)',
-    },
   }
 }
 

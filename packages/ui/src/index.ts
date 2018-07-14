@@ -63,10 +63,9 @@ export * from './table/TableBody'
 export * from './table/TableHead'
 
 // effects
-export * from './effects/hoverGlow'
-export * from './effects/poof'
+export * from './effects/HoverGlow'
 export * from './effects/tilt'
-export * from './effects/tiltHoverGlow'
+export * from './effects/TiltHoverGlow'
 export * from './effects/glint'
 
 // form

@@ -194,17 +194,6 @@ export class OrbitFrame {
     hideOverflow: {
       overflow: 'hidden',
     },
-    orbitHeight: adjust => {
-      if (!adjust) {
-        return {
-          height: '100%',
-        }
-      }
-      return {
-        height: `calc(100% - ${adjust}px)`,
-        maxHeight: '100%',
-      }
-    },
     orbitTorn: {
       opacity: 1,
       transform: {

@@ -31,6 +31,16 @@ export class OrbitDockedPaneStore {
     this.subscriptions.add({ dispose })
   }
 
+  setActivePaneHomeOnSearchInSettings = react(
+    () => App.state.query,
+    () => {
+      if (this.activePane !== 'settings') {
+        throw react.cancel
+      }
+      this.setActivePane('home')
+    }
+  )
+
   setDirectoryOnAt = react(
     () => App.state.query[0] === '@',
     isDir => {

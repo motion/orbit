@@ -10,6 +10,13 @@ const options = {
   remove_duplicates: false,
 }
 
+const BodyContents = view({
+  whiteSpace: 'pre-line',
+  width: '100%',
+  overflow: 'hidden',
+  padding: [0, 10],
+})
+
 @view
 export class Document extends React.Component {
   render({ bit, appStore, children }) {
@@ -27,7 +34,7 @@ export class Document extends React.Component {
             title,
             icon,
             content: (
-              <bodyContents
+              <BodyContents
                 className="markdown"
                 dangerouslySetInnerHTML={{
                   __html: bodyContents,
@@ -38,14 +45,5 @@ export class Document extends React.Component {
         }}
       </PeekBitResolver>
     )
-  }
-
-  static style = {
-    bodyContents: {
-      whiteSpace: 'pre-line',
-      width: '100%',
-      overflow: 'hidden',
-      padding: [0, 10],
-    },
   }
 }

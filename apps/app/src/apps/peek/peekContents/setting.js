@@ -67,19 +67,18 @@ export class SettingContent extends React.Component {
             subhead,
             content,
             subtitle: (
-              <UI.Row>
-                <UI.Row if={store.job}>
-                  {store.bitsCount} total{' '}
-                  <UI.Text if={store.job.updatedAt}>
-                    &nbsp;&middot; Last run:{' '}
-                    <UI.Icon
-                      size={14}
-                      css={{ display: 'inline-block' }}
-                      {...statusIcons[store.job.status]}
-                    />{' '}
-                    <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-                  </UI.Text>
-                </UI.Row>
+              <UI.Row if={store.job}>
+                <UI.Text>{store.bitsCount} total </UI.Text>
+                <UI.View flex={1} />
+                <UI.Text if={store.job.updatedAt}>
+                  Last run:{' '}
+                  <UI.Icon
+                    size={14}
+                    css={{ display: 'inline-block' }}
+                    {...statusIcons[store.job.status]}
+                  />{' '}
+                  <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
+                </UI.Text>
                 <load if={!store.job}>Loading...</load>
               </UI.Row>
             ),

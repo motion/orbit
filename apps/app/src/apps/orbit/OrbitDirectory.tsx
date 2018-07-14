@@ -53,37 +53,36 @@ class OrbitDirectoryStore {
   store: OrbitDirectoryStore,
 })
 @view
-export class OrbitDirectory extends React.Component {
-  render({ store }) {
+export class OrbitDirectory extends React.Component<{
+  store: OrbitDirectoryStore
+}> {
+  render() {
+    const { store } = this.props
     // log('DIRECTORY --------')
     const total = store.results.length
     return (
       <OrbitDockedPane name="directory" fadeBottom>
-        <React.Fragment if={store.people.length}>
-          <SubTitle>People</SubTitle>
-          <Masonry>
-            {store.people.map((bit, index) => (
-              <OrbitCard
-                pane="summary"
-                subPane="directory"
-                key={bit.id}
-                index={index}
-                bit={bit}
-                total={total}
-                hide={{
-                  icon: true,
-                }}
-              />
-            ))}
-          </Masonry>
-        </React.Fragment>
+        {store.people.length && (
+          <React.Fragment>
+            <SubTitle>People</SubTitle>
+            <Masonry>
+              {store.people.map((bit, index) => (
+                <OrbitCard
+                  pane="summary"
+                  subPane="directory"
+                  key={bit.id}
+                  index={index}
+                  bit={bit}
+                  total={total}
+                  hide={{
+                    icon: true,
+                  }}
+                />
+              ))}
+            </Masonry>
+          </React.Fragment>
+        )}
       </OrbitDockedPane>
     )
-  }
-
-  static style = {
-    carousel: {
-      flexFlow: 'row',
-    },
   }
 }

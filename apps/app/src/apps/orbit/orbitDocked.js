@@ -6,7 +6,7 @@ import { OrbitSettings } from './orbitSettings'
 import { OrbitHomeHeader } from './orbitHomeHeader'
 import { OrbitHeader } from './orbitHeader'
 import { OrbitSearchResults } from './orbitSearchResults'
-import { OrbitDirectory } from './orbitDirectory'
+import { OrbitDirectory } from './OrbitDirectory'
 import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 

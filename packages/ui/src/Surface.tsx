@@ -607,10 +607,14 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       background: 'transparent',
     }
     const focusable = props.focusable || (uiContext && uiContext.inForm)
-    const focusStyle = !props.chromeless && {
-      ...theme.focus,
-      boxShadow: [...boxShadow, [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)]],
-    }
+    const focusStyle = !props.chromeless &&
+      theme.focus && {
+        ...theme.focus,
+        boxShadow: [
+          ...boxShadow,
+          [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)],
+        ],
+      }
     const iconSize =
       props.iconSize ||
       Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100

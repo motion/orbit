@@ -11,6 +11,9 @@ import {
 import { modelQueryReaction } from '@mcro/helpers'
 import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
+import * as UI from '@mcro/ui'
+import { AppStore } from '../../stores/AppStore'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
 class OrbitSettingsStore {
   get isPaneActive() {
@@ -57,6 +60,7 @@ class OrbitSettingsStore {
         throw react.cancel
       }
       const getResults = () => integrationSettings
+      // @ts-ignore
       getResults.shouldFilter = true
       this.props.appStore.setGetResults(() => this.allResults)
     },
@@ -93,8 +97,14 @@ class OrbitSettingsStore {
   Store: OrbitSettingsStore,
 })
 @view
-export class OrbitSettings extends React.Component {
-  render({ name, Store, appStore }) {
+export class OrbitSettings extends React.Component<{
+  name: string
+  Store?: OrbitSettingsStore
+  appStore?: AppStore
+  paneStore?: OrbitDockedPaneStore
+}> {
+  render() {
+    const { name, Store, appStore } = this.props
     const isActive = result => {
       return !!Store.integrationSettings.find(
         setting => setting.type === result.id,
@@ -116,7 +126,7 @@ export class OrbitSettings extends React.Component {
           ))}
         </Masonry>
         <Views.VertSpace />
-        <section if={Store.integrationSettings.length}>
+        <UI.View if={Store.integrationSettings.length}>
           <Views.SubTitle>Active Integrations</Views.SubTitle>
           <Masonry>
             {Store.integrationSettings
@@ -134,7 +144,7 @@ export class OrbitSettings extends React.Component {
               .filter(Boolean)}
           </Masonry>
           <Views.VertSpace />
-        </section>
+        </UI.View>
         <Views.SubTitle>Add Integration</Views.SubTitle>
         <Masonry>
           {allIntegrations
@@ -147,32 +157,19 @@ export class OrbitSettings extends React.Component {
                 appStore={appStore}
                 hoverable
                 onSelect={
-                  item.auth &&
-                  (target => {
-                    App.actions.selectItem(
-                      { id: item.id, type: 'view', title: item.title },
-                      target,
-                    )
-                  })
+                  item.auth
+                    ? target => {
+                        App.actions.selectItem(
+                          { id: item.id, type: 'view', title: item.title },
+                          target,
+                        )
+                      }
+                    : null
                 }
               />
             ))}
         </Masonry>
       </OrbitDockedPane>
     )
-  }
-
-  static style = {
-    cards: {
-      userSelect: 'none',
-      marginBottom: 10,
-    },
-    inactive: {
-      opacity: 0.7,
-      transition: 'all ease-in 300ms',
-      '&:hover': {
-        opacity: 1,
-      },
-    },
   }
 }

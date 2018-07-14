@@ -118,11 +118,6 @@ export class ThemeMaker {
         ...focused,
         ...rest.active,
       },
-      focus: {
-        ...base,
-        ...focused,
-        ...rest.focus,
-      },
       highlight: {
         ...base,
         ...rest.highlight,

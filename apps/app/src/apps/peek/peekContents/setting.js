@@ -67,7 +67,7 @@ export class SettingContent extends React.Component {
             subhead,
             content,
             subtitle: (
-              <UI.Row if={store.job}>
+              <UI.Row if={store.job} flex={1}>
                 <UI.Text>{store.bitsCount} total </UI.Text>
                 <UI.View flex={1} />
                 <UI.Text if={store.job.updatedAt}>

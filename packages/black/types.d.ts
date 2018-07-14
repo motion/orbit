@@ -1,4 +1,5 @@
 import { DecorCompiledDecorator } from '@mcro/decor'
+import { CSSPropertySet } from '@mcro/gloss'
 
 export { react } from '@mcro/automagical'
 export { on } from '@mcro/helpers'
@@ -22,9 +23,9 @@ export interface PotentiallyView {
 }
 
 export function view<T>(
-  a: T,
-  b?: any,
-): T & { theme?: Object; displayName?: string } & PotentiallyView
+  a: T | CSSPropertySet,
+  b?: CSSPropertySet,
+): T & { theme?: CSSPropertySet; displayName?: string } & PotentiallyView
 export namespace view {
   export function on(
     name: string | Object,

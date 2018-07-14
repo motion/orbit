@@ -157,6 +157,7 @@ export declare const cssNameMap: {
     gridTemplateColumns: string;
     gridAutoRows: string;
 };
+export { CSSPropertySet } from './cssTypes';
 export { Transform, Color } from './types';
 export * from './helpers';
 declare type Opts = {

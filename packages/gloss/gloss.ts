@@ -13,7 +13,7 @@ export { Theme } from './theme/Theme'
 export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
-export { cssNameMap, psuedoKeys } from '@mcro/css'
+export { CSSPropertySet, cssNameMap, psuedoKeys } from '@mcro/css'
 
 const glossSimpleComponentFirstArg = a => {
   if (!a) {

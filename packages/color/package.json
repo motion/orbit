@@ -1,0 +1,16 @@
+{
+  "name": "@mcro/color",
+  "version": "2.2.0",
+  "description": "",
+  "main": "_/color.js",
+  "author": "Motion",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "prebuild": "tsc",
+    "watch": "npm run build -- --watch --preserveWatchOutput"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

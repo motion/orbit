@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Theme } from './helpers/theme'
 import { view, attachTheme } from '@mcro/black'
-import $ from 'color'
+import $ from '@mcro/color'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/glint'

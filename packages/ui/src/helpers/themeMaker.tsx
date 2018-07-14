@@ -1,4 +1,4 @@
-import $ from 'color'
+import $ from '@mcro/color'
 import { Color } from '@mcro/css'
 
 type ColorObject = { [a: string]: Color }

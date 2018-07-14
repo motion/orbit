@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import $ from 'color'
+import $ from '@mcro/color'
 
 // type Props = {
 //   background?: Color,

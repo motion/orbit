@@ -73,18 +73,13 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
   const { options, css } = Gloss
   const tagNameOption = options.tagName
 
-  const addStyle = (finalStyles, key, val, checkTheme) => {
+  const addStyle = (finalStyles, key, checkTheme) => {
     let style = styleSheet[key]
     if (!style) {
       style = styleSheet.getRule ? styleSheet.getRule(key) : styleSheet[key]
     }
-    // dynamic
     if (style) {
-      if (typeof style === 'function') {
-        return css(style(val))
-      } else {
-        finalStyles.push(style)
-      }
+      finalStyles.push(style)
     }
     if (checkTheme && themeSheet) {
       const themeKey = `${key}--theme`
@@ -117,7 +112,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
 
     // this is whats attaching simple component styles, for now
     if (name) {
-      addStyle(finalStyles, `${name}--${glossUID}`, null, true)
+      addStyle(finalStyles, `${name}--${glossUID}`, true)
     }
 
     let style
@@ -183,15 +178,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
         }
         // $style={}
         if (styleSheet) {
-          const inlineStyle = addStyle(
-            finalStyles,
-            `${prop.slice(1)}--${glossUID}`,
-            val,
-            true,
-          )
-          if (inlineStyle) {
-            style = { ...style, ...snakeToCamelObject(inlineStyle) }
-          }
+          addStyle(finalStyles, `${prop.slice(1)}--${glossUID}`, true)
         }
       }
     }

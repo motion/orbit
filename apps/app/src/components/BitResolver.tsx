@@ -43,7 +43,7 @@ const EmptyResolver = ({ children }) =>
 
 type Props = {
   bit?: Bit
-  appStore: AppStore
+  appStore?: AppStore
   isExpanded?: boolean
 }
 

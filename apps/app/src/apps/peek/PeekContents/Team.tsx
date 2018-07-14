@@ -1,12 +1,14 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekHeader } from '../PeekHeader'
+import { PeekContentProps } from './PeekContentProps'
 // import { SubTitle } from '~/views'
 // import * as UI from '@mcro/ui'
 
 @view
-export class Team extends React.Component {
-  render({ bit }) {
+export class Team extends React.Component<PeekContentProps> {
+  render() {
+    const { bit } = this.props
     if (!bit) {
       return null
     }

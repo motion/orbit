@@ -39,7 +39,7 @@ export type appearance = 'auto' | 'none'
 export type azimuth = number | string | 'leftwards' | 'rightwards'
 export type backdropFilter = 'none' | string
 export type backfaceVisibility = 'visible' | 'hidden'
-type backgroundSyntax = {
+type backgroundSyntax = Array<number> | {
   attachment?: attachment
   color?: color
   image?: bgImage
@@ -486,14 +486,7 @@ export type overflowClipBox = 'padding-box' | 'content-box'
 export type overflowWrap = 'normal' | 'break-word'
 export type overflowX = 'visible' | 'hidden' | 'scroll' | 'auto'
 export type overflowY = 'visible' | 'hidden' | 'scroll' | 'auto'
-type paddingSyntax = {
-  vertical?: number | string
-  horizontal?: number | string
-  top?: number | string
-  left?: number | string
-  right?: number | string
-  bottom?: number | string
-}
+type paddingSyntax = Array<number | string>
 export type padding = number | string | paddingSyntax
 export type paddingBlockEnd = paddingLeft
 export type paddingBlockStart = paddingLeft

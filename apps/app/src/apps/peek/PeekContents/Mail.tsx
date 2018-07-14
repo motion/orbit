@@ -2,7 +2,8 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import * as _ from 'lodash'
-import * as Helpers from '~/helpers'
+import * as Helpers from '../../../helpers'
+import { PeekContentProps } from './PeekContentProps'
 
 const parseBody = body =>
   !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
@@ -17,8 +18,9 @@ const Para = view({
 })
 
 @view
-export class Mail extends React.Component {
-  render({ bit, children }) {
+export class Mail extends React.Component<PeekContentProps> {
+  render() {
+    const { bit, children } = this.props
     if (!bit || !bit.data) {
       return children({})
     }
@@ -27,14 +29,13 @@ export class Mail extends React.Component {
       icon: 'email',
       title: bit.title,
       date: bit.createdAt,
-      content: (
-        <messages if={messages}>
+      content: messages && (
+        <div>
           {messages.map((message, index) => {
             return (
               <Message key={`${index}${message.id}`}>
-                <row
+                <UI.Row
                   css={{
-                    flexFlow: 'row',
                     opacity: 0.7,
                     margin: [0, 0, 6, -15],
                     flex: 1,
@@ -59,9 +60,11 @@ export class Mail extends React.Component {
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <strong if={Helpers.getHeader(message, 'From')}>
-                      {Helpers.getHeader(message, 'From').split(' ')[0]}
-                    </strong>&nbsp;
+                    {Helpers.getHeader(message, 'From') && (
+                      <strong>
+                        {Helpers.getHeader(message, 'From').split(' ')[0]}&nbsp;
+                      </strong>
+                    )}
                     <UI.Date
                       if={index !== 0}
                       css={{
@@ -74,7 +77,7 @@ export class Mail extends React.Component {
                       {Helpers.getHeader(message, 'Date')}
                     </UI.Date>
                   </UI.Row>
-                </row>
+                </UI.Row>
                 <UI.Text if={message.snippet} size={1.1}>
                   {_.flatten(
                     (parseBody(message.payload.body.data) || message.snippet)
@@ -85,7 +88,7 @@ export class Mail extends React.Component {
               </Message>
             )
           })}
-        </messages>
+        </div>
       ),
     })
   }

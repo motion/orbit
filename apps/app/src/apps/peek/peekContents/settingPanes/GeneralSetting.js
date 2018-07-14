@@ -17,7 +17,8 @@ class OrbitGeneralSettingsStore {
 })
 @view
 export class GeneralSetting extends React.Component {
-  render({ store, setting, children }) {
+  render() {
+    const { store, setting, children } = this.props
     if (!setting) {
       return null
     }

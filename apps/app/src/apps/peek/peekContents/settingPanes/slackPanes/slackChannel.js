@@ -24,7 +24,8 @@ export class SlackChannel extends React.Component {
     this.version++
   }
 
-  render({ channel, slackService }) {
+  render() {
+    const { channel, slackService } = this.props
     if (!slackService.setting) {
       return null
     }

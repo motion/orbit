@@ -108,22 +108,24 @@ class Folder extends React.Component {
   }
 }
 
+class GDocsSettingStore {
+  get setting() {
+    return this.props.setting
+  }
+
+  get service() {
+    return this.props.appStore.services.gdocs
+  }
+
+  folders = react(() => this.service && this.service.getFilesBasic())
+
+  get files() {
+    return (this.things || []).filter(t => t.type === 'doc')
+  }
+}
+
 @view.attach({
-  store: class GDocsSettingStore {
-    get setting() {
-      return this.props.setting
-    }
-
-    get service() {
-      return this.props.appStore.services.gdocs
-    }
-
-    folders = react(() => this.service && this.service.getFilesBasic())
-
-    get files() {
-      return (this.things || []).filter(t => t.type === 'doc')
-    }
-  },
+  store: GDocsSettingStore,
 })
 @view
 export class GdocsSetting extends React.Component {

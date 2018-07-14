@@ -3,23 +3,26 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { OrbitIcon } from '../../../../apps/orbit/OrbitIcon'
 
-@view.attach({
-  store: class {
-    max = ''
+class GmailSettingStore {
+  max = ''
 
-    willMount() {
-      this.props.setting.values = {
-        syncSettings: { max: 50 },
-        ...this.props.setting.values,
-      }
-      const settings = this.props.setting.values.syncSettings
-      this.max = settings.max
+  willMount() {
+    this.props.setting.values = {
+      syncSettings: { max: 50 },
+      ...this.props.setting.values,
     }
-  },
+    const settings = this.props.setting.values.syncSettings
+    this.max = settings.max
+  }
+}
+
+@view.attach({
+  store: GmailSettingStore,
 })
 @view
 export class GmailSetting extends React.Component {
-  render({ store, setting, update, children }) {
+  render() {
+    const { store, setting, update, children } = this.props
     const { syncSettings } = setting.values
     return children({
       content: (

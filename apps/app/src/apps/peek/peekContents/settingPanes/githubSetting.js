@@ -7,8 +7,6 @@ import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 
-console.log('UI', UI)
-
 const columnSizes = {
   repo: 'flex',
   org: 'flex',

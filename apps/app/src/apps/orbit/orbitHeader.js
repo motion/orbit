@@ -7,6 +7,7 @@ import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 
 class HeaderStore {
   inputRef = React.createRef()
+  iconHovered = false
 
   onInput = () => {
     this.props.orbitStore.onChangeQuery(this.inputRef.innerText)
@@ -43,10 +44,22 @@ class HeaderStore {
       App.togglePinned()
     }
   }
+
+  onHoverIcon = () => {
+    this.iconHovered = true
+  }
+
+  onUnHoverIcon = () => {
+    this.iconHovered = false
+  }
+
+  goHome = () => {
+    this.props.paneStore.setActivePane('home')
+  }
 }
 
 @attachTheme
-@view.attach('orbitStore', 'appStore')
+@view.attach('orbitStore', 'appStore', 'paneStore')
 @view.attach({
   headerStore: HeaderStore,
 })
@@ -64,16 +77,26 @@ export class OrbitHeader extends React.Component {
     onHover: this.props.headerStore.hover,
   })
 
-  render({ orbitStore, headerStore, after, theme, showPin }) {
+  render({ paneStore, orbitStore, headerStore, after, theme, showPin }) {
     const headerBg = theme.base.background
+    const notHome = paneStore.activePane !== 'home'
     return (
       <orbitHeader $headerBg={headerBg} {...this.hoverSettler.props}>
         <title>
           <UI.Icon
-            $searchIcon
-            name="ui-1_zoom"
+            name={notHome && headerStore.iconHovered ? 'home' : 'ui-1_zoom'}
             size={18}
-            color={theme.base.color.alpha(0.2)}
+            color={theme.base.color}
+            onMouseEnter={headerStore.onHoverIcon}
+            onMouseLeave={headerStore.onUnHoverIcon}
+            onClick={headerStore.goHome}
+            height="100%"
+            width={30}
+            marginRight={-5}
+            opacity={0.2}
+            hover={{
+              opacity: 1,
+            }}
           />
           <HighlightedTextArea
             width="100%"
@@ -135,10 +158,6 @@ export class OrbitHeader extends React.Component {
     after: {
       alignItems: 'center',
       flexFlow: 'row',
-    },
-    searchIcon: {
-      paddingLeft: 6,
-      margin: ['auto', 0],
     },
     pinnedIcon: {
       position: 'relative',

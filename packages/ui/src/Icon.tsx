@@ -58,7 +58,7 @@ IconInner.theme = ({ padding, width: propWidth, height: propHeight, size }) => {
   return {
     width,
     height,
-    fontSize: width,
+    fontSize: size,
     lineHeight: `${size / 12}rem`, // scale where 1 when 14
   }
 }

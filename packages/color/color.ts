@@ -92,29 +92,24 @@ class Color {
       this.valpha = 1
     } else {
       this.valpha = 1
-
       var keys = Object.keys(obj)
       if ('alpha' in obj) {
         keys.splice(keys.indexOf('alpha'), 1)
         this.valpha = typeof obj.alpha === 'number' ? obj.alpha : 0
       }
-
       var hashedKeys = keys.sort().join('')
       if (!(hashedKeys in hashedModelKeys)) {
         throw new Error(
           'Unable to parse color from object: ' + JSON.stringify(obj),
         )
       }
-
       this.model = hashedModelKeys[hashedKeys]
-
       var labels = colorConvert[this.model].labels
       var color = []
       for (i = 0; i < labels.length; i++) {
         color.push(obj[labels[i]])
       }
-
-      this.color = zeroArray(color)
+      this.color = zeroArray(color, color.length)
     }
 
     // perform limitations (clamping, etc.)
@@ -143,7 +138,7 @@ class Color {
     return this[this.model]()
   }
 
-  string(places) {
+  string(places?) {
     var self = this.model in colorString.to ? this : this.rgb()
     self = self.round(typeof places === 'number' ? places : 1)
     var args = self.valpha === 1 ? self.color : self.color.concat(this.valpha)
@@ -166,15 +161,12 @@ class Color {
     var result = {}
     var channels = colorConvert[this.model].channels
     var labels = colorConvert[this.model].labels
-
     for (var i = 0; i < channels; i++) {
       result[labels[i]] = this.color[i]
     }
-
     if (this.valpha !== 1) {
       result.alpha = this.valpha
     }
-
     return result
   }
 
@@ -183,11 +175,9 @@ class Color {
     rgb[0] /= 255
     rgb[1] /= 255
     rgb[2] /= 255
-
     if (this.valpha !== 1) {
       rgb.push(this.valpha)
     }
-
     return rgb
   }
 
@@ -196,11 +186,9 @@ class Color {
     rgb.r /= 255
     rgb.g /= 255
     rgb.b /= 255
-
     if (this.valpha !== 1) {
       rgb.alpha = this.valpha
     }
-
     return rgb
   }
 
@@ -219,7 +207,6 @@ class Color {
         this.model,
       )
     }
-
     return this.valpha
   }
 
@@ -227,7 +214,6 @@ class Color {
     if (arguments.length) {
       return new Color(val)
     }
-
     return colorConvert[this.model].keyword(this.color)
   }
 
@@ -235,7 +221,6 @@ class Color {
     if (arguments.length) {
       return new Color(val)
     }
-
     return toHex(this.rgb().round().color)
   }
 
@@ -247,14 +232,12 @@ class Color {
   luminosity() {
     // http://www.w3.org/TR/WCAG20/#relativeluminancedef
     var rgb = this.rgb().color
-
     var lum = []
     for (var i = 0; i < rgb.length; i++) {
       var chan = rgb[i] / 255
       lum[i] =
         chan <= 0.03928 ? chan / 12.92 : Math.pow((chan + 0.055) / 1.055, 2.4)
     }
-
     return 0.2126 * lum[0] + 0.7152 * lum[1] + 0.0722 * lum[2]
   }
 
@@ -262,11 +245,9 @@ class Color {
     // http://www.w3.org/TR/WCAG20/#contrast-ratiodef
     var lum1 = this.luminosity()
     var lum2 = color2.luminosity()
-
     if (lum1 > lum2) {
       return (lum1 + 0.05) / (lum2 + 0.05)
     }
-
     return (lum2 + 0.05) / (lum1 + 0.05)
   }
 
@@ -275,7 +256,6 @@ class Color {
     if (contrastRatio >= 7.1) {
       return 'AAA'
     }
-
     return contrastRatio >= 4.5 ? 'AA' : ''
   }
 
@@ -364,13 +344,10 @@ class Color {
     var color1 = mixinColor.rgb()
     var color2 = this.rgb()
     var p = weight === undefined ? 0.5 : weight
-
     var w = 2 * p - 1
     var a = color1.alpha() - color2.alpha()
-
     var w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2.0
     var w2 = 1 - w1
-
     return Color.rgb(
       w1 * color1.red() + w2 * color2.red(),
       w1 * color1.green() + w2 * color2.green(),
@@ -385,19 +362,15 @@ Object.keys(colorConvert).forEach(function(model) {
   if (skippedModels.indexOf(model) !== -1) {
     return
   }
-
   var channels = colorConvert[model].channels
-
   // conversion methods
   Color.prototype[model] = function() {
     if (this.model === model) {
       return new Color(this)
     }
-
     if (arguments.length) {
       return new Color(arguments, model)
     }
-
     var newAlpha =
       typeof arguments[channels] === 'number' ? channels : this.valpha
     return new Color(
@@ -407,7 +380,6 @@ Object.keys(colorConvert).forEach(function(model) {
       model,
     )
   }
-
   // 'static' construction methods
   Color[model] = function(color) {
     if (typeof color === 'number') {
@@ -467,7 +439,6 @@ function zeroArray(arr, length) {
       arr[i] = 0
     }
   }
-
   return arr
 }
 

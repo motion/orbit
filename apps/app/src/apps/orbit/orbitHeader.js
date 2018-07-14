@@ -39,6 +39,16 @@ class HeaderStore {
     },
   )
 
+  focusInputOnClearQuery = react(
+    () => App.state.query,
+    query => {
+      if (query) {
+        throw react.cancel
+      }
+      this.focus()
+    },
+  )
+
   onClickInput = () => {
     if (!App.orbitState.pinned && Desktop.isHoldingOption) {
       App.togglePinned()
@@ -57,7 +67,11 @@ class HeaderStore {
     if (this.props.paneStore.activePane === 'home') {
       App.actions.closeOrbit()
     } else {
-      this.props.paneStore.setActivePane('home')
+      if (App.state.query) {
+        this.props.orbitStore.clearQuery()
+      } else {
+        this.props.paneStore.setActivePane('home')
+      }
     }
   }
 }

@@ -54,7 +54,11 @@ class HeaderStore {
   }
 
   goHome = () => {
-    this.props.paneStore.setActivePane('home')
+    if (this.props.paneStore.activePane === 'home') {
+      App.actions.closeOrbit()
+    } else {
+      this.props.paneStore.setActivePane('home')
+    }
   }
 }
 
@@ -79,12 +83,19 @@ export class OrbitHeader extends React.Component {
 
   render({ paneStore, orbitStore, headerStore, after, theme, showPin }) {
     const headerBg = theme.base.background
-    const notHome = paneStore.activePane !== 'home'
+    const isHome = paneStore.activePane === 'home'
+    const { iconHovered } = headerStore
     return (
       <orbitHeader $headerBg={headerBg} {...this.hoverSettler.props}>
         <title>
           <UI.Icon
-            name={notHome && headerStore.iconHovered ? 'home' : 'ui-1_zoom'}
+            name={
+              isHome && iconHovered
+                ? 'remove'
+                : !isHome && iconHovered
+                  ? 'home'
+                  : 'ui-1_zoom'
+            }
             size={18}
             color={theme.base.color}
             onMouseEnter={headerStore.onHoverIcon}
@@ -94,6 +105,7 @@ export class OrbitHeader extends React.Component {
             width={30}
             marginRight={-5}
             opacity={0.2}
+            cursor="pointer"
             hover={{
               opacity: 1,
             }}

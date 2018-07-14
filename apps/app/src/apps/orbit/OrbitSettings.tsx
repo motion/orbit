@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { OrbitSettingCard } from './OrbitSettingCard'
-import { OrbitDockedPane } from './orbitDockedPane'
+import { OrbitDockedPane } from './OrbitDockedPane'
 import * as Views from '../../views'
 import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import {

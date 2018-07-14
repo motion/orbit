@@ -5,7 +5,7 @@ import { Bit, Person } from '@mcro/models'
 import { SubTitle } from '../../views'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
-import { OrbitDockedPane } from './orbitDockedPane'
+import { OrbitDockedPane } from './OrbitDockedPane'
 
 // css={{
 //   opacity: index > 3 ? (total / index / total) * 3 : 1,

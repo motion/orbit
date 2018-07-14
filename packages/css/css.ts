@@ -11,7 +11,7 @@ import { CAMEL_TO_SNAKE } from './cssNameMap'
 export const cssNameMap = CAMEL_TO_SNAKE
 
 // exports
-export { CSSPropertySet } from './cssTypes'
+export { CSSPropertySet } from './cssPropertySet'
 export { Transform, Color } from './types'
 export * from './helpers'
 

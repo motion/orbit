@@ -103,7 +103,7 @@ export class PeekStore {
       }
       return res
     },
-    { delay: 32, immediate: true },
+    { delay: 200, immediate: true },
   )
 
   get curState() {
@@ -186,10 +186,14 @@ export class PeekStore {
     delay: 16,
   })
 
-  onDragStart = e => {
-    e.preventDefault()
+  tearPeek = () => {
     this.tornState = { ...this.state }
     this.props.appStore.clearSelected(false)
+  }
+
+  onDragStart = e => {
+    e.preventDefault()
+    this.tearPeek()
     // set initial offset of mouse from frame
     let mouseDown
     const offMove = on(this, window, 'mousemove', e => {

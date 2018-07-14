@@ -96,6 +96,7 @@ export const PeekFrame = view.attach('peekStore')(
           }}
         >
           <UI.Arrow
+            if={!peekStore.tornState}
             position="absolute"
             top={0}
             zIndex={100}

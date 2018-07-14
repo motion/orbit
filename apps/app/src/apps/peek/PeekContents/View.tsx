@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { ConfluenceSetupPane } from './settingSetupPanes/ConfluenceSetupPane'
 import { JiraSetupPane } from './settingSetupPanes/JiraSetupPane'
+import { PeekContentProps } from './PeekContentProps'
 
 const views = {
   confluence: ConfluenceSetupPane,
@@ -9,8 +10,9 @@ const views = {
 }
 
 @view
-export class View extends React.Component {
-  render({ bit, children }) {
+export class View extends React.Component<PeekContentProps> {
+  render() {
+    const { bit, children } = this.props
     if (!bit || !views[bit.id]) {
       console.log('no view or bit', bit, views)
       return children({})

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekBitResolver } from '../index'
 import markdown from '@mcro/marky-markdown'
+import { PeekContentProps } from './PeekContentProps'
 
 const options = {
   language: 'english',
@@ -18,8 +19,9 @@ const BodyContents = view({
 })
 
 @view
-export class Document extends React.Component {
-  render({ bit, appStore, children }) {
+export class Document extends React.Component<PeekContentProps> {
+  render() {
+    const { bit, appStore, children } = this.props
     if (!bit || !bit.data) {
       return children({})
     }

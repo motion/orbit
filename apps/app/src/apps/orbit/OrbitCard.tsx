@@ -430,9 +430,13 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           {typeof children === 'function'
             ? children(contentProps, { background })
             : children}
-          <div if={people && people.length && people[0].data.profile}>
-            <PeopleRow people={people} />
-          </div>
+          {people &&
+            people.length &&
+            people[0].data.profile && (
+              <div>
+                <PeopleRow people={people} />
+              </div>
+            )}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         <UI.HoverGlow

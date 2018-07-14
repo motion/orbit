@@ -8,6 +8,8 @@ import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '../../../stores/SettingInfoStore'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { modelQueryReaction } from '@mcro/helpers'
+import { PeekContentProps } from './PeekContentProps'
+import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -25,7 +27,13 @@ const statusIcons = {
   store: SettingInfoStore,
 })
 @view
-export class SettingContent extends React.Component {
+export class SettingContent extends React.Component<
+  PeekContentProps & {
+    store?: SettingInfoStore
+    integrationSettingsStore?: IntegrationSettingsStore
+    setting: Setting
+  }
+> {
   handleRefresh = async () => {
     const store = this.props.store
     const job = new Job()
@@ -42,7 +50,8 @@ export class SettingContent extends React.Component {
     App.actions.clearPeek()
   }
 
-  render({ appStore, integrationSettingsStore, store, children }) {
+  render() {
+    const { appStore, integrationSettingsStore, store, children } = this.props
     const { setting } = store
     if (!setting) {
       return children({})
@@ -79,7 +88,7 @@ export class SettingContent extends React.Component {
                   />{' '}
                   <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
                 </UI.Text>
-                <load if={!store.job}>Loading...</load>
+                {!store.job && <div>Loading...</div>}
               </UI.Row>
             ),
             after: (
@@ -112,30 +121,37 @@ export class SettingContent extends React.Component {
   }
 }
 
+class LoadSettingStore {
+  get setting() {
+    return this.idSetting || this.typeSetting
+  }
+
+  get item() {
+    return App.peekState.item || {}
+  }
+
+  idSetting = modelQueryReaction(() =>
+    SettingModel.findOne({ id: this.item.id }),
+  )
+
+  // hackkkkky for now because look at OrbitSettings.generalsettings
+  // need a migration to insert the settings first and then make them just like integrationSettingsd
+  typeSetting = modelQueryReaction(() =>
+    SettingModel.findOne({ type: this.item.id }),
+  )
+}
+
 @view.attach({
-  store: class LoadSettingStore {
-    get setting() {
-      return this.idSetting || this.typeSetting
-    }
-
-    get item() {
-      return App.peekState.item || {}
-    }
-
-    idSetting = modelQueryReaction(() =>
-      SettingModel.findOne({ id: this.item.id }),
-    )
-
-    // hackkkkky for now because look at OrbitSettings.generalsettings
-    // need a migration to insert the settings first and then make them just like integrationSettingsd
-    typeSetting = modelQueryReaction(() =>
-      SettingModel.findOne({ type: this.item.id }),
-    )
-  },
+  store: LoadSettingStore,
 })
 @view
-export class Setting extends React.Component {
-  render({ store, ...props }) {
+export class Setting extends React.Component<
+  PeekContentProps & {
+    store: LoadSettingStore
+  }
+> {
+  render() {
+    const { store, ...props } = this.props
     if (!store.setting) {
       return null
     }

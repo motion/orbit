@@ -20,7 +20,8 @@ const imageStyle = {
 
 @view.ui
 export class OrbitCardTeam extends React.Component {
-  render({ store, bit, isExpanded, ...props }) {
+  render() {
+    const { store, bit, isExpanded, ...props } = this.props
     const connections = (
       <div
         css={{
@@ -66,7 +67,8 @@ export class OrbitCardTeam extends React.Component {
 
 @view.ui
 class OrbitCardTeamContent extends React.Component {
-  render({ background, store, bit, isExpanded, connections }) {
+  render() {
+    const { background, store, bit, isExpanded, connections } = this.props
     const { topics, people, recently } = bit.data
     const results = store.results.slice(8, 28)
     const extraHeight = isExpanded ? 20 : 5

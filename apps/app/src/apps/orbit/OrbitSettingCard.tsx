@@ -5,7 +5,7 @@ import { OrbitCard } from '../../apps/orbit/OrbitCard'
 import { SettingInfoStore } from '../../stores/SettingInfoStore'
 import * as OauthActions from '../../actions/OauthActions'
 import { Setting } from '@mcro/models'
-import { OrbitCardProps } from './OrbitCardProps'
+import { OrbitCardProps } from './OrbitCard'
 
 @view.attach('appStore')
 @view.attach({

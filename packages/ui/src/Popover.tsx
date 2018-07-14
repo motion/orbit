@@ -71,6 +71,59 @@ export type PopoverProps = {
   theme?: Object
 }
 
+const Overlay = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: 'transparent',
+  pointerEvents: 'none',
+  opacity: 0,
+  transition: 'all ease-in 100ms',
+  zIndex: -2,
+  shown: {
+    opacity: 1,
+    pointerEvents: 'all',
+  },
+})
+
+Overlay.theme = ({ overlay }) => ({
+  background: props.overlay === true ? 'rgba(0,0,0,0.2)' : props.overlay,
+})
+
+const PopoverWrap = view({
+  position: 'absolute',
+  pointerEvents: 'none',
+  zIndex: -1,
+  opacity: 0,
+  transition: 'opacity ease-in 60ms, transform ease-out 100ms',
+  transform: {
+    y: -5,
+  },
+  isOpen: {
+    opacity: 1,
+    pointerEvents: 'auto',
+    transition: 'transform 0ms',
+    transform: {
+      y: 0,
+    },
+  },
+})
+
+PopoverWrap.theme = ({
+  showForgiveness,
+  forgiveness,
+  distance,
+  animation,
+  isOpen,
+}) => ({
+  padding: calcForgiveness(forgiveness, distance),
+  margin: -calcForgiveness(forgiveness, distance),
+  background: showForgiveness ? [250, 250, 0, 0.2] : 'auto',
+  animation: isOpen && animation === true ? 'bounce 200ms' : animation,
+})
+
 const INVERSE = {
   top: 'bottom',
   bottom: 'top',
@@ -733,8 +786,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
       closeOnClick,
       delay,
       distance,
-      edgePadding,
       forgiveness,
+      showForgiveness,
+      edgePadding,
       height,
       left: _left,
       noArrow,
@@ -744,7 +798,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
       openOnClick,
       openOnHover,
       overlay,
-      showForgiveness,
       target,
       top: _top,
       towards,
@@ -799,18 +852,21 @@ export class Popover extends React.PureComponent<PopoverProps> {
             $open={showPopover}
             $closing={closing}
           >
-            <div
-              $background
+            <Overlay
               if={overlay}
               ref={this.overlayRef}
-              $overlayShown={showPopover && !closing}
+              shown={showPopover && !closing}
               onClick={e => this.handleOverlayClick(e)}
+              overlay={overlay}
             />
-            <div
-              $popover
+            <PopoverWrap
               {...popoverProps}
-              $popoverOpen={!closing && showPopover}
+              isOpen={!closing && showPopover}
               ref={this.setPopoverRef}
+              distance={distance}
+              forgiveness={forgiveness}
+              showForgiveness={showForgiveness}
+              animation={animation}
               style={{
                 ...style,
                 top: top || 'auto',
@@ -857,7 +913,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
                   ? children(showPopover)
                   : children}
               </SizedSurface>
-            </div>
+            </PopoverWrap>
           </div>
         </Portal>
       </>
@@ -889,40 +945,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     closing: {
       zIndex: Number.MAX_SAFE_INTEGER - 1,
     },
-    background: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'transparent',
-      pointerEvents: 'none',
-      opacity: 0,
-      transition: 'all ease-in 100ms',
-      zIndex: -2,
-    },
-    overlayShown: {
-      opacity: 1,
-      pointerEvents: 'all',
-    },
-    popover: {
-      position: 'absolute',
-      pointerEvents: 'none',
-      zIndex: -1,
-      opacity: 0,
-      transition: 'opacity ease-in 60ms, transform ease-out 100ms',
-      transform: {
-        y: -5,
-      },
-    },
-    popoverOpen: {
-      opacity: 1,
-      pointerEvents: 'auto',
-      transition: 'transform 0ms',
-      transform: {
-        y: 0,
-      },
-    },
     item: {
       minWidth: 120,
     },
@@ -933,22 +955,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
       position: 'absolute',
       left: '50%',
     },
-  }
-
-  static theme = props => {
-    return {
-      popover: {
-        padding: calcForgiveness(props.forgiveness, props.distance),
-        margin: -calcForgiveness(props.forgiveness, props.distance),
-        background: props.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
-      },
-      popoverOpen: {
-        animation: props.animation === true ? 'bounce 200ms' : props.animation,
-      },
-      background: {
-        background: props.overlay === true ? 'rgba(0,0,0,0.2)' : props.overlay,
-      },
-    }
   }
 }
 

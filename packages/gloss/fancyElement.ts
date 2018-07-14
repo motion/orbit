@@ -110,11 +110,6 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
     const finalStyles = []
     const isSimple = glossUID && glossUID[0] === '_'
 
-    // this is whats attaching simple component styles, for now
-    if (name) {
-      addStyle(finalStyles, `${name}--${glossUID}`, true)
-    }
-
     let style
 
     if (propNames) {
@@ -170,10 +165,6 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
           if (!isTag || validProp(prop)) {
             finalProps[prop] = val
           }
-          continue
-        }
-        // ignore most falsy values (except 0)
-        if (val === false || val === null || val === undefined) {
           continue
         }
         // $style={}

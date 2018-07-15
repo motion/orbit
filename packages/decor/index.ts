@@ -75,9 +75,6 @@ export default function decor(
 
   const decorDecorator = <DecorCompiledDecorator<any>>(
     function decorDecorator(KlassOrOpts: Function | Object, opts?: Object) {
-      if (KlassOrOpts.prototype && KlassOrOpts.prototype.testMeOut) {
-        console.log('??????????????????????????????????????', KlassOrOpts)
-      }
       // BUGIFX: wrapHOC the component comes through again!
       // @ts-ignore
       if (KlassOrOpts._isHOC) {

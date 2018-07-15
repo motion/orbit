@@ -369,7 +369,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       (childTheme && childTheme.background) || theme.base.background
     return (
       <CardWrap
-        ref={store.setRef}
+      forwardRef={store.setRef}
         onClick={store.handleClick}
         {...hoverToSelect && !inactive && this.hoverSettler.props}
         style={{

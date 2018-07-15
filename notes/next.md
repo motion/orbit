@@ -5,7 +5,6 @@
 - icons https://danklammer.com/bytesize-icons/
 - nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
 - static styles https://github.com/jsxstyle/jsxstyle/tree/master/packages/jsxstyle-webpack-plugin
-- displayname https://github.com/paypal/glamorous/blob/2b71a17cd9dd8032d5343639251803d256e16afa/src/get-glamor-classname.js
 
 - filters
   - one bar for integrations - can easily toggle many on/off

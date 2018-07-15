@@ -10,7 +10,6 @@ npx nodemon \
   --quiet \
   --watch _ \
   --watch $(realpath node_modules/@mcro/stores)/_ \
-  --watch $(realpath node_modules/@mcro/black)/_ \
   --watch $(realpath node_modules/@mcro/constants)/_  \
   --watch $(realpath node_modules/@mcro/reactron)/_  \
   --watch $(realpath node_modules/@mcro/decor-mobx)/_  \

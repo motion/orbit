@@ -1,5 +1,7 @@
 const app = require('electron').app
 
+console.log(require('electron'))
+
 app.once('ready', () => {
   // bugfix something weird with esm and startup
   // require = require('esm')(module)

@@ -29,7 +29,7 @@ export class ResizeSensor extends React.Component<{
   }
 
   render() {
-    return <IFrame ref={this.setRef} />
+    return <IFrame forwardRef={this.setRef} />
   }
 
   componentDidMount() {

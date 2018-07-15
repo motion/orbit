@@ -181,7 +181,7 @@ class TableHeadColumn extends React.PureComponent {
         width={width}
         title={title}
         onClick={sortable === true ? this.onClick : undefined}
-        innerRef={this.setRef}
+        forwardRef={this.setRef}
       >
         {children}
       </TableHeadColumnContainer>

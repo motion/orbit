@@ -53,8 +53,20 @@ function createViewDecorator(): ViewDecorator {
     if (glossSimpleComponentArgs(a, b)) {
       return decorator(a, b)
     }
+    // patch this in for now...
+    const shouldPatchConfig = !a.prototype && !a.withConfig
+    let aFinal
+    if (shouldPatchConfig) {
+      a.withConfig = function(config) {
+        if (config.displayName) {
+          a.displayName = config.displayName
+        }
+        return aFinal
+      }
+    }
     // class/function
-    return blackDecorator(a)
+    aFinal = blackDecorator(a)
+    return aFinal
   }
   // pass on emitter
   view.emitter = blackDecorator.emitter

@@ -78,7 +78,7 @@ export class Masonry extends React.Component {
     if (!measured) {
       return (
         <MasonryGrid
-          ref={this.handleGridRef}
+          forwardRef={this.handleGridRef}
           {...props}
           css={{
             gridColumnGap,

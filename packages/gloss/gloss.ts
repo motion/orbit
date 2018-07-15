@@ -1,4 +1,3 @@
-import * as React from 'react'
 import fancyElement from './fancyElement'
 import css, { validCSSAttr, Color } from '@mcro/css'
 import JSS from './stylesheet'
@@ -66,11 +65,20 @@ export type Options = {
   isColor?: Function
 }
 
-interface GlossView {
+type GlossViewConfig = {
+  displayName?: string
+}
+
+interface GlossView<T> {
   (props: Object): any
   theme?: Object
   style?: Object
   displayName?: string
+  compiledStyles: Object
+  child?: GlossView<any>
+  withConfig: (a: GlossViewConfig) => T
+  defaultProps?: Object
+  tagName?: string
 }
 
 const DEFAULT_OPTS = {}
@@ -260,15 +268,18 @@ export default class Gloss {
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
     const id = `_${uid()}`
     let name = target.name || target
+    let displayName = name
     let themeUpdate
     let hasAttachedStyles = false
     let targetElement = target
     if (isParentComponent) {
-      targetElement = target.displayName
-      name = targetElement
+      targetElement = name = targetElement.tagName || 'div'
+    }
+    if (target === 'span') {
+      console.log('is', targetElement)
     }
     const styleProp = `$${name}`
-    const InnerView = <GlossView>attachTheme(allProps => {
+    const View = <GlossView<any>>attachTheme(allProps => {
       // basically PureRender
       if (elementCache.has(allProps)) {
         return elementCache.get(allProps)
@@ -302,21 +313,26 @@ export default class Gloss {
       const element = this.createElement(targetElement, {
         glossUID: id,
         ref: forwardRef,
+        [`data-name`]: displayName,
         [styleProp]: true,
         ...props,
       })
       elementCache.set(props, element)
       return element
     })
-    // forward ref
-    const View = React.forwardRef((props, ref) =>
-      React.createElement(InnerView, { ...props, forwardRef: ref }),
-    )
-    // TODO: babel transform to auto attach name?
-    View.displayName = View.displayName || name
     View.style = styles
+    View.displayName = targetElement
+    View.tagName = name
     if (isParentComponent) {
       View.child = target
+    }
+    View.withConfig = config => {
+      if (config.displayName) {
+        // set tagname and displayname
+        displayName = config.displayName
+        View.displayName = config.displayName
+      }
+      return View
     }
     View[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
     // forward ref

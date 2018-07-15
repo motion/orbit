@@ -351,7 +351,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
 
     return (
       <DynamicListContainer
-        ref={this.setContainerRef}
+        forwardRef={this.setContainerRef}
         onScroll={this.handleScroll}
       >
         <ResizeSensor onResize={this.onResize} />

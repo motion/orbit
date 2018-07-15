@@ -9,7 +9,6 @@ npx nodemon \
   --quiet \
   --ignore src \
   --watch _ \
-  --watch $(realpath node_modules/@mcro/black)/_ \
   --watch $(realpath node_modules/@mcro/models)/_ \
   --watch $(realpath node_modules/@mcro/services)/_ \
   --watch $(realpath node_modules/@mcro/debug) \

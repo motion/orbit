@@ -9,8 +9,8 @@ const jss = JSS.create()
 jss.use(
   jssNested(),
   jssDefaultUnit(),
-  jssPropsSort(),
-  jssIsolate({ isolate: false })
+  // jssPropsSort(),
+  // jssIsolate({ isolate: false })
 )
 
 export default jss

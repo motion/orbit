@@ -54,7 +54,9 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
                 }
               >
                 {sanitize(
-                  highlightWords.length ? bit.body : bit.body.slice(0, 200),
+                  highlightWords.length
+                    ? bit.body
+                    : (bit.body || '').slice(0, 200),
                 )}
               </UI.Text>
             </div>

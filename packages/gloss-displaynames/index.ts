@@ -1,7 +1,7 @@
 import handleGlossReferences from './handleGlossReferences'
 
 export default function(babel) {
-  const { types: t } = babel
+  // const { types: t } = babel
   const references = new Set()
   return {
     name: '@mcro/gloss-displaynames',

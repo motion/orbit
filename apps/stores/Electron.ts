@@ -1,5 +1,4 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
-import { setGlobal } from './helpers'
 import { store, deep } from '@mcro/black/store'
 
 export let Electron = null as ElectronStore
@@ -37,4 +36,4 @@ class ElectronStore {
 
 Electron = proxySetters(new ElectronStore())
 Bridge.stores[Electron.source] = Electron
-setGlobal('Electron', Electron)
+

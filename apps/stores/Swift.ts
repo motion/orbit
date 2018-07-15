@@ -1,6 +1,5 @@
 import { store, react } from '@mcro/black/store'
 import { WebSocket, ReconnectingWebSocket } from '@mcro/mobx-bridge'
-import { setGlobal } from './helpers'
 import { Desktop } from './Desktop'
 
 export let Swift
@@ -113,4 +112,3 @@ class SwiftStore {
 }
 
 Swift = new SwiftStore()
-setGlobal('Swift', Swift)

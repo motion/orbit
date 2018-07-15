@@ -43,4 +43,3 @@ export class Setting extends T.BaseEntity {
   @T.UpdateDateColumn() updatedAt: Date
 }
 
-T.setGlobal('Setting', Setting)

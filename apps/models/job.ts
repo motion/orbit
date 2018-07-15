@@ -60,4 +60,3 @@ export class Job extends T.BaseEntity {
   }
 }
 
-T.setGlobal('Job', Job)

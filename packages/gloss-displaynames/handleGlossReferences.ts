@@ -19,7 +19,6 @@ function handleGlossReferences(references, file, babel) {
   })
 
   function handleBuiltIns(path, displayName) {
-    console.log('path', path)
     const isBuiltIn = looksLike(path, {
       parentPath: {
         type: 'CallExpression',
@@ -31,14 +30,9 @@ function handleGlossReferences(references, file, babel) {
         },
       },
     })
-    console.log('isBuiltIn', isBuiltIn, displayName)
     if (!isBuiltIn) {
       return
     }
-    console.log({
-      GLOSS: path.node,
-      DISPLAY_NAME: t.stringLiteral(displayName),
-    })
     path.parentPath.replaceWith(
       buildBuiltInWithConfig({
         GLOSS: path.node,

@@ -1,5 +1,4 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
-import { setGlobal } from './helpers'
 import { store, react, deep } from '@mcro/black/store'
 
 // store export
@@ -196,5 +195,4 @@ class DesktopStore {
 }
 
 Desktop = proxySetters(new DesktopStore())
-setGlobal('Desktop', Desktop)
 Bridge.stores[Desktop.source] = Desktop

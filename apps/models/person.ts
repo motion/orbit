@@ -23,5 +23,3 @@ export class Person extends T.BaseEntity {
     }
   }
 }
-
-T.setGlobal('Person', Person)

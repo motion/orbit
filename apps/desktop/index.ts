@@ -1,8 +1,5 @@
 import 'isomorphic-fetch'
 import '@mcro/debug/inject'
-import '@mcro/black/mlog.js'
-import * as Mobx from 'mobx'
-import root from 'global'
 
 require('module-alias').addAlias('~', __dirname + '/')
 
@@ -12,12 +9,7 @@ console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 
 if (process.env.NODE_ENV === 'development') {
   require('source-map-support/register')
-  root.Mobx = Mobx
-  root.require = require
-  root.Path = require('path')
-  root._ = require('lodash')
-  root.r2 = require('@mcro/r2')
-  root.Constants = require('./constants')
+  require('./helpers/installGlobals')
 }
 
 const { Root } = require('./root')

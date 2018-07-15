@@ -57,4 +57,3 @@ export class Bit extends T.BaseEntity {
   people: Person[]
 }
 
-T.setGlobal('Bit', Bit)

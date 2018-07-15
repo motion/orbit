@@ -7,30 +7,29 @@ import * as Constants from '../constants'
 import * as Black from '@mcro/black'
 import r2 from '@mcro/r2'
 import * as Helpers from '../helpers'
+import { App, Desktop, Swift, Electron } from '@mcro/stores'
+import { modelsList } from '@mcro/models'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
-// @ts-ignore
-window.webpackData = __webpack_require__
-// @ts-ignore
-window.require = require('webpack-runtime-require').Require
+window['webpackData'] = __webpack_require__
+window['require'] = require('webpack-runtime-require').Require
 
 // the heavy hitters
-// @ts-ignore
-window.React = React
-// @ts-ignore
-window.Constants = Constants
-// @ts-ignore
-window.Mobx = Mobx
-// @ts-ignore
-window.MobxUtils = MobxUtils
-// @ts-ignore
-window.Constants = Constants
-// @ts-ignore
-window.log = Black.log
-// @ts-ignore
-window.Black = Black
-// @ts-ignore
-window.r2 = r2
-// @ts-ignore
-window.Helpers = Helpers
+window['React'] = React
+window['Constants'] = Constants
+window['Mobx'] = Mobx
+window['MobxUtils'] = MobxUtils
+window['Constants'] = Constants
+window['log'] = Black.log
+window['Black'] = Black
+window['r2'] = r2
+window['Helpers'] = Helpers
+window['App'] = App
+window['Desktop'] = Desktop
+window['Electron'] = Electron
+window['Swift'] = Swift
+
+modelsList.map(model => {
+  window[`${model.name}`] = model
+})

@@ -4,6 +4,7 @@ import { view, on } from '@mcro/black'
 import { fuzzy } from '../../../../helpers'
 import * as _ from 'lodash'
 import { SlackChannel } from './slackPanes/SlackChannel'
+import { SettingPaneProps } from './SettingPaneProps'
 
 class SlackSettingStore {
   search = ''
@@ -42,7 +43,11 @@ class SlackSettingStore {
   store: SlackSettingStore,
 })
 @view
-export class SlackSetting extends React.Component {
+export class SlackSetting extends React.Component<
+  SettingPaneProps & {
+    store: SlackSettingStore
+  }
+> {
   render() {
     const { store, setting, children } = this.props
     if (!setting) {

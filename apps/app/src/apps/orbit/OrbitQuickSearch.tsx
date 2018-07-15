@@ -48,26 +48,21 @@ const Main = view({
   },
 })
 
-@attachTheme
-@view
-class OrbitQuickItem extends React.Component {
-  render() {
-    const { item, appStore, index } = this.props
-    const active =
-      appStore.quickSearchIndex === index && appStore.activeIndex === -1
-    return (
-      <QuickItem active={active} inactive={!active}>
-        <OrbitIcon icon={`/icons/${item.icon}`} size={iconSize} />
-        <Description>
-          <Main ellipse>{item.title}</Main>
-          <Main secondary ellipse>
-            {item.id}
-          </Main>
-        </Description>
-      </QuickItem>
-    )
-  }
-}
+const OrbitQuickItem = view(({ item, appStore, index }) => {
+  const active =
+    appStore.quickSearchIndex === index && appStore.activeIndex === -1
+  return (
+    <QuickItem active={active} inactive={!active}>
+      <OrbitIcon icon={`/icons/${item.icon}`} size={iconSize} />
+      <Description>
+        <Main ellipse>{item.title}</Main>
+        <Main secondary ellipse>
+          {item.id}
+        </Main>
+      </Description>
+    </QuickItem>
+  )
+})
 
 const QuickSearch = view({
   // pointerEvents: 'all',

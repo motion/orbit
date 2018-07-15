@@ -2,8 +2,11 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { OrbitIcon } from '../../../../apps/orbit/OrbitIcon'
+import { SettingPaneProps } from './SettingPaneProps'
 
 class GmailSettingStore {
+  props: SettingPaneProps
+
   max = ''
 
   willMount() {
@@ -20,7 +23,11 @@ class GmailSettingStore {
   store: GmailSettingStore,
 })
 @view
-export class GmailSetting extends React.Component {
+export class GmailSetting extends React.Component<
+  SettingPaneProps & {
+    store: GmailSettingStore
+  }
+> {
   render() {
     const { store, setting, update, children } = this.props
     const { syncSettings } = setting.values

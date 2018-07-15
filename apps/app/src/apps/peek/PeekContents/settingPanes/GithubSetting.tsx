@@ -6,6 +6,7 @@ import { Bits } from '../../../../views/Bits'
 import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import { SettingPaneProps } from './SettingPaneProps'
 
 const columnSizes = {
   repo: 'flex',
@@ -158,7 +159,9 @@ const InvisiblePane = view(UI.FullScreen, {
 
 @view.provide({ githubStore: GithubSettingStore })
 @view
-export class GithubSetting extends React.Component {
+export class GithubSetting extends React.Component<
+  SettingPaneProps & { githubStore: GithubSettingStore }
+> {
   render() {
     const { githubStore: store, children } = this.props
     return children({

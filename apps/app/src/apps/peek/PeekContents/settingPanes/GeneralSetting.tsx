@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import { OrbitCard } from '../../../../apps/orbit/OrbitCard'
 // import * as UI from '@mcro/ui'
 import * as Views from '../../../../views'
+import { SettingPaneProps } from './SettingPaneProps'
 
 class OrbitGeneralSettingsStore {
   handleChange = prop => val => {
@@ -16,7 +17,11 @@ class OrbitGeneralSettingsStore {
   store: OrbitGeneralSettingsStore,
 })
 @view
-export class GeneralSetting extends React.Component {
+export class GeneralSetting extends React.Component<
+  SettingPaneProps & {
+    store: OrbitGeneralSettingsStore
+  }
+> {
   render() {
     const { store, setting, children } = this.props
     if (!setting) {

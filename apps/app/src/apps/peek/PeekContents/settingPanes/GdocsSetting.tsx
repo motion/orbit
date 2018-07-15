@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import { formatDistance } from 'date-fns'
+import { SettingPaneProps } from './SettingPaneProps'
 
 const baseId = '0AKfTFZu-thXbUk9PVA'
 const truncate = (s, n) => (s.length > n ? s.substring(0, n) + '...' : s)
@@ -12,7 +13,8 @@ class Folder extends React.Component {
   // recursive use of stores was raising issues
   state = { open: false, showAllFiles: false }
 
-  render({ id = baseId, folders, files }) {
+  render() {
+    const { id = baseId, folders, files } = this.props
     const current = folders.filter(f => f.id === id)
     const { name } = current.length > 0 ? current[0] : { name: 'home' }
     const { open, showAllFiles } = this.state
@@ -34,7 +36,7 @@ class Folder extends React.Component {
         )
     const moreFiles = childFiles.length - showFiles.length
     return (
-      <folder>
+      <div>
         <UI.Row onClick={() => this.setState({ open: !open })}>
           <UI.Text fontWeight={500} css={{ userSelect: 'none' }}>
             {name}
@@ -43,9 +45,9 @@ class Folder extends React.Component {
             <b>{childFolders.length + childFiles.length}</b> items
           </UI.Text>
         </UI.Row>
-        <content open={isBase ? true : open}>
-          <content>
-            <folders>
+        <div open={isBase ? true : open}>
+          <div>
+            <div>
               {childFolders.map(folder => (
                 <Folder
                   key={folder.id}
@@ -54,13 +56,13 @@ class Folder extends React.Component {
                   id={folder.id}
                 />
               ))}
-            </folders>
-            <noItems if={showFiles.length === 0 && childFolders.length === 0}>
+            </div>
+            <div if={showFiles.length === 0 && childFolders.length === 0}>
               <UI.Text css={{ marginLeft: 15 }} opacity={0.8}>
                 No Files
               </UI.Text>
-            </noItems>
-            <items>
+            </div>
+            <div>
               {showFiles.map(item => (
                 <UI.Row alignItems="center">
                   <UI.Button
@@ -79,7 +81,7 @@ class Folder extends React.Component {
                   </UI.Text>
                 </UI.Row>
               ))}
-            </items>
+            </div>
             <UI.Row if={moreFiles > 0}>
               <UI.Button
                 marginTop={5}
@@ -88,23 +90,10 @@ class Folder extends React.Component {
                 {moreFiles} files edited more than 1 year ago
               </UI.Button>
             </UI.Row>
-          </content>
-        </content>
-      </folder>
+          </div>
+        </div>
+      </div>
     )
-  }
-
-  static style = {
-    folder: {
-      marginTop: 2,
-      marginBottom: 2,
-    },
-    title: {
-      userSelect: 'none',
-    },
-    content: {
-      margin: [5, 10],
-    },
   }
 }
 
@@ -128,7 +117,11 @@ class GDocsSettingStore {
   store: GDocsSettingStore,
 })
 @view
-export class GdocsSetting extends React.Component {
+export class GdocsSetting extends React.Component<
+  SettingPaneProps & {
+    store: GDocsSettingStore
+  }
+> {
   render({ store, children }) {
     const loading = !store.folders
     return children({

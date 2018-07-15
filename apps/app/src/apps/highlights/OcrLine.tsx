@@ -5,7 +5,11 @@ import { LINE_Y_ADJ, TOP_BAR_PAD } from './helpers'
 
 @view
 export class OCRLine {
-  render({ item, store: { hoveredLine } }) {
+  render() {
+    const {
+      item,
+      store: { hoveredLine },
+    } = this.props
     const [x, y, width, height] = item
     const key = Helpers.wordKey(item)
     return (

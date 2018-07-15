@@ -1,3 +1,5 @@
+- make stores do `extends Store` as that can be typed very easily
+
 - decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
 - p2p https://github.com/mafintosh/hyperdb
 - hire https://github.com/theKashey
@@ -21,12 +23,12 @@
   - hover highlight the areas effect
 - bit document page design
 - fix laggy typing on search
-- move sonar settings pane stuff in
 - settings panes runthrough
 - search filters <=> nlp v1
 - search highlight sections v2
 - settings panes more fixes
 - corresponding peek UX for search results
+- "open" items from search/peek
   - make all peeks work like slack and deal with "item"
   - click highlight to open directly to that item in the peek
 - slack card:

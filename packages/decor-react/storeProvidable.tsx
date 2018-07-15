@@ -7,6 +7,7 @@ import root from 'global'
 import { DecorPlugin } from '@mcro/decor'
 import { StoreContext } from './contexts'
 import { Disposable } from 'event-kit'
+import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants'
 
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {

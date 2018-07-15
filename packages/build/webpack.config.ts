@@ -121,7 +121,7 @@ const config = {
     rules: [
       {
         test: /\.[jt]sx?$/,
-        use: [/* 'cache-loader', 'thread-loader',  */ 'babel-loader'],
+        use: ['cache-loader', 'thread-loader', 'babel-loader'],
         exclude: ['node_modules'],
       },
       // {
@@ -198,7 +198,7 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
     // adds cache based on source of files
-    // new HardSourceWebpackPlugin(),
+    new HardSourceWebpackPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       favicon: 'public/favicon.png',

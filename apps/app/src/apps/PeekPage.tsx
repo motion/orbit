@@ -84,7 +84,6 @@ export class PeekPage extends React.Component<{
   peekStore?: PeekStore
 }> {
   render() {
-    console.log('999999999999999999999999999999999')
     const { appStore, peekStore } = this.props
     return (
       <div>

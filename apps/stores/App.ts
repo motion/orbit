@@ -3,15 +3,66 @@ import { setGlobal } from './helpers'
 import { store, react, deep } from '@mcro/black/store'
 import { Desktop } from './Desktop'
 
-export let App
+export let App = null as AppStore
 
 // @ts-ignore
 const isBrowser = typeof window !== 'undefined'
 const isOrbit = isBrowser && window.location.pathname === '/orbit'
 // const log = debug('App')
 
+export type AppStatePeekItem = {
+  id: string
+  icon: string
+  title: string
+  body: string
+  type: string
+  integration: string
+}
+
+export type AppState = {
+  query: string
+  screenSize: [number, number]
+  orbitState: {
+    hidden: boolean
+    pinned: boolean
+    docked: boolean
+    orbitOnLeft: boolean
+    position: [number, number]
+    size: [number, number]
+    inputFocused: boolean
+  }
+  peekState: {
+    pinned: boolean
+    devModeStick: boolean
+    target?: {
+      top: number
+      left: number
+      width: number
+      height: number
+    }
+    item?: AppStatePeekItem
+    peekId: number
+    peekOnLeft: boolean
+    position: [number, number]
+    size: [number, number]
+  }
+  authState: {
+    openId: null
+    closeId: null
+  }
+  highlightWords: {}
+  hoveredWord: null
+  hoveredLine: null
+  contextMessage: 'Orbit'
+}
+
 @store
 class AppStore {
+  // shortcuts
+  orbitState: AppStore['state']['orbitState']
+  peekState: AppStore['state']['peekState']
+  authState: AppStore['state']['authState']
+
   messages = {
     TOGGLE_SETTINGS: 'TOGGLE_SETTINGS',
     TOGGLE_DOCKED: 'TOGGLE_DOCKED',
@@ -30,7 +81,7 @@ class AppStore {
   bridge: any
   source = 'App'
 
-  state = deep({
+  state: AppState = deep({
     query: '',
     screenSize: [0, 0],
     orbitState: {

@@ -1,12 +1,68 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
 import { setGlobal } from './helpers'
 import { store, react, deep } from '@mcro/black/store'
-import { DesktopState } from './types'
 
+// store export
 export let Desktop = null as DesktopStore
 
 // const log = debug('Desktop')
 const PAD_WINDOW = 15
+
+export type DesktopStateAppState = {
+  id?: string
+  name?: string
+  title?: string
+  offset: [number, number]
+  bounds: [number, number]
+  selectedText?: string
+}
+
+export type DesktopStateOCRItem = {
+  word?: string
+  weight: number
+  top: number
+  left: number
+  width: number
+  height: number
+}
+
+export type DesktopState = {
+  paused: boolean
+  appState?: DesktopStateAppState
+  lastScreenChange: number
+  lastAppChange: number
+  hoverState: {
+    orbitHovered: boolean
+    peekHovered: boolean
+  }
+  mouseState: {
+    mouseDown?: { x: number; y: number; at: number }
+  }
+  operatingSystem: {
+    isAccessible: boolean
+    macVersion?: string
+  }
+  keyboardState: {
+    option?: number
+    optionUp?: number
+    shiftUp?: number
+    space?: number
+  }
+  ocrState: {
+    words?: DesktopStateOCRItem[]
+    lines?: DesktopStateOCRItem[]
+    clearWords: { [key: string]: number }
+    restoreWords: { [key: string]: number }
+  }
+  focusedOnOrbit: boolean
+  appStateUpdatedAt: number
+  lastBitUpdatedAt: number
+  searchState: {
+    pluginResults: Array<{}>
+    indexStatus: string
+    searchResults: Array<{}>
+  }
+}
 
 @store
 class DesktopStore {

@@ -1,5 +1,5 @@
 import { Person, Bit } from '@mcro/models'
-import { App } from '@mcro/stores'
+import { App, AppStatePeekItem } from '@mcro/stores'
 import peekPosition from '../helpers/peekPosition'
 import invariant from 'invariant'
 import debug from '@mcro/debug'
@@ -15,13 +15,6 @@ type PositionObject =
       height: number
     }
 
-type GenericPeekItem = {
-  id: string
-  type: string
-  title?: string
-  integration?: string
-}
-
 function setPeekState(props) {
   const target = getTargetPosition(props.target)
   App.setPeekState({
@@ -32,7 +25,7 @@ function setPeekState(props) {
 }
 
 export function selectItem(
-  item: Person | Bit | GenericPeekItem,
+  item: Person | Bit | AppStatePeekItem,
   target?: PositionObject,
 ) {
   invariant(item, 'Must pass item')

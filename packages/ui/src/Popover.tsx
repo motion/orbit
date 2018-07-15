@@ -44,7 +44,8 @@ export type PopoverProps = {
   onMouseEnter?: Function
   onMouseLeave?: Function
   onClose?: Function
-  animation?: string
+  openAnimation?: string
+  closeAnimation?: string
   // lets you adjust position after target is positioned
   adjust?: number[]
   // hide arrow
@@ -138,12 +139,11 @@ PopoverWrap.theme = ({
   forgiveness,
   distance,
   animation,
-  isOpen,
 }) => ({
   padding: calcForgiveness(forgiveness, distance),
   margin: -calcForgiveness(forgiveness, distance),
   background: showForgiveness ? [250, 250, 0, 0.2] : 'auto',
-  animation: isOpen && animation === true ? 'bounce 200ms' : animation,
+  animation,
 })
 
 const INVERSE = {
@@ -176,7 +176,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
     arrowSize: 24,
     forgiveness: 15,
     towards: 'auto',
-    animation: 'slide 300ms',
+    openAnimation: 'slide 300ms',
+    closeAnimation: 'bounce 300ms',
     adjust: [0, 0],
     delay: 16,
   }
@@ -801,7 +802,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
   render() {
     const {
       adjust,
-      animation,
+      openAnimation,
+      closeAnimation,
       arrowSize,
       children,
       closeOnClick,
@@ -886,7 +888,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
               distance={distance}
               forgiveness={forgiveness}
               showForgiveness={showForgiveness}
-              animation={animation}
+              animation={isOpen ? closeAnimation : openAnimation}
               style={{
                 ...style,
                 top: top || 'auto',

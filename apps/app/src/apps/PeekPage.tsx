@@ -22,6 +22,7 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
     console.error('none', type)
     return <div>no pane found</div>
   }
+  log(`RRR`, item)
   return (
     <PeekContentsView
       key={peekId}
@@ -50,11 +51,7 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
             date={date}
             subhead={subhead}
             permalink={permalink}
-            integration={
-              peekStore.model instanceof Bit
-                ? peekStore.model.integration
-                : null
-            }
+            integration={item.integration || item.type}
             {...headerProps}
           />
           <PeekContent>{content}</PeekContent>

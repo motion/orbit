@@ -2,7 +2,7 @@ import Oracle from '@mcro/oracle'
 import { debounce, throttle, last } from 'lodash'
 import iohook from 'iohook'
 import { store, isEqual, react, on } from '@mcro/black/store'
-import { App, Desktop, Electron, Swift } from '@mcro/stores'
+import { App, Desktop, DesktopState, Electron, Swift } from '@mcro/stores'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
@@ -179,8 +179,7 @@ export class Screen {
         return
       }
       const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
-      Desktop.setFocusedOnOrbit(focusedOnOrbit)
-      // @ts-ignore
+      Desktop.setState({ focusedOnOrbit })
       const state: Partial<DesktopState> = {
         appState: nextState,
       }

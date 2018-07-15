@@ -2,7 +2,6 @@ import * as React from 'react'
 import fancyElement from './fancyElement'
 import css, { validCSSAttr, Color } from '@mcro/css'
 import JSS from './stylesheet'
-import { wrapTheme } from './theme/attachTheme'
 import { ThemeContext } from './theme/ThemeContext'
 
 import * as Helpers_ from '@mcro/css'

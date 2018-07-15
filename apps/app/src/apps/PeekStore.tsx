@@ -5,8 +5,11 @@ import { deepClone } from '../helpers'
 import * as Constants from '../constants'
 
 const TYPE_THEMES = {
-  person: 'orange',
-  setting: 'gray',
+  person: {
+    background: 'rgba(0,0,0,0.013)',
+    color: '#444',
+  },
+  // setting: 'gray',
 }
 
 const INTEGRATION_THEMES = {
@@ -16,11 +19,6 @@ const INTEGRATION_THEMES = {
   jira: { background: 'darkblue', color: 'white' },
   confluence: { background: 'darkblue', color: 'white' },
   gmail: { background: 'darkred', color: 'white' },
-}
-
-const PERSON_THEME = {
-  background: 'rgba(0,0,0,0.013)',
-  color: '#444',
 }
 
 const BASE_THEME = {
@@ -34,21 +32,11 @@ export class PeekStore {
   history = []
 
   get theme() {
-    if (!this.model) {
-      return null
+    if (!App.peekState.item) {
+      return BASE_THEME
     }
-    const item = App.peekState.item
-    if (TYPE_THEMES[item]) {
-      return TYPE_THEMES[item]
-    }
-    if (this.model instanceof Person) {
-      return PERSON_THEME
-    }
-    const intTheme =
-      this.model instanceof Bit
-        ? INTEGRATION_THEMES[this.model.integration || this.model.type]
-        : null
-    return intTheme || BASE_THEME
+    const { type, integration } = App.peekState.item
+    return INTEGRATION_THEMES[integration] || TYPE_THEMES[type] || BASE_THEME
   }
 
   get hasHistory() {

@@ -29,7 +29,7 @@ type Props = {
   forwardRef?: React.Ref<any>
 }
 
-class HighlightedTextAreaInner extends React.Component<Props> {
+export class HighlightedTextArea extends React.Component<Props> {
   backdrop = React.createRef()
 
   static defaultProps = {
@@ -43,6 +43,7 @@ class HighlightedTextAreaInner extends React.Component<Props> {
         value: props.value,
       }
     }
+    return null
   }
 
   state = {

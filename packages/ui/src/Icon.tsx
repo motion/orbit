@@ -63,7 +63,7 @@ IconInner.theme = ({ padding, width: propWidth, height: propHeight, size }) => {
   }
 }
 
-export class Icon extends React.PureComponent<IconProps> {
+export class Icon extends React.Component<IconProps> {
   static defaultProps = {
     size: 16,
     type: 'mini',

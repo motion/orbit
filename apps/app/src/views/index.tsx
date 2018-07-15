@@ -157,6 +157,8 @@ const SmallLinkContainer = view('span', {
   },
 })
 
+window.SmallLinkContainer = SmallLinkContainer
+
 @view.ui
 export class SmallLink extends React.Component {
   handleClick = () => {

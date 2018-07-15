@@ -19,7 +19,7 @@ function handleGlossReferences(references, file, babel) {
   })
 
   function handleBuiltIns(path, displayName) {
-    // console.log('path', path)
+    console.log('path', path)
     const isBuiltIn = looksLike(path, {
       parentPath: {
         type: 'CallExpression',

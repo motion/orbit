@@ -1,4 +1,3 @@
-import * as React from 'react'
 import fancyElement from './fancyElement'
 import css, { validCSSAttr, Color } from '@mcro/css'
 import JSS from './stylesheet'
@@ -79,6 +78,7 @@ interface GlossView<T> {
   child?: GlossView<any>
   withConfig: (a: GlossViewConfig) => T
   defaultProps?: Object
+  tagName?: string
 }
 
 const DEFAULT_OPTS = {}
@@ -268,12 +268,15 @@ export default class Gloss {
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
     const id = `_${uid()}`
     let name = target.name || target
+    let displayName = name
     let themeUpdate
     let hasAttachedStyles = false
     let targetElement = target
     if (isParentComponent) {
-      targetElement = target.displayName
-      name = targetElement
+      targetElement = name = targetElement.tagName || 'div'
+    }
+    if (target === 'span') {
+      console.log('is', targetElement)
     }
     const styleProp = `$${name}`
     const View = <GlossView<any>>attachTheme(allProps => {
@@ -310,6 +313,7 @@ export default class Gloss {
       const element = this.createElement(targetElement, {
         glossUID: id,
         ref: forwardRef,
+        [`data-name`]: displayName,
         [styleProp]: true,
         ...props,
       })
@@ -318,13 +322,14 @@ export default class Gloss {
     })
     View.style = styles
     View.displayName = targetElement
+    View.tagName = name
     if (isParentComponent) {
       View.child = target
     }
     View.withConfig = config => {
       if (config.displayName) {
         // set tagname and displayname
-        targetElement = config.displayName
+        displayName = config.displayName
         View.displayName = config.displayName
       }
       return View

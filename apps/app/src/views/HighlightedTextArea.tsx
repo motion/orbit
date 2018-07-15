@@ -123,7 +123,6 @@ export class HighlightedTextArea extends React.Component<Props> {
 
   render() {
     const { onChange, highlight, value, forwardRef, ...props } = this.props
-    console.log('now value is', this.state.value)
     return (
       <TextAreaOuter debug>
         <Block

@@ -49,7 +49,6 @@ export const blackDecorator: DecorCompiledDecorator<any> = decor(
 
 function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(a, b) {
-    console.log('got a thing', a, b)
     // short: view({ ...styles }), view('div', {}) view(OtherView, {})
     if (glossSimpleComponentArgs(a, b)) {
       return decorator(a, b)

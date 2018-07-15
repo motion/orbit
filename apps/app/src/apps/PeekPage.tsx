@@ -12,7 +12,6 @@ import { PeekBitInformation } from './peek/PeekContents/PeekBitInformation'
 import { Bit, Person } from '@mcro/models'
 
 const PeekPageInner = view(({ peekStore, appStore }) => {
-  console.log('_____________________', peekStore)
   if (!peekStore.state) {
     return null
   }
@@ -23,7 +22,6 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
     console.error('none', type)
     return <div>no pane found</div>
   }
-  console.log('!!!!!!!!! peeek page', peekStore)
   return (
     <PeekContentsView
       key={peekId}

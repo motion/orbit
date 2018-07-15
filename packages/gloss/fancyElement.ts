@@ -69,7 +69,7 @@ setTimeout(() => {
 const cssOpts = { snakeCase: false }
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
+export default function fancyElementFactory(Gloss, styleSheet, themeSheet, isSimple = false) {
   const { options, css } = Gloss
   const tagNameOption = options.tagName
 
@@ -96,19 +96,14 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
       console.error('Error values', type, props, children)
       throw new Error(`Didn't get a valid type: ${type}`)
     }
+
     // @ts-ignore
-    let glossUID = this && this.constructor.glossUID
-    // for shorthand components
-    if (props && props.glossUID) {
-      glossUID = props.glossUID
-      delete props.glossUID
-    }
+    const glossUID = isSimple ? children[0] : this && this.constructor.glossUID
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
     const name = !isTag ? `${type.name}` : `${type}`
     const finalProps: any = {}
     const finalStyles = []
-    const isSimple = glossUID && glossUID[0] === '_'
 
     let style
 
@@ -141,7 +136,6 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
           }
           continue
         }
-        // also hacky to put this here
         // tagName={}
         if (tagNameOption && prop === tagNameOption && isTag) {
           // lets it be optionally undefined/false
@@ -150,11 +144,14 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
           }
           continue
         }
-        // simple component boolean prop styles :)
-        if (isSimple && val === true) {
-          const rule = styleSheet.getRule(`${prop}--${glossUID}`)
-          if (rule) {
-            finalStyles.push(rule)
+        if (isSimple) {
+          // boolean prop rules
+          if (val === true) {
+            const rule = styleSheet.getRule(`${prop}--${glossUID}`)
+            if (rule) {
+              finalStyles.push(rule)
+              continue
+            }
           }
         }
         // after tagname, css, style
@@ -168,7 +165,7 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
           continue
         }
         // $style={}
-        if (styleSheet) {
+        if (!isSimple && styleSheet) {
           addStyle(finalStyles, `${prop.slice(1)}--${glossUID}`, true)
         }
       }
@@ -219,6 +216,9 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet) {
       type = TAG_NAME_MAP[name] || type
     }
 
+    if (isSimple) {
+      return ogCreateElement(type, finalProps)
+    }
     return ogCreateElement(type, finalProps, ...children)
   }
 

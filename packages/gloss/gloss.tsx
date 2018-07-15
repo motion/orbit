@@ -96,6 +96,7 @@ export default class Gloss {
   helpers: any
   options: Options
   createElement: Function
+  createSimpleElement: Function
   Helpers: Object = Helpers
   // for debug
   JSS = JSS
@@ -107,6 +108,7 @@ export default class Gloss {
     this.stylesheet = JSS.createStyleSheet()
     this.themeSheet = JSS.createStyleSheet()
     this.createElement = fancyElement(this, this.stylesheet, this.themeSheet)
+    this.createSimpleElement = fancyElement(this, this.stylesheet, this.themeSheet, true)
     // @ts-ignore
     this.decorator.createElement = this.createElement
   }
@@ -278,6 +280,7 @@ export default class Gloss {
     return hasTheme
   }
 
+  // simple gloss view api
   private createSimpleGlossComponent = (target, styles) => {
     const elementCache = new WeakMap()
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
@@ -291,7 +294,7 @@ export default class Gloss {
     if (isParentComponent) {
       targetElement = name = targetElement.tagName || 'div'
     }
-    const styleProp = `$${name}`
+    let styleClassName
     const View: GlossView<any> = allProps => {
       // basically PureRender
       if (elementCache.has(allProps)) {
@@ -300,7 +303,7 @@ export default class Gloss {
       }
       // allow View.defaultProps
       // @ts-ignore
-      const { forwardRef, ...props } = {
+      const { forwardRef, className, ...props } = {
         ...View.defaultProps,
         ...allProps,
       }
@@ -309,21 +312,20 @@ export default class Gloss {
         try {
           View.compiledStyles = this.getAllStyles(View, name)
           this.attachStyles(id, View.compiledStyles)
+          styleClassName = this.stylesheet.getRule(`${name}--${id}`).selectorText.slice(1)
         } catch (err) {
           console.log('error attaching styles', target, name, styles)
           console.log('err', err)
         }
         hasAttachedStyles = true
       }
-      const createElement = () => {
-        const el = this.createElement(targetElement, {
-          // TODO: probably can avoid passing glossUID through props
-          glossUID: id,
+      const createElement = (extraClassName?) => {
+        const el = this.createSimpleElement(targetElement, {
           ref: forwardRef,
           [`data-name`]: displayName,
-          [styleProp]: true,
+          className: `${className || ''} ${styleClassName} ${extraClassName || ''}`,
           ...props,
-        })
+        }, id)
         elementCache.set(allProps, el)
         return el
       }
@@ -346,7 +348,8 @@ export default class Gloss {
           <ThemeContext.Consumer>
             {({ allThemes, activeThemeName }) => {
               themeUpdate(props, null, allThemes[activeThemeName])
-              return createElement()
+              const themeClassName = this.themeSheet.getRule(`${name}--${id}--theme`).selectorText.slice(1)
+              return createElement(themeClassName)
             }}
           </ThemeContext.Consumer>
         )

@@ -232,9 +232,6 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       hide,
       ...props
     } = this.props
-    console.time('color')
-    $(color).toString()
-    console.timeEnd('color')
     const show = !hide
     const durationArg = show ? durationOut : durationIn
     const duration = durationArg >= 0 ? durationArg : _duration

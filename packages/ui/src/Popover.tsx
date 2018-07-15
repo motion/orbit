@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, on, attachTheme } from '@mcro/black'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
-import { isNumber, debounce, throttle, isEqual } from 'lodash'
+import { isNumber, debounce, throttle, isEqual, omit } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
@@ -217,7 +217,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   // also, nicely lets us define get fn helpers
 
   static getDerivedStateFromProps(props, state) {
-    if (!isEqual(props, state.props)) {
+    if (!isEqual(omit(props, ['children']), omit(state.props, ['children']))) {
       return {
         setPosition: true,
         props,
@@ -260,7 +260,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
   shouldSendDidOpen = true
 
   componentDidUpdate() {
-    console.log('popover update', this.state.setPosition)
     if (this.state.setPosition) {
       this.setPosition()
       this.setOpenOrClosed(this.props)
@@ -847,7 +846,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
       maxHeight,
       direction,
     } = this.state
-    console.log('render popovr', this.props, this.state)
     const { showPopover } = this
     const controlledTarget = target => {
       const targetProps = {

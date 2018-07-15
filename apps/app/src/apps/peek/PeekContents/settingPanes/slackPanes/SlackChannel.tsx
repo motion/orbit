@@ -2,6 +2,29 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 
+// style = {
+//   channel: {
+//     flex: 1,
+//     flexFlow: 'row',
+//     overflow: 'hidden',
+//     alignItems: 'center',
+//     padding: [5, 0],
+//   },
+//   span: {
+//     fontWeight: 300,
+//     fontSize: '80%',
+//   },
+//   info: {
+//     flex: 1,
+//     overflow: 'hidden',
+//   },
+//   options: {
+//     flexFlow: 'row',
+//     width: 40,
+//     marginLeft: 20,
+//   },
+// }
+
 @view
 export class SlackChannel extends React.Component {
   version = 0
@@ -24,7 +47,8 @@ export class SlackChannel extends React.Component {
     this.version++
   }
 
-  render({ channel, slackService }) {
+  render() {
+    const { channel, slackService } = this.props
     if (!slackService.setting) {
       return null
     }
@@ -49,28 +73,5 @@ export class SlackChannel extends React.Component {
         </div>
       </div>
     )
-  }
-
-  static style = {
-    channel: {
-      flex: 1,
-      flexFlow: 'row',
-      overflow: 'hidden',
-      alignItems: 'center',
-      padding: [5, 0],
-    },
-    span: {
-      fontWeight: 300,
-      fontSize: '80%',
-    },
-    info: {
-      flex: 1,
-      overflow: 'hidden',
-    },
-    options: {
-      flexFlow: 'row',
-      width: 40,
-      marginLeft: 20,
-    },
   }
 }

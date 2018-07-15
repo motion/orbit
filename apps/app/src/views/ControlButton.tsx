@@ -11,7 +11,7 @@ const icons = {
   z: controlZ,
 }
 
-const ControlButtonChrome = view(UI.Col, {
+export const ControlButtonChrome = view(UI.Col, {
   width: 12,
   height: 12,
   padding: 4,
@@ -27,28 +27,19 @@ const ControlButtonChrome = view(UI.Col, {
   },
 })
 
-export const ControlButton = ({
-  background = '#ED6A5F',
-  icon,
-  borderColor,
-  borderWidth = 0.5,
-  ...props
-}) => {
+ControlButtonChrome.theme = ({ theme, borderWidth, ...props }) => {
+  const background =
+    props.backgroud || theme.base.background.darken(0.02).desaturate(0.02)
+  const borderColor = props.borderColor || UI.color(background).darken(0.1)
+  return {
+    background,
+    boxShadow: [['inset', 0, 0, 0, borderWidth, borderColor]],
+  }
+}
+
+export const ControlButton = ({ icon, ...props }) => {
   return (
-    <ControlButtonChrome
-      background={background}
-      boxShadow={[
-        [
-          'inset',
-          0,
-          0,
-          0,
-          borderWidth,
-          borderColor || UI.color(background).darken(0.1),
-        ],
-      ]}
-      {...props}
-    >
+    <ControlButtonChrome {...props}>
       <img src={icons[icon]} />
     </ControlButtonChrome>
   )

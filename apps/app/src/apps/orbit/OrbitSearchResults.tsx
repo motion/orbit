@@ -2,12 +2,13 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { OrbitCard } from './OrbitCard'
-import { OrbitDockedPane } from './orbitDockedPane'
+import { OrbitDockedPane } from './OrbitDockedPane'
 // import { OrbitQuickSearch } from './OrbitQuickSearch'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import { stateOnlyWhenActive } from './stateOnlyWhenActive'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
+import { AppStore } from '../../stores/AppStore'
 
 const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
   const { query, results, message } = searchStore.state
@@ -17,9 +18,9 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
     .filter(x => x.length > 2)
   return (
     <UI.Col flex={1} padding={[10, 0]}>
-      <message if={message}>{message}</message>
+      <div if={message}>{message}</div>
       <OrbitSearchFilters appStore={appStore} searchStore={searchStore} />
-      <results
+      <div
         if={results.length}
         css={{
           position: 'relative',
@@ -37,7 +38,7 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
             bit={bit}
             listItem
           >
-            <content>
+            <div>
               <UI.Text
                 size={1.2}
                 alpha={0.7}
@@ -56,11 +57,11 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
                   highlightWords.length ? bit.body : bit.body.slice(0, 200),
                 )}
               </UI.Text>
-            </content>
+            </div>
           </OrbitCard>
         ))}
-      </results>
-      <space css={{ height: 20 }} />
+      </div>
+      <div css={{ height: 20 }} />
     </UI.Col>
   )
 })
@@ -81,12 +82,18 @@ class SearchStore {
   currentQuery = react(() => App.state.query, _ => _, { delay: 32 })
 }
 
+type Props = {
+  searchStore: SearchStore
+  appStore: AppStore
+  name?: string
+}
+
 @view.attach('appStore')
 @view.attach({
   searchStore: SearchStore,
 })
 @view
-export class OrbitSearchResults extends React.Component {
+export class OrbitSearchResults extends React.Component<Props> {
   render() {
     const { appStore, searchStore, name } = this.props
     if (!searchStore.state.results) {

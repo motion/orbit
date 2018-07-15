@@ -3,10 +3,72 @@ import { view, react, attachTheme } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import * as Constants from '../../constants'
 import { OrbitArrow } from './OrbitArrow'
-import { OrbitIndicator } from './orbitIndicator'
+import { OrbitIndicator } from './OrbitIndicator'
+import * as UI from '@mcro/ui'
 
 const SHADOW_PAD = 85
 const ARROW_PAD = 15
+
+const OrbitBorder = view({
+  pointerEvents: 'none',
+  userSelect: 'none',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 10000000,
+})
+
+const Orbit = view({
+  position: 'relative',
+  flex: 1,
+  orbitAnimate: {
+    willChange: 'transform, opacity',
+    transition: `
+        transform ease-in ${App.animationDuration}ms,
+        opacity ease-in ${App.animationDuration}ms
+      `,
+  },
+})
+
+// used to hide edge overlap of drawer during in animation
+const OverflowWrap = view({
+  // overflow: 'hidden',
+  alignSelf: 'flex-end',
+  flex: 1,
+  position: 'relative',
+})
+
+const OrbitContent = view({
+  flex: 1,
+  overflow: 'hidden',
+  opacity: 1,
+  position: 'relative',
+})
+
+const Fade = view({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  top: 0,
+  pointerEvents: 'none',
+})
+
+const Expand = view({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  top: '85%',
+  alignItems: 'flex-end',
+  justifyContent: 'center',
+  flexFlow: 'row',
+  zIndex: 1000,
+  overflow: 'hidden',
+  pointerEvents: 'none',
+})
 
 class FrameStore {
   animationState = react(
@@ -48,8 +110,11 @@ const showingAnimation = {
   store: FrameStore,
 })
 @view
-export class OrbitFrame {
-  render({ store, children, theme, headerBg }) {
+export class OrbitFrame extends React.Component<{
+  store: FrameStore
+}> {
+  render() {
+    const { store, children, theme, headerBg } = this.props
     if (!store.animationState) {
       return null
     }
@@ -70,9 +135,9 @@ export class OrbitFrame {
       },
     }
     return (
-      <div
-        $orbitFrame
+      <UI.Col
         css={{
+          color: theme.base.color,
           position: 'absolute',
           pointerEvents: hidden ? ' none' : 'auto',
           width: size[0],
@@ -93,8 +158,7 @@ export class OrbitFrame {
           borderColor={borderColor}
         />
         <OrbitIndicator orbitOnLeft={orbitOnLeft} />
-        <div
-          $overflowWrap
+        <OverflowWrap
           css={{
             overflow: 'hidden',
             padding: SHADOW_PAD,
@@ -107,18 +171,16 @@ export class OrbitFrame {
             marginLeft: !orbitOnLeft ? 0 : -SHADOW_PAD,
           }}
         >
-          <div
-            $orbit
+          <Orbit
             css={{
               width: size[0],
               borderLeftRadius,
               borderRightRadius,
               ...(hidden ? hiddenAnimation : showingAnimation),
             }}
-            $orbitAnimate={willAnimate}
+            orbitAnimate={willAnimate}
           >
-            <div
-              $orbitBorder
+            <OrbitBorder
               css={{
                 borderLeftRadius: borderLeftRadius ? borderLeftRadius - 1 : 0,
                 borderRightRadius: borderRightRadius
@@ -127,8 +189,7 @@ export class OrbitFrame {
                 boxShadow: [borderShadow, [orbitLightShadow]].filter(Boolean),
               }}
             />
-            <div
-              $content
+            <OrbitContent
               css={{
                 background,
                 // makes the shadow go offscreen nicely
@@ -139,9 +200,8 @@ export class OrbitFrame {
               }}
             >
               {children}
-              <div $expand>
-                <div
-                  $fade
+              <Expand>
+                <Fade
                   css={{
                     opacity: 1,
                     background: `linear-gradient(transparent, ${
@@ -149,102 +209,11 @@ export class OrbitFrame {
                     } 95%)`,
                   }}
                 />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </Expand>
+            </OrbitContent>
+          </Orbit>
+        </OverflowWrap>
+      </UI.Col>
     )
   }
-
-  static style = {
-    orbitBorder: {
-      pointerEvents: 'none',
-      userSelect: 'none',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 10000000,
-    },
-    orbitInnerShadow: {
-      position: 'absolute',
-      top: 20,
-      bottom: 20,
-      left: ARROW_PAD,
-      right: ARROW_PAD,
-      boxShadow: [[0, 0, 90, 0, [0, 0, 0, 0.075]]],
-      zIndex: -1,
-    },
-    orbit: {
-      position: 'relative',
-      flex: 1,
-    },
-    orbitAnimate: {
-      willChange: 'transform, opacity',
-      transition: `
-        transform ease-in ${App.animationDuration}ms,
-        opacity ease-in ${App.animationDuration}ms
-      `,
-    },
-    // used to hide edge overlap of drawer during in animation
-    overflowWrap: {
-      // overflow: 'hidden',
-      alignSelf: 'flex-end',
-      flex: 1,
-      position: 'relative',
-    },
-    hideOverflow: {
-      overflow: 'hidden',
-    },
-    orbitTorn: {
-      opacity: 1,
-      transform: {
-        y: 0,
-      },
-    },
-    content: {
-      flex: 1,
-      // border: [1, 'transparent'],
-      overflow: 'hidden',
-      opacity: 1,
-      position: 'relative',
-    },
-    fade: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      top: 0,
-      pointerEvents: 'none',
-    },
-    expand: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      top: '85%',
-      alignItems: 'flex-end',
-      justifyContent: 'center',
-      flexFlow: 'row',
-      zIndex: 1000,
-      overflow: 'hidden',
-      pointerEvents: 'none',
-    },
-    expandEnd: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: 50,
-      alignItems: 'flex-end',
-    },
-  }
-
-  static theme = ({ theme }) => ({
-    orbitFrame: {
-      color: theme.base.color,
-    },
-  })
 }

@@ -32,6 +32,7 @@ export const colorConversions = {
 
 // hide .channels and .labels properties
 for (var model in colorConversions) {
+  // @ts-ignore
   if (colorConversions.hasOwnProperty(model)) {
     if (!('channels' in colorConversions[model])) {
       throw new Error('missing channels property: ' + model)
@@ -58,6 +59,7 @@ for (var model in colorConversions) {
   }
 }
 
+// @ts-ignore
 colorConversions.rgb.hsl = function(rgb) {
   var r = rgb[0] / 255
   var g = rgb[1] / 255
@@ -98,6 +100,7 @@ colorConversions.rgb.hsl = function(rgb) {
   return [h, s * 100, l * 100]
 }
 
+// @ts-ignore
 colorConversions.rgb.hsv = function(rgb) {
   var rdif
   var gdif
@@ -139,10 +142,12 @@ colorConversions.rgb.hsv = function(rgb) {
   return [h * 360, s * 100, v * 100]
 }
 
+// @ts-ignore
 colorConversions.rgb.hwb = function(rgb) {
   var r = rgb[0]
   var g = rgb[1]
   var b = rgb[2]
+  // @ts-ignore
   var h = colorConversions.rgb.hsl(rgb)[0]
   var w = (1 / 255) * Math.min(r, Math.min(g, b))
 
@@ -151,6 +156,7 @@ colorConversions.rgb.hwb = function(rgb) {
   return [h, w * 100, b * 100]
 }
 
+// @ts-ignore
 colorConversions.rgb.cmyk = function(rgb) {
   var r = rgb[0] / 255
   var g = rgb[1] / 255
@@ -179,6 +185,7 @@ function comparativeDistance(x, y) {
   )
 }
 
+// @ts-ignore
 colorConversions.rgb.keyword = function(rgb) {
   var reversed = reverseKeywords[rgb]
   if (reversed) {
@@ -206,10 +213,12 @@ colorConversions.rgb.keyword = function(rgb) {
   return currentClosestKeyword
 }
 
+// @ts-ignore
 colorConversions.keyword.rgb = function(keyword) {
   return cssColorNames[keyword]
 }
 
+// @ts-ignore
 colorConversions.rgb.xyz = function(rgb) {
   var r = rgb[0] / 255
   var g = rgb[1] / 255
@@ -227,7 +236,9 @@ colorConversions.rgb.xyz = function(rgb) {
   return [x * 100, y * 100, z * 100]
 }
 
+// @ts-ignore
 colorConversions.rgb.lab = function(rgb) {
+  // @ts-ignore
   var xyz = colorConversions.rgb.xyz(rgb)
   var x = xyz[0]
   var y = xyz[1]
@@ -251,6 +262,7 @@ colorConversions.rgb.lab = function(rgb) {
   return [l, a, b]
 }
 
+// @ts-ignore
 colorConversions.hsl.rgb = function(hsl) {
   var h = hsl[0] / 360
   var s = hsl[1] / 100
@@ -300,6 +312,7 @@ colorConversions.hsl.rgb = function(hsl) {
   return rgb
 }
 
+// @ts-ignore
 colorConversions.hsl.hsv = function(hsl) {
   var h = hsl[0]
   var s = hsl[1] / 100
@@ -318,6 +331,7 @@ colorConversions.hsl.hsv = function(hsl) {
   return [h, sv * 100, v * 100]
 }
 
+// @ts-ignore
 colorConversions.hsv.rgb = function(hsv) {
   var h = hsv[0] / 60
   var s = hsv[1] / 100
@@ -346,6 +360,7 @@ colorConversions.hsv.rgb = function(hsv) {
   }
 }
 
+// @ts-ignore
 colorConversions.hsv.hsl = function(hsv) {
   var h = hsv[0]
   var s = hsv[1] / 100
@@ -366,6 +381,7 @@ colorConversions.hsv.hsl = function(hsv) {
 }
 
 // http://dev.w3.org/csswg/css-color/#hwb-to-rgb
+// @ts-ignore
 colorConversions.hwb.rgb = function(hwb) {
   var h = hwb[0] / 360
   var wh = hwb[1] / 100
@@ -433,6 +449,7 @@ colorConversions.hwb.rgb = function(hwb) {
   return [r * 255, g * 255, b * 255]
 }
 
+// @ts-ignore
 colorConversions.cmyk.rgb = function(cmyk) {
   var c = cmyk[0] / 100
   var m = cmyk[1] / 100
@@ -449,6 +466,7 @@ colorConversions.cmyk.rgb = function(cmyk) {
   return [r * 255, g * 255, b * 255]
 }
 
+// @ts-ignore
 colorConversions.xyz.rgb = function(xyz) {
   var x = xyz[0] / 100
   var y = xyz[1] / 100
@@ -475,6 +493,7 @@ colorConversions.xyz.rgb = function(xyz) {
   return [r * 255, g * 255, b * 255]
 }
 
+// @ts-ignore
 colorConversions.xyz.lab = function(xyz) {
   var x = xyz[0]
   var y = xyz[1]
@@ -498,6 +517,7 @@ colorConversions.xyz.lab = function(xyz) {
   return [l, a, b]
 }
 
+// @ts-ignore
 colorConversions.lab.xyz = function(lab) {
   var l = lab[0]
   var a = lab[1]
@@ -524,6 +544,7 @@ colorConversions.lab.xyz = function(lab) {
   return [x, y, z]
 }
 
+// @ts-ignore
 colorConversions.lab.lch = function(lab) {
   var l = lab[0]
   var a = lab[1]
@@ -544,6 +565,7 @@ colorConversions.lab.lch = function(lab) {
   return [l, c, h]
 }
 
+// @ts-ignore
 colorConversions.lch.lab = function(lch) {
   var l = lch[0]
   var c = lch[1]
@@ -559,10 +581,12 @@ colorConversions.lch.lab = function(lch) {
   return [l, a, b]
 }
 
+// @ts-ignore
 colorConversions.rgb.ansi16 = function(args) {
   var r = args[0]
   var g = args[1]
   var b = args[2]
+  // @ts-ignore
   var value = 1 in arguments ? arguments[1] : colorConversions.rgb.hsv(args)[2] // hsv -> ansi16 optimization
 
   value = Math.round(value / 50)
@@ -584,12 +608,16 @@ colorConversions.rgb.ansi16 = function(args) {
   return ansi
 }
 
+// @ts-ignore
 colorConversions.hsv.ansi16 = function(args) {
   // optimization here; we already know the value and don't need to get
   // it converted for us.
+  // @ts-ignore
+  // @ts-ignore
   return colorConversions.rgb.ansi16(colorConversions.hsv.rgb(args), args[2])
 }
 
+// @ts-ignore
 colorConversions.rgb.ansi256 = function(args) {
   var r = args[0]
   var g = args[1]
@@ -618,6 +646,7 @@ colorConversions.rgb.ansi256 = function(args) {
   return ansi
 }
 
+// @ts-ignore
 colorConversions.ansi16.rgb = function(args) {
   var color = args % 10
 
@@ -640,6 +669,7 @@ colorConversions.ansi16.rgb = function(args) {
   return [r, g, b]
 }
 
+// @ts-ignore
 colorConversions.ansi256.rgb = function(args) {
   // handle greyscale
   if (args >= 232) {
@@ -657,6 +687,7 @@ colorConversions.ansi256.rgb = function(args) {
   return [r, g, b]
 }
 
+// @ts-ignore
 colorConversions.rgb.hex = function(args) {
   var integer =
     ((Math.round(args[0]) & 0xff) << 16) +
@@ -667,6 +698,7 @@ colorConversions.rgb.hex = function(args) {
   return '000000'.substring(string.length) + string
 }
 
+// @ts-ignore
 colorConversions.hex.rgb = function(args) {
   var match = args.toString(16).match(/[a-f0-9]{6}|[a-f0-9]{3}/i)
   if (!match) {
@@ -692,6 +724,7 @@ colorConversions.hex.rgb = function(args) {
   return [r, g, b]
 }
 
+// @ts-ignore
 colorConversions.rgb.hcg = function(rgb) {
   var r = rgb[0] / 255
   var g = rgb[1] / 255
@@ -724,6 +757,7 @@ colorConversions.rgb.hcg = function(rgb) {
   return [hue * 360, chroma * 100, grayscale * 100]
 }
 
+// @ts-ignore
 colorConversions.hsl.hcg = function(hsl) {
   var s = hsl[1] / 100
   var l = hsl[2] / 100
@@ -743,6 +777,7 @@ colorConversions.hsl.hcg = function(hsl) {
   return [hsl[0], c * 100, f * 100]
 }
 
+// @ts-ignore
 colorConversions.hsv.hcg = function(hsv) {
   var s = hsv[1] / 100
   var v = hsv[2] / 100
@@ -757,6 +792,7 @@ colorConversions.hsv.hcg = function(hsv) {
   return [hsv[0], c * 100, f * 100]
 }
 
+// @ts-ignore
 colorConversions.hcg.rgb = function(hcg) {
   var h = hcg[0] / 360
   var c = hcg[1] / 100
@@ -813,6 +849,7 @@ colorConversions.hcg.rgb = function(hcg) {
   ]
 }
 
+// @ts-ignore
 colorConversions.hcg.hsv = function(hcg) {
   var c = hcg[1] / 100
   var g = hcg[2] / 100
@@ -827,6 +864,7 @@ colorConversions.hcg.hsv = function(hcg) {
   return [hcg[0], f * 100, v * 100]
 }
 
+// @ts-ignore
 colorConversions.hcg.hsl = function(hcg) {
   var c = hcg[1] / 100
   var g = hcg[2] / 100
@@ -843,6 +881,7 @@ colorConversions.hcg.hsl = function(hcg) {
   return [hcg[0], s * 100, l * 100]
 }
 
+// @ts-ignore
 colorConversions.hcg.hwb = function(hcg) {
   var c = hcg[1] / 100
   var g = hcg[2] / 100
@@ -850,6 +889,7 @@ colorConversions.hcg.hwb = function(hcg) {
   return [hcg[0], (v - c) * 100, (1 - v) * 100]
 }
 
+// @ts-ignore
 colorConversions.hwb.hcg = function(hwb) {
   var w = hwb[1] / 100
   var b = hwb[2] / 100
@@ -864,6 +904,7 @@ colorConversions.hwb.hcg = function(hwb) {
   return [hwb[0], c * 100, g * 100]
 }
 
+// @ts-ignore
 colorConversions.apple.rgb = function(apple) {
   return [
     (apple[0] / 65535) * 255,
@@ -872,6 +913,7 @@ colorConversions.apple.rgb = function(apple) {
   ]
 }
 
+// @ts-ignore
 colorConversions.rgb.apple = function(rgb) {
   return [
     (rgb[0] / 255) * 65535,
@@ -880,26 +922,33 @@ colorConversions.rgb.apple = function(rgb) {
   ]
 }
 
+// @ts-ignore
 colorConversions.gray.rgb = function(args) {
   return [(args[0] / 100) * 255, (args[0] / 100) * 255, (args[0] / 100) * 255]
 }
 
+// @ts-ignore
+// @ts-ignore
 colorConversions.gray.hsl = colorConversions.gray.hsv = function(args) {
   return [0, 0, args[0]]
 }
 
+// @ts-ignore
 colorConversions.gray.hwb = function(gray) {
   return [0, 100, gray[0]]
 }
 
+// @ts-ignore
 colorConversions.gray.cmyk = function(gray) {
   return [0, 0, 0, gray[0]]
 }
 
+// @ts-ignore
 colorConversions.gray.lab = function(gray) {
   return [gray[0], 0, 0]
 }
 
+// @ts-ignore
 colorConversions.gray.hex = function(gray) {
   var val = Math.round((gray[0] / 100) * 255) & 0xff
   var integer = (val << 16) + (val << 8) + val
@@ -908,6 +957,7 @@ colorConversions.gray.hex = function(gray) {
   return '000000'.substring(string.length) + string
 }
 
+// @ts-ignore
 colorConversions.rgb.gray = function(rgb) {
   var val = (rgb[0] + rgb[1] + rgb[2]) / 3
   return [(val / 255) * 100]

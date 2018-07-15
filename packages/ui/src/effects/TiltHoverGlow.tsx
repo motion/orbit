@@ -63,7 +63,7 @@ export class TiltHoverGlow extends React.PureComponent<TiltHoverGlowProps> {
             scale={0.5}
             resist={52}
             offsetTop={-80}
-            blur={130}
+            blur={80}
             color="#fff"
             borderRadius={20}
             zIndex={100000}

@@ -2,48 +2,9 @@ import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Bit, Person } from '@mcro/models'
-import { SubTitle } from '../../views'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
-import { OrbitDockedPane } from './orbitDockedPane'
-
-// css={{
-//   opacity: index > 3 ? (total / index / total) * 3 : 1,
-// }}
-
-const postfix = [
-  'st',
-  'nd',
-  'rd',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'st',
-  'nd',
-  'rd',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'th',
-  'st',
-]
+import { OrbitDockedPane } from './OrbitDockedPane'
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -124,38 +85,20 @@ const itemProps = {
   store: OrbitHomeStore,
 })
 @view
-export class OrbitHome extends React.Component {
+export class OrbitHome extends React.Component<{
+  store: OrbitHomeStore
+}> {
   span2 = {
     gridColumnEnd: 'span 2',
   }
 
-  render({ store }) {
+  render() {
+    const { store } = this.props
     log('HOME---------------')
-    const locale = 'en-US'
-    const now = new Date()
-    const day = now.toLocaleDateString(locale, { weekday: 'short' })
-    const month = now.toLocaleDateString(locale, { month: 'short' })
-    const dayNum = now.getMonth()
     const total = store.results.length
     return (
       <OrbitDockedPane name="home" fadeBottom>
-        <div if={false}>
-          <SubTitle>
-            {day} {month} {dayNum}
-            <span
-              css={{
-                verticalAlign: 'super',
-                marginLeft: 1,
-                fontSize: 11,
-                opacity: 0.6,
-              }}
-            >
-              {postfix[dayNum - 1]}
-            </span>
-          </SubTitle>
-          <div css={{ flex: 1 }} />
-        </div>
-        <content>
+        <div>
           <Masonry if={total}>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2
@@ -176,13 +119,13 @@ export class OrbitHome extends React.Component {
                   {false &&
                     isExpanded &&
                     (({ content }) => (
-                      <inner css={{ margin: [6, 0] }}>{content}</inner>
+                      <div css={{ margin: [6, 0] }}>{content}</div>
                     ))}
                 </OrbitCard>
               )
             })}
           </Masonry>
-        </content>
+        </div>
       </OrbitDockedPane>
     )
   }

@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../../orbit/OrbitIcon'
 import { SubTitle } from '../../../../views'
 import { AtlassianSettingLogin } from './AtlassianSettingLogin'
+import { SettingPaneProps } from './SettingPaneProps'
 
 class JiraSettingStore {
   active = 'general'
@@ -15,8 +16,13 @@ const Section = view({ flex: 1 })
   store: JiraSettingStore,
 })
 @view
-export class JiraSetting extends React.Component {
-  render({ store, children }) {
+export class JiraSetting extends React.Component<
+  SettingPaneProps & {
+    store: JiraSettingStore
+  }
+> {
+  render() {
+    const { store, children } = this.props
     return children({
       subhead: (
         <UI.Tabs
@@ -31,10 +37,10 @@ export class JiraSetting extends React.Component {
       content: (
         <UI.View flex={1}>
           <Section if={store.active === 'general'}>
-            <div $centered>
+            <UI.View margin="auto">
               <SubTitle css={{ textAlign: 'center' }}>All good!</SubTitle>
               <OrbitIcon icon="confluence" size={256} />
-            </div>
+            </UI.View>
           </Section>
           <Section if={store.active === 'account'}>
             <AtlassianSettingLogin setting={this.props.setting} />
@@ -42,11 +48,5 @@ export class JiraSetting extends React.Component {
         </UI.View>
       ),
     })
-  }
-
-  static style = {
-    centered: {
-      margin: 'auto',
-    },
   }
 }

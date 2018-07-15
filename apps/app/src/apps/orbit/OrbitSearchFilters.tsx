@@ -12,7 +12,12 @@ export const OrbitSearchFilters = view((
   return (
     <UI.Row width="100%" padding={[0, 0, 10]} alignItems="center">
       {/* <UI.Icon name="ui-2_filter" size={12} opacity={0.6} marginRight={12} /> */}
-      <UI.PassProps circular size={1.2} marginRight={5}>
+      <UI.PassProps
+        circular
+        size={1.2}
+        marginRight={5}
+        css={{ filter: 'grayscale(100%)', opacity: 0.5 }}
+      >
         <RoundButton icon={<OrbitIcon size={22} icon="slack" />} />
         <RoundButton icon={<OrbitIcon size={22} icon="gdrive" />} />
         <RoundButton icon={<OrbitIcon size={22} icon="gmail" />} />

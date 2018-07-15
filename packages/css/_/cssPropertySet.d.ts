@@ -1,3 +1,4 @@
+import { Color } from './types';
 export declare type alignContent = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'stretch';
 export declare type alignItems = 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
 export declare type alignSelf = 'auto' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
@@ -50,7 +51,7 @@ export declare type borderBottomRightRadius = lengthPercentage;
 export declare type borderBottomStyle = brStyle;
 export declare type borderBottomWidth = borderWidth;
 export declare type borderCollapse = 'collapse' | 'separate';
-export declare type borderColor = color;
+export declare type borderColor = color | Array<number | string | Color>;
 export declare type borderImage = borderImageSource | borderImageSlice | string | borderImageRepeat;
 export declare type borderImageOutset = string;
 export declare type borderImageRepeat = string;
@@ -95,7 +96,7 @@ declare type boxShadowSyntax = {
     color?: string;
     inset?: boolean;
 };
-export declare type boxShadow = 'none' | string | boxShadowSyntax | Array<string | boxShadowSyntax>;
+export declare type boxShadow = 'none' | string | boxShadowSyntax | Array<string | number | boxShadowSyntax | Color>;
 export declare type boxSizing = 'content-box' | 'border-box';
 export declare type boxSuppress = 'show' | 'discard' | 'hide';
 export declare type breakAfter = 'auto' | 'avoid' | 'avoid-page' | 'page' | 'left' | 'right' | 'recto' | 'verso' | 'avoid-column' | 'column' | 'avoid-region' | 'region';

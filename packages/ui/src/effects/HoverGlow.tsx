@@ -13,7 +13,7 @@ type ChildArgs = {
 export type HoverGlowProps = {
   width: number
   height: number
-  color: Color
+  color: string
   zIndex: number
   resist: number
   scale: number
@@ -27,7 +27,7 @@ export type HoverGlowProps = {
   duration: number
   overlayZIndex: number
   blur: number
-  parent?: HTMLElement
+  parent?: () => HTMLElement
   backdropFilter?: boolean
   restingPosition?: [number, number]
   full?: boolean
@@ -94,7 +94,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     mounted: false,
     track: false,
     parentNode: null,
-    position: {},
+    position: { x: 0, y: 0 },
     bounds: { width: 0, height: 0 },
   }
 
@@ -113,7 +113,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
 
   follow() {
     let parentNode
-    if (this.props.parent) {
+    if (typeof this.props.parent === 'function') {
       parentNode = this.props.parent()
     } else if (this.rootRef) {
       const node = this.rootRef.current
@@ -232,17 +232,15 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       hide,
       ...props
     } = this.props
+    console.time('color')
+    $(color).toString()
+    console.timeEnd('color')
     const show = !hide
     const durationArg = show ? durationOut : durationIn
     const duration = durationArg >= 0 ? durationArg : _duration
     if (!this.state.mounted) {
       return (
-        <div
-          $overlay
-          key="hoverglow"
-          ref={this.rootRef}
-          style={{ opacity: 0 }}
-        />
+        <Overlay key="hoverglow" ref={this.rootRef} style={{ opacity: 0 }} />
       )
     }
     // find width / height (full == match size of container)
@@ -278,7 +276,6 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       if (!inverse) return coord
       return -coord
     }
-    const colorRGB = $(color).toString()
     const translateX = inversed(
       bounded(resisted(x), width * scale, this.state.bounds.width),
     )
@@ -330,8 +327,8 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
               zIndex,
               background:
                 background || gradient
-                  ? `radial-gradient(${$(color).toString()}, transparent 70%)`
-                  : colorRGB,
+                  ? `radial-gradient(${color}, transparent 70%)`
+                  : color,
               borderRadius,
               transition: `
                   opacity linear ${duration}ms

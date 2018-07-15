@@ -11,10 +11,11 @@ import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
-import { OrbitStore } from './orbitStore'
+import { OrbitStore } from './OrbitStore'
 import { Bit } from '@mcro/models'
 
 export type OrbitCardProps = {
+  total?: number
   hoverToSelect?: boolean
   appStore?: AppStore
   paneStore?: OrbitDockedPaneStore
@@ -436,13 +437,11 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           {typeof children === 'function'
             ? children(contentProps, { background })
             : children}
-          {people &&
-            people.length &&
-            people[0].data.profile && (
-              <div>
-                <PeopleRow people={people} />
-              </div>
-            )}
+          {people && people.length && people[0].data.profile ? (
+            <div>
+              <PeopleRow people={people} />
+            </div>
+          ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
         <UI.HoverGlow

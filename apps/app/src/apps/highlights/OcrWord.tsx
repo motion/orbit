@@ -6,7 +6,11 @@ import * as Helpers from '@mcro/constants'
 
 @view
 export class OCRWord {
-  render({ item, store: { hoveredWord } }) {
+  render() {
+    const {
+      item,
+      store: { hoveredWord },
+    } = this.props
     const [x, y, width, height, word, index, color] = item
     const key = Helpers.wordKey(item)
     const highlighted = App.state.highlightWords[word]

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import SectionContent from '~/views/sectionContent'
+import { SectionContent } from '~/views/sectionContent'
 import { ParallaxLayer } from '~/components/Parallax'
 
 const NormalLayer = view.attach('homeStore')(({ homeStore, ...props }) => {

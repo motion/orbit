@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekBitResolver } from '../index'
 import { SubTitle } from '../../../views'
-import { OrbitDivider } from '../../../apps/orbit/orbitDivider'
+import { OrbitDivider } from '../../../apps/orbit/OrbitDivider'
 import { PeekRelatedStore } from './PeekRelatedStore'
 import { PeekContentProps } from './PeekContentProps'
 

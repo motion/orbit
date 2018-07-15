@@ -1,16 +1,17 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitHome } from './orbitHome'
+import { OrbitHome } from './OrbitHome'
 import { OrbitSettings } from './OrbitSettings'
-import { OrbitHomeHeader } from './orbitHomeHeader'
-import { OrbitHeader } from './orbitHeader'
-import { OrbitSearchResults } from './orbitSearchResults'
+import { OrbitHomeHeader } from './OrbitHomeHeader'
+import { OrbitHeader } from './OrbitHeader'
+import { OrbitSearchResults } from './OrbitSearchResults'
 import { OrbitDirectory } from './OrbitDirectory'
 import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { BORDER_RADIUS } from '../../constants'
+import { AppStore } from '../../stores/AppStore'
 
-const borderRadius = 14
 const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.55]]
 
@@ -19,7 +20,7 @@ const Frame = view(UI.Col, {
   top: 10,
   right: 10,
   bottom: 100,
-  borderRadius,
+  borderRadius: BORDER_RADIUS,
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
@@ -58,7 +59,7 @@ Border.theme = ({ theme }) => {
   const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
   const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.5]]
   return {
-    borderRadius: borderRadius,
+    borderRadius: BORDER_RADIUS,
     boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
   }
 }
@@ -76,14 +77,17 @@ const OrbitInner = view({
   flex: 1,
 })
 
-@attachTheme
 @view.attach('appStore', 'orbitStore')
 @view.provide({
   paneStore: OrbitDockedPaneStore,
 })
 @view
-class OrbitDockedInner extends React.Component {
-  render({ paneStore, appStore, theme }) {
+class OrbitDockedInner extends React.Component<{
+  paneStore: OrbitDockedPaneStore
+  appStore: AppStore
+}> {
+  render() {
+    const { paneStore, appStore } = this.props
     const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)
     return (
@@ -93,13 +97,13 @@ class OrbitDockedInner extends React.Component {
           willAnimate={animationState.willAnimate}
         >
           <Border />
-          <div $container>
+          <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>
             <OrbitHeader
-              borderRadius={borderRadius}
-              after={<OrbitHomeHeader paneStore={paneStore} theme={theme} />}
+              borderRadius={BORDER_RADIUS}
+              after={<OrbitHomeHeader paneStore={paneStore} />}
             />
             <OrbitInner>
-              <div $orbitRelativeInner>
+              <UI.View position="relative" flex={1}>
                 <OrbitHome
                   name="home"
                   appStore={appStore}
@@ -115,24 +119,12 @@ class OrbitDockedInner extends React.Component {
                   parentPane="summary"
                 />
                 <OrbitSettings name="settings" />
-              </div>
+              </UI.View>
             </OrbitInner>
-          </div>
+          </UI.View>
         </Frame>
       </>
     )
-  }
-
-  static style = {
-    container: {
-      borderRadius: borderRadius + 1,
-      // overflow: 'hidden',
-      flex: 1,
-    },
-    orbitRelativeInner: {
-      position: 'relative',
-      flex: 1,
-    },
   }
 }
 

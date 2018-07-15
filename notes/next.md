@@ -1,3 +1,12 @@
+- decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
+- p2p https://github.com/mafintosh/hyperdb
+- hire https://github.com/theKashey
+- ide https://retool.in/
+- icons https://danklammer.com/bytesize-icons/
+- nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
+- static styles https://github.com/jsxstyle/jsxstyle/tree/master/packages/jsxstyle-webpack-plugin
+- displayname https://github.com/paypal/glamorous/blob/2b71a17cd9dd8032d5343639251803d256e16afa/src/get-glamor-classname.js
+
 - filters
   - one bar for integrations - can easily toggle many on/off
   - one bar for type: people, attachment, document, task

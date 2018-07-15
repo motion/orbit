@@ -260,6 +260,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   shouldSendDidOpen = true
 
   componentDidUpdate() {
+    console.log('popover update', this.state.setPosition)
     if (this.state.setPosition) {
       this.setPosition()
       this.setOpenOrClosed(this.props)
@@ -846,6 +847,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       maxHeight,
       direction,
     } = this.state
+    console.log('render popovr', this.props, this.state)
     const { showPopover } = this
     const controlledTarget = target => {
       const targetProps = {

@@ -2,19 +2,19 @@ import * as React from 'react'
 import { view, react, on, attachTheme } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { OrbitCard } from './OrbitCard'
-import { OrbitDockedPane } from './orbitDockedPane'
+import { OrbitDockedPane } from './OrbitDockedPane'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '../../views'
 import { Desktop, App } from '@mcro/stores'
 
-const OrbitContextHeader = () => (
-  <contextHeader css={{ textAlign: App.orbitOnLeft ? 'right' : 'left' }}>
+const OrbitContextHeader = view(() => (
+  <div style={{ textAlign: App.orbitOnLeft ? 'right' : 'left' }}>
     <Title ellipse={1}>{Desktop.appState.name}</Title>
     <SubTitle if={Desktop.appState.title} ellipse={2}>
       {Desktop.appState.title}
     </SubTitle>
-  </contextHeader>
-)
+  </div>
+))
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -106,7 +106,9 @@ export class OrbitContextHome {
     }
   }, 16)
 
-  render({ appStore, store }, { resultsRef, isScrolled, isOverflowing }) {
+  render() {
+    const { appStore, store } = this.props
+    const { resultsRef, isScrolled, isOverflowing } = this.state
     log('CONTEXT HOME---------------')
     const total = store.results.length
     return (
@@ -122,7 +124,7 @@ export class OrbitContextHome {
             <div $results if={store.results.length} ref={this.setResults}>
               <firstResultSpace
                 style={{ pointerEvents: 'none' }}
-                css={{ height: 6 }}
+                style={{ height: 6 }}
               />
               {store.results.map((bit, i) => (
                 <OrbitCard
@@ -152,56 +154,55 @@ export class OrbitContextHome {
     )
   }
 
-  static style = {
-    resultsFrame: {
-      flex: 1,
-      position: 'relative',
-      // because its above some stuff, no pointer events here
-      paddingTop: 40,
-      marginTop: -40,
-      pointerEvents: 'none',
-    },
-    resultsScroller: {
-      flex: 1,
-      overflowY: 'scroll',
-      pointerEvents: 'inherit',
-    },
-    fade: {
-      position: 'fixed',
-      left: 0,
-      right: 0,
-      zIndex: 10000,
-      opacity: 0,
-      transform: {
-        z: 0,
-      },
-      // transition: 'opacity ease-in 150ms',
-    },
-    fadeTop: {
-      top: 13,
-      height: 40,
-    },
-    fadeBottom: {
-      bottom: 0,
-      height: 40,
-    },
-    fadeVisible: {
-      opacity: 1,
-    },
-  }
-
-  static theme = ({ theme }) => {
-    return {
-      fadeTop: {
-        background: `linear-gradient(${
-          theme.base.background
-        } 25%, transparent)`,
-      },
-      fadeBottom: {
-        background: `linear-gradient(transparent 45%, ${
-          theme.base.background
-        })`,
-      },
-    }
-  }
+  // style = {
+  //   resultsFrame: {
+  //     flex: 1,
+  //     position: 'relative',
+  //     // because its above some stuff, no pointer events here
+  //     paddingTop: 40,
+  //     marginTop: -40,
+  //     pointerEvents: 'none',
+  //   },
+  //   resultsScroller: {
+  //     flex: 1,
+  //     overflowY: 'scroll',
+  //     pointerEvents: 'inherit',
+  //   },
+  //   fade: {
+  //     position: 'fixed',
+  //     left: 0,
+  //     right: 0,
+  //     zIndex: 10000,
+  //     opacity: 0,
+  //     transform: {
+  //       z: 0,
+  //     },
+  //     // transition: 'opacity ease-in 150ms',
+  //   },
+  //   fadeTop: {
+  //     top: 13,
+  //     height: 40,
+  //   },
+  //   fadeBottom: {
+  //     bottom: 0,
+  //     height: 40,
+  //   },
+  //   fadeVisible: {
+  //     opacity: 1,
+  //   },
+  // }
+  // theme = ({ theme }) => {
+  //   return {
+  //     fadeTop: {
+  //       background: `linear-gradient(${
+  //         theme.base.background
+  //       } 25%, transparent)`,
+  //     },
+  //     fadeBottom: {
+  //       background: `linear-gradient(transparent 45%, ${
+  //         theme.base.background
+  //       })`,
+  //     },
+  //   }
+  // }
 }

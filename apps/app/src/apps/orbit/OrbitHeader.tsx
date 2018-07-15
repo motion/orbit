@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, attachTheme, on } from '@mcro/black'
+import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
@@ -142,12 +142,25 @@ export class OrbitHeader extends React.Component {
     onHover: this.props.headerStore.hover,
   })
 
-  render({ paneStore, orbitStore, headerStore, after, theme, showPin }) {
+  render() {
+    const {
+      paneStore,
+      orbitStore,
+      headerStore,
+      after,
+      theme,
+      showPin,
+      borderRadius,
+    } = this.props
     const headerBg = theme.base.background
     const isHome = paneStore.activePane === 'home'
     const { iconHovered } = headerStore
     return (
-      <OrbitHeaderContainer headerBg={headerBg} {...this.hoverSettler.props}>
+      <OrbitHeaderContainer
+        headerBg={headerBg}
+        {...this.hoverSettler.props}
+        borderRadius={borderRadius}
+      >
         <Title>
           <UI.Icon
             name={

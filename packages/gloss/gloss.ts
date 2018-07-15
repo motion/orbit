@@ -66,11 +66,19 @@ export type Options = {
   isColor?: Function
 }
 
-interface GlossView {
+type GlossViewConfig = {
+  displayName?: string
+}
+
+interface GlossView<T> {
   (props: Object): any
   theme?: Object
   style?: Object
   displayName?: string
+  compiledStyles: Object
+  child?: GlossView<any>
+  withConfig: (a: GlossViewConfig) => T
+  defaultProps?: Object
 }
 
 const DEFAULT_OPTS = {}
@@ -268,7 +276,7 @@ export default class Gloss {
       name = targetElement
     }
     const styleProp = `$${name}`
-    const InnerView = <GlossView>attachTheme(allProps => {
+    const View = <GlossView<any>>attachTheme(allProps => {
       // basically PureRender
       if (elementCache.has(allProps)) {
         return elementCache.get(allProps)
@@ -308,15 +316,18 @@ export default class Gloss {
       elementCache.set(props, element)
       return element
     })
-    // forward ref
-    const View = React.forwardRef((props, ref) =>
-      React.createElement(InnerView, { ...props, forwardRef: ref }),
-    )
-    // TODO: babel transform to auto attach name?
-    View.displayName = View.displayName || name
     View.style = styles
+    View.displayName = targetElement
     if (isParentComponent) {
       View.child = target
+    }
+    View.withConfig = config => {
+      if (config.displayName) {
+        // set tagname and displayname
+        targetElement = config.displayName
+        View.displayName = config.displayName
+      }
+      return View
     }
     View[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
     // forward ref

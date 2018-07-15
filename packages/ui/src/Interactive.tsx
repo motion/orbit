@@ -620,7 +620,7 @@ export class Interactive extends React.Component<
       <InteractiveContainer
         className={this.props.className}
         hidden={this.props.hidden}
-        ref={this.setRef}
+        forwardRef={this.setRef}
         onMouseDown={this.startAction}
         onMouseMove={this.onLocalMouseMove}
         onMouseLeave={this.onMouseLeave} // eslint-disable-next-line

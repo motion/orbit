@@ -521,7 +521,7 @@ export default class TableBody extends PureComponent<
     if (this.isVirtualisedDisabled()) {
       return (
         <TableBodyContainer
-          ref={this.setNonVirtualScrollRef}
+          forwardRef={this.setNonVirtualScrollRef}
           onScroll={this.onScroll}
           autoHeight
         >

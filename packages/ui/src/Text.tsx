@@ -259,7 +259,7 @@ export class Text extends React.Component<TextProps> {
         oneLineEllipse={oneLineEllipse}
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
-        ref={this.getRef}
+        forwardRef={this.getRef}
         color={color}
         {...props}
       >

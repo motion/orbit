@@ -140,7 +140,7 @@ export class OrbitDockedPane extends React.Component<Props> {
           if={fadeBottom}
           isInvisible={store.isAtBottom || !store.isActive}
         />
-        <Pane isActive={store.isActive} style={style} ref={store.paneRef}>
+        <Pane isActive={store.isActive} style={style} forwardRef={store.paneRef}>
           {children}
         </Pane>
         {after}

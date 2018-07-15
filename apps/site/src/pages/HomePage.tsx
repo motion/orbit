@@ -122,7 +122,7 @@ const WaveSVG = view('svg', {
 
 const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
   <WaveSVG
-    ref={forwardRef}
+    forwardRef={forwardRef}
     className="wavebanner"
     preserveAspectRatio="none"
     viewBox="0 0 3701 2273"

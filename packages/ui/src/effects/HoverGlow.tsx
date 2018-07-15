@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
-import $ from '@mcro/color'
 import throttle from 'raf-throttle'
 import { Color } from '@mcro/css'
 
@@ -237,7 +236,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const duration = durationArg >= 0 ? durationArg : _duration
     if (!this.state.mounted) {
       return (
-        <Overlay key="hoverglow" ref={this.rootRef} style={{ opacity: 0 }} />
+        <Overlay key="hoverglow" forwardRef={this.rootRef} style={{ opacity: 0 }} />
       )
     }
     // find width / height (full == match size of container)
@@ -283,7 +282,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const glow = (
       <Overlay
         key="hoverglow"
-        ref={this.rootRef}
+        forwardRef={this.rootRef}
         css={{
           WebkitAppRegion: draggable ? 'drag' : 'no-drag',
           borderLeftRadius: borderLeftRadius || borderRadius,

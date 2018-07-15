@@ -238,7 +238,7 @@ export class FilterToken extends PureComponent {
         onMouseDown={this.onMouseDown}
         focused={this.props.focused}
         color={color}
-        innerRef={this.setRef}
+        forwardRef={this.setRef}
       >
         <Key type={this.props.filter.type} focused={this.props.focused}>
           {filter.key}

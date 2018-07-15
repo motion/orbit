@@ -127,7 +127,7 @@ class HighlightedTextAreaInner extends React.Component<Props> {
       <TextAreaOuter debug>
         <Block
           {...props}
-          ref={this.backdrop}
+          forwardRef={this.backdrop}
           dangerouslySetInnerHTML={{ __html: this.getHighlights() }}
           color="transparent"
         />
@@ -138,13 +138,9 @@ class HighlightedTextAreaInner extends React.Component<Props> {
           onChange={this.handleInputChange}
           onScroll={this.handleScroll}
           value={this.state.value}
-          ref={forwardRef}
+          forwardRef={forwardRef}
         />
       </TextAreaOuter>
     )
   }
 }
-
-export const HighlightedTextArea = React.forwardRef((props, ref) => (
-  <HighlightedTextAreaInner {...props} forwardRef={ref} />
-))

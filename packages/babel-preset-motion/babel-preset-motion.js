@@ -16,6 +16,7 @@ module.exports = function(context, givenOpts) {
         polyfill: true,
         regenerator: false,
       }),
+      plug('@mcro/gloss-displaynames'),
       plug('@mcro/babel-plugin-if'),
       plug('@mcro/gloss/transform', {
         decoratorName: opts.decorator || 'view',

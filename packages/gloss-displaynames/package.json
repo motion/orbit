@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/babel-plugin-gloss-displayname",
+  "name": "@mcro/gloss-displaynames",
   "version": "2.1.0",
   "main": "_/index.js",
   "scripts": {

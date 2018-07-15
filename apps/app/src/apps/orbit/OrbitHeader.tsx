@@ -214,7 +214,7 @@ export class OrbitHeader extends React.Component<{
             onFocus={orbitStore.onFocus}
             onBlur={orbitStore.onBlur}
             onKeyDown={this.handleKeyDown}
-            ref={headerStore.inputRef}
+            forwardRef={headerStore.inputRef}
             onClick={headerStore.onClickInput}
           />
         </Title>

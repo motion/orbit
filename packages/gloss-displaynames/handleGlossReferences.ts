@@ -5,39 +5,43 @@ import { looksLike } from './looksLike'
 function handleGlossReferences(references, file, babel) {
   const { types: t, template } = babel
   const buildBuiltInWithConfig = template(`
-    GLAMOROUS.BUILT_IN.withConfig({displayName: DISPLAY_NAME})
+    GLOSS.withConfig({displayName: DISPLAY_NAME})
   `)
   const buildCustomWithConfig = template(`
-    GLAMOROUS(ARGUMENTS).withConfig({displayName: DISPLAY_NAME})
+    GLOSS(ARGUMENTS).withConfig({displayName: DISPLAY_NAME})
   `)
 
   references.forEach(reference => {
     const displayName = getDisplayName(reference)
+    // console.log('displayName', displayName)
     handleBuiltIns(reference, displayName)
     handleCustomComponent(reference, displayName)
   })
 
   function handleBuiltIns(path, displayName) {
+    // console.log('path', path)
     const isBuiltIn = looksLike(path, {
       parentPath: {
-        type: 'MemberExpression',
-        node: {
-          property: {
-            type: 'Identifier',
-          },
-        },
-        parent: {
-          type: 'CallExpression',
+        type: 'CallExpression',
+        // callee: {
+        //   name: 'view',
+        // },
+        parentPath: {
+          type: 'VariableDeclarator',
         },
       },
     })
+    console.log('isBuiltIn', isBuiltIn, displayName)
     if (!isBuiltIn) {
       return
     }
+    console.log({
+      GLOSS: path.node,
+      DISPLAY_NAME: t.stringLiteral(displayName),
+    })
     path.parentPath.replaceWith(
       buildBuiltInWithConfig({
-        GLAMOROUS: path.node,
-        BUILT_IN: path.parent.property,
+        GLOSS: path.node,
         DISPLAY_NAME: t.stringLiteral(displayName),
       }),
     )
@@ -54,7 +58,7 @@ function handleGlossReferences(references, file, babel) {
     }
     path.parentPath.replaceWith(
       buildCustomWithConfig({
-        GLAMOROUS: path.node,
+        GLOSS: path.node,
         ARGUMENTS: path.parent.arguments,
         DISPLAY_NAME: t.stringLiteral(displayName),
       }),

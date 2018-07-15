@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitFrame } from './orbitFrame'
-import { OrbitSearchResults } from './orbitSearchResults'
-import { OrbitHeader } from './orbitHeader'
+import { OrbitFrame } from './OrbitFrame'
+import { OrbitSearchResults } from './OrbitSearchResults'
+import { OrbitHeader } from './OrbitHeader'
 import { App } from '@mcro/stores'
-import { OrbitContextHome } from './orbitContextHome'
+import { OrbitContextHome } from './OrbitContextHome'
 
 class PaneStore {
   get activePane() {

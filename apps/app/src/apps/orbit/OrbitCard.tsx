@@ -11,7 +11,7 @@ import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
-import { OrbitStore } from './orbitStore'
+import { OrbitStore } from './OrbitStore'
 import { Bit } from '@mcro/models'
 
 export type OrbitCardProps = {

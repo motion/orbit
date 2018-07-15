@@ -5,6 +5,53 @@ import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 
+const OrbitHeaderContainer = view({
+  position: 'relative',
+  flexFlow: 'row',
+  alignItems: 'stretch',
+  justifyContent: 'stretch',
+  padding: [5, 16],
+  transition: 'all ease-in 300ms',
+  zIndex: 4,
+})
+
+OrbitHeaderContainer.theme = ({ borderRadius, theme }) => ({
+  borderTopRadius: borderRadius,
+  background: theme.base.background,
+})
+
+const PinnedControlButton = view(ControlButton, {
+  position: 'relative',
+  zIndex: 10000,
+  transition: 'all ease-in 100ms 100ms',
+  marginRight: 12,
+  opacity: 0.2,
+  '&:hover': {
+    opacity: 0.4,
+  },
+  isPinned: {
+    opacity: 1,
+  },
+  onLeft: {
+    right: 3,
+  },
+  onRight: {
+    left: 0,
+  },
+})
+
+const After = view({
+  alignItems: 'center',
+  flexFlow: 'row',
+})
+
+const Title = view({
+  flexFlow: 'row',
+  flex: 1,
+  justifyContent: 'stretch',
+  alignItems: 'stretch',
+})
+
 class HeaderStore {
   inputRef = React.createRef()
   iconHovered = false
@@ -100,8 +147,8 @@ export class OrbitHeader extends React.Component {
     const isHome = paneStore.activePane === 'home'
     const { iconHovered } = headerStore
     return (
-      <div $orbitHeader $headerBg={headerBg} {...this.hoverSettler.props}>
-        <div $title>
+      <OrbitHeaderContainer headerBg={headerBg} {...this.hoverSettler.props}>
+        <Title>
           <UI.Icon
             name={
               isHome && iconHovered
@@ -147,18 +194,15 @@ export class OrbitHeader extends React.Component {
             ref={headerStore.inputRef}
             onClick={headerStore.onClickInput}
           />
-        </div>
-        <div $after if={after}>
-          {after}
-        </div>
-        <ControlButton
+        </Title>
+        <After if={after}>{after}</After>
+        <PinnedControlButton
           if={showPin}
           onClick={App.togglePinned}
           borderWidth={App.orbitState.pinned ? 0.5 : 2}
-          $pinnedIcon
-          $onLeft={App.orbitOnLeft}
-          $onRight={!App.orbitOnLeft}
-          $isPinned={App.orbitState.pinned}
+          onLeft={App.orbitOnLeft}
+          onRight={!App.orbitOnLeft}
+          isPinned={App.orbitState.pinned}
           background={App.orbitState.pinned ? '#7954F9' : 'transparent'}
           borderColor={
             App.orbitState.pinned
@@ -169,57 +213,7 @@ export class OrbitHeader extends React.Component {
             opacity: App.orbitState.hidden ? 0 : 1,
           }}
         />
-      </div>
+      </OrbitHeaderContainer>
     )
-  }
-
-  static style = {
-    orbitHeader: {
-      position: 'relative',
-      flexFlow: 'row',
-      alignItems: 'stretch',
-      justifyContent: 'stretch',
-      padding: [5, 16],
-      transition: 'all ease-in 300ms',
-      zIndex: 4,
-    },
-    after: {
-      alignItems: 'center',
-      flexFlow: 'row',
-    },
-    pinnedIcon: {
-      position: 'relative',
-      zIndex: 10000,
-      transition: 'all ease-in 100ms 100ms',
-      marginRight: 12,
-      opacity: 0.2,
-      '&:hover': {
-        opacity: 0.4,
-      },
-    },
-    isPinned: {
-      opacity: 1,
-    },
-    onLeft: {
-      right: 3,
-    },
-    onRight: {
-      left: 0,
-    },
-    title: {
-      flexFlow: 'row',
-      flex: 1,
-      justifyContent: 'stretch',
-      alignItems: 'stretch',
-    },
-  }
-
-  static theme = ({ borderRadius, theme }) => {
-    return {
-      orbitHeader: {
-        borderTopRadius: borderRadius,
-        background: theme.base.background,
-      },
-    }
   }
 }

@@ -940,7 +940,8 @@ export class HomeWrapper extends React.Component {
     this.props.homeStore.onScroll()
   }, 16)
 
-  render({ homeStore, sectionHeight }) {
+  render() {
+    const { homeStore, sectionHeight } = this.props
     console.log('props', this.props)
     return (
       <Media query={Constants.screen.tall}>

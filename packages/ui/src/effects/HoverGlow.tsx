@@ -27,7 +27,7 @@ export type HoverGlowProps = {
   duration: number
   overlayZIndex: number
   blur: number
-  parent?: HTMLElement
+  parent?: () => HTMLElement
   backdropFilter?: boolean
   restingPosition?: [number, number]
   full?: boolean
@@ -94,7 +94,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     mounted: false,
     track: false,
     parentNode: null,
-    position: {},
+    position: { x: 0, y: 0 },
     bounds: { width: 0, height: 0 },
   }
 
@@ -113,7 +113,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
 
   follow() {
     let parentNode
-    if (this.props.parent) {
+    if (typeof this.props.parent === 'function') {
       parentNode = this.props.parent()
     } else if (this.rootRef) {
       const node = this.rootRef.current

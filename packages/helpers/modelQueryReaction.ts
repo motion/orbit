@@ -4,7 +4,7 @@ import { modelEqual, modelsEqual } from './modelsEqual'
 import * as _ from 'lodash'
 
 type ReactModelQueryOpts = ReactionOptions & {
-  condition: Function
+  condition?: Function
   poll?: number
 }
 

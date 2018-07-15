@@ -2,10 +2,18 @@ import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
+const Section = view('section', {
+  width: '100%',
+  flexFlow: 'row',
+  padding: [7, 0, 7, 12],
+  alignItems: 'center',
+})
+
 @attachTheme
 @view
 export class OrbitHomeHeader extends React.Component {
-  render({ paneStore, theme }) {
+  render() {
+    const { paneStore, theme } = this.props
     const buttonColor = theme.base.color.lighten(0.2)
     const exploreButton = {
       size: 1.1,
@@ -31,11 +39,10 @@ export class OrbitHomeHeader extends React.Component {
     }
     return (
       <>
-        <section $explore>
+        <Section>
           <UI.Button
             icon="home"
             tooltip="Home"
-            $exploreButton
             active={paneStore.activePane === 'home'}
             onClick={() => paneStore.setActivePane('home')}
             {...exploreButton}
@@ -43,7 +50,6 @@ export class OrbitHomeHeader extends React.Component {
           <UI.Button
             icon="menu35"
             tooltip="Directory"
-            $exploreButton
             active={paneStore.activePane === 'directory'}
             onClick={() => paneStore.setActivePane('directory')}
             {...exploreButton}
@@ -51,7 +57,6 @@ export class OrbitHomeHeader extends React.Component {
           <UI.Button
             icon="gear"
             tooltip="Settings"
-            $exploreButton
             sizeIcon={1.2}
             active={paneStore.activePane === 'settings'}
             onClick={() => paneStore.setActivePane('settings')}
@@ -79,26 +84,8 @@ export class OrbitHomeHeader extends React.Component {
               }}
             />
           </filters> */}
-        </section>
+        </Section>
       </>
     )
-  }
-
-  static style = {
-    explore: {
-      width: '100%',
-      flexFlow: 'row',
-      padding: [7, 0, 7, 12],
-      alignItems: 'center',
-    },
-    filters: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity: 0.5,
-      '&:hover': {
-        opacity: 1,
-      },
-    },
   }
 }

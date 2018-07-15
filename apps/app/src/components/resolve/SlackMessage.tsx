@@ -16,6 +16,24 @@ type SlackMessageProps = {
   itemProps?: Object
 }
 
+const Date = view({
+  fontSize: '75%',
+  fontWeight: 300,
+  opacity: 0.45,
+  marginTop: 1,
+  marginBottom: -1,
+  lineHeight: '1rem',
+})
+
+const Content = view({
+  width: '100%',
+  display: 'block',
+  position: 'relative',
+  margin: [1, 0, 0],
+  userSelect: 'auto',
+  wordWrap: 'break-word',
+})
+
 @view
 export class SlackMessage extends React.Component<SlackMessageProps> {
   render() {
@@ -57,37 +75,15 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           cursor="default"
         >
           <RoundButtonPerson person={person} />
-          <space />
-          <date if={!previousMessage || !previousWithinOneMinute}>
+          <div style={{ width: 6 }} />
+          <Date if={!previousMessage || !previousWithinOneMinute}>
             <TimeAgo if={message.ts}>{getSlackDate(message.ts)}</TimeAgo>
-          </date>
+          </Date>
         </UI.Row>
         <UI.Row>
-          <content dangerouslySetInnerHTML={{ __html: htmlText }} />
+          <Content dangerouslySetInnerHTML={{ __html: htmlText }} />
         </UI.Row>
       </UI.Col>
     )
-  }
-
-  static style = {
-    date: {
-      fontSize: '75%',
-      fontWeight: 300,
-      opacity: 0.45,
-      marginTop: 1,
-      marginBottom: -1,
-      lineHeight: '1rem',
-    },
-    space: {
-      width: 6,
-    },
-    content: {
-      width: '100%',
-      display: 'block',
-      position: 'relative',
-      margin: [1, 0, 0],
-      userSelect: 'auto',
-      wordWrap: 'break-word',
-    },
   }
 }

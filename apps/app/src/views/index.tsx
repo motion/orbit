@@ -150,6 +150,13 @@ export const Link = props => (
   />
 )
 
+const SmallLinkContainer = view('span', {
+  borderBottom: [2, 'transparent'],
+  '&:hover': {
+    borderBottom: [2, 'solid', [0, 0, 0, 0.1]],
+  },
+})
+
 @view.ui
 export class SmallLink extends React.Component {
   handleClick = () => {
@@ -158,16 +165,9 @@ export class SmallLink extends React.Component {
     }
   }
 
-  render({ children }) {
-    return <span onDoubleClick={this.handleClick}>{children}</span>
-  }
-
-  static style = {
-    span: {
-      borderBottom: [2, 'transparent'],
-      '&:hover': {
-        borderBottom: [2, 'solid', [0, 0, 0, 0.1]],
-      },
-    },
+  render() {
+    return (
+      <SmallLinkContainer onDoubleClick={this.handleClick} {...this.props} />
+    )
   }
 }

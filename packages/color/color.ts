@@ -22,19 +22,6 @@ Object.keys(colorConvert).forEach(function(model) {
   ] = model
 })
 
-class GenericMap {
-  strong = {}
-
-  get(obj) {
-    return this.strong[JSON.stringify(obj)]
-  }
-
-  set(obj, val) {
-    this.strong[JSON.stringify(obj)] = val
-  }
-}
-
-const ColorCache = new GenericMap()
 const StringCache = new WeakMap()
 
 var limiters = {}
@@ -51,11 +38,6 @@ class Color {
   hwb: Function
 
   constructor(obj, model?) {
-    // console.log(obj, model)
-    const key = [obj, model]
-    if (ColorCache.get(key)) {
-      return ColorCache.get(key)
-    }
     if (model && model in skippedModels) {
       model = null
     }
@@ -128,8 +110,6 @@ class Color {
     if (Object.freeze) {
       Object.freeze(this)
     }
-
-    ColorCache.set(key, this)
   }
 
   toString() {

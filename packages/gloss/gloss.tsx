@@ -1,7 +1,9 @@
+import * as React from 'react'
 import fancyElement from './fancyElement'
 import css, { validCSSAttr, Color } from '@mcro/css'
 import JSS from './stylesheet'
-import { attachTheme } from './theme/attachTheme'
+import { wrapTheme } from './theme/attachTheme'
+import { ThemeContext } from './theme/ThemeContext'
 
 import * as Helpers_ from '@mcro/css'
 export const Helpers = Helpers_
@@ -74,9 +76,9 @@ interface GlossView<T> {
   theme?: Object
   style?: Object
   displayName?: string
-  compiledStyles: Object
+  compiledStyles?: Object
   child?: GlossView<any>
-  withConfig: (a: GlossViewConfig) => T
+  withConfig?: (a: GlossViewConfig) => T
   defaultProps?: Object
   tagName?: string
 }
@@ -263,6 +265,20 @@ export default class Gloss {
     return styles
   }
 
+  private checkHasTheme = (View, isParentComponent) => {
+    let hasTheme = !!View.theme
+    if (isParentComponent) {
+      let cur = View.child
+      while (cur) {
+        if (!!cur.theme) {
+          hasTheme = true
+        }
+        cur = cur.child
+      }
+    }
+    return hasTheme
+  }
+
   private createSimpleGlossComponent = (target, styles) => {
     const elementCache = new WeakMap()
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
@@ -270,18 +286,17 @@ export default class Gloss {
     let name = target.name || target
     let displayName = name
     let themeUpdate
+    let hasTheme
     let hasAttachedStyles = false
     let targetElement = target
     if (isParentComponent) {
       targetElement = name = targetElement.tagName || 'div'
     }
-    if (target === 'span') {
-      console.log('is', targetElement)
-    }
     const styleProp = `$${name}`
-    const View = <GlossView<any>>attachTheme(allProps => {
+    const View: GlossView<any> = allProps => {
       // basically PureRender
       if (elementCache.has(allProps)) {
+        console.log('returning cached', this, allProps)
         return elementCache.get(allProps)
       }
       // allow View.defaultProps
@@ -301,25 +316,45 @@ export default class Gloss {
         }
         hasAttachedStyles = true
       }
-      // detect child or parent theme
-      if (!themeUpdate) {
-        themeUpdate = this.createThemeManager(id, this.getAllThemes(View), name)
+      const createElement = () => {
+        const el = this.createElement(targetElement, {
+          // TODO: probably can avoid passing glossUID through props
+          glossUID: id,
+          ref: forwardRef,
+          [`data-name`]: displayName,
+          [styleProp]: true,
+          ...props,
+        })
+        elementCache.set(allProps, el)
+        return el
       }
-      // update theme
-      if (themeUpdate) {
-        themeUpdate(props)
+      // themes!
+      // we aren't just wrapping attachTheme on View because it adds a big layer for every simple view
+      // we only attach themes now if they actually need it, to save a lot of nesting.
+      if (typeof hasTheme === 'undefined') {
+        hasTheme = this.checkHasTheme(View, isParentComponent)
       }
-      // TODO: probably can avoid passing glossUID through props
-      const element = this.createElement(targetElement, {
-        glossUID: id,
-        ref: forwardRef,
-        [`data-name`]: displayName,
-        [styleProp]: true,
-        ...props,
-      })
-      elementCache.set(props, element)
-      return element
-    })
+      if (hasTheme) {
+        // detect child or parent theme
+        if (!themeUpdate) {
+          themeUpdate = this.createThemeManager(
+            id,
+            this.getAllThemes(View),
+            name,
+          )
+        }
+        return (
+          <ThemeContext.Consumer>
+            {({ allThemes, activeThemeName }) => {
+              themeUpdate(props, null, allThemes[activeThemeName])
+              return createElement()
+            }}
+          </ThemeContext.Consumer>
+        )
+      }
+      // no theme
+      return createElement()
+    }
     View.style = styles
     View.displayName = targetElement
     View.tagName = name
@@ -343,7 +378,10 @@ export default class Gloss {
     const activeThemeKey = {}
     const cssProcessor = this.css
     const selectors = {}
-    return (props, self) => {
+    return (props, self, theme) => {
+      if (!props.theme) {
+        props.theme = theme
+      }
       if (!props.theme) {
         console.log('no theme', props)
         return

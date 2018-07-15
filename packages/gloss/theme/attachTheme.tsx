@@ -3,19 +3,23 @@ import { ThemeContext } from './ThemeContext'
 
 // HoC for active theme attaching
 
+export const wrapTheme = (props, Klass, avoidTheme?) => {
+  if (props.theme || avoidTheme) {
+    return <Klass {...props} />
+  }
+  return (
+    <ThemeContext.Consumer>
+      {({ allThemes, activeThemeName }) => {
+        return <Klass {...props} theme={allThemes[activeThemeName]} />
+      }}
+    </ThemeContext.Consumer>
+  )
+}
+
 export const attachTheme = Klass => {
   Klass._hasTheme = true
   const AttachedKlass = props => {
-    if (props.theme) {
-      return <Klass {...props} />
-    }
-    return (
-      <ThemeContext.Consumer>
-        {({ allThemes, activeThemeName }) => {
-          return <Klass {...props} theme={allThemes[activeThemeName]} />
-        }}
-      </ThemeContext.Consumer>
-    )
+    return wrapTheme(props, Klass)
   }
   return new Proxy(AttachedKlass, {
     set(_, method, value) {

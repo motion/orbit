@@ -124,7 +124,7 @@ export class HighlightedTextArea extends React.Component<Props> {
   render() {
     const { onChange, highlight, value, forwardRef, ...props } = this.props
     return (
-      <TextAreaOuter debug>
+      <TextAreaOuter>
         <Block
           {...props}
           forwardRef={this.backdrop}

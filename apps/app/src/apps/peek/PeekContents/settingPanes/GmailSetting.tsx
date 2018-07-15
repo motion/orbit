@@ -5,7 +5,7 @@ import { OrbitIcon } from '../../../../apps/orbit/OrbitIcon'
 import { SettingPaneProps } from './SettingPaneProps'
 
 class GmailSettingStore {
-  props: SettingPaneProps
+  // props: SettingPaneProps
 
   max = ''
 

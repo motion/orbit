@@ -4,6 +4,9 @@ import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { AppStore } from '../../stores/AppStore'
+import { OrbitStore } from './OrbitStore'
 
 const OrbitHeaderContainer = view({
   position: 'relative',
@@ -129,7 +132,14 @@ class HeaderStore {
   headerStore: HeaderStore,
 })
 @view
-export class OrbitHeader extends React.Component {
+export class OrbitHeader extends React.Component<{
+  headerStore?: HeaderStore
+  paneStore?: OrbitDockedPaneStore
+  appStore?: AppStore
+  orbitStore?: OrbitStore
+  after?: React.ReactNode
+  borderRadius: number
+}> {
   handleKeyDown = e => {
     // up/down
     const { keyCode } = e

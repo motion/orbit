@@ -7,7 +7,7 @@ import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
 
 const log = debug('appStore')
-const TYPE_DEBOUNCE = 30
+const TYPE_DEBOUNCE = 120
 
 const searchBits = async (query, params?) => {
   if (!query) {

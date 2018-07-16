@@ -214,7 +214,6 @@ storeProvidable = function(options, Helpers) {
         }
 
         mountStores() {
-          console.log('mounting again', this)
           if (!this.stores) {
             return
           }
@@ -230,7 +229,6 @@ storeProvidable = function(options, Helpers) {
         }
 
         disposeStores = () => {
-          console.log('disposing', this)
           if (!this.stores) {
             console.log('no stores to dispose')
             return

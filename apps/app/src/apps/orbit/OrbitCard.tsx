@@ -43,7 +43,7 @@ export type OrbitCardProps = {
   subPane?: string
   bit?: Bit
   itemProps?: Object
-  children?: Function | React.ReactNode
+  children?: (a: Object, b: Object) => JSX.Element  | React.ReactNode
   onClick?: Function
 }
 
@@ -369,7 +369,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       (childTheme && childTheme.background) || theme.base.background
     return (
       <CardWrap
-      forwardRef={store.setRef}
+        forwardRef={store.setRef}
         onClick={store.handleClick}
         {...hoverToSelect && !inactive && this.hoverSettler.props}
         style={{
@@ -450,11 +450,11 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           color="#000"
           resist={90}
           scale={0.99}
-          offsetTop={isSelected ? 13 : 6}
+          offsetTop={isSelected ? 8 : 4}
           full
           blur={isSelected ? 8 : 4}
           inverse
-          opacity={isSelected ? 0.08 : 0.04}
+          opacity={isSelected ? 0.08 : 0.03}
           borderRadius={20}
         />
       </CardWrap>

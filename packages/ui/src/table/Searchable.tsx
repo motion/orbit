@@ -380,11 +380,11 @@ export const Searchable = (Component: any) =>
               onFocus={this.onInputFocus}
               onBlur={this.onInputBlur}
             />
-            {(this.state.searchTerm || this.state.filters.length > 0) && (
+            {this.state.searchTerm || this.state.filters.length > 0 ? (
               <Clear onClick={this.clear}>&times;</Clear>
-            )}
+            ) : null}
           </SearchBox>
-          {actions != null && <Actions>{actions}</Actions>}
+          {actions != null ? <Actions>{actions}</Actions> : null}
         </SearchBar>,
         <Component
           {...props}

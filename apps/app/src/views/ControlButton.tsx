@@ -29,7 +29,7 @@ export const ControlButtonChrome = view(UI.Col, {
 
 ControlButtonChrome.theme = ({ theme, borderWidth, ...props }) => {
   const background =
-    props.backgroud || theme.base.background.darken(0.02).desaturate(0.02)
+    props.background || theme.base.background.darken(0.2).desaturate(0.2)
   const borderColor = props.borderColor || UI.color(background).darken(0.1)
   return {
     background,

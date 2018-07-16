@@ -130,11 +130,13 @@ type boxShadowSyntax = {
   color?: string
   inset?: boolean
 }
+export type innerBoxShadow = string | number | boxShadowSyntax | Color
 export type boxShadow =
   | 'none'
+  | number
   | string
   | boxShadowSyntax
-  | Array<string | number | boxShadowSyntax | Color>
+  | Array<innerBoxShadow | Array<innerBoxShadow>>
 export type boxSizing = 'content-box' | 'border-box'
 export type boxSuppress = 'show' | 'discard' | 'hide'
 export type breakAfter =

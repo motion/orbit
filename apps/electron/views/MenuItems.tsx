@@ -27,9 +27,7 @@ export class MenuItems extends React.Component<{
   }
 
   handleClose = () => {
-    if (Electron.state.showSettings) {
-      // this.handleSettingsVisibility(false)
-    }
+    console.log('close event?')
   }
 
   handlePreferences = () => {

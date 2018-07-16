@@ -45,7 +45,7 @@ export class Conversation extends React.Component<
             content: (
               <>
                 {content}
-                {relatedStore.relatedConversations.length && (
+                {relatedStore.relatedConversations.length ? (
                   <div>
                     <Section>
                       <SubTitle>Related Conversations</SubTitle>
@@ -71,7 +71,7 @@ export class Conversation extends React.Component<
                     <br />
                     <br />
                   </div>
-                )}
+                ) : null}
               </>
             ),
           })

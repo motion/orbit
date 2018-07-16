@@ -306,7 +306,7 @@ export class Parallax extends React.PureComponent {
           }}
           className={className}
         >
-          {this.state.ready && (
+          {this.state.ready ? (
             <div
               ref={node => (this.content = node)}
               style={{
@@ -321,7 +321,7 @@ export class Parallax extends React.PureComponent {
             >
               <Provider value={this}>{children}</Provider>
             </div>
-          )}
+          ) : null}
         </div>
         <div
           if={!showAbsolute}

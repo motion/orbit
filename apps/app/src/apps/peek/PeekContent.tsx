@@ -8,6 +8,10 @@ const PeekContentChrome = view(UI.Col, {
   zIndex: 0,
 })
 
+PeekContentChrome.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
+
 const ContentInner = view(UI.Col, {
   overflowY: 'scroll',
   flex: 1,
@@ -16,14 +20,10 @@ const ContentInner = view(UI.Col, {
   wordBreak: 'break-word',
 })
 
-@view.ui
-export class PeekContent extends React.Component {
-  render() {
-    const { children } = this.props
-    return (
-      <PeekContentChrome>
-        <ContentInner>{children}</ContentInner>
-      </PeekContentChrome>
-    )
-  }
+export const PeekContent = ({ children }) => {
+  return (
+    <PeekContentChrome>
+      <ContentInner>{children}</ContentInner>
+    </PeekContentChrome>
+  )
 }

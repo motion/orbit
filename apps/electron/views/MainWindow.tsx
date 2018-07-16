@@ -3,7 +3,7 @@ import * as Constants from '../constants'
 import { on, view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '../helpers'
-import { Electron, Desktop } from '@mcro/stores'
+import { Electron, Desktop, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 
 class MainStore {
@@ -48,6 +48,19 @@ export class MainWindow extends React.Component<{
     this.setState({ position })
   }
 
+  handleClose = e => {
+    console.log('handling close...')
+    if (App.peekState.item) {
+      e.preventDefault()
+      Electron.sendMessage(App, App.messages.HIDE_PEEK)
+      return
+    }
+    if (App.orbitState.docked || !App.orbitState.hidden) {
+      e.preventDefault()
+      Electron.sendMessage(App, App.messages.HIDE)
+    }
+  }
+
   render() {
     const { store, electronStore, onRef } = this.props
     return (
@@ -67,6 +80,7 @@ export class MainWindow extends React.Component<{
         position={this.state.position}
         size={Electron.state.screenSize}
         onMove={this.handleMove}
+        onClose={this.handleClose}
       />
     )
   }

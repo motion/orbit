@@ -139,9 +139,6 @@ export class PeekHeaderContent extends React.Component {
                   }}
                   onClose={App.actions.clearPeek}
                   onMax={() => App.actions.toggleDevModeStick()}
-                  maxProps={{
-                    background: '#ccc',
-                  }}
                 />
                 <UI.Button
                   if={peekStore.hasHistory}
@@ -153,7 +150,6 @@ export class PeekHeaderContent extends React.Component {
                 <ControlButton
                   if={!peekStore.tornState}
                   icon="z"
-                  background="#62C554"
                   onClick={peekStore.tearPeek}
                 />
               </UI.Row>

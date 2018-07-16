@@ -16,6 +16,7 @@ export const WindowControls = ({
         if={onClose}
         icon="x"
         onClick={onClose}
+        background="#ED6C60"
         {...itemProps}
         {...closeProps}
       />

@@ -14,11 +14,11 @@ const TYPE_THEMES = {
 
 const INTEGRATION_THEMES = {
   slack: { background: '#FDDE64' },
-  github: { background: '#333', color: 'white' },
+  github: { background: '#353535', color: 'white' },
   gdocs: { background: '#7DA5F4' },
-  jira: { background: 'darkblue', color: 'white' },
-  confluence: { background: 'darkblue', color: 'white' },
-  gmail: { background: 'darkred', color: 'white' },
+  jira: { background: '#4978D0', color: 'white' },
+  confluence: { background: '#4B7BD4', color: 'white' },
+  gmail: { background: '#D2675E', color: 'white' },
 }
 
 const BASE_THEME = {

@@ -200,7 +200,6 @@ export class OrbitHeader extends React.Component<{
             fontSize={22}
             lineHeight="22px"
             padding={13}
-            paddingLeft={20}
             border="none"
             display="block"
             background="transparent"

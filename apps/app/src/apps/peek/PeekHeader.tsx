@@ -42,33 +42,9 @@ TitleBarContain.theme = ({ theme }) => ({
   },
 })
 
-const SubTitle = ({ children, date, permalink }) => (
-  <UI.Row
-    if={children || date || permalink}
-    padding={[4, 12]}
-    alignItems="center"
-  >
-    <UI.Text
-      if={children || date}
-      display="flex"
-      flexFlow="row"
-      alignItems="center"
-      alpha={0.8}
-    >
-      {children}
-      <span if={date}>
-        {' '}
-        &middot;&nbsp;&nbsp; <UI.Date>{date}</UI.Date>
-      </span>
-    </UI.Text>
-    <UI.Col if={permalink} flex={1} />
-    <UI.Button
-      if={permalink}
-      size={0.9}
-      icon="link"
-      circular
-      onClick={permalink}
-    />
+const SubTitle = ({ children }) => (
+  <UI.Row padding={[4, 12]} alignItems="center" flex={1}>
+    {children}
   </UI.Row>
 )
 

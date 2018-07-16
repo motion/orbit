@@ -9,7 +9,7 @@ const PeekContentChrome = view(UI.Col, {
 })
 
 PeekContentChrome.theme = ({ theme }) => ({
-  background: theme.base.background,
+  background: theme.base.background || '#fefefe',
 })
 
 const ContentInner = view(UI.Col, {

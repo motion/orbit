@@ -7,7 +7,7 @@ import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
 
 const log = debug('appStore')
-const TYPE_DEBOUNCE = 120
+const TYPE_DEBOUNCE = 200
 
 const searchBits = async (query, params?) => {
   if (!query) {
@@ -232,23 +232,23 @@ export class AppStore {
     },
   )
 
-  peopleSearch = react(
-    () => [App.state.query, Desktop.state.lastBitUpdatedAt],
-    async ([query], { sleep }) => {
-      await sleep(TYPE_DEBOUNCE)
-      return {
-        query,
-        results: await Person.find({
-          where: `(name like "%${query}%")`,
-          take: 4,
-        }),
-      }
-    },
-    {
-      immediate: true,
-      defaultValue: { results: [] },
-    },
-  )
+  // peopleSearch = react(
+  //   () => [App.state.query, Desktop.state.lastBitUpdatedAt],
+  //   async ([query], { sleep }) => {
+  //     await sleep(TYPE_DEBOUNCE)
+  //     return {
+  //       query,
+  //       results: await Person.find({
+  //         where: `(name like "%${query}%")`,
+  //         take: 4,
+  //       }),
+  //     }
+  //   },
+  //   {
+  //     immediate: true,
+  //     defaultValue: { results: [] },
+  //   },
+  // )
 
   searchState = react(
     () => [App.state.query, this.getResults],

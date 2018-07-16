@@ -20,6 +20,9 @@ export type PageQuery = {
   mimeType?: string
 }
 
+/**
+ * @deprecated
+ */
 @store
 export class DriveService {
   helpers: DriveServiceHelpers

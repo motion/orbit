@@ -23,7 +23,9 @@ export class Setting extends T.BaseEntity {
       password: string
       domain: string
     }
-    oauth?: Object
+    oauth?: {
+      refreshToken: string
+    }
     repos?: Object
     calendarsActive?: Object
     syncTokens?: Object

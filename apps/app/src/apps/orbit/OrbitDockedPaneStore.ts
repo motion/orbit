@@ -38,7 +38,7 @@ export class OrbitDockedPaneStore {
         throw react.cancel
       }
       this.setActivePane('home')
-    }
+    },
   )
 
   setDirectoryOnAt = react(
@@ -70,9 +70,6 @@ export class OrbitDockedPaneStore {
       const active = this.panes[this.paneIndex]
       if (active === 'home' && App.state.query) {
         return 'search'
-      }
-      if (!App.orbitState.docked) {
-        return this.panes[this.paneIndex]
       }
       return active
     },

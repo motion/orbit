@@ -15,5 +15,8 @@ export class OrbitSearchStore {
   }
 
   // delay just a tiny bit to prevent input delay
-  currentQuery = react(() => App.state.query, _ => _, { delay: 32 })
+  currentQuery = react(() => App.state.query, _ => _, {
+    delay: 32,
+    immediate: true,
+  })
 }

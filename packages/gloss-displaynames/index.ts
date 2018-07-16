@@ -7,7 +7,7 @@ export default function(babel) {
     name: '@mcro/gloss-displaynames',
     visitor: {
       ImportDeclaration(path) {
-        const defaultSpecifierPath = path.get('specifiers')[0]
+        const importSpecifier = path.get('specifiers')[0]
         if (path.node.source.value !== '@mcro/black') {
           return
         }
@@ -15,7 +15,7 @@ export default function(babel) {
           node: {
             local: { name },
           },
-        } = defaultSpecifierPath
+        } = importSpecifier
         if (name != 'view') {
           return
         }

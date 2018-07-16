@@ -12,6 +12,9 @@ export function storeAttachable(options): ContextAttacher {
         <StoreContext.Consumer>
           {allStores => {
             let stores = {}
+            if (props.debug) {
+              console.log('attach me', options)
+            }
             if (
               options.stores.length === 1 &&
               typeof options.stores[0] === 'object'

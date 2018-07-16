@@ -21,7 +21,7 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
   return (
     <UI.Col flex={1} padding={[10, 0]}>
       <div if={message}>{message}</div>
-      <OrbitSearchFilters appStore={appStore} searchStore={searchStore} />
+      <OrbitSearchFilters debug appStore={appStore} searchStore={searchStore} />
       <div
         if={results.length}
         css={{
@@ -39,6 +39,12 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
             total={results.length}
             bit={bit}
             listItem
+            debug={index === 0}
+            nextUpStyle={
+              index === 0 && {
+                background: [0, 0, 0, 0.025],
+              }
+            }
           >
             <UI.Text
               size={1.2}
@@ -91,7 +97,12 @@ export class OrbitSearchResults extends React.Component<Props> {
       } --------------`,
     )
     return (
-      <OrbitDockedPane name="search" extraCondition={searchStore}>
+      <OrbitDockedPane
+        paddingLeft={0}
+        paddingRight={0}
+        name="search"
+        extraCondition={searchStore}
+      >
         <OrbitSearchResultsInner
           appStore={appStore}
           searchStore={searchStore}

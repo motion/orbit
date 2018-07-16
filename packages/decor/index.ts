@@ -14,12 +14,20 @@ export default function decor(
   const emit = (a, b?) => emitter.emit(a, b)
   const on = (a, b) => emitter.on(a, b)
   const isClass = x => {
-    return (
-      x._isDecoratedClass ||
-      (x.prototype &&
+    if (x._isDecoratedClass) {
+      return true
+    }
+    try {
+      return (
+        x.prototype &&
         (x.toString().indexOf('class') === 0 ||
-          x.toString().indexOf('classCallCheck') > -1))
-    )
+          x.toString().indexOf('classCallCheck') > -1)
+      )
+    } catch (err) {
+      // this is super odd
+      console.log('weird class', err)
+      return false
+    }
   }
 
   // process plugins
@@ -88,12 +96,13 @@ export default function decor(
       if (!decoratedClass) {
         throw new Error('No class/function passed to decorator')
       }
+      // do this before we pass through proxies and decorators
+      // @ts-ignore
+      decoratedClass._isDecoratedClass = isClass(KlassOrOpts)
       for (const plugin of allPlugins) {
         decoratedClass =
           plugin.decorator(decoratedClass, opts) || decoratedClass
       }
-      // @ts-ignore
-      decoratedClass._isDecoratedClass = true
       const ProxiedClass = new Proxy(decoratedClass, {
         set(_, method, value) {
           KlassOrOpts[method] = value

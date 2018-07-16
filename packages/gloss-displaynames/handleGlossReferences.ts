@@ -5,53 +5,35 @@ import { looksLike } from './looksLike'
 function handleGlossReferences(references, file, babel) {
   const { types: t, template } = babel
   const buildBuiltInWithConfig = template(`
-    GLOSS.withConfig({displayName: DISPLAY_NAME})
-  `)
-  const buildCustomWithConfig = template(`
     GLOSS(ARGUMENTS).withConfig({displayName: DISPLAY_NAME})
   `)
 
   references.forEach(reference => {
     const displayName = getDisplayName(reference)
     // console.log('displayName', displayName)
-    handleBuiltIns(reference, displayName)
-    handleCustomComponent(reference, displayName)
+    handleComponent(reference, displayName)
   })
 
-  function handleBuiltIns(path, displayName) {
+  function handleComponent(path, displayName) {
     const isBuiltIn = looksLike(path, {
+      parent: {
+        callee: {
+          name: 'view',
+        },
+      },
       parentPath: {
         type: 'CallExpression',
-        // callee: {
-        //   name: 'view',
-        // },
         parentPath: {
           type: 'VariableDeclarator',
         },
       },
     })
+    console.log(isBuiltIn, path.parent.callee.name)
     if (!isBuiltIn) {
       return
     }
     path.parentPath.replaceWith(
       buildBuiltInWithConfig({
-        GLOSS: path.node,
-        DISPLAY_NAME: t.stringLiteral(displayName),
-      }),
-    )
-  }
-
-  function handleCustomComponent(path, displayName) {
-    const isCustom = looksLike(path, {
-      parent: {
-        type: 'CallExpression',
-      },
-    })
-    if (!isCustom) {
-      return
-    }
-    path.parentPath.replaceWith(
-      buildCustomWithConfig({
         GLOSS: path.node,
         ARGUMENTS: path.parent.arguments,
         DISPLAY_NAME: t.stringLiteral(displayName),

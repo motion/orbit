@@ -130,7 +130,7 @@ type boxShadowSyntax = {
   color?: string
   inset?: boolean
 }
-export type innerBoxShadow = string | number | boxShadowSyntax | Color
+export type innerBoxShadow = Array<string | number | boxShadowSyntax | Color>
 export type boxShadow =
   | 'none'
   | number

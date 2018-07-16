@@ -8,6 +8,10 @@
 - nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
 - static styles https://github.com/jsxstyle/jsxstyle/tree/master/packages/jsxstyle-webpack-plugin
 
+# nate
+
+goal for all of this: Friday:
+
 - pre-select first index with light gray
 - filters
   - one bar for integrations - can easily toggle many on/off
@@ -24,19 +28,23 @@
   - hover highlight the areas effect
 - bit document page design
 - fix laggy typing on search
-- settings panes runthrough
 - search filters <=> nlp v1
 - search highlight sections v2
+  - corresponding peek UX for search results
+- orbit pane fix bottom invsible click through and have it expand as you search
+
+Next week:
+
+- settings panes runthrough
 - settings panes more fixes
-- corresponding peek UX for search results
 - "open" items from search/peek
   - make all peeks work like slack and deal with "item"
   - click highlight to open directly to that item in the peek
 - slack card:
   - if it was a post in #status, show other posts by that person in #status
   - fix people cards
-- auto setup
-- p2p
+- onboarding: auto setup
+- p2p hyperdb initial version
 
 # high level
 

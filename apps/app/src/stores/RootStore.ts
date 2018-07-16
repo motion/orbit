@@ -7,6 +7,15 @@ import connectModels from '../helpers/connectModels'
 import * as AppStoreActions from '../actions/AppStoreActions'
 import { WebSQLClient } from '../helpers/WebSQLClient'
 
+if (process.env.NODE_ENV === 'development') {
+  if (module && module.hot) {
+    module.hot.accept('../actions/AppStoreActions', () => {
+      console.log('set new actions')
+      App.start({ actions: require('../actions/AppStoreActions') })
+    })
+  }
+}
+
 const onPort = async cb => {
   await sleep(200)
   try {
@@ -28,6 +37,7 @@ export class RootStore {
 
   constructor() {
     debugState(({ stores, views }) => {
+      console.log('debug state', stores, views)
       this.stores = stores
       this.views = views
     })

@@ -6,14 +6,13 @@ import paths from './paths'
 import { ncp } from 'ncp'
 import fs from 'fs'
 
-console.log('build for prod...')
-
 if (fs.existsSync(paths.appPublic)) {
   ncp(paths.appPublic, paths.appBuild, console.log.bind(console))
 }
 
-process.env.NODE_ENV = 'production'
+process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 
+console.log('build for prod... process.env.NODE_ENV', process.env.NODE_ENV)
 webpack(
   {
     mode: 'production',

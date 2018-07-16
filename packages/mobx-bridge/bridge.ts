@@ -63,6 +63,7 @@ class Bridge {
     }
     if (this.store || this._socket) {
       console.warn(`Already started ${this._source}`)
+      this.setupActions(store, options.actions)
       return
     }
     store.bridge = this
@@ -106,23 +107,7 @@ class Bridge {
     this._source = store.source
     this._store = store
     this._options = options
-    // define actions onto the store
-    // wrap them in mobx actions so we get logging
-    if (options.actions) {
-      if (store.actions) {
-        throw new Error('Actions should be defined through Store.start()')
-      }
-      store.actions = {}
-      for (const key of Object.keys(options.actions)) {
-        const actionName = `${store.constructor.name}.${key}`
-        const boundAction = options.actions[key].bind(store)
-        const finalAction = (...args) => {
-          log(`ACTION: ${actionName}`)
-          return boundAction(...args)
-        }
-        store.actions[key] = Mobx.action(actionName, finalAction)
-      }
-    }
+    this.setupActions(store, options.actions)
     // set initial state synchronously before
     this._initialState = JSON.parse(JSON.stringify(initialState))
     if (initialState) {
@@ -134,6 +119,24 @@ class Bridge {
     } else {
       await eval(`require('wait-port')`)({ host: 'localhost', port: 40510 })
       process.on('exit', this.dispose)
+    }
+  }
+
+  // define actions onto the store
+  // wrap them in mobx actions so we get logging
+  setupActions(store, actions) {
+    if (!actions) {
+      return
+    }
+    store.actions = {}
+    for (const key of Object.keys(actions)) {
+      const actionName = `${store.constructor.name}.${key}`
+      const boundAction = actions[key].bind(store)
+      const finalAction = (...args) => {
+        log(`ACTION: ${actionName}`)
+        return boundAction(...args)
+      }
+      store.actions[key] = Mobx.action(actionName, finalAction)
     }
   }
 

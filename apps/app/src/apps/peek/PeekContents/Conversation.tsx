@@ -5,6 +5,7 @@ import { SubTitle } from '../../../views'
 import { OrbitDivider } from '../../../apps/orbit/OrbitDivider'
 import { PeekRelatedStore } from './PeekRelatedStore'
 import { PeekContentProps } from './PeekContentProps'
+import * as UI from '@mcro/ui'
 
 const Section = view({
   padding: 20,
@@ -13,7 +14,7 @@ const Section = view({
 // delays here help ensure it doesn't jitter
 
 const itemProps = {
-  padding: [5, 15],
+  padding: [4, 15],
   '&:hover': {
     background: [0, 0, 0, 0.02],
   },
@@ -46,7 +47,7 @@ export class Conversation extends React.Component<
               <>
                 {content}
                 {relatedStore.relatedConversations.length ? (
-                  <div>
+                  <UI.View marginTop={60} background="#f5f5f5">
                     <Section>
                       <SubTitle>Related Conversations</SubTitle>
                     </Section>
@@ -70,7 +71,7 @@ export class Conversation extends React.Component<
                     )}
                     <br />
                     <br />
-                  </div>
+                  </UI.View>
                 ) : null}
               </>
             ),

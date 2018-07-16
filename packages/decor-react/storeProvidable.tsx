@@ -214,6 +214,7 @@ storeProvidable = function(options, Helpers) {
         }
 
         mountStores() {
+          console.log('mounting again', this)
           if (!this.stores) {
             return
           }
@@ -229,6 +230,7 @@ storeProvidable = function(options, Helpers) {
         }
 
         disposeStores = () => {
+          console.log('disposing', this)
           if (!this.stores) {
             console.log('no stores to dispose')
             return
@@ -254,9 +256,6 @@ storeProvidable = function(options, Helpers) {
             // to get real key: findDOMNode(this) + serialize dom position into key
             storeHMRCache[`${getName(this)}${name}`] = {
               state: store.dehydrate(),
-            }
-            if (store.onWillReload) {
-              store.willReload(storeHMRCache[name])
             }
           }
           // save these for later because webpack may not actually HMR
@@ -284,6 +283,7 @@ storeProvidable = function(options, Helpers) {
             // auto rehydrate
             if (storeHMRCache[key].state) {
               store.hydrate(storeHMRCache[key].state)
+              Helpers.emit('store.mount', { name, thing: store })
             }
             if (store.onReload) {
               store.onReload()

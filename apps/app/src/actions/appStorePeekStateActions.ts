@@ -45,11 +45,11 @@ export function selectItem(
       item: {
         id: item.id,
         title: item.title,
+        icon: item.icon || '',
         type: item.type || '',
         // because were doing deep merging, we reset extra fields
         body: '',
         integration: item.integration || '',
-        icon: '',
       },
     })
   }
@@ -77,11 +77,11 @@ export function selectBit(bit: Bit, target?: PositionObject) {
     peekId: Math.random(),
     item: {
       id: bit.id,
-      icon: bit.icon,
+      icon: bit.icon || '',
       title: bit.title,
-      body: bit.body,
-      type: bit.type,
-      integration: bit.integration,
+      body: bit.body || '',
+      type: bit.type || '',
+      integration: bit.integration || '',
     },
   })
 }

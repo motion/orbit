@@ -40,7 +40,7 @@ type PeekFrameProps = {
 
 export const PeekFrame = view.attach('peekStore')(
   attachTheme(
-    view(({ peekStore, children, theme, ...props }: PeekFrameProps) => {
+    view(({ peekStore, children, ...props }: PeekFrameProps) => {
       const {
         willShow,
         willHide,
@@ -134,7 +134,7 @@ export const PeekFrame = view.attach('peekStore')(
                 css={{
                   boxShadow,
                   borderRadius,
-                  background,
+                  // background,
                 }}
                 {...props}
               >

@@ -8,6 +8,7 @@
 - nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
 - static styles https://github.com/jsxstyle/jsxstyle/tree/master/packages/jsxstyle-webpack-plugin
 
+- pre-select first index with light gray
 - filters
   - one bar for integrations - can easily toggle many on/off
   - one bar for type: people, attachment, document, task

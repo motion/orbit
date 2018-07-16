@@ -41,7 +41,6 @@ export class SettingContent extends React.Component<
     job.action = 'all'
     job.status = Job.statuses.PENDING
     await job.save()
-    store.update = Math.random()
   }
 
   removeIntegration = async () => {
@@ -64,7 +63,6 @@ export class SettingContent extends React.Component<
         integrationSettingsStore={integrationSettingsStore}
         appStore={appStore}
         setting={setting}
-        update={store.update}
       >
         {({ subhead, content }) => {
           // this is a bit strange, its calling up a few times and passing up props
@@ -127,7 +125,7 @@ class LoadSettingStore {
   }
 
   get item() {
-    return App.peekState.item || {}
+    return this.props.item
   }
 
   idSetting = modelQueryReaction(() =>

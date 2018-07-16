@@ -62,6 +62,11 @@ class AppStore {
   peekState: AppStore['state']['peekState']
   authState: AppStore['state']['authState']
 
+  actions: {
+    closeOrbit: Function
+    selectItem: Function
+  }
+
   messages = {
     TOGGLE_SETTINGS: 'TOGGLE_SETTINGS',
     TOGGLE_DOCKED: 'TOGGLE_DOCKED',

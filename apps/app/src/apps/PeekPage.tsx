@@ -12,6 +12,7 @@ import { PeekBitInformation } from './peek/PeekContents/PeekBitInformation'
 import { Bit, Person } from '@mcro/models'
 
 const PeekPageInner = view(({ peekStore, appStore }) => {
+  console.log('inner peek page', peekStore.state, peekStore.model)
   if (!peekStore.state) {
     return null
   }
@@ -26,6 +27,7 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
   return (
     <PeekContentsView
       key={peekId}
+      item={item}
       bit={peekStore.model}
       person={peekStore.model}
       appStore={appStore}
@@ -41,33 +43,36 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
         after,
         content,
         headerProps,
-      }) => (
-        <>
-          <PeekHeader
-            title={title}
-            subtitle={subtitle}
-            after={after}
-            icon={icon}
-            date={date}
-            subhead={subhead}
-            permalink={permalink}
-            integration={item.integration || item.type}
-            {...headerProps}
-          />
-          <PeekContent>{content}</PeekContent>
-          <PeekBitInformation
-            if={
-              peekStore.model instanceof Bit ||
-              peekStore.model instanceof Person
-            }
-            body={
-              peekStore.model.body ||
-              'ui kit size prop async migration freelance distrbiution org integration'
-            }
-            people={peekStore.model.people}
-          />
-        </>
-      )}
+      }) => {
+        console.log('now rende rthe damn peek', title)
+        return (
+          <>
+            <PeekHeader
+              title={title}
+              subtitle={subtitle}
+              after={after}
+              icon={icon}
+              date={date}
+              subhead={subhead}
+              permalink={permalink}
+              integration={item.integration || item.type}
+              {...headerProps}
+            />
+            <PeekContent>{content}</PeekContent>
+            <PeekBitInformation
+              if={
+                peekStore.model instanceof Bit ||
+                peekStore.model instanceof Person
+              }
+              body={
+                peekStore.model.body ||
+                'ui kit size prop async migration freelance distrbiution org integration'
+              }
+              people={peekStore.model.people}
+            />
+          </>
+        )
+      }}
     </PeekContentsView>
   )
 })

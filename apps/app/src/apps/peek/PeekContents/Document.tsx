@@ -15,7 +15,9 @@ const BodyContents = view({
   whiteSpace: 'pre-line',
   width: '100%',
   overflow: 'hidden',
-  padding: [0, 10],
+  padding: 20,
+  fontSize: 22,
+  lineHeight: '2rem',
 })
 
 @view

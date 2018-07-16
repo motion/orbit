@@ -1,59 +1,81 @@
-import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
-import { GoogleDriveFileLoader } from './GoogleDriveFileLoader'
-import { GoogleDriveFile } from './GoogleDriveTypes'
-import { htmlToMarkdown } from './GoogleDriveUtils'
+import { Bit, createOrUpdateBit, Setting, createOrUpdate, Person } from '@mcro/models'
+import * as Helpers from '~/helpers'
+import { GoogleDriveLoader } from './GoogleDriveLoader'
+import { GoogleDriveLoadedFile, GoogleDriveLoadedUser } from './GoogleDriveTypes'
 
-export default class GoogleDriveSync {
-  service: GoogleDriveFileLoader
+export class GoogleDriveSync {
+  loader: GoogleDriveLoader
   setting: Setting
 
   constructor(setting) {
     this.setting = setting
-    this.service = new GoogleDriveFileLoader(this.setting)
+    this.loader = new GoogleDriveLoader(this.setting)
   }
 
-  async run(): Promise<Bit[]> {
+  async run(): Promise<void> {
     try {
-      console.log('synchronizing google drive files')
-      const files = await this.syncFiles()
-      console.log(`created ${files.length} files`, files)
-      return files
+      console.log('synchronizing google drive files!')
+      await this.loader.load()
+
+      // create entities for loaded files
+      const createdFiles = await Promise.all(this.loader.files.map(file => {
+        return this.createFile(file)
+      }));
+      const newlyCreatedFiles = createdFiles.filter(file => !!file);
+      console.log(`synced ${newlyCreatedFiles.length} files`)
+
+      // create entities for loaded users
+      const createdPeople = await Promise.all(this.loader.users.map(user => {
+        return this.createPerson(user)
+      }));
+      const newlyCreatedPeople = createdPeople.filter(person => !!person);
+      console.log(`synced ${newlyCreatedPeople.length} people`)
+
     } catch (err) {
       console.log('error in google drive sync', err.message, err.stack)
-      return []
     }
   }
 
-  private async syncFiles(): Promise<Bit[]> {
-    const files = await this.service.getFiles()
-    console.log(`got ${files.length} files`)
-    const created = await Promise.all(files.map(file => {
-      return this.createFile(file)
-    }));
-    const newlyInserted = created.filter(file => !!file);
-    console.log(`synced ${newlyInserted.length} files`)
-    return newlyInserted
-  }
-
-  private async createFile(file: GoogleDriveFile): Promise<Bit|null> {
-    const { name, text, html, ...data } = file
-    const markdowned = html ? htmlToMarkdown(html) : text
+  private async createFile(file: GoogleDriveLoadedFile): Promise<Bit|null> {
     return await createOrUpdateBit(Bit, {
       integration: 'gdocs',
-      identifier: file.id,
+      identifier: file.file.id,
       type: 'document',
-      title: name,
-      body: text || 'empty',
+      title: file.file.name,
+      body: file.content || 'empty',
       data: {
-        ...data,
+        ...file.file,
         // storing too much for now just to have flexibility
-        htmlBody: html,
-        markdownBody: markdowned || '',
-        textBody: text,
+        // htmlBody: html || '',
+        // markdownBody: html ? htmlToMarkdown(html) : text || '',
+        // textBody: text || '',
       },
-      bitCreatedAt: new Date(file.createdTime),
-      bitUpdatedAt: new Date(file.modifiedTime),
+      bitCreatedAt: new Date(file.file.createdTime),
+      bitUpdatedAt: new Date(file.file.modifiedTime),
+      image: file.file.fileExtension && file.file.thumbnailLink ? file.file.id + "." + file.file.fileExtension : undefined
     })
+  }
+
+  private async createPerson(user: GoogleDriveLoadedUser) {
+    const person = {
+      location: '',
+      bio: '',
+      avatar: user.photo || '',
+      emails: user.email ? [user.email] : [],
+    }
+    return await createOrUpdate(
+      Person,
+      {
+        identifier: `gdrive-${Helpers.hash(person)}`,
+        integrationId: user.email,
+        integration: 'gdrive',
+        name: user.name,
+        data: {
+          ...user
+        },
+      },
+      { matching: Person.identifyingKeys },
+    )
   }
 
 }

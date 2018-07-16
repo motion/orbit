@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-import { View } from './View'
+import { View } from './blocks/View'
 
 export const Image = view(View, {
   display: 'block',

@@ -49,6 +49,9 @@ export class Bit extends T.BaseEntity {
   @T.Column({ nullable: true })
   url: string
 
+  @T.Column({ nullable: true })
+  image: string
+
   @T.Column('simple-json', { default: '{}' })
   data: Object
 

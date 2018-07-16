@@ -29,6 +29,7 @@ apps/oracle/orbit/Build
 apps/oracle/swindler/Carthage
 apps/oracle/swindler/Build
 apps/app/build
+apps/desktop/uploads
 apps/desktop/build
 apps/desktop/data/database
 apps/desktop/data/database.bak

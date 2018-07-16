@@ -8,9 +8,6 @@ export function storeAttachable(options): ContextAttacher {
     name: 'storeAttachable',
     once: true,
     decorator: View => {
-      if (View.debug) {
-        console.log('we got a view', View)
-      }
       const ContextAttacher = props => (
         <StoreContext.Consumer>
           {allStores => {
@@ -32,9 +29,6 @@ export function storeAttachable(options): ContextAttacher {
               for (const name of options.stores) {
                 stores[name] = allStores[name]
               }
-            }
-            if (props.debug) {
-              console.log('attaching a thing', props, stores, options)
             }
             return <View {...props} {...stores} />
           }}

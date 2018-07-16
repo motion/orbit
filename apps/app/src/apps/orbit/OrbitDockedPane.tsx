@@ -75,7 +75,7 @@ const Pane = view({
   right: 0,
   bottom: 0,
   left: 0,
-  transition: 'all ease-in-out 100ms',
+  transition: 'all ease 100ms',
   borderRadius: BORDER_RADIUS,
   overflowX: 'hidden',
   overflowY: 'scroll',
@@ -140,7 +140,11 @@ export class OrbitDockedPane extends React.Component<Props> {
           if={fadeBottom}
           isInvisible={store.isAtBottom || !store.isActive}
         />
-        <Pane isActive={store.isActive} style={style} forwardRef={store.paneRef}>
+        <Pane
+          isActive={store.isActive}
+          style={style}
+          forwardRef={store.paneRef}
+        >
           {children}
         </Pane>
         {after}

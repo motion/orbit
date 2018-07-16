@@ -74,7 +74,7 @@ export const OrbitIcon = ({
       {...iconImg && orbitIconStyle}
       {...props}
     >
-      {iconImg && (
+      {iconImg ? (
         <img
           src={iconImg}
           css={{
@@ -83,7 +83,7 @@ export const OrbitIcon = ({
             ...imageStyle,
           }}
         />
-      )}
+      ) : null}
       <UI.Icon
         if={!iconImg}
         name={icon}

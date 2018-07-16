@@ -103,7 +103,7 @@ export class Icon extends React.Component<IconProps> {
         >
           {content}
         </div>
-        {tooltip && (
+        {tooltip ? (
           <Popover
             theme="dark"
             background
@@ -118,7 +118,7 @@ export class Icon extends React.Component<IconProps> {
           >
             {tooltip}
           </Popover>
-        )}
+        ) : null}
       </IconInner>
     )
   }

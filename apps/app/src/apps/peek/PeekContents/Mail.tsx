@@ -29,7 +29,7 @@ export class Mail extends React.Component<PeekContentProps> {
       icon: 'email',
       title: bit.title,
       date: bit.createdAt,
-      content: messages && (
+      content: messages ? (
         <div>
           {messages.map((message, index) => {
             return (
@@ -89,7 +89,7 @@ export class Mail extends React.Component<PeekContentProps> {
             )
           })}
         </div>
-      ),
+      ) : null,
     })
   }
 }

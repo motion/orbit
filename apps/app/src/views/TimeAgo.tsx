@@ -2,8 +2,13 @@ import { Component } from 'react'
 import differenceInSeconds from 'date-fns/difference_in_seconds'
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 
-export class TimeAgo extends Component {
+type TimeAgoProps = {
+  date: Date
+}
+
+export class TimeAgo extends Component<TimeAgoProps> {
   static defaultProps = {
+    date: null,
     element: 'p',
     postfix: '',
     className: undefined,

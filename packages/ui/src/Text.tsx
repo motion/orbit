@@ -264,11 +264,11 @@ export class Text extends React.Component<TextProps> {
         {...props}
       >
         {!showEllipse && children}
-        {showEllipse && (
+        {showEllipse ? (
           <TextEllipse ellipse={ellipse} color={color} {...ellipseProps}>
             {!highlight ? children : null}
           </TextEllipse>
-        )}
+        ) : null}
       </TextBlock>
     )
   }

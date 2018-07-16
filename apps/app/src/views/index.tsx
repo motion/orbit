@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
+import { OrbitStore } from '../apps/orbit/OrbitStore';
 
 export * from './RoundButton'
 
@@ -160,7 +161,7 @@ const SmallLinkContainer = view('span', {
 window.SmallLinkContainer = SmallLinkContainer
 
 @view.ui
-export class SmallLink extends React.Component {
+export class SmallLink extends React.Component<{ orbitStore?: OrbitStore }> {
   handleClick = () => {
     if (this.props.orbitStore) {
       this.props.orbitStore.setQuery(this.props.children)

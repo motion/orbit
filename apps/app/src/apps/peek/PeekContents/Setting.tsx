@@ -88,7 +88,7 @@ export class SettingContent extends React.Component<
                   />{' '}
                   <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
                 </UI.Text>
-                {!store.job && <div>Loading...</div>}
+                {!store.job ? <div>Loading...</div> : null}
               </UI.Row>
             ),
             after: (

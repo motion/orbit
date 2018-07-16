@@ -62,7 +62,7 @@ export class OrbitDirectory extends React.Component<{
     const total = store.results.length
     return (
       <OrbitDockedPane name="directory" fadeBottom>
-        {store.people.length && (
+        {store.people.length ? (
           <React.Fragment>
             <SubTitle>People</SubTitle>
             <Masonry>
@@ -81,7 +81,7 @@ export class OrbitDirectory extends React.Component<{
               ))}
             </Masonry>
           </React.Fragment>
-        )}
+        ) : null}
       </OrbitDockedPane>
     )
   }

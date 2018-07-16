@@ -32,10 +32,10 @@ export class PeekStore {
   history = []
 
   get theme() {
-    if (!App.peekState.item) {
+    if (!this.curState || !this.curState.item) {
       return BASE_THEME
     }
-    const { type, integration } = App.peekState.item
+    const { type, integration } = this.curState.item
     return INTEGRATION_THEMES[integration] || TYPE_THEMES[type] || BASE_THEME
   }
 

@@ -278,11 +278,11 @@ class SurfaceInner extends React.Component<SurfaceProps> {
           borderLeftRadius={borderLeftRadius - 1}
           borderRightRadius={borderRightRadius - 1}
         />
-        {badge && (
+        {badge ? (
           <Badge {...badgeProps}>
             {typeof badge !== 'boolean' ? badge : ''}
           </Badge>
-        )}
+        ) : null}
         <div $icon if={icon && !stringIcon}>
           {icon}
         </div>

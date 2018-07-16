@@ -96,7 +96,8 @@ declare type boxShadowSyntax = {
     color?: string;
     inset?: boolean;
 };
-export declare type boxShadow = 'none' | string | boxShadowSyntax | Array<string | number | boxShadowSyntax | Color>;
+export declare type innerBoxShadow = string | number | boxShadowSyntax | Color;
+export declare type boxShadow = 'none' | number | string | boxShadowSyntax | Array<innerBoxShadow | Array<innerBoxShadow>>;
 export declare type boxSizing = 'content-box' | 'border-box';
 export declare type boxSuppress = 'show' | 'discard' | 'hide';
 export declare type breakAfter = 'auto' | 'avoid' | 'avoid-page' | 'page' | 'left' | 'right' | 'recto' | 'verso' | 'avoid-column' | 'column' | 'avoid-region' | 'region';

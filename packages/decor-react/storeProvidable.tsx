@@ -255,9 +255,6 @@ storeProvidable = function(options, Helpers) {
             storeHMRCache[`${getName(this)}${name}`] = {
               state: store.dehydrate(),
             }
-            if (store.onWillReload) {
-              store.willReload(storeHMRCache[name])
-            }
           }
           // save these for later because webpack may not actually HMR
           // if there is "nothing to update", it will not call `onReloadStores`
@@ -284,6 +281,7 @@ storeProvidable = function(options, Helpers) {
             // auto rehydrate
             if (storeHMRCache[key].state) {
               store.hydrate(storeHMRCache[key].state)
+              Helpers.emit('store.mount', { name, thing: store })
             }
             if (store.onReload) {
               store.onReload()

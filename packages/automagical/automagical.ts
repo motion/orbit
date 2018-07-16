@@ -17,6 +17,9 @@ export {
 } from './constants'
 export * from './types'
 
+// perf
+const SHARED_REJECTION_ERROR = new ReactionRejectionError()
+
 // TODO: fix deep() wrapper doesnt trigger reactions when mutating objects
 // so basically this.reactiveObj.x = 1, wont trigger react(() => this.reactiveObj)
 
@@ -416,7 +419,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   const sleep = (ms: number): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!reactionID) {
-        reject(new ReactionRejectionError())
+        reject(SHARED_REJECTION_ERROR)
         return
       }
       if (typeof ms === 'undefined') {
@@ -426,7 +429,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       const sleepTimeout = setTimeout(() => resolve(), ms)
       rejections.push(() => {
         clearTimeout(sleepTimeout)
-        reject(new ReactionRejectionError())
+        reject(SHARED_REJECTION_ERROR)
       })
     })
   }
@@ -435,7 +438,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     return new Promise((resolve, reject) => {
       let cancelTm
       if (!reactionID) {
-        return reject(new ReactionRejectionError())
+        return reject(SHARED_REJECTION_ERROR)
       }
       let cancelWhen = false
       Mobx.when(condition)
@@ -457,7 +460,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       const cancel = () => {
         clearTimeout(cancelTm)
         cancelWhen = true
-        reject(new ReactionRejectionError())
+        reject(SHARED_REJECTION_ERROR)
       }
       rejections.push(cancel)
     })
@@ -468,7 +471,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     let curVal
     return new Promise((resolve, reject) => {
       if (!reactionID) {
-        return reject(new ReactionRejectionError())
+        return reject(SHARED_REJECTION_ERROR)
       }
       let cancelWhen = false
       Mobx.when(() => {
@@ -487,7 +490,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         .catch(reject)
       rejections.push(() => {
         cancelWhen = true
-        reject(new ReactionRejectionError())
+        reject(SHARED_REJECTION_ERROR)
       })
     })
   }

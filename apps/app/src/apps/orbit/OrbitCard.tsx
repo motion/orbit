@@ -43,7 +43,7 @@ export type OrbitCardProps = {
   subPane?: string
   bit?: Bit
   itemProps?: Object
-  children?: (a: Object, b: Object) => JSX.Element  | React.ReactNode
+  children?: (a: Object, b: Object) => JSX.Element | React.ReactNode
   onClick?: Function
 }
 

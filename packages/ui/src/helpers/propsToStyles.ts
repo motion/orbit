@@ -15,8 +15,10 @@ const valFor = state => (props, key) => {
   return value
 }
 
-const cssAttributeNames = document.body.style
-const validCSSAttr = key => cssAttributeNames[key] === ''
+const validCSSAttr = Object.keys(document.body.style).reduce((acc, cur) => {
+  acc[cur] = true
+  return acc
+}, {})
 
 // resolves props into styles for valid css
 // supports hover={{ background: 'green' }} and other states as well
@@ -26,7 +28,7 @@ export const propsToStyles = props => {
   const getVal = valFor('base')
   // loop over props turning into styles
   for (const key of Object.keys(props)) {
-    if (validCSSAttr(key)) {
+    if (validCSSAttr[key]) {
       styles[key] = getVal(props, key)
       if (key === 'gridAutoRows') {
         console.log('styles', styles)
@@ -43,7 +45,7 @@ export const propsToStyles = props => {
         throw new Error(`Bad val for ${key} ${JSON.stringify(val)}`)
       }
       for (const subKey of Object.keys(val)) {
-        if (validCSSAttr(subKey)) {
+        if (validCSSAttr[subKey]) {
           styles[stateKey][subKey] = getStateVal(props, subKey)
         } else {
           console.log('propStyles error info', styles, props)

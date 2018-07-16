@@ -2,12 +2,16 @@
 
 const shouldBuild = process.argv.indexOf('--build') > 0
 
-if (process.argv.indexOf('--clean') > 0) {
-  require('./_/helpers/clean').clean()
+function start() {
+  if (shouldBuild) {
+    require('./_/build.js')
+  } else {
+    require('./_/run.js')
+  }
 }
 
-if (shouldBuild) {
-  require('./_/build.js')
+if (process.argv.indexOf('--clean') > 0) {
+  require('./_/helpers/clean').clean().then(start)
 } else {
-  require('./_/run.js')
+  start()
 }

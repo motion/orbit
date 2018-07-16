@@ -22,7 +22,6 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
     console.error('none', type)
     return <div>no pane found</div>
   }
-  log(`RRR`, item)
   return (
     <PeekContentsView
       key={peekId}
@@ -43,11 +42,10 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
         content,
         headerProps,
       }) => {
-        console.log('now rende rthe damn peek', title)
         return (
           <>
             <PeekHeader
-              title={title}
+              title={title || item.title}
               subtitle={subtitle}
               after={after}
               icon={icon}

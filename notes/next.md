@@ -8,6 +8,34 @@
 - nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
 - static styles https://github.com/jsxstyle/jsxstyle/tree/master/packages/jsxstyle-webpack-plugin
 
+- gdrive and other oauth strategies:
+  - option 1: have a key cycle system, pay someone to:
+    - create a lot of email accounts we can use for various apis
+    - have those emails inside a unified inbox
+    - register keys for all the diffrent integrations across each email
+  - option 2 (at same time as 1):
+    - requires us having some traction and a good website
+    - get a blessed permission from various companies and explain strategy
+  - option 3 (build at same time as 1/2):
+    - p2p sync most of the data between people rather than hitting lots of apis
+    - the first people who run syncs basically sync most of the data into a p2p db
+    - people who come online later just do history sync, use id's to request the info
+  - option 4
+    - workaround for some of the oauth stuff for various services
+    - gdrive may be able to download to a folder first and then read the folder
+  - option 5
+    - option 3 but instead of p2p just do encrypted contents in the cloud
+    - pros: works even if all peers offline
+    - cons: no more security pitch for all data, even if its encrypted before transit
+  - option 6
+    - option 3 but instead of p2p store encrypted contents in specific service(s)
+    - pros: keeps security guarantee and solves oauth rate limits
+    - cons: requires schleppy specific impl for probably at least a few different services
+
+# nate
+
+goal for all of this: Friday:
+
 - pre-select first index with light gray
 - filters
   - one bar for integrations - can easily toggle many on/off
@@ -24,19 +52,23 @@
   - hover highlight the areas effect
 - bit document page design
 - fix laggy typing on search
-- settings panes runthrough
 - search filters <=> nlp v1
 - search highlight sections v2
+  - corresponding peek UX for search results
+- orbit pane fix bottom invsible click through and have it expand as you search
+
+Next week:
+
+- settings panes runthrough
 - settings panes more fixes
-- corresponding peek UX for search results
 - "open" items from search/peek
   - make all peeks work like slack and deal with "item"
   - click highlight to open directly to that item in the peek
 - slack card:
   - if it was a post in #status, show other posts by that person in #status
   - fix people cards
-- auto setup
-- p2p
+- onboarding: auto setup
+- p2p hyperdb initial version
 
 # high level
 

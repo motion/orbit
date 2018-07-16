@@ -152,6 +152,11 @@ export class OrbitHeader extends React.Component<{
     onHover: this.props.headerStore.hover,
   })
 
+  highlightWords = words => {
+    words
+    return /\w+/g
+  }
+
   render() {
     const {
       paneStore,
@@ -204,10 +209,7 @@ export class OrbitHeader extends React.Component<{
             display="block"
             background="transparent"
             value={orbitStore.query}
-            highlight={words => {
-              words
-              return /\w+/g
-            }}
+            highlight={this.highlightWords}
             color={theme.base.color.alpha(0.8)}
             onChange={orbitStore.onChangeQuery}
             onFocus={orbitStore.onFocus}

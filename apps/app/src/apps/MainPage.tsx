@@ -34,7 +34,6 @@ export class MainPage extends React.Component<{
   }
 
   render() {
-    console.log('main page', this.props)
     return (
       <Main>
         {/* <HighlightsPage /> */}

@@ -195,7 +195,7 @@ const config = {
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
     new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.NODE_ENV': JSON.stringify(mode),
     }),
     // adds cache based on source of files
     new HardSourceWebpackPlugin(),

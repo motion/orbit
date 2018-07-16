@@ -70,7 +70,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           flexFlow="row"
           alignItems="center"
           margin={[0, 0, 2, -2]}
-          padding={[5, 0]}
+          padding={[2, 0]}
           userSelect="none"
           cursor="default"
         >

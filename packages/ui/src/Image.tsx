@@ -1,8 +1,10 @@
 import { view } from '@mcro/black'
-import { propStyles } from './helpers/propStyles'
+import { View } from './View'
 
-export const Image = view('img', {
+export const Image = view(View, {
   display: 'block',
 })
 
-Image.theme = propStyles
+Image.defaultProps = {
+  tagName: 'img',
+}

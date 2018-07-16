@@ -28,7 +28,6 @@ function handleGlossReferences(references, file, babel) {
         },
       },
     })
-    console.log(isBuiltIn, path.parent.callee.name)
     if (!isBuiltIn) {
       return
     }

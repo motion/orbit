@@ -10,12 +10,11 @@ class SearchFilterStore {
 
 const decorate = compose(
   view.provide('integrationSettingsStore'),
-  view.attach({ store2: SearchFilterStore }),
+  view.attach({ store: SearchFilterStore }),
   view,
 )
 
-export const OrbitSearchFilters = decorate(props => {
-  console.log('props', props)
+export const OrbitSearchFilters = decorate(({ store }) => {
   return (
     <UI.Row width="100%" padding={[0, 0, 10]} alignItems="center">
       {/* <UI.Icon name="ui-2_filter" size={12} opacity={0.6} marginRight={12} /> */}
@@ -26,7 +25,7 @@ export const OrbitSearchFilters = decorate(props => {
         <option>Everyone</option>
       </select>
       <UI.Col flex={1} />
-      {(store.filters || []).map((filter, i) => {
+      {store.filters.map((filter, i) => {
         return (
           <RoundButton
             key={`${filter.icon}${i}`}

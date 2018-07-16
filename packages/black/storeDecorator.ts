@@ -51,7 +51,7 @@ export const storeOptions = {
         store[key] &&
         store[key].subscriptions instanceof CompositeDisposable
       ) {
-        console.log('dispsoing store', key)
+        console.log('!!!!!! dispose store', key)
         store[key].subscriptions.dispose()
       }
     }

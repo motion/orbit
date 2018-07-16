@@ -21,7 +21,7 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
   return (
     <UI.Col flex={1} padding={[10, 0]}>
       <div if={message}>{message}</div>
-      <OrbitSearchFilters debug appStore={appStore} searchStore={searchStore} />
+      <OrbitSearchFilters appStore={appStore} searchStore={searchStore} />
       <div
         if={results.length}
         css={{

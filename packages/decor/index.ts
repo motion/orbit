@@ -90,10 +90,6 @@ export default function decor(
   const decorDecorator = <DecorCompiledDecorator<any>>(
     function decorDecorator(KlassOrOpts: Function | Object, opts?: Object) {
       // BUGIFX: wrapHOC the component comes through again!
-      // if (KlassOrOpts.debug) {
-      //   console.log('debugging', KlassOrOpts, allPlugins)
-      //   debugger
-      // }
       // @ts-ignore
       if (KlassOrOpts._isHOC) {
         return KlassOrOpts

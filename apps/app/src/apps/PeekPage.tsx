@@ -12,7 +12,6 @@ import { PeekBitInformation } from './peek/PeekContents/PeekBitInformation'
 import { Bit, Person } from '@mcro/models'
 
 const PeekPageInner = view(({ peekStore, appStore }) => {
-  console.log('inner peek page', peekStore.state, peekStore.model)
   if (!peekStore.state) {
     return null
   }

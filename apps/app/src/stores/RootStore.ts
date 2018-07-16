@@ -37,7 +37,6 @@ export class RootStore {
 
   constructor() {
     debugState(({ stores, views }) => {
-      console.log('debug state', stores, views)
       this.stores = stores
       this.views = views
     })

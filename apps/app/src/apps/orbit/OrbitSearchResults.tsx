@@ -16,12 +16,12 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
   const highlightWords = searchStore.state.query
     .split(' ')
     .filter(x => x.length > 2)
-  log(`.Inner ${isChanging}`)
+  log(`.Inner123 ${isChanging}`)
   trace()
   return (
     <UI.Col flex={1} padding={[10, 0]}>
       <div if={message}>{message}</div>
-      <OrbitSearchFilters appStore={appStore} searchStore={searchStore} />
+      <OrbitSearchFilters debug appStore={appStore} searchStore={searchStore} />
       <div
         if={results.length}
         css={{
@@ -39,7 +39,6 @@ const OrbitSearchResultsInner = view(({ name, appStore, searchStore }) => {
             total={results.length}
             bit={bit}
             listItem
-            debug={index === 0}
             nextUpStyle={
               index === 0 && {
                 background: [0, 0, 0, 0.025],

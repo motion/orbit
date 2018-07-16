@@ -14,19 +14,25 @@ export default function decor(
   const emit = (a, b?) => emitter.emit(a, b)
   const on = (a, b) => emitter.on(a, b)
   const isClass = x => {
-    if (x._isDecoratedClass) {
-      return true
+    if (typeof x._isDecoratedClass === 'boolean') {
+      return x._isDecoratedClass
     }
     try {
-      return (
+      return !!(
         x.prototype &&
         (x.toString().indexOf('class') === 0 ||
           x.toString().indexOf('classCallCheck') > -1)
       )
     } catch (err) {
       // this is super odd
-      console.log('weird class', err)
-      return false
+      // happens to functional components wrapped in view()
+      if (
+        err.message ===
+        "Function.prototype.toString requires that 'this' be a Function"
+      ) {
+        return false
+      }
+      throw err
     }
   }
 
@@ -84,6 +90,10 @@ export default function decor(
   const decorDecorator = <DecorCompiledDecorator<any>>(
     function decorDecorator(KlassOrOpts: Function | Object, opts?: Object) {
       // BUGIFX: wrapHOC the component comes through again!
+      // if (KlassOrOpts.debug) {
+      //   console.log('debugging', KlassOrOpts, allPlugins)
+      //   debugger
+      // }
       // @ts-ignore
       if (KlassOrOpts._isHOC) {
         return KlassOrOpts

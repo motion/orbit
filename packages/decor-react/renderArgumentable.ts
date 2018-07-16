@@ -4,9 +4,8 @@ export function renderArgumentable() {
     once: true,
     onlyClass: true,
     decorator: (Klass: Function) => {
-      if (!Klass.prototype.render) {
-        console.log(Klass)
-        throw new Error('Not a react-like class')
+      if (!Klass.prototype || !Klass.prototype.render) {
+        return Klass
       }
       // preact-like render
       const or = Klass.prototype.render

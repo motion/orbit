@@ -71,7 +71,6 @@ storeProvidable = function(options, Helpers) {
   return {
     name: 'store-providable',
     once: true,
-    onlyClass: true,
     decorator: (Klass, opts: any = {}) => {
       const allStores = opts.stores || options.stores
       const context = opts.context || options.context
@@ -79,6 +78,11 @@ storeProvidable = function(options, Helpers) {
 
       if (!allStores) {
         return Klass
+      }
+      if (typeof allStores !== 'object') {
+        throw new Error(
+          'Bad type for stores passed to provide, should be object',
+        )
       }
 
       // see setupStores()

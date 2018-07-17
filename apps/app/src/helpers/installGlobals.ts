@@ -10,6 +10,8 @@ import * as Helpers from '../helpers'
 import { App, Desktop, Swift, Electron } from '@mcro/stores'
 import { modelsList } from '@mcro/models'
 
+console.log('installing globals...')
+
 // add require('') to window for easy debugging
 // for example require('lodash')
 window['webpackData'] = __webpack_require__

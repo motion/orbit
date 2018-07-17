@@ -27,7 +27,8 @@ const {
   In,
   Between,
   Like,
-  LessThan
+  getRepository,
+  LessThan,
 } = typeorm
 
 export {
@@ -54,7 +55,8 @@ export {
   In,
   Between,
   Like,
-  LessThan
+  getRepository,
+  LessThan,
 }
 
 // globals

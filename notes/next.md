@@ -37,11 +37,11 @@
 goal for all of this: Friday:
 
 - filters
+  - colors for people / thing / location / integration / date
   - one bar for integrations - can easily toggle many on/off
   - one bar for type: people, attachment, document, task
   - one bar for time: 2 days, 2 weeks, 2 months
   - one bar for people: shows people within current set and lets you filter
-- pull nlp pieces in search into filters (compromis)
 - better search result UX
   - pass search term to a \*Resolver and the resolver returns items
   - have the concept of a "item" in \*Resolver

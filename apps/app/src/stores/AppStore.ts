@@ -1,6 +1,6 @@
 import { on, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
+import { Bit, Person, Setting, Not, Equal, getRepository } from '@mcro/models'
 import * as Helpers from '../helpers'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
@@ -9,25 +9,34 @@ import debug from '@mcro/debug'
 const log = debug('appStore')
 const TYPE_DEBOUNCE = 200
 
-const searchBits = async (query, params?) => {
+const bitQuery = getRepository(Bit).createQueryBuilder('bit')
+
+const searchBits = async (query, cb = _ => _) => {
+  const buildQuery = bitQuery
+    .select([
+      // 'bit.people',
+      'bit.title',
+      'bit.body',
+      'bit.type',
+      'bit.bitCreatedAt',
+      'bit.bitUpdatedAt',
+      'bit.image',
+      'bit.url',
+    ])
+    .leftJoinAndSelect('bit.people', 'person')
   if (!query) {
-    return await Bit.find({
-      take: 6,
-      relations: ['people'],
-      order: { bitCreatedAt: 'DESC' },
-    })
+    return await buildQuery
+      .take(6)
+      .orderBy({ bitCreatedAt: 'DESC' })
+      .getMany()
   }
   const { conditions, rest } = AppStoreHelpers.parseQuery(query)
   const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
-  const where = `(title like "%${titleLike}%" or body like "%${titleLike}%") ${conditions}`
-  const queryParams = {
-    where,
-    relations: ['people'],
-    order: { bitCreatedAt: 'DESC' },
-    ...params,
-  }
-  const res = await Bit.find(queryParams)
-  return res
+  return await cb(
+    buildQuery.where(
+      `(title like "%${titleLike}%" or body like "%${titleLike}%") ${conditions}`,
+    ),
+  ).getMany()
 }
 
 export class AppStore {
@@ -301,7 +310,9 @@ export class AppStore {
         let results = []
         for (let i = 0; i < takeMax / takePer; i += 1) {
           const skip = i * takePer
-          const nextResults = await searchBits(query, { take: takePer, skip })
+          const nextResults = await searchBits(query, x =>
+            x.take(takePer).skip(skip),
+          )
           results = [...results, ...nextResults]
           setValue({
             results,

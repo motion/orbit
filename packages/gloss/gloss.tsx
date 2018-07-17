@@ -108,7 +108,12 @@ export default class Gloss {
     this.stylesheet = JSS.createStyleSheet()
     this.themeSheet = JSS.createStyleSheet()
     this.createElement = fancyElement(this, this.stylesheet, this.themeSheet)
-    this.createSimpleElement = fancyElement(this, this.stylesheet, this.themeSheet, true)
+    this.createSimpleElement = fancyElement(
+      this,
+      this.stylesheet,
+      this.themeSheet,
+      true,
+    )
     // @ts-ignore
     this.decorator.createElement = this.createElement
   }
@@ -282,7 +287,6 @@ export default class Gloss {
 
   // simple gloss view api
   private createSimpleGlossComponent = (target, styles) => {
-    const elementCache = new WeakMap()
     const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
     const id = `_${uid()}`
     let name = target.name || target
@@ -296,11 +300,6 @@ export default class Gloss {
     }
     let styleClassName
     const View: GlossView<any> = allProps => {
-      // basically PureRender
-      if (elementCache.has(allProps)) {
-        console.log('returning cached', this, allProps)
-        return elementCache.get(allProps)
-      }
       // allow View.defaultProps
       // @ts-ignore
       const { forwardRef, className, ...props } = {
@@ -312,7 +311,9 @@ export default class Gloss {
         try {
           View.compiledStyles = this.getAllStyles(View, name)
           this.attachStyles(id, View.compiledStyles)
-          styleClassName = this.stylesheet.getRule(`${name}--${id}`).selectorText.slice(1)
+          styleClassName = this.stylesheet
+            .getRule(`${name}--${id}`)
+            .selectorText.slice(1)
         } catch (err) {
           console.log('error attaching styles', target, name, styles)
           console.log('err', err)
@@ -320,13 +321,17 @@ export default class Gloss {
         hasAttachedStyles = true
       }
       const createElement = (extraClassName?) => {
-        const el = this.createSimpleElement(targetElement, {
-          ref: forwardRef,
-          [`data-name`]: displayName,
-          className: `${className || ''} ${styleClassName} ${extraClassName || ''}`,
-          ...props,
-        }, id)
-        elementCache.set(allProps, el)
+        const el = this.createSimpleElement(
+          targetElement,
+          {
+            ref: forwardRef,
+            [`data-name`]: displayName,
+            className: `${className || ''} ${styleClassName} ${extraClassName ||
+              ''}`,
+            ...props,
+          },
+          id,
+        )
         return el
       }
       // themes!
@@ -348,7 +353,9 @@ export default class Gloss {
           <ThemeContext.Consumer>
             {({ allThemes, activeThemeName }) => {
               themeUpdate(props, null, allThemes[activeThemeName])
-              const themeClassName = this.themeSheet.getRule(`${name}--${id}--theme`).selectorText.slice(1)
+              const themeClassName = this.themeSheet
+                .getRule(`${name}--${id}--theme`)
+                .selectorText.slice(1)
               return createElement(themeClassName)
             }}
           </ThemeContext.Consumer>

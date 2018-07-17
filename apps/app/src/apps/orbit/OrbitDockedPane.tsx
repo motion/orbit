@@ -135,6 +135,12 @@ const DockedPaneFrame = view(UI.FullScreen, {
   },
 })
 
+const DockedPaneContent = view(UI.View, {
+  position: 'relative',
+  flex: 1,
+  overflow: 'hidden',
+})
+
 @view.attach('paneStore', 'appStore')
 @view.attach({
   store: DockedPaneStore,
@@ -148,17 +154,15 @@ export class OrbitDockedPane extends React.Component<Props> {
       style,
       after,
       fadeBottom,
-      transform,
       name,
       before,
+      containerStyle,
       ...props
     } = this.props
     return (
       <DockedPaneFrame isActive={store.isActive}>
         {before}
-        <div
-          css={{ position: 'relative', flex: 1, overflow: 'hidden', transform }}
-        >
+        <DockedPaneContent {...containerStyle}>
           <OverflowFade if={fadeBottom} isInvisible={store.isAtBottom} />
           <Pane
             isActive={store.isActive}
@@ -168,7 +172,7 @@ export class OrbitDockedPane extends React.Component<Props> {
           >
             {children}
           </Pane>
-        </div>
+        </DockedPaneContent>
         {after}
       </DockedPaneFrame>
     )

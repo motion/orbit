@@ -101,14 +101,18 @@ export class OrbitSearchResults extends React.Component<Props> {
         searchStore.currentQuery
       } --------------`,
     )
+    const transform = {
+      y: searchStore.extraFiltersVisible ? 0 : -searchStore.extraFiltersHeight,
+    }
+    console.log('transform', transform)
     return (
       <OrbitDockedPane
         paddingLeft={0}
         paddingRight={0}
-        transform={{
-          y: searchStore.extraFiltersVisible
-            ? 0
-            : -searchStore.extraFiltersHeight,
+        containerStyle={{
+          transition: 'all ease 150ms',
+          background: 'red',
+          transform,
         }}
         name="search"
         extraCondition={searchStore}

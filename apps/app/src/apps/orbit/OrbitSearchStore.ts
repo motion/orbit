@@ -4,7 +4,7 @@ import { App } from '@mcro/stores'
 import { hoverSettler } from '../../helpers'
 
 export class OrbitSearchStore {
-  extraFiltersHeight = 280
+  extraFiltersHeight = 300
   extraFiltersVisible = false
 
   // this isn't a computed val because it persists the last state
@@ -40,7 +40,6 @@ export class OrbitSearchStore {
 
   setExtraFiltersVisible = target => {
     this.extraFiltersVisible = !!target
-    console.log('hovered2', target)
   }
 
   dateHover = hoverSettler({

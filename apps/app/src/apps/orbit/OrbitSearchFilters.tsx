@@ -16,6 +16,7 @@ SearchFilters.theme = ({ theme }) => ({
 
 const ExtraFilters = view(UI.View, {
   opacity: 1,
+  padding: [20, 0],
 })
 
 const decorate = compose(

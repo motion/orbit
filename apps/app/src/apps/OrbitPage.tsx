@@ -4,6 +4,8 @@ import { OrbitDocked } from './orbit/OrbitDocked'
 // import OrbitContext from './orbit/orbitContext'
 import { OrbitStore } from './orbit/OrbitStore'
 
+console.log(123)
+
 @view.attach('appStore')
 @view.provide({
   orbitStore: OrbitStore,

@@ -97,6 +97,13 @@ export function parseSearchQuery(query: string) {
 }
 
 export function setUserNames(nextUsers) {
+  let regexes = []
+
+  for (const name of nextUsers) {
+    // regexes.push(`(${name})`)
+    // regexes.push()
+  }
+
   const usersSplitByName = flatten(
     nextUsers.map(x => x.split(' ').filter(x => x.length > 1)),
   )

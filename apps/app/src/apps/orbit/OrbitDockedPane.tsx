@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view, on, react } from '@mcro/black'
 import * as _ from 'lodash'
-import { trace } from 'mobx'
 import { BORDER_RADIUS } from '../../constants'
+import * as UI from '@mcro/ui'
 
 const EXTRA_PAD = 40
 
@@ -69,13 +69,13 @@ class DockedPaneStore {
   }
 }
 
-const Pane = view({
+const Pane = view(UI.View, {
   position: 'absolute',
   top: 0,
   right: 0,
   bottom: 0,
   left: 0,
-  transition: 'all ease-in-out 100ms',
+  transition: 'all ease 100ms',
   borderRadius: BORDER_RADIUS,
   overflowX: 'hidden',
   overflowY: 'scroll',
@@ -131,16 +131,25 @@ type Props = {
 @view
 export class OrbitDockedPane extends React.Component<Props> {
   render() {
-    const { children, store, style, after, fadeBottom, name } = this.props
-    console.log(`render docked pane ${name} ${store.isAtBottom}`)
-    trace()
+    const {
+      children,
+      store,
+      style,
+      after,
+      fadeBottom,
+      name,
+      ...props
+    } = this.props
+    log(`${name} ${store.isAtBottom} -- render docked pane`)
     return (
       <>
-        <OverflowFade
-          if={fadeBottom}
-          isInvisible={store.isAtBottom || !store.isActive}
-        />
-        <Pane isActive={store.isActive} style={style} forwardRef={store.paneRef}>
+        <OverflowFade if={fadeBottom} isInvisible={store.isAtBottom} />
+        <Pane
+          isActive={store.isActive}
+          style={style}
+          forwardRef={store.paneRef}
+          {...props}
+        >
           {children}
         </Pane>
         {after}

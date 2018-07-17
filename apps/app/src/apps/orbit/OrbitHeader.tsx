@@ -3,10 +3,10 @@ import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
-import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitStore } from './OrbitStore'
+import { OrbitHeaderInput } from './OrbitHeaderInput'
 
 const OrbitHeaderContainer = view({
   position: 'relative',
@@ -140,22 +140,9 @@ export class OrbitHeader extends React.Component<{
   after?: React.ReactNode
   borderRadius: number
 }> {
-  handleKeyDown = e => {
-    // up/down
-    const { keyCode } = e
-    if (keyCode === 38 || keyCode === 40) {
-      e.preventDefault()
-    }
-  }
-
   hoverSettler = this.props.appStore.getHoverSettler({
     onHover: this.props.headerStore.hover,
   })
-
-  highlightWords = words => {
-    words
-    return /\w+/g
-  }
 
   render() {
     const {
@@ -199,24 +186,10 @@ export class OrbitHeader extends React.Component<{
               opacity: 1,
             }}
           />
-          <HighlightedTextArea
-            width="100%"
-            fontWeight={300}
-            fontSize={22}
-            lineHeight="22px"
-            padding={13}
-            border="none"
-            display="block"
-            background="transparent"
-            value={orbitStore.query}
-            highlight={this.highlightWords}
-            color={theme.base.color.alpha(0.8)}
-            onChange={orbitStore.onChangeQuery}
-            onFocus={orbitStore.onFocus}
-            onBlur={orbitStore.onBlur}
-            onKeyDown={this.handleKeyDown}
-            forwardRef={headerStore.inputRef}
-            onClick={headerStore.onClickInput}
+          <OrbitHeaderInput
+            headerStore={headerStore}
+            orbitStore={orbitStore}
+            theme={theme}
           />
         </Title>
         <After if={after}>{after}</After>

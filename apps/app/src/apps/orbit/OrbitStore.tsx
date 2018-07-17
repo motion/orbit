@@ -47,7 +47,6 @@ export class OrbitStore {
   }
 
   handleKeyDown = ({ keyCode }) => {
-    console.log('keydown', keyCode)
     const { openSelected, increment, decrement } = this.props.appStore
     switch (keyCode) {
       case 37: // left

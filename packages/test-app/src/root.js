@@ -28,7 +28,7 @@ const Test2 = view(Test, {
 
 Test2.theme = ({ theme, big }) => ({
   fontWeight: 'bold',
-  color: big ? 'red' : theme.base.color
+  color: big ? 'red' : theme.base.color,
 })
 
 // export type TreeItem = {

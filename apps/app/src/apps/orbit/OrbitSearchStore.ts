@@ -6,6 +6,10 @@ export class OrbitSearchStore {
   // this isn't a computed val because it persists the last state
   state = stateOnlyWhenActive(this)
 
+  get isChanging() {
+    return this.currentQuery !== this.state.query
+  }
+
   get isActive() {
     return this.props.appStore.selectedPane === this.props.name
   }
@@ -15,5 +19,8 @@ export class OrbitSearchStore {
   }
 
   // delay just a tiny bit to prevent input delay
-  currentQuery = react(() => App.state.query, _ => _, { delay: 32 })
+  currentQuery = react(() => App.state.query, _ => _, {
+    delay: 32,
+    immediate: true,
+  })
 }

@@ -2,7 +2,7 @@ import { DecorCompiledDecorator } from '@mcro/decor'
 import { CSSPropertySet, ThemeObject } from '@mcro/gloss'
 
 export { react } from '@mcro/automagical'
-export { on } from '@mcro/helpers'
+export { on, compose } from '@mcro/helpers'
 
 export { Component } from './Component'
 export { DecorCompiledDecorator } from '@mcro/decor'

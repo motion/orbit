@@ -43,8 +43,8 @@ Frame.theme = ({ theme, visible, willAnimate }) => ({
   ...(willAnimate && {
     willChange: 'transform, opacity',
     transition: `
-      transform ease-in ${App.animationDuration}ms,
-      opacity ease-in ${App.animationDuration}ms
+      transform ease ${App.animationDuration}ms,
+      opacity ease ${App.animationDuration}ms
     `,
   }),
 })

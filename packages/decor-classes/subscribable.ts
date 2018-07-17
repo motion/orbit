@@ -6,7 +6,7 @@ export interface Subscribable {
 }
 
 function subscribableDecorator(Klass: any): Subscribable {
-  if (Klass.prototype.subscriptions) {
+  if (!Klass.prototype || Klass.prototype.subscriptions) {
     return Klass
   }
   Object.defineProperty(Klass.prototype, 'subscriptions', {

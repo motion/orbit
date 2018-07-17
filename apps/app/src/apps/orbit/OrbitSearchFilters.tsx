@@ -1,46 +1,43 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, compose } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { RoundButton } from '../../views'
 import { OrbitIcon } from './OrbitIcon'
 
-export const OrbitSearchFilters = view((
-  {
-    /* appStore, searchStore */
-  },
-) => {
+class SearchFilterStore {
+  filters = []
+}
+
+const decorate = compose(
+  view.attach('integrationSettingsStore'),
+  view.attach({ store: SearchFilterStore }),
+  view,
+)
+
+const x = ({ store, ...props }) => {
   return (
     <UI.Row width="100%" padding={[0, 0, 10]} alignItems="center">
       {/* <UI.Icon name="ui-2_filter" size={12} opacity={0.6} marginRight={12} /> */}
-      <UI.PassProps
-        circular
-        size={1.2}
-        marginRight={5}
-        css={{ filter: 'grayscale(100%)', opacity: 0.5 }}
-      >
-        <RoundButton icon={<OrbitIcon size={22} icon="slack" />} />
-        <RoundButton icon={<OrbitIcon size={22} icon="gdrive" />} />
-        <RoundButton icon={<OrbitIcon size={22} icon="gmail" />} />
-        <RoundButton icon={<OrbitIcon size={22} icon="confluence" />} />
-        <RoundButton icon={<OrbitIcon size={22} icon="jira" />} />
-        <RoundButton icon={<OrbitIcon size={22} icon="github" />} />
-      </UI.PassProps>
+      <select>
+        <option>Last month</option>
+      </select>
+      <select>
+        <option>Everyone</option>
+      </select>
       <UI.Col flex={1} />
-      <UI.Popover
-        openOnClick
-        openOnHover
-        closeOnEsc
-        background
-        borderRadius={6}
-        elevation={3}
-        arrowSize={12}
-        distance={4}
-        target={<RoundButton debug>All</RoundButton>}
-      >
-        <UI.List>
-          <UI.ListItem>Hello world</UI.ListItem>
-        </UI.List>
-      </UI.Popover>
+      {store.filters.map((filter, i) => {
+        return (
+          <RoundButton
+            key={`${filter.icon}${i}`}
+            circular
+            size={1.2}
+            marginRight={5}
+            icon={<OrbitIcon size={22} icon={filter.icon} />}
+          />
+        )
+      })}
     </UI.Row>
   )
-})
+}
+
+export const OrbitSearchFilters = decorate(x)

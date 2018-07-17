@@ -47,7 +47,7 @@ export type OrbitCardProps = {
   onClick?: Function
 }
 
-const CardWrap = view({
+const CardWrap = view(UI.View, {
   position: 'relative',
   width: '100%',
   transform: {
@@ -73,8 +73,9 @@ Card.theme = ({
   inGrid,
   hoverable,
   theme,
+  nextUpStyle,
 }) => {
-  const { isSelected } = store
+  const { isSelected, isNextUp } = store
   let hoveredStyle
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
@@ -105,7 +106,6 @@ Card.theme = ({
     card = {
       ...card,
       ...listStateStyle,
-      margin: [0, -14],
       padding: [16, 20],
       borderTop: [1, theme.hover.background],
     }
@@ -115,7 +115,7 @@ Card.theme = ({
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     card = {
       ...card,
-      borderRadius,
+      borderRadius: borderRadius || 7,
       background: theme.selected.background,
       boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
       border: [1, '#fff'],
@@ -139,6 +139,12 @@ Card.theme = ({
     card['&:hover'] = {
       ...card['&:hover'],
       opacity: 1,
+    }
+  }
+  if (isNextUp && nextUpStyle) {
+    card = {
+      ...card,
+      ...nextUpStyle,
     }
   }
   return card
@@ -234,6 +240,25 @@ class OrbitCardStore {
     return this.props.bit || this.props.result
   }
 
+  isNextUp = react(
+    () => [
+      this.props.appStore.nextIndex,
+      this.isPaneSelected,
+      !!this.props.nextUpStyle,
+    ],
+    ([nextIndex, isPaneSelected, hasUpNextStyle], { getValue }) => {
+      if (!isPaneSelected || !hasUpNextStyle) {
+        throw react.cancel
+      }
+      const isUpNext = nextIndex + 1 === this.props.index
+      if (isUpNext === getValue()) {
+        throw react.cancel
+      }
+      return isUpNext
+    },
+    { immediate: true },
+  )
+
   setPeekTargetOnNextIndex = react(
     () => [this.props.appStore.nextIndex, this.isPaneSelected],
     async ([nextIndex, isPaneSelected], { sleep }) => {
@@ -247,7 +272,7 @@ class OrbitCardStore {
       this._isSelected = shouldSelect
       if (shouldSelect) {
         // visual smoothness
-        await sleep()
+        await sleep(40)
         if (!this.target) {
           throw new Error(
             `No target! ${this.props.pane} ${this.props.subPane} ${
@@ -273,7 +298,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   hoverSettler = null
 
   static defaultProps = {
-    borderRadius: 7,
     hide: {},
   }
 
@@ -337,7 +361,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       hoverToSelect,
       children,
       orbitStore,
-      style,
       selectedTheme,
       afterTitle,
       theme,
@@ -345,8 +368,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       inactive,
       iconProps,
       hide,
-      className,
       inGrid,
+      ...props
     } = this.props
     const hasSubtitle = subtitle || location
     const orbitIcon = (
@@ -372,11 +395,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
         forwardRef={store.setRef}
         onClick={store.handleClick}
         {...hoverToSelect && !inactive && this.hoverSettler.props}
-        style={{
-          zIndex: isSelected ? 5 : 4,
-          ...style,
-        }}
-        className={className}
+        zIndex={isSelected ? 5 : 4}
+        {...props}
       >
         <Card onClick={this.handleClick} {...this.props}>
           {orbitIcon}

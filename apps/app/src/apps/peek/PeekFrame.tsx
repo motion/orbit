@@ -10,10 +10,10 @@ const background = '#f9f9f9'
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
 const transitions = store => {
   if (store.isHidden) return 'none'
-  if (store.tornState) return 'all linear 32ms'
-  if (store.willHide) return 'all ease-in 200ms'
-  if (store.willStayShown) return 'all ease-in 120ms'
-  return 'all ease-in 150ms'
+  if (store.tornState) return 'all linear 10ms'
+  if (store.willHide) return 'all ease 200ms'
+  if (store.willStayShown) return 'all ease 90ms'
+  return 'all ease 150ms'
 }
 
 const PeekFrameBorder = view({

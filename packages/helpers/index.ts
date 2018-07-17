@@ -15,3 +15,4 @@ export const isEqual = comparer.structural
 export * from './modelQueryReaction'
 export * from './modelsEqual'
 export * from './watchModel'
+export * from './compose'

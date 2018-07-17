@@ -1,8 +1,9 @@
 import compromise from 'compromise'
 import Sherlockjs from 'sherlockjs'
+import { flatten } from 'lodash'
 
 const state = {
-  userNames: [],
+  userNames: {},
 }
 
 const prefixes = {
@@ -37,8 +38,6 @@ const types = {
 }
 
 const simpleNames = /(with|from|by)\s([A-Za-z]+)$/
-
-const NOUN_CLASS = 'noun'
 
 const filterNounsObj = {
   week: true,
@@ -98,5 +97,14 @@ export function parseSearchQuery(query: string) {
 }
 
 export function setUserNames(nextUsers) {
-  state.userNames = nextUsers
+  const usersSplitByName = flatten(
+    nextUsers.map(x => x.split(' ').filter(x => x.length > 1)),
+  )
+
+  const searchableUsers = {}
+  for (const name of usersSplitByName) {
+    searchableUsers[name.toLowerCase()] = true
+  }
+
+  state.userNames = searchableUsers
 }

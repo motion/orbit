@@ -16,11 +16,15 @@ const Block = view(UI.Block, {
   bottom: 0,
 })
 
+type Color = string
+
 type Props = {
   openMark?: string
   closeMark?: string
   value?: string
-  highlight?: (a: string) => Array<[number, number]> | RegExp
+  highlight?: (
+    a: string,
+  ) => Array<[number, number]> | RegExp | { [index: number]: Color }
   onChange?: Function
   onFocus?: Function
   onBlur?: Function
@@ -63,16 +67,16 @@ export class HighlightedTextArea extends React.Component<Props> {
     this.backdrop.current.scrollTop = scrollTop
   }
 
-  handleRegexHighlight(input, payload) {
+  handleRegexHighlight(input, markRegex) {
     return input.replace(
-      payload,
+      markRegex,
       this.props.openMark + '$&' + this.props.closeMark,
     )
   }
 
-  handleArrayHighlight(input, payload) {
+  handleArrayHighlight(input, markList) {
     let offset = 0
-    payload.forEach(function(element) {
+    markList.forEach(function(element) {
       // insert open tag
       var open = element[0] + offset
       if (element[2]) {
@@ -91,7 +95,29 @@ export class HighlightedTextArea extends React.Component<Props> {
     return input
   }
 
+  handleObjectHighlight(input, markWords) {
+    const markWithClass = className => {
+      const openMark = this.props.openMark.replace(
+        '>',
+        ` class="${className}">`,
+      )
+      return inner => `${openMark}${inner}${this.props.closeMark}`
+    }
+    return input
+      .split(' ')
+      .map((word, index) => {
+        if (markWords[index]) {
+          return markWithClass(markWords[index])(word)
+        }
+        return word
+      })
+      .join(' ')
+  }
+
   getHighlights() {
+    if (!this.props.highlight) {
+      return this.state.value
+    }
     let highlightMarks = this.state.value
     const payload = this.props.highlight(highlightMarks)
     // escape HTML
@@ -101,6 +127,9 @@ export class HighlightedTextArea extends React.Component<Props> {
       .replace(/>/g, '&gt;')
     if (payload) {
       switch (payload.constructor.name) {
+        case 'Object':
+          highlightMarks = this.handleObjectHighlight(highlightMarks, payload)
+          break
         case 'Array':
           highlightMarks = this.handleArrayHighlight(highlightMarks, payload)
           break

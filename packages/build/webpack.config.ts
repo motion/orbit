@@ -94,6 +94,8 @@ const config = {
     pathinfo: !isProd,
     filename: 'bundle.js',
     publicPath: '/',
+    // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
+    globalObject: 'this',
   },
   devServer: {
     historyApiFallback: true,
@@ -120,35 +122,18 @@ const config = {
   module: {
     rules: [
       {
+        test: /[wW]orker\.[jt]sx?$/,
+        use: {
+          loader: 'workerize-loader',
+          // options: { inline: true },
+        },
+        exclude: ['node_modules'],
+      },
+      {
         test: /\.[jt]sx?$/,
         use: ['cache-loader', 'thread-loader', 'babel-loader'],
         exclude: ['node_modules'],
       },
-      // {
-      //   test: /\.tsx?$/,
-      //   use: [
-      //     'cache-loader',
-      //     'babel-loader',
-      //     {
-      //       loader: 'thread-loader',
-      //       options: {
-      //         // there should be 1 cpu for the fork-ts-checker-webpack-plugin
-      //         workers: require('os').cpus().length,
-      //       },
-      //     },
-      //     {
-      //       loader: 'ts-loader',
-      //       options: {
-      //         // speed-up compilation and reduce errors reported to webpack
-      //         happyPackMode: true,
-      //         // no checking of types in webpack in dev, just use your IDE
-      //         transpileOnly: !isProd,
-      //         experimentalWatchApi: true,
-      //       },
-      //     },
-      //   ],
-      //   exclude: ['node_modules'],
-      // },
       {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],

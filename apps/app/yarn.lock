@@ -192,6 +192,12 @@ combined-stream@1.0.6, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
+compromise@11.11.0:
+  version "11.11.0"
+  resolved "https://registry.yarnpkg.com/compromise/-/compromise-11.11.0.tgz#0e68f5f92c8fb2a64b60e8638fbe260d13409ca1"
+  dependencies:
+    efrt-unpack "2.0.3"
+
 connected@0.0.x:
   version "0.0.2"
   resolved "https://registry.npmjs.org/connected/-/connected-0.0.2.tgz#7b5755b216ce31ffabccc38e9f4e1dfc1c3b7c6d"
@@ -319,6 +325,10 @@ ecc-jsbn@~0.1.1:
   resolved "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz#0fc73a9ed5f0d53c38193398523ef7e543777505"
   dependencies:
     jsbn "~0.1.0"
+
+efrt-unpack@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/efrt-unpack/-/efrt-unpack-2.0.3.tgz#6ada57793e3dda16d182f6a371fbe3d135af9dc2"
 
 emits@3.0.x:
   version "3.0.0"
@@ -1027,6 +1037,10 @@ shebang-command@^1.2.0:
 shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
+
+sherlockjs@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/sherlockjs/-/sherlockjs-1.4.0.tgz#57dcba75dd95b9e8243b67a6ee3e13629ac4b566"
 
 signal-exit@^3.0.0:
   version "3.0.2"

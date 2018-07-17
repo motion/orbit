@@ -2,11 +2,23 @@ import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { throttle } from 'lodash'
 import { AppReactions } from '../../stores/AppReactions'
+import initNlp from './nlpWorker'
+
+const { parseSearchQuery } = initNlp()
 
 // some comment test
 
 export class OrbitStore {
   query = App.state.query
+
+  nlp = react(
+    () => this.query,
+    async (query, { sleep }) => {
+      await sleep(40)
+      return await parseSearchQuery(query)
+    },
+    { immediate: true },
+  )
 
   updateAppQuery = react(
     () => this.query,

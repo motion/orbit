@@ -282,9 +282,9 @@ class OrbitCardStore {
           )
         }
         // TODO: implement
-        if (this.props.paneStore) {
-          this.props.paneStore.scrollIntoView(this.ref)
-        }
+        // if (this.props.paneStore) {
+        //   this.props.paneStore.scrollIntoView(this.ref)
+        // }
         App.actions.selectItem(this.target, this.ref)
       }
     },

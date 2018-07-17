@@ -6,7 +6,8 @@ import { ControlButton } from '../../views/ControlButton'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitStore } from './OrbitStore'
-import { OrbitHeaderInput } from './OrbitHeaderInput'
+import { OrbitHeaderInput } from './orbitHeader/OrbitHeaderInput'
+import { NLPStore } from './orbitHeader/NLPStore'
 
 const OrbitHeaderContainer = view({
   position: 'relative',
@@ -128,6 +129,9 @@ class HeaderStore {
 
 @attachTheme
 @view.attach('orbitStore', 'appStore', 'paneStore')
+@view.attach({
+  nlpStore: NLPStore,
+})
 @view.attach({
   headerStore: HeaderStore,
 })

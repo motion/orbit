@@ -491,7 +491,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       inGrid,
       ...props
     } = this.props
-    debounceLog(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
+    // debounceLog(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
     if (!bit) {
       return this.getOrbitCard(props)
     }

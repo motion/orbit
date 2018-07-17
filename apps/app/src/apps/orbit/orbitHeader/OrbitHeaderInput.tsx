@@ -1,4 +1,4 @@
-import { HighlightedTextArea } from '../../views/HighlightedTextArea'
+import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view } from '@mcro/black'
 
 const handleKeyDown = e => {

@@ -2,13 +2,13 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitCard } from './OrbitCard'
 import { OrbitDockedPane } from './OrbitDockedPane'
-// import { OrbitQuickSearch } from './OrbitQuickSearch'
+import { OrbitSearchQuickResults } from './orbitSearch/OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
-import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { AppStore } from '../../stores/AppStore'
 import { trace } from 'mobx'
 import { OrbitSearchStore } from './OrbitSearchStore'
+import { OrbitSearchFilters } from './OrbitSearchFilters'
 
 const OrbitSearchResultsList = view(({ name, searchStore }) => {
   const { results, query } = searchStore.state
@@ -58,9 +58,9 @@ const OrbitSearchResultsFrame = view(({ name, appStore, searchStore }) => {
   const { isChanging, message } = searchStore.state
   trace()
   return (
-    <UI.Col flex={1} padding={[10, 0]}>
+    <UI.Col flex={1}>
       {message ? <div>{message}</div> : null}
-      <OrbitSearchFilters debug appStore={appStore} searchStore={searchStore} />
+      <OrbitSearchQuickResults />
       <div
         style={{
           position: 'relative',
@@ -76,12 +76,12 @@ const OrbitSearchResultsFrame = view(({ name, appStore, searchStore }) => {
 })
 
 type Props = {
-  searchStore: OrbitSearchStore
-  appStore: AppStore
+  searchStore?: OrbitSearchStore
+  appStore?: AppStore
   name?: string
 }
 
-@view.attach('appStore')
+@view.attach('appStore', 'searchStore')
 @view.attach({
   searchStore: OrbitSearchStore,
 })
@@ -103,6 +103,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         paddingRight={0}
         name="search"
         extraCondition={searchStore}
+        before={<OrbitSearchFilters />}
       >
         <OrbitSearchResultsFrame
           appStore={appStore}

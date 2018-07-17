@@ -7,7 +7,15 @@ import { OrbitIcon } from './OrbitIcon'
 const Select = view('select', {})
 
 class SearchFilterStore {
-  filters = []
+  get filters() {
+    const { settingsList } = this.props.integrationSettingsStore
+    if (!settingsList) {
+      return []
+    }
+    return settingsList
+      .filter(x => x.type !== 'setting')
+      .map(setting => ({ icon: setting.type }))
+  }
 }
 
 const decorate = compose(
@@ -16,13 +24,22 @@ const decorate = compose(
   view,
 )
 
+const SearchFilters = view(UI.Row, {
+  padding: [7, 12],
+})
+
+SearchFilters.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
+
 const x = ({ store, ...props }) => {
   return (
-    <UI.Row width="100%" padding={[0, 15, 10]} alignItems="center">
+    <SearchFilters width="100%" alignItems="center">
       {/* <UI.Icon name="ui-2_filter" size={12} opacity={0.6} marginRight={12} /> */}
       <Select>
         <option>Last month</option>
       </Select>
+      <div style={{ width: 10 }} />
       <Select>
         <option>Everyone</option>
       </Select>
@@ -38,7 +55,7 @@ const x = ({ store, ...props }) => {
           />
         )
       })}
-    </UI.Row>
+    </SearchFilters>
   )
 }
 

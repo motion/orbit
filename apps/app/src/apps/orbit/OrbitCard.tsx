@@ -45,6 +45,7 @@ export type OrbitCardProps = {
   itemProps?: Object
   children?: (a: Object, b: Object) => JSX.Element | React.ReactNode
   onClick?: Function
+  onSelect?: (a: HTMLElement) => any
 }
 
 const CardWrap = view(UI.View, {
@@ -167,17 +168,17 @@ const Subtitle = view({
   alignItems: 'center',
 })
 
-let loggers = []
-let nextLog = null
-const debounceLog = (...args) => {
-  loggers.push([...args])
-  clearTimeout(nextLog)
-  nextLog = setTimeout(() => {
-    // log('render cards:', loggers.length, loggers.slice(0, 2).join(' -- '))
-    loggers = []
-    nextLog = null
-  }, 16)
-}
+// let loggers = []
+// let nextLog = null
+// const debounceLog = (...args) => {
+//   loggers.push([...args])
+//   clearTimeout(nextLog)
+//   nextLog = setTimeout(() => {
+//     // log('render cards:', loggers.length, loggers.slice(0, 2).join(' -- '))
+//     loggers = []
+//     nextLog = null
+//   }, 16)
+// }
 
 const orbitIconProps = {
   imageStyle: {
@@ -219,7 +220,7 @@ class OrbitCardStore {
       this.props.onClick(e)
     }
     if (this.props.onSelect) {
-      this.props.onSelect(e.currentTarget)
+      this.props.onSelect(this.ref)
       return
     }
     if (this.props.inactive) {
@@ -280,7 +281,10 @@ class OrbitCardStore {
             }`,
           )
         }
-        this.props.appStore.setSelectedCardRef(this.ref)
+        // TODO: implement
+        if (this.props.paneStore) {
+          this.props.paneStore.scrollIntoView(this.ref)
+        }
         App.actions.selectItem(this.target, this.ref)
       }
     },

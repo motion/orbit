@@ -11,6 +11,7 @@ import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { BORDER_RADIUS } from '../../constants'
 import { AppStore } from '../../stores/AppStore'
+import { OrbitSearchStore } from './OrbitSearchStore'
 
 const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.55]]
@@ -19,7 +20,6 @@ const Frame = view(UI.Col, {
   position: 'absolute',
   top: 10,
   right: 10,
-  bottom: 100,
   borderRadius: BORDER_RADIUS,
   zIndex: 2,
   flex: 1,
@@ -80,6 +80,7 @@ const OrbitInner = view({
 @view.attach('appStore', 'orbitStore')
 @view.provide({
   paneStore: OrbitDockedPaneStore,
+  searchStore: OrbitSearchStore,
 })
 @view
 class OrbitDockedInner extends React.Component<{
@@ -95,14 +96,19 @@ class OrbitDockedInner extends React.Component<{
         <Frame
           visible={animationState.visible}
           willAnimate={animationState.willAnimate}
+          bottom={App.state.query ? 10 : 100}
         >
           <Border />
           <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
-              after={<OrbitHomeHeader paneStore={paneStore} />}
+              after={
+                <>
+                  <OrbitHomeHeader paneStore={paneStore} />
+                </>
+              }
             />
-            <OrbitInner>
+            <OrbitInner height={window.innerHeight}>
               <UI.View position="relative" flex={1}>
                 <OrbitHome
                   name="home"

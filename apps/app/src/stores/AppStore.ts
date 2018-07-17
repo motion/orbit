@@ -31,7 +31,6 @@ const searchBits = async (query, params?) => {
 }
 
 export class AppStore {
-  selectedCardRef = null
   quickSearchIndex = 0
   nextIndex = 0
   leaveIndex = -1
@@ -232,23 +231,9 @@ export class AppStore {
     },
   )
 
-  // peopleSearch = react(
-  //   () => [App.state.query, Desktop.state.lastBitUpdatedAt],
-  //   async ([query], { sleep }) => {
-  //     await sleep(TYPE_DEBOUNCE)
-  //     return {
-  //       query,
-  //       results: await Person.find({
-  //         where: `(name like "%${query}%")`,
-  //         take: 4,
-  //       }),
-  //     }
-  //   },
-  //   {
-  //     immediate: true,
-  //     defaultValue: { results: [] },
-  //   },
-  // )
+  get isChanging() {
+    return this.searchState.query !== App.state.query
+  }
 
   searchState = react(
     () => [App.state.query, this.getResults],
@@ -440,9 +425,5 @@ export class AppStore {
     }
     const url = await AppStoreHelpers.getPermalink(result, openType)
     App.open(url)
-  }
-
-  setSelectedCardRef = ref => {
-    this.selectedCardRef = ref
   }
 }

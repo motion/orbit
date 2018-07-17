@@ -26,7 +26,7 @@ class Orbit extends React.Component {
   render({ orbitPage, theme }) {
     const headerBg = theme.base.background
     return (
-      <OrbitFrame headerBg={headerBg} orbitPage={orbitPage}>
+      <OrbitFrame orbitPage={orbitPage}>
         <OrbitHeader showPin headerBg={headerBg} />
         <orbitInner>
           <OrbitContextHome />

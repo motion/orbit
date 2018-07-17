@@ -9,11 +9,6 @@ const handleKeyDown = e => {
   }
 }
 
-const highlightWords = words => {
-  words
-  return /\w+/g
-}
-
 export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
   return (
     <HighlightedTextArea
@@ -26,7 +21,7 @@ export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
       display="block"
       background="transparent"
       value={orbitStore.query}
-      highlight={highlightWords}
+      highlight={orbitStore.highlightWords}
       color={theme.base.color.alpha(0.8)}
       onChange={orbitStore.onChangeQuery}
       onFocus={orbitStore.onFocus}

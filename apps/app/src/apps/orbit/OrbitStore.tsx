@@ -6,6 +6,8 @@ import initNlp from './nlpWorker'
 
 const { parseSearchQuery } = initNlp()
 
+console.log(parseSearchQuery, initNlp())
+
 // some comment test
 
 export class OrbitStore {
@@ -19,6 +21,14 @@ export class OrbitStore {
     },
     { immediate: true },
   )
+
+  get highlightWords() {
+    if (!this.nlp) {
+      return null
+    }
+    const highlights = this.nlp.highlights
+    return () => highlights
+  }
 
   updateAppQuery = react(
     () => this.query,

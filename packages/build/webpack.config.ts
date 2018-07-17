@@ -125,7 +125,7 @@ const config = {
         test: /[wW]orker\.[jt]sx?$/,
         use: {
           loader: 'workerize-loader',
-          options: { inline: true },
+          // options: { inline: true },
         },
         exclude: ['node_modules'],
       },

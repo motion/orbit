@@ -64,17 +64,16 @@ const optimizeSplit = {
 const optimization = {
   prod: {
     ...optimizeSplit,
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          ecma: 8,
-          toplevel: true,
-        },
-        sourceMap: true,
-        cache: true,
-        parallel: true,
-      }),
-    ],
+    minimizer: [],
+    // new UglifyJsPlugin({
+    //   uglifyOptions: {
+    //     ecma: 8,
+    //     toplevel: true,
+    //   },
+    //   sourceMap: true,
+    //   cache: true,
+    //   parallel: true,
+    // }),
   },
   dev: {
     removeAvailableModules: false,

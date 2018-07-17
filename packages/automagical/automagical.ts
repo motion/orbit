@@ -408,6 +408,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
 
   const reset = () => {
     rejections.map(rej => rej())
+    rejections = []
     isAsyncReaction = false
     reactionID = null
   }

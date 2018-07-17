@@ -8,14 +8,27 @@ import { DecorPlugin } from '@mcro/decor'
 import { StoreContext } from './contexts'
 import { Disposable } from 'event-kit'
 
+// omit react like elements
+const getProps = nextProps => {
+  let props = {}
+  for (const key of Object.keys(nextProps)) {
+    if (React.isValidElement(nextProps[key])) {
+      continue
+    }
+    props[key] = nextProps[key]
+  }
+  return props
+}
+
 // keep action out of class directly because of hmr bug
 const updateProps = Mobx.action('updateProps', (props, nextProps) => {
+  const nextPropsFinal = getProps(nextProps)
   const curPropKeys = Object.keys(props)
-  const nextPropsKeys = Object.keys(nextProps)
+  const nextPropsKeys = Object.keys(nextPropsFinal)
   // change granular so reactions are granular
   for (const prop of nextPropsKeys) {
-    if (!isEqual(props[prop], nextProps[prop])) {
-      props[prop] = nextProps[prop]
+    if (!isEqual(props[prop], nextPropsFinal[prop])) {
+      props[prop] = nextPropsFinal[prop]
     }
   }
   // remove
@@ -167,7 +180,13 @@ storeProvidable = function(options, Helpers) {
         // 🐛 must run this before this.setupStore()
         setupProps() {
           if (!this._props) {
-            Mobx.extendObservable(this, { _props: { ...this.props } })
+            // shallow
+            Mobx.extendObservable(
+              this,
+              { _props: getProps(this.props) },
+              null,
+              { deep: false },
+            )
           }
         }
 

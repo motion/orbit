@@ -33,7 +33,7 @@ export function hoverSettler({
     }
   }, 16)
 
-  return ({ onHover, onBlur } = {}) => {
+  return ({ onHover = null, onBlur = null } = {}) => {
     let itemLastEnterTm
     let itemLastLeaveTm
     let fullyLeaveTm

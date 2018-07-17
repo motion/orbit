@@ -148,6 +148,7 @@ export class OrbitDockedPane extends React.Component<Props> {
       style,
       after,
       fadeBottom,
+      transform,
       name,
       before,
       ...props
@@ -155,7 +156,9 @@ export class OrbitDockedPane extends React.Component<Props> {
     return (
       <DockedPaneFrame isActive={store.isActive}>
         {before}
-        <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
+        <div
+          css={{ position: 'relative', flex: 1, overflow: 'hidden', transform }}
+        >
           <OverflowFade if={fadeBottom} isInvisible={store.isAtBottom} />
           <Pane
             isActive={store.isActive}

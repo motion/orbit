@@ -77,7 +77,7 @@ const OrbitInner = view({
   flex: 1,
 })
 
-@view.attach('appStore', 'orbitStore')
+@view.attach('appStore', 'orbitStore', 'integrationSettingsStore')
 @view.provide({
   paneStore: OrbitDockedPaneStore,
   searchStore: OrbitSearchStore,

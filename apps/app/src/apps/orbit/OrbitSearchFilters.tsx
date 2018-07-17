@@ -7,72 +7,57 @@ import { RoundButton } from '../../views'
 import { OrbitIcon } from './OrbitIcon'
 import { DateRangePicker } from 'react-date-range'
 
-const Select = view('select', {})
-
-class SearchFilterStore {
-  dateState = {
-    ranges: [
-      {
-        startDate: Date.now(),
-        endDate: Date.now(),
-        key: 'selection',
-      },
-    ],
-  }
-
-  get filters() {
-    const { settingsList } = this.props.integrationSettingsStore
-    if (!settingsList) {
-      return []
-    }
-    return settingsList
-      .filter(x => x.type !== 'setting')
-      .map(setting => ({ icon: setting.type }))
-  }
-
-  onChangeDate = ranges => {
-    this.dateState = {
-      ranges: [ranges.selection],
-    }
-    // this.dateState = ranges
-  }
-}
-
-const decorate = compose(
-  view.attach('integrationSettingsStore'),
-  view.attach({ store: SearchFilterStore }),
-  view,
-)
-
-const SearchFilters = view(UI.Row, {
+const SearchFilters = view(UI.Col, {
   padding: [7, 12],
 })
-
 SearchFilters.theme = ({ theme }) => ({
   background: theme.base.background,
 })
 
-const x = ({ store, ...props }) => {
+const ExtraFilters = view(UI.View, {
+  opacity: 1,
+})
+
+const decorate = compose(
+  view.attach('integrationSettingsStore', 'searchStore'),
+  view,
+)
+export const OrbitSearchFilters = decorate(({ searchStore }) => {
   return (
     <SearchFilters width="100%" alignItems="center">
-      {/* <UI.Icon name="ui-2_filter" size={12} opacity={0.6} marginRight={12} /> */}
-      <div className="calendar-dom">
-        <DateRangePicker onChange={store.onChangeDate} {...store.dateState} />
-      </div>
-      <UI.Col flex={1} />
-      {store.filters.map((filter, i) => {
-        return (
-          <RoundButton
-            key={`${filter.icon}${i}`}
-            circular
-            size={1.2}
-            marginRight={5}
-            icon={<OrbitIcon size={22} icon={filter.icon} />}
-          />
-        )
-      })}
+      <UI.Row width="100%">
+        <UI.Button
+          onMouseEnter={searchStore.dateHoverProps.onMouseEnter}
+          onMouseLeave={searchStore.dateHoverProps.onMouseLeave}
+          onMouseMove={searchStore.dateHoverProps.onMouseMove}
+        >
+          Today
+        </UI.Button>
+        <UI.Col flex={1} />
+        {searchStore.filters.map((filter, i) => {
+          return (
+            <RoundButton
+              key={`${filter.icon}${i}`}
+              circular
+              size={1.2}
+              marginRight={5}
+              icon={<OrbitIcon size={22} icon={filter.icon} />}
+            />
+          )
+        })}
+      </UI.Row>
+      <ExtraFilters
+        onMouseEnter={searchStore.dateHoverProps.onMouseEnter}
+        onMouseLeave={searchStore.dateHoverProps.onMouseLeave}
+        onMouseMove={searchStore.dateHoverProps.onMouseMove}
+        className="calendar-dom"
+        height={searchStore.extraFiltersHeight}
+      >
+        <DateRangePicker
+          onChange={searchStore.onChangeDate}
+          {...searchStore.dateState}
+        />
+      </ExtraFilters>
     </SearchFilters>
   )
-}
-
-export const OrbitSearchFilters = decorate(x)
+})

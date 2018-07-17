@@ -54,11 +54,18 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
   ))
 })
 
-const OrbitSearchResultsFrame = view(({ name, appStore, searchStore }) => {
+const OrbitSearchResultsFrame = view({
+  flex: 1,
+})
+OrbitSearchResultsFrame.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
+
+const OrbitSearchResultsContents = view(({ name, appStore, searchStore }) => {
   const { isChanging, message } = searchStore.state
   trace()
   return (
-    <UI.Col flex={1}>
+    <OrbitSearchResultsFrame>
       {message ? <div>{message}</div> : null}
       <OrbitSearchQuickResults />
       <div
@@ -71,7 +78,7 @@ const OrbitSearchResultsFrame = view(({ name, appStore, searchStore }) => {
         <OrbitSearchResultsList searchStore={searchStore} name={name} />
       </div>
       <div style={{ height: 20 }} />
-    </UI.Col>
+    </OrbitSearchResultsFrame>
   )
 })
 
@@ -82,9 +89,6 @@ type Props = {
 }
 
 @view.attach('appStore', 'searchStore')
-@view.attach({
-  searchStore: OrbitSearchStore,
-})
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   render() {
@@ -101,11 +105,16 @@ export class OrbitSearchResults extends React.Component<Props> {
       <OrbitDockedPane
         paddingLeft={0}
         paddingRight={0}
+        transform={{
+          y: searchStore.extraFiltersVisible
+            ? 0
+            : -searchStore.extraFiltersHeight,
+        }}
         name="search"
         extraCondition={searchStore}
         before={<OrbitSearchFilters />}
       >
-        <OrbitSearchResultsFrame
+        <OrbitSearchResultsContents
           appStore={appStore}
           searchStore={searchStore}
           name={name}

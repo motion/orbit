@@ -1,8 +1,12 @@
 import { react } from '@mcro/black'
 import { stateOnlyWhenActive } from './stateOnlyWhenActive'
 import { App } from '@mcro/stores'
+import { hoverSettler } from '../../helpers'
 
 export class OrbitSearchStore {
+  extraFiltersHeight = 280
+  extraFiltersVisible = false
+
   // this isn't a computed val because it persists the last state
   state = stateOnlyWhenActive(this)
 
@@ -11,7 +15,7 @@ export class OrbitSearchStore {
   }
 
   get isActive() {
-    return this.props.appStore.selectedPane === this.props.name
+    return this.props.appStore.selectedPane === 'summary-search'
   }
 
   hasQuery() {
@@ -23,4 +27,44 @@ export class OrbitSearchStore {
     delay: 32,
     immediate: true,
   })
+
+  dateState = {
+    ranges: [
+      {
+        startDate: Date.now(),
+        endDate: Date.now(),
+        key: 'selection',
+      },
+    ],
+  }
+
+  setExtraFiltersVisible = target => {
+    this.extraFiltersVisible = !!target
+    console.log('hovered2', target)
+  }
+
+  dateHover = hoverSettler({
+    enterDelay: 400,
+    leaveDelay: 400,
+    onHovered: this.setExtraFiltersVisible,
+  })
+
+  dateHoverProps = this.dateHover().props
+
+  get filters() {
+    const { settingsList } = this.props.integrationSettingsStore
+    if (!settingsList) {
+      return []
+    }
+    return settingsList
+      .filter(x => x.type !== 'setting')
+      .map(setting => ({ icon: setting.type }))
+  }
+
+  onChangeDate = ranges => {
+    this.dateState = {
+      ranges: [ranges.selection],
+    }
+    // this.dateState = ranges
+  }
 }

@@ -1,3 +1,9 @@
+.calendar-dom * {
+  display: block;
+  flex-shrink: initial;
+  flex-flow: row;
+}
+
 #app code {
   background: #fff;
   padding: 0 4px;

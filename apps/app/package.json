@@ -27,6 +27,7 @@
     "@mcro/ui": "^2.2.0",
     "@mcro/color": "*",
     "@mcro/marky-markdown": "*",
+    "react-date-range": "1.0.0-beta",
     "arrford": "2.0.1",
     "date-fns": "1.29.0",
     "event-kit": "^2.5.0",

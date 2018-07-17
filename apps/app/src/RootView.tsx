@@ -90,7 +90,7 @@ if (module.hot && module.hot.addStatusHandler) {
           view.provide.emit('did-hmr')
           console.log('[HMR] Re-render')
           // @ts-ignore
-          window.render()
+          // window.render()
         })
       }
     })

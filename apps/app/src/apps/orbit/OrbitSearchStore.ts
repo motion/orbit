@@ -7,6 +7,10 @@ export class OrbitSearchStore {
   extraFiltersHeight = 300
   extraFiltersVisible = false
 
+  get extraHeight() {
+    return this.extraFiltersVisible ? 0 : this.extraFiltersHeight
+  }
+
   // this isn't a computed val because it persists the last state
   state = stateOnlyWhenActive(this)
 

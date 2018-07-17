@@ -6,6 +6,8 @@ import { Person } from '@mcro/models'
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
 
+console.log('parseSearchQuery, setUserNames', parseSearchQuery, setUserNames)
+
 @store
 export class NLPStore {
   nlp = react(

@@ -28,6 +28,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }) => {
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
         <UI.Button
+          alpha={0.8}
           onMouseEnter={searchStore.dateHoverProps.onMouseEnter}
           onMouseLeave={searchStore.dateHoverProps.onMouseLeave}
           onMouseMove={searchStore.dateHoverProps.onMouseMove}

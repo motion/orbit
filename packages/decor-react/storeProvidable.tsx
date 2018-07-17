@@ -114,7 +114,6 @@ storeProvidable = function(options, Helpers) {
 
       // return HoC
       class StoreProvider extends React.Component implements StoreProvidable {
-        isSetup = false
         id = Math.random()
 
         props: any | { __contextualStores?: Object }
@@ -139,7 +138,6 @@ storeProvidable = function(options, Helpers) {
           super(a, b)
           this.setupProps()
           this.setupStores()
-          this.isSetup = true
         }
 
         // PureComponent means this is only called when props are not shallow equal
@@ -196,7 +194,6 @@ storeProvidable = function(options, Helpers) {
             get: () => this._props,
             configurable: true,
           }
-
           // start stores
           const stores = Object.keys(Stores).reduce((acc, cur) => {
             const Store = Stores[cur]
@@ -218,7 +215,6 @@ storeProvidable = function(options, Helpers) {
               [cur]: createStore(),
             }
           }, {})
-
           // optional mount function
           if (options.onStoreMount) {
             for (const name of Object.keys(stores)) {
@@ -232,7 +228,6 @@ storeProvidable = function(options, Helpers) {
                 ) || stores[name]
             }
           }
-
           this.stores = stores
         }
 

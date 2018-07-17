@@ -64,6 +64,7 @@ export type Options = {
   tagName?: string
   toColor?: Function
   isColor?: Function
+  parentStylesOverride?: boolean
 }
 
 type GlossViewConfig = {
@@ -182,6 +183,7 @@ export default class Gloss {
   }
 
   private getAllThemes = View => {
+    const { parentStylesOverride } = this.options
     // skipParentStyles =
     //    store parent style keys we need to skip when applying themes
     //    this is because themes generate inline styles that would clobber static classnames
@@ -221,8 +223,9 @@ export default class Gloss {
         // fast merge
         const curTheme = views[i].theme(props)
         for (const key of Object.keys(curTheme)) {
+          // this would be if you want to make it so child themes don't overwrite parent static styles
           // skip parent static styles!
-          if (i > 0) {
+          if (parentStylesOverride && i > 0) {
             if (skipParentStyleKeys[i - 1][key]) {
               continue
             }

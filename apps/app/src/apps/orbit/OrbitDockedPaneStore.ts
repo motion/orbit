@@ -15,6 +15,9 @@ export class OrbitDockedPaneStore {
         console.log('not input focused')
         return
       }
+      if (App.state.query) {
+        return
+      }
       if (key === 'right') {
         this.setPaneIndex(Math.min(this.panes.length - 1, this.paneIndex + 1))
       }

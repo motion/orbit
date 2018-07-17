@@ -20,7 +20,7 @@ type Props = {
   openMark?: string
   closeMark?: string
   value?: string
-  highlight?: (a: string) => Array<[number, number]>
+  highlight?: (a: string) => Array<[number, number]> | RegExp
   onChange?: Function
   onFocus?: Function
   onBlur?: Function

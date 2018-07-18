@@ -152,7 +152,6 @@ const config = {
       {
         test: /\.(gif|png|jpe?g|svg)$/,
         use: [
-          'cache-loader',
           'file-loader',
           {
             loader: 'image-webpack-loader',

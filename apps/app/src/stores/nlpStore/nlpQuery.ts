@@ -110,30 +110,35 @@ export function parseSearchQuery(query: string): NLPResponse {
 
   // build a nicer object describing the query for easier parsing
   let parsedQuery: QueryFragment[] = []
-  // prefix
-  parsedQuery.push({
-    text: query.slice(0, marks[0][0]),
-  })
-  for (const [index, mark] of marks.entries()) {
-    // marks
+
+  if (!marks.length) {
+    parsedQuery.push({ text: query })
+  } else {
+    // prefix
     parsedQuery.push({
-      text: query.slice(mark[0], mark[1]),
-      type: mark[2],
+      text: query.slice(0, marks[0][0]),
     })
-    // in between marks
-    const nextMark = marks[index + 1]
-    if (nextMark && nextMark[0] > mark[1]) {
+    for (const [index, mark] of marks.entries()) {
+      // marks
       parsedQuery.push({
-        text: query.slice(mark[1], nextMark[0]),
+        text: query.slice(mark[0], mark[1]),
+        type: mark[2],
+      })
+      // in between marks
+      const nextMark = marks[index + 1]
+      if (nextMark && nextMark[0] > mark[1]) {
+        parsedQuery.push({
+          text: query.slice(mark[1], nextMark[0]),
+        })
+      }
+    }
+    // postfix
+    const lastMark = marks[marks.length - 1]
+    if (lastMark[1] < query.length) {
+      parsedQuery.push({
+        text: query.slice(lastMark[1]),
       })
     }
-  }
-  // postfix
-  const lastMark = marks[marks.length - 1]
-  if (lastMark[1] < query.length) {
-    parsedQuery.push({
-      text: query.slice(lastMark[1]),
-    })
   }
 
   const searchQuery = parsedQuery

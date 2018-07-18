@@ -88,11 +88,11 @@ export default class Gloss {
       typeof maybeNameOrComponent === 'object' &&
       !maybeNameOrComponent[GLOSS_SIMPLE_COMPONENT_SYMBOL]
     ) {
-      this.createSimpleGlossComponent('div', maybeNameOrComponent)
+      return this.createSimpleGlossComponent('div', maybeNameOrComponent)
     }
     // view('div', {}) or view(OtherView, {})
     if (glossSimpleComponentArgs(maybeNameOrComponent, shortStyles)) {
-      this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
+      return this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
     }
     // @view class MyView {}
     const Child = maybeNameOrComponent

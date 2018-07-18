@@ -12,9 +12,14 @@ import css, { validCSSAttr } from '@mcro/css'
 const addStyles = (id, baseStyles, nextStyles) => {
   for (const key of Object.keys(nextStyles)) {
     // dont overwrite as we go down
-    if (typeof baseStyles[id][key] === 'undefined') {
-      // valid attribute
-      if (validCSSAttr(key)) {
+    if (typeof baseStyles[id][key] !== 'undefined') {
+      continue
+    }
+    // valid attribute
+    if (validCSSAttr(key)) {
+      if (key[0] === '&') {
+        baseStyles[key] = nextStyles[key]
+      } else {
         baseStyles[id][key] = nextStyles[key]
       }
     } else {
@@ -40,7 +45,7 @@ const getAllStyles = (id, target, rawStyles) => {
   addStyles(id, builtStyles, rawStyles)
   let curView = target
   // merge the children
-  while (curView.IS_GLOSSY) {
+  while (curView && curView.IS_GLOSSY) {
     const { child, styles } = curView.getConfig()
     if (styles) {
       addStyles(id, builtStyles, styles)
@@ -159,7 +164,7 @@ let idCounter = 1
 const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
 export function createSimpleView(target: any, rawStyles: RawRules) {
-  const id = uid()
+  const id = `${uid()}`
   let styles = getAllStyles(id, target, rawStyles)
   console.log(JSON.stringify(styles, null, 2))
   let displayName = 'ComponentName'
@@ -202,6 +207,11 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
             namespace,
             props,
           )
+          if (namespace !== id && namespace[0] !== '&') {
+            if (props[namespace] !== true) {
+              continue
+            }
+          }
           classNames.push(className)
           // if this is the first mount render or we didn't previously have this class then add it as new
           if (prevProps == null || !prevClasses.includes(className)) {
@@ -249,6 +259,8 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
       return React.createElement(target, props, children)
     }
   }
+
+  Constructor.IS_GLOSSY = true
 
   Constructor.withConfig = config => {
     if (config.displayName) {

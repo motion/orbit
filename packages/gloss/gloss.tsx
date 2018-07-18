@@ -4,6 +4,7 @@ import css, { validCSSAttr } from '@mcro/css'
 import JSS from './stylesheet'
 import { ThemeContext } from './theme/ThemeContext'
 import { Options, GlossView } from './types'
+import { createSimpleView } from './createSimpleView'
 
 import * as Helpers_ from '@mcro/css'
 export const Helpers = Helpers_
@@ -88,11 +89,11 @@ export default class Gloss {
       typeof maybeNameOrComponent === 'object' &&
       !maybeNameOrComponent[GLOSS_SIMPLE_COMPONENT_SYMBOL]
     ) {
-      return this.createSimpleGlossComponent('div', maybeNameOrComponent)
+      return createSimpleView('div', maybeNameOrComponent)
     }
     // view('div', {}) or view(OtherView, {})
     if (glossSimpleComponentArgs(maybeNameOrComponent, shortStyles)) {
-      return this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
+      return createSimpleView(maybeNameOrComponent, shortStyles)
     }
     // @view class MyView {}
     const Child = maybeNameOrComponent

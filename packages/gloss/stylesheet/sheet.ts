@@ -29,8 +29,7 @@ export class StyleSheet {
     this.inject()
   }
 
-  ruleIndexes: Array<string>
-  injected: boolean
+  ruleIndexes: string[]
   isSpeedy: boolean
   tag: HTMLStyleElement
 
@@ -49,7 +48,6 @@ export class StyleSheet {
     if (this.injected) {
       throw new Error('already injected stylesheet!')
     }
-
     this.tag = makeStyleTag()
     this.injected = true
   }
@@ -60,9 +58,7 @@ export class StyleSheet {
       // TODO maybe error
       return
     }
-
     this.ruleIndexes.splice(index, 1)
-
     const tag = this.tag
     if (this.isSpeedy) {
       const sheet = tag.sheet as CSSStyleSheet
@@ -75,7 +71,6 @@ export class StyleSheet {
 
   insert(key: string, rule: string) {
     const tag = this.tag
-
     if (this.isSpeedy) {
       const sheet = tag.sheet as CSSStyleSheet
       invariant(sheet, 'expected sheet')

@@ -1,12 +1,54 @@
 import { CSSPropertyValue, CSSPropertySet } from '@mcro/css'
 import * as React from 'react'
-import { GlossView } from './types'
-import { ThemeContext } from './theme/ThemeContext'
+// import { GlossView } from './types'
+// import { ThemeContext } from './theme/ThemeContext'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
+import css, { validCSSAttr } from '@mcro/css'
 
 // import sonar
+
+const addStyles = (id, baseStyles, nextStyles) => {
+  for (const key of Object.keys(nextStyles)) {
+    // dont overwrite as we go down
+    if (typeof baseStyles[id][key] === 'undefined') {
+      // valid attribute
+      if (validCSSAttr(key)) {
+        baseStyles[id][key] = nextStyles[key]
+      }
+    } else {
+      // were defining a boolean prop style
+      //   looks like: <Component tall />
+      //   via: view({ color: 'red', tall: { height: '100%' } })
+      const prop = key
+      const styleObj = nextStyles[prop]
+      if (typeof styleObj === 'object') {
+        // dont overwrite as we go down
+        if (typeof baseStyles[prop] === 'undefined') {
+          baseStyles[prop] = styleObj
+        }
+      }
+    }
+  }
+}
+
+const getAllStyles = (id, target, rawStyles) => {
+  const builtStyles = {
+    [id]: {},
+  }
+  addStyles(id, builtStyles, rawStyles)
+  let curView = target
+  // merge the children
+  while (curView.IS_GLOSSY) {
+    const { child, styles } = curView.getConfig()
+    if (styles) {
+      addStyles(id, builtStyles, styles)
+    }
+    curView = child
+  }
+  return builtStyles
+}
 
 export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
@@ -22,7 +64,7 @@ export const sheet = new StyleSheet(process.env.NODE_ENV === 'production')
 export const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 
 // basicaly @mcro/css
-const buildRules = (..._) => ({})
+const buildRules = css()
 
 function addRules(
   displayName: string,
@@ -54,12 +96,13 @@ function addRules(
         if (part[0] === '&') {
           return '.' + className + part.slice(1)
         } else {
-          return '.' + className + ' ' + part
+          return '.' + className
         }
       })
       .join(', ')
     // insert the new style text
     tracker.set(className, { displayName, namespace, rules, selector, style })
+    console.log('insert', `${selector} {\n${css}\n}`)
     sheet.insert(className, `${selector} {\n${css}\n}`)
     // if there's no dynamic rules then cache this
     if (true) {
@@ -74,7 +117,7 @@ class StyledComponentBase<T extends Object> extends React.PureComponent<T> {
   state = {
     classNames: [],
     extraClassNames: [],
-    lastBuiltRules: null,
+    lastStyles: null,
   }
   componentWillMount() {
     this.generateClassnames(this.props, null)
@@ -112,21 +155,25 @@ function hasEquivProps(props: T, nextProps: T): boolean {
   return true
 }
 
-export function createGlossView(target: any, styles: RawRules) {
-  // TODO make it extend
-  let builtRules = styles
+let idCounter = 1
+const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
+
+export function createSimpleView(target: any, rawStyles: RawRules) {
+  const id = uid()
+  let styles = getAllStyles(id, target, rawStyles)
+  console.log(JSON.stringify(styles, null, 2))
   let displayName = 'ComponentName'
-  let tagName = 'div'
-  const isDOM = typeof tagName === 'string'
+  const isDOM = typeof target === 'string'
 
   class Constructor extends StyledComponentBase<Props> {
     generateClassnames(props: Props, prevProps?: Props) {
+      console.log('styles', styles)
       // if this is a secondary render then check if the props are essentially equivalent
       if (prevProps != null && hasEquivProps(props, prevProps)) {
         return
       }
       const extraClassNames = []
-      let myBuiltRules = builtRules
+      let myStyles = styles
       // if passed any classes from another styled component, ignore that class and merge in their
       // resolved styles
       if (props.className) {
@@ -135,7 +182,7 @@ export function createGlossView(target: any, styles: RawRules) {
           const classInfo = tracker.get(className)
           if (classInfo) {
             const { namespace, style } = classInfo
-            myBuiltRules = Object.assign({}, myBuiltRules, {
+            myStyles = Object.assign({}, myStyles, {
               [namespace]: style,
             })
           } else {
@@ -144,14 +191,14 @@ export function createGlossView(target: any, styles: RawRules) {
         }
       }
       // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
-      if (myBuiltRules !== this.state.lastBuiltRules) {
+      if (myStyles !== this.state.lastStyles) {
         const prevClasses = this.state.classNames
         const classNames = []
         // add rules
-        for (const namespace in myBuiltRules) {
+        for (const namespace in myStyles) {
           const className = addRules(
             displayName,
-            myBuiltRules[namespace],
+            myStyles[namespace],
             namespace,
             props,
           )
@@ -172,7 +219,7 @@ export function createGlossView(target: any, styles: RawRules) {
         }
         this.setState({
           classNames,
-          lastBuiltRules: myBuiltRules,
+          lastStyles: myStyles,
           extraClassNames,
         })
       }
@@ -199,108 +246,25 @@ export function createGlossView(target: any, styles: RawRules) {
           props.innerRef = innerRef
         }
       }
-      return React.createElement(tagName, props, children)
+      return React.createElement(target, props, children)
     }
   }
-  Constructor.STYLED_CONFIG = {
-    builtRules,
-    // ignoreAttributes,
-    // tagName,
+
+  Constructor.withConfig = config => {
+    if (config.displayName) {
+      // set tagname and displayname
+      displayName = config.displayName
+      Constructor.displayName = config.displayName
+    }
+    return Constructor
   }
+
+  Constructor.getConfig = () => ({
+    styles,
+    id,
+  })
+
   return Constructor
 }
 
 // gloss
-
-export const createSimpleView = (target, styles) => {
-  const isParentComponent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  const id = `_${uid()}`
-  let name = target.name || target
-  let displayName = name
-  let themeUpdate
-  let hasTheme
-  let hasAttachedStyles = false
-  let targetElement = target
-  if (isParentComponent) {
-    targetElement = name = targetElement.tagName || 'div'
-  }
-  let styleClassName
-  const View: GlossView<any> = allProps => {
-    // allow View.defaultProps
-    // @ts-ignore
-    const { forwardRef, className, ...props } = {
-      ...View.defaultProps,
-      ...allProps,
-    }
-    // attach theme/styles on first use
-    if (!hasAttachedStyles) {
-      try {
-        View.compiledStyles = getAllStyles(View, name)
-        attachStyles(id, View.compiledStyles)
-        styleClassName = stylesheet
-          .getRule(`${name}--${id}`)
-          .selectorText.slice(1)
-      } catch (err) {
-        console.log('error attaching styles', target, name, styles)
-        console.log('err', err)
-      }
-      hasAttachedStyles = true
-    }
-    const createElement = (extraClassName?) => {
-      const el = createSimpleElement(
-        targetElement,
-        {
-          ref: forwardRef,
-          [`data-name`]: displayName,
-          className: `${className || ''} ${styleClassName} ${extraClassName ||
-            ''}`,
-          ...props,
-        },
-        id,
-      )
-      return el
-    }
-    // themes!
-    // we aren't just wrapping attachTheme on View because it adds a big layer for every simple view
-    // we only attach themes now if they actually need it, to save a lot of nesting.
-    if (typeof hasTheme === 'undefined') {
-      hasTheme = checkHasTheme(View, isParentComponent)
-    }
-    if (hasTheme) {
-      // detect child or parent theme
-      if (!themeUpdate) {
-        themeUpdate = createThemeManager(id, getAllThemes(View), name)
-      }
-      return (
-        <ThemeContext.Consumer>
-          {({ allThemes, activeThemeName }) => {
-            themeUpdate(props, null, allThemes[activeThemeName])
-            const themeClassName = themeSheet
-              .getRule(`${name}--${id}--theme`)
-              .selectorText.slice(1)
-            return createElement(themeClassName)
-          }}
-        </ThemeContext.Consumer>
-      )
-    }
-    // no theme
-    return createElement()
-  }
-  View.style = styles
-  View.displayName = targetElement
-  View.tagName = name
-  if (isParentComponent) {
-    View.child = target
-  }
-  View.withConfig = config => {
-    if (config.displayName) {
-      // set tagname and displayname
-      displayName = config.displayName
-      View.displayName = config.displayName
-    }
-    return View
-  }
-  View[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
-  // forward ref
-  return View
-}

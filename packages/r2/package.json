@@ -4,7 +4,7 @@
   "version": "2.2.0",
   "scripts": {
     "build": "tsc",
-    "watch": "npm run build -- --watch --preserveWatchOutput"
+    "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
     "caseless": "^0.12.0",

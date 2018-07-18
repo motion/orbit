@@ -68,6 +68,12 @@ export function parseSearchQuery(query: string) {
     marks.push(newMark)
   }
 
+  function highlightIfClear(word, className) {
+    const start = query.indexOf(word)
+    const end = start + word.length
+    addMarkIfClear([start, end, className])
+  }
+
   // @ts-ignore
   const nlp = compromise(query)
   const date = Sherlockjs.parse(query)
@@ -83,39 +89,30 @@ export function parseSearchQuery(query: string) {
 
   const prefix = prefixes[words[0]]
   if (prefix) {
-    marks.push([0, prefix.length, CLASSES.INTEGRATION])
+    marks.push([0, words[0].length, CLASSES.INTEGRATION])
   }
 
   for (const curDate of dates) {
-    const start = query.indexOf(curDate)
-    const end = start + curDate.length
-    addMarkIfClear([start, end, CLASSES.DATE])
+    highlightIfClear(curDate, CLASSES.DATE)
   }
 
-  // for (const [index, word] of words.entries()) {
-  //   if (index === 0 && prefixes[word]) {
-  //     highlights[index] = { type: 'integration', value: prefixes[word] }
-  //     continue
-  //   }
-  //   if (date.startDate && dates.length) {
-  //     if (dates.indexOf(word) > -1) {
-  //       highlights[index] = { type: 'date', value: date.startDate }
-  //       continue
-  //     }
-  //   }
-  //   if (nouns.length) {
-  //     if (nouns.indexOf(word) > -1) {
-  //       if (integrations[word]) {
-  //         highlights[index] = { type: 'integration', value: integrations[word] }
-  //         continue
-  //       }
-  //       if (types[word]) {
-  //         highlights[index] = { type: 'type', value: types[word] }
-  //         continue
-  //       }
-  //     }
-  //   }
-  // }
+  if (state.namePattern) {
+    const nameMatches = query.match(state.namePattern)
+    if (nameMatches.length) {
+      for (const name of nameMatches) {
+        highlightIfClear(name, CLASSES.PERSON)
+      }
+    }
+  }
+
+  for (const word of words) {
+    if (types[word]) {
+      highlightIfClear(word, CLASSES.TYPE)
+    }
+    if (integrations[word]) {
+      highlightIfClear(word, CLASSES.INTEGRATION)
+    }
+  }
 
   return {
     state,

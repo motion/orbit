@@ -122,7 +122,7 @@ const config = {
     rules: [
       {
         test: /[wW]orker\.[jt]sx?$/,
-        use: ['cache-loader', 'workerize-loader'],
+        use: ['workerize-loader'],
         exclude: ['node_modules'],
       },
       {

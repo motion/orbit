@@ -16,6 +16,7 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
+    "@mcro/color": "*",
     "@mcro/css": "^2.2.0",
     "deep-extend": "^0.6.0",
     "html-tags": "^2.0.0",

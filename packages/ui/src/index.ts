@@ -1,11 +1,9 @@
 // helpers
 export { default as color } from '@mcro/color'
-export { ThemeProvide, ThemeContext } from '@mcro/gloss'
+export { ThemeProvide, Theme, ThemeContext } from '@mcro/gloss'
 
 export * from './helpers/forwardRef'
 export * from './helpers/parentSize'
-export * from './helpers/themeMaker'
-export * from './helpers/theme'
 export * from './helpers/passProps'
 export * from './helpers/propsToStyles'
 export * from './helpers/propsToTextSize'

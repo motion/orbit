@@ -10,6 +10,7 @@ import css, { validCSSAttr } from '@mcro/css'
 // import sonar
 
 const addStyles = (id, baseStyles, nextStyles) => {
+  const booleanKeys = {}
   for (const key of Object.keys(nextStyles)) {
     // dont overwrite as we go down
     if (typeof baseStyles[id][key] !== 'undefined') {
@@ -26,40 +27,51 @@ const addStyles = (id, baseStyles, nextStyles) => {
       // were defining a boolean prop style
       //   looks like: <Component tall />
       //   via: view({ color: 'red', tall: { height: '100%' } })
-      const prop = key
-      const styleObj = nextStyles[prop]
+      const prop = `&.${key}`
+      booleanKeys[prop] = key
+      const styleObj = nextStyles[key]
       if (typeof styleObj === 'object') {
         // dont overwrite as we go down
         if (typeof baseStyles[prop] === 'undefined') {
           baseStyles[prop] = {}
-          for (const key of Object.keys(styleObj)) {
-            if (key[0] === '&') {
-              baseStyles[`${prop}${key.slice(1)}`] = styleObj[key]
+          for (const subKey of Object.keys(styleObj)) {
+            if (subKey[0] === '&') {
+              baseStyles[`${prop}${subKey.slice(1)}`] = styleObj[subKey]
             } else {
-              baseStyles[prop][key] = styleObj[key]
+              baseStyles[prop][subKey] = styleObj[subKey]
             }
           }
         }
       }
     }
   }
+  return booleanKeys
 }
 
-const getAllStyles = (id, target, rawStyles) => {
+const getAllStyles = (baseId, target, rawStyles) => {
+  let namespaceToProp = {}
   const builtStyles = {
-    [id]: {},
+    [baseId]: {},
   }
-  addStyles(id, builtStyles, rawStyles)
-  let curView = target
-  // merge the children
-  while (curView && curView.IS_GLOSSY) {
-    const { child, styles } = curView.getConfig()
-    if (styles) {
-      addStyles(id, builtStyles, styles)
+  const booleanKeys = addStyles(baseId, builtStyles, rawStyles)
+  namespaceToProp = {
+    ...namespaceToProp,
+    ...booleanKeys,
+  }
+  // merge child styles
+  if (target.IS_GLOSSY) {
+    const { id, styles } = target.getConfig()
+    for (let key of Object.keys(styles)) {
+      key = key === id ? baseId : key
+      if (typeof builtStyles[key] === 'undefined') {
+        builtStyles[key] = styles[key]
+      }
     }
-    curView = child
   }
-  return builtStyles
+  return {
+    styles: builtStyles,
+    namespaceToProp,
+  }
 }
 
 export type RawRules = CSSPropertySet & {
@@ -172,7 +184,8 @@ const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
 export function createSimpleView(target: any, rawStyles: RawRules) {
   const id = `${uid()}`
-  let styles = getAllStyles(id, target, rawStyles)
+  let { styles, namespaceToProp } = getAllStyles(id, target, rawStyles)
+  console.log('namespaceToProp', namespaceToProp)
   console.log(JSON.stringify(styles, null, 2))
   let displayName = 'ComponentName'
   const isDOM = typeof target === 'string'
@@ -214,10 +227,10 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
             namespace,
             props,
           )
-          if (namespace !== id && namespace[0] !== '&') {
-            if (props[namespace] !== true) {
-              continue
-            }
+          const propKey = namespaceToProp[namespace]
+          console.log('propKey', propKey, namespace)
+          if (propKey && props[propKey] !== true) {
+            continue
           }
           classNames.push(className)
           // if this is the first mount render or we didn't previously have this class then add it as new

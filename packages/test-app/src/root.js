@@ -12,6 +12,9 @@ const Test = view({
   },
   big: {
     background: 'pink',
+    '&:hover': {
+      background: 'violet',
+    },
   },
 })
 

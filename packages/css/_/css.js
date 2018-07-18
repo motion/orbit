@@ -54,6 +54,38 @@ exports.psuedoKeys = {
     '&:placeholder': true,
     '&:selection': true,
 };
+const unitlessNumberProperties = new Set([
+    'animation-iteration-count',
+    'border-image-outset',
+    'border-image-slice',
+    'border-image-width',
+    'column-count',
+    'flex',
+    'flex-grow',
+    'flex-positive',
+    'flex-shrink',
+    'flex-order',
+    'grid-row',
+    'grid-column',
+    'font-weight',
+    'line-clamp',
+    'line-height',
+    'opacity',
+    'order',
+    'orphans',
+    'tab-size',
+    'widows',
+    'z-index',
+    'zoom',
+    'fill-opacity',
+    'flood-opacity',
+    'stop-opacity',
+    'stroke-dasharray',
+    'stroke-dashoffset',
+    'stroke-miterlimit',
+    'stroke-opacity',
+    'stroke-width',
+]);
 const cssAttributeNames = typeof document !== 'undefined' ? document.body.style : {};
 exports.validCSSAttr = key => typeof cssAttributeNames[key] === 'string' ||
     exports.psuedoKeys[key] ||
@@ -148,6 +180,7 @@ function motionStyle(options = {}) {
         }
         return toReturn.join(' ');
     }
+    const addPx = x => (typeof x === 'number' ? `${x}px` : x);
     function processStyles(styles, opts) {
         const toReturn = {};
         const shouldSnake = !opts || opts.snakeCase !== false;
@@ -171,6 +204,9 @@ function motionStyle(options = {}) {
             let respond;
             const firstChar = key[0];
             if (valueType === 'string' || valueType === 'number') {
+                if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
+                    value += 'px';
+                }
                 toReturn[finalKey] = value;
                 respond = true;
             }
@@ -194,11 +230,10 @@ function motionStyle(options = {}) {
                     else {
                         toReturn.position = 'absolute';
                     }
-                    toReturn.top = value[index++];
-                    toReturn.right = value[index++];
-                    toReturn.bottom = value[index++];
-                    toReturn.left = value[index++];
-                    console.log('to return', toReturn);
+                    toReturn.top = addPx(value[index++]);
+                    toReturn.right = addPx(value[index++]);
+                    toReturn.bottom = addPx(value[index++]);
+                    toReturn.left = addPx(value[index++]);
                 }
                 else {
                     toReturn[finalKey] = processArray(key, value);
@@ -226,7 +261,7 @@ function motionStyle(options = {}) {
                 if (Array.isArray(key)) {
                     for (let k of key) {
                         k = shouldSnake ? cssNameMap_1.CAMEL_TO_SNAKE[k] || k : k;
-                        toReturn[k] = value;
+                        toReturn[k] = addPx(value);
                     }
                 }
             }

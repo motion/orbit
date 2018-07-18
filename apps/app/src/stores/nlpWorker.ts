@@ -5,6 +5,13 @@ const state = {
   namePattern: null,
 }
 
+const CLASSES = {
+  DATE: 'date',
+  INTEGRATION: 'integration',
+  PERSON: 'person',
+  TYPE: 'type',
+}
+
 const prefixes = {
   gh: 'github',
   sl: 'slack',
@@ -45,7 +52,22 @@ const filterNounsObj = {
 
 const filterNouns = strings => strings.filter(x => !filterNounsObj[x])
 
+const inside = (a, b) => {
+  if (a[0] > b[0] && a[0] < b[1]) return true
+  if (a[0] > b[1] && a[1] > b[1]) return true
+  return false
+}
+
 export function parseSearchQuery(query: string) {
+  const marks = []
+
+  function addMarkIfClear(newMark) {
+    if (marks.some(mark => inside(newMark, mark))) {
+      return
+    }
+    marks.push(newMark)
+  }
+
   // @ts-ignore
   const nlp = compromise(query)
   const date = Sherlockjs.parse(query)
@@ -59,7 +81,9 @@ export function parseSearchQuery(query: string) {
   const people = nlp.people().out('frequency')
   // const words = query.split(' ')
 
-  let highlights = {}
+  for (const curDate of dates) {
+    addMarkIfClear([query.indexOf(curDate), curDate.length, CLASSES.DATE])
+  }
 
   // for (const [index, word] of words.entries()) {
   //   if (index === 0 && prefixes[word]) {
@@ -93,7 +117,7 @@ export function parseSearchQuery(query: string) {
     people,
     nouns,
     date,
-    highlights,
+    marks,
   }
 }
 

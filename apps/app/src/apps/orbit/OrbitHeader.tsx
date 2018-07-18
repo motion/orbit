@@ -1,13 +1,13 @@
 import * as React from 'react'
-import { view, react, attachTheme } from '@mcro/black'
+import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitStore } from './OrbitStore'
 import { OrbitHeaderInput } from './orbitHeader/OrbitHeaderInput'
-import { NLPStore } from './orbitHeader/NLPStore'
+import { HeaderStore } from './HeaderStore'
 
 const OrbitHeaderContainer = view({
   position: 'relative',
@@ -56,82 +56,8 @@ const Title = view({
   alignItems: 'stretch',
 })
 
-class HeaderStore {
-  inputRef = React.createRef()
-  iconHovered = false
-
-  onInput = () => {
-    this.props.orbitStore.onChangeQuery(this.inputRef.innerText)
-  }
-
-  focus = () => {
-    if (!this.inputRef || !this.inputRef.current) {
-      return
-    }
-    this.inputRef.current.focus()
-  }
-
-  focusInput = react(
-    () => [
-      App.orbitState.pinned || App.orbitState.docked,
-      // use this because otherwise input may not focus
-      App.isMouseInActiveArea,
-    ],
-    async ([shown], { when }) => {
-      if (!shown) {
-        throw react.cancel
-      }
-      this.focus()
-      await when(() => Desktop.state.focusedOnOrbit)
-      this.focus()
-    },
-    {
-      log: false,
-    },
-  )
-
-  focusInputOnClearQuery = react(
-    () => App.state.query,
-    query => {
-      if (query) {
-        throw react.cancel
-      }
-      this.focus()
-    },
-  )
-
-  onClickInput = () => {
-    if (!App.orbitState.pinned && Desktop.isHoldingOption) {
-      App.togglePinned()
-    }
-  }
-
-  onHoverIcon = () => {
-    this.iconHovered = true
-  }
-
-  onUnHoverIcon = () => {
-    this.iconHovered = false
-  }
-
-  goHome = () => {
-    if (this.props.paneStore.activePane === 'home') {
-      App.actions.closeOrbit()
-    } else {
-      if (App.state.query) {
-        this.props.orbitStore.clearQuery()
-      } else {
-        this.props.paneStore.setActivePane('home')
-      }
-    }
-  }
-}
-
 @attachTheme
-@view.attach('orbitStore', 'appStore', 'paneStore')
-@view.attach({
-  nlpStore: NLPStore,
-})
+@view.attach('orbitStore', 'appStore', 'paneStore', 'nlpStore')
 @view.attach({
   headerStore: HeaderStore,
 })

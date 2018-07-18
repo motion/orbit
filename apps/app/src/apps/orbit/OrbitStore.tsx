@@ -8,15 +8,6 @@ import { AppReactions } from '../../stores/AppReactions'
 export class OrbitStore {
   query = App.state.query
 
-  get highlightWords() {
-    return null
-    if (!this.nlp) {
-      return null
-    }
-    const highlights = this.nlp.highlights
-    return () => highlights
-  }
-
   updateAppQuery = react(
     () => this.query,
     throttle(query => {

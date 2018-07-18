@@ -6,6 +6,7 @@ import * as UI from '@mcro/ui'
 import { RoundButton } from '../../views'
 import { OrbitIcon } from './OrbitIcon'
 import { DateRangePicker } from 'react-date-range'
+import { formatDistance } from 'date-fns'
 
 const SearchFilters = view(UI.Col, {
   padding: [7, 12],
@@ -19,11 +20,23 @@ const ExtraFilters = view(UI.View, {
   padding: [20, 0],
 })
 
+const getDate = ({ startDate, endDate }) => {
+  if (!startDate) {
+    return null
+  }
+  const startInWords = formatDistance(Date.now(), startDate)
+  if (!endDate) {
+    return startInWords
+  }
+  const endInWords = formatDistance(Date.now(), endDate)
+  return `${startInWords} - ${endInWords}`
+}
+
 const decorate = compose(
-  view.attach('integrationSettingsStore', 'searchStore'),
+  view.attach('integrationSettingsStore', 'searchStore', 'nlpStore'),
   view,
 )
-export const OrbitSearchFilters = decorate(({ searchStore }) => {
+export const OrbitSearchFilters = decorate(({ searchStore, nlpStore }) => {
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
@@ -33,7 +46,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }) => {
           onMouseLeave={searchStore.dateHoverProps.onMouseLeave}
           onMouseMove={searchStore.dateHoverProps.onMouseMove}
         >
-          Today
+          {getDate(nlpStore.nlp.date) || 'Any time'}
         </UI.Button>
         <UI.Col flex={1} />
         {searchStore.filters.map((filter, i) => {

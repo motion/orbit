@@ -6,8 +6,6 @@ import { Person } from '@mcro/models'
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
 
-window.x = { parseSearchQuery, setUserNames }
-
 @store
 export class NLPStore {
   nlp = react(
@@ -15,10 +13,9 @@ export class NLPStore {
     () => this.props.orbitStore.query,
     async (query, { sleep }) => {
       await sleep(40)
-      console.log('what is it', parseSearchQuery)
       return await parseSearchQuery(query)
     },
-    { immediate: true },
+    { immediate: true, defaultValue: { date: {} } },
   )
 
   updateUsers = modelQueryReaction(

@@ -6,7 +6,6 @@ import { OrbitSearchQuickResults } from './orbitSearch/OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import { AppStore } from '../../stores/AppStore'
-import { trace } from 'mobx'
 import { OrbitSearchStore } from './OrbitSearchStore'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
 
@@ -63,7 +62,6 @@ OrbitSearchResultsFrame.theme = ({ theme }) => ({
 
 const OrbitSearchResultsContents = view(({ name, appStore, searchStore }) => {
   const { isChanging, message } = searchStore.state
-  trace()
   return (
     <OrbitSearchResultsFrame>
       {message ? <div>{message}</div> : null}
@@ -88,7 +86,7 @@ type Props = {
   name?: string
 }
 
-@view.attach('appStore', 'searchStore')
+@view.attach('appStore', 'searchStore', 'nlpStore')
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   render() {
@@ -96,11 +94,6 @@ export class OrbitSearchResults extends React.Component<Props> {
     if (!searchStore.state.results) {
       return null
     }
-    log(
-      `SEARCH OrbitSearchResults ${name} ${searchStore.hasQuery()} ${
-        searchStore.currentQuery
-      } --------------`,
-    )
     const transform = {
       y: -searchStore.extraHeight,
     }

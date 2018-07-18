@@ -1,37 +1,48 @@
-import { Bit } from '@mcro/models'
+import { Bit, Brackets, getRepository } from '@mcro/models'
 
 export const searchBits = async (
   searchString,
-  { query, people, startDate, endDate },
+  { take, skip, people, startDate, endDate },
 ) => {
-  if (!query) {
-    return await Bit.find({
-      take: 6,
-      relations: ['people'],
-      order: { bitCreatedAt: 'DESC' },
+  let query = getRepository(Bit)
+    .createQueryBuilder('bit')
+    .leftJoinAndSelect('bit.people', 'person')
+
+  if (searchString.length) {
+    query = query.where('title like :searchString or body like :searchString', {
+      searchString,
     })
+  } else {
+    // order by recent if no search
+    query = query.order({ bitCreatedAt: 'DESC' })
   }
-  const titleLike = searchString.replace(/\s+/g, '%')
-  let where = `(title like "%${titleLike}%" or body like "%${titleLike}%")`
-  if (people) {
-    const peopleWhere = people
-      .map(person => `(${person} like "%%")`)
-      .join(' OR ')
-    where = `${where} AND ${peopleWhere}`
+
+  if (people.length) {
+    // essentially, find at least one person
+    query = query.andWhere(
+      new Brackets(qb => {
+        for (const name of people) {
+          qb = qb.where('person.name like :name', { name })
+        }
+      }),
+    )
   }
+
   if (startDate) {
-    where = `${where} AND "bit"."createdAt" > ${startDate}`
+    query = query.where('bit.createdAt > :startDate', { startDate })
   }
+
   if (endDate) {
-    where = `${where} AND "bit"."createdAt" < ${endDate}`
+    query = query.where('bit.createdAt > :endDate', { endDate })
   }
-  const queryParams = {
-    where,
-    relations: ['people'],
-    order: { bitCreatedAt: 'DESC' },
-    ...query,
+
+  if (take) {
+    query = query.take(take)
   }
-  console.log('querying', where)
-  const res = await Bit.find(queryParams)
-  return res
+
+  if (skip) {
+    query = query.skip(skip)
+  }
+
+  return await query.getMany()
 }

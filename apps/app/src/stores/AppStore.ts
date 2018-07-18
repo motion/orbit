@@ -283,10 +283,8 @@ export class AppStore {
             people,
             startDate,
             endDate,
-            query: {
-              take: takePer,
-              skip,
-            },
+            take: takePer,
+            skip,
           })
           results = [...results, ...nextResults]
           setValue({

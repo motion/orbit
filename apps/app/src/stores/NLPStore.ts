@@ -6,6 +6,7 @@ import { App } from '@mcro/stores'
 
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
+window.nlp = { parseSearchQuery, setUserNames }
 
 @store
 export class NLPStore {

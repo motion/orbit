@@ -12,7 +12,14 @@ export class OrbitSearchStore {
   }
 
   // this isn't a computed val because it persists the last state
-  state = stateOnlyWhenActive(this)
+  lastActiveState = stateOnlyWhenActive(this)
+
+  get state() {
+    if (this.isActive) {
+      return this.props.appStore.searchState
+    }
+    return this.lastActiveState
+  }
 
   get isChanging() {
     return this.currentQuery !== this.state.query

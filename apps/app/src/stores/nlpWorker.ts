@@ -79,7 +79,12 @@ export function parseSearchQuery(query: string) {
     word => word.normal,
   )
   const people = nlp.people().out('frequency')
-  // const words = query.split(' ')
+  const words = query.split(' ')
+
+  const prefix = prefixes[words[0]]
+  if (prefix) {
+    marks.push([0, prefix.length, CLASSES.INTEGRATION])
+  }
 
   for (const curDate of dates) {
     const start = query.indexOf(curDate)

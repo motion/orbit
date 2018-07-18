@@ -1,15 +1,9 @@
 import compromise from 'compromise'
 import Sherlockjs from 'sherlockjs'
+import { TYPES, DateRange, NLPResponse, QueryFragment } from './types'
 
 const state = {
   namePattern: null,
-}
-
-const CLASSES = {
-  DATE: 'date',
-  INTEGRATION: 'integration',
-  PERSON: 'person',
-  TYPE: 'type',
 }
 
 const prefixes = {
@@ -53,22 +47,22 @@ const filterNounsObj = {
 const filterNouns = strings => strings.filter(x => !filterNounsObj[x])
 
 const inside = ([startA, endA], [startB, endB]) => {
-  if (endA > startB && startA > startB) return true
+  if (endA > startB && startA < endB) return true
   if (startA < endB && endA > endB) return true
   if (endA > endB && startA < endB) return true
   return false
 }
 
-export function parseSearchQuery(query: string) {
+export function parseSearchQuery(query: string): NLPResponse {
   const marks = []
 
+  // mark helpers
   function addMarkIfClear(newMark) {
     if (marks.some(mark => inside(newMark, mark))) {
       return
     }
     marks.push(newMark)
   }
-
   function highlightIfClear(word, className) {
     const start = query.indexOf(word)
     const end = start + word.length
@@ -77,54 +71,99 @@ export function parseSearchQuery(query: string) {
 
   // @ts-ignore
   const nlp = compromise(query)
-  const date = Sherlockjs.parse(query)
-  const dates = nlp
+  const date: DateRange = Sherlockjs.parse(query)
+  const dates: string[] = nlp
     .dates()
     .out('frequency')
     .map(word => word.normal)
   const nouns = filterNouns(nlp.nouns().out('frequency')).map(
     word => word.normal,
   )
-  const people = nlp.people().out('frequency')
   const words = query.toLowerCase().split(' ')
 
+  // find all marks for highlighting
   const prefix = prefixes[words[0]]
   if (prefix) {
-    marks.push([0, words[0].length, CLASSES.INTEGRATION])
+    marks.push([0, words[0].length, TYPES.INTEGRATION])
   }
-
   for (const curDate of dates) {
-    highlightIfClear(curDate, CLASSES.DATE)
+    highlightIfClear(curDate, TYPES.DATE)
   }
-
   if (state.namePattern) {
     const nameMatches = query.match(state.namePattern)
     if (nameMatches && nameMatches.length) {
       for (const name of nameMatches) {
-        highlightIfClear(name, CLASSES.PERSON)
+        highlightIfClear(name, TYPES.PERSON)
       }
     }
   }
-
   for (const word of words) {
     if (types[word]) {
-      highlightIfClear(word, CLASSES.TYPE)
+      highlightIfClear(word, TYPES.TYPE)
       continue
     }
     if (integrations[word]) {
-      highlightIfClear(word, CLASSES.INTEGRATION)
+      highlightIfClear(word, TYPES.INTEGRATION)
       continue
     }
   }
 
+  // build a nicer object describing the query for easier parsing
+  let parsedQuery: QueryFragment[] = []
+  // prefix
+  parsedQuery.push({
+    text: query.slice(0, marks[0][0]),
+  })
+  for (const [index, mark] of marks.entries()) {
+    // marks
+    parsedQuery.push({
+      text: query.slice(mark[0], mark[1]),
+      type: mark[2],
+    })
+    // in between marks
+    const nextMark = marks[index + 1]
+    if (nextMark && nextMark[0] > mark[1]) {
+      parsedQuery.push({
+        text: query.slice(mark[1], nextMark[0]),
+      })
+    }
+  }
+  // postfix
+  const lastMark = marks[marks.length - 1]
+  if (lastMark[1] < query.length) {
+    parsedQuery.push({
+      text: query.slice(lastMark[1]),
+    })
+  }
+
+  const searchQuery = parsedQuery
+    .filter(x => !x.type)
+    .map(x => x.text.trim())
+    .join(' ')
+    .trim()
+  const people = parsedQuery
+    .filter(x => x.type === TYPES.PERSON)
+    .map(x => x.text)
+
   return {
-    state,
-    matches: state.namePattern ? query.match(state.namePattern) : null,
+    query,
+    searchQuery,
+    parsedQuery,
     dates,
-    people,
     nouns,
     date,
     marks,
+    people,
+    startDate: date.startDate,
+    endDate: date.endDate,
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.nlp = {
+    parseSearchQuery: x => JSON.stringify(parseSearchQuery(x), null, 2),
+    setUserNames: setUserNames,
+    state: state,
   }
 }
 

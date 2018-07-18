@@ -1,24 +1,27 @@
-import initNlp from './nlpWorker'
+import initNlp from './nlpStore/nlpQueryWorker'
 import { store, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Person } from '@mcro/models'
 import { App } from '@mcro/stores'
+import { TYPES, NLPResponse } from './nlpStore/types'
 
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
-window.nlp = { parseSearchQuery, setUserNames }
+window.nlpWorker = { parseSearchQuery, setUserNames }
 
 @store
 export class NLPStore {
+  types = TYPES
+
   get marks() {
     return this.nlp.marks
   }
 
-  nlp = react(
+  nlp: NLPResponse = react(
     // fastest (sync) link to search
     () => App.state.query,
     async (query, { sleep }) => {
-      await sleep(170)
+      await sleep(150)
       return {
         ...(await parseSearchQuery(query)),
         query,

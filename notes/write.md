@@ -157,3 +157,13 @@ Orbit does that.
 - but they are also likely undervalued/underexplored
 - and its a lost value in modern society due to MVP-culture
   - requires leonardo da vinci / steve jobs "many-talented execution"
+
+---
+
+# The Metagame is the Game
+
+Or monetizing monetizing.
+
+- see game dev: Star citizen, Citybound, "how to spend 7 years building a game"
+- see kickstarter: long ongoing campaigns, re-raising etc
+- see crypto: ico's raising on just having good updates and seeming legit

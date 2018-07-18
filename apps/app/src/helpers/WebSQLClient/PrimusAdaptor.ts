@@ -8,6 +8,10 @@ export class PrimusAdaptor {
   }
 
   private connect() {
+    if (!window.Primus) {
+      console.log('no window.primus')
+      return
+    }
     // @ts-ignore
     this.primus = new window.Primus('http://localhost:8082', {
       websockets: true,
@@ -49,6 +53,9 @@ export class PrimusAdaptor {
   }
 
   open = (onSuccess, onError, args) => {
+    if (!this.primus) {
+      return
+    }
     this.cblist[this.id] = {
       s: onSuccess,
       e: onError,
@@ -61,6 +68,9 @@ export class PrimusAdaptor {
   }
 
   close = (onSuccess, onError, args) => {
+    if (!this.primuse) {
+      return
+    }
     this.cblist[this.id] = {
       s: onSuccess,
       e: onError,

@@ -1,35 +1,18 @@
 import { on, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
+import { Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '../helpers'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
 import { NLPStore } from './NLPStore'
+import { searchBits } from './helpers/searchBits'
+
+// // for testing nlp on main thread
+// import './nlpStore/nlpQuery'
 
 const log = debug('appStore')
 const TYPE_DEBOUNCE = 200
-
-const searchBits = async (query, params?) => {
-  if (!query) {
-    return await Bit.find({
-      take: 6,
-      relations: ['people'],
-      order: { bitCreatedAt: 'DESC' },
-    })
-  }
-  const { conditions, rest } = AppStoreHelpers.parseQuery(query)
-  const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
-  const where = `(title like "%${titleLike}%" or body like "%${titleLike}%") ${conditions}`
-  const queryParams = {
-    where,
-    relations: ['people'],
-    order: { bitCreatedAt: 'DESC' },
-    ...params,
-  }
-  const res = await Bit.find(queryParams)
-  return res
-}
 
 export class AppStore {
   nlpStore = new NLPStore()
@@ -287,16 +270,8 @@ export class AppStore {
         await sleep(TYPE_DEBOUNCE)
         // wait for nlp to give us results
         await when(() => this.nlpStore.nlp.query === query)
-        let searchQuery = `${query}`
-        let sliced = 0
-        for (const mark of this.nlpStore.marks) {
-          if (mark[2] === 'date') {
-            const start = mark[0] + sliced
-            const end = mark[1] + sliced
-            searchQuery = searchQuery.substr(0, start) + searchQuery.substr(end)
-            sliced += mark[1] - mark[0]
-          }
-        }
+        // gather all the pieces from nlp store for query
+        const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
         // get first page results
         const takePer = 4
         const takeMax = takePer * 6
@@ -305,8 +280,13 @@ export class AppStore {
         for (let i = 0; i < takeMax / takePer; i += 1) {
           const skip = i * takePer
           const nextResults = await searchBits(searchQuery, {
-            take: takePer,
-            skip,
+            people,
+            startDate,
+            endDate,
+            query: {
+              take: takePer,
+              skip,
+            },
           })
           results = [...results, ...nextResults]
           setValue({

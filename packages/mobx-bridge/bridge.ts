@@ -48,6 +48,7 @@ class Bridge {
   _source = ''
   _initialState = {}
   _socket = null
+  _hasFetchedInitialState = false
   // to be set once they are imported
   stores = {}
   messageListeners = new Set()
@@ -120,6 +121,12 @@ class Bridge {
       await eval(`require('wait-port')`)({ host: 'localhost', port: 40510 })
       process.on('exit', this.dispose)
     }
+    // wait for initial state to come down for a little
+    try {
+      await Mobx.when(() => this._hasFetchedInitialState, { timeout: 250 })
+    } catch {
+      this._hasFetchedInitialState = true
+    }
   }
 
   // define actions onto the store
@@ -143,6 +150,14 @@ class Bridge {
   setupClientSocket = () => {
     // socket setup
     this._socket.onmessage = async ({ data }) => {
+      if (!this._hasFetchedInitialState) {
+        // TODO: make this actually logically consistent
+        // has a few steps though and this is actually not bad for what we need
+        // just pretty shit code to understand why
+        setTimeout(() => {
+          this._hasFetchedInitialState = true
+        }, 40)
+      }
       if (!data) {
         console.log(`No data received over socket`)
         return

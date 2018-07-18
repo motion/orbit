@@ -2,9 +2,8 @@ import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { AppReactions } from '../../stores/AppReactions'
 
-// some comment test
-
 export class OrbitStore {
+  // start it with state from last time
   query = App.state.query
 
   updateAppQuery = react(

@@ -40,45 +40,63 @@ export function hoverSettler({
     let betweenTm
     let itemProps
 
+    const select = target => {
+      if (isReallyEqual(currentNode, target)) {
+        return
+      }
+      currentNode = target
+      if (!target) {
+        return
+      }
+      setHovered(
+        {
+          top: target.offsetTop,
+          left: target.offsetLeft,
+          width: target.clientWidth,
+          height: target.clientHeight,
+          ...itemProps,
+        },
+        onHover,
+      )
+      if (itemLastEnterTm === lastEnter) {
+        itemLastEnterTm = null
+        lastEnter = null
+      }
+    }
+
     function handleHover(target) {
       // remove any other enters/leaves
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)
       clearTimeout(betweenTm)
-      const updateHover = () => {
-        if (isReallyEqual(currentNode, target)) {
-          return
-        }
-        currentNode = target
-        if (!target) {
-          return
-        }
-        setHovered(
-          {
-            top: target.offsetTop,
-            left: target.offsetLeft,
-            width: target.clientWidth,
-            height: target.clientHeight,
-            ...itemProps,
-          },
-          onHover,
-        )
-        if (itemLastEnterTm === lastEnter) {
-          itemLastEnterTm = null
-          lastEnter = null
-        }
-      }
       // dont delay enter at all if were already hovering other node
       const isAlreadyHovering = !!currentNode
       if (isAlreadyHovering || enterDelay === 0) {
         if (betweenDelay) {
-          betweenTm = setTimeout(updateHover, betweenDelay)
+          betweenTm = setTimeout(() => select(target), betweenDelay)
         } else {
-          updateHover()
+          select(target)
         }
       } else {
-        itemLastEnterTm = lastEnter = setTimeout(updateHover, enterDelay)
+        itemLastEnterTm = lastEnter = setTimeout(
+          () => select(target),
+          enterDelay,
+        )
+      }
+    }
+
+    function onClick(e) {
+      clearTimeout(lastEnter)
+      clearTimeout(lastLeave)
+      clearTimeout(fullyLeaveTm)
+      clearTimeout(betweenTm)
+      clearTimeout(itemLastLeaveTm)
+      clearTimeout(itemLastEnterTm)
+      if (!currentNode) {
+        select(e.currentTarget)
+      } else {
+        select(null)
       }
     }
 
@@ -125,6 +143,7 @@ export function hoverSettler({
         onMouseEnter,
         onMouseLeave,
         onMouseMove,
+        onClick,
       },
     }
   }

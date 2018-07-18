@@ -218,6 +218,7 @@ class OrbitCardStore {
   handleClick = e => {
     if (this.props.onClick) {
       this.props.onClick(e)
+      return
     }
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)

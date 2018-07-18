@@ -45,6 +45,7 @@ export const OrbitSearchFilters = decorate(({ searchStore, appStore }) => {
           onMouseEnter={searchStore.dateHoverProps.onMouseEnter}
           onMouseLeave={searchStore.dateHoverProps.onMouseLeave}
           onMouseMove={searchStore.dateHoverProps.onMouseMove}
+          onClick={searchStore.dateHoverProps.onClick}
         >
           {getDate(appStore.nlpStore.nlp.date) || 'Any time'}
         </UI.Button>

@@ -52,9 +52,10 @@ const filterNounsObj = {
 
 const filterNouns = strings => strings.filter(x => !filterNounsObj[x])
 
-const inside = (a, b) => {
-  if (a[0] > b[0] && a[0] < b[1]) return true
-  if (a[0] > b[1] && a[1] > b[1]) return true
+const inside = ([startA, endA], [startB, endB]) => {
+  if (startA > startB && endA > startB) return true
+  if (startA < endB && endA > endB) return true
+  if (endA > endB && startA < endB) return true
   return false
 }
 
@@ -98,7 +99,7 @@ export function parseSearchQuery(query: string) {
 
   if (state.namePattern) {
     const nameMatches = query.match(state.namePattern)
-    if (nameMatches.length) {
+    if (nameMatches && nameMatches.length) {
       for (const name of nameMatches) {
         highlightIfClear(name, CLASSES.PERSON)
       }

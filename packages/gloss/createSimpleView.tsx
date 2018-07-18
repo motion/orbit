@@ -31,7 +31,14 @@ const addStyles = (id, baseStyles, nextStyles) => {
       if (typeof styleObj === 'object') {
         // dont overwrite as we go down
         if (typeof baseStyles[prop] === 'undefined') {
-          baseStyles[prop] = styleObj
+          baseStyles[prop] = {}
+          for (const key of Object.keys(styleObj)) {
+            if (key[0] === '&') {
+              baseStyles[`${prop}${key.slice(1)}`] = styleObj[key]
+            } else {
+              baseStyles[prop][key] = styleObj[key]
+            }
+          }
         }
       }
     }

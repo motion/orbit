@@ -141,6 +141,10 @@ const DockedPaneContent = view(UI.View, {
   overflow: 'hidden',
 })
 
+DockedPaneContent.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
+
 @view.attach('paneStore', 'appStore')
 @view.attach({
   store: DockedPaneStore,

@@ -9,10 +9,11 @@ export const searchBits = async (
     .leftJoinAndSelect('bit.people', 'person')
 
   if (searchString.length) {
+    const likeString = `%${searchString.replace(/\s+/g, '%')}%`
     query = query.andWhere(
       new Brackets(qb => {
-        qb.where('bit.title like :searchString', { searchString })
-        qb.orWhere('bit.body like :searchString', { searchString })
+        qb.where('bit.title like :likeString', { likeString })
+        qb.orWhere('bit.body like :likeString', { likeString })
       }),
     )
   } else {
@@ -24,8 +25,9 @@ export const searchBits = async (
     // essentially, find at least one person
     query = query.andWhere(
       new Brackets(qb => {
-        qb.where('person.name like :name', { name: people[0] })
-        for (const name of people.slice(1)) {
+        const peopleLike = people.map(x => `%${x}%`)
+        qb.where('person.name like :name', { name: peopleLike[0] })
+        for (const name of peopleLike.slice(1)) {
           qb.orWhere('person.name like :name', { name })
         }
       }),
@@ -33,11 +35,11 @@ export const searchBits = async (
   }
 
   if (startDate) {
-    query = query.where('bit.createdAt > :startDate', { startDate })
+    query = query.where('bit.bitCreatedAt > :startDate', { startDate })
   }
 
   if (endDate) {
-    query = query.where('bit.createdAt > :endDate', { endDate })
+    query = query.where('bit.bitCreatedAt < :endDate', { endDate })
   }
 
   if (take) {

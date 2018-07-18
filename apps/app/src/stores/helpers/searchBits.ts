@@ -50,7 +50,5 @@ export const searchBits = async (
     query = query.skip(skip)
   }
 
-  console.log('query is', query)
-
   return await query.getMany()
 }

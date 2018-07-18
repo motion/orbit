@@ -1,5 +1,5 @@
 import { Setting } from '@mcro/models'
-import * as Helpers from '~/helpers'
+import * as Helpers from '../../helpers'
 
 export const getPermalink = async (result, type) => {
   if (result.type === 'app') {

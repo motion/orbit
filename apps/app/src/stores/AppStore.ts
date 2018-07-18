@@ -394,8 +394,8 @@ export class AppStore {
     },
   })
 
-  // sitrep
   toggleSelected = index => {
+    console.log('toggle selected', index, this.activeIndex)
     const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {

@@ -7,10 +7,10 @@ export class HeaderStore {
   iconHovered = false
 
   get highlightWords() {
-    if (!this.props.nlpStore.nlp.marks) {
+    if (!this.props.appStore.nlpStore.marks) {
       return null
     }
-    return () => this.props.nlpStore.nlp.marks
+    return () => this.props.appStore.nlpStore.marks
   }
 
   onInput = () => {

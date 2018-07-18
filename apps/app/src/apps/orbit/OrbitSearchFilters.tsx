@@ -33,10 +33,10 @@ const getDate = ({ startDate, endDate }) => {
 }
 
 const decorate = compose(
-  view.attach('integrationSettingsStore', 'searchStore', 'nlpStore'),
+  view.attach('integrationSettingsStore', 'searchStore', 'appStore'),
   view,
 )
-export const OrbitSearchFilters = decorate(({ searchStore, nlpStore }) => {
+export const OrbitSearchFilters = decorate(({ searchStore, appStore }) => {
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
@@ -46,7 +46,7 @@ export const OrbitSearchFilters = decorate(({ searchStore, nlpStore }) => {
           onMouseLeave={searchStore.dateHoverProps.onMouseLeave}
           onMouseMove={searchStore.dateHoverProps.onMouseMove}
         >
-          {getDate(nlpStore.nlp.date) || 'Any time'}
+          {getDate(appStore.nlpStore.nlp.date) || 'Any time'}
         </UI.Button>
         <UI.Col flex={1} />
         {searchStore.filters.map((filter, i) => {

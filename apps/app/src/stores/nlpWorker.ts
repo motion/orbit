@@ -82,7 +82,9 @@ export function parseSearchQuery(query: string) {
   // const words = query.split(' ')
 
   for (const curDate of dates) {
-    addMarkIfClear([query.indexOf(curDate), curDate.length, CLASSES.DATE])
+    const start = query.indexOf(curDate)
+    const end = start + curDate.length
+    addMarkIfClear([start, end, CLASSES.DATE])
   }
 
   // for (const [index, word] of words.entries()) {

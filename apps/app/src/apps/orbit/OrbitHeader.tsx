@@ -57,7 +57,7 @@ const Title = view({
 })
 
 @attachTheme
-@view.attach('orbitStore', 'appStore', 'paneStore', 'nlpStore')
+@view.attach('orbitStore', 'appStore', 'paneStore')
 @view.attach({
   headerStore: HeaderStore,
 })

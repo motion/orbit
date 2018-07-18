@@ -5,6 +5,7 @@ import * as Helpers from '../helpers'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
+import { NLPStore } from './NLPStore'
 
 const log = debug('appStore')
 const TYPE_DEBOUNCE = 200
@@ -31,6 +32,8 @@ const searchBits = async (query, params?) => {
 }
 
 export class AppStore {
+  nlpStore = new NLPStore()
+
   quickSearchIndex = 0
   nextIndex = 0
   leaveIndex = -1
@@ -41,6 +44,9 @@ export class AppStore {
 
   async willMount() {
     this.updateScreenSize()
+    this.subscriptions.add({
+      dispose: () => this.nlpStore.subscriptions.dispose(),
+    })
   }
 
   get activeIndex() {
@@ -237,7 +243,7 @@ export class AppStore {
 
   searchState = react(
     () => [App.state.query, this.getResults],
-    async ([query], { sleep, setValue, preventLogging }) => {
+    async ([query], { sleep, when, setValue, preventLogging }) => {
       if (!query) {
         return setValue({
           query,
@@ -279,6 +285,18 @@ export class AppStore {
       if (!results) {
         // debounce a little for fast typer
         await sleep(TYPE_DEBOUNCE)
+        // wait for nlp to give us results
+        await when(() => this.nlpStore.nlp.query === query)
+        let searchQuery = `${query}`
+        let sliced = 0
+        for (const mark of this.nlpStore.marks) {
+          if (mark[2] === 'date') {
+            const start = mark[0] + sliced
+            const end = mark[1] + sliced
+            searchQuery = searchQuery.substr(0, start) + searchQuery.substr(end)
+            sliced += mark[1] - mark[0]
+          }
+        }
         // get first page results
         const takePer = 4
         const takeMax = takePer * 6
@@ -286,7 +304,10 @@ export class AppStore {
         let results = []
         for (let i = 0; i < takeMax / takePer; i += 1) {
           const skip = i * takePer
-          const nextResults = await searchBits(query, { take: takePer, skip })
+          const nextResults = await searchBits(searchQuery, {
+            take: takePer,
+            skip,
+          })
           results = [...results, ...nextResults]
           setValue({
             results,

@@ -86,7 +86,7 @@ type Props = {
   name?: string
 }
 
-@view.attach('appStore', 'searchStore', 'nlpStore')
+@view.attach('appStore', 'searchStore')
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   render() {

@@ -1,6 +1,5 @@
 import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { throttle } from 'lodash'
 import { AppReactions } from '../../stores/AppReactions'
 
 // some comment test
@@ -10,9 +9,12 @@ export class OrbitStore {
 
   updateAppQuery = react(
     () => this.query,
-    throttle(query => {
+    async (query, { sleep }) => {
+      // slight debounce for super fast typing
+      await sleep(50)
+      console.log('finish me')
       App.setQuery(query)
-    }, 32),
+    },
   )
 
   clearQuery = () => {

@@ -100,7 +100,7 @@ class OrbitDockedInner extends React.Component<{
         <Frame
           visible={animationState.visible}
           willAnimate={animationState.willAnimate}
-          bottom={App.state.query ? 10 : 100}
+          bottom={appStore.searchState.query ? 10 : 100}
         >
           <Border />
           <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>

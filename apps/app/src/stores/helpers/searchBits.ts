@@ -9,9 +9,12 @@ export const searchBits = async (
     .leftJoinAndSelect('bit.people', 'person')
 
   if (searchString.length) {
-    query = query.where('title like :searchString or body like :searchString', {
-      searchString,
-    })
+    query = query.andWhere(
+      new Brackets(qb => {
+        qb.where('bit.title like :searchString', { searchString })
+        qb.orWhere('bit.body like :searchString', { searchString })
+      }),
+    )
   } else {
     // order by recent if no search
     query = query.order({ bitCreatedAt: 'DESC' })
@@ -21,8 +24,9 @@ export const searchBits = async (
     // essentially, find at least one person
     query = query.andWhere(
       new Brackets(qb => {
-        for (const name of people) {
-          qb = qb.where('person.name like :name', { name })
+        qb.where('person.name like :name', { name: people[0] })
+        for (const name of people.slice(1)) {
+          qb.orWhere('person.name like :name', { name })
         }
       }),
     )
@@ -43,6 +47,8 @@ export const searchBits = async (
   if (skip) {
     query = query.skip(skip)
   }
+
+  console.log('query is', query)
 
   return await query.getMany()
 }

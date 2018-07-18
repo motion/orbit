@@ -1,8 +1,9 @@
 import * as React from 'react'
 import fancyElement from './fancyElement'
-import css, { validCSSAttr, Color } from '@mcro/css'
+import css, { validCSSAttr } from '@mcro/css'
 import JSS from './stylesheet'
 import { ThemeContext } from './theme/ThemeContext'
+import { Options, GlossView } from './types'
 
 import * as Helpers_ from '@mcro/css'
 export const Helpers = Helpers_
@@ -14,29 +15,6 @@ export { ThemeProvide } from './theme/themeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
 export { CSSPropertySet, cssNameMap, psuedoKeys } from '@mcro/css'
-
-export type ThemeObject = {
-  base: {
-    background: Color
-    borderColor: Color
-    color: Color
-  }
-  hover: {
-    background: Color
-    borderColor: Color
-    color: Color
-  }
-  active: {
-    background: Color
-    borderColor: Color
-    color: Color
-  }
-  focus: {
-    background: Color
-    borderColor: Color
-    color: Color
-  }
-}
 
 const glossSimpleComponentFirstArg = a => {
   if (!a) {
@@ -56,31 +34,6 @@ export const glossSimpleComponentArgs = (a, b) => {
     return true
   }
   return glossSimpleComponentFirstArg(a)
-}
-
-export type Options = {
-  dontTheme?: boolean
-  glossProp?: string
-  tagName?: string
-  toColor?: Function
-  isColor?: Function
-  parentStylesOverride?: boolean
-}
-
-type GlossViewConfig = {
-  displayName?: string
-}
-
-interface GlossView<T> {
-  (props: Object): any
-  theme?: Object
-  style?: Object
-  displayName?: string
-  compiledStyles?: Object
-  child?: GlossView<any>
-  withConfig?: (a: GlossViewConfig) => T
-  defaultProps?: Object
-  tagName?: string
 }
 
 const DEFAULT_OPTS = {}
@@ -135,11 +88,11 @@ export default class Gloss {
       typeof maybeNameOrComponent === 'object' &&
       !maybeNameOrComponent[GLOSS_SIMPLE_COMPONENT_SYMBOL]
     ) {
-      return this.createSimpleGlossComponent('div', maybeNameOrComponent)
+      this.createSimpleGlossComponent('div', maybeNameOrComponent)
     }
     // view('div', {}) or view(OtherView, {})
     if (glossSimpleComponentArgs(maybeNameOrComponent, shortStyles)) {
-      return this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
+      this.createSimpleGlossComponent(maybeNameOrComponent, shortStyles)
     }
     // @view class MyView {}
     const Child = maybeNameOrComponent

@@ -75,7 +75,9 @@ export class HighlightedTextArea extends React.Component<Props> {
   }
 
   handleArrayHighlight(value, markList = []) {
-    const sortedMarkList = markList.sort((a, b) => (a[0] < b[0] ? -1 : 1))
+    const sortedMarkList = markList
+      .slice()
+      .sort((a, b) => (a[0] < b[0] ? -1 : 1))
     let input = `${value}`
     let offset = 0
     for (const mark of sortedMarkList) {

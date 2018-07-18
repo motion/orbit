@@ -32,6 +32,9 @@
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
+  "devDependencies": {
+    "@types/react": "16.4.6"
+  },
   "publishConfig": {
     "access": "public"
   }

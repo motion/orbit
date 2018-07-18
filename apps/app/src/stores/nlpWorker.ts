@@ -53,7 +53,7 @@ const filterNounsObj = {
 const filterNouns = strings => strings.filter(x => !filterNounsObj[x])
 
 const inside = ([startA, endA], [startB, endB]) => {
-  if (startA > startB && endA > startB) return true
+  if (endA > startB && startA > startB) return true
   if (startA < endB && endA > endB) return true
   if (endA > endB && startA < endB) return true
   return false
@@ -86,7 +86,7 @@ export function parseSearchQuery(query: string) {
     word => word.normal,
   )
   const people = nlp.people().out('frequency')
-  const words = query.split(' ')
+  const words = query.toLowerCase().split(' ')
 
   const prefix = prefixes[words[0]]
   if (prefix) {
@@ -109,9 +109,11 @@ export function parseSearchQuery(query: string) {
   for (const word of words) {
     if (types[word]) {
       highlightIfClear(word, CLASSES.TYPE)
+      continue
     }
     if (integrations[word]) {
       highlightIfClear(word, CLASSES.INTEGRATION)
+      continue
     }
   }
 

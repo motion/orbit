@@ -6,6 +6,7 @@
  */
 
 import { Tracker, RulesToClass } from './index'
+import { StyleSheet } from './sheet'
 
 const invariant = require('invariant')
 

@@ -29,7 +29,7 @@
     "@mcro/marky-markdown": "*",
     "react-date-range": "1.0.0-beta",
     "arrford": "2.0.1",
-    "date-fns": "1.29.0",
+    "date-fns": "2.0.0-alpha.7",
     "event-kit": "^2.5.0",
     "fuzzysort": "^1.1.1",
     "invariant": "2.2.4",

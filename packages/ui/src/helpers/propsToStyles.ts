@@ -15,10 +15,20 @@ const valFor = state => (props, key) => {
   return value
 }
 
-const validCSSAttr = Object.keys(document.body.style).reduce((acc, cur) => {
-  acc[cur] = true
-  return acc
-}, {})
+// special @mcro/css attributes
+const validCSSAttr = {
+  borderLeftRadius: true,
+  borderRightRadius: true,
+  borderBottomRadius: true,
+  borderTopRadius: true,
+}
+
+// add standard ones
+for (const key of Object.keys(document.body.style)) {
+  validCSSAttr[key] = true
+}
+
+// add gloss special ones
 
 // resolves props into styles for valid css
 // supports hover={{ background: 'green' }} and other states as well
@@ -30,9 +40,6 @@ export const propsToStyles = props => {
   for (const key of Object.keys(props)) {
     if (validCSSAttr[key]) {
       styles[key] = getVal(props, key)
-      if (key === 'gridAutoRows') {
-        console.log('styles', styles)
-      }
       continue
     }
     // &:hover, etc

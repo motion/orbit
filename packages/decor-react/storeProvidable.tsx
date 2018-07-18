@@ -76,6 +76,8 @@ storeProvidable = function(options, Helpers) {
     recentHMR = true
     recentHMRTm = setTimeout(() => {
       recentHMR = false
+      // @ts-ignore
+      window.render()
     }, 2000)
   }
 

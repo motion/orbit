@@ -6,7 +6,7 @@ import { Person } from '@mcro/models'
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
 
-console.log('parseSearchQuery, setUserNames', parseSearchQuery, setUserNames)
+window.x = { parseSearchQuery, setUserNames }
 
 @store
 export class NLPStore {
@@ -15,6 +15,7 @@ export class NLPStore {
     () => this.props.orbitStore.query,
     async (query, { sleep }) => {
       await sleep(40)
+      console.log('what is it', parseSearchQuery)
       return await parseSearchQuery(query)
     },
     { immediate: true },

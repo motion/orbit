@@ -1,9 +1,8 @@
 import compromise from 'compromise'
 import Sherlockjs from 'sherlockjs'
-import { flatten } from 'lodash'
 
 const state = {
-  userNames: {},
+  namePattern: null,
 }
 
 const prefixes = {
@@ -37,7 +36,7 @@ const types = {
   chats: 'conversation',
 }
 
-const simpleNames = /(with|from|by)\s([A-Za-z]+)$/
+// const simpleNames = /(with|from|by)\s([A-Za-z]+)$/
 
 const filterNounsObj = {
   week: true,
@@ -47,6 +46,7 @@ const filterNounsObj = {
 const filterNouns = strings => strings.filter(x => !filterNounsObj[x])
 
 export function parseSearchQuery(query: string) {
+  // @ts-ignore
   const nlp = compromise(query)
   const date = Sherlockjs.parse(query)
   const dates = nlp
@@ -57,7 +57,7 @@ export function parseSearchQuery(query: string) {
     word => word.normal,
   )
   const people = nlp.people().out('frequency')
-  const words = query.split(' ')
+  // const words = query.split(' ')
 
   let highlights = {}
 
@@ -88,6 +88,7 @@ export function parseSearchQuery(query: string) {
 
   return {
     state,
+    matches: state.namePattern ? query.match(state.namePattern) : null,
     dates,
     people,
     nouns,
@@ -96,22 +97,17 @@ export function parseSearchQuery(query: string) {
   }
 }
 
-export function setUserNames(nextUsers) {
-  let regexes = []
-
-  for (const name of nextUsers) {
-    // regexes.push(`(${name})`)
-    // regexes.push()
+export function setUserNames(fullNames = []) {
+  const cleanNames = fullNames
+    .map(name => name.replace(/[^a-zA-Z\s]/g, '').trim())
+    .filter(x => x.length > 1)
+  if (!cleanNames.length) {
+    return
   }
-
-  const usersSplitByName = flatten(
-    nextUsers.map(x => x.split(' ').filter(x => x.length > 1)),
-  )
-
-  const searchableUsers = {}
-  for (const name of usersSplitByName) {
-    searchableUsers[name.toLowerCase()] = true
-  }
-
-  state.userNames = searchableUsers
+  const firstNames = cleanNames.map(x => x.split(' ')[0])
+  const firstNameGroup = `(${firstNames.join('|').toLowerCase()})`
+  const fullNameGroup = `(${cleanNames.join('|')})`
+  // do full name first so it matches
+  const namePattern = new RegExp(`${fullNameGroup}|${firstNameGroup}`, 'g')
+  state.namePattern = namePattern
 }

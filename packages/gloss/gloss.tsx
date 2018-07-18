@@ -449,10 +449,6 @@ export default class Gloss {
         continue
       }
       const stylesKey = childKey ? `${key}--${childKey}` : key
-      if (typeof style === 'function') {
-        this.stylesheet[stylesKey] = style
-        continue
-      }
       if (force) {
         this.stylesheet.deleteRule(stylesKey)
       }

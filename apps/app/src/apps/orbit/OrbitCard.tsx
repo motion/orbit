@@ -273,7 +273,7 @@ class OrbitCardStore {
       this._isSelected = shouldSelect
       if (shouldSelect) {
         // visual smoothness
-        await sleep(40)
+        await sleep()
         if (!this.target) {
           throw new Error(
             `No target! ${this.props.pane} ${this.props.subPane} ${

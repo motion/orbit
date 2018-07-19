@@ -3,6 +3,15 @@ import { view } from '@mcro/black'
 import * as Helpers from '@mcro/constants'
 import { LINE_Y_ADJ, TOP_BAR_PAD } from './helpers'
 
+const OcrLine = view({
+  borderBottom: [2, '#EDD71E'],
+  position: 'absolute',
+  opacity: 0.05,
+  hovered: {
+    borderBottom: [3, '#EDD71E'],
+  },
+})
+
 @view
 export class OCRLine {
   render() {
@@ -13,9 +22,8 @@ export class OCRLine {
     const [x, y, width, height] = item
     const key = Helpers.wordKey(item)
     return (
-      <div
-        $ocrLine
-        $hoveredLine={hoveredLine && hoveredLine.string === key}
+      <OcrLine
+        hovered={hoveredLine && hoveredLine.string === key}
         style={{
           top: y - TOP_BAR_PAD + LINE_Y_ADJ,
           left: x,
@@ -24,15 +32,5 @@ export class OCRLine {
         }}
       />
     )
-  }
-  static style = {
-    ocrLine: {
-      borderBottom: [2, '#EDD71E'],
-      position: 'absolute',
-      opacity: 0.05,
-    },
-    hoveredLine: {
-      borderBottom: [3, '#EDD71E'],
-    },
   }
 }

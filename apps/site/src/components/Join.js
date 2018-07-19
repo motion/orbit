@@ -32,7 +32,6 @@ const Section = view('section', {
 })
 
 const WrapInput = view({
-  margin: [10, 0],
   flex: 1,
   minWidth: 235,
 })
@@ -119,7 +118,7 @@ export class Join extends React.Component {
           <Inner>
             <WrapInput>
               <UI.Input
-                flex
+                flex={1}
                 {...sizeProps}
                 ref={this.email}
                 type="email"

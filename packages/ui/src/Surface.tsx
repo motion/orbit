@@ -113,6 +113,10 @@ export type SurfaceProps = {
   type?: string
 }
 
+const getIconSize = props =>
+  props.iconSize ||
+  Math.round(props.size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
+
 const inlineStyle = {
   display: 'inline',
 }
@@ -129,11 +133,6 @@ const dimStyle = {
   },
 }
 
-const spacedStyles = {
-  margin: [0, 5],
-  borderRightWidth: 1,
-}
-
 // fontFamily: inherit on both fixes noElement elements
 const SurfaceFrame = view(View, {
   fontFamily: 'inherit',
@@ -143,8 +142,7 @@ const SurfaceFrame = view(View, {
 SurfaceFrame.theme = props => {
   const theme = props.theme
   // sizes
-  const size = props.size === true ? 1 : props.size || 1
-  const height = props.height || (props.style && props.style.height)
+  const height = props.height
   const width = props.width
   const padding = props.padding
   const flex =
@@ -245,47 +243,7 @@ SurfaceFrame.theme = props => {
       [0, 0, 0, (1 / Math.log(props.elevation)) * 0.15],
     ])
   }
-  // glint
-  let glintColor
-  if (props.glint) {
-    glintColor =
-      props.glint === true
-        ? colorfulBg
-          ? background.lighten(0.1)
-          : [255, 255, 255, 0.2]
-        : props.glint
-    // boxShadow.push(['inset', 0, 0, 0, glintColor])
-  }
-  // borderRadius
-  let radius = props.circular ? height / 2 : props.borderRadius
-  radius = radius === true ? (height / 3.4) * size : radius
-  radius = typeof radius === 'number' ? Math.round(radius) : radius
-  const borderRadius = {} as any
-  // if (uiContext && uiContext.inSegment && !props.ignoreSegment) {
-  //   borderRadius.borderLeftRadius = uiContext.inSegment.first ? radius : 0
-  //   borderRadius.borderRightRadius = uiContext.inSegment.last ? radius : 0
-  // } else
-  if (props.circular) {
-    borderRadius.borderRadius = size * LINE_HEIGHT
-  } else {
-    let hasSidesDefined = false
-    for (const side of BORDER_RADIUS_SIDES) {
-      const isDefined = typeof props[side] === 'number'
-      if (isDefined) {
-        hasSidesDefined = true
-        if (props[side] === true) {
-          borderRadius[side] = radius
-        } else {
-          borderRadius[side] = props[side]
-        }
-      } else {
-        borderRadius[side] = radius
-      }
-    }
-    if (!hasSidesDefined && radius) {
-      borderRadius.borderRadius = radius
-    }
-  }
+
   // circular
   const circularStyles = props.circular && {
     padding: 0,
@@ -351,7 +309,6 @@ SurfaceFrame.theme = props => {
     justifyContent: props.justify || props.justifyContent,
     alignItems: props.align || props.alignItems,
     alignSelf: props.alignSelf,
-    ...borderRadius,
     borderStyle: props.borderStyle || props.borderWidth ? 'solid' : undefined,
     ...circularStyles,
     '& > div > .icon': iconStyle,
@@ -368,7 +325,6 @@ SurfaceFrame.theme = props => {
     ...(props.hovered && hoverStyle),
     ...(props.dimmed && dimmedStyle),
     ...(props.dim && dimStyle),
-    ...(props.spaced && spacedStyle),
     ...chromelessStyle,
     ...(props.active && activeStyle),
     // // so you can override
@@ -380,7 +336,7 @@ SurfaceFrame.theme = props => {
   return surfaceStyles
 }
 
-const Element = view({
+const Element = view(View, {
   fontFamily: 'inherit',
   border: 'none',
   background: 'transparent',
@@ -393,9 +349,7 @@ const Element = view({
 })
 
 Element.theme = props => {
-  const iconSize =
-    props.iconSize ||
-    Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
+  const iconSize = getIconSize(props)
   const flexFlow = props.flexFlow || 'row'
   const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
   let elementGlowProps
@@ -408,9 +362,6 @@ Element.theme = props => {
   // element styles
   const element = {
     ...(props.inline && inlineStyle),
-    // this fixes inputs but may break other things, need to test
-    height,
-    ...borderRadius,
     ...elementGlowProps,
     flexFlow,
     lineHeight: 'inherit',
@@ -447,7 +398,6 @@ const WrapContents = view({
 })
 
 const ICON_SCALE = 12
-const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
 const BORDER_RADIUS_SIDES = [
   'borderBottomRadius',
@@ -528,20 +478,6 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       ...props,
     }
 
-    // get border radius
-    let borderLeftRadius =
-      typeof _borderLeftRadius === 'number'
-        ? _borderLeftRadius
-        : borderRadius.borderLeftRadius
-    let borderRightRadius =
-      typeof _borderRightRadius === 'number'
-        ? _borderRightRadius
-        : borderRadius.borderRightRadius
-    if (typeof borderLeftRadius === 'undefined') {
-      borderLeftRadius = radius
-      borderRightRadius = radius
-    }
-
     const glowColor = (props.theme && props.color) || DEFAULT_GLOW_COLOR
 
     const contents = (
@@ -549,9 +485,9 @@ class SurfaceInner extends React.Component<SurfaceProps> {
         <Glint
           if={glint}
           key={0}
-          size={size}
-          borderLeftRadius={borderLeftRadius - 1}
-          borderRightRadius={borderRightRadius - 1}
+          size={props.size}
+          // borderLeftRadius={borderLeftRadius - 1}
+          // borderRightRadius={borderRightRadius - 1}
         />
         {badge ? (
           <Badge {...badgeProps}>
@@ -565,20 +501,18 @@ class SurfaceInner extends React.Component<SurfaceProps> {
               order: icon && iconAfter ? 3 : 'auto',
             }}
             name={`${icon}`}
-            size={iconSize}
+            size={getIconSize(props)}
             {...iconProps}
           />
         ) : null}
         {glow && !dimmed && !disabled ? (
           <HoverGlow
-            if={}
             full
             scale={1.1}
-            show={hovered}
-            color={glowColor}
+            color={`${glowColor}`}
             opacity={0.35}
-            borderLeftRadius={borderLeftRadius - 1}
-            borderRightRadius={borderRightRadius - 1}
+            // borderLeftRadius={borderLeftRadius - 1}
+            // borderRightRadius={borderRightRadius - 1}
             {...glowProps}
           />
         ) : null}

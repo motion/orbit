@@ -4,8 +4,16 @@ import * as React from 'react'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
-import css, { validCSSAttr } from '@mcro/css'
+import { validCSSAttr } from '@mcro/css'
 import validProp from './helpers/validProp'
+
+export type RawRules = CSSPropertySet & {
+  [key: string]: CSSPropertySet
+}
+export type BaseRules = {
+  [key: string]: CSSPropertyValue<string | number>
+}
+type Props = CSSPropertySet
 
 // import sonar
 
@@ -66,71 +74,20 @@ const getAllStyles = (baseId, target, rawStyles) => {
   return builtStyles
 }
 
-export type RawRules = CSSPropertySet & {
-  [key: string]: CSSPropertySet
-}
-export type BaseRules = {
-  [key: string]: CSSPropertyValue<string | number>
-}
-type Props = CSSPropertySet
-
-export function simpleViewFactory() {
+export function simpleViewFactory(toCSS) {
   const tracker = new Map()
   const rulesToClass = new WeakMap()
   const sheet = new StyleSheet(process.env.NODE_ENV === 'production')
   const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 
-  // basicaly @mcro/css
-  const toCSS = css({
-    isColor: color => color && !!color.rgb,
-    toColor: obj => {
-      const { model, color, valpha } = obj
-      const hasAlpha = typeof valpha === 'number' && valpha !== 1
-      if (model === 'rgb') {
-        const inner = `${color[0]}, ${color[1]}, ${color[2]}`
-        if (hasAlpha) {
-          return `rgba(${inner}, ${valpha})`
-        }
-        return `rgb(${inner})`
-      }
-      if (model === 'hsl') {
-        const inner = `${color[0]}, ${Math.round(color[1])}%, ${Math.round(
-          color[2],
-        )}%`
-        if (hasAlpha) {
-          return `hsla(${inner}, ${valpha})`
-        }
-        return `hsl(${inner})`
-      }
-      return obj.toString()
-    },
-  })
-
-  const buildRules = (rules, props, theme) => {
-    let styles = toCSS(rules)
-    if (theme) {
-      styles = {
-        ...styles,
-        ...toCSS(theme(props)),
-      }
-    }
-    return styles
-  }
-
-  function addRules(
-    displayName: string,
-    rules: BaseRules,
-    namespace,
-    props: Object,
-    theme: Function,
-  ) {
+  function addRules(displayName: string, rules: BaseRules, namespace) {
     // if these rules have been cached to a className then retrieve it
     const cachedClass = rulesToClass.get(rules)
-    if (!theme && cachedClass) {
+    if (cachedClass) {
       return cachedClass
     }
     const declarations = []
-    const style = buildRules(rules, props, theme)
+    const style = toCSS(rules)
     // generate css declarations based on the style object
     for (const key in style) {
       const val = style[key]
@@ -197,10 +154,9 @@ export function simpleViewFactory() {
     const isDOM = typeof tagName === 'string'
     let ThemedConstructor
     let cachedTheme
-    let hasTheme = false
 
     function getTheme() {
-      if (hasTheme) {
+      if (cachedTheme) {
         return cachedTheme
       }
       let themes = []
@@ -215,7 +171,6 @@ export function simpleViewFactory() {
       if (!themes.length) {
         result = null
       } else {
-        hasTheme = true
         result = props => {
           let styles = {}
           // from most important to least
@@ -230,6 +185,21 @@ export function simpleViewFactory() {
       }
       cachedTheme = result
       return result
+    }
+
+    function isNamespaceBooleanPropActive(namespace, props) {
+      // remove inactive props, including boolean props
+      if (namespace !== id && namespace[0] !== '&') {
+        const psuedoIndex = namespace.indexOf('&')
+        const namespaceWithoutPsuedo = namespace.slice(
+          0,
+          psuedoIndex === -1 ? namespace.length : psuedoIndex,
+        )
+        if (props[namespaceWithoutPsuedo] !== true) {
+          return false
+        }
+      }
+      return true
     }
 
     class Constructor extends React.PureComponent<Props> {
@@ -272,8 +242,20 @@ export function simpleViewFactory() {
             }
           }
         }
+        const theme = getTheme()
+        if (theme) {
+          const themeStyles = { [id]: {} }
+          addStyles(id, themeStyles, theme(props))
+          for (const key of Object.keys(themeStyles)) {
+            myStyles[key] = myStyles[key] || {}
+            myStyles[key] = {
+              ...myStyles[key],
+              ...themeStyles[key],
+            }
+          }
+        }
         // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
-        if (!hasTheme && myStyles === this.state.lastStyles) {
+        if (myStyles === this.state.lastStyles) {
           return
         }
         const prevClasses = this.state.classNames
@@ -284,19 +266,9 @@ export function simpleViewFactory() {
             displayName,
             myStyles[namespace],
             namespace,
-            props,
-            getTheme(),
           )
-          // remove inactive props, including boolean props
-          if (namespace !== id && namespace[0] !== '&') {
-            const psuedoIndex = namespace.indexOf('&')
-            const namespaceWithoutPsuedo = namespace.slice(
-              0,
-              psuedoIndex === -1 ? namespace.length : psuedoIndex,
-            )
-            if (props[namespaceWithoutPsuedo] !== true) {
-              continue
-            }
+          if (!isNamespaceBooleanPropActive(namespace, props)) {
+            continue
           }
           classNames.push(className)
           // if this is the first mount render or we didn't previously have this class then add it as new

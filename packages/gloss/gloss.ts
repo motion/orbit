@@ -59,9 +59,9 @@ export default class Gloss {
   JSS = JSS
 
   constructor(opts: Options = DEFAULT_OPTS) {
-    this.createSimpleView = simpleViewFactory()
     this.options = opts
     this.css = css(opts)
+    this.createSimpleView = simpleViewFactory(this.css)
     this.helpers = this.css.helpers
     this.stylesheet = JSS.createStyleSheet()
     this.themeSheet = JSS.createStyleSheet()

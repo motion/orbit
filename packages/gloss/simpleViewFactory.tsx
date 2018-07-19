@@ -18,7 +18,8 @@ type Props = CSSPropertySet
 // import sonar
 
 const addStyles = (id, baseStyles, nextStyles) => {
-  for (const key of Object.keys(nextStyles)) {
+  const propStyles = {}
+  for (const key in nextStyles) {
     // dont overwrite as we go down
     if (typeof baseStyles[id][key] !== 'undefined') {
       continue
@@ -37,41 +38,57 @@ const addStyles = (id, baseStyles, nextStyles) => {
       const prop = key
       const styleObj = nextStyles[key]
       if (typeof styleObj === 'object') {
-        // dont overwrite as we go down
-        if (typeof baseStyles[prop] === 'undefined') {
-          baseStyles[prop] = {}
-          for (const subKey of Object.keys(styleObj)) {
-            if (subKey[0] === '&') {
-              baseStyles[`${prop}${subKey}`] = styleObj[subKey]
-            } else {
-              baseStyles[prop][subKey] = styleObj[subKey]
-            }
+        propStyles[prop] = {
+          base: {}
+        }
+        for (const subKey in styleObj) {
+          if (subKey[0] === '&') {
+            propStyles[prop][subKey] = styleObj[subKey]
+          } else {
+            propStyles[prop].base[subKey] = styleObj[subKey]
           }
         }
       }
     }
   }
+  return propStyles
 }
 
+// gets childrens styles and merges them into a big object
 const getAllStyles = (baseId, target, rawStyles) => {
-  const builtStyles = {
+  const styles = {
     [baseId]: {},
   }
-  addStyles(baseId, builtStyles, rawStyles)
+  const propStyles = addStyles(baseId, styles, rawStyles)
   // merge child styles
   if (target.IS_GLOSSY) {
-    const { id, styles } = target.getConfig()
-    const moveToMyId = styles[id]
-    delete styles[id]
-    styles[baseId] = moveToMyId
-    for (const key of Object.keys(styles)) {
-      builtStyles[key] = {
+    const childConfig = target.getConfig()
+    const childPropStyles = childConfig.propStyles
+    if (childPropStyles) {
+      for (const key of Object.keys(childPropStyles)) {
+        propStyles[key] = propStyles[key] || {}
+        propStyles[key] = {
+          ...childPropStyles[key]
+          ...propStyles[key]
+        }
+      }
+    }
+    const childStyles = childConfig.styles
+    const childId = childConfig.id
+    const moveToMyId = childStyles[childId]
+    delete childStyles[childId]
+    childStyles[baseId] = moveToMyId
+    for (const key of Object.keys(childStyles)) {
+      styles[key] = {
+        ...childStyles[key],
         ...styles[key],
-        ...builtStyles[key],
       }
     }
   }
-  return builtStyles
+  return {
+    styles,
+    propStyles,
+  }
 }
 
 export function simpleViewFactory(toCSS) {
@@ -149,14 +166,15 @@ export function simpleViewFactory(toCSS) {
   return function createSimpleView(target: any, rawStyles: RawRules) {
     const tagName = target.IS_GLOSSY ? target.getConfig().tagName : target
     const id = `${uid()}`
-    let styles = getAllStyles(id, target, rawStyles)
-    let displayName = 'ComponentName'
+    const { styles, propStyles } = getAllStyles(id, target, rawStyles)
+    const hasPropStyles = Object.keys(propStyles).length
     const isDOM = typeof tagName === 'string'
+    let displayName = 'ComponentName'
     let ThemedConstructor
     let cachedTheme
 
     function getTheme() {
-      if (cachedTheme) {
+      if (typeof cachedTheme !== 'undefined') {
         return cachedTheme
       }
       let themes = []
@@ -187,21 +205,6 @@ export function simpleViewFactory(toCSS) {
       return result
     }
 
-    function isNamespaceBooleanPropActive(namespace, props) {
-      // remove inactive props, including boolean props
-      if (namespace !== id && namespace[0] !== '&') {
-        const psuedoIndex = namespace.indexOf('&')
-        const namespaceWithoutPsuedo = namespace.slice(
-          0,
-          psuedoIndex === -1 ? namespace.length : psuedoIndex,
-        )
-        if (props[namespaceWithoutPsuedo] !== true) {
-          return false
-        }
-      }
-      return true
-    }
-
     class Constructor extends React.PureComponent<Props> {
       state = {
         classNames: [],
@@ -217,9 +220,6 @@ export function simpleViewFactory(toCSS) {
       }
 
       generateClassnames(props: Props, prevProps?: Props) {
-        if (props.debug) {
-          debugger
-        }
         // if this is a secondary render then check if the props are essentially equivalent
         if (prevProps != null && hasEquivProps(props, prevProps)) {
           return
@@ -243,20 +243,38 @@ export function simpleViewFactory(toCSS) {
           }
         }
         const theme = getTheme()
-        if (theme) {
-          const themeStyles = { [id]: {} }
-          addStyles(id, themeStyles, theme(props))
-          for (const key of Object.keys(themeStyles)) {
-            myStyles[key] = myStyles[key] || {}
-            myStyles[key] = {
-              ...myStyles[key],
-              ...themeStyles[key],
+        const hasDynamicStyles = theme || hasPropStyles
+        // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
+        if (!hasDynamicStyles && myStyles === this.state.lastStyles) {
+          return
+        }
+        let dynamicStyles
+        if (hasDynamicStyles) {
+          dynamicStyles = { [id]: {} }
+        }
+        if (hasPropStyles) {
+          for (const key in propStyles) {
+            if (props[key] !== true) continue
+            for (const styleKey in propStyles[key]) {
+              const dynKey = styleKey === 'base' ? id : styleKey
+              dynamicStyles[dynKey] = {
+                ...dynamicStyles[dynKey],
+                ...propStyles[key][styleKey]
+              }
             }
           }
         }
-        // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
-        if (myStyles === this.state.lastStyles) {
-          return
+        if (theme) {
+          addStyles(id, dynamicStyles, theme(props))
+        }
+        if (hasDynamicStyles) {
+          for (const key in dynamicStyles) {
+            myStyles[key] = myStyles[key] || {}
+            myStyles[key] = {
+              ...myStyles[key],
+              ...dynamicStyles[key],
+            }
+          }
         }
         const prevClasses = this.state.classNames
         const classNames = []
@@ -267,9 +285,6 @@ export function simpleViewFactory(toCSS) {
             myStyles[namespace],
             namespace,
           )
-          if (!isNamespaceBooleanPropActive(namespace, props)) {
-            continue
-          }
           classNames.push(className)
           // if this is the first mount render or we didn't previously have this class then add it as new
           if (prevProps == null || !prevClasses.includes(className)) {
@@ -359,6 +374,7 @@ export function simpleViewFactory(toCSS) {
     ThemedConstructor.getConfig = () => ({
       tagName,
       styles: { ...styles },
+      propStyles: { ...propStyles },
       id,
       child: target.IS_GLOSSY ? target : null,
     })

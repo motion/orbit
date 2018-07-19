@@ -16,6 +16,12 @@ const Test = view({
       background: 'violet',
     },
   },
+  bigFont: {
+    fontSize: 30,
+    '&:hover': {
+      fontSize: 10,
+    },
+  },
 })
 
 // extend and test
@@ -61,11 +67,11 @@ Test3.theme = () => ({
 export const Root = () => {
   return (
     <div css={{ pointerEvents: 'all', width: '100%', height: '100%' }}>
-      <Test>blue</Test>
-      <Test big>pink</Test>
-      <Test2>red</Test2>
-      <Test2 big>white bold</Test2>
-      <Test3>italic hover black</Test3>
+      <Test>blue hover orange</Test>
+      <Test big>pink hover pinker</Test>
+      <Test2 bigFont>red faint</Test2>
+      <Test2 big>white bold on yellow opacity 1</Test2>
+      <Test3>red italic hover black</Test3>
 
       <br />
       <br />

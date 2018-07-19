@@ -26,23 +26,8 @@ export const propsToStyles = props => {
   // loop over props turning into styles
   for (const key of Object.keys(props)) {
     // &:hover, etc
-    if (psuedoKeys[key]) {
-      const stateKey = key
-      styles[stateKey] = {}
-      const getStateVal = valFor(key)
-      const val = props[key]
-      if (!val) {
-        // allow falsy/undefined for easier dynamic
-        continue
-      }
-      for (const subKey of Object.keys(val)) {
-        if (validCSSAttr[subKey]) {
-          styles[stateKey][subKey] = getStateVal(props, subKey)
-        } else {
-          console.log('propStyles error info', styles, props)
-          throw new Error(`Invalid name for css key: ${key}`)
-        }
-      }
+    if (key[0] === '&') {
+      styles[key] = props[key]
       continue
     }
     if (validCSSAttr[key]) {

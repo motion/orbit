@@ -43,7 +43,6 @@ export default function fancyElementFactory(Gloss) {
     if (props && options.glossProp) {
       const cached = cache.get(props)
       if (cached) {
-        console.log('using cache')
         finalProps = cached
       } else {
         const val = props[options.glossProp]
@@ -55,6 +54,10 @@ export default function fancyElementFactory(Gloss) {
         }
         cache.set(props, finalProps)
       }
+    }
+
+    if (props && finalProps.style === false) {
+      delete finalProps.style
     }
 
     return ogCreateElement(type, finalProps, ...children)

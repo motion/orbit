@@ -44,7 +44,7 @@ export class RootView extends React.Component {
               right: 0,
               width: '40%',
               height: '30%',
-              background: [0, 0, 0, 0.9],
+              background: [0, 0, 0, 0.3],
               padding: 20,
               lineHeight: '2.5rem',
               color: 'red',

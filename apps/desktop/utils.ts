@@ -14,3 +14,18 @@ export function sequence<T, U>(collection: T[], callback: (item: T) => Promise<U
     return results;
   });
 }
+
+/**
+ * Converts simple query object to a URL query string.
+ * For example { a: "hello", b: "world" } getting converting into ?a=hello&b=world.
+ * Skips undefined properties.
+ */
+export function queryObjectToQueryString(query: { [key: string]: any }|undefined): string {
+  if (!query || !Object.keys(query).length)
+    return "";
+
+  return "?" + Object.keys(query)
+    .filter(key => query[key] !== undefined)
+    .map(key => `${key}=${query[key]}`)
+    .join("&");
+}

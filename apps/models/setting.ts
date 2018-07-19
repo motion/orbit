@@ -18,6 +18,7 @@ export class Setting extends T.BaseEntity {
   @T.Column('simple-json', { default: '{}' })
   values: {
     // TODO: umberalla other settings into objects like this, or split this into individual simple-json fields
+    // todo: having a union type also is an option
     atlassian?: {
       username: string
       password: string
@@ -30,14 +31,18 @@ export class Setting extends T.BaseEntity {
     calendarsActive?: Object
     syncTokens?: Object
     folders?: Array<string>
-    historyId?: string
-    syncSettings?: any
-    lastSyncSettings?: any
     channels?: Array<string>
     lastAttachmentSync?: { [key: string]: string }
     lastMessageSync?: { [key: string]: string }
     autoLaunch?: boolean
     openShortcut?: string
+
+    // gmail-specific options
+    historyId?: string
+    syncSettings?: any
+    lastSyncSettings?: any
+    filter?: string
+
   }
 
   @T.CreateDateColumn() createdAt: Date

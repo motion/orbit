@@ -107,6 +107,7 @@ const toCSS = css({
 const buildRules = (rules, props, theme) => {
   let styles = toCSS(rules)
   if (theme) {
+    console.log('get theme', props)
     styles = {
       ...styles,
       ...toCSS(theme(props)),
@@ -124,7 +125,7 @@ function addRules(
 ) {
   // if these rules have been cached to a className then retrieve it
   const cachedClass = rulesToClass.get(rules)
-  if (cachedClass != null) {
+  if (!theme && cachedClass) {
     return cachedClass
   }
   const declarations = []
@@ -191,10 +192,42 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
   const tagName = target.IS_GLOSSY ? target.getConfig().tagName : target
   const id = `${uid()}`
   let styles = getAllStyles(id, target, rawStyles)
-  console.log(JSON.stringify(styles, null, 2))
   let displayName = 'ComponentName'
   const isDOM = typeof tagName === 'string'
   let ThemedConstructor
+  let cachedTheme
+
+  function getTheme() {
+    if (cachedTheme === null || cachedTheme) {
+      return cachedTheme
+    }
+    let themes = []
+    let view = ThemedConstructor
+    while (view) {
+      if (view.theme) {
+        themes.push(view.theme)
+      }
+      view = view.getConfig().child
+    }
+    let result
+    if (!themes.length) {
+      result = null
+    } else {
+      result = props => {
+        let styles = {}
+        // from most important to least
+        for (const theme of themes) {
+          styles = {
+            ...theme(props),
+            ...styles,
+          }
+        }
+        return styles
+      }
+    }
+    cachedTheme = result
+    return result
+  }
 
   class Constructor extends React.PureComponent<Props> {
     state = {
@@ -211,7 +244,6 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
     }
 
     generateClassnames(props: Props, prevProps?: Props) {
-      console.log('styles', styles)
       // if this is a secondary render then check if the props are essentially equivalent
       if (prevProps != null && hasEquivProps(props, prevProps)) {
         return
@@ -222,7 +254,6 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
       // resolved styles
       if (props.className) {
         const propClassNames = props.className.trim().split(/[\s]+/g)
-        console.log('got props class', id, propClassNames)
         for (const className of propClassNames) {
           const classInfo = tracker.get(className)
           if (classInfo) {
@@ -240,16 +271,13 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
         const prevClasses = this.state.classNames
         const classNames = []
         // add rules
-        if (props.debug) {
-          console.log('namespace--', myStyles, id)
-        }
         for (const namespace in myStyles) {
           const className = addRules(
             displayName,
             myStyles[namespace],
             namespace,
             props,
-            ThemedConstructor.theme,
+            getTheme(),
           )
           // remove inactive props, including boolean props
           if (namespace !== id && namespace[0] !== '&') {
@@ -293,6 +321,7 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
 
     render() {
       const { children, innerRef, ...props } = this.props
+      console.log('render me', id, this.props)
       // build class names
       const className = this.state.classNames
         .concat(this.state.extraClassNames)
@@ -320,6 +349,7 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
     <ThemeContext.Consumer>
       {({ allThemes, activeThemeName }) => {
         const theme = allThemes[activeThemeName]
+        console.log('passing down', props)
         return <Constructor theme={theme} {...props} />
       }}
     </ThemeContext.Consumer>
@@ -340,6 +370,7 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
     tagName,
     styles: { ...styles },
     id,
+    child: target.IS_GLOSSY ? target : null,
   })
 
   return ThemedConstructor

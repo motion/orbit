@@ -21,7 +21,7 @@ const Test = view({
 // extend and test
 const Test2 = view(Test, {
   background: 'red',
-  opacity: 0,
+  opacity: 0.5,
   big: {
     opacity: 1,
     background: 'yellow',
@@ -32,8 +32,14 @@ const Test2 = view(Test, {
 })
 
 Test2.theme = ({ theme, big }) => ({
-  fontWeight: 'bold',
+  fontStyle: 'italic',
+  fontWeight: big ? 'bold' : 'light',
   color: big ? 'red' : theme.base.color,
+})
+
+// extend theme
+const Test3 = view(Test2, {
+  opacity: 1,
 })
 
 // export type TreeItem = {
@@ -53,6 +59,7 @@ export const Root = () => {
       <Test big>pink</Test>
       <Test2>red</Test2>
       <Test2 big>yellow</Test2>
+      <Test3>italic</Test3>
 
       <br />
       <br />

@@ -48,6 +48,58 @@ export type ItemProps = {
   selectable?: boolean
 }
 
+const Content = view({
+  flex: 1,
+  maxWidth: '100%',
+  justifyContent: 'center',
+  overflowHidden: {
+    overflow: 'hidden',
+  },
+})
+
+const Above = view({
+  maxWidth: '100%',
+  flexFlow: 'row',
+  flex: 'none',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+})
+
+const Prop = view({
+  flex: 1,
+  overflow: 'hidden',
+  maxWidth: '100%',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+})
+
+const Middot = view({
+  display: 'inline',
+})
+
+const Text = view({
+  width: '100%',
+  primaryText: {
+    wordWrap: 'break-word',
+    maxHeight: '2.8rem',
+  },
+})
+
+const Date = view({
+  userSelect: 'none',
+  fontWeight: 600,
+  opacity: 0.8,
+})
+
+const After = view({
+  margin: [0, -5, 0, 5],
+  height: 'auto',
+})
+
+const Before = view({
+  margin: ['auto', 5, 'auto', 0],
+})
+
 @view
 export class ListItem extends React.Component<ItemProps> {
   static isListItem = true
@@ -147,7 +199,6 @@ export class ListItem extends React.Component<ItemProps> {
         tagName="listitem"
         size={size}
         sizePadding={1.4}
-        $item
         {...radiusProps}
         border={false}
         background="transparent"
@@ -170,16 +221,15 @@ export class ListItem extends React.Component<ItemProps> {
         after={below}
         {...props}
       >
-        <div $before if={before} {...beforeProps}>
+        <Before if={before} {...beforeProps}>
           {before}
-        </div>
-        <div $content $overflowHidden={after || before}>
-          <div $above if={primary || secondary || date}>
+        </Before>
+        <Content overflowHidden={after || before}>
+          <Above if={primary || secondary || date}>
             {beforePrimary}
-            <div $prop if={primary || secondary}>
+            <Prop if={primary || secondary}>
               <Text
-                $text
-                $primaryText
+                primaryText
                 fontSize={fontSize}
                 size={size}
                 editable={editable}
@@ -199,20 +249,13 @@ export class ListItem extends React.Component<ItemProps> {
                 ellipse
                 {...secondaryProps}
               >
-                <Date $date if={date}>
-                  {date}
-                </Date>
-                <div $middot if={date && secondary}>
-                  {' '}
-                  &middot;{' '}
-                </div>
+                <Date if={date}>{date}</Date>
+                <Middot if={date && secondary}> &middot; </Middot>
                 {secondary}
               </Text>
-            </div>
-          </div>
-          <div $children if={!areChildrenString}>
-            {children}
-          </div>
+            </Prop>
+          </Above>
+          <div if={!areChildrenString}>{children}</div>
           <Text
             if={areChildrenString}
             size={size * 0.9}
@@ -222,65 +265,11 @@ export class ListItem extends React.Component<ItemProps> {
           >
             {children}
           </Text>
-        </div>
-        <div $after if={after} {...afterProps}>
+        </Content>
+        <After if={after} {...afterProps}>
           {after}
-        </div>
+        </After>
       </SizedSurface>
     )
-  }
-
-  static style = {
-    item: {
-      maxWidth: '100%',
-      userSelect: 'none',
-    },
-    content: {
-      flex: 1,
-      maxWidth: '100%',
-      justifyContent: 'center',
-    },
-    overflowHidden: {
-      overflow: 'hidden',
-    },
-    above: {
-      maxWidth: '100%',
-      flexFlow: 'row',
-      flex: 'none',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    prop: {
-      flex: 1,
-      overflow: 'hidden',
-      maxWidth: '100%',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-    },
-    middot: {
-      display: 'inline',
-    },
-    text: {
-      width: '100%',
-    },
-    primaryText: {
-      wordWrap: 'break-word',
-      maxHeight: '2.8rem',
-    },
-    date: {
-      userSelect: 'none',
-      fontWeight: 600,
-      opacity: 0.8,
-    },
-    flex: {
-      flexGrow: 1,
-    },
-    after: {
-      margin: [0, -5, 0, 5],
-      height: 'auto',
-    },
-    before: {
-      margin: ['auto', 5, 'auto', 0],
-    },
   }
 }

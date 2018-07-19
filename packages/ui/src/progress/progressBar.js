@@ -24,31 +24,31 @@ export class ProgressBar extends React.Component {
     )
   }
 
-  static style = {
-    outer: {
-      height: 6,
-      margin: ['auto', 5],
-      borderRadius: 100,
-      justifyContent: 'center',
-    },
-    inner: {
-      height: '100%',
-      borderRadius: 100,
-    },
-  }
+  // style = {
+  //   outer: {
+  //     height: 6,
+  //     margin: ['auto', 5],
+  //     borderRadius: 100,
+  //     justifyContent: 'center',
+  //   },
+  //   inner: {
+  //     height: '100%',
+  //     borderRadius: 100,
+  //   },
+  // }
 
-  static theme = ({ color, background, theme, width, percent }) => ({
-    outer: {
-      minWidth: width,
-      width,
-      background:
-        background || theme.base.background
-          ? $(theme.base.background).darken(0.5)
-          : '#eee',
-    },
-    inner: {
-      width: `${percent}%`,
-      background: color || theme.base.highlightColor,
-    },
-  })
+  // static theme = ({ color, background, theme, width, percent }) => ({
+  //   outer: {
+  //     minWidth: width,
+  //     width,
+  //     background:
+  //       background || theme.base.background
+  //         ? $(theme.base.background).darken(0.5)
+  //         : '#eee',
+  //   },
+  //   inner: {
+  //     width: `${percent}%`,
+  //     background: color || theme.base.highlightColor,
+  //   },
+  // })
 }

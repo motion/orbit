@@ -2,14 +2,14 @@ import * as React from 'react'
 import { Theme } from './helpers/theme'
 import { view, attachTheme } from '@mcro/black'
 import $ from '@mcro/color'
+import { View } from './blocks/View'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
-import { Glint } from './effects/glint'
+import { Glint } from './effects/Glint'
 import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { Color } from '@mcro/css'
-// import { propsToStyles } from './helpers/propsToStyles'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -113,6 +113,63 @@ export type SurfaceProps = {
   type?: string
 }
 
+const inlineStyle = {
+  display: 'inline',
+}
+
+const dimmedStyle = {
+  opacity: 0.2,
+  // pointerEvents: 'none',
+}
+
+const dimStyle = {
+  opacity: 0.5,
+  '&:hover': {
+    opacity: 1,
+  },
+}
+
+const spacedStyles = {
+  margin: [0, 5],
+  borderRightWidth: 1,
+}
+
+// fontFamily: inherit on both fixes noElement elements
+const SurfaceFrame = view(View, {
+  fontFamily: 'inherit',
+  position: 'relative',
+})
+
+const Element = view({
+  fontFamily: 'inherit',
+  border: 'none',
+  background: 'transparent',
+  height: '100%',
+  color: 'inherit',
+  // this seems to maybe fix some line height stuff
+  transform: {
+    y: '1%',
+  },
+})
+
+const baseIconStyle = {
+  pointerEvents: 'none',
+  justifyContent: 'center',
+  height: '1.4rem',
+  transform: `translateY(1%)`,
+}
+
+const Wrap = view({
+  flex: 1,
+  overflow: 'hidden',
+})
+
+const WrapContents = view({
+  flex: 1,
+  position: 'relative',
+  overflow: 'hidden',
+})
+
 const ICON_SCALE = 12
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
@@ -139,12 +196,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     provided: object,
   }
 
-  themeValues = null
   uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
-
-  get uiContext() {
-    return this.context.provided.uiContext
-  }
 
   render() {
     const {
@@ -153,13 +205,11 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       align,
       alignSelf,
       alpha,
-      background,
       badge,
       badgeProps,
       border,
       borderBottom,
       borderBottomRadius,
-      borderColor,
       borderLeft,
       borderLeftRadius: _borderLeftRadius,
       borderRadius: _borderRadius,
@@ -169,37 +219,29 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       borderTop,
       borderTopRadius,
       borderWidth,
-      boxShadow,
       children,
       chromeless,
       circular,
       className,
       clickable,
-      color,
       dim,
       dimmed,
       disabled,
       elementProps,
       elevation,
-      flex,
-      flexFlow,
-      focusable,
       fontSize,
       fontWeight,
       forwardRef,
       glint,
       glow,
       glowProps,
-      height,
       highlight,
       highlightBackground,
       highlightColor,
-      hoverStyle,
       hoverable,
       hovered,
       icon,
       iconAfter,
-      iconColor,
       iconProps,
       iconSize: _iconSize,
       inline,
@@ -216,14 +258,12 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       noWrap,
       onClick,
       opacity,
-      padding,
       paddingBottom,
       paddingLeft,
       paddingRight,
       paddingTop,
       placeholderColor,
       row,
-      size,
       sizeIcon,
       spaced,
       stretch,
@@ -232,194 +272,22 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       textAlign,
       tooltip,
       tooltipProps,
-      width,
       wrapElement,
       ignoreSegment,
       alignItems,
       justifyContent,
       backgroundAlpha,
-      activeStyle,
       sizeLineHeight,
       theme,
       ...props
     } = this.props
     const stringIcon = typeof icon === 'string'
-    const { themeValues } = this
-    if (!themeValues) {
-      console.warn('this is weird', this, 'sure you set a theme?', this.context)
-      return null
-    }
     const passProps = {
       tagName,
       ref: forwardRef,
       style,
       ...props,
     }
-    // get border radius
-    let borderLeftRadius =
-      typeof _borderLeftRadius === 'number'
-        ? _borderLeftRadius
-        : themeValues.borderRadius.borderLeftRadius
-    let borderRightRadius =
-      typeof _borderRightRadius === 'number'
-        ? _borderRightRadius
-        : themeValues.borderRadius.borderRightRadius
-    if (typeof borderLeftRadius === 'undefined') {
-      borderLeftRadius = themeValues.borderRadiusSize
-      borderRightRadius = themeValues.borderRadiusSize
-    }
-    const glowColor = (this.theme && themeValues.color) || DEFAULT_GLOW_COLOR
-    const contents = (
-      <>
-        <Glint
-          if={glint}
-          key={0}
-          size={size}
-          borderLeftRadius={borderLeftRadius - 1}
-          borderRightRadius={borderRightRadius - 1}
-        />
-        {badge ? (
-          <Badge {...badgeProps}>
-            {typeof badge !== 'boolean' ? badge : ''}
-          </Badge>
-        ) : null}
-        <div $icon if={icon && !stringIcon}>
-          {icon}
-        </div>
-        <Icon
-          if={icon && stringIcon}
-          $icon
-          css={
-            icon &&
-            iconAfter && {
-              order: 3,
-            }
-          }
-          name={icon}
-          size={themeValues.iconSize}
-          {...iconProps}
-        />
-        <HoverGlow
-          if={glow && !dimmed && !disabled}
-          full
-          scale={1.1}
-          show={hovered}
-          color={glowColor}
-          opacity={0.35}
-          borderLeftRadius={borderLeftRadius - 1}
-          borderRightRadius={borderRightRadius - 1}
-          {...glowProps}
-        />
-        <div
-          $element
-          if={!noElement || (noElement && !noWrap && hasChildren(children))}
-          {...wrapElement && passProps}
-          {...elementProps}
-          disabled={disabled}
-        >
-          {children}
-        </div>
-        {noElement && noWrap && hasChildren(children) && children}
-        <Theme if={tooltip} name="dark">
-          <Popover
-            background
-            openOnHover
-            closeOnClick
-            noHoverOnChildren
-            animation="bounce 150ms"
-            target={`.${this.uniq}`}
-            padding={[2, 7, 4]}
-            borderRadius={5}
-            distance={8}
-            forgiveness={8}
-            arrowSize={10}
-            delay={400}
-            popoverProps={POPOVER_PROPS}
-            {...tooltipProps}
-          >
-            <span css={{ maxWidth: 200 }}>{tooltip}</span>
-          </Popover>
-        </Theme>
-      </>
-    )
-    return (
-      <div
-        $surface
-        className={`${this.uniq} ${className || ''}`}
-        onClick={onClick}
-        {...!wrapElement && passProps}
-      >
-        {after && (
-          <div $wrap>
-            <div $wrapContents>{contents}</div>
-            <div $after>{after}</div>
-          </div>
-        )}
-        {!after && contents}
-      </div>
-    )
-  }
-
-  static style = {
-    // fontFamily: inherit on both fixes noElement elements
-    surface: {
-      fontFamily: 'inherit',
-      position: 'relative',
-    },
-    element: {
-      fontFamily: 'inherit',
-      border: 'none',
-      background: 'transparent',
-      height: '100%',
-      color: 'inherit',
-      // this seems to maybe fix some line height stuff
-      transform: {
-        y: '1%',
-      },
-    },
-    icon: {
-      pointerEvents: 'none',
-      justifyContent: 'center',
-      height: '1.4rem',
-      transform: {
-        y: '1%',
-      },
-    },
-    wrap: {
-      flex: 1,
-      overflow: 'hidden',
-    },
-    after: {},
-    wrapContents: {
-      flex: 1,
-      position: 'relative',
-      overflow: 'hidden',
-    },
-  }
-
-  static inlineStyle = {
-    display: 'inline',
-  }
-
-  static dimmedStyle = {
-    opacity: 0.2,
-    // pointerEvents: 'none',
-  }
-
-  static dimStyle = {
-    opacity: 0.5,
-    '&:hover': {
-      opacity: 1,
-    },
-  }
-
-  static spacedStyles = {
-    margin: [0, 5],
-    borderRightWidth: 1,
-  }
-
-  static theme = ({ theme, ...props }, self) => {
-    const uiContext = null
     // sizes
     const size = props.size === true ? 1 : props.size || 1
     const height = props.height || (props.style && props.style.height)
@@ -542,10 +410,11 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     radius = typeof radius === 'number' ? Math.round(radius) : radius
 
     const borderRadius = {} as any
-    if (uiContext && uiContext.inSegment && !props.ignoreSegment) {
-      borderRadius.borderLeftRadius = uiContext.inSegment.first ? radius : 0
-      borderRadius.borderRightRadius = uiContext.inSegment.last ? radius : 0
-    } else if (props.circular) {
+    // if (uiContext && uiContext.inSegment && !props.ignoreSegment) {
+    //   borderRadius.borderLeftRadius = uiContext.inSegment.first ? radius : 0
+    //   borderRadius.borderRightRadius = uiContext.inSegment.last ? radius : 0
+    // } else
+    if (props.circular) {
       borderRadius.borderRadius = size * LINE_HEIGHT
     } else {
       let hasSidesDefined = false
@@ -573,6 +442,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     }
     // icon
     const iconStyle = {
+      ...baseIconStyle,
       color: iconColor,
     }
     const hoverIconStyle = {
@@ -599,7 +469,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
           ...activeStyle,
           ...userActiveStyle,
           '&:hover':
-            userActiveStyle['&:hover'] || userActiveStyle || activeStyle,
+            userActiveStyle['&:hover'] || userActiveStyle || activeStyle || {},
         }
       }
     }
@@ -607,7 +477,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       borderWidth: 0,
       background: 'transparent',
     }
-    const focusable = props.focusable || (uiContext && uiContext.inForm)
+    const focusable = props.focusable
     const focusStyle = !props.chromeless &&
       theme.focus && {
         ...theme.focus,
@@ -619,14 +489,6 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     const iconSize =
       props.iconSize ||
       Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
-    // TODO figure out better pattern for this
-    self.themeValues = {
-      iconSize,
-      borderRadiusSize: radius,
-      borderRadius,
-      glintColor,
-      color,
-    }
     const flexFlow = props.flexFlow || 'row'
     const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
     const undoPadding = {
@@ -645,7 +507,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       }
     }
     let surfaceStyles = {
-      ...(props.inline && self.constructor.inlineStyle),
+      ...(props.inline && inlineStyle),
       transform: props.transform,
       position: props.position,
       zIndex: props.zIndex,
@@ -680,17 +542,14 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       borderRight: props.borderRight,
       marginBottom: props.marginBottom,
       marginTop: props.marginTop,
-      marginLeft:
-        uiContext && uiContext.inSegment && !uiContext.inSegment.first
-          ? -1
-          : props.marginLeft,
+      marginLeft: props.marginLeft,
       marginRight: props.marginRight,
       paddingBottom: props.paddingBottom,
       paddingTop: props.paddingTop,
       paddingLeft: props.paddingLeft,
       paddingRight: props.paddingRight,
       ...circularStyles,
-      '& > div > .icon': props.hovered ? hoverIconStyle : iconStyle,
+      '& > div > .icon': iconStyle,
       '&:hover > div > .icon': hoverIconStyle,
       '&:hover': hoverStyle,
       ...(props.wrapElement && {
@@ -702,9 +561,9 @@ class SurfaceInner extends React.Component<SurfaceProps> {
         '&:active': activeStyle,
       }),
       ...(props.hovered && hoverStyle),
-      ...(props.dimmed && self.constructor.dimmedStyle),
-      ...(props.dim && self.constructor.dimStyle),
-      ...(props.spaced && self.constructor.spacedStyle),
+      ...(props.dimmed && dimmedStyle),
+      ...(props.dim && dimStyle),
+      ...(props.spaced && spacedStyle),
       ...chromelessStyle,
       ...(props.active && activeStyle),
       // // so you can override
@@ -715,7 +574,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     }
     // element styles
     const element = {
-      ...(props.inline && self.constructor.inlineStyle),
+      ...(props.inline && inlineStyle),
       // this fixes inputs but may break other things, need to test
       height,
       ...borderRadius,
@@ -739,7 +598,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     if (hasIconAfter) {
       element.marginRight = props.iconPad
     }
-    const result = {
+    const styles = {
       element,
       wrap: undoPadding,
       wrapContents: undoPadding,
@@ -753,7 +612,108 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       surface: surfaceStyles,
     }
 
-    return result
+    // get border radius
+    let borderLeftRadius =
+      typeof _borderLeftRadius === 'number'
+        ? _borderLeftRadius
+        : borderRadius.borderLeftRadius
+    let borderRightRadius =
+      typeof _borderRightRadius === 'number'
+        ? _borderRightRadius
+        : borderRadius.borderRightRadius
+    if (typeof borderLeftRadius === 'undefined') {
+      borderLeftRadius = radius
+      borderRightRadius = radius
+    }
+
+    const glowColor = (theme && color) || DEFAULT_GLOW_COLOR
+
+    const contents = (
+      <>
+        <Glint
+          if={glint}
+          key={0}
+          size={size}
+          borderLeftRadius={borderLeftRadius - 1}
+          borderRightRadius={borderRightRadius - 1}
+        />
+        {badge ? (
+          <Badge {...badgeProps}>
+            {typeof badge !== 'boolean' ? badge : ''}
+          </Badge>
+        ) : null}
+        <div style={iconStyle} if={icon && !stringIcon}>
+          {icon}
+        </div>
+        <Icon
+          if={icon && stringIcon}
+          style={{
+            ...iconStyle,
+            order: icon && iconAfter ? 3 : 'auto',
+          }}
+          name={icon}
+          size={iconSize}
+          {...iconProps}
+        />
+        <HoverGlow
+          if={glow && !dimmed && !disabled}
+          full
+          scale={1.1}
+          show={hovered}
+          color={glowColor}
+          opacity={0.35}
+          borderLeftRadius={borderLeftRadius - 1}
+          borderRightRadius={borderRightRadius - 1}
+          {...glowProps}
+        />
+        <Element
+          if={!noElement || (noElement && !noWrap && hasChildren(children))}
+          {...wrapElement && passProps}
+          {...elementProps}
+          disabled={disabled}
+          {...styles.element}
+        >
+          {children}
+        </Element>
+        {noElement && noWrap && hasChildren(children) && children}
+        <Theme if={tooltip} name="dark">
+          <Popover
+            background
+            openOnHover
+            closeOnClick
+            noHoverOnChildren
+            animation="bounce 150ms"
+            target={`.${this.uniq}`}
+            padding={[2, 7, 4]}
+            borderRadius={5}
+            distance={8}
+            forgiveness={8}
+            arrowSize={10}
+            delay={400}
+            popoverProps={POPOVER_PROPS}
+            {...tooltipProps}
+          >
+            <span css={{ maxWidth: 200 }}>{tooltip}</span>
+          </Popover>
+        </Theme>
+      </>
+    )
+    return (
+      <SurfaceFrame
+        className={`${this.uniq} ${className || ''}`}
+        onClick={onClick}
+        {...styles.surface}
+        {...!wrapElement && passProps}
+      >
+        {after && (
+          <Wrap>
+            <WrapContents>{contents}</WrapContents>
+            {after}
+          </Wrap>
+        )}
+        {!after && contents}
+      </SurfaceFrame>
+    )
   }
 }
 

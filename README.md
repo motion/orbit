@@ -221,32 +221,7 @@ See `@mcro/black/view`. Basically has:
 
 Most of this is really simple. The only interesting thing for views is the style system. It uses our own, which is called Gloss. See [the gloss README.md](packages/gloss/README.md) for details.
 
-Basically gloss gives you a nice style system that just works:
-
-```js
-import { view } from '@mcro/black'
-
-@view
-class MyView {
-  render({ color = 'green' }) {
-    return (
-      <section>
-        <h1 $alternate $color={color} css={{ fontWeight: 500 }}>
-          Hello World
-        </h1>
-      </section>
-    )
-  }
-  static style = {
-    section: { background: [0, 0, 0] }, // black
-    h1: { background: 'green' },
-    alternate: { background: 'red' },
-    color: color => ({ color }),
-  }
-}
-```
-
-There's also `@view.ui` for leaf-views. The only diff is it just doesn't wrap `mobx-react`, which may be heavy for simple views.
+Basically gloss gives you a nice style system that just works see it's readme.
 
 ### Stores with `@store` and `react`
 

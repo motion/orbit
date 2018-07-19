@@ -111,56 +111,56 @@ export class Footer extends React.Component {
     )
   }
 
-  static style = {
-    bottom: {
-      overflow: 'hidden',
-      zIndex: 1000,
-    },
-    nav: {
-      flex: 1,
-      height: '100%',
-    },
-    link: {
-      margin: [0, 0, 5],
-      color: [0, 0, 0, 0.5],
-    },
-    sections: {
-      flex: 1,
-      flexFlow: 'row',
-      [Constants.screen.smallQuery]: {
-        flexFlow: 'column',
-      },
-    },
-    startSection: {
-      maxWidth: '50%',
-      flex: 1,
-      [Constants.screen.smallQuery]: {
-        padding: [0, 0, 50],
-        textAlign: 'center',
-        order: 2,
-        margin: [50, 'auto', 0],
-        alignItems: 'center',
-      },
-    },
-    endSections: {
-      flex: 2,
-      flexFlow: 'row',
-      padding: [0, 0, 0, 40],
-      alignItems: 'space-around',
-      [Constants.screen.smallQuery]: {
-        flexFlow: 'column',
-      },
-    },
-    section: {
-      margin: [0, '10%'],
-      [Constants.screen.smallQuery]: {
-        margin: [0, -40, 40],
-      },
-    },
-    contact: {
-      [Constants.screen.smallQuery]: {
-        margin: 'auto',
-      },
-    },
-  }
+  // style = {
+  //   bottom: {
+  //     overflow: 'hidden',
+  //     zIndex: 1000,
+  //   },
+  //   nav: {
+  //     flex: 1,
+  //     height: '100%',
+  //   },
+  //   link: {
+  //     margin: [0, 0, 5],
+  //     color: [0, 0, 0, 0.5],
+  //   },
+  //   sections: {
+  //     flex: 1,
+  //     flexFlow: 'row',
+  //     [Constants.screen.smallQuery]: {
+  //       flexFlow: 'column',
+  //     },
+  //   },
+  //   startSection: {
+  //     maxWidth: '50%',
+  //     flex: 1,
+  //     [Constants.screen.smallQuery]: {
+  //       padding: [0, 0, 50],
+  //       textAlign: 'center',
+  //       order: 2,
+  //       margin: [50, 'auto', 0],
+  //       alignItems: 'center',
+  //     },
+  //   },
+  //   endSections: {
+  //     flex: 2,
+  //     flexFlow: 'row',
+  //     padding: [0, 0, 0, 40],
+  //     alignItems: 'space-around',
+  //     [Constants.screen.smallQuery]: {
+  //       flexFlow: 'column',
+  //     },
+  //   },
+  //   section: {
+  //     margin: [0, '10%'],
+  //     [Constants.screen.smallQuery]: {
+  //       margin: [0, -40, 40],
+  //     },
+  //   },
+  //   contact: {
+  //     [Constants.screen.smallQuery]: {
+  //       margin: 'auto',
+  //     },
+  //   },
+  // }
 }

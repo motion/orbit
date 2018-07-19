@@ -111,12 +111,6 @@ class FeaturesIntro extends React.Component {
       </Section>
     )
   }
-
-  static style = {
-    link: {
-      textDecoration: 'none',
-    },
-  }
 }
 
 const SearchIllustration = () => (

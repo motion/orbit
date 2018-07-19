@@ -9,6 +9,11 @@ import { SizedSurface } from './SizedSurface'
 import { Color } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
 
+const ArrowContain = view({
+  position: 'absolute',
+  left: '50%',
+})
+
 export type PopoverProps = {
   // can pass function to get isOpen passed in
   children?: React.ReactNode | Function
@@ -902,8 +907,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
                 maxHeight,
               }}
             >
-              <div
-                $arrowContain
+              <ArrowContain
                 if={!noArrow}
                 css={{
                   top: arrowTop,
@@ -922,14 +926,13 @@ export class Popover extends React.PureComponent<PopoverProps> {
                   towards={INVERSE[direction]}
                   boxShadow={getShadow(shadow, elevation)}
                 />
-              </div>
+              </ArrowContain>
               <SizedSurface
                 sizeRadius
                 ignoreSegment
                 flex={1}
                 {...props}
                 elevation={elevation}
-                background={background}
               >
                 {typeof children === 'function'
                   ? children(showPopover)
@@ -940,22 +943,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
         </Portal>
       </>
     )
-  }
-
-  static style = {
-    content: {
-      flex: 1,
-    },
-    item: {
-      minWidth: 120,
-    },
-    itemFirstChild: {
-      borderTop: 'none',
-    },
-    arrowContain: {
-      position: 'absolute',
-      left: '50%',
-    },
   }
 }
 

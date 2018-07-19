@@ -3,6 +3,16 @@ import { view } from '@mcro/black'
 import { observable } from 'mobx'
 import { SizedSurface } from '../SizedSurface'
 
+const HiddenInput = view({
+  position: 'absolute',
+  opacity: 0.0001,
+  transform: {
+    scale: 2,
+    x: '-33%',
+    y: '-60%',
+  },
+})
+
 @view
 export class Checkbox extends React.Component {
   @observable isChecked = this.props.defaultValue || false
@@ -45,20 +55,8 @@ export class Checkbox extends React.Component {
         }}
         {...props}
       >
-        <input $input type="checkbox" onChange={this.onChange} />
+        <HiddenInput type="checkbox" onChange={this.onChange} />
       </SizedSurface>
     )
-  }
-
-  static style = {
-    input: {
-      position: 'absolute',
-      opacity: 0.0001,
-      transform: {
-        scale: 2,
-        x: '-33%',
-        y: '-60%',
-      },
-    },
   }
 }

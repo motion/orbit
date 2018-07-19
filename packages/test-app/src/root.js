@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 
-// this static style should override the grandparent dynamic
-// ... looks like it does! :)
 const Test = view({
   color: 'gray',
   background: 'blue',

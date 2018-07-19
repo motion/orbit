@@ -101,89 +101,89 @@ export class Drawer extends React.PureComponent<Props> {
     )
   }
 
-  static style = {
-    drawer: {
-      position: 'absolute',
-      overflow: 'hidden', // needed to hide drawer when closed
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      opacity: 0,
-      pointerEvents: 'none',
-      transition: 'opacity ease-out 150ms',
-    },
-    drawerOpen: {
-      opacity: 1,
-      zIndex: 100,
-    },
-    overlayBackground: val => ({
-      background: val === true ? [0, 0, 0, 0.3] : val,
-    }),
-    // darken bg much less if blurring
-    overlayBlur: blur => ({
-      backdropFilter: `blur(${blur === true ? 5 : blur}px)`,
-    }),
-    panel: {
-      pointerEvents: 'none',
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      transition: 'transform ease-in-out 150ms',
-      zIndex: 100,
-      maxHeight: '100%',
-    },
-    panelOpen: {
-      pointerEvents: 'all',
-      transform: { x: 0, y: 0, z: 0 },
-    },
-    from: direction => ({
-      [direction]: 0,
-      [opposite(direction)]: 'auto',
-    }),
-    // for nicer shadows, they will go "offscreen" a bit
-    // which avoids showing the edges of it onscreen
-    // withShadow: dimension =>
-    //   dimension === 'height'
-    //     ? {
-    //         margin: [0, -100],
-    //         padding: [0, 100],
-    //       }
-    //     : {
-    //         margin: [-100, 0],
-    //         padding: [100, 0],
-    //       },
-    overlay: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      opacity: 0,
-      transition: 'all ease-in-out 250ms',
-      zIndex: -1,
-      pointerEvents: 'none',
-    },
-    overlayOpen: {
-      opacity: 1,
-      zIndex: 1,
-      pointerEvents: 'all',
-    },
-  }
+  // style = {
+  //   drawer: {
+  //     position: 'absolute',
+  //     overflow: 'hidden', // needed to hide drawer when closed
+  //     top: 0,
+  //     right: 0,
+  //     bottom: 0,
+  //     left: 0,
+  //     opacity: 0,
+  //     pointerEvents: 'none',
+  //     transition: 'opacity ease-out 150ms',
+  //   },
+  //   drawerOpen: {
+  //     opacity: 1,
+  //     zIndex: 100,
+  //   },
+  //   overlayBackground: val => ({
+  //     background: val === true ? [0, 0, 0, 0.3] : val,
+  //   }),
+  //   // darken bg much less if blurring
+  //   overlayBlur: blur => ({
+  //     backdropFilter: `blur(${blur === true ? 5 : blur}px)`,
+  //   }),
+  //   panel: {
+  //     pointerEvents: 'none',
+  //     position: 'absolute',
+  //     top: 0,
+  //     bottom: 0,
+  //     left: 0,
+  //     right: 0,
+  //     transition: 'transform ease-in-out 150ms',
+  //     zIndex: 100,
+  //     maxHeight: '100%',
+  //   },
+  //   panelOpen: {
+  //     pointerEvents: 'all',
+  //     transform: { x: 0, y: 0, z: 0 },
+  //   },
+  //   from: direction => ({
+  //     [direction]: 0,
+  //     [opposite(direction)]: 'auto',
+  //   }),
+  //   // for nicer shadows, they will go "offscreen" a bit
+  //   // which avoids showing the edges of it onscreen
+  //   // withShadow: dimension =>
+  //   //   dimension === 'height'
+  //   //     ? {
+  //   //         margin: [0, -100],
+  //   //         padding: [0, 100],
+  //   //       }
+  //   //     : {
+  //   //         margin: [-100, 0],
+  //   //         padding: [100, 0],
+  //   //       },
+  //   overlay: {
+  //     position: 'absolute',
+  //     top: 0,
+  //     left: 0,
+  //     right: 0,
+  //     bottom: 0,
+  //     opacity: 0,
+  //     transition: 'all ease-in-out 250ms',
+  //     zIndex: -1,
+  //     pointerEvents: 'none',
+  //   },
+  //   overlayOpen: {
+  //     opacity: 1,
+  //     zIndex: 1,
+  //     pointerEvents: 'all',
+  //   },
+  // }
 
-  static theme = ({ theme, ...props }) => {
-    return {
-      drawer: {
-        zIndex: props.zIndex,
-      },
-      panel: {
-        overflowY: props.scrollable ? 'scroll' : 'inherit',
-        // transition:
-        //   (props.transition && `all ease-in ${props.transitionDuration}`) || '',
-        borderColor: (props.bordered && theme.base.borderColor) || '',
-      },
-    }
-  }
+  // static theme = ({ theme, ...props }) => {
+  //   return {
+  //     drawer: {
+  //       zIndex: props.zIndex,
+  //     },
+  //     panel: {
+  //       overflowY: props.scrollable ? 'scroll' : 'inherit',
+  //       // transition:
+  //       //   (props.transition && `all ease-in ${props.transitionDuration}`) || '',
+  //       borderColor: (props.bordered && theme.base.borderColor) || '',
+  //     },
+  //   }
+  // }
 }

@@ -32,7 +32,8 @@ export const propsToStyles = props => {
       const getStateVal = valFor(key)
       const val = props[key]
       if (!val) {
-        throw new Error(`Bad val for ${key} ${JSON.stringify(val)}`)
+        // allow falsy/undefined for easier dynamic
+        continue
       }
       for (const subKey of Object.keys(val)) {
         if (validCSSAttr[subKey]) {

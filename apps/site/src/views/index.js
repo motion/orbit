@@ -353,65 +353,6 @@ const Lines = ({ width = 100, height = 100, style }) => (
   </svg>
 )
 
-@attachTheme
-@view
-export class Callout extends React.Component {
-  render({ style, theme, ...props }) {
-    return (
-      <Media query={Constants.screen.small}>
-        {isSmall =>
-          isSmall ? (
-            <section style={style} {...props} />
-          ) : (
-            <section $largeCallout style={style}>
-              <Lines width={1000} height={2000} $lines />
-              <div
-                $innerSection
-                css={{
-                  background: theme.base.background.lighten(0.028).alpha(0.8),
-                }}
-                {...props}
-              />
-            </section>
-          )
-        }
-      </Media>
-    )
-  }
-
-  static style = {
-    largeCallout: {
-      // border: [1, [0, 0, 0, 0.02]],
-      boxShadow: [[0, 5, 20, [0, 0, 0, 0.065]]],
-      background: [255, 255, 255, 0.1],
-      zIndex: 10,
-      overflow: 'hidden',
-      position: 'relative',
-    },
-    lines: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: -2,
-      opacity: 0.02,
-      transformOrigin: 'top left',
-      transform: {
-        scale: 12,
-      },
-    },
-    innerSection: {
-      margin: 4,
-      padding: 26,
-      overflow: 'hidden',
-      position: 'relative',
-      [Constants.screen.smallQuery]: {
-        margin: 0,
-      },
-    },
-  }
-}
-
 export const Glow = ({ below, style = {}, ...props }) => (
   <Media
     if={!isSafari}

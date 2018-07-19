@@ -66,12 +66,6 @@ class FormPlain extends React.Component {
       />
     )
   }
-
-  static style = {
-    form: {
-      width: '100%',
-    },
-  }
 }
 
 export const Form = () => (

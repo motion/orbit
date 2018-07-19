@@ -23,6 +23,12 @@ type ListRowProps = {
   theme?: Object
 }
 
+const Label = view({
+  margin: ['auto', 5],
+  opacity: 0.8,
+  fontSize: 11,
+})
+
 @attachTheme
 @view.ui
 export class ListRow extends React.Component<ListRowProps> {
@@ -158,34 +164,9 @@ export class ListRow extends React.Component<ListRowProps> {
         flexFlow="row"
         {...props}
       >
-        {label && <label $label>{label}</label>}
+        {label && <Label>{label}</Label>}
         {children}
       </Surface>
     )
   }
-
-  static style = {
-    row: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      userSelect: 'none',
-    },
-    label: {
-      margin: ['auto', 5],
-      opacity: 0.8,
-      fontSize: 11,
-    },
-  }
-
-  static theme = props => ({
-    row: {
-      flex: props.flex || props.stretch === true ? 1 : props.flex,
-      ...(props.reverse && {
-        flexFlow: 'row-reverse',
-      }),
-      ...(props.column && {
-        flexFlow: 'column',
-      }),
-    },
-  })
 }

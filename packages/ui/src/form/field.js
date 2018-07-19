@@ -117,54 +117,54 @@ export class Field extends React.Component {
     )
   }
 
-  static style = {
-    field: {
-      textAlign: 'left',
-    },
-    label: {
-      overflow: 'hidden',
-      padding: [10, 0, 10, 0],
-    },
-  }
+  // style = {
+  //   field: {
+  //     textAlign: 'left',
+  //   },
+  //   label: {
+  //     overflow: 'hidden',
+  //     padding: [10, 0, 10, 0],
+  //   },
+  // }
 
-  static theme = ({ theme, ...props }) => {
-    const inactiveStyle = {
-      field: {
-        opacity: 0.5,
-        pointerEvents: 'none',
-      },
-    }
+  // static theme = ({ theme, ...props }) => {
+  //   const inactiveStyle = {
+  //     field: {
+  //       opacity: 0.5,
+  //       pointerEvents: 'none',
+  //     },
+  //   }
 
-    const rowStyle = {
-      label: {
-        margin: 0,
-        padding: [0, 10],
-        flex: 'none',
-        width: 'auto',
-      },
-      element: {
-        fontSize: 24,
-        height: 40,
-        border: 'none',
-      },
-    }
+  //   const rowStyle = {
+  //     label: {
+  //       margin: 0,
+  //       padding: [0, 10],
+  //       flex: 'none',
+  //       width: 'auto',
+  //     },
+  //     element: {
+  //       fontSize: 24,
+  //       height: 40,
+  //       border: 'none',
+  //     },
+  //   }
 
-    return {
-      field: {
-        width: props.width,
-        ...(props.inactive && inactiveStyle.field),
-        ...props.fieldStyle,
-      },
-      element: {
-        color: theme.base.color,
-        ...(props.row && rowStyle.element),
-        ...props.elementStyle,
-      },
-      label: {
-        color: theme.base.color,
-        ...(props.row && rowStyle.label),
-        ...props.labelStyle,
-      },
-    }
-  }
+  //   return {
+  //     field: {
+  //       width: props.width,
+  //       ...(props.inactive && inactiveStyle.field),
+  //       ...props.fieldStyle,
+  //     },
+  //     element: {
+  //       color: theme.base.color,
+  //       ...(props.row && rowStyle.element),
+  //       ...props.elementStyle,
+  //     },
+  //     label: {
+  //       color: theme.base.color,
+  //       ...(props.row && rowStyle.label),
+  //       ...props.labelStyle,
+  //     },
+  //   }
+  // }
 }

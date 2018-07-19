@@ -100,45 +100,45 @@ class TogglePlain extends React.Component {
     )
   }
 
-  static style = {
-    bar: {
-      width: BAR_WIDTH,
-      height: BAR_HEIGHT,
-      borderRadius: 10,
-      border: [BAR_INVISIBLE_PAD, 'transparent'],
-      margin: [-BAR_INVISIBLE_PAD, 0],
-      position: 'relative',
-    },
-    dot: {
-      borderRadius: 100,
-      background: '#000',
-      boxShadow: [0, 0, 10, [0, 0, 0, 0.2]],
-      border: [1, [255, 255, 255, 0.1]],
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      transform: { x: -BAR_INVISIBLE_PAD },
-      transition: 'all ease-in 80ms',
-    },
-    dotOn: {
-      background: '#000',
-      transform: {
-        x: BAR_WIDTH - 10 - 5,
-      },
-    },
-  }
+  // style = {
+  //   bar: {
+  //     width: BAR_WIDTH,
+  //     height: BAR_HEIGHT,
+  //     borderRadius: 10,
+  //     border: [BAR_INVISIBLE_PAD, 'transparent'],
+  //     margin: [-BAR_INVISIBLE_PAD, 0],
+  //     position: 'relative',
+  //   },
+  //   dot: {
+  //     borderRadius: 100,
+  //     background: '#000',
+  //     boxShadow: [0, 0, 10, [0, 0, 0, 0.2]],
+  //     border: [1, [255, 255, 255, 0.1]],
+  //     position: 'absolute',
+  //     top: 0,
+  //     left: 0,
+  //     transform: { x: -BAR_INVISIBLE_PAD },
+  //     transition: 'all ease-in 80ms',
+  //   },
+  //   dotOn: {
+  //     background: '#000',
+  //     transform: {
+  //       x: BAR_WIDTH - 10 - 5,
+  //     },
+  //   },
+  // }
 
-  static theme = ({ dotSize, color, barColor, theme }) => ({
-    bar: {
-      background: barColor || theme.hover.background,
-    },
-    dot: {
-      background: color || theme.base.color,
-      width: dotSize,
-      height: dotSize,
-      marginTop: -((dotSize - BAR_HEIGHT) / 2) - BAR_INVISIBLE_PAD + 1,
-    },
-  })
+  // static theme = ({ dotSize, color, barColor, theme }) => ({
+  //   bar: {
+  //     background: barColor || theme.hover.background,
+  //   },
+  //   dot: {
+  //     background: color || theme.base.color,
+  //     width: dotSize,
+  //     height: dotSize,
+  //     marginTop: -((dotSize - BAR_HEIGHT) / 2) - BAR_INVISIBLE_PAD + 1,
+  //   },
+  // })
 }
 
 export const Toggle = props => (

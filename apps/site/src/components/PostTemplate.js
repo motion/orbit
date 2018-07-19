@@ -38,28 +38,28 @@ export class PostTemplate extends React.Component {
     )
   }
 
-  static style = {
-    post: {
-      position: 'relative',
-      zIndex: 100,
-    },
-    header: {
-      padding: [150, 150, 50],
-      textAlign: 'center',
-      [Constants.screen.smallQuery]: {
-        padding: [0, 0, 20],
-      },
-    },
-    card: {
-      background: '#fff',
-      borderRadius: 6,
-      padding: ['7%', '8%'],
-      margin: [0, '10%', 50],
-      boxShadow: [[0, 3, 14, [0, 0, 0, 0.1]]],
-      [Constants.screen.smallQuery]: {
-        margin: [0, -50],
-        padding: [40, '10%'],
-      },
-    },
-  }
+  // style = {
+  //   post: {
+  //     position: 'relative',
+  //     zIndex: 100,
+  //   },
+  //   header: {
+  //     padding: [150, 150, 50],
+  //     textAlign: 'center',
+  //     [Constants.screen.smallQuery]: {
+  //       padding: [0, 0, 20],
+  //     },
+  //   },
+  //   card: {
+  //     background: '#fff',
+  //     borderRadius: 6,
+  //     padding: ['7%', '8%'],
+  //     margin: [0, '10%', 50],
+  //     boxShadow: [[0, 3, 14, [0, 0, 0, 0.1]]],
+  //     [Constants.screen.smallQuery]: {
+  //       margin: [0, -50],
+  //       padding: [40, '10%'],
+  //     },
+  //   },
+  // }
 }

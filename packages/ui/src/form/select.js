@@ -33,30 +33,30 @@ export class Select extends React.Component {
     )
   }
 
-  static style = {
-    root: {
-      borderRadius: 4,
-    },
-    select: {
-      background: 'transparent',
-      border: 'none',
-      width: '100%',
-      padding: 5,
-      marginTop: 1,
-    },
-  }
+  // style = {
+  //   root: {
+  //     borderRadius: 4,
+  //   },
+  //   select: {
+  //     background: 'transparent',
+  //     border: 'none',
+  //     width: '100%',
+  //     padding: 5,
+  //     marginTop: 1,
+  //   },
+  // }
 
-  static theme = ({ height, width, background, theme }) => ({
-    root: {
-      height,
-      width,
-      background,
-    },
-    select: {
-      ...theme.base,
-      background,
-      height,
-      width,
-    },
-  })
+  // static theme = ({ height, width, background, theme }) => ({
+  //   root: {
+  //     height,
+  //     width,
+  //     background,
+  //   },
+  //   select: {
+  //     ...theme.base,
+  //     background,
+  //     height,
+  //     width,
+  //   },
+  // })
 }

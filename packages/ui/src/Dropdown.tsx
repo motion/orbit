@@ -78,18 +78,18 @@ export class Dropdown extends React.Component<Props> {
     )
   }
 
-  static style = {
-    target: {
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-    icon: {
-      marginLeft: 5,
-    },
-    arrow: {
-      transform: {
-        y: 1,
-      },
-    },
-  }
+  // style = {
+  //   target: {
+  //     flexFlow: 'row',
+  //     alignItems: 'center',
+  //   },
+  //   icon: {
+  //     marginLeft: 5,
+  //   },
+  //   arrow: {
+  //     transform: {
+  //       y: 1,
+  //     },
+  //   },
+  // }
 }

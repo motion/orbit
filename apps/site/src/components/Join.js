@@ -127,56 +127,56 @@ export class Join extends React.Component {
     )
   }
 
-  static style = {
-    form: {
-      flex: 1,
-      position: 'relative',
-    },
-    inner: {
-      flexFlow: 'row',
-      [Constants.screen.smallQuery]: {
-        flexFlow: 'column',
-      },
-    },
-    section: {
-      textAlign: 'left',
-      width: '100%',
-      maxWidth: 540,
-      margin: [0, 'auto'],
-    },
-    button: {
-      margin: [10, 12],
-    },
-    wrapInput: {
-      margin: [10, 0],
-      flex: 1,
-      minWidth: 235,
-    },
-    input: {
-      background: [0, 0, 0, 0.025],
-    },
-    message: {
-      position: 'absolute',
-      bottom: -100,
-      left: 0,
-      right: 0,
-      color: 'darkred',
-    },
-    success: {
-      color: 'darkgreen',
-    },
-  }
+  // style = {
+  //   form: {
+  //     flex: 1,
+  //     position: 'relative',
+  //   },
+  //   inner: {
+  //     flexFlow: 'row',
+  //     [Constants.screen.smallQuery]: {
+  //       flexFlow: 'column',
+  //     },
+  //   },
+  //   section: {
+  //     textAlign: 'left',
+  //     width: '100%',
+  //     maxWidth: 540,
+  //     margin: [0, 'auto'],
+  //   },
+  //   button: {
+  //     margin: [10, 12],
+  //   },
+  //   wrapInput: {
+  //     margin: [10, 0],
+  //     flex: 1,
+  //     minWidth: 235,
+  //   },
+  //   input: {
+  //     background: [0, 0, 0, 0.025],
+  //   },
+  //   message: {
+  //     position: 'absolute',
+  //     bottom: -100,
+  //     left: 0,
+  //     right: 0,
+  //     color: 'darkred',
+  //   },
+  //   success: {
+  //     color: 'darkgreen',
+  //   },
+  // }
 
-  static theme = ({ theme }) => {
-    // const bg = theme.base.background
-    // const isLight = bg.isLight()
-    // const adjust = isLight ? 'darken' : 'lighten'
-    // const amt = isLight ? 0.1 : 1
-    return {
-      input: {
-        color: theme.base.color,
-        // WebkitTextFillColor: `${theme.base.color.alpha(0.7)} !important`,
-      },
-    }
-  }
+  // static theme = ({ theme }) => {
+  //   // const bg = theme.base.background
+  //   // const isLight = bg.isLight()
+  //   // const adjust = isLight ? 'darken' : 'lighten'
+  //   // const amt = isLight ? 0.1 : 1
+  //   return {
+  //     input: {
+  //       color: theme.base.color,
+  //       // WebkitTextFillColor: `${theme.base.color.alpha(0.7)} !important`,
+  //     },
+  //   }
+  // }
 }

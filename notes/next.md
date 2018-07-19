@@ -6,7 +6,6 @@
 - ide https://retool.in/
 - icons https://danklammer.com/bytesize-icons/
 - nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
-- static styles https://github.com/jsxstyle/jsxstyle/tree/master/packages/jsxstyle-webpack-plugin
 
 - gdrive and other oauth strategies:
   - option 1: have a key cycle system, pay someone to:

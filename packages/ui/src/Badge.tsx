@@ -77,38 +77,38 @@ export class Badge extends React.Component<Props> {
     )
   }
 
-  static style = {
-    badge: {
-      height: 18,
-      padding: [2, 3],
-      marginLeft: 5,
-      alignSelf: 'center',
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-    content: {
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-    labelBefore: {
-      flexDirection: 'row-reverse',
-    },
-    inner: {
-      display: 'block',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
-      margin: 'auto',
-      textAlign: 'center',
-      padding: [0, 4],
-    },
-    hasLabel: {
-      paddingLeft: 4,
-    },
-    lbl: {
-      padding: [2, 4],
-    },
-    hasChildren: {
-      paddingRight: 4,
-    },
-  }
+  // style = {
+  //   badge: {
+  //     height: 18,
+  //     padding: [2, 3],
+  //     marginLeft: 5,
+  //     alignSelf: 'center',
+  //     flexFlow: 'row',
+  //     alignItems: 'center',
+  //   },
+  //   content: {
+  //     flexFlow: 'row',
+  //     alignItems: 'center',
+  //   },
+  //   labelBefore: {
+  //     flexDirection: 'row-reverse',
+  //   },
+  //   inner: {
+  //     display: 'block',
+  //     whiteSpace: 'nowrap',
+  //     textOverflow: 'ellipsis',
+  //     margin: 'auto',
+  //     textAlign: 'center',
+  //     padding: [0, 4],
+  //   },
+  //   hasLabel: {
+  //     paddingLeft: 4,
+  //   },
+  //   lbl: {
+  //     padding: [2, 4],
+  //   },
+  //   hasChildren: {
+  //     paddingRight: 4,
+  //   },
+  // }
 }

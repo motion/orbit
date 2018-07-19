@@ -1,7 +1,6 @@
+import { ThemeContext } from './theme/ThemeContext'
 import { CSSPropertyValue, CSSPropertySet } from '@mcro/css'
 import * as React from 'react'
-// import { GlossView } from './types'
-// import { ThemeContext } from './theme/ThemeContext'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
@@ -46,7 +45,6 @@ const addStyles = (id, baseStyles, nextStyles) => {
 }
 
 const getAllStyles = (baseId, target, rawStyles) => {
-  console.log('build styles for', baseId)
   const builtStyles = {
     [baseId]: {},
   }
@@ -64,7 +62,6 @@ const getAllStyles = (baseId, target, rawStyles) => {
       }
     }
   }
-  console.log('now', builtStyles)
   return builtStyles
 }
 
@@ -82,13 +79,48 @@ export const sheet = new StyleSheet(process.env.NODE_ENV === 'production')
 export const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 
 // basicaly @mcro/css
-const buildRules = css()
+const toCSS = css({
+  isColor: color => color && !!color.rgb,
+  toColor: obj => {
+    const { model, color, valpha } = obj
+    const hasAlpha = typeof valpha === 'number' && valpha !== 1
+    if (model === 'rgb') {
+      const inner = `${color[0]}, ${color[1]}, ${color[2]}`
+      if (hasAlpha) {
+        return `rgba(${inner}, ${valpha})`
+      }
+      return `rgb(${inner})`
+    }
+    if (model === 'hsl') {
+      const inner = `${color[0]}, ${Math.round(color[1])}%, ${Math.round(
+        color[2],
+      )}%`
+      if (hasAlpha) {
+        return `hsla(${inner}, ${valpha})`
+      }
+      return `hsl(${inner})`
+    }
+    return obj.toString()
+  },
+})
+
+const buildRules = (rules, props, theme) => {
+  let styles = toCSS(rules)
+  if (theme) {
+    styles = {
+      ...styles,
+      ...toCSS(theme(props)),
+    }
+  }
+  return styles
+}
 
 function addRules(
   displayName: string,
   rules: BaseRules,
   namespace,
   props: Object,
+  theme: Function,
 ) {
   // if these rules have been cached to a className then retrieve it
   const cachedClass = rulesToClass.get(rules)
@@ -96,7 +128,7 @@ function addRules(
     return cachedClass
   }
   const declarations = []
-  const style = buildRules(rules, props)
+  const style = buildRules(rules, props, theme)
   // generate css declarations based on the style object
   for (const key in style) {
     const val = style[key]
@@ -123,7 +155,6 @@ function addRules(
       .join(', ')
     // insert the new style text
     tracker.set(className, { displayName, namespace, rules, selector, style })
-    console.log('insert', `${selector} {\n${css}\n}`)
     sheet.insert(className, `${selector} {\n${css}\n}`)
     // if there's no dynamic rules then cache this
     if (true) {
@@ -131,29 +162,6 @@ function addRules(
     }
   }
   return className
-}
-
-class StyledComponentBase<T extends Object> extends React.PureComponent<T> {
-  props: T
-  state = {
-    classNames: [],
-    extraClassNames: [],
-    lastStyles: null,
-  }
-  componentWillMount() {
-    this.generateClassnames(this.props, null)
-  }
-  componentWillReceiveProps(nextProps: T) {
-    this.generateClassnames(nextProps, this.props)
-  }
-  componentWillUnmount(): void {
-    for (const name of this.state.classNames) {
-      gc.deregisterClassUse(name)
-    }
-  }
-  generateClassnames(_a: T, _b: T) {
-    throw new Error('unimplemented')
-  }
 }
 
 function hasEquivProps(props: T, nextProps: T): boolean {
@@ -186,8 +194,22 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
   console.log(JSON.stringify(styles, null, 2))
   let displayName = 'ComponentName'
   const isDOM = typeof tagName === 'string'
+  let ThemedConstructor
 
-  class Constructor extends StyledComponentBase<Props> {
+  class Constructor extends React.PureComponent<Props> {
+    state = {
+      classNames: [],
+      extraClassNames: [],
+      lastStyles: null,
+    }
+
+    componentWillMount() {
+      this.generateClassnames(this.props, null)
+    }
+    componentWillReceiveProps(nextProps: T) {
+      this.generateClassnames(nextProps, this.props)
+    }
+
     generateClassnames(props: Props, prevProps?: Props) {
       console.log('styles', styles)
       // if this is a secondary render then check if the props are essentially equivalent
@@ -227,6 +249,7 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
             myStyles[namespace],
             namespace,
             props,
+            ThemedConstructor.theme,
           )
           // remove inactive props, including boolean props
           if (namespace !== id && namespace[0] !== '&') {
@@ -262,6 +285,12 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
       }
     }
 
+    componentWillUnmount() {
+      for (const name of this.state.classNames) {
+        gc.deregisterClassUse(name)
+      }
+    }
+
     render() {
       const { children, innerRef, ...props } = this.props
       // build class names
@@ -287,24 +316,33 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
     }
   }
 
-  Constructor.IS_GLOSSY = true
+  ThemedConstructor = props => (
+    <ThemeContext.Consumer>
+      {({ allThemes, activeThemeName }) => {
+        const theme = allThemes[activeThemeName]
+        return <Constructor theme={theme} {...props} />
+      }}
+    </ThemeContext.Consumer>
+  )
 
-  Constructor.withConfig = config => {
+  ThemedConstructor.IS_GLOSSY = true
+
+  ThemedConstructor.withConfig = config => {
     if (config.displayName) {
       // set tagname and displayname
       displayName = config.displayName
-      Constructor.displayName = config.displayName
+      ThemedConstructor.displayName = config.displayName
     }
-    return Constructor
+    return ThemedConstructor
   }
 
-  Constructor.getConfig = () => ({
+  ThemedConstructor.getConfig = () => ({
     tagName,
     styles: { ...styles },
     id,
   })
 
-  return Constructor
+  return ThemedConstructor
 }
 
 // gloss

@@ -51,7 +51,7 @@ export const Root = () => {
     <div css={{ pointerEvents: 'all', width: '100%', height: '100%' }}>
       <Test>blue</Test>
       <Test big>pink</Test>
-      <Test2 debug>red</Test2>
+      <Test2>red</Test2>
       <Test2 big>yellow</Test2>
 
       <br />

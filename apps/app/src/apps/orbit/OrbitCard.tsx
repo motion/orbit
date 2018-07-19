@@ -68,15 +68,15 @@ const Card = view({
 
 Card.theme = ({
   style,
-  store,
   listItem,
   borderRadius,
   inGrid,
   hoverable,
   theme,
   nextUpStyle,
+  isSelected,
+  isNextUp,
 }) => {
-  const { isSelected, isNextUp } = store
   let hoveredStyle
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
@@ -403,7 +403,12 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
         zIndex={isSelected ? 5 : 4}
         {...props}
       >
-        <Card onClick={this.handleClick} {...this.props}>
+        <Card
+          onClick={this.handleClick}
+          isSelected={isSelected}
+          isNextUp={store.isNextUp}
+          {...this.props}
+        >
           {orbitIcon}
           <Title>
             <UI.Text

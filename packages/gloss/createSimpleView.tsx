@@ -10,7 +10,6 @@ import css, { validCSSAttr } from '@mcro/css'
 // import sonar
 
 const addStyles = (id, baseStyles, nextStyles) => {
-  const booleanKeys = {}
   for (const key of Object.keys(nextStyles)) {
     // dont overwrite as we go down
     if (typeof baseStyles[id][key] !== 'undefined') {
@@ -27,8 +26,7 @@ const addStyles = (id, baseStyles, nextStyles) => {
       // were defining a boolean prop style
       //   looks like: <Component tall />
       //   via: view({ color: 'red', tall: { height: '100%' } })
-      const prop = `&.${key}`
-      booleanKeys[prop] = key
+      const prop = key
       const styleObj = nextStyles[key]
       if (typeof styleObj === 'object') {
         // dont overwrite as we go down
@@ -36,7 +34,7 @@ const addStyles = (id, baseStyles, nextStyles) => {
           baseStyles[prop] = {}
           for (const subKey of Object.keys(styleObj)) {
             if (subKey[0] === '&') {
-              baseStyles[`${prop}${subKey.slice(1)}`] = styleObj[subKey]
+              baseStyles[`${prop}${subKey}`] = styleObj[subKey]
             } else {
               baseStyles[prop][subKey] = styleObj[subKey]
             }
@@ -45,19 +43,13 @@ const addStyles = (id, baseStyles, nextStyles) => {
       }
     }
   }
-  return booleanKeys
 }
 
 const getAllStyles = (baseId, target, rawStyles) => {
-  let namespaceToProp = {}
   const builtStyles = {
     [baseId]: {},
   }
-  const booleanKeys = addStyles(baseId, builtStyles, rawStyles)
-  namespaceToProp = {
-    ...namespaceToProp,
-    ...booleanKeys,
-  }
+  addStyles(baseId, builtStyles, rawStyles)
   // merge child styles
   if (target.IS_GLOSSY) {
     const { id, styles } = target.getConfig()
@@ -68,10 +60,7 @@ const getAllStyles = (baseId, target, rawStyles) => {
       }
     }
   }
-  return {
-    styles: builtStyles,
-    namespaceToProp,
-  }
+  return builtStyles
 }
 
 export type RawRules = CSSPropertySet & {
@@ -117,8 +106,11 @@ function addRules(
     const selector = namespace
       .split(', ')
       .map(part => {
-        if (part[0] === '&') {
+        const sub = part.indexOf('&')
+        if (sub === 0) {
           return '.' + className + part.slice(1)
+        } else if (sub > 0) {
+          return '.' + className + part.slice(sub + 1)
         } else {
           return '.' + className
         }
@@ -184,8 +176,7 @@ const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
 export function createSimpleView(target: any, rawStyles: RawRules) {
   const id = `${uid()}`
-  let { styles, namespaceToProp } = getAllStyles(id, target, rawStyles)
-  console.log('namespaceToProp', namespaceToProp)
+  let styles = getAllStyles(id, target, rawStyles)
   console.log(JSON.stringify(styles, null, 2))
   let displayName = 'ComponentName'
   const isDOM = typeof target === 'string'
@@ -227,10 +218,16 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
             namespace,
             props,
           )
-          const propKey = namespaceToProp[namespace]
-          console.log('propKey', propKey, namespace)
-          if (propKey && props[propKey] !== true) {
-            continue
+          // remove inactive props, including boolean props
+          if (namespace !== id && namespace[0] !== '&') {
+            const psuedoIndex = namespace.indexOf('&')
+            const namespaceWithoutPsuedo = namespace.slice(
+              0,
+              psuedoIndex === -1 ? namespace.length : psuedoIndex,
+            )
+            if (props[namespaceWithoutPsuedo] !== true) {
+              continue
+            }
           }
           classNames.push(className)
           // if this is the first mount render or we didn't previously have this class then add it as new

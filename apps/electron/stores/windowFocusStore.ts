@@ -60,9 +60,7 @@ export class WindowFocusStore {
 
   unfocusOnHide = react(
     () => App.orbitState.docked || App.orbitState.pinned,
-    async (showing, { sleep, when }) => {
-      await sleep(App.animationDuration * 2)
-      await when(() => !App.isAnimatingOrbit)
+    showing => {
       if (!showing) {
         Swift.defocus()
         return

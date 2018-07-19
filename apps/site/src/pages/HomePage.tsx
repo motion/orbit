@@ -200,23 +200,29 @@ const SectionSubTitle = props => (
 
 const Pitch = ({ isLarge, scrollTo }) => (
   <>
-    <Title italic size={4.4} fontWeight={300} alpha={1} color="#222">
+    <Title italic size={4.4} fontWeight={600} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      A powerful and fast new way to organize all your private and cloud
-      knowledge.
+      A powerful way to organize all your internal and cloud knowledge.
     </SectionSubTitle>
     <VertSpace />
-    <SectionSubTitle fontWeight={300} size={1.2} onClick={() => scrollTo(3)}>
+    <SectionSubTitle
+      cursor="pointer"
+      fontWeight={300}
+      size={1.2}
+      onClick={() => scrollTo(3)}
+    >
       (And for the first time, completely securely.)
     </SectionSubTitle>
     <VertSpace />
-    <UI.Row css={{ margin: [2, 0, 10] }}>
+    <VertSpace />
+    <UI.Row>
       <Join />
       <UI.View flex={1} />
     </UI.Row>
+    <VertSpace />
     <VertSpace />
     <UI.Row
       css={{

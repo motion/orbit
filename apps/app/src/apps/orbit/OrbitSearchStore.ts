@@ -68,7 +68,7 @@ export class OrbitSearchStore {
     }
     return settingsList
       .filter(x => x.type !== 'setting')
-      .map(setting => ({ icon: setting.type }))
+      .map(setting => ({ icon: setting.type, name: setting.name }))
   }
 
   onChangeDate = ranges => {

@@ -4,16 +4,13 @@ import { OrbitSettingCard } from './OrbitSettingCard'
 import { OrbitDockedPane } from './OrbitDockedPane'
 import * as Views from '../../views'
 import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
-import {
-  settingToResult,
-  allIntegrations,
-} from './orbitSettings/orbitSettingsIntegrations'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 
 class OrbitSettingsStore {
   get isPaneActive() {
@@ -92,21 +89,22 @@ class OrbitSettingsStore {
   )
 }
 
-@view.attach('appStore', 'paneStore')
+@view.attach('appStore', 'paneStore', 'integrationSettingsStore')
 @view.attach({
-  Store: OrbitSettingsStore,
+  store: OrbitSettingsStore,
 })
 @view
 export class OrbitSettings extends React.Component<{
   name: string
-  Store?: OrbitSettingsStore
+  store?: OrbitSettingsStore
   appStore?: AppStore
   paneStore?: OrbitDockedPaneStore
+  integrationSettingsStore: IntegrationSettingsStore
 }> {
   render() {
-    const { name, Store, appStore } = this.props
+    const { name, store, appStore, integrationSettingsStore } = this.props
     const isActive = result => {
-      return !!Store.integrationSettings.find(
+      return !!store.integrationSettings.find(
         setting => setting.type === result.id,
       )
     }
@@ -114,8 +112,8 @@ export class OrbitSettings extends React.Component<{
       <OrbitDockedPane name={name} fadeBottom>
         <Views.SubTitle>Settings</Views.SubTitle>
         <Masonry>
-          {Store.generalSettings.map((result, index) => (
-            <Store.IntegrationCard
+          {store.generalSettings.map((result, index) => (
+            <store.IntegrationCard
               key={`${result.id}`}
               result={result}
               index={index}
@@ -126,16 +124,16 @@ export class OrbitSettings extends React.Component<{
           ))}
         </Masonry>
         <Views.VertSpace />
-        <UI.View if={Store.integrationSettings.length}>
+        <UI.View if={store.integrationSettings.length}>
           <Views.SubTitle>Active Integrations</Views.SubTitle>
           <Masonry>
-            {Store.integrationSettings
+            {store.integrationSettings
               .map((setting, index) => (
-                <Store.IntegrationCard
-                  if={settingToResult(setting).title}
+                <store.IntegrationCard
+                  if={integrationSettingsStore.getTitle(setting)}
                   key={`${setting.id}`}
-                  result={settingToResult(setting)}
-                  index={index + Store.generalSettings.length}
+                  result={integrationSettingsStore.settingToResult(setting)}
+                  index={index + store.generalSettings.length}
                   appStore={appStore}
                   setting={setting}
                   isActive
@@ -147,13 +145,13 @@ export class OrbitSettings extends React.Component<{
         </UI.View>
         <Views.SubTitle>Add Integration</Views.SubTitle>
         <Masonry>
-          {allIntegrations
+          {integrationSettingsStore.allIntegrations
             .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
             .map((item, index) => (
-              <Store.IntegrationCard
+              <store.IntegrationCard
                 key={`${item.id}`}
                 result={item}
-                index={index + Store.allResults.length}
+                index={index + store.allResults.length}
                 appStore={appStore}
                 hoverable
                 onSelect={

@@ -1,5 +1,5 @@
 import toColor from '@mcro/color'
-import { psuedoKeys } from '@mcro/gloss'
+import { psuedoKeys, validCSSAttr } from '@mcro/gloss'
 
 const valFor = state => (props, key) => {
   let value = state === 'base' ? props[key] : props[state] && props[state][key]
@@ -15,19 +15,6 @@ const valFor = state => (props, key) => {
   return value
 }
 
-// special @mcro/css attributes
-const validCSSAttr = {
-  borderLeftRadius: true,
-  borderRightRadius: true,
-  borderBottomRadius: true,
-  borderTopRadius: true,
-}
-
-// add standard ones
-for (const key of Object.keys(document.body.style)) {
-  validCSSAttr[key] = true
-}
-
 // add gloss special ones
 
 // resolves props into styles for valid css
@@ -38,10 +25,6 @@ export const propsToStyles = props => {
   const getVal = valFor('base')
   // loop over props turning into styles
   for (const key of Object.keys(props)) {
-    if (validCSSAttr[key]) {
-      styles[key] = getVal(props, key)
-      continue
-    }
     // &:hover, etc
     if (psuedoKeys[key]) {
       const stateKey = key
@@ -59,6 +42,10 @@ export const propsToStyles = props => {
           throw new Error(`Invalid name for css key: ${key}`)
         }
       }
+      continue
+    }
+    if (validCSSAttr[key]) {
+      styles[key] = getVal(props, key)
       continue
     }
   }

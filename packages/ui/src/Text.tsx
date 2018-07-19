@@ -13,17 +13,13 @@ const TextBlock = view(InlineBlock, {
   wordBreak: 'break-word',
   position: 'relative',
   maxWidth: '100%',
-})
-
-TextBlock.theme = ({ selectable, oneLineEllipse, display }) => ({
-  display,
-  ...(selectable && {
+  selectable: {
     userSelect: 'auto',
     cursor: 'inherit',
-  }),
-  ...(oneLineEllipse && {
+  },
+  oneLineEllipse: {
     overflow: 'hidden',
-  }),
+  },
 })
 
 const TextEllipse = view(Inline, {

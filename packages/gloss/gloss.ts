@@ -14,7 +14,7 @@ export { ThemeMaker } from './theme/ThemeMaker'
 export { ThemeProvide } from './theme/ThemeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
-export { CSSPropertySet, cssNameMap, psuedoKeys } from '@mcro/css'
+export { CSSPropertySet, cssNameMap, psuedoKeys, validCSSAttr } from '@mcro/css'
 
 export const color = require('@mcro/color').default
 

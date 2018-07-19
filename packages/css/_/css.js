@@ -86,11 +86,17 @@ const unitlessNumberProperties = new Set([
     'strokeOpacity',
     'strokeWidth',
 ]);
-const cssAttributeNames = typeof document !== 'undefined' ? document.body.style : {};
-exports.validCSSAttr = key => typeof cssAttributeNames[key] === 'string' ||
-    exports.psuedoKeys[key] ||
-    key[0] === '&' ||
-    key[0] === '@';
+exports.validCSSAttr = {
+    borderLeftRadius: true,
+    borderRightRadius: true,
+    borderBottomRadius: true,
+    borderTopRadius: true,
+};
+if (typeof document !== 'undefined') {
+    for (const key of Object.keys(document.body.style)) {
+        exports.validCSSAttr[key] = true;
+    }
+}
 const px = (x) => typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x;
 function motionStyle(options = {}) {
     const isColor = (color) => helpers_1.isColorLike(color, options);

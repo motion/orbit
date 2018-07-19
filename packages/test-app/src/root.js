@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 // this static style should override the grandparent dynamic
 // ... looks like it does! :)
 const Test = view({
+  color: 'gray',
   background: 'blue',
   height: 100,
   width: 100,
@@ -40,7 +41,7 @@ const Test2 = view(Test, {
 Test2.theme = ({ theme, big }) => ({
   fontStyle: 'italic',
   fontWeight: big ? 'bold' : 'light',
-  color: big ? 'white' : theme.base.color,
+  color: big ? 'pink' : theme.base.color,
 })
 
 // extend theme
@@ -70,7 +71,9 @@ export const Root = () => {
       <Test>blue hover orange</Test>
       <Test big>pink hover pinker</Test>
       <Test2 bigFont>red faint</Test2>
-      <Test2 big>white bold on yellow opacity 1</Test2>
+      <Test2 big debug>
+        pink bold on yellow opacity 1
+      </Test2>
       <Test3>red italic hover black</Test3>
 
       <br />

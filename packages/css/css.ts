@@ -108,15 +108,20 @@ const unitlessNumberProperties = new Set([
   'strokeWidth',
 ])
 
-const cssAttributeNames =
-  typeof document !== 'undefined' ? document.body.style : {}
+// special @mcro/css attributes
+export const validCSSAttr = {
+  borderLeftRadius: true,
+  borderRightRadius: true,
+  borderBottomRadius: true,
+  borderTopRadius: true,
+}
 
-// captures everything including nested & > * or media queries
-export const validCSSAttr = key =>
-  typeof cssAttributeNames[key] === 'string' ||
-  psuedoKeys[key] ||
-  key[0] === '&' ||
-  key[0] === '@'
+// add standard ones
+if (typeof document !== 'undefined') {
+  for (const key of Object.keys(document.body.style)) {
+    validCSSAttr[key] = true
+  }
+}
 
 // helpers
 const px = (x: number | string) =>

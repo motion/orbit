@@ -25,12 +25,10 @@ const addStyles = (id, baseStyles, nextStyles) => {
       continue
     }
     // valid attribute
-    if (validCSSAttr(key)) {
-      if (key[0] === '&') {
-        baseStyles[key] = nextStyles[key]
-      } else {
-        baseStyles[id][key] = nextStyles[key]
-      }
+    if (key[0] === '&') {
+      baseStyles[key] = nextStyles[key]
+    } else if (validCSSAttr[key]) {
+      baseStyles[id][key] = nextStyles[key]
     } else {
       // were defining a boolean prop style
       //   looks like: <Component tall />
@@ -39,7 +37,7 @@ const addStyles = (id, baseStyles, nextStyles) => {
       const styleObj = nextStyles[key]
       if (typeof styleObj === 'object') {
         propStyles[prop] = {
-          base: {}
+          base: {},
         }
         for (const subKey in styleObj) {
           if (subKey[0] === '&') {
@@ -65,11 +63,11 @@ const getAllStyles = (baseId, target, rawStyles) => {
     const childConfig = target.getConfig()
     const childPropStyles = childConfig.propStyles
     if (childPropStyles) {
-      for (const key of Object.keys(childPropStyles)) {
+      for (const key in childPropStyles) {
         propStyles[key] = propStyles[key] || {}
         propStyles[key] = {
-          ...childPropStyles[key]
-          ...propStyles[key]
+          ...childPropStyles[key],
+          ...propStyles[key],
         }
       }
     }
@@ -78,7 +76,7 @@ const getAllStyles = (baseId, target, rawStyles) => {
     const moveToMyId = childStyles[childId]
     delete childStyles[childId]
     childStyles[baseId] = moveToMyId
-    for (const key of Object.keys(childStyles)) {
+    for (const key in childStyles) {
       styles[key] = {
         ...childStyles[key],
         ...styles[key],
@@ -226,6 +224,9 @@ export function simpleViewFactory(toCSS) {
         }
         const extraClassNames = []
         let myStyles = styles
+        if (props.debug) {
+          console.log(styles)
+        }
         // if passed any classes from another styled component, ignore that class and merge in their
         // resolved styles
         if (props.className) {
@@ -234,6 +235,7 @@ export function simpleViewFactory(toCSS) {
             const classInfo = tracker.get(className)
             if (classInfo) {
               const { namespace, style } = classInfo
+              console.log('add some shit', style)
               myStyles = Object.assign({}, myStyles, {
                 [namespace]: style,
               })
@@ -248,6 +250,7 @@ export function simpleViewFactory(toCSS) {
         if (!hasDynamicStyles && myStyles === this.state.lastStyles) {
           return
         }
+        myStyles = { ...myStyles }
         let dynamicStyles
         if (hasDynamicStyles) {
           dynamicStyles = { [id]: {} }
@@ -259,7 +262,7 @@ export function simpleViewFactory(toCSS) {
               const dynKey = styleKey === 'base' ? id : styleKey
               dynamicStyles[dynKey] = {
                 ...dynamicStyles[dynKey],
-                ...propStyles[key][styleKey]
+                ...propStyles[key][styleKey],
               }
             }
           }

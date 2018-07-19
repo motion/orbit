@@ -21,7 +21,7 @@ export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
       display="block"
       background="transparent"
       value={orbitStore.query}
-      highlight={orbitStore.highlightWords}
+      highlight={headerStore.highlightWords}
       color={theme.base.color.alpha(0.8)}
       onChange={orbitStore.onChangeQuery}
       onFocus={orbitStore.onFocus}

@@ -181,5 +181,10 @@ export declare const psuedoKeys: {
     '&:placeholder': boolean;
     '&:selection': boolean;
 };
-export declare const validCSSAttr: (key: any) => any;
+export declare const validCSSAttr: {
+    borderLeftRadius: boolean;
+    borderRightRadius: boolean;
+    borderBottomRadius: boolean;
+    borderTopRadius: boolean;
+};
 export default function motionStyle(options?: Object): (styles: Object, opts?: Opts) => Object;

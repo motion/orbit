@@ -1,22 +1,34 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
 
 // this static style should override the grandparent dynamic
 // ... looks like it does! :)
 const Test = view({
+  color: 'gray',
   background: 'blue',
   height: 100,
   width: 100,
+  '&:hover': {
+    background: 'orange',
+  },
   big: {
     background: 'pink',
+    '&:hover': {
+      background: 'violet',
+    },
+  },
+  bigFont: {
+    fontSize: 30,
+    '&:hover': {
+      fontSize: 10,
+    },
   },
 })
 
 // extend and test
 const Test2 = view(Test, {
   background: 'red',
-  opacity: 0,
+  opacity: 0.5,
   big: {
     opacity: 1,
     background: 'yellow',
@@ -27,8 +39,20 @@ const Test2 = view(Test, {
 })
 
 Test2.theme = ({ theme, big }) => ({
-  fontWeight: 'bold',
-  color: big ? 'red' : theme.base.color,
+  fontStyle: 'italic',
+  fontWeight: big ? 'bold' : 'light',
+  color: big ? 'pink' : theme.base.color,
+})
+
+// extend theme
+const Test3 = view(Test2, {
+  opacity: 1,
+})
+
+Test3.theme = () => ({
+  '&:hover': {
+    background: 'black',
+  },
 })
 
 // export type TreeItem = {
@@ -44,10 +68,13 @@ Test2.theme = ({ theme, big }) => ({
 export const Root = () => {
   return (
     <div css={{ pointerEvents: 'all', width: '100%', height: '100%' }}>
-      <Test>blue</Test>
-      <Test big>pink</Test>
-      <Test2>red</Test2>
-      <Test2 big>yellow</Test2>
+      <Test>blue hover orange</Test>
+      <Test big>pink hover pinker</Test>
+      <Test2 bigFont>red faint</Test2>
+      <Test2 big debug>
+        pink bold on yellow opacity 1
+      </Test2>
+      <Test3>red italic hover black</Test3>
 
       <br />
       <br />

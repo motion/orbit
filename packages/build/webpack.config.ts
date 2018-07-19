@@ -64,17 +64,16 @@ const optimizeSplit = {
 const optimization = {
   prod: {
     ...optimizeSplit,
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          ecma: 8,
-          toplevel: true,
-        },
-        sourceMap: true,
-        cache: true,
-        parallel: true,
-      }),
-    ],
+    minimizer: [],
+    // new UglifyJsPlugin({
+    //   uglifyOptions: {
+    //     ecma: 8,
+    //     toplevel: true,
+    //   },
+    //   sourceMap: true,
+    //   cache: true,
+    //   parallel: true,
+    // }),
   },
   dev: {
     removeAvailableModules: false,
@@ -123,10 +122,7 @@ const config = {
     rules: [
       {
         test: /[wW]orker\.[jt]sx?$/,
-        use: {
-          loader: 'workerize-loader',
-          // options: { inline: true },
-        },
+        use: ['workerize-loader'],
         exclude: ['node_modules'],
       },
       {
@@ -136,16 +132,18 @@ const config = {
       },
       {
         test: /\.css$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+        use: ['cache-loader', 'style-loader', 'css-loader'],
       },
       {
         test: /\.(ttf|eot|woff|woff2)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: 'fonts/[name].[ext]',
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'fonts/[name].[ext]',
+            },
           },
-        },
+        ],
       },
       // {
       //   test: /\.svg$/,
@@ -183,7 +181,7 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify(mode),
     }),
     // adds cache based on source of files
-    new HardSourceWebpackPlugin(),
+    // new HardSourceWebpackPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       favicon: 'public/favicon.png',

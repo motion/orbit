@@ -52,3 +52,25 @@ Talked to James (Juul):
 Talked to Raymond (startup person)
 
 - https://retool.in/
+
+# Jul 18th
+
+Talked to Michael Shade (Stripe Home)
+
+- Resonance in order:
+  - Onboarding / Profiles + Contextual Search (+ Highlights somewhat)
+  - Personal assistant
+  - Company vocab / defining terms
+  - Highlight peoples names on screen to see them
+  - Text expansion or actions within a company
+- Feels it makes a really great personal product and could then expand to teams
+- Sees a management layer similar to data warehouse tools being part of that
+  - Basically flows to connect your integrations together (see the various graph interfaces)
+- Just person and document search is valuable enough
+- They are building internal tools that use internal apis
+  - but he couldnt see using orbit to deploy it
+  - likely because super easy availability there is important
+  - for example, customer success uses chromebooks for cost
+  - also he mentioned this could be because he hasn't seen the product
+- They are building a sort of data warehouse thing
+- Mentioned he couldn't use it on work laptop due to extreme security, but off hand and ran out of time

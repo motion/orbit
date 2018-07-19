@@ -29,11 +29,10 @@ class ElectronStore {
     },
   })
 
-  start = options => {
-    Bridge.start(this, this.state, options)
+  start = async options => {
+    await Bridge.start(this, this.state, options)
   }
 }
 
 Electron = proxySetters(new ElectronStore())
 Bridge.stores[Electron.source] = Electron
-

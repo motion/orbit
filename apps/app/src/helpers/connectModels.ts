@@ -12,7 +12,6 @@ export default async function connectModels(models) {
         console.error('SQL Error', err)
         // temp to debug locks
         console.log('Last query queue:', Client.sqlLitePlugin.lastQueryQueue)
-        debugger
         // window.location = window.location
       },
     })

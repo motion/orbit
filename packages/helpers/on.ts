@@ -25,11 +25,14 @@ type Watchable = {
 type OnAble = number | NodeJS.Timer | Disposable | MutationObserver | Watchable
 
 // fuck electron doesnt have timers
-const looksLikeTimeout = thing => !!thing._idleTimeout
+const looksLikeTimeout = thing => thing && !!thing._idleTimeout
 
 // because instanceof breaks idk
 const looksLikeDisposable = thing =>
-  typeof thing.dispose === 'function' && !thing.subscribe && !thing.emitter
+  thing &&
+  typeof thing.dispose === 'function' &&
+  !thing.subscribe &&
+  !thing.emitter
 
 // 1. listens to a lots of things:
 // 2. adds it onto this.subscriptions
@@ -40,6 +43,9 @@ export default function on(
   eventName: String | Function,
   callback: Function,
 ) {
+  if (!target) {
+    throw new Error('No target given')
+  }
   // Timer
   if (typeof target === 'number' || looksLikeTimeout(target)) {
     const dispose = () => clearTimeout(target as NodeJS.Timer)

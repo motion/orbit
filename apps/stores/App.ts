@@ -180,8 +180,8 @@ class AppStore {
     return App.isAnimatingOrbit && App.orbitState.hidden
   }
 
-  start = options => {
-    Bridge.start(this, this.state, options)
+  start = async options => {
+    await Bridge.start(this, this.state, options)
   }
 
   open = async url => {

@@ -37,10 +37,6 @@
 goal for all of this: Friday:
 
 - filters
-  - colors for people / thing / location / integration / date
-  - one bar for integrations - can easily toggle many on/off
-  - one bar for type: people, attachment, document, task
-  - one bar for time: 2 days, 2 weeks, 2 months
   - one bar for people: shows people within current set and lets you filter
 - better search result UX
   - pass search term to a \*Resolver and the resolver returns items
@@ -50,10 +46,20 @@ goal for all of this: Friday:
   - for slack that would include the message + name nicely
   - hover highlight the areas effect
 - bit document page design
-- fix laggy typing on search
-- search filters <=> nlp v1
 - search highlight sections v2
   - corresponding peek UX for search results
+
+now:
+
+- one bar for time: 2 days, 2 weeks, 2 months
+- one bar for integrations - can easily toggle many on/off
+- one bar for type: people, attachment, document, task
+- search filters <=> nlp v1
+
+done:
+
+- fix laggy typing on search
+  - colors for people / thing / location / integration / date
 - orbit pane fix bottom invsible click through and have it expand as you search
 
 Next week:

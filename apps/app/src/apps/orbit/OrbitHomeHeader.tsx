@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { ThemeObject } from '@mcro/gloss'
 
 const Section = view('section', {
   width: '100%',
@@ -9,9 +11,14 @@ const Section = view('section', {
   alignItems: 'center',
 })
 
+type Props = {
+  paneStore: OrbitDockedPaneStore
+  theme?: ThemeObject
+}
+
 @attachTheme
 @view
-export class OrbitHomeHeader extends React.Component {
+export class OrbitHomeHeader extends React.Component<Props> {
   render() {
     const { paneStore, theme } = this.props
     const buttonColor = theme.base.color.lighten(0.2)

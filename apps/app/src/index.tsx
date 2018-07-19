@@ -36,7 +36,6 @@ const render = throttle(async () => {
   const { RootViewHMR } = require('./RootViewHMR')
   // <React.unstable_AsyncMode>
   // </React.unstable_AsyncMode>
-  Gloss.attach()
   ReactDOM.render(
     <UI.ThemeProvide {...Themes}>
       <UI.Theme name="light">

@@ -1,3 +1,9 @@
+.calendar-dom * {
+  display: block;
+  flex-shrink: initial;
+  flex-flow: row;
+}
+
 #app code {
   background: #fff;
   padding: 0 4px;
@@ -494,8 +500,16 @@ mark.date {
   background: lightyellow;
 }
 
-mark.noun {
+mark.integration {
   background: lightgreen;
+}
+
+mark.person {
+  background: lightpink;
+}
+
+mark.type {
+  background: lightcoral;
 }
 
 blockquote {

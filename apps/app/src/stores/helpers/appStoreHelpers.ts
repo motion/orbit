@@ -1,5 +1,5 @@
 import { Setting } from '@mcro/models'
-import * as Helpers from '~/helpers'
+import * as Helpers from '../../helpers'
 
 export const getPermalink = async (result, type) => {
   if (result.type === 'app') {
@@ -48,29 +48,4 @@ export const matchSort = (query, results) => {
     threshold: -40,
   })
   return uniq([...strongTitleMatches, ...results])
-}
-
-export const prefixes = {
-  gh: { integration: 'github' },
-  gd: { integration: 'google', type: 'document' },
-  gm: { integration: 'google', type: 'mail' },
-  sl: { integration: 'slack' },
-  m: { type: 'mail' },
-  d: { type: 'document' },
-  c: { type: 'conversation' },
-}
-
-export const parseQuery = query => {
-  const [prefix, rest] = query.split(' ')
-  const q = prefixes[prefix]
-  if (q && rest) {
-    return {
-      rest: query.replace(prefix, '').trim(),
-      conditions: Object.keys(q).reduce(
-        (query, key) => `${query} AND ${key} = "${q[key]}"`,
-        '',
-      ),
-    }
-  }
-  return { rest: query, conditions: '' }
 }

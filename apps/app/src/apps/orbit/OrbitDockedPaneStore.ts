@@ -70,9 +70,12 @@ export class OrbitDockedPaneStore {
   activePane = react(
     () => [this.panes, this.paneIndex, App.orbitState.docked, App.state.query],
     () => {
-      const active = this.panes[this.paneIndex]
+      let active = this.panes[this.paneIndex]
       if (active === 'home' && App.state.query) {
-        return 'search'
+        active = 'search'
+      }
+      if (active === this.activePane) {
+        throw react.cancel
       }
       return active
     },

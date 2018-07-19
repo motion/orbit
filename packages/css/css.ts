@@ -75,15 +75,53 @@ export const psuedoKeys = {
   '&:selection': true,
 }
 
-const cssAttributeNames =
-  typeof document !== 'undefined' ? document.body.style : {}
+const unitlessNumberProperties = new Set([
+  'animationIterationCount',
+  'borderImageOutset',
+  'borderImageSlice',
+  'borderImageWidth',
+  'columnCount',
+  'flex',
+  'flexGrow',
+  'flexPositive',
+  'flexShrink',
+  'flexOrder',
+  'gridRow',
+  'gridColumn',
+  'fontWeight',
+  'lineClamp',
+  'lineHeight',
+  'opacity',
+  'order',
+  'orphans',
+  'tabSize',
+  'widows',
+  'zIndex',
+  'zoom',
+  'fillOpacity',
+  'floodOpacity',
+  'stopOpacity',
+  'strokeDasharray',
+  'strokeDashoffset',
+  'strokeMiterlimit',
+  'strokeOpacity',
+  'strokeWidth',
+])
 
-// captures everything including nested & > * or media queries
-export const validCSSAttr = key =>
-  typeof cssAttributeNames[key] === 'string' ||
-  psuedoKeys[key] ||
-  key[0] === '&' ||
-  key[0] === '@'
+// special @mcro/css attributes
+export const validCSSAttr = {
+  borderLeftRadius: true,
+  borderRightRadius: true,
+  borderBottomRadius: true,
+  borderTopRadius: true,
+}
+
+// add standard ones
+if (typeof document !== 'undefined') {
+  for (const key of Object.keys(document.body.style)) {
+    validCSSAttr[key] = true
+  }
+}
 
 // helpers
 const px = (x: number | string) =>
@@ -206,6 +244,8 @@ export default function motionStyle(options: Object = {}) {
     return toReturn.join(' ')
   }
 
+  const addPx = x => (typeof x === 'number' ? `${x}px` : x)
+
   // RETURN THIS
   // style transformer
   function processStyles(styles: Object, opts?: Opts): Object {
@@ -234,6 +274,9 @@ export default function motionStyle(options: Object = {}) {
       let respond
       const firstChar = key[0]
       if (valueType === 'string' || valueType === 'number') {
+        if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
+          value += 'px'
+        }
         toReturn[finalKey] = value
         respond = true
       } else if (COLOR_KEYS.has(key)) {
@@ -253,11 +296,10 @@ export default function motionStyle(options: Object = {}) {
           } else {
             toReturn.position = 'absolute'
           }
-          toReturn.top = value[index++]
-          toReturn.right = value[index++]
-          toReturn.bottom = value[index++]
-          toReturn.left = value[index++]
-          console.log('to return', toReturn)
+          toReturn.top = addPx(value[index++])
+          toReturn.right = addPx(value[index++])
+          toReturn.bottom = addPx(value[index++])
+          toReturn.left = addPx(value[index++])
         } else {
           toReturn[finalKey] = processArray(key, value)
         }
@@ -285,7 +327,7 @@ export default function motionStyle(options: Object = {}) {
         if (Array.isArray(key)) {
           for (let k of key) {
             k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
-            toReturn[k] = value
+            toReturn[k] = addPx(value)
           }
         }
       }

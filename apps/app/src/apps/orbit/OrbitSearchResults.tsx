@@ -2,13 +2,12 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitCard } from './OrbitCard'
 import { OrbitDockedPane } from './OrbitDockedPane'
-// import { OrbitQuickSearch } from './OrbitQuickSearch'
+import { OrbitSearchQuickResults } from './orbitSearch/OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
-import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { AppStore } from '../../stores/AppStore'
-import { trace } from 'mobx'
 import { OrbitSearchStore } from './OrbitSearchStore'
+import { OrbitSearchFilters } from './OrbitSearchFilters'
 
 const OrbitSearchResultsList = view(({ name, searchStore }) => {
   const { results, query } = searchStore.state
@@ -28,7 +27,7 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
       listItem
       nextUpStyle={
         index === 0 && {
-          background: [0, 0, 0, 0.025],
+          background: [255, 255, 255, 0.15],
         }
       }
     >
@@ -54,13 +53,19 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
   ))
 })
 
-const OrbitSearchResultsFrame = view(({ name, appStore, searchStore }) => {
+const OrbitSearchResultsFrame = view({
+  flex: 1,
+})
+OrbitSearchResultsFrame.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
+
+const OrbitSearchResultsContents = view(({ name, appStore, searchStore }) => {
   const { isChanging, message } = searchStore.state
-  trace()
   return (
-    <UI.Col flex={1} padding={[10, 0]}>
+    <OrbitSearchResultsFrame>
       {message ? <div>{message}</div> : null}
-      <OrbitSearchFilters debug appStore={appStore} searchStore={searchStore} />
+      <OrbitSearchQuickResults />
       <div
         style={{
           position: 'relative',
@@ -71,20 +76,17 @@ const OrbitSearchResultsFrame = view(({ name, appStore, searchStore }) => {
         <OrbitSearchResultsList searchStore={searchStore} name={name} />
       </div>
       <div style={{ height: 20 }} />
-    </UI.Col>
+    </OrbitSearchResultsFrame>
   )
 })
 
 type Props = {
-  searchStore: OrbitSearchStore
-  appStore: AppStore
+  searchStore?: OrbitSearchStore
+  appStore?: AppStore
   name?: string
 }
 
-@view.attach('appStore')
-@view.attach({
-  searchStore: OrbitSearchStore,
-})
+@view.attach('appStore', 'searchStore')
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   render() {
@@ -92,19 +94,24 @@ export class OrbitSearchResults extends React.Component<Props> {
     if (!searchStore.state.results) {
       return null
     }
-    log(
-      `SEARCH OrbitSearchResults ${name} ${searchStore.hasQuery()} ${
-        searchStore.currentQuery
-      } --------------`,
-    )
+    const transform = {
+      y: -searchStore.extraHeight,
+    }
     return (
       <OrbitDockedPane
         paddingLeft={0}
         paddingRight={0}
+        containerStyle={{
+          transition: 'all ease 150ms',
+          transform,
+          height: '100%',
+          flex: 'none',
+        }}
         name="search"
         extraCondition={searchStore}
+        before={<OrbitSearchFilters />}
       >
-        <OrbitSearchResultsFrame
+        <OrbitSearchResultsContents
           appStore={appStore}
           searchStore={searchStore}
           name={name}

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "prebuild": "tsc",
-    "watch": "npm run build -- --watch --preserveWatchOutput"
+    "watch": "tsc --watch --preserveWatchOutput"
   },
   "repository": {
     "type": "git",
@@ -16,6 +16,7 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
+    "@mcro/color": "*",
     "@mcro/css": "^2.2.0",
     "deep-extend": "^0.6.0",
     "html-tags": "^2.0.0",
@@ -31,6 +32,9 @@
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "16.4.6"
   },
   "publishConfig": {
     "access": "public"

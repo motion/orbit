@@ -11,6 +11,7 @@ import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { BORDER_RADIUS } from '../../constants'
 import { AppStore } from '../../stores/AppStore'
+import { OrbitSearchStore } from './OrbitSearchStore'
 
 const SHADOW_PAD = 120
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.55]]
@@ -19,7 +20,6 @@ const Frame = view(UI.Col, {
   position: 'absolute',
   top: 10,
   right: 10,
-  bottom: 100,
   borderRadius: BORDER_RADIUS,
   zIndex: 2,
   flex: 1,
@@ -29,24 +29,24 @@ const Frame = view(UI.Col, {
   transform: {
     x: 6,
   },
-})
-
-Frame.theme = ({ theme, visible, willAnimate }) => ({
-  background: theme.base.background,
-  ...(visible && {
+  visible: {
     pointerEvents: 'auto',
     opacity: 1,
     transform: {
       x: 0,
     },
-  }),
-  ...(willAnimate && {
+  },
+  willAnimate: {
     willChange: 'transform, opacity',
     transition: `
       transform ease ${App.animationDuration}ms,
       opacity ease ${App.animationDuration}ms
     `,
-  }),
+  },
+})
+
+Frame.theme = ({ theme }) => ({
+  background: theme.base.background,
 })
 
 const Border = view(UI.FullScreen, {
@@ -75,11 +75,16 @@ const OrbitInner = view({
   margin: [-20, -20, 0, -20],
   padding: [20, 20, 0, 20],
   flex: 1,
+  // this can be a lot more because theres padding left and right
+  // and so this lets us have the top/side overflow but still cut off bottom
+  borderBottomLeftRadius: 60,
+  borderBottomRightRadius: 60,
 })
 
-@view.attach('appStore', 'orbitStore')
+@view.attach('appStore', 'orbitStore', 'integrationSettingsStore')
 @view.provide({
   paneStore: OrbitDockedPaneStore,
+  searchStore: OrbitSearchStore,
 })
 @view
 class OrbitDockedInner extends React.Component<{
@@ -95,14 +100,19 @@ class OrbitDockedInner extends React.Component<{
         <Frame
           visible={animationState.visible}
           willAnimate={animationState.willAnimate}
+          bottom={appStore.searchState.query ? 10 : 100}
         >
           <Border />
           <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
-              after={<OrbitHomeHeader paneStore={paneStore} />}
+              after={
+                <>
+                  <OrbitHomeHeader paneStore={paneStore} />
+                </>
+              }
             />
-            <OrbitInner>
+            <OrbitInner height={window.innerHeight}>
               <UI.View position="relative" flex={1}>
                 <OrbitHome
                   name="home"

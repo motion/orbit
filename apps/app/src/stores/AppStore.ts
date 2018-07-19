@@ -1,37 +1,22 @@
 import { on, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { Bit, Person, Setting, Not, Equal } from '@mcro/models'
+import { Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '../helpers'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import debug from '@mcro/debug'
+import { NLPStore } from './NLPStore'
+import { searchBits } from './helpers/searchBits'
+
+// // for testing nlp on main thread
+// import './nlpStore/nlpQuery'
 
 const log = debug('appStore')
 const TYPE_DEBOUNCE = 200
 
-const searchBits = async (query, params?) => {
-  if (!query) {
-    return await Bit.find({
-      take: 6,
-      relations: ['people'],
-      order: { bitCreatedAt: 'DESC' },
-    })
-  }
-  const { conditions, rest } = AppStoreHelpers.parseQuery(query)
-  const titleLike = rest.length === 1 ? rest : rest.replace(/\s+/g, '%')
-  const where = `(title like "%${titleLike}%" or body like "%${titleLike}%") ${conditions}`
-  const queryParams = {
-    where,
-    relations: ['people'],
-    order: { bitCreatedAt: 'DESC' },
-    ...params,
-  }
-  const res = await Bit.find(queryParams)
-  return res
-}
-
 export class AppStore {
-  selectedCardRef = null
+  nlpStore = new NLPStore()
+
   quickSearchIndex = 0
   nextIndex = 0
   leaveIndex = -1
@@ -42,6 +27,9 @@ export class AppStore {
 
   async willMount() {
     this.updateScreenSize()
+    this.subscriptions.add({
+      dispose: () => this.nlpStore.subscriptions.dispose(),
+    })
   }
 
   get activeIndex() {
@@ -232,27 +220,13 @@ export class AppStore {
     },
   )
 
-  // peopleSearch = react(
-  //   () => [App.state.query, Desktop.state.lastBitUpdatedAt],
-  //   async ([query], { sleep }) => {
-  //     await sleep(TYPE_DEBOUNCE)
-  //     return {
-  //       query,
-  //       results: await Person.find({
-  //         where: `(name like "%${query}%")`,
-  //         take: 4,
-  //       }),
-  //     }
-  //   },
-  //   {
-  //     immediate: true,
-  //     defaultValue: { results: [] },
-  //   },
-  // )
+  get isChanging() {
+    return this.searchState.query !== App.state.query
+  }
 
   searchState = react(
     () => [App.state.query, this.getResults],
-    async ([query], { sleep, setValue, preventLogging }) => {
+    async ([query], { sleep, when, setValue, preventLogging }) => {
       if (!query) {
         return setValue({
           query,
@@ -294,6 +268,10 @@ export class AppStore {
       if (!results) {
         // debounce a little for fast typer
         await sleep(TYPE_DEBOUNCE)
+        // wait for nlp to give us results
+        await when(() => this.nlpStore.nlp.query === query)
+        // gather all the pieces from nlp store for query
+        const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
         // get first page results
         const takePer = 4
         const takeMax = takePer * 6
@@ -301,7 +279,13 @@ export class AppStore {
         let results = []
         for (let i = 0; i < takeMax / takePer; i += 1) {
           const skip = i * takePer
-          const nextResults = await searchBits(query, { take: takePer, skip })
+          const nextResults = await searchBits(searchQuery, {
+            people,
+            startDate,
+            endDate,
+            take: takePer,
+            skip,
+          })
           results = [...results, ...nextResults]
           setValue({
             results,
@@ -388,8 +372,8 @@ export class AppStore {
     },
   })
 
-  // sitrep
   toggleSelected = index => {
+    console.log('toggle selected', index, this.activeIndex)
     const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
@@ -440,9 +424,5 @@ export class AppStore {
     }
     const url = await AppStoreHelpers.getPermalink(result, openType)
     App.open(url)
-  }
-
-  setSelectedCardRef = ref => {
-    this.selectedCardRef = ref
   }
 }

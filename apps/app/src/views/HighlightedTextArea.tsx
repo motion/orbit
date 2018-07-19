@@ -74,13 +74,17 @@ export class HighlightedTextArea extends React.Component<Props> {
     )
   }
 
-  handleArrayHighlight(input, markList) {
+  handleArrayHighlight(value, markList = []) {
+    const sortedMarkList = markList
+      .slice()
+      .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+    let input = `${value}`
     let offset = 0
-    markList.forEach(function(element) {
+    for (const mark of sortedMarkList) {
       // insert open tag
-      var open = element[0] + offset
-      if (element[2]) {
-        const OPEN_MARK_WITH_CLASS = '<mark class="' + element[2] + '">'
+      const open = mark[0] + offset
+      if (mark[2]) {
+        const OPEN_MARK_WITH_CLASS = '<mark class="' + mark[2] + '">'
         input = input.slice(0, open) + OPEN_MARK_WITH_CLASS + input.slice(open)
         offset += OPEN_MARK_WITH_CLASS.length
       } else {
@@ -88,10 +92,10 @@ export class HighlightedTextArea extends React.Component<Props> {
         offset += this.props.openMark.length
       }
       // insert close tag
-      var close = element[1] + offset
+      const close = mark[1] + offset
       input = input.slice(0, close) + this.props.closeMark + input.slice(close)
       offset += this.props.closeMark.length
-    }, this)
+    }
     return input
   }
 

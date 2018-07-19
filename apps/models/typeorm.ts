@@ -28,6 +28,7 @@ const {
   Between,
   Like,
   getRepository,
+  Brackets,
   LessThan,
 } = typeorm
 
@@ -56,6 +57,7 @@ export {
   Between,
   Like,
   getRepository,
+  Brackets,
   LessThan,
 }
 

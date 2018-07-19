@@ -8,7 +8,7 @@ import {
 import { subscribable } from '@mcro/decor-classes'
 import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
-import { decorator } from './gloss'
+import { getGloss } from './getGloss'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
@@ -28,15 +28,16 @@ export interface ViewDecorator {
   attach: any
 }
 
-const glossPlugin = () => ({
+const Gloss = getGloss()
+const glossDecorator = () => ({
   onlyClass: true,
-  decorator,
+  decorator: Gloss.decorator,
 })
 
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
   renderArgumentable,
-  enable.ui && glossPlugin,
+  enable.ui && glossDecorator,
   enable.mobx && reactObservable,
   [storeProvidable, storeOptions],
   !enable.ui && emitsMount,
@@ -51,7 +52,7 @@ function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(a, b) {
     // short: view({ ...styles }), view('div', {}) view(OtherView, {})
     if (glossSimpleComponentArgs(a, b)) {
-      return decorator(a, b)
+      return Gloss.decorator(a, b)
     }
     // patch this in for now...
     const shouldPatchConfig = !a.prototype && !a.withConfig

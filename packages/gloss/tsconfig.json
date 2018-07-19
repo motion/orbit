@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
+    "declaration": false,
     "outDir": "_",
     "baseUrl": "./",
     "paths": {

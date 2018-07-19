@@ -8,14 +8,15 @@
 const invariant = require('invariant')
 
 function makeStyleTag(): HTMLStyleElement {
+  if (typeof document === 'undefined') {
+    return null
+  }
   const tag = document.createElement('style')
   tag.type = 'text/css'
   tag.appendChild(document.createTextNode(''))
-
   const { head } = document
   invariant(head, 'expected head')
   head.appendChild(tag)
-
   return tag
 }
 
@@ -29,8 +30,7 @@ export class StyleSheet {
     this.inject()
   }
 
-  ruleIndexes: Array<string>
-  injected: boolean
+  ruleIndexes: string[]
   isSpeedy: boolean
   tag: HTMLStyleElement
 
@@ -49,7 +49,6 @@ export class StyleSheet {
     if (this.injected) {
       throw new Error('already injected stylesheet!')
     }
-
     this.tag = makeStyleTag()
     this.injected = true
   }
@@ -60,9 +59,7 @@ export class StyleSheet {
       // TODO maybe error
       return
     }
-
     this.ruleIndexes.splice(index, 1)
-
     const tag = this.tag
     if (this.isSpeedy) {
       const sheet = tag.sheet as CSSStyleSheet
@@ -75,7 +72,6 @@ export class StyleSheet {
 
   insert(key: string, rule: string) {
     const tag = this.tag
-
     if (this.isSpeedy) {
       const sheet = tag.sheet as CSSStyleSheet
       invariant(sheet, 'expected sheet')

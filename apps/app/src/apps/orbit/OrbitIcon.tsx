@@ -49,12 +49,12 @@ const adjust = {
 
 export const OrbitIcon = ({
   icon,
-  imageStyle,
-  orbitIconStyle,
+  imageStyle = null,
+  orbitIconStyle = null,
   size = 25,
-  color,
-  preventAdjust,
-  className,
+  color = 'black',
+  preventAdjust = false,
+  className = '',
   ...props
 }) => {
   const sizeProps = {

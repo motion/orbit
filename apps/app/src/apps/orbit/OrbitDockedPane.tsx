@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { view, on, react } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import * as _ from 'lodash'
 import { BORDER_RADIUS } from '../../constants'
 import * as UI from '@mcro/ui'
+import { CSSPropertySet } from '@mcro/gloss'
 
 const EXTRA_PAD = 40
 
@@ -11,6 +12,7 @@ class DockedPaneStore {
   isAtBottom = false
 
   didMount() {
+    console.log('waht', on, this)
     on(
       this,
       this.paneRef.current,
@@ -22,24 +24,24 @@ class DockedPaneStore {
     on(this, observer)
   }
 
-  scrollToSelectedCard = react(
-    () => this.props.appStore.selectedCardRef,
-    cardRef => {
-      if (!this.isActive) {
-        throw react.cancel
-      }
-      // cardRef.scrollIntoViewIfNeeded()
-      // const frameBottom = this.paneRef.current.clientHeight
-      // const cardBottom = cardRef.offsetTop + cardRef.clientHeight
-      // if (cardBottom <= frameBottom) {
-      //   throw react.cancel
-      // }
-      // this.paneRef.current.scrollTop = cardBottom - frameBottom + EXTRA_PAD
-    },
-    {
-      immediate: true,
-    },
-  )
+  // scrollToSelectedCard = react(
+  //   () => this.props.appStore.selectedCardRef,
+  //   cardRef => {
+  //     if (!this.isActive) {
+  //       throw react.cancel
+  //     }
+  //     // cardRef.scrollIntoViewIfNeeded()
+  //     // const frameBottom = this.paneRef.current.clientHeight
+  //     // const cardBottom = cardRef.offsetTop + cardRef.clientHeight
+  //     // if (cardBottom <= frameBottom) {
+  //     //   throw react.cancel
+  //     // }
+  //     // this.paneRef.current.scrollTop = cardBottom - frameBottom + EXTRA_PAD
+  //   },
+  //   {
+  //     immediate: true,
+  //   },
+  // )
 
   setOverflow = () => {
     const node = this.paneRef.current
@@ -116,13 +118,33 @@ OverflowFade.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background})`,
 })
 
-type Props = {
-  store: DockedPaneStore
+type Props = CSSPropertySet & {
+  store?: DockedPaneStore
   style?: Object
   after?: React.ReactNode
+  before?: React.ReactNode
   fadeBottom?: boolean
   name?: string
 }
+
+const DockedPaneFrame = view(UI.FullScreen, {
+  opacity: 0,
+  pointerEvents: 'none',
+  isActive: {
+    opacity: 1,
+    pointerEvents: 'all',
+  },
+})
+
+const DockedPaneContent = view(UI.View, {
+  position: 'relative',
+  flex: 1,
+  overflow: 'hidden',
+})
+
+DockedPaneContent.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
 
 @view.attach('paneStore', 'appStore')
 @view.attach({
@@ -138,22 +160,26 @@ export class OrbitDockedPane extends React.Component<Props> {
       after,
       fadeBottom,
       name,
+      before,
+      containerStyle,
       ...props
     } = this.props
-    log(`${name} ${store.isAtBottom} -- render docked pane`)
     return (
-      <>
-        <OverflowFade if={fadeBottom} isInvisible={store.isAtBottom} />
-        <Pane
-          isActive={store.isActive}
-          style={style}
-          forwardRef={store.paneRef}
-          {...props}
-        >
-          {children}
-        </Pane>
+      <DockedPaneFrame isActive={store.isActive}>
+        {before}
+        <DockedPaneContent {...containerStyle}>
+          <OverflowFade if={fadeBottom} isInvisible={store.isAtBottom} />
+          <Pane
+            isActive={store.isActive}
+            style={style}
+            forwardRef={store.paneRef}
+            {...props}
+          >
+            {children}
+          </Pane>
+        </DockedPaneContent>
         {after}
-      </>
+      </DockedPaneFrame>
     )
   }
 }

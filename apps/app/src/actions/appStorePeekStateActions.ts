@@ -15,6 +15,12 @@ type PositionObject =
       height: number
     }
 
+export function tearPeek() {
+  if (App.peekState.item) {
+    // do it
+  }
+}
+
 function setPeekState(props) {
   const target = getTargetPosition(props.target)
   App.setPeekState({

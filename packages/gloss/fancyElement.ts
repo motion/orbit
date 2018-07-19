@@ -1,41 +1,6 @@
 import * as React from 'react'
-import deepExtend from 'deep-extend'
-import tags from 'html-tags'
-import svgTags from './helpers/svgTags'
-import validProp from './helpers/validProp'
-import { snakeToCamelObject } from './helpers/snakeToCamelObject'
 
-const electronTags = ['webview']
-
-const $ = '$'
 const ogCreateElement = React.createElement.bind(React)
-const VALID_TAGS = [...tags, ...svgTags, ...electronTags].reduce((acc, cur) => {
-  acc[cur] = true
-  return acc
-}, {})
-
-const arrayOfObjectsToObject = arr => {
-  let res = {}
-  for (let i = 0; i < arr.length; i++) {
-    if (!arr[i]) {
-      continue
-    }
-    deepExtend(res, arr[i])
-  }
-  return res
-}
-
-// tags that are dangerous to use
-const TAG_NAME_MAP = {
-  title: 'div',
-  body: 'div',
-  meta: 'div',
-  head: 'div',
-  item: 'div',
-  text: 'div',
-  col: 'div',
-  main: 'div',
-}
 
 const IS_BROWSER = typeof window !== 'undefined'
 let cancelNextClick = false
@@ -69,62 +34,19 @@ setTimeout(() => {
 const cssOpts = { snakeCase: false }
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(Gloss, styleSheet, themeSheet, isSimple = false) {
+export default function fancyElementFactory(Gloss) {
   const { options, css } = Gloss
-  const tagNameOption = options.tagName
 
-  const addStyle = (finalStyles, key, checkTheme) => {
-    let style = styleSheet[key]
-    if (!style) {
-      style = styleSheet.getRule ? styleSheet.getRule(key) : styleSheet[key]
-    }
-    if (style) {
-      finalStyles.push(style)
-    }
-    if (checkTheme && themeSheet) {
-      const themeKey = `${key}--theme`
-      const themeStyle = themeSheet.getRule(themeKey)
-      if (themeStyle) {
-        finalStyles.push(themeStyle)
-      }
-    }
-  }
-
-  function fancyElement(type_, props, ...children) {
-    let type = type_
-    if (!type) {
-      console.error('Error values', type, props, children)
-      throw new Error(`Didn't get a valid type: ${type}`)
-    }
-
-    // @ts-ignore
-    const glossUID = isSimple ? children[0] : this && this.constructor.glossUID
+  function fancyElement(type, props, ...children) {
     const propNames = props ? Object.keys(props) : null
-    const isTag = typeof type === 'string'
-    const name = !isTag ? `${type.name}` : `${type}`
-    const finalProps: any = {}
-    const finalStyles = []
-
-    let style
 
     if (propNames) {
       for (const prop of propNames) {
         const val = props && props[prop]
         // style={}
         if (prop === 'style') {
-          style = { ...style, ...val }
-          continue
-        }
-        // hacky hacky place to put this, should be out of gloss
-        if (IS_BROWSER && prop === 'onClick' && typeof val === 'function') {
-          const ogClick = val
-          finalProps.onClick = function(...args) {
-            if (cancelNextClick) {
-              cancelNextClick = false
-              return
-            }
-            return ogClick.call(this, ...args)
-          }
+          props.style = props.style || {}
+          props.style = { ...props.style, ...val }
           continue
         }
         // css={}
@@ -132,94 +54,14 @@ export default function fancyElementFactory(Gloss, styleSheet, themeSheet, isSim
           if (val && Object.keys(val).length) {
             // css={}
             const extraStyle = css(val, cssOpts)
-            style = { ...style, ...extraStyle }
+            props.style = props.style || {}
+            props.style = { ...props.style, ...extraStyle }
           }
           continue
         }
-        // tagName={}
-        if (tagNameOption && prop === tagNameOption && isTag) {
-          // lets it be optionally undefined/false
-          if (val) {
-            type = val
-          }
-          continue
-        }
-        if (isSimple) {
-          // boolean prop rules
-          if (val === true) {
-            const rule = styleSheet.getRule(`${prop}--${glossUID}`)
-            if (rule) {
-              finalStyles.push(rule)
-              continue
-            }
-          }
-        }
-        // after tagname, css, style
-        const notStyle = prop[0] !== $
-        if (notStyle) {
-          // pass props down if not glossProp style prop
-          // we just exclude invalid props!!!!!!!!!! yay!!!!!!!
-          if (!isTag || validProp(prop)) {
-            finalProps[prop] = val
-          }
-          continue
-        }
-        // $style={}
-        if (!isSimple && styleSheet) {
-          addStyle(finalStyles, `${prop.slice(1)}--${glossUID}`, true)
-        }
       }
     }
-
-    if (style) {
-      finalProps.style = style
-    }
-
-    // styles => props
-    if (finalStyles.length) {
-      if (isTag) {
-        // tags get className
-        finalProps.className = finalStyles
-          .map(x => x.className || x.selectorText.slice(1))
-          .join(' ')
-
-        // keep original finalStyles
-        if (props && props.className) {
-          if (typeof props.className === 'string') {
-            finalProps.className += ` ${props.className}`
-          }
-        }
-      } else {
-        // children get a style prop
-        if (props) {
-          finalProps.style = snakeToCamelObject(
-            arrayOfObjectsToObject([
-              ...finalStyles.map(style => style && style.style),
-              finalProps.style,
-            ]),
-          )
-        }
-      }
-    }
-
-    if (isTag) {
-      if (name !== 'div') {
-        if (!finalProps.className) {
-          finalProps.className = name
-        } else {
-          finalProps.className += ` ${name}`
-        }
-        if (!VALID_TAGS[type]) {
-          type = 'div'
-        }
-      }
-      type = TAG_NAME_MAP[name] || type
-    }
-
-    if (isSimple) {
-      return ogCreateElement(type, finalProps)
-    }
-    return ogCreateElement(type, finalProps, ...children)
+    return ogCreateElement(type, props, ...children)
   }
 
   return fancyElement

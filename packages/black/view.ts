@@ -28,16 +28,9 @@ export interface ViewDecorator {
   attach: any
 }
 
-const Gloss = getGloss()
-const glossDecorator = () => ({
-  onlyClass: true,
-  decorator: Gloss.decorator,
-})
-
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
   renderArgumentable,
-  enable.ui && glossDecorator,
   enable.mobx && reactObservable,
   [storeProvidable, storeOptions],
   !enable.ui && emitsMount,
@@ -49,6 +42,8 @@ export const blackDecorator: DecorCompiledDecorator<any> = decor(
 )
 
 function createViewDecorator(): ViewDecorator {
+  const Gloss = getGloss()
+
   const view = <ViewDecorator>function view(a, b) {
     // short: view({ ...styles }), view('div', {}) view(OtherView, {})
     if (glossSimpleComponentArgs(a, b)) {

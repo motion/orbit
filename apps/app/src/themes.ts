@@ -19,7 +19,7 @@ const dbHoverBg = dbBg.darken(0.02).desaturate(0.3)
 const dbActiveBg = dbHoverBg.darken(0.05).desaturate(0.3)
 const dbActiveHoverBg = dbHoverBg.darken(0.06).desaturate(0.3)
 
-const Themes = {
+export const themes = {
   clear: {
     base: {
       background: 'transparent',
@@ -130,7 +130,3 @@ const Themes = {
     },
   }),
 }
-
-window.Themes = Themes
-
-export default Themes

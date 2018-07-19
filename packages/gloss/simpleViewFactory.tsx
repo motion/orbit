@@ -1,6 +1,6 @@
+import * as React from 'react'
 import { ThemeContext } from './theme/ThemeContext'
 import { CSSPropertyValue, CSSPropertySet } from '@mcro/css'
-import * as React from 'react'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
@@ -224,9 +224,6 @@ export function simpleViewFactory(toCSS) {
         }
         const extraClassNames = []
         let myStyles = styles
-        if (props.debug) {
-          console.log(styles)
-        }
         // if passed any classes from another styled component, ignore that class and merge in their
         // resolved styles
         if (props.className) {

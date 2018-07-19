@@ -10,9 +10,10 @@ import { RootStore } from './stores/RootStore'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import Themes from './themes'
+import { themes } from './themes'
 import { throttle } from 'lodash'
-import { Gloss } from '@mcro/black'
+
+console.log('themesthemes', themes)
 
 Error.stackTraceLimit = Infinity
 
@@ -37,7 +38,7 @@ const render = throttle(async () => {
   // <React.unstable_AsyncMode>
   // </React.unstable_AsyncMode>
   ReactDOM.render(
-    <UI.ThemeProvide {...Themes}>
+    <UI.ThemeProvide {...themes}>
       <UI.Theme name="light">
         <RootViewHMR />
       </UI.Theme>

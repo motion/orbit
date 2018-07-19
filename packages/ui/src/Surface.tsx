@@ -10,12 +10,14 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { Color } from '@mcro/css'
+// import { propsToTextSize } from './helpers/propsToTextSize'
+import { propsToThemeStyles } from '@mcro/gloss'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
 export type SurfaceProps = {
   active?: boolean
-  after?: Element | string
+  after?: React.ReactNode
   align?: string
   alignSelf?: string
   background?: Color
@@ -53,7 +55,7 @@ export type SurfaceProps = {
   highlight?: boolean
   hoverable?: boolean
   hovered?: boolean
-  icon?: React.ReactNode | string
+  icon?: React.ReactNode
   iconAfter?: boolean
   iconColor?: Color
   iconProps?: Object
@@ -141,6 +143,7 @@ const SurfaceFrame = view(View, {
 
 SurfaceFrame.theme = props => {
   const theme = props.theme
+  const propStyles = propsToThemeStyles(props)
   // sizes
   const height = props.height
   const width = props.width
@@ -206,30 +209,6 @@ SurfaceFrame.theme = props => {
     hoverBackground = hoverBackground.alpha(props.hover.backgroundAlpha)
   }
 
-  const borderColor = $(
-    props.borderColor === true
-      ? theme[STATE].borderColor
-      : props.borderColor || 'transparent',
-  )
-  let hoverColor =
-    props.color === false
-      ? 'inherit'
-      : $(
-          (props.hover && props.hover.color) ||
-            theme[STATE].color.lighten(0.2) ||
-            props.color,
-        )
-  if (props.hover && typeof props.hover.alpha === 'number') {
-    hoverColor = hoverColor.alpha(props.hover.alpha)
-  }
-
-  const hoverBorderColor =
-    props.hoverBorderColor ||
-    (props.borderColor && $(props.borderColor).lighten(0.2)) ||
-    theme[STATE].borderColor ||
-    theme.hover.borderColor ||
-    borderColor.lighten(0.2)
-
   // shadows
   const boxShadow =
     typeof props.boxShadow === 'string'
@@ -255,14 +234,14 @@ SurfaceFrame.theme = props => {
     color: iconColor,
   }
   const hoverIconStyle = {
-    color: props.iconHoverColor || hoverColor,
+    color: props.iconHoverColor || propStyles.hoverColor,
   }
   // state styles
   const hoverStyle = (props.hover ||
     (!props.chromeless && !props.disabled && props.hoverable)) && {
     ...theme.hover,
-    color: hoverColor,
-    borderColor: hoverBorderColor,
+    color: propStyles.hoverColor,
+    borderColor: propStyles.hoverBorderColor,
     background: hoverBackground,
     ...props.hoverStyle,
   }
@@ -303,7 +282,6 @@ SurfaceFrame.theme = props => {
     width,
     flex,
     padding,
-    borderColor,
     background,
     boxShadow,
     justifyContent: props.justify || props.justifyContent,

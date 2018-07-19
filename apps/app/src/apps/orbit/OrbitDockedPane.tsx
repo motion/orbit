@@ -12,7 +12,6 @@ class DockedPaneStore {
   isAtBottom = false
 
   didMount() {
-    console.log('waht', on, this)
     on(
       this,
       this.paneRef.current,

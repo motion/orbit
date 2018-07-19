@@ -58,8 +58,6 @@ export const Button = forwardRef(
         tagName="button"
         style={{
           outline: 0,
-          flexWrap: 'nowrap',
-          whiteSpace: 'pre',
           cursor: 'default',
         }}
         type={type}

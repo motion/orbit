@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-import { propsToStyles } from '../helpers/propsToStyles'
+import { propsToStyles } from '@mcro/gloss'
 import { propsToTextSize } from '../helpers/propsToTextSize'
 
 export const View = view({})

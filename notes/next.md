@@ -1,4 +1,13 @@
-- make stores do `extends Store` as that can be typed very easily
+- make orbit fast and fluid for exploring:
+
+  - being able to drill into quicks search cards
+  - secondary in-app search
+    - type some stuff, see updates in your orbit
+    - arrow key down to see document
+    - that selects a sub-find bar in the app window
+    - type a few more characters there to see better answers
+
+- bring back contextual search / ocr / sidebar
 
 - decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
 - p2p https://github.com/mafintosh/hyperdb
@@ -48,19 +57,6 @@ goal for all of this: Friday:
 - search highlight sections v2
   - corresponding peek UX for search results
 
-now:
-
-- one bar for time: 2 days, 2 weeks, 2 months
-- one bar for integrations - can easily toggle many on/off
-- one bar for type: people, attachment, document, task
-- search filters <=> nlp v1
-
-done:
-
-- fix laggy typing on search
-  - colors for people / thing / location / integration / date
-- orbit pane fix bottom invsible click through and have it expand as you search
-
 Next week:
 
 - settings panes runthrough
@@ -76,10 +72,6 @@ Next week:
 
 # high level
 
-## Profiles
-
-First need to design out really ideal profiles. Then need to figure out what it would take to show that.
-
 ## Events/Updates
 
 Backend system to track updates to Bits. It would make homepage function better, search look better, and probably hook into profiles as well anyway.
@@ -92,17 +84,9 @@ May want to redo this so it uses their "default browser" if it's not too much tr
 
 Set up mostly a simple fake API that returns results so it can be shown.
 
-## Onboarding
-
-Basically we need a server to sync settings and handle signups. Everything from initial signup to emailing them, and then to storing their settings and syncing them between teams.
-
 ## Search improvements
 
 Start with just hst5 for sqlite, but eventually merge in cosal.
-
-## Scaling improvements
-
-A lot of stuff here, beginning by just implementing syncers and testing them up to big amounts. Adding indices. In the end what would be ideal is if we can basically remove lots of "extra" data stored by just storing the keywords minus stopwords, plus a vector. And then do vector search along with normal search. And when we need more data on the frontend to show it, just use a service to pull on-demand. That would potentially enable 2-4x more storage on our end. Combine with CEVFS and could be another 2x or more.
 
 # nate
 
@@ -119,19 +103,7 @@ A lot of stuff here, beginning by just implementing syncers and testing them up 
 - run through a few searches and bugfix (duplicates)
 - hover highlighted snippet in search to scroll to part in peek
 - profile design 2.0: make it worth keeping open
-- part parser of searches:
-  - initially:
-    - [integration] xyz
-    - xyz in [integration]
-    - @person
-    - [integration] @person
-    - @person [integration] xyz
-    - xyz @person @person [integration]
-
-## dev
-
 - hmr fix: flash on orbit with no data for a bit
-- potentially crawler
 - settings panes: slack, folder
 
 bugs:
@@ -292,8 +264,6 @@ last demo:
 - Productionizing
   - smooth build to prod process
   - auto updates in app
-- Onboarding
-  - need better story for setting up and sharing integrations
 - Website
   - signup process
 - Setting up your team

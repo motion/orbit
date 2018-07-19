@@ -25,10 +25,8 @@ export const P = ({ size, titleFont, ...props }) => (
       <UI.Text
         size={size * (isSmall ? 0.9 : 1)}
         selectable
-        css={{
-          display: 'block',
-          fontFamily: titleFont ? TITLE_FONT_FAMILY : 'inherit',
-        }}
+        display="block"
+        fontFamily={titleFont ? TITLE_FONT_FAMILY : 'inherit'}
         {...props}
       />
     )}

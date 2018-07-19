@@ -52,14 +52,7 @@ class WindowResize extends React.Component {
 }
 
 const SectionTitle = props => (
-  <Title
-    css={{ marginRight: 100 }}
-    italic
-    size={4}
-    alpha={1}
-    color="#222"
-    {...props}
-  />
+  <Title marginRight={100} italic size={4} alpha={1} color="#222" {...props} />
 )
 
 const SectionP = props => (

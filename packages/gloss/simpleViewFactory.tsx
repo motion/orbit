@@ -354,6 +354,9 @@ export function simpleViewFactory(toCSS) {
     ThemedConstructor = props => (
       <ThemeContext.Consumer>
         {({ allThemes, activeThemeName }) => {
+          if (!allThemes) {
+            return <Constructor {...props} />
+          }
           const theme = allThemes[activeThemeName]
           return <Constructor theme={theme} {...props} />
         }}

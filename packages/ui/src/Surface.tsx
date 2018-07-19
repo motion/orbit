@@ -10,7 +10,6 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { Color } from '@mcro/css'
-// import { propsToTextSize } from './helpers/propsToTextSize'
 import { propsToThemeStyles } from '@mcro/gloss'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
@@ -80,7 +79,7 @@ export type SurfaceProps = {
   paddingLeft?: number
   paddingRight?: number
   paddingTop?: number
-  row?: boolean
+  vertical?: boolean
   size?: number
   sizeIcon?: number
   spaced?: boolean
@@ -117,7 +116,12 @@ export type SurfaceProps = {
 
 const getIconSize = props =>
   props.iconSize ||
-  Math.round(props.size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
+  Math.round(
+    props.size *
+      (props.height ? props.height / 3.5 : 12) *
+      (props.sizeIcon || 1) *
+      100,
+  ) / 100
 
 const inlineStyle = {
   display: 'inline',
@@ -137,6 +141,8 @@ const dimStyle = {
 
 // fontFamily: inherit on both fixes noElement elements
 const SurfaceFrame = view(View, {
+  flexFlow: 'row',
+  alignItems: 'center',
   fontFamily: 'inherit',
   position: 'relative',
 })
@@ -285,7 +291,6 @@ SurfaceFrame.theme = props => {
     background,
     boxShadow,
     justifyContent: props.justify || props.justifyContent,
-    alignItems: props.align || props.alignItems,
     alignSelf: props.alignSelf,
     borderStyle: props.borderStyle || props.borderWidth ? 'solid' : undefined,
     ...circularStyles,
@@ -315,10 +320,12 @@ SurfaceFrame.theme = props => {
 }
 
 const Element = view(View, {
+  flexFlow: 'row',
   fontFamily: 'inherit',
   border: 'none',
   background: 'transparent',
   height: '100%',
+  lineHeight: 'inherit',
   color: 'inherit',
   // this seems to maybe fix some line height stuff
   transform: {
@@ -328,39 +335,29 @@ const Element = view(View, {
 
 Element.theme = props => {
   const iconSize = getIconSize(props)
-  const flexFlow = props.flexFlow || 'row'
   const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
-  let elementGlowProps
-  if (props.glow) {
-    elementGlowProps = {
-      position: 'relative',
-      zIndex: 1,
-    }
-  }
   // element styles
-  const element = {
-    ...(props.inline && inlineStyle),
-    ...elementGlowProps,
-    flexFlow,
-    lineHeight: 'inherit',
-    maxWidth: `calc(100% ${iconNegativePad})`,
-  }
+  const elementStyle = {}
   // spacing between icon
-  const hasIconBefore = props.icon && !props.iconAfter
-  const hasIconAfter = props.icon && props.iconAfter
+  const hasIconBefore = !!props.icon && !props.iconAfter
+  const hasIconAfter = !!props.icon && props.iconAfter
   if (hasIconBefore) {
-    element.marginLeft = props.iconPad
+    elementStyle.marginLeft = props.iconPad
   }
   if (hasIconAfter) {
-    element.marginRight = props.iconPad
+    elementStyle.marginRight = props.iconPad
   }
-  return element
+  console.log('elementStyle', elementStyle)
+  return {
+    ...(props.inline && inlineStyle),
+    width: `calc(100% ${iconNegativePad})`,
+    ...elementStyle,
+  }
 }
 
 const baseIconStyle = {
   pointerEvents: 'none',
   justifyContent: 'center',
-  height: '1.4rem',
   transform: `translateY(1%)`,
 }
 
@@ -375,7 +372,6 @@ const WrapContents = view({
   overflow: 'hidden',
 })
 
-const ICON_SCALE = 12
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
 const BORDER_RADIUS_SIDES = [
   'borderBottomRadius',
@@ -388,27 +384,6 @@ const hasChildren = children =>
   Array.isArray(children)
     ? children.reduce((a, b) => a || !!b, false)
     : !!children
-
-// const undoPadding = {
-//   margin: padding
-//     ? typeof padding === 'number'
-//       ? -padding
-//       : padding.map(x => -x)
-//     : 0,
-//   padding,
-// }
-
-// const styles = {
-//   wrap: undoPadding,
-//   wrapContents: undoPadding,
-//   after: {
-//     marginTop: padding
-//       ? Array.isArray(padding)
-//         ? padding[0]
-//         : padding
-//       : 0,
-//   },
-// }
 
 @attachTheme
 @view.ui
@@ -425,8 +400,6 @@ class SurfaceInner extends React.Component<SurfaceProps> {
 
   render() {
     const {
-      borderLeftRadius: _borderLeftRadius,
-      borderRightRadius: _borderRightRadius,
       glint,
       badge,
       badgeProps,
@@ -440,33 +413,44 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       noElement,
       noWrap,
       children,
-      wrapElement,
+      // wrapElement,
       elementProps,
       tooltip,
       tooltipProps,
-      className,
       after,
-      ...props
+      color,
+      theme,
+      size,
     } = this.props
     const stringIcon = typeof icon === 'string'
-    const passProps = {
-      tagName: props.tagName,
-      ref: props.forwardRef,
-      style: props.style,
-      ...props,
-    }
-
-    const glowColor = (props.theme && props.color) || DEFAULT_GLOW_COLOR
-
-    const contents = (
-      <>
-        <Glint
-          if={glint}
-          key={0}
-          size={props.size}
-          // borderLeftRadius={borderLeftRadius - 1}
-          // borderRightRadius={borderRightRadius - 1}
-        />
+    const {
+      tagName,
+      forwardRef,
+      style,
+      padding,
+      className,
+      ...throughProps
+    } = this.props
+    const glowColor = (theme && color) || DEFAULT_GLOW_COLOR
+    console.log('iconsize', this.props, getIconSize(this.props))
+    return (
+      <SurfaceFrame
+        alignSelf="flex-start"
+        whiteSpace="pre"
+        padding={padding}
+        {...throughProps}
+        forwardRef={forwardRef}
+        style={style}
+        className={`${this.uniq} ${className || ''}`}
+      >
+        {glint ? (
+          <Glint
+            key={0}
+            size={size}
+            // borderLeftRadius={borderLeftRadius - 1}
+            // borderRightRadius={borderRightRadius - 1}
+          />
+        ) : null}
         {badge ? (
           <Badge {...badgeProps}>
             {typeof badge !== 'boolean' ? badge : ''}
@@ -475,11 +459,9 @@ class SurfaceInner extends React.Component<SurfaceProps> {
         {icon && !stringIcon ? <div>{icon}</div> : null}
         {icon && stringIcon ? (
           <Icon
-            style={{
-              order: icon && iconAfter ? 3 : 'auto',
-            }}
+            order={icon && iconAfter ? 3 : 'auto'}
             name={`${icon}`}
-            size={getIconSize(props)}
+            size={getIconSize(this.props)}
             {...iconProps}
           />
         ) : null}
@@ -494,16 +476,19 @@ class SurfaceInner extends React.Component<SurfaceProps> {
             {...glowProps}
           />
         ) : null}
-        {!noElement || (noElement && !noWrap && hasChildren(children)) ? (
-          <Element
-            {...wrapElement && passProps}
-            {...elementProps}
-            disabled={disabled}
-          >
-            {children}
-          </Element>
-        ) : null}
-        {noElement && noWrap && hasChildren(children) && children}
+        <Element
+          minWidth={
+            Array.isArray(this.props.padding)
+              ? this.props.padding[1] * 5
+              : 'auto'
+          }
+          tagName={tagName}
+          {...throughProps}
+          {...elementProps}
+          disabled={disabled}
+        >
+          {children}
+        </Element>
         {tooltip ? (
           <Theme name="dark">
             <Popover
@@ -526,20 +511,6 @@ class SurfaceInner extends React.Component<SurfaceProps> {
             </Popover>
           </Theme>
         ) : null}
-      </>
-    )
-    return (
-      <SurfaceFrame
-        className={`${this.uniq} ${className || ''}`}
-        {...!wrapElement && passProps}
-      >
-        {after ? (
-          <Wrap>
-            <WrapContents>{contents}</WrapContents>
-            {after}
-          </Wrap>
-        ) : null}
-        {!after && contents}
       </SurfaceFrame>
     )
   }

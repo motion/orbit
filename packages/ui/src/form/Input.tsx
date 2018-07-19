@@ -1,21 +1,21 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { SizedSurface } from '../SizedSurface'
+import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { UIContext } from '../helpers/contexts'
 
-// type Props = {
-//   uiContext: Object,
-//   sync?: Object,
-//   onEnter?: Function,
-//   type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password',
-//   name?: string,
-//   form?: Object,
-//   elementProps?: Object,
-//   onClick?: Function,
-// }
+export type InputProps = SizedSurfaceProps & {
+  uiContext: Object
+  sync?: Object
+  onEnter?: Function
+  type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password'
+  name?: string
+  form?: Object
+  elementProps?: Object
+  onClick?: Function
+}
 
 @view.ui
-class InputPlain extends React.PureComponent {
+class InputPlain extends React.PureComponent<InputProps> {
   static defaultProps = {
     size: 1,
     type: 'input',
@@ -62,14 +62,8 @@ class InputPlain extends React.PureComponent {
   render() {
     const {
       sync,
-      type,
-      name,
-      uiContext,
-      form,
       elementProps,
-      style,
       onChange,
-      size,
       value,
       forwardRef,
       ...props
@@ -81,26 +75,16 @@ class InputPlain extends React.PureComponent {
     }
     return (
       <SizedSurface
-        size={size}
         sizeFont
         sizePadding
         sizeHeight
         sizeLineHeight
+        sizeRadius
         borderWidth={1}
-        wrapElement
         tagName="input"
-        className="input"
-        name={name}
-        type={type}
         elementProps={{
           value,
           onChange,
-          style: {
-            width: '100%',
-            pointerEvents: 'auto',
-            padding: `0 ${10 * size}px`,
-            ...style,
-          },
           ref: forwardRef,
           ...finalProps,
         }}

@@ -38,7 +38,7 @@ const render = throttle(async () => {
   // <React.unstable_AsyncMode>
   // </React.unstable_AsyncMode>
   ReactDOM.render(
-    <UI.ThemeProvide {...themes}>
+    <UI.ThemeProvide themes={themes}>
       <UI.Theme name="light">
         <RootViewHMR />
       </UI.Theme>
@@ -53,4 +53,6 @@ render()
 // @ts-ignore
 window.render = render
 
-module.hot && module.hot.accept(render)
+if (process.env.NODE_ENV === 'development') {
+  module.hot && module.hot.accept(render)
+}

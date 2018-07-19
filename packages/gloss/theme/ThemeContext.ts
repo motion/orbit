@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 export const ThemeContext = React.createContext({
-  allThemes: null,
+  allThemes: {},
   activeThemeName: null,
   activeTheme: null,
 })

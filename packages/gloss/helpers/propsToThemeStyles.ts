@@ -6,13 +6,17 @@ import { validCSSAttr } from '@mcro/css'
 
 // needs work...
 
-// <Button base hover="&:hover" active="&:active" />
+// <Button />
 // will apply all theme styles from:
 // theme { base: {}, hover: {}, active: {} }
 // on the states normal, :hover, :active
 
 // You can toggle them individually
 // <Button background={false} hover={{ background: false }} />
+
+// And maybe have a custom alternate state
+
+// <Button alt />
 
 export const propsToThemeStyles = props => {
   const styles = {}

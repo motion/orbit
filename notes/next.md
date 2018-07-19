@@ -113,15 +113,12 @@ bugs:
 1.  Search
 
 - shows summarized and nice meta info for things
-- type something else - is fast and fluid
 - pin to top of search (or drag to order it?)
-- pin to news
-  - this highlights asynchronous communication
-- keyboard nav: should scroll down as you move down so its easier to see
+- keyboard nav: should scroll down as you move
   - after you click down one, have it expand to full screen
   - before you go down, have it be limited height
 
-3.  Directory
+1.  Directory
 
 - search to filter a person
 - peek to show person
@@ -143,14 +140,9 @@ last demo:
   - topic search would be nice
   - "pin to search"
 - directory
+
   - show profile
   - show team peek card
-- apps
-
-  - final wow
-  - click "create app", paste in some code
-  - realtime HMR edit
-  - shows up in Home
 
 - write three articles from write.md
 - site:
@@ -160,74 +152,17 @@ last demo:
     - update site with blog posts
     - polish everything to better explain (features use cases)
     - post articles to HN, PH, dev twitter, etc
-- start twitter and tweeting, follow a bunch of good and similar accounts
-
-  - setup tweetbot or something to manage
-
-- hire:
-  - start with syncers + panes
-    - do one syncer/pane at a time
-    - google docs
-    - google mail
-    - slack
-
-# dev
-
-## high level
-
-- p2p sync system
-- merging cosal
-- major fixes for settings, syncers, etc
-- productionize
-- auto updates
-- fixing types and pane structures
+- start twitter and tweeting, follow a bunch of good and similar
 
 ## low level
 
-- [ ] cpu on desktop gets pegged at 100%
 - [ ] intercept all a=href and open in native browser (slack)
-- [ ] slack emojis
-- [ ] only close peek on esc if electron focused
 - [ ] slack unread/read sql
 - [ ] slack various formatting issues: backticks ``, inline html
 - [ ] setting pane improvements
-- [ ] double click to open OrbitCard item
 - [ ] swindler on close window need to reposition
-- [ ] explore mockup
-- [ ] home animations
-- [ ] productionize
-- interaction
-  - [ ] space to peek
-    - appStore.hasNavigated = false on new query, true on keydown
-    - use that to make space open peek
-  - [ ] option+key to pin needs some bugfixing (~30m)
-    - if opened/closed again, select text in header
-    - fix option+backspace to pin/delete
-- settings/onboard
-  - on no bits, show onboard/settings stuff
-  - general settings stuff at top of settings pane
-    - adjust delay for option hold
-    - adjust max storage size
   - automatic settings: slack common rooms, etc
   - remove setting + clear bits
-- peek
-  - design
-    - open/close interactions
-  - [ ] click header input clear peek
-  - [ ] peek auto link links
-  - [ ] peek show images
-  - [ ] gmail formatting issues (apostrophe's are html escaped)
-- profiles
-  - [ ] sync people info from github
-  - [ ] sync people info from google
-  - [ ] peek view with aggregate info
-  - [ ] NLP: related things, common rooms
-- sync
-  - [ ] deletes! needs to sync when something deletes :/
-  - [ ] github sync
-  - [ ] github simple sidebar/peek
-- stack
-  - [ ] fix electron devtools not working
 
 # Product strategy
 

@@ -18,6 +18,8 @@
 - scanning their history and try to auto import things
 - crawler could start importing some popular website data even
 - much smoother adding of integration flow
+- automatic configure integrations a bit
+  - slack top rooms, gmail filters
 
 ## Beta
 
@@ -25,6 +27,14 @@
 - Walks through integration setup on first start
 - Syncs their preferences for integrations (not tokens just settings)
 - General shared data system
+
+## Site for launch
+
+- really needs a lot of iteration
+- needs extensive page just for assurance of security/privacy
+- needs integrations page with lots of nice detail
+- needs search/explore page with inline videos
+- needs about page with trustworthy stuff
 
 ## Launch
 
@@ -74,3 +84,4 @@
   - One click instant deploy
   - Triggers based on incoming bits
   - Triggers based on what you're doing
+- HMR edit an app that realtime syncs to team

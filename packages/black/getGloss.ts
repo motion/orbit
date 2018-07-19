@@ -3,7 +3,6 @@ import Gloss from '@mcro/gloss'
 let gloss
 
 export function getGloss() {
-  console.trace()
   if (!gloss) {
     gloss = new Gloss({
       glossProp: 'css',
@@ -34,6 +33,3 @@ export function getGloss() {
   }
   return gloss
 }
-
-// export const { decorator, createElement } = gloss
-// export default gloss

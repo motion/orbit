@@ -8,14 +8,15 @@
 const invariant = require('invariant')
 
 function makeStyleTag(): HTMLStyleElement {
+  if (typeof document === 'undefined') {
+    return null
+  }
   const tag = document.createElement('style')
   tag.type = 'text/css'
   tag.appendChild(document.createTextNode(''))
-
   const { head } = document
   invariant(head, 'expected head')
   head.appendChild(tag)
-
   return tag
 }
 

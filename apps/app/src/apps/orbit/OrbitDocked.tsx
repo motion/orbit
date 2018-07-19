@@ -29,24 +29,24 @@ const Frame = view(UI.Col, {
   transform: {
     x: 6,
   },
-})
-
-Frame.theme = ({ theme, visible, willAnimate }) => ({
-  background: theme.base.background,
-  ...(visible && {
+  visible: {
     pointerEvents: 'auto',
     opacity: 1,
     transform: {
       x: 0,
     },
-  }),
-  ...(willAnimate && {
+  },
+  willAnimate: {
     willChange: 'transform, opacity',
     transition: `
       transform ease ${App.animationDuration}ms,
       opacity ease ${App.animationDuration}ms
     `,
-  }),
+  },
+})
+
+Frame.theme = ({ theme }) => ({
+  background: theme.base.background,
 })
 
 const Border = view(UI.FullScreen, {

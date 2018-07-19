@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, on, react } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import * as _ from 'lodash'
 import { BORDER_RADIUS } from '../../constants'
 import * as UI from '@mcro/ui'
@@ -12,6 +12,7 @@ class DockedPaneStore {
   isAtBottom = false
 
   didMount() {
+    console.log('waht', on, this)
     on(
       this,
       this.paneRef.current,

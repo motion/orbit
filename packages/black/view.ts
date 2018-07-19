@@ -28,15 +28,16 @@ export interface ViewDecorator {
   attach: any
 }
 
+const Gloss = getGloss()
+const glossDecorator = () => ({
+  onlyClass: true,
+  decorator: Gloss.decorator,
+})
+
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
   renderArgumentable,
-  // gloss plugin
-  enable.ui &&
-    (() => ({
-      onlyClass: true,
-      decorator: getGloss().decorator,
-    })),
+  enable.ui && glossDecorator,
   enable.mobx && reactObservable,
   [storeProvidable, storeOptions],
   !enable.ui && emitsMount,
@@ -51,7 +52,7 @@ function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(a, b) {
     // short: view({ ...styles }), view('div', {}) view(OtherView, {})
     if (glossSimpleComponentArgs(a, b)) {
-      return decorator(a, b)
+      return Gloss.decorator(a, b)
     }
     // patch this in for now...
     const shouldPatchConfig = !a.prototype && !a.withConfig

@@ -5,6 +5,7 @@ import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import css, { validCSSAttr } from '@mcro/css'
+import validProp from './helpers/validProp'
 
 // import sonar
 
@@ -108,7 +109,6 @@ export function simpleViewFactory() {
   const buildRules = (rules, props, theme) => {
     let styles = toCSS(rules)
     if (theme) {
-      console.log('get theme', props)
       styles = {
         ...styles,
         ...toCSS(theme(props)),
@@ -197,9 +197,10 @@ export function simpleViewFactory() {
     const isDOM = typeof tagName === 'string'
     let ThemedConstructor
     let cachedTheme
+    let hasTheme = false
 
     function getTheme() {
-      if (cachedTheme === null || cachedTheme) {
+      if (hasTheme) {
         return cachedTheme
       }
       let themes = []
@@ -214,6 +215,7 @@ export function simpleViewFactory() {
       if (!themes.length) {
         result = null
       } else {
+        hasTheme = true
         result = props => {
           let styles = {}
           // from most important to least
@@ -245,6 +247,9 @@ export function simpleViewFactory() {
       }
 
       generateClassnames(props: Props, prevProps?: Props) {
+        if (props.debug) {
+          debugger
+        }
         // if this is a secondary render then check if the props are essentially equivalent
         if (prevProps != null && hasEquivProps(props, prevProps)) {
           return
@@ -268,50 +273,51 @@ export function simpleViewFactory() {
           }
         }
         // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
-        if (myStyles !== this.state.lastStyles) {
-          const prevClasses = this.state.classNames
-          const classNames = []
-          // add rules
-          for (const namespace in myStyles) {
-            const className = addRules(
-              displayName,
-              myStyles[namespace],
-              namespace,
-              props,
-              getTheme(),
-            )
-            // remove inactive props, including boolean props
-            if (namespace !== id && namespace[0] !== '&') {
-              const psuedoIndex = namespace.indexOf('&')
-              const namespaceWithoutPsuedo = namespace.slice(
-                0,
-                psuedoIndex === -1 ? namespace.length : psuedoIndex,
-              )
-              if (props[namespaceWithoutPsuedo] !== true) {
-                continue
-              }
-            }
-            classNames.push(className)
-            // if this is the first mount render or we didn't previously have this class then add it as new
-            if (prevProps == null || !prevClasses.includes(className)) {
-              gc.registerClassUse(className)
-            }
-          }
-          // check what classNames have been removed if this is a secondary render
-          if (prevProps != null) {
-            for (const className of prevClasses) {
-              // if this previous class isn't in the current classes then deregister it
-              if (!classNames.includes(className)) {
-                gc.deregisterClassUse(className)
-              }
-            }
-          }
-          this.setState({
-            classNames,
-            lastStyles: myStyles,
-            extraClassNames,
-          })
+        if (!hasTheme && myStyles === this.state.lastStyles) {
+          return
         }
+        const prevClasses = this.state.classNames
+        const classNames = []
+        // add rules
+        for (const namespace in myStyles) {
+          const className = addRules(
+            displayName,
+            myStyles[namespace],
+            namespace,
+            props,
+            getTheme(),
+          )
+          // remove inactive props, including boolean props
+          if (namespace !== id && namespace[0] !== '&') {
+            const psuedoIndex = namespace.indexOf('&')
+            const namespaceWithoutPsuedo = namespace.slice(
+              0,
+              psuedoIndex === -1 ? namespace.length : psuedoIndex,
+            )
+            if (props[namespaceWithoutPsuedo] !== true) {
+              continue
+            }
+          }
+          classNames.push(className)
+          // if this is the first mount render or we didn't previously have this class then add it as new
+          if (prevProps == null || !prevClasses.includes(className)) {
+            gc.registerClassUse(className)
+          }
+        }
+        // check what classNames have been removed if this is a secondary render
+        if (prevProps != null) {
+          for (const className of prevClasses) {
+            // if this previous class isn't in the current classes then deregister it
+            if (!classNames.includes(className)) {
+              gc.deregisterClassUse(className)
+            }
+          }
+        }
+        this.setState({
+          classNames,
+          lastStyles: myStyles,
+          extraClassNames,
+        })
       }
 
       componentWillUnmount() {
@@ -321,28 +327,40 @@ export function simpleViewFactory() {
       }
 
       render() {
-        const { children, innerRef, ...props } = this.props
-        console.log('render me', id, this.props)
+        const props = this.props
+        const { children, forwardRef } = props
+        // build final props without weird attrs
+        const finalProps = {}
         // build class names
         const className = this.state.classNames
           .concat(this.state.extraClassNames)
           .join(' ')
-        if (props.is) {
-          props.class = className
-        } else {
-          props.className = className
-        }
-        //
-        if (innerRef) {
-          if (isDOM) {
-            // dom ref
-            props.ref = innerRef
-          } else {
-            // probably another styled component so pass it down
-            props.innerRef = innerRef
+        for (const key of Object.keys(props)) {
+          if (validProp(key)) {
+            finalProps[key] = props[key]
           }
         }
-        return React.createElement(tagName, props, children)
+        if (props.is) {
+          finalProps.class = className
+        } else {
+          finalProps.className = className
+        }
+        //
+        if (forwardRef) {
+          if (isDOM) {
+            // dom ref
+            finalProps.ref = forwardRef
+          } else {
+            // probably another styled component so pass it down
+            finalProps.forwardRef = forwardRef
+          }
+        }
+        return React.createElement(
+          // accept custom tagname overrides
+          props.tagName || tagName,
+          finalProps,
+          children,
+        )
       }
     }
 
@@ -350,7 +368,6 @@ export function simpleViewFactory() {
       <ThemeContext.Consumer>
         {({ allThemes, activeThemeName }) => {
           const theme = allThemes[activeThemeName]
-          console.log('passing down', props)
           return <Constructor theme={theme} {...props} />
         }}
       </ThemeContext.Consumer>

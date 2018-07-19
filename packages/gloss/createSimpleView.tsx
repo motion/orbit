@@ -46,6 +46,7 @@ const addStyles = (id, baseStyles, nextStyles) => {
 }
 
 const getAllStyles = (baseId, target, rawStyles) => {
+  console.log('build styles for', baseId)
   const builtStyles = {
     [baseId]: {},
   }
@@ -53,13 +54,17 @@ const getAllStyles = (baseId, target, rawStyles) => {
   // merge child styles
   if (target.IS_GLOSSY) {
     const { id, styles } = target.getConfig()
-    for (let key of Object.keys(styles)) {
-      key = key === id ? baseId : key
-      if (typeof builtStyles[key] === 'undefined') {
-        builtStyles[key] = styles[key]
+    const moveToMyId = styles[id]
+    delete styles[id]
+    styles[baseId] = moveToMyId
+    for (const key of Object.keys(styles)) {
+      builtStyles[key] = {
+        ...styles[key],
+        ...builtStyles[key],
       }
     }
   }
+  console.log('now', builtStyles)
   return builtStyles
 }
 
@@ -175,11 +180,12 @@ let idCounter = 1
 const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
 export function createSimpleView(target: any, rawStyles: RawRules) {
+  const tagName = target.IS_GLOSSY ? target.getConfig().tagName : target
   const id = `${uid()}`
   let styles = getAllStyles(id, target, rawStyles)
   console.log(JSON.stringify(styles, null, 2))
   let displayName = 'ComponentName'
-  const isDOM = typeof target === 'string'
+  const isDOM = typeof tagName === 'string'
 
   class Constructor extends StyledComponentBase<Props> {
     generateClassnames(props: Props, prevProps?: Props) {
@@ -194,6 +200,7 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
       // resolved styles
       if (props.className) {
         const propClassNames = props.className.trim().split(/[\s]+/g)
+        console.log('got props class', id, propClassNames)
         for (const className of propClassNames) {
           const classInfo = tracker.get(className)
           if (classInfo) {
@@ -211,6 +218,9 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
         const prevClasses = this.state.classNames
         const classNames = []
         // add rules
+        if (props.debug) {
+          console.log('namespace--', myStyles, id)
+        }
         for (const namespace in myStyles) {
           const className = addRules(
             displayName,
@@ -273,7 +283,7 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
           props.innerRef = innerRef
         }
       }
-      return React.createElement(target, props, children)
+      return React.createElement(tagName, props, children)
     }
   }
 
@@ -289,7 +299,8 @@ export function createSimpleView(target: any, rawStyles: RawRules) {
   }
 
   Constructor.getConfig = () => ({
-    styles,
+    tagName,
+    styles: { ...styles },
     id,
   })
 

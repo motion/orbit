@@ -739,6 +739,7 @@ class OrbitPure extends React.Component {
               />
               <HomeImg
                 src={homeImg}
+                debug
                 css={{
                   ...imgProps,
                   zIndex: 3,

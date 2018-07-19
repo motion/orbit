@@ -1,8 +1,8 @@
 import * as React from 'react'
 
 const ogCreateElement = React.createElement.bind(React)
-
 const IS_BROWSER = typeof window !== 'undefined'
+const cssOpts = { snakeCase: false }
 let cancelNextClick = false
 let lastMouseDown = Date.now()
 
@@ -31,37 +31,33 @@ setTimeout(() => {
   }
 }, 100)
 
-const cssOpts = { snakeCase: false }
+const cache = new WeakMap()
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss) {
   const { options, css } = Gloss
 
   function fancyElement(type, props, ...children) {
-    const propNames = props ? Object.keys(props) : null
+    let finalProps = props
 
-    if (propNames) {
-      for (const prop of propNames) {
-        const val = props && props[prop]
-        // style={}
-        if (prop === 'style') {
-          props.style = props.style || {}
-          props.style = { ...props.style, ...val }
-          continue
+    if (props && options.glossProp) {
+      const cached = cache.get(props)
+      if (cached) {
+        console.log('using cache')
+        finalProps = cached
+      } else {
+        const val = props[options.glossProp]
+        if (val) {
+          finalProps = { ...props }
+          delete finalProps[options.glossProp]
+          const extraStyle = css(val, cssOpts)
+          finalProps.style = { ...finalProps.style, ...extraStyle }
         }
-        // css={}
-        if (options.glossProp && prop === options.glossProp) {
-          if (val && Object.keys(val).length) {
-            // css={}
-            const extraStyle = css(val, cssOpts)
-            props.style = props.style || {}
-            props.style = { ...props.style, ...extraStyle }
-          }
-          continue
-        }
+        cache.set(props, finalProps)
       }
     }
-    return ogCreateElement(type, props, ...children)
+
+    return ogCreateElement(type, finalProps, ...children)
   }
 
   return fancyElement

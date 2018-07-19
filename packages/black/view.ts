@@ -8,7 +8,7 @@ import {
 import { subscribable } from '@mcro/decor-classes'
 import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
-import { decorator } from './gloss'
+import { getGloss } from './getGloss'
 
 import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
@@ -28,15 +28,15 @@ export interface ViewDecorator {
   attach: any
 }
 
-const glossPlugin = () => ({
-  onlyClass: true,
-  decorator,
-})
-
 const decorations = (enable: { ui?: boolean; mobx?: boolean } = {}) => [
   subscribable,
   renderArgumentable,
-  enable.ui && glossPlugin,
+  // gloss plugin
+  enable.ui &&
+    (() => ({
+      onlyClass: true,
+      decorator: getGloss().decorator,
+    })),
   enable.mobx && reactObservable,
   [storeProvidable, storeOptions],
   !enable.ui && emitsMount,

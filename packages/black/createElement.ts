@@ -1,3 +1,3 @@
-import { createElement } from './gloss'
+import { getGloss } from './getGloss'
 
-export default createElement
+export default getGloss().createElement

@@ -18,7 +18,6 @@ window.Black = Black
 function render() {
   const RootNode = document.querySelector('#app')
   const Root = require('./root').default
-  Black.Gloss.attach()
   ReactDOM.render(
     <ThemeProvide {...Themes}>
       <Root />

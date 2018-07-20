@@ -5,7 +5,7 @@ import { hot } from 'react-hot-loader'
 // it fixes hmr
 // import './helpers/installDevelopmentHelpers'
 import './router'
-// import './themes'
-// import './constants'
+import './themes'
+import './constants'
 
 export const RootViewHMR = hot(module)(RootView)

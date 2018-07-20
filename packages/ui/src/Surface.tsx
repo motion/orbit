@@ -69,7 +69,7 @@ export type SurfaceProps = {
   marginTop?: number
   maxWidth?: number
   minWidth?: number
-  noElement?: boolean
+  noInnerElement?: boolean
   noWrap?: boolean
   onClick?: Function
   opacity?: number
@@ -145,7 +145,7 @@ SurfaceBase.theme = props => ({
   ...propsToStyles(props),
 })
 
-// fontFamily: inherit on both fixes noElement elements
+// fontFamily: inherit on both fixes elements
 const SurfaceFrame = view(SurfaceBase, {
   flexFlow: 'row',
   alignItems: 'center',
@@ -237,6 +237,8 @@ SurfaceFrame.theme = props => {
 
   // circular
   const circularStyles = props.circular && {
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 0,
     width: height,
   }
@@ -333,6 +335,9 @@ const Element = view(View, {
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
+  noInnerElement: {
+    display: 'none',
+  },
 })
 
 Element.theme = props => {
@@ -362,29 +367,7 @@ const baseIconStyle = {
   transform: `translateY(1%)`,
 }
 
-const Wrap = view({
-  flex: 1,
-  overflow: 'hidden',
-})
-
-const WrapContents = view({
-  flex: 1,
-  position: 'relative',
-  overflow: 'hidden',
-})
-
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
-const BORDER_RADIUS_SIDES = [
-  'borderBottomRadius',
-  'borderTopRadius',
-  'borderLeftRadius',
-  'borderRightRadius',
-]
-
-const hasChildren = children =>
-  Array.isArray(children)
-    ? children.reduce((a, b) => a || !!b, false)
-    : !!children
 
 @attachTheme
 @view.ui
@@ -420,6 +403,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       theme,
       size,
       sizeLineHeight,
+      noInnerElement,
     } = this.props
     const stringIcon = typeof icon === 'string'
     const {
@@ -479,6 +463,7 @@ class SurfaceInner extends React.Component<SurfaceProps> {
           />
         ) : null}
         <Element
+          noInnerElement={noInnerElement}
           minWidth={
             Array.isArray(this.props.padding)
               ? this.props.padding[1] * 5

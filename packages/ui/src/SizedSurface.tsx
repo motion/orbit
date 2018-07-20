@@ -5,6 +5,7 @@ import { forwardRef } from './helpers/forwardRef'
 const LINE_HEIGHT = 30
 
 export type SizedSurfaceProps = SurfaceProps & {
+  circular?: boolean
   sizeHeight?: boolean | number
   sizeFont?: boolean | number
   sizePadding?: boolean | number
@@ -24,6 +25,7 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
     sizePadding,
     sizeRadius,
     sizeIcon,
+    circular,
     ...rest
   } = props
   const size =
@@ -64,6 +66,11 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
   if (sizeRadius) {
     const radius = num(sizeRadius) * 8 * size
     pass.borderRadius = radius
+  }
+  if (circular) {
+    pass.width = height
+    pass.borderRadius = size * 1000
+    pass.noInnerElement = true
   }
   // icon already tracks height so no need to size it from here
   if (sizeIcon) {

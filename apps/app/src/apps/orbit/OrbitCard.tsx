@@ -201,8 +201,11 @@ class OrbitCardStore {
     return isPaneActive && isSubPaneActive
   }
 
-  handleClick = () => {
-    console.log('handle click')
+  handleClick = e => {
+    if (this.props.onClick) {
+      this.props.onClick(e)
+      return
+    }
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
       return
@@ -357,7 +360,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       iconProps,
       hide,
       inGrid,
-      onClick,
       hoverable,
       borderRadius,
       nextUpStyle,
@@ -387,7 +389,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
         forwardRef={store.setRef}
         {...hoverToSelect && !inactive && this.hoverSettler.props}
         zIndex={isSelected ? 5 : 4}
-        onClick={onClick || store.handleClick}
+        onClick={store.handleClick}
         {...props}
       >
         <Card

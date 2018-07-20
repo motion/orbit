@@ -3,6 +3,8 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 
+const oneLine = str => str.replace(/\r?\n|\r/g, '')
+
 const TextAreaOuter = view(UI.Col, {
   position: 'relative',
   width: '100%',
@@ -15,6 +17,8 @@ const Block = view(UI.Block, {
   left: 0,
   right: 0,
   bottom: 0,
+  whiteSpace: 'pre',
+  wordWrap: 'no-wrap',
 })
 
 type Color = string
@@ -35,7 +39,7 @@ type Props = CSSPropertySet & {
 }
 
 export class HighlightedTextArea extends React.Component<Props> {
-  backdrop = React.createRef()
+  highlights = React.createRef()
 
   static defaultProps = {
     openMark: '<mark>',
@@ -56,16 +60,17 @@ export class HighlightedTextArea extends React.Component<Props> {
   }
 
   handleInputChange = event => {
-    this.setState({ value: event.target.value })
+    this.setState({ value: oneLine(event.target.value) })
     if (this.props.onChange) {
       this.props.onChange(event)
     }
   }
 
   handleScroll = event => {
-    const scrollTop = event.target.scrollTop
+    const scrollLeft = event.target.scrollLeft
     // @ts-ignore
-    this.backdrop.current.scrollTop = scrollTop
+    this.highlights.current.scrollLeft = scrollLeft
+    console.log('scrolllll', scrollLeft)
   }
 
   handleRegexHighlight(input, markRegex) {
@@ -158,21 +163,26 @@ export class HighlightedTextArea extends React.Component<Props> {
   render() {
     const { onChange, highlight, value, forwardRef, ...props } = this.props
     return (
-      <TextAreaOuter>
+      <TextAreaOuter height="100%">
         <Block
           {...props}
-          forwardRef={this.backdrop}
+          forwardRef={this.highlights}
           dangerouslySetInnerHTML={{ __html: this.getHighlights() }}
           color="transparent"
+          overflowX="scroll"
+          overflowY="hidden"
+          className="hideScrollBar"
         />
         <Block
           tagName="textarea"
+          rows={1}
           resize="none"
           {...props}
           onChange={this.handleInputChange}
           onScroll={this.handleScroll}
           value={this.state.value}
           forwardRef={forwardRef}
+          className="hideScrollBar"
         />
       </TextAreaOuter>
     )

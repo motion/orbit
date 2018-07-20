@@ -45,7 +45,7 @@ function createViewDecorator(): ViewDecorator {
   const Gloss = getGloss()
 
   const view = <ViewDecorator>function view(a, b) {
-    // short: view({ ...styles }), view('div', {}) view(OtherView, {})
+    // simple views
     if (glossSimpleComponentArgs(a, b)) {
       return Gloss.decorator(a, b)
     }

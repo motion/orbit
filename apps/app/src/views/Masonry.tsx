@@ -12,7 +12,7 @@ const MasonryGrid = view({
 })
 
 export type MasonryProps = {
-  minWidth: number
+  minWidth?: number
 }
 
 @view.ui

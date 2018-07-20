@@ -154,7 +154,7 @@ export class OrbitSettings extends React.Component<{
                 appStore={appStore}
                 hoverable
                 onClick={
-                  item.auth
+                  log(item.auth)
                     ? ({ currentTarget }) => {
                         App.actions.toggleSelectItem(
                           { id: item.id, type: 'view', title: item.title },

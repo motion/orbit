@@ -14,7 +14,7 @@ const OrbitHeaderContainer = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  padding: [4, 16],
+  padding: [5, 12],
   transition: 'all ease-in 300ms',
   zIndex: 4,
 })

@@ -12,24 +12,25 @@ const handleKeyDown = e => {
 
 export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
   return (
-    <HighlightedTextArea
-      width="100%"
-      fontWeight={300}
-      fontSize={22}
-      lineHeight="22px"
-      padding={12}
-      border="none"
-      display="block"
-      background="transparent"
-      value={orbitStore.query}
-      highlight={headerStore.highlightWords}
-      color={theme.base.color.alpha(0.8)}
-      onChange={orbitStore.onChangeQuery}
-      onFocus={orbitStore.onFocus}
-      onBlur={orbitStore.onBlur}
-      onKeyDown={handleKeyDown}
-      forwardRef={headerStore.inputRef}
-      onClick={headerStore.onClickInput}
-    />
+    <div style={{ padding: 12, width: '100%' }}>
+      <HighlightedTextArea
+        width="100%"
+        fontWeight={300}
+        fontSize={22}
+        lineHeight="22px"
+        border="none"
+        display="block"
+        background="transparent"
+        value={orbitStore.query}
+        highlight={headerStore.highlightWords}
+        color={theme.base.color.alpha(0.8)}
+        onChange={orbitStore.onChangeQuery}
+        onFocus={orbitStore.onFocus}
+        onBlur={orbitStore.onBlur}
+        onKeyDown={handleKeyDown}
+        forwardRef={headerStore.inputRef}
+        onClick={headerStore.onClickInput}
+      />
+    </div>
   )
 })

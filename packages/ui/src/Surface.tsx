@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Theme } from '@mcro/gloss'
 import { view, attachTheme } from '@mcro/black'
-import $ from '@mcro/color'
+import toColor from '@mcro/color'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
@@ -171,7 +171,7 @@ SurfaceFrame.theme = props => {
   let color =
     props.color === false || props.color === 'inherit'
       ? 'inherit'
-      : $(
+      : toColor(
           props.color ||
             (props.highlight && props.highlightColor) ||
             theme[STATE].color,
@@ -200,7 +200,7 @@ SurfaceFrame.theme = props => {
   const colorfulBg = !isGradient && !isTransparent
 
   if (colorfulBg && background && !background.model) {
-    background = $(background)
+    background = toColor(background)
   }
   if (typeof props.backgroundAlpha === 'number' && background.alpha) {
     background = background.alpha(props.backgroundAlpha)
@@ -281,7 +281,10 @@ SurfaceFrame.theme = props => {
   const focusStyle = !props.chromeless &&
     theme.focus && {
       ...theme.focus,
-      boxShadow: [...boxShadow, [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)]],
+      boxShadow: [
+        ...boxShadow,
+        [0, 0, 0, 4, toColor(theme.focus.color).alpha(0.05)],
+      ],
     }
   let surfaceStyles = {
     ...(props.inline && inlineStyle),
@@ -434,7 +437,6 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     const glowColor = (theme && color) || DEFAULT_GLOW_COLOR
     return (
       <SurfaceFrame
-        alignSelf="flex-start"
         whiteSpace="pre"
         padding={padding}
         margin={margin}

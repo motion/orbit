@@ -24,7 +24,7 @@ export class IntegrationSettingsStore {
     const config = this.allIntegrations.find(
       x => x.integration === setting.type,
     )
-    return config && config[0] ? config[0].title : ''
+    return config ? config.title : ''
   }
 
   settingToResult = (setting: Setting) => ({

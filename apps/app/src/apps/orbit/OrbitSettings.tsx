@@ -130,7 +130,6 @@ export class OrbitSettings extends React.Component<{
             {store.integrationSettings
               .map((setting, index) => (
                 <store.IntegrationCard
-                  if={integrationSettingsStore.getTitle(setting)}
                   key={`${setting.id}`}
                   result={integrationSettingsStore.settingToResult(setting)}
                   index={index + store.generalSettings.length}

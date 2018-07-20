@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Theme } from '@mcro/gloss'
 import { view, attachTheme } from '@mcro/black'
 import $ from '@mcro/color'
-import { View } from './blocks/View'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
@@ -10,7 +9,7 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { Color } from '@mcro/css'
-import { propsToThemeStyles } from '@mcro/gloss'
+import { propsToThemeStyles, propsToStyles } from '@mcro/gloss'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -139,8 +138,14 @@ const dimStyle = {
   },
 }
 
+const SurfaceBase = view({})
+SurfaceBase.theme = props => ({
+  ...propsToThemeStyles(props),
+  ...propsToStyles(props),
+})
+
 // fontFamily: inherit on both fixes noElement elements
-const SurfaceFrame = view(View, {
+const SurfaceFrame = view(SurfaceBase, {
   flexFlow: 'row',
   alignItems: 'center',
   fontFamily: 'inherit',
@@ -319,7 +324,7 @@ SurfaceFrame.theme = props => {
   return surfaceStyles
 }
 
-const Element = view(View, {
+const Element = view(SurfaceBase, {
   flexFlow: 'row',
   fontFamily: 'inherit',
   border: 'none',

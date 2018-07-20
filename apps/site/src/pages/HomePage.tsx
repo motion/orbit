@@ -193,7 +193,7 @@ const VertSpace = () => (
 
 const SectionSubTitle = props => (
   <Title
-    size={1.8}
+    size={1.7}
     sizeLineHeight={1.1}
     titleFont
     alpha={0.65}
@@ -204,13 +204,13 @@ const SectionSubTitle = props => (
 
 const Pitch = ({ isLarge, scrollTo }) => (
   <>
-    <Title italic size={4.4} fontWeight={600} alpha={1} color="#222">
+    <Title italic size={4.4} fontWeight={300} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      The serverless unified knowledge platform. Organize and search everything
-      in your cloud and behind your firewall.
+      Unified team knowledge on your desktop. Organize and search everything in
+      your cloud and behind your firewall.
     </SectionSubTitle>
     <VertSpace />
     <SectionSubTitle
@@ -219,7 +219,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
       size={1.2}
       onClick={() => scrollTo(3)}
     >
-      Learn how serverless makes it work for you.
+      (Without giving up your privacy)
     </SectionSubTitle>
     <VertSpace />
     <VertSpace />
@@ -287,7 +287,7 @@ class HomeHeader extends React.Component {
                 ]}
               />
             </Parallax>
-            <bg
+            <div
               css={{
                 height: sectionHeight,
                 position: 'absolute',

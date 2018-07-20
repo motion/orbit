@@ -17,4 +17,6 @@ const cleanerDOMIgnore = {
   src: false,
 }
 
-View.ignoreAttrs = ['style', ...Object.keys(cleanerDOMIgnore).filter(Boolean)]
+View.ignoreAttrs = cleanerDOMIgnore
+
+console.log('View.ignoreAttrs', View.ignoreAttrs)

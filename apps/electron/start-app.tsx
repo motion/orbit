@@ -7,10 +7,7 @@ import electronDebug from 'electron-debug'
 import React from 'react'
 import { render } from '@mcro/reactron'
 import waitPort from 'wait-port'
-import root from 'global'
 import { Electron } from '@mcro/stores'
-
-root.__dom = React.createElement
 
 // now stuff that uses relative paths
 require('./helpers/handlePromiseErrors')

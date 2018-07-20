@@ -15,6 +15,16 @@ export type BaseRules = {
 }
 type Props = CSSPropertySet
 
+const arrToHash = obj => {
+  if (Array.isArray(obj)) {
+    return obj.reduce((acc, cur) => {
+      acc[cur] = true
+      return acc
+    }, {})
+  }
+  return obj
+}
+
 // import sonar
 
 const addStyles = (id, baseStyles, nextStyles) => {
@@ -203,108 +213,161 @@ export function simpleViewFactory(toCSS) {
       return result
     }
 
+    function addRules(displayName: string, rules: BaseRules, namespace) {
+      // if these rules have been cached to a className then retrieve it
+      const cachedClass = rulesToClass.get(rules)
+      if (cachedClass) {
+        return cachedClass
+      }
+      const declarations = []
+      const style = toCSS(rules)
+      // generate css declarations based on the style object
+      for (const key in style) {
+        const val = style[key]
+        declarations.push(`  ${key}: ${val};`)
+      }
+      const css = declarations.join('\n')
+      // build the class name with the display name of the styled component and a unique id based on the css and namespace
+      const className = displayName + '__' + hash(namespace + css)
+      // this is the first time we've found this className
+      if (!tracker.has(className)) {
+        // build up the correct selector, explode on commas to allow multiple selectors
+        const selector = namespace
+          .split(', ')
+          .map(part => {
+            const sub = part.indexOf('&')
+            if (sub === 0) {
+              return '.' + className + part.slice(1)
+            } else if (sub > 0) {
+              return '.' + className + part.slice(sub + 1)
+            } else {
+              return '.' + className
+            }
+          })
+          .join(', ')
+        // insert the new style text
+        tracker.set(className, {
+          displayName,
+          namespace,
+          rules,
+          selector,
+          style,
+        })
+        sheet.insert(className, `${selector} {\n${css}\n}`)
+        // if there's no dynamic rules then cache this
+        if (true) {
+          rulesToClass.set(rules, className)
+        }
+      }
+      return className
+    }
+
+    function generateClassnames(
+      styles,
+      props: CSSPropertySet,
+      prevProps?: CSSPropertySet,
+      state,
+    ) {
+      // if this is a secondary render then check if the props are essentially equivalent
+      const extraClassNames = []
+      let myStyles = styles
+      // if passed any classes from another styled component, ignore that class and merge in their
+      // resolved styles
+      if (props.className) {
+        const propClassNames = props.className.trim().split(/[\s]+/g)
+        for (const className of propClassNames) {
+          const classInfo = tracker.get(className)
+          if (classInfo) {
+            const { namespace, style } = classInfo
+            console.log('add some shit', style)
+            myStyles = Object.assign({}, myStyles, {
+              [namespace]: style,
+            })
+          } else {
+            extraClassNames.push(className)
+          }
+        }
+      }
+      const theme = getTheme()
+      const hasDynamicStyles = theme || hasPropStyles
+      // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
+      if (!hasDynamicStyles && myStyles === state.lastStyles) {
+        return null
+      }
+      myStyles = { ...myStyles }
+      let dynamicStyles
+      if (hasDynamicStyles) {
+        dynamicStyles = { [id]: {} }
+      }
+      if (hasPropStyles) {
+        for (const key in propStyles) {
+          if (props[key] !== true) continue
+          for (const styleKey in propStyles[key]) {
+            const dynKey = styleKey === 'base' ? id : styleKey
+            dynamicStyles[dynKey] = {
+              ...dynamicStyles[dynKey],
+              ...propStyles[key][styleKey],
+            }
+          }
+        }
+      }
+      if (theme) {
+        addStyles(id, dynamicStyles, theme(props))
+      }
+      if (hasDynamicStyles) {
+        for (const key in dynamicStyles) {
+          myStyles[key] = myStyles[key] || {}
+          myStyles[key] = {
+            ...myStyles[key],
+            ...dynamicStyles[key],
+          }
+        }
+      }
+      const prevClasses = state.classNames
+      const classNames = []
+      // add rules
+      for (const namespace in myStyles) {
+        const className = addRules(displayName, myStyles[namespace], namespace)
+        classNames.push(className)
+        // if this is the first mount render or we didn't previously have this class then add it as new
+        if (prevProps == null || !prevClasses.includes(className)) {
+          gc.registerClassUse(className)
+        }
+      }
+      // check what classNames have been removed if this is a secondary render
+      if (prevProps != null) {
+        for (const className of prevClasses) {
+          // if this previous class isn't in the current classes then deregister it
+          if (!classNames.includes(className)) {
+            gc.deregisterClassUse(className)
+          }
+        }
+      }
+      return {
+        classNames,
+        lastStyles: myStyles,
+        extraClassNames,
+      }
+    }
+
     class Constructor extends React.PureComponent<Props> {
       state = {
         classNames: [],
         extraClassNames: [],
         lastStyles: null,
+        ignoreAttrs: null,
+        prevProps: null,
       }
 
-      componentWillMount() {
-        this.generateClassnames(this.props, null)
-      }
-      componentWillReceiveProps(nextProps: T) {
-        this.generateClassnames(nextProps, this.props)
-      }
-
-      generateClassnames(props: Props, prevProps?: Props) {
-        // if this is a secondary render then check if the props are essentially equivalent
-        if (prevProps != null && hasEquivProps(props, prevProps)) {
-          return
+      static getDerivedStateFromProps(props, state) {
+        if (state.prevProps != null && hasEquivProps(props, state.prevProps)) {
+          return null
         }
-        const extraClassNames = []
-        let myStyles = styles
-        // if passed any classes from another styled component, ignore that class and merge in their
-        // resolved styles
-        if (props.className) {
-          const propClassNames = props.className.trim().split(/[\s]+/g)
-          for (const className of propClassNames) {
-            const classInfo = tracker.get(className)
-            if (classInfo) {
-              const { namespace, style } = classInfo
-              console.log('add some shit', style)
-              myStyles = Object.assign({}, myStyles, {
-                [namespace]: style,
-              })
-            } else {
-              extraClassNames.push(className)
-            }
-          }
+        return {
+          ignoreAttrs: arrToHash(props.ignoreAttrs),
+          ...generateClassnames(styles, props, state.prevProps, state),
+          prevProps: props,
         }
-        const theme = getTheme()
-        const hasDynamicStyles = theme || hasPropStyles
-        // if we had the exact same rules as last time and they weren't dynamic then we can bail out here
-        if (!hasDynamicStyles && myStyles === this.state.lastStyles) {
-          return
-        }
-        myStyles = { ...myStyles }
-        let dynamicStyles
-        if (hasDynamicStyles) {
-          dynamicStyles = { [id]: {} }
-        }
-        if (hasPropStyles) {
-          for (const key in propStyles) {
-            if (props[key] !== true) continue
-            for (const styleKey in propStyles[key]) {
-              const dynKey = styleKey === 'base' ? id : styleKey
-              dynamicStyles[dynKey] = {
-                ...dynamicStyles[dynKey],
-                ...propStyles[key][styleKey],
-              }
-            }
-          }
-        }
-        if (theme) {
-          addStyles(id, dynamicStyles, theme(props))
-        }
-        if (hasDynamicStyles) {
-          for (const key in dynamicStyles) {
-            myStyles[key] = myStyles[key] || {}
-            myStyles[key] = {
-              ...myStyles[key],
-              ...dynamicStyles[key],
-            }
-          }
-        }
-        const prevClasses = this.state.classNames
-        const classNames = []
-        // add rules
-        for (const namespace in myStyles) {
-          const className = addRules(
-            displayName,
-            myStyles[namespace],
-            namespace,
-          )
-          classNames.push(className)
-          // if this is the first mount render or we didn't previously have this class then add it as new
-          if (prevProps == null || !prevClasses.includes(className)) {
-            gc.registerClassUse(className)
-          }
-        }
-        // check what classNames have been removed if this is a secondary render
-        if (prevProps != null) {
-          for (const className of prevClasses) {
-            // if this previous class isn't in the current classes then deregister it
-            if (!classNames.includes(className)) {
-              gc.deregisterClassUse(className)
-            }
-          }
-        }
-        this.setState({
-          classNames,
-          lastStyles: myStyles,
-          extraClassNames,
-        })
       }
 
       componentWillUnmount() {
@@ -343,10 +406,10 @@ export function simpleViewFactory(toCSS) {
           }
         }
         // ignoreAttrs
-        if (ThemedConstructor.ignoreAttrs) {
-          for (const attr of ThemedConstructor.ignoreAttrs) {
-            if (finalProps[attr]) {
-              delete finalProps[attr]
+        if (this.state.ignoreAttrs) {
+          for (const prop in finalProps) {
+            if (this.state.ignoreAttrs[prop]) {
+              delete finalProps[prop]
             }
           }
         }

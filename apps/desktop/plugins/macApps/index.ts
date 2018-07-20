@@ -41,7 +41,7 @@ export const fn = ({ term, display }) => {
       const { path, name } = file
       return {
         id: path,
-        title: name.replace('.app', ''),
+        title: (name || '').replace('.app', ''),
         term: name,
         icon: path,
         subtitle: path,

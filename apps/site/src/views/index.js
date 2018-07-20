@@ -188,7 +188,7 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
           }}
           {...props}
         >
-          <inner
+          <div
             if={!noEdge}
             css={{
               display: 'block',
@@ -208,7 +208,7 @@ export const RightSide = ({ children, inverse, noPad, noEdge, ...props }) => (
               }}
             />
             {children}
-          </inner>
+          </div>
           {noEdge && children}
         </rightSide>
       )

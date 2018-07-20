@@ -23,7 +23,7 @@ export default class Icons {
         destination,
       })
     } catch (err) {
-      console.log('error getting icon', path, err)
+      console.log('error getting icon', path)
     }
     this.cache[name] = true
     return name

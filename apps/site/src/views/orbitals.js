@@ -62,7 +62,7 @@ export default ({
       }}
       {...props}
     >
-      <inner
+      <div
         css={{
           position: 'absolute',
           height: size,
@@ -150,7 +150,7 @@ export default ({
             </contain>
           )
         })}
-      </inner>
+      </div>
     </orbitals>
   )
 }

@@ -8,7 +8,6 @@ import { Color } from '@mcro/css'
 import { propsToTextSize } from './helpers/propsToTextSize'
 
 const TextBlock = view(InlineBlock, {
-  cursor: 'default',
   userSelect: 'none',
   wordBreak: 'break-word',
   position: 'relative',

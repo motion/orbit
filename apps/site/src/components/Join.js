@@ -99,7 +99,7 @@ export class Join extends React.Component {
     return (
       <Section id="join">
         <Form
-          ref={this.form}
+          forwardRef={this.form}
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
           method="post"
           id="mc-embedded-subscribe-form"
@@ -112,7 +112,7 @@ export class Join extends React.Component {
             <UI.Input
               flex={1}
               {...sizeProps}
-              ref={this.email}
+              forwardRef={this.email}
               type="email"
               name="EMAIL"
               id="mce-EMAIL"

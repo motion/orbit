@@ -20,6 +20,7 @@ const onPort = async cb => {
 @store
 class Root {
   client: WebSQLClient
+  connecting = false
   connection = null
   started = false
   stores = null
@@ -55,10 +56,12 @@ class Root {
   )
 
   async connectModels() {
-    if (this.connection) {
+    if (this.connection || this.connecting) {
       return
     }
+    this.connecting = true
     const { client, connection } = await connectModels(modelsList)
+    this.connecting = false
     this.connection = connection
     this.client = client
   }

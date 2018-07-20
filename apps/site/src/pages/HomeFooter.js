@@ -49,7 +49,7 @@ export class HomeFooter extends React.Component {
           <Slant {...secondSlant} {...bottomSlants} />
           <Slant inverseSlant {...thirdSlant} {...bottomSlants} />
           <LeftSide css={{ textAlign: 'left' }}>
-            <inner>
+            <div>
               <UI.View flex={1} />
               <content css={isLarge && { marginRight: 80 }}>
                 <Title size={2.3} color="#333" css={{ marginBottom: 25 }}>
@@ -94,7 +94,7 @@ export class HomeFooter extends React.Component {
                 </UI.PassProps>
               </content>
               <UI.View flex={1} />
-            </inner>
+            </div>
           </LeftSide>
           <RightSide
             noEdge

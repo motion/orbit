@@ -17,8 +17,9 @@ export class OrbitSettingCard extends React.Component<
     store: SettingInfoStore
   }
 > {
+  id = Math.random()
+
   handleClick = async () => {
-    console.trace()
     const { isActive, result } = this.props
     if (isActive) {
       return
@@ -67,13 +68,6 @@ export class OrbitSettingCard extends React.Component<
         }
         result={result}
         onClick={this.handleClick}
-        // afterTitle={
-        //   <UI.Row margin={[-5, 0]}>
-        //     <React.Fragment if={false && isActive}>
-        //       <UI.Button>Remove</UI.Button>
-        //     </React.Fragment>
-        //   </UI.Row>
-        // }
         {...props}
       />
     )

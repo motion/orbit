@@ -135,7 +135,7 @@ Card.theme = ({
   }
   if (hoverable) {
     card.opacity = 0.7
-    card.transition = card.transition || 'opacity ease-in 300ms'
+    card.transition = card.transition || 'opacity ease 100ms'
     card['&:hover'] = {
       ...card['&:hover'],
       opacity: 1,
@@ -214,11 +214,8 @@ class OrbitCardStore {
     return isPaneActive && isSubPaneActive
   }
 
-  handleClick = e => {
-    if (this.props.onClick) {
-      this.props.onClick(e)
-      return
-    }
+  handleClick = () => {
+    console.log('handle click')
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
       return
@@ -331,7 +328,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
 
   clickAt = 0
 
-  handleClick = e => {
+  handleDoubleClick = e => {
     // so we can control the speed of double clicks
     if (Date.now() - this.clickAt < 150) {
       this.open()
@@ -373,6 +370,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       iconProps,
       hide,
       inGrid,
+      onClick,
+      hoverable,
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
@@ -397,16 +396,15 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     return (
       <CardWrap
         forwardRef={store.setRef}
-        onClick={store.handleClick}
         {...hoverToSelect && !inactive && this.hoverSettler.props}
         zIndex={isSelected ? 5 : 4}
+        onClick={onClick || store.handleClick}
         {...props}
       >
         <Card
-          onClick={this.handleClick}
           isSelected={isSelected}
           isNextUp={store.isNextUp}
-          {...this.props}
+          hoverable={hoverable}
         >
           {orbitIcon}
           <Title>

@@ -21,6 +21,7 @@ export class OrbitSettingCard extends React.Component<
   id = Math.random()
 
   handleClick = async () => {
+    console.log('handleClick', this.props)
     const { result } = this.props
     if (result.auth === false) {
       const setting = new Setting()
@@ -49,6 +50,7 @@ export class OrbitSettingCard extends React.Component<
       console.log('no title for', result)
       return null
     }
+    const onClick = !isActive ? this.handleClick : props.onClick
     return (
       <OrbitCard
         inactive={!isActive}
@@ -65,8 +67,8 @@ export class OrbitSettingCard extends React.Component<
           }
         }
         result={result}
-        onClick={!isActive && this.handleClick}
         {...props}
+        onClick={onClick}
       />
     )
   }

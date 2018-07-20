@@ -202,10 +202,6 @@ class OrbitCardStore {
   }
 
   handleClick = e => {
-    if (this.props.onClick) {
-      this.props.onClick(e)
-      return
-    }
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
       return
@@ -363,6 +359,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       hoverable,
       borderRadius,
       nextUpStyle,
+      onClick,
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
@@ -381,18 +378,13 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       />
     )
     const { isSelected } = store
-    const childTheme = isSelected && selectedTheme ? selectedTheme : null
-    const background =
-      (childTheme && childTheme.background) || theme.base.background
+    const { background } =
+      isSelected && selectedTheme ? selectedTheme : theme.base
     return (
-      <CardWrap
-        forwardRef={store.setRef}
-        {...hoverToSelect && !inactive && this.hoverSettler.props}
-        zIndex={isSelected ? 5 : 4}
-        onClick={store.handleClick}
-        {...props}
-      >
+      <CardWrap zIndex={isSelected ? 5 : 4} {...props}>
         <Card
+          {...hoverToSelect && !inactive && this.hoverSettler.props}
+          forwardRef={store.setRef}
           isSelected={isSelected}
           isNextUp={store.isNextUp}
           hoverable={hoverable}
@@ -400,6 +392,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           borderRadius={borderRadius}
           inGrid={inGrid}
           nextUpStyle={nextUpStyle}
+          onClick={onClick || store.handleClick}
         >
           {orbitIcon}
           <Title>

@@ -145,26 +145,29 @@ export class OrbitSettings extends React.Component<{
         <Views.SubTitle>Add Integration</Views.SubTitle>
         <Masonry>
           {integrationSettingsStore.allIntegrations
+            // sort by not used first
             .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
-            .map((item, index) => (
-              <store.IntegrationCard
-                key={`${item.id}`}
-                result={item}
-                index={index + store.allResults.length}
-                appStore={appStore}
-                hoverable
-                onClick={
-                  log(item.auth)
-                    ? ({ currentTarget }) => {
-                        App.actions.toggleSelectItem(
-                          { id: item.id, type: 'view', title: item.title },
-                          currentTarget,
-                        )
-                      }
-                    : null
-                }
-              />
-            ))}
+            .map((item, index) => {
+              // custom auth clicks
+              const onClick = item.auth
+                ? ({ currentTarget }) => {
+                    App.actions.toggleSelectItem(
+                      { id: item.id, type: 'view', title: item.title },
+                      currentTarget,
+                    )
+                  }
+                : null
+              return (
+                <store.IntegrationCard
+                  key={`${item.id}`}
+                  result={item}
+                  index={index + store.allResults.length}
+                  appStore={appStore}
+                  hoverable
+                  onClick={onClick}
+                />
+              )
+            })}
         </Masonry>
       </OrbitDockedPane>
     )

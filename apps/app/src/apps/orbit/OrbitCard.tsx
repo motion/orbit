@@ -381,10 +381,13 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     const { background } =
       isSelected && selectedTheme ? selectedTheme : theme.base
     return (
-      <CardWrap zIndex={isSelected ? 5 : 4} {...props}>
+      <CardWrap
+        {...hoverToSelect && !inactive && this.hoverSettler.props}
+        forwardRef={store.setRef}
+        zIndex={isSelected ? 5 : 4}
+        {...props}
+      >
         <Card
-          {...hoverToSelect && !inactive && this.hoverSettler.props}
-          forwardRef={store.setRef}
           isSelected={isSelected}
           isNextUp={store.isNextUp}
           hoverable={hoverable}

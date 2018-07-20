@@ -18,6 +18,7 @@ export class OrbitSettingCard extends React.Component<
   }
 > {
   handleClick = async () => {
+    console.trace()
     const { isActive, result } = this.props
     if (isActive) {
       return

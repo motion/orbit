@@ -2,7 +2,10 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export class ReactiveCheckBox extends React.Component {
+export class ReactiveCheckBox extends React.Component<{
+  isActive?: () => boolean
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+}> {
   render() {
     const { isActive, onChange } = this.props
     return (

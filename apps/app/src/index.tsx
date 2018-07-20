@@ -1,18 +1,14 @@
-// any js thats imported here but should work with HMR
-// should also be added to ./RootViewHMR!
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import './helpers/createElement'
 import 'isomorphic-fetch'
 import '@mcro/debug/inject.js'
-import { RootStore } from './stores/RootStore'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { themes } from './themes'
 import { throttle } from 'lodash'
 import { App } from '@mcro/stores'
-import { RootView } from './RootViewHMR'
 
 if (process.env.NODE_ENV === 'development') {
   if (module && module.hot) {
@@ -33,10 +29,16 @@ process.on('uncaughtException', err => {
 export const render = throttle(async () => {
   // Root is the topmost store essentially
   // We export it so you can access a number of helpers
-  console.timeEnd('splash')
-  await RootStore.start({
-    connectModels: window.location.pathname !== '/auth',
-  })
+  if (!window['Root']) {
+    console.timeEnd('splash')
+    const { RootStore } = require('./stores/RootStore')
+    const rootStore = new RootStore()
+    window['Root'] = rootStore
+    await rootStore.start({
+      connectModels: window.location.pathname !== '/auth',
+    })
+  }
+  const { RootView } = require('./RootViewHMR')
   // <React.unstable_AsyncMode>
   // </React.unstable_AsyncMode>
   ReactDOM.render(

@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@mcro/decor": "^2.2.0",
-    "autobind-decorator": "^2.1.0",
     "event-kit": "^2.5.0"
   },
   "devDependencies": {

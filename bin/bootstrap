@@ -23,8 +23,9 @@ function copy-bootstrap-hook() {
 }
 
 function build-builder-modules() {
-  (cd packages/gloss && npm run prebuild) &
-  (cd packages/css && npm run prebuild) &
+  (cd packages/gloss && npm run build) &
+  (cd packages/css && npm run build) &
+  (cd packages/gloss-displaynames && npm run build) &
   wait
 }
 
@@ -44,6 +45,7 @@ npx lerna bootstrap --loglevel=warn
 # internal tools
 ensure-file ./packages/gloss/_/gloss.js -- build-builder-modules
 ensure-file ./packages/css/_/css.js -- build-builder-modules
+ensure-file ./packages/gloss-displaynames/_/index.js -- build-builder-modules
 # link second
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 copy-bootstrap-hook

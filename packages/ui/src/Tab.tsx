@@ -33,5 +33,6 @@ export function Tab(props: {
    */
   children?: any
 }) {
-  throw new Error("don't render me")
+  console.error("don't render me")
+  return null
 }

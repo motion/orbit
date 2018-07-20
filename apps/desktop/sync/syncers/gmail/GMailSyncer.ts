@@ -1,11 +1,11 @@
 import Syncer from '../syncer'
-import GoogleMailSync from './GoogleMailSync'
+import {GMailSync} from './GMailSync'
 
 export const gmail = new Syncer('gmail', {
   actions: {
-    gmail: { secondsBetween: 60 * 4 },
+    gmail: { secondsBetween: 20 },
   },
   getSyncers: setting => ({
-    gmail: new GoogleMailSync(setting),
+    gmail: new GMailSync(setting),
   }),
 })

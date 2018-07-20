@@ -13,8 +13,9 @@ export class GoogleDriveSync {
   }
 
   async run(): Promise<void> {
+    return;
     try {
-      console.log('synchronizing google drive files!')
+      console.log('synchronizing google drive files')
       await this.loader.load()
 
       // create entities for loaded files

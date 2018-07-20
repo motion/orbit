@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Theme } from './helpers/theme'
+import { Theme } from '@mcro/gloss'
 import { view, attachTheme } from '@mcro/black'
 import $ from '@mcro/color'
 import { View } from './blocks/View'

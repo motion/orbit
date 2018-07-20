@@ -77,14 +77,6 @@ const Middot = view({
   display: 'inline',
 })
 
-const Text = view({
-  width: '100%',
-  primaryText: {
-    wordWrap: 'break-word',
-    maxHeight: '2.8rem',
-  },
-})
-
 const Date = view({
   userSelect: 'none',
   fontWeight: 600,
@@ -229,7 +221,7 @@ export class ListItem extends React.Component<ItemProps> {
             {beforePrimary}
             <Prop if={primary || secondary}>
               <Text
-                primaryText
+                wordWrap="break-word"
                 fontSize={fontSize}
                 size={size}
                 editable={editable}
@@ -243,7 +235,6 @@ export class ListItem extends React.Component<ItemProps> {
               </Text>
               <Text
                 if={secondary || date}
-                $text
                 size={size * 0.85}
                 alpha={0.7}
                 ellipse

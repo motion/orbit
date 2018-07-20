@@ -77,7 +77,7 @@ const Middot = view({
   display: 'inline',
 })
 
-const Date = view({
+const ListDate = view({
   userSelect: 'none',
   fontWeight: 600,
   opacity: 0.8,
@@ -240,7 +240,7 @@ export class ListItem extends React.Component<ItemProps> {
                 ellipse
                 {...secondaryProps}
               >
-                <Date if={date}>{date}</Date>
+                <ListDate if={date}>{date}</ListDate>
                 <Middot if={date && secondary}> &middot; </Middot>
                 {secondary}
               </Text>

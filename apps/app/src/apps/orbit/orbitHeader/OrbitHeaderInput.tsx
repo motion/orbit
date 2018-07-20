@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view } from '@mcro/black'
 
@@ -16,7 +17,7 @@ export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
       fontWeight={300}
       fontSize={22}
       lineHeight="22px"
-      padding={13}
+      padding={12}
       border="none"
       display="block"
       background="transparent"

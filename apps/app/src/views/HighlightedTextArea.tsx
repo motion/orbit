@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { CSSPropertySet } from '@mcro/gloss'
 
 const TextAreaOuter = view(UI.Col, {
   position: 'relative',
@@ -18,7 +19,7 @@ const Block = view(UI.Block, {
 
 type Color = string
 
-type Props = {
+type Props = CSSPropertySet & {
   openMark?: string
   closeMark?: string
   value?: string

@@ -10,6 +10,7 @@ import * as Helpers from '../helpers'
 import { App, Desktop, Swift, Electron } from '@mcro/stores'
 import { modelsList } from '@mcro/models'
 import { RootStore } from '../stores/RootStore'
+import { render } from '../index'
 
 console.log('installing globals...')
 
@@ -33,6 +34,7 @@ window['Desktop'] = Desktop
 window['Electron'] = Electron
 window['Swift'] = Swift
 window['Root'] = RootStore
+window['render'] = render
 
 modelsList.map(model => {
   window[`${model.name}`] = model

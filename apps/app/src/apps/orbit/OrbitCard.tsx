@@ -46,6 +46,8 @@ export type OrbitCardProps = {
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
   hoverable?: boolean
+  borderRadius?: number
+  nextUpStyle?: Object
 }
 
 const CardWrap = view(UI.View, {
@@ -67,7 +69,6 @@ const Card = view({
 })
 
 Card.theme = ({
-  style,
   listItem,
   borderRadius,
   inGrid,
@@ -77,24 +78,21 @@ Card.theme = ({
   isSelected,
   isNextUp,
 }) => {
-  let hoveredStyle
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
-    height: (style && style.height) || 'auto',
   }
   if (listItem) {
     // LIST ITEM
-    hoveredStyle = {
-      background: theme.selected.background,
-    }
-    let listStateStyle
+    let listStyle
     if (isSelected) {
-      listStateStyle = {
-        background: theme.selected.background,
-        '&:hover': hoveredStyle,
+      listStyle = {
+        background: 'transparent',
+        '&:hover': {
+          background: theme.selected.background,
+        },
       }
     } else {
-      listStateStyle = {
+      listStyle = {
         background: 'transparent',
         '&:hover': {
           background: theme.hover.background,
@@ -106,7 +104,7 @@ Card.theme = ({
     }
     card = {
       ...card,
-      ...listStateStyle,
+      ...listStyle,
       padding: [16, 20],
       borderTop: [1, theme.hover.background],
     }
@@ -361,6 +359,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       inGrid,
       onClick,
       hoverable,
+      borderRadius,
+      nextUpStyle,
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
@@ -394,6 +394,10 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           isSelected={isSelected}
           isNextUp={store.isNextUp}
           hoverable={hoverable}
+          listItem={listItem}
+          borderRadius={borderRadius}
+          inGrid={inGrid}
+          nextUpStyle={nextUpStyle}
         >
           {orbitIcon}
           <Title>

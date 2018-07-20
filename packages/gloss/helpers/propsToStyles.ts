@@ -4,7 +4,9 @@ import toColor from '@mcro/color'
 // resolves props into styles for valid css
 
 export const propsToStyles = props => {
-  const styles: CSSPropertySet = {}
+  const styles: CSSPropertySet = {
+    ...props.style,
+  }
   // loop over props turning into styles
   for (const key of Object.keys(props)) {
     // &:hover, etc

@@ -31,11 +31,6 @@ const Section = view('section', {
   margin: [0, 'auto'],
 })
 
-const WrapInput = view({
-  flex: 1,
-  minWidth: 235,
-})
-
 const Message = view({
   position: 'absolute',
   bottom: -100,
@@ -94,9 +89,7 @@ export class Join extends React.Component {
   }
 
   render() {
-    const { theme, ...props } = this.props
     const { success, error, submitting } = this.state
-    const style = { fontFamily: '"Eesti Pro"' }
     const sizeProps = {
       size: 1.2,
       sizeRadius: 1,
@@ -104,7 +97,7 @@ export class Join extends React.Component {
       sizeHeight: 1.1,
     }
     return (
-      <Section id="join" {...props}>
+      <Section id="join">
         <Form
           ref={this.form}
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
@@ -116,23 +109,16 @@ export class Join extends React.Component {
           onSubmit={this.submit}
         >
           <Inner>
-            <WrapInput>
-              <UI.Input
-                flex={1}
-                {...sizeProps}
-                ref={this.email}
-                type="email"
-                name="EMAIL"
-                id="mce-EMAIL"
-                placeholder="Email address..."
-                style={style}
-                css={{
-                  background: [0, 0, 0, 0.025],
-                  // eesti font fix
-                  padding: [4, 12, 0],
-                }}
-              />
-            </WrapInput>
+            <UI.Input
+              flex={1}
+              {...sizeProps}
+              ref={this.email}
+              type="email"
+              name="EMAIL"
+              id="mce-EMAIL"
+              placeholder="Email address..."
+              fontFamily="Eesti Pro"
+            />
             <div style={{ height: 20 }} />
             <UI.Theme theme="#37C457">
               <UI.Button
@@ -140,11 +126,10 @@ export class Join extends React.Component {
                 fontWeight={500}
                 type="submit"
                 disabled={submitting}
-                style={{
-                  margin: [10, 12],
-                  ...style,
-                  ...(submitting && { opacity: 0.5, pointerEvents: 'none' }),
-                }}
+                fontFamily="Eesti Pro"
+                margin={[0, 0, 0, 12]}
+                opacity={submitting ? 0.5 : 1}
+                pointerEvents={submitting ? 'none' : 'auto'}
               >
                 {submitting ? 'Signing up...' : 'Early access'}
               </UI.Button>

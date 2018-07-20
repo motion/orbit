@@ -94,7 +94,7 @@ const Half = props => (
   </Media>
 )
 
-const WaveSVG = view('svg', {
+const WaveSVG = view(UI.View, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -112,6 +112,10 @@ const WaveSVG = view('svg', {
     z: 0,
   },
 })
+
+WaveSVG.defaultProps = {
+  tagName: 'svg',
+}
 
 const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
   <WaveSVG
@@ -205,7 +209,8 @@ const Pitch = ({ isLarge, scrollTo }) => (
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      A powerful way to organize all your internal and cloud knowledge.
+      The serverless unified knowledge platform. Organize and search everything
+      in your cloud and behind your firewall.
     </SectionSubTitle>
     <VertSpace />
     <SectionSubTitle
@@ -214,7 +219,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
       size={1.2}
       onClick={() => scrollTo(3)}
     >
-      (And for the first time, completely securely.)
+      Learn how serverless makes it work for you.
     </SectionSubTitle>
     <VertSpace />
     <VertSpace />

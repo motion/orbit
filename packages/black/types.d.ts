@@ -25,6 +25,7 @@ export interface PotentiallyView<T> {
   // TODO: make props flow
   theme?: (a: Props & { theme: ThemeObject }) => CSSPropertySet
   displayName?: string
+  ignoreAttrs?: string[]
   style: T
 }
 

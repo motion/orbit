@@ -10,6 +10,7 @@ import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { Color } from '@mcro/css'
 import { propsToThemeStyles, propsToStyles } from '@mcro/gloss'
+import { View } from './blocks/View'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -318,13 +319,10 @@ SurfaceFrame.theme = props => {
     // // so you can override
     // ...props.style,
   }
-  if (props.sizeLineHeight) {
-    surfaceStyles.lineHeight = `${surfaceStyles.height}px`
-  }
   return surfaceStyles
 }
 
-const Element = view(SurfaceBase, {
+const Element = view(View, {
   flexFlow: 'row',
   fontFamily: 'inherit',
   border: 'none',
@@ -332,10 +330,6 @@ const Element = view(SurfaceBase, {
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
-  // this seems to maybe fix some line height stuff
-  transform: {
-    y: '1%',
-  },
 })
 
 Element.theme = props => {
@@ -414,17 +408,15 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       dimmed,
       disabled,
       glowProps,
-      noElement,
-      noWrap,
       children,
-      // wrapElement,
       elementProps,
       tooltip,
       tooltipProps,
-      after,
+      height,
       color,
       theme,
       size,
+      sizeLineHeight,
     } = this.props
     const stringIcon = typeof icon === 'string'
     const {
@@ -432,15 +424,20 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       forwardRef,
       style,
       padding,
+      margin,
       className,
       ...throughProps
     } = this.props
+    if (sizeLineHeight) {
+      throughProps.lineHeight = `${height}px`
+    }
     const glowColor = (theme && color) || DEFAULT_GLOW_COLOR
     return (
       <SurfaceFrame
         alignSelf="flex-start"
         whiteSpace="pre"
         padding={padding}
+        margin={margin}
         {...throughProps}
         forwardRef={forwardRef}
         style={style}

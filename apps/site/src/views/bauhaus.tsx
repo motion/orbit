@@ -29,7 +29,7 @@ export class Bauhaus extends React.Component {
     return (
       <UI.FullScreen
         css={{
-          transform: { scale: 0.5, x: '52%', y: '-8%', z: 0 },
+          transform: { scale: 0.85, x: '62%', y: '-20%', z: 0 },
           zIndex: 0,
           pointerEvents: 'none',
         }}

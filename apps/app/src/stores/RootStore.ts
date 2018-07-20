@@ -18,7 +18,7 @@ const onPort = async cb => {
 }
 
 @store
-class Root {
+export class RootStore {
   client: WebSQLClient
   connecting = false
   connection = null
@@ -95,5 +95,3 @@ class Root {
     this.errors = []
   }
 }
-
-export const RootStore = new Root()

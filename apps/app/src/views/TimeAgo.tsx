@@ -3,7 +3,8 @@ import differenceInSeconds from 'date-fns/difference_in_seconds'
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 
 type TimeAgoProps = {
-  date: Date
+  date?: number | Date
+  children?: number | Date
 }
 
 export class TimeAgo extends Component<TimeAgoProps> {

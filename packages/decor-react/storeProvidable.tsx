@@ -78,7 +78,7 @@ storeProvidable = function(options, Helpers) {
       recentHMR = false
       // @ts-ignore
       window.render()
-    }, 2000)
+    }, 1000)
   }
 
   Helpers.on('did-hmr', setRecentHMR)
@@ -158,6 +158,7 @@ storeProvidable = function(options, Helpers) {
           root.loadedStores.add(this)
           this.mountStores()
           this.willReloadListener = Helpers.on('will-hmr', () => {
+            console.log('willhmr')
             setRecentHMR()
             this.onWillReloadStores()
           })

@@ -52,12 +52,11 @@ class GithubSettingStore {
     return this.props.appStore.services.github
   }
 
-  issues = react(() =>
+  bits = react(() =>
     Bit.find({ where: { integration: 'github', type: 'task' } }),
   )
 
   active = 'repos'
-  syncing = {}
   userOrgs = []
 
   get orgsList() {
@@ -145,7 +144,9 @@ class GithubSettingStore {
     this.newOrg = ''
   }
 
-  setActiveKey = key => (this.active = key)
+  setActiveKey = key => {
+    this.active = key
+  }
 }
 
 const InvisiblePane = view(UI.FullScreen, {
@@ -157,13 +158,13 @@ const InvisiblePane = view(UI.FullScreen, {
   },
 })
 
-@view.provide({ githubStore: GithubSettingStore })
+@view.provide({ store: GithubSettingStore })
 @view
 export class GithubSetting extends React.Component<
-  SettingPaneProps & { githubStore: GithubSettingStore }
+  SettingPaneProps & { store: GithubSettingStore }
 > {
   render() {
-    const { githubStore: store, children } = this.props
+    const { store, children } = this.props
     return children({
       subhead: (
         <UI.Tabs active={store.active} onActive={store.setActiveKey}>
@@ -171,7 +172,7 @@ export class GithubSetting extends React.Component<
           <UI.Tab
             key="issues"
             width="50%"
-            label={`Issues (${store.issues ? store.issues.length : 0})`}
+            label={`Issues (${store.bits ? store.bits.length : 0})`}
           />
         </UI.Tabs>
       ),
@@ -188,14 +189,14 @@ export class GithubSetting extends React.Component<
               multiHighlight
               rows={store.rows}
               bodyPlaceholder={
-                <div css={{ margin: 'auto' }}>
+                <div style={{ margin: 'auto' }}>
                   <UI.Text size={1.2}>Loading...</UI.Text>
                 </div>
               }
             />
           </InvisiblePane>
           <InvisiblePane visible={store.active === 'issues'}>
-            <Bits bits={store.section} />
+            <Bits bits={store.bits} />
           </InvisiblePane>
         </>
       ),

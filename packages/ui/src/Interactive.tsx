@@ -569,7 +569,6 @@ export class Interactive extends React.Component<
   }
 
   setRef = (ref: HTMLElement) => {
-    console.log('set ref', ref)
     this.ref = ref
     const { innerRef } = this.props
     if (innerRef) {

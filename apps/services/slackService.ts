@@ -10,8 +10,9 @@ export type ChannelInfo = {
   id: string
   name: string
   name_normalized: string
-  purpose: { value: string }
-  topic: { value: string }
+  num_members: number
+  purpose?: { value: string }
+  topic?: { value: string }
   members: Array<string>
 }
 

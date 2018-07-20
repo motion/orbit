@@ -3,9 +3,10 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { capitalize } from 'lodash'
 import { format, formatDistance } from 'date-fns'
+import { Bit } from '@mcro/models'
 
 @view
-export class Bits extends React.Component {
+export class Bits extends React.Component<{ bits: Bit[] }> {
   getTask = task => {
     const { title, id } = task.data
     return {
@@ -40,7 +41,8 @@ export class Bits extends React.Component {
     }
   }
 
-  render({ bits }) {
+  render() {
+    const { bits } = this.props
     return (
       <UI.Col overflow="scroll" maxHeight={300}>
         <UI.Col margin={10}>

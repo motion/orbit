@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view } from '@mcro/black'
+import { View } from '@mcro/ui'
 
 const handleKeyDown = e => {
   // up/down
@@ -12,7 +13,7 @@ const handleKeyDown = e => {
 
 export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
   return (
-    <div style={{ padding: 12, width: '100%' }}>
+    <View height={30} margin={['auto', 0]} padding={[0, 10]} width="100%">
       <HighlightedTextArea
         width="100%"
         fontWeight={300}
@@ -31,6 +32,6 @@ export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
         forwardRef={headerStore.inputRef}
         onClick={headerStore.onClickInput}
       />
-    </div>
+    </View>
   )
 })

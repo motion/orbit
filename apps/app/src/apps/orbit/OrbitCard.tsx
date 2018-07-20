@@ -84,9 +84,10 @@ Card.theme = ({
   if (listItem) {
     // LIST ITEM
     let listStyle
+    // selected...
     if (isSelected) {
       listStyle = {
-        background: 'transparent',
+        background: theme.selected.background,
         '&:hover': {
           background: theme.selected.background,
         },

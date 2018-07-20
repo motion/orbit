@@ -18,9 +18,6 @@ module.exports = function(context, givenOpts) {
       }),
       plug('@mcro/gloss-displaynames'),
       plug('@mcro/babel-plugin-if'),
-      plug('@mcro/gloss/transform', {
-        decoratorName: opts.decorator || 'view',
-      }),
       plug('@babel/plugin-proposal-export-default-from'),
       plug('@babel/plugin-proposal-class-properties', {
         loose: true,
@@ -32,9 +29,6 @@ module.exports = function(context, givenOpts) {
         rootPathPrefix: '~',
         rootPathSuffix:
           typeof opts.rootSuffix === 'undefined' ? 'src' : opts.rootSuffix,
-      }),
-      plug('babel-plugin-transform-react-jsx', {
-        pragma: '__dom',
       }),
       plug('babel-plugin-lodash'),
     ],

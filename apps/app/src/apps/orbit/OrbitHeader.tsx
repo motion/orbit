@@ -14,7 +14,7 @@ const OrbitHeaderContainer = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  padding: [5, 16],
+  padding: [5, 12],
   transition: 'all ease-in 300ms',
   zIndex: 4,
 })
@@ -109,7 +109,6 @@ export class OrbitHeader extends React.Component<{
             onClick={headerStore.goHome}
             height="100%"
             width={30}
-            marginRight={-5}
             opacity={0.2}
             cursor="pointer"
             hover={{

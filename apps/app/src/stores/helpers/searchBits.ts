@@ -18,7 +18,7 @@ export const searchBits = async (
     )
   } else {
     // order by recent if no search
-    query = query.order({ bitCreatedAt: 'DESC' })
+    query = query.orderBy({ bitCreatedAt: 'DESC' })
   }
 
   if (people.length) {

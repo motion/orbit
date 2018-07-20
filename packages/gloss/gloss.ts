@@ -3,11 +3,11 @@ import css from '@mcro/css'
 import { Options } from './types'
 import { simpleViewFactory } from './simpleViewFactory'
 
-import * as Helpers_ from '@mcro/css'
-export const Helpers = Helpers_
 export const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const GLOSS_IGNORE_COMPONENT_SYMBOL = '__GLOSS_IGNORE_COMPONENT__'
 
+export { propsToStyles } from './helpers/propsToStyles'
+export { propsToThemeStyles } from './helpers/propsToThemeStyles'
 export { Theme } from './theme/Theme'
 export { ThemeMaker } from './theme/ThemeMaker'
 export { ThemeProvide } from './theme/ThemeProvide'
@@ -41,17 +41,14 @@ const DEFAULT_OPTS = {}
 
 export default class Gloss {
   css: any
-  helpers: any
   options: Options
   createElement: Function
   createSimpleView: Function
-  Helpers: Object = Helpers
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
     this.css = css(opts)
     this.createSimpleView = simpleViewFactory(this.css)
-    this.helpers = this.css.helpers
     this.createElement = fancyElement(this)
   }
 

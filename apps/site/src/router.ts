@@ -1,6 +1,6 @@
 import Router from '@mcro/router'
 import { HomePage } from '~/pages/HomePage'
-import { FeaturesPage } from '~/pages/FeaturesPage'
+// import { FeaturesPage } from '~/pages/FeaturesPage'
 // import { UseCasesPage } from '~/pages/UseCasesPage'
 import { AboutPage } from '~/pages/AboutPage'
 import { PrivacyPage } from '~/pages/PrivacyPage'
@@ -11,7 +11,7 @@ function runRouter() {
   return new Router({
     routes: {
       '/': HomePage,
-      '/features': FeaturesPage,
+      // '/features': FeaturesPage,
       // '/use-cases': UseCasesPage,
       '/about': AboutPage,
       '/privacy': PrivacyPage,

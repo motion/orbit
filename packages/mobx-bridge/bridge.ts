@@ -1,5 +1,5 @@
 import { action } from 'mobx'
-import { mergeWith, isPlainObject, isEqual } from 'lodash'
+import { isPlainObject, isEqual } from 'lodash'
 import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
@@ -62,9 +62,9 @@ class Bridge {
     if (!store) {
       throw new Error(`No source given for starting screen store`)
     }
-    if (this.store || this._socket) {
-      console.warn(`Already started ${this._source}`)
-      this.setupActions(store, options.actions)
+    this.setupActions(store, options.actions)
+    // on re-start treat as update
+    if (this.started) {
       return
     }
     store.bridge = this
@@ -140,7 +140,7 @@ class Bridge {
       const actionName = `${store.constructor.name}.${key}`
       const boundAction = actions[key].bind(store)
       const finalAction = (...args) => {
-        log(`ACTION: ${actionName}`)
+        log(`ACTION: ${actionName}`, args)
         return boundAction(...args)
       }
       store.actions[key] = Mobx.action(actionName, finalAction)
@@ -293,7 +293,7 @@ class Bridge {
       return changedState
     }
     if (changedState) {
-      // log(`changedState:\n\n ${JSON.stringify(changedState, null, 2)}`)
+      log(`changedState:\n\n ${JSON.stringify(changedState)}`)
       if (this._options.master) {
         this.socketManager.sendAll(this._source, changedState)
       } else {
@@ -376,18 +376,10 @@ class Bridge {
     if (root.__trackStateChanges && root.__trackStateChanges.isActive) {
       root.__trackStateChanges.changed = changed
     }
-    // log(`_update ${JSON.stringify(changed)}`)
     return changed
   }
 
   onMessage = (type, listener): Function => {
-    if (!this.started) {
-      // avoid bailing out here as sometimes hmr may interfere
-      console.error(
-        `Not started, can only call onMessage on the app that starts it.`,
-      )
-      return
-    }
     let subscription = { type, listener }
     if (!listener) {
       subscription = { type: null, listener: type }

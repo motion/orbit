@@ -1,6 +1,6 @@
-import { Setting } from '@mcro/models'
+import { Setting } from '../../../../models'
 import { App, Desktop } from '@mcro/stores'
-import * as Constants from '../constants'
+import * as Constants from '../../constants'
 import * as r2 from '@mcro/r2'
 import debug from '@mcro/debug'
 import invariant from 'invariant'

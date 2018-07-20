@@ -10,7 +10,6 @@ import {
   LeftSide,
   TopoBg,
   RightSide,
-  Callout,
   Notification,
   Glow,
   HalfSection,
@@ -41,6 +40,8 @@ const theme = {
   titleColor: background.darken(0.7).desaturate(0.8),
   subTitleColor: '#111',
 }
+
+const Callout = view('div', {})
 
 const slantBg = background
 

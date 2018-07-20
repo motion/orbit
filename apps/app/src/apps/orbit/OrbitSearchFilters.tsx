@@ -16,6 +16,7 @@ SearchFilters.theme = ({ theme }) => ({
 })
 
 const ExtraFilters = view(UI.View, {
+  width: '100%',
   opacity: 1,
   padding: [20, 0],
 })
@@ -49,6 +50,7 @@ export const OrbitSearchFilters = decorate(({ searchStore, appStore }) => {
         >
           {getDate(appStore.nlpStore.nlp.date) || 'Any time'}
         </UI.Button>
+        <UI.Button alpha={0.8}>Relevant</UI.Button>
         <UI.Col flex={1} />
         {searchStore.filters.map((filter, i) => {
           return (
@@ -58,6 +60,7 @@ export const OrbitSearchFilters = decorate(({ searchStore, appStore }) => {
               size={1.2}
               marginRight={5}
               icon={<OrbitIcon size={22} icon={filter.icon} />}
+              tooltip={filter.name}
             />
           )
         })}

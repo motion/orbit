@@ -9,11 +9,18 @@ const gridColumnGap = 9
 const MasonryGrid = view({
   display: 'grid',
   margin: [0, -5],
-  gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
 })
 
+export type MasonryProps = {
+  minWidth?: number
+}
+
 @view.ui
-export class Masonry extends React.Component {
+export class Masonry extends React.Component<MasonryProps> {
+  static defaultProps = {
+    minWidth: 200,
+  }
+
   state = {
     measured: false,
     children: null,
@@ -70,19 +77,21 @@ export class Masonry extends React.Component {
 
   handleGridRef = ref => this.setGrid(ref)
 
-  gridStyle = { gridAutoRows: rowHeight, gridGap, gridColumnGap }
-
   render() {
     const { measured } = this.state
-    const { children, ...props } = this.props
+    const { children, minWidth, ...props } = this.props
+    const style = {
+      gridColumnGap,
+      gridTemplateColumns: `repeat(auto-fill, minmax(${minWidth}px,1fr))`,
+    }
     if (!measured) {
       return (
         <MasonryGrid
           forwardRef={this.handleGridRef}
           {...props}
-          css={{
-            gridColumnGap,
+          style={{
             opacity: 0,
+            ...style,
           }}
         >
           {children}
@@ -90,7 +99,10 @@ export class Masonry extends React.Component {
       )
     }
     return (
-      <MasonryGrid css={this.gridStyle} {...props}>
+      <MasonryGrid
+        style={{ ...style, gridAutoRows: rowHeight, gridGap, gridColumnGap }}
+        {...props}
+      >
         {this.state.gridChildren}
       </MasonryGrid>
     )

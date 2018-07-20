@@ -16,8 +16,6 @@ export const Label = ({
     justifyContent={justifyContent}
     alignItems={alignItems}
     borderWidth={1}
-    noElement
-    noWrap
     background="transparent"
     tagName="label"
     {...props}

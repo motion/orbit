@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { Theme } from '@mcro/gloss'
 import { view, attachTheme } from '@mcro/black'
-import $ from '@mcro/color'
-import { View } from './blocks/View'
+import toColor from '@mcro/color'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
@@ -10,12 +9,14 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { Color } from '@mcro/css'
+import { propsToThemeStyles, propsToStyles } from '@mcro/gloss'
+import { View } from './blocks/View'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
 export type SurfaceProps = {
   active?: boolean
-  after?: Element | string
+  after?: React.ReactNode
   align?: string
   alignSelf?: string
   background?: Color
@@ -53,7 +54,7 @@ export type SurfaceProps = {
   highlight?: boolean
   hoverable?: boolean
   hovered?: boolean
-  icon?: React.ReactNode | string
+  icon?: React.ReactNode
   iconAfter?: boolean
   iconColor?: Color
   iconProps?: Object
@@ -68,7 +69,7 @@ export type SurfaceProps = {
   marginTop?: number
   maxWidth?: number
   minWidth?: number
-  noElement?: boolean
+  noInnerElement?: boolean
   noWrap?: boolean
   onClick?: Function
   opacity?: number
@@ -78,7 +79,7 @@ export type SurfaceProps = {
   paddingLeft?: number
   paddingRight?: number
   paddingTop?: number
-  row?: boolean
+  vertical?: boolean
   size?: number
   sizeIcon?: number
   spaced?: boolean
@@ -113,6 +114,15 @@ export type SurfaceProps = {
   type?: string
 }
 
+const getIconSize = props =>
+  props.iconSize ||
+  Math.round(
+    props.size *
+      (props.height ? props.height / 3.5 : 12) *
+      (props.sizeIcon || 1) *
+      100,
+  ) / 100
+
 const inlineStyle = {
   display: 'inline',
 }
@@ -129,61 +139,235 @@ const dimStyle = {
   },
 }
 
-const spacedStyles = {
-  margin: [0, 5],
-  borderRightWidth: 1,
-}
+const SurfaceBase = view({})
+SurfaceBase.theme = props => ({
+  ...propsToThemeStyles(props),
+  ...propsToStyles(props),
+})
 
-// fontFamily: inherit on both fixes noElement elements
-const SurfaceFrame = view(View, {
+// fontFamily: inherit on both fixes elements
+const SurfaceFrame = view(SurfaceBase, {
+  flexFlow: 'row',
+  alignItems: 'center',
   fontFamily: 'inherit',
   position: 'relative',
 })
 
-const Element = view({
+SurfaceFrame.theme = props => {
+  const theme = props.theme
+  const propStyles = propsToThemeStyles(props)
+  // sizes
+  const height = props.height
+  const width = props.width
+  const padding = props.padding
+  const flex =
+    props.flex === true
+      ? 1
+      : props.flex || (props.style && props.style.flex) || 'none'
+  const STATE =
+    (props.highlight && 'highlight') || (props.active && 'active') || 'base'
+
+  // colors
+  let color =
+    props.color === false || props.color === 'inherit'
+      ? 'inherit'
+      : toColor(
+          props.color ||
+            (props.highlight && props.highlightColor) ||
+            theme[STATE].color,
+        )
+  if (typeof props.alpha === 'number') {
+    color = color.alpha(props.alpha)
+  }
+  const iconColor = props.iconColor || color
+
+  // background
+  const baseBackground =
+    props.background === true
+      ? theme[STATE].background
+      : props.background || theme[STATE].background
+  let background = props.highlight
+    ? props.highlightBackground || theme.highlight.background
+    : props.active
+      ? props.activeBackground || theme.active.background || baseBackground
+      : baseBackground
+
+  const isGradient =
+    typeof background === 'string' &&
+    (background.indexOf('linear-gradient') === 0 ||
+      background.indexOf('radial-gradient') === 0)
+  const isTransparent = background === 'transparent'
+  const colorfulBg = !isGradient && !isTransparent
+
+  if (colorfulBg && background && !background.model) {
+    background = toColor(background)
+  }
+  if (typeof props.backgroundAlpha === 'number' && background.alpha) {
+    background = background.alpha(props.backgroundAlpha)
+  }
+
+  let hoverBackground =
+    !props.highlight &&
+    (props.hover && props.hover.background === true
+      ? theme.hover.background
+      : (props.hover && props.hover.background) ||
+        theme.hover.background ||
+        (colorfulBg ? background.lighten(0.5) : background))
+  if (
+    hoverBackground &&
+    props.hover &&
+    typeof props.hover.backgroundAlpha === 'number'
+  ) {
+    hoverBackground = hoverBackground.alpha(props.hover.backgroundAlpha)
+  }
+
+  // shadows
+  const boxShadow =
+    typeof props.boxShadow === 'string'
+      ? [props.boxShadow]
+      : props.boxShadow || []
+  if (props.elevation) {
+    boxShadow.push([
+      0,
+      (Math.log(props.elevation) + 1) * 3 + 1,
+      (Math.log(props.elevation) + 1) * 10,
+      [0, 0, 0, (1 / Math.log(props.elevation)) * 0.15],
+    ])
+  }
+
+  // circular
+  const circularStyles = props.circular && {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    width: height,
+  }
+  // icon
+  const iconStyle = {
+    ...baseIconStyle,
+    color: iconColor,
+  }
+  const hoverIconStyle = {
+    color: props.iconHoverColor || propStyles.hoverColor,
+  }
+  // state styles
+  const hoverStyle = (props.hover ||
+    (!props.chromeless && !props.disabled && props.hoverable)) && {
+    ...theme.hover,
+    color: propStyles.hoverColor,
+    borderColor: propStyles.hoverBorderColor,
+    background: hoverBackground,
+    ...props.hoverStyle,
+  }
+  let activeStyle = !props.chromeless && {
+    position: 'relative',
+    zIndex: props.zIndex || 1000,
+  }
+  if (props.active) {
+    const userActiveStyle =
+      props.activeStyle || (props.clickable && theme.active)
+    if (userActiveStyle) {
+      activeStyle = {
+        ...activeStyle,
+        ...userActiveStyle,
+        '&:hover':
+          userActiveStyle['&:hover'] || userActiveStyle || activeStyle || {},
+      }
+    }
+  }
+  const chromelessStyle = props.chromeless && {
+    borderWidth: 0,
+    background: 'transparent',
+  }
+  const focusable = props.focusable
+  const focusStyle = !props.chromeless &&
+    theme.focus && {
+      ...theme.focus,
+      boxShadow: [
+        ...boxShadow,
+        [0, 0, 0, 4, toColor(theme.focus.color).alpha(0.05)],
+      ],
+    }
+  let surfaceStyles = {
+    ...(props.inline && inlineStyle),
+    color,
+    overflow:
+      props.overflow || props.glow
+        ? props.overflow || 'hidden'
+        : props.overflow,
+    height,
+    width,
+    flex,
+    padding,
+    background,
+    boxShadow,
+    justifyContent: props.justify || props.justifyContent,
+    alignSelf: props.alignSelf,
+    borderStyle: props.borderStyle || props.borderWidth ? 'solid' : undefined,
+    ...circularStyles,
+    '& > div > .icon': iconStyle,
+    '&:hover > div > .icon': hoverIconStyle,
+    '&:hover': hoverStyle,
+    ...(props.wrapElement && {
+      '& > :focus': focusable && focusStyle,
+      '& > :active': activeStyle,
+    }),
+    ...(!props.wrapElement && {
+      '&:focus': focusable && focusStyle,
+      '&:active': activeStyle,
+    }),
+    ...(props.hovered && hoverStyle),
+    ...(props.dimmed && dimmedStyle),
+    ...(props.dim && dimStyle),
+    ...chromelessStyle,
+    ...(props.active && activeStyle),
+    // // so you can override
+    // ...props.style,
+  }
+  return surfaceStyles
+}
+
+const Element = view(View, {
+  flexFlow: 'row',
   fontFamily: 'inherit',
   border: 'none',
   background: 'transparent',
   height: '100%',
+  lineHeight: 'inherit',
   color: 'inherit',
-  // this seems to maybe fix some line height stuff
-  transform: {
-    y: '1%',
+  noInnerElement: {
+    display: 'none',
   },
 })
+
+Element.theme = props => {
+  const iconSize = getIconSize(props)
+  const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
+  // element styles
+  const elementStyle = {}
+  // spacing between icon
+  const hasIconBefore = !!props.icon && !props.iconAfter
+  const hasIconAfter = !!props.icon && props.iconAfter
+  if (hasIconBefore) {
+    elementStyle.marginLeft = props.iconPad
+  }
+  if (hasIconAfter) {
+    elementStyle.marginRight = props.iconPad
+  }
+  return {
+    ...(props.inline && inlineStyle),
+    width: `calc(100% ${iconNegativePad})`,
+    ...elementStyle,
+  }
+}
 
 const baseIconStyle = {
   pointerEvents: 'none',
   justifyContent: 'center',
-  height: '1.4rem',
   transform: `translateY(1%)`,
 }
 
-const Wrap = view({
-  flex: 1,
-  overflow: 'hidden',
-})
-
-const WrapContents = view({
-  flex: 1,
-  position: 'relative',
-  overflow: 'hidden',
-})
-
-const ICON_SCALE = 12
-const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
-const BORDER_RADIUS_SIDES = [
-  'borderBottomRadius',
-  'borderTopRadius',
-  'borderLeftRadius',
-  'borderRightRadius',
-]
-
-const hasChildren = children =>
-  Array.isArray(children)
-    ? children.reduce((a, b) => a || !!b, false)
-    : !!children
 
 @attachTheme
 @view.ui
@@ -200,518 +384,120 @@ class SurfaceInner extends React.Component<SurfaceProps> {
 
   render() {
     const {
-      active,
-      after,
-      align,
-      alignSelf,
-      alpha,
+      glint,
       badge,
       badgeProps,
-      border,
-      borderBottom,
-      borderBottomRadius,
-      borderLeft,
-      borderLeftRadius: _borderLeftRadius,
-      borderRadius: _borderRadius,
-      borderRight,
-      borderRightRadius: _borderRightRadius,
-      borderStyle,
-      borderTop,
-      borderTopRadius,
-      borderWidth,
-      children,
-      chromeless,
-      circular,
-      className,
-      clickable,
-      dim,
-      dimmed,
-      disabled,
-      elementProps,
-      elevation,
-      fontSize,
-      fontWeight,
-      forwardRef,
-      glint,
-      glow,
-      glowProps,
-      highlight,
-      highlightBackground,
-      highlightColor,
-      hoverable,
-      hovered,
       icon,
       iconAfter,
       iconProps,
-      iconSize: _iconSize,
-      inline,
-      justify,
-      lineHeight,
-      margin,
-      marginBottom,
-      marginLeft,
-      marginRight,
-      marginTop,
-      maxWidth,
-      minWidth,
-      noElement,
-      noWrap,
-      onClick,
-      opacity,
-      paddingBottom,
-      paddingLeft,
-      paddingRight,
-      paddingTop,
-      placeholderColor,
-      row,
-      sizeIcon,
-      spaced,
-      stretch,
-      style,
-      tagName,
-      textAlign,
+      glow,
+      dimmed,
+      disabled,
+      glowProps,
+      children,
+      elementProps,
       tooltip,
       tooltipProps,
-      wrapElement,
-      ignoreSegment,
-      alignItems,
-      justifyContent,
-      backgroundAlpha,
-      sizeLineHeight,
+      height,
+      color,
       theme,
-      ...props
+      size,
+      sizeLineHeight,
+      noInnerElement,
     } = this.props
     const stringIcon = typeof icon === 'string'
-    const passProps = {
+    const {
       tagName,
-      ref: forwardRef,
+      forwardRef,
       style,
-      ...props,
-    }
-    // sizes
-    const size = props.size === true ? 1 : props.size || 1
-    const height = props.height || (props.style && props.style.height)
-    const width = props.width
-    const padding = props.padding
-    const flex =
-      props.flex === true
-        ? 1
-        : props.flex || (props.style && props.style.flex) || 'none'
-    const STATE =
-      (props.highlight && 'highlight') || (props.active && 'active') || 'base'
-
-    // colors
-    let color =
-      props.color === false || props.color === 'inherit'
-        ? 'inherit'
-        : $(
-            props.color ||
-              (props.highlight && props.highlightColor) ||
-              theme[STATE].color,
-          )
-    if (typeof props.alpha === 'number') {
-      color = color.alpha(props.alpha)
-    }
-    const iconColor = props.iconColor || color
-
-    // background
-    const baseBackground =
-      props.background === true
-        ? theme[STATE].background
-        : props.background || theme[STATE].background
-    let background = props.highlight
-      ? props.highlightBackground || theme.highlight.background
-      : props.active
-        ? props.activeBackground || theme.active.background || baseBackground
-        : baseBackground
-
-    const isGradient =
-      typeof background === 'string' &&
-      (background.indexOf('linear-gradient') === 0 ||
-        background.indexOf('radial-gradient') === 0)
-    const isTransparent = background === 'transparent'
-    const colorfulBg = !isGradient && !isTransparent
-
-    if (colorfulBg && background && !background.model) {
-      background = $(background)
-    }
-    if (typeof props.backgroundAlpha === 'number' && background.alpha) {
-      background = background.alpha(props.backgroundAlpha)
-    }
-
-    let hoverBackground =
-      !props.highlight &&
-      (props.hover && props.hover.background === true
-        ? theme.hover.background
-        : (props.hover && props.hover.background) ||
-          theme.hover.background ||
-          (colorfulBg ? background.lighten(0.5) : background))
-    if (
-      hoverBackground &&
-      props.hover &&
-      typeof props.hover.backgroundAlpha === 'number'
-    ) {
-      hoverBackground = hoverBackground.alpha(props.hover.backgroundAlpha)
-    }
-
-    const borderColor = $(
-      props.borderColor === true
-        ? theme[STATE].borderColor
-        : props.borderColor || 'transparent',
-    )
-    let hoverColor =
-      props.color === false
-        ? 'inherit'
-        : $(
-            (props.hover && props.hover.color) ||
-              theme[STATE].color.lighten(0.2) ||
-              props.color,
-          )
-    if (props.hover && typeof props.hover.alpha === 'number') {
-      hoverColor = hoverColor.alpha(props.hover.alpha)
-    }
-
-    const hoverBorderColor =
-      props.hoverBorderColor ||
-      (props.borderColor && $(props.borderColor).lighten(0.2)) ||
-      theme[STATE].borderColor ||
-      theme.hover.borderColor ||
-      borderColor.lighten(0.2)
-
-    // shadows
-    const boxShadow =
-      typeof props.boxShadow === 'string'
-        ? [props.boxShadow]
-        : props.boxShadow || []
-    if (props.elevation) {
-      boxShadow.push([
-        0,
-        (Math.log(props.elevation) + 1) * 3 + 1,
-        (Math.log(props.elevation) + 1) * 10,
-        [0, 0, 0, (1 / Math.log(props.elevation)) * 0.15],
-      ])
-    }
-
-    // glint
-    let glintColor
-    if (props.glint) {
-      glintColor =
-        props.glint === true
-          ? colorfulBg
-            ? background.lighten(0.1)
-            : [255, 255, 255, 0.2]
-          : props.glint
-      // boxShadow.push(['inset', 0, 0, 0, glintColor])
-    }
-
-    // borderRadius
-    let radius = props.circular ? height / 2 : props.borderRadius
-    radius = radius === true ? (height / 3.4) * size : radius
-    radius = typeof radius === 'number' ? Math.round(radius) : radius
-
-    const borderRadius = {} as any
-    // if (uiContext && uiContext.inSegment && !props.ignoreSegment) {
-    //   borderRadius.borderLeftRadius = uiContext.inSegment.first ? radius : 0
-    //   borderRadius.borderRightRadius = uiContext.inSegment.last ? radius : 0
-    // } else
-    if (props.circular) {
-      borderRadius.borderRadius = size * LINE_HEIGHT
-    } else {
-      let hasSidesDefined = false
-      for (const side of BORDER_RADIUS_SIDES) {
-        const isDefined = typeof props[side] === 'number'
-        if (isDefined) {
-          hasSidesDefined = true
-          if (props[side] === true) {
-            borderRadius[side] = radius
-          } else {
-            borderRadius[side] = props[side]
-          }
-        } else {
-          borderRadius[side] = radius
-        }
-      }
-      if (!hasSidesDefined && radius) {
-        borderRadius.borderRadius = radius
-      }
-    }
-    // circular
-    const circularStyles = props.circular && {
-      padding: 0,
-      width: height,
-    }
-    // icon
-    const iconStyle = {
-      ...baseIconStyle,
-      color: iconColor,
-    }
-    const hoverIconStyle = {
-      color: props.iconHoverColor || hoverColor,
-    }
-    // state styles
-    const hoverStyle = (props.hover ||
-      (!props.chromeless && !props.disabled && props.hoverable)) && {
-      ...theme.hover,
-      color: hoverColor,
-      borderColor: hoverBorderColor,
-      background: hoverBackground,
-      ...props.hoverStyle,
-    }
-    let activeStyle = !props.chromeless && {
-      position: 'relative',
-      zIndex: props.zIndex || 1000,
-    }
-    if (props.active) {
-      const userActiveStyle =
-        props.activeStyle || (props.clickable && theme.active)
-      if (userActiveStyle) {
-        activeStyle = {
-          ...activeStyle,
-          ...userActiveStyle,
-          '&:hover':
-            userActiveStyle['&:hover'] || userActiveStyle || activeStyle || {},
-        }
-      }
-    }
-    const chromelessStyle = props.chromeless && {
-      borderWidth: 0,
-      background: 'transparent',
-    }
-    const focusable = props.focusable
-    const focusStyle = !props.chromeless &&
-      theme.focus && {
-        ...theme.focus,
-        boxShadow: [
-          ...boxShadow,
-          [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)],
-        ],
-      }
-    const iconSize =
-      props.iconSize ||
-      Math.round(size * ICON_SCALE * (props.sizeIcon || 1) * 100) / 100
-    const flexFlow = props.flexFlow || 'row'
-    const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
-    const undoPadding = {
-      margin: padding
-        ? typeof padding === 'number'
-          ? -padding
-          : padding.map(x => -x)
-        : 0,
       padding,
+      margin,
+      className,
+      ...throughProps
+    } = this.props
+    if (sizeLineHeight) {
+      throughProps.lineHeight = `${height}px`
     }
-    let elementGlowProps
-    if (props.glow) {
-      elementGlowProps = {
-        position: 'relative',
-        zIndex: 1,
-      }
-    }
-    let surfaceStyles = {
-      ...(props.inline && inlineStyle),
-      transform: props.transform,
-      position: props.position,
-      zIndex: props.zIndex,
-      opacity: props.opacity,
-      minWidth: props.minWidth,
-      maxWidth: props.maxWidth,
-      color,
-      overflow:
-        props.overflow || props.glow
-          ? props.overflow || 'hidden'
-          : props.overflow,
-      height,
-      width,
-      flex,
-      padding,
-      borderColor,
-      background,
-      boxShadow,
-      fontWeight: props.fontWeight,
-      justifyContent: props.justify || props.justifyContent,
-      alignItems: props.align || props.alignItems,
-      alignSelf: props.alignSelf,
-      flexFlow,
-      ...borderRadius,
-      margin: props.margin,
-      borderWidth: props.borderWidth,
-      borderStyle: props.borderStyle || props.borderWidth ? 'solid' : undefined,
-      border: props.border,
-      borderBottom: props.borderBottom,
-      borderTop: props.borderTop,
-      borderLeft: props.borderLeft,
-      borderRight: props.borderRight,
-      marginBottom: props.marginBottom,
-      marginTop: props.marginTop,
-      marginLeft: props.marginLeft,
-      marginRight: props.marginRight,
-      paddingBottom: props.paddingBottom,
-      paddingTop: props.paddingTop,
-      paddingLeft: props.paddingLeft,
-      paddingRight: props.paddingRight,
-      ...circularStyles,
-      '& > div > .icon': iconStyle,
-      '&:hover > div > .icon': hoverIconStyle,
-      '&:hover': hoverStyle,
-      ...(props.wrapElement && {
-        '& > :focus': focusable && focusStyle,
-        '& > :active': activeStyle,
-      }),
-      ...(!props.wrapElement && {
-        '&:focus': focusable && focusStyle,
-        '&:active': activeStyle,
-      }),
-      ...(props.hovered && hoverStyle),
-      ...(props.dimmed && dimmedStyle),
-      ...(props.dim && dimStyle),
-      ...(props.spaced && spacedStyle),
-      ...chromelessStyle,
-      ...(props.active && activeStyle),
-      // // so you can override
-      // ...props.style,
-    }
-    if (props.sizeLineHeight) {
-      surfaceStyles.lineHeight = `${surfaceStyles.height}px`
-    }
-    // element styles
-    const element = {
-      ...(props.inline && inlineStyle),
-      // this fixes inputs but may break other things, need to test
-      height,
-      ...borderRadius,
-      ...elementGlowProps,
-      overflow: props.overflow || 'visible',
-      flexFlow,
-      fontSize: props.fontSize || 'inherit',
-      fontWeight: props.fontWeight,
-      lineHeight: 'inherit',
-      justifyContent: props.justify || props.justifyContent,
-      maxWidth: `calc(100% ${iconNegativePad})`,
-      // maxHeight: '100%',
-      textAlign: props.textAlign,
-    }
-    // spacing between icon
-    const hasIconBefore = props.icon && !props.iconAfter
-    const hasIconAfter = props.icon && props.iconAfter
-    if (hasIconBefore) {
-      element.marginLeft = props.iconPad
-    }
-    if (hasIconAfter) {
-      element.marginRight = props.iconPad
-    }
-    const styles = {
-      element,
-      wrap: undoPadding,
-      wrapContents: undoPadding,
-      after: {
-        marginTop: padding
-          ? Array.isArray(padding)
-            ? padding[0]
-            : padding
-          : 0,
-      },
-      surface: surfaceStyles,
-    }
-
-    // get border radius
-    let borderLeftRadius =
-      typeof _borderLeftRadius === 'number'
-        ? _borderLeftRadius
-        : borderRadius.borderLeftRadius
-    let borderRightRadius =
-      typeof _borderRightRadius === 'number'
-        ? _borderRightRadius
-        : borderRadius.borderRightRadius
-    if (typeof borderLeftRadius === 'undefined') {
-      borderLeftRadius = radius
-      borderRightRadius = radius
-    }
-
     const glowColor = (theme && color) || DEFAULT_GLOW_COLOR
-
-    const contents = (
-      <>
-        <Glint
-          if={glint}
-          key={0}
-          size={size}
-          borderLeftRadius={borderLeftRadius - 1}
-          borderRightRadius={borderRightRadius - 1}
-        />
+    return (
+      <SurfaceFrame
+        whiteSpace="pre"
+        padding={padding}
+        margin={margin}
+        {...throughProps}
+        forwardRef={forwardRef}
+        style={style}
+        className={`${this.uniq} ${className || ''}`}
+      >
+        {glint ? (
+          <Glint
+            key={0}
+            size={size}
+            // borderLeftRadius={borderLeftRadius - 1}
+            // borderRightRadius={borderRightRadius - 1}
+          />
+        ) : null}
         {badge ? (
           <Badge {...badgeProps}>
             {typeof badge !== 'boolean' ? badge : ''}
           </Badge>
         ) : null}
-        <div style={iconStyle} if={icon && !stringIcon}>
-          {icon}
-        </div>
-        <Icon
-          if={icon && stringIcon}
-          style={{
-            ...iconStyle,
-            order: icon && iconAfter ? 3 : 'auto',
-          }}
-          name={icon}
-          size={iconSize}
-          {...iconProps}
-        />
-        <HoverGlow
-          if={glow && !dimmed && !disabled}
-          full
-          scale={1.1}
-          show={hovered}
-          color={glowColor}
-          opacity={0.35}
-          borderLeftRadius={borderLeftRadius - 1}
-          borderRightRadius={borderRightRadius - 1}
-          {...glowProps}
-        />
+        {icon && !stringIcon ? <div>{icon}</div> : null}
+        {icon && stringIcon ? (
+          <Icon
+            order={icon && iconAfter ? 3 : 'auto'}
+            name={`${icon}`}
+            size={getIconSize(this.props)}
+            {...iconProps}
+          />
+        ) : null}
+        {glow && !dimmed && !disabled ? (
+          <HoverGlow
+            full
+            scale={1.1}
+            color={`${glowColor}`}
+            opacity={0.35}
+            // borderLeftRadius={borderLeftRadius - 1}
+            // borderRightRadius={borderRightRadius - 1}
+            {...glowProps}
+          />
+        ) : null}
         <Element
-          if={!noElement || (noElement && !noWrap && hasChildren(children))}
-          {...wrapElement && passProps}
+          noInnerElement={noInnerElement}
+          minWidth={
+            Array.isArray(this.props.padding)
+              ? this.props.padding[1] * 5
+              : 'auto'
+          }
+          tagName={tagName}
+          {...throughProps}
           {...elementProps}
           disabled={disabled}
-          {...styles.element}
         >
           {children}
         </Element>
-        {noElement && noWrap && hasChildren(children) && children}
-        <Theme if={tooltip} name="dark">
-          <Popover
-            background
-            openOnHover
-            closeOnClick
-            noHoverOnChildren
-            animation="bounce 150ms"
-            target={`.${this.uniq}`}
-            padding={[2, 7, 4]}
-            borderRadius={5}
-            distance={8}
-            forgiveness={8}
-            arrowSize={10}
-            delay={400}
-            popoverProps={POPOVER_PROPS}
-            {...tooltipProps}
-          >
-            <span css={{ maxWidth: 200 }}>{tooltip}</span>
-          </Popover>
-        </Theme>
-      </>
-    )
-    return (
-      <SurfaceFrame
-        className={`${this.uniq} ${className || ''}`}
-        onClick={onClick}
-        {...styles.surface}
-        {...!wrapElement && passProps}
-      >
-        {after && (
-          <Wrap>
-            <WrapContents>{contents}</WrapContents>
-            {after}
-          </Wrap>
-        )}
-        {!after && contents}
+        {tooltip ? (
+          <Theme name="dark">
+            <Popover
+              background
+              openOnHover
+              closeOnClick
+              noHoverOnChildren
+              animation="bounce 150ms"
+              target={`.${this.uniq}`}
+              padding={[2, 7, 4]}
+              borderRadius={5}
+              distance={8}
+              forgiveness={8}
+              arrowSize={10}
+              delay={400}
+              popoverProps={POPOVER_PROPS}
+              {...tooltipProps}
+            >
+              <span style={{ maxWidth: 200 }}>{tooltip}</span>
+            </Popover>
+          </Theme>
+        ) : null}
       </SurfaceFrame>
     )
   }

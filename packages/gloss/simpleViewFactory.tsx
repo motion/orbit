@@ -342,6 +342,14 @@ export function simpleViewFactory(toCSS) {
             finalProps.forwardRef = forwardRef
           }
         }
+        // ignoreAttrs
+        if (ThemedConstructor.ignoreAttrs) {
+          for (const attr of ThemedConstructor.ignoreAttrs) {
+            if (finalProps[attr]) {
+              delete finalProps[attr]
+            }
+          }
+        }
         return React.createElement(
           // accept custom tagname overrides
           props.tagName || tagName,
@@ -354,6 +362,9 @@ export function simpleViewFactory(toCSS) {
     ThemedConstructor = props => (
       <ThemeContext.Consumer>
         {({ allThemes, activeThemeName }) => {
+          if (!allThemes) {
+            return <Constructor {...props} />
+          }
           const theme = allThemes[activeThemeName]
           return <Constructor theme={theme} {...props} />
         }}

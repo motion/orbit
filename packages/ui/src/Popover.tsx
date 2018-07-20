@@ -44,7 +44,7 @@ export type PopoverProps = {
   closeOnEsc?: boolean
   // which direction it shows towards
   // default determine direction automatically
-  towards: 'auto' | 'left' | 'right' | 'bottom' | 'top'
+  towards?: 'auto' | 'left' | 'right' | 'bottom' | 'top'
   padding?: number[] | number
   onMouseEnter?: Function
   onMouseLeave?: Function

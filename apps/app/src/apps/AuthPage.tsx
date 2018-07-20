@@ -5,6 +5,7 @@ import r2 from '@mcro/r2'
 import * as Constants from '../constants'
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
+import { OrbitIcon } from './orbit/OrbitIcon'
 
 const service = (window.location + '').split('service=')[1]
 
@@ -47,7 +48,12 @@ export class AuthPage extends React.Component {
     return (
       <Wrap>
         <UI.Theme theme="#4C36C4">
-          <UI.Button size={1.5} $button id="link" onClick={this.link}>
+          <UI.Button
+            size={2}
+            id="link"
+            onClick={this.link}
+            icon={<OrbitIcon icon={service} />}
+          >
             Link {capitalize(service)}
           </UI.Button>
         </UI.Theme>

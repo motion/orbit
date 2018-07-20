@@ -66,7 +66,6 @@ export class ThemeMaker {
     }
     const opposite = base.mix(base.lighten(1))
     const theme = this.fromStyles({
-      highlightColor: base,
       background: base,
       color: opposite.lighten(1.6),
       borderColor: opposite.darken(0.5),
@@ -83,18 +82,9 @@ export class ThemeMaker {
     if (this.cache[key]) {
       return this.cache[key]
     }
-    const {
-      highlightColor,
-      highlightBackground,
-      background,
-      color,
-      borderColor,
-      ...rest
-    } = styleObject
+    const { background, color, borderColor, ...rest } = styleObject
     const backgroundColored = background ? $(background) : opposite($(color))
     const base = this.colorize({
-      highlightColor,
-      highlightBackground,
       background: backgroundColored,
       color: color || opposite(backgroundColored),
       borderColor: borderColor || adjust(backgroundColored, smallAmt),

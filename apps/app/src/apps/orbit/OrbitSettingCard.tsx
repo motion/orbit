@@ -3,9 +3,9 @@ import { view } from '@mcro/black'
 // import * as UI from '@mcro/ui'
 import { OrbitCard } from '../../apps/orbit/OrbitCard'
 import { SettingInfoStore } from '../../stores/SettingInfoStore'
-import * as OauthActions from '../../actions/OauthActions'
 import { Setting } from '@mcro/models'
 import { OrbitCardProps } from './OrbitCard'
+import { App } from '@mcro/stores'
 
 @view.attach('appStore')
 @view.attach({
@@ -15,13 +15,14 @@ import { OrbitCardProps } from './OrbitCard'
 export class OrbitSettingCard extends React.Component<
   OrbitCardProps & {
     store: SettingInfoStore
+    isActive?: boolean
   }
 > {
+  id = Math.random()
+
   handleClick = async () => {
-    const { isActive, result } = this.props
-    if (isActive) {
-      return
-    }
+    console.log('handleClick', this.props)
+    const { result } = this.props
     if (result.auth === false) {
       const setting = new Setting()
       setting.category = 'integration'
@@ -32,7 +33,7 @@ export class OrbitSettingCard extends React.Component<
       console.log('should select auth view')
       return
     } else {
-      OauthActions.startOauth(result.id)
+      App.actions.startOauth(result.id)
     }
     return
   }
@@ -49,6 +50,7 @@ export class OrbitSettingCard extends React.Component<
       console.log('no title for', result)
       return null
     }
+    const onClick = !isActive ? this.handleClick : props.onClick
     return (
       <OrbitCard
         inactive={!isActive}
@@ -65,15 +67,8 @@ export class OrbitSettingCard extends React.Component<
           }
         }
         result={result}
-        onClick={this.handleClick}
-        // afterTitle={
-        //   <UI.Row margin={[-5, 0]}>
-        //     <React.Fragment if={false && isActive}>
-        //       <UI.Button>Remove</UI.Button>
-        //     </React.Fragment>
-        //   </UI.Row>
-        // }
         {...props}
+        onClick={onClick}
       />
     )
   }

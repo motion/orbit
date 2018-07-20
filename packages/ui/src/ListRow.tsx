@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import { Button } from './Button'
-import { Surface } from './Surface'
+import { Row } from './blocks/Row'
 import { UIContext } from './helpers/contexts'
 import { Color } from '@mcro/css'
 
@@ -156,17 +156,10 @@ export class ListRow extends React.Component<ListRowProps> {
     }
 
     return (
-      <Surface
-        tagName="row"
-        noElement
-        noWrap
-        background="transparent"
-        flexFlow="row"
-        {...props}
-      >
+      <Row {...props}>
         {label && <Label>{label}</Label>}
         {children}
-      </Surface>
+      </Row>
     )
   }
 }

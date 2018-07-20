@@ -52,14 +52,7 @@ class WindowResize extends React.Component {
 }
 
 const SectionTitle = props => (
-  <Title
-    css={{ marginRight: 100 }}
-    italic
-    size={4}
-    alpha={1}
-    color="#222"
-    {...props}
-  />
+  <Title marginRight={100} italic size={4} alpha={1} color="#222" {...props} />
 )
 
 const SectionP = props => (
@@ -101,7 +94,7 @@ const Half = props => (
   </Media>
 )
 
-const WaveSVG = view('svg', {
+const WaveSVG = view(UI.View, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -119,6 +112,10 @@ const WaveSVG = view('svg', {
     z: 0,
   },
 })
+
+WaveSVG.defaultProps = {
+  tagName: 'svg',
+}
 
 const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
   <WaveSVG
@@ -207,25 +204,30 @@ const SectionSubTitle = props => (
 
 const Pitch = ({ isLarge, scrollTo }) => (
   <>
-    <Title italic size={5.5} alpha={1} color="#222">
+    <Title italic size={4.4} fontWeight={600} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      The serverless internal knowledge platform. Organize and search everything
+      The serverless unified knowledge platform. Organize and search everything
       in your cloud and behind your firewall.
     </SectionSubTitle>
     <VertSpace />
-    <SectionSubTitle fontWeight={300} size={1.6}>
-      <ToolTip onClick={() => scrollTo(3)}>
-        Learn how serverless makes it work for you.
-      </ToolTip>
+    <SectionSubTitle
+      cursor="pointer"
+      fontWeight={300}
+      size={1.2}
+      onClick={() => scrollTo(3)}
+    >
+      Learn how serverless makes it work for you.
     </SectionSubTitle>
     <VertSpace />
-    <UI.Row css={{ margin: [2, 0, 10] }}>
+    <VertSpace />
+    <UI.Row>
       <Join />
       <UI.View flex={1} />
     </UI.Row>
+    <VertSpace />
     <VertSpace />
     <UI.Row
       css={{
@@ -746,6 +748,7 @@ class OrbitPure extends React.Component {
               />
               <HomeImg
                 src={homeImg}
+                debug
                 css={{
                   ...imgProps,
                   zIndex: 3,

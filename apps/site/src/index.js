@@ -4,7 +4,7 @@ import './createElement'
 import 'intersection-observer'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import Themes from '~/themes'
+import themes from '~/themes'
 import { ThemeProvide } from '@mcro/ui'
 import * as Constants from '~/constants'
 import * as Black from '@mcro/black'
@@ -19,7 +19,7 @@ function render() {
   const RootNode = document.querySelector('#app')
   const Root = require('./root').default
   ReactDOM.render(
-    <ThemeProvide {...Themes}>
+    <ThemeProvide themes={themes}>
       <Root />
     </ThemeProvide>,
     RootNode,

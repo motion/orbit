@@ -4,17 +4,8 @@ import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import { modelsList } from '@mcro/models'
 import connectModels from '../helpers/connectModels'
-import * as AppStoreActions from '../actions/AppStoreActions'
+import * as appActions from '../actions/appActions'
 import { WebSQLClient } from '../helpers/WebSQLClient'
-
-if (process.env.NODE_ENV === 'development') {
-  if (module && module.hot) {
-    module.hot.accept('../actions/AppStoreActions', () => {
-      console.log('set new actions')
-      App.start({ actions: require('../actions/AppStoreActions') })
-    })
-  }
-}
 
 const onPort = async cb => {
   await sleep(200)
@@ -27,7 +18,7 @@ const onPort = async cb => {
 }
 
 @store
-export class RootStore {
+class Root {
   client: WebSQLClient
   connection = null
   started = false
@@ -42,11 +33,12 @@ export class RootStore {
     })
   }
 
-  async start() {
-    if (window.location.pathname !== '/auth') {
+  // should be able to run multiple times
+  async start({ connectModels }) {
+    if (connectModels) {
       await this.connectModels()
       await App.start({
-        actions: AppStoreActions,
+        actions: appActions,
       })
     }
     this.catchErrors()
@@ -63,6 +55,9 @@ export class RootStore {
   )
 
   async connectModels() {
+    if (this.connection) {
+      return
+    }
     const { client, connection } = await connectModels(modelsList)
     this.connection = connection
     this.client = client
@@ -97,3 +92,5 @@ export class RootStore {
     this.errors = []
   }
 }
+
+export const RootStore = new Root()

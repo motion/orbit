@@ -6,7 +6,9 @@ import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import { Bit, Setting } from '@mcro/models'
 import * as UI from '@mcro/ui'
-import { settingToResult } from './orbit/orbitSettings/orbitSettingsIntegrations'
+import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
+
+const store = new IntegrationSettingsStore()
 
 const getItem = {
   githubItem: () => Bit.findOne({ where: { integration: 'github' }, skip: 6 }),
@@ -17,7 +19,7 @@ const getItem = {
     integration: 'gdocs',
   }),
   githubSetting: async () =>
-    Setting.findOne({ where: { type: 'github' } }).then(settingToResult),
+    Setting.findOne({ where: { type: 'github' } }).then(store.settingToResult),
 }
 
 @view

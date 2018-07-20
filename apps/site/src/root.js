@@ -12,6 +12,7 @@ class Root extends React.Component {
   componentDidMount() {
     Router.onNavigate(() => {
       setTimeout(() => {
+        console.log('scroll to app')
         scrollTo('#app')()
       })
     })

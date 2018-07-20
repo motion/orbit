@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { Tilt } from './tilt'
+import { Tilt } from './Tilt'
 import { HoverGlow, HoverGlowProps } from './HoverGlow'
 
 type TiltHoverGlowProps = {

@@ -57,13 +57,17 @@ export const ChangeThemeByName = ({ name, children }) => {
     <ThemeContext.Consumer>
       {({ allThemes }) => {
         if (!allThemes || !allThemes[name]) {
-          throw new Error(`No ${name} theme in context!`)
+          throw new Error(
+            `No theme in context: ${name}. Themes are: ${Object.keys(
+              allThemes,
+            )}`,
+          )
         }
         const activeTheme = allThemes[name]
         return (
           <ThemeContext.Provider
             value={{
-              allThemes: { ...allThemes, [name]: activeTheme },
+              allThemes,
               activeTheme,
               activeThemeName: name,
             }}

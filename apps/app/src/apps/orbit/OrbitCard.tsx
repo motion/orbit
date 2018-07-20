@@ -5,7 +5,6 @@ import { OrbitIcon } from './OrbitIcon'
 import { BitResolver } from '../../components/BitResolver'
 import { SmallLink } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
-import * as BitActions from '../../actions/BitActions'
 import { App } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
@@ -46,6 +45,9 @@ export type OrbitCardProps = {
   children?: (a: Object, b: Object) => JSX.Element | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
+  hoverable?: boolean
+  borderRadius?: number
+  nextUpStyle?: Object
 }
 
 const CardWrap = view(UI.View, {
@@ -67,7 +69,6 @@ const Card = view({
 })
 
 Card.theme = ({
-  style,
   listItem,
   borderRadius,
   inGrid,
@@ -77,24 +78,22 @@ Card.theme = ({
   isSelected,
   isNextUp,
 }) => {
-  let hoveredStyle
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
-    height: (style && style.height) || 'auto',
   }
   if (listItem) {
     // LIST ITEM
-    hoveredStyle = {
-      background: theme.selected.background,
-    }
-    let listStateStyle
+    let listStyle
+    // selected...
     if (isSelected) {
-      listStateStyle = {
+      listStyle = {
         background: theme.selected.background,
-        '&:hover': hoveredStyle,
+        '&:hover': {
+          background: theme.selected.background,
+        },
       }
     } else {
-      listStateStyle = {
+      listStyle = {
         background: 'transparent',
         '&:hover': {
           background: theme.hover.background,
@@ -106,7 +105,7 @@ Card.theme = ({
     }
     card = {
       ...card,
-      ...listStateStyle,
+      ...listStyle,
       padding: [16, 20],
       borderTop: [1, theme.hover.background],
     }
@@ -136,7 +135,7 @@ Card.theme = ({
   }
   if (hoverable) {
     card.opacity = 0.7
-    card.transition = card.transition || 'opacity ease-in 300ms'
+    card.transition = card.transition || 'opacity ease 100ms'
     card['&:hover'] = {
       ...card['&:hover'],
       opacity: 1,
@@ -167,18 +166,6 @@ const Subtitle = view({
   flexFlow: 'row',
   alignItems: 'center',
 })
-
-// let loggers = []
-// let nextLog = null
-// const debounceLog = (...args) => {
-//   loggers.push([...args])
-//   clearTimeout(nextLog)
-//   nextLog = setTimeout(() => {
-//     // log('render cards:', loggers.length, loggers.slice(0, 2).join(' -- '))
-//     loggers = []
-//     nextLog = null
-//   }, 16)
-// }
 
 const orbitIconProps = {
   imageStyle: {
@@ -216,10 +203,6 @@ class OrbitCardStore {
   }
 
   handleClick = e => {
-    if (this.props.onClick) {
-      this.props.onClick(e)
-      return
-    }
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
       return
@@ -332,7 +315,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
 
   clickAt = 0
 
-  handleClick = e => {
+  handleDoubleClick = e => {
     // so we can control the speed of double clicks
     if (Date.now() - this.clickAt < 150) {
       this.open()
@@ -345,7 +328,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     if (!this.props.bit) {
       return
     }
-    BitActions.open(this.props.bit)
+    App.actions.open(this.props.bit)
   }
 
   getOrbitCard(contentProps) {
@@ -374,6 +357,10 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       iconProps,
       hide,
       inGrid,
+      hoverable,
+      borderRadius,
+      nextUpStyle,
+      onClick,
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
@@ -392,22 +379,24 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       />
     )
     const { isSelected } = store
-    const childTheme = isSelected && selectedTheme ? selectedTheme : null
-    const background =
-      (childTheme && childTheme.background) || theme.base.background
+    const { background } =
+      isSelected && selectedTheme ? selectedTheme : theme.base
     return (
       <CardWrap
-        forwardRef={store.setRef}
-        onClick={store.handleClick}
         {...hoverToSelect && !inactive && this.hoverSettler.props}
+        forwardRef={store.setRef}
         zIndex={isSelected ? 5 : 4}
         {...props}
       >
         <Card
-          onClick={this.handleClick}
           isSelected={isSelected}
           isNextUp={store.isNextUp}
-          {...this.props}
+          hoverable={hoverable}
+          listItem={listItem}
+          borderRadius={borderRadius}
+          inGrid={inGrid}
+          nextUpStyle={nextUpStyle}
+          onClick={onClick || store.handleClick}
         >
           {orbitIcon}
           <Title>

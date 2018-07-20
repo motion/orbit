@@ -61,10 +61,18 @@ class AppStore {
   orbitState: AppStore['state']['orbitState']
   peekState: AppStore['state']['peekState']
   authState: AppStore['state']['authState']
+  setOrbitState: Function
+  setPeekState: Function
+  setAuthState: Function
 
+  // TODO: get these onto here
   actions: {
     closeOrbit: Function
     selectItem: Function
+    toggleSelectItem: Function
+    open: Function
+    startOauth: Function
+    clearPeek: Function
   }
 
   messages = {
@@ -126,7 +134,7 @@ class AppStore {
   }
 
   animationDuration = 160
-  dockedWidth = 550
+  dockedWidth = 500
 
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(

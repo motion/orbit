@@ -1,10 +1,8 @@
 import { Person, Bit } from '@mcro/models'
 import { App, AppStatePeekItem } from '@mcro/stores'
-import peekPosition from '../helpers/peekPosition'
+import peekPosition from '../../helpers/peekPosition'
 import invariant from 'invariant'
-import debug from '@mcro/debug'
-
-const log = debug('appStorePeekStateActions')
+import { isEqual } from '@mcro/black'
 
 type PositionObject =
   | HTMLElement
@@ -28,6 +26,17 @@ function setPeekState(props) {
     target,
     ...peekPosition(target),
   })
+}
+
+export function toggleSelectItem(
+  item: Person | Bit | AppStatePeekItem,
+  target?: PositionObject,
+) {
+  if (isEqual(App.peekState.item, item)) {
+    App.actions.clearPeek()
+  } else {
+    selectItem(item, target)
+  }
 }
 
 export function selectItem(
@@ -62,7 +71,7 @@ export function selectItem(
 }
 
 export function selectPerson(person: Person, target?: PositionObject) {
-  const avatar = person.data.profile.image_48
+  const avatar = person.data.profile ? person.data.profile.image_48 : ''
   setPeekState({
     target,
     peekId: Math.random(),

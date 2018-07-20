@@ -12,6 +12,36 @@ const queryString = query => {
     .join('&')
 }
 
+const Form = view('form', {
+  flex: 1,
+  position: 'relative',
+})
+
+const Inner = view({
+  flexFlow: 'row',
+  [Constants.screen.smallQuery]: {
+    flexFlow: 'column',
+  },
+})
+
+const Section = view('section', {
+  textAlign: 'left',
+  width: '100%',
+  maxWidth: 540,
+  margin: [0, 'auto'],
+})
+
+const Message = view({
+  position: 'absolute',
+  bottom: -100,
+  left: 0,
+  right: 0,
+  color: 'darkred',
+  success: {
+    color: 'darkgreen',
+  },
+})
+
 @attachTheme
 @view
 export class Join extends React.Component {
@@ -58,8 +88,8 @@ export class Join extends React.Component {
     }
   }
 
-  render({ theme, ...props }, { success, error, submitting }) {
-    const style = { fontFamily: '"Eesti Pro"' }
+  render() {
+    const { success, error, submitting } = this.state
     const sizeProps = {
       size: 1.2,
       sizeRadius: 1,
@@ -67,9 +97,8 @@ export class Join extends React.Component {
       sizeHeight: 1.1,
     }
     return (
-      <section $section id="join" {...props}>
-        <form
-          $form
+      <Section id="join">
+        <Form
           ref={this.form}
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
           method="post"
@@ -79,93 +108,44 @@ export class Join extends React.Component {
           noValidate
           onSubmit={this.submit}
         >
-          <div $inner>
-            <div $wrapInput>
-              <UI.Input
-                $input
-                flex
-                {...sizeProps}
-                ref={this.email}
-                type="email"
-                name="EMAIL"
-                id="mce-EMAIL"
-                placeholder="Email address..."
-                style={style}
-                css={{
-                  // eesti font fix
-                  padding: [4, 12, 0],
-                }}
-              />
-            </div>
-            <space css={{ height: 20 }} />
+          <Inner>
+            <UI.Input
+              flex={1}
+              {...sizeProps}
+              ref={this.email}
+              type="email"
+              name="EMAIL"
+              id="mce-EMAIL"
+              placeholder="Email address..."
+              fontFamily="Eesti Pro"
+            />
+            <div style={{ height: 20 }} />
             <UI.Theme theme="#37C457">
               <UI.Button
-                $button
                 {...sizeProps}
                 fontWeight={500}
                 type="submit"
                 disabled={submitting}
-                style={{
-                  ...style,
-                  ...(submitting && { opacity: 0.5, pointerEvents: 'none' }),
-                }}
+                fontFamily="Eesti Pro"
+                margin={[0, 0, 0, 12]}
+                opacity={submitting ? 0.5 : 1}
+                pointerEvents={submitting ? 'none' : 'auto'}
               >
                 {submitting ? 'Signing up...' : 'Early access'}
               </UI.Button>
             </UI.Theme>
-          </div>
-          <div
-            $message
-            $success={success && !error}
+          </Inner>
+          <Message
+            success={success && !error}
             css={{ maxWidth: '70%', height: 30, marginBottom: -20 }}
             dangerouslySetInnerHTML={{
               __html: sanitize(success || error || ''),
             }}
           />
-        </form>
-      </section>
+        </Form>
+      </Section>
     )
   }
-
-  // style = {
-  //   form: {
-  //     flex: 1,
-  //     position: 'relative',
-  //   },
-  //   inner: {
-  //     flexFlow: 'row',
-  //     [Constants.screen.smallQuery]: {
-  //       flexFlow: 'column',
-  //     },
-  //   },
-  //   section: {
-  //     textAlign: 'left',
-  //     width: '100%',
-  //     maxWidth: 540,
-  //     margin: [0, 'auto'],
-  //   },
-  //   button: {
-  //     margin: [10, 12],
-  //   },
-  //   wrapInput: {
-  //     margin: [10, 0],
-  //     flex: 1,
-  //     minWidth: 235,
-  //   },
-  //   input: {
-  //     background: [0, 0, 0, 0.025],
-  //   },
-  //   message: {
-  //     position: 'absolute',
-  //     bottom: -100,
-  //     left: 0,
-  //     right: 0,
-  //     color: 'darkred',
-  //   },
-  //   success: {
-  //     color: 'darkgreen',
-  //   },
-  // }
 
   // static theme = ({ theme }) => {
   //   // const bg = theme.base.background

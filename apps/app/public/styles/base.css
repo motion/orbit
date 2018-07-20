@@ -1,3 +1,13 @@
+.hideScrollBar::-webkit-scrollbar {
+  height: 0px;
+  width: 0px;
+  background: transparent;
+}
+
+.hideScrollBar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
 .calendar-dom * {
   display: block;
   flex-shrink: initial;

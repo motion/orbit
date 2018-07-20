@@ -347,7 +347,6 @@ Element.theme = props => {
   if (hasIconAfter) {
     elementStyle.marginRight = props.iconPad
   }
-  console.log('elementStyle', elementStyle)
   return {
     ...(props.inline && inlineStyle),
     width: `calc(100% ${iconNegativePad})`,
@@ -432,7 +431,6 @@ class SurfaceInner extends React.Component<SurfaceProps> {
       ...throughProps
     } = this.props
     const glowColor = (theme && color) || DEFAULT_GLOW_COLOR
-    console.log('iconsize', this.props, getIconSize(this.props))
     return (
       <SurfaceFrame
         alignSelf="flex-start"

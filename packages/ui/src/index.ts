@@ -65,10 +65,6 @@ export * from './effects/TiltHoverGlow'
 export * from './effects/Glint'
 
 // form
-export * from './form/form'
-export * from './form/input'
-export * from './form/checkbox'
-export * from './form/toggle'
-export * from './form/field'
-export * from './form/select'
-export * from './form/label'
+export * from './form/Input'
+export * from './form/Checkbox'
+export * from './form/Label'

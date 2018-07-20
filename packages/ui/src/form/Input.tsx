@@ -86,7 +86,7 @@ class InputPlain extends React.PureComponent<InputProps> {
         elementProps={{
           value,
           onChange,
-          ref: forwardRef,
+          forwardRef,
           ...finalProps,
         }}
         {...props}
@@ -95,12 +95,10 @@ class InputPlain extends React.PureComponent<InputProps> {
   }
 }
 
-export const Input = React.forwardRef((props, ref) => {
+export const Input = props => {
   return (
     <UIContext.Consumer>
-      {uiContext => (
-        <InputPlain uiContext={uiContext} forwardRef={ref} {...props} />
-      )}
+      {uiContext => <InputPlain uiContext={uiContext} {...props} />}
     </UIContext.Consumer>
   )
-})
+}

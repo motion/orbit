@@ -371,7 +371,7 @@ const DEFAULT_GLOW_COLOR = [255, 255, 255]
 
 @attachTheme
 @view.ui
-class SurfaceInner extends React.Component<SurfaceProps> {
+export class Surface extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,
   }
@@ -502,7 +502,3 @@ class SurfaceInner extends React.Component<SurfaceProps> {
     )
   }
 }
-
-export const Surface = React.forwardRef((props, ref) => (
-  <SurfaceInner {...props} forwardRef={ref} />
-))

@@ -104,7 +104,7 @@ export class Section extends React.Component {
   }) {
     return (
       <section css={{ position: 'relative' }} {...props}>
-        <bgTest
+        <div
           if={leftBackground}
           css={{
             position: 'absolute',

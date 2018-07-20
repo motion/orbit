@@ -287,7 +287,7 @@ class HomeHeader extends React.Component {
                 ]}
               />
             </Parallax>
-            <bg
+            <div
               css={{
                 height: sectionHeight,
                 position: 'absolute',

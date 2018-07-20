@@ -18,7 +18,7 @@ export class BrandLogo extends React.Component {
     return (
       <Media query={Constants.screen.large}>
         {isLarge => (
-          <brandMark
+          <div
             {...props}
             onMouseEnter={this.hover}
             onMouseLeave={this.leave}
@@ -27,7 +27,7 @@ export class BrandLogo extends React.Component {
           >
             <orbit />
             <Logo fill={`${fill}`} size={0.19} white={white} />
-          </brandMark>
+          </div>
         )}
       </Media>
     )

@@ -3,9 +3,9 @@ import { view } from '@mcro/black'
 // import * as UI from '@mcro/ui'
 import { OrbitCard } from '../../apps/orbit/OrbitCard'
 import { SettingInfoStore } from '../../stores/SettingInfoStore'
-import * as OauthActions from '../../actions/OauthActions'
 import { Setting } from '@mcro/models'
 import { OrbitCardProps } from './OrbitCard'
+import { App } from '@mcro/stores'
 
 @view.attach('appStore')
 @view.attach({
@@ -32,7 +32,7 @@ export class OrbitSettingCard extends React.Component<
       console.log('should select auth view')
       return
     } else {
-      OauthActions.startOauth(result.id)
+      App.actions.startOauth(result.id)
     }
     return
   }

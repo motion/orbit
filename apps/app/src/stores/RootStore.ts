@@ -4,14 +4,14 @@ import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
 import { modelsList } from '@mcro/models'
 import connectModels from '../helpers/connectModels'
-import * as AppStoreActions from '../actions/AppStoreActions'
+import * as appActions from '../actions/appActions'
 import { WebSQLClient } from '../helpers/WebSQLClient'
 
 if (process.env.NODE_ENV === 'development') {
   if (module && module.hot) {
-    module.hot.accept('../actions/AppStoreActions', () => {
+    module.hot.accept('../actions/appActions', () => {
       console.log('set new actions')
-      App.start({ actions: require('../actions/AppStoreActions') })
+      App.start({ actions: require('../actions/appActions') })
     })
   }
 }
@@ -46,7 +46,7 @@ export class RootStore {
     if (window.location.pathname !== '/auth') {
       await this.connectModels()
       await App.start({
-        actions: AppStoreActions,
+        actions: appActions,
       })
     }
     this.catchErrors()

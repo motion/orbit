@@ -5,7 +5,6 @@ import { OrbitIcon } from './OrbitIcon'
 import { BitResolver } from '../../components/BitResolver'
 import { SmallLink } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
-import * as BitActions from '../../actions/BitActions'
 import { App } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
@@ -345,7 +344,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     if (!this.props.bit) {
       return
     }
-    BitActions.open(this.props.bit)
+    App.actions.open(this.props.bit)
   }
 
   getOrbitCard(contentProps) {

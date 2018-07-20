@@ -1,8 +1,8 @@
-import { Person, Bit } from '@mcro/models'
-import { App, AppStatePeekItem } from '@mcro/stores'
-import peekPosition from '../helpers/peekPosition'
+import { Person, Bit } from '../../../../models/_'
+import { App, AppStatePeekItem } from '../../../../stores'
+import peekPosition from '../../helpers/peekPosition'
 import invariant from 'invariant'
-import debug from '@mcro/debug'
+import debug from '../../../../../packages/debug/_/debug'
 
 const log = debug('appStorePeekStateActions')
 

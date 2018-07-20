@@ -62,9 +62,12 @@ class AppStore {
   peekState: AppStore['state']['peekState']
   authState: AppStore['state']['authState']
 
+  // TODO: get these onto here
   actions: {
     closeOrbit: Function
     selectItem: Function
+    open: Function
+    startOauth: Function
   }
 
   messages = {

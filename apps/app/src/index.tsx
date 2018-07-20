@@ -26,22 +26,17 @@ process.on('uncaughtException', err => {
 const render = throttle(async () => {
   // Root is the topmost store essentially
   // We export it so you can access a number of helpers
-  if (!window['Root']) {
-    console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
-    console.timeEnd('splash')
-    const rootStore = new RootStore()
-    window['Root'] = rootStore
-    window['restart'] = rootStore.restart
-    await rootStore.start()
-  }
+  console.warn(`NODE_ENV=${process.env.NODE_ENV} ${window.location.pathname}`)
+  console.timeEnd('splash')
+  await RootStore.start({
+    connectModels: window.location.pathname !== '/auth',
+  })
   const { RootViewHMR } = require('./RootViewHMR')
   // <React.unstable_AsyncMode>
   // </React.unstable_AsyncMode>
   ReactDOM.render(
-    <UI.ThemeProvide themes={themes}>
-      <UI.Theme name="light">
-        <RootViewHMR />
-      </UI.Theme>
+    <UI.ThemeProvide themes={themes} defaultTheme="light">
+      <RootViewHMR />
     </UI.ThemeProvide>,
     document.querySelector('#app'),
   )

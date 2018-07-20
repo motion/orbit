@@ -27,7 +27,7 @@ const onPort = async cb => {
 }
 
 @store
-export class RootStore {
+class Root {
   client: WebSQLClient
   connection = null
   started = false
@@ -42,8 +42,9 @@ export class RootStore {
     })
   }
 
-  async start() {
-    if (window.location.pathname !== '/auth') {
+  // should be able to run multiple times
+  async start({ connectModels }) {
+    if (connectModels) {
       await this.connectModels()
       await App.start({
         actions: appActions,
@@ -63,6 +64,9 @@ export class RootStore {
   )
 
   async connectModels() {
+    if (this.connection) {
+      return
+    }
     const { client, connection } = await connectModels(modelsList)
     this.connection = connection
     this.client = client
@@ -97,3 +101,5 @@ export class RootStore {
     this.errors = []
   }
 }
+
+export const RootStore = new Root()

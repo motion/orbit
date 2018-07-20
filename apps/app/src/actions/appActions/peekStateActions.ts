@@ -1,10 +1,8 @@
-import { Person, Bit } from '../../../../models/_'
-import { App, AppStatePeekItem } from '../../../../stores'
+import { Person, Bit } from '@mcro/models'
+import { App, AppStatePeekItem } from '@mcro/stores'
 import peekPosition from '../../helpers/peekPosition'
 import invariant from 'invariant'
-import debug from '../../../../../packages/debug/_/debug'
-
-const log = debug('appStorePeekStateActions')
+import { isEqual } from '@mcro/black'
 
 type PositionObject =
   | HTMLElement
@@ -28,6 +26,17 @@ function setPeekState(props) {
     target,
     ...peekPosition(target),
   })
+}
+
+export function toggleSelectItem(
+  item: Person | Bit | AppStatePeekItem,
+  target?: PositionObject,
+) {
+  if (isEqual(App.peekState.item, item)) {
+    App.actions.clearPeek()
+  } else {
+    selectItem(item, target)
+  }
 }
 
 export function selectItem(

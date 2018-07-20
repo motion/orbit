@@ -35,7 +35,7 @@ export class GmailSetting extends React.Component<
       content: (
         <section>
           <OrbitIcon icon="gmail" />
-          <UI.Field
+          {/* <UI.Field
             row
             label="Max"
             value={store.max}
@@ -48,7 +48,7 @@ export class GmailSetting extends React.Component<
               await setting.save()
               update()
             }}
-          />
+          /> */}
         </section>
       ),
     })

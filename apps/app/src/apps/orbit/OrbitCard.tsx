@@ -45,6 +45,7 @@ export type OrbitCardProps = {
   children?: (a: Object, b: Object) => JSX.Element | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
+  hoverable?: boolean
 }
 
 const CardWrap = view(UI.View, {
@@ -166,18 +167,6 @@ const Subtitle = view({
   flexFlow: 'row',
   alignItems: 'center',
 })
-
-// let loggers = []
-// let nextLog = null
-// const debounceLog = (...args) => {
-//   loggers.push([...args])
-//   clearTimeout(nextLog)
-//   nextLog = setTimeout(() => {
-//     // log('render cards:', loggers.length, loggers.slice(0, 2).join(' -- '))
-//     loggers = []
-//     nextLog = null
-//   }, 16)
-// }
 
 const orbitIconProps = {
   imageStyle: {

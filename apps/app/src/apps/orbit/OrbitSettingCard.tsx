@@ -15,15 +15,13 @@ import { App } from '@mcro/stores'
 export class OrbitSettingCard extends React.Component<
   OrbitCardProps & {
     store: SettingInfoStore
+    isActive?: boolean
   }
 > {
   id = Math.random()
 
   handleClick = async () => {
-    const { isActive, result } = this.props
-    if (isActive) {
-      return
-    }
+    const { result } = this.props
     if (result.auth === false) {
       const setting = new Setting()
       setting.category = 'integration'
@@ -67,7 +65,7 @@ export class OrbitSettingCard extends React.Component<
           }
         }
         result={result}
-        onClick={this.handleClick}
+        onClick={!isActive && this.handleClick}
         {...props}
       />
     )

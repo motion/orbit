@@ -64,12 +64,12 @@ export class SlackChannel extends React.Component {
           </UI.Text>
         </div>
         <div $options>
-          <UI.Field
+          {/* <UI.Field
             size={1.2}
             type="toggle"
             value={channels[channel.id]}
             onChange={val => this.onChange(val)}
-          />
+          /> */}
         </div>
       </div>
     )

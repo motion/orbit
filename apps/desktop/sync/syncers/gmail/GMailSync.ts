@@ -10,7 +10,7 @@ export class GMailSync {
   loader: GMailLoader
 
   constructor(setting: Setting) {
-    this.setting = setting
+    this.setting = setting;
     this.loader = new GMailLoader(setting)
   }
 
@@ -23,51 +23,75 @@ export class GMailSync {
     }
   }
 
-  private async syncMail(options = { fullUpdate: false }) {
-    const { lastSyncSettings = {} } = this.setting.values
-    const max = +(this.syncSettings.max || 0)
-    const hasNewMaxValue = max !== +(lastSyncSettings.max || 0)
-    const partialUpdate = options.fullUpdate !== true && !hasNewMaxValue
-    if (hasNewMaxValue) {
-      console.log(`Has new max: ${max} was ${lastSyncSettings.max}`)
-    }
-    const { historyId } = this.setting.values || { historyId: null }
-    console.log('history id ', historyId)
-    let addedThreads: GmailThread[], removedBits: Bit[]
-    if (partialUpdate && historyId) {
-      console.log('got history id saved in the settings', historyId)
-      const [addedThreadIds, removedThreadIds] = await this.loader.loadHistory(historyId)
-      addedThreads = addedThreadIds.map(threadId => ({ id: threadId } as GmailThread))
+  private async syncMail() {
 
-      if (removedThreadIds.length) {
-        console.log('found actions in history for thread removals', removedThreadIds)
-        removedBits = await Bit.find({ integration: 'gmail', identifier: In(removedThreadIds) })
+    let { historyId, max, filter, lastSyncMax, lastSyncFilter } = this.setting.values;
+    if (!max) max = 50
+    console.log('sync settings', { historyId, max, filter, lastSyncMax, lastSyncFilter })
+
+    // if max or filter has changed - we drop all bits we have and make complete sync again
+    if (max !== lastSyncMax || filter !== lastSyncFilter) {
+      console.log(`last syncronization settings mismatch (max=${max}/${lastSyncMax}; filter=${filter}/${lastSyncFilter})`)
+      const truncatedBits = await Bit.find({ integration: "gmail" }) // also need to filter by setting
+      console.log(`removing all bits`, truncatedBits)
+      await Bit.remove(truncatedBits)
+      console.log(`bits were removed`)
+      historyId = null
+    }
+
+    let addedThreads: GmailThread[] = [], removedBits: Bit[] = []
+    if (historyId) {
+
+      // load history
+      const history = await this.loader.loadHistory(historyId)
+      historyId = history.historyId
+
+      // load threads for newly added / changed threads
+      if (history.addedThreadIds.length) {
+        console.log(`loading all threads until we find following thread ids`, history.addedThreadIds)
+        addedThreads = await this.loader.loadThreads(max, history.addedThreadIds)
+      } else {
+        console.log(`no new messages in history were found`)
+      }
+
+      // load bits for removed threads
+      if (history.removedThreadIds.length) {
+        console.log('found actions in history for thread removals', history.removedThreadIds)
+        removedBits = await Bit.find({ integration: 'gmail', identifier: In(history.removedThreadIds) })
         console.log('found bits to be removed', removedBits)
+      } else {
+        console.log(`no removed messages in history were found`)
       }
 
     } else {
-      console.log(`doing a full sync with ${max} max`)
       addedThreads = await this.loader.loadThreads(max)
+      historyId = addedThreads.length > 0 ? addedThreads[0].historyId : null
     }
-    await this.loader.loadMessages(addedThreads)
-    await this.createBits(addedThreads)
 
+    // if there are added threads then load messages and save their bits
+    if (addedThreads.length) {
+      console.log(`have a threads to be added/changed`, addedThreads)
+      await this.loader.loadMessages(addedThreads)
+      const createdBits = await this.createBits(addedThreads)
+      console.log('bits were created / updated', createdBits)
+    }
+
+    // if there are removed threads then remove their bits
     if (removedBits.length) {
+      console.log(`have a bits to be removed`, removedBits)
       Bit.remove(removedBits)
-      console.log('bits were removed', removedBits)
+      console.log('bits were removed')
     }
 
-    const newHistoryId = addedThreads.length > 0 ? addedThreads[0].historyId : null
-    // update setting after run
-    if (newHistoryId) {
-      this.setting.values.historyId = newHistoryId
-      this.setting.values.lastSyncSettings = this.syncSettings
-      await this.setting.save()
-    }
+    // update settings
+    this.setting.values.historyId = historyId
+    this.setting.values.lastSyncFilter = filter
+    this.setting.values.lastSyncMax = max
+    await this.setting.save()
   }
 
-  private async createBits(threads: GmailThread[]) {
-    await Promise.all(threads.map(thread => {
+  private async createBits(threads: GmailThread[]): Promise<Bit[]> {
+    return Promise.all(threads.map(thread => {
       return createOrUpdateBit(Bit, {
         identifier: thread.id,
         integration: 'gmail',
@@ -79,13 +103,6 @@ export class GMailSync {
         bitUpdatedAt: parseMailDate(thread.messages[thread.messages.length - 1]),
       })
     }))
-  }
-
-  private get syncSettings() {
-    return {
-      max: 50,
-      ...((this.setting.values || {}).syncSettings || {}),
-    }
   }
 
 }

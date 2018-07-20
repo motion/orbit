@@ -82,3 +82,9 @@ export type GmailHistoryMessageAction = {
   }
   labelIds?: string[]
 }
+
+export type GmailHistoryLoadResult = {
+  historyId: string
+  addedThreadIds: string[]
+  removedThreadIds: string[]
+}

@@ -17,12 +17,13 @@ export function userProfileQuery(userId = "me"): GmailFetchOptions<GmailUserProf
  *
  * @see https://developers.google.com/gmail/api/v1/reference/users/threads/list
  */
-export function threadsQuery(max: number, pageToken: string, userId = "me"): GmailFetchOptions<GmailThreadResult> {
+export function threadsQuery(max: number, filter?: string, pageToken?: string, userId = "me"): GmailFetchOptions<GmailThreadResult> {
   return {
     url: `/users/${userId}/threads`,
     query: {
       maxResults: max,
-      nextPageToken: pageToken
+      nextPageToken: pageToken,
+      q: filter,
     }
   }
 }
@@ -32,12 +33,9 @@ export function threadsQuery(max: number, pageToken: string, userId = "me"): Gma
  *
  * @see https://developers.google.com/gmail/api/v1/reference/users/threads/get
  */
-export function threadQuery(threadId: string, filter: string, userId = "me"): GmailFetchOptions<GmailThread> {
+export function threadQuery(threadId: string, userId = "me"): GmailFetchOptions<GmailThread> {
   return {
-    url: `/users/${userId}/threads/${threadId}`,
-    query: {
-      q: filter
-    }
+    url: `/users/${userId}/threads/${threadId}`
   }
 }
 

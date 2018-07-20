@@ -1,4 +1,4 @@
-import { GmailMessage } from '~/sync/syncers/gmail/GMailTypes'
+import { GmailMessage } from './GMailTypes'
 
 /**
  * Gets the date from the Gmail message.
@@ -6,8 +6,7 @@ import { GmailMessage } from '~/sync/syncers/gmail/GMailTypes'
  */
 export function parseMailDate(message: GmailMessage): Date|undefined {
   const dateHeader = message.payload.headers.find(x => x.name === 'Date')
-  const date = dateHeader && dateHeader.value
-  return date ? new Date(date) : undefined
+  return dateHeader && dateHeader.value ? new Date(dateHeader.value) : undefined
 }
 
 /**

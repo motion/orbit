@@ -38,10 +38,11 @@ export class Setting extends T.BaseEntity {
     openShortcut?: string
 
     // gmail-specific options
+    max?: number
     historyId?: string
-    syncSettings?: any
-    lastSyncSettings?: any
     filter?: string
+    lastSyncFilter?: string
+    lastSyncMax?: number
 
   }
 

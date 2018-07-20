@@ -12,8 +12,16 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { themes } from './themes'
 import { throttle } from 'lodash'
+import { App } from '@mcro/stores'
 
-console.log('themesthemes', themes)
+if (process.env.NODE_ENV === 'development') {
+  if (module && module.hot) {
+    module.hot.accept('./actions/appActions', () => {
+      console.log('set new actions')
+      App.start({ actions: require('./actions/appActions') })
+    })
+  }
+}
 
 Error.stackTraceLimit = Infinity
 

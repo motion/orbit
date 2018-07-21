@@ -33,7 +33,6 @@ export class NLPStore {
   updateUsers = modelQueryReaction(
     () => Person.find({ limit: 5000 }),
     people => {
-      console.log('setting user names', people)
       setUserNames(people.map(person => person.name))
     },
     // 5 minute poll

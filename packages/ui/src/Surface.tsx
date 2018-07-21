@@ -317,6 +317,7 @@ const Element = view(View, {
 
 Element.theme = props => {
   const iconSize = getIconSize(props)
+  console.log('iconSize', iconSize, props)
   const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
   // element styles
   const elementStyle = {}

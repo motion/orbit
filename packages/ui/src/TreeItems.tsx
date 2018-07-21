@@ -16,7 +16,7 @@ import { Image } from './Image'
 import { colors } from './helpers/colors'
 import { Text } from './Text'
 import { FixedList } from './FixedList'
-// import {clipboard} from 'electron';
+import isEqual from 'react-fast-compare'
 
 const ROW_HEIGHT = 23
 
@@ -281,7 +281,7 @@ class TreeItemsRow extends React.PureComponent<
         <span onClick={this.onDoubleClick} role="button" tabIndex={-1}>
           <Icon
             size={8}
-            name={element.expanded ? 'chevron-down' : 'chevron-right'}
+            name={element.expanded ? 'mindown' : 'minright'}
             color={selected ? 'white' : colors.light80}
           />
         </span>
@@ -368,6 +368,7 @@ const TreeItemsBox = view(Col, {
 })
 
 type TreeItemsProps = {
+  itemsKey?: string
   root?: TreeItemID
   selected?: TreeItemID
   searchResults?: TreeItemSearchResultSet
@@ -387,24 +388,16 @@ export class TreeItems extends React.PureComponent<
   TreeItemsProps,
   TreeItemsState
 > {
-  constructor(props: TreeItemsProps, context: Object) {
-    super(props, context)
-    this.state = {
-      flatTreeItems: [],
-      flatKeys: [],
-      maxDepth: 0,
+  state = {
+    flatTreeItems: [],
+    flatKeys: [],
+    maxDepth: 0,
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.itemsKey && props.itemsKey === state.itemsKey) {
+      return null
     }
-  }
-
-  componentDidMount() {
-    this.setProps(this.props)
-  }
-
-  componentWillReceiveProps(nextProps: TreeItemsProps) {
-    this.setProps(nextProps)
-  }
-
-  setProps(props: TreeItemsProps) {
     const flatTreeItems: FlatTreeItems = []
     const flatKeys = []
     let maxDepth = 0
@@ -433,7 +426,7 @@ export class TreeItems extends React.PureComponent<
     if (props.root != null) {
       seed(props.root, 1)
     }
-    this.setState({ flatTreeItems, flatKeys, maxDepth })
+    return { itemsKey: props.itemsKey, flatTreeItems, flatKeys, maxDepth }
   }
 
   selectElement = (key: TreeItemID) => {

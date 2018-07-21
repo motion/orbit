@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { FullScreen } from './blocks/FullScreen'
 import { TreeItems } from './TreeItems'
 
 export type TreeItemID = string
@@ -60,17 +59,15 @@ export class Tree extends React.Component<{
     } = this.props
 
     return (
-      <FullScreen>
-        <TreeItems
-          onTreeItemExpanded={onTreeItemExpanded}
-          onTreeItemSelected={onTreeItemSelected}
-          onTreeItemHovered={onTreeItemHovered}
-          selected={selected}
-          searchResults={searchResults}
-          root={root}
-          elements={elements}
-        />
-      </FullScreen>
+      <TreeItems
+        onTreeItemExpanded={onTreeItemExpanded}
+        onTreeItemSelected={onTreeItemSelected}
+        onTreeItemHovered={onTreeItemHovered}
+        selected={selected}
+        searchResults={searchResults}
+        root={root}
+        elements={elements}
+      />
     )
   }
 }

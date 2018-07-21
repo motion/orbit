@@ -84,7 +84,7 @@ const RootViewInner = () => {
         <br />
         <br />
 
-        {/* <UI.FullScreen>
+        <UI.FullScreen>
           <UI.Tree
             root="zero"
             elements={{
@@ -111,7 +111,7 @@ const RootViewInner = () => {
               },
             }}
           />
-        </UI.FullScreen> */}
+        </UI.FullScreen>
 
         <UI.Button icon="ic">Hello World</UI.Button>
         <UI.Input icon="ic" />

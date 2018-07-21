@@ -6,7 +6,7 @@ APP = ['src/Bridge.py']
 OPTIONS = {
     # Any local packages to include in the bundle should go here.
     # See the py2app documentation for more
-    "includes": ['torch', 'csv'],
+    "includes": ['torch', 'csv', 'numpy'],
 }
 
 setup(

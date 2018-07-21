@@ -3,12 +3,14 @@ import { Color } from '@mcro/css'
 
 type ColorObject = { [a: string]: Color }
 
+// TODO: change themes to just use `base:{}` not put stuff in global?
 type SimpleStyleObject = {
   [a: string]: Color | ColorObject
   hover?: ColorObject
   active?: ColorObject
-  highlight?: ColorObject
-  focus?: ColorObject
+  focused?: ColorObject
+  inactive?: ColorObject
+  disabled?: ColorObject
 }
 
 const lighten = {
@@ -26,12 +28,18 @@ const adjust = (color, adjuster, opposite = false) => {
   return color[direction](adjuster(color))
 }
 
-const MIN_ADJUST = 0.1
-const smallAmt = color =>
-  Math.min(0.5, Math.max(MIN_ADJUST, 2 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
+const smallAmt = color => {
+  // 1 = white, 1 = black, 0 = middle
+  const ranged = Math.abs(50 / (50 - color.lightness()))
+  // this is 0-0.025
+  const small = (ranged + 0.001) * 0.025
+  const softened = Math.log(2) - Math.log(2 - (0.1 - small))
+  return softened * 1.8
+}
+const smallerAmt = color => smallAmt(color) * 0.25
 const largeAmt = color => smallAmt(color) * 1.25
-
-const opposite = color => color.mix(color.lighten(1))
+const opposite = color =>
+  color.isDark() ? color.mix(color.lighten(1)) : color.mix(color.darken(1))
 
 export class ThemeMaker {
   cache = {}
@@ -48,30 +56,23 @@ export class ThemeMaker {
       {},
     )
 
-  fromColor = colorName => {
-    if (typeof colorName !== 'string') {
+  fromColor = bgName => {
+    if (typeof bgName !== 'string') {
       return null
     }
-    if (this.cache[colorName]) {
-      return this.cache[colorName]
+    if (this.cache[bgName]) {
+      return this.cache[bgName]
     }
-    let base
+    let background
     try {
-      base = $(colorName)
+      background = $(bgName)
     } catch (e) {
       if (e.message.indexOf('parse color from string') > -1) {
         return null
       }
       throw e
     }
-    const opposite = base.mix(base.lighten(1))
-    const theme = this.fromStyles({
-      background: base,
-      color: opposite.lighten(1.6),
-      borderColor: opposite.darken(0.5),
-    })
-    this.cache[colorName] = theme // cache
-    return theme
+    return this.fromStyles({ background })
   }
 
   fromStyles = (styleObject: SimpleStyleObject) => {
@@ -86,32 +87,45 @@ export class ThemeMaker {
     const backgroundColored = background ? $(background) : opposite($(color))
     const base = this.colorize({
       background: backgroundColored,
-      color: color || opposite(backgroundColored),
+      color: color || adjust(opposite(backgroundColored), largeAmt),
       borderColor: borderColor || adjust(backgroundColored, smallAmt),
     })
+    const hover = {
+      color: adjust(base.color, smallerAmt),
+      background: adjust(base.background, smallerAmt),
+      borderColor: adjust(base.borderColor, smallerAmt),
+      ...rest.hover,
+    }
+    const active = {
+      ...base,
+      borderColor: adjust(base.borderColor, smallAmt, true),
+      ...rest.active,
+    }
+    const inactive = {
+      background: adjust(base.background, smallAmt),
+      color: adjust(base.color, smallAmt),
+      borderColor: adjust(base.borderColor, smallAmt),
+      ...rest.inactive,
+    }
+    const disabled = {
+      background: adjust(base.background, largeAmt),
+      color: adjust(base.color, largeAmt),
+      borderColor: adjust(base.borderColor, largeAmt),
+      ...rest.disabled,
+    }
     const focused = {
-      background: base.background && adjust(base.background, largeAmt, true),
-      borderColor: base.borderColor && adjust(base.borderColor, largeAmt, true),
+      background: adjust(base.background, largeAmt, true),
+      borderColor: adjust(base.borderColor, largeAmt, true),
+      ...rest.focused,
     }
     const res = this.colorize({
       ...rest,
       base,
-      hover: {
-        ...base,
-        color: adjust(base.color, smallAmt),
-        background: adjust(base.background, smallAmt),
-        borderColor: base.borderColor && adjust(base.borderColor, smallAmt),
-        ...rest.hover,
-      },
-      active: {
-        ...base,
-        ...focused,
-        ...rest.active,
-      },
-      highlight: {
-        ...base,
-        ...rest.highlight,
-      },
+      hover,
+      active,
+      inactive,
+      disabled,
+      focused,
     })
     this.cache[key] = res
     return res

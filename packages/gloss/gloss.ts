@@ -54,10 +54,8 @@ export default class Gloss {
 
   decorator = (maybeNameOrComponent: any, shortStyles?: Object) => {
     if (!maybeNameOrComponent) {
-      console.error('invalid view given to gloss', arguments)
-      return () => this.createElement('div', { children: 'Error Component' })
+      throw new Error('No view passed into gloss')
     }
-    // Shorthand views --
     // just object view({})
     if (
       typeof maybeNameOrComponent === 'object' &&

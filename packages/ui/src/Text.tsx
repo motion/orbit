@@ -21,6 +21,10 @@ const TextBlock = view(InlineBlock, {
   },
 })
 
+TextBlock.theme = ({ theme, color }) => ({
+  color: color || theme.base.color
+})
+
 const TextEllipse = view(Inline, {
   margin: ['auto', 0],
   maxWidth: '100%',

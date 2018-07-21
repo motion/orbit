@@ -5,12 +5,40 @@
  * @format
  */
 
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { View } from './blocks/View'
 import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'
+
+export type TabsProps = {
+  // Callback for when the active tab has changed.
+  onActive?: (key: string | void) => void
+  // The key of the default active tab.
+  defaultActive?: string
+  // The key of the currently active tab.
+  active?: string | void
+  // Tab elements.
+  children?: Array<any>
+  // Whether the tabs can be reordered by the user.
+  orderable?: boolean
+  // Callback when the tab order changes.
+  onOrder?: (order: Array<string>) => void
+  // Order of tabs.
+  order?: Array<string>
+  // Whether to include the contents of every tab in the DOM and just toggle
+  persist?: boolean
+  // Whether to include a button to create additional items.
+  newable?: boolean
+  // Callback for when the new button is clicked.
+  onNew?: () => void
+  // Elements to insert before all tabs in the tab list.
+  before?: Array<any>
+  // Elements to insert after all tabs in the tab list.
+  after?: Array<any>
+}
 
 const TabContainer = view(View, {
   height: 'auto',
@@ -25,7 +53,7 @@ const TabListItem = view(Row, {
   fontSize: 13,
   lineHeight: '28px',
   overflow: 'hidden',
-  padding: '0 10px',
+  padding: [3, 10],
   position: 'relative',
   textAlign: 'center',
   textOverflow: 'ellipsis',
@@ -34,9 +62,9 @@ const TabListItem = view(Row, {
 })
 
 TabListItem.theme = ({ theme, active }) => ({
-  color: active ? theme.active.color : theme.base.color,
+  color: active ? theme.active.color : theme.inactive.color,
   // this is reversed because technically active tabs should match the bgcolor
-  background: active ? theme.base.background : theme.active.background,
+  background: active ? theme.active.background : theme.inactive.background,
   '&:hover': {
     color: active ? theme.active.color : theme.hover.color,
     background: active
@@ -80,74 +108,15 @@ const TabContent = view({
   width: '100%',
 })
 
-/**
- * A Tabs component.
- */
-export function Tabs(props: {
-  /**
-   * Callback for when the active tab has changed.
-   */
-  onActive?: (key: string | void) => void
-  /**
-   * The key of the default active tab.
-   */
-  defaultActive?: string
-  /**
-   * The key of the currently active tab.
-   */
-  active?: string | void
-  /**
-   * Tab elements.
-   */
-  children?: Array<any>
-  /**
-   * Whether the tabs can be reordered by the user.
-   */
-  orderable?: boolean
-  /**
-   * Callback when the tab order changes.
-   */
-  onOrder?: (order: Array<string>) => void
-  /**
-   * Order of tabs.
-   */
-  order?: Array<string>
-  /**
-   * Whether to include the contents of every tab in the DOM and just toggle
-   * it's visibility.
-   */
-  persist?: boolean
-  /**
-   * Whether to include a button to create additional items.
-   */
-  newable?: boolean
-  /**
-   * Callback for when the new button is clicked.
-   */
-  onNew?: () => void
-  /**
-   * Elements to insert before all tabs in the tab list.
-   */
-  before?: Array<any>
-  /**
-   * Elements to insert after all tabs in the tab list.
-   */
-  after?: Array<any>
-}) {
+export function Tabs(props: TabsProps) {
   const { onActive } = props
-  const active: string | void =
-    props.active == null ? props.defaultActive : props.active
-
+  const active = props.active == null ? props.defaultActive : props.active
   // array of other components that aren't tabs
   const before = props.before || []
   const after = props.after || []
-
-  //
   const tabs = {}
-
   // a list of keys
   const keys = props.order ? props.order.slice() : []
-
   const tabContents = []
   const tabSiblings = []
 
@@ -160,7 +129,8 @@ export function Tabs(props: {
       if (!comp) {
         continue
       }
-      if (comp.type !== Tab) {
+      // for some reason had to check constructor instead
+      if (comp.type.constructor !== Tab.constructor) {
         // if element isn't a tab then just push it into the tab list
         tabSiblings.push(comp)
         continue
@@ -242,6 +212,7 @@ export function Tabs(props: {
       tabList.push(tabs[key])
     }
   }
+
   if (props.newable === true) {
     after.push(
       <TabListAddItem key={keys.length} onMouseDown={props.onNew}>
@@ -249,6 +220,7 @@ export function Tabs(props: {
       </TabListAddItem>,
     )
   }
+
   return (
     <TabContainer>
       <TabList>

@@ -11,6 +11,7 @@ import { App, Desktop, Swift, Electron } from '@mcro/stores'
 import { modelsList } from '@mcro/models'
 import { RootStore } from '../stores/RootStore'
 import { render } from '../index'
+import { color } from '@mcro/gloss'
 
 console.log('installing globals...')
 
@@ -35,6 +36,7 @@ window['Electron'] = Electron
 window['Swift'] = Swift
 window['Root'] = RootStore
 window['render'] = render
+window['color'] = color
 
 modelsList.map(model => {
   window[`${model.name}`] = model

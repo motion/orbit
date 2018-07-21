@@ -4,7 +4,7 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-export function Tab(props: {
+export function Tab(_: {
   /**
    * Label of this tab to show in the tab list.
    */

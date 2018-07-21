@@ -19,6 +19,7 @@ export type SizedSurfaceProps = SurfaceProps & {
 
 const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
   const {
+    size = 1,
     sizeHeight,
     sizeMargin,
     sizeFont,
@@ -28,8 +29,6 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
     circular,
     ...rest
   } = props
-  const size =
-    !!props.size && typeof props.size === 'boolean' ? 1 : props.size || 1
   const num = x => (x === true ? 1 : 1 * size)
   // sizes
   let height =
@@ -77,7 +76,7 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
     pass.sizeIcon = num(sizeIcon)
   }
   const iconPad = LINE_HEIGHT * 0.2 * num(sizeHeight)
-  return <Surface {...pass} iconPad={iconPad} {...rest} />
+  return <Surface {...pass} size={size} iconPad={iconPad} {...rest} />
 })
 
 export const SizedSurface = SizedSurfaceInner as React.SFC<SizedSurfaceProps>

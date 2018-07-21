@@ -184,10 +184,6 @@ class AppStore {
     return 'none for now'
   }
 
-  get aboutToShow() {
-    return App.isAnimatingOrbit && App.orbitState.hidden
-  }
-
   start = async options => {
     await Bridge.start(this, this.state, options)
   }

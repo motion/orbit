@@ -1,5 +1,5 @@
 import { react, store } from '@mcro/black'
-import { App, Electron, Desktop, Swift } from '@mcro/stores'
+import { App, Swift } from '@mcro/stores'
 // @ts-ignore
 import ElectronNode from 'electron'
 
@@ -70,11 +70,10 @@ export class WindowFocusStore {
 
   focusOnMouseOver = react(
     () => App.isMouseInActiveArea,
-    async (mouseOver, { when }) => {
-      if (!App.isShowingOrbit /* || App.orbitState.pinned*/) {
+    async mouseOver => {
+      if (!App.isShowingOrbit) {
         throw react.cancel
       }
-      await when(() => !App.isAnimatingOrbit)
       if (mouseOver) {
         this.focusOrbit()
       } else {

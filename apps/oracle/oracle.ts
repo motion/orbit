@@ -78,7 +78,10 @@ export default class Oracle {
       this.setupSocket()
     }
     await this.setState({ isPaused: false })
-    await this._runScreenProcess()
+
+    // ⚠️ DISABLED FOR NOW TESTING FREEZE ON MY CPU
+    // await this._runScreenProcess()
+
     await this._connectToScreenProcess()
     // monitorScreenProcess(this.process, this.restart)
   }

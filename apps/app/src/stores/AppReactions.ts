@@ -5,7 +5,7 @@ import orbitPosition from '../helpers/orbitPosition'
 // const log = debug('AppReactions')
 
 const SCREEN_PAD = 15
-const appTarget = ({ offset, bounds }) => {
+const appTarget = ({ offset = null, bounds = null } = {}) => {
   if (!offset || !bounds) return null
   const [left, top] = offset
   const [width, height] = bounds
@@ -209,7 +209,7 @@ export class AppReactions {
       }
       // some leeway on mouse leave
       await sleep(150)
-      if (Desktop.isHoldingOption || App.isAnimatingOrbit) {
+      if (Desktop.isHoldingOption) {
         throw react.cancel
       }
       console.log('hiding orbit from mouseout')
@@ -222,7 +222,7 @@ export class AppReactions {
   )
 
   repositioningFromAppState = react(
-    () => [appTarget(Desktop.appState || {}), Desktop.linesBoundingBox],
+    () => [appTarget(Desktop.appState), Desktop.linesBoundingBox],
     ([appBB, linesBB]) => {
       // prefer using lines bounding box, fall back to app
       const box = linesBB || appBB

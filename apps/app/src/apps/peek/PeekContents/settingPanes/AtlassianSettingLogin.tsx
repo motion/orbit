@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Views from '../../../../views'
+import { Message } from '../../../../views/Message'
 import { Setting, findOrCreate } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import { App } from '@mcro/stores'
@@ -152,11 +153,11 @@ export class AtlassianSettingLogin extends React.Component {
     const { store } = this.props
     return (
       <UI.Col padding={20}>
-        <Views.Message>
+        <Message>
           Atlassian requires username and password as their OAuth requires
           administrator permissions. As always with Orbit, this information is{' '}
           <strong>completely private</strong> to you.
-        </Views.Message>
+        </Message>
         <Views.VertSpace />
         <UI.Col margin="auto" width={370}>
           <UI.Col padding={[0, 10]}>
@@ -207,10 +208,10 @@ export class AtlassianSettingLogin extends React.Component {
               </UI.Theme>
             </UI.ListRow>
             <Views.VertSpace />
-            <Views.Message if={store.error}>{store.error}</Views.Message>
-            <Views.Message if={store.status === Statuses.SUCCESS}>
+            <Message if={store.error}>{store.error}</Message>
+            <Message if={store.status === Statuses.SUCCESS}>
               Looks good! We can login to your account successfully.
-            </Views.Message>
+            </Message>
           </UI.Col>
         </UI.Col>
       </UI.Col>

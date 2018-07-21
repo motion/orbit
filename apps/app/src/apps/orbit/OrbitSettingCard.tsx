@@ -21,7 +21,10 @@ export class OrbitSettingCard extends React.Component<
   id = Math.random()
 
   handleClick = async () => {
-    console.log('handleClick', this.props)
+    if (!this.props.isActive) {
+      console.log('inactive')
+      return
+    }
     const { result } = this.props
     if (result.auth === false) {
       const setting = new Setting()
@@ -39,7 +42,7 @@ export class OrbitSettingCard extends React.Component<
   }
 
   render() {
-    const { store, result, isActive, subtitle, ...props } = this.props
+    const { store, result, isActive, subtitle, onClick, ...props } = this.props
     const countSubtitle = !isActive
       ? ''
       : store.bitsCount === null
@@ -50,7 +53,6 @@ export class OrbitSettingCard extends React.Component<
       console.log('no title for', result)
       return null
     }
-    const onClick = !isActive ? this.handleClick : props.onClick
     return (
       <OrbitCard
         inactive={!isActive}
@@ -68,7 +70,7 @@ export class OrbitSettingCard extends React.Component<
         }
         result={result}
         {...props}
-        onClick={onClick}
+        onClick={onClick || this.handleClick}
       />
     )
   }

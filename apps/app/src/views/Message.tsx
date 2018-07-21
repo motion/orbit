@@ -1,0 +1,17 @@
+import { view } from '@mcro/black'
+
+export const Message = view('p', {
+  fontSize: 16,
+  lineHeight: '1.4rem',
+  cursor: 'text',
+  // theres a weird glitchy thing that happens when trying to select this
+  userSelect: 'none',
+  display: 'block',
+  width: '100%',
+  borderRadius: 8,
+  border: [1, '#eee'],
+  background: '#fff',
+  padding: [10, 10],
+  margin: [0, 0, 20],
+  color: '#666',
+})

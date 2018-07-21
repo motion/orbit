@@ -5,7 +5,7 @@ import { OrbitIcon } from './OrbitIcon'
 import { BitResolver } from '../../components/BitResolver'
 import { SmallLink } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
-import { App } from '@mcro/stores'
+import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { AppStore } from '../../stores/AppStore'
@@ -23,7 +23,7 @@ export type OrbitCardProps = {
   subtitle?: React.ReactNode
   date?: React.ReactNode
   icon?: React.ReactNode
-  result?: Object
+  result?: AppStatePeekItem & { auth: boolean }
   index?: number
   store?: OrbitCardStore
   isExpanded?: boolean

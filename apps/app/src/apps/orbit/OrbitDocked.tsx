@@ -95,12 +95,16 @@ class OrbitDockedInner extends React.Component<{
     const { paneStore, appStore } = this.props
     const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)
+    const contentBottom = Math.max(
+      10,
+      window.innerHeight - appStore.contentHeight + 30,
+    )
     return (
       <>
         <Frame
           visible={animationState.visible}
           willAnimate={animationState.willAnimate}
-          bottom={appStore.searchState.query ? 10 : 100}
+          bottom={appStore.searchState.query ? 10 : contentBottom}
         >
           <Border />
           <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>

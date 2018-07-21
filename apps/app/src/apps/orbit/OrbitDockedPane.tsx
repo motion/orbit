@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, on } from '@mcro/black'
+import { view, on, react } from '@mcro/black'
 import * as _ from 'lodash'
 import { BORDER_RADIUS } from '../../constants'
 import * as UI from '@mcro/ui'
@@ -7,20 +7,39 @@ import { CSSPropertySet } from '@mcro/gloss'
 
 const EXTRA_PAD = 40
 
+const getInnerHeight = node => {
+  const lastNode = _.last(Array.from(node.children))
+  if (!lastNode) {
+    return null
+  }
+  return lastNode.offsetTop + lastNode.clientHeight
+}
+
 class DockedPaneStore {
-  paneRef = React.createRef()
+  paneRef: { current?: HTMLElement } = React.createRef()
   isAtBottom = false
+  childMutationObserver = null
+
+  get node() {
+    return this.paneRef.current || null
+  }
+
+  addObserver = (node, cb, options = { childList: true }) => {
+    const observer = new MutationObserver(cb)
+    observer.observe(node, options)
+    on(this, observer)
+    return () => observer.disconnect()
+  }
 
   didMount() {
     on(
       this,
       this.paneRef.current,
       'scroll',
-      _.throttle(this.setOverflow, 16 * 3),
+      _.throttle(this.handlePaneChange, 16 * 3),
     )
-    const observer = new MutationObserver(this.setOverflow)
-    observer.observe(this.paneRef.current, { childList: true })
-    on(this, observer)
+    this.addObserver(this.paneRef.current, this.handlePaneChange)
+    this.handlePaneChange()
   }
 
   // scrollToSelectedCard = react(
@@ -42,16 +61,42 @@ class DockedPaneStore {
   //   },
   // )
 
-  setOverflow = () => {
-    const node = this.paneRef.current
-    if (!node) {
+  updatePaneHeightOnActive = react(() => this.isActive, this.updateOnHeight)
+
+  followChildrenHeight = () => {
+    if (this.paneRef.firstElementChild) {
+      this.childMutationObserver = this.addObserver(
+        this.paneRef.firstElementChild,
+        () => {
+          console.log('children changed!')
+          this.updateOnHeight()
+        },
+      )
+    }
+  }
+
+  updateOnHeight() {
+    if (!this.isActive || !this.props.appStore) {
       return
     }
-    const lastNode = _.last(Array.from(node.children))
-    if (!lastNode) {
-      return
+    if (this.node && this.node.firstElementChild) {
+      console.log('this.node.firstElementChild', this.node.firstElementChild)
+      const innerHeight = getInnerHeight(this.node)
+      const aboveHeight = this.node.firstElementChild.getBoundingClientRect()
+        .top
+      this.props.appStore.setContentHeight(innerHeight + aboveHeight)
     }
-    const innerHeight = lastNode.offsetTop + lastNode.clientHeight
+  }
+  handlePaneChange = () => {
+    if (this.childMutationObserver) {
+      this.childMutationObserver()
+    }
+    this.followChildrenHeight()
+    this.updateScrolledTo(this.node)
+  }
+
+  updateScrolledTo = node => {
+    const innerHeight = getInnerHeight(node)
     const scrolledTo = node.scrollTop + node.clientHeight
     if (innerHeight <= scrolledTo) {
       this.isAtBottom = true

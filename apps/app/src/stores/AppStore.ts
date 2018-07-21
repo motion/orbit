@@ -17,6 +17,7 @@ const TYPE_DEBOUNCE = 200
 export class AppStore {
   nlpStore = new NLPStore()
 
+  contentHeight = 0
   quickSearchIndex = 0
   nextIndex = 0
   leaveIndex = -1
@@ -70,6 +71,11 @@ export class AppStore {
       this.activeIndex > -1 &&
       this.activeIndex < this.searchState.results.length
     )
+  }
+
+  setContentHeight = height => {
+    console.log('got pane height', height)
+    this.contentHeight = height
   }
 
   services = modelQueryReaction(

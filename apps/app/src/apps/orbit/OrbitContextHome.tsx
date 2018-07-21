@@ -114,11 +114,10 @@ export class OrbitContextHome {
     return (
       <OrbitDockedPane name="context">
         <OrbitContextHeader />
-        <div $resultsFrame ref={this.setResultsFrame}>
-          <fadeTop
-            $fade
+        <div ref={this.setResultsFrame}>
+          <div
+            className="fadeTop fade $fadeVisible={isScrolled}"
             style={{ pointerEvents: 'none' }}
-            $fadeVisible={isScrolled}
           />
           <div $resultsScroller>
             <div $results if={store.results.length} ref={this.setResults}>

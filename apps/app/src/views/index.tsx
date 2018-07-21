@@ -7,18 +7,6 @@ export * from './RoundButton'
 
 export const highlightColor = UI.color('#696549')
 
-export const Message = view({
-  cursor: 'default',
-  display: 'block',
-  width: '100%',
-  borderRadius: 8,
-  border: [1, '#eee'],
-  background: '#fff',
-  padding: [10, 10],
-  margin: [0, 0, 20],
-  color: '#666',
-})
-
 export const Table = view({
   display: 'table',
   width: '100%',
@@ -157,8 +145,6 @@ const SmallLinkContainer = view('span', {
     borderBottom: [2, 'solid', [0, 0, 0, 0.1]],
   },
 })
-
-window.SmallLinkContainer = SmallLinkContainer
 
 @view.ui
 export class SmallLink extends React.Component<{ orbitStore?: OrbitStore }> {

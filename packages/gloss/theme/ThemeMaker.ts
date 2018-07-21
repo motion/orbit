@@ -3,6 +3,7 @@ import { Color } from '@mcro/css'
 
 type ColorObject = { [a: string]: Color }
 
+// TODO: change themes to just use `base:{}` not put stuff in global?
 type SimpleStyleObject = {
   [a: string]: Color | ColorObject
   hover?: ColorObject
@@ -37,7 +38,8 @@ const smallAmt = color => {
 }
 const smallerAmt = color => smallAmt(color) * 0.25
 const largeAmt = color => smallAmt(color) * 1.25
-const opposite = color => color.mix(color.lighten(1))
+const opposite = color =>
+  color.isDark() ? color.mix(color.lighten(1)) : color.mix(color.darken(1))
 
 export class ThemeMaker {
   cache = {}

@@ -134,7 +134,7 @@ class AppStore {
   }
 
   animationDuration = 160
-  dockedWidth = 500
+  dockedWidth = 520
 
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(

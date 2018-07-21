@@ -38,6 +38,7 @@ ensure-dep "yarn" -- npm i -g yarn &
 ensure-dep "python3" -- brew install python3 &
 ensure-dep "carthage" -- brew install carthage &
 wait
+ensure-dep "pyenv" -- ./apps/oracle/build.sh
 echo "installing root"
 yarn install
 echo "installing packages"

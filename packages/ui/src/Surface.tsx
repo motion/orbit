@@ -206,21 +206,6 @@ SurfaceFrame.theme = props => {
     background = background.alpha(props.backgroundAlpha)
   }
 
-  let hoverBackground =
-    !props.highlight &&
-    (props.hover && props.hover.background === true
-      ? theme.hover.background
-      : (props.hover && props.hover.background) ||
-        theme.hover.background ||
-        (colorfulBg ? background.lighten(0.5) : background))
-  if (
-    hoverBackground &&
-    props.hover &&
-    typeof props.hover.backgroundAlpha === 'number'
-  ) {
-    hoverBackground = hoverBackground.alpha(props.hover.backgroundAlpha)
-  }
-
   // shadows
   const boxShadow =
     typeof props.boxShadow === 'string'
@@ -251,14 +236,6 @@ SurfaceFrame.theme = props => {
     color: props.iconHoverColor || propStyles.hoverColor,
   }
   // state styles
-  const hoverStyle = (props.hover ||
-    (!props.chromeless && !props.disabled && props.hoverable)) && {
-    ...theme.hover,
-    color: propStyles.hoverColor,
-    borderColor: propStyles.hoverBorderColor,
-    background: hoverBackground,
-    ...props.hoverStyle,
-  }
   let activeStyle = !props.chromeless && {
     position: 'relative',
     zIndex: props.zIndex || 1000,
@@ -307,7 +284,6 @@ SurfaceFrame.theme = props => {
     ...circularStyles,
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
-    '&:hover': hoverStyle,
     ...(props.wrapElement && {
       '& > :focus': focusable && focusStyle,
       '& > :active': activeStyle,
@@ -316,7 +292,6 @@ SurfaceFrame.theme = props => {
       '&:focus': focusable && focusStyle,
       '&:active': activeStyle,
     }),
-    ...(props.hovered && hoverStyle),
     ...(props.dimmed && dimmedStyle),
     ...(props.dim && dimStyle),
     ...chromelessStyle,

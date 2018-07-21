@@ -2,8 +2,10 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { themes } from './themes'
-import { ThemeProvide } from '@mcro/gloss'
+import { color, ThemeProvide } from '@mcro/gloss'
 import { hot } from 'react-hot-loader'
+
+window.color = color
 
 const Test = view({
   color: 'gray',
@@ -114,10 +116,12 @@ const RootViewInner = () => {
         <UI.Button icon="ic">Hello World</UI.Button>
         <UI.Input icon="ic" />
 
-        <UI.Button size={2} icon="ic">
-          Hello World
-        </UI.Button>
-        <UI.Input icon="ic" size={2} />
+        <UI.Theme theme={{ background: '#4B7BD4', color: 'white' }}>
+          <UI.Button size={2} icon="ic">
+            Hello World
+          </UI.Button>
+          <UI.Input icon="ic" size={2} />
+        </UI.Theme>
 
         <UI.Button circular size={2} icon="ic" />
 

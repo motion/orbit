@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ "$1" = "--if-empty" ]; then
+if [ "$1" -eq "--if-empty" ]; then
   if [ -d "./orbit/Build" ]; then
-    echo "already built oracle once"
+    echo "already built oracle once, run again with --force"
     exit 0
   fi
 fi

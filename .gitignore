@@ -24,6 +24,7 @@ common/temp/**
 apps/oracle/train
 apps/oracle/orbit/orbit.xcodeproj/project.xcworkspace
 apps/oracle/orbit/orbit.xcodeproj/xcuserdata
+apps/oracle/swindler/Swindler.xcodeproj/xcuserdata
 apps/oracle/orbit/Carthage
 apps/oracle/orbit/Build
 apps/oracle/swindler/Carthage

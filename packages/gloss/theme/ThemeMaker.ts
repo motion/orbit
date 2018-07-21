@@ -85,7 +85,7 @@ export class ThemeMaker {
     const backgroundColored = background ? $(background) : opposite($(color))
     const base = this.colorize({
       background: backgroundColored,
-      color: color || opposite(backgroundColored),
+      color: color || adjust(opposite(backgroundColored), largeAmt),
       borderColor: borderColor || adjust(backgroundColored, smallAmt),
     })
     const hover = {

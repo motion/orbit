@@ -1,7 +1,7 @@
 import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import { Options } from './types'
-import { simpleViewFactory } from './simpleViewFactory'
+import { createViewFactory } from './createViewFactory'
 
 export const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const GLOSS_IGNORE_COMPONENT_SYMBOL = '__GLOSS_IGNORE_COMPONENT__'
@@ -17,55 +17,52 @@ export { CSSPropertySet, cssNameMap, psuedoKeys, validCSSAttr } from '@mcro/css'
 
 export const color = require('@mcro/color').default
 
-const glossSimpleComponentFirstArg = a => {
-  if (!a) {
-    return false
-  }
-  if (typeof a === 'string' || typeof a === 'object') {
-    return true
-  }
-  return false
-}
+const isGlossFirstArg = a =>
+  typeof a === 'undefined' || typeof a === 'string' || typeof a === 'object'
 
-export const glossSimpleComponentArgs = (a, b) => {
+export const isGlossArguments = (a, b) => {
   if (b && b[GLOSS_IGNORE_COMPONENT_SYMBOL]) {
     return false
   }
   if (typeof a === 'function' && typeof b === 'object') {
     return true
   }
-  return glossSimpleComponentFirstArg(a)
+  return isGlossFirstArg(a)
 }
 
-const DEFAULT_OPTS = {}
-
-export default class Gloss {
-  css: any
-  options: Options
-  createElement: Function
-  createSimpleView: Function
-
-  constructor(opts: Options = DEFAULT_OPTS) {
-    this.options = opts
-    this.css = css(opts)
-    this.createSimpleView = simpleViewFactory(this.css)
-    this.createElement = fancyElement(this)
-  }
-
-  decorator = (maybeNameOrComponent: any, shortStyles?: Object) => {
-    if (!maybeNameOrComponent) {
-      throw new Error('No view passed into gloss')
+const DEFAULT_OPTS = {
+  glossProp: 'css',
+  isColor: color => color && !!color.rgb,
+  toColor: obj => {
+    const { model, color, valpha } = obj
+    const hasAlpha = typeof valpha === 'number' && valpha !== 1
+    if (model === 'rgb') {
+      const inner = `${color[0]}, ${color[1]}, ${color[2]}`
+      if (hasAlpha) {
+        return `rgba(${inner}, ${valpha})`
+      }
+      return `rgb(${inner})`
     }
-    // just object view({})
-    if (
-      typeof maybeNameOrComponent === 'object' &&
-      !maybeNameOrComponent[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-    ) {
-      return this.createSimpleView('div', maybeNameOrComponent)
+    if (model === 'hsl') {
+      const inner = `${color[0]}, ${Math.round(color[1])}%, ${Math.round(
+        color[2],
+      )}%`
+      if (hasAlpha) {
+        return `hsla(${inner}, ${valpha})`
+      }
+      return `hsl(${inner})`
     }
-    // view('div', {}) or view(OtherView, {})
-    if (glossSimpleComponentArgs(maybeNameOrComponent, shortStyles)) {
-      return this.createSimpleView(maybeNameOrComponent, shortStyles)
-    }
+    return obj.toString()
+  },
+}
+
+export default function createGloss(options: Options = DEFAULT_OPTS) {
+  const createStyles = css(options)
+  const createView = createViewFactory(createStyles)
+  const createElement = fancyElement({ createStyles, options })
+  return {
+    createStyles,
+    createElement,
+    createView,
   }
 }

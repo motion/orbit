@@ -3,7 +3,7 @@ import { propsToStyles } from '@mcro/gloss'
 import { propsToTextSize } from '../helpers/propsToTextSize'
 import { validCSSAttr } from '@mcro/css'
 
-export const View = view({})
+export const View = view()
 
 View.theme = ({ scrollable, ...props }) => {
   return {
@@ -12,11 +12,9 @@ View.theme = ({ scrollable, ...props }) => {
   }
 }
 
-const cleanerDOMIgnore = {
+// ignore all valid css props, except src for images
+View.ignoreAttrs = {
   ...validCSSAttr,
+  size: true,
   src: false,
 }
-
-View.ignoreAttrs = cleanerDOMIgnore
-
-console.log('View.ignoreAttrs', View.ignoreAttrs)

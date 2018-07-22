@@ -485,7 +485,6 @@ export const TopoBg = () => (
 export const HomeImg = ({ children, style, borderProps, ...props }) => (
   <>
     <img
-      debug
       css={{
         width: 1100 / 2,
         height: 2014 / 2,

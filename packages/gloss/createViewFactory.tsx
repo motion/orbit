@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { ThemeContext } from './theme/ThemeContext'
-import { CSSPropertyValue, CSSPropertySet } from '@mcro/css'
+import { CSSPropertyValue, CSSPropertySet, validCSSAttr } from '@mcro/css'
 import { GarbageCollector } from './stylesheet/gc'
 import hash from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
-import { validCSSAttr } from '@mcro/css'
 import validProp from './helpers/validProp'
+import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './gloss'
 
 export type RawRules = CSSPropertySet & {
   [key: string]: CSSPropertySet
@@ -15,7 +15,7 @@ export type BaseRules = {
 }
 type Props = CSSPropertySet
 
-const arrToHash = obj => {
+const arrToDict = obj => {
   if (Array.isArray(obj)) {
     return obj.reduce((acc, cur) => {
       acc[cur] = true
@@ -69,7 +69,7 @@ const getAllStyles = (baseId, target, rawStyles) => {
   }
   const propStyles = addStyles(baseId, styles, rawStyles)
   // merge child styles
-  if (target.IS_GLOSSY) {
+  if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
     const childConfig = target.getConfig()
     const childPropStyles = childConfig.propStyles
     if (childPropStyles) {
@@ -99,7 +99,7 @@ const getAllStyles = (baseId, target, rawStyles) => {
   }
 }
 
-export function simpleViewFactory(toCSS) {
+export function createViewFactory(toCSS) {
   const tracker = new Map()
   const rulesToClass = new WeakMap()
   const sheet = new StyleSheet(process.env.NODE_ENV === 'production')
@@ -128,8 +128,20 @@ export function simpleViewFactory(toCSS) {
   let idCounter = 1
   const uid = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
-  return function createSimpleView(target: any, rawStyles: RawRules) {
-    const tagName = target.IS_GLOSSY ? target.getConfig().tagName : target
+  return function createView(a: any, b: RawRules) {
+    let target = a || 'div'
+    let rawStyles = b
+    let config
+    const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+    if (isSimpleView) {
+      config = target.getConfig()
+    }
+    // shorthand: view({ ... })
+    if (typeof target === 'object' && !isSimpleView) {
+      target = 'div'
+      rawStyles = a
+    }
+    const tagName = isSimpleView ? config.tagName : target
     const id = `${uid()}`
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = Object.keys(propStyles).length
@@ -323,17 +335,17 @@ export function simpleViewFactory(toCSS) {
         prevProps: null,
       }
 
-      static getDerivedStateFromProps(props, state) {
-        if (state.prevProps != null && hasEquivProps(props, state.prevProps)) {
+      static getDerivedStateFromProps(props: Props, state: State) {
+        if (state.prevProps !== null && hasEquivProps(props, state.prevProps)) {
           return null
         }
         let nextState: Partial<State> = {}
         // update ignore attributes
-        if (ThemedConstructor.ignoreAttrs && !state.ignoreAttrs) {
-          nextState.ignoreAttrs = arrToHash(props.ignoreAttrs)
+        if (config && config.ignoreAttrs && !state.ignoreAttrs) {
+          nextState.ignoreAttrs = arrToDict(config.ignoreAttrs)
         }
-        // update classnames/prevprops
         return {
+          ...nextState,
           ...generateClassnames(styles, state, props, state.prevProps),
           prevProps: props,
         }
@@ -349,7 +361,7 @@ export function simpleViewFactory(toCSS) {
         const props = this.props
         const { children, forwardRef } = props
         // build final props without weird attrs
-        const finalProps = {}
+        const finalProps: Props = {}
         // build class names
         const className = this.state.classNames
           .concat(this.state.extraClassNames)
@@ -374,7 +386,6 @@ export function simpleViewFactory(toCSS) {
             finalProps.forwardRef = forwardRef
           }
         }
-        // ignoreAttrs
         if (this.state.ignoreAttrs) {
           for (const prop in finalProps) {
             if (this.state.ignoreAttrs[prop]) {
@@ -403,7 +414,7 @@ export function simpleViewFactory(toCSS) {
       </ThemeContext.Consumer>
     )
 
-    ThemedConstructor.IS_GLOSSY = true
+    ThemedConstructor[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
 
     ThemedConstructor.withConfig = config => {
       if (config.displayName) {
@@ -416,10 +427,11 @@ export function simpleViewFactory(toCSS) {
 
     ThemedConstructor.getConfig = () => ({
       tagName,
+      ignoreAttrs: ThemedConstructor.ignoreAttrs,
       styles: { ...styles },
       propStyles: { ...propStyles },
       id,
-      child: target.IS_GLOSSY ? target : null,
+      child: isSimpleView ? target : null,
     })
 
     return ThemedConstructor

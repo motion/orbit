@@ -22,7 +22,7 @@ export class BrandLogo extends React.Component {
             {...props}
             onMouseEnter={this.hover}
             onMouseLeave={this.leave}
-            css={{ cursor: 'pointer', marginLeft: isLarge ? 0 : 0 }}
+            style={{ cursor: 'pointer', marginLeft: isLarge ? 0 : 0 }}
             onClick={Router.link('/')}
           >
             <orbit />

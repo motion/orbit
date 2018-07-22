@@ -8,14 +8,13 @@ import {
 import { subscribable } from '@mcro/decor-classes'
 import { reactObservable } from '@mcro/decor-mobx'
 import { storeOptions } from './storeDecorator'
-import { getGloss } from './getGloss'
-
-import { DecorCompiledDecorator } from '@mcro/decor'
-export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
-import {
-  glossSimpleComponentArgs,
+import createGloss, {
+  isGlossArguments,
   GLOSS_IGNORE_COMPONENT_SYMBOL,
 } from '@mcro/gloss'
+import { DecorCompiledDecorator } from '@mcro/decor'
+
+export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 
 export interface ViewDecorator {
   (): any
@@ -42,13 +41,14 @@ export const blackDecorator: DecorCompiledDecorator<any> = decor(
 )
 
 function createViewDecorator(): ViewDecorator {
-  const Gloss = getGloss()
+  const { createView } = createGloss()
 
   const view = <ViewDecorator>function view(a, b) {
-    // simple views
-    if (glossSimpleComponentArgs(a, b)) {
-      return Gloss.decorator(a, b)
+    // simple views: view(), view({}), view('div', {}), view(OtherView, {})
+    if (isGlossArguments(a, b)) {
+      return createView(a, b)
     }
+    // class views
     // patch this in for now...
     const shouldPatchConfig = !a.prototype && !a.withConfig
     let aFinal

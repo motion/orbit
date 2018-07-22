@@ -1,3 +1,4 @@
+import * as React from 'react'
 import gcalendar from '~/../public/logos/gcalendar.svg'
 import gdocs from '~/../public/logos/gdocs.svg'
 import gdrive from '~/../public/logos/gdrive.svg'

@@ -196,7 +196,7 @@ const SectionSubTitle = props => (
     size={1.7}
     sizeLineHeight={1.1}
     titleFont
-    alpha={0.5555}
+    alpha={0.6}
     fontWeight={400}
     {...props}
   />
@@ -219,7 +219,7 @@ const Pitch = ({ isLarge, scrollTo }) => (
       size={1.2}
       onClick={() => scrollTo(3)}
     >
-      (Without giving up your privacy)
+      With complete privacy and security.
     </SectionSubTitle>
     <VertSpace />
     <VertSpace />
@@ -582,10 +582,10 @@ const Card = ({ title, children, icon }) => (
       css={{ margin: [0, 40, 0, 0] }}
     />
     <div style={{ flex: 1 }}>
-      <SectionP size={1.5} fontWeight={700} css={{ flex: 1 }}>
+      <SectionP size={1.5} fontWeight={700} flex={1} marginBottom={5}>
         {title}
       </SectionP>
-      <SectionSubP size={1.7} sizeLineHeight={1} css={{ flex: 1 }}>
+      <SectionSubP size={1.5} sizeLineHeight={1} flex={1}>
         {children}
       </SectionSubP>
     </div>

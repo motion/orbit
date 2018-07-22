@@ -6,6 +6,7 @@ import { createViewFactory } from './createViewFactory'
 export const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const GLOSS_IGNORE_COMPONENT_SYMBOL = '__GLOSS_IGNORE_COMPONENT__'
 
+export { alphaColor } from './helpers/alphaColor'
 export { propsToStyles } from './helpers/propsToStyles'
 export { propsToThemeStyles } from './helpers/propsToThemeStyles'
 export { Theme } from './theme/Theme'
@@ -13,7 +14,13 @@ export { ThemeMaker } from './theme/ThemeMaker'
 export { ThemeProvide } from './theme/ThemeProvide'
 export { ThemeContext } from './theme/ThemeContext'
 export { attachTheme } from './theme/attachTheme'
-export { CSSPropertySet, cssNameMap, psuedoKeys, validCSSAttr } from '@mcro/css'
+export {
+  CSSPropertySet,
+  cssNameMap,
+  psuedoKeys,
+  validCSSAttr,
+  Color,
+} from '@mcro/css'
 
 export const color = require('@mcro/color').default
 

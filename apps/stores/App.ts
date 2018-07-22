@@ -1,6 +1,7 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
 import { store, react, deep } from '@mcro/black/store'
 import { Desktop } from './Desktop'
+import { Electron } from './Electron'
 
 export let App = null as AppStore
 
@@ -147,7 +148,7 @@ class AppStore {
   // this won't trigger until the app is actually finished showing
   // to be more precise for enabling mouse events
   isMouseInActiveArea = react(
-    () => !!(Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered),
+    () => !!(Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered),
     async (over, { sleep, setValue }) => {
       await sleep(over ? 0 : App.animationDuration)
       setValue(over)

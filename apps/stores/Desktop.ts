@@ -32,10 +32,6 @@ export type DesktopState = {
   appState?: DesktopStateAppState
   lastScreenChange: number
   lastAppChange: number
-  hoverState: {
-    orbitHovered: boolean
-    peekHovered: boolean
-  }
   mouseState: {
     mouseDown?: { x: number; y: number; at: number }
   }
@@ -72,7 +68,6 @@ class DesktopStore {
   ocrState: DesktopStore['state']['ocrState']
   searchState: DesktopStore['state']['searchState']
   keyboardState: DesktopStore['state']['keyboardState']
-  hoverState: DesktopStore['state']['hoverState']
   mouseState: DesktopStore['state']['mouseState']
 
   messages = {
@@ -113,10 +108,6 @@ class DesktopStore {
       optionUp: 1,
       space: 0,
       shiftUp: 0,
-    },
-    hoverState: {
-      orbitHovered: false,
-      peekHovered: false,
     },
     mouseState: {
       mouseDown: null,

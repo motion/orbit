@@ -1,5 +1,5 @@
 import { store, react, sleep } from '@mcro/black/store'
-import { App, Desktop } from '@mcro/stores'
+import { App, Desktop, Electron } from '@mcro/stores'
 import orbitPosition from '../helpers/orbitPosition'
 // import debug from '@mcro/debug'
 // const log = debug('AppReactions')
@@ -149,9 +149,9 @@ export class AppReactions {
 
   // react
   // clearPeekOnMouseOut = [
-  //   () => Desktop.hoverState.peekHovered,
+  //   () => Electron.hoverState.peekHovered,
   //   async (mouseOver, { sleep }) => {
-  //     if (mouseOver || Desktop.hoverState.orbitHovered) {
+  //     if (mouseOver || Electron.hoverState.orbitHovered) {
   //       return
   //     }
   //     // wait a bit
@@ -184,7 +184,7 @@ export class AppReactions {
 
   hideOrbitOnMouseOut = react(
     () => [
-      Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered,
+      Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered,
       App.peekState.target,
     ],
     async ([mouseOver], { sleep }) => {

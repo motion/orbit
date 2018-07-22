@@ -1,5 +1,5 @@
 import { on, react } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
+import { App, Desktop, Electron } from '@mcro/stores'
 import { Setting, Not, Equal } from '@mcro/models'
 import * as Helpers from '../helpers'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
@@ -102,7 +102,7 @@ export class AppStore {
   )
 
   clearSelectedOnLeave = react(
-    () => [this.leaveIndex, Desktop.hoverState.peekHovered],
+    () => [this.leaveIndex, Electron.hoverState.peekHovered],
     async ([leaveIndex, peekHovered], { sleep, when }) => {
       if (!peekHovered) {
         await sleep(100)

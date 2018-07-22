@@ -3,12 +3,12 @@ import * as Constants from '../constants'
 import { on, view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import * as Helpers from '../helpers'
-import { Electron, Desktop, App } from '@mcro/stores'
+import { Electron, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 
 class MainStore {
   get mouseInActiveArea() {
-    return Desktop.hoverState.peekHovered || Desktop.hoverState.orbitHovered
+    return Electron.hoverState.peekHovered || Electron.hoverState.orbitHovered
   }
 }
 

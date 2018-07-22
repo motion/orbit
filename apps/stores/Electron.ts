@@ -5,6 +5,8 @@ export let Electron = null as ElectronStore
 
 @store
 class ElectronStore {
+  setHoverState: Function
+
   messages = {
     CLEAR: 'CLEAR',
     DEFOCUS: 'DEFOCUS',
@@ -22,6 +24,10 @@ class ElectronStore {
   state = deep({
     screenSize: [0, 0],
     settingsPosition: [], // todo: settingsState.position
+    hoverState: {
+      orbitHovered: false,
+      peekHovered: false,
+    },
     showDevTools: {
       orbit: false,
       peek: false,

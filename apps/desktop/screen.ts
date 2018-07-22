@@ -1,25 +1,10 @@
 import Oracle from '@mcro/oracle'
-import { debounce, throttle, last } from 'lodash'
-import iohook from 'iohook'
+import { debounce, last } from 'lodash'
 import { store, isEqual, react, on } from '@mcro/black/store'
-import { App, Desktop, DesktopState, Electron, Swift } from '@mcro/stores'
+import { Desktop, DesktopState, Electron, Swift } from '@mcro/stores'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
-
-const isMouseOver = (bounds, mousePosition) => {
-  if (!bounds || !mousePosition) {
-    return false
-  }
-  const { x, y } = mousePosition
-  const { position, size } = bounds
-  if (!position || !size) {
-    return false
-  }
-  const withinX = x > position[0] && x < position[0] + size[0]
-  const withinY = y > position[1] && y < position[1] + size[1]
-  return withinX && withinY
-}
 
 const log = debug('screen')
 debug.quiet('screen')
@@ -60,17 +45,6 @@ export class Screen {
   curAppName = ''
   watchSettings = { name: '', settings: {} }
   oracle = new Oracle()
-
-  unsetOrbitHoveredOnHide = react(
-    () => App.orbitState.docked,
-    docked => {
-      if (!docked) {
-        Desktop.setHoverState({ orbitHovered: false })
-        return
-      }
-      throw react.cancel
-    },
-  )
 
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 
@@ -117,9 +91,8 @@ export class Screen {
   start = async () => {
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
     // for now just enable until re enable oracle
-    if (true || macosVersion.is('<10.12')) {
-      this.watchMouse()
-      console.log('older mac version, just watching mouse')
+    if (macosVersion.is('<10.12')) {
+      console.log('older mac, avoiding oracle')
       return
     }
     // accessiblity check
@@ -279,91 +252,50 @@ export class Screen {
     })
   }, 32)
 
-  mouseHookIds = []
-  watchMouse = () => {
-    this.unWatchMouse()
-    this.mouseHookIds = [
-      iohook.on('mousemove', throttle(this.handleMousePosition, 32)),
-      iohook.on('mousedown', ({ button, x, y }) => {
-        if (button === 1) {
-          const TITLE_BAR_HEIGHT = 23
-          Desktop.setMouseState({
-            mouseDown: { x, y: y - TITLE_BAR_HEIGHT, at: Date.now() },
-          })
-        }
-      }),
-      iohook.on('mouseup', ({ button }) => {
-        if (button === 1) {
-          Desktop.setMouseState({ mouseDown: null })
-        }
-      }),
-    ]
-  }
+  // iohook based mouse move
+  // mouseHookIds = []
+  // watchMouse = () => {
+  //   this.unWatchMouse()
+  //   this.mouseHookIds = [
+  //     iohook.on('mousemove', throttle(this.handleMousePosition, 32)),
+  //     iohook.on('mousedown', ({ button, x, y }) => {
+  //       if (button === 1) {
+  //         const TITLE_BAR_HEIGHT = 23
+  //         Desktop.setMouseState({
+  //           mouseDown: { x, y: y - TITLE_BAR_HEIGHT, at: Date.now() },
+  //         })
+  //       }
+  //     }),
+  //     iohook.on('mouseup', ({ button }) => {
+  //       if (button === 1) {
+  //         Desktop.setMouseState({ mouseDown: null })
+  //       }
+  //     }),
+  //   ]
+  // }
 
-  unWatchMouse = () => {
-    this.mouseHookIds.map(id => iohook.unregisterShortcut(id))
-    this.mouseHookIds = []
-  }
+  // unWatchMouse = () => {
+  //   this.mouseHookIds.map(id => iohook.unregisterShortcut(id))
+  //   this.mouseHookIds = []
+  // }
 
-  mouseOverShowDelay: any = 0
-
-  updateMouseMoveAt = throttle(() => {
-    Desktop.setMouseState({
-      mouseMove: Date.now(),
-    })
-  }, 100)
-
-  handleMousePosition = async mousePos => {
-    clearTimeout(this.mouseOverShowDelay)
-    // this.updateMouseMoveAt()
-    const { hidden, position, docked } = App.orbitState
-    const { target, pinned } = App.peekState
-    const peekHovered =
-      (target || pinned) && isMouseOver(App.peekState, mousePos)
-    if (docked) {
-      if (mousePos.x > App.state.screenSize[0] - App.dockedWidth) {
-        Desktop.setHoverState({ orbitHovered: true, peekHovered })
-      } else {
-        Desktop.setHoverState({ orbitHovered: false, peekHovered })
-      }
-      return
-    }
-    if (pinned) {
-      Desktop.setHoverState({ peekHovered })
-      return
-    }
-    if (!hidden) {
-      // contextual orbit sidebar
-      const orbitHovered = position && isMouseOver(App.orbitState, mousePos)
-      Desktop.setHoverState({ orbitHovered, peekHovered })
-      return
-    }
-    // nothing showing
-    if (Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered) {
-      Desktop.setHoverState({
-        orbitHovered: false,
-        peekHovered: false,
-      })
-    }
-    this.checkHoverIndicator(mousePos, position)
-  }
-
+  // mouseOverShowDelay: any = 0
   // this aws for a little orbit indicator that follows windows
   // was an experiment that is off now can likely remove once we
   // re-enable sidebar and decide if we want it
-  checkHoverIndicator = (mousePos, position) => {
-    const [oX, oY] = position
-    // TODO: Constants.ORBIT_WIDTH
-    const adjX = App.orbitOnLeft ? 313 : 17
-    const adjY = 36
-    const withinX = Math.abs(oX - mousePos.x + adjX) < 6
-    const withinY = Math.abs(oY - mousePos.y + adjY) < 15
-    if (withinX && withinY) {
-      this.mouseOverShowDelay = setTimeout(() => {
-        Desktop.sendMessage(App, App.messages.SHOW)
-      }, 250)
-    }
-  }
+  // checkHoverIndicator = (mousePos, position) => {
+  //   const [oX, oY] = position
+  //   // TODO: Constants.ORBIT_WIDTH
+  //   const adjX = App.orbitOnLeft ? 313 : 17
+  //   const adjY = 36
+  //   const withinX = Math.abs(oX - mousePos.x + adjX) < 6
+  //   const withinY = Math.abs(oY - mousePos.y + adjY) < 15
+  //   if (withinX && withinY) {
+  //     this.mouseOverShowDelay = setTimeout(() => {
+  //       Desktop.sendMessage(App, App.messages.SHOW)
+  //     }, 250)
+  //   }
+  // }
 
   async rescanApp() {
     clearTimeout(this.clearOCRTm)
@@ -416,7 +348,6 @@ export class Screen {
   }
 
   async dispose() {
-    this.unWatchMouse()
     if (this.oracle) {
       await this.oracle.stop()
     }

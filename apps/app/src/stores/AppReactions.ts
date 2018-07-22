@@ -1,5 +1,5 @@
 import { store, react, sleep } from '@mcro/black/store'
-import { App, Desktop } from '@mcro/stores'
+import { App, Desktop, Electron } from '@mcro/stores'
 import orbitPosition from '../helpers/orbitPosition'
 // import debug from '@mcro/debug'
 // const log = debug('AppReactions')
@@ -38,7 +38,7 @@ export class AppReactions {
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:
-          this.hide()
+          App.actions.hideOrbit()
           return
         case App.messages.SHOW:
           this.show()
@@ -72,28 +72,13 @@ export class AppReactions {
   //   if (App.orbitState.hidden) {
   //     this.show()
   //   } else {
-  //     this.hide()
+  //     App.actions.hide()
   //   }
   // }
 
   // show() {
   //   App.setOrbitState({ hidden: false })
   // }
-
-  hide = async () => {
-    // hide peek first
-    if (App.peekState.target && !App.peekState.pinned) {
-      App.actions.clearPeek()
-      await new Promise(res => setTimeout(res, 80)) // sleep 80
-      return
-    }
-    // hide orbit docked second
-    if (App.orbitState.docked) {
-      App.setOrbitState({ docked: false })
-      return
-    }
-    App.setOrbitState({ hidden: true })
-  }
 
   // handleHoldingOption = react(
   //   () => Desktop.isHoldingOption,
@@ -164,9 +149,9 @@ export class AppReactions {
 
   // react
   // clearPeekOnMouseOut = [
-  //   () => Desktop.hoverState.peekHovered,
+  //   () => Electron.hoverState.peekHovered,
   //   async (mouseOver, { sleep }) => {
-  //     if (mouseOver || Desktop.hoverState.orbitHovered) {
+  //     if (mouseOver || Electron.hoverState.orbitHovered) {
   //       return
   //     }
   //     // wait a bit
@@ -199,7 +184,7 @@ export class AppReactions {
 
   hideOrbitOnMouseOut = react(
     () => [
-      Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered,
+      Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered,
       App.peekState.target,
     ],
     async ([mouseOver], { sleep }) => {

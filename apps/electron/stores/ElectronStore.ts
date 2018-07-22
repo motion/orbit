@@ -1,14 +1,18 @@
 import { App, Electron, Desktop } from '@mcro/stores'
-import { isEqual, store, react, debugState } from '@mcro/black'
+import { isEqual, store, react, debugState, on } from '@mcro/black'
 import { ShortcutsStore } from '../stores/ShortcutsStore'
 import { WindowFocusStore } from '../stores/WindowFocusStore'
+import { HoverStateStore } from '../stores/HoverStateStore'
 import root from 'global'
 import { sleep } from '../helpers'
+import { screen } from 'electron'
 
 @store
 export class ElectronStore {
+  // = null makes them observable
   shortcutStore?: ShortcutsStore = null
   windowFocusStore?: WindowFocusStore = null
+  hoverStateStore?: HoverStateStore = null
   error = null
   appRef = null
   stores = null
@@ -26,6 +30,8 @@ export class ElectronStore {
     })
     this.windowFocusStore = new WindowFocusStore()
     this.shortcutStore = new ShortcutsStore(['Option+Space'])
+    this.hoverStateStore = new HoverStateStore()
+    this.followMousePosition()
     this.shortcutStore.onShortcut(this.onShortcut)
     Electron.onMessage(msg => {
       switch (msg) {
@@ -46,6 +52,15 @@ export class ElectronStore {
     }
     // clear to start
     Electron.onClear()
+  }
+
+  followMousePosition = () => {
+    on(
+      this,
+      setInterval(() => {
+        this.hoverStateStore.handleMousePosition(screen.getCursorScreenPoint())
+      }, 40),
+    )
   }
 
   onShortcut = async shortcut => {

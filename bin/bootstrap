@@ -2,8 +2,9 @@
 
 . $(dirname $0)/__/common
 cd $ROOT
-# allow errors
-set +e
+
+# dont allow errors
+set -e
 
 file-exists ".env"
 source .env
@@ -29,7 +30,7 @@ function build-builder-modules() {
   wait
 }
 
-xcode-select --install 2> /dev/null
+xcode-select --install 2> /dev/null || true
 # this on in sync before running brew checks
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ensure-dep "npm" -- brew install node &
@@ -38,6 +39,7 @@ ensure-dep "yarn" -- npm i -g yarn &
 ensure-dep "python3" -- brew install python3 &
 ensure-dep "carthage" -- brew install carthage &
 wait
+ensure-dep "tsc" -- npm i -g typescript
 ensure-dep "pyenv" -- ./apps/oracle/build.sh
 echo "installing root"
 yarn install
@@ -51,6 +53,6 @@ ensure-file ./packages/gloss-displaynames/_/index.js -- build-builder-modules
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 copy-bootstrap-hook
 # build everything once
-ensure-dir ./apps/desktop/_ -- build
+ensure-dir ./packages/ui/_ -- build
 echo "bootstrapped!"
 echo "run desktop; run app; run electron"

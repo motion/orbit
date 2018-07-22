@@ -134,7 +134,7 @@ class AppStore {
   }
 
   animationDuration = 160
-  dockedWidth = 520
+  dockedWidth = 540
 
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(
@@ -170,7 +170,7 @@ class AppStore {
   )
 
   get orbitOnLeft() {
-    if (App.orbitState.orbitDocked) {
+    if (App.orbitState.docked) {
       return true
     }
     return App.orbitState.orbitOnLeft
@@ -184,10 +184,6 @@ class AppStore {
     return 'none for now'
   }
 
-  get aboutToShow() {
-    return App.isAnimatingOrbit && App.orbitState.hidden
-  }
-
   start = async options => {
     await Bridge.start(this, this.state, options)
   }
@@ -199,10 +195,6 @@ class AppStore {
 
   togglePinned = () => {
     App.setOrbitState({ pinned: !App.orbitState.pinned })
-  }
-
-  togglePeek = () => {
-    App.setState({ disablePeek: !App.state.disablePeek })
   }
 
   toggleHidden = () => {

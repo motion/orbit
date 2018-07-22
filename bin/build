@@ -20,33 +20,4 @@ if [ "$(realpath .)" = "$ROOT" ]; then
 fi
 
 # this runs in sub-directories
-
-function build-prod() {
-  BABEL_ENV=production babel src  --extensions '.js,.ts,.tsx' --out-dir dist -s true ${@:1}
-}
-function build-dev() {
-  babel src  --extensions '.js,.ts,.tsx' --out-dir lib -s true ${@:1}
-}
-function build-es6() {
-  BABEL_ENV=es6 babel src  --extensions '.js,.ts,.tsx' --out-dir es6 -s true ${@:1}
-}
-
-MODES="$1"
-FLAGS=""
-if [ "$2" = "--watch" ]; then
-  FLAGS="--watch --skip-initial-build"
-fi
-
-for i in ${MODES//,/$IFS}; do
-  if [ "$i" = "prod" ]; then
-    build-prod $FLAGS &
-  fi
-  if [ "$i" = "dev" ]; then
-    build-dev $FLAGS &
-  fi
-  if [ "$i" = "es6" ]; then
-    build-es6 $FLAGS &
-  fi
-done
-
-wait
+babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true ${@:1}

@@ -42,9 +42,15 @@ TitleBarContain.theme = ({ theme }) => ({
   },
 })
 
-const SubTitle = ({ children }) => (
+const SubTitle = ({ children, date }) => (
   <UI.Row padding={[4, 12]} alignItems="center" flex={1}>
     {children}
+    {date ? (
+      <>
+        {' '}
+        <UI.Date>{date}</UI.Date>
+      </>
+    ) : null}
   </UI.Row>
 )
 
@@ -132,7 +138,7 @@ export class PeekHeaderContent extends React.Component {
             </>
           }
         >
-          {integration ? `${NICE_INTEGRATION_NAMES[integration]}: ` : ''}{' '}
+          {integration ? `${NICE_INTEGRATION_NAMES[integration] || ''} ` : ''}{' '}
           {title}
         </TitleBar>
         <SubTitle date={date} permalink={permalink}>

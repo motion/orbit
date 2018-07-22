@@ -196,7 +196,7 @@ const SectionSubTitle = props => (
     size={1.7}
     sizeLineHeight={1.1}
     titleFont
-    alpha={0.5}
+    alpha={0.5555}
     fontWeight={400}
     {...props}
   />

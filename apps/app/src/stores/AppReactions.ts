@@ -38,7 +38,7 @@ export class AppReactions {
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:
-          this.hide()
+          App.actions.hideOrbit()
           return
         case App.messages.SHOW:
           this.show()
@@ -72,28 +72,13 @@ export class AppReactions {
   //   if (App.orbitState.hidden) {
   //     this.show()
   //   } else {
-  //     this.hide()
+  //     App.actions.hide()
   //   }
   // }
 
   // show() {
   //   App.setOrbitState({ hidden: false })
   // }
-
-  hide = async () => {
-    // hide peek first
-    if (App.peekState.target && !App.peekState.pinned) {
-      App.actions.clearPeek()
-      await new Promise(res => setTimeout(res, 80)) // sleep 80
-      return
-    }
-    // hide orbit docked second
-    if (App.orbitState.docked) {
-      App.setOrbitState({ docked: false })
-      return
-    }
-    App.setOrbitState({ hidden: true })
-  }
 
   // handleHoldingOption = react(
   //   () => Desktop.isHoldingOption,

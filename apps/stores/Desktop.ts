@@ -126,7 +126,7 @@ class DesktopStore {
       macVersion: null,
     },
     paused: true,
-    focusedOnOrbit: true,
+    focusedOnOrbit: false,
     appStateUpdatedAt: Date.now(),
     lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),

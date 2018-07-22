@@ -23,7 +23,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
     const { paneStore, theme } = this.props
     const buttonColor = theme.base.color.lighten(0.2)
     const exploreButton = {
-      size: 1.1,
+      size: 1.2,
       circular: true,
       borderWidth: 1,
       margin: [0, 0, 0, 6],
@@ -31,7 +31,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
       background: 'transparent',
       iconProps: {
         color: buttonColor,
-        size: 15,
+        size: 13,
       },
       opacity: 0.3,
       activeStyle: {

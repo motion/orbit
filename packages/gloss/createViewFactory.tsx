@@ -93,7 +93,6 @@ const getAllStyles = (baseId, target, rawStyles) => {
       }
     }
   }
-  console.log('returning styles', styles)
   return {
     styles,
     propStyles,

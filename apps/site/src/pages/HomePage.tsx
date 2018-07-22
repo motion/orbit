@@ -608,11 +608,9 @@ class SectionNoCloud extends React.Component {
         <SectionContent css={{ flex: 1 }}>
           <Bauhaus
             showCircle
-            css={{
-              zIndex: 0,
-              opacity: 0.2,
-              transform: { y: '40%', x: '80%', scale: 0.7 },
-            }}
+            zIndex={0}
+            opacity={0.1}
+            transform={{ y: '70%', x: '80%', scale: 0.7 }}
           />
           <div
             style={{
@@ -638,9 +636,6 @@ class SectionNoCloud extends React.Component {
               </SectionSubP>
               <VertSpace />
               <VertSpace />
-              <space if={false} css={{ margin: [0, 'auto'] }}>
-                <SectionSubP size={3}>🙅‍ ☁️ = 🙅‍♂️ 😅</SectionSubP>
-              </space>
             </UI.Col>
             <UI.Col css={isLarge && { width: '38%', margin: ['auto', 0] }}>
               <Card icon="lock" title="Complete Security">
@@ -966,7 +961,7 @@ export class HomeWrapper extends React.Component {
                     container={document.documentElement}
                     pages={pages}
                     pageHeight={sectionHeight}
-                    config={config.slow} // { tension: 170, friction: 26 }
+                    config={config.fast} // { tension: 170, friction: 26 }
                   >
                     <Orbit if={isLarge} />
                     <Header {...sectionProps} white />
@@ -985,7 +980,7 @@ export class HomeWrapper extends React.Component {
                         left: 0,
                         height: 500,
                         right: 0,
-                        background: bodyBg,
+                        background: '#fff',
                       }}
                     />
                     <Footer />

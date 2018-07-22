@@ -16,5 +16,5 @@ export const propsToStyles = props => {
       styles[key] = props[key]
     }
   }
-  return alphaColor(styles, props)
+  return alphaColor(styles, props.alpha)
 }

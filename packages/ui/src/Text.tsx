@@ -21,10 +21,13 @@ const TextBlock = view(InlineBlock, {
   },
 })
 
-TextBlock.theme = ({ theme, color }) =>
-  alphaColor({
-    color: color || theme.base.color,
-  })
+TextBlock.theme = ({ theme, color, alpha }) =>
+  alphaColor(
+    {
+      color: color || theme.base.color,
+    },
+    alpha,
+  )
 
 const TextEllipse = view(Inline, {
   margin: ['auto', 0],

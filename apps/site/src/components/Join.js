@@ -91,8 +91,8 @@ export class Join extends React.Component {
   render() {
     const { success, error, submitting } = this.state
     const sizeProps = {
-      size: 1.2,
-      sizeRadius: 1,
+      size: 1.3,
+      sizeRadius: 1.1,
       sizePadding: 1.5,
       sizeHeight: 1.1,
     }
@@ -120,7 +120,7 @@ export class Join extends React.Component {
               fontFamily="Eesti Pro"
             />
             <div style={{ height: 20 }} />
-            <UI.Theme theme="#37C457">
+            <UI.Theme theme={{ background: '#37C457', color: '#fff' }}>
               <UI.Button
                 {...sizeProps}
                 fontWeight={500}

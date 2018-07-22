@@ -105,7 +105,10 @@ export function createViewFactory(toCSS) {
   const sheet = new StyleSheet(process.env.NODE_ENV === 'production')
   const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 
-  function hasEquivProps(props: T, nextProps: T): boolean {
+  function hasEquivProps<A extends React.Props<Object>>(
+    props: A,
+    nextProps: A,
+  ): boolean {
     for (const key in props) {
       if (key === 'children') {
         continue
@@ -131,17 +134,18 @@ export function createViewFactory(toCSS) {
   return function createView(a: any, b: RawRules) {
     let target = a || 'div'
     let rawStyles = b
-    let config
+    let targetConfig
+    let ignoreAttrs
     const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
     if (isSimpleView) {
-      config = target.getConfig()
+      targetConfig = target.getConfig()
     }
     // shorthand: view({ ... })
     if (typeof target === 'object' && !isSimpleView) {
       target = 'div'
       rawStyles = a
     }
-    const tagName = isSimpleView ? config.tagName : target
+    const tagName = isSimpleView ? targetConfig.tagName : target
     const id = `${uid()}`
     const { styles, propStyles } = getAllStyles(id, target, rawStyles)
     const hasPropStyles = Object.keys(propStyles).length
@@ -149,6 +153,11 @@ export function createViewFactory(toCSS) {
     let displayName = 'ComponentName'
     let ThemedConstructor
     let cachedTheme
+
+    function getIgnoreAttrs() {
+      const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
+      return ThemedConstructor.ignoreAttrs || targetAttrs
+    }
 
     function getTheme() {
       if (typeof cachedTheme !== 'undefined') {
@@ -341,8 +350,9 @@ export function createViewFactory(toCSS) {
         }
         let nextState: Partial<State> = {}
         // update ignore attributes
-        if (config && config.ignoreAttrs && !state.ignoreAttrs) {
-          nextState.ignoreAttrs = arrToDict(config.ignoreAttrs)
+        ignoreAttrs = ignoreAttrs || getIgnoreAttrs()
+        if (ignoreAttrs && !state.ignoreAttrs) {
+          nextState.ignoreAttrs = arrToDict(ignoreAttrs)
         }
         return {
           ...nextState,
@@ -426,11 +436,12 @@ export function createViewFactory(toCSS) {
     }
 
     ThemedConstructor.getConfig = () => ({
+      id,
+      displayName,
       tagName,
-      ignoreAttrs: ThemedConstructor.ignoreAttrs,
+      ignoreAttrs: getIgnoreAttrs(),
       styles: { ...styles },
       propStyles: { ...propStyles },
-      id,
       child: isSimpleView ? target : null,
     })
 

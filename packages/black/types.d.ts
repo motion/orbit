@@ -27,6 +27,7 @@ export interface PotentiallyView<T> {
   displayName?: string
   ignoreAttrs?: string[] | { [key: string]: boolean }
   style: T
+  getConfig: () => Object
 }
 
 export function view<T>(

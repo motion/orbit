@@ -19,5 +19,3 @@ if [ "$(realpath .)" = "$ROOT" ]; then
   exit 0
 fi
 
-# this runs in sub-directories
-babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true ${@:1}

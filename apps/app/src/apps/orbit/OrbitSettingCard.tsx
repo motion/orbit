@@ -63,9 +63,7 @@ export class OrbitSettingCard extends React.Component<
         iconProps={
           !isActive && {
             color: '#999',
-            style: {
-              opacity: 0.6,
-            },
+            alpha: 0.8,
           }
         }
         result={result}

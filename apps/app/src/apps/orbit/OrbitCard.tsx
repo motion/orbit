@@ -45,7 +45,6 @@ export type OrbitCardProps = {
   children?: (a: Object, b: Object) => JSX.Element | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
-  hoverable?: boolean
   borderRadius?: number
   nextUpStyle?: Object
 }
@@ -72,7 +71,6 @@ Card.theme = ({
   listItem,
   borderRadius,
   inGrid,
-  hoverable,
   theme,
   nextUpStyle,
   isSelected,
@@ -131,14 +129,6 @@ Card.theme = ({
         ...card,
         border: [1, borderHover],
       }
-    }
-  }
-  if (hoverable) {
-    card.opacity = 0.7
-    card.transition = card.transition || 'opacity ease 100ms'
-    card['&:hover'] = {
-      ...card['&:hover'],
-      opacity: 1,
     }
   }
   if (isNextUp && nextUpStyle) {
@@ -357,7 +347,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       iconProps,
       hide,
       inGrid,
-      hoverable,
       borderRadius,
       nextUpStyle,
       onClick,
@@ -391,7 +380,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
         <Card
           isSelected={isSelected}
           isNextUp={store.isNextUp}
-          hoverable={hoverable}
           listItem={listItem}
           borderRadius={borderRadius}
           inGrid={inGrid}

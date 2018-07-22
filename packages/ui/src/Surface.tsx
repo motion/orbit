@@ -391,7 +391,7 @@ export class Surface extends React.Component<SurfaceProps> {
       ...throughProps
     } = this.props
     if (sizeLineHeight) {
-      throughProps.lineHeight = `${height}px`
+      throughProps.lineHeight = `${height + 0.5}px`
     }
     const glowColor = (theme && color) || DEFAULT_GLOW_COLOR
     return (

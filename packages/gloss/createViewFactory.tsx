@@ -35,7 +35,7 @@ const addStyles = (id, baseStyles, nextStyles) => {
       continue
     }
     // valid attribute
-    if (key[0] === '&') {
+    if (key[0] === '&' || key[0] === '@') {
       baseStyles[key] = nextStyles[key]
     } else if (validCSSAttr[key]) {
       baseStyles[id][key] = nextStyles[key]
@@ -50,7 +50,7 @@ const addStyles = (id, baseStyles, nextStyles) => {
           base: {},
         }
         for (const subKey in styleObj) {
-          if (subKey[0] === '&') {
+          if (subKey[0] === '&' || subKey[0] === '@') {
             propStyles[prop][subKey] = styleObj[subKey]
           } else {
             propStyles[prop].base[subKey] = styleObj[subKey]
@@ -191,6 +191,19 @@ export function createViewFactory(toCSS) {
       return result
     }
 
+    function getSelector(className: string, namespace: string) {
+      if (namespace[0] === '@') {
+        return '.' + className
+      }
+      const sub = namespace.indexOf('&')
+      if (sub === 0) {
+        return '.' + className + namespace.slice(1)
+      } else if (sub > 0) {
+        return '.' + className + namespace.slice(sub + 1)
+      }
+      return '.' + className
+    }
+
     function addRules(displayName: string, rules: BaseRules, namespace) {
       // if these rules have been cached to a className then retrieve it
       const cachedClass = rulesToClass.get(rules)
@@ -207,22 +220,11 @@ export function createViewFactory(toCSS) {
       const css = declarations.join('\n')
       // build the class name with the display name of the styled component and a unique id based on the css and namespace
       const className = displayName + '__' + hash(namespace + css)
+      // for media queries
       // this is the first time we've found this className
       if (!tracker.has(className)) {
         // build up the correct selector, explode on commas to allow multiple selectors
-        const selector = namespace
-          .split(', ')
-          .map(part => {
-            const sub = part.indexOf('&')
-            if (sub === 0) {
-              return '.' + className + part.slice(1)
-            } else if (sub > 0) {
-              return '.' + className + part.slice(sub + 1)
-            } else {
-              return '.' + className
-            }
-          })
-          .join(', ')
+        const selector = getSelector(className, namespace)
         // insert the new style text
         tracker.set(className, {
           displayName,
@@ -231,7 +233,11 @@ export function createViewFactory(toCSS) {
           selector,
           style,
         })
-        sheet.insert(className, `${selector} {\n${css}\n}`)
+        if (namespace[0] === '@') {
+          sheet.insert(namespace, `${namespace} {\n${selector} {\n${css}\n}\n}`)
+        } else {
+          sheet.insert(className, `${selector} {\n${css}\n}`)
+        }
         // if there's no dynamic rules then cache this
         if (true) {
           rulesToClass.set(rules, className)

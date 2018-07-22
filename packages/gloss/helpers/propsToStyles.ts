@@ -1,5 +1,5 @@
 import { validCSSAttr, CSSPropertySet } from '@mcro/css'
-import toColor from '@mcro/color'
+import { alphaColor } from './alphaColor'
 
 // resolves props into styles for valid css
 
@@ -15,12 +15,6 @@ export const propsToStyles = props => {
     } else if (validCSSAttr[key]) {
       styles[key] = props[key]
     }
-    // alpha effects on colors
-    if (key === 'color' && styles.color) {
-      if (typeof props.alpha === 'number' && props.color !== 'inherit') {
-        styles.color = `${toColor(styles.color).alpha(props.alpha)}`
-      }
-    }
   }
-  return styles
+  return alphaColor(styles, props.alpha)
 }

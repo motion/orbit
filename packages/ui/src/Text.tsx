@@ -4,8 +4,8 @@ import keycode from 'keycode'
 import { InlineBlock } from './blocks/InlineBlock'
 import { Inline } from './blocks/Inline'
 import { highlightText } from './helpers/highlightText'
-import { Color } from '@mcro/css'
 import { propsToTextSize } from './helpers/propsToTextSize'
+import { Color, alphaColor } from '@mcro/gloss'
 
 const TextBlock = view(InlineBlock, {
   userSelect: 'none',
@@ -21,9 +21,13 @@ const TextBlock = view(InlineBlock, {
   },
 })
 
-TextBlock.theme = ({ theme, color }) => ({
-  color: color || theme.base.color,
-})
+TextBlock.theme = ({ theme, color, alpha }) =>
+  alphaColor(
+    {
+      color: color || theme.base.color,
+    },
+    alpha,
+  )
 
 const TextEllipse = view(Inline, {
   margin: ['auto', 0],

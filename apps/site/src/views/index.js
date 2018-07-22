@@ -60,18 +60,13 @@ export const Title = attachTheme(
           fontWeight={600}
           size={size * (isSmall ? 0.75 : 1)}
           sizeLineHeight={1.1}
+          fontFamily={TITLE_FONT_FAMILY}
+          // Eesti font adds space at bottom
+          marginBottom="-1%"
           color={
-            theme.titleColor ||
-            theme.base.color
-              .desaturate(0.3)
-              .rotate(-90)
-              .alpha(0.8)
+            theme.titleColor || theme.base.color.desaturate(0.3).rotate(-90)
           }
-          css={{
-            fontFamily: TITLE_FONT_FAMILY,
-            // Eesti font adds space at bottom
-            marginBottom: '-1%',
-          }}
+          alpha={0.8}
           {...props}
         >
           {reduceCapsPct ? changeCaps(children, reduceCapsPct) : children}

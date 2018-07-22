@@ -9,9 +9,10 @@ import { screen } from 'electron'
 
 @store
 export class ElectronStore {
-  shortcutStore?: ShortcutsStore
-  windowFocusStore?: WindowFocusStore
-  hoverStateStore?: HoverStateStore
+  // = null makes them observable
+  shortcutStore?: ShortcutsStore = null
+  windowFocusStore?: WindowFocusStore = null
+  hoverStateStore?: HoverStateStore = null
   error = null
   appRef = null
   stores = null
@@ -54,9 +55,12 @@ export class ElectronStore {
   }
 
   followMousePosition = () => {
-    on(this, setInterval(() => {
-      this.hoverStateStore.handleMousePosition(screen.getCursorScreenPoint())
-    }, 40))
+    on(
+      this,
+      setInterval(() => {
+        this.hoverStateStore.handleMousePosition(screen.getCursorScreenPoint())
+      }, 40),
+    )
   }
 
   onShortcut = async shortcut => {

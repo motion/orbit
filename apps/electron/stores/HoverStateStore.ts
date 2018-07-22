@@ -63,12 +63,11 @@ export class HoverStateStore {
       return
     }
     // nothing showing
-    if (Desktop.hoverState.orbitHovered || Desktop.hoverState.peekHovered) {
+    if (Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered) {
       Electron.setHoverState({
         orbitHovered: false,
         peekHovered: false,
       })
     }
   }
-
 }

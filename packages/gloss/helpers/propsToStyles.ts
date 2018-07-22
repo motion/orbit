@@ -8,7 +8,7 @@ export const propsToStyles = props => {
     ...props.style,
   }
   // loop over props turning into styles
-  for (const key of Object.keys(props)) {
+  for (const key in props) {
     // &:hover, etc
     if (key[0] === '&') {
       styles[key] = props[key]

@@ -5,9 +5,7 @@ const cssOpts = { snakeCase: false }
 const cache = new WeakMap()
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(Gloss) {
-  const { options, css } = Gloss
-
+export default function fancyElementFactory({ options, createStyles }) {
   function fancyElement(type, props, ...children) {
     let finalProps = props
 
@@ -20,7 +18,7 @@ export default function fancyElementFactory(Gloss) {
         if (val) {
           finalProps = { ...props }
           delete finalProps[options.glossProp]
-          const extraStyle = css(val, cssOpts)
+          const extraStyle = createStyles(val, cssOpts)
           finalProps.style = { ...finalProps.style, ...extraStyle }
         }
         cache.set(props, finalProps)

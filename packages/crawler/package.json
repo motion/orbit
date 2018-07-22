@@ -5,8 +5,8 @@
   "main": "_/index.js",
   "module": "src/index.js",
   "scripts": {
-    "build": "build dev",
-    "watch": "npm run build -- --watch",
+    "build": "tsc",
+    "watch": "tsc --watch --preserveWatchOutput",
     "start": "node index.js",
     "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js"
   },

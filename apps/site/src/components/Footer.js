@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view } from '@mcro/black'
 import { SectionContent } from '~/views/sectionContent'
-import { Link, Title, P } from '~/views'
+import { Title, P } from '~/views'
 import { BrandLogo, Join } from '~/components'
 import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
@@ -11,7 +11,7 @@ const SmallTitle = props => (
     size={1.1}
     alpha={1}
     color="#111"
-    css={{ textTransform: 'uppercase', fontWeight: 600, marginBottom: 10 }}
+    style={{ textTransform: 'uppercase', fontWeight: 600, marginBottom: 10 }}
     titleFont
     {...props}
   />

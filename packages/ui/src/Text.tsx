@@ -22,7 +22,7 @@ const TextBlock = view(InlineBlock, {
 })
 
 TextBlock.theme = ({ theme, color }) => ({
-  color: color || theme.base.color
+  color: color || theme.base.color,
 })
 
 const TextEllipse = view(Inline, {

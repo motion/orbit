@@ -27,10 +27,11 @@ export interface PotentiallyView<T> {
   displayName?: string
   ignoreAttrs?: string[] | { [key: string]: boolean }
   style: T
+  getConfig: () => Object
 }
 
 export function view<T>(
-  a: T | CSSPropertySet,
+  a?: T | CSSPropertySet,
   b?: CSSPropertySet,
 ): PotentiallyView<T>
 export namespace view {

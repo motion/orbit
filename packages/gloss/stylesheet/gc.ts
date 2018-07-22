@@ -5,7 +5,7 @@
  * @format
  */
 
-import { Tracker, RulesToClass } from './index'
+import { Tracker, RulesToClass } from '.'
 import { StyleSheet } from './sheet'
 
 const invariant = require('invariant')

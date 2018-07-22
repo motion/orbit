@@ -196,7 +196,7 @@ const SectionSubTitle = props => (
     size={1.7}
     sizeLineHeight={1.1}
     titleFont
-    alpha={0.65}
+    alpha={0.5555}
     fontWeight={400}
     {...props}
   />
@@ -204,7 +204,7 @@ const SectionSubTitle = props => (
 
 const Pitch = ({ isLarge, scrollTo }) => (
   <>
-    <Title italic size={4.4} fontWeight={300} alpha={1} color="#222">
+    <Title italic size={5} fontWeight={600} alpha={1} color="#222">
       Instant-on Intranet
     </Title>
     <VertSpace />
@@ -748,8 +748,7 @@ class OrbitPure extends React.Component {
               />
               <HomeImg
                 src={homeImg}
-                debug
-                css={{
+                style={{
                   ...imgProps,
                   zIndex: 3,
                   opacity: lastLockedIndex === 0 ? 1 : 0,
@@ -757,7 +756,7 @@ class OrbitPure extends React.Component {
               />
               <HomeImg
                 src={searchImg}
-                css={{
+                style={{
                   ...imgProps,
                   zIndex: 2,
                   opacity: lastLockedIndex === 1 ? 1 : 0,
@@ -765,7 +764,7 @@ class OrbitPure extends React.Component {
               />
               <HomeImg
                 src={homeImg}
-                css={{
+                style={{
                   ...imgProps,
                   zIndex: 1,
                   opacity: lastLockedIndex === 2 ? 1 : 0,

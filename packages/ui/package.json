@@ -2,7 +2,7 @@
   "name": "@mcro/ui",
   "private": true,
   "version": "2.2.0",
-  "main": "lib/index.js",
+  "main": "_/index.js",
   "license": "MIT",
   "sideEffects": false,
   "scripts": {

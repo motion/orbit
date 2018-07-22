@@ -116,7 +116,8 @@ export class Screen {
 
   start = async () => {
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
-    if (macosVersion.is('<10.12')) {
+    // for now just enable until re enable oracle
+    if (true || macosVersion.is('<10.12')) {
       this.watchMouse()
       console.log('older mac version, just watching mouse')
       return

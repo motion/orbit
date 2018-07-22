@@ -3,6 +3,5 @@
 echo $(dirname $0)
 
 . $(dirname $0)/__/common
-cd $ROOT
 
-./node_modules/.bin/tsc ${@:1}
+$ROOT/node_modules/.bin/tsc ${@:1}

@@ -170,7 +170,7 @@ class AppStore {
   )
 
   get orbitOnLeft() {
-    if (App.orbitState.orbitDocked) {
+    if (App.orbitState.docked) {
       return true
     }
     return App.orbitState.orbitOnLeft
@@ -195,10 +195,6 @@ class AppStore {
 
   togglePinned = () => {
     App.setOrbitState({ pinned: !App.orbitState.pinned })
-  }
-
-  togglePeek = () => {
-    App.setState({ disablePeek: !App.state.disablePeek })
   }
 
   toggleHidden = () => {

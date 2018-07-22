@@ -8,7 +8,7 @@ const logTransformer = require('strong-log-transformer')
 const chalk = require('chalk')
 
 const numCpus = OS.cpus().length
-const betweenSleep = 15000 / numCpus
+const betweenSleep = 5000 / numCpus
 const flatten = arr => arr.reduce((acc, arr) => [...acc, ...arr], [])
 const subDirs = ['apps', 'packages']
 const shouldWatch = process.argv.indexOf('--watch') > -1

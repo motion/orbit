@@ -16,14 +16,16 @@ export type DesktopStateAppState = {
   selectedText?: string
 }
 
-export type DesktopStateOCRItem = {
-  word?: string
-  weight: number
-  top: number
-  left: number
-  width: number
-  height: number
-}
+export type DesktopStateOCRItem = [
+  // x, y, width, height, word, index, color
+  number,
+  number,
+  number,
+  number,
+  string,
+  number,
+  string
+]
 
 export type DesktopState = {
   paused: boolean

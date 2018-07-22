@@ -2,7 +2,7 @@
   "name": "@mcro/crawler",
   "private": true,
   "version": "2.2.0",
-  "main": "lib/index.js",
+  "main": "_/index.js",
   "module": "src/index.js",
   "scripts": {
     "build": "build dev",

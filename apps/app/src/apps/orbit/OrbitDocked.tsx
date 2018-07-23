@@ -11,6 +11,7 @@ import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { BORDER_RADIUS } from '../../constants'
 import { SearchStore } from '../../stores/SearchStore'
+import { AppStore } from '../../stores/AppStore'
 
 const SHADOW_PAD = 200
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.45]]
@@ -91,14 +92,15 @@ const OrbitInner = view({
 class OrbitDockedInner extends React.Component<{
   paneStore: OrbitDockedPaneStore
   searchStore: SearchStore
+  appStore: AppStore
 }> {
   render() {
-    const { paneStore, searchStore } = this.props
+    const { paneStore, appStore, searchStore } = this.props
     const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
       10,
-      window.innerHeight - searchStore.contentHeight - 10,
+      window.innerHeight - appStore.contentHeight - 10,
     )
     return (
       <>

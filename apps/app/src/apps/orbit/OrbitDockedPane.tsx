@@ -73,6 +73,7 @@ class DockedPaneStore {
     if (!this.isActive || !this.props.appStore || !this.node) {
       return
     }
+    console.log('got through', this.props)
     const innerHeight = getInnerHeight(this.node)
     const aboveHeight = this.node.getBoundingClientRect().top
     this.props.appStore.setContentHeight(innerHeight + aboveHeight)

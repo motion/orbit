@@ -7,6 +7,8 @@ import { RoundButton } from '../../views'
 import { OrbitIcon } from './OrbitIcon'
 import { DateRangePicker } from 'react-date-range'
 import { formatDistance } from 'date-fns'
+import { SearchStore } from '../../stores/SearchStore'
+import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 
 const SearchFilters = view(UI.Col, {
   padding: [7, 12],
@@ -33,11 +35,16 @@ const getDate = ({ startDate, endDate }) => {
   return `${startInWords} - ${endInWords}`
 }
 
+type Props = {
+  searchStore?: SearchStore
+  integrationSettingsStore?: IntegrationSettingsStore
+}
+
 const decorate = compose(
   view.attach('integrationSettingsStore', 'searchStore'),
   view,
 )
-export const OrbitSearchFilters = decorate(({ searchStore }) => {
+export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">

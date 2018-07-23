@@ -8,16 +8,24 @@ import * as Helpers from '../helpers'
 import * as SearchStoreHelpers from './helpers/searchStoreHelpers'
 import debug from '@mcro/debug'
 import { AppReactions } from './AppReactions'
+import { AppStore } from './AppStore'
+import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
 
-type Filter = {
+export type SearchFilter = {
   icon: string
-  title: string
+  name: string
+  active: boolean
 }
 
 export class SearchStore {
+  props: {
+    appStore: AppStore
+    integrationSettingsStore: IntegrationSettingsStore
+  }
+
   id = Math.random()
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore()
@@ -178,26 +186,6 @@ export class SearchStore {
           await sleep(sleepBtwn)
         }
         return
-        // await Promise.all([
-        //   when(() => this.bitSearch.query === query),
-        //   when(() => this.peopleSearch.query === query),
-        // ])
-        // const allResultsUnsorted = [
-        //   ...this.bitSearch.results,
-        //   ...this.peopleSearch.results,
-        //   // ...Desktop.searchState.pluginResults,
-        // ]
-        // // return first page fast results
-        // const { rest } = SearchStoreHelpers.parseQuery(query)
-        // results = SearchStoreHelpers.matchSort(rest, allResultsUnsorted)
-        // setValue({
-        //   query,
-        //   message,
-        //   results,
-        // })
-        // // then return full results
-        // await when(() => this.bitSearch.restResults)
-        // results = [...results, ...this.bitSearch.restResults]
       }
       return setValue({
         query,
@@ -274,21 +262,6 @@ export class SearchStore {
     },
   )
 
-  // this does "auto-select of first result after search"
-  // but it can be pretty annoying
-  // resetActiveIndexOnSearchStart = react(
-  //   () => App.state.query,
-  //   async (query, { sleep }) => {
-  //     this.activeIndex = -1
-  //     this.clearSelected()
-  //     // auto select after delay
-  //     if (query) {
-  //       await sleep(1000)
-  //       this.nextIndex = 0
-  //     }
-  //   },
-  // )
-
   resetActiveIndexOnNewSearchValue = react(
     () => this.searchState.query,
     async (_, { sleep }) => {
@@ -297,23 +270,6 @@ export class SearchStore {
       this.activeIndex = -1
     },
   )
-
-  // disable until app launching
-  // quickSearchResults = react(
-  //   () => App.state.query,
-  //   async (query, { when }) => {
-  //     const hasLoaded = !!this.quickSearchResults.length
-  //     if (hasLoaded) {
-  //       await when(() => query === Desktop.searchState.pluginResultsId)
-  //     }
-  //     const results = Desktop.searchState.pluginResults
-  //     if (!results.length) {
-  //       throw react.cancel
-  //     }
-  //     return SearchStoreHelpers.matchSort(query, results)
-  //   },
-  //   { defaultValue: [], immediate: true },
-  // )
 
   clearSelected = (clearPeek = true) => {
     this.leaveIndex = -1
@@ -413,17 +369,21 @@ export class SearchStore {
     this.extraFiltersVisible = !!target
   }
 
-  get filters(): Filter[] {
+  get filters(): SearchFilter[] {
     const { settingsList, getTitle } = this.props.integrationSettingsStore
     if (!settingsList) {
       return []
     }
     return settingsList
       .filter(x => x.type !== 'setting')
-      .map(setting => ({ icon: setting.type, name: getTitle(setting) }))
+      .map(setting => ({
+        icon: setting.type,
+        name: getTitle(setting),
+        active: true,
+      }))
   }
 
-  filterToggler = (filter: Filter) => {
+  filterToggler = (filter: SearchFilter) => {
     return () => {
       console.log('toggle fitler', filter)
     }

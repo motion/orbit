@@ -27,11 +27,14 @@ const getDate = ({ startDate, endDate }) => {
   if (!startDate) {
     return null
   }
-  const startInWords = formatDistance(Date.now(), startDate)
+  const startInWords = formatDistance(Date.now(), startDate).replace(
+    'about ',
+    '',
+  )
   if (!endDate) {
-    return startInWords
+    return `within ${startInWords}`
   }
-  const endInWords = formatDistance(Date.now(), endDate)
+  const endInWords = formatDistance(Date.now(), endDate).replace('about ', '')
   return `${startInWords} - ${endInWords}`
 }
 
@@ -45,6 +48,7 @@ const decorate = compose(
   view,
 )
 export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
+  const { searchFilterStore } = searchStore
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
@@ -54,7 +58,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
         <div style={{ width: 10 }} />
         <UI.Button alpha={0.8}>Relevant</UI.Button>
         <UI.Col flex={1} />
-        {searchStore.filters.map((filter, i) => {
+        {searchFilterStore.filters.map((filter, i) => {
           return (
             <RoundButton
               key={`${filter.icon}${i}`}
@@ -63,7 +67,9 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
               marginLeft={10}
               icon={<OrbitIcon size={22} icon={filter.icon} />}
               tooltip={filter.name}
-              onClick={searchStore.filterToggler(filter)}
+              onClick={searchFilterStore.filterToggler(filter)}
+              filter={filter.active ? null : 'grayscale(100%)'}
+              opacity={filter.active ? 1 : 0.3}
             />
           )
         })}

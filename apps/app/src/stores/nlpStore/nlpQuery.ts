@@ -159,8 +159,8 @@ export function parseSearchQuery(query: string): NLPResponse {
     date,
     marks,
     people,
-    startDate: date.startDate,
-    endDate: date.endDate,
+    startDate: date.startDate || null,
+    endDate: date.endDate || null,
   }
 }
 

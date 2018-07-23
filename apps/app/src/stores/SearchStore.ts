@@ -3,22 +3,17 @@ import { App, Electron } from '@mcro/stores'
 import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
-import { searchBits } from './helpers/searchBits'
+import { getSearchQuery } from './helpers/getSearchQuery'
 import * as Helpers from '../helpers'
 import * as SearchStoreHelpers from './helpers/searchStoreHelpers'
 import debug from '@mcro/debug'
 import { AppReactions } from './AppReactions'
 import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
+import { Brackets } from '../../../../node_modules/typeorm/browser'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
-
-export type SearchFilter = {
-  icon: string
-  name: string
-  active: boolean
-}
 
 export class SearchStore {
   props: {
@@ -28,7 +23,7 @@ export class SearchStore {
 
   id = Math.random()
   nlpStore = new NLPStore()
-  searchFilterStore = new SearchFilterStore()
+  searchFilterStore = new SearchFilterStore(this)
   appReactionsStore = new AppReactions({
     onPinKey: key => {
       if (key === 'Delete') {
@@ -114,19 +109,26 @@ export class SearchStore {
   }
 
   searchState = react(
-    () => [App.state.query, this.getResults],
-    async ([query], { sleep, when, setValue, preventLogging }) => {
+    () => [
+      App.state.query,
+      this.getResults,
+      this.searchFilterStore.activeFilters,
+    ],
+    async (
+      [query, getResults, activeFilters],
+      { sleep, when, setValue, preventLogging },
+    ) => {
       if (!query) {
         return setValue({
           query,
-          results: this.getResults ? this.getResults() : [],
+          results: getResults ? getResults() : [],
         })
       }
       // these are all specialized searches, see below for main search logic
-      if (this.getResults && this.getResults.shouldFilter) {
+      if (getResults && getResults.shouldFilter) {
         return setValue({
           query,
-          results: Helpers.fuzzy(query, this.getResults()),
+          results: Helpers.fuzzy(query, getResults()),
         })
       }
       let results
@@ -149,7 +151,7 @@ export class SearchStore {
         message = `Searching ${channelResults[0].title}`
       }
       // filtered search
-      if (isFilteringChannel && this.services.slack) {
+      if (isFilteringChannel && this.props.appStore.services.slack) {
         message = 'SPACE to search selected channel'
         results = channelResults
       }
@@ -168,13 +170,24 @@ export class SearchStore {
         let results = []
         for (let i = 0; i < takeMax / takePer; i += 1) {
           const skip = i * takePer
-          const nextResults = await searchBits(searchQuery, {
+          const nextQuery = getSearchQuery(searchQuery, {
             people,
             startDate,
             endDate,
             take: takePer,
             skip,
           })
+          // add in filters if need be
+          if (activeFilters) {
+            nextQuery.andWhere(
+              new Brackets(qb => {
+                for (const integration of activeFilters) {
+                  qb.orWhere('bit.integration = :integration', { integration })
+                }
+              }),
+            )
+          }
+          const nextResults = await nextQuery.getMany()
           results = [...results, ...nextResults]
           setValue({
             results,
@@ -367,26 +380,6 @@ export class SearchStore {
   setExtraFiltersVisible = target => {
     console.log('set set set', !!target, target, this.id)
     this.extraFiltersVisible = !!target
-  }
-
-  get filters(): SearchFilter[] {
-    const { settingsList, getTitle } = this.props.integrationSettingsStore
-    if (!settingsList) {
-      return []
-    }
-    return settingsList
-      .filter(x => x.type !== 'setting')
-      .map(setting => ({
-        icon: setting.type,
-        name: getTitle(setting),
-        active: true,
-      }))
-  }
-
-  filterToggler = (filter: SearchFilter) => {
-    return () => {
-      console.log('toggle fitler', filter)
-    }
   }
 
   onChangeDate = ranges => {

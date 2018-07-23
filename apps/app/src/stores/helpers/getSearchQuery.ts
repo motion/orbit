@@ -1,6 +1,6 @@
 import { Bit, Brackets, getRepository } from '@mcro/models'
 
-export const searchBits = async (
+export const getSearchQuery = (
   searchString,
   { take, skip, people, startDate, endDate },
 ) => {
@@ -50,5 +50,5 @@ export const searchBits = async (
     query = query.skip(skip)
   }
 
-  return await query.getMany()
+  return query
 }

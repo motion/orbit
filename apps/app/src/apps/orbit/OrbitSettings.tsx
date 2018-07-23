@@ -11,8 +11,20 @@ import * as UI from '@mcro/ui'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
+import { SearchStore } from '../../stores/SearchStore'
+
+type Props = {
+  name: string
+  store?: OrbitSettingsStore
+  searchStore: SearchStore
+  appStore?: AppStore
+  paneStore?: OrbitDockedPaneStore
+  integrationSettingsStore: IntegrationSettingsStore
+}
 
 class OrbitSettingsStore {
+  props: Props
+
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
   }
@@ -59,7 +71,7 @@ class OrbitSettingsStore {
       const getResults = () => integrationSettings
       // @ts-ignore
       getResults.shouldFilter = true
-      this.props.appStore.setGetResults(() => this.allResults)
+      this.props.searchStore.setGetResults(() => this.allResults)
     },
     { immediate: true },
   )
@@ -94,13 +106,7 @@ class OrbitSettingsStore {
   store: OrbitSettingsStore,
 })
 @view
-export class OrbitSettings extends React.Component<{
-  name: string
-  store?: OrbitSettingsStore
-  appStore?: AppStore
-  paneStore?: OrbitDockedPaneStore
-  integrationSettingsStore: IntegrationSettingsStore
-}> {
+export class OrbitSettings extends React.Component<Props> {
   render() {
     const { name, store, appStore, integrationSettingsStore } = this.props
     const isActive = result => {

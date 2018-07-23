@@ -44,12 +44,9 @@ export function hoverSettler({
     let stickOnClick = false
 
     const select = target => {
-      console.trace()
-      console.log('target', target)
       let prevTarget = currentNode
       currentNode = target
       if (isReallyEqual(prevTarget, target)) {
-        console.log('no target or is equal', currentNode, target)
         return
       }
       setHovered(

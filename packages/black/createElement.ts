@@ -1,3 +1,3 @@
-import { getGloss } from './getGloss'
+import createGloss from '@mcro/gloss'
 
-export default getGloss().createElement
+export default createGloss().createElement

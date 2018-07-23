@@ -66,7 +66,6 @@ function ensure-file {
 
 function ensure-symlink {
   cmd=${@:3}
-  echo "ensuring $1"
   if [ ! -L "$1" ]; then
     echo "$1 doesnt exist, running... $cmd"
     $($cmd)

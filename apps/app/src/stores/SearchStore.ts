@@ -1,0 +1,489 @@
+import { react, on } from '@mcro/black'
+import { App, Electron } from '@mcro/stores'
+import { stateOnlyWhenActive } from './helpers/stateOnlyWhenActive'
+import { hoverSettler } from '../helpers/hoverSettler'
+import { NLPStore } from './NLPStore'
+import { SearchFilterStore } from './SearchFilterStore'
+import { searchBits } from './helpers/searchBits'
+import * as Helpers from '../helpers'
+import * as SearchStoreHelpers from './helpers/searchStoreHelpers'
+import debug from '@mcro/debug'
+import { AppReactions } from './AppReactions'
+
+const log = debug('searchStore')
+const TYPE_DEBOUNCE = 200
+
+type Filter = {
+  icon: string
+  title: string
+}
+
+export class SearchStore {
+  nlpStore = new NLPStore()
+  searchFilterStore = new SearchFilterStore()
+  appReactionsStore = new AppReactions({
+    onPinKey: key => {
+      if (key === 'Delete') {
+        this.query = ''
+        return
+      }
+      const { lastPinKey } = this
+      if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
+        this.query = key
+      } else {
+        this.query += key
+      }
+      this.lastPinKey = key
+    },
+  })
+  // searchIndexStore = new SearchIndexStore()
+
+  // start it with state from last time
+  query = App.state.query
+  lastPinKey = ''
+
+  nextIndex = 0
+  leaveIndex = -1
+  lastSelectAt = 0
+  _activeIndex = -1
+  getResults = null
+
+  extraFiltersHeight = 300
+  extraFiltersVisible = false
+
+  willMount() {
+    this.subscriptions.add({
+      dispose: () => {
+        this.nlpStore.subscriptions.dispose()
+        this.searchFilterStore.subscriptions.dispose()
+        this.appReactionsStore.subscriptions.dispose()
+      },
+    })
+    on(this, window, 'keydown', this.handleKeyDown)
+  }
+
+  get isChanging() {
+    return this.searchState.query !== App.state.query
+  }
+
+  get activeIndex() {
+    this.lastSelectAt
+    return this._activeIndex
+  }
+
+  set activeIndex(val) {
+    this.lastSelectAt = Date.now()
+    this._activeIndex = val
+  }
+
+  get selectedItem() {
+    return this.searchState.results[this.activeIndex]
+  }
+
+  get hasActiveIndex() {
+    return (
+      this.activeIndex > -1 &&
+      this.activeIndex < this.searchState.results.length
+    )
+  }
+
+  get extraHeight() {
+    return this.extraFiltersVisible ? 0 : this.extraFiltersHeight
+  }
+
+  get isActive() {
+    return this.props.appStore.selectedPane === 'summary-search'
+  }
+
+  searchState = react(
+    () => [App.state.query, this.getResults],
+    async ([query], { sleep, when, setValue, preventLogging }) => {
+      if (!query) {
+        return setValue({
+          query,
+          results: this.getResults ? this.getResults() : [],
+        })
+      }
+      // these are all specialized searches, see below for main search logic
+      if (this.getResults && this.getResults.shouldFilter) {
+        return setValue({
+          query,
+          results: Helpers.fuzzy(query, this.getResults()),
+        })
+      }
+      let results
+      let channelResults
+      let message
+      // do stuff to prepare for getting results...
+      const isFilteringSlack = query[0] === '#'
+      const isFilteringChannel = isFilteringSlack && query.indexOf(' ') === -1
+      if (isFilteringSlack) {
+        channelResults = SearchStoreHelpers.matchSort(
+          query.split(' ')[0],
+          this.props.appStore.services.slack.activeChannels.map(channel => ({
+            id: channel.id,
+            title: `#${channel.name}`,
+            icon: 'slack',
+          })),
+        )
+      }
+      if (isFilteringSlack && !isFilteringChannel) {
+        message = `Searching ${channelResults[0].title}`
+      }
+      // filtered search
+      if (isFilteringChannel && this.services.slack) {
+        message = 'SPACE to search selected channel'
+        results = channelResults
+      }
+      // regular search
+      if (!results) {
+        // debounce a little for fast typer
+        await sleep(TYPE_DEBOUNCE)
+        // wait for nlp to give us results
+        await when(() => this.nlpStore.nlp.query === query)
+        // gather all the pieces from nlp store for query
+        const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
+        // get first page results
+        const takePer = 4
+        const takeMax = takePer * 6
+        const sleepBtwn = 80
+        let results = []
+        for (let i = 0; i < takeMax / takePer; i += 1) {
+          const skip = i * takePer
+          const nextResults = await searchBits(searchQuery, {
+            people,
+            startDate,
+            endDate,
+            take: takePer,
+            skip,
+          })
+          results = [...results, ...nextResults]
+          setValue({
+            results,
+            query,
+          })
+          // only log it once...
+          preventLogging()
+          // get next page results
+          await sleep(sleepBtwn)
+        }
+        return
+        // await Promise.all([
+        //   when(() => this.bitSearch.query === query),
+        //   when(() => this.peopleSearch.query === query),
+        // ])
+        // const allResultsUnsorted = [
+        //   ...this.bitSearch.results,
+        //   ...this.peopleSearch.results,
+        //   // ...Desktop.searchState.pluginResults,
+        // ]
+        // // return first page fast results
+        // const { rest } = SearchStoreHelpers.parseQuery(query)
+        // results = SearchStoreHelpers.matchSort(rest, allResultsUnsorted)
+        // setValue({
+        //   query,
+        //   message,
+        //   results,
+        // })
+        // // then return full results
+        // await when(() => this.bitSearch.restResults)
+        // results = [...results, ...this.bitSearch.restResults]
+      }
+      return setValue({
+        query,
+        message,
+        results,
+      })
+    },
+    {
+      defaultValue: { results: [], query: '' },
+      immediate: true,
+    },
+  )
+
+  clearSelectedOnLeave = react(
+    () => [this.leaveIndex, Electron.hoverState.peekHovered],
+    async ([leaveIndex, peekHovered], { sleep, when }) => {
+      if (!peekHovered) {
+        await sleep(100)
+      }
+      await when(() => !peekHovered)
+      await sleep(100)
+      if (leaveIndex === -1) {
+        throw react.cancel
+      }
+      this.clearSelected()
+    },
+  )
+
+  clearPeekOnInactiveIndex = react(
+    () => this.activeIndex,
+    () => {
+      log(`active ${this.hasActiveIndex}`)
+      if (this.hasActiveIndex) {
+        throw react.cancel
+      }
+      App.actions.clearPeek()
+    },
+  )
+
+  resetActiveIndexOnPeekTarget = react(
+    () => App.peekState.target,
+    target => {
+      if (target || !this.hasActiveIndex) {
+        throw react.cancel
+      }
+      log(`ok clearing ${target} ${this.hasActiveIndex} ${this.activeIndex}`)
+      this.clearSelected()
+    },
+  )
+
+  resetActiveIndexOnKeyPastEnds = react(
+    () => this.nextIndex,
+    index => {
+      if (index === -1) {
+        this.activeIndex = this.nextIndex
+      } else {
+        const len = this.searchState.results.length
+        if (index >= len) {
+          this.nextIndex = len - 1
+          this.activeIndex = this.nextIndex
+        } else {
+          throw react.cancel
+        }
+      }
+    },
+  )
+
+  // one frame after for speed of rendering
+  updateActiveIndexToNextIndex = react(
+    () => this.nextIndex,
+    async (i, { sleep }) => {
+      await sleep(0)
+      this.activeIndex = i
+    },
+  )
+
+  // this does "auto-select of first result after search"
+  // but it can be pretty annoying
+  // resetActiveIndexOnSearchStart = react(
+  //   () => App.state.query,
+  //   async (query, { sleep }) => {
+  //     this.activeIndex = -1
+  //     this.clearSelected()
+  //     // auto select after delay
+  //     if (query) {
+  //       await sleep(1000)
+  //       this.nextIndex = 0
+  //     }
+  //   },
+  // )
+
+  resetActiveIndexOnNewSearchValue = react(
+    () => this.searchState.query,
+    async (_, { sleep }) => {
+      await sleep(16)
+      this.nextIndex = -1
+      this.activeIndex = -1
+    },
+  )
+
+  // disable until app launching
+  // quickSearchResults = react(
+  //   () => App.state.query,
+  //   async (query, { when }) => {
+  //     const hasLoaded = !!this.quickSearchResults.length
+  //     if (hasLoaded) {
+  //       await when(() => query === Desktop.searchState.pluginResultsId)
+  //     }
+  //     const results = Desktop.searchState.pluginResults
+  //     if (!results.length) {
+  //       throw react.cancel
+  //     }
+  //     return SearchStoreHelpers.matchSort(query, results)
+  //   },
+  //   { defaultValue: [], immediate: true },
+  // )
+
+  clearSelected = (clearPeek = true) => {
+    this.leaveIndex = -1
+    this.nextIndex = -1
+    this.activeIndex = -1
+    if (clearPeek) {
+      App.actions.clearPeek()
+    }
+  }
+
+  getHoverSettler = Helpers.hoverSettler({
+    enterDelay: 40,
+    betweenDelay: 40,
+    onHovered: res => {
+      // leave
+      if (!res) {
+        if (this.activeIndex !== -1) {
+          this.leaveIndex = this.activeIndex
+        }
+        return
+      }
+      this.leaveIndex = -1
+      this.toggleSelected(res.index)
+    },
+  })
+
+  toggleSelected = index => {
+    console.log('toggle selected', index, this.activeIndex)
+    const isSame = this.activeIndex === index && this.activeIndex > -1
+    if (isSame && App.peekState.target) {
+      if (Date.now() - this.lastSelectAt < 450) {
+        // ignore double clicks
+        console.log('isSame, ignore', index, this.activeIndex)
+        return isSame
+      }
+      this.clearSelected()
+    } else {
+      if (typeof index === 'number') {
+        this.nextIndex = index
+      }
+    }
+    return false
+  }
+
+  clearIndexOnTarget = react(
+    () => App.peekState.target,
+    target => {
+      if (target) {
+        throw react.cancel
+      }
+      this.nextIndex = -1
+    },
+  )
+
+  increment = (by = 1) => {
+    this.toggleSelected(
+      Math.min(this.searchState.results.length - 1, this.activeIndex + by),
+    )
+  }
+
+  decrement = (by = 1) => {
+    this.toggleSelected(Math.max(-1, this.activeIndex - by))
+  }
+
+  setGetResults = fn => {
+    this.getResults = fn
+  }
+
+  openSelected = () => {
+    this.open(this.selectedItem)
+  }
+
+  open = async (result, openType?) => {
+    if (!result) {
+      throw new Error('No result given to open')
+    }
+    const url = await SearchStoreHelpers.getPermalink(result, openType)
+    App.open(url)
+  }
+
+  hasQuery() {
+    return !!App.state.query
+  }
+
+  dateState = {
+    ranges: [
+      {
+        startDate: Date.now(),
+        endDate: Date.now(),
+        key: 'selection',
+      },
+    ],
+  }
+
+  setExtraFiltersVisible = target => {
+    this.extraFiltersVisible = !!target
+  }
+
+  dateHover = hoverSettler({
+    enterDelay: 400,
+    leaveDelay: 400,
+    onHovered: this.setExtraFiltersVisible,
+  })
+
+  dateHoverProps = this.dateHover().props
+
+  get filters(): Filter[] {
+    const { settingsList, getTitle } = this.props.integrationSettingsStore
+    if (!settingsList) {
+      return []
+    }
+    return settingsList
+      .filter(x => x.type !== 'setting')
+      .map(setting => ({ icon: setting.type, name: getTitle(setting) }))
+  }
+
+  filterToggler = (filter: Filter) => {
+    return () => {
+      console.log('toggle fitler', filter)
+    }
+  }
+
+  onChangeDate = ranges => {
+    this.dateState = {
+      ranges: [ranges.selection],
+    }
+    // this.dateState = ranges
+  }
+
+  updateAppQuery = react(
+    () => this.query,
+    async (query, { sleep }) => {
+      // slight debounce for super fast typing
+      await sleep(50)
+      console.log('finish me')
+      App.setQuery(query)
+    },
+  )
+
+  clearQuery = () => {
+    this.query = ''
+  }
+
+  handleKeyDown = ({ keyCode }) => {
+    switch (keyCode) {
+      case 37: // left
+        this.emit('key', 'left')
+        return
+      case 39: // right
+        this.emit('key', 'right')
+        return
+      case 40: // down
+        this.increment()
+        return
+      case 38: // up
+        this.decrement()
+        return
+      case 13: // enter
+        this.openSelected()
+        return
+    }
+  }
+
+  setQuery = value => {
+    this.query = value
+  }
+
+  onChangeQuery = e => {
+    this.query = e.target.value
+  }
+
+  onFocus = () => {
+    App.setOrbitState({
+      inputFocused: true,
+    })
+  }
+
+  onBlur = () => {
+    App.setOrbitState({
+      inputFocused: false,
+    })
+  }
+}

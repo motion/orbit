@@ -7,14 +7,14 @@ export class HeaderStore {
   iconHovered = false
 
   get highlightWords() {
-    if (!this.props.appStore.nlpStore.marks) {
+    if (!this.props.searchStore.nlpStore.marks) {
       return null
     }
-    return () => this.props.appStore.nlpStore.marks
+    return () => this.props.searchStore.nlpStore.marks
   }
 
   onInput = () => {
-    this.props.orbitStore.onChangeQuery(this.inputRef.innerText)
+    this.props.searchStore.onChangeQuery(this.inputRef.innerText)
   }
 
   focus = () => {
@@ -72,7 +72,7 @@ export class HeaderStore {
       App.actions.closeOrbit()
     } else {
       if (App.state.query) {
-        this.props.orbitStore.clearQuery()
+        this.props.searchStore.clearQuery()
       } else {
         this.props.paneStore.setActivePane('home')
       }

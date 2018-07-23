@@ -24,7 +24,7 @@ class OrbitHomeStore {
       if (!isActive) {
         throw react.cancel
       }
-      this.props.appStore.setGetResults(() => this.results)
+      this.props.searchStore.setGetResults(() => this.results)
     },
     { immediate: true },
   )
@@ -81,6 +81,7 @@ const itemProps = {
 }
 
 @attachTheme
+@view.attach('searchStore')
 @view.attach({
   store: OrbitHomeStore,
 })

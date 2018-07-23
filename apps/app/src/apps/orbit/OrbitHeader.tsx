@@ -4,10 +4,9 @@ import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
-import { AppStore } from '../../stores/AppStore'
-import { OrbitStore } from './OrbitStore'
 import { OrbitHeaderInput } from './orbitHeader/OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
+import { SearchStore } from '../../stores/SearchStore'
 
 const OrbitHeaderContainer = view({
   position: 'relative',
@@ -57,7 +56,7 @@ const Title = view({
 })
 
 @attachTheme
-@view.attach('orbitStore', 'appStore', 'paneStore')
+@view.attach('searchStore', 'paneStore')
 @view.attach({
   headerStore: HeaderStore,
 })
@@ -65,24 +64,25 @@ const Title = view({
 export class OrbitHeader extends React.Component<{
   headerStore?: HeaderStore
   paneStore?: OrbitDockedPaneStore
-  appStore?: AppStore
-  orbitStore?: OrbitStore
+  searchStore?: SearchStore
   after?: React.ReactNode
   borderRadius: number
+  theme: Object
+  showPin?: boolean
 }> {
-  hoverSettler = this.props.appStore.getHoverSettler({
+  hoverSettler = this.props.searchStore.getHoverSettler({
     onHover: this.props.headerStore.hover,
   })
 
   render() {
     const {
       paneStore,
-      orbitStore,
       headerStore,
       after,
       theme,
       showPin,
       borderRadius,
+      searchStore,
     } = this.props
     const headerBg = theme.base.background
     const isHome = paneStore.activePane === 'home'
@@ -116,8 +116,8 @@ export class OrbitHeader extends React.Component<{
             }}
           />
           <OrbitHeaderInput
+            searchStore={searchStore}
             headerStore={headerStore}
-            orbitStore={orbitStore}
             theme={theme}
           />
         </Title>

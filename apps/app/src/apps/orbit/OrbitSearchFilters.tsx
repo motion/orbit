@@ -34,10 +34,10 @@ const getDate = ({ startDate, endDate }) => {
 }
 
 const decorate = compose(
-  view.attach('integrationSettingsStore', 'searchStore', 'appStore'),
+  view.attach('integrationSettingsStore', 'searchStore'),
   view,
 )
-export const OrbitSearchFilters = decorate(({ searchStore, appStore }) => {
+export const OrbitSearchFilters = decorate(({ searchStore }) => {
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
@@ -48,7 +48,7 @@ export const OrbitSearchFilters = decorate(({ searchStore, appStore }) => {
           onMouseMove={searchStore.dateHoverProps.onMouseMove}
           onClick={searchStore.dateHoverProps.onClick}
         >
-          {getDate(appStore.nlpStore.nlp.date) || 'Any time'}
+          {getDate(searchStore.nlpStore.nlp.date) || 'Any time'}
         </UI.Button>
         <UI.Button alpha={0.8}>Relevant</UI.Button>
         <UI.Col flex={1} />
@@ -58,9 +58,10 @@ export const OrbitSearchFilters = decorate(({ searchStore, appStore }) => {
               key={`${filter.icon}${i}`}
               circular
               size={1.2}
-              marginRight={5}
+              marginLeft={10}
               icon={<OrbitIcon size={22} icon={filter.icon} />}
               tooltip={filter.name}
+              onClick={searchStore.filterToggler(filter)}
             />
           )
         })}

@@ -6,7 +6,7 @@ import { ResolveTask } from './resolve/ResolveTask'
 import { ResolveApp } from './resolve/ResolveApp'
 import { ResolvePerson } from './resolve/ResolvePerson'
 import { Person, Bit } from '@mcro/models'
-import { AppStore } from '../stores/AppStore'
+import { SearchStore } from '../stores/SearchStore'
 
 const results = {
   slack: {
@@ -43,8 +43,9 @@ const EmptyResolver = ({ children }) =>
 
 type Props = {
   bit?: Bit
-  appStore?: AppStore
+  searchStore?: SearchStore
   isExpanded?: boolean
+  children: Function | React.ReactNode
 }
 
 export const BitResolver: React.SFC<Props> = ({ bit, ...props }) => {

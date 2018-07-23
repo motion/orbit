@@ -10,8 +10,7 @@ import { OrbitDirectory } from './OrbitDirectory'
 import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { BORDER_RADIUS } from '../../constants'
-import { AppStore } from '../../stores/AppStore'
-import { OrbitSearchStore } from './OrbitSearchStore'
+import { SearchStore } from '../../stores/SearchStore'
 
 const SHADOW_PAD = 200
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.45]]
@@ -81,30 +80,32 @@ const OrbitInner = view({
   borderBottomRightRadius: 60,
 })
 
-@view.attach('appStore', 'orbitStore', 'integrationSettingsStore')
+@view.attach('appStore', 'integrationSettingsStore')
+@view.provide({
+  searchStore: SearchStore,
+})
 @view.provide({
   paneStore: OrbitDockedPaneStore,
-  searchStore: OrbitSearchStore,
 })
 @view
 class OrbitDockedInner extends React.Component<{
   paneStore: OrbitDockedPaneStore
-  appStore: AppStore
+  searchStore: SearchStore
 }> {
   render() {
-    const { paneStore, appStore } = this.props
+    const { paneStore, searchStore } = this.props
     const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
       10,
-      window.innerHeight - appStore.contentHeight - 10,
+      window.innerHeight - searchStore.contentHeight - 10,
     )
     return (
       <>
         <Frame
           visible={animationState.visible}
           willAnimate={animationState.willAnimate}
-          bottom={appStore.searchState.query ? 10 : contentBottom}
+          bottom={searchStore.searchState.query ? 10 : contentBottom}
         >
           <Border />
           <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>
@@ -118,16 +119,8 @@ class OrbitDockedInner extends React.Component<{
             />
             <OrbitInner height={window.innerHeight}>
               <UI.View position="relative" flex={1}>
-                <OrbitHome
-                  name="home"
-                  appStore={appStore}
-                  paneStore={paneStore}
-                />
-                <OrbitDirectory
-                  name="directory"
-                  appStore={appStore}
-                  paneStore={paneStore}
-                />
+                <OrbitHome name="home" paneStore={paneStore} />
+                <OrbitDirectory name="directory" paneStore={paneStore} />
                 <OrbitSearchResults
                   name="summary-search"
                   parentPane="summary"

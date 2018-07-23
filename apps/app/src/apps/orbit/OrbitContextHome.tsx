@@ -38,7 +38,7 @@ class OrbitContextHomeStore {
         throw react.cancel
       }
       // log('set get results')
-      this.props.appStore.setGetResults(() => this.results)
+      this.props.searchStore.setGetResults(() => this.results)
     },
     { immediate: true },
   )
@@ -64,7 +64,7 @@ class OrbitContextHomeStore {
 }
 
 @attachTheme
-@view.attach('appStore', 'paneStore')
+@view.attach('appStore', 'searchStore', 'paneStore')
 @view.attach({
   store: OrbitContextHomeStore,
 })
@@ -107,8 +107,8 @@ export class OrbitContextHome {
   }, 16)
 
   render() {
-    const { appStore, store } = this.props
-    const { resultsRef, isScrolled, isOverflowing } = this.state
+    const { store } = this.props
+    const { resultsRef, isOverflowing } = this.state
     log('CONTEXT HOME---------------')
     const total = store.results.length
     return (
@@ -131,7 +131,6 @@ export class OrbitContextHome {
                   pane="context"
                   subPane="context"
                   parentElement={resultsRef}
-                  appStore={appStore}
                   bit={bit}
                   index={i}
                   total={total}

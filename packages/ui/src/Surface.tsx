@@ -400,11 +400,6 @@ export class Surface extends React.Component<SurfaceProps> {
         ) : null}
         <Element
           noInnerElement={noInnerElement}
-          minWidth={
-            Array.isArray(this.props.padding)
-              ? this.props.padding[1] * 5
-              : 'auto'
-          }
           tagName={tagName}
           {...throughProps}
           {...elementProps}
@@ -430,7 +425,7 @@ export class Surface extends React.Component<SurfaceProps> {
               popoverProps={POPOVER_PROPS}
               {...tooltipProps}
             >
-              <span style={{ maxWidth: 200 }}>{tooltip}</span>
+              {tooltip}
             </Popover>
           </Theme>
         ) : null}

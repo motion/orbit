@@ -132,7 +132,6 @@ const PopoverWrap = view({
   isOpen: {
     opacity: 1,
     pointerEvents: 'auto',
-    transition: 'transform 0ms',
     transform: {
       y: 0,
     },

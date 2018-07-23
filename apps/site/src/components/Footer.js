@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { SectionContent } from '~/views/sectionContent'
-import { Title, P } from '~/views'
+import { Title, P, Link } from '~/views'
 import { BrandLogo, Join } from '~/components'
 import * as Constants from '~/constants'
 import * as UI from '@mcro/ui'
@@ -28,7 +28,7 @@ const Nav = view({
 })
 
 // Link
-const FootLink = view('a', {
+const FootLink = view(Link, {
   margin: [0, 0, 5],
   color: [0, 0, 0, 0.5],
 })

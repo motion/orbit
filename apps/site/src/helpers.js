@@ -1,10 +1,11 @@
+import * as React from 'react'
 import ZenScroll from 'zenscroll'
 import reactRenderer from 'remark-react'
 import remark from 'remark'
 import { A, P2, SubTitle, SubSubTitle, Title } from '~/views'
 
 export const scrollTo = query => () =>
-  ZenScroll.to(document.querySelector(query))
+  ZenScroll.to(document.querySelector(query), 100)
 
 export const pProps = {
   size: 1.7,

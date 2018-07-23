@@ -28,11 +28,9 @@ export class Bauhaus extends React.Component {
     } = this.props
     return (
       <UI.FullScreen
-        css={{
-          transform: { scale: 0.85, x: '62%', y: '-20%', z: 0 },
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
+        transform={{ scale: 0.85, x: '62%', y: '-20%', z: 0 }}
+        zIndex={0}
+        pointerEvents="none"
         {...props}
       >
         <svg viewBox="0 0 303 251" css={{ overflow: 'visible' }}>

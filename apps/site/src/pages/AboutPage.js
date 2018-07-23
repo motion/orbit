@@ -24,27 +24,23 @@ export class AboutPage extends React.Component {
             <SectionContent padded>
               <Bauhaus
                 showCircle
+                opacity={0.1}
                 circleColor="#F7C7FF"
-                css={{
-                  transform: { scale: 0.8, y: '-45%', x: '65%' },
-                  zIndex: 0,
-                }}
+                transform={{ scale: 0.8, y: '-45%', x: '65%' }}
+                zIndex={0}
               />
               <Bauhaus
                 showCircle
-                css={{
-                  transform: { scale: 0.57, y: '91%', x: '84%' },
-                  zIndex: 0,
-                }}
+                opacity={0.1}
+                transform={{ scale: 0.57, y: '191%', x: '84%' }}
+                zIndex={0}
               />
               <Bauhaus
                 showTriangle
                 showSquare
-                css={{
-                  opacity: 0.05,
-                  transform: { scale: 1, y: '25%', x: '-34%' },
-                  zIndex: 0,
-                }}
+                opacity={0.05}
+                transform={{ scale: 1, y: '25%', x: '-34%' }}
+                zIndex={0}
               />
               <PostTemplate
                 sectionTitle="About Us"

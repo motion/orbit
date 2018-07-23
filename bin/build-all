@@ -82,7 +82,15 @@ async function main() {
       let i = 0
       console.log('build --watch: starting...')
       for (const dir of packageDirs) {
-        buildPackage(Path.basename(dir), dir)
+        try {
+          buildPackage(Path.basename(dir), dir)
+        } catch(err) {
+          console.log('\n\n\n\n\n')
+          console.log('Error building in', dir)
+          console.log(err.message)
+          console.log('this may be due to a directory without package.json')
+          console.log('\n\n\n\n\n')
+        }
         // sleep a bit every 10 processes started
         if (i > 0 && i % 10 === 0) {
           await sleep(betweenSleep)

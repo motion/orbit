@@ -22,7 +22,7 @@ export const getSearchQuery = (
     )
   } else {
     // order by recent if no search
-    query = query.orderBy({ bitCreatedAt: 'DESC' })
+    query = query.orderBy('bit.bitCreatedAt', 'DESC')
   }
 
   if (people.length) {
@@ -54,5 +54,6 @@ export const getSearchQuery = (
     query = query.skip(skip)
   }
 
+  log('query', query)
   return query
 }

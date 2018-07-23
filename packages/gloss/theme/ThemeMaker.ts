@@ -13,19 +13,13 @@ type SimpleStyleObject = {
   disabled?: ColorObject
 }
 
-const lighten = {
-  true: 'darken',
-  false: 'lighten',
+const increaseContrast = (color, amt) => {
+  const adjustAmt = amt(color)
+  return color.isLight() ? color.darken(adjustAmt) : color.lighten(adjustAmt)
 }
-const darken = {
-  true: 'lighten',
-  false: 'darken',
-}
-const str = x => `${x}`
-const adjust = (color, adjuster, opposite = false) => {
-  const isLight = color.isLight()
-  const direction = isLight ? darken[str(opposite)] : lighten[str(opposite)]
-  return color[direction](adjuster(color))
+const decreaseContrast = (color, amt) => {
+  const adjustAmt = amt(color)
+  return color.isLight() ? color.lighten(adjustAmt) : color.darken(adjustAmt)
 }
 
 const smallAmt = color => {
@@ -36,10 +30,14 @@ const smallAmt = color => {
   const softened = Math.log(2) - Math.log(2 - (0.1 - small))
   return softened * 1.8
 }
+
 const smallerAmt = color => smallAmt(color) * 0.25
 const largeAmt = color => smallAmt(color) * 1.25
-const opposite = color =>
-  color.isDark() ? color.mix(color.lighten(1)) : color.mix(color.darken(1))
+const opposite = color => {
+  return color.isDark()
+    ? color.mix(color.lightness(0)).lightness(75)
+    : color.mix(color.lightness(1)).lightness(25)
+}
 
 export class ThemeMaker {
   cache = {}
@@ -87,35 +85,35 @@ export class ThemeMaker {
     const backgroundColored = background ? $(background) : opposite($(color))
     const base = this.colorize({
       background: backgroundColored,
-      color: color || adjust(opposite(backgroundColored), largeAmt),
-      borderColor: borderColor || adjust(backgroundColored, smallAmt),
+      color: color || decreaseContrast(opposite(backgroundColored), largeAmt),
+      borderColor: borderColor || increaseContrast(backgroundColored, smallAmt),
     })
     const hover = {
-      color: adjust(base.color, smallerAmt),
-      background: adjust(base.background, smallerAmt),
-      borderColor: adjust(base.borderColor, smallerAmt),
+      color: increaseContrast(base.color, smallerAmt),
+      background: increaseContrast(base.background, smallerAmt),
+      borderColor: increaseContrast(base.borderColor, smallerAmt),
       ...rest.hover,
     }
     const active = {
       ...base,
-      borderColor: adjust(base.borderColor, smallAmt, true),
+      borderColor: decreaseContrast(base.borderColor, smallAmt),
       ...rest.active,
     }
     const inactive = {
-      background: adjust(base.background, smallAmt),
-      color: adjust(base.color, smallAmt),
-      borderColor: adjust(base.borderColor, smallAmt),
+      background: increaseContrast(base.background, smallAmt),
+      color: increaseContrast(base.color, smallAmt),
+      borderColor: increaseContrast(base.borderColor, smallAmt),
       ...rest.inactive,
     }
     const disabled = {
-      background: adjust(base.background, largeAmt),
-      color: adjust(base.color, largeAmt),
-      borderColor: adjust(base.borderColor, largeAmt),
+      background: increaseContrast(base.background, largeAmt),
+      color: increaseContrast(base.color, largeAmt),
+      borderColor: increaseContrast(base.borderColor, largeAmt),
       ...rest.disabled,
     }
     const focused = {
-      background: adjust(base.background, largeAmt, true),
-      borderColor: adjust(base.borderColor, largeAmt, true),
+      background: decreaseContrast(base.background, largeAmt),
+      borderColor: decreaseContrast(base.borderColor, largeAmt),
       ...rest.focused,
     }
     const res = this.colorize({

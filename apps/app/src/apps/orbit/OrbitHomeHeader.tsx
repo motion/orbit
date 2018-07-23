@@ -39,9 +39,9 @@ export class OrbitHomeHeader extends React.Component<Props> {
         borderColor: 'transparent',
         opacity: 1,
       },
-      hoverStyle: {
+      hover: {
         background: 'transparent',
-        borderColor: [0, 0, 0, 0.1],
+        borderColor: [0, 0, 0, 0.3],
       },
     }
     return (

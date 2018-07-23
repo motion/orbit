@@ -57,7 +57,7 @@ const Border = view(UI.FullScreen, {
 Border.theme = ({ theme }) => {
   const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
   const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
-  const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.5]]
+  const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.75]]
   return {
     borderRadius: BORDER_RADIUS,
     boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],

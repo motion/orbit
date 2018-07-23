@@ -115,7 +115,7 @@ Card.theme = ({
       ...card,
       borderRadius: borderRadius || 7,
       background: theme.selected.background,
-      boxShadow: [[0, 1, 1, [0, 0, 0, 0.03]]],
+      boxShadow: [[0, 1, 3, [0, 0, 0, 0.05]]],
       border: [1, '#fff'],
       '&:hover': {
         border: [1, borderHover],

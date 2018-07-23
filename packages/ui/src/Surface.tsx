@@ -421,7 +421,7 @@ export class Surface extends React.Component<SurfaceProps> {
               noHoverOnChildren
               animation="bounce 150ms"
               target={`.${this.uniq}`}
-              padding={[2, 7, 4]}
+              padding={[2, 7]}
               borderRadius={5}
               distance={8}
               forgiveness={8}

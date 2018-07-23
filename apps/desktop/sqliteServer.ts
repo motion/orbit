@@ -78,7 +78,7 @@ export default class SQLiteServer {
     var top = queryArray.shift()
     try {
       // console.log('sql', top.sql, top.params)
-      console.log('exec', top.sql)
+      // console.log('exec', top.sql)
       const rows = await this.db.all(top.sql, top.params)
       accumAnswer.push({
         type: 'success',

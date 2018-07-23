@@ -76,11 +76,19 @@ class DockedPaneStore {
   //   },
   // )
 
-  updatePaneHeightOnActive = react(() => this.isActive, this.updateOnHeight)
+  updatePaneHeightOnActive = react(
+    () => this.isActive,
+    () => {
+      const res = this.updateOnHeight()
+      if (!res) {
+        throw react.cancel
+      }
+    },
+  )
 
-  updateOnHeight() {
+  updateOnHeight = () => {
     if (!this.isActive || !this.props.appStore || !this.node) {
-      return
+      return false
     }
     const innerHeight = getInnerHeight(this.node)
     const aboveHeight = this.node.getBoundingClientRect().top

@@ -2,13 +2,13 @@ import * as React from 'react'
 import { ControlButton } from './ControlButton'
 
 export const WindowControls = ({
-  onClose,
-  onMax,
-  onMin,
-  maxProps,
-  closeProps,
-  minProps,
-  itemProps,
+  onClose = null,
+  onMax = null,
+  onMin = null,
+  maxProps = null,
+  closeProps = null,
+  minProps = null,
+  itemProps = null,
 }) => {
   return (
     <>

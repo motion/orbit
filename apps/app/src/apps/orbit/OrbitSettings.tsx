@@ -16,7 +16,7 @@ import { SearchStore } from '../../stores/SearchStore'
 type Props = {
   name: string
   store?: OrbitSettingsStore
-  searchStore: SearchStore
+  searchStore?: SearchStore
   appStore?: AppStore
   paneStore?: OrbitDockedPaneStore
   integrationSettingsStore: IntegrationSettingsStore
@@ -101,7 +101,7 @@ class OrbitSettingsStore {
   )
 }
 
-@view.attach('appStore', 'paneStore', 'integrationSettingsStore')
+@view.attach('appStore', 'searchStore', 'paneStore', 'integrationSettingsStore')
 @view.attach({
   store: OrbitSettingsStore,
 })

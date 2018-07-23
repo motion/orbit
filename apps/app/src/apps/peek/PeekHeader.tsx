@@ -4,7 +4,6 @@ import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/OrbitIcon'
 import { WindowControls } from '../../views/WindowControls'
 import { App } from '@mcro/stores'
-import { NICE_INTEGRATION_NAMES } from '../../constants'
 import { ControlButton } from '../../views/ControlButton'
 
 const PeekHeaderContain = view(UI.View, {
@@ -113,26 +112,14 @@ export class PeekHeaderContent extends React.Component {
                 zIndex={10000}
                 alignItems="center"
               >
-                <WindowControls
-                  if={peekStore.tornState}
-                  onClose={App.actions.clearPeek}
-                />
-                <UI.Button
-                  if={peekStore.hasHistory}
-                  icon="arrowminleft"
-                  circular
-                  size={0.8}
-                />
+                <WindowControls onClose={App.actions.clearPeek} />
+                {!!peekStore.hasHistory && (
+                  <UI.Button icon="arrowminleft" circular size={0.8} />
+                )}
                 <UI.View flex={1} />
-                <ControlButton
-                  if={!peekStore.tornState}
-                  icon="z"
-                  onClick={peekStore.tearPeek}
-                />
-                <WindowControls
-                  if={!peekStore.tornState}
-                  onClose={App.actions.clearPeek}
-                />
+                {!peekStore.tornState && (
+                  <ControlButton icon="z" onClick={peekStore.tearPeek} />
+                )}
               </UI.Row>
             </>
           }

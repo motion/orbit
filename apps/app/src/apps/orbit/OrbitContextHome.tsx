@@ -6,6 +6,16 @@ import { OrbitDockedPane } from './OrbitDockedPane'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '../../views'
 import { Desktop, App } from '@mcro/stores'
+import { AppStore } from '../../stores/AppStore'
+import { SearchStore } from '../../stores/SearchStore'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+
+type Props = {
+  appStore?: AppStore
+  searchStore?: SearchStore
+  paneStore?: OrbitDockedPaneStore
+  store?: OrbitContextHomeStore
+}
 
 const OrbitContextHeader = view(() => (
   <div style={{ textAlign: App.orbitOnLeft ? 'right' : 'left' }}>
@@ -29,6 +39,8 @@ const findType = (integration, type, skip = 0) =>
   })
 
 class OrbitContextHomeStore {
+  props: Props
+
   setGetResults = react(
     () =>
       this.props.appStore.selectedPane.indexOf('context') === 0 &&
@@ -69,7 +81,7 @@ class OrbitContextHomeStore {
   store: OrbitContextHomeStore,
 })
 @view
-export class OrbitContextHome {
+export class OrbitContextHome<Props> {
   frameRef = null
   state = {
     resultsRef: null,

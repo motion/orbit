@@ -37,10 +37,10 @@ ensure-dep "npm" -- brew install node &
 ensure-dep "realpath" -- brew install coreutils &
 ensure-dep "yarn" -- npm i -g yarn &
 ensure-dep "python3" -- brew install python3 &
-ensure-dep "carthage" -- brew install carthage &
+# ensure-dep "carthage" -- brew install carthage &
 wait
 ensure-dep "tsc" -- npm i -g typescript
-ensure-dep "pyenv" -- ./apps/oracle/build.sh
+# ensure-dep "pyenv" -- ./apps/oracle/build.sh
 echo "installing root"
 yarn install
 echo "installing packages"

@@ -128,7 +128,7 @@ const px = (x: number | string) =>
   typeof x !== 'string' || x.indexOf('px') === -1 ? `${x}px` : x
 
 // style transform creator
-export default function motionStyle(options: Object = {}) {
+export default function createCSS(options: Object = {}) {
   const isColor = (color: any) => isColorLike(color, options)
   const toColor = (color: Color) => colorToString(color, options)
 

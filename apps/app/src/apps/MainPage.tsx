@@ -5,7 +5,6 @@ import { OrbitPage } from './OrbitPage'
 import { PeekPage } from './PeekPage'
 import { AppStore } from '../stores/AppStore'
 import * as UI from '@mcro/ui'
-import { SearchFilterStore } from '../stores/SearchFilterStore'
 import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
 
 const Main = view(UI.Col, {
@@ -21,18 +20,12 @@ const Main = view(UI.Col, {
 
 @view.provide({
   integrationSettingsStore: IntegrationSettingsStore,
-  searchFilterStore: SearchFilterStore,
   appStore: AppStore,
 })
 export class MainPage extends React.Component<{
   integrationSettingsStore: IntegrationSettingsStore
-  searchFilterStore: SearchFilterStore
   appStore: AppStore
 }> {
-  componentWillMount() {
-    this.props.searchFilterStore.integrationSettingsStore = this.props.integrationSettingsStore
-  }
-
   render() {
     return (
       <Main>

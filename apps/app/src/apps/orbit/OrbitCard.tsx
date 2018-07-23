@@ -11,10 +11,12 @@ import { CSSPropertySet } from '@mcro/gloss'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { Bit } from '@mcro/models'
 import { SearchStore } from '../../stores/SearchStore'
+import { AppStore } from '../../stores/AppStore'
 
 export type OrbitCardProps = {
   total?: number
   hoverToSelect?: boolean
+  appStore?: AppStore
   searchStore?: SearchStore
   paneStore?: OrbitDockedPaneStore
   title?: React.ReactNode
@@ -45,6 +47,8 @@ export type OrbitCardProps = {
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number
   nextUpStyle?: Object
+  isSelected?: boolean
+  getRef?: Function
 }
 
 const CardWrap = view(UI.View, {
@@ -171,6 +175,8 @@ const orbitIconProps = {
 }
 
 class OrbitCardStore {
+  props: OrbitCardProps
+
   _isSelected = false
   ref = null
 
@@ -184,13 +190,13 @@ class OrbitCardStore {
     if (!this.props.subPane) {
       return false
     }
-    const isPaneActive = this.props.searchStore.selectedPane === this.props.pane
+    const isPaneActive = this.props.appStore.selectedPane === this.props.pane
     const isSubPaneActive =
       this.props.paneStore.activePane === this.props.subPane
     return isPaneActive && isSubPaneActive
   }
 
-  handleClick = e => {
+  handleClick = () => {
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
       return
@@ -265,7 +271,7 @@ class OrbitCardStore {
 }
 
 @attachTheme
-@view.attach('searchStore', 'paneStore')
+@view.attach('appStore', 'searchStore', 'paneStore')
 @view.attach({
   store: OrbitCardStore,
 })

@@ -195,6 +195,9 @@ storeProvidable = function(options, Helpers) {
         setupStores() {
           const getProps = {
             get: () => this._props,
+            set() {
+              // ignore
+            },
             configurable: true,
           }
           // start stores
@@ -208,7 +211,7 @@ storeProvidable = function(options, Helpers) {
               }
               Object.defineProperty(Store.prototype, 'props', getProps)
               const store = new Store()
-              delete Store.prototype.props // safety, remove hack
+              // delete Store.prototype.props // safety, remove hack
               // then define directly
               Object.defineProperty(store, 'props', getProps)
               return store

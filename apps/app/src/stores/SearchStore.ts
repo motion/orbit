@@ -1,6 +1,5 @@
 import { react, on } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
-import { stateOnlyWhenActive } from './helpers/stateOnlyWhenActive'
 import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'

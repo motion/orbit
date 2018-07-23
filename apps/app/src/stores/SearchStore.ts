@@ -18,6 +18,7 @@ type Filter = {
 }
 
 export class SearchStore {
+  id = Math.random()
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore()
   appReactionsStore = new AppReactions({
@@ -50,7 +51,18 @@ export class SearchStore {
   extraFiltersHeight = 300
   extraFiltersVisible = false
 
+  dateHover = hoverSettler({
+    enterDelay: 400,
+    leaveDelay: 400,
+    onHovered: target => {
+      console.log('on hovered', this.id)
+      this.setExtraFiltersVisible(target)
+    },
+  })()
+
   willMount() {
+    on(this, window, 'keydown', this.handleKeyDown)
+
     this.subscriptions.add({
       dispose: () => {
         this.nlpStore.subscriptions.dispose()
@@ -58,7 +70,6 @@ export class SearchStore {
         this.appReactionsStore.subscriptions.dispose()
       },
     })
-    on(this, window, 'keydown', this.handleKeyDown)
   }
 
   get isChanging() {
@@ -398,16 +409,9 @@ export class SearchStore {
   }
 
   setExtraFiltersVisible = target => {
+    console.log('set set set', !!target, target, this.id)
     this.extraFiltersVisible = !!target
   }
-
-  dateHover = hoverSettler({
-    enterDelay: 400,
-    leaveDelay: 400,
-    onHovered: this.setExtraFiltersVisible,
-  })
-
-  dateHoverProps = this.dateHover().props
 
   get filters(): Filter[] {
     const { settingsList, getTitle } = this.props.integrationSettingsStore

@@ -340,17 +340,26 @@ export class Surface extends React.Component<SurfaceProps> {
       size,
       sizeLineHeight,
       noInnerElement,
-    } = this.props
-    const stringIcon = typeof icon === 'string'
-    const {
       tagName,
       forwardRef,
       style,
       padding,
       margin,
       className,
-      ...throughProps
+      ...props
     } = this.props
+    const stringIcon = typeof icon === 'string'
+    // goes to both
+    const throughProps = {
+      sizeIcon: this.props.sizeIcon,
+      iconSize: this.props.iconSize,
+      height: this.props.height,
+      iconAfter: this.props.iconAfter,
+      iconPad: this.props.iconPad,
+      inline: this.props.inline,
+      icon: this.props.icon,
+      lineHeight: this.props.lineHeight,
+    }
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height + 0.5}px`
     }
@@ -361,6 +370,7 @@ export class Surface extends React.Component<SurfaceProps> {
         padding={padding}
         margin={margin}
         {...throughProps}
+        {...props}
         forwardRef={forwardRef}
         style={style}
         className={`${this.uniq} ${className || ''}`}

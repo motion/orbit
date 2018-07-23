@@ -41,15 +41,10 @@ export const OrbitSearchFilters = decorate(({ searchStore }) => {
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
-        <UI.Button
-          alpha={0.8}
-          onMouseEnter={searchStore.dateHoverProps.onMouseEnter}
-          onMouseLeave={searchStore.dateHoverProps.onMouseLeave}
-          onMouseMove={searchStore.dateHoverProps.onMouseMove}
-          onClick={searchStore.dateHoverProps.onClick}
-        >
+        <UI.Button alpha={0.8} {...searchStore.dateHover.props}>
           {getDate(searchStore.nlpStore.nlp.date) || 'Any time'}
         </UI.Button>
+        <div style={{ width: 10 }} />
         <UI.Button alpha={0.8}>Relevant</UI.Button>
         <UI.Col flex={1} />
         {searchStore.filters.map((filter, i) => {
@@ -67,9 +62,9 @@ export const OrbitSearchFilters = decorate(({ searchStore }) => {
         })}
       </UI.Row>
       <ExtraFilters
-        onMouseEnter={searchStore.dateHoverProps.onMouseEnter}
-        onMouseLeave={searchStore.dateHoverProps.onMouseLeave}
-        onMouseMove={searchStore.dateHoverProps.onMouseMove}
+        onMouseEnter={searchStore.dateHover.props.onMouseEnter}
+        onMouseLeave={searchStore.dateHover.props.onMouseLeave}
+        onMouseMove={searchStore.dateHover.props.onMouseMove}
         className="calendar-dom"
         height={searchStore.extraFiltersHeight}
       >

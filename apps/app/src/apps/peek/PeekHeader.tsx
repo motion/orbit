@@ -114,13 +114,8 @@ export class PeekHeaderContent extends React.Component {
                 alignItems="center"
               >
                 <WindowControls
-                  itemProps={{
-                    style: {
-                      marginLeft: 1,
-                    },
-                  }}
+                  if={peekStore.tornState}
                   onClose={App.actions.clearPeek}
-                  onMax={() => App.actions.toggleDevModeStick()}
                 />
                 <UI.Button
                   if={peekStore.hasHistory}
@@ -134,11 +129,14 @@ export class PeekHeaderContent extends React.Component {
                   icon="z"
                   onClick={peekStore.tearPeek}
                 />
+                <WindowControls
+                  if={!peekStore.tornState}
+                  onClose={App.actions.clearPeek}
+                />
               </UI.Row>
             </>
           }
         >
-          {integration ? `${NICE_INTEGRATION_NAMES[integration] || ''} ` : ''}{' '}
           {title}
         </TitleBar>
         <SubTitle date={date} permalink={permalink}>

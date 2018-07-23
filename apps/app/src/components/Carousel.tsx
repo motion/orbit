@@ -21,8 +21,8 @@ export const Carousel = view.attach('appStore')(
             bit={bit}
             index={index}
             total={items.length}
-            expanded={false}
-            css={{
+            inGrid
+            style={{
               ...cardStyleDefault,
               ...cardStyle,
             }}

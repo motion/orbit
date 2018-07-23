@@ -5,7 +5,7 @@ export let Electron = null as ElectronStore
 
 @store
 class ElectronStore {
-  mouseState: ElectronStore['state']['hoverState']
+  hoverState: ElectronStore['state']['hoverState']
   setHoverState: Function
 
   messages = {

@@ -3,6 +3,7 @@ import { App } from '@mcro/stores'
 import { Setting, Not, Equal } from '@mcro/models'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
 export class AppStore {
   contentHeight = 0
@@ -11,6 +12,16 @@ export class AppStore {
   async willMount() {
     this.updateScreenSize()
   }
+
+  updateAppOrbitStateOnResize = react(
+    () => this.contentHeight,
+    height => {
+      console.log('updating to new height', height)
+      App.setOrbitState({
+        size: [ORBIT_WIDTH, height + 20],
+      })
+    },
+  )
 
   get selectedPane() {
     if (App.orbitState.docked) {
@@ -29,7 +40,6 @@ export class AppStore {
   }
 
   setContentHeight = height => {
-    console.log('got pane height', height)
     this.contentHeight = height
   }
 

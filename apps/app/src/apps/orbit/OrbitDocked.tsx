@@ -12,6 +12,7 @@ import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { BORDER_RADIUS } from '../../constants'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
 const SHADOW_PAD = 200
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.45]]
@@ -24,7 +25,7 @@ const Frame = view(UI.Col, {
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
-  width: App.dockedWidth,
+  width: ORBIT_WIDTH,
   opacity: 0,
   transform: {
     x: 6,

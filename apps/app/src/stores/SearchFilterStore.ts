@@ -1,7 +1,9 @@
-import { store, deep } from '@mcro/black'
+import { store, deep, react } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { memoize } from 'lodash'
+import { NLPResponse } from './nlpStore/types'
+import { Setting } from '@mcro/models'
 
 export type SearchFilter = {
   type: string
@@ -20,6 +22,26 @@ export class SearchFilterStore {
     this.searchStore = searchStore
     this.integrationSettingsStore = searchStore.props.integrationSettingsStore
   }
+
+  updateFiltersOnNLP = react(
+    () => this.searchStore.nlpStore.nlp,
+    (nlp: NLPResponse) => {
+      if (!nlp) {
+        throw react.cancel
+      }
+      const { integrations } = nlp
+      if (!integrations.length) {
+        throw react.cancel
+      }
+      this.inactiveFilters = this.integrationSettingsStore.settingsList.reduce(
+        (acc, setting: Setting) => {
+          acc[setting.type] = integrations.some(x => x === setting.type)
+          return acc
+        },
+        {},
+      )
+    },
+  )
 
   get hasInactiveFilters() {
     return Object.keys(this.inactiveFilters).length

@@ -15,7 +15,7 @@ const prefixes = {
   co: 'confluence',
 }
 
-const integrations = {
+const integrationFilters = {
   slack: 'slack',
   gmail: 'gmail',
   gdocs: 'gdocs',
@@ -80,6 +80,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     word => word.normal,
   )
   const words = query.toLowerCase().split(' ')
+  const integrations = []
 
   // find all marks for highlighting
   const prefix = prefixes[words[0]]
@@ -102,7 +103,8 @@ export function parseSearchQuery(query: string): NLPResponse {
       highlightIfClear(word, TYPES.TYPE)
       continue
     }
-    if (integrations[word]) {
+    if (integrationFilters[word]) {
+      integrations.push(word)
       highlightIfClear(word, TYPES.INTEGRATION)
       continue
     }
@@ -159,18 +161,19 @@ export function parseSearchQuery(query: string): NLPResponse {
     date,
     marks,
     people,
+    integrations,
     startDate: date.startDate || null,
     endDate: date.endDate || null,
   }
 }
 
-if (typeof window !== 'undefined') {
-  window.nlp = {
-    parseSearchQuery: x => JSON.stringify(parseSearchQuery(x), null, 2),
-    setUserNames: setUserNames,
-    state: state,
-  }
-}
+// if (typeof window !== 'undefined') {
+//   window.nlp = {
+//     parseSearchQuery: x => JSON.stringify(parseSearchQuery(x), null, 2),
+//     setUserNames: setUserNames,
+//     state: state,
+//   }
+// }
 
 export function setUserNames(fullNames = []) {
   const cleanNames = fullNames

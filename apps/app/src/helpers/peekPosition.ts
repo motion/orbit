@@ -15,7 +15,7 @@ export default function peekPosition(target) {
   let orbitWidth = App.orbitState.size[0]
   if (App.orbitState.docked) {
     orbitOnLeft = false
-    orbitWidth = App.dockedWidth
+    orbitWidth = Constants.ORBIT_WIDTH
   }
   const { left, top } = target
   const leftSpace = left

@@ -47,13 +47,13 @@ export class OrbitHomeHeader extends React.Component<Props> {
     return (
       <>
         <Section>
-          <UI.Button
+          {/* <UI.Button
             icon="home"
             tooltip="Home"
             active={paneStore.activePane === 'home'}
             onClick={() => paneStore.setActivePane('home')}
             {...exploreButton}
-          />
+          /> */}
           <UI.Button
             icon="menu35"
             tooltip="Directory"

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+npx lerna exec -- yarn link
+yarn link @mcro/gloss &
+yarn link @mcro/css &
+yarn link @mcro/babel-plugin-if &
+yarn link @mcro/babel-preset-motion &
+wait

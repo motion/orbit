@@ -1,21 +1,5 @@
 #!/bin/bash
 
-function link-root-modules() {
-  npx lerna exec -- yarn link
-  yarn link @mcro/gloss &
-  yarn link @mcro/css &
-  yarn link @mcro/babel-plugin-if &
-  yarn link @mcro/babel-preset-motion &
-  wait
-}
-
-function build-builder-modules() {
-  (cd packages/gloss && npm run build) &
-  (cd packages/css && npm run build) &
-  (cd packages/gloss-displaynames && npm run build) &
-  wait
-}
-
 . $(dirname $0)/__/common
 cd $ROOT
 

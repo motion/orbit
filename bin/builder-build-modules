@@ -1,0 +1,6 @@
+#!/bin/bash
+
+(cd packages/gloss && npm run build) &
+(cd packages/css && npm run build) &
+(cd packages/gloss-displaynames && npm run build) &
+wait

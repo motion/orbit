@@ -9,7 +9,6 @@ import r2 from '@mcro/r2'
 import * as Helpers from '../helpers'
 import { App, Desktop, Swift, Electron } from '@mcro/stores'
 import { modelsList } from '@mcro/models'
-import { RootStore } from '../stores/RootStore'
 import { render } from '../index'
 import { color } from '@mcro/gloss'
 
@@ -34,7 +33,6 @@ window['App'] = App
 window['Desktop'] = Desktop
 window['Electron'] = Electron
 window['Swift'] = Swift
-window['Root'] = RootStore
 window['render'] = render
 window['color'] = color
 

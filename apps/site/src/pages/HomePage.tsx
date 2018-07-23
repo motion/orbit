@@ -209,17 +209,24 @@ const Pitch = ({ isLarge, scrollTo }) => (
     </Title>
     <VertSpace />
     <SectionSubTitle>
-      Unified team knowledge on your desktop. Organize and search everything in
-      your cloud and behind your firewall.
+      Organize and search everything in your cloud from behind the firewall.
+      It's the ultimate knowledge tool for teams.
     </SectionSubTitle>
     <VertSpace />
     <SectionSubTitle
-      cursor="pointer"
+      style={{
+        cursor: 'pointer',
+      }}
+      {...{
+        ['&:hover']: {
+          color: 'teal',
+        },
+      }}
       fontWeight={300}
       size={1.2}
       onClick={() => scrollTo(3)}
     >
-      With complete privacy and security.
+      Learn how Orbit does it differently.
     </SectionSubTitle>
     <VertSpace />
     <VertSpace />
@@ -594,7 +601,8 @@ const Card = ({ title, children, icon }) => (
 
 @view
 class SectionNoCloud extends React.Component {
-  render({ homeStore, isLarge }) {
+  render() {
+    const { homeStore, isLarge } = this.props
     return (
       <UI.View
         css={{
@@ -610,7 +618,7 @@ class SectionNoCloud extends React.Component {
             showCircle
             zIndex={0}
             opacity={0.1}
-            transform={{ y: '70%', x: '80%', scale: 0.7 }}
+            transform={{ y: '0%', x: '90%', scale: 0.7 }}
           />
           <div
             style={{
@@ -630,9 +638,9 @@ class SectionNoCloud extends React.Component {
               <VertSpace />
               <SectionSubP size={1.45} alpha={0.7} if={isLarge}>
                 Because it has no server, it only takes a minute to install and
-                we never touch a single bit of your private data. We don't like
-                to call it decentralized, but you can think of it as a
-                peer-to-peer intranet system for your team.
+                never exposes single bit of your private data. We don't like to
+                call it decentralized, but you can think of it as a peer-to-peer
+                intranet system for your team.
               </SectionSubP>
               <VertSpace />
               <VertSpace />

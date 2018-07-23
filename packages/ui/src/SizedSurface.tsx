@@ -29,7 +29,7 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
     circular,
     ...rest
   } = props
-  const num = x => (x === true ? 1 : 1 * size)
+  const num = x => (x === true ? 1 : x)
   // sizes
   let height =
     typeof sizeHeight !== 'undefined'
@@ -52,7 +52,7 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
     const padWithWrap = props.wrapElement ? 0 : padSize * 4
     const padding =
       (sizePadding && [
-        sizeHeight ? 0 : padSize * 1.7,
+        sizeHeight ? 0 : padSize * 1.2,
         padWithWrap * padSize,
       ]) ||
       0

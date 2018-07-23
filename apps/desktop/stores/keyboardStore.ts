@@ -103,45 +103,43 @@ export class KeyboardStore {
   }
 
   start = () => {
-    let clearLastKeys
-
+    // let clearLastKeys
     // keydown
-    iohook.on('keydown', ({ keycode }) => {
-      this.keysDown.add(keycode)
-      lastKeys.push(['down', keycode])
-      this.onKey(keycode)
-    })
-
-    // keyup
-    iohook.on('keyup', ({ keycode }) => {
-      this.keysDown.delete(keycode)
-      clearTimeout(clearLastKeys)
-      lastKeys.push(['up', keycode])
-      while (lastKeys.length > 4) {
-        lastKeys.shift() // ensure only 4 max
-      }
-      this.clearDownKeysAfterPause()
-      // option off
-      switch (keycode) {
-        // case codes.shift:
-        //   Desktop.setKeyboardState({ shiftUp: Date.now() })
-        //   break
-        case codes.option:
-          this.clearOption()
-          break
-        // case codes.space:
-        //   Desktop.setKeyboardState({ spaceUp: Date.now() })
-        // break
-      }
-      // disable double tap to pin for now
-      // if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
-      //   Desktop.sendMessage(App, App.messages.TOGGLE_PINNED)
-      // }
-      // be sure its a fast action not slow
-      clearLastKeys = setTimeout(() => {
-        lastKeys = []
-      }, 190)
-    })
+    // iohook.on('keydown', ({ keycode }) => {
+    //   this.keysDown.add(keycode)
+    //   lastKeys.push(['down', keycode])
+    //   this.onKey(keycode)
+    // })
+    // // keyup
+    // iohook.on('keyup', ({ keycode }) => {
+    //   this.keysDown.delete(keycode)
+    //   clearTimeout(clearLastKeys)
+    //   lastKeys.push(['up', keycode])
+    //   while (lastKeys.length > 4) {
+    //     lastKeys.shift() // ensure only 4 max
+    //   }
+    //   this.clearDownKeysAfterPause()
+    //   // option off
+    //   switch (keycode) {
+    //     // case codes.shift:
+    //     //   Desktop.setKeyboardState({ shiftUp: Date.now() })
+    //     //   break
+    //     case codes.option:
+    //       this.clearOption()
+    //       break
+    //     // case codes.space:
+    //     //   Desktop.setKeyboardState({ spaceUp: Date.now() })
+    //     // break
+    //   }
+    //   // disable double tap to pin for now
+    //   // if (isEqual(lastKeys, DOUBLE_TAP_OPTION)) {
+    //   //   Desktop.sendMessage(App, App.messages.TOGGLE_PINNED)
+    //   // }
+    //   // be sure its a fast action not slow
+    //   clearLastKeys = setTimeout(() => {
+    //     lastKeys = []
+    //   }, 190)
+    // })
   }
 
   clearDownKeysAfterPause = () => {

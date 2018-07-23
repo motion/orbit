@@ -17,7 +17,7 @@ export type HoverGlowProps = {
   resist: number
   scale: number
   opacity: number
-  boundPct: number | string
+  boundPct: number
   offsetTop: number
   offsetLeft: number
   clickable: boolean
@@ -236,7 +236,11 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const duration = durationArg >= 0 ? durationArg : _duration
     if (!this.state.mounted) {
       return (
-        <Overlay key="hoverglow" forwardRef={this.rootRef} style={{ opacity: 0 }} />
+        <Overlay
+          key="hoverglow"
+          forwardRef={this.rootRef}
+          style={{ opacity: 0 }}
+        />
       )
     }
     // find width / height (full == match size of container)

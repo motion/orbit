@@ -434,7 +434,7 @@ A.theme = ({ theme, active, ...props }) => {
     borderBottom: [2, bg],
   }
   return {
-    margin: props.isLarge ? [0, 0, 0, 30] : [0, 0, 0, 15],
+    margin: props.isLarge ? [0, 0, 0, 30] : props.margin,
     color,
     ...activeStyle,
     '&:hover': {

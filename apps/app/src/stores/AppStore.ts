@@ -152,19 +152,6 @@ export class AppStore {
     )
   }
 
-  updateResults = react(
-    () => [
-      Desktop.state.lastBitUpdatedAt,
-      // Desktop.searchState.pluginResultsId || 0,
-    ],
-    () => {
-      if (this.searchState.results && this.searchState.results.length) {
-        throw react.cancel
-      }
-      return Math.random()
-    },
-  )
-
   resetActiveIndexOnPeekTarget = react(
     () => App.peekState.target,
     target => {
@@ -424,7 +411,7 @@ export class AppStore {
     this.open(this.selectedItem)
   }
 
-  open = async (result, openType) => {
+  open = async (result, openType?) => {
     if (!result) {
       throw new Error('No result given to open')
     }

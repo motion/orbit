@@ -62,13 +62,13 @@ export class OrbitSearchStore {
   dateHoverProps = this.dateHover().props
 
   get filters() {
-    const { settingsList } = this.props.integrationSettingsStore
+    const { settingsList, getTitle } = this.props.integrationSettingsStore
     if (!settingsList) {
       return []
     }
     return settingsList
       .filter(x => x.type !== 'setting')
-      .map(setting => ({ icon: setting.type, name: setting.name }))
+      .map(setting => ({ icon: setting.type, name: getTitle(setting) }))
   }
 
   onChangeDate = ranges => {

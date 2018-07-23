@@ -28,11 +28,14 @@ function setPeekState(props) {
   })
 }
 
+const oneWayEqual = (a, b) =>
+  a && b && Object.keys(a).reduce((res, key) => a[key] === b[key] && res, true)
+
 export function toggleSelectItem(
   item: Person | Bit | AppStatePeekItem,
   target?: PositionObject,
 ) {
-  if (isEqual(App.peekState.item, item)) {
+  if (oneWayEqual(item, App.peekState.item)) {
     App.actions.clearPeek()
   } else {
     selectItem(item, target)

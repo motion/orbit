@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { Theme } from '@mcro/gloss'
+import {
+  Theme,
+  Color,
+  CSSPropertySet,
+  propsToThemeStyles,
+  propsToStyles,
+} from '@mcro/gloss'
 import { view, attachTheme } from '@mcro/black'
 import toColor from '@mcro/color'
 import { Icon } from './Icon'
@@ -8,39 +14,22 @@ import { Glint } from './effects/Glint'
 import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
-import { Color } from '@mcro/css'
-import { propsToThemeStyles, propsToStyles } from '@mcro/gloss'
 import { View } from './blocks/View'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
-export type SurfaceProps = {
+export type SurfaceProps = CSSPropertySet & {
   active?: boolean
   after?: React.ReactNode
-  align?: string
-  alignSelf?: string
   background?: Color
   badge?: React.ReactNode
   badgeProps?: Object
-  border?: Array<any> | Object
-  borderBottom?: Array<any> | Object
-  borderBottomRadius?: number
-  borderLeft?: Array<any> | Object
-  borderLeftRadius?: number
-  borderRight?: Array<any> | Object
-  borderRightRadius?: number
-  borderStyle?: 'solid' | 'dotted'
-  borderTop?: Array<any> | Object
-  borderTopRadius?: number
-  borderWidth?: number | string
-  boxShadow?: Array<any> | string
   children?: React.ReactNode
   name?: string
   chromeless?: boolean
   circular?: boolean
   className?: string
   clickable?: boolean
-  color?: Color
   dim?: boolean
   elementProps?: Object
   elevation?: number
@@ -60,26 +49,8 @@ export type SurfaceProps = {
   iconProps?: Object
   iconSize?: number
   inline?: boolean
-  justify?: string
-  lineHeight?: number | string
-  margin?: number | Array<number>
-  marginBottom?: number
-  marginLeft?: number
-  marginRight?: number
-  marginTop?: number
-  maxWidth?: number
-  minWidth?: number
   noInnerElement?: boolean
-  noWrap?: boolean
   onClick?: Function
-  opacity?: number
-  overflow?: 'hidden' | 'visible' | 'scroll' | 'default'
-  padding?: number | Array<number>
-  paddingBottom?: number
-  paddingLeft?: number
-  paddingRight?: number
-  paddingTop?: number
-  vertical?: boolean
   size?: number
   sizeIcon?: number
   spaced?: boolean
@@ -91,24 +62,14 @@ export type SurfaceProps = {
   uiContext?: boolean
   width?: number
   wrapElement?: boolean
-  borderRadius?: number
   alpha?: number
   dimmed?: boolean
   disabled?: boolean
-  flexFlow?: string
-  borderColor?: Color
-  fontSize?: number | string
-  fontWeight?: number
   placeholderColor?: Color
   highlightBackground?: Color
   highlightColor?: Color
-  hoverStyle?: Object
   style?: Object
-  textAlign?: string
   ignoreSegment?: boolean
-  alignItems?: string
-  justifyContent?: string
-  backgroundAlpha?: number
   activeStyle?: Object
   sizeLineHeight?: boolean | number
   type?: string
@@ -460,7 +421,7 @@ export class Surface extends React.Component<SurfaceProps> {
               noHoverOnChildren
               animation="bounce 150ms"
               target={`.${this.uniq}`}
-              padding={[2, 7, 4]}
+              padding={[2, 7]}
               borderRadius={5}
               distance={8}
               forgiveness={8}

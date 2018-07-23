@@ -4,8 +4,7 @@
   "description": "Higher order component for nicer component styles",
   "main": "_/gloss.js",
   "scripts": {
-    "build": "tsc",
-    "prebuild": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "repository": {

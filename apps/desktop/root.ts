@@ -16,7 +16,7 @@ import { store, debugState, on } from '@mcro/black'
 import root from 'global'
 import Path from 'path'
 import open from 'opn'
-import iohook from 'iohook'
+// import iohook from 'iohook'
 import debug from '@mcro/debug'
 import { Bit, Setting, modelsList } from '@mcro/models'
 import { Connection } from 'typeorm'
@@ -44,7 +44,7 @@ export class Root {
   stores = null
 
   start = async () => {
-    iohook.start(false)
+    // iohook.start(false)
     root.Root = this
     root.restart = this.restart
     const db = await sqlite.open(

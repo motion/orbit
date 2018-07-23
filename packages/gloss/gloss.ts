@@ -24,6 +24,28 @@ export {
 
 export const color = require('@mcro/color').default
 
+export const colorToString = obj => {
+  const { model, color, valpha } = obj
+  const hasAlpha = typeof valpha === 'number' && valpha !== 1
+  if (model === 'rgb') {
+    const inner = `${color[0]}, ${color[1]}, ${color[2]}`
+    if (hasAlpha) {
+      return `rgba(${inner}, ${valpha})`
+    }
+    return `rgb(${inner})`
+  }
+  if (model === 'hsl') {
+    const inner = `${color[0]}, ${Math.round(color[1])}%, ${Math.round(
+      color[2],
+    )}%`
+    if (hasAlpha) {
+      return `hsla(${inner}, ${valpha})`
+    }
+    return `hsl(${inner})`
+  }
+  return obj.toString()
+}
+
 const isGlossFirstArg = a =>
   typeof a === 'undefined' || typeof a === 'string' || typeof a === 'object'
 
@@ -40,27 +62,7 @@ export const isGlossArguments = (a, b) => {
 const DEFAULT_OPTS = {
   glossProp: 'css',
   isColor: color => color && !!color.rgb,
-  toColor: obj => {
-    const { model, color, valpha } = obj
-    const hasAlpha = typeof valpha === 'number' && valpha !== 1
-    if (model === 'rgb') {
-      const inner = `${color[0]}, ${color[1]}, ${color[2]}`
-      if (hasAlpha) {
-        return `rgba(${inner}, ${valpha})`
-      }
-      return `rgb(${inner})`
-    }
-    if (model === 'hsl') {
-      const inner = `${color[0]}, ${Math.round(color[1])}%, ${Math.round(
-        color[2],
-      )}%`
-      if (hasAlpha) {
-        return `hsla(${inner}, ${valpha})`
-      }
-      return `hsl(${inner})`
-    }
-    return obj.toString()
-  },
+  toColor: colorToString,
 }
 
 export default function createGloss(options: Options = DEFAULT_OPTS) {

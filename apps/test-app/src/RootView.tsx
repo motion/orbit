@@ -123,6 +123,20 @@ const RootViewInner = () => {
           <UI.Input icon="ic" size={2} />
         </UI.Theme>
 
+        <UI.Theme theme="darkred">
+          <UI.Button size={2} icon="ic">
+            Hello World
+          </UI.Button>
+          <UI.Input icon="ic" size={2} />
+        </UI.Theme>
+
+        <UI.Theme theme="pink">
+          <UI.Button size={2} icon="ic">
+            Hello World
+          </UI.Button>
+          <UI.Input icon="ic" size={2} />
+        </UI.Theme>
+
         <UI.Button circular size={2} icon="ic" />
 
         <UI.Theme name="dark">

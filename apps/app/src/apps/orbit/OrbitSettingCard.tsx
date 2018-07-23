@@ -21,10 +21,6 @@ export class OrbitSettingCard extends React.Component<
   id = Math.random()
 
   handleClick = async () => {
-    if (!this.props.isActive) {
-      console.log('inactive')
-      return
-    }
     const { result } = this.props
     if (result.auth === false) {
       const setting = new Setting()
@@ -36,6 +32,7 @@ export class OrbitSettingCard extends React.Component<
       console.log('should select auth view')
       return
     } else {
+      console.log('result', result)
       App.actions.startOauth(result.id)
     }
     return
@@ -63,14 +60,12 @@ export class OrbitSettingCard extends React.Component<
         iconProps={
           !isActive && {
             color: '#999',
-            style: {
-              opacity: 0.6,
-            },
+            alpha: 0.8,
           }
         }
         result={result}
         {...props}
-        onClick={onClick || this.handleClick}
+        onClick={onClick || !isActive ? this.handleClick : null}
       />
     )
   }

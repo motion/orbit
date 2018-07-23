@@ -26,7 +26,7 @@ class DockedPaneStore {
 
   addObserver = (node, cb, options = { childList: true }) => {
     const observer = new MutationObserver(cb)
-    observer.observe(node, options)
+    observer.observe(node, { childList: true, subtree: true })
     on(this, observer)
     return () => observer.disconnect()
   }
@@ -40,6 +40,12 @@ class DockedPaneStore {
     )
     this.addObserver(this.paneRef.current, this.handlePaneChange)
     this.handlePaneChange()
+    this.updateOnHeight()
+  }
+
+  handlePaneChange = () => {
+    this.updateOnHeight()
+    this.updateScrolledTo(this.node)
   }
 
   // scrollToSelectedCard = react(
@@ -63,36 +69,13 @@ class DockedPaneStore {
 
   updatePaneHeightOnActive = react(() => this.isActive, this.updateOnHeight)
 
-  followChildrenHeight = () => {
-    if (this.paneRef.firstElementChild) {
-      this.childMutationObserver = this.addObserver(
-        this.paneRef.firstElementChild,
-        () => {
-          console.log('children changed!')
-          this.updateOnHeight()
-        },
-      )
-    }
-  }
-
   updateOnHeight() {
-    if (!this.isActive || !this.props.appStore) {
+    if (!this.isActive || !this.props.appStore || !this.node) {
       return
     }
-    if (this.node && this.node.firstElementChild) {
-      console.log('this.node.firstElementChild', this.node.firstElementChild)
-      const innerHeight = getInnerHeight(this.node)
-      const aboveHeight = this.node.firstElementChild.getBoundingClientRect()
-        .top
-      this.props.appStore.setContentHeight(innerHeight + aboveHeight)
-    }
-  }
-  handlePaneChange = () => {
-    if (this.childMutationObserver) {
-      this.childMutationObserver()
-    }
-    this.followChildrenHeight()
-    this.updateScrolledTo(this.node)
+    const innerHeight = getInnerHeight(this.node)
+    const aboveHeight = this.node.getBoundingClientRect().top
+    this.props.appStore.setContentHeight(innerHeight + aboveHeight)
   }
 
   updateScrolledTo = node => {

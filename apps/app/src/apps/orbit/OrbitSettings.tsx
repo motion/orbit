@@ -70,7 +70,7 @@ class OrbitSettingsStore {
 
   IntegrationCard = props => (
     <OrbitSettingCard
-      pane="summary"
+      pane="docked"
       subPane="settings"
       total={this.allResults.length}
       {...props}

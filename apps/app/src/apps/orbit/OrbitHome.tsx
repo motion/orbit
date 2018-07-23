@@ -105,7 +105,7 @@ export class OrbitHome extends React.Component<{
               const isExpanded = index < 2
               return (
                 <OrbitCard
-                  pane="summary"
+                  pane="docked"
                   subPane="home"
                   selectedTheme={selectedTheme}
                   key={`${bit.id}${index}`}

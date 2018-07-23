@@ -92,7 +92,7 @@ export class SearchStore {
   }
 
   get isActive() {
-    return this.props.appStore.selectedPane === 'summary-search'
+    return this.props.appStore.selectedPane === 'docked-search'
   }
 
   searchState = react(

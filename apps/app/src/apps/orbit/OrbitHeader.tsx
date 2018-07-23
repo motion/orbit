@@ -19,7 +19,7 @@ const OrbitHeaderContainer = view({
 })
 
 OrbitHeaderContainer.theme = ({ borderRadius, theme }) => ({
-  borderTopRadius: borderRadius,
+  borderRadius: borderRadius,
   background: theme.base.background,
 })
 

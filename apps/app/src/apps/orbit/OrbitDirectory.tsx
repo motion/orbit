@@ -69,7 +69,7 @@ export class OrbitDirectory extends React.Component<{
             <Masonry>
               {store.people.map((bit, index) => (
                 <OrbitCard
-                  pane="summary"
+                  pane="docked"
                   subPane="directory"
                   key={bit.id}
                   index={index}

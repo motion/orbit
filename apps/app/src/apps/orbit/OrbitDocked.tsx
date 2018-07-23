@@ -121,10 +121,7 @@ class OrbitDockedInner extends React.Component<{
               <UI.View position="relative" flex={1}>
                 <OrbitHome name="home" paneStore={paneStore} />
                 <OrbitDirectory name="directory" paneStore={paneStore} />
-                <OrbitSearchResults
-                  name="summary-search"
-                  parentPane="summary"
-                />
+                <OrbitSearchResults name="docked-search" parentPane="docked" />
                 <OrbitSettings name="settings" />
               </UI.View>
             </OrbitInner>

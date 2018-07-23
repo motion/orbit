@@ -196,6 +196,10 @@ export class SearchStore {
             results,
             query,
           })
+          // no more results...
+          if (!nextResults.length) {
+            throw react.cancel
+          }
           // only log it once...
           preventLogging()
           // get next page results
@@ -373,8 +377,8 @@ export class SearchStore {
   dateState = {
     ranges: [
       {
-        startDate: Date.now(),
-        endDate: Date.now(),
+        startDate: new Date(),
+        endDate: new Date(),
         key: 'selection',
       },
     ],

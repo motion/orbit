@@ -11,6 +11,7 @@ import { App, Desktop, Swift, Electron } from '@mcro/stores'
 import { modelsList } from '@mcro/models'
 import { render } from '../index'
 import { color } from '@mcro/gloss'
+import * as dateFns from 'date-fns'
 
 console.log('installing globals...')
 
@@ -35,6 +36,7 @@ window['Electron'] = Electron
 window['Swift'] = Swift
 window['render'] = render
 window['color'] = color
+window['dateFns'] = dateFns
 
 modelsList.map(model => {
   window[`${model.name}`] = model

@@ -13,8 +13,6 @@ export interface Debug {
 const dbg = <Debug>function(namespace) {
   // const uid = id++
   namespaces.push(namespace)
-  // quiet by default
-  dbg.quiet(namespace)
   function log(...messages) {
     if (disableLogs[namespace]) return
     colorfulLog(namespace, messages)

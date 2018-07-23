@@ -1,9 +1,13 @@
 import { Bit, Brackets, getRepository } from '@mcro/models'
+import debug from '@mcro/debug'
+
+const log = debug('getSearchQuery')
 
 export const getSearchQuery = (
   searchString,
   { take, skip, people, startDate, endDate },
 ) => {
+  log('params', { take, skip, people, startDate, endDate })
   let query = getRepository(Bit)
     .createQueryBuilder('bit')
     .leftJoinAndSelect('bit.people', 'person')

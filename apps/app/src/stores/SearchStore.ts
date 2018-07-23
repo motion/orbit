@@ -178,11 +178,14 @@ export class SearchStore {
             skip,
           })
           // add in filters if need be
-          if (activeFilters) {
+          if (activeFilters && activeFilters.length) {
             nextQuery.andWhere(
               new Brackets(qb => {
-                for (const integration of activeFilters) {
-                  qb.orWhere('bit.integration = :integration', { integration })
+                for (const [index, integration] of activeFilters.entries()) {
+                  const whereType = index === 0 ? 'where' : 'orWhere'
+                  qb[whereType]('bit.integration = :integration', {
+                    integration,
+                  })
                 }
               }),
             )
@@ -394,7 +397,6 @@ export class SearchStore {
     async (query, { sleep }) => {
       // slight debounce for super fast typing
       await sleep(50)
-      console.log('finish me')
       App.setQuery(query)
     },
   )

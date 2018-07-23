@@ -25,9 +25,9 @@ yarn install
 echo "installing packages"
 npx lerna bootstrap --loglevel=warn
 # internal tools
-ensure-file ./packages/gloss/_/gloss.js -- build-builder-modules
-ensure-file ./packages/css/_/css.js -- build-builder-modules
-ensure-file ./packages/gloss-displaynames/_/index.js -- build-builder-modules
+ensure-file ./packages/gloss/_/gloss.js -- $ROOT/bin/build-builder-modules
+ensure-file ./packages/css/_/css.js -- $ROOT/bin/build-builder-modules
+ensure-file ./packages/gloss-displaynames/_/index.js -- $ROOT/bin/build-builder-modules
 # link second
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 # build everything once

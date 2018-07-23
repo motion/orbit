@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "main": "_/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "license": "MIT",

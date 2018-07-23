@@ -6,7 +6,7 @@
   "author": "Motion",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "prebuild": "tsc",
     "watch": "tsc --watch --preserveWatchOutput",
     "test": "node ./_/test.js"

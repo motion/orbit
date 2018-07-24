@@ -194,6 +194,10 @@ export class PeekStore {
     e.preventDefault()
     this.tearPeek()
     this.clearDragHandlers()
+    this.initMouseDown = {
+      x: e.clientX,
+      y: e.clientY,
+    }
     this.offMove = on(this, window, 'mousemove', this.handleDragMove)
     this.offUp = on(this, window, 'mouseup', this.handleDragEnd)
   }
@@ -210,13 +214,6 @@ export class PeekStore {
   }
 
   handleDragMove = e => {
-    // Desktop.mouseState.mouseDown is a bit better because its from before you start dragging
-    if (!this.initMouseDown) {
-      this.initMouseDown = Desktop.mouseState.mouseDown || {
-        x: e.clientX,
-        y: e.clientY,
-      }
-    }
     const { x, y } = this.initMouseDown
     this.dragOffset = [e.clientX - x, e.clientY - y]
     console.log('this.dragOffset', this.dragOffset, e.clientX, e.clientY)

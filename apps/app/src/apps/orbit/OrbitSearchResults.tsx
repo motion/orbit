@@ -15,7 +15,6 @@ const Highlight = view({
   padding: [10, listItemSidePad],
   margin: [0, -listItemSidePad],
   borderTop: [1, '#f2f2f2'],
-  // background: '#fff',
   '&:hover': {
     background: '#fff',
   },

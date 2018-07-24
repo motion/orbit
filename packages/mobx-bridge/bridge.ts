@@ -392,7 +392,7 @@ class Bridge {
     }
   }
 
-  sendMessage = async (Store: any, ogMessage: string, value: string) => {
+  sendMessage = async (Store: any, ogMessage: string, value?: string) => {
     if (!this.started) {
       throw new Error(
         `Not started, can only call sendMessage on the app that starts it.`,

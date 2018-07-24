@@ -86,6 +86,7 @@ class AppStore {
     PIN: 'PIN',
     UNPIN: 'UNPIN',
     TOGGLE_PINNED: 'TOGGLE_PINNED',
+    CLEAR_SELECTED: 'CLEAR_SELECTED',
   }
 
   setState = Bridge.setState

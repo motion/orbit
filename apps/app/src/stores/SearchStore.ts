@@ -66,11 +66,16 @@ export class SearchStore {
   willMount() {
     on(this, window, 'keydown', this.handleKeyDown)
 
+    const disposeAppListen = App.onMessage(App.messages.CLEAR_SELECTED, () => {
+      this.clearSelected()
+    })
+
     this.subscriptions.add({
       dispose: () => {
         this.nlpStore.subscriptions.dispose()
         this.searchFilterStore.subscriptions.dispose()
         this.appReactionsStore.subscriptions.dispose()
+        disposeAppListen()
       },
     })
   }
@@ -385,7 +390,6 @@ export class SearchStore {
   }
 
   setExtraFiltersVisible = target => {
-    console.log('set set set', !!target, target, this.id)
     this.extraFiltersVisible = !!target
   }
 

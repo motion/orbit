@@ -1,4 +1,7 @@
 import { isEqual, throttle } from 'lodash'
+import debug from '@mcro/debug'
+
+const log = debug('hoverSettler')
 
 // isEqual but works with dom nodes (lodash doesnt)
 function isReallyEqual(a, b) {
@@ -12,6 +15,7 @@ export function hoverSettler({
   enterDelay = 0,
   leaveDelay = 32,
   betweenDelay = 0,
+  toggleThrottle = 300,
   onHovered = null,
 }) {
   let curOnHovered = onHovered
@@ -42,13 +46,20 @@ export function hoverSettler({
     let betweenTm
     let itemProps
     let stickOnClick = false
+    let lastToggle = Date.now()
 
     const select = target => {
       let prevTarget = currentNode
       currentNode = target
       if (isReallyEqual(prevTarget, target)) {
+        log('Cancel select, same target')
         return
       }
+      if (Date.now() - lastToggle < toggleThrottle) {
+        log('Cancel toggle, too soon')
+        return
+      }
+      lastToggle = Date.now()
       setHovered(
         target
           ? {

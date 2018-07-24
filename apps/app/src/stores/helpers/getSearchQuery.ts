@@ -7,7 +7,6 @@ export const getSearchQuery = (
   searchString,
   { take, skip, people, startDate, endDate },
 ) => {
-  log('params', { take, skip, people, startDate, endDate })
   let query = getRepository(Bit)
     .createQueryBuilder('bit')
     .leftJoinAndSelect('bit.people', 'person')
@@ -54,6 +53,6 @@ export const getSearchQuery = (
     query = query.skip(skip)
   }
 
-  log('query', query)
+  log('params', { take, skip, people, startDate, endDate }, 'query', query)
   return query
 }

@@ -57,14 +57,14 @@ export class SearchStore {
   dateHover = hoverSettler({
     enterDelay: 400,
     leaveDelay: 400,
-    onHovered: target => {
-      console.log('on hovered', this.id)
-      this.setExtraFiltersVisible(target)
-    },
   })()
 
   willMount() {
     on(this, window, 'keydown', this.handleKeyDown)
+
+    this.dateHover.setOnHovered(target => {
+      this.setExtraFiltersVisible(target)
+    })
 
     const disposeAppListen = App.onMessage(App.messages.CLEAR_SELECTED, () => {
       this.clearSelected()

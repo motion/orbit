@@ -269,7 +269,7 @@ class Bridge {
 
   // this will go up to api and back down to all screen stores
   // set is only allowed from the source its set as initially
-  setState = (newState, ignoreSocketSend) => {
+  setState = (newState, ignoreSocketSend?) => {
     if (!this.started) {
       throw new Error(
         `Not started, can only call setState on the app that starts it.`,

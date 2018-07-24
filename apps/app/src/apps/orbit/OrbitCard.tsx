@@ -12,6 +12,7 @@ import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { Bit } from '@mcro/models'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
+import { getTargetPosition } from '../../helpers/getTargetPosition'
 
 export type OrbitCardProps = {
   total?: number
@@ -266,7 +267,12 @@ class OrbitCardStore {
         // if (this.props.paneStore) {
         //   this.props.paneStore.scrollIntoView(this.ref)
         // }
-        App.actions.selectItem(this.target, this.ref)
+        const position = getTargetPosition(this.ref)
+        // list items are closer to edge, adjust...
+        if (this.props.listItem === true) {
+          position.left += 8
+        }
+        App.actions.selectItem(this.target, position)
       }
     },
     { immediate: true },

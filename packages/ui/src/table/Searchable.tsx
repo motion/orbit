@@ -28,13 +28,17 @@ const SearchBar = view(Toolbar, {
 export const SearchBox = view(View, {
   position: 'relative',
   flexFlow: 'row',
-  backgroundColor: colors.white,
   borderRadius: '999em',
-  border: `1px solid ${colors.light15}`,
   height: '100%',
   width: '100%',
   alignItems: 'center',
   paddingLeft: 4,
+  background: colors.white,
+  border: [1, colors.light15],
+})
+
+SearchBox.theme = ({ theme }) => ({
+  border: [1, theme.base.borderColor],
 })
 
 export const SearchInput = view(TableInput, {
@@ -99,6 +103,8 @@ type Props = {
   tableKey: string
   onFilterChange: (filters: Array<Filter>) => void
   defaultFilters: Array<Filter>
+  searchBarProps?: Object
+  searchInputProps?: Object
 }
 
 type State = {
@@ -172,7 +178,7 @@ export const Searchable = (Component: any) =>
       }
     }
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    componentDidUpdate(_: Props, prevState: State) {
       if (
         this.context.plugin &&
         (prevState.searchTerm !== this.state.searchTerm ||
@@ -350,9 +356,15 @@ export const Searchable = (Component: any) =>
       })
 
     render() {
-      const { placeholder, actions, ...props } = this.props
+      const {
+        placeholder,
+        actions,
+        searchBarProps,
+        searchInputProps,
+        ...props
+      } = this.props
       return [
-        <SearchBar position="top" key="searchbar">
+        <SearchBar position="top" key="searchbar" {...searchBarProps}>
           <SearchBox tabIndex={-1}>
             <SearchIcon
               name="ui-1_zoom"
@@ -378,6 +390,7 @@ export const Searchable = (Component: any) =>
               innerRef={this.setInputRef}
               onFocus={this.onInputFocus}
               onBlur={this.onInputBlur}
+              {...searchInputProps}
             />
             {this.state.searchTerm || this.state.filters.length > 0 ? (
               <Clear onClick={this.clear}>&times;</Clear>

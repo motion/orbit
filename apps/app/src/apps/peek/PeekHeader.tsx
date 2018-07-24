@@ -88,7 +88,7 @@ export class PeekHeaderContent extends React.Component {
     } = this.props
     return (
       <PeekHeaderContain
-        draggable={true}
+        draggable
         onDragStart={peekStore.onDragStart}
         onDrag={peekStore.onDrag}
         onDragEnd={peekStore.onDragEnd}
@@ -97,6 +97,8 @@ export class PeekHeaderContent extends React.Component {
       >
         {/* Nice gradient effect on header */}
         <UI.FullScreen background="linear-gradient(rgba(255,255,255,0.04), transparent 44%)" />
+        {/* Fade below the icon */}
+        <UI.View position="absolute" top={0} right={0} bottom={0} width={70} background={`linear-gradient(to right, transparent, ${theme.base.background.darken(0.2)})`} />
         {/* <UI.HoverGlow
           width={400}
           height={300}
@@ -114,11 +116,10 @@ export class PeekHeaderContent extends React.Component {
                   size={16}
                   css={{
                     position: 'absolute',
-                    top: -2,
-                    right: 2,
+                    top: 7,
+                    right: 12,
                     transform: {
-                      scale: 2.5,
-                      rotate: '45deg',
+                      scale: 2,
                     },
                   }}
                 />
@@ -138,9 +139,9 @@ export class PeekHeaderContent extends React.Component {
                   <UI.Button icon="arrowminleft" circular size={0.8} />
                 )}
                 <UI.View flex={1} />
-                {!peekStore.tornState && (
+                {/* {!!peekStore.tornState && (
                   <ControlButton icon="z" onClick={peekStore.tearPeek} />
-                )}
+                )} */}
               </UI.Row>
             </>
           }

@@ -7,7 +7,6 @@ const SHADOW_PAD = 80
 const borderRadius = 6
 const background = '#f9f9f9'
 
-const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]
 const transitions = store => {
   if (store.isHidden) return 'none'
   if (store.tornState) return 'all linear 10ms'
@@ -16,14 +15,13 @@ const transitions = store => {
   return 'all ease 150ms'
 }
 
-const PeekFrameBorder = view({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
+const PeekFrameBorder = view(UI.FullScreen, {
   zIndex: 10000,
   pointerEvents: 'none',
+  boxShadow: [
+    ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.7]],
+    ['inset', 0, 0, 0, 1, [255, 255, 255, 0.2]],
+  ],
 })
 
 const PeekMain = view({
@@ -124,12 +122,7 @@ export const PeekFrame = view.attach('peekStore')(
           />
           <UI.Col flex={1} padding={padding} margin={margin}>
             <UI.Col pointerEvents="all !important" position="relative" flex={1}>
-              <PeekFrameBorder
-                css={{
-                  borderRadius,
-                  boxShadow: [borderShadow],
-                }}
-              />
+              <PeekFrameBorder borderRadius={borderRadius} />
               <PeekMain
                 css={{
                   boxShadow,

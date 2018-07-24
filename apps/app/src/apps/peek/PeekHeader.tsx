@@ -95,6 +95,16 @@ export class PeekHeaderContent extends React.Component {
         theme={theme}
         {...props}
       >
+        {/* Nice gradient effect on header */}
+        <UI.FullScreen background="linear-gradient(rgba(255,255,255,0.04), transparent 44%)" />
+        {/* <UI.HoverGlow
+          width={400}
+          height={300}
+          opacity={0.1}
+          blur={90}
+          zIndex={10000}
+          resist={50}
+        /> */}
         <TitleBar
           after={
             <>

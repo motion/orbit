@@ -6,6 +6,8 @@ const PeekContentChrome = view(UI.Col, {
   flex: 1,
   position: 'relative',
   zIndex: 0,
+  // without this, things strangely overflow
+  overflow: 'hidden',
 })
 
 PeekContentChrome.theme = ({ theme }) => ({

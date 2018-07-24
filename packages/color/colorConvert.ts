@@ -10,20 +10,16 @@ function wrapRaw(fn) {
     if (args === undefined || args === null) {
       return args
     }
-
     if (arguments.length > 1) {
       args = Array.prototype.slice.call(arguments)
     }
-
     return fn(args)
   }
-
   // preserve .conversion property if there is one
   if ('conversion' in fn) {
     // @ts-ignore
     wrappedFn.conversion = fn.conversion
   }
-
   return wrappedFn
 }
 
@@ -32,13 +28,10 @@ function wrapRounded(fn) {
     if (args === undefined || args === null) {
       return args
     }
-
     if (arguments.length > 1) {
       args = Array.prototype.slice.call(arguments)
     }
-
     var result = fn(args)
-
     // we're assuming the result is an array here.
     // see notice in conversions.js; don't use box types
     // in conversion functions.
@@ -47,7 +40,6 @@ function wrapRounded(fn) {
         result[i] = Math.round(result[i])
       }
     }
-
     return result
   }
 
@@ -62,20 +54,16 @@ function wrapRounded(fn) {
 
 models.forEach(function(fromModel) {
   colorConvert[fromModel] = {}
-
   Object.defineProperty(colorConvert[fromModel], 'channels', {
     value: colorConversions[fromModel].channels,
   })
   Object.defineProperty(colorConvert[fromModel], 'labels', {
     value: colorConversions[fromModel].labels,
   })
-
   var routes = colorRoute(fromModel)
   var routeModels = Object.keys(routes)
-
   routeModels.forEach(function(toModel) {
     var fn = routes[toModel]
-
     colorConvert[fromModel][toModel] = wrapRounded(fn)
     colorConvert[fromModel][toModel].raw = wrapRaw(fn)
   })

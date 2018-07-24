@@ -30,17 +30,15 @@ function buildGraph() {
 function deriveBFS(fromModel) {
   var graph = buildGraph()
   var queue = [fromModel] // unshift -> queue -> pop
-
+  console.log(graph, fromModel, graph[fromModel])
   graph[fromModel].distance = 0
-
   while (queue.length) {
-    var current = queue.pop()
-    var adjacents = Object.keys(colorConversions[current])
-
-    for (var len = adjacents.length, i = 0; i < len; i++) {
-      var adjacent = adjacents[i]
-      var node = graph[adjacent]
-
+    const current = queue.pop()
+    const adjacents = Object.keys(colorConversions[current])
+    for (let len = adjacents.length, i = 0; i < len; i++) {
+      const adjacent = adjacents[i]
+      const node = graph[adjacent]
+      console.log(graph, adjacent)
       if (node.distance === -1) {
         node.distance = graph[current].distance + 1
         node.parent = current
@@ -48,7 +46,6 @@ function deriveBFS(fromModel) {
       }
     }
   }
-
   return graph
 }
 

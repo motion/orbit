@@ -19,7 +19,6 @@ export class AppReactions extends Store {
 
   constructor({ onPinKey }) {
     super()
-    console.log(123)
     this.onPinKey = onPinKey
     this.setupReactions()
   }
@@ -29,7 +28,6 @@ export class AppReactions extends Store {
   }
 
   async setupReactions() {
-    console.log('mounting...', this.id)
     const dispose = App.onMessage(async msg => {
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:

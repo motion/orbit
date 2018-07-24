@@ -4,19 +4,19 @@ import { PeekBitResolver } from '../../views/PeekBitResolver'
 import { SubTitle } from '../../../../views'
 import { OrbitDivider } from '../../../../apps/orbit/OrbitDivider'
 import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
-import { PeekPaneProps } from '../../PeekPaneProps'
 import * as UI from '@mcro/ui'
+import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const Section = view({
   padding: 20,
 })
 
-// delays here help ensure it doesn't jitter
-
-const itemProps = {
-  padding: [4, 15],
-  '&:hover': {
-    background: [0, 0, 0, 0.02],
+const bitResolverProps = {
+  itemProps: {
+    padding: [4, 15],
+    '&:hover': {
+      background: [0, 0, 0, 0.02],
+    },
   },
 }
 
@@ -25,60 +25,41 @@ const itemProps = {
 })
 @view
 export class Conversation extends React.Component<
-  PeekPaneProps & {
+  PeekBitPaneProps & {
     relatedStore: PeekRelatedStore
   }
 > {
+  static bitResolverProps = bitResolverProps
+
   render() {
-    const { relatedStore, bit, appStore, children } = this.props
-    if (!bit) {
-      return children({})
-    }
+    const { relatedStore, appStore, content } = this.props
     return (
-      <PeekBitResolver appStore={appStore} bit={bit} itemProps={itemProps}>
-        {({ permalink, location, title, icon, content, date }) => {
-          return children({
-            title,
-            subtitle: location,
-            icon,
-            permalink,
-            date,
-            content: (
-              <>
-                {content}
-                {relatedStore.relatedConversations.length ? (
-                  <UI.View marginTop={60} background="#f5f5f5">
-                    <Section>
-                      <SubTitle>Related Conversations</SubTitle>
-                    </Section>
-                    {relatedStore.relatedConversations.map(
-                      (relatedBit, index) => (
-                        <React.Fragment key={`${relatedBit.id}${index}`}>
-                          <PeekBitResolver
-                            appStore={appStore}
-                            bit={relatedBit}
-                            itemProps={itemProps}
-                          >
-                            {({ content }) => content}
-                          </PeekBitResolver>
-                          {index < 2 && (
-                            <OrbitDivider
-                              height={2}
-                              css={{ margin: [20, 0, 10] }}
-                            />
-                          )}
-                        </React.Fragment>
-                      ),
-                    )}
-                    <br />
-                    <br />
-                  </UI.View>
-                ) : null}
-              </>
-            ),
-          })
-        }}
-      </PeekBitResolver>
+      <>
+        {content}
+        {relatedStore.relatedConversations.length ? (
+          <UI.View marginTop={60} background="#f5f5f5">
+            <Section>
+              <SubTitle>Related Conversations</SubTitle>
+            </Section>
+            {relatedStore.relatedConversations.map((relatedBit, index) => (
+              <React.Fragment key={`${relatedBit.id}${index}`}>
+                <PeekBitResolver
+                  appStore={appStore}
+                  bit={relatedBit}
+                  itemProps={bitResolverProps}
+                >
+                  {({ content }) => content}
+                </PeekBitResolver>
+                {index < 2 && (
+                  <OrbitDivider height={2} css={{ margin: [20, 0, 10] }} />
+                )}
+              </React.Fragment>
+            ))}
+            <br />
+            <br />
+          </UI.View>
+        ) : null}
+      </>
     )
   }
 }

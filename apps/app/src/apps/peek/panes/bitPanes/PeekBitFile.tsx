@@ -1,5 +1,3 @@
-export const File = ({ bit, children }) =>
-  children({
-    title: bit.title,
-    body: bit.body,
-  })
+import { PeekBitPaneProps } from './PeekBitPaneProps'
+
+export const File = ({ content }: PeekBitPaneProps) => content

@@ -30,7 +30,6 @@ function buildGraph() {
 function deriveBFS(fromModel) {
   var graph = buildGraph()
   var queue = [fromModel] // unshift -> queue -> pop
-  console.log(graph, fromModel, graph[fromModel])
   graph[fromModel].distance = 0
   while (queue.length) {
     const current = queue.pop()
@@ -38,7 +37,6 @@ function deriveBFS(fromModel) {
     for (let len = adjacents.length, i = 0; i < len; i++) {
       const adjacent = adjacents[i]
       const node = graph[adjacent]
-      console.log(graph, adjacent)
       if (node.distance === -1) {
         node.distance = graph[current].distance + 1
         node.parent = current

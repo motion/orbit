@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
-import { PeekBitResolver } from '../../views/PeekBitResolver'
+import { view, compose } from '@mcro/black'
 import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
 // import { RelatedPeople } from '../../views/RelatedPeople'
-import { PeekPaneProps } from '../../PeekPaneProps'
+import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const BodyContents = view({
   whiteSpace: 'pre-line',
@@ -13,46 +12,29 @@ const BodyContents = view({
   overflow: 'hidden',
 })
 
-@view.attach({
-  relatedStore: PeekRelatedStore,
-})
-@view
-export class Task extends React.Component<
-  PeekPaneProps & {
-    relatedStore: PeekRelatedStore
-  }
-> {
-  render() {
-    const { relatedStore, bit, appStore, children } = this.props
-    if (!bit) {
-      return children({})
-    }
-    return (
-      <PeekBitResolver appStore={appStore} bit={bit}>
-        {({ title, date, location, content, comments, icon, permalink }) => {
-          return children({
-            title,
-            subtitle: location,
-            icon,
-            date,
-            permalink,
-            content: (
-              <>
-                {/* <RelatedPeople title="Assigned" relatedStore={relatedStore} /> */}
-                <BodyContents
-                  className="markdown"
-                  dangerouslySetInnerHTML={{
-                    __html: content,
-                  }}
-                />
-                <BodyContents>{comments}</BodyContents>
-                <br />
-                <br />
-              </>
-            ),
-          })
-        }}
-      </PeekBitResolver>
-    )
-  }
+type Props = PeekBitPaneProps & {
+  relatedStore: PeekRelatedStore
 }
+
+const decorator = compose(
+  view.attach({
+    relatedStore: PeekRelatedStore,
+  }),
+)
+
+export const Task = decorator(({ content, comments }: Props) => {
+  return (
+    <>
+      {/* <RelatedPeople title="Assigned" relatedStore={relatedStore} /> */}
+      <BodyContents
+        className="markdown"
+        dangerouslySetInnerHTML={{
+          __html: content,
+        }}
+      />
+      <BodyContents>{comments}</BodyContents>
+      <br />
+      <br />
+    </>
+  )
+})

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { PeekBitResolver } from '../index'
-import { PeekContentProps } from './PeekContentProps'
+import { PeekBitResolver } from '../../views/PeekBitResolver'
+import { PeekPaneProps } from '../../PeekPaneProps'
 import * as UI from '@mcro/ui'
-import { MarkdownBody } from './views/MarkdownBody'
+import { MarkdownBody } from '../../views/MarkdownBody'
 
 const SearchableDocument = UI.Searchable(
   ({ content, children, searchBar, searchTerm }) => {
@@ -18,7 +18,7 @@ export const Document = ({
   appStore,
   peekStore,
   children,
-}: PeekContentProps) => {
+}: PeekPaneProps) => {
   if (!bit || !bit.data) {
     return children({})
   }

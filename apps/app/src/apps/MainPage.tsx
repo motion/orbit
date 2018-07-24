@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 // import { HighlightsPage } from './HighlightsPage'
-import { OrbitPage } from './OrbitPage'
-import { PeekPage } from './PeekPage'
+import { Orbit } from './orbit/Orbit'
+import { Peek } from './peek/Peek'
 import { AppStore } from '../stores/AppStore'
 import * as UI from '@mcro/ui'
 import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
@@ -30,8 +30,8 @@ export class MainPage extends React.Component<{
     return (
       <Main>
         {/* <HighlightsPage /> */}
-        <OrbitPage />
-        <PeekPage />
+        <Orbit />
+        <Peek />
       </Main>
     )
   }

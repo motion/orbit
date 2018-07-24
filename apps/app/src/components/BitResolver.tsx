@@ -46,6 +46,7 @@ type Props = {
   searchStore?: SearchStore
   isExpanded?: boolean
   children: Function | React.ReactNode
+  shownLimit?: number
 }
 
 export const BitResolver: React.SFC<Props> = ({ bit, ...props }) => {

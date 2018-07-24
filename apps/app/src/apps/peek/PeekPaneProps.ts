@@ -1,6 +1,6 @@
 import { Bit } from '@mcro/models'
-import { AppStore } from '../../../stores/AppStore'
-import { PeekStore } from '../../PeekStore'
+import { AppStore } from '../../stores/AppStore'
+import { PeekStore } from './stores/PeekStore'
 
 export type PeekContents = {
   title: React.ReactNode
@@ -14,7 +14,7 @@ export type PeekContents = {
   after?: React.ReactNode
 }
 
-export type PeekContentProps = {
+export type PeekPaneProps = {
   bit: Bit
   appStore: AppStore
   peekStore: PeekStore

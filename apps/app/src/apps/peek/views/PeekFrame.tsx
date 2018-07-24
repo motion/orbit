@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { PeekStore } from '../PeekStore'
+import { PeekStore } from '../stores/PeekStore'
 
 const SHADOW_PAD = 80
 const borderRadius = 6

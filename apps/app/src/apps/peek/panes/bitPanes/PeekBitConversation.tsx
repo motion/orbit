@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekBitResolver } from '../index'
-import { SubTitle } from '../../../views'
-import { OrbitDivider } from '../../../apps/orbit/OrbitDivider'
-import { PeekRelatedStore } from './PeekRelatedStore'
-import { PeekContentProps } from './PeekContentProps'
+import { PeekBitResolver } from '../../views/PeekBitResolver'
+import { SubTitle } from '../../../../views'
+import { OrbitDivider } from '../../../../apps/orbit/OrbitDivider'
+import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
+import { PeekPaneProps } from '../../PeekPaneProps'
 import * as UI from '@mcro/ui'
 
 const Section = view({
@@ -25,7 +25,7 @@ const itemProps = {
 })
 @view
 export class Conversation extends React.Component<
-  PeekContentProps & {
+  PeekPaneProps & {
     relatedStore: PeekRelatedStore
   }
 > {

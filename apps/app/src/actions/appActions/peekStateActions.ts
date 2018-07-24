@@ -68,6 +68,7 @@ export function selectItem(
         // because were doing deep merging, we reset extra fields
         body: '',
         integration: item.integration || '',
+        subType: item.subType || '',
       },
     })
   }
@@ -85,6 +86,7 @@ export function selectPerson(person: Person, target?: PositionObject) {
       body: '',
       type: 'person',
       integration: '',
+      subType: '',
     },
   })
 }
@@ -98,7 +100,8 @@ export function selectBit(bit: Bit, target?: PositionObject) {
       icon: bit.icon || '',
       title: bit.title,
       body: bit.body || '',
-      type: bit.type || '',
+      type: 'bit',
+      subType: bit.type,
       integration: bit.integration || '',
     },
   })

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BitResolver } from '../../components/BitResolver'
+import { BitResolver } from '../../../components/BitResolver'
 
 export const PeekBitResolver = ({ bit, children, ...props }) => {
   return (

@@ -13,7 +13,7 @@ export function runRouter() {
       '/isolate': IsolatePage,
     },
   })
-  window.Router = AppRouter
+  window['Router'] = AppRouter
 }
 
 runRouter()

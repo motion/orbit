@@ -1,15 +1,13 @@
-import { PeekStore } from './PeekStore'
+import { PeekStore } from './stores/PeekStore'
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, compose } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as PeekContents from './peek/PeekContents'
+import * as PeekPanes from './panes'
 import { capitalize } from 'lodash'
-import { PeekFrame } from './peek/PeekFrame'
-import { AppStore } from '../stores/AppStore'
-import { PeekContent } from './peek/PeekContent'
-import { PeekHeader } from './peek/PeekHeader'
-import { PeekBitInformation } from './peek/PeekContents/PeekBitInformation'
-import { Bit, Person } from '@mcro/models'
+import { PeekFrame } from './views/PeekFrame'
+import { AppStore } from '../../stores/AppStore'
+import { PeekContent } from './views/PeekContent'
+import { PeekHeader } from './views/PeekHeader'
 
 const PeekPageInner = view(({ peekStore, appStore }) => {
   if (!peekStore.state) {
@@ -17,7 +15,7 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
   }
   const { item, peekId } = peekStore.state
   const type = (item && capitalize(item.type)) || 'Empty'
-  const PeekContentsView = PeekContents[type]
+  const PeekContentsView = PeekPanes[type]
   if (!PeekContentsView) {
     console.error('none', type)
     return <div>no pane found</div>
@@ -56,17 +54,6 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
               {...headerProps}
             />
             <PeekContent>{content}</PeekContent>
-            <PeekBitInformation
-              if={
-                peekStore.model instanceof Bit ||
-                peekStore.model instanceof Person
-              }
-              body={
-                peekStore.model.body ||
-                'ui kit size prop async migration freelance distrbiution org integration'
-              }
-              people={peekStore.model.people}
-            />
           </>
         )
       }}
@@ -74,24 +61,26 @@ const PeekPageInner = view(({ peekStore, appStore }) => {
   )
 })
 
-@view.attach('appStore')
-@view.provide({
-  peekStore: PeekStore,
-})
-export class PeekPage extends React.Component<{
+const decorator = compose(
+  view.attach('appStore'),
+  view.provide({
+    peekStore: PeekStore,
+  }),
+)
+
+type Props = {
   appStore?: AppStore
   peekStore?: PeekStore
-}> {
-  render() {
-    const { appStore, peekStore } = this.props
-    return (
-      <div>
-        <UI.Theme name="light">
-          <PeekFrame>
-            <PeekPageInner appStore={appStore} peekStore={peekStore} />
-          </PeekFrame>
-        </UI.Theme>
-      </div>
-    )
-  }
 }
+
+export const Peek = decorator(({ appStore, peekStore }: Props) => {
+  return (
+    <div>
+      <UI.Theme name="light">
+        <PeekFrame>
+          <PeekPageInner appStore={appStore} peekStore={peekStore} />
+        </PeekFrame>
+      </UI.Theme>
+    </div>
+  )
+})

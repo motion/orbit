@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekBitResolver } from '../index'
-import { PeekRelatedStore } from './PeekRelatedStore'
-import { RelatedPeople } from './RelatedPeople'
-import { PeekContentProps } from './PeekContentProps'
+import { PeekBitResolver } from '../../views/PeekBitResolver'
+import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
+// import { RelatedPeople } from '../../views/RelatedPeople'
+import { PeekPaneProps } from '../../PeekPaneProps'
 
 const BodyContents = view({
   whiteSpace: 'pre-line',
@@ -18,7 +18,7 @@ const BodyContents = view({
 })
 @view
 export class Task extends React.Component<
-  PeekContentProps & {
+  PeekPaneProps & {
     relatedStore: PeekRelatedStore
   }
 > {

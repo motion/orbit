@@ -2,8 +2,8 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import * as _ from 'lodash'
-import * as Helpers from '../../../helpers'
-import { PeekContentProps } from './PeekContentProps'
+import * as Helpers from '../../../../helpers'
+import { PeekPaneProps } from '../../PeekPaneProps'
 
 const parseBody = body =>
   !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
@@ -18,7 +18,7 @@ const Para = view({
 })
 
 @view
-export class Mail extends React.Component<PeekContentProps> {
+export class Mail extends React.Component<PeekPaneProps> {
   render() {
     const { bit, children } = this.props
     if (!bit || !bit.data) {

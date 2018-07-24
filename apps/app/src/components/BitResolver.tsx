@@ -7,6 +7,7 @@ import { ResolveApp } from './resolve/ResolveApp'
 import { ResolvePerson } from './resolve/ResolvePerson'
 import { Person, Bit } from '@mcro/models'
 import { SearchStore } from '../stores/SearchStore'
+import { AppStatePeekItem } from '../../../stores/App'
 
 const results = {
   slack: {
@@ -32,32 +33,37 @@ const results = {
   },
 }
 
-const EmptyResolver = ({ children }) =>
+const EmptyResolver = ({
+  item,
+  children,
+}: {
+  item: AppStatePeekItem
+  children: Function
+}) =>
   children({
-    title: '',
+    title: item.title || '',
     body: '',
     subtitle: '',
     location: '',
-    icon: '',
+    icon: item.icon || '',
   })
 
-type Props = {
+export type BitResolverProps = {
   bit?: Bit
+  item: AppStatePeekItem
   searchStore?: SearchStore
   isExpanded?: boolean
   children: Function | React.ReactNode
   shownLimit?: number
 }
 
-export const BitResolver: React.SFC<Props> = ({ bit, ...props }) => {
+export const BitResolver = ({ bit, item, ...props }: BitResolverProps) => {
   let Resolver
   if (!bit) {
-    return EmptyResolver
+    return <EmptyResolver item={item} {...props} />
   }
   if (bit instanceof Person) {
     Resolver = ResolvePerson
-  } else if (!bit.integration || !bit.type) {
-    Resolver = ({ children }) => children(bit)
   } else {
     const resolveIntegration = results[bit.integration]
     Resolver = resolveIntegration && resolveIntegration[bit.type]

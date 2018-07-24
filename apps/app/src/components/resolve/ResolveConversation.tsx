@@ -1,4 +1,3 @@
-import { view } from '@mcro/black'
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
 import { RoundButton } from '../../views/RoundButton'

@@ -44,7 +44,7 @@ const TitleBarTitle = props => (
 
 const TitleBarContain = view({
   flex: 1,
-  height: 30,
+  height: 27,
   maxWidth: '100%',
 })
 
@@ -54,25 +54,36 @@ TitleBarContain.theme = ({ theme }) => ({
   },
 })
 
-const Permalink = ({ to = () => {} }) => (
-  <UI.Button circular icon="link" size={1.1} onClick={to} />
-)
+const SubTitleHorizontalSpace = () => <div style={{ width: 12 }} />
 
-const SubTitle = ({ children, date, permalink }) => (
+const SubTitle = ({ children, date, permalink, icon }) => (
   <UI.Row padding={[0, 12]} alignItems="center" flex={1} height={32}>
-    {children}
-    {date ? (
-      <>
-        {' '}
-        <UI.Date>{date}</UI.Date>
-      </>
-    ) : null}
-    {!!permalink && (
-      <>
-        <div style={{ flex: 1 }} />
-        <Permalink to={permalink} />
-      </>
-    )}
+    <UI.Text>{children}</UI.Text>
+    {!!children && !!date && <SubTitleHorizontalSpace />}
+    <UI.Text>
+      {date ? (
+        <>
+          {' '}
+          <UI.Date>{date}</UI.Date>
+        </>
+      ) : null}
+    </UI.Text>
+    {!!permalink &&
+      !!icon && (
+        <>
+          <div style={{ flex: 1 }} />
+          <OrbitIcon
+            onClick={permalink}
+            icon={icon}
+            size={16}
+            css={{
+              transform: {
+                scale: 2,
+              },
+            }}
+          />
+        </>
+      )}
   </UI.Row>
 )
 
@@ -109,9 +120,13 @@ export class PeekHeaderContent extends React.Component<Props> {
         {...props}
       >
         {/* Nice gradient effect on header */}
-        <UI.FullScreen background="linear-gradient(rgba(255,255,255,0.04), transparent 44%)" />
+        <UI.FullScreen
+          background="linear-gradient(rgba(255,255,255,0.04), transparent 44%)"
+          pointerEvents="none"
+        />
         {/* Fade below the icon */}
         <UI.View
+          pointerEvents="none"
           position="absolute"
           top={0}
           right={0}
@@ -132,20 +147,6 @@ export class PeekHeaderContent extends React.Component<Props> {
         <TitleBar
           after={
             <>
-              {!!icon && (
-                <OrbitIcon
-                  icon={icon}
-                  size={16}
-                  css={{
-                    position: 'absolute',
-                    top: 7,
-                    right: 12,
-                    transform: {
-                      scale: 2,
-                    },
-                  }}
-                />
-              )}
               <UI.Row
                 flexFlow="row"
                 position="absolute"
@@ -171,7 +172,7 @@ export class PeekHeaderContent extends React.Component<Props> {
           {title}
         </TitleBar>
         {!!subtitle && (
-          <SubTitle date={date} permalink={permalink}>
+          <SubTitle date={date} permalink={permalink} icon={icon}>
             {subtitle}
           </SubTitle>
         )}

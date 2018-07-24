@@ -408,15 +408,17 @@ export class Surface extends React.Component<SurfaceProps> {
             {...glowProps}
           />
         ) : null}
-        <Element
-          noInnerElement={noInnerElement}
-          tagName={tagName}
-          {...throughProps}
-          {...elementProps}
-          disabled={disabled}
-        >
-          {children}
-        </Element>
+        {!noInnerElement &&
+          !!children && (
+            <Element
+              tagName={tagName}
+              {...throughProps}
+              {...elementProps}
+              disabled={disabled}
+            >
+              {children}
+            </Element>
+          )}
         {tooltip ? (
           <Theme name="dark">
             <Popover

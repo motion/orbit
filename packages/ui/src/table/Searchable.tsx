@@ -29,7 +29,6 @@ type Props = {
   searchBarProps?: Object
   searchInputProps?: Object
   children?: React.ReactNode | Function
-  customRender?: boolean
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
@@ -420,7 +419,7 @@ export const Searchable = (Component: any) =>
         />
       )
 
-      if (customRender && typeof props.children === 'function') {
+      if (typeof props.children === 'function') {
         return body
       }
 

@@ -61,11 +61,12 @@ export class Conversation extends React.Component<
                           >
                             {({ content }) => content}
                           </PeekBitResolver>
-                          <OrbitDivider
-                            if={index < 2}
-                            height={2}
-                            css={{ margin: [20, 0, 10] }}
-                          />
+                          {index < 2 && (
+                            <OrbitDivider
+                              height={2}
+                              css={{ margin: [20, 0, 10] }}
+                            />
+                          )}
                         </React.Fragment>
                       ),
                     )}

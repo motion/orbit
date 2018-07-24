@@ -6,6 +6,8 @@ import { PeekStore } from '../PeekStore'
 const SHADOW_PAD = 80
 const borderRadius = 6
 const background = '#f9f9f9'
+// shared by arrow and frameborder
+const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.7]]
 
 const transitions = store => {
   if (store.isHidden) return 'none'
@@ -18,10 +20,7 @@ const transitions = store => {
 const PeekFrameBorder = view(UI.FullScreen, {
   zIndex: 10000,
   pointerEvents: 'none',
-  boxShadow: [
-    ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.7]],
-    ['inset', 0, 0, 0, 1, [255, 255, 255, 0.2]],
-  ],
+  boxShadow: [borderShadow, ['inset', 0, 0.5, 0, 1, [255, 255, 255, 0.3]]],
 })
 
 const PeekMain = view({
@@ -103,13 +102,10 @@ export const PeekFrame = view.attach('peekStore')(
             towards={onRight ? 'left' : 'right'}
             background={
               arrowY < 40 && peekStore.theme
-                ? peekStore.theme.background
+                ? UI.color(peekStore.theme.background).darken(0.2)
                 : background
             }
-            boxShadow={[
-              [0, 0, 10, [0, 0, 0, 0.05]],
-              ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.35]],
-            ]}
+            boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
             css={{
               left: !onRight ? 'auto' : -14,
               right: !onRight ? -arrowSize : 'auto',

@@ -1,10 +1,9 @@
 import { react, on } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../helpers'
 import * as Constants from '../constants'
 import { AppStore } from '../stores/AppStore'
-import { SearchStore } from '../stores/SearchStore'
 
 const TYPE_THEMES = {
   person: {

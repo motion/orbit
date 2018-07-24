@@ -17,6 +17,20 @@ import { View } from '../blocks/View'
 import { Icon } from '../Icon'
 import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
+import { Theme } from '@mcro/gloss'
+
+type Props = {
+  placeholder?: string
+  actions: React.ReactNode
+  tableKey: string
+  onFilterChange: (filters: Array<Filter>) => void
+  defaultFilters: Array<Filter>
+  searchBarTheme?: Object
+  searchBarProps?: Object
+  searchInputProps?: Object
+  children?: React.ReactNode | Function
+  customRender?: boolean
+}
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
@@ -95,16 +109,6 @@ export type SearchableProps = {
   addFilter: (filter: Filter) => void
   searchTerm: string
   filters: Array<Filter>
-}
-
-type Props = {
-  placeholder?: string
-  actions: React.ReactNode
-  tableKey: string
-  onFilterChange: (filters: Array<Filter>) => void
-  defaultFilters: Array<Filter>
-  searchBarProps?: Object
-  searchInputProps?: Object
 }
 
 type State = {
@@ -361,50 +365,70 @@ export const Searchable = (Component: any) =>
         actions,
         searchBarProps,
         searchInputProps,
+        customRender,
+        searchBarTheme,
         ...props
       } = this.props
-      return [
-        <SearchBar position="top" key="searchbar" {...searchBarProps}>
-          <SearchBox tabIndex={-1}>
-            <SearchIcon
-              name="ui-1_zoom"
-              color={colors.macOSTitleBarIcon}
-              size={16}
-            />
-            {this.state.filters.map((filter, i) => (
-              <FilterToken
-                key={`${filter.key}:${filter.type}`}
-                index={i}
-                filter={filter}
-                focused={i === this.state.focusedToken}
-                onFocus={this.onTokenFocus}
-                onDelete={this.removeFilter}
-                onReplace={this.replaceFilter}
-                onBlur={this.onTokenBlur}
+
+      const searchBar = (
+        <Theme theme={searchBarTheme}>
+          <SearchBar position="top" key="searchbar" {...searchBarProps}>
+            <SearchBox tabIndex={-1}>
+              <SearchIcon
+                name="ui-1_zoom"
+                color={colors.macOSTitleBarIcon}
+                size={16}
               />
-            ))}
-            <SearchInput
-              placeholder={placeholder}
-              onChange={this.onChangeSearchTerm}
-              value={this.state.searchTerm}
-              innerRef={this.setInputRef}
-              onFocus={this.onInputFocus}
-              onBlur={this.onInputBlur}
-              {...searchInputProps}
-            />
-            {this.state.searchTerm || this.state.filters.length > 0 ? (
-              <Clear onClick={this.clear}>&times;</Clear>
-            ) : null}
-          </SearchBox>
-          {actions != null ? <Actions>{actions}</Actions> : null}
-        </SearchBar>,
+              {this.state.filters.map((filter, i) => (
+                <FilterToken
+                  key={`${filter.key}:${filter.type}`}
+                  index={i}
+                  filter={filter}
+                  focused={i === this.state.focusedToken}
+                  onFocus={this.onTokenFocus}
+                  onDelete={this.removeFilter}
+                  onReplace={this.replaceFilter}
+                  onBlur={this.onTokenBlur}
+                />
+              ))}
+              <SearchInput
+                placeholder={placeholder}
+                onChange={this.onChangeSearchTerm}
+                value={this.state.searchTerm}
+                innerRef={this.setInputRef}
+                onFocus={this.onInputFocus}
+                onBlur={this.onInputBlur}
+                {...searchInputProps}
+              />
+              {this.state.searchTerm || this.state.filters.length > 0 ? (
+                <Clear onClick={this.clear}>&times;</Clear>
+              ) : null}
+            </SearchBox>
+            {actions != null ? <Actions>{actions}</Actions> : null}
+          </SearchBar>
+        </Theme>
+      )
+
+      const body = (
         <Component
           {...props}
           key="table"
           addFilter={this.addFilter}
           searchTerm={this.state.searchTerm}
+          searchBar={searchBar}
           filters={this.state.filters}
-        />,
-      ]
+        />
+      )
+
+      if (customRender && typeof props.children === 'function') {
+        return body
+      }
+
+      return (
+        <>
+          {searchBar}
+          {body}
+        </>
+      )
     }
   }

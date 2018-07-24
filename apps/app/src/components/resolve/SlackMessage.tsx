@@ -32,6 +32,8 @@ const Content = view({
   margin: [1, 0, 0],
   userSelect: 'auto',
   wordWrap: 'break-word',
+  fontSize: 16,
+  lineHeight: 25,
 })
 
 @view
@@ -77,7 +79,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           <RoundButtonPerson person={person} />
           <div style={{ width: 6 }} />
           <Date if={!previousMessage || !previousWithinOneMinute}>
-            <TimeAgo if={message.ts}>{getSlackDate(message.ts)}</TimeAgo>
+            {!!message.ts && <TimeAgo>{getSlackDate(message.ts)}</TimeAgo>}
           </Date>
         </UI.Row>
         <UI.Row>

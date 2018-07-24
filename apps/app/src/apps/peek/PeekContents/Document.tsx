@@ -23,16 +23,24 @@ const BodyContents = view({
   lineHeight: 26,
 })
 
-const SearchableDocument = UI.Searchable(({ children, searchTerm }) => {
-  return (
-    <BodyContents
-      className="markdown"
-      dangerouslySetInnerHTML={{
-        __html: children,
-      }}
-    />
-  )
-})
+const SearchableDocument = UI.Searchable(
+  ({ content, children, searchBar, searchTerm }) => {
+    return children({
+      searchBar,
+      content: (
+        <BodyContents
+          className="markdown"
+          dangerouslySetInnerHTML={{
+            __html:
+              typeof content === 'string'
+                ? markdown(content, options)
+                : content,
+          }}
+        />
+      ),
+    })
+  },
+)
 
 @view
 export class Document extends React.Component<PeekContentProps> {
@@ -44,19 +52,22 @@ export class Document extends React.Component<PeekContentProps> {
     return (
       <PeekBitResolver bit={bit} appStore={appStore}>
         {({ title, icon, content }) => {
-          return children({
-            title,
-            icon,
-            content: (
-              <UI.Theme theme={peekStore.theme}>
-                <SearchableDocument>
-                  {typeof content === 'string'
-                    ? markdown(content, options)
-                    : content}
-                </SearchableDocument>
-              </UI.Theme>
-            ),
-          })
+          return (
+            <SearchableDocument
+              content={content}
+              customRender
+              searchBarTheme={peekStore.theme}
+            >
+              {({ content, searchBar }) => {
+                return children({
+                  title,
+                  icon,
+                  subhead: searchBar,
+                  content,
+                })
+              }}
+            </SearchableDocument>
+          )
         }}
       </PeekBitResolver>
     )

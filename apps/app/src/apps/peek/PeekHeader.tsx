@@ -4,7 +4,20 @@ import * as UI from '@mcro/ui'
 import { OrbitIcon } from '../../apps/orbit/OrbitIcon'
 import { WindowControls } from '../../views/WindowControls'
 import { App } from '@mcro/stores'
-import { ControlButton } from '../../views/ControlButton'
+import { PeekStore } from '../PeekStore'
+// import { ControlButton } from '../../views/ControlButton'
+
+type Props = {
+  peekStore?: PeekStore
+  title?: React.ReactNode
+  date?: React.ReactNode
+  subtitle?: React.ReactNode
+  permalink?: Function
+  icon?: string | React.ReactNode
+  theme?: Object
+  subhead?: React.ReactNode
+  integration?: string
+}
 
 const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
@@ -72,7 +85,7 @@ const TitleBar = ({ children, after, ...props }) => (
 
 @attachTheme
 @view
-export class PeekHeaderContent extends React.Component {
+export class PeekHeaderContent extends React.Component<Props> {
   render() {
     const {
       peekStore,
@@ -98,7 +111,16 @@ export class PeekHeaderContent extends React.Component {
         {/* Nice gradient effect on header */}
         <UI.FullScreen background="linear-gradient(rgba(255,255,255,0.04), transparent 44%)" />
         {/* Fade below the icon */}
-        <UI.View position="absolute" top={0} right={0} bottom={0} width={70} background={`linear-gradient(to right, transparent, ${theme.base.background.darken(0.2)})`} />
+        <UI.View
+          position="absolute"
+          top={0}
+          right={0}
+          bottom={0}
+          width={70}
+          background={`linear-gradient(to right, transparent, ${theme.base.background.darken(
+            0.2,
+          )})`}
+        />
         {/* <UI.HoverGlow
           width={400}
           height={300}

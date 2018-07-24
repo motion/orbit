@@ -72,7 +72,6 @@ export class SearchStore {
       dispose: () => {
         this.nlpStore.subscriptions.dispose()
         this.searchFilterStore.subscriptions.dispose()
-        this.appReactionsStore.subscriptions.dispose()
         disposeAppListen()
       },
     })

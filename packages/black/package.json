@@ -1,6 +1,5 @@
 {
   "name": "@mcro/black",
-  "types": "./types.d.ts",
   "main": "_/index.js",
   "module": "_/index.js",
   "sideEffects": false,

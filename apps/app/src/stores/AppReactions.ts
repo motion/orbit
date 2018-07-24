@@ -1,4 +1,4 @@
-import { store, react, sleep } from '@mcro/black/store'
+import { store, react, sleep, Store } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/stores'
 import orbitPosition from '../helpers/orbitPosition'
 import { ORBIT_WIDTH } from '@mcro/constants'
@@ -13,13 +13,19 @@ const appTarget = ({ offset = null, bounds = null } = {}) => {
 }
 
 @store
-export class AppReactions {
+export class AppReactions extends Store {
   onPinKey = null
   id = Math.random()
 
   constructor({ onPinKey }) {
+    super()
+    console.log(123)
     this.onPinKey = onPinKey
     this.setupReactions()
+  }
+
+  dispose() {
+    this.subscriptions.dispose()
   }
 
   async setupReactions() {

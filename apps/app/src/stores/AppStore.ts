@@ -19,6 +19,10 @@ export class AppStore {
     this.updateScreenSize()
   }
 
+  willUnmount() {
+    this.appReactionsStore.dispose()
+  }
+
   onPinKey = cb => {
     this.onPinKeyCB = cb
   }

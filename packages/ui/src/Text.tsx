@@ -267,8 +267,6 @@ export class Text extends React.Component<TextProps> {
       )
     }
 
-    console.log('cotnents', contents)
-
     return (
       <TextBlock
         contentEditable={editable}

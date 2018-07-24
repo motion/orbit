@@ -13,6 +13,8 @@ export class SlackLoader {
 
   /**
    * Loads all slack users.
+   *
+   * @see https://api.slack.com/methods/users.list
    */
   async loadUsers(cursor?: string): Promise<SlackUser[]> {
     const response = await users.list({
@@ -31,6 +33,8 @@ export class SlackLoader {
 
   /**
    * Loads all slack channels.
+   *
+   * @see https://api.slack.com/methods/channels.list
    */
   async loadChannels(cursor?: string): Promise<SlackChannel[]> {
     const response = await channels.list({

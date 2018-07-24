@@ -5,6 +5,7 @@
  */
 export type SlackMessage = {
   type: string
+  subtype: string
   user: string
   text: string
   ts: string
@@ -15,7 +16,7 @@ export type SlackMessage = {
 /**
  * Slack channel.
  *
- * @see https://api.slack.com/methods/channels.list
+ * @see https://api.slack.com/types/channel
  */
 export type SlackChannel = {
   id: string
@@ -49,7 +50,7 @@ export type SlackChannel = {
 /**
  * Slack user.
  *
- * @see https://api.slack.com/methods/users.list
+ * @see https://api.slack.com/types/user
  */
 export type SlackUser = {
   id: string

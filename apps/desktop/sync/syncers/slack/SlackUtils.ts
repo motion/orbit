@@ -6,13 +6,18 @@ import { SlackChannel, SlackMessage } from './SlackTypes'
  */
 export function filterChannelsBySettings(channels: SlackChannel[], setting: Setting) {
 
+  const settingChannels = setting.values.channels/* || {
+    // C2LCP6BM4: "C2LCP6BM4",
+    // C1NFAQMCH: "C1NFAQMCH",!
+  }*/
+
   // if no channels in settings are selected then return all channels
-  if (!setting.values.channels)
+  if (!settingChannels)
     return channels
 
   const settingsChannelIds = Object
-    .keys(setting.values.channels)
-    .map(key => setting.values.channels[key])
+    .keys(settingChannels)
+    .map(key => settingChannels[key])
 
   return channels.filter(channel => {
     return settingsChannelIds.indexOf(channel.id) !== -1
@@ -25,13 +30,15 @@ export function filterChannelsBySettings(channels: SlackChannel[], setting: Sett
  */
 export function createConversation(messages: SlackMessage[]): SlackMessage[][] {
 
-  // no messages - no groups
-  if (!messages.length)
-    return []
-
   // push a first message as a first message in a first group
-  const conversations: SlackMessage[][] = [[messages[0]]]
+  const conversations: SlackMessage[][] = []
   for (const message of messages) {
+
+    // push first message as a first group in a conversation
+    if (message === messages[0]) {
+      conversations.push([message])
+      continue;
+    }
 
     const index1 = conversations.length - 1
     const index2 = conversations[index1].length - 1

@@ -1,6 +1,7 @@
 import { Bit, createOrUpdateBit, Person, Setting, createOrUpdate } from '@mcro/models'
 import * as _ from 'lodash'
 import * as Helpers from '~/helpers'
+import { sequence } from '~/utils'
 import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
@@ -27,11 +28,11 @@ export class SlackSync {
   }
 
   private async syncUsers() {
-    console.log(`loading slack users`);
+    console.log(`loading users`);
     const users = await this.loader.loadUsers()
     console.log(`loaded slack users`, users);
     const bits = await Promise.all(users.map(user => this.createOrUpdatePerson(user)))
-    console.log(`updated bits`, bits);
+    console.log(`updated person bits`, bits);
   }
 
   private async loadAllUsers() {
@@ -42,42 +43,57 @@ export class SlackSync {
   private async syncMessages(): Promise<void> {
 
     // load channels
-    console.log(`loading slack channels`);
+    console.log(`loading channels`);
     const channels = await this.loader.loadChannels()
-    console.log(`slack channels loaded`, channels);
+    console.log(`channels loaded`, channels);
     const activeChannels = filterChannelsBySettings(channels, this.setting)
-    console.log(`filtering only active channels`, activeChannels);
+    console.log(`filtering only selected channels`, activeChannels);
 
     // load channel messages
     console.log(`loading channels messages`)
-    let lastMessageSync = this.setting.values.lastMessageSync || {}
-    let updatedBits: Bit[] = []
+    const lastMessageSync = this.setting.values.lastMessageSync || {}
+    const updatedBits: Bit[] = []
 
-    try {
-      await Promise.all(activeChannels.map(async channel => {
+    await sequence(activeChannels, async channel => {
 
-        // load messages
-        const oldestMessageId = lastMessageSync[channel.id] ? lastMessageSync[channel.id] : undefined
-        const messages = await this.loader.loadMessages(channel.id, oldestMessageId)
-        console.log(`loaded channel ${channel.id} messages`, messages)
+      // load messages
+      const oldestMessageId = lastMessageSync[channel.id] ? lastMessageSync[channel.id] : undefined
+      console.log(`loading channel ${channel.id} messages`, { oldestMessageId })
+      const loadedMessages = await this.loader.loadMessages(channel.id, oldestMessageId)
 
-        // group messages into special "conversations" to avoid insertion of multiple bits for each message
-        console.log(`creating conversations`)
-        const conversations = createConversation(messages)
-        console.log(`conversations created`, conversations)
+      // do not processed if no messages found
+      if (!loadedMessages.length) {
+        console.log(`no new messages found`)
+        return
+      }
 
-        // create bits from conversations
-        await Promise.all(conversations.map(async messages => {
-          updatedBits.push(await this.createConversation(channel, messages))
-        }))
+      // left only messages we need - real user messages, no system or bot messages
+      console.log(`loaded messages`, loadedMessages)
+      const filteredMessages = loadedMessages.filter(message => {
+        return message.type === 'message' &&
+          !message.subtype &&
+          !message.bot_id &&
+          message.user
+      })
+      console.log(`filter out unnecessary messages`, filteredMessages)
 
-      }))
-      console.log("AM I FINISHED!")
-    } catch (error) {
-      console.log('error!!', error)
-    }
-    console.log("FINISHED!~")
-    console.log(`updated bits`, updatedBits);
+      // group messages into special "conversations" to avoid insertion of multiple bits for each message
+      console.log(`creating conversations`)
+      const conversations = createConversation(filteredMessages)
+      console.log(`created ${conversations.length} conversations`, conversations)
+
+      // create bits from conversations
+      await sequence(conversations, async messages => {
+        const permalink = await this.loader.loadPermalink(channel.id, messages[0].ts)
+        updatedBits.push(await this.createConversation(channel, messages, permalink))
+      })
+
+      // update last message sync setting
+      // note: we need to use loaded messages, not filtered
+      lastMessageSync[channel.id] = loadedMessages[0].ts
+
+    })
+    console.log(`updated message bits`, updatedBits);
 
     // update settings
     console.log(`updating settings`, { lastMessageSync });
@@ -85,32 +101,19 @@ export class SlackSync {
     await this.setting.save()
   }
 
-  private async createConversation(channelInfo: SlackChannel, rawMessages: SlackMessage[]) {
+  private async createConversation(channelInfo: SlackChannel,
+                                   messages: SlackMessage[],
+                                   permalink: string) {
 
-    // oldest to newest
-    const peopleInMessages: Person[] = []
-    const messages = await Promise.all(
-      rawMessages.reverse().map(async message => {
+    // we need message in a reverse order
+    // by default messages we get are in last-first order, but we need in last-last order
+    messages = messages.reverse()
 
-        // tood
-        if (!message.user)
-          return message
+    // get people from messages
+    const peopleInMessages: Person[] = this.people.filter(person => {
+      return messages.find(message => message.user === person.integrationId)
+    })
 
-        const person = this.people.find(person => person.integrationId === message.user)
-
-        if (!person) {
-          console.log(`person was not found~`, person, message, this.people)
-        }
-
-        if (peopleInMessages.indexOf(person) === -1)
-          peopleInMessages.push(person)
-        return { // todo: unknown data type, create a separate type and find a good place for it
-          ...message,
-          name: person.data.name,
-        }
-      }),
-    )
-    const permalink = await this.loader.loadPermalink(channelInfo.id, messages[0].ts)
     const data = {
       permalink,
       channel: {
@@ -119,10 +122,16 @@ export class SlackSync {
         topic: channelInfo.topic.value,
         members: channelInfo.members,
       },
-      messages,
+      messages: messages.map(message => {
+        const person = peopleInMessages.find(person => person.integrationId === message.user)
+        return {
+          name: person.data.name,
+          ...message
+        }
+      }),
     }
 
-    const bit = {
+    return createOrUpdateBit(Bit, {
       title: `#${channelInfo.name}`,
       body: messages
         .map(message => message.text)
@@ -135,16 +144,7 @@ export class SlackSync {
       people: peopleInMessages,
       type: 'conversation',
       integration: 'slack',
-    }
-
-    console.log(`creating a bit`, bit)
-    try {
-      const createdBit = await createOrUpdateBit(Bit, bit)
-      console.log('bit created')
-      return createdBit
-    } catch (err) {
-      console.log("ERROR:", err)
-    }
+    })
   }
 
   private async createOrUpdatePerson(person: SlackUser, returnIfUnchanged = false) {

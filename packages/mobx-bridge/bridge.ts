@@ -380,7 +380,7 @@ class Bridge {
     return changed
   }
 
-  onMessage = (type, listener): Function => {
+  onMessage = (type, listener?): Function => {
     let subscription = { type, listener }
     if (!listener) {
       subscription = { type: null, listener: type }

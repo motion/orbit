@@ -7,7 +7,6 @@ import { getSearchQuery } from './helpers/getSearchQuery'
 import * as Helpers from '../helpers'
 import * as SearchStoreHelpers from './helpers/searchStoreHelpers'
 import debug from '@mcro/debug'
-import { AppReactions } from './AppReactions'
 import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { Brackets } from '../../../../node_modules/typeorm/browser'
@@ -24,21 +23,6 @@ export class SearchStore {
   id = Math.random()
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore(this)
-  appReactionsStore = new AppReactions({
-    onPinKey: key => {
-      if (key === 'Delete') {
-        this.query = ''
-        return
-      }
-      const { lastPinKey } = this
-      if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
-        this.query = key
-      } else {
-        this.query += key
-      }
-      this.lastPinKey = key
-    },
-  })
   // searchIndexStore = new SearchIndexStore()
 
   // start it with state from last time
@@ -61,6 +45,20 @@ export class SearchStore {
 
   willMount() {
     on(this, window, 'keydown', this.handleKeyDown)
+
+    this.props.appStore.onPinKey(key => {
+      if (key === 'Delete') {
+        this.query = ''
+        return
+      }
+      const { lastPinKey } = this
+      if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
+        this.query = key
+      } else {
+        this.query += key
+      }
+      this.lastPinKey = key
+    })
 
     this.dateHover.setOnHovered(target => {
       this.setExtraFiltersVisible(target)

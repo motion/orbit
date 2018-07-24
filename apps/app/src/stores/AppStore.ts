@@ -4,13 +4,23 @@ import { Setting, Not, Equal } from '@mcro/models'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { AppReactions } from './AppReactions'
 
 export class AppStore {
   contentHeight = 0
   lastSelectedPane = ''
+  onPinKeyCB = null
+
+  appReactionsStore = new AppReactions({
+    onPinKey: key => this.onPinKeyCB(key),
+  })
 
   async willMount() {
     this.updateScreenSize()
+  }
+
+  onPinKey = cb => {
+    this.onPinKeyCB = cb
   }
 
   updateAppOrbitStateOnResize = react(

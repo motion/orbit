@@ -221,7 +221,7 @@ class OrbitCardStore {
 
   isNextUp = react(
     () => [
-      this.props.searchStore.nextIndex,
+      this.props.searchStore && this.props.searchStore.nextIndex,
       this.isPaneSelected,
       !!this.props.nextUpStyle,
     ],
@@ -239,7 +239,10 @@ class OrbitCardStore {
   )
 
   setPeekTargetOnNextIndex = react(
-    () => [this.props.searchStore.nextIndex, this.isPaneSelected],
+    () => [
+      this.props.searchStore && this.props.searchStore.nextIndex,
+      this.isPaneSelected,
+    ],
     async ([nextIndex, isPaneSelected], { sleep }) => {
       if (!isPaneSelected) {
         throw react.cancel

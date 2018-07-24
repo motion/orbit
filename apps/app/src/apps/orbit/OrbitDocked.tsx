@@ -21,7 +21,7 @@ const Frame = view(UI.Col, {
   position: 'absolute',
   top: 10,
   right: 10,
-  borderRadius: BORDER_RADIUS,
+  borderRadius: BORDER_RADIUS - 1,
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',

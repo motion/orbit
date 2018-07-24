@@ -1,5 +1,5 @@
-import Syncer from '../syncer'
-import { Bit, Setting } from '@mcro/models'
+import Syncer from '../../sync/syncers/syncer'
+import { Bit, Setting } from '../../../models/index'
 import { createInChunks } from '~/sync/helpers'
 import Path from 'path'
 import Fs from 'fs-extra'

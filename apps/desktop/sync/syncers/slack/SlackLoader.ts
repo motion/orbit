@@ -1,7 +1,6 @@
-import {users, channels, chat} from 'slack'
 import { Setting } from '@mcro/models'
-import { SlackMessage } from '~/sync/syncers/slack/SlackTypes'
-import { SlackChannel, SlackUser } from './SlackTypes'
+import { channels, chat, users } from 'slack'
+import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 
 export class SlackLoader {
 

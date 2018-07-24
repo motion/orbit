@@ -22,7 +22,7 @@ const TitleBarTitle = props => (
     fontWeight={700}
     ellipse={1}
     margin={0}
-    padding={[4, 60]}
+    padding={[3, 80]}
     lineHeight="1.5rem"
     textAlign="center"
     {...props}
@@ -46,7 +46,7 @@ const Permalink = ({ to = () => {} }) => (
 )
 
 const SubTitle = ({ children, date, permalink }) => (
-  <UI.Row padding={[4, 12]} alignItems="center" flex={1}>
+  <UI.Row padding={[0, 12]} alignItems="center" flex={1} height={32}>
     {children}
     {date ? (
       <>
@@ -98,20 +98,21 @@ export class PeekHeaderContent extends React.Component {
         <TitleBar
           after={
             <>
-              <OrbitIcon
-                if={icon}
-                icon={icon}
-                size={16}
-                css={{
-                  position: 'absolute',
-                  top: -2,
-                  right: 70,
-                  transform: {
-                    scale: 3,
-                    rotate: '45deg',
-                  },
-                }}
-              />
+              {!!icon && (
+                <OrbitIcon
+                  icon={icon}
+                  size={16}
+                  css={{
+                    position: 'absolute',
+                    top: -2,
+                    right: 2,
+                    transform: {
+                      scale: 2.5,
+                      rotate: '45deg',
+                    },
+                  }}
+                />
+              )}
               <UI.Row
                 flexFlow="row"
                 position="absolute"
@@ -136,9 +137,11 @@ export class PeekHeaderContent extends React.Component {
         >
           {title}
         </TitleBar>
-        <SubTitle date={date} permalink={permalink}>
-          {subtitle}
-        </SubTitle>
+        {!!subtitle && (
+          <SubTitle date={date} permalink={permalink}>
+            {subtitle}
+          </SubTitle>
+        )}
         {subhead}
       </PeekHeaderContain>
     )

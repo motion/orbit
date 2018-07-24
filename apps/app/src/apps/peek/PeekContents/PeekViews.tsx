@@ -2,5 +2,5 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 export const PeekSection = view(UI.Col, {
-  padding: [16, 18],
+  padding: [10, 18],
 })

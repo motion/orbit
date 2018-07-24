@@ -6,7 +6,7 @@
  */
 
 import { view } from '@mcro/black'
-import { Filter } from '../filter/types'
+import { Filter } from './types'
 import * as React from 'react'
 import { Toolbar } from '../Toolbar'
 import { Row } from '../blocks/Row'
@@ -15,7 +15,6 @@ import { colors } from '../helpers/colors'
 import { Text } from '../Text'
 import { View } from '../blocks/View'
 import { Icon } from '../Icon'
-// import Glyph from '../Glyph'
 import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
 
@@ -245,8 +244,8 @@ export const Searchable = (Component: any) =>
         match.forEach((filter: string) => {
           const separator =
             filter.indexOf(':') > filter.indexOf('=') ? ':' : '='
-          let [key, ...value] = filter.split(separator)
-          value = value.join(separator).trim()
+          let [key, ...values] = filter.split(separator)
+          let value = values.join(separator).trim()
           let type = 'include'
           // if value starts with !, it's an exclude filter
           if (value.indexOf('!') === 0) {

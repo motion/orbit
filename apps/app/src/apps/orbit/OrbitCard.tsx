@@ -8,17 +8,18 @@ import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
-import { AppStore } from '../../stores/AppStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
-import { OrbitStore } from './OrbitStore'
 import { Bit } from '@mcro/models'
+import { SearchStore } from '../../stores/SearchStore'
+import { AppStore } from '../../stores/AppStore'
+import { getTargetPosition } from '../../helpers/getTargetPosition'
 
 export type OrbitCardProps = {
   total?: number
   hoverToSelect?: boolean
   appStore?: AppStore
+  searchStore?: SearchStore
   paneStore?: OrbitDockedPaneStore
-  orbitStore?: OrbitStore
   title?: React.ReactNode
   subtitle?: React.ReactNode
   date?: React.ReactNode
@@ -47,6 +48,8 @@ export type OrbitCardProps = {
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number
   nextUpStyle?: Object
+  isSelected?: boolean
+  getRef?: Function
 }
 
 const CardWrap = view(UI.View, {
@@ -173,6 +176,8 @@ const orbitIconProps = {
 }
 
 class OrbitCardStore {
+  props: OrbitCardProps
+
   _isSelected = false
   ref = null
 
@@ -192,7 +197,7 @@ class OrbitCardStore {
     return isPaneActive && isSubPaneActive
   }
 
-  handleClick = e => {
+  handleClick = () => {
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
       return
@@ -200,7 +205,7 @@ class OrbitCardStore {
     if (this.props.inactive) {
       return
     }
-    this.props.appStore.toggleSelected(this.props.index)
+    this.props.searchStore.toggleSelected(this.props.index)
   }
 
   setRef = ref => {
@@ -217,7 +222,7 @@ class OrbitCardStore {
 
   isNextUp = react(
     () => [
-      this.props.appStore.nextIndex,
+      this.props.searchStore && this.props.searchStore.nextIndex,
       this.isPaneSelected,
       !!this.props.nextUpStyle,
     ],
@@ -235,7 +240,10 @@ class OrbitCardStore {
   )
 
   setPeekTargetOnNextIndex = react(
-    () => [this.props.appStore.nextIndex, this.isPaneSelected],
+    () => [
+      this.props.searchStore && this.props.searchStore.nextIndex,
+      this.isPaneSelected,
+    ],
     async ([nextIndex, isPaneSelected], { sleep }) => {
       if (!isPaneSelected) {
         throw react.cancel
@@ -259,7 +267,12 @@ class OrbitCardStore {
         // if (this.props.paneStore) {
         //   this.props.paneStore.scrollIntoView(this.ref)
         // }
-        App.actions.selectItem(this.target, this.ref)
+        const position = getTargetPosition(this.ref)
+        // list items are closer to edge, adjust...
+        if (this.props.listItem === true) {
+          position.left += 8
+        }
+        App.actions.selectItem(this.target, position)
       }
     },
     { immediate: true },
@@ -267,7 +280,7 @@ class OrbitCardStore {
 }
 
 @attachTheme
-@view.attach('appStore', 'paneStore', 'orbitStore')
+@view.attach('appStore', 'searchStore', 'paneStore')
 @view.attach({
   store: OrbitCardStore,
 })
@@ -282,9 +295,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   constructor(a, b) {
     super(a, b)
     this.getOrbitCard = this.getOrbitCard.bind(this)
-    const { appStore, hoverToSelect } = this.props
+    const { searchStore, hoverToSelect } = this.props
     if (hoverToSelect) {
-      this.hoverSettler = appStore.getHoverSettler()
+      this.hoverSettler = searchStore.getHoverSettler()
       this.hoverSettler.setItem({
         index: this.props.index,
       })
@@ -338,7 +351,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       listItem,
       hoverToSelect,
       children,
-      orbitStore,
       selectedTheme,
       afterTitle,
       theme,
@@ -350,6 +362,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       borderRadius,
       nextUpStyle,
       onClick,
+      searchStore,
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
@@ -436,7 +449,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 .split(' ')
                 .map((word, i) => (
                   <React.Fragment key={i}>
-                    <SmallLink orbitStore={orbitStore}>{word}</SmallLink>{' '}
+                    <SmallLink searchStore={searchStore}>{word}</SmallLink>{' '}
                   </React.Fragment>
                 ))}
             </UI.Text>
@@ -470,7 +483,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
 
   render() {
     const {
-      appStore,
+      searchStore,
       store,
       pane,
       bit,
@@ -485,7 +498,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     store.isSelected
     return (
       <BitResolver
-        appStore={appStore}
+        searchStore={searchStore}
         bit={bit}
         isExpanded={this.isExpanded}
         {...itemProps}

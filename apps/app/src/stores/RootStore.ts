@@ -10,7 +10,6 @@ import { WebSQLClient } from '../helpers/WebSQLClient'
 if (process.env.NODE_ENV === 'development') {
   if (module && module.hot) {
     module.hot.accept('../actions/appActions', () => {
-      console.log('set new actions')
       App.start({ actions: require('../actions/appActions') })
     })
   }

@@ -1,6 +1,5 @@
-export const PEEK_SIZE = [600, 700]
+export const ORBIT_WIDTH = 540
 export const FORCE_FULLSCREEN = false
-export const ORBIT_WIDTH = 340
 export const ARROW_PAD = 15
 
 export const wordKey = word => word.join('-')

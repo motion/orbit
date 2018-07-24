@@ -1,6 +1,9 @@
 import { Bit, Brackets, getRepository } from '@mcro/models'
+import debug from '@mcro/debug'
 
-export const searchBits = async (
+const log = debug('getSearchQuery')
+
+export const getSearchQuery = (
   searchString,
   { take, skip, people, startDate, endDate },
 ) => {
@@ -18,7 +21,7 @@ export const searchBits = async (
     )
   } else {
     // order by recent if no search
-    query = query.orderBy({ bitCreatedAt: 'DESC' })
+    query = query.orderBy('bit.bitCreatedAt', 'DESC')
   }
 
   if (people.length) {
@@ -50,5 +53,6 @@ export const searchBits = async (
     query = query.skip(skip)
   }
 
-  return await query.getMany()
+  log('params', { take, skip, people, startDate, endDate }, 'query', query)
+  return query
 }

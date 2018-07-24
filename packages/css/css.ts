@@ -90,7 +90,6 @@ const unitlessNumberProperties = new Set([
   'gridColumn',
   'fontWeight',
   'lineClamp',
-  'lineHeight',
   'opacity',
   'order',
   'orphans',

@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import { PeekStore } from '../PeekStore'
 
 const SHADOW_PAD = 80
-const borderRadius = 10
+const borderRadius = 6
 const background = '#f9f9f9'
 
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.3]]

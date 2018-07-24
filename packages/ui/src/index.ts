@@ -53,6 +53,7 @@ export * from './Toolbar'
 
 // table
 export * from './table/TableInput'
+export * from './table/Searchable'
 export * from './table/SearchableTable'
 export * from './table/Table'
 export * from './table/TableBody'

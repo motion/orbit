@@ -1,10 +1,10 @@
-import { store, react, sleep } from '@mcro/black/store'
+import { store, react, sleep, Store } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/stores'
 import orbitPosition from '../helpers/orbitPosition'
+import { ORBIT_WIDTH } from '@mcro/constants'
 // import debug from '@mcro/debug'
 // const log = debug('AppReactions')
 
-const SCREEN_PAD = 15
 const appTarget = ({ offset = null, bounds = null } = {}) => {
   if (!offset || !bounds) return null
   const [left, top] = offset
@@ -13,13 +13,19 @@ const appTarget = ({ offset = null, bounds = null } = {}) => {
 }
 
 @store
-export class AppReactions {
+export class AppReactions extends Store {
   onPinKey = null
   id = Math.random()
 
   constructor({ onPinKey }) {
+    super()
+    console.log(123)
     this.onPinKey = onPinKey
     this.setupReactions()
+  }
+
+  dispose() {
+    this.subscriptions.dispose()
   }
 
   async setupReactions() {
@@ -31,7 +37,7 @@ export class AppReactions {
     const dispose = App.onMessage(async msg => {
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
-          this.toggle()
+          // this.toggle()
           return
         case App.messages.TOGGLE_DOCKED:
           console.log('toggle docked', this.id, this)
@@ -41,7 +47,7 @@ export class AppReactions {
           App.actions.hideOrbit()
           return
         case App.messages.SHOW:
-          this.show()
+          // this.show()
           return
         case App.messages.HIDE_PEEK:
           return App.actions.clearPeek()
@@ -214,16 +220,18 @@ export class AppReactions {
       if (!box) {
         throw react.cancel
       }
-      let { position, size, orbitOnLeft, orbitDocked } = orbitPosition(box)
-      if (linesBB) {
-        // add padding
-        position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
-      } else {
-        // remove padding
-        position[0] += orbitOnLeft ? SCREEN_PAD : -SCREEN_PAD
-      }
+      let { size, orbitOnLeft, orbitDocked } = orbitPosition(box)
+      // before for sidebar we used "{position} = orbitPosition(box)"
+      // in future, put sidebar onto different state area
+      // if (linesBB) {
+      //   // add padding
+      //   position[0] += orbitOnLeft ? -SCREEN_PAD : SCREEN_PAD
+      // } else {
+      //   // remove padding
+      //   position[0] += orbitOnLeft ? SCREEN_PAD : -SCREEN_PAD
+      // }
       App.setOrbitState({
-        position,
+        position: [window.innerWidth - ORBIT_WIDTH, 0],
         size,
         orbitOnLeft,
         orbitDocked,

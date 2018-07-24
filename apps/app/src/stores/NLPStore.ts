@@ -1,3 +1,4 @@
+// @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
 import { store, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
@@ -7,6 +8,8 @@ import { TYPES, NLPResponse } from './nlpStore/types'
 
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
+
+// @ts-ignore
 window.nlpWorker = { parseSearchQuery, setUserNames }
 
 @store
@@ -27,7 +30,10 @@ export class NLPStore {
         query,
       }
     },
-    { immediate: true, defaultValue: { date: {} } },
+    {
+      immediate: true,
+      defaultValue: { date: { startDate: null, endDate: null } },
+    },
   )
 
   updateUsers = modelQueryReaction(

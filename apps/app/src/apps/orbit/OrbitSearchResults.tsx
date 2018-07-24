@@ -5,12 +5,11 @@ import { OrbitDockedPane } from './OrbitDockedPane'
 import { OrbitSearchQuickResults } from './orbitSearch/OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
-import { AppStore } from '../../stores/AppStore'
-import { OrbitSearchStore } from './OrbitSearchStore'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
+import { SearchStore } from '../../stores/SearchStore'
 
 const OrbitSearchResultsList = view(({ name, searchStore }) => {
-  const { results, query } = searchStore.state
+  const { results, query } = searchStore.searchState
   log(`RENDER SENSITIVE`)
   if (!results.length) {
     return null
@@ -60,8 +59,8 @@ OrbitSearchResultsFrame.theme = ({ theme }) => ({
   background: theme.base.background,
 })
 
-const OrbitSearchResultsContents = view(({ name, appStore, searchStore }) => {
-  const { isChanging, message } = searchStore.state
+const OrbitSearchResultsContents = view(({ name, searchStore }) => {
+  const { isChanging, message } = searchStore
   return (
     <OrbitSearchResultsFrame>
       {message ? <div>{message}</div> : null}
@@ -81,17 +80,16 @@ const OrbitSearchResultsContents = view(({ name, appStore, searchStore }) => {
 })
 
 type Props = {
-  searchStore?: OrbitSearchStore
-  appStore?: AppStore
+  searchStore?: SearchStore
   name?: string
 }
 
-@view.attach('appStore', 'searchStore')
+@view.attach('searchStore')
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   render() {
-    const { appStore, searchStore, name } = this.props
-    if (!searchStore.state.results) {
+    const { searchStore, name } = this.props
+    if (!searchStore.searchState.results) {
       return null
     }
     const transform = {
@@ -111,11 +109,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         extraCondition={searchStore}
         before={<OrbitSearchFilters />}
       >
-        <OrbitSearchResultsContents
-          appStore={appStore}
-          searchStore={searchStore}
-          name={name}
-        />
+        <OrbitSearchResultsContents searchStore={searchStore} name={name} />
       </OrbitDockedPane>
     )
   }

@@ -86,6 +86,7 @@ class AppStore {
     PIN: 'PIN',
     UNPIN: 'UNPIN',
     TOGGLE_PINNED: 'TOGGLE_PINNED',
+    CLEAR_SELECTED: 'CLEAR_SELECTED',
   }
 
   setState = Bridge.setState
@@ -135,7 +136,6 @@ class AppStore {
   }
 
   animationDuration = 160
-  dockedWidth = 540
 
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(
@@ -148,7 +148,8 @@ class AppStore {
   // this won't trigger until the app is actually finished showing
   // to be more precise for enabling mouse events
   isMouseInActiveArea = react(
-    () => !!(Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered),
+    () =>
+      !!(Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered),
     async (over, { sleep, setValue }) => {
       await sleep(over ? 0 : App.animationDuration)
       setValue(over)

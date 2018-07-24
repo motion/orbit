@@ -4,6 +4,8 @@ import * as _ from 'lodash'
 import { BORDER_RADIUS } from '../../constants'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
+import { AppStore } from '../../stores/AppStore'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
 const EXTRA_PAD = 40
 
@@ -16,6 +18,13 @@ const getInnerHeight = node => {
 }
 
 class DockedPaneStore {
+  props: {
+    appStore: AppStore
+    paneStore: OrbitDockedPaneStore
+    name: string
+    extraCondition: () => boolean
+  }
+
   paneRef: { current?: HTMLElement } = React.createRef()
   isAtBottom = false
   childMutationObserver = null
@@ -67,11 +76,19 @@ class DockedPaneStore {
   //   },
   // )
 
-  updatePaneHeightOnActive = react(() => this.isActive, this.updateOnHeight)
+  updatePaneHeightOnActive = react(
+    () => this.isActive,
+    () => {
+      const res = this.updateOnHeight()
+      if (!res) {
+        throw react.cancel
+      }
+    },
+  )
 
-  updateOnHeight() {
+  updateOnHeight = () => {
     if (!this.isActive || !this.props.appStore || !this.node) {
-      return
+      return false
     }
     const innerHeight = getInnerHeight(this.node)
     const aboveHeight = this.node.getBoundingClientRect().top

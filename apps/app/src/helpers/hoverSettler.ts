@@ -1,4 +1,7 @@
 import { isEqual, throttle } from 'lodash'
+import debug from '@mcro/debug'
+
+const log = debug('hoverSettler')
 
 // isEqual but works with dom nodes (lodash doesnt)
 function isReallyEqual(a, b) {
@@ -12,8 +15,10 @@ export function hoverSettler({
   enterDelay = 0,
   leaveDelay = 32,
   betweenDelay = 0,
-  onHovered,
+  toggleThrottle = 300,
+  onHovered = null,
 }) {
+  let curOnHovered = onHovered
   let lastEnter
   let lastLeave
   let currentNode
@@ -24,8 +29,8 @@ export function hoverSettler({
     if (!isEqual(nextHovered, lastHovered)) {
       // 🐛 object spread fixes comparison bugs later on
       lastHovered = nextHovered ? { ...nextHovered } : nextHovered
-      if (onHovered) {
-        onHovered(nextHovered)
+      if (curOnHovered) {
+        curOnHovered(nextHovered)
       }
       if (cb) {
         cb()
@@ -33,29 +38,38 @@ export function hoverSettler({
     }
   }, 16)
 
+  // these are if you want to also hook into, beyond the normal settler
   return ({ onHover = null, onBlur = null } = {}) => {
     let itemLastEnterTm
     let itemLastLeaveTm
     let fullyLeaveTm
     let betweenTm
     let itemProps
+    let stickOnClick = false
+    let lastToggle = Date.now()
 
     const select = target => {
-      if (isReallyEqual(currentNode, target)) {
-        return
-      }
+      let prevTarget = currentNode
       currentNode = target
-      if (!target) {
+      if (isReallyEqual(prevTarget, target)) {
+        log('Cancel select, same target')
         return
       }
+      if (Date.now() - lastToggle < toggleThrottle) {
+        log('Cancel toggle, too soon')
+        return
+      }
+      lastToggle = Date.now()
       setHovered(
-        {
-          top: target.offsetTop,
-          left: target.offsetLeft,
-          width: target.clientWidth,
-          height: target.clientHeight,
-          ...itemProps,
-        },
+        target
+          ? {
+              top: target.offsetTop,
+              left: target.offsetLeft,
+              width: target.clientWidth,
+              height: target.clientHeight,
+              ...itemProps,
+            }
+          : null,
         onHover,
       )
       if (itemLastEnterTm === lastEnter) {
@@ -65,6 +79,9 @@ export function hoverSettler({
     }
 
     function handleHover(target) {
+      if (stickOnClick) {
+        return
+      }
       // remove any other enters/leaves
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
@@ -86,7 +103,8 @@ export function hoverSettler({
       }
     }
 
-    function onClick(e) {
+    const onClick = throttle(e => {
+      stickOnClick = true
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)
@@ -98,7 +116,7 @@ export function hoverSettler({
       } else {
         select(null)
       }
-    }
+    }, 100)
 
     function onMouseEnter(e) {
       clearTimeout(itemLastLeaveTm)
@@ -111,6 +129,10 @@ export function hoverSettler({
     }
 
     function onMouseLeave() {
+      if (stickOnClick) {
+        stickOnClick = false
+        return
+      }
       clearTimeout(itemLastLeaveTm)
       clearTimeout(fullyLeaveTm)
       clearTimeout(betweenTm)
@@ -138,6 +160,9 @@ export function hoverSettler({
       setItem(props) {
         itemProps = props
         return this
+      },
+      setOnHovered(onHovered) {
+        curOnHovered = onHovered
       },
       props: {
         onMouseEnter,

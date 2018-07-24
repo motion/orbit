@@ -24,7 +24,7 @@ class OrbitHomeStore {
       if (!isActive) {
         throw react.cancel
       }
-      this.props.appStore.setGetResults(() => this.results)
+      this.props.searchStore.setGetResults(() => this.results)
     },
     { immediate: true },
   )
@@ -81,6 +81,7 @@ const itemProps = {
 }
 
 @attachTheme
+@view.attach('searchStore')
 @view.attach({
   store: OrbitHomeStore,
 })
@@ -104,7 +105,7 @@ export class OrbitHome extends React.Component<{
               const isExpanded = index < 2
               return (
                 <OrbitCard
-                  pane="summary"
+                  pane="docked"
                   subPane="home"
                   selectedTheme={selectedTheme}
                   key={`${bit.id}${index}`}

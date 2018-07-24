@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { OrbitStore } from '../apps/orbit/OrbitStore';
+import { SearchStore } from '../stores/SearchStore'
 
 export * from './RoundButton'
 
@@ -147,10 +147,10 @@ const SmallLinkContainer = view('span', {
 })
 
 @view.ui
-export class SmallLink extends React.Component<{ orbitStore?: OrbitStore }> {
+export class SmallLink extends React.Component<{ searchStore?: SearchStore }> {
   handleClick = () => {
-    if (this.props.orbitStore) {
-      this.props.orbitStore.setQuery(this.props.children)
+    if (this.props.searchStore) {
+      this.props.searchStore.setQuery(this.props.children)
     }
   }
 

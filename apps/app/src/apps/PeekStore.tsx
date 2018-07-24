@@ -3,6 +3,8 @@ import { App, Desktop } from '@mcro/stores'
 import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../helpers'
 import * as Constants from '../constants'
+import { AppStore } from '../stores/AppStore'
+import { SearchStore } from '../stores/SearchStore'
 
 const TYPE_THEMES = {
   person: {
@@ -27,6 +29,11 @@ const BASE_THEME = {
 }
 
 export class PeekStore {
+  props: {
+    appStore: AppStore
+    fixed?: boolean
+  }
+
   tornState = null
   dragOffset: [number, number] = null
   history = []
@@ -176,28 +183,45 @@ export class PeekStore {
 
   tearPeek = () => {
     this.tornState = { ...this.state }
-    this.props.appStore.clearSelected(false)
+    App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
+
+  offMove = null
+  offUp = null
+  initMouseDown = null
 
   onDragStart = e => {
     e.preventDefault()
     this.tearPeek()
-    // set initial offset of mouse from frame
-    let mouseDown
-    const offMove = on(this, window, 'mousemove', e => {
-      if (!mouseDown) {
-        // Desktop.mouseState.mouseDown is a bit better because its from before you start dragging
-        mouseDown = mouseDown ||
-          Desktop.mouseState.mouseDown || [e.clientX, e.clientY]
-      }
-      const { x, y } = mouseDown
-      this.dragOffset = [e.clientX - x, e.clientY - y]
-    })
-    const offUp = on(this, window, 'mouseup', e => {
-      offMove()
-      offUp()
-      // now that it's pinned, update position
-      App.actions.finishPeekDrag(this.framePosition)
-    })
+    this.clearDragHandlers()
+    this.initMouseDown = {
+      x: e.clientX,
+      y: e.clientY,
+    }
+    this.offMove = on(this, window, 'mousemove', this.handleDragMove)
+    this.offUp = on(this, window, 'mouseup', this.handleDragEnd)
+  }
+
+  clearDragHandlers = () => {
+    if (this.offMove) {
+      this.offMove()
+      this.offMove = null
+    }
+    if (this.offUp) {
+      this.offUp()
+      this.offUp = null
+    }
+  }
+
+  handleDragMove = e => {
+    const { x, y } = this.initMouseDown
+    this.dragOffset = [e.clientX - x, e.clientY - y]
+    console.log('this.dragOffset', this.dragOffset, e.clientX, e.clientY)
+  }
+
+  handleDragEnd = () => {
+    this.clearDragHandlers()
+    // now that it's pinned, update position
+    App.actions.finishPeekDrag(this.framePosition)
   }
 }

@@ -1,8 +1,8 @@
 import { Person, Bit } from '@mcro/models'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import peekPosition from '../../helpers/peekPosition'
+import { getTargetPosition } from '../../helpers/getTargetPosition'
 import invariant from 'invariant'
-import { isEqual } from '@mcro/black'
 
 type PositionObject =
   | HTMLElement
@@ -104,30 +104,14 @@ export function selectBit(bit: Bit, target?: PositionObject) {
   })
 }
 
-function getTargetPosition(node: PositionObject) {
-  if (!node) {
-    return null
-  }
-  if (node instanceof HTMLElement) {
-    const { top, left, height } = node.getBoundingClientRect()
-    return {
-      top,
-      left: left,
-      width: App.orbitState.size[0],
-      height,
-    }
-  }
-  return node
-}
-
 export function clearPeek() {
   if (App.peekState.devModeStick) {
     console.log('Peek pinned, ignore')
     return
   }
   setPeekState({
-    peekId: null,
     target: null,
+    peekId: null,
     item: null,
     pinned: false,
   })

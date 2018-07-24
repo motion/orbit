@@ -17,17 +17,17 @@ export const storeDecorator: any = decor([
 
 export const storeOptions = {
   storeDecorator,
-  onStoreMount(_, store, props) {
-    if (store._decorated) {
-      return
-    }
-    Object.defineProperty(store, '_decorated', {
-      enumerable: false,
-      writable: false,
-      value: true,
-    })
-    if (store.automagic) {
-      store.automagic()
+  onStoreMount(store, props) {
+    // TODO make automagical idempotent
+    if (!store._decorated) {
+      Object.defineProperty(store, '_decorated', {
+        enumerable: false,
+        writable: false,
+        value: true,
+      })
+      if (store.automagic) {
+        store.automagic()
+      }
     }
     if (store.willMount) {
       store.willMount.call(store, props)
@@ -63,7 +63,7 @@ export function store<T>(Store): T {
   const ProxyStore = function(...args) {
     // console.log('on store mount', this, args)
     const store = new DecoratedStore(...args)
-    storeOptions.onStoreMount(Store.constructor.name, store, args[0])
+    storeOptions.onStoreMount(store, args[0])
     return store
   }
   // copy statics

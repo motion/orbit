@@ -14,6 +14,13 @@ export const inputStyle = {
   font: 'inherit',
   fontSize: '1em',
   marginRight: 5,
+  padding: [0, 5],
+  height: 28,
+  lineHeight: 28,
+  compact: {
+    height: 17,
+    lineHeight: 17,
+  },
   '&:disabled': {
     backgroundColor: '#ddd',
     borderColor: '#ccc',
@@ -22,12 +29,6 @@ export const inputStyle = {
 }
 
 export const TableInput = view('input', inputStyle)
-
-TableInput.theme = ({ compact }) => ({
-  height: compact ? '17px' : '28px',
-  lineHeight: compact ? '17px' : '28px',
-  padding: compact ? '0 5px' : '0 10px',
-})
 
 TableInput.defaultProps = {
   type: 'text',

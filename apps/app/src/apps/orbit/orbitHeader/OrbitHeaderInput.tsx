@@ -11,7 +11,7 @@ const handleKeyDown = e => {
   }
 }
 
-export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
+export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
   return (
     <View height={30} margin={['auto', 0]} padding={[1, 8, 0]} width="100%">
       <HighlightedTextArea
@@ -22,12 +22,12 @@ export const OrbitHeaderInput = view(({ orbitStore, theme, headerStore }) => {
         border="none"
         display="block"
         background="transparent"
-        value={orbitStore.query}
+        value={searchStore.query}
         highlight={headerStore.highlightWords}
         color={theme.base.color.alpha(0.8)}
-        onChange={orbitStore.onChangeQuery}
-        onFocus={orbitStore.onFocus}
-        onBlur={orbitStore.onBlur}
+        onChange={searchStore.onChangeQuery}
+        onFocus={searchStore.onFocus}
+        onBlur={searchStore.onBlur}
         onKeyDown={handleKeyDown}
         forwardRef={headerStore.inputRef}
         onClick={headerStore.onClickInput}

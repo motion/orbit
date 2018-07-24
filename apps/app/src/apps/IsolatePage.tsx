@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekPage } from './PeekPage'
-import { OrbitPage } from './OrbitPage'
+import { Peek } from './peek/Peek'
+import { Orbit } from './orbit/Orbit'
 import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import { Bit, Setting } from '@mcro/models'
@@ -34,7 +34,7 @@ export class IsolatePeek extends React.Component {
         height: 10,
       })
     })
-    return <PeekPage fixed />
+    return <Peek fixed />
   }
 }
 
@@ -44,7 +44,7 @@ export class IsolateHome extends React.Component {
   }
 
   render() {
-    return <OrbitPage />
+    return <Orbit />
   }
 }
 

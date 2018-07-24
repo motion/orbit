@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { PeekBitResolver } from '../index'
 import markdown from '@mcro/marky-markdown'
 import { PeekContentProps } from './PeekContentProps'
-import { Searchable } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 
 const options = {
   language: 'english',
@@ -23,7 +23,7 @@ const BodyContents = view({
   lineHeight: 26,
 })
 
-const SearchableDocument = Searchable(({ children, searchTerm }) => {
+const SearchableDocument = UI.Searchable(({ children, searchTerm }) => {
   return (
     <BodyContents
       className="markdown"
@@ -37,7 +37,7 @@ const SearchableDocument = Searchable(({ children, searchTerm }) => {
 @view
 export class Document extends React.Component<PeekContentProps> {
   render() {
-    const { bit, appStore, children } = this.props
+    const { bit, appStore, peekStore, children } = this.props
     if (!bit || !bit.data) {
       return children({})
     }
@@ -48,11 +48,13 @@ export class Document extends React.Component<PeekContentProps> {
             title,
             icon,
             content: (
-              <SearchableDocument>
-                {typeof content === 'string'
-                  ? markdown(content, options)
-                  : content}
-              </SearchableDocument>
+              <UI.Theme theme={peekStore.theme}>
+                <SearchableDocument>
+                  {typeof content === 'string'
+                    ? markdown(content, options)
+                    : content}
+                </SearchableDocument>
+              </UI.Theme>
             ),
           })
         }}

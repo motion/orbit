@@ -29,10 +29,6 @@ export class AppReactions extends Store {
   }
 
   async setupReactions() {
-    if (typeof App.onMessage !== 'function') {
-      console.log('weird app on hmr', App, App.onMessage)
-      await sleep(100)
-    }
     console.log('mounting...', this.id)
     const dispose = App.onMessage(async msg => {
       switch (msg) {

@@ -17,7 +17,7 @@ const Highlight = view({
   borderTop: [1, '#f2f2f2'],
   // background: '#fff',
   '&:hover': {
-    background: [0, 0, 0, 0.025],
+    background: '#fff',
   },
 })
 
@@ -63,7 +63,6 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
         }
       >
         {({ highlights }) => {
-          console.log('highlights', highlights)
           return highlights.map((highlight, index) => {
             return (
               <Highlight

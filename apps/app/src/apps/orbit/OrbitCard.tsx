@@ -97,11 +97,8 @@ Card.theme = ({
     } else {
       listStyle = {
         background: 'transparent',
-        '&:hover': {
-          background: theme.hover.background,
-        },
         '&:active': {
-          background: theme.active.background,
+          background: theme.selected.background,
         },
       }
     }
@@ -109,7 +106,7 @@ Card.theme = ({
       ...card,
       ...listStyle,
       padding: [20, 18],
-      borderTop: [1, theme.base.borderColor],
+      borderTop: [1, theme.base.borderColor.alpha(0.5)],
     }
   } else {
     // CARD
@@ -442,7 +439,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {typeof preview !== 'string' && preview}
             <UI.Text
               if={typeof preview === 'string'}
-              alpha={isSelected ? 0.85 : 0.6}
+              className="preview-text"
+              alpha={isSelected ? 1 : 0.6}
               size={listItem ? 1.1 : 1.3}
               sizeLineHeight={0.9}
               margin={inGrid ? ['auto', 0] : 0}
@@ -467,19 +465,20 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-        <UI.HoverGlow
-          if={!listItem}
-          behind
-          color="#000"
-          resist={90}
-          scale={0.99}
-          offsetTop={isSelected ? 8 : 4}
-          full
-          blur={isSelected ? 8 : 4}
-          inverse
-          opacity={isSelected ? 0.08 : 0.03}
-          borderRadius={20}
-        />
+        {!listItem && (
+          <UI.HoverGlow
+            behind
+            color="#000"
+            resist={90}
+            scale={0.99}
+            offsetTop={isSelected ? 8 : 4}
+            full
+            blur={isSelected ? 8 : 4}
+            inverse
+            opacity={isSelected ? 0.08 : 0.03}
+            borderRadius={20}
+          />
+        )}
       </CardWrap>
     )
   }

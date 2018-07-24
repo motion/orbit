@@ -1,7 +1,7 @@
 // @ts-ignore
 import { flatten } from 'lodash'
 
-const splitChar = '&&&**&&&'
+const splitChar = '🂓'
 
 // cut text down using highlight words
 // not a wonderfully efficient
@@ -80,16 +80,19 @@ export const highlightText = (options, returnList = false) => {
   }
   let final = []
   for (const part of filtered) {
-    if (words.indexOf(part) > -1) {
+    if (words.indexOf(part.toLowerCase()) === 0) {
       final.push(`<span style="${style}">${part}</span>`)
     } else {
       final.push(part)
     }
   }
-  let stringResult = final.join('')
+  let stringResult = final.join('').trim()
   // return raw array
   if (returnList) {
-    return stringResult.split(splitChar).filter(x => !!x.length)
+    return stringResult
+      .split(splitChar)
+      .filter(x => !!x.length)
+      .map(part => `...${part}...`)
   }
   stringResult = stringResult.replace(splitChar, ' ... ')
   if (stringResult.length) {

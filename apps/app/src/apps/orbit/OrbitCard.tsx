@@ -50,6 +50,7 @@ export type OrbitCardProps = {
   nextUpStyle?: Object
   isSelected?: boolean
   getRef?: Function
+  cardProps?: Object
 }
 
 const CardWrap = view(UI.View, {
@@ -107,8 +108,8 @@ Card.theme = ({
     card = {
       ...card,
       ...listStyle,
-      padding: [16, 20],
-      borderTop: [1, theme.hover.background],
+      padding: [20, 18],
+      borderTop: [1, theme.base.borderColor],
     }
   } else {
     // CARD
@@ -162,12 +163,12 @@ const Subtitle = view({
 
 const orbitIconProps = {
   imageStyle: {
-    transformOrigin: 'bottom right',
+    transformOrigin: 'top right',
     transform: {
-      y: -6 - 3,
-      x: 20 + 3,
-      scale: 2.7,
-      rotate: '-45deg',
+      y: 6,
+      x: 0,
+      scale: 2,
+      // rotate: '-45deg',
     },
   },
   orbitIconStyle: {
@@ -363,6 +364,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       nextUpStyle,
       onClick,
       searchStore,
+      cardProps,
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
@@ -398,6 +400,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           inGrid={inGrid}
           nextUpStyle={nextUpStyle}
           onClick={onClick || store.handleClick}
+          {...cardProps}
         >
           {orbitIcon}
           <Title>
@@ -405,7 +408,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               size={listItem ? 1.15 : 1.25}
               sizeLineHeight={0.85}
               ellipse={2}
-              alpha={isSelected ? 1 : 0.8}
+              alpha={isSelected || listItem ? 1 : 0.8}
               fontWeight={500}
               maxWidth="calc(100% - 30px)"
               {...titleProps}

@@ -11,7 +11,7 @@ import { SearchStore } from '../../stores/SearchStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 
 const SearchFilters = view(UI.Col, {
-  padding: [7, 12],
+  padding: [7, 12, 12],
 })
 SearchFilters.theme = ({ theme }) => ({
   background: theme.base.background,

@@ -8,6 +8,19 @@ import sanitize from 'sanitize-html'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { SearchStore } from '../../stores/SearchStore'
 
+const listItemSidePad = 18
+
+const Highlight = view({
+  display: 'inline-block',
+  padding: [10, listItemSidePad],
+  margin: [0, -listItemSidePad],
+  borderTop: [1, '#f2f2f2'],
+  // background: '#fff',
+  '&:hover': {
+    background: [0, 0, 0, 0.025],
+  },
+})
+
 const OrbitSearchResultsList = view(({ name, searchStore }) => {
   const { results, query } = searchStore.searchState
   log(`RENDER SENSITIVE`)
@@ -36,6 +49,11 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
         wordBreak="break-all"
         highlight={
           highlightWords.length && {
+            text: sanitize(
+              highlightWords.length
+                ? bit.body
+                : (bit.body || '').slice(0, 1000),
+            ),
             words: highlightWords,
             maxChars: 380,
             maxSurroundChars: 120,
@@ -44,9 +62,17 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
           }
         }
       >
-        {sanitize(
-          highlightWords.length ? bit.body : (bit.body || '').slice(0, 200),
-        )}
+        {({ highlights }) => {
+          console.log('highlights', highlights)
+          return highlights.map((highlight, index) => {
+            return (
+              <Highlight
+                key={index}
+                dangerouslySetInnerHTML={{ __html: highlight }}
+              />
+            )
+          })
+        }}
       </UI.Text>
     </OrbitCard>
   ))

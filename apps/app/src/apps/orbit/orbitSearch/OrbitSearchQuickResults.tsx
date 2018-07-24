@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react, compose } from '@mcro/black'
-import { Person } from '@mcro/models'
+import { Person, getRepository } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { OrbitCard } from '../OrbitCard'
 import * as UI from '@mcro/ui'
@@ -16,12 +16,16 @@ class QuickSearchStore {
     () => [App.state.query, Desktop.state.lastBitUpdatedAt],
     async ([query], { sleep }) => {
       await sleep(TYPE_DEBOUNCE)
+      const results = await getRepository(Person)
+        .createQueryBuilder('person')
+        .where('person.name like :nameLike', {
+          nameLike: `%${query.split('').join('%')}%`,
+        })
+        .take(8)
+        .getMany()
       return {
         query,
-        results: await Person.find({
-          where: `(name like "%${query}%")`,
-          take: 8,
-        }),
+        results,
       }
     },
     {
@@ -64,6 +68,9 @@ export const OrbitSearchQuickResults = decorate(({ quickSearchStore }) => {
               width: 240,
               height: 80,
               marginRight: 10,
+            }}
+            cardProps={{
+              flex: 1,
             }}
             hide={{
               icon: true,

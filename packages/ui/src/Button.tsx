@@ -36,6 +36,7 @@ export const Button = ({
       chromeless={chromeless}
       hovered={hovered}
       glow={glow}
+      glint
       glowProps={{
         scale: 1.8,
         draggable: false,

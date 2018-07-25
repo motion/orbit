@@ -32,7 +32,7 @@
 }
 
 .rdrDateDisplayItemActive {
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: rgb(40.4%, 70.5%, 92.9%);
 }
 
 .rdrDateDisplayItemActive input {
@@ -231,27 +231,27 @@
 }
 
 .rdrStartEdge {
-  border-top-left-radius: 1.042em;
-  border-bottom-left-radius: 1.042em;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   left: 2px;
 }
 
 .rdrEndEdge {
-  border-top-right-radius: 1.042em;
-  border-bottom-right-radius: 1.042em;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
   right: 2px;
 }
 
 .rdrSelected {
-  border-radius: 1.042em;
+  border-radius: 5px;
 }
 
 .rdrDayStartOfMonth .rdrInRange,
 .rdrDayStartOfMonth .rdrEndEdge,
 .rdrDayStartOfWeek .rdrInRange,
 .rdrDayStartOfWeek .rdrEndEdge {
-  border-top-left-radius: 1.042em;
-  border-bottom-left-radius: 1.042em;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   left: 2px;
 }
 
@@ -259,8 +259,8 @@
 .rdrDayEndOfMonth .rdrStartEdge,
 .rdrDayEndOfWeek .rdrInRange,
 .rdrDayEndOfWeek .rdrStartEdge {
-  border-top-right-radius: 1.042em;
-  border-bottom-right-radius: 1.042em;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
   right: 2px;
 }
 
@@ -338,7 +338,6 @@
   cursor: pointer;
   display: block;
   outline: 0;
-  border-bottom: 1px solid #eff2f7;
   padding: 0;
 }
 
@@ -355,7 +354,8 @@
   display: block;
   outline: 0;
   line-height: 18px;
-  padding: 10px 10px;
+  font-size: 14px;
+  padding: 10px 4px;
   text-align: left;
 }
 

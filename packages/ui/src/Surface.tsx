@@ -376,12 +376,7 @@ export class Surface extends React.Component<SurfaceProps> {
         className={`${this.uniq} ${className || ''}`}
       >
         {glint ? (
-          <Glint
-            key={0}
-            size={size}
-            // borderLeftRadius={borderLeftRadius - 1}
-            // borderRightRadius={borderRightRadius - 1}
-          />
+          <Glint key={0} size={size} borderRadius={props.borderRadius} />
         ) : null}
         {badge ? (
           <Badge {...badgeProps}>
@@ -403,8 +398,7 @@ export class Surface extends React.Component<SurfaceProps> {
             scale={1.1}
             color={`${glowColor}`}
             opacity={0.35}
-            // borderLeftRadius={borderLeftRadius - 1}
-            // borderRightRadius={borderRightRadius - 1}
+            borderRadius={props.borderRadius}
             {...glowProps}
           />
         ) : null}

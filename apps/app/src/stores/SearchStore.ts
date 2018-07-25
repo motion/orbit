@@ -35,7 +35,7 @@ export class SearchStore {
   _activeIndex = -1
   getResults = null
 
-  extraFiltersHeight = 300
+  extraFiltersHeight = 325
   extraFiltersVisible = false
 
   dateHover = hoverSettler({

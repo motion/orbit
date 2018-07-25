@@ -84,7 +84,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
         </UI.Row>
         <UI.Row>
           <Content
-            className="searchable"
+            className="searchable-item"
             dangerouslySetInnerHTML={{ __html: htmlText }}
           />
         </UI.Row>

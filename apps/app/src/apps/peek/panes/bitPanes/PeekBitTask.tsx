@@ -27,7 +27,7 @@ export const Task = decorator(({ content, comments }: Props) => {
     <>
       {/* <RelatedPeople title="Assigned" relatedStore={relatedStore} /> */}
       <BodyContents
-        className="markdown"
+        className="markdown searchable"
         dangerouslySetInnerHTML={{
           __html: content,
         }}

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { BitResolver } from '../../components/BitResolver'
+import { ItemResolver } from '../../components/ItemResolver'
 import { SmallLink } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
@@ -80,6 +80,7 @@ Card.theme = ({
   nextUpStyle,
   isSelected,
   isNextUp,
+  background,
 }) => {
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
@@ -116,7 +117,7 @@ Card.theme = ({
     card = {
       ...card,
       borderRadius: borderRadius || 7,
-      background: theme.selected.background,
+      background: background || theme.selected.background,
       boxShadow: [[0, 1, 3, [0, 0, 0, 0.05]]],
       border: [1, '#fff'],
       '&:hover': {
@@ -177,6 +178,7 @@ const orbitIconProps = {
 class OrbitCardStore {
   props: OrbitCardProps
 
+  normalizedBit = null
   _isSelected = false
   ref = null
 
@@ -216,7 +218,7 @@ class OrbitCardStore {
   }
 
   get target() {
-    return this.props.bit || this.props.result
+    return this.props.result || this.normalizedBit
   }
 
   isNextUp = react(
@@ -334,6 +336,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   }
 
   getOrbitCard(contentProps) {
+    // TODO weird mutation
+    this.props.store.normalizedBit = contentProps
+
     const {
       title,
       icon,
@@ -403,7 +408,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           {orbitIcon}
           <Title>
             <UI.Text
-              size={listItem ? 1.15 : 1.25}
+              size={listItem ? 1.15 : 1.2}
               sizeLineHeight={0.85}
               ellipse={2}
               alpha={isSelected || listItem ? 1 : 0.8}
@@ -501,7 +506,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     }
     store.isSelected
     return (
-      <BitResolver
+      <ItemResolver
         searchStore={searchStore}
         bit={bit}
         item={item}
@@ -509,7 +514,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
         {...itemProps}
       >
         {this.getOrbitCard}
-      </BitResolver>
+      </ItemResolver>
     )
   }
 }

@@ -1,4 +1,4 @@
-import * as Helpers from '../../helpers'
+import * as Helpers from '../../../helpers'
 import keywordExtract from 'keyword-extractor'
 import * as _ from 'lodash'
 

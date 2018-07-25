@@ -21,9 +21,12 @@ export const ResolvePerson = ({ children, bit }) => {
   if (!bit) {
     return null
   }
+  const avatar = bit.data.profile && bit.data.profile.image_512
   return children({
+    id: bit.id,
     title: bit.name,
-    icon: 'users_square',
+    type: 'person',
+    icon: avatar || 'users_square',
     subtitle: (
       <UI.Text if={bit.data.profile} ellipse>
         {bit.data.profile.email}
@@ -33,8 +36,8 @@ export const ResolvePerson = ({ children, bit }) => {
     iconProps: {
       color: '#ccc',
     },
-    preview: (
-      <UI.Col if={bit.data.profile} flex={1}>
+    preview: !!avatar && (
+      <UI.Col flex={1}>
         <Avatar src={bit.data.profile.image_512} />
       </UI.Col>
     ),

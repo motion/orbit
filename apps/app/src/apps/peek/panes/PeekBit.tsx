@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as PeekBitPanes from './bitPanes'
-import { PeekBitResolver } from '../views/PeekBitResolver'
+import { PeekItemResolver } from '../views/PeekItemResolver'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 
@@ -17,7 +17,7 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
     return <div>Error yo item.subType: {item.subType}</div>
   }
   return (
-    <PeekBitResolver
+    <PeekItemResolver
       item={item}
       bit={bit}
       appStore={appStore}
@@ -49,6 +49,6 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
           </SearchablePeek>
         )
       }}
-    </PeekBitResolver>
+    </PeekItemResolver>
   )
 }

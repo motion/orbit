@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
-import { PeekBitResolver } from '../../views/PeekBitResolver'
+import { PeekItemResolver } from '../../views/PeekItemResolver'
 import { SubTitle } from '../../../../views'
 import { OrbitDivider } from '../../../../apps/orbit/OrbitDivider'
 import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
@@ -42,9 +42,9 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
           </Section>
           {relatedStore.relatedConversations.map((relatedBit, index) => (
             <React.Fragment key={`${relatedBit.id}${index}`}>
-              <PeekBitResolver bit={relatedBit} {...bitResolverProps}>
+              <PeekItemResolver bit={relatedBit} {...bitResolverProps}>
                 {({ content }) => content}
-              </PeekBitResolver>
+              </PeekItemResolver>
               {index < 2 && (
                 <OrbitDivider height={2} css={{ margin: [20, 0, 10] }} />
               )}

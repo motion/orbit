@@ -28,6 +28,9 @@ export const storeOptions = {
         store.automagic()
       }
     }
+    if (store.setupSubscribables) {
+      store.setupSubscribables()
+    }
     if (store.willMount) {
       store.willMount.call(store, props)
     }

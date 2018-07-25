@@ -1,14 +1,17 @@
 import * as React from 'react'
-import { BitResolver, BitResolverProps } from '../../../components/BitResolver'
+import {
+  ItemResolver,
+  ItemResolverProps,
+} from '../../../components/ItemResolver'
 
-export const PeekBitResolver = ({
+export const PeekItemResolver = ({
   bit,
   children,
   item,
   ...props
-}: BitResolverProps) => {
+}: ItemResolverProps) => {
   return (
-    <BitResolver
+    <ItemResolver
       bit={bit}
       item={item}
       shownLimit={Infinity}
@@ -16,6 +19,6 @@ export const PeekBitResolver = ({
       {...props}
     >
       {children}
-    </BitResolver>
+    </ItemResolver>
   )
 }

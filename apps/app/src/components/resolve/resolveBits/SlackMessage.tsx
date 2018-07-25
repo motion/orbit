@@ -2,10 +2,10 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import slackDown from '@mcro/slackdown'
-import { getSlackDate } from '../../helpers'
-import { TimeAgo } from '../../views/TimeAgo'
+import { getSlackDate } from '../../../helpers'
+import { TimeAgo } from '../../../views/TimeAgo'
 import { Bit } from '@mcro/models'
-import { RoundButtonPerson } from '../../views/RoundButtonPerson'
+import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
 
 type SlackMessageObj = { name: string; text: string; user: string; ts: string }
 

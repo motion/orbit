@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
-import { RoundButton } from '../../views/RoundButton'
+import { RoundButton } from '../../../views/RoundButton'
 import keywordExtract from 'keyword-extractor'
 import arrford from 'arrford'
-import { getSlackDate } from '../../helpers'
+import { getSlackDate } from '../../../helpers'
 import { capitalize } from 'lodash'
 
 const options = {

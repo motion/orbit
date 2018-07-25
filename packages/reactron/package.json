@@ -5,7 +5,7 @@
   "main": "_/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "test": "electron lib/tests"
   },

@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "./start.sh",
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "deploy": "cd ../electron-build && npm run deploy"
   },

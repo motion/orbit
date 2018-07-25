@@ -31,6 +31,6 @@ fi
 # link second
 ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
 # build everything once
-ensure-dir ./packages/ui/_ -- build
+ensure-dir ./packages/ui/_ -- cd $ROOT && bin/build-all
 echo "bootstrapped!"
 echo "run desktop; run app; run electron"

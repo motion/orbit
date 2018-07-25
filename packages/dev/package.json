@@ -11,7 +11,7 @@
     "start-app": "cd ../app && npm start",
     "start-electron": "sleep 35 && cd ../electron && npm start",
     "start-desktop": "cd ../desktop && npm start",
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "devDependencies": {

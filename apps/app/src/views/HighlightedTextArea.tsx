@@ -40,7 +40,7 @@ type Props = CSSPropertySet & {
 }
 
 export class HighlightedTextArea extends React.Component<Props> {
-  highlights = React.createRef()
+  highlights = React.createRef<HTMLDivElement>()
 
   static defaultProps = {
     openMark: '<mark>',

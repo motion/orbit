@@ -46,6 +46,9 @@ class Color {
     }
     var i
     var channels
+    if (!obj) {
+      throw new Error(`Error, empty value for color`)
+    }
     if (obj instanceof Color) {
       this.model = obj.model
       this.color = obj.color.slice()

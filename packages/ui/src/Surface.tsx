@@ -34,7 +34,6 @@ export type SurfaceProps = CSSPropertySet & {
   elementProps?: Object
   elevation?: number
   flex?: boolean | number
-  focusable?: boolean
   forwardRef?: React.Ref<any>
   glint?: boolean
   glow?: boolean
@@ -137,8 +136,8 @@ SurfaceFrame.theme = props => {
             (props.highlight && props.highlightColor) ||
             theme[STATE].color,
         )
-  if (typeof props.alpha === 'number') {
-    color = color.alpha(props.alpha)
+  if (typeof props.alpha === 'number' && typeof color !== 'string') {
+    color = `${color.alpha(props.alpha)}`
   }
   const iconColor = props.iconColor || color
 
@@ -217,15 +216,6 @@ SurfaceFrame.theme = props => {
     borderWidth: 0,
     background: 'transparent',
   }
-  const focusable = props.focusable
-  const focusStyle = !props.chromeless &&
-    theme.focus && {
-      ...theme.focus,
-      boxShadow: [
-        ...boxShadow,
-        [0, 0, 0, 4, toColor(theme.focus.color).alpha(0.05)],
-      ],
-    }
   let surfaceStyles = {
     ...(props.inline && inlineStyle),
     color,
@@ -246,11 +236,9 @@ SurfaceFrame.theme = props => {
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
     ...(props.wrapElement && {
-      '& > :focus': focusable && focusStyle,
       '& > :active': activeStyle,
     }),
     ...(!props.wrapElement && {
-      '&:focus': focusable && focusStyle,
       '&:active': activeStyle,
     }),
     ...(props.dimmed && dimmedStyle),

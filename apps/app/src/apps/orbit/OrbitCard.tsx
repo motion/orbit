@@ -7,7 +7,7 @@ import { SmallLink } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
-import { CSSPropertySet } from '@mcro/gloss'
+import { CSSPropertySet, ThemeObject } from '@mcro/gloss'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { Bit } from '@mcro/models'
 import { SearchStore } from '../../stores/SearchStore'
@@ -32,7 +32,7 @@ export type OrbitCardProps = {
   style?: Object
   selectedTheme?: Object
   afterTitle?: React.ReactNode
-  theme?: Object
+  theme?: ThemeObject
   titleProps?: Object
   inactive?: boolean
   iconProps?: Object
@@ -43,7 +43,7 @@ export type OrbitCardProps = {
   subPane?: string
   bit?: Bit
   itemProps?: Object
-  children?: (a: Object, b: Object) => JSX.Element | React.ReactNode
+  children?: ((a: Object, b: Object) => JSX.Element) | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number

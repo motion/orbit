@@ -1,26 +1,18 @@
 import { Color } from '@mcro/css'
 
+export type ThemeSubObject = {
+  background: Color
+  color: Color
+  borderColor: Color
+}
+
 export type ThemeObject = {
-  base: {
-    background: Color
-    borderColor: Color
-    color: Color
-  }
-  hover: {
-    background: Color
-    borderColor: Color
-    color: Color
-  }
-  active: {
-    background: Color
-    borderColor: Color
-    color: Color
-  }
-  focus: {
-    background: Color
-    borderColor: Color
-    color: Color
-  }
+  base: ThemeSubObject
+  hover: ThemeSubObject
+  focus: ThemeSubObject
+  active: ThemeSubObject
+  disabled: ThemeSubObject
+  inactive: ThemeSubObject
 }
 
 export type Options = {

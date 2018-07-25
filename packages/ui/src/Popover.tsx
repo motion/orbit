@@ -198,7 +198,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   unmounted = false
   mounted = false
   isClickingTarget = false
-  targetRef = React.createRef()
+  targetRef = React.createRef<HTMLDivElement>()
   popoverRef = null
 
   setPopoverRef = ref => {

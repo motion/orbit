@@ -1,10 +1,15 @@
-import { react, on } from '@mcro/black'
+import { react, on, Store } from '@mcro/black'
 import { App } from '@mcro/stores'
+import { SearchStore } from '../../stores/SearchStore'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
 
-export class OrbitDockedPaneStore {
+export class OrbitDockedPaneStore extends Store {
+  props: {
+    searchStore: SearchStore
+  }
+
   panes = ['home', 'directory', 'settings']
   paneIndex = 0
 

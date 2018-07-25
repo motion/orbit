@@ -1,4 +1,4 @@
-import { react, on } from '@mcro/black'
+import { react, on, Store } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
@@ -14,7 +14,7 @@ import { Brackets } from '../../../../node_modules/typeorm/browser'
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
 
-export class SearchStore {
+export class SearchStore extends Store {
   props: {
     appStore: AppStore
     integrationSettingsStore: IntegrationSettingsStore

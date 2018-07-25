@@ -6,6 +6,7 @@ import { createViewFactory } from './createViewFactory'
 export const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 export const GLOSS_IGNORE_COMPONENT_SYMBOL = '__GLOSS_IGNORE_COMPONENT__'
 
+export { ThemeObject } from './types'
 export { alphaColor } from './helpers/alphaColor'
 export { propsToStyles } from './helpers/propsToStyles'
 export { propsToThemeStyles } from './helpers/propsToThemeStyles'

@@ -412,7 +412,7 @@ export class Surface extends React.Component<SurfaceProps> {
               target={`.${this.uniq}`}
               padding={[2, 7]}
               borderRadius={5}
-              distance={8}
+              distance={12}
               forgiveness={8}
               arrowSize={10}
               delay={400}

@@ -3,12 +3,12 @@ import { view, on } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
 const rowHeight = 2
-const gridGap = 9
-const gridColumnGap = 9
+const gridGap = 7
+const gridColumnGap = 7
 
 const MasonryGrid = view({
   display: 'grid',
-  margin: [0, -5],
+  margin: [0, -8],
 })
 
 export type MasonryProps = {

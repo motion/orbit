@@ -1,4 +1,4 @@
-export const ORBIT_WIDTH = 540
+export const ORBIT_WIDTH = 500
 export const FORCE_FULLSCREEN = false
 export const ARROW_PAD = 15
 

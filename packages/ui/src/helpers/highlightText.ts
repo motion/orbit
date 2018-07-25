@@ -3,6 +3,10 @@ import { flatten } from 'lodash'
 
 const splitChar = '🂓'
 
+const cutoff = (str, maxChars) => {
+  return str.replace(/(\s{2,}|\n)/g, ' ').slice(0, maxChars - 3) + '...'
+}
+
 // cut text down using highlight words
 // not a wonderfully efficient
 // but still great for not too long text
@@ -89,6 +93,9 @@ export const highlightText = (options, returnList = false) => {
   let stringResult = final.join('').trim()
   // return raw array
   if (returnList) {
+    if (!stringResult.length) {
+      return [cutoff(text, maxChars)]
+    }
     return stringResult
       .split(splitChar)
       .filter(x => !!x.length)
@@ -98,7 +105,5 @@ export const highlightText = (options, returnList = false) => {
   if (stringResult.length) {
     return stringResult
   }
-  return text.length < maxChars
-    ? text
-    : text.replace(/(\s{2,}|\n)/g, separator).slice(0, maxChars - 3) + '...'
+  return text.length < maxChars ? text : cutoff(text, maxChars)
 }

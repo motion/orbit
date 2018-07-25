@@ -50,11 +50,12 @@ const EmptyResolver = ({
 
 export type BitResolverProps = {
   bit?: Bit
-  item: AppStatePeekItem
+  item?: AppStatePeekItem
   searchStore?: SearchStore
   isExpanded?: boolean
   children: Function | React.ReactNode
   shownLimit?: number
+  itemProps?: Object
 }
 
 export const BitResolver = ({ bit, item, ...props }: BitResolverProps) => {

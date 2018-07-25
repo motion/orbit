@@ -41,7 +41,6 @@ class QuickSearchStore {
       await sleep(TYPE_DEBOUNCE)
       await when(() => this.nlp.query === query)
       const { people, searchQuery, integrations, nouns } = this.nlp
-      console.log('goooooooooooooooooooooooooooo')
       const allResults = await Promise.all([
         // fuzzy people results
         this.personQueryBuilder

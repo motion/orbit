@@ -365,6 +365,7 @@ storeProvidable = function(options, Helpers) {
       return new Proxy(StoreProviderWithContext, {
         set(_, method, value) {
           Klass[method] = value
+          StoreProviderWithContext[method] = value
           return true
         },
       })

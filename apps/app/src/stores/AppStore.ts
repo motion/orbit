@@ -30,7 +30,6 @@ export class AppStore {
   updateAppOrbitStateOnResize = react(
     () => this.contentHeight,
     height => {
-      console.log('updating to new height', height)
       App.setOrbitState({
         size: [ORBIT_WIDTH, height + 20],
       })

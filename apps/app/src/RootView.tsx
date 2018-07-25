@@ -2,7 +2,8 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { NotFound } from './views/NotFound'
 import Router from './router'
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
+import { App, Desktop } from '@mcro/stores'
 
 export class RootView extends React.Component {
   state = {
@@ -12,6 +13,17 @@ export class RootView extends React.Component {
   componentDidMount() {
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
+
+    // capture un-captured links
+    on(this, document, 'click', event => {
+      if (
+        event.target.tagName === 'A' &&
+        event.target.href.startsWith('http')
+      ) {
+        event.preventDefault()
+        App.sendMessage(Desktop, Desktop.messages.OPEN, event.target.href)
+      }
+    })
   }
 
   componentDidCatch(error) {

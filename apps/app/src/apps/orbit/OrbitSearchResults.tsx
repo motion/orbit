@@ -46,20 +46,14 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
         size={1.2}
         alpha={0.7}
         wordBreak="break-all"
-        highlight={
-          highlightWords.length && {
-            text: sanitize(
-              highlightWords.length
-                ? bit.body
-                : (bit.body || '').slice(0, 1000),
-            ),
-            words: highlightWords,
-            maxChars: 380,
-            maxSurroundChars: 120,
-            trimWhitespace: true,
-            separator: '&nbsp;&middot;&nbsp;',
-          }
-        }
+        highlight={{
+          text: sanitize(bit.body || ''),
+          words: highlightWords,
+          maxChars: 380,
+          maxSurroundChars: 120,
+          trimWhitespace: true,
+          separator: '&nbsp;&middot;&nbsp;',
+        }}
       >
         {({ highlights }) => {
           return highlights.map((highlight, index) => {

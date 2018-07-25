@@ -112,6 +112,7 @@ export default function decor(
       const ProxiedClass = new Proxy(decoratedClass, {
         set(_, method, value) {
           KlassOrOpts[method] = value
+          decoratedClass[method] = value
           return true
         },
       })

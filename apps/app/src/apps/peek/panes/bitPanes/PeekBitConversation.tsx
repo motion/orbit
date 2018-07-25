@@ -8,12 +8,12 @@ import * as UI from '@mcro/ui'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const Section = view({
-  padding: 20,
+  padding: [10, 16, 0],
 })
 
 const bitResolverProps = {
   itemProps: {
-    padding: [4, 15],
+    padding: [5, 16],
     '&:hover': {
       background: [0, 0, 0, 0.02],
     },
@@ -36,9 +36,9 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
     <>
       {content}
       {relatedStore.relatedConversations.length ? (
-        <UI.View marginTop={60} background="#f5f5f5">
+        <UI.View marginTop={20} background="#fefefe">
           <Section>
-            <SubTitle>Related Conversations</SubTitle>
+            <SubTitle>After</SubTitle>
           </Section>
           {relatedStore.relatedConversations.map((relatedBit, index) => (
             <React.Fragment key={`${relatedBit.id}${index}`}>

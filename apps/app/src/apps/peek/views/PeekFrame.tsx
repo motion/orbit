@@ -20,7 +20,7 @@ const transitions = store => {
 const PeekFrameBorder = view(UI.FullScreen, {
   zIndex: 10000,
   pointerEvents: 'none',
-  boxShadow: [borderShadow, ['inset', 0, 0.5, 0, 1, [255, 255, 255, 0.3]]],
+  boxShadow: [borderShadow, ['inset', 0, 0.5, 0, 0.5, [255, 255, 255, 0.3]]],
 })
 
 const PeekMain = view({

@@ -1,7 +1,13 @@
 import { CompositeDisposable, Emitter } from 'event-kit'
 import { automagicClass } from '@mcro/automagical'
 
+// disabling for now because i'm getting a "Emitter has been disposed" error on HMR
+
 export class Store {
+  // emitter: Emitter
+  // emit: Emitter['emit']
+  // subscriptions: CompositeDisposable
+
   private _emitter: Emitter
   private _subscriptions: CompositeDisposable
   private _emit: Emitter['emit']

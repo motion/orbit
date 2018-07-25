@@ -16,10 +16,11 @@ const Highlight = view({
   display: 'inline-block',
   lineHeight: 22,
   fontSize: 16,
-  padding: [10, listItemSidePad, 10, listItemSidePad * 2],
-  margin: [0, -listItemSidePad],
+  padding: [2, listItemSidePad * 2, 2, listItemSidePad * 1.5],
+  margin: [8, -listItemSidePad, 8, 0],
+  borderLeft: [3, 'transparent'],
   '&:hover': {
-    background: '#f2f2f2',
+    borderLeftColor: '#ddd',
   },
 })
 
@@ -41,6 +42,7 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
       listItem
       cardProps={{
         background: '#fff',
+        padding: [20, 18, 10],
       }}
       nextUpStyle={
         index === 0 && {

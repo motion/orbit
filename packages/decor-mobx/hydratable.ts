@@ -11,7 +11,7 @@ const defaultFilter = (obj, key, val) => {
   if (typeof val === 'function') {
     return true
   }
-  if (key.indexOf('_') === 0) {
+  if (key[0] === '_') {
     return true
   }
   if (Mobx.isComputedProp(obj, key)) {

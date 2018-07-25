@@ -81,6 +81,7 @@ Card.theme = ({
   isSelected,
   isNextUp,
   background,
+  padding,
 }) => {
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
@@ -107,7 +108,7 @@ Card.theme = ({
     card = {
       ...card,
       ...listStyle,
-      padding: [20, 18],
+      padding: padding || [20, 18],
       // borderTop: [1, theme.base.borderColor.alpha(0.5)],
     }
   } else {

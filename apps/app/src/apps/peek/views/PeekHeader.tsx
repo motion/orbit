@@ -121,7 +121,7 @@ export class PeekHeaderContent extends React.Component<Props> {
       >
         {/* Nice gradient effect on header */}
         <UI.FullScreen
-          background="linear-gradient(rgba(255,255,255,0.04), transparent 44%)"
+          background="linear-gradient(rgba(255,255,255,0.055), transparent 44%)"
           pointerEvents="none"
         />
         {/* Fade below the icon */}

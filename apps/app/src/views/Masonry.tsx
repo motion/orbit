@@ -8,7 +8,7 @@ const gridColumnGap = 7
 
 const MasonryGrid = view({
   display: 'grid',
-  margin: [0, -8],
+  margin: [0, -7],
 })
 
 export type MasonryProps = {

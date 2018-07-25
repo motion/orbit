@@ -53,7 +53,7 @@ export const SearchBox = view(View, {
 })
 
 SearchBox.theme = ({ theme }) => ({
-  border: [1, theme.base.borderColor.darken(0.15)],
+  border: [1, theme.base.borderColor.darken(0.2).desaturate(0.2)],
 })
 
 export const SearchInput = view(TableInput, {
@@ -95,7 +95,7 @@ const Clear = view(Text, {
 })
 
 export const SearchIcon = view(Icon, {
-  marginRight: 3,
+  marginRight: 4,
   marginLeft: 3,
   marginTop: -1,
   minWidth: 16,

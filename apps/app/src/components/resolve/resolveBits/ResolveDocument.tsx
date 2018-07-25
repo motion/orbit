@@ -16,7 +16,7 @@ export const ResolveDocument = ({ bit, searchStore, children, isExpanded }) =>
     permalink: () => searchStore.open(bit),
     date: bit.bitUpdatedAt,
     content: isExpanded
-      ? markdown(bit.data.markdownBody || bit.data.body || '')
+      ? markdown(bit.data.markdownBody || bit.data.body || bit.body || '')
       : bit.body.slice(0, 200),
     preview: keywordExtract
       .extract(bit.body, options)

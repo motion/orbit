@@ -2,9 +2,9 @@ import { CompositeDisposable, Emitter } from 'event-kit'
 import { automagicClass } from '@mcro/automagical'
 
 export class Store {
-  private _emitter
-  private _subscriptions
-  private _emit
+  private _emitter: Emitter
+  private _subscriptions: CompositeDisposable
+  private _emit: Emitter['emit']
 
   constructor() {
     this.setupSubscribables()
@@ -12,6 +12,9 @@ export class Store {
 
   // handle HMR by re-setting up some thing on re-mount
   setupSubscribables() {
+    if (this._subscriptions && !this._subscriptions.disposed) {
+      this._subscriptions.dispose()
+    }
     this._emitter = new Emitter()
     this._subscriptions = new CompositeDisposable()
     this._emit = this.emitter.emit.bind(this.emitter)

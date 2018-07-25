@@ -91,16 +91,16 @@ Card.theme = ({
     // selected...
     if (isSelected) {
       listStyle = {
-        background: theme.selected.background,
+        background: background || theme.active.background,
         '&:hover': {
-          background: theme.selected.background,
+          background: background || theme.active.background,
         },
       }
     } else {
       listStyle = {
-        background: 'transparent',
+        background: background || 'transparent',
         '&:active': {
-          background: theme.selected.background,
+          background: background || theme.selected.background,
         },
       }
     }
@@ -108,7 +108,7 @@ Card.theme = ({
       ...card,
       ...listStyle,
       padding: [20, 18],
-      borderTop: [1, theme.base.borderColor.alpha(0.5)],
+      // borderTop: [1, theme.base.borderColor.alpha(0.5)],
     }
   } else {
     // CARD

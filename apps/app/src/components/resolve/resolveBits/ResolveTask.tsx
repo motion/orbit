@@ -25,13 +25,13 @@ const BitGithubTaskComment = ({ comment }) => {
     <div>
       <UI.Row>
         <img
-          css={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
+          style={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
           src={avatarUrl}
         />
         {login}
-        <TimeAgo if={createdAt}>{createdAt}</TimeAgo>
+        {!!createdAt && <TimeAgo>{createdAt}</TimeAgo>}
       </UI.Row>
-      <body
+      <div
         dangerouslySetInnerHTML={{
           __html: markdown(body),
         }}
@@ -46,7 +46,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
     comments = bit.data.comments
       .slice(0, shownLimit)
       .map((comment, index) => (
-        <BitGithubTaskComment key={index} comment={comment} bit={bit} />
+        <BitGithubTaskComment key={index} comment={comment} />
       ))
   }
   return {

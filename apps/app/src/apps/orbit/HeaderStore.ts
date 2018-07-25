@@ -1,8 +1,12 @@
 import * as React from 'react'
-import { react } from '@mcro/black'
+import { react, sleep } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+
+const moveCursorToEndOfTextarea = textarea => {
+  textarea.setSelectionRange(textarea.value.length, textarea.value.length)
+}
 
 export class HeaderStore {
   props: {
@@ -31,6 +35,7 @@ export class HeaderStore {
     if (!this.inputRef.current) {
       return
     }
+    moveCursorToEndOfTextarea(this.inputRef.current)
     this.inputRef.current.focus()
   }
 
@@ -55,10 +60,12 @@ export class HeaderStore {
 
   focusInputOnClosePeek = react(
     () => !!App.peekState.target,
-    hasTarget => {
+    async (hasTarget, { sleep }) => {
       if (hasTarget) {
         throw react.cancel
       }
+      this.focus()
+      await sleep(16)
       this.focus()
     },
   )

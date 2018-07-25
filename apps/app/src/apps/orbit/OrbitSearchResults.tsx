@@ -16,7 +16,6 @@ const Highlight = view({
   display: 'inline-block',
   padding: [10, listItemSidePad],
   margin: [0, -listItemSidePad],
-  borderTop: [1, '#f2f2f2'],
   '&:hover': {
     background: '#fff',
   },
@@ -38,9 +37,12 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
       total={results.length}
       bit={bit}
       listItem
+      cardProps={{
+        background: '#fff',
+      }}
       nextUpStyle={
         index === 0 && {
-          background: [255, 255, 255, 0.15],
+          color: 'black',
         }
       }
     >

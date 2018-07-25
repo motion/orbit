@@ -605,7 +605,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
                 log(`${name} [${curID}] cancelled`)
               }
             } else {
-              console.log('throwing err', err)
+              console.log(`throwing err from ${prefix}`, err)
               throw new Error(err)
             }
           })

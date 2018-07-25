@@ -88,7 +88,7 @@ const OrbitSearchResultsContents = view(({ name, searchStore }) => {
   return (
     <OrbitSearchResultsFrame>
       {message ? <div>{message}</div> : null}
-      <OrbitSearchQuickResults />
+      <OrbitSearchQuickResults searchStore={searchStore} />
       <div
         style={{
           position: 'relative',

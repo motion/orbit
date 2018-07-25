@@ -51,6 +51,7 @@ export type OrbitCardProps = {
   isSelected?: boolean
   getRef?: Function
   cardProps?: Object
+  item?: AppStatePeekItem
 }
 
 const CardWrap = view(UI.View, {
@@ -491,6 +492,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       bit,
       itemProps,
       inGrid,
+      item,
       ...props
     } = this.props
     // debounceLog(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
@@ -502,6 +504,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       <BitResolver
         searchStore={searchStore}
         bit={bit}
+        item={item}
         isExpanded={this.isExpanded}
         {...itemProps}
       >

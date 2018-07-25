@@ -13,7 +13,7 @@ const { parseSearchQuery, setUserNames } = initNlp()
 window.nlpWorker = { parseSearchQuery, setUserNames }
 
 @store
-export class NLPStore extends Store {
+export class NLPStore /* extends Store */ {
   types = TYPES
 
   get marks() {

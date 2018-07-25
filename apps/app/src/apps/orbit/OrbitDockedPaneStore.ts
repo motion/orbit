@@ -1,4 +1,4 @@
-import { react, on, store, Store } from '@mcro/black'
+import { react, on, store } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
 

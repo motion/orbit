@@ -48,14 +48,15 @@ function createViewDecorator(): ViewDecorator {
     if (isGlossArguments(a, b)) {
       return createView(a, b)
     }
+    const View = a as Function
     // class views
     // patch this in for now...
-    const shouldPatchConfig = !a.prototype && !a.withConfig
+    const shouldPatchConfig = !View.prototype && !View['withConfig']
     let aFinal
     if (shouldPatchConfig) {
-      a.withConfig = function(config) {
+      a['withConfig'] = function(config) {
         if (config.displayName) {
-          a.displayName = config.displayName
+          a['displayName'] = config.displayName
         }
         return aFinal
       }

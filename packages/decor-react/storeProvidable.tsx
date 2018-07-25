@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import * as Mobx from 'mobx'
-import { difference, throttle } from 'lodash'
+import { difference } from 'lodash'
 import isEqual from 'react-fast-compare'
 import root from 'global'
 import { DecorPlugin } from '@mcro/decor'

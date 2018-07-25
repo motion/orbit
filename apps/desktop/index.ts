@@ -1,5 +1,4 @@
 import 'isomorphic-fetch'
-import '@mcro/debug/inject'
 
 require('module-alias').addAlias('~', __dirname + '/')
 

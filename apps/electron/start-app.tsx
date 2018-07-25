@@ -1,6 +1,5 @@
 import 'source-map-support/register'
 import 'raf/polyfill'
-import '@mcro/debug/inject'
 import '@mcro/black/mlog.js'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'

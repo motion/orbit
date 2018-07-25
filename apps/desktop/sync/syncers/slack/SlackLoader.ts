@@ -1,9 +1,11 @@
 import { Setting } from '@mcro/models'
-import { channels, chat, users } from 'slack'
+import { channels, users } from 'slack'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 
+/**
+ * Loads the data from the Slack API.
+ */
 export class SlackLoader {
-
   setting: Setting
 
   constructor(setting: Setting) {
@@ -73,17 +75,20 @@ export class SlackLoader {
 
   /**
    * Loads message permalink.
-   *
-   * todo: it gives a ratelimit error. Maybe its a good idea to request permalinks as a separate passive process
    */
   async loadPermalink(channelId: string, messageTs: string): Promise<string> {
-    const response = await chat.getPermalink({
+    // since message permalinks looks static we can generate links to them
+    // instead of loading from api
+    // https://motion-core.slack.com/archives/CBV9PGSGG/p1532462700000382
+    const team = this.setting.values.oauth.info.team.domain
+    return `https://${team}.slack.com/archives/${channelId}/p${messageTs.replace(".", "")}`
+    /*const response = await chat.getPermalink({
       token: this.setting.token,
       channel: channelId,
       message_ts: messageTs,
     })
 
-    return response.permalink
+    return response.permalink*/
   }
 
 }

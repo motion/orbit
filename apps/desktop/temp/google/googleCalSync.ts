@@ -1,8 +1,8 @@
-import { Bit, Setting } from '../../../models/index'
+import { Bit, Setting } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 import * as _ from 'lodash'
 import debug from '@mcro/debug'
-import { DriveService } from '../../../services/index'
+import { DriveService } from '@mcro/services'
 
 const log = debug('sync.googleCal')
 

@@ -6,7 +6,7 @@ import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import r2 from '@mcro/r2'
 import { GoogleDriveFetchQueryOptions } from '~/sync/syncers/gdrive/GoogleDriveTypes'
-import { Setting } from '../../../../models'
+import { Setting } from '@mcro/models'
 
 export function htmlToMarkdown(html: string) {
   const turndown = new TurndownService()

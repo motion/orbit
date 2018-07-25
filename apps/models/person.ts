@@ -1,25 +1,90 @@
+import { Setting } from './setting'
 import * as T from './typeorm'
 
 @T.Entity()
 export class Person extends T.BaseEntity {
-  static identifyingKeys = ['identifier', 'integration']
 
-  @T.PrimaryGeneratedColumn() id: number
+  // todo: probably using generated id is a bad idea for the following reasons:
+  // 1. we already have unique columns that we can use as primary keys
+  // 2. since this table (as well as Bit) will be place of endless insertions id will get out of range quite quickly
+  // todo: check usages and remove
+  @T.PrimaryGeneratedColumn()
+  id: number
+
+  /**
+   * Person id.
+   *
+   * todo: rename to "id" if we remove auto generated key
+   */
   @T.Column({ unique: true })
   identifier: string
-  @T.Column() integrationId: string
-  @T.Column() integration: string
-  @T.Column() name: string
-  @T.CreateDateColumn() createdAt: Date
-  @T.UpdateDateColumn() updatedAt: Date
 
+  /**
+   * Integration type.
+   * Duplicates information stored in the settings.
+   */
+  @T.Column({ type: String, nullable: true })
+  integration: "slack"|string // todo: need to specify all possible integration types here
+
+  /**
+   * Id of this person in the integration that owns it.
+   */
+  @T.Column({ nullable: true })
+  integrationId: string
+
+  /**
+   * Database record creation time.
+   *
+   * todo: find about usages
+   */
+  @T.CreateDateColumn()
+  createdAt: Date
+
+  /**
+   * Database record updation time.
+   *
+   * todo: find about usages
+   */
+  @T.UpdateDateColumn()
+  updatedAt: Date
+
+  /**
+   * Name of this person in the integration that owns it.
+   */
+  @T.Column()
+  name: string
+
+  /**
+   * Setting has multiple persons it owns.
+   * Setting is a Person's owner.
+   *
+   * todo: remove nullable once we migrate all syncers into new model
+   */
+  @T.ManyToOne(() => Setting)
+  setting: Setting
+
+  /**
+   * Setting id.
+   *
+   * todo: remove nullable once we migrate all syncers into new model
+   */
+  @T.Column({ nullable: true })
+  settingId: number
+
+  /**
+   * Person data crawled from the API.
+   */
   @T.Column('simple-json', { default: '{}' })
-  data: {
-    name: string
-    email: string
-    phone: string
-    profile?: {
-      image_48?: string
-    }
+  data: SlackPersonData // todo: write down all other data types from other integrations
+
+}
+
+// todo: extract out of here later
+export interface SlackPersonData {
+  name: string
+  email: string
+  phone: string
+  profile?: {
+    image_48?: string
   }
 }

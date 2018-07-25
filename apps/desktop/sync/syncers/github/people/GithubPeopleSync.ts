@@ -57,7 +57,7 @@ export class GithubPeopleSync {
           ...person,
         },
       },
-      { matching: Person.identifyingKeys },
+      { matching: ['identifier', 'integration'] },
     )
   }
 

@@ -3,7 +3,7 @@ import {SlackSync} from './SlackSync'
 
 export const slack = new Syncer('slack', {
   actions: {
-    slack: { secondsBetween: 50 },
+    slack: { secondsBetween: 60 * 5 },
   },
   getSyncers: setting => {
     return {

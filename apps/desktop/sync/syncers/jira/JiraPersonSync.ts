@@ -62,7 +62,7 @@ export class JiraPersonSync {
           emails: person.emailAddress ? [person.emailAddress] : [],
         },
       },
-      { matching: Person.identifyingKeys },
+      { matching: ['identifier', 'integration'] },
     )
   }
 }

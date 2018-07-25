@@ -11,6 +11,7 @@ export * from './job'
 export * from './setting'
 export * from './bit'
 export * from './person'
+export * from './location'
 
 import { Job } from './job'
 import { Setting } from './setting'

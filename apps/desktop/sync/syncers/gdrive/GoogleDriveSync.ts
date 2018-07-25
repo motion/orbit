@@ -75,7 +75,7 @@ export class GoogleDriveSync {
           ...user
         },
       },
-      { matching: Person.identifyingKeys },
+      { matching: ['identifier', 'integration'] },
     )
   }
 

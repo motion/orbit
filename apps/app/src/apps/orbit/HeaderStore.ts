@@ -1,8 +1,15 @@
 import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
+import { SearchStore } from '../../stores/SearchStore'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
 export class HeaderStore {
+  props: {
+    searchStore: SearchStore
+    paneStore: OrbitDockedPaneStore
+  }
+
   inputRef = React.createRef()
   iconHovered = false
 
@@ -24,7 +31,7 @@ export class HeaderStore {
     this.inputRef.current.focus()
   }
 
-  focusInput = react(
+  focusInputOnVisible = react(
     () => [
       App.orbitState.pinned || App.orbitState.docked,
       // use this because otherwise input may not focus
@@ -40,6 +47,16 @@ export class HeaderStore {
     },
     {
       log: false,
+    },
+  )
+
+  focusInputOnClosePeek = react(
+    () => !!App.peekState.target,
+    hasTarget => {
+      if (hasTarget) {
+        throw react.cancel
+      }
+      this.focus()
     },
   )
 

@@ -5,7 +5,7 @@
  * @format
  */
 
-import { view } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import { Filter } from './types'
 import * as React from 'react'
 import { Toolbar } from '../Toolbar'
@@ -18,6 +18,7 @@ import { Icon } from '../Icon'
 import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
 import { Theme } from '@mcro/gloss'
+import { findDOMNode } from 'react-dom'
 
 type Props = {
   placeholder?: string
@@ -29,6 +30,7 @@ type Props = {
   searchBarProps?: Object
   searchInputProps?: Object
   children?: React.ReactNode | Function
+  focusOnMount?: boolean
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
@@ -139,7 +141,13 @@ export const Searchable = (Component: any) =>
     _inputRef: HTMLInputElement | void
 
     componentDidMount() {
-      window.document.addEventListener('keydown', this.onKeyDown)
+      if (this.props.focusOnMount) {
+        debugger
+      }
+      if (this.props.focusOnMount && this._inputRef) {
+        this._inputRef.focus()
+      }
+      on(this, findDOMNode(this), 'keydown', this.onKeyDown)
       const { defaultFilters } = this.props
       let savedState
       let key = this.context.plugin + this.props.tableKey
@@ -364,7 +372,7 @@ export const Searchable = (Component: any) =>
         actions,
         searchBarProps,
         searchInputProps,
-        customRender,
+        focusOnMount,
         searchBarTheme,
         ...props
       } = this.props
@@ -394,7 +402,7 @@ export const Searchable = (Component: any) =>
                 placeholder={placeholder}
                 onChange={this.onChangeSearchTerm}
                 value={this.state.searchTerm}
-                innerRef={this.setInputRef}
+                forwardRef={this.setInputRef}
                 onFocus={this.onInputFocus}
                 onBlur={this.onInputBlur}
                 {...searchInputProps}

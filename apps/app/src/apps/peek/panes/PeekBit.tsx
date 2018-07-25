@@ -16,11 +16,6 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {item.subType}</div>
   }
-  console.log(
-    'BitPaneContent----------',
-    BitPaneContent,
-    BitPaneContent.bitResolverProps,
-  )
   return (
     <PeekBitResolver
       item={item}
@@ -30,7 +25,7 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
     >
       {({ title, icon, content, location, permalink, date, comments }) => {
         return (
-          <SearchablePeek searchBarTheme={peekStore.theme}>
+          <SearchablePeek focusOnMount searchBarTheme={peekStore.theme}>
             {({ searchBar, searchTerm }) => {
               return children({
                 permalink,

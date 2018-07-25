@@ -8,7 +8,7 @@ export class Body extends React.Component {
     height: 0,
   }
 
-  innerRef = React.createRef()
+  innerRef = React.createRef<HTMLDivElement>()
 
   componentDidMount() {
     console.log('measure', this.innerRef.current)
@@ -17,7 +17,8 @@ export class Body extends React.Component {
     })
   }
 
-  render({ open, children }) {
+  render() {
+    const { open, children } = this.props
     return (
       <div style={{ height: 'auto' /* !open ? 0 : this.state.height */ }}>
         <div ref={this.innerRef} style={{ opacity: open ? 1 : 0 }}>

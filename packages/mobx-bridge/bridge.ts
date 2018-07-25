@@ -25,6 +25,8 @@ const stringifyObject = obj =>
 const requestIdle = (cb?: Function) =>
   new Promise(res => setTimeout(cb || res, 0))
 
+type Disposer = () => void
+
 type Options = {
   master?: Boolean
   ignoreSelf?: Boolean
@@ -380,7 +382,7 @@ class Bridge {
     return changed
   }
 
-  onMessage = (type, listener?): Function => {
+  onMessage = (type, listener?): Disposer => {
     let subscription = { type, listener }
     if (!listener) {
       subscription = { type: null, listener: type }

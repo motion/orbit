@@ -63,12 +63,18 @@ export type DesktopState = {
 
 @store
 class DesktopStore {
+  // TODO have the store decorator somehow auto-define these types
   // shortcuts
   appState: DesktopStore['state']['appState']
   ocrState: DesktopStore['state']['ocrState']
   searchState: DesktopStore['state']['searchState']
   keyboardState: DesktopStore['state']['keyboardState']
   mouseState: DesktopStore['state']['mouseState']
+  setKeyboardState: DesktopStore['setState']
+  setAppState: DesktopStore['setState']
+  setOcrState: DesktopStore['setState']
+  setSearchState: DesktopStore['setState']
+  setMouseState: DesktopStore['setState']
 
   messages = {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',

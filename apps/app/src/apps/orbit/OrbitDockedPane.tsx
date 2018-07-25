@@ -25,7 +25,7 @@ class DockedPaneStore {
     extraCondition: () => boolean
   }
 
-  paneRef: { current?: HTMLElement } = React.createRef()
+  paneRef = React.createRef<HTMLDivElement>()
   isAtBottom = false
   childMutationObserver = null
 
@@ -110,7 +110,7 @@ class DockedPaneStore {
     const { extraCondition, name, paneStore } = this.props
     const isActive =
       name === paneStore.activePane &&
-      (extraCondition ? extraCondition.hasQuery() : true)
+      (extraCondition ? extraCondition() : true)
     return isActive
   }
 }

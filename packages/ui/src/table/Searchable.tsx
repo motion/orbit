@@ -141,9 +141,6 @@ export const Searchable = (Component: any) =>
     _inputRef: HTMLInputElement | void
 
     componentDidMount() {
-      if (this.props.focusOnMount) {
-        debugger
-      }
       if (this.props.focusOnMount && this._inputRef) {
         this._inputRef.focus()
       }

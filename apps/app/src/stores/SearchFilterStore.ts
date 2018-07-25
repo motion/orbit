@@ -1,4 +1,4 @@
-import { store, deep, react } from '@mcro/black'
+import { store, deep, react, Store } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { memoize } from 'lodash'
@@ -13,12 +13,13 @@ export type SearchFilter = {
 }
 
 @store
-export class SearchFilterStore {
+export class SearchFilterStore extends Store {
   searchStore: SearchStore
   integrationSettingsStore: IntegrationSettingsStore
   inactiveFilters = deep({})
 
   constructor(searchStore) {
+    super()
     this.searchStore = searchStore
     this.integrationSettingsStore = searchStore.props.integrationSettingsStore
   }

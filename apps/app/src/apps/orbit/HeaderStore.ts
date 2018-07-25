@@ -10,7 +10,7 @@ export class HeaderStore {
     paneStore: OrbitDockedPaneStore
   }
 
-  inputRef = React.createRef()
+  inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false
 
   get highlightWords() {
@@ -21,11 +21,14 @@ export class HeaderStore {
   }
 
   onInput = () => {
-    this.props.searchStore.onChangeQuery(this.inputRef.innerText)
+    if (!this.inputRef.current) {
+      return
+    }
+    this.props.searchStore.onChangeQuery(this.inputRef.current.innerText)
   }
 
   focus = () => {
-    if (!this.inputRef || !this.inputRef.current) {
+    if (!this.inputRef.current) {
       return
     }
     this.inputRef.current.focus()

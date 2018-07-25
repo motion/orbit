@@ -99,7 +99,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
 
   unmounted = false
   parentNode = null
-  rootRef = React.createRef()
+  rootRef = React.createRef<HTMLDivElement>()
 
   componentDidMount() {
     on(

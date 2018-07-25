@@ -1,5 +1,6 @@
 import $ from '@mcro/color'
 import { Color } from '@mcro/css'
+import { ThemeObject } from '../types'
 
 type ColorObject = { [a: string]: Color }
 
@@ -8,7 +9,7 @@ type SimpleStyleObject = {
   [a: string]: Color | ColorObject
   hover?: ColorObject
   active?: ColorObject
-  focused?: ColorObject
+  focus?: ColorObject
   inactive?: ColorObject
   disabled?: ColorObject
 }
@@ -54,7 +55,7 @@ export class ThemeMaker {
       {},
     )
 
-  fromColor = bgName => {
+  fromColor = (bgName): ThemeObject => {
     if (typeof bgName !== 'string') {
       return null
     }
@@ -73,7 +74,7 @@ export class ThemeMaker {
     return this.fromStyles({ background })
   }
 
-  fromStyles = (styleObject: SimpleStyleObject) => {
+  fromStyles = (styleObject: SimpleStyleObject): ThemeObject => {
     if (!styleObject.background && !styleObject.color) {
       throw new Error('Themes require at least background or color')
     }
@@ -111,10 +112,10 @@ export class ThemeMaker {
       borderColor: increaseContrast(base.borderColor, largeAmt),
       ...rest.disabled,
     }
-    const focused = {
+    const focus = {
       background: decreaseContrast(base.background, largeAmt),
       borderColor: decreaseContrast(base.borderColor, largeAmt),
-      ...rest.focused,
+      ...rest.focus,
     }
     const res = this.colorize({
       ...rest,
@@ -123,9 +124,9 @@ export class ThemeMaker {
       active,
       inactive,
       disabled,
-      focused,
+      focus,
     })
     this.cache[key] = res
-    return res
+    return res as ThemeObject
   }
 }

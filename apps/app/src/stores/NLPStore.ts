@@ -1,6 +1,6 @@
 // @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
-import { store, react } from '@mcro/black'
+import { store, react, Store } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Person } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -13,7 +13,7 @@ const { parseSearchQuery, setUserNames } = initNlp()
 window.nlpWorker = { parseSearchQuery, setUserNames }
 
 @store
-export class NLPStore {
+export class NLPStore extends Store {
   types = TYPES
 
   get marks() {

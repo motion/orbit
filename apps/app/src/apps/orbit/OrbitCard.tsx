@@ -50,6 +50,8 @@ export type OrbitCardProps = {
   nextUpStyle?: Object
   isSelected?: boolean
   getRef?: Function
+  cardProps?: Object
+  item?: AppStatePeekItem
 }
 
 const CardWrap = view(UI.View, {
@@ -96,19 +98,16 @@ Card.theme = ({
     } else {
       listStyle = {
         background: 'transparent',
-        '&:hover': {
-          background: theme.hover.background,
-        },
         '&:active': {
-          background: theme.active.background,
+          background: theme.selected.background,
         },
       }
     }
     card = {
       ...card,
       ...listStyle,
-      padding: [16, 20],
-      borderTop: [1, theme.hover.background],
+      padding: [20, 18],
+      borderTop: [1, theme.base.borderColor.alpha(0.5)],
     }
   } else {
     // CARD
@@ -162,12 +161,12 @@ const Subtitle = view({
 
 const orbitIconProps = {
   imageStyle: {
-    transformOrigin: 'bottom right',
+    transformOrigin: 'top right',
     transform: {
-      y: -6 - 3,
-      x: 20 + 3,
-      scale: 2.7,
-      rotate: '-45deg',
+      y: 6,
+      x: 0,
+      scale: 2,
+      // rotate: '-45deg',
     },
   },
   orbitIconStyle: {
@@ -363,6 +362,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       nextUpStyle,
       onClick,
       searchStore,
+      cardProps,
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
@@ -398,6 +398,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           inGrid={inGrid}
           nextUpStyle={nextUpStyle}
           onClick={onClick || store.handleClick}
+          {...cardProps}
         >
           {orbitIcon}
           <Title>
@@ -405,7 +406,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               size={listItem ? 1.15 : 1.25}
               sizeLineHeight={0.85}
               ellipse={2}
-              alpha={isSelected ? 1 : 0.8}
+              alpha={isSelected || listItem ? 1 : 0.8}
               fontWeight={500}
               maxWidth="calc(100% - 30px)"
               {...titleProps}
@@ -439,7 +440,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {typeof preview !== 'string' && preview}
             <UI.Text
               if={typeof preview === 'string'}
-              alpha={isSelected ? 0.85 : 0.6}
+              className="preview-text"
+              alpha={isSelected ? 1 : 0.6}
               size={listItem ? 1.1 : 1.3}
               sizeLineHeight={0.9}
               margin={inGrid ? ['auto', 0] : 0}
@@ -464,19 +466,20 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-        <UI.HoverGlow
-          if={!listItem}
-          behind
-          color="#000"
-          resist={90}
-          scale={0.99}
-          offsetTop={isSelected ? 8 : 4}
-          full
-          blur={isSelected ? 8 : 4}
-          inverse
-          opacity={isSelected ? 0.08 : 0.03}
-          borderRadius={20}
-        />
+        {!listItem && (
+          <UI.HoverGlow
+            behind
+            color="#000"
+            resist={90}
+            scale={0.99}
+            offsetTop={isSelected ? 8 : 4}
+            full
+            blur={isSelected ? 8 : 4}
+            inverse
+            opacity={isSelected ? 0.08 : 0.03}
+            borderRadius={20}
+          />
+        )}
       </CardWrap>
     )
   }
@@ -489,6 +492,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       bit,
       itemProps,
       inGrid,
+      item,
       ...props
     } = this.props
     // debounceLog(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
@@ -500,6 +504,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       <BitResolver
         searchStore={searchStore}
         bit={bit}
+        item={item}
         isExpanded={this.isExpanded}
         {...itemProps}
       >

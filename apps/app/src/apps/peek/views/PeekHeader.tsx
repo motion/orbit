@@ -1,10 +1,23 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from '../../apps/orbit/OrbitIcon'
-import { WindowControls } from '../../views/WindowControls'
+import { OrbitIcon } from '../../../apps/orbit/OrbitIcon'
+import { WindowControls } from '../../../views/WindowControls'
 import { App } from '@mcro/stores'
-import { ControlButton } from '../../views/ControlButton'
+import { PeekStore } from '../stores/PeekStore'
+// import { ControlButton } from '../../views/ControlButton'
+
+type Props = {
+  peekStore?: PeekStore
+  title?: React.ReactNode
+  date?: React.ReactNode
+  subtitle?: React.ReactNode
+  permalink?: Function
+  icon?: string | React.ReactNode
+  theme?: Object
+  subhead?: React.ReactNode
+  integration?: string
+}
 
 const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
@@ -31,7 +44,7 @@ const TitleBarTitle = props => (
 
 const TitleBarContain = view({
   flex: 1,
-  height: 30,
+  height: 27,
   maxWidth: '100%',
 })
 
@@ -41,25 +54,36 @@ TitleBarContain.theme = ({ theme }) => ({
   },
 })
 
-const Permalink = ({ to = () => {} }) => (
-  <UI.Button circular icon="link" size={1.1} onClick={to} />
-)
+const SubTitleHorizontalSpace = () => <div style={{ width: 12 }} />
 
-const SubTitle = ({ children, date, permalink }) => (
+const SubTitle = ({ children, date, permalink, icon }) => (
   <UI.Row padding={[0, 12]} alignItems="center" flex={1} height={32}>
-    {children}
-    {date ? (
-      <>
-        {' '}
-        <UI.Date>{date}</UI.Date>
-      </>
-    ) : null}
-    {!!permalink && (
-      <>
-        <div style={{ flex: 1 }} />
-        <Permalink to={permalink} />
-      </>
-    )}
+    <UI.Text>{children}</UI.Text>
+    {!!children && !!date && <SubTitleHorizontalSpace />}
+    <UI.Text>
+      {date ? (
+        <>
+          {' '}
+          <UI.Date>{date}</UI.Date>
+        </>
+      ) : null}
+    </UI.Text>
+    {!!permalink &&
+      !!icon && (
+        <>
+          <div style={{ flex: 1 }} />
+          <OrbitIcon
+            onClick={permalink}
+            icon={icon}
+            size={16}
+            css={{
+              transform: {
+                scale: 2,
+              },
+            }}
+          />
+        </>
+      )}
   </UI.Row>
 )
 
@@ -72,7 +96,7 @@ const TitleBar = ({ children, after, ...props }) => (
 
 @attachTheme
 @view
-export class PeekHeaderContent extends React.Component {
+export class PeekHeaderContent extends React.Component<Props> {
   render() {
     const {
       peekStore,
@@ -88,31 +112,41 @@ export class PeekHeaderContent extends React.Component {
     } = this.props
     return (
       <PeekHeaderContain
-        draggable={true}
+        draggable
         onDragStart={peekStore.onDragStart}
         onDrag={peekStore.onDrag}
         onDragEnd={peekStore.onDragEnd}
         theme={theme}
         {...props}
       >
+        {/* Nice gradient effect on header */}
+        <UI.FullScreen
+          background="linear-gradient(rgba(255,255,255,0.04), transparent 44%)"
+          pointerEvents="none"
+        />
+        {/* Fade below the icon */}
+        <UI.View
+          pointerEvents="none"
+          position="absolute"
+          top={0}
+          right={0}
+          bottom={0}
+          width={70}
+          background={`linear-gradient(to right, transparent, ${theme.base.background.darken(
+            0.2,
+          )})`}
+        />
+        {/* <UI.HoverGlow
+          width={400}
+          height={300}
+          opacity={0.1}
+          blur={90}
+          zIndex={10000}
+          resist={50}
+        /> */}
         <TitleBar
           after={
             <>
-              {!!icon && (
-                <OrbitIcon
-                  icon={icon}
-                  size={16}
-                  css={{
-                    position: 'absolute',
-                    top: -2,
-                    right: 2,
-                    transform: {
-                      scale: 2.5,
-                      rotate: '45deg',
-                    },
-                  }}
-                />
-              )}
               <UI.Row
                 flexFlow="row"
                 position="absolute"
@@ -128,9 +162,9 @@ export class PeekHeaderContent extends React.Component {
                   <UI.Button icon="arrowminleft" circular size={0.8} />
                 )}
                 <UI.View flex={1} />
-                {!peekStore.tornState && (
+                {/* {!!peekStore.tornState && (
                   <ControlButton icon="z" onClick={peekStore.tearPeek} />
-                )}
+                )} */}
               </UI.Row>
             </>
           }
@@ -138,7 +172,7 @@ export class PeekHeaderContent extends React.Component {
           {title}
         </TitleBar>
         {!!subtitle && (
-          <SubTitle date={date} permalink={permalink}>
+          <SubTitle date={date} permalink={permalink} icon={icon}>
             {subtitle}
           </SubTitle>
         )}

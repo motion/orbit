@@ -35,6 +35,7 @@ export function storeAttachable(options): ContextAttacher {
       return new Proxy(ContextAttacher, {
         set(_, method, value) {
           View[method] = value
+          ContextAttacher[method] = value
           return true
         },
       })

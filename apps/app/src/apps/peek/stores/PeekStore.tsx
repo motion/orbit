@@ -1,10 +1,9 @@
 import { react, on } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { Person, Bit } from '@mcro/models'
-import { deepClone } from '../helpers'
-import * as Constants from '../constants'
-import { AppStore } from '../stores/AppStore'
-import { SearchStore } from '../stores/SearchStore'
+import { deepClone } from '../../../helpers'
+import * as Constants from '../../../constants'
+import { AppStore } from '../../../stores/AppStore'
 
 const TYPE_THEMES = {
   person: {
@@ -38,11 +37,32 @@ export class PeekStore {
   dragOffset: [number, number] = null
   history = []
 
+  get curState() {
+    if (this.tornState) {
+      return this.tornState
+    }
+    if (!App.peekState.target) {
+      return null
+    }
+    if (App.orbitState.docked || !App.orbitState.hidden) {
+      return App.peekState
+    }
+    return null
+  }
+
+  get state() {
+    let state = this.curState
+    if (this.willHide) {
+      state = this.lastState
+    }
+    return state
+  }
+
   get theme() {
-    if (!this.curState || !this.curState.item) {
+    if (!this.state || !this.state.item) {
       return BASE_THEME
     }
-    const { type, integration } = this.curState.item
+    const { type, integration } = this.state.item
     return INTEGRATION_THEMES[integration] || TYPE_THEMES[type] || BASE_THEME
   }
 
@@ -101,22 +121,6 @@ export class PeekStore {
     { delay: 200, immediate: true },
   )
 
-  get curState() {
-    if (this.tornState) {
-      return this.tornState
-    }
-    if (this.props.fixed) {
-      return App.peekState
-    }
-    if (!App.peekState.target) {
-      return null
-    }
-    if (App.orbitState.docked || !App.orbitState.hidden) {
-      return App.peekState
-    }
-    return null
-  }
-
   get framePosition() {
     const { willShow, willStayShown, willHide, state } = this
     if (!state) {
@@ -155,14 +159,6 @@ export class PeekStore {
     },
     { delay: 32 },
   )
-
-  get state() {
-    let state = this.curState
-    if (this.willHide) {
-      state = this.lastState
-    }
-    return state
-  }
 
   lastState = react(() => this.curState, deepClone, {
     delay: 16,

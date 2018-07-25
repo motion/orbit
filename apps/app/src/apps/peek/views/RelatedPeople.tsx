@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { PeekSection } from './PeekViews'
+import { PeekSection } from './PeekSection'
 import { SubTitle } from '../../../views'
 import * as UI from '@mcro/ui'
 import { Carousel } from '../../../components/Carousel'

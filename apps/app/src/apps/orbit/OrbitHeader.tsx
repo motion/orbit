@@ -13,14 +13,16 @@ const OrbitHeaderContainer = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  padding: [6, 12],
+  padding: [3, 12],
   transition: 'all ease-in 300ms',
   zIndex: 4,
 })
 
 OrbitHeaderContainer.theme = ({ borderRadius, theme }) => ({
   borderRadius: borderRadius,
-  background: theme.base.background,
+  background: `linear-gradient(${theme.base.background.lighten(0.1)}, ${
+    theme.base.background
+  })`,
 })
 
 const PinnedControlButton = view(ControlButton, {
@@ -107,8 +109,10 @@ export class OrbitHeader extends React.Component<{
             width={30}
             opacity={0.2}
             cursor="pointer"
-            hover={{
-              opacity: 1,
+            {...{
+              '&:hover': {
+                opacity: 0.75,
+              },
             }}
           />
           <OrbitHeaderInput

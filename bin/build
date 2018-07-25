@@ -2,6 +2,8 @@
 
 . $(dirname $0)/__/common
 
+echo "building.... $(pwd)"
+
 # TODO move this into each package and just have this npm run build in each
 
 # if in root

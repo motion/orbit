@@ -26,7 +26,6 @@ export const Spacer = view(Col, {
 // }>
 
 export const Toolbar = view(Row, {
-  backgroundColor: colors.light02,
   flexShrink: 0,
   lineHeight: '32px',
   alignItems: 'center',
@@ -34,10 +33,24 @@ export const Toolbar = view(Row, {
   width: '100%',
 })
 
-Toolbar.theme = ({ position, compact }) => ({
+Toolbar.theme = ({
+  borderTop,
+  borderBottom,
+  background,
+  position,
+  compact,
+  theme,
+}) => ({
+  background: background || theme.base.background || colors.light02,
   borderBottom:
-    position === 'bottom' ? 'none' : `1px solid ${colors.sectionHeaderBorder}`,
+    borderBottom ||
+    (position === 'bottom'
+      ? 'none'
+      : [1, theme.base.borderColor || colors.sectionHeaderBorder]),
   borderTop:
-    position === 'bottom' ? `1px solid ${colors.sectionHeaderBorder}` : 'none',
+    borderTop ||
+    (position === 'bottom'
+      ? [1, theme.base.borderColor || colors.sectionHeaderBorder]
+      : 'none'),
   height: compact ? 28 : 42,
 })

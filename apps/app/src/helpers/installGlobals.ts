@@ -13,8 +13,6 @@ import { render } from '../index'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
 
-console.log('installing globals...')
-
 // add require('') to window for easy debugging
 // for example require('lodash')
 window['webpackData'] = __webpack_require__

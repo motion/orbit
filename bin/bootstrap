@@ -25,12 +25,28 @@ yarn install
 echo "installing packages"
 npx lerna bootstrap --loglevel=warn
 # internal tools
-if [ ! -L "./packages/gloss/_/gloss.js" ]; then
-  $ROOT/bin/build-builder-modules
+if [ ! -f "./packages/gloss/_/gloss.js" ]; then
+  build-builder-modules
 fi
 # link second
-ensure-symlink ./node_modules/@mcro/gloss -- link-root-modules
-# build everything once
-ensure-dir ./packages/ui/_ -- build
-echo "bootstrapped!"
-echo "run desktop; run app; run electron"
+if [ ! -L "./node_modules/@mcro/gloss" ]; then
+  link-root-modules
+fi
+# build everything
+if [ ! -d "./packages/ui/_" ]; then
+  build-all
+fi
+
+printf "\n\n"
+printf "  🎉🎉🎉 bootstrapped! 🎉🎉🎉"
+printf "\n\n"
+printf "1) be sure you are running:"
+printf "\n\n"
+printf "    build --watch"
+printf "\n\n"
+printf "2) run your apps in any order, in separate consoles:"
+printf "\n\n"
+printf "    run app\n"
+printf "    run desktop\n"
+printf "    run electron\n"
+printf "\n\n"

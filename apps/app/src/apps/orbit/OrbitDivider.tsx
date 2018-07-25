@@ -24,7 +24,7 @@ OrbitBarInner.theme = ({ theme }) => ({
   },
 })
 
-export const OrbitDivider = ({ children, ...props }) => (
+export const OrbitDivider = ({ children = '', ...props }) => (
   <OrbitDividerContainer {...props}>
     <OrbitBarInner>{children}</OrbitBarInner>
   </OrbitDividerContainer>

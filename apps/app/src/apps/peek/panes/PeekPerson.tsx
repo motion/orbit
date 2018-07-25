@@ -6,7 +6,7 @@ import * as UI from '@mcro/ui'
 import { Bit } from '@mcro/models'
 import { SubTitle, RoundButton } from '../../../views'
 import { OrbitCardMasonry } from '../../orbit/OrbitCardMasonry'
-import { PeekContentProps } from './PeekContentProps'
+import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 
 const StrongSubTitle = props => (
@@ -160,8 +160,8 @@ const IntegrationButton = ({ href, children, ...props }) => (
   store: PersonPeek,
 })
 @view
-export class Person extends React.Component<
-  PeekContentProps & {
+export class PeekPerson extends React.Component<
+  PeekPaneProps & {
     store: PersonPeek
     integrationSettingsStore: IntegrationSettingsStore
   }

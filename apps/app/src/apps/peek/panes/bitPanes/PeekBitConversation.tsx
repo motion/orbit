@@ -1,0 +1,61 @@
+import * as React from 'react'
+import { view, compose } from '@mcro/black'
+import { PeekBitResolver } from '../../views/PeekBitResolver'
+import { SubTitle } from '../../../../views'
+import { OrbitDivider } from '../../../../apps/orbit/OrbitDivider'
+import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
+import * as UI from '@mcro/ui'
+import { PeekBitPaneProps } from './PeekBitPaneProps'
+
+const Section = view({
+  padding: [10, 16, 0],
+})
+
+const bitResolverProps = {
+  itemProps: {
+    padding: [5, 16],
+    '&:hover': {
+      background: [0, 0, 0, 0.02],
+    },
+  },
+}
+
+const decorator = compose(
+  view.attach({
+    relatedStore: PeekRelatedStore,
+  }),
+  view,
+)
+
+type Props = PeekBitPaneProps & {
+  relatedStore: PeekRelatedStore
+}
+
+export const Conversation = decorator(({ relatedStore, content }: Props) => {
+  return (
+    <>
+      {content}
+      {relatedStore.relatedConversations.length ? (
+        <UI.View marginTop={20} background="#fefefe">
+          <Section>
+            <SubTitle>After</SubTitle>
+          </Section>
+          {relatedStore.relatedConversations.map((relatedBit, index) => (
+            <React.Fragment key={`${relatedBit.id}${index}`}>
+              <PeekBitResolver bit={relatedBit} {...bitResolverProps}>
+                {({ content }) => content}
+              </PeekBitResolver>
+              {index < 2 && (
+                <OrbitDivider height={2} css={{ margin: [20, 0, 10] }} />
+              )}
+            </React.Fragment>
+          ))}
+          <br />
+          <br />
+        </UI.View>
+      ) : null}
+    </>
+  )
+})
+
+Conversation.bitResolverProps = bitResolverProps

@@ -8,7 +8,7 @@ import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '../../../stores/SettingInfoStore'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { modelQueryReaction } from '@mcro/helpers'
-import { PeekContentProps } from './PeekContentProps'
+import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 
 const EmptyPane = ({ setting }) => (
@@ -27,8 +27,8 @@ const statusIcons = {
   store: SettingInfoStore,
 })
 @view
-export class SettingContent extends React.Component<
-  PeekContentProps & {
+class SettingContent extends React.Component<
+  PeekPaneProps & {
     store?: SettingInfoStore
     integrationSettingsStore?: IntegrationSettingsStore
     setting: Setting
@@ -143,8 +143,8 @@ class LoadSettingStore {
   store: LoadSettingStore,
 })
 @view
-export class Setting extends React.Component<
-  PeekContentProps & {
+export class PeekSetting extends React.Component<
+  PeekPaneProps & {
     store: LoadSettingStore
   }
 > {

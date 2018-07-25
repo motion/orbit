@@ -52,6 +52,7 @@ function ensure-dir {
   cmd=${@:3}
   if [ ! -d "$1" ]; then
     echo "$1 doesnt exist, running... $cmd"
+    echo $(pwd)
     $($cmd)
   fi
 }
@@ -60,6 +61,7 @@ function ensure-file {
   cmd=${@:3}
   if [ ! -f "$1" ]; then
     echo "$1 doesnt exist, running... $cmd"
+    echo $(pwd)
     $($cmd)
   fi
 }

@@ -17,6 +17,7 @@ export type AppStatePeekItem = {
   body: string
   type: string
   integration: string
+  subType: string
 }
 
 export type AppState = {

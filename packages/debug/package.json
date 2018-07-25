@@ -6,7 +6,7 @@
   "author": "Motion",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {

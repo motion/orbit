@@ -1,22 +1,25 @@
-// import keywordExtract from 'keyword-extractor'
+import markdown from '@mcro/marky-markdown'
+import keywordExtract from 'keyword-extractor'
 
-// const options = {
-//   language: 'english',
-//   remove_digits: true,
-//   return_changed_case: true,
-//   remove_duplicates: false,
-// }
+const options = {
+  language: 'english',
+  remove_digits: true,
+  return_changed_case: true,
+  remove_duplicates: false,
+}
 
-export const ResolveDocument = ({ bit, children, isExpanded }) =>
+export const ResolveDocument = ({ bit, searchStore, children, isExpanded }) =>
   children({
     title: bit.title,
     icon: bit.integration || 'gdocs',
-    location: ' ', //bit.data.spaces[0],
-    date: Date.now(),
+    location: 'Wiki',
+    permalink: () => searchStore.open(bit),
+    date: bit.bitUpdatedAt,
     content: isExpanded
-      ? bit.data.markdownBody ||
-        (typeof bit.data.body === 'string' && bit.data.body) ||
-        bit.body
-      : null,
-    preview: bit.body,
+      ? markdown(bit.data.markdownBody || bit.data.body || '')
+      : bit.body.slice(0, 200),
+    preview: keywordExtract
+      .extract(bit.body, options)
+      .slice(0, 8)
+      .join(' '),
   })

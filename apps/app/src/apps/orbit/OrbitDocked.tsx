@@ -14,14 +14,14 @@ import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
 
-const SHADOW_PAD = 200
+const SHADOW_PAD = 180
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.45]]
 
 const Frame = view(UI.Col, {
   position: 'absolute',
   top: 10,
   right: 10,
-  borderRadius: BORDER_RADIUS,
+  borderRadius: BORDER_RADIUS - 1,
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
@@ -58,7 +58,7 @@ const Border = view(UI.FullScreen, {
 Border.theme = ({ theme }) => {
   const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
   const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
-  const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.75]]
+  const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.95]]
   return {
     borderRadius: BORDER_RADIUS,
     boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],

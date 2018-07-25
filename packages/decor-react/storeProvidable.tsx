@@ -158,7 +158,6 @@ storeProvidable = function(options, Helpers) {
           root.loadedStores.add(this)
           this.didMountStores()
           this.willReloadListener = Helpers.on('will-hmr', () => {
-            console.log('willhmr')
             setRecentHMR()
             this.onWillReloadStores()
           })
@@ -366,6 +365,7 @@ storeProvidable = function(options, Helpers) {
       return new Proxy(StoreProviderWithContext, {
         set(_, method, value) {
           Klass[method] = value
+          StoreProviderWithContext[method] = value
           return true
         },
       })

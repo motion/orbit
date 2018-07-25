@@ -13,8 +13,10 @@ import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 const SearchFilters = view(UI.Col, {
   padding: [7, 12],
 })
+
 SearchFilters.theme = ({ theme }) => ({
-  background: theme.base.background,
+  borderTop: [1, theme.base.background.darken(0.05)],
+  background: theme.base.background.darken(0.05),
 })
 
 const ExtraFilters = view(UI.View, {
@@ -70,6 +72,12 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
               onClick={searchFilterStore.filterToggler(filter)}
               filter={filter.active ? null : 'grayscale(100%)'}
               opacity={filter.active ? 1 : 0.3}
+              {...{
+                '&:hover': {
+                  filter: 'none',
+                  opacity: filter.active ? 1 : 0.75,
+                },
+              }}
             />
           )
         })}

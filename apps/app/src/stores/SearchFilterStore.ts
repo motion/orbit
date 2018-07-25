@@ -63,12 +63,12 @@ export class SearchFilterStore {
     if (!settingsList) {
       return []
     }
-    const { hasInactiveFilters, inactiveFilters } = this
+    const { /* hasInactiveFilters, */ inactiveFilters } = this
     return settingsList.filter(x => x.type !== 'setting').map(setting => ({
       type: setting.type,
       icon: setting.type,
       name: getTitle(setting),
-      active: !hasInactiveFilters ? true : inactiveFilters[setting.type],
+      active: /* !hasInactiveFilters ? true :  */ inactiveFilters[setting.type],
     }))
   }
 

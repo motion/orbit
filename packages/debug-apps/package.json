@@ -6,7 +6,7 @@
     "debug-apps": "./_/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "start": "node --max_old_space_size=4096 ./_/index"
   },

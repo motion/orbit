@@ -1,13 +1,13 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { PeekContentProps } from './PeekContentProps'
+import { PeekPaneProps } from '../PeekPaneProps'
 import { Bit } from '@mcro/models'
 
 const EMPTY_BIT = {
   title: 'nothign found',
 } as Bit
 
-export const Empty = ({ bit = EMPTY_BIT }: PeekContentProps) =>
+export const PeekEmpty = ({ bit = EMPTY_BIT }: PeekPaneProps) =>
   !bit ? null : (
     <div style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
       {bit.icon ? (

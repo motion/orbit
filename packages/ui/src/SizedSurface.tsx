@@ -71,6 +71,10 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
     pass.borderRadius = size * 1000
     pass.noInnerElement = true
   }
+  // clamp radius to max, because we use it for Glint/Hoverglow in Surface and they need actual radius
+  if (pass.borderRadius) {
+    pass.borderRadius = Math.min(height / 2, pass.borderRadius)
+  }
   // icon already tracks height so no need to size it from here
   if (sizeIcon) {
     pass.sizeIcon = num(sizeIcon)

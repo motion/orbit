@@ -1,4 +1,3 @@
-import { view } from '@mcro/black'
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
 import { RoundButton } from '../../views/RoundButton'
@@ -17,7 +16,7 @@ const options = {
 export const ResolveConversation = ({
   children,
   bit,
-  appStore,
+  searchStore,
   shownLimit = 5,
   itemProps,
   isExpanded,
@@ -55,13 +54,13 @@ export const ResolveConversation = ({
       <RoundButton
         onClick={e => {
           e.stopPropagation()
-          appStore.open(bit, 'channel')
+          searchStore.open(bit, 'channel')
         }}
       >
         {bit.title.slice(1)}
       </RoundButton>
     ),
-    permalink: () => appStore.open(bit),
+    permalink: () => searchStore.open(bit),
     content,
   })
 }

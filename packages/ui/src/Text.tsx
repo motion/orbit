@@ -51,6 +51,10 @@ TextEllipse.theme = ({ ellipse }) => ({
   }),
 })
 
+export type Highlights = {
+  highlights: string[]
+}
+
 export type TextProps = {
   editable?: boolean
   autoselect?: boolean
@@ -82,6 +86,7 @@ export type TextProps = {
   highlight?: Object
   wordBreak?: string
   theme?: Object
+  children: React.ReactNode | ((Highlights) => React.ReactNode)
 }
 
 @view.ui
@@ -230,19 +235,13 @@ export class Text extends React.Component<TextProps> {
         : 'auto'
     const oneLineEllipse = ellipse === 1
     let ellipseProps = {}
-    if (highlight) {
-      if (typeof children === 'string') {
-        const __html = highlightText({
-          text: children,
-          ...highlight,
-        })
-        ellipseProps = {
-          dangerouslySetInnerHTML: {
-            __html,
-          },
-        }
-      } else {
-        console.warn('Expected chidlren to be string for highlighting')
+
+    if (highlight && typeof children === 'string') {
+      const __html = highlightText({ text: children, ...highlight })
+      ellipseProps = {
+        dangerouslySetInnerHTML: {
+          __html,
+        },
       }
     }
     if (multiLineEllipse) {
@@ -254,7 +253,20 @@ export class Text extends React.Component<TextProps> {
         opacity: doClamp ? 1 : 0,
       }
     }
-    const showEllipse = highlight || ellipse
+
+    let contents = children
+
+    if (highlight && typeof children === 'function') {
+      const highlights = highlightText(highlight, true)
+      contents = children({ highlights })
+    } else if (ellipse) {
+      contents = (
+        <TextEllipse ellipse={ellipse} color={color} {...ellipseProps}>
+          {children}
+        </TextEllipse>
+      )
+    }
+
     return (
       <TextBlock
         contentEditable={editable}
@@ -266,12 +278,7 @@ export class Text extends React.Component<TextProps> {
         color={color}
         {...props}
       >
-        {!showEllipse && children}
-        {showEllipse ? (
-          <TextEllipse ellipse={ellipse} color={color} {...ellipseProps}>
-            {!highlight ? children : null}
-          </TextEllipse>
-        ) : null}
+        {contents}
       </TextBlock>
     )
   }

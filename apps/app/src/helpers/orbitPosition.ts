@@ -1,7 +1,6 @@
 import { ORBIT_WIDTH } from '@mcro/constants'
 
-// small vertical pad allows you to resize attached window
-const VERT_PAD = 5
+const EDGE_PAD = 10
 const screenSize = () => [window.innerWidth, window.innerHeight]
 
 export default function orbitPosition({ left, top, width, height }) {
@@ -35,13 +34,11 @@ export default function orbitPosition({ left, top, width, height }) {
       orbitW = rightSpace
     }
   }
-  y += VERT_PAD
-  orbitH -= VERT_PAD
   if (orbitH + y > screenH) {
     height -= screenH - (orbitH + y)
   }
   return {
-    position: [Math.round(x), Math.round(y)],
+    position: [Math.round(x) - EDGE_PAD, Math.round(y) + EDGE_PAD],
     size: [orbitW, orbitH],
     orbitOnLeft,
     orbitDocked: false,

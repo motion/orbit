@@ -14,10 +14,12 @@ const listItemSidePad = 18
 
 const Highlight = view({
   display: 'inline-block',
-  padding: [10, listItemSidePad],
+  lineHeight: 22,
+  fontSize: 16,
+  padding: [10, listItemSidePad, 10, listItemSidePad * 2],
   margin: [0, -listItemSidePad],
   '&:hover': {
-    background: '#fff',
+    background: '#f2f2f2',
   },
 })
 

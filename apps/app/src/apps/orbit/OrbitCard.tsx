@@ -371,20 +371,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
-    const orbitIcon = (
-      <OrbitIcon
-        if={icon && !hide.icon}
-        icon={icon}
-        size={hasSubtitle ? 14 : 18}
-        {...orbitIconProps}
-        {...contentIconProps}
-        {...iconProps}
-        position="absolute"
-        top={0}
-        right={0}
-        opacity={0.8}
-      />
-    )
     const { isSelected } = store
     const { background } =
       isSelected && selectedTheme ? selectedTheme : theme.base
@@ -405,7 +391,20 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           onClick={onClick || store.handleClick}
           {...cardProps}
         >
-          {orbitIcon}
+          {!!icon &&
+            !hide.icon && (
+              <OrbitIcon
+                icon={icon}
+                size={hasSubtitle ? 14 : 18}
+                {...orbitIconProps}
+                {...contentIconProps}
+                {...iconProps}
+                position="absolute"
+                top={listItem ? 15 : 0}
+                right={listItem ? 2 : 0}
+                opacity={0.8}
+              />
+            )}
           <Title>
             <UI.Text
               size={listItem ? 1.15 : 1.2}

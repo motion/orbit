@@ -83,7 +83,10 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           </Date>
         </UI.Row>
         <UI.Row>
-          <Content dangerouslySetInnerHTML={{ __html: htmlText }} />
+          <Content
+            className="searchable"
+            dangerouslySetInnerHTML={{ __html: htmlText }}
+          />
         </UI.Row>
       </UI.Col>
     )

@@ -5,7 +5,7 @@ import {URL} from "url";
 import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import r2 from '@mcro/r2'
-import { GoogleDriveFetchQueryOptions } from 'GDriveTypes.ts'
+import { GoogleDriveFetchQueryOptions } from './GDriveTypes'
 import { Setting } from '@mcro/models'
 
 export function htmlToMarkdown(html: string) {

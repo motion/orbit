@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 

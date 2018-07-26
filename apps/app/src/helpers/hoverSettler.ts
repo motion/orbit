@@ -141,7 +141,6 @@ export function hoverSettler({
     }
 
     function onMouseLeave(e) {
-      console.log('leave', stickOnClick, e.currentTarget)
       if (stickOnClick) {
         return
       }

@@ -120,7 +120,7 @@ Card.theme = ({
     }
   } else {
     // CARD
-    const borderSelected = UI.color('#5a8ade')
+    const borderSelected = UI.color('#7095de')
     const borderHover = UI.color('#c9c9c9')
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     const cardBackground = background || theme.selected.background
@@ -218,7 +218,11 @@ class OrbitCardStore {
     return isPaneActive && isSubPaneActive
   }
 
-  handleClick = () => {
+  handleClick = e => {
+    if (this.props.onClick) {
+      this.props.onClick(e, this.ref)
+      return
+    }
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
       return
@@ -408,7 +412,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           borderRadius={borderRadius}
           inGrid={inGrid}
           nextUpStyle={nextUpStyle}
-          onClick={onClick || store.handleClick}
+          onClick={store.handleClick}
           disableShadow={disableShadow}
           {...cardProps}
         >

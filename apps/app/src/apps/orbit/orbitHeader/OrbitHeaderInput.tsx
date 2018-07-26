@@ -4,9 +4,9 @@ import { view } from '@mcro/black'
 import { View } from '@mcro/ui'
 
 const handleKeyDown = e => {
-  // up/down
+  // up/down/enter
   const { keyCode } = e
-  if (keyCode === 38 || keyCode === 40) {
+  if (keyCode === 38 || keyCode === 40 || keyCode === 13) {
     e.preventDefault()
   }
 }

@@ -1,4 +1,4 @@
-import { on, react } from '@mcro/black'
+import { on, react, isEqual } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Setting, Not, Equal } from '@mcro/models'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
@@ -92,9 +92,10 @@ export class AppStore {
       this,
       setInterval(() => {
         if (!App.setState) return
-        App.setState({
-          screenSize: [window.innerWidth, window.innerHeight],
-        })
+        const screenSize = [window.innerWidth, window.innerHeight]
+        if (!isEqual(App.state.screenSize, screenSize)) {
+          App.setState({ screenSize })
+        }
       }, 1000),
     )
   }

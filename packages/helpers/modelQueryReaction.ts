@@ -4,11 +4,16 @@ import { modelEqual, modelsEqual } from './modelsEqual'
 import * as _ from 'lodash'
 
 type ReactModelQueryOpts = ReactionOptions & {
-  condition?: Function
+  condition?: () => boolean
   poll?: number
 }
 
 const trueFn = () => true
+const DEFAULT_OPTIONS = {
+  poll: 5000,
+  condition: trueFn,
+  log: false,
+}
 
 // a helper to watch model queries and only trigger reactions when the model changes
 // because our models dont implement a nice comparison, which we could probably do later
@@ -25,8 +30,10 @@ export function modelQueryReaction(
   } else if (b instanceof Object) {
     options = b
   }
-  const { poll = 5000, condition = trueFn, log = false, ...restOptions } =
-    options || {}
+  const { poll, condition, log, ...restOptions } = {
+    ...DEFAULT_OPTIONS,
+    ...options,
+  }
   const finalOptions: ReactionOptions = {
     immediate: true,
     defaultValue: null,
@@ -34,10 +41,11 @@ export function modelQueryReaction(
     ...restOptions,
   }
   let currentVal
+  console.log('setting up reaction with poll', poll, query)
   return react(
-    () => [condition(), now(poll)],
-    async ([condition]) => {
-      if (!condition) {
+    () => (now(poll) && condition() ? Math.random() : null),
+    async () => {
+      if (!condition()) {
         throw react.cancel
       }
       const next = await query()

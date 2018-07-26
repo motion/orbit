@@ -1,14 +1,9 @@
 import * as React from 'react'
 import { view, react, compose, on } from '@mcro/black'
-import { Person, getRepository } from '@mcro/models'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { OrbitCard } from '../OrbitCard'
 import * as UI from '@mcro/ui'
 import { SearchStore } from '../../../stores/SearchStore'
-import * as SearchStoreHelpers from '../../../stores/helpers/searchStoreHelpers'
-import { flatten } from 'lodash'
-
-const TYPE_DEBOUNCE = 150
 
 class QuickSearchStore {
   props: {
@@ -16,103 +11,50 @@ class QuickSearchStore {
   }
 
   frameRef = React.createRef<HTMLDivElement>()
-  preselectedIndex = 0
 
-  didMount() {
-    on(this, this.props.searchStore, 'key', key => {
-      if (key === 'right') {
-        this.increment()
-      }
-      if (key === 'left') {
-        this.decrement()
+  willMount() {
+    on(this, this.searchStore, 'key', val => {
+      if (val === 'enter') {
+        App.actions.selectItem(
+          this.quickResults[this.index],
+          this.cardRefs[this.index],
+        )
       }
     })
   }
 
+  get searchStore() {
+    return this.props.searchStore
+  }
+
+  get quickResults() {
+    return this.searchStore.quickSearchState.results
+  }
+
+  get index() {
+    return this.searchStore.quickIndex
+  }
+
+  get isChanging() {
+    return App.state.query !== this.searchStore.quickSearchState.query
+  }
+
+  get cardRefs(): HTMLDivElement[] {
+    return Array.from(
+      this.frameRef.current.querySelectorAll('.quick-result-card'),
+    )
+  }
+
   scrollToSelected = react(
-    () => this.preselectedIndex,
+    () => this.index,
     index => {
       const frame = this.frameRef.current
+      console.log('scroll', frame, index, this.cardRefs[index])
       if (!frame) {
         throw react.cancel
       }
-      if (index === 0) {
-        frame.scrollLeft = 0
-        return
-      }
-      const activeCard = Array.from(
-        frame.querySelectorAll('.quick-result-card'),
-      )[index] as HTMLDivElement
-      frame.scrollLeft = activeCard.offsetLeft
-    },
-  )
-
-  resetSelectedOnSearch = react(
-    () => App.state.query.length,
-    () => {
-      this.preselectedIndex = 0
-    },
-  )
-
-  increment = () => {
-    if (this.preselectedIndex < this.search.results.length - 1) {
-      this.preselectedIndex += 1
-    }
-  }
-
-  decrement = () => {
-    if (this.preselectedIndex > 0) {
-      this.preselectedIndex -= 1
-    }
-  }
-
-  get isActive() {
-    return App.state.query === this.search.query
-  }
-
-  get nlp() {
-    return this.props.searchStore.nlpStore.nlp
-  }
-
-  personQueryBuilder = getRepository(Person).createQueryBuilder('person')
-
-  search = react(
-    () => [App.state.query, Desktop.state.lastBitUpdatedAt],
-    async ([query], { sleep, when }) => {
-      await sleep(TYPE_DEBOUNCE)
-      await when(() => this.nlp.query === query)
-      const { people, searchQuery, integrations /* , nouns */ } = this.nlp
-      const allResults = await Promise.all([
-        // fuzzy people results
-        this.personQueryBuilder
-          .where('person.name like :nameLike', {
-            nameLike: `%${searchQuery.split('').join('%')}%`,
-          })
-          .take(3)
-          .getMany(),
-      ])
-      const exactPeople = await Promise.all(
-        people.map(name => {
-          return this.personQueryBuilder
-            .where('person.name like :nameLike', {
-              nameLike: `%${name}%`,
-            })
-            .getOne()
-        }),
-      )
-      const results = flatten([
-        ...exactPeople,
-        integrations.map(name => ({ name, icon: name })),
-        ...SearchStoreHelpers.matchSort(searchQuery, flatten(allResults)),
-      ]).filter(Boolean)
-      return {
-        query,
-        results,
-      }
-    },
-    {
-      immediate: true,
-      defaultValue: { results: [] },
+      const activeCard = this.cardRefs[index]
+      frame.scrollLeft = activeCard.offsetLeft - 12
     },
   )
 }
@@ -137,19 +79,24 @@ const QuickResultsFrame = view(UI.Row, {
 
 const decorate = compose(
   view.attach({
-    quickSearchStore: QuickSearchStore,
+    store: QuickSearchStore,
   }),
   view,
 )
 
+type Props = {
+  searchStore: SearchStore
+  store: QuickSearchStore
+}
+
 export const OrbitSearchQuickResults = decorate(
-  ({ searchStore, quickSearchStore }) => {
-    const { results } = quickSearchStore.search
+  ({ searchStore, store }: Props) => {
+    const { results } = searchStore.quickSearchState
     return (
       <QuickResultsFrameHideScrollBar height={results.length ? frameHeight : 0}>
         <QuickResultsFrame
-          opacity={quickSearchStore.isActive ? 1 : 0.5}
-          forwardRef={quickSearchStore.frameRef}
+          opacity={store.isChanging ? 0.5 : 1}
+          forwardRef={store.frameRef}
         >
           {/* inner div so scrolls to end all the way */}
           <div style={{ flexFlow: 'row', padding: pad }}>
@@ -163,10 +110,7 @@ export const OrbitSearchQuickResults = decorate(
                   bit={person}
                   inGrid
                   isSelected={() => {
-                    return (
-                      searchStore.nextIndex === -1 &&
-                      index === quickSearchStore.preselectedIndex
-                    )
+                    return searchStore.nextIndex === -1 && index === store.index
                   }}
                   style={{
                     width: 240,
@@ -179,9 +123,7 @@ export const OrbitSearchQuickResults = decorate(
                   hide={{
                     icon: true,
                   }}
-                  onSelect={ref => {
-                    App.actions.selectItem(person, ref)
-                  }}
+                  onClick={searchStore.toggleSelected}
                 />
               )
             })}

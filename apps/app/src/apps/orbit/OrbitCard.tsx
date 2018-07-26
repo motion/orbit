@@ -120,7 +120,7 @@ Card.theme = ({
     }
   } else {
     // CARD
-    const borderSelected = UI.color('#7095de')
+    const borderSelected = UI.color('#90b1e4')
     const borderHover = UI.color('#c9c9c9')
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     const cardBackground = background || theme.selected.background

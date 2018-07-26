@@ -14,7 +14,6 @@ class QuickSearchStore {
 
   willMount() {
     on(this, this.searchStore, 'key', val => {
-      console.log('ENTER ETNER', this.index)
       if (val === 'enter') {
         App.actions.selectItem(
           this.quickResults[this.index],
@@ -62,8 +61,8 @@ class QuickSearchStore {
 
 const height = 100
 const pad = 12
-const frameHeight = height + pad * 2
 const scrollBarHeight = 16
+const frameHeight = height + pad
 
 const QuickResultsFrameHideScrollBar = view(UI.View, {
   overflow: 'hidden',
@@ -71,9 +70,9 @@ const QuickResultsFrameHideScrollBar = view(UI.View, {
 
 const QuickResultsFrame = view(UI.Row, {
   alignItems: 'center',
-  height: frameHeight + scrollBarHeight,
-  paddingBottom: scrollBarHeight,
-  marginBottom: -scrollBarHeight,
+  height: frameHeight + scrollBarHeight + 3,
+  paddingBottom: scrollBarHeight + pad,
+  marginBottom: -(scrollBarHeight + pad),
   overflow: 'hidden',
   overflowX: 'auto',
 })

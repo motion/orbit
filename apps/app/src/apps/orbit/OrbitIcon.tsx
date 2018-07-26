@@ -36,13 +36,15 @@ const adjust = {
     },
   },
   confluence: {
+    transformOrigin: 'top right',
     transform: {
       scale: 1.4,
     },
   },
   jira: {
+    transformOrigin: 'top right',
     transform: {
-      scale: 1.3,
+      scale: 1.4,
     },
   },
 }
@@ -75,20 +77,13 @@ export const OrbitIcon = ({
       {...props}
     >
       {iconImg ? (
-        <img
-          src={iconImg}
-          css={{
-            width: '100%',
-            height: '100%',
-            ...imageStyle,
-          }}
-        />
+        <UI.Image src={iconImg} width="100%" height="100%" {...imageStyle} />
       ) : null}
       <UI.Icon
         if={!iconImg}
         name={icon}
         css={{ display: 'inline-block', ...sizeProps, ...imageStyle }}
-        size={size * (preventAdjust ? 1 : 0.65)}
+        size={size * (preventAdjust ? 1 : 0.8)}
         color={color}
       />
     </UI.View>

@@ -56,7 +56,6 @@ export function hoverSettler({
         return
       }
       if (Date.now() - lastToggle < toggleThrottle) {
-        log('Cancel toggle, too soon')
         return
       }
       lastToggle = Date.now()
@@ -104,7 +103,6 @@ export function hoverSettler({
     }
 
     const onClick = throttle(e => {
-      console.log('click', e.currentTarget, stickOnClick)
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)
@@ -126,7 +124,6 @@ export function hoverSettler({
     function onMouseEnter(e) {
       clearTimeout(itemLastLeaveTm)
       const target = e.currentTarget
-      console.log(target, stickOnClick)
       if (target === stickOnClick) {
         return
       }

@@ -141,11 +141,17 @@ export const Searchable = (Component: any) =>
       }
     }
 
-    _inputRef: HTMLInputElement | void
+    inputRef = React.createRef<HTMLTextAreaElement>()
+
+    get _inputRef() {
+      return this.inputRef.current
+    }
 
     componentDidMount() {
-      if (this.props.focusOnMount && this._inputRef) {
-        this._inputRef.focus()
+      if (this.props.focusOnMount) {
+        if (this._inputRef) {
+          this._inputRef.focus()
+        }
       }
       on(this, findDOMNode(this), 'keydown', this.onKeyDown)
       const { defaultFilters } = this.props
@@ -286,10 +292,6 @@ export const Searchable = (Component: any) =>
       this.setState({ searchTerm })
     }
 
-    setInputRef = (ref: HTMLInputElement | void) => {
-      this._inputRef = ref
-    }
-
     addFilter = (filter: Filter) => {
       const filterIndex = this.state.filters.findIndex(
         f => f.key === filter.key,
@@ -402,7 +404,7 @@ export const Searchable = (Component: any) =>
                 placeholder={placeholder}
                 onChange={this.onChangeSearchTerm}
                 value={this.state.searchTerm}
-                forwardRef={this.setInputRef}
+                forwardRef={this.inputRef}
                 onFocus={this.onInputFocus}
                 onBlur={this.onInputBlur}
                 {...searchInputProps}

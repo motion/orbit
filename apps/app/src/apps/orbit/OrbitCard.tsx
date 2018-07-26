@@ -254,6 +254,14 @@ class OrbitCardStore {
         throw react.cancel
       }
       const shouldSelect = nextIndex === this.props.index
+      console.log(
+        'shouldSelect',
+        nextIndex,
+        this.props.index,
+        this.isPaneSelected,
+        this.props.pane,
+        this.props.subPane,
+      )
       if (shouldSelect === this._isSelected) {
         throw react.cancel
       }

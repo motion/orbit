@@ -2,6 +2,7 @@ import { Bit, Brackets, getRepository } from '@mcro/models'
 import debug from '@mcro/debug'
 
 const log = debug('getSearchQuery')
+debug.quiet('getSearchQuery')
 
 export const getSearchQuery = (
   searchString,

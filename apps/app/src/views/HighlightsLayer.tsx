@@ -114,7 +114,6 @@ export class HighlightsLayer extends React.Component<Props, State> {
         continue
       }
       range.selectNode(node)
-      console.log('found', node, range.getBoundingClientRect())
       const textRect = range.getBoundingClientRect() as DOMRect
       const highlight = {
         x: textRect.x - frameBounds.x,

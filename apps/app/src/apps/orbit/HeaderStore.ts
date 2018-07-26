@@ -40,11 +40,7 @@ export class HeaderStore {
   }
 
   focusInputOnVisible = react(
-    () => [
-      App.orbitState.pinned || App.orbitState.docked,
-      // use this because otherwise input may not focus
-      App.isMouseInActiveArea,
-    ],
+    () => App.orbitState.pinned || App.orbitState.docked,
     async ([shown], { when }) => {
       if (!shown) {
         throw react.cancel

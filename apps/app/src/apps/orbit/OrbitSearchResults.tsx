@@ -19,6 +19,7 @@ const Highlight = view({
   padding: [2, listItemSidePad * 2, 2, listItemSidePad * 1.5],
   margin: [8, -listItemSidePad, 8, 0],
   borderLeft: [3, 'transparent'],
+  transition: 'border ease 400ms 100ms',
   '&:hover': {
     borderLeftColor: '#ddd',
   },

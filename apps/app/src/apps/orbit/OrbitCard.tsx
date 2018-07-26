@@ -104,6 +104,9 @@ Card.theme = ({
     } else {
       listStyle = {
         background: 'transparent',
+        '&:hover': {
+          background: [255, 255, 255, 0.2],
+        },
         '&:active': {
           background: theme.selected.background,
         },

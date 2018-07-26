@@ -34,7 +34,8 @@ export const PeekBit = ({
       defaultValue={App.state.query}
       focusOnMount
       searchBarTheme={peekStore.theme}
-      scrollToHighlight={searchStore.highlightIndex}
+      onChange={() => searchStore.setHighlightIndex(0)}
+      onEnter={peekStore.goToNextHighlight}
     >
       {({ searchBar, searchTerm }) => {
         return (

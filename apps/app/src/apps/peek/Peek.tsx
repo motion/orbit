@@ -44,7 +44,7 @@ class PeekPageInner extends React.Component<Props> {
           integration={item.integration || item.type}
           {...headerProps}
         />
-        <PeekContent>{content}</PeekContent>
+        <PeekContent peekStore={this.props.peekStore}>{content}</PeekContent>
       </>
     )
   }

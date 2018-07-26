@@ -1,6 +1,7 @@
+import * as React from 'react'
 import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { deepClone } from '../../../helpers'
+import { deepClone, sleep } from '../../../helpers'
 import * as Constants from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import { SearchStore } from '../../../stores/SearchStore'
@@ -37,6 +38,43 @@ export class PeekStore {
   tornState = null
   dragOffset: [number, number] = null
   history = []
+  contentFrame = React.createRef<HTMLDivElement>()
+
+  get highlights(): HTMLDivElement[] {
+    this.state // update on state...?
+    return Array.from(this.contentFrame.current.querySelectorAll('.highlight'))
+  }
+
+  scrollToHighlight = react(
+    () => this.props.searchStore.highlightIndex,
+    async (index, { sleep }) => {
+      if (typeof index !== 'number') {
+        throw react.cancel
+      }
+      const frame = this.contentFrame.current
+      if (!frame) {
+        throw react.cancel
+      }
+      await sleep(150)
+      const activeHighlight = this.highlights[index]
+      if (!activeHighlight) {
+        console.error('no highlight at index', index, this.highlights)
+        throw react.cancel
+      }
+      // move frame to center the highlight but 100px more towards the top which looks nicer
+      frame.scrollTop = activeHighlight.offsetTop - frame.clientHeight / 2 + 100
+    },
+    {
+      immediate: true,
+    },
+  )
+
+  goToNextHighlight = () => {
+    const { highlightIndex, setHighlightIndex } = this.props.searchStore
+    // loop back to beginning once at end
+    const next = (highlightIndex + 1) % this.highlights.length
+    setHighlightIndex(next)
+  }
 
   curState = react(
     () => [

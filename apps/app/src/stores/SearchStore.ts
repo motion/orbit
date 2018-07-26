@@ -29,7 +29,6 @@ export class SearchStore /* extends Store */ {
   query = App.state.query
   lastPinKey = ''
 
-  nextHighlightIndex = -1
   highlightIndex = -1
   nextIndex = 0
   leaveIndex = -1
@@ -91,10 +90,6 @@ export class SearchStore /* extends Store */ {
   set activeIndex(val) {
     this.lastSelectAt = Date.now()
     this._activeIndex = val
-    if (this.nextHighlightIndex >= 0) {
-      this.highlightIndex = this.nextHighlightIndex
-      this.nextHighlightIndex = null
-    }
   }
 
   get selectedItem() {
@@ -342,7 +337,9 @@ export class SearchStore /* extends Store */ {
   }
 
   setHighlightIndex = highlightIndex => {
-    this.nextHighlightIndex = highlightIndex
+    console.log(highlightIndex)
+    console.trace()
+    this.highlightIndex = +highlightIndex
   }
 
   clearIndexOnTarget = react(
@@ -426,7 +423,10 @@ export class SearchStore /* extends Store */ {
         this.decrement()
         return
       case 13: // enter
-        this.openSelected()
+        // TODO: this is rough, should have proper keyboard handling system based on focus
+        if (App.orbitState.inputFocused) {
+          this.openSelected()
+        }
         return
     }
   }

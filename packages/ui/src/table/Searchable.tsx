@@ -32,6 +32,9 @@ type Props = {
   searchInputProps?: Object
   children?: React.ReactNode | Function
   focusOnMount?: boolean
+  // only called once it changes once at least
+  onChange?: Function
+  onEnter?: Function
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
@@ -195,12 +198,15 @@ export const Searchable = (Component: any) =>
       }
     }
 
-    componentDidUpdate(_: Props, prevState: State) {
+    componentDidUpdate(props: Props, prevState: State) {
       if (
         this.context.plugin &&
         (prevState.searchTerm !== this.state.searchTerm ||
           prevState.filters !== this.state.filters)
       ) {
+        if (props.onChange) {
+          props.onChange(this.state.searchTerm)
+        }
         let key = this.context.plugin + this.props.tableKey
         window.localStorage.setItem(
           SEARCHABLE_STORAGE_KEY(key),
@@ -251,6 +257,9 @@ export const Searchable = (Component: any) =>
       ) {
         this.removeFilter(this.state.focusedToken)
       } else if (e.key === 'Enter' && this.hasFocus() && this._inputRef) {
+        if (this.props.onEnter) {
+          this.props.onEnter(this.state.searchTerm)
+        }
         this.matchTags(this._inputRef.value, true)
       }
     }

@@ -78,11 +78,11 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
                 dangerouslySetInnerHTML={{ __html: highlight }}
                 onClick={e => {
                   e.stopPropagation()
+                  searchStore.setHighlightIndex(hlIndex)
                   // don't actually toggle when selecting highlights
                   if (searchStore.activeIndex === index) {
                     return
                   }
-                  searchStore.setHighlightIndex(hlIndex)
                   searchStore.toggleSelected(index)
                 }}
               />

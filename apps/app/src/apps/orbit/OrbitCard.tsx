@@ -169,7 +169,7 @@ const Preview = view({
   flex: 1,
 })
 
-const Subtitle = view({
+const Subtitle = view(UI.View, {
   margin: [0, 0, 3],
   opacity: 0.4,
   flexFlow: 'row',
@@ -440,7 +440,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {afterTitle}
           </Title>
           {!!(location || subtitle) && (
-            <Subtitle>
+            <Subtitle opacity={listItem ? 0.55 : 0.4}>
               {!!location && (
                 <UI.Text
                   display="inline-flex"

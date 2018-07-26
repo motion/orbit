@@ -29,12 +29,12 @@ export class AppReactions /* extends Store */ {
 
   async setupReactions() {
     const dispose = App.onMessage(async msg => {
+      console.log('app message', msg)
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
           // this.toggle()
           return
         case App.messages.TOGGLE_DOCKED:
-          console.log('toggle docked', this.id, this)
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:

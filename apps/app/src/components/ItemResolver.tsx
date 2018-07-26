@@ -3,15 +3,29 @@ import { ResolvePerson } from './resolve/ResolvePerson'
 import { ResolveBit } from './resolve/ResolveBit'
 import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit } from '@mcro/models'
-import { SearchStore } from '../stores/SearchStore'
 import { AppStatePeekItem } from '../../../stores/App'
+import { AppStore } from '../stores/AppStore'
+
+export type ResolvedItem = {
+  title: string
+  preview?: string
+  content?: string
+  icon: string
+  location: string
+  locationLink: Function
+  permalink: Function
+  date: React.ReactNode
+  comments?: React.ReactNode[]
+  people?: Person[]
+  searchTerm?: string
+}
 
 export type ItemResolverProps = {
   bit?: Bit
   item?: AppStatePeekItem
-  searchStore?: SearchStore
+  appStore?: AppStore
   isExpanded?: boolean
-  children: Function | React.ReactNode
+  children: ((a: ResolvedItem) => React.ReactNode)
   shownLimit?: number
   itemProps?: Object
 }

@@ -32,7 +32,7 @@ export class HeaderStore {
   }
 
   focus = () => {
-    if (!this.inputRef.current) {
+    if (!this.inputRef || !this.inputRef.current) {
       return
     }
     moveCursorToEndOfTextarea(this.inputRef.current)

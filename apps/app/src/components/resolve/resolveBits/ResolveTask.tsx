@@ -4,6 +4,7 @@ import markdown from '@mcro/marky-markdown'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { RoundButton } from '../../../views/RoundButton'
 import * as UI from '@mcro/ui'
+import { ItemResolverProps } from '../../ItemResolver'
 
 // const converter = new Showdown.Converter()
 // const markdown = text => converter.makeHtml(text)
@@ -61,28 +62,18 @@ export const ResolveTask = ({
   isExpanded,
   shownLimit,
   appStore,
-}) => {
+}: ItemResolverProps) => {
   const { content, comments } = isExpanded
     ? parseGithubContents({ bit, shownLimit })
     : { content: null, comments: null }
   return children({
     title: bit.title,
     icon: 'github',
-    location: (
-      <RoundButton
-        onClick={e => {
-          e.stopPropagation()
-          // TODO: resolve links on all bits in one place
-          appStore.open(
-            `https://github.com/${bit.data.orgLogin}/${
-              bit.data.repositoryName
-            }`,
-          )
-        }}
-      >
-        {bit.data.orgLogin}/{bit.data.repositoryName}
-      </RoundButton>
-    ),
+    locationLink: () =>
+      appStore.open(
+        `https://github.com/${bit.data.orgLogin}/${bit.data.repositoryName}`,
+      ),
+    location: `${bit.data.orgLogin}/${bit.data.repositoryName}`,
     permalink: () =>
       appStore.open(
         `https://github.com/${bit.data.orgLogin}/${

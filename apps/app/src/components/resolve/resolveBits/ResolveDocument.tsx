@@ -1,5 +1,6 @@
 import markdown from '@mcro/marky-markdown'
 import keywordExtract from 'keyword-extractor'
+import { ItemResolverProps } from '../../ItemResolver'
 
 const options = {
   language: 'english',
@@ -20,16 +21,18 @@ const markdownBoldifySearch = (str = '', term = '') => {
 }
 
 export const ResolveDocument = ({
+  item,
   bit,
   appStore,
   searchTerm,
   children,
   isExpanded,
-}) =>
+}: ItemResolverProps) =>
   children({
-    title: bit.title,
-    icon: bit.integration || 'gdocs',
-    location: 'Wiki',
+    title: bit.title || item.title,
+    icon: bit.integration || item.integration,
+    location: bit.location || item.location || 'Wiki',
+    locationLink: () => {},
     permalink: () => appStore.open(bit),
     date: bit.bitUpdatedAt,
     content: isExpanded

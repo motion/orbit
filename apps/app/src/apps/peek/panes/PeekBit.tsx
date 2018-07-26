@@ -5,6 +5,7 @@ import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import { HighlightsLayer } from '../../../views/HighlightsLayer'
 import { App } from '@mcro/stores'
+import { RoundButton } from '../../../views'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -39,13 +40,23 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
               icon,
               content,
               location,
+              locationLink,
               permalink,
               date,
               comments,
             }) => {
               return children({
                 permalink,
-                subtitle: location,
+                subtitle: (
+                  <RoundButton
+                    onClick={e => {
+                      e.stopPropagation()
+                      locationLink()
+                    }}
+                  >
+                    {location}
+                  </RoundButton>
+                ),
                 date,
                 title,
                 icon,

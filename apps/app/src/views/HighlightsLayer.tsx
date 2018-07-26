@@ -48,6 +48,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
         doSearch: true,
       }
     }
+    return null
   }
 
   componentDidMount() {

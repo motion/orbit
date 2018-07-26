@@ -1,15 +1,5 @@
 import { AppStatePeekItem } from '../../../../stores/App'
-
-const EMPTY_ITEM = {
-  id: '',
-  title: '',
-  body: '',
-  subtitle: '',
-  location: '',
-  icon: '',
-  type: '',
-  subType: '',
-}
+import { EMPTY_ITEM } from '../../constants'
 
 export const ResolveEmpty = ({
   item = EMPTY_ITEM,

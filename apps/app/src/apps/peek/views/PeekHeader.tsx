@@ -25,7 +25,7 @@ const PeekHeaderContain = view(UI.View, {
 
 PeekHeaderContain.theme = ({ theme, position }) => ({
   position: position || 'relative',
-  borderBottom: [1, theme.base.borderColor],
+  borderBottom: [1, theme.base.borderColor.darken(0.2).desaturate(0.2)],
   background: theme.base.background || '#fff',
 })
 
@@ -58,7 +58,7 @@ const SubTitleHorizontalSpace = () => <div style={{ width: 12 }} />
 
 const SubTitle = ({ children, date, permalink, icon }) => (
   <UI.Row padding={[0, 12]} alignItems="center" flex={1} height={32}>
-    <UI.Text>{children}</UI.Text>
+    {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
     {!!children && !!date && <SubTitleHorizontalSpace />}
     <UI.Text>
       {date ? (
@@ -72,16 +72,7 @@ const SubTitle = ({ children, date, permalink, icon }) => (
       !!icon && (
         <>
           <div style={{ flex: 1 }} />
-          <OrbitIcon
-            onClick={permalink}
-            icon={icon}
-            size={16}
-            css={{
-              transform: {
-                scale: 2,
-              },
-            }}
-          />
+          <OrbitIcon onClick={permalink} icon={icon} size={20} />
         </>
       )}
   </UI.Row>

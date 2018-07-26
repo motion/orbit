@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
-import { RoundButton } from '../../../views/RoundButton'
 import keywordExtract from 'keyword-extractor'
 import arrford from 'arrford'
 import { getSlackDate } from '../../../helpers'
 import { capitalize } from 'lodash'
+import { ItemResolverProps } from '../../ItemResolver'
 
 const options = {
   language: 'english',
@@ -20,7 +20,7 @@ export const ResolveConversation = ({
   shownLimit = 5,
   itemProps,
   isExpanded,
-}) => {
+}: ItemResolverProps) => {
   if (!bit) {
     console.log('no bit :/')
     return null
@@ -50,16 +50,8 @@ export const ResolveConversation = ({
       .slice(0, 8)
       .join(' '),
     icon: 'slack',
-    location: (
-      <RoundButton
-        onClick={e => {
-          e.stopPropagation()
-          appStore.open(bit, 'channel')
-        }}
-      >
-        {bit.title.slice(1)}
-      </RoundButton>
-    ),
+    locationLink: () => appStore.open(bit, 'channel'),
+    location: bit.title,
     permalink: () => appStore.open(bit),
     content,
   })

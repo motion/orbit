@@ -2,8 +2,12 @@ import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { ItemResolver } from '../../components/ItemResolver'
-import { SmallLink } from '../../views'
+import {
+  ItemResolver,
+  ItemResolverProps,
+  ResolvedItem,
+} from '../../components/ItemResolver'
+import { SmallLink, RoundButton } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
@@ -13,6 +17,7 @@ import { Bit } from '@mcro/models'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
 import { getTargetPosition } from '../../helpers/getTargetPosition'
+import { EMPTY_ITEM } from '../../constants'
 
 export type OrbitCardProps = {
   total?: number
@@ -168,9 +173,9 @@ const orbitIconProps = {
   imageStyle: {
     transformOrigin: 'top right',
     transform: {
-      y: 6,
-      x: 0,
-      scale: 2,
+      y: 8,
+      x: 2,
+      scale: 1.6,
       // rotate: '-45deg',
     },
   },
@@ -254,14 +259,6 @@ class OrbitCardStore {
         throw react.cancel
       }
       const shouldSelect = nextIndex === this.props.index
-      console.log(
-        'shouldSelect',
-        nextIndex,
-        this.props.index,
-        this.isPaneSelected,
-        this.props.pane,
-        this.props.subPane,
-      )
       if (shouldSelect === this._isSelected) {
         throw react.cancel
       }
@@ -302,6 +299,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   hoverSettler = null
 
   static defaultProps = {
+    item: EMPTY_ITEM,
     hide: {},
   }
 
@@ -347,7 +345,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     App.actions.open(this.props.bit)
   }
 
-  getOrbitCard(contentProps) {
+  getOrbitCard(contentProps: ResolvedItem & { subtitle?: string }) {
     // TODO weird mutation
     this.props.store.normalizedBit = contentProps
 
@@ -356,11 +354,11 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       icon,
       preview,
       location,
-      subtitle,
       permalink,
       date,
       people,
-      iconProps: contentIconProps,
+      subtitle,
+      locationLink,
     } = contentProps
     const {
       store,
@@ -383,7 +381,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       disableShadow,
       ...props
     } = this.props
-    const hasSubtitle = subtitle || location
     const { isSelected } = store
     const { background } =
       isSelected && selectedTheme ? selectedTheme : theme.base
@@ -409,9 +406,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             !hide.icon && (
               <OrbitIcon
                 icon={icon}
-                size={hasSubtitle ? 14 : 18}
+                size={location ? 14 : 18}
                 {...orbitIconProps}
-                {...contentIconProps}
                 {...iconProps}
                 position="absolute"
                 top={listItem ? 15 : 0}
@@ -433,27 +429,29 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             </UI.Text>
             {afterTitle}
           </Title>
-          <Subtitle if={hasSubtitle}>
-            <UI.Text
-              display="inline-flex"
-              alignItems="center"
-              flexFlow="row"
-              if={location}
-            >
-              in&nbsp;{location}
-            </UI.Text>
-            <UI.Text
-              if={typeof subtitle === 'string'}
-              ellipse
-              maxWidth="calc(100% - 40px)"
-            >
-              {subtitle}
-            </UI.Text>
-            {typeof subtitle !== 'string' && subtitle}
-            <UI.Text if={date} onClick={permalink} size={0.95}>
-              <strong> &middot;</strong> <TimeAgo date={date} />
-            </UI.Text>
-          </Subtitle>
+          {!!(location || subtitle) && (
+            <Subtitle>
+              {!!location && (
+                <UI.Text
+                  display="inline-flex"
+                  alignItems="center"
+                  flexFlow="row"
+                >
+                  <RoundButton onClick={locationLink}>{location}</RoundButton>
+                </UI.Text>
+              )}
+              {typeof subtitle === 'string' && (
+                <UI.Text ellipse maxWidth="calc(100% - 40px)">
+                  {subtitle}
+                </UI.Text>
+              )}
+              {!!date && (
+                <UI.Text onClick={permalink} size={0.95}>
+                  <strong> &middot;</strong> <TimeAgo date={date} />
+                </UI.Text>
+              )}
+            </Subtitle>
+          )}
           <Preview if={preview && !children}>
             {typeof preview !== 'string' && preview}
             <UI.Text

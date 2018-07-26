@@ -41,3 +41,15 @@ export const NICE_INTEGRATION_NAMES = {
   jira: 'Jira',
   github: 'Github',
 }
+
+export const EMPTY_ITEM = {
+  id: '',
+  title: '',
+  body: '',
+  subtitle: '',
+  location: '',
+  icon: '',
+  type: '',
+  subType: '',
+  integration: '',
+}

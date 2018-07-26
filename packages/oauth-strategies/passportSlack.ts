@@ -30,7 +30,6 @@ function Strategy(options, verify) {
     options.profileUrl || 'https://slack.com/api/users.identity?token=' // requires 'identity.basic' scope
   this._team = options.team
 
-  console.log(`hello strategy`, options)
   OAuth2Strategy.call(this, options, verify)
   this.name = options.name || 'slack'
 

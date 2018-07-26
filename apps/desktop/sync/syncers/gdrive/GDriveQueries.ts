@@ -37,6 +37,7 @@ export function googleDriveFileQuery(
             'properties',
             'spaces',
             'version',
+            'webViewLink',
             'webContentLink',
             'iconLink',
             'thumbnailLink',

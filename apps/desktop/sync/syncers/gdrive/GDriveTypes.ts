@@ -12,7 +12,7 @@ export type GoogleDriveFetchQueryOptions<_R> = {
   /**
    * Query parameters to be appended to the url.
    */
-  query: { [key: string]: any };
+  query: { [key: string]: any }
 
   /**
    * Indicates if this query returns a JSON or not.

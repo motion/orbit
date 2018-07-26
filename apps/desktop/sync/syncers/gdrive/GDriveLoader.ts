@@ -14,22 +14,22 @@ import {
   GoogleDriveRevision,
 } from './GDriveTypes'
 import { GDriveFetcher } from './GDriveFetcher'
-import * as path from "path";
+import * as path from 'path'
 
 export class GDriveLoader {
 
-  fetcher: GDriveFetcher;
-  files: GoogleDriveLoadedFile[] = [];
-  users: GoogleDriveLoadedUser[] = [];
+  fetcher: GDriveFetcher
+  files: GoogleDriveLoadedFile[] = []
+  users: GoogleDriveLoadedUser[] = []
 
   constructor(setting: Setting) {
     this.fetcher = new GDriveFetcher(setting)
   }
 
   async load(): Promise<void> {
-    console.log(`loading google drive files`);
+    console.log(`loading google drive files`)
     const files = await this.loadFiles()
-    console.log(`loaded ${files.length} files`, files);
+    console.log(`loaded ${files.length} files`, files)
 
     // limit number of files for now
     // files.splice(10, files.length)
@@ -44,8 +44,8 @@ export class GDriveLoader {
       }
     })
 
-    console.log(`aggregating users from loaded files, comments and revisions`);
-    this.users = [];
+    console.log(`aggregating users from loaded files, comments and revisions`)
+    this.users = []
     this.files.forEach(file => {
 
       [
@@ -58,7 +58,7 @@ export class GDriveLoader {
           // some users are not defined in where they come from. we skip such cases
           // some users don't have emails. we skip such cases
           // if author of the comment is current user we don't need to add him to users list
-          return user && user.emailAddress && user.me === false;
+          return user && user.emailAddress && user.me === false
         })
         .forEach(user => {
 
@@ -79,7 +79,7 @@ export class GDriveLoader {
           // push file that user owns if its not exist yet
           if (foundUser.files.indexOf(file.file) === -1)
             foundUser.files.push(file.file)
-        });
+        })
 
     })
 
@@ -89,10 +89,10 @@ export class GDriveLoader {
   private async loadFiles(pageToken?: string): Promise<GoogleDriveFile[]> {
     const result = await this.fetcher.fetch(googleDriveFileQuery(pageToken))
     if (result.nextPageToken) {
-      const nextPageFiles = await this.loadFiles(result.nextPageToken);
-      return [...result.files, ...nextPageFiles];
+      const nextPageFiles = await this.loadFiles(result.nextPageToken)
+      return [...result.files, ...nextPageFiles]
     }
-    return result.files;
+    return result.files
   }
 
   private async loadFilesContent(file: GoogleDriveFile): Promise<string> {
@@ -109,32 +109,32 @@ export class GDriveLoader {
 
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map')
-      return [];
+      return []
 
     console.log(`loading comments for`, file)
     const result = await this.fetcher.fetch(googleDriveFileCommentQuery(file.id, pageToken))
     if (result.nextPageToken) {
       console.log(`next page found`)
-      const nextPageComments = await this.loadComments(file, result.nextPageToken);
-      return [...result.comments, ...nextPageComments];
+      const nextPageComments = await this.loadComments(file, result.nextPageToken)
+      return [...result.comments, ...nextPageComments]
     }
-    return result.comments;
+    return result.comments
   }
 
   private async loadRevisions(file: GoogleDriveFile, pageToken?: string): Promise<GoogleDriveRevision[]> {
 
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions)
-      return [];
+      return []
 
     console.log(`loading revisions for`, file)
     const result = await this.fetcher.fetch(googleDriveFileRevisionQuery(file.id, pageToken))
     if (result.nextPageToken) {
       console.log(`next page found`)
-      const nextPageRevisions = await this.loadRevisions(file, result.nextPageToken);
-      return [...result.revisions, ...nextPageRevisions];
+      const nextPageRevisions = await this.loadRevisions(file, result.nextPageToken)
+      return [...result.revisions, ...nextPageRevisions]
     }
-    return result.revisions;
+    return result.revisions
   }
 
   private async downloadThumbnail(file: GoogleDriveFile): Promise<string> {
@@ -142,8 +142,8 @@ export class GDriveLoader {
       return ''
 
     console.log(`downloading file thumbnail for`, file)
-    const destination = path.normalize(__dirname + '/../../../../uploads/' + file.id + '.' + file.fileExtension);
-    await this.fetcher.downloadFile(file.thumbnailLink, destination);
+    const destination = path.normalize(__dirname + '/../../../../uploads/' + file.id + '.' + file.fileExtension)
+    await this.fetcher.downloadFile(file.thumbnailLink, destination)
     console.log(`thumbnail downloaded and saved as`, destination)
   }
 

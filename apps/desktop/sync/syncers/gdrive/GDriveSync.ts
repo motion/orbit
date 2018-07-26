@@ -13,7 +13,6 @@ export class GDriveSync {
   }
 
   async run(): Promise<void> {
-    return;
     try {
       console.log('synchronizing google drive files')
       await this.loader.load()
@@ -21,15 +20,15 @@ export class GDriveSync {
       // create entities for loaded files
       const createdFiles = await Promise.all(this.loader.files.map(file => {
         return this.createFile(file)
-      }));
-      const newlyCreatedFiles = createdFiles.filter(file => !!file);
+      }))
+      const newlyCreatedFiles = createdFiles.filter(file => !!file)
       console.log(`synced ${newlyCreatedFiles.length} files`)
 
       // create entities for loaded users
       const createdPeople = await Promise.all(this.loader.users.map(user => {
         return this.createPerson(user)
-      }));
-      const newlyCreatedPeople = createdPeople.filter(person => !!person);
+      }))
+      const newlyCreatedPeople = createdPeople.filter(person => !!person)
       console.log(`synced ${newlyCreatedPeople.length} people`)
 
     } catch (err) {
@@ -51,9 +50,15 @@ export class GDriveSync {
         // markdownBody: html ? htmlToMarkdown(html) : text || '',
         // textBody: text || '',
       },
+      webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
+      location: {
+        id: '',
+        name: '',
+        webLink: ''
+      },
       bitCreatedAt: new Date(file.file.createdTime),
       bitUpdatedAt: new Date(file.file.modifiedTime),
-      image: file.file.fileExtension && file.file.thumbnailLink ? file.file.id + "." + file.file.fileExtension : undefined
+      image: file.file.fileExtension && file.file.thumbnailLink ? file.file.id + '.' + file.file.fileExtension : undefined
     })
   }
 

@@ -88,16 +88,14 @@ const decorator = compose(
 
 export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
   return (
-    <div>
-      <UI.Theme name="light">
-        <PeekFrame>
-          <PeekPageInner
-            appStore={appStore}
-            searchStore={searchStore}
-            peekStore={peekStore}
-          />
-        </PeekFrame>
-      </UI.Theme>
-    </div>
+    <UI.Theme name="light">
+      <PeekFrame>
+        <PeekPageInner
+          appStore={appStore}
+          searchStore={searchStore}
+          peekStore={peekStore}
+        />
+      </PeekFrame>
+    </UI.Theme>
   )
 })

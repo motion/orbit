@@ -227,7 +227,10 @@ storeProvidable = function(options, Helpers) {
         willMountStores() {
           if (options.onStoreMount) {
             for (const name of Object.keys(this.stores)) {
-              options.onStoreMount(this.stores[name], this.props)
+              if (!this.stores[name].__hasMounted) {
+                options.onStoreMount(this.stores[name], this.props)
+              }
+              this.stores[name].__hasMounted = true
             }
           }
         }

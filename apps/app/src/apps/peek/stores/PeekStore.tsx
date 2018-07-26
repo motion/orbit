@@ -131,10 +131,23 @@ export class PeekStore {
     },
   )
 
-  lastState = react(() => this.curState, deepClone, {
-    delay: 16,
-    immediate: true,
-  })
+  lastState = react(
+    () => this.curState,
+    state => {
+      if (!state) {
+        return state
+      }
+      const { model, ...restState } = state
+      return {
+        ...JSON.parse(JSON.stringify(restState)),
+        model,
+      }
+    },
+    {
+      delay: 16,
+      immediate: true,
+    },
+  )
 
   get willHide() {
     return !!this.lastState && !this.curState

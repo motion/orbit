@@ -14,6 +14,7 @@ class QuickSearchStore {
 
   willMount() {
     on(this, this.searchStore, 'key', val => {
+      console.log('ENTER ETNER', this.index)
       if (val === 'enter') {
         App.actions.selectItem(
           this.quickResults[this.index],

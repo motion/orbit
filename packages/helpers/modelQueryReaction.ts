@@ -41,7 +41,6 @@ export function modelQueryReaction(
     ...restOptions,
   }
   let currentVal
-  console.log('setting up reaction with poll', poll, query)
   return react(
     () => (now(poll) && condition() ? Math.random() : null),
     async () => {

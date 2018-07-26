@@ -132,10 +132,6 @@ class AppStore {
     return !App.orbitState.hidden
   }
 
-  get isShowingPeek() {
-    return !!App.peekState.target
-  }
-
   animationDuration = 160
 
   // debounced a little to prevent aggressive reactions
@@ -159,18 +155,6 @@ class AppStore {
   )
 
   last: Boolean
-
-  wasShowingPeek = react(
-    () => App.isShowingPeek,
-    is => {
-      if (is === false) {
-        return false
-      }
-      const last = this.last
-      this.last = is
-      return is || last || false
-    },
-  )
 
   get orbitOnLeft() {
     if (App.orbitState.docked) {

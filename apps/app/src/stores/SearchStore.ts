@@ -86,6 +86,9 @@ export class SearchStore /* extends Store */ {
   }
 
   get isQuickSearchActive() {
+    if (this.props.appStore.selectedPane !== 'docked-search') {
+      return false
+    }
     return this.activeIndex === -1 && !!this.quickSearchState.results.length
   }
 
@@ -471,7 +474,7 @@ export class SearchStore /* extends Store */ {
 
   windowKeyDown = e => {
     const { keyCode } = e
-    console.log('keydown', keyCode)
+    console.log('window.keydown', keyCode)
     switch (keyCode) {
       case 37: // left
         if (this.isQuickSearchActive) {

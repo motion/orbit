@@ -25,6 +25,12 @@ const icons = {
 }
 
 const adjust = {
+  icon: {
+    transform: {
+      x: -7,
+      y: 2,
+    },
+  },
   slack: {
     transform: {
       scale: 0.95,
@@ -36,14 +42,15 @@ const adjust = {
     },
   },
   confluence: {
-    transformOrigin: 'top right',
     transform: {
+      y: '-31%',
       scale: 1.4,
     },
   },
   jira: {
-    transformOrigin: 'top right',
     transform: {
+      y: '-25%',
+      x: '-4%',
       scale: 1.4,
     },
   },
@@ -71,7 +78,7 @@ export const OrbitIcon = ({
       display="inline-block"
       textAlign="center"
       justifyContent="center"
-      {...adjust[icon]}
+      {...(iconImg ? adjust[icon] : adjust.icon)}
       {...sizeProps}
       {...iconImg && orbitIconStyle}
       {...props}

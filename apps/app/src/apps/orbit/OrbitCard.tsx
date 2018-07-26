@@ -172,7 +172,7 @@ const orbitIconProps = {
     transform: {
       y: 8,
       x: 2,
-      scale: 1.3,
+      scale: 1.5,
       // rotate: '-45deg',
     },
   },

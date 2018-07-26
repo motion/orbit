@@ -20,7 +20,7 @@ const OrbitHeaderContainer = view({
 
 OrbitHeaderContainer.theme = ({ borderRadius, theme }) => ({
   borderRadius: borderRadius,
-  background: `linear-gradient(${theme.base.background.lighten(0.1)}, ${
+  background: `linear-gradient(${theme.base.background.lighten(0.05)}, ${
     theme.base.background
   })`,
 })
@@ -104,7 +104,7 @@ export class OrbitHeader extends React.Component<{
                   ? 'home'
                   : 'ui-1_zoom'
             }
-            size={18}
+            size={17}
             color={theme.base.color}
             onMouseEnter={headerStore.onHoverIcon}
             onMouseLeave={headerStore.onUnHoverIcon}

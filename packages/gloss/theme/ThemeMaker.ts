@@ -90,9 +90,9 @@ export class ThemeMaker {
       borderColor: borderColor || increaseContrast(backgroundColored, smallAmt),
     })
     const hover = {
-      color: increaseContrast(base.color, smallerAmt),
-      background: increaseContrast(base.background, smallerAmt),
-      borderColor: increaseContrast(base.borderColor, smallerAmt),
+      color: increaseContrast(base.color, smallAmt),
+      background: increaseContrast(base.background, smallAmt),
+      borderColor: increaseContrast(base.borderColor, smallAmt),
       ...rest.hover,
     }
     const active = {

@@ -46,6 +46,8 @@ const TitleBarContain = view({
   flex: 1,
   height: 27,
   maxWidth: '100%',
+  position: 'relative',
+  zIndex: 1,
 })
 
 TitleBarContain.theme = ({ theme }) => ({
@@ -57,7 +59,14 @@ TitleBarContain.theme = ({ theme }) => ({
 const SubTitleHorizontalSpace = () => <div style={{ width: 12 }} />
 
 const SubTitle = ({ children, date, permalink, icon }) => (
-  <UI.Row padding={[0, 12]} alignItems="center" flex={1} height={32}>
+  <UI.Row
+    position="relative"
+    padding={[0, 12]}
+    alignItems="center"
+    flex={1}
+    height={32}
+    zIndex={1}
+  >
     {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
     {!!children && !!date && <SubTitleHorizontalSpace />}
     <UI.Text>
@@ -117,6 +126,7 @@ export class PeekHeaderContent extends React.Component<Props> {
         />
         {/* Fade below the icon */}
         <UI.View
+          zIndex={0}
           pointerEvents="none"
           position="absolute"
           top={0}

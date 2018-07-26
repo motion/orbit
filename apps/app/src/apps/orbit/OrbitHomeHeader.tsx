@@ -33,7 +33,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
         color: buttonColor,
         size: 13,
       },
-      opacity: 0.3,
+      opacity: 0.4,
       activeStyle: {
         background: 'transparent',
         borderColor: 'transparent',

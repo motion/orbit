@@ -1,8 +1,8 @@
 
 /**
- * Options based on which fetch query to GoogleDriveApi will be performed.
+ * Options based on which fetch query to Google Drive Api will be performed.
  */
-export type GoogleDriveFetchQueryOptions<_R> = {
+export type GDriveFetchQueryOptions<_R> = {
 
   /**
    * Url segment to where query should be performed.
@@ -21,41 +21,41 @@ export type GoogleDriveFetchQueryOptions<_R> = {
 }
 
 /**
- * What GoogleDriveApi gives us when we request a list of files.
+ * What Google Drive Api gives us when we request a list of files.
  *
  * @see https://developers.google.com/drive/api/v3/reference/files/list
  */
-export type GoogleDriveFileResponse = {
+export type GDriveFileResponse = {
   nextPageToken: string
-  files: GoogleDriveFile[]
+  files: GDriveFile[]
 }
 
 /**
- * What GoogleDriveApi gives us when we request a list of file comments.
+ * What Google Drive Api gives us when we request a list of file comments.
  *
  * @see https://developers.google.com/drive/api/v3/reference/comments/list
  */
-export type GoogleDriveCommentResponse = {
+export type GDriveCommentResponse = {
   kind: 'drive#commentList'
   nextPageToken: string
-  comments: GoogleDriveComment[]
+  comments: GDriveComment[]
 }
 
 /**
- * What GoogleDriveApi gives us when we request a list of file revisions.
+ * What Google Drive Api gives us when we request a list of file revisions.
  *
  * @see https://developers.google.com/drive/api/v3/reference/revisions/list
  */
-export type GoogleDriveRevisionResponse = {
+export type GDriveRevisionResponse = {
   kind: 'drive#revisionList'
   nextPageToken: string
-  revisions: GoogleDriveRevision[]
+  revisions: GDriveRevision[]
 }
 
 /**
- * Single GoogleDriveApi User resource.
+ * Single Google Drive Api User resource.
  */
-export type GoogleDriveUser = {
+export type GDriveUser = {
   kind: 'drive#user'
   displayName: string
   photoLink: string
@@ -65,11 +65,11 @@ export type GoogleDriveUser = {
 }
 
 /**
- * Single GoogleDriveApi File resource.
+ * Single Google Drive Api File resource.
  *
  * @see https://developers.google.com/drive/api/v3/reference/files#resource
  */
-export type GoogleDriveFile = {
+export type GDriveFile = {
   kind: 'drive#file'
   id: string
   name: string
@@ -78,7 +78,7 @@ export type GoogleDriveFile = {
   starred: boolean
   trashed: boolean
   explicitlyTrashed: boolean
-  trashingUser: GoogleDriveUser
+  trashingUser: GDriveUser
   trashedTime: string
   parents: string[]
   properties: { [key: string]: string }
@@ -98,10 +98,10 @@ export type GoogleDriveFile = {
   modifiedByMeTime: string
   modifiedByMe: boolean
   sharedWithMeTime: string
-  sharingUser: GoogleDriveUser
-  owners: GoogleDriveUser[]
+  sharingUser: GDriveUser
+  owners: GDriveUser[]
   teamDriveId: string
-  lastModifyingUser: GoogleDriveUser
+  lastModifyingUser: GDriveUser
   shared: boolean
   ownedByMe: boolean
   capabilities: {
@@ -181,16 +181,16 @@ export type GoogleDriveFile = {
 }
 
 /**
- * Single GoogleDriveApi Comment resource.
+ * Single Google Drive Api Comment resource.
  *
  * @see https://developers.google.com/drive/api/v3/reference/comments#resource
  */
-export type GoogleDriveComment = {
+export type GDriveComment = {
   kind: 'drive#comment'
   id: string
   createdTime: string
   modifiedTime: string
-  author: GoogleDriveUser
+  author: GDriveUser
   htmlContent: string
   content: string
   deleted: boolean
@@ -204,11 +204,11 @@ export type GoogleDriveComment = {
 }
 
 /**
- * Single GoogleDriveApi Revision resource.
+ * Single Google Drive Api Revision resource.
  *
  * @see https://developers.google.com/drive/api/v3/reference/revisions#resource
  */
-export type GoogleDriveRevision = {
+export type GDriveRevision = {
   kind: 'drive#revision'
   id: string
   mimeType: string
@@ -217,7 +217,7 @@ export type GoogleDriveRevision = {
   published: boolean
   publishAuto: boolean
   publishedOutsideDomain: boolean
-  lastModifyingUser: GoogleDriveUser
+  lastModifyingUser: GDriveUser
   originalFilename: string
   md5Checksum: string
   size: number
@@ -226,22 +226,23 @@ export type GoogleDriveRevision = {
 /**
  * Finally loaded google drive file with all information related to a file.
  */
-export type GoogleDriveLoadedFile = {
-  file: GoogleDriveFile
+export type GDriveLoadedFile = {
+  file: GDriveFile
   content: string
   thumbnailFilePath: string
-  comments: GoogleDriveComment[]
-  revisions: GoogleDriveRevision[]
+  comments: GDriveComment[]
+  revisions: GDriveRevision[]
+  parent?: GDriveFile
 }
 
 /**
  * Finally loaded google drive user with all information related to a user.
  */
-export type GoogleDriveLoadedUser = {
+export type GDriveLoadedUser = {
   email: string
   name: string
   photo: string
-  comments: GoogleDriveComment[]
-  revisions: GoogleDriveRevision[]
-  files: GoogleDriveFile[]
+  comments: GDriveComment[]
+  revisions: GDriveRevision[]
+  files: GDriveFile[]
 }

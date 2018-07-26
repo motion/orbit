@@ -4,7 +4,7 @@ import {URL} from 'url'
 import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import r2 from '@mcro/r2'
-import { GoogleDriveFetchQueryOptions } from './GDriveTypes'
+import { GDriveFetchQueryOptions } from './GDriveTypes'
 import { Setting } from '@mcro/models'
 
 /**
@@ -49,7 +49,7 @@ export class GDriveFetcher {
   /**
    * Fetches data from google api based on a given query.
    */
-  async fetch<R>(options: GoogleDriveFetchQueryOptions<R>): Promise<R> {
+  async fetch<R>(options: GDriveFetchQueryOptions<R>): Promise<R> {
     const { url, query, json } = options
     const qs = Object.keys(query).map(key => key + '=' + query[key]).join('&')
     const fullUrl = `https://content.googleapis.com/drive/v3${url}?${qs}`

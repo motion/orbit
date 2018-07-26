@@ -1,7 +1,7 @@
 import { Bit, createOrUpdateBit, Setting, createOrUpdate, Person } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import { GDriveLoader } from './GDriveLoader'
-import { GoogleDriveLoadedFile, GoogleDriveLoadedUser } from './GDriveTypes'
+import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
 
 export class GDriveSync {
   loader: GDriveLoader
@@ -36,8 +36,8 @@ export class GDriveSync {
     }
   }
 
-  private async createFile(file: GoogleDriveLoadedFile): Promise<Bit|null> {
-    return await createOrUpdateBit(Bit, {
+  private createFile(file: GDriveLoadedFile): Promise<Bit|null> {
+    return createOrUpdateBit(Bit, {
       integration: 'gdocs',
       identifier: file.file.id,
       type: 'document',
@@ -51,18 +51,18 @@ export class GDriveSync {
         // textBody: text || '',
       },
       webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
-      location: {
-        id: '',
-        name: '',
-        webLink: ''
-      },
+      location: file.parent ? {
+        id: file.parent.id,
+        name: file.parent.name,
+        webLink: file.file.webViewLink || file.parent.webContentLink
+      } : undefined,
       bitCreatedAt: new Date(file.file.createdTime),
       bitUpdatedAt: new Date(file.file.modifiedTime),
       image: file.file.fileExtension && file.file.thumbnailLink ? file.file.id + '.' + file.file.fileExtension : undefined
     })
   }
 
-  private async createPerson(user: GoogleDriveLoadedUser) {
+  private async createPerson(user: GDriveLoadedUser) {
     const person = {
       location: '',
       bio: '',

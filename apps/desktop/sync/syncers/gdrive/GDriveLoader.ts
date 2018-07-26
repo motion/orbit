@@ -7,11 +7,11 @@ import {
   googleDriveFileRevisionQuery,
 } from './GDriveQueries'
 import {
-  GoogleDriveComment,
-  GoogleDriveFile,
-  GoogleDriveLoadedFile,
-  GoogleDriveLoadedUser,
-  GoogleDriveRevision,
+  GDriveComment,
+  GDriveFile,
+  GDriveLoadedFile,
+  GDriveLoadedUser,
+  GDriveRevision,
 } from './GDriveTypes'
 import { GDriveFetcher } from './GDriveFetcher'
 import * as path from 'path'
@@ -19,8 +19,8 @@ import * as path from 'path'
 export class GDriveLoader {
 
   fetcher: GDriveFetcher
-  files: GoogleDriveLoadedFile[] = []
-  users: GoogleDriveLoadedUser[] = []
+  files: GDriveLoadedFile[] = []
+  users: GDriveLoadedUser[] = []
 
   constructor(setting: Setting) {
     this.fetcher = new GDriveFetcher(setting)
@@ -32,15 +32,22 @@ export class GDriveLoader {
     console.log(`loaded ${files.length} files`, files)
 
     // limit number of files for now
-    // files.splice(10, files.length)
+    files.splice(10, files.length)
 
     this.files = await sequence(files, async file => {
+
+      // try to find a file folder to create a Bit.location later on
+      let parent: GDriveFile
+      if (file.parents && file.parents.length)
+        parent = files.find(otherFile => otherFile.id === file.parents[0])
+
       return {
         file,
         content: await this.loadFilesContent(file),
         comments: await this.loadComments(file),
         revisions: await this.loadRevisions(file),
         thumbnailFilePath: await this.downloadThumbnail(file),
+        parent
       }
     })
 
@@ -63,7 +70,7 @@ export class GDriveLoader {
         .forEach(user => {
 
           // make sure we don't have duplicate users - find user by email if it already was added
-          let foundUser: GoogleDriveLoadedUser = this.users.find(foundUser => foundUser.name === user.displayName)
+          let foundUser: GDriveLoadedUser = this.users.find(foundUser => foundUser.name === user.displayName)
           if (!foundUser) {
             foundUser = {
               email: user.emailAddress,
@@ -86,7 +93,7 @@ export class GDriveLoader {
     console.log(`created ${this.users.length} users`, this.users)
   }
 
-  private async loadFiles(pageToken?: string): Promise<GoogleDriveFile[]> {
+  private async loadFiles(pageToken?: string): Promise<GDriveFile[]> {
     const result = await this.fetcher.fetch(googleDriveFileQuery(pageToken))
     if (result.nextPageToken) {
       const nextPageFiles = await this.loadFiles(result.nextPageToken)
@@ -95,7 +102,7 @@ export class GDriveLoader {
     return result.files
   }
 
-  private async loadFilesContent(file: GoogleDriveFile): Promise<string> {
+  private async loadFilesContent(file: GDriveFile): Promise<string> {
     if (file.mimeType !== 'application/vnd.google-apps.document')
       return ''
 
@@ -105,7 +112,7 @@ export class GDriveLoader {
     return content
   }
 
-  private async loadComments(file: GoogleDriveFile, pageToken?: string): Promise<GoogleDriveComment[]> {
+  private async loadComments(file: GDriveFile, pageToken?: string): Promise<GDriveComment[]> {
 
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map')
@@ -121,7 +128,7 @@ export class GDriveLoader {
     return result.comments
   }
 
-  private async loadRevisions(file: GoogleDriveFile, pageToken?: string): Promise<GoogleDriveRevision[]> {
+  private async loadRevisions(file: GDriveFile, pageToken?: string): Promise<GDriveRevision[]> {
 
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions)
@@ -137,7 +144,7 @@ export class GDriveLoader {
     return result.revisions
   }
 
-  private async downloadThumbnail(file: GoogleDriveFile): Promise<string> {
+  private async downloadThumbnail(file: GDriveFile): Promise<string> {
     if (!file.thumbnailLink)
       return ''
 

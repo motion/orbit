@@ -5,6 +5,7 @@ import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction } from '@mcro/helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppReactions } from './AppReactions'
+import { getPermalink } from '../helpers/getPermalink'
 
 export class AppStore {
   contentHeight = 0
@@ -96,5 +97,13 @@ export class AppStore {
         })
       }, 1000),
     )
+  }
+
+  open = async (result, openType?) => {
+    if (!result) {
+      throw new Error('No result given to open')
+    }
+    const url = await getPermalink(result, openType)
+    App.open(url)
   }
 }

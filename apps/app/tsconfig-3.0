@@ -1,0 +1,35 @@
+// desktop
+// "composite": true,
+    // "references": [
+  //   { "path": "../stores" },
+  //   { "path": "../models" },
+  //   { "path": "../services" },
+  //   { "path": "../oracle" },
+  //   { "path": "../../packages/black" },
+  //   { "path": "../../packages/constants" },
+  //   { "path": "../../packages/debug" },
+  //   { "path": "../../packages/helpers" },
+  //   { "path": "../../packages/oauth-strategies" },
+  //   { "path": "../../packages/r2" }
+  // ]
+
+
+
+    "composite": true,
+    "declaration": true,
+
+"references": [
+    { "path": "../stores" },
+    { "path": "../models" },
+    { "path": "../services" },
+    { "path": "../../packages/black" },
+    { "path": "../../packages/constants" },
+    { "path": "../../packages/gloss" },
+    { "path": "../../packages/debug" },
+    { "path": "../../packages/helpers" },
+    { "path": "../../packages/r2" },
+    { "path": "../../packages/color" },
+    { "path": "../../packages/slackdown" },
+    { "path": "../../packages/router" },
+    { "path": "../../packages/color" }
+  ]

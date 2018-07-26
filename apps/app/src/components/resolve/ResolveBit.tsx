@@ -25,7 +25,7 @@ const results = {
   },
 }
 
-export const ResolveBit = ({ bit, children, ...props }) => {
+export const ResolveBit = ({ bit, children, searchTerm, ...props }) => {
   const resolveIntegration = results[bit.integration]
   const Resolver = resolveIntegration && resolveIntegration[bit.type]
   if (!Resolver) {
@@ -33,7 +33,7 @@ export const ResolveBit = ({ bit, children, ...props }) => {
     return () => <div>no resolver</div>
   }
   return (
-    <Resolver bit={bit} {...props}>
+    <Resolver bit={bit} searchTerm={searchTerm} {...props}>
       {bitProps =>
         children({
           id: bit.id,

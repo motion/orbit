@@ -16,7 +16,7 @@ const options = {
 export const ResolveConversation = ({
   children,
   bit,
-  searchStore,
+  appStore,
   shownLimit = 5,
   itemProps,
   isExpanded,
@@ -54,13 +54,13 @@ export const ResolveConversation = ({
       <RoundButton
         onClick={e => {
           e.stopPropagation()
-          searchStore.open(bit, 'channel')
+          appStore.open(bit, 'channel')
         }}
       >
         {bit.title.slice(1)}
       </RoundButton>
     ),
-    permalink: () => searchStore.open(bit),
+    permalink: () => appStore.open(bit),
     content,
   })
 }

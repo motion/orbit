@@ -1,4 +1,4 @@
-import 'react-hot-loader'
+// import 'react-hot-loader'
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import './helpers/createElement'

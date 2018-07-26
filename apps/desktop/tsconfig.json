@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
-    // "composite": true,
     "declaration": true,
     "module": "CommonJS",
     "outDir": "_",
@@ -12,16 +11,4 @@
   },
   "include": ["**/*"],
   "exclude": ["_", "node_modules", "tmp", "desktop.js"]
-  // "references": [
-  //   { "path": "../stores" },
-  //   { "path": "../models" },
-  //   { "path": "../services" },
-  //   { "path": "../oracle" },
-  //   { "path": "../../packages/black" },
-  //   { "path": "../../packages/constants" },
-  //   { "path": "../../packages/debug" },
-  //   { "path": "../../packages/helpers" },
-  //   { "path": "../../packages/oauth-strategies" },
-  //   { "path": "../../packages/r2" }
-  // ]
 }

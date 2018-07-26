@@ -361,15 +361,7 @@ export class SearchStore /* extends Store */ {
   }
 
   openSelected = () => {
-    this.open(this.selectedItem)
-  }
-
-  open = async (result, openType?) => {
-    if (!result) {
-      throw new Error('No result given to open')
-    }
-    const url = await SearchStoreHelpers.getPermalink(result, openType)
-    App.open(url)
+    this.props.appStore.open(this.selectedItem)
   }
 
   hasQuery() {

@@ -4,6 +4,7 @@ import { PeekItemResolver } from '../views/PeekItemResolver'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import { HighlightsLayer } from '../../../views/HighlightsLayer'
+import { App } from '@mcro/stores'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -18,16 +19,29 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
     return <div>Error yo item.subType: {item.subType}</div>
   }
   return (
-    <PeekItemResolver
-      item={item}
-      bit={bit}
-      appStore={appStore}
-      {...BitPaneContent.bitResolverProps}
+    <SearchablePeek
+      defaultValue={App.state.query}
+      focusOnMount
+      searchBarTheme={peekStore.theme}
     >
-      {({ title, icon, content, location, permalink, date, comments }) => {
+      {({ searchBar, searchTerm }) => {
         return (
-          <SearchablePeek focusOnMount searchBarTheme={peekStore.theme}>
-            {({ searchBar, searchTerm }) => {
+          <PeekItemResolver
+            item={item}
+            bit={bit}
+            appStore={appStore}
+            searchTerm={searchTerm}
+            {...BitPaneContent.bitResolverProps}
+          >
+            {({
+              title,
+              icon,
+              content,
+              location,
+              permalink,
+              date,
+              comments,
+            }) => {
               return children({
                 permalink,
                 subtitle: location,
@@ -49,9 +63,9 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
                 ),
               })
             }}
-          </SearchablePeek>
+          </PeekItemResolver>
         )
       }}
-    </PeekItemResolver>
+    </SearchablePeek>
   )
 }

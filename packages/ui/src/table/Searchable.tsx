@@ -21,6 +21,7 @@ import { Theme } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
 
 type Props = {
+  defaultValue?: string
   placeholder?: string
   actions: React.ReactNode
   tableKey: string
@@ -120,22 +121,24 @@ type State = {
 }
 
 export const Searchable = (Component: any) =>
-  class extends React.PureComponent {
-    props: Props
-
+  class extends React.PureComponent<Props, State> {
     static defaultProps = {
       placeholder: 'Search...',
+      defaultValue: '',
     }
 
     static contextTypes = {
       plugin: PropTypes.string,
     }
 
-    state: State = {
-      filters: [],
-      focusedToken: -1,
-      searchTerm: '',
-      hasFocus: false,
+    constructor(a, b) {
+      super(a, b)
+      this.state = {
+        filters: [],
+        focusedToken: -1,
+        searchTerm: this.props.defaultValue,
+        hasFocus: false,
+      }
     }
 
     _inputRef: HTMLInputElement | void

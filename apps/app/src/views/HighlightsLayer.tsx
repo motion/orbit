@@ -24,7 +24,12 @@ const Highlight = view(UI.View, {
   position: 'absolute',
   background: 'yellow',
   borderRadius: 4,
-  opacity: 0.6,
+  opacity: 0.4,
+  padding: 2,
+  transform: {
+    y: -1,
+    x: -1,
+  },
 })
 
 export class HighlightsLayer extends React.Component<Props, State> {
@@ -120,7 +125,11 @@ export class HighlightsLayer extends React.Component<Props, State> {
     const { highlights } = this.state
     return (
       <UI.View position="relative">
-        <UI.FullScreen forwardRef={this.frameRef} pointerEvents="none">
+        <UI.FullScreen
+          forwardRef={this.frameRef}
+          pointerEvents="none"
+          zIndex={-1}
+        >
           {highlights.map(({ x, y, width, height }, index) => {
             return (
               <Highlight

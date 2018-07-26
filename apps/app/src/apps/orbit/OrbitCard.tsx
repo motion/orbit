@@ -2,11 +2,7 @@ import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import {
-  ItemResolver,
-  ItemResolverProps,
-  ResolvedItem,
-} from '../../components/ItemResolver'
+import { ItemResolver, ResolvedItem } from '../../components/ItemResolver'
 import { SmallLink, RoundButton } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
@@ -123,12 +119,13 @@ Card.theme = ({
     // CARD
     const borderHover = UI.color('#c9c9c9')
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
+    const cardBackground = background || theme.selected.background
     card = {
       ...card,
-      borderRadius: borderRadius || 7,
-      background: background || theme.selected.background,
-      boxShadow: disableShadow ? 'none' : [[0, 1, 3, [0, 0, 0, 0.05]]],
-      border: border || [1, '#fff'],
+      borderRadius: borderRadius || 9,
+      background: cardBackground,
+      boxShadow: disableShadow ? 'none' : [[0, 1, 2, [0, 0, 0, 0.05]]],
+      border: border || [1, cardBackground.darken(0.08)],
       '&:hover': {
         border: [1, borderHover],
       },
@@ -163,7 +160,7 @@ const Preview = view({
 })
 
 const Subtitle = view({
-  margin: [-1, 0, 0],
+  margin: [0, 0, 3],
   opacity: 0.4,
   flexFlow: 'row',
   alignItems: 'center',
@@ -436,7 +433,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                   alignItems="center"
                   flexFlow="row"
                 >
-                  <RoundButton onClick={locationLink}>{location}</RoundButton>
+                  <RoundButton marginLeft={-3} onClick={locationLink}>
+                    {location}
+                  </RoundButton>
                 </UI.Text>
               )}
               {typeof subtitle === 'string' ? (
@@ -447,7 +446,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 subtitle
               )}
               {!!date && (
-                <UI.Text onClick={permalink} size={0.95}>
+                <UI.Text size={0.95}>
                   <strong> &middot;</strong> <TimeAgo date={date} />
                 </UI.Text>
               )}

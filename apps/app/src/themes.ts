@@ -4,7 +4,7 @@ const Theme = new ThemeMaker()
 
 const highlightColor = '#fff'
 
-const greyBg = color('#f2f2f2')
+const greyBg = color('#f0f0f0')
 const greyHoverBg = greyBg.darken(0.02)
 const greyActiveBg = greyHoverBg.darken(0.05)
 const greyActiveHoverBg = greyHoverBg.darken(0.06)

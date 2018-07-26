@@ -56,9 +56,9 @@ const Border = view(UI.FullScreen, {
 })
 
 Border.theme = ({ theme }) => {
-  const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
+  const borderColor = theme.base.background.darken(0.35)
   const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
-  const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.95]]
+  const borderGlow = ['inset', 0, 0.5, 0, 0.5, '#fff']
   return {
     borderRadius: BORDER_RADIUS,
     boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
@@ -108,7 +108,7 @@ class OrbitDockedInner extends React.Component<{
           bottom={searchStore.searchState.query ? 10 : contentBottom}
         >
           <Border />
-          <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>
+          <UI.View borderRadius={BORDER_RADIUS} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
               after={

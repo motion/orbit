@@ -32,7 +32,7 @@ export class GDriveLoader {
     console.log(`loaded ${files.length} files`, files)
 
     // limit number of files for now
-    files.splice(10, files.length)
+    // files.splice(10, files.length)
 
     this.files = await sequence(files, async file => {
 

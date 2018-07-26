@@ -4,13 +4,13 @@ import {URL} from "url";
 import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import r2 from '@mcro/r2'
-import { GoogleDriveFetchQueryOptions } from '~/sync/syncers/gdrive/GoogleDriveTypes'
+import { GoogleDriveFetchQueryOptions } from 'GDriveTypes.ts'
 import { Setting } from '@mcro/models'
 
 /**
  * Fetches data from Google Drive Api.
  */
-export class GoogleDriveFetcher {
+export class GDriveFetcher {
 
   setting: Setting;
 

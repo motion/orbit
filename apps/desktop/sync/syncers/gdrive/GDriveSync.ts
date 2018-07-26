@@ -1,15 +1,15 @@
 import { Bit, createOrUpdateBit, Setting, createOrUpdate, Person } from '@mcro/models'
 import * as Helpers from '~/helpers'
-import { GoogleDriveLoader } from './GoogleDriveLoader'
-import { GoogleDriveLoadedFile, GoogleDriveLoadedUser } from './GoogleDriveTypes'
+import { GDriveLoader } from './GDriveLoader'
+import { GoogleDriveLoadedFile, GoogleDriveLoadedUser } from './GDriveTypes'
 
-export class GoogleDriveSync {
-  loader: GoogleDriveLoader
+export class GDriveSync {
+  loader: GDriveLoader
   setting: Setting
 
   constructor(setting) {
     this.setting = setting
-    this.loader = new GoogleDriveLoader(this.setting)
+    this.loader = new GDriveLoader(this.setting)
   }
 
   async run(): Promise<void> {

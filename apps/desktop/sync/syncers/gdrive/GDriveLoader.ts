@@ -5,25 +5,25 @@ import {
   googleDriveFileExportQuery,
   googleDriveFileQuery,
   googleDriveFileRevisionQuery,
-} from './GoogleDriveQueries'
+} from './GDriveQueries'
 import {
   GoogleDriveComment,
   GoogleDriveFile,
   GoogleDriveLoadedFile,
   GoogleDriveLoadedUser,
   GoogleDriveRevision,
-} from './GoogleDriveTypes'
-import { GoogleDriveFetcher } from './GoogleDriveFetcher'
+} from './GDriveTypes'
+import { GDriveFetcher } from './GDriveFetcher'
 import * as path from "path";
 
-export class GoogleDriveLoader {
+export class GDriveLoader {
 
-  fetcher: GoogleDriveFetcher;
+  fetcher: GDriveFetcher;
   files: GoogleDriveLoadedFile[] = [];
   users: GoogleDriveLoadedUser[] = [];
 
   constructor(setting: Setting) {
-    this.fetcher = new GoogleDriveFetcher(setting)
+    this.fetcher = new GDriveFetcher(setting)
   }
 
   async load(): Promise<void> {

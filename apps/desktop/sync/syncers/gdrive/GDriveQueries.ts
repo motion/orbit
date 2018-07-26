@@ -3,7 +3,7 @@ import {
   GoogleDriveFetchQueryOptions,
   GoogleDriveFileResponse,
   GoogleDriveRevisionResponse,
-} from './GoogleDriveTypes'
+} from './GDriveTypes'
 
 /**
  * @see https://developers.google.com/drive/api/v3/reference/files/list

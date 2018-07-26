@@ -345,10 +345,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     App.actions.open(this.props.bit)
   }
 
-  getOrbitCard(contentProps: ResolvedItem & { subtitle?: string }) {
+  getOrbitCard(contentProps: ResolvedItem) {
     // TODO weird mutation
     this.props.store.normalizedBit = contentProps
-
     const {
       title,
       icon,
@@ -440,10 +439,12 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                   <RoundButton onClick={locationLink}>{location}</RoundButton>
                 </UI.Text>
               )}
-              {typeof subtitle === 'string' && (
+              {typeof subtitle === 'string' ? (
                 <UI.Text ellipse maxWidth="calc(100% - 40px)">
                   {subtitle}
                 </UI.Text>
+              ) : (
+                subtitle
               )}
               {!!date && (
                 <UI.Text onClick={permalink} size={0.95}>

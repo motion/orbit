@@ -18,6 +18,7 @@ export type ResolvedItem = {
   comments?: React.ReactNode[]
   people?: Person[]
   searchTerm?: string
+  subtitle?: React.ReactNode
 }
 
 export type ItemResolverProps = {

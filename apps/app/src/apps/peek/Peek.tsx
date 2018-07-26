@@ -53,7 +53,7 @@ class PeekPageInner extends React.Component<InnerProps> {
     if (!peekStore.state) {
       return null
     }
-    const { item, peekId } = peekStore.state
+    const { item, peekId, model } = peekStore.state
     const type = (item && capitalize(item.type)) || 'Empty'
     const PeekContentsView = PeekPanes[type]
     if (!PeekContentsView) {
@@ -65,8 +65,8 @@ class PeekPageInner extends React.Component<InnerProps> {
       <PeekContentsView
         key={peekId}
         item={item}
-        bit={peekStore.model}
-        person={peekStore.model}
+        bit={model}
+        person={model}
         appStore={appStore}
         peekStore={peekStore}
       >

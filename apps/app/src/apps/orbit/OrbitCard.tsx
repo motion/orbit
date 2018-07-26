@@ -107,9 +107,9 @@ Card.theme = ({
       }
     } else {
       listStyle = {
-        background: background || 'transparent',
+        background: 'transparent',
         '&:active': {
-          background: background || theme.selected.background,
+          background: theme.selected.background,
         },
       }
     }

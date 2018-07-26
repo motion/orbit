@@ -15,7 +15,7 @@ const listItemSidePad = 18
 const Highlight = view({
   display: 'inline-block',
   lineHeight: 22,
-  fontSize: 16,
+  fontSize: 15,
   padding: [2, listItemSidePad * 2, 2, listItemSidePad * 1.5],
   margin: [8, -listItemSidePad, 8, 0],
   borderLeft: [3, 'transparent'],
@@ -51,8 +51,7 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
       }
     >
       <UI.Text
-        size={1.2}
-        alpha={0.7}
+        alpha={0.85}
         wordBreak="break-all"
         highlight={{
           text: sanitize(bit.body || ''),

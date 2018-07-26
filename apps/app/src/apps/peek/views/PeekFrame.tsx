@@ -14,7 +14,7 @@ const transitions = store => {
   if (store.tornState) return 'all linear 10ms'
   if (store.willHide) return 'all ease 200ms'
   if (store.willStayShown) return 'all ease 80ms'
-  return 'opacity ease 200ms, transform ease 120ms'
+  return 'opacity ease 100ms, transform ease 150ms'
 }
 
 const PeekFrameBorder = view(UI.FullScreen, {

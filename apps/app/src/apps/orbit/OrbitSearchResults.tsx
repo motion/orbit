@@ -47,7 +47,7 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
       listItem
       cardProps={{
         background: '#fff',
-        padding: [20, 18, 10],
+        padding: [16, 18, 10],
       }}
       nextUpStyle={
         index === 0 && {

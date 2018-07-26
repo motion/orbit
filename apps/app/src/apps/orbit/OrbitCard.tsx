@@ -49,7 +49,7 @@ export type OrbitCardProps = {
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number
   nextUpStyle?: Object
-  isSelected?: boolean
+  isSelected?: boolean | Function
   getRef?: Function
   cardProps?: Object
   item?: AppStatePeekItem
@@ -117,6 +117,7 @@ Card.theme = ({
     }
   } else {
     // CARD
+    const borderSelected = UI.color('#5a8ade')
     const borderHover = UI.color('#c9c9c9')
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     const cardBackground = background || theme.selected.background
@@ -136,7 +137,13 @@ Card.theme = ({
     if (isSelected) {
       card = {
         ...card,
-        border: [1, borderHover],
+        border: [1, borderSelected],
+        '&:hover': {
+          border: [1, borderSelected.lighten(0.1)],
+        },
+        '&:active': {
+          border: [1, borderSelected],
+        },
       }
     }
   }
@@ -189,9 +196,13 @@ class OrbitCardStore {
   ref = null
 
   get isSelected() {
-    return typeof this.props.isSelected === 'boolean'
-      ? this.props.isSelected
-      : this._isSelected
+    if (typeof this.props.isSelected === 'boolean') {
+      return this.props.isSelected
+    }
+    if (typeof this.props.isSelected === 'function') {
+      return this.props.isSelected()
+    }
+    return this._isSelected
   }
 
   get isPaneSelected() {

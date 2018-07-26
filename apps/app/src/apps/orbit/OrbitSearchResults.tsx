@@ -24,7 +24,12 @@ const Highlight = view({
   },
 })
 
-const OrbitSearchResultsList = view(({ name, searchStore }) => {
+type ListProps = {
+  name: string
+  searchStore: SearchStore
+}
+
+const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
   const { results, query } = searchStore.searchState
   log(`RENDER SENSITIVE`)
   if (!results.length) {
@@ -63,11 +68,20 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
         }}
       >
         {({ highlights }) => {
-          return highlights.map((highlight, index) => {
+          return highlights.map((highlight, hlIndex) => {
             return (
               <Highlight
-                key={index}
+                key={hlIndex}
                 dangerouslySetInnerHTML={{ __html: highlight }}
+                onClick={e => {
+                  e.stopPropagation()
+                  // don't actually toggle when selecting highlights
+                  if (searchStore.activeIndex === index) {
+                    return
+                  }
+                  searchStore.setHighlightIndex(hlIndex)
+                  searchStore.toggleSelected(index)
+                }}
               />
             )
           })

@@ -1,6 +1,7 @@
 import { Setting } from './setting'
 import * as T from './typeorm'
 import { Person } from './person'
+import { Location } from './location'
 
 @T.Entity()
 export class Bit extends T.BaseEntity {
@@ -9,26 +10,20 @@ export class Bit extends T.BaseEntity {
   // 1. we already have unique columns that we can use as primary keys
   // 2. since this table (as well as Person) will be place of endless insertions id will get out of range quite quickly
   // todo: check usages and remove
+  /**
+   * @deprecated
+   */
   @T.PrimaryGeneratedColumn()
   id: number
 
   /**
-   * Database record creation time.
+   * Url to this bit on its origin.
    *
-   * todo: find about usages
+   * todo: use webLink and desktopLink instead
+   * @deprecated
    */
-  @T.Index()
-  @T.CreateDateColumn()
-  createdAt: Date
-
-  /**
-   * Database record updation time.
-   *
-   * todo: find about usages
-   */
-  @T.Index()
-  @T.UpdateDateColumn()
-  updatedAt: Date
+  @T.Column({ nullable: true })
+  url: string
 
   /**
    * Bit id.
@@ -45,16 +40,22 @@ export class Bit extends T.BaseEntity {
   @T.Column({ type: String })
   integration: "slack"|string // todo: need to specify all possible integration types here
 
-  // todo: do we need an integration id ?
-
   /**
-   * todo: find about usages
+   * Database record creation time.
    */
-  @T.Column({ unique: true })
-  contentHash: string
+  @T.Index()
+  @T.CreateDateColumn()
+  createdAt: Date
 
   /**
-   * todo: find about usages
+   * Database record updation time.
+   */
+  @T.Index()
+  @T.UpdateDateColumn()
+  updatedAt: Date
+
+  /**
+   * Bit title.
    */
   @T.Index()
   @T.Column()
@@ -62,43 +63,46 @@ export class Bit extends T.BaseEntity {
 
   /**
    * Bit body.
-   * Used to show complete content of the bit.
+   * Primary used for search.
    */
   @T.Column()
   body: string
 
+  /**
+   * Content type, for example "conversation", "message", "email", etc.
+   */
   @T.Index()
   @T.Column()
   type: string
 
   /**
    * Time when bit was created on its origin.
-   *
-   * todo: why its a string?
    */
   @T.Column()
   bitCreatedAt: string
 
   /**
    * Time when bit was created on its origin.
-   *
-   * todo: why its a string?
    */
   @T.Column()
   bitUpdatedAt: string
 
   /**
-   * Url to this bit on its origin.
-   *
-   * todo: create webLink and desktopLink instead
+   * Web link to this bit on its origin.
    */
   @T.Column({ nullable: true })
-  url: string
+  webLink: string
+
+  /**
+   * Desktop link to this bit on its origin.
+   */
+  @T.Column({ nullable: true })
+  desktopLink: string
 
   /**
    * Related to this Bit people.
    */
-  @T.ManyToMany(_ => Person)
+  @T.ManyToMany(() => Person)
   @T.JoinTable()
   people: Person[]
 
@@ -120,42 +124,43 @@ export class Bit extends T.BaseEntity {
   settingId: number
 
   /**
-   * Time in number when Bit source was created.
-   *
-   * Currently we use it in a Slack.
-   * todo: try to use bitCreatedAt
-   */
-  @T.Column({ nullable: true })
-  time: number
-
-  /**
-   * Channel id.
-   * We need it to find slack messages in a single channel.
-   *
-   * Currently we use it in a Slack.
-   *
-   * todo: use location instead
-   */
-  @T.Column({ nullable: true })
-  channel: string
-
-  /**
    * Bit raw JSON data.
    *
    * todo: needs to be typed!
    */
   @T.Column('simple-json', { default: '{}' })
-  data: SlackBitType | Object // todo: provide other union types
+  data: SlackBitDataType | Object // todo: provide other union types
 
   /**
    * Used for filtering: slack room, github repo, google doc folder, etc
    */
+  @T.Column(() => Location)
   location: Location
+
+  /**
+   * todo: find about usages
+   */
+  @T.Column({ unique: true })
+  contentHash: string
+
+  /**
+   * Time in number when Bit source was created.
+   * We can't use bitCreatedAt because its a string.
+   * Currently we use it in a Slack.
+   */
+  @T.Column({ nullable: true })
+  time: number
+
+  // @T.BeforeUpdate()
+  // @T.BeforeInsert()
+  // private beforeInsert() {
+  //   this.contentHash = '' // todo: hash()
+  // }
 
 }
 
 // todo: finish
 // todo: extract
-export interface SlackBitType {
+export interface SlackBitDataType {
 
 }

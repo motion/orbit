@@ -6,10 +6,13 @@ export class Location {
   id: string
 
   @T.Column({ nullable: true })
-  url: string
+  name: string
 
   @T.Column({ nullable: true })
-  name: string
+  webLink: string
+
+  @T.Column({ nullable: true })
+  desktopLink: string
 
 }
 

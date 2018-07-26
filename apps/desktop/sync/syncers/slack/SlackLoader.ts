@@ -1,5 +1,5 @@
 import { Setting } from '@mcro/models'
-import { channels, users } from 'slack'
+import { channels, chat, users } from 'slack'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 
 /**
@@ -77,18 +77,13 @@ export class SlackLoader {
    * Loads message permalink.
    */
   async loadPermalink(channelId: string, messageTs: string): Promise<string> {
-    // since message permalinks looks static we can generate links to them
-    // instead of loading from api
-    // https://motion-core.slack.com/archives/CBV9PGSGG/p1532462700000382
-    const team = this.setting.values.oauth.info.team.domain
-    return `https://${team}.slack.com/archives/${channelId}/p${messageTs.replace(".", "")}`
-    /*const response = await chat.getPermalink({
+    const response = await chat.getPermalink({
       token: this.setting.token,
       channel: channelId,
       message_ts: messageTs,
     })
 
-    return response.permalink*/
+    return response.permalink
   }
 
 }

@@ -30,6 +30,7 @@ export class Setting extends T.BaseEntity {
       // slack-specific
       info?: {
         team?: {
+          id?: string
           domain?: string
         }
       }

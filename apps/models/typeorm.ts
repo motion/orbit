@@ -31,6 +31,8 @@ const {
   getRepository,
   Brackets,
   LessThan,
+  BeforeUpdate,
+  BeforeInsert,
 } = typeorm
 
 export {
@@ -61,6 +63,8 @@ export {
   getRepository,
   Brackets,
   LessThan,
+  BeforeUpdate,
+  BeforeInsert,
 }
 
 // globals

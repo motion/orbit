@@ -1,4 +1,4 @@
-import { Bit, hash, Person, Setting } from '@mcro/models'
+import { Bit, Location, Person, Setting } from '@mcro/models'
 import * as _ from 'lodash'
 import { MoreThan } from 'typeorm'
 import { sequence } from '~/utils'
@@ -112,10 +112,7 @@ export class SlackSync {
 
         // create bits from conversations
         await sequence(conversations, async messages => {
-          const permalink = await this.loader.loadPermalink(channel.id, messages[0].ts)
-
-          // create a bit only if it was not found
-          updatedBits.push(await this.createConversation(channel, messages, permalink))
+          updatedBits.push(await this.createConversation(channel, messages))
         })
 
         // update last message sync setting
@@ -133,7 +130,9 @@ export class SlackSync {
         console.log(`loading latest bits to check if some were removed`)
         const latestBits = await Bit.find({
           settingId: this.setting.id,
-          channel: channel.id,
+          location: {
+            id: channel.id
+          },
           time: MoreThan(parseInt(oldestMessageId))
         })
         console.log(`latest bits were loaded`, latestBits)
@@ -142,7 +141,7 @@ export class SlackSync {
         // then we shall remove such bits
         removedBits.push(...latestBits.filter(bit => {
           return !loadedMessages.some(message => {
-            return String(bit.time) === message.ts
+            return bit.bitCreatedAt === message.ts
           })
         }))
         console.log(`bits to be removed`, removedBits)
@@ -164,7 +163,7 @@ export class SlackSync {
   }
 
   /**
-   * Creates a single Person from given Slack user.
+   * Creates a single integration person from given Slack user.
    */
   private createPerson(people: Person[], user: SlackUser): Person {
 
@@ -172,14 +171,12 @@ export class SlackSync {
     const person = people.find(person => person.identifier === identifier)
 
     return Object.assign(person || new Person(), {
-      identifier,
-      integrationId: user.id,
-      integration: 'slack',
-      name: user.profile.real_name || user.name,
-      data: {
-        ...user,
-      },
       setting: this.setting,
+      identifier,
+      integration: 'slack',
+      integrationId: user.id,
+      name: user.profile.real_name || user.name,
+      data: user,
     })
   }
 
@@ -189,63 +186,75 @@ export class SlackSync {
   private async createConversation(
     channel: SlackChannel,
     messages: SlackMessage[],
-    permalink: string,
   ): Promise<Bit> {
 
     // we need message in a reverse order
-    // by default messages we get are in last-first order, but we need in last-last order
+    // by default messages we get are in last-first order,
+    // but we need in last-last order here
     messages = messages.reverse()
 
     // get people from messages
-    const peopleInMessages: Person[] = this.people.filter(person => {
+    const people: Person[] = this.people.filter(person => {
       return messages.find(message => message.user === person.integrationId)
     })
 
-    const data = {
-      permalink,
-      channel: {
-        id: channel.id,
-        purpose: channel.purpose.value,
-        topic: channel.topic.value,
-        members: channel.members,
-      },
-      messages: messages.map(message => {
-        const person = peopleInMessages.find(person => person.integrationId === message.user)
-        return {
-          name: person.data.name,
-          ...message
-        }
-      }),
-    }
+    // create a new messages structure special for a data property
+    const dataMessages = messages.map(message => {
+      const person = people.find(person => person.integrationId === message.user)
+      return {
+        name: person.data.name, // todo: looks weird, person name alongside message and its called "message name"?
+        ...message
+      }
+    })
 
-    const identifier = messages[0].ts
+    // create a bit body - main searching content
+    const body = messages
+      .map(message => message.text)
+      .join(' ... ')
+      .slice(0, 255)
+
+    const identifier = channel.id + '_' + messages[0].ts
+    const bitCreatedAt = new Date(+_.first(messages).ts.split('.')[0] + 1000)
+    const bitUpdatedAt = new Date(+_.last(messages).ts.split('.')[0] + 1000)
+    const team = this.setting.values.oauth.info.team
+
+    const location = new Location()
+    location.id = channel.id
+    location.name = channel.name
+    location.webLink = `https://${team.domain}.slack.com/archives/${channel.id}`
+    location.desktopLink = `slack://channel?id=${channel.id}&team=${team.id}`
+
+    const webLink = `https://${team.domain}.slack.com/archives/${channel.id}/p${messages[0].ts.replace('.', '')}`
+    const desktopLink = `slack://channel?id=${channel.id}&message=${messages[0].ts}&team=${team.id}`
+
     const bit = await Bit.findOne({
       settingId: this.setting.id,
-      channel: channel.id,
       identifier
     })
 
-    const values = {
-      title: `#${channel.name}`,
-      body: messages
-        .map(message => message.text)
-        .join(' ... ')
-        .slice(0, 255),
-      identifier,
-      data,
-      bitCreatedAt: new Date(+_.first(messages).ts.split('.')[0] + 1000),
-      bitUpdatedAt: new Date(+_.last(messages).ts.split('.')[0] + 1000),
-      people: peopleInMessages,
-      type: 'conversation',
-      integration: 'slack',
-      time: messages[0].ts,
-      channel: channel.id,
-      setting: this.setting,
-    }
-
     return Object.assign(bit || new Bit(), {
-      ...values,
-      contentHash: hash(values),
+      setting: this.setting,
+      integration: 'slack',
+      identifier,
+      type: 'conversation',
+      title: `#${channel.name}`,
+      body,
+      data: {
+        channel: {
+          id: channel.id,
+          purpose: channel.purpose.value,
+          topic: channel.topic.value,
+          members: channel.members,
+        },
+        messages: dataMessages,
+      },
+      bitCreatedAt,
+      bitUpdatedAt,
+      people,
+      location,
+      webLink,
+      desktopLink,
+      time: bitCreatedAt,
     })
   }
 

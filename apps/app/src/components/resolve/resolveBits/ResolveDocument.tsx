@@ -8,8 +8,12 @@ const options = {
   remove_duplicates: false,
 }
 
-const markdownBoldifySearch = (str, term) => {
-  if (!term) {
+const markdownBoldifySearch = (str = '', term = '') => {
+  if (term.length < 3) {
+    return str
+  }
+  // avoid highlighting when multiple words for now
+  if (term.indexOf(' ') > -1) {
     return str
   }
   return str.replace(new RegExp(`(${term})`, 'gi'), '**$1**')

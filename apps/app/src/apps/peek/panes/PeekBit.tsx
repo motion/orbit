@@ -20,6 +20,7 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
   }
   return (
     <SearchablePeek
+      key={item.id}
       defaultValue={App.state.query}
       focusOnMount
       searchBarTheme={peekStore.theme}

@@ -50,13 +50,18 @@ export class HighlightsLayer extends React.Component<Props, State> {
     }
   }
 
+  componentDidMount() {
+    this.doSearch()
+  }
+
   componentDidUpdate() {
-    if (this.state.doSearch) {
-      this.doSearch()
-    }
+    this.doSearch()
   }
 
   doSearch() {
+    if (!this.state.doSearch) {
+      return
+    }
     if (this.props.term.length < 3) {
       this.setState({
         highlights: [],

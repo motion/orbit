@@ -52,6 +52,7 @@ export type OrbitCardProps = {
   getRef?: Function
   cardProps?: Object
   item?: AppStatePeekItem
+  disableShadow?: boolean
 }
 
 const CardWrap = view(UI.View, {
@@ -81,7 +82,9 @@ Card.theme = ({
   isSelected,
   isNextUp,
   background,
+  border,
   padding,
+  disableShadow,
 }) => {
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
@@ -119,8 +122,8 @@ Card.theme = ({
       ...card,
       borderRadius: borderRadius || 7,
       background: background || theme.selected.background,
-      boxShadow: [[0, 1, 3, [0, 0, 0, 0.05]]],
-      border: [1, '#fff'],
+      boxShadow: disableShadow ? 'none' : [[0, 1, 3, [0, 0, 0, 0.05]]],
+      border: border || [1, '#fff'],
       '&:hover': {
         border: [1, borderHover],
       },
@@ -369,6 +372,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       onClick,
       searchStore,
       cardProps,
+      disableShadow,
       ...props
     } = this.props
     const hasSubtitle = subtitle || location
@@ -390,6 +394,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           inGrid={inGrid}
           nextUpStyle={nextUpStyle}
           onClick={onClick || store.handleClick}
+          disableShadow={disableShadow}
           {...cardProps}
         >
           {!!icon &&
@@ -471,20 +476,21 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-        {!listItem && (
-          <UI.HoverGlow
-            behind
-            color="#000"
-            resist={90}
-            scale={0.99}
-            offsetTop={isSelected ? 8 : 4}
-            full
-            blur={isSelected ? 8 : 4}
-            inverse
-            opacity={isSelected ? 0.08 : 0.03}
-            borderRadius={20}
-          />
-        )}
+        {!listItem &&
+          !disableShadow && (
+            <UI.HoverGlow
+              behind
+              color="#000"
+              resist={90}
+              scale={0.99}
+              offsetTop={isSelected ? 8 : 4}
+              full
+              blur={isSelected ? 8 : 4}
+              inverse
+              opacity={isSelected ? 0.08 : 0.03}
+              borderRadius={20}
+            />
+          )}
       </CardWrap>
     )
   }

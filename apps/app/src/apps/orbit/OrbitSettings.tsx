@@ -170,7 +170,9 @@ export class OrbitSettings extends React.Component<Props> {
                   index={index + store.allResults.length}
                   appStore={appStore}
                   onClick={onClick}
+                  disableShadow
                   cardProps={{
+                    border: [1, 'transparent'],
                     background: 'transparent',
                   }}
                 />

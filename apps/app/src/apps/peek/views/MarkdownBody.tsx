@@ -14,7 +14,7 @@ const BodyContents = view({
 
 export const MarkdownBody = ({ children }) => (
   <BodyContents
-    className="markdown searchable"
+    className="markdown searchable rendered-content"
     dangerouslySetInnerHTML={{
       __html: children,
     }}

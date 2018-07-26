@@ -1,3 +1,4 @@
+import { hash } from './helpers/createOrUpdateBit'
 import { Setting } from './setting'
 import * as T from './typeorm'
 import { Person } from './person'
@@ -125,8 +126,6 @@ export class Bit extends T.BaseEntity {
 
   /**
    * Bit raw JSON data.
-   *
-   * todo: needs to be typed!
    */
   @T.Column('simple-json', { default: '{}' })
   data: SlackBitDataType | Object // todo: provide other union types
@@ -151,11 +150,12 @@ export class Bit extends T.BaseEntity {
   @T.Column({ nullable: true })
   time: number
 
-  // @T.BeforeUpdate()
-  // @T.BeforeInsert()
-  // private beforeInsert() {
-  //   this.contentHash = '' // todo: hash()
-  // }
+  @T.BeforeUpdate()
+  @T.BeforeInsert()
+  beforeInsert() {
+    if (!this.contentHash)
+      this.contentHash = hash(this.data)
+  }
 
 }
 

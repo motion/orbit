@@ -8,16 +8,29 @@ function Strategy(options, verify) {
     options.authorizationURL || 'https://slack.com/oauth/authorize'
   // options.scopeSeparator = ','
   options.scope = options.scope || [
-    'identity.basic',
-    'identity.email',
-    'identity.avatar',
-    'identity.team',
+    'channels:history',
+    'channels:read',
+    'files:read',
+    'groups:history',
+    'groups:read',
+    'im:history',
+    'im:read',
+    'links:read',
+    'mpim:history',
+    'mpim:read',
+    'search:read',
+    'team:read',
+    'usergroups:read',
+    'users:read',
+    'users:read.email',
   ]
+  options.skipUserProfile = true
 
   this.profileUrl =
     options.profileUrl || 'https://slack.com/api/users.identity?token=' // requires 'identity.basic' scope
   this._team = options.team
 
+  console.log(`hello strategy`, options)
   OAuth2Strategy.call(this, options, verify)
   this.name = options.name || 'slack'
 

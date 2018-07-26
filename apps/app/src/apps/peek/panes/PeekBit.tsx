@@ -27,7 +27,6 @@ export const PeekBit = ({
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {item.subType}</div>
   }
-  console.log('RENDER PEEKBIT', item)
   return (
     <SearchablePeek
       key={item.id}

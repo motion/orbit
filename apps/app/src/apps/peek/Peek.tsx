@@ -62,7 +62,6 @@ class PeekPageInner extends React.Component<Props> {
       console.error('none', type)
       return <div>no pane found</div>
     }
-    console.log('render peek', peekId)
     return (
       <PeekContentsView
         key={peekId}

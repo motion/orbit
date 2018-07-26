@@ -12,6 +12,7 @@ import { modelsList } from '@mcro/models'
 import { render } from '../index'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
+import debug from '@mcro/debug'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -35,6 +36,7 @@ window['Swift'] = Swift
 window['render'] = render
 window['color'] = color
 window['dateFns'] = dateFns
+window['debug'] = debug
 
 modelsList.map(model => {
   window[`${model.name}`] = model

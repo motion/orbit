@@ -4,6 +4,7 @@ import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../../../helpers'
 import * as Constants from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
+import { SearchStore } from '../../../stores/SearchStore'
 
 const TYPE_THEMES = {
   person: {
@@ -30,6 +31,7 @@ const BASE_THEME = {
 export class PeekStore {
   props: {
     appStore: AppStore
+    searchStore: SearchStore
     fixed?: boolean
   }
 
@@ -89,37 +91,9 @@ export class PeekStore {
     return this.tornState ? this.tornState.item : App.peekState.item
   }
 
-  model = react(
-    () => this.peekItem,
-    async item => {
-      if (this.model && this.tornState) {
-        throw react.cancel
-      }
-      if (!item) {
-        return null
-      }
-      if (item.type === 'person') {
-        return await Person.findOne({ id: item.id })
-      }
-      if (item.type === 'setting') {
-        return item
-      }
-      if (item.type === 'team') {
-        return item
-      }
-      const res = await Bit.findOne({
-        where: {
-          id: item.id,
-        },
-        relations: ['people'],
-      })
-      if (!res) {
-        return item
-      }
-      return res
-    },
-    { delay: 200, immediate: true },
-  )
+  get model() {
+    return this.props.searchStore.selectedItem
+  }
 
   get framePosition() {
     const { willShow, willStayShown, willHide, state } = this

@@ -82,10 +82,7 @@ const OrbitInner = view({
   borderBottomRightRadius: 60,
 })
 
-@view.attach('appStore', 'integrationSettingsStore')
-@view.provide({
-  searchStore: SearchStore,
-})
+@view.attach('appStore', 'searchStore')
 @view.provide({
   paneStore: OrbitDockedPaneStore,
 })

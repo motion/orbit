@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { react, sleep } from '@mcro/black'
+import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
@@ -41,7 +41,7 @@ export class HeaderStore {
 
   focusInputOnVisible = react(
     () => App.orbitState.pinned || App.orbitState.docked,
-    async ([shown], { when }) => {
+    async (shown, { when }) => {
       if (!shown) {
         throw react.cancel
       }

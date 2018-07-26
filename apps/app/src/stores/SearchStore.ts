@@ -239,7 +239,6 @@ export class SearchStore /* extends Store */ {
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,
     () => {
-      log(`active ${this.hasActiveIndex}`)
       if (this.hasActiveIndex) {
         throw react.cancel
       }

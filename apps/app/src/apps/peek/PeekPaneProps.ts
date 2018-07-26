@@ -1,6 +1,8 @@
-import { Bit } from '@mcro/models'
+import { Bit, Person } from '@mcro/models'
 import { AppStore } from '../../stores/AppStore'
 import { PeekStore } from './stores/PeekStore'
+import { AppStatePeekItem } from '@mcro/stores'
+import { SearchStore } from '../../stores/SearchStore'
 
 export type PeekContents = {
   title: React.ReactNode
@@ -15,8 +17,11 @@ export type PeekContents = {
 }
 
 export type PeekPaneProps = {
-  bit: Bit
+  bit?: Bit
+  person?: Person
+  searchStore: SearchStore
   appStore: AppStore
   peekStore: PeekStore
+  item: AppStatePeekItem
   children: (a: PeekContents) => JSX.Element
 }

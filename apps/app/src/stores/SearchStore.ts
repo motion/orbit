@@ -29,8 +29,8 @@ export class SearchStore /* extends Store */ {
   query = App.state.query
   lastPinKey = ''
 
-  nextHighlightIndex = null
-  highlightIndex = null
+  nextHighlightIndex = -1
+  highlightIndex = -1
   nextIndex = 0
   leaveIndex = -1
   lastSelectAt = 0
@@ -91,7 +91,7 @@ export class SearchStore /* extends Store */ {
   set activeIndex(val) {
     this.lastSelectAt = Date.now()
     this._activeIndex = val
-    if (this.nextHighlightIndex) {
+    if (this.nextHighlightIndex >= 0) {
       this.highlightIndex = this.nextHighlightIndex
       this.nextHighlightIndex = null
     }

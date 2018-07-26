@@ -16,11 +16,13 @@ const Highlight = view({
   display: 'inline-block',
   lineHeight: 22,
   fontSize: 15,
-  padding: [2, listItemSidePad * 2, 2, listItemSidePad * 1.5],
-  margin: [8, -listItemSidePad, 8, 0],
+  padding: [2, listItemSidePad * 2, 2, listItemSidePad],
+  margin: [8, -listItemSidePad, 8, 8],
   borderLeft: [3, 'transparent'],
-  transition: 'border ease 400ms 100ms',
+  transition: 'border ease 200ms 100ms',
+  color: [0, 0, 0, 0.8],
   '&:hover': {
+    color: [0, 0, 0, 1],
     borderLeftColor: '#ddd',
   },
 })

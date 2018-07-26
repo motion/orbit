@@ -9,14 +9,16 @@ import { AppStore } from '../../stores/AppStore'
 import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
 import { trace } from '../../../../../node_modules/mobx'
+import { SearchStore } from '../../stores/SearchStore'
 
-type InnerProps = {
-  peekStore: PeekStore
-  appStore: AppStore
+type Props = {
+  appStore?: AppStore
+  peekStore?: PeekStore
+  searchStore?: SearchStore
 }
 
 @view
-class PeekPageInner extends React.Component<InnerProps> {
+class PeekPageInner extends React.Component<Props> {
   renderInnerContents = ({
     title,
     permalink,
@@ -49,7 +51,7 @@ class PeekPageInner extends React.Component<InnerProps> {
 
   render() {
     trace()
-    const { peekStore, appStore } = this.props
+    const { peekStore, appStore, searchStore } = this.props
     if (!peekStore.state) {
       return null
     }
@@ -69,6 +71,7 @@ class PeekPageInner extends React.Component<InnerProps> {
         person={model}
         appStore={appStore}
         peekStore={peekStore}
+        searchStore={searchStore}
       >
         {this.renderInnerContents}
       </PeekContentsView>
@@ -83,17 +86,16 @@ const decorator = compose(
   }),
 )
 
-type Props = {
-  appStore?: AppStore
-  peekStore?: PeekStore
-}
-
-export const Peek = decorator(({ appStore, peekStore }: Props) => {
+export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
   return (
     <div>
       <UI.Theme name="light">
         <PeekFrame>
-          <PeekPageInner appStore={appStore} peekStore={peekStore} />
+          <PeekPageInner
+            appStore={appStore}
+            searchStore={searchStore}
+            peekStore={peekStore}
+          />
         </PeekFrame>
       </UI.Theme>
     </div>

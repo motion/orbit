@@ -6,6 +6,7 @@ import * as UI from '@mcro/ui'
 import { HighlightsLayer } from '../../../views/HighlightsLayer'
 import { App } from '@mcro/stores'
 import { RoundButton } from '../../../views'
+import { PeekPaneProps } from '../PeekPaneProps'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -14,7 +15,14 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   })
 })
 
-export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
+export const PeekBit = ({
+  item,
+  bit,
+  appStore,
+  searchStore,
+  peekStore,
+  children,
+}: PeekPaneProps) => {
   const BitPaneContent = PeekBitPanes[capitalize(item.subType)]
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {item.subType}</div>
@@ -26,6 +34,7 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
       defaultValue={App.state.query}
       focusOnMount
       searchBarTheme={peekStore.theme}
+      scrollToHighlight={searchStore.highlightIndex}
     >
       {({ searchBar, searchTerm }) => {
         return (

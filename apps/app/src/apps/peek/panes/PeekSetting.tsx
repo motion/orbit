@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { Job, Setting as SettingModel } from '@mcro/models'
+import { Job, Setting } from '@mcro/models'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import * as SettingPanes from './settingPanes'
@@ -128,14 +128,12 @@ class LoadSettingStore {
     return this.props.item
   }
 
-  idSetting = modelQueryReaction(() =>
-    SettingModel.findOne({ id: this.item.id }),
-  )
+  idSetting = modelQueryReaction(() => Setting.findOne({ id: this.item.id }))
 
   // hackkkkky for now because look at OrbitSettings.generalsettings
   // need a migration to insert the settings first and then make them just like integrationSettingsd
   typeSetting = modelQueryReaction(() =>
-    SettingModel.findOne({ type: this.item.id }),
+    Setting.findOne({ type: this.item.id }),
   )
 }
 

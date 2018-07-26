@@ -544,6 +544,9 @@ export class SearchStore /* extends Store */ {
     () => {
       this.quickIndex = 0
     },
+    {
+      log: false,
+    },
   )
 
   incrementQuick = () => {

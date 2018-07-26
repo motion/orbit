@@ -85,6 +85,9 @@ export class AppStore {
     val => {
       this.lastSelectedPane = val
     },
+    {
+      log: false,
+    },
   )
 
   updateScreenSize() {

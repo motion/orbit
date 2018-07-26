@@ -8,61 +8,76 @@ import { PeekFrame } from './views/PeekFrame'
 import { AppStore } from '../../stores/AppStore'
 import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
+import { trace } from '../../../../../node_modules/mobx'
 
-const PeekPageInner = view(({ peekStore, appStore }) => {
-  if (!peekStore.state) {
-    return null
+type InnerProps = {
+  peekStore: PeekStore
+  appStore: AppStore
+}
+
+@view
+class PeekPageInner extends React.Component<InnerProps> {
+  renderInnerContents = ({
+    title,
+    permalink,
+    icon,
+    date,
+    subhead,
+    subtitle,
+    after,
+    content,
+    headerProps,
+  }) => {
+    const { item } = this.props.peekStore.state
+    return (
+      <>
+        <PeekHeader
+          title={title || item.title}
+          subtitle={subtitle}
+          after={after}
+          icon={icon}
+          date={date}
+          subhead={subhead}
+          permalink={permalink}
+          integration={item.integration || item.type}
+          {...headerProps}
+        />
+        <PeekContent>{content}</PeekContent>
+      </>
+    )
   }
-  const { item, peekId } = peekStore.state
-  const type = (item && capitalize(item.type)) || 'Empty'
-  const PeekContentsView = PeekPanes[type]
-  if (!PeekContentsView) {
-    console.error('none', type)
-    return <div>no pane found</div>
+
+  render() {
+    trace()
+    const { peekStore, appStore } = this.props
+    if (!peekStore.state) {
+      return null
+    }
+    const { item, peekId, model } = peekStore.state
+    const type = (item && capitalize(item.type)) || 'Empty'
+    const PeekContentsView = PeekPanes[type]
+    if (!PeekContentsView) {
+      console.error('none', type)
+      return <div>no pane found</div>
+    }
+    console.log('render peek', peekId)
+    return (
+      <PeekContentsView
+        key={peekId}
+        item={item}
+        bit={model}
+        person={model}
+        appStore={appStore}
+        peekStore={peekStore}
+      >
+        {this.renderInnerContents}
+      </PeekContentsView>
+    )
   }
-  return (
-    <PeekContentsView
-      key={peekId}
-      item={item}
-      bit={peekStore.model}
-      person={peekStore.model}
-      appStore={appStore}
-      peekStore={peekStore}
-    >
-      {({
-        title,
-        permalink,
-        icon,
-        date,
-        subhead,
-        subtitle,
-        after,
-        content,
-        headerProps,
-      }) => {
-        return (
-          <>
-            <PeekHeader
-              title={title || item.title}
-              subtitle={subtitle}
-              after={after}
-              icon={icon}
-              date={date}
-              subhead={subhead}
-              permalink={permalink}
-              integration={item.integration || item.type}
-              {...headerProps}
-            />
-            <PeekContent>{content}</PeekContent>
-          </>
-        )
-      }}
-    </PeekContentsView>
-  )
-})
+}
 
 const decorator = compose(
-  view.attach('appStore'),
+  view.attach('appStore', 'searchStore'),
   view.provide({
     peekStore: PeekStore,
   }),

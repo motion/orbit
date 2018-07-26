@@ -4,6 +4,10 @@ import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
+const moveCursorToEndOfTextarea = textarea => {
+  textarea.setSelectionRange(textarea.value.length, textarea.value.length)
+}
+
 export class HeaderStore {
   props: {
     searchStore: SearchStore
@@ -28,19 +32,16 @@ export class HeaderStore {
   }
 
   focus = () => {
-    if (!this.inputRef.current) {
+    if (!this.inputRef || !this.inputRef.current) {
       return
     }
+    moveCursorToEndOfTextarea(this.inputRef.current)
     this.inputRef.current.focus()
   }
 
   focusInputOnVisible = react(
-    () => [
-      App.orbitState.pinned || App.orbitState.docked,
-      // use this because otherwise input may not focus
-      App.isMouseInActiveArea,
-    ],
-    async ([shown], { when }) => {
+    () => App.orbitState.pinned || App.orbitState.docked,
+    async (shown, { when }) => {
       if (!shown) {
         throw react.cancel
       }
@@ -55,10 +56,12 @@ export class HeaderStore {
 
   focusInputOnClosePeek = react(
     () => !!App.peekState.target,
-    hasTarget => {
+    async (hasTarget, { sleep }) => {
       if (hasTarget) {
         throw react.cancel
       }
+      this.focus()
+      await sleep(16)
       this.focus()
     },
   )

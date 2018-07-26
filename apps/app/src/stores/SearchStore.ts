@@ -1,4 +1,4 @@
-import { react, on, Store } from '@mcro/black'
+import { react, on } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
@@ -14,7 +14,7 @@ import { Brackets } from '../../../../node_modules/typeorm/browser'
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
 
-export class SearchStore extends Store {
+export class SearchStore /* extends Store */ {
   props: {
     appStore: AppStore
     integrationSettingsStore: IntegrationSettingsStore
@@ -29,6 +29,8 @@ export class SearchStore extends Store {
   query = App.state.query
   lastPinKey = ''
 
+  nextHighlightIndex = null
+  highlightIndex = null
   nextIndex = 0
   leaveIndex = -1
   lastSelectAt = 0
@@ -89,6 +91,10 @@ export class SearchStore extends Store {
   set activeIndex(val) {
     this.lastSelectAt = Date.now()
     this._activeIndex = val
+    if (this.nextHighlightIndex) {
+      this.highlightIndex = this.nextHighlightIndex
+      this.nextHighlightIndex = null
+    }
   }
 
   get selectedItem() {
@@ -239,7 +245,6 @@ export class SearchStore extends Store {
   clearPeekOnInactiveIndex = react(
     () => this.activeIndex,
     () => {
-      log(`active ${this.hasActiveIndex}`)
       if (this.hasActiveIndex) {
         throw react.cancel
       }
@@ -336,6 +341,10 @@ export class SearchStore extends Store {
     return false
   }
 
+  setHighlightIndex = highlightIndex => {
+    this.nextHighlightIndex = highlightIndex
+  }
+
   clearIndexOnTarget = react(
     () => App.peekState.target,
     target => {
@@ -361,15 +370,7 @@ export class SearchStore extends Store {
   }
 
   openSelected = () => {
-    this.open(this.selectedItem)
-  }
-
-  open = async (result, openType?) => {
-    if (!result) {
-      throw new Error('No result given to open')
-    }
-    const url = await SearchStoreHelpers.getPermalink(result, openType)
-    App.open(url)
+    this.props.appStore.open(this.selectedItem)
   }
 
   hasQuery() {

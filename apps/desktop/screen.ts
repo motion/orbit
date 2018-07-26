@@ -102,7 +102,7 @@ export class Screen {
         operatingSystem: { isAccessible },
       })
       if (isAccessible) {
-        this.watchMouse()
+        // this.watchMouse()
       }
     })
     // OCR words

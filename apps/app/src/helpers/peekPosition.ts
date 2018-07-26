@@ -10,9 +10,9 @@ const screenSize = () => [window.innerWidth, window.innerHeight]
 // always slightly taller than wide
 // capped between a set range
 const getPeekSize = ([screenWidth]: number[]) => {
-  const max = [800, 950]
+  const max = [800, 900]
   const min = [600, 700]
-  const preferred = [screenWidth / 3, screenWidth / 2.333]
+  const preferred = [screenWidth / 3, screenWidth / 2.45]
   return preferred
     .map((z, i) => Math.min(z, max[i]))
     .map((z, i) => Math.max(z, min[i]))

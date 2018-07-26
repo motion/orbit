@@ -3,18 +3,18 @@ import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 
-const SHADOW_PAD = 80
+const SHADOW_PAD = 85
 const borderRadius = 6
 const background = '#f9f9f9'
 // shared by arrow and frameborder
-const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.7]]
+const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.5]]
 
 const transitions = store => {
   if (store.isHidden) return 'none'
   if (store.tornState) return 'all linear 10ms'
   if (store.willHide) return 'all ease 200ms'
-  if (store.willStayShown) return 'all ease 90ms'
-  return 'all ease 150ms'
+  if (store.willStayShown) return 'all ease 80ms'
+  return 'opacity ease 200ms, transform ease 120ms'
 }
 
 const PeekFrameBorder = view(UI.FullScreen, {
@@ -62,7 +62,7 @@ export const PeekFrame = view.attach('peekStore')(
         !onRight ? SHADOW_PAD : 0,
       ]
       const margin = padding.map(x => -x)
-      const boxShadow = [[onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.2]]]
+      const boxShadow = [[onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.3]]]
       const arrowSize = 20
       const ARROW_CARD_TOP_OFFSET = 32
       const arrowY = Math.min(

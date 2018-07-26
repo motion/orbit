@@ -2,8 +2,12 @@ import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { BitResolver } from '../../components/BitResolver'
-import { SmallLink } from '../../views'
+import {
+  ItemResolver,
+  ItemResolverProps,
+  ResolvedItem,
+} from '../../components/ItemResolver'
+import { SmallLink, RoundButton } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
@@ -13,6 +17,7 @@ import { Bit } from '@mcro/models'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
 import { getTargetPosition } from '../../helpers/getTargetPosition'
+import { EMPTY_ITEM } from '../../constants'
 
 export type OrbitCardProps = {
   total?: number
@@ -52,6 +57,7 @@ export type OrbitCardProps = {
   getRef?: Function
   cardProps?: Object
   item?: AppStatePeekItem
+  disableShadow?: boolean
 }
 
 const CardWrap = view(UI.View, {
@@ -80,6 +86,10 @@ Card.theme = ({
   nextUpStyle,
   isSelected,
   isNextUp,
+  background,
+  border,
+  padding,
+  disableShadow,
 }) => {
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
@@ -90,9 +100,9 @@ Card.theme = ({
     // selected...
     if (isSelected) {
       listStyle = {
-        background: theme.selected.background,
+        background: background || theme.active.background,
         '&:hover': {
-          background: theme.selected.background,
+          background: background || theme.active.background,
         },
       }
     } else {
@@ -106,19 +116,19 @@ Card.theme = ({
     card = {
       ...card,
       ...listStyle,
-      padding: [20, 18],
-      borderTop: [1, theme.base.borderColor.alpha(0.5)],
+      padding: padding || [20, 18],
+      // borderTop: [1, theme.base.borderColor.alpha(0.5)],
     }
   } else {
     // CARD
-    const borderHover = UI.color('#ddd')
+    const borderHover = UI.color('#c9c9c9')
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     card = {
       ...card,
       borderRadius: borderRadius || 7,
-      background: theme.selected.background,
-      boxShadow: [[0, 1, 3, [0, 0, 0, 0.05]]],
-      border: [1, '#fff'],
+      background: background || theme.selected.background,
+      boxShadow: disableShadow ? 'none' : [[0, 1, 3, [0, 0, 0, 0.05]]],
+      border: border || [1, '#fff'],
       '&:hover': {
         border: [1, borderHover],
       },
@@ -163,9 +173,9 @@ const orbitIconProps = {
   imageStyle: {
     transformOrigin: 'top right',
     transform: {
-      y: 6,
-      x: 0,
-      scale: 2,
+      y: 8,
+      x: 2,
+      scale: 1.6,
       // rotate: '-45deg',
     },
   },
@@ -177,6 +187,7 @@ const orbitIconProps = {
 class OrbitCardStore {
   props: OrbitCardProps
 
+  normalizedBit = null
   _isSelected = false
   ref = null
 
@@ -216,7 +227,7 @@ class OrbitCardStore {
   }
 
   get target() {
-    return this.props.bit || this.props.result
+    return this.props.result || this.normalizedBit
   }
 
   isNextUp = react(
@@ -288,6 +299,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   hoverSettler = null
 
   static defaultProps = {
+    item: EMPTY_ITEM,
     hide: {},
   }
 
@@ -333,17 +345,19 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     App.actions.open(this.props.bit)
   }
 
-  getOrbitCard(contentProps) {
+  getOrbitCard(contentProps: ResolvedItem) {
+    // TODO weird mutation
+    this.props.store.normalizedBit = contentProps
     const {
       title,
       icon,
       preview,
       location,
-      subtitle,
       permalink,
       date,
       people,
-      iconProps: contentIconProps,
+      subtitle,
+      locationLink,
     } = contentProps
     const {
       store,
@@ -363,23 +377,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       onClick,
       searchStore,
       cardProps,
+      disableShadow,
       ...props
     } = this.props
-    const hasSubtitle = subtitle || location
-    const orbitIcon = (
-      <OrbitIcon
-        if={icon && !hide.icon}
-        icon={icon}
-        size={hasSubtitle ? 14 : 18}
-        {...orbitIconProps}
-        {...contentIconProps}
-        {...iconProps}
-        position="absolute"
-        top={0}
-        right={0}
-        opacity={0.8}
-      />
-    )
     const { isSelected } = store
     const { background } =
       isSelected && selectedTheme ? selectedTheme : theme.base
@@ -398,12 +398,25 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           inGrid={inGrid}
           nextUpStyle={nextUpStyle}
           onClick={onClick || store.handleClick}
+          disableShadow={disableShadow}
           {...cardProps}
         >
-          {orbitIcon}
+          {!!icon &&
+            !hide.icon && (
+              <OrbitIcon
+                icon={icon}
+                size={location ? 14 : 18}
+                {...orbitIconProps}
+                {...iconProps}
+                position="absolute"
+                top={listItem ? 15 : 0}
+                right={listItem ? 2 : 0}
+                opacity={0.8}
+              />
+            )}
           <Title>
             <UI.Text
-              size={listItem ? 1.15 : 1.25}
+              size={listItem ? 1.15 : 1.2}
               sizeLineHeight={0.85}
               ellipse={2}
               alpha={isSelected || listItem ? 1 : 0.8}
@@ -415,27 +428,31 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             </UI.Text>
             {afterTitle}
           </Title>
-          <Subtitle if={hasSubtitle}>
-            <UI.Text
-              display="inline-flex"
-              alignItems="center"
-              flexFlow="row"
-              if={location}
-            >
-              in&nbsp;{location}
-            </UI.Text>
-            <UI.Text
-              if={typeof subtitle === 'string'}
-              ellipse
-              maxWidth="calc(100% - 40px)"
-            >
-              {subtitle}
-            </UI.Text>
-            {typeof subtitle !== 'string' && subtitle}
-            <UI.Text if={date} onClick={permalink} size={0.95}>
-              <strong> &middot;</strong> <TimeAgo date={date} />
-            </UI.Text>
-          </Subtitle>
+          {!!(location || subtitle) && (
+            <Subtitle>
+              {!!location && (
+                <UI.Text
+                  display="inline-flex"
+                  alignItems="center"
+                  flexFlow="row"
+                >
+                  <RoundButton onClick={locationLink}>{location}</RoundButton>
+                </UI.Text>
+              )}
+              {typeof subtitle === 'string' ? (
+                <UI.Text ellipse maxWidth="calc(100% - 40px)">
+                  {subtitle}
+                </UI.Text>
+              ) : (
+                subtitle
+              )}
+              {!!date && (
+                <UI.Text onClick={permalink} size={0.95}>
+                  <strong> &middot;</strong> <TimeAgo date={date} />
+                </UI.Text>
+              )}
+            </Subtitle>
+          )}
           <Preview if={preview && !children}>
             {typeof preview !== 'string' && preview}
             <UI.Text
@@ -466,20 +483,21 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-        {!listItem && (
-          <UI.HoverGlow
-            behind
-            color="#000"
-            resist={90}
-            scale={0.99}
-            offsetTop={isSelected ? 8 : 4}
-            full
-            blur={isSelected ? 8 : 4}
-            inverse
-            opacity={isSelected ? 0.08 : 0.03}
-            borderRadius={20}
-          />
-        )}
+        {!listItem &&
+          !disableShadow && (
+            <UI.HoverGlow
+              behind
+              color="#000"
+              resist={90}
+              scale={0.99}
+              offsetTop={isSelected ? 8 : 4}
+              full
+              blur={isSelected ? 8 : 4}
+              inverse
+              opacity={isSelected ? 0.08 : 0.03}
+              borderRadius={20}
+            />
+          )}
       </CardWrap>
     )
   }
@@ -501,7 +519,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     }
     store.isSelected
     return (
-      <BitResolver
+      <ItemResolver
         searchStore={searchStore}
         bit={bit}
         item={item}
@@ -509,7 +527,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
         {...itemProps}
       >
         {this.getOrbitCard}
-      </BitResolver>
+      </ItemResolver>
     )
   }
 }

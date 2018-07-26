@@ -169,8 +169,12 @@ export class OrbitSettings extends React.Component<Props> {
                   result={item}
                   index={index + store.allResults.length}
                   appStore={appStore}
-                  hoverable
                   onClick={onClick}
+                  disableShadow
+                  cardProps={{
+                    border: [1, 'transparent'],
+                    background: 'transparent',
+                  }}
                 />
               )
             })}

@@ -21,6 +21,7 @@ import { Theme } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
 
 type Props = {
+  defaultValue?: string
   placeholder?: string
   actions: React.ReactNode
   tableKey: string
@@ -53,7 +54,7 @@ export const SearchBox = view(View, {
 })
 
 SearchBox.theme = ({ theme }) => ({
-  border: [1, theme.base.borderColor.darken(0.15)],
+  border: [1, theme.base.borderColor.darken(0.2).desaturate(0.2)],
 })
 
 export const SearchInput = view(TableInput, {
@@ -95,7 +96,7 @@ const Clear = view(Text, {
 })
 
 export const SearchIcon = view(Icon, {
-  marginRight: 3,
+  marginRight: 4,
   marginLeft: 3,
   marginTop: -1,
   minWidth: 16,
@@ -120,29 +121,37 @@ type State = {
 }
 
 export const Searchable = (Component: any) =>
-  class extends React.PureComponent {
-    props: Props
-
+  class extends React.PureComponent<Props, State> {
     static defaultProps = {
       placeholder: 'Search...',
+      defaultValue: '',
     }
 
     static contextTypes = {
       plugin: PropTypes.string,
     }
 
-    state: State = {
-      filters: [],
-      focusedToken: -1,
-      searchTerm: '',
-      hasFocus: false,
+    constructor(a, b) {
+      super(a, b)
+      this.state = {
+        filters: [],
+        focusedToken: -1,
+        searchTerm: this.props.defaultValue,
+        hasFocus: false,
+      }
     }
 
-    _inputRef: HTMLInputElement | void
+    inputRef = React.createRef<HTMLTextAreaElement>()
+
+    get _inputRef() {
+      return this.inputRef.current
+    }
 
     componentDidMount() {
-      if (this.props.focusOnMount && this._inputRef) {
-        this._inputRef.focus()
+      if (this.props.focusOnMount) {
+        if (this._inputRef) {
+          this._inputRef.focus()
+        }
       }
       on(this, findDOMNode(this), 'keydown', this.onKeyDown)
       const { defaultFilters } = this.props
@@ -283,10 +292,6 @@ export const Searchable = (Component: any) =>
       this.setState({ searchTerm })
     }
 
-    setInputRef = (ref: HTMLInputElement | void) => {
-      this._inputRef = ref
-    }
-
     addFilter = (filter: Filter) => {
       const filterIndex = this.state.filters.findIndex(
         f => f.key === filter.key,
@@ -374,6 +379,8 @@ export const Searchable = (Component: any) =>
         ...props
       } = this.props
 
+      console.log('RENDER SEARCHABLE')
+
       const searchBar = (
         <Theme theme={searchBarTheme}>
           <SearchBar position="top" key="searchbar" {...searchBarProps}>
@@ -399,7 +406,7 @@ export const Searchable = (Component: any) =>
                 placeholder={placeholder}
                 onChange={this.onChangeSearchTerm}
                 value={this.state.searchTerm}
-                forwardRef={this.setInputRef}
+                forwardRef={this.inputRef}
                 onFocus={this.onInputFocus}
                 onBlur={this.onInputBlur}
                 {...searchInputProps}

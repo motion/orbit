@@ -48,6 +48,7 @@ export type DesktopState = {
   ocrState: {
     words?: DesktopStateOCRItem[]
     lines?: DesktopStateOCRItem[]
+    shouldClear: string[]
     clearWords: { [key: string]: number }
     restoreWords: { [key: string]: number }
   }
@@ -101,6 +102,7 @@ class DesktopStore {
     ocrState: {
       words: null,
       lines: null,
+      shouldClear: [],
       clearWords: null,
       restoreWords: null,
     },

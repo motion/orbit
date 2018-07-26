@@ -1,8 +1,11 @@
 import * as React from 'react'
 import * as PeekBitPanes from './bitPanes'
-import { PeekBitResolver } from '../views/PeekBitResolver'
+import { PeekItemResolver } from '../views/PeekItemResolver'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
+import { HighlightsLayer } from '../../../views/HighlightsLayer'
+import { App } from '@mcro/stores'
+import { RoundButton } from '../../../views'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -16,39 +19,66 @@ export const PeekBit = ({ item, bit, appStore, peekStore, children }) => {
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {item.subType}</div>
   }
+  console.log('RENDER PEEKBIT', item)
   return (
-    <PeekBitResolver
-      item={item}
-      bit={bit}
-      appStore={appStore}
-      {...BitPaneContent.bitResolverProps}
+    <SearchablePeek
+      key={item.id}
+      defaultValue={App.state.query}
+      focusOnMount
+      searchBarTheme={peekStore.theme}
     >
-      {({ title, icon, content, location, permalink, date, comments }) => {
+      {({ searchBar, searchTerm }) => {
         return (
-          <SearchablePeek focusOnMount searchBarTheme={peekStore.theme}>
-            {({ searchBar, searchTerm }) => {
+          <PeekItemResolver
+            item={item}
+            bit={bit}
+            appStore={appStore}
+            searchTerm={searchTerm}
+            {...BitPaneContent.bitResolverProps}
+          >
+            {({
+              title,
+              icon,
+              content,
+              location,
+              locationLink,
+              permalink,
+              date,
+              comments,
+            }) => {
               return children({
                 permalink,
-                subtitle: location,
+                subtitle: (
+                  <RoundButton
+                    onClick={e => {
+                      e.stopPropagation()
+                      locationLink()
+                    }}
+                  >
+                    {location}
+                  </RoundButton>
+                ),
                 date,
                 title,
                 icon,
                 subhead: searchBar,
                 content: (
-                  <BitPaneContent
-                    bit={bit}
-                    appStore={appStore}
-                    peekStore={peekStore}
-                    searchTerm={searchTerm}
-                    content={content}
-                    comments={comments}
-                  />
+                  <HighlightsLayer term={searchTerm}>
+                    <BitPaneContent
+                      bit={bit}
+                      appStore={appStore}
+                      peekStore={peekStore}
+                      searchTerm={searchTerm}
+                      content={content}
+                      comments={comments}
+                    />
+                  </HighlightsLayer>
                 ),
               })
             }}
-          </SearchablePeek>
+          </PeekItemResolver>
         )
       }}
-    </PeekBitResolver>
+    </SearchablePeek>
   )
 }

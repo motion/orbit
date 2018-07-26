@@ -1,4 +1,4 @@
-import { store, react, sleep, Store } from '@mcro/black'
+import { store, react } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/stores'
 import orbitPosition from '../helpers/orbitPosition'
 import { ORBIT_WIDTH } from '@mcro/constants'
@@ -13,12 +13,12 @@ const appTarget = ({ offset = null, bounds = null } = {}) => {
 }
 
 @store
-export class AppReactions extends Store {
+export class AppReactions /* extends Store */ {
   onPinKey = null
   id = Math.random()
 
   constructor({ onPinKey }) {
-    super()
+    // super()
     this.onPinKey = onPinKey
     this.setupReactions()
   }
@@ -29,12 +29,12 @@ export class AppReactions extends Store {
 
   async setupReactions() {
     const dispose = App.onMessage(async msg => {
+      console.log('app message', msg)
       switch (msg) {
         case App.messages.TOGGLE_SHOWN:
           // this.toggle()
           return
         case App.messages.TOGGLE_DOCKED:
-          console.log('toggle docked', this.id, this)
           App.setOrbitState({ docked: !App.orbitState.docked })
           return
         case App.messages.HIDE:

@@ -14,15 +14,22 @@ const listItemSidePad = 18
 
 const Highlight = view({
   display: 'inline-block',
-  padding: [10, listItemSidePad],
-  margin: [0, -listItemSidePad],
-  borderTop: [1, '#f2f2f2'],
+  lineHeight: 22,
+  fontSize: 15,
+  padding: [2, listItemSidePad * 2, 2, listItemSidePad * 1.5],
+  margin: [8, -listItemSidePad, 8, 0],
+  borderLeft: [3, 'transparent'],
   '&:hover': {
-    background: '#fff',
+    borderLeftColor: '#ddd',
   },
 })
 
-const OrbitSearchResultsList = view(({ name, searchStore }) => {
+type ListProps = {
+  name: string
+  searchStore: SearchStore
+}
+
+const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
   const { results, query } = searchStore.searchState
   log(`RENDER SENSITIVE`)
   if (!results.length) {
@@ -38,15 +45,18 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
       total={results.length}
       bit={bit}
       listItem
+      cardProps={{
+        background: '#fff',
+        padding: [20, 18, 10],
+      }}
       nextUpStyle={
         index === 0 && {
-          background: [255, 255, 255, 0.15],
+          color: 'black',
         }
       }
     >
       <UI.Text
-        size={1.2}
-        alpha={0.7}
+        alpha={0.85}
         wordBreak="break-all"
         highlight={{
           text: sanitize(bit.body || ''),
@@ -58,11 +68,20 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
         }}
       >
         {({ highlights }) => {
-          return highlights.map((highlight, index) => {
+          return highlights.map((highlight, hlIndex) => {
             return (
               <Highlight
-                key={index}
+                key={hlIndex}
                 dangerouslySetInnerHTML={{ __html: highlight }}
+                onClick={e => {
+                  e.stopPropagation()
+                  // don't actually toggle when selecting highlights
+                  if (searchStore.activeIndex === index) {
+                    return
+                  }
+                  searchStore.setHighlightIndex(hlIndex)
+                  searchStore.toggleSelected(index)
+                }}
               />
             )
           })

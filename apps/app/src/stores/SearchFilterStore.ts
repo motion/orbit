@@ -13,13 +13,13 @@ export type SearchFilter = {
 }
 
 @store
-export class SearchFilterStore extends Store {
+export class SearchFilterStore /* extends Store */ {
   searchStore: SearchStore
   integrationSettingsStore: IntegrationSettingsStore
   inactiveFilters = deep({})
 
   constructor(searchStore) {
-    super()
+    // super()
     this.searchStore = searchStore
     this.integrationSettingsStore = searchStore.props.integrationSettingsStore
   }

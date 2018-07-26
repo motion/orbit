@@ -73,7 +73,6 @@ class SlackSettingStore {
     () => this.allChannels,
     channels => {
       return channels.map((channel, index) => {
-        console.log('channel', channel)
         const topic = channel.topic ? channel.topic.value : ''
         const isActive = () => this.isSyncing(channel.id)
         return {

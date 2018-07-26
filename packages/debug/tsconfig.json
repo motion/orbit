@@ -8,5 +8,5 @@
     }
   },
   "include": ["**/*"],
-  "exclude": ["_", "node_modules", "tmp", "*.js"]
+  "exclude": ["_", "node_modules", "tmp"]
 }

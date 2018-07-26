@@ -1,8 +1,3 @@
 {
-  "git.ignoreLimitWarning": true,
-  "python.pythonPath": "/usr/local/bin/python3",
-  "python.linting.enabled": false,
-  "python.formatting.provider": "autopep8",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "python.jediEnabled": false
+  "git.ignoreLimitWarning": true
 }

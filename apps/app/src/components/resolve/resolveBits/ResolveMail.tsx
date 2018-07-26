@@ -1,6 +1,7 @@
-import * as Helpers from '../../helpers'
+import * as Helpers from '../../../helpers'
 import keywordExtract from 'keyword-extractor'
 import * as _ from 'lodash'
+import { ItemResolverProps } from '../../ItemResolver'
 
 const options = {
   language: 'english',
@@ -9,7 +10,7 @@ const options = {
   remove_duplicates: false,
 }
 
-export const ResolveMail = ({ bit, children }) =>
+export const ResolveMail = ({ bit, appStore, children }: ItemResolverProps) =>
   children({
     title: keywordExtract
       .extract(bit.title, options)
@@ -17,7 +18,9 @@ export const ResolveMail = ({ bit, children }) =>
       .map(_.capitalize)
       .join(' '),
     icon: 'gmail',
+    permalink: () => appStore.open(bit),
     location: Helpers.getHeaderFromShort(bit),
+    locationLink: () => {},
     date: Date.now(),
     content: bit.body,
     preview: keywordExtract

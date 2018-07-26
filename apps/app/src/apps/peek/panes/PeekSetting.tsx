@@ -73,8 +73,8 @@ class SettingContent extends React.Component<
             title: capitalize(integration),
             subhead,
             content,
-            subtitle: (
-              <UI.Row if={store.job} flex={1}>
+            subtitle: store.job ? (
+              <UI.Row flex={1}>
                 <UI.Text>{store.bitsCount} total </UI.Text>
                 <UI.View flex={1} />
                 <UI.Text if={store.job.updatedAt}>
@@ -88,7 +88,7 @@ class SettingContent extends React.Component<
                 </UI.Text>
                 {!store.job ? <div>Loading...</div> : null}
               </UI.Row>
-            ),
+            ) : null,
             after: (
               <UI.ListRow
                 flex={1}

@@ -4,6 +4,7 @@ import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../../../helpers'
 import * as Constants from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
+import { SearchStore } from '../../../stores/SearchStore'
 
 const TYPE_THEMES = {
   person: {
@@ -30,6 +31,7 @@ const BASE_THEME = {
 export class PeekStore {
   props: {
     appStore: AppStore
+    searchStore: SearchStore
     fixed?: boolean
   }
 
@@ -37,26 +39,77 @@ export class PeekStore {
   dragOffset: [number, number] = null
   history = []
 
-  get curState() {
-    if (this.tornState) {
-      return this.tornState
-    }
-    if (!App.peekState.target) {
+  curState = react(
+    () => [
+      this.tornState,
+      App.peekState,
+      App.orbitState,
+      this.props.searchStore.selectedItem,
+    ],
+    async (
+      [tornState, { target }, { docked, hidden }, selectedItem],
+      { sleep },
+    ) => {
+      // debounce just a tiny bit to avoid renders as selectedItem updated a bit after peekState
+      await sleep(16 * 2)
+      if (tornState) {
+        return tornState
+      }
+      if (!target) {
+        return null
+      }
+      if (docked || !hidden) {
+        return {
+          _internalId: Math.random(),
+          ...App.peekState,
+          model: selectedItem,
+        }
+      }
       return null
-    }
-    if (App.orbitState.docked || !App.orbitState.hidden) {
-      return App.peekState
-    }
-    return null
+    },
+    {
+      immediate: true,
+    },
+  )
+
+  // reaction because we don't want to re-render on this.lastState changes
+  state = react(
+    () => [this.curState, this.lastState],
+    ([curState, lastState]) => {
+      if (this.willHide) {
+        return this.lastState
+      }
+      // avoid re-renders on update lastState when showing
+      if (
+        curState &&
+        lastState &&
+        curState._internalId === lastState._internalId
+      ) {
+        throw react.cancel
+      }
+      return curState
+    },
+    {
+      immediate: true,
+    },
+  )
+
+  lastState = react(() => this.curState, deepClone, {
+    delay: 16,
+    immediate: true,
+  })
+
+  get willHide() {
+    return !!this.lastState && !this.curState
   }
 
-  get state() {
-    let state = this.curState
-    if (this.willHide) {
-      state = this.lastState
-    }
-    return state
+  get willShow() {
+    return !!this.curState && !this.lastState
   }
+
+  willStayShown = react(() => this.willShow, _ => _, {
+    delay: 16,
+  })
 
   get theme() {
     if (!this.state || !this.state.item) {
@@ -84,42 +137,6 @@ export class PeekStore {
     this.dragOffset = null
     this.tornState = null
   }
-
-  get peekItem() {
-    return this.tornState ? this.tornState.item : App.peekState.item
-  }
-
-  model = react(
-    () => this.peekItem,
-    async item => {
-      if (this.model && this.tornState) {
-        throw react.cancel
-      }
-      if (!item) {
-        return null
-      }
-      if (item.type === 'person') {
-        return await Person.findOne({ id: item.id })
-      }
-      if (item.type === 'setting') {
-        return item
-      }
-      if (item.type === 'team') {
-        return item
-      }
-      const res = await Bit.findOne({
-        where: {
-          id: item.id,
-        },
-        relations: ['people'],
-      })
-      if (!res) {
-        return item
-      }
-      return res
-    },
-    { delay: 200, immediate: true },
-  )
 
   get framePosition() {
     const { willShow, willStayShown, willHide, state } = this
@@ -159,23 +176,6 @@ export class PeekStore {
     },
     { delay: 32 },
   )
-
-  lastState = react(() => this.curState, deepClone, {
-    delay: 16,
-    immediate: true,
-  })
-
-  get willHide() {
-    return !!this.lastState && !this.curState
-  }
-
-  get willShow() {
-    return !!this.curState && !this.lastState
-  }
-
-  willStayShown = react(() => this.willShow, _ => _, {
-    delay: 16,
-  })
 
   tearPeek = () => {
     this.tornState = { ...this.state }

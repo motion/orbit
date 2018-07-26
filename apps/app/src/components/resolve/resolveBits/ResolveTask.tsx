@@ -1,9 +1,10 @@
 import * as React from 'react'
 import keywordExtract from 'keyword-extractor'
 import markdown from '@mcro/marky-markdown'
-import { TimeAgo } from '../../views/TimeAgo'
-import { RoundButton } from '../../views/RoundButton'
+import { TimeAgo } from '../../../views/TimeAgo'
+import { RoundButton } from '../../../views/RoundButton'
 import * as UI from '@mcro/ui'
+import { ItemResolverProps } from '../../ItemResolver'
 
 // const converter = new Showdown.Converter()
 // const markdown = text => converter.makeHtml(text)
@@ -25,13 +26,13 @@ const BitGithubTaskComment = ({ comment }) => {
     <div>
       <UI.Row>
         <img
-          css={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
+          style={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
           src={avatarUrl}
         />
         {login}
-        <TimeAgo if={createdAt}>{createdAt}</TimeAgo>
+        {!!createdAt && <TimeAgo>{createdAt}</TimeAgo>}
       </UI.Row>
-      <body
+      <div
         dangerouslySetInnerHTML={{
           __html: markdown(body),
         }}
@@ -46,7 +47,7 @@ const parseGithubContents = ({ bit, shownLimit }) => {
     comments = bit.data.comments
       .slice(0, shownLimit)
       .map((comment, index) => (
-        <BitGithubTaskComment key={index} comment={comment} bit={bit} />
+        <BitGithubTaskComment key={index} comment={comment} />
       ))
   }
   return {
@@ -61,28 +62,18 @@ export const ResolveTask = ({
   isExpanded,
   shownLimit,
   appStore,
-}) => {
+}: ItemResolverProps) => {
   const { content, comments } = isExpanded
     ? parseGithubContents({ bit, shownLimit })
     : { content: null, comments: null }
   return children({
     title: bit.title,
     icon: 'github',
-    location: (
-      <RoundButton
-        onClick={e => {
-          e.stopPropagation()
-          // TODO: resolve links on all bits in one place
-          appStore.open(
-            `https://github.com/${bit.data.orgLogin}/${
-              bit.data.repositoryName
-            }`,
-          )
-        }}
-      >
-        {bit.data.orgLogin}/{bit.data.repositoryName}
-      </RoundButton>
-    ),
+    locationLink: () =>
+      appStore.open(
+        `https://github.com/${bit.data.orgLogin}/${bit.data.repositoryName}`,
+      ),
+    location: `${bit.data.orgLogin}/${bit.data.repositoryName}`,
     permalink: () =>
       appStore.open(
         `https://github.com/${bit.data.orgLogin}/${

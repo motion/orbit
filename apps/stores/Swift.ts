@@ -6,7 +6,7 @@ export let Swift
 
 @store
 class SwiftStore {
-  ws: ReconnectingWebSocket
+  ws: any
   isOpen = false
   state = {
     isRunning: false,

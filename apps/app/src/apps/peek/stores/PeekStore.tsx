@@ -1,6 +1,5 @@
 import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { Person, Bit } from '@mcro/models'
 import { deepClone } from '../../../helpers'
 import * as Constants from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
@@ -51,7 +50,7 @@ export class PeekStore {
       { sleep },
     ) => {
       // debounce just a tiny bit to avoid renders as selectedItem updated a bit after peekState
-      await sleep(16 * 2)
+      await sleep(16)
       if (tornState) {
         return tornState
       }

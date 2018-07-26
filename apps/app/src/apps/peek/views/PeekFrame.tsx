@@ -13,7 +13,7 @@ const transitions = store => {
   if (store.isHidden) return 'none'
   if (store.tornState) return 'all linear 10ms'
   if (store.willHide) return 'all ease 200ms'
-  if (store.willStayShown) return 'all ease 80ms'
+  if (store.willStayShown) return 'all ease 50ms'
   return 'opacity ease 100ms, transform ease 150ms'
 }
 
@@ -92,30 +92,31 @@ export const PeekFrame = view.attach('peekStore')(
             },
           }}
         >
-          <UI.Arrow
-            if={!peekStore.tornState}
-            position="absolute"
-            top={0}
-            zIndex={100}
-            transition="transform ease-in 100ms"
-            size={arrowSize}
-            towards={onRight ? 'left' : 'right'}
-            background={
-              arrowY < 40 && peekStore.theme
-                ? UI.color(peekStore.theme.background).darken(0.2)
-                : background
-            }
-            boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
-            css={{
-              left: !onRight ? 'auto' : -14,
-              right: !onRight ? -arrowSize : 'auto',
-              zIndex: 1000000000,
-              transform: {
-                y: arrowY,
-                x: onRight ? 0.5 : -0.5,
-              },
-            }}
-          />
+          {!peekStore.tornState && (
+            <UI.Arrow
+              position="absolute"
+              top={0}
+              zIndex={100}
+              transition="transform ease 70ms"
+              size={arrowSize}
+              towards={onRight ? 'left' : 'right'}
+              background={
+                arrowY < 40 && peekStore.theme
+                  ? UI.color(peekStore.theme.background).darken(0.2)
+                  : background
+              }
+              boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
+              css={{
+                left: !onRight ? 'auto' : -14,
+                right: !onRight ? -arrowSize : 'auto',
+                zIndex: 1000000000,
+                transform: {
+                  y: arrowY,
+                  x: onRight ? 0.5 : -0.5,
+                },
+              }}
+            />
+          )}
           <UI.Col flex={1} padding={padding} margin={margin}>
             <UI.Col pointerEvents="all !important" position="relative" flex={1}>
               <PeekFrameBorder borderRadius={borderRadius} />

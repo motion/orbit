@@ -23,6 +23,7 @@ export function hoverSettler({
   let lastLeave
   let currentNode
   let lastHovered
+  let stickOnClick = false
 
   // debounce - leave space for ui thread
   const setHovered = throttle((nextHovered, cb) => {
@@ -45,7 +46,6 @@ export function hoverSettler({
     let fullyLeaveTm
     let betweenTm
     let itemProps
-    let stickOnClick = false
     let lastToggle = Date.now()
 
     const select = target => {
@@ -104,7 +104,7 @@ export function hoverSettler({
     }
 
     const onClick = throttle(e => {
-      stickOnClick = true
+      console.log('click', e.currentTarget, stickOnClick)
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)
@@ -112,8 +112,13 @@ export function hoverSettler({
       clearTimeout(itemLastLeaveTm)
       clearTimeout(itemLastEnterTm)
       if (!currentNode) {
+        stickOnClick = e.currentTarget
         select(e.currentTarget)
       } else {
+        if (stickOnClick && stickOnClick !== e.currentTarget) {
+          return
+        }
+        stickOnClick = false
         select(null)
       }
     }, 100)
@@ -121,16 +126,23 @@ export function hoverSettler({
     function onMouseEnter(e) {
       clearTimeout(itemLastLeaveTm)
       const target = e.currentTarget
+      console.log(target, stickOnClick)
+      if (target === stickOnClick) {
+        return
+      }
       handleHover(target)
     }
 
     function onMouseMove(e) {
+      if (stickOnClick) {
+        return
+      }
       handleHover(e.currentTarget)
     }
 
-    function onMouseLeave() {
+    function onMouseLeave(e) {
+      console.log('leave', stickOnClick, e.currentTarget)
       if (stickOnClick) {
-        stickOnClick = false
         return
       }
       clearTimeout(itemLastLeaveTm)

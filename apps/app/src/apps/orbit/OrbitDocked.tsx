@@ -101,7 +101,7 @@ class OrbitDockedInner extends React.Component<{
     log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
       10,
-      window.innerHeight - appStore.contentHeight - 9,
+      window.innerHeight - appStore.contentHeight - 8,
     )
     return (
       <>

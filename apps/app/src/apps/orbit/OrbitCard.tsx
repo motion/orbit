@@ -105,7 +105,7 @@ Card.theme = ({
       listStyle = {
         background: 'transparent',
         '&:hover': {
-          background: [255, 255, 255, 0.2],
+          background: [255, 255, 255, 0.4],
         },
         '&:active': {
           background: theme.selected.background,
@@ -177,15 +177,6 @@ const Subtitle = view(UI.View, {
 })
 
 const orbitIconProps = {
-  imageStyle: {
-    transformOrigin: 'top right',
-    transform: {
-      y: 8,
-      x: 2,
-      scale: 1.5,
-      // rotate: '-45deg',
-    },
-  },
   orbitIconStyle: {
     marginRight: 6,
   },
@@ -420,12 +411,12 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             !hide.icon && (
               <OrbitIcon
                 icon={icon}
-                size={location ? 14 : 18}
+                size={24}
                 {...orbitIconProps}
                 {...iconProps}
                 position="absolute"
-                top={listItem ? 15 : 0}
-                right={listItem ? 2 : 0}
+                top={listItem ? 25 : 10}
+                right={listItem ? 8 : 0}
                 opacity={0.8}
               />
             )}

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { deepClone, sleep } from '../../../helpers'
 import * as Constants from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import { SearchStore } from '../../../stores/SearchStore'
@@ -12,15 +11,6 @@ const TYPE_THEMES = {
     color: '#444',
   },
   // setting: 'gray',
-}
-
-const INTEGRATION_THEMES = {
-  slack: { background: '#FDDE64' },
-  github: { background: '#353535', color: 'white' },
-  gdocs: { background: '#7DA5F4' },
-  jira: { background: '#4978D0', color: 'white' },
-  confluence: { background: '#4B7BD4', color: 'white' },
-  gmail: { background: '#D2675E', color: 'white' },
 }
 
 const BASE_THEME = {
@@ -166,7 +156,11 @@ export class PeekStore {
       return BASE_THEME
     }
     const { type, integration } = this.state.item
-    return INTEGRATION_THEMES[integration] || TYPE_THEMES[type] || BASE_THEME
+    return (
+      Constants.INTEGRATION_THEMES[integration] ||
+      TYPE_THEMES[type] ||
+      BASE_THEME
+    )
   }
 
   get hasHistory() {

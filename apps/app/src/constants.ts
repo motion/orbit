@@ -53,3 +53,12 @@ export const EMPTY_ITEM = {
   subType: '',
   integration: '',
 }
+
+export const INTEGRATION_THEMES = {
+  slack: { background: '#FDDE64' },
+  github: { background: '#353535', color: 'white' },
+  gdocs: { background: '#7DA5F4' },
+  jira: { background: '#4978D0', color: 'white' },
+  confluence: { background: '#4B7BD4', color: 'white' },
+  gmail: { background: '#D2675E', color: 'white' },
+}

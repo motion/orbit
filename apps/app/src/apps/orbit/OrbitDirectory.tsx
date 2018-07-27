@@ -7,7 +7,7 @@ import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { SubTitle } from '../../views'
 import * as Helpers from '../../helpers'
-import { stateOnlyWhenActive } from './stateOnlyWhenActive'
+import { stateOnlyWhenActive } from '../../stores/helpers/stateOnlyWhenActive'
 
 class OrbitDirectoryStore {
   setGetResults = react(
@@ -18,7 +18,7 @@ class OrbitDirectoryStore {
       }
       const getResults = () => this.results
       getResults.shouldFilter = true
-      this.props.appStore.setGetResults(getResults)
+      this.props.searchStore.setGetResults(getResults)
     },
     { immediate: true },
   )
@@ -43,12 +43,13 @@ class OrbitDirectoryStore {
     })
   }
 
-  // poll every 2 seconds while active
+  // poll every few seconds while active
   results = modelQueryReaction(() => Person.find({ take: 100 }), {
     defaultValue: [],
   })
 }
 
+@view.attach('searchStore')
 @view.attach({
   store: OrbitDirectoryStore,
 })
@@ -68,7 +69,7 @@ export class OrbitDirectory extends React.Component<{
             <Masonry>
               {store.people.map((bit, index) => (
                 <OrbitCard
-                  pane="summary"
+                  pane="docked"
                   subPane="directory"
                   key={bit.id}
                   index={index}

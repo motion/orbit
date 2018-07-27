@@ -46,6 +46,9 @@ class Color {
     }
     var i
     var channels
+    if (!obj) {
+      throw new Error(`Error, empty value for color`)
+    }
     if (obj instanceof Color) {
       this.model = obj.model
       this.color = obj.color.slice()
@@ -346,27 +349,15 @@ const conversions = {
   red: getset('rgb', 0, maxfn(255)),
   green: getset('rgb', 1, maxfn(255)),
   blue: getset('rgb', 2, maxfn(255)),
-  hue: getset(['hsl', 'hsv', 'hsl', 'hwb', 'hcg'], 0, function(val) {
+  hue: getset(['hsl', 'hsv', 'hsl', 'hwb'], 0, function(val) {
     return ((val % 360) + 360) % 360
   }),
   saturationl: getset('hsl', 1, maxfn(100)),
   lightness: getset('hsl', 2, maxfn(100)),
   saturationv: getset('hsv', 1, maxfn(100)),
   value: getset('hsv', 2, maxfn(100)),
-  chroma: getset('hcg', 1, maxfn(100)),
-  gray: getset('hcg', 2, maxfn(100)),
   white: getset('hwb', 1, maxfn(100)),
   wblack: getset('hwb', 2, maxfn(100)),
-  cyan: getset('cmyk', 0, maxfn(100)),
-  magenta: getset('cmyk', 1, maxfn(100)),
-  yellow: getset('cmyk', 2, maxfn(100)),
-  black: getset('cmyk', 3, maxfn(100)),
-  x: getset('xyz', 0, maxfn(100)),
-  y: getset('xyz', 1, maxfn(100)),
-  z: getset('xyz', 2, maxfn(100)),
-  l: getset('lab', 0, maxfn(100)),
-  a: getset('lab', 1),
-  b: getset('lab', 2),
 }
 
 for (const key of Object.keys(conversions)) {

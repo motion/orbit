@@ -5,7 +5,7 @@
   "sideEffects": false,
   "version": "2.2.0",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {

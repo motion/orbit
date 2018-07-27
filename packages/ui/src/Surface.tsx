@@ -34,7 +34,6 @@ export type SurfaceProps = CSSPropertySet & {
   elementProps?: Object
   elevation?: number
   flex?: boolean | number
-  focusable?: boolean
   forwardRef?: React.Ref<any>
   glint?: boolean
   glow?: boolean
@@ -137,8 +136,8 @@ SurfaceFrame.theme = props => {
             (props.highlight && props.highlightColor) ||
             theme[STATE].color,
         )
-  if (typeof props.alpha === 'number') {
-    color = color.alpha(props.alpha)
+  if (typeof props.alpha === 'number' && typeof color !== 'string') {
+    color = `${color.alpha(props.alpha)}`
   }
   const iconColor = props.iconColor || color
 
@@ -217,15 +216,6 @@ SurfaceFrame.theme = props => {
     borderWidth: 0,
     background: 'transparent',
   }
-  const focusable = props.focusable
-  const focusStyle = !props.chromeless &&
-    theme.focus && {
-      ...theme.focus,
-      boxShadow: [
-        ...boxShadow,
-        [0, 0, 0, 4, toColor(theme.focus.color).alpha(0.05)],
-      ],
-    }
   let surfaceStyles = {
     ...(props.inline && inlineStyle),
     color,
@@ -246,11 +236,9 @@ SurfaceFrame.theme = props => {
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
     ...(props.wrapElement && {
-      '& > :focus': focusable && focusStyle,
       '& > :active': activeStyle,
     }),
     ...(!props.wrapElement && {
-      '&:focus': focusable && focusStyle,
       '&:active': activeStyle,
     }),
     ...(props.dimmed && dimmedStyle),
@@ -340,17 +328,26 @@ export class Surface extends React.Component<SurfaceProps> {
       size,
       sizeLineHeight,
       noInnerElement,
-    } = this.props
-    const stringIcon = typeof icon === 'string'
-    const {
       tagName,
       forwardRef,
       style,
       padding,
       margin,
       className,
-      ...throughProps
+      ...props
     } = this.props
+    const stringIcon = typeof icon === 'string'
+    // goes to both
+    const throughProps = {
+      sizeIcon: this.props.sizeIcon,
+      iconSize: this.props.iconSize,
+      height: this.props.height,
+      iconAfter: this.props.iconAfter,
+      iconPad: this.props.iconPad,
+      inline: this.props.inline,
+      icon: this.props.icon,
+      lineHeight: this.props.lineHeight,
+    }
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height + 0.5}px`
     }
@@ -361,17 +358,13 @@ export class Surface extends React.Component<SurfaceProps> {
         padding={padding}
         margin={margin}
         {...throughProps}
+        {...props}
         forwardRef={forwardRef}
         style={style}
         className={`${this.uniq} ${className || ''}`}
       >
         {glint ? (
-          <Glint
-            key={0}
-            size={size}
-            // borderLeftRadius={borderLeftRadius - 1}
-            // borderRightRadius={borderRightRadius - 1}
-          />
+          <Glint key={0} size={size} borderRadius={props.borderRadius} />
         ) : null}
         {badge ? (
           <Badge {...badgeProps}>
@@ -393,25 +386,21 @@ export class Surface extends React.Component<SurfaceProps> {
             scale={1.1}
             color={`${glowColor}`}
             opacity={0.35}
-            // borderLeftRadius={borderLeftRadius - 1}
-            // borderRightRadius={borderRightRadius - 1}
+            borderRadius={props.borderRadius}
             {...glowProps}
           />
         ) : null}
-        <Element
-          noInnerElement={noInnerElement}
-          minWidth={
-            Array.isArray(this.props.padding)
-              ? this.props.padding[1] * 5
-              : 'auto'
-          }
-          tagName={tagName}
-          {...throughProps}
-          {...elementProps}
-          disabled={disabled}
-        >
-          {children}
-        </Element>
+        {!noInnerElement &&
+          !!children && (
+            <Element
+              tagName={tagName}
+              {...throughProps}
+              {...elementProps}
+              disabled={disabled}
+            >
+              {children}
+            </Element>
+          )}
         {tooltip ? (
           <Theme name="dark">
             <Popover
@@ -423,14 +412,14 @@ export class Surface extends React.Component<SurfaceProps> {
               target={`.${this.uniq}`}
               padding={[2, 7]}
               borderRadius={5}
-              distance={8}
+              distance={12}
               forgiveness={8}
               arrowSize={10}
               delay={400}
               popoverProps={POPOVER_PROPS}
               {...tooltipProps}
             >
-              <span style={{ maxWidth: 200 }}>{tooltip}</span>
+              {tooltip}
             </Popover>
           </Theme>
         ) : null}

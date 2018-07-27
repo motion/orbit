@@ -70,7 +70,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
   static defaultProps = {
     width: 380,
     height: 200,
-    color: [255, 255, 255],
+    color: '#fff',
     zIndex: 1,
     resist: 0,
     scale: 1,
@@ -99,7 +99,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
 
   unmounted = false
   parentNode = null
-  rootRef = React.createRef()
+  rootRef = React.createRef<HTMLDivElement>()
 
   componentDidMount() {
     on(

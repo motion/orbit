@@ -6,6 +6,18 @@ const EDGE_PAD = 20
 const TOP_OFFSET = 0
 const screenSize = () => [window.innerWidth, window.innerHeight]
 
+// dynamic peek size
+// always slightly taller than wide
+// capped between a set range
+const getPeekSize = ([screenWidth]: number[]) => {
+  const max = [800, 900]
+  const min = [600, 700]
+  const preferred = [screenWidth / 3, screenWidth / 2.45]
+  return preferred
+    .map((z, i) => Math.min(z, max[i]))
+    .map((z, i) => Math.max(z, min[i]))
+}
+
 export default function peekPosition(target) {
   if (!target) {
     return null
@@ -15,14 +27,14 @@ export default function peekPosition(target) {
   let orbitWidth = App.orbitState.size[0]
   if (App.orbitState.docked) {
     orbitOnLeft = false
-    orbitWidth = App.dockedWidth
+    orbitWidth = Constants.ORBIT_WIDTH
   }
   const { left, top } = target
   const leftSpace = left
   const rightSpace = screenW - (left + orbitWidth)
   // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
-  let [pW, pH] = Constants.PEEK_SIZE
+  let [pW, pH] = getPeekSize(screenSize())
   let x
   let y = top + TOP_OFFSET
   // prefer more strongly away from app if possible

@@ -1,36 +1,47 @@
 import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
+import { SearchStore } from '../../stores/SearchStore'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+
+const moveCursorToEndOfTextarea = textarea => {
+  textarea.setSelectionRange(textarea.value.length, textarea.value.length)
+}
 
 export class HeaderStore {
-  inputRef = React.createRef()
+  props: {
+    searchStore: SearchStore
+    paneStore: OrbitDockedPaneStore
+  }
+
+  inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false
 
   get highlightWords() {
-    if (!this.props.appStore.nlpStore.marks) {
+    if (!this.props.searchStore.nlpStore.marks) {
       return null
     }
-    return () => this.props.appStore.nlpStore.marks
+    return () => this.props.searchStore.nlpStore.marks
   }
 
   onInput = () => {
-    this.props.orbitStore.onChangeQuery(this.inputRef.innerText)
+    if (!this.inputRef.current) {
+      return
+    }
+    this.props.searchStore.onChangeQuery(this.inputRef.current.innerText)
   }
 
   focus = () => {
     if (!this.inputRef || !this.inputRef.current) {
       return
     }
+    moveCursorToEndOfTextarea(this.inputRef.current)
     this.inputRef.current.focus()
   }
 
-  focusInput = react(
-    () => [
-      App.orbitState.pinned || App.orbitState.docked,
-      // use this because otherwise input may not focus
-      App.isMouseInActiveArea,
-    ],
-    async ([shown], { when }) => {
+  focusInputOnVisible = react(
+    () => App.orbitState.pinned || App.orbitState.docked,
+    async (shown, { when }) => {
       if (!shown) {
         throw react.cancel
       }
@@ -43,6 +54,18 @@ export class HeaderStore {
     },
   )
 
+  focusInputOnClosePeek = react(
+    () => !!App.peekState.target,
+    async (hasTarget, { sleep }) => {
+      if (hasTarget) {
+        throw react.cancel
+      }
+      this.focus()
+      await sleep(16)
+      this.focus()
+    },
+  )
+
   focusInputOnClearQuery = react(
     () => App.state.query,
     query => {
@@ -50,6 +73,9 @@ export class HeaderStore {
         throw react.cancel
       }
       this.focus()
+    },
+    {
+      log: false,
     },
   )
 
@@ -72,7 +98,7 @@ export class HeaderStore {
       App.actions.closeOrbit()
     } else {
       if (App.state.query) {
-        this.props.orbitStore.clearQuery()
+        this.props.searchStore.clearQuery()
       } else {
         this.props.paneStore.setActivePane('home')
       }

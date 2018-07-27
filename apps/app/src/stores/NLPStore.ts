@@ -1,5 +1,6 @@
+// @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
-import { store, react } from '@mcro/black'
+import { store, react, Store } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Person } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -7,10 +8,12 @@ import { TYPES, NLPResponse } from './nlpStore/types'
 
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
+
+// @ts-ignore
 window.nlpWorker = { parseSearchQuery, setUserNames }
 
 @store
-export class NLPStore {
+export class NLPStore /* extends Store */ {
   types = TYPES
 
   get marks() {
@@ -27,7 +30,10 @@ export class NLPStore {
         query,
       }
     },
-    { immediate: true, defaultValue: { date: {} } },
+    {
+      immediate: true,
+      defaultValue: { date: { startDate: null, endDate: null } },
+    },
   )
 
   updateUsers = modelQueryReaction(
@@ -36,6 +42,6 @@ export class NLPStore {
       setUserNames(people.map(person => person.name))
     },
     // 5 minute poll
-    { poll: 60 * 5 },
+    { poll: 60 * 5 * 1000 },
   )
 }

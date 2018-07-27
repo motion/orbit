@@ -7,5 +7,5 @@
       "~/*": ["./src/*"]
     }
   },
-  "exclude": ["_", "node_modules", "tmp", "**/*/_"]
+  "exclude": ["_", "node_modules", "tmp"]
 }

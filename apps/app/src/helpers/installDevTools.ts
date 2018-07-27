@@ -3,13 +3,6 @@ import * as Mobx from 'mobx'
 
 // 🐛 note: dont import router or app here
 // it causes the entire app to be imported before boot
-import debug from '@mcro/debug'
-
-// lets log loudly by default
-console.log(
-  'In dev mode, setting debug.loud() by default. Call debug.quiet() to turn down logs',
-)
-debug.loud()
 
 // should enable eventually for safer mobx
 // really should be even safer with automagical to enforce same-store only actions

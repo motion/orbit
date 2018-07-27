@@ -1,7 +1,5 @@
 import usage from 'usage'
 
-const log = debug('monitor')
-
 const { pid } = process
 
 // stupid but useful
@@ -24,7 +22,7 @@ setTimeout(() => {
       // in percent
       if (res.cpu > 90) {
         if (burnTime % 10 === 0)
-          log(`CPU usage above 90% for ${burnTime} seconds`)
+          console.log(`CPU usage above 90% for ${burnTime} seconds`)
         burnTime++
       } else {
         burnTime = 0

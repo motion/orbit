@@ -10,7 +10,7 @@ rm -rf packages/*/_
 rm -rf packages/*/npm-debug.log.*
 rm -rf packages/*/shrinkwrap.json
 
-if [[ "$1" != "--only-files" ]]; then
+if [[ "$1" = "--all" ]]; then
   rm -rf node_modules
   rm -rf apps/*/node_modules
   rm -rf packages/*/node_modules

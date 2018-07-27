@@ -1,11 +1,17 @@
 // @ts-ignore
 import { flatten } from 'lodash'
 
+const splitChar = '🂓'
+
+const cutoff = (str, maxChars) => {
+  return str.replace(/(\s{2,}|\n)/g, ' ').slice(0, maxChars - 3) + '...'
+}
+
 // cut text down using highlight words
 // not a wonderfully efficient
 // but still great for not too long text
 // and pretty easy to follow
-export const highlightText = options => {
+export const highlightText = (options, returnList = false) => {
   const {
     text,
     words,
@@ -50,7 +56,7 @@ export const highlightText = options => {
     }
     if (prevHighlighted && !nextHighlighted) {
       if (part.length > surroundMax) {
-        filtered.push(part.slice(0, surroundMax)) + '...'
+        filtered.push(part.slice(0, surroundMax)) + splitChar
       } else {
         filtered.push(part)
       }
@@ -58,7 +64,7 @@ export const highlightText = options => {
     }
     if (!prevHighlighted && nextHighlighted) {
       if (part.length > surroundMax) {
-        filtered.push('...' + part.slice(part.length - surroundMax))
+        filtered.push(splitChar + part.slice(part.length - surroundMax))
       } else {
         filtered.push(part)
       }
@@ -68,7 +74,7 @@ export const highlightText = options => {
       if (part.length > surroundMax * 2) {
         filtered.push(
           part.slice(0, surroundMax) +
-            '...' +
+            splitChar +
             part.slice(part.length - surroundMax),
         )
       } else {
@@ -78,17 +84,26 @@ export const highlightText = options => {
   }
   let final = []
   for (const part of filtered) {
-    if (words.indexOf(part) > -1) {
+    if (words.indexOf(part.toLowerCase()) === 0) {
       final.push(`<span style="${style}">${part}</span>`)
     } else {
       final.push(part)
     }
   }
-  const result = final.join('')
-  if (result.length) {
-    return result
+  let stringResult = final.join('').trim()
+  // return raw array
+  if (returnList) {
+    if (!stringResult.length) {
+      return [cutoff(text, maxChars)]
+    }
+    return stringResult
+      .split(splitChar)
+      .filter(x => !!x.length)
+      .map(part => `...${part}...`)
   }
-  return text.length < maxChars
-    ? text
-    : text.replace(/(\s{2,}|\n)/g, separator).slice(0, maxChars - 3) + '...'
+  stringResult = stringResult.replace(splitChar, ' ... ')
+  if (stringResult.length) {
+    return stringResult
+  }
+  return text.length < maxChars ? text : cutoff(text, maxChars)
 }

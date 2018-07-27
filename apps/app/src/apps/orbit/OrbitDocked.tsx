@@ -10,10 +10,11 @@ import { OrbitDirectory } from './OrbitDirectory'
 import { App } from '@mcro/stores'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { BORDER_RADIUS } from '../../constants'
+import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
-import { OrbitSearchStore } from './OrbitSearchStore'
+import { ORBIT_WIDTH } from '@mcro/constants'
 
-const SHADOW_PAD = 200
+const SHADOW_PAD = 100
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.45]]
 
 const Frame = view(UI.Col, {
@@ -24,8 +25,9 @@ const Frame = view(UI.Col, {
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
-  width: App.dockedWidth,
+  width: ORBIT_WIDTH,
   opacity: 0,
+  transition: 'bottom ease 80ms',
   transform: {
     x: 6,
   },
@@ -55,11 +57,12 @@ const Border = view(UI.FullScreen, {
 })
 
 Border.theme = ({ theme }) => {
-  const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
+  const borderColor = theme.base.background.darken(0.3)
   const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
-  const borderGlow = ['inset', 0, 0, 0, 1, [255, 255, 255, 0.75]]
+  const lightBg = theme.base.background.lighten(1)
+  const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
   return {
-    borderRadius: BORDER_RADIUS,
+    borderRadius: BORDER_RADIUS - 1,
     boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
   }
 }
@@ -81,33 +84,33 @@ const OrbitInner = view({
   borderBottomRightRadius: 60,
 })
 
-@view.attach('appStore', 'orbitStore', 'integrationSettingsStore')
+@view.attach('appStore', 'searchStore')
 @view.provide({
   paneStore: OrbitDockedPaneStore,
-  searchStore: OrbitSearchStore,
 })
 @view
 class OrbitDockedInner extends React.Component<{
   paneStore: OrbitDockedPaneStore
+  searchStore: SearchStore
   appStore: AppStore
 }> {
   render() {
-    const { paneStore, appStore } = this.props
+    const { paneStore, appStore, searchStore } = this.props
     const { animationState } = paneStore
     log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
       10,
-      window.innerHeight - appStore.contentHeight - 10,
+      window.innerHeight - appStore.contentHeight - 8,
     )
     return (
       <>
         <Frame
           visible={animationState.visible}
           willAnimate={animationState.willAnimate}
-          bottom={appStore.searchState.query ? 10 : contentBottom}
+          bottom={searchStore.searchState.query ? 10 : contentBottom}
         >
           <Border />
-          <UI.View borderRadius={BORDER_RADIUS + 1} flex={1}>
+          <UI.View borderRadius={BORDER_RADIUS} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
               after={
@@ -118,20 +121,9 @@ class OrbitDockedInner extends React.Component<{
             />
             <OrbitInner height={window.innerHeight}>
               <UI.View position="relative" flex={1}>
-                <OrbitHome
-                  name="home"
-                  appStore={appStore}
-                  paneStore={paneStore}
-                />
-                <OrbitDirectory
-                  name="directory"
-                  appStore={appStore}
-                  paneStore={paneStore}
-                />
-                <OrbitSearchResults
-                  name="summary-search"
-                  parentPane="summary"
-                />
+                <OrbitHome name="home" paneStore={paneStore} />
+                <OrbitDirectory name="directory" paneStore={paneStore} />
+                <OrbitSearchResults name="docked-search" parentPane="docked" />
                 <OrbitSettings name="settings" />
               </UI.View>
             </OrbitInner>

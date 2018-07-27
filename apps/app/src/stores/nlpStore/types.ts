@@ -11,8 +11,8 @@ type Mark = [number, number, TypeKey]
 export type QueryFragment = { text: string; type?: TypeKey }
 
 export type DateRange = {
-  startDate?: Date
-  endDate?: Date
+  startDate: Date | null
+  endDate: Date | null
 }
 
 export type NLPResponse = {
@@ -26,4 +26,5 @@ export type NLPResponse = {
   startDate: Date
   endDate: Date
   people: string[]
+  integrations: string[]
 }

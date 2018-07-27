@@ -5,12 +5,35 @@ import { OrbitDockedPane } from './OrbitDockedPane'
 import { OrbitSearchQuickResults } from './orbitSearch/OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
-import { AppStore } from '../../stores/AppStore'
-import { OrbitSearchStore } from './OrbitSearchStore'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
+import { SearchStore } from '../../stores/SearchStore'
+import debug from '@mcro/debug'
 
-const OrbitSearchResultsList = view(({ name, searchStore }) => {
-  const { results, query } = searchStore.state
+const log = debug('OrbitSearchResults')
+const listItemSidePad = 18
+
+const Highlight = view({
+  display: 'inline-block',
+  lineHeight: 22,
+  fontSize: 15,
+  padding: [2, listItemSidePad * 2, 2, listItemSidePad],
+  margin: [8, -listItemSidePad, 8, 8],
+  borderLeft: [3, 'transparent'],
+  transition: 'border ease 200ms 100ms',
+  color: [0, 0, 0, 0.8],
+  '&:hover': {
+    color: [0, 0, 0, 1],
+    borderLeftColor: '#ddd',
+  },
+})
+
+type ListProps = {
+  name: string
+  searchStore: SearchStore
+}
+
+const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
+  const { results, query } = searchStore.searchState
   log(`RENDER SENSITIVE`)
   if (!results.length) {
     return null
@@ -25,29 +48,47 @@ const OrbitSearchResultsList = view(({ name, searchStore }) => {
       total={results.length}
       bit={bit}
       listItem
+      cardProps={{
+        background: '#fff',
+        padding: [16, 18, 10],
+      }}
       nextUpStyle={
         index === 0 && {
-          background: [255, 255, 255, 0.15],
+          color: 'black',
         }
       }
     >
       <UI.Text
-        size={1.2}
-        alpha={0.7}
+        alpha={0.85}
         wordBreak="break-all"
-        highlight={
-          highlightWords.length && {
-            words: highlightWords,
-            maxChars: 380,
-            maxSurroundChars: 120,
-            trimWhitespace: true,
-            separator: '&nbsp;&middot;&nbsp;',
-          }
-        }
+        highlight={{
+          text: sanitize(bit.body || ''),
+          words: highlightWords,
+          maxChars: 380,
+          maxSurroundChars: 120,
+          trimWhitespace: true,
+          separator: '&nbsp;&middot;&nbsp;',
+        }}
       >
-        {sanitize(
-          highlightWords.length ? bit.body : (bit.body || '').slice(0, 200),
-        )}
+        {({ highlights }) => {
+          return highlights.map((highlight, hlIndex) => {
+            return (
+              <Highlight
+                key={hlIndex}
+                dangerouslySetInnerHTML={{ __html: highlight }}
+                onClick={e => {
+                  e.stopPropagation()
+                  searchStore.setHighlightIndex(hlIndex)
+                  // don't actually toggle when selecting highlights
+                  if (searchStore.activeIndex === index) {
+                    return
+                  }
+                  searchStore.toggleSelected(index)
+                }}
+              />
+            )
+          })
+        }}
       </UI.Text>
     </OrbitCard>
   ))
@@ -60,12 +101,12 @@ OrbitSearchResultsFrame.theme = ({ theme }) => ({
   background: theme.base.background,
 })
 
-const OrbitSearchResultsContents = view(({ name, appStore, searchStore }) => {
-  const { isChanging, message } = searchStore.state
+const OrbitSearchResultsContents = view(({ name, searchStore }) => {
+  const { isChanging, message } = searchStore
   return (
     <OrbitSearchResultsFrame>
       {message ? <div>{message}</div> : null}
-      <OrbitSearchQuickResults />
+      <OrbitSearchQuickResults searchStore={searchStore} />
       <div
         style={{
           position: 'relative',
@@ -81,17 +122,20 @@ const OrbitSearchResultsContents = view(({ name, appStore, searchStore }) => {
 })
 
 type Props = {
-  searchStore?: OrbitSearchStore
-  appStore?: AppStore
+  searchStore?: SearchStore
   name?: string
 }
 
-@view.attach('appStore', 'searchStore')
+@view.attach('searchStore')
 @view
 export class OrbitSearchResults extends React.Component<Props> {
+  extraCondition = () => {
+    return this.props.searchStore.hasQuery()
+  }
+
   render() {
-    const { appStore, searchStore, name } = this.props
-    if (!searchStore.state.results) {
+    const { searchStore, name } = this.props
+    if (!searchStore.searchState.results) {
       return null
     }
     const transform = {
@@ -108,14 +152,10 @@ export class OrbitSearchResults extends React.Component<Props> {
           flex: 'none',
         }}
         name="search"
-        extraCondition={searchStore}
+        extraCondition={this.extraCondition}
         before={<OrbitSearchFilters />}
       >
-        <OrbitSearchResultsContents
-          appStore={appStore}
-          searchStore={searchStore}
-          name={name}
-        />
+        <OrbitSearchResultsContents searchStore={searchStore} name={name} />
       </OrbitDockedPane>
     )
   }

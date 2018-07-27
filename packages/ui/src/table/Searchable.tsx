@@ -5,8 +5,8 @@
  * @format
  */
 
-import { view } from '@mcro/black'
-import { Filter } from '../filter/types'
+import { view, on } from '@mcro/black'
+import { Filter } from './types'
 import * as React from 'react'
 import { Toolbar } from '../Toolbar'
 import { Row } from '../blocks/Row'
@@ -15,9 +15,27 @@ import { colors } from '../helpers/colors'
 import { Text } from '../Text'
 import { View } from '../blocks/View'
 import { Icon } from '../Icon'
-// import Glyph from '../Glyph'
 import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
+import { Theme } from '@mcro/gloss'
+import { findDOMNode } from 'react-dom'
+
+type Props = {
+  defaultValue?: string
+  placeholder?: string
+  actions: React.ReactNode
+  tableKey: string
+  onFilterChange: (filters: Array<Filter>) => void
+  defaultFilters: Array<Filter>
+  searchBarTheme?: Object
+  searchBarProps?: Object
+  searchInputProps?: Object
+  children?: React.ReactNode | Function
+  focusOnMount?: boolean
+  // only called once it changes once at least
+  onChange?: Function
+  onEnter?: Function
+}
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
@@ -29,13 +47,17 @@ const SearchBar = view(Toolbar, {
 export const SearchBox = view(View, {
   position: 'relative',
   flexFlow: 'row',
-  backgroundColor: colors.white,
   borderRadius: '999em',
-  border: `1px solid ${colors.light15}`,
   height: '100%',
   width: '100%',
   alignItems: 'center',
   paddingLeft: 4,
+  background: colors.white,
+  border: [1, colors.light15],
+})
+
+SearchBox.theme = ({ theme }) => ({
+  border: [1, theme.base.borderColor.darken(0.2).desaturate(0.2)],
 })
 
 export const SearchInput = view(TableInput, {
@@ -77,7 +99,7 @@ const Clear = view(Text, {
 })
 
 export const SearchIcon = view(Icon, {
-  marginRight: 3,
+  marginRight: 4,
   marginLeft: 3,
   marginTop: -1,
   minWidth: 16,
@@ -94,14 +116,6 @@ export type SearchableProps = {
   filters: Array<Filter>
 }
 
-type Props = {
-  placeholder?: string
-  actions: React.ReactNode
-  tableKey: string
-  onFilterChange: (filters: Array<Filter>) => void
-  defaultFilters: Array<Filter>
-}
-
 type State = {
   filters: Array<Filter>
   focusedToken: number
@@ -110,28 +124,39 @@ type State = {
 }
 
 export const Searchable = (Component: any) =>
-  class extends React.PureComponent {
-    props: Props
-
+  class extends React.PureComponent<Props, State> {
     static defaultProps = {
       placeholder: 'Search...',
+      defaultValue: '',
     }
 
     static contextTypes = {
       plugin: PropTypes.string,
     }
 
-    state: State = {
-      filters: [],
-      focusedToken: -1,
-      searchTerm: '',
-      hasFocus: false,
+    constructor(a, b) {
+      super(a, b)
+      this.state = {
+        filters: [],
+        focusedToken: -1,
+        searchTerm: this.props.defaultValue,
+        hasFocus: false,
+      }
     }
 
-    _inputRef: HTMLInputElement | void
+    inputRef = React.createRef<HTMLTextAreaElement>()
+
+    get _inputRef() {
+      return this.inputRef.current
+    }
 
     componentDidMount() {
-      window.document.addEventListener('keydown', this.onKeyDown)
+      if (this.props.focusOnMount) {
+        if (this._inputRef) {
+          this._inputRef.focus()
+        }
+      }
+      on(this, findDOMNode(this), 'keydown', this.onKeyDown)
       const { defaultFilters } = this.props
       let savedState
       let key = this.context.plugin + this.props.tableKey
@@ -173,12 +198,15 @@ export const Searchable = (Component: any) =>
       }
     }
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    componentDidUpdate(props: Props, prevState: State) {
       if (
         this.context.plugin &&
         (prevState.searchTerm !== this.state.searchTerm ||
           prevState.filters !== this.state.filters)
       ) {
+        if (props.onChange) {
+          props.onChange(this.state.searchTerm)
+        }
         let key = this.context.plugin + this.props.tableKey
         window.localStorage.setItem(
           SEARCHABLE_STORAGE_KEY(key),
@@ -229,6 +257,9 @@ export const Searchable = (Component: any) =>
       ) {
         this.removeFilter(this.state.focusedToken)
       } else if (e.key === 'Enter' && this.hasFocus() && this._inputRef) {
+        if (this.props.onEnter) {
+          this.props.onEnter(this.state.searchTerm)
+        }
         this.matchTags(this._inputRef.value, true)
       }
     }
@@ -245,8 +276,8 @@ export const Searchable = (Component: any) =>
         match.forEach((filter: string) => {
           const separator =
             filter.indexOf(':') > filter.indexOf('=') ? ':' : '='
-          let [key, ...value] = filter.split(separator)
-          value = value.join(separator).trim()
+          let [key, ...values] = filter.split(separator)
+          let value = values.join(separator).trim()
           let type = 'include'
           // if value starts with !, it's an exclude filter
           if (value.indexOf('!') === 0) {
@@ -268,10 +299,6 @@ export const Searchable = (Component: any) =>
         searchTerm = searchTerm.replace(filterPattern, '')
       }
       this.setState({ searchTerm })
-    }
-
-    setInputRef = (ref: HTMLInputElement | void) => {
-      this._inputRef = ref
     }
 
     addFilter = (filter: Filter) => {
@@ -351,48 +378,77 @@ export const Searchable = (Component: any) =>
       })
 
     render() {
-      const { placeholder, actions, ...props } = this.props
-      return [
-        <SearchBar position="top" key="searchbar">
-          <SearchBox tabIndex={-1}>
-            <SearchIcon
-              name="ui-1_zoom"
-              color={colors.macOSTitleBarIcon}
-              size={16}
-            />
-            {this.state.filters.map((filter, i) => (
-              <FilterToken
-                key={`${filter.key}:${filter.type}`}
-                index={i}
-                filter={filter}
-                focused={i === this.state.focusedToken}
-                onFocus={this.onTokenFocus}
-                onDelete={this.removeFilter}
-                onReplace={this.replaceFilter}
-                onBlur={this.onTokenBlur}
+      const {
+        placeholder,
+        actions,
+        searchBarProps,
+        searchInputProps,
+        focusOnMount,
+        searchBarTheme,
+        ...props
+      } = this.props
+
+      console.log('RENDER SEARCHABLE')
+
+      const searchBar = (
+        <Theme theme={searchBarTheme}>
+          <SearchBar position="top" key="searchbar" {...searchBarProps}>
+            <SearchBox tabIndex={-1}>
+              <SearchIcon
+                name="ui-1_zoom"
+                color={colors.macOSTitleBarIcon}
+                size={16}
               />
-            ))}
-            <SearchInput
-              placeholder={placeholder}
-              onChange={this.onChangeSearchTerm}
-              value={this.state.searchTerm}
-              innerRef={this.setInputRef}
-              onFocus={this.onInputFocus}
-              onBlur={this.onInputBlur}
-            />
-            {this.state.searchTerm || this.state.filters.length > 0 ? (
-              <Clear onClick={this.clear}>&times;</Clear>
-            ) : null}
-          </SearchBox>
-          {actions != null ? <Actions>{actions}</Actions> : null}
-        </SearchBar>,
+              {this.state.filters.map((filter, i) => (
+                <FilterToken
+                  key={`${filter.key}:${filter.type}`}
+                  index={i}
+                  filter={filter}
+                  focused={i === this.state.focusedToken}
+                  onFocus={this.onTokenFocus}
+                  onDelete={this.removeFilter}
+                  onReplace={this.replaceFilter}
+                  onBlur={this.onTokenBlur}
+                />
+              ))}
+              <SearchInput
+                placeholder={placeholder}
+                onChange={this.onChangeSearchTerm}
+                value={this.state.searchTerm}
+                forwardRef={this.inputRef}
+                onFocus={this.onInputFocus}
+                onBlur={this.onInputBlur}
+                {...searchInputProps}
+              />
+              {this.state.searchTerm || this.state.filters.length > 0 ? (
+                <Clear onClick={this.clear}>&times;</Clear>
+              ) : null}
+            </SearchBox>
+            {actions != null ? <Actions>{actions}</Actions> : null}
+          </SearchBar>
+        </Theme>
+      )
+
+      const body = (
         <Component
           {...props}
           key="table"
           addFilter={this.addFilter}
           searchTerm={this.state.searchTerm}
+          searchBar={searchBar}
           filters={this.state.filters}
-        />,
-      ]
+        />
+      )
+
+      if (typeof props.children === 'function') {
+        return body
+      }
+
+      return (
+        <>
+          {searchBar}
+          {body}
+        </>
+      )
     }
   }

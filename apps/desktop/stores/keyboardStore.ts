@@ -1,5 +1,5 @@
-import { isEqual } from 'lodash'
-import iohook from 'iohook'
+// import { isEqual } from 'lodash'
+// import iohook from 'iohook'
 import { Desktop, App } from '@mcro/stores'
 
 const codes = {
@@ -15,16 +15,16 @@ const codes = {
   pgDown: 3665,
 }
 
-const DOUBLE_TAP_OPTION = [
-  ['down', codes.option],
-  ['up', codes.option],
-  ['down', codes.option],
-  ['up', codes.option],
-]
+// const DOUBLE_TAP_OPTION = [
+//   ['down', codes.option],
+//   ['up', codes.option],
+//   ['down', codes.option],
+//   ['up', codes.option],
+// ]
 
 // stores the last 4 keys pressed
 // but clears after a little, so it only stores "purposeful sequences"
-let lastKeys = []
+// let lastKeys = []
 
 export class KeyboardStore {
   // this is imperfect, iohook doesn't always match events perfectly

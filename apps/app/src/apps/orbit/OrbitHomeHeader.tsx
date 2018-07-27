@@ -33,7 +33,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
         color: buttonColor,
         size: 13,
       },
-      opacity: 0.3,
+      opacity: 0.4,
       activeStyle: {
         background: 'transparent',
         borderColor: 'transparent',
@@ -47,13 +47,13 @@ export class OrbitHomeHeader extends React.Component<Props> {
     return (
       <>
         <Section>
-          <UI.Button
+          {/* <UI.Button
             icon="home"
             tooltip="Home"
             active={paneStore.activePane === 'home'}
             onClick={() => paneStore.setActivePane('home')}
             {...exploreButton}
-          />
+          /> */}
           <UI.Button
             icon="menu35"
             tooltip="Directory"

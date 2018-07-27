@@ -9,7 +9,9 @@ export const IS_PROD =
 export const IS_DEV = !IS_PROD
 export const VERSION = require('../package.json').version
 
-export const BORDER_RADIUS = 14
+export const BORDER_RADIUS = 12
+export const PEEK_BORDER_RADIUS = 6
+
 export const SHADOW_PAD = 15
 export const APP_SHADOW = [0, 0, 40, [0, 0, 0, 1]]
 export const ORBIT_COLOR = UI.color('#714842')
@@ -40,4 +42,25 @@ export const NICE_INTEGRATION_NAMES = {
   confluence: 'Confluence',
   jira: 'Jira',
   github: 'Github',
+}
+
+export const EMPTY_ITEM = {
+  id: '',
+  title: '',
+  body: '',
+  subtitle: '',
+  location: '',
+  icon: '',
+  type: '',
+  subType: '',
+  integration: '',
+}
+
+export const INTEGRATION_THEMES = {
+  slack: { background: '#FDDE64' },
+  github: { background: '#353535', color: 'white' },
+  gdocs: { background: '#7DA5F4' },
+  jira: { background: '#4978D0', color: 'white' },
+  confluence: { background: '#4B7BD4', color: 'white' },
+  gmail: { background: '#D2675E', color: 'white' },
 }

@@ -5,8 +5,25 @@
  * @format
  */
 
-import { Tracker, RulesToClass } from '.'
+import { CSSPropertyValue } from '@mcro/css'
 import { StyleSheet } from './sheet'
+
+type BaseRules = {
+  [key: string]: CSSPropertyValue<string | number>
+}
+
+type Tracker = Map<
+  string,
+  {
+    displayName?: string
+    namespace: string
+    rules: BaseRules
+    selector: string
+    style: Object
+  }
+>
+
+type RulesToClass = WeakMap<BaseRules, string>
 
 const invariant = require('invariant')
 

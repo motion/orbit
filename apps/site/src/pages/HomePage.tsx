@@ -827,7 +827,8 @@ class OrbitStore {
 })
 @view
 class Orbit extends React.Component {
-  render({ homeStore, orbitStore }) {
+  render() {
+    const { homeStore, orbitStore } = this.props
     const { stopAt } = orbitStore
     const { lockedIndex, lastLockedIndex } = homeStore
     const restingIndex = lockedIndex === -1 ? lastLockedIndex : lockedIndex

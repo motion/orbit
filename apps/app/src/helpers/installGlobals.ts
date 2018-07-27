@@ -11,8 +11,8 @@ import { App, Desktop, Swift, Electron } from '@mcro/stores'
 import { modelsList } from '@mcro/models'
 import { render } from '../index'
 import { color } from '@mcro/gloss'
-
-console.log('installing globals...')
+import * as dateFns from 'date-fns'
+import debug from '@mcro/debug'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -35,6 +35,8 @@ window['Electron'] = Electron
 window['Swift'] = Swift
 window['render'] = render
 window['color'] = color
+window['dateFns'] = dateFns
+window['debug'] = debug
 
 modelsList.map(model => {
   window[`${model.name}`] = model

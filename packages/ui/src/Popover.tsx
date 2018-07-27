@@ -97,6 +97,9 @@ const PopoverContainer = view({
   isClosing: {
     zIndex: Number.MAX_SAFE_INTEGER - 1,
   },
+  isMeasuring: {
+    opacity: 0,
+  },
 })
 
 const Overlay = view({
@@ -132,7 +135,6 @@ const PopoverWrap = view({
   isOpen: {
     opacity: 1,
     pointerEvents: 'auto',
-    transition: 'transform 0ms',
     transform: {
       y: 0,
     },
@@ -196,7 +198,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   unmounted = false
   mounted = false
   isClickingTarget = false
-  targetRef = React.createRef()
+  targetRef = React.createRef<HTMLDivElement>()
   popoverRef = null
 
   setPopoverRef = ref => {
@@ -876,6 +878,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
         <Portal>
           <PopoverContainer
             data-towards={direction}
+            isMeasuring={this.state.setPosition || (top === 0 && left === 0)}
             isOpen={showPopover}
             isClosing={closing}
           >
@@ -909,7 +912,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
             >
               <ArrowContain
                 if={!noArrow}
-                css={{
+                style={{
                   top: arrowTop,
                   marginLeft: arrowLeft,
                   zIndex: 100000000000, // above any shadows

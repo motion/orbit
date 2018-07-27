@@ -13,7 +13,6 @@ export const Button = ({
   glow,
   glowProps,
   badgeProps,
-  hovered,
   ...props
 }: ButtonProps) => {
   return (
@@ -34,8 +33,8 @@ export const Button = ({
       justifyContent="center"
       borderWidth={1}
       chromeless={chromeless}
-      hovered={hovered}
       glow={glow}
+      glint
       glowProps={{
         scale: 1.8,
         draggable: false,

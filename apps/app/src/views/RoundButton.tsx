@@ -5,6 +5,7 @@ export const RoundButton = UI.forwardRef(props => (
   <UI.Button
     sizeRadius={100}
     sizeHeight={0.8}
+    sizePadding={0.7}
     borderWidth={0}
     fontWeight={300}
     display="inline-flex"

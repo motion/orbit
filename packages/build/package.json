@@ -6,7 +6,7 @@
     "mcro-build": "./mcro-build"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {

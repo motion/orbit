@@ -1,15 +1,20 @@
-import { react, on } from '@mcro/black'
+import { react, on, store } from '@mcro/black'
 import { App } from '@mcro/stores'
+import { SearchStore } from '../../stores/SearchStore'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
 
 export class OrbitDockedPaneStore {
+  props: {
+    searchStore: SearchStore
+  }
+
   panes = ['home', 'directory', 'settings']
   paneIndex = 0
 
   willMount() {
-    on(this, this.props.orbitStore, 'key', key => {
+    on(this, this.props.searchStore, 'key', key => {
       // no keyshortcuts when peek is open
       if (!App.orbitState.inputFocused) {
         console.log('not input focused')

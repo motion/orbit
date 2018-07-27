@@ -1,6 +1,7 @@
 import compromise from 'compromise'
 import Sherlockjs from 'sherlockjs'
 import { TYPES, DateRange, NLPResponse, QueryFragment } from './types'
+import * as DateFns from 'date-fns'
 
 const state = {
   namePattern: null,
@@ -15,7 +16,7 @@ const prefixes = {
   co: 'confluence',
 }
 
-const integrations = {
+const integrationFilters = {
   slack: 'slack',
   gmail: 'gmail',
   gdocs: 'gdocs',
@@ -71,7 +72,6 @@ export function parseSearchQuery(query: string): NLPResponse {
 
   // @ts-ignore
   const nlp = compromise(query)
-  const date: DateRange = Sherlockjs.parse(query)
   const dates: string[] = nlp
     .dates()
     .out('frequency')
@@ -80,6 +80,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     word => word.normal,
   )
   const words = query.toLowerCase().split(' ')
+  const integrations = []
 
   // find all marks for highlighting
   const prefix = prefixes[words[0]]
@@ -102,7 +103,8 @@ export function parseSearchQuery(query: string): NLPResponse {
       highlightIfClear(word, TYPES.TYPE)
       continue
     }
-    if (integrations[word]) {
+    if (integrationFilters[word]) {
+      integrations.push(word)
       highlightIfClear(word, TYPES.INTEGRATION)
       continue
     }
@@ -150,6 +152,30 @@ export function parseSearchQuery(query: string): NLPResponse {
     .filter(x => x.type === TYPES.PERSON)
     .map(x => x.text)
 
+  const date: DateRange = Sherlockjs.parse(query)
+
+  if (date.startDate) {
+    // sherlock found a date in the future
+    // but we don't deal with future dates
+    // so lets convert it to the past
+    const startDaysAheadOfNow = DateFns.differenceInDays(
+      date.startDate,
+      new Date(),
+    )
+    if (startDaysAheadOfNow > 0) {
+      const dateBehindEquivOfStartAhead = DateFns.subDays(
+        new Date(),
+        startDaysAheadOfNow,
+      )
+      date.startDate = dateBehindEquivOfStartAhead
+    }
+  }
+
+  // if end date in future, just set it to now
+  if (date.endDate && DateFns.differenceInDays(date.endDate, new Date()) > 0) {
+    date.endDate = new Date()
+  }
+
   return {
     query,
     searchQuery,
@@ -159,18 +185,19 @@ export function parseSearchQuery(query: string): NLPResponse {
     date,
     marks,
     people,
-    startDate: date.startDate,
-    endDate: date.endDate,
+    integrations,
+    startDate: date.startDate || null,
+    endDate: date.endDate || null,
   }
 }
 
-if (typeof window !== 'undefined') {
-  window.nlp = {
-    parseSearchQuery: x => JSON.stringify(parseSearchQuery(x), null, 2),
-    setUserNames: setUserNames,
-    state: state,
-  }
-}
+// if (typeof window !== 'undefined') {
+//   window.nlp = {
+//     parseSearchQuery: x => JSON.stringify(parseSearchQuery(x), null, 2),
+//     setUserNames: setUserNames,
+//     state: state,
+//   }
+// }
 
 export function setUserNames(fullNames = []) {
   const cleanNames = fullNames

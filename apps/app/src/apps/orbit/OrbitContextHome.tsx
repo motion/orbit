@@ -6,6 +6,16 @@ import { OrbitDockedPane } from './OrbitDockedPane'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '../../views'
 import { Desktop, App } from '@mcro/stores'
+import { AppStore } from '../../stores/AppStore'
+import { SearchStore } from '../../stores/SearchStore'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+
+type Props = {
+  appStore?: AppStore
+  searchStore?: SearchStore
+  paneStore?: OrbitDockedPaneStore
+  store?: OrbitContextHomeStore
+}
 
 const OrbitContextHeader = view(() => (
   <div style={{ textAlign: App.orbitOnLeft ? 'right' : 'left' }}>
@@ -29,6 +39,8 @@ const findType = (integration, type, skip = 0) =>
   })
 
 class OrbitContextHomeStore {
+  props: Props
+
   setGetResults = react(
     () =>
       this.props.appStore.selectedPane.indexOf('context') === 0 &&
@@ -38,7 +50,7 @@ class OrbitContextHomeStore {
         throw react.cancel
       }
       // log('set get results')
-      this.props.appStore.setGetResults(() => this.results)
+      this.props.searchStore.setGetResults(() => this.results)
     },
     { immediate: true },
   )
@@ -64,12 +76,12 @@ class OrbitContextHomeStore {
 }
 
 @attachTheme
-@view.attach('appStore', 'paneStore')
+@view.attach('appStore', 'searchStore', 'paneStore')
 @view.attach({
   store: OrbitContextHomeStore,
 })
 @view
-export class OrbitContextHome {
+export class OrbitContextHome<Props> {
   frameRef = null
   state = {
     resultsRef: null,
@@ -107,8 +119,8 @@ export class OrbitContextHome {
   }, 16)
 
   render() {
-    const { appStore, store } = this.props
-    const { resultsRef, isScrolled, isOverflowing } = this.state
+    const { store } = this.props
+    const { resultsRef, isOverflowing } = this.state
     log('CONTEXT HOME---------------')
     const total = store.results.length
     return (
@@ -131,7 +143,6 @@ export class OrbitContextHome {
                   pane="context"
                   subPane="context"
                   parentElement={resultsRef}
-                  appStore={appStore}
                   bit={bit}
                   index={i}
                   total={total}

@@ -17,7 +17,7 @@ import { DecorCompiledDecorator } from '@mcro/decor'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 
 export interface ViewDecorator {
-  (): any
+  (a?: string | Function | Object, b?: Object): any
   on: typeof blackDecorator.on
   emitter: typeof blackDecorator.emitter
   emit: typeof blackDecorator.emit
@@ -43,19 +43,20 @@ export const blackDecorator: DecorCompiledDecorator<any> = decor(
 function createViewDecorator(): ViewDecorator {
   const { createView } = createGloss()
 
-  const view = <ViewDecorator>function view(a, b) {
+  const view = <ViewDecorator>function view(a?, b?) {
     // simple views: view(), view({}), view('div', {}), view(OtherView, {})
     if (isGlossArguments(a, b)) {
       return createView(a, b)
     }
+    const View = a as Function
     // class views
     // patch this in for now...
-    const shouldPatchConfig = !a.prototype && !a.withConfig
+    const shouldPatchConfig = !View.prototype && !View['withConfig']
     let aFinal
     if (shouldPatchConfig) {
-      a.withConfig = function(config) {
+      a['withConfig'] = function(config) {
         if (config.displayName) {
-          a.displayName = config.displayName
+          a['displayName'] = config.displayName
         }
         return aFinal
       }

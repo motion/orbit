@@ -101,26 +101,28 @@ const isObservableLike = val =>
 
 const DEFAULT_VALUE = undefined
 
+export function automagicClass() {
+  if (!this.__automagical) {
+    this.__automagical = {}
+  }
+  if (!this.__automagical.started) {
+    decorateClassWithAutomagic(this)
+    if (this.__automagical.watchers) {
+      for (const watcher of this.__automagical.watchers) {
+        watcher()
+      }
+    }
+    this.__automagical.started = true
+  }
+}
+
 export default function automagical() {
   return {
     name: 'automagical',
     decorator: (Klass: Function) => {
-      Klass.prototype.automagic =
-        Klass.prototype.automagic ||
-        function() {
-          if (!this.__automagical) {
-            this.__automagical = {}
-          }
-          if (!this.__automagical.started) {
-            decorateClassWithAutomagic(this)
-            if (this.__automagical.watchers) {
-              for (const watcher of this.__automagical.watchers) {
-                watcher()
-              }
-            }
-            this.__automagical.started = true
-          }
-        }
+      if (!Klass.prototype.automagic) {
+        Klass.prototype.automagic = automagicClass
+      }
       return Klass
     },
   }
@@ -605,7 +607,7 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
                 log(`${name} [${curID}] cancelled`)
               }
             } else {
-              console.log('throwing err', err)
+              console.log(`throwing err from ${prefix}`, err)
               throw new Error(err)
             }
           })

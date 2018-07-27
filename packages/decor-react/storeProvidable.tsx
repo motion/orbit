@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import * as Mobx from 'mobx'
-import difference from 'lodash/difference'
+import { difference } from 'lodash'
 import isEqual from 'react-fast-compare'
 import root from 'global'
 import { DecorPlugin } from '@mcro/decor'
@@ -156,9 +156,8 @@ storeProvidable = function(options, Helpers) {
             return
           }
           root.loadedStores.add(this)
-          this.mountStores()
+          this.didMountStores()
           this.willReloadListener = Helpers.on('will-hmr', () => {
-            console.log('willhmr')
             setRecentHMR()
             this.onWillReloadStores()
           })
@@ -195,6 +194,9 @@ storeProvidable = function(options, Helpers) {
         setupStores() {
           const getProps = {
             get: () => this._props,
+            set() {
+              // ignore
+            },
             configurable: true,
           }
           // start stores
@@ -208,7 +210,7 @@ storeProvidable = function(options, Helpers) {
               }
               Object.defineProperty(Store.prototype, 'props', getProps)
               const store = new Store()
-              delete Store.prototype.props // safety, remove hack
+              // delete Store.prototype.props // safety, remove hack
               // then define directly
               Object.defineProperty(store, 'props', getProps)
               return store
@@ -218,23 +220,22 @@ storeProvidable = function(options, Helpers) {
               [cur]: createStore(),
             }
           }, {})
-          // optional mount function
-          if (options.onStoreMount) {
-            for (const name of Object.keys(stores)) {
-              // fallback to store if nothing returned
-              stores[name] =
-                options.onStoreMount.call(
-                  stores[name],
-                  name,
-                  stores[name],
-                  this.props,
-                ) || stores[name]
-            }
-          }
           this.stores = stores
+          this.willMountStores()
         }
 
-        mountStores() {
+        willMountStores() {
+          if (options.onStoreMount) {
+            for (const name of Object.keys(this.stores)) {
+              if (!this.stores[name].__hasMounted) {
+                options.onStoreMount(this.stores[name], this.props)
+              }
+              this.stores[name].__hasMounted = true
+            }
+          }
+        }
+
+        didMountStores() {
           if (!this.stores) {
             return
           }
@@ -300,14 +301,15 @@ storeProvidable = function(options, Helpers) {
               continue
             }
             // auto rehydrate
-            if (storeHMRCache[key].state) {
-              store.hydrate(storeHMRCache[key].state)
+            const hydrateState = storeHMRCache[key].state
+            if (hydrateState) {
+              // console.log('hydrating', key, hydrateState)
+              store.hydrate(hydrateState)
               Helpers.emit('store.mount', { name, thing: store })
             }
-            if (store.onReload) {
-              store.onReload()
-            }
           }
+          // re-run didMount
+          this.willMountStores()
         }
 
         childContextStores() {
@@ -368,6 +370,7 @@ storeProvidable = function(options, Helpers) {
       return new Proxy(StoreProviderWithContext, {
         set(_, method, value) {
           Klass[method] = value
+          StoreProviderWithContext[method] = value
           return true
         },
       })

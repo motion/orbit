@@ -17,6 +17,7 @@ export type AppStatePeekItem = {
   body: string
   type: string
   integration: string
+  subType: string
 }
 
 export type AppState = {
@@ -86,6 +87,7 @@ class AppStore {
     PIN: 'PIN',
     UNPIN: 'UNPIN',
     TOGGLE_PINNED: 'TOGGLE_PINNED',
+    CLEAR_SELECTED: 'CLEAR_SELECTED',
   }
 
   setState = Bridge.setState
@@ -130,12 +132,7 @@ class AppStore {
     return !App.orbitState.hidden
   }
 
-  get isShowingPeek() {
-    return !!App.peekState.target
-  }
-
   animationDuration = 160
-  dockedWidth = 540
 
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(
@@ -148,7 +145,8 @@ class AppStore {
   // this won't trigger until the app is actually finished showing
   // to be more precise for enabling mouse events
   isMouseInActiveArea = react(
-    () => !!(Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered),
+    () =>
+      !!(Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered),
     async (over, { sleep, setValue }) => {
       await sleep(over ? 0 : App.animationDuration)
       setValue(over)
@@ -157,18 +155,6 @@ class AppStore {
   )
 
   last: Boolean
-
-  wasShowingPeek = react(
-    () => App.isShowingPeek,
-    is => {
-      if (is === false) {
-        return false
-      }
-      const last = this.last
-      this.last = is
-      return is || last || false
-    },
-  )
 
   get orbitOnLeft() {
     if (App.orbitState.docked) {

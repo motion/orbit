@@ -5,6 +5,7 @@ import { Bit, Person } from '@mcro/models'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { OrbitDockedPane } from './OrbitDockedPane'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -24,7 +25,7 @@ class OrbitHomeStore {
       if (!isActive) {
         throw react.cancel
       }
-      this.props.appStore.setGetResults(() => this.results)
+      this.props.searchStore.setGetResults(() => this.results)
     },
     { immediate: true },
   )
@@ -81,12 +82,15 @@ const itemProps = {
 }
 
 @attachTheme
+@view.attach('searchStore')
 @view.attach({
   store: OrbitHomeStore,
 })
 @view
 export class OrbitHome extends React.Component<{
-  store: OrbitHomeStore
+  name: string
+  paneStore: OrbitDockedPaneStore
+  store?: OrbitHomeStore
 }> {
   span2 = {
     gridColumnEnd: 'span 2',
@@ -104,7 +108,7 @@ export class OrbitHome extends React.Component<{
               const isExpanded = index < 2
               return (
                 <OrbitCard
-                  pane="summary"
+                  pane="docked"
                   subPane="home"
                   selectedTheme={selectedTheme}
                   key={`${bit.id}${index}`}

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import { Col } from './blocks/Col'
-import { Color } from '@mcro/css'
+import { Color } from '@mcro/gloss'
 
 type Props = {
   size: number

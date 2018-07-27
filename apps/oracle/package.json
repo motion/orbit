@@ -4,7 +4,7 @@
   "private": true,
   "main": "./_/oracle.js",
   "scripts": {
-    "build": "./build.sh --if-empty && npx tsc",
+    "build": "./build.sh --if-empty && npx tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "build-app": "./build.sh",
     "train": "cd ./pyocr/src && python3 train.py",

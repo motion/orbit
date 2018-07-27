@@ -49,23 +49,28 @@
 
 # Wow features
 
-## Watch
+## Fast Search
 
+- Instant results as you type
+- Highlights sub-sections much better
+- Keyboard nav thats snappy
+- Sub-search within selected item with just a couple keystrokes
+- Enter to open
+
+## Follow
+
+- This should show on your homepage
+- Can automatically show people you recently interacted with
+- Type a term and hit "follow"
+  - Shows off app stuff nicely as you can drag it out
 - Add watch terms and see updates on them
 - "search" -> "Watch this term"
   - go back to home, see updates on it now
 
-## Snippets
-
-- Orbit adds a context bottom bar
-  - Shows current page you're looking at + preview
-- One click adds it to your memory
-- Highlight anything, add to orbit
-
 ## Memory
 
 - As you work it scans things
-- You can search anything you've read/talked about
+- Search anything you've read/talked about
 
 ## Context
 

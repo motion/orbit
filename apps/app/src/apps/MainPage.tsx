@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 // import { HighlightsPage } from './HighlightsPage'
-import { OrbitPage } from './OrbitPage'
-import { PeekPage } from './PeekPage'
+import { Orbit } from './orbit/Orbit'
+import { Peek } from './peek/Peek'
 import { AppStore } from '../stores/AppStore'
 import * as UI from '@mcro/ui'
-import { SearchFilterStore } from '../stores/SearchFilterStore'
 import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
+import { SearchStore } from '../stores/SearchStore'
 
 const Main = view(UI.Col, {
   // background: [0, 0, 0, 0.1],
@@ -21,24 +21,21 @@ const Main = view(UI.Col, {
 
 @view.provide({
   integrationSettingsStore: IntegrationSettingsStore,
-  searchFilterStore: SearchFilterStore,
   appStore: AppStore,
+})
+@view.provide({
+  searchStore: SearchStore, // Peek and Orbit both can use search store
 })
 export class MainPage extends React.Component<{
   integrationSettingsStore: IntegrationSettingsStore
-  searchFilterStore: SearchFilterStore
   appStore: AppStore
 }> {
-  componentWillMount() {
-    this.props.searchFilterStore.integrationSettingsStore = this.props.integrationSettingsStore
-  }
-
   render() {
     return (
       <Main>
         {/* <HighlightsPage /> */}
-        <OrbitPage />
-        <PeekPage />
+        <Orbit />
+        <Peek />
       </Main>
     )
   }

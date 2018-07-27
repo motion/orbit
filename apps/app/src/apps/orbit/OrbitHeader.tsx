@@ -4,24 +4,25 @@ import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
-import { AppStore } from '../../stores/AppStore'
-import { OrbitStore } from './OrbitStore'
 import { OrbitHeaderInput } from './orbitHeader/OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
+import { SearchStore } from '../../stores/SearchStore'
 
 const OrbitHeaderContainer = view({
   position: 'relative',
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  padding: [6, 12],
+  padding: [3, 12],
   transition: 'all ease-in 300ms',
   zIndex: 4,
 })
 
 OrbitHeaderContainer.theme = ({ borderRadius, theme }) => ({
-  borderTopRadius: borderRadius,
-  background: theme.base.background,
+  borderRadius: borderRadius,
+  background: `linear-gradient(${theme.base.background.lighten(0.03)} 50%, ${
+    theme.base.background
+  })`,
 })
 
 const PinnedControlButton = view(ControlButton, {
@@ -57,7 +58,7 @@ const Title = view({
 })
 
 @attachTheme
-@view.attach('orbitStore', 'appStore', 'paneStore')
+@view.attach('searchStore', 'paneStore')
 @view.attach({
   headerStore: HeaderStore,
 })
@@ -65,24 +66,25 @@ const Title = view({
 export class OrbitHeader extends React.Component<{
   headerStore?: HeaderStore
   paneStore?: OrbitDockedPaneStore
-  appStore?: AppStore
-  orbitStore?: OrbitStore
+  searchStore?: SearchStore
   after?: React.ReactNode
-  borderRadius: number
+  borderRadius?: number
+  theme?: Object
+  showPin?: boolean
 }> {
-  hoverSettler = this.props.appStore.getHoverSettler({
+  hoverSettler = this.props.searchStore.getHoverSettler({
     onHover: this.props.headerStore.hover,
   })
 
   render() {
     const {
       paneStore,
-      orbitStore,
       headerStore,
       after,
       theme,
       showPin,
       borderRadius,
+      searchStore,
     } = this.props
     const headerBg = theme.base.background
     const isHome = paneStore.activePane === 'home'
@@ -97,12 +99,12 @@ export class OrbitHeader extends React.Component<{
           <UI.Icon
             name={
               isHome && iconHovered
-                ? 'remove'
-                : !isHome && iconHovered
+                ? 'arrowright'
+                : !isHome
                   ? 'home'
                   : 'ui-1_zoom'
             }
-            size={18}
+            size={17}
             color={theme.base.color}
             onMouseEnter={headerStore.onHoverIcon}
             onMouseLeave={headerStore.onUnHoverIcon}
@@ -110,14 +112,16 @@ export class OrbitHeader extends React.Component<{
             height="100%"
             width={30}
             opacity={0.2}
-            cursor="pointer"
-            hover={{
-              opacity: 1,
+            // cursor="pointer"
+            {...{
+              '&:hover': {
+                opacity: 0.4,
+              },
             }}
           />
           <OrbitHeaderInput
+            searchStore={searchStore}
             headerStore={headerStore}
-            orbitStore={orbitStore}
             theme={theme}
           />
         </Title>

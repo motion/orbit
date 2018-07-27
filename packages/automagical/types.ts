@@ -2,7 +2,7 @@ export type ReactionHelpers = {
   preventLogging: Function
   setValue: (a: any) => void
   getValue: () => any
-  sleep: (ms: number) => Promise<void>
+  sleep: (ms?: number) => Promise<void>
   when: (condition: () => boolean, ms?: number) => Promise<void>
   whenChanged: <A>(condition: () => A, dontCompare?: boolean) => Promise<A>
 }

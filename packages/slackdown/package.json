@@ -6,7 +6,7 @@
   "author": "Motion (http://motion.io)",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "publishConfig": {

@@ -11,8 +11,20 @@ import * as UI from '@mcro/ui'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
+import { SearchStore } from '../../stores/SearchStore'
+
+type Props = {
+  name: string
+  store?: OrbitSettingsStore
+  searchStore?: SearchStore
+  appStore?: AppStore
+  paneStore?: OrbitDockedPaneStore
+  integrationSettingsStore: IntegrationSettingsStore
+}
 
 class OrbitSettingsStore {
+  props: Props
+
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
   }
@@ -59,7 +71,7 @@ class OrbitSettingsStore {
       const getResults = () => integrationSettings
       // @ts-ignore
       getResults.shouldFilter = true
-      this.props.appStore.setGetResults(() => this.allResults)
+      this.props.searchStore.setGetResults(() => this.allResults)
     },
     { immediate: true },
   )
@@ -70,7 +82,7 @@ class OrbitSettingsStore {
 
   IntegrationCard = props => (
     <OrbitSettingCard
-      pane="summary"
+      pane="docked"
       subPane="settings"
       total={this.allResults.length}
       {...props}
@@ -89,18 +101,12 @@ class OrbitSettingsStore {
   )
 }
 
-@view.attach('appStore', 'paneStore', 'integrationSettingsStore')
+@view.attach('appStore', 'searchStore', 'paneStore', 'integrationSettingsStore')
 @view.attach({
   store: OrbitSettingsStore,
 })
 @view
-export class OrbitSettings extends React.Component<{
-  name: string
-  store?: OrbitSettingsStore
-  appStore?: AppStore
-  paneStore?: OrbitDockedPaneStore
-  integrationSettingsStore: IntegrationSettingsStore
-}> {
+export class OrbitSettings extends React.Component<Props> {
   render() {
     const { name, store, appStore, integrationSettingsStore } = this.props
     const isActive = result => {
@@ -151,6 +157,7 @@ export class OrbitSettings extends React.Component<{
               // custom auth clicks
               const onClick = item.auth
                 ? ({ currentTarget }) => {
+                    console.log('select auth')
                     App.actions.toggleSelectItem(
                       { id: item.id, type: 'view', title: item.title },
                       currentTarget,
@@ -163,8 +170,16 @@ export class OrbitSettings extends React.Component<{
                   result={item}
                   index={index + store.allResults.length}
                   appStore={appStore}
-                  hoverable
                   onClick={onClick}
+                  disableShadow
+                  cardProps={{
+                    border: [1, 'transparent'],
+                    background: 'transparent',
+                    padding: [12, 12, 12, 10],
+                  }}
+                  titleProps={{
+                    size: 1.1,
+                  }}
                 />
               )
             })}

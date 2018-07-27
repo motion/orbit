@@ -1,3 +1,14 @@
+.rendered-content a {
+  color: #108ca2;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.rendered-content a:hover {
+  color: #13a8c2;
+  text-decoration: underline;
+}
+
 .hideScrollBar::-webkit-scrollbar {
   height: 0px;
   width: 0px;

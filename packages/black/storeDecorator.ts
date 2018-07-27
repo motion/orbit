@@ -9,25 +9,28 @@ export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 export { on } from '@mcro/helpers'
 
 export const storeDecorator: any = decor([
-  subscribable,
   emittable,
+  subscribable,
   automagical,
   hydratable,
 ])
 
 export const storeOptions = {
   storeDecorator,
-  onStoreMount(_, store, props) {
-    if (store._decorated) {
-      return
+  onStoreMount(store, props) {
+    // TODO make automagical idempotent
+    if (!store._decorated) {
+      Object.defineProperty(store, '_decorated', {
+        enumerable: false,
+        writable: false,
+        value: true,
+      })
+      if (store.automagic) {
+        store.automagic()
+      }
     }
-    Object.defineProperty(store, '_decorated', {
-      enumerable: false,
-      writable: false,
-      value: true,
-    })
-    if (store.automagic) {
-      store.automagic()
+    if (store.setupSubscribables) {
+      store.setupSubscribables()
     }
     if (store.willMount) {
       store.willMount.call(store, props)
@@ -51,7 +54,6 @@ export const storeOptions = {
         store[key] &&
         store[key].subscriptions instanceof CompositeDisposable
       ) {
-        console.log('!!!!!! dispose store', key)
         store[key].subscriptions.dispose()
       }
     }
@@ -63,7 +65,7 @@ export function store<T>(Store): T {
   const ProxyStore = function(...args) {
     // console.log('on store mount', this, args)
     const store = new DecoratedStore(...args)
-    storeOptions.onStoreMount(Store.constructor.name, store, args[0])
+    storeOptions.onStoreMount(store, args[0])
     return store
   }
   // copy statics

@@ -57,7 +57,8 @@
     "turndown": "4.0.2",
     "webpack-runtime-require": "0.3.0",
     "compromise": "11.11.0",
-    "sherlockjs": "1.4.0"
+    "sherlockjs": "1.4.0",
+    "scroll": "2.0.3"
   },
   "devDependencies": {
     "@mcro/dev": "^2.2.0",

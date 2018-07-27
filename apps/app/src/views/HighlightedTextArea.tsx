@@ -17,6 +17,7 @@ const Block = view(UI.Block, {
   left: 0,
   right: 0,
   bottom: 0,
+  padding: 3,
   whiteSpace: 'pre',
   wordWrap: 'no-wrap',
 })
@@ -39,7 +40,7 @@ type Props = CSSPropertySet & {
 }
 
 export class HighlightedTextArea extends React.Component<Props> {
-  highlights = React.createRef()
+  highlights = React.createRef<HTMLDivElement>()
 
   static defaultProps = {
     openMark: '<mark>',

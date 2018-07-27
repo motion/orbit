@@ -1,79 +1,135 @@
 import * as React from 'react'
-import { view, react, compose } from '@mcro/black'
-import { Person } from '@mcro/models'
-import { App, Desktop } from '@mcro/stores'
+import { view, react, compose, on } from '@mcro/black'
+import { App } from '@mcro/stores'
 import { OrbitCard } from '../OrbitCard'
 import * as UI from '@mcro/ui'
-
-const TYPE_DEBOUNCE = 200
+import { SearchStore } from '../../../stores/SearchStore'
 
 class QuickSearchStore {
-  get isActive() {
-    return App.state.query === this.search.query
+  props: {
+    searchStore: SearchStore
   }
 
-  search = react(
-    () => [App.state.query, Desktop.state.lastBitUpdatedAt],
-    async ([query], { sleep }) => {
-      await sleep(TYPE_DEBOUNCE)
-      return {
-        query,
-        results: await Person.find({
-          where: `(name like "%${query}%")`,
-          take: 8,
-        }),
+  frameRef = React.createRef<HTMLDivElement>()
+
+  willMount() {
+    on(this, this.searchStore, 'key', val => {
+      if (val === 'enter') {
+        App.actions.selectItem(
+          this.quickResults[this.index],
+          this.cardRefs[this.index],
+        )
       }
-    },
-    {
-      immediate: true,
-      defaultValue: { results: [] },
+    })
+  }
+
+  get searchStore() {
+    return this.props.searchStore
+  }
+
+  get quickResults() {
+    return this.searchStore.quickSearchState.results
+  }
+
+  get index() {
+    return this.searchStore.quickIndex
+  }
+
+  get isChanging() {
+    return App.state.query !== this.searchStore.quickSearchState.query
+  }
+
+  get cardRefs(): HTMLDivElement[] {
+    return Array.from(
+      this.frameRef.current.querySelectorAll('.quick-result-card'),
+    )
+  }
+
+  scrollToSelected = react(
+    () => this.index,
+    index => {
+      const frame = this.frameRef.current
+      console.log('scroll', frame, index, this.cardRefs[index])
+      if (!frame) {
+        throw react.cancel
+      }
+      const activeCard = this.cardRefs[index]
+      frame.scrollLeft = activeCard.offsetLeft - 12
     },
   )
 }
 
+const height = 100
+const pad = 12
+const scrollBarHeight = 16
+const frameHeight = height + pad
+
+const QuickResultsFrameHideScrollBar = view(UI.View, {
+  overflow: 'hidden',
+})
+
 const QuickResultsFrame = view(UI.Row, {
   alignItems: 'center',
-  padding: [0, 12],
+  height: frameHeight + scrollBarHeight + 3,
+  paddingBottom: scrollBarHeight + pad,
+  marginBottom: -(scrollBarHeight + pad),
   overflow: 'hidden',
   overflowX: 'auto',
 })
 
 const decorate = compose(
   view.attach({
-    quickSearchStore: QuickSearchStore,
+    store: QuickSearchStore,
   }),
   view,
 )
 
-export const OrbitSearchQuickResults = decorate(({ quickSearchStore }) => {
-  const { results } = quickSearchStore.search
-  return (
-    <QuickResultsFrame
-      opacity={quickSearchStore.isActive ? 1 : 0.5}
-      height={results.length ? 100 : 0}
-    >
-      {/* hacky we are filtering to just get people with images */}
-      {results.filter(person => !!person.data.profile).map(person => {
-        return (
-          <OrbitCard
-            pane=""
-            subPane=""
-            key={person.id}
-            bit={person}
-            style={{
-              width: 240,
-              height: 80,
-              marginRight: 10,
-            }}
-            hide={{
-              icon: true,
-            }}
-            onSelect={ref => {
-              App.actions.selectItem(person, ref)
-            }}
-          />
-        )
-      })}
-    </QuickResultsFrame>
-  )
-})
+type Props = {
+  searchStore: SearchStore
+  store: QuickSearchStore
+}
+
+export const OrbitSearchQuickResults = decorate(
+  ({ searchStore, store }: Props) => {
+    const { results } = searchStore.quickSearchState
+    return (
+      <QuickResultsFrameHideScrollBar height={results.length ? frameHeight : 0}>
+        <QuickResultsFrame
+          opacity={store.isChanging ? 0.5 : 1}
+          forwardRef={store.frameRef}
+        >
+          {/* inner div so scrolls to end all the way */}
+          <div style={{ flexFlow: 'row', padding: pad }}>
+            {results.map((person, index) => {
+              return (
+                <OrbitCard
+                  pane=""
+                  subPane=""
+                  className="quick-result-card"
+                  key={person.id}
+                  bit={person}
+                  inGrid
+                  isSelected={() => {
+                    return searchStore.nextIndex === -1 && index === store.index
+                  }}
+                  style={{
+                    width: 240,
+                    height: height - 20, // 20 == shadow space
+                    marginRight: 10,
+                  }}
+                  cardProps={{
+                    flex: 1,
+                  }}
+                  hide={{
+                    icon: true,
+                  }}
+                  onClick={searchStore.toggleSelected}
+                />
+              )
+            })}
+          </div>
+        </QuickResultsFrame>
+      </QuickResultsFrameHideScrollBar>
+    )
+  },
+)

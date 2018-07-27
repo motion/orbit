@@ -1,13 +1,14 @@
 // import { react } from '@mcro/black'
-import { Bit, Job } from '@mcro/models'
+import { Bit, Job, Setting } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
 
 // TODO: we can have multiple of the same integration added in
 // this just assumes one of each
 
 export class SettingInfoStore {
-  job = null
-  bitsCount = null
+  props: {
+    setting: Setting
+  }
 
   get setting() {
     return this.props.setting

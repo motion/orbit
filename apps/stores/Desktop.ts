@@ -48,6 +48,7 @@ export type DesktopState = {
   ocrState: {
     words?: DesktopStateOCRItem[]
     lines?: DesktopStateOCRItem[]
+    shouldClear: string[]
     clearWords: { [key: string]: number }
     restoreWords: { [key: string]: number }
   }
@@ -63,12 +64,18 @@ export type DesktopState = {
 
 @store
 class DesktopStore {
+  // TODO have the store decorator somehow auto-define these types
   // shortcuts
   appState: DesktopStore['state']['appState']
   ocrState: DesktopStore['state']['ocrState']
   searchState: DesktopStore['state']['searchState']
   keyboardState: DesktopStore['state']['keyboardState']
   mouseState: DesktopStore['state']['mouseState']
+  setKeyboardState: DesktopStore['setState']
+  setAppState: DesktopStore['setState']
+  setOcrState: DesktopStore['setState']
+  setSearchState: DesktopStore['setState']
+  setMouseState: DesktopStore['setState']
 
   messages = {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',
@@ -95,6 +102,7 @@ class DesktopStore {
     ocrState: {
       words: null,
       lines: null,
+      shouldClear: [],
       clearWords: null,
       restoreWords: null,
     },

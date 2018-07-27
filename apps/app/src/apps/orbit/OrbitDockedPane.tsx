@@ -183,7 +183,8 @@ const DockedPaneFrame = view(UI.FullScreen, {
 const DockedPaneContent = view(UI.View, {
   position: 'relative',
   flex: 1,
-  overflow: 'hidden',
+  // this would make card shadows cut off
+  // overflow: 'hidden',
 })
 
 DockedPaneContent.theme = ({ theme }) => ({

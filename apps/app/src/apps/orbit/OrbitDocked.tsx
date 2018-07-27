@@ -73,7 +73,7 @@ Border.theme = ({ theme }) => {
 // but still hide things that go below the bottom as it should
 const OrbitInner = view({
   position: 'relative',
-  zIndex: 3,
+  zIndex: 4,
   overflow: 'hidden',
   margin: [-20, -20, 0, -20],
   padding: [20, 20, 0, 20],

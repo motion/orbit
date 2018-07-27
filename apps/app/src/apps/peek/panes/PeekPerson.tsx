@@ -8,6 +8,8 @@ import { SubTitle, RoundButton } from '../../../views'
 import { OrbitCardMasonry } from '../../orbit/OrbitCardMasonry'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
+import { Masonry } from '../../../views/Masonry'
+import { OrbitCard } from '../../orbit/OrbitCard'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
@@ -17,12 +19,11 @@ const mapW = 700
 const mapH = 300
 
 class PersonPeek {
-  relatedConversations = modelQueryReaction(
+  recentBits = modelQueryReaction(
     () =>
       Bit.find({
         relations: ['people'],
-        where: { integration: 'slack', type: 'conversation' },
-        take: 3,
+        take: 20,
       }),
     { defaultValue: [] },
   )
@@ -32,12 +33,12 @@ const Frame = view({
   width: '100%',
   height: '100%',
   overflow: 'hidden',
+  overflowY: 'scroll',
   position: 'relative',
 })
 
 const Content = view({
   padding: [10, 0],
-  overflowY: 'scroll',
   flex: 1,
   position: 'relative',
   zIndex: 100,
@@ -76,8 +77,11 @@ const FadeMap = view({
   left: 0,
   right: 0,
   height: 200,
-  background: 'linear-gradient(transparent, #f9f9f9)',
   zIndex: 2,
+})
+
+FadeMap.theme = ({ theme }) => ({
+  background: `linear-gradient(transparent, ${theme.base.background})`,
 })
 
 const FadeMapRight = view({
@@ -86,8 +90,13 @@ const FadeMapRight = view({
   bottom: 0,
   left: 0,
   right: 0,
-  background: 'linear-gradient(to right, transparent, #f9f9f9)',
   zIndex: 2,
+})
+
+FadeMapRight.theme = ({ theme }) => ({
+  background: `linear-gradient(to right, transparent, ${
+    theme.base.background
+  })`,
 })
 
 const Info = view({
@@ -115,7 +124,7 @@ const Email = view('a', {
 })
 
 const Avatar = view('img', {
-  margin: [-40, 0, 15, -65],
+  margin: [-40, 0, -15, -65],
   width: 256,
   height: 256,
   borderRadius: 1000,
@@ -135,11 +144,11 @@ const Links = view({
 const IntButton = view('a', {
   padding: [6, 10],
   marginRight: 7,
-  borderRadius: 10,
+  borderRadius: 7,
   flexFlow: 'row',
   fontSize: 13,
   fontWeight: 500,
-  background: 'linear-gradient(#fff, #f6f6f6 50%)',
+  background: 'linear-gradient(#fff, #f4f4f4 70%)',
   boxShadow: 'inset 0 0 1px #ccc, inset 0 1px #fff',
   border: [1, '#fff'],
   cursor: 'default',
@@ -168,14 +177,14 @@ export class PeekPerson extends React.Component<
 > {
   render() {
     const { store, integrationSettingsStore, person, children } = this.props
-    console.log('integrationSettingsStore', integrationSettingsStore)
     const { settings } = integrationSettingsStore
+    console.log('!!!!!!!!!!!!!!! settings', settings)
     if (!settings) {
       return children({})
     }
     const setting = settings.slack
     if (!setting || !person || !person.data || !person.data.profile) {
-      console.log('no person or person.data.profile', person)
+      console.log('no person or person.data.profile?', person)
       return children({})
     }
     return children({
@@ -229,25 +238,39 @@ export class PeekPerson extends React.Component<
             <ContentInner>
               <Card>
                 <StrongSubTitle>Spends time in</StrongSubTitle>
-                <UI.ListRow
-                  itemProps={{
-                    size: 1.05,
-                    alpha: 0.9,
-                    background: 'transparent',
-                    borderRadius: 5,
-                    margin: [0, 10, 0, -5],
-                  }}
-                >
-                  <RoundButton>#general</RoundButton>
-                  <RoundButton>#status</RoundButton>
-                  <RoundButton icon="github">motion/orbit</RoundButton>
-                  <RoundButton>#showoff</RoundButton>
-                </UI.ListRow>
+                <UI.Theme name="grey">
+                  <Masonry>
+                    {[
+                      {
+                        title: '#general',
+                        icon: 'slack',
+                        subtitle: '20 people',
+                      },
+                      {
+                        title: '#status',
+                        icon: 'slack',
+                        subtitle: '29 people',
+                      },
+                      {
+                        title: 'motion/orbit',
+                        icon: 'github',
+                        subtitle: '20 people',
+                      },
+                      {
+                        title: '#showoff',
+                        icon: 'slack',
+                        subtitle: '78 people',
+                      },
+                    ].map((place, index) => (
+                      <OrbitCard key={index} {...place} />
+                    ))}
+                  </Masonry>
+                </UI.Theme>
               </Card>
 
               <Card>
                 <StrongSubTitle>Recently</StrongSubTitle>
-                <OrbitCardMasonry items={store.relatedConversations} />
+                <OrbitCardMasonry items={store.recentBits} />
               </Card>
             </ContentInner>
           </Content>

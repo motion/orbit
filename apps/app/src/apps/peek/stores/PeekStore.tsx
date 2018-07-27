@@ -7,7 +7,9 @@ import { SearchStore } from '../../../stores/SearchStore'
 
 const TYPE_THEMES = {
   person: {
-    background: 'rgba(0,0,0,0.013)',
+    titlebarBackground: 'rgba(0,0,0,0.1)',
+    headerBackground: 'transparent',
+    background: '#f2f2f2',
     color: '#444',
   },
   // setting: 'gray',

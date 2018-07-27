@@ -2,9 +2,9 @@ import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
+import * as Constants from '../../../constants'
 
 const SHADOW_PAD = 85
-const borderRadius = 6
 const background = '#f9f9f9'
 // shared by arrow and frameborder
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.5]]
@@ -27,7 +27,10 @@ const PeekMain = view({
   flex: 1,
   overflow: 'hidden',
   opacity: 1,
-  transition: 'background ease-in 200ms',
+})
+
+PeekMain.theme = ({ theme }) => ({
+  background: theme.base.background,
 })
 
 type PeekFrameProps = {
@@ -72,7 +75,7 @@ export const PeekFrame = view.attach('peekStore')(
             ARROW_CARD_TOP_OFFSET -
             state.position[1] -
             arrowSize / 2,
-        state.size[1] - borderRadius * 2 - arrowSize,
+        state.size[1] - Constants.PEEK_BORDER_RADIUS * 2 - arrowSize,
       )
       const transition = transitions(peekStore)
       return (
@@ -119,11 +122,11 @@ export const PeekFrame = view.attach('peekStore')(
           )}
           <UI.Col flex={1} padding={padding} margin={margin}>
             <UI.Col pointerEvents="all !important" position="relative" flex={1}>
-              <PeekFrameBorder borderRadius={borderRadius} />
+              <PeekFrameBorder borderRadius={Constants.PEEK_BORDER_RADIUS} />
               <PeekMain
                 css={{
                   boxShadow,
-                  borderRadius,
+                  borderRadius: Constants.PEEK_BORDER_RADIUS,
                   // background,
                 }}
                 {...props}

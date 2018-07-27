@@ -133,10 +133,12 @@ const Pane = view(UI.View, {
     x: 10,
   },
   isActive: {
-    pointerEvents: 'auto',
     opacity: 1,
     transform: {
       x: 0,
+    },
+    '& > *': {
+      pointerEvents: 'auto',
     },
   },
 })

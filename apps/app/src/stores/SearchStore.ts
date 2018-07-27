@@ -125,9 +125,17 @@ export class SearchStore /* extends Store */ {
 
   get selectedItem() {
     if (this.activeIndex === -1) {
-      return this.quickSearchState.results[this.quickIndex]
+      const { results } = this.quickSearchState
+      if (!results.length) {
+        return null
+      }
+      return results[this.quickIndex]
     }
-    return this.searchState.results[this.activeIndex]
+    const { results } = this.searchState
+    if (!results.length) {
+      return null
+    }
+    return results[this.activeIndex]
   }
 
   get hasActiveIndex() {
@@ -464,6 +472,7 @@ export class SearchStore /* extends Store */ {
   }
 
   onChangeDate = ({ selection }: { selection: DateSelections }) => {
+    console.log('got selection', selection)
     this.dateState = {
       ranges: [selection],
     }
@@ -558,8 +567,8 @@ export class SearchStore /* extends Store */ {
     })
   }
 
-  resetQuickIndexOnSearch = react(
-    () => App.state.query.length,
+  resetQuickIndexOnChange = react(
+    () => this.quickSearchState,
     () => {
       this.quickIndex = 0
     },

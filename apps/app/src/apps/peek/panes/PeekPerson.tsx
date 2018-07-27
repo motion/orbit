@@ -178,7 +178,6 @@ export class PeekPerson extends React.Component<
   render() {
     const { store, integrationSettingsStore, person, children } = this.props
     const { settings } = integrationSettingsStore
-    console.log('!!!!!!!!!!!!!!! settings', settings)
     if (!settings) {
       return children({})
     }

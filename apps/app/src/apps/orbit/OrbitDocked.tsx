@@ -22,6 +22,7 @@ const Frame = view(UI.Col, {
   top: 10,
   right: 10,
   borderRadius: BORDER_RADIUS,
+  border: [2, [0, 0, 0, 0.05]],
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
@@ -47,11 +48,12 @@ const Frame = view(UI.Col, {
   },
 })
 
-Frame.theme = ({ theme }) => ({
-  background: theme.base.background,
-})
-
-const Border = view(UI.FullScreen, {
+const Border = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
   zIndex: Number.MAX_SAFE_INTEGER,
   pointerEvents: 'none',
 })
@@ -66,6 +68,15 @@ Border.theme = ({ theme }) => {
     boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
   }
 }
+
+const FrameBackground = view(UI.FullScreen, {
+  zIndex: -1,
+  borderRadius: BORDER_RADIUS + 1,
+})
+
+FrameBackground.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
 
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
@@ -110,6 +121,7 @@ class OrbitDockedInner extends React.Component<{
           bottom={searchStore.searchState.query ? 10 : contentBottom}
         >
           <Border />
+          <FrameBackground />
           <UI.View borderRadius={BORDER_RADIUS} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}

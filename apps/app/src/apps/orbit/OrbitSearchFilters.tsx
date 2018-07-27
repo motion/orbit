@@ -78,7 +78,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
               onClick={searchFilterStore.filterToggler(filter)}
               filter={filter.active ? null : 'grayscale(100%)'}
               opacity={filter.active ? 1 : 0.3}
-              background="#fff"
+              background="transparent"
               {...{
                 '&:hover': {
                   filter: 'none',

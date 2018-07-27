@@ -77,8 +77,9 @@ export class PeekStore {
       this.props.searchStore.selectedItem,
     ],
     async ([tornState, target, docked, hidden, selectedItem], { sleep }) => {
+      console.log('peek curState reaction!!!!')
       // debounce just a tiny bit to avoid renders as selectedItem updated a bit after peekState
-      await sleep(16)
+      await sleep()
       if (tornState) {
         return tornState
       }
@@ -136,7 +137,9 @@ export class PeekStore {
       }
     },
     {
-      delay: 16,
+      // delay a bit more here to let peek render
+      // our only time constraint is having this ready for when it leaves
+      delay: 40,
       immediate: true,
     },
   )

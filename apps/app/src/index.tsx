@@ -17,6 +17,8 @@ process.on('uncaughtException', err => {
 // hmr calls render twice out the gate
 // so prevent that
 export const render = throttle(async () => {
+  const { RootView } = require('./RootViewHMR')
+
   // Root is the topmost store essentially
   // We export it so you can access a number of helpers
   if (!window['Root']) {
@@ -27,8 +29,9 @@ export const render = throttle(async () => {
     await rootStore.start({
       connectModels: window.location.pathname !== '/auth',
     })
+    rootStore.rootView = RootView
   }
-  const { RootView } = require('./RootViewHMR')
+
   // <React.unstable_AsyncMode>
   // </React.unstable_AsyncMode>
   ReactDOM.render(

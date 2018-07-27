@@ -1,6 +1,6 @@
 import { Person, Bit } from '@mcro/models'
 import { App, AppStatePeekItem } from '@mcro/stores'
-import peekPosition from '../../../helpers/peekPosition'
+import { peekPosition } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 

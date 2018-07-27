@@ -65,7 +65,7 @@ export class OrbitSettingCard extends React.Component<
         }
         result={result}
         {...props}
-        onClick={onClick || !isActive ? this.handleClick : null}
+        onClick={onClick || (!isActive ? this.handleClick : null)}
       />
     )
   }

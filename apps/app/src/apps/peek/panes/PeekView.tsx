@@ -8,15 +8,14 @@ const views = {
   jira: JiraSetupPane,
 }
 
-export const PeekView = (_: PeekPaneProps) => {
-  const { bit, children } = this.props
-  if (!bit || !views[bit.id]) {
-    console.log('no view or bit', bit, views)
+export const PeekView = ({ item, children }: PeekPaneProps) => {
+  if (!item || !views[item.id]) {
+    console.log('no view or item', item, views)
     return children({})
   }
-  const View = views[bit.id]
+  const View = views[item.id]
   return children({
-    title: bit.title,
-    content: <View bit={bit} />,
+    title: item.title,
+    content: <View item={item} />,
   })
 }

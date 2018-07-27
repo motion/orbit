@@ -157,6 +157,7 @@ export class OrbitSettings extends React.Component<Props> {
               // custom auth clicks
               const onClick = item.auth
                 ? ({ currentTarget }) => {
+                    console.log('select auth')
                     App.actions.toggleSelectItem(
                       { id: item.id, type: 'view', title: item.title },
                       currentTarget,

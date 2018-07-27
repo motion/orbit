@@ -1,16 +1,16 @@
 import {
-  GoogleDriveCommentResponse,
-  GoogleDriveFetchQueryOptions,
-  GoogleDriveFileResponse,
-  GoogleDriveRevisionResponse,
-} from './GoogleDriveTypes'
+  GDriveCommentResponse,
+  GDriveFetchQueryOptions,
+  GDriveFileResponse,
+  GDriveRevisionResponse,
+} from './GDriveTypes'
 
 /**
  * @see https://developers.google.com/drive/api/v3/reference/files/list
  */
 export function googleDriveFileQuery(
   pageToken: string,
-): GoogleDriveFetchQueryOptions<GoogleDriveFileResponse> {
+): GDriveFetchQueryOptions<GDriveFileResponse> {
   return {
     json: true,
     url: '/files',
@@ -37,6 +37,7 @@ export function googleDriveFileQuery(
             'properties',
             'spaces',
             'version',
+            'webViewLink',
             'webContentLink',
             'iconLink',
             'thumbnailLink',
@@ -67,7 +68,7 @@ export function googleDriveFileQuery(
  */
 export function googleDriveFileExportQuery(
   fileId: string,
-): GoogleDriveFetchQueryOptions<string> {
+): GDriveFetchQueryOptions<string> {
   return {
     url: `/files/${fileId}/export`,
     query: {
@@ -82,7 +83,7 @@ export function googleDriveFileExportQuery(
 export function googleDriveFileCommentQuery(
   fileId: string,
   pageToken?: string,
-): GoogleDriveFetchQueryOptions<GoogleDriveCommentResponse> {
+): GDriveFetchQueryOptions<GDriveCommentResponse> {
   return {
     json: true,
     url: `/files/${fileId}/comments`,
@@ -109,7 +110,7 @@ export function googleDriveFileCommentQuery(
 export function googleDriveFileRevisionQuery(
   fileId: string,
   pageToken?: string,
-): GoogleDriveFetchQueryOptions<GoogleDriveRevisionResponse> {
+): GDriveFetchQueryOptions<GDriveRevisionResponse> {
   return {
     json: true,
     url: `/files/${fileId}/revisions`,

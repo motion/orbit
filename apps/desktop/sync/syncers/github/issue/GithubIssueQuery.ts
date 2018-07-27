@@ -24,6 +24,12 @@ export type GithubIssueQueryResult = {
           labels: {
             edges: { node: { name: string } }[]
           }
+          url: string
+          repository: {
+            id: string
+            name: string
+            url: string
+          }
           comments: {
             edges: {
               node: {
@@ -70,6 +76,12 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
           bodyText
           updatedAt
           createdAt
+          url
+          repository {
+            id
+            name
+            url
+          }
           author {
             avatarUrl
             login

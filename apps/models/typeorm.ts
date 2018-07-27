@@ -16,6 +16,7 @@ const {
   getConnection,
   OneToOne,
   ManyToMany,
+  ManyToOne,
   JoinColumn,
   JoinTable,
   Not,
@@ -30,6 +31,9 @@ const {
   getRepository,
   Brackets,
   LessThan,
+  PrimaryColumn,
+  BeforeUpdate,
+  BeforeInsert,
 } = typeorm
 
 export {
@@ -45,6 +49,7 @@ export {
   getConnection,
   OneToOne,
   ManyToMany,
+  ManyToOne,
   JoinColumn,
   JoinTable,
   Not,
@@ -59,6 +64,9 @@ export {
   getRepository,
   Brackets,
   LessThan,
+  PrimaryColumn,
+  BeforeUpdate,
+  BeforeInsert,
 }
 
 // globals

@@ -14,6 +14,7 @@ export type GithubPeopleQueryResult = {
           avatarUrl: string
           bio: string
           email: string
+          name: string
         }
       }[]
     }
@@ -45,6 +46,7 @@ query GitHubIssueQuery($organization: String!, $cursor: String) {
           avatarUrl
           bio
           email
+          name
         }
       }
     }

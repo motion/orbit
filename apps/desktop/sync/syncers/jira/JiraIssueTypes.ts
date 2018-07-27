@@ -9,6 +9,11 @@ export type JiraIssueResponse = {
       description: string
       created: string
       updated: string
+      project: {
+        id: string
+        name: string
+        key: string
+      }
       creator: {
         name: string
         emailAddress: string

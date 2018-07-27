@@ -1,21 +1,21 @@
-import * as fs from "fs";
-import * as https from "https";
-import {URL} from "url";
+import * as fs from 'fs'
+import * as https from 'https'
+import {URL} from 'url'
 import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import r2 from '@mcro/r2'
-import { GoogleDriveFetchQueryOptions } from '~/sync/syncers/gdrive/GoogleDriveTypes'
-import { Setting } from '../../../../models'
+import { GDriveFetchQueryOptions } from './GDriveTypes'
+import { Setting } from '@mcro/models'
 
 /**
  * Fetches data from Google Drive Api.
  */
-export class GoogleDriveFetcher {
+export class GDriveFetcher {
 
-  setting: Setting;
+  setting: Setting
 
   constructor(setting: Setting) {
-    this.setting = setting;
+    this.setting = setting
   }
 
   /**
@@ -23,35 +23,35 @@ export class GoogleDriveFetcher {
    */
   downloadFile(url: string, dest: string): Promise<void> {
     return new Promise((ok, fail) => {
-      const file = fs.createWriteStream(dest);
-      const urlObject = new URL(url);
+      const file = fs.createWriteStream(dest)
+      const urlObject = new URL(url)
       https.get({
         protocol: urlObject.protocol,
         host: urlObject.host,
         port: urlObject.port,
         path: urlObject.pathname,
-        method: "GET",
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${this.setting.token}`
         }
       }, function(response) {
-        response.pipe(file);
+        response.pipe(file)
         file.on('finish', function() {
-          file.close();
-          ok();
+          file.close()
+          ok()
         }).on('error', function(err) { // Handle errors
-          fail(err.message);
-        });
-      });
-    });
+          fail(err.message)
+        })
+      })
+    })
   }
 
   /**
    * Fetches data from google api based on a given query.
    */
-  async fetch<R>(options: GoogleDriveFetchQueryOptions<R>): Promise<R> {
+  async fetch<R>(options: GDriveFetchQueryOptions<R>): Promise<R> {
     const { url, query, json } = options
-    const qs = Object.keys(query).map(key => key + "=" + query[key]).join("&");
+    const qs = Object.keys(query).map(key => key + '=' + query[key]).join('&')
     const fullUrl = `https://content.googleapis.com/drive/v3${url}?${qs}`
     const response = await fetch(fullUrl, {
       mode: json ? 'cors' : undefined,
@@ -61,7 +61,7 @@ export class GoogleDriveFetcher {
         'Access-Control-Allow-Methods': 'GET',
       },
     })
-    const result = json ? await response.json() : await response.text();
+    const result = json ? await response.json() : await response.text()
     if (result.error && result.error.code === 401/* && !isRetrying*/) {
       const didRefresh = await this.refreshToken(this.setting)
       if (didRefresh) {
@@ -72,7 +72,7 @@ export class GoogleDriveFetcher {
       }
     } else if (result.error) {
       console.log(fullUrl, 'error getting result for', result.error)
-      throw result.error;
+      throw result.error
     }
     return result
   }

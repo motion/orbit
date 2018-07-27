@@ -1,5 +1,4 @@
 import { createOrUpdate, CreateOrUpdateOpts } from './createOrUpdate'
-import { Bit } from '../bit'
 import Crypto from 'crypto'
 
 export const hash = x =>
@@ -21,7 +20,7 @@ export async function createOrUpdateBit(
     },
     {
       updateIf: found => found.contentHash !== contentHash,
-      matching: Bit.identifyingKeys,
+      matching: ['identifier', 'type', 'integration'],
       ...options,
     },
   )

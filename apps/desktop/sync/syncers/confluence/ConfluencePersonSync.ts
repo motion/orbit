@@ -68,7 +68,7 @@ export default class ConfluencePersonSync {
           },
         },
       },
-      { matching: Person.identifyingKeys },
+      { matching: ['identifier', 'integration'] },
     )
   }
 

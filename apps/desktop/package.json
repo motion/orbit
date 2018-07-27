@@ -63,6 +63,7 @@
     "reconnecting-websocket": "^3.2.2",
     "recursive-readdir": "^2.2.2",
     "sb-promisify": "^2.0.2",
+    "slack": "^11.0.1",
     "source-map-support": "^0.4.16",
     "sqlite": "2.9.2",
     "sudo-prompt": "^7.1.1",

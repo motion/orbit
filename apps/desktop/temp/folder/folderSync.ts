@@ -1,4 +1,4 @@
-import Syncer from '../syncer'
+import Syncer from '../../sync/syncers/syncer'
 import { Bit, Setting } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 import Path from 'path'

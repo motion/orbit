@@ -27,11 +27,23 @@ type AtlassianContent = {
       when: string
     }
   }
+  space: {
+    id: string
+    name: string
+    _links: {
+      base: string
+      webui: string
+    }
+  }
   extensions: Object
   id: string
   status: string
   title: string
   type: 'page'
+  _links: {
+    base: string
+    webui: string
+  }
 }
 
 type AtlassianObj = {
@@ -79,10 +91,11 @@ export default class ConfluenceBitSync {
     const contents = await Promise.all(
       contentList.map(content =>
         this.service.fetch(`/wiki/rest/api/content/${content.id}`, {
-          expand: 'body.storage,history,history.lastUpdated',
+          expand: 'space,body.storage,history,history.lastUpdated',
         }),
       ),
     )
+    console.log(`loaded content`, contents)
     const contentsRendered = contents.map(response => {
       const markdownBody = htmlToMarkdown(response.body.storage.value)
       return {
@@ -105,8 +118,9 @@ export default class ConfluenceBitSync {
     markdownBody,
     body,
   }: AtlassianObj): Promise<Bit> => {
-    const bitCreatedAt = response.history.createdDate || ''
-    const bitUpdatedAt = response.history.lastUpdated.when || ''
+    const bitCreatedAt = new Date(response.history.createdDate).getTime()
+    const bitUpdatedAt = new Date(response.history.lastUpdated.when).getTime()
+
     return await createOrUpdateBit(Bit, {
       integration: 'confluence',
       identifier: response.id,
@@ -117,6 +131,12 @@ export default class ConfluenceBitSync {
         ...response,
         markdownBody,
       },
+      location: {
+        id: response.space.id,
+        name: response.space.name,
+        webLink: response._links.base + response.space._links.webui,
+      },
+      webLink: response._links.base + response._links.webui,
       author:
         response.history.createdBy.displayName ||
         response.history.createdBy.username,

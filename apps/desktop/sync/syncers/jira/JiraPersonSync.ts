@@ -1,5 +1,6 @@
 import { createOrUpdate, Person, Setting } from '@mcro/models'
 import * as Helpers from '~/helpers'
+import { createOrUpdatePersonBit } from '~/repository'
 import { JiraPeopleResponse, JiraPerson } from './JiraPersonTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 
@@ -50,10 +51,11 @@ export class JiraPersonSync {
 
   // todo: do not return null here
   private async createPerson(person: JiraPerson): Promise<Person|null> {
-    return await createOrUpdate(
+    const identifier = `jira-${Helpers.hash(person)}`
+    const personEntity = await createOrUpdate(
       Person,
       {
-        identifier: `jira-${Helpers.hash(person)}`,
+        identifier,
         integrationId: person.accountId,
         integration: 'jira',
         name: person.displayName,
@@ -62,7 +64,18 @@ export class JiraPersonSync {
           emails: person.emailAddress ? [person.emailAddress] : [],
         },
       },
-      { matching: Person.identifyingKeys },
+      { matching: ['identifier', 'integration'] },
     )
+
+    await createOrUpdatePersonBit({
+      email: person.emailAddress,
+      name: person.displayName,
+      photo: person.avatarUrls["48x48"],
+      identifier,
+      integration: "jira",
+      person: personEntity,
+    })
+
+    return personEntity
   }
 }

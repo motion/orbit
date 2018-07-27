@@ -26,6 +26,14 @@ export class Setting extends T.BaseEntity {
     }
     oauth?: {
       refreshToken: string
+
+      // slack-specific
+      info?: {
+        team?: {
+          id?: string
+          domain?: string
+        }
+      }
     }
     repos?: Object
     calendarsActive?: Object

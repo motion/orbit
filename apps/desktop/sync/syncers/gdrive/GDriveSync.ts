@@ -1,19 +1,19 @@
 import { Bit, createOrUpdateBit, Setting, createOrUpdate, Person } from '@mcro/models'
 import * as Helpers from '~/helpers'
-import { GoogleDriveLoader } from './GoogleDriveLoader'
-import { GoogleDriveLoadedFile, GoogleDriveLoadedUser } from './GoogleDriveTypes'
+import { createOrUpdatePersonBit } from '~/repository'
+import { GDriveLoader } from './GDriveLoader'
+import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
 
-export class GoogleDriveSync {
-  loader: GoogleDriveLoader
+export class GDriveSync {
+  loader: GDriveLoader
   setting: Setting
 
   constructor(setting) {
     this.setting = setting
-    this.loader = new GoogleDriveLoader(this.setting)
+    this.loader = new GDriveLoader(this.setting)
   }
 
   async run(): Promise<void> {
-    return;
     try {
       console.log('synchronizing google drive files')
       await this.loader.load()
@@ -21,15 +21,15 @@ export class GoogleDriveSync {
       // create entities for loaded files
       const createdFiles = await Promise.all(this.loader.files.map(file => {
         return this.createFile(file)
-      }));
-      const newlyCreatedFiles = createdFiles.filter(file => !!file);
+      }))
+      const newlyCreatedFiles = createdFiles.filter(file => !!file)
       console.log(`synced ${newlyCreatedFiles.length} files`)
 
       // create entities for loaded users
       const createdPeople = await Promise.all(this.loader.users.map(user => {
         return this.createPerson(user)
-      }));
-      const newlyCreatedPeople = createdPeople.filter(person => !!person);
+      }))
+      const newlyCreatedPeople = createdPeople.filter(person => !!person)
       console.log(`synced ${newlyCreatedPeople.length} people`)
 
     } catch (err) {
@@ -37,8 +37,8 @@ export class GoogleDriveSync {
     }
   }
 
-  private async createFile(file: GoogleDriveLoadedFile): Promise<Bit|null> {
-    return await createOrUpdateBit(Bit, {
+  private createFile(file: GDriveLoadedFile): Promise<Bit|null> {
+    return createOrUpdateBit(Bit, {
       integration: 'gdocs',
       identifier: file.file.id,
       type: 'document',
@@ -51,23 +51,30 @@ export class GoogleDriveSync {
         // markdownBody: html ? htmlToMarkdown(html) : text || '',
         // textBody: text || '',
       },
-      bitCreatedAt: new Date(file.file.createdTime),
-      bitUpdatedAt: new Date(file.file.modifiedTime),
-      image: file.file.fileExtension && file.file.thumbnailLink ? file.file.id + "." + file.file.fileExtension : undefined
+      webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
+      location: file.parent ? {
+        id: file.parent.id,
+        name: file.parent.name,
+        webLink: file.file.webViewLink || file.parent.webContentLink
+      } : undefined,
+      bitCreatedAt: new Date(file.file.createdTime).getTime(),
+      bitUpdatedAt: new Date(file.file.modifiedTime).getTime(),
+      image: file.file.fileExtension && file.file.thumbnailLink ? file.file.id + '.' + file.file.fileExtension : undefined
     })
   }
 
-  private async createPerson(user: GoogleDriveLoadedUser) {
+  private async createPerson(user: GDriveLoadedUser) {
     const person = {
       location: '',
       bio: '',
       avatar: user.photo || '',
       emails: user.email ? [user.email] : [],
     }
-    return await createOrUpdate(
+    const identifier = `gdrive-${Helpers.hash(person)}`
+    const personEntity = await createOrUpdate(
       Person,
       {
-        identifier: `gdrive-${Helpers.hash(person)}`,
+        identifier,
         integrationId: user.email,
         integration: 'gdrive',
         name: user.name,
@@ -75,8 +82,21 @@ export class GoogleDriveSync {
           ...user
         },
       },
-      { matching: Person.identifyingKeys },
+      { matching: ['identifier', 'integration'] },
     )
+
+    if (user.email) {
+      await createOrUpdatePersonBit({
+        email: user.email,
+        name: user.name,
+        photo: user.photo,
+        identifier,
+        integration: "gdrive",
+        person: personEntity,
+      })
+    }
+
+    return personEntity
   }
 
 }

@@ -20,7 +20,7 @@ const OrbitHeaderContainer = view({
 
 OrbitHeaderContainer.theme = ({ borderRadius, theme }) => ({
   borderRadius: borderRadius,
-  background: `linear-gradient(${theme.base.background.lighten(0.05)}, ${
+  background: `linear-gradient(${theme.base.background.lighten(0.03)} 50%, ${
     theme.base.background
   })`,
 })
@@ -68,8 +68,8 @@ export class OrbitHeader extends React.Component<{
   paneStore?: OrbitDockedPaneStore
   searchStore?: SearchStore
   after?: React.ReactNode
-  borderRadius: number
-  theme: Object
+  borderRadius?: number
+  theme?: Object
   showPin?: boolean
 }> {
   hoverSettler = this.props.searchStore.getHoverSettler({

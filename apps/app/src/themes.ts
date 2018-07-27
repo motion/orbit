@@ -59,18 +59,6 @@ export const themes = {
     background: tanBg,
     color: '#656141',
     borderColor: tanActiveBg,
-    hover: {
-      background: tanHoverBg,
-    },
-    selected: {
-      background: color('#fff'),
-    },
-    active: {
-      background: tanActiveBg,
-    },
-    activeHover: {
-      background: tanActiveHoverBg,
-    },
   }),
   darkBlue: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
@@ -78,18 +66,6 @@ export const themes = {
     background: dbBg,
     color: '#fff',
     borderColor: dbActiveBg,
-    hover: {
-      background: dbHoverBg,
-    },
-    selected: {
-      background: color('#fff'),
-    },
-    active: {
-      background: dbActiveBg,
-    },
-    activeHover: {
-      background: dbActiveHoverBg,
-    },
   }),
   dark: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],

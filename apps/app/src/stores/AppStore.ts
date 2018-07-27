@@ -17,6 +17,7 @@ export class AppStore {
   })
 
   async willMount() {
+    console.log('mount me', this)
     this.updateScreenSize()
   }
 

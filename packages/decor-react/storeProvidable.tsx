@@ -301,8 +301,10 @@ storeProvidable = function(options, Helpers) {
               continue
             }
             // auto rehydrate
-            if (storeHMRCache[key].state) {
-              store.hydrate(storeHMRCache[key].state)
+            const hydrateState = storeHMRCache[key].state
+            if (hydrateState) {
+              // console.log('hydrating', key, hydrateState)
+              store.hydrate(hydrateState)
               Helpers.emit('store.mount', { name, thing: store })
             }
           }

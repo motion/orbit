@@ -44,13 +44,13 @@ const adjust = {
   },
   confluence: {
     transform: {
-      y: '-31%',
+      // y: '-31%',
       scale: 1.4,
     },
   },
   jira: {
     transform: {
-      y: '-25%',
+      // y: '-25%',
       x: '-4%',
       scale: 1.4,
     },

@@ -1,7 +1,7 @@
 import { Person, Bit } from '@mcro/models'
 import { App, AppStatePeekItem } from '@mcro/stores'
-import peekPosition from '../../helpers/peekPosition'
-import { getTargetPosition } from '../../helpers/getTargetPosition'
+import peekPosition from '../../../helpers/peekPosition'
+import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
 
 type PositionObject =
@@ -13,13 +13,7 @@ type PositionObject =
       height: number
     }
 
-export function tearPeek() {
-  if (App.peekState.item) {
-    // do it
-  }
-}
-
-function setPeekState(props) {
+export function setPeekState(props) {
   const target = getTargetPosition(props.target)
   App.setPeekState({
     ...props,
@@ -74,7 +68,7 @@ export function selectItem(
   }
 }
 
-export function selectPerson(person: Person, target?: PositionObject) {
+function selectPerson(person: Person, target?: PositionObject) {
   const avatar = person.data.profile ? person.data.profile.image_48 : ''
   setPeekState({
     target,
@@ -91,7 +85,7 @@ export function selectPerson(person: Person, target?: PositionObject) {
   })
 }
 
-export function selectBit(bit: Bit, target?: PositionObject) {
+function selectBit(bit: Bit, target?: PositionObject) {
   setPeekState({
     target,
     peekId: Math.random(),
@@ -104,31 +98,5 @@ export function selectBit(bit: Bit, target?: PositionObject) {
       subType: bit.type,
       integration: bit.integration || '',
     },
-  })
-}
-
-export function clearPeek() {
-  if (App.peekState.devModeStick) {
-    console.log('Peek pinned, ignore')
-    return
-  }
-  setPeekState({
-    target: null,
-    peekId: null,
-    item: null,
-    pinned: false,
-  })
-}
-
-export function toggleDevModeStick() {
-  App.setPeekState({
-    devModeStick: !App.peekState.devModeStick,
-  })
-}
-
-export function finishPeekDrag(position) {
-  App.setPeekState({
-    pinned: true,
-    position,
   })
 }

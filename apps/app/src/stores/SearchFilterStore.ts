@@ -4,6 +4,7 @@ import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { memoize } from 'lodash'
 import { NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
+import { App } from '@mcro/stores'
 
 export type SearchFilter = {
   type: string
@@ -41,6 +42,16 @@ export class SearchFilterStore /* extends Store */ {
         },
         {},
       )
+    },
+  )
+
+  resetInactiveFiltersOnEmptySearch = react(
+    () => !!App.state.query,
+    hasQuery => {
+      if (hasQuery) {
+        throw react.cancel
+      }
+      this.inactiveFilters = {}
     },
   )
 

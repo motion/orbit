@@ -124,6 +124,7 @@
 
 .rdrMonth {
   padding: 0 0.833em 1.666em 0.833em;
+  width: 360px;
 }
 
 .rdrMonth .rdrWeekDays {
@@ -324,8 +325,7 @@
 
 .rdrDefinedRangesWrapper {
   font-size: 12px;
-  width: 133px;
-  border-right: solid 1px #eff2f7;
+  width: 140px;
 }
 
 .rdrDefinedRangesWrapper .rdrStaticRangeSelected {

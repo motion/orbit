@@ -1,5 +1,6 @@
 import { react, on } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
+import { Person, getRepository } from '@mcro/models'
 import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
@@ -10,9 +11,21 @@ import debug from '@mcro/debug'
 import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { Brackets } from '../../../../node_modules/typeorm/browser'
+import { flatten } from 'lodash'
+import { DateRange } from './nlpStore/types'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
+
+type DateSelections = {
+  startDate?: Date
+  endDate?: Date
+  key?: string
+}
+
+type DateState = {
+  ranges: DateSelections[]
+}
 
 export class SearchStore /* extends Store */ {
   props: {
@@ -29,9 +42,9 @@ export class SearchStore /* extends Store */ {
   query = App.state.query
   lastPinKey = ''
 
-  nextHighlightIndex = null
-  highlightIndex = null
-  nextIndex = 0
+  quickIndex = 0
+  highlightIndex = -1
+  nextIndex = -1
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
@@ -40,13 +53,23 @@ export class SearchStore /* extends Store */ {
   extraFiltersHeight = 325
   extraFiltersVisible = false
 
+  dateState: DateState = {
+    ranges: [
+      {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection',
+      },
+    ],
+  }
+
   dateHover = hoverSettler({
     enterDelay: 400,
     leaveDelay: 400,
   })()
 
   willMount() {
-    on(this, window, 'keydown', this.handleKeyDown)
+    on(this, window, 'keydown', this.windowKeyDown)
 
     this.props.appStore.onPinKey(key => {
       if (key === 'Delete') {
@@ -83,6 +106,13 @@ export class SearchStore /* extends Store */ {
     return this.searchState.query !== App.state.query
   }
 
+  get isQuickSearchActive() {
+    if (this.props.appStore.selectedPane !== 'docked-search') {
+      return false
+    }
+    return this.activeIndex === -1 && !!this.quickSearchState.results.length
+  }
+
   get activeIndex() {
     this.lastSelectAt
     return this._activeIndex
@@ -91,13 +121,12 @@ export class SearchStore /* extends Store */ {
   set activeIndex(val) {
     this.lastSelectAt = Date.now()
     this._activeIndex = val
-    if (this.nextHighlightIndex) {
-      this.highlightIndex = this.nextHighlightIndex
-      this.nextHighlightIndex = null
-    }
   }
 
   get selectedItem() {
+    if (this.activeIndex === -1) {
+      return this.quickSearchState.results[this.quickIndex]
+    }
     return this.searchState.results[this.activeIndex]
   }
 
@@ -227,6 +256,53 @@ export class SearchStore /* extends Store */ {
     },
   )
 
+  personQueryBuilder = getRepository(Person).createQueryBuilder('person')
+
+  quickSearchState = react(
+    () => App.state.query,
+    async (query, { sleep, when }) => {
+      // slightly faster for quick search
+      await sleep(TYPE_DEBOUNCE - 60)
+      await when(() => this.nlpStore.nlp.query === query)
+      const {
+        people,
+        searchQuery,
+        integrations /* , nouns */,
+      } = this.nlpStore.nlp
+      const allResults = await Promise.all([
+        // fuzzy people results
+        this.personQueryBuilder
+          .where('person.name like :nameLike', {
+            nameLike: `%${searchQuery.split('').join('%')}%`,
+          })
+          .take(3)
+          .getMany(),
+      ])
+      const exactPeople = await Promise.all(
+        people.map(name => {
+          return this.personQueryBuilder
+            .where('person.name like :nameLike', {
+              nameLike: `%${name}%`,
+            })
+            .getOne()
+        }),
+      )
+      const results = flatten([
+        ...exactPeople,
+        integrations.map(name => ({ name, icon: name })),
+        ...SearchStoreHelpers.matchSort(searchQuery, flatten(allResults)),
+      ]).filter(Boolean)
+      return {
+        query,
+        results,
+      }
+    },
+    {
+      immediate: true,
+      defaultValue: { results: [] },
+    },
+  )
+
   clearSelectedOnLeave = react(
     () => [this.leaveIndex, Electron.hoverState.peekHovered],
     async ([leaveIndex, peekHovered], { sleep, when }) => {
@@ -342,7 +418,9 @@ export class SearchStore /* extends Store */ {
   }
 
   setHighlightIndex = highlightIndex => {
-    this.nextHighlightIndex = highlightIndex
+    console.log(highlightIndex)
+    console.trace()
+    this.highlightIndex = +highlightIndex
   }
 
   clearIndexOnTarget = react(
@@ -370,33 +448,35 @@ export class SearchStore /* extends Store */ {
   }
 
   openSelected = () => {
-    this.props.appStore.open(this.selectedItem)
+    if (this.selectedItem) {
+      this.props.appStore.open(this.selectedItem)
+      return true
+    }
+    return false
   }
 
   hasQuery() {
     return !!App.state.query
   }
 
-  dateState = {
-    ranges: [
-      {
-        startDate: new Date(),
-        endDate: new Date(),
-        key: 'selection',
-      },
-    ],
-  }
-
   setExtraFiltersVisible = target => {
     this.extraFiltersVisible = !!target
   }
 
-  onChangeDate = ranges => {
+  onChangeDate = ({ selection }: { selection: DateSelections }) => {
     this.dateState = {
-      ranges: [ranges.selection],
+      ranges: [selection],
     }
-    // this.dateState = ranges
   }
+
+  updateDateStateOnNLP = react(
+    () => this.nlpStore.nlp.date,
+    (date: DateRange) => {
+      this.dateState = {
+        ranges: [date],
+      }
+    },
+  )
 
   updateAppQuery = react(
     () => this.query,
@@ -411,12 +491,22 @@ export class SearchStore /* extends Store */ {
     this.query = ''
   }
 
-  handleKeyDown = ({ keyCode }) => {
+  windowKeyDown = e => {
+    const { keyCode } = e
+    console.log('window.keydown', keyCode)
     switch (keyCode) {
       case 37: // left
+        if (this.isQuickSearchActive) {
+          this.decrementQuick()
+          return
+        }
         this.emit('key', 'left')
         return
       case 39: // right
+        if (this.isQuickSearchActive) {
+          this.incrementQuick()
+          return
+        }
         this.emit('key', 'right')
         return
       case 40: // down
@@ -426,7 +516,24 @@ export class SearchStore /* extends Store */ {
         this.decrement()
         return
       case 13: // enter
-        this.openSelected()
+        e.preventDefault()
+        if (this.isQuickSearchActive) {
+          // two things happen:
+          //  first, if no target, open a peek
+          //  then, if peek already open, then open the item
+          if (App.peekState.target) {
+            this.openSelected()
+          } else {
+            // see OrbitSearchQuickResults
+            this.emit('key', 'enter')
+          }
+          return
+        }
+        if (App.orbitState.inputFocused) {
+          if (this.openSelected()) {
+            return
+          }
+        }
         return
     }
   }
@@ -449,5 +556,27 @@ export class SearchStore /* extends Store */ {
     App.setOrbitState({
       inputFocused: false,
     })
+  }
+
+  resetQuickIndexOnSearch = react(
+    () => App.state.query.length,
+    () => {
+      this.quickIndex = 0
+    },
+    {
+      log: false,
+    },
+  )
+
+  incrementQuick = () => {
+    if (this.quickIndex < this.quickSearchState.results.length - 1) {
+      this.quickIndex += 1
+    }
+  }
+
+  decrementQuick = () => {
+    if (this.quickIndex > 0) {
+      this.quickIndex -= 1
+    }
   }
 }

@@ -42,6 +42,6 @@ export class NLPStore /* extends Store */ {
       setUserNames(people.map(person => person.name))
     },
     // 5 minute poll
-    { poll: 60 * 5 },
+    { poll: 60 * 5 * 1000 },
   )
 }

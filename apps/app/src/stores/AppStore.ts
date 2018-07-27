@@ -1,4 +1,4 @@
-import { on, react } from '@mcro/black'
+import { on, react, isEqual } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Setting, Not, Equal } from '@mcro/models'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
@@ -17,6 +17,7 @@ export class AppStore {
   })
 
   async willMount() {
+    console.log('mount me', this)
     this.updateScreenSize()
   }
 
@@ -53,7 +54,21 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
+  offContentHeight = null
+
   setContentHeight = height => {
+    if (this.offContentHeight) {
+      this.offContentHeight()
+    }
+    if (this.contentHeight !== height) {
+      this.offContentHeight = on(
+        this,
+        setTimeout(() => this.doSetContentHeight(height), 100),
+      )
+    }
+  }
+
+  doSetContentHeight = height => {
     this.contentHeight = height
   }
 
@@ -85,6 +100,9 @@ export class AppStore {
     val => {
       this.lastSelectedPane = val
     },
+    {
+      log: false,
+    },
   )
 
   updateScreenSize() {
@@ -92,9 +110,10 @@ export class AppStore {
       this,
       setInterval(() => {
         if (!App.setState) return
-        App.setState({
-          screenSize: [window.innerWidth, window.innerHeight],
-        })
+        const screenSize = [window.innerWidth, window.innerHeight]
+        if (!isEqual(App.state.screenSize, screenSize)) {
+          App.setState({ screenSize })
+        }
       }, 1000),
     )
   }

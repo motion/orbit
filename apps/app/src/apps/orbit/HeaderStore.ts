@@ -74,6 +74,9 @@ export class HeaderStore {
       }
       this.focus()
     },
+    {
+      log: false,
+    },
   )
 
   onClickInput = () => {

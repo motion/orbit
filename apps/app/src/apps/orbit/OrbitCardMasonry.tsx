@@ -3,7 +3,7 @@ import { Masonry } from '../../views/Masonry'
 import { OrbitCard } from './OrbitCard'
 import * as UI from '@mcro/ui'
 
-export const OrbitCardMasonry = ({ items, searchStore, ...props }) => (
+export const OrbitCardMasonry = ({ items, ...props }) => (
   <UI.Theme name="grey">
     <Masonry {...props}>
       {items.map((result, index) => (

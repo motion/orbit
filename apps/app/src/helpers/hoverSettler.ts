@@ -23,6 +23,7 @@ export function hoverSettler({
   let lastLeave
   let currentNode
   let lastHovered
+  let stickOnClick = false
 
   // debounce - leave space for ui thread
   const setHovered = throttle((nextHovered, cb) => {
@@ -45,10 +46,10 @@ export function hoverSettler({
     let fullyLeaveTm
     let betweenTm
     let itemProps
-    let stickOnClick = false
     let lastToggle = Date.now()
 
     const select = target => {
+      console.log('select', target)
       let prevTarget = currentNode
       currentNode = target
       if (isReallyEqual(prevTarget, target)) {
@@ -56,7 +57,7 @@ export function hoverSettler({
         return
       }
       if (Date.now() - lastToggle < toggleThrottle) {
-        log('Cancel toggle, too soon')
+        log('Cancel select, too soon')
         return
       }
       lastToggle = Date.now()
@@ -104,7 +105,7 @@ export function hoverSettler({
     }
 
     const onClick = throttle(e => {
-      stickOnClick = true
+      console.log('click', e.currentTarget)
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)
@@ -112,8 +113,13 @@ export function hoverSettler({
       clearTimeout(itemLastLeaveTm)
       clearTimeout(itemLastEnterTm)
       if (!currentNode) {
+        stickOnClick = e.currentTarget
         select(e.currentTarget)
       } else {
+        if (stickOnClick && stickOnClick !== e.currentTarget) {
+          return
+        }
+        stickOnClick = false
         select(null)
       }
     }, 100)
@@ -121,16 +127,21 @@ export function hoverSettler({
     function onMouseEnter(e) {
       clearTimeout(itemLastLeaveTm)
       const target = e.currentTarget
+      if (target === stickOnClick) {
+        return
+      }
       handleHover(target)
     }
 
     function onMouseMove(e) {
+      if (stickOnClick) {
+        return
+      }
       handleHover(e.currentTarget)
     }
 
-    function onMouseLeave() {
+    function onMouseLeave(e) {
       if (stickOnClick) {
-        stickOnClick = false
         return
       }
       clearTimeout(itemLastLeaveTm)

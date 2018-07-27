@@ -227,7 +227,10 @@ storeProvidable = function(options, Helpers) {
         willMountStores() {
           if (options.onStoreMount) {
             for (const name of Object.keys(this.stores)) {
-              options.onStoreMount(this.stores[name], this.props)
+              if (!this.stores[name].__hasMounted) {
+                options.onStoreMount(this.stores[name], this.props)
+              }
+              this.stores[name].__hasMounted = true
             }
           }
         }
@@ -298,8 +301,10 @@ storeProvidable = function(options, Helpers) {
               continue
             }
             // auto rehydrate
-            if (storeHMRCache[key].state) {
-              store.hydrate(storeHMRCache[key].state)
+            const hydrateState = storeHMRCache[key].state
+            if (hydrateState) {
+              // console.log('hydrating', key, hydrateState)
+              store.hydrate(hydrateState)
               Helpers.emit('store.mount', { name, thing: store })
             }
           }

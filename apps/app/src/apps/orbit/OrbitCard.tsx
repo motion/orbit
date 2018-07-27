@@ -49,7 +49,7 @@ export type OrbitCardProps = {
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number
   nextUpStyle?: Object
-  isSelected?: boolean
+  isSelected?: boolean | Function
   getRef?: Function
   cardProps?: Object
   item?: AppStatePeekItem
@@ -68,7 +68,6 @@ const Card = view({
   overflow: 'hidden',
   position: 'relative',
   maxHeight: '100%',
-  padding: [16, 18],
   transform: {
     z: 0,
   },
@@ -95,17 +94,24 @@ Card.theme = ({
     let listStyle
     // selected...
     if (isSelected) {
+      const selectedBackground = background || theme.active.background
       listStyle = {
-        background: background || theme.active.background,
+        background: selectedBackground,
         '&:hover': {
-          background: background || theme.active.background,
+          background: selectedBackground,
         },
+        // '&:active': {
+        //   background: [selectedBackground, 0.5],
+        // },
       }
     } else {
       listStyle = {
         background: 'transparent',
+        '&:hover': {
+          background: [255, 255, 255, 0.4],
+        },
         '&:active': {
-          background: theme.selected.background,
+          background: [0, 0, 0, 0.018],
         },
       }
     }
@@ -117,11 +123,13 @@ Card.theme = ({
     }
   } else {
     // CARD
-    const borderHover = UI.color('#c9c9c9')
+    const borderSelected = UI.color('#90b1e4')
+    const borderHover = UI.color('#ddd')
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     const cardBackground = background || theme.selected.background
     card = {
       ...card,
+      padding: padding || 16,
       borderRadius: borderRadius || 9,
       background: cardBackground,
       boxShadow: disableShadow ? 'none' : [[0, 1, 2, [0, 0, 0, 0.05]]],
@@ -136,7 +144,13 @@ Card.theme = ({
     if (isSelected) {
       card = {
         ...card,
-        border: [1, borderHover],
+        border: [1, borderSelected],
+        '&:hover': {
+          border: [1, borderSelected.darken(0.1)],
+        },
+        '&:active': {
+          border: [1, borderSelected],
+        },
       }
     }
   }
@@ -159,23 +173,14 @@ const Preview = view({
   flex: 1,
 })
 
-const Subtitle = view({
-  margin: [0, 0, 3],
+const Subtitle = view(UI.View, {
+  margin: [2, 0, 3],
   opacity: 0.4,
   flexFlow: 'row',
   alignItems: 'center',
 })
 
 const orbitIconProps = {
-  imageStyle: {
-    transformOrigin: 'top right',
-    transform: {
-      y: 8,
-      x: 2,
-      scale: 1.5,
-      // rotate: '-45deg',
-    },
-  },
   orbitIconStyle: {
     marginRight: 6,
   },
@@ -189,9 +194,13 @@ class OrbitCardStore {
   ref = null
 
   get isSelected() {
-    return typeof this.props.isSelected === 'boolean'
-      ? this.props.isSelected
-      : this._isSelected
+    if (typeof this.props.isSelected === 'boolean') {
+      return this.props.isSelected
+    }
+    if (typeof this.props.isSelected === 'function') {
+      return this.props.isSelected()
+    }
+    return this._isSelected
   }
 
   get isPaneSelected() {
@@ -204,7 +213,11 @@ class OrbitCardStore {
     return isPaneActive && isSubPaneActive
   }
 
-  handleClick = () => {
+  handleClick = e => {
+    if (this.props.onClick) {
+      this.props.onClick(e, this.ref)
+      return
+    }
     if (this.props.onSelect) {
       this.props.onSelect(this.ref)
       return
@@ -227,24 +240,24 @@ class OrbitCardStore {
     return this.props.result || this.normalizedBit
   }
 
-  isNextUp = react(
-    () => [
-      this.props.searchStore && this.props.searchStore.nextIndex,
-      this.isPaneSelected,
-      !!this.props.nextUpStyle,
-    ],
-    ([nextIndex, isPaneSelected, hasUpNextStyle], { getValue }) => {
-      if (!isPaneSelected || !hasUpNextStyle) {
-        throw react.cancel
-      }
-      const isUpNext = nextIndex + 1 === this.props.index
-      if (isUpNext === getValue()) {
-        throw react.cancel
-      }
-      return isUpNext
-    },
-    { immediate: true },
-  )
+  // isNextUp = react(
+  //   () => [
+  //     this.props.searchStore && this.props.searchStore.nextIndex,
+  //     this.isPaneSelected,
+  //     !!this.props.nextUpStyle,
+  //   ],
+  //   ([nextIndex, isPaneSelected, hasUpNextStyle], { getValue }) => {
+  //     if (!isPaneSelected || !hasUpNextStyle) {
+  //       throw react.cancel
+  //     }
+  //     const isUpNext = nextIndex + 1 === this.props.index
+  //     if (isUpNext === getValue()) {
+  //       throw react.cancel
+  //     }
+  //     return isUpNext
+  //   },
+  //   { immediate: true },
+  // )
 
   setPeekTargetOnNextIndex = react(
     () => [
@@ -389,12 +402,12 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       >
         <Card
           isSelected={isSelected}
-          isNextUp={store.isNextUp}
+          // isNextUp={store.isNextUp}
           listItem={listItem}
           borderRadius={borderRadius}
           inGrid={inGrid}
           nextUpStyle={nextUpStyle}
-          onClick={onClick || store.handleClick}
+          onClick={store.handleClick}
           disableShadow={disableShadow}
           {...cardProps}
         >
@@ -402,18 +415,18 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             !hide.icon && (
               <OrbitIcon
                 icon={icon}
-                size={location ? 14 : 18}
+                size={24}
                 {...orbitIconProps}
                 {...iconProps}
                 position="absolute"
-                top={listItem ? 15 : 0}
-                right={listItem ? 2 : 0}
+                top={listItem ? 25 : 10}
+                right={listItem ? 8 : 0}
                 opacity={0.8}
               />
             )}
           <Title>
             <UI.Text
-              size={listItem ? 1.15 : 1.2}
+              size={1.2}
               sizeLineHeight={0.85}
               ellipse={2}
               alpha={isSelected || listItem ? 1 : 0.8}
@@ -426,7 +439,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {afterTitle}
           </Title>
           {!!(location || subtitle) && (
-            <Subtitle>
+            <Subtitle opacity={listItem ? 0.55 : 0.4}>
               {!!location && (
                 <UI.Text
                   display="inline-flex"

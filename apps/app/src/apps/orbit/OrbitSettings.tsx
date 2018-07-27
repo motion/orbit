@@ -174,6 +174,10 @@ export class OrbitSettings extends React.Component<Props> {
                   cardProps={{
                     border: [1, 'transparent'],
                     background: 'transparent',
+                    padding: [12, 12, 12, 10],
+                  }}
+                  titleProps={{
+                    size: 1.1,
                   }}
                 />
               )

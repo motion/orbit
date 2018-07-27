@@ -14,21 +14,23 @@ const dbg = <Debug>function(namespace) {
   // const uid = id++
   namespaces.push(namespace)
   function log(...messages) {
-    if (disableLogs[namespace]) return
+    if (disableLogs[namespace]) {
+      return
+    }
     colorfulLog(namespace, messages)
   }
   return log
 }
 
-const setLogging = (list, val) => {
+const disableLogging = (list, val) => {
   const names = list.length ? list : dbg.list()
   for (const name of names) {
     disableLogs[name] = val
   }
 }
 
-dbg.quiet = (...args) => setLogging(args, true)
-dbg.loud = (...args) => setLogging(args, false)
+dbg.quiet = (...args) => disableLogging(args, true)
+dbg.loud = (...args) => disableLogging(args, false)
 dbg.list = () => namespaces
 dbg.settings = () => disableLogs
 

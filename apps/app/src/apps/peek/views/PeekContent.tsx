@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { PeekStore } from '../stores/PeekStore'
 
 const PeekContentChrome = view(UI.Col, {
   flex: 1,
@@ -22,10 +23,15 @@ const ContentInner = view(UI.Col, {
   wordBreak: 'break-word',
 })
 
-export const PeekContent = ({ children }) => {
-  return (
-    <PeekContentChrome>
-      <ContentInner>{children}</ContentInner>
-    </PeekContentChrome>
-  )
+export class PeekContent extends React.Component<{ peekStore: PeekStore }> {
+  render() {
+    const { children, peekStore } = this.props
+    return (
+      <PeekContentChrome>
+        <ContentInner forwardRef={peekStore.contentFrame}>
+          {children}
+        </ContentInner>
+      </PeekContentChrome>
+    )
+  }
 }

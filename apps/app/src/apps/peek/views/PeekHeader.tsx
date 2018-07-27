@@ -5,7 +5,9 @@ import { OrbitIcon } from '../../../apps/orbit/OrbitIcon'
 import { WindowControls } from '../../../views/WindowControls'
 import { App } from '@mcro/stores'
 import { PeekStore } from '../stores/PeekStore'
+import { color } from '@mcro/gloss'
 // import { ControlButton } from '../../views/ControlButton'
+import * as Constants from '../../../constants'
 
 type Props = {
   peekStore?: PeekStore
@@ -19,17 +21,51 @@ type Props = {
   integration?: string
 }
 
+// the full header:
 const PeekHeaderContain = view(UI.View, {
+  background: 'transparent',
   zIndex: 100,
+  overflow: 'hidden',
+  borderTopRadius: Constants.PEEK_BORDER_RADIUS,
 })
 
-PeekHeaderContain.theme = ({ theme, position }) => ({
-  position: position || 'relative',
-  borderBottom: [1, theme.base.borderColor.darken(0.2).desaturate(0.2)],
-  background: theme.base.background || '#fff',
+PeekHeaderContain.theme = ({ theme, position }) => {
+  return {
+    position: position || 'relative',
+    // borderBottom: [1, theme.base.background.darken(0.1)],
+    background: theme.headerBackground || theme.base.background,
+  }
+}
+
+// just the top titlebar:
+const TitleBar = ({ children, after, ...props }) => (
+  <TitleBarContain {...props}>
+    <TitleBarText>{children}</TitleBarText>
+    {after}
+  </TitleBarContain>
+)
+
+const TitleBarContain = view({
+  flex: 1,
+  height: 27,
+  maxWidth: '100%',
+  position: 'relative',
+  zIndex: 1,
 })
 
-const TitleBarTitle = props => (
+TitleBarContain.theme = ({ theme }) => {
+  const hoverBackground =
+    (theme.titlebarBackground && theme.titlebarBackground.lighten(0.1)) ||
+    color('rgba(255,255,255,0.04)')
+  return {
+    background: theme.titlebarBackground,
+    '&:hover': {
+      background: hoverBackground,
+    },
+  }
+}
+
+const TitleBarText = props => (
   <UI.Text
     size={1.1}
     fontWeight={700}
@@ -41,20 +77,6 @@ const TitleBarTitle = props => (
     {...props}
   />
 )
-
-const TitleBarContain = view({
-  flex: 1,
-  height: 27,
-  maxWidth: '100%',
-  position: 'relative',
-  zIndex: 1,
-})
-
-TitleBarContain.theme = ({ theme }) => ({
-  '&:hover': {
-    background: theme.hover.background.lighten(0.05),
-  },
-})
 
 const SubTitleHorizontalSpace = () => <div style={{ width: 12 }} />
 
@@ -85,13 +107,6 @@ const SubTitle = ({ children, date, permalink, icon }) => (
         </>
       )}
   </UI.Row>
-)
-
-const TitleBar = ({ children, after, ...props }) => (
-  <TitleBarContain {...props}>
-    <TitleBarTitle>{children}</TitleBarTitle>
-    {after}
-  </TitleBarContain>
 )
 
 @attachTheme
@@ -159,9 +174,9 @@ export class PeekHeaderContent extends React.Component<Props> {
                 alignItems="center"
               >
                 <WindowControls onClose={App.actions.clearPeek} />
-                {!!peekStore.hasHistory && (
+                {/* {!!peekStore.hasHistory && (
                   <UI.Button icon="arrowminleft" circular size={0.8} />
-                )}
+                )} */}
                 <UI.View flex={1} />
                 {/* {!!peekStore.tornState && (
                   <ControlButton icon="z" onClick={peekStore.tearPeek} />

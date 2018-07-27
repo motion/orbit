@@ -5,12 +5,12 @@ import { Bit, Person } from '@mcro/models'
 export class PeekRelatedStore {
   relatedPeople = react(() => Person.find({ take: 3, skip: 7 }), {
     defaultValue: [],
-    delay: 40,
+    delay: 250,
   })
 
   relatedBits = react(
     () => Bit.find({ take: 3, skip: 2, relations: ['people'] }),
-    { defaultValue: [], delay: 40 },
+    { defaultValue: [], delay: 250 },
   )
 
   relatedConversations = react(
@@ -21,6 +21,6 @@ export class PeekRelatedStore {
         take: 3,
         skip: 2,
       }),
-    { defaultValue: [], delay: 40 },
+    { defaultValue: [], delay: 250 },
   )
 }

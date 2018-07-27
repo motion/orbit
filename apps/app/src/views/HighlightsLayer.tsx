@@ -143,6 +143,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
                 left={x}
                 width={width}
                 height={height}
+                className="highlight"
               />
             )
           })}

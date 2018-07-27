@@ -1,26 +1,18 @@
+import * as React from 'react'
 import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { Person, Bit } from '@mcro/models'
-import { deepClone } from '../../../helpers'
 import * as Constants from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import { SearchStore } from '../../../stores/SearchStore'
 
 const TYPE_THEMES = {
   person: {
-    background: 'rgba(0,0,0,0.013)',
+    titlebarBackground: 'rgba(0,0,0,0.1)',
+    headerBackground: 'transparent',
+    background: '#f2f2f2',
     color: '#444',
   },
   // setting: 'gray',
-}
-
-const INTEGRATION_THEMES = {
-  slack: { background: '#FDDE64' },
-  github: { background: '#353535', color: 'white' },
-  gdocs: { background: '#7DA5F4' },
-  jira: { background: '#4978D0', color: 'white' },
-  confluence: { background: '#4B7BD4', color: 'white' },
-  gmail: { background: '#D2675E', color: 'white' },
 }
 
 const BASE_THEME = {
@@ -38,20 +30,55 @@ export class PeekStore {
   tornState = null
   dragOffset: [number, number] = null
   history = []
+  contentFrame = React.createRef<HTMLDivElement>()
+
+  get highlights(): HTMLDivElement[] {
+    this.state // update on state...?
+    return Array.from(this.contentFrame.current.querySelectorAll('.highlight'))
+  }
+
+  scrollToHighlight = react(
+    () => this.props.searchStore.highlightIndex,
+    async (index, { sleep }) => {
+      if (typeof index !== 'number') {
+        throw react.cancel
+      }
+      const frame = this.contentFrame.current
+      if (!frame) {
+        throw react.cancel
+      }
+      await sleep(150)
+      const activeHighlight = this.highlights[index]
+      if (!activeHighlight) {
+        console.error('no highlight at index', index, this.highlights)
+        throw react.cancel
+      }
+      // move frame to center the highlight but 100px more towards the top which looks nicer
+      frame.scrollTop = activeHighlight.offsetTop - frame.clientHeight / 2 + 100
+    },
+    {
+      immediate: true,
+    },
+  )
+
+  goToNextHighlight = () => {
+    const { highlightIndex, setHighlightIndex } = this.props.searchStore
+    // loop back to beginning once at end
+    const next = (highlightIndex + 1) % this.highlights.length
+    setHighlightIndex(next)
+  }
 
   curState = react(
     () => [
       this.tornState,
-      App.peekState,
-      App.orbitState,
+      App.peekState.target,
+      App.orbitState.docked,
+      App.orbitState.hidden,
       this.props.searchStore.selectedItem,
     ],
-    async (
-      [tornState, { target }, { docked, hidden }, selectedItem],
-      { sleep },
-    ) => {
+    async ([tornState, target, docked, hidden, selectedItem], { sleep }) => {
       // debounce just a tiny bit to avoid renders as selectedItem updated a bit after peekState
-      await sleep(16 * 2)
+      await sleep(16)
       if (tornState) {
         return tornState
       }
@@ -69,6 +96,7 @@ export class PeekStore {
     },
     {
       immediate: true,
+      log: false,
     },
   )
 
@@ -91,13 +119,27 @@ export class PeekStore {
     },
     {
       immediate: true,
+      log: false,
     },
   )
 
-  lastState = react(() => this.curState, deepClone, {
-    delay: 16,
-    immediate: true,
-  })
+  lastState = react(
+    () => this.curState,
+    state => {
+      if (!state) {
+        return state
+      }
+      const { model, ...restState } = state
+      return {
+        ...JSON.parse(JSON.stringify(restState)),
+        model,
+      }
+    },
+    {
+      delay: 16,
+      immediate: true,
+    },
+  )
 
   get willHide() {
     return !!this.lastState && !this.curState
@@ -116,7 +158,11 @@ export class PeekStore {
       return BASE_THEME
     }
     const { type, integration } = this.state.item
-    return INTEGRATION_THEMES[integration] || TYPE_THEMES[type] || BASE_THEME
+    return (
+      Constants.INTEGRATION_THEMES[integration] ||
+      TYPE_THEMES[type] ||
+      BASE_THEME
+    )
   }
 
   get hasHistory() {

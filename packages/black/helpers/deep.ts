@@ -1,4 +1,4 @@
-export function deep(target, method) {
+export function deep(target, method?) {
   if (!method) {
     target.__IS_DEEP = true
     return target

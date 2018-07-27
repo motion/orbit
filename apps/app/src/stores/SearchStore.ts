@@ -12,9 +12,20 @@ import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { Brackets } from '../../../../node_modules/typeorm/browser'
 import { flatten } from 'lodash'
+import { DateRange } from './nlpStore/types'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
+
+type DateSelections = {
+  startDate?: Date
+  endDate?: Date
+  key?: string
+}
+
+type DateState = {
+  ranges: DateSelections[]
+}
 
 export class SearchStore /* extends Store */ {
   props: {
@@ -41,6 +52,16 @@ export class SearchStore /* extends Store */ {
 
   extraFiltersHeight = 325
   extraFiltersVisible = false
+
+  dateState: DateState = {
+    ranges: [
+      {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection',
+      },
+    ],
+  }
 
   dateHover = hoverSettler({
     enterDelay: 400,
@@ -438,26 +459,24 @@ export class SearchStore /* extends Store */ {
     return !!App.state.query
   }
 
-  dateState = {
-    ranges: [
-      {
-        startDate: new Date(),
-        endDate: new Date(),
-        key: 'selection',
-      },
-    ],
-  }
-
   setExtraFiltersVisible = target => {
     this.extraFiltersVisible = !!target
   }
 
-  onChangeDate = ranges => {
+  onChangeDate = ({ selection }: { selection: DateSelections }) => {
     this.dateState = {
-      ranges: [ranges.selection],
+      ranges: [selection],
     }
-    // this.dateState = ranges
   }
+
+  updateDateStateOnNLP = react(
+    () => this.nlpStore.nlp.date,
+    (date: DateRange) => {
+      this.dateState = {
+        ranges: [date],
+      }
+    },
+  )
 
   updateAppQuery = react(
     () => this.query,

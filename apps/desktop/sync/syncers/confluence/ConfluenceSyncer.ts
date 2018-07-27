@@ -4,7 +4,7 @@ import ConfluencePersonSync from './ConfluencePersonSync'
 
 export const confluence = new Syncer('confluence', {
   actions: {
-    bit: { secondsBetween: 60 * 5 },
+    bit: { secondsBetween: 60 },
     person: { secondsBetween: 60 * 5 },
   },
   getSyncers: setting => {

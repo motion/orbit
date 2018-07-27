@@ -7,6 +7,7 @@ import { HighlightsLayer } from '../../../views/HighlightsLayer'
 import { App } from '@mcro/stores'
 import { RoundButton } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
+import { OrbitIcon } from '../../orbit/OrbitIcon'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -56,7 +57,7 @@ export const PeekBit = ({
               comments,
             }) => {
               return children({
-                permalink,
+                subtitleBefore: <UI.Date>{date}</UI.Date>,
                 subtitle: (
                   <RoundButton
                     onClick={e => {
@@ -67,6 +68,10 @@ export const PeekBit = ({
                     {location}
                   </RoundButton>
                 ),
+                subtitleAfter: !!permalink &&
+                  !!icon && (
+                    <OrbitIcon onClick={permalink} icon={icon} size={20} />
+                  ),
                 date,
                 title,
                 icon,

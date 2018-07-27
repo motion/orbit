@@ -8,16 +8,11 @@ import { PeekStore } from '../stores/PeekStore'
 import { color } from '@mcro/gloss'
 // import { ControlButton } from '../../views/ControlButton'
 import * as Constants from '../../../constants'
+import { PeekContents } from '../PeekPaneProps'
 
-type Props = {
+type Props = PeekContents & {
   peekStore?: PeekStore
-  title?: React.ReactNode
-  date?: React.ReactNode
-  subtitle?: React.ReactNode
-  permalink?: Function
-  icon?: string | React.ReactNode
   theme?: Object
-  subhead?: React.ReactNode
   integration?: string
 }
 
@@ -90,7 +85,7 @@ const Centered = view({
   textAlign: 'center',
 })
 
-const SubTitle = ({ children, date, permalink, icon }) => (
+const SubTitle = ({ children, before, after }) => (
   <UI.Row
     position="relative"
     padding={[0, 12]}
@@ -99,24 +94,12 @@ const SubTitle = ({ children, date, permalink, icon }) => (
     height={32}
     zIndex={1}
   >
-    <UI.Text>
-      {date ? (
-        <>
-          {' '}
-          <UI.Date>{date}</UI.Date>
-        </>
-      ) : null}
-    </UI.Text>
+    {before}
+    <div style={{ flex: 1 }} />
     <Centered>
       {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
     </Centered>
-    {!!permalink &&
-      !!icon && (
-        <>
-          <div style={{ flex: 1 }} />
-          <OrbitIcon onClick={permalink} icon={icon} size={20} />
-        </>
-      )}
+    {after}
   </UI.Row>
 )
 
@@ -129,6 +112,8 @@ export class PeekHeaderContent extends React.Component<Props> {
       title,
       date,
       subtitle,
+      subtitleBefore,
+      subtitleAfter,
       permalink,
       icon,
       theme,
@@ -136,6 +121,7 @@ export class PeekHeaderContent extends React.Component<Props> {
       integration,
       ...props
     } = this.props
+    const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
     return (
       <PeekHeaderContain
         draggable
@@ -198,8 +184,8 @@ export class PeekHeaderContent extends React.Component<Props> {
         >
           {title}
         </TitleBar>
-        {!!subtitle && (
-          <SubTitle date={date} permalink={permalink} icon={icon}>
+        {hasSubTitle && (
+          <SubTitle before={subtitleBefore} after={subtitleAfter}>
             {subtitle}
           </SubTitle>
         )}

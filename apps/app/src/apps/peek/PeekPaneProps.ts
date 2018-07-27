@@ -7,6 +7,8 @@ import { SearchStore } from '../../stores/SearchStore'
 export type PeekContents = {
   title: React.ReactNode
   subtitle?: React.ReactNode
+  subtitleBefore?: React.ReactNode
+  subtitleAfter?: React.ReactNode
   icon?: React.ReactNode
   permalink?: React.ReactNode
   date?: React.ReactNode

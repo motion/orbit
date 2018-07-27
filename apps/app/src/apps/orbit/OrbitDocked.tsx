@@ -92,8 +92,8 @@ const OrbitInner = view({
   flex: 1,
   // this can be a lot more because theres padding left and right
   // and so this lets us have the top/side overflow but still cut off bottom
-  borderBottomLeftRadius: 60,
-  borderBottomRightRadius: 60,
+  borderBottomLeftRadius: 37,
+  borderBottomRightRadius: 37,
   '& > *': {
     pointerEvents: 'auto',
   },
@@ -115,7 +115,7 @@ class OrbitDockedInner extends React.Component<{
     log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
       10,
-      window.innerHeight - appStore.contentHeight - 8,
+      window.innerHeight - appStore.contentHeight - 12,
     )
     return (
       <>

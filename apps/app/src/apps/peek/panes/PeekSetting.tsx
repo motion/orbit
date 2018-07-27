@@ -74,25 +74,20 @@ class SettingContent extends React.Component<
             title: capitalize(integration),
             subhead,
             content,
-            subtitle: store.job ? (
-              <UI.Row flex={1}>
-                <UI.Text>{store.bitsCount} total </UI.Text>
-                <UI.View flex={1} />
-
-                {!!store.job.updatedAt && (
-                  <UI.Button
-                    icon={icon.name}
-                    iconProps={icon}
-                    tooltip={
-                      <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-                    }
-                  >
-                    Last run
-                  </UI.Button>
-                )}
-                {!store.job ? <div>Loading...</div> : null}
-              </UI.Row>
-            ) : null,
+            subtitleBefore: <UI.Text>{store.bitsCount} total</UI.Text>,
+            subtitle: !store.job ? 'Loading...' : 'Settings',
+            subtitleAfter: !!store.job &&
+              !!store.job.updatedAt && (
+                <UI.Button
+                  icon={icon.name}
+                  iconProps={icon}
+                  tooltip={
+                    <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
+                  }
+                >
+                  Last run
+                </UI.Button>
+              ),
             after: (
               <UI.ListRow
                 flex={1}

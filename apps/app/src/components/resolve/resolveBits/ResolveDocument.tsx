@@ -31,7 +31,7 @@ export const ResolveDocument = ({
   children({
     title: bit.title || item.title,
     icon: bit.integration || item.integration,
-    location: bit.location || item.location || 'Wiki',
+    location: bit.location.name || item.location || 'Wiki',
     locationLink: () => {},
     permalink: () => appStore.open(bit),
     date: bit.bitUpdatedAt,

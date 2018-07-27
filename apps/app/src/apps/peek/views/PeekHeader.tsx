@@ -159,9 +159,9 @@ export class PeekHeaderContent extends React.Component<Props> {
                 alignItems="center"
               >
                 <WindowControls onClose={App.actions.clearPeek} />
-                {!!peekStore.hasHistory && (
+                {/* {!!peekStore.hasHistory && (
                   <UI.Button icon="arrowminleft" circular size={0.8} />
-                )}
+                )} */}
                 <UI.View flex={1} />
                 {/* {!!peekStore.tornState && (
                   <ControlButton icon="z" onClick={peekStore.tearPeek} />

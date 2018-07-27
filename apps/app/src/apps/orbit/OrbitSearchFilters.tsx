@@ -47,6 +47,10 @@ type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
 }
 
+const FilterButton = props => (
+  <UI.Button background="#fbfbfb" alpha={0.9} {...props} />
+)
+
 const decorate = compose(
   view.attach('integrationSettingsStore', 'searchStore'),
   view,
@@ -56,11 +60,11 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
-        <UI.Button alpha={0.8} {...searchStore.dateHover.props}>
+        <FilterButton {...searchStore.dateHover.props}>
           {getDate(searchStore.nlpStore.nlp.date) || 'Any time'}
-        </UI.Button>
-        <div style={{ width: 10 }} />
-        <UI.Button alpha={0.8}>Relevant</UI.Button>
+        </FilterButton>
+        <div style={{ width: 4 }} />
+        <FilterButton>Relevant</FilterButton>
         <UI.Col flex={1} />
         {searchFilterStore.filters.map((filter, i) => {
           return (
@@ -74,6 +78,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
               onClick={searchFilterStore.filterToggler(filter)}
               filter={filter.active ? null : 'grayscale(100%)'}
               opacity={filter.active ? 1 : 0.3}
+              background="#fff"
               {...{
                 '&:hover': {
                   filter: 'none',

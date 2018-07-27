@@ -170,7 +170,7 @@ const Preview = view({
 })
 
 const Subtitle = view(UI.View, {
-  margin: [0, 0, 3],
+  margin: [2, 0, 3],
   opacity: 0.4,
   flexFlow: 'row',
   alignItems: 'center',
@@ -245,24 +245,24 @@ class OrbitCardStore {
     return this.props.result || this.normalizedBit
   }
 
-  isNextUp = react(
-    () => [
-      this.props.searchStore && this.props.searchStore.nextIndex,
-      this.isPaneSelected,
-      !!this.props.nextUpStyle,
-    ],
-    ([nextIndex, isPaneSelected, hasUpNextStyle], { getValue }) => {
-      if (!isPaneSelected || !hasUpNextStyle) {
-        throw react.cancel
-      }
-      const isUpNext = nextIndex + 1 === this.props.index
-      if (isUpNext === getValue()) {
-        throw react.cancel
-      }
-      return isUpNext
-    },
-    { immediate: true },
-  )
+  // isNextUp = react(
+  //   () => [
+  //     this.props.searchStore && this.props.searchStore.nextIndex,
+  //     this.isPaneSelected,
+  //     !!this.props.nextUpStyle,
+  //   ],
+  //   ([nextIndex, isPaneSelected, hasUpNextStyle], { getValue }) => {
+  //     if (!isPaneSelected || !hasUpNextStyle) {
+  //       throw react.cancel
+  //     }
+  //     const isUpNext = nextIndex + 1 === this.props.index
+  //     if (isUpNext === getValue()) {
+  //       throw react.cancel
+  //     }
+  //     return isUpNext
+  //   },
+  //   { immediate: true },
+  // )
 
   setPeekTargetOnNextIndex = react(
     () => [
@@ -407,7 +407,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       >
         <Card
           isSelected={isSelected}
-          isNextUp={store.isNextUp}
+          // isNextUp={store.isNextUp}
           listItem={listItem}
           borderRadius={borderRadius}
           inGrid={inGrid}
@@ -431,7 +431,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             )}
           <Title>
             <UI.Text
-              size={listItem ? 1.15 : 1.2}
+              size={1.2}
               sizeLineHeight={0.85}
               ellipse={2}
               alpha={isSelected || listItem ? 1 : 0.8}

@@ -53,7 +53,21 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
+  offContentHeight = null
+
   setContentHeight = height => {
+    if (this.offContentHeight) {
+      this.offContentHeight()
+    }
+    if (this.contentHeight !== height) {
+      this.offContentHeight = on(
+        this,
+        setTimeout(() => this.doSetContentHeight(height), 100),
+      )
+    }
+  }
+
+  doSetContentHeight = height => {
     this.contentHeight = height
   }
 

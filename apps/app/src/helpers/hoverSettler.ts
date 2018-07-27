@@ -49,6 +49,7 @@ export function hoverSettler({
     let lastToggle = Date.now()
 
     const select = target => {
+      console.log('select', target)
       let prevTarget = currentNode
       currentNode = target
       if (isReallyEqual(prevTarget, target)) {
@@ -56,6 +57,7 @@ export function hoverSettler({
         return
       }
       if (Date.now() - lastToggle < toggleThrottle) {
+        log('Cancel select, too soon')
         return
       }
       lastToggle = Date.now()
@@ -103,6 +105,7 @@ export function hoverSettler({
     }
 
     const onClick = throttle(e => {
+      console.log('click', e.currentTarget)
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)

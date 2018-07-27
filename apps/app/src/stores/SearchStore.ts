@@ -44,7 +44,7 @@ export class SearchStore /* extends Store */ {
 
   quickIndex = 0
   highlightIndex = -1
-  nextIndex = 0
+  nextIndex = -1
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1

@@ -261,7 +261,6 @@ export class PeekStore {
   handleDragMove = e => {
     const { x, y } = this.initMouseDown
     this.dragOffset = [e.clientX - x, e.clientY - y]
-    console.log('this.dragOffset', this.dragOffset, e.clientX, e.clientY)
   }
 
   handleDragEnd = () => {

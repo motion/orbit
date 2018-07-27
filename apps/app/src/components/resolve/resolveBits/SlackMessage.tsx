@@ -48,15 +48,11 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
     try {
       htmlText = slackDown(message.text)
     } catch (err) {
-      console.log('err parsing', err)
+      console.error('err parsing', err)
     }
     const person = (bit.people || []).find(
       person => person.integrationId === message.user,
     )
-    if (!person) {
-      console.log(`no person for message ${message.text}`)
-      return null
-    }
     let previousBySameAuthor = false
     let previousWithinOneMinute = false
     if (previousMessage) {
@@ -76,7 +72,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           userSelect="none"
           cursor="default"
         >
-          <RoundButtonPerson person={person} />
+          {!!person && <RoundButtonPerson person={person} />}
           <div style={{ width: 6 }} />
           <Date if={!previousMessage || !previousWithinOneMinute}>
             {!!message.ts && <TimeAgo>{getSlackDate(message.ts)}</TimeAgo>}

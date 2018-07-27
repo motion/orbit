@@ -4,21 +4,6 @@ import {
   ItemResolverProps,
 } from '../../../components/ItemResolver'
 
-export const PeekItemResolver = ({
-  bit,
-  children,
-  item,
-  ...props
-}: ItemResolverProps) => {
-  return (
-    <ItemResolver
-      bit={bit}
-      item={item}
-      shownLimit={Infinity}
-      isExpanded
-      {...props}
-    >
-      {children}
-    </ItemResolver>
-  )
+export const PeekItemResolver = (props: ItemResolverProps) => {
+  return <ItemResolver shownLimit={Infinity} isExpanded {...props} />
 }

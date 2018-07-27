@@ -36,6 +36,8 @@ export class GithubIssueSync {
   }
 
   private async createIssue(issue: GithubIssue, organization: string, repository: string): Promise<Bit> {
+    const createdAt = issue.createdAt ? new Date(issue.createdAt).getTime() : undefined
+    const updatedAt = issue.updatedAt ? new Date(issue.updatedAt).getTime() : undefined
     return await createOrUpdateBit(Bit, {
       integration: 'github',
       identifier: issue.id,
@@ -56,8 +58,8 @@ export class GithubIssueSync {
         repositoryName: repository
       },
       author: issue.author ? issue.author.login : null, // github can return null author in the case if github user was removed,
-      bitCreatedAt: issue.createdAt || issue.updatedAt || '',
-      bitUpdatedAt: issue.updatedAt || issue.createdAt || '',
+      bitCreatedAt: createdAt,
+      bitUpdatedAt: updatedAt,
     })
   }
 

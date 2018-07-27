@@ -47,6 +47,9 @@ export class JiraIssueSync {
   }
 
   private createIssue(issue: JiraIssue): Promise<Bit> {
+    const bitCreatedAt = new Date(issue.fields.created).getTime()
+    const bitUpdatedAt = new Date(issue.fields.updated).getTime()
+
     return createOrUpdateBit(Bit, {
       integration: 'jira',
       identifier: issue.id,
@@ -61,8 +64,8 @@ export class JiraIssueSync {
       },
       webLink: this.setting.values.atlassian.domain + "/browse/" + issue.key,
       author: issue.fields.creator.displayName,
-      bitCreatedAt: issue.fields.created,
-      bitUpdatedAt: issue.fields.updated,
+      bitCreatedAt,
+      bitUpdatedAt,
     })
   }
 }

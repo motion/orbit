@@ -1,6 +1,8 @@
-import { Bit, createOrUpdateBit, Setting } from '@mcro/models'
+import { Bit, createOrUpdate, createOrUpdateBit, Person, Setting } from '@mcro/models'
+import * as Helpers from '~/helpers'
+import { sequence } from '~/utils'
 import { GMailLoader } from './GMailLoader'
-import { parseMailDate, parseMailTitle } from './GMailMessageParser'
+import { parseMailDate, parseMailTitle, parseSender } from './GMailMessageParser'
 import { GmailThread } from './GMailTypes'
 import {In} from "typeorm"
 
@@ -73,13 +75,14 @@ export class GMailSync {
       console.log(`have a threads to be added/changed`, addedThreads)
       await this.loader.loadMessages(addedThreads)
       const createdBits = await this.createBits(addedThreads)
-      console.log('bits were created / updated', createdBits)
+      const createdPeople = await this.createPeople(addedThreads)
+      console.log('bits were created / updated', createdBits, createdPeople)
     }
 
     // if there are removed threads then remove their bits
     if (removedBits.length) {
       console.log(`have a bits to be removed`, removedBits)
-      Bit.remove(removedBits)
+      await Bit.remove(removedBits)
       console.log('bits were removed')
     }
 
@@ -103,6 +106,29 @@ export class GMailSync {
         bitUpdatedAt: parseMailDate(thread.messages[thread.messages.length - 1]),
       })
     }))
+  }
+
+  private async createPeople(threads: GmailThread[]): Promise<Person[]> {
+    const people: Person[] = []
+    await sequence(threads, thread => {
+      return sequence(thread.messages, async message => {
+        const [name, email] = parseSender(message)
+        if (name && email) {
+          const person = await createOrUpdate(
+            Person,
+            {
+              identifier: `gmail-${Helpers.hash({ name, email })}`,
+              integrationId: email,
+              integration: 'gmail',
+              name: name,
+            },
+            { matching: ['identifier', 'integration'] },
+          )
+          people.push(person)
+        }
+      })
+    })
+    return people
   }
 
 }

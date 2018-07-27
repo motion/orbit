@@ -133,7 +133,7 @@ export class SlackSync {
           location: {
             id: channel.id
           },
-          time: MoreThan(parseInt(oldestMessageId))
+          bitCreatedAt: MoreThan(parseInt(oldestMessageId))
         })
         console.log(`latest bits were loaded`, latestBits)
 
@@ -254,7 +254,6 @@ export class SlackSync {
       location,
       webLink,
       desktopLink,
-      time: bitCreatedAt,
     })
   }
 

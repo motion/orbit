@@ -56,8 +56,8 @@ export class GDriveSync {
         name: file.parent.name,
         webLink: file.file.webViewLink || file.parent.webContentLink
       } : undefined,
-      bitCreatedAt: new Date(file.file.createdTime),
-      bitUpdatedAt: new Date(file.file.modifiedTime),
+      bitCreatedAt: new Date(file.file.createdTime).getTime(),
+      bitUpdatedAt: new Date(file.file.modifiedTime).getTime(),
       image: file.file.fileExtension && file.file.thumbnailLink ? file.file.id + '.' + file.file.fileExtension : undefined
     })
   }

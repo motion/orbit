@@ -118,8 +118,8 @@ export default class ConfluenceBitSync {
     markdownBody,
     body,
   }: AtlassianObj): Promise<Bit> => {
-    const bitCreatedAt = response.history.createdDate || ''
-    const bitUpdatedAt = response.history.lastUpdated.when || ''
+    const bitCreatedAt = new Date(response.history.createdDate).getTime()
+    const bitUpdatedAt = new Date(response.history.lastUpdated.when).getTime()
 
     return await createOrUpdateBit(Bit, {
       integration: 'confluence',

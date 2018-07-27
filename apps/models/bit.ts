@@ -80,13 +80,13 @@ export class Bit extends T.BaseEntity {
    * Time when bit was created on its origin.
    */
   @T.Column()
-  bitCreatedAt: string
+  bitCreatedAt: number
 
   /**
-   * Time when bit was created on its origin.
+   * Time when bit was updated on its origin.
    */
   @T.Column()
-  bitUpdatedAt: string
+  bitUpdatedAt: number
 
   /**
    * Web link to this bit on its origin.
@@ -141,14 +141,6 @@ export class Bit extends T.BaseEntity {
    */
   @T.Column({ unique: true })
   contentHash: string
-
-  /**
-   * Time in number when Bit source was created.
-   * We can't use bitCreatedAt because its a string.
-   * Currently we use it in a Slack.
-   */
-  @T.Column({ nullable: true })
-  time: number
 
   @T.BeforeUpdate()
   @T.BeforeInsert()

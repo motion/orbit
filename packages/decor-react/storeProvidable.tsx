@@ -210,6 +210,9 @@ storeProvidable = function(options, Helpers) {
               }
               Object.defineProperty(Store.prototype, 'props', getProps)
               const store = new Store()
+              if (store.debug) {
+                debugger
+              }
               // delete Store.prototype.props // safety, remove hack
               // then define directly
               Object.defineProperty(store, 'props', getProps)
@@ -288,6 +291,7 @@ storeProvidable = function(options, Helpers) {
           if (!this.stores) {
             return
           }
+          // dipose now because we are definitely re-hydrating
           for (const disposer of StoreDisposals) {
             disposer()
           }
@@ -303,7 +307,8 @@ storeProvidable = function(options, Helpers) {
             // auto rehydrate
             const hydrateState = storeHMRCache[key].state
             if (hydrateState) {
-              // console.log('hydrating', key, hydrateState)
+              // remove once its hydrated once
+              delete storeHMRCache[key]
               store.hydrate(hydrateState)
               Helpers.emit('store.mount', { name, thing: store })
             }

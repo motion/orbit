@@ -8,6 +8,12 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { themes } from './themes'
 import { throttle } from 'lodash'
+import debug from '@mcro/debug'
+
+// quiet everything
+setTimeout(() => {
+  debug.quiet()
+})
 
 Error.stackTraceLimit = Infinity
 // process.on('uncaughtException', err => {
@@ -42,7 +48,7 @@ export const render = throttle(async () => {
   )
 }, 32)
 
-setTimeout(render)
+render()
 
 // do this at end so it can import any instantiated things it wants to set on window.*
 // also a bit safer as it ensures we don't rely on it for anything  downstraem

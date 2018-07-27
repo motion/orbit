@@ -112,7 +112,7 @@ class OrbitDockedInner extends React.Component<{
   render() {
     const { paneStore, appStore, searchStore } = this.props
     const { animationState } = paneStore
-    log('DOCKED ------------', App.orbitState.docked)
+    // log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
       10,
       window.innerHeight - appStore.contentHeight - 12,

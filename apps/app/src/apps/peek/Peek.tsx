@@ -17,6 +17,27 @@ type Props = {
   searchStore?: SearchStore
 }
 
+const decorator = compose(
+  view.attach('appStore', 'searchStore'),
+  view.provide({
+    peekStore: PeekStore,
+  }),
+)
+
+export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
+  return (
+    <UI.Theme name="light">
+      <PeekFrame>
+        <PeekPageInner
+          appStore={appStore}
+          searchStore={searchStore}
+          peekStore={peekStore}
+        />
+      </PeekFrame>
+    </UI.Theme>
+  )
+})
+
 @view
 class PeekPageInner extends React.Component<Props> {
   renderInnerContents = ({
@@ -81,24 +102,3 @@ class PeekPageInner extends React.Component<Props> {
     )
   }
 }
-
-const decorator = compose(
-  view.attach('appStore', 'searchStore'),
-  view.provide({
-    peekStore: PeekStore,
-  }),
-)
-
-export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
-  return (
-    <UI.Theme name="light">
-      <PeekFrame>
-        <PeekPageInner
-          appStore={appStore}
-          searchStore={searchStore}
-          peekStore={peekStore}
-        />
-      </PeekFrame>
-    </UI.Theme>
-  )
-})

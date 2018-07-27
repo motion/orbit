@@ -1,5 +1,5 @@
 var _ = require('lodash')
-const stopwords = require('./en')
+const stopwords = require('./en').stopwords
 
 function _extract(str, options) {
   if (_.isEmpty(str)) {

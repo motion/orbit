@@ -36,7 +36,6 @@ class OrbitHomeStore {
 
   results = modelQueryReaction(
     async () => {
-      console.time('homeSearch')
       const result = await Promise.all([
         // { type: 'team', title: 'Engineering' },
         findType('slack', 'conversation', 2),
@@ -56,7 +55,6 @@ class OrbitHomeStore {
         // findType('slack', 'conversation', 7),
         // findType('slack', 'conversation', 8),
       ])
-      console.timeEnd('homeSearch')
       return result.filter(Boolean)
     },
     {
@@ -98,7 +96,7 @@ export class OrbitHome extends React.Component<{
 
   render() {
     const { store } = this.props
-    log('HOME---------------')
+    // log('HOME---------------')
     const total = store.results.length
     return (
       <OrbitDockedPane name="home" fadeBottom>

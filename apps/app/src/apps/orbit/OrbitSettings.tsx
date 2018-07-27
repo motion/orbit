@@ -31,7 +31,6 @@ class OrbitSettingsStore {
 
   generalSettings = react(
     async () => {
-      console.log('ensuring models are in place all over, remove me plz')
       const settingQuery = [
         { type: 'general', category: 'general' },
         { type: 'account', category: 'general' },

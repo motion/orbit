@@ -94,7 +94,7 @@ const SubTitle = ({ children, before, after }) => (
     height={32}
     zIndex={1}
   >
-    {before}
+    {before} this doesn't, though it used to
     <div style={{ flex: 1 }} />
     <Centered>
       {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}

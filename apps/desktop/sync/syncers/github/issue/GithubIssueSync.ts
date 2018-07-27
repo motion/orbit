@@ -42,6 +42,12 @@ export class GithubIssueSync {
       type: 'task',
       title: issue.title,
       body: issue.bodyText,
+      webLink: issue.url,
+      location: {
+        id: issue.repository.id,
+        name: issue.repository.name,
+        webLink: issue.repository.url,
+      },
       data: {
         ...omit(issue, ['bodyText']),
         labels: issue.labels.edges.map(edge => edge.node),

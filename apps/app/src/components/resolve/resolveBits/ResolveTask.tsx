@@ -2,7 +2,6 @@ import * as React from 'react'
 import keywordExtract from 'keyword-extractor'
 import markdown from '@mcro/marky-markdown'
 import { TimeAgo } from '../../../views/TimeAgo'
-import { RoundButton } from '../../../views/RoundButton'
 import * as UI from '@mcro/ui'
 import { ItemResolverProps } from '../../ItemResolver'
 

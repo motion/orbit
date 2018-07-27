@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, on } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
-const rowHeight = 2
+const rowHeight = 4
 const gridGap = 8
 const gridColumnGap = 8
 

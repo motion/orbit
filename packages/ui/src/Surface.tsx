@@ -60,7 +60,6 @@ export type SurfaceProps = CSSPropertySet & {
   tooltipProps?: Object
   uiContext?: boolean
   width?: number
-  wrapElement?: boolean
   alpha?: number
   dimmed?: boolean
   disabled?: boolean
@@ -78,7 +77,7 @@ const getIconSize = props =>
   props.iconSize ||
   Math.round(
     props.size *
-      (props.height ? props.height / 3.5 : 12) *
+      (props.height ? props.height / 3 : 12) *
       (props.sizeIcon || 1) *
       100,
   ) / 100
@@ -235,12 +234,7 @@ SurfaceFrame.theme = props => {
     ...circularStyles,
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
-    ...(props.wrapElement && {
-      '& > :active': activeStyle,
-    }),
-    ...(!props.wrapElement && {
-      '&:active': activeStyle,
-    }),
+    '&:active': activeStyle,
     ...(props.dimmed && dimmedStyle),
     ...(props.dim && dimStyle),
     ...chromelessStyle,
@@ -252,6 +246,8 @@ SurfaceFrame.theme = props => {
 }
 
 const Element = view(View, {
+  // needed to reset for <button /> at least
+  padding: 0,
   flexFlow: 'row',
   fontFamily: 'inherit',
   border: 'none',
@@ -268,7 +264,10 @@ Element.theme = props => {
   const iconSize = getIconSize(props)
   const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
   // element styles
-  const elementStyle = {}
+  const elementStyle = {
+    marginLeft: 0,
+    marginRight: 0,
+  }
   // spacing between icon
   const hasIconBefore = !!props.icon && !props.iconAfter
   const hasIconAfter = !!props.icon && props.iconAfter
@@ -298,6 +297,7 @@ const DEFAULT_GLOW_COLOR = [255, 255, 255]
 export class Surface extends React.Component<SurfaceProps> {
   static defaultProps = {
     iconPad: 8,
+    size: 1,
   }
 
   static contextTypes = {

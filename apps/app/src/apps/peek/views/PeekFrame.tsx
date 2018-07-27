@@ -111,7 +111,7 @@ export const PeekFrame = view.attach('peekStore')(
               towards={onRight ? 'left' : 'right'}
               background={
                 arrowY < 40 && peekStore.theme
-                  ? UI.color(peekStore.theme.background).darken(0.2)
+                  ? UI.color(peekStore.theme.background).darken(0.1)
                   : background
               }
               boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}

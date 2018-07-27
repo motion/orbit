@@ -78,7 +78,17 @@ const TitleBarText = props => (
   />
 )
 
-const SubTitleHorizontalSpace = () => <div style={{ width: 12 }} />
+const Centered = view({
+  position: 'absolute',
+  top: 0,
+  left: 100,
+  right: 100,
+  bottom: 0,
+  overflow: 'hidden',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+})
 
 const SubTitle = ({ children, date, permalink, icon }) => (
   <UI.Row
@@ -89,8 +99,6 @@ const SubTitle = ({ children, date, permalink, icon }) => (
     height={32}
     zIndex={1}
   >
-    {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
-    {!!children && !!date && <SubTitleHorizontalSpace />}
     <UI.Text>
       {date ? (
         <>
@@ -99,6 +107,9 @@ const SubTitle = ({ children, date, permalink, icon }) => (
         </>
       ) : null}
     </UI.Text>
+    <Centered>
+      {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
+    </Centered>
     {!!permalink &&
       !!icon && (
         <>
@@ -141,7 +152,7 @@ export class PeekHeaderContent extends React.Component<Props> {
         />
         {/* Fade below the icon */}
         <UI.View
-          zIndex={0}
+          zIndex={1}
           pointerEvents="none"
           position="absolute"
           top={0}
@@ -149,7 +160,7 @@ export class PeekHeaderContent extends React.Component<Props> {
           bottom={0}
           width={70}
           background={`linear-gradient(to right, transparent, ${theme.base.background.darken(
-            0.2,
+            0.1,
           )})`}
         />
         {/* <UI.HoverGlow

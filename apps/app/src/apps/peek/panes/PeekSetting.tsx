@@ -69,6 +69,7 @@ class SettingContent extends React.Component<
           // not sure i like the pattern, but it is extremely flexible
           // basically look at PeekPageInner > setting > *Setting
           // where they call back up and pass contents *Setting() => setting() => PeekPageInner
+          const icon = statusIcons[store.job && store.job.status] || {}
           return children({
             title: capitalize(integration),
             subhead,
@@ -77,15 +78,18 @@ class SettingContent extends React.Component<
               <UI.Row flex={1}>
                 <UI.Text>{store.bitsCount} total </UI.Text>
                 <UI.View flex={1} />
-                <UI.Text if={store.job.updatedAt}>
-                  Last run:{' '}
-                  <UI.Icon
-                    size={14}
-                    css={{ display: 'inline-block' }}
-                    {...statusIcons[store.job.status]}
-                  />{' '}
-                  <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-                </UI.Text>
+
+                {!!store.job.updatedAt && (
+                  <UI.Button
+                    icon={icon.name}
+                    iconProps={icon}
+                    tooltip={
+                      <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
+                    }
+                  >
+                    Last run
+                  </UI.Button>
+                )}
                 {!store.job ? <div>Loading...</div> : null}
               </UI.Row>
             ) : null,

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
 import keywordExtract from 'keyword-extractor'
 import arrford from 'arrford'
-import { getSlackDate } from '../../../helpers'
 import { capitalize } from 'lodash'
 import { ItemResolverProps } from '../../ItemResolver'
 
@@ -44,7 +43,7 @@ export const ResolveConversation = ({
       false,
     ),
     people: bit.people,
-    date: getSlackDate(bit.bitUpdatedAt),
+    date: bit.bitUpdatedAt,
     preview: keywordExtract
       .extract(bit.body, options)
       .slice(0, 8)

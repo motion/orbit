@@ -46,7 +46,7 @@ export function peekPosition(target): WindowMap | null {
 // so we'll nudge it down just a little.
 
 const BOTTOM_PAD = 40
-const NUDGE_AMT = 80
+const NUDGE_AMT = 40
 
 function getLazyPosition(
   target: Position,

@@ -27,6 +27,7 @@ export class PeekStore {
     fixed?: boolean
   }
 
+  // debug = true
   tornState = null
   dragOffset: [number, number] = null
   history = []
@@ -77,7 +78,6 @@ export class PeekStore {
       this.props.searchStore.selectedItem,
     ],
     async ([tornState, target, docked, hidden, selectedItem], { sleep }) => {
-      console.log('peek curState reaction!!!!')
       // debounce just a tiny bit to avoid renders as selectedItem updated a bit after peekState
       await sleep()
       if (tornState) {
@@ -261,7 +261,6 @@ export class PeekStore {
   handleDragMove = e => {
     const { x, y } = this.initMouseDown
     this.dragOffset = [e.clientX - x, e.clientY - y]
-    console.log('this.dragOffset', this.dragOffset, e.clientX, e.clientY)
   }
 
   handleDragEnd = () => {

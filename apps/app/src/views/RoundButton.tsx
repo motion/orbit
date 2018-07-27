@@ -4,8 +4,7 @@ import * as UI from '@mcro/ui'
 export const RoundButton = UI.forwardRef(props => (
   <UI.Button
     sizeRadius={100}
-    sizeHeight={0.8}
-    sizePadding={0.7}
+    sizeHeight={0.9}
     borderWidth={0}
     fontWeight={300}
     display="inline-flex"

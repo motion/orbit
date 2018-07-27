@@ -181,8 +181,9 @@ const Preview = view({
 })
 
 const Subtitle = view(UI.View, {
-  margin: [2, 0, 3],
-  opacity: 0.4,
+  height: 20,
+  margin: [2, 0, 0],
+  opacity: 0.45,
   flexFlow: 'row',
   alignItems: 'center',
 })
@@ -400,6 +401,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     const { isSelected } = store
     const { background } =
       isSelected && selectedTheme ? selectedTheme : theme.base
+    const hasSubtitle = !!(location || subtitle)
     return (
       <CardWrap
         {...hoverToSelect && !inactive && this.hoverSettler.props}
@@ -445,7 +447,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             </UI.Text>
             {afterTitle}
           </Title>
-          {!!(location || subtitle) && (
+          {hasSubtitle && (
             <Subtitle opacity={listItem ? 0.55 : 0.4}>
               {!!location && (
                 <UI.Text
@@ -472,6 +474,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               )}
             </Subtitle>
           )}
+          {/* vertical space only if needed */}
+          {hasSubtitle &&
+            (!!children || !!preview) && <div style={{ height: 4 }} />}
           <Preview if={preview && !children}>
             {typeof preview !== 'string' && preview}
             <UI.Text

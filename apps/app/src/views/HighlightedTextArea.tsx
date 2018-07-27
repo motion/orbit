@@ -17,7 +17,7 @@ const Block = view(UI.Block, {
   left: 0,
   right: 0,
   bottom: 0,
-  padding: [10, 3],
+  padding: [13, 3],
   whiteSpace: 'pre',
   wordWrap: 'no-wrap',
 })

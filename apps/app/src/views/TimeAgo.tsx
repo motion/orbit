@@ -5,6 +5,7 @@ import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 type TimeAgoProps = {
   date?: number | Date
   children?: number | Date
+  postfix?: string
 }
 
 export class TimeAgo extends Component<TimeAgoProps> {

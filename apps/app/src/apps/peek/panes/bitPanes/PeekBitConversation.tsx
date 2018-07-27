@@ -46,7 +46,7 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
                 {({ content }) => content}
               </PeekItemResolver>
               {index < 2 && (
-                <OrbitDivider height={2} css={{ margin: [20, 0, 10] }} />
+                <OrbitDivider css={{ height: 2, margin: [20, 0, 10] }} />
               )}
             </React.Fragment>
           ))}

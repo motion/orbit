@@ -8,7 +8,7 @@ export class PrimusAdaptor {
   }
 
   private connect() {
-    if (!window.Primus) {
+    if (!window['Primus']) {
       console.log('no window.primus')
       return
     }

@@ -12,7 +12,7 @@ export const inputStyle = {
   border: `1px solid ${colors.light15}`,
   borderRadius: 4,
   font: 'inherit',
-  fontSize: '1em',
+  fontSize: 16,
   marginRight: 5,
   padding: [0, 5],
   height: 28,

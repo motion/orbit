@@ -1,13 +1,11 @@
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
-import keywordExtract from 'keyword-extractor'
+import keywordExtract from '@mcro/keyword-extract'
 import arrford from 'arrford'
-import { getSlackDate } from '../../../helpers'
 import { capitalize } from 'lodash'
 import { ItemResolverProps } from '../../ItemResolver'
 
 const options = {
-  language: 'english',
   remove_digits: true,
   return_changed_case: true,
   remove_duplicates: false,
@@ -21,10 +19,6 @@ export const ResolveConversation = ({
   itemProps,
   isExpanded,
 }: ItemResolverProps) => {
-  if (!bit) {
-    console.log('no bit :/')
-    return null
-  }
   const content = isExpanded
     ? ((bit.data && bit.data.messages) || [])
         .slice(0, shownLimit)
@@ -39,12 +33,12 @@ export const ResolveConversation = ({
         ))
     : null
   return children({
-    title: arrford(
-      (bit.people || []).map(p => capitalize((p.name || '').split(' ')[0])),
-      false,
-    ),
+    title:
+      bit.people && bit.people.length
+        ? arrford(bit.people.map(p => capitalize((p.name || '').split(' ')[0])))
+        : bit.title,
     people: bit.people,
-    date: getSlackDate(bit.bitUpdatedAt),
+    date: new Date(bit.bitUpdatedAt * 1000),
     preview: keywordExtract
       .extract(bit.body, options)
       .slice(0, 8)

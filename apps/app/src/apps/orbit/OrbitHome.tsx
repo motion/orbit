@@ -36,7 +36,6 @@ class OrbitHomeStore {
 
   results = modelQueryReaction(
     async () => {
-      console.time('homeSearch')
       const result = await Promise.all([
         // { type: 'team', title: 'Engineering' },
         findType('slack', 'conversation', 2),
@@ -56,7 +55,6 @@ class OrbitHomeStore {
         // findType('slack', 'conversation', 7),
         // findType('slack', 'conversation', 8),
       ])
-      console.timeEnd('homeSearch')
       return result.filter(Boolean)
     },
     {
@@ -98,12 +96,12 @@ export class OrbitHome extends React.Component<{
 
   render() {
     const { store } = this.props
-    log('HOME---------------')
+    // log('HOME---------------')
     const total = store.results.length
     return (
       <OrbitDockedPane name="home" fadeBottom>
         <div>
-          <Masonry if={total}>
+          <Masonry>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2
               return (
@@ -118,15 +116,7 @@ export class OrbitHome extends React.Component<{
                   isExpanded={false && isExpanded}
                   style={isExpanded && this.span2}
                   itemProps={itemProps}
-                  // hoverToSelect
-                  // onClick={App.actions.tearPeek}
-                >
-                  {false &&
-                    isExpanded &&
-                    (({ content }) => (
-                      <div css={{ margin: [6, 0] }}>{content}</div>
-                    ))}
-                </OrbitCard>
+                />
               )
             })}
           </Masonry>

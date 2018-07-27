@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "./scripts/start.sh",
-    "start-pundle": "pundle --dev.port 3002 --dev.singlepage --dev.static ./public::/",
+    "start-pundle": "pundle --watch.adapter chokidar --dev.port 3002 --dev.singlepage --dev.static ./public::/",
     "start-prod": "NODE_ENV=production ./scripts/start.sh",
     "serve-prod": "static-server -p 3002 -n dist/index.html dist",
     "build-app": "NODE_ENV=production mcro-build --build",
@@ -28,6 +28,7 @@
     "@mcro/ui": "^2.2.0",
     "@mcro/color": "*",
     "@mcro/marky-markdown": "*",
+    "@mcro/keyword-extract": "*",
     "react-date-range": "1.0.0-beta",
     "arrford": "2.0.1",
     "date-fns": "2.0.0-alpha.7",
@@ -35,7 +36,6 @@
     "fuzzysort": "^1.1.1",
     "invariant": "2.2.4",
     "keycode": "^2.1.9",
-    "keyword-extractor": "0.0.15",
     "kill-port": "^1.1.0",
     "latinize": "0.4.0",
     "lodash": "4.17.10",
@@ -64,7 +64,9 @@
     "@mcro/dev": "^2.2.0",
     "@types/react": "16.4.6",
     "@types/react-dom": "16.0.6",
-    "@types/webpack-env": "1.13.6"
+    "@types/webpack-env": "1.13.6",
+    "pundle-preset-default": "3.0.0-beta4",
+    "pundle-cli": "3.0.0-beta4"
   },
   "peerDependencies": {
     "mobx": "^5.0.2",

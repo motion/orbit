@@ -8,16 +8,11 @@ import { PeekStore } from '../stores/PeekStore'
 import { color } from '@mcro/gloss'
 // import { ControlButton } from '../../views/ControlButton'
 import * as Constants from '../../../constants'
+import { PeekContents } from '../PeekPaneProps'
 
-type Props = {
+type Props = PeekContents & {
   peekStore?: PeekStore
-  title?: React.ReactNode
-  date?: React.ReactNode
-  subtitle?: React.ReactNode
-  permalink?: Function
-  icon?: string | React.ReactNode
   theme?: Object
-  subhead?: React.ReactNode
   integration?: string
 }
 
@@ -78,9 +73,19 @@ const TitleBarText = props => (
   />
 )
 
-const SubTitleHorizontalSpace = () => <div style={{ width: 12 }} />
+const Centered = view({
+  position: 'absolute',
+  top: 0,
+  left: 100,
+  right: 100,
+  bottom: 0,
+  overflow: 'hidden',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+})
 
-const SubTitle = ({ children, date, permalink, icon }) => (
+const SubTitle = ({ children, before, after }) => (
   <UI.Row
     position="relative"
     padding={[0, 12]}
@@ -89,23 +94,12 @@ const SubTitle = ({ children, date, permalink, icon }) => (
     height={32}
     zIndex={1}
   >
-    {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
-    {!!children && !!date && <SubTitleHorizontalSpace />}
-    <UI.Text>
-      {date ? (
-        <>
-          {' '}
-          <UI.Date>{date}</UI.Date>
-        </>
-      ) : null}
-    </UI.Text>
-    {!!permalink &&
-      !!icon && (
-        <>
-          <div style={{ flex: 1 }} />
-          <OrbitIcon onClick={permalink} icon={icon} size={20} />
-        </>
-      )}
+    {before} this doesn't, though it used to
+    <div style={{ flex: 1 }} />
+    <Centered>
+      {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
+    </Centered>
+    {after}
   </UI.Row>
 )
 
@@ -118,6 +112,8 @@ export class PeekHeaderContent extends React.Component<Props> {
       title,
       date,
       subtitle,
+      subtitleBefore,
+      subtitleAfter,
       permalink,
       icon,
       theme,
@@ -125,6 +121,7 @@ export class PeekHeaderContent extends React.Component<Props> {
       integration,
       ...props
     } = this.props
+    const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
     return (
       <PeekHeaderContain
         draggable
@@ -141,7 +138,7 @@ export class PeekHeaderContent extends React.Component<Props> {
         />
         {/* Fade below the icon */}
         <UI.View
-          zIndex={0}
+          zIndex={1}
           pointerEvents="none"
           position="absolute"
           top={0}
@@ -149,7 +146,7 @@ export class PeekHeaderContent extends React.Component<Props> {
           bottom={0}
           width={70}
           background={`linear-gradient(to right, transparent, ${theme.base.background.darken(
-            0.2,
+            0.1,
           )})`}
         />
         {/* <UI.HoverGlow
@@ -187,8 +184,8 @@ export class PeekHeaderContent extends React.Component<Props> {
         >
           {title}
         </TitleBar>
-        {!!subtitle && (
-          <SubTitle date={date} permalink={permalink} icon={icon}>
+        {hasSubTitle && (
+          <SubTitle before={subtitleBefore} after={subtitleAfter}>
             {subtitle}
           </SubTitle>
         )}

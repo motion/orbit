@@ -56,12 +56,15 @@ const decorate = compose(
   view,
 )
 export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
-  const { searchFilterStore } = searchStore
+  const { searchFilterStore, nlpStore } = searchStore
+  if (!nlpStore.nlp.date) {
+    return null
+  }
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
         <FilterButton {...searchStore.dateHover.props}>
-          {getDate(searchStore.nlpStore.nlp.date) || 'Any time'}
+          {getDate(nlpStore.nlp.date) || 'Any time'}
         </FilterButton>
         <div style={{ width: 4 }} />
         <FilterButton>Relevant</FilterButton>

@@ -121,7 +121,7 @@ export class OrbitContextHome<Props> {
   render() {
     const { store } = this.props
     const { resultsRef, isOverflowing } = this.state
-    log('CONTEXT HOME---------------')
+    // log('CONTEXT HOME---------------')
     const total = store.results.length
     return (
       <OrbitDockedPane name="context">

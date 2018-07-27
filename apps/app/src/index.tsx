@@ -8,11 +8,17 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { themes } from './themes'
 import { throttle } from 'lodash'
+import debug from '@mcro/debug'
+
+// quiet everything
+setTimeout(() => {
+  debug.quiet()
+})
 
 Error.stackTraceLimit = Infinity
-process.on('uncaughtException', err => {
-  console.log('App.uncaughtException', err.stack)
-})
+// process.on('uncaughtException', err => {
+//   console.log('App.uncaughtException', err.stack)
+// })
 
 // hmr calls render twice out the gate
 // so prevent that

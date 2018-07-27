@@ -95,11 +95,15 @@ Card.theme = ({
     let listStyle
     // selected...
     if (isSelected) {
+      const selectedBackground = background || theme.active.background
       listStyle = {
-        background: background || theme.active.background,
+        background: selectedBackground,
         '&:hover': {
-          background: background || theme.active.background,
+          background: selectedBackground,
         },
+        // '&:active': {
+        //   background: [selectedBackground, 0.5],
+        // },
       }
     } else {
       listStyle = {
@@ -108,7 +112,7 @@ Card.theme = ({
           background: [255, 255, 255, 0.4],
         },
         '&:active': {
-          background: theme.selected.background,
+          background: [0, 0, 0, 0.018],
         },
       }
     }

@@ -86,6 +86,7 @@ const OrbitInner = view({
   position: 'relative',
   zIndex: 4,
   overflow: 'hidden',
+  pointerEvents: 'none',
   margin: [-20, -20, 0, -20],
   padding: [20, 20, 0, 20],
   flex: 1,
@@ -93,6 +94,9 @@ const OrbitInner = view({
   // and so this lets us have the top/side overflow but still cut off bottom
   borderBottomLeftRadius: 60,
   borderBottomRightRadius: 60,
+  '& > *': {
+    pointerEvents: 'auto',
+  },
 })
 
 @view.attach('appStore', 'searchStore')

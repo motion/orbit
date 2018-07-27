@@ -13,7 +13,7 @@ const handleKeyDown = e => {
 
 export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
   return (
-    <View height={30} margin={['auto', 0]} padding={[0, 8]} width="100%">
+    <View height={48} margin={['auto', 0]} padding={[0, 8]} width="100%">
       <HighlightedTextArea
         width="100%"
         fontWeight={300}

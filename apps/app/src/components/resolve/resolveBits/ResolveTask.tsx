@@ -1,5 +1,5 @@
 import * as React from 'react'
-import keywordExtract from 'keyword-extractor'
+import keywordExtract from '@mcro/keyword-extract'
 import markdown from '@mcro/marky-markdown'
 import { TimeAgo } from '../../../views/TimeAgo'
 import * as UI from '@mcro/ui'
@@ -9,7 +9,6 @@ import { ItemResolverProps } from '../../ItemResolver'
 // const markdown = text => converter.makeHtml(text)
 
 const options = {
-  language: 'english',
   remove_digits: true,
   return_changed_case: true,
   remove_duplicates: false,

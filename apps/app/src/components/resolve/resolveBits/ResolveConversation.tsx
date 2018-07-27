@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
-import keywordExtract from 'keyword-extractor'
+import keywordExtract from '@mcro/keyword-extract'
 import arrford from 'arrford'
 import { capitalize } from 'lodash'
 import { ItemResolverProps } from '../../ItemResolver'
 
 const options = {
-  language: 'english',
   remove_digits: true,
   return_changed_case: true,
   remove_duplicates: false,

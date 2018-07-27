@@ -10,9 +10,9 @@ import { themes } from './themes'
 import { throttle } from 'lodash'
 
 Error.stackTraceLimit = Infinity
-process.on('uncaughtException', err => {
-  console.log('App.uncaughtException', err.stack)
-})
+// process.on('uncaughtException', err => {
+//   console.log('App.uncaughtException', err.stack)
+// })
 
 // hmr calls render twice out the gate
 // so prevent that
@@ -42,7 +42,7 @@ export const render = throttle(async () => {
   )
 }, 32)
 
-render()
+setTimeout(render)
 
 // do this at end so it can import any instantiated things it wants to set on window.*
 // also a bit safer as it ensures we don't rely on it for anything  downstraem

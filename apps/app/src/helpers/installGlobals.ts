@@ -16,8 +16,10 @@ import debug from '@mcro/debug'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
-window['webpackData'] = __webpack_require__
-window['require'] = require('webpack-runtime-require').Require
+if (typeof __webpack_require__ !== 'undefined') {
+  window['webpackData'] = __webpack_require__
+  window['require'] = require('webpack-runtime-require').Require
+}
 
 // the heavy hitters
 window['React'] = React

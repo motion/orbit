@@ -1,3 +1,6 @@
 import createElement from '@mcro/black/_/createElement'
-import React from 'react'
+const React = require('react')
+
+console.log('React', React)
+
 React.createElement = createElement

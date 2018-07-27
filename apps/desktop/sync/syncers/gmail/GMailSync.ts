@@ -1,10 +1,11 @@
 import { Bit, createOrUpdate, createOrUpdateBit, Person, Setting } from '@mcro/models'
+import { In } from 'typeorm'
 import * as Helpers from '~/helpers'
+import { createOrUpdatePersonBit } from '~/repository'
 import { sequence } from '~/utils'
 import { GMailLoader } from './GMailLoader'
 import { parseMailDate, parseMailTitle, parseSender } from './GMailMessageParser'
 import { GmailThread } from './GMailTypes'
-import {In} from "typeorm"
 
 export class GMailSync {
 
@@ -74,8 +75,8 @@ export class GMailSync {
     if (addedThreads.length) {
       console.log(`have a threads to be added/changed`, addedThreads)
       await this.loader.loadMessages(addedThreads)
-      const createdBits = await this.createBits(addedThreads)
       const createdPeople = await this.createPeople(addedThreads)
+      const createdBits = await this.createBits(addedThreads)
       console.log('bits were created / updated', createdBits, createdPeople)
     }
 
@@ -114,17 +115,25 @@ export class GMailSync {
       return sequence(thread.messages, async message => {
         const [name, email] = parseSender(message)
         if (name && email) {
+          const identifier = `gmail-${Helpers.hash({ name, email })}`
           const person = await createOrUpdate(
             Person,
             {
-              identifier: `gmail-${Helpers.hash({ name, email })}`,
+              identifier,
               integrationId: email,
               integration: 'gmail',
               name: name,
             },
             { matching: ['identifier', 'integration'] },
           )
-          people.push(person)
+
+          await createOrUpdatePersonBit({
+            email,
+            name,
+            identifier,
+            integration: "gmail",
+            person,
+          })
         }
       })
     })

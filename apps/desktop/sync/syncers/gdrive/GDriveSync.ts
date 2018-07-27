@@ -1,5 +1,6 @@
 import { Bit, createOrUpdateBit, Setting, createOrUpdate, Person } from '@mcro/models'
 import * as Helpers from '~/helpers'
+import { createOrUpdatePersonBit } from '~/repository'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
 
@@ -69,10 +70,11 @@ export class GDriveSync {
       avatar: user.photo || '',
       emails: user.email ? [user.email] : [],
     }
-    return await createOrUpdate(
+    const identifier = `gdrive-${Helpers.hash(person)}`
+    const personEntity = await createOrUpdate(
       Person,
       {
-        identifier: `gdrive-${Helpers.hash(person)}`,
+        identifier,
         integrationId: user.email,
         integration: 'gdrive',
         name: user.name,
@@ -82,6 +84,19 @@ export class GDriveSync {
       },
       { matching: ['identifier', 'integration'] },
     )
+
+    if (user.email) {
+      await createOrUpdatePersonBit({
+        email: user.email,
+        name: user.name,
+        photo: user.photo,
+        identifier,
+        integration: "gdrive",
+        person: personEntity,
+      })
+    }
+
+    return personEntity
   }
 
 }

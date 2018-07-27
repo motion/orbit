@@ -1,6 +1,7 @@
 import { Bit, Location, Person, Setting } from '@mcro/models'
 import * as _ from 'lodash'
 import { MoreThan } from 'typeorm'
+import { createOrUpdatePersonBit } from '~/repository'
 import { sequence } from '~/utils'
 import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
@@ -49,6 +50,19 @@ export class SlackSync {
 
     // update in the database
     await Person.save(updatedPeople)
+
+    // add person bits
+    await Promise.all(updatedPeople.map(person => {
+      return createOrUpdatePersonBit({
+        email: person.email,
+        name: person.name,
+        photo: person.data.profile.image_48,
+        identifier: person.identifier,
+        integration: "slack",
+        person: person,
+      })
+    }));
+
     console.log(`people were updated`, updatedPeople)
 
     // find remove people and remove them from the database

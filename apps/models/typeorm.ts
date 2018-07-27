@@ -31,6 +31,7 @@ const {
   getRepository,
   Brackets,
   LessThan,
+  PrimaryColumn,
   BeforeUpdate,
   BeforeInsert,
 } = typeorm
@@ -63,6 +64,7 @@ export {
   getRepository,
   Brackets,
   LessThan,
+  PrimaryColumn,
   BeforeUpdate,
   BeforeInsert,
 }

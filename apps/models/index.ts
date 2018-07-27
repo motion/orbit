@@ -16,6 +16,6 @@ export * from './location'
 import { Job } from './job'
 import { Setting } from './setting'
 import { Bit } from './bit'
-import { Person } from './person'
+import { Person, PersonBit } from './person'
 
-export const modelsList = [Job, Setting, Bit, Person]
+export const modelsList = [Job, Setting, Bit, Person, PersonBit]

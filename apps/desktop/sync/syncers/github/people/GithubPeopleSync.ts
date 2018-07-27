@@ -1,6 +1,7 @@
 import { Setting, createOrUpdate, Person } from '@mcro/models'
 import { flatten, uniq } from 'lodash'
 import * as Helpers from '~/helpers'
+import { createOrUpdatePersonBit } from '~/repository'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
 import { GithubPerson } from './GithubPeopleQuery'
 import { sequence } from '../../../../utils'
@@ -46,10 +47,11 @@ export class GithubPeopleSync {
         github: githubPerson,
       },
     }
-    return await createOrUpdate(
+    const identifier = `github-${Helpers.hash(person)}`
+    const personEntity = await createOrUpdate(
       Person,
       {
-        identifier: `github-${Helpers.hash(person)}`,
+        identifier,
         integrationId: githubPerson.id,
         integration: 'github',
         name: githubPerson.login,
@@ -59,6 +61,19 @@ export class GithubPeopleSync {
       },
       { matching: ['identifier', 'integration'] },
     )
+
+    if (githubPerson.email) {
+      await createOrUpdatePersonBit({
+        email: githubPerson.email,
+        name: githubPerson.name,
+        photo: githubPerson.avatarUrl,
+        identifier,
+        integration: "github",
+        person: personEntity,
+      })
+    }
+
+    return personEntity
   }
 
 }

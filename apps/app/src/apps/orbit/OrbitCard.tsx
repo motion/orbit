@@ -75,7 +75,7 @@ const Card = view({
 
 const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 2, '#90b1e480']
+const cardSelectedGlow = [0, 0, 0, 2, '#90b1e46b']
 
 Card.theme = ({
   listItem,
@@ -128,7 +128,7 @@ Card.theme = ({
   } else {
     // CARD
     const borderSelected = UI.color('#90b1e4')
-    const borderHover = UI.color('#ddd')
+    const borderHover = UI.color('#c9c9c9')
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     const cardBackground = background || theme.selected.background
     const disabledShadow = disableShadow ? 'none' : null

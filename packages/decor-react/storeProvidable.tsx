@@ -1,86 +1,31 @@
 import * as React from 'react'
-import { findDOMNode } from 'react-dom'
 import * as Mobx from 'mobx'
-import { difference } from 'lodash'
-import isEqual from 'react-fast-compare'
 import root from 'global'
-import { DecorPlugin } from '@mcro/decor'
 import { StoreContext } from './contexts'
 import { Disposable } from 'event-kit'
-
-// omit react like elements
-const getProps = nextProps => {
-  let props = {}
-  for (const key of Object.keys(nextProps)) {
-    if (React.isValidElement(nextProps[key])) {
-      continue
-    }
-    props[key] = nextProps[key]
-  }
-  return props
-}
-
-// keep action out of class directly because of hmr bug
-const updateProps = Mobx.action('updateProps', (props, nextProps) => {
-  const nextPropsFinal = getProps(nextProps)
-  const curPropKeys = Object.keys(props)
-  const nextPropsKeys = Object.keys(nextPropsFinal)
-  // change granular so reactions are granular
-  for (const prop of nextPropsKeys) {
-    if (!isEqual(props[prop], nextPropsFinal[prop])) {
-      props[prop] = nextPropsFinal[prop]
-    }
-  }
-  // remove
-  for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-    props[extraProp] = undefined
-  }
-})
-
-function getElementIndex(node: Element) {
-  var index = 0
-  while ((node = node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
-function getName(mountedComponent) {
-  const node = findDOMNode(mountedComponent) as HTMLElement
-  let name = `${mountedComponent.name}`
-  let parent = node
-  while (parent && parent instanceof HTMLElement && parent.tagName !== 'HTML') {
-    name += parent.nodeName + getElementIndex(parent)
-    parent = parent.parentNode as HTMLElement
-  }
-  return name
-}
+import { updateProps } from './helpers/updateProps'
+import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
+import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 
 let StoreDisposals = new Set()
-
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
 
-export interface StoreProvidable {}
+let recentHMR = false
+let recentHMRTm = null
+// let things re-mount after queries and such
+const setRecentHMR = () => {
+  clearTimeout(recentHMRTm)
+  recentHMR = true
+  recentHMRTm = setTimeout(() => {
+    recentHMR = false
+    // @ts-ignore
+    window.render()
+  }, 1000)
+}
 
-export let storeProvidable: DecorPlugin<StoreProvidable>
-
-storeProvidable = function(options, Helpers) {
-  let recentHMR = false
-  let recentHMRTm = null
-
-  // let things re-mount after queries and such
-  const setRecentHMR = () => {
-    clearTimeout(recentHMRTm)
-    recentHMR = true
-    recentHMRTm = setTimeout(() => {
-      recentHMR = false
-      // @ts-ignore
-      window.render()
-    }, 1000)
-  }
-
+export function storeProvidable(options, Helpers) {
   Helpers.on('did-hmr', setRecentHMR)
 
   return {
@@ -88,52 +33,34 @@ storeProvidable = function(options, Helpers) {
     once: true,
     decorator: (Klass, opts: any = {}) => {
       const allStores = opts.stores || options.stores
-      const context = opts.context || options.context
-      const storeDecorator = opts.storeDecorator || options.storeDecorator
 
       if (!allStores) {
         return Klass
       }
+
       if (typeof allStores !== 'object') {
-        throw new Error(
-          'Bad type for stores passed to provide, should be object',
-        )
+        throw new Error('Bad store provide, should be object')
       }
 
-      // see setupStores()
+      const context = opts.context || options.context
+      const storeDecorator = opts.storeDecorator || options.storeDecorator
       let Stores
 
-      function decorateStores() {
-        Stores = allStores
-        if (storeDecorator && allStores) {
-          for (const key of Object.keys(allStores)) {
-            Stores[key] = storeDecorator(allStores[key])
-          }
+      if (storeDecorator && allStores) {
+        Stores = {}
+        for (const key in allStores) {
+          Stores[key] = storeDecorator(allStores[key])
         }
       }
 
-      decorateStores()
-
       // return HoC
-      class StoreProvider extends React.Component implements StoreProvidable {
+      class StoreProvider extends React.Component {
         id = Math.random()
-
         props: any | { __contextualStores?: Object }
-        hmrDispose: any
         _props: any
         stores: any
         unmounted: boolean
         willReloadListener: Disposable
-
-        // @ts-ignore
-        static get name() {
-          return Klass.name
-        }
-
-        get name() {
-          return Klass.name
-        }
-
         allStores = allStores
 
         constructor(a, b) {
@@ -152,7 +79,7 @@ storeProvidable = function(options, Helpers) {
         }
 
         componentDidMount() {
-          if (this.stores === null) {
+          if (!this.stores) {
             return
           }
           root.loadedStores.add(this)
@@ -179,62 +106,44 @@ storeProvidable = function(options, Helpers) {
         // for reactive props in stores
         // 🐛 must run this before this.setupStore()
         setupProps() {
-          if (!this._props) {
-            // shallow
-            Mobx.extendObservable(
-              this,
-              { _props: getProps(this.props) },
-              null,
-              { deep: false },
-            )
+          if (this._props) {
+            return
           }
+          const properties = { _props: getNonReactElementProps(this.props) }
+          // shallow
+          Mobx.extendObservable(this, properties, null, { deep: false })
         }
 
         // DO NOT USE CLASS PROPERTY DECORATORS FOR THIS, IDK WTF WHY
         setupStores() {
           const getProps = {
+            configurable: true,
             get: () => this._props,
             set() {
-              // ignore
+              /* ignore */
             },
-            configurable: true,
           }
-          // start stores
-          const stores = Object.keys(Stores).reduce((acc, cur) => {
-            const Store = Stores[cur]
-            const createStore = () => {
-              if (!Store.prototype) {
-                throw new Error(
-                  `Store has no prototype from ${this.name}: ${cur}`,
-                )
-              }
-              Object.defineProperty(Store.prototype, 'props', getProps)
-              const store = new Store()
-              if (store.debug) {
-                debugger
-              }
-              // delete Store.prototype.props // safety, remove hack
-              // then define directly
-              Object.defineProperty(store, 'props', getProps)
-              return store
-            }
-            return {
-              ...acc,
-              [cur]: createStore(),
-            }
-          }, {})
-          this.stores = stores
+          // create stores
+          this.stores = {}
+          for (const name in Stores) {
+            const Store = Stores[name]
+            Object.defineProperty(Store.prototype, 'props', getProps)
+            const store = new Store()
+            Object.defineProperty(store, 'props', getProps)
+            this.stores[name] = store
+          }
           this.willMountStores()
         }
 
         willMountStores() {
-          if (options.onStoreMount) {
-            for (const name of Object.keys(this.stores)) {
-              if (!this.stores[name].__hasMounted) {
-                options.onStoreMount(this.stores[name], this.props)
-              }
-              this.stores[name].__hasMounted = true
+          if (!options.onStoreMount) {
+            return
+          }
+          for (const name of Object.keys(this.stores)) {
+            if (!this.stores[name].__hasMounted) {
+              options.onStoreMount(this.stores[name], this.props)
             }
+            this.stores[name].__hasMounted = true
           }
         }
 
@@ -255,7 +164,6 @@ storeProvidable = function(options, Helpers) {
 
         disposeStores = () => {
           if (!this.stores) {
-            console.log('no stores to dispose')
             return
           }
           for (const name of Object.keys(this.stores)) {
@@ -277,7 +185,7 @@ storeProvidable = function(options, Helpers) {
             const store = this.stores[name]
             // pass in state + auto dehydrate
             // to get real key: findDOMNode(this) + serialize dom position into key
-            storeHMRCache[`${getName(this)}${name}`] = {
+            storeHMRCache[`${getUniqueDOMPath(this)}${name}`] = {
               state: store.dehydrate(),
             }
           }
@@ -298,7 +206,7 @@ storeProvidable = function(options, Helpers) {
           StoreDisposals = new Set()
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            const key = `${getName(this)}${name}`
+            const key = `${getUniqueDOMPath(this)}${name}`
             if (!storeHMRCache[key]) {
               // try again a bit later, perhaps it wasnt mounted
               // console.log('no hmr state for', name, key, storeHMRCache)
@@ -317,18 +225,14 @@ storeProvidable = function(options, Helpers) {
           this.willMountStores()
         }
 
-        childContextStores() {
-          const parentStores = this.props.__contextualStores
+        childContextStores(parentStores) {
           if (options.warnOnOverwriteStore && parentStores) {
-            Object.keys(Stores).forEach(name => {
-              if (parentStores[name]) {
-                console.log(
-                  `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${
-                    Klass.name
-                  }`,
-                )
-              }
-            })
+            for (const name in Stores) {
+              if (!parentStores[name]) continue
+              console.log(
+                `Overwriting existing store ${name} via ${Klass.name}`,
+              )
+            }
           }
           const names = Object.keys(Stores)
           const childStores = {}
@@ -346,8 +250,9 @@ storeProvidable = function(options, Helpers) {
           const { __contextualStores, ...props } = this.props
           const children = <Klass {...props} {...this.stores} />
           if (context) {
+            const childStores = this.childContextStores(__contextualStores)
             return (
-              <StoreContext.Provider value={this.childContextStores()}>
+              <StoreContext.Provider value={childStores}>
                 {children}
               </StoreContext.Provider>
             )

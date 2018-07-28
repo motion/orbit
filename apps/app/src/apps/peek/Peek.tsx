@@ -8,8 +8,8 @@ import { PeekFrame } from './views/PeekFrame'
 import { AppStore } from '../../stores/AppStore'
 import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
-import { trace } from '../../../../../node_modules/mobx'
 import { SearchStore } from '../../stores/SearchStore'
+import { PeekPaneProps, PeekContents } from './PeekPaneProps'
 
 type Props = {
   appStore?: AppStore
@@ -38,51 +38,18 @@ export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
   )
 })
 
+type PeekPane = React.SFC<PeekPaneProps>
+
 @view
 class PeekPageInner extends React.Component<Props> {
-  renderInnerContents = ({
-    title,
-    permalink,
-    icon,
-    date,
-    subhead,
-    subtitle,
-    subtitleBefore,
-    subtitleAfter,
-    after,
-    content,
-    headerProps,
-  }) => {
-    const { item } = this.props.peekStore.state
-    return (
-      <>
-        <PeekHeader
-          title={title || item.title}
-          subtitle={subtitle}
-          subtitleBefore={subtitleBefore}
-          subtitleAfter={subtitleAfter}
-          after={after}
-          icon={icon}
-          date={date}
-          subhead={subhead}
-          permalink={permalink}
-          integration={item.integration || item.type}
-          {...headerProps}
-        />
-        <PeekContent peekStore={this.props.peekStore}>{content}</PeekContent>
-      </>
-    )
-  }
-
   render() {
-    trace()
     const { peekStore, appStore, searchStore } = this.props
     if (!peekStore.state) {
       return null
     }
     const { item, peekId, model } = peekStore.state
     const type = (item && capitalize(item.type)) || 'Empty'
-    const PeekContentsView = PeekPanes[type]
+    const PeekContentsView = PeekPanes[type] as PeekPane
     if (!PeekContentsView) {
       console.error('none', type)
       return <div>no pane found</div>
@@ -97,7 +64,39 @@ class PeekPageInner extends React.Component<Props> {
         peekStore={peekStore}
         searchStore={searchStore}
       >
-        {this.renderInnerContents}
+        {(resolvedProps: PeekContents) => {
+          console.log('got resolved', resolvedProps)
+          const {
+            title,
+            permalink,
+            icon,
+            date,
+            subhead,
+            subtitle,
+            subtitleBefore,
+            subtitleAfter,
+            after,
+            content,
+            headerProps,
+          } = resolvedProps
+          return (
+            <>
+              <PeekHeader
+                title={title}
+                subtitle={subtitle}
+                subtitleBefore={subtitleBefore}
+                subtitleAfter={subtitleAfter}
+                after={after}
+                icon={icon}
+                date={date}
+                subhead={subhead}
+                permalink={permalink}
+                {...headerProps}
+              />
+              <PeekContent peekStore={peekStore}>{content}</PeekContent>
+            </>
+          )
+        }}
       </PeekContentsView>
     )
   }

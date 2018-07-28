@@ -19,7 +19,7 @@ export type PeekContents = {
 }
 
 export type PeekPaneProps = {
-  scrollToHighlight: () => void
+  scrollToHighlight?: () => void
   bit?: Bit
   person?: Person
   searchStore: SearchStore

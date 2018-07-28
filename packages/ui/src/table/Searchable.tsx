@@ -391,9 +391,6 @@ export const Searchable = (Component: any) =>
         searchBarTheme,
         ...props
       } = this.props
-
-      console.log('RENDER SEARCHABLE')
-
       const searchBar = (
         <Theme theme={searchBarTheme}>
           <SearchBar

@@ -22,7 +22,7 @@ const Frame = view(UI.Col, {
   top: 10,
   right: 10,
   borderRadius: BORDER_RADIUS,
-  border: [2, [0, 0, 0, 0.05]],
+  border: [3, [0, 0, 0, 0.04]],
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
@@ -92,8 +92,8 @@ const OrbitInner = view({
   flex: 1,
   // this can be a lot more because theres padding left and right
   // and so this lets us have the top/side overflow but still cut off bottom
-  borderBottomLeftRadius: 37,
-  borderBottomRightRadius: 37,
+  borderBottomLeftRadius: 51,
+  borderBottomRightRadius: 51,
   '& > *': {
     pointerEvents: 'auto',
   },

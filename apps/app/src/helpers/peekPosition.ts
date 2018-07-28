@@ -58,10 +58,14 @@ function getLazyPosition(
   }
   let y = target.top
   const peekLastY = lastPeek.position[1]
-  // moving DOWN
+  // adjacent (in grid next to each other)
+  if (target.top === lastTarget.top) {
+    return peekLastY
+  }
   if (target.top > lastTarget.top) {
-    // target is BELOW peek, do minimum possible (+ edge pad)
+    // moving DOWN
     if (target.top > peekLastY + peekHeight) {
+      // target is BELOW peek, do minimum possible (+ edge pad)
       y = target.top - peekHeight + BOTTOM_PAD
     } else {
       // target is WITHIN peek, do a small nudge
@@ -70,19 +74,19 @@ function getLazyPosition(
     // ensure we don't nudge too far down
     // right now this is done in getPeekPositionFromTarget... TODO put here
     // y = Math.max()
-  }
-  // moving UP
-  else {
-    // target is ABOVE peek
+  } else {
+    // moving UP
     if (target.top < peekLastY) {
+      // target is ABOVE peek
       y = target.top
     } else {
       // target is WITHIN peek, small nudge
       y = peekLastY - NUDGE_AMT
     }
     // ensure we don't nudge too far up
-    y = Math.max(target.top, y)
+    y = Math.max(EDGE_PAD, y)
   }
+  console.log('do it', target.top, peekLastY, y)
   return y
 }
 

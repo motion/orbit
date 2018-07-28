@@ -8,12 +8,10 @@ import * as appActions from '../actions/appActions'
 import { WebSQLClient } from '../helpers/WebSQLClient'
 
 if (process.env.NODE_ENV === 'development') {
-  if (module && module.hot) {
-    module.hot.accept('../actions/appActions', () => {
-      console.log('accepting just actions....')
-      App.start({ actions: require('../actions/appActions') })
-    })
-  }
+  module.hot.accept('../actions/appActions', () => {
+    window['interceptHMR'] = true
+    App.start({ actions: require('../actions/appActions') })
+  })
 }
 
 const onPort = async cb => {

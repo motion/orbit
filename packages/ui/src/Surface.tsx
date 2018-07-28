@@ -75,7 +75,6 @@ export type SurfaceProps = CSSPropertySet & {
 }
 
 const getIconSize = props => {
-  console.log(props)
   return (
     props.iconSize ||
     Math.round(
@@ -269,7 +268,6 @@ const Element = view({
 
 Element.theme = props => {
   const iconSize = getIconSize(props)
-  console.log('iconSize', iconSize)
   const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
   // element styles
   const elementStyle = {

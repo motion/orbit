@@ -4,7 +4,7 @@ import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '../../../apps/orbit/OrbitIcon'
 import * as UI from '@mcro/ui'
 import { Bit } from '@mcro/models'
-import { SubTitle, RoundButton } from '../../../views'
+import { SubTitle } from '../../../views'
 import { OrbitCardMasonry } from '../../orbit/OrbitCardMasonry'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
@@ -23,7 +23,7 @@ class PersonPeek {
     () =>
       Bit.find({
         relations: ['people'],
-        take: 20,
+        take: 10,
       }),
     { defaultValue: [] },
   )

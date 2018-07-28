@@ -128,7 +128,6 @@ export class PeekHeaderContent extends React.Component<Props> {
       ...props
     } = this.props
     const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
-    console.log('peek theme', theme)
     return (
       <PeekHeaderContain
         draggable

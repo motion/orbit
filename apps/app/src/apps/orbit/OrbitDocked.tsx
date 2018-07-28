@@ -92,8 +92,8 @@ const OrbitInner = view({
   flex: 1,
   // this can be a lot more because theres padding left and right
   // and so this lets us have the top/side overflow but still cut off bottom
-  borderBottomLeftRadius: 37,
-  borderBottomRightRadius: 37,
+  borderBottomLeftRadius: 51,
+  borderBottomRightRadius: 51,
   '& > *': {
     pointerEvents: 'auto',
   },

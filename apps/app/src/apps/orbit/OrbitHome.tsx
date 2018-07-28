@@ -100,7 +100,7 @@ export class OrbitHome extends React.Component<{
     const total = store.results.length
     return (
       <OrbitDockedPane name="home" fadeBottom>
-        <div>
+        <div style={{ paddingTop: 2 }}>
           <Masonry>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2

@@ -9,6 +9,15 @@ import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
 const EXTRA_PAD = 40
 
+type Props = CSSPropertySet & {
+  store?: DockedPaneStore
+  style?: Object
+  after?: React.ReactNode
+  before?: React.ReactNode
+  fadeBottom?: boolean
+  name?: string
+}
+
 class DockedPaneStore {
   props: {
     appStore: AppStore
@@ -121,9 +130,9 @@ const Pane = view(UI.View, {
   borderRadius: BORDER_RADIUS,
   overflowX: 'hidden',
   overflowY: 'scroll',
-  padding: [EXTRA_PAD, 14, 0],
-  margin: [-EXTRA_PAD, 0, 0],
-  pointerEvents: 'none',
+  padding: [0, 14, 0],
+  margin: [0, 0, 0],
+  // pointerEvents: 'none',
   opacity: 0,
   transform: {
     x: 10,
@@ -159,15 +168,6 @@ const OverflowFade = view({
 OverflowFade.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background})`,
 })
-
-type Props = CSSPropertySet & {
-  store?: DockedPaneStore
-  style?: Object
-  after?: React.ReactNode
-  before?: React.ReactNode
-  fadeBottom?: boolean
-  name?: string
-}
 
 const DockedPaneFrame = view(UI.FullScreen, {
   opacity: 0,

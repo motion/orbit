@@ -56,11 +56,48 @@ export const EMPTY_ITEM = {
   integration: '',
 }
 
-export const INTEGRATION_THEMES = {
-  slack: { background: '#FDDE64' },
-  github: { background: '#353535', color: 'white' },
-  gdocs: { background: '#7DA5F4' },
-  jira: { background: '#4978D0', color: 'white' },
-  confluence: { background: '#4B7BD4', color: 'white' },
-  gmail: { background: '#D2675E', color: 'white' },
+export const PEEK_THEMES = {
+  base: {
+    background: '#fff',
+    color: '#444',
+  },
+  type: {
+    person: {
+      darkenTitleBarAmount: 0,
+      titlebarBackground: 'rgba(0,0,0,0.1)',
+      headerBackground: 'transparent',
+      background: '#f2f2f2',
+      color: '#444',
+    },
+  },
+  integration: {
+    slack: {
+      darkenTitleBarAmount: 0.1,
+      background: '#FDDE64',
+    },
+    github: {
+      darkenTitleBarAmount: 0.1,
+      background: '#353535',
+      color: 'white',
+    },
+    gdocs: {
+      darkenTitleBarAmount: 0.1,
+      background: '#7DA5F4',
+    },
+    jira: {
+      darkenTitleBarAmount: 0.1,
+      background: '#4978D0',
+      color: 'white',
+    },
+    confluence: {
+      darkenTitleBarAmount: 0.1,
+      background: '#4B7BD4',
+      color: 'white',
+    },
+    gmail: {
+      darkenTitleBarAmount: 0.1,
+      background: '#D2675E',
+      color: 'white',
+    },
+  },
 }

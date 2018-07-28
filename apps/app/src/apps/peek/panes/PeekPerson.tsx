@@ -124,7 +124,7 @@ const Email = view('a', {
 })
 
 const Avatar = view('img', {
-  margin: [-40, 0, -15, -65],
+  margin: [-40, 0, 10, -65],
   width: 256,
   height: 256,
   borderRadius: 1000,
@@ -215,10 +215,10 @@ export class PeekPerson extends React.Component<
                 >
                   Slack
                 </IntegrationButton>
-                <IntegrationButton icon="zoom" size={12} color="#777">
+                <IntegrationButton icon="zoom" size={12} href="">
                   Documents
                 </IntegrationButton>
-                <IntegrationButton icon="zoom" size={12} color="#777">
+                <IntegrationButton icon="zoom" size={12} href="">
                   Tasks
                 </IntegrationButton>
               </Links>
@@ -236,7 +236,7 @@ export class PeekPerson extends React.Component<
           <Content>
             <ContentInner>
               <Card>
-                <StrongSubTitle>Spends time in</StrongSubTitle>
+                <StrongSubTitle>Interested in</StrongSubTitle>
                 <UI.Theme name="grey">
                   <Masonry>
                     {[

@@ -84,6 +84,7 @@ export const PeekFrame = view.attach('peekStore')(
         state.size[1] - Constants.PEEK_BORDER_RADIUS * 2 - arrowSize,
       )
       const transition = transitions(peekStore)
+      const { theme } = peekStore
       return (
         <UI.Col
           position="absolute"
@@ -110,8 +111,10 @@ export const PeekFrame = view.attach('peekStore')(
               size={arrowSize}
               towards={onRight ? 'left' : 'right'}
               background={
-                arrowY < 40 && peekStore.theme
-                  ? UI.color(peekStore.theme.background).darken(0.1)
+                arrowY < 40 && theme
+                  ? UI.color(theme.background).darken(
+                      theme.darkenTitleBarAmount || 0,
+                    )
                   : background
               }
               boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}

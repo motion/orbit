@@ -84,6 +84,13 @@ const Centered = view({
   textAlign: 'center',
 })
 
+const textify = thing => {
+  if (typeof thing === 'string') {
+    return <UI.Text>{thing}</UI.Text>
+  }
+  return thing
+}
+
 const SubTitle = ({ children, before, after }) => (
   <UI.Row
     position="relative"
@@ -93,12 +100,12 @@ const SubTitle = ({ children, before, after }) => (
     height={32}
     zIndex={1}
   >
-    {before}
+    {textify(before)}
     <div style={{ flex: 1 }} />
     <Centered>
       {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
     </Centered>
-    {after}
+    {textify(after)}
   </UI.Row>
 )
 
@@ -132,7 +139,7 @@ export class PeekHeaderContent extends React.Component<Props> {
       >
         {/* Nice gradient effect on header */}
         <UI.FullScreen
-          background="linear-gradient(rgba(255,255,255,0.055), transparent 44%)"
+          background="linear-gradient(rgba(255,255,255,0.02), transparent 44%)"
           pointerEvents="none"
         />
         {/* Fade below the icon */}

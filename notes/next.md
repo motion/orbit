@@ -1,5 +1,49 @@
+# theme run
+
 - @mcro/color: increaseContrast, decreaseContrast
 - test-app: fix themes/tabs
+- fix orbitdocked resizing/overflow logic
+- roundbutton hover more contrast
+
+# peek visual run
+
+- titlebar borderbottom is weird
+- no titlabar faderight to transparent on profile
+- UI.Text not wrapping subtitlePrefix
+
+# peek search/display run
+
+- horizontal related row at top of each peek bit for all of them
+- make all searches work: task search, message search
+
+# interaction run
+
+- need good solution for key move past ends of search results
+- peek arrow position shouldn't straddle weird borders
+
+# smaller visual bugs
+
+- hover effects on home button odd / stay around after hide/show
+- hovering terms on homescreen -- remove for now
+- selected state of searchBar in peek should glow and help bring focus there
+
+# settings run
+
+- Remove setting button
+- Google drive settings pane
+- Manage tab for every one:
+  - Stats card of total bits
+  - Clear all bits
+  - Remove integration
+  - Can have login settings if applicable
+
+# permalinks run
+
+- once umed has permalinks merged
+- integration + location + item permalinks
+- on card
+- listitem
+- and in peek
 
 * decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
 * p2p https://github.com/mafintosh/hyperdb

@@ -15,6 +15,7 @@ import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
 import { View } from './blocks/View'
+import { propsToTextSize } from './helpers/propsToTextSize'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
@@ -73,14 +74,18 @@ export type SurfaceProps = CSSPropertySet & {
   type?: string
 }
 
-const getIconSize = props =>
-  props.iconSize ||
-  Math.round(
-    props.size *
-      (props.height ? props.height / 3 : 12) *
-      (props.sizeIcon || 1) *
-      100,
-  ) / 100
+const getIconSize = props => {
+  console.log(props)
+  return (
+    props.iconSize ||
+    Math.round(
+      (props.size || 1) *
+        (props.height ? props.height / 3 : 12) *
+        (props.sizeIcon || 1) *
+        100,
+    ) / 100
+  )
+}
 
 const inlineStyle = {
   display: 'inline',
@@ -102,6 +107,7 @@ const SurfaceBase = view({})
 SurfaceBase.theme = props => ({
   ...propsToThemeStyles(props),
   ...propsToStyles(props),
+  ...propsToTextSize(props),
 })
 
 // fontFamily: inherit on both fixes elements
@@ -245,8 +251,9 @@ SurfaceFrame.theme = props => {
   return surfaceStyles
 }
 
-const Element = view(View, {
+const Element = view({
   // needed to reset for <button /> at least
+  fontSize: 'inherit',
   padding: 0,
   flexFlow: 'row',
   fontFamily: 'inherit',
@@ -262,6 +269,7 @@ const Element = view(View, {
 
 Element.theme = props => {
   const iconSize = getIconSize(props)
+  console.log('iconSize', iconSize)
   const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
   // element styles
   const elementStyle = {
@@ -278,6 +286,7 @@ Element.theme = props => {
     elementStyle.marginRight = props.iconPad
   }
   return {
+    ...props,
     ...(props.inline && inlineStyle),
     width: `calc(100% ${iconNegativePad})`,
     ...elementStyle,
@@ -289,8 +298,6 @@ const baseIconStyle = {
   justifyContent: 'center',
   transform: `translateY(1%)`,
 }
-
-const DEFAULT_GLOW_COLOR = [255, 255, 255]
 
 @attachTheme
 @view.ui
@@ -351,7 +358,6 @@ export class Surface extends React.Component<SurfaceProps> {
     if (sizeLineHeight) {
       throughProps.lineHeight = `${height + 0.5}px`
     }
-    const glowColor = (theme && color) || DEFAULT_GLOW_COLOR
     return (
       <SurfaceFrame
         whiteSpace="pre"
@@ -384,7 +390,6 @@ export class Surface extends React.Component<SurfaceProps> {
           <HoverGlow
             full
             scale={1.1}
-            color={`${glowColor}`}
             opacity={0.35}
             borderRadius={props.borderRadius}
             {...glowProps}

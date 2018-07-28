@@ -442,12 +442,12 @@ export class SearchStore /* extends Store */ {
 
   increment = (by = 1) => {
     this.toggleSelected(
-      Math.min(this.searchState.results.length - 1, this.activeIndex + by),
+      Math.min(this.searchState.results.length - 1, this.nextIndex + by),
     )
   }
 
   decrement = (by = 1) => {
-    this.toggleSelected(Math.max(-1, this.activeIndex - by))
+    this.toggleSelected(Math.max(-1, this.nextIndex - by))
   }
 
   setGetResults = fn => {

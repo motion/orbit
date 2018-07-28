@@ -65,7 +65,6 @@ class PeekPageInner extends React.Component<Props> {
         searchStore={searchStore}
       >
         {(resolvedProps: PeekContents) => {
-          console.log('got resolved', resolvedProps)
           const {
             title,
             permalink,

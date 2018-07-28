@@ -6,8 +6,10 @@ import { Disposable } from 'event-kit'
 import { updateProps } from './helpers/updateProps'
 import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
+import debug from '@mcro/debug'
 
-let StoreDisposals = new Set()
+const log = debug('storeProvidable')
+
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
@@ -33,6 +35,7 @@ export function storeProvidable(options, Helpers) {
     once: true,
     decorator: (Klass, opts: any = {}) => {
       const allStores = opts.stores || options.stores
+      const logName = `${Object.keys(allStores || {}).join(', ')}`
 
       if (!allStores) {
         return Klass
@@ -65,6 +68,7 @@ export function storeProvidable(options, Helpers) {
 
         constructor(a, b) {
           super(a, b)
+          log(`${logName}.constructor`)
           this.setupProps()
           this.setupStores()
         }
@@ -73,9 +77,9 @@ export function storeProvidable(options, Helpers) {
         componentDidUpdate() {
           updateProps(this._props, this.props)
           // update even later because the hydrations change props and renders, changing the key path
-          if (recentHMR) {
-            this.onReloadStores()
-          }
+          // if (recentHMR) {
+          //   this.onReloadStores()
+          // }
         }
 
         componentDidMount() {
@@ -141,6 +145,7 @@ export function storeProvidable(options, Helpers) {
           if (!options.onStoreMount) {
             return
           }
+          log(`${logName}.willMountStores`)
           for (const name of Object.keys(this.stores)) {
             if (!this.stores[name].__hasMounted) {
               options.onStoreMount(this.stores[name], this.props)
@@ -183,6 +188,7 @@ export function storeProvidable(options, Helpers) {
           if (!this.stores) {
             return
           }
+          log(`${logName}.onWillReloadStores`)
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             // pass in state + auto dehydrate
@@ -191,21 +197,14 @@ export function storeProvidable(options, Helpers) {
               state: store.dehydrate(),
             }
           }
-          // save these for later because webpack may not actually HMR
-          // if there is "nothing to update", it will not call `onReloadStores`
-          // so we don't want to dispose prematurely
-          StoreDisposals.add(this.disposeStores)
         }
 
         onReloadStores = () => {
           if (!this.stores) {
             return
           }
+          log(`${logName}.onReloadStores`)
           // dipose now because we are definitely re-hydrating
-          for (const disposer of StoreDisposals) {
-            disposer()
-          }
-          StoreDisposals = new Set()
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             const key = `${getUniqueDOMPath(this)}${name}`

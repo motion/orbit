@@ -8,6 +8,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@mcro/debug": "*",
     "@mcro/decor": "^2.2.0",
     "@mcro/helpers": "^2.2.0",
     "batch-processor": "^1.0.0",

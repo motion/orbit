@@ -1,6 +1,9 @@
-- decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
-- p2p https://github.com/mafintosh/hyperdb
-- hire https://github.com/theKashey
-- ide https://retool.in/
-- icons https://danklammer.com/bytesize-icons/
-- nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
+- @mcro/color: increaseContrast, decreaseContrast
+- test-app: fix themes/tabs
+
+* decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
+* p2p https://github.com/mafintosh/hyperdb
+* hire https://github.com/theKashey
+* ide https://retool.in/
+* icons https://danklammer.com/bytesize-icons/
+* nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical

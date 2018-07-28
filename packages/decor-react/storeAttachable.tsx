@@ -11,6 +11,9 @@ export function storeAttachable(options): ContextAttacher {
       const ContextAttacher = props => (
         <StoreContext.Consumer>
           {allStores => {
+            if (!allStores) {
+              return <View {...props} />
+            }
             let stores = {}
             if (
               options.stores.length === 1 &&

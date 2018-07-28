@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom'
 import { themes } from './themes'
 import { throttle } from 'lodash'
 import debug from '@mcro/debug'
-import { RootView } from './RootViewHMR'
+import './RootViewHMR'
 
 // quiet everything
 setTimeout(() => {

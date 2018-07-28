@@ -11,7 +11,7 @@ import { PeekContents } from '../PeekPaneProps'
 
 type Props = PeekContents & {
   peekStore?: PeekStore
-  theme?: Object
+  theme?: any
   integration?: string
 }
 
@@ -128,6 +128,7 @@ export class PeekHeaderContent extends React.Component<Props> {
       ...props
     } = this.props
     const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
+    console.log('peek theme', theme)
     return (
       <PeekHeaderContain
         draggable
@@ -151,9 +152,15 @@ export class PeekHeaderContent extends React.Component<Props> {
           right={0}
           bottom={0}
           width={70}
-          background={`linear-gradient(to right, transparent, ${theme.base.background.darken(
-            0.1,
-          )})`}
+          background={`linear-gradient(
+            to right,
+            transparent,
+            ${
+              theme.darkenTitleBarAmount
+                ? theme.base.background.darken(theme.darkenTitleBarAmount)
+                : 'transparent'
+            }
+          )`}
         />
         {/* <UI.HoverGlow
           width={400}

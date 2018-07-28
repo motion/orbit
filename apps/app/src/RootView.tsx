@@ -5,41 +5,13 @@ import Router from './router'
 import { view, on } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 
-if (module.hot && module.hot.addStatusHandler) {
-  if (module.hot.status() === 'idle') {
-    module.hot.addStatusHandler(status => {
-      // allow them to run after any other accept
-      setTimeout(() => {
-        // allow prevent of running hooks
-        if (window['interceptHMR']) {
-          if (status === 'apply') {
-            window['interceptHMR'] = false
-          }
-          console.log('ignore')
-          return
-        }
-        if (status === 'prepare') {
-          view.emit('will-hmr')
-          view.provide.emit('will-hmr')
-        }
-        if (status === 'apply') {
-          view.emit('did-hmr')
-          view.provide.emit('did-hmr')
-          console.log('[HMR] orbit done')
-          // @ts-ignore
-          window.render()
-        }
-      }, 50)
-    })
-  }
-}
-
 export class RootView extends React.Component {
   state = {
     error: null,
   }
 
   componentDidMount() {
+    window['rootViewInstance'] = this
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
 
@@ -115,5 +87,35 @@ export class RootView extends React.Component {
         <CurrentPage key={Router.key} {...Router.params} />
       </UI.Theme>
     )
+  }
+}
+
+if (process.env.NODE_ENV === 'development') {
+  if (module.hot && module.hot.addStatusHandler) {
+    if (module.hot.status() === 'idle') {
+      module.hot.addStatusHandler(status => {
+        // allow them to run after any other accept
+        setTimeout(() => {
+          // allow prevent of running hooks
+          if (window['interceptHMR']) {
+            if (status === 'apply') {
+              window['interceptHMR'] = false
+            }
+            return
+          }
+          if (status === 'prepare') {
+            view.emit('will-hmr')
+            view.provide.emit('will-hmr')
+          }
+          if (status === 'apply') {
+            view.emit('did-hmr')
+            view.provide.emit('did-hmr')
+            console.log('[HMR] orbit done')
+            // @ts-ignore
+            window.render()
+          }
+        }, 50)
+      })
+    }
   }
 }

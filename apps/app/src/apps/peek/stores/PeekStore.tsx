@@ -1,24 +1,9 @@
 import * as React from 'react'
 import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import * as Constants from '../../../constants'
+import { PEEK_THEMES } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import { SearchStore } from '../../../stores/SearchStore'
-
-const TYPE_THEMES = {
-  person: {
-    titlebarBackground: 'rgba(0,0,0,0.1)',
-    headerBackground: 'transparent',
-    background: '#f2f2f2',
-    color: '#444',
-  },
-  // setting: 'gray',
-}
-
-const BASE_THEME = {
-  background: '#fff',
-  color: '#444',
-}
 
 export class PeekStore {
   props: {
@@ -158,13 +143,13 @@ export class PeekStore {
 
   get theme() {
     if (!this.state || !this.state.item) {
-      return BASE_THEME
+      return PEEK_THEMES.base
     }
     const { type, integration } = this.state.item
     return (
-      Constants.INTEGRATION_THEMES[integration] ||
-      TYPE_THEMES[type] ||
-      BASE_THEME
+      PEEK_THEMES.integration[integration] ||
+      PEEK_THEMES.type[type] ||
+      PEEK_THEMES.base
     )
   }
 

@@ -71,7 +71,7 @@ const RootViewInner = () => {
   return (
     <ThemeProvide themes={themes} activeTheme="light">
       <div style={{ pointerEvents: 'all', width: '100%', height: '100%' }}>
-        <div>
+        <div style={{ flex: 1, overflowY: 'scroll' }}>
           <box style={{ height: 500 }} />
           <box style={{ height: 500 }} />
           <UI.Button glow glowProps={{ color: '#000' }}>

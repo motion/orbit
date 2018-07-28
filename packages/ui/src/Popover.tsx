@@ -171,7 +171,8 @@ const getShadow = (shadow, elevation) => {
   }
   return base
 }
-const calcForgiveness = (forgiveness, _) => forgiveness
+const calcForgiveness = (forgiveness, distance) =>
+  forgiveness > distance ? distance : forgiveness
 
 @attachTheme
 @view.ui
@@ -536,12 +537,12 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   get x() {
-    const { direction, popoverSize, targetBounds } = this
+    const { direction, popoverSize, targetBounds, forgiveness } = this
     if (!targetBounds) {
       return 0
     }
     const VERTICAL = direction === 'top' || direction === 'bottom'
-    const { adjust, distance, arrowSize, forgiveness } = this.curProps
+    const { adjust, distance, arrowSize } = this.curProps
     // measurements
     const popoverHalfWidth = popoverSize.width / 2
     const targetCenter = targetBounds.left + targetBounds.width / 2
@@ -607,7 +608,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
     let maxHeight
     let top = null
 
-    const arrowAdjust = Math.max(forgiveness, distance)
+    const arrowAdjust = distance
 
     // bottom half
     if (VERTICAL) {
@@ -641,10 +642,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
         maxHeight =
           window.innerHeight - (targetBounds.top + targetBounds.height)
       }
-    }
-    if (isNaN(top)) {
-      console.log('nan top')
-      debugger
     }
     return { arrowTop, top, maxHeight }
   }

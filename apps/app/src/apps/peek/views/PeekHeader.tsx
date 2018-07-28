@@ -26,7 +26,7 @@ const PeekHeaderContain = view(UI.View, {
 PeekHeaderContain.theme = ({ theme, position }) => {
   return {
     position: position || 'relative',
-    // borderBottom: [1, theme.base.background.darken(0.1)],
+    borderBottom: [1, theme.base.background.darken(0.3)],
     background: theme.headerBackground || theme.base.background,
   }
 }

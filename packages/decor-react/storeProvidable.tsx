@@ -77,9 +77,9 @@ export function storeProvidable(options, Helpers) {
         componentDidUpdate() {
           updateProps(this._props, this.props)
           // update even later because the hydrations change props and renders, changing the key path
-          if (recentHMR) {
-            this.onReloadStores()
-          }
+          // if (recentHMR) {
+          //   this.onReloadStores()
+          // }
         }
 
         componentDidMount() {

@@ -1,3 +1,13 @@
+# WOW for demo
+
+* multiselect:
+  1. search
+  2. hit shift + click
+  3. (or click and drag just like tableview)
+  4. it puts the results into tabs
+  5. drag away the window
+  6. now you have a grouped view
+
 # theme run
 
 - @mcro/color: increaseContrast, decreaseContrast

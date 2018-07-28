@@ -11,6 +11,7 @@
     "@mcro/debug": "*",
     "@mcro/decor": "^2.2.0",
     "@mcro/helpers": "^2.2.0",
+    "@mcro/store-hmr": "*",
     "batch-processor": "^1.0.0",
     "event-kit": "^2.5.0",
     "global": "^4.3.2",

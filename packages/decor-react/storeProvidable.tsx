@@ -7,6 +7,7 @@ import { updateProps } from './helpers/updateProps'
 import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import debug from '@mcro/debug'
+// import { StoreHMR } from '@mcro/store-hmr'
 
 const log = debug('storeProvidable')
 
@@ -65,6 +66,15 @@ export function storeProvidable(options, Helpers) {
         unmounted: boolean
         willReloadListener: Disposable
         allStores = allStores
+        getUniqueDOMPath = getUniqueDOMPath
+
+        state = {
+          key: null,
+        }
+
+        get name() {
+          return Klass.name
+        }
 
         constructor(a, b) {
           super(a, b)
@@ -76,6 +86,14 @@ export function storeProvidable(options, Helpers) {
         // PureComponent means this is only called when props are not shallow equal
         componentDidUpdate() {
           updateProps(this._props, this.props)
+          if (process.env.NODE_ENV === 'development') {
+            if (this.key !== this.state.key) {
+              this.setState({ key: this.key })
+              if (this.setStoreHMRState) {
+                this.setStoreHMRState({ key: this.key })
+              }
+            }
+          }
           // update even later because the hydrations change props and renders, changing the key path
           // if (recentHMR) {
           //   this.onReloadStores()
@@ -184,6 +202,10 @@ export function storeProvidable(options, Helpers) {
           }
         }
 
+        get key() {
+          return `${getUniqueDOMPath(this)}${name}`
+        }
+
         onWillReloadStores = () => {
           if (!this.stores) {
             return
@@ -193,7 +215,7 @@ export function storeProvidable(options, Helpers) {
             const store = this.stores[name]
             // pass in state + auto dehydrate
             // to get real key: findDOMNode(this) + serialize dom position into key
-            storeHMRCache[`${getUniqueDOMPath(this)}${name}`] = {
+            storeHMRCache[this.key] = {
               state: store.dehydrate(),
             }
           }
@@ -207,17 +229,16 @@ export function storeProvidable(options, Helpers) {
           // dipose now because we are definitely re-hydrating
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            const key = `${getUniqueDOMPath(this)}${name}`
-            if (!storeHMRCache[key]) {
+            if (!storeHMRCache[this.key]) {
               // try again a bit later, perhaps it wasnt mounted
               // console.log('no hmr state for', name, key, storeHMRCache)
               continue
             }
             // auto rehydrate
-            const hydrateState = storeHMRCache[key].state
+            const hydrateState = storeHMRCache[this.key].state
             if (hydrateState) {
               // remove once its hydrated once
-              delete storeHMRCache[key]
+              delete storeHMRCache[this.key]
               store.hydrate(hydrateState)
               Helpers.emit('store.mount', { name, thing: store })
             }
@@ -247,6 +268,8 @@ export function storeProvidable(options, Helpers) {
           return stores
         }
 
+        setStoreHMRState = null
+
         render() {
           const { __contextualStores, ...props } = this.props
           const children = <Klass {...props} {...this.stores} />
@@ -259,6 +282,15 @@ export function storeProvidable(options, Helpers) {
             )
           }
           return children
+          // return (
+          //   <StoreHMR>
+          //     {({ setState, state }) => {
+          //       this.setStoreHMRState = setState
+          //       console.log('??', state.key, this.state.key)
+          //       return
+          //     }}
+          //   </StoreHMR>
+          // )
         }
       }
 

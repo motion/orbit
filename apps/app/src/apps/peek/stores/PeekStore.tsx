@@ -12,7 +12,7 @@ export class PeekStore {
     fixed?: boolean
   }
 
-  // debug = true
+  debug = true
   tornState = null
   dragOffset: [number, number] = null
   history = []

@@ -1,9 +1,56 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, compose } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { themes } from './themes'
 import { ThemeProvide } from '@mcro/gloss'
 import { OrbitCard } from '../../app/src/apps/orbit/OrbitCard'
+
+const decorator = compose(
+  view.attach({
+    store: class {
+      state = {
+        hello: 'notworld',
+      }
+
+      willMount() {
+        setTimeout(() => {
+          this.state = {
+            hello: 'world',
+          }
+        }, 1000)
+      }
+    },
+  }),
+  view,
+)
+
+const SomeSubView = decorator(({ store }) => {
+  return (
+    <div>
+      123 123
+      {store.state.hello === 'world' ? <SomeOtherSubView /> : <div>hiii</div>}
+    </div>
+  )
+})
+
+const subDecorator = compose(
+  view.attach({
+    store: class {
+      state = 'wut'
+
+      willMount() {
+        setTimeout(() => {
+          this.state = 'yeeeeeeeeeeee'
+        }, 1000)
+      }
+    },
+  }),
+  view,
+)
+
+const SomeOtherSubView = subDecorator(({ store }) => {
+  return <div>{store.state}</div>
+})
 
 const Test = view({
   color: 'gray',
@@ -71,7 +118,9 @@ const RootViewInner = () => {
   return (
     <ThemeProvide themes={themes} activeTheme="light">
       <div style={{ pointerEvents: 'all', width: '100%', height: '100%' }}>
-        <div style={{ flex: 1, overflowY: 'scroll' }}>
+        <SomeSubView />
+
+        {/* <div style={{ flex: 1, overflowY: 'scroll' }}>
           <box style={{ height: 500 }} />
           <box style={{ height: 500 }} />
           <UI.Button glow glowProps={{ color: '#000' }}>
@@ -79,7 +128,7 @@ const RootViewInner = () => {
           </UI.Button>
           <box style={{ height: 500 }} />
           <box style={{ height: 500 }} />
-        </div>
+        </div> */}
         {/* <Test>blue hover orange</Test>
         <Test big>pink hover pinker</Test>
         <Test2 bigFont>red faint</Test2>

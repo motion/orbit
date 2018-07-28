@@ -101,6 +101,7 @@ const SubTitle = ({ children, before, after }) => (
     zIndex={1}
   >
     {textify(before)}
+    123 123 123
     <div style={{ flex: 1 }} />
     <Centered>
       {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
@@ -132,14 +133,12 @@ export class PeekHeaderContent extends React.Component<Props> {
       <PeekHeaderContain
         draggable
         onDragStart={peekStore.onDragStart}
-        onDrag={peekStore.onDrag}
-        onDragEnd={peekStore.onDragEnd}
         theme={theme}
         {...props}
       >
         {/* Nice gradient effect on header */}
         <UI.FullScreen
-          background="linear-gradient(rgba(255,255,255,0.02), transparent 44%)"
+          background="linear-gradient(rgba(255,255,255,0.025), transparent 44%)"
           pointerEvents="none"
         />
         {/* Fade below the icon */}

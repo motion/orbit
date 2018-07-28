@@ -3,9 +3,9 @@ import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
+import { PeekFrameArrow } from './PeekFrameArrow'
 
 const SHADOW_PAD = 85
-const background = '#f9f9f9'
 // shared by arrow and frameborder
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.5]]
 
@@ -72,19 +72,7 @@ export const PeekFrame = view.attach('peekStore')(
       ]
       const margin = padding.map(x => -x)
       const boxShadow = [[onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.3]]]
-      const arrowSize = 20
-      const ARROW_CARD_TOP_OFFSET = 32
-      const arrowY = Math.min(
-        isHidden
-          ? 0
-          : state.target.top +
-            ARROW_CARD_TOP_OFFSET -
-            state.position[1] -
-            arrowSize / 2,
-        state.size[1] - Constants.PEEK_BORDER_RADIUS * 2 - arrowSize,
-      )
       const transition = transitions(peekStore)
-      const { theme } = peekStore
       return (
         <UI.Col
           position="absolute"
@@ -103,31 +91,7 @@ export const PeekFrame = view.attach('peekStore')(
           }}
         >
           {!peekStore.tornState && (
-            <UI.Arrow
-              position="absolute"
-              top={0}
-              zIndex={100}
-              transition="transform ease 70ms"
-              size={arrowSize}
-              towards={onRight ? 'left' : 'right'}
-              background={
-                arrowY < 40 && theme
-                  ? UI.color(theme.background).darken(
-                      theme.darkenTitleBarAmount || 0,
-                    )
-                  : background
-              }
-              boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
-              css={{
-                left: !onRight ? 'auto' : -14,
-                right: !onRight ? -arrowSize : 'auto',
-                zIndex: 1000000000,
-                transform: {
-                  y: arrowY,
-                  x: onRight ? 0.5 : -0.5,
-                },
-              }}
-            />
+            <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
           )}
           <UI.Col flex={1} padding={padding} margin={margin}>
             <UI.Col pointerEvents="all !important" position="relative" flex={1}>

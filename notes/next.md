@@ -23,6 +23,7 @@
 
 # smaller visual bugs
 
+- if you have a search entered and hit "settings" it breaks
 - hover effects on home button odd / stay around after hide/show
 - hovering terms on homescreen -- remove for now
 - selected state of searchBar in peek should glow and help bring focus there

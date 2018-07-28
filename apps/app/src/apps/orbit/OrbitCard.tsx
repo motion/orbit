@@ -75,7 +75,7 @@ const Card = view({
 
 const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 2, '#90b1e46b']
+const cardSelectedGlow = [0, 0, 0, 2, '#90b1e452']
 
 Card.theme = ({
   listItem,

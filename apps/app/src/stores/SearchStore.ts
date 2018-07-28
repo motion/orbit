@@ -501,7 +501,6 @@ export class SearchStore /* extends Store */ {
 
   windowKeyDown = e => {
     const { keyCode } = e
-    console.log('window.keydown', keyCode)
     switch (keyCode) {
       case 37: // left
         if (this.isQuickSearchActive) {

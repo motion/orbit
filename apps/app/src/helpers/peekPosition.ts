@@ -86,7 +86,6 @@ function getLazyPosition(
     // ensure we don't nudge too far up
     y = Math.max(EDGE_PAD, y)
   }
-  console.log('do it', target.top, peekLastY, y)
   return y
 }
 

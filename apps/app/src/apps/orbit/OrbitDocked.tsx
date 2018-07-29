@@ -56,6 +56,7 @@ const Border = view({
   bottom: 0,
   zIndex: Number.MAX_SAFE_INTEGER,
   pointerEvents: 'none',
+  borderRadius: BORDER_RADIUS - 2,
 })
 
 Border.theme = ({ theme }) => {
@@ -64,7 +65,6 @@ Border.theme = ({ theme }) => {
   const lightBg = theme.base.background.lighten(1)
   const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
   return {
-    borderRadius: BORDER_RADIUS - 1,
     boxShadow: [borderShadow, borderGlow, DOCKED_SHADOW],
   }
 }
@@ -92,8 +92,8 @@ const OrbitInner = view({
   flex: 1,
   // this can be a lot more because theres padding left and right
   // and so this lets us have the top/side overflow but still cut off bottom
-  borderBottomLeftRadius: 51,
-  borderBottomRightRadius: 51,
+  borderBottomLeftRadius: 59,
+  borderBottomRightRadius: 59,
   '& > *': {
     pointerEvents: 'auto',
   },

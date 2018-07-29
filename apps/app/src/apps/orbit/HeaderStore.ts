@@ -35,8 +35,8 @@ export class HeaderStore {
     if (!this.inputRef || !this.inputRef.current) {
       return
     }
-    moveCursorToEndOfTextarea(this.inputRef.current)
     this.inputRef.current.focus()
+    moveCursorToEndOfTextarea(this.inputRef.current)
   }
 
   focusInputOnVisible = react(

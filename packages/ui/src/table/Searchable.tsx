@@ -40,7 +40,7 @@ type Props = {
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
 const SearchBar = view(Toolbar, {
-  height: 42,
+  height: 41,
   padding: [4, 6],
 })
 
@@ -65,8 +65,8 @@ SearchBox.theme = ({ theme }) => ({
 })
 
 export const SearchInput = view(TableInput, {
+  fontSize: 16,
   padding: 0,
-  fontSize: '1em',
   flexGrow: 1,
   background: 'transparent',
   height: '100%',

@@ -36,7 +36,7 @@ export const PeekFrameArrow = view(({ peekStore, borderShadow }: Props) => {
       position="absolute"
       top={0}
       zIndex={100}
-      transition="transform ease 70ms"
+      transition="transform ease 170ms"
       size={arrowSize}
       towards={onRight ? 'left' : 'right'}
       background={

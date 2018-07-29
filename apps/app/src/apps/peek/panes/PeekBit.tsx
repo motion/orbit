@@ -57,7 +57,7 @@ export const PeekBit = ({
               comments,
             }) => {
               return children({
-                subtitleBefore: <UI.Date>{date}</UI.Date>,
+                subtitleBefore: <UI.Text><UI.Date>{date}</UI.Date></UI.Text>,
                 subtitle: (
                   <RoundButton
                     onClick={e => {

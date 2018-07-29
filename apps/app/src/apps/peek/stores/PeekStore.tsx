@@ -142,10 +142,10 @@ export class PeekStore {
   })
 
   get theme() {
-    if (!this.state || !this.state.item) {
+    if (!App.peekState.item) {
       return PEEK_THEMES.base
     }
-    const { type, integration } = this.state.item
+    const { type, integration } = App.peekState.item
     return (
       PEEK_THEMES.integration[integration] ||
       PEEK_THEMES.type[type] ||

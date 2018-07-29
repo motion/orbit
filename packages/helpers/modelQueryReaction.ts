@@ -10,7 +10,7 @@ type ReactModelQueryOpts = ReactionOptions & {
 
 const trueFn = () => true
 const DEFAULT_OPTIONS = {
-  poll: 5000,
+  poll: 15000,
   condition: trueFn,
   log: false,
 }

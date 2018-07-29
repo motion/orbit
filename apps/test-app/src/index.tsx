@@ -1,11 +1,13 @@
 import '../public/styles/nucleo.css'
 import '../public/testBase.css'
 import './createElement'
+import 'react-hot-loader'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import { RootView } from './RootView'
+import './RootViewHMR'
 
 export function render() {
+  const { RootView } = require('./RootViewHMR')
   const RootNode = document.querySelector('#app')
   ReactDOM.render(<RootView />, RootNode)
 }

@@ -6,37 +6,18 @@ import { Disposable } from 'event-kit'
 import { updateProps } from './helpers/updateProps'
 import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
-import debug from '@mcro/debug'
-// import { StoreHMR } from '@mcro/store-hmr'
-
-const log = debug('storeProvidable')
+import { StoreHMR } from '@mcro/store-hmr'
 
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
 
-let recentHMR = false
-let recentHMRTm = null
-// let things re-mount after queries and such
-const setRecentHMR = () => {
-  clearTimeout(recentHMRTm)
-  recentHMR = true
-  recentHMRTm = setTimeout(() => {
-    recentHMR = false
-    // @ts-ignore
-    window.render()
-  }, 1000)
-}
-
 export function storeProvidable(options, Helpers) {
-  Helpers.on('did-hmr', setRecentHMR)
-
   return {
     name: 'store-providable',
     once: true,
     decorator: (Klass, opts: any = {}) => {
       const allStores = opts.stores || options.stores
-      const logName = `${Object.keys(allStores || {}).join(', ')}`
 
       if (!allStores) {
         return Klass
@@ -58,12 +39,11 @@ export function storeProvidable(options, Helpers) {
       }
 
       // return HoC
-      class StoreProvider extends React.Component {
+      class StoreProvider extends React.PureComponent {
         id = Math.random()
         props: any | { __contextualStores?: Object }
         _props: any
         stores: any
-        unmounted: boolean
         willReloadListener: Disposable
         allStores = allStores
         getUniqueDOMPath = getUniqueDOMPath
@@ -78,7 +58,6 @@ export function storeProvidable(options, Helpers) {
 
         constructor(a, b) {
           super(a, b)
-          log(`${logName}.constructor`)
           this.setupProps()
           this.setupStores()
         }
@@ -86,33 +65,14 @@ export function storeProvidable(options, Helpers) {
         // PureComponent means this is only called when props are not shallow equal
         componentDidUpdate() {
           updateProps(this._props, this.props)
-          if (process.env.NODE_ENV === 'development') {
-            if (this.key !== this.state.key) {
-              this.setState({ key: this.key })
-              if (this.setStoreHMRState) {
-                this.setStoreHMRState({ key: this.key })
-              }
-            }
-          }
-          // update even later because the hydrations change props and renders, changing the key path
-          // if (recentHMR) {
-          //   this.onReloadStores()
-          // }
         }
 
         componentDidMount() {
-          if (!this.stores) {
-            return
-          }
           root.loadedStores.add(this)
           this.didMountStores()
           this.willReloadListener = Helpers.on('will-hmr', () => {
-            setRecentHMR()
             this.onWillReloadStores()
           })
-          if (recentHMR) {
-            this.onReloadStores()
-          }
         }
 
         componentWillUnmount() {
@@ -123,7 +83,6 @@ export function storeProvidable(options, Helpers) {
           // if you remove @view.attach({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()
-            this.unmounted = true
           }
         }
 
@@ -140,6 +99,10 @@ export function storeProvidable(options, Helpers) {
 
         // DO NOT USE CLASS PROPERTY DECORATORS FOR THIS, IDK WTF WHY
         setupStores() {
+          if (storeHMRCache[this.props.__hmrPath]) {
+            this.restoreStores()
+            return
+          }
           const getProps = {
             configurable: true,
             get: () => this._props,
@@ -159,11 +122,17 @@ export function storeProvidable(options, Helpers) {
           this.willMountStores()
         }
 
+        restoreStores() {
+          this.stores = storeHMRCache[this.props.__hmrPath]
+          setTimeout(() => {
+            delete storeHMRCache[this.props.__hmrPath]
+          })
+        }
+
         willMountStores() {
           if (!options.onStoreMount) {
             return
           }
-          log(`${logName}.willMountStores`)
           for (const name of Object.keys(this.stores)) {
             if (!this.stores[name].__hasMounted) {
               options.onStoreMount(this.stores[name], this.props)
@@ -173,10 +142,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         didMountStores() {
-          if (!this.stores) {
-            return
-          }
-          for (const name of Object.keys(this.stores)) {
+          for (const name in this.stores) {
             const store = this.stores[name]
             if (Helpers) {
               Helpers.emit('store.mount', { name, thing: store })
@@ -188,10 +154,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         disposeStores = () => {
-          if (!this.stores) {
-            return
-          }
-          for (const name of Object.keys(this.stores)) {
+          for (const name in this.stores) {
             const store = this.stores[name]
             if (Helpers) {
               Helpers.emit('store.unmount', { name, thing: store })
@@ -202,49 +165,8 @@ export function storeProvidable(options, Helpers) {
           }
         }
 
-        get key() {
-          return `${getUniqueDOMPath(this)}${name}`
-        }
-
         onWillReloadStores = () => {
-          if (!this.stores) {
-            return
-          }
-          log(`${logName}.onWillReloadStores`)
-          for (const name of Object.keys(this.stores)) {
-            const store = this.stores[name]
-            // pass in state + auto dehydrate
-            // to get real key: findDOMNode(this) + serialize dom position into key
-            storeHMRCache[this.key] = {
-              state: store.dehydrate(),
-            }
-          }
-        }
-
-        onReloadStores = () => {
-          if (!this.stores) {
-            return
-          }
-          log(`${logName}.onReloadStores`)
-          // dipose now because we are definitely re-hydrating
-          for (const name of Object.keys(this.stores)) {
-            const store = this.stores[name]
-            if (!storeHMRCache[this.key]) {
-              // try again a bit later, perhaps it wasnt mounted
-              // console.log('no hmr state for', name, key, storeHMRCache)
-              continue
-            }
-            // auto rehydrate
-            const hydrateState = storeHMRCache[this.key].state
-            if (hydrateState) {
-              // remove once its hydrated once
-              delete storeHMRCache[this.key]
-              store.hydrate(hydrateState)
-              Helpers.emit('store.mount', { name, thing: store })
-            }
-          }
-          // re-run didMount
-          this.willMountStores()
+          storeHMRCache[this.props.__hmrPath] = this.stores
         }
 
         childContextStores(parentStores) {
@@ -268,10 +190,8 @@ export function storeProvidable(options, Helpers) {
           return stores
         }
 
-        setStoreHMRState = null
-
         render() {
-          const { __contextualStores, ...props } = this.props
+          const { __contextualStores, __hmrPath, ...props } = this.props
           const children = <Klass {...props} {...this.stores} />
           if (context) {
             const childStores = this.childContextStores(__contextualStores)
@@ -282,15 +202,6 @@ export function storeProvidable(options, Helpers) {
             )
           }
           return children
-          // return (
-          //   <StoreHMR>
-          //     {({ setState, state }) => {
-          //       this.setStoreHMRState = setState
-          //       console.log('??', state.key, this.state.key)
-          //       return
-          //     }}
-          //   </StoreHMR>
-          // )
         }
       }
 
@@ -310,10 +221,16 @@ export function storeProvidable(options, Helpers) {
         )
       }
 
-      return new Proxy(StoreProviderWithContext, {
+      const WithPath = props => (
+        <StoreHMR>
+          <StoreProviderWithContext {...props} />
+        </StoreHMR>
+      )
+
+      return new Proxy(WithPath, {
         set(_, method, value) {
           Klass[method] = value
-          StoreProviderWithContext[method] = value
+          WithPath[method] = value
           return true
         },
       })

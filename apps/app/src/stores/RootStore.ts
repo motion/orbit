@@ -9,7 +9,7 @@ import { WebSQLClient } from '../helpers/WebSQLClient'
 
 if (process.env.NODE_ENV === 'development') {
   module.hot.accept('../actions/appActions', () => {
-    window['interceptHMR'] = true
+    console.log('update actions')
     App.start({ actions: require('../actions/appActions') })
   })
 }

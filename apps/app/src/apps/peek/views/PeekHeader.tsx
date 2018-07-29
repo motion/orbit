@@ -21,6 +21,7 @@ const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
+  transition: 'background ease-in 1300ms'
 })
 
 PeekHeaderContain.theme = ({ theme, position }) => {
@@ -101,7 +102,6 @@ const SubTitle = ({ children, before, after }) => (
     zIndex={1}
   >
     {textify(before)}
-    123 123 123
     <div style={{ flex: 1 }} />
     <Centered>
       {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}

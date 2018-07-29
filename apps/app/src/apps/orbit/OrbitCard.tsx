@@ -52,6 +52,7 @@ export type OrbitCardProps = {
   cardProps?: Object
   item?: AppStatePeekItem
   disableShadow?: boolean
+  preventAutoSelect?: boolean
 }
 
 const CardWrap = view(UI.View, {
@@ -279,7 +280,7 @@ class OrbitCardStore {
         throw react.cancel
       }
       this.isSelected = nextIsSelected
-      if (nextIsSelected) {
+      if (nextIsSelected && !this.props.preventAutoSelect) {
         // visual smoothness
         await sleep(150)
         if (!this.target) {

@@ -4,8 +4,8 @@ import { App } from '@mcro/stores'
 import { OrbitCard } from '../OrbitCard'
 import * as UI from '@mcro/ui'
 import { SearchStore } from '../../../stores/SearchStore'
-import { AppStore } from '../../../stores/AppStore';
-import { OrbitDockedPaneStore } from '../OrbitDockedPaneStore';
+import { AppStore } from '../../../stores/AppStore'
+import { OrbitDockedPaneStore } from '../OrbitDockedPaneStore'
 
 class QuickSearchStore {
   props: {
@@ -88,7 +88,7 @@ const decorate = compose(
 
 type Props = {
   appStore?: AppStore
-  paneStore?: OrbitDockedPaneStore,
+  paneStore?: OrbitDockedPaneStore
   searchStore: SearchStore
   store: QuickSearchStore
 }
@@ -107,6 +107,7 @@ export const OrbitSearchQuickResults = decorate(
             {results.map((person, index) => {
               return (
                 <OrbitCard
+                  preventAutoSelect
                   pane="docked-search"
                   subPane="search"
                   className="quick-result-card"

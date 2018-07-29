@@ -127,9 +127,6 @@ Card.theme = ({
     }
   } else {
     // CARD
-    const borderSelected = UI.color('#90b1e4')
-    const borderHover = UI.color('#c9c9c9')
-    const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     const cardBackground = background || theme.selected.background
     const disabledShadow = disableShadow ? 'none' : null
     card = {
@@ -137,25 +134,34 @@ Card.theme = ({
       padding: padding || 16,
       borderRadius: borderRadius || 9,
       background: cardBackground,
-      boxShadow: disabledShadow || [cardShadow],
-      border: border || [1, cardBackground.darken(0.08)],
-      '&:hover': {
-        boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-        border: [1, borderHover],
-      },
-      '&:active': {
-        border: [1, borderActive],
-      },
+    }
+    if (!isSelected) {
+      const borderHover = UI.color('#c9c9c9')
+      card = {
+        ...card,
+        boxShadow: disabledShadow || [cardShadow],
+        border: border || [1, cardBackground.darken(0.08)],
+        '&:active': {
+          boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
+          // slightly darker
+          border: [1, '#ccc'],
+        },
+        '&:hover': {
+          boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
+          border: [1, borderHover],
+        },
+      }
     }
     if (isSelected) {
+      const borderSelected = UI.color('#90b1e4')
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
         border: [1, borderSelected],
-        '&:hover': {
+        '&:active': {
           border: [1, borderSelected.darken(0.1)],
         },
-        '&:active': {
+        '&:hover': {
           border: [1, borderSelected],
         },
       }
@@ -169,6 +175,8 @@ Card.theme = ({
   }
   return card
 }
+
+console.log('card', Card)
 
 const Title = view({
   maxWidth: '100%',

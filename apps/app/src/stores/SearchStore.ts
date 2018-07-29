@@ -470,10 +470,13 @@ export class SearchStore /* extends Store */ {
     this.extraFiltersVisible = !!target
   }
 
-  onChangeDate = ({ selection }: { selection: DateSelections }) => {
-    console.log('got selection', selection)
+  onChangeDate = (date) => {
+    console.log('got date', date)
+    if (!date.selection) {
+      return
+    }
     this.dateState = {
-      ranges: [selection],
+      ranges: [date.selection],
     }
   }
 

@@ -15,10 +15,8 @@ const SearchFilters = view(UI.Col, {
 })
 
 SearchFilters.theme = ({ theme }) => ({
-  borderTop: [1, theme.base.background.darken(0.1)],
-  background: `linear-gradient(${theme.base.background.darken(
-    0.07,
-  )}, ${theme.base.background.darken(0.05)} 40px)`,
+  borderTop: [1, theme.base.borderColor],
+  background: 'transparent',
 })
 
 const ExtraFilters = view(UI.View, {

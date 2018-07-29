@@ -15,6 +15,7 @@ export type BaseRules = {
 }
 type Props = CSSPropertySet
 
+const isHMREnabled = () => typeof module !== 'undefined' && module.hot
 const arrToDict = obj => {
   if (Array.isArray(obj)) {
     return obj.reduce((acc, cur) => {
@@ -351,7 +352,7 @@ export function createViewFactory(toCSS) {
       }
 
       static getDerivedStateFromProps(props: Props, state: State) {
-        if (state.prevProps !== null && hasEquivProps(props, state.prevProps)) {
+        if (!isHMREnabled() && state.prevProps !== null && hasEquivProps(props, state.prevProps)) {
           return null
         }
         let nextState: Partial<State> = {}

@@ -7,7 +7,7 @@ import { ThemeObject } from '@mcro/gloss'
 const Section = view('section', {
   width: '100%',
   flexFlow: 'row',
-  padding: [7, 0, 7, 12],
+  padding: [0, 6, 0, 12],
   alignItems: 'center',
 })
 
@@ -23,17 +23,17 @@ export class OrbitHomeHeader extends React.Component<Props> {
     const { paneStore, theme } = this.props
     const buttonColor = theme.base.color.lighten(0.2)
     const exploreButton = {
-      size: 1.2,
+      size: 1.1,
       circular: true,
       borderWidth: 1,
-      margin: [0, 0, 0, 6],
+      margin: [0, 0, 0, 2],
       borderColor: 'transparent',
       background: 'transparent',
       iconProps: {
         color: buttonColor,
-        size: 13,
+        size: 12,
       },
-      opacity: 0.4,
+      opacity: 0.35,
       activeStyle: {
         background: 'transparent',
         borderColor: 'transparent',

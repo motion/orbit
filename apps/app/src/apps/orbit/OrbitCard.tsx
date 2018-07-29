@@ -204,18 +204,8 @@ class OrbitCardStore {
   props: OrbitCardProps
 
   normalizedBit = null
-  isSelectedInternal = false
+  isSelected = false
   ref = null
-
-  get isSelected() {
-    if (typeof this.props.isSelected === 'boolean') {
-      return this.props.isSelected
-    }
-    if (typeof this.props.isSelected === 'function') {
-      return this.props.isSelected()
-    }
-    return this.isSelectedInternal
-  }
 
   get isPaneSelected() {
     if (!this.props.subPane) {
@@ -273,21 +263,28 @@ class OrbitCardStore {
   //   { immediate: true },
   // )
 
-  setPeekTargetOnNextIndex = react(
+  // this cancels to prevent renders very aggressively
+  updateIsSelected = react(
     () => [
       this.props.searchStore && this.props.searchStore.nextIndex,
       this.isPaneSelected,
+      typeof this.props.isSelected === 'function' ? this.props.isSelected() : this.props.isSelected
     ],
-    async ([nextIndex, isPaneSelected], { sleep }) => {
+    async ([nextIndex, isPaneSelected, isSelected], { sleep }) => {
       if (!isPaneSelected) {
         throw react.cancel
       }
-      const shouldSelect = nextIndex === this.props.index
-      if (shouldSelect === this.isSelectedInternal) {
+      let nextIsSelected
+      if (typeof isSelected === 'boolean') {
+        nextIsSelected = isSelected
+      } else {
+        nextIsSelected = nextIndex === this.props.index
+      }
+      if (nextIsSelected === this.isSelected) {
         throw react.cancel
       }
-      this.isSelectedInternal = shouldSelect
-      if (shouldSelect) {
+      this.isSelected = nextIsSelected
+      if (nextIsSelected) {
         // visual smoothness
         await sleep(80)
         if (!this.target) {
@@ -339,7 +336,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   }
 
   get isExpanded() {
-    this.props.store.isSelected
     const { isExpanded } = this.props
     if (typeof isExpanded === 'boolean') {
       return isExpanded
@@ -376,7 +372,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       icon,
       preview,
       location,
-      permalink,
       date,
       people,
       subtitle,

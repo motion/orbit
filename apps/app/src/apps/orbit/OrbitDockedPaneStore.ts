@@ -1,4 +1,4 @@
-import { react, on, store } from '@mcro/black'
+import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
 
@@ -69,8 +69,6 @@ export class OrbitDockedPaneStore {
       this.paneIndex = index
     }
   }
-
-  id = Math.random()
 
   activePane = react(
     () => [this.panes, this.paneIndex, App.orbitState.docked, App.state.query],

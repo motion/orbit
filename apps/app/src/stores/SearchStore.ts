@@ -33,7 +33,6 @@ export class SearchStore /* extends Store */ {
     integrationSettingsStore: IntegrationSettingsStore
   }
 
-  id = Math.random()
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore(this)
   // searchIndexStore = new SearchIndexStore()
@@ -52,6 +51,10 @@ export class SearchStore /* extends Store */ {
 
   extraFiltersHeight = 325
   extraFiltersVisible = false
+
+  setActivePane = ref => {
+    console.log('123', ref)
+  }
 
   dateState: DateState = {
     ranges: [

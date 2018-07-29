@@ -7,10 +7,37 @@ import { updateProps } from './helpers/updateProps'
 import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import { StoreHMR } from '@mcro/store-hmr'
+import hashSum from 'hash-sum'
+import debug from '@mcro/debug'
 
+const log = debug('storeProvidable')
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
+
+const storeToHash = store => {
+  let hash = `${Object.keys(store).length}`
+  for (const key in store) {
+    if (key[0] === '_') continue
+    const val = store[key]
+    hash += key
+    switch(typeof val) {
+      case 'function':
+        hash += val.toString()
+        break
+      case 'object':
+        try {
+          hash += JSON.stringify(val)
+        } catch {
+          hash += val.toString()
+        }
+        break
+      default:
+        hash += `${val}`
+    }
+  }
+  return hashSum(hash)
+}
 
 export function storeProvidable(options, Helpers) {
   return {
@@ -40,7 +67,6 @@ export function storeProvidable(options, Helpers) {
 
       // return HoC
       class StoreProvider extends React.PureComponent {
-        id = Math.random()
         props: any | { __contextualStores?: Object }
         _props: any
         stores: any
@@ -99,10 +125,17 @@ export function storeProvidable(options, Helpers) {
 
         // DO NOT USE CLASS PROPERTY DECORATORS FOR THIS, IDK WTF WHY
         setupStores() {
-          if (storeHMRCache[this.props.__hmrPath]) {
-            this.restoreStores()
+          if (this.stores) {
             return
           }
+          this.stores = {}
+          // hmr stuff
+          const { __hmrPath } = this.props
+          storeHMRCache[__hmrPath] = storeHMRCache[__hmrPath] || {
+            compare: {},
+            stores: {}
+          }
+          const cachedStores = storeHMRCache[__hmrPath]
           const getProps = {
             configurable: true,
             get: () => this._props,
@@ -110,23 +143,33 @@ export function storeProvidable(options, Helpers) {
               /* ignore */
             },
           }
-          // create stores
-          this.stores = {}
           for (const name in Stores) {
             const Store = Stores[name]
             Object.defineProperty(Store.prototype, 'props', getProps)
             const store = new Store()
             Object.defineProperty(store, 'props', getProps)
-            this.stores[name] = store
+
+            const { stores, compare } = cachedStores
+            if (stores[name] && compare[name]) {
+              const newHash = storeToHash(store)
+              if (compare[name] === newHash) {
+                this.stores[name] = stores[name]
+              } else {
+                log(`Couldn't hydrate store ${name}`)
+              }
+            }
+
+            // we didn't hydrate it from hmr, set it up normally
+            if (!this.stores[name]) {
+              compare[name] = storeToHash(store)
+              this.stores[name] = store
+            }
           }
           this.willMountStores()
         }
 
-        restoreStores() {
-          this.stores = storeHMRCache[this.props.__hmrPath]
-          setTimeout(() => {
-            delete storeHMRCache[this.props.__hmrPath]
-          })
+        shouldRestoreStore() {
+          return storeHMRCache[this.props.__hmrPath]
         }
 
         willMountStores() {
@@ -166,7 +209,10 @@ export function storeProvidable(options, Helpers) {
         }
 
         onWillReloadStores = () => {
-          storeHMRCache[this.props.__hmrPath] = this.stores
+          storeHMRCache[this.props.__hmrPath] = {
+            ...storeHMRCache[this.props.__hmrPath],
+            stores: this.stores,
+          }
         }
 
         childContextStores(parentStores) {

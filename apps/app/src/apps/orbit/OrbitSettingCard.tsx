@@ -18,8 +18,6 @@ export class OrbitSettingCard extends React.Component<
     isActive?: boolean
   }
 > {
-  id = Math.random()
-
   handleClick = async () => {
     const { result } = this.props
     if (result.auth === false) {

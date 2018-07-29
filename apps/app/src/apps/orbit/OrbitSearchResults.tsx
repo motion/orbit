@@ -7,9 +7,7 @@ import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { SearchStore } from '../../stores/SearchStore'
-import debug from '@mcro/debug'
 
-const log = debug('OrbitSearchResults')
 const listItemSidePad = 18
 
 const Highlight = view({
@@ -132,6 +130,12 @@ export class OrbitSearchResults extends React.Component<Props> {
     return this.props.searchStore.hasQuery()
   }
 
+  paneRef = React.createRef()
+
+  updateActivePane = () => {
+    this.props.searchStore.setActivePane(this.paneRef)
+  }
+
   render() {
     const { searchStore, name } = this.props
     if (!searchStore.searchState.results) {
@@ -153,6 +157,8 @@ export class OrbitSearchResults extends React.Component<Props> {
         name="search"
         extraCondition={this.extraCondition}
         before={<OrbitSearchFilters />}
+        onActive={this.updateActivePane}
+        ref={this.paneRef}
       >
         <OrbitSearchResultsContents searchStore={searchStore} name={name} />
       </OrbitDockedPane>

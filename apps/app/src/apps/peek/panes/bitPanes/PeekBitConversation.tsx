@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { PeekItemResolver } from '../../views/PeekItemResolver'
 import { SubTitle } from '../../../../views'
-import { OrbitDivider } from '../../../../apps/orbit/OrbitDivider'
+import { Divider } from '../../../../views/Divider'
 import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
 import * as UI from '@mcro/ui'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
@@ -46,7 +46,7 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
                 {({ content }) => content}
               </PeekItemResolver>
               {index < 2 && (
-                <OrbitDivider css={{ height: 2, margin: [20, 0, 10] }} />
+                <Divider css={{ height: 2, margin: [20, 0, 10] }} />
               )}
             </React.Fragment>
           ))}

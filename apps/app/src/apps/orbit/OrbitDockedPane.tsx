@@ -62,25 +62,6 @@ class DockedPaneStore {
     this.updateScrolledTo()
   }
 
-  // scrollToSelectedCard = react(
-  //   () => this.props.appStore.selectedCardRef,
-  //   cardRef => {
-  //     if (!this.isActive) {
-  //       throw react.cancel
-  //     }
-  //     // cardRef.scrollIntoViewIfNeeded()
-  //     // const frameBottom = this.paneRef.current.clientHeight
-  //     // const cardBottom = cardRef.offsetTop + cardRef.clientHeight
-  //     // if (cardBottom <= frameBottom) {
-  //     //   throw react.cancel
-  //     // }
-  //     // this.paneRef.current.scrollTop = cardBottom - frameBottom + EXTRA_PAD
-  //   },
-  //   {
-  //     immediate: true,
-  //   },
-  // )
-
   updatePaneHeightOnActive = react(
     () => this.isActive,
     () => {

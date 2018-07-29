@@ -6,6 +6,19 @@ import { ThemeProvide } from '@mcro/gloss'
 // import { OrbitCard } from '../../app/src/apps/orbit/OrbitCard'
 import { TestHMR } from './TestHMR'
 
+if (process.env.NODE_ENV === 'development') {
+  if (module.hot && module.hot.addStatusHandler) {
+    if (module.hot.status() === 'idle') {
+      module.hot.addStatusHandler(status => {
+        if (status === 'prepare') {
+          view.emit('will-hmr')
+          view.provide.emit('will-hmr')
+        }
+      })
+    }
+  }
+}
+
 const Test = view({
   color: 'gray',
   background: 'blue',

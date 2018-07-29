@@ -17,13 +17,20 @@ const decorator = compose(
   view,
 )
 
-export const TestHMR = decorator(({ store }) => {
+export const TestHMR = () => <>
+  123 123
+  <TestHMRInner />
+</>
+
+
+const TestHMRInner = decorator(({ store }) => {
   return (
     <div>
-      123 123 123 123 123
-      {store.x.map((_, index) => (
-        <SomeOtherSubView key={index} id={index} />
-      ))}
+      123 123 123 123 123 123 123 123123123123 123
+      <SomeOtherSubView />
+      {/* {store.x.map((_, index) => (
+        <SomeOtherSubView key={`${key}${index}`} id={index} />
+      ))} */}
       <button onClick={store.onClick}>gooo</button>
     </div>
   )

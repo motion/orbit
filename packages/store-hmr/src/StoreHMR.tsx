@@ -2,11 +2,7 @@ import * as React from 'react'
 
 export class StoreHMR extends React.Component {
   state = {
-    path: ''
-  }
-
-  componentDidMount() {
-    this.setState({ path: Math.random() })
+    path: Math.random()
   }
 
   render() {

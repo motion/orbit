@@ -230,7 +230,7 @@ export function storeProvidable(options, Helpers) {
       return new Proxy(WithPath, {
         set(_, method, value) {
           Klass[method] = value
-          StoreProviderWithContext[method] = value
+          WithPath[method] = value
           return true
         },
       })

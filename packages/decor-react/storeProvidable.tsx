@@ -20,21 +20,7 @@ const storeToHash = store => {
   for (const key in store) {
     if (key[0] === '_') continue
     const val = store[key]
-    hash += key
-    switch(typeof val) {
-      case 'function':
-        hash += val.toString()
-        break
-      case 'object':
-        try {
-          hash += JSON.stringify(val)
-        } catch {
-          hash += val.toString()
-        }
-        break
-      default:
-        hash += `${val}`
-    }
+    hash += key + hashSum(val)
   }
   return hashSum(hash)
 }
@@ -143,7 +129,7 @@ export function storeProvidable(userOptions, Helpers) {
           const { __hmrPath } = this.props
           storeHMRCache[__hmrPath] = storeHMRCache[__hmrPath] || {
             compare: {},
-            stores: {}
+            stores: {},
           }
           const cachedStores = storeHMRCache[__hmrPath]
           const getProps = {
@@ -158,17 +144,20 @@ export function storeProvidable(userOptions, Helpers) {
             Object.defineProperty(Store.prototype, 'props', getProps)
             const nextStore = new Store()
             Object.defineProperty(nextStore, 'props', getProps)
-
             const { stores, compare } = cachedStores
-            if (stores[name] && compare[name]) {
-              const newHash = storeToHash(nextStore)
-              if (compare[name] === newHash) {
-                // we have a hydratable store, hot swap it in!
-                this.stores[name] = stores[name]
-                // be sure to clean up the comparison store
-                options.onStoreUnmount(nextStore)
-              } else {
-                log(`Couldn't hydrate store ${name}`)
+
+            // hmr hot reload stores
+            if (process.env.NODE_ENV === 'development') {
+              if (stores[name] && compare[name]) {
+                const newHash = storeToHash(nextStore)
+                if (compare[name] === newHash) {
+                  // we have a hydratable store, hot swap it in!
+                  this.stores[name] = stores[name]
+                  // be sure to clean up the comparison store
+                  options.onStoreUnmount(nextStore)
+                } else {
+                  log(`Couldn't hydrate store ${name}`)
+                }
               }
             }
 

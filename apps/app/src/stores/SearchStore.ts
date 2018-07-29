@@ -314,6 +314,17 @@ export class SearchStore /* extends Store */ {
     },
   )
 
+  selectFirstItemAfterSearchSettles = react(
+    () => this.searchState.query,
+    async (_, { sleep }) => {
+      await sleep(300)
+      console.log('search settled 121233')
+      if (this.nextIndex === -1) {
+        this.nextIndex = 0
+      }
+    },
+  )
+
   clearSelectedOnLeave = react(
     () => [this.leaveIndex, Electron.hoverState.peekHovered],
     async ([leaveIndex, peekHovered], { sleep, when }) => {
@@ -473,7 +484,7 @@ export class SearchStore /* extends Store */ {
     this.extraFiltersVisible = !!target
   }
 
-  onChangeDate = (date) => {
+  onChangeDate = date => {
     console.log('got date', date)
     if (!date.selection) {
       return

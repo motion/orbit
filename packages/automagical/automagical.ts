@@ -670,12 +670,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
   Object.defineProperty(obj, method, {
     get: getCurrentValue,
   })
-  Object.defineProperty(obj, `${method}__automagic_source`, {
-    enumerable: false,
-    get() {
-      return { result, current, curObservable }
-    },
-  })
 
   return current
 }

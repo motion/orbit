@@ -1,4 +1,8 @@
-import createElement from '@mcro/black/_/createElement'
+const createElement = require('@mcro/black/_/createElement').default
 const React = require('react')
 
-React.createElement = createElement
+console.log('createElement', createElement)
+
+if (React.createElement !== createElement) {
+  React.createElement = createElement
+}

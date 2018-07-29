@@ -94,27 +94,10 @@ if (process.env.NODE_ENV === 'development') {
   if (module.hot && module.hot.addStatusHandler) {
     if (module.hot.status() === 'idle') {
       module.hot.addStatusHandler(status => {
-        // allow them to run after any other accept
-        setTimeout(() => {
-          // allow prevent of running hooks
-          if (window['interceptHMR']) {
-            if (status === 'apply') {
-              window['interceptHMR'] = false
-            }
-            return
-          }
-          if (status === 'prepare') {
-            view.emit('will-hmr')
-            view.provide.emit('will-hmr')
-          }
-          if (status === 'apply') {
-            view.emit('did-hmr')
-            view.provide.emit('did-hmr')
-            console.log('[HMR] orbit done')
-            // @ts-ignore
-            window.render()
-          }
-        }, 50)
+        if (status === 'prepare') {
+          view.emit('will-hmr')
+          view.provide.emit('will-hmr')
+        }
       })
     }
   }

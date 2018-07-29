@@ -1,6 +1,6 @@
-// import 'react-hot-loader'
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
+import 'react-hot-loader'
 import './helpers/createElement'
 import 'isomorphic-fetch'
 import * as UI from '@mcro/ui'

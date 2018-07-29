@@ -102,7 +102,6 @@ export function storeProvidable(options, Helpers) {
 
         // DO NOT USE CLASS PROPERTY DECORATORS FOR THIS, IDK WTF WHY
         setupStores() {
-          console.log('setup', this.props.__hmrPath, storeHMRCache)
           if (storeHMRCache[this.props.__hmrPath]) {
             this.restoreStores()
             return

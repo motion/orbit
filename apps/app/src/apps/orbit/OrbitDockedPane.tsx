@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view, on, react } from '@mcro/black'
 import * as _ from 'lodash'
-import { BORDER_RADIUS } from '../../constants'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { AppStore } from '../../stores/AppStore'

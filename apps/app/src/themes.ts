@@ -12,12 +12,10 @@ const greyActiveHoverBg = greyHoverBg.darken(0.06)
 const tanBg = color('rgb(255,255,245)')
 const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
 const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
-const tanActiveHoverBg = tanHoverBg.darken(0.06).desaturate(0.3)
 
 const dbBg = color('rgb(11, 60, 117)')
 const dbHoverBg = dbBg.darken(0.02).desaturate(0.3)
 const dbActiveBg = dbHoverBg.darken(0.05).desaturate(0.3)
-const dbActiveHoverBg = dbHoverBg.darken(0.06).desaturate(0.3)
 
 export const themes = {
   clear: {

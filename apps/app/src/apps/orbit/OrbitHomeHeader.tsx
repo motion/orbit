@@ -16,34 +16,39 @@ type Props = {
   theme?: ThemeObject
 }
 
+const exploreButton = {
+  size: 1.1,
+  circular: true,
+  borderWidth: 1,
+  margin: [0, 0, 0, 2],
+  borderColor: 'transparent',
+  background: 'transparent',
+  transform: {
+    y: -0.5,
+  },
+  iconProps: {
+    color: 'black',
+    size: 12,
+  },
+  opacity: 0.35,
+  activeStyle: {
+    background: 'transparent',
+    borderColor: 'transparent',
+    opacity: 1,
+  },
+  hover: {
+    background: 'transparent',
+    borderColor: [0, 0, 0, 0.3],
+  },
+}
+
 @attachTheme
 @view
 export class OrbitHomeHeader extends React.Component<Props> {
   render() {
     const { paneStore, theme } = this.props
     const buttonColor = theme.base.color.lighten(0.2)
-    const exploreButton = {
-      size: 1.1,
-      circular: true,
-      borderWidth: 1,
-      margin: [0, 0, 0, 2],
-      borderColor: 'transparent',
-      background: 'transparent',
-      iconProps: {
-        color: buttonColor,
-        size: 12,
-      },
-      opacity: 0.35,
-      activeStyle: {
-        background: 'transparent',
-        borderColor: 'transparent',
-        opacity: 1,
-      },
-      hover: {
-        background: 'transparent',
-        borderColor: [0, 0, 0, 0.3],
-      },
-    }
+    exploreButton.iconProps.color = buttonColor
     return (
       <>
         <Section>

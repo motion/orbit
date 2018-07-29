@@ -281,7 +281,7 @@ class OrbitCardStore {
       this.isSelected = nextIsSelected
       if (nextIsSelected) {
         // visual smoothness
-        await sleep(80)
+        await sleep(150)
         if (!this.target) {
           throw new Error(
             `No target! ${this.props.pane} ${this.props.subPane} ${

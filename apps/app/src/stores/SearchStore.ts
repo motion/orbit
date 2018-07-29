@@ -316,9 +316,12 @@ export class SearchStore /* extends Store */ {
 
   selectFirstItemAfterSearchSettles = react(
     () => this.searchState.query,
-    async (_, { sleep }) => {
+    async (query, { sleep }) => {
+      if (!query) {
+        throw react.cancel
+      }
       await sleep(300)
-      console.log('search settled 121233')
+      console.log('it worked?')
       if (this.nextIndex === -1) {
         this.nextIndex = 0
       }

@@ -7,23 +7,12 @@ import { updateProps } from './helpers/updateProps'
 import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import { StoreHMR } from '@mcro/store-hmr'
-import hashSum from 'hash-sum'
 import debug from '@mcro/debug'
 
 const log = debug('storeProvidable')
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
-
-const storeToHash = store => {
-  let hash = `${Object.keys(store).length}`
-  for (const key in store) {
-    if (key[0] === '_') continue
-    const val = store[key]
-    hash += key + hashSum(val)
-  }
-  return hashSum(hash)
-}
 
 const DEFAULT_OPTIONS = {
   onStoreUnmount: () => {},
@@ -127,10 +116,6 @@ export function storeProvidable(userOptions, Helpers) {
           this.stores = {}
           // hmr stuff
           const { __hmrPath } = this.props
-          storeHMRCache[__hmrPath] = storeHMRCache[__hmrPath] || {
-            compare: {},
-            stores: {},
-          }
           const cachedStores = storeHMRCache[__hmrPath]
           const getProps = {
             configurable: true,
@@ -144,15 +129,17 @@ export function storeProvidable(userOptions, Helpers) {
             Object.defineProperty(Store.prototype, 'props', getProps)
             const nextStore = new Store()
             Object.defineProperty(nextStore, 'props', getProps)
-            const { stores, compare } = cachedStores
 
-            // hmr hot reload stores
+            // hmr hot reload stores, has to be after intantiating to get the real source
             if (process.env.NODE_ENV === 'development') {
-              if (stores[name] && compare[name]) {
-                const newHash = storeToHash(nextStore)
-                if (compare[name] === newHash) {
+              if (cachedStores && cachedStores[name]) {
+                // matching source, hot reload
+                if (
+                  nextStore.constructor.toString() ===
+                  cachedStores[name].constructor.toString()
+                ) {
                   // we have a hydratable store, hot swap it in!
-                  this.stores[name] = stores[name]
+                  this.stores[name] = cachedStores[name]
                   // be sure to clean up the comparison store
                   options.onStoreUnmount(nextStore)
                 } else {
@@ -163,7 +150,6 @@ export function storeProvidable(userOptions, Helpers) {
 
             // we didn't hydrate it from hmr, set it up normally
             if (!this.stores[name]) {
-              compare[name] = storeToHash(nextStore)
               this.stores[name] = nextStore
             }
           }
@@ -204,10 +190,7 @@ export function storeProvidable(userOptions, Helpers) {
         }
 
         onWillReloadStores = () => {
-          storeHMRCache[this.props.__hmrPath] = {
-            ...storeHMRCache[this.props.__hmrPath],
-            stores: this.stores,
-          }
+          storeHMRCache[this.props.__hmrPath] = this.stores
         }
 
         childContextStores(parentStores) {

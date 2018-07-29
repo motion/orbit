@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, attachTheme } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
 import { ItemResolver, ResolvedItem } from '../../components/ItemResolver'
@@ -7,7 +7,7 @@ import { SmallLink, RoundButton } from '../../views'
 import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
-import { CSSPropertySet, ThemeObject } from '@mcro/gloss'
+import { CSSPropertySet } from '@mcro/gloss'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 import { Bit } from '@mcro/models'
 import { SearchStore } from '../../stores/SearchStore'
@@ -31,9 +31,7 @@ export type OrbitCardProps = {
   isExpanded?: boolean
   listItem?: boolean
   style?: Object
-  selectedTheme?: Object
   afterTitle?: React.ReactNode
-  theme?: ThemeObject
   titleProps?: Object
   inactive?: boolean
   iconProps?: Object
@@ -44,7 +42,7 @@ export type OrbitCardProps = {
   subPane?: string
   bit?: Bit
   itemProps?: Object
-  children?: ((a: Object, b: Object) => JSX.Element) | React.ReactNode
+  children?: ((a: Object) => JSX.Element) | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number
@@ -104,9 +102,9 @@ Card.theme = ({
         '&:hover': {
           background: selectedBackground,
         },
-        // '&:active': {
-        //   background: [selectedBackground, 0.5],
-        // },
+        '&:active': {
+          opacity: 0.75
+        },
       }
     } else {
       listStyle = {
@@ -115,7 +113,7 @@ Card.theme = ({
           background: [255, 255, 255, 0.4],
         },
         '&:active': {
-          background: [0, 0, 0, 0.018],
+          opacity: 0.75
         },
       }
     }
@@ -206,7 +204,7 @@ class OrbitCardStore {
   props: OrbitCardProps
 
   normalizedBit = null
-  _isSelected = false
+  isSelectedInternal = false
   ref = null
 
   get isSelected() {
@@ -216,7 +214,7 @@ class OrbitCardStore {
     if (typeof this.props.isSelected === 'function') {
       return this.props.isSelected()
     }
-    return this._isSelected
+    return this.isSelectedInternal
   }
 
   get isPaneSelected() {
@@ -285,10 +283,10 @@ class OrbitCardStore {
         throw react.cancel
       }
       const shouldSelect = nextIndex === this.props.index
-      if (shouldSelect === this._isSelected) {
+      if (shouldSelect === this.isSelectedInternal) {
         throw react.cancel
       }
-      this._isSelected = shouldSelect
+      this.isSelectedInternal = shouldSelect
       if (shouldSelect) {
         // visual smoothness
         await sleep(80)
@@ -315,7 +313,6 @@ class OrbitCardStore {
   )
 }
 
-@attachTheme
 @view.attach('appStore', 'searchStore', 'paneStore')
 @view.attach({
   store: OrbitCardStore,
@@ -390,9 +387,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       listItem,
       hoverToSelect,
       children,
-      selectedTheme,
       afterTitle,
-      theme,
       titleProps,
       inactive,
       iconProps,
@@ -407,8 +402,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const { background } =
-      isSelected && selectedTheme ? selectedTheme : theme.base
     const hasSubtitle = !!(location || subtitle)
     return (
       <CardWrap
@@ -506,7 +499,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             </UI.Text>
           </Preview>
           {typeof children === 'function'
-            ? children(contentProps, { background })
+            ? children(contentProps)
             : children}
           {people && people.length && people[0].data.profile ? (
             <div>

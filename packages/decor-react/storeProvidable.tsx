@@ -39,7 +39,17 @@ const storeToHash = store => {
   return hashSum(hash)
 }
 
-export function storeProvidable(options, Helpers) {
+const DEFAULT_OPTIONS = {
+  onStoreUnmount: () => {},
+  onStoreWillMount: () => {},
+  onStoreDidMount: () => {},
+}
+
+export function storeProvidable(userOptions, Helpers) {
+  const options = {
+    ...DEFAULT_OPTIONS,
+    ...userOptions,
+  }
   return {
     name: 'store-providable',
     once: true,
@@ -146,14 +156,17 @@ export function storeProvidable(options, Helpers) {
           for (const name in Stores) {
             const Store = Stores[name]
             Object.defineProperty(Store.prototype, 'props', getProps)
-            const store = new Store()
-            Object.defineProperty(store, 'props', getProps)
+            const nextStore = new Store()
+            Object.defineProperty(nextStore, 'props', getProps)
 
             const { stores, compare } = cachedStores
             if (stores[name] && compare[name]) {
-              const newHash = storeToHash(store)
+              const newHash = storeToHash(nextStore)
               if (compare[name] === newHash) {
+                // we have a hydratable store, hot swap it in!
                 this.stores[name] = stores[name]
+                // be sure to clean up the comparison store
+                options.onStoreUnmount(nextStore)
               } else {
                 log(`Couldn't hydrate store ${name}`)
               }
@@ -161,8 +174,8 @@ export function storeProvidable(options, Helpers) {
 
             // we didn't hydrate it from hmr, set it up normally
             if (!this.stores[name]) {
-              compare[name] = storeToHash(store)
-              this.stores[name] = store
+              compare[name] = storeToHash(nextStore)
+              this.stores[name] = nextStore
             }
           }
           this.willMountStores()
@@ -173,10 +186,7 @@ export function storeProvidable(options, Helpers) {
         }
 
         willMountStores() {
-          if (!options.onStoreMount) {
-            return
-          }
-          for (const name of Object.keys(this.stores)) {
+          for (const name in this.stores) {
             if (!this.stores[name].__hasMounted) {
               options.onStoreMount(this.stores[name], this.props)
             }
@@ -190,9 +200,7 @@ export function storeProvidable(options, Helpers) {
             if (Helpers) {
               Helpers.emit('store.mount', { name, thing: store })
             }
-            if (options.onStoreDidMount) {
-              options.onStoreDidMount(store, this.props)
-            }
+            options.onStoreDidMount(store, this.props)
           }
         }
 
@@ -202,9 +210,7 @@ export function storeProvidable(options, Helpers) {
             if (Helpers) {
               Helpers.emit('store.unmount', { name, thing: store })
             }
-            if (options.onStoreUnmount) {
-              options.onStoreUnmount(store)
-            }
+            options.onStoreUnmount(store)
           }
         }
 

@@ -64,7 +64,6 @@ class OrbitHomeStore {
   )
 }
 
-const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
 const itemProps = {
   shownLimit: 3,
   contentStyle: {
@@ -108,7 +107,6 @@ export class OrbitHome extends React.Component<{
                 <OrbitCard
                   pane="docked"
                   subPane="home"
-                  selectedTheme={selectedTheme}
                   key={`${bit.id}${index}`}
                   index={index}
                   bit={bit}

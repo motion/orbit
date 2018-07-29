@@ -3,6 +3,9 @@ import { App } from '@mcro/stores'
 
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
+const BOTTOM_PAD = 40
+const NUDGE_AMT = 20
+
 const screenSize = () => [window.innerWidth, window.innerHeight]
 
 type WindowMap = {
@@ -44,9 +47,6 @@ export function peekPosition(target): WindowMap | null {
 // so if you are moving down a list it will stay in place until it has to move
 // but we don't want to stay alllll the way in place because it looks better to move a little
 // so we'll nudge it down just a little.
-
-const BOTTOM_PAD = 40
-const NUDGE_AMT = 0
 
 function getLazyPosition(
   target: Position,

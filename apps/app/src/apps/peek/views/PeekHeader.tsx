@@ -21,6 +21,7 @@ const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
+  transition: 'background ease-in 1300ms'
 })
 
 PeekHeaderContain.theme = ({ theme, position }) => {

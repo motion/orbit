@@ -8,20 +8,18 @@ import sanitize from 'sanitize-html'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { SearchStore } from '../../stores/SearchStore'
 
-const listItemSidePad = 18
-
 const Highlight = view({
   display: 'inline-block',
   lineHeight: 22,
   fontSize: 15,
-  padding: [2, listItemSidePad * 2, 2, listItemSidePad],
-  margin: [8, -listItemSidePad, 0, 8],
+  padding: 6,
+  margin: [4, 0, 0, 8],
   borderLeft: [3, 'transparent'],
+  borderRadius: 8,
   transition: 'border ease 100ms',
   color: [0, 0, 0, 0.8],
   '&:hover': {
-    color: [0, 0, 0, 1],
-    borderLeftColor: '#ddd',
+    background: [0, 0, 0, 0.05],
   },
 })
 

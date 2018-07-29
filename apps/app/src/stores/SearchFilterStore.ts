@@ -1,7 +1,7 @@
 import { store, deep, react, Store } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
-import { memoize } from 'lodash'
+import { memoize, uniqBy } from 'lodash'
 import { NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -35,7 +35,7 @@ export class SearchFilterStore /* extends Store */ {
       if (!integrations.length) {
         throw react.cancel
       }
-      this.inactiveFilters = this.integrationSettingsStore.settingsList.reduce(
+      this.inactiveFilters = this.uniqueSettings.reduce(
         (acc, setting: Setting) => {
           acc[setting.type] = integrations.some(x => x === setting.type)
           return acc
@@ -66,20 +66,20 @@ export class SearchFilterStore /* extends Store */ {
     return false
   }
 
-  get settings() {
-    return this.integrationSettingsStore.settingsList
+  get uniqueSettings(): Setting[] {
+    const intSettings = (
+      this.integrationSettingsStore.settingsList || []
+    ).filter(x => x.type !== 'setting')
+    const unique = uniqBy(intSettings, x => x.type)
+    return unique
   }
 
   get filters(): SearchFilter[] {
-    const { settingsList, getTitle } = this.integrationSettingsStore
-    if (!settingsList) {
-      return []
-    }
     const { /* hasInactiveFilters, */ inactiveFilters } = this
-    return settingsList.filter(x => x.type !== 'setting').map(setting => ({
+    return this.uniqueSettings.map(setting => ({
       type: setting.type,
       icon: setting.type,
-      name: getTitle(setting),
+      name: this.integrationSettingsStore.getTitle(setting),
       active: /* !hasInactiveFilters ? true :  */ inactiveFilters[setting.type],
     }))
   }

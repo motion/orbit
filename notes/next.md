@@ -1,12 +1,9 @@
-# WOW for demo
+# sunday:
 
-* multiselect:
-  1. search
-  2. hit shift + click
-  3. (or click and drag just like tableview)
-  4. it puts the results into tabs
-  5. drag away the window
-  6. now you have a grouped view
+- react-spring for peek placement
+- styling on settings panes
+- peek header styles
+- settings panes fixes
 
 # theme run
 
@@ -62,3 +59,13 @@
 * ide https://retool.in/
 * icons https://danklammer.com/bytesize-icons/
 * nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
+
+# gamechanger ideas:
+
+- multiselect:
+  1.  search
+  2.  hit shift + click
+  3.  (or click and drag just like tableview)
+  4.  it puts the results into tabs
+  5.  drag away the window
+  6.  now you have a grouped view

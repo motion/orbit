@@ -7,7 +7,7 @@ import { updateProps } from './helpers/updateProps'
 import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import debug from '@mcro/debug'
-// import { StoreHMR } from '@mcro/store-hmr'
+import { StoreHMR } from '@mcro/store-hmr'
 
 const log = debug('storeProvidable')
 
@@ -78,7 +78,6 @@ export function storeProvidable(options, Helpers) {
 
         constructor(a, b) {
           super(a, b)
-          log(`${logName}.constructor`)
           this.setupProps()
           this.setupStores()
         }
@@ -210,7 +209,6 @@ export function storeProvidable(options, Helpers) {
           if (!this.stores) {
             return
           }
-          log(`${logName}.onWillReloadStores`)
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
             // pass in state + auto dehydrate
@@ -225,7 +223,6 @@ export function storeProvidable(options, Helpers) {
           if (!this.stores) {
             return
           }
-          log(`${logName}.onReloadStores`)
           // dipose now because we are definitely re-hydrating
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
@@ -271,8 +268,9 @@ export function storeProvidable(options, Helpers) {
         setStoreHMRState = null
 
         render() {
-          const { __contextualStores, ...props } = this.props
-          const children = <Klass {...props} {...this.stores} />
+          const { __contextualStores, __hmrPath, ...props } = this.props
+          console.log('__hmrPath', __hmrPath, this)
+          const children = <>{__hmrPath}<Klass {...props} {...this.stores} /></>
           if (context) {
             const childStores = this.childContextStores(__contextualStores)
             return (
@@ -310,7 +308,13 @@ export function storeProvidable(options, Helpers) {
         )
       }
 
-      return new Proxy(StoreProviderWithContext, {
+      const WithPath = props => (
+        <StoreHMR>
+          <StoreProviderWithContext {...props} />
+        </StoreHMR>
+      )
+
+      return new Proxy(WithPath, {
         set(_, method, value) {
           Klass[method] = value
           StoreProviderWithContext[method] = value

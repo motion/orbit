@@ -199,17 +199,17 @@ export class PeekStore {
     return [x, y]
   }
 
-  updateHistory = react(
-    () => this.curState,
-    state => {
-      if (state) {
-        this.history.push(state)
-      } else {
-        this.history = []
-      }
-    },
-    { delay: 32 },
-  )
+  // updateHistory = react(
+  //   () => this.curState,
+  //   state => {
+  //     if (state) {
+  //       this.history.push(state)
+  //     } else {
+  //       this.history = []
+  //     }
+  //   },
+  //   { delay: 32 },
+  // )
 
   tearPeek = () => {
     this.tornState = { ...this.state }

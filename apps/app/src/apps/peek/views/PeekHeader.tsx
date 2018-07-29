@@ -101,7 +101,6 @@ const SubTitle = ({ children, before, after }) => (
     zIndex={1}
   >
     {textify(before)}
-    123 123 123
     <div style={{ flex: 1 }} />
     <Centered>
       {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}

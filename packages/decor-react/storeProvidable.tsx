@@ -6,10 +6,7 @@ import { Disposable } from 'event-kit'
 import { updateProps } from './helpers/updateProps'
 import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
-import debug from '@mcro/debug'
 import { StoreHMR } from '@mcro/store-hmr'
-
-const log = debug('storeProvidable')
 
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
@@ -127,8 +124,9 @@ export function storeProvidable(options, Helpers) {
 
         restoreStores() {
           this.stores = storeHMRCache[this.props.__hmrPath]
-          console.log('restoring stores', this.stores)
-          delete storeHMRCache[this.props.__hmrPath]
+          setTimeout(() => {
+            delete storeHMRCache[this.props.__hmrPath]
+          })
         }
 
         willMountStores() {
@@ -168,7 +166,6 @@ export function storeProvidable(options, Helpers) {
         }
 
         onWillReloadStores = () => {
-          console.log('dehydarate', this.props.__hmrPath, this.stores)
           storeHMRCache[this.props.__hmrPath] = this.stores
         }
 

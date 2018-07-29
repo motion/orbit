@@ -18,7 +18,7 @@ const decorator = compose(
 )
 
 export const TestHMR = () => <>
-  123 123 123 123
+  hello
   <TestHMRInner />
 </>
 

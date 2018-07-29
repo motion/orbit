@@ -46,14 +46,6 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
       total={results.length}
       bit={bit}
       listItem
-      cardProps={{
-        background: '#fff',
-      }}
-      nextUpStyle={
-        index === 0 && {
-          color: 'black',
-        }
-      }
     >
       <UI.Text
         alpha={0.85}
@@ -158,7 +150,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         extraCondition={this.extraCondition}
         before={<OrbitSearchFilters />}
         onActive={this.updateActivePane}
-        ref={this.paneRef}
+        forwardRef={this.paneRef}
       >
         <OrbitSearchResultsContents searchStore={searchStore} name={name} />
       </OrbitDockedPane>

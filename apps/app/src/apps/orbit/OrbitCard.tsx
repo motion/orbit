@@ -82,7 +82,7 @@ const Card = view({
 
 const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 2, '#90b1e452']
+const cardSelectedGlow = [0, 0, 0, 3, '#90b1e452']
 const borderSelected = UI.color('#90b1e4')
 
 Card.theme = ({
@@ -113,18 +113,17 @@ Card.theme = ({
       listStyle = {
         border: [1, borderSelected],
         boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
-        '&:hover': {
-          border: [1, borderSelected],
-        },
       }
     } else {
       listStyle = {
-        border: [1, 'tranparent'],
+        border: [1, 'transparent'],
       }
     }
     card = {
       ...card,
       ...listStyle,
+      borderLeft: 'none',
+      borderRight: 'none',
       padding: padding || [20, 18],
     }
   } else {

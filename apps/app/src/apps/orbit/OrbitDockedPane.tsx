@@ -7,7 +7,77 @@ import { CSSPropertySet } from '@mcro/gloss'
 import { AppStore } from '../../stores/AppStore'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
-const EXTRA_PAD = 40
+const EXTRA_PAD = 5
+
+const Pane = view(UI.View, {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  transition: 'all ease 100ms',
+  overflowX: 'hidden',
+  overflowY: 'scroll',
+  padding: [EXTRA_PAD, 14, 0],
+  margin: [-EXTRA_PAD, 0, 0],
+  // pointerEvents: 'none',
+  opacity: 0,
+  transform: {
+    x: 10,
+  },
+  isActive: {
+    opacity: 1,
+    transform: {
+      x: 0,
+    },
+    '& > *': {
+      pointerEvents: 'auto',
+    },
+  },
+})
+
+const OverflowFade = view({
+  pointerEvents: 'none',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: 100,
+  zIndex: 10000000,
+  borderRadius: 20,
+  overflow: 'hidden',
+  opacity: 1,
+  transition: 'all ease-in 250ms',
+  isInvisible: {
+    opacity: 0,
+  },
+})
+
+OverflowFade.theme = ({ theme }) => ({
+  background: `linear-gradient(transparent, ${theme.base.background})`,
+})
+
+const DockedPaneFrame = view(UI.FullScreen, {
+  opacity: 0,
+  pointerEvents: 'none',
+  isActive: {
+    opacity: 1,
+    pointerEvents: 'all',
+  },
+})
+
+const DockedPaneInner = view(UI.View, {
+  position: 'relative',
+  flex: 1,
+})
+
+DockedPaneInner.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
+
+const PaneContentInner = view({
+  position: 'relative',
+})
 
 type Props = CSSPropertySet & {
   store?: DockedPaneStore
@@ -100,77 +170,6 @@ class DockedPaneStore {
     return isActive
   }
 }
-
-const Pane = view(UI.View, {
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  transition: 'all ease 100ms',
-  borderRadius: BORDER_RADIUS,
-  overflowX: 'hidden',
-  overflowY: 'scroll',
-  padding: [0, 14, 0],
-  margin: [0, 0, 0],
-  // pointerEvents: 'none',
-  opacity: 0,
-  transform: {
-    x: 10,
-  },
-  isActive: {
-    opacity: 1,
-    transform: {
-      x: 0,
-    },
-    '& > *': {
-      pointerEvents: 'auto',
-    },
-  },
-})
-
-const OverflowFade = view({
-  pointerEvents: 'none',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  height: 100,
-  zIndex: 10000000,
-  borderRadius: 20,
-  overflow: 'hidden',
-  opacity: 1,
-  transition: 'all ease-in 250ms',
-  isInvisible: {
-    opacity: 0,
-  },
-})
-
-OverflowFade.theme = ({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.base.background})`,
-})
-
-const DockedPaneFrame = view(UI.FullScreen, {
-  opacity: 0,
-  pointerEvents: 'none',
-  isActive: {
-    opacity: 1,
-    pointerEvents: 'all',
-  },
-})
-
-const DockedPaneInner = view(UI.View, {
-  position: 'relative',
-  flex: 1,
-})
-
-DockedPaneInner.theme = ({ theme }) => ({
-  background: theme.base.background,
-})
-
-const PaneContentInner = view({
-  position: 'relative',
-})
 
 @view.attach('paneStore', 'appStore')
 @view.attach({

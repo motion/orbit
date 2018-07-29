@@ -150,7 +150,6 @@ export class OrbitSearchResults extends React.Component<Props> {
         extraCondition={this.extraCondition}
         before={<OrbitSearchFilters />}
         onActive={this.updateActivePane}
-        forwardRef={this.paneRef}
       >
         <OrbitSearchResultsContents searchStore={searchStore} name={name} />
       </OrbitDockedPane>

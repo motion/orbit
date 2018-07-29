@@ -115,12 +115,7 @@ class DockedPaneStore {
   }
 
   didMount() {
-    on(
-      this,
-      this.paneRef.current,
-      'scroll',
-      _.throttle(this.handlePaneChange, 16 * 3),
-    )
+    on(this, this.paneNode, 'scroll', _.throttle(this.handlePaneChange, 16 * 3))
     this.addObserver(this.paneRef.current, this.handlePaneChange)
     this.handlePaneChange()
     this.updateOnHeight()
@@ -170,7 +165,7 @@ class DockedPaneStore {
   }
 }
 
-@view.attach('paneStore', 'appStore')
+@view.attach('paneStore', 'appStore', 'searchStore')
 @view.attach({
   store: DockedPaneStore,
 })

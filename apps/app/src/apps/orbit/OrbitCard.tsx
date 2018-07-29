@@ -62,6 +62,15 @@ const CardWrap = view(UI.View, {
   },
 })
 
+const Divider = view({
+  height: 1,
+  background: [0, 0, 0, 0.05],
+  position: 'absolute',
+  bottom: 0,
+  left: 10,
+  right: 10,
+})
+
 const Card = view({
   overflow: 'hidden',
   position: 'relative',
@@ -74,6 +83,7 @@ const Card = view({
 const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
 const cardSelectedGlow = [0, 0, 0, 2, '#90b1e452']
+const borderSelected = UI.color('#90b1e4')
 
 Card.theme = ({
   listItem,
@@ -88,45 +98,38 @@ Card.theme = ({
   padding,
   disableShadow,
 }) => {
+  const disabledShadow = disableShadow ? 'none' : null
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
+    '&:active': {
+      opacity: 0.75,
+    },
   }
   if (listItem) {
     // LIST ITEM
     let listStyle
     // selected...
     if (isSelected) {
-      const selectedBackground = background || theme.active.background
       listStyle = {
-        background: selectedBackground,
+        border: [1, borderSelected],
+        boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
         '&:hover': {
-          background: selectedBackground,
-        },
-        '&:active': {
-          opacity: 0.75
+          border: [1, borderSelected],
         },
       }
     } else {
       listStyle = {
-        background: 'transparent',
-        '&:hover': {
-          background: [255, 255, 255, 0.4],
-        },
-        '&:active': {
-          opacity: 0.75
-        },
+        border: [1, 'tranparent'],
       }
     }
     card = {
       ...card,
       ...listStyle,
       padding: padding || [20, 18],
-      // borderTop: [1, theme.base.borderColor.alpha(0.5)],
     }
   } else {
     // CARD
     const cardBackground = background || theme.selected.background
-    const disabledShadow = disableShadow ? 'none' : null
     card = {
       ...card,
       padding: padding || 16,
@@ -139,11 +142,6 @@ Card.theme = ({
         ...card,
         boxShadow: disabledShadow || [cardShadow],
         border: border || [1, cardBackground.darken(0.08)],
-        '&:active': {
-          boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-          // slightly darker
-          border: [1, '#ccc'],
-        },
         '&:hover': {
           boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
           border: [1, borderHover],
@@ -151,14 +149,10 @@ Card.theme = ({
       }
     }
     if (isSelected) {
-      const borderSelected = UI.color('#90b1e4')
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
         border: [1, borderSelected],
-        '&:active': {
-          border: [1, borderSelected.darken(0.1)],
-        },
         '&:hover': {
           border: [1, borderSelected],
         },
@@ -268,7 +262,9 @@ class OrbitCardStore {
     () => [
       this.props.searchStore && this.props.searchStore.nextIndex,
       this.isPaneSelected,
-      typeof this.props.isSelected === 'function' ? this.props.isSelected() : this.props.isSelected
+      typeof this.props.isSelected === 'function'
+        ? this.props.isSelected()
+        : this.props.isSelected,
     ],
     async ([nextIndex, isPaneSelected, isSelected], { sleep }) => {
       if (!isPaneSelected) {
@@ -493,9 +489,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 ))}
             </UI.Text>
           </Preview>
-          {typeof children === 'function'
-            ? children(contentProps)
-            : children}
+          {typeof children === 'function' ? children(contentProps) : children}
           {people && people.length && people[0].data.profile ? (
             <div>
               <PeopleRow people={people} />
@@ -518,6 +512,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               borderRadius={20}
             />
           )}
+        {listItem && <Divider />}
       </CardWrap>
     )
   }

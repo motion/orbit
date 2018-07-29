@@ -17,8 +17,8 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
       <HighlightedTextArea
         width="100%"
         fontWeight={300}
-        fontSize={18}
-        lineHeight="24px"
+        fontSize={16}
+        lineHeight={22}
         border="none"
         display="block"
         background="transparent"

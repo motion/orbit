@@ -2,12 +2,11 @@ import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import 'react-hot-loader'
 import 'isomorphic-fetch'
-import * as UI from '@mcro/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import { themes } from './themes'
 import debug from '@mcro/debug'
 import './RootViewHMR'
+import './helpers/createElement'
 
 // quiet everything
 setTimeout(() => {
@@ -32,15 +31,10 @@ export async function render() {
     rootStore.rootView = RootView
   }
   ReactDOM.render(
-    <UI.ThemeProvide themes={themes} defaultTheme="light">
-      <RootView />
-    </UI.ThemeProvide>,
+    <RootView />,
     document.querySelector('#app'),
   )
 }
-
-// this imports render and then patches createElement, needs to be here
-require('./helpers/installDevelopmentHelpers')
 
 render()
 

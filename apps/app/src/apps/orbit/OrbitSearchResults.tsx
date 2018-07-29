@@ -17,9 +17,9 @@ const Highlight = view({
   lineHeight: 22,
   fontSize: 15,
   padding: [2, listItemSidePad * 2, 2, listItemSidePad],
-  margin: [8, -listItemSidePad, 8, 8],
+  margin: [8, -listItemSidePad, 0, 8],
   borderLeft: [3, 'transparent'],
-  transition: 'border ease 200ms 100ms',
+  transition: 'border ease 100ms',
   color: [0, 0, 0, 0.8],
   '&:hover': {
     color: [0, 0, 0, 1],
@@ -50,7 +50,6 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
       listItem
       cardProps={{
         background: '#fff',
-        padding: [16, 18, 10],
       }}
       nextUpStyle={
         index === 0 && {

@@ -100,7 +100,7 @@ export class OrbitHeader extends React.Component<{
             name={
               isHome && iconHovered
                 ? 'arrowright'
-                : !isHome
+                : !isHome && iconHovered
                   ? 'home'
                   : 'ui-1_zoom'
             }

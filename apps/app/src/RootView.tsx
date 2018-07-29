@@ -4,6 +4,9 @@ import { NotFound } from './views/NotFound'
 import Router from './router'
 import { view, on } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
+import { themes } from './themes'
+
+require('./helpers/installDevelopmentHelpers')
 
 if (process.env.NODE_ENV === 'development') {
   if (module.hot && module.hot.addStatusHandler) {
@@ -96,9 +99,9 @@ export class RootView extends React.Component {
     }
     const CurrentPage = Router.activeView || NotFound
     return (
-      <UI.Theme name="light">
+      <UI.ThemeProvide themes={themes} defaultTheme="light">
         <CurrentPage key={Router.key} {...Router.params} />
-      </UI.Theme>
+      </UI.ThemeProvide>
     )
   }
 }

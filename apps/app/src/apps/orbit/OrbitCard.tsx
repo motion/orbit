@@ -112,6 +112,7 @@ Card.theme = ({
     // selected...
     if (isSelected) {
       listStyle = {
+        background: '#f8faff',
         border: [1, borderSelected],
         boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
       }
@@ -126,6 +127,9 @@ Card.theme = ({
       borderLeft: 'none',
       borderRight: 'none',
       padding: padding || [20, 18],
+      '&:hover': {
+        background: '#f8faff'
+      }
     }
   } else {
     // CARD

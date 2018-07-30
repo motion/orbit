@@ -65,6 +65,9 @@ export const SearchBox = view(View, {
   paddingLeft: 4,
   background: colors.white,
   border: [1, colors.light15],
+  '&:focus-within': {
+    boxShadow: `0 0 0 3px rgba(255,255,255,0.2)`,
+  },
 })
 
 SearchBox.theme = ({ theme }) => ({
@@ -72,8 +75,10 @@ SearchBox.theme = ({ theme }) => ({
 })
 
 export const SearchInput = view(TableInput, {
+  fontWeight: 500,
   fontSize: 16,
   padding: 0,
+  paddingBottom: 1, // fixes visual height
   flexGrow: 1,
   background: 'transparent',
   height: '100%',

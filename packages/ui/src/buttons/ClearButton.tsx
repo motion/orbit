@@ -4,7 +4,7 @@ import { View } from '../blocks/View'
 
 const ClearFrame = view(View, {
   fontSize: 16,
-  lineHeight: 15,
+  lineHeight: '1rem',
   width: 17,
   height: 17,
   borderRadius: 999,

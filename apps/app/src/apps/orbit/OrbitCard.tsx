@@ -128,8 +128,8 @@ Card.theme = ({
       borderRight: 'none',
       padding: padding || [20, 18],
       '&:hover': {
-        background: '#f8faff'
-      }
+        background: '#f8faff',
+      },
     }
   } else {
     // CARD
@@ -242,9 +242,14 @@ class OrbitCardStore {
   }
 
   get sleepBeforePeek() {
+    // first time, go fast
+    if (!App.peekState.target) {
+      return 0
+    }
+    // depending on type of move, adjust speed
     if (this.props.searchStore) {
       const { selectEvent } = this.props.searchStore
-      return selectEvent === 'key' ? 150 : 0
+      return selectEvent === 'key' ? 130 : 0
     }
     return 0
   }

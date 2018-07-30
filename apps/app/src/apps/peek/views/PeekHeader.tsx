@@ -21,7 +21,7 @@ const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
-  transition: 'background ease-in 1300ms'
+  transition: 'background ease-in 1300ms',
 })
 
 PeekHeaderContain.theme = ({ theme, position }) => {
@@ -117,6 +117,7 @@ export class PeekHeaderContent extends React.Component<Props> {
     const {
       peekStore,
       title,
+      titleAfter,
       date,
       subtitle,
       subtitleBefore,
@@ -189,6 +190,7 @@ export class PeekHeaderContent extends React.Component<Props> {
                 {/* {!!peekStore.tornState && (
                   <ControlButton icon="z" onClick={peekStore.tearPeek} />
                 )} */}
+                {titleAfter}
               </UI.Row>
             </>
           }

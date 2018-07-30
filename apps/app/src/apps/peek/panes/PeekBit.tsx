@@ -57,7 +57,11 @@ export const PeekBit = ({
               comments,
             }) => {
               return children({
-                subtitleBefore: <UI.Text><UI.Date>{date}</UI.Date></UI.Text>,
+                subtitleBefore: (
+                  <UI.Text>
+                    <UI.Date>{date}</UI.Date>
+                  </UI.Text>
+                ),
                 subtitle: (
                   <RoundButton
                     onClick={e => {
@@ -68,12 +72,13 @@ export const PeekBit = ({
                     {location}
                   </RoundButton>
                 ),
-                subtitleAfter: !!permalink &&
-                  !!icon && (
-                    <OrbitIcon onClick={permalink} icon={icon} size={20} />
-                  ),
+                subtitleAfter: <RoundButton>Open</RoundButton>,
                 date,
                 title,
+                titleAfter: !!permalink &&
+                  !!icon && (
+                    <OrbitIcon onClick={permalink} icon={icon} size={16} />
+                  ),
                 icon,
                 subhead: searchBar,
                 content: (

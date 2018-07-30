@@ -44,7 +44,7 @@ FilterBarFade.theme = ({ theme }) => ({
   })`,
 })
 
-export const OrbitActiveFilters = ({ filters }) => {
+export const OrbitFilterBar = ({ filters }) => {
   return (
     <FilterBar>
       {filters.map((filter, index) => {

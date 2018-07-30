@@ -240,8 +240,8 @@ export function storeProvidable(userOptions, Helpers) {
       }
 
       const WithPath = props => (
-        <StoreHMR>
-          <StoreProviderWithContext key={Klass.__hmrId} {...props} />
+        <StoreHMR key={Klass.__hmrId}>
+          <StoreProviderWithContext {...props} />
         </StoreHMR>
       )
 

@@ -4,7 +4,7 @@ import { modelQueryReaction } from '@mcro/helpers'
 import { Bit, Person } from '@mcro/models'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
-import { OrbitDockedPane } from './OrbitDockedPane'
+import { SubPane } from './SubPane'
 import { PaneManagerStore } from './PaneManagerStore'
 
 const findType = (integration, type, skip = 0) =>
@@ -97,7 +97,7 @@ export class OrbitHome extends React.Component<{
     const { store } = this.props
     const total = store.results.length
     return (
-      <OrbitDockedPane name="home" fadeBottom>
+      <SubPane name="home" fadeBottom>
         <div style={{ paddingTop: 2 }}>
           <Masonry>
             {store.results.map((bit, index) => {
@@ -118,7 +118,7 @@ export class OrbitHome extends React.Component<{
             })}
           </Masonry>
         </div>
-      </OrbitDockedPane>
+      </SubPane>
     )
   }
 }

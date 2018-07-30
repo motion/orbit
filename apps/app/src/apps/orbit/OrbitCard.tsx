@@ -8,7 +8,7 @@ import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
-import { PaneManagerStore } from 'stores/OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 import { Bit } from '@mcro/models'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
@@ -21,6 +21,7 @@ export type OrbitCardProps = {
   appStore?: AppStore
   searchStore?: SearchStore
   paneStore?: PaneManagerStore
+  subPaneStore?: SubPaneStore
   title?: React.ReactNode
   subtitle?: React.ReactNode
   date?: React.ReactNode
@@ -201,25 +202,15 @@ class OrbitCardStore {
 
   normalizedBit = null
   isSelected = false
-  ref = null
-
-  get isPaneSelected() {
-    if (!this.props.subPane) {
-      return false
-    }
-    const isPaneActive = this.props.appStore.selectedPane === this.props.pane
-    const isSubPaneActive =
-      this.props.paneStore.activePane === this.props.subPane
-    return isPaneActive && isSubPaneActive
-  }
+  cardWrapRef = null
 
   handleClick = e => {
     if (this.props.onClick) {
-      this.props.onClick(e, this.ref)
+      this.props.onClick(e, this.cardWrapRef)
       return
     }
     if (this.props.onSelect) {
-      this.props.onSelect(this.ref)
+      this.props.onSelect(this.cardWrapRef)
       return
     }
     if (this.props.inactive) {
@@ -229,11 +220,11 @@ class OrbitCardStore {
     this.props.searchStore.toggleSelected(this.props.index)
   }
 
-  setRef = ref => {
-    if (!ref) return
-    this.ref = ref
+  setCardWrapRef = cardWrapRef => {
+    if (!cardWrapRef) return
+    this.cardWrapRef = cardWrapRef
     if (this.props.getRef) {
-      this.props.getRef(ref)
+      this.props.getRef(cardWrapRef)
     }
   }
 
@@ -258,13 +249,13 @@ class OrbitCardStore {
   updateIsSelected = react(
     () => [
       this.props.searchStore && this.props.searchStore.nextIndex,
-      this.isPaneSelected,
+      this.props.subPaneStore.isActive,
       typeof this.props.isSelected === 'function'
         ? this.props.isSelected()
         : this.props.isSelected,
     ],
-    async ([nextIndex, isPaneSelected, isSelected], { sleep }) => {
-      if (!isPaneSelected) {
+    async ([nextIndex, isPaneActive, isSelected], { sleep }) => {
+      if (!isPaneActive) {
         throw react.cancel
       }
       let nextIsSelected
@@ -278,15 +269,15 @@ class OrbitCardStore {
       }
       this.isSelected = nextIsSelected
       if (nextIsSelected && !this.props.preventAutoSelect) {
-        // if (this.props.subPaneStore) {
-        //   this.props.subPaneStore.scrollIntoView(this.ref)
-        // }
+        if (this.props.subPaneStore) {
+          this.props.subPaneStore.scrollIntoView(this.cardWrapRef)
+        }
         // reduce jitter, work, visual delay looks a bit nicer
         await sleep(this.sleepBeforePeek)
         if (!this.target) {
           throw new Error(`No target!`)
         }
-        const position = getTargetPosition(this.ref)
+        const position = getTargetPosition(this.cardWrapRef)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
           position.left += 8
@@ -298,7 +289,7 @@ class OrbitCardStore {
   )
 }
 
-@view.attach('appStore', 'searchStore', 'paneStore')
+@view.attach('appStore', 'searchStore', 'paneStore', 'subPaneStore')
 @view.attach({
   store: OrbitCardStore,
 })
@@ -392,7 +383,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     return (
       <CardWrap
         {...hoverToSelect && !inactive && this.hoverSettler.props}
-        forwardRef={store.setRef}
+        forwardRef={store.setCardWrapRef}
         zIndex={isSelected ? 5 : 4}
         {...props}
       >

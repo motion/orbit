@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitCard } from './OrbitCard'
-import { OrbitDockedPane } from './OrbitDockedPane'
+import { SubPane } from './SubPane'
 import { OrbitSearchQuickResults } from './orbitSearch/OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
@@ -19,7 +19,7 @@ const Highlight = view({
   transition: 'border ease 100ms',
   color: [0, 0, 0, 0.8],
   '&:hover': {
-    background: [0, 0, 0, 0.05],
+    background: [255, 255, 255, 1],
   },
 })
 
@@ -91,20 +91,19 @@ OrbitSearchResultsFrame.theme = ({ theme }) => ({
 const OrbitSearchResultsContents = view(({ name, searchStore }) => {
   const { isChanging, message } = searchStore
   return (
-    <OrbitSearchResultsFrame>
+    <>
       {message ? <div>{message}</div> : null}
       <OrbitSearchQuickResults searchStore={searchStore} />
       <div
         style={{
           position: 'relative',
-          transition: 'opacity ease-in-out 150ms',
           opacity: isChanging ? 0.7 : 1,
         }}
       >
         <OrbitSearchResultsList searchStore={searchStore} name={name} />
       </div>
       <div style={{ height: 20 }} />
-    </OrbitSearchResultsFrame>
+    </>
   )
 })
 
@@ -135,7 +134,7 @@ export class OrbitSearchResults extends React.Component<Props> {
       y: -searchStore.extraHeight,
     }
     return (
-      <OrbitDockedPane
+      <SubPane
         paddingLeft={0}
         paddingRight={0}
         containerStyle={{
@@ -150,7 +149,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         onActive={this.updateActivePane}
       >
         <OrbitSearchResultsContents searchStore={searchStore} name={name} />
-      </OrbitDockedPane>
+      </SubPane>
     )
   }
 }

@@ -13,7 +13,7 @@ import { BORDER_RADIUS } from '../../constants'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitActiveFilters } from './orbitHeader/OrbitActiveFilters'
+import { OrbitFilterBar } from './orbitHeader/OrbitFilterBar'
 
 const SHADOW_PAD = 100
 const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.45]]
@@ -138,7 +138,7 @@ class OrbitDockedInner extends React.Component<{
                 </>
               }
             />
-            <OrbitActiveFilters
+            <OrbitFilterBar
               filters={[
                 { name: 'Jira', type: 'active' },
                 { name: 'Nate', type: 'active' },
@@ -150,7 +150,7 @@ class OrbitDockedInner extends React.Component<{
               ]}
             />
             <OrbitInner height={window.innerHeight}>
-              <UI.View position="relative" flex={1}>
+              <UI.View position="relative" flex={1} overflow="hidden">
                 <OrbitHome name="home" paneStore={paneStore} />
                 <OrbitDirectory name="directory" paneStore={paneStore} />
                 <OrbitSearchResults name="docked-search" />

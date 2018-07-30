@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { OrbitSettingCard } from './OrbitSettingCard'
-import { OrbitDockedPane } from './OrbitDockedPane'
+import { SubPane } from './SubPane'
 import * as Views from '../../views'
 import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
@@ -114,7 +114,7 @@ export class OrbitSettings extends React.Component<Props> {
       )
     }
     return (
-      <OrbitDockedPane name={name} fadeBottom>
+      <SubPane name={name} fadeBottom>
         <Views.SubTitle>Settings</Views.SubTitle>
         <Masonry>
           {store.generalSettings.map((result, index) => (
@@ -183,7 +183,7 @@ export class OrbitSettings extends React.Component<Props> {
               )
             })}
         </Masonry>
-      </OrbitDockedPane>
+      </SubPane>
     )
   }
 }

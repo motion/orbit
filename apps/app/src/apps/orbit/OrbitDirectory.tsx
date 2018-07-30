@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Person } from '@mcro/models'
-import { OrbitDockedPane } from './OrbitDockedPane'
+import { SubPane } from './SubPane'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { SubTitle } from '../../views'
@@ -65,7 +65,7 @@ export class OrbitDirectory extends React.Component<{
     // log('DIRECTORY --------')
     const total = store.results.length
     return (
-      <OrbitDockedPane name="directory" fadeBottom>
+      <SubPane name="directory" fadeBottom>
         {store.people.length ? (
           <React.Fragment>
             <SubTitle>People</SubTitle>
@@ -86,7 +86,7 @@ export class OrbitDirectory extends React.Component<{
             </Masonry>
           </React.Fragment>
         ) : null}
-      </OrbitDockedPane>
+      </SubPane>
     )
   }
 }

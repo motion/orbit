@@ -21,8 +21,8 @@ const Frame = view(UI.Col, {
   position: 'absolute',
   top: 10,
   right: 10,
-  borderRadius: BORDER_RADIUS,
-  border: [3, [0, 0, 0, 0.04]],
+  borderRadius: BORDER_RADIUS + 2,
+  border: [3, [0, 0, 0, 0.08]],
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
@@ -56,7 +56,7 @@ const Border = view({
   bottom: 0,
   zIndex: Number.MAX_SAFE_INTEGER,
   pointerEvents: 'none',
-  borderRadius: BORDER_RADIUS - 2,
+  borderRadius: BORDER_RADIUS - 1,
 })
 
 Border.theme = ({ theme }) => {
@@ -114,7 +114,9 @@ class OrbitDockedInner extends React.Component<{
     const { animationState } = paneStore
     // log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
-      10,
+      // always leave 40px room at bottom
+      // leaving a little room at the bottom makes it feel much lighter
+      50,
       window.innerHeight - appStore.contentHeight - 12,
     )
     return (

@@ -168,8 +168,6 @@ Card.theme = ({
   return card
 }
 
-console.log('card', Card)
-
 const Title = view({
   maxWidth: '100%',
   flexFlow: 'row',
@@ -223,6 +221,7 @@ class OrbitCardStore {
     if (this.props.inactive) {
       return
     }
+    this.props.searchStore.setSelectEvent('click')
     this.props.searchStore.toggleSelected(this.props.index)
   }
 
@@ -238,24 +237,13 @@ class OrbitCardStore {
     return this.props.result || this.normalizedBit
   }
 
-  // isNextUp = react(
-  //   () => [
-  //     this.props.searchStore && this.props.searchStore.nextIndex,
-  //     this.isPaneSelected,
-  //     !!this.props.nextUpStyle,
-  //   ],
-  //   ([nextIndex, isPaneSelected, hasUpNextStyle], { getValue }) => {
-  //     if (!isPaneSelected || !hasUpNextStyle) {
-  //       throw react.cancel
-  //     }
-  //     const isUpNext = nextIndex + 1 === this.props.index
-  //     if (isUpNext === getValue()) {
-  //       throw react.cancel
-  //     }
-  //     return isUpNext
-  //   },
-  //   { immediate: true },
-  // )
+  get sleepBeforePeek() {
+    if (this.props.searchStore) {
+      const { selectEvent } = this.props.searchStore
+      return selectEvent === 'key' ? 150 : 0
+    }
+    return 0
+  }
 
   // this cancels to prevent renders very aggressively
   updateIsSelected = react(
@@ -281,19 +269,14 @@ class OrbitCardStore {
       }
       this.isSelected = nextIsSelected
       if (nextIsSelected && !this.props.preventAutoSelect) {
-        // visual smoothness
-        await sleep(150)
-        if (!this.target) {
-          throw new Error(
-            `No target! ${this.props.pane} ${this.props.subPane} ${
-              this.props.index
-            }`,
-          )
-        }
-        // TODO: implement
-        // if (this.props.paneStore) {
-        //   this.props.paneStore.scrollIntoView(this.ref)
+        // if (this.props.subPaneStore) {
+        //   this.props.subPaneStore.scrollIntoView(this.ref)
         // }
+        // reduce jitter, work, visual delay looks a bit nicer
+        await sleep(this.sleepBeforePeek)
+        if (!this.target) {
+          throw new Error(`No target!`)
+        }
         const position = getTargetPosition(this.ref)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
@@ -359,6 +342,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     }
     App.actions.open(this.props.bit)
   }
+
+  id = Math.random()
 
   getOrbitCard(contentProps: ResolvedItem) {
     // TODO weird mutation
@@ -535,7 +520,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     store.isSelected
     return (
       <ItemResolver
-        searchStore={searchStore}
         bit={bit}
         item={item}
         isExpanded={this.isExpanded}

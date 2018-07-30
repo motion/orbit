@@ -8,6 +8,8 @@ import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import { StoreHMR } from '@mcro/store-hmr'
 import debug from '@mcro/debug'
+import { throttle } from 'lodash'
+import hashSum from 'hash-sum'
 
 const log = debug('storeProvidable')
 root.loadedStores = new Set()
@@ -25,6 +27,30 @@ export function storeProvidable(userOptions, Helpers) {
     ...DEFAULT_OPTIONS,
     ...userOptions,
   }
+
+  let hmrRunning = null
+
+  // to track and dispose old stores after hmr
+  Helpers.on(
+    'will-hmr',
+    throttle(() => {
+      hmrRunning = {}
+      // after hmr, clean up non hot-swapped stores
+      setTimeout(() => {
+        for (const namespace in storeHMRCache) {
+          for (const storeName in storeHMRCache[namespace]) {
+            const store = storeHMRCache[namespace][storeName]
+            if (!store.__wasHotReloaded) {
+              options.onStoreUnmount(store)
+            }
+          }
+        }
+        root.storeHMRCache = {}
+        hmrRunning = null
+      }, 300)
+    }, 80),
+  )
+
   return {
     name: 'store-providable',
     once: true,
@@ -50,18 +76,17 @@ export function storeProvidable(userOptions, Helpers) {
         }
       }
 
+      Klass.__hmrId = 0
+
       // return HoC
-      class StoreProvider extends React.PureComponent {
+      // dont use class properties on this, react-hot-loader seems to pick it up even if cold()
+
+      class StoreProvider extends React.Component {
         props: any | { __contextualStores?: Object }
         _props: any
         stores: any
         willReloadListener: Disposable
-        allStores = allStores
-        getUniqueDOMPath = getUniqueDOMPath
-
-        state = {
-          key: null,
-        }
+        clearUnusedStores = null
 
         get name() {
           return Klass.name
@@ -69,6 +94,16 @@ export function storeProvidable(userOptions, Helpers) {
 
         constructor(a, b) {
           super(a, b)
+          // 🐛 one: hmr runs constructor twice on hmr.... why?? no docs anywhere
+          // for some reason this runs twice on hmr causing mayhem
+          // so prevent that in a hacky ass way
+          if (hmrRunning) {
+            const key = hashSum(this)
+            if (!hmrRunning[key]) {
+              hmrRunning[key] = true
+              return
+            }
+          }
           this.setupProps()
           this.setupStores()
         }
@@ -108,11 +143,8 @@ export function storeProvidable(userOptions, Helpers) {
           Mobx.extendObservable(this, properties, null, { deep: false })
         }
 
-        // DO NOT USE CLASS PROPERTY DECORATORS FOR THIS, IDK WTF WHY
         setupStores() {
-          if (this.stores) {
-            return
-          }
+          if (this.stores) return
           this.stores = {}
           // hmr stuff
           const { __hmrPath } = this.props
@@ -140,10 +172,18 @@ export function storeProvidable(userOptions, Helpers) {
                 ) {
                   // we have a hydratable store, hot swap it in!
                   this.stores[name] = cachedStores[name]
-                  // be sure to clean up the comparison store
+                  this.stores[name].__test = hashSum(this)
+                  cachedStores[name].__wasHotReloaded = true
+                  // be sure to clean up the temporary unused comparison store
                   options.onStoreUnmount(nextStore)
                 } else {
-                  log(`Couldn't hydrate store ${name}`)
+                  cachedStores[name].__wasHotReloaded = false
+                  Klass.__hmrId = Math.random()
+                  // 🐛 two: maybe this is my fault, but again stores are left around
+                  // but because we force a key update in the line above so it will re-render
+                  this.clearUnusedStores = setTimeout(() => {
+                    this.disposeStores()
+                  }, 200)
                 }
               }
             }
@@ -151,37 +191,25 @@ export function storeProvidable(userOptions, Helpers) {
             // we didn't hydrate it from hmr, set it up normally
             if (!this.stores[name]) {
               this.stores[name] = nextStore
+              options.onStoreMount(nextStore, this.props)
+              // only update if it re-mounted (TEST)
+              Helpers.emit('store.mount', { name, thing: nextStore })
             }
-          }
-          this.willMountStores()
-        }
-
-        shouldRestoreStore() {
-          return storeHMRCache[this.props.__hmrPath]
-        }
-
-        willMountStores() {
-          for (const name in this.stores) {
-            if (!this.stores[name].__hasMounted) {
-              options.onStoreMount(this.stores[name], this.props)
-            }
-            this.stores[name].__hasMounted = true
           }
         }
 
         didMountStores() {
           for (const name in this.stores) {
-            const store = this.stores[name]
-            if (Helpers) {
-              Helpers.emit('store.mount', { name, thing: store })
-            }
-            options.onStoreDidMount(store, this.props)
+            options.onStoreDidMount(this.stores[name], this.props)
           }
         }
 
-        disposeStores = () => {
+        disposeStores() {
           for (const name in this.stores) {
             const store = this.stores[name]
+            if (store.__wasHotReloaded) {
+              continue
+            }
             if (Helpers) {
               Helpers.emit('store.unmount', { name, thing: store })
             }
@@ -189,7 +217,7 @@ export function storeProvidable(userOptions, Helpers) {
           }
         }
 
-        onWillReloadStores = () => {
+        onWillReloadStores() {
           storeHMRCache[this.props.__hmrPath] = this.stores
         }
 
@@ -215,6 +243,7 @@ export function storeProvidable(userOptions, Helpers) {
         }
 
         render() {
+          clearTimeout(this.clearUnusedStores)
           const { __contextualStores, __hmrPath, ...props } = this.props
           const children = <Klass {...props} {...this.stores} />
           if (context) {
@@ -247,7 +276,7 @@ export function storeProvidable(userOptions, Helpers) {
 
       const WithPath = props => (
         <StoreHMR>
-          <StoreProviderWithContext {...props} />
+          <StoreProviderWithContext key={Klass.__hmrId} {...props} />
         </StoreHMR>
       )
 

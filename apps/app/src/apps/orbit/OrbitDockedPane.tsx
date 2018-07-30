@@ -126,6 +126,10 @@ class DockedPaneStore {
     this.updateScrolledTo()
   }
 
+  scrollIntoView = ref => {
+    console.log('scroll me', ref)
+  }
+
   updatePaneHeightOnActive = react(
     () => this.isActive,
     () => {

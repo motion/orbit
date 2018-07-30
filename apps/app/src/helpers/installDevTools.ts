@@ -5,7 +5,11 @@ import * as Mobx from 'mobx'
 import { setConfig } from 'react-hot-loader'
 
 setConfig({
-  logLevel: 'no-errors-please'
+  logLevel: 'no-errors-please',
+  // onComponentRegister: (type, name, file) => {
+  //   console.log('registering', name, file)
+  //   // file.indexOf('node_modules') > 0 && cold(type),
+  // },
 })
 
 Error.stackTraceLimit = Infinity

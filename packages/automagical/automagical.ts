@@ -665,6 +665,8 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     obj.__automagical.watchers = obj.__automagical.watchers || []
     // @ts-ignore
     obj.__automagical.watchers.push(run)
+    // @ts-ignore
+    obj.__automagical.debug = val
   }
 
   Object.defineProperty(obj, method, {

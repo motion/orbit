@@ -141,11 +141,18 @@ export class PeekStore {
     delay: 16,
   })
 
+  get quickState() {
+    if (this.tornState) {
+      return this.tornState
+    }
+    return App.peekState
+  }
+
   get theme() {
-    if (!App.peekState.item) {
+    if (!this.quickState.item) {
       return PEEK_THEMES.base
     }
-    const { type, integration } = App.peekState.item
+    const { type, integration } = this.quickState.item
     return (
       PEEK_THEMES.integration[integration] ||
       PEEK_THEMES.type[type] ||

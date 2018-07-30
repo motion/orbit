@@ -41,6 +41,7 @@ export class SearchStore /* extends Store */ {
   query = App.state.query
   lastPinKey = ''
 
+  selectEvent = ''
   quickIndex = 0
   highlightIndex = -1
   nextIndex = -1
@@ -314,19 +315,19 @@ export class SearchStore /* extends Store */ {
     },
   )
 
-  selectFirstItemAfterSearchSettles = react(
-    () => this.searchState.query,
-    async (query, { sleep }) => {
-      if (!query) {
-        throw react.cancel
-      }
-      await sleep(300)
-      console.log('it worked?')
-      if (this.nextIndex === -1) {
-        this.nextIndex = 0
-      }
-    },
-  )
+  // selectFirstItemAfterSearchSettles = react(
+  //   () => this.searchState.query,
+  //   async (query, { sleep }) => {
+  //     if (!query) {
+  //       throw react.cancel
+  //     }
+  //     await sleep(300)
+  //     console.log('it worked?')
+  //     if (this.nextIndex === -1) {
+  //       this.nextIndex = 0
+  //     }
+  //   },
+  // )
 
   clearSelectedOnLeave = react(
     () => [this.leaveIndex, Electron.hoverState.peekHovered],
@@ -457,13 +458,20 @@ export class SearchStore /* extends Store */ {
     },
   )
 
+  setSelectEvent = (val: string) => {
+    this.selectEvent = val
+  }
+
   increment = (by = 1) => {
+    console.log('increment')
+    this.setSelectEvent('key')
     this.toggleSelected(
       Math.min(this.searchState.results.length - 1, this.nextIndex + by),
     )
   }
 
   decrement = (by = 1) => {
+    this.setSelectEvent('key')
     this.toggleSelected(Math.max(-1, this.nextIndex - by))
   }
 

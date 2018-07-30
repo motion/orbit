@@ -95,7 +95,6 @@ export class OrbitHome extends React.Component<{
 
   render() {
     const { store } = this.props
-    // log('HOME---------------')
     const total = store.results.length
     return (
       <OrbitDockedPane name="home" fadeBottom>

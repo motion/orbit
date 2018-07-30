@@ -4,6 +4,7 @@
 - styling on settings panes
 - peek header styles
 - settings panes fixes
+- hoverGlow needs fix for x/left just like top/y
 
 # theme run
 

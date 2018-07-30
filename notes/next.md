@@ -1,16 +1,8 @@
-# monday
+- p2p https://github.com/mafintosh/hyperdb
 
-- search key movement move frame
-- peek fix highlights delay bug
-- sub-search fixes
-- permalinks in peeks
-- location links in search results working
+# unnecessary for beta polish bucket
 
-- big bug: css styles that don't end well cause problems in all styles lol... basically can do css xss
-  - `linear-gradient(to right, white, black`
-
-# sunday:
-
+- peek arrow position shouldn't straddle weird borders
 - react-spring for peek placement
 - styling on settings panes
 - peek header styles
@@ -29,11 +21,6 @@
 - horizontal related row at top of each peek bit for all of them
 - make all searches work: task search, message search
 
-# interaction run
-
-- need good solution for key move past ends of search results
-- peek arrow position shouldn't straddle weird borders
-
 # smaller visual bugs
 
 - if you have a search entered and hit "settings" it breaks
@@ -51,14 +38,7 @@
   - Remove integration
   - Can have login settings if applicable
 
-* decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
-* p2p https://github.com/mafintosh/hyperdb
-* hire https://github.com/theKashey
-* ide https://retool.in/
-* icons https://danklammer.com/bytesize-icons/
-* nlp/filters https://github.com/NaturalNode/naturalhttps://github.com/spencermountain/compromise/wiki https://github.com/laconalabs/elliptical
-
-# gamechanger ideas:
+# gamechangers
 
 - multiselect:
   1.  search

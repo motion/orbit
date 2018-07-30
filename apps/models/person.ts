@@ -1,86 +1,6 @@
-import { Bit } from './bit'
+import { PersonBit } from './person-bit'
 import { Setting } from './setting'
 import * as T from './typeorm'
-
-@T.Entity()
-export class PersonBit extends T.BaseEntity {
-
-  /**
-   * Person's email address.
-   */
-  @T.PrimaryColumn()
-  email: string
-
-  /**
-   * Person's name.
-   */
-  @T.Column({ nullable: true })
-  @T.Index()
-  name: string
-
-  /**
-   * All known person names.
-   */
-  @T.Column("simple-array")
-  @T.Index()
-  allNames: string[]
-
-  /**
-   * Person's profile photo.
-   */
-  @T.Column({ nullable: true })
-  photo: string
-
-  /**
-   * All known person photos.
-   */
-  @T.Column("simple-array", { nullable: true })
-  @T.Index()
-  allPhotos: string[]
-
-  /**
-   * Google Drive files being edited/commented/shared with.
-   */
-  @T.ManyToMany(() => Bit)
-  @T.JoinTable()
-  files: Bit[]
-
-  /**
-   * GitHub issues created by this person.
-   */
-  @T.ManyToMany(() => Bit)
-  @T.JoinTable()
-  githubIssues: Bit[]
-
-  /**
-   * Person's email messages.
-   */
-  @T.ManyToMany(() => Bit)
-  @T.JoinTable()
-  emails: Bit[]
-
-  /**
-   * Person's JIRA issues.
-   */
-  @T.ManyToMany(() => Bit)
-  @T.JoinTable()
-  jiraIssues: Bit[]
-
-  /**
-   * Person's Slack messages.
-   */
-  @T.ManyToMany(() => Bit)
-  @T.JoinTable()
-  messages: Bit[]
-
-  /**
-   * People from integrations.
-   */
-  @T.ManyToMany(() => Person)
-  @T.JoinTable()
-  people: Person[]
-
-}
 
 @T.Entity()
 export class Person extends T.BaseEntity {
@@ -157,6 +77,12 @@ export class Person extends T.BaseEntity {
    */
   @T.Column('simple-json', { default: '{}' })
   data: SlackPersonData // todo: write down all other data types from other integrations
+
+  /**
+   * People bits from integrations.
+   */
+  @T.ManyToOne(() => PersonBit, person => person.people)
+  personBit: PersonBit
 
 }
 

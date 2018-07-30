@@ -11,11 +11,13 @@ export * from './job'
 export * from './setting'
 export * from './bit'
 export * from './person'
+export * from './person-bit'
 export * from './location'
 
 import { Job } from './job'
 import { Setting } from './setting'
 import { Bit } from './bit'
-import { Person, PersonBit } from './person'
+import { Person } from './person'
+import { PersonBit } from './person-bit'
 
 export const modelsList = [Job, Setting, Bit, Person, PersonBit]

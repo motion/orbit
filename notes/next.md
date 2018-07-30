@@ -1,6 +1,5 @@
 # monday
 
-- relevant/recent toggle
 - search key movement move frame
 - peek fix highlights delay bug
 - sub-search fixes

@@ -8,7 +8,7 @@ import { TimeAgo } from '../../views/TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './OrbitDockedPaneStore'
 import { Bit } from '@mcro/models'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
@@ -20,7 +20,7 @@ export type OrbitCardProps = {
   hoverToSelect?: boolean
   appStore?: AppStore
   searchStore?: SearchStore
-  paneStore?: OrbitDockedPaneStore
+  paneStore?: PaneManagerStore
   title?: React.ReactNode
   subtitle?: React.ReactNode
   date?: React.ReactNode
@@ -459,9 +459,10 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                   <strong> &middot;</strong> <TimeAgo date={createdAt} />
                 </UI.Text>
               )}
-              {(updatedAt !== createdAt) && (
+              {updatedAt !== createdAt && (
                 <UI.Text size={0.95}>
-                  <strong> &middot;</strong> updated <TimeAgo date={updatedAt} />
+                  <strong> &middot;</strong> updated{' '}
+                  <TimeAgo date={updatedAt} />
                 </UI.Text>
               )}
             </Subtitle>

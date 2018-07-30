@@ -8,7 +8,7 @@ import { OrbitHeader } from './OrbitHeader'
 import { OrbitSearchResults } from './OrbitSearchResults'
 import { OrbitDirectory } from './OrbitDirectory'
 import { App } from '@mcro/stores'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './OrbitDockedPaneStore'
 import { BORDER_RADIUS } from '../../constants'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppStore } from '../../stores/AppStore'
@@ -102,11 +102,11 @@ const OrbitInner = view({
 
 @view.attach('appStore', 'searchStore')
 @view.provide({
-  paneStore: OrbitDockedPaneStore,
+  paneStore: PaneManagerStore,
 })
 @view
 class OrbitDockedInner extends React.Component<{
-  paneStore: OrbitDockedPaneStore
+  paneStore: PaneManagerStore
   searchStore: SearchStore
   appStore: AppStore
 }> {

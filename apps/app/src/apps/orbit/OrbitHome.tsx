@@ -5,7 +5,7 @@ import { Bit, Person } from '@mcro/models'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { OrbitDockedPane } from './OrbitDockedPane'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './OrbitDockedPaneStore'
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -86,7 +86,7 @@ const itemProps = {
 @view
 export class OrbitHome extends React.Component<{
   name: string
-  paneStore: OrbitDockedPaneStore
+  paneStore: PaneManagerStore
   store?: OrbitHomeStore
 }> {
   span2 = {

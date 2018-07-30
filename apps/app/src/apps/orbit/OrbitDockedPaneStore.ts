@@ -5,7 +5,7 @@ import { SearchStore } from '../../stores/SearchStore'
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
 
-export class OrbitDockedPaneStore {
+export class PaneManagerStore {
   props: {
     searchStore: SearchStore
   }

@@ -4,7 +4,7 @@ import * as _ from 'lodash'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { AppStore } from '../../stores/AppStore'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './OrbitDockedPaneStore'
 
 const EXTRA_PAD = 5
 
@@ -90,7 +90,7 @@ type Props = CSSPropertySet & {
 class DockedPaneStore {
   props: {
     appStore: AppStore
-    paneStore: OrbitDockedPaneStore
+    paneStore: PaneManagerStore
     name: string
     extraCondition: () => boolean
   }

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './OrbitDockedPaneStore'
 
 const moveCursorToEndOfTextarea = textarea => {
   textarea.setSelectionRange(textarea.value.length, textarea.value.length)
@@ -11,7 +11,7 @@ const moveCursorToEndOfTextarea = textarea => {
 export class HeaderStore {
   props: {
     searchStore: SearchStore
-    paneStore: OrbitDockedPaneStore
+    paneStore: PaneManagerStore
   }
 
   inputRef = React.createRef<HTMLDivElement>()

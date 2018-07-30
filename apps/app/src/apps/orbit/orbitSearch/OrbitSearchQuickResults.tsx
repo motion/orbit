@@ -5,7 +5,7 @@ import { OrbitCard } from '../OrbitCard'
 import * as UI from '@mcro/ui'
 import { SearchStore } from '../../../stores/SearchStore'
 import { AppStore } from '../../../stores/AppStore'
-import { OrbitDockedPaneStore } from '../OrbitDockedPaneStore'
+import { PaneManagerStore } from '../OrbitDockedPaneStore'
 
 class QuickSearchStore {
   props: {
@@ -88,7 +88,7 @@ const decorate = compose(
 
 type Props = {
   appStore?: AppStore
-  paneStore?: OrbitDockedPaneStore
+  paneStore?: PaneManagerStore
   searchStore: SearchStore
   store: QuickSearchStore
 }

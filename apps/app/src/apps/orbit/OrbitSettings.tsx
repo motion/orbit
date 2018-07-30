@@ -9,7 +9,7 @@ import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { AppStore } from '../../stores/AppStore'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './OrbitDockedPaneStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../stores/SearchStore'
 
@@ -18,7 +18,7 @@ type Props = {
   store?: OrbitSettingsStore
   searchStore?: SearchStore
   appStore?: AppStore
-  paneStore?: OrbitDockedPaneStore
+  paneStore?: PaneManagerStore
   integrationSettingsStore?: IntegrationSettingsStore
 }
 

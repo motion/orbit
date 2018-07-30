@@ -3,7 +3,7 @@ import { view, react, attachTheme } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import * as Constants from '../../constants'
 import { OrbitArrow } from './OrbitArrow'
-import { OrbitIndicator } from './OrbitIndicator'
+import { OrbitIndicator } from '../../views/OrbitIndicator'
 import * as UI from '@mcro/ui'
 
 const SHADOW_PAD = 85

@@ -7,7 +7,7 @@ import { HighlightsLayer } from '../../../views/HighlightsLayer'
 import { App } from '@mcro/stores'
 import { RoundButton } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
-import { OrbitIcon } from '../../orbit/OrbitIcon'
+import { OrbitIcon } from '../../../views/OrbitIcon'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({

@@ -4,14 +4,9 @@ import root from 'global'
 import { StoreContext } from './contexts'
 import { Disposable } from 'event-kit'
 import { updateProps } from './helpers/updateProps'
-import { getUniqueDOMPath } from './helpers/getUniqueDOMPath'
 import { getNonReactElementProps } from './helpers/getNonReactElementProps'
 import { StoreHMR } from '@mcro/store-hmr'
-import debug from '@mcro/debug'
-import { throttle } from 'lodash'
-import hashSum from 'hash-sum'
 
-const log = debug('storeProvidable')
 root.loadedStores = new Set()
 const storeHMRCache = root.storeHMRCache || {}
 root.storeHMRCache = storeHMRCache
@@ -27,29 +22,6 @@ export function storeProvidable(userOptions, Helpers) {
     ...DEFAULT_OPTIONS,
     ...userOptions,
   }
-
-  let hmrRunning = null
-
-  // to track and dispose old stores after hmr
-  Helpers.on(
-    'will-hmr',
-    throttle(() => {
-      hmrRunning = {}
-      // after hmr, clean up non hot-swapped stores
-      setTimeout(() => {
-        for (const namespace in storeHMRCache) {
-          for (const storeName in storeHMRCache[namespace]) {
-            const store = storeHMRCache[namespace][storeName]
-            if (!store.__wasHotReloaded) {
-              options.onStoreUnmount(store)
-            }
-          }
-        }
-        root.storeHMRCache = {}
-        hmrRunning = null
-      }, 300)
-    }, 80),
-  )
 
   return {
     name: 'store-providable',
@@ -94,16 +66,6 @@ export function storeProvidable(userOptions, Helpers) {
 
         constructor(a, b) {
           super(a, b)
-          // 🐛 one: hmr runs constructor twice on hmr.... why?? no docs anywhere
-          // for some reason this runs twice on hmr causing mayhem
-          // so prevent that in a hacky ass way
-          if (hmrRunning) {
-            const key = hashSum(this)
-            if (!hmrRunning[key]) {
-              hmrRunning[key] = true
-              return
-            }
-          }
           this.setupProps()
           this.setupStores()
         }
@@ -172,17 +134,15 @@ export function storeProvidable(userOptions, Helpers) {
                 ) {
                   // we have a hydratable store, hot swap it in!
                   this.stores[name] = cachedStores[name]
-                  this.stores[name].__test = hashSum(this)
                   cachedStores[name].__wasHotReloaded = true
                   // be sure to clean up the temporary unused comparison store
                   options.onStoreUnmount(nextStore)
                 } else {
                   cachedStores[name].__wasHotReloaded = false
                   Klass.__hmrId = Math.random()
-                  // 🐛 two: maybe this is my fault, but again stores are left around
-                  // but because we force a key update in the line above so it will re-render
+                  // 🐛 we force a key update in the line above so it will re-render and check for unused
                   this.clearUnusedStores = setTimeout(() => {
-                    this.disposeStores()
+                    options.onStoreUnmount(cachedStores[name])
                   }, 200)
                 }
               }

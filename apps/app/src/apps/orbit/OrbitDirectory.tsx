@@ -8,6 +8,7 @@ import { Masonry } from '../../views/Masonry'
 import { SubTitle } from '../../views'
 import * as Helpers from '../../helpers'
 import { stateOnlyWhenActive } from '../../stores/helpers/stateOnlyWhenActive'
+import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
 class OrbitDirectoryStore {
   setGetResults = react(
@@ -55,7 +56,9 @@ class OrbitDirectoryStore {
 })
 @view
 export class OrbitDirectory extends React.Component<{
-  store: OrbitDirectoryStore
+  store?: OrbitDirectoryStore
+  name: string
+  paneStore: OrbitDockedPaneStore
 }> {
   render() {
     const { store } = this.props

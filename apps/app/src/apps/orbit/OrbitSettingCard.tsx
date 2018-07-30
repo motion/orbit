@@ -38,6 +38,9 @@ export class OrbitSettingCard extends React.Component<
 
   render() {
     const { store, result, isActive, subtitle, onClick, ...props } = this.props
+    if (!store) {
+      debugger
+    }
     const countSubtitle = !isActive
       ? ''
       : store.bitsCount === null

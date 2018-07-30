@@ -19,7 +19,7 @@ type Props = {
   searchStore?: SearchStore
   appStore?: AppStore
   paneStore?: OrbitDockedPaneStore
-  integrationSettingsStore: IntegrationSettingsStore
+  integrationSettingsStore?: IntegrationSettingsStore
 }
 
 class OrbitSettingsStore {

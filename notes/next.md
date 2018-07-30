@@ -6,7 +6,9 @@
 - sub-search fixes
 - permalinks in peeks
 - location links in search results working
--
+
+- big bug: css styles that don't end well cause problems in all styles lol... basically can do css xss
+  - `linear-gradient(to right, white, black`
 
 # sunday:
 

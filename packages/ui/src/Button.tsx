@@ -40,12 +40,12 @@ export const Button = ({
       chromeless={chromeless}
       glow={glow}
       glint
+      theme={theme}
       glowProps={{
         scale: 1.8,
         draggable: false,
         opacity: 0.15,
         ...glowProps,
-        ...(theme && theme.glow),
       }}
       {...props}
     >

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react, compose, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { OrbitCard } from '../OrbitCard'
+import { OrbitCard } from '../../../views/OrbitCard'
 import * as UI from '@mcro/ui'
 import { SearchStore } from '../../../stores/SearchStore'
 import { AppStore } from '../../../stores/AppStore'

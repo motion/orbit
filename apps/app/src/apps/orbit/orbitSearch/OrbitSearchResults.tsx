@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { OrbitCard } from '../OrbitCard'
+import { OrbitCard } from '../../../views/OrbitCard'
 import { SubPane } from '../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'

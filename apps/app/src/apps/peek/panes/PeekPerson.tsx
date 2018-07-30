@@ -5,11 +5,11 @@ import { OrbitIcon } from '../../../views/OrbitIcon'
 import * as UI from '@mcro/ui'
 import { Bit } from '@mcro/models'
 import { SubTitle } from '../../../views'
-import { OrbitCardMasonry } from '../../orbit/OrbitCardMasonry'
+import { OrbitCardMasonry } from '../../../views/OrbitCardMasonry'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { Masonry } from '../../../views/Masonry'
-import { OrbitCard } from '../../orbit/OrbitCard'
+import { OrbitCard } from '../../../views/OrbitCard'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />

@@ -1,3 +1,13 @@
+# monday
+
+- relevant/recent toggle
+- search key movement move frame
+- peek fix highlights delay bug
+- sub-search fixes
+- permalinks in peeks
+- location links in search results working
+-
+
 # sunday:
 
 - react-spring for peek placement
@@ -5,17 +15,11 @@
 - peek header styles
 - settings panes fixes
 - hoverGlow needs fix for x/left just like top/y
-
-# theme run
-
 - @mcro/color: increaseContrast, decreaseContrast
 - test-app: fix themes/tabs
 - fix orbitdocked resizing/overflow logic
 - roundbutton hover more contrast
-
-# peek visual run
-
-- titlebar borderbottom is weird
+- Person titlebar borderbottom is weird
 - no titlabar faderight to transparent on profile
 - UI.Text not wrapping subtitlePrefix
 
@@ -45,14 +49,6 @@
   - Clear all bits
   - Remove integration
   - Can have login settings if applicable
-
-# permalinks run
-
-- once umed has permalinks merged
-- integration + location + item permalinks
-- on card
-- listitem
-- and in peek
 
 * decorators/HOC: https://github.com/Microsoft/TypeScript/issues/4881, https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951 https://stackoverflow.com/questions/39026224/how-to-compose-multiple-typescript-class-decorators
 * p2p https://github.com/mafintosh/hyperdb

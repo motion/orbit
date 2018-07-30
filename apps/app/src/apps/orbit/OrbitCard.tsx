@@ -362,7 +362,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       icon,
       preview,
       location,
-      date,
+      createdAt,
+      updatedAt,
       people,
       subtitle,
       locationLink,
@@ -453,9 +454,14 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               ) : (
                 subtitle
               )}
-              {!!date && (
+              {!!createdAt && (
                 <UI.Text size={0.95}>
-                  <strong> &middot;</strong> <TimeAgo date={date} />
+                  <strong> &middot;</strong> <TimeAgo date={createdAt} />
+                </UI.Text>
+              )}
+              {(updatedAt !== createdAt) && (
+                <UI.Text size={0.95}>
+                  <strong> &middot;</strong> updated <TimeAgo date={updatedAt} />
                 </UI.Text>
               )}
             </Subtitle>

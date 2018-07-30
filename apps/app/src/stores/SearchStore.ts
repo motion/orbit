@@ -35,7 +35,6 @@ export class SearchStore /* extends Store */ {
 
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore(this)
-  // searchIndexStore = new SearchIndexStore()
 
   // start it with state from last time
   query = App.state.query
@@ -162,9 +161,10 @@ export class SearchStore /* extends Store */ {
       App.state.query,
       this.getResults,
       this.searchFilterStore.activeFilters,
+      this.searchFilterStore.sortBy,
     ],
     async (
-      [query, getResults, activeFilters],
+      [query, getResults, activeFilters, sortBy],
       { sleep, when, setValue, preventLogging },
     ) => {
       if (!query) {
@@ -225,6 +225,7 @@ export class SearchStore /* extends Store */ {
             endDate,
             take: takePer,
             skip,
+            sortBy,
           })
           // add in filters if need be
           if (activeFilters && activeFilters.length) {

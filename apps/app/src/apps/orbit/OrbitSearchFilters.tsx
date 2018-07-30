@@ -65,7 +65,9 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
           {getDate(nlpStore.nlp.date) || 'Any time'}
         </FilterButton>
         <div style={{ width: 4 }} />
-        <FilterButton>Relevant</FilterButton>
+        <FilterButton onClick={searchStore.searchFilterStore.toggleSortBy}>
+          {searchStore.searchFilterStore.sortBy}
+        </FilterButton>
         <UI.Col flex={1} />
         {searchFilterStore.filters.map((filter, i) => {
           return (

@@ -6,7 +6,7 @@ debug.quiet('getSearchQuery')
 
 export const getSearchQuery = (
   searchString,
-  { take, skip, people, startDate, endDate },
+  { take, skip, people, startDate, endDate, sortBy },
 ) => {
   let query = getRepository(Bit)
     .createQueryBuilder('bit')
@@ -20,11 +20,25 @@ export const getSearchQuery = (
         qb.orWhere('bit.body like :likeString', { likeString })
       }),
     )
+  }
+
+  // SORT
+  if (sortBy) {
+    switch (sortBy) {
+      case 'Relevant':
+        // TODO: i think it is this by default
+        // once we do sprint on better search/hsf5 we can maybe make better
+        break
+      case 'Recent':
+        query = query.orderBy('bit.bitCreatedAt', 'DESC')
+        break
+    }
   } else {
     // order by recent if no search
     query = query.orderBy('bit.bitCreatedAt', 'DESC')
   }
 
+  // PEOPLE
   if (people.length) {
     // essentially, find at least one person
     query = query.andWhere(
@@ -38,18 +52,18 @@ export const getSearchQuery = (
     )
   }
 
+  // DATE RANGE
   if (startDate) {
     query = query.where('bit.bitCreatedAt > :startDate', { startDate })
   }
-
   if (endDate) {
     query = query.where('bit.bitCreatedAt < :endDate', { endDate })
   }
 
+  // PAGINATION
   if (take) {
     query = query.take(take)
   }
-
   if (skip) {
     query = query.skip(skip)
   }

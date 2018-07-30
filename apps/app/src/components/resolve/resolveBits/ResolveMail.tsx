@@ -20,7 +20,6 @@ export const ResolveMail = ({ bit, appStore, children }: ItemResolverProps) =>
     permalink: () => appStore.open(bit),
     location: Helpers.getHeaderFromShort(bit),
     locationLink: () => {},
-    date: Date.now(),
     content: bit.body,
     preview: keywordExtract
       .extract(bit.body, options)

@@ -33,7 +33,6 @@ export const ResolveDocument = ({
     location: bit.location.name || item.location || 'Wiki',
     locationLink: () => {},
     permalink: () => appStore.open(bit),
-    date: bit.bitUpdatedAt,
     content: isExpanded
       ? markdown(
           markdownBoldifySearch(

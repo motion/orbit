@@ -14,7 +14,8 @@ export type ResolvedItem = {
   location: string
   locationLink: Function
   permalink: Function
-  date: React.ReactNode
+  createdAt: Date
+  updatedAt: Date
   comments?: React.ReactNode[]
   people?: Person[]
   searchTerm?: string

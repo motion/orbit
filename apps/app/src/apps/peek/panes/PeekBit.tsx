@@ -53,13 +53,13 @@ export const PeekBit = ({
               location,
               locationLink,
               permalink,
-              date,
+              updatedAt,
               comments,
             }) => {
               return children({
                 subtitleBefore: (
                   <UI.Text>
-                    <UI.Date>{date}</UI.Date>
+                    <UI.Date>{updatedAt}</UI.Date>
                   </UI.Text>
                 ),
                 subtitle: (
@@ -73,7 +73,6 @@ export const PeekBit = ({
                   </RoundButton>
                 ),
                 subtitleAfter: <RoundButton>Open</RoundButton>,
-                date,
                 title,
                 titleAfter: !!permalink &&
                   !!icon && (

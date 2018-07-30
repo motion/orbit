@@ -12,13 +12,20 @@ import { Toolbar } from '../Toolbar'
 import { Row } from '../blocks/Row'
 import { TableInput } from './TableInput'
 import { colors } from '../helpers/colors'
-import { Text } from '../Text'
 import { View } from '../blocks/View'
 import { Icon } from '../Icon'
 import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
 import { Theme } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
+import { ClearButton } from '../buttons/ClearButton'
+
+const SearchClearButton = view(ClearButton, {
+  position: 'absolute',
+  right: 6,
+  top: '50%',
+  marginTop: -9,
+})
 
 type Props = {
   defaultValue?: string
@@ -81,25 +88,6 @@ export const SearchInput = view(TableInput, {
 
 SearchInput.theme = ({ focus }) => ({
   border: focus ? '1px solid black' : 0,
-})
-
-const Clear = view(Text, {
-  position: 'absolute',
-  right: 6,
-  top: '50%',
-  marginTop: -9,
-  fontSize: 16,
-  width: 17,
-  height: 17,
-  borderRadius: 999,
-  lineHeight: '15.5px',
-  textAlign: 'center',
-  backgroundColor: 'rgba(0,0,0,0.1)',
-  color: colors.white,
-  display: 'block',
-  '&:hover': {
-    backgroundColor: 'rgba(0,0,0,0.15)',
-  },
 })
 
 export const SearchIcon = view(Icon, {
@@ -427,7 +415,7 @@ export const Searchable = (Component: any) =>
                 {...searchInputProps}
               />
               {this.state.searchTerm || this.state.filters.length > 0 ? (
-                <Clear onClick={this.clear}>&times;</Clear>
+                <SearchClearButton onClick={this.clear} />
               ) : null}
             </SearchBox>
             {actions != null ? <Actions>{actions}</Actions> : null}

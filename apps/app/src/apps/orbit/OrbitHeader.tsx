@@ -92,7 +92,7 @@ export class OrbitHeader extends React.Component<{
 
   render() {
     const {
-      paneStore,
+      // paneStore,
       headerStore,
       after,
       theme,
@@ -101,8 +101,8 @@ export class OrbitHeader extends React.Component<{
       searchStore,
     } = this.props
     const headerBg = theme.base.background
-    const isHome = paneStore.activePane === 'home'
-    const { iconHovered } = headerStore
+    // const isHome = paneStore.activePane === 'home'
+    // const { iconHovered } = headerStore
     return (
       <OrbitHeaderContainer
         headerBg={headerBg}
@@ -112,13 +112,7 @@ export class OrbitHeader extends React.Component<{
         <OrbitFakeInput>
           <Title>
             <UI.Icon
-              name={
-                isHome && iconHovered
-                  ? 'arrowright'
-                  : !isHome && iconHovered
-                    ? 'home'
-                    : 'ui-1_zoom'
-              }
+              name={'ui-1_zoom'}
               size={17}
               onMouseEnter={headerStore.onHoverIcon}
               onMouseLeave={headerStore.onUnHoverIcon}

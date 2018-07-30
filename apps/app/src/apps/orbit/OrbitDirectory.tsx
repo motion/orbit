@@ -8,7 +8,7 @@ import { Masonry } from '../../views/Masonry'
 import { SubTitle } from '../../views'
 import * as Helpers from '../../helpers'
 import { stateOnlyWhenActive } from '../../stores/helpers/stateOnlyWhenActive'
-import { PaneManagerStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 
 class OrbitDirectoryStore {
   setGetResults = react(

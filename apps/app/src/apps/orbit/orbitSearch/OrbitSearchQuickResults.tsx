@@ -5,7 +5,7 @@ import { OrbitCard } from '../OrbitCard'
 import * as UI from '@mcro/ui'
 import { SearchStore } from '../../../stores/SearchStore'
 import { AppStore } from '../../../stores/AppStore'
-import { PaneManagerStore } from '../OrbitDockedPaneStore'
+import { PaneManagerStore } from '../PaneManagerStore'
 
 class QuickSearchStore {
   props: {

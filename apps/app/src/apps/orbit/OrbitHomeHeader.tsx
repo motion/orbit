@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { PaneManagerStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
 
 const Section = view('section', {

@@ -1,6 +1,6 @@
 import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from 'stores/SearchStore'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]

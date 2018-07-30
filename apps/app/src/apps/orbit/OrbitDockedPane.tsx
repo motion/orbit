@@ -4,7 +4,7 @@ import * as _ from 'lodash'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { AppStore } from '../../stores/AppStore'
-import { PaneManagerStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 
 const EXTRA_PAD = 5
 

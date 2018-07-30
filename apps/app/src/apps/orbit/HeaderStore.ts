@@ -2,7 +2,7 @@ import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
-import { PaneManagerStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 
 const moveCursorToEndOfTextarea = textarea => {
   textarea.setSelectionRange(textarea.value.length, textarea.value.length)

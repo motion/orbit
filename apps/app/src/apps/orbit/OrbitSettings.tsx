@@ -9,7 +9,7 @@ import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { AppStore } from '../../stores/AppStore'
-import { PaneManagerStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../stores/SearchStore'
 

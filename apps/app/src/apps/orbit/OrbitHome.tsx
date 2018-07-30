@@ -5,7 +5,7 @@ import { Bit, Person } from '@mcro/models'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { OrbitDockedPane } from './OrbitDockedPane'
-import { PaneManagerStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({

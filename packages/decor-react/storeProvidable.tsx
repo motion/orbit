@@ -48,6 +48,16 @@ export function storeProvidable(userOptions, Helpers) {
         }
       }
 
+      const unmountStore = (name, store) => {
+        options.onStoreUnmount(store)
+        Helpers.emit('store.unmount', { name, thing: store })
+      }
+
+      const mountStore = (name, store, props) => {
+        options.onStoreMount(store, props)
+        Helpers.emit('store.mount', { name, thing: store })
+      }
+
       Klass.__hmrId = 0
 
       // return HoC
@@ -136,13 +146,13 @@ export function storeProvidable(userOptions, Helpers) {
                   this.stores[name] = cachedStores[name]
                   cachedStores[name].__wasHotReloaded = true
                   // be sure to clean up the temporary unused comparison store
-                  options.onStoreUnmount(nextStore)
+                  unmountStore(name, nextStore)
                 } else {
                   cachedStores[name].__wasHotReloaded = false
                   Klass.__hmrId = Math.random()
                   // 🐛 we force a key update in the line above so it will re-render and check for unused
                   this.clearUnusedStores = setTimeout(() => {
-                    options.onStoreUnmount(cachedStores[name])
+                    unmountStore(name, cachedStores[name])
                   }, 200)
                 }
               }
@@ -151,9 +161,7 @@ export function storeProvidable(userOptions, Helpers) {
             // we didn't hydrate it from hmr, set it up normally
             if (!this.stores[name]) {
               this.stores[name] = nextStore
-              options.onStoreMount(nextStore, this.props)
-              // only update if it re-mounted (TEST)
-              Helpers.emit('store.mount', { name, thing: nextStore })
+              mountStore(name, nextStore, this.props)
             }
           }
         }
@@ -170,10 +178,7 @@ export function storeProvidable(userOptions, Helpers) {
             if (store.__wasHotReloaded) {
               continue
             }
-            if (Helpers) {
-              Helpers.emit('store.unmount', { name, thing: store })
-            }
-            options.onStoreUnmount(store)
+            unmountStore(name, store)
           }
         }
 

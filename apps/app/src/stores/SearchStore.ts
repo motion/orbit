@@ -156,6 +156,16 @@ export class SearchStore /* extends Store */ {
     return this.props.appStore.selectedPane === 'docked-search'
   }
 
+  get queryParams() {
+    const { people, startDate, endDate } = this.nlpStore.nlp
+    return {
+      people,
+      startDate,
+      endDate,
+      sortBy: this.searchFilterStore.sortBy,
+    }
+  }
+
   searchState = react(
     () => [
       App.state.query,
@@ -164,7 +174,7 @@ export class SearchStore /* extends Store */ {
       this.searchFilterStore.sortBy,
     ],
     async (
-      [query, getResults, activeFilters, sortBy],
+      [query, getResults, activeFilters],
       { sleep, when, setValue, preventLogging },
     ) => {
       if (!query) {
@@ -211,21 +221,18 @@ export class SearchStore /* extends Store */ {
         // wait for nlp to give us results
         await when(() => this.nlpStore.nlp.query === query)
         // gather all the pieces from nlp store for query
-        const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
+        const { searchQuery } = this.nlpStore.nlp
         // get first page results
-        const takePer = 4
-        const takeMax = takePer * 6
+        const take = 4
+        const takeMax = take * 6
         const sleepBtwn = 80
         let results = []
-        for (let i = 0; i < takeMax / takePer; i += 1) {
-          const skip = i * takePer
+        for (let i = 0; i < takeMax / take; i += 1) {
+          const skip = i * take
           const nextQuery = getSearchQuery(searchQuery, {
-            people,
-            startDate,
-            endDate,
-            take: takePer,
             skip,
-            sortBy,
+            take,
+            ...this.queryParams,
           })
           // add in filters if need be
           if (activeFilters && activeFilters.length) {

@@ -77,7 +77,7 @@ type Props = {
   filterStore?: SearchFilterStore
 }
 
-export const OrbitFilterBar = ({ filterStore }: Props) => {
+export const OrbitFilterBar = view(({ filterStore }: Props) => {
   return (
     <FilterBar>
       <HorizontalScroll>
@@ -96,4 +96,4 @@ export const OrbitFilterBar = ({ filterStore }: Props) => {
       <FilterBarFade />
     </FilterBar>
   )
-}
+})

@@ -103,15 +103,15 @@ export const OrbitSearchQuickResults = decorate(
         >
           {/* inner div so scrolls to end all the way */}
           <div style={{ flexFlow: 'row', padding: pad }}>
-            {results.map((person, index) => {
+            {results.map((item, index) => {
               return (
                 <OrbitCard
                   preventAutoSelect
                   pane="docked-search"
                   subPane="search"
                   className="quick-result-card"
-                  key={person.id}
-                  bit={person}
+                  key={`${item.id}${index}`}
+                  bit={item}
                   inGrid
                   isSelected={() => {
                     return searchStore.nextIndex === -1 && index === store.index

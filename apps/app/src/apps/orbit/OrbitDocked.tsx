@@ -86,7 +86,7 @@ FrameBackground.theme = ({ theme }) => ({
 const OrbitInner = view({
   position: 'relative',
   zIndex: 4,
-  overflow: 'hidden',
+  // overflow: 'hidden',
   pointerEvents: 'none',
   flex: 1,
   borderBottomRadius: BORDER_RADIUS,
@@ -118,7 +118,12 @@ class OrbitDockedInner extends React.Component<{
         >
           <Border />
           <FrameBackground />
-          <UI.View borderRadius={BORDER_RADIUS} flex={1} overflow="hidden">
+          <UI.View
+            borderRadius={BORDER_RADIUS}
+            flex={1}
+            overflow="hidden"
+            transform={{ z: 0 }}
+          >
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
               after={
@@ -129,12 +134,12 @@ class OrbitDockedInner extends React.Component<{
             />
             <OrbitFilterBar filterStore={searchStore.searchFilterStore} />
             <OrbitInner height={window.innerHeight}>
-              <UI.View position="relative" flex={1} overflow="hidden">
+              <div style={{ position: 'relative', flex: 1 }}>
                 <OrbitHome name="home" paneStore={paneStore} />
                 <OrbitDirectory name="directory" paneStore={paneStore} />
                 <OrbitSearchResults name="docked-search" />
                 <OrbitSettings name="settings" />
-              </UI.View>
+              </div>
             </OrbitInner>
           </UI.View>
         </Frame>

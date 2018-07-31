@@ -69,7 +69,7 @@ export class SearchFilterStore /* extends Store */ {
     // allows disabling date
     for (const part of this.parsedQuery) {
       if (part.type === MarkType.Date) {
-        if (this.disabledFilters[part.text]) {
+        if (this.disabledFilters[part.text.toLowerCase()]) {
           return {
             startDate: null,
             endDate: null,
@@ -84,7 +84,9 @@ export class SearchFilterStore /* extends Store */ {
     if (!this.nlpStore.marks) {
       return null
     }
-    return this.nlpStore.marks.filter(mark => !this.disabledFilters[mark[3]])
+    return this.nlpStore.marks.filter(
+      mark => !this.disabledFilters[mark[3].toLowerCase()],
+    )
   }
 
   get hasExclusiveFilters() {
@@ -138,15 +140,6 @@ export class SearchFilterStore /* extends Store */ {
       suggestions = [...suggestions, ...this.suggestedPeople]
     }
     return suggestions
-  }
-
-  // includes nlp parsed segments + suggested other segments
-  get nlpActiveFilters() {
-    return (this.parsedQuery || []).filter(x => !!x.type).map(part => ({
-      name: part.text,
-      type: part.type,
-      active: true,
-    }))
   }
 
   resetIntegrationFiltersOnNLPChange = react(

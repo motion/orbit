@@ -3,8 +3,8 @@ import { view, on } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
 const rowHeight = 4
-const gridGap = 8
-const gridColumnGap = 8
+const gridGap = 10
+const gridColumnGap = 10
 
 const MasonryGrid = view({
   display: 'grid',

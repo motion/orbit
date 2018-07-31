@@ -29,7 +29,7 @@ const HorizontalScroll = view({
 
 const FilterButton = props => (
   <UI.Button
-    size={0.95}
+    size={1}
     sizeRadius={0.8}
     marginRight={4}
     sizeHeight={0.8}

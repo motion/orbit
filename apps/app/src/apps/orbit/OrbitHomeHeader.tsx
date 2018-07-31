@@ -32,11 +32,12 @@ const exploreButton = {
   },
   opacity: 0.35,
   activeStyle: {
+    color: '#000',
     background: 'transparent',
     borderColor: 'transparent',
     opacity: 1,
   },
-  hover: {
+  hoverStyle: {
     background: 'transparent',
     borderColor: [0, 0, 0, 0.3],
   },

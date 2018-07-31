@@ -98,7 +98,7 @@ export class OrbitHome extends React.Component<{
     const total = store.results.length
     return (
       <SubPane name="home" fadeBottom>
-        <div style={{ paddingTop: 2 }}>
+        <div style={{ paddingTop: 3 }}>
           <Masonry>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2

@@ -88,13 +88,8 @@ const OrbitInner = view({
   zIndex: 4,
   overflow: 'hidden',
   pointerEvents: 'none',
-  margin: [-20, -20, 0, -20],
-  padding: [20, 20, 0, 20],
   flex: 1,
-  // this can be a lot more because theres padding left and right
-  // and so this lets us have the top/side overflow but still cut off bottom
-  borderBottomLeftRadius: 59,
-  borderBottomRightRadius: 59,
+  borderBottomRadius: BORDER_RADIUS,
   '& > *': {
     pointerEvents: 'auto',
   },
@@ -115,7 +110,7 @@ class OrbitDockedInner extends React.Component<{
     const { animationState } = paneStore
     // log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
-      // always leave 40px room at bottom
+      // always leave x room at bottom
       // leaving a little room at the bottom makes it feel much lighter
       50,
       window.innerHeight - appStore.contentHeight - 12,

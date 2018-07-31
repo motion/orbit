@@ -83,7 +83,7 @@ export const OrbitFilterBar = view(({ filterStore }: Props) => {
       <HorizontalScroll>
         {filterStore.allFilters.map((filter, index) => (
           <UI.Theme
-            key={`${filter.text}${index}`}
+            key={`${filter.text}${filter.active}${index}`}
             theme={filter.active ? activeThemes[filter.type] : inactiveTheme}
           >
             <FilterButton onClick={() => filterStore.toggleFilter(filter.text)}>

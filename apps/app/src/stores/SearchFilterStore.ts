@@ -43,6 +43,9 @@ export class SearchFilterStore /* extends Store */ {
     return this.nlpStore.nlp.parsedQuery || []
   }
 
+  isActive = querySegment =>
+    !this.disabledFilters[querySegment.text.toLowerCase().trim()]
+
   // allows back in text segments that aren't filtered
   get activeQuery() {
     return this.parsedQuery
@@ -55,24 +58,24 @@ export class SearchFilterStore /* extends Store */ {
   get allFilters() {
     return [
       // keep them in the order of the query so they dont jump around
-      ...this.queryFilters.map(part => ({ ...part, active: true })),
+      ...this.queryFilters,
       ...this.suggestedFilters,
     ]
   }
 
+  get activeFilters() {
+    return this.queryFilters.filter(x => x.active)
+  }
+
   get inactiveFilters() {
-    return this.parsedQuery.filter(
-      x => x.type && this.disabledFilters[x.text.toLowerCase().trim()],
-    )
+    return this.queryFilters.filter(x => !x.active)
   }
 
   get queryFilters() {
-    return this.parsedQuery
-      .filter(x => x.type)
-      .map(x => ({
-        ...x,
-        active: !this.disabledFilters[x.text.toLowerCase().trim()],
-      }))
+    return this.parsedQuery.filter(x => !!x.type).map(x => ({
+      ...x,
+      active: this.isActive(x),
+    }))
   }
 
   get activeDate() {

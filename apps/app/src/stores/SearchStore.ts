@@ -13,7 +13,7 @@ import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { Brackets } from '../../../../node_modules/typeorm/browser'
 import { flatten } from 'lodash'
 import { DateRange } from './nlpStore/types'
-import { TYPES } from './NLPStore/types'
+import { MarkType } from './NLPStore/types'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
@@ -229,9 +229,11 @@ export class SearchStore /* extends Store */ {
         let results = []
 
         // filters
-        const peopleFilters = activeFilters.filter(x => x.type === TYPES.PERSON)
+        const peopleFilters = activeFilters.filter(
+          x => x.type === MarkType.Person,
+        )
         const integrationFilters = activeFilters.filter(
-          x => x.type === TYPES.INTEGRATION,
+          x => x.type === MarkType.Integration,
         )
         const { startDate, endDate } = activeDate
 

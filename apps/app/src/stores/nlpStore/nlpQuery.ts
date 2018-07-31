@@ -1,6 +1,6 @@
 import compromise from 'compromise'
 import Sherlockjs from 'sherlockjs'
-import { TYPES, DateRange, NLPResponse, QueryFragment } from './types'
+import { MarkType, DateRange, NLPResponse, QueryFragment, Mark } from './types'
 import * as DateFns from 'date-fns'
 
 const state = {
@@ -55,10 +55,11 @@ const inside = ([startA, endA], [startB, endB]) => {
 }
 
 export function parseSearchQuery(query: string): NLPResponse {
-  const marks = []
+  const marks: Mark[] = []
 
   // mark helpers
-  function addMarkIfClear(newMark) {
+  function addMarkIfClear(newMark: Mark) {
+    // @ts-ignore
     if (marks.some(mark => inside(newMark, mark))) {
       return
     }
@@ -67,7 +68,7 @@ export function parseSearchQuery(query: string): NLPResponse {
   function highlightIfClear(word, className) {
     const start = query.indexOf(word)
     const end = start + word.length
-    addMarkIfClear([start, end, className])
+    addMarkIfClear([start, end, className, word])
   }
 
   // @ts-ignore
@@ -85,27 +86,28 @@ export function parseSearchQuery(query: string): NLPResponse {
   // find all marks for highlighting
   const prefix = prefixes[words[0]]
   if (prefix) {
-    marks.push([0, words[0].length, TYPES.INTEGRATION])
+    const mark: Mark = [0, words[0].length, MarkType.Integration, words[0]]
+    marks.push(mark)
   }
   for (const curDate of dates) {
-    highlightIfClear(curDate, TYPES.DATE)
+    highlightIfClear(curDate, MarkType.Date)
   }
   if (state.namePattern) {
     const nameMatches = query.match(state.namePattern)
     if (nameMatches && nameMatches.length) {
       for (const name of nameMatches) {
-        highlightIfClear(name, TYPES.PERSON)
+        highlightIfClear(name, MarkType.Person)
       }
     }
   }
   for (const word of words) {
     if (types[word]) {
-      highlightIfClear(word, TYPES.TYPE)
+      highlightIfClear(word, MarkType.Type)
       continue
     }
     if (integrationFilters[word]) {
       integrations.push(word)
-      highlightIfClear(word, TYPES.INTEGRATION)
+      highlightIfClear(word, MarkType.Integration)
       continue
     }
   }
@@ -172,7 +174,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     .join(' ')
     .trim()
   const people = parsedQuery
-    .filter(x => x.type === TYPES.PERSON)
+    .filter(x => x.type === MarkType.Person)
     .map(x => x.text)
 
   return {

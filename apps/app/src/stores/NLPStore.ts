@@ -4,7 +4,7 @@ import { store, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Person } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { TYPES, NLPResponse } from './nlpStore/types'
+import { NLPResponse } from './nlpStore/types'
 
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
@@ -14,8 +14,6 @@ const { parseSearchQuery, setUserNames } = initNlp()
 
 @store
 export class NLPStore /* extends Store */ {
-  types = TYPES
-
   get marks() {
     return this.nlp.marks
   }

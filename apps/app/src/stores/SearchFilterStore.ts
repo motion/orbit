@@ -6,7 +6,7 @@ import { NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { NLPStore } from './NLPStore'
-import { TYPES } from './nlpStore/types'
+import { MarkType } from './nlpStore/types'
 
 export type SearchFilter = {
   type: string
@@ -16,8 +16,8 @@ export type SearchFilter = {
 }
 
 const suggestedDates = [
-  { text: 'Last Week', type: TYPES.DATE },
-  { text: 'Last Month', type: TYPES.DATE },
+  { text: 'Last Week', type: MarkType.Date },
+  { text: 'Last Month', type: MarkType.Date },
 ]
 
 @store
@@ -63,7 +63,7 @@ export class SearchFilterStore /* extends Store */ {
   get activeDate() {
     // allows disabling date
     for (const part of this.parsedQuery) {
-      if (part.type === TYPES.DATE) {
+      if (part.type === MarkType.Date) {
         if (this.disabledFilters[part.text]) {
           return {
             startDate: null,
@@ -73,6 +73,13 @@ export class SearchFilterStore /* extends Store */ {
       }
     }
     return this.nlpStore.nlp.date
+  }
+
+  get activeMarks() {
+    if (!this.nlpStore.marks) {
+      return null
+    }
+    return this.nlpStore.marks.filter(mark => !this.disabledFilters[mark[3]])
   }
 
   get hasExclusiveFilters() {
@@ -107,7 +114,7 @@ export class SearchFilterStore /* extends Store */ {
   get suggestedPeople() {
     return (this.nlpStore.peopleNames || []).slice(0, 2).map(name => ({
       text: name,
-      type: TYPES.PERSON,
+      type: MarkType.Person,
     }))
   }
 
@@ -115,12 +122,8 @@ export class SearchFilterStore /* extends Store */ {
     if (!this.parsedQuery) {
       return suggestedDates
     }
-    const hasDates = this.parsedQuery.some(
-      x => x.type === this.nlpStore.types.DATE,
-    )
-    const hasPeople = this.parsedQuery.some(
-      x => x.type === this.nlpStore.types.PERSON,
-    )
+    const hasDates = this.parsedQuery.some(x => x.type === MarkType.Date)
+    const hasPeople = this.parsedQuery.some(x => x.type === MarkType.Person)
     let suggestions = []
     if (!hasDates) {
       suggestions = [...suggestions, ...suggestedDates]

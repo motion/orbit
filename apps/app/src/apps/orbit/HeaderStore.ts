@@ -18,10 +18,11 @@ export class HeaderStore {
   iconHovered = false
 
   get highlightWords() {
-    if (!this.props.searchStore.nlpStore.marks) {
+    const { activeMarks } = this.props.searchStore.searchFilterStore
+    if (!activeMarks) {
       return null
     }
-    return () => this.props.searchStore.nlpStore.marks
+    return () => activeMarks
   }
 
   onInput = () => {

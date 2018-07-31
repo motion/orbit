@@ -68,7 +68,7 @@ export class AppStore {
     if (this.contentHeight !== height) {
       this.offContentHeight = on(
         this,
-        setTimeout(() => this.doSetContentHeight(height), 100),
+        setTimeout(() => this.doSetContentHeight(height), 150),
       )
     }
   }

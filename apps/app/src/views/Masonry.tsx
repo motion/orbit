@@ -3,7 +3,7 @@ import { view, on } from '@mcro/black'
 import isEqual from 'react-fast-compare'
 
 const rowHeight = 4
-const gridGap = 9
+const gridGap = 7
 const gridColumnGap = 9
 
 const MasonryGrid = view({

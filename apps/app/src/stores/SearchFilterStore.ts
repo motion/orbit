@@ -1,10 +1,9 @@
-import { store, deep, react } from '@mcro/black'
+import { store, react } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { memoize, uniqBy } from 'lodash'
 import { NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
-import { App } from '@mcro/stores'
 import { NLPStore } from './NLPStore'
 import { MarkType } from './nlpStore/types'
 
@@ -26,8 +25,8 @@ export class SearchFilterStore /* extends Store */ {
   integrationSettingsStore: IntegrationSettingsStore
   nlpStore: NLPStore
 
-  disabledFilters = deep({})
-  exclusiveFilters = deep({})
+  disabledFilters = {}
+  exclusiveFilters = {}
   sortBy = 'Relevant'
   sortOptions = ['Relevant', 'Recent']
 
@@ -44,12 +43,13 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   isActive = querySegment =>
+    querySegment.type &&
     !this.disabledFilters[querySegment.text.toLowerCase().trim()]
 
   // allows back in text segments that aren't filtered
   get activeQuery() {
     return this.parsedQuery
-      .filter(x => !x.type || this.disabledFilters[x.text.toLowerCase()])
+      .filter(this.isActive)
       .map(x => x.text.trim())
       .join(' ')
       .trim()
@@ -72,6 +72,7 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   get queryFilters() {
+    this.disabledFilters
     return this.parsedQuery.filter(x => !!x.type).map(x => ({
       ...x,
       active: this.isActive(x),
@@ -182,12 +183,8 @@ export class SearchFilterStore /* extends Store */ {
       if (hasQuery) {
         throw react.cancel
       }
-      for (const name in this.disabledFilters) {
-        this.disabledFilters[name] = false
-      }
-      for (const name in this.exclusiveFilters) {
-        this.exclusiveFilters[name] = false
-      }
+      this.disabledFilters = {}
+      this.exclusiveFilters = {}
     },
   )
 
@@ -201,7 +198,10 @@ export class SearchFilterStore /* extends Store */ {
       return
     }
     const key = name.toLowerCase()
-    this.disabledFilters[key] = !this.disabledFilters[key]
+    this.disabledFilters = {
+      ...this.disabledFilters,
+      [key]: !this.disabledFilters[key],
+    }
   }
 
   toggleSortBy = () => {
@@ -214,6 +214,9 @@ export class SearchFilterStore /* extends Store */ {
   })
 
   toggleExclusiveFilter = (filter: SearchFilter) => {
-    this.exclusiveFilters[filter.type] = !this.exclusiveFilters[filter.type]
+    this.exclusiveFilters = {
+      ...this.exclusiveFilters,
+      [filter.type]: !this.exclusiveFilters[filter.type],
+    }
   }
 }

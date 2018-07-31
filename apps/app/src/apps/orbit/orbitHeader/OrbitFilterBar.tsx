@@ -78,6 +78,7 @@ type Props = {
 }
 
 export const OrbitFilterBar = view(({ filterStore }: Props) => {
+  filterStore.disabledFilters
   return (
     <FilterBar>
       <HorizontalScroll>

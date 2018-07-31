@@ -26,7 +26,7 @@ export class SearchFilterStore /* extends Store */ {
   integrationSettingsStore: IntegrationSettingsStore
   nlpStore: NLPStore
 
-  disabledFilters = {}
+  disabledFilters = deep({})
   exclusiveFilters = deep({})
   sortBy = 'Relevant'
   sortOptions = ['Relevant', 'Recent']

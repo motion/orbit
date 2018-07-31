@@ -64,7 +64,7 @@ export class PeekStore {
     ],
     async ([tornState, target, docked, hidden, selectedItem], { sleep }) => {
       // debounce just a tiny bit to avoid renders as selectedItem updated a bit after peekState
-      await sleep()
+      await sleep(16)
       if (tornState) {
         return tornState
       }
@@ -120,9 +120,6 @@ export class PeekStore {
       }
     },
     {
-      // delay a bit more here to let peek render
-      // our only time constraint is having this ready for when it leaves
-      delay: 40,
       immediate: true,
     },
   )

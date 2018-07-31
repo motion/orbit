@@ -108,7 +108,7 @@ export class SubPane extends React.Component<Props> {
       <DockedPaneFrame isActive={subPaneStore.isActive}>
         {before}
         <DockedPaneInner {...containerStyle}>
-          <OverflowFade if={fadeBottom} isInvisible={subPaneStore.isAtBottom} />
+          {fadeBottom && <OverflowFade isInvisible={subPaneStore.isAtBottom} />}
           <Pane
             isActive={subPaneStore.isActive}
             style={style}

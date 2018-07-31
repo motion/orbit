@@ -46,7 +46,7 @@ export class SubPaneStore {
   }
 
   didMount() {
-    on(this, this.paneNode, 'scroll', _.throttle(this.handlePaneChange, 16 * 3))
+    on(this, this.paneNode, 'scroll', throttle(this.handlePaneChange, 16 * 3))
     this.addObserver(this.paneRef.current, this.handlePaneChange)
     this.handlePaneChange()
     this.updateHeight()

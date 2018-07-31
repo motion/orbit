@@ -1,10 +1,11 @@
 - p2p https://github.com/mafintosh/hyperdb
 
-- permalinks: cant click location permalink on orbitcard
 - fix settings doing work every enter
 - filterbar: click to add/remove suggested
-- bottom overflowfade showing sometimes when not needed
 - slow animations when resizing often
+
+- permalinks: cant click location permalink on orbitcard
+- bottom overflowfade showing sometimes when not needed
 - search: too glitchy after first key is pressed from home
 - search: filtering "nick and nate" doesn't show any results for some reason
 - relevant/recent toggle broke

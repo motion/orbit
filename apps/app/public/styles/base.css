@@ -565,12 +565,12 @@ html {
  */
 
 ::selection {
-  background: #ccc;
+  background: rgb(203, 211, 255);
   color: #222;
   text-shadow: none;
 }
 *::selection {
-  background: #ccc;
+  background: rgb(203, 211, 255);
   color: #222;
   text-shadow: none;
 }

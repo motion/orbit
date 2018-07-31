@@ -3,7 +3,6 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
 import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
-import { SmallLink, RoundButton } from '.'
 import { TimeAgo } from './TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../components/PeopleRow'
@@ -15,6 +14,7 @@ import { AppStore } from '../stores/AppStore'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { EMPTY_ITEM } from '../constants'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
+import { RoundButton } from './RoundButton'
 
 export type OrbitCardProps = {
   total?: number
@@ -294,11 +294,9 @@ class OrbitCardStore {
         if (!this.target) {
           throw new Error(`No target!`)
         }
+        // fluidity
+        await sleep(16)
         const position = getTargetPosition(this.cardWrapRef)
-        // quickly move the position
-        // App.actions.setPeekTarget(position)
-        // then later update the information
-        await sleep(this.sleepBeforePeek)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
           position.left += 8

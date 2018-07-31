@@ -61,8 +61,8 @@ const Border = view({
 })
 
 Border.theme = ({ theme }) => {
-  const borderColor = theme.base.background.darken(0.35)
-  const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
+  const borderColor = theme.base.background.darken(0.45)
+  const borderShadow = [0, 0, 0, 0.5, borderColor]
   const lightBg = theme.base.background.lighten(1)
   const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
   return {

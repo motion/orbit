@@ -101,7 +101,7 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   get suggestedPeople() {
-    return this.nlpStore.peopleNames.slice(0, 2).map(name => ({
+    return (this.nlpStore.peopleNames || []).slice(0, 2).map(name => ({
       name,
       type: 'person',
       active: false,
@@ -118,18 +118,12 @@ export class SearchFilterStore /* extends Store */ {
     const hasPeople = this.parsedQuery.some(
       x => x.type === this.nlpStore.types.PERSON,
     )
-    const hasIntegrations = this.parsedQuery.some(
-      x => x.type === this.nlpStore.types.INTEGRATION,
-    )
     let suggestions = []
     if (!hasDates) {
       suggestions = [...suggestions, ...suggestedDates]
     }
     if (!hasPeople) {
       suggestions = [...suggestions, ...this.suggestedPeople]
-    }
-    if (!hasIntegrations) {
-      suggestions = [...suggestions, ...this.filters.slice(0, 2)]
     }
     return suggestions
   }

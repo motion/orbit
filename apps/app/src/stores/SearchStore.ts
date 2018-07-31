@@ -161,14 +161,10 @@ export class SearchStore /* extends Store */ {
     () => [
       App.state.query,
       this.getResults,
+      // this is tied to all filter changes
       this.searchFilterStore.activeFilters,
-      this.searchFilterStore.sortBy,
-      this.searchFilterStore.disableMarks,
     ],
-    async (
-      [query, getResults, activeFilters, disableMarks],
-      { sleep, when, setValue, preventLogging },
-    ) => {
+    async ([query, getResults], { sleep, when, setValue, preventLogging }) => {
       if (!query) {
         return setValue({
           query,

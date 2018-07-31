@@ -6,6 +6,7 @@ import { NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { NLPStore } from './NLPStore'
+import { TYPES } from './nlpStore/types'
 
 export type SearchFilter = {
   type: string
@@ -25,10 +26,10 @@ export class SearchFilterStore /* extends Store */ {
   integrationSettingsStore: IntegrationSettingsStore
   nlpStore: NLPStore
 
-  inactiveFilters = deep({})
+  disabledFilters = {}
+  exclusiveFilters = deep({})
   sortBy = 'Relevant'
   sortOptions = ['Relevant', 'Recent']
-  disabledMarks = {}
 
   constructor(searchStore) {
     this.searchStore = searchStore
@@ -42,15 +43,36 @@ export class SearchFilterStore /* extends Store */ {
     return this.nlpStore.nlp.parsedQuery
   }
 
-  get hasInactiveFilters() {
-    return Object.keys(this.inactiveFilters).length
+  // allows back in text segments that aren't filtered
+  get activeQuery() {
+    return this.parsedQuery
+      .filter(x => !x.type || this.disabledFilters[x.text])
+      .map(x => x.text.trim())
+      .join(' ')
+      .trim()
   }
 
   get activeFilters() {
-    if (this.hasInactiveFilters) {
-      return this.filters.filter(x => x.active).map(x => x.type)
+    return this.parsedQuery.filter(x => x.type && !this.disabledFilters[x.text])
+  }
+
+  get activeDate() {
+    // allows disabling date
+    for (const part of this.parsedQuery) {
+      if (part.type === TYPES.DATE) {
+        if (this.disabledFilters[part.text]) {
+          return {
+            startDate: null,
+            endDate: null,
+          }
+        }
+      }
     }
-    return false
+    return this.nlpStore.nlp.date
+  }
+
+  get hasExclusiveFilters() {
+    return Object.keys(this.exclusiveFilters).length
   }
 
   get uniqueSettings(): Setting[] {
@@ -61,13 +83,20 @@ export class SearchFilterStore /* extends Store */ {
     return unique
   }
 
-  get filters(): SearchFilter[] {
-    const { /* hasInactiveFilters, */ inactiveFilters } = this
+  get activeIntegrationFilters() {
+    if (this.hasExclusiveFilters) {
+      return this.integrationFilters.filter(x => x.active).map(x => x.type)
+    }
+    return false
+  }
+
+  get integrationFilters(): SearchFilter[] {
+    const { exclusiveFilters } = this
     return this.uniqueSettings.map(setting => ({
       type: setting.type,
       icon: setting.type,
       name: this.integrationSettingsStore.getTitle(setting),
-      active: /* !hasInactiveFilters ? true :  */ inactiveFilters[setting.type],
+      active: exclusiveFilters[setting.type],
     }))
   }
 
@@ -129,7 +158,7 @@ export class SearchFilterStore /* extends Store */ {
       if (!integrations.length) {
         throw react.cancel
       }
-      this.inactiveFilters = this.uniqueSettings.reduce(
+      this.exclusiveFilters = this.uniqueSettings.reduce(
         (acc, setting: Setting) => {
           acc[setting.type] = integrations.some(x => x === setting.type)
           return acc
@@ -145,14 +174,14 @@ export class SearchFilterStore /* extends Store */ {
       if (hasQuery) {
         throw react.cancel
       }
-      this.disabledMarks = {}
+      this.disabledFilters = {}
     },
   )
 
   toggleFilter = (name: string) => {
-    this.disabledMarks = {
-      ...this.disabledMarks,
-      [name]: !this.disabledMarks[name],
+    this.disabledFilters = {
+      ...this.disabledFilters,
+      [name]: !this.disabledFilters[name],
     }
   }
 
@@ -172,10 +201,10 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   integrationFilterToggler = memoize((filter: SearchFilter) => {
-    return () => this.toggleIntegrationFilter(filter)
+    return () => this.toggleExclusiveFilter(filter)
   })
 
-  toggleIntegrationFilter = (filter: SearchFilter) => {
-    this.inactiveFilters[filter.type] = !this.inactiveFilters[filter.type]
+  toggleExclusiveFilter = (filter: SearchFilter) => {
+    this.exclusiveFilters[filter.type] = !this.exclusiveFilters[filter.type]
   }
 }

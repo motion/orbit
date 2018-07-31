@@ -72,7 +72,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
           {searchStore.searchFilterStore.sortBy}
         </FilterButton>
         <UI.Col flex={1} />
-        {searchFilterStore.filters.map((filter, i) => {
+        {searchFilterStore.integrationFilters.map((filter, i) => {
           return (
             <RoundButton
               key={`${filter.icon}${i}`}

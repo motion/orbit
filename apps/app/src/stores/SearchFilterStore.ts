@@ -52,12 +52,18 @@ export class SearchFilterStore /* extends Store */ {
       .trim()
   }
 
-  get activeFilters() {
-    return this.parsedQuery.filter(x => x.type && !this.disabledFilters[x.text])
+  get allFilters() {
+    const parsedFilters = this.parsedQuery.filter(x => !!x.type).map(part => ({
+      ...part,
+      active: !this.disabledFilters[part.text.trim()],
+    }))
+    return [...parsedFilters, ...this.suggestedFilters]
   }
 
-  get inactiveFilters() {
-    return this.parsedQuery.filter(x => this.disabledFilters[x.text])
+  get activeFilters() {
+    return this.parsedQuery.filter(
+      x => x.type && !this.disabledFilters[x.text.trim()],
+    )
   }
 
   get activeDate() {
@@ -164,32 +170,24 @@ export class SearchFilterStore /* extends Store */ {
     },
   )
 
-  resetDisabledFiltersOnSearchClear = react(
+  resetFiltersOnSearchClear = react(
     () => !!this.searchStore.searchState.query,
     hasQuery => {
       if (hasQuery) {
         throw react.cancel
       }
-      this.disabledFilters = {}
+      for (const name in this.disabledFilters) {
+        this.disabledFilters[name] = false
+      }
+      for (const name in this.exclusiveFilters) {
+        this.exclusiveFilters[name] = false
+      }
     },
   )
 
   toggleFilter = (name: string) => {
-    this.disabledFilters = {
-      ...this.disabledFilters,
-      [name]: !this.disabledFilters[name],
-    }
+    this.disabledFilters[name] = !this.disabledFilters[name]
   }
-
-  resetInactiveFiltersOnEmptySearch = react(
-    () => !!App.state.query,
-    hasQuery => {
-      if (hasQuery) {
-        throw react.cancel
-      }
-      this.disabledFilters = {}
-    },
-  )
 
   toggleSortBy = () => {
     const cur = this.sortOptions.indexOf(this.sortBy)

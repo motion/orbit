@@ -10,7 +10,7 @@ const inactiveTheme = {
 }
 
 const activeTheme = {
-  background: 'blue',
+  background: '#5459ED',
   color: '#fff',
 }
 
@@ -60,30 +60,19 @@ type Props = {
 }
 
 export const OrbitFilterBar = ({ filterStore }: Props) => {
-  const inactiveFilters = [
-    ...filterStore.inactiveFilters,
-    ...filterStore.suggestedFilters,
-  ]
   return (
     <FilterBar>
       <HorizontalScroll>
-        <UI.Theme theme={activeTheme}>
-          {filterStore.activeFilters.map((filter, index) => (
-            <FilterButton
-              key={`${filter.text}${index}`}
-              onClick={() => filterStore.toggleFilter(filter.text)}
-            >
+        {filterStore.allFilters.map((filter, index) => (
+          <UI.Theme
+            key={`${filter.text}${index}`}
+            theme={filter.active ? activeTheme : inactiveTheme}
+          >
+            <FilterButton onClick={() => filterStore.toggleFilter(filter.text)}>
               {filter.text}
             </FilterButton>
-          ))}
-        </UI.Theme>
-        <UI.Theme theme={inactiveTheme}>
-          {inactiveFilters.map((filter, index) => (
-            <FilterButton key={`${filter.text}${index}`}>
-              {filter.text}
-            </FilterButton>
-          ))}
-        </UI.Theme>
+          </UI.Theme>
+        ))}
         <UI.View width={50} />
       </HorizontalScroll>
       <FilterBarFade />

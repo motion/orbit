@@ -268,7 +268,7 @@ class OrbitCardStore {
   updateIsSelected = react(
     () => [
       this.props.searchStore && this.props.searchStore.nextIndex,
-      this.props.subPaneStore.isActive,
+      this.props.subPaneStore && this.props.subPaneStore.isActive,
       typeof this.props.isSelected === 'function'
         ? this.props.isSelected()
         : this.props.isSelected,
@@ -296,7 +296,7 @@ class OrbitCardStore {
         }
         const position = getTargetPosition(this.cardWrapRef)
         // quickly move the position
-        App.actions.setPeekTarget(position)
+        // App.actions.setPeekTarget(position)
         // then later update the information
         await sleep(this.sleepBeforePeek)
         // list items are closer to edge, adjust...

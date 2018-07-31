@@ -337,7 +337,7 @@ export class Surface extends React.Component<SurfaceProps> {
       lineHeight: this.props.lineHeight,
     }
     if (sizeLineHeight) {
-      throughProps.lineHeight = `${height + 0.5}px`
+      throughProps.lineHeight = `${height + 1}px`
     }
     return (
       <SurfaceFrame

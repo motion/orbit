@@ -15,15 +15,15 @@ import { AppStore } from '../../stores/AppStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitFilterBar } from './orbitHeader/OrbitFilterBar'
 
-const SHADOW_PAD = 100
-const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.45]]
+const SHADOW_PAD = 120
+const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.25]]
 
 const Frame = view(UI.Col, {
   position: 'absolute',
   top: 10,
   right: 10,
   borderRadius: BORDER_RADIUS + 2,
-  border: [3, [0, 0, 0, 0.08]],
+  border: [3, [0, 0, 0, 0.05]],
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
@@ -61,7 +61,7 @@ const Border = view({
 })
 
 Border.theme = ({ theme }) => {
-  const borderColor = theme.base.background.darken(0.3)
+  const borderColor = theme.base.background.darken(0.35)
   const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
   const lightBg = theme.base.background.lighten(1)
   const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
@@ -109,18 +109,12 @@ class OrbitDockedInner extends React.Component<{
     const { paneStore, appStore, searchStore } = this.props
     const { animationState } = paneStore
     // log('DOCKED ------------', App.orbitState.docked)
-    const contentBottom = Math.max(
-      // always leave x room at bottom
-      // leaving a little room at the bottom makes it feel much lighter
-      50,
-      window.innerHeight - appStore.contentHeight - 12,
-    )
     return (
       <>
         <Frame
           visible={animationState.visible}
           willAnimate={animationState.willAnimate}
-          bottom={searchStore.searchState.query ? 10 : contentBottom}
+          bottom={appStore.contentBottom}
         >
           <Border />
           <FrameBackground />

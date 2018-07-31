@@ -19,7 +19,7 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
         width="100%"
         fontWeight={300}
         fontSize={16}
-        lineHeight={22}
+        lineHeight={21}
         border="none"
         display="block"
         background="transparent"
@@ -40,6 +40,9 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
         top="50%"
         right={40}
         marginTop={-8}
+        transform={{
+          y: -0.5,
+        }}
       />
     </View>
   )

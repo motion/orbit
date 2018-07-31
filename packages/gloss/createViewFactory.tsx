@@ -268,9 +268,10 @@ export function createViewFactory(toCSS) {
           const classInfo = tracker.get(className)
           if (classInfo) {
             const { namespace, style } = classInfo
-            myStyles = Object.assign({}, myStyles, {
+            myStyles = {
+              ...myStyles,
               [namespace]: style,
-            })
+            }
           } else {
             extraClassNames.push(className)
           }

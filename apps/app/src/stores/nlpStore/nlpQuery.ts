@@ -55,7 +55,7 @@ const inside = ([startA, endA], [startB, endB]) => {
 }
 
 export function parseSearchQuery(query: string): NLPResponse {
-  const marks: Mark[] = []
+  let marks: Mark[] = []
 
   // mark helpers
   function addMarkIfClear(newMark: Mark) {
@@ -89,6 +89,10 @@ export function parseSearchQuery(query: string): NLPResponse {
     const mark: Mark = [0, words[0].length, MarkType.Integration, words[0]]
     marks.push(mark)
   }
+
+  // sort marks in order of occurance
+  marks = marks.sort((a, b) => (a[0] > b[0] ? 1 : -1))
+
   for (const curDate of dates) {
     highlightIfClear(curDate, MarkType.Date)
   }
@@ -114,6 +118,10 @@ export function parseSearchQuery(query: string): NLPResponse {
 
   // date
   const date: DateRange = Sherlockjs.parse(query)
+  // better "now", sherlock often says a few hours earlier than actually now
+  if (dates.indexOf('now') > -1) {
+    date.endDate = new Date()
+  }
   if (date.startDate) {
     // sherlock found a date in the future
     // but we don't deal with future dates
@@ -142,9 +150,11 @@ export function parseSearchQuery(query: string): NLPResponse {
     parsedQuery.push({ text: query })
   } else {
     // prefix
-    parsedQuery.push({
-      text: query.slice(0, marks[0][0]),
-    })
+    if (marks[0][0] > 0) {
+      parsedQuery.push({
+        text: query.slice(0, marks[0][0]),
+      })
+    }
     for (const [index, mark] of marks.entries()) {
       // marks
       parsedQuery.push({

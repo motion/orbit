@@ -53,11 +53,10 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   get allFilters() {
-    const parsedFilters = this.parsedQuery.filter(x => !!x.type).map(part => ({
-      ...part,
-      active: !this.disabledFilters[part.text.trim()],
-    }))
-    return [...parsedFilters, ...this.suggestedFilters]
+    return [
+      ...this.activeFilters.map(part => ({ ...part, active: true })),
+      ...this.suggestedFilters,
+    ]
   }
 
   get activeFilters() {
@@ -129,12 +128,13 @@ export class SearchFilterStore /* extends Store */ {
       return suggestedDates
     }
     const hasDates = this.parsedQuery.some(x => x.type === MarkType.Date)
-    const hasPeople = this.parsedQuery.some(x => x.type === MarkType.Person)
+    const numPeople = this.parsedQuery.filter(x => x.type === MarkType.Person)
+      .length
     let suggestions = []
     if (!hasDates) {
       suggestions = [...suggestions, ...suggestedDates]
     }
-    if (!hasPeople) {
+    if (numPeople < 5) {
       suggestions = [...suggestions, ...this.suggestedPeople]
     }
     return suggestions

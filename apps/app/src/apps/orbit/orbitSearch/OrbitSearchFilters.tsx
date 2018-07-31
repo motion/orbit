@@ -34,7 +34,7 @@ const getDate = ({ startDate, endDate }) => {
     '',
   )
   if (!endDate) {
-    return `last ${startInWords}`
+    return `${startInWords}`
   }
   const endInWords = formatDistance(Date.now(), endDate).replace('about ', '')
   return `${startInWords} - ${endInWords}`

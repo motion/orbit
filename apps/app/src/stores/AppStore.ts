@@ -12,6 +12,12 @@ export class AppStore {
   lastSelectedPane = ''
   onPinKeyCB = null
 
+  get contentBottom() {
+    // always leave x room at bottom
+    // leaving a little room at the bottom makes it feel much lighter
+    return window.innerHeight - this.contentHeight
+  }
+
   appReactionsStore = new AppReactions({
     onPinKey: key => this.onPinKeyCB(key),
   })
@@ -68,7 +74,14 @@ export class AppStore {
   }
 
   doSetContentHeight = height => {
-    this.contentHeight = height
+    const max = Math.min(
+      // you never go "full screen"
+      window.innerHeight - 50,
+      height,
+    )
+    // TODO: make this based on measuring non-content stuff
+    const min = Math.max(max, 90)
+    this.contentHeight = min
   }
 
   services = modelQueryReaction(

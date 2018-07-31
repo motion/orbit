@@ -5,6 +5,11 @@ import { themes } from './themes'
 import { ThemeProvide } from '@mcro/gloss'
 // import { OrbitCard } from '../../app/src/apps/orbit/OrbitCard'
 import { TestHMR } from './TestHMR'
+import createCss from '@mcro/css'
+
+const css = createCss()
+
+console.log('css', css({ lineHeight: 10 }))
 
 if (process.env.NODE_ENV === 'development') {
   if (module.hot && module.hot.addStatusHandler) {

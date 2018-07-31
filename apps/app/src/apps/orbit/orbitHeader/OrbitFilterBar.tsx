@@ -4,18 +4,35 @@ import { view } from '@mcro/black'
 import { SearchFilterStore } from '../../../stores/SearchFilterStore'
 
 const inactiveTheme = {
-  background: '#ccc',
-  color: '#fff',
+  background: 'transparent',
+  color: '#999',
+  hover: {
+    color: '#aaa',
+  },
 }
 
-const activeTheme = {
-  background: '#5459ED',
-  color: '#fff',
+const activeThemes = {
+  date: {
+    background: '#ffb049',
+    color: '#fff',
+  },
+  integration: {
+    background: 'rgba(71, 189, 36)',
+    color: '#fff'
+  },
+  person: {
+    background: '#8279ff',
+    color: '#fff'
+  },
+  type: {
+    background: 'rgba(193, 255, 143)',
+    color: '#fff'
+  },
 }
 
 const FilterBar = view(UI.Row, {
   position: 'relative',
-  padding: [0, 15, 5],
+  padding: [0, 15, 8],
 })
 
 const HorizontalScroll = view({
@@ -29,11 +46,12 @@ const HorizontalScroll = view({
 
 const FilterButton = props => (
   <UI.Button
-    size={1.1}
+    size={1}
     sizeRadius={0.8}
     marginRight={4}
     sizeHeight={0.8}
     sizePadding={0.6}
+    fontWeight={600}
     {...props}
   />
 )
@@ -43,7 +61,7 @@ const FilterBarFade = view({
   top: 0,
   right: 0,
   bottom: 0,
-  width: '23%',
+  width: '14%',
   zIndex: 1000,
   pointerEvents: 'none',
 })
@@ -65,7 +83,7 @@ export const OrbitFilterBar = ({ filterStore }: Props) => {
         {filterStore.allFilters.map((filter, index) => (
           <UI.Theme
             key={`${filter.text}${index}`}
-            theme={filter.active ? activeTheme : inactiveTheme}
+            theme={filter.active ? activeThemes[filter.type] : inactiveTheme}
           >
             <FilterButton onClick={() => filterStore.toggleFilter(filter.text)}>
               {filter.text}

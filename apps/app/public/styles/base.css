@@ -510,28 +510,27 @@ mark {
   color: auto;
   display: inline-block;
   color: transparent;
-  padding: 0 1px;
-  margin: 0 -1px;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-  border-bottom: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.6);
+  /* padding: 0 1px;
+  margin: 0 -1px; */
+  /* border-radius: 6px; */
+  border-bottom: 2px solid transparent;
+  background: transparent;
 }
 
 mark.date {
-  border-color: #ff9f21;
+  border-color: #ffb0497a;
 }
 
 mark.integration {
-  border-color: rgba(238, 186, 144);
+  border-color: rgba(71, 189, 36, 0.5);
 }
 
 mark.person {
-  border-color: #4b3eff;
+  border-color: #8279ff8a;
 }
 
 mark.type {
-  border-color: rgba(193, 255, 143);
+  border-color: rgba(193, 255, 143, 0.555);
 }
 
 blockquote {

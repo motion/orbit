@@ -4,7 +4,8 @@ import { View } from '../blocks/View'
 
 const ClearFrame = view(View, {
   fontSize: 16,
-  lineHeight: '1rem',
+  lineHeight: 15,
+  fontWeight: 600,
   width: 17,
   height: 17,
   borderRadius: 999,
@@ -17,4 +18,8 @@ const ClearFrame = view(View, {
   },
 })
 
-export const ClearButton = props => <ClearFrame {...props}>&times;</ClearFrame>
+export const ClearButton = props => (
+  <ClearFrame debug {...props}>
+    &times;
+  </ClearFrame>
+)

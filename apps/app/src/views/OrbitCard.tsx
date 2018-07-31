@@ -494,8 +494,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                     sizeLineHeight={0.9}
                     margin={inGrid ? ['auto', 0] : 0}
                   >
-                    {preview
-                      .slice(0, 220)
+                    {preview}
+                    {/* .slice(0, 220)
                       .split(' ')
                       .map((word, i) => (
                         <React.Fragment key={i}>
@@ -503,7 +503,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                             {word}
                           </SmallLink>{' '}
                         </React.Fragment>
-                      ))}
+                      )) */}
                   </UI.Text>
                 )}
               </Preview>

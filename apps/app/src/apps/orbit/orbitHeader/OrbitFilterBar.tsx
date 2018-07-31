@@ -2,7 +2,6 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { SearchFilterStore } from '../../../stores/SearchFilterStore'
-import { partition } from 'lodash'
 
 const inactiveTheme = {
   background: '#ccc',
@@ -16,7 +15,7 @@ const activeTheme = {
 
 const FilterBar = view(UI.Row, {
   position: 'relative',
-  padding: [0, 15, 8],
+  padding: [0, 15, 5],
 })
 
 const HorizontalScroll = view({
@@ -44,7 +43,7 @@ const FilterBarFade = view({
   top: 0,
   right: 0,
   bottom: 0,
-  width: '25%',
+  width: '23%',
   zIndex: 1000,
   pointerEvents: 'none',
 })
@@ -52,7 +51,7 @@ const FilterBarFade = view({
 FilterBarFade.theme = ({ theme }) => ({
   background: `linear-gradient(to right, transparent, ${
     theme.base.background
-  })`,
+  } 80%)`,
 })
 
 type Props = {

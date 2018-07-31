@@ -291,12 +291,14 @@ class OrbitCardStore {
         if (this.props.subPaneStore) {
           this.props.subPaneStore.scrollIntoView(this.cardWrapRef)
         }
-        // reduce jitter, work, visual delay looks a bit nicer
-        await sleep(this.sleepBeforePeek)
         if (!this.target) {
           throw new Error(`No target!`)
         }
         const position = getTargetPosition(this.cardWrapRef)
+        // quickly move the position
+        App.actions.setPeekTarget(position)
+        // then later update the information
+        await sleep(this.sleepBeforePeek)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
           position.left += 8

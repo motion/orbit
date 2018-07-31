@@ -75,6 +75,7 @@ class AppStore {
     open: Function
     startOauth: Function
     clearPeek: Function
+    setPeekTarget: Function
   }
 
   messages = {

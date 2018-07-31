@@ -7,8 +7,13 @@ export const TYPES = {
 
 type Types = typeof TYPES
 type TypeKey = keyof Types
+
 type Mark = [number, number, TypeKey]
-export type QueryFragment = { text: string; type?: TypeKey }
+
+export type QueryFragment = {
+  text: string
+  type?: TypeKey
+}
 
 export type DateRange = {
   startDate: Date | null

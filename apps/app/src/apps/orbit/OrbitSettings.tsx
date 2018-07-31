@@ -172,6 +172,7 @@ export class OrbitSettings extends React.Component<Props> {
                   onClick={onClick}
                   disableShadow
                   cardProps={{
+                    chromeless: true,
                     border: [1, 'transparent'],
                     background: 'transparent',
                     padding: [12, 12, 12, 10],

@@ -81,6 +81,14 @@ const Card = view({
   transform: {
     z: 0,
   },
+  chromeless: {
+    border: [1, 'transparent'],
+    background: 'transparent',
+    padding: [12, 12, 12, 10],
+    '&:hover': {
+      background: '#eee',
+    },
+  },
 })
 
 const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
@@ -100,7 +108,14 @@ Card.theme = ({
   border,
   padding,
   disableShadow,
+  chromeless,
 }) => {
+  if (chromeless) {
+    return {
+      padding: padding || 16,
+      borderRadius: borderRadius || 9,
+    }
+  }
   const disabledShadow = disableShadow ? 'none' : null
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',

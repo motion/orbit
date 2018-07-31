@@ -1,6 +1,6 @@
 // @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
-import { store, react, Store } from '@mcro/black'
+import { store, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Person } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -25,14 +25,19 @@ export class NLPStore /* extends Store */ {
     () => App.state.query,
     async (query, { sleep }) => {
       await sleep(150)
-      return {
+      this.nlp = {
         ...(await parseSearchQuery(query)),
         query,
       }
     },
     {
       immediate: true,
-      defaultValue: { date: { startDate: null, endDate: null } },
+      defaultValue: {
+        date: {
+          startDate: null,
+          endDate: null,
+        },
+      },
     },
   )
 

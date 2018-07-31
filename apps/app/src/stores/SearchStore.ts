@@ -172,9 +172,10 @@ export class SearchStore /* extends Store */ {
       this.getResults,
       this.searchFilterStore.activeFilters,
       this.searchFilterStore.sortBy,
+      this.searchFilterStore.disableMarks,
     ],
     async (
-      [query, getResults, activeFilters],
+      [query, getResults, activeFilters, disableMarks],
       { sleep, when, setValue, preventLogging },
     ) => {
       if (!query) {
@@ -216,10 +217,13 @@ export class SearchStore /* extends Store */ {
       }
       // regular search
       if (!results) {
-        // debounce a little for fast typer
-        await sleep(TYPE_DEBOUNCE)
-        // wait for nlp to give us results
-        await when(() => this.nlpStore.nlp.query === query)
+        // if typing, wait a bit
+        if (this.searchState.query !== query) {
+          // debounce a little for fast typer
+          await sleep(TYPE_DEBOUNCE)
+          // wait for nlp to give us results
+          await when(() => this.nlpStore.nlp.query === query)
+        }
         // gather all the pieces from nlp store for query
         const { searchQuery } = this.nlpStore.nlp
         // get first page results

@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { SearchFilterStore } from '../../../stores/SearchFilterStore'
+import { partition } from 'lodash'
 
 const inactiveTheme = {
   background: '#ccc',
@@ -59,19 +60,30 @@ export const OrbitFilterBar = ({
 }: {
   filterStore: SearchFilterStore
 }) => {
+  const [active, inactive] = partition(
+    filterStore.filterBarFilters,
+    x => x.active,
+  )
   return (
     <FilterBar>
       <HorizontalScroll>
-        {filterStore.filterBarFilters.map((filter, index) => {
-          return (
-            <UI.Theme
+        <UI.Theme theme={activeTheme}>
+          {active.map((filter, index) => (
+            <FilterButton
               key={`${filter.name}${index}`}
-              theme={filter.active ? activeTheme : inactiveTheme}
+              onClick={() => filterStore.toggleFilter(filter)}
             >
-              <FilterButton>{filter.name}</FilterButton>
-            </UI.Theme>
-          )
-        })}
+              {filter.name}
+            </FilterButton>
+          ))}
+        </UI.Theme>
+        <UI.Theme theme={inactiveTheme}>
+          {inactive.map((filter, index) => (
+            <FilterButton key={`${filter.name}${index}`}>
+              {filter.name}
+            </FilterButton>
+          ))}
+        </UI.Theme>
       </HorizontalScroll>
       <FilterBarFade />
     </FilterBar>

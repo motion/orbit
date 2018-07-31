@@ -5,6 +5,7 @@ import { memoize, uniqBy } from 'lodash'
 import { NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { App } from '@mcro/stores'
+import { NLPStore } from './NLPStore'
 
 export type SearchFilter = {
   type: string
@@ -22,14 +23,16 @@ const suggestedDates = [
 export class SearchFilterStore /* extends Store */ {
   searchStore: SearchStore
   integrationSettingsStore: IntegrationSettingsStore
+  nlpStore: NLPStore
   inactiveFilters = deep({})
   sortBy = 'Relevant'
   sortOptions = ['Relevant', 'Recent']
+  disabledMarks = {}
 
   constructor(searchStore) {
-    // super()
     this.searchStore = searchStore
     this.integrationSettingsStore = searchStore.props.integrationSettingsStore
+    this.nlpStore = searchStore.nlpStore
   }
 
   get hasInactiveFilters() {
@@ -59,10 +62,6 @@ export class SearchFilterStore /* extends Store */ {
       name: this.integrationSettingsStore.getTitle(setting),
       active: /* !hasInactiveFilters ? true :  */ inactiveFilters[setting.type],
     }))
-  }
-
-  get nlpStore() {
-    return this.searchStore.nlpStore
   }
 
   get parsedQuery() {
@@ -116,12 +115,13 @@ export class SearchFilterStore /* extends Store */ {
     return [...this.nlpActiveFilters, ...this.suggestedFilters]
   }
 
-  updateFiltersOnNLP = react(
+  resetIntegrationFiltersOnNLPChange = react(
     () => this.searchStore.nlpStore.nlp,
     (nlp: NLPResponse) => {
       if (!nlp) {
         throw react.cancel
       }
+      // reset integration inactive filters
       const { integrations } = nlp
       if (!integrations.length) {
         throw react.cancel
@@ -135,6 +135,26 @@ export class SearchFilterStore /* extends Store */ {
       )
     },
   )
+
+  resetDisabledFiltersOnSearchClear = react(
+    () => !!this.searchStore.searchState.query,
+    hasQuery => {
+      if (hasQuery) {
+        throw react.cancel
+      }
+      this.disabledMarks = {}
+    },
+  )
+
+  toggleFilter = name => {
+    const disableIndex = this.nlpStore.nlp.parsedQuery.findIndex(
+      x => x.text === name,
+    )
+    this.disabledMarks = {
+      ...this.disabledMarks,
+      [disableIndex]: !this.disabledMarks[disableIndex],
+    }
+  }
 
   resetInactiveFiltersOnEmptySearch = react(
     () => !!App.state.query,
@@ -151,11 +171,11 @@ export class SearchFilterStore /* extends Store */ {
     this.sortBy = this.sortOptions[(cur + 1) % this.sortOptions.length]
   }
 
-  filterToggler = memoize((filter: SearchFilter) => {
-    return () => this.toggleFilter(filter)
+  integrationFilterToggler = memoize((filter: SearchFilter) => {
+    return () => this.toggleIntegrationFilter(filter)
   })
 
-  toggleFilter = (filter: SearchFilter) => {
+  toggleIntegrationFilter = (filter: SearchFilter) => {
     this.inactiveFilters[filter.type] = !this.inactiveFilters[filter.type]
   }
 }

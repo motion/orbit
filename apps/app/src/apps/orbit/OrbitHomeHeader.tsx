@@ -51,16 +51,21 @@ export class OrbitHomeHeader extends React.Component<Props> {
     const { paneStore, theme } = this.props
     const buttonColor = theme.base.color.lighten(0.2)
     exploreButton.iconProps.color = buttonColor
+    const homeActive = paneStore.activePane === 'home'
     return (
       <>
         <Section>
-          {/* <UI.Button
+          <UI.Button
             icon="home"
             tooltip="Home"
-            active={paneStore.activePane === 'home'}
+            active={homeActive}
             onClick={() => paneStore.setActivePane('home')}
+            style={{
+              opacity: homeActive ? 0 : exploreButton.opacity,
+              pointerEvents: homeActive ? 'none' : 'all',
+            }}
             {...exploreButton}
-          /> */}
+          />
           <UI.Button
             icon="menu35"
             tooltip="Directory"

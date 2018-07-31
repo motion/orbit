@@ -91,14 +91,13 @@ class OrbitSettingsStore {
   )
 
   integrationSettings = modelQueryReaction(
-    async () => {
-      this.hasFetchedOnce = true
-      return await Setting.find({
+    () =>
+      Setting.find({
         where: { category: 'integration', token: Not(IsNull()) },
-      })
-    },
+      }),
     {
-      condition: () => this.isPaneActive || !this.hasFetchedOnce,
+      condition: () =>
+        this.isPaneActive || this.integrationSettings.length === 0,
       defaultValue: [],
     },
   )

@@ -3,8 +3,8 @@
 - fix settings doing work every enter
 - filterbar: click to add/remove suggested
 - slow animations when resizing often
-
 - bottom overflowfade showing sometimes when not needed
+
 - permalinks: cant click location permalink on orbitcard
 - search: too glitchy after first key is pressed from home
 - search: filtering "nick and nate" doesn't show any results for some reason

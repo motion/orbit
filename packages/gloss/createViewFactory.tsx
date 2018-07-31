@@ -18,7 +18,10 @@ type Props = CSSPropertySet
 const isHMREnabled =
   process.env.NODE_ENV === 'development' &&
   typeof module !== 'undefined' &&
-  module.hot
+  !!module['hot']
+
+const falseIfRecentHMR = () =>
+  typeof window['__recentHMR'] === 'boolean' ? !window['__recentHMR'] : true
 
 const arrToDict = obj => {
   if (Array.isArray(obj)) {
@@ -358,7 +361,7 @@ export function createViewFactory(toCSS) {
 
       static getDerivedStateFromProps(props: Props, state: State) {
         if (
-          !isHMREnabled &&
+          (isHMREnabled ? falseIfRecentHMR() : true) &&
           state.prevProps !== null &&
           hasEquivProps(props, state.prevProps)
         ) {

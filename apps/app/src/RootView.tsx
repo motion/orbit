@@ -13,6 +13,9 @@ if (process.env.NODE_ENV === 'development') {
     if (module.hot.status() === 'idle') {
       module.hot.addStatusHandler(status => {
         if (status === 'prepare') {
+          // for gloss to update styles
+          window['__recentHMR'] = true
+          setTimeout(() => (window['__recentHMR'] = false), 400)
           view.emit('will-hmr')
           view.provide.emit('will-hmr')
         }

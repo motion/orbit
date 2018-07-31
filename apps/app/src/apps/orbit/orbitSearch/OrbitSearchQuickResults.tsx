@@ -51,7 +51,6 @@ class QuickSearchStore {
     () => this.index,
     index => {
       const frame = this.frameRef.current
-      console.log('scroll', frame, index, this.cardRefs[index])
       if (!frame) {
         throw react.cancel
       }

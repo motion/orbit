@@ -1,7 +1,7 @@
 import { react, ReactionOptions } from '@mcro/automagical'
 import { now } from 'mobx-utils'
 import { modelEqual, modelsEqual } from './modelsEqual'
-import * as _ from 'lodash'
+import { comparer } from 'mobx'
 
 type ReactModelQueryOpts = ReactionOptions & {
   condition?: () => boolean
@@ -52,7 +52,7 @@ export function modelQueryReaction(
           if (modelsEqual(currentVal, next)) {
             throw react.cancel
           }
-        } else if (_.isEqual(currentVal, next)) {
+        } else if (comparer.structural(currentVal, next)) {
           throw react.cancel
         } else if (modelEqual(currentVal, next)) {
           throw react.cancel

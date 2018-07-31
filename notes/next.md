@@ -4,19 +4,19 @@
 - filterbar: click to add/remove suggested
 - slow animations when resizing often
 - bottom overflowfade showing sometimes when not needed
+- hoverSettler: when hovered open and click to stick, have it stick
+- polish: when you click "clear query" theres a significant delay before it "goes home"
+- use old laptop to verify why hovering cards is delayed/not instant
 
+- search: integration filters dont update search
 - permalinks: cant click location permalink on orbitcard
 - search: too glitchy after first key is pressed from home
 - search: filtering "nick and nate" doesn't show any results for some reason
 - relevant/recent toggle broke
-- hoverSettler: when hovered open and click to stick, have it stick
-- search: integration filters dont update search
 - highlights click: doesn't toggle open/close peek
 - peek: make "open" button work well
-- polish: when you click "clear query" theres a significant delay before it "goes home"
 - horizontal related row at bottom of each peek bit for all of them
 - horizontal info/updates row at top of each peek
-- use old laptop to verify why hovering cards is delayed/not instant
 - peek people: topbar needs a lot of visual work
 - make all searches work: task search, message search
 - why overflow hidden makes hovers slow anywhere in OrbitDocked

@@ -30,7 +30,7 @@ const HorizontalScroll = view({
 
 const FilterButton = props => (
   <UI.Button
-    size={1}
+    size={1.1}
     sizeRadius={0.8}
     marginRight={4}
     sizeHeight={0.8}
@@ -55,35 +55,36 @@ FilterBarFade.theme = ({ theme }) => ({
   })`,
 })
 
-export const OrbitFilterBar = ({
-  filterStore,
-}: {
-  filterStore: SearchFilterStore
-}) => {
-  const [active, inactive] = partition(
-    filterStore.filterBarFilters,
-    x => x.active,
-  )
+type Props = {
+  filterStore?: SearchFilterStore
+}
+
+export const OrbitFilterBar = ({ filterStore }: Props) => {
+  const inactiveFilters = [
+    ...filterStore.inactiveFilters,
+    ...filterStore.suggestedFilters,
+  ]
   return (
     <FilterBar>
       <HorizontalScroll>
         <UI.Theme theme={activeTheme}>
-          {active.map((filter, index) => (
+          {filterStore.activeFilters.map((filter, index) => (
             <FilterButton
-              key={`${filter.name}${index}`}
-              onClick={() => filterStore.toggleFilter(filter.name)}
+              key={`${filter.text}${index}`}
+              onClick={() => filterStore.toggleFilter(filter.text)}
             >
-              {filter.name}
+              {filter.text}
             </FilterButton>
           ))}
         </UI.Theme>
         <UI.Theme theme={inactiveTheme}>
-          {inactive.map((filter, index) => (
-            <FilterButton key={`${filter.name}${index}`}>
-              {filter.name}
+          {inactiveFilters.map((filter, index) => (
+            <FilterButton key={`${filter.text}${index}`}>
+              {filter.text}
             </FilterButton>
           ))}
         </UI.Theme>
+        <UI.View width={50} />
       </HorizontalScroll>
       <FilterBarFade />
     </FilterBar>

@@ -237,7 +237,7 @@ export class SearchStore /* extends Store */ {
 
         for (let i = 0; i < takeMax / take; i += 1) {
           const skip = i * take
-          const nextQuery = getSearchQuery(activeQuery, {
+          let nextQuery = getSearchQuery(activeQuery, {
             skip,
             take,
             startDate,
@@ -248,7 +248,7 @@ export class SearchStore /* extends Store */ {
           // add people filters
           if (peopleFilters.length) {
             // find one or more
-            query = query.andWhere(
+            nextQuery = nextQuery.andWhere(
               new Brackets(qb => {
                 const peopleLike = peopleFilters.map(
                   filter => `%${filter.text}%`,
@@ -263,7 +263,7 @@ export class SearchStore /* extends Store */ {
 
           // add integration filters
           if (integrationFilters.length) {
-            nextQuery.andWhere(
+            nextQuery = nextQuery.andWhere(
               new Brackets(qb => {
                 for (const [
                   index,

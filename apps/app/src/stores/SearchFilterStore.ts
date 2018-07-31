@@ -16,8 +16,8 @@ export type SearchFilter = {
 }
 
 const suggestedDates = [
-  { name: 'Last Week', type: 'date', active: false },
-  { name: 'Last Month', type: 'date', active: false },
+  { text: 'Last Week', type: TYPES.DATE },
+  { text: 'Last Month', type: TYPES.DATE },
 ]
 
 @store
@@ -40,7 +40,7 @@ export class SearchFilterStore /* extends Store */ {
   // this contains the segments we found via nlp in order of search
   // like [{ text: 'hey' }, { text: 'world', type: 'integration }]
   get parsedQuery() {
-    return this.nlpStore.nlp.parsedQuery
+    return this.nlpStore.nlp.parsedQuery || []
   }
 
   // allows back in text segments that aren't filtered
@@ -54,6 +54,10 @@ export class SearchFilterStore /* extends Store */ {
 
   get activeFilters() {
     return this.parsedQuery.filter(x => x.type && !this.disabledFilters[x.text])
+  }
+
+  get inactiveFilters() {
+    return this.parsedQuery.filter(x => this.disabledFilters[x.text])
   }
 
   get activeDate() {
@@ -102,9 +106,8 @@ export class SearchFilterStore /* extends Store */ {
 
   get suggestedPeople() {
     return (this.nlpStore.peopleNames || []).slice(0, 2).map(name => ({
-      name,
-      type: 'person',
-      active: false,
+      text: name,
+      type: TYPES.PERSON,
     }))
   }
 
@@ -135,10 +138,6 @@ export class SearchFilterStore /* extends Store */ {
       type: part.type,
       active: true,
     }))
-  }
-
-  get filterBarFilters() {
-    return [...this.nlpActiveFilters, ...this.suggestedFilters]
   }
 
   resetIntegrationFiltersOnNLPChange = react(
@@ -185,7 +184,7 @@ export class SearchFilterStore /* extends Store */ {
       if (hasQuery) {
         throw react.cancel
       }
-      this.inactiveFilters = {}
+      this.disabledFilters = {}
     },
   )
 

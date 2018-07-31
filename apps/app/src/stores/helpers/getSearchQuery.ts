@@ -1,8 +1,4 @@
 import { Bit, Brackets, getRepository } from '@mcro/models'
-import debug from '@mcro/debug'
-
-const log = debug('getSearchQuery')
-debug.quiet('getSearchQuery')
 
 export const getSearchQuery = (
   searchString,
@@ -54,6 +50,5 @@ export const getSearchQuery = (
     query = query.skip(skip)
   }
 
-  log('params', { take, skip, people, startDate, endDate }, 'query', query)
   return query
 }

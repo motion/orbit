@@ -3,6 +3,7 @@ import { HighlightedTextArea } from '../../../views/HighlightedTextArea'
 import { view } from '@mcro/black'
 import { View } from '@mcro/ui'
 import * as UI from '@mcro/ui'
+import { App } from '@mcro/stores'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -35,7 +36,7 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
       />
       <UI.ClearButton
         onClick={searchStore.clearQuery}
-        opacity={searchStore.searchState.query ? 1 : 0}
+        opacity={App.state.query ? 1 : 0}
         position="absolute"
         top="50%"
         right={40}

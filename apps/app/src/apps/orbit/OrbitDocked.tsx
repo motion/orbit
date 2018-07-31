@@ -118,12 +118,7 @@ class OrbitDockedInner extends React.Component<{
         >
           <Border />
           <FrameBackground />
-          <UI.View
-            borderRadius={BORDER_RADIUS}
-            flex={1}
-            overflow="hidden"
-            transform={{ z: 0 }}
-          >
+          <UI.View borderRadius={BORDER_RADIUS} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
               after={

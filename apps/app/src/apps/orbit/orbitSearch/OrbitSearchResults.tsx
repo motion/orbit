@@ -62,13 +62,14 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
                 key={hlIndex}
                 dangerouslySetInnerHTML={{ __html: highlight }}
                 onClick={e => {
-                  e.stopPropagation()
-                  searchStore.setHighlightIndex(hlIndex)
-                  // don't actually toggle when selecting highlights
-                  if (searchStore.activeIndex === index) {
+                  const isAlreadyAtHighlight =
+                    searchStore.activeIndex === index &&
+                    searchStore.highlightIndex === hlIndex
+                  if (!isAlreadyAtHighlight) {
+                    e.stopPropagation()
+                    searchStore.setHighlightIndex(hlIndex)
                     return
                   }
-                  searchStore.toggleSelected(index)
                 }}
               />
             )
@@ -89,19 +90,17 @@ OrbitSearchResultsFrame.theme = ({ theme }) => ({
 const OrbitSearchResultsContents = view(({ name, searchStore }) => {
   const { isChanging, message } = searchStore
   return (
-    <>
+    <div
+      style={{
+        position: 'relative',
+        opacity: isChanging ? 0.3 : 1,
+      }}
+    >
       {message ? <div>{message}</div> : null}
       <OrbitSearchQuickResults searchStore={searchStore} />
-      <div
-        style={{
-          position: 'relative',
-          opacity: isChanging ? 0.7 : 1,
-        }}
-      >
-        <OrbitSearchResultsList searchStore={searchStore} name={name} />
-      </div>
+      <OrbitSearchResultsList searchStore={searchStore} name={name} />
       <div style={{ height: 20 }} />
-    </>
+    </div>
   )
 })
 
@@ -136,6 +135,7 @@ export class OrbitSearchResults extends React.Component<Props> {
     }
     return (
       <SubPane
+        transition="none"
         paddingLeft={0}
         paddingRight={0}
         containerStyle={{

@@ -185,7 +185,15 @@ export class SearchFilterStore /* extends Store */ {
     },
   )
 
+  queryHasActiveSegment = name =>
+    this.parsedQuery.some(x => x.text.toLowerCase() === name.toLowerCase())
+
   toggleFilter = (name: string) => {
+    // if adding a suggested filter, add it dont disable
+    if (!this.queryHasActiveSegment(name)) {
+      this.searchStore.setQuery(`${this.searchStore.query} ${name}`.trim())
+      return
+    }
     this.disabledFilters[name] = !this.disabledFilters[name]
   }
 

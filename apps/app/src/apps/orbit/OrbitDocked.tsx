@@ -86,7 +86,8 @@ FrameBackground.theme = ({ theme }) => ({
 const OrbitInner = view({
   position: 'relative',
   zIndex: 4,
-  // overflow: 'hidden',
+  // this may cause slowness in hover state css, or did for at one point
+  overflow: 'hidden',
   pointerEvents: 'none',
   flex: 1,
   borderBottomRadius: BORDER_RADIUS,

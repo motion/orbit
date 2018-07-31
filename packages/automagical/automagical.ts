@@ -387,15 +387,18 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       if (isReaction) {
         if (typeof val[1] !== 'function') {
-          console.log(val)
-          throw new Error(`Didn't supply a function to reaction ${name}`)
+          throw new Error(
+            `Reaction requires second function. ${name} got ${typeof val}`,
+          )
         }
         // reaction
         // @ts-ignore
         stopReaction = Mobx.reaction(val[0], watcher(val[1]), options)
       } else {
         if (typeof val !== 'function') {
-          throw new Error(`Didn't supply a function to watcher ${name}`)
+          throw new Error(
+            `Reaction requires function. ${name} got ${typeof val}`,
+          )
         }
         //autorun
         stopReaction = Mobx.autorun(watcher(val), options)

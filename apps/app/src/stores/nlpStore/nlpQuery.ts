@@ -55,6 +55,7 @@ const inside = ([startA, endA], [startB, endB]) => {
 }
 
 export function parseSearchQuery(query: string): NLPResponse {
+  const lowerCaseQuery = query.toLowerCase()
   let marks: Mark[] = []
 
   // mark helpers
@@ -66,7 +67,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     marks.push(newMark)
   }
   function highlightIfClear(word, className) {
-    const start = query.indexOf(word)
+    const start = lowerCaseQuery.indexOf(word)
     const end = start + word.length
     addMarkIfClear([start, end, className, word])
   }
@@ -93,8 +94,8 @@ export function parseSearchQuery(query: string): NLPResponse {
   // sort marks in order of occurance
   marks = marks.sort((a, b) => (a[0] > b[0] ? 1 : -1))
 
-  for (const curDate of dates) {
-    highlightIfClear(curDate, MarkType.Date)
+  for (const dateString of dates) {
+    highlightIfClear(dateString, MarkType.Date)
   }
   if (state.namePattern) {
     const nameMatches = query.match(state.namePattern)

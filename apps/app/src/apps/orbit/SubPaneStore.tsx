@@ -46,7 +46,6 @@ export class SubPaneStore {
   }
 
   didMount() {
-    console.log('mount it up', this.props)
     on(this, this.paneNode, 'scroll', _.throttle(this.handlePaneChange, 16 * 3))
     this.addObserver(this.paneRef.current, this.handlePaneChange)
     this.handlePaneChange()
@@ -64,7 +63,6 @@ export class SubPaneStore {
       if (!isActive) {
         throw react.cancel
       }
-      console.log('height with extra', height, this.height, this.props)
       this.props.appStore.setContentHeight(height)
     },
     {
@@ -118,11 +116,9 @@ export class SubPaneStore {
       return
     }
     const { top, height } = this.paneInnerNode.getBoundingClientRect()
-    console.log('updating height', top, height)
-    if (top + height === 0) {
-      debugger
+    if (this.height !== top + height) {
+      this.height = top + height
     }
-    this.height = top + height
   }
 
   updateScrolledTo = () => {

@@ -35,7 +35,7 @@ export class MainPage extends React.Component<{
       <Main>
         {/* <HighlightsPage /> */}
         <Orbit />
-        <Peek />
+        {/* <Peek /> */}
       </Main>
     )
   }

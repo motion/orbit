@@ -82,7 +82,6 @@ export class PeekStore {
     },
     {
       immediate: true,
-      log: false,
     },
   )
 
@@ -105,7 +104,6 @@ export class PeekStore {
     },
     {
       immediate: true,
-      log: false,
     },
   )
 

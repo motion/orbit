@@ -93,7 +93,7 @@ const Card = view({
 
 const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 3, '#90b1e452']
+const cardSelectedGlow = [0, 0, 0, 2, '#90b1e452']
 const borderSelected = UI.color('#90b1e4')
 
 Card.theme = ({
@@ -133,6 +133,9 @@ Card.theme = ({
     } else {
       listStyle = {
         border: [1, 'transparent'],
+        '&:hover': {
+          background: '#f8faff55',
+        },
       }
     }
     card = {
@@ -141,11 +144,8 @@ Card.theme = ({
       borderLeft: 'none',
       borderRight: 'none',
       padding: padding || [20, 18],
-      '&:hover': {
-        background: '#f8faff',
-      },
       '&:active': {
-        opacity: 0.75,
+        opacity: isSelected ? 1 : 0.75,
       },
     }
   } else {
@@ -254,14 +254,14 @@ class OrbitCardStore {
   get sleepBeforePeek() {
     // first time, go fast
     if (!App.peekState.target) {
-      return 0
+      return 16
     }
     // depending on type of move, adjust speed
     if (this.props.searchStore) {
       const { selectEvent } = this.props.searchStore
       return selectEvent === 'key' ? 130 : 0
     }
-    return 0
+    return 16
   }
 
   // this cancels to prevent renders very aggressively
@@ -482,26 +482,32 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           {/* vertical space only if needed */}
           {hasSubtitle &&
             (!!children || !!preview) && <div style={{ height: 4 }} />}
-          <Preview if={preview && !children}>
-            {typeof preview !== 'string' && preview}
-            <UI.Text
-              if={typeof preview === 'string'}
-              className="preview-text"
-              alpha={isSelected ? 1 : 0.6}
-              size={listItem ? 1.1 : 1.3}
-              sizeLineHeight={0.9}
-              margin={inGrid ? ['auto', 0] : 0}
-            >
-              {preview
-                .slice(0, 220)
-                .split(' ')
-                .map((word, i) => (
-                  <React.Fragment key={i}>
-                    <SmallLink searchStore={searchStore}>{word}</SmallLink>{' '}
-                  </React.Fragment>
-                ))}
-            </UI.Text>
-          </Preview>
+          {!!preview &&
+            !children && (
+              <Preview>
+                {typeof preview !== 'string' && preview}
+                {typeof preview === 'string' && (
+                  <UI.Text
+                    className="preview-text"
+                    alpha={isSelected ? 1 : 0.6}
+                    size={listItem ? 1.1 : 1.3}
+                    sizeLineHeight={0.9}
+                    margin={inGrid ? ['auto', 0] : 0}
+                  >
+                    {preview
+                      .slice(0, 220)
+                      .split(' ')
+                      .map((word, i) => (
+                        <React.Fragment key={i}>
+                          <SmallLink searchStore={searchStore}>
+                            {word}
+                          </SmallLink>{' '}
+                        </React.Fragment>
+                      ))}
+                  </UI.Text>
+                )}
+              </Preview>
+            )}
           {typeof children === 'function' ? children(contentProps) : children}
           {people && people.length && people[0].data.profile ? (
             <div>

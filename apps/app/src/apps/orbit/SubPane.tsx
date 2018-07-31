@@ -54,7 +54,7 @@ const OverflowFade = view({
   borderRadius: 20,
   overflow: 'hidden',
   opacity: 1,
-  transition: 'all ease-in 250ms',
+  transition: 'all ease-in 100ms',
   isInvisible: {
     opacity: 0,
   },

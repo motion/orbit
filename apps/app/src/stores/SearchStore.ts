@@ -77,14 +77,14 @@ export class SearchStore /* extends Store */ {
 
     this.props.appStore.onPinKey(key => {
       if (key === 'Delete') {
-        this.query = ''
+        this.setQuery('')
         return
       }
       const { lastPinKey } = this
       if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
-        this.query = key
+        this.setQuery(key)
       } else {
-        this.query += key
+        this.setQuery(this.query + key)
       }
       this.lastPinKey = key
     })
@@ -484,8 +484,6 @@ export class SearchStore /* extends Store */ {
   }
 
   setHighlightIndex = highlightIndex => {
-    console.log(highlightIndex)
-    console.trace()
     this.highlightIndex = +highlightIndex
   }
 

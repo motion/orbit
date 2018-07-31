@@ -29,7 +29,7 @@ const Frame = view(UI.Col, {
   pointerEvents: 'none',
   width: ORBIT_WIDTH,
   opacity: 0,
-  transition: 'bottom ease 80ms',
+  // transition: 'bottom ease 80ms',
   transform: {
     x: 6,
   },

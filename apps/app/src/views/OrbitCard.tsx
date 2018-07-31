@@ -529,6 +529,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               inverse
               opacity={isSelected ? 0.08 : 0.03}
               borderRadius={20}
+              duration={100}
             />
           )}
         {listItem && <Divider />}

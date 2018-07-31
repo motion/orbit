@@ -25,6 +25,8 @@ type Props = {
 class OrbitSettingsStore {
   props: Props
 
+  hasFetchedOnce = false
+
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
   }
@@ -89,12 +91,14 @@ class OrbitSettingsStore {
   )
 
   integrationSettings = modelQueryReaction(
-    () =>
-      Setting.find({
+    () => {
+      this.hasFetchedOnce = true
+      return Setting.find({
         where: { category: 'integration', token: Not(IsNull()) },
-      }),
+      })
+    },
     {
-      condition: () => this.isPaneActive,
+      condition: () => this.isPaneActive || !this.hasFetchedOnce,
       defaultValue: [],
     },
   )

@@ -108,9 +108,11 @@ export function hoverSettler({
       clearTimeout(betweenTm)
       clearTimeout(itemLastLeaveTm)
       clearTimeout(itemLastEnterTm)
-      if (!currentNode) {
+      if (!stuck.get()) {
         stuck.set(e.currentTarget)
-        select(e.currentTarget)
+        if (!currentNode) {
+          select(e.currentTarget)
+        }
       } else {
         if (stuck.get() && stuck.get() !== e.currentTarget) {
           return

@@ -4,6 +4,14 @@ import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 export type ButtonProps = SizedSurfaceProps &
   React.HTMLAttributes<HTMLButtonElement>
 
+const buttonStyles = {
+  outline: 0,
+  cursor: 'default',
+  '&:active': {
+    opacity: 0.75,
+  },
+}
+
 export const Button = ({
   badge,
   children,
@@ -14,15 +22,13 @@ export const Button = ({
   glowProps,
   badgeProps,
   elementProps,
+  style,
   ...props
 }: ButtonProps) => {
   return (
     <SizedSurface
       tagName="button"
-      style={{
-        outline: 0,
-        cursor: 'default',
-      }}
+      style={{ ...buttonStyles, ...style }}
       elementProps={{
         justifyContent: 'center',
         ...elementProps,

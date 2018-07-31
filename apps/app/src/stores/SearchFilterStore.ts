@@ -54,15 +54,25 @@ export class SearchFilterStore /* extends Store */ {
 
   get allFilters() {
     return [
-      ...this.activeFilters.map(part => ({ ...part, active: true })),
+      // keep them in the order of the query so they dont jump around
+      ...this.queryFilters.map(part => ({ ...part, active: true })),
       ...this.suggestedFilters,
     ]
   }
 
-  get activeFilters() {
+  get inactiveFilters() {
     return this.parsedQuery.filter(
-      x => x.type && !this.disabledFilters[x.text.toLowerCase().trim()],
+      x => x.type && this.disabledFilters[x.text.toLowerCase().trim()],
     )
+  }
+
+  get queryFilters() {
+    return this.parsedQuery
+      .filter(x => x.type)
+      .map(x => ({
+        ...x,
+        active: !this.disabledFilters[x.text.toLowerCase().trim()],
+      }))
   }
 
   get activeDate() {

@@ -50,7 +50,7 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
           text: sanitize(bit.body || ''),
           words: highlightWords,
           maxChars: 380,
-          maxSurroundChars: 120,
+          maxSurroundChars: 110,
           trimWhitespace: true,
           separator: '&nbsp;&middot;&nbsp;',
         }}

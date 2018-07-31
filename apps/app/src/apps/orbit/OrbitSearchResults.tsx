@@ -34,7 +34,7 @@ type ListProps = {
 
 const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
   const { results, query } = searchStore.searchState
-  log(`RENDER SENSITIVE`)
+  // log(`RENDER SENSITIVE`)
   if (!results.length) {
     return null
   }

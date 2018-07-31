@@ -10,7 +10,7 @@ import { TYPES, NLPResponse } from './nlpStore/types'
 const { parseSearchQuery, setUserNames } = initNlp()
 
 // @ts-ignore
-window.nlpWorker = { parseSearchQuery, setUserNames }
+// window.nlpWorker = { parseSearchQuery, setUserNames }
 
 @store
 export class NLPStore /* extends Store */ {

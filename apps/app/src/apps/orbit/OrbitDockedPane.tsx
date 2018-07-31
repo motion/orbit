@@ -9,12 +9,13 @@ import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
 const EXTRA_PAD = 40
 
-const getInnerHeight = node => {
-  const lastNode = _.last(Array.from(node.children))
-  if (!lastNode) {
-    return null
-  }
-  return lastNode.offsetTop + lastNode.clientHeight
+type Props = CSSPropertySet & {
+  store?: DockedPaneStore
+  style?: Object
+  after?: React.ReactNode
+  before?: React.ReactNode
+  fadeBottom?: boolean
+  name?: string
 }
 
 class DockedPaneStore {
@@ -29,11 +30,15 @@ class DockedPaneStore {
   isAtBottom = false
   childMutationObserver = null
 
-  get node() {
+  get paneNode() {
     return this.paneRef.current || null
   }
 
-  addObserver = (node, cb, options = { childList: true }) => {
+  get paneInnerNode() {
+    return this.paneNode.firstChild as HTMLDivElement
+  }
+
+  addObserver = (node, cb) => {
     const observer = new MutationObserver(cb)
     observer.observe(node, { childList: true, subtree: true })
     on(this, observer)
@@ -54,7 +59,7 @@ class DockedPaneStore {
 
   handlePaneChange = () => {
     this.updateOnHeight()
-    this.updateScrolledTo(this.node)
+    this.updateScrolledTo()
   }
 
   // scrollToSelectedCard = react(
@@ -87,17 +92,17 @@ class DockedPaneStore {
   )
 
   updateOnHeight = () => {
-    if (!this.isActive || !this.props.appStore || !this.node) {
+    if (!this.isActive || !this.props.appStore || !this.paneNode) {
       return false
     }
-    const innerHeight = getInnerHeight(this.node)
-    const aboveHeight = this.node.getBoundingClientRect().top
-    this.props.appStore.setContentHeight(innerHeight + aboveHeight)
+    const { top, height } = this.paneInnerNode.getBoundingClientRect()
+    this.props.appStore.setContentHeight(top + height)
   }
 
-  updateScrolledTo = node => {
-    const innerHeight = getInnerHeight(node)
-    const scrolledTo = node.scrollTop + node.clientHeight
+  updateScrolledTo = () => {
+    const pane = this.paneNode
+    const innerHeight = this.paneInnerNode.clientHeight
+    const scrolledTo = pane.scrollTop + pane.clientHeight
     if (innerHeight <= scrolledTo) {
       this.isAtBottom = true
     } else {
@@ -125,18 +130,20 @@ const Pane = view(UI.View, {
   borderRadius: BORDER_RADIUS,
   overflowX: 'hidden',
   overflowY: 'scroll',
-  padding: [EXTRA_PAD, 14, 0],
-  margin: [-EXTRA_PAD, 0, 0],
-  pointerEvents: 'none',
+  padding: [0, 14, 0],
+  margin: [0, 0, 0],
+  // pointerEvents: 'none',
   opacity: 0,
   transform: {
     x: 10,
   },
   isActive: {
-    pointerEvents: 'auto',
     opacity: 1,
     transform: {
       x: 0,
+    },
+    '& > *': {
+      pointerEvents: 'auto',
     },
   },
 })
@@ -162,15 +169,6 @@ OverflowFade.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background})`,
 })
 
-type Props = CSSPropertySet & {
-  store?: DockedPaneStore
-  style?: Object
-  after?: React.ReactNode
-  before?: React.ReactNode
-  fadeBottom?: boolean
-  name?: string
-}
-
 const DockedPaneFrame = view(UI.FullScreen, {
   opacity: 0,
   pointerEvents: 'none',
@@ -180,14 +178,17 @@ const DockedPaneFrame = view(UI.FullScreen, {
   },
 })
 
-const DockedPaneContent = view(UI.View, {
+const DockedPaneInner = view(UI.View, {
   position: 'relative',
   flex: 1,
-  overflow: 'hidden',
 })
 
-DockedPaneContent.theme = ({ theme }) => ({
+DockedPaneInner.theme = ({ theme }) => ({
   background: theme.base.background,
+})
+
+const PaneContentInner = view({
+  position: 'relative',
 })
 
 @view.attach('paneStore', 'appStore')
@@ -211,7 +212,7 @@ export class OrbitDockedPane extends React.Component<Props> {
     return (
       <DockedPaneFrame isActive={store.isActive}>
         {before}
-        <DockedPaneContent {...containerStyle}>
+        <DockedPaneInner {...containerStyle}>
           <OverflowFade if={fadeBottom} isInvisible={store.isAtBottom} />
           <Pane
             isActive={store.isActive}
@@ -219,9 +220,9 @@ export class OrbitDockedPane extends React.Component<Props> {
             forwardRef={store.paneRef}
             {...props}
           >
-            {children}
+            <PaneContentInner>{children}</PaneContentInner>
           </Pane>
-        </DockedPaneContent>
+        </DockedPaneInner>
         {after}
       </DockedPaneFrame>
     )

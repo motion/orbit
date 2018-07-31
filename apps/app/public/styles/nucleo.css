@@ -21,9 +21,8 @@ Created using IcoMoon - icomoon.io
 -------------------------*/
 .nc-icon-mini {
   display: inline-block;
-  font: normal normal normal 14px/1 'Nucleo Mini';
+  font: normal normal normal 14px 'Nucleo Mini';
   font-size: inherit;
-  speak: none;
   text-transform: none;
   /* Better Font Rendering */
   -webkit-font-smoothing: antialiased;

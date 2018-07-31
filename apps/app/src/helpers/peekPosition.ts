@@ -3,8 +3,23 @@ import { App } from '@mcro/stores'
 
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
-const TOP_OFFSET = 0
+const BOTTOM_PAD = 40
+const NUDGE_AMT = 20
+
 const screenSize = () => [window.innerWidth, window.innerHeight]
+
+type WindowMap = {
+  position: [number, number]
+  size: [number, number]
+  peekOnLeft: boolean
+}
+
+type Position = {
+  top: number
+  left: number
+  width: number
+  height: number
+}
 
 // dynamic peek size
 // always slightly taller than wide
@@ -18,7 +33,63 @@ const getPeekSize = ([screenWidth]: number[]) => {
     .map((z, i) => Math.max(z, min[i]))
 }
 
-export default function peekPosition(target) {
+let lastPeek = null
+let lastTarget = null
+
+export function peekPosition(target): WindowMap | null {
+  const nextPosition = getPeekPositionFromTarget(target, lastPeek)
+  lastPeek = nextPosition
+  lastTarget = target
+  return nextPosition
+}
+
+// peek window will prefer to "stay in place"
+// so if you are moving down a list it will stay in place until it has to move
+// but we don't want to stay alllll the way in place because it looks better to move a little
+// so we'll nudge it down just a little.
+
+function getLazyPosition(
+  target: Position,
+  peekHeight: number,
+  lastPeek: WindowMap,
+): number {
+  if (!lastPeek || !lastTarget) {
+    return target.top
+  }
+  let y = target.top
+  const peekLastY = lastPeek.position[1]
+  // adjacent (in grid next to each other)
+  if (target.top === lastTarget.top) {
+    return peekLastY
+  }
+  if (target.top > lastTarget.top) {
+    // moving DOWN
+    if (target.top > peekLastY + peekHeight) {
+      // target is BELOW peek, do minimum possible (+ edge pad)
+      y = target.top - peekHeight + BOTTOM_PAD
+    } else {
+      // target is WITHIN peek, do a small nudge
+      y = peekLastY + NUDGE_AMT
+    }
+    // ensure we don't nudge too far down
+    // right now this is done in getPeekPositionFromTarget... TODO put here
+    // y = Math.max()
+  } else {
+    // moving UP
+    if (target.top < peekLastY) {
+      // target is ABOVE peek
+      y = target.top
+    } else {
+      // target is WITHIN peek, small nudge
+      y = peekLastY - NUDGE_AMT
+    }
+    // ensure we don't nudge too far up
+    y = Math.max(EDGE_PAD, y)
+  }
+  return y
+}
+
+function getPeekPositionFromTarget(target, lastPeek): WindowMap | null {
   if (!target) {
     return null
   }
@@ -29,14 +100,13 @@ export default function peekPosition(target) {
     orbitOnLeft = false
     orbitWidth = Constants.ORBIT_WIDTH
   }
-  const { left, top } = target
-  const leftSpace = left
-  const rightSpace = screenW - (left + orbitWidth)
+  const leftSpace = target.left
+  const rightSpace = screenW - (target.left + orbitWidth)
   // prefer bigger area
   let peekOnLeft = leftSpace > rightSpace
   let [pW, pH] = getPeekSize(screenSize())
   let x
-  let y = top + TOP_OFFSET
+  let y = getLazyPosition(target, pH, lastPeek)
   // prefer more strongly away from app if possible
   if (peekOnLeft && !orbitOnLeft && rightSpace > pW + EDGE_PAD) {
     peekOnLeft = false
@@ -45,7 +115,7 @@ export default function peekPosition(target) {
     peekOnLeft = true
   }
   if (peekOnLeft) {
-    x = left - pW
+    x = target.left - pW
     if (orbitOnLeft) {
       x -= SHADOW_PAD
     }
@@ -54,7 +124,7 @@ export default function peekPosition(target) {
       x = 0
     }
   } else {
-    x = left + orbitWidth
+    x = target.left + orbitWidth
     if (pW > rightSpace) {
       pW = rightSpace
     }

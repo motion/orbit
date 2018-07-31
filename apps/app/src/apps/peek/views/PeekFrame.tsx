@@ -3,9 +3,9 @@ import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
+import { PeekFrameArrow } from './PeekFrameArrow'
 
 const SHADOW_PAD = 85
-const background = '#f9f9f9'
 // shared by arrow and frameborder
 const borderShadow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.5]]
 
@@ -13,12 +13,18 @@ const transitions = store => {
   if (store.isHidden) return 'none'
   if (store.tornState) return 'all linear 10ms'
   if (store.willHide) return 'all ease 200ms'
-  if (store.willStayShown) return 'all ease-out 50ms'
-  return 'opacity ease 100ms, transform ease 150ms'
+  if (store.willStayShown) return 'all ease 200ms'
+  return 'opacity ease 100ms, transform ease 100ms'
 }
 
-const PeekFrameBorder = view(UI.FullScreen, {
+const PeekFrameBorder = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
   zIndex: 10000,
+  borderRadius: Constants.PEEK_BORDER_RADIUS,
   pointerEvents: 'none',
   boxShadow: [borderShadow, ['inset', 0, 0.5, 0, 0.5, [255, 255, 255, 0.3]]],
 })
@@ -66,17 +72,6 @@ export const PeekFrame = view.attach('peekStore')(
       ]
       const margin = padding.map(x => -x)
       const boxShadow = [[onRight ? 6 : -6, 8, SHADOW_PAD, [0, 0, 0, 0.3]]]
-      const arrowSize = 20
-      const ARROW_CARD_TOP_OFFSET = 32
-      const arrowY = Math.min(
-        isHidden
-          ? 0
-          : state.target.top +
-            ARROW_CARD_TOP_OFFSET -
-            state.position[1] -
-            arrowSize / 2,
-        state.size[1] - Constants.PEEK_BORDER_RADIUS * 2 - arrowSize,
-      )
       const transition = transitions(peekStore)
       return (
         <UI.Col
@@ -96,33 +91,11 @@ export const PeekFrame = view.attach('peekStore')(
           }}
         >
           {!peekStore.tornState && (
-            <UI.Arrow
-              position="absolute"
-              top={0}
-              zIndex={100}
-              transition="transform ease 70ms"
-              size={arrowSize}
-              towards={onRight ? 'left' : 'right'}
-              background={
-                arrowY < 40 && peekStore.theme
-                  ? UI.color(peekStore.theme.background).darken(0.2)
-                  : background
-              }
-              boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
-              css={{
-                left: !onRight ? 'auto' : -14,
-                right: !onRight ? -arrowSize : 'auto',
-                zIndex: 1000000000,
-                transform: {
-                  y: arrowY,
-                  x: onRight ? 0.5 : -0.5,
-                },
-              }}
-            />
+            <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
           )}
           <UI.Col flex={1} padding={padding} margin={margin}>
             <UI.Col pointerEvents="all !important" position="relative" flex={1}>
-              <PeekFrameBorder borderRadius={Constants.PEEK_BORDER_RADIUS} />
+              <PeekFrameBorder />
               <PeekMain
                 css={{
                   boxShadow,

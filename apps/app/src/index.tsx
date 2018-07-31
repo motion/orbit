@@ -1,22 +1,24 @@
-// import 'react-hot-loader'
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
-import './helpers/createElement'
+import 'react-hot-loader'
 import 'isomorphic-fetch'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { themes } from './themes'
-import { throttle } from 'lodash'
+import debug from '@mcro/debug'
+import './RootViewHMR'
 
-Error.stackTraceLimit = Infinity
-process.on('uncaughtException', err => {
-  console.log('App.uncaughtException', err.stack)
+// quiet everything
+setTimeout(() => {
+  debug.quiet()
 })
 
 // hmr calls render twice out the gate
 // so prevent that
-export const render = throttle(async () => {
+export async function render() {
+  console.log('rendering app')
+  const { RootView } = require('./RootViewHMR')
   // Root is the topmost store essentially
   // We export it so you can access a number of helpers
   if (!window['Root']) {
@@ -27,23 +29,20 @@ export const render = throttle(async () => {
     await rootStore.start({
       connectModels: window.location.pathname !== '/auth',
     })
+    rootStore.rootView = RootView
   }
-  const { RootView } = require('./RootViewHMR')
-  // <React.unstable_AsyncMode>
-  // </React.unstable_AsyncMode>
   ReactDOM.render(
     <UI.ThemeProvide themes={themes} defaultTheme="light">
       <RootView />
     </UI.ThemeProvide>,
     document.querySelector('#app'),
   )
-}, 32)
+}
+
+// this imports render and then patches createElement, needs to be here
+require('./helpers/installDevelopmentHelpers')
 
 render()
-
-// do this at end so it can import any instantiated things it wants to set on window.*
-// also a bit safer as it ensures we don't rely on it for anything  downstraem
-require('./helpers/installDevelopmentHelpers')
 
 if (process.env.NODE_ENV === 'development') {
   module.hot && module.hot.accept(render)

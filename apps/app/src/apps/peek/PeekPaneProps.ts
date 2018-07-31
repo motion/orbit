@@ -7,6 +7,8 @@ import { SearchStore } from '../../stores/SearchStore'
 export type PeekContents = {
   title: React.ReactNode
   subtitle?: React.ReactNode
+  subtitleBefore?: React.ReactNode
+  subtitleAfter?: React.ReactNode
   icon?: React.ReactNode
   permalink?: React.ReactNode
   date?: React.ReactNode
@@ -17,7 +19,7 @@ export type PeekContents = {
 }
 
 export type PeekPaneProps = {
-  scrollToHighlight: () => void
+  scrollToHighlight?: () => void
   bit?: Bit
   person?: Person
   searchStore: SearchStore

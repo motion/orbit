@@ -14,7 +14,7 @@ const icons = {
 export const ControlButtonChrome = view(UI.Col, {
   width: 12,
   height: 12,
-  padding: 4,
+  padding: 2,
   marginRight: 8,
   borderRadius: 100,
   alignItems: 'center',
@@ -23,7 +23,7 @@ export const ControlButtonChrome = view(UI.Col, {
     opacity: 0,
   },
   '&:hover > img': {
-    opacity: 1,
+    opacity: 0.5,
   },
 })
 
@@ -37,10 +37,17 @@ ControlButtonChrome.theme = ({ theme, borderWidth, ...props }) => {
   }
 }
 
+const Img = view('img', {
+  margin: 'auto',
+  width: '100%',
+  height: '100%',
+  cursor: 'default',
+})
+
 export const ControlButton = ({ icon, ...props }) => {
   return (
     <ControlButtonChrome {...props}>
-      <img src={icons[icon]} />
+      <Img src={icons[icon]} />
     </ControlButtonChrome>
   )
 }

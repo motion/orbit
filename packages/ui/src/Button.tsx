@@ -13,6 +13,7 @@ export const Button = ({
   glow,
   glowProps,
   badgeProps,
+  elementProps,
   ...props
 }: ButtonProps) => {
   return (
@@ -21,6 +22,10 @@ export const Button = ({
       style={{
         outline: 0,
         cursor: 'default',
+      }}
+      elementProps={{
+        justifyContent: 'center',
+        ...elementProps,
       }}
       type={type}
       clickable

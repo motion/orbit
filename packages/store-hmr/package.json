@@ -1,0 +1,12 @@
+{
+  "name": "@mcro/store-hmr",
+  "main": "_/StoreHMR.js",
+  "version": "2.2.0",
+  "scripts": {
+    "build": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
+    "watch": "npm run build -- --watch"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "7.0.0-beta.55"
+  }
+}

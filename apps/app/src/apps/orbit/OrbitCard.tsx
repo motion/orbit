@@ -73,6 +73,10 @@ const Card = view({
   },
 })
 
+const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
+const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
+const cardSelectedGlow = [0, 0, 0, 2, '#90b1e452']
+
 Card.theme = ({
   listItem,
   borderRadius,
@@ -124,17 +128,19 @@ Card.theme = ({
   } else {
     // CARD
     const borderSelected = UI.color('#90b1e4')
-    const borderHover = UI.color('#ddd')
+    const borderHover = UI.color('#c9c9c9')
     const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     const cardBackground = background || theme.selected.background
+    const disabledShadow = disableShadow ? 'none' : null
     card = {
       ...card,
       padding: padding || 16,
       borderRadius: borderRadius || 9,
       background: cardBackground,
-      boxShadow: disableShadow ? 'none' : [[0, 1, 2, [0, 0, 0, 0.05]]],
+      boxShadow: disabledShadow || [cardShadow],
       border: border || [1, cardBackground.darken(0.08)],
       '&:hover': {
+        boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
         border: [1, borderHover],
       },
       '&:active': {
@@ -144,6 +150,7 @@ Card.theme = ({
     if (isSelected) {
       card = {
         ...card,
+        boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
         border: [1, borderSelected],
         '&:hover': {
           border: [1, borderSelected.darken(0.1)],
@@ -174,8 +181,9 @@ const Preview = view({
 })
 
 const Subtitle = view(UI.View, {
-  margin: [2, 0, 3],
-  opacity: 0.4,
+  height: 20,
+  margin: [2, 0, 0],
+  opacity: 0.45,
   flexFlow: 'row',
   alignItems: 'center',
 })
@@ -275,7 +283,7 @@ class OrbitCardStore {
       this._isSelected = shouldSelect
       if (shouldSelect) {
         // visual smoothness
-        await sleep()
+        await sleep(32)
         if (!this.target) {
           throw new Error(
             `No target! ${this.props.pane} ${this.props.subPane} ${
@@ -393,6 +401,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     const { isSelected } = store
     const { background } =
       isSelected && selectedTheme ? selectedTheme : theme.base
+    const hasSubtitle = !!(location || subtitle)
     return (
       <CardWrap
         {...hoverToSelect && !inactive && this.hoverSettler.props}
@@ -438,7 +447,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             </UI.Text>
             {afterTitle}
           </Title>
-          {!!(location || subtitle) && (
+          {hasSubtitle && (
             <Subtitle opacity={listItem ? 0.55 : 0.4}>
               {!!location && (
                 <UI.Text
@@ -465,6 +474,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               )}
             </Subtitle>
           )}
+          {/* vertical space only if needed */}
+          {hasSubtitle &&
+            (!!children || !!preview) && <div style={{ height: 4 }} />}
           <Preview if={preview && !children}>
             {typeof preview !== 'string' && preview}
             <UI.Text

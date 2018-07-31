@@ -1,4 +1,8 @@
+<<<<<<< HEAD:apps/desktop/temp/folder/folderSync.ts
 import Syncer from '../../sync/syncers/core/Syncer'
+=======
+import Syncer from '../../sync/syncers/syncer'
+>>>>>>> master:apps/desktop/temp/folder/folderSync.ts
 import { Bit, Setting } from '@mcro/models'
 import { createInChunks } from '~/sync/helpers'
 import Path from 'path'

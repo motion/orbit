@@ -4,7 +4,7 @@ import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '../../../apps/orbit/OrbitIcon'
 import * as UI from '@mcro/ui'
 import { Bit } from '@mcro/models'
-import { SubTitle, RoundButton } from '../../../views'
+import { SubTitle } from '../../../views'
 import { OrbitCardMasonry } from '../../orbit/OrbitCardMasonry'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
@@ -23,7 +23,7 @@ class PersonPeek {
     () =>
       Bit.find({
         relations: ['people'],
-        take: 20,
+        take: 10,
       }),
     { defaultValue: [] },
   )
@@ -124,7 +124,7 @@ const Email = view('a', {
 })
 
 const Avatar = view('img', {
-  margin: [-40, 0, -15, -65],
+  margin: [-40, 0, 10, -65],
   width: 256,
   height: 256,
   borderRadius: 1000,
@@ -178,7 +178,6 @@ export class PeekPerson extends React.Component<
   render() {
     const { store, integrationSettingsStore, person, children } = this.props
     const { settings } = integrationSettingsStore
-    console.log('!!!!!!!!!!!!!!! settings', settings)
     if (!settings) {
       return children({})
     }
@@ -216,10 +215,10 @@ export class PeekPerson extends React.Component<
                 >
                   Slack
                 </IntegrationButton>
-                <IntegrationButton icon="zoom" size={12} color="#777">
+                <IntegrationButton icon="zoom" size={12} href="">
                   Documents
                 </IntegrationButton>
-                <IntegrationButton icon="zoom" size={12} color="#777">
+                <IntegrationButton icon="zoom" size={12} href="">
                   Tasks
                 </IntegrationButton>
               </Links>
@@ -237,7 +236,7 @@ export class PeekPerson extends React.Component<
           <Content>
             <ContentInner>
               <Card>
-                <StrongSubTitle>Spends time in</StrongSubTitle>
+                <StrongSubTitle>Interested in</StrongSubTitle>
                 <UI.Theme name="grey">
                   <Masonry>
                     {[

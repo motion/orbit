@@ -1,11 +1,23 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
+import { view, compose } from '@mcro/black'
+// import * as UI from '@mcro/ui'
 import { themes } from './themes'
-import { color, ThemeProvide } from '@mcro/gloss'
-import { hot } from 'react-hot-loader'
+import { ThemeProvide } from '@mcro/gloss'
+// import { OrbitCard } from '../../app/src/apps/orbit/OrbitCard'
+import { TestHMR } from './TestHMR'
 
-window.color = color
+if (process.env.NODE_ENV === 'development') {
+  if (module.hot && module.hot.addStatusHandler) {
+    if (module.hot.status() === 'idle') {
+      module.hot.addStatusHandler(status => {
+        if (status === 'prepare') {
+          view.emit('will-hmr')
+          view.provide.emit('will-hmr')
+        }
+      })
+    }
+  }
+}
 
 const Test = view({
   color: 'gray',
@@ -73,7 +85,18 @@ const RootViewInner = () => {
   return (
     <ThemeProvide themes={themes} activeTheme="light">
       <div style={{ pointerEvents: 'all', width: '100%', height: '100%' }}>
-        <Test>blue hover orange</Test>
+        <TestHMR />
+
+        {/* <div style={{ flex: 1, overflowY: 'scroll' }}>
+          <box style={{ height: 500 }} />
+          <box style={{ height: 500 }} />
+          <UI.Button glow glowProps={{ color: '#000' }}>
+            hello world
+          </UI.Button>
+          <box style={{ height: 500 }} />
+          <box style={{ height: 500 }} />
+        </div> */}
+        {/* <Test>blue hover orange</Test>
         <Test big>pink hover pinker</Test>
         <Test2 bigFont>red faint</Test2>
         <Test2 big debug>
@@ -144,7 +167,7 @@ const RootViewInner = () => {
             Hello World
           </UI.Button>
           <UI.Input icon="ic" size={3} />
-        </UI.Theme>
+        </UI.Theme> */}
       </div>
     </ThemeProvide>
   )

@@ -29,6 +29,7 @@ export type ItemResolverProps = {
   children: ((a: ResolvedItem) => React.ReactNode)
   shownLimit?: number
   itemProps?: Object
+  searchTerm?: string
 }
 
 export const ItemResolver = ({ bit, item, ...props }: ItemResolverProps) => {

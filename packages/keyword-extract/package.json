@@ -1,0 +1,13 @@
+{
+  "name": "@mcro/keyword-extract",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "version": "2.2.0",
+  "scripts": {
+    "build": "echo hi",
+    "watch": "echo hi"
+  },
+  "dependencies": {
+    "lodash": "4.17.10"
+  }
+}

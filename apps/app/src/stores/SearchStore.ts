@@ -125,9 +125,17 @@ export class SearchStore /* extends Store */ {
 
   get selectedItem() {
     if (this.activeIndex === -1) {
-      return this.quickSearchState.results[this.quickIndex]
+      const { results } = this.quickSearchState
+      if (!results.length) {
+        return null
+      }
+      return results[this.quickIndex]
     }
-    return this.searchState.results[this.activeIndex]
+    const { results } = this.searchState
+    if (!results.length) {
+      return null
+    }
+    return results[this.activeIndex]
   }
 
   get hasActiveIndex() {
@@ -400,7 +408,6 @@ export class SearchStore /* extends Store */ {
   })
 
   toggleSelected = index => {
-    console.log('toggle selected', index, this.activeIndex)
     const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 450) {
@@ -435,12 +442,12 @@ export class SearchStore /* extends Store */ {
 
   increment = (by = 1) => {
     this.toggleSelected(
-      Math.min(this.searchState.results.length - 1, this.activeIndex + by),
+      Math.min(this.searchState.results.length - 1, this.nextIndex + by),
     )
   }
 
   decrement = (by = 1) => {
-    this.toggleSelected(Math.max(-1, this.activeIndex - by))
+    this.toggleSelected(Math.max(-1, this.nextIndex - by))
   }
 
   setGetResults = fn => {
@@ -464,6 +471,7 @@ export class SearchStore /* extends Store */ {
   }
 
   onChangeDate = ({ selection }: { selection: DateSelections }) => {
+    console.log('got selection', selection)
     this.dateState = {
       ranges: [selection],
     }
@@ -493,7 +501,6 @@ export class SearchStore /* extends Store */ {
 
   windowKeyDown = e => {
     const { keyCode } = e
-    console.log('window.keydown', keyCode)
     switch (keyCode) {
       case 37: // left
         if (this.isQuickSearchActive) {
@@ -558,8 +565,8 @@ export class SearchStore /* extends Store */ {
     })
   }
 
-  resetQuickIndexOnSearch = react(
-    () => App.state.query.length,
+  resetQuickIndexOnChange = react(
+    () => this.quickSearchState,
     () => {
       this.quickIndex = 0
     },

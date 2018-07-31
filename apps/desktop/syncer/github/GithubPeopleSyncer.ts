@@ -2,8 +2,11 @@ import { Setting, createOrUpdate, Person } from '@mcro/models'
 import { flatten, uniq } from 'lodash'
 import * as Helpers from '~/helpers'
 import { createOrUpdatePersonBit } from '~/repository'
+<<<<<<< HEAD:apps/desktop/syncer/github/GithubPeopleSyncer.ts
 import { GithubPerson } from '~/syncer/github/GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
+=======
+>>>>>>> master:apps/desktop/sync/syncers/github/people/GithubPeopleSync.ts
 import { GithubPeopleLoader } from './GithubPeopleLoader'
 import { sequence } from '../../utils'
 

@@ -1,23 +1,17 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitIcon } from '../../../apps/orbit/OrbitIcon'
 import { WindowControls } from '../../../views/WindowControls'
 import { App } from '@mcro/stores'
 import { PeekStore } from '../stores/PeekStore'
 import { color } from '@mcro/gloss'
 // import { ControlButton } from '../../views/ControlButton'
 import * as Constants from '../../../constants'
+import { PeekContents } from '../PeekPaneProps'
 
-type Props = {
+type Props = PeekContents & {
   peekStore?: PeekStore
-  title?: React.ReactNode
-  date?: React.ReactNode
-  subtitle?: React.ReactNode
-  permalink?: Function
-  icon?: string | React.ReactNode
-  theme?: Object
-  subhead?: React.ReactNode
+  theme?: any
   integration?: string
 }
 
@@ -27,12 +21,13 @@ const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
+  transition: 'background ease-in 1300ms'
 })
 
 PeekHeaderContain.theme = ({ theme, position }) => {
   return {
     position: position || 'relative',
-    // borderBottom: [1, theme.base.background.darken(0.1)],
+    borderBottom: [1, theme.base.background.darken(0.3)],
     background: theme.headerBackground || theme.base.background,
   }
 }
@@ -78,9 +73,26 @@ const TitleBarText = props => (
   />
 )
 
-const SubTitleHorizontalSpace = () => <div style={{ width: 12 }} />
+const Centered = view({
+  position: 'absolute',
+  top: 0,
+  left: 100,
+  right: 100,
+  bottom: 0,
+  overflow: 'hidden',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+})
 
-const SubTitle = ({ children, date, permalink, icon }) => (
+const textify = thing => {
+  if (typeof thing === 'string') {
+    return <UI.Text>{thing}</UI.Text>
+  }
+  return thing
+}
+
+const SubTitle = ({ children, before, after }) => (
   <UI.Row
     position="relative"
     padding={[0, 12]}
@@ -89,23 +101,12 @@ const SubTitle = ({ children, date, permalink, icon }) => (
     height={32}
     zIndex={1}
   >
-    {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
-    {!!children && !!date && <SubTitleHorizontalSpace />}
-    <UI.Text>
-      {date ? (
-        <>
-          {' '}
-          <UI.Date>{date}</UI.Date>
-        </>
-      ) : null}
-    </UI.Text>
-    {!!permalink &&
-      !!icon && (
-        <>
-          <div style={{ flex: 1 }} />
-          <OrbitIcon onClick={permalink} icon={icon} size={20} />
-        </>
-      )}
+    {textify(before)}
+    <div style={{ flex: 1 }} />
+    <Centered>
+      {typeof children === 'string' ? <UI.Text>{children}</UI.Text> : children}
+    </Centered>
+    {textify(after)}
   </UI.Row>
 )
 
@@ -118,6 +119,8 @@ export class PeekHeaderContent extends React.Component<Props> {
       title,
       date,
       subtitle,
+      subtitleBefore,
+      subtitleAfter,
       permalink,
       icon,
       theme,
@@ -125,32 +128,37 @@ export class PeekHeaderContent extends React.Component<Props> {
       integration,
       ...props
     } = this.props
+    const hasSubTitle = !!(subtitle || subtitleBefore || subtitleAfter)
     return (
       <PeekHeaderContain
         draggable
         onDragStart={peekStore.onDragStart}
-        onDrag={peekStore.onDrag}
-        onDragEnd={peekStore.onDragEnd}
         theme={theme}
         {...props}
       >
         {/* Nice gradient effect on header */}
         <UI.FullScreen
-          background="linear-gradient(rgba(255,255,255,0.055), transparent 44%)"
+          background="linear-gradient(rgba(255,255,255,0.025), transparent 44%)"
           pointerEvents="none"
         />
         {/* Fade below the icon */}
         <UI.View
-          zIndex={0}
+          zIndex={1}
           pointerEvents="none"
           position="absolute"
           top={0}
           right={0}
           bottom={0}
           width={70}
-          background={`linear-gradient(to right, transparent, ${theme.base.background.darken(
-            0.2,
-          )})`}
+          background={`linear-gradient(
+            to right,
+            transparent,
+            ${
+              theme.darkenTitleBarAmount
+                ? theme.base.background.darken(theme.darkenTitleBarAmount)
+                : 'transparent'
+            }
+          )`}
         />
         {/* <UI.HoverGlow
           width={400}
@@ -187,8 +195,8 @@ export class PeekHeaderContent extends React.Component<Props> {
         >
           {title}
         </TitleBar>
-        {!!subtitle && (
-          <SubTitle date={date} permalink={permalink} icon={icon}>
+        {hasSubTitle && (
+          <SubTitle before={subtitleBefore} after={subtitleAfter}>
             {subtitle}
           </SubTitle>
         )}

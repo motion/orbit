@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Surface, SurfaceProps } from './Surface'
 import { forwardRef } from './helpers/forwardRef'
 
-const LINE_HEIGHT = 30
+const LINE_HEIGHT = 28
 
 export type SizedSurfaceProps = SurfaceProps & {
   circular?: boolean
@@ -14,8 +14,9 @@ export type SizedSurfaceProps = SurfaceProps & {
   sizeIcon?: boolean | number
   height?: number
   inline?: boolean
-  wrapElement?: boolean
 }
+
+const num = x => (x === true ? 1 : x)
 
 const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
   const {
@@ -29,7 +30,6 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
     circular,
     ...rest
   } = props
-  const num = x => (x === true ? 1 : x)
   // sizes
   let height =
     typeof sizeHeight !== 'undefined'
@@ -49,13 +49,9 @@ const SizedSurfaceInner = forwardRef((props: SizedSurfaceProps) => {
   }
   if (sizePadding) {
     const padSize = num(sizePadding) * size
-    const padWithWrap = props.wrapElement ? 0 : padSize * 4
-    const padding =
-      (sizePadding && [
-        sizeHeight ? 0 : padSize * 1.2,
-        padWithWrap * padSize,
-      ]) ||
-      0
+    const padding = sizePadding
+      ? [sizeHeight ? 0 : padSize * 1.5, 9 * padSize]
+      : 0
     pass.padding = padding
   }
   if (sizeMargin) {

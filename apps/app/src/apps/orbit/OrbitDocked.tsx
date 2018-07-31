@@ -22,6 +22,7 @@ const Frame = view(UI.Col, {
   top: 10,
   right: 10,
   borderRadius: BORDER_RADIUS,
+  border: [3, [0, 0, 0, 0.04]],
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
@@ -47,11 +48,12 @@ const Frame = view(UI.Col, {
   },
 })
 
-Frame.theme = ({ theme }) => ({
-  background: theme.base.background,
-})
-
-const Border = view(UI.FullScreen, {
+const Border = view({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
   zIndex: Number.MAX_SAFE_INTEGER,
   pointerEvents: 'none',
 })
@@ -67,21 +69,34 @@ Border.theme = ({ theme }) => {
   }
 }
 
+const FrameBackground = view(UI.FullScreen, {
+  zIndex: -1,
+  borderRadius: BORDER_RADIUS + 1,
+})
+
+FrameBackground.theme = ({ theme }) => ({
+  background: theme.base.background,
+})
+
 // having this have -20 margin on sides
 // means we have nice shadows on inner content
 // that overlap the edge of the frame and dont cut off
 // but still hide things that go below the bottom as it should
 const OrbitInner = view({
   position: 'relative',
-  zIndex: 3,
+  zIndex: 4,
   overflow: 'hidden',
+  pointerEvents: 'none',
   margin: [-20, -20, 0, -20],
   padding: [20, 20, 0, 20],
   flex: 1,
   // this can be a lot more because theres padding left and right
   // and so this lets us have the top/side overflow but still cut off bottom
-  borderBottomLeftRadius: 60,
-  borderBottomRightRadius: 60,
+  borderBottomLeftRadius: 51,
+  borderBottomRightRadius: 51,
+  '& > *': {
+    pointerEvents: 'auto',
+  },
 })
 
 @view.attach('appStore', 'searchStore')
@@ -97,10 +112,10 @@ class OrbitDockedInner extends React.Component<{
   render() {
     const { paneStore, appStore, searchStore } = this.props
     const { animationState } = paneStore
-    log('DOCKED ------------', App.orbitState.docked)
+    // log('DOCKED ------------', App.orbitState.docked)
     const contentBottom = Math.max(
       10,
-      window.innerHeight - appStore.contentHeight - 8,
+      window.innerHeight - appStore.contentHeight - 12,
     )
     return (
       <>
@@ -110,6 +125,7 @@ class OrbitDockedInner extends React.Component<{
           bottom={searchStore.searchState.query ? 10 : contentBottom}
         >
           <Border />
+          <FrameBackground />
           <UI.View borderRadius={BORDER_RADIUS} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}

@@ -8,6 +8,7 @@ import T_SocketManager from './socketManager'
 import debug from '@mcro/debug'
 
 const log = debug('bridge')
+debug.quiet('bridge')
 
 // exports
 export * from './proxySetters'
@@ -67,6 +68,7 @@ class Bridge {
     this.setupActions(store, options.actions)
     // on re-start treat as update
     if (this.started) {
+      log('already started, just updating actions...')
       return
     }
     store.bridge = this

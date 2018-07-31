@@ -41,7 +41,11 @@ const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
 const SearchBar = view(Toolbar, {
   height: 42,
-  padding: 6,
+  padding: [4, 6],
+})
+
+SearchBar.theme = () => ({
+  background: 'transparent',
 })
 
 export const SearchBox = view(View, {
@@ -387,12 +391,14 @@ export const Searchable = (Component: any) =>
         searchBarTheme,
         ...props
       } = this.props
-
-      console.log('RENDER SEARCHABLE')
-
       const searchBar = (
         <Theme theme={searchBarTheme}>
-          <SearchBar position="top" key="searchbar" {...searchBarProps}>
+          <SearchBar
+            position="relative"
+            zIndex="1"
+            key="searchbar"
+            {...searchBarProps}
+          >
             <SearchBox tabIndex={-1}>
               <SearchIcon
                 name="ui-1_zoom"

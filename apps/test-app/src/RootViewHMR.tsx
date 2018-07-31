@@ -1,17 +1,7 @@
-export { RootView } from './RootView'
+import { RootView as RootViewReal } from './RootView'
+import { hot } from 'react-hot-loader'
 
 import './createElement'
+import './themes'
 
-if (module.hot && module.hot.addStatusHandler) {
-  if (module.hot.status() === 'idle') {
-    module.hot.addStatusHandler(status => {
-      if (status === 'apply') {
-        setTimeout(() => {
-          console.log('[HMR] Re-render')
-          // @ts-ignore
-          window.render()
-        })
-      }
-    })
-  }
-}
+export const RootView = hot(module)(RootViewReal)

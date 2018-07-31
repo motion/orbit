@@ -1,6 +1,15 @@
 import './installGlobals'
 import * as Mobx from 'mobx'
 
+// just for now since its spitting out so many
+import { setConfig } from 'react-hot-loader'
+
+setConfig({
+  logLevel: 'no-errors-please'
+})
+
+Error.stackTraceLimit = Infinity
+
 // 🐛 note: dont import router or app here
 // it causes the entire app to be imported before boot
 

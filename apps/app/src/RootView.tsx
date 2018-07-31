@@ -5,12 +5,26 @@ import Router from './router'
 import { view, on } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 
+if (process.env.NODE_ENV === 'development') {
+  if (module.hot && module.hot.addStatusHandler) {
+    if (module.hot.status() === 'idle') {
+      module.hot.addStatusHandler(status => {
+        if (status === 'prepare') {
+          view.emit('will-hmr')
+          view.provide.emit('will-hmr')
+        }
+      })
+    }
+  }
+}
+
 export class RootView extends React.Component {
   state = {
     error: null,
   }
 
   componentDidMount() {
+    window['rootViewInstance'] = this
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
 
@@ -86,25 +100,5 @@ export class RootView extends React.Component {
         <CurrentPage key={Router.key} {...Router.params} />
       </UI.Theme>
     )
-  }
-}
-
-if (module.hot && module.hot.addStatusHandler) {
-  if (module.hot.status() === 'idle') {
-    module.hot.addStatusHandler(status => {
-      if (status === 'prepare') {
-        view.emit('will-hmr')
-        view.provide.emit('will-hmr')
-      }
-      if (status === 'apply') {
-        setTimeout(() => {
-          view.emit('did-hmr')
-          view.provide.emit('did-hmr')
-          console.log('[HMR] Re-render')
-          // @ts-ignore
-          window.render()
-        })
-      }
-    })
   }
 }

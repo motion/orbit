@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
 import throttle from 'raf-throttle'
+import { debounce } from 'lodash'
 import { Color } from '@mcro/css'
 
 type ChildArgs = {
@@ -44,6 +45,25 @@ export type HoverGlowProps = {
   overflow?: boolean
   hide?: boolean
   children?: (a: ChildArgs) => React.ReactNode
+}
+
+function getScrollParent(element) {
+  let style = getComputedStyle(element)
+  const excludeStaticParent = style.position === 'absolute'
+  const overflowRegex = /(auto|scroll)/
+  if (style.position === 'fixed') return document.body
+  for (let parent = element; (parent = parent.parentElement); ) {
+    style = getComputedStyle(parent)
+    if (excludeStaticParent && style.position === 'static') {
+      continue
+    }
+    if (
+      overflowRegex.test(style.overflow + style.overflowY + style.overflowX)
+    ) {
+      return parent
+    }
+  }
+  return document.body
 }
 
 const Overlay = view({
@@ -94,20 +114,16 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     track: false,
     parentNode: null,
     position: { x: 0, y: 0 },
-    bounds: { width: 0, height: 0 },
+    bounds: { width: 0, height: 0, left: 0, top: 0 },
+    scrollParent: { top: 0, left: 0 },
   }
 
   unmounted = false
-  parentNode = null
+  parentNode: HTMLDivElement
   rootRef = React.createRef<HTMLDivElement>()
 
   componentDidMount() {
-    on(
-      this,
-      setTimeout(() => {
-        this.follow()
-      }, 100),
-    )
+    this.follow()
   }
 
   follow() {
@@ -122,12 +138,9 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       parentNode = node.parentNode
     }
     if (parentNode) {
-      this.setState({ parentRect: parentNode.getBoundingClientRect() })
-      const bounds = parentNode.getBoundingClientRect()
-      this.setState({ parentNode, bounds })
-      // @ts-ignore
+      this.followScrollParent(parentNode)
+      this.setState({ parentNode })
       const trackMouseTrue = throttle(() => this.trackMouse(true))
-      // @ts-ignore
       const trackMouseFalse = throttle(() => this.trackMouse(false))
       on(this, parentNode, 'mouseenter', trackMouseTrue)
       on(this, parentNode, 'mousemove', this.move)
@@ -135,16 +148,33 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       if (this.props.clickable) {
         on(this, parentNode, 'mousedown', this.mouseDown)
       }
-      const { restingPosition } = this.props
-      if (restingPosition) {
-        const [x, y] = restingPosition
-        this.setMouseTo(x + bounds.left, y + bounds.top)
-      }
+      this.setRestingPosition()
     }
     if (!this.props.hide) {
       // trigger it to show
       this.setState({ mounted: true })
     }
+  }
+
+  setRestingPosition = () => {
+    // const { restingPosition } = this.props
+    // if (restingPosition) {
+    //   const [x, y] = restingPosition
+    //   this.setMouseTo(x + bounds.left, y + bounds.top)
+    // }
+  }
+
+  followScrollParent = parentNode => {
+    this.parentNode = parentNode
+    const scrollParent = getScrollParent(parentNode)
+    on(this, scrollParent, 'scroll', debounce(this.updateScrollParent, 80))
+    this.updateScrollParent()
+  }
+
+  updateScrollParent = () => {
+    this.setState({
+      bounds: this.parentNode.getBoundingClientRect(),
+    })
   }
 
   componentWillUnmount() {
@@ -153,20 +183,17 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
 
   // offset gives us offset without scroll, just based on parent
   move = e => {
-    this.setMouseTo(e.clientX, e.clientY)
+    this.setMouseTo(e.pageX, e.pageY)
   }
 
   setMouseTo = (x1, y1) => {
-    const x = x1 - this.state.parentRect.left
-    const y = y1 - this.state.parentRect.top
-    // if (this.unmounted || !this.state.bounds) {
-    //   console.log('bad')
-    //   return
-    // }
+    const { top, left, width, height } = this.state.bounds
+    const x = x1 - left
+    const y = y1 - top
     this.setState({
       position: {
-        x: x - this.state.bounds.width / 2,
-        y: y - this.state.bounds.height / 2,
+        x: x - width / 2,
+        y: y - height / 2,
       },
     })
   }

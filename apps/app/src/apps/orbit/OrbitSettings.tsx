@@ -96,9 +96,11 @@ class OrbitSettingsStore {
         where: { category: 'integration', token: Not(IsNull()) },
       }),
     {
-      condition: () =>
-        this.isPaneActive || this.integrationSettings.length === 0,
+      condition: () => {
+        return this.isPaneActive || this.integrationSettings.length === 0
+      },
       defaultValue: [],
+      log: true,
     },
   )
 }

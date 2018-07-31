@@ -4,14 +4,8 @@ import 'react-hot-loader'
 import 'isomorphic-fetch'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import debug from '@mcro/debug'
 import './RootViewHMR'
 import './helpers/createElement'
-
-// quiet everything
-setTimeout(() => {
-  debug.quiet()
-})
 
 // hmr calls render twice out the gate
 // so prevent that
@@ -30,10 +24,7 @@ export async function render() {
     })
     rootStore.rootView = RootView
   }
-  ReactDOM.render(
-    <RootView />,
-    document.querySelector('#app'),
-  )
+  ReactDOM.render(<RootView />, document.querySelector('#app'))
 }
 
 render()

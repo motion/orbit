@@ -529,17 +529,19 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       reactionID = uid()
       const curID = reactionID
       const updateAsyncValue = val => {
-        if (curID === reactionID) {
+        const isValid = curID === reactionID
+        if (isValid) {
           replaceDisposable()
-          if (!IS_PROD && !preventLog) {
-            log(
-              `${name} (${Date.now() - start}ms) ${
-                isAsyncReaction ? `[${id}]` : ''
-              } = `,
-              val,
-            )
-          }
           update(val)
+        }
+        if (!IS_PROD && !preventLog) {
+          log(
+            `${name} (${Date.now() - start}ms) ${
+              isAsyncReaction ? `[${id}]` : ''
+            } = `,
+            val,
+            isValid ? '✅' : `🚫 ${reactionID}/${curID}`,
+          )
         }
       }
       let hasCalledSetValue = false
@@ -586,6 +588,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         reactionResult
           .then(val => {
             if (!reactionID) {
+              if (!IS_PROD && !preventLog) {
+                log(`${prefix} 🚫`)
+              }
               // cancelled before finishing
               return
             }
@@ -596,9 +601,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
                 )
               }
               updateAsyncValue(val)
-            }
-            if (!IS_PROD && !preventLog) {
-              log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(val))
             }
           })
           .catch(err => {

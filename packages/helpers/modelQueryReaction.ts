@@ -12,7 +12,6 @@ const trueFn = () => true
 const DEFAULT_OPTIONS = {
   poll: 15000,
   condition: trueFn,
-  log: false,
 }
 
 // a helper to watch model queries and only trigger reactions when the model changes
@@ -30,23 +29,23 @@ export function modelQueryReaction(
   } else if (b instanceof Object) {
     options = b
   }
-  const { poll, condition, log, ...restOptions } = {
+  const { poll, condition, ...restOptions } = {
     ...DEFAULT_OPTIONS,
     ...options,
   }
   const finalOptions: ReactionOptions = {
     immediate: true,
     defaultValue: null,
-    log: false, // because these poll all the time
+    log: false,
     ...restOptions,
   }
-  let currentVal
   return react(
     () => (now(poll) && condition() ? Math.random() : null),
-    async () => {
+    async (_, { getValue }) => {
       if (!condition()) {
         throw react.cancel
       }
+      const currentVal = getValue()
       const next = await query()
       if (next && currentVal) {
         if (Array.isArray(next)) {
@@ -62,7 +61,6 @@ export function modelQueryReaction(
       if (typeof next === 'undefined') {
         throw react.cancel
       }
-      currentVal = next
       // if given explicit reaction, use that as return val
       if (returnVal) {
         const res = returnVal(next)

@@ -2,11 +2,12 @@ import { Setting, createOrUpdate, Person } from '@mcro/models'
 import { flatten, uniq } from 'lodash'
 import * as Helpers from '~/helpers'
 import { createOrUpdatePersonBit } from '~/repository'
+import { GithubPerson } from '~/syncer/github/GithubTypes'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
-import { GithubPerson } from './GithubPeopleQuery'
-import { sequence } from '../../../../utils'
+import { sequence } from '../../utils'
 
-export class GithubPeopleSync {
+export class GithubPeopleSyncer implements IntegrationSyncer {
 
   setting: Setting
 

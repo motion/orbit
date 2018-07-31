@@ -1,3 +1,4 @@
+import { Syncers } from '~/syncer'
 import connectModels from './helpers/connectModels'
 import Server from './Server'
 import { Plugins } from './plugins'
@@ -8,7 +9,6 @@ import hostile_ from 'hostile'
 import * as Constants from './constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import { Sync } from './sync'
 import SQLiteServer from './SQLiteServer'
 import { App, Electron, Desktop } from '@mcro/stores'
 // import { sleep } from '@mcro/helpers'
@@ -33,7 +33,6 @@ export class Root {
   isReconnecting = false
   connection?: Connection
   disposed = false
-  sync: Sync
   screen: Screen
   plugins: Plugins
   keyboardStore: KeyboardStore
@@ -44,9 +43,8 @@ export class Root {
   stores = null
 
   start = async () => {
+    this.registerREPLGlobals();
     // iohook.start(false)
-    root.Root = this
-    root.restart = this.restart
     const db = await sqlite.open(
       Path.join(__dirname, '..', 'data', 'database'),
       {
@@ -93,8 +91,7 @@ export class Root {
     }
 
     this.generalSettingManager = new GeneralSettingManager()
-    this.sync = new Sync()
-    this.sync.start()
+    await this.startSyncers();
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,
@@ -161,7 +158,7 @@ export class Root {
     if (this.screen) {
       await this.screen.dispose()
     }
-    this.sync.dispose()
+    await this.stopSyncers();
     this.disposed = true
     return true
   }
@@ -176,4 +173,46 @@ export class Root {
       })
     }
   }
+
+  /**
+   * Registers global variables in the REPL.
+   * Used for the development purposes.
+   */
+  private registerREPLGlobals() {
+    root.Root = this
+    root.restart = this.restart
+    root.Syncers = Syncers.reduce((map, syncer) => {
+
+      // since Syncers is an array we need to convert it to object
+      // to make them more usable in the REPL. We are using Syncer type
+      // as an object key. Since Syncers can have duplicate types
+      // we apply ordered number to syncers with duplicated types
+      const sameTypeSyncersNumber = Object
+        .keys(map)
+        .filter(key => key === syncer.options.type)
+        .length
+      const suffix = (sameTypeSyncersNumber > 0 ? sameTypeSyncersNumber : '')
+      map[syncer.options.type + suffix] = syncer
+      return map
+    }, {});
+  }
+
+  /**
+   * Starts all the syncers.
+   */
+  private async startSyncers() {
+    await Promise.all(Syncers.map(syncer => {
+      return syncer.start()
+    }))
+  }
+
+  /**
+   * Stops all the syncers.
+   */
+  private async stopSyncers() {
+    await Promise.all(Syncers.map(syncer => {
+      return syncer.stop()
+    }))
+  }
+
 }

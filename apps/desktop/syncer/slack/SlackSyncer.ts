@@ -2,6 +2,7 @@ import { Bit, Location, Person, Setting } from '@mcro/models'
 import * as _ from 'lodash'
 import { MoreThan } from 'typeorm'
 import { createOrUpdatePersonBit } from '~/repository'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { sequence } from '~/utils'
 import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
@@ -10,10 +11,10 @@ import { createConversation, filterChannelsBySettings } from './SlackUtils'
 /**
  * Syncs Slack Bits.
  */
-export class SlackSync {
-  setting: Setting
-  loader: SlackLoader
-  people: Person[]
+export class SlackSyncer implements IntegrationSyncer {
+  private setting: Setting
+  private loader: SlackLoader
+  private people: Person[]
 
   constructor(setting: Setting) {
     this.setting = setting

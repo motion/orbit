@@ -1,5 +1,6 @@
-import { GithubIssueQuery, GithubIssueQueryResult } from './GithubIssueQuery'
-import { fetchFromGitHub } from '../GithubUtils'
+import { GithubIssueQueryResult } from '~/syncer/github/GithubTypes'
+import { GithubIssueQuery } from './GithubQueries'
+import { fetchFromGitHub } from './GithubUtils'
 import debug from '@mcro/debug'
 
 const log = debug('GithubIssueLoader')

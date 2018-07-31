@@ -2,7 +2,8 @@ import { Bit, Person, Setting } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import TurndownService from 'turndown'
 import { createOrUpdatePersonBit } from '~/repository'
-import { fetchFromAtlassian } from '~/sync/syncers/jira/JiraUtils'
+import { fetchFromAtlassian } from '~/syncer/jira/JiraUtils'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import {
   AtlassianObj,
   ConfluenceGroupMembersResponse,
@@ -10,11 +11,11 @@ import {
   ConfluenceUser,
 } from './ConfluenceTypes'
 
-export class ConfluenceSync {
+export class ConfluenceSyncer implements IntegrationSyncer {
 
-  setting: Setting
-  service: AtlassianService
-  people: Person[]
+  private setting: Setting
+  private service: AtlassianService
+  private people: Person[]
 
   constructor(setting: Setting) {
     this.setting = setting

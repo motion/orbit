@@ -6,9 +6,9 @@ import { SlackChannel, SlackMessage } from './SlackTypes'
  */
 export function filterChannelsBySettings(channels: SlackChannel[], setting: Setting) {
 
-  const settingChannels = setting.values.channels || {
+  const settingChannels = setting.values.channels /*|| {
     "CBV9PGSGG": "CBV9PGSGG"
-  }
+  }*/
 
   // if no channels in settings are selected then return all channels
   if (!settingChannels)

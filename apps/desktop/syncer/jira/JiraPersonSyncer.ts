@@ -1,25 +1,24 @@
 import { createOrUpdate, Person, Setting } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import { createOrUpdatePersonBit } from '~/repository'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { JiraPeopleResponse, JiraPerson } from './JiraPersonTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 
-export class JiraPersonSync {
-  setting: Setting
+export class JiraPersonSyncer implements IntegrationSyncer {
+  private setting: Setting
 
   constructor(setting: Setting) {
     this.setting = setting
   }
 
-  async run(): Promise<Person[]> {
+  async run(): Promise<void> {
     try {
       console.log('synchronizing jira people')
       const people = await this.syncPeople(0)
       console.log(`created ${people.length} jira people`, people)
-      return people
     } catch (err) {
       console.log('error in jira people sync', err.message, err.stack)
-      return []
     }
   }
 

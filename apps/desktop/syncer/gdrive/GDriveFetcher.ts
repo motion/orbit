@@ -12,7 +12,7 @@ import { Setting } from '@mcro/models'
  */
 export class GDriveFetcher {
 
-  setting: Setting
+  private setting: Setting
 
   constructor(setting: Setting) {
     this.setting = setting

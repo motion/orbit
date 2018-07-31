@@ -1,12 +1,13 @@
 import { Bit, createOrUpdateBit, Setting } from '@mcro/models'
 import { flatten, omit } from 'lodash'
-import { GithubIssue } from './GithubIssueQuery'
+import { GithubIssue } from '~/syncer/github/GithubTypes'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubIssueLoader } from './GithubIssueLoader'
-import { sequence } from '../../../../utils'
+import { sequence } from '../../utils'
 
-export class GithubIssueSync {
+export class GithubIssueSyncer implements IntegrationSyncer {
 
-  setting: Setting
+  private setting: Setting
 
   constructor(setting: Setting) {
     this.setting = setting

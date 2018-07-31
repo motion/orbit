@@ -1,23 +1,22 @@
 import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
+import { IntegrationSyncer } from '~/syncer/core/IntegrationSyncer'
 import { JiraIssue, JiraIssueResponse } from './JiraIssueTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 
-export class JiraIssueSync {
+export class JiraIssueSync implements IntegrationSyncer {
   setting: Setting
 
   constructor(setting: Setting) {
     this.setting = setting
   }
 
-  async run(): Promise<Bit[]> {
+  async run(): Promise<void> {
     try {
       console.log('synchronizing jira issues')
       const issues = await this.syncIssues(0)
       console.log(`created ${issues.length} jira issues`, issues)
-      return issues
     } catch (err) {
       console.log('error in jira task sync', err.message, err.stack)
-      return []
     }
   }
 

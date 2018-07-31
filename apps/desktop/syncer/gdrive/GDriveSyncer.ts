@@ -1,12 +1,14 @@
 import { Bit, createOrUpdateBit, Setting, createOrUpdate, Person } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import { createOrUpdatePersonBit } from '~/repository'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
 
-export class GDriveSync {
-  loader: GDriveLoader
-  setting: Setting
+export class GDriveSyncer implements IntegrationSyncer {
+
+  private loader: GDriveLoader
+  private setting: Setting
 
   constructor(setting) {
     this.setting = setting

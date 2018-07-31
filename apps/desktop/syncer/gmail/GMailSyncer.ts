@@ -2,15 +2,16 @@ import { Bit, createOrUpdate, createOrUpdateBit, Person, Setting } from '@mcro/m
 import { In } from 'typeorm'
 import * as Helpers from '~/helpers'
 import { createOrUpdatePersonBit } from '~/repository'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { sequence } from '~/utils'
 import { GMailLoader } from './GMailLoader'
 import { parseMailDate, parseMailTitle, parseSender } from './GMailMessageParser'
 import { GmailThread } from './GMailTypes'
 
-export class GMailSync {
+export class GMailSyncer implements IntegrationSyncer {
 
-  setting: Setting
-  loader: GMailLoader
+  private setting: Setting
+  private loader: GMailLoader
 
   constructor(setting: Setting) {
     this.setting = setting;

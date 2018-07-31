@@ -1,5 +1,16 @@
 - p2p https://github.com/mafintosh/hyperdb
 
+- horizontal related row at bottom of each peek bit for all of them
+- horizontal info/updates row at top of each peek
+- make all searches work: task search, message search
+- Remove setting button
+- Google drive settings pane
+- Manage tab for every one:
+  - Stats card of total bits
+  - Clear all bits
+  - Remove integration
+  - Can have login settings if applicable
+
 # unnecessary for beta polish bucket
 
 - peek arrow position shouldn't straddle weird borders
@@ -16,31 +27,9 @@
 - no titlabar faderight to transparent on profile
 - UI.Text not wrapping subtitlePrefix
 
-# peek search/display run
-
-- horizontal related row at top of each peek bit for all of them
-- make all searches work: task search, message search
-
-# smaller visual bugs
-
-- if you have a search entered and hit "settings" it breaks
-- hover effects on home button odd / stay around after hide/show
-- hovering terms on homescreen -- remove for now
-- selected state of searchBar in peek should glow and help bring focus there
-
-# settings run
-
-- Remove setting button
-- Google drive settings pane
-- Manage tab for every one:
-  - Stats card of total bits
-  - Clear all bits
-  - Remove integration
-  - Can have login settings if applicable
-
 # gamechangers
 
-- multiselect:
+- multiselect ?
   1.  search
   2.  hit shift + click
   3.  (or click and drag just like tableview)

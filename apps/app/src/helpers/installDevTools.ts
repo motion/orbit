@@ -37,17 +37,20 @@ setTimeout(() => {
   console.warn = ogWarn
 })
 
+const recrusiveMobxToJS = obj => {
+  const next = Mobx.toJS(obj)
+  if (Array.isArray(next)) {
+    return next.map(recrusiveMobxToJS)
+  }
+  return next
+}
+
 // really nice for quicker debugging...
 if (!Object.prototype['toJS']) {
   Object.defineProperty(Object.prototype, 'toJS', {
     enumerable: false,
     value: function() {
-      // this does it deeply...
-      try {
-        return JSON.parse(JSON.stringify(this))
-      } catch {
-        return Mobx.toJS(this)
-      }
+      return recrusiveMobxToJS(this)
     },
   })
 }

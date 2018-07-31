@@ -23,6 +23,7 @@ export class SubPaneStore {
     extraCondition: () => boolean
   }
 
+  height = 0
   paneRef = React.createRef<HTMLDivElement>()
   isAtBottom = false
   childMutationObserver = null
@@ -45,11 +46,31 @@ export class SubPaneStore {
   }
 
   didMount() {
+    console.log('mount it up', this.props)
     on(this, this.paneNode, 'scroll', _.throttle(this.handlePaneChange, 16 * 3))
     this.addObserver(this.paneRef.current, this.handlePaneChange)
     this.handlePaneChange()
-    this.updateOnHeight()
+    this.updateHeight()
   }
+
+  get heightWithExtraFilters() {
+    // add padding + filters height
+    return this.height + this.props.searchStore.extraHeight + 14
+  }
+
+  setAppHeightOnHeightChange = react(
+    () => [this.heightWithExtraFilters, this.isActive],
+    ([height, isActive]) => {
+      if (!isActive) {
+        throw react.cancel
+      }
+      console.log('height with extra', height, this.height, this.props)
+      this.props.appStore.setContentHeight(height)
+    },
+    {
+      immediate: true,
+    },
+  )
 
   addObserver = (node, cb) => {
     const observer = new MutationObserver(cb)
@@ -59,7 +80,7 @@ export class SubPaneStore {
   }
 
   handlePaneChange = () => {
-    this.updateOnHeight()
+    this.updateHeight()
     this.updateScrolledTo()
   }
 
@@ -82,19 +103,26 @@ export class SubPaneStore {
   updatePaneHeightOnActive = react(
     () => this.isActive,
     () => {
-      const res = this.updateOnHeight()
+      const res = this.updateHeight()
       if (!res) {
         throw react.cancel
       }
     },
   )
 
-  updateOnHeight = () => {
-    if (!this.isActive || !this.props.appStore || !this.paneNode) {
-      return false
+  updateHeight = () => {
+    if (!this.props.appStore || !this.paneNode) {
+      return
+    }
+    if (!this.isActive && this.height) {
+      return
     }
     const { top, height } = this.paneInnerNode.getBoundingClientRect()
-    this.props.appStore.setContentHeight(top + height)
+    console.log('updating height', top, height)
+    if (top + height === 0) {
+      debugger
+    }
+    this.height = top + height
   }
 
   updateScrolledTo = () => {

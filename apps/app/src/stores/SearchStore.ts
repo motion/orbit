@@ -150,7 +150,7 @@ export class SearchStore /* extends Store */ {
   }
 
   get extraHeight() {
-    return this.extraFiltersVisible ? 0 : this.extraFiltersHeight
+    return this.extraFiltersVisible ? this.extraFiltersHeight : 0
   }
 
   get isActive() {

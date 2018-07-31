@@ -12,11 +12,9 @@ const Highlight = view({
   display: 'inline-block',
   lineHeight: 22,
   fontSize: 15,
-  padding: [3, 6, 3, 10],
-  margin: [4, 0, 0, 8],
+  padding: [3, 6, 3, 14],
+  margin: [4, 0, 0, 4],
   borderLeft: [2, 'transparent'],
-  // borderRadius: 8,
-  transition: 'border ease 100ms',
   color: [0, 0, 0, 0.8],
   '&:hover': {
     borderLeftColor: '#90b1e4',
@@ -130,8 +128,11 @@ export class OrbitSearchResults extends React.Component<Props> {
     if (!searchStore.searchState.results) {
       return null
     }
+    const hideHeight = searchStore.extraFiltersVisible
+      ? 0
+      : searchStore.extraFiltersHeight
     const transform = {
-      y: -searchStore.extraHeight,
+      y: -hideHeight,
     }
     return (
       <SubPane

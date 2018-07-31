@@ -61,7 +61,10 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
-        <FilterButton {...searchStore.dateHover.props}>
+        <FilterButton
+          {...searchStore.dateHover.props}
+          active={searchStore.dateHover.isStuck()}
+        >
           {getDate(nlpStore.nlp.date) || 'Any time'}
         </FilterButton>
         <div style={{ width: 4 }} />

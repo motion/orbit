@@ -1,5 +1,6 @@
 import { isEqual, throttle } from 'lodash'
 import debug from '@mcro/debug'
+import * as Mobx from 'mobx'
 
 const log = debug('hoverSettler')
 
@@ -23,7 +24,7 @@ export function hoverSettler({
   let lastLeave
   let currentNode
   let lastHovered
-  let stickOnClick = false
+  let stuck = Mobx.observable.box(false)
 
   // debounce - leave space for ui thread
   const setHovered = throttle((nextHovered, cb) => {
@@ -78,9 +79,7 @@ export function hoverSettler({
     }
 
     function handleHover(target) {
-      if (stickOnClick) {
-        return
-      }
+      if (stuck.get()) return
       // remove any other enters/leaves
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
@@ -103,7 +102,6 @@ export function hoverSettler({
     }
 
     const onClick = throttle(e => {
-      console.log('click', e.currentTarget)
       clearTimeout(lastEnter)
       clearTimeout(lastLeave)
       clearTimeout(fullyLeaveTm)
@@ -111,13 +109,13 @@ export function hoverSettler({
       clearTimeout(itemLastLeaveTm)
       clearTimeout(itemLastEnterTm)
       if (!currentNode) {
-        stickOnClick = e.currentTarget
+        stuck.set(e.currentTarget)
         select(e.currentTarget)
       } else {
-        if (stickOnClick && stickOnClick !== e.currentTarget) {
+        if (stuck.get() && stuck.get() !== e.currentTarget) {
           return
         }
-        stickOnClick = false
+        stuck.set(false)
         select(null)
       }
     }, 100)
@@ -125,27 +123,22 @@ export function hoverSettler({
     function onMouseEnter(e) {
       clearTimeout(itemLastLeaveTm)
       const target = e.currentTarget
-      if (target === stickOnClick) {
+      if (target === stuck.get()) {
         return
       }
       handleHover(target)
     }
 
     function onMouseMove(e) {
-      if (stickOnClick) {
-        return
-      }
+      if (stuck.get()) return
       handleHover(e.currentTarget)
     }
 
     function onMouseLeave(e) {
-      if (stickOnClick) {
-        return
-      }
+      if (stuck.get()) return
       clearTimeout(itemLastLeaveTm)
       clearTimeout(fullyLeaveTm)
       clearTimeout(betweenTm)
-
       // be sure to clear your own hovers
       if (itemLastEnterTm === lastEnter) {
         clearTimeout(lastEnter)
@@ -173,6 +166,7 @@ export function hoverSettler({
       setOnHovered(onHovered) {
         curOnHovered = onHovered
       },
+      isStuck: () => stuck.get(),
       props: {
         onMouseEnter,
         onMouseLeave,

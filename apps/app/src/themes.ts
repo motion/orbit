@@ -45,7 +45,8 @@ export const themes = {
       background: color('#fff'),
     },
     active: {
-      background: greyActiveBg,
+      background: '#5459ED',
+      color: '#fff',
     },
     activeHover: {
       background: greyActiveHoverBg,

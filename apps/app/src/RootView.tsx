@@ -41,10 +41,12 @@ export class RootView extends React.Component {
         App.sendMessage(Desktop, Desktop.messages.OPEN, event.target.href)
       }
     })
+
+    // reset errors on hmr
+    on(this, view, 'will-hmr', () => this.setState({ error: null }))
   }
 
   componentDidCatch(error) {
-    console.warn('did catch', error)
     this.setState({ error })
   }
 
@@ -57,7 +59,6 @@ export class RootView extends React.Component {
       return (
         <UI.Col
           css={{
-            background: [255, 0, 0, 0.025],
             position: 'absolute',
             top: 0,
             left: 0,
@@ -73,23 +74,20 @@ export class RootView extends React.Component {
               right: 0,
               width: '40%',
               height: '30%',
-              background: [0, 0, 0, 0.3],
-              padding: 20,
-              lineHeight: '2.5rem',
-              color: 'red',
-              fontWeight: 900,
+              background: [255, 255, 255, 0.95],
+              padding: 10,
+              lineHeight: '1.25rem',
+              color: '#000',
+              fontWeight: 500,
               overflowY: 'scroll',
             }}
           >
-            <h1>Orbit Error</h1>
-            <h2>{this.state.error.message}</h2>
+            <h2>Orbit Error: {this.state.error.message}</h2>
             <UI.Block
               tagName="pre"
-              css={{
-                lineHeight: '1.4rem',
-                fontSize: 16,
-                color: '#fff',
-              }}
+              fontSize={15}
+              marginTop={10}
+              lineHeight={15}
             >
               {this.state.error.stack}
             </UI.Block>

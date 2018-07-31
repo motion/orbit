@@ -24,6 +24,7 @@ export class SearchFilterStore /* extends Store */ {
   searchStore: SearchStore
   integrationSettingsStore: IntegrationSettingsStore
   nlpStore: NLPStore
+
   inactiveFilters = deep({})
   sortBy = 'Relevant'
   sortOptions = ['Relevant', 'Recent']
@@ -33,6 +34,12 @@ export class SearchFilterStore /* extends Store */ {
     this.searchStore = searchStore
     this.integrationSettingsStore = searchStore.props.integrationSettingsStore
     this.nlpStore = searchStore.nlpStore
+  }
+
+  // this contains the segments we found via nlp in order of search
+  // like [{ text: 'hey' }, { text: 'world', type: 'integration }]
+  get parsedQuery() {
+    return this.nlpStore.nlp.parsedQuery
   }
 
   get hasInactiveFilters() {
@@ -62,10 +69,6 @@ export class SearchFilterStore /* extends Store */ {
       name: this.integrationSettingsStore.getTitle(setting),
       active: /* !hasInactiveFilters ? true :  */ inactiveFilters[setting.type],
     }))
-  }
-
-  get parsedQuery() {
-    return this.nlpStore.nlp.parsedQuery
   }
 
   get suggestedPeople() {
@@ -146,13 +149,10 @@ export class SearchFilterStore /* extends Store */ {
     },
   )
 
-  toggleFilter = name => {
-    const disableIndex = this.nlpStore.nlp.parsedQuery.findIndex(
-      x => x.text === name,
-    )
+  toggleFilter = (name: string) => {
     this.disabledMarks = {
       ...this.disabledMarks,
-      [disableIndex]: !this.disabledMarks[disableIndex],
+      [name]: !this.disabledMarks[name],
     }
   }
 

@@ -13,6 +13,7 @@ import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { Brackets } from '../../../../node_modules/typeorm/browser'
 import { flatten } from 'lodash'
 import { DateRange } from './nlpStore/types'
+import { TYPES } from './NLPStore/types'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
@@ -156,16 +157,6 @@ export class SearchStore /* extends Store */ {
     return this.props.appStore.selectedPane === 'docked-search'
   }
 
-  get queryParams() {
-    const { people, startDate, endDate } = this.nlpStore.nlp
-    return {
-      people,
-      startDate,
-      endDate,
-      sortBy: this.searchFilterStore.sortBy,
-    }
-  }
-
   searchState = react(
     () => [
       App.state.query,
@@ -224,25 +215,64 @@ export class SearchStore /* extends Store */ {
           // wait for nlp to give us results
           await when(() => this.nlpStore.nlp.query === query)
         }
-        // gather all the pieces from nlp store for query
-        const { searchQuery } = this.nlpStore.nlp
-        // get first page results
+
+        // pagination
         const take = 4
         const takeMax = take * 6
         const sleepBtwn = 80
+
+        // gather all the pieces from nlp store for query
+        // const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
+        const {
+          activeFilters,
+          activeQuery,
+          activeDate,
+          sortBy,
+        } = this.searchFilterStore
+
         let results = []
+
+        // filters
+        const peopleFilters = activeFilters.filter(x => x.type === TYPES.PERSON)
+        const integrationFilters = activeFilters.filter(
+          x => x.type === TYPES.INTEGRATION,
+        )
+        const { startDate, endDate } = activeDate
+
         for (let i = 0; i < takeMax / take; i += 1) {
           const skip = i * take
-          const nextQuery = getSearchQuery(searchQuery, {
+          const nextQuery = getSearchQuery(activeQuery, {
             skip,
             take,
-            ...this.queryParams,
+            startDate,
+            endDate,
+            sortBy,
           })
-          // add in filters if need be
-          if (activeFilters && activeFilters.length) {
+
+          // add people filters
+          if (peopleFilters.length) {
+            // find one or more
+            query = query.andWhere(
+              new Brackets(qb => {
+                const peopleLike = peopleFilters.map(
+                  filter => `%${filter.text}%`,
+                )
+                qb.where('person.name like :name', { name: peopleLike[0] })
+                for (const name of peopleLike.slice(1)) {
+                  qb.orWhere('person.name like :name', { name })
+                }
+              }),
+            )
+          }
+
+          // add integration filters
+          if (integrationFilters.length) {
             nextQuery.andWhere(
               new Brackets(qb => {
-                for (const [index, integration] of activeFilters.entries()) {
+                for (const [
+                  index,
+                  integration,
+                ] of integrationFilters.entries()) {
                   const whereType = index === 0 ? 'where' : 'orWhere'
                   qb[whereType]('bit.integration = :integration', {
                     integration,
@@ -251,6 +281,7 @@ export class SearchStore /* extends Store */ {
               }),
             )
           }
+
           const nextResults = await nextQuery.getMany()
           results = [...results, ...nextResults]
           setValue({

@@ -6,7 +6,7 @@ debug.quiet('getSearchQuery')
 
 export const getSearchQuery = (
   searchString,
-  { take, skip, people, startDate, endDate, sortBy },
+  { take, skip, startDate, endDate, sortBy },
 ) => {
   let query = getRepository(Bit)
     .createQueryBuilder('bit')
@@ -36,20 +36,6 @@ export const getSearchQuery = (
   } else {
     // order by recent if no search
     query = query.orderBy('bit.bitCreatedAt', 'DESC')
-  }
-
-  // PEOPLE
-  if (people.length) {
-    // essentially, find at least one person
-    query = query.andWhere(
-      new Brackets(qb => {
-        const peopleLike = people.map(x => `%${x}%`)
-        qb.where('person.name like :name', { name: peopleLike[0] })
-        for (const name of peopleLike.slice(1)) {
-          qb.orWhere('person.name like :name', { name })
-        }
-      }),
-    )
   }
 
   // DATE RANGE

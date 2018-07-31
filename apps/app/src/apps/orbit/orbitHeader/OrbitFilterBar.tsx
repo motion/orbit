@@ -71,7 +71,7 @@ export const OrbitFilterBar = ({
           {active.map((filter, index) => (
             <FilterButton
               key={`${filter.name}${index}`}
-              onClick={() => filterStore.toggleFilter(filter)}
+              onClick={() => filterStore.toggleFilter(filter.name)}
             >
               {filter.name}
             </FilterButton>

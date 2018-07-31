@@ -110,6 +110,29 @@ export function parseSearchQuery(query: string): NLPResponse {
     }
   }
 
+  // date
+  const date: DateRange = Sherlockjs.parse(query)
+  if (date.startDate) {
+    // sherlock found a date in the future
+    // but we don't deal with future dates
+    // so lets convert it to the past
+    const startDaysAheadOfNow = DateFns.differenceInDays(
+      date.startDate,
+      new Date(),
+    )
+    if (startDaysAheadOfNow > 0) {
+      const dateBehindEquivOfStartAhead = DateFns.subDays(
+        new Date(),
+        startDaysAheadOfNow,
+      )
+      date.startDate = dateBehindEquivOfStartAhead
+    }
+  }
+  // if end date in future, just set it to now
+  if (date.endDate && DateFns.differenceInDays(date.endDate, new Date()) > 0) {
+    date.endDate = new Date()
+  }
+
   // build a nicer object describing the query for easier parsing
   let parsedQuery: QueryFragment[] = []
 
@@ -151,30 +174,6 @@ export function parseSearchQuery(query: string): NLPResponse {
   const people = parsedQuery
     .filter(x => x.type === TYPES.PERSON)
     .map(x => x.text)
-
-  const date: DateRange = Sherlockjs.parse(query)
-
-  if (date.startDate) {
-    // sherlock found a date in the future
-    // but we don't deal with future dates
-    // so lets convert it to the past
-    const startDaysAheadOfNow = DateFns.differenceInDays(
-      date.startDate,
-      new Date(),
-    )
-    if (startDaysAheadOfNow > 0) {
-      const dateBehindEquivOfStartAhead = DateFns.subDays(
-        new Date(),
-        startDaysAheadOfNow,
-      )
-      date.startDate = dateBehindEquivOfStartAhead
-    }
-  }
-
-  // if end date in future, just set it to now
-  if (date.endDate && DateFns.differenceInDays(date.endDate, new Date()) > 0) {
-    date.endDate = new Date()
-  }
 
   return {
     query,

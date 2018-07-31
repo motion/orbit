@@ -25,7 +25,7 @@ export class NLPStore /* extends Store */ {
     () => App.state.query,
     async (query, { sleep }) => {
       await sleep(150)
-      this.nlp = {
+      return {
         ...(await parseSearchQuery(query)),
         query,
       }

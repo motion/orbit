@@ -13,6 +13,11 @@ export type SearchFilter = {
   active: boolean
 }
 
+const suggestedDates = [
+  { name: 'Last Week', type: 'date', active: false },
+  { name: 'Last Month', type: 'date', active: false },
+]
+
 @store
 export class SearchFilterStore /* extends Store */ {
   searchStore: SearchStore
@@ -54,6 +59,61 @@ export class SearchFilterStore /* extends Store */ {
       name: this.integrationSettingsStore.getTitle(setting),
       active: /* !hasInactiveFilters ? true :  */ inactiveFilters[setting.type],
     }))
+  }
+
+  get nlpStore() {
+    return this.searchStore.nlpStore
+  }
+
+  get parsedQuery() {
+    return this.nlpStore.nlp.parsedQuery
+  }
+
+  get suggestedPeople() {
+    return this.nlpStore.peopleNames.slice(0, 2).map(name => ({
+      name,
+      type: 'person',
+      active: false,
+    }))
+  }
+
+  get suggestedFilters() {
+    if (!this.parsedQuery) {
+      return suggestedDates
+    }
+    const hasDates = this.parsedQuery.some(
+      x => x.type === this.nlpStore.types.DATE,
+    )
+    const hasPeople = this.parsedQuery.some(
+      x => x.type === this.nlpStore.types.PERSON,
+    )
+    const hasIntegrations = this.parsedQuery.some(
+      x => x.type === this.nlpStore.types.INTEGRATION,
+    )
+    let suggestions = []
+    if (!hasDates) {
+      suggestions = [...suggestions, ...suggestedDates]
+    }
+    if (!hasPeople) {
+      suggestions = [...suggestions, ...this.suggestedPeople]
+    }
+    if (!hasIntegrations) {
+      suggestions = [...suggestions, ...this.filters.slice(0, 2)]
+    }
+    return suggestions
+  }
+
+  // includes nlp parsed segments + suggested other segments
+  get nlpActiveFilters() {
+    return (this.parsedQuery || []).filter(x => !!x.type).map(part => ({
+      name: part.text,
+      type: part.type,
+      active: true,
+    }))
+  }
+
+  get filterBarFilters() {
+    return [...this.nlpActiveFilters, ...this.suggestedFilters]
   }
 
   updateFiltersOnNLP = react(

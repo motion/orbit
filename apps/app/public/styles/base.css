@@ -507,30 +507,31 @@ caption {
 
 /* reset mark */
 mark {
-  background: none;
   color: auto;
   display: inline-block;
   color: transparent;
-  background: rgba(40.4%, 70.5%, 92.9%, 0.644);
-  border-radius: 6px;
-  padding: 0 2px;
-  margin: 0 -2px;
+  padding: 0 1px;
+  margin: 0 -1px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.6);
 }
 
 mark.date {
-  background: lightyellow;
+  border-color: #ff9f21;
 }
 
 mark.integration {
-  background: lightgreen;
+  border-color: rgba(238, 186, 144);
 }
 
 mark.person {
-  background: lightpink;
+  border-color: #4b3eff;
 }
 
 mark.type {
-  background: lightcoral;
+  border-color: rgba(193, 255, 143);
 }
 
 blockquote {

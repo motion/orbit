@@ -36,12 +36,11 @@ export class NLPStore /* extends Store */ {
     },
   )
 
-  updateUsers = modelQueryReaction(
+  peopleNames = modelQueryReaction(
     () => Person.find({ limit: 5000 }),
-    people => {
-      setUserNames(people.map(person => person.name))
-    },
-    // 5 minute poll
+    people => people.map(person => person.name),
     { poll: 60 * 5 * 1000 },
   )
+
+  updateUsers = react(() => this.peopleNames, setUserNames)
 }

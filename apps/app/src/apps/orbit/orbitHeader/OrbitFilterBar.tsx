@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
+import { SearchFilterStore } from '../../../stores/SearchFilterStore'
 
 const inactiveTheme = {
   background: '#ccc',
@@ -15,6 +16,15 @@ const activeTheme = {
 const FilterBar = view(UI.Row, {
   position: 'relative',
   padding: [0, 15, 8],
+})
+
+const HorizontalScroll = view({
+  overflowX: 'scroll',
+  flex: 1,
+  flexFlow: 'row',
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
 })
 
 const FilterButton = props => (
@@ -44,19 +54,25 @@ FilterBarFade.theme = ({ theme }) => ({
   })`,
 })
 
-export const OrbitFilterBar = ({ filters }) => {
+export const OrbitFilterBar = ({
+  filterStore,
+}: {
+  filterStore: SearchFilterStore
+}) => {
   return (
     <FilterBar>
-      {filters.map((filter, index) => {
-        return (
-          <UI.Theme
-            key={`${filter.name}${index}`}
-            theme={filter.type === 'active' ? activeTheme : inactiveTheme}
-          >
-            <FilterButton>{filter.name}</FilterButton>
-          </UI.Theme>
-        )
-      })}
+      <HorizontalScroll>
+        {filterStore.filterBarFilters.map((filter, index) => {
+          return (
+            <UI.Theme
+              key={`${filter.name}${index}`}
+              theme={filter.active ? activeTheme : inactiveTheme}
+            >
+              <FilterButton>{filter.name}</FilterButton>
+            </UI.Theme>
+          )
+        })}
+      </HorizontalScroll>
       <FilterBarFade />
     </FilterBar>
   )

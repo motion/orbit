@@ -138,17 +138,7 @@ class OrbitDockedInner extends React.Component<{
                 </>
               }
             />
-            <OrbitFilterBar
-              filters={[
-                { name: 'Jira', type: 'active' },
-                { name: 'Nate', type: 'active' },
-                { name: 'Last Week', type: 'suggested' },
-                { name: 'Last Month', type: 'suggested' },
-                { name: 'Umed', type: 'suggested' },
-                { name: 'Slack', type: 'suggested' },
-                { name: 'Document', type: 'suggested' },
-              ]}
-            />
+            <OrbitFilterBar filterStore={searchStore.searchFilterStore} />
             <OrbitInner height={window.innerHeight}>
               <UI.View position="relative" flex={1} overflow="hidden">
                 <OrbitHome name="home" paneStore={paneStore} />

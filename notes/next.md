@@ -4,8 +4,8 @@
 - filterbar: click to add/remove suggested
 - slow animations when resizing often
 
-- permalinks: cant click location permalink on orbitcard
 - bottom overflowfade showing sometimes when not needed
+- permalinks: cant click location permalink on orbitcard
 - search: too glitchy after first key is pressed from home
 - search: filtering "nick and nate" doesn't show any results for some reason
 - relevant/recent toggle broke

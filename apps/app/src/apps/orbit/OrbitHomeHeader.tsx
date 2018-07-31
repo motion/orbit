@@ -64,7 +64,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
           <UI.Button
             icon="menu35"
             tooltip="Directory"
-            active={paneStore.activePane === 'directory'}
+            active={paneStore.activePaneFast === 'directory'}
             onClick={() => paneStore.setActivePane('directory')}
             {...exploreButton}
           />
@@ -72,7 +72,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
             icon="gear"
             tooltip="Settings"
             sizeIcon={1.2}
-            active={paneStore.activePane === 'settings'}
+            active={paneStore.activePaneFast === 'settings'}
             onClick={() => paneStore.setActivePane('settings')}
             {...exploreButton}
           />

@@ -47,7 +47,18 @@ export class SubPaneStore {
 
   didMount() {
     on(this, this.paneNode, 'scroll', throttle(this.handlePaneChange, 16 * 3))
-    this.addObserver(this.paneRef.current, this.handlePaneChange)
+    this.addObserver(this.paneNode, this.handlePaneChange)
+
+    // watch resizes
+    // @ts-ignore
+    const resizeObserver = new ResizeObserver(this.updateScrolledTo)
+    resizeObserver.observe(this.paneNode)
+    resizeObserver.observe(this.paneInnerNode)
+    // @ts-ignore
+    this.subscriptions.add({
+      dispose: () => resizeObserver.disconnect(),
+    })
+
     this.handlePaneChange()
     this.updateHeight()
   }
@@ -83,7 +94,7 @@ export class SubPaneStore {
   }
 
   scrollIntoView = throttle((card: HTMLDivElement) => {
-    const pane = this.paneRef.current
+    const pane = this.paneNode
     const cardOffset = getTopOffset(card, pane)
     // too high
     if (cardOffset < pane.scrollTop) {

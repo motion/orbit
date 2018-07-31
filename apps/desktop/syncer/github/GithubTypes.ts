@@ -63,7 +63,6 @@ export type GithubPeopleQueryResult = {
       pageInfo: {
         hasNextPage: boolean
       }
-<<<<<<< HEAD:apps/desktop/syncer/github/GithubTypes.ts
       edges: {
         cursor: string
         node: {
@@ -74,47 +73,6 @@ export type GithubPeopleQueryResult = {
           bio: string
           email: string
           name: string
-=======
-      edges {
-        cursor
-        node {
-          id
-          title
-          number
-          body
-          bodyText
-          updatedAt
-          createdAt
-          url
-          repository {
-            id
-            name
-            url
-          }
-          author {
-            avatarUrl
-            login
-          }
-          labels(first: 10) {
-            edges {
-              node {
-                name
-              }
-            }
-          }
-          comments(first: 100) {
-            edges {
-              node {
-                author {
-                  avatarUrl
-                  login
-                }
-                createdAt
-                body
-              }
-            }
-          }
->>>>>>> master:apps/desktop/sync/syncers/github/issue/GithubIssueQuery.ts
         }
       }[]
     }

@@ -1,10 +1,7 @@
 import { createOrUpdate, Person, Setting } from '@mcro/models'
 import * as Helpers from '~/helpers'
 import { createOrUpdatePersonBit } from '~/repository'
-<<<<<<< HEAD:apps/desktop/syncer/jira/JiraPersonSyncer.ts
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-=======
->>>>>>> master:apps/desktop/sync/syncers/jira/JiraPersonSync.ts
 import { JiraPeopleResponse, JiraPerson } from './JiraPersonTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 

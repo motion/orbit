@@ -1,15 +1,10 @@
-<<<<<<< HEAD:apps/desktop/temp/folder/folderSync.ts
-import Syncer from '../../sync/syncers/core/Syncer'
-=======
-import Syncer from '../../sync/syncers/syncer'
->>>>>>> master:apps/desktop/temp/folder/folderSync.ts
 import { Bit, Setting } from '@mcro/models'
-import { createInChunks } from '~/sync/helpers'
 import Path from 'path'
 import Fs from 'fs-extra'
 import readDir from 'recursive-readdir'
 import Yaml from 'js-yaml'
 import debug from '@mcro/debug'
+import { createInChunks } from '~/temp/createInChunks'
 
 const log = debug('folder')
 debug.quiet('folder')
@@ -71,6 +66,7 @@ class FolderSync {
   }
 }
 
+/*
 export const folder = new Syncer('folder', {
   actions: {
     folder: { secondsBetween: 60 * 5 },
@@ -79,3 +75,4 @@ export const folder = new Syncer('folder', {
     folder: new FolderSync(setting),
   }),
 })
+*/

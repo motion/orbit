@@ -2,10 +2,7 @@ import { Bit, createOrUpdate, createOrUpdateBit, Person, Setting } from '@mcro/m
 import { In } from 'typeorm'
 import * as Helpers from '~/helpers'
 import { createOrUpdatePersonBit } from '~/repository'
-<<<<<<< HEAD:apps/desktop/syncer/gmail/GMailSyncer.ts
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-=======
->>>>>>> master:apps/desktop/sync/syncers/gmail/GMailSync.ts
 import { sequence } from '~/utils'
 import { GMailLoader } from './GMailLoader'
 import { parseMailDate, parseMailTitle, parseSender } from './GMailMessageParser'

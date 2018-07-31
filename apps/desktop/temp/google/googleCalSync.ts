@@ -1,12 +1,12 @@
 import { Bit, Setting } from '@mcro/models'
-import { createInChunks } from '~/sync/helpers'
 import * as _ from 'lodash'
 import debug from '@mcro/debug'
 import { DriveService } from '@mcro/services'
+import { createInChunks } from '~/temp/createInChunks'
 
 const log = debug('sync.googleCal')
 
-type GoogleCalItem = {
+export type GoogleCalItem = {
   id: string
   created: string
   updated: string

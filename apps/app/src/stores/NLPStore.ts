@@ -42,5 +42,11 @@ export class NLPStore /* extends Store */ {
     { poll: 60 * 5 * 1000 },
   )
 
-  updateUsers = react(() => this.peopleNames, setUserNames)
+  updateUsers = react(
+    () => this.peopleNames,
+    names => {
+      // ensure js
+      setUserNames(names.slice())
+    },
+  )
 }

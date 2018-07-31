@@ -104,9 +104,6 @@ Card.theme = ({
   const disabledShadow = disableShadow ? 'none' : null
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
-    '&:active': {
-      opacity: 0.75,
-    },
   }
   if (listItem) {
     // LIST ITEM
@@ -132,6 +129,9 @@ Card.theme = ({
       '&:hover': {
         background: '#f8faff',
       },
+      '&:active': {
+        opacity: 0.75,
+      },
     }
   } else {
     // CARD
@@ -151,6 +151,9 @@ Card.theme = ({
         '&:hover': {
           boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
           border: [1, borderHover],
+        },
+        '&:active': {
+          opacity: 0.75,
         },
       }
     }

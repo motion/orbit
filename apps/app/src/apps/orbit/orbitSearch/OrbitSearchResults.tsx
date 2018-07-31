@@ -12,14 +12,14 @@ const Highlight = view({
   display: 'inline-block',
   lineHeight: 22,
   fontSize: 15,
-  padding: 6,
+  padding: [3, 6, 3, 10],
   margin: [4, 0, 0, 8],
-  borderLeft: [3, 'transparent'],
-  borderRadius: 8,
+  borderLeft: [2, 'transparent'],
+  // borderRadius: 8,
   transition: 'border ease 100ms',
   color: [0, 0, 0, 0.8],
   '&:hover': {
-    background: [255, 255, 255, 1],
+    borderLeftColor: '#90b1e4',
   },
 })
 

@@ -469,8 +469,8 @@ export class SearchStore /* extends Store */ {
   toggleSelected = index => {
     const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState.target) {
-      if (Date.now() - this.lastSelectAt < 450) {
-        // ignore double clicks
+      if (Date.now() - this.lastSelectAt < 70) {
+        // ignore really fast double clicks
         console.log('isSame, ignore', index, this.activeIndex)
         return isSame
       }

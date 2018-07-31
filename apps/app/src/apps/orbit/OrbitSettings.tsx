@@ -91,9 +91,9 @@ class OrbitSettingsStore {
   )
 
   integrationSettings = modelQueryReaction(
-    () => {
+    async () => {
       this.hasFetchedOnce = true
-      return Setting.find({
+      return await Setting.find({
         where: { category: 'integration', token: Not(IsNull()) },
       })
     },

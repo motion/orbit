@@ -46,7 +46,7 @@ export class SearchFilterStore /* extends Store */ {
   // allows back in text segments that aren't filtered
   get activeQuery() {
     return this.parsedQuery
-      .filter(x => !x.type || this.disabledFilters[x.text])
+      .filter(x => !x.type || this.disabledFilters[x.text.toLowerCase()])
       .map(x => x.text.trim())
       .join(' ')
       .trim()
@@ -61,7 +61,7 @@ export class SearchFilterStore /* extends Store */ {
 
   get activeFilters() {
     return this.parsedQuery.filter(
-      x => x.type && !this.disabledFilters[x.text.trim()],
+      x => x.type && !this.disabledFilters[x.text.toLowerCase().trim()],
     )
   }
 
@@ -194,7 +194,8 @@ export class SearchFilterStore /* extends Store */ {
       this.searchStore.setQuery(`${this.searchStore.query} ${name}`.trim())
       return
     }
-    this.disabledFilters[name] = !this.disabledFilters[name]
+    const key = name.toLowerCase()
+    this.disabledFilters[key] = !this.disabledFilters[key]
   }
 
   toggleSortBy = () => {

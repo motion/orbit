@@ -7,7 +7,8 @@ const inactiveTheme = {
   background: 'transparent',
   color: '#999',
   hover: {
-    color: '#aaa',
+    background: '#c7c7c7',
+    color: '#fff',
   },
 }
 
@@ -18,15 +19,15 @@ const activeThemes = {
   },
   integration: {
     background: 'rgba(71, 189, 36)',
-    color: '#fff'
+    color: '#fff',
   },
   person: {
     background: '#8279ff',
-    color: '#fff'
+    color: '#fff',
   },
   type: {
     background: 'rgba(193, 255, 143)',
-    color: '#fff'
+    color: '#fff',
   },
 }
 

@@ -39,7 +39,8 @@ const exploreButton = {
   },
   hoverStyle: {
     background: 'transparent',
-    borderColor: [0, 0, 0, 0.3],
+    borderColor: 'transparent',
+    opacity: 1,
   },
 }
 

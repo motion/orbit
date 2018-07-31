@@ -15,7 +15,7 @@ const handleKeyDown = e => {
 
 export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
   return (
-    <View height="100%" width="100%" position="relative">
+    <View height="100%" flex={1} position="relative">
       <HighlightedTextArea
         width="100%"
         fontWeight={300}
@@ -39,7 +39,7 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
         opacity={App.state.query ? 1 : 0}
         position="absolute"
         top="50%"
-        right={40}
+        right={0}
         marginTop={-8}
         transform={{
           y: -0.5,

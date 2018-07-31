@@ -48,7 +48,6 @@ export class OrbitSettingCard extends React.Component<
         : `${store.bitsCount || '0'} total`
     const subtitleDisplay = subtitle || countSubtitle
     if (!result.title) {
-      console.log('no title for', result)
       return null
     }
     return (

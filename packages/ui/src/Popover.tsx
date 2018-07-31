@@ -22,7 +22,7 @@ export type PopoverProps = {
   open?: boolean
   // the amount of space around popover you can move mouse
   // before it triggers it to close
-  forgiveness: number
+  forgiveness?: number
   // show a background over content
   overlay?: boolean
   left?: number
@@ -35,7 +35,7 @@ export type PopoverProps = {
   // open automatically when target is hovered
   openOnHover?: boolean
   // delay until openOnHover
-  delay: number
+  delay?: number
   // prevent popover itself from catching pointer events
   noHoverOnChildren?: boolean
   // size of shown arrow
@@ -58,7 +58,7 @@ export type PopoverProps = {
   // DEBUG: helps you see forgiveness zone
   showForgiveness?: boolean
   // padding from edge of window
-  edgePadding: number
+  edgePadding?: number
   // pretty much what it says, for use with closeOnClick
   keepOpenOnClickTarget?: boolean
   // callback after close

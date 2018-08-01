@@ -21,6 +21,9 @@ const Highlight = view({
   },
 })
 
+const uglies = /([^a-zA-Z]{2,})/g
+const replaceUglies = str => str.replace(uglies, ' ')
+
 type ListProps = {
   name: string
   searchStore: SearchStore
@@ -47,9 +50,9 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
         alpha={0.85}
         wordBreak="break-all"
         highlight={{
-          text: sanitize(bit.body || ''),
+          text: replaceUglies(sanitize(bit.body || '')),
           words: highlightWords,
-          maxChars: 380,
+          maxChars: 300,
           maxSurroundChars: 110,
           trimWhitespace: true,
           separator: '&nbsp;&middot;&nbsp;',

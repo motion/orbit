@@ -52,7 +52,7 @@ const Background = view({
   borderRadius: BORDER_RADIUS + 1,
 })
 Background.theme = ({ theme }) => ({
-  background: theme.base.background.alpha(0.97),
+  background: theme.base.background.alpha(0.98),
 })
 
 const OrbitChrome = () => {

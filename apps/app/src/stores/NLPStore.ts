@@ -12,6 +12,13 @@ const { parseSearchQuery, setUserNames } = initNlp()
 // @ts-ignore
 // window.nlpWorker = { parseSearchQuery, setUserNames }
 
+const DEFAULT_NLP = {
+  date: {
+    startDate: null,
+    endDate: null,
+  },
+}
+
 @store
 export class NLPStore /* extends Store */ {
   get marks() {
@@ -22,6 +29,9 @@ export class NLPStore /* extends Store */ {
     // fastest (sync) link to search
     () => App.state.query,
     async (query, { sleep }) => {
+      if (!query) {
+        return DEFAULT_NLP
+      }
       await sleep(150)
       return {
         ...(await parseSearchQuery(query)),
@@ -30,12 +40,7 @@ export class NLPStore /* extends Store */ {
     },
     {
       immediate: true,
-      defaultValue: {
-        date: {
-          startDate: null,
-          endDate: null,
-        },
-      },
+      defaultValue: DEFAULT_NLP,
     },
   )
 

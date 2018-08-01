@@ -40,10 +40,10 @@ export class SubPaneStore {
   isActive = react(
     () => {
       const { extraCondition, name, paneStore } = this.props
-      const isActive =
+      return (
         name === paneStore.activePane &&
         (extraCondition ? extraCondition() : true)
-      return isActive
+      )
     },
     isActive => {
       if (isActive === this.isActive) {

@@ -120,7 +120,7 @@ const BlockTop = ({ overflow, above, maxHeight, height, children }) => (
           right: overflow,
           height: maxHeight,
           transform: `translateY(${height - maxHeight}px)`,
-          transition: 'transform ease 100ms',
+          transition: 'transform ease-out 60ms',
         }}
       >
         {children}

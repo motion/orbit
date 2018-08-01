@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { view } from '@mcro/black'
 import * as PeekBitPanes from './bitPanes'
 import { PeekItemResolver } from '../views/PeekItemResolver'
 import { capitalize } from 'lodash'
@@ -14,6 +15,18 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
     searchTerm,
     searchBar,
   })
+})
+
+const Meta = view({
+  padding: 10,
+  borderBottom: [1, '#eee'],
+  flexFlow: 'row',
+  overflow: 'hidden',
+  alignItems: 'center',
+})
+
+const HorizontalSpace = view({
+  width: 15,
 })
 
 export const PeekBit = ({
@@ -52,45 +65,64 @@ export const PeekBit = ({
               content,
               location,
               locationLink,
+              integration,
               permalink,
               updatedAt,
               comments,
             }) => {
               return children({
-                subtitleBefore: (
-                  <UI.Text>
-                    <UI.Date>{updatedAt}</UI.Date>
-                  </UI.Text>
-                ),
-                subtitle: (
-                  <RoundButton
-                    onClick={e => {
-                      e.stopPropagation()
-                      locationLink()
-                    }}
-                  >
-                    {location}
-                  </RoundButton>
-                ),
-                subtitleAfter: <RoundButton>Open</RoundButton>,
                 title,
-                titleAfter: !!permalink &&
-                  !!icon && (
-                    <OrbitIcon onClick={permalink} icon={icon} size={16} />
-                  ),
                 icon,
                 subhead: searchBar,
                 content: (
-                  <HighlightsLayer term={searchTerm}>
-                    <BitPaneContent
-                      bit={bit}
-                      appStore={appStore}
-                      peekStore={peekStore}
-                      searchTerm={searchTerm}
-                      content={content}
-                      comments={comments}
-                    />
-                  </HighlightsLayer>
+                  <>
+                    <Meta>
+                      <UI.Theme name="grey">
+                        <RoundButton
+                          onClick={e => {
+                            e.stopPropagation()
+                            locationLink()
+                          }}
+                        >
+                          {location}
+                        </RoundButton>
+                      </UI.Theme>
+                      <UI.View flex={1} />
+                      <UI.Text>
+                        <UI.Date>{updatedAt}</UI.Date>
+                      </UI.Text>
+                      {!!permalink &&
+                        !!icon && (
+                          <>
+                            <HorizontalSpace />
+                            <OrbitIcon
+                              onClick={() => {
+                                console.log(
+                                  'todo open integration',
+                                  integration,
+                                )
+                              }}
+                              icon={icon}
+                              size={16}
+                            />
+                          </>
+                        )}
+                      <HorizontalSpace />
+                      <UI.Theme name="orbit">
+                        <RoundButton onClick={permalink}>Open</RoundButton>
+                      </UI.Theme>
+                    </Meta>
+                    <HighlightsLayer term={searchTerm}>
+                      <BitPaneContent
+                        bit={bit}
+                        appStore={appStore}
+                        peekStore={peekStore}
+                        searchTerm={searchTerm}
+                        content={content}
+                        comments={comments}
+                      />
+                    </HighlightsLayer>
+                  </>
                 ),
               })
             }}

@@ -67,6 +67,7 @@ class PeekPageInner extends React.Component<Props> {
         {(resolvedProps: PeekContents) => {
           const {
             title,
+            titleAfter,
             permalink,
             icon,
             date,
@@ -82,6 +83,7 @@ class PeekPageInner extends React.Component<Props> {
             <>
               <PeekHeader
                 title={title}
+                titleAfter={titleAfter}
                 subtitle={subtitle}
                 subtitleBefore={subtitleBefore}
                 subtitleAfter={subtitleAfter}

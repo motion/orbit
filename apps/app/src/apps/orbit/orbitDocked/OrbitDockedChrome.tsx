@@ -18,7 +18,7 @@ const Border = view({
   bottom: 0,
   zIndex: Number.MAX_SAFE_INTEGER,
   pointerEvents: 'none',
-  borderRadius: BORDER_RADIUS - 1,
+  borderRadius: BORDER_RADIUS,
 })
 
 Border.theme = ({ theme }) => {
@@ -52,7 +52,7 @@ const Background = view({
   borderRadius: BORDER_RADIUS + 1,
 })
 Background.theme = ({ theme }) => ({
-  background: theme.base.background.alpha(0.985),
+  background: theme.base.background.alpha(0.97),
 })
 
 const OrbitChrome = () => {

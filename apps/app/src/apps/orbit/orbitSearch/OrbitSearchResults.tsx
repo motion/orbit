@@ -94,6 +94,8 @@ const OrbitSearchResultsContents = view(({ name, searchStore }) => {
       style={{
         position: 'relative',
         opacity: isChanging ? 0.3 : 1,
+        // allows for card glow
+        paddingTop: 2,
       }}
     >
       {message ? <div>{message}</div> : null}

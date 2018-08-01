@@ -62,7 +62,7 @@ const OrbitFakeInput = view({
     background: '#f2f2f2',
   },
   '&:focus-within': {
-    background: '#eee',
+    background: '#f2f2f2',
   },
 })
 

@@ -20,6 +20,7 @@ export type ResolvedItem = {
   people?: Person[]
   searchTerm?: string
   subtitle?: React.ReactNode
+  integration?: string
 }
 
 export type ItemResolverProps = {

@@ -9,7 +9,7 @@ const BodyContents = view({
   overflowY: 'scroll',
   padding: 20,
   fontSize: 16,
-  lineHeight: 25,
+  lineHeight: 22,
 })
 
 export const MarkdownBody = ({ children }) => (

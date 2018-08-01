@@ -8,7 +8,7 @@ const BodyContents = view({
   whiteSpace: 'pre-line',
   padding: 20,
   fontSize: 16,
-  lineHeight: '1.5rem',
+  lineHeight: 22,
   overflow: 'hidden',
 })
 

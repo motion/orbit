@@ -13,9 +13,9 @@ const tanBg = color('rgb(255,255,245)')
 const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
 const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
 
-const dbBg = color('rgb(11, 60, 117)')
-const dbHoverBg = dbBg.darken(0.02).desaturate(0.3)
-const dbActiveBg = dbHoverBg.darken(0.05).desaturate(0.3)
+const orbitBg = color('#5459ED')
+const orbitHoverBg = orbitBg.darken(0.02).desaturate(0.3)
+const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 export const themes = {
   clear: {
@@ -32,6 +32,11 @@ export const themes = {
       color: '#444',
     },
   },
+  orbit: Theme.fromStyles({
+    background: orbitBg,
+    color: '#fff',
+    borderColor: orbitActiveBg,
+  }),
   grey: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,
@@ -53,22 +58,11 @@ export const themes = {
     },
   }),
   tan: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
     background: tanBg,
     color: '#656141',
     borderColor: tanActiveBg,
   }),
-  darkBlue: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
-    background: dbBg,
-    color: '#fff',
-    borderColor: dbActiveBg,
-  }),
   dark: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
     borderColor: '#222',
@@ -86,8 +80,6 @@ export const themes = {
     },
   }),
   light: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
     background: color('#fff'),
     color: color('#444'),
     borderColor: color('#e2e2e2'),

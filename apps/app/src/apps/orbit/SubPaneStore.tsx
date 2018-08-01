@@ -23,7 +23,8 @@ export class SubPaneStore {
     extraCondition: () => boolean
   }
 
-  height = 0
+  aboveContentHeight = 0
+  contentHeight = 0
   paneRef = React.createRef<HTMLDivElement>()
   isAtBottom = false
   childMutationObserver = null
@@ -72,13 +73,24 @@ export class SubPaneStore {
     this.updateHeight()
   }
 
-  get heightWithExtraFilters() {
-    // add padding + filters height
-    return this.height + this.props.searchStore.extraHeight + 14
+  get fullHeight() {
+    // this is the expandable filterpane in searches
+    const extraHeight = this.props.searchStore.extraHeight + 14
+    const fullHeight =
+      extraHeight + this.contentHeight + this.aboveContentHeight
+    const minHeight = 90
+    // never go all the way to bottom
+    const maxHeight = window.innerHeight - 50
+    // cap min and max
+    return Math.max(minHeight, Math.min(maxHeight, fullHeight))
+  }
+
+  get contentHeightLimited() {
+    return this.fullHeight - this.aboveContentHeight
   }
 
   setAppHeightOnHeightChange = react(
-    () => [this.heightWithExtraFilters, this.isActive],
+    () => [this.fullHeight, this.isActive],
     ([height, isActive]) => {
       if (!isActive) {
         throw react.cancel
@@ -123,9 +135,9 @@ export class SubPaneStore {
 
   updateHeight = () => {
     const { top, height } = this.paneInnerNode.getBoundingClientRect()
-    const nextHeight = Math.min(top + height, window.innerHeight - 20)
-    if (this.height !== nextHeight) {
-      this.height = nextHeight
+    if (top !== this.aboveContentHeight || height !== this.contentHeight) {
+      this.aboveContentHeight = top
+      this.contentHeight = height
     }
   }
 

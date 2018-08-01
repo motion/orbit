@@ -11,7 +11,7 @@ import { SearchStore } from '../../stores/SearchStore'
 type Props = {
   name: string
   paneStore: PaneManagerStore
-  searchStore: SearchStore
+  searchStore?: SearchStore
   store?: OrbitHomeStore
 }
 

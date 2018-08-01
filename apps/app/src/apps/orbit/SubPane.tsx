@@ -19,7 +19,6 @@ const Pane = view(UI.View, {
   position: 'absolute',
   top: 0,
   right: 0,
-  bottom: 0,
   left: 0,
   transition: 'all ease 80ms 60ms',
   overflowX: 'hidden',
@@ -108,6 +107,7 @@ export class SubPane extends React.Component<Props> {
           <Pane
             isActive={subPaneStore.isActive}
             style={style}
+            height={subPaneStore.contentHeightLimited}
             forwardRef={subPaneStore.paneRef}
             {...props}
           >

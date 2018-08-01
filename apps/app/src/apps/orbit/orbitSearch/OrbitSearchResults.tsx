@@ -14,7 +14,7 @@ type Props = {
   searchStore?: SearchStore
   paneStore?: PaneManagerStore
   name?: string
-  store: SubSearchStore
+  store?: SubSearchStore
 }
 
 const Highlight = view({

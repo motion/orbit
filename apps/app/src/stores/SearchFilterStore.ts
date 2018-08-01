@@ -164,7 +164,7 @@ export class SearchFilterStore /* extends Store */ {
       }
       // reset integration inactive filters
       const { integrations } = nlp
-      if (!integrations.length) {
+      if (!integrations || !integrations.length) {
         throw react.cancel
       }
       this.exclusiveFilters = this.uniqueSettings.reduce(

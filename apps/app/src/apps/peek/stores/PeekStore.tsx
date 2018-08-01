@@ -14,7 +14,6 @@ export class PeekStore {
 
   debug = true
   tornState = null
-  lastState = null
   dragOffset: [number, number] = null
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
@@ -55,82 +54,82 @@ export class PeekStore {
     setHighlightIndex(next)
   }
 
-  curState = react(
+  state = react(
     () => [
       this.tornState,
       App.peekState.target,
       App.orbitState.docked,
       App.orbitState.hidden,
     ],
-    ([tornState, target, docked, hidden], { getValue }) => {
-      this.lastState = getValue()
-      if (tornState) {
-        return tornState
+    (_, { getValue }) => {
+      const lastState = getValue()
+      const curState = this.getCurState()
+      return {
+        lastState,
+        curState,
+        willHide: !!lastState && !curState,
+        willShow: !!curState && !lastState,
+        willStayShown: !!curState && !!lastState,
       }
-      if (!target) {
-        return null
-      }
-      const { selectedItem } = this.props.searchStore
-      if (docked || !hidden) {
-        return {
-          _internalId: Math.random(),
-          ...App.peekState,
-          model: selectedItem,
-        }
-      }
-      return null
     },
     {
       immediate: true,
+      defaultValue: {
+        lastState: null,
+        curState: null,
+        willHide: false,
+        willShow: false,
+        willStayShown: false,
+      },
     },
   )
 
-  get state() {
-    if (this.willHide) {
-      return this.lastState
-    }
-    return this.curState
+  // these get helpers just proxy to .state
+
+  get lastState() {
+    return this.state.lastState
   }
 
-  // // reaction because we don't want to re-render on this.lastState changes
-  // state = react(
-  //   () => [this.curState, this.lastState],
-  //   ([curState, lastState]) => {
-  //     if (this.willHide) {
-  //       return this.lastState
-  //     }
-  //     // avoid re-renders on update lastState when showing
-  //     if (
-  //       curState &&
-  //       lastState &&
-  //       curState._internalId === lastState._internalId
-  //     ) {
-  //       throw react.cancel
-  //     }
-  //     return curState
-  //   },
-  //   {
-  //     immediate: true,
-  //   },
-  // )
+  get curState() {
+    return this.state.curState
+  }
 
   get willHide() {
-    return !!this.lastState && !this.curState
+    return this.state.willHide
   }
 
   get willShow() {
-    return !!this.curState && !this.lastState
+    return this.state.willShow
   }
 
-  willStayShown = react(() => this.willShow, _ => _, {
-    delay: 16,
-  })
+  get willStayShown() {
+    return this.state.willStayShown
+  }
+
+  getCurState = () => {
+    if (this.tornState) {
+      return this.tornState
+    }
+    if (!App.peekState.target) {
+      return null
+    }
+    const { selectedItem } = this.props.searchStore
+    const { docked, hidden } = App.orbitState
+    if (docked || !hidden) {
+      return {
+        _internalId: Math.random(),
+        ...App.peekState,
+        model: selectedItem,
+      }
+    }
+    return null
+  }
 
   get theme() {
-    if (!this.state.item) {
+    if (!this.curState.item) {
       return PEEK_THEMES.base
     }
-    const { type, integration } = this.state.item
+    const { type, integration } = this.curState.item
     return (
       PEEK_THEMES.integration[integration] ||
       PEEK_THEMES.type[type] ||
@@ -158,12 +157,12 @@ export class PeekStore {
   }
 
   get framePosition() {
-    const { willShow, willStayShown, willHide, state } = this
-    if (!state) {
+    const { willShow, willStayShown, willHide, curState } = this
+    if (!curState) {
       return [0, 0]
     }
     const { docked, orbitOnLeft } = App.orbitState
-    const onRight = state && !state.peekOnLeft
+    const onRight = curState && !curState.peekOnLeft
     // determine x adjustments
     let peekAdjustX = 0
     // adjust for orbit arrow blank
@@ -173,7 +172,7 @@ export class PeekStore {
     // small adjust to overlap
     peekAdjustX += onRight ? -2 : 2
     const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
-    const position = state.position
+    const position = curState.position
     let x = position[0] + peekAdjustX
     let y = position[1] + animationAdjust
     if (this.dragOffset) {
@@ -184,20 +183,8 @@ export class PeekStore {
     return [x, y]
   }
 
-  // updateHistory = react(
-  //   () => this.curState,
-  //   state => {
-  //     if (state) {
-  //       this.history.push(state)
-  //     } else {
-  //       this.history = []
-  //     }
-  //   },
-  //   { delay: 32 },
-  // )
-
   tearPeek = () => {
-    this.tornState = { ...this.state }
+    this.tornState = { ...this.curState }
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
 

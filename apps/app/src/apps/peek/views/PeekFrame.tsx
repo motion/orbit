@@ -50,20 +50,20 @@ export const PeekFrame = view.attach('peekStore')(
       const {
         willShow,
         willHide,
-        state,
+        curState,
         willStayShown,
         framePosition,
       } = peekStore
       if (
-        !state ||
-        !state.position ||
-        !state.position.length ||
-        !state.target
+        !curState ||
+        !curState.position ||
+        !curState.position.length ||
+        !curState.target
       ) {
         return null
       }
-      const isHidden = !state
-      const onRight = !state.peekOnLeft
+      const isHidden = !curState
+      const onRight = !curState.peekOnLeft
       const padding = [
         SHADOW_PAD,
         onRight ? SHADOW_PAD : 0,
@@ -82,8 +82,8 @@ export const PeekFrame = view.attach('peekStore')(
             transition,
             opacity:
               isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
-            width: state.size[0],
-            height: state.size[1],
+            width: curState.size[0],
+            height: curState.size[1],
             transform: {
               x: framePosition[0],
               y: framePosition[1],

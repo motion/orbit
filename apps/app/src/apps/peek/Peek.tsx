@@ -44,10 +44,10 @@ type PeekPane = React.SFC<PeekPaneProps>
 class PeekPageInner extends React.Component<Props> {
   render() {
     const { peekStore, appStore, searchStore } = this.props
-    if (!peekStore.state) {
+    if (!peekStore.curState) {
       return null
     }
-    const { item, peekId, model } = peekStore.state
+    const { item, peekId, model } = peekStore.curState
     const type = (item && capitalize(item.type)) || 'Empty'
     const PeekContentsView = PeekPanes[type] as PeekPane
     if (!PeekContentsView) {

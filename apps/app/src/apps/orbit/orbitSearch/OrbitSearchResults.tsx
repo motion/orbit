@@ -57,7 +57,7 @@ const highlightOptions = memoize((query, bit) => ({
 const OrbitSearchResultsList = view(({ name, store, searchStore }: Props) => {
   const { results, query } = store.state
   // log(`RENDER SENSITIVE`)
-  if (!results.length) {
+  if (!results || !results.length) {
     return null
   }
   return results.map((bit, index) => (

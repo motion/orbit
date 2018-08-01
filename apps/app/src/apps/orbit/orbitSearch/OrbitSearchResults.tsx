@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { OrbitCard } from '../../../views/OrbitCard'
 import { SubPane } from '../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
@@ -7,6 +7,15 @@ import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { SearchStore } from '../../../stores/SearchStore'
+import { memoize } from 'lodash'
+import { PaneManagerStore } from '../PaneManagerStore'
+
+type Props = {
+  searchStore?: SearchStore
+  paneStore?: PaneManagerStore
+  name?: string
+  store: SubSearchStore
+}
 
 const Highlight = view({
   display: 'inline-block',
@@ -24,18 +33,33 @@ const Highlight = view({
 const uglies = /([^a-zA-Z]{2,})/g
 const replaceUglies = str => str.replace(uglies, ' ')
 
-type ListProps = {
-  name: string
-  searchStore: SearchStore
-}
+const selectHighlight = (index, hlIndex, searchStore) =>
+  memoize(e => {
+    const isAlreadyAtHighlight =
+      searchStore.activeIndex === index &&
+      searchStore.highlightIndex === hlIndex
+    if (!isAlreadyAtHighlight) {
+      e.stopPropagation()
+      searchStore.setHighlightIndex(hlIndex)
+      return
+    }
+  })
 
-const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
-  const { results, query } = searchStore.searchState
+const highlightOptions = memoize((query, bit) => ({
+  text: replaceUglies(sanitize(bit.body || '')),
+  words: query.split(' ').filter(x => x.length > 2),
+  maxChars: 300,
+  maxSurroundChars: 110,
+  trimWhitespace: true,
+  separator: '&nbsp;&middot;&nbsp;',
+}))
+
+const OrbitSearchResultsList = view(({ name, store, searchStore }: Props) => {
+  const { results, query } = store.state
   // log(`RENDER SENSITIVE`)
   if (!results.length) {
     return null
   }
-  const highlightWords = query.split(' ').filter(x => x.length > 2)
   return results.map((bit, index) => (
     <OrbitCard
       pane={name}
@@ -49,14 +73,7 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
       <UI.Text
         alpha={0.85}
         wordBreak="break-all"
-        highlight={{
-          text: replaceUglies(sanitize(bit.body || '')),
-          words: highlightWords,
-          maxChars: 300,
-          maxSurroundChars: 110,
-          trimWhitespace: true,
-          separator: '&nbsp;&middot;&nbsp;',
-        }}
+        highlight={highlightOptions(query, bit)}
       >
         {({ highlights }) => {
           return highlights.map((highlight, hlIndex) => {
@@ -64,16 +81,7 @@ const OrbitSearchResultsList = view(({ name, searchStore }: ListProps) => {
               <Highlight
                 key={hlIndex}
                 dangerouslySetInnerHTML={{ __html: highlight }}
-                onClick={e => {
-                  const isAlreadyAtHighlight =
-                    searchStore.activeIndex === index &&
-                    searchStore.highlightIndex === hlIndex
-                  if (!isAlreadyAtHighlight) {
-                    e.stopPropagation()
-                    searchStore.setHighlightIndex(hlIndex)
-                    return
-                  }
-                }}
+                onClick={selectHighlight(index, hlIndex, searchStore)}
               />
             )
           })
@@ -90,7 +98,7 @@ OrbitSearchResultsFrame.theme = ({ theme }) => ({
   background: theme.base.background,
 })
 
-const OrbitSearchResultsContents = view(({ name, searchStore }) => {
+const OrbitSearchResultsContents = view(({ name, searchStore, store }) => {
   const { isChanging, message } = searchStore
   return (
     <div
@@ -102,19 +110,40 @@ const OrbitSearchResultsContents = view(({ name, searchStore }) => {
       }}
     >
       {message ? <div>{message}</div> : null}
-      <OrbitSearchQuickResults searchStore={searchStore} />
-      <OrbitSearchResultsList searchStore={searchStore} name={name} />
+      <OrbitSearchQuickResults searchStore={searchStore} store={store} />
+      <OrbitSearchResultsList
+        searchStore={searchStore}
+        store={store}
+        name={name}
+      />
       <div style={{ height: 20 }} />
     </div>
   )
 })
 
-type Props = {
-  searchStore?: SearchStore
-  name?: string
+class SubSearchStore {
+  props: Props
+
+  get isActive() {
+    return this.props.paneStore.activePane === 'search'
+  }
+
+  state = react(
+    () => this.props.searchStore.searchState,
+    state => {
+      if (!this.isActive) {
+        throw react.cancel
+      }
+      return state
+    },
+    { log: false, immediate: true, defaultValue: {} },
+  )
 }
 
-@view.attach('searchStore')
+@view.attach('searchStore', 'paneStore')
+@view.attach({
+  store: SubSearchStore,
+})
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   extraCondition = () => {
@@ -128,10 +157,7 @@ export class OrbitSearchResults extends React.Component<Props> {
   }
 
   render() {
-    const { searchStore, name } = this.props
-    if (!searchStore.searchState.results) {
-      return null
-    }
+    const { store, searchStore, name } = this.props
     const hideHeight = searchStore.extraFiltersVisible
       ? 0
       : searchStore.extraFiltersHeight
@@ -154,7 +180,11 @@ export class OrbitSearchResults extends React.Component<Props> {
         before={<OrbitSearchFilters />}
         onActive={this.updateActivePane}
       >
-        <OrbitSearchResultsContents searchStore={searchStore} name={name} />
+        <OrbitSearchResultsContents
+          store={store}
+          searchStore={searchStore}
+          name={name}
+        />
       </SubPane>
     )
   }

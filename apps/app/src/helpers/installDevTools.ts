@@ -54,3 +54,17 @@ if (!Object.prototype['toJS']) {
     },
   })
 }
+
+// really nice for quicker debugging...
+if (!Object.prototype['stringify']) {
+  Object.defineProperty(Object.prototype, 'stringify', {
+    enumerable: false,
+    value: function() {
+      try {
+        return JSON.stringify(recrusiveMobxToJS(this))
+      } catch {
+        return this
+      }
+    },
+  })
+}

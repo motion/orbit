@@ -110,11 +110,16 @@ export class SearchStore /* extends Store */ {
     return this.searchState.query !== App.state.query
   }
 
+  get isOnSearchPane() {
+    return this.props.appStore.selectedPane === 'docked-search'
+  }
+
   get isQuickSearchActive() {
-    if (this.props.appStore.selectedPane !== 'docked-search') {
-      return false
-    }
-    return this.activeIndex === -1 && !!this.quickSearchState.results.length
+    return (
+      this.isOnSearchPane &&
+      this.activeIndex === -1 &&
+      !!this.quickSearchState.results.length
+    )
   }
 
   get activeIndex() {
@@ -314,6 +319,9 @@ export class SearchStore /* extends Store */ {
   quickSearchState = react(
     () => App.state.query,
     async (query, { sleep, when }) => {
+      if (!this.isOnSearchPane) {
+        throw react.cancel
+      }
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE - 60)
       await when(() => this.nlpStore.nlp.query === query)

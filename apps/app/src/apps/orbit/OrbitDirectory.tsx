@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { App } from '@mcro/stores'
 import { view, react } from '@mcro/black'
 import { modelQueryReaction, compose } from '@mcro/helpers'
 import { Person } from '@mcro/models'
@@ -7,23 +8,28 @@ import { OrbitCard } from '../../views/OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { SubTitle } from '../../views'
 import * as Helpers from '../../helpers'
-// import { stateOnlyWhenActive } from '../../stores/helpers/stateOnlyWhenActive'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from '../../stores/SearchStore'
 
+type Props = {
+  store?: OrbitDirectoryStore
+  name: string
+  paneStore: PaneManagerStore
+  searchStore: SearchStore
+}
+
 class OrbitDirectoryStore {
-  props: {
-    paneStore: PaneManagerStore
-    searchStore: SearchStore
-  }
+  props: Props
 
   setGetResults = react(
     () => [this.isActive, this.results],
-    ([isActive]) => {
+    async ([isActive], { sleep }) => {
       if (!isActive) {
         throw react.cancel
       }
+      await sleep(40)
       const getResults = () => this.results
+      // @ts-ignore
       getResults.shouldFilter = true
       this.props.searchStore.setGetResults(getResults)
     },
@@ -56,12 +62,6 @@ class OrbitDirectoryStore {
       defaultValue: [],
     },
   )
-}
-
-type Props = {
-  store?: OrbitDirectoryStore
-  name: string
-  paneStore: PaneManagerStore
 }
 
 const decorator = compose(

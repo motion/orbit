@@ -6,6 +6,14 @@ import { OrbitCard } from '../../views/OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { SubPane } from './SubPane'
 import { PaneManagerStore } from './PaneManagerStore'
+import { SearchStore } from '../../stores/SearchStore'
+
+type Props = {
+  name: string
+  paneStore: PaneManagerStore
+  searchStore: SearchStore
+  store?: OrbitHomeStore
+}
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -19,20 +27,23 @@ const findType = (integration, type, skip = 0) =>
   })
 
 class OrbitHomeStore {
-  setGetResults = react(
-    () => [this.isActive, this.results],
-    ([isActive]) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      this.props.searchStore.setGetResults(() => this.results)
-    },
-    { immediate: true },
-  )
+  props: Props
 
   get isActive() {
     return this.props.paneStore.activePane === this.props.name
   }
+
+  setGetResults = react(
+    () => [this.isActive, this.results],
+    async ([isActive], { sleep }) => {
+      if (!isActive) {
+        throw react.cancel
+      }
+      await sleep(40)
+      this.props.searchStore.setGetResults(() => this.results)
+    },
+    { immediate: true },
+  )
 
   results = modelQueryReaction(
     async () => {
@@ -84,11 +95,7 @@ const itemProps = {
   store: OrbitHomeStore,
 })
 @view
-export class OrbitHome extends React.Component<{
-  name: string
-  paneStore: PaneManagerStore
-  store?: OrbitHomeStore
-}> {
+export class OrbitHome extends React.Component<Props> {
   span2 = {
     gridColumnEnd: 'span 2',
   }

@@ -27,6 +27,21 @@ class OrbitSettingsStore {
 
   hasFetchedOnce = false
 
+  setGetResults = react(
+    () => [this.isPaneActive, this.integrationSettings],
+    async ([isActive, integrationSettings], { sleep }) => {
+      if (!isActive) {
+        throw react.cancel
+      }
+      await sleep(40)
+      const getResults = () => integrationSettings
+      // @ts-ignore
+      getResults.shouldFilter = true
+      this.props.searchStore.setGetResults(() => this.allResults)
+    },
+    { immediate: true },
+  )
+
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
   }
@@ -61,20 +76,6 @@ class OrbitSettingsStore {
       ]
     },
     { defaultValue: [] },
-  )
-
-  setGetResults = react(
-    () => [this.isPaneActive, this.integrationSettings],
-    ([isActive, integrationSettings]) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      const getResults = () => integrationSettings
-      // @ts-ignore
-      getResults.shouldFilter = true
-      this.props.searchStore.setGetResults(() => this.allResults)
-    },
-    { immediate: true },
   )
 
   get allResults() {

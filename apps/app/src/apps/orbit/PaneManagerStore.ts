@@ -101,6 +101,9 @@ export class PaneManagerStore {
       if (!pane) {
         throw react.cancel
       }
+      if (!App.peekState.target) {
+        throw react.cancel
+      }
       App.actions.clearPeek()
     },
   )

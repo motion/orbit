@@ -2,7 +2,7 @@ import { on, react, isEqual } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Setting, Not, Equal } from '@mcro/models'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
-import { modelQueryReaction } from '@mcro/helpers'
+import { modelQueryReaction, sleep } from '@mcro/helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppReactions } from './AppReactions'
 import { getPermalink } from '../helpers/getPermalink'
@@ -36,7 +36,8 @@ export class AppStore {
 
   updateAppOrbitStateOnResize = react(
     () => this.contentHeight,
-    height => {
+    async (height, { sleep }) => {
+      await sleep(40)
       App.setOrbitState({
         size: [ORBIT_WIDTH, height + 20],
       })
@@ -59,21 +60,7 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
-  offContentHeight = null
-
   setContentHeight = height => {
-    if (this.offContentHeight) {
-      this.offContentHeight()
-    }
-    if (this.contentHeight !== height) {
-      this.offContentHeight = on(
-        this,
-        setTimeout(() => this.doSetContentHeight(height), 150),
-      )
-    }
-  }
-
-  doSetContentHeight = height => {
     const max = Math.min(
       // you never go "full screen"
       window.innerHeight - 50,

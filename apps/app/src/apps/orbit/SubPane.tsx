@@ -4,6 +4,7 @@ import * as _ from 'lodash'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
+import { trace } from 'mobx'
 
 type Props = CSSPropertySet & {
   store?: SubPaneStore
@@ -14,15 +15,13 @@ type Props = CSSPropertySet & {
   name?: string
 }
 
-const EXTRA_PAD = 6
-
 const Pane = view(UI.View, {
   position: 'absolute',
   top: 0,
   right: 0,
   bottom: 0,
   left: 0,
-  transition: 'all ease 100ms',
+  transition: 'all ease 80ms 60ms',
   overflowX: 'hidden',
   overflowY: 'scroll',
   padding: [0, 14, 0],
@@ -100,6 +99,7 @@ export class SubPane extends React.Component<Props> {
       containerStyle,
       ...props
     } = this.props
+    trace()
     return (
       <DockedPaneFrame isActive={subPaneStore.isActive}>
         {before}

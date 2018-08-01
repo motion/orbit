@@ -3,7 +3,7 @@ import { on, react } from '@mcro/black'
 import { AppStore } from '../../stores/AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from '../../stores/SearchStore'
-import { throttle } from 'lodash'
+import { throttle, debounce } from 'lodash'
 
 function getTopOffset(element, parent?) {
   let offset = 0
@@ -37,13 +37,22 @@ export class SubPaneStore {
   }
 
   // prevents uncessary and expensive OrbitCard re-renders
-  get isActive() {
-    const { extraCondition, name, paneStore } = this.props
-    const isActive =
-      name === paneStore.activePane &&
-      (extraCondition ? extraCondition() : true)
-    return isActive
-  }
+  isActive = react(
+    () => {
+      const { extraCondition, name, paneStore } = this.props
+      const isActive =
+        name === paneStore.activePane &&
+        (extraCondition ? extraCondition() : true)
+      return isActive
+    },
+    isActive => {
+      if (isActive === this.isActive) {
+        throw react.cancel
+      }
+      return isActive
+    },
+    { immediate: true },
+  )
 
   didMount() {
     on(this, this.paneNode, 'scroll', throttle(this.handlePaneChange, 16 * 3))
@@ -51,7 +60,7 @@ export class SubPaneStore {
 
     // watch resizes
     // @ts-ignore
-    const resizeObserver = new ResizeObserver(this.updateScrolledTo)
+    const resizeObserver = new ResizeObserver(this.handlePaneChange)
     resizeObserver.observe(this.paneNode)
     resizeObserver.observe(this.paneInnerNode)
     // @ts-ignore
@@ -74,6 +83,9 @@ export class SubPaneStore {
       if (!isActive) {
         throw react.cancel
       }
+      if (height === this.props.appStore.contentHeight) {
+        throw react.cancel
+      }
       this.props.appStore.setContentHeight(height)
     },
     {
@@ -88,10 +100,10 @@ export class SubPaneStore {
     return () => observer.disconnect()
   }
 
-  handlePaneChange = () => {
+  handlePaneChange = debounce(() => {
     this.updateHeight()
     this.updateScrolledTo()
-  }
+  }, 16)
 
   scrollIntoView = throttle((card: HTMLDivElement) => {
     const pane = this.paneNode
@@ -109,26 +121,11 @@ export class SubPaneStore {
     }
   }, 100)
 
-  updatePaneHeightOnActive = react(
-    () => this.isActive,
-    () => {
-      const res = this.updateHeight()
-      if (!res) {
-        throw react.cancel
-      }
-    },
-  )
-
   updateHeight = () => {
-    if (!this.props.appStore || !this.paneNode) {
-      return
-    }
-    if (!this.isActive && this.height) {
-      return
-    }
     const { top, height } = this.paneInnerNode.getBoundingClientRect()
-    if (this.height !== top + height) {
-      this.height = top + height
+    const nextHeight = Math.min(top + height, window.innerHeight - 20)
+    if (this.height !== nextHeight) {
+      this.height = nextHeight
     }
   }
 

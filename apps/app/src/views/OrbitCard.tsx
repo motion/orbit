@@ -487,7 +487,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 {typeof preview === 'string' && (
                   <UI.Text
                     className="preview-text"
-                    alpha={isSelected ? 1 : 0.6}
+                    alpha={isSelected ? 1 : 0.7}
                     size={listItem ? 1.1 : 1.3}
                     sizeLineHeight={0.9}
                     margin={inGrid ? ['auto', 0] : 0}

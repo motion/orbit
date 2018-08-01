@@ -1,17 +1,15 @@
 - p2p https://github.com/mafintosh/hyperdb
 
-- search: integration filters dont update search
-- going home is glitchy again
-- search: filtering "nick and nate" doesn't show any results for some reason
-- relevant/recent toggle broke
 - highlights click: doesn't toggle open/close peek
 - peek: make "open" button work well
+- relevant/recent toggle broke
+- search: integration filters dont update search
+- peek people: topbar needs a lot of visual work
+- search: filtering "nick and nate" doesn't show any results for some reason
 - horizontal related row at bottom of each peek bit for all of them
 - horizontal info/updates row at top of each peek
 - peekArrow: account for real header and dont overlap edges
-- peek people: topbar needs a lot of visual work
 - make all searches work: task search, message search
-- why overflow hidden makes hovers slow anywhere in OrbitDocked
 - Remove setting button
 - Google drive settings pane
 - Manage tab for every one:

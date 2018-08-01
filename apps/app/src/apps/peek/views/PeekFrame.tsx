@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, attachTheme } from '@mcro/black'
+import { view, attachTheme, compose, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
@@ -44,72 +44,69 @@ type PeekFrameProps = {
   children: any
 }
 
-export const PeekFrame = view.attach('peekStore')(
-  attachTheme(
-    view(({ peekStore, children, ...props }: PeekFrameProps) => {
-      const {
-        willShow,
-        willHide,
-        curState,
-        willStayShown,
-        framePosition,
-      } = peekStore
-      if (
-        !curState ||
-        !curState.position ||
-        !curState.position.length ||
-        !curState.target
-      ) {
-        return null
-      }
-      const isHidden = !curState
-      const onRight = !curState.peekOnLeft
-      const padding = [
-        SHADOW_PAD,
-        onRight ? SHADOW_PAD : 0,
-        SHADOW_PAD,
-        !onRight ? SHADOW_PAD : 0,
-      ]
-      const margin = padding.map(x => -x)
-      const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.4]]]
-      const transition = transitions(peekStore)
-      return (
-        <UI.Col
-          position="absolute"
-          left={0}
-          zIndex={2}
-          {...{
-            transition,
-            opacity:
-              isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
-            width: curState.size[0],
-            height: curState.size[1],
-            transform: {
-              x: framePosition[0],
-              y: framePosition[1],
-            },
-          }}
-        >
-          {!peekStore.tornState && (
-            <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
-          )}
-          <UI.Col flex={1} padding={padding} margin={margin}>
-            <UI.Col pointerEvents="all !important" position="relative" flex={1}>
-              <PeekFrameBorder />
-              <PeekMain
-                css={{
-                  boxShadow,
-                  borderRadius: Constants.PEEK_BORDER_RADIUS,
-                  // background,
-                }}
-                {...props}
-              >
-                {children}
-              </PeekMain>
-            </UI.Col>
+const decorator = compose(
+  view.attach('peekStore'),
+  view,
+)
+
+export const PeekFrame = decorator(
+  ({ peekStore, children, ...props }: PeekFrameProps) => {
+    const {
+      willShow,
+      willHide,
+      state,
+      willStayShown,
+      framePosition,
+    } = peekStore
+    if (!state || !state.position || !state.position.length || !state.target) {
+      return null
+    }
+    const isHidden = !state
+    const onRight = !state.peekOnLeft
+    const padding = [
+      SHADOW_PAD,
+      onRight ? SHADOW_PAD : 0,
+      SHADOW_PAD,
+      !onRight ? SHADOW_PAD : 0,
+    ]
+    const margin = padding.map(x => -x)
+    const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.4]]]
+    const transition = transitions(peekStore)
+    return (
+      <UI.Col
+        position="absolute"
+        left={0}
+        zIndex={2}
+        {...{
+          transition,
+          opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
+          width: state.size[0],
+          height: state.size[1],
+          transform: {
+            x: framePosition[0],
+            y: framePosition[1],
+          },
+        }}
+      >
+        {!peekStore.tornState && (
+          <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
+        )}
+        <UI.Col flex={1} padding={padding} margin={margin}>
+          <UI.Col pointerEvents="all !important" position="relative" flex={1}>
+            <PeekFrameBorder />
+            <PeekMain
+              css={{
+                boxShadow,
+                borderRadius: Constants.PEEK_BORDER_RADIUS,
+                // background,
+              }}
+              {...props}
+            >
+              {children}
+            </PeekMain>
           </UI.Col>
         </UI.Col>
-      )
-    }),
-  ),
+      </UI.Col>
+    )
+  },
 )

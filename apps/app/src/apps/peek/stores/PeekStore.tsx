@@ -4,6 +4,7 @@ import { App } from '@mcro/stores'
 import { PEEK_THEMES } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import { SearchStore } from '../../../stores/SearchStore'
+import * as Constants from '../../../constants'
 
 export class PeekStore {
   props: {
@@ -14,7 +15,7 @@ export class PeekStore {
 
   debug = true
   tornState = null
-  dragOffset: [number, number] = null
+  dragOffset?: [number, number] = null
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
 
@@ -54,15 +55,10 @@ export class PeekStore {
     setHighlightIndex(next)
   }
 
-  state = react(
-    () => [
-      this.tornState,
-      App.peekState.target,
-      App.orbitState.docked,
-      App.orbitState.hidden,
-    ],
+  internalState = react(
+    () => [App.peekState.target, App.orbitState.docked, App.orbitState.hidden],
     (_, { getValue }) => {
-      const lastState = getValue()
+      const lastState = getValue().curState
       const curState = this.getCurState()
       return {
         lastState,
@@ -84,26 +80,34 @@ export class PeekStore {
     },
   )
 
-  // these get helpers just proxy to .state
-
-  get lastState() {
-    return this.state.lastState
-  }
-
-  get curState() {
-    return this.state.curState
+  get state() {
+    if (this.tornState) {
+      return this.tornState
+    }
+    if (this.willHide) {
+      return this.internalState.lastState
+    }
+    return this.internalState.curState
   }
 
   get willHide() {
-    return this.state.willHide
+    return this.internalState.willHide
   }
 
-  get willShow() {
-    return this.state.willShow
-  }
+  // only keep it alive for a frame
+  willShow = react(
+    () => this.internalState.willShow,
+    async (willShow, { setValue, sleep }) => {
+      if (willShow) {
+        setValue(true)
+        await sleep(16)
+      }
+      setValue(false)
+    },
+  )
 
   get willStayShown() {
-    return this.state.willStayShown
+    return this.internalState.willStayShown
   }
 
   getCurState = () => {
@@ -126,10 +130,10 @@ export class PeekStore {
   }
 
   get theme() {
-    if (!this.curState.item) {
+    if (!this.state.item) {
       return PEEK_THEMES.base
     }
-    const { type, integration } = this.curState.item
+    const { type, integration } = this.state.item
     return (
       PEEK_THEMES.integration[integration] ||
       PEEK_THEMES.type[type] ||
@@ -157,12 +161,13 @@ export class PeekStore {
   }
 
   get framePosition() {
-    const { willShow, willStayShown, willHide, curState } = this
-    if (!curState) {
+    const { willShow, willStayShown, willHide, state } = this
+    console.log('got', state, this.state, this.internalState)
+    if (!state) {
       return [0, 0]
     }
     const { docked, orbitOnLeft } = App.orbitState
-    const onRight = curState && !curState.peekOnLeft
+    const onRight = state && !state.peekOnLeft
     // determine x adjustments
     let peekAdjustX = 0
     // adjust for orbit arrow blank
@@ -172,7 +177,7 @@ export class PeekStore {
     // small adjust to overlap
     peekAdjustX += onRight ? -2 : 2
     const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
-    const position = curState.position
+    const position = state.position
     let x = position[0] + peekAdjustX
     let y = position[1] + animationAdjust
     if (this.dragOffset) {
@@ -184,7 +189,7 @@ export class PeekStore {
   }
 
   tearPeek = () => {
-    this.tornState = { ...this.curState }
+    this.tornState = { ...this.state }
     App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
 

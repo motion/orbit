@@ -51,3 +51,7 @@
   4.  it puts the results into tabs
   5.  drag away the window
   6.  now you have a grouped view
+
+# random dev notes
+
+- react: await finishRender() could be interesting

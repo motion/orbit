@@ -14,6 +14,7 @@ export class PeekStore {
 
   debug = true
   tornState = null
+  lastState = null
   dragOffset: [number, number] = null
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
@@ -60,17 +61,16 @@ export class PeekStore {
       App.peekState.target,
       App.orbitState.docked,
       App.orbitState.hidden,
-      this.props.searchStore.selectedItem,
     ],
-    async ([tornState, target, docked, hidden, selectedItem], { sleep }) => {
-      // debounce just a tiny bit to avoid renders as selectedItem updated a bit after peekState
-      await sleep(16)
+    ([tornState, target, docked, hidden], { getValue }) => {
+      this.lastState = getValue()
       if (tornState) {
         return tornState
       }
       if (!target) {
         return null
       }
+      const { selectedItem } = this.props.searchStore
       if (docked || !hidden) {
         return {
           _internalId: Math.random(),
@@ -85,44 +85,34 @@ export class PeekStore {
     },
   )
 
-  // reaction because we don't want to re-render on this.lastState changes
-  state = react(
-    () => [this.curState, this.lastState],
-    ([curState, lastState]) => {
-      if (this.willHide) {
-        return this.lastState
-      }
-      // avoid re-renders on update lastState when showing
-      if (
-        curState &&
-        lastState &&
-        curState._internalId === lastState._internalId
-      ) {
-        throw react.cancel
-      }
-      return curState
-    },
-    {
-      immediate: true,
-    },
-  )
+  get state() {
+    if (this.willHide) {
+      return this.lastState
+    }
+    return this.curState
+  }
 
-  lastState = react(
-    () => this.curState,
-    state => {
-      if (!state) {
-        return state
-      }
-      const { model, ...restState } = state
-      return {
-        ...JSON.parse(JSON.stringify(restState)),
-        model,
-      }
-    },
-    {
-      immediate: true,
-    },
-  )
+  // // reaction because we don't want to re-render on this.lastState changes
+  // state = react(
+  //   () => [this.curState, this.lastState],
+  //   ([curState, lastState]) => {
+  //     if (this.willHide) {
+  //       return this.lastState
+  //     }
+  //     // avoid re-renders on update lastState when showing
+  //     if (
+  //       curState &&
+  //       lastState &&
+  //       curState._internalId === lastState._internalId
+  //     ) {
+  //       throw react.cancel
+  //     }
+  //     return curState
+  //   },
+  //   {
+  //     immediate: true,
+  //   },
+  // )
 
   get willHide() {
     return !!this.lastState && !this.curState
@@ -136,18 +126,11 @@ export class PeekStore {
     delay: 16,
   })
 
-  get quickState() {
-    if (this.tornState) {
-      return this.tornState
-    }
-    return App.peekState
-  }
-
   get theme() {
-    if (!this.quickState.item) {
+    if (!this.state.item) {
       return PEEK_THEMES.base
     }
-    const { type, integration } = this.quickState.item
+    const { type, integration } = this.state.item
     return (
       PEEK_THEMES.integration[integration] ||
       PEEK_THEMES.type[type] ||

@@ -295,11 +295,11 @@ class OrbitCardStore {
           throw new Error(`No target!`)
         }
         // fluidity
-        await sleep(16)
+        await sleep(80)
         const position = getTargetPosition(this.cardWrapRef)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
-          position.left += 8
+          position.left += 7
         }
         App.actions.selectItem(this.target, position)
       }

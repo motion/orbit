@@ -423,11 +423,11 @@ export class SearchStore /* extends Store */ {
     },
   )
 
-  // one frame after for speed of rendering
+  // delay for speed of rendering
   updateActiveIndexToNextIndex = react(
     () => this.nextIndex,
     async (i, { sleep }) => {
-      await sleep(0)
+      await sleep(32)
       this.activeIndex = i
     },
   )

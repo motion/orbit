@@ -19,6 +19,7 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
 
 const Meta = view({
   padding: 10,
+  background: '#fff',
   borderBottom: [1, '#eee'],
   flexFlow: 'row',
   overflow: 'hidden',
@@ -75,55 +76,52 @@ export const PeekBit = ({
                 title,
                 icon,
                 subhead: searchBar,
+                preBody: (
+                  <Meta>
+                    <UI.Theme name="grey">
+                      <RoundButton
+                        onClick={e => {
+                          e.stopPropagation()
+                          locationLink()
+                        }}
+                      >
+                        {location}
+                      </RoundButton>
+                    </UI.Theme>
+                    <UI.View flex={1} />
+                    <UI.Text>
+                      <UI.Date>{updatedAt}</UI.Date>
+                    </UI.Text>
+                    {!!permalink &&
+                      !!icon && (
+                        <>
+                          <HorizontalSpace />
+                          <OrbitIcon
+                            onClick={() => {
+                              console.log('todo open integration', integration)
+                            }}
+                            icon={icon}
+                            size={16}
+                          />
+                        </>
+                      )}
+                    <HorizontalSpace />
+                    <UI.Theme name="orbit">
+                      <RoundButton onClick={permalink}>View</RoundButton>
+                    </UI.Theme>
+                  </Meta>
+                ),
                 content: (
-                  <>
-                    <Meta>
-                      <UI.Theme name="grey">
-                        <RoundButton
-                          onClick={e => {
-                            e.stopPropagation()
-                            locationLink()
-                          }}
-                        >
-                          {location}
-                        </RoundButton>
-                      </UI.Theme>
-                      <UI.View flex={1} />
-                      <UI.Text>
-                        <UI.Date>{updatedAt}</UI.Date>
-                      </UI.Text>
-                      {!!permalink &&
-                        !!icon && (
-                          <>
-                            <HorizontalSpace />
-                            <OrbitIcon
-                              onClick={() => {
-                                console.log(
-                                  'todo open integration',
-                                  integration,
-                                )
-                              }}
-                              icon={icon}
-                              size={16}
-                            />
-                          </>
-                        )}
-                      <HorizontalSpace />
-                      <UI.Theme name="orbit">
-                        <RoundButton onClick={permalink}>Open</RoundButton>
-                      </UI.Theme>
-                    </Meta>
-                    <HighlightsLayer term={searchTerm}>
-                      <BitPaneContent
-                        bit={bit}
-                        appStore={appStore}
-                        peekStore={peekStore}
-                        searchTerm={searchTerm}
-                        content={content}
-                        comments={comments}
-                      />
-                    </HighlightsLayer>
-                  </>
+                  <HighlightsLayer term={searchTerm}>
+                    <BitPaneContent
+                      bit={bit}
+                      appStore={appStore}
+                      peekStore={peekStore}
+                      searchTerm={searchTerm}
+                      content={content}
+                      comments={comments}
+                    />
+                  </HighlightsLayer>
                 ),
               })
             }}

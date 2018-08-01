@@ -10,6 +10,7 @@ import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
 import { SearchStore } from '../../stores/SearchStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
+import { RoundButton } from '../../views'
 
 type Props = {
   appStore?: AppStore
@@ -36,6 +37,19 @@ export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
       </PeekFrame>
     </UI.Theme>
   )
+})
+
+const PeekActionBar = view({
+  padding: 10,
+  background: '#fff',
+  borderTop: [1, '#eee'],
+  flexFlow: 'row',
+  overflow: 'hidden',
+  alignItems: 'center',
+})
+
+const Cmd = view({
+  opacity: 0.5,
 })
 
 type PeekPane = React.SFC<PeekPaneProps>
@@ -72,6 +86,7 @@ class PeekPageInner extends React.Component<Props> {
             icon,
             date,
             subhead,
+            preBody,
             subtitle,
             subtitleBefore,
             subtitleAfter,
@@ -94,7 +109,20 @@ class PeekPageInner extends React.Component<Props> {
                 permalink={permalink}
                 {...headerProps}
               />
+              {preBody}
               <PeekContent peekStore={peekStore}>{content}</PeekContent>
+              <PeekActionBar>
+                <div />
+                <UI.View flex={1} />
+                <UI.Row alignItems="center">
+                  <RoundButton alignItems="center">
+                    Copy Link <Cmd>⌘+Shift+C</Cmd>
+                  </RoundButton>
+                  <RoundButton alignItems="center">
+                    Open <Cmd>⌘+Enter</Cmd>
+                  </RoundButton>
+                </UI.Row>
+              </PeekActionBar>
             </>
           )
         }}

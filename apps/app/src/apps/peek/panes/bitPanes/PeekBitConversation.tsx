@@ -36,7 +36,7 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
     <>
       {content}
       {relatedStore.relatedConversations.length ? (
-        <UI.View marginTop={20} background="#fefefe">
+        <UI.View marginTop={20}>
           <Section>
             <SubTitle>After</SubTitle>
           </Section>

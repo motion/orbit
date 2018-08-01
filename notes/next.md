@@ -8,6 +8,7 @@
 - search: filtering "nick and nate" doesn't show any results for some reason
 - horizontal related row at bottom of each peek bit for all of them
 - horizontal info/updates row at top of each peek
+- clearing home search is slow
 - peekArrow: account for real header and dont overlap edges
 - make all searches work: task search, message search
 - Remove setting button

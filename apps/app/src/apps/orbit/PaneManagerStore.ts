@@ -97,7 +97,12 @@ export class PaneManagerStore {
 
   clearPeekOnActivePaneChange = react(
     () => this.activePane,
-    () => App.actions.clearPeek(),
+    pane => {
+      if (!pane) {
+        throw react.cancel
+      }
+      App.actions.clearPeek()
+    },
   )
 
   animationState = react(

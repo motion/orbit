@@ -782,8 +782,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
       .trim()
       .replace(/\s+/g, '.')}:hover`
     return (
-      !!node.parentNode.querySelector(childSelector) ||
-      node.querySelector(':hover')
+      !!(node.parentNode
+        ? node.parentNode.querySelector(childSelector)
+        : null) || node.querySelector(':hover')
     )
   }
 

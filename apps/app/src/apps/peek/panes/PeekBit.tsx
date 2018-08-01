@@ -49,6 +49,7 @@ export const PeekBit = ({
       searchBarTheme={peekStore.theme}
       onChange={() => searchStore.setHighlightIndex(0)}
       onEnter={peekStore.goToNextHighlight}
+      placeholder={`Search this ${item.subType} and related...`}
     >
       {({ searchBar, searchTerm }) => {
         return (

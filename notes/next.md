@@ -1,8 +1,5 @@
 - p2p https://github.com/mafintosh/hyperdb
 
-- highlights click: doesn't toggle open/close peek
-- peek: make "open" button work well
-- relevant/recent toggle broke
 - search: integration filters dont update search
 - peek people: topbar needs a lot of visual work
 - search: filtering "nick and nate" doesn't show any results for some reason
@@ -54,4 +51,5 @@
 
 # random dev notes
 
+- hmr: doesn't store.unmount stores often
 - react: await finishRender() could be interesting

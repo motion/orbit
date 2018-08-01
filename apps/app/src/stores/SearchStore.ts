@@ -168,6 +168,7 @@ export class SearchStore /* extends Store */ {
       this.getResults,
       // filter updates
       this.searchFilterStore.activeFilters,
+      this.searchFilterStore.exclusiveFilters,
       this.searchFilterStore.sortBy,
     ],
     async ([query, getResults], { sleep, when, setValue, preventLogging }) => {
@@ -226,6 +227,7 @@ export class SearchStore /* extends Store */ {
         // gather all the pieces from nlp store for query
         // const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
         const {
+          exclusiveFilters,
           activeFilters,
           activeQuery,
           activeDate,
@@ -235,12 +237,17 @@ export class SearchStore /* extends Store */ {
         let results = []
 
         // filters
-        const peopleFilters = activeFilters.filter(
-          x => x.type === MarkType.Person,
-        )
-        const integrationFilters = activeFilters.filter(
-          x => x.type === MarkType.Integration,
-        )
+        const peopleFilters = activeFilters
+          .filter(x => x.type === MarkType.Person)
+          .map(x => x.text)
+        const integrationFilters = [
+          // these come from the text string
+          ...activeFilters
+            .filter(x => x.type === MarkType.Integration)
+            .map(x => x.text),
+          // these come from the button bar
+          ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
+        ]
         const { startDate, endDate } = activeDate
 
         for (let i = 0; i < takeMax / take; i += 1) {
@@ -258,9 +265,7 @@ export class SearchStore /* extends Store */ {
             // find one or more
             nextQuery = nextQuery.andWhere(
               new Brackets(qb => {
-                const peopleLike = peopleFilters.map(
-                  filter => `%${filter.text}%`,
-                )
+                const peopleLike = peopleFilters.map(filter => `%${filter}%`)
                 qb.where('person.name like :name', { name: peopleLike[0] })
                 for (const name of peopleLike.slice(1)) {
                   qb.orWhere('person.name like :name', { name })

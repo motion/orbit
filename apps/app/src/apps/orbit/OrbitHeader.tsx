@@ -18,11 +18,6 @@ const OrbitHeaderContainer = view({
   zIndex: 4,
 })
 
-OrbitHeaderContainer.theme = ({ borderRadius, theme }) => ({
-  borderRadius: borderRadius,
-  background: theme.base.background,
-})
-
 const PinnedControlButton = view(ControlButton, {
   position: 'relative',
   zIndex: 10000,
@@ -61,13 +56,13 @@ const OrbitFakeInput = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  background: [0, 0, 0, 0.06],
+  background: '#eee',
   borderRadius: 10,
   '&:hover': {
-    background: [0, 0, 0, 0.05],
+    background: '#f2f2f2',
   },
   '&:focus-within': {
-    background: [0, 0, 0, 0.05],
+    background: '#eee',
   },
 })
 

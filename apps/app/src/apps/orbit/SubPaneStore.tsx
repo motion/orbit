@@ -122,7 +122,9 @@ export class SubPaneStore {
     const cardOffset = getTopOffset(card, pane)
     // too high
     if (cardOffset < pane.scrollTop) {
-      pane.scrollTop = cardOffset
+      // if near top just go all the way
+      const scrollTop = cardOffset < 200 ? 0 : cardOffset
+      pane.scrollTop = scrollTop
       return
     }
     // too low
@@ -131,7 +133,7 @@ export class SubPaneStore {
     if (cardBottom > paneBottomVisible) {
       pane.scrollTop = cardBottom - pane.clientHeight + 100 // for some reason we need this extra
     }
-  }, 100)
+  }, 60)
 
   updateHeight = () => {
     const { top, height } = this.paneInnerNode.getBoundingClientRect()
@@ -145,10 +147,9 @@ export class SubPaneStore {
     const pane = this.paneNode
     const innerHeight = this.paneInnerNode.clientHeight
     const scrolledTo = pane.scrollTop + pane.clientHeight
-    if (innerHeight <= scrolledTo) {
-      this.isAtBottom = true
-    } else {
-      this.isAtBottom = false
+    const next = innerHeight <= scrolledTo
+    if (next !== this.isAtBottom) {
+      this.isAtBottom = next
     }
   }
 }

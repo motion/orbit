@@ -78,10 +78,6 @@ const DockedPaneInner = view(UI.View, {
   flex: 1,
 })
 
-DockedPaneInner.theme = ({ theme }) => ({
-  background: theme.base.background,
-})
-
 const PaneContentInner = view({
   position: 'relative',
 })

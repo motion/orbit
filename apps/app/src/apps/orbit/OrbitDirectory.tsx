@@ -50,9 +50,12 @@ class OrbitDirectoryStore {
   }
 
   // poll every few seconds while active
-  results = modelQueryReaction(() => Person.find({ take: 100 }), {
-    defaultValue: [],
-  })
+  results = modelQueryReaction(
+    () => Person.find({ take: 100, where: { integration: 'slack' } }),
+    {
+      defaultValue: [],
+    },
+  )
 }
 
 type Props = {

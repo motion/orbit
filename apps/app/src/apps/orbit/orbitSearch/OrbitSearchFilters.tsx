@@ -23,10 +23,10 @@ const ExtraFilters = view(UI.View, {
   width: '100%',
   padding: [20, 0],
   opacity: 0,
-  transition: 'all ease 50ms 100ms',
+  transition: 'all ease 50ms',
   visible: {
     opacity: 1,
-    transition: 'all ease 50ms',
+    transition: 'all ease 100ms 50ms',
   },
 })
 
@@ -63,7 +63,6 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   if (!nlpStore.nlp.date) {
     return null
   }
-  const showCal = !!searchStore.extraFiltersHeight
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
@@ -107,7 +106,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
         onMouseMove={searchStore.dateHover.props.onMouseMove}
         className="calendar-dom"
         height={searchStore.extraFiltersHeight}
-        visible={showCal}
+        visible={searchStore.extraFiltersVisible}
       >
         <DateRangePicker
           onChange={searchStore.onChangeDate}

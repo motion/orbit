@@ -7,7 +7,6 @@ import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
 import { SearchStore } from '../../../stores/SearchStore'
-import { memoize } from 'lodash'
 import { PaneManagerStore } from '../PaneManagerStore'
 
 type Props = {
@@ -33,26 +32,27 @@ const Highlight = view({
 const uglies = /([^a-zA-Z]{2,})/g
 const replaceUglies = str => str.replace(uglies, ' ')
 
-const selectHighlight = (index, hlIndex, searchStore) =>
-  memoize(e => {
-    const isAlreadyAtHighlight =
-      searchStore.activeIndex === index &&
-      searchStore.highlightIndex === hlIndex
-    if (!isAlreadyAtHighlight) {
-      e.stopPropagation()
-      searchStore.setHighlightIndex(hlIndex)
-      return
-    }
-  })
+const selectHighlight = (index, hlIndex, searchStore) => e => {
+  const isAlreadyAtHighlight = searchStore.highlightIndex === hlIndex
+  const isAlreadyAtIndex = searchStore.activeIndex === index
+  if (isAlreadyAtHighlight && isAlreadyAtIndex) {
+    return
+  }
+  if (isAlreadyAtIndex) {
+    e.stopPropagation()
+  }
+  searchStore.setHighlightIndex(hlIndex)
+  return
+}
 
-const highlightOptions = memoize((query, bit) => ({
+const highlightOptions = (query, bit) => ({
   text: replaceUglies(sanitize(bit.body || '')),
   words: query.split(' ').filter(x => x.length > 2),
   maxChars: 300,
   maxSurroundChars: 110,
   trimWhitespace: true,
   separator: '&nbsp;&middot;&nbsp;',
-}))
+})
 
 const OrbitSearchResultsList = view(({ name, store, searchStore }: Props) => {
   const { results, query } = store.state

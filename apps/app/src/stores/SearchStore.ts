@@ -166,8 +166,9 @@ export class SearchStore /* extends Store */ {
     () => [
       App.state.query,
       this.getResults,
-      // this is tied to all filter changes
+      // filter updates
       this.searchFilterStore.activeFilters,
+      this.searchFilterStore.sortBy,
     ],
     async ([query, getResults], { sleep, when, setValue, preventLogging }) => {
       if (!query) {

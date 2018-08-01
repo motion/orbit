@@ -7,10 +7,10 @@
 - hoverSettler: when hovered open and click to stick, have it stick
 - polish: when you click "clear query" theres a significant delay before it "goes home"
 - use old laptop to verify why hovering cards is delayed/not instant
+- search: too glitchy after first key is pressed from home
 
 - search: integration filters dont update search
 - permalinks: cant click location permalink on orbitcard
-- search: too glitchy after first key is pressed from home
 - search: filtering "nick and nate" doesn't show any results for some reason
 - relevant/recent toggle broke
 - highlights click: doesn't toggle open/close peek

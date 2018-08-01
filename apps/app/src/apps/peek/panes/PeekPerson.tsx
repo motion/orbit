@@ -4,13 +4,14 @@ import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import * as UI from '@mcro/ui'
 import { Bit } from '@mcro/models'
-import { SubTitle } from '../../../views'
+import { SubTitle, RoundButton } from '../../../views'
 import { OrbitCardMasonry } from '../../../views/OrbitCardMasonry'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { Masonry } from '../../../views/Masonry'
 import { OrbitCard } from '../../../views/OrbitCard'
 import { Carousel } from '../../../components/Carousel'
+import { App } from '@mcro/stores'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
@@ -104,7 +105,7 @@ FadeMapRight.theme = ({ theme }) => ({
 const Info = view({
   display: 'block',
   position: 'absolute',
-  top: 60,
+  top: 50,
   left: 140,
 })
 
@@ -132,8 +133,8 @@ const Avatar = view('img', {
   borderRadius: 1000,
 })
 
-const Card = view({
-  marginBottom: 20,
+const Section = view({
+  marginBottom: 15,
 })
 
 const Links = view({
@@ -143,27 +144,13 @@ const Links = view({
   flexFlow: 'row',
 })
 
-const IntButton = view('a', {
-  padding: [2, 7],
-  marginRight: 7,
-  borderRadius: 7,
-  flexFlow: 'row',
-  fontSize: 13,
-  fontWeight: 500,
-  background: 'linear-gradient(#fff, #f4f4f4 70%)',
-  boxShadow: 'inset 0 0 1px #ccc, inset 0 1px #fff',
-  border: [1, '#fff'],
-  cursor: 'default',
-  '&:hover': {
-    background: 'linear-gradient(#fff, #f9f9f9 50%)',
-  },
-})
-
 const IntegrationButton = ({ href, children, ...props }) => (
-  <IntButton href={href}>
-    <OrbitIcon preventAdjust margin={[0, 7, 0, 0]} size={14} {...props} />
+  <RoundButton
+    onClick={() => App.open(href)}
+    icon={<OrbitIcon preventAdjust size={14} {...props} />}
+  >
     {children}
-  </IntButton>
+  </RoundButton>
 )
 
 @view.attach('integrationSettingsStore')
@@ -237,7 +224,7 @@ export class PeekPerson extends React.Component<
           </Map>
           <Content>
             <ContentInner>
-              <Card>
+              <Section>
                 <StrongSubTitle>Interested in</StrongSubTitle>
                 <Carousel
                   items={[
@@ -263,12 +250,12 @@ export class PeekPerson extends React.Component<
                     },
                   ]}
                 />
-              </Card>
+              </Section>
 
-              <Card>
+              <Section>
                 <StrongSubTitle>Recently</StrongSubTitle>
                 <OrbitCardMasonry items={store.recentBits} />
-              </Card>
+              </Section>
             </ContentInner>
           </Content>
         </Frame>

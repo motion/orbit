@@ -14,9 +14,12 @@ export const PeekRelated = decorator(({ relatedStore }) => (
     <Carousel
       items={relatedStore.relatedBits}
       cardProps={{
+        hide: {
+          subtitle: true,
+        },
         style: {
           width: 180,
-          height: 90,
+          height: 78,
         },
       }}
     />

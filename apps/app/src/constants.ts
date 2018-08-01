@@ -65,7 +65,9 @@ export const PEEK_THEMES = {
   type: {
     person: {
       darkenTitleBarAmount: 0,
-      titlebarBackground: 'rgba(0,0,0,0.1)',
+      titlebarBackground:
+        'linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.1) 90%, transparent)',
+      titlebarBorder: 'transparent',
       headerBackground: 'transparent',
       background: '#f2f2f2',
       color: '#444',

@@ -27,7 +27,10 @@ const PeekHeaderContain = view(UI.View, {
 PeekHeaderContain.theme = ({ theme, position }) => {
   return {
     position: position || 'relative',
-    borderBottom: [1, theme.base.background.darken(0.3)],
+    borderBottom: [
+      1,
+      theme.titlebarBorder || theme.base.background.darken(0.2),
+    ],
     background: theme.headerBackground || theme.base.background,
   }
 }
@@ -50,8 +53,7 @@ const TitleBarContain = view({
 
 TitleBarContain.theme = ({ theme }) => {
   const hoverBackground =
-    (theme.titlebarBackground && theme.titlebarBackground.lighten(0.1)) ||
-    color('rgba(255,255,255,0.04)')
+    theme.titlebarBackground || color('rgba(255,255,255,0.04)')
   return {
     background: theme.titlebarBackground,
     '&:hover': {

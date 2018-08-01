@@ -17,6 +17,7 @@ export type PeekContents = {
   headerProps?: Object
   subhead?: React.ReactNode
   preBody?: React.ReactNode
+  postBody?: React.ReactNode
   after?: React.ReactNode
 }
 

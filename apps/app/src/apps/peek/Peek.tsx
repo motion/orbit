@@ -10,8 +10,6 @@ import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
 import { SearchStore } from '../../stores/SearchStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
-import { RoundButton, SubTitle } from '../../views'
-import { PeekRelated } from './views/PeekRelated'
 
 type Props = {
   appStore?: AppStore
@@ -38,25 +36,6 @@ export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
       </PeekFrame>
     </UI.Theme>
   )
-})
-
-const PeekBottom = view({
-  background: '#fff',
-  boxShadow: [[0, 0, 10, [0, 0, 0, 0.1]]],
-  borderTop: [1, '#eee'],
-  position: 'relative',
-  zIndex: 10,
-})
-
-const PeekActionBar = view({
-  padding: 10,
-  flexFlow: 'row',
-  overflow: 'hidden',
-  alignItems: 'center',
-})
-
-const Cmd = view({
-  opacity: 0.5,
 })
 
 type PeekPane = React.SFC<PeekPaneProps>
@@ -94,6 +73,7 @@ class PeekPageInner extends React.Component<Props> {
             date,
             subhead,
             preBody,
+            postBody,
             subtitle,
             subtitleBefore,
             subtitleAfter,
@@ -118,26 +98,7 @@ class PeekPageInner extends React.Component<Props> {
               />
               {preBody}
               <PeekContent peekStore={peekStore}>{content}</PeekContent>
-              <PeekBottom>
-                <PeekActionBar style={{ paddingTop: 4, paddingBottom: 4 }}>
-                  <SubTitle padding={0} margin={[12, 12, 'auto', 5]}>
-                    Related
-                  </SubTitle>
-                  <PeekRelated />
-                </PeekActionBar>
-                <PeekActionBar>
-                  <div />
-                  <UI.View flex={1} />
-                  <UI.Row alignItems="center">
-                    <RoundButton alignItems="center">
-                      Copy Link <Cmd>⌘+Shift+C</Cmd>
-                    </RoundButton>
-                    <RoundButton alignItems="center">
-                      Open <Cmd>⌘+Enter</Cmd>
-                    </RoundButton>
-                  </UI.Row>
-                </PeekActionBar>
-              </PeekBottom>
+              {postBody}
             </>
           )
         }}

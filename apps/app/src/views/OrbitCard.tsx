@@ -37,7 +37,7 @@ export type OrbitCardProps = {
   titleProps?: Object
   inactive?: boolean
   iconProps?: Object
-  hide?: { icon?: boolean }
+  hide?: { icon?: boolean; subtitle?: boolean }
   className?: string
   inGrid?: boolean
   pane?: string
@@ -398,7 +398,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const hasSubtitle = !!(location || subtitle)
+    const hasSubtitle = !!(location || subtitle) && !hide.subtitle
     return (
       <CardWrap
         {...hoverToSelect && !inactive && this.hoverSettler.props}

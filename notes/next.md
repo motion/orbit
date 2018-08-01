@@ -1,6 +1,5 @@
 - p2p https://github.com/mafintosh/hyperdb
 
-- search: integration filters dont update search
 - peek people: topbar needs a lot of visual work
 - search: filtering "nick and nate" doesn't show any results for some reason
 - horizontal related row at bottom of each peek bit for all of them

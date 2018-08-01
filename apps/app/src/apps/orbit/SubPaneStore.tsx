@@ -122,8 +122,8 @@ export class SubPaneStore {
     const cardOffset = getTopOffset(card, pane)
     // too high
     if (cardOffset < pane.scrollTop) {
-      // if near top just go all the way
-      const scrollTop = cardOffset < 200 ? 0 : cardOffset
+      // if near top just go all the way, otherwise subtract small amt for glow
+      const scrollTop = cardOffset < 200 ? 0 : cardOffset - 3
       pane.scrollTop = scrollTop
       return
     }

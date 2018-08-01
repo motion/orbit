@@ -10,7 +10,8 @@ import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
 import { SearchStore } from '../../stores/SearchStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
-import { RoundButton } from '../../views'
+import { RoundButton, SubTitle } from '../../views'
+import { PeekRelated } from './views/PeekRelated'
 
 type Props = {
   appStore?: AppStore
@@ -39,10 +40,16 @@ export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
   )
 })
 
+const PeekBottom = view({
+  background: '#fff',
+  boxShadow: [[0, 0, 10, [0, 0, 0, 0.1]]],
+  borderTop: [1, '#eee'],
+  position: 'relative',
+  zIndex: 10,
+})
+
 const PeekActionBar = view({
   padding: 10,
-  background: '#fff',
-  borderTop: [1, '#eee'],
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
@@ -111,18 +118,26 @@ class PeekPageInner extends React.Component<Props> {
               />
               {preBody}
               <PeekContent peekStore={peekStore}>{content}</PeekContent>
-              <PeekActionBar>
-                <div />
-                <UI.View flex={1} />
-                <UI.Row alignItems="center">
-                  <RoundButton alignItems="center">
-                    Copy Link <Cmd>⌘+Shift+C</Cmd>
-                  </RoundButton>
-                  <RoundButton alignItems="center">
-                    Open <Cmd>⌘+Enter</Cmd>
-                  </RoundButton>
-                </UI.Row>
-              </PeekActionBar>
+              <PeekBottom>
+                <PeekActionBar style={{ paddingTop: 4, paddingBottom: 4 }}>
+                  <SubTitle padding={0} margin={[12, 12, 'auto', 5]}>
+                    Related
+                  </SubTitle>
+                  <PeekRelated />
+                </PeekActionBar>
+                <PeekActionBar>
+                  <div />
+                  <UI.View flex={1} />
+                  <UI.Row alignItems="center">
+                    <RoundButton alignItems="center">
+                      Copy Link <Cmd>⌘+Shift+C</Cmd>
+                    </RoundButton>
+                    <RoundButton alignItems="center">
+                      Open <Cmd>⌘+Enter</Cmd>
+                    </RoundButton>
+                  </UI.Row>
+                </PeekActionBar>
+              </PeekBottom>
             </>
           )
         }}

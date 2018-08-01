@@ -1,34 +1,35 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { OrbitCard } from '../views/OrbitCard'
-import { view } from '@mcro/black'
+import { Bit } from '@mcro/models'
 
 const cardStyleDefault = {
-  width: 200,
-  height: 175,
+  width: 180,
+  height: 90,
   marginRight: 12,
 }
 
-export const Carousel = view.attach('appStore')(
-  ({ items, appStore, cardStyle = {}, ...props }) => {
-    return (
-      <UI.Row overflow="hidden" overflowX="scroll" {...props}>
+export const Carousel = ({ items, cardProps = {}, ...props }) => {
+  return (
+    <UI.Theme name="grey">
+      <UI.Row overflow="hidden" overflowX="scroll" padding={3} {...props}>
         {(items || []).map((bit, index) => (
           <OrbitCard
             key={`${index}${bit.id}`}
             pane="carousel"
-            appStore={appStore}
-            bit={bit}
+            bit={bit instanceof Bit ? bit : null}
+            {...(!(bit instanceof Bit) ? bit : null)}
             index={index}
             total={items.length}
             inGrid
+            {...cardProps}
             style={{
               ...cardStyleDefault,
-              ...cardStyle,
+              ...cardProps['style'],
             }}
           />
         ))}
       </UI.Row>
-    )
-  },
-)
+    </UI.Theme>
+  )
+}

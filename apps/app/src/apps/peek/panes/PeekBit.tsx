@@ -112,16 +112,18 @@ export const PeekBit = ({
                   </Meta>
                 ),
                 content: (
-                  <HighlightsLayer term={searchTerm}>
-                    <BitPaneContent
-                      bit={bit}
-                      appStore={appStore}
-                      peekStore={peekStore}
-                      searchTerm={searchTerm}
-                      content={content}
-                      comments={comments}
-                    />
-                  </HighlightsLayer>
+                  <>
+                    <HighlightsLayer term={searchTerm}>
+                      <BitPaneContent
+                        bit={bit}
+                        appStore={appStore}
+                        peekStore={peekStore}
+                        searchTerm={searchTerm}
+                        content={content}
+                        comments={comments}
+                      />
+                    </HighlightsLayer>
+                  </>
                 ),
               })
             }}

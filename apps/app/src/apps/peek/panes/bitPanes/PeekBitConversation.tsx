@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
-import { PeekItemResolver } from '../../views/PeekItemResolver'
-import { SubTitle } from '../../../../views'
-import { Divider } from '../../../../views/Divider'
+// import { PeekItemResolver } from '../../views/PeekItemResolver'
+// import { SubTitle } from '../../../../views'
+// import { Divider } from '../../../../views/Divider'
+// import * as UI from '@mcro/ui'
 import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
-import * as UI from '@mcro/ui'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const Section = view({
@@ -35,7 +35,7 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
   return (
     <>
       {content}
-      {relatedStore.relatedConversations.length ? (
+      {/* {relatedStore.relatedConversations.length ? (
         <UI.View marginTop={20}>
           <Section>
             <SubTitle>After</SubTitle>
@@ -53,7 +53,7 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
           <br />
           <br />
         </UI.View>
-      ) : null}
+      ) : null} */}
     </>
   )
 })

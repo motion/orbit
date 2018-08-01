@@ -1,7 +1,5 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
-import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
-// import { RelatedPeople } from '../../views/RelatedPeople'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const BodyContents = view({
@@ -12,20 +10,9 @@ const BodyContents = view({
   overflow: 'hidden',
 })
 
-type Props = PeekBitPaneProps & {
-  relatedStore: PeekRelatedStore
-}
-
-const decorator = compose(
-  view.attach({
-    relatedStore: PeekRelatedStore,
-  }),
-)
-
-export const Task = decorator(({ content, comments }: Props) => {
+export const Task = ({ content, comments }: PeekBitPaneProps) => {
   return (
     <>
-      {/* <RelatedPeople title="Assigned" relatedStore={relatedStore} /> */}
       <BodyContents
         className="markdown searchable"
         dangerouslySetInnerHTML={{
@@ -37,4 +24,4 @@ export const Task = decorator(({ content, comments }: Props) => {
       <br />
     </>
   )
-})
+}

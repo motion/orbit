@@ -10,13 +10,14 @@ import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { Masonry } from '../../../views/Masonry'
 import { OrbitCard } from '../../../views/OrbitCard'
+import { Carousel } from '../../../components/Carousel'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
 )
 
 const mapW = 700
-const mapH = 300
+const mapH = 200
 
 class PersonPeek {
   recentBits = modelQueryReaction(
@@ -78,11 +79,12 @@ const FadeMap = view({
   right: 0,
   height: 200,
   zIndex: 2,
+  background: 'linear-gradient(transparent, #fbfbfb)',
 })
 
-FadeMap.theme = ({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.base.background})`,
-})
+// FadeMap.theme = ({ theme }) => ({
+//   background: `linear-gradient(transparent, ${theme.base.background})`,
+// })
 
 const FadeMapRight = view({
   position: 'absolute',
@@ -124,9 +126,9 @@ const Email = view('a', {
 })
 
 const Avatar = view('img', {
-  margin: [-40, 0, 10, -65],
-  width: 256,
-  height: 256,
+  margin: [-20, 0, 0, -45],
+  width: 200,
+  height: 200,
   borderRadius: 1000,
 })
 
@@ -142,7 +144,7 @@ const Links = view({
 })
 
 const IntButton = view('a', {
-  padding: [6, 10],
+  padding: [2, 7],
   marginRight: 7,
   borderRadius: 7,
   flexFlow: 'row',
@@ -237,34 +239,30 @@ export class PeekPerson extends React.Component<
             <ContentInner>
               <Card>
                 <StrongSubTitle>Interested in</StrongSubTitle>
-                <UI.Theme name="grey">
-                  <Masonry>
-                    {[
-                      {
-                        title: '#general',
-                        icon: 'slack',
-                        subtitle: '20 people',
-                      },
-                      {
-                        title: '#status',
-                        icon: 'slack',
-                        subtitle: '29 people',
-                      },
-                      {
-                        title: 'motion/orbit',
-                        icon: 'github',
-                        subtitle: '20 people',
-                      },
-                      {
-                        title: '#showoff',
-                        icon: 'slack',
-                        subtitle: '78 people',
-                      },
-                    ].map((place, index) => (
-                      <OrbitCard key={index} {...place} />
-                    ))}
-                  </Masonry>
-                </UI.Theme>
+                <Carousel
+                  items={[
+                    {
+                      title: '#general',
+                      icon: 'slack',
+                      subtitle: '20 people',
+                    },
+                    {
+                      title: '#status',
+                      icon: 'slack',
+                      subtitle: '29 people',
+                    },
+                    {
+                      title: 'motion/orbit',
+                      icon: 'github',
+                      subtitle: '20 people',
+                    },
+                    {
+                      title: '#showoff',
+                      icon: 'slack',
+                      subtitle: '78 people',
+                    },
+                  ]}
+                />
               </Card>
 
               <Card>

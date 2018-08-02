@@ -77,7 +77,7 @@ export const PeekFrame = decorator(
       !onRight ? SHADOW_PAD : 0,
     ]
     const margin = padding.map(x => -x)
-    const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.4]]]
+    const boxShadow = [[onRight ? 15 : -15, 8, SHADOW_PAD, [0, 0, 0, 0.3]]]
     const transition = transitions(peekStore)
     return (
       <PeekFrameContainer

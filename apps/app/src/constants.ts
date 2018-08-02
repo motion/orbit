@@ -10,7 +10,7 @@ export const IS_DEV = !IS_PROD
 export const VERSION = require('../package.json').version
 
 export const BORDER_RADIUS = 15
-export const CHROME_PAD = 3
+export const CHROME_PAD = 4
 export const PEEK_BORDER_RADIUS = 6
 
 export const SHADOW_PAD = 15

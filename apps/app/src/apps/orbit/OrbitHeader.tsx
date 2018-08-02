@@ -50,6 +50,8 @@ const Title = view({
   alignItems: 'stretch',
 })
 
+const cardSelectedGlow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.2]]
+
 const OrbitFakeInput = view({
   height: 43,
   flex: 1,
@@ -64,6 +66,9 @@ const OrbitFakeInput = view({
   // '&:focus-within': {
   //   background: '#eee',
   // },
+  isFocused: {
+    // boxShadow: [cardSelectedGlow],
+  },
 })
 
 @attachTheme
@@ -104,7 +109,7 @@ export class OrbitHeader extends React.Component<{
         {...this.hoverSettler.props}
         borderRadius={borderRadius}
       >
-        <OrbitFakeInput>
+        <OrbitFakeInput isFocused={headerStore.isInputFocused}>
           <Title>
             <UI.Icon
               name={'ui-1_zoom'}

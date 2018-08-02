@@ -39,7 +39,7 @@ const Chrome = view({
   right: -CHROME_PAD,
   bottom: -CHROME_PAD,
   border: [CHROME_PAD, [0, 0, 0, 0.05]],
-  borderRadius: BORDER_RADIUS + 1,
+  borderRadius: BORDER_RADIUS + CHROME_PAD - 1,
   zIndex: -1,
 })
 

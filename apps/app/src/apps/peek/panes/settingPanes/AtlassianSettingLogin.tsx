@@ -8,6 +8,11 @@ import { AtlassianService } from '@mcro/services'
 import { App } from '@mcro/stores'
 import { capitalize } from 'lodash'
 
+type Props = {
+  type: string
+  setting: Setting
+}
+
 const Statuses = {
   LOADING: 'LOADING',
   SUCCESS: 'SUCCESS',
@@ -21,6 +26,8 @@ const buttonThemes = {
 }
 
 class AtlassianSettingLoginStore {
+  props: Props
+
   retry = null
   error = null
   values = {
@@ -148,7 +155,9 @@ class AtlassianSettingLoginStore {
   store: AtlassianSettingLoginStore,
 })
 @view
-export class AtlassianSettingLogin extends React.Component {
+export class AtlassianSettingLogin extends React.Component<
+  Props & { store?: AtlassianSettingLoginStore }
+> {
   render() {
     const { store } = this.props
     return (

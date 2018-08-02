@@ -51,6 +51,7 @@ class GDocsSettingStore {
   }
 
   get service(): DriveService {
+    console.log('get service again')
     return this.props.appStore.services.gdocs
   }
 
@@ -62,6 +63,7 @@ class GDocsSettingStore {
     async () => {
       const res = await this.service.fetch('/files', {
         query: {
+          pageSize: 1000,
           q: 'mimeType="application/vnd.google-apps.folder"',
           orderBy: [
             'modifiedByMeTime desc',

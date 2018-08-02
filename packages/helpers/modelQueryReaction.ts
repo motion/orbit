@@ -14,6 +14,20 @@ const DEFAULT_OPTIONS = {
   condition: trueFn,
 }
 
+const isEqual = (a, b) => {
+  // cancel if not changed
+  if (Array.isArray(a)) {
+    if (modelsEqual(a, b)) {
+      return true
+    }
+  } else if (comparer.structural(a, b)) {
+    return true
+  } else if (modelEqual(a, b)) {
+    return true
+  }
+  return false
+}
+
 // a helper to watch model queries and only trigger reactions when the model changes
 // because our models dont implement a nice comparison, which we could probably do later
 export function modelQueryReaction(
@@ -39,35 +53,27 @@ export function modelQueryReaction(
     log: false,
     ...restOptions,
   }
+  let currentVal
   return react(
     () => (now(poll) && condition() ? Math.random() : null),
-    async (_, { getValue }) => {
+    async () => {
       if (!condition()) {
         throw react.cancel
       }
-      const currentVal = getValue()
-      let next = await query()
-      if (typeof next === 'undefined') {
+      const next = await query()
+      if (isEqual(currentVal, next)) {
         throw react.cancel
       }
+      currentVal = next
       // if given explicit reaction, use that as return val
       if (returnVal) {
-        next = returnVal(next)
+        const res = returnVal(next)
         if (next instanceof Promise) {
-          next = await next
+          return await res
         }
+      } else {
+        return next
       }
-      if (Array.isArray(next)) {
-        if (modelsEqual(currentVal, next)) {
-          throw react.cancel
-        }
-      } else if (comparer.structural(currentVal, next)) {
-        throw react.cancel
-      } else if (modelEqual(currentVal, next)) {
-        throw react.cancel
-      }
-      // else just return the new models
-      return next
     },
     finalOptions,
   )

@@ -145,7 +145,7 @@ Card.theme = ({
       borderRight: 'none',
       padding: padding || [20, 18],
       '&:active': {
-        opacity: isSelected ? 1 : 0.75,
+        opacity: isSelected ? 1 : 0.85,
       },
     }
   } else {
@@ -168,7 +168,7 @@ Card.theme = ({
           border: [1, borderHover],
         },
         '&:active': {
-          opacity: 0.75,
+          opacity: 0.85,
         },
       }
     }

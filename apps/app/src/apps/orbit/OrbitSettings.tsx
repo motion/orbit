@@ -87,12 +87,12 @@ class OrbitSettingsStore {
   integrationSettings = modelQueryReaction(
     () =>
       Setting.find({
-        where: { category: 'integration', token: Not(IsNull()) },
+        where: {
+          category: 'integration',
+          token: Not(IsNull()),
+          type: Not('setting'),
+        },
       }),
-    settings => {
-      // just integration settings, not general ones
-      return settings.filter(setting => setting.type !== 'setting')
-    },
     {
       condition: () => {
         return this.isPaneActive || this.integrationSettings.length === 0

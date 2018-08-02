@@ -43,6 +43,34 @@ const columns = {
   },
 }
 
+const itemToRow = (index, channel, topic, isActive, onSync) => ({
+  key: `${index}`,
+  columns: {
+    name: {
+      sortValue: channel.name,
+      value: channel.name,
+    },
+    topic: {
+      sortValue: topic,
+      value: topic,
+    },
+    members: {
+      sortValue: channel.num_members,
+      value: channel.num_members,
+    },
+    lastActive: {
+      sortValue: Date.now(),
+      value: <TimeAgo>{Date.now()}</TimeAgo>,
+    },
+    active: {
+      sortValue: isActive,
+      value: (
+        <ReactiveCheckBox onChange={onSync(channel.id)} isActive={isActive} />
+      ),
+    },
+  },
+})
+
 class SlackSettingStore {
   props: SettingPaneProps
 
@@ -75,36 +103,7 @@ class SlackSettingStore {
       return channels.map((channel, index) => {
         const topic = channel.topic ? channel.topic.value : ''
         const isActive = () => this.isSyncing(channel.id)
-        return {
-          key: `${index}`,
-          columns: {
-            name: {
-              sortValue: channel.name,
-              value: channel.name,
-            },
-            topic: {
-              sortValue: topic,
-              value: topic,
-            },
-            members: {
-              sortValue: channel.num_members,
-              value: channel.num_members,
-            },
-            lastActive: {
-              sortValue: Date.now(),
-              value: <TimeAgo>{Date.now()}</TimeAgo>,
-            },
-            active: {
-              sortValue: isActive,
-              value: (
-                <ReactiveCheckBox
-                  onChange={this.onSync(channel.id)}
-                  isActive={isActive}
-                />
-              ),
-            },
-          },
-        }
+        return itemToRow(index, channel, topic, isActive, this.onSync)
       })
     },
     {

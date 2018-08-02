@@ -76,16 +76,6 @@ Test3.theme = () => ({
   },
 })
 
-// export type TreeItem = {
-//   id: TreeItemID
-//   name: string
-//   expanded: boolean
-//   children: Array<TreeItemID>
-//   attributes: Array<TreeItemAttribute>
-//   data: TreeItemData
-//   decoration: string
-// }
-
 const RootViewInner = () => {
   return (
     <ThemeProvide themes={themes} activeTheme="light">

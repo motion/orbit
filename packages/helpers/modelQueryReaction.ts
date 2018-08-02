@@ -46,28 +46,25 @@ export function modelQueryReaction(
         throw react.cancel
       }
       const currentVal = getValue()
-      const next = await query()
-      if (next && currentVal) {
-        if (Array.isArray(next)) {
-          if (modelsEqual(currentVal, next)) {
-            throw react.cancel
-          }
-        } else if (comparer.structural(currentVal, next)) {
-          throw react.cancel
-        } else if (modelEqual(currentVal, next)) {
-          throw react.cancel
-        }
-      }
+      let next = await query()
       if (typeof next === 'undefined') {
         throw react.cancel
       }
       // if given explicit reaction, use that as return val
       if (returnVal) {
-        const res = returnVal(next)
-        if (res instanceof Promise) {
-          return await res
+        next = returnVal(next)
+        if (next instanceof Promise) {
+          next = await next
         }
-        return res
+      }
+      if (Array.isArray(next)) {
+        if (modelsEqual(currentVal, next)) {
+          throw react.cancel
+        }
+      } else if (comparer.structural(currentVal, next)) {
+        throw react.cancel
+      } else if (modelEqual(currentVal, next)) {
+        throw react.cancel
       }
       // else just return the new models
       return next

@@ -137,7 +137,7 @@ export class OrbitSettings extends React.Component<Props> {
             <Masonry>
               {store.integrationSettings.map((setting, index) => (
                 <store.IntegrationCard
-                  key={`${setting.id}${index}`}
+                  key={`${setting.id}`}
                   result={integrationSettingsStore.settingToResult(setting)}
                   index={index + store.generalSettings.length}
                   setting={setting}

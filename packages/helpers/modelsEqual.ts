@@ -4,6 +4,9 @@ export function modelEqual(a: any, b: any) {
 }
 
 export function modelsEqual(a: any[], b: any[]) {
+  if (!a || !b) {
+    return false
+  }
   if (a.length !== b.length) {
     return false
   }

@@ -133,7 +133,7 @@ export class SubPaneStore {
 
   addObserver = (node, cb) => {
     const observer = new MutationObserver(cb)
-    observer.observe(node, { childList: true, subtree: true })
+    observer.observe(node, { childList: true })
     on(this, observer)
     return () => observer.disconnect()
   }

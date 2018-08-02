@@ -11,7 +11,7 @@
 Aug 7th:
 
 - Settings panes all fully working
-- Better homepage
+- Better app home
 - Build to .app
 - Auto updating .app
 - Auto onboarding flow/history-scan/notifications/tray-guide

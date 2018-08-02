@@ -34,6 +34,9 @@ export class SubPaneStore {
   }
 
   get paneInnerNode() {
+    if (!this.paneNode) {
+      return null
+    }
     return this.paneNode.firstChild as HTMLDivElement
   }
 

@@ -516,10 +516,14 @@ export class SearchStore /* extends Store */ {
   }
 
   increment = (by = 1) => {
-    console.log('increment')
     this.setSelectEvent('key')
+    const max = this.searchState.results.length - 1
+    // dont go past end
+    if (this.nextIndex === max) {
+      return
+    }
     this.toggleSelected(
-      Math.min(this.searchState.results.length - 1, this.nextIndex + by),
+      Math.min(max, this.nextIndex + by),
     )
   }
 

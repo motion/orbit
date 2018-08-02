@@ -1,8 +1,33 @@
 - p2p https://github.com/mafintosh/hyperdb
 
+Goals end of Sep:
+
+- Hire top frontender
+- Next level website
+- p2p sync with 2 real features (rate-limit, pin-to-search)
+- deploy it with 5 teams
+- alpha ocr/memory/contextual-search
+
+Next:
+
+- Aug 2nd - Filtering/search done
+- Aug 3rd - Auto updating
+- Aug 4th - Productionized
+- Aug 5th - Settings panes done
+- Aug 6th - Details - tray menu, links, better search
+- Aug 7th - Onboarding
+  - Explain shortcuts
+  - Invite friend card on home
+- Aug 10th - simple p2p sync for dedupe gdocs
+- Aug 13th - invite features
+- Aug 14th - deploy to Matt
+- Aug 21st - deploy to FOSSA
+- Aug 30th - iterations based on Matt/Kevin install
+- Sep 2nd - Website upgraded for beta
+- Sep 10th - Article written
+
 tonight:
 
-- clearing home search is slow
 - fix date filter interaction
 - performance run on searching
 
@@ -38,9 +63,16 @@ friday:
 - no titlabar faderight to transparent on profile
 - UI.Text not wrapping subtitlePrefix
 
-# gamechangers
-
 # random dev notes
 
 - hmr: doesn't store.unmount stores often
 - react: await finishRender() could be interesting
+
+# gamechangers
+
+- calendar support
+- index anything
+- memory
+- contextual search
+
+# p2p features

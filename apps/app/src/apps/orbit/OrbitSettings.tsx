@@ -7,8 +7,6 @@ import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
-import * as UI from '@mcro/ui'
-import { AppStore } from '../../stores/AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../stores/SearchStore'
@@ -17,7 +15,6 @@ type Props = {
   name: string
   store?: OrbitSettingsStore
   searchStore?: SearchStore
-  appStore?: AppStore
   paneStore?: PaneManagerStore
   integrationSettingsStore?: IntegrationSettingsStore
 }
@@ -25,19 +22,15 @@ type Props = {
 class OrbitSettingsStore {
   props: Props
 
-  hasFetchedOnce = false
-
   setGetResults = react(
-    () => [this.isPaneActive, this.integrationSettings],
-    async ([isActive, integrationSettings], { sleep }) => {
+    () => [this.isPaneActive, this.allResults],
+    async ([isActive, allResults], { sleep }) => {
       if (!isActive) {
         throw react.cancel
       }
       await sleep(40)
-      const getResults = () => integrationSettings
-      // @ts-ignore
-      getResults.shouldFilter = true
-      this.props.searchStore.setGetResults(() => this.allResults)
+      const getResults = () => allResults
+      this.props.searchStore.setGetResults(getResults)
     },
     { immediate: true },
   )
@@ -96,6 +89,10 @@ class OrbitSettingsStore {
       Setting.find({
         where: { category: 'integration', token: Not(IsNull()) },
       }),
+    settings => {
+      // just integration settings, not general ones
+      return settings.filter(setting => setting.type !== 'setting')
+    },
     {
       condition: () => {
         return this.isPaneActive || this.integrationSettings.length === 0
@@ -106,14 +103,14 @@ class OrbitSettingsStore {
   )
 }
 
-@view.attach('appStore', 'searchStore', 'paneStore', 'integrationSettingsStore')
+@view.attach('searchStore', 'paneStore', 'integrationSettingsStore')
 @view.attach({
   store: OrbitSettingsStore,
 })
 @view
 export class OrbitSettings extends React.Component<Props> {
   render() {
-    const { name, store, appStore, integrationSettingsStore } = this.props
+    const { name, store, integrationSettingsStore } = this.props
     const isActive = result => {
       return !!store.integrationSettings.find(
         setting => setting.type === result.id,
@@ -128,31 +125,29 @@ export class OrbitSettings extends React.Component<Props> {
               key={`${result.id}`}
               result={result}
               index={index}
-              appStore={appStore}
               subtitle={result.subtitle}
               isActive
             />
           ))}
         </Masonry>
         <Views.VertSpace />
-        <UI.View if={store.integrationSettings.length}>
-          <Views.SubTitle>Active Integrations</Views.SubTitle>
-          <Masonry>
-            {store.integrationSettings
-              .map((setting, index) => (
+        {!!store.integrationSettings.length && (
+          <>
+            <Views.SubTitle>Active Integrations</Views.SubTitle>
+            <Masonry>
+              {store.integrationSettings.map((setting, index) => (
                 <store.IntegrationCard
-                  key={`${setting.id}`}
+                  key={`${setting.id}${index}`}
                   result={integrationSettingsStore.settingToResult(setting)}
                   index={index + store.generalSettings.length}
-                  appStore={appStore}
                   setting={setting}
                   isActive
                 />
-              ))
-              .filter(Boolean)}
-          </Masonry>
-          <Views.VertSpace />
-        </UI.View>
+              ))}
+            </Masonry>
+            <Views.VertSpace />
+          </>
+        )}
         <Views.SubTitle>Add Integration</Views.SubTitle>
         <Masonry>
           {integrationSettingsStore.allIntegrations
@@ -174,7 +169,6 @@ export class OrbitSettings extends React.Component<Props> {
                   key={`${item.id}`}
                   result={item}
                   index={index + store.allResults.length}
-                  appStore={appStore}
                   onClick={onClick}
                   disableShadow
                   cardProps={{

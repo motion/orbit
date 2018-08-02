@@ -3,7 +3,7 @@
 Goals end of Sep:
 
 - Hire top frontender
-- Next level website
+- auto setup
 - p2p sync with 2 real features (rate-limit, pin-to-search)
 - deploy it with 5 teams
 - alpha ocr/memory/contextual-search
@@ -13,6 +13,15 @@ Next:
 - Aug 2nd - Filtering/search done
 - Aug 3rd - Auto updating
 - Aug 4th - Productionized
+- Aug 6th - Auto setup:
+  1.  startup orbit, nothing shows!
+  2.  scans your chrome history
+  3.  shows in Tray (Setting up Orbit...)
+  4.  do exactly how fantastical gmail setup works
+  5.  open chrome tab with the oauth already active (not button page)
+  6.  at the end show a sucess notification
+  7.  cycle to next integration to set up
+  8.  once all done, open orbit and do a tour
 - Aug 5th - Settings panes done
 - Aug 6th - Details - tray menu, links, better search
 - Aug 7th - Onboarding

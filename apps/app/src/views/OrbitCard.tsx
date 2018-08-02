@@ -91,10 +91,10 @@ const Card = view({
   },
 })
 
-const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
-const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 2, '#90b1e452']
-const borderSelected = UI.color('#90b1e4')
+const cardShadow = [0, 1, 2, [0, 0, 0, 0.025]]
+const cardHoverGlow = [0, 0, 0, 3, [0, 0, 0, 0.05]]
+const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
+const borderSelected = UI.color('#90b1e4cc')
 
 Card.theme = ({
   listItem,
@@ -521,7 +521,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               color="#000"
               resist={90}
               scale={0.99}
-              offsetTop={isSelected ? 8 : 4}
+              offsetTop={isSelected ? 6 : 4}
               full
               blur={isSelected ? 8 : 4}
               inverse

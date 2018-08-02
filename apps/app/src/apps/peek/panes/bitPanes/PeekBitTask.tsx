@@ -14,14 +14,12 @@ export const Task = ({ content, comments }: PeekBitPaneProps) => {
   return (
     <>
       <BodyContents
-        className="markdown searchable"
+        className="markdown searchable rendered-content"
         dangerouslySetInnerHTML={{
           __html: content,
         }}
       />
       <BodyContents>{comments}</BodyContents>
-      <br />
-      <br />
     </>
   )
 }

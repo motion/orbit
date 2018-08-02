@@ -41,7 +41,7 @@ const Pane = view(UI.View, {
 })
 
 const OverflowFade = view({
-  pointerEvents: 'none',
+  pointerEvents: 'none !important',
   position: 'fixed',
   bottom: 0,
   left: 0,

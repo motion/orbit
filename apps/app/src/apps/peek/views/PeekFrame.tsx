@@ -94,7 +94,7 @@ export const PeekFrame = decorator(
           <PeekFrameArrow peekStore={peekStore} borderShadow={borderShadow} />
         )}
         <UI.Col flex={1} padding={padding} margin={margin}>
-          <UI.Col pointerEvents="all !important" position="relative" flex={1}>
+          <UI.Col position="relative" flex={1}>
             <PeekFrameBorder />
             <PeekMain
               css={{

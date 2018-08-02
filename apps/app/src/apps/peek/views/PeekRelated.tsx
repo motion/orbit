@@ -13,13 +13,11 @@ export const PeekRelated = decorator(({ relatedStore, ...props }) => (
   <UI.Theme name="grey">
     <Carousel
       items={relatedStore.relatedBits}
+      cardWidth={180}
+      cardHeight={78}
       cardProps={{
         hide: {
           subtitle: true,
-        },
-        style: {
-          width: 180,
-          height: 78,
         },
       }}
       {...props}

@@ -43,7 +43,7 @@ const Pane = view(UI.View, {
 
 const OverflowFade = view({
   pointerEvents: 'none',
-  position: 'absolute',
+  position: 'fixed',
   bottom: 0,
   left: 0,
   right: 0,
@@ -103,7 +103,6 @@ export class SubPane extends React.Component<Props> {
       <DockedPaneFrame isActive={subPaneStore.isActive}>
         {before}
         <DockedPaneInner {...containerStyle}>
-          {fadeBottom && <OverflowFade isInvisible={subPaneStore.isAtBottom} />}
           <Pane
             isActive={subPaneStore.isActive}
             style={style}
@@ -112,6 +111,11 @@ export class SubPane extends React.Component<Props> {
             {...props}
           >
             <PaneContentInner>{children}</PaneContentInner>
+            {fadeBottom && (
+              <OverflowFade
+                isInvisible={!subPaneStore.isActive || subPaneStore.isAtBottom}
+              />
+            )}
           </Pane>
         </DockedPaneInner>
         {after}

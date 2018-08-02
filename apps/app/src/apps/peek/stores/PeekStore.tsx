@@ -90,6 +90,10 @@ export class PeekStore {
     return this.internalState.curState
   }
 
+  get isShown() {
+    return !!this.internalState.target
+  }
+
   get willHide() {
     return this.internalState.willHide
   }
@@ -165,19 +169,10 @@ export class PeekStore {
     if (!state) {
       return [0, 0]
     }
-    const { docked, orbitOnLeft } = App.orbitState
-    const onRight = state && !state.peekOnLeft
     // determine x adjustments
-    let peekAdjustX = 0
-    // adjust for orbit arrow blank
-    if (!docked && orbitOnLeft && !onRight) {
-      peekAdjustX -= Constants.SHADOW_PAD
-    }
-    // small adjust to overlap
-    peekAdjustX += onRight ? -2 : 2
     const animationAdjust = (willShow && !willStayShown) || willHide ? -8 : 0
     const position = state.position
-    let x = position[0] + peekAdjustX
+    let x = position[0]
     let y = position[1] + animationAdjust
     if (this.dragOffset) {
       const [xOff, yOff] = this.dragOffset

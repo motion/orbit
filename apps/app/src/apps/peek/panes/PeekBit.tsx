@@ -10,6 +10,7 @@ import { RoundButton, SubTitle } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { PeekRelated } from '../views/PeekRelated'
+import { CarouselWithoutScrollbar } from '../../../views/CarouselWithoutScrollbar'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -20,14 +21,16 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
 
 const PeekBottom = view({
   background: '#fff',
-  boxShadow: [[0, 0, 40, [0, 0, 0, 0.1]]],
+  boxShadow: [[0, 0, 40, [0, 0, 0, 0.07]]],
+  margin: [0, -20],
+  padding: [0, 20],
   borderTop: [1, '#eee'],
   position: 'relative',
   zIndex: 10,
 })
 
 const PeekActionBar = view({
-  padding: 10,
+  padding: [6, 10, 10],
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
@@ -133,12 +136,12 @@ export const PeekBit = ({
                 ),
                 postBody: (
                   <PeekBottom>
-                    <PeekActionBar style={{ paddingTop: 8, paddingBottom: 0 }}>
-                      <SubTitle padding={0} margin={[12, 12, 'auto', 5]}>
+                    <CarouselWithoutScrollbar height={86} padding={3}>
+                      <SubTitle padding={0} margin={[12, 12, 'auto', 12]}>
                         Related
                       </SubTitle>
-                      <PeekRelated />
-                    </PeekActionBar>
+                      <PeekRelated overflowX="visible" />
+                    </CarouselWithoutScrollbar>
                     <PeekActionBar>
                       <div />
                       <UI.View flex={1} />

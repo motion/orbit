@@ -9,7 +9,7 @@ const decorator = compose(
   view,
 )
 
-export const PeekRelated = decorator(({ relatedStore }) => (
+export const PeekRelated = decorator(({ relatedStore, ...props }) => (
   <UI.Theme name="grey">
     <Carousel
       items={relatedStore.relatedBits}
@@ -22,6 +22,7 @@ export const PeekRelated = decorator(({ relatedStore }) => (
           height: 78,
         },
       }}
+      {...props}
     />
   </UI.Theme>
 ))

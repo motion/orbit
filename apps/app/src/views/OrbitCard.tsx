@@ -204,7 +204,7 @@ const Preview = view({
 
 const Subtitle = view(UI.View, {
   height: 20,
-  margin: [2, 0, 0],
+  margin: [4, 0, 0],
   opacity: 0.45,
   flexFlow: 'row',
   alignItems: 'center',
@@ -299,7 +299,7 @@ class OrbitCardStore {
         const position = getTargetPosition(this.cardWrapRef)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
-          position.left += 7
+          position.left += 9
         }
         App.actions.selectItem(this.target, position)
       }
@@ -514,7 +514,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-        {!listItem &&
+        {/* {!listItem &&
           !disableShadow && (
             <UI.HoverGlow
               behind
@@ -529,7 +529,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               borderRadius={20}
               duration={100}
             />
-          )}
+          )} */}
         {listItem && <Divider />}
       </CardWrap>
     )

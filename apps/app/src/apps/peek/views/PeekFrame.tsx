@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, attachTheme, compose, react } from '@mcro/black'
+import { view, compose } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
@@ -52,6 +52,7 @@ const decorator = compose(
 export const PeekFrame = decorator(
   ({ peekStore, children, ...props }: PeekFrameProps) => {
     const {
+      isShown,
       willShow,
       willHide,
       state,
@@ -77,6 +78,7 @@ export const PeekFrame = decorator(
         position="absolute"
         left={0}
         zIndex={2}
+        pointerEvents={isShown ? 'auto' : 'none'}
         {...{
           transition,
           opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,

@@ -716,7 +716,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       }
       if (!this.isNodeHovered(node)) {
         setUnhovered()
-        if (this.delayOpenIfHover) {
+        if (typeof this.delayOpenIfHover === 'function') {
           // cancel previous
           this.delayOpenIfHover()
           this.delayOpenIfHover = null

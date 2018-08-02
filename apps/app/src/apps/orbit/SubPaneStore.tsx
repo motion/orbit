@@ -63,7 +63,7 @@ export class SubPaneStore {
   )
 
   didMount() {
-    on(this, this.paneNode, 'scroll', throttle(this.handlePaneChange, 16 * 3))
+    on(this, this.paneNode, 'scroll', throttle(this.updateScrolledTo, 16 * 3))
     this.addObserver(this.paneNode, this.handlePaneChange)
 
     // watch resizes
@@ -98,6 +98,11 @@ export class SubPaneStore {
   lastHeight = react(() => this.fullHeight, _ => _, { delayValue: true })
 
   get contentHeightLimited() {
+    console.log(
+      'subpane',
+      this.props.name,
+      this.fullHeight - this.aboveContentHeight,
+    )
     return this.fullHeight - this.aboveContentHeight
   }
 
@@ -133,7 +138,7 @@ export class SubPaneStore {
 
   addObserver = (node, cb) => {
     const observer = new MutationObserver(cb)
-    observer.observe(node, { childList: true })
+    observer.observe(node, { childList: true, subtree: true })
     on(this, observer)
     return () => observer.disconnect()
   }

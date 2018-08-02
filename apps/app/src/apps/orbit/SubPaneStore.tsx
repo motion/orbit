@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { on, react } from '@mcro/black'
+import { on, react, sleep } from '@mcro/black'
 import { AppStore } from '../../stores/AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from '../../stores/SearchStore'
@@ -28,6 +28,7 @@ export class SubPaneStore {
   paneRef = React.createRef<HTMLDivElement>()
   isAtBottom = false
   childMutationObserver = null
+  isTransitioningToActive = false
 
   get paneNode() {
     return this.paneRef.current || null
@@ -53,6 +54,9 @@ export class SubPaneStore {
       if (isActive === this.isActive) {
         throw react.cancel
       }
+      if (isActive) {
+        this.isTransitioningToActive = true
+      }
       return isActive
     },
     { immediate: true },
@@ -76,6 +80,10 @@ export class SubPaneStore {
     this.updateHeight()
   }
 
+  get maxHeight() {
+    return window.innerHeight - 50
+  }
+
   get fullHeight() {
     // this is the expandable filterpane in searches
     const extraHeight = this.props.searchStore.extraHeight + 14
@@ -83,20 +91,35 @@ export class SubPaneStore {
       extraHeight + this.contentHeight + this.aboveContentHeight
     const minHeight = 90
     // never go all the way to bottom
-    const maxHeight = window.innerHeight - 50
     // cap min and max
-    return Math.max(minHeight, Math.min(maxHeight, fullHeight))
+    return Math.max(minHeight, Math.min(this.maxHeight, fullHeight))
   }
+
+  lastHeight = react(() => this.fullHeight, _ => _, { delayValue: true })
 
   get contentHeightLimited() {
     return this.fullHeight - this.aboveContentHeight
   }
 
+  hasRunOnce = false
+
   setAppHeightOnHeightChange = react(
     () => [this.fullHeight, this.isActive],
-    ([height, isActive]) => {
+    async ([height, isActive], { sleep }) => {
       if (!isActive) {
+        this.hasRunOnce = false
         throw react.cancel
+      }
+      // on first transition go fast
+      if (this.isTransitioningToActive) {
+        this.isTransitioningToActive = false
+      } else {
+        // on next transitions, if not at full height, debounce
+        const isLessThanMax = height < this.maxHeight
+        const willBeShorter = height < this.lastHeight
+        if (isLessThanMax && willBeShorter) {
+          await sleep(100)
+        }
       }
       if (height === this.props.appStore.contentHeight) {
         throw react.cancel
@@ -115,10 +138,11 @@ export class SubPaneStore {
     return () => observer.disconnect()
   }
 
-  handlePaneChange = debounce(() => {
+  handlePaneChange = () => {
+    console.log('handlePaneChange', this.props.name)
     this.updateHeight()
     this.updateScrolledTo()
-  }, 16)
+  }
 
   scrollIntoView = throttle((card: HTMLDivElement) => {
     const pane = this.paneNode

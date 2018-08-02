@@ -220,8 +220,8 @@ export class SearchStore /* extends Store */ {
         }
 
         // pagination
-        const take = 4
-        const takeMax = take * 6
+        const take = 2
+        const takeMax = take * 10
         const sleepBtwn = 80
 
         // gather all the pieces from nlp store for query
@@ -522,9 +522,7 @@ export class SearchStore /* extends Store */ {
     if (this.nextIndex === max) {
       return
     }
-    this.toggleSelected(
-      Math.min(max, this.nextIndex + by),
-    )
+    this.toggleSelected(Math.min(max, this.nextIndex + by))
   }
 
   decrement = (by = 1) => {

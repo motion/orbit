@@ -70,6 +70,7 @@ export class AppStore {
         where: { category: 'integration', token: Not(Equal('good')) },
       }),
     settings => {
+      console.log('update services')
       const services = {}
       for (const setting of settings) {
         const { type } = setting

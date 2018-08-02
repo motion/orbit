@@ -71,6 +71,7 @@ export type SurfaceProps = CSSPropertySet & {
   activeStyle?: Object
   sizeLineHeight?: boolean | number
   type?: string
+  themeAdjust?: Function
 }
 
 const getIconSize = props => {
@@ -117,7 +118,10 @@ const SurfaceFrame = view(SurfaceBase, {
 })
 
 SurfaceFrame.theme = props => {
-  const theme = props.theme
+  let theme = props.theme
+  if (props.themeAdjust) {
+    theme = props.themeAdjust(theme)
+  }
   const propStyles = propsToThemeStyles(props)
   // sizes
   const height = props.height

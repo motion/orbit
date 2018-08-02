@@ -66,10 +66,10 @@ class GDocsSettingStore {
           pageSize: 1000,
           q: 'mimeType="application/vnd.google-apps.folder"',
           orderBy: [
-            'modifiedByMeTime desc',
-            'modifiedTime desc',
             'sharedWithMeTime desc',
             'viewedByMeTime desc',
+            'modifiedByMeTime desc',
+            'modifiedTime desc',
           ],
         },
       })

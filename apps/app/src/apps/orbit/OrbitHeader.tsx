@@ -56,14 +56,14 @@ const OrbitFakeInput = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  background: '#efefef',
+  background: '#e8e8e8',
   borderRadius: 10,
-  '&:hover': {
-    background: '#eee',
-  },
-  '&:focus-within': {
-    background: '#eee',
-  },
+  // '&:hover': {
+  //   background: '#eee',
+  // },
+  // '&:focus-within': {
+  //   background: '#eee',
+  // },
 })
 
 @attachTheme

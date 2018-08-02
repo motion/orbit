@@ -139,7 +139,6 @@ export class SubPaneStore {
   }
 
   handlePaneChange = () => {
-    console.log('handlePaneChange', this.props.name)
     this.updateHeight()
     this.updateScrolledTo()
   }

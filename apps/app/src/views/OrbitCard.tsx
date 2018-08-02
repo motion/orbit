@@ -14,7 +14,7 @@ import { AppStore } from '../stores/AppStore'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { EMPTY_ITEM } from '../constants'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
-import { RoundButton } from './RoundButton'
+import { RoundButtonSmall } from './RoundButtonSmall'
 
 export type OrbitCardProps = {
   total?: number
@@ -91,7 +91,7 @@ const Card = view({
   },
 })
 
-const cardShadow = [0, 1, 2, [0, 0, 0, 0.025]]
+const cardShadow = [0, 1, 2, [0, 0, 0, 0.03]]
 const cardHoverGlow = [0, 0, 0, 3, [0, 0, 0, 0.05]]
 const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
 const borderSelected = UI.color('#90b1e4cc')
@@ -452,9 +452,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                   alignItems="center"
                   flexFlow="row"
                 >
-                  <RoundButton marginLeft={-3} onClick={locationLink}>
+                  <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
                     {location}
-                  </RoundButton>
+                  </RoundButtonSmall>
                 </UI.Text>
               )}
               {typeof subtitle === 'string' ? (

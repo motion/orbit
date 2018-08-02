@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { OrbitCard } from '../../../../apps/orbit/OrbitCard'
+import { SettingRepository } from '../../../../repositories'
 // import * as UI from '@mcro/ui'
 import * as Views from '../../../../views'
 import { SettingPaneProps } from './SettingPaneProps'
@@ -9,7 +10,8 @@ class OrbitGeneralSettingsStore {
   handleChange = prop => val => {
     console.log('handleChange', prop, val)
     this.props.setting.values[prop] = val
-    this.props.setting.save()
+    // this.props.setting.save()
+    SettingRepository.save(this.props.setting)
   }
 }
 

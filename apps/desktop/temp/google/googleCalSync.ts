@@ -1,7 +1,8 @@
-import { Bit, Setting } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import * as _ from 'lodash'
 import debug from '@mcro/debug'
 import { DriveService } from '@mcro/services'
+import { BitEntity } from '~/entities/BitEntity'
 import { createInChunks } from '~/temp/createInChunks'
 
 const log = debug('sync.googleCal')
@@ -45,7 +46,7 @@ export default class GoogleCalSync {
   }
 
   async resetCalendarData(calendar: string) {
-    const all = await Bit.find({
+    const all = await BitEntity.find({
       integration: 'google',
       type: 'calendar',
       org: calendar,

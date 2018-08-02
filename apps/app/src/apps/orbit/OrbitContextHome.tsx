@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react, on, attachTheme } from '@mcro/black'
-import { Bit } from '@mcro/models'
+import { BitRepository } from '../../repositories'
 import { OrbitCard } from './OrbitCard'
 import { OrbitDockedPane } from './OrbitDockedPane'
 import { throttle } from 'lodash'
@@ -27,7 +27,7 @@ const OrbitContextHeader = view(() => (
 ))
 
 const findType = (integration, type, skip = 0) =>
-  Bit.findOne({
+  BitRepository.findOne({
     skip,
     take: 1,
     where: {

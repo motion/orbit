@@ -4,6 +4,7 @@ import { App } from '@mcro/stores'
 import { Job, Setting } from '@mcro/models'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
+import { JobRepository, SettingRepository } from '../../../repositories'
 import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '../../../stores/SettingInfoStore'
 import { TimeAgo } from '../../../views/TimeAgo'
@@ -36,16 +37,16 @@ class SettingContent extends React.Component<
 > {
   handleRefresh = async () => {
     const store = this.props.store
-    const job = new Job()
+    const job: Job = {} as Job
     job.type = store.setting.type
     job.action = 'all'
-    job.status = Job.statuses.PENDING
-    await job.save()
+    job.status = 'PENDING'
+    await JobRepository.save(setting)
   }
 
   removeIntegration = async () => {
     const { store } = this.props
-    await store.setting.remove()
+    await SettingRepository.remove(store.setting)
     App.actions.clearPeek()
   }
 
@@ -132,7 +133,7 @@ class LoadSettingStore {
   // hackkkkky for now because look at OrbitSettings.generalsettings
   // need a migration to insert the settings first and then make them just like integrationSettingsd
   typeSetting = modelQueryReaction(() =>
-    Setting.findOne({ type: this.item.id }),
+    SettingRepository.findOne({ type: this.item.id }),
   )
 }
 

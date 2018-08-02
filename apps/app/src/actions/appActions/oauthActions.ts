@@ -1,5 +1,6 @@
 import { Setting } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
+import { SettingRepository } from '../../repositories'
 import * as Constants from '../../constants'
 import * as r2 from '@mcro/r2'
 import debug from '@mcro/debug'
@@ -38,13 +39,13 @@ export const startOauth = type => {
     // todo: have a resolver for identifiers based on integration
     const oauthid = (oauth.info && oauth.info.id) || 'none'
     const identifier = `${oauthid}-${type}`
-    let setting
+    let setting: Setting
     // update if its the same identifier from the oauth
     if (identifier) {
-      setting = await Setting.findOne({ identifier })
+      setting = await SettingRepository.findOne({ identifier: identifier })
     }
     if (!setting) {
-      setting = new Setting()
+      setting = {} as Setting
     }
     setting.category = 'integration'
     setting.identifier = identifier
@@ -54,7 +55,7 @@ export const startOauth = type => {
       ...setting.values,
       oauth: { ...oauth },
     }
-    await setting.save()
+    await SettingRepository.save(setting)
     App.sendMessage(Desktop, Desktop.messages.CLOSE_AUTH, type)
     // show settings again
     App.sendMessage(App, App.messages.TOGGLE_SETTINGS)

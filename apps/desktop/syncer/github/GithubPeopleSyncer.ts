@@ -1,6 +1,8 @@
-import { Setting, createOrUpdate, Person } from '@mcro/models'
+import { Setting, Person } from '@mcro/models'
 import { flatten, uniq } from 'lodash'
+import { PersonEntity } from '~/entities/PersonEntity'
 import * as Helpers from '~/helpers'
+import { createOrUpdate } from '~/helpers/createOrUpdate'
 import { createOrUpdatePersonBit } from '~/repository'
 import { GithubPerson } from '~/syncer/github/GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
@@ -50,7 +52,7 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     }
     const identifier = `github-${Helpers.hash(person)}`
     const personEntity = await createOrUpdate(
-      Person,
+      PersonEntity,
       {
         identifier,
         integrationId: githubPerson.id,

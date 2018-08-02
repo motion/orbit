@@ -1,5 +1,7 @@
-import { createOrUpdate, Person, Setting } from '@mcro/models'
+import { Person, Setting } from '@mcro/models'
+import { PersonEntity } from '~/entities/PersonEntity'
 import * as Helpers from '~/helpers'
+import { createOrUpdate } from '~/helpers/createOrUpdate'
 import { createOrUpdatePersonBit } from '~/repository'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { JiraPeopleResponse, JiraPerson } from './JiraPersonTypes'
@@ -52,7 +54,7 @@ export class JiraPersonSyncer implements IntegrationSyncer {
   private async createPerson(person: JiraPerson): Promise<Person|null> {
     const identifier = `jira-${Helpers.hash(person)}`
     const personEntity = await createOrUpdate(
-      Person,
+      PersonEntity,
       {
         identifier,
         integrationId: person.accountId,

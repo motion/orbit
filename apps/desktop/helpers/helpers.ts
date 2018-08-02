@@ -1,9 +1,8 @@
-import { getConnection } from './typeorm'
+import { getConnection } from 'typeorm'
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
-export * from './typeorm'
-export * from './helpers/createOrUpdate'
-export * from './helpers/createOrUpdateBit'
+export * from './createOrUpdate'
+export * from './createOrUpdateBit'
 
 export async function findOrCreate(Model: any, values: Object) {
   let item = await Model.findOne({ where: values })

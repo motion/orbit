@@ -1,5 +1,4 @@
-import { IntegrationType } from '~/types/IntegrationType'
-import { Setting } from '@mcro/models'
+import { Setting, IntegrationType } from '@mcro/models'
 
 /**
  * Interface for integration syncers.

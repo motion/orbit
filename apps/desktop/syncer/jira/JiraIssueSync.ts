@@ -1,4 +1,6 @@
-import { Bit, Setting, createOrUpdateBit } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
+import { BitEntity } from '~/entities/BitEntity'
+import { createOrUpdateBit } from '~/helpers/createOrUpdateBit'
 import { IntegrationSyncer } from '~/syncer/core/IntegrationSyncer'
 import { JiraIssue, JiraIssueResponse } from './JiraIssueTypes'
 import { fetchFromAtlassian } from './JiraUtils'
@@ -49,7 +51,7 @@ export class JiraIssueSync implements IntegrationSyncer {
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
 
-    return createOrUpdateBit(Bit, {
+    return createOrUpdateBit(BitEntity, {
       integration: 'jira',
       identifier: issue.id,
       type: 'document',

@@ -4,7 +4,7 @@ import { Bit, Person } from '@mcro/models'
 export const PeekBitInformationBar = ({ bit }) => {
   return (
     <PeekBitInformation
-      if={peekStore.model instanceof Bit || peekStore.model instanceof Person}
+      if={peekStore.model.target === "bit" || peekStore.model.target === "person"}
       body={
         peekStore.model.body ||
         'ui kit size prop async migration freelance distrbiution org integration'

@@ -1,16 +1,16 @@
 import { react, on } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
-import { Person, getRepository } from '@mcro/models'
+import { FindOptions } from 'typeorm'
+import { Bit } from '../../../models'
+import { BitRepository, PersonRepository } from '../repositories'
 import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
-import { getSearchQuery } from './helpers/getSearchQuery'
 import * as Helpers from '../helpers'
 import * as SearchStoreHelpers from './helpers/searchStoreHelpers'
 import debug from '@mcro/debug'
 import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
-import { Brackets } from '../../../../node_modules/typeorm/browser'
 import { flatten } from 'lodash'
 import { DateRange } from './nlpStore/types'
 
@@ -215,27 +215,48 @@ export class SearchStore /* extends Store */ {
         let results = []
         for (let i = 0; i < takeMax / takePer; i += 1) {
           const skip = i * takePer
-          const nextQuery = getSearchQuery(searchQuery, {
-            people,
-            startDate,
-            endDate,
+
+          const findOptions: FindOptions<Bit> = {
+            where: [],
+            relations: {
+              people: true
+            },
             take: takePer,
-            skip,
-          })
-          // add in filters if need be
-          if (activeFilters && activeFilters.length) {
-            nextQuery.andWhere(
-              new Brackets(qb => {
-                for (const [index, integration] of activeFilters.entries()) {
-                  const whereType = index === 0 ? 'where' : 'orWhere'
-                  qb[whereType]('bit.integration = :integration', {
-                    integration,
-                  })
-                }
-              }),
-            )
+            skip
           }
-          const nextResults = await nextQuery.getMany()
+
+          const andConditions: any = {}
+          if (startDate)
+            andConditions.bitCreatedAt = { $moreThan: startDate }
+          if (endDate)
+            andConditions.bitCreatedAt = { $lessThan: endDate }
+          if (activeFilters && activeFilters.length)
+            andConditions.integration = { $in: activeFilters }
+
+          if (searchQuery.length) {
+            const likeString = `%${searchQuery.replace(/\s+/g, '%')}%`
+            findOptions.where.push({ ...andConditions, title: { $like: likeString } })
+            findOptions.where.push({ ...andConditions, body: { $like: likeString } })
+          } else {
+            // order by recent if no search
+            findOptions.order = {
+              bitCreatedAt: "desc"
+            }
+          }
+
+          if (people.length) {
+            // essentially, find at least one person
+            people.forEach(name => {
+              findOptions.where.push({
+                ...andConditions,
+                person: {
+                  name: { $like: `%${name}%` }
+                }
+              })
+            })
+          }
+
+          const nextResults = await BitRepository.find(findOptions)
           results = [...results, ...nextResults]
           setValue({
             results,
@@ -264,8 +285,6 @@ export class SearchStore /* extends Store */ {
     },
   )
 
-  personQueryBuilder = getRepository(Person).createQueryBuilder('person')
-
   quickSearchState = react(
     () => App.state.query,
     async (query, { sleep, when }) => {
@@ -277,22 +296,18 @@ export class SearchStore /* extends Store */ {
         searchQuery,
         integrations /* , nouns */,
       } = this.nlpStore.nlp
-      const allResults = await Promise.all([
-        // fuzzy people results
-        this.personQueryBuilder
-          .where('person.name like :nameLike', {
-            nameLike: `%${searchQuery.split('').join('%')}%`,
-          })
-          .take(3)
-          .getMany(),
-      ])
+      // fuzzy people results
+      const allResults = await PersonRepository.find({
+        take: 3,
+        where: {
+          name: { $like: `%${searchQuery.split('').join('%')}%` }
+        }
+      })
       const exactPeople = await Promise.all(
         people.map(name => {
-          return this.personQueryBuilder
-            .where('person.name like :nameLike', {
-              nameLike: `%${name}%`,
-            })
-            .getOne()
+          return PersonRepository.findOne({
+            where: { name: { $like: `%${name}%` } }
+          })
         }),
       )
       const results = flatten([

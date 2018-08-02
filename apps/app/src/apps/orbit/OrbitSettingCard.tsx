@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 // import * as UI from '@mcro/ui'
 import { OrbitCard } from '../../apps/orbit/OrbitCard'
+import { SettingRepository } from '../../repositories'
 import { SettingInfoStore } from '../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
 import { OrbitCardProps } from './OrbitCard'
@@ -23,11 +24,11 @@ export class OrbitSettingCard extends React.Component<
   handleClick = async () => {
     const { result } = this.props
     if (result.auth === false) {
-      const setting = new Setting()
+      const setting: Setting = {} as Setting
       setting.category = 'integration'
       setting.type = result.type
       setting.token = 'good'
-      await setting.save()
+      await SettingRepository.save(setting)
     } else if (result.auth) {
       console.log('should select auth view')
       return

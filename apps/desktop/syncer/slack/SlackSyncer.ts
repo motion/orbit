@@ -1,6 +1,8 @@
-import { Bit, Location, Person, Setting } from '@mcro/models'
+import { Bit, Person, Setting } from '@mcro/models'
 import * as _ from 'lodash'
 import { MoreThan } from 'typeorm'
+import { BitEntity } from '~/entities/BitEntity'
+import { PersonEntity } from '~/entities/PersonEntity'
 import { createOrUpdatePersonBit } from '~/repository'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { sequence } from '~/utils'
@@ -42,7 +44,7 @@ export class SlackSyncer implements IntegrationSyncer {
     const users = await this.loader.loadUsers()
 
     // load all persons in local database
-    const existPeople = await Person.find({ settingId: this.setting.id })
+    const existPeople = await PersonEntity.find({ settingId: this.setting.id })
 
     // creating entities for them
     console.log(`finding and creating people for users`, users)
@@ -50,7 +52,7 @@ export class SlackSyncer implements IntegrationSyncer {
     console.log(`updated people`, updatedPeople)
 
     // update in the database
-    await Person.save(updatedPeople)
+    await PersonEntity.save(updatedPeople)
 
     // add person bits
     await Promise.all(updatedPeople.map(person => {
@@ -68,7 +70,7 @@ export class SlackSyncer implements IntegrationSyncer {
 
     // find remove people and remove them from the database
     const removedPeople = existPeople.filter(person => updatedPeople.indexOf(person) === -1)
-    await Person.remove(removedPeople)
+    await PersonEntity.remove(removedPeople)
     console.log(`people were removed`, removedPeople)
 
     return updatedPeople
@@ -143,7 +145,7 @@ export class SlackSyncer implements IntegrationSyncer {
 
         // find bits in the database
         console.log(`loading latest bits to check if some were removed`)
-        const latestBits = await Bit.find({
+        const latestBits = await BitEntity.find({
           settingId: this.setting.id,
           location: {
             id: channel.id
@@ -166,10 +168,10 @@ export class SlackSyncer implements IntegrationSyncer {
 
     // create new bits
     console.log(`updated message bits`, updatedBits)
-    await Bit.save(updatedBits)
+    await BitEntity.save(updatedBits)
 
     console.log(`removed message bits`, removedBits)
-    await Bit.remove(removedBits)
+    await BitEntity.remove(removedBits)
 
     // update settings
     console.log(`updating settings`, { lastMessageSync })
@@ -185,7 +187,7 @@ export class SlackSyncer implements IntegrationSyncer {
     const identifier = `slack-person-${user.id}`
     const person = people.find(person => person.identifier === identifier)
 
-    return Object.assign(person || new Person(), {
+    return Object.assign(person || new PersonEntity(), {
       setting: this.setting,
       identifier,
       integration: 'slack',
@@ -233,21 +235,22 @@ export class SlackSyncer implements IntegrationSyncer {
     const bitUpdatedAt = new Date(+_.last(messages).ts.split('.')[0] + 1000)
     const team = this.setting.values.oauth.info.team
 
-    const location = new Location()
-    location.id = channel.id
-    location.name = channel.name
-    location.webLink = `https://${team.domain}.slack.com/archives/${channel.id}`
-    location.desktopLink = `slack://channel?id=${channel.id}&team=${team.id}`
+    const location = {
+      id: channel.id,
+      name: channel.name,
+      webLink: `https://${team.domain}.slack.com/archives/${channel.id}`,
+      desktopLink: `slack://channel?id=${channel.id}&team=${team.id}`
+    }
 
     const webLink = `https://${team.domain}.slack.com/archives/${channel.id}/p${messages[0].ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${messages[0].ts}&team=${team.id}`
 
-    const bit = await Bit.findOne({
+    const bit = await BitEntity.findOne({
       settingId: this.setting.id,
       identifier
     })
 
-    return Object.assign(bit || new Bit(), {
+    return Object.assign(bit || new BitEntity(), {
       setting: this.setting,
       integration: 'slack',
       identifier,

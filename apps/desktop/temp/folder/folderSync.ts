@@ -1,9 +1,10 @@
-import { Bit, Setting } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import Path from 'path'
 import Fs from 'fs-extra'
 import readDir from 'recursive-readdir'
 import Yaml from 'js-yaml'
 import debug from '@mcro/debug'
+import { BitEntity } from '~/entities/BitEntity'
 import { createInChunks } from '~/temp/createInChunks'
 
 const log = debug('folder')
@@ -41,7 +42,7 @@ class FolderSync {
     }
     const fileStats = await Fs.stat(path)
     if (
-      await Bit.findOne({
+      await BitEntity.findOne({
         identifier: path,
         bitUpdatedAt: fileStats.mtime.toString(),
       })
@@ -51,7 +52,7 @@ class FolderSync {
     const yamlData = Yaml.safeLoad(await Fs.readFile(path, 'utf8'))
     const bitCreatedAt = fileStats.ctime.toString()
     const bitUpdatedAt = fileStats.mtime.toString()
-    const bit = new Bit()
+    const bit = new BitEntity()
     Object.assign(bit, {
       identifier: path,
       integration: 'folder',

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
-import { Person } from '@mcro/models'
+import { PersonRepository } from '../../repositories'
 import { OrbitDockedPane } from './OrbitDockedPane'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
@@ -44,7 +44,7 @@ class OrbitDirectoryStore {
   }
 
   // poll every few seconds while active
-  results = modelQueryReaction(() => Person.find({ take: 100 }), {
+  results = modelQueryReaction(() => PersonRepository.find({ take: 100 }), {
     defaultValue: [],
   })
 }

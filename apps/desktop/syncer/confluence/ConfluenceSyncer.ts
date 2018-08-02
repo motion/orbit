@@ -1,6 +1,8 @@
 import { Bit, Person, Setting } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import TurndownService from 'turndown'
+import { BitEntity } from '~/entities/BitEntity'
+import { PersonEntity } from '~/entities/PersonEntity'
 import { createOrUpdatePersonBit } from '~/repository'
 import { fetchFromAtlassian } from '~/syncer/jira/JiraUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
@@ -84,8 +86,8 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     const bitCreatedAt = new Date(response.history.createdDate).getTime()
     const bitUpdatedAt = new Date(response.history.lastUpdated.when).getTime()
 
-    const bit = await Bit.findOne({ integration, identifier })
-    const updatedBit = Object.assign(bit || new Bit(), {
+    const bit = await BitEntity.findOne({ integration, identifier })
+    const updatedBit = Object.assign(bit || new BitEntity(), {
       integration,
       identifier,
       type: 'document',
@@ -168,8 +170,8 @@ export class ConfluenceSyncer implements IntegrationSyncer {
 
     const identifier = `confluence-${user.accountId}`
     const integration = 'confluence'
-    const person = await Person.findOne({ identifier, integration }, { relations: ["personBit", "personBit.bits"] })
-    const updatedPerson = Object.assign(person || new Person(), {
+    const person = await PersonEntity.findOne({ identifier, integration }, { relations: ["personBit", "personBit.bits"] })
+    const updatedPerson = Object.assign(person || new PersonEntity(), {
       integration,
       identifier,
       integrationId: user.accountId,
@@ -183,7 +185,7 @@ export class ConfluenceSyncer implements IntegrationSyncer {
       }
     })
 
-    await Person.save(updatedPerson)
+    await PersonEntity.save(updatedPerson)
 
     // todo: we already have person bit loaded in the person, we don't need to load it again
     updatedPerson.personBit = await createOrUpdatePersonBit({

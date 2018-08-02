@@ -1,5 +1,9 @@
-import { Bit, createOrUpdateBit, Setting, createOrUpdate, Person } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
+import { BitEntity } from '~/entities/BitEntity'
+import { PersonEntity } from '~/entities/PersonEntity'
 import * as Helpers from '~/helpers'
+import { createOrUpdate } from '~/helpers/createOrUpdate'
+import { createOrUpdateBit } from '~/helpers/createOrUpdateBit'
 import { createOrUpdatePersonBit } from '~/repository'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
@@ -40,7 +44,7 @@ export class GDriveSyncer implements IntegrationSyncer {
   }
 
   private createFile(file: GDriveLoadedFile): Promise<Bit|null> {
-    return createOrUpdateBit(Bit, {
+    return createOrUpdateBit(BitEntity, {
       integration: 'gdocs',
       identifier: file.file.id,
       type: 'document',
@@ -74,7 +78,7 @@ export class GDriveSyncer implements IntegrationSyncer {
     }
     const identifier = `gdrive-${Helpers.hash(person)}`
     const personEntity = await createOrUpdate(
-      Person,
+      PersonEntity,
       {
         identifier,
         integrationId: user.email,

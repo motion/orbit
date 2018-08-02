@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
 import { Bit } from '@mcro/models'
+import { BitRepository, SettingRepository } from '../../../../repositories'
 import { Bits } from '../../../../views/Bits'
 import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
@@ -59,7 +60,7 @@ class SlackSettingStore {
     return this.props.appStore.services.slack
   }
 
-  bits = react(() => Bit.find({ where: { integration: 'slack' } }))
+  bits = react(() => BitRepository.find({ where: { integration: 'slack' } }))
 
   get allChannels() {
     return _.orderBy(
@@ -121,7 +122,8 @@ class SlackSettingStore {
         [fullName]: e.target.checked,
       },
     }
-    await this.setting.save()
+    // await this.setting.save()
+    await SettingRepository.save(this.setting)
   }
 
   isSyncing = fullName => {

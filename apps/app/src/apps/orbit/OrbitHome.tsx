@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
-import { Bit, Person } from '@mcro/models'
+import { BitRepository, PersonRepository } from '../../repositories'
 import { OrbitCard } from './OrbitCard'
 import { Masonry } from '../../views/Masonry'
 import { OrbitDockedPane } from './OrbitDockedPane'
 import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
 
 const findType = (integration, type, skip = 0) =>
-  Bit.findOne({
+  BitRepository.findOne({
     skip,
     where: {
       type,
@@ -42,8 +42,8 @@ class OrbitHomeStore {
         findType('github', 'task', 1),
         findType('slack', 'conversation', 4),
         findType('gdocs', 'document'),
-        Person.findOne({ name: 'Andrew Hsu' }),
-        Person.findOne({ name: 'Nick Bovee' }),
+        PersonRepository.findOne({ name: 'Andrew Hsu' }),
+        PersonRepository.findOne({ name: 'Nick Bovee' }),
         // limit due to slowness for now
         findType('confluence', 'document'),
         findType('jira', 'document'),

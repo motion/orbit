@@ -1,3 +1,6 @@
+import { Entities } from '~/entities'
+import { BitEntity } from '~/entities/BitEntity'
+import { SettingEntity } from '~/entities/SettingEntity'
 import { Syncers } from '~/syncer'
 import connectModels from './helpers/connectModels'
 import Server from './Server'
@@ -9,7 +12,7 @@ import hostile_ from 'hostile'
 import * as Constants from './constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import SQLiteServer from './SQLiteServer'
+import { handlePrimusEntityActions } from './SQLiteServer'
 import { App, Electron, Desktop } from '@mcro/stores'
 // import { sleep } from '@mcro/helpers'
 import { store, debugState, on } from '@mcro/black'
@@ -18,11 +21,10 @@ import Path from 'path'
 import open from 'opn'
 // import iohook from 'iohook'
 import debug from '@mcro/debug'
-import { Bit, Setting, modelsList } from '@mcro/models'
 import { Connection } from 'typeorm'
 import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
-import sqlite from 'sqlite'
 import macosVersion from 'macos-version'
+import Primus from 'primus'
 
 const log = debug('desktop')
 const hostile = promisifyAll(hostile_)
@@ -39,21 +41,12 @@ export class Root {
   generalSettingManager: GeneralSettingManager
   auth: Auth
   server = new Server()
-  sqlite: SQLiteServer
   stores = null
 
   start = async () => {
     this.registerREPLGlobals();
+    this.registerPrimusServer();
     // iohook.start(false)
-    const db = await sqlite.open(
-      Path.join(__dirname, '..', 'data', 'database'),
-      {
-        // @ts-ignore
-        cached: true,
-        promise: Promise,
-      },
-    )
-    this.sqlite = new SQLiteServer({ db })
     await Desktop.start({
       ignoreSelf: true,
       master: true,
@@ -75,8 +68,8 @@ export class Root {
     await this.connect()
 
     // rtemp
-    if (!(await Setting.findOne({ type: 'confluence' }))) {
-      const setting = new Setting()
+    if (!(await SettingEntity.findOne({ type: 'confluence' }))) {
+      const setting = new SettingEntity()
       setting.type = 'confluence'
       setting.category = 'integration'
       setting.token = 'good'
@@ -117,12 +110,12 @@ export class Root {
   }
 
   async connect() {
-    this.connection = await connectModels(modelsList)
+    this.connection = await connectModels(Entities)
   }
 
   watchLastBit = () => {
     async function updateLastBit() {
-      const lastBit = await Bit.findOne({
+      const lastBit = await BitEntity.findOne({
         order: { updatedAt: 'DESC' },
       })
       const updatedAt = `${lastBit ? lastBit.updatedAt : ''}`
@@ -195,6 +188,20 @@ export class Root {
       map[syncer.options.type + suffix] = syncer
       return map
     }, {});
+  }
+
+  /**
+   * Registers a websocket-based Primus server which is responsible
+   * for communication between processes.
+   */
+  private registerPrimusServer() {
+    Primus.createServer(spark => {
+      spark.on('data', data => handlePrimusEntityActions(spark, data))
+    }, {
+      port: 8082,
+      transformer: 'websockets',
+      iknowhttpsisbetter: true,
+    })
   }
 
   /**

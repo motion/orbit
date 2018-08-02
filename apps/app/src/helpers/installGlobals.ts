@@ -8,7 +8,6 @@ import * as Black from '@mcro/black'
 import r2 from '@mcro/r2'
 import * as Helpers from '../helpers'
 import { App, Desktop, Swift, Electron } from '@mcro/stores'
-import { modelsList } from '@mcro/models'
 import { render } from '../index'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
@@ -39,7 +38,3 @@ window['render'] = render
 window['color'] = color
 window['dateFns'] = dateFns
 window['debug'] = debug
-
-modelsList.map(model => {
-  window[`${model.name}`] = model
-})

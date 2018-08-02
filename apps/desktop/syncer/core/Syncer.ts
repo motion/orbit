@@ -1,5 +1,6 @@
-import { Setting } from '@mcro/models'
+import { SettingEntity } from '~/entities/SettingEntity'
 import { SyncerOptions } from './IntegrationSyncer'
+import { Setting } from '@mcro/models'
 import Timer = NodeJS.Timer
 
 /**
@@ -28,7 +29,7 @@ export class Syncer {
    * Starts a process of active syncronization (runs interval).
    */
   async start() {
-    const settings = await Setting.find({ type: this.options.type })
+    const settings = await SettingEntity.find({ type: this.options.type })
     await Promise.all(settings.map(async setting => {
 
       if (this.intervalIds[setting.id])

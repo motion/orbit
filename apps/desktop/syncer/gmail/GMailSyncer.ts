@@ -1,6 +1,10 @@
-import { Bit, createOrUpdate, createOrUpdateBit, Person, Setting } from '@mcro/models'
+import { Bit, Person, Setting } from '@mcro/models'
 import { In } from 'typeorm'
+import { BitEntity } from '~/entities/BitEntity'
+import { PersonEntity } from '~/entities/PersonEntity'
 import * as Helpers from '~/helpers'
+import { createOrUpdate } from '~/helpers/createOrUpdate'
+import { createOrUpdateBit } from '~/helpers/createOrUpdateBit'
 import { createOrUpdatePersonBit } from '~/repository'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { sequence } from '~/utils'
@@ -36,9 +40,9 @@ export class GMailSyncer implements IntegrationSyncer {
     // if max or filter has changed - we drop all bits we have and make complete sync again
     if (max !== lastSyncMax || filter !== lastSyncFilter) {
       console.log(`last syncronization settings mismatch (max=${max}/${lastSyncMax}; filter=${filter}/${lastSyncFilter})`)
-      const truncatedBits = await Bit.find({ integration: "gmail" }) // also need to filter by setting
+      const truncatedBits = await BitEntity.find({ integration: "gmail" }) // also need to filter by setting
       console.log(`removing all bits`, truncatedBits)
-      await Bit.remove(truncatedBits)
+      await BitEntity.remove(truncatedBits)
       console.log(`bits were removed`)
       historyId = null
     }
@@ -61,7 +65,7 @@ export class GMailSyncer implements IntegrationSyncer {
       // load bits for removed threads
       if (history.removedThreadIds.length) {
         console.log('found actions in history for thread removals', history.removedThreadIds)
-        removedBits = await Bit.find({ integration: 'gmail', identifier: In(history.removedThreadIds) })
+        removedBits = await BitEntity.find({ integration: 'gmail', identifier: In(history.removedThreadIds) })
         console.log('found bits to be removed', removedBits)
       } else {
         console.log(`no removed messages in history were found`)
@@ -97,7 +101,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
   private async createBits(threads: GmailThread[]): Promise<Bit[]> {
     return Promise.all(threads.map(thread => {
-      return createOrUpdateBit(Bit, {
+      return createOrUpdateBit(BitEntity, {
         identifier: thread.id,
         integration: 'gmail',
         type: 'mail',
@@ -118,7 +122,7 @@ export class GMailSyncer implements IntegrationSyncer {
         if (name && email) {
           const identifier = `gmail-${Helpers.hash({ name, email })}`
           const person = await createOrUpdate(
-            Person,
+            PersonEntity,
             {
               identifier,
               integrationId: email,

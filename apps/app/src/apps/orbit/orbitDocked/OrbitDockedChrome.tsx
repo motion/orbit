@@ -124,7 +124,6 @@ const BlockTop = ({ overflow, above, maxHeight, height, children }) => (
 // this view has two halves so it can animate smoothly without causing layout reflows
 
 export const OrbitDockedChrome = view(({ appStore }: Props) => {
-  console.log('orbitdockedcrhome', appStore.contentHeight)
   return (
     <>
       <BlockBottom height={90} overflow={SHADOW_PAD}>

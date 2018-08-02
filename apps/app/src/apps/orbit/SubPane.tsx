@@ -4,7 +4,6 @@ import * as _ from 'lodash'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
-import { trace } from 'mobx'
 
 type Props = CSSPropertySet & {
   store?: SubPaneStore
@@ -98,7 +97,6 @@ export class SubPane extends React.Component<Props> {
       containerStyle,
       ...props
     } = this.props
-    trace()
     return (
       <DockedPaneFrame isActive={subPaneStore.isActive}>
         {before}

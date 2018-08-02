@@ -93,10 +93,19 @@ class OrbitSettingsStore {
           type: Not('setting'),
         },
       }),
+    val => {
+      console.log(
+        'waht the fuck',
+        this.isPaneActive,
+        this.integrationSettings,
+        val,
+      )
+      if (!this.isPaneActive && this.integrationSettings.length) {
+        throw react.cancel
+      }
+      return val
+    },
     {
-      condition: () => {
-        return this.isPaneActive || this.integrationSettings.length === 0
-      },
       defaultValue: [],
       log: true,
     },

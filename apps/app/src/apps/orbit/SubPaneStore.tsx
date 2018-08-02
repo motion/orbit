@@ -98,11 +98,6 @@ export class SubPaneStore {
   lastHeight = react(() => this.fullHeight, _ => _, { delayValue: true })
 
   get contentHeightLimited() {
-    console.log(
-      'subpane',
-      this.props.name,
-      this.fullHeight - this.aboveContentHeight,
-    )
     return this.fullHeight - this.aboveContentHeight
   }
 

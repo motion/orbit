@@ -92,7 +92,7 @@ export class PeekStore {
   }
 
   get isShown() {
-    return this.state && !!this.state.target
+    return this.internalState.isShown
   }
 
   get willHide() {

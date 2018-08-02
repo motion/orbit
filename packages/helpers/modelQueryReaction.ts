@@ -56,7 +56,7 @@ export function modelQueryReaction(
   let currentVal
   return react(
     () => (now(poll) && condition() ? Math.random() : null),
-    async () => {
+    async (_, { setValue }) => {
       if (!condition()) {
         throw react.cancel
       }
@@ -65,15 +65,19 @@ export function modelQueryReaction(
         throw react.cancel
       }
       currentVal = next
+      let final
       // if given explicit reaction, use that as return val
       if (returnVal) {
         const res = returnVal(next)
         if (next instanceof Promise) {
-          return await res
+          final = await res
+        } else {
+          final = res
         }
       } else {
-        return next
+        final = next
       }
+      setValue(final)
     },
     finalOptions,
   )

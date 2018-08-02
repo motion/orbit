@@ -1,12 +1,12 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view, react } from '@mcro/black'
-import { Bit } from '@mcro/models'
-import { Bits } from '../../../../views/Bits'
+import { view, react, compose } from '@mcro/black'
+// import { Bit } from '@mcro/models'
+// import { Bits } from '../../../../views/Bits'
 import { TimeAgo } from '../../../../views/TimeAgo'
-import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
+import { InvisiblePane } from '../../views/InvisiblePane'
 
 const columnSizes = {
   repo: 'flex',
@@ -44,6 +44,8 @@ const columns = {
 }
 
 class SlackSettingStore {
+  props: SettingPaneProps
+
   syncing = {}
   active = 'repos'
 
@@ -58,8 +60,6 @@ class SlackSettingStore {
   get service() {
     return this.props.appStore.services.slack
   }
-
-  bits = react(() => Bit.find({ where: { integration: 'slack' } }))
 
   get allChannels() {
     return _.orderBy(
@@ -132,58 +132,47 @@ class SlackSettingStore {
   }
 }
 
-const InvisiblePane = view(UI.FullScreen, {
-  opacity: 0,
-  pointerEvents: 'none',
-  visible: {
-    opacity: 1,
-    pointerEvents: 'auto',
-  },
-})
+const decorator = compose(
+  view.attach({ store: SlackSettingStore }),
+  view,
+)
 
-@view.provide({ store: SlackSettingStore })
-@view
-export class SlackSetting extends React.Component<
-  SettingPaneProps & { store: SlackSettingStore }
-> {
-  render() {
-    const { store, children } = this.props
-    console.log(1232222222222222222222222)
-    return children({
-      subhead: (
-        <UI.Tabs active={store.active} onActive={store.setActiveKey}>
-          <UI.Tab key="repos" width="50%" label="Repos" />
-          <UI.Tab
-            key="issues"
-            width="50%"
-            label={`Issues (${store.bits ? store.bits.length : 0})`}
+type Props = SettingPaneProps & { store: SlackSettingStore }
+
+export const SlackSetting = decorator(({ store, children }: Props) => {
+  return children({
+    subhead: (
+      <UI.Tabs active={store.active} onActive={store.setActiveKey}>
+        <UI.Tab key="repos" width="50%" label="Repos" />
+        <UI.Tab
+          key="issues"
+          width="50%"
+          label={`Issues (${store.bits ? store.bits.length : 0})`}
+        />
+      </UI.Tabs>
+    ),
+    content: (
+      <>
+        <InvisiblePane visible={store.active === 'repos'}>
+          <UI.SearchableTable
+            virtual
+            rowLineHeight={28}
+            floating={false}
+            columnSizes={columnSizes}
+            columns={columns}
+            multiHighlight
+            rows={store.rows}
+            bodyPlaceholder={
+              <div style={{ margin: 'auto' }}>
+                <UI.Text size={1.2}>Loading...</UI.Text>
+              </div>
+            }
           />
-        </UI.Tabs>
-      ),
-      content: (
-        <>
-          <InvisiblePane visible={store.active === 'repos'}>
-            <UI.SearchableTable
-              virtual
-              rowLineHeight={28}
-              floating={false}
-              columnSizes={columnSizes}
-              columns={columns}
-              onRowHighlighted={this.onRowHighlighted}
-              multiHighlight
-              rows={store.rows}
-              bodyPlaceholder={
-                <div style={{ margin: 'auto' }}>
-                  <UI.Text size={1.2}>Loading...</UI.Text>
-                </div>
-              }
-            />
-          </InvisiblePane>
-          <InvisiblePane visible={store.active === 'issues'}>
-            <Bits bits={store.bits} />
-          </InvisiblePane>
-        </>
-      ),
-    })
-  }
-}
+        </InvisiblePane>
+        <InvisiblePane visible={store.active === 'issues'}>
+          {/* <Bits bits={store.bits} /> */}
+        </InvisiblePane>
+      </>
+    ),
+  })
+})

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { BORDER_RADIUS, CHROME_PAD } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
+import * as UI from '@mcro/ui'
 
 type Props = {
   appStore: AppStore
@@ -65,15 +66,13 @@ const OrbitChrome = () => {
   )
 }
 
+const BlockFrame = view(UI.View, {
+  pointerEvents: 'none',
+  position: 'absolute',
+})
+
 const BlockBottom = ({ overflow, height, children }) => (
-  <div
-    style={{
-      position: 'absolute',
-      top: -overflow,
-      right: -overflow,
-      left: -overflow,
-    }}
-  >
+  <BlockFrame top={-overflow} right={-overflow} left={-overflow}>
     <div
       style={{
         height: overflow + height,
@@ -93,18 +92,11 @@ const BlockBottom = ({ overflow, height, children }) => (
         {children}
       </div>
     </div>
-  </div>
+  </BlockFrame>
 )
 
 const BlockTop = ({ overflow, above, maxHeight, height, children }) => (
-  <div
-    style={{
-      position: 'absolute',
-      top: above,
-      right: -overflow,
-      left: -overflow,
-    }}
-  >
+  <BlockFrame top={above} right={-overflow} left={-overflow}>
     <div
       style={{
         height: maxHeight,
@@ -126,7 +118,7 @@ const BlockTop = ({ overflow, above, maxHeight, height, children }) => (
         {children}
       </div>
     </div>
-  </div>
+  </BlockFrame>
 )
 
 // this view has two halves so it can animate smoothly without causing layout reflows

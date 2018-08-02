@@ -49,6 +49,12 @@ const decorator = compose(
   view,
 )
 
+const PeekFrameContainer = view(UI.View, {
+  position: 'absolute',
+  left: 0,
+  zIndex: 2,
+})
+
 export const PeekFrame = decorator(
   ({ peekStore, children, ...props }: PeekFrameProps) => {
     const {
@@ -74,10 +80,7 @@ export const PeekFrame = decorator(
     const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.4]]]
     const transition = transitions(peekStore)
     return (
-      <UI.Col
-        position="absolute"
-        left={0}
-        zIndex={2}
+      <PeekFrameContainer
         pointerEvents={isShown ? 'auto' : 'none'}
         {...{
           transition,
@@ -108,7 +111,7 @@ export const PeekFrame = decorator(
             </PeekMain>
           </UI.Col>
         </UI.Col>
-      </UI.Col>
+      </PeekFrameContainer>
     )
   },
 )

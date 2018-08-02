@@ -63,6 +63,7 @@ export class PeekStore {
       return {
         lastState,
         curState,
+        isShown: !!curState,
         willHide: !!lastState && !curState,
         willShow: !!curState && !lastState,
         willStayShown: !!curState && !!lastState,
@@ -91,7 +92,7 @@ export class PeekStore {
   }
 
   get isShown() {
-    return !!this.internalState.target
+    return !!this.state.target
   }
 
   get willHide() {

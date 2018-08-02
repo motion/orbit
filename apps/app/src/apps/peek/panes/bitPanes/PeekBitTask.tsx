@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
+import { view } from '@mcro/black'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const BodyContents = view({

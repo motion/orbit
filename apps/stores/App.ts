@@ -133,7 +133,7 @@ class AppStore {
     return !App.orbitState.hidden
   }
 
-  animationDuration = 160
+  animationDuration = 90
 
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(

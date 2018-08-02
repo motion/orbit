@@ -5,8 +5,6 @@
   "main": "src/index.js",
   "scripts": {
     "start": "./scripts/start.sh",
-    "start-pundle": "pundle --watch.adapter chokidar --dev.port 3002 --dev.singlepage --dev.static ./public::/",
-    "start-prod": "NODE_ENV=production ./scripts/start.sh",
     "serve-prod": "static-server -p 3002 -n dist/index.html dist",
     "build-app": "NODE_ENV=production mcro-build --build",
     "deploy": "./scripts/deploy.sh"

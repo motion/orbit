@@ -9,7 +9,7 @@ type Props = {
 }
 
 const SHADOW_PAD = 120
-const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.25]]
+const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.35]]
 
 const Border = view({
   position: 'absolute',

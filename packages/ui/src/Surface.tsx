@@ -118,10 +118,7 @@ const SurfaceFrame = view(SurfaceBase, {
 })
 
 SurfaceFrame.theme = props => {
-  let theme = props.theme
-  if (props.themeAdjust) {
-    theme = props.themeAdjust(theme)
-  }
+  const theme = props.theme
   const propStyles = propsToThemeStyles(props)
   // sizes
   const height = props.height
@@ -322,15 +319,18 @@ export class Surface extends React.Component<SurfaceProps> {
       noInnerElement,
       tagName,
       forwardRef,
+      themeAdjust,
       style,
       padding,
       margin,
       className,
       ...props
     } = this.props
+    const adjustedTheme = themeAdjust ? themeAdjust(theme) : theme
     const stringIcon = typeof icon === 'string'
     // goes to both
     const throughProps = {
+      theme: adjustedTheme,
       sizeIcon: this.props.sizeIcon,
       iconSize: this.props.iconSize,
       height: this.props.height,

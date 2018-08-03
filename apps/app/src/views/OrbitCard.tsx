@@ -145,18 +145,12 @@ Card.theme = ({
       borderRight: 'none',
       padding: padding || [20, 18],
       '&:active': {
-        opacity: isSelected ? 1 : 0.85,
+        opacity: isSelected ? 1 : 0.8,
       },
     }
   } else {
     // CARD
     const cardBackground = background || theme.selected.background
-    card = {
-      ...card,
-      padding: padding || 16,
-      borderRadius: borderRadius || 9,
-      background: cardBackground,
-    }
     if (!isSelected) {
       const borderHover = UI.color('#c9c9c9')
       card = {
@@ -166,9 +160,6 @@ Card.theme = ({
         '&:hover': {
           boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
           border: [1, borderHover],
-        },
-        '&:active': {
-          opacity: 0.85,
         },
       }
     }
@@ -181,6 +172,15 @@ Card.theme = ({
           border: [1, borderSelected],
         },
       }
+    }
+    card = {
+      ...card,
+      padding: padding || 16,
+      borderRadius: borderRadius || 9,
+      background: cardBackground,
+      '&:active': {
+        opacity: 0.8,
+      },
     }
   }
   if (isNextUp && nextUpStyle) {
@@ -205,7 +205,6 @@ const Preview = view({
 const Subtitle = view(UI.View, {
   height: 20,
   margin: [4, 0, 0],
-  opacity: 0.45,
   flexFlow: 'row',
   alignItems: 'center',
 })
@@ -436,7 +435,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               sizeLineHeight={0.85}
               ellipse={2}
               alpha={isSelected || listItem ? 1 : 0.8}
-              fontWeight={500}
+              fontWeight={600}
               maxWidth="calc(100% - 30px)"
               {...titleProps}
             >
@@ -445,7 +444,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {afterTitle}
           </Title>
           {hasSubtitle && (
-            <Subtitle opacity={listItem ? 0.55 : 0.4}>
+            <Subtitle>
               {!!location && (
                 <UI.Text
                   display="inline-flex"
@@ -458,19 +457,19 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 </UI.Text>
               )}
               {typeof subtitle === 'string' ? (
-                <UI.Text ellipse maxWidth="calc(100% - 40px)">
+                <UI.Text alpha={0.55} ellipse maxWidth="calc(100% - 40px)">
                   {subtitle}
                 </UI.Text>
               ) : (
                 subtitle
               )}
               {!!createdAt && (
-                <UI.Text size={0.95}>
+                <UI.Text alpha={0.55} size={0.95}>
                   <strong> &middot;</strong> <TimeAgo date={createdAt} />
                 </UI.Text>
               )}
               {updatedAt !== createdAt && (
-                <UI.Text size={0.95}>
+                <UI.Text alpha={0.55} size={0.95}>
                   <strong> &middot;</strong> updated{' '}
                   <TimeAgo date={updatedAt} />
                 </UI.Text>

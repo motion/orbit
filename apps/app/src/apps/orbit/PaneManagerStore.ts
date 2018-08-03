@@ -1,11 +1,11 @@
-import { react, on, store } from '@mcro/black'
+import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from 'stores/SearchStore'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
 
-export class OrbitDockedPaneStore {
+export class PaneManagerStore {
   props: {
     searchStore: SearchStore
   }
@@ -70,11 +70,15 @@ export class OrbitDockedPaneStore {
     }
   }
 
-  id = Math.random()
+  get activePaneFast() {
+    return this.panes[this.paneIndex]
+  }
 
   activePane = react(
     () => [this.panes, this.paneIndex, App.orbitState.docked, App.state.query],
-    () => {
+    async (_, { sleep }) => {
+      // let activePaneFast be a frame ahead
+      await sleep(32)
       let active = this.panes[this.paneIndex]
       if (active === 'home' && App.state.query) {
         active = 'search'
@@ -93,7 +97,15 @@ export class OrbitDockedPaneStore {
 
   clearPeekOnActivePaneChange = react(
     () => this.activePane,
-    () => App.actions.clearPeek(),
+    pane => {
+      if (!pane) {
+        throw react.cancel
+      }
+      if (!App.peekState.target) {
+        throw react.cancel
+      }
+      App.actions.clearPeek()
+    },
   )
 
   animationState = react(

@@ -5,6 +5,11 @@ import { themes } from './themes'
 import { ThemeProvide } from '@mcro/gloss'
 // import { OrbitCard } from '../../app/src/apps/orbit/OrbitCard'
 import { TestHMR } from './TestHMR'
+import createCss from '@mcro/css'
+
+const css = createCss()
+
+console.log('css', css({ lineHeight: 10 }))
 
 if (process.env.NODE_ENV === 'development') {
   if (module.hot && module.hot.addStatusHandler) {
@@ -70,16 +75,6 @@ Test3.theme = () => ({
     background: 'black',
   },
 })
-
-// export type TreeItem = {
-//   id: TreeItemID
-//   name: string
-//   expanded: boolean
-//   children: Array<TreeItemID>
-//   attributes: Array<TreeItemAttribute>
-//   data: TreeItemData
-//   decoration: string
-// }
 
 const RootViewInner = () => {
   return (

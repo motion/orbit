@@ -21,13 +21,16 @@ const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
-  transition: 'background ease-in 1300ms'
+  // transition: 'background ease-in 1300ms',
 })
 
 PeekHeaderContain.theme = ({ theme, position }) => {
   return {
     position: position || 'relative',
-    borderBottom: [1, theme.base.background.darken(0.3)],
+    borderBottom: [
+      1,
+      theme.titlebarBorder || theme.base.background.darken(0.2),
+    ],
     background: theme.headerBackground || theme.base.background,
   }
 }
@@ -50,8 +53,7 @@ const TitleBarContain = view({
 
 TitleBarContain.theme = ({ theme }) => {
   const hoverBackground =
-    (theme.titlebarBackground && theme.titlebarBackground.lighten(0.1)) ||
-    color('rgba(255,255,255,0.04)')
+    theme.titlebarBackground || color('rgba(255,255,255,0.04)')
   return {
     background: theme.titlebarBackground,
     '&:hover': {
@@ -117,6 +119,7 @@ export class PeekHeaderContent extends React.Component<Props> {
     const {
       peekStore,
       title,
+      titleAfter,
       date,
       subtitle,
       subtitleBefore,
@@ -189,6 +192,7 @@ export class PeekHeaderContent extends React.Component<Props> {
                 {/* {!!peekStore.tornState && (
                   <ControlButton icon="z" onClick={peekStore.tearPeek} />
                 )} */}
+                {titleAfter}
               </UI.Row>
             </>
           }

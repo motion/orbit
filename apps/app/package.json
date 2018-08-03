@@ -5,8 +5,6 @@
   "main": "src/index.js",
   "scripts": {
     "start": "./scripts/start.sh",
-    "start-pundle": "pundle --watch.adapter chokidar --dev.port 3002 --dev.singlepage --dev.static ./public::/",
-    "start-prod": "NODE_ENV=production ./scripts/start.sh",
     "serve-prod": "static-server -p 3002 -n dist/index.html dist",
     "build-app": "NODE_ENV=production mcro-build --build",
     "deploy": "./scripts/deploy.sh"
@@ -48,7 +46,7 @@
     "primus": "^7.1.1",
     "react-fast-compare": "2.0.1",
     "react-hot-loader": "4.3.4",
-    "react-spring": "5.3.11",
+    "react-spring": "5.5.1",
     "reconnecting-websocket": "^3.2.2",
     "regenerator-runtime": "0.11.1",
     "sanitize-html": "1.18.2",
@@ -65,6 +63,7 @@
     "@types/react": "16.4.6",
     "@types/react-dom": "16.0.6",
     "@types/webpack-env": "1.13.6",
+    "@types/lodash": "4.14.115",
     "pundle-preset-default": "3.0.0-beta4",
     "pundle-cli": "3.0.0-beta4"
   },

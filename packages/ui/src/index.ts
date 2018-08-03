@@ -69,3 +69,6 @@ export * from './effects/Glint'
 export * from './form/Input'
 export * from './form/Checkbox'
 export * from './form/Label'
+
+// buttons
+export * from './buttons/ClearButton'

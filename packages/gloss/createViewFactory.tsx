@@ -15,6 +15,14 @@ export type BaseRules = {
 }
 type Props = CSSPropertySet
 
+const isHMREnabled =
+  process.env.NODE_ENV === 'development' &&
+  typeof module !== 'undefined' &&
+  !!module['hot']
+
+const falseIfRecentHMR = () =>
+  typeof window['__recentHMR'] === 'boolean' ? !window['__recentHMR'] : true
+
 const arrToDict = obj => {
   if (Array.isArray(obj)) {
     return obj.reduce((acc, cur) => {
@@ -263,9 +271,10 @@ export function createViewFactory(toCSS) {
           const classInfo = tracker.get(className)
           if (classInfo) {
             const { namespace, style } = classInfo
-            myStyles = Object.assign({}, myStyles, {
+            myStyles = {
+              ...myStyles,
               [namespace]: style,
-            })
+            }
           } else {
             extraClassNames.push(className)
           }
@@ -351,7 +360,11 @@ export function createViewFactory(toCSS) {
       }
 
       static getDerivedStateFromProps(props: Props, state: State) {
-        if (state.prevProps !== null && hasEquivProps(props, state.prevProps)) {
+        if (
+          (isHMREnabled ? falseIfRecentHMR() : true) &&
+          state.prevProps !== null &&
+          hasEquivProps(props, state.prevProps)
+        ) {
           return null
         }
         let nextState: Partial<State> = {}

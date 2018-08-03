@@ -13,6 +13,7 @@ import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { Brackets } from '../../../../node_modules/typeorm/browser'
 import { flatten } from 'lodash'
 import { DateRange } from './nlpStore/types'
+import { MarkType } from './NLPStore/types'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
@@ -33,15 +34,14 @@ export class SearchStore /* extends Store */ {
     integrationSettingsStore: IntegrationSettingsStore
   }
 
-  id = Math.random()
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore(this)
-  // searchIndexStore = new SearchIndexStore()
 
   // start it with state from last time
   query = App.state.query
   lastPinKey = ''
 
+  selectEvent = ''
   quickIndex = 0
   highlightIndex = -1
   nextIndex = -1
@@ -52,6 +52,10 @@ export class SearchStore /* extends Store */ {
 
   extraFiltersHeight = 325
   extraFiltersVisible = false
+
+  setActivePane = ref => {
+    console.log('123', ref)
+  }
 
   dateState: DateState = {
     ranges: [
@@ -73,14 +77,14 @@ export class SearchStore /* extends Store */ {
 
     this.props.appStore.onPinKey(key => {
       if (key === 'Delete') {
-        this.query = ''
+        this.setQuery('')
         return
       }
       const { lastPinKey } = this
       if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
-        this.query = key
+        this.setQuery(key)
       } else {
-        this.query += key
+        this.setQuery(this.query + key)
       }
       this.lastPinKey = key
     })
@@ -106,11 +110,16 @@ export class SearchStore /* extends Store */ {
     return this.searchState.query !== App.state.query
   }
 
+  get isOnSearchPane() {
+    return this.props.appStore.selectedPane === 'docked-search'
+  }
+
   get isQuickSearchActive() {
-    if (this.props.appStore.selectedPane !== 'docked-search') {
-      return false
-    }
-    return this.activeIndex === -1 && !!this.quickSearchState.results.length
+    return (
+      this.isOnSearchPane &&
+      this.activeIndex === -1 &&
+      !!this.quickSearchState.results.length
+    )
   }
 
   get activeIndex() {
@@ -146,7 +155,7 @@ export class SearchStore /* extends Store */ {
   }
 
   get extraHeight() {
-    return this.extraFiltersVisible ? 0 : this.extraFiltersHeight
+    return this.extraFiltersVisible ? this.extraFiltersHeight : 0
   }
 
   get isActive() {
@@ -157,12 +166,12 @@ export class SearchStore /* extends Store */ {
     () => [
       App.state.query,
       this.getResults,
+      // filter updates
       this.searchFilterStore.activeFilters,
+      this.searchFilterStore.exclusiveFilters,
+      this.searchFilterStore.sortBy,
     ],
-    async (
-      [query, getResults, activeFilters],
-      { sleep, when, setValue, preventLogging },
-    ) => {
+    async ([query, getResults], { sleep, when, setValue, preventLogging }) => {
       if (!query) {
         return setValue({
           query,
@@ -202,31 +211,77 @@ export class SearchStore /* extends Store */ {
       }
       // regular search
       if (!results) {
-        // debounce a little for fast typer
-        await sleep(TYPE_DEBOUNCE)
-        // wait for nlp to give us results
-        await when(() => this.nlpStore.nlp.query === query)
-        // gather all the pieces from nlp store for query
-        const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
-        // get first page results
-        const takePer = 4
-        const takeMax = takePer * 6
+        // if typing, wait a bit
+        if (this.searchState.query !== query) {
+          // debounce a little for fast typer
+          await sleep(TYPE_DEBOUNCE)
+          // wait for nlp to give us results
+          await when(() => this.nlpStore.nlp.query === query)
+        }
+
+        // pagination
+        const take = 2
+        const takeMax = take * 10
         const sleepBtwn = 80
+
+        // gather all the pieces from nlp store for query
+        // const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
+        const {
+          exclusiveFilters,
+          activeFilters,
+          activeQuery,
+          activeDate,
+          sortBy,
+        } = this.searchFilterStore
+
         let results = []
-        for (let i = 0; i < takeMax / takePer; i += 1) {
-          const skip = i * takePer
-          const nextQuery = getSearchQuery(searchQuery, {
-            people,
+
+        // filters
+        const peopleFilters = activeFilters
+          .filter(x => x.type === MarkType.Person)
+          .map(x => x.text)
+        const integrationFilters = [
+          // these come from the text string
+          ...activeFilters
+            .filter(x => x.type === MarkType.Integration)
+            .map(x => x.text),
+          // these come from the button bar
+          ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
+        ]
+        const { startDate, endDate } = activeDate
+
+        for (let i = 0; i < takeMax / take; i += 1) {
+          const skip = i * take
+          let nextQuery = getSearchQuery(activeQuery, {
+            skip,
+            take,
             startDate,
             endDate,
-            take: takePer,
-            skip,
+            sortBy,
           })
-          // add in filters if need be
-          if (activeFilters && activeFilters.length) {
-            nextQuery.andWhere(
+
+          // add people filters
+          if (peopleFilters.length) {
+            // find one or more
+            nextQuery = nextQuery.andWhere(
               new Brackets(qb => {
-                for (const [index, integration] of activeFilters.entries()) {
+                const peopleLike = peopleFilters.map(filter => `%${filter}%`)
+                qb.where('person.name like :name', { name: peopleLike[0] })
+                for (const name of peopleLike.slice(1)) {
+                  qb.orWhere('person.name like :name', { name })
+                }
+              }),
+            )
+          }
+
+          // add integration filters
+          if (integrationFilters.length) {
+            nextQuery = nextQuery.andWhere(
+              new Brackets(qb => {
+                for (const [
+                  index,
+                  integration,
+                ] of integrationFilters.entries()) {
                   const whereType = index === 0 ? 'where' : 'orWhere'
                   qb[whereType]('bit.integration = :integration', {
                     integration,
@@ -235,6 +290,7 @@ export class SearchStore /* extends Store */ {
               }),
             )
           }
+
           const nextResults = await nextQuery.getMany()
           results = [...results, ...nextResults]
           setValue({
@@ -269,6 +325,9 @@ export class SearchStore /* extends Store */ {
   quickSearchState = react(
     () => App.state.query,
     async (query, { sleep, when }) => {
+      if (!this.isOnSearchPane) {
+        throw react.cancel
+      }
       // slightly faster for quick search
       await sleep(TYPE_DEBOUNCE - 60)
       await when(() => this.nlpStore.nlp.query === query)
@@ -310,6 +369,20 @@ export class SearchStore /* extends Store */ {
       defaultValue: { results: [] },
     },
   )
+
+  // selectFirstItemAfterSearchSettles = react(
+  //   () => this.searchState.query,
+  //   async (query, { sleep }) => {
+  //     if (!query) {
+  //       throw react.cancel
+  //     }
+  //     await sleep(300)
+  //     console.log('it worked?')
+  //     if (this.nextIndex === -1) {
+  //       this.nextIndex = 0
+  //     }
+  //   },
+  // )
 
   clearSelectedOnLeave = react(
     () => [this.leaveIndex, Electron.hoverState.peekHovered],
@@ -364,11 +437,11 @@ export class SearchStore /* extends Store */ {
     },
   )
 
-  // one frame after for speed of rendering
+  // delay for speed of rendering
   updateActiveIndexToNextIndex = react(
     () => this.nextIndex,
     async (i, { sleep }) => {
-      await sleep(0)
+      await sleep(32)
       this.activeIndex = i
     },
   )
@@ -410,8 +483,8 @@ export class SearchStore /* extends Store */ {
   toggleSelected = index => {
     const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState.target) {
-      if (Date.now() - this.lastSelectAt < 450) {
-        // ignore double clicks
+      if (Date.now() - this.lastSelectAt < 70) {
+        // ignore really fast double clicks
         console.log('isSame, ignore', index, this.activeIndex)
         return isSame
       }
@@ -425,8 +498,6 @@ export class SearchStore /* extends Store */ {
   }
 
   setHighlightIndex = highlightIndex => {
-    console.log(highlightIndex)
-    console.trace()
     this.highlightIndex = +highlightIndex
   }
 
@@ -440,13 +511,22 @@ export class SearchStore /* extends Store */ {
     },
   )
 
+  setSelectEvent = (val: string) => {
+    this.selectEvent = val
+  }
+
   increment = (by = 1) => {
-    this.toggleSelected(
-      Math.min(this.searchState.results.length - 1, this.nextIndex + by),
-    )
+    this.setSelectEvent('key')
+    const max = this.searchState.results.length - 1
+    // dont go past end
+    if (this.nextIndex === max) {
+      return
+    }
+    this.toggleSelected(Math.min(max, this.nextIndex + by))
   }
 
   decrement = (by = 1) => {
+    this.setSelectEvent('key')
     this.toggleSelected(Math.max(-1, this.nextIndex - by))
   }
 
@@ -470,10 +550,13 @@ export class SearchStore /* extends Store */ {
     this.extraFiltersVisible = !!target
   }
 
-  onChangeDate = ({ selection }: { selection: DateSelections }) => {
-    console.log('got selection', selection)
+  onChangeDate = date => {
+    console.log('got date', date)
+    if (!date.selection) {
+      return
+    }
     this.dateState = {
-      ranges: [selection],
+      ranges: [date.selection],
     }
   }
 

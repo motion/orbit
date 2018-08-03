@@ -2,7 +2,7 @@ import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 
 const moveCursorToEndOfTextarea = textarea => {
   textarea.setSelectionRange(textarea.value.length, textarea.value.length)
@@ -11,18 +11,30 @@ const moveCursorToEndOfTextarea = textarea => {
 export class HeaderStore {
   props: {
     searchStore: SearchStore
-    paneStore: OrbitDockedPaneStore
+    paneStore: PaneManagerStore
   }
 
   inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false
 
   get highlightWords() {
-    if (!this.props.searchStore.nlpStore.marks) {
+    const { activeMarks } = this.props.searchStore.searchFilterStore
+    if (!activeMarks) {
       return null
     }
-    return () => this.props.searchStore.nlpStore.marks
+    return () => activeMarks
   }
+
+  // not based on real focus because when you scroll down and select it technically
+  // focuses on the list items but still lets you type
+  // also needs to be
+  isInputFocused = react(
+    () => [App.orbitState.inputFocused, this.props.searchStore.nextIndex],
+    ([focused, nextIndex]) => {
+      return focused && nextIndex === -1
+    },
+    { immediate: true },
+  )
 
   onInput = () => {
     if (!this.inputRef.current) {
@@ -35,8 +47,8 @@ export class HeaderStore {
     if (!this.inputRef || !this.inputRef.current) {
       return
     }
-    moveCursorToEndOfTextarea(this.inputRef.current)
     this.inputRef.current.focus()
+    moveCursorToEndOfTextarea(this.inputRef.current)
   }
 
   focusInputOnVisible = react(

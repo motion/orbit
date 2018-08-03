@@ -48,7 +48,9 @@ export class ThemeMaker {
       (acc, cur) => ({
         ...acc,
         [cur]:
-          typeof obj[cur] === 'string' || Array.isArray(obj[cur])
+          (typeof obj[cur] === 'string' &&
+            !(obj[cur].indexOf('gradient') >= 0)) ||
+          Array.isArray(obj[cur])
             ? $(obj[cur])
             : obj[cur],
       }),
@@ -117,15 +119,17 @@ export class ThemeMaker {
       borderColor: decreaseContrast(base.borderColor, largeAmt),
       ...rest.focus,
     }
-    const res = this.colorize({
+    const res = {
       ...rest,
-      base,
-      hover,
-      active,
-      inactive,
-      disabled,
-      focus,
-    })
+      ...this.colorize({
+        base,
+        hover,
+        active,
+        inactive,
+        disabled,
+        focus,
+      }),
+    }
     this.cache[key] = res
     return res as ThemeObject
   }

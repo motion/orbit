@@ -92,7 +92,7 @@ export class DriveService {
     })
   }
 
-  private async getFilesBasic(pages = 1, query: PageQuery = {}) {
+  async getFilesBasic(pages = 1, query: PageQuery = {}) {
     let all = []
     let fetchedPages = 0
     while (fetchedPages < pages) {
@@ -203,5 +203,4 @@ export class DriveService {
       res(result)
     })
   }
-
 }

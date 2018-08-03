@@ -2,10 +2,18 @@ import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Bit, Person } from '@mcro/models'
-import { OrbitCard } from './OrbitCard'
+import { OrbitCard } from '../../views/OrbitCard'
 import { Masonry } from '../../views/Masonry'
-import { OrbitDockedPane } from './OrbitDockedPane'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { SubPane } from './SubPane'
+import { PaneManagerStore } from './PaneManagerStore'
+import { SearchStore } from '../../stores/SearchStore'
+
+type Props = {
+  name: string
+  paneStore: PaneManagerStore
+  searchStore?: SearchStore
+  store?: OrbitHomeStore
+}
 
 const findType = (integration, type, skip = 0) =>
   Bit.findOne({
@@ -19,20 +27,23 @@ const findType = (integration, type, skip = 0) =>
   })
 
 class OrbitHomeStore {
-  setGetResults = react(
-    () => [this.isActive, this.results],
-    ([isActive]) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      this.props.searchStore.setGetResults(() => this.results)
-    },
-    { immediate: true },
-  )
+  props: Props
 
   get isActive() {
     return this.props.paneStore.activePane === this.props.name
   }
+
+  setGetResults = react(
+    () => [this.isActive, this.results],
+    async ([isActive], { sleep }) => {
+      if (!isActive) {
+        throw react.cancel
+      }
+      await sleep(40)
+      this.props.searchStore.setGetResults(() => this.results)
+    },
+    { immediate: true },
+  )
 
   results = modelQueryReaction(
     async () => {
@@ -64,7 +75,6 @@ class OrbitHomeStore {
   )
 }
 
-const selectedTheme = { color: 'rgb(34.3%, 26.9%, 54.2%)', background: '#fff' }
 const itemProps = {
   shownLimit: 3,
   contentStyle: {
@@ -85,22 +95,17 @@ const itemProps = {
   store: OrbitHomeStore,
 })
 @view
-export class OrbitHome extends React.Component<{
-  name: string
-  paneStore: OrbitDockedPaneStore
-  store?: OrbitHomeStore
-}> {
+export class OrbitHome extends React.Component<Props> {
   span2 = {
     gridColumnEnd: 'span 2',
   }
 
   render() {
     const { store } = this.props
-    // log('HOME---------------')
     const total = store.results.length
     return (
-      <OrbitDockedPane name="home" fadeBottom>
-        <div style={{ paddingTop: 2 }}>
+      <SubPane name="home" fadeBottom>
+        <div style={{ paddingTop: 3 }}>
           <Masonry>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2
@@ -108,7 +113,6 @@ export class OrbitHome extends React.Component<{
                 <OrbitCard
                   pane="docked"
                   subPane="home"
-                  selectedTheme={selectedTheme}
                   key={`${bit.id}${index}`}
                   index={index}
                   bit={bit}
@@ -121,7 +125,7 @@ export class OrbitHome extends React.Component<{
             })}
           </Masonry>
         </div>
-      </OrbitDockedPane>
+      </SubPane>
     )
   }
 }

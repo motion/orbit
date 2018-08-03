@@ -148,7 +148,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
             )
           })}
         </UI.FullScreen>
-        {this.props.children}
+        {this.props.children || null}
       </UI.View>
     )
   }

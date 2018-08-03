@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { OrbitIcon } from '../../../../apps/orbit/OrbitIcon'
+import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { SettingPaneProps } from './SettingPaneProps'
 
 class GmailSettingStore {

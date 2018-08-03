@@ -1,34 +1,55 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { OrbitCard } from '../apps/orbit/OrbitCard'
-import { view } from '@mcro/black'
+import { OrbitCard } from '../views/OrbitCard'
+import { Bit } from '@mcro/models'
+import { HorizontalScrollRow } from '../views/HorizontalScrollRow'
 
-const cardStyleDefault = {
-  width: 200,
-  height: 175,
-  marginRight: 12,
+type CarouselProps = {
+  items?: any[]
+  verticalPadding?: number
+  cardWidth?: number
+  cardHeight?: number
+  cardSpace?: number
+  cardProps?: Object
+  before?: React.ReactNode
+  after?: React.ReactNode
+  children?: React.ReactNode
 }
 
-export const Carousel = view.attach('appStore')(
-  ({ items, appStore, cardStyle = {}, ...props }) => {
-    return (
-      <UI.Row overflow="hidden" overflowX="scroll" {...props}>
+export const Carousel = ({
+  items,
+  verticalPadding = 3,
+  cardWidth = 180,
+  cardHeight = 90,
+  cardSpace = 12,
+  cardProps = {},
+  before,
+  after,
+}: CarouselProps) => {
+  return (
+    <UI.Theme name="grey">
+      <HorizontalScrollRow height={cardHeight + verticalPadding * 2}>
+        {before}
         {(items || []).map((bit, index) => (
           <OrbitCard
             key={`${index}${bit.id}`}
             pane="carousel"
-            appStore={appStore}
-            bit={bit}
+            bit={bit instanceof Bit ? bit : null}
+            {...(!(bit instanceof Bit) ? bit : null)}
             index={index}
             total={items.length}
             inGrid
+            {...cardProps}
             style={{
-              ...cardStyleDefault,
-              ...cardStyle,
+              width: cardWidth,
+              height: cardHeight,
+              marginRight: cardSpace,
+              ...cardProps['style'],
             }}
           />
         ))}
-      </UI.Row>
-    )
-  },
-)
+        {after}
+      </HorizontalScrollRow>
+    </UI.Theme>
+  )
+}

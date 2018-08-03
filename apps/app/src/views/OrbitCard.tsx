@@ -1,26 +1,28 @@
 import * as React from 'react'
-import { view, react, attachTheme } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
-import { ItemResolver, ResolvedItem } from '../../components/ItemResolver'
-import { SmallLink, RoundButton } from '../../views'
-import { TimeAgo } from '../../views/TimeAgo'
+import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
+import { TimeAgo } from './TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
-import { PeopleRow } from '../../components/PeopleRow'
-import { CSSPropertySet, ThemeObject } from '@mcro/gloss'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PeopleRow } from '../components/PeopleRow'
+import { CSSPropertySet } from '@mcro/gloss'
+import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
 import { Bit } from '@mcro/models'
-import { SearchStore } from '../../stores/SearchStore'
-import { AppStore } from '../../stores/AppStore'
-import { getTargetPosition } from '../../helpers/getTargetPosition'
-import { EMPTY_ITEM } from '../../constants'
+import { SearchStore } from '../stores/SearchStore'
+import { AppStore } from '../stores/AppStore'
+import { getTargetPosition } from '../helpers/getTargetPosition'
+import { EMPTY_ITEM } from '../constants'
+import { SubPaneStore } from '../apps/orbit/SubPaneStore'
+import { RoundButtonSmall } from './RoundButtonSmall'
 
 export type OrbitCardProps = {
   total?: number
   hoverToSelect?: boolean
   appStore?: AppStore
   searchStore?: SearchStore
-  paneStore?: OrbitDockedPaneStore
+  paneStore?: PaneManagerStore
+  subPaneStore?: SubPaneStore
   title?: React.ReactNode
   subtitle?: React.ReactNode
   date?: React.ReactNode
@@ -31,20 +33,18 @@ export type OrbitCardProps = {
   isExpanded?: boolean
   listItem?: boolean
   style?: Object
-  selectedTheme?: Object
   afterTitle?: React.ReactNode
-  theme?: ThemeObject
   titleProps?: Object
   inactive?: boolean
   iconProps?: Object
-  hide?: { icon?: boolean }
+  hide?: { icon?: boolean; subtitle?: boolean }
   className?: string
   inGrid?: boolean
   pane?: string
   subPane?: string
   bit?: Bit
   itemProps?: Object
-  children?: ((a: Object, b: Object) => JSX.Element) | React.ReactNode
+  children?: ((a: Object) => JSX.Element) | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number
@@ -54,6 +54,7 @@ export type OrbitCardProps = {
   cardProps?: Object
   item?: AppStatePeekItem
   disableShadow?: boolean
+  preventAutoSelect?: boolean
 }
 
 const CardWrap = view(UI.View, {
@@ -64,6 +65,15 @@ const CardWrap = view(UI.View, {
   },
 })
 
+const Divider = view({
+  height: 1,
+  background: [0, 0, 0, 0.05],
+  position: 'absolute',
+  bottom: 0,
+  left: 10,
+  right: 10,
+})
+
 const Card = view({
   overflow: 'hidden',
   position: 'relative',
@@ -71,11 +81,20 @@ const Card = view({
   transform: {
     z: 0,
   },
+  chromeless: {
+    border: [1, 'transparent'],
+    background: 'transparent',
+    padding: [12, 12, 12, 10],
+    '&:hover': {
+      background: '#eee',
+    },
+  },
 })
 
-const cardShadow = [0, 1, 2, [0, 0, 0, 0.05]]
-const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 2, '#90b1e452']
+const cardShadow = [0, 1, 2, [0, 0, 0, 0.03]]
+const cardHoverGlow = [0, 0, 0, 3, [0, 0, 0, 0.05]]
+const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
+const borderSelected = UI.color('#90b1e4cc')
 
 Card.theme = ({
   listItem,
@@ -89,7 +108,15 @@ Card.theme = ({
   border,
   padding,
   disableShadow,
+  chromeless,
 }) => {
+  if (chromeless) {
+    return {
+      padding: padding || 16,
+      borderRadius: borderRadius || 9,
+    }
+  }
+  const disabledShadow = disableShadow ? 'none' : null
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
   }
@@ -98,54 +125,43 @@ Card.theme = ({
     let listStyle
     // selected...
     if (isSelected) {
-      const selectedBackground = background || theme.active.background
       listStyle = {
-        background: selectedBackground,
-        '&:hover': {
-          background: selectedBackground,
-        },
-        // '&:active': {
-        //   background: [selectedBackground, 0.5],
-        // },
+        background: '#f8faff',
+        border: [1, borderSelected],
+        boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
       }
     } else {
       listStyle = {
-        background: 'transparent',
+        border: [1, 'transparent'],
         '&:hover': {
-          background: [255, 255, 255, 0.4],
-        },
-        '&:active': {
-          background: [0, 0, 0, 0.018],
+          background: theme.base.background.darken(0.03),
         },
       }
     }
     card = {
       ...card,
       ...listStyle,
+      borderLeft: 'none',
+      borderRight: 'none',
       padding: padding || [20, 18],
-      // borderTop: [1, theme.base.borderColor.alpha(0.5)],
+      '&:active': {
+        opacity: isSelected ? 1 : 0.8,
+      },
     }
   } else {
     // CARD
-    const borderSelected = UI.color('#90b1e4')
-    const borderHover = UI.color('#c9c9c9')
-    const borderActive = UI.color('rgb(51.3%, 65.7%, 88.6%)').lighten(0.1)
     const cardBackground = background || theme.selected.background
-    const disabledShadow = disableShadow ? 'none' : null
-    card = {
-      ...card,
-      padding: padding || 16,
-      borderRadius: borderRadius || 9,
-      background: cardBackground,
-      boxShadow: disabledShadow || [cardShadow],
-      border: border || [1, cardBackground.darken(0.08)],
-      '&:hover': {
-        boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-        border: [1, borderHover],
-      },
-      '&:active': {
-        border: [1, borderActive],
-      },
+    if (!isSelected) {
+      const borderHover = UI.color('#c9c9c9')
+      card = {
+        ...card,
+        boxShadow: disabledShadow || [cardShadow],
+        border: border || [1, cardBackground.darken(0.08)],
+        '&:hover': {
+          boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
+          border: [1, borderHover],
+        },
+      }
     }
     if (isSelected) {
       card = {
@@ -153,12 +169,18 @@ Card.theme = ({
         boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
         border: [1, borderSelected],
         '&:hover': {
-          border: [1, borderSelected.darken(0.1)],
-        },
-        '&:active': {
           border: [1, borderSelected],
         },
       }
+    }
+    card = {
+      ...card,
+      padding: padding || 16,
+      borderRadius: borderRadius || 9,
+      background: cardBackground,
+      '&:active': {
+        opacity: 0.8,
+      },
     }
   }
   if (isNextUp && nextUpStyle) {
@@ -182,8 +204,7 @@ const Preview = view({
 
 const Subtitle = view(UI.View, {
   height: 20,
-  margin: [2, 0, 0],
-  opacity: 0.45,
+  margin: [4, 0, 0],
   flexFlow: 'row',
   alignItems: 'center',
 })
@@ -198,49 +219,30 @@ class OrbitCardStore {
   props: OrbitCardProps
 
   normalizedBit = null
-  _isSelected = false
-  ref = null
-
-  get isSelected() {
-    if (typeof this.props.isSelected === 'boolean') {
-      return this.props.isSelected
-    }
-    if (typeof this.props.isSelected === 'function') {
-      return this.props.isSelected()
-    }
-    return this._isSelected
-  }
-
-  get isPaneSelected() {
-    if (!this.props.subPane) {
-      return false
-    }
-    const isPaneActive = this.props.appStore.selectedPane === this.props.pane
-    const isSubPaneActive =
-      this.props.paneStore.activePane === this.props.subPane
-    return isPaneActive && isSubPaneActive
-  }
+  isSelected = false
+  cardWrapRef = null
 
   handleClick = e => {
     if (this.props.onClick) {
-      this.props.onClick(e, this.ref)
+      this.props.onClick(e, this.cardWrapRef)
       return
     }
     if (this.props.onSelect) {
-      this.props.onSelect(this.ref)
+      this.props.onSelect(this.cardWrapRef)
       return
     }
     if (this.props.inactive) {
       return
     }
+    this.props.searchStore.setSelectEvent('click')
     this.props.searchStore.toggleSelected(this.props.index)
   }
 
-  setRef = ref => {
-    if (!ref) return
-    this.ref = ref
+  setCardWrapRef = cardWrapRef => {
+    if (!cardWrapRef) return
+    this.cardWrapRef = cardWrapRef
     if (this.props.getRef) {
-      this.props.getRef(ref)
+      this.props.getRef(cardWrapRef)
     }
   }
 
@@ -248,57 +250,55 @@ class OrbitCardStore {
     return this.props.result || this.normalizedBit
   }
 
-  // isNextUp = react(
-  //   () => [
-  //     this.props.searchStore && this.props.searchStore.nextIndex,
-  //     this.isPaneSelected,
-  //     !!this.props.nextUpStyle,
-  //   ],
-  //   ([nextIndex, isPaneSelected, hasUpNextStyle], { getValue }) => {
-  //     if (!isPaneSelected || !hasUpNextStyle) {
-  //       throw react.cancel
-  //     }
-  //     const isUpNext = nextIndex + 1 === this.props.index
-  //     if (isUpNext === getValue()) {
-  //       throw react.cancel
-  //     }
-  //     return isUpNext
-  //   },
-  //   { immediate: true },
-  // )
+  get sleepBeforePeek() {
+    // first time, go fast
+    if (!App.peekState.target) {
+      return 16
+    }
+    // depending on type of move, adjust speed
+    if (this.props.searchStore) {
+      const { selectEvent } = this.props.searchStore
+      return selectEvent === 'key' ? 130 : 0
+    }
+    return 16
+  }
 
-  setPeekTargetOnNextIndex = react(
+  // this cancels to prevent renders very aggressively
+  updateIsSelected = react(
     () => [
       this.props.searchStore && this.props.searchStore.nextIndex,
-      this.isPaneSelected,
+      this.props.subPaneStore && this.props.subPaneStore.isActive,
+      typeof this.props.isSelected === 'function'
+        ? this.props.isSelected()
+        : this.props.isSelected,
     ],
-    async ([nextIndex, isPaneSelected], { sleep }) => {
-      if (!isPaneSelected) {
+    async ([nextIndex, isPaneActive, isSelected], { sleep }) => {
+      if (!isPaneActive) {
         throw react.cancel
       }
-      const shouldSelect = nextIndex === this.props.index
-      if (shouldSelect === this._isSelected) {
+      let nextIsSelected
+      if (typeof isSelected === 'boolean') {
+        nextIsSelected = isSelected
+      } else {
+        nextIsSelected = nextIndex === this.props.index
+      }
+      if (nextIsSelected === this.isSelected) {
         throw react.cancel
       }
-      this._isSelected = shouldSelect
-      if (shouldSelect) {
-        // visual smoothness
-        await sleep(32)
-        if (!this.target) {
-          throw new Error(
-            `No target! ${this.props.pane} ${this.props.subPane} ${
-              this.props.index
-            }`,
-          )
+      this.isSelected = nextIsSelected
+      if (nextIsSelected && !this.props.preventAutoSelect) {
+        if (this.props.subPaneStore) {
+          this.props.subPaneStore.scrollIntoView(this.cardWrapRef)
         }
-        // TODO: implement
-        // if (this.props.paneStore) {
-        //   this.props.paneStore.scrollIntoView(this.ref)
-        // }
-        const position = getTargetPosition(this.ref)
+        if (!this.target) {
+          throw new Error(`No target!`)
+        }
+        // fluidity
+        await sleep(80)
+        const position = getTargetPosition(this.cardWrapRef)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
-          position.left += 8
+          position.left += 9
         }
         App.actions.selectItem(this.target, position)
       }
@@ -307,8 +307,7 @@ class OrbitCardStore {
   )
 }
 
-@attachTheme
-@view.attach('appStore', 'searchStore', 'paneStore')
+@view.attach('appStore', 'searchStore', 'paneStore', 'subPaneStore')
 @view.attach({
   store: OrbitCardStore,
 })
@@ -334,7 +333,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   }
 
   get isExpanded() {
-    this.props.store.isSelected
     const { isExpanded } = this.props
     if (typeof isExpanded === 'boolean') {
       return isExpanded
@@ -363,6 +361,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     App.actions.open(this.props.bit)
   }
 
+  id = Math.random()
+
   getOrbitCard(contentProps: ResolvedItem) {
     // TODO weird mutation
     this.props.store.normalizedBit = contentProps
@@ -371,8 +371,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       icon,
       preview,
       location,
-      permalink,
-      date,
+      createdAt,
+      updatedAt,
       people,
       subtitle,
       locationLink,
@@ -382,9 +382,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       listItem,
       hoverToSelect,
       children,
-      selectedTheme,
       afterTitle,
-      theme,
       titleProps,
       inactive,
       iconProps,
@@ -399,13 +397,11 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const { background } =
-      isSelected && selectedTheme ? selectedTheme : theme.base
-    const hasSubtitle = !!(location || subtitle)
+    const hasSubtitle = !!(location || subtitle) && !hide.subtitle
     return (
       <CardWrap
         {...hoverToSelect && !inactive && this.hoverSettler.props}
-        forwardRef={store.setRef}
+        forwardRef={store.setCardWrapRef}
         zIndex={isSelected ? 5 : 4}
         {...props}
       >
@@ -439,7 +435,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               sizeLineHeight={0.85}
               ellipse={2}
               alpha={isSelected || listItem ? 1 : 0.8}
-              fontWeight={500}
+              fontWeight={600}
               maxWidth="calc(100% - 30px)"
               {...titleProps}
             >
@@ -448,28 +444,34 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {afterTitle}
           </Title>
           {hasSubtitle && (
-            <Subtitle opacity={listItem ? 0.55 : 0.4}>
+            <Subtitle>
               {!!location && (
                 <UI.Text
                   display="inline-flex"
                   alignItems="center"
                   flexFlow="row"
                 >
-                  <RoundButton marginLeft={-3} onClick={locationLink}>
+                  <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
                     {location}
-                  </RoundButton>
+                  </RoundButtonSmall>
                 </UI.Text>
               )}
               {typeof subtitle === 'string' ? (
-                <UI.Text ellipse maxWidth="calc(100% - 40px)">
+                <UI.Text alpha={0.55} ellipse maxWidth="calc(100% - 40px)">
                   {subtitle}
                 </UI.Text>
               ) : (
                 subtitle
               )}
-              {!!date && (
-                <UI.Text size={0.95}>
-                  <strong> &middot;</strong> <TimeAgo date={date} />
+              {!!createdAt && (
+                <UI.Text alpha={0.55} size={0.95}>
+                  <strong> &middot;</strong> <TimeAgo date={createdAt} />
+                </UI.Text>
+              )}
+              {updatedAt !== createdAt && (
+                <UI.Text alpha={0.55} size={0.95}>
+                  <strong> &middot;</strong> updated{' '}
+                  <TimeAgo date={updatedAt} />
                 </UI.Text>
               )}
             </Subtitle>
@@ -477,29 +479,33 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           {/* vertical space only if needed */}
           {hasSubtitle &&
             (!!children || !!preview) && <div style={{ height: 4 }} />}
-          <Preview if={preview && !children}>
-            {typeof preview !== 'string' && preview}
-            <UI.Text
-              if={typeof preview === 'string'}
-              className="preview-text"
-              alpha={isSelected ? 1 : 0.6}
-              size={listItem ? 1.1 : 1.3}
-              sizeLineHeight={0.9}
-              margin={inGrid ? ['auto', 0] : 0}
-            >
-              {preview
-                .slice(0, 220)
-                .split(' ')
-                .map((word, i) => (
-                  <React.Fragment key={i}>
-                    <SmallLink searchStore={searchStore}>{word}</SmallLink>{' '}
-                  </React.Fragment>
-                ))}
-            </UI.Text>
-          </Preview>
-          {typeof children === 'function'
-            ? children(contentProps, { background })
-            : children}
+          {!!preview &&
+            !children && (
+              <Preview>
+                {typeof preview !== 'string' && preview}
+                {typeof preview === 'string' && (
+                  <UI.Text
+                    className="preview-text"
+                    alpha={isSelected ? 1 : 0.7}
+                    size={listItem ? 1.1 : 1.3}
+                    sizeLineHeight={0.9}
+                    margin={inGrid ? ['auto', 0] : 0}
+                  >
+                    {preview}
+                    {/* .slice(0, 220)
+                      .split(' ')
+                      .map((word, i) => (
+                        <React.Fragment key={i}>
+                          <SmallLink searchStore={searchStore}>
+                            {word}
+                          </SmallLink>{' '}
+                        </React.Fragment>
+                      )) */}
+                  </UI.Text>
+                )}
+              </Preview>
+            )}
+          {typeof children === 'function' ? children(contentProps) : children}
           {people && people.length && people[0].data.profile ? (
             <div>
               <PeopleRow people={people} />
@@ -507,21 +513,23 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           ) : null}
         </Card>
         {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
-        {!listItem &&
+        {/* {!listItem &&
           !disableShadow && (
             <UI.HoverGlow
               behind
               color="#000"
               resist={90}
               scale={0.99}
-              offsetTop={isSelected ? 8 : 4}
+              offsetTop={isSelected ? 6 : 4}
               full
               blur={isSelected ? 8 : 4}
               inverse
               opacity={isSelected ? 0.08 : 0.03}
               borderRadius={20}
+              duration={100}
             />
-          )}
+          )} */}
+        {listItem && <Divider />}
       </CardWrap>
     )
   }
@@ -544,7 +552,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     store.isSelected
     return (
       <ItemResolver
-        searchStore={searchStore}
         bit={bit}
         item={item}
         isExpanded={this.isExpanded}

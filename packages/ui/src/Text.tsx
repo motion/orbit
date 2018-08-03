@@ -63,7 +63,7 @@ export type TextProps = {
   onCancelEdit?: Function
   getRef?: Function
   ellipse?: boolean | number
-  tagName: string
+  tagName?: string
   fontWeight?: number
   lines?: number
   alpha?: number

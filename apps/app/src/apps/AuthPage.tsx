@@ -5,7 +5,7 @@ import r2 from '@mcro/r2'
 import * as Constants from '../constants'
 import * as UI from '@mcro/ui'
 import { capitalize } from 'lodash'
-import { OrbitIcon } from './orbit/OrbitIcon'
+import { OrbitIcon } from '../views/OrbitIcon'
 
 const service = (window.location + '').split('service=')[1]
 

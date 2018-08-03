@@ -4,7 +4,7 @@ import { App } from '@mcro/stores'
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const BOTTOM_PAD = 40
-const NUDGE_AMT = 20
+const NUDGE_AMT = 25
 
 const screenSize = () => [window.innerWidth, window.innerHeight]
 

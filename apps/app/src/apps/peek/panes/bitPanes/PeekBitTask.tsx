@@ -1,40 +1,25 @@
 import * as React from 'react'
-import { view, compose } from '@mcro/black'
-import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
-// import { RelatedPeople } from '../../views/RelatedPeople'
+import { view } from '@mcro/black'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const BodyContents = view({
   whiteSpace: 'pre-line',
   padding: 20,
   fontSize: 16,
-  lineHeight: '1.5rem',
+  lineHeight: 22,
   overflow: 'hidden',
 })
 
-type Props = PeekBitPaneProps & {
-  relatedStore: PeekRelatedStore
-}
-
-const decorator = compose(
-  view.attach({
-    relatedStore: PeekRelatedStore,
-  }),
-)
-
-export const Task = decorator(({ content, comments }: Props) => {
+export const Task = ({ content, comments }: PeekBitPaneProps) => {
   return (
     <>
-      {/* <RelatedPeople title="Assigned" relatedStore={relatedStore} /> */}
       <BodyContents
-        className="markdown searchable"
+        className="markdown searchable rendered-content"
         dangerouslySetInnerHTML={{
           __html: content,
         }}
       />
       <BodyContents>{comments}</BodyContents>
-      <br />
-      <br />
     </>
   )
-})
+}

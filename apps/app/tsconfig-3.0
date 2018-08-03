@@ -1,5 +1,5 @@
 // desktop
-// "composite": true,
+  // "composite": true,
     // "references": [
   //   { "path": "../stores" },
   //   { "path": "../models" },

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 // import * as UI from '@mcro/ui'
-import { OrbitCard } from '../../apps/orbit/OrbitCard'
+import { OrbitCard } from '../../views/OrbitCard'
 import { SettingInfoStore } from '../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
-import { OrbitCardProps } from './OrbitCard'
+import { OrbitCardProps } from '../../views/OrbitCard'
 import { App } from '@mcro/stores'
 
 @view.attach('appStore')
@@ -18,8 +18,6 @@ export class OrbitSettingCard extends React.Component<
     isActive?: boolean
   }
 > {
-  id = Math.random()
-
   handleClick = async () => {
     const { result } = this.props
     if (result.auth === false) {
@@ -40,6 +38,9 @@ export class OrbitSettingCard extends React.Component<
 
   render() {
     const { store, result, isActive, subtitle, onClick, ...props } = this.props
+    if (!store) {
+      debugger
+    }
     const countSubtitle = !isActive
       ? ''
       : store.bitsCount === null
@@ -47,7 +48,6 @@ export class OrbitSettingCard extends React.Component<
         : `${store.bitsCount || '0'} total`
     const subtitleDisplay = subtitle || countSubtitle
     if (!result.title) {
-      console.log('no title for', result)
       return null
     }
     return (

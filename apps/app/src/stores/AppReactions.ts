@@ -15,7 +15,6 @@ const appTarget = ({ offset = null, bounds = null } = {}) => {
 @store
 export class AppReactions /* extends Store */ {
   onPinKey = null
-  id = Math.random()
 
   constructor({ onPinKey }) {
     // super()
@@ -170,41 +169,41 @@ export class AppReactions /* extends Store */ {
   //   }
   // )
 
-  showOrbitOnHoverWord = react(
-    () => App.hoveredWordName,
-    async (word, { sleep }) => {
-      if (Desktop.isHoldingOption) {
-        throw react.cancel
-      }
-      const hidden = !word
-      await sleep(hidden ? 50 : 500)
-      App.setOrbitState({ hidden })
-    },
-  )
+  // showOrbitOnHoverWord = react(
+  //   () => App.hoveredWordName,
+  //   async (word, { sleep }) => {
+  //     if (Desktop.isHoldingOption) {
+  //       throw react.cancel
+  //     }
+  //     const hidden = !word
+  //     await sleep(hidden ? 50 : 500)
+  //     App.setOrbitState({ hidden })
+  //   },
+  // )
 
-  hideOrbitOnMouseOut = react(
-    () => [
-      Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered,
-      App.peekState.target,
-    ],
-    async ([mouseOver], { sleep }) => {
-      const isShown = !App.orbitState.hidden
-      if (!isShown || mouseOver || App.orbitState.pinned) {
-        throw react.cancel
-      }
-      // some leeway on mouse leave
-      await sleep(150)
-      if (Desktop.isHoldingOption) {
-        throw react.cancel
-      }
-      console.log('hiding orbit from mouseout')
-      App.setOrbitState({ hidden: true })
-    },
-    {
-      delay: 32,
-      log: 'state',
-    },
-  )
+  // hideOrbitOnMouseOut = react(
+  //   () => [
+  //     Electron.hoverState.orbitHovered || Electron.hoverState.peekHovered,
+  //     App.peekState.target,
+  //   ],
+  //   async ([mouseOver], { sleep }) => {
+  //     const isShown = !App.orbitState.hidden
+  //     if (!isShown || mouseOver || App.orbitState.pinned) {
+  //       throw react.cancel
+  //     }
+  //     // some leeway on mouse leave
+  //     await sleep(150)
+  //     if (Desktop.isHoldingOption) {
+  //       throw react.cancel
+  //     }
+  //     console.log('hiding orbit from mouseout')
+  //     App.setOrbitState({ hidden: true })
+  //   },
+  //   {
+  //     delay: 32,
+  //     log: 'state',
+  //   },
+  // )
 
   repositioningFromAppState = react(
     () => [appTarget(Desktop.appState), Desktop.linesBoundingBox],

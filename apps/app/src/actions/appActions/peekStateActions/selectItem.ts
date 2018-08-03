@@ -3,15 +3,7 @@ import { App, AppStatePeekItem } from '@mcro/stores'
 import { peekPosition } from '../../../helpers/peekPosition'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import invariant from 'invariant'
-
-type PositionObject =
-  | HTMLElement
-  | {
-      top: number
-      left: number
-      width: number
-      height: number
-    }
+import { PeekTarget } from './types'
 
 export function setPeekState(props) {
   const target = getTargetPosition(props.target)
@@ -27,7 +19,7 @@ const oneWayEqual = (a, b) =>
 
 export function toggleSelectItem(
   item: Person | Bit | AppStatePeekItem,
-  target?: PositionObject,
+  target?: PeekTarget,
 ) {
   if (oneWayEqual(item, App.peekState.item)) {
     App.actions.clearPeek()
@@ -38,7 +30,7 @@ export function toggleSelectItem(
 
 export function selectItem(
   item: Person | Bit | AppStatePeekItem,
-  target?: PositionObject,
+  target?: PeekTarget,
 ) {
   invariant(item, 'Must pass item')
   if (item instanceof Person) {
@@ -68,7 +60,7 @@ export function selectItem(
   }
 }
 
-function selectPerson(person: Person, target?: PositionObject) {
+function selectPerson(person: Person, target?: PeekTarget) {
   const avatar = person.data.profile ? person.data.profile.image_48 : ''
   setPeekState({
     target,
@@ -85,7 +77,7 @@ function selectPerson(person: Person, target?: PositionObject) {
   })
 }
 
-function selectBit(bit: Bit, target?: PositionObject) {
+function selectBit(bit: Bit, target?: PeekTarget) {
   setPeekState({
     target,
     peekId: Math.random(),

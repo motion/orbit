@@ -3,7 +3,7 @@ import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { ControlButton } from '../../views/ControlButton'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 import { OrbitHeaderInput } from './orbitHeader/OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
 import { SearchStore } from '../../stores/SearchStore'
@@ -13,16 +13,9 @@ const OrbitHeaderContainer = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  padding: [3, 12],
+  padding: [9, 9, 7, 9],
   transition: 'all ease-in 300ms',
   zIndex: 4,
-})
-
-OrbitHeaderContainer.theme = ({ borderRadius, theme }) => ({
-  borderRadius: borderRadius,
-  background: `linear-gradient(${theme.base.background.lighten(0.03)} 50%, ${
-    theme.base.background
-  })`,
 })
 
 const PinnedControlButton = view(ControlButton, {
@@ -57,6 +50,27 @@ const Title = view({
   alignItems: 'stretch',
 })
 
+const cardSelectedGlow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.2]]
+
+const OrbitFakeInput = view({
+  height: 43,
+  flex: 1,
+  flexFlow: 'row',
+  alignItems: 'stretch',
+  justifyContent: 'stretch',
+  background: '#ececec',
+  borderRadius: 10,
+  // '&:hover': {
+  //   background: '#eee',
+  // },
+  // '&:focus-within': {
+  //   background: '#eee',
+  // },
+  isFocused: {
+    // boxShadow: [cardSelectedGlow],
+  },
+})
+
 @attachTheme
 @view.attach('searchStore', 'paneStore')
 @view.attach({
@@ -65,7 +79,7 @@ const Title = view({
 @view
 export class OrbitHeader extends React.Component<{
   headerStore?: HeaderStore
-  paneStore?: OrbitDockedPaneStore
+  paneStore?: PaneManagerStore
   searchStore?: SearchStore
   after?: React.ReactNode
   borderRadius?: number
@@ -78,7 +92,7 @@ export class OrbitHeader extends React.Component<{
 
   render() {
     const {
-      paneStore,
+      // paneStore,
       headerStore,
       after,
       theme,
@@ -87,62 +101,60 @@ export class OrbitHeader extends React.Component<{
       searchStore,
     } = this.props
     const headerBg = theme.base.background
-    const isHome = paneStore.activePane === 'home'
-    const { iconHovered } = headerStore
+    // const isHome = paneStore.activePane === 'home'
+    // const { iconHovered } = headerStore
     return (
       <OrbitHeaderContainer
         headerBg={headerBg}
         {...this.hoverSettler.props}
         borderRadius={borderRadius}
       >
-        <Title>
-          <UI.Icon
-            name={
-              isHome && iconHovered
-                ? 'arrowright'
-                : !isHome
-                  ? 'home'
-                  : 'ui-1_zoom'
+        <OrbitFakeInput isFocused={headerStore.isInputFocused}>
+          <Title>
+            <UI.Icon
+              name={'ui-1_zoom'}
+              size={17}
+              onMouseEnter={headerStore.onHoverIcon}
+              onMouseLeave={headerStore.onUnHoverIcon}
+              onClick={headerStore.goHome}
+              height="100%"
+              width={40}
+              opacity={0.2}
+              margin={[0, -4, 0, 0]}
+              transform={{
+                y: -0.5,
+              }}
+              {...{
+                '&:hover': {
+                  opacity: 0.4,
+                },
+              }}
+            />
+            <OrbitHeaderInput
+              searchStore={searchStore}
+              headerStore={headerStore}
+              theme={theme}
+            />
+          </Title>
+          <After if={after}>{after}</After>
+          <PinnedControlButton
+            if={showPin}
+            onClick={App.togglePinned}
+            borderWidth={App.orbitState.pinned ? 0.5 : 2}
+            onLeft={App.orbitOnLeft}
+            onRight={!App.orbitOnLeft}
+            isPinned={App.orbitState.pinned}
+            background={App.orbitState.pinned ? '#7954F9' : 'transparent'}
+            borderColor={
+              App.orbitState.pinned
+                ? null
+                : theme.base.background.darken(0.4).desaturate(0.6)
             }
-            size={17}
-            color={theme.base.color}
-            onMouseEnter={headerStore.onHoverIcon}
-            onMouseLeave={headerStore.onUnHoverIcon}
-            onClick={headerStore.goHome}
-            height="100%"
-            width={30}
-            opacity={0.2}
-            // cursor="pointer"
-            {...{
-              '&:hover': {
-                opacity: 0.4,
-              },
+            css={{
+              opacity: App.orbitState.hidden ? 0 : 1,
             }}
           />
-          <OrbitHeaderInput
-            searchStore={searchStore}
-            headerStore={headerStore}
-            theme={theme}
-          />
-        </Title>
-        <After if={after}>{after}</After>
-        <PinnedControlButton
-          if={showPin}
-          onClick={App.togglePinned}
-          borderWidth={App.orbitState.pinned ? 0.5 : 2}
-          onLeft={App.orbitOnLeft}
-          onRight={!App.orbitOnLeft}
-          isPinned={App.orbitState.pinned}
-          background={App.orbitState.pinned ? '#7954F9' : 'transparent'}
-          borderColor={
-            App.orbitState.pinned
-              ? null
-              : theme.base.background.darken(0.4).desaturate(0.6)
-          }
-          css={{
-            opacity: App.orbitState.hidden ? 0 : 1,
-          }}
-        />
+        </OrbitFakeInput>
       </OrbitHeaderContainer>
     )
   }

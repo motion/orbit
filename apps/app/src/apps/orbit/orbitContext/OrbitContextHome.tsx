@@ -2,18 +2,18 @@ import * as React from 'react'
 import { view, react, on, attachTheme } from '@mcro/black'
 import { Bit } from '@mcro/models'
 import { OrbitCard } from './OrbitCard'
-import { OrbitDockedPane } from './OrbitDockedPane'
+import { SubPane } from './SubPane'
 import { throttle } from 'lodash'
 import { Title, SubTitle } from '../../views'
 import { Desktop, App } from '@mcro/stores'
 import { AppStore } from '../../stores/AppStore'
 import { SearchStore } from '../../stores/SearchStore'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { SubPaneStore } from './SubPaneStore'
 
 type Props = {
   appStore?: AppStore
   searchStore?: SearchStore
-  paneStore?: OrbitDockedPaneStore
+  paneStore?: SubPaneStore
   store?: OrbitContextHomeStore
 }
 
@@ -124,7 +124,7 @@ export class OrbitContextHome<Props> {
     // log('CONTEXT HOME---------------')
     const total = store.results.length
     return (
-      <OrbitDockedPane name="context">
+      <SubPane name="context">
         <OrbitContextHeader />
         <div ref={this.setResultsFrame}>
           <div
@@ -160,7 +160,7 @@ export class OrbitContextHome<Props> {
             $fadeVisible={isOverflowing}
           />
         </div>
-      </OrbitDockedPane>
+      </SubPane>
     )
   }
 

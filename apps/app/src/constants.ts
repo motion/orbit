@@ -9,7 +9,8 @@ export const IS_PROD =
 export const IS_DEV = !IS_PROD
 export const VERSION = require('../package.json').version
 
-export const BORDER_RADIUS = 12
+export const BORDER_RADIUS = 15
+export const CHROME_PAD = 4
 export const PEEK_BORDER_RADIUS = 6
 
 export const SHADOW_PAD = 15
@@ -64,7 +65,9 @@ export const PEEK_THEMES = {
   type: {
     person: {
       darkenTitleBarAmount: 0,
-      titlebarBackground: 'rgba(0,0,0,0.1)',
+      titlebarBackground:
+        'linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.1) 90%, transparent)',
+      titlebarBorder: 'transparent',
       headerBackground: 'transparent',
       background: '#f2f2f2',
       color: '#444',

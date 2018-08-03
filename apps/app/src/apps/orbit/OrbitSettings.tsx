@@ -1,15 +1,13 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { OrbitSettingCard } from './OrbitSettingCard'
-import { OrbitDockedPane } from './OrbitDockedPane'
+import { SubPane } from './SubPane'
 import * as Views from '../../views'
 import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
-import * as UI from '@mcro/ui'
-import { AppStore } from '../../stores/AppStore'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../stores/SearchStore'
 
@@ -17,13 +15,25 @@ type Props = {
   name: string
   store?: OrbitSettingsStore
   searchStore?: SearchStore
-  appStore?: AppStore
-  paneStore?: OrbitDockedPaneStore
-  integrationSettingsStore: IntegrationSettingsStore
+  paneStore?: PaneManagerStore
+  integrationSettingsStore?: IntegrationSettingsStore
 }
 
 class OrbitSettingsStore {
   props: Props
+
+  setGetResults = react(
+    () => [this.isPaneActive, this.allResults],
+    async ([isActive, allResults], { sleep }) => {
+      if (!isActive) {
+        throw react.cancel
+      }
+      await sleep(40)
+      const getResults = () => allResults
+      this.props.searchStore.setGetResults(getResults)
+    },
+    { immediate: true },
+  )
 
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
@@ -61,20 +71,6 @@ class OrbitSettingsStore {
     { defaultValue: [] },
   )
 
-  setGetResults = react(
-    () => [this.isPaneActive, this.integrationSettings],
-    ([isActive, integrationSettings]) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      const getResults = () => integrationSettings
-      // @ts-ignore
-      getResults.shouldFilter = true
-      this.props.searchStore.setGetResults(() => this.allResults)
-    },
-    { immediate: true },
-  )
-
   get allResults() {
     return [...this.generalSettings, ...this.integrationSettings]
   }
@@ -91,30 +87,46 @@ class OrbitSettingsStore {
   integrationSettings = modelQueryReaction(
     () =>
       Setting.find({
-        where: { category: 'integration', token: Not(IsNull()) },
+        where: {
+          category: 'integration',
+          token: Not(IsNull()),
+          type: Not('setting'),
+        },
       }),
+    val => {
+      console.log(
+        'waht the fuck',
+        this.isPaneActive,
+        this.integrationSettings,
+        val,
+      )
+      if (!this.isPaneActive && this.integrationSettings.length) {
+        throw react.cancel
+      }
+      return val
+    },
     {
-      condition: () => this.isPaneActive,
       defaultValue: [],
+      log: true,
     },
   )
 }
 
-@view.attach('appStore', 'searchStore', 'paneStore', 'integrationSettingsStore')
+@view.attach('searchStore', 'paneStore', 'integrationSettingsStore')
 @view.attach({
   store: OrbitSettingsStore,
 })
 @view
 export class OrbitSettings extends React.Component<Props> {
   render() {
-    const { name, store, appStore, integrationSettingsStore } = this.props
+    const { name, store, integrationSettingsStore } = this.props
     const isActive = result => {
       return !!store.integrationSettings.find(
         setting => setting.type === result.id,
       )
     }
     return (
-      <OrbitDockedPane name={name} fadeBottom>
+      <SubPane name={name} fadeBottom>
         <Views.SubTitle>Settings</Views.SubTitle>
         <Masonry>
           {store.generalSettings.map((result, index) => (
@@ -122,31 +134,29 @@ export class OrbitSettings extends React.Component<Props> {
               key={`${result.id}`}
               result={result}
               index={index}
-              appStore={appStore}
               subtitle={result.subtitle}
               isActive
             />
           ))}
         </Masonry>
         <Views.VertSpace />
-        <UI.View if={store.integrationSettings.length}>
-          <Views.SubTitle>Active Integrations</Views.SubTitle>
-          <Masonry>
-            {store.integrationSettings
-              .map((setting, index) => (
+        {!!store.integrationSettings.length && (
+          <>
+            <Views.SubTitle>Active Integrations</Views.SubTitle>
+            <Masonry>
+              {store.integrationSettings.map((setting, index) => (
                 <store.IntegrationCard
                   key={`${setting.id}`}
                   result={integrationSettingsStore.settingToResult(setting)}
                   index={index + store.generalSettings.length}
-                  appStore={appStore}
                   setting={setting}
                   isActive
                 />
-              ))
-              .filter(Boolean)}
-          </Masonry>
-          <Views.VertSpace />
-        </UI.View>
+              ))}
+            </Masonry>
+            <Views.VertSpace />
+          </>
+        )}
         <Views.SubTitle>Add Integration</Views.SubTitle>
         <Masonry>
           {integrationSettingsStore.allIntegrations
@@ -168,10 +178,10 @@ export class OrbitSettings extends React.Component<Props> {
                   key={`${item.id}`}
                   result={item}
                   index={index + store.allResults.length}
-                  appStore={appStore}
                   onClick={onClick}
                   disableShadow
                   cardProps={{
+                    chromeless: true,
                     border: [1, 'transparent'],
                     background: 'transparent',
                     padding: [12, 12, 12, 10],
@@ -183,7 +193,7 @@ export class OrbitSettings extends React.Component<Props> {
               )
             })}
         </Masonry>
-      </OrbitDockedPane>
+      </SubPane>
     )
   }
 }

@@ -38,7 +38,6 @@ export const ResolveConversation = ({
         ? arrford(bit.people.map(p => capitalize((p.name || '').split(' ')[0])))
         : bit.title,
     people: bit.people,
-    date: new Date(bit.bitUpdatedAt * 1000),
     preview: keywordExtract
       .extract(bit.body, options)
       .slice(0, 8)

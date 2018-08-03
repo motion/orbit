@@ -37,7 +37,7 @@ setTimeout(() => {
 }, STARTUP_WAIT)
 
 setInterval(() => {
-  usage.lookup(pid, options, (err, res) => {
+  usage.lookup(pid, options, (_, res) => {
     const memoryUsedMb = res.memory / 1024 / 1024
     if (memoryUsedMb > 200) {
       console.log('memory usage high:', memoryUsedMb, 'Mb')

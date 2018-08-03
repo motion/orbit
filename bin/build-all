@@ -10,7 +10,7 @@ const chalk = require('chalk')
 const numCpus = OS.cpus().length
 const betweenSleep = 5000 / numCpus
 const flatten = arr => arr.reduce((acc, arr) => [...acc, ...arr], [])
-const subDirs = ['apps', 'packages']
+const subDirs = ['app', 'packages']
 const shouldWatch = process.argv.indexOf('--watch') > -1
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 

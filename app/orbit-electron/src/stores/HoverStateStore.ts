@@ -1,4 +1,4 @@
-import { App, Desktop, Electron } from '@mcro/stores'
+import { App, Electron } from '@mcro/stores'
 import { store, react } from '@mcro/black/store'
 
 type Point = {

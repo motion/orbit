@@ -1,6 +1,6 @@
 {
   "lerna": "2.11.0",
   "npmClient": "yarn",
-  "packages": ["orbit/*", "playground/*", "website/*", "packages/*"],
+  "packages": ["app/*", "apps-*/*", "packages/*"],
   "version": "2.2.0"
 }

@@ -9,7 +9,7 @@
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi",
-    "start": "",
+    "start": "./scripts/start.sh",
     "build-app": "cd iohook && npm install && npm version patch && npm run bundle && npm run pack",
     "deploy": "npm run prepare-publish && npm run publish-app && npm run publish-clean",
     "pack": "npm run sign-app && npm run pack-app",

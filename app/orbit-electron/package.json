@@ -10,7 +10,7 @@
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "start": "./start.sh",
+    "start": "./scripts/start.sh",
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "deploy": "cd ../electron-build && npm run deploy"

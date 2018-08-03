@@ -13,7 +13,6 @@
     "@mcro/black": "^2.2.0",
     "@mcro/constants": "^2.2.0",
     "@mcro/debug": "^2.2.0",
-    "@mcro/models": "^2.2.0",
     "html5-websocket": "^2.0.2",
     "kill-port": "^1.1.0",
     "lodash": "4.17.10",

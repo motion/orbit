@@ -5,6 +5,10 @@ import ElectronNode from 'electron'
 
 @store
 export class WindowFocusStore {
+  props: {
+    onRef: Function
+  }
+
   show = 0
   orbitRef = null
 

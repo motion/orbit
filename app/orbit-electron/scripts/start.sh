@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $(dirname $0)/..
+
 if [ ! -d "./node_modules/iohook/builds/node-v59-darwin-x64" ]; then
   echo "building iohook first time..."
   rm -r node_modules/electron-rebuild/node_modules/node-abi
@@ -18,4 +20,4 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/decor)/_  \
   --watch $(realpath node_modules/@mcro/debug)  \
   --watch $(realpath node_modules/@mcro/automagical)/_  \
-  --exec 'npx kill-port 9001 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 electron.js'
+  --exec 'npx kill-port 9001 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 _/main.js'

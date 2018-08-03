@@ -1,7 +1,6 @@
 {
   "name": "@mcro/oracle",
   "version": "2.2.0",
-  "private": true,
   "main": "./_/oracle.js",
   "scripts": {
     "build": "./build.sh --if-empty && npx tsc || true",

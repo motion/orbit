@@ -1,6 +1,5 @@
 {
   "name": "@mcro/ui",
-  "private": true,
   "version": "2.2.0",
   "main": "_/index.js",
   "license": "MIT",

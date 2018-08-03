@@ -1,6 +1,5 @@
 {
   "name": "@mcro/test-app",
-  "private": true,
   "version": "2.2.0",
   "scripts": {
     "build": "echo hi",

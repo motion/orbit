@@ -1,7 +1,6 @@
 {
   "name": "@mcro/oauth-strategies",
   "main": "./_/oauthStrategies.js",
-  "private": true,
   "version": "2.2.0",
   "dependencies": {
     "@mcro/constants": "^2.2.0",

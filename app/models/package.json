@@ -1,7 +1,6 @@
 {
   "name": "@mcro/models",
   "version": "2.2.0",
-  "private": true,
   "main": "_/index.js",
   "module": "_/index.js",
   "scripts": {

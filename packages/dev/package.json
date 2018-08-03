@@ -1,6 +1,5 @@
 {
   "name": "@mcro/dev",
-  "private": true,
   "version": "2.2.0",
   "bin": {
     "dev-apps": "./_/dev-apps.js"

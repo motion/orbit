@@ -1,6 +1,5 @@
 {
   "name": "@mcro/crawler",
-  "private": true,
   "version": "2.2.0",
   "main": "_/index.js",
   "module": "src/index.js",

@@ -1,7 +1,6 @@
 {
   "name": "@mcro/build",
   "version": "2.2.0",
-  "private": true,
   "bin": {
     "mcro-build": "./mcro-build"
   },

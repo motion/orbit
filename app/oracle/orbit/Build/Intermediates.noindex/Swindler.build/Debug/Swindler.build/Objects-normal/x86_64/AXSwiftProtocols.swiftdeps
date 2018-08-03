@@ -1,0 +1,181 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "UIElementType"
+- "ObserverType"
+- "ApplicationElementType"
+provides-nominal:
+- "8Swindler13UIElementTypeP"
+- "7AXSwift9UIElementC"
+- "8Swindler12ObserverTypeP"
+- "7AXSwift8ObserverC"
+- "8Swindler22ApplicationElementTypeP"
+- "7AXSwift11ApplicationC"
+provides-member:
+- ["8Swindler13UIElementTypeP", ""]
+- ["7AXSwift9UIElementC", ""]
+- ["8Swindler12ObserverTypeP", ""]
+- ["7AXSwift8ObserverC", ""]
+- ["8Swindler22ApplicationElementTypeP", ""]
+- ["7AXSwift11ApplicationC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- "AXSwift"
+- "ApplicationElementType"
+- "Attribute"
+- "Equatable"
+- "Float"
+- "ObserverType"
+- "String"
+- "UIElementType"
+- "Void"
+- "pid_t"
+depends-member:
+- ["7AXSwift11ApplicationC", "AXSwift"]
+- ["7AXSwift11ApplicationC", "UIElement"]
+- ["7AXSwift11ApplicationC", "all"]
+- ["7AXSwift11ApplicationC", "deinit"]
+- ["7AXSwift11ApplicationC", "init"]
+- ["7AXSwift11ApplicationC", "toElement"]
+- ["8Swindler22ApplicationElementTypeP", "Self"]
+- ["8Swindler22ApplicationElementTypeP", "UIElement"]
+- ["8Swindler22ApplicationElementTypeP", "UIElementType"]
+- ["8Swindler22ApplicationElementTypeP", ""]
+- ["8Swindler22ApplicationElementTypeP", "all"]
+- ["8Swindler22ApplicationElementTypeP", "init"]
+- ["8Swindler22ApplicationElementTypeP", "pid_t"]
+- ["8Swindler22ApplicationElementTypeP", "toElement"]
+- ["s23CustomStringConvertibleP", "UIElement"]
+- ["s23CustomStringConvertibleP", "all"]
+- ["s23CustomStringConvertibleP", "arrayAttribute"]
+- ["s23CustomStringConvertibleP", "attribute"]
+- ["s23CustomStringConvertibleP", "getMultipleAttributes"]
+- ["s23CustomStringConvertibleP", "globalMessagingTimeout"]
+- ["s23CustomStringConvertibleP", "init"]
+- ["s23CustomStringConvertibleP", "inspect"]
+- ["s23CustomStringConvertibleP", "pid"]
+- ["s23CustomStringConvertibleP", "setAttribute"]
+- ["s23CustomStringConvertibleP", "toElement"]
+- ["SQ", "AXSwift"]
+- ["SQ", "Attribute"]
+- ["SQ", "Float"]
+- ["SQ", "Self"]
+- ["SQ", "String"]
+- ["SQ", "UIElement"]
+- ["SQ", "UIElementType"]
+- ["SQ", ""]
+- ["SQ", "all"]
+- ["SQ", "arrayAttribute"]
+- ["SQ", "attribute"]
+- ["SQ", "getMultipleAttributes"]
+- ["SQ", "globalMessagingTimeout"]
+- ["SQ", "init"]
+- ["SQ", "inspect"]
+- ["SQ", "pid"]
+- ["SQ", "pid_t"]
+- ["SQ", "setAttribute"]
+- ["SQ", "toElement"]
+- ["7AXSwift8ObserverC", "AXSwift"]
+- ["7AXSwift8ObserverC", "Context"]
+- ["7AXSwift8ObserverC", "UIElement"]
+- ["7AXSwift8ObserverC", "addNotification"]
+- ["7AXSwift8ObserverC", "deinit"]
+- ["7AXSwift8ObserverC", "init"]
+- ["7AXSwift8ObserverC", "removeNotification"]
+- ["8Swindler12ObserverTypeP", "AXSwift"]
+- ["8Swindler12ObserverTypeP", "Callback"]
+- ["8Swindler12ObserverTypeP", "Context"]
+- ["8Swindler12ObserverTypeP", "UIElement"]
+- ["8Swindler12ObserverTypeP", "UIElementType"]
+- ["8Swindler12ObserverTypeP", "Void"]
+- ["8Swindler12ObserverTypeP", ""]
+- ["8Swindler12ObserverTypeP", "addNotification"]
+- ["8Swindler12ObserverTypeP", "init"]
+- ["8Swindler12ObserverTypeP", "pid_t"]
+- ["8Swindler12ObserverTypeP", "removeNotification"]
+- ["7AXSwift9UIElementC", "AXSwift"]
+- ["7AXSwift9UIElementC", "UIElement"]
+- ["7AXSwift9UIElementC", "all"]
+- ["7AXSwift9UIElementC", "arrayAttribute"]
+- ["7AXSwift9UIElementC", "attribute"]
+- ["7AXSwift9UIElementC", "deinit"]
+- ["7AXSwift9UIElementC", "getMultipleAttributes"]
+- ["7AXSwift9UIElementC", "globalMessagingTimeout"]
+- ["7AXSwift9UIElementC", "init"]
+- ["7AXSwift9UIElementC", "inspect"]
+- ["7AXSwift9UIElementC", "pid"]
+- ["7AXSwift9UIElementC", "setAttribute"]
+- ["7AXSwift9UIElementC", "toElement"]
+- ["8Swindler13UIElementTypeP", "AXSwift"]
+- ["8Swindler13UIElementTypeP", "Attribute"]
+- ["8Swindler13UIElementTypeP", "Float"]
+- ["8Swindler13UIElementTypeP", "Self"]
+- ["8Swindler13UIElementTypeP", "String"]
+- ["8Swindler13UIElementTypeP", "UIElement"]
+- ["8Swindler13UIElementTypeP", "UIElementType"]
+- ["8Swindler13UIElementTypeP", ""]
+- ["8Swindler13UIElementTypeP", "all"]
+- ["8Swindler13UIElementTypeP", "arrayAttribute"]
+- ["8Swindler13UIElementTypeP", "attribute"]
+- ["8Swindler13UIElementTypeP", "getMultipleAttributes"]
+- ["8Swindler13UIElementTypeP", "globalMessagingTimeout"]
+- ["8Swindler13UIElementTypeP", "init"]
+- ["8Swindler13UIElementTypeP", "inspect"]
+- ["8Swindler13UIElementTypeP", "pid"]
+- ["8Swindler13UIElementTypeP", "pid_t"]
+- ["8Swindler13UIElementTypeP", "setAttribute"]
+- ["8Swindler13UIElementTypeP", "toElement"]
+depends-nominal:
+- "7AXSwift11ApplicationC"
+- "8Swindler22ApplicationElementTypeP"
+- "s23CustomStringConvertibleP"
+- "SQ"
+- "7AXSwift8ObserverC"
+- "8Swindler12ObserverTypeP"
+- "7AXSwift9UIElementC"
+- "8Swindler13UIElementTypeP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Modules/AXSwift.swiftmodule/x86_64.swiftmodule"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Modules/PromiseKit.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/fwd.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/ASLLog/ASLLog.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/Swindler.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Headers/AXSwift-Swift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/PromiseKit-Swift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/PrivateHeaders/AXSwift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/PromiseKit.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/orbit/Build/Intermediates.noindex/Swindler.build/Debug/Swindler.build/unextended-module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/ASLLog/module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Modules/module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Modules/module.modulemap"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/xpc/XPC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "2c8d7399e2f23cef8598f962a4dc2f4c"

@@ -37,8 +37,8 @@
   },
   "scripts": {
     "watch": "source .env && build --watch",
-    "desktop": "./bin/run desktop",
-    "app": "./bin/run app",
-    "electron": "./bin/run electron"
+    "clean": "lerna exec --parallel -- rm -r ./_",
+    "clean-packages": "lerna exec --parallel -- rm -r ./node_modules",
+    "start": "cd apps/orbit && npm start"
   }
 }

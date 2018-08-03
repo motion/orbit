@@ -1,0 +1,115 @@
+[
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 4756,
+    "text": "convertToOptionalCIContextOptionDictionary("
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 4757,
+    "remove": 1,
+    "text": "convertFromCIContextOption("
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 4767,
+    "remove": 1,
+    "text": "Option.u"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 4786,
+    "text": ")"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 4794,
+    "text": ")"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 5208,
+    "text": "convertToOptionalCIContextOptionDictionary("
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 5209,
+    "remove": 1,
+    "text": "convertFromCIContextOption("
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 5219,
+    "remove": 1,
+    "text": "Option.u"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 5238,
+    "text": ")"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 5246,
+    "text": ")"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 5999,
+    "text": "convertToOptionalCIContextOptionDictionary("
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6000,
+    "remove": 1,
+    "text": "convertFromCIContextOption("
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6010,
+    "remove": 1,
+    "text": "Option.u"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6029,
+    "text": ")"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6037,
+    "text": ")"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6564,
+    "text": "convertToOptionalCIContextOptionDictionary("
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6565,
+    "remove": 1,
+    "text": "convertFrom"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6575,
+    "remove": 1,
+    "text": "Option(CIContextOption.u"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6594,
+    "text": ")"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6602,
+    "text": ")"
+  },
+  {
+    "file": "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift",
+    "offset": 6686,
+    "text": "\n// Helper function inserted by Swift 4.2 migrator.\nfileprivate func convertToOptionalCIContextOptionDictionary(_ input: [String: Any]?) -> [CIContextOption: Any]? {\n\tguard let input = input else { return nil }\n\treturn Dictionary(uniqueKeysWithValues: input.map { key, value in (CIContextOption(rawValue: key), value)})\n}\n\n// Helper function inserted by Swift 4.2 migrator.\nfileprivate func convertFromCIContextOption(_ input: CIContextOption) -> String {\n\treturn input.rawValue\n}\n"
+  }
+]

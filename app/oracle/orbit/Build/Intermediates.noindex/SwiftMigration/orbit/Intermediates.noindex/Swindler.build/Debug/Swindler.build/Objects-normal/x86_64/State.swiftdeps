@@ -1,0 +1,1017 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "state"
+- "State"
+- "StateDelegate"
+- "EventNotifier"
+- "ApplicationObserverType"
+- "ApplicationObserver"
+- "ScreenObserverType"
+- "ScreenObserver"
+- "OSXStateDelegate"
+- "AppFinder"
+provides-nominal:
+- "8Swindler5StateC"
+- "8Swindler13StateDelegateP"
+- "8Swindler13EventNotifierP"
+- "8Swindler23ApplicationObserverTypeP"
+- "8Swindler19ApplicationObserverV"
+- "8Swindler18ScreenObserverTypeP"
+- "8Swindler14ScreenObserverV"
+- "8Swindler16OSXStateDelegateC"
+- "8Swindler9AppFinderP"
+provides-member:
+- ["8Swindler5StateC", ""]
+- ["8Swindler13StateDelegateP", ""]
+- ["8Swindler13EventNotifierP", ""]
+- ["8Swindler23ApplicationObserverTypeP", ""]
+- ["8Swindler19ApplicationObserverV", ""]
+- ["8Swindler18ScreenObserverTypeP", ""]
+- ["8Swindler14ScreenObserverV", ""]
+- ["8Swindler16OSXStateDelegateC", ""]
+- ["8Swindler9AppFinderP", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "+"
+- !private "<"
+- !private "=="
+- !private "??"
+- "AXSwift"
+- "AnyObject"
+- "AppFinder"
+- "Application"
+- "ApplicationDelegate"
+- "ApplicationElementType"
+- !private "ApplicationLaunchedEvent"
+- "ApplicationObserver"
+- "ApplicationObserverType"
+- !private "ApplicationTerminatedEvent"
+- !private "Array"
+- "AssignmentPrecedence"
+- "Bool"
+- "BooleanLiteralType"
+- !private "CastingPrecedence"
+- "Dictionary"
+- !private "DispatchQueue"
+- "EventNotifier"
+- "EventType"
+- !private "FloatLiteralType"
+- !private "FrontmostApplicationChangedEvent"
+- !private "FrontmostApplicationPropertyDelegate"
+- "Int"
+- !private "IntegerLiteralType"
+- !private "NSApplication"
+- !private "NSRunningApplication"
+- "NSScreen"
+- !private "NSWorkspace"
+- "OSXApplicationDelegate"
+- !private "OSXDriverError"
+- !private "OSXScreenDelegate"
+- "OSXStateDelegate"
+- "OSXWindowDelegate"
+- "ObserverType"
+- "OfOptionalType"
+- "Promise"
+- "PropertyDelegate"
+- !private "PropertyError"
+- "PropertyEventType"
+- "PropertyNotifier"
+- "Screen"
+- "ScreenDelegate"
+- "ScreenObserver"
+- "ScreenObserverType"
+- "State"
+- "StateDelegate"
+- "String"
+- "StringLiteralType"
+- !private "TernaryPrecedence"
+- !private "Thread"
+- "Void"
+- "Window"
+- "WindowDelegate"
+- "WriteableProperty"
+- !private "assert"
+- !private "assertionFailure"
+- !private "log"
+- "pid_t"
+- "state"
+- !private "when"
+depends-member:
+- !private ["8Swindler9AppFinderP", "AppDelegate"]
+- ["8Swindler9AppFinderP", "Application"]
+- !private ["8Swindler9AppFinderP", "ApplicationElement"]
+- !private ["8Swindler9AppFinderP", "ApplicationLaunchedEvent"]
+- !private ["8Swindler9AppFinderP", "ApplicationTerminatedEvent"]
+- !private ["8Swindler9AppFinderP", "FrontmostApplicationChangedEvent"]
+- !private ["8Swindler9AppFinderP", "FrontmostApplicationPropertyDelegate"]
+- !private ["8Swindler9AppFinderP", "NSRunningApplication"]
+- !private ["8Swindler9AppFinderP", "NSScreen"]
+- !private ["8Swindler9AppFinderP", "OSXScreenDelegate"]
+- ["8Swindler9AppFinderP", "Object"]
+- !private ["8Swindler9AppFinderP", "Promise"]
+- !private ["8Swindler9AppFinderP", "State"]
+- !private ["8Swindler9AppFinderP", "String"]
+- !private ["8Swindler9AppFinderP", "Thread"]
+- !private ["8Swindler9AppFinderP", "WriteableProperty"]
+- ["8Swindler9AppFinderP", ""]
+- !private ["8Swindler9AppFinderP", "applications"]
+- !private ["8Swindler9AppFinderP", "applicationsByPID"]
+- !private ["8Swindler9AppFinderP", "assert"]
+- !private ["8Swindler9AppFinderP", "assertionFailure"]
+- !private ["8Swindler9AppFinderP", "eventHandlers"]
+- ["8Swindler9AppFinderP", "findAppByPID"]
+- ["8Swindler9AppFinderP", "frontmostApplication"]
+- ["8Swindler9AppFinderP", "init"]
+- ["8Swindler9AppFinderP", "knownWindows"]
+- !private ["8Swindler9AppFinderP", "log"]
+- ["8Swindler9AppFinderP", "notify"]
+- ["8Swindler9AppFinderP", "notifyInvalid"]
+- ["8Swindler9AppFinderP", "on"]
+- !private ["8Swindler9AppFinderP", "onApplicationLaunch"]
+- !private ["8Swindler9AppFinderP", "onApplicationTerminate"]
+- ["8Swindler9AppFinderP", "pid_t"]
+- ["8Swindler9AppFinderP", "runningApplications"]
+- ["8Swindler9AppFinderP", "screens"]
+- !private ["8Swindler9AppFinderP", "watchApplication"]
+- !private ["8Swindler9AppFinderP", "when"]
+- ["7AXSwift11ApplicationC", "deinit"]
+- ["8Swindler11ApplicationC", "deinit"]
+- !private ["8Swindler11ApplicationC", "delegate"]
+- !private ["8Swindler11ApplicationC", "init"]
+- !private ["8Swindler19ApplicationDelegateP", "axElement"]
+- !private ["8Swindler19ApplicationDelegateP", "initialize"]
+- !private ["8Swindler19ApplicationDelegateP", "knownWindows"]
+- !private ["8Swindler19ApplicationDelegateP", "processIdentifier"]
+- !private ["8Swindler22ApplicationElementTypeP", "all"]
+- !private ["8Swindler22ApplicationElementTypeP", "init"]
+- !private ["8Swindler22ApplicationElementTypeP", "pid"]
+- !private ["8Swindler24ApplicationLaunchedEventV", "deinit"]
+- !private ["8Swindler24ApplicationLaunchedEventV", "init"]
+- !private ["8Swindler19ApplicationObserverV", "NSRunningApplication"]
+- !private ["8Swindler19ApplicationObserverV", "NSWorkspace"]
+- !private ["8Swindler19ApplicationObserverV", "OSXDriverError"]
+- ["8Swindler19ApplicationObserverV", "Void"]
+- ["8Swindler19ApplicationObserverV", "deinit"]
+- ["8Swindler19ApplicationObserverV", "frontmostApplicationPID"]
+- ["8Swindler19ApplicationObserverV", "init"]
+- !private ["8Swindler19ApplicationObserverV", "log"]
+- ["8Swindler19ApplicationObserverV", "makeApplicationFrontmost"]
+- ["8Swindler19ApplicationObserverV", "onApplicationLaunched"]
+- ["8Swindler19ApplicationObserverV", "onApplicationTerminated"]
+- ["8Swindler19ApplicationObserverV", "onFrontmostApplicationChanged"]
+- ["8Swindler19ApplicationObserverV", "pid_t"]
+- !private ["8Swindler23ApplicationObserverTypeP", "NSRunningApplication"]
+- !private ["8Swindler23ApplicationObserverTypeP", "NSWorkspace"]
+- !private ["8Swindler23ApplicationObserverTypeP", "OSXDriverError"]
+- ["8Swindler23ApplicationObserverTypeP", "Void"]
+- ["8Swindler23ApplicationObserverTypeP", ""]
+- ["8Swindler23ApplicationObserverTypeP", "frontmostApplicationPID"]
+- ["8Swindler23ApplicationObserverTypeP", "init"]
+- !private ["8Swindler23ApplicationObserverTypeP", "log"]
+- ["8Swindler23ApplicationObserverTypeP", "makeApplicationFrontmost"]
+- ["8Swindler23ApplicationObserverTypeP", "onApplicationLaunched"]
+- ["8Swindler23ApplicationObserverTypeP", "onApplicationTerminated"]
+- ["8Swindler23ApplicationObserverTypeP", "onFrontmostApplicationChanged"]
+- ["8Swindler23ApplicationObserverTypeP", "pid_t"]
+- !private ["8Swindler26ApplicationTerminatedEventV", "deinit"]
+- !private ["8Swindler26ApplicationTerminatedEventV", "init"]
+- !private ["Sa", "append"]
+- !private ["Sa", "flatMap"]
+- !private ["Sa", "map"]
+- !private ["s13ArrayProtocolP", "append"]
+- !private ["s13ArrayProtocolP", "flatMap"]
+- !private ["s13ArrayProtocolP", "map"]
+- !private ["SK", "append"]
+- !private ["SK", "flatMap"]
+- !private ["SK", "init"]
+- !private ["SK", "init"]
+- !private ["SK", "map"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- ["s7CVarArgP", "Values"]
+- !private ["s7CVarArgP", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "activate"]
+- !private ["s7CVarArgP", "addObserver"]
+- !private ["s7CVarArgP", "append"]
+- !private ["s7CVarArgP", "applicationUserInfoKey"]
+- !private ["s7CVarArgP", "bundleIdentifier"]
+- !private ["s7CVarArgP", "current"]
+- !private ["s7CVarArgP", "didActivateApplicationNotification"]
+- !private ["s7CVarArgP", "didChangeScreenParametersNotification"]
+- !private ["s7CVarArgP", "didDeactivateApplicationNotification"]
+- !private ["s7CVarArgP", "didLaunchApplicationNotification"]
+- !private ["s7CVarArgP", "didTerminateApplicationNotification"]
+- !private ["s7CVarArgP", "flatMap"]
+- !private ["s7CVarArgP", "frontmostApplication"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "isMainThread"]
+- !private ["s7CVarArgP", "main"]
+- !private ["s7CVarArgP", "map"]
+- !private ["s7CVarArgP", "notificationCenter"]
+- !private ["s7CVarArgP", "processIdentifier"]
+- !private ["s7CVarArgP", "removeValue"]
+- !private ["s7CVarArgP", "screens"]
+- !private ["s7CVarArgP", "shared"]
+- !private ["s7CVarArgP", "subscript"]
+- !private ["s7CVarArgP", "sync"]
+- !private ["s7CVarArgP", "values"]
+- ["Sl", "Values"]
+- !private ["Sl", "append"]
+- !private ["Sl", "flatMap"]
+- !private ["Sl", "init"]
+- !private ["Sl", "init"]
+- !private ["Sl", "map"]
+- !private ["Sl", "removeValue"]
+- !private ["Sl", "subscript"]
+- !private ["Sl", "values"]
+- !private ["SL", "init"]
+- !private ["SL", "init"]
+- ["s28CustomDebugStringConvertibleP", "Values"]
+- !private ["s28CustomDebugStringConvertibleP", "activate"]
+- !private ["s28CustomDebugStringConvertibleP", "addObserver"]
+- !private ["s28CustomDebugStringConvertibleP", "append"]
+- !private ["s28CustomDebugStringConvertibleP", "applicationUserInfoKey"]
+- !private ["s28CustomDebugStringConvertibleP", "bundleIdentifier"]
+- !private ["s28CustomDebugStringConvertibleP", "current"]
+- !private ["s28CustomDebugStringConvertibleP", "didActivateApplicationNotification"]
+- !private ["s28CustomDebugStringConvertibleP", "didChangeScreenParametersNotification"]
+- !private ["s28CustomDebugStringConvertibleP", "didDeactivateApplicationNotification"]
+- !private ["s28CustomDebugStringConvertibleP", "didLaunchApplicationNotification"]
+- !private ["s28CustomDebugStringConvertibleP", "didTerminateApplicationNotification"]
+- !private ["s28CustomDebugStringConvertibleP", "flatMap"]
+- !private ["s28CustomDebugStringConvertibleP", "frontmostApplication"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "initialized"]
+- !private ["s28CustomDebugStringConvertibleP", "isMainThread"]
+- !private ["s28CustomDebugStringConvertibleP", "main"]
+- !private ["s28CustomDebugStringConvertibleP", "map"]
+- !private ["s28CustomDebugStringConvertibleP", "notificationCenter"]
+- !private ["s28CustomDebugStringConvertibleP", "processIdentifier"]
+- !private ["s28CustomDebugStringConvertibleP", "refresh"]
+- !private ["s28CustomDebugStringConvertibleP", "removeValue"]
+- !private ["s28CustomDebugStringConvertibleP", "screens"]
+- !private ["s28CustomDebugStringConvertibleP", "shared"]
+- !private ["s28CustomDebugStringConvertibleP", "subscript"]
+- !private ["s28CustomDebugStringConvertibleP", "sync"]
+- !private ["s28CustomDebugStringConvertibleP", "userInfo"]
+- !private ["s28CustomDebugStringConvertibleP", "values"]
+- !private ["s29CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- ["s17CustomReflectableP", "Values"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
+- !private ["s17CustomReflectableP", "append"]
+- !private ["s17CustomReflectableP", "flatMap"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "initialized"]
+- !private ["s17CustomReflectableP", "map"]
+- !private ["s17CustomReflectableP", "refresh"]
+- !private ["s17CustomReflectableP", "removeValue"]
+- !private ["s17CustomReflectableP", "subscript"]
+- !private ["s17CustomReflectableP", "userInfo"]
+- !private ["s17CustomReflectableP", "values"]
+- ["s23CustomStringConvertibleP", "Values"]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s23CustomStringConvertibleP", "activate"]
+- !private ["s23CustomStringConvertibleP", "addObserver"]
+- !private ["s23CustomStringConvertibleP", "always"]
+- !private ["s23CustomStringConvertibleP", "append"]
+- !private ["s23CustomStringConvertibleP", "applicationUserInfoKey"]
+- !private ["s23CustomStringConvertibleP", "asVoid"]
+- !private ["s23CustomStringConvertibleP", "axElement"]
+- !private ["s23CustomStringConvertibleP", "bundleIdentifier"]
+- !private ["s23CustomStringConvertibleP", "catch"]
+- !private ["s23CustomStringConvertibleP", "current"]
+- !private ["s23CustomStringConvertibleP", "didActivateApplicationNotification"]
+- !private ["s23CustomStringConvertibleP", "didChangeScreenParametersNotification"]
+- !private ["s23CustomStringConvertibleP", "didDeactivateApplicationNotification"]
+- !private ["s23CustomStringConvertibleP", "didLaunchApplicationNotification"]
+- !private ["s23CustomStringConvertibleP", "didTerminateApplicationNotification"]
+- !private ["s23CustomStringConvertibleP", "flatMap"]
+- !private ["s23CustomStringConvertibleP", "frontmostApplication"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "initialize"]
+- !private ["s23CustomStringConvertibleP", "isMainThread"]
+- !private ["s23CustomStringConvertibleP", "knownWindows"]
+- !private ["s23CustomStringConvertibleP", "main"]
+- !private ["s23CustomStringConvertibleP", "map"]
+- !private ["s23CustomStringConvertibleP", "notificationCenter"]
+- !private ["s23CustomStringConvertibleP", "pending"]
+- !private ["s23CustomStringConvertibleP", "processIdentifier"]
+- !private ["s23CustomStringConvertibleP", "recover"]
+- !private ["s23CustomStringConvertibleP", "removeValue"]
+- !private ["s23CustomStringConvertibleP", "screens"]
+- !private ["s23CustomStringConvertibleP", "shared"]
+- !private ["s23CustomStringConvertibleP", "subscript"]
+- !private ["s23CustomStringConvertibleP", "sync"]
+- !private ["s23CustomStringConvertibleP", "then"]
+- !private ["s23CustomStringConvertibleP", "userInfo"]
+- !private ["s23CustomStringConvertibleP", "values"]
+- ["Se", "Values"]
+- !private ["Se", "_getBuiltinLogicValue"]
+- !private ["Se", "append"]
+- !private ["Se", "flatMap"]
+- !private ["Se", "init"]
+- !private ["Se", "init"]
+- !private ["Se", "initialized"]
+- !private ["Se", "map"]
+- !private ["Se", "refresh"]
+- !private ["Se", "removeValue"]
+- !private ["Se", "subscript"]
+- !private ["Se", "values"]
+- ["SD", "Values"]
+- !private ["SD", "removeValue"]
+- !private ["SD", "subscript"]
+- !private ["SD", "values"]
+- !private ["So18OS_dispatch_objectC", "main"]
+- !private ["So18OS_dispatch_objectC", "sync"]
+- !private ["So17OS_dispatch_queueC", "main"]
+- !private ["So17OS_dispatch_queueC", "sync"]
+- ["SE", "Values"]
+- !private ["SE", "_getBuiltinLogicValue"]
+- !private ["SE", "append"]
+- !private ["SE", "flatMap"]
+- !private ["SE", "init"]
+- !private ["SE", "init"]
+- !private ["SE", "initialized"]
+- !private ["SE", "map"]
+- !private ["SE", "refresh"]
+- !private ["SE", "removeValue"]
+- !private ["SE", "subscript"]
+- !private ["SE", "values"]
+- ["SQ", "Values"]
+- !private ["SQ", "_getBuiltinLogicValue"]
+- !private ["SQ", "activate"]
+- !private ["SQ", "addObserver"]
+- !private ["SQ", "all"]
+- !private ["SQ", "append"]
+- !private ["SQ", "applicationUserInfoKey"]
+- !private ["SQ", "bundleIdentifier"]
+- !private ["SQ", "current"]
+- !private ["SQ", "delegate"]
+- !private ["SQ", "didActivateApplicationNotification"]
+- !private ["SQ", "didChangeScreenParametersNotification"]
+- !private ["SQ", "didDeactivateApplicationNotification"]
+- !private ["SQ", "didLaunchApplicationNotification"]
+- !private ["SQ", "didTerminateApplicationNotification"]
+- !private ["SQ", "flatMap"]
+- !private ["SQ", "frontmostApplication"]
+- !private ["SQ", "init"]
+- !private ["SQ", "init"]
+- !private ["SQ", "initialized"]
+- !private ["SQ", "isMainThread"]
+- !private ["SQ", "main"]
+- !private ["SQ", "map"]
+- !private ["SQ", "notificationCenter"]
+- !private ["SQ", "pid"]
+- !private ["SQ", "processIdentifier"]
+- !private ["SQ", "refresh"]
+- !private ["SQ", "removeValue"]
+- !private ["SQ", "screens"]
+- !private ["SQ", "shared"]
+- !private ["SQ", "subscript"]
+- !private ["SQ", "sync"]
+- !private ["SQ", "userInfo"]
+- !private ["SQ", "values"]
+- !private ["s5ErrorP", "invalidObject"]
+- !private ["s5ErrorP", "runningApplicationNotFound"]
+- !private ["8Swindler13EventNotifierP", "AppDelegate"]
+- !private ["8Swindler13EventNotifierP", "Application"]
+- !private ["8Swindler13EventNotifierP", "ApplicationElement"]
+- !private ["8Swindler13EventNotifierP", "ApplicationLaunchedEvent"]
+- !private ["8Swindler13EventNotifierP", "ApplicationTerminatedEvent"]
+- ["8Swindler13EventNotifierP", "EventType"]
+- !private ["8Swindler13EventNotifierP", "FrontmostApplicationChangedEvent"]
+- !private ["8Swindler13EventNotifierP", "FrontmostApplicationPropertyDelegate"]
+- !private ["8Swindler13EventNotifierP", "NSRunningApplication"]
+- !private ["8Swindler13EventNotifierP", "NSScreen"]
+- !private ["8Swindler13EventNotifierP", "OSXScreenDelegate"]
+- ["8Swindler13EventNotifierP", "Object"]
+- !private ["8Swindler13EventNotifierP", "Promise"]
+- !private ["8Swindler13EventNotifierP", "State"]
+- !private ["8Swindler13EventNotifierP", "String"]
+- !private ["8Swindler13EventNotifierP", "Thread"]
+- !private ["8Swindler13EventNotifierP", "WriteableProperty"]
+- ["8Swindler13EventNotifierP", ""]
+- !private ["8Swindler13EventNotifierP", "applications"]
+- !private ["8Swindler13EventNotifierP", "applicationsByPID"]
+- !private ["8Swindler13EventNotifierP", "assert"]
+- !private ["8Swindler13EventNotifierP", "assertionFailure"]
+- !private ["8Swindler13EventNotifierP", "eventHandlers"]
+- ["8Swindler13EventNotifierP", "findAppByPID"]
+- ["8Swindler13EventNotifierP", "frontmostApplication"]
+- ["8Swindler13EventNotifierP", "init"]
+- ["8Swindler13EventNotifierP", "knownWindows"]
+- !private ["8Swindler13EventNotifierP", "log"]
+- ["8Swindler13EventNotifierP", "notify"]
+- ["8Swindler13EventNotifierP", "notifyInvalid"]
+- ["8Swindler13EventNotifierP", "on"]
+- !private ["8Swindler13EventNotifierP", "onApplicationLaunch"]
+- !private ["8Swindler13EventNotifierP", "onApplicationTerminate"]
+- ["8Swindler13EventNotifierP", "runningApplications"]
+- ["8Swindler13EventNotifierP", "screens"]
+- !private ["8Swindler13EventNotifierP", "watchApplication"]
+- !private ["8Swindler13EventNotifierP", "when"]
+- !private ["8Swindler9EventTypeP", "init"]
+- !private ["8Swindler9EventTypeP", "typeName"]
+- !private ["s25ExpressibleByArrayLiteralP", "append"]
+- !private ["s25ExpressibleByArrayLiteralP", "flatMap"]
+- !private ["s25ExpressibleByArrayLiteralP", "map"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
+- ["s30ExpressibleByDictionaryLiteralP", "Values"]
+- !private ["s30ExpressibleByDictionaryLiteralP", "removeValue"]
+- !private ["s30ExpressibleByDictionaryLiteralP", "subscript"]
+- !private ["s30ExpressibleByDictionaryLiteralP", "values"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s23ExpressibleByNilLiteralP", "flatMap"]
+- !private ["s23ExpressibleByNilLiteralP", "initialized"]
+- !private ["s23ExpressibleByNilLiteralP", "refresh"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["8Swindler32FrontmostApplicationChangedEventV", "deinit"]
+- ["SH", "Values"]
+- !private ["SH", "_getBuiltinLogicValue"]
+- !private ["SH", "activate"]
+- !private ["SH", "addObserver"]
+- !private ["SH", "append"]
+- !private ["SH", "applicationUserInfoKey"]
+- !private ["SH", "bundleIdentifier"]
+- !private ["SH", "current"]
+- !private ["SH", "didActivateApplicationNotification"]
+- !private ["SH", "didChangeScreenParametersNotification"]
+- !private ["SH", "didDeactivateApplicationNotification"]
+- !private ["SH", "didLaunchApplicationNotification"]
+- !private ["SH", "didTerminateApplicationNotification"]
+- !private ["SH", "flatMap"]
+- !private ["SH", "frontmostApplication"]
+- !private ["SH", "init"]
+- !private ["SH", "init"]
+- !private ["SH", "initialized"]
+- !private ["SH", "isMainThread"]
+- !private ["SH", "main"]
+- !private ["SH", "map"]
+- !private ["SH", "notificationCenter"]
+- !private ["SH", "processIdentifier"]
+- !private ["SH", "refresh"]
+- !private ["SH", "removeValue"]
+- !private ["SH", "screens"]
+- !private ["SH", "shared"]
+- !private ["SH", "subscript"]
+- !private ["SH", "sync"]
+- !private ["SH", "userInfo"]
+- !private ["SH", "values"]
+- !private ["8Swindler3LogV", "debug"]
+- !private ["8Swindler3LogV", "error"]
+- !private ["8Swindler3LogV", "notice"]
+- !private ["8Swindler3LogV", "warn"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["SM", "append"]
+- !private ["SM", "flatMap"]
+- !private ["SM", "map"]
+- !private ["So15NSAccessibilityP", "didChangeScreenParametersNotification"]
+- !private ["So15NSAccessibilityP", "shared"]
+- !private ["So22NSAccessibilityElementP", "didChangeScreenParametersNotification"]
+- !private ["So22NSAccessibilityElementP", "shared"]
+- !private ["So25NSAppearanceCustomizationP", "didChangeScreenParametersNotification"]
+- !private ["So25NSAppearanceCustomizationP", "shared"]
+- !private ["So13NSApplicationC", "didChangeScreenParametersNotification"]
+- !private ["So13NSApplicationC", "shared"]
+- !private ["So8NSCodingP", "didChangeScreenParametersNotification"]
+- !private ["So8NSCodingP", "shared"]
+- !private ["So20NSMenuItemValidationP", "didChangeScreenParametersNotification"]
+- !private ["So20NSMenuItemValidationP", "shared"]
+- !private ["So8NSObjectC", "activate"]
+- !private ["So8NSObjectC", "addObserver"]
+- !private ["So8NSObjectC", "applicationUserInfoKey"]
+- !private ["So8NSObjectC", "bundleIdentifier"]
+- !private ["So8NSObjectC", "current"]
+- !private ["So8NSObjectC", "didActivateApplicationNotification"]
+- !private ["So8NSObjectC", "didChangeScreenParametersNotification"]
+- !private ["So8NSObjectC", "didDeactivateApplicationNotification"]
+- !private ["So8NSObjectC", "didLaunchApplicationNotification"]
+- !private ["So8NSObjectC", "didTerminateApplicationNotification"]
+- !private ["So8NSObjectC", "frontmostApplication"]
+- !private ["So8NSObjectC", "init"]
+- !private ["So8NSObjectC", "isMainThread"]
+- !private ["So8NSObjectC", "main"]
+- !private ["So8NSObjectC", "notificationCenter"]
+- !private ["So8NSObjectC", "processIdentifier"]
+- !private ["So8NSObjectC", "screens"]
+- !private ["So8NSObjectC", "shared"]
+- !private ["So8NSObjectC", "sync"]
+- !private ["So8NSObjectP", "activate"]
+- !private ["So8NSObjectP", "addObserver"]
+- !private ["So8NSObjectP", "applicationUserInfoKey"]
+- !private ["So8NSObjectP", "bundleIdentifier"]
+- !private ["So8NSObjectP", "current"]
+- !private ["So8NSObjectP", "didActivateApplicationNotification"]
+- !private ["So8NSObjectP", "didChangeScreenParametersNotification"]
+- !private ["So8NSObjectP", "didDeactivateApplicationNotification"]
+- !private ["So8NSObjectP", "didLaunchApplicationNotification"]
+- !private ["So8NSObjectP", "didTerminateApplicationNotification"]
+- !private ["So8NSObjectP", "frontmostApplication"]
+- !private ["So8NSObjectP", "init"]
+- !private ["So8NSObjectP", "isMainThread"]
+- !private ["So8NSObjectP", "main"]
+- !private ["So8NSObjectP", "notificationCenter"]
+- !private ["So8NSObjectP", "processIdentifier"]
+- !private ["So8NSObjectP", "screens"]
+- !private ["So8NSObjectP", "shared"]
+- !private ["So8NSObjectP", "sync"]
+- !private ["So11NSResponderC", "didChangeScreenParametersNotification"]
+- !private ["So11NSResponderC", "shared"]
+- !private ["So20NSRunningApplicationC", "activate"]
+- !private ["So20NSRunningApplicationC", "bundleIdentifier"]
+- !private ["So20NSRunningApplicationC", "init"]
+- !private ["So20NSRunningApplicationC", "processIdentifier"]
+- !private ["So8NSScreenC", "deinit"]
+- !private ["So8NSScreenC", "screens"]
+- !private ["8Swindler12NSScreenTypeP", "screens"]
+- !private ["So30NSStandardKeyBindingRespondingP", "didChangeScreenParametersNotification"]
+- !private ["So30NSStandardKeyBindingRespondingP", "shared"]
+- !private ["So18NSTouchBarProviderP", "didChangeScreenParametersNotification"]
+- !private ["So18NSTouchBarProviderP", "shared"]
+- !private ["So26NSUserInterfaceValidationsP", "didChangeScreenParametersNotification"]
+- !private ["So26NSUserInterfaceValidationsP", "shared"]
+- !private ["So11NSWorkspaceC", "applicationUserInfoKey"]
+- !private ["So11NSWorkspaceC", "didActivateApplicationNotification"]
+- !private ["So11NSWorkspaceC", "didDeactivateApplicationNotification"]
+- !private ["So11NSWorkspaceC", "didLaunchApplicationNotification"]
+- !private ["So11NSWorkspaceC", "didTerminateApplicationNotification"]
+- !private ["So11NSWorkspaceC", "frontmostApplication"]
+- !private ["So11NSWorkspaceC", "notificationCenter"]
+- !private ["So11NSWorkspaceC", "shared"]
+- !private ["10Foundation12NotificationV", "userInfo"]
+- !private ["So20NSNotificationCenterC", "addObserver"]
+- !private ["8Swindler22OSXApplicationDelegateC", "axElement"]
+- !private ["8Swindler22OSXApplicationDelegateC", "deinit"]
+- !private ["8Swindler22OSXApplicationDelegateC", "initialize"]
+- !private ["8Swindler22OSXApplicationDelegateC", "knownWindows"]
+- !private ["8Swindler14OSXDriverErrorO", "deinit"]
+- !private ["8Swindler14OSXDriverErrorO", "runningApplicationNotFound"]
+- !private ["8Swindler17OSXScreenDelegateC", "deinit"]
+- !private ["8Swindler17OSXScreenDelegateC", "init"]
+- ["8Swindler16OSXStateDelegateC", "AppDelegate"]
+- ["8Swindler16OSXStateDelegateC", "Application"]
+- ["8Swindler16OSXStateDelegateC", "ApplicationDelegate"]
+- ["8Swindler16OSXStateDelegateC", "ApplicationElement"]
+- !private ["8Swindler16OSXStateDelegateC", "ApplicationLaunchedEvent"]
+- ["8Swindler16OSXStateDelegateC", "ApplicationObserverType"]
+- !private ["8Swindler16OSXStateDelegateC", "ApplicationTerminatedEvent"]
+- ["8Swindler16OSXStateDelegateC", "Bool"]
+- ["8Swindler16OSXStateDelegateC", "Dictionary"]
+- ["8Swindler16OSXStateDelegateC", "EventHandler"]
+- ["8Swindler16OSXStateDelegateC", "EventType"]
+- !private ["8Swindler16OSXStateDelegateC", "FrontmostApplicationChangedEvent"]
+- !private ["8Swindler16OSXStateDelegateC", "FrontmostApplicationPropertyDelegate"]
+- ["8Swindler16OSXStateDelegateC", "Int"]
+- !private ["8Swindler16OSXStateDelegateC", "NSRunningApplication"]
+- !private ["8Swindler16OSXStateDelegateC", "NSScreen"]
+- ["8Swindler16OSXStateDelegateC", "OSXApplicationDelegate"]
+- !private ["8Swindler16OSXStateDelegateC", "OSXScreenDelegate"]
+- ["8Swindler16OSXStateDelegateC", "OSXWindowDelegate"]
+- ["8Swindler16OSXStateDelegateC", "Object"]
+- ["8Swindler16OSXStateDelegateC", "Observer"]
+- ["8Swindler16OSXStateDelegateC", "OfOptionalType"]
+- ["8Swindler16OSXStateDelegateC", "Promise"]
+- ["8Swindler16OSXStateDelegateC", "PropertyEventType"]
+- ["8Swindler16OSXStateDelegateC", "ScreenDelegate"]
+- ["8Swindler16OSXStateDelegateC", "State"]
+- ["8Swindler16OSXStateDelegateC", "String"]
+- !private ["8Swindler16OSXStateDelegateC", "Thread"]
+- ["8Swindler16OSXStateDelegateC", "UIElement"]
+- ["8Swindler16OSXStateDelegateC", "Void"]
+- ["8Swindler16OSXStateDelegateC", "WinDelegate"]
+- ["8Swindler16OSXStateDelegateC", "WindowDelegate"]
+- ["8Swindler16OSXStateDelegateC", "WriteableProperty"]
+- !private ["8Swindler16OSXStateDelegateC", "applications"]
+- !private ["8Swindler16OSXStateDelegateC", "applicationsByPID"]
+- !private ["8Swindler16OSXStateDelegateC", "assert"]
+- !private ["8Swindler16OSXStateDelegateC", "assertionFailure"]
+- ["8Swindler16OSXStateDelegateC", "deinit"]
+- !private ["8Swindler16OSXStateDelegateC", "eventHandlers"]
+- ["8Swindler16OSXStateDelegateC", "findAppByPID"]
+- ["8Swindler16OSXStateDelegateC", "frontmostApplication"]
+- ["8Swindler16OSXStateDelegateC", "init"]
+- ["8Swindler16OSXStateDelegateC", "knownWindows"]
+- !private ["8Swindler16OSXStateDelegateC", "log"]
+- ["8Swindler16OSXStateDelegateC", "notify"]
+- ["8Swindler16OSXStateDelegateC", "notifyInvalid"]
+- ["8Swindler16OSXStateDelegateC", "on"]
+- ["8Swindler16OSXStateDelegateC", "onApplicationLaunch"]
+- ["8Swindler16OSXStateDelegateC", "onApplicationTerminate"]
+- ["8Swindler16OSXStateDelegateC", "pid_t"]
+- ["8Swindler16OSXStateDelegateC", "runningApplications"]
+- ["8Swindler16OSXStateDelegateC", "screens"]
+- ["8Swindler16OSXStateDelegateC", "watchApplication"]
+- !private ["8Swindler16OSXStateDelegateC", "when"]
+- !private ["So9OS_objectC", "main"]
+- !private ["So9OS_objectC", "sync"]
+- ["7AXSwift8ObserverC", "deinit"]
+- ["8Swindler14OfOptionalTypeV", "deinit"]
+- !private ["Sq", "flatMap"]
+- !private ["Sq", "initialized"]
+- !private ["Sq", "refresh"]
+- !private ["10PromiseKit0A0C", "always"]
+- !private ["10PromiseKit0A0C", "asVoid"]
+- !private ["10PromiseKit0A0C", "catch"]
+- !private ["10PromiseKit0A0C", "pending"]
+- !private ["10PromiseKit0A0C", "recover"]
+- !private ["10PromiseKit0A0C", "then"]
+- !private ["8Swindler8PropertyC", "init"]
+- !private ["8Swindler8PropertyC", "initialized"]
+- !private ["8Swindler8PropertyC", "refresh"]
+- !private ["8Swindler16PropertyDelegateP", "DispatchQueue"]
+- !private ["8Swindler16PropertyDelegateP", "PropertyError"]
+- ["8Swindler16PropertyDelegateP", "T"]
+- !private ["8Swindler16PropertyDelegateP", "Thread"]
+- !private ["8Swindler16PropertyDelegateP", ""]
+- !private ["8Swindler16PropertyDelegateP", "appFinder"]
+- !private ["8Swindler16PropertyDelegateP", "appObserver"]
+- !private ["8Swindler16PropertyDelegateP", "findAppByPID"]
+- !private ["8Swindler16PropertyDelegateP", "init"]
+- !private ["8Swindler16PropertyDelegateP", "initPromise"]
+- ["8Swindler16PropertyDelegateP", "initialize"]
+- !private ["8Swindler16PropertyDelegateP", "log"]
+- ["8Swindler16PropertyDelegateP", "readValue"]
+- ["8Swindler16PropertyDelegateP", "writeValue"]
+- !private ["8Swindler13PropertyErrorO", "deinit"]
+- !private ["8Swindler13PropertyErrorO", "invalidObject"]
+- !private ["8Swindler17PropertyEventTypeP", "init"]
+- !private ["8Swindler16PropertyNotifierP", "AppDelegate"]
+- !private ["8Swindler16PropertyNotifierP", "Application"]
+- !private ["8Swindler16PropertyNotifierP", "ApplicationElement"]
+- !private ["8Swindler16PropertyNotifierP", "ApplicationLaunchedEvent"]
+- !private ["8Swindler16PropertyNotifierP", "ApplicationTerminatedEvent"]
+- !private ["8Swindler16PropertyNotifierP", "FrontmostApplicationChangedEvent"]
+- !private ["8Swindler16PropertyNotifierP", "FrontmostApplicationPropertyDelegate"]
+- !private ["8Swindler16PropertyNotifierP", "NSRunningApplication"]
+- !private ["8Swindler16PropertyNotifierP", "NSScreen"]
+- !private ["8Swindler16PropertyNotifierP", "OSXScreenDelegate"]
+- ["8Swindler16PropertyNotifierP", "Object"]
+- !private ["8Swindler16PropertyNotifierP", "Promise"]
+- !private ["8Swindler16PropertyNotifierP", "State"]
+- !private ["8Swindler16PropertyNotifierP", "String"]
+- !private ["8Swindler16PropertyNotifierP", "Thread"]
+- !private ["8Swindler16PropertyNotifierP", "WriteableProperty"]
+- ["8Swindler16PropertyNotifierP", ""]
+- !private ["8Swindler16PropertyNotifierP", "applications"]
+- !private ["8Swindler16PropertyNotifierP", "applicationsByPID"]
+- !private ["8Swindler16PropertyNotifierP", "assert"]
+- !private ["8Swindler16PropertyNotifierP", "assertionFailure"]
+- !private ["8Swindler16PropertyNotifierP", "axElement"]
+- !private ["8Swindler16PropertyNotifierP", "eventHandlers"]
+- ["8Swindler16PropertyNotifierP", "findAppByPID"]
+- ["8Swindler16PropertyNotifierP", "frontmostApplication"]
+- ["8Swindler16PropertyNotifierP", "init"]
+- !private ["8Swindler16PropertyNotifierP", "initialize"]
+- ["8Swindler16PropertyNotifierP", "knownWindows"]
+- !private ["8Swindler16PropertyNotifierP", "log"]
+- ["8Swindler16PropertyNotifierP", "notify"]
+- ["8Swindler16PropertyNotifierP", "notifyInvalid"]
+- ["8Swindler16PropertyNotifierP", "on"]
+- !private ["8Swindler16PropertyNotifierP", "onApplicationLaunch"]
+- !private ["8Swindler16PropertyNotifierP", "onApplicationTerminate"]
+- ["8Swindler16PropertyNotifierP", "runningApplications"]
+- ["8Swindler16PropertyNotifierP", "screens"]
+- !private ["8Swindler16PropertyNotifierP", "watchApplication"]
+- !private ["8Swindler16PropertyNotifierP", "when"]
+- !private ["8Swindler12PropertyTypeP", "init"]
+- !private ["8Swindler12PropertyTypeP", "initialized"]
+- !private ["8Swindler12PropertyTypeP", "refresh"]
+- !private ["Sk", "append"]
+- !private ["Sk", "flatMap"]
+- !private ["Sk", "map"]
+- !private ["Sm", "append"]
+- !private ["Sm", "flatMap"]
+- !private ["Sm", "init"]
+- !private ["Sm", "init"]
+- !private ["Sm", "map"]
+- !private ["10Foundation20ReferenceConvertibleP", "userInfo"]
+- !private ["8Swindler6ScreenC", "init"]
+- !private ["8Swindler14ScreenDelegateP", "init"]
+- !private ["8Swindler14ScreenObserverV", "NSApplication"]
+- ["8Swindler14ScreenObserverV", "NSScreen"]
+- !private ["8Swindler14ScreenObserverV", "NSWorkspace"]
+- ["8Swindler14ScreenObserverV", "Void"]
+- ["8Swindler14ScreenObserverV", "allScreens"]
+- ["8Swindler14ScreenObserverV", "deinit"]
+- ["8Swindler14ScreenObserverV", "init"]
+- ["8Swindler14ScreenObserverV", "onScreenLayoutChanged"]
+- !private ["8Swindler18ScreenObserverTypeP", "NSApplication"]
+- ["8Swindler18ScreenObserverTypeP", "NSScreen"]
+- !private ["8Swindler18ScreenObserverTypeP", "NSWorkspace"]
+- ["8Swindler18ScreenObserverTypeP", "Void"]
+- ["8Swindler18ScreenObserverTypeP", ""]
+- ["8Swindler18ScreenObserverTypeP", "allScreens"]
+- ["8Swindler18ScreenObserverTypeP", "onScreenLayoutChanged"]
+- ["ST", "Values"]
+- !private ["ST", "append"]
+- !private ["ST", "flatMap"]
+- !private ["ST", "init"]
+- !private ["ST", "init"]
+- !private ["ST", "map"]
+- !private ["ST", "removeValue"]
+- !private ["ST", "subscript"]
+- !private ["ST", "values"]
+- ["8Swindler5StateC", "Application"]
+- ["8Swindler5StateC", "EventType"]
+- ["8Swindler5StateC", "OfOptionalType"]
+- ["8Swindler5StateC", "Screen"]
+- ["8Swindler5StateC", "StateDelegate"]
+- ["8Swindler5StateC", "Void"]
+- ["8Swindler5StateC", "Window"]
+- ["8Swindler5StateC", "WriteableProperty"]
+- ["8Swindler5StateC", "delegate"]
+- ["8Swindler5StateC", "frontmostApplication"]
+- ["8Swindler5StateC", "init"]
+- ["8Swindler5StateC", "knownWindows"]
+- ["8Swindler5StateC", "on"]
+- ["8Swindler5StateC", "runningApplications"]
+- ["8Swindler5StateC", "screens"]
+- !private ["8Swindler13StateDelegateP", "AppDelegate"]
+- ["8Swindler13StateDelegateP", "Application"]
+- ["8Swindler13StateDelegateP", "ApplicationDelegate"]
+- !private ["8Swindler13StateDelegateP", "ApplicationElement"]
+- !private ["8Swindler13StateDelegateP", "ApplicationLaunchedEvent"]
+- !private ["8Swindler13StateDelegateP", "ApplicationTerminatedEvent"]
+- ["8Swindler13StateDelegateP", "EventType"]
+- !private ["8Swindler13StateDelegateP", "FrontmostApplicationChangedEvent"]
+- !private ["8Swindler13StateDelegateP", "FrontmostApplicationPropertyDelegate"]
+- !private ["8Swindler13StateDelegateP", "NSRunningApplication"]
+- !private ["8Swindler13StateDelegateP", "NSScreen"]
+- !private ["8Swindler13StateDelegateP", "OSXScreenDelegate"]
+- ["8Swindler13StateDelegateP", "Object"]
+- ["8Swindler13StateDelegateP", "OfOptionalType"]
+- !private ["8Swindler13StateDelegateP", "Promise"]
+- ["8Swindler13StateDelegateP", "ScreenDelegate"]
+- !private ["8Swindler13StateDelegateP", "State"]
+- !private ["8Swindler13StateDelegateP", "String"]
+- !private ["8Swindler13StateDelegateP", "Thread"]
+- ["8Swindler13StateDelegateP", "Void"]
+- ["8Swindler13StateDelegateP", "WindowDelegate"]
+- ["8Swindler13StateDelegateP", "WriteableProperty"]
+- ["8Swindler13StateDelegateP", ""]
+- !private ["8Swindler13StateDelegateP", "applications"]
+- !private ["8Swindler13StateDelegateP", "applicationsByPID"]
+- !private ["8Swindler13StateDelegateP", "assert"]
+- !private ["8Swindler13StateDelegateP", "assertionFailure"]
+- !private ["8Swindler13StateDelegateP", "eventHandlers"]
+- ["8Swindler13StateDelegateP", "findAppByPID"]
+- ["8Swindler13StateDelegateP", "frontmostApplication"]
+- ["8Swindler13StateDelegateP", "init"]
+- ["8Swindler13StateDelegateP", "knownWindows"]
+- !private ["8Swindler13StateDelegateP", "log"]
+- ["8Swindler13StateDelegateP", "notify"]
+- ["8Swindler13StateDelegateP", "notifyInvalid"]
+- ["8Swindler13StateDelegateP", "on"]
+- !private ["8Swindler13StateDelegateP", "onApplicationLaunch"]
+- !private ["8Swindler13StateDelegateP", "onApplicationTerminate"]
+- ["8Swindler13StateDelegateP", "runningApplications"]
+- ["8Swindler13StateDelegateP", "screens"]
+- !private ["8Swindler13StateDelegateP", "watchApplication"]
+- !private ["8Swindler13StateDelegateP", "when"]
+- !private ["s12StaticStringV", "init"]
+- !private ["s12StaticStringV", "init"]
+- !private ["SS", "init"]
+- !private ["SS", "init"]
+- !private ["Sy", "init"]
+- !private ["Sy", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["So8NSThreadC", "current"]
+- !private ["So8NSThreadC", "isMainThread"]
+- !private ["8Swindler13UIElementTypeP", "all"]
+- !private ["8Swindler13UIElementTypeP", "init"]
+- !private ["8Swindler13UIElementTypeP", "pid"]
+- !private ["SD6ValuesV", "flatMap"]
+- !private ["SD6ValuesV", "map"]
+- !private ["8Swindler6WindowC", "init"]
+- !private ["8Swindler12WindowFinderP", "axElement"]
+- !private ["8Swindler12WindowFinderP", "initialize"]
+- !private ["8Swindler12WindowFinderP", "knownWindows"]
+- !private ["8Swindler17WriteablePropertyC", "deinit"]
+- !private ["8Swindler17WriteablePropertyC", "init"]
+- !private ["8Swindler17WriteablePropertyC", "initialized"]
+- !private ["8Swindler17WriteablePropertyC", "refresh"]
+- !private ["s24_DestructorSafeContainerP", "append"]
+- !private ["s24_DestructorSafeContainerP", "flatMap"]
+- !private ["s24_DestructorSafeContainerP", "map"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- ["s35_HasCustomAnyHashableRepresentationP", "Values"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "append"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "flatMap"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "map"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "removeValue"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "subscript"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "values"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "activate"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "addObserver"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "applicationUserInfoKey"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "bundleIdentifier"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "current"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "didActivateApplicationNotification"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "didChangeScreenParametersNotification"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "didDeactivateApplicationNotification"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "didLaunchApplicationNotification"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "didTerminateApplicationNotification"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "frontmostApplication"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "isMainThread"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "main"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "notificationCenter"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "processIdentifier"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "screens"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "shared"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "sync"]
+- ["s21_ObjectiveCBridgeableP", "Values"]
+- !private ["s21_ObjectiveCBridgeableP", "_getBuiltinLogicValue"]
+- !private ["s21_ObjectiveCBridgeableP", "append"]
+- !private ["s21_ObjectiveCBridgeableP", "flatMap"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "initialized"]
+- !private ["s21_ObjectiveCBridgeableP", "map"]
+- !private ["s21_ObjectiveCBridgeableP", "refresh"]
+- !private ["s21_ObjectiveCBridgeableP", "removeValue"]
+- !private ["s21_ObjectiveCBridgeableP", "subscript"]
+- !private ["s21_ObjectiveCBridgeableP", "userInfo"]
+- !private ["s21_ObjectiveCBridgeableP", "values"]
+- !private ["s16_SwiftStringViewP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- "8Swindler9AppFinderP"
+- "7AXSwift11ApplicationC"
+- "8Swindler11ApplicationC"
+- !private "8Swindler19ApplicationDelegateP"
+- !private "8Swindler22ApplicationElementTypeP"
+- !private "8Swindler24ApplicationLaunchedEventV"
+- "8Swindler19ApplicationObserverV"
+- "8Swindler23ApplicationObserverTypeP"
+- !private "8Swindler26ApplicationTerminatedEventV"
+- !private "Sa"
+- !private "s13ArrayProtocolP"
+- !private "SK"
+- !private "Sb"
+- "s7CVarArgP"
+- "Sl"
+- !private "SL"
+- "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- "Se"
+- "SD"
+- !private "So18OS_dispatch_objectC"
+- !private "So17OS_dispatch_queueC"
+- "SE"
+- "SQ"
+- !private "s5ErrorP"
+- "8Swindler13EventNotifierP"
+- !private "8Swindler9EventTypeP"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "s27ExpressibleByBooleanLiteralP"
+- "s30ExpressibleByDictionaryLiteralP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s23ExpressibleByNilLiteralP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "8Swindler32FrontmostApplicationChangedEventV"
+- "SH"
+- !private "8Swindler3LogV"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "SM"
+- !private "So15NSAccessibilityP"
+- !private "So22NSAccessibilityElementP"
+- !private "So25NSAppearanceCustomizationP"
+- !private "So13NSApplicationC"
+- !private "So8NSCodingP"
+- !private "So20NSMenuItemValidationP"
+- !private "So8NSObjectC"
+- !private "So8NSObjectP"
+- !private "So11NSResponderC"
+- !private "So20NSRunningApplicationC"
+- !private "So8NSScreenC"
+- !private "8Swindler12NSScreenTypeP"
+- !private "So30NSStandardKeyBindingRespondingP"
+- !private "So18NSTouchBarProviderP"
+- !private "So26NSUserInterfaceValidationsP"
+- !private "So11NSWorkspaceC"
+- !private "10Foundation12NotificationV"
+- !private "So20NSNotificationCenterC"
+- !private "8Swindler22OSXApplicationDelegateC"
+- !private "8Swindler14OSXDriverErrorO"
+- !private "8Swindler17OSXScreenDelegateC"
+- "8Swindler16OSXStateDelegateC"
+- !private "So9OS_objectC"
+- "7AXSwift8ObserverC"
+- "8Swindler14OfOptionalTypeV"
+- !private "Sq"
+- !private "10PromiseKit0A0C"
+- !private "8Swindler8PropertyC"
+- "8Swindler16PropertyDelegateP"
+- !private "8Swindler13PropertyErrorO"
+- !private "8Swindler17PropertyEventTypeP"
+- "8Swindler16PropertyNotifierP"
+- !private "8Swindler12PropertyTypeP"
+- !private "Sk"
+- !private "Sm"
+- !private "10Foundation20ReferenceConvertibleP"
+- !private "8Swindler6ScreenC"
+- !private "8Swindler14ScreenDelegateP"
+- "8Swindler14ScreenObserverV"
+- "8Swindler18ScreenObserverTypeP"
+- "ST"
+- "8Swindler5StateC"
+- "8Swindler13StateDelegateP"
+- !private "s12StaticStringV"
+- !private "SS"
+- !private "Sy"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "So8NSThreadC"
+- !private "8Swindler13UIElementTypeP"
+- !private "SD6ValuesV"
+- !private "8Swindler6WindowC"
+- !private "8Swindler12WindowFinderP"
+- !private "8Swindler17WriteablePropertyC"
+- !private "s24_DestructorSafeContainerP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s33_ExpressibleByStringInterpolationP"
+- "s35_HasCustomAnyHashableRepresentationP"
+- !private "10Foundation27_KeyValueCodingAndObservingP"
+- "s21_ObjectiveCBridgeableP"
+- !private "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Modules/AXSwift.swiftmodule/x86_64.swiftmodule"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Modules/PromiseKit.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/fwd.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/ASLLog/ASLLog.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/Swindler.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Headers/AXSwift-Swift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/PromiseKit-Swift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/PrivateHeaders/AXSwift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/PromiseKit.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/orbit/Build/Intermediates.noindex/SwiftMigration/orbit/Intermediates.noindex/Swindler.build/Debug/Swindler.build/unextended-module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/ASLLog/module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Modules/module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Modules/module.modulemap"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/xpc/XPC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "f28d6629b7fb8b1d62fe34b3af83db13"

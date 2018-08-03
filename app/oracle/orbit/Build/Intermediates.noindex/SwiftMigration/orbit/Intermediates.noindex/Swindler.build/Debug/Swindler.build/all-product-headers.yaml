@@ -1,0 +1,33 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/apps/oracle/orbit/Build/Intermediates.noindex/SwiftMigration/orbit/Products/Debug/Swindler.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "Swindler-Swift.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/apps/oracle/orbit/Build/Intermediates.noindex/SwiftMigration/orbit/Products/Debug/Swindler.framework/Versions/A/Headers/Swindler-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "Swindler.h",
+          'external-contents': "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/Swindler.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/nw/projects/motion/orbit/apps/oracle/orbit/Build/Intermediates.noindex/SwiftMigration/orbit/Products/Debug/Swindler.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/nw/projects/motion/orbit/apps/oracle/orbit/Build/Intermediates.noindex/SwiftMigration/orbit/Intermediates.noindex/Swindler.build/Debug/Swindler.build/module.modulemap"
+        }
+      ]
+    }
+  ]
+}

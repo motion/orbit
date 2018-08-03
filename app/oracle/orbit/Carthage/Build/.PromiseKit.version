@@ -1,0 +1,9 @@
+{
+  "commitish" : "4.5.2",
+  "Mac" : [
+    {
+      "name" : "PromiseKit",
+      "hash" : "9d6a12c4affe4c9cfa94c10b4585ac17ff600418138c3cf8a78d9cab5a92e6c1"
+    }
+  ]
+}

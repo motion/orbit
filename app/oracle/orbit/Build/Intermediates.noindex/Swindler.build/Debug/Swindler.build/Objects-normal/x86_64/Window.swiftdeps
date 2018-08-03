@@ -1,0 +1,802 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Window"
+- "=="
+- "WindowDelegate"
+- "OSXWindowDelegate"
+provides-nominal:
+- "8Swindler6WindowC"
+- "8Swindler14WindowDelegateP"
+- "8Swindler17OSXWindowDelegateC"
+provides-member:
+- ["8Swindler6WindowC", ""]
+- ["8Swindler14WindowDelegateP", ""]
+- ["8Swindler17OSXWindowDelegateC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "!"
+- !private "*"
+- !private "+"
+- !private "<"
+- "=="
+- "AXNotification"
+- !private "AXPropertyDelegate"
+- !private "AXPropertyDelegateType"
+- "AXSwift"
+- "AnyObject"
+- "Application"
+- "ApplicationDelegate"
+- "ApplicationElementType"
+- !private "Array"
+- "AssignmentPrecedence"
+- "Bool"
+- "BooleanLiteralType"
+- "CGPoint"
+- "CGRect"
+- "CGSize"
+- "CastingPrecedence"
+- !private "Dictionary"
+- "Equatable"
+- "EventNotifier"
+- !private "OSXDriverError"
+- "OSXWindowDelegate"
+- "ObserverType"
+- "OfType"
+- "Promise"
+- "Property"
+- "PropertyEventType"
+- "PropertyNotifier"
+- "PropertyType"
+- "Screen"
+- "String"
+- !private "StringLiteralType"
+- "Void"
+- "Window"
+- "WindowDelegate"
+- !private "WindowMinimizedChangedEvent"
+- !private "WindowPosChangedEvent"
+- !private "WindowSizeChangedEvent"
+- !private "WindowTitleChangedEvent"
+- "WriteableProperty"
+- !private "fetchAttributes"
+- !private "firstly"
+- !private "initializeProperties"
+- !private "log"
+- !private "traceRequest"
+- !private "when"
+depends-member:
+- !private ["7AXSwift14AXNotificationO", "moved"]
+- !private ["7AXSwift14AXNotificationO", "resized"]
+- !private ["7AXSwift14AXNotificationO", "titleChanged"]
+- ["7AXSwift14AXNotificationO", "uiElementDestroyed"]
+- !private ["7AXSwift14AXNotificationO", "windowDeminiaturized"]
+- !private ["7AXSwift14AXNotificationO", "windowMiniaturized"]
+- !private ["8Swindler18AXPropertyDelegateC", "deinit"]
+- !private ["8Swindler18AXPropertyDelegateC", "init"]
+- !private ["8Swindler22AXPropertyDelegateTypeP", "attribute"]
+- !private ["8Swindler22AXPropertyDelegateTypeP", "init"]
+- !private ["8Swindler11ApplicationC", "init"]
+- !private ["8Swindler11ApplicationC", "swindlerState"]
+- !private ["Sa", "delegate"]
+- !private ["Sa", "filter"]
+- !private ["Sa", "forEach"]
+- !private ["Sa", "lazy"]
+- !private ["Sa", "map"]
+- !private ["s13ArrayProtocolP", "delegate"]
+- !private ["s13ArrayProtocolP", "filter"]
+- !private ["s13ArrayProtocolP", "forEach"]
+- !private ["s13ArrayProtocolP", "lazy"]
+- !private ["s13ArrayProtocolP", "map"]
+- !private ["7AXSwift9AttributeO", "fullScreen"]
+- !private ["7AXSwift9AttributeO", "minimized"]
+- !private ["7AXSwift9AttributeO", "position"]
+- !private ["7AXSwift9AttributeO", "size"]
+- !private ["7AXSwift9AttributeO", "subrole"]
+- !private ["7AXSwift9AttributeO", "title"]
+- !private ["SK", "delegate"]
+- !private ["SK", "filter"]
+- !private ["SK", "forEach"]
+- !private ["SK", "init"]
+- !private ["SK", "init"]
+- !private ["SK", "lazy"]
+- !private ["SK", "map"]
+- !private ["SK", "max"]
+- !private ["SK", "subrole"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["So6CGRectV", "init"]
+- !private ["So6CGRectV", "intersection"]
+- !private ["So6CGRectV", "isNull"]
+- !private ["So6CGRectV", "size"]
+- !private ["So6CGSizeV", "height"]
+- !private ["So6CGSizeV", "width"]
+- !private ["s7CVarArgP", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "delegate"]
+- !private ["s7CVarArgP", "filter"]
+- !private ["s7CVarArgP", "forEach"]
+- !private ["s7CVarArgP", "global"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "keys"]
+- !private ["s7CVarArgP", "lazy"]
+- !private ["s7CVarArgP", "map"]
+- !private ["s7CVarArgP", "subscript"]
+- !private ["Sl", "delegate"]
+- !private ["Sl", "filter"]
+- !private ["Sl", "forEach"]
+- !private ["Sl", "init"]
+- !private ["Sl", "init"]
+- !private ["Sl", "keys"]
+- !private ["Sl", "lazy"]
+- !private ["Sl", "map"]
+- !private ["Sl", "max"]
+- !private ["Sl", "subrole"]
+- !private ["Sl", "subscript"]
+- !private ["SL", "init"]
+- !private ["SL", "init"]
+- !private ["SL", "subrole"]
+- !private ["s28CustomDebugStringConvertibleP", "delegate"]
+- !private ["s28CustomDebugStringConvertibleP", "filter"]
+- !private ["s28CustomDebugStringConvertibleP", "forEach"]
+- !private ["s28CustomDebugStringConvertibleP", "frame"]
+- !private ["s28CustomDebugStringConvertibleP", "global"]
+- !private ["s28CustomDebugStringConvertibleP", "height"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "intersection"]
+- !private ["s28CustomDebugStringConvertibleP", "isNull"]
+- !private ["s28CustomDebugStringConvertibleP", "keys"]
+- !private ["s28CustomDebugStringConvertibleP", "lazy"]
+- !private ["s28CustomDebugStringConvertibleP", "map"]
+- !private ["s28CustomDebugStringConvertibleP", "size"]
+- !private ["s28CustomDebugStringConvertibleP", "subrole"]
+- !private ["s28CustomDebugStringConvertibleP", "subscript"]
+- !private ["s28CustomDebugStringConvertibleP", "then"]
+- !private ["s28CustomDebugStringConvertibleP", "width"]
+- !private ["s29CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- !private ["s29CustomPlaygroundQuickLookableP", "height"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "intersection"]
+- !private ["s29CustomPlaygroundQuickLookableP", "isNull"]
+- !private ["s29CustomPlaygroundQuickLookableP", "size"]
+- !private ["s29CustomPlaygroundQuickLookableP", "width"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
+- !private ["s17CustomReflectableP", "delegate"]
+- !private ["s17CustomReflectableP", "filter"]
+- !private ["s17CustomReflectableP", "forEach"]
+- !private ["s17CustomReflectableP", "height"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "intersection"]
+- !private ["s17CustomReflectableP", "isNull"]
+- !private ["s17CustomReflectableP", "keys"]
+- !private ["s17CustomReflectableP", "lazy"]
+- !private ["s17CustomReflectableP", "map"]
+- !private ["s17CustomReflectableP", "size"]
+- !private ["s17CustomReflectableP", "subrole"]
+- !private ["s17CustomReflectableP", "subscript"]
+- !private ["s17CustomReflectableP", "then"]
+- !private ["s17CustomReflectableP", "width"]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s23CustomStringConvertibleP", "asVoid"]
+- !private ["s23CustomStringConvertibleP", "catch"]
+- !private ["s23CustomStringConvertibleP", "delegate"]
+- !private ["s23CustomStringConvertibleP", "filter"]
+- !private ["s23CustomStringConvertibleP", "forEach"]
+- !private ["s23CustomStringConvertibleP", "global"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "keys"]
+- !private ["s23CustomStringConvertibleP", "lazy"]
+- !private ["s23CustomStringConvertibleP", "map"]
+- !private ["s23CustomStringConvertibleP", "pending"]
+- !private ["s23CustomStringConvertibleP", "subrole"]
+- !private ["s23CustomStringConvertibleP", "subscript"]
+- !private ["s23CustomStringConvertibleP", "then"]
+- !private ["Se", "_getBuiltinLogicValue"]
+- !private ["Se", "delegate"]
+- !private ["Se", "filter"]
+- !private ["Se", "forEach"]
+- !private ["Se", "height"]
+- !private ["Se", "init"]
+- !private ["Se", "init"]
+- !private ["Se", "intersection"]
+- !private ["Se", "isNull"]
+- !private ["Se", "keys"]
+- !private ["Se", "lazy"]
+- !private ["Se", "map"]
+- !private ["Se", "size"]
+- !private ["Se", "subscript"]
+- !private ["Se", "then"]
+- !private ["Se", "width"]
+- !private ["SD", "keys"]
+- !private ["SD", "subscript"]
+- !private ["So18OS_dispatch_objectC", "global"]
+- !private ["So17OS_dispatch_queueC", "global"]
+- !private ["SE", "_getBuiltinLogicValue"]
+- !private ["SE", "delegate"]
+- !private ["SE", "filter"]
+- !private ["SE", "forEach"]
+- !private ["SE", "height"]
+- !private ["SE", "init"]
+- !private ["SE", "init"]
+- !private ["SE", "intersection"]
+- !private ["SE", "isNull"]
+- !private ["SE", "keys"]
+- !private ["SE", "lazy"]
+- !private ["SE", "map"]
+- !private ["SE", "size"]
+- !private ["SE", "subscript"]
+- !private ["SE", "then"]
+- !private ["SE", "width"]
+- !private ["SQ", "Application"]
+- !private ["SQ", "CGRect"]
+- ["SQ", ""]
+- !private ["SQ", "_getBuiltinLogicValue"]
+- !private ["SQ", "application"]
+- !private ["SQ", "application_"]
+- !private ["SQ", "delegate"]
+- !private ["SQ", "filter"]
+- !private ["SQ", "forEach"]
+- !private ["SQ", "frame"]
+- !private ["SQ", "fullScreen"]
+- !private ["SQ", "global"]
+- !private ["SQ", "height"]
+- !private ["SQ", "init"]
+- !private ["SQ", "init"]
+- !private ["SQ", "intersection"]
+- !private ["SQ", "isNull"]
+- !private ["SQ", "keys"]
+- !private ["SQ", "lazy"]
+- !private ["SQ", "log"]
+- !private ["SQ", "map"]
+- !private ["SQ", "minimized"]
+- !private ["SQ", "moved"]
+- !private ["SQ", "position"]
+- !private ["SQ", "rect"]
+- !private ["SQ", "resized"]
+- !private ["SQ", "size"]
+- !private ["SQ", "subrole"]
+- !private ["SQ", "subscript"]
+- !private ["SQ", "swindlerState"]
+- !private ["SQ", "then"]
+- !private ["SQ", "title"]
+- !private ["SQ", "titleChanged"]
+- ["SQ", "uiElementDestroyed"]
+- !private ["SQ", "width"]
+- !private ["SQ", "windowDeminiaturized"]
+- !private ["SQ", "windowMiniaturized"]
+- !private ["s5ErrorP", "windowIgnored"]
+- !private ["8Swindler13EventNotifierP", "notify"]
+- !private ["8Swindler9EventTypeP", "init"]
+- !private ["s25ExpressibleByArrayLiteralP", "delegate"]
+- !private ["s25ExpressibleByArrayLiteralP", "filter"]
+- !private ["s25ExpressibleByArrayLiteralP", "forEach"]
+- !private ["s25ExpressibleByArrayLiteralP", "lazy"]
+- !private ["s25ExpressibleByArrayLiteralP", "map"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s30ExpressibleByDictionaryLiteralP", "keys"]
+- !private ["s30ExpressibleByDictionaryLiteralP", "subscript"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s23ExpressibleByNilLiteralP", "keys"]
+- !private ["s23ExpressibleByNilLiteralP", "map"]
+- !private ["s23ExpressibleByNilLiteralP", "subscript"]
+- !private ["s23ExpressibleByNilLiteralP", "then"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["SH", "_getBuiltinLogicValue"]
+- !private ["SH", "delegate"]
+- !private ["SH", "filter"]
+- !private ["SH", "forEach"]
+- !private ["SH", "fullScreen"]
+- !private ["SH", "global"]
+- !private ["SH", "init"]
+- !private ["SH", "init"]
+- !private ["SH", "keys"]
+- !private ["SH", "lazy"]
+- !private ["SH", "map"]
+- !private ["SH", "minimized"]
+- !private ["SH", "moved"]
+- !private ["SH", "position"]
+- !private ["SH", "resized"]
+- !private ["SH", "size"]
+- !private ["SH", "subrole"]
+- !private ["SH", "subscript"]
+- !private ["SH", "then"]
+- !private ["SH", "title"]
+- !private ["SH", "titleChanged"]
+- ["SH", "uiElementDestroyed"]
+- !private ["SH", "windowDeminiaturized"]
+- !private ["SH", "windowMiniaturized"]
+- !private ["SD5IndexV", "subrole"]
+- !private ["s14LazyCollectionV", "map"]
+- !private ["s22LazyCollectionProtocolP", "filter"]
+- !private ["s22LazyCollectionProtocolP", "map"]
+- !private ["s22LazyCollectionProtocolP", "max"]
+- !private ["s20LazyFilterCollectionV", "map"]
+- !private ["s18LazyFilterSequenceV", "map"]
+- !private ["s17LazyMapCollectionV", "filter"]
+- !private ["s17LazyMapCollectionV", "max"]
+- !private ["s15LazyMapSequenceV", "filter"]
+- !private ["s12LazySequenceV", "map"]
+- !private ["s20LazySequenceProtocolP", "filter"]
+- !private ["s20LazySequenceProtocolP", "map"]
+- !private ["s20LazySequenceProtocolP", "max"]
+- !private ["8Swindler3LogV", "debug"]
+- !private ["8Swindler3LogV", "warn"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["SM", "delegate"]
+- !private ["SM", "filter"]
+- !private ["SM", "forEach"]
+- !private ["SM", "lazy"]
+- !private ["SM", "map"]
+- !private ["So8NSObjectC", "global"]
+- !private ["So8NSObjectP", "global"]
+- !private ["8Swindler15OSXDelegateTypeP", "AXPropertyDelegate"]
+- !private ["8Swindler15OSXDelegateTypeP", "OSXDriverError"]
+- !private ["8Swindler15OSXDelegateTypeP", "OSXWindowDelegate"]
+- ["8Swindler15OSXDelegateTypeP", "Object"]
+- !private ["8Swindler15OSXDelegateTypeP", "Promise"]
+- !private ["8Swindler15OSXDelegateTypeP", "Property"]
+- !private ["8Swindler15OSXDelegateTypeP", "Window"]
+- !private ["8Swindler15OSXDelegateTypeP", "WindowMinimizedChangedEvent"]
+- !private ["8Swindler15OSXDelegateTypeP", "WindowPosChangedEvent"]
+- !private ["8Swindler15OSXDelegateTypeP", "WindowSizeChangedEvent"]
+- !private ["8Swindler15OSXDelegateTypeP", "WindowTitleChangedEvent"]
+- !private ["8Swindler15OSXDelegateTypeP", "WriteableProperty"]
+- ["8Swindler15OSXDelegateTypeP", "appDelegate"]
+- !private ["8Swindler15OSXDelegateTypeP", "axElement"]
+- !private ["8Swindler15OSXDelegateTypeP", "axProperties"]
+- ["8Swindler15OSXDelegateTypeP", "equalTo"]
+- !private ["8Swindler15OSXDelegateTypeP", "fetchAttributes"]
+- !private ["8Swindler15OSXDelegateTypeP", "firstly"]
+- !private ["8Swindler15OSXDelegateTypeP", "init"]
+- !private ["8Swindler15OSXDelegateTypeP", "initializeProperties"]
+- !private ["8Swindler15OSXDelegateTypeP", "initialized"]
+- ["8Swindler15OSXDelegateTypeP", "isFullscreen"]
+- ["8Swindler15OSXDelegateTypeP", "isMinimized"]
+- ["8Swindler15OSXDelegateTypeP", "isValid"]
+- !private ["8Swindler15OSXDelegateTypeP", "log"]
+- !private ["8Swindler15OSXDelegateTypeP", "notifier"]
+- ["8Swindler15OSXDelegateTypeP", "notify"]
+- ["8Swindler15OSXDelegateTypeP", "notifyInvalid"]
+- ["8Swindler15OSXDelegateTypeP", "position"]
+- ["8Swindler15OSXDelegateTypeP", "size"]
+- ["8Swindler15OSXDelegateTypeP", "title"]
+- !private ["8Swindler15OSXDelegateTypeP", "traceRequest"]
+- !private ["8Swindler15OSXDelegateTypeP", "unwatchWindowElement"]
+- !private ["8Swindler15OSXDelegateTypeP", "watchWindowElement"]
+- !private ["8Swindler15OSXDelegateTypeP", "watchedAxProperties"]
+- !private ["8Swindler15OSXDelegateTypeP", "when"]
+- !private ["8Swindler14OSXDriverErrorO", "deinit"]
+- !private ["8Swindler14OSXDriverErrorO", "windowIgnored"]
+- ["8Swindler17OSXWindowDelegateC", "AXNotification"]
+- !private ["8Swindler17OSXWindowDelegateC", "AXPropertyDelegate"]
+- !private ["8Swindler17OSXWindowDelegateC", "AXPropertyDelegateType"]
+- ["8Swindler17OSXWindowDelegateC", "AXSwift"]
+- ["8Swindler17OSXWindowDelegateC", "ApplicationDelegate"]
+- ["8Swindler17OSXWindowDelegateC", "Bool"]
+- ["8Swindler17OSXWindowDelegateC", "CGPoint"]
+- ["8Swindler17OSXWindowDelegateC", "CGSize"]
+- ["8Swindler17OSXWindowDelegateC", "EventNotifier"]
+- !private ["8Swindler17OSXWindowDelegateC", "OSXDriverError"]
+- ["8Swindler17OSXWindowDelegateC", "OSXWindowDelegate"]
+- ["8Swindler17OSXWindowDelegateC", "Object"]
+- ["8Swindler17OSXWindowDelegateC", "Observer"]
+- ["8Swindler17OSXWindowDelegateC", "OfType"]
+- ["8Swindler17OSXWindowDelegateC", "Promise"]
+- ["8Swindler17OSXWindowDelegateC", "Property"]
+- ["8Swindler17OSXWindowDelegateC", "PropertyEventType"]
+- ["8Swindler17OSXWindowDelegateC", "PropertyType"]
+- ["8Swindler17OSXWindowDelegateC", "String"]
+- ["8Swindler17OSXWindowDelegateC", "UIElement"]
+- ["8Swindler17OSXWindowDelegateC", "Void"]
+- ["8Swindler17OSXWindowDelegateC", "Window"]
+- ["8Swindler17OSXWindowDelegateC", "WindowDelegate"]
+- !private ["8Swindler17OSXWindowDelegateC", "WindowMinimizedChangedEvent"]
+- !private ["8Swindler17OSXWindowDelegateC", "WindowPosChangedEvent"]
+- !private ["8Swindler17OSXWindowDelegateC", "WindowSizeChangedEvent"]
+- !private ["8Swindler17OSXWindowDelegateC", "WindowTitleChangedEvent"]
+- ["8Swindler17OSXWindowDelegateC", "WriteableProperty"]
+- ["8Swindler17OSXWindowDelegateC", "appDelegate"]
+- ["8Swindler17OSXWindowDelegateC", "axElement"]
+- !private ["8Swindler17OSXWindowDelegateC", "axProperties"]
+- ["8Swindler17OSXWindowDelegateC", "deinit"]
+- ["8Swindler17OSXWindowDelegateC", "equalTo"]
+- !private ["8Swindler17OSXWindowDelegateC", "fetchAttributes"]
+- !private ["8Swindler17OSXWindowDelegateC", "firstly"]
+- ["8Swindler17OSXWindowDelegateC", "handleEvent"]
+- !private ["8Swindler17OSXWindowDelegateC", "init"]
+- ["8Swindler17OSXWindowDelegateC", "initialize"]
+- !private ["8Swindler17OSXWindowDelegateC", "initializeProperties"]
+- !private ["8Swindler17OSXWindowDelegateC", "initialized"]
+- ["8Swindler17OSXWindowDelegateC", "isFullscreen"]
+- ["8Swindler17OSXWindowDelegateC", "isMinimized"]
+- ["8Swindler17OSXWindowDelegateC", "isValid"]
+- !private ["8Swindler17OSXWindowDelegateC", "log"]
+- !private ["8Swindler17OSXWindowDelegateC", "notifier"]
+- ["8Swindler17OSXWindowDelegateC", "notify"]
+- ["8Swindler17OSXWindowDelegateC", "notifyInvalid"]
+- ["8Swindler17OSXWindowDelegateC", "position"]
+- ["8Swindler17OSXWindowDelegateC", "size"]
+- ["8Swindler17OSXWindowDelegateC", "title"]
+- !private ["8Swindler17OSXWindowDelegateC", "traceRequest"]
+- !private ["8Swindler17OSXWindowDelegateC", "unwatchWindowElement"]
+- !private ["8Swindler17OSXWindowDelegateC", "watchWindowElement"]
+- !private ["8Swindler17OSXWindowDelegateC", "watchedAxProperties"]
+- !private ["8Swindler17OSXWindowDelegateC", "when"]
+- !private ["So9OS_objectC", "global"]
+- !private ["8Swindler12ObserverTypeP", "addNotification"]
+- !private ["8Swindler12ObserverTypeP", "removeNotification"]
+- ["8Swindler6OfTypeV", "deinit"]
+- !private ["Sq", "keys"]
+- !private ["Sq", "map"]
+- !private ["Sq", "subscript"]
+- !private ["Sq", "then"]
+- !private ["10PromiseKit0A0C", "asVoid"]
+- !private ["10PromiseKit0A0C", "catch"]
+- !private ["10PromiseKit0A0C", "init"]
+- !private ["10PromiseKit0A0C", "pending"]
+- !private ["10PromiseKit0A0C", "then"]
+- !private ["8Swindler8PropertyC", "deinit"]
+- !private ["8Swindler8PropertyC", "init"]
+- !private ["8Swindler8PropertyC", "value"]
+- !private ["8Swindler16PropertyDelegateP", "init"]
+- !private ["8Swindler17PropertyEventTypeP", "init"]
+- !private ["8Swindler16PropertyNotifierP", "AXPropertyDelegate"]
+- !private ["8Swindler16PropertyNotifierP", "OSXDriverError"]
+- !private ["8Swindler16PropertyNotifierP", "OSXWindowDelegate"]
+- ["8Swindler16PropertyNotifierP", "Object"]
+- !private ["8Swindler16PropertyNotifierP", "Promise"]
+- !private ["8Swindler16PropertyNotifierP", "Property"]
+- !private ["8Swindler16PropertyNotifierP", "Window"]
+- !private ["8Swindler16PropertyNotifierP", "WindowMinimizedChangedEvent"]
+- !private ["8Swindler16PropertyNotifierP", "WindowPosChangedEvent"]
+- !private ["8Swindler16PropertyNotifierP", "WindowSizeChangedEvent"]
+- !private ["8Swindler16PropertyNotifierP", "WindowTitleChangedEvent"]
+- !private ["8Swindler16PropertyNotifierP", "WriteableProperty"]
+- ["8Swindler16PropertyNotifierP", ""]
+- ["8Swindler16PropertyNotifierP", "appDelegate"]
+- !private ["8Swindler16PropertyNotifierP", "axElement"]
+- !private ["8Swindler16PropertyNotifierP", "axProperties"]
+- ["8Swindler16PropertyNotifierP", "equalTo"]
+- !private ["8Swindler16PropertyNotifierP", "fetchAttributes"]
+- !private ["8Swindler16PropertyNotifierP", "firstly"]
+- !private ["8Swindler16PropertyNotifierP", "init"]
+- !private ["8Swindler16PropertyNotifierP", "initializeProperties"]
+- !private ["8Swindler16PropertyNotifierP", "initialized"]
+- ["8Swindler16PropertyNotifierP", "isFullscreen"]
+- ["8Swindler16PropertyNotifierP", "isMinimized"]
+- ["8Swindler16PropertyNotifierP", "isValid"]
+- !private ["8Swindler16PropertyNotifierP", "log"]
+- !private ["8Swindler16PropertyNotifierP", "notifier"]
+- ["8Swindler16PropertyNotifierP", "notify"]
+- ["8Swindler16PropertyNotifierP", "notifyInvalid"]
+- ["8Swindler16PropertyNotifierP", "position"]
+- ["8Swindler16PropertyNotifierP", "size"]
+- ["8Swindler16PropertyNotifierP", "title"]
+- !private ["8Swindler16PropertyNotifierP", "traceRequest"]
+- !private ["8Swindler16PropertyNotifierP", "unwatchWindowElement"]
+- !private ["8Swindler16PropertyNotifierP", "watchWindowElement"]
+- !private ["8Swindler16PropertyNotifierP", "watchedAxProperties"]
+- !private ["8Swindler16PropertyNotifierP", "when"]
+- !private ["8Swindler12PropertyTypeP", "delegate"]
+- !private ["8Swindler12PropertyTypeP", "init"]
+- !private ["8Swindler12PropertyTypeP", "refresh"]
+- !private ["8Swindler12PropertyTypeP", "value"]
+- !private ["Sk", "delegate"]
+- !private ["Sk", "filter"]
+- !private ["Sk", "forEach"]
+- !private ["Sk", "lazy"]
+- !private ["Sk", "map"]
+- !private ["Sk", "max"]
+- !private ["Sk", "subrole"]
+- !private ["Sn", "subrole"]
+- !private ["SX", "subrole"]
+- !private ["Sm", "delegate"]
+- !private ["Sm", "filter"]
+- !private ["Sm", "forEach"]
+- !private ["Sm", "init"]
+- !private ["Sm", "init"]
+- !private ["Sm", "lazy"]
+- !private ["Sm", "map"]
+- !private ["SY", "fullScreen"]
+- !private ["SY", "minimized"]
+- !private ["SY", "moved"]
+- !private ["SY", "position"]
+- !private ["SY", "resized"]
+- !private ["SY", "size"]
+- !private ["SY", "subrole"]
+- !private ["SY", "title"]
+- !private ["SY", "titleChanged"]
+- ["SY", "uiElementDestroyed"]
+- !private ["SY", "windowDeminiaturized"]
+- !private ["SY", "windowMiniaturized"]
+- !private ["8Swindler6ScreenC", "frame"]
+- !private ["ST", "delegate"]
+- !private ["ST", "filter"]
+- !private ["ST", "forEach"]
+- !private ["ST", "init"]
+- !private ["ST", "init"]
+- !private ["ST", "keys"]
+- !private ["ST", "lazy"]
+- !private ["ST", "map"]
+- !private ["ST", "max"]
+- !private ["ST", "subrole"]
+- !private ["ST", "subscript"]
+- !private ["8Swindler5StateC", "screens"]
+- !private ["SS", "init"]
+- !private ["SS", "init"]
+- !private ["Sy", "init"]
+- !private ["Sy", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- ["8Swindler6WindowC", "Application"]
+- ["8Swindler6WindowC", "Bool"]
+- ["8Swindler6WindowC", "CGPoint"]
+- ["8Swindler6WindowC", "CGRect"]
+- ["8Swindler6WindowC", "CGSize"]
+- ["8Swindler6WindowC", "OfType"]
+- ["8Swindler6WindowC", "Property"]
+- ["8Swindler6WindowC", "Screen"]
+- ["8Swindler6WindowC", "String"]
+- ["8Swindler6WindowC", "WindowDelegate"]
+- ["8Swindler6WindowC", "WriteableProperty"]
+- ["8Swindler6WindowC", "application"]
+- !private ["8Swindler6WindowC", "application_"]
+- ["8Swindler6WindowC", "deinit"]
+- ["8Swindler6WindowC", "delegate"]
+- ["8Swindler6WindowC", "init"]
+- ["8Swindler6WindowC", "isFullscreen"]
+- ["8Swindler6WindowC", "isMinimized"]
+- ["8Swindler6WindowC", "isValid"]
+- !private ["8Swindler6WindowC", "log"]
+- ["8Swindler6WindowC", "position"]
+- !private ["8Swindler6WindowC", "rect"]
+- ["8Swindler6WindowC", "screen"]
+- ["8Swindler6WindowC", "size"]
+- ["8Swindler6WindowC", "title"]
+- !private ["8Swindler14WindowDelegateP", "AXPropertyDelegate"]
+- ["8Swindler14WindowDelegateP", "ApplicationDelegate"]
+- ["8Swindler14WindowDelegateP", "Bool"]
+- ["8Swindler14WindowDelegateP", "CGPoint"]
+- ["8Swindler14WindowDelegateP", "CGSize"]
+- !private ["8Swindler14WindowDelegateP", "OSXDriverError"]
+- !private ["8Swindler14WindowDelegateP", "OSXWindowDelegate"]
+- ["8Swindler14WindowDelegateP", "Object"]
+- ["8Swindler14WindowDelegateP", "OfType"]
+- !private ["8Swindler14WindowDelegateP", "Promise"]
+- ["8Swindler14WindowDelegateP", "Property"]
+- ["8Swindler14WindowDelegateP", "String"]
+- !private ["8Swindler14WindowDelegateP", "Window"]
+- ["8Swindler14WindowDelegateP", "WindowDelegate"]
+- !private ["8Swindler14WindowDelegateP", "WindowMinimizedChangedEvent"]
+- !private ["8Swindler14WindowDelegateP", "WindowPosChangedEvent"]
+- !private ["8Swindler14WindowDelegateP", "WindowSizeChangedEvent"]
+- !private ["8Swindler14WindowDelegateP", "WindowTitleChangedEvent"]
+- ["8Swindler14WindowDelegateP", "WriteableProperty"]
+- ["8Swindler14WindowDelegateP", ""]
+- ["8Swindler14WindowDelegateP", "appDelegate"]
+- !private ["8Swindler14WindowDelegateP", "axElement"]
+- !private ["8Swindler14WindowDelegateP", "axProperties"]
+- ["8Swindler14WindowDelegateP", "equalTo"]
+- !private ["8Swindler14WindowDelegateP", "fetchAttributes"]
+- !private ["8Swindler14WindowDelegateP", "firstly"]
+- !private ["8Swindler14WindowDelegateP", "init"]
+- !private ["8Swindler14WindowDelegateP", "initializeProperties"]
+- !private ["8Swindler14WindowDelegateP", "initialized"]
+- ["8Swindler14WindowDelegateP", "isFullscreen"]
+- ["8Swindler14WindowDelegateP", "isMinimized"]
+- ["8Swindler14WindowDelegateP", "isValid"]
+- !private ["8Swindler14WindowDelegateP", "log"]
+- !private ["8Swindler14WindowDelegateP", "notifier"]
+- ["8Swindler14WindowDelegateP", "notify"]
+- ["8Swindler14WindowDelegateP", "notifyInvalid"]
+- ["8Swindler14WindowDelegateP", "position"]
+- ["8Swindler14WindowDelegateP", "size"]
+- ["8Swindler14WindowDelegateP", "title"]
+- !private ["8Swindler14WindowDelegateP", "traceRequest"]
+- !private ["8Swindler14WindowDelegateP", "unwatchWindowElement"]
+- !private ["8Swindler14WindowDelegateP", "watchWindowElement"]
+- !private ["8Swindler14WindowDelegateP", "watchedAxProperties"]
+- !private ["8Swindler14WindowDelegateP", "when"]
+- !private ["8Swindler27WindowMinimizedChangedEventV", "deinit"]
+- !private ["8Swindler21WindowPosChangedEventV", "deinit"]
+- !private ["8Swindler22WindowSizeChangedEventV", "deinit"]
+- !private ["8Swindler23WindowTitleChangedEventV", "deinit"]
+- !private ["8Swindler17WriteablePropertyC", "deinit"]
+- !private ["8Swindler17WriteablePropertyC", "init"]
+- !private ["8Swindler17WriteablePropertyC", "value"]
+- !private ["s24_DestructorSafeContainerP", "delegate"]
+- !private ["s24_DestructorSafeContainerP", "filter"]
+- !private ["s24_DestructorSafeContainerP", "forEach"]
+- !private ["s24_DestructorSafeContainerP", "lazy"]
+- !private ["s24_DestructorSafeContainerP", "map"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "delegate"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "filter"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "forEach"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "keys"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "lazy"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "map"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "subscript"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "global"]
+- !private ["s21_ObjectiveCBridgeableP", "_getBuiltinLogicValue"]
+- !private ["s21_ObjectiveCBridgeableP", "delegate"]
+- !private ["s21_ObjectiveCBridgeableP", "filter"]
+- !private ["s21_ObjectiveCBridgeableP", "forEach"]
+- !private ["s21_ObjectiveCBridgeableP", "height"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "intersection"]
+- !private ["s21_ObjectiveCBridgeableP", "isNull"]
+- !private ["s21_ObjectiveCBridgeableP", "keys"]
+- !private ["s21_ObjectiveCBridgeableP", "lazy"]
+- !private ["s21_ObjectiveCBridgeableP", "map"]
+- !private ["s21_ObjectiveCBridgeableP", "size"]
+- !private ["s21_ObjectiveCBridgeableP", "subscript"]
+- !private ["s21_ObjectiveCBridgeableP", "then"]
+- !private ["s21_ObjectiveCBridgeableP", "width"]
+- !private ["s16_SequenceWrapperP", "map"]
+- !private ["s16_SwiftStringViewP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- "7AXSwift14AXNotificationO"
+- !private "8Swindler18AXPropertyDelegateC"
+- !private "8Swindler22AXPropertyDelegateTypeP"
+- !private "8Swindler11ApplicationC"
+- !private "Sa"
+- !private "s13ArrayProtocolP"
+- !private "7AXSwift9AttributeO"
+- !private "SK"
+- !private "Sb"
+- !private "So6CGRectV"
+- !private "So6CGSizeV"
+- !private "s7CVarArgP"
+- !private "Sl"
+- !private "SL"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "Se"
+- !private "SD"
+- !private "So18OS_dispatch_objectC"
+- !private "So17OS_dispatch_queueC"
+- !private "SE"
+- "SQ"
+- !private "s5ErrorP"
+- !private "8Swindler13EventNotifierP"
+- !private "8Swindler9EventTypeP"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "s27ExpressibleByBooleanLiteralP"
+- !private "s30ExpressibleByDictionaryLiteralP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s23ExpressibleByNilLiteralP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- "SH"
+- !private "SD5IndexV"
+- !private "s14LazyCollectionV"
+- !private "s22LazyCollectionProtocolP"
+- !private "s20LazyFilterCollectionV"
+- !private "s18LazyFilterSequenceV"
+- !private "s17LazyMapCollectionV"
+- !private "s15LazyMapSequenceV"
+- !private "s12LazySequenceV"
+- !private "s20LazySequenceProtocolP"
+- !private "8Swindler3LogV"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "SM"
+- !private "So8NSObjectC"
+- !private "So8NSObjectP"
+- "8Swindler15OSXDelegateTypeP"
+- !private "8Swindler14OSXDriverErrorO"
+- "8Swindler17OSXWindowDelegateC"
+- !private "So9OS_objectC"
+- !private "8Swindler12ObserverTypeP"
+- "8Swindler6OfTypeV"
+- !private "Sq"
+- !private "10PromiseKit0A0C"
+- !private "8Swindler8PropertyC"
+- !private "8Swindler16PropertyDelegateP"
+- !private "8Swindler17PropertyEventTypeP"
+- "8Swindler16PropertyNotifierP"
+- !private "8Swindler12PropertyTypeP"
+- !private "Sk"
+- !private "Sn"
+- !private "SX"
+- !private "Sm"
+- "SY"
+- !private "8Swindler6ScreenC"
+- !private "ST"
+- !private "8Swindler5StateC"
+- !private "SS"
+- !private "Sy"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- "8Swindler6WindowC"
+- "8Swindler14WindowDelegateP"
+- !private "8Swindler27WindowMinimizedChangedEventV"
+- !private "8Swindler21WindowPosChangedEventV"
+- !private "8Swindler22WindowSizeChangedEventV"
+- !private "8Swindler23WindowTitleChangedEventV"
+- !private "8Swindler17WriteablePropertyC"
+- !private "s24_DestructorSafeContainerP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s33_ExpressibleByStringInterpolationP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "10Foundation27_KeyValueCodingAndObservingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s16_SequenceWrapperP"
+- !private "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Modules/AXSwift.swiftmodule/x86_64.swiftmodule"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Modules/PromiseKit.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/fwd.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/AnyPromise.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/ASLLog/ASLLog.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/Swindler.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Headers/AXSwift-Swift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/PromiseKit-Swift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/PrivateHeaders/AXSwift.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Headers/PromiseKit.h"
+- "/Users/nw/projects/motion/orbit/apps/oracle/orbit/Build/Intermediates.noindex/Swindler.build/Debug/Swindler.build/unextended-module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Swindler/ASLLog/module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/AXSwift.framework/Modules/module.modulemap"
+- "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Build/Mac/PromiseKit.framework/Modules/module.modulemap"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/xpc/XPC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "8f9dc1a531215e33806c505e66415808"

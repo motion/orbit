@@ -1,0 +1,9 @@
+{
+  "commitish" : "0.2.1",
+  "Mac" : [
+    {
+      "name" : "AXSwift",
+      "hash" : "1b1d7e739605432c1204cdc113e50b3ba32ee880d15baa610386c51592475551"
+    }
+  ]
+}

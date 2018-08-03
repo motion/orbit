@@ -1,0 +1,17 @@
+version: "Apple Swift version 4.2 (swiftlang-1000.0.29.2 clang-1000.10.39)"
+options: "abaae868c68925ea8978e7d10b20f60a"
+build_time: [1532188713, 577610000]
+inputs:
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/when.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/join.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/Zalgo.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/wrap.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/after.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/Promise+AnyPromise.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/Promise+Properties.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/race.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/State.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/DispatchQueue+Promise.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/Promise.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/AnyPromise.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/swindler/Carthage/Checkouts/PromiseKit/Sources/Error.swift": [9223372036, 854775807]

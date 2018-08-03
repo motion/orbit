@@ -1,0 +1,16 @@
+PODS:
+  - AsyncSwift (2.0.2)
+
+DEPENDENCIES:
+  - AsyncSwift (from `../`)
+
+EXTERNAL SOURCES:
+  AsyncSwift:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AsyncSwift: 8d95107589e4c2a9dadadaeb8e5f48662eccca3b
+
+PODFILE CHECKSUM: c3ad687081866de096cfcd637a5439ffa36aff6f
+
+COCOAPODS: 1.2.0

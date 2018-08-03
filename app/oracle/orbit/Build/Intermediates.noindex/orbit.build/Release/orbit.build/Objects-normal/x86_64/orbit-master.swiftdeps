@@ -1,0 +1,23 @@
+version: "Apple Swift version 4.2 (swiftlang-1000.0.29.2 clang-1000.10.39)"
+options: "286fe8a093672e5f1b15633c85c2ad34"
+build_time: [1532188733, 111929000]
+inputs:
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/SocketBridge.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/AppDelegate.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/main.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Characters.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/ConnectedComponentsSwiftOCR.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/UnionFind.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Filters.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Images.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Structs.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/OCRInterface.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Moves.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Screen.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/ThresholdFilter.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/ThresholdBelowFilter.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/Extensions.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/util.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Windo/Windo.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Windo/AXUIWindow.swift": [9223372036, 854775807]
+  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/orbit/Screen/ScreenFrame.swift": [9223372036, 854775807]

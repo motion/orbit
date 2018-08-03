@@ -19,5 +19,8 @@
   "peerDependencies": {
     "mobx": "*",
     "typeorm": "*"
+  },
+  "publishConfig": {
+    "access": "private"
   }
 }

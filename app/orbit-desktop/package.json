@@ -79,5 +79,8 @@
     "nodemon": "^1.15.0",
     "touch": "^3.1.0",
     "watch": "^1.0.2"
+  },
+  "publishConfig": {
+    "access": "private"
   }
 }

@@ -32,5 +32,8 @@
   },
   "peerDependencies": {
     "mobx": "*"
+  },
+  "publishConfig": {
+    "access": "private"
   }
 }

@@ -8,13 +8,5 @@ killgroup() {
   kill 0
 }
 
-if [[ "$1" == "" ]]; then
-  npx lerna --parallel \
-    --scope @mcro/orbit-desktop \
-    --scope @mcro/orbit-app \
-    --scope @mcro/orbit-electron \
-    exec -- npm run start -- ${@:2}
-else
-  cd apps/$1
-  npm run start -- ${@:2}
-fi
+cd app/$1
+npm run start -- ${@:2}

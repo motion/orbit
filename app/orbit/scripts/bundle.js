@@ -13,10 +13,10 @@ const log = {
   copy: debug('electron-build:copy'),
 }
 
-const ROOT = __dirname
-const APPS_DIR = Path.join(ROOT, '..', '..', 'apps')
-const ELECTRON_DIR = Path.join(APPS_DIR, 'electron')
-const DESKTOP_DIR = Path.join(APPS_DIR, 'electron')
+const ROOT = Path.join(__dirname, '..')
+const APPS_DIR = Path.join(ROOT, '..')
+const ELECTRON_DIR = Path.join(APPS_DIR, 'orbit-electron')
+const DESKTOP_DIR = Path.join(APPS_DIR, 'orbit-desktop')
 const ignorePaths = [
   // exclude extra dirs for xcode
   'oracle/train',
@@ -70,18 +70,11 @@ async function bundle() {
     ),
   )
   await new Promise(resolve => rm(Path.join(ROOT, 'app', 'Orbit.dmg'), resolve))
-  console.log('npm install in ./iohook')
-  await execa('npm', ['install'], {
-    cwd: Path.join(__dirname, 'iohook'),
-  })
-  console.log('npm install --production in desktop')
-  await execa('npm', ['install', '--production'], {
-    cwd: DESKTOP_DIR,
-  })
-  console.log('npm install --production in electron')
-  await execa('npm', ['install', '--production'], {
-    cwd: ELECTRON_DIR,
-  })
+
+  // why install --production and not just dereference symlinks?
+  // because it avoids bundling massive things like Oracle build files
+  // but requires we use verdaccio
+
   console.log('bundle new app')
   const paths = await electronPackager({
     dir: ELECTRON_DIR,

@@ -1,0 +1,6 @@
+orbit
+pyocr
+swindler
+test
+*.ts
+**/*.ts

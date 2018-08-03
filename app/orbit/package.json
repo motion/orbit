@@ -1,7 +1,7 @@
 {
   "name": "@mcro/orbit",
   "productName": "Orbit",
-  "version": "2.2.0",
+  "version": "2.2.25",
   "private": true,
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
@@ -9,7 +9,8 @@
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi",
-    "start": "./scripts/start.sh"
+    "start": "./scripts/start.sh",
+    "build-app": "./scripts/build.sh"
   },
   "devDependencies": {
     "electron-installer-dmg": "^1.0.0",

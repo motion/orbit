@@ -1,13 +1,13 @@
 #!/bin/bash
 
 echo "running verdaccio private registry..."
-kill -9 $(lsof -t -i:4444)
-npx verdaccio --listen 4444 &
+kill $(lsof -t -i:4343)
+npx verdaccio --listen 4343 &
 
-sleep 0.5
+sleep 1
 
 echo "making you log in..."
-npm login --registry=http://localhost:4444/ --scope=@mcro
+npm login --registry=http://localhost:4343/ --scope=@mcro
 
 # fail on exit, allow for exiting from verdaccio login
 set -e
@@ -27,14 +27,14 @@ npm version patch
 
 echo "publishing packages for prod install..."
 function publish-all() {
-  npx lerna exec --parallel -- npm unpublish --force --registry http://localhost:4444 && npm publish --registry http://localhost:4444
+  npx lerna exec -- npm unpublish --force --registry http://localhost:4343 && npm publish --registry http://localhost:4343
 }
 (cd ../.. && publish-all)
 
 echo "installing for prod..."
 echo $(pwd)
-(cd ../orbit-desktop && yarn install --production --registry http://localhost:4444)
-(cd ../orbit-electron && yarn install --production --registry http://localhost:4444)
+(cd ../orbit-desktop && yarn install --production --registry http://localhost:4343)
+(cd ../orbit-electron && yarn install --production --registry http://localhost:4343)
 
 echo "killing verdaccio..."
 kill %-

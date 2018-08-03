@@ -2,8 +2,6 @@
 
 ./scripts/start-debug.sh &
 
-echo "is $1 $2"
-
 if [ "$1" = "start-pundle" ]; then
   pundle --watch.adapter chokidar --dev.port 3002 --dev.singlepage --dev.static ./public::/
   exit 0

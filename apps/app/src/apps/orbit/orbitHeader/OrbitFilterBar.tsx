@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { SearchFilterStore } from '../../../stores/SearchFilterStore'
+import { PaneManagerStore } from '../PaneManagerStore'
 
 const inactiveTheme = {
   background: 'transparent',
@@ -75,12 +76,13 @@ FilterBarFade.theme = ({ theme }) => ({
 
 type Props = {
   filterStore?: SearchFilterStore
+  paneStore: PaneManagerStore
 }
 
-export const OrbitFilterBar = view(({ filterStore }: Props) => {
+export const OrbitFilterBar = view(({ filterStore, paneStore }: Props) => {
   filterStore.disabledFilters
   return (
-    <FilterBar>
+    <FilterBar opacity={paneStore.activePane === 'settings' ? 0 : 1}>
       <HorizontalScroll>
         {filterStore.allFilters.map((filter, index) => (
           <UI.Theme

@@ -182,6 +182,9 @@ export class OrbitSettings extends React.Component<Props> {
                     background: 'transparent',
                     padding: [12, 12, 12, 10],
                   }}
+                  iconProps={{
+                    size: 18,
+                  }}
                   titleProps={{
                     size: 1.1,
                   }}

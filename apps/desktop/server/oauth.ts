@@ -93,7 +93,7 @@ export default class Oauth {
 
   finishOauth = (type: string, values: OauthValues) => {
     // close window
-    closeChromeTabWithUrlStarting(`${API_URL}/auth/${name}`)
+    closeChromeTabWithUrlStarting(`${API_URL}/auth/${type}`)
     // create setting
     this.createSetting(type, values)
     // show Orbit again

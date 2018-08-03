@@ -1,6 +1,7 @@
 #!/bin/bash
 
-./scripts/start-debug.sh &
+# cd to this package root
+cd $(dirname $0)/..
 
 if [ "$1" = "start-pundle" ]; then
   pundle --watch.adapter chokidar --dev.port 3002 --dev.singlepage --dev.static ./public::/

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# cd to root
+cd $(dirname $0)/..
+
 npx nodemon \
   --quiet \
   --watch $(realpath node_modules/@mcro/dev) \

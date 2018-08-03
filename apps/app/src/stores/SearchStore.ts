@@ -1,7 +1,6 @@
 import { react, on } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import { Person, getRepository } from '@mcro/models'
-import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
 import { getSearchQuery } from './helpers/getSearchQuery'
@@ -12,21 +11,10 @@ import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { Brackets } from '../../../../node_modules/typeorm/browser'
 import { flatten } from 'lodash'
-import { DateRange } from './nlpStore/types'
 import { MarkType } from './NLPStore/types'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
-
-type DateSelections = {
-  startDate?: Date
-  endDate?: Date
-  key?: string
-}
-
-type DateState = {
-  ranges: DateSelections[]
-}
 
 export class SearchStore /* extends Store */ {
   props: {
@@ -57,21 +45,6 @@ export class SearchStore /* extends Store */ {
     console.log('123', ref)
   }
 
-  dateState: DateState = {
-    ranges: [
-      {
-        startDate: new Date(),
-        endDate: new Date(),
-        key: 'selection',
-      },
-    ],
-  }
-
-  dateHover = hoverSettler({
-    enterDelay: 400,
-    leaveDelay: 400,
-  })()
-
   willMount() {
     on(this, window, 'keydown', this.windowKeyDown)
 
@@ -87,10 +60,6 @@ export class SearchStore /* extends Store */ {
         this.setQuery(this.query + key)
       }
       this.lastPinKey = key
-    })
-
-    this.dateHover.setOnHovered(target => {
-      this.setExtraFiltersVisible(target)
     })
 
     const disposeAppListen = App.onMessage(App.messages.CLEAR_SELECTED, () => {
@@ -170,6 +139,7 @@ export class SearchStore /* extends Store */ {
       this.searchFilterStore.activeFilters,
       this.searchFilterStore.exclusiveFilters,
       this.searchFilterStore.sortBy,
+      this.searchFilterStore.dateState,
     ],
     async ([query, getResults], { sleep, when, setValue, preventLogging }) => {
       if (!query) {
@@ -220,8 +190,8 @@ export class SearchStore /* extends Store */ {
         }
 
         // pagination
-        const take = 2
-        const takeMax = take * 10
+        const take = 6
+        const takeMax = take * 2
         const sleepBtwn = 80
 
         // gather all the pieces from nlp store for query
@@ -230,7 +200,7 @@ export class SearchStore /* extends Store */ {
           exclusiveFilters,
           activeFilters,
           activeQuery,
-          activeDate,
+          dateState,
           sortBy,
         } = this.searchFilterStore
 
@@ -248,7 +218,7 @@ export class SearchStore /* extends Store */ {
           // these come from the button bar
           ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
         ]
-        const { startDate, endDate } = activeDate
+        const { startDate, endDate } = dateState
 
         for (let i = 0; i < takeMax / take; i += 1) {
           const skip = i * take
@@ -549,25 +519,6 @@ export class SearchStore /* extends Store */ {
   setExtraFiltersVisible = target => {
     this.extraFiltersVisible = !!target
   }
-
-  onChangeDate = date => {
-    console.log('got date', date)
-    if (!date.selection) {
-      return
-    }
-    this.dateState = {
-      ranges: [date.selection],
-    }
-  }
-
-  updateDateStateOnNLP = react(
-    () => this.nlpStore.nlp.date,
-    (date: DateRange) => {
-      this.dateState = {
-        ranges: [date],
-      }
-    },
-  )
 
   updateAppQuery = react(
     () => this.query,

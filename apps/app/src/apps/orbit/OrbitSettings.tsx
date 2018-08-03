@@ -94,12 +94,6 @@ class OrbitSettingsStore {
         },
       }),
     val => {
-      console.log(
-        'waht the fuck',
-        this.isPaneActive,
-        this.integrationSettings,
-        val,
-      )
       if (!this.isPaneActive && this.integrationSettings.length) {
         throw react.cancel
       }

@@ -28,7 +28,8 @@
     "pidusage": "^1.2.0",
     "reconnecting-websocket": "^3.2.2",
     "sb-promisify": "^2.0.2",
-    "ws": "^4.0.0"
+    "ws": "^4.0.0",
+    "verdaccio": "3.5.1"
   },
   "peerDependencies": {
     "mobx": "*"

@@ -359,7 +359,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     if (!this.props.bit) {
       return
     }
-    App.actions.open(this.props.bit)
+    App.actions.open(this.props.bit.url)
   }
 
   id = Math.random()

@@ -12,7 +12,6 @@ import killPort from 'kill-port'
 import Fs from 'fs'
 import Path from 'path'
 import debug from '@mcro/debug'
-import { closeChromeTabWithUrlStarting } from './helpers/injections'
 
 const { SERVER_PORT } = Constants
 

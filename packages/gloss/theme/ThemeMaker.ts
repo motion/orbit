@@ -32,7 +32,6 @@ const smallAmt = color => {
   return softened * 1.8
 }
 
-const smallerAmt = color => smallAmt(color) * 0.25
 const largeAmt = color => smallAmt(color) * 1.25
 const opposite = color => {
   return color.isDark()

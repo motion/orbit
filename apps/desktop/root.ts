@@ -3,7 +3,6 @@ import Server from './Server'
 import { Plugins } from './plugins'
 import { Screen } from './Screen'
 import { KeyboardStore } from './stores/keyboardStore'
-import { Auth } from './Auth'
 import hostile_ from 'hostile'
 import * as Constants from './constants'
 import { promisifyAll } from 'sb-promisify'
@@ -71,8 +70,6 @@ export class Root {
         macVersion: macosVersion(),
       },
     })
-    // requires desktop to be started
-    this.auth = new Auth()
     Desktop.onMessage(Desktop.messages.OPEN, open)
     await this.connect()
 

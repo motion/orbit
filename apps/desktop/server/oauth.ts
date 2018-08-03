@@ -91,7 +91,16 @@ export default class Oauth {
     })
   }
 
-  createSetting = async (type, values: OauthValues) => {
+  finishOauth = (type: string, values: OauthValues) => {
+    // close window
+    closeChromeTabWithUrlStarting(`${API_URL}/auth/${name}`)
+    // create setting
+    this.createSetting(type, values)
+    // show Orbit again
+    Desktop.sendMessage(App, App.messages.TOGGLE_SETTINGS, type)
+  }
+
+  private createSetting = async (type: string, values: OauthValues) => {
     if (!values.token) {
       throw new Error(`No token returned ${JSON.stringify(values)}`)
     }
@@ -115,14 +124,5 @@ export default class Oauth {
       oauth: { ...values },
     }
     await setting.save()
-  }
-
-  finishOauth = (type, values: OauthValues) => {
-    // close window
-    closeChromeTabWithUrlStarting(`${API_URL}/auth/${name}`)
-    // create setting
-    this.createSetting(type, values)
-    // show Orbit again
-    Desktop.sendMessage(App, App.messages.TOGGLE_SETTINGS, type)
   }
 }

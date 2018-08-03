@@ -166,7 +166,7 @@ export class OrbitSettings extends React.Component<Props> {
                     currentTarget,
                   )
                 } else {
-                  App.open(`${API_URL}/auth/${item.id}`)
+                  App.actions.open(`${API_URL}/auth/${item.id}`)
                 }
               }
               return (

@@ -7,7 +7,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4444"
   },
   "dependencies": {
     "@mcro/black": "^2.2.1",

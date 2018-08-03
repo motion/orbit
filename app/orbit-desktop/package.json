@@ -81,6 +81,6 @@
     "watch": "^1.0.2"
   },
   "publishConfig": {
-    "access": "restricted"
+    "registry": "http://localhost:4444"
   }
 }

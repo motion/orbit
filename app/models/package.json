@@ -21,6 +21,6 @@
     "typeorm": "*"
   },
   "publishConfig": {
-    "access": "restricted"
+    "registry": "http://localhost:4444"
   }
 }

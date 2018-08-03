@@ -68,6 +68,6 @@
     "touch": "^3.1.0"
   },
   "publishConfig": {
-    "access": "restricted"
+    "registry": "http://localhost:4444"
   }
 }

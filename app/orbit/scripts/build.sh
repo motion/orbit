@@ -1,9 +1,10 @@
 #!/bin/bash
 
 echo "running verdaccio private registry..."
-kill $(lsof -t -i:4444)
-veraccioPID=$!
+kill -9 $(lsof -t -i:4444)
 npx verdaccio --listen 4444 &
+
+sleep 0.5
 
 echo "making you log in..."
 npm login --registry=http://localhost:4444/ --scope=@mcro
@@ -26,7 +27,7 @@ npm version patch
 
 echo "publishing packages for prod install..."
 function publish-all() {
-  npx lerna exec --parallel -- npm publish --force --registry http://localhost:4444
+  npx lerna exec --parallel -- npm unpublish --force --registry http://localhost:4444 && npm publish --registry http://localhost:4444
 }
 (cd ../.. && publish-all)
 
@@ -36,7 +37,7 @@ echo $(pwd)
 (cd ../orbit-electron && yarn install --production --registry http://localhost:4444)
 
 echo "killing verdaccio..."
-kill $veraccioPID
+kill %-
 
 echo "running electron-bundler..."
 DEBUG=electron-packager node -r esm --trace-warnings ./scripts/bundle.js &

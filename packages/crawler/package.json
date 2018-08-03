@@ -21,6 +21,6 @@
     "urijs": "^1.19.0"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4444"
   }
 }

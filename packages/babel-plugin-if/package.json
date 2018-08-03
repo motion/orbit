@@ -5,6 +5,6 @@
   "main": "babel-plugin-if.js",
   "license": "MIT",
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4444"
   }
 }

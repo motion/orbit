@@ -16,6 +16,6 @@
     "mobx": "^5.0.2"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4444"
   }
 }

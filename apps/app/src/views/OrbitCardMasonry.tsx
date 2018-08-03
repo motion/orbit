@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Masonry } from '../../views/Masonry'
+import { Masonry } from './Masonry'
 import { OrbitCard } from './OrbitCard'
 import * as UI from '@mcro/ui'
 

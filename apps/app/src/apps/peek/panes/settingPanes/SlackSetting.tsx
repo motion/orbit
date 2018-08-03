@@ -1,13 +1,13 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view, react } from '@mcro/black'
-import { Bit } from '@mcro/models'
-import { BitRepository, SettingRepository } from '../../../../repositories'
+import { view, react, compose } from '@mcro/black'
+// import { Bit } from '@mcro/models'
+// import { BitRepository, SettingRepository } from '../../../../repositories'
 import { Bits } from '../../../../views/Bits'
 import { TimeAgo } from '../../../../views/TimeAgo'
-import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
+import { InvisiblePane } from '../../views/InvisiblePane'
 
 const columnSizes = {
   repo: 'flex',
@@ -44,7 +44,37 @@ const columns = {
   },
 }
 
+const itemToRow = (index, channel, topic, isActive, onSync) => ({
+  key: `${index}`,
+  columns: {
+    name: {
+      sortValue: channel.name,
+      value: channel.name,
+    },
+    topic: {
+      sortValue: topic,
+      value: topic,
+    },
+    members: {
+      sortValue: channel.num_members,
+      value: channel.num_members,
+    },
+    lastActive: {
+      sortValue: Date.now(),
+      value: <TimeAgo>{Date.now()}</TimeAgo>,
+    },
+    active: {
+      sortValue: isActive,
+      value: (
+        <ReactiveCheckBox onChange={onSync(channel.id)} isActive={isActive} />
+      ),
+    },
+  },
+})
+
 class SlackSettingStore {
+  props: SettingPaneProps
+
   syncing = {}
   active = 'repos'
 
@@ -60,8 +90,6 @@ class SlackSettingStore {
     return this.props.appStore.services.slack
   }
 
-  bits = react(() => BitRepository.find({ where: { integration: 'slack' } }))
-
   get allChannels() {
     return _.orderBy(
       this.service.allChannels || [],
@@ -76,36 +104,7 @@ class SlackSettingStore {
       return channels.map((channel, index) => {
         const topic = channel.topic ? channel.topic.value : ''
         const isActive = () => this.isSyncing(channel.id)
-        return {
-          key: `${index}`,
-          columns: {
-            name: {
-              sortValue: channel.name,
-              value: channel.name,
-            },
-            topic: {
-              sortValue: topic,
-              value: topic,
-            },
-            members: {
-              sortValue: channel.num_members,
-              value: channel.num_members,
-            },
-            lastActive: {
-              sortValue: Date.now(),
-              value: <TimeAgo>{Date.now()}</TimeAgo>,
-            },
-            active: {
-              sortValue: isActive,
-              value: (
-                <ReactiveCheckBox
-                  onChange={this.onSync(channel.id)}
-                  isActive={isActive}
-                />
-              ),
-            },
-          },
-        }
+        return itemToRow(index, channel, topic, isActive, this.onSync)
       })
     },
     {
@@ -134,58 +133,47 @@ class SlackSettingStore {
   }
 }
 
-const InvisiblePane = view(UI.FullScreen, {
-  opacity: 0,
-  pointerEvents: 'none',
-  visible: {
-    opacity: 1,
-    pointerEvents: 'auto',
-  },
-})
+const decorator = compose(
+  view.attach({ store: SlackSettingStore }),
+  view,
+)
 
-@view.provide({ store: SlackSettingStore })
-@view
-export class SlackSetting extends React.Component<
-  SettingPaneProps & { store: SlackSettingStore }
-> {
-  render() {
-    const { store, children } = this.props
-    console.log(1232222222222222222222222)
-    return children({
-      subhead: (
-        <UI.Tabs active={store.active} onActive={store.setActiveKey}>
-          <UI.Tab key="repos" width="50%" label="Repos" />
-          <UI.Tab
-            key="issues"
-            width="50%"
-            label={`Issues (${store.bits ? store.bits.length : 0})`}
+type Props = SettingPaneProps & { store: SlackSettingStore }
+
+export const SlackSetting = decorator(({ store, children }: Props) => {
+  return children({
+    subhead: (
+      <UI.Tabs active={store.active} onActive={store.setActiveKey}>
+        <UI.Tab key="repos" width="50%" label="Repos" />
+        <UI.Tab
+          key="issues"
+          width="50%"
+          label={`Issues (${store.bits ? store.bits.length : 0})`}
+        />
+      </UI.Tabs>
+    ),
+    content: (
+      <>
+        <InvisiblePane visible={store.active === 'repos'}>
+          <UI.SearchableTable
+            virtual
+            rowLineHeight={28}
+            floating={false}
+            columnSizes={columnSizes}
+            columns={columns}
+            multiHighlight
+            rows={store.rows}
+            bodyPlaceholder={
+              <div style={{ margin: 'auto' }}>
+                <UI.Text size={1.2}>Loading...</UI.Text>
+              </div>
+            }
           />
-        </UI.Tabs>
-      ),
-      content: (
-        <>
-          <InvisiblePane visible={store.active === 'repos'}>
-            <UI.SearchableTable
-              virtual
-              rowLineHeight={28}
-              floating={false}
-              columnSizes={columnSizes}
-              columns={columns}
-              onRowHighlighted={this.onRowHighlighted}
-              multiHighlight
-              rows={store.rows}
-              bodyPlaceholder={
-                <div style={{ margin: 'auto' }}>
-                  <UI.Text size={1.2}>Loading...</UI.Text>
-                </div>
-              }
-            />
-          </InvisiblePane>
-          <InvisiblePane visible={store.active === 'issues'}>
-            <Bits bits={store.bits} />
-          </InvisiblePane>
-        </>
-      ),
-    })
-  }
-}
+        </InvisiblePane>
+        <InvisiblePane visible={store.active === 'issues'}>
+          {/* <Bits bits={store.bits} /> */}
+        </InvisiblePane>
+      </>
+    ),
+  })
+})

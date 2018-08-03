@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { capitalize } from 'lodash'
 import { format, formatDistance } from 'date-fns'
 import { Bit } from '@mcro/models'
 
@@ -42,21 +41,6 @@ export class Bits extends React.Component<{ bits: Bit[] }> {
   }
 
   render() {
-    const { bits } = this.props
-    return (
-      <UI.Col overflow="scroll" maxHeight={300}>
-        <UI.Col margin={10}>
-          <UI.List
-            itemProps={{
-              fontSize: 18,
-              padding: [8, 15],
-              iconSize: 18,
-            }}
-            items={bits}
-            getItem={bit => this['get' + capitalize(bit.type)](bit)}
-          />
-        </UI.Col>
-      </UI.Col>
-    )
+    return null
   }
 }

@@ -70,6 +70,7 @@ export class TimeAgo extends Component<TimeAgoProps> {
       }
       return distanceInWordsToNow(this.date, options)
         .replace('about ', '')
+        .replace('over ', '')
         .replace('less than ', '')
         .replace(' ago', this.props.postfix ? ` ${this.props.postfix}` : '')
     }

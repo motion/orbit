@@ -387,15 +387,18 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       }
       if (isReaction) {
         if (typeof val[1] !== 'function') {
-          console.log(val)
-          throw new Error(`Didn't supply a function to reaction ${name}`)
+          throw new Error(
+            `Reaction requires second function. ${name} got ${typeof val}`,
+          )
         }
         // reaction
         // @ts-ignore
         stopReaction = Mobx.reaction(val[0], watcher(val[1]), options)
       } else {
         if (typeof val !== 'function') {
-          throw new Error(`Didn't supply a function to watcher ${name}`)
+          throw new Error(
+            `Reaction requires function. ${name} got ${typeof val}`,
+          )
         }
         //autorun
         stopReaction = Mobx.autorun(watcher(val), options)
@@ -526,17 +529,19 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
       reactionID = uid()
       const curID = reactionID
       const updateAsyncValue = val => {
-        if (curID === reactionID) {
+        const isValid = curID === reactionID
+        if (isValid) {
           replaceDisposable()
-          if (!IS_PROD && !preventLog) {
-            log(
-              `${name} (${Date.now() - start}ms) ${
-                isAsyncReaction ? `[${id}]` : ''
-              } = `,
-              val,
-            )
-          }
           update(val)
+        }
+        if (!IS_PROD && !preventLog) {
+          log(
+            `${name} (${Date.now() - start}ms) ${
+              isAsyncReaction ? `[${id}]` : ''
+            } = `,
+            val,
+            isValid ? '✅' : `🚫 ${reactionID}/${curID}`,
+          )
         }
       }
       let hasCalledSetValue = false
@@ -583,6 +588,9 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
         reactionResult
           .then(val => {
             if (!reactionID) {
+              if (!IS_PROD && !preventLog) {
+                log(`${prefix} 🚫`)
+              }
               // cancelled before finishing
               return
             }
@@ -593,9 +601,6 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
                 )
               }
               updateAsyncValue(val)
-            }
-            if (!IS_PROD && !preventLog) {
-              log(`${prefix}`, isReaction ? reactValArg : '', ...logRes(val))
             }
           })
           .catch(err => {
@@ -665,16 +670,12 @@ function mobxifyWatch(obj: MagicalObject, method, val, userOptions) {
     obj.__automagical.watchers = obj.__automagical.watchers || []
     // @ts-ignore
     obj.__automagical.watchers.push(run)
+    // @ts-ignore
+    obj.__automagical.debug = val
   }
 
   Object.defineProperty(obj, method, {
     get: getCurrentValue,
-  })
-  Object.defineProperty(obj, `${method}__automagic_source`, {
-    enumerable: false,
-    get() {
-      return { result, current, curObservable }
-    },
   })
 
   return current

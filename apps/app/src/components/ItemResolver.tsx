@@ -14,11 +14,13 @@ export type ResolvedItem = {
   location: string
   locationLink: Function
   permalink: Function
-  date: React.ReactNode
+  createdAt?: Date
+  updatedAt?: Date
   comments?: React.ReactNode[]
   people?: Person[]
   searchTerm?: string
   subtitle?: React.ReactNode
+  integration?: string
 }
 
 export type ItemResolverProps = {

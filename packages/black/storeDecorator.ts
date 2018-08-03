@@ -37,8 +37,9 @@ export const storeOptions = {
     }
   },
   onStoreDidMount(store, props) {
-    if (store.didMount) {
+    if (store.didMount && !store.__didMounted) {
       store.didMount.call(store, props)
+      store.__didMounted = true
     }
   },
   onStoreUnmount(store) {

@@ -11,6 +11,7 @@ import { TimeAgo } from '../../../views/TimeAgo'
 import { modelQueryReaction } from '@mcro/helpers'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
+import { RoundButton } from '../../../views'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -76,10 +77,10 @@ class SettingContent extends React.Component<
             subhead,
             content,
             subtitleBefore: <UI.Text>{store.bitsCount} total</UI.Text>,
-            subtitle: !store.job ? 'Loading...' : 'Settings',
+            subtitle: !store.job ? 'Loading...' : '',
             subtitleAfter: !!store.job &&
               !!store.job.updatedAt && (
-                <UI.Button
+                <RoundButton
                   icon={icon.name}
                   iconProps={icon}
                   tooltip={
@@ -87,7 +88,7 @@ class SettingContent extends React.Component<
                   }
                 >
                   Last run
-                </UI.Button>
+                </RoundButton>
               ),
             after: (
               <UI.ListRow

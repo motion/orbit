@@ -1,19 +1,47 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
 
 const Section = view('section', {
   width: '100%',
   flexFlow: 'row',
-  padding: [7, 0, 7, 12],
+  padding: [0, 6, 0, 12],
   alignItems: 'center',
 })
 
 type Props = {
-  paneStore: OrbitDockedPaneStore
+  paneStore: PaneManagerStore
   theme?: ThemeObject
+}
+
+const exploreButton = {
+  size: 1.1,
+  circular: true,
+  borderWidth: 1,
+  margin: [0, 0, 0, 2],
+  borderColor: 'transparent',
+  background: 'transparent',
+  transform: {
+    y: -0.5,
+  },
+  iconProps: {
+    color: 'black',
+    size: 12,
+  },
+  opacity: 0.35,
+  activeStyle: {
+    color: '#000',
+    background: 'transparent',
+    borderColor: 'transparent',
+    opacity: 1,
+  },
+  hoverStyle: {
+    background: 'transparent',
+    borderColor: 'transparent',
+    opacity: 1,
+  },
 }
 
 @attachTheme
@@ -22,42 +50,24 @@ export class OrbitHomeHeader extends React.Component<Props> {
   render() {
     const { paneStore, theme } = this.props
     const buttonColor = theme.base.color.lighten(0.2)
-    const exploreButton = {
-      size: 1.2,
-      circular: true,
-      borderWidth: 1,
-      margin: [0, 0, 0, 6],
-      borderColor: 'transparent',
-      background: 'transparent',
-      iconProps: {
-        color: buttonColor,
-        size: 13,
-      },
-      opacity: 0.4,
-      activeStyle: {
-        background: 'transparent',
-        borderColor: 'transparent',
-        opacity: 1,
-      },
-      hover: {
-        background: 'transparent',
-        borderColor: [0, 0, 0, 0.3],
-      },
-    }
+    exploreButton.iconProps.color = buttonColor
+    const homeActive =
+      paneStore.activePane === 'home' || paneStore.activePane === 'search'
     return (
       <>
         <Section>
-          {/* <UI.Button
+          <UI.Button
+            if={!homeActive}
             icon="home"
             tooltip="Home"
-            active={paneStore.activePane === 'home'}
+            active={homeActive}
             onClick={() => paneStore.setActivePane('home')}
             {...exploreButton}
-          /> */}
+          />
           <UI.Button
             icon="menu35"
             tooltip="Directory"
-            active={paneStore.activePane === 'directory'}
+            active={paneStore.activePaneFast === 'directory'}
             onClick={() => paneStore.setActivePane('directory')}
             {...exploreButton}
           />
@@ -65,7 +75,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
             icon="gear"
             tooltip="Settings"
             sizeIcon={1.2}
-            active={paneStore.activePane === 'settings'}
+            active={paneStore.activePaneFast === 'settings'}
             onClick={() => paneStore.setActivePane('settings')}
             {...exploreButton}
           />

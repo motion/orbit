@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
-import { PeekItemResolver } from '../../views/PeekItemResolver'
-import { SubTitle } from '../../../../views'
-import { OrbitDivider } from '../../../../apps/orbit/OrbitDivider'
+// import { PeekItemResolver } from '../../views/PeekItemResolver'
+// import { SubTitle } from '../../../../views'
+// import { Divider } from '../../../../views/Divider'
+// import * as UI from '@mcro/ui'
 import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
-import * as UI from '@mcro/ui'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
 const Section = view({
@@ -13,7 +13,8 @@ const Section = view({
 
 const bitResolverProps = {
   itemProps: {
-    padding: [5, 16],
+    padding: [6, 16],
+    lineHeight: 22,
     '&:hover': {
       background: [0, 0, 0, 0.02],
     },
@@ -35,8 +36,8 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
   return (
     <>
       {content}
-      {relatedStore.relatedConversations.length ? (
-        <UI.View marginTop={20} background="#fefefe">
+      {/* {relatedStore.relatedConversations.length ? (
+        <UI.View marginTop={20}>
           <Section>
             <SubTitle>After</SubTitle>
           </Section>
@@ -46,14 +47,14 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
                 {({ content }) => content}
               </PeekItemResolver>
               {index < 2 && (
-                <OrbitDivider css={{ height: 2, margin: [20, 0, 10] }} />
+                <Divider css={{ height: 2, margin: [20, 0, 10] }} />
               )}
             </React.Fragment>
           ))}
           <br />
           <br />
         </UI.View>
-      ) : null}
+      ) : null} */}
     </>
   )
 })

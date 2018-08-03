@@ -22,7 +22,7 @@ export type PopoverProps = {
   open?: boolean
   // the amount of space around popover you can move mouse
   // before it triggers it to close
-  forgiveness: number
+  forgiveness?: number
   // show a background over content
   overlay?: boolean
   left?: number
@@ -35,7 +35,7 @@ export type PopoverProps = {
   // open automatically when target is hovered
   openOnHover?: boolean
   // delay until openOnHover
-  delay: number
+  delay?: number
   // prevent popover itself from catching pointer events
   noHoverOnChildren?: boolean
   // size of shown arrow
@@ -58,7 +58,7 @@ export type PopoverProps = {
   // DEBUG: helps you see forgiveness zone
   showForgiveness?: boolean
   // padding from edge of window
-  edgePadding: number
+  edgePadding?: number
   // pretty much what it says, for use with closeOnClick
   keepOpenOnClickTarget?: boolean
   // callback after close
@@ -317,9 +317,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
         on(
           this,
           setTimeout(() => {
-            this.setState(
-              { closing: false, isOpen: false },
-              this.props.onDidClose,
+            this.setState({ closing: false, isOpen: false }, () =>
+              this.props.onDidClose(),
             )
             resolve()
           }, 300),
@@ -466,7 +465,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
     return size
   }
 
-  get targetBounds() {
+  get targetBounds():
+    | { top: number; left: number; width: number; height: number }
+    | false {
     const { top, left } = this.curProps
     const bounds = { top: 0, left: 0, width: 0, height: 0 }
     // find target dimensions
@@ -490,8 +491,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   get isManuallyPositioned() {
-    const { bottom, top, left } = this.curProps
-    return (isNumber(bottom) || isNumber(top)) && isNumber(left)
+    const { top, left } = this.curProps
+    return isNumber(top) && isNumber(left)
   }
 
   get positionState() {
@@ -595,6 +596,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   get y() {
+    if (!this.targetBounds) {
+      return 0
+    }
     const { forgiveness, direction, popoverSize, targetBounds } = this
     const VERTICAL = direction === 'top' || direction === 'bottom'
     const { distance, adjust, noArrow, arrowSize } = this.curProps
@@ -683,6 +687,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
     enter: { target: null, menu: null },
   }
 
+  delayOpenIfHover = null
+
   addHoverListeners(name, node) {
     if (!(node instanceof HTMLElement)) {
       console.log('no node!', name)
@@ -710,9 +716,10 @@ export class Popover extends React.PureComponent<PopoverProps> {
       }
       if (!this.isNodeHovered(node)) {
         setUnhovered()
-        if (delayOpenIfHover.cancel) {
+        if (typeof this.delayOpenIfHover === 'function') {
           // cancel previous
-          delayOpenIfHover.cancel()
+          this.delayOpenIfHover()
+          this.delayOpenIfHover = null
         }
       }
       // ensure check if we have a delay open
@@ -727,13 +734,15 @@ export class Popover extends React.PureComponent<PopoverProps> {
         )
       }
     }
-    const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
+    this.delayOpenIfHover = isTarget
+      ? debounce(openIfOver, delay).cancel
+      : openIfOver
     // this will avoid the delay open if its already open
     const onEnter = () => {
       if (isTarget && this.state.menuHovered) {
         openIfOver()
       } else {
-        delayOpenIfHover()
+        this.delayOpenIfHover()
       }
     }
     // 🐛 target should close slower than menu opens
@@ -782,8 +791,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
       .trim()
       .replace(/\s+/g, '.')}:hover`
     return (
-      !!node.parentNode.querySelector(childSelector) ||
-      node.querySelector(':hover')
+      !!(node.parentNode
+        ? node.parentNode.querySelector(childSelector)
+        : null) || node.querySelector(':hover')
     )
   }
 

@@ -5,7 +5,11 @@ import * as Mobx from 'mobx'
 import { setConfig } from 'react-hot-loader'
 
 setConfig({
-  logLevel: 'no-errors-please'
+  logLevel: 'no-errors-please',
+  // onComponentRegister: (type, name, file) => {
+  //   console.log('registering', name, file)
+  //   // file.indexOf('node_modules') > 0 && cold(type),
+  // },
 })
 
 Error.stackTraceLimit = Infinity
@@ -33,16 +37,33 @@ setTimeout(() => {
   console.warn = ogWarn
 })
 
+const recrusiveMobxToJS = obj => {
+  const next = Mobx.toJS(obj)
+  if (Array.isArray(next)) {
+    return next.map(recrusiveMobxToJS)
+  }
+  return next
+}
+
 // really nice for quicker debugging...
 if (!Object.prototype['toJS']) {
   Object.defineProperty(Object.prototype, 'toJS', {
     enumerable: false,
     value: function() {
-      // this does it deeply...
+      return recrusiveMobxToJS(this)
+    },
+  })
+}
+
+// really nice for quicker debugging...
+if (!Object.prototype['stringify']) {
+  Object.defineProperty(Object.prototype, 'stringify', {
+    enumerable: false,
+    value: function() {
       try {
-        return JSON.parse(JSON.stringify(this))
+        return JSON.stringify(recrusiveMobxToJS(this))
       } catch {
-        return Mobx.toJS(this)
+        return this
       }
     },
   })

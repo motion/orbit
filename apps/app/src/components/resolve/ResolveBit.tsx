@@ -3,6 +3,7 @@ import { ResolveConversation } from './resolveBits/ResolveConversation'
 import { ResolveDocument } from './resolveBits/ResolveDocument'
 import { ResolveMail } from './resolveBits/ResolveMail'
 import { ResolveTask } from './resolveBits/ResolveTask'
+import { ItemResolverProps } from '../ItemResolver';
 
 const results = {
   slack: {
@@ -25,7 +26,7 @@ const results = {
   },
 }
 
-export const ResolveBit = ({ bit, children, searchTerm, ...props }) => {
+export const ResolveBit = ({ bit, children, searchTerm, ...props }: ItemResolverProps) => {
   const resolveIntegration = results[bit.integration]
   const Resolver = resolveIntegration && resolveIntegration[bit.type]
   if (!Resolver) {
@@ -40,6 +41,8 @@ export const ResolveBit = ({ bit, children, searchTerm, ...props }) => {
           type: 'bit',
           subType: bit.type,
           integration: bit.integration,
+          createdAt: bit.bitCreatedAt,
+          updatedAt: bit.bitUpdatedAt,
           ...bitProps,
         })
       }

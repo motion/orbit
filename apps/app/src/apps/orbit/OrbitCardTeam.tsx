@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { OrbitCard } from './OrbitCard'
-import { OrbitIcon } from './OrbitIcon'
+import { OrbitCard } from '../../views/OrbitCard'
+import { OrbitIcon } from '../../views/OrbitIcon'
 
 const diameter = 100
 const itemSize = 32

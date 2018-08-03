@@ -3,7 +3,7 @@ import { view, react, attachTheme } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import * as Constants from '../../constants'
 import { OrbitArrow } from './OrbitArrow'
-import { OrbitIndicator } from './OrbitIndicator'
+import { OrbitIndicator } from '../../views/OrbitIndicator'
 import * as UI from '@mcro/ui'
 
 const SHADOW_PAD = 85
@@ -121,7 +121,7 @@ export class OrbitFrame extends React.Component<{
     const { hidden, willAnimate } = store.animationState
     const { position, size, orbitOnLeft } = App.orbitState
     const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
-    const borderShadow = ['inset', 0, 0, 0, 0.5, borderColor]
+    const borderShadow = [0, 0, 0, 0.5, borderColor]
     const background = theme.base.background
     const borderLeftRadius = !orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const borderRightRadius = orbitOnLeft ? 0 : Constants.BORDER_RADIUS
@@ -150,7 +150,7 @@ export class OrbitFrame extends React.Component<{
         }}
       >
         <OrbitArrow
-          arrowSize={22}
+          arrowSize={20}
           hidden={hidden}
           willAnimate={willAnimate}
           orbitOnLeft={orbitOnLeft}

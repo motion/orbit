@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { OrbitCard } from '../../../../apps/orbit/OrbitCard'
+import { OrbitCard } from '../../../../views/OrbitCard'
 import { SettingRepository } from '../../../../repositories'
 // import * as UI from '@mcro/ui'
 import * as Views from '../../../../views'

@@ -1,30 +1,33 @@
 import 'react-date-range/dist/styles.css' // main style file
-import '../../../public/styles/calendar.css' // theme css file
+import '../../../../public/styles/calendar.css' // theme css file
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { RoundButton } from '../../views'
-import { OrbitIcon } from './OrbitIcon'
+import { RoundButton } from '../../../views'
+import { OrbitIcon } from '../../../views/OrbitIcon'
 import { DateRangePicker } from 'react-date-range'
 import { formatDistance } from 'date-fns'
-import { SearchStore } from '../../stores/SearchStore'
-import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
+import { SearchStore } from '../../../stores/SearchStore'
+import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 
 const SearchFilters = view(UI.Col, {
   padding: [7, 12],
 })
 
 SearchFilters.theme = ({ theme }) => ({
-  borderTop: [1, theme.base.background.darken(0.1)],
-  background: `linear-gradient(${theme.base.background.darken(
-    0.07,
-  )}, ${theme.base.background.darken(0.05)} 40px)`,
+  borderTop: [1, theme.base.borderColor],
+  background: 'transparent',
 })
 
 const ExtraFilters = view(UI.View, {
   width: '100%',
-  opacity: 1,
   padding: [20, 0],
+  opacity: 0,
+  transition: 'all ease 50ms',
+  visible: {
+    opacity: 1,
+    transition: 'all ease 100ms 50ms',
+  },
 })
 
 const getDate = ({ startDate, endDate }) => {
@@ -36,7 +39,7 @@ const getDate = ({ startDate, endDate }) => {
     '',
   )
   if (!endDate) {
-    return `last ${startInWords}`
+    return `${startInWords}`
   }
   const endInWords = formatDistance(Date.now(), endDate).replace('about ', '')
   return `${startInWords} - ${endInWords}`
@@ -56,29 +59,31 @@ const decorate = compose(
   view,
 )
 export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
-  const { searchFilterStore, nlpStore } = searchStore
-  if (!nlpStore.nlp.date) {
-    return null
-  }
+  const { searchFilterStore } = searchStore
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
-        <FilterButton {...searchStore.dateHover.props}>
-          {getDate(nlpStore.nlp.date) || 'Any time'}
+        <FilterButton
+          {...searchFilterStore.dateHover.props}
+          active={searchFilterStore.dateHover.isStuck()}
+        >
+          {getDate(searchFilterStore.dateState) || 'Any time'}
         </FilterButton>
         <div style={{ width: 4 }} />
-        <FilterButton>Relevant</FilterButton>
+        <FilterButton onClick={searchFilterStore.toggleSortBy}>
+          {searchFilterStore.sortBy}
+        </FilterButton>
         <UI.Col flex={1} />
-        {searchFilterStore.filters.map((filter, i) => {
+        {searchFilterStore.integrationFilters.map((filter, i) => {
           return (
             <RoundButton
               key={`${filter.icon}${i}`}
               circular
               size={1.2}
-              marginLeft={8}
+              marginLeft={4}
               icon={<OrbitIcon size={20} icon={filter.icon} />}
               tooltip={filter.name}
-              onClick={searchFilterStore.filterToggler(filter)}
+              onClick={searchFilterStore.integrationFilterToggler(filter)}
               filter={filter.active ? null : 'grayscale(100%)'}
               opacity={filter.active ? 1 : 0.3}
               background="transparent"
@@ -93,15 +98,16 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
         })}
       </UI.Row>
       <ExtraFilters
-        onMouseEnter={searchStore.dateHover.props.onMouseEnter}
-        onMouseLeave={searchStore.dateHover.props.onMouseLeave}
-        onMouseMove={searchStore.dateHover.props.onMouseMove}
+        onMouseEnter={searchFilterStore.dateHover.props.onMouseEnter}
+        onMouseLeave={searchFilterStore.dateHover.props.onMouseLeave}
+        onMouseMove={searchFilterStore.dateHover.props.onMouseMove}
         className="calendar-dom"
         height={searchStore.extraFiltersHeight}
+        visible={searchStore.extraFiltersVisible}
       >
         <DateRangePicker
-          onChange={searchStore.onChangeDate}
-          {...searchStore.dateState}
+          onChange={searchFilterStore.onChangeDate}
+          ranges={[searchFilterStore.dateState]}
         />
       </ExtraFilters>
     </SearchFilters>

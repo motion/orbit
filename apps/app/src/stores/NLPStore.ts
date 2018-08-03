@@ -2,10 +2,10 @@ import { PersonRepository } from '../repositories'
 
 // @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
-import { store, react, Store } from '@mcro/black'
+import { store, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { App } from '@mcro/stores'
-import { TYPES, NLPResponse } from './nlpStore/types'
+import { NLPResponse } from './nlpStore/types'
 
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()
@@ -13,10 +13,15 @@ const { parseSearchQuery, setUserNames } = initNlp()
 // @ts-ignore
 // window.nlpWorker = { parseSearchQuery, setUserNames }
 
+const DEFAULT_NLP = {
+  date: {
+    startDate: null,
+    endDate: null,
+  },
+}
+
 @store
 export class NLPStore /* extends Store */ {
-  types = TYPES
-
   get marks() {
     return this.nlp.marks
   }
@@ -25,6 +30,9 @@ export class NLPStore /* extends Store */ {
     // fastest (sync) link to search
     () => App.state.query,
     async (query, { sleep }) => {
+      if (!query) {
+        return DEFAULT_NLP
+      }
       await sleep(150)
       return {
         ...(await parseSearchQuery(query)),
@@ -33,16 +41,21 @@ export class NLPStore /* extends Store */ {
     },
     {
       immediate: true,
-      defaultValue: { date: { startDate: null, endDate: null } },
+      defaultValue: DEFAULT_NLP,
     },
   )
 
-  updateUsers = modelQueryReaction(
+  peopleNames = modelQueryReaction(
     () => PersonRepository.find({ take: 5000 }),
-    people => {
-      setUserNames(people.map(person => person.name))
-    },
-    // 5 minute poll
+    people => people.map(person => person.name),
     { poll: 60 * 5 * 1000 },
+  )
+
+  updateUsers = react(
+    () => this.peopleNames,
+    names => {
+      // ensure js
+      setUserNames(names.slice())
+    },
   )
 }

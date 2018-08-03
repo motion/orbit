@@ -14,7 +14,6 @@ import { Glint } from './effects/Glint'
 import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
-import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
@@ -72,6 +71,7 @@ export type SurfaceProps = CSSPropertySet & {
   activeStyle?: Object
   sizeLineHeight?: boolean | number
   type?: string
+  themeAdjust?: Function
 }
 
 const getIconSize = props => {
@@ -104,7 +104,7 @@ const dimStyle = {
 
 const SurfaceBase = view({})
 SurfaceBase.theme = props => ({
-  ...propsToThemeStyles(props),
+  ...propsToThemeStyles(props, true),
   ...propsToStyles(props),
   ...propsToTextSize(props),
 })
@@ -130,20 +130,6 @@ SurfaceFrame.theme = props => {
       : props.flex || (props.style && props.style.flex) || 'none'
   const STATE =
     (props.highlight && 'highlight') || (props.active && 'active') || 'base'
-
-  // colors
-  let color =
-    props.color === false || props.color === 'inherit'
-      ? 'inherit'
-      : toColor(
-          props.color ||
-            (props.highlight && props.highlightColor) ||
-            theme[STATE].color,
-        )
-  if (typeof props.alpha === 'number' && typeof color !== 'string') {
-    color = `${color.alpha(props.alpha)}`
-  }
-  const iconColor = props.iconColor || color
 
   // background
   const baseBackground =
@@ -194,7 +180,6 @@ SurfaceFrame.theme = props => {
   // icon
   const iconStyle = {
     ...baseIconStyle,
-    color: iconColor,
   }
   const hoverIconStyle = {
     color: props.iconHoverColor || propStyles.hoverColor,
@@ -222,7 +207,6 @@ SurfaceFrame.theme = props => {
   }
   let surfaceStyles = {
     ...(props.inline && inlineStyle),
-    color,
     overflow:
       props.overflow || props.glow
         ? props.overflow || 'hidden'
@@ -245,7 +229,7 @@ SurfaceFrame.theme = props => {
     ...chromelessStyle,
     ...(props.active && activeStyle),
     // // so you can override
-    // ...props.style,
+    ...props.userStyle,
   }
   return surfaceStyles
 }
@@ -335,15 +319,18 @@ export class Surface extends React.Component<SurfaceProps> {
       noInnerElement,
       tagName,
       forwardRef,
+      themeAdjust,
       style,
       padding,
       margin,
       className,
       ...props
     } = this.props
+    const adjustedTheme = themeAdjust ? themeAdjust(theme) : theme
     const stringIcon = typeof icon === 'string'
     // goes to both
     const throughProps = {
+      theme: adjustedTheme,
       sizeIcon: this.props.sizeIcon,
       iconSize: this.props.iconSize,
       height: this.props.height,
@@ -354,7 +341,7 @@ export class Surface extends React.Component<SurfaceProps> {
       lineHeight: this.props.lineHeight,
     }
     if (sizeLineHeight) {
-      throughProps.lineHeight = `${height + 0.5}px`
+      throughProps.lineHeight = `${height + 1}px`
     }
     return (
       <SurfaceFrame
@@ -364,7 +351,7 @@ export class Surface extends React.Component<SurfaceProps> {
         {...throughProps}
         {...props}
         forwardRef={forwardRef}
-        style={style}
+        userStyle={style}
         className={`${this.uniq} ${className || ''}`}
       >
         {glint ? (

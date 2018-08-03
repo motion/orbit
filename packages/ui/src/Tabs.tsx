@@ -51,7 +51,7 @@ const TabList = view(Row, {
 const TabListItem = view(Row, {
   flex: 1,
   fontSize: 13,
-  lineHeight: '28px',
+  lineHeight: 22,
   overflow: 'hidden',
   padding: [3, 10],
   position: 'relative',

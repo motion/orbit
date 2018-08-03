@@ -4,7 +4,7 @@ const Theme = new ThemeMaker()
 
 const highlightColor = '#fff'
 
-const greyBg = color('#f0f0f0')
+const greyBg = color('#fff')
 const greyHoverBg = greyBg.darken(0.02)
 const greyActiveBg = greyHoverBg.darken(0.05)
 const greyActiveHoverBg = greyHoverBg.darken(0.06)
@@ -12,12 +12,10 @@ const greyActiveHoverBg = greyHoverBg.darken(0.06)
 const tanBg = color('rgb(255,255,245)')
 const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
 const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
-const tanActiveHoverBg = tanHoverBg.darken(0.06).desaturate(0.3)
 
-const dbBg = color('rgb(11, 60, 117)')
-const dbHoverBg = dbBg.darken(0.02).desaturate(0.3)
-const dbActiveBg = dbHoverBg.darken(0.05).desaturate(0.3)
-const dbActiveHoverBg = dbHoverBg.darken(0.06).desaturate(0.3)
+const orbitColor = color('#3d91ff')
+const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
+const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 export const themes = {
   clear: {
@@ -34,6 +32,11 @@ export const themes = {
       color: '#444',
     },
   },
+  orbit: Theme.fromStyles({
+    background: orbitColor,
+    color: '#fff',
+    borderColor: orbitActiveBg,
+  }),
   grey: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,
@@ -47,29 +50,19 @@ export const themes = {
       background: color('#fff'),
     },
     active: {
-      background: greyActiveBg,
+      background: orbitColor,
+      color: '#fff',
     },
     activeHover: {
       background: greyActiveHoverBg,
     },
   }),
   tan: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
     background: tanBg,
     color: '#656141',
     borderColor: tanActiveBg,
   }),
-  darkBlue: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
-    background: dbBg,
-    color: '#fff',
-    borderColor: dbActiveBg,
-  }),
   dark: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
     borderColor: '#222',
@@ -87,8 +80,6 @@ export const themes = {
     },
   }),
   light: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
     background: color('#fff'),
     color: color('#444'),
     borderColor: color('#e2e2e2'),

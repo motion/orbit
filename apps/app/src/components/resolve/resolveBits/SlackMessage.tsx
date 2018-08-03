@@ -7,7 +7,12 @@ import { TimeAgo } from '../../../views/TimeAgo'
 import { Bit } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
 
-type SlackMessageObj = { name: string; text: string; user: string; ts: string }
+type SlackMessageObj = {
+  name: string
+  text: string
+  user: string
+  ts: string
+}
 
 type SlackMessageProps = {
   bit: Bit

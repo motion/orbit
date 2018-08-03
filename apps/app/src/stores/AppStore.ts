@@ -2,7 +2,7 @@ import { on, react, isEqual } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SettingRepository } from '../repositories'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
-import { modelQueryReaction } from '@mcro/helpers'
+import { modelQueryReaction, sleep } from '@mcro/helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppReactions } from './AppReactions'
 import { getPermalink } from '../helpers/getPermalink'
@@ -11,6 +11,12 @@ export class AppStore {
   contentHeight = 0
   lastSelectedPane = ''
   onPinKeyCB = null
+
+  get contentBottom() {
+    // always leave x room at bottom
+    // leaving a little room at the bottom makes it feel much lighter
+    return window.innerHeight - this.contentHeight
+  }
 
   appReactionsStore = new AppReactions({
     onPinKey: key => this.onPinKeyCB(key),
@@ -30,7 +36,8 @@ export class AppStore {
 
   updateAppOrbitStateOnResize = react(
     () => this.contentHeight,
-    height => {
+    async (height, { sleep }) => {
+      await sleep(40)
       App.setOrbitState({
         size: [ORBIT_WIDTH, height + 20],
       })
@@ -53,21 +60,7 @@ export class AppStore {
     return this.lastSelectedPane
   }
 
-  offContentHeight = null
-
   setContentHeight = height => {
-    if (this.offContentHeight) {
-      this.offContentHeight()
-    }
-    if (this.contentHeight !== height) {
-      this.offContentHeight = on(
-        this,
-        setTimeout(() => this.doSetContentHeight(height), 100),
-      )
-    }
-  }
-
-  doSetContentHeight = height => {
     this.contentHeight = height
   }
 
@@ -77,6 +70,7 @@ export class AppStore {
         where: { category: 'integration', token: { $not: 'good' } }
       }),
     settings => {
+      console.log('update services')
       const services = {}
       for (const setting of settings) {
         const { type } = setting

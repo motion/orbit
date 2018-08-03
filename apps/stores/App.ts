@@ -73,8 +73,8 @@ class AppStore {
     selectItem: Function
     toggleSelectItem: Function
     open: Function
-    startOauth: Function
     clearPeek: Function
+    setPeekTarget: Function
   }
 
   messages = {
@@ -132,7 +132,7 @@ class AppStore {
     return !App.orbitState.hidden
   }
 
-  animationDuration = 160
+  animationDuration = 90
 
   // debounced a little to prevent aggressive reactions
   isFullyHidden = react(
@@ -173,11 +173,6 @@ class AppStore {
 
   start = async options => {
     await Bridge.start(this, this.state, options)
-  }
-
-  open = async url => {
-    App.sendMessage(Desktop, Desktop.messages.OPEN, url)
-    App.setOrbitState({ hidden: true, docked: false })
   }
 
   togglePinned = () => {

@@ -1,6 +1,8 @@
 import * as Path from 'path'
 import execa from 'execa'
 
+console.log('node env', process.env.NODE_ENV)
+
 const configPath = require.resolve('./webpack.config')
 const root = Path.join(__dirname, '..')
 
@@ -8,7 +10,11 @@ const argsIndex = process.argv.findIndex(x => /mcro-build$/.test(x))
 const extraArgs = argsIndex >= 0 ? process.argv.slice(argsIndex + 1) : []
 
 const cmd = 'webpack-dev-server'
-const args = ['--hot', '--config', configPath, ...extraArgs]
+let args = ['--config', configPath, ...extraArgs]
+
+if (process.env.NODE_ENV !== 'production') {
+  args.push('--hot')
+}
 
 console.log(`Running ${cmd} ${args.join(' ')}`)
 

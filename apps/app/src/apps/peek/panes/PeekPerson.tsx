@@ -1,22 +1,24 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
-import { OrbitIcon } from '../../../apps/orbit/OrbitIcon'
+import { OrbitIcon } from '../../../views/OrbitIcon'
 import * as UI from '@mcro/ui'
 import { BitRepository } from '../../../repositories'
-import { SubTitle } from '../../../views'
-import { OrbitCardMasonry } from '../../orbit/OrbitCardMasonry'
+import { SubTitle, RoundButton } from '../../../views'
+import { OrbitCardMasonry } from '../../../views/OrbitCardMasonry'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { Masonry } from '../../../views/Masonry'
-import { OrbitCard } from '../../orbit/OrbitCard'
+import { OrbitCard } from '../../../views/OrbitCard'
+import { Carousel } from '../../../components/Carousel'
+import { App } from '@mcro/stores'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
 )
 
 const mapW = 700
-const mapH = 300
+const mapH = 200
 
 class PersonPeek {
   recentBits = modelQueryReaction(
@@ -78,11 +80,12 @@ const FadeMap = view({
   right: 0,
   height: 200,
   zIndex: 2,
+  background: 'linear-gradient(transparent, #fbfbfb)',
 })
 
-FadeMap.theme = ({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.base.background})`,
-})
+// FadeMap.theme = ({ theme }) => ({
+//   background: `linear-gradient(transparent, ${theme.base.background})`,
+// })
 
 const FadeMapRight = view({
   position: 'absolute',
@@ -102,7 +105,7 @@ FadeMapRight.theme = ({ theme }) => ({
 const Info = view({
   display: 'block',
   position: 'absolute',
-  top: 60,
+  top: 50,
   left: 140,
 })
 
@@ -124,14 +127,14 @@ const Email = view('a', {
 })
 
 const Avatar = view('img', {
-  margin: [-40, 0, 10, -65],
-  width: 256,
-  height: 256,
+  margin: [-20, 0, 0, -45],
+  width: 200,
+  height: 200,
   borderRadius: 1000,
 })
 
-const Card = view({
-  marginBottom: 20,
+const Section = view({
+  marginBottom: 15,
 })
 
 const Links = view({
@@ -141,27 +144,13 @@ const Links = view({
   flexFlow: 'row',
 })
 
-const IntButton = view('a', {
-  padding: [6, 10],
-  marginRight: 7,
-  borderRadius: 7,
-  flexFlow: 'row',
-  fontSize: 13,
-  fontWeight: 500,
-  background: 'linear-gradient(#fff, #f4f4f4 70%)',
-  boxShadow: 'inset 0 0 1px #ccc, inset 0 1px #fff',
-  border: [1, '#fff'],
-  cursor: 'default',
-  '&:hover': {
-    background: 'linear-gradient(#fff, #f9f9f9 50%)',
-  },
-})
-
 const IntegrationButton = ({ href, children, ...props }) => (
-  <IntButton href={href}>
-    <OrbitIcon preventAdjust margin={[0, 7, 0, 0]} size={14} {...props} />
+  <RoundButton
+    onClick={() => App.open(href)}
+    icon={<OrbitIcon preventAdjust size={14} {...props} />}
+  >
     {children}
-  </IntButton>
+  </RoundButton>
 )
 
 @view.attach('integrationSettingsStore')
@@ -235,42 +224,38 @@ export class PeekPerson extends React.Component<
           </Map>
           <Content>
             <ContentInner>
-              <Card>
+              <Section>
                 <StrongSubTitle>Interested in</StrongSubTitle>
-                <UI.Theme name="grey">
-                  <Masonry>
-                    {[
-                      {
-                        title: '#general',
-                        icon: 'slack',
-                        subtitle: '20 people',
-                      },
-                      {
-                        title: '#status',
-                        icon: 'slack',
-                        subtitle: '29 people',
-                      },
-                      {
-                        title: 'motion/orbit',
-                        icon: 'github',
-                        subtitle: '20 people',
-                      },
-                      {
-                        title: '#showoff',
-                        icon: 'slack',
-                        subtitle: '78 people',
-                      },
-                    ].map((place, index) => (
-                      <OrbitCard key={index} {...place} />
-                    ))}
-                  </Masonry>
-                </UI.Theme>
-              </Card>
+                <Carousel
+                  items={[
+                    {
+                      title: '#general',
+                      icon: 'slack',
+                      subtitle: '20 people',
+                    },
+                    {
+                      title: '#status',
+                      icon: 'slack',
+                      subtitle: '29 people',
+                    },
+                    {
+                      title: 'motion/orbit',
+                      icon: 'github',
+                      subtitle: '20 people',
+                    },
+                    {
+                      title: '#showoff',
+                      icon: 'slack',
+                      subtitle: '78 people',
+                    },
+                  ]}
+                />
+              </Section>
 
-              <Card>
+              <Section>
                 <StrongSubTitle>Recently</StrongSubTitle>
                 <OrbitCardMasonry items={store.recentBits} />
-              </Card>
+              </Section>
             </ContentInner>
           </Content>
         </Frame>

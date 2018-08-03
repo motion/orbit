@@ -2,30 +2,49 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { SettingRepository } from '../../repositories'
 import { OrbitSettingCard } from './OrbitSettingCard'
-import { OrbitDockedPane } from './OrbitDockedPane'
+import { SubPane } from './SubPane'
 import * as Views from '../../views'
 import { Setting } from '@mcro/models'
 // import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
-import * as UI from '@mcro/ui'
-import { AppStore } from '../../stores/AppStore'
-import { OrbitDockedPaneStore } from './OrbitDockedPaneStore'
+import { PaneManagerStore } from './PaneManagerStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../stores/SearchStore'
+import { API_URL } from '../../constants'
 
 type Props = {
   name: string
   store?: OrbitSettingsStore
   searchStore?: SearchStore
-  appStore?: AppStore
-  paneStore?: OrbitDockedPaneStore
-  integrationSettingsStore: IntegrationSettingsStore
+  paneStore?: PaneManagerStore
+  integrationSettingsStore?: IntegrationSettingsStore
 }
 
 class OrbitSettingsStore {
   props: Props
+  integrationSettings = []
+
+  setGetResults = react(
+    () => [this.isPaneActive, this.allResults],
+    async ([isActive, allResults], { sleep }) => {
+      if (!isActive) {
+        throw react.cancel
+      }
+      await sleep(40)
+      const getResults = () => allResults
+      this.props.searchStore.setGetResults(getResults)
+    },
+    { immediate: true },
+  )
+
+  didMount() {
+    const dispose = App.onMessage(App.messages.TOGGLE_SETTINGS, () =>
+      this.updateIntegrationSettings(),
+    )
+    this.subscriptions.add({ dispose })
+  }
 
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
@@ -67,20 +86,6 @@ class OrbitSettingsStore {
     { defaultValue: [] },
   )
 
-  setGetResults = react(
-    () => [this.isPaneActive, this.integrationSettings],
-    ([isActive, integrationSettings]) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      const getResults = () => integrationSettings
-      // @ts-ignore
-      getResults.shouldFilter = true
-      this.props.searchStore.setGetResults(() => this.allResults)
-    },
-    { immediate: true },
-  )
-
   get allResults() {
     return [...this.generalSettings, ...this.integrationSettings]
   }
@@ -94,33 +99,45 @@ class OrbitSettingsStore {
     />
   )
 
-  integrationSettings = modelQueryReaction(
-    () =>
-      SettingRepository.find({
-        where: { category: 'integration', token: { $not: null }},
-      }),
-    {
-      condition: () => this.isPaneActive,
-      defaultValue: [],
-    },
-  )
+  getSettings = () =>
+    SettingRepository.find({
+      where: {
+        category: 'integration',
+        token: { $not: null },
+        type: { $not: 'setting' },
+      },
+    })
+
+  // this will go away soon...
+  refreshSettings = modelQueryReaction(this.getSettings, val => {
+    // only when pane active
+    if (!this.isPaneActive && this.integrationSettings.length) {
+      throw react.cancel
+    }
+    this.updateIntegrationSettings(val)
+  })
+
+  updateIntegrationSettings = async (settings?) => {
+    const next = settings || (await this.getSettings())
+    this.integrationSettings = next
+  }
 }
 
-@view.attach('appStore', 'searchStore', 'paneStore', 'integrationSettingsStore')
+@view.attach('searchStore', 'paneStore', 'integrationSettingsStore')
 @view.attach({
   store: OrbitSettingsStore,
 })
 @view
 export class OrbitSettings extends React.Component<Props> {
   render() {
-    const { name, store, appStore, integrationSettingsStore } = this.props
+    const { name, store, integrationSettingsStore } = this.props
     const isActive = result => {
       return !!store.integrationSettings.find(
         setting => setting.type === result.id,
       )
     }
     return (
-      <OrbitDockedPane name={name} fadeBottom>
+      <SubPane name={name} fadeBottom>
         <Views.SubTitle>Settings</Views.SubTitle>
         <Masonry>
           {store.generalSettings.map((result, index) => (
@@ -128,31 +145,29 @@ export class OrbitSettings extends React.Component<Props> {
               key={`${result.id}`}
               result={result}
               index={index}
-              appStore={appStore}
               subtitle={result.subtitle}
               isActive
             />
           ))}
         </Masonry>
         <Views.VertSpace />
-        <UI.View if={store.integrationSettings.length}>
-          <Views.SubTitle>Active Integrations</Views.SubTitle>
-          <Masonry>
-            {store.integrationSettings
-              .map((setting, index) => (
+        {!!store.integrationSettings.length && (
+          <>
+            <Views.SubTitle>Active Integrations</Views.SubTitle>
+            <Masonry>
+              {store.integrationSettings.map((setting, index) => (
                 <store.IntegrationCard
                   key={`${setting.id}`}
                   result={integrationSettingsStore.settingToResult(setting)}
                   index={index + store.generalSettings.length}
-                  appStore={appStore}
                   setting={setting}
                   isActive
                 />
-              ))
-              .filter(Boolean)}
-          </Masonry>
-          <Views.VertSpace />
-        </UI.View>
+              ))}
+            </Masonry>
+            <Views.VertSpace />
+          </>
+        )}
         <Views.SubTitle>Add Integration</Views.SubTitle>
         <Masonry>
           {integrationSettingsStore.allIntegrations
@@ -160,27 +175,31 @@ export class OrbitSettings extends React.Component<Props> {
             .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
             .map((item, index) => {
               // custom auth clicks
-              const onClick = item.auth
-                ? ({ currentTarget }) => {
-                    console.log('select auth')
-                    App.actions.toggleSelectItem(
-                      { id: item.id, type: 'view', title: item.title },
-                      currentTarget,
-                    )
-                  }
-                : null
+              const onClick = ({ currentTarget }) => {
+                if (item.auth) {
+                  App.actions.toggleSelectItem(
+                    { id: item.id, type: 'view', title: item.title },
+                    currentTarget,
+                  )
+                } else {
+                  App.actions.open(`${API_URL}/auth/${item.id}`)
+                }
+              }
               return (
                 <store.IntegrationCard
                   key={`${item.id}`}
                   result={item}
                   index={index + store.allResults.length}
-                  appStore={appStore}
                   onClick={onClick}
                   disableShadow
                   cardProps={{
+                    chromeless: true,
                     border: [1, 'transparent'],
                     background: 'transparent',
                     padding: [12, 12, 12, 10],
+                  }}
+                  iconProps={{
+                    size: 18,
                   }}
                   titleProps={{
                     size: 1.1,
@@ -189,7 +208,7 @@ export class OrbitSettings extends React.Component<Props> {
               )
             })}
         </Masonry>
-      </OrbitDockedPane>
+      </SubPane>
     )
   }
 }

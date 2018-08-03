@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { view, react, compose, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { OrbitCard } from '../OrbitCard'
+import { OrbitCard } from '../../../views/OrbitCard'
 import * as UI from '@mcro/ui'
 import { SearchStore } from '../../../stores/SearchStore'
+import { AppStore } from '../../../stores/AppStore'
+import { PaneManagerStore } from '../PaneManagerStore'
 
 class QuickSearchStore {
   props: {
@@ -49,7 +51,6 @@ class QuickSearchStore {
     () => this.index,
     index => {
       const frame = this.frameRef.current
-      console.log('scroll', frame, index, this.cardRefs[index])
       if (!frame) {
         throw react.cancel
       }
@@ -85,6 +86,8 @@ const decorate = compose(
 )
 
 type Props = {
+  appStore?: AppStore
+  paneStore?: PaneManagerStore
   searchStore: SearchStore
   store: QuickSearchStore
 }
@@ -100,14 +103,15 @@ export const OrbitSearchQuickResults = decorate(
         >
           {/* inner div so scrolls to end all the way */}
           <div style={{ flexFlow: 'row', padding: pad }}>
-            {results.map((person, index) => {
+            {results.map((item, index) => {
               return (
                 <OrbitCard
-                  pane=""
-                  subPane=""
+                  preventAutoSelect
+                  pane="docked-search"
+                  subPane="search"
                   className="quick-result-card"
-                  key={person.id}
-                  bit={person}
+                  key={`${item.id}${index}`}
+                  bit={item}
                   inGrid
                   isSelected={() => {
                     return searchStore.nextIndex === -1 && index === store.index

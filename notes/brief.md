@@ -17,6 +17,8 @@ nearest neighbors:
 - "inline related info" for any app on your OS
   - clippy (product)
   - rapportive (product)
+- IDE tool companies:
+  - https://retool.in/
 
 ## secret
 

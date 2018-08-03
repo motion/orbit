@@ -6,6 +6,7 @@ import { SearchStore } from '../../stores/SearchStore'
 
 export type PeekContents = {
   title: React.ReactNode
+  titleAfter?: React.ReactNode
   subtitle?: React.ReactNode
   subtitleBefore?: React.ReactNode
   subtitleAfter?: React.ReactNode
@@ -15,6 +16,8 @@ export type PeekContents = {
   content: React.ReactNode
   headerProps?: Object
   subhead?: React.ReactNode
+  preBody?: React.ReactNode
+  postBody?: React.ReactNode
   after?: React.ReactNode
 }
 

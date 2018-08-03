@@ -79,7 +79,6 @@ export const ResolveTask = ({
         }/issues/${bit.data.number}`,
       ),
     people: bit.people,
-    date: bit.bitUpdatedAt,
     content,
     comments,
     preview:

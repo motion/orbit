@@ -98,7 +98,7 @@ const config = {
   },
   devServer: {
     historyApiFallback: true,
-    hot: true,
+    hot: !isProd,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },

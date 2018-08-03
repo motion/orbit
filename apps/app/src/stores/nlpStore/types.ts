@@ -1,14 +1,16 @@
-export const TYPES = {
-  DATE: 'date',
-  INTEGRATION: 'integration',
-  PERSON: 'person',
-  TYPE: 'type',
+export enum MarkType {
+  Date = 'date',
+  Integration = 'integration',
+  Person = 'person',
+  Type = 'type',
 }
 
-type Types = typeof TYPES
-type TypeKey = keyof Types
-type Mark = [number, number, TypeKey]
-export type QueryFragment = { text: string; type?: TypeKey }
+export type Mark = [number, number, MarkType, string]
+
+export type QueryFragment = {
+  text: string
+  type?: MarkType
+}
 
 export type DateRange = {
   startDate: Date | null

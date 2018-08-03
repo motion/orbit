@@ -31,10 +31,8 @@ export class GarbageCollector {
   constructor(sheet: StyleSheet, tracker: Tracker, rulesToClass: RulesToClass) {
     this.sheet = sheet
     this.tracker = tracker
-
     // used to keep track of what classes are actively in use
     this.usedClasses = new Map()
-
     // classes to be removed, we put this in a queue and perform it in bulk rather than straight away
     // since by the time the next tick happens this style could have been reinserted
     this.classRemovalQueue = new Set()
@@ -63,7 +61,6 @@ export class GarbageCollector {
     this.usedClasses.set(name, count + 1)
     if (this.classRemovalQueue.has(name)) {
       this.classRemovalQueue.delete(name)
-
       if (this.classRemovalQueue.size === 0) {
         this.haltGarbage()
       }
@@ -76,10 +73,8 @@ export class GarbageCollector {
     if (count == null) {
       return
     }
-
     count--
     this.usedClasses.set(name, count)
-
     if (count === 0) {
       this.classRemovalQueue.add(name)
       this.scheduleGarbage()
@@ -90,10 +85,9 @@ export class GarbageCollector {
     if (this.garbageTimer != null) {
       return
     }
-
     this.garbageTimer = setTimeout(() => {
       this.collectGarbage()
-    }, 2000)
+    }, 10000)
   }
 
   haltGarbage() {
@@ -112,10 +106,8 @@ export class GarbageCollector {
     for (const name of this.classRemovalQueue) {
       const trackerInfo = this.tracker.get(name)
       invariant(trackerInfo != null, 'trying to remove unknown class')
-
       const { rules } = trackerInfo
       this.rulesToClass.delete(rules)
-
       this.sheet.delete(name)
       this.tracker.delete(name)
       this.usedClasses.delete(name)

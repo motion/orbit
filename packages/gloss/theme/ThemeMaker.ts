@@ -32,7 +32,6 @@ const smallAmt = color => {
   return softened * 1.8
 }
 
-const smallerAmt = color => smallAmt(color) * 0.25
 const largeAmt = color => smallAmt(color) * 1.25
 const opposite = color => {
   return color.isDark()
@@ -48,7 +47,9 @@ export class ThemeMaker {
       (acc, cur) => ({
         ...acc,
         [cur]:
-          typeof obj[cur] === 'string' || Array.isArray(obj[cur])
+          (typeof obj[cur] === 'string' &&
+            !(obj[cur].indexOf('gradient') >= 0)) ||
+          Array.isArray(obj[cur])
             ? $(obj[cur])
             : obj[cur],
       }),
@@ -117,15 +118,17 @@ export class ThemeMaker {
       borderColor: decreaseContrast(base.borderColor, largeAmt),
       ...rest.focus,
     }
-    const res = this.colorize({
+    const res = {
       ...rest,
-      base,
-      hover,
-      active,
-      inactive,
-      disabled,
-      focus,
-    })
+      ...this.colorize({
+        base,
+        hover,
+        active,
+        inactive,
+        disabled,
+        focus,
+      }),
+    }
     this.cache[key] = res
     return res as ThemeObject
   }

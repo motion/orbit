@@ -1,7 +1,7 @@
 {
   "name": "@mcro/store-hmr",
   "main": "_/StoreHMR.js",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "scripts": {
     "build": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
     "watch": "npm run build -- --watch"

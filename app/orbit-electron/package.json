@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "description": "Description",
   "author": "Orbit",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "main": "electron.js",
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
@@ -30,13 +30,13 @@
     ]
   },
   "dependencies": {
-    "@mcro/black": "^2.2.0",
-    "@mcro/constants": "^2.2.0",
-    "@mcro/debug": "^2.2.0",
-    "@mcro/orbit-desktop": "^2.2.0",
-    "@mcro/r2": "^2.2.0",
-    "@mcro/reactron": "^2.2.0",
-    "@mcro/stores": "^2.2.0",
+    "@mcro/black": "^2.2.1",
+    "@mcro/constants": "^2.2.1",
+    "@mcro/debug": "^2.2.1",
+    "@mcro/orbit-desktop": "^2.2.1",
+    "@mcro/r2": "^2.2.1",
+    "@mcro/reactron": "^2.2.1",
+    "@mcro/stores": "^2.2.1",
     "babel-polyfill": "7.0.0-beta.3",
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.5.0",

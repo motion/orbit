@@ -1,6 +1,6 @@
 {
   "name": "@mcro/test-app",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi",
@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.47",
-    "@mcro/black": "^2.2.0",
-    "@mcro/build": "^2.2.0",
-    "@mcro/gloss": "^2.2.0",
-    "@mcro/ui": "^2.2.0"
+    "@mcro/black": "^2.2.1",
+    "@mcro/build": "^2.2.1",
+    "@mcro/gloss": "^2.2.1",
+    "@mcro/ui": "^2.2.1"
   },
   "peerDependencies": {
     "react": "16.4.0",

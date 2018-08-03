@@ -1,6 +1,6 @@
 {
   "name": "@mcro/orbit-desktop",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "main": "./desktop.js",
   "scripts": {
     "build": "tsc || true",
@@ -10,16 +10,16 @@
     "start-prod": "NODE_ENV=production node desktop.js"
   },
   "dependencies": {
-    "@mcro/black": "^2.2.0",
-    "@mcro/constants": "^2.2.0",
-    "@mcro/debug": "^2.2.0",
-    "@mcro/helpers": "^2.2.0",
-    "@mcro/models": "^2.2.0",
-    "@mcro/oauth-strategies": "^2.2.0",
-    "@mcro/oracle": "^2.2.0",
-    "@mcro/r2": "^2.2.0",
-    "@mcro/services": "^2.2.0",
-    "@mcro/stores": "^2.2.0",
+    "@mcro/black": "^2.2.1",
+    "@mcro/constants": "^2.2.1",
+    "@mcro/debug": "^2.2.1",
+    "@mcro/helpers": "^2.2.1",
+    "@mcro/models": "^2.2.1",
+    "@mcro/oauth-strategies": "^2.2.1",
+    "@mcro/oracle": "^2.2.1",
+    "@mcro/r2": "^2.2.1",
+    "@mcro/services": "^2.2.1",
+    "@mcro/stores": "^2.2.1",
     "apollo-fetch": "^0.7.0",
     "auto-launch": "5.0.5",
     "babel-polyfill": "7.0.0-beta.3",
@@ -73,8 +73,8 @@
     "mobx": "*"
   },
   "devDependencies": {
-    "@mcro/build": "^2.2.0",
-    "@mcro/dev": "^2.2.0",
+    "@mcro/build": "^2.2.1",
+    "@mcro/dev": "^2.2.1",
     "@types/passport": "0.4.5",
     "nodemon": "^1.15.0",
     "touch": "^3.1.0",

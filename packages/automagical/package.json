@@ -1,13 +1,13 @@
 {
   "name": "@mcro/automagical",
   "main": "_/automagical.js",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/debug": "^2.2.0",
+    "@mcro/debug": "^2.2.1",
     "global": "^4.3.2",
     "mobx-utils": "5.0.0"
   },

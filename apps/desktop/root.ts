@@ -1,6 +1,5 @@
 import connectModels from './helpers/connectModels'
 import Server from './Server'
-import { Plugins } from './plugins'
 import { Screen } from './Screen'
 import { KeyboardStore } from './stores/keyboardStore'
 import hostile_ from 'hostile'
@@ -34,10 +33,8 @@ export class Root {
   disposed = false
   sync: Sync
   screen: Screen
-  plugins: Plugins
   keyboardStore: KeyboardStore
   generalSettingManager: GeneralSettingManager
-  auth: Auth
   server = new Server()
   sqlite: SQLiteServer
   stores = null
@@ -93,9 +90,6 @@ export class Root {
     this.sync = new Sync()
     this.sync.start()
     this.screen = new Screen()
-    this.plugins = new Plugins({
-      server: this.server,
-    })
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,
     })

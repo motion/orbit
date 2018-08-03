@@ -24,4 +24,5 @@ npx nodemon \
     NODE_ENV=development node --inspect=127.0.0.1:9000 _/main.js'
 
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT > /dev/null
-echo "done done"
+
+echo "bye orbit-desktop"

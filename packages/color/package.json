@@ -10,6 +10,6 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "publishConfig": {
-    "registry": "http://localhost:4444"
+    "registry": "http://localhost:4343"
   }
 }

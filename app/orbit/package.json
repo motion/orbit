@@ -1,7 +1,7 @@
 {
   "name": "@mcro/orbit",
   "productName": "Orbit",
-  "version": "2.2.9",
+  "version": "2.2.13",
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
@@ -34,6 +34,6 @@
     "electron": "*"
   },
   "publishConfig": {
-    "registry": "http://localhost:4444"
+    "registry": "http://localhost:4343"
   }
 }

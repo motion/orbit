@@ -16,6 +16,6 @@
     "@types/event-kit": "2.4.0"
   },
   "publishConfig": {
-    "registry": "http://localhost:4444"
+    "registry": "http://localhost:4343"
   }
 }

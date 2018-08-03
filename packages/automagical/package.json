@@ -18,6 +18,6 @@
     "mobx": "^5.0.2"
   },
   "publishConfig": {
-    "registry": "http://localhost:4444"
+    "registry": "http://localhost:4343"
   }
 }

@@ -5,7 +5,7 @@
   "version": "2.2.1",
   "command": {
     "publish": {
-      "registry": "http://localhost:4444"
+      "registry": "http://localhost:4343"
     }
   }
 }

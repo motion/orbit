@@ -26,6 +26,6 @@
     "@types/react": "16.4.6"
   },
   "publishConfig": {
-    "registry": "http://localhost:4444"
+    "registry": "http://localhost:4343"
   }
 }

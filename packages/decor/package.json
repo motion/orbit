@@ -29,6 +29,6 @@
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "publishConfig": {
-    "registry": "http://localhost:4444"
+    "registry": "http://localhost:4343"
   }
 }

@@ -7,7 +7,7 @@ npx verdaccio --listen 4343 &
 sleep 1
 
 echo "making you log in..."
-npm login --registry=http://localhost:4343/ --scope=@mcro
+# npm login --registry=http://localhost:4343/ --scope=@mcro
 
 # fail on exit, allow for exiting from verdaccio login
 set -e
@@ -27,7 +27,7 @@ npm version patch
 
 echo "publishing packages for prod install..."
 function publish-all() {
-  npx lerna exec -- npm unpublish --force --registry http://localhost:4343 && npm publish --registry http://localhost:4343
+  npx lerna exec --ignore @mcro/orbit -- npm unpublish --force --registry http://localhost:4343 && npm publish --registry http://localhost:4343
 }
 (cd ../.. && publish-all)
 

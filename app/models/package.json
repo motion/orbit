@@ -21,6 +21,6 @@
     "typeorm": "*"
   },
   "publishConfig": {
-    "registry": "http://localhost:4444"
+    "registry": "http://localhost:4343"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@mcro/orbit",
   "productName": "Orbit",
-  "version": "2.2.2",
+  "version": "2.2.5",
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },

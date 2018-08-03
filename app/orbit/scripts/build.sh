@@ -1,6 +1,14 @@
 #!/bin/bash
 
-# fail on exit
+echo "running verdaccio private registry..."
+kill $(lsof -t -i:4444)
+veraccioPID=$!
+npx verdaccio --listen 4444 &
+
+echo "making you log in..."
+npm login --registry=http://localhost:4444/ --scope=@mcro
+
+# fail on exit, allow for exiting from verdaccio login
 set -e
 
 # cd root
@@ -16,21 +24,14 @@ echo "installing iohook..."
 echo "bump version..."
 npm version patch
 
-echo "running verdaccio private registry..."
-veraccioPID=$!
-npx verdaccio --listen 4444 &
-
-echo "making you log in..."
-npm login --registry=http://localhost:4444/ --scope=@mcro
-
 echo "publishing packages for prod install..."
 function publish-all() {
-  cd ../..
   npx lerna exec --parallel -- npm publish --force --registry http://localhost:4444
 }
-publish-all
+(cd ../.. && publish-all)
 
 echo "installing for prod..."
+echo $(pwd)
 (cd ../orbit-desktop && yarn install --production --registry http://localhost:4444)
 (cd ../orbit-electron && yarn install --production --registry http://localhost:4444)
 

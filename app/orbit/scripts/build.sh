@@ -2,12 +2,12 @@
 
 echo "running verdaccio private registry..."
 kill $(lsof -t -i:4343)
-npx verdaccio --listen 4343 &
+npx verdaccio -c ./scripts/verdaccio/config.yaml --listen 4343 &
 
-sleep 1
+sleep 0.5
 
 echo "making you log in..."
-# npm login --registry=http://localhost:4343/ --scope=@mcro
+npm login --registry=http://localhost:4343/ --scope=@mcro
 
 # fail on exit, allow for exiting from verdaccio login
 set -e
@@ -27,7 +27,7 @@ npm version patch
 
 echo "publishing packages for prod install..."
 function publish-all() {
-  npx lerna exec --ignore @mcro/orbit -- npm unpublish --force && npm publish
+  npx lerna exec --stream --ignore "@mcro/orbit" -- npm publish --force
 }
 (cd ../.. && publish-all)
 

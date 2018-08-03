@@ -1,5 +1,5 @@
 {
-  "name": "orbit",
+  "name": "@mcro/orbit",
   "dependencies": {
     "global": "^4.3.2",
     "react": "16.4.0",
@@ -24,7 +24,7 @@
     "eslint-plugin-react": "^7.6.1",
     "eslint-plugin-babel": "^5.1.0",
     "fs-extra": "^5.0.0",
-    "lerna": "2.11.0",
+    "lerna": "3.0.0-rc.0",
     "mobx": "^5.0.2",
     "prettier": "^1.12.1",
     "sb-promisify": "^2.0.2",

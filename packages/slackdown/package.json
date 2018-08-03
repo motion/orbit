@@ -8,8 +8,5 @@
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

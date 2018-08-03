@@ -24,6 +24,6 @@
     "mobx": "*"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "restricted"
   }
 }

@@ -1,6 +1,7 @@
 {
   "name": "@mcro/site",
   "version": "2.2.1",
+  "private": true,
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi",

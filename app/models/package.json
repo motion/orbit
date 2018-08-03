@@ -21,6 +21,6 @@
     "typeorm": "*"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "restricted"
   }
 }

@@ -71,6 +71,6 @@
     "react-dom": "16.4.0"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "restricted"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@mcro/oracle",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "main": "./_/oracle.js",
   "scripts": {
     "build": "./build.sh --if-empty && npx tsc || true",
@@ -34,6 +34,6 @@
     "mobx": "*"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "restricted"
   }
 }

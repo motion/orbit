@@ -20,13 +20,15 @@ echo "running verdaccio private registry..."
 veraccioPID=$!
 npx verdaccio --listen 4444 &
 
+echo "making you log in..."
+npm login --registry=http://localhost:4444/ --scope=@mcro
+
 echo "publishing packages for prod install..."
-function publish-for-production() {
-  # cd to monorepo root
+function publish-all() {
   cd ../..
-  npx lerna publish --registry http://localhost:4444
+  npx lerna exec --parallel -- npm publish --force --registry http://localhost:4444
 }
-publish-for-production
+publish-all
 
 echo "installing for prod..."
 (cd ../orbit-desktop && yarn install --production --registry http://localhost:4444)

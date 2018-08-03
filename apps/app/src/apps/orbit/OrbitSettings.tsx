@@ -22,6 +22,7 @@ type Props = {
 
 class OrbitSettingsStore {
   props: Props
+  integrationSettings = []
 
   setGetResults = react(
     () => [this.isPaneActive, this.allResults],
@@ -35,6 +36,13 @@ class OrbitSettingsStore {
     },
     { immediate: true },
   )
+
+  didMount() {
+    const dispose = App.onMessage(App.messages.TOGGLE_SETTINGS, () =>
+      this.updateIntegrationSettings(),
+    )
+    this.subscriptions.add({ dispose })
+  }
 
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
@@ -85,26 +93,28 @@ class OrbitSettingsStore {
     />
   )
 
-  integrationSettings = modelQueryReaction(
-    () =>
-      Setting.find({
-        where: {
-          category: 'integration',
-          token: Not(IsNull()),
-          type: Not('setting'),
-        },
-      }),
-    val => {
-      if (!this.isPaneActive && this.integrationSettings.length) {
-        throw react.cancel
-      }
-      return val
-    },
-    {
-      defaultValue: [],
-      log: true,
-    },
-  )
+  getSettings = () =>
+    Setting.find({
+      where: {
+        category: 'integration',
+        token: Not(IsNull()),
+        type: Not('setting'),
+      },
+    })
+
+  // this will go away soon...
+  refreshSettings = modelQueryReaction(this.getSettings, val => {
+    // only when pane active
+    if (!this.isPaneActive && this.integrationSettings.length) {
+      throw react.cancel
+    }
+    this.updateIntegrationSettings(val)
+  })
+
+  updateIntegrationSettings = async (settings?) => {
+    const next = settings || (await this.getSettings())
+    this.integrationSettings = next
+  }
 }
 
 @view.attach('searchStore', 'paneStore', 'integrationSettingsStore')

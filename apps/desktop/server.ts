@@ -12,6 +12,7 @@ import killPort from 'kill-port'
 import Fs from 'fs'
 import Path from 'path'
 import debug from '@mcro/debug'
+import { closeChromeTabWithUrlStarting } from './helpers/injections'
 
 const { SERVER_PORT } = Constants
 
@@ -172,7 +173,7 @@ export default class Server {
   }
 
   setupAuthReplyRoutes() {
-    for (const name of Object.keys(OAuthStrategies)) {
+    for (const name in OAuthStrategies) {
       const path = `/auth/${name}`
       const options = OAuthStrategies[name].options
       this.app.get(path, Passport.authenticate(name, options, null))
@@ -180,39 +181,11 @@ export default class Server {
         `/auth/${name}/callback`,
         Passport.authenticate(name, options, null),
         (req, res) => {
-          // @ts-ignore
-          const { user, currentUser } = req
-          const realUser = user || currentUser
-          log('auth reply, user', realUser)
-          res.send(`
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Authentication Success</title>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-</head>
-<body>
-<script type="text/javascript">
-  if (window.opener) {
-    window.opener.focus()
-    const info = {
-      refreshToken: ${JSON.stringify(realUser.refreshToken)},
-      token: ${JSON.stringify(realUser.token)},
-      error: ${JSON.stringify(realUser.error)},
-      info: ${JSON.stringify(realUser.info)},
-    }
-    if (window.opener.passport && window.opener.passport.oauthSession) {
-      window.opener.passport.oauthSession(info)
-    } else {
-      alert('closed original window!')
-    }
-  }
-  window.close()
-</script>
-</body>
-</html>
-          `)
+          const values = req.user || req['currentUser']
+          this.oauth.finishOauth(name, values)
+          res.send(
+            `<html><head><title>Authentication Success</title></head><body>All done, closing...</body></html>`,
+          )
         },
       )
     }

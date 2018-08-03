@@ -10,6 +10,7 @@ import { App } from '@mcro/stores'
 import { PaneManagerStore } from './PaneManagerStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../stores/SearchStore'
+import { API_URL } from '../../constants'
 
 type Props = {
   name: string
@@ -158,15 +159,16 @@ export class OrbitSettings extends React.Component<Props> {
             .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
             .map((item, index) => {
               // custom auth clicks
-              const onClick = item.auth
-                ? ({ currentTarget }) => {
-                    console.log('select auth')
-                    App.actions.toggleSelectItem(
-                      { id: item.id, type: 'view', title: item.title },
-                      currentTarget,
-                    )
-                  }
-                : null
+              const onClick = ({ currentTarget }) => {
+                if (item.auth) {
+                  App.actions.toggleSelectItem(
+                    { id: item.id, type: 'view', title: item.title },
+                    currentTarget,
+                  )
+                } else {
+                  App.open(`${API_URL}/auth/${item.id}`)
+                }
+              }
               return (
                 <store.IntegrationCard
                   key={`${item.id}`}

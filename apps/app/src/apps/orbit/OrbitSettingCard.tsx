@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-// import * as UI from '@mcro/ui'
 import { OrbitCard } from '../../views/OrbitCard'
 import { SettingInfoStore } from '../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
 import { OrbitCardProps } from '../../views/OrbitCard'
-import { App } from '@mcro/stores'
 
 @view.attach('appStore')
 @view.attach({
@@ -26,21 +24,11 @@ export class OrbitSettingCard extends React.Component<
       setting.type = result.type
       setting.token = 'good'
       await setting.save()
-    } else if (result.auth) {
-      console.log('should select auth view')
-      return
-    } else {
-      console.log('result', result)
-      App.actions.startOauth(result.id)
     }
-    return
   }
 
   render() {
     const { store, result, isActive, subtitle, onClick, ...props } = this.props
-    if (!store) {
-      debugger
-    }
     const countSubtitle = !isActive
       ? ''
       : store.bitsCount === null

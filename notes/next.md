@@ -10,11 +10,11 @@
 
 Aug 7th:
 
-- Settings panes all fully working
-- Better app home
+- Auto onboarding flow/history-scan/notifications/tray-guide
 - Build to .app
 - Auto updating .app
-- Auto onboarding flow/history-scan/notifications/tray-guide
+- Better app home
+- Settings panes all fully working
 
 Aug 14th:
 

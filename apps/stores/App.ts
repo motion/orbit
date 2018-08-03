@@ -73,7 +73,6 @@ class AppStore {
     selectItem: Function
     toggleSelectItem: Function
     open: Function
-    startOauth: Function
     clearPeek: Function
     setPeekTarget: Function
   }

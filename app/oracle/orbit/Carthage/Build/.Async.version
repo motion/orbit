@@ -1,9 +1,0 @@
-{
-  "commitish" : "2.0.4",
-  "Mac" : [
-    {
-      "name" : "Async",
-      "hash" : "badb411fc832a83311a1354f8c294461c1081fcbdd4d07c32a5928d1bbe372db"
-    }
-  ]
-}

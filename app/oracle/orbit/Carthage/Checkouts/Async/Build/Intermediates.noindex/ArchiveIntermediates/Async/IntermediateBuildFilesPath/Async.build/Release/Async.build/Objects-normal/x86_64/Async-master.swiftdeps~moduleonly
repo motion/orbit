@@ -1,5 +1,0 @@
-version: "Apple Swift version 4.2 (swiftlang-1000.0.29.2 clang-1000.10.39)"
-options: "f769ef61feb8791e01a834c621b4bbc7"
-build_time: [1532146193, 644820000]
-inputs:
-  "/Users/nw/projects/motion/orbit/apps/oracle/orbit/Carthage/Checkouts/Async/Sources/Async/Async.swift": [9223372036, 854775807]

@@ -32,10 +32,13 @@ function publish-all() {
 (cd ../.. && publish-all)
 
 echo "installing for prod... $(pwd)"
-yarn install --production --registry http://localhost:4343
+(cd app-build && yarn install --production --registry http://localhost:4343)
 
 echo "killing verdaccio..."
 kill %-
+
+echo "moving into app-build to finish..."
+cd app-build
 
 echo "running electron-bundler..."
 DEBUG=electron-packager node -r esm --trace-warnings ./scripts/bundle.js &

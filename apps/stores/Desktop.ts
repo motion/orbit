@@ -79,8 +79,6 @@ class DesktopStore {
 
   messages = {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',
-    OPEN_AUTH: 'OPEN_AUTH',
-    CLOSE_AUTH: 'CLOSE_AUTH',
     OPEN: 'OPEN',
     CLEAR_OPTION: 'CLEAR_OPTION',
   }

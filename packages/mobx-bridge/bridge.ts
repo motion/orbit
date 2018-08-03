@@ -8,7 +8,6 @@ import T_SocketManager from './socketManager'
 import debug from '@mcro/debug'
 
 const log = debug('bridge')
-debug.quiet('bridge')
 
 // exports
 export * from './proxySetters'

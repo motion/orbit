@@ -253,9 +253,6 @@ export default function createCSS(options: Object = {}) {
     if (!styles || typeof styles !== 'object') {
       return toReturn
     }
-    if (styles.debug) {
-      debugger
-    }
     for (let key in styles) {
       let value = styles[key]
       let valueType = typeof value

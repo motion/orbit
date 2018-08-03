@@ -10,6 +10,7 @@ import { App } from '@mcro/stores'
 import { PaneManagerStore } from './PaneManagerStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../stores/SearchStore'
+import { API_URL } from '../../constants'
 
 type Props = {
   name: string
@@ -21,6 +22,7 @@ type Props = {
 
 class OrbitSettingsStore {
   props: Props
+  integrationSettings = []
 
   setGetResults = react(
     () => [this.isPaneActive, this.allResults],
@@ -34,6 +36,13 @@ class OrbitSettingsStore {
     },
     { immediate: true },
   )
+
+  didMount() {
+    const dispose = App.onMessage(App.messages.TOGGLE_SETTINGS, () =>
+      this.updateIntegrationSettings(),
+    )
+    this.subscriptions.add({ dispose })
+  }
 
   get isPaneActive() {
     return this.props.paneStore.activePane === this.props.name
@@ -84,26 +93,28 @@ class OrbitSettingsStore {
     />
   )
 
-  integrationSettings = modelQueryReaction(
-    () =>
-      Setting.find({
-        where: {
-          category: 'integration',
-          token: Not(IsNull()),
-          type: Not('setting'),
-        },
-      }),
-    val => {
-      if (!this.isPaneActive && this.integrationSettings.length) {
-        throw react.cancel
-      }
-      return val
-    },
-    {
-      defaultValue: [],
-      log: true,
-    },
-  )
+  getSettings = () =>
+    Setting.find({
+      where: {
+        category: 'integration',
+        token: Not(IsNull()),
+        type: Not('setting'),
+      },
+    })
+
+  // this will go away soon...
+  refreshSettings = modelQueryReaction(this.getSettings, val => {
+    // only when pane active
+    if (!this.isPaneActive && this.integrationSettings.length) {
+      throw react.cancel
+    }
+    this.updateIntegrationSettings(val)
+  })
+
+  updateIntegrationSettings = async (settings?) => {
+    const next = settings || (await this.getSettings())
+    this.integrationSettings = next
+  }
 }
 
 @view.attach('searchStore', 'paneStore', 'integrationSettingsStore')
@@ -158,15 +169,16 @@ export class OrbitSettings extends React.Component<Props> {
             .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
             .map((item, index) => {
               // custom auth clicks
-              const onClick = item.auth
-                ? ({ currentTarget }) => {
-                    console.log('select auth')
-                    App.actions.toggleSelectItem(
-                      { id: item.id, type: 'view', title: item.title },
-                      currentTarget,
-                    )
-                  }
-                : null
+              const onClick = ({ currentTarget }) => {
+                if (item.auth) {
+                  App.actions.toggleSelectItem(
+                    { id: item.id, type: 'view', title: item.title },
+                    currentTarget,
+                  )
+                } else {
+                  App.actions.open(`${API_URL}/auth/${item.id}`)
+                }
+              }
               return (
                 <store.IntegrationCard
                   key={`${item.id}`}
@@ -179,6 +191,9 @@ export class OrbitSettings extends React.Component<Props> {
                     border: [1, 'transparent'],
                     background: 'transparent',
                     padding: [12, 12, 12, 10],
+                  }}
+                  iconProps={{
+                    size: 18,
                   }}
                   titleProps={{
                     size: 1.1,

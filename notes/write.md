@@ -167,3 +167,7 @@ Or monetizing monetizing.
 - see game dev: Star citizen, Citybound, "how to spend 7 years building a game"
 - see kickstarter: long ongoing campaigns, re-raising etc
 - see crypto: ico's raising on just having good updates and seeming legit
+
+---
+
+# I Can't Believe It's Not Native

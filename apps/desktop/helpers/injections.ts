@@ -1,6 +1,6 @@
 import runAppleScript from './runAppleScript'
 
-export const closeChromeTabWithUrl = async url => {
+export const closeChromeTabWithUrlStarting = async url => {
   await runAppleScript(`
   -- Closes google tab that matches checkUrl
   set checkUrl to "${url}"
@@ -10,7 +10,7 @@ export const closeChromeTabWithUrl = async url => {
       set tab_list to every tab in the_window
       repeat with the_tab in tab_list
         set the_title to the URL of the_tab
-        if the_title is equal to checkUrl then
+        if the_title contains checkUrl then
           close the_tab
         end if
       end repeat

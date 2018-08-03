@@ -73,7 +73,6 @@ class AppStore {
     selectItem: Function
     toggleSelectItem: Function
     open: Function
-    startOauth: Function
     clearPeek: Function
     setPeekTarget: Function
   }
@@ -174,11 +173,6 @@ class AppStore {
 
   start = async options => {
     await Bridge.start(this, this.state, options)
-  }
-
-  open = async url => {
-    App.sendMessage(Desktop, Desktop.messages.OPEN, url)
-    App.setOrbitState({ hidden: true, docked: false })
   }
 
   togglePinned = () => {

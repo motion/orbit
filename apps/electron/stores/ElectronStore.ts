@@ -55,10 +55,15 @@ export class ElectronStore {
   }
 
   followMousePosition = () => {
+    let lastPoint
     on(
       this,
       setInterval(() => {
-        this.hoverStateStore.handleMousePosition(screen.getCursorScreenPoint())
+        const nextPoint = screen.getCursorScreenPoint()
+        if (!isEqual(nextPoint, lastPoint)) {
+          lastPoint = nextPoint
+          this.hoverStateStore.handleMousePosition(nextPoint)
+        }
       }, 40),
     )
   }

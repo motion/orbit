@@ -359,7 +359,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     if (!this.props.bit) {
       return
     }
-    App.actions.open(this.props.bit)
+    App.actions.open(this.props.bit.url)
   }
 
   id = Math.random()
@@ -425,11 +425,11 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 icon={icon}
                 size={24}
                 {...orbitIconProps}
-                {...iconProps}
                 position="absolute"
                 top={listItem ? 25 : 10}
                 right={listItem ? 8 : 0}
                 opacity={0.8}
+                {...iconProps}
               />
             )}
           <Title>

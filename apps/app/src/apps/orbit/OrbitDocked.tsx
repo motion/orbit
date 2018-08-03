@@ -93,7 +93,10 @@ class OrbitDockedInner extends React.Component<{
               </>
             }
           />
-          <OrbitFilterBar filterStore={searchStore.searchFilterStore} />
+          <OrbitFilterBar
+            filterStore={searchStore.searchFilterStore}
+            paneStore={paneStore}
+          />
           <OrbitInner style={{ height: window.innerHeight }}>
             <div style={{ position: 'relative', flex: 1 }}>
               <OrbitHome name="home" paneStore={paneStore} />

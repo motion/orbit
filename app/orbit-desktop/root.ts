@@ -44,7 +44,7 @@ export class Root {
     root.Root = this
     root.restart = this.restart
     const db = await sqlite.open(
-      Path.join(__dirname, '..', 'data', 'database'),
+      Path.join(__dirname, '..', 'app_data', 'database'),
       {
         // @ts-ignore
         cached: true,

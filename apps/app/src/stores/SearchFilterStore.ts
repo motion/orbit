@@ -209,13 +209,17 @@ export class SearchFilterStore /* extends Store */ {
   )
 
   resetFiltersOnSearchClear = react(
-    () => !!this.searchStore.searchState.query,
+    () => !!this.searchStore.query,
     hasQuery => {
       if (hasQuery) {
         throw react.cancel
       }
       this.disabledFilters = {}
       this.exclusiveFilters = {}
+      this.dateState = {
+        startDate: null,
+        endDate: null,
+      }
     },
   )
 

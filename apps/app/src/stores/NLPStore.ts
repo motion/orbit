@@ -1,8 +1,9 @@
+import { PersonRepository } from '../repositories'
+
 // @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
 import { store, react } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
-import { Person } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { NLPResponse } from './nlpStore/types'
 
@@ -45,7 +46,7 @@ export class NLPStore /* extends Store */ {
   )
 
   peopleNames = modelQueryReaction(
-    () => Person.find({ limit: 5000 }),
+    () => PersonRepository.find({ take: 5000 }),
     people => people.map(person => person.name),
     { poll: 60 * 5 * 1000 },
   )

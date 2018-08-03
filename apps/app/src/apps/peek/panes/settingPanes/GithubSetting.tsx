@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react } from '@mcro/black'
-import { Bit } from '@mcro/models'
+import { BitRepository, SettingRepository } from '../../../../repositories'
 import { Bits } from '../../../../views/Bits'
 import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
@@ -53,7 +53,7 @@ class GithubSettingStore {
   }
 
   bits = react(() =>
-    Bit.find({ where: { integration: 'github', type: 'task' } }),
+    BitRepository.find({ where: { integration: 'github', type: 'task' } }),
   )
 
   active = 'repos'
@@ -128,7 +128,8 @@ class GithubSettingStore {
         [fullName]: e.target.checked,
       },
     }
-    await this.setting.save()
+    // await this.setting.save()
+    SettingRepository.save(this.setting)
   }
 
   isSyncing = fullName => {

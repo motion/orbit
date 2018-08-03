@@ -2,7 +2,8 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view, react, compose } from '@mcro/black'
 // import { Bit } from '@mcro/models'
-// import { Bits } from '../../../../views/Bits'
+// import { BitRepository, SettingRepository } from '../../../../repositories'
+import { Bits } from '../../../../views/Bits'
 import { TimeAgo } from '../../../../views/TimeAgo'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
@@ -120,7 +121,8 @@ class SlackSettingStore {
         [fullName]: e.target.checked,
       },
     }
-    await this.setting.save()
+    // await this.setting.save()
+    await SettingRepository.save(this.setting)
   }
 
   isSyncing = fullName => {

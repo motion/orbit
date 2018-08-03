@@ -1,4 +1,4 @@
-import { Setting } from '@mcro/models'
+import { SettingRepository } from '../../repositories'
 import * as Helpers from '../../helpers'
 
 export const getPermalink = async (result, type) => {
@@ -6,7 +6,7 @@ export const getPermalink = async (result, type) => {
     return result.id
   }
   if (result.integration === 'slack') {
-    const setting = await Setting.findOne({ type: 'slack' })
+    const setting = await SettingRepository.findOne({ type: 'slack' })
     let url = `slack://channel?id=${result.data.channel.id}&team=${
       setting.values.oauth.info.team.id
     }`

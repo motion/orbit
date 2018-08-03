@@ -1,6 +1,6 @@
 import { on, react, isEqual } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { Setting, Not, Equal } from '@mcro/models'
+import { SettingRepository } from '../repositories'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { modelQueryReaction, sleep } from '@mcro/helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
@@ -66,8 +66,8 @@ export class AppStore {
 
   services = modelQueryReaction(
     () =>
-      Setting.find({
-        where: { category: 'integration', token: Not(Equal('good')) },
+      SettingRepository.find({
+        where: { category: 'integration', token: { $not: 'good' } }
       }),
     settings => {
       console.log('update services')

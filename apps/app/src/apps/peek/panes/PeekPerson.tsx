@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import * as UI from '@mcro/ui'
-import { Bit } from '@mcro/models'
+import { BitRepository } from '../../../repositories'
 import { SubTitle, RoundButton } from '../../../views'
 import { OrbitCardMasonry } from '../../../views/OrbitCardMasonry'
 import { PeekPaneProps } from '../PeekPaneProps'
@@ -23,7 +23,7 @@ const mapH = 200
 class PersonPeek {
   recentBits = modelQueryReaction(
     () =>
-      Bit.find({
+      BitRepository.find({
         relations: ['people'],
         take: 10,
       }),

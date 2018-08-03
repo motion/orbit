@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
+import { SettingRepository } from '../../repositories'
 import { OrbitSettingCard } from './OrbitSettingCard'
 import { SubPane } from './SubPane'
 import * as Views from '../../views'
-import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
+import { Setting } from '@mcro/models'
+// import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
 import { Masonry } from '../../views/Masonry'
 import { App } from '@mcro/stores'
@@ -54,12 +56,16 @@ class OrbitSettingsStore {
         { type: 'general', category: 'general' },
         { type: 'account', category: 'general' },
       ]
-      await findOrCreate(Setting, settingQuery[0])
-      await findOrCreate(Setting, settingQuery[1])
-      const settings = await Promise.all([
-        Setting.findOne(settingQuery[0]),
-        Setting.findOne(settingQuery[1]),
-      ])
+
+      // don't like the fact that this is happening here. looks like backend should be the only place were this code should be
+      const settings = await Promise.all(settingQuery.map(async settingQuery => {
+        const setting = await SettingRepository.findOne({ where: settingQuery })
+        if (setting)
+          return setting
+
+        return SettingRepository.save(settingQuery as Setting) // todo: make sure save really returns us
+      }))
+
       return [
         {
           id: settings[0].id,
@@ -94,11 +100,11 @@ class OrbitSettingsStore {
   )
 
   getSettings = () =>
-    Setting.find({
+    SettingRepository.find({
       where: {
         category: 'integration',
-        token: Not(IsNull()),
-        type: Not('setting'),
+        token: { $not: null },
+        type: { $not: 'setting' },
       },
     })
 

@@ -1,3 +1,7 @@
+import { Entities } from '~/entities'
+import { BitEntity } from '~/entities/BitEntity'
+import { SettingEntity } from '~/entities/SettingEntity'
+import { Syncers } from '~/syncer'
 import connectModels from './helpers/connectModels'
 import Server from './Server'
 import { Plugins } from './plugins'
@@ -7,8 +11,7 @@ import hostile_ from 'hostile'
 import * as Constants from './constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import { Sync } from './sync'
-import SQLiteServer from './SQLiteServer'
+import { handlePrimusEntityActions } from './SQLiteServer'
 import { App, Electron, Desktop } from '@mcro/stores'
 // import { sleep } from '@mcro/helpers'
 import { store, debugState, on } from '@mcro/black'
@@ -17,11 +20,10 @@ import Path from 'path'
 import open from 'opn'
 // import iohook from 'iohook'
 import debug from '@mcro/debug'
-import { Bit, Setting, modelsList } from '@mcro/models'
 import { Connection } from 'typeorm'
 import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
-import sqlite from 'sqlite'
 import macosVersion from 'macos-version'
+import Primus from 'primus'
 
 const log = debug('desktop')
 const hostile = promisifyAll(hostile_)
@@ -32,29 +34,18 @@ export class Root {
   isReconnecting = false
   connection?: Connection
   disposed = false
-  sync: Sync
   screen: Screen
   plugins: Plugins
   keyboardStore: KeyboardStore
   generalSettingManager: GeneralSettingManager
   auth: Auth
   server = new Server()
-  sqlite: SQLiteServer
   stores = null
 
   start = async () => {
+    this.registerREPLGlobals();
+    this.registerPrimusServer();
     // iohook.start(false)
-    root.Root = this
-    root.restart = this.restart
-    const db = await sqlite.open(
-      Path.join(__dirname, '..', 'data', 'database'),
-      {
-        // @ts-ignore
-        cached: true,
-        promise: Promise,
-      },
-    )
-    this.sqlite = new SQLiteServer({ db })
     await Desktop.start({
       ignoreSelf: true,
       master: true,
@@ -74,8 +65,8 @@ export class Root {
     await this.connect()
 
     // rtemp
-    if (!(await Setting.findOne({ type: 'confluence' }))) {
-      const setting = new Setting()
+    if (!(await SettingEntity.findOne({ type: 'confluence' }))) {
+      const setting = new SettingEntity()
       setting.type = 'confluence'
       setting.category = 'integration'
       setting.token = 'good'
@@ -90,8 +81,7 @@ export class Root {
     }
 
     this.generalSettingManager = new GeneralSettingManager()
-    this.sync = new Sync()
-    this.sync.start()
+    await this.startSyncers();
     this.screen = new Screen()
     this.plugins = new Plugins({
       server: this.server,
@@ -117,12 +107,12 @@ export class Root {
   }
 
   async connect() {
-    this.connection = await connectModels(modelsList)
+    this.connection = await connectModels(Entities)
   }
 
   watchLastBit = () => {
     async function updateLastBit() {
-      const lastBit = await Bit.findOne({
+      const lastBit = await BitEntity.findOne({
         order: { updatedAt: 'DESC' },
       })
       const updatedAt = `${lastBit ? lastBit.updatedAt : ''}`
@@ -158,7 +148,7 @@ export class Root {
     if (this.screen) {
       await this.screen.dispose()
     }
-    this.sync.dispose()
+    await this.stopSyncers();
     this.disposed = true
     return true
   }
@@ -173,4 +163,60 @@ export class Root {
       })
     }
   }
+
+  /**
+   * Registers global variables in the REPL.
+   * Used for the development purposes.
+   */
+  private registerREPLGlobals() {
+    root.Root = this
+    root.restart = this.restart
+    root.Syncers = Syncers.reduce((map, syncer) => {
+
+      // since Syncers is an array we need to convert it to object
+      // to make them more usable in the REPL. We are using Syncer type
+      // as an object key. Since Syncers can have duplicate types
+      // we apply ordered number to syncers with duplicated types
+      const sameTypeSyncersNumber = Object
+        .keys(map)
+        .filter(key => key === syncer.options.type)
+        .length
+      const suffix = (sameTypeSyncersNumber > 0 ? sameTypeSyncersNumber : '')
+      map[syncer.options.type + suffix] = syncer
+      return map
+    }, {});
+  }
+
+  /**
+   * Registers a websocket-based Primus server which is responsible
+   * for communication between processes.
+   */
+  private registerPrimusServer() {
+    Primus.createServer(spark => {
+      spark.on('data', data => handlePrimusEntityActions(spark, data))
+    }, {
+      port: 8082,
+      transformer: 'websockets',
+      iknowhttpsisbetter: true,
+    })
+  }
+
+  /**
+   * Starts all the syncers.
+   */
+  private async startSyncers() {
+    await Promise.all(Syncers.map(syncer => {
+      return syncer.start()
+    }))
+  }
+
+  /**
+   * Stops all the syncers.
+   */
+  private async stopSyncers() {
+    await Promise.all(Syncers.map(syncer => {
+      return syncer.stop()
+    }))
+  }
+
 }

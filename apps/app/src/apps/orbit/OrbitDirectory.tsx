@@ -2,7 +2,7 @@ import * as React from 'react'
 import { App } from '@mcro/stores'
 import { view, react } from '@mcro/black'
 import { modelQueryReaction, compose } from '@mcro/helpers'
-import { Person } from '@mcro/models'
+import { PersonRepository } from '../../repositories'
 import { SubPane } from './SubPane'
 import { OrbitCard } from '../../views/OrbitCard'
 import { Masonry } from '../../views/Masonry'
@@ -57,7 +57,7 @@ class OrbitDirectoryStore {
 
   // poll every few seconds while active
   results = modelQueryReaction(
-    () => Person.find({ take: 100, where: { integration: 'slack' } }),
+    () => PersonRepository.find({ take: 100, where: { integration: 'slack' } }),
     {
       defaultValue: [],
     },

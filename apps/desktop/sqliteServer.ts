@@ -1,110 +1,90 @@
-import Primus from 'primus'
-import recoverDB from '~/helpers/recoverDB'
-import { Desktop } from '@mcro/stores'
+import { getConnection, getRepository } from 'typeorm'
 
-export default class SQLiteServer {
-  id = 0
-  txLock = null
-  queue = []
-  db = null
+/**
+ * Handles received primus server actions,
+ * actions that needs to manipulate with the database.
+ */
+export function handlePrimusEntityActions(spark: any, data: any) {
+  console.log('primus received data', data)
 
-  constructor({ db }) {
-    this.db = db
-    Primus.createServer(this.onConnection, {
-      port: 8082,
-      transformer: 'websockets',
-      iknowhttpsisbetter: true,
+  // check if data has all necessary stuff
+  if (!data.operation || !data.entity || !data.operationId) {
+    console.log(`wrong operation was received, cannot handle`)
+    return
+  }
+
+  // find entity type that is requested
+  const entityTarget = getConnection().entityMetadatas.find(metadata => {
+    return metadata.targetName === data.entity
+  })
+  if (!entityTarget) {
+    console.error(`${data.entity} entity was not found`, getConnection().entityMetadatas)
+    return;
+  }
+
+  // get the repository and register a callback that will handle repository method calls
+  const repository = getRepository(entityTarget.target)
+  const sendResultsBack = result => {
+    console.log(`operation ${data.operation} executed successfully`, result)
+    spark.write({
+      operationId: data.operationId,
+      entity: data.entity,
+      result: result
     })
   }
 
-  onConnection = spark => {
-    let uid = ++this.id
-    spark.on('data', data => {
-      if (this.txLock && this.txLock !== uid) {
-        this.queue.push([spark, data, uid])
-        return
-      }
-      this.onData(spark, data, uid)
-    })
-  }
+  // do repository actions based on operation type
+  switch (data.operation) {
+    case 'save':
+      // @ts-ignore (to make it possible to pass dynamic arguments to repository methods)
+      return repository
+        .save(...data.parameters)
+        .then(sendResultsBack)
 
-  async finishLock() {
-    this.txLock = null
-    const running = [...this.queue]
-    this.queue = []
-    for (const [a, b, c] of running) {
-      await this.onData(a, b, c)
-    }
-  }
+    case 'remove':
+      // @ts-ignore (to make it possible to pass dynamic arguments to repository methods)
+      return repository
+        .remove(...data.parameters)
+        .then(sendResultsBack)
 
-  onData = async (spark, data, uid) => {
-    switch (data.command) {
-      case 'open':
-        spark.write({
-          err: null,
-          command: 'openComplete',
-          id: data.id,
-          databaseID: 100,
-        })
-        break
-      case 'backgroundExecuteSqlBatch':
-        const queries = data.args[0].executes
-        if (!queries[0]) {
-          console.log('no queries')
-          return
-        }
-        const sql = `${queries[0].sql}`
-        if (sql === 'BEGIN TRANSACTION') {
-          this.txLock = uid
-        }
-        await this.runQueries(data.id, spark, queries, [])
-        if (sql === 'COMMIT') {
-          await this.finishLock()
-        }
-        break
-    }
-  }
+    case 'count':
+      return repository
+        .count(...data.parameters)
+        .then(sendResultsBack)
 
-  async runQueries(id, spark, queryArray, accumAnswer) {
-    if (queryArray.length < 1) {
-      spark.write({
-        command: 'backgroundExecuteSqlBatchComplete',
-        err: null,
-        answer: accumAnswer,
-        id,
-      })
-      return
-    }
-    var top = queryArray.shift()
-    try {
-      // console.log('sql', top.sql, top.params)
-      // console.log('exec', top.sql)
-      const rows = await this.db.all(top.sql, top.params)
-      accumAnswer.push({
-        type: 'success',
-        qid: top.qid,
-        result: { rows },
-      })
-      await this.runQueries(id, spark, queryArray, accumAnswer)
-    } catch (err) {
-      console.error('sqlite server err')
-      Desktop.setState({
-        lastSQLError: Date.now(),
-      })
-      console.log('sqlite error', err)
-      if (err.message && err.message.indexOf('SQLITE_IOERR')) {
-        recoverDB()
-      }
-      accumAnswer.push({
-        type: 'error',
-        qid: top.qid,
-      })
-      spark.write({
-        command: 'backgroundExecuteSqlBatchFailed',
-        err: err.toString(),
-        answer: accumAnswer,
-        id,
-      })
-    }
+    case 'find':
+      return repository
+        .find(...data.parameters)
+        .then(sendResultsBack)
+
+    case 'findOne':
+      return getRepository(entityTarget.target)
+        .findOne(...data.parameters)
+        .then(sendResultsBack)
+
+    case 'findAndCount':
+      return getRepository(entityTarget.target)
+        .findAndCount(...data.parameters)
+        .then(sendResultsBack)
+
+    case 'findByIds':
+      // @ts-ignore (to make it possible to pass dynamic arguments to repository methods)
+      return getRepository(entityTarget.target)
+        .findByIds(...data.parameters)
+        .then(sendResultsBack)
+
+    case 'query':
+      // @ts-ignore (to make it possible to pass dynamic arguments to repository methods)
+      return getRepository(entityTarget.target)
+        .query(...data.parameters)
+        .then(sendResultsBack)
+
+    case 'clear':
+      return getRepository(entityTarget.target)
+        .clear()
+        .then(sendResultsBack)
+
+    default:
+      throw new Error(`given operation "${data.operation}" is not valid`)
   }
 }

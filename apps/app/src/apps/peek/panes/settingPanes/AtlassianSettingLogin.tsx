@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { SettingRepository } from '../../../../repositories'
 import * as Views from '../../../../views'
 import { Message } from '../../../../views/Message'
-import { Setting, findOrCreate } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import { App } from '@mcro/stores'
 import { capitalize } from 'lodash'
@@ -45,11 +46,16 @@ class AtlassianSettingLoginStore {
       if (!this.props.type) {
         throw new Error('No props.type')
       }
-      return await findOrCreate(Setting, {
+
+      const values = {
         category: 'integration',
         type: this.props.type,
         token: null,
-      })
+      } as Setting
+      const setting = await SettingRepository.findOne({ where: values })
+      if (setting)
+        return setting
+      return await SettingRepository.save(values)
     },
     {
       immediate: true,
@@ -117,7 +123,7 @@ class AtlassianSettingLoginStore {
   )
 
   existingSetting = react(async () => {
-    return await Setting.findOne({
+    return await SettingRepository.findOne({
       where: {
         type: this.props.type === 'confluence' ? 'jira' : 'confluence',
         token: 'good',
@@ -144,7 +150,10 @@ class AtlassianSettingLoginStore {
 
   addIntegration = () => {
     this.setting.token = 'good'
-    this.setting.save()
+    // replaced following code: this.setting.save()
+    // code here is very strange because it saves a something that I don't know type of,
+    // but assume its a setting
+    SettingRepository.save(this.setting)
     App.actions.clearPeek()
   }
 

@@ -33,10 +33,10 @@ export function selectItem(
   target?: PeekTarget,
 ) {
   invariant(item, 'Must pass item')
-  if (item instanceof Person) {
+  if (item.target === "person") {
     invariant(item.name, 'Must pass Person name')
     selectPerson(item, target)
-  } else if (item instanceof Bit) {
+  } else if (item.target === "bit") {
     invariant(item.title, 'Must pass Bit title')
     selectBit(item, target)
   } else {

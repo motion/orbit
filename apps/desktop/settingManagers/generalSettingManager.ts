@@ -1,7 +1,9 @@
 import { store } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
-import { Setting, findOrCreate } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
+import { SettingEntity } from '~/entities/SettingEntity'
+import { findOrCreate } from '~/helpers/helpers'
 import * as Constants from '../constants'
 import debug from '@mcro/debug'
 
@@ -18,7 +20,7 @@ export class GeneralSettingManager {
       )
     }
     console.log('ensuring models are in place all over, remove me plz')
-    findOrCreate(Setting, generalSettingQuery)
+    findOrCreate(SettingEntity, generalSettingQuery)
   }
 
   autoLaunch =
@@ -28,7 +30,7 @@ export class GeneralSettingManager {
     })
 
   handleSetting = modelQueryReaction(
-    () => Setting.findOne(generalSettingQuery),
+    () => SettingEntity.findOne(generalSettingQuery),
     (setting: Setting) => {
       log('reacting to setting', setting)
       this.ensureDefaultSettings(setting)

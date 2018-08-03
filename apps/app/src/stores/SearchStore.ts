@@ -1,15 +1,16 @@
 import { react, on } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
-import { Person, getRepository } from '@mcro/models'
+import { FindOptions } from 'typeorm'
+import { Bit, Person } from '@mcro/models'
+import { BitRepository, PersonRepository } from '../repositories'
+import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
-import { getSearchQuery } from './helpers/getSearchQuery'
 import * as Helpers from '../helpers'
 import * as SearchStoreHelpers from './helpers/searchStoreHelpers'
 import debug from '@mcro/debug'
 import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
-import { Brackets } from '../../../../node_modules/typeorm/browser'
 import { flatten } from 'lodash'
 import { MarkType } from './NLPStore/types'
 
@@ -218,50 +219,78 @@ export class SearchStore /* extends Store */ {
           // these come from the button bar
           ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
         ]
+
         const { startDate, endDate } = dateState
+
 
         for (let i = 0; i < takeMax / take; i += 1) {
           const skip = i * take
-          let nextQuery = getSearchQuery(activeQuery, {
-            skip,
+
+          const findOptions: FindOptions<Bit> = {
+            where: [],
+            relations: {
+              people: true
+            },
             take,
-            startDate,
-            endDate,
-            sortBy,
-          })
+            skip
+          }
 
-          // add people filters
+          const andConditions: any = {}
+          if (startDate)
+            andConditions.bitCreatedAt = { $moreThan: startDate }
+          if (endDate)
+            andConditions.bitCreatedAt = { $lessThan: endDate }
+          if (integrationFilters && integrationFilters.length)
+            andConditions.integration = { $in: integrationFilters }
+
+          if (activeQuery.length) {
+            const likeString = `%${activeQuery.replace(/\s+/g, '%')}%`
+            findOptions.where.push({ ...andConditions, title: { $like: likeString } })
+            findOptions.where.push({ ...andConditions, body: { $like: likeString } })
+          }
+
+          // SORT
+          if (sortBy) {
+            switch (sortBy) {
+              case 'Relevant':
+                // TODO: i think it is this by default
+                // once we do sprint on better search/hsf5 we can maybe make better
+                break
+              case 'Recent':
+                findOptions.order = {
+                  bitCreatedAt: "desc"
+                }
+                break
+            }
+          } else {
+            findOptions.order = {
+              bitCreatedAt: "desc"
+            }
+          }
+
           if (peopleFilters.length) {
-            // find one or more
-            nextQuery = nextQuery.andWhere(
-              new Brackets(qb => {
-                const peopleLike = peopleFilters.map(filter => `%${filter}%`)
-                qb.where('person.name like :name', { name: peopleLike[0] })
-                for (const name of peopleLike.slice(1)) {
-                  qb.orWhere('person.name like :name', { name })
+            // essentially, find at least one person
+            peopleFilters.forEach(name => {
+              findOptions.where.push({
+                ...andConditions,
+                person: {
+                  name: { $like: `%${name}%` }
                 }
-              }),
-            )
+              })
+            })
           }
 
-          // add integration filters
-          if (integrationFilters.length) {
-            nextQuery = nextQuery.andWhere(
-              new Brackets(qb => {
-                for (const [
-                  index,
-                  integration,
-                ] of integrationFilters.entries()) {
-                  const whereType = index === 0 ? 'where' : 'orWhere'
-                  qb[whereType]('bit.integration = :integration', {
-                    integration,
-                  })
-                }
-              }),
-            )
+          if (!findOptions.where.length) {
+            if (Object.keys(andConditions).length) {
+              findOptions.where = andConditions
+            } else {
+              findOptions.where = undefined
+            }
           }
 
-          const nextResults = await nextQuery.getMany()
+          // console.log("SEARCH FIND OPTIONS:", findOptions)
+          const nextResults = await BitRepository.find(findOptions)
+
           results = [...results, ...nextResults]
           setValue({
             results,
@@ -290,8 +319,6 @@ export class SearchStore /* extends Store */ {
     },
   )
 
-  personQueryBuilder = getRepository(Person).createQueryBuilder('person')
-
   quickSearchState = react(
     () => App.state.query,
     async (query, { sleep, when }) => {
@@ -306,22 +333,18 @@ export class SearchStore /* extends Store */ {
         searchQuery,
         integrations /* , nouns */,
       } = this.nlpStore.nlp
-      const allResults = await Promise.all([
-        // fuzzy people results
-        this.personQueryBuilder
-          .where('person.name like :nameLike', {
-            nameLike: `%${searchQuery.split('').join('%')}%`,
-          })
-          .take(3)
-          .getMany(),
-      ])
+      // fuzzy people results
+      const allResults = await PersonRepository.find({
+        take: 3,
+        where: {
+          name: { $like: `%${searchQuery.split('').join('%')}%` }
+        }
+      })
       const exactPeople = await Promise.all(
         people.map(name => {
-          return this.personQueryBuilder
-            .where('person.name like :nameLike', {
-              nameLike: `%${name}%`,
-            })
-            .getOne()
+          return PersonRepository.findOne({
+            where: { name: { $like: `%${name}%` } }
+          })
         }),
       )
       const results = flatten([

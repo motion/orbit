@@ -2,10 +2,7 @@ import { store, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { sleep, debugState } from '@mcro/black'
 import { uniqBy } from 'lodash'
-import { modelsList } from '@mcro/models'
-import connectModels from '../helpers/connectModels'
 import * as appActions from '../actions/appActions'
-import { WebSQLClient } from '../helpers/WebSQLClient'
 
 if (process.env.NODE_ENV === 'development') {
   module.hot.accept('../actions/appActions', () => {
@@ -26,9 +23,6 @@ const onPort = async cb => {
 
 @store
 export class RootStore {
-  client: WebSQLClient
-  connecting = false
-  connection = null
   started = false
   stores = null
   views = null
@@ -44,7 +38,6 @@ export class RootStore {
   // should be able to run multiple times
   async start({ connectModels }) {
     if (connectModels) {
-      await this.connectModels()
       await App.start({
         actions: appActions,
       })
@@ -58,20 +51,8 @@ export class RootStore {
     () => Desktop.state.lastSQLError,
     () => {
       console.log('last queries before error!!!!')
-      console.log(this.client.sqlLitePlugin.lastQueryQueue)
     },
   )
-
-  async connectModels() {
-    if (this.connection || this.connecting) {
-      return
-    }
-    this.connecting = true
-    const { client, connection } = await connectModels(modelsList)
-    this.connecting = false
-    this.connection = connection
-    this.client = client
-  }
 
   async restart() {
     onPort(() => (window.location = window.location))

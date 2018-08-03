@@ -27,14 +27,12 @@ npm version patch
 
 echo "publishing packages for prod install..."
 function publish-all() {
-  npx lerna exec --ignore @mcro/orbit -- npm unpublish --force --registry http://localhost:4343 && npm publish --registry http://localhost:4343
+  npx lerna exec --ignore @mcro/orbit -- npm unpublish --force && npm publish
 }
 (cd ../.. && publish-all)
 
-echo "installing for prod..."
-echo $(pwd)
-(cd ../orbit-desktop && yarn install --production --registry http://localhost:4343)
-(cd ../orbit-electron && yarn install --production --registry http://localhost:4343)
+echo "installing for prod... $(pwd)"
+yarn install --production --registry http://localhost:4343
 
 echo "killing verdaccio..."
 kill %-
@@ -43,8 +41,8 @@ echo "running electron-bundler..."
 DEBUG=electron-packager node -r esm --trace-warnings ./scripts/bundle.js &
 
 echo "patching bundle..."
-rm -r app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/desktop/node_modules/iohook
-cp -r ./build-resources/iohook/node_modules/iohook app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/desktop/node_modules
+rm -r app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules/iohook
+cp -r ./build-resources/iohook/node_modules/iohook app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules
 
 echo "signing app..."
 npx electron-osx-sign --ignore puppeteer/\\.local-chromium ./app/Orbit-darwin-x64/Orbit.app

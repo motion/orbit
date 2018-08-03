@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { Bit } from '@mcro/models'
+import { BitRepository } from '../../../repositories'
 
 export class PeekRelatedStore {
   relatedBits = react(

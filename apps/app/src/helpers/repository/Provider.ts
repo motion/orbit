@@ -43,6 +43,7 @@ export class Provider {
       operation,
       parameters,
     }
+    console.log(`write a query`, query)
     const writeResult: boolean = this.primus.write(query)
     if (!writeResult)
       return Promise.reject(`Failed to execute websocket operation ${JSON.stringify(query)}`)

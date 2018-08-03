@@ -219,6 +219,7 @@ export class SearchStore /* extends Store */ {
           // these come from the button bar
           ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
         ]
+
         const { startDate, endDate } = dateState
 
 
@@ -242,12 +243,10 @@ export class SearchStore /* extends Store */ {
           if (integrationFilters && integrationFilters.length)
             andConditions.integration = { $in: integrationFilters }
 
-          if (searchQuery.length) {
-            const likeString = `%${searchQuery.replace(/\s+/g, '%')}%`
+          if (activeQuery.length) {
+            const likeString = `%${activeQuery.replace(/\s+/g, '%')}%`
             findOptions.where.push({ ...andConditions, title: { $like: likeString } })
             findOptions.where.push({ ...andConditions, body: { $like: likeString } })
-          } else {
-            // order by recent if no search
           }
 
           // SORT
@@ -281,6 +280,15 @@ export class SearchStore /* extends Store */ {
             })
           }
 
+          if (!findOptions.where.length) {
+            if (Object.keys(andConditions).length) {
+              findOptions.where = andConditions
+            } else {
+              findOptions.where = undefined
+            }
+          }
+
+          // console.log("SEARCH FIND OPTIONS:", findOptions)
           const nextResults = await BitRepository.find(findOptions)
 
           results = [...results, ...nextResults]

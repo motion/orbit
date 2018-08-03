@@ -150,7 +150,7 @@ export class OrbitFrame extends React.Component<{
         }}
       >
         <OrbitArrow
-          arrowSize={22}
+          arrowSize={20}
           hidden={hidden}
           willAnimate={willAnimate}
           orbitOnLeft={orbitOnLeft}

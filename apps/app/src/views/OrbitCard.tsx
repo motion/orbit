@@ -37,7 +37,7 @@ export type OrbitCardProps = {
   titleProps?: Object
   inactive?: boolean
   iconProps?: Object
-  hide?: { icon?: boolean; subtitle?: boolean }
+  hide?: { icon?: boolean; subtitle?: boolean; body?: boolean }
   className?: string
   inGrid?: boolean
   pane?: string
@@ -55,6 +55,7 @@ export type OrbitCardProps = {
   item?: AppStatePeekItem
   disableShadow?: boolean
   preventAutoSelect?: boolean
+  padding?: number | number[]
 }
 
 const CardWrap = view(UI.View, {
@@ -367,33 +368,34 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     // TODO weird mutation
     this.props.store.normalizedBit = contentProps
     const {
-      title,
-      icon,
-      preview,
-      location,
       createdAt,
-      updatedAt,
-      people,
-      subtitle,
+      icon,
+      location,
       locationLink,
+      people,
+      preview,
+      subtitle,
+      title,
+      updatedAt,
     } = contentProps
     const {
-      store,
-      listItem,
-      hoverToSelect,
-      children,
       afterTitle,
-      titleProps,
-      inactive,
-      iconProps,
-      hide,
-      inGrid,
       borderRadius,
+      cardProps,
+      children,
+      disableShadow,
+      hide,
+      hoverToSelect,
+      iconProps,
+      inactive,
+      inGrid,
+      listItem,
       nextUpStyle,
       onClick,
       searchStore,
-      cardProps,
-      disableShadow,
+      store,
+      titleProps,
+      padding,
       ...props
     } = this.props
     const { isSelected } = store
@@ -414,6 +416,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           nextUpStyle={nextUpStyle}
           onClick={store.handleClick}
           disableShadow={disableShadow}
+          padding={padding}
           {...cardProps}
         >
           {!!icon &&
@@ -432,7 +435,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           <Title>
             <UI.Text
               size={1.2}
-              sizeLineHeight={0.85}
+              sizeLineHeight={0.8}
               ellipse={2}
               alpha={isSelected || listItem ? 1 : 0.8}
               fontWeight={600}
@@ -480,7 +483,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           {hasSubtitle &&
             (!!children || !!preview) && <div style={{ height: 4 }} />}
           {!!preview &&
-            !children && (
+            !children &&
+            !hide.body && (
               <Preview>
                 {typeof preview !== 'string' && preview}
                 {typeof preview === 'string' && (

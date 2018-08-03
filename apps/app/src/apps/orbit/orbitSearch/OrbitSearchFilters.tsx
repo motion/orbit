@@ -59,22 +59,19 @@ const decorate = compose(
   view,
 )
 export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
-  const { searchFilterStore, nlpStore } = searchStore
-  if (!nlpStore.nlp.date) {
-    return null
-  }
+  const { searchFilterStore } = searchStore
   return (
     <SearchFilters width="100%" alignItems="center">
       <UI.Row width="100%">
         <FilterButton
-          {...searchStore.dateHover.props}
-          active={searchStore.dateHover.isStuck()}
+          {...searchFilterStore.dateHover.props}
+          active={searchFilterStore.dateHover.isStuck()}
         >
-          {getDate(nlpStore.nlp.date) || 'Any time'}
+          {getDate(searchFilterStore.dateState) || 'Any time'}
         </FilterButton>
         <div style={{ width: 4 }} />
-        <FilterButton onClick={searchStore.searchFilterStore.toggleSortBy}>
-          {searchStore.searchFilterStore.sortBy}
+        <FilterButton onClick={searchFilterStore.toggleSortBy}>
+          {searchFilterStore.sortBy}
         </FilterButton>
         <UI.Col flex={1} />
         {searchFilterStore.integrationFilters.map((filter, i) => {
@@ -101,16 +98,16 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
         })}
       </UI.Row>
       <ExtraFilters
-        onMouseEnter={searchStore.dateHover.props.onMouseEnter}
-        onMouseLeave={searchStore.dateHover.props.onMouseLeave}
-        onMouseMove={searchStore.dateHover.props.onMouseMove}
+        onMouseEnter={searchFilterStore.dateHover.props.onMouseEnter}
+        onMouseLeave={searchFilterStore.dateHover.props.onMouseLeave}
+        onMouseMove={searchFilterStore.dateHover.props.onMouseMove}
         className="calendar-dom"
         height={searchStore.extraFiltersHeight}
         visible={searchStore.extraFiltersVisible}
       >
         <DateRangePicker
-          onChange={searchStore.onChangeDate}
-          {...searchStore.dateState}
+          onChange={searchFilterStore.onChangeDate}
+          ranges={[searchFilterStore.dateState]}
         />
       </ExtraFilters>
     </SearchFilters>

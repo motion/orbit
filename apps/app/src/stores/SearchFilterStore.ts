@@ -6,12 +6,24 @@ import { NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
 import { MarkType } from './nlpStore/types'
+import { DateRange } from './nlpStore/types'
+import { hoverSettler } from '../helpers/hoverSettler'
 
 export type SearchFilter = {
   type: string
   icon: string
   name: string
   active: boolean
+}
+
+type DateSelections = {
+  startDate?: Date
+  endDate?: Date
+  key?: string
+}
+
+type DateState = {
+  ranges: DateSelections[]
 }
 
 const suggestedDates = [
@@ -30,10 +42,26 @@ export class SearchFilterStore /* extends Store */ {
   sortBy = 'Relevant'
   sortOptions = ['Relevant', 'Recent']
 
+  dateState: DateSelections = {
+    startDate: null,
+    endDate: null,
+  }
+
+  dateHover = hoverSettler({
+    enterDelay: 400,
+    leaveDelay: 400,
+  })()
+
   constructor(searchStore) {
     this.searchStore = searchStore
     this.integrationSettingsStore = searchStore.props.integrationSettingsStore
     this.nlpStore = searchStore.nlpStore
+  }
+
+  willMount() {
+    this.dateHover.setOnHovered(target => {
+      this.searchStore.setExtraFiltersVisible(target)
+    })
   }
 
   // this contains the segments we found via nlp in order of search
@@ -71,27 +99,16 @@ export class SearchFilterStore /* extends Store */ {
     return this.queryFilters.filter(x => !x.active)
   }
 
+  get activeDateFilters() {
+    return this.activeFilters.filter(part => part.type === MarkType.Date)
+  }
+
   get queryFilters() {
     this.disabledFilters
     return this.parsedQuery.filter(x => !!x.type).map(x => ({
       ...x,
       active: this.isActive(x),
     }))
-  }
-
-  get activeDate() {
-    // allows disabling date
-    for (const part of this.parsedQuery) {
-      if (part.type === MarkType.Date) {
-        if (this.disabledFilters[part.text.toLowerCase()]) {
-          return {
-            startDate: null,
-            endDate: null,
-          }
-        }
-      }
-    }
-    return this.nlpStore.nlp.date
   }
 
   get activeMarks() {
@@ -156,6 +173,20 @@ export class SearchFilterStore /* extends Store */ {
     return suggestions
   }
 
+  updateDateStateOnNLPDate = react(
+    () => this.activeDateFilters,
+    dateQueries => {
+      if (!dateQueries.length) {
+        this.dateState = {
+          startDate: null,
+          endDate: null,
+        }
+      } else {
+        this.dateState = this.nlpStore.nlp.date
+      }
+    },
+  )
+
   resetIntegrationFiltersOnNLPChange = react(
     () => this.searchStore.nlpStore.nlp,
     (nlp: NLPResponse) => {
@@ -178,13 +209,17 @@ export class SearchFilterStore /* extends Store */ {
   )
 
   resetFiltersOnSearchClear = react(
-    () => !!this.searchStore.searchState.query,
+    () => !!this.searchStore.query,
     hasQuery => {
       if (hasQuery) {
         throw react.cancel
       }
       this.disabledFilters = {}
       this.exclusiveFilters = {}
+      this.dateState = {
+        startDate: null,
+        endDate: null,
+      }
     },
   )
 
@@ -218,5 +253,14 @@ export class SearchFilterStore /* extends Store */ {
       ...this.exclusiveFilters,
       [filter.type]: !this.exclusiveFilters[filter.type],
     }
+  }
+
+  onChangeDate = date => {
+    const key = Object.keys(date)[0]
+    const firstSelection = date[key]
+    if (!firstSelection) {
+      return
+    }
+    this.dateState = firstSelection
   }
 }

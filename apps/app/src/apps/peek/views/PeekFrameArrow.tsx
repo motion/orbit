@@ -20,7 +20,7 @@ export const PeekFrameArrow = view(({ peekStore, borderShadow }: Props) => {
   const { theme } = peekStore
   const isHidden = !state
   const onRight = !state.peekOnLeft
-  const arrowSize = 20
+  const arrowSize = 18
   const ARROW_CARD_TOP_OFFSET = 32
   const arrowY = Math.min(
     isHidden

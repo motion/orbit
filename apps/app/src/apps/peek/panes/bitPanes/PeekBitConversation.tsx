@@ -13,7 +13,8 @@ const Section = view({
 
 const bitResolverProps = {
   itemProps: {
-    padding: [5, 16],
+    padding: [6, 16],
+    lineHeight: 22,
     '&:hover': {
       background: [0, 0, 0, 0.02],
     },

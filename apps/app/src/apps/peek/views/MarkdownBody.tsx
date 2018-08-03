@@ -7,7 +7,7 @@ const BodyContents = view({
   flex: 1,
   overflowX: 'hidden',
   overflowY: 'scroll',
-  padding: 20,
+  padding: 22,
   fontSize: 16,
   lineHeight: 22,
 })

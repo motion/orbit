@@ -18,7 +18,7 @@ export class Provider {
         constructor: WebSocket,
       },
     )
-    this.websocket.onmessage = ({ data }) => this.handleData(data)
+    this.websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     this.websocket.onerror = err => {
       console.log('ws error', err)
     }

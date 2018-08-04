@@ -290,7 +290,7 @@ export class SearchStore /* extends Store */ {
             }
           }
 
-          // console.log("SEARCH FIND OPTIONS:", findOptions)
+          console.log('SEARCH FIND OPTIONS:', findOptions)
           const nextResults = await BitRepository.find(findOptions)
 
           results = [...results, ...nextResults]

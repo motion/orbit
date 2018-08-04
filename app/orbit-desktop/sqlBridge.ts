@@ -1,17 +1,11 @@
-<<<<<<< HEAD:apps/desktop/sqliteServer.ts
 import { getConnection, getRepository } from 'typeorm'
-=======
-import Primus from 'primus'
-import recoverDB from './helpers/recoverDB'
-import { Desktop } from '@mcro/stores'
->>>>>>> master:app/orbit-desktop/sqliteServer.ts
 
 /**
- * Handles received primus server actions,
+ * Handles received server actions,
  * actions that needs to manipulate with the database.
  */
-export function handlePrimusEntityActions(spark: any, data: any) {
-  console.log('primus received data', data)
+export function handleEntityActions(socket: WebSocket, data: any) {
+  console.log('sqlBridge received data', data)
 
   // check if data has all necessary stuff
   if (!data.operation || !data.entity || !data.operationId) {
@@ -24,44 +18,41 @@ export function handlePrimusEntityActions(spark: any, data: any) {
     return metadata.targetName === data.entity
   })
   if (!entityTarget) {
-    console.error(`${data.entity} entity was not found`, getConnection().entityMetadatas)
-    return;
+    console.error(
+      `${data.entity} entity was not found`,
+      getConnection().entityMetadatas,
+    )
+    return
   }
 
   // get the repository and register a callback that will handle repository method calls
   const repository = getRepository(entityTarget.target)
   const sendResultsBack = result => {
     console.log(`operation ${data.operation} executed successfully`, result)
-    spark.write({
-      operationId: data.operationId,
-      entity: data.entity,
-      result: result
-    })
+    socket.send(
+      JSON.stringify({
+        operationId: data.operationId,
+        entity: data.entity,
+        result: result,
+      }),
+    )
   }
 
   // do repository actions based on operation type
   switch (data.operation) {
     case 'save':
       // @ts-ignore (to make it possible to pass dynamic arguments to repository methods)
-      return repository
-        .save(...data.parameters)
-        .then(sendResultsBack)
+      return repository.save(...data.parameters).then(sendResultsBack)
 
     case 'remove':
       // @ts-ignore (to make it possible to pass dynamic arguments to repository methods)
-      return repository
-        .remove(...data.parameters)
-        .then(sendResultsBack)
+      return repository.remove(...data.parameters).then(sendResultsBack)
 
     case 'count':
-      return repository
-        .count(...data.parameters)
-        .then(sendResultsBack)
+      return repository.count(...data.parameters).then(sendResultsBack)
 
     case 'find':
-      return repository
-        .find(...data.parameters)
-        .then(sendResultsBack)
+      return repository.find(...data.parameters).then(sendResultsBack)
 
     case 'findOne':
       return getRepository(entityTarget.target)

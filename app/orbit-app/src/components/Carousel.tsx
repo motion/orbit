@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { OrbitCard } from '../views/OrbitCard'
-import { Bit } from '@mcro/models'
 import { HorizontalScrollRow } from '../views/HorizontalScrollRow'
 
 type CarouselProps = {

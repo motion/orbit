@@ -1,7 +1,8 @@
 import { RepositoryOperationType } from './Repository'
+import ReconnectingWebsocket from 'reconnecting-websocket'
 
 export class Provider {
-  primus: any
+  websocket: WebSocket
   operationId: number = 0
   subscriptions: {
     operationId: number
@@ -10,17 +11,17 @@ export class Provider {
   }[] = []
 
   constructor() {
-    this.primus = new window.Primus('http://localhost:8082', {
-      websockets: true,
+    this.websocket = new ReconnectingWebsocket('ws://localhost:8082', undefined, {
+      constructor: WebSocket,
     })
-    this.primus.on('data', data => this.handleData(data))
-    this.primus.on('error', err => {
-      console.log('got an error', err.message, err.stack)
-      this.primus.end()
-    })
-    this.primus.on('close', () => {
-      console.log(`primus closed`)
-    })
+    this.websocket.onmessage = ({ data }) => this.handleData(data)
+    this.websocket.onerror = err => {
+      console.log('got an error', err)
+      this.websocket.close()
+    }
+    this.websocket.onclose = () => {
+      console.log('Provider closed')
+    }
   }
 
   handleData(data: any) {
@@ -46,13 +47,13 @@ export class Provider {
       operation,
       parameters,
     }
-    const writeResult: boolean = this.primus.write(query)
-    if (!writeResult)
-      return Promise.reject(
-        `Failed to execute websocket operation ${JSON.stringify(query)}`,
-      )
-
     return new Promise((ok, fail) => {
+      try {
+        this.websocket.send(JSON.stringify(query))
+      } catch (err) {
+        fail(`Failed to execute websocket operation ${JSON.stringify(query)}`)
+        return
+      }
       const subscription: any = { operationId: this.operationId }
       subscription.onSuccess = result => {
         this.subscriptions.splice(this.subscriptions.indexOf(subscription), 1)

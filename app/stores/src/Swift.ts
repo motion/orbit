@@ -93,8 +93,6 @@ class SwiftStore {
         err.preventDefault()
         err.stopPropagation()
       }
-      // err.preventDefault()
-      // err.stopPropagation()
       if (this.ws.readyState == 1) {
         console.log('swift ws error', err)
       }

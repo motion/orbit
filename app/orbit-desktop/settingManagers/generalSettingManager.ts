@@ -3,7 +3,7 @@ import { modelQueryReaction } from '@mcro/helpers'
 import { Setting } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '~/entities/SettingEntity'
-import { findOrCreate } from '~/helpers/helpers'
+import { findOrCreate } from '../helpers/helpers'
 import * as Constants from '../constants'
 import debug from '@mcro/debug'
 

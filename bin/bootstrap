@@ -33,7 +33,7 @@ if [ ! -L "./node_modules/@mcro/gloss" ]; then
   link-root-modules
 fi
 # build everything
-if [ ! -d "./packages/ui/_" ]; then
+if [ ! -d "./app/orbit-desktop/_" ]; then
   build-all
 fi
 

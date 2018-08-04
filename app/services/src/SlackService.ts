@@ -1,6 +1,5 @@
 import * as Slack1 from 'slack'
 import { store } from '@mcro/black/store'
-import { watchModel } from '@mcro/helpers'
 import { Setting } from '@mcro/models'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -28,26 +27,18 @@ export class SlackService {
 
   constructor(setting: Setting) {
     this.setting = setting
-    this.watch = watchModel(
-      setting.constructor,
-      { type: 'slack' },
-      async setting => {
-        this.setting = setting
-        this.slack = new Slack({ token: this.setting.token })
-        this.setAllChannels(
-          await this.slack.channels.list({}).then(res => res && res.channels),
-        )
-      },
-    )
+    this.slack = new Slack({ token: this.setting.token })
+    this.slack.channels
+      .list({})
+      .then(res => res && res.channels)
+      .then(channels => this.setAllChannels(channels))
   }
 
   setAllChannels = channels => {
     this.allChannels = channels
   }
 
-  dispose() {
-    this.watch.cancel()
-  }
+  dispose() {}
 
   get activeChannelIds() {
     const settings = this.setting.values.channels

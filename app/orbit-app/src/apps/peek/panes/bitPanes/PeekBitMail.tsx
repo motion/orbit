@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import { flatten } from 'lodash'
 import * as Helpers from '../../../../helpers'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
+import { TimeAgo } from '../../../../views/TimeAgo'
 
 const parseBody = body =>
   !body ? '' : atob(body.replace(/-/g, '+').replace(/_/g, '/'))
@@ -38,13 +39,10 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
                 name="arrows-1_redo"
                 color="#ddd"
                 size={12}
-                css={{
-                  opacity: index === 0 ? 0 : 1,
-                  display: 'inline-block',
-                  marginTop: 2,
-                  marginRight: 8,
-                  marginLeft: -6,
-                }}
+                opacity={index === 0 ? 0 : 1}
+                marginTop={2}
+                marginRight={8}
+                marginLeft={-6}
               />
               <UI.Row
                 if={message.payload}
@@ -56,26 +54,29 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
                     {Helpers.getHeader(message, 'From').split(' ')[0]}&nbsp;
                   </strong>
                 )}
-                <UI.Date
-                  if={index !== 0}
-                  css={{
-                    opacity: 0.6,
-                    marginBottom: 2,
-                    marginLeft: 3,
-                    fontSize: 13,
-                  }}
-                >
-                  {Helpers.getHeader(message, 'Date')}
-                </UI.Date>
+                {index !== 0 && (
+                  <UI.View
+                    style={{
+                      opacity: 0.6,
+                      marginBottom: 2,
+                      marginLeft: 3,
+                      fontSize: 13,
+                    }}
+                  >
+                    <TimeAgo>{Helpers.getHeader(message, 'Date')}</TimeAgo>
+                  </UI.View>
+                )}
               </UI.Row>
             </UI.Row>
-            <UI.Text if={message.snippet} size={1.1}>
-              {flatten(
-                (parseBody(message.payload.body.data) || message.snippet)
-                  .split('\n')
-                  .map((i, idx) => <Para key={idx}>{i}</Para>),
-              )}
-            </UI.Text>
+            {!!message.snippet && (
+              <UI.Text size={1.1}>
+                {flatten(
+                  (parseBody(message.payload.body.data) || message.snippet)
+                    .split('\n')
+                    .map((i, idx) => <Para key={idx}>{i}</Para>),
+                )}
+              </UI.Text>
+            )}
           </Message>
         )
       })}

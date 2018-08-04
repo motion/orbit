@@ -25,7 +25,6 @@
     "react-resize-detector": "^2.3.0",
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.20.1",
-    "time-ago": "^0.2.1",
     "lodash": "^4.17.10"
   },
   "devDependencies": {

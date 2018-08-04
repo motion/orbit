@@ -10,6 +10,7 @@ import { RoundButton, SubTitle } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { PeekRelated } from '../views/PeekRelated'
+import { TimeAgo } from '../../../views/TimeAgo'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -131,7 +132,7 @@ export const PeekBit = ({
                       </UI.Theme>
                       <HorizontalSpace />
                       <UI.Text>
-                        <UI.Date>{updatedAt}</UI.Date>
+                        <TimeAgo>{updatedAt}</TimeAgo>
                       </UI.Text>
                       <div />
                       <UI.View flex={1} />

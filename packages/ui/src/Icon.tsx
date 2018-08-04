@@ -3,10 +3,10 @@ import * as React from 'react'
 import { Popover } from './Popover'
 import { iconNames } from './iconNames'
 import fuzzy from 'fuzzy'
-import { Color } from '@mcro/css'
 import { View } from './blocks/View'
+import { Color, CSSPropertySet } from '@mcro/gloss'
 
-export type IconProps = {
+export type IconProps = CSSPropertySet & {
   size: number
   color: Color
   type?: 'mini' | 'outline'

@@ -11,6 +11,7 @@ import { App, Desktop, Swift, Electron } from '@mcro/stores'
 import { render } from '../index'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
+import * as Repositories from '../repositories'
 import debug from '@mcro/debug'
 
 // add require('') to window for easy debugging
@@ -38,3 +39,7 @@ window['render'] = render
 window['color'] = color
 window['dateFns'] = dateFns
 window['debug'] = debug
+
+for (const repo in Repositories) {
+  window[repo] = Repositories[repo]
+}

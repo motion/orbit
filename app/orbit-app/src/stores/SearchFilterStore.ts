@@ -2,11 +2,9 @@ import { store, react } from '@mcro/black'
 import { SearchStore } from './SearchStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { memoize, uniqBy } from 'lodash'
-import { NLPResponse } from './nlpStore/types'
+import { MarkType, NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
-import { MarkType } from './nlpStore/types'
-import { DateRange } from './nlpStore/types'
 import { hoverSettler } from '../helpers/hoverSettler'
 
 export type SearchFilter = {

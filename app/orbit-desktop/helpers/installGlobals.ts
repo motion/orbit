@@ -1,7 +1,7 @@
 import root from 'global'
 import '@mcro/black/mlog.js'
 import * as Mobx from 'mobx'
-import { Entities } from '~/entities'
+import { Entities } from '../entities'
 import * as Constants from '../constants'
 import r2 from '@mcro/r2'
 import { App, Desktop, Swift, Electron } from '@mcro/stores'
@@ -18,6 +18,6 @@ root['Desktop'] = Desktop
 root['Electron'] = Electron
 root['Swift'] = Swift
 
-Entities.map(model => {
+for (const model of Entities) {
   root[`${model.name}`] = model
-})
+}

@@ -11,13 +11,16 @@ export class Provider {
   }[] = []
 
   constructor() {
-    this.websocket = new ReconnectingWebsocket('ws://localhost:8082', undefined, {
-      constructor: WebSocket,
-    })
+    this.websocket = new ReconnectingWebsocket(
+      'ws://localhost:8082',
+      undefined,
+      {
+        constructor: WebSocket,
+      },
+    )
     this.websocket.onmessage = ({ data }) => this.handleData(data)
     this.websocket.onerror = err => {
-      console.log('got an error', err)
-      this.websocket.close()
+      console.log('ws error', err)
     }
     this.websocket.onclose = () => {
       console.log('Provider closed')

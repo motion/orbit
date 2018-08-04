@@ -1,9 +1,8 @@
 import { react, on } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import { FindOptions } from 'typeorm'
-import { Bit, Person } from '@mcro/models'
+import { Bit } from '@mcro/models'
 import { BitRepository, PersonRepository } from '../repositories'
-import { hoverSettler } from '../helpers/hoverSettler'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
 import * as Helpers from '../helpers'
@@ -12,7 +11,7 @@ import debug from '@mcro/debug'
 import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { flatten } from 'lodash'
-import { MarkType } from './NLPStore/types'
+import { MarkType } from './nlpStore/types'
 
 const log = debug('searchStore')
 const TYPE_DEBOUNCE = 200
@@ -222,31 +221,34 @@ export class SearchStore /* extends Store */ {
 
         const { startDate, endDate } = dateState
 
-
         for (let i = 0; i < takeMax / take; i += 1) {
           const skip = i * take
 
           const findOptions: FindOptions<Bit> = {
             where: [],
             relations: {
-              people: true
+              people: true,
             },
             take,
-            skip
+            skip,
           }
 
           const andConditions: any = {}
-          if (startDate)
-            andConditions.bitCreatedAt = { $moreThan: startDate }
-          if (endDate)
-            andConditions.bitCreatedAt = { $lessThan: endDate }
+          if (startDate) andConditions.bitCreatedAt = { $moreThan: startDate }
+          if (endDate) andConditions.bitCreatedAt = { $lessThan: endDate }
           if (integrationFilters && integrationFilters.length)
             andConditions.integration = { $in: integrationFilters }
 
           if (activeQuery.length) {
             const likeString = `%${activeQuery.replace(/\s+/g, '%')}%`
-            findOptions.where.push({ ...andConditions, title: { $like: likeString } })
-            findOptions.where.push({ ...andConditions, body: { $like: likeString } })
+            findOptions.where.push({
+              ...andConditions,
+              title: { $like: likeString },
+            })
+            findOptions.where.push({
+              ...andConditions,
+              body: { $like: likeString },
+            })
           }
 
           // SORT
@@ -258,13 +260,13 @@ export class SearchStore /* extends Store */ {
                 break
               case 'Recent':
                 findOptions.order = {
-                  bitCreatedAt: "desc"
+                  bitCreatedAt: 'desc',
                 }
                 break
             }
           } else {
             findOptions.order = {
-              bitCreatedAt: "desc"
+              bitCreatedAt: 'desc',
             }
           }
 
@@ -274,8 +276,8 @@ export class SearchStore /* extends Store */ {
               findOptions.where.push({
                 ...andConditions,
                 person: {
-                  name: { $like: `%${name}%` }
-                }
+                  name: { $like: `%${name}%` },
+                },
               })
             })
           }
@@ -337,13 +339,13 @@ export class SearchStore /* extends Store */ {
       const allResults = await PersonRepository.find({
         take: 3,
         where: {
-          name: { $like: `%${searchQuery.split('').join('%')}%` }
-        }
+          name: { $like: `%${searchQuery.split('').join('%')}%` },
+        },
       })
       const exactPeople = await Promise.all(
         people.map(name => {
           return PersonRepository.findOne({
-            where: { name: { $like: `%${name}%` } }
+            where: { name: { $like: `%${name}%` } },
           })
         }),
       )

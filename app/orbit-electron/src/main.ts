@@ -7,6 +7,7 @@ Error.stackTraceLimit = Infinity
 
 export async function main() {
   if (process.env.NODE_ENV === 'development') {
+    require('./helpers/installGlobals')
     require('./helpers/watchForAppRestarts').watchForAppRestarts()
     await waitPort({ port: 3002 })
     await waitPort({ port: 3001 })

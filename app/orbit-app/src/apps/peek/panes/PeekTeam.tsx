@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { PeekPaneProps } from '../PeekPaneProps'
-// import { SubTitle } from '~/views'
 // import * as UI from '@mcro/ui'
 
 @view

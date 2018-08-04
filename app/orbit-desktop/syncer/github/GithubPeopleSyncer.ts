@@ -1,16 +1,15 @@
-import { Setting, Person } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import { flatten, uniq } from 'lodash'
-import { PersonEntity } from '~/entities/PersonEntity'
-import * as Helpers from '~/helpers'
-import { createOrUpdate } from '~/helpers/createOrUpdate'
-import { createOrUpdatePersonBit } from '~/repository'
-import { GithubPerson } from '~/syncer/github/GithubTypes'
+import { PersonEntity } from '../../entities/PersonEntity'
+import * as Helpers from '../../helpers'
+import { createOrUpdate } from '../../helpers/createOrUpdate'
+import { createOrUpdatePersonBit } from '../../repository'
+import { GithubPerson } from '../../syncer/github/GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
 import { sequence } from '../../utils'
 
 export class GithubPeopleSyncer implements IntegrationSyncer {
-
   setting: Setting
 
   constructor(setting: Setting) {
@@ -30,13 +29,15 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
   private syncRepos = async (repos?: string[]) => {
     const repoSettings = this.setting.values.repos
     const repositoryPaths = repos || Object.keys(repoSettings || {})
-    const organizations: string[] = uniq(repositoryPaths.map(repositoryPath => repositoryPath.split('/')[0]));
+    const organizations: string[] = uniq(
+      repositoryPaths.map(repositoryPath => repositoryPath.split('/')[0]),
+    )
     return flatten(
       sequence(organizations, async organization => {
-        const loader = new GithubPeopleLoader(organization, this.setting.token);
-        const people = await loader.load();
+        const loader = new GithubPeopleLoader(organization, this.setting.token)
+        const people = await loader.load()
         return Promise.all(people.map(person => this.createPerson(person)))
-      })
+      }),
     )
   }
 
@@ -71,12 +72,11 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
         name: githubPerson.name,
         photo: githubPerson.avatarUrl,
         identifier,
-        integration: "github",
+        integration: 'github',
         person: personEntity,
       })
     }
 
     return personEntity
   }
-
 }

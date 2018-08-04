@@ -13,15 +13,14 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { hash } from '~/helpers/createOrUpdateBit'
+import { hash } from '../helpers/createOrUpdateBit'
 import { LocationEntity } from './LocationEntity'
 import { PersonEntity } from './PersonEntity'
 import { SettingEntity } from './SettingEntity'
 
 @Entity()
 export class BitEntity extends BaseEntity implements Bit {
-
-  target = "bit"
+  target = 'bit'
 
   // todo: probably using generated id is a bad idea for the following reasons:
   // 1. we already have unique columns that we can use as primary keys
@@ -30,8 +29,7 @@ export class BitEntity extends BaseEntity implements Bit {
   /**
    * @deprecated
    */
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn() id: number
 
   /**
    * Url to this bit on its origin.
@@ -55,7 +53,7 @@ export class BitEntity extends BaseEntity implements Bit {
    * Duplicates information stored in the settings.
    */
   @Column({ type: String })
-  integration: "slack"|string // todo: need to specify all possible integration types here
+  integration: 'slack' | string // todo: need to specify all possible integration types here
 
   /**
    * Database record creation time.
@@ -82,8 +80,7 @@ export class BitEntity extends BaseEntity implements Bit {
    * Bit body.
    * Primary used for search.
    */
-  @Column()
-  body: string
+  @Column() body: string
 
   /**
    * Content type, for example "conversation", "message", "email", etc.
@@ -95,14 +92,12 @@ export class BitEntity extends BaseEntity implements Bit {
   /**
    * Time when bit was created on its origin.
    */
-  @Column()
-  bitCreatedAt: number
+  @Column() bitCreatedAt: number
 
   /**
    * Time when bit was updated on its origin.
    */
-  @Column()
-  bitUpdatedAt: number
+  @Column() bitUpdatedAt: number
 
   /**
    * Web link to this bit on its origin.
@@ -161,8 +156,6 @@ export class BitEntity extends BaseEntity implements Bit {
   @BeforeUpdate()
   @BeforeInsert()
   beforeInsert() {
-    if (!this.contentHash)
-      this.contentHash = hash(this.data)
+    if (!this.contentHash) this.contentHash = hash(this.data)
   }
-
 }

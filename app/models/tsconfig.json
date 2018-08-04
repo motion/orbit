@@ -2,10 +2,7 @@
   "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
     "outDir": "_",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["*"]
-    }
+    "baseUrl": "./"
   },
   "include": ["src/**/*"]
 }

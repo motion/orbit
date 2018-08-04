@@ -1,10 +1,10 @@
 import { Bit, Person, Setting } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import TurndownService from 'turndown'
-import { BitEntity } from '~/entities/BitEntity'
-import { PersonEntity } from '~/entities/PersonEntity'
-import { createOrUpdatePersonBit } from '~/repository'
-import { fetchFromAtlassian } from '~/syncer/jira/JiraUtils'
+import { BitEntity } from '../../entities/BitEntity'
+import { PersonEntity } from '../../entities/PersonEntity'
+import { createOrUpdatePersonBit } from '../../repository'
+import { fetchFromAtlassian } from '../../syncer/jira/JiraUtils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import {
   AtlassianObj,
@@ -14,7 +14,6 @@ import {
 } from './ConfluenceTypes'
 
 export class ConfluenceSyncer implements IntegrationSyncer {
-
   private setting: Setting
   private service: AtlassianService
   private people: Person[]
@@ -26,10 +25,12 @@ export class ConfluenceSyncer implements IntegrationSyncer {
 
   async run(): Promise<void> {
     try {
-
       console.log('synchronizing confluence people')
       this.people = await this.syncPeople()
-      console.log(`created ${this.people.length} confluence people`, this.people)
+      console.log(
+        `created ${this.people.length} confluence people`,
+        this.people,
+      )
 
       console.log('running confluence')
       const result = await this.syncBits()
@@ -39,7 +40,6 @@ export class ConfluenceSyncer implements IntegrationSyncer {
         'confluence items',
         result,
       )
-
     } catch (err) {
       console.log('Error in confluence task sync', err.message, err.stack)
     }
@@ -65,13 +65,15 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     const contentsRendered = contents.map(response => {
       const markdownBody = htmlToMarkdown(response.body.storage.value)
       const body = markdownBody.replace(/\s\s+/g, ' ')
-      return { body, markdownBody, response, }
+      return { body, markdownBody, response }
     })
     return await this.createIssues(contentsRendered)
   }
 
   private async createIssues(issues: AtlassianObj[]): Promise<Bit[]> {
-    const results = await Promise.all(issues.map(issue => this.createIssue(issue)))
+    const results = await Promise.all(
+      issues.map(issue => this.createIssue(issue)),
+    )
     return results.filter(Boolean)
   }
 
@@ -80,7 +82,6 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     markdownBody,
     body,
   }: AtlassianObj): Promise<Bit> => {
-
     const integration = 'confluence'
     const identifier = response.id
     const bitCreatedAt = new Date(response.history.createdDate).getTime()
@@ -117,8 +118,7 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     })
     console.log(`found a person`, person)
     if (person) {
-      if (!person.personBit.bits)
-        person.personBit.bits = []
+      if (!person.personBit.bits) person.personBit.bits = []
 
       const hasSuchBit = person.personBit.bits.some(bit => {
         return bit.identifier === identifier && bit.integration === integration
@@ -134,12 +134,11 @@ export class ConfluenceSyncer implements IntegrationSyncer {
   }
 
   private async syncPeople(): Promise<Person[]> {
-
     // load groups where from we will extract users
     console.log('loading confluence groups')
     const groups: ConfluenceGroupResponse = await fetchFromAtlassian(
       this.setting.values.atlassian,
-      `/wiki/rest/api/group`
+      `/wiki/rest/api/group`,
     )
     console.log('confluence groups are loaded', groups.results)
 
@@ -148,18 +147,24 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     const users: ConfluenceUser[] = []
     await Promise.all(
       groups.results.map(async group => {
-        const response = await fetchFromAtlassian<ConfluenceGroupMembersResponse>(
+        const response = await fetchFromAtlassian<
+          ConfluenceGroupMembersResponse
+        >(
           this.setting.values.atlassian,
-          `/wiki/rest/api/group/${group.name}/member`
+          `/wiki/rest/api/group/${group.name}/member`,
         )
-        await Promise.all(response.results.map(async member => {
-          const user = await fetchFromAtlassian<ConfluenceUser>(
-            this.setting.values.atlassian,
-            `/wiki/rest/api/user?accountId=` + member.accountId + "&expand=operations,details.personal"
-          )
-          users.push(user)
-        }))
-      })
+        await Promise.all(
+          response.results.map(async member => {
+            const user = await fetchFromAtlassian<ConfluenceUser>(
+              this.setting.values.atlassian,
+              `/wiki/rest/api/user?accountId=` +
+                member.accountId +
+                '&expand=operations,details.personal',
+            )
+            users.push(user)
+          }),
+        )
+      }),
     )
 
     // create people for each loaded member
@@ -167,10 +172,12 @@ export class ConfluenceSyncer implements IntegrationSyncer {
   }
 
   private async createPerson(user: ConfluenceUser): Promise<Person> {
-
     const identifier = `confluence-${user.accountId}`
     const integration = 'confluence'
-    const person = await PersonEntity.findOne({ identifier, integration }, { relations: ["personBit", "personBit.bits"] })
+    const person = await PersonEntity.findOne(
+      { identifier, integration },
+      { relations: ['personBit', 'personBit.bits'] },
+    )
     const updatedPerson = Object.assign(person || new PersonEntity(), {
       integration,
       identifier,
@@ -180,9 +187,9 @@ export class ConfluenceSyncer implements IntegrationSyncer {
         avatar: user.profilePicture.path || '',
         emails: [user.details.personal.email],
         data: {
-          github: user
-        }
-      }
+          github: user,
+        },
+      },
     })
 
     await PersonEntity.save(updatedPerson)
@@ -199,5 +206,4 @@ export class ConfluenceSyncer implements IntegrationSyncer {
 
     return updatedPerson
   }
-
 }

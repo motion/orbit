@@ -1,4 +1,4 @@
-import { GithubIssueQueryResult } from '~/syncer/github/GithubTypes'
+import { GithubIssueQueryResult } from '../../syncer/github/GithubTypes'
 import { GithubIssueQuery } from './GithubQueries'
 import { fetchFromGitHub } from './GithubUtils'
 import debug from '@mcro/debug'

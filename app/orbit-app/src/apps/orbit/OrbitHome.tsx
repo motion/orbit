@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
-import { modelQueryReaction } from '@mcro/helpers'
 import { BitRepository, PersonRepository } from '../../repositories'
 import { OrbitCard } from '../../views/OrbitCard'
 import { Masonry } from '../../views/Masonry'
@@ -45,7 +44,7 @@ class OrbitHomeStore {
     { immediate: true },
   )
 
-  results = modelQueryReaction(
+  results = react(
     async () => {
       const result = await Promise.all([
         // { type: 'team', title: 'Engineering' },
@@ -70,7 +69,6 @@ class OrbitHomeStore {
     },
     {
       defaultValue: [],
-      poll: 60 * 1000,
     },
   )
 }

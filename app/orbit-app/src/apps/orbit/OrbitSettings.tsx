@@ -124,6 +124,12 @@ class OrbitSettingsStore {
     const next = settings || (await this.getSettings())
     this.integrationSettings = next
   }
+
+  isActive = result => {
+    return !!this.integrationSettings.find(
+      setting => setting.type === result.id,
+    )
+  }
 }
 
 @view.attach('searchStore', 'paneStore', 'integrationSettingsStore')
@@ -134,11 +140,6 @@ class OrbitSettingsStore {
 export class OrbitSettings extends React.Component<Props> {
   render() {
     const { name, store, integrationSettingsStore } = this.props
-    const isActive = result => {
-      return !!store.integrationSettings.find(
-        setting => setting.type === result.id,
-      )
-    }
     return (
       <SubPane name={name} fadeBottom>
         <Views.SubTitle>Settings</Views.SubTitle>
@@ -175,7 +176,7 @@ export class OrbitSettings extends React.Component<Props> {
         <Masonry>
           {integrationSettingsStore.allIntegrations
             // sort by not used first
-            .sort((a, b) => (!isActive(a) && isActive(b) ? -1 : 1))
+            .sort((a, b) => (!store.isActive(a) && store.isActive(b) ? -1 : 1))
             .map((item, index) => {
               // custom auth clicks
               const onClick = ({ currentTarget }) => {

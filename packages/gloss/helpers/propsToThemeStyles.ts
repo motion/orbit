@@ -13,19 +13,21 @@ const themeOverrides = {
 // resolves props into styles for valid css
 // backs up to theme colors if not found
 
-export const propsToThemeStyles = (props, mapPsuedoToBooleans?) => {
+export const propsToThemeStyles = (props, mapPropStylesToPseudos?) => {
   let styles = {
     ...props.theme.base,
   }
   for (const state in themeStates) {
-    styles[themeStates[state]] = props.theme[state]
+    const pseudoKey = themeStates[state]
+    styles[pseudoKey] = {
+      ...styles[pseudoKey],
+      ...props.theme[state],
+    }
     const overrideStyles = props[themeOverrides[state]]
-    if (mapPsuedoToBooleans && overrideStyles) {
-      if (props[state]) {
-        styles = {
-          ...styles,
-          ...overrideStyles,
-        }
+    if (mapPropStylesToPseudos && overrideStyles) {
+      styles[pseudoKey] = {
+        ...styles[pseudoKey],
+        ...overrideStyles,
       }
     }
   }

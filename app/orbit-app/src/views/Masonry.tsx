@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
-import isEqual from 'react-fast-compare'
 
-const rowHeight = 4
+const rowHeight = 1
 const gridGap = 7
-const gridColumnGap = 9
+const gridColumnGap = 10
 
 const MasonryGrid = view({
   display: 'grid',
@@ -13,23 +12,25 @@ const MasonryGrid = view({
 
 export type MasonryProps = {
   minWidth?: number
+  measureKey?: number
 }
 
 @view.ui
 export class Masonry extends React.Component<MasonryProps> {
   static defaultProps = {
+    measureKey: 0,
     minWidth: 200,
   }
 
   state = {
     measured: false,
-    children: null,
+    measureKey: null,
     gridChildren: null,
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (!isEqual(state.children, props.children)) {
-      return { measured: false, children: props.children }
+    if (state.measureKey !== props.measureKey) {
+      return { measured: false, measureKey: props.measureKey }
     }
     return null
   }
@@ -50,7 +51,7 @@ export class Masonry extends React.Component<MasonryProps> {
     }
     const styles = []
     for (const item of Array.from(this.gridNode.children)) {
-      const content = item.firstChild
+      const content = item.firstChild as HTMLDivElement
       const contentHeight = content.clientHeight
       const rowSpan = Math.ceil(
         (contentHeight + gridGap) / (rowHeight + gridGap),
@@ -60,6 +61,9 @@ export class Masonry extends React.Component<MasonryProps> {
     const gridChildren = React.Children.map(
       this.props.children,
       (child, index) => {
+        if (typeof child === 'string' || typeof child === 'number') {
+          return child
+        }
         return React.cloneElement(child, {
           inGrid: true,
           style: {

@@ -42,7 +42,12 @@ const HorizontalSpace = view({
   width: 15,
 })
 
+const BottomSpace = view({
+  height: 100,
+})
+
 const BottomFloat = view({
+  height: 132,
   position: 'absolute',
   bottom: 0,
   left: 0,
@@ -164,6 +169,7 @@ export const PeekBit = ({
                         comments={comments}
                       />
                     </HighlightsLayer>
+                    <BottomSpace />
                     <BottomFloat>
                       <PeekRelated
                         padding={[0, 15]}

@@ -47,8 +47,8 @@ type Props = {
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
 const SearchBar = view(Toolbar, {
-  height: 39,
-  padding: [4, 6],
+  height: 37,
+  padding: [5, 8],
 })
 
 SearchBar.theme = () => ({

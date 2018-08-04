@@ -1,5 +1,5 @@
 import Primus from 'primus'
-import recoverDB from '~/helpers/recoverDB'
+import recoverDB from './helpers/recoverDB'
 import { Desktop } from '@mcro/stores'
 
 export default class SQLiteServer {

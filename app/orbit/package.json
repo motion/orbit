@@ -9,6 +9,7 @@
     "build": "echo hi",
     "watch": "echo hi",
     "start": "./scripts/start.sh",
+    "start-prod": "./scripts/start.sh start-prod",
     "build-app": "./scripts/build.sh"
   },
   "devDependencies": {

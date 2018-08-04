@@ -2,9 +2,9 @@ import * as React from 'react'
 import * as Constants from '../constants'
 import { on, view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import * as Helpers from '../helpers'
 import { Electron, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
+import { getScreenSize } from '../helpers/getScreenSize'
 
 class MainStore {
   get mouseInActiveArea() {
@@ -33,7 +33,7 @@ export class MainWindow extends React.Component<{
   }
 
   setScreenSize = () => {
-    const screenSize = Helpers.getScreenSize()
+    const screenSize = getScreenSize()
     Electron.setState({ screenSize })
   }
 

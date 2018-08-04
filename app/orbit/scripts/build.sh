@@ -27,7 +27,7 @@ fi
 
 #publish
 
-if [[ "$@" =~ "--no-publish" ]]; then
+if [[ "$@" =~ "--no-install" ]]; then
   echo "not publishing..."
 else
   echo "publishing packages for prod install..."
@@ -46,12 +46,8 @@ else
 
   # install
 
-  if [[ "$@" =~ "--no-install" ]]; then
-    echo "not installing"
-  else
-    echo "installing for prod... $(pwd)"
-    (cd app-build && yarn install --production --registry http://localhost:4343)
-  fi
+  echo "installing for prod... $(pwd)"
+  (cd app-build && yarn install --production --registry http://localhost:4343)
 
   echo "killing verdaccio..."
   kill %-
@@ -67,11 +63,17 @@ rm -r app-built/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@
 cp -r ./build-resources/iohook/node_modules/iohook app-built/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules
 
 # sign
-
-echo "signing app..."
-npx electron-osx-sign --ignore puppeteer/\\.local-chromium ./app-built/Orbit-darwin-x64/Orbit.app
+if [[ "$@" =~ "--no-sign" ]]; then
+  echo "not signing"
+else
+  echo "signing app..."
+  npx electron-osx-sign --ignore puppeteer/\\.local-chromium ./app-built/Orbit-darwin-x64/Orbit.app
+fi
 
 # pack
-
-echo "packing app into .dmg..."
-npx electron-installer-dmg --overwrite --out ./app-built --icon ./resources/icon.icns ./app-built/Orbit-darwin-x64/Orbit.app Orbit
+if [[ "$@" =~ "--no-pack" ]]; then
+  echo "not signing"
+else
+  echo "packing app into .dmg..."
+  npx electron-installer-dmg --overwrite --out ./app-built --icon ./resources/icon.icns ./app-built/Orbit-darwin-x64/Orbit.app Orbit
+fi

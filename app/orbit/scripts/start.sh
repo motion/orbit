@@ -4,7 +4,7 @@ cd $(dirname $0)/..
 
 # test prod app
 if [ "$1" = "start-prod" ]; then
-  DEBUG=api,crawler,crawler:* app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit
+  DEBUG=api,crawler,crawler:* app-built/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit
   exit 0
 fi
 

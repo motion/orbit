@@ -4,7 +4,7 @@
   "description": "Description",
   "author": "Orbit",
   "version": "2.2.1",
-  "main": "electron.js",
+  "main": "_/main.js",
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },

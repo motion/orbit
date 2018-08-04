@@ -14,6 +14,8 @@ const log = {
 }
 
 const ROOT = Path.join(__dirname, '..')
+const APP_BUILD_DIR = Path.join(ROOT, 'app-built')
+
 const ignorePaths = [
   // exclude extra dirs for xcode
   'oracle/train',
@@ -43,7 +45,7 @@ const ignorePaths = [
 async function bundle() {
   console.log('cleaning old app...')
   await new Promise(resolve =>
-    rm(Path.join(ROOT, 'app-built', 'Orbit-darwin-x64'), resolve),
+    rm(Path.join(APP_BUILD_DIR, 'Orbit-darwin-x64'), resolve),
   )
   await new Promise(resolve =>
     rm(
@@ -74,7 +76,7 @@ async function bundle() {
   console.log('packaging new app...')
   const paths = await electronPackager({
     dir: Path.join(ROOT, 'app'),
-    out: Path.join(ROOT, 'app-built'),
+    out: APP_BUILD_DIR,
     icon: Path.join(ROOT, 'resources', 'icon.icns'),
     overwrite: true,
     tmpdir: false,
@@ -103,7 +105,7 @@ async function bundle() {
   // this is necessary for high sierra to be able to sign
   console.log('removing metadata for signing...')
   await execa('xattr', ['-cr', 'Orbit.app'], {
-    cwd: Path.join(ROOT, 'app', 'Orbit-darwin-x64'),
+    cwd: Path.join(APP_BUILD_DIR, 'Orbit-darwin-x64'),
   })
   finish()
 }

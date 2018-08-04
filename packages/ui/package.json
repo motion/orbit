@@ -5,8 +5,10 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "build": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
-    "watch": "npm run build -- --watch"
+    "build": "npm run build-js & npm run build-types",
+    "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
+    "build-types": "tsc  --emitDeclarationOnly",
+    "watch": "npm run build-js -- --watch & npm run build-types -- watch"
   },
   "dependencies": {
     "@mcro/black": "^2.2.1",

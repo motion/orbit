@@ -13,6 +13,7 @@ import { PaneManagerStore } from './PaneManagerStore'
 import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../stores/SearchStore'
 import { API_URL } from '../../constants'
+import { ClearButton } from '@mcro/ui'
 
 type Props = {
   name: string
@@ -166,7 +167,9 @@ export class OrbitSettings extends React.Component<Props> {
                   index={index + store.generalSettings.length}
                   setting={setting}
                   isActive
-                />
+                >
+                  <ClearButton />
+                </store.IntegrationCard>
               ))}
             </Masonry>
             <Views.VertSpace />

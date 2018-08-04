@@ -142,7 +142,10 @@ function getPeekPositionFromTarget(target, lastPeek): WindowMap | null {
   }
   // adjust for docked
   if (App.orbitState.docked) {
-    x -= 24
+    // for now lets not allow things to overlap the docked frame
+    // comment this out if you want them to
+    const maxLeft = App.orbitState.position[0] - pW - 10
+    x = Math.min(maxLeft || x)
   }
   return {
     position: [Math.round(x), Math.round(y)],

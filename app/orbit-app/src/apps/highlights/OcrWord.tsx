@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { HL_PAD, TOP_BAR_PAD } from './helpers'
+import { HL_PAD } from './helpers'
+import { MAC_TOPBAR_HEIGHT, wordKey } from '@mcro/constants'
 import { App } from '@mcro/stores'
-import * as Helpers from '@mcro/constants'
 
 const Word = view({
   fontFamily: 'helvetica',
@@ -28,32 +28,25 @@ const WordInner = view({
   whiteSpace: 'pre',
 })
 
-@view
-export class OCRWord {
-  render() {
-    const {
-      item,
-      store: { hoveredWord },
-    } = this.props
-    const [x, y, width, height, word, index, color] = item
-    const key = Helpers.wordKey(item)
-    const highlighted = App.state.highlightWords[word]
-    return (
-      <Word
-        hovered={hoveredWord && hoveredWord.key === key}
-        highlighted={highlighted}
-        style={{
-          top: y - HL_PAD - TOP_BAR_PAD,
-          left: x - HL_PAD,
-          width: width + HL_PAD * 2,
-          height: height + HL_PAD * 2,
-          background: color,
-          fontSize: 10,
-          opacity: 1, //highlighted || Desktop.isHoldingOption ? 1 : 0,
-        }}
-      >
-        <WordInner if={!highlighted}>{word}</WordInner>
-      </Word>
-    )
-  }
-}
+export const OCRWord = view(({ item, store: { hoveredWord } }) => {
+  const [x, y, width, height, word /* index */, , color] = item
+  const key = wordKey(item)
+  const highlighted = App.state.highlightWords[word]
+  return (
+    <Word
+      hovered={hoveredWord && hoveredWord.key === key}
+      highlighted={highlighted}
+      style={{
+        top: y - HL_PAD - MAC_TOPBAR_HEIGHT,
+        left: x - HL_PAD,
+        width: width + HL_PAD * 2,
+        height: height + HL_PAD * 2,
+        background: color,
+        fontSize: 10,
+        opacity: 1, //highlighted || Desktop.isHoldingOption ? 1 : 0,
+      }}
+    >
+      <WordInner if={!highlighted}>{word}</WordInner>
+    </Word>
+  )
+})

@@ -14,7 +14,7 @@ import { SettingEntity } from './SettingEntity'
 @Entity()
 export class PersonEntity extends BaseEntity implements Person {
 
-  target = "person"
+  target: Person['target'] = "person"
 
   // todo: probably using generated id is a bad idea for the following reasons:
   // 1. we already have unique columns that we can use as primary keys

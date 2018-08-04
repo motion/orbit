@@ -10,8 +10,7 @@ import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import { handleEntityActions } from './sqlBridge'
 import { App, Electron, Desktop } from '@mcro/stores'
-// import { sleep } from '@mcro/helpers'
-import { store, debugState, on } from '@mcro/black'
+import { debugState, on } from '@mcro/black'
 import root from 'global'
 import Path from 'path'
 import open from 'opn'
@@ -28,7 +27,6 @@ const log = debug('desktop')
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
 
-@store
 export class Root {
   isReconnecting = false
   connection?: Connection

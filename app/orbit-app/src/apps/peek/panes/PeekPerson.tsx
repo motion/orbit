@@ -185,12 +185,12 @@ export class PeekPerson extends React.Component<
       content: (
         <Frame>
           <CardContent>
-            <Avatar src={person.data.profile.image_512} />
+            <Avatar src={person.data.profile.image_48} />
             <Info>
               <Name>{person.name}</Name>
               <br />
-              <Email href={`mailto:${person.data.profile.email}`}>
-                {person.data.profile.email}
+              <Email href={`mailto:${person.data.email}`}>
+                {person.data.email}
               </Email>
               <br />
               <Links>

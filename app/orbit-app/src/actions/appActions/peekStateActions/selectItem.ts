@@ -33,10 +33,10 @@ export function selectItem(
   target?: PeekTarget,
 ) {
   invariant(item, 'Must pass item')
-  if (item.target === "person") {
+  if (item.target === 'person') {
     invariant(item.name, 'Must pass Person name')
     selectPerson(item, target)
-  } else if (item.target === "bit") {
+  } else if (item.target === 'bit') {
     invariant(item.title, 'Must pass Bit title')
     selectBit(item, target)
   } else {
@@ -83,7 +83,7 @@ function selectBit(bit: Bit, target?: PeekTarget) {
     peekId: Math.random(),
     item: {
       id: bit.id,
-      icon: bit.icon || '',
+      icon: bit.integration || '',
       title: bit.title,
       body: bit.body || '',
       type: 'bit',

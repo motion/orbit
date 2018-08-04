@@ -4,8 +4,8 @@ import Fs from 'fs-extra'
 import readDir from 'recursive-readdir'
 import Yaml from 'js-yaml'
 import debug from '@mcro/debug'
-import { BitEntity } from '~/entities/BitEntity'
-import { createInChunks } from '~/temp/createInChunks'
+import { BitEntity } from '../../entities/BitEntity'
+import { createInChunks } from '../../temp/createInChunks'
 
 const log = debug('folder')
 debug.quiet('folder')

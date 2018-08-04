@@ -1,7 +1,5 @@
 import 'isomorphic-fetch'
 
-require('module-alias').addAlias('~', __dirname + '/')
-
 Error.stackTraceLimit = Infinity
 
 console.warn(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)

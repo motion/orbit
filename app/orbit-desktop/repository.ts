@@ -1,5 +1,5 @@
-import { PersonBitEntity } from '~/entities/PersonBitEntity'
-import { PersonEntity } from '~/entities/PersonEntity'
+import { PersonBitEntity } from './entities/PersonBitEntity'
+import { PersonEntity } from './entities/PersonEntity'
 
 export async function createOrUpdatePersonBit({
   email,
@@ -16,7 +16,6 @@ export async function createOrUpdatePersonBit({
   identifier: string
   person: PersonEntity
 }): Promise<PersonBitEntity> {
-
   // find a person, if not found create a new one
   let personBit = await PersonBitEntity.findOne(email, {
     relations: ['people'],

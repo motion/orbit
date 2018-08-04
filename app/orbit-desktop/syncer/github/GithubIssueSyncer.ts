@@ -1,12 +1,13 @@
-import { Bit, createOrUpdateBit, Setting } from '@mcro/models'
+import { Bit, Setting } from '@mcro/models'
 import { flatten, omit } from 'lodash'
-import { GithubIssue } from '~/syncer/github/GithubTypes'
+import { GithubIssue } from '../../syncer/github/GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubIssueLoader } from './GithubIssueLoader'
 import { sequence } from '../../utils'
+import { createOrUpdateBit } from '../../helpers/helpers'
+import { BitEntity } from '../../entities/BitEntity'
 
 export class GithubIssueSyncer implements IntegrationSyncer {
-
   private setting: Setting
 
   constructor(setting: Setting) {
@@ -19,7 +20,11 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       const issues = await this.syncIssues()
       console.log(`created ${issues.length} issues`, issues)
     } catch (err) {
-      console.log('error in github issues synchronization', err.message, err.stack)
+      console.log(
+        'error in github issues synchronization',
+        err.message,
+        err.stack,
+      )
     }
   }
 
@@ -29,17 +34,33 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     return flatten(
       sequence(repositoryPaths, async repositoryPath => {
         const [organization, repository] = repositoryPath.split('/')
-        const loader = new GithubIssueLoader(organization, repository, this.setting.token);
-        const issues = await loader.load();
-        return Promise.all(issues.map(issue => this.createIssue(issue, organization, repository)))
-      })
+        const loader = new GithubIssueLoader(
+          organization,
+          repository,
+          this.setting.token,
+        )
+        const issues = await loader.load()
+        return Promise.all(
+          issues.map(issue =>
+            this.createIssue(issue, organization, repository),
+          ),
+        )
+      }),
     )
   }
 
-  private async createIssue(issue: GithubIssue, organization: string, repository: string): Promise<Bit> {
-    const createdAt = issue.createdAt ? new Date(issue.createdAt).getTime() : undefined
-    const updatedAt = issue.updatedAt ? new Date(issue.updatedAt).getTime() : undefined
-    return await createOrUpdateBit(Bit, {
+  private async createIssue(
+    issue: GithubIssue,
+    organization: string,
+    repository: string,
+  ): Promise<Bit> {
+    const createdAt = issue.createdAt
+      ? new Date(issue.createdAt).getTime()
+      : undefined
+    const updatedAt = issue.updatedAt
+      ? new Date(issue.updatedAt).getTime()
+      : undefined
+    return await createOrUpdateBit(BitEntity, {
       integration: 'github',
       identifier: issue.id,
       type: 'task',
@@ -56,12 +77,11 @@ export class GithubIssueSyncer implements IntegrationSyncer {
         labels: issue.labels.edges.map(edge => edge.node),
         comments: issue.comments.edges.map(edge => edge.node),
         orgLogin: organization,
-        repositoryName: repository
+        repositoryName: repository,
       },
       author: issue.author ? issue.author.login : null, // github can return null author in the case if github user was removed,
       bitCreatedAt: createdAt,
       bitUpdatedAt: updatedAt,
     })
   }
-
 }

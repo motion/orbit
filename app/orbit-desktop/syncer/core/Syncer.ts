@@ -1,4 +1,4 @@
-import { SettingEntity } from '~/entities/SettingEntity'
+import { SettingEntity } from '../../entities/SettingEntity'
 import { SyncerOptions } from './IntegrationSyncer'
 import { Setting } from '@mcro/models'
 import Timer = NodeJS.Timer
@@ -17,7 +17,6 @@ import Timer = NodeJS.Timer
  *   6. run syncer from the REPL
  */
 export class Syncer {
-
   options: SyncerOptions
   private intervalIds: Timer[] = []
 
@@ -30,18 +29,19 @@ export class Syncer {
    */
   async start() {
     const settings = await SettingEntity.find({ type: this.options.type })
-    await Promise.all(settings.map(async setting => {
+    await Promise.all(
+      settings.map(async setting => {
+        if (this.intervalIds[setting.id])
+          clearInterval(this.intervalIds[setting.id])
 
-      if (this.intervalIds[setting.id])
-        clearInterval(this.intervalIds[setting.id])
+        this.intervalIds[setting.id] = setInterval(
+          () => this.runSyncer(setting),
+          1000 * 60, // 1 minute
+        )
 
-      this.intervalIds[setting.id] = setInterval(
-        () => this.runSyncer(setting),
-        1000 * 60 // 1 minute
-      )
-
-      await this.runSyncer(setting)
-    }))
+        await this.runSyncer(setting)
+      }),
+    )
   }
 
   /**
@@ -57,8 +57,7 @@ export class Syncer {
    * Runs syncer immediately.
    */
   async runSyncer(setting: Setting) {
-    const syncer = new this.options.constructor(setting);
-    return syncer.run(); // todo: add try/catch block here
+    const syncer = new this.options.constructor(setting)
+    return syncer.run() // todo: add try/catch block here
   }
-
 }

@@ -2,8 +2,8 @@ import { Setting } from '@mcro/models'
 import * as _ from 'lodash'
 import debug from '@mcro/debug'
 import { DriveService } from '@mcro/services'
-import { BitEntity } from '~/entities/BitEntity'
-import { createInChunks } from '~/temp/createInChunks'
+import { BitEntity } from '../../entities/BitEntity'
+import { createInChunks } from '../../temp/createInChunks'
 
 const log = debug('sync.googleCal')
 

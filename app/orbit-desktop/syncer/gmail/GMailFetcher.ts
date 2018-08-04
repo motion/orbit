@@ -1,37 +1,46 @@
 import { Setting } from '@mcro/models'
 import Strategies from '@mcro/oauth-strategies'
 import r2 from '@mcro/r2'
-import * as Constants from '~/constants'
-import { queryObjectToQueryString } from '~/utils'
+import * as Constants from '../../constants'
+import { queryObjectToQueryString } from '../../utils'
 import { GmailFetchOptions } from './GMailTypes'
 
 export class GMailFetcher {
-
-  setting: Setting;
+  setting: Setting
 
   constructor(setting: Setting) {
-    this.setting = setting;
+    this.setting = setting
   }
 
   async fetch<T>(options: GmailFetchOptions<T>): Promise<T> {
-    return this.doFetch('/gmail/v1' + options.url, options.query);
+    return this.doFetch('/gmail/v1' + options.url, options.query)
   }
 
-  private async doFetch(path, query?: { [key: string]: any }, isRetrying = false) {
-    const url = `https://www.googleapis.com${path}${queryObjectToQueryString(query)}`;
+  private async doFetch(
+    path,
+    query?: { [key: string]: any },
+    isRetrying = false,
+  ) {
+    const url = `https://www.googleapis.com${path}${queryObjectToQueryString(
+      query,
+    )}`
     console.log('fetching', url)
     const response = await fetch(url, {
       mode: 'cors',
       headers: {
-        'Authorization': `Bearer ${this.setting.token}`,
+        Authorization: `Bearer ${this.setting.token}`,
         'Access-Control-Allow-Origin': Constants.API_HOST,
         'Access-Control-Allow-Methods': 'GET',
-      }
-    });
-    const result = await response.json();
+      },
+    })
+    const result = await response.json()
     if (result.error) {
-      if ((result.error.message === 'Invalid Credentials' || result.error.code === 401) && !isRetrying) {
-        console.log("refreshing token")
+      if (
+        (result.error.message === 'Invalid Credentials' ||
+          result.error.code === 401) &&
+        !isRetrying
+      ) {
+        console.log('refreshing token')
         const didRefresh = await this.refreshToken()
         if (didRefresh) {
           return await this.doFetch(path, query, true)
@@ -67,5 +76,4 @@ export class GMailFetcher {
     }
     return false
   }
-
 }

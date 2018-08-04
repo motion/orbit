@@ -4,10 +4,7 @@
     "declaration": true,
     "module": "CommonJS",
     "outDir": "_",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["*"]
-    }
+    "baseUrl": "./"
   },
   "include": ["**/*"],
   "exclude": ["_", "node_modules", "tmp", "desktop.js"]

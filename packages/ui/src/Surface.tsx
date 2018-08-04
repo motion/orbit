@@ -112,6 +112,7 @@ const SurfaceFrame = view(View, {
 
 SurfaceFrame.theme = props => {
   const themeStyles = propsToThemeStyles(props, true)
+  if (props.debug) console.log('themeStyles', themeStyles)
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -150,6 +151,7 @@ SurfaceFrame.theme = props => {
     ...themeStyles,
     ...propsToStyles(props),
     ...propsToTextSize(props),
+    ...(props.active && themeStyles['&:active']),
   }
   return surfaceStyles
 }

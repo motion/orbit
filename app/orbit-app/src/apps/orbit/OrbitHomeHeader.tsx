@@ -66,6 +66,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
             />
           )}
           <UI.Button
+            debug
             icon="menu35"
             tooltip="Directory"
             active={paneStore.activePaneFast === 'directory'}

@@ -1,0 +1,39 @@
+{
+  "name": "@mcro/oracle",
+  "version": "2.2.2",
+  "main": "./_/oracle.js",
+  "scripts": {
+    "build": "./build.sh --if-empty && npx tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "build-app": "./build.sh",
+    "train": "cd ./pyocr/src && python3 train.py",
+    "generate": "node ./generate",
+    "test": "DEBUG_IMAGES=true node ./test/test --debug",
+    "test-fast": "node ./test/test",
+    "test-scroll": "node ./test/test --scroll",
+    "edit": "open ./orbit/orbit.xcodeproj"
+  },
+  "files": [
+    "_/**/*"
+  ],
+  "dependencies": {
+    "@mcro/black": "^2.2.1",
+    "@mcro/debug": "^2.2.1",
+    "electron-util": "^0.2.1",
+    "execa": "^0.8.0",
+    "express": "^4.16.2",
+    "kill-port": "^1.1.0",
+    "macos-version": "^4.0.1",
+    "pidusage": "^1.2.0",
+    "reconnecting-websocket": "^3.2.2",
+    "sb-promisify": "^2.0.2",
+    "verdaccio": "3.5.1",
+    "ws": "^4.0.0"
+  },
+  "peerDependencies": {
+    "mobx": "*"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4343"
+  }
+}

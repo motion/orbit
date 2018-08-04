@@ -1,6 +1,6 @@
 {
   "name": "@mcro/gloss-displaynames",
-  "version": "2.1.0",
+  "version": "2.2.1",
   "main": "_/index.js",
   "scripts": {
     "build": "tsc || true",

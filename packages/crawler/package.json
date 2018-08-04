@@ -1,7 +1,6 @@
 {
   "name": "@mcro/crawler",
-  "private": true,
-  "version": "2.2.0",
+  "version": "2.2.1",
   "main": "_/index.js",
   "module": "src/index.js",
   "scripts": {
@@ -22,6 +21,6 @@
     "urijs": "^1.19.0"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4343"
   }
 }

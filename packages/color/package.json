@@ -1,6 +1,6 @@
 {
   "name": "@mcro/color",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "",
   "main": "_/color.js",
   "author": "Motion",
@@ -10,6 +10,6 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4343"
   }
 }

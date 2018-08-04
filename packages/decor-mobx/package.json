@@ -3,19 +3,19 @@
   "main": "_/decor-mobx.js",
   "types": "decor-mobx.d.ts",
   "sideEffects": false,
-  "version": "2.2.0",
+  "version": "2.2.1",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/decor": "^2.2.0",
+    "@mcro/decor": "^2.2.1",
     "mobx-react": "5.2.3"
   },
   "peerDependencies": {
     "mobx": "^5.0.2"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4343"
   }
 }

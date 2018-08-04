@@ -1,6 +1,6 @@
 {
   "name": "@mcro/slackdown",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "",
   "main": "_/slackdown.js",
   "author": "Motion (http://motion.io)",
@@ -8,8 +8,5 @@
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

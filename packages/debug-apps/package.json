@@ -1,24 +1,30 @@
 {
-	"name": "@mcro/debug-apps",
-	"main": "_/index.js",
-	"version": "2.2.1",
-	"bin": {
-		"debug-apps": "./_/index.js"
-	},
-	"dependencies": {
-		"debug": "^3.1.0",
-		"express": "^4.12.3",
-		"guid": "0.0.12",
-		"http-proxy-middleware": "^0.17.4",
-		"kill-port": "^1.2.0",
-		"lodash": "4.17.10",
-		"node-uuid": "^1.4.7",
-		"puppeteer": "1.5.0",
-		"request": "^2.67.0",
-		"socket.io": "^2.0.4",
-		"ws": "6.0.0"
-	},
-	"publishConfig": {
-		"registry": "http://localhost:4343"
-	}
+  "name": "@mcro/debug-apps",
+  "main": "_/index.js",
+  "version": "2.2.1",
+  "bin": {
+    "debug-apps": "./_/index.js"
+  },
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "start": "node --max_old_space_size=4096 ./_/index"
+  },
+  "dependencies": {
+    "@mcro/r2": "^2.2.1",
+    "debug": "^3.1.0",
+    "express": "^4.12.3",
+    "guid": "0.0.12",
+    "http-proxy-middleware": "^0.17.4",
+    "kill-port": "^1.2.0",
+    "lodash": "4.17.10",
+    "node-uuid": "^1.4.7",
+    "puppeteer": "1.5.0",
+    "request": "^2.67.0",
+    "socket.io": "^2.0.4",
+    "ws": "6.0.0"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4343"
+  }
 }

@@ -21,6 +21,8 @@ import { Connection } from 'typeorm'
 import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
 import macosVersion from 'macos-version'
 import { Server as WebSocketServer } from 'ws'
+import connectModels from './helpers/connectModels'
+import { Entities } from './entities'
 
 const log = debug('desktop')
 const hostile = promisifyAll(hostile_)
@@ -96,6 +98,10 @@ export class Root {
     //     Desktop.setAppState({ selectedText: selection })
     //   }
     // }, 3000)
+  }
+
+  async connect() {
+    this.connection = await connectModels(Entities)
   }
 
   watchLastBit = () => {

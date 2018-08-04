@@ -8,50 +8,5 @@ killgroup() {
   kill 0
 }
 
-# just in case
-rm -rf ./packages/decor/node_modules/mobx 2> /dev/null
-rm -rf ./packages/decor-classes/node_modules/mobx 2> /dev/null
-rm -rf ./packages/decor-classes/node_modules/react 2> /dev/null
-rm -rf ./packages/decor-react/node_modules/mobx 2> /dev/null
-rm -rf ./packages/decor-react/node_modules/react 2> /dev/null
-rm -rf ./packages/decor-mobx/node_modules/mobx 2> /dev/null
-rm -rf ./packages/router/node_modules/mobx 2> /dev/null
-rm -rf ./packages/black/node_modules/mobx 2> /dev/null
-rm -rf ./packages/automagical/node_modules/mobx 2> /dev/null
-rm -rf ./packages/ui/node_modules/mobx 2> /dev/null
-rm -rf ./packages/search/node_modules/mobx 2> /dev/null
-rm -rf ./packages/model/node_modules/mobx 2> /dev/null
-rm -rf ./packages/helpers/node_modules/mobx 2> /dev/null
-rm -rf ./apps/oracle/node_modules/mobx 2> /dev/null
-rm -rf ./apps/all/node_modules/mobx 2> /dev/null
-rm -rf ./apps/models/node_modules/mobx 2> /dev/null
-rm -rf ./packages/debug/node_modules/mobx 2> /dev/null
-rm -rf ./packages/ui/node_modules/react 2> /dev/null
-rm -rf ./packages/reactron/node_modules/react 2> /dev/null
-rm -rf ./packages/search/node_modules/react 2> /dev/null
-rm -rf ./packages/babel-preset-motion/node_modules/react 2> /dev/null
-rm -rf ./apps/oracle/node_modules/react 2> /dev/null
-rm -rf ./apps/all/node_modules/react 2> /dev/null
-rm -rf ./packages/gloss/node_modules/react 2> /dev/null
-rm -rf ./packages/black/node_modules/react 2> /dev/null
-rm -rf ./packages/decor/node_modules/react 2> /dev/null
-rm -rf ./packages/ui/node_modules/react-dom 2> /dev/null
-rm -rf ./packages/reactron/node_modules/react-dom 2> /dev/null
-rm -rf ./packages/search/node_modules/react-dom 2> /dev/null
-rm -rf ./packages/babel-preset-motion/node_modules/react-dom 2> /dev/null
-rm -rf ./apps/oracle/node_modules/react-dom 2> /dev/null
-rm -rf ./apps/all/node_modules/react-dom 2> /dev/null
-rm -rf ./packages/gloss/node_modules/react-dom 2> /dev/null
-rm -rf ./packages/black/node_modules/react-dom 2> /dev/null
-rm -rf ./packages/decor/node_modules/react-dom 2> /dev/null
-
-if [[ "$1" == "" ]]; then
-  npx lerna --parallel \
-    --scope @mcro/desktop \
-    --scope @mcro/app \
-    --scope @mcro/electron \
-    exec -- npm run start -- ${@:2}
-else
-  cd apps/$1
-  npm run start -- ${@:2}
-fi
+cd app/$1
+npm run start -- ${@:2}

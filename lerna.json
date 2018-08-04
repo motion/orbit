@@ -1,9 +1,11 @@
 {
-  "lerna": "2.11.0",
+  "lerna": "3.0.0-rc.0",
   "npmClient": "yarn",
-  "packages": [
-    "apps/*",
-    "packages/*"
-  ],
-  "version": "2.2.0"
+  "packages": ["app/*", "packages/*"],
+  "version": "2.2.1",
+  "command": {
+    "publish": {
+      "registry": "http://localhost:4343"
+    }
+  }
 }

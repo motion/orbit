@@ -7,7 +7,7 @@ ARGS=${@:2}
 
 echo "in $NAME: $ARGS"
 
-APP="$ROOT/apps/$NAME"
+APP="$ROOT/app/$NAME"
 PKG="$ROOT/packages/$NAME"
 
 if [ -d "$APP" ]; then

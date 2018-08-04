@@ -1,6 +1,6 @@
 {
   "name": "@mcro/router",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "",
   "sideEffects": false,
   "main": "_/index.js",
@@ -19,6 +19,6 @@
     "mobx": "^5.0.2"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4343"
   }
 }

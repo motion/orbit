@@ -2,7 +2,7 @@
   "name": "@mcro/keyword-extract",
   "main": "_/index.js",
   "sideEffects": false,
-  "version": "2.2.0",
+  "version": "2.2.1",
   "scripts": {
     "build": "echo hi",
     "watch": "echo hi"

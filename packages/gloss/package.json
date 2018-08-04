@@ -1,6 +1,6 @@
 {
   "name": "@mcro/gloss",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Higher order component for nicer component styles",
   "main": "_/gloss.js",
   "scripts": {
@@ -15,8 +15,8 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
-    "@mcro/color": "^2.2.0",
-    "@mcro/css": "^2.2.0"
+    "@mcro/color": "^2.2.1",
+    "@mcro/css": "^2.2.1"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
@@ -26,6 +26,6 @@
     "@types/react": "16.4.6"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4343"
   }
 }

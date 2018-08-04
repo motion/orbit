@@ -2,16 +2,16 @@
   "name": "@mcro/decor-react",
   "main": "_/decor-react.js",
   "sideEffects": false,
-  "version": "2.2.0",
+  "version": "2.2.1",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/debug": "*",
-    "@mcro/decor": "^2.2.0",
-    "@mcro/helpers": "^2.2.0",
-    "@mcro/store-hmr": "*",
+    "@mcro/debug": "^2.2.1",
+    "@mcro/decor": "^2.2.1",
+    "@mcro/helpers": "^2.2.1",
+    "@mcro/store-hmr": "^2.2.1",
     "batch-processor": "^1.0.0",
     "event-kit": "^2.5.0",
     "global": "^4.3.2",
@@ -23,15 +23,15 @@
   },
   "devDependencies": {
     "@types/event-kit": "2.4.0",
+    "@types/lodash": "4.14.115",
     "@types/react": "16.3.17",
-    "@types/react-dom": "16.0.6",
-    "@types/lodash": "4.14.115"
+    "@types/react-dom": "16.0.6"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "http://localhost:4343"
   }
 }

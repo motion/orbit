@@ -1,6 +1,5 @@
 import root from 'global'
 import * as Mobx from 'mobx'
-import { deepObserve } from 'mobx-deep-observer'
 import { enableLogging } from 'mobx-logger'
 
 let runners = (root.__mlogRunners = root.__mlogRunners || [])
@@ -19,8 +18,6 @@ function deepMobxToJS(_thing) {
   return thing
 }
 
-let cur
-
 type MLog = {
   (fn: Function, ...rest: Array<any>): void
   clear: Function
@@ -28,17 +25,7 @@ type MLog = {
   disable: Function
 }
 
-export const mlog = <MLog>function mlog(fn, ...rest) {
-  // regular log
-  if (typeof fn !== 'function') {
-    cur = fn
-    deepObserve(fn, (change, type, path) => {
-      if (cur === fn) {
-        console.log(change, type, path)
-      }
-    })
-    return console.log(...[fn, ...rest].map(deepMobxToJS))
-  }
+export const mlog = <MLog>function mlog(fn) {
   const isClass = fn.toString().indexOf('class') === 0
   if (isClass) {
     Object.keys(fn).forEach(key => {

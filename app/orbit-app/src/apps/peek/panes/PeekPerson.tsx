@@ -199,7 +199,7 @@ export class PeekPerson extends React.Component<
                 <IntegrationButton
                   icon="slack"
                   href={`slack://user?team=${
-                    setting.values.oauth.info.team.id
+                    1 /* setting.values.oauth.info.team.id */
                   }&id=${person.data.id}`}
                 >
                   Slack

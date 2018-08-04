@@ -34,8 +34,7 @@ export const Carousel = ({
           <OrbitCard
             key={`${index}${bit.id}`}
             pane="carousel"
-            bit={bit instanceof Bit ? bit : null}
-            {...(!(bit instanceof Bit) ? bit : null)}
+            bit={bit}
             index={index}
             total={items.length}
             inGrid

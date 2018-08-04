@@ -20,16 +20,15 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
 
 const PeekBottom = view({
   background: '#fff',
-  boxShadow: [[0, 0, 40, [0, 0, 0, 0.07]]],
-  margin: [0, -20],
-  padding: [0, 20],
+  margin: [0, -30],
+  padding: [0, 30],
   borderTop: [1, '#eee'],
   position: 'relative',
   zIndex: 10,
 })
 
 const PeekActionBar = view({
-  padding: [6, 10, 10],
+  padding: [6, 10, 8],
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
@@ -39,17 +38,24 @@ const Cmd = view({
   opacity: 0.5,
 })
 
-const Meta = view({
-  padding: 10,
-  background: '#fff',
-  borderBottom: [1, '#eee'],
-  flexFlow: 'row',
-  overflow: 'hidden',
-  alignItems: 'center',
-})
-
 const HorizontalSpace = view({
   width: 15,
+})
+
+const BottomFloat = view({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  paddingTop: 50,
+  pointerEvents: 'none',
+  '& > *': {
+    pointerEvents: 'auto',
+  },
+})
+
+BottomFloat.theme = ({ theme }) => ({
+  background: `linear-gradient(transparent, ${theme.base.background} 90%)`,
 })
 
 export const PeekBit = ({
@@ -98,60 +104,50 @@ export const PeekBit = ({
                 title,
                 icon,
                 subhead: searchBar,
-                preBody: (
-                  <Meta>
-                    <UI.Theme name="grey">
-                      <RoundButton
-                        onClick={e => {
-                          e.stopPropagation()
-                          locationLink()
-                        }}
-                      >
-                        {location}
-                      </RoundButton>
-                    </UI.Theme>
-                    <UI.View flex={1} />
-                    <UI.Text>
-                      <UI.Date>{updatedAt}</UI.Date>
-                    </UI.Text>
-                    {!!permalink &&
-                      !!icon && (
-                        <>
-                          <HorizontalSpace />
-                          <OrbitIcon
-                            onClick={() => {
-                              console.log('todo open integration', integration)
-                            }}
-                            icon={icon}
-                            size={16}
-                          />
-                        </>
-                      )}
-                    <HorizontalSpace />
-                    <UI.Theme name="orbit">
-                      <RoundButton onClick={permalink}>View</RoundButton>
-                    </UI.Theme>
-                  </Meta>
-                ),
                 postBody: (
                   <PeekBottom>
-                    <PeekRelated
-                      before={
-                        <SubTitle padding={0} margin={[12, 12, 'auto', 12]}>
-                          Related
-                        </SubTitle>
-                      }
-                    />
                     <PeekActionBar>
+                      <UI.Theme name="grey">
+                        <RoundButton
+                          onClick={e => {
+                            e.stopPropagation()
+                            locationLink()
+                          }}
+                        >
+                          {location}
+                        </RoundButton>
+                      </UI.Theme>
+                      <UI.Text>
+                        <UI.Date>{updatedAt}</UI.Date>
+                      </UI.Text>
                       <div />
                       <UI.View flex={1} />
                       <UI.Row alignItems="center">
+                        {!!permalink &&
+                          !!icon && (
+                            <>
+                              <HorizontalSpace />
+                              <OrbitIcon
+                                onClick={() => {
+                                  console.log(
+                                    'todo open integration',
+                                    integration,
+                                  )
+                                }}
+                                icon={icon}
+                                size={16}
+                              />
+                            </>
+                          )}
                         <RoundButton alignItems="center">
                           Copy Link <Cmd>⌘+Shift+C</Cmd>
                         </RoundButton>
-                        <RoundButton alignItems="center">
-                          Open <Cmd>⌘+Enter</Cmd>
-                        </RoundButton>
+                        <HorizontalSpace />
+                        <UI.Theme name="orbit">
+                          <RoundButton alignItems="center">
+                            Open <Cmd>⌘+Enter</Cmd>
+                          </RoundButton>
+                        </UI.Theme>
                       </UI.Row>
                     </PeekActionBar>
                   </PeekBottom>
@@ -168,6 +164,13 @@ export const PeekBit = ({
                         comments={comments}
                       />
                     </HighlightsLayer>
+                    <BottomFloat>
+                      <PeekRelated
+                        padding={[0, 15]}
+                        cardSpace={10}
+                        verticalPadding={10}
+                      />
+                    </BottomFloat>
                   </>
                 ),
               })

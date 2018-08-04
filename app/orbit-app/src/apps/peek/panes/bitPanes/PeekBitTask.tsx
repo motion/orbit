@@ -6,7 +6,7 @@ const BodyContents = view({
   whiteSpace: 'pre-line',
   padding: 22,
   fontSize: 16,
-  lineHeight: 22,
+  lineHeight: 24,
   overflow: 'hidden',
 })
 

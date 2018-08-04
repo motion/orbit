@@ -168,7 +168,7 @@ export class OrbitSettings extends React.Component<Props> {
                   setting={setting}
                   isActive
                 >
-                  <ClearButton />
+                  {/* <ClearButton position="absolute" bottom={8} right={8} /> */}
                 </store.IntegrationCard>
               ))}
             </Masonry>

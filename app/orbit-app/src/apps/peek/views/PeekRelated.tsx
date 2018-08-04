@@ -20,6 +20,7 @@ export const PeekRelated = decorator(({ relatedStore, ...props }) => (
       cardProps={{
         titleProps: {
           size: 1,
+          fontWeight: 300,
         },
         padding: 10,
         hide: {

@@ -5,12 +5,10 @@ import { validCSSAttr } from '@mcro/css'
 
 export const View = view()
 
-View.theme = ({ scrollable, ...props }) => {
-  return {
-    ...propsToStyles(props),
-    ...propsToTextSize(props),
-  }
-}
+View.theme = props => ({
+  ...propsToStyles(props),
+  ...propsToTextSize(props),
+})
 
 // ignore all valid css props, except src for images
 View.ignoreAttrs = {

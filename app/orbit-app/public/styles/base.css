@@ -85,10 +85,21 @@ a.anchor {
   margin: 0 0 10px 0;
 }
 
+.markdown h2 {
+  font-size: 22px;
+}
+.markdown h3 {
+  font-size: 20px;
+}
+.markdown h4 {
+  font-size: 18px;
+}
+
 .markdown h2,
 .markdown h3,
 .markdown h4 {
-  margin: 10px 0;
+  margin: 0.8rem 0;
+  line-height: 1.7rem;
 }
 
 .markdown hr {

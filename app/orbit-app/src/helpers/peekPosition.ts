@@ -1,5 +1,6 @@
 import * as Constants from '@mcro/constants'
 import { App } from '@mcro/stores'
+import { isEqual } from 'lodash'
 
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
@@ -37,6 +38,9 @@ let lastPeek = null
 let lastTarget = null
 
 export function peekPosition(target): WindowMap | null {
+  if (!target) {
+    return null
+  }
   const nextPosition = getPeekPositionFromTarget(target, lastPeek)
   lastPeek = nextPosition
   lastTarget = target
@@ -90,8 +94,9 @@ function getLazyPosition(
 }
 
 function getPeekPositionFromTarget(target, lastPeek): WindowMap | null {
-  if (!target) {
-    return null
+  // dont reset position on same target re-opening
+  if (isEqual(target, lastTarget)) {
+    return lastPeek
   }
   const [screenW, screenH] = screenSize()
   let { orbitOnLeft } = App
@@ -144,8 +149,12 @@ function getPeekPositionFromTarget(target, lastPeek): WindowMap | null {
   if (App.orbitState.docked) {
     // for now lets not allow things to overlap the docked frame
     // comment this out if you want them to
-    const maxLeft = App.orbitState.position[0] - pW - 10
-    x = Math.min(maxLeft || x)
+    const maxLeft = App.orbitState.position[0] - pW + 20
+    if (x > maxLeft) {
+      x = maxLeft + 200
+    } else {
+      x -= 20
+    }
   }
   return {
     position: [Math.round(x), Math.round(y)],

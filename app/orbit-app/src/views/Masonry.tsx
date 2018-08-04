@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
+import isEqual from 'react-fast-compare'
 
 const rowHeight = 1
 const gridGap = 7
@@ -16,7 +17,7 @@ export type MasonryProps = {
 }
 
 @view.ui
-export class Masonry extends React.Component<MasonryProps> {
+export class Masonry extends React.PureComponent<MasonryProps> {
   static defaultProps = {
     measureKey: 0,
     minWidth: 200,
@@ -29,8 +30,15 @@ export class Masonry extends React.Component<MasonryProps> {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (state.measureKey !== props.measureKey) {
-      return { measured: false, measureKey: props.measureKey }
+    if (
+      state.measureKey !== props.measureKey ||
+      !isEqual(props.children, state.children)
+    ) {
+      return {
+        measured: false,
+        measureKey: props.measureKey,
+        children: props.children,
+      }
     }
     return null
   }

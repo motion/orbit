@@ -2,14 +2,11 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '../../../views/OrbitIcon'
-import * as UI from '@mcro/ui'
 import { BitRepository } from '../../../repositories'
 import { SubTitle, RoundButton } from '../../../views'
 import { OrbitCardMasonry } from '../../../views/OrbitCardMasonry'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
-import { Masonry } from '../../../views/Masonry'
-import { OrbitCard } from '../../../views/OrbitCard'
 import { Carousel } from '../../../components/Carousel'
 import { App } from '@mcro/stores'
 
@@ -170,6 +167,7 @@ export class PeekPerson extends React.Component<
     if (!settings) {
       return children({})
     }
+    // @ts-ignore
     const setting = settings.slack
     if (!setting || !person || !person.data || !person.data.profile) {
       console.log('no person or person.data.profile?', person)

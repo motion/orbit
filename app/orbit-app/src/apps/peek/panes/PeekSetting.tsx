@@ -121,6 +121,8 @@ class SettingContent extends React.Component<
 }
 
 class PeekSettingStore {
+  props: PeekPaneProps
+
   get setting() {
     return this.idSetting || this.typeSetting
   }

@@ -5,7 +5,7 @@ import { AppStatePeekItem } from '@mcro/stores'
 import { SearchStore } from '../../stores/SearchStore'
 
 export type PeekContents = {
-  title: React.ReactNode
+  title?: React.ReactNode
   titleAfter?: React.ReactNode
   subtitle?: React.ReactNode
   subtitleBefore?: React.ReactNode
@@ -13,7 +13,7 @@ export type PeekContents = {
   icon?: React.ReactNode
   permalink?: React.ReactNode
   date?: React.ReactNode
-  content: React.ReactNode
+  content?: React.ReactNode
   headerProps?: Object
   subhead?: React.ReactNode
   preBody?: React.ReactNode

@@ -64,11 +64,6 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
     ) {
       return
     }
-    if (Mobx.isObservable(value)) {
-      console.log('weird converting to js...')
-      value = Mobx.toJS(value)
-    }
-    console.log('setting to', name, newValue, value)
     current.set(value)
   }
 
@@ -169,7 +164,6 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         })
       if (timeout) {
         cancelTm = setTimeout(() => {
-          console.log('automagical, when timed out!')
           reject(new ReactionTimeoutError())
         }, timeout)
       }
@@ -242,7 +236,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       }
       let hasCalledSetValue = false
       const start = Date.now()
-      root.__trackStateChanges.isActive = true
+      Root.__trackStateChanges.isActive = true
 
       let result
       reactionHelpers.setValue = val => {
@@ -274,11 +268,9 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
         return
       }
 
-      const changed = root.__trackStateChanges.changed
+      const changed = Root.__trackStateChanges.changed
       const prefix = `${name} ${isReaction ? `@r` : `@w`}`
-      root.__trackStateChanges = {}
-
-      console.log('react', name, result)
+      Root.__trackStateChanges = {}
 
       // handle promises
       if (result instanceof Promise) {

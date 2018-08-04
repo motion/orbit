@@ -209,9 +209,9 @@ react-tilt@^0.1.4:
   version "0.1.4"
   resolved "https://registry.npmjs.org/react-tilt/-/react-tilt-0.1.4.tgz#0ac1f33674a3fff6c617cf411002d7ecdd2ebcb1"
 
-react-virtualized@^9.13.0:
-  version "9.19.1"
-  resolved "https://registry.npmjs.org/react-virtualized/-/react-virtualized-9.19.1.tgz#84b53253df2d9df61c85ce037141edccc70a73fd"
+react-virtualized@^9.20.1:
+  version "9.20.1"
+  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.20.1.tgz#02dc08fe9070386b8c48e2ac56bce7af0208d22d"
   dependencies:
     babel-runtime "^6.26.0"
     classnames "^2.2.3"
@@ -240,9 +240,9 @@ shallowequal@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/shallowequal/-/shallowequal-1.0.2.tgz#1561dbdefb8c01408100319085764da3fcf83f8f"
 
-time-ago@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/time-ago/-/time-ago-0.1.0.tgz#5b4921a11843081c95ea50930084f90007f4a026"
+time-ago@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/time-ago/-/time-ago-0.2.1.tgz#4abcb7fb8c8cbb1efd9575ab8b30ec699e8e05a9"
 
 ua-parser-js@^0.7.9:
   version "0.7.18"

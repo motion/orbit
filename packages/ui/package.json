@@ -1,36 +1,45 @@
 {
-	"name": "@mcro/ui",
-	"version": "2.2.1",
-	"main": "_/index.js",
-	"license": "MIT",
-	"sideEffects": false,
-	"dependencies": {
-		"batch-processor": "^1.0.0",
-		"fuzzy": "^0.1.3",
-		"hoist-non-react-statics": "^2.3.0",
-		"keycode": "^2.1.9",
-		"prop-types": "^15.6.0",
-		"raf-throttle": "^2.0.3",
-		"react-fast-compare": "2.0.1",
-		"react-hot-loader": "4.3.4",
-		"react-resize-detector": "^2.3.0",
-		"react-tilt": "^0.1.4",
-		"react-virtualized": "^9.20.1",
-		"time-ago": "^0.2.1"
-	},
-	"devDependencies": {
-		"@types/lodash": "4.14.112",
-		"@types/react": "16.3.17",
-		"@types/react-dom": "16.0.6"
-	},
-	"peerDependencies": {
-		"@babel/runtime": "*",
-		"lodash": "*",
-		"mobx": "5.0.3",
-		"react": "^0.14.0 || ^15.0.0 || ^16.0.0",
-		"react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
-	},
-	"publishConfig": {
-		"registry": "http://localhost:4343"
-	}
+  "name": "@mcro/ui",
+  "version": "2.2.1",
+  "main": "_/index.js",
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+    "build": "npm run build-js & npm run build-types",
+    "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
+    "build-types": "tsc  --emitDeclarationOnly",
+    "watch": "npm run build-js -- --watch & npm run build-types -- watch"
+  },
+  "dependencies": {
+    "@mcro/black": "^2.2.1",
+    "@mcro/color": "^2.2.1",
+    "@mcro/gloss": "^2.2.1",
+    "batch-processor": "^1.0.0",
+    "fuzzy": "^0.1.3",
+    "hoist-non-react-statics": "^2.3.0",
+    "keycode": "^2.1.9",
+    "prop-types": "^15.6.0",
+    "raf-throttle": "^2.0.3",
+    "react-fast-compare": "2.0.1",
+    "react-hot-loader": "4.3.4",
+    "react-resize-detector": "^2.3.0",
+    "react-tilt": "^0.1.4",
+    "react-virtualized": "^9.20.1",
+    "time-ago": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.112",
+    "@types/react": "16.3.17",
+    "@types/react-dom": "16.0.6"
+  },
+  "peerDependencies": {
+    "@babel/runtime": "*",
+    "lodash": "*",
+    "mobx": "5.0.3",
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4343"
+  }
 }

@@ -4,6 +4,6 @@ export interface Provider {
   execute(
     entity: string,
     operation: RepositoryOperationType,
-    parameters: any[],
+    parameters?: any[],
   ): Promise<any>
 }

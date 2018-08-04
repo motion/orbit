@@ -34,6 +34,7 @@ export const Toolbar = view(Row, {
 })
 
 Toolbar.theme = ({
+  height,
   borderTop,
   borderBottom,
   background,
@@ -52,5 +53,5 @@ Toolbar.theme = ({
     (position === 'bottom'
       ? [1, theme.base.borderColor || colors.sectionHeaderBorder]
       : 'none'),
-  height: compact ? 28 : 42,
+  height: height || (compact ? 28 : 42),
 })

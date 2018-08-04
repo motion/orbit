@@ -75,30 +75,30 @@ export const PEEK_THEMES = {
   },
   integration: {
     slack: {
-      darkenTitleBarAmount: 0.1,
+      darkenTitleBarAmount: 0.04,
       background: '#FDDE64',
     },
     github: {
-      darkenTitleBarAmount: 0.1,
+      darkenTitleBarAmount: 0.04,
       background: '#353535',
       color: 'white',
     },
     gdocs: {
-      darkenTitleBarAmount: 0.1,
+      darkenTitleBarAmount: 0.04,
       background: '#7DA5F4',
     },
     jira: {
-      darkenTitleBarAmount: 0.1,
+      darkenTitleBarAmount: 0.04,
       background: '#4978D0',
       color: 'white',
     },
     confluence: {
-      darkenTitleBarAmount: 0.1,
+      darkenTitleBarAmount: 0.04,
       background: '#4B7BD4',
       color: 'white',
     },
     gmail: {
-      darkenTitleBarAmount: 0.1,
+      darkenTitleBarAmount: 0.04,
       background: '#D2675E',
       color: 'white',
     },

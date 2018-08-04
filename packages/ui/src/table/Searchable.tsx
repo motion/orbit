@@ -48,7 +48,7 @@ const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
 const SearchBar = view(Toolbar, {
   height: 37,
-  padding: [5, 8],
+  padding: [3, 5],
 })
 
 SearchBar.theme = () => ({
@@ -65,12 +65,12 @@ export const SearchBox = view(View, {
   paddingLeft: 4,
   background: [255, 255, 255, 0.1],
   '&:focus-within': {
-    boxShadow: `0 0 0 3px rgba(255,255,255,0.2)`,
+    boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
   },
 })
 
 SearchBox.theme = ({ theme }) => ({
-  border: [1, theme.base.borderColor.darken(0.2).desaturate(0.2)],
+  border: [1, theme.base.borderColor.desaturate(0.1)],
 })
 
 export const SearchInput = view(TableInput, {

@@ -39,20 +39,21 @@ const Cmd = view({
 })
 
 const HorizontalSpace = view({
-  width: 15,
+  width: 10,
 })
 
 const BottomSpace = view({
   height: 100,
 })
 
+const extra = 50
 const BottomFloat = view({
-  height: 132,
+  height: 132 + extra,
   position: 'absolute',
   bottom: 0,
   left: 0,
   right: 0,
-  paddingTop: 50,
+  paddingTop: 50 + extra,
   pointerEvents: 'none',
   '& > *': {
     pointerEvents: 'auto',
@@ -60,8 +61,13 @@ const BottomFloat = view({
 })
 
 BottomFloat.theme = ({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.base.background} 90%)`,
+  background: `linear-gradient(transparent, ${theme.base.background} 50%)`,
 })
+
+const searchBarProps = {
+  padding: [7, 50],
+  height: 48,
+}
 
 export const PeekBit = ({
   item,
@@ -84,6 +90,7 @@ export const PeekBit = ({
       onChange={() => searchStore.setHighlightIndex(0)}
       onEnter={peekStore.goToNextHighlight}
       placeholder={`Search this ${item.subType} and related...`}
+      searchBarProps={searchBarProps}
     >
       {({ searchBar, searchTerm }) => {
         return (
@@ -122,6 +129,7 @@ export const PeekBit = ({
                           {location}
                         </RoundButton>
                       </UI.Theme>
+                      <HorizontalSpace />
                       <UI.Text>
                         <UI.Date>{updatedAt}</UI.Date>
                       </UI.Text>
@@ -131,7 +139,6 @@ export const PeekBit = ({
                         {!!permalink &&
                           !!icon && (
                             <>
-                              <HorizontalSpace />
                               <OrbitIcon
                                 onClick={() => {
                                   console.log(
@@ -142,6 +149,7 @@ export const PeekBit = ({
                                 icon={icon}
                                 size={16}
                               />
+                              <HorizontalSpace />
                             </>
                           )}
                         <RoundButton alignItems="center">

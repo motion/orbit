@@ -27,10 +27,10 @@ const PeekHeaderContain = view(UI.View, {
 PeekHeaderContain.theme = ({ theme, position }) => {
   return {
     position: position || 'relative',
-    borderBottom: [
-      1,
-      theme.titlebarBorder || theme.base.background.darken(0.2),
-    ],
+    // borderBottom: [
+    //   1,
+    //   theme.titlebarBorder || theme.base.background.darken(0.2),
+    // ],
     background: theme.headerBackground || theme.base.background,
   }
 }
@@ -64,7 +64,7 @@ TitleBarContain.theme = ({ theme }) => {
 
 const TitleBarText = props => (
   <UI.Text
-    size={1.1}
+    size={1}
     fontWeight={700}
     ellipse={1}
     margin={0}
@@ -141,7 +141,7 @@ export class PeekHeaderContent extends React.Component<Props> {
       >
         {/* Nice gradient effect on header */}
         <UI.FullScreen
-          background="linear-gradient(rgba(255,255,255,0.025), transparent 44%)"
+          background="linear-gradient(rgba(255,255,255,0.027), transparent 44%)"
           pointerEvents="none"
         />
         {/* Fade below the icon */}
@@ -152,10 +152,19 @@ export class PeekHeaderContent extends React.Component<Props> {
           top={0}
           right={0}
           bottom={0}
-          width={70}
+          left={0}
           background={`linear-gradient(
             to right,
-            transparent,
+            transparent 80%,
+            ${
+              theme.darkenTitleBarAmount
+                ? theme.base.background.darken(theme.darkenTitleBarAmount)
+                : 'transparent'
+            }
+          ),
+          linear-gradient(
+            to left,
+            transparent 80%,
             ${
               theme.darkenTitleBarAmount
                 ? theme.base.background.darken(theme.darkenTitleBarAmount)

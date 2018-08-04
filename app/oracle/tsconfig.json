@@ -5,6 +5,5 @@
     "outDir": "_",
     "baseUrl": "./"
   },
-  "include": ["**/*"],
-  "exclude": ["_", "node_modules", "tmp", "*.js"]
+  "include": ["src/**/*"]
 }

@@ -40,9 +40,8 @@ class SettingContent extends React.Component<
     const store = this.props.store
     const job: Job = {} as Job
     job.type = store.setting.type
-    job.action = 'all'
     job.status = 'PENDING'
-    await JobRepository.save(setting)
+    await JobRepository.save(job)
   }
 
   removeIntegration = async () => {
@@ -121,6 +120,8 @@ class SettingContent extends React.Component<
 }
 
 class PeekSettingStore {
+  props: PeekPaneProps
+
   get setting() {
     return this.idSetting || this.typeSetting
   }

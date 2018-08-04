@@ -53,8 +53,7 @@ class AtlassianSettingLoginStore {
         token: null,
       } as Setting
       const setting = await SettingRepository.findOne({ where: values })
-      if (setting)
-        return setting
+      if (setting) return setting
       return await SettingRepository.save(values)
     },
     {

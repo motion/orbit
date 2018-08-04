@@ -1,5 +1,6 @@
 import { App, Electron } from '@mcro/stores'
 import { store, react } from '@mcro/black/store'
+import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
 
 type Point = {
   x: number
@@ -15,7 +16,8 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
   if (!bounds || !mousePosition) {
     return false
   }
-  const { x, y } = mousePosition
+  const { x } = mousePosition
+  const y = mousePosition.y - MAC_TOPBAR_HEIGHT
   const { position, size } = bounds
   if (!position || !size) {
     return false

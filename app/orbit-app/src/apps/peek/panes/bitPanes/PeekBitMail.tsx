@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import * as _ from 'lodash'
+import { flatten } from 'lodash'
 import * as Helpers from '../../../../helpers'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
@@ -70,7 +70,7 @@ export const Mail = ({ bit }: PeekBitPaneProps) => {
               </UI.Row>
             </UI.Row>
             <UI.Text if={message.snippet} size={1.1}>
-              {_.flatten(
+              {flatten(
                 (parseBody(message.payload.body.data) || message.snippet)
                   .split('\n')
                   .map((i, idx) => <Para key={idx}>{i}</Para>),

@@ -10,7 +10,6 @@ import { RoundButton, SubTitle } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { PeekRelated } from '../views/PeekRelated'
-import { HorizontalScrollRow } from '../../../views/HorizontalScrollRow'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({

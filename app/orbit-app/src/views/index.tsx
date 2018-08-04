@@ -41,14 +41,16 @@ export const FormTableValue = ({ children }) => (
   <TableCell {...inputCellProps}>{children}</TableCell>
 )
 
-export const InputRow = ({ label, type, value, onChange }) => (
+const Label = view('label', { padding: [0, 4], fontWeight: 400 })
+const Input = view('input', { fontSize: 16, padding: [7, 8], width: '100%' })
+
+export const InputRow = ({ label, type = 'input', value, onChange }) => (
   <FormTableRow>
     <FormTableLabel>
-      <label css={{ padding: [0, 4], fontWeight: 400 }}>{label}</label>
+      <Label>{label}</Label>
     </FormTableLabel>
     <FormTableValue>
-      <input
-        css={{ fontSize: 16, padding: [7, 8], width: '100%' }}
+      <Input
         value={value}
         onChange={e => onChange(e.target.value)}
         type={type}
@@ -65,9 +67,7 @@ export const CheckBoxRow = ({
 }) => (
   <FormTableRow>
     <FormTableLabel>
-      <label htmlFor={name} css={{ padding: [0, 4], fontWeight: 400 }}>
-        {children}
-      </label>
+      <Label htmlFor={name}>{children}</Label>
     </FormTableLabel>
     <FormTableValue>
       <input
@@ -75,7 +75,7 @@ export const CheckBoxRow = ({
         name={name}
         checked={checked}
         onChange={onChange && (e => onChange(e.target.checked))}
-        css={{ margin: ['auto', 4] }}
+        style={{ margin: `auto 4px` }}
         type="checkbox"
       />
     </FormTableValue>

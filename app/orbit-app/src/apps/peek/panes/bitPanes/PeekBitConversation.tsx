@@ -7,10 +7,6 @@ import { view, compose } from '@mcro/black'
 import { PeekRelatedStore } from '../../stores/PeekRelatedStore'
 import { PeekBitPaneProps } from './PeekBitPaneProps'
 
-const Section = view({
-  padding: [10, 16, 0],
-})
-
 const bitResolverProps = {
   itemProps: {
     padding: [6, 16],
@@ -32,11 +28,12 @@ type Props = PeekBitPaneProps & {
   relatedStore: PeekRelatedStore
 }
 
-export const Conversation = decorator(({ relatedStore, content }: Props) => {
-  return (
-    <>
-      {content}
-      {/* {relatedStore.relatedConversations.length ? (
+export const Conversation = decorator(
+  ({ /* relatedStore, */ content }: Props) => {
+    return (
+      <>
+        {content}
+        {/* {relatedStore.relatedConversations.length ? (
         <UI.View marginTop={20}>
           <Section>
             <SubTitle>After</SubTitle>
@@ -55,8 +52,9 @@ export const Conversation = decorator(({ relatedStore, content }: Props) => {
           <br />
         </UI.View>
       ) : null} */}
-    </>
-  )
-})
+      </>
+    )
+  },
+)
 
 Conversation.bitResolverProps = bitResolverProps

@@ -14,7 +14,7 @@ if (debug) {
   }
 }
 
-process.on('unhandledRejection', function(error, p) {
+process.on('unhandledRejection', function(error) {
   console.log('OCR PromiseFail:')
   if (error.stack) {
     console.log(error.message)
@@ -50,7 +50,7 @@ async function test() {
   await oracle.start()
 
   if (scroll) {
-    oracle.onScroll(x => console.log(x))
+    // oracle.onScroll(x => console.log(x))
     return // just have it wait
   }
 

@@ -1,6 +1,5 @@
 import { SettingEntity } from '../../entities/SettingEntity'
 import { SyncerOptions } from './IntegrationSyncer'
-import { Setting } from '@mcro/models'
 import Timer = NodeJS.Timer
 
 /**
@@ -56,7 +55,7 @@ export class Syncer {
   /**
    * Runs syncer immediately.
    */
-  async runSyncer(setting: Setting) {
+  async runSyncer(setting: SettingEntity) {
     const syncer = new this.options.constructor(setting)
     return syncer.run() // todo: add try/catch block here
   }

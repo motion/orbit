@@ -716,7 +716,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       }
       if (!this.isNodeHovered(node)) {
         setUnhovered()
-        if (typeof this.delayOpenIfHover === 'function') {
+        if (this.delayOpenIfHover) {
           // cancel previous
           this.delayOpenIfHover()
           this.delayOpenIfHover = null
@@ -742,7 +742,10 @@ export class Popover extends React.PureComponent<PopoverProps> {
       if (isTarget && this.state.menuHovered) {
         openIfOver()
       } else {
-        this.delayOpenIfHover()
+        if (this.delayOpenIfHover) {
+          this.delayOpenIfHover()
+          this.delayOpenIfHover = null
+        }
       }
     }
     // 🐛 target should close slower than menu opens

@@ -1,9 +1,9 @@
 import { react } from '@mcro/black'
-import { Bit } from '@mcro/models'
+import { BitRepository } from '../../../repositories'
 
 export class PeekRelatedStore {
   relatedBits = react(
-    () => Bit.find({ take: 6, skip: 2, relations: ['people'] }),
+    () => BitRepository.find({ take: 6, skip: 2, relations: ['people'] }),
     { defaultValue: [], delay: 250 },
   )
 }

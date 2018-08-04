@@ -28,7 +28,7 @@
     "reconnecting-websocket": "^3.2.2",
     "sb-promisify": "^2.0.2",
     "verdaccio": "3.5.1",
-    "ws": "^4.0.0"
+    "ws": "6.0.0"
   },
   "peerDependencies": {
     "mobx": "*"

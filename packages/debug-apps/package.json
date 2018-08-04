@@ -22,7 +22,7 @@
     "puppeteer": "1.5.0",
     "request": "^2.67.0",
     "socket.io": "^2.0.4",
-    "ws": "^4.0.0"
+    "ws": "6.0.0"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

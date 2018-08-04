@@ -1,7 +1,7 @@
 import Passport from 'passport'
 import Refresh from 'passport-oauth2-refresh'
 import { Desktop, App } from '@mcro/stores'
-import { Setting } from '@mcro/models'
+import { SettingEntity } from '../entities/SettingEntity'
 import { API_URL } from '../constants'
 import { closeChromeTabWithUrlStarting } from '../helpers/injections'
 import { OauthValues } from './oauthTypes'
@@ -110,10 +110,10 @@ export default class Oauth {
     let setting
     // update if its the same identifier from the oauth
     if (identifier) {
-      setting = await Setting.findOne({ identifier })
+      setting = await SettingEntity.findOne({ identifier })
     }
     if (!setting) {
-      setting = new Setting()
+      setting = new SettingEntity()
     }
     setting.category = 'integration'
     setting.identifier = identifier

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { OrbitCard } from '../views/OrbitCard'
-import { Bit } from '@mcro/models'
 import { HorizontalScrollRow } from '../views/HorizontalScrollRow'
 
 type CarouselProps = {
@@ -26,6 +25,7 @@ export const Carousel = ({
   before,
   after,
 }: CarouselProps) => {
+  console.log('items', items)
   return (
     <UI.Theme name="grey">
       <HorizontalScrollRow height={cardHeight + verticalPadding * 2}>

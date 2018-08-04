@@ -1,17 +1,17 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import { BitRepository, SettingRepository } from '../repositories'
 import { Peek } from './peek/Peek'
 import { Orbit } from './orbit/Orbit'
 import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
-import { Bit, Setting } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
 
 const store = new IntegrationSettingsStore()
 
 const getItem = {
-  githubItem: () => Bit.findOne({ where: { integration: 'github' }, skip: 6 }),
+  githubItem: () => BitRepository.findOne({ where: { integration: 'github' }, skip: 6 }),
   gdocsSetting: async () => ({
     id: 1,
     title: 'GDocs',
@@ -19,7 +19,7 @@ const getItem = {
     integration: 'gdocs',
   }),
   githubSetting: async () =>
-    Setting.findOne({ where: { type: 'github' } }).then(store.settingToResult),
+    SettingRepository.findOne({ where: { type: 'github' } }).then(store.settingToResult),
 }
 
 @view

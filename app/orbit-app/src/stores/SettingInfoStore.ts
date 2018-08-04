@@ -1,6 +1,7 @@
 // import { react } from '@mcro/black'
-import { Bit, Job, Setting } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
+import { BitRepository, JobRepository } from '../repositories'
 
 // TODO: we can have multiple of the same integration added in
 // this just assumes one of each
@@ -16,7 +17,7 @@ export class SettingInfoStore {
 
   job = modelQueryReaction(
     async () => {
-      return await Job.findOne({
+      return await JobRepository.findOne({
         where: { type: this.setting.type },
         order: { createdAt: 'DESC' },
       })
@@ -29,9 +30,9 @@ export class SettingInfoStore {
 
   bitsCount = modelQueryReaction(
     () =>
-      Bit.createQueryBuilder()
-        .where({ integration: this.setting.type })
-        .getCount(),
+      BitRepository.count({
+        integration: this.setting.type
+      }),
     {
       immediate: true,
       condition: () => !!this.setting,

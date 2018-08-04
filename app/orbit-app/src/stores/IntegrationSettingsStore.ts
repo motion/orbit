@@ -1,11 +1,12 @@
 import { modelQueryReaction } from '@mcro/helpers'
-import { Setting, Not, Equal } from '@mcro/models'
+import { Setting } from '@mcro/models'
+import { SettingRepository } from '../repositories'
 
 export class IntegrationSettingsStore {
   settingsList?: Setting[] = modelQueryReaction(() =>
-    Setting.find({
+    SettingRepository.find({
       where: {
-        token: Not(Equal('')),
+        token: { $not: "" },
       },
     }),
   )

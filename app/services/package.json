@@ -2,7 +2,6 @@
   "name": "@mcro/services",
   "version": "2.2.1",
   "main": "_/index.js",
-  "module": "_/index.js",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

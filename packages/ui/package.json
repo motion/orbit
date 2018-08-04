@@ -25,7 +25,8 @@
     "react-resize-detector": "^2.3.0",
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.20.1",
-    "time-ago": "^0.2.1"
+    "time-ago": "^0.2.1",
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
     "@types/lodash": "4.14.112",
@@ -34,7 +35,6 @@
   },
   "peerDependencies": {
     "@babel/runtime": "*",
-    "lodash": "*",
     "mobx": "5.0.3",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"

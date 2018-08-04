@@ -7,7 +7,6 @@ import {
   propsToStyles,
 } from '@mcro/gloss'
 import { view, attachTheme } from '@mcro/black'
-import toColor from '@mcro/color'
 import { Icon } from './Icon'
 import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
@@ -112,10 +111,7 @@ const SurfaceFrame = view(View, {
 })
 
 SurfaceFrame.theme = props => {
-  const theme = props.theme
-  const propStyles = propsToThemeStyles(props)
-  // sizes
-
+  const themeStyles = propsToThemeStyles(props, true)
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -128,24 +124,7 @@ SurfaceFrame.theme = props => {
     ...baseIconStyle,
   }
   const hoverIconStyle = {
-    color: props.iconHoverColor || propStyles.hoverColor,
-  }
-  // state styles
-  let activeStyle = !props.chromeless && {
-    position: 'relative',
-    zIndex: props.zIndex || 1000,
-  }
-  if (props.active) {
-    const userActiveStyle =
-      props.activeStyle || (props.clickable && theme.active)
-    if (userActiveStyle) {
-      activeStyle = {
-        ...activeStyle,
-        ...userActiveStyle,
-        '&:hover':
-          userActiveStyle['&:hover'] || userActiveStyle || activeStyle || {},
-      }
-    }
+    color: props.iconHoverColor || themeStyles.hoverColor,
   }
   const chromelessStyle = props.chromeless && {
     borderWidth: 0,
@@ -163,16 +142,15 @@ SurfaceFrame.theme = props => {
     ...circularStyles,
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,
-    '&:active': activeStyle,
     ...(props.dimmed && dimmedStyle),
     ...(props.dim && dimStyle),
     ...chromelessStyle,
-    ...(props.active && activeStyle),
     // // so you can override
     ...props.userStyle,
-    ...propsToThemeStyles(props, true),
+    ...themeStyles,
     ...propsToStyles(props),
     ...propsToTextSize(props),
+    ...(props.active && themeStyles['&:active']),
   }
   return surfaceStyles
 }

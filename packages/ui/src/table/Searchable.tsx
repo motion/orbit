@@ -30,10 +30,10 @@ const SearchClearButton = view(ClearButton, {
 type Props = {
   defaultValue?: string
   placeholder?: string
-  actions: React.ReactNode
-  tableKey: string
-  onFilterChange: (filters: Array<Filter>) => void
-  defaultFilters: Array<Filter>
+  actions?: React.ReactNode
+  tableKey?: string
+  onFilterChange?: (filters: Array<Filter>) => void
+  defaultFilters?: Array<Filter>
   searchBarTheme?: Object
   searchBarProps?: Object
   searchInputProps?: Object
@@ -47,8 +47,8 @@ type Props = {
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
 const SearchBar = view(Toolbar, {
-  height: 41,
-  padding: [4, 6],
+  height: 37,
+  padding: [3, 5],
 })
 
 SearchBar.theme = () => ({
@@ -63,15 +63,14 @@ export const SearchBox = view(View, {
   width: '100%',
   alignItems: 'center',
   paddingLeft: 4,
-  background: colors.white,
-  border: [1, colors.light15],
+  background: [255, 255, 255, 0.1],
   '&:focus-within': {
-    boxShadow: `0 0 0 3px rgba(255,255,255,0.2)`,
+    boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
   },
 })
 
 SearchBox.theme = ({ theme }) => ({
-  border: [1, theme.base.borderColor.darken(0.2).desaturate(0.2)],
+  border: [1, theme.base.borderColor.desaturate(0.1)],
 })
 
 export const SearchInput = view(TableInput, {
@@ -91,8 +90,12 @@ export const SearchInput = view(TableInput, {
   },
 })
 
-SearchInput.theme = ({ focus }) => ({
+SearchInput.theme = ({ focus, theme }) => ({
+  color: theme.base.color,
   border: focus ? '1px solid black' : 0,
+  '&::-webkit-input-placeholder': {
+    color: theme.base.color.alpha(0.5),
+  },
 })
 
 export const SearchIcon = view(Icon, {
@@ -400,7 +403,7 @@ export const Searchable = (Component: any) =>
             <SearchBox tabIndex={-1}>
               <SearchIcon
                 name="ui-1_zoom"
-                color={colors.macOSTitleBarIcon}
+                color={[255, 255, 255, 0.3]}
                 size={16}
               />
               {this.state.filters.map((filter, i) => (

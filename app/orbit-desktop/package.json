@@ -47,7 +47,6 @@
     "lodash": "4.17.10",
     "macos-version": "4.1.0",
     "math-expression-evaluator": "^1.2.17",
-    "mobx-utils": "5.0.0",
     "morgan": "^1.8.2",
     "node-gmail-api": "^0.6.1",
     "node-osascript": "~2.0.0",

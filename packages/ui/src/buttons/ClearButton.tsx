@@ -18,8 +18,4 @@ const ClearFrame = view(View, {
   },
 })
 
-export const ClearButton = props => (
-  <ClearFrame debug {...props}>
-    &times;
-  </ClearFrame>
-)
+export const ClearButton = props => <ClearFrame {...props}>&times;</ClearFrame>

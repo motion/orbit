@@ -7,7 +7,7 @@ const HorizontalScrollRowFrame = view(UI.View, {
   overflow: 'hidden',
 })
 
-const Inner = view({
+const Inner = view(UI.View, {
   flexFlow: 'row',
   alignItems: 'center',
   overflow: 'hidden',

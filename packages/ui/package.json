@@ -5,8 +5,10 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "build": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
-    "watch": "npm run build -- --watch"
+    "build": "npm run build-js & npm run build-types",
+    "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
+    "build-types": "tsc  --emitDeclarationOnly",
+    "watch": "npm run build-js -- --watch & npm run build-types -- watch"
   },
   "dependencies": {
     "@mcro/black": "^2.2.1",
@@ -22,8 +24,8 @@
     "react-hot-loader": "4.3.4",
     "react-resize-detector": "^2.3.0",
     "react-tilt": "^0.1.4",
-    "react-virtualized": "^9.13.0",
-    "time-ago": "^0.1.0"
+    "react-virtualized": "^9.20.1",
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
     "@types/lodash": "4.14.112",
@@ -32,8 +34,7 @@
   },
   "peerDependencies": {
     "@babel/runtime": "*",
-    "lodash": "*",
-    "mobx": "^5.0.2",
+    "mobx": "5.0.3",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },

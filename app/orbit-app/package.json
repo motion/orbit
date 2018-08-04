@@ -39,7 +39,6 @@
     "mobx-formatters": "^1.0.2",
     "mobx-react": "5.2.3",
     "mobx-react-devtools": "6.0.2",
-    "mobx-utils": "5.0.0",
     "pluralize": "^7.0.0",
     "react-date-range": "1.0.0-beta",
     "react-fast-compare": "2.0.1",
@@ -50,7 +49,6 @@
     "scroll": "2.0.3",
     "sherlockjs": "1.4.0",
     "simple-quadtree": "^0.1.3",
-    "time-ago": "^0.1.0",
     "turndown": "4.0.2",
     "webpack-runtime-require": "0.3.0"
   },
@@ -63,7 +61,7 @@
     "pundle-preset-default": "3.0.0-beta4"
   },
   "peerDependencies": {
-    "mobx": "^5.0.2",
+    "mobx": "5.0.3",
     "react": "16.4.0",
     "react-dom": "16.4.0"
   },

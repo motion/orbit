@@ -59,7 +59,7 @@ export class SubPaneStore {
       }
       return isActive
     },
-    { immediate: true },
+    { immediate: true, defaultValue: false },
   )
 
   didMount() {

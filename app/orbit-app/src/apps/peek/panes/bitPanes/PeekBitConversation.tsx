@@ -10,7 +10,7 @@ import { PeekBitPaneProps } from './PeekBitPaneProps'
 const bitResolverProps = {
   itemProps: {
     padding: [6, 16],
-    lineHeight: 22,
+    lineHeight: 24,
     '&:hover': {
       background: [0, 0, 0, 0.02],
     },

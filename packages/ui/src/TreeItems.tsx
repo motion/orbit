@@ -16,7 +16,7 @@ import { Image } from './Image'
 import { colors } from './helpers/colors'
 import { Text } from './Text'
 import { FixedList } from './FixedList'
-import isEqual from 'react-fast-compare'
+// import isEqual from 'react-fast-compare'
 
 const ROW_HEIGHT = 23
 

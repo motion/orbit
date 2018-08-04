@@ -24,11 +24,11 @@ export const Carousel = ({
   cardProps = {},
   before,
   after,
+  ...props
 }: CarouselProps) => {
-  console.log('items', items)
   return (
     <UI.Theme name="grey">
-      <HorizontalScrollRow height={cardHeight + verticalPadding * 2}>
+      <HorizontalScrollRow height={cardHeight + verticalPadding * 2} {...props}>
         {before}
         {(items || []).map((bit, index) => (
           <OrbitCard

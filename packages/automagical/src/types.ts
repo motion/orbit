@@ -19,3 +19,13 @@ export type ReactionOptions = {
   onlyUpdateIfChanged?: boolean
   defaultValue?: any
 }
+
+export type MagicalObject = {
+  subscriptions: { add: ({ dispose: Function }) => void }
+  __automagical: {
+    watchers?: [any] | undefined[]
+    deep?: {}
+    started?: boolean
+  }
+  props?: {}
+}

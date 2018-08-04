@@ -42,7 +42,7 @@ export class SearchStore /* extends Store */ {
   extraFiltersVisible = false
 
   setActivePane = ref => {
-    console.log('123', ref)
+    console.log('setactivepane-----------', ref)
   }
 
   willMount() {

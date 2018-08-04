@@ -39,7 +39,6 @@
     "mobx-formatters": "^1.0.2",
     "mobx-react": "5.2.3",
     "mobx-react-devtools": "6.0.2",
-    "mobx-utils": "5.0.0",
     "pluralize": "^7.0.0",
     "react-date-range": "1.0.0-beta",
     "react-fast-compare": "2.0.1",

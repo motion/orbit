@@ -92,6 +92,7 @@ export class PeekStore {
   }
 
   get isShown() {
+    debugger
     return this.internalState.isShown
   }
 

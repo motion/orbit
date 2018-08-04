@@ -8,8 +8,7 @@
   },
   "dependencies": {
     "@mcro/debug": "^2.2.1",
-    "global": "^4.3.2",
-    "mobx-utils": "5.0.0"
+    "global": "^4.3.2"
   },
   "devDependencies": {
     "@types/webpack-env": "*"

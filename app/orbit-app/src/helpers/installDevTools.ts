@@ -28,14 +28,14 @@ Error.stackTraceLimit = Infinity
 // install console formatters
 // mobxFormatters(Mobx)
 
-console.warn(
-  'WARNING! console.warn off during initial render because Electron spits out 3 pages of warnings... that we need to fix before we release app',
-)
-const ogWarn = console.warn
-console.warn = _ => _
-setTimeout(() => {
-  console.warn = ogWarn
-})
+// console.warn(
+//   'WARNING! console.warn off during initial render because Electron spits out 3 pages of warnings... that we need to fix before we release app',
+// )
+// const ogWarn = console.warn
+// console.warn = _ => _
+// setTimeout(() => {
+//   console.warn = ogWarn
+// })
 
 const recrusiveMobxToJS = obj => {
   const next = Mobx.toJS(obj)

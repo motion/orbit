@@ -1,7 +1,6 @@
 import Passport from 'passport'
 import Refresh from 'passport-oauth2-refresh'
 import { Desktop, App } from '@mcro/stores'
-import { Setting } from '@mcro/models'
 import { SettingEntity } from '../entities/SettingEntity'
 import { API_URL } from '../constants'
 import { closeChromeTabWithUrlStarting } from '../helpers/injections'

@@ -50,6 +50,7 @@ export class WebSocketProvider {
       operation,
       parameters,
     }
+    console.log('waht?', Promise)
     return new Promise((ok, fail) => {
       try {
         this.websocket.send(JSON.stringify(query))

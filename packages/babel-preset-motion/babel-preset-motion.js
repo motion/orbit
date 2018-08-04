@@ -13,7 +13,7 @@ module.exports = function(context, givenOpts) {
       // plug('babel-plugin-sitrep'),
       plug('react-hot-loader/babel'),
       plug('@babel/plugin-transform-runtime', {
-        polyfill: true,
+        polyfill: false,
         regenerator: false,
       }),
       plug('@mcro/gloss-displaynames'),

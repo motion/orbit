@@ -1,5 +1,5 @@
 import { DeepPartial, FindOptions, RemoveOptions, SaveOptions } from 'typeorm'
-import { Provider } from '../../repositories'
+import { Provider } from './Provider'
 
 export type RepositoryOperationType =
   | 'create'

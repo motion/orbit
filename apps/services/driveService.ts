@@ -40,7 +40,7 @@ export class DriveService {
   }
 
   updateSetting = async (setting?) => {
-    this.setting = setting || (await Setting.findOne({ type: 'gdocs' }))
+    this.setting = setting
     this.helpers = getHelpers(this.setting)
   }
 

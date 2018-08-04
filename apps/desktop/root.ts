@@ -192,6 +192,7 @@ export class Root {
    * for communication between processes.
    */
   private registerPrimusServer() {
+    // require('electron').ipcMain.on('data', data => handlePrimusEntityActions(data))
     Primus.createServer(spark => {
       spark.on('data', data => handlePrimusEntityActions(spark, data))
     }, {

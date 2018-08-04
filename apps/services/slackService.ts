@@ -24,21 +24,16 @@ export class SlackService {
   setting: Setting
   slack: any
   allChannels: Array<ChannelInfo> = []
-  watch: { cancel: Function }
+  // watch: { cancel: Function }
 
   constructor(setting: Setting) {
     this.setting = setting
-    this.watch = watchModel(
-      setting.constructor,
-      { type: 'slack' },
-      async setting => {
-        this.setting = setting
-        this.slack = new Slack({ token: this.setting.token })
-        this.setAllChannels(
-          await this.slack.channels.list({}).then(res => res && res.channels),
-        )
-      },
-    )
+    this.setting = setting
+    this.slack = new Slack({ token: this.setting.token })
+    this.slack.channels
+      .list({})
+      .then(res => res && res.channels)
+      .then(channels => this.setAllChannels(channels))
   }
 
   setAllChannels = channels => {
@@ -46,7 +41,6 @@ export class SlackService {
   }
 
   dispose() {
-    this.watch.cancel()
   }
 
   get activeChannelIds() {

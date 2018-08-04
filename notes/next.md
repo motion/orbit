@@ -11,10 +11,29 @@
 Aug 7th:
 
 - Auto onboarding flow/history-scan/notifications/tray-guide
+  - SHOULD show ORBIT saying "hello", and "start auto-setup"
+  - SHOULD scan history and open sites in order based on matches
+  - SHOULD show integration in orbit as it asks for integration
+  - SHOULD show "proxy active" and privacy message during final step of integratino
+  - SHOULD show nice progress menu of integrations
+  - SHOULD show other options at the end
+  - SHOULD show scan status during setup
+- fix automagic deep causing bad updates
 - Build to .app
-- Auto updating .app
-- Better app home
+  - SHOULD one command build to an .app that works
+  - SHOULD have auto-port finding not hardcoded
+  - SHOULD one command to push update
+  - SHOULD show banner, update and restart once update is pushed
+- Peek fixes
+  - dont let it go too high
+  - fix horizontal scroller to cut off nicer
 - Settings panes all fully working
+  - SHOULD have general setting for shortuct
+  - SHOULD have setting for start on login
+  - SHOULD have Orbit area:
+    - SHOULD allow adding a new Orbit team in UI with peek input + add button
+- Better app home
+  - SHOULD have simple query for mixed recent things by default to start
 
 Aug 14th:
 

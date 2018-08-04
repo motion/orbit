@@ -120,7 +120,7 @@ class SettingContent extends React.Component<
   }
 }
 
-class LoadSettingStore {
+class PeekSettingStore {
   get setting() {
     return this.idSetting || this.typeSetting
   }
@@ -129,7 +129,9 @@ class LoadSettingStore {
     return this.props.item
   }
 
-  idSetting = modelQueryReaction(() => Setting.findOne({ id: this.item.id }))
+  idSetting = modelQueryReaction(() =>
+    SettingRepository.findOne({ id: this.item.id }),
+  )
 
   // hackkkkky for now because look at OrbitSettings.generalsettings
   // need a migration to insert the settings first and then make them just like integrationSettingsd
@@ -139,12 +141,12 @@ class LoadSettingStore {
 }
 
 @view.attach({
-  store: LoadSettingStore,
+  store: PeekSettingStore,
 })
 @view
 export class PeekSetting extends React.Component<
   PeekPaneProps & {
-    store: LoadSettingStore
+    store: PeekSettingStore
   }
 > {
   render() {

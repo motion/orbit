@@ -153,7 +153,12 @@ export const Searchable = (Component: any) =>
           this._inputRef.focus()
         }
       }
-      on(this, findDOMNode(this), 'keydown', this.onKeyDown)
+      const node = findDOMNode(this)
+      if (node) {
+        on(this, findDOMNode(this), 'keydown', this.onKeyDown)
+      } else {
+        console.log('no searchable node!')
+      }
       const { defaultFilters } = this.props
       let savedState
       let key = this.context.plugin + this.props.tableKey

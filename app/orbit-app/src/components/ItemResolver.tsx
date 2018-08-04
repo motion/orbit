@@ -36,10 +36,13 @@ export type ItemResolverProps = {
 
 export const ItemResolver = ({ bit, item, ...props }: ItemResolverProps) => {
   let Resolver
-  if (bit.target === "person") {
+  if (!bit) {
+    return null
+  }
+  if (bit.target === 'person') {
     Resolver = ResolvePerson
   }
-  if (bit.target === "bit") {
+  if (bit.target === 'bit') {
     Resolver = ResolveBit
   }
   if (!Resolver) {

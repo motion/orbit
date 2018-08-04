@@ -26,6 +26,7 @@ export const Carousel = ({
   before,
   after,
 }: CarouselProps) => {
+  console.log('items', items)
   return (
     <UI.Theme name="grey">
       <HorizontalScrollRow height={cardHeight + verticalPadding * 2}>

@@ -88,6 +88,7 @@ export class Masonry extends React.Component<MasonryProps> {
       gridColumnGap,
       gridTemplateColumns: `repeat(auto-fill, minmax(${minWidth}px,1fr))`,
     }
+    console.log('123', children, this.state.gridChildren)
     if (!measured) {
       return (
         <MasonryGrid

@@ -14,9 +14,6 @@ const log = {
 }
 
 const ROOT = Path.join(__dirname, '..')
-const APPS_DIR = Path.join(ROOT, '..')
-const ELECTRON_DIR = Path.join(APPS_DIR, 'orbit-electron')
-const DESKTOP_DIR = Path.join(APPS_DIR, 'orbit-desktop')
 const ignorePaths = [
   // exclude extra dirs for xcode
   'oracle/train',
@@ -44,10 +41,9 @@ const ignorePaths = [
 ]
 
 async function bundle() {
-  console.log('bundling', ELECTRON_DIR)
-  console.log('remove old app')
+  console.log('cleaning old app...')
   await new Promise(resolve =>
-    rm(Path.join(ROOT, 'app', 'Orbit-darwin-x64'), resolve),
+    rm(Path.join(ROOT, 'app-built', 'Orbit-darwin-x64'), resolve),
   )
   await new Promise(resolve =>
     rm(
@@ -75,10 +71,10 @@ async function bundle() {
   // because it avoids bundling massive things like Oracle build files
   // but requires we use verdaccio
 
-  console.log('bundle new app')
+  console.log('packaging new app...')
   const paths = await electronPackager({
-    dir: ELECTRON_DIR,
-    out: Path.join(ROOT, 'app'),
+    dir: Path.join(ROOT, 'app'),
+    out: Path.join(ROOT, 'app-built'),
     icon: Path.join(ROOT, 'resources', 'icon.icns'),
     overwrite: true,
     tmpdir: false,

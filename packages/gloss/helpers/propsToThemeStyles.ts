@@ -23,11 +23,13 @@ export const propsToThemeStyles = (props, mapPropStylesToPseudos?) => {
       ...styles[pseudoKey],
       ...props.theme[state],
     }
-    const overrideStyles = props[themeOverrides[state]]
-    if (mapPropStylesToPseudos && overrideStyles) {
-      styles[pseudoKey] = {
-        ...styles[pseudoKey],
-        ...overrideStyles,
+    if (mapPropStylesToPseudos) {
+      const overrideStyles = props[themeOverrides[state]]
+      if (overrideStyles) {
+        styles[pseudoKey] = {
+          ...styles[pseudoKey],
+          ...overrideStyles,
+        }
       }
     }
   }

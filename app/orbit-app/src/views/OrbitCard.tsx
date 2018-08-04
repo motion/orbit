@@ -61,6 +61,7 @@ export type OrbitCardProps = {
 const CardWrap = view(UI.View, {
   position: 'relative',
   width: '100%',
+  marginBottom: 1,
   transform: {
     z: 0,
   },

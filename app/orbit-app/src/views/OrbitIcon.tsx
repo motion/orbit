@@ -82,6 +82,18 @@ export const OrbitIcon = attachTheme(
         iconImg = icons[whiteKey]
       }
     }
+    if (!iconImg) {
+      return null
+      return (
+        <UI.Icon
+          name={icon}
+          display="inline-block"
+          size={size * (preventAdjust ? 1 : 0.8)}
+          color={color}
+          {...props}
+        />
+      )
+    }
     return (
       <UI.View
         className={`icon ${className}`}
@@ -93,16 +105,7 @@ export const OrbitIcon = attachTheme(
         {...iconImg && orbitIconStyle}
         {...props}
       >
-        {iconImg ? (
-          <UI.Image src={iconImg} width="100%" height="100%" {...imageStyle} />
-        ) : null}
-        <UI.Icon
-          if={!iconImg}
-          name={icon}
-          css={{ display: 'inline-block', ...sizeProps, ...imageStyle }}
-          size={size * (preventAdjust ? 1 : 0.8)}
-          color={color}
-        />
+        <UI.Image src={iconImg} width="100%" height="100%" {...imageStyle} />
       </UI.View>
     )
   },

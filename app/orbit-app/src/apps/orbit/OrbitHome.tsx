@@ -100,7 +100,6 @@ export class OrbitHome extends React.Component<Props> {
 
   render() {
     const { store } = this.props
-    console.log('home results', store.results)
     const total = store.results.length
     return (
       <SubPane name="home" fadeBottom>

@@ -14,6 +14,7 @@ import { Glint } from './effects/Glint'
 import { Popover } from './Popover'
 import { object } from 'prop-types'
 import { Badge } from './Badge'
+import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
 
 const POPOVER_PROPS = { style: { fontSize: 12 } }
@@ -102,15 +103,8 @@ const dimStyle = {
   },
 }
 
-const SurfaceBase = view({})
-SurfaceBase.theme = props => ({
-  ...propsToThemeStyles(props, true),
-  ...propsToStyles(props),
-  ...propsToTextSize(props),
-})
-
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = view(SurfaceBase, {
+const SurfaceFrame = view(View, {
   flexFlow: 'row',
   alignItems: 'center',
   fontFamily: 'inherit',
@@ -121,61 +115,13 @@ SurfaceFrame.theme = props => {
   const theme = props.theme
   const propStyles = propsToThemeStyles(props)
   // sizes
-  const height = props.height
-  const width = props.width
-  const padding = props.padding
-  const flex =
-    props.flex === true
-      ? 1
-      : props.flex || (props.style && props.style.flex) || 'none'
-  const STATE =
-    (props.highlight && 'highlight') || (props.active && 'active') || 'base'
-
-  // background
-  const baseBackground =
-    props.background === true
-      ? theme[STATE].background
-      : props.background || theme[STATE].background
-  let background = props.highlight
-    ? props.highlightBackground || theme.highlight.background
-    : props.active
-      ? props.activeBackground || theme.active.background || baseBackground
-      : baseBackground
-
-  const isGradient =
-    typeof background === 'string' &&
-    (background.indexOf('linear-gradient') === 0 ||
-      background.indexOf('radial-gradient') === 0)
-  const isTransparent = background === 'transparent'
-  const colorfulBg = !isGradient && !isTransparent
-
-  if (colorfulBg && background && !background.model) {
-    background = toColor(background)
-  }
-  if (typeof props.backgroundAlpha === 'number' && background.alpha) {
-    background = background.alpha(props.backgroundAlpha)
-  }
-
-  // shadows
-  const boxShadow =
-    typeof props.boxShadow === 'string'
-      ? [props.boxShadow]
-      : props.boxShadow || []
-  if (props.elevation) {
-    boxShadow.push([
-      0,
-      (Math.log(props.elevation) + 1) * 3 + 1,
-      (Math.log(props.elevation) + 1) * 10,
-      [0, 0, 0, (1 / Math.log(props.elevation)) * 0.15],
-    ])
-  }
 
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 0,
-    width: height,
+    width: props.height,
   }
   // icon
   const iconStyle = {
@@ -211,12 +157,6 @@ SurfaceFrame.theme = props => {
       props.overflow || props.glow
         ? props.overflow || 'hidden'
         : props.overflow,
-    height,
-    width,
-    flex,
-    padding,
-    background,
-    boxShadow,
     justifyContent: props.justify || props.justifyContent,
     alignSelf: props.alignSelf,
     borderStyle: props.borderStyle || props.borderWidth ? 'solid' : undefined,
@@ -230,6 +170,9 @@ SurfaceFrame.theme = props => {
     ...(props.active && activeStyle),
     // // so you can override
     ...props.userStyle,
+    ...propsToThemeStyles(props, true),
+    ...propsToStyles(props),
+    ...propsToTextSize(props),
   }
   return surfaceStyles
 }

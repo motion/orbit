@@ -58,13 +58,16 @@ class OrbitSettingsStore {
       ]
 
       // don't like the fact that this is happening here. looks like backend should be the only place were this code should be
-      const settings = await Promise.all(settingQuery.map(async settingQuery => {
-        const setting = await SettingRepository.findOne({ where: settingQuery })
-        if (setting)
-          return setting
+      const settings = await Promise.all(
+        settingQuery.map(async settingQuery => {
+          const setting = await SettingRepository.findOne({
+            where: settingQuery,
+          })
+          if (setting) return setting
 
-        return SettingRepository.save(settingQuery as Setting) // todo: make sure save really returns us
-      }))
+          return SettingRepository.save(settingQuery as Setting) // todo: make sure save really returns us
+        }),
+      )
 
       return [
         {
@@ -103,8 +106,8 @@ class OrbitSettingsStore {
     SettingRepository.find({
       where: {
         category: 'integration',
-        token: { $not: null },
-        type: { $not: 'setting' },
+        // token: { $not: null },
+        // type: { $not: 'setting' },
       },
     })
 

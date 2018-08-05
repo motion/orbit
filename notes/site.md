@@ -11,3 +11,13 @@ npm i -g orbit
 
 orbit new app
 ```
+
+# framer x hype design
+
+2x sized up close interface screens
+very white contrast look for most sections
+
+- section:
+  - next gen knowledge tool
+  - augmented intelligent operating system
+  - the instant, unified, keyboard friendly, way to manage incoming

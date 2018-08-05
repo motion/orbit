@@ -6,11 +6,13 @@ import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import { HighlightsLayer } from '../../../views/HighlightsLayer'
 import { App } from '@mcro/stores'
-import { RoundButton, SubTitle } from '../../../views'
+import { RoundButton } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { PeekRelated } from '../views/PeekRelated'
 import { TimeAgo } from '../../../views/TimeAgo'
+import { PeekBottom } from './PeekBottom'
+import { PeekActionBar } from './PeekActionBar'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -19,28 +21,8 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   })
 })
 
-const PeekBottom = view({
-  background: '#fff',
-  margin: [0, -30],
-  padding: [0, 30],
-  borderTop: [1, '#eee'],
-  position: 'relative',
-  zIndex: 10,
-})
-
-const PeekActionBar = view({
-  padding: [6, 10, 8],
-  flexFlow: 'row',
-  overflow: 'hidden',
-  alignItems: 'center',
-})
-
 const Cmd = view({
   opacity: 0.5,
-})
-
-const HorizontalSpace = view({
-  width: 10,
 })
 
 const BottomSpace = view({
@@ -149,7 +131,7 @@ export const PeekBit = ({
                           {location}
                         </RoundButton>
                       </UI.Theme>
-                      <HorizontalSpace />
+                      <PeekActionBar.Space />
                       <UI.Text>
                         <TimeAgo>{updatedAt}</TimeAgo>
                       </UI.Text>
@@ -159,7 +141,7 @@ export const PeekBit = ({
                         <RoundButton alignItems="center">
                           Copy Link <Cmd>⌘+Shift+C</Cmd>
                         </RoundButton>
-                        <HorizontalSpace />
+                        <PeekActionBar.Space />
                         <RoundButton alignItems="center">
                           Open <Cmd>⌘+Enter</Cmd>
                         </RoundButton>

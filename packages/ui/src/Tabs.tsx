@@ -63,13 +63,12 @@ const TabListItem = view(Row, {
 
 TabListItem.theme = ({ theme, active }) => ({
   color: active ? theme.active.color : theme.inactive.color,
-  // this is reversed because technically active tabs should match the bgcolor
   background: active ? theme.active.background : theme.inactive.background,
   '&:hover': {
     color: active ? theme.active.color : theme.hover.color,
     background: active
       ? theme.base.background
-      : theme.active.background.lighten(0.01),
+      : theme.inactive.background.darken(0.05),
   },
 })
 

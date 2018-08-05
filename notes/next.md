@@ -2,8 +2,11 @@ Umed week of Aug 6th
 
 - Discuss rate limit workaround method
 - Discuss gdocs sync/search strategy
+- Discuss handling mutations and updating in UI (Observable Ids work)
+- Duplicate types for models... way to resolve?
 - Gmail scan emails based on slack and other emails
 - Person fix higher res image from slack + id for permalinks
+- Person Aggregation is important
 - "Delete integration" endpoint
 - Syncers: persist last sync state so on restarts it doesn't re-run
 

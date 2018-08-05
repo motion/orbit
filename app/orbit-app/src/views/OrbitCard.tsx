@@ -129,12 +129,12 @@ Card.theme = ({
     if (isSelected) {
       listStyle = {
         background: '#f8faff',
-        border: [1, borderSelected],
-        boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
+        // border: [1, borderSelected],
+        boxShadow: disabledShadow || [cardSelectedGlow],
       }
     } else {
       listStyle = {
-        border: [1, 'transparent'],
+        // border: [1, 'transparent'],
         '&:hover': {
           background: theme.base.background.darken(0.03),
         },
@@ -300,7 +300,7 @@ class OrbitCardStore {
         const position = getTargetPosition(this.cardWrapRef)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
-          position.left += 9
+          position.left += 5
         }
         App.actions.selectItem(this.target, position)
       }

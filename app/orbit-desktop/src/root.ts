@@ -22,6 +22,7 @@ import macosVersion from 'macos-version'
 import { Server as WebSocketServer } from 'ws'
 import connectModels from './helpers/connectModels'
 import { Entities } from './entities'
+import { Onboard } from './onboard/Onboard'
 
 const log = debug('desktop')
 const hostile = promisifyAll(hostile_)
@@ -30,6 +31,7 @@ const sudoPrompt = promisifyAll(sudoPrompt_)
 export class Root {
   isReconnecting = false
   connection?: Connection
+  onboard: Onboard
   disposed = false
   screen: Screen
   keyboardStore: KeyboardStore
@@ -75,8 +77,9 @@ export class Root {
       await setting.save()
     }
 
+    this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
-    await this.startSyncers()
+    // await this.startSyncers()
     this.screen = new Screen()
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,

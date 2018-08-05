@@ -15,7 +15,8 @@ export type PeekContents = {
   date?: React.ReactNode
   content?: React.ReactNode
   headerProps?: Object
-  subhead?: React.ReactNode
+  belowHeadMain?: React.ReactNode
+  belowHead?: React.ReactNode
   preBody?: React.ReactNode
   postBody?: React.ReactNode
   after?: React.ReactNode

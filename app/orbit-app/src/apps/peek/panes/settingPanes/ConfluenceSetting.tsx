@@ -28,7 +28,7 @@ export const ConfluenceSetting = decorator(({ setting, children }: Props) => {
     content: <AtlassianSettingLogin type="confluence" setting={setting} />,
   })
   // return children({
-  //   subhead: (
+  //   belowHead: (
   //     <UI.Tabs
   //       $tabs
   //       active={store.active}

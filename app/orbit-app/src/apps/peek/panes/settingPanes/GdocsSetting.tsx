@@ -92,7 +92,7 @@ export const GdocsSetting = decorator(({ store, children }: Props) => {
   const folders = store.popularFolders
   console.log('folders, ', folders)
   return children({
-    subhead: (
+    belowHead: (
       <UI.Tabs active={store.active} onActive={store.setActiveKey}>
         <UI.Tab key="folders" width="50%" label="Folders" />
         <UI.Tab key="settings" width="50%" label="Settings" />

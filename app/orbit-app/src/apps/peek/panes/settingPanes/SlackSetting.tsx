@@ -142,7 +142,7 @@ type Props = SettingPaneProps & { store: SlackSettingStore }
 
 export const SlackSetting = decorator(({ store, children }: Props) => {
   return children({
-    subhead: (
+    belowHead: (
       <UI.Tabs active={store.active} onActive={store.setActiveKey}>
         <UI.Tab key="repos" width="50%" label="Repos" />
         <UI.Tab

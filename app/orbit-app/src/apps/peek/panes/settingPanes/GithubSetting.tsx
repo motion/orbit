@@ -159,7 +159,7 @@ export class GithubSetting extends React.Component<
   render() {
     const { store, children } = this.props
     return children({
-      subhead: (
+      belowHead: (
         <UI.Tabs active={store.active} onActive={store.setActiveKey}>
           <UI.Tab key="repos" width="50%" label="Repos" />
           <UI.Tab

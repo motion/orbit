@@ -67,7 +67,7 @@ class SettingContent extends React.Component<
         appStore={appStore}
         setting={setting}
       >
-        {({ subhead, content }) => {
+        {({ belowHead, content }) => {
           // this is a bit strange, its calling up a few times and passing up props
           // not sure i like the pattern, but it is extremely flexible
           // basically look at PeekPageInner > setting > *Setting
@@ -75,7 +75,7 @@ class SettingContent extends React.Component<
           const icon = statusIcons[store.job && store.job.status] || {}
           return children({
             title: capitalize(integration),
-            subhead,
+            belowHead,
             content,
             postBody: (
               <PeekBottom>

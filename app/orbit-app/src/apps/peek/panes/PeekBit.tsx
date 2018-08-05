@@ -117,7 +117,7 @@ export const PeekBit = ({
               return children({
                 title,
                 icon,
-                subhead: searchBar,
+                belowHeadMain: searchBar,
                 postBody: (
                   <PeekBottom>
                     <PeekActionBar>

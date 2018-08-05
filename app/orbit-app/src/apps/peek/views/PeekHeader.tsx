@@ -132,7 +132,8 @@ export class PeekHeaderContent extends React.Component<Props> {
       permalink,
       icon,
       theme,
-      subhead,
+      belowHeadMain,
+      belowHead,
       integration,
       ...props
     } = this.props
@@ -219,8 +220,9 @@ export class PeekHeaderContent extends React.Component<Props> {
               {subtitle}
             </SubTitle>
           )}
+          {belowHeadMain}
         </MainHead>
-        {subhead}
+        {belowHead}
       </PeekHeaderContain>
     )
   }

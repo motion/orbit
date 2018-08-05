@@ -4,7 +4,7 @@ import Fs from 'fs-extra'
 import Path from 'path'
 import Os from 'os'
 
-const CHROME_DB_PATHS = [
+const chromeDbPaths = [
   Path.join(
     Os.homedir(),
     'Library',
@@ -15,7 +15,14 @@ const CHROME_DB_PATHS = [
     'History',
   ),
 ]
-const TMP_DB_PATH = Path.join('/tmp', `db-${Math.random()}`.replace('.', ''))
+const tmpDbPath = Path.join('/tmp', `db-${Math.random()}`.replace('.', ''))
+
+const integrationPatterns = [
+  { name: 'atlassian', patterns: ['%atlassian.net%'] },
+  { name: 'github', patterns: ['%github.com%'] },
+  { name: 'gmail', patterns: ['%gmail.com%'] },
+  { name: 'slack', patterns: ['%.slack.com%'] },
+]
 
 export class Onboard {
   generalSetting: SettingEntity
@@ -47,24 +54,39 @@ export class Onboard {
   }
 
   scanHistory() {
-    const chromeFolder = CHROME_DB_PATHS.find(x => Fs.existsSync(x))
+    const chromeFolder = chromeDbPaths.find(x => Fs.existsSync(x))
     if (chromeFolder) {
       this.scanChrome(chromeFolder)
     }
   }
 
+  selectTopFromPattern = async (db, pattern) => {
+    return await db.all(
+      `SELECT datetime(last_visit_time/1000000-11644473600, "unixepoch") as last_visited, url, title, visit_count
+        FROM urls
+        WHERE url like ?
+        ORDER BY visit_count desc
+        LIMIT 10;`,
+      pattern,
+    )
+  }
+
   async scanChrome(dbPath: string) {
     console.log('Scanning chrome db for integration sites...')
     // first copy it so it's not getting locked by active chrome
-    Fs.copyFileSync(dbPath, TMP_DB_PATH)
-    const db = await sqlite.open(TMP_DB_PATH)
-    const urls = await db.all(
-      `SELECT datetime(last_visit_time/1000000-11644473600, "unixepoch") as last_visited, url, title, visit_count
-        WHERE url like "%confluence%"
-        FROM urls
-        ORDER BY visit_count desc
-        LIMIT 10;`,
-    )
-    console.log('got urls', urls)
+    Fs.copyFileSync(dbPath, tmpDbPath)
+    const db = await sqlite.open(tmpDbPath)
+    const foundIntegrations = []
+
+    for (const { name, patterns } of integrationPatterns) {
+      for (const pattern of patterns) {
+        const found = await this.selectTopFromPattern(db, pattern)
+        if (found) {
+          foundIntegrations.push({ name, found })
+        }
+      }
+    }
+
+    console.log('foundIntegrations', JSON.stringify(foundIntegrations, null, 2))
   }
 }

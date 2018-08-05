@@ -1,16 +1,18 @@
-# September
+Umed week of Aug 6th
 
-- Hire top frontender
-- auto setup
-- p2p sync with real features (rate-limit, pin-to-search)
-- deploy it with 5 teams
-- alpha ocr/memory/contextual-search
+- Discuss rate limit workaround method
+- Discuss gdocs sync/search strategy
+- Gmail scan emails based on slack and other emails
+- Person fix higher res image from slack + id for permalinks
+- "Delete integration" endpoint
+- Syncers: persist last sync state so on restarts it doesn't re-run
 
 # August
 
 Aug 7th:
 
 - Auto onboarding flow/history-scan/notifications/tray-guide
+  - SHOULD show in Tray (Setting up Orbit...)
   - SHOULD show ORBIT saying "hello", and "start auto-setup"
   - SHOULD scan history and open sites in order based on matches
   - SHOULD show integration in orbit as it asks for integration
@@ -32,8 +34,11 @@ Aug 7th:
   - SHOULD have setting for start on login
   - SHOULD have Orbit area:
     - SHOULD allow adding a new Orbit team in UI with peek input + add button
-- Better app home
+- Minor bugs
+  - SHOULD fix shortcuts by having electron register globalShortcuts only when focused
   - SHOULD have simple query for mixed recent things by default to start
+  - SHOULD handle screen changes/resizes
+  - SHOULD have open keyboard shortcuts work
 
 Aug 14th:
 
@@ -55,24 +60,19 @@ Aug 31st:
 
 p2p: https://github.com/mafintosh/hyperdb
 
-auto setup:
+# September
 
-1.  startup orbit, nothing shows!
-2.  scans your chrome history
-3.  shows in Tray (Setting up Orbit...)
-4.  do exactly how fantastical gmail setup works
-5.  open chrome tab with the oauth already active (not button page)
-6.  at the end show a sucess notification
-7.  cycle to next integration to set up
-8.  once all done, open orbit and do a tour
+- Hire top frontender
+- auto setup
+- p2p sync with real features (rate-limit, pin-to-search)
+- deploy it with 5 teams
+- alpha ocr/memory/contextual-search
 
 queue:
 
-- fix date filter interaction
 - search: filtering "nick and nate" doesn't show any results for some reason
 - make all searches work: task search, message search
 - Remove setting button
-- peek use Meta bar
 - Google drive settings pane
 - Manage tab for every one:
   - Stats card of total bits

@@ -66,9 +66,15 @@ BottomFloat.theme = ({ theme }) => ({
 })
 
 const searchBarProps = {
-  padding: [7, 50],
+  padding: [7, 10],
   height: 48,
 }
+
+const HeadSide = view({
+  width: 40,
+  alignItems: 'center',
+  justifyContent: 'center',
+})
 
 export const PeekBit = ({
   item,
@@ -83,36 +89,49 @@ export const PeekBit = ({
     return <div>Error yo item.subType: {item.subType}</div>
   }
   return (
-    <SearchablePeek
-      key={item.id}
-      defaultValue={App.state.query}
-      focusOnMount
-      searchBarTheme={peekStore.theme}
-      onChange={() => searchStore.setHighlightIndex(0)}
-      onEnter={peekStore.goToNextHighlight}
-      placeholder={`Search this ${item.subType} and related...`}
-      searchBarProps={searchBarProps}
+    <PeekItemResolver
+      item={item}
+      bit={bit}
+      appStore={appStore}
+      {...BitPaneContent.bitResolverProps}
     >
-      {({ searchBar, searchTerm }) => {
+      {({
+        title,
+        icon,
+        content,
+        location,
+        locationLink,
+        integration,
+        // permalink,
+        updatedAt,
+        comments,
+      }) => {
         return (
-          <PeekItemResolver
-            item={item}
-            bit={bit}
-            appStore={appStore}
-            searchTerm={searchTerm}
-            {...BitPaneContent.bitResolverProps}
+          <SearchablePeek
+            key={item.id}
+            defaultValue={App.state.query}
+            focusOnMount
+            searchBarTheme={peekStore.theme}
+            onChange={() => searchStore.setHighlightIndex(0)}
+            onEnter={peekStore.goToNextHighlight}
+            placeholder={`Search this ${item.subType} and related...`}
+            searchBarProps={searchBarProps}
+            before={<HeadSide />}
+            after={
+              <HeadSide>
+                {!!icon && (
+                  <UI.Button
+                    onClick={() => {
+                      console.log('todo open integration', integration)
+                    }}
+                    circular
+                    icon={<OrbitIcon icon={icon} size={16} />}
+                  />
+                )}
+              </HeadSide>
+            }
           >
-            {({
-              title,
-              icon,
-              content,
-              location,
-              locationLink,
-              integration,
-              permalink,
-              updatedAt,
-              comments,
-            }) => {
+            {({ searchBar, searchTerm }) => {
               return children({
                 title,
                 icon,
@@ -137,31 +156,13 @@ export const PeekBit = ({
                       <div />
                       <UI.View flex={1} />
                       <UI.Row alignItems="center">
-                        {!!permalink &&
-                          !!icon && (
-                            <>
-                              <OrbitIcon
-                                onClick={() => {
-                                  console.log(
-                                    'todo open integration',
-                                    integration,
-                                  )
-                                }}
-                                icon={icon}
-                                size={16}
-                              />
-                              <HorizontalSpace />
-                            </>
-                          )}
                         <RoundButton alignItems="center">
                           Copy Link <Cmd>⌘+Shift+C</Cmd>
                         </RoundButton>
                         <HorizontalSpace />
-                        <UI.Theme name="orbit">
-                          <RoundButton alignItems="center">
-                            Open <Cmd>⌘+Enter</Cmd>
-                          </RoundButton>
-                        </UI.Theme>
+                        <RoundButton alignItems="center">
+                          Open <Cmd>⌘+Enter</Cmd>
+                        </RoundButton>
                       </UI.Row>
                     </PeekActionBar>
                   </PeekBottom>
@@ -190,9 +191,9 @@ export const PeekBit = ({
                 ),
               })
             }}
-          </PeekItemResolver>
+          </SearchablePeek>
         )
       }}
-    </SearchablePeek>
+    </PeekItemResolver>
   )
 }

@@ -3,11 +3,11 @@ import * as UI from '@mcro/ui'
 import { view, react, compose } from '@mcro/black'
 // import { Bit } from '@mcro/models'
 // import { BitRepository, SettingRepository } from '../../../../repositories'
-import { Bits } from '../../../../views/Bits'
+// import { Bits } from '../../../../views/Bits'
 import { TimeAgo } from '../../../../views/TimeAgo'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
-import { InvisiblePane } from '../../views/InvisiblePane'
+import { HideablePane } from '../../views/HideablePane'
 
 const columnSizes = {
   repo: 'flex',
@@ -154,7 +154,7 @@ export const SlackSetting = decorator(({ store, children }: Props) => {
     ),
     content: (
       <>
-        <InvisiblePane visible={store.active === 'repos'}>
+        <HideablePane visible={store.active !== 'repos'}>
           <UI.SearchableTable
             virtual
             rowLineHeight={28}
@@ -169,10 +169,10 @@ export const SlackSetting = decorator(({ store, children }: Props) => {
               </div>
             }
           />
-        </InvisiblePane>
-        <InvisiblePane visible={store.active === 'issues'}>
+        </HideablePane>
+        <HideablePane visible={store.active !== 'issues'}>
           {/* <Bits bits={store.bits} /> */}
-        </InvisiblePane>
+        </HideablePane>
       </>
     ),
   })

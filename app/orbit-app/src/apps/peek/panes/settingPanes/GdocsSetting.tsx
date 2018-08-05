@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, react, compose } from '@mcro/black'
 import { SettingPaneProps } from './SettingPaneProps'
 import * as UI from '@mcro/ui'
-import { InvisiblePane } from '../../views/InvisiblePane'
+import { HideablePane } from '../../views/HideablePane'
 import { DriveService } from '@mcro/services'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 
@@ -100,7 +100,7 @@ export const GdocsSetting = decorator(({ store, children }: Props) => {
     ),
     content: (
       <>
-        <InvisiblePane visible={store.active === 'folders'}>
+        <HideablePane visible={store.active !== 'folders'}>
           <UI.SearchableTable
             virtual
             rowLineHeight={28}
@@ -115,8 +115,8 @@ export const GdocsSetting = decorator(({ store, children }: Props) => {
               </div>
             }
           />
-        </InvisiblePane>
-        <InvisiblePane visible={store.active === 'issues'} />
+        </HideablePane>
+        <HideablePane visible={store.active !== 'issues'} />
       </>
     ),
   })

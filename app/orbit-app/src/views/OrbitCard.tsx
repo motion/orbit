@@ -93,7 +93,7 @@ const Card = view({
   },
 })
 
-const cardShadow = [0, 1, 2, [0, 0, 0, 0.03]]
+const cardShadow = [0, 1, 2, [0, 0, 0, 0.04]]
 const cardHoverGlow = [0, 0, 0, 3, [0, 0, 0, 0.05]]
 const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
 const borderSelected = UI.color('#90b1e4cc')

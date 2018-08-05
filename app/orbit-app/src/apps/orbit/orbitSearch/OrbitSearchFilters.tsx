@@ -51,7 +51,7 @@ type Props = {
 }
 
 const FilterButton = props => (
-  <UI.Button background="#fbfbfb" alpha={0.9} {...props} />
+  <UI.Button background="#fbfbfb" size={0.95} alpha={0.9} {...props} />
 )
 
 const decorate = compose(
@@ -62,7 +62,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   const { searchFilterStore } = searchStore
   return (
     <SearchFilters width="100%" alignItems="center">
-      <UI.Row width="100%">
+      <UI.Row width="100%" alignItems="center">
         <FilterButton
           {...searchFilterStore.dateHover.props}
           active={searchFilterStore.dateHover.isStuck()}
@@ -70,7 +70,11 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
           {getDate(searchFilterStore.dateState) || 'Any time'}
         </FilterButton>
         <div style={{ width: 4 }} />
-        <FilterButton onClick={searchFilterStore.toggleSortBy}>
+        <FilterButton
+          chromeless
+          alpha={0.6}
+          onClick={searchFilterStore.toggleSortBy}
+        >
           {searchFilterStore.sortBy}
         </FilterButton>
         <UI.Col flex={1} />
@@ -79,19 +83,20 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
             <RoundButton
               key={`${filter.icon}${i}`}
               circular
-              size={1.2}
-              marginLeft={4}
-              icon={<OrbitIcon size={20} icon={filter.icon} />}
+              size={1.1}
+              marginLeft={5}
+              icon={<OrbitIcon size={18} icon={filter.icon} />}
               tooltip={filter.name}
               onClick={searchFilterStore.integrationFilterToggler(filter)}
               filter={filter.active ? null : 'grayscale(100%)'}
               opacity={filter.active ? 1 : 0.3}
               background="transparent"
-              {...{
-                '&:hover': {
-                  filter: 'none',
-                  opacity: filter.active ? 1 : 0.75,
-                },
+              activeStyle={{
+                background: 'transparent',
+              }}
+              hoverStyle={{
+                filter: 'none',
+                opacity: filter.active ? 1 : 0.75,
               }}
             />
           )

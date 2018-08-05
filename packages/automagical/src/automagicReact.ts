@@ -40,7 +40,10 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
     .slice(0, 35)
   const name = `--> ${methodName} | ${delayLog}`
   let preventLog = options.log === false
-  let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE, { name })
+  let current = Mobx.observable.box(defaultValue || DEFAULT_VALUE, {
+    name,
+    deep: false,
+  })
   let prev
   let stopReaction
   let disposed = false

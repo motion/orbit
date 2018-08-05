@@ -76,32 +76,34 @@ FilterBarFade.theme = ({ theme }) => ({
 
 type Props = {
   filterStore?: SearchFilterStore
-  paneStore: PaneManagerStore
+  paneManagerStore: PaneManagerStore
 }
 
 const opacityScale = [1, 0.9, 0.8, 0.7, 0.5]
 
-export const OrbitFilterBar = view(({ filterStore, paneStore }: Props) => {
-  filterStore.disabledFilters
-  return (
-    <FilterBar opacity={paneStore.activePane === 'settings' ? 0 : 1}>
-      <HorizontalScroll>
-        {filterStore.allFilters.map((filter, index) => (
-          <UI.Theme
-            key={`${filter.text}${filter.active}${index}`}
-            theme={filter.active ? activeThemes[filter.type] : inactiveTheme}
-          >
-            <FilterButton
-              onClick={() => filterStore.toggleFilter(filter.text)}
-              opacity={opacityScale[index] || 0.333}
+export const OrbitFilterBar = view(
+  ({ filterStore, paneManagerStore }: Props) => {
+    filterStore.disabledFilters
+    return (
+      <FilterBar opacity={paneManagerStore.activePane === 'settings' ? 0 : 1}>
+        <HorizontalScroll>
+          {filterStore.allFilters.map((filter, index) => (
+            <UI.Theme
+              key={`${filter.text}${filter.active}${index}`}
+              theme={filter.active ? activeThemes[filter.type] : inactiveTheme}
             >
-              {filter.text}
-            </FilterButton>
-          </UI.Theme>
-        ))}
-        <UI.View width={50} />
-      </HorizontalScroll>
-      <FilterBarFade />
-    </FilterBar>
-  )
-})
+              <FilterButton
+                onClick={() => filterStore.toggleFilter(filter.text)}
+                opacity={opacityScale[index] || 0.333}
+              >
+                {filter.text}
+              </FilterButton>
+            </UI.Theme>
+          ))}
+          <UI.View width={50} />
+        </HorizontalScroll>
+        <FilterBarFade />
+      </FilterBar>
+    )
+  },
+)

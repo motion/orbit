@@ -3,11 +3,7 @@
   "types": "./types.d.ts",
   "compilerOptions": {
     "outDir": "_",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["*"]
-    }
+    "baseUrl": "./"
   },
-  "include": ["**/*"],
-  "exclude": ["_", "node_modules", "tmp", "*.js"]
+  "include": ["src/**/*"]
 }

@@ -2,19 +2,19 @@ import * as React from 'react'
 import { App } from '@mcro/stores'
 import { view, react } from '@mcro/black'
 import { modelQueryReaction, compose } from '@mcro/helpers'
-import { PersonRepository } from '../../repositories'
-import { SubPane } from './SubPane'
-import { OrbitCard } from '../../views/OrbitCard'
-import { Masonry } from '../../views/Masonry'
-import { SubTitle } from '../../views'
-import * as Helpers from '../../helpers'
-import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
+import { PersonRepository } from '../../../repositories'
+import { SubPane } from '../SubPane'
+import { OrbitCard } from '../../../views/OrbitCard'
+import { Masonry } from '../../../views/Masonry'
+import { SubTitle } from '../../../views'
+import * as Helpers from '../../../helpers'
+import { PaneManagerStore } from '../PaneManagerStore'
+import { SearchStore } from '../../../stores/SearchStore'
 
 type Props = {
   store?: OrbitDirectoryStore
   name: string
-  paneStore: PaneManagerStore
+  paneManagerStore: PaneManagerStore
   searchStore: SearchStore
 }
 
@@ -37,7 +37,7 @@ class OrbitDirectoryStore {
   )
 
   get isActive() {
-    return this.props.paneStore.activePane === this.props.name
+    return this.props.paneManagerStore.activePane === this.props.name
   }
 
   get peopleQuery() {

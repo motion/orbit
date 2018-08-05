@@ -21,7 +21,7 @@ export type OrbitCardProps = {
   hoverToSelect?: boolean
   appStore?: AppStore
   searchStore?: SearchStore
-  paneStore?: PaneManagerStore
+  paneManagerStore?: PaneManagerStore
   subPaneStore?: SubPaneStore
   title?: React.ReactNode
   subtitle?: React.ReactNode
@@ -178,7 +178,7 @@ Card.theme = ({
     card = {
       ...card,
       padding: padding || 16,
-      borderRadius: borderRadius || 9,
+      borderRadius: borderRadius || 11,
       background: cardBackground,
       '&:active': {
         opacity: 0.8,
@@ -206,7 +206,7 @@ const Preview = view({
 
 const Subtitle = view(UI.View, {
   height: 20,
-  margin: [4, 0, 0],
+  margin: [3, 0, 1],
   flexFlow: 'row',
   alignItems: 'center',
 })
@@ -309,7 +309,7 @@ class OrbitCardStore {
   )
 }
 
-@view.attach('appStore', 'searchStore', 'paneStore', 'subPaneStore')
+@view.attach('appStore', 'searchStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitCardStore,
 })

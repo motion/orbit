@@ -1,17 +1,17 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { OrbitCard } from '../../../views/OrbitCard'
-import { SubPane } from '../SubPane'
+import { OrbitCard } from '../../../../views/OrbitCard'
+import { SubPane } from '../../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import { OrbitSearchFilters } from './OrbitSearchFilters'
-import { SearchStore } from '../../../stores/SearchStore'
-import { PaneManagerStore } from '../PaneManagerStore'
+import { SearchStore } from '../../../../stores/SearchStore'
+import { PaneManagerStore } from '../../PaneManagerStore'
 
 type Props = {
   searchStore?: SearchStore
-  paneStore?: PaneManagerStore
+  paneManagerStore?: PaneManagerStore
   name?: string
   store?: SubSearchStore
 }
@@ -125,7 +125,7 @@ class SubSearchStore {
   props: Props
 
   get isActive() {
-    return this.props.paneStore.activePane === 'search'
+    return this.props.paneManagerStore.activePane === 'search'
   }
 
   state = react(
@@ -140,7 +140,7 @@ class SubSearchStore {
   )
 }
 
-@view.attach('searchStore', 'paneStore')
+@view.attach('searchStore', 'paneManagerStore')
 @view.attach({
   store: SubSearchStore,
 })

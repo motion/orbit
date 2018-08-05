@@ -79,7 +79,7 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-@view.attach('paneStore', 'appStore', 'searchStore')
+@view.attach('paneManagerStore', 'appStore', 'searchStore')
 @view.provide({
   subPaneStore: SubPaneStore,
 })

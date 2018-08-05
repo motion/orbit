@@ -1,5 +1,5 @@
 import { Setting } from '@mcro/models'
-import { store, react } from '@mcro/black/store'
+import { store, react } from '@mcro/black'
 import Octokat from 'octokat'
 
 @store

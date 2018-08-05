@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { on, react, sleep } from '@mcro/black'
+import { on, react } from '@mcro/black'
 import { AppStore } from '../../stores/AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from '../../stores/SearchStore'
-import { throttle, debounce } from 'lodash'
+import { throttle } from 'lodash'
 
 function getTopOffset(element, parent?) {
   let offset = 0
@@ -17,10 +17,10 @@ function getTopOffset(element, parent?) {
 export class SubPaneStore {
   props: {
     appStore: AppStore
-    paneStore: PaneManagerStore
+    paneManagerStore: PaneManagerStore
     searchStore: SearchStore
     name: string
-    extraCondition: () => boolean
+    extraCondition?: () => boolean
   }
 
   aboveContentHeight = 0
@@ -44,13 +44,14 @@ export class SubPaneStore {
   // prevents uncessary and expensive OrbitCard re-renders
   isActive = react(
     () => {
-      const { extraCondition, name, paneStore } = this.props
+      const { extraCondition, name, paneManagerStore } = this.props
       return (
-        name === paneStore.activePane &&
+        name === paneManagerStore.activePane &&
         (extraCondition ? extraCondition() : true)
       )
     },
     isActive => {
+      console.log('running is active...', isActive, this.isActive)
       if (isActive === this.isActive) {
         throw react.cancel
       }

@@ -1,14 +1,14 @@
 import 'react-date-range/dist/styles.css' // main style file
-import '../../../../public/styles/calendar.css' // theme css file
+import './calendar.css' // theme css file
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { RoundButton } from '../../../views'
-import { OrbitIcon } from '../../../views/OrbitIcon'
+import { RoundButton } from '../../../../views'
+import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { DateRangePicker } from 'react-date-range'
 import { formatDistance } from 'date-fns'
-import { SearchStore } from '../../../stores/SearchStore'
-import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
+import { SearchStore } from '../../../../stores/SearchStore'
+import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 
 const SearchFilters = view(UI.Col, {
   padding: [7, 12],

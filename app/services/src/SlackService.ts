@@ -1,5 +1,5 @@
 import * as Slack1 from 'slack'
-import { store } from '@mcro/black/store'
+import { store } from '@mcro/black'
 import { Setting } from '@mcro/models'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))

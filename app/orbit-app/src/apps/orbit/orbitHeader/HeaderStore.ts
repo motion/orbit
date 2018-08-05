@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { SearchStore } from '../../stores/SearchStore'
-import { PaneManagerStore } from './PaneManagerStore'
+import { SearchStore } from '../../../stores/SearchStore'
+import { PaneManagerStore } from '../PaneManagerStore'
 
 const moveCursorToEndOfTextarea = textarea => {
   textarea.setSelectionRange(textarea.value.length, textarea.value.length)
@@ -11,7 +11,7 @@ const moveCursorToEndOfTextarea = textarea => {
 export class HeaderStore {
   props: {
     searchStore: SearchStore
-    paneStore: PaneManagerStore
+    paneManagerStore: PaneManagerStore
   }
 
   inputRef = React.createRef<HTMLDivElement>()
@@ -106,13 +106,13 @@ export class HeaderStore {
   }
 
   goHome = () => {
-    if (this.props.paneStore.activePane === 'home') {
+    if (this.props.paneManagerStore.activePane === 'home') {
       App.actions.closeOrbit()
     } else {
       if (App.state.query) {
         this.props.searchStore.clearQuery()
       } else {
-        this.props.paneStore.setActivePane('home')
+        this.props.paneManagerStore.setActivePane('home')
       }
     }
   }

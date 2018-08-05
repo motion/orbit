@@ -1,7 +1,6 @@
 {
   "name": "@mcro/black",
-  "main": "_/index.js",
-  "module": "_/index.js",
+  "main": "_/main.js",
   "sideEffects": false,
   "version": "2.2.1",
   "scripts": {

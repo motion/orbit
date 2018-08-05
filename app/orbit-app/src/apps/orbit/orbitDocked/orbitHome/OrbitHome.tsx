@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { view, react, attachTheme } from '@mcro/black'
-import { BitRepository, PersonRepository } from '../../repositories'
-import { OrbitCard } from '../../views/OrbitCard'
-import { Masonry } from '../../views/Masonry'
-import { SubPane } from './SubPane'
-import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
+import { BitRepository, PersonRepository } from '../../../../repositories'
+import { OrbitCard } from '../../../../views/OrbitCard'
+import { Masonry } from '../../../../views/Masonry'
+import { SubPane } from '../../SubPane'
+import { PaneManagerStore } from '../../PaneManagerStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 
 type Props = {
   name: string
-  paneStore: PaneManagerStore
+  paneManagerStore: PaneManagerStore
   searchStore?: SearchStore
   store?: OrbitHomeStore
 }
@@ -29,7 +29,7 @@ class OrbitHomeStore {
   props: Props
 
   get isActive() {
-    return this.props.paneStore.activePane === this.props.name
+    return this.props.paneManagerStore.activePane === this.props.name
   }
 
   setGetResults = react(

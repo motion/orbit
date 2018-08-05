@@ -1,5 +1,5 @@
 import { react, on } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from 'stores/SearchStore'
 
 // filters = ['all', 'general', 'status', 'showoff']
@@ -75,8 +75,17 @@ export class PaneManagerStore {
   }
 
   activePane = react(
-    () => [this.panes, this.paneIndex, App.orbitState.docked, App.state.query],
+    () => [
+      this.panes,
+      this.paneIndex,
+      App.orbitState.docked,
+      App.state.query,
+      Desktop.state.shouldOnboard,
+    ],
     async (_, { sleep }) => {
+      if (Desktop.state.shouldOnboard) {
+        return 'onboard'
+      }
       // let activePaneFast be a frame ahead
       await sleep(32)
       let active = this.panes[this.paneIndex]

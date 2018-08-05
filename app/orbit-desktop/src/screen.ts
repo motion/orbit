@@ -1,6 +1,6 @@
 import Oracle from '@mcro/oracle'
 import { debounce, last } from 'lodash'
-import { store, isEqual, react, on } from '@mcro/black/store'
+import { store, isEqual, react, on } from '@mcro/black'
 import { Desktop, DesktopState, Electron, Swift } from '@mcro/stores'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'

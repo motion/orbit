@@ -1,4 +1,4 @@
-import { store, react } from '@mcro/black/store'
+import { store, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import Icons from './icons'
 import * as _ from 'lodash'

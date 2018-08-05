@@ -1,4 +1,4 @@
-import { store, react } from '@mcro/black/store'
+import { store, react } from '@mcro/black'
 import { WebSocket, ReconnectingWebSocket } from '@mcro/mobx-bridge'
 import { Desktop } from './Desktop'
 

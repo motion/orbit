@@ -1,4 +1,4 @@
-import { store } from '@mcro/black/store'
+import { store } from '@mcro/black'
 import { Setting } from '@mcro/models'
 import { getHelpers } from './driveServiceHelpers'
 import { DriveServiceHelpers } from './types'

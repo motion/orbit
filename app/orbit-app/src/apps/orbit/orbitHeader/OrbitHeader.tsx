@@ -2,11 +2,11 @@ import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App } from '@mcro/stores'
-import { ControlButton } from '../../views/ControlButton'
-import { PaneManagerStore } from './PaneManagerStore'
-import { OrbitHeaderInput } from './orbitHeader/OrbitHeaderInput'
+import { ControlButton } from '../../../views/ControlButton'
+import { PaneManagerStore } from '../PaneManagerStore'
+import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from '../../../stores/SearchStore'
 
 const OrbitHeaderContainer = view({
   position: 'relative',
@@ -72,14 +72,14 @@ const OrbitFakeInput = view({
 })
 
 @attachTheme
-@view.attach('searchStore', 'paneStore')
+@view.attach('searchStore', 'paneManagerStore')
 @view.attach({
   headerStore: HeaderStore,
 })
 @view
 export class OrbitHeader extends React.Component<{
   headerStore?: HeaderStore
-  paneStore?: PaneManagerStore
+  paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   after?: React.ReactNode
   borderRadius?: number
@@ -92,7 +92,7 @@ export class OrbitHeader extends React.Component<{
 
   render() {
     const {
-      // paneStore,
+      // paneManagerStore,
       headerStore,
       after,
       theme,
@@ -101,7 +101,7 @@ export class OrbitHeader extends React.Component<{
       searchStore,
     } = this.props
     const headerBg = theme.base.background
-    // const isHome = paneStore.activePane === 'home'
+    // const isHome = paneManagerStore.activePane === 'home'
     // const { iconHovered } = headerStore
     return (
       <OrbitHeaderContainer

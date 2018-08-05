@@ -45,7 +45,7 @@ const adjust = {
   confluence: {
     transform: {
       // y: '-31%',
-      scale: 1.4,
+      scale: 3,
     },
   },
   jira: {
@@ -87,7 +87,6 @@ export const OrbitIcon = attachTheme(
       return (
         <UI.Icon
           name={icon}
-          display="inline-block"
           size={size * (preventAdjust ? 1 : 0.8)}
           color={color}
           {...props}

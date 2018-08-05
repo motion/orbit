@@ -45,14 +45,14 @@ const adjust = {
   confluence: {
     transform: {
       // y: '-31%',
-      scale: 3,
+      scale: 1.6,
     },
   },
   jira: {
     transform: {
       // y: '-25%',
       x: '-4%',
-      scale: 1.4,
+      scale: 1.5,
     },
   },
 }
@@ -83,7 +83,6 @@ export const OrbitIcon = attachTheme(
       }
     }
     if (!iconImg) {
-      return null
       return (
         <UI.Icon
           name={icon}

@@ -220,6 +220,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
     delay: 16,
     props: {} as PopoverProps,
     setPosition: false,
+    closing: false,
+    maxHeight: null,
   }
 
   // curProps is always up to date, so we dont have to thread props around a ton
@@ -319,9 +321,11 @@ export class Popover extends React.PureComponent<PopoverProps> {
         on(
           this,
           setTimeout(() => {
-            this.setState({ closing: false, isOpen: false }, () =>
-              this.props.onDidClose(),
-            )
+            this.setState({ closing: false, isOpen: false }, () => {
+              if (this.props.onDidClose) {
+                this.props.onDidClose()
+              }
+            })
             resolve()
           }, 300),
         )
@@ -864,7 +868,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
       direction,
     } = this.state
     const { showPopover } = this
-    console.log(this, this.targetBounds, top, left)
     const controlledTarget = target => {
       const targetProps = {
         ref: this.targetRef,

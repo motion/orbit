@@ -1,6 +1,6 @@
 import { Bit, Job, Person, PersonBit, Setting } from '@mcro/models'
-import { WebSocketProvider } from './helpers/repository/WebSocketProvider'
-import { Repository } from './helpers/repository/Repository'
+import { WebSocketProvider } from '../helpers/repository/WebSocketProvider'
+import { Repository } from '../helpers/repository/Repository'
 
 const provider = new WebSocketProvider()
 

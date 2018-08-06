@@ -1,7 +1,7 @@
-import { react, ReactionOptions } from '@mcro/automagical'
+import { react, ReactionOptions } from '@mcro/black'
 import { now } from 'mobx-utils'
-import { modelEqual, modelsEqual } from './modelsEqual'
 import { comparer } from 'mobx'
+import { Person, Bit, Setting, Job, PersonBit } from '@mcro/models'
 
 type ReactModelQueryOpts = ReactionOptions & {
   condition?: () => boolean
@@ -14,25 +14,17 @@ const DEFAULT_OPTIONS = {
   condition: trueFn,
 }
 
-const isEqual = (a, b) => {
-  // cancel if not changed
-  if (Array.isArray(a)) {
-    if (modelsEqual(a, b)) {
-      return true
-    }
-  } else if (comparer.structural(a, b)) {
-    return true
-  } else if (modelEqual(a, b)) {
-    return true
-  }
-  return false
-}
+const isEqual = comparer.structural
+
+type ValidModel = Person | Bit | Setting | PersonBit | Job
+
+type ModelQuery<T> = (() => Promise<T>)
 
 // a helper to watch model queries and only trigger reactions when the model changes
 // because our models dont implement a nice comparison, which we could probably do later
-export function modelQueryReaction(
-  query: Function,
-  b?: ReactModelQueryOpts | Function,
+export function modelQueryReaction<T extends ValidModel | ValidModel[]>(
+  query: ModelQuery<T>,
+  b?: ReactModelQueryOpts | ((a: T) => any),
   c?: ReactModelQueryOpts,
 ) {
   let options: ReactModelQueryOpts | undefined

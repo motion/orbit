@@ -2,10 +2,10 @@ import { on, react, isEqual } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { SettingRepository } from '../repositories'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
-import { modelQueryReaction, sleep } from '@mcro/helpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppReactions } from './AppReactions'
 import { getPermalink } from '../helpers/getPermalink'
+import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
 export class AppStore {
   contentHeight = 0

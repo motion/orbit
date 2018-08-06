@@ -5,13 +5,13 @@ import { OrbitSettingCard } from './OrbitSettingCard'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
 import { Setting } from '@mcro/models'
-import { modelQueryReaction } from '@mcro/helpers'
 import { Masonry } from '../../../../views/Masonry'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../../../stores/SearchStore'
 import { API_URL } from '../../../../constants'
+import { modelQueryReaction } from '../../../../repositories/modelQueryReaction'
 
 type Props = {
   name: string

@@ -1,7 +1,7 @@
 // import { react } from '@mcro/black'
 import { Setting } from '@mcro/models'
-import { modelQueryReaction } from '@mcro/helpers'
 import { BitRepository, JobRepository } from '../repositories'
+import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
 // TODO: we can have multiple of the same integration added in
 // this just assumes one of each
@@ -31,7 +31,7 @@ export class SettingInfoStore {
   bitsCount = modelQueryReaction(
     () =>
       BitRepository.count({
-        integration: this.setting.type
+        integration: this.setting.type,
       }),
     {
       immediate: true,

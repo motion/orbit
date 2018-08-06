@@ -1,6 +1,8 @@
 import { react, on } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from 'stores/SearchStore'
+import { generalSettingQuery } from '../../repositories/settingQueries'
+import { modelQueryReaction } from '../../repositories/modelQueryReaction'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
@@ -74,16 +76,21 @@ export class PaneManagerStore {
     return this.panes[this.paneIndex]
   }
 
+  shouldOnboard = modelQueryReaction(
+    generalSettingQuery,
+    setting => !setting.values.hasOnboarded,
+  )
+
   activePane = react(
     () => [
       this.panes,
       this.paneIndex,
       App.orbitState.docked,
       App.state.query,
-      Desktop.state.shouldOnboard,
+      this.shouldOnboard,
     ],
     async (_, { sleep }) => {
-      if (Desktop.state.shouldOnboard) {
+      if (this.shouldOnboard) {
         return 'onboard'
       }
       // let activePaneFast be a frame ahead

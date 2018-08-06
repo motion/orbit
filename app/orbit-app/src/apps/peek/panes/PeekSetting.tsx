@@ -8,12 +8,12 @@ import { JobRepository, SettingRepository } from '../../../repositories'
 import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '../../../stores/SettingInfoStore'
 import { TimeAgo } from '../../../views/TimeAgo'
-import { modelQueryReaction } from '@mcro/helpers'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton } from '../../../views'
 import { PeekBottom } from './PeekBottom'
 import { PeekActionBar } from './PeekActionBar'
+import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>

@@ -1,5 +1,12 @@
 # Umed week of Aug 6th
 
+## Main Goals
+
+- Have people profile queries ready
+- Have syncing set up for rate limits
+
+Other stuff:
+
 - Discuss handling mutations and updating in UI (Observable Ids work)
 - Gmail scan emails based on slack and other emails
 - Person:
@@ -15,12 +22,7 @@
 - Small: syncers throttle various syncs so they don't all run at once (cpu)
 - Small: Duplicate types for models... way to resolve?
 
-Main Goals:
-
-- Have people profile queries ready
-- Have syncing set up for rate limits
-
-Broken down:
+## Main goals, broken down...
 
 - Discuss rate limit workaround method
 
@@ -65,6 +67,8 @@ Later we unlock p2p sync:
 
 - Can just query for drive.history and use p2p network to sync docs using identifiers
 - (1 history query vs. 1 + N queries)
+
+---
 
 # nate
 

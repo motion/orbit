@@ -1,10 +1,21 @@
 {
   "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
-    "declaration": true,
+    "composite": true,
     "module": "CommonJS",
-    "outDir": "_",
-    "baseUrl": "./"
+    "outDir": "_"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../models" },
+    { "path": "../services" },
+    { "path": "../stores" },
+    { "path": "../oracle" },
+    { "path": "../../packages/black" },
+    { "path": "../../packages/constants" },
+    { "path": "../../packages/debug" },
+    { "path": "../../packages/helpers" },
+    { "path": "../../packages/oauth-strategies" },
+    { "path": "../../packages/r2" }
+  ]
 }

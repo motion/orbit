@@ -3,11 +3,6 @@
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "_",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["*"]
-    }
-  },
-  "include": ["**/*"],
-  "exclude": ["_", "node_modules", "tmp", "*.js"]
+    "rootDir": "src"
+  }
 }

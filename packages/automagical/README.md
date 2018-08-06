@@ -14,6 +14,7 @@ class MyStore {
       () => this.val,
       val => {
         this.val2 = val + 1
+        // and if you want async stuff that cancels on next reaction, good luck...
       },
       {
         // have to set this to get a nice log
@@ -26,7 +27,7 @@ class MyStore {
 }
 ```
 
-With automagical + react, you can use this:
+With automagical + react, you can do this:
 
 ```js
 class MyStore {
@@ -35,7 +36,7 @@ class MyStore {
   // this will also log as MyStore.val2 automatically
   val2 = react(
     () => this.val,
-    // note react returns the value of the reaction to the variable
+    // react() stores this value to the class property
     val => val + 1,
   )
 }
@@ -102,7 +103,9 @@ class MyStore {
 }
 ```
 
-Internally these helper functions throw a special value that is caught when the reaction re-runs, and handled as a cancel. You can also do your own cancels. This will prevent the reaction from logging, which is helpful as your app grows:
+Internally these helper functions throw a special value that is caught and handled properly. When the reaction re-runs it also ignores and throws after the last async function.
+
+You can also do your own cancels. This will prevent the reaction from logging as a success, so you can debug just "valid" reactions, which is helpful as your app grows:
 
 ```js
 class MyStore {
@@ -119,9 +122,11 @@ class MyStore {
 }
 ```
 
-There is also a `whenChanged` helper which is like `when` but will continue once the value changes at all.
+There is also a `whenChanged` helper which is like `when` but continues once the value changes at all.
 
-Finally, you can do "pipes", where you set a value multiple times over the course of a reaction:
+## Multiple updates
+
+Finally, you can multiple-updates, where you set a value multiple times over the course of a reaction:
 
 ```js
 class MyStore {
@@ -146,5 +151,4 @@ Document:
 
 - ReactionOptions
   - delayValue
-  - remove or fix isIf
   - onlyUpdateIfChanged

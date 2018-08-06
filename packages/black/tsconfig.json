@@ -2,8 +2,17 @@
   "extends": "../../tsconfig.tspackage",
   "types": "./types.d.ts",
   "compilerOptions": {
+    "composite": true,
     "outDir": "_",
-    "baseUrl": "./"
+    "rootDir": "src"
   },
-  "include": ["src/**/*"]
+  "references": [
+    { "path": "../automagical" },
+    { "path": "../decor" },
+    { "path": "../decor-classes" },
+    { "path": "../decor-mobx" },
+    { "path": "../decor-react" },
+    { "path": "../gloss" },
+    { "path": "../helpers" }
+  ]
 }

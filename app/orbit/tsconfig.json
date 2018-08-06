@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "composite": true
+  },
+  "references": [
+    { "path": "../orbit-app" },
+    { "path": "../orbit-desktop" },
+    { "path": "../orbit-electron" },
+    { "path": "../../packages/dev" },
+    { "path": "../../packages/debug-apps" }
+  ]
+}

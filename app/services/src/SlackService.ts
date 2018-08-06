@@ -1,4 +1,4 @@
-// import * as Slack1 from 'slack'
+import * as Slack1 from 'slack'
 import { store } from '@mcro/black'
 import { Setting } from '@mcro/models'
 
@@ -16,7 +16,7 @@ export type ChannelInfo = {
 }
 
 // @ts-ignore
-// export const Slack = Slack1.default || Slack1
+export const Slack = Slack1.default || Slack1
 
 // @ts-ignore
 @store
@@ -28,12 +28,11 @@ export class SlackService {
 
   constructor(setting: Setting) {
     this.setting = setting
-    console.log('todo fix')
-    // this.slack = new Slack({ token: this.setting.token, useElectronNet: true })
-    // this.slack.channels
-    //   .list({})
-    //   .then(res => res && res.channels)
-    //   .then(channels => this.setAllChannels(channels))
+    this.slack = new Slack({ token: this.setting.token, useElectronNet: true })
+    this.slack.channels
+      .list({})
+      .then(res => res && res.channels)
+      .then(channels => this.setAllChannels(channels))
   }
 
   setAllChannels = channels => {

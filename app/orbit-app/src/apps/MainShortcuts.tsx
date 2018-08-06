@@ -1,8 +1,7 @@
 import { HotKeys } from 'react-hotkeys'
-import { App } from '@mcro/stores'
+import { App, Electron } from '@mcro/stores'
 import { view, compose } from '@mcro/black'
 import { SearchStore } from '../stores/SearchStore'
-import { clipboard } from 'electron'
 import { getPermalink } from '../helpers/getPermalink'
 
 type Props = {
@@ -25,7 +24,7 @@ export const MainShortcuts = decorator(({ searchStore, children }: Props) => {
     },
     copyLink: async () => {
       const permalink = await getPermalink(searchStore.selectedItem)
-      clipboard.writeText(permalink)
+      App.sendMessage(Electron, Electron.messages.COPY, permalink)
     },
   }
 

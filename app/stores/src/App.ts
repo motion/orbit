@@ -41,6 +41,7 @@ class AppStore {
     copyLink: Function
     clearPeek: Function
     setPeekTarget: Function
+    setContextMessage: Function
   }
 
   messages = {

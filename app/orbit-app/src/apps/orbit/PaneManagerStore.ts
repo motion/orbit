@@ -55,9 +55,9 @@ export class PaneManagerStore {
     () => this.activePane,
     pane => {
       if (pane === 'onboard') {
-        App.setState({ contextMessage: 'Welcome to Orbit...' })
+        App.actions.setContextMessage('Welcome to Orbit...')
       } else {
-        App.setState({ contextMessage: 'Orbit' })
+        App.actions.setContextMessage('Orbit')
       }
     },
   )

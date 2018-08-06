@@ -5,15 +5,6 @@ import Path from 'path'
 import * as Constants from '../constants'
 import { Electron, Desktop, App } from '@mcro/stores'
 
-const getTitle = () => {
-  if (Desktop.state.paused) {
-    return 'Paused'
-  }
-  if (App.state.contextMessage) {
-    return App.state.contextMessage
-  }
-}
-
 @view.electron
 export default class TrayEl extends React.Component {
   render() {
@@ -28,7 +19,7 @@ export default class TrayEl extends React.Component {
           'icons',
           'orbitTemplate.png',
         )}
-        title={getTitle()}
+        title={App.state.contextMessage}
       />
     )
   }

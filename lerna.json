@@ -6,6 +6,9 @@
   "command": {
     "publish": {
       "registry": "http://localhost:4343"
+    },
+    "bootstrap": {
+      "registry": "https://registry.npmjs.org"
     }
   }
 }

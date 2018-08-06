@@ -4,7 +4,7 @@ import { CSSPropertySet, ThemeObject } from '@mcro/gloss'
 export { react } from '@mcro/automagical'
 export { on, compose } from '@mcro/helpers'
 
-export { Component } from './Component'
+export { Component } from './src/Component'
 export { DecorCompiledDecorator } from '@mcro/decor'
 
 export type Constants = { IS_ELECTRON: boolean }

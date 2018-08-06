@@ -1,7 +1,7 @@
 var util = require('util')
 var OAuth2Strategy = require('passport-oauth').OAuth2Strategy
 
-function Strategy(options, verify) {
+export default function Strategy(options, verify) {
   options = options || {}
   options.tokenURL = options.tokenURL || 'https://slack.com/api/oauth.access'
   options.authorizationURL =
@@ -125,5 +125,3 @@ Strategy.prototype.authorizationParams = function(options) {
   }
   return params
 }
-
-export default Strategy

@@ -25,6 +25,7 @@ export class GithubService {
   }
 
   get activeOrgs() {
+    // @ts-ignore
     return this.setting.orgs
   }
 }

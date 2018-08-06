@@ -19,43 +19,7 @@ export type AppStatePeekItem = {
   subType: string
 }
 
-export type AppState = {
-  query: string
-  screenSize: [number, number]
-  orbitState: {
-    hidden: boolean
-    pinned: boolean
-    docked: boolean
-    orbitOnLeft: boolean
-    position: [number, number]
-    size: [number, number]
-    inputFocused: boolean
-  }
-  peekState: {
-    pinned: boolean
-    devModeStick: boolean
-    target?: {
-      top: number
-      left: number
-      width: number
-      height: number
-    }
-    item?: AppStatePeekItem
-    peekId: number
-    peekOnLeft: boolean
-    position: [number, number]
-    size: [number, number]
-  }
-  authState: {
-    openId: null
-    closeId: null
-  }
-  highlightWords: {}
-  hoveredWord: null
-  hoveredLine: null
-  contextMessage: 'Orbit'
-}
-
+// @ts-ignore
 @store
 class AppStore {
   // shortcuts
@@ -95,7 +59,7 @@ class AppStore {
   bridge: any
   source = 'App'
 
-  state: AppState = deep({
+  state = deep({
     query: '',
     screenSize: [0, 0],
     orbitState: {

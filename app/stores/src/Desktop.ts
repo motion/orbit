@@ -18,6 +18,7 @@ export type DesktopStateOCRItem = [
   string
 ]
 
+// @ts-ignore
 @store
 class DesktopStore {
   // TODO have the store decorator somehow auto-define these types

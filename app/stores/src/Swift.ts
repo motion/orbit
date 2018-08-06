@@ -4,6 +4,7 @@ import { Desktop } from './Desktop'
 
 export let Swift
 
+// @ts-ignore
 @store
 class SwiftStore {
   ws: any

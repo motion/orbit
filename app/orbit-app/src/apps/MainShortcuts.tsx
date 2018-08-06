@@ -30,7 +30,12 @@ export const MainShortcuts = decorator(({ searchStore, children }: Props) => {
   }
 
   return (
-    <HotKeys focused keyMap={rootShortcuts} handlers={handlers}>
+    <HotKeys
+      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+      focused
+      keyMap={rootShortcuts}
+      handlers={handlers}
+    >
       {children}
     </HotKeys>
   )

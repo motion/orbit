@@ -4,11 +4,9 @@
     "composite": true,
     "outDir": "_",
     "rootDir": "src",
-    "baseUrl": "./src"
+    "baseUrl": "./"
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
     { "path": "../services" },

@@ -10,8 +10,8 @@ import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 import { SearchStore } from '../../../../stores/SearchStore'
-import { API_URL } from '../../../../constants'
 import { modelQueryReaction } from '../../../../repositories/modelQueryReaction'
+import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 
 type Props = {
   name: string
@@ -179,23 +179,12 @@ export class OrbitSettings extends React.Component<Props> {
             // sort by not used first
             .sort((a, b) => (!store.isActive(a) && store.isActive(b) ? -1 : 1))
             .map((item, index) => {
-              // custom auth clicks
-              const onClick = ({ currentTarget }) => {
-                if (item.auth) {
-                  App.actions.toggleSelectItem(
-                    { id: item.id, type: 'view', title: item.title },
-                    currentTarget,
-                  )
-                } else {
-                  App.actions.openAuth(item.id)
-                }
-              }
               return (
                 <store.IntegrationCard
                   key={`${item.id}`}
                   result={item}
                   index={index + store.allResults.length}
-                  onClick={onClick}
+                  onClick={addIntegrationClickHandler(item)}
                   disableShadow
                   cardProps={{
                     chromeless: true,

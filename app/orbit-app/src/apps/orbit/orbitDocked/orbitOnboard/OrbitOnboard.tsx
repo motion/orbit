@@ -5,6 +5,8 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
 import { Desktop, App } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
+import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
+import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 
 const sidePad = 16
 const controlsHeight = 40
@@ -61,13 +63,17 @@ const Item = view({
   padding: [0, sidePad],
   height: 56,
   alignItems: 'center',
+  '&:hover': {
+    background: '#f6f6f6',
+  },
 })
 
 Item.theme = ({ theme }) => ({
-  borderBottom: [1, theme.base.borderColor],
+  borderBottom: [1, theme.base.borderColor.alpha(0.7)],
 })
 
 const ItemTitle = view({
+  fontWeight: 600,
   padding: [0, 12],
   justifyContent: 'center',
   fontSize: 16,
@@ -75,89 +81,111 @@ const ItemTitle = view({
   flex: 1,
 })
 
-const AddButton = props => (
-  <Theme name="orbit">
-    <Button fontWeight={700} {...props} />
-  </Theme>
-)
+const AddButton = ({ disabled, ...props }) =>
+  disabled ? (
+    <Button chromeless disabled {...props} />
+  ) : (
+    <Theme theme="green">
+      <Button fontWeight={700} {...props} />
+    </Theme>
+  )
 
 const buttonText = ["Let's get setup", 'Looks good', 'Done!']
 
+class OnboardStore {
+  curFrame = 0
+  nextFrame = () => this.curFrame++
+  lastFrame = () => this.curFrame--
+}
+
 const decorator = compose(
+  view.attach('integrationSettingsStore'),
   view.attach({
-    store: class {
-      curFrame = 0
-      nextFrame = () => this.curFrame++
-      lastFrame = () => this.curFrame--
-    },
+    store: OnboardStore,
   }),
   view,
 )
 
-export const OrbitOnboard = decorator(({ store }) => {
-  const { foundIntegrations } = Desktop.state.onboardState
-  if (!foundIntegrations) {
-    console.log('no found integrations...')
-    return null
-  }
-  const { atlassian, ...rest } = foundIntegrations
-  let finalIntegrations = Object.keys(rest)
-  if (atlassian) {
-    finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
-  }
-  const integrations = finalIntegrations.map(integration => {
-    return {
-      integration,
-      name: NICE_INTEGRATION_NAMES[integration],
+type Props = {
+  integrationSettingsStore?: IntegrationSettingsStore
+  store?: OnboardStore
+}
+
+export const OrbitOnboard = decorator(
+  ({ store, integrationSettingsStore }: Props) => {
+    const { foundIntegrations } = Desktop.state.onboardState
+    if (!foundIntegrations) {
+      console.log('no found integrations...')
+      return null
     }
-  })
-  return (
-    <SubPane name="onboard">
-      <FrameAnimate curFrame={store.curFrame}>
-        <OnboardFrame>
-          <Centered>
-            <Text size={2.5} fontWeight={600}>
-              Hello
+    const { atlassian, ...rest } = foundIntegrations
+    let finalIntegrations = Object.keys(rest)
+    if (atlassian) {
+      finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
+    }
+    const integrations = finalIntegrations.map(integration => {
+      return {
+        id: integration,
+        title: NICE_INTEGRATION_NAMES[integration],
+        auth: /jira|conflunce/.test(integration),
+        added: !!integrationSettingsStore.settingsList.find(
+          x => x.type === integration,
+        ),
+      }
+    })
+    return (
+      <SubPane name="onboard">
+        <FrameAnimate curFrame={store.curFrame}>
+          <OnboardFrame>
+            <Centered>
+              <Text size={2.5} fontWeight={600}>
+                Hello
+              </Text>
+              <View height={10} />
+              <Text size={1.5} alpha={0.5}>
+                Welcome to Orbit.
+              </Text>
+            </Centered>
+          </OnboardFrame>
+          <OnboardFrame>
+            <Text size={1.3} fontWeight={600}>
+              Select integrations
             </Text>
             <View height={10} />
-            <Text size={1.5} alpha={0.5}>
-              Welcome to Orbit.
-            </Text>
-          </Centered>
-        </OnboardFrame>
-        <OnboardFrame>
-          <Text size={1.3} fontWeight={600}>
-            Select integrations
-          </Text>
-          <View height={10} />
-          <Unpad>
-            {integrations.map(({ integration, name }) => {
-              return (
-                <Item key={integration}>
-                  <OrbitIcon icon={integration} />
-                  <ItemTitle>{name}</ItemTitle>
-                  <AddButton onClick={() => App.actions.openAuth(integration)}>
-                    Add
-                  </AddButton>
-                </Item>
-              )
-            })}
-          </Unpad>
-        </OnboardFrame>
-      </FrameAnimate>
-      <Controls>
-        {store.curFrame > 1 && (
-          <Button chromeless onClick={store.lastFrame}>
-            Back
-          </Button>
-        )}
-        <View width={10} />
-        <Theme name="orbit">
-          <Button size={1.2} onClick={store.nextFrame}>
-            {buttonText[store.curFrame]}
-          </Button>
-        </Theme>
-      </Controls>
-    </SubPane>
-  )
-})
+            <Unpad>
+              {integrations.map(item => {
+                return (
+                  <Item
+                    key={item.id}
+                    onClick={
+                      item.added ? addIntegrationClickHandler(item) : null
+                    }
+                  >
+                    <OrbitIcon size={18} icon={item.id} />
+                    <ItemTitle>{item.title}</ItemTitle>
+                    <AddButton disabled={item.added}>
+                      {item.added ? 'Added!' : 'Add'}
+                    </AddButton>
+                  </Item>
+                )
+              })}
+            </Unpad>
+          </OnboardFrame>
+        </FrameAnimate>
+        <Controls>
+          {store.curFrame > 1 && (
+            <Button chromeless onClick={store.lastFrame}>
+              Back
+            </Button>
+          )}
+          <View width={10} />
+          <Theme name="orbit">
+            <Button size={1.2} onClick={store.nextFrame}>
+              {buttonText[store.curFrame]}
+            </Button>
+          </Theme>
+        </Controls>
+      </SubPane>
+    )
+  },
+)

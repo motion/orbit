@@ -51,31 +51,25 @@ Later we unlock p2p sync:
 Aug 7th:
 
 - Auto onboarding flow/history-scan/notifications/tray-guide
-  - SHOULD show in Tray (Setting up Orbit...)
-  - SHOULD show ORBIT saying "hello", and "start auto-setup"
-  - SHOULD scan history and open sites in order based on matches
-  - SHOULD show integration in orbit as it asks for integration
   - SHOULD show "proxy active" and privacy message during final step of integratino
   - SHOULD show nice progress menu of integrations
   - SHOULD show other options at the end
   - SHOULD show scan status during setup
 - Build to .app
-  - SHOULD one command build to an .app that works
   - SHOULD have auto-port finding not hardcoded
   - SHOULD one command to push update
   - SHOULD show banner, update and restart once update is pushed
-- Peek fixes
-  - fix horizontal scroller to cut off nicer
 - Settings panes all fully working
+  - General settings go directly in settings pane
   - SHOULD have general setting for shortuct
   - SHOULD have setting for start on login
   - SHOULD have Orbit area:
     - SHOULD allow adding a new Orbit team in UI with peek input + add button
 - Minor bugs
-  - SHOULD fix shortcuts by having electron register globalShortcuts only when focused
   - SHOULD have simple query for mixed recent things by default to start
   - SHOULD handle screen changes/resizes
   - SHOULD have open keyboard shortcuts work
+  - fix horizontal scroller to cut off nicer
 
 Aug 14th:
 

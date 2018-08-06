@@ -33,6 +33,7 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
       repositoryPaths.map(repositoryPath => repositoryPath.split('/')[0]),
     )
     return flatten(
+      // @ts-ignore
       sequence(organizations, async organization => {
         const loader = new GithubPeopleLoader(organization, this.setting.token)
         const people = await loader.load()

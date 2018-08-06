@@ -2,10 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/event-kit@2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@types%2fevent-kit/-/event-kit-2.4.0.tgz#d470e1e9b5ee1ad574ca4efc65093aa116277ff4"
-
 event-kit@^2.5.0:
   version "2.5.0"
-  resolved "https://registry.npmjs.org/event-kit/-/event-kit-2.5.0.tgz#2f72b11e2b5f533cc1c950387040624a4a025fe8"
+  resolved "https://registry.yarnpkg.com/event-kit/-/event-kit-2.5.0.tgz#2f72b11e2b5f533cc1c950387040624a4a025fe8"

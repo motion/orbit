@@ -33,6 +33,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     const repoSettings = this.setting.values.repos
     const repositoryPaths = repos || Object.keys(repoSettings || {})
     return flatten(
+      // @ts-ignore
       sequence(repositoryPaths, async repositoryPath => {
         const [organization, repository] = repositoryPath.split('/')
         const loader = new GithubIssueLoader(

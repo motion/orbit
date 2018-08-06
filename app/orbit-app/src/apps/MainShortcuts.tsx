@@ -21,7 +21,7 @@ export const MainShortcuts = decorator(({ searchStore, children }: Props) => {
       App.actions.openItem(searchStore.selectedItem)
     },
     copyLink: async () => {
-      App.actions.openItem(searchStore.selectedItem)
+      App.actions.copyLink(searchStore.selectedItem)
     },
   }
 

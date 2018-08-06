@@ -125,11 +125,14 @@ export class ConfluenceSyncer implements IntegrationSyncer {
       })
       console.log(`don't have such bit`)
       if (!hasSuchBit) {
+        // @ts-ignore
         person.personBit.bits.push(updatedBit)
+        // @ts-ignore
         await person.personBit.save()
       }
     }
 
+    // @ts-ignore
     return updatedBit
   }
 
@@ -176,6 +179,7 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     const integration = 'confluence'
     const person = await PersonEntity.findOne(
       { identifier, integration },
+      // @ts-ignore
       { relations: ['personBit', 'personBit.bits'] },
     )
     const updatedPerson = Object.assign(person || new PersonEntity(), {

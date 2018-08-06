@@ -55,7 +55,7 @@ export type SurfaceProps = CSSPropertySet & {
   sizeIcon?: number
   spaced?: boolean
   stretch?: boolean
-  tagName: string
+  tagName?: string
   theme?: string
   tooltip?: string
   tooltipProps?: Object

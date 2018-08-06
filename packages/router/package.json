@@ -1,9 +1,8 @@
 {
   "name": "@mcro/router",
   "version": "2.2.1",
-  "description": "",
-  "sideEffects": false,
   "main": "_/index.js",
+  "sideEffects": false,
   "author": "Motion (http://motion.io)",
   "license": "MIT",
   "scripts": {

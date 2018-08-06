@@ -1,4 +1,3 @@
-import { Setting } from '@mcro/models'
 import { sequence } from '../../utils'
 import {
   googleDriveFileCommentQuery,
@@ -15,13 +14,14 @@ import {
 } from './GDriveTypes'
 import { GDriveFetcher } from './GDriveFetcher'
 import * as path from 'path'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 export class GDriveLoader {
   fetcher: GDriveFetcher
   files: GDriveLoadedFile[] = []
   users: GDriveLoadedUser[] = []
 
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.fetcher = new GDriveFetcher(setting)
   }
 

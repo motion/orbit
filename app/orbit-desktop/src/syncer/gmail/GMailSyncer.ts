@@ -1,4 +1,4 @@
-import { Bit, Person, Setting } from '@mcro/models'
+import { Bit, Person } from '@mcro/models'
 import { In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -15,12 +15,13 @@ import {
   parseSender,
 } from './GMailMessageParser'
 import { GmailThread } from './GMailTypes'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 export class GMailSyncer implements IntegrationSyncer {
-  private setting: Setting
+  private setting: SettingEntity
   private loader: GMailLoader
 
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
     this.loader = new GMailLoader(setting)
   }
@@ -64,7 +65,7 @@ export class GMailSyncer implements IntegrationSyncer {
     }
 
     let addedThreads: GmailThread[] = [],
-      removedBits: Bit[] = []
+      removedBits: BitEntity[] = []
     if (historyId) {
       // load history
       const history = await this.loader.loadHistory(historyId)
@@ -115,7 +116,7 @@ export class GMailSyncer implements IntegrationSyncer {
     // if there are removed threads then remove their bits
     if (removedBits.length) {
       console.log(`have a bits to be removed`, removedBits)
-      await Bit.remove(removedBits)
+      await BitEntity.remove(removedBits)
       console.log('bits were removed')
     }
 
@@ -123,6 +124,7 @@ export class GMailSyncer implements IntegrationSyncer {
     this.setting.values.historyId = historyId
     this.setting.values.lastSyncFilter = filter
     this.setting.values.lastSyncMax = max
+    // @ts-ignore
     await this.setting.save()
   }
 

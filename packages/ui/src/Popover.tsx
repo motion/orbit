@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { view, on, attachTheme } from '@mcro/black'
+import { view, on } from '@mcro/black'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
-import { isNumber, debounce, throttle, isEqual, omit, Cancelable } from 'lodash'
+import { isNumber, debounce, throttle, isEqual, omit } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
@@ -16,7 +16,7 @@ const ArrowContain = view({
 
 export type PopoverProps = {
   // can pass function to get isOpen passed in
-  children?: React.ReactNode | Function
+  children?: React.ReactNode | ((showPopover: boolean) => React.ReactNode)
   // element or function that returns element, or querySelector to element
   target?: React.ReactNode | (() => React.ReactNode) | string
   open?: boolean
@@ -74,7 +74,6 @@ export type PopoverProps = {
   shadow?: boolean | string
   style?: Object
   elevation?: number
-  theme?: Object
 }
 
 const PopoverContainer = view({
@@ -174,7 +173,6 @@ const getShadow = (shadow, elevation) => {
 const calcForgiveness = (forgiveness, distance) =>
   forgiveness > distance ? distance : forgiveness
 
-@attachTheme
 @view.ui
 export class Popover extends React.PureComponent<PopoverProps> {
   static acceptsHovered = 'open'
@@ -420,8 +418,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
     if (!target) {
       return false
     }
-    const { noHoverOnChildren, targetHovered, menuHovered } = this.state
-    if (noHoverOnChildren) {
+    const { targetHovered, menuHovered } = this.state
+    if (this.curProps.noHoverOnChildren) {
       return targetHovered
     }
     return targetHovered || menuHovered
@@ -811,10 +809,14 @@ export class Popover extends React.PureComponent<PopoverProps> {
   get showPopover() {
     const { isOpen } = this.state
     const { openOnHover, open, openOnClick } = this.props
-    if (!this.mounted) return false
-    if (open || isOpen) return true
+    if (!this.mounted) {
+      return false
+    }
+    if (open || isOpen) {
+      return true
+    }
     if (typeof open === 'undefined') {
-      return (openOnHover && this.isHovered) || (openOnClick && isOpen)
+      return !!(openOnHover && this.isHovered) || !!(openOnClick && isOpen)
     }
   }
 
@@ -853,7 +855,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
       shadow,
       style,
       elevation,
-      theme,
       ...props
     } = this.props
     const {

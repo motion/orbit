@@ -1,4 +1,4 @@
-import { Bit, Person, Setting } from '@mcro/models'
+import { Person, Setting } from '@mcro/models'
 import * as _ from 'lodash'
 import { MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
@@ -53,12 +53,15 @@ export class SlackSyncer implements IntegrationSyncer {
     console.log(`updated people`, updatedPeople)
 
     // update in the database
+    // @ts-ignore
     await PersonEntity.save(updatedPeople)
 
     // add person bits
     await Promise.all(
       updatedPeople.map(person => {
+        // @ts-ignore
         return createOrUpdatePersonBit({
+          // @ts-ignore
           email: person.email,
           name: person.name,
           photo: person.data.profile.image_48,
@@ -99,8 +102,8 @@ export class SlackSyncer implements IntegrationSyncer {
     const lastMessageSync = this.setting.values.lastMessageSync || {}
 
     // load messages for each channel
-    const updatedBits: Bit[] = [],
-      removedBits: Bit[] = []
+    const updatedBits: BitEntity[] = [],
+      removedBits: BitEntity[] = []
     await sequence(activeChannels, async channel => {
       // to load messages using pagination we use "oldest" message we got last time when we synced
       // BUT we also need to support edit and remove last x messages
@@ -168,7 +171,7 @@ export class SlackSyncer implements IntegrationSyncer {
         removedBits.push(
           ...latestBits.filter(bit => {
             return !loadedMessages.some(message => {
-              return bit.bitCreatedAt === message.ts
+              return bit.bitCreatedAt === +message.ts
             })
           }),
         )
@@ -186,6 +189,7 @@ export class SlackSyncer implements IntegrationSyncer {
     // update settings
     console.log(`updating settings`, { lastMessageSync })
     this.setting.values.lastMessageSync = lastMessageSync
+    // @ts-ignore
     await this.setting.save()
   }
 
@@ -212,7 +216,7 @@ export class SlackSyncer implements IntegrationSyncer {
   private async createConversation(
     channel: SlackChannel,
     messages: SlackMessage[],
-  ): Promise<Bit> {
+  ): Promise<BitEntity> {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here

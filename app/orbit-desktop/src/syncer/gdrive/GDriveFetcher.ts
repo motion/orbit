@@ -1,20 +1,19 @@
 import * as fs from 'fs'
 import * as https from 'https'
-import {URL} from 'url'
+import { URL } from 'url'
 import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import r2 from '@mcro/r2'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
-import { Setting } from '@mcro/models'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 /**
  * Fetches data from Google Drive Api.
  */
 export class GDriveFetcher {
+  private setting: SettingEntity
 
-  private setting: Setting
-
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
   }
 
@@ -25,24 +24,30 @@ export class GDriveFetcher {
     return new Promise((ok, fail) => {
       const file = fs.createWriteStream(dest)
       const urlObject = new URL(url)
-      https.get({
-        protocol: urlObject.protocol,
-        host: urlObject.host,
-        port: urlObject.port,
-        path: urlObject.pathname,
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${this.setting.token}`
-        }
-      }, function(response) {
-        response.pipe(file)
-        file.on('finish', function() {
-          file.close()
-          ok()
-        }).on('error', function(err) { // Handle errors
-          fail(err.message)
-        })
-      })
+      https.get(
+        {
+          protocol: urlObject.protocol,
+          host: urlObject.host,
+          port: urlObject.port,
+          path: urlObject.pathname,
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${this.setting.token}`,
+          },
+        },
+        function(response) {
+          response.pipe(file)
+          file
+            .on('finish', function() {
+              file.close()
+              ok()
+            })
+            .on('error', function(err) {
+              // Handle errors
+              fail(err.message)
+            })
+        },
+      )
     })
   }
 
@@ -51,18 +56,20 @@ export class GDriveFetcher {
    */
   async fetch<R>(options: GDriveFetchQueryOptions<R>): Promise<R> {
     const { url, query, json } = options
-    const qs = Object.keys(query).map(key => key + '=' + query[key]).join('&')
+    const qs = Object.keys(query)
+      .map(key => key + '=' + query[key])
+      .join('&')
     const fullUrl = `https://content.googleapis.com/drive/v3${url}?${qs}`
     const response = await fetch(fullUrl, {
       mode: json ? 'cors' : undefined,
       headers: {
-        'Authorization': `Bearer ${this.setting.token}`,
+        Authorization: `Bearer ${this.setting.token}`,
         'Access-Control-Allow-Origin': Constants.API_URL,
         'Access-Control-Allow-Methods': 'GET',
       },
     })
     const result = json ? await response.json() : await response.text()
-    if (result.error && result.error.code === 401/* && !isRetrying*/) {
+    if (result.error && result.error.code === 401 /* && !isRetrying*/) {
       const didRefresh = await this.refreshToken(this.setting)
       if (didRefresh) {
         return await this.fetch(options)
@@ -83,7 +90,7 @@ export class GDriveFetcher {
    * todo: need to move this logic into Setting check method,
    * todo: its a setting responsibility to control its access token state
    */
-  private async refreshToken(setting: Setting) {
+  private async refreshToken(setting: SettingEntity) {
     if (!setting.values.oauth.refreshToken) {
       return null
     }
@@ -100,10 +107,10 @@ export class GDriveFetcher {
     }).json
     if (reply && reply.access_token) {
       setting.token = reply.access_token
+      // @ts-ignore
       await setting.save()
       return true
     }
     return false
   }
-
 }

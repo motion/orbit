@@ -1,14 +1,14 @@
-import { Setting } from '@mcro/models'
 import Strategies from '@mcro/oauth-strategies'
 import r2 from '@mcro/r2'
 import * as Constants from '../../constants'
 import { queryObjectToQueryString } from '../../utils'
 import { GmailFetchOptions } from './GMailTypes'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 export class GMailFetcher {
-  setting: Setting
+  setting: SettingEntity
 
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
   }
 

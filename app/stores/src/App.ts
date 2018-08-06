@@ -37,6 +37,7 @@ class AppStore {
     toggleSelectItem: Function
     open: Function
     openItem: Function
+    openAuth: Function
     copyLink: Function
     clearPeek: Function
     setPeekTarget: Function

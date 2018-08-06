@@ -11,6 +11,7 @@ import { storeOptions } from './storeDecorator'
 import createGloss, {
   isGlossArguments,
   GLOSS_IGNORE_COMPONENT_SYMBOL,
+  CSSPropertySet,
 } from '@mcro/gloss'
 import { DecorCompiledDecorator } from '@mcro/decor'
 import { RawRules } from '@mcro/gloss/_/createViewFactory'
@@ -18,7 +19,7 @@ import { RawRules } from '@mcro/gloss/_/createViewFactory'
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 
 export interface ViewDecorator {
-  (a?: string | Function | Object, b?: Object): any
+  (a?: string | Function | CSSPropertySet, b?: CSSPropertySet): any
   on: typeof blackDecorator.on
   emitter: typeof blackDecorator.emitter
   emit: typeof blackDecorator.emit

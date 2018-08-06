@@ -2,11 +2,15 @@ import { SubPane } from '../../SubPane'
 import { view, compose } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
+import { OrbitIcon } from '../../../../views/OrbitIcon'
+import { Desktop } from '@mcro/stores'
+import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 
+const sidePad = 16
 const controlsHeight = 40
 const numFrames = 3
 // subtract padding from parent
-const frameWidth = ORBIT_WIDTH - 16 * 2
+const frameWidth = ORBIT_WIDTH - sidePad * 2
 
 const OnboardFrame = view({
   position: 'relative',
@@ -18,6 +22,8 @@ const OnboardFrame = view({
 
 const Centered = view({
   margin: 'auto',
+  alignItems: 'center',
+  justifyContent: 'center',
 })
 
 const Controls = view({
@@ -35,14 +41,25 @@ const FrameAnimate = view({
 })
 
 FrameAnimate.theme = ({ curFrame }) => ({
+  '& > div': {
+    transition: 'all ease-in 500ms',
+    opacity: 0,
+  },
+  [`& > div:nth-child(${curFrame + 1})`]: {
+    opacity: 1,
+  },
   transform: {
     x: -frameWidth * curFrame,
   },
 })
 
+const Unpad = view({
+  margin: [0, -sidePad],
+})
+
 const Item = view({
   flexFlow: 'row',
-  padding: [0, 10],
+  padding: [0, sidePad],
   height: 40,
   alignItems: 'center',
 })
@@ -52,6 +69,7 @@ Item.theme = ({ theme }) => ({
 })
 
 const ItemTitle = view({
+  padding: [0, 12],
   justifyContent: 'center',
   fontSize: 18,
   alpha: 0.5,
@@ -60,7 +78,7 @@ const ItemTitle = view({
 
 const AddButton = props => (
   <Theme name="orbit">
-    <Button {...props} />
+    <Button fontWeight={700} {...props} />
   </Theme>
 )
 
@@ -74,9 +92,21 @@ const decorator = compose(
       lastFrame = () => this.curFrame--
     },
   }),
+  view,
 )
 
 export const OrbitOnboard = decorator(({ store }) => {
+  const { foundIntegrations } = Desktop.state.onboardState
+  if (!foundIntegrations) {
+    console.log('no found integrations...')
+    return null
+  }
+  const integrations = Object.keys(foundIntegrations).map(integration => {
+    return {
+      integration,
+      name: NICE_INTEGRATION_NAMES[key],
+    }
+  })
   return (
     <SubPane name="onboard">
       <FrameAnimate curFrame={store.curFrame}>
@@ -92,14 +122,23 @@ export const OrbitOnboard = decorator(({ store }) => {
           </Centered>
         </OnboardFrame>
         <OnboardFrame>
-          <Text size={1} fontWeight={600}>
+          <Text size={1.3} fontWeight={600}>
             Select integrations
           </Text>
-
-          <Item>
-            <ItemTitle>Hello world</ItemTitle>
-            <AddButton>Add</AddButton>
-          </Item>
+          <View height={10} />
+          <Unpad>
+            {integrations.map(({ integration, name }) => {
+              return (
+                <Item key={integration}>
+                  <OrbitIcon icon={integration} />
+                  <ItemTitle>{name}</ItemTitle>
+                  <AddButton onClick={() => App.actions.openAuth(integration)}>
+                    Add
+                  </AddButton>
+                </Item>
+              )
+            })}
+          </Unpad>
         </OnboardFrame>
       </FrameAnimate>
       <Controls>

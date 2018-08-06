@@ -2,12 +2,12 @@
 
 . $(dirname $0)/__/common
 
-# if in root
 if [ "$(realpath .)" = "$ROOT" ]; then
   echo "building.... $(pwd)"
   # build
   if [ "$1" = "" ]; then
-    (bin/in orbit tsc --build --force) &
+    ARGS=${@:1}
+    (bin/in orbit tsc --build --force $ARGS) &
     (bin/in orbit-desktop tsc) &
     (bin/in ui npm run build) &
     (bin/in store-hmr npm run build) &
@@ -15,7 +15,8 @@ if [ "$(realpath .)" = "$ROOT" ]; then
   fi
   # build --watch
   if [ "$1" = "--watch" ]; then
-    (bin/in orbit tsc --build --watch) &
+    ARGS=${@:2}
+    (bin/in orbit tsc --build --watch $ARGS) &
     (bin/in ui npm run watch) &
     (bin/in store-hmr npm run build --watch) &
     wait

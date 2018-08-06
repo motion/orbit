@@ -1,4 +1,4 @@
-Umed week of Aug 6th
+# Umed week of Aug 6th
 
 - Discuss handling mutations and updating in UI (Observable Ids work)
 - Gmail scan emails based on slack and other emails
@@ -66,7 +66,9 @@ Later we unlock p2p sync:
 - Can just query for drive.history and use p2p network to sync docs using identifiers
 - (1 history query vs. 1 + N queries)
 
-# August
+# nate
+
+## August
 
 Aug 7th:
 
@@ -119,7 +121,7 @@ Aug 31st:
 
 p2p: https://github.com/mafintosh/hyperdb
 
-# September
+## September
 
 - Hire top frontender
 - auto setup
@@ -139,7 +141,7 @@ queue:
   - Remove integration
   - Can have login settings if applicable
 
-# unnecessary for beta polish bucket
+## unnecessary for beta polish bucket
 
 - shortcuts bar working
 - cmd+z undo in search area (needs to work with toggles...)
@@ -156,7 +158,7 @@ queue:
 - no titlabar faderight to transparent on profile
 - UI.Text not wrapping subtitlePrefix
 
-# random dev notes
+## random dev notes
 
 - hmr: doesn't store.unmount stores often
 - react: await finishRender() could be interesting

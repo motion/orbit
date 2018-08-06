@@ -3,7 +3,7 @@ import { view, compose } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
-import { Desktop } from '@mcro/stores'
+import { Desktop, App } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 
 const sidePad = 16
@@ -104,7 +104,7 @@ export const OrbitOnboard = decorator(({ store }) => {
   const integrations = Object.keys(foundIntegrations).map(integration => {
     return {
       integration,
-      name: NICE_INTEGRATION_NAMES[key],
+      name: NICE_INTEGRATION_NAMES[integration],
     }
   })
   return (

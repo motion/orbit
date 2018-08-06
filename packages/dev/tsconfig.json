@@ -4,5 +4,6 @@
     "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
-  }
+  },
+  "references": [{ "path": "../debug-apps" }]
 }

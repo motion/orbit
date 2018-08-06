@@ -4,5 +4,10 @@
     "outDir": "_",
     "baseUrl": "./src"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../black" },
+    { "path": "../color" },
+    { "path": "../gloss" }
+  ]
 }

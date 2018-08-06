@@ -60,7 +60,7 @@ const Unpad = view({
 const Item = view({
   flexFlow: 'row',
   padding: [0, sidePad],
-  height: 40,
+  height: 56,
   alignItems: 'center',
 })
 
@@ -71,7 +71,7 @@ Item.theme = ({ theme }) => ({
 const ItemTitle = view({
   padding: [0, 12],
   justifyContent: 'center',
-  fontSize: 18,
+  fontSize: 16,
   alpha: 0.5,
   flex: 1,
 })

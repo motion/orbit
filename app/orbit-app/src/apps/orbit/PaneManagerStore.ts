@@ -1,6 +1,6 @@
 import { react, on } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
-import { SearchStore } from 'stores/SearchStore'
+import { App } from '@mcro/stores'
+import { SearchStore } from '../../stores/SearchStore'
 import { generalSettingQuery } from '../../repositories/settingQueries'
 import { modelQueryReaction } from '../../repositories/modelQueryReaction'
 
@@ -48,6 +48,17 @@ export class PaneManagerStore {
         throw react.cancel
       }
       this.setActivePane('home')
+    },
+  )
+
+  setTrayTitleOnPaneChange = react(
+    () => this.activePane,
+    pane => {
+      if (pane === 'onboard') {
+        App.setState({ contextMessage: 'Welcome to Orbit...' })
+      } else {
+        App.setState({ contextMessage: 'Orbit' })
+      }
     },
   )
 

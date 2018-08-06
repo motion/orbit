@@ -13,6 +13,7 @@ const OnboardFrame = view({
   width: frameWidth,
   height: 300,
   paddingBottom: controlsHeight,
+  padding: [20, 0],
 })
 
 const Centered = view({
@@ -63,6 +64,8 @@ const AddButton = props => (
   </Theme>
 )
 
+const buttonText = ["Let's get setup", 'Looks good', 'Done!']
+
 const decorator = compose(
   view.attach({
     store: class {
@@ -89,7 +92,7 @@ export const OrbitOnboard = decorator(({ store }) => {
           </Centered>
         </OnboardFrame>
         <OnboardFrame>
-          <Text size={1.5} fontWeight={600}>
+          <Text size={1} fontWeight={600}>
             Select integrations
           </Text>
 
@@ -100,13 +103,15 @@ export const OrbitOnboard = decorator(({ store }) => {
         </OnboardFrame>
       </FrameAnimate>
       <Controls>
-        <Button chromeless onClick={store.lastFrame}>
-          Back
-        </Button>
+        {store.curFrame > 0 && (
+          <Button chromeless onClick={store.lastFrame}>
+            Back
+          </Button>
+        )}
         <View width={10} />
         <Theme name="orbit">
           <Button size={1.2} onClick={store.nextFrame}>
-            Let's get setup
+            {buttonText[store.curFrame]}
           </Button>
         </Theme>
       </Controls>

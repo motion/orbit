@@ -89,6 +89,9 @@ const hideFilterPanes = {
 export const OrbitFilterBar = view(
   ({ filterStore, paneManagerStore }: Props) => {
     filterStore.disabledFilters
+    if (hideFilterPanes[paneManagerStore.activePane]) {
+      return null
+    }
     return (
       <FilterBar opacity={hideFilterPanes[paneManagerStore.activePane] ? 0 : 1}>
         <HorizontalScroll>

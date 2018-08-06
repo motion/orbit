@@ -17,23 +17,22 @@ const OrbitIndicatorContainer = view({
 })
 
 export const OrbitIndicator = view(({ orbitOnLeft }) => {
-    if (Date.now() - Desktop.state.lastAppChange < 100) {
-      return null
-    }
-    const border = [1, UI.color('#E9B73A').darken(0.2)]
-    return (
-      <OrbitIndicatorContainer
-        css={{
-          border,
-          borderRight: orbitOnLeft ? 0 : border,
-          borderLeft: !orbitOnLeft ? 0 : border,
-          opacity: App.isShowingOrbit ? 0 : 1,
-          right: orbitOnLeft ? SHADOW_PAD : 'auto',
-          left: !orbitOnLeft ? SHADOW_PAD : 'auto',
-          borderLeftRadius: orbitOnLeft ? 20 : 0,
-          borderRightRadius: !orbitOnLeft ? 20 : 0,
-        }}
-      />
-    )
+  if (Date.now() - Desktop.state.lastAppChange < 100) {
+    return null
   }
+  const border = [1, UI.color('#E9B73A').darken(0.2)]
+  return (
+    <OrbitIndicatorContainer
+      css={{
+        border,
+        borderRight: orbitOnLeft ? 0 : border,
+        borderLeft: !orbitOnLeft ? 0 : border,
+        opacity: App.isShowingOrbit ? 0 : 1,
+        right: orbitOnLeft ? SHADOW_PAD : 'auto',
+        left: !orbitOnLeft ? SHADOW_PAD : 'auto',
+        borderLeftRadius: orbitOnLeft ? 20 : 0,
+        borderRightRadius: !orbitOnLeft ? 20 : 0,
+      }}
+    />
+  )
 })

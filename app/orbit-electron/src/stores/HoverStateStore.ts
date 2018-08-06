@@ -8,8 +8,9 @@ type Point = {
 }
 
 type BoundLike = {
-  position: [number, number]
-  size: [number, number]
+  position: number[]
+  size: number[]
+  [key: string]: any
 }
 
 const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
@@ -27,6 +28,7 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
   return withinX && withinY
 }
 
+// @ts-ignore
 @store
 export class HoverStateStore {
   lastMousePos?: Point

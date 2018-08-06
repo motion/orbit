@@ -17,6 +17,7 @@ export class MenuItems extends React.Component<{
   isClosing = false
 
   toggleDevTools = appName => () => {
+    // @ts-ignore
     Electron.setShowDevTools({
       [appName]: !Electron.state.showDevTools[appName],
     })

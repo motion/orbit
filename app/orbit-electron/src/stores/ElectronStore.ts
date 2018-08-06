@@ -6,6 +6,7 @@ import { HoverStateStore } from '../stores/HoverStateStore'
 import root from 'global'
 import { screen } from 'electron'
 
+// @ts-ignore
 @store
 export class ElectronStore {
   // = null makes them observable
@@ -123,7 +124,7 @@ export class ElectronStore {
       this.appRef.hide()
       const getState = () => ({
         ...Desktop.appState,
-        ...Electron.state.orbitState,
+        ...App.state.orbitState,
       })
       const lastState = getState()
       this.show = 0

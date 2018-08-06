@@ -10,7 +10,7 @@ export interface Debug {
   settings: any
 }
 
-const dbg = <Debug>function(namespace) {
+export default function debug(namespace) {
   // const uid = id++
   namespaces.push(namespace)
   function log(...messages) {
@@ -23,19 +23,22 @@ const dbg = <Debug>function(namespace) {
 }
 
 const disableLogging = (list, val) => {
-  const names = list.length ? list : dbg.list()
+  // @ts-ignore
+  const names = list.length ? list : debug.list()
   for (const name of names) {
     disableLogs[name] = val
   }
 }
 
-dbg.quiet = (...args) => disableLogging(args, true)
-dbg.loud = (...args) => disableLogging(args, false)
-dbg.list = () => namespaces
-dbg.settings = () => disableLogs
+// @ts-ignore
+debug.quiet = (...args) => disableLogging(args, true)
+// @ts-ignore
+debug.loud = (...args) => disableLogging(args, false)
+// @ts-ignore
+debug.list = () => namespaces
+// @ts-ignore
+debug.settings = () => disableLogs
 
 function colorfulLog(namespace, messages) {
   console.log(`${namespace}`, ...messages)
 }
-
-export default dbg

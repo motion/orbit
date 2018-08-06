@@ -7,7 +7,6 @@
   },
   "references": [
     { "path": "../stores" },
-    { "path": "../orbit-desktop" },
     { "path": "../../packages/black" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/debug" },

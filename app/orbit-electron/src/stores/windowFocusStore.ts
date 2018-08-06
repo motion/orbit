@@ -3,6 +3,7 @@ import { App, Swift } from '@mcro/stores'
 // @ts-ignore
 import ElectronNode from 'electron'
 
+// @ts-ignore
 @store
 export class WindowFocusStore {
   props: {

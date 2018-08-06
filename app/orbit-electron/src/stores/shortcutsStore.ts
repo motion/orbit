@@ -1,6 +1,7 @@
 import { globalShortcut } from 'electron'
 import { store } from '@mcro/black'
 
+// @ts-ignore
 @store
 export class ShortcutsStore {
   onShortcutCb = _ => _

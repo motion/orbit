@@ -1,12 +1,8 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "composite": true,
     "outDir": "_",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["*"]
-    }
-  },
-  "include": ["**/*"],
-  "exclude": ["_", "node_modules", "tmp"]
+    "rootDir": "src"
+  }
 }

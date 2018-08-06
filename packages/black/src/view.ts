@@ -13,6 +13,7 @@ import createGloss, {
   GLOSS_IGNORE_COMPONENT_SYMBOL,
 } from '@mcro/gloss'
 import { DecorCompiledDecorator } from '@mcro/decor'
+import { RawRules } from '@mcro/gloss/_/createViewFactory'
 
 export { DecorPlugin, DecorCompiledDecorator } from '@mcro/decor'
 
@@ -46,7 +47,7 @@ function createViewDecorator(): ViewDecorator {
   const view = <ViewDecorator>function view(a?, b?) {
     // simple views: view(), view({}), view('div', {}), view(OtherView, {})
     if (isGlossArguments(a, b)) {
-      return createView(a, b)
+      return createView(a, b as RawRules)
     }
     const View = a as Function
     // class views

@@ -2,12 +2,8 @@
   "extends": "../../tsconfig.tspackage",
   "types": "decor-mobx.d.ts",
   "compilerOptions": {
+    "composite": true,
     "outDir": "_",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["*"]
-    }
-  },
-  "include": ["**/*"],
-  "exclude": ["_", "node_modules", "tmp", "*.js"]
+    "rootDir": "src"
+  }
 }

@@ -2,21 +2,22 @@
 
 . $(dirname $0)/__/common
 
-echo "building.... $(pwd)"
-
-# TODO move this into each package and just have this npm run build in each
-
 # if in root
 if [ "$(realpath .)" = "$ROOT" ]; then
+  echo "building.... $(pwd)"
   # build
   if [ "$1" = "" ]; then
-    cd $ROOT
-    bin/build-all
+    (bin/in orbit tsc --build --force) &
+    (bin/in ui npm run build) &
+    (bin/in store-hmr npm run build) &
+    wait
   fi
   # build --watch
   if [ "$1" = "--watch" ]; then
-    cd $ROOT
-    bin/build-all --watch
+    (bin/in orbit tsc --build --watch) &
+    (bin/in ui npm run watch) &
+    (bin/in store-hmr npm run build --watch) &
+    wait
   fi
   exit 0
 fi

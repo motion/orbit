@@ -1,8 +1,27 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "composite": true,
     "outDir": "_",
+    "rootDir": "src",
     "baseUrl": "./src"
   },
-  "exclude": ["_", "node_modules", "tmp"]
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    { "path": "../models" },
+    { "path": "../services" },
+    { "path": "../stores" },
+    { "path": "../../packages/black" },
+    { "path": "../../packages/build" },
+    { "path": "../../packages/color" },
+    { "path": "../../packages/constants" },
+    { "path": "../../packages/debug" },
+    { "path": "../../packages/gloss" },
+    { "path": "../../packages/helpers" },
+    { "path": "../../packages/r2" },
+    { "path": "../../packages/router" },
+    { "path": "../../packages/slackdown" }
+  ]
 }

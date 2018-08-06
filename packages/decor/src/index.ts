@@ -1,8 +1,6 @@
 import { Emitter } from 'event-kit'
 export { Emitter, CompositeDisposable } from 'event-kit'
-import { DecorPlugins, DecorCompiledDecorator } from './index.d'
-
-export { DecorPlugins, DecorCompiledDecorator } from './index.d'
+import { DecorPlugins, DecorCompiledDecorator } from '..'
 
 export default function decor(
   plugins: DecorPlugins,

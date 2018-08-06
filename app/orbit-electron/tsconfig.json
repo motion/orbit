@@ -2,7 +2,16 @@
   "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
     "module": "CommonJS",
-    "outDir": "_"
+    "outDir": "_",
+    "rootDir": "src"
   },
-  "include": ["src/**/*"]
+  "references": [
+    { "path": "../stores" },
+    { "path": "../orbit-desktop" },
+    { "path": "../../packages/black" },
+    { "path": "../../packages/constants" },
+    { "path": "../../packages/debug" },
+    { "path": "../../packages/r2" },
+    { "path": "../../packages/reactron" }
+  ]
 }

@@ -23,7 +23,7 @@
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "devDependencies": {
-    "@types/react": "16.4.6"
+    "@types/react": "16.4.7"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

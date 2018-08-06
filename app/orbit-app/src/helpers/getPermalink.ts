@@ -1,6 +1,6 @@
 import { SettingRepository } from '../repositories'
 
-export const getPermalink = async (result, type) => {
+export const getPermalink = async (result, type?) => {
   if (result.type === 'app') {
     return result.id
   }

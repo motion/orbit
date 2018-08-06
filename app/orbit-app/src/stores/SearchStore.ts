@@ -1,7 +1,7 @@
 import { react, on } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import { FindOptions } from 'typeorm'
-import { Bit } from '@mcro/models'
+import { Bit, Person } from '@mcro/models'
 import { BitRepository, PersonRepository } from '../repositories'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
@@ -101,7 +101,7 @@ export class SearchStore /* extends Store */ {
     this._activeIndex = val
   }
 
-  get selectedItem() {
+  get selectedItem(): Bit | Person {
     if (this.activeIndex === -1) {
       const { results } = this.quickSearchState
       if (!results.length) {

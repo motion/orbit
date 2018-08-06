@@ -2,7 +2,7 @@ import * as React from 'react'
 import hoistStatics from 'hoist-non-react-statics'
 import ReactResizeDetector from 'react-resize-detector'
 
-export const parentSize = (...props) => Child => {
+export const parentSize: any = (...props) => Child => {
   class ParentSize extends React.PureComponent {
     state = {
       width: null,

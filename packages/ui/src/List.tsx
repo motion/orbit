@@ -59,12 +59,12 @@ export type ListProps = {
   onScroll?: Function
 }
 
-type VirtualItemProps = {
-  index: number
-  key: string
-  style: Object
-  parent: any
-}
+// type VirtualItemProps = {
+//   index: number
+//   key: string
+//   style: Object
+//   parent: any
+// }
 
 @view.ui
 class ListUI extends React.PureComponent<ListProps> {

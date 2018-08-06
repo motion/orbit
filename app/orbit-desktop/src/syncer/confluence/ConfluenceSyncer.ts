@@ -1,4 +1,4 @@
-import { Bit, Person, Setting } from '@mcro/models'
+import { Bit, Person } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import TurndownService from 'turndown'
 import { BitEntity } from '../../entities/BitEntity'
@@ -12,13 +12,14 @@ import {
   ConfluenceGroupResponse,
   ConfluenceUser,
 } from './ConfluenceTypes'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 export class ConfluenceSyncer implements IntegrationSyncer {
-  private setting: Setting
+  private setting: SettingEntity
   private service: AtlassianService
   private people: Person[]
 
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
     this.service = new AtlassianService(setting)
   }

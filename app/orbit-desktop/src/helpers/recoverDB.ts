@@ -5,6 +5,7 @@ import Fs from 'fs-extra'
 export default async function recoverDB() {
   const backupDB = Path.join(Constants.ROOT_DIR, 'app_data', 'database.bak')
   const mainDB = Path.join(Constants.ROOT_DIR, 'app_data', 'database')
+  // @ts-ignore bad typedefs
   if (await Fs.exists(backupDB)) {
     await Fs.remove(mainDB)
     await Fs.copy(backupDB, mainDB)

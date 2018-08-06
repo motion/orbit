@@ -1,4 +1,3 @@
-import { Setting } from '@mcro/models'
 import { flatten, uniq } from 'lodash'
 import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
@@ -8,11 +7,12 @@ import { GithubPerson } from '../../syncer/github/GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
 import { sequence } from '../../utils'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 export class GithubPeopleSyncer implements IntegrationSyncer {
-  setting: Setting
+  setting: SettingEntity
 
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
   }
 

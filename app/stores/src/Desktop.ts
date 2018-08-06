@@ -33,6 +33,9 @@ class DesktopStore {
   setOcrState: DesktopStore['setState']
   setSearchState: DesktopStore['setState']
   setMouseState: DesktopStore['setState']
+  setPaused: DesktopStore['setState']
+  setLastScreenChange: DesktopStore['setState']
+  setLastBitUpdatedAt: DesktopStore['setState']
 
   messages = {
     TOGGLE_PAUSED: 'TOGGLE_PAUSED',

@@ -1,13 +1,12 @@
 import Oracle from '@mcro/oracle'
 import { debounce, last } from 'lodash'
 import { store, isEqual, react, on } from '@mcro/black'
-import { Desktop, DesktopState, Electron, Swift } from '@mcro/stores'
+import { Desktop, Electron, Swift } from '@mcro/stores'
 import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
 
 const log = debug('screen')
-debug.quiet('screen')
 const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
 
@@ -35,6 +34,7 @@ const PREVENT_SCANNING = {
   ActivityMonitor: true,
 }
 
+// @ts-ignore
 @store
 export class Screen {
   hasResolvedOCR = false
@@ -154,7 +154,7 @@ export class Screen {
       }
       const focusedOnOrbit = this.curAppID === ORBIT_APP_ID
       Desktop.setState({ focusedOnOrbit })
-      const state: Partial<DesktopState> = {
+      const state: Partial<typeof Desktop.state> = {
         appState: nextState,
       }
       // when were moving into focus prevent app, store its appName, pause then return

@@ -20,6 +20,7 @@ import { SettingEntity } from './SettingEntity'
 
 @Entity()
 export class BitEntity extends BaseEntity implements Bit {
+  // @ts-ignore
   target = 'bit'
 
   // todo: probably using generated id is a bad idea for the following reasons:
@@ -53,6 +54,7 @@ export class BitEntity extends BaseEntity implements Bit {
    * Duplicates information stored in the settings.
    */
   @Column({ type: String })
+  // @ts-ignore
   integration: 'slack' | string // todo: need to specify all possible integration types here
 
   /**
@@ -125,6 +127,7 @@ export class BitEntity extends BaseEntity implements Bit {
    * todo: remove nullable once we migrate all syncers into new model
    */
   @ManyToOne(() => SettingEntity)
+  // @ts-ignore
   setting: SettingEntity
 
   /**

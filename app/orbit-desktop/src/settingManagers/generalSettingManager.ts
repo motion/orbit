@@ -11,6 +11,7 @@ const log = debug('GeneralSettingManager')
 
 const generalSettingQuery = { type: 'general', category: 'general' }
 
+// @ts-ignore
 @store
 export class GeneralSettingManager {
   constructor() {

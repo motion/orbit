@@ -1,4 +1,4 @@
-import { Person, Setting } from '@mcro/models'
+import { Person } from '@mcro/models'
 import * as _ from 'lodash'
 import { MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
@@ -9,16 +9,17 @@ import { sequence } from '../../utils'
 import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 /**
  * Syncs Slack Bits.
  */
 export class SlackSyncer implements IntegrationSyncer {
-  private setting: Setting
+  private setting: SettingEntity
   private loader: SlackLoader
   private people: Person[]
 
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
     this.loader = new SlackLoader(this.setting)
   }

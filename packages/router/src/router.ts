@@ -1,6 +1,11 @@
 import Route from 'url-pattern'
 
 export default class Router {
+  routes: {}
+  history: any
+  routeTable: { [path: string]: Route }
+  routeList: Array<{ path: string; route: Route }>
+
   constructor({ routes, history, path = window.location }) {
     this.routes = routes
     this.history = history

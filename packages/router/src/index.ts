@@ -12,6 +12,10 @@ const historyDirection = val =>
   )
 
 export class ObservableRouter {
+  router: Router
+  routes: any
+  history: any
+
   max = historyLength
   @observable position = historyLength
   @observable path = window.location.pathname
@@ -115,6 +119,7 @@ export class ObservableRouter {
       path = path.replace(window.location.origin, '')
     } else {
       if (path.indexOf('http') === 0) {
+        // @ts-ignore
         window.location = path
         return
       }

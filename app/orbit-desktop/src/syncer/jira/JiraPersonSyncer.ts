@@ -1,4 +1,4 @@
-import { Person, Setting } from '@mcro/models'
+import { Person } from '@mcro/models'
 import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
 import { createOrUpdate } from '../../helpers/createOrUpdate'
@@ -6,11 +6,12 @@ import { createOrUpdatePersonBit } from '../../repository'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { JiraPeopleResponse, JiraPerson } from './JiraPersonTypes'
 import { fetchFromAtlassian } from './JiraUtils'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 export class JiraPersonSyncer implements IntegrationSyncer {
-  private setting: Setting
+  private setting: SettingEntity
 
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
   }
 

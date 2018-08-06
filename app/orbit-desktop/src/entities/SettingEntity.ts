@@ -1,23 +1,27 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { Setting } from '@mcro/models'
 
 @Entity()
 export class SettingEntity extends BaseEntity implements Setting {
+  // @ts-ignore
+  target = 'setting'
 
-  target = "setting"
-
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn() id: number
 
   // use for determining if oauth is from same account as previous one
   @Column({ nullable: true, unique: true })
   identifier: string
 
-  @Column()
-  category: string
+  @Column() category: string
 
-  @Column()
-  type: string
+  @Column() type: string
 
   @Column({ nullable: true })
   token: string
@@ -51,6 +55,7 @@ export class SettingEntity extends BaseEntity implements Setting {
     lastMessageSync?: { [key: string]: string }
     autoLaunch?: boolean
     openShortcut?: string
+    hasOnboarded?: boolean
 
     // gmail-specific options
     max?: number
@@ -58,14 +63,9 @@ export class SettingEntity extends BaseEntity implements Setting {
     filter?: string
     lastSyncFilter?: string
     lastSyncMax?: number
-
   }
 
-  @CreateDateColumn()
-  createdAt: Date
+  @CreateDateColumn() createdAt: Date
 
-  @UpdateDateColumn()
-  updatedAt: Date
-
+  @UpdateDateColumn() updatedAt: Date
 }
-

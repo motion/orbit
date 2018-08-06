@@ -1,13 +1,20 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { Job } from '@mcro/models'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {
+  // @ts-ignore
+  target = 'job'
 
-  target = "job"
-
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn() id: number
 
   @Index()
   @Column()
@@ -70,6 +77,4 @@ export class JobEntity extends BaseEntity implements Job {
       take: 1,
     } as any)
   }
-
 }
-

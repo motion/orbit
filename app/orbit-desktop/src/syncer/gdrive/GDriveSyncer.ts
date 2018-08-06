@@ -1,4 +1,4 @@
-import { Bit, Setting } from '@mcro/models'
+import { Bit } from '@mcro/models'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
@@ -8,12 +8,13 @@ import { createOrUpdatePersonBit } from '../../repository'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 export class GDriveSyncer implements IntegrationSyncer {
   private loader: GDriveLoader
-  private setting: Setting
+  private setting: SettingEntity
 
-  constructor(setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
     this.loader = new GDriveLoader(this.setting)
   }

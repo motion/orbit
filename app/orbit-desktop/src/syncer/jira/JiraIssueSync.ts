@@ -1,14 +1,15 @@
-import { Bit, Setting } from '@mcro/models'
+import { Bit } from '@mcro/models'
 import { BitEntity } from '../../entities/BitEntity'
 import { createOrUpdateBit } from '../../helpers/createOrUpdateBit'
 import { IntegrationSyncer } from '../../syncer/core/IntegrationSyncer'
 import { JiraIssue, JiraIssueResponse } from './JiraIssueTypes'
 import { fetchFromAtlassian } from './JiraUtils'
+import { SettingEntity } from '../../entities/SettingEntity'
 
 export class JiraIssueSync implements IntegrationSyncer {
-  setting: Setting
+  setting: SettingEntity
 
-  constructor(setting: Setting) {
+  constructor(setting: SettingEntity) {
     this.setting = setting
   }
 

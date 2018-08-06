@@ -1,18 +1,26 @@
-import { BaseEntity, Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm'
 import { Bit, Person, PersonBit } from '@mcro/models'
 import { BitEntity } from './BitEntity'
 import { PersonEntity } from './PersonEntity'
 
 @Entity()
 export class PersonBitEntity extends BaseEntity implements PersonBit {
-
-  target = "person-bit"
+  // @ts-ignore
+  target = 'person-bit'
 
   /**
    * Person's email address.
    */
-  @PrimaryColumn()
-  email: string
+  @PrimaryColumn() email: string
 
   /**
    * Person's name.
@@ -24,7 +32,7 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   /**
    * All known person names.
    */
-  @Column("simple-array")
+  @Column('simple-array')
   @Index()
   allNames: string[]
 
@@ -37,7 +45,7 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   /**
    * All known person photos.
    */
-  @Column("simple-array", { nullable: true })
+  @Column('simple-array', { nullable: true })
   @Index()
   allPhotos: string[]
 
@@ -53,5 +61,4 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
    */
   @OneToMany(() => PersonEntity, person => person.personBit)
   people: Person[]
-
 }

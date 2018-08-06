@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import $ from '@mcro/color'
+// import $ from '@mcro/color'
 
 // type Props = {
 //   background?: Color,
@@ -16,12 +16,14 @@ export class ProgressBar extends React.Component {
     percent: 0,
   }
 
-  render({ percent, color, background, theme, ...props }) {
-    return (
-      <div $outer {...props}>
-        <div $inner $color={color} />
-      </div>
-    )
+  render() {
+    return null
+    // const { percent, color, background, theme, ...props } = this.props
+    // return (
+    //   <div $outer {...props}>
+    //     <div $inner $color={color} />
+    //   </div>
+    // )
   }
 
   // style = {

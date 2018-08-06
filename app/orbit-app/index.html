@@ -9,15 +9,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/png" href="./public/favicon.png" />
   <title>Orbit</title>
-  <script>
-    // fix electron: https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
-    if (typeof require !== 'undefined') {
-      window.nodeRequire = require;
-      delete window.require;
-      delete window.exports;
-      delete window.module;
-    }
-  </script>
   <!-- chunk-import format:css -->
 </head>
 

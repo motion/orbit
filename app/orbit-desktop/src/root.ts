@@ -79,7 +79,8 @@ export class Root {
 
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
-    await this.startSyncers()
+    // no need to wait for them...
+    this.startSyncers()
     this.screen = new Screen()
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,

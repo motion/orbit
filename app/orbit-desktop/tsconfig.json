@@ -4,7 +4,9 @@
     "composite": true,
     "module": "CommonJS",
     "outDir": "_",
-    "rootDir": "src"
+    "rootDir": "src",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "references": [
     { "path": "../models" },

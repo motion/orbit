@@ -28,6 +28,10 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     try {
       console.log('synchronizing confluence people')
       this.people = await this.syncPeople()
+      if (!this.people) {
+        console.log('no people returned...')
+        return
+      }
       console.log(
         `created ${this.people.length} confluence people`,
         this.people,
@@ -144,6 +148,10 @@ export class ConfluenceSyncer implements IntegrationSyncer {
       this.setting.values.atlassian,
       `/wiki/rest/api/group`,
     )
+    if (!groups) {
+      console.log('error no groupd returned')
+      return
+    }
     console.log('confluence groups are loaded', groups.results)
 
     // now load group members from which we will create people

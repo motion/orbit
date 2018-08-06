@@ -1,4 +1,4 @@
-import r2 from '@mcro/r2'
+import * as r2 from '@mcro/r2'
 import puppeteer from 'puppeteer'
 import * as _ from 'lodash'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -84,7 +84,7 @@ export default class DebugApps {
     }
   }
 
-  getSessions = async () => {
+  getSessions = async (): Promise<any> => {
     return _.uniq(
       _.flatten(await Promise.all(this.sessions.map(this.getDevUrl))).filter(
         Boolean,

@@ -138,11 +138,17 @@ export const PeekBit = ({
                       <div />
                       <UI.View flex={1} />
                       <UI.Row alignItems="center">
-                        <RoundButton alignItems="center">
+                        <RoundButton
+                          onClick={peekStore.copyItem}
+                          alignItems="center"
+                        >
                           Copy Link <Cmd>⌘+Shift+C</Cmd>
                         </RoundButton>
                         <PeekActionBar.Space />
-                        <RoundButton alignItems="center">
+                        <RoundButton
+                          onClick={peekStore.openItem}
+                          alignItems="center"
+                        >
                           Open <Cmd>⌘+Enter</Cmd>
                         </RoundButton>
                       </UI.Row>

@@ -1,5 +1,5 @@
 import { HotKeys } from 'react-hotkeys'
-import { App, Electron } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { view, compose } from '@mcro/black'
 import { SearchStore } from '../stores/SearchStore'
 
@@ -18,27 +18,10 @@ const decorator = compose(view.attach('searchStore'))
 export const MainShortcuts = decorator(({ searchStore, children }: Props) => {
   const handlers = {
     openCurrent: () => {
-      const { selectedItem } = searchStore
-      if (!selectedItem) {
-        console.log('nothing selected')
-        return
-      }
-      if (selectedItem.target === 'person') {
-        App.actions.open('')
-        return
-      }
-      if (selectedItem.target === 'bit') {
-        App.actions.open(selectedItem.desktopLink || selectedItem.webLink)
-        return
-      }
+      App.actions.openItem(searchStore.selectedItem)
     },
     copyLink: async () => {
-      const { selectedItem } = searchStore
-      let link
-      if (selectedItem.target === 'bit') {
-        link = selectedItem.webLink
-      }
-      App.sendMessage(Electron, Electron.messages.COPY, link)
+      App.actions.openItem(searchStore.selectedItem)
     },
   }
 

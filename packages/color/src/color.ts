@@ -26,7 +26,7 @@ const StringCache = new WeakMap()
 
 var limiters = {}
 
-class Color {
+export class Color {
   static rgb: Function
 
   model = 'rgb'

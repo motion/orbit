@@ -3,6 +3,7 @@ import sqlite from 'sqlite'
 import Fs from 'fs-extra'
 import Path from 'path'
 import Os from 'os'
+import { Desktop } from '@mcro/stores'
 
 const chromeDbPaths = [
   Path.join(
@@ -28,6 +29,7 @@ const integrationPatterns = [
 export class Onboard {
   generalSetting: SettingEntity
   history = []
+  foundIntegrations = null
 
   constructor() {
     this.start()
@@ -79,18 +81,27 @@ export class Onboard {
     await Fs.copyFile(dbPath, tmpDbPath)
 
     const db = await sqlite.open(tmpDbPath)
-    const foundIntegrations = []
+    const foundIntegrations = {}
 
     for (const { name, patterns } of integrationPatterns) {
       for (const pattern of patterns) {
         const found = await this.getTopUrlsLike(db, pattern)
         if (found) {
-          foundIntegrations.push({ name, found })
+          foundIntegrations[name] = foundIntegrations[name] || []
+          foundIntegrations[name].push(found)
         }
       }
     }
 
     await Fs.remove(tmpDbPath)
+
+    this.foundIntegrations = foundIntegrations
+
+    Desktop.setState({
+      onboardState: {
+        foundIntegrations,
+      },
+    })
 
     console.log('foundIntegrations', JSON.stringify(foundIntegrations, null, 2))
   }

@@ -18,6 +18,7 @@ export type ChannelInfo = {
 // @ts-ignore
 export const Slack = Slack1.default || Slack1
 
+// @ts-ignore
 @store
 export class SlackService {
   setting: Setting

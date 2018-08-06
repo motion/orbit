@@ -23,6 +23,7 @@ export type PageQuery = {
 /**
  * @deprecated
  */
+// @ts-ignore
 @store
 export class DriveService {
   helpers: DriveServiceHelpers

@@ -128,7 +128,7 @@ export const OrbitOnboard = decorator(
         id: integration,
         title: NICE_INTEGRATION_NAMES[integration],
         auth: /jira|conflunce/.test(integration),
-        added: !!integrationSettingsStore.settingsList.find(
+        added: !!(integrationSettingsStore.settingsList || []).find(
           x => x.type === integration,
         ),
       }

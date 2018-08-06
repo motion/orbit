@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { OrbitCard } from '../../views/OrbitCard'
-import { SettingRepository } from '../../repositories'
-import { SettingInfoStore } from '../../stores/SettingInfoStore'
+import { OrbitCard } from '../../../../views/OrbitCard'
+import { SettingRepository } from '../../../../repositories'
+import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
-import { OrbitCardProps } from '../../views/OrbitCard'
+import { OrbitCardProps } from '../../../../views/OrbitCard'
 
 @view.attach('appStore')
 @view.attach({

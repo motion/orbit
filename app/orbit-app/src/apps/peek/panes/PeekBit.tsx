@@ -6,11 +6,13 @@ import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
 import { HighlightsLayer } from '../../../views/HighlightsLayer'
 import { App } from '@mcro/stores'
-import { RoundButton, SubTitle } from '../../../views'
+import { RoundButton } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { PeekRelated } from '../views/PeekRelated'
 import { TimeAgo } from '../../../views/TimeAgo'
+import { PeekBottom } from './PeekBottom'
+import { PeekActionBar } from './PeekActionBar'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -19,28 +21,8 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   })
 })
 
-const PeekBottom = view({
-  background: '#fff',
-  margin: [0, -30],
-  padding: [0, 30],
-  borderTop: [1, '#eee'],
-  position: 'relative',
-  zIndex: 10,
-})
-
-const PeekActionBar = view({
-  padding: [6, 10, 8],
-  flexFlow: 'row',
-  overflow: 'hidden',
-  alignItems: 'center',
-})
-
 const Cmd = view({
   opacity: 0.5,
-})
-
-const HorizontalSpace = view({
-  width: 10,
 })
 
 const BottomSpace = view({
@@ -66,9 +48,15 @@ BottomFloat.theme = ({ theme }) => ({
 })
 
 const searchBarProps = {
-  padding: [7, 50],
+  padding: [7, 10],
   height: 48,
 }
+
+const HeadSide = view({
+  width: 40,
+  alignItems: 'center',
+  justifyContent: 'center',
+})
 
 export const PeekBit = ({
   item,
@@ -83,40 +71,53 @@ export const PeekBit = ({
     return <div>Error yo item.subType: {item.subType}</div>
   }
   return (
-    <SearchablePeek
-      key={item.id}
-      defaultValue={App.state.query}
-      focusOnMount
-      searchBarTheme={peekStore.theme}
-      onChange={() => searchStore.setHighlightIndex(0)}
-      onEnter={peekStore.goToNextHighlight}
-      placeholder={`Search this ${item.subType} and related...`}
-      searchBarProps={searchBarProps}
+    <PeekItemResolver
+      item={item}
+      bit={bit}
+      appStore={appStore}
+      {...BitPaneContent.bitResolverProps}
     >
-      {({ searchBar, searchTerm }) => {
+      {({
+        title,
+        icon,
+        content,
+        location,
+        locationLink,
+        integration,
+        // permalink,
+        updatedAt,
+        comments,
+      }) => {
         return (
-          <PeekItemResolver
-            item={item}
-            bit={bit}
-            appStore={appStore}
-            searchTerm={searchTerm}
-            {...BitPaneContent.bitResolverProps}
+          <SearchablePeek
+            key={item.id}
+            defaultValue={App.state.query}
+            focusOnMount
+            searchBarTheme={peekStore.theme}
+            onChange={() => searchStore.setHighlightIndex(0)}
+            onEnter={peekStore.goToNextHighlight}
+            placeholder={`Search this ${item.subType} and related...`}
+            searchBarProps={searchBarProps}
+            before={<HeadSide />}
+            after={
+              <HeadSide>
+                {!!icon && (
+                  <UI.Button
+                    onClick={() => {
+                      console.log('todo open integration', integration)
+                    }}
+                    circular
+                    icon={<OrbitIcon icon={icon} size={16} />}
+                  />
+                )}
+              </HeadSide>
+            }
           >
-            {({
-              title,
-              icon,
-              content,
-              location,
-              locationLink,
-              integration,
-              permalink,
-              updatedAt,
-              comments,
-            }) => {
+            {({ searchBar, searchTerm }) => {
               return children({
                 title,
                 icon,
-                subhead: searchBar,
+                belowHeadMain: searchBar,
                 postBody: (
                   <PeekBottom>
                     <PeekActionBar>
@@ -130,38 +131,20 @@ export const PeekBit = ({
                           {location}
                         </RoundButton>
                       </UI.Theme>
-                      <HorizontalSpace />
+                      <PeekActionBar.Space />
                       <UI.Text>
                         <TimeAgo>{updatedAt}</TimeAgo>
                       </UI.Text>
                       <div />
                       <UI.View flex={1} />
                       <UI.Row alignItems="center">
-                        {!!permalink &&
-                          !!icon && (
-                            <>
-                              <OrbitIcon
-                                onClick={() => {
-                                  console.log(
-                                    'todo open integration',
-                                    integration,
-                                  )
-                                }}
-                                icon={icon}
-                                size={16}
-                              />
-                              <HorizontalSpace />
-                            </>
-                          )}
                         <RoundButton alignItems="center">
                           Copy Link <Cmd>⌘+Shift+C</Cmd>
                         </RoundButton>
-                        <HorizontalSpace />
-                        <UI.Theme name="orbit">
-                          <RoundButton alignItems="center">
-                            Open <Cmd>⌘+Enter</Cmd>
-                          </RoundButton>
-                        </UI.Theme>
+                        <PeekActionBar.Space />
+                        <RoundButton alignItems="center">
+                          Open <Cmd>⌘+Enter</Cmd>
+                        </RoundButton>
                       </UI.Row>
                     </PeekActionBar>
                   </PeekBottom>
@@ -190,9 +173,9 @@ export const PeekBit = ({
                 ),
               })
             }}
-          </PeekItemResolver>
+          </SearchablePeek>
         )
       }}
-    </SearchablePeek>
+    </PeekItemResolver>
   )
 }

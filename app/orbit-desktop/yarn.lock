@@ -35,6 +35,12 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/fs-extra@5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.0.4.tgz#b971134d162cc0497d221adde3dbb67502225599"
+  dependencies:
+    "@types/node" "*"
+
 "@types/mime@*":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@types%2fmime/-/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
@@ -2080,14 +2086,6 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   resolved "http://localhost:4444/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
-
-mobx-utils@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/mobx-utils/-/mobx-utils-5.0.0.tgz#384e805064c237b9a9446788a9e68278a3437610"
-
-module-alias@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.npmjs.org/module-alias/-/module-alias-2.0.6.tgz#abb2cfa07014f503514ad5061c6f03d79b591889"
 
 morgan@^1.8.2:
   version "1.9.0"

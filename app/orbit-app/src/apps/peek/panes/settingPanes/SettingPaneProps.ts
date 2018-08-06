@@ -7,6 +7,6 @@ export type SettingPaneProps = {
   appStore: AppStore
   setting: Setting
   children: (
-    a: { content: React.ReactNode; subhead?: React.ReactNode },
+    a: { content: React.ReactNode; belowHead?: React.ReactNode },
   ) => JSX.Element
 }

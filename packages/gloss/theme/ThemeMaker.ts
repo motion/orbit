@@ -14,6 +14,9 @@ type SimpleStyleObject = {
   disabled?: ColorObject
 }
 
+const darken = (color, amt) => {
+  return color.darken(amt(color))
+}
 const increaseContrast = (color, amt) => {
   const adjustAmt = amt(color)
   return color.isLight() ? color.darken(adjustAmt) : color.lighten(adjustAmt)
@@ -102,9 +105,9 @@ export class ThemeMaker {
       ...rest.active,
     }
     const inactive = {
-      background: increaseContrast(base.background, smallAmt),
-      color: increaseContrast(base.color, smallAmt),
-      borderColor: increaseContrast(base.borderColor, smallAmt),
+      background: darken(base.background, largeAmt),
+      color: darken(base.color, largeAmt),
+      borderColor: darken(base.borderColor, largeAmt),
       ...rest.inactive,
     }
     const disabled = {

@@ -12,6 +12,8 @@ import { modelQueryReaction } from '@mcro/helpers'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton } from '../../../views'
+import { PeekBottom } from './PeekBottom'
+import { PeekActionBar } from './PeekActionBar'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -65,7 +67,7 @@ class SettingContent extends React.Component<
         appStore={appStore}
         setting={setting}
       >
-        {({ subhead, content }) => {
+        {({ belowHead, content }) => {
           // this is a bit strange, its calling up a few times and passing up props
           // not sure i like the pattern, but it is extremely flexible
           // basically look at PeekPageInner > setting > *Setting
@@ -73,44 +75,48 @@ class SettingContent extends React.Component<
           const icon = statusIcons[store.job && store.job.status] || {}
           return children({
             title: capitalize(integration),
-            subhead,
+            belowHead,
             content,
-            subtitleBefore: <UI.Text>{store.bitsCount} total</UI.Text>,
-            subtitle: !store.job ? 'Loading...' : '',
-            subtitleAfter: !!store.job &&
-              !!store.job.updatedAt && (
-                <RoundButton
-                  icon={icon.name}
-                  iconProps={icon}
-                  tooltip={
-                    <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-                  }
-                >
-                  Last run
-                </RoundButton>
-              ),
-            after: (
-              <UI.ListRow
-                flex={1}
-                margin={[0, -8, -5, 0]}
-                itemProps={{
-                  size: 0.9,
-                  chromeless: true,
-                  opacity: 0.7,
-                  margin: [0, 0, 0, 5],
-                }}
-              >
-                <UI.Button
-                  icon="refresh"
-                  tooltip="Refresh"
-                  onClick={this.handleRefresh}
-                />
-                <UI.Button
-                  icon="remove"
-                  tooltip="Remove"
-                  onClick={this.removeIntegration}
-                />
-              </UI.ListRow>
+            postBody: (
+              <PeekBottom>
+                <PeekActionBar>
+                  <UI.Text>{store.bitsCount} total</UI.Text>
+                  <PeekActionBar.Space />
+                  {!!store.job &&
+                    !!store.job.updatedAt && (
+                      <RoundButton
+                        icon={icon.name}
+                        iconProps={icon}
+                        tooltip={
+                          <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
+                        }
+                      >
+                        Last run
+                      </RoundButton>
+                    )}
+                  <UI.ListRow
+                    flex={1}
+                    margin={[0, -8, -5, 0]}
+                    itemProps={{
+                      size: 0.9,
+                      chromeless: true,
+                      opacity: 0.7,
+                      margin: [0, 0, 0, 5],
+                    }}
+                  >
+                    <UI.Button
+                      icon="refresh"
+                      tooltip="Refresh"
+                      onClick={this.handleRefresh}
+                    />
+                    <UI.Button
+                      icon="remove"
+                      tooltip="Remove"
+                      onClick={this.removeIntegration}
+                    />
+                  </UI.ListRow>
+                </PeekActionBar>
+              </PeekBottom>
             ),
           })
         }}

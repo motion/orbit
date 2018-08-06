@@ -28,7 +28,7 @@ export const JiraSetting = decorator(({ setting, children }: Props) => {
     content: <AtlassianSettingLogin type="jira" setting={setting} />,
   })
   // return children({
-  //   subhead: (
+  //   belowHead: (
   //     <UI.Tabs
   //       $tabs
   //       active={store.active}

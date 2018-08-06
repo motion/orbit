@@ -1,5 +1,4 @@
 import root from 'global'
-import '@mcro/black/mlog.js'
 import * as Mobx from 'mobx'
 import { Entities } from '../entities'
 import * as Constants from '../constants'
@@ -9,7 +8,6 @@ import { App, Desktop, Swift, Electron } from '@mcro/stores'
 root['require'] = require
 root['Path'] = require('path')
 root['_'] = require('lodash')
-
 root['Constants'] = Constants
 root['Mobx'] = Mobx
 root['r2'] = r2

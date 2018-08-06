@@ -2,7 +2,6 @@
   "name": "@mcro/stores",
   "version": "2.2.1",
   "main": "_/index",
-  "types": "./index.d.ts",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

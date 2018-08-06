@@ -73,6 +73,7 @@
     "@mcro/build": "^2.2.1",
     "@mcro/dev": "^2.2.1",
     "@types/passport": "0.4.5",
+    "@types/fs-extra": "5.0.4",
     "nodemon": "^1.15.0",
     "touch": "^3.1.0",
     "watch": "^1.0.2"

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { PaneManagerStore } from './PaneManagerStore'
+import { PaneManagerStore } from '../../PaneManagerStore'
 import { ThemeObject } from '@mcro/gloss'
 
 const Section = view('section', {
@@ -12,7 +12,7 @@ const Section = view('section', {
 })
 
 type Props = {
-  paneStore: PaneManagerStore
+  paneManagerStore: PaneManagerStore
   theme?: ThemeObject
 }
 
@@ -48,11 +48,12 @@ const exploreButton = {
 @view
 export class OrbitHomeHeader extends React.Component<Props> {
   render() {
-    const { paneStore, theme } = this.props
+    const { paneManagerStore, theme } = this.props
     const buttonColor = theme.base.color.lighten(0.2)
     exploreButton.iconProps.color = buttonColor
     const homeActive =
-      paneStore.activePane === 'home' || paneStore.activePane === 'search'
+      paneManagerStore.activePane === 'home' ||
+      paneManagerStore.activePane === 'search'
     return (
       <>
         <Section>
@@ -61,7 +62,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
               icon="home"
               tooltip="Home"
               active={homeActive}
-              onClick={() => paneStore.setActivePane('home')}
+              onClick={() => paneManagerStore.setActivePane('home')}
               {...exploreButton}
             />
           )}
@@ -69,8 +70,8 @@ export class OrbitHomeHeader extends React.Component<Props> {
             debug
             icon="menu35"
             tooltip="Directory"
-            active={paneStore.activePaneFast === 'directory'}
-            onClick={() => paneStore.setActivePane('directory')}
+            active={paneManagerStore.activePaneFast === 'directory'}
+            onClick={() => paneManagerStore.setActivePane('directory')}
             {...exploreButton}
           />
           <UI.Button
@@ -78,18 +79,18 @@ export class OrbitHomeHeader extends React.Component<Props> {
             icon="gear"
             tooltip="Settings"
             sizeIcon={1.2}
-            active={paneStore.activePaneFast === 'settings'}
-            onClick={() => paneStore.setActivePane('settings')}
+            active={paneManagerStore.activePaneFast === 'settings'}
+            onClick={() => paneManagerStore.setActivePane('settings')}
             {...exploreButton}
           />
           {/*
           <filters>
-            {paneStore.filters.map((name, index) => (
+            {paneManagerStore.filters.map((name, index) => (
               <RoundButton
                 {...roundBtnProps}
                 key={index}
-                active={paneStore.paneIndex === index - paneStore.mainPanes}
-                onClick={() => paneStore.setActivePane(name)}
+                active={paneManagerStore.paneIndex === index - paneManagerStore.mainPanes}
+                onClick={() => paneManagerStore.setActivePane(name)}
               >
                 {name}
               </RoundButton>

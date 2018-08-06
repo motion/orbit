@@ -143,7 +143,7 @@ const Links = view({
 
 const IntegrationButton = ({ href, children, ...props }) => (
   <RoundButton
-    onClick={() => App.open(href)}
+    onClick={() => App.actions.open(href)}
     icon={<OrbitIcon preventAdjust size={14} {...props} />}
   >
     {children}

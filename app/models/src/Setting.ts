@@ -1,9 +1,8 @@
 export interface Setting {
-
   /**
    * Target type.
    */
-  target: "setting"
+  target: 'setting'
 
   id: number
   identifier: string
@@ -38,6 +37,7 @@ export interface Setting {
     lastMessageSync?: { [key: string]: string }
     autoLaunch?: boolean
     openShortcut?: string
+    hasOnboarded?: boolean
 
     // gmail-specific options
     max?: number
@@ -49,4 +49,3 @@ export interface Setting {
   createdAt: Date
   updatedAt: Date
 }
-

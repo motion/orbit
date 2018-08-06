@@ -7,6 +7,7 @@ import { TimeAgo } from '../../../../views/TimeAgo'
 import * as _ from 'lodash'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
+import { HideablePane } from '../../views/HideablePane'
 
 const columnSizes = {
   repo: 'flex',
@@ -150,15 +151,6 @@ class GithubSettingStore {
   }
 }
 
-const InvisiblePane = view(UI.FullScreen, {
-  opacity: 0,
-  pointerEvents: 'none',
-  visible: {
-    opacity: 1,
-    pointerEvents: 'auto',
-  },
-})
-
 @view.provide({ store: GithubSettingStore })
 @view
 export class GithubSetting extends React.Component<
@@ -167,7 +159,7 @@ export class GithubSetting extends React.Component<
   render() {
     const { store, children } = this.props
     return children({
-      subhead: (
+      belowHead: (
         <UI.Tabs active={store.active} onActive={store.setActiveKey}>
           <UI.Tab key="repos" width="50%" label="Repos" />
           <UI.Tab
@@ -179,7 +171,7 @@ export class GithubSetting extends React.Component<
       ),
       content: (
         <>
-          <InvisiblePane visible={store.active === 'repos'}>
+          <HideablePane invisible={store.active !== 'repos'}>
             <UI.SearchableTable
               virtual
               rowLineHeight={28}
@@ -195,10 +187,10 @@ export class GithubSetting extends React.Component<
                 </div>
               }
             />
-          </InvisiblePane>
-          <InvisiblePane visible={store.active === 'issues'}>
+          </HideablePane>
+          <HideablePane invisible={store.active !== 'issues'}>
             <Bits bits={store.bits} />
-          </InvisiblePane>
+          </HideablePane>
         </>
       ),
     })

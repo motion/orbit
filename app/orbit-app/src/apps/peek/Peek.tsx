@@ -71,7 +71,8 @@ class PeekPageInner extends React.Component<Props> {
             permalink,
             icon,
             date,
-            subhead,
+            belowHead,
+            belowHeadMain,
             preBody,
             postBody,
             subtitle,
@@ -92,7 +93,8 @@ class PeekPageInner extends React.Component<Props> {
                 after={after}
                 icon={icon}
                 date={date}
-                subhead={subhead}
+                belowHead={belowHead}
+                belowHeadMain={belowHeadMain}
                 permalink={permalink}
                 {...headerProps}
               />

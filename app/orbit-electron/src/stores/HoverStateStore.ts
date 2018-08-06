@@ -1,5 +1,5 @@
 import { App, Electron } from '@mcro/stores'
-import { store, react } from '@mcro/black/store'
+import { store, react } from '@mcro/black'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
 
 type Point = {

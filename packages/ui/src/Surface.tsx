@@ -5,6 +5,7 @@ import {
   CSSPropertySet,
   propsToThemeStyles,
   propsToStyles,
+  alphaColor,
 } from '@mcro/gloss'
 import { view, attachTheme } from '@mcro/black'
 import { Icon } from './Icon'
@@ -127,10 +128,11 @@ SurfaceFrame.theme = props => {
     color: props.iconHoverColor || themeStyles.hoverColor,
   }
   const chromelessStyle = props.chromeless && {
-    borderWidth: 0,
+    borderColor: 'transparent',
     background: 'transparent',
   }
   let surfaceStyles = {
+    color: props.color || props.theme.base.color,
     ...(props.inline && inlineStyle),
     overflow:
       props.overflow || props.glow
@@ -144,15 +146,14 @@ SurfaceFrame.theme = props => {
     '&:hover > div > .icon': hoverIconStyle,
     ...(props.dimmed && dimmedStyle),
     ...(props.dim && dimStyle),
-    ...chromelessStyle,
-    // // so you can override
     ...props.userStyle,
     ...themeStyles,
     ...propsToStyles(props),
     ...propsToTextSize(props),
     ...(props.active && themeStyles['&:active']),
+    ...chromelessStyle,
   }
-  return surfaceStyles
+  return alphaColor(surfaceStyles, props.alpha)
 }
 
 const Element = view({
@@ -199,7 +200,6 @@ Element.theme = props => {
 const baseIconStyle = {
   pointerEvents: 'none',
   justifyContent: 'center',
-  transform: `translateY(1%)`,
 }
 
 @attachTheme

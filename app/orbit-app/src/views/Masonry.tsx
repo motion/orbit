@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare'
 
 const rowHeight = 1
 const gridGap = 7
-const gridColumnGap = 10
+const gridColumnGap = 9
 
 const MasonryGrid = view({
   display: 'grid',

@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { view, react, compose, on } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { OrbitCard } from '../../../views/OrbitCard'
+import { OrbitCard } from '../../../../views/OrbitCard'
 import * as UI from '@mcro/ui'
-import { SearchStore } from '../../../stores/SearchStore'
-import { AppStore } from '../../../stores/AppStore'
-import { PaneManagerStore } from '../PaneManagerStore'
+import { SearchStore } from '../../../../stores/SearchStore'
+import { AppStore } from '../../../../stores/AppStore'
+import { PaneManagerStore } from '../../PaneManagerStore'
 
 class QuickSearchStore {
   props: {
@@ -87,7 +87,7 @@ const decorate = compose(
 
 type Props = {
   appStore?: AppStore
-  paneStore?: PaneManagerStore
+  paneManagerStore?: PaneManagerStore
   searchStore: SearchStore
   store: QuickSearchStore
 }

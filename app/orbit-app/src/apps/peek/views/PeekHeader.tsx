@@ -112,6 +112,11 @@ const SubTitle = ({ children, before, after }) => (
   </UI.Row>
 )
 
+const MainHead = view({
+  position: 'relative',
+  flex: 1,
+})
+
 @attachTheme
 @view
 export class PeekHeaderContent extends React.Component<Props> {
@@ -127,7 +132,8 @@ export class PeekHeaderContent extends React.Component<Props> {
       permalink,
       icon,
       theme,
-      subhead,
+      belowHeadMain,
+      belowHead,
       integration,
       ...props
     } = this.props
@@ -139,21 +145,22 @@ export class PeekHeaderContent extends React.Component<Props> {
         theme={theme}
         {...props}
       >
-        {/* Nice gradient effect on header */}
-        <UI.FullScreen
-          background="linear-gradient(rgba(255,255,255,0.027), transparent 44%)"
-          pointerEvents="none"
-        />
-        {/* Fade below the icon */}
-        <UI.View
-          zIndex={1}
-          pointerEvents="none"
-          position="absolute"
-          top={0}
-          right={0}
-          bottom={0}
-          left={0}
-          background={`linear-gradient(
+        <MainHead>
+          {/* Nice gradient effect on header */}
+          <UI.FullScreen
+            background="linear-gradient(rgba(255,255,255,0.027), transparent 44%)"
+            pointerEvents="none"
+          />
+          {/* Fade below the icon */}
+          <UI.View
+            zIndex={1}
+            pointerEvents="none"
+            position="absolute"
+            top={0}
+            right={0}
+            bottom={0}
+            left={0}
+            background={`linear-gradient(
             to right,
             transparent 80%,
             ${
@@ -171,8 +178,8 @@ export class PeekHeaderContent extends React.Component<Props> {
                 : 'transparent'
             }
           )`}
-        />
-        {/* <UI.HoverGlow
+          />
+          {/* <UI.HoverGlow
           width={400}
           height={300}
           opacity={0.1}
@@ -180,40 +187,42 @@ export class PeekHeaderContent extends React.Component<Props> {
           zIndex={10000}
           resist={50}
         /> */}
-        <TitleBar
-          after={
-            <>
-              <UI.Row
-                flexFlow="row"
-                position="absolute"
-                top={0}
-                left={6}
-                right={0}
-                height={27}
-                zIndex={10000}
-                alignItems="center"
-              >
-                <WindowControls onClose={App.actions.clearPeek} />
-                {/* {!!peekStore.hasHistory && (
+          <TitleBar
+            after={
+              <>
+                <UI.Row
+                  flexFlow="row"
+                  position="absolute"
+                  top={0}
+                  left={6}
+                  right={0}
+                  height={27}
+                  zIndex={10000}
+                  alignItems="center"
+                >
+                  <WindowControls onClose={App.actions.clearPeek} />
+                  {/* {!!peekStore.hasHistory && (
                   <UI.Button icon="arrowminleft" circular size={0.8} />
                 )} */}
-                <UI.View flex={1} />
-                {/* {!!peekStore.tornState && (
+                  <UI.View flex={1} />
+                  {/* {!!peekStore.tornState && (
                   <ControlButton icon="z" onClick={peekStore.tearPeek} />
                 )} */}
-                {titleAfter}
-              </UI.Row>
-            </>
-          }
-        >
-          {title}
-        </TitleBar>
-        {hasSubTitle && (
-          <SubTitle before={subtitleBefore} after={subtitleAfter}>
-            {subtitle}
-          </SubTitle>
-        )}
-        {subhead}
+                  {titleAfter}
+                </UI.Row>
+              </>
+            }
+          >
+            {title}
+          </TitleBar>
+          {hasSubTitle && (
+            <SubTitle before={subtitleBefore} after={subtitleAfter}>
+              {subtitle}
+            </SubTitle>
+          )}
+          {belowHeadMain}
+        </MainHead>
+        {belowHead}
       </PeekHeaderContain>
     )
   }

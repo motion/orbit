@@ -42,6 +42,8 @@ type Props = {
   // only called once it changes once at least
   onChange?: Function
   onEnter?: Function
+  before?: React.ReactNode
+  after?: React.ReactNode
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
@@ -60,7 +62,7 @@ export const SearchBox = view(View, {
   flexFlow: 'row',
   borderRadius: '999em',
   height: '100%',
-  width: '100%',
+  flex: 1,
   alignItems: 'center',
   paddingLeft: 4,
   background: [255, 255, 255, 0.1],
@@ -227,6 +229,7 @@ export const Searchable = (Component: any) =>
     }
 
     componentWillUnmount() {
+      // @ts-ignore
       window.document.removeEventListener('keydown', this.onKeyDown)
     }
 
@@ -390,6 +393,8 @@ export const Searchable = (Component: any) =>
         searchInputProps,
         focusOnMount,
         searchBarTheme,
+        before,
+        after,
         ...props
       } = this.props
       const searchBar = (
@@ -400,6 +405,7 @@ export const Searchable = (Component: any) =>
             key="searchbar"
             {...searchBarProps}
           >
+            {before}
             <SearchBox tabIndex={-1}>
               <SearchIcon
                 name="ui-1_zoom"
@@ -431,6 +437,7 @@ export const Searchable = (Component: any) =>
                 <SearchClearButton onClick={this.clear} />
               ) : null}
             </SearchBox>
+            {after}
             {actions != null ? <Actions>{actions}</Actions> : null}
           </SearchBar>
         </Theme>

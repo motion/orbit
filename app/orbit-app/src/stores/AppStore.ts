@@ -64,7 +64,7 @@ export class AppStore {
     this.contentHeight = height
   }
 
-  services = react(
+  services = modelQueryReaction(
     () =>
       SettingRepository.find({
         where: { category: 'integration', token: { $not: 'good' } },
@@ -85,9 +85,6 @@ export class AppStore {
         }
       }
       return services
-    },
-    {
-      onlyUpdateIfChanged: true,
     },
   )
 

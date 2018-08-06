@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { OrbitDocked } from './OrbitDocked'
+import { OrbitDocked } from './orbitDocked/OrbitDocked'
 // import OrbitContext from './orbit/orbitContext'
 
 export const Orbit = () => (

@@ -10,6 +10,7 @@ export type Filter =
       key: string
       value: string
       type: 'include' | 'exclude'
+      persistent?: boolean
     }
   | {
       key: string

@@ -10,6 +10,7 @@
     "watch": "echo hi",
     "start": "./scripts/start.sh",
     "start-prod": "./scripts/start.sh start-prod",
+    "test-built-app": "DEBUG=api,crawler,crawler:* app-built/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "build-app": "./scripts/build.sh"
   },
   "devDependencies": {

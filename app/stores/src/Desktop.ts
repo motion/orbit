@@ -1,20 +1,11 @@
 import Bridge, { proxySetters } from '@mcro/mobx-bridge'
-import { store, react, deep } from '@mcro/black/store'
+import { store, react, deep } from '@mcro/black'
 
 // store export
 export let Desktop = null as DesktopStore
 
 // const log = debug('Desktop')
 const PAD_WINDOW = 15
-
-export type DesktopStateAppState = {
-  id?: string
-  name?: string
-  title?: string
-  offset: [number, number]
-  bounds: [number, number]
-  selectedText?: string
-}
 
 export type DesktopStateOCRItem = [
   // x, y, width, height, word, index, color
@@ -26,41 +17,6 @@ export type DesktopStateOCRItem = [
   number,
   string
 ]
-
-export type DesktopState = {
-  paused: boolean
-  appState?: DesktopStateAppState
-  lastScreenChange: number
-  lastAppChange: number
-  mouseState: {
-    mouseDown?: { x: number; y: number; at: number }
-  }
-  operatingSystem: {
-    isAccessible: boolean
-    macVersion?: string
-  }
-  keyboardState: {
-    option?: number
-    optionUp?: number
-    shiftUp?: number
-    space?: number
-  }
-  ocrState: {
-    words?: DesktopStateOCRItem[]
-    lines?: DesktopStateOCRItem[]
-    shouldClear: string[]
-    clearWords: { [key: string]: number }
-    restoreWords: { [key: string]: number }
-  }
-  focusedOnOrbit: boolean
-  appStateUpdatedAt: number
-  lastBitUpdatedAt: number
-  searchState: {
-    pluginResults: Array<{}>
-    indexStatus: string
-    searchResults: Array<{}>
-  }
-}
 
 @store
 class DesktopStore {
@@ -88,18 +44,18 @@ class DesktopStore {
   onMessage = Bridge.onMessage
   source = 'Desktop'
 
-  state: DesktopState = deep({
+  state = deep({
     appState: {
       selectedText: '',
-      id: null,
-      name: null,
-      title: null,
+      id: '',
+      name: '',
+      title: '',
       offset: [0, 0],
       bounds: [0, 0],
     },
     ocrState: {
-      words: null,
-      lines: null,
+      words: null as DesktopStateOCRItem[],
+      lines: null as DesktopStateOCRItem[],
       shouldClear: [],
       clearWords: null,
       restoreWords: null,
@@ -116,7 +72,7 @@ class DesktopStore {
       shiftUp: 0,
     },
     mouseState: {
-      mouseDown: null,
+      mouseDown: Date.now(),
     },
     operatingSystem: {
       isAccessible: false,
@@ -128,7 +84,8 @@ class DesktopStore {
     lastBitUpdatedAt: Date.now(),
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
-    lastSQLError: null,
+    lastSQLError: '',
+    shouldOnboard: false,
   })
 
   results = []

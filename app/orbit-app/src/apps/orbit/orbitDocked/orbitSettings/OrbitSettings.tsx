@@ -1,25 +1,23 @@
 import * as React from 'react'
 import { view, react } from '@mcro/black'
-import { SettingRepository } from '../../repositories'
+import { SettingRepository } from '../../../../repositories'
 import { OrbitSettingCard } from './OrbitSettingCard'
-import { SubPane } from './SubPane'
-import * as Views from '../../views'
+import { SubPane } from '../../SubPane'
+import * as Views from '../../../../views'
 import { Setting } from '@mcro/models'
-// import { Setting, Not, IsNull, findOrCreate } from '@mcro/models'
 import { modelQueryReaction } from '@mcro/helpers'
-import { Masonry } from '../../views/Masonry'
+import { Masonry } from '../../../../views/Masonry'
 import { App } from '@mcro/stores'
-import { PaneManagerStore } from './PaneManagerStore'
-import { IntegrationSettingsStore } from '../../stores/IntegrationSettingsStore'
-import { SearchStore } from '../../stores/SearchStore'
-import { API_URL } from '../../constants'
-import { ClearButton } from '@mcro/ui'
+import { PaneManagerStore } from '../../PaneManagerStore'
+import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
+import { SearchStore } from '../../../../stores/SearchStore'
+import { API_URL } from '../../../../constants'
 
 type Props = {
   name: string
   store?: OrbitSettingsStore
   searchStore?: SearchStore
-  paneStore?: PaneManagerStore
+  paneManagerStore?: PaneManagerStore
   integrationSettingsStore?: IntegrationSettingsStore
 }
 
@@ -48,7 +46,7 @@ class OrbitSettingsStore {
   }
 
   get isPaneActive() {
-    return this.props.paneStore.activePane === this.props.name
+    return this.props.paneManagerStore.activePane === this.props.name
   }
 
   generalSettings = react(
@@ -133,7 +131,7 @@ class OrbitSettingsStore {
   }
 }
 
-@view.attach('searchStore', 'paneStore', 'integrationSettingsStore')
+@view.attach('searchStore', 'paneManagerStore', 'integrationSettingsStore')
 @view.attach({
   store: OrbitSettingsStore,
 })

@@ -21,7 +21,7 @@ export type OrbitCardProps = {
   hoverToSelect?: boolean
   appStore?: AppStore
   searchStore?: SearchStore
-  paneStore?: PaneManagerStore
+  paneManagerStore?: PaneManagerStore
   subPaneStore?: SubPaneStore
   title?: React.ReactNode
   subtitle?: React.ReactNode
@@ -93,7 +93,7 @@ const Card = view({
   },
 })
 
-const cardShadow = [0, 1, 2, [0, 0, 0, 0.03]]
+const cardShadow = [0, 1, 2, [0, 0, 0, 0.04]]
 const cardHoverGlow = [0, 0, 0, 3, [0, 0, 0, 0.05]]
 const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
 const borderSelected = UI.color('#90b1e4cc')
@@ -129,12 +129,12 @@ Card.theme = ({
     if (isSelected) {
       listStyle = {
         background: '#f8faff',
-        border: [1, borderSelected],
-        boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
+        // border: [1, borderSelected],
+        boxShadow: disabledShadow || [cardSelectedGlow],
       }
     } else {
       listStyle = {
-        border: [1, 'transparent'],
+        // border: [1, 'transparent'],
         '&:hover': {
           background: theme.base.background.darken(0.03),
         },
@@ -178,7 +178,7 @@ Card.theme = ({
     card = {
       ...card,
       padding: padding || 16,
-      borderRadius: borderRadius || 9,
+      borderRadius: borderRadius || 11,
       background: cardBackground,
       '&:active': {
         opacity: 0.8,
@@ -206,7 +206,7 @@ const Preview = view({
 
 const Subtitle = view(UI.View, {
   height: 20,
-  margin: [4, 0, 0],
+  margin: [3, 0, 1],
   flexFlow: 'row',
   alignItems: 'center',
 })
@@ -300,7 +300,7 @@ class OrbitCardStore {
         const position = getTargetPosition(this.cardWrapRef)
         // list items are closer to edge, adjust...
         if (this.props.listItem === true) {
-          position.left += 9
+          position.left += 5
         }
         App.actions.selectItem(this.target, position)
       }
@@ -309,7 +309,7 @@ class OrbitCardStore {
   )
 }
 
-@view.attach('appStore', 'searchStore', 'paneStore', 'subPaneStore')
+@view.attach('appStore', 'searchStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitCardStore,
 })

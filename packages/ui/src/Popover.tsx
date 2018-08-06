@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view, on, attachTheme } from '@mcro/black'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
-import { isNumber, debounce, throttle, isEqual, omit } from 'lodash'
+import { isNumber, debounce, throttle, isEqual, omit, Cancelable } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
@@ -220,13 +220,17 @@ export class Popover extends React.PureComponent<PopoverProps> {
     delay: 16,
     props: {} as PopoverProps,
     setPosition: false,
+    closing: false,
+    maxHeight: null,
   }
 
   // curProps is always up to date, so we dont have to thread props around a ton
   // also, nicely lets us define get fn helpers
 
   static getDerivedStateFromProps(props, state) {
+    console.log('compare')
     if (!isEqual(omit(props, ['children']), omit(state.props, ['children']))) {
+      console.log('show me')
       return {
         setPosition: true,
         props,
@@ -317,9 +321,11 @@ export class Popover extends React.PureComponent<PopoverProps> {
         on(
           this,
           setTimeout(() => {
-            this.setState({ closing: false, isOpen: false }, () =>
-              this.props.onDidClose(),
-            )
+            this.setState({ closing: false, isOpen: false }, () => {
+              if (this.props.onDidClose) {
+                this.props.onDidClose()
+              }
+            })
             resolve()
           }, 300),
         )
@@ -440,6 +446,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   setPosition(callback?) {
+    console.log('set pos', this.positionState, this.popoverRef)
     if (!this.popoverRef) {
       return
     }
@@ -687,8 +694,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
     enter: { target: null, menu: null },
   }
 
-  delayOpenIfHover = null
-
   addHoverListeners(name, node) {
     if (!(node instanceof HTMLElement)) {
       console.log('no node!', name)
@@ -709,6 +714,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
         setHovered()
       }
     }
+
+    const delayOpenIfHover = debounce(openIfOver, isTarget ? delay : 0)
+
     const closeIfOut = () => {
       // avoid if too soon
       if (isPopover && Date.now() - this.state.menuHovered < 200) {
@@ -716,10 +724,9 @@ export class Popover extends React.PureComponent<PopoverProps> {
       }
       if (!this.isNodeHovered(node)) {
         setUnhovered()
-        if (this.delayOpenIfHover) {
-          // cancel previous
-          this.delayOpenIfHover()
-          this.delayOpenIfHover = null
+        // cancel previous
+        if (typeof delayOpenIfHover.cancel === 'function') {
+          delayOpenIfHover.cancel()
         }
       }
       // ensure check if we have a delay open
@@ -734,18 +741,12 @@ export class Popover extends React.PureComponent<PopoverProps> {
         )
       }
     }
-    this.delayOpenIfHover = isTarget
-      ? debounce(openIfOver, delay).cancel
-      : openIfOver
     // this will avoid the delay open if its already open
     const onEnter = () => {
       if (isTarget && this.state.menuHovered) {
         openIfOver()
       } else {
-        if (this.delayOpenIfHover) {
-          this.delayOpenIfHover()
-          this.delayOpenIfHover = null
-        }
+        delayOpenIfHover()
       }
     }
     // 🐛 target should close slower than menu opens
@@ -774,6 +775,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
       const key = `${name}Hovered`
       this.setState({ [key]: isHovered ? Date.now() : false })
     }
+    console.log('set hovered', isHovered, openOnHover)
     if (isHovered) {
       if (openOnHover) {
         this.setPosition(setter)
@@ -940,13 +942,7 @@ export class Popover extends React.PureComponent<PopoverProps> {
                   boxShadow={getShadow(shadow, elevation)}
                 />
               </ArrowContain>
-              <SizedSurface
-                sizeRadius
-                ignoreSegment
-                flex={1}
-                {...props}
-                elevation={elevation}
-              >
+              <SizedSurface sizeRadius flex={1} {...props}>
                 {typeof children === 'function'
                   ? children(showPopover)
                   : children}

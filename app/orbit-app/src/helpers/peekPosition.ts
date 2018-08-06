@@ -2,6 +2,7 @@ import * as Constants from '@mcro/constants'
 import { App } from '@mcro/stores'
 import { isEqual } from 'lodash'
 
+const MIN_Y = 80
 const SHADOW_PAD = 15
 const EDGE_PAD = 20
 const BOTTOM_PAD = 40
@@ -87,9 +88,9 @@ function getLazyPosition(
       // target is WITHIN peek, small nudge
       y = peekLastY - NUDGE_AMT
     }
-    // ensure we don't nudge too far up
-    y = Math.max(EDGE_PAD, y)
   }
+  // ensure we don't nudge too far up
+  y = Math.max(MIN_Y, y)
   return y
 }
 

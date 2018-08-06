@@ -9,6 +9,7 @@ if [ "$1" = "start-pundle" ]; then
 fi
 
 if [ "$1" = "start-prod" ]; then
+  echo "orbit-app production mode..."
   export NODE_ENV="production"
 fi
 

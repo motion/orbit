@@ -79,7 +79,7 @@ class DesktopStore {
       mouseDown: Date.now(),
     },
     onboardState: {
-      foundIntegrations: [],
+      foundIntegrations: {},
     },
     operatingSystem: {
       isAccessible: false,

@@ -100,7 +100,12 @@ export const OrbitOnboard = decorator(({ store }) => {
     console.log('no found integrations...')
     return null
   }
-  const integrations = Object.keys(foundIntegrations).map(integration => {
+  const { atlassian, ...rest } = foundIntegrations
+  let finalIntegrations = Object.keys(rest)
+  if (atlassian) {
+    finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
+  }
+  const integrations = finalIntegrations.map(integration => {
     return {
       integration,
       name: NICE_INTEGRATION_NAMES[integration],
@@ -141,7 +146,7 @@ export const OrbitOnboard = decorator(({ store }) => {
         </OnboardFrame>
       </FrameAnimate>
       <Controls>
-        {store.curFrame > 0 && (
+        {store.curFrame > 1 && (
           <Button chromeless onClick={store.lastFrame}>
             Back
           </Button>

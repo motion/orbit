@@ -81,11 +81,16 @@ type Props = {
 
 const opacityScale = [1, 0.9, 0.8, 0.7, 0.5]
 
+const hideFilterPanes = {
+  settings: true,
+  onboard: true,
+}
+
 export const OrbitFilterBar = view(
   ({ filterStore, paneManagerStore }: Props) => {
     filterStore.disabledFilters
     return (
-      <FilterBar opacity={paneManagerStore.activePane === 'settings' ? 0 : 1}>
+      <FilterBar opacity={hideFilterPanes[paneManagerStore.activePane] ? 0 : 1}>
         <HorizontalScroll>
           {filterStore.allFilters.map((filter, index) => (
             <UI.Theme

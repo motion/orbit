@@ -9,6 +9,11 @@ const Section = view('section', {
   flexFlow: 'row',
   padding: [0, 6, 0, 12],
   alignItems: 'center',
+  transition: 'all ease 500ms',
+  invisible: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
 })
 
 type Props = {
@@ -56,7 +61,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
       paneManagerStore.activePane === 'search'
     return (
       <>
-        <Section>
+        <Section invisible={paneManagerStore.activePane === 'onboard'}>
           {!homeActive && (
             <UI.Button
               icon="home"

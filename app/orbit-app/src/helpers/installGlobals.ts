@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as Mobx from 'mobx'
-import * as MobxUtils from 'mobx-utils'
 import * as Constants from '../constants'
 import * as Black from '@mcro/black'
 import r2 from '@mcro/r2'
@@ -23,7 +22,6 @@ if (typeof __webpack_require__ !== 'undefined') {
 window['React'] = React
 window['Constants'] = Constants
 window['Mobx'] = Mobx
-window['MobxUtils'] = MobxUtils
 window['Constants'] = Constants
 window['log'] = Black.log
 window['Black'] = Black

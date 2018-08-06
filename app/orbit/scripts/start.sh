@@ -2,10 +2,12 @@
 
 cd $(dirname $0)/..
 
+FLAG=""
+
 # test prod app
 if [ "$1" = "start-prod" ]; then
-  DEBUG=api,crawler,crawler:* app-built/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit
-  exit 0
+  FLAG="start-prod"
+  echo "starting app in prod... $FLAG"
 fi
 
 browserPID=$!
@@ -15,7 +17,7 @@ electronPID=$!
 desktopPID=$!
 ../orbit-desktop/scripts/start.sh &
 appPID=$!
-../orbit-app/scripts/start.sh &
+../orbit-app/scripts/start.sh $FLAG &
 lastPID=$!
 
 wait

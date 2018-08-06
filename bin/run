@@ -9,4 +9,9 @@ killgroup() {
 }
 
 cd app/$1
-npm run start -- ${@:2}
+
+if [ "$2" = "--prod" ]; then
+  npm run start-prod
+else
+  npm run start -- ${@:2}
+fi

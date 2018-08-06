@@ -2,7 +2,6 @@ import { HotKeys } from 'react-hotkeys'
 import { App, Electron } from '@mcro/stores'
 import { view, compose } from '@mcro/black'
 import { SearchStore } from '../stores/SearchStore'
-import { getPermalink } from '../helpers/getPermalink'
 
 type Props = {
   searchStore: SearchStore
@@ -19,12 +18,27 @@ const decorator = compose(view.attach('searchStore'))
 export const MainShortcuts = decorator(({ searchStore, children }: Props) => {
   const handlers = {
     openCurrent: () => {
-      console.log('!!!!!!!!!!!!!opening current', searchStore.selectedItem)
-      // App.actions.open(searchStore.selectedItem)
+      const { selectedItem } = searchStore
+      if (!selectedItem) {
+        console.log('nothing selected')
+        return
+      }
+      if (selectedItem.target === 'person') {
+        App.actions.open('')
+        return
+      }
+      if (selectedItem.target === 'bit') {
+        App.actions.open(selectedItem.desktopLink || selectedItem.webLink)
+        return
+      }
     },
     copyLink: async () => {
-      const permalink = await getPermalink(searchStore.selectedItem)
-      App.sendMessage(Electron, Electron.messages.COPY, permalink)
+      const { selectedItem } = searchStore
+      let link
+      if (selectedItem.target === 'bit') {
+        link = selectedItem.webLink
+      }
+      App.sendMessage(Electron, Electron.messages.COPY, link)
     },
   }
 

@@ -28,7 +28,7 @@ export class SlackService {
 
   constructor(setting: Setting) {
     this.setting = setting
-    this.slack = new Slack({ token: this.setting.token, useElectronNet: true })
+    this.slack = new Slack({ token: this.setting.token })
     this.slack.channels
       .list({})
       .then(res => res && res.channels)

@@ -7,7 +7,7 @@ if [ "$(realpath .)" = "$ROOT" ]; then
   echo "building.... $(pwd)"
   # build
   if [ "$1" = "" ]; then
-    (bin/in orbit tsc --build) &
+    (bin/in orbit tsc --build --force) &
     (bin/in ui npm run build) &
     (bin/in store-hmr npm run build) &
     wait

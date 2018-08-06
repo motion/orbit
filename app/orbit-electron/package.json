@@ -55,7 +55,7 @@
     "wait-port": "^0.2.2"
   },
   "devDependencies": {
-    "@types/react": "16.3.17",
+    "@types/react": "16.4.7",
     "@types/react-dom": "16.0.6",
     "electron": "3.0.0-beta.3",
     "electron-rebuild": "1.7.3",

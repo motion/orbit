@@ -34,7 +34,7 @@ if [ ! -L "./node_modules/@mcro/gloss" ]; then
 fi
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then
-  build-all
+  bin/build
 fi
 
 printf "\n\n"

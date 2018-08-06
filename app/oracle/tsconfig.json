@@ -4,7 +4,6 @@
     "composite": true,
     "module": "CommonJS",
     "outDir": "_",
-    "baseUrl": "./"
-  },
-  "include": ["src/**/*"]
+    "rootDir": "src"
+  }
 }

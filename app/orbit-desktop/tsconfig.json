@@ -3,9 +3,9 @@
   "compilerOptions": {
     "composite": true,
     "module": "CommonJS",
-    "outDir": "_"
+    "outDir": "_",
+    "rootDir": "src"
   },
-  "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
     { "path": "../services" },

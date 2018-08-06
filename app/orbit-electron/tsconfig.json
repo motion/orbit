@@ -2,9 +2,9 @@
   "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
     "module": "CommonJS",
-    "outDir": "_"
+    "outDir": "_",
+    "rootDir": "src"
   },
-  "include": ["src/**/*"],
   "references": [
     { "path": "../stores" },
     { "path": "../orbit-desktop" },

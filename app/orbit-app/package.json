@@ -56,9 +56,6 @@
     "mobx-utils": "5.0.0"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.115",
-    "@types/react": "16.4.6",
-    "@types/react-dom": "16.0.6",
     "@types/webpack-env": "1.13.6",
     "pundle-cli": "3.0.0-beta4",
     "pundle-preset-default": "3.0.0-beta4"

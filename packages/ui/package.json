@@ -28,11 +28,6 @@
     "react-virtualized": "^9.20.1",
     "lodash": "^4.17.10"
   },
-  "devDependencies": {
-    "@types/lodash": "4.14.112",
-    "@types/react": "16.4.7",
-    "@types/react-dom": "16.0.6"
-  },
   "peerDependencies": {
     "@babel/runtime": "*",
     "mobx": "5.0.3",

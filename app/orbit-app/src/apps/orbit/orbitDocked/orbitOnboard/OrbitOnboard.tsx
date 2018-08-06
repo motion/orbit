@@ -15,9 +15,8 @@ const frameWidth = ORBIT_WIDTH - sidePad * 2
 const OnboardFrame = view({
   position: 'relative',
   width: frameWidth,
-  height: 300,
-  paddingBottom: controlsHeight,
-  padding: [20, 0],
+  minHeight: 300,
+  padding: [20, 0, 20 + controlsHeight],
 })
 
 const Centered = view({

@@ -6,7 +6,7 @@ import { queryObjectToQueryString } from '../../utils'
 import { GmailFetchOptions } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 
-const log = logger('syncers:gmail')
+const log = logger('syncer:gmail')
 
 export class GMailFetcher {
   setting: SettingEntity

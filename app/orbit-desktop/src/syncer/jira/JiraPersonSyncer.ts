@@ -9,7 +9,7 @@ import { fetchFromAtlassian } from './JiraUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { logger } from '@motion/logger'
 
-const log = logger('syncers:jira:people')
+const log = logger('syncer:jira:people')
 
 export class JiraPersonSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -19,13 +19,12 @@ export class JiraPersonSyncer implements IntegrationSyncer {
   }
 
   async run(): Promise<void> {
-    try {
-      log('synchronizing jira people')
-      const people = await this.syncPeople(0)
-      log(`created ${people.length} jira people`, people)
-    } catch (err) {
-      log('error in jira people sync', err.message, err.stack)
-    }
+    const people = await this.syncPeople(0)
+    log(`created ${people.length} jira people`, people)
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private async syncPeople(startAt: number): Promise<Person[]> {

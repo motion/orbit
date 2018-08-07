@@ -3,7 +3,7 @@ import { GithubIssueQuery } from './GithubQueries'
 import { fetchFromGitHub } from './GithubUtils'
 import {logger} from '@motion/logger'
 
-const log = logger('syncers:github:issues')
+const log = logger('syncer:github:issues')
 
 /**
  * Loads GitHub issues for a single repository.

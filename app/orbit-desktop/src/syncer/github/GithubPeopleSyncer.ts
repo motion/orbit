@@ -10,7 +10,7 @@ import { sequence } from '../../utils'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { logger } from '@motion/logger'
 
-const log = logger('syncers:github:people')
+const log = logger('syncer:github:people')
 
 export class GithubPeopleSyncer implements IntegrationSyncer {
   setting: SettingEntity
@@ -20,13 +20,12 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    try {
-      log('Running github people sync')
-      const people = await this.syncRepos()
-      log('Created', people ? people.length : 0, 'people', people)
-    } catch (err) {
-      log('Error in github people sync', err.message, err.stack)
-    }
+    const people = await this.syncRepos()
+    log('Created', people ? people.length : 0, 'people', people)
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private async syncRepos(repos?: string[]) {

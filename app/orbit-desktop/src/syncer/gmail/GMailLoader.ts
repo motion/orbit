@@ -4,7 +4,7 @@ import { historyQuery, threadQuery, threadsQuery } from './GMailQueries'
 import { GmailHistoryLoadResult, GmailThread } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 
-const log = logger('syncers:gmail')
+const log = logger('syncer:gmail')
 
 export class GMailLoader {
   setting: SettingEntity

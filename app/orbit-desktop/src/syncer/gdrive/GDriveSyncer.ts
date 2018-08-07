@@ -11,7 +11,7 @@ import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 
-const log = logger('syncers:gdrive')
+const log = logger('syncer:gdrive')
 
 export class GDriveSyncer implements IntegrationSyncer {
   private loader: GDriveLoader
@@ -23,30 +23,30 @@ export class GDriveSyncer implements IntegrationSyncer {
   }
 
   async run(): Promise<void> {
-    try {
-      log('synchronizing google drive files')
-      await this.loader.load()
+    log('synchronizing google drive files')
+    await this.loader.load()
 
-      // create entities for loaded files
-      const createdFiles = await Promise.all(
-        this.loader.files.map(file => {
-          return this.createFile(file)
-        }),
-      )
-      const newlyCreatedFiles = createdFiles.filter(file => !!file)
-      log(`synced ${newlyCreatedFiles.length} files`)
+    // create entities for loaded files
+    const createdFiles = await Promise.all(
+      this.loader.files.map(file => {
+        return this.createFile(file)
+      }),
+    )
+    const newlyCreatedFiles = createdFiles.filter(file => !!file)
+    log(`synced ${newlyCreatedFiles.length} files`)
 
-      // create entities for loaded users
-      const createdPeople = await Promise.all(
-        this.loader.users.map(user => {
-          return this.createPerson(user)
-        }),
-      )
-      const newlyCreatedPeople = createdPeople.filter(person => !!person)
-      log(`synced ${newlyCreatedPeople.length} people`)
-    } catch (err) {
-      log('error in google drive sync', err.message, err.stack)
-    }
+    // create entities for loaded users
+    const createdPeople = await Promise.all(
+      this.loader.users.map(user => {
+        return this.createPerson(user)
+      }),
+    )
+    const newlyCreatedPeople = createdPeople.filter(person => !!person)
+    log(`synced ${newlyCreatedPeople.length} people`)
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private createFile(file: GDriveLoadedFile): Promise<Bit | null> {

@@ -17,7 +17,7 @@ import { GDriveFetcher } from './GDriveFetcher'
 import * as path from 'path'
 import { SettingEntity } from '../../entities/SettingEntity'
 
-const log = logger('syncers:gdrive')
+const log = logger('syncer:gdrive')
 
 export class GDriveLoader {
   fetcher: GDriveFetcher

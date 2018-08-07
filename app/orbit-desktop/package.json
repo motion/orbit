@@ -27,7 +27,6 @@
     "cerebro-tools": "^0.1.8",
     "convert-units": "^2.3.4",
     "cors": "^2.8.3",
-    "debug": "^3.1.0",
     "escape-string-applescript": "^2.0.0",
     "esm": "^3.0.37",
     "event-stream": "^3.3.4",

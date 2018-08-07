@@ -12,7 +12,7 @@ import { createConversation, filterChannelsBySettings } from './SlackUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { logger } from '@motion/logger'
 
-const log = logger('syncers:slack')
+const log = logger('syncer:slack')
 
 /**
  * Syncs Slack Bits.
@@ -28,13 +28,12 @@ export class SlackSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    try {
-      this.people = await this.syncUsers()
-      await this.syncMessages()
-    } catch (error) {
-      // todo: error catching should be on top-level
-      log(`error in slack syncer`, error)
-    }
+    this.people = await this.syncUsers()
+    await this.syncMessages()
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   /**

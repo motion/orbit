@@ -9,7 +9,7 @@ import { createOrUpdateBit } from '../../helpers/helpers'
 import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 
-const log = logger('syncers:github:issues')
+const log = logger('syncer:github:issues')
 
 export class GithubIssueSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -19,17 +19,12 @@ export class GithubIssueSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    try {
-      log('synchronizing github issues')
-      const issues = await this.syncIssues()
-      log(`created ${issues.length} issues`, issues)
-    } catch (err) {
-      log(
-        'error in github issues synchronization',
-        err.message,
-        err.stack,
-      )
-    }
+    const issues = await this.syncIssues()
+    log(`created ${issues.length} issues`, issues)
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private async syncIssues(repos?: string[]): Promise<Bit[]> {

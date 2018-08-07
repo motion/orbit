@@ -18,7 +18,7 @@ import { GmailThread } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { logger } from '@motion/logger'
 
-const log = logger('syncers:gmail')
+const log = logger('syncer:gmail')
 
 export class GMailSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -30,12 +30,11 @@ export class GMailSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    try {
-      log('synchronizing GMail')
-      await this.syncMail()
-    } catch (err) {
-      console.error(err)
-    }
+    await this.syncMail()
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private async syncMail() {
@@ -145,6 +144,7 @@ export class GMailSyncer implements IntegrationSyncer {
           bitUpdatedAt: parseMailDate(
             thread.messages[thread.messages.length - 1],
           ),
+          webLink: `https://mail.google.com/mail/u/0/#inbox/` + thread.id
         })
       }),
     )

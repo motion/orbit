@@ -15,7 +15,7 @@ import {
 } from './ConfluenceTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 
-const log = logger('syncers:confluence')
+const log = logger('syncer:confluence')
 
 export class ConfluenceSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -28,29 +28,29 @@ export class ConfluenceSyncer implements IntegrationSyncer {
   }
 
   async run(): Promise<void> {
-    try {
-      log('synchronizing confluence people')
-      this.people = await this.syncPeople()
-      if (!this.people) {
-        log('no people returned...')
-        return
-      }
-      log(
-        `created ${this.people.length} confluence people`,
-        this.people,
-      )
-
-      log('running confluence')
-      const result = await this.syncBits()
-      log(
-        'Created',
-        result ? result.length : 0,
-        'confluence items',
-        result,
-      )
-    } catch (err) {
-      log('Error in confluence task sync', err.message, err.stack)
+    log('synchronizing confluence people')
+    this.people = await this.syncPeople()
+    if (!this.people) {
+      log('no people returned...')
+      return
     }
+    log(
+      `created ${this.people.length} confluence people`,
+      this.people,
+    )
+
+    log('running confluence')
+    const result = await this.syncBits()
+    log(
+      'Created',
+      result ? result.length : 0,
+      'confluence items',
+      result,
+    )
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   async syncBits(): Promise<Bit[]> {

@@ -8,7 +8,7 @@ import { logger } from '@motion/logger'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 
-const log = logger('syncers:gdrive')
+const log = logger('syncer:gdrive')
 
 /**
  * Fetches data from Google Drive Api.

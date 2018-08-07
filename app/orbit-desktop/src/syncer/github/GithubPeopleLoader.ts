@@ -3,7 +3,7 @@ import { GithubPeopleQueryResult } from '../../syncer/github/GithubTypes'
 import { GithubPeopleQuery } from './GithubQueries'
 import { fetchFromGitHub } from './GithubUtils'
 
-const log = logger('syncers:github:people')
+const log = logger('syncer:github:people')
 
 /**
  * Loads GitHub people for a single organization.

@@ -15,7 +15,7 @@
     { "path": "../../packages/build" },
     { "path": "../../packages/color" },
     { "path": "../../packages/constants" },
-    { "path": "../../packages/debug" },
+    { "path": "../../packages/logger" },
     { "path": "../../packages/gloss" },
     { "path": "../../packages/helpers" },
     { "path": "../../packages/r2" },

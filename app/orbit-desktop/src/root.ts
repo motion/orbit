@@ -155,14 +155,9 @@ export class Root {
     root.Logger = Logger
     root.Syncers = Syncers.reduce((map, syncer) => {
       // since Syncers is an array we need to convert it to object
-      // to make them more usable in the REPL. We are using Syncer type
-      // as an object key. Since Syncers can have duplicate types
-      // we apply ordered number to syncers with duplicated types
-      const sameTypeSyncersNumber = Object.keys(map).filter(
-        key => key === syncer.options.type,
-      ).length
-      const suffix = sameTypeSyncersNumber > 0 ? sameTypeSyncersNumber : ''
-      map[syncer.options.type + suffix] = syncer
+      // to make them more usable in the REPL.
+      // we are using Syncer constructor name as an object key.
+      map[syncer.options.constructor.name] = syncer
       return map
     }, {})
   }

@@ -7,7 +7,7 @@ import { fetchFromAtlassian } from './JiraUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { logger } from '@motion/logger'
 
-const log = logger('syncers:jira:issue')
+const log = logger('syncer:jira:issue')
 
 export class JiraIssueSync implements IntegrationSyncer {
   setting: SettingEntity
@@ -17,13 +17,12 @@ export class JiraIssueSync implements IntegrationSyncer {
   }
 
   async run(): Promise<void> {
-    try {
-      log('synchronizing jira issues')
-      const issues = await this.syncIssues(0)
-      log(`created ${issues.length} jira issues`, issues)
-    } catch (err) {
-      log('error in jira task sync', err.message, err.stack)
-    }
+    const issues = await this.syncIssues(0)
+    log(`created ${issues.length} jira issues`, issues)
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private async syncIssues(startAt: number): Promise<Bit[]> {

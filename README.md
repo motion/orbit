@@ -106,7 +106,7 @@ When you start the apps you'll see a Chromium instance pop up and hook into each
 In dev mode we expose `Logger` from @motion/logger so you can control logs:
 
 ```js
-Logger.list // list things that log
+Logger.namespaces // list things that log
 Logger.loud() // log everything, pass argument to narrow
 Logger.quiet() // quiet everything, argument to narrow
 ```
@@ -198,10 +198,40 @@ Desktop.sendMessage(App, App.messages.TOGGLE_SHOWN)
 App.sendMessage(Electron, Electron.messages.SOME_MESSAGE, 'hello world')
 ```
 
-### TypeORM Models from `@mcro/models`
 
-In dev mode we set up models to be globals so you can use them easily in REPL as well. So for now `Bit`, `Setting`, `Person`, and `Job`.
+### Syncers
+
+You can manually stop/run any syncers using REPL.
+
+To start any syncer you can use following command:
+
+```
+await Syncers.[SyncerName].start()
+```
+
+To stop any syncer you can use following command:
+
+```
+await Syncers.[SyncerName].stop()
+```
+
+To reset any syncer you can use following command:
+
+```
+await Syncers.[SyncerName].reset()
+```
+
+To apply same operations on multiple syncers you can use following pattern:
+
+```
+await Promise.all(Object.keys(Syncers).map(syncer => Syncers[syncer].start()))
+```
+
+### TypeORM Entities
+
+In dev mode we set up models to be globals so you can use them easily in REPL as well.
+You can use any entity from `app/orbit-desktop/src/entities` and use it in the REPL following way:
 
 ```js
-await Bit.find()
+await BitEntity.find()
 ```

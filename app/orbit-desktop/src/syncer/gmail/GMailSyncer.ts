@@ -1,5 +1,5 @@
 import { Bit, Person } from '@mcro/models'
-import { In } from 'typeorm'
+import { getManager, getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
@@ -35,6 +35,21 @@ export class GMailSyncer implements IntegrationSyncer {
 
   async reset(): Promise<void> {
 
+    // todo: this logic should be extracted into separate place where settings managed
+    // get entities for removal / updation
+    const bits = await getRepository(BitEntity).find({ settingId: this.setting.id })
+    const people = await getRepository(PersonEntity).find({ settingId: this.setting.id })
+
+    // remove entities
+    log(`removing ${bits.length} bits and ${people.length} people`, bits, people)
+    await getManager().remove([...bits, ...people])
+    log(`people were removed`)
+
+    // reset settings
+    this.setting.values.historyId = null
+    this.setting.values.lastSyncFilter = null
+    this.setting.values.lastSyncMax = null
+    await getRepository(SettingEntity).save(this.setting)
   }
 
   private async syncMail() {
@@ -144,7 +159,8 @@ export class GMailSyncer implements IntegrationSyncer {
           bitUpdatedAt: parseMailDate(
             thread.messages[thread.messages.length - 1],
           ),
-          webLink: `https://mail.google.com/mail/u/0/#inbox/` + thread.id
+          webLink: `https://mail.google.com/mail/u/0/#inbox/` + thread.id,
+          settingId: this.setting.id,
         })
       }),
     )
@@ -164,6 +180,7 @@ export class GMailSyncer implements IntegrationSyncer {
               integrationId: email,
               integration: 'gmail',
               name: name,
+              settingId: this.setting.id
             },
             { matching: ['identifier', 'integration'] },
           )

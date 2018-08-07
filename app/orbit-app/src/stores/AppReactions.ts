@@ -2,7 +2,6 @@ import { store, react } from '@mcro/black'
 import { App, Desktop, Electron } from '@mcro/stores'
 import orbitPosition from '../helpers/orbitPosition'
 import { ORBIT_WIDTH } from '@mcro/constants'
-// import debug from '@mcro/debug'
 // const log = debug('AppReactions')
 
 const appTarget = ({ offset = null, bounds = null } = {}) => {

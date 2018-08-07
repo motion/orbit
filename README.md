@@ -101,17 +101,17 @@ Bootstrap sort of checks a lot of stuff, but its really fast, so you can general
 
 When you start the apps you'll see a Chromium instance pop up and hook into each running app. Right now there are three: Desktop (Node), Electron, and App (Web). They share a few small helpers:
 
-### `debug` from @mcro/debug
+### `Logger` from @motion/logger
 
-In dev mode we expose `debug` from @mcro/debug so you can control logs:
+In dev mode we expose `Logger` from @motion/logger so you can control logs:
 
 ```js
-debug.list() // list things that log
-debug.loud() // log everything, pass argument to narrow
-debug.quiet() // quiet everything, argument to narrow
+Logger.list // list things that log
+Logger.loud() // log everything, pass argument to narrow
+Logger.quiet() // quiet everything, argument to narrow
 ```
 
-It may be helpful to run `debug.list()` and `debug.loud()` in each app just to get an idea of what's going on there.
+It may be helpful to run `Logger.list` and `Logger.loud()` in each app just to get an idea of what's going on there.
 
 ### `log` from @mcro/black
 

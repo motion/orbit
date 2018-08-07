@@ -100,13 +100,12 @@ function getSortedRows(
   let sortedRows = rows.sort((a, b) => {
     const aVal = a.columns[sortOrder.key].sortValue
     const bVal = b.columns[sortOrder.key].sortValue
-    const aType = typeof aVal
-    const bType = typeof bVal
-    if (aType === 'string' && bType === 'string') {
+    if (typeof aVal === 'string' && typeof bVal === 'string') {
       return aVal.localeCompare(bVal)
-    } else if (aType === 'number' && bType === 'number') {
+    } else if (typeof aVal === 'number' && typeof bVal === 'number') {
       return aVal - bVal
-    } else if (aType === 'function' && bType === 'function') {
+    } else if (typeof aVal === 'function' && typeof bVal === 'function') {
+      // @ts-ignore
       return aVal() - bVal()
     } else {
       throw new Error('Unsure how to sort this')
@@ -182,7 +181,7 @@ const filterRows = (
       let keep = false
 
       // check if this row's filterValue contains the current filter
-      if (filterValue != null && row.filterValue != null) {
+      if (!!filterValue && !!row.filterValue) {
         keep = row.filterValue.includes(filterValue)
       }
 
@@ -411,13 +410,13 @@ export default class Table extends PureComponent<TableProps, TableState> {
         selectedRow = sortedRows[index].key
       } else {
         // determine sibling row to select
-        const prevRowFinder = (row, index) =>
+        const prevRowFinder = (_, index) =>
           index < sortedRows.length - 1
             ? sortedRows[index + 1].key ===
               currentlyHighlightedRows[currentlyHighlightedRows.length - 1]
             : false
 
-        const nextRowFinder = (row, index) =>
+        const nextRowFinder = (_, index) =>
           index > 0
             ? sortedRows[index - 1].key ===
               currentlyHighlightedRows[currentlyHighlightedRows.length - 1]

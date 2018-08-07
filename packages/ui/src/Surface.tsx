@@ -13,7 +13,6 @@ import { HoverGlow } from './effects/HoverGlow'
 import { Glint } from './effects/Glint'
 import { Popover } from './Popover'
 import { object } from 'prop-types'
-import { Badge } from './Badge'
 import { View } from './blocks/View'
 import { propsToTextSize } from './helpers/propsToTextSize'
 
@@ -278,11 +277,6 @@ export class Surface extends React.Component<SurfaceProps> {
       >
         {glint ? (
           <Glint key={0} size={size} borderRadius={props.borderRadius} />
-        ) : null}
-        {badge ? (
-          <Badge {...badgeProps}>
-            {typeof badge !== 'boolean' ? badge : ''}
-          </Badge>
         ) : null}
         {icon && !stringIcon ? <div>{icon}</div> : null}
         {icon && stringIcon ? (

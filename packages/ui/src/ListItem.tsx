@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { Text } from './Text'
-import { Date } from './Date'
 import { SizedSurface } from './SizedSurface'
 
 export type ItemProps = {

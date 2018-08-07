@@ -5,7 +5,7 @@ import WS from './websocket'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
-import {logger} from '@motion/logger'
+import {logger} from '@mcro/logger'
 
 const log = logger('bridge')
 

@@ -7,7 +7,7 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { JiraPeopleResponse, JiraPerson } from './JiraPersonTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('syncer:jira:people')
 

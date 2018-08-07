@@ -1,4 +1,4 @@
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 import { GithubPeopleQueryResult } from '../../syncer/github/GithubTypes'
 import { GithubPeopleQuery } from './GithubQueries'
 import { fetchFromGitHub } from './GithubUtils'

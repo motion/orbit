@@ -1,6 +1,6 @@
 import { Bit } from '@mcro/models'
 import { flatten, omit } from 'lodash'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 import { GithubIssue } from '../../syncer/github/GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubIssueLoader } from './GithubIssueLoader'

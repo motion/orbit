@@ -2,6 +2,8 @@
   "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
     "composite": true,
-    "outDir": "_"
-  }
+    "outDir": "_",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"]
 }

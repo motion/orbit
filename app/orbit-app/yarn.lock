@@ -2230,6 +2230,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+key-event-to-string@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/key-event-to-string/-/key-event-to-string-1.2.0.tgz#6cf2ed0d246fe2ae3ff5e7751fd2d66764437bf3"
+
 keycode@^2.1.9:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"

@@ -1,5 +1,5 @@
 import * as Mobx from 'mobx'
-import {logger} from '@motion/logger'
+import {logger} from '@mcro/logger'
 import { MagicalObject, ReactionOptions } from './types'
 
 const PREFIX = `=>`

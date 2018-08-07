@@ -8,7 +8,7 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
 import { sequence } from '../../utils'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('syncer:github:people')
 

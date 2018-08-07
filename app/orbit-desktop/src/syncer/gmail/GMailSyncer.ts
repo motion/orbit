@@ -16,7 +16,7 @@ import {
 } from './GMailMessageParser'
 import { GmailThread } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('syncer:gmail')
 

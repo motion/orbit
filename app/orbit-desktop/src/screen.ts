@@ -2,7 +2,7 @@ import Oracle from '@mcro/oracle'
 import { debounce, last } from 'lodash'
 import { store, isEqual, react, on } from '@mcro/black'
 import { Desktop, Electron, Swift } from '@mcro/stores'
-import {logger} from '@motion/logger'
+import {logger} from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
 

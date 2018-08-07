@@ -22,7 +22,7 @@ import { Server as WebSocketServer } from 'ws'
 import connectModels from './helpers/connectModels'
 import { Entities } from './entities'
 import { Onboard } from './onboard/Onboard'
-import { Logger, logger } from '@motion/logger'
+import { Logger, logger } from '@mcro/logger'
 
 const log = logger('desktop')
 const hostile = promisifyAll(hostile_)
@@ -80,7 +80,7 @@ export class Root {
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    this.startSyncers()
+    // this.startSyncers()
     this.screen = new Screen()
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,

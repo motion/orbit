@@ -6,7 +6,7 @@ import { Server } from 'ws'
 import killPort from 'kill-port'
 // import monitorScreenProcess from './monitorProcess'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('oracle')
 

@@ -1,7 +1,7 @@
 import { Bit, Person } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import TurndownService from 'turndown'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { createOrUpdatePersonBit } from '../../repository'

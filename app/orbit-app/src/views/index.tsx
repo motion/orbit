@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { SearchStore } from '../stores/SearchStore'
 import { View, Row } from '@mcro/ui'
+import { Input } from './Input'
 
 export * from './RoundButton'
 
@@ -12,7 +13,9 @@ export const Table = view(View, {
   width: '100%',
 })
 
-export const TableCell = view(View, {})
+export const TableCell = view(View, {
+  padding: [4, 0],
+})
 
 export const FormTableRow = view(Row, {
   width: '100%',
@@ -30,25 +33,14 @@ export const FormTableValue = ({ children }) => (
 
 const Label = view('label', { padding: [0, 4], fontWeight: 400 })
 
-export const Input = view(View, {
-  position: 'relative',
-  flexFlow: 'row',
-  borderRadius: 5,
-  height: '100%',
-  width: '100%',
-  alignItems: 'center',
-  padding: [6, 12],
-  background: [255, 255, 255, 0.1],
-})
-Input.theme = ({ theme }) => ({
-  border: [1, theme.base.borderColor.desaturate(0.1)],
-  '&:focus-within': {
-    boxShadow: [[0, 0, 0, 2, theme.base.borderColor.alpha(0.5)]], // `0 0 0 2px rgba(255,255,255,0.2)`,
-  },
-})
-Input.defaultProps = {
-  tagName: 'input',
-}
+export const FormRow = ({ label, children }) => (
+  <FormTableRow>
+    <FormTableLabel>
+      <Label>{label}</Label>
+    </FormTableLabel>
+    <FormTableValue>{children}</FormTableValue>
+  </FormTableRow>
+)
 
 export const InputRow = ({ label, type = 'input', value, onChange }) => (
   <FormTableRow>

@@ -69,12 +69,15 @@ export class SearchFilterStore /* extends Store */ {
   }
 
   isActive = querySegment =>
-    querySegment.type &&
     !this.disabledFilters[querySegment.text.toLowerCase().trim()]
+
+  isntFilter = querySegment => !querySegment.type
+  isFilter = querySegment => !!querySegment.type
 
   // allows back in text segments that aren't filtered
   get activeQuery() {
     return this.parsedQuery
+      .filter(this.isntFilter)
       .filter(this.isActive)
       .map(x => x.text.trim())
       .join(' ')
@@ -103,7 +106,7 @@ export class SearchFilterStore /* extends Store */ {
 
   get queryFilters() {
     this.disabledFilters
-    return this.parsedQuery.filter(x => !!x.type).map(x => ({
+    return this.parsedQuery.filter(this.isFilter).map(x => ({
       ...x,
       active: this.isActive(x),
     }))

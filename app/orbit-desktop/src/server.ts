@@ -11,7 +11,7 @@ import Passport from 'passport'
 import killPort from 'kill-port'
 import Fs from 'fs'
 import Path from 'path'
-import {logger} from '@motion/logger'
+import {logger} from '@mcro/logger'
 
 const { SERVER_PORT } = Constants
 

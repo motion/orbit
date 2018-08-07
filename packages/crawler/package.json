@@ -10,7 +10,7 @@
     "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js"
   },
   "dependencies": {
-    "@motion/logger": "2.2.1",
+    "@mcro/logger": "2.2.1",
     "babel-polyfill": "7.0.0-beta.3",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "4.17.10",

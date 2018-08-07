@@ -1,6 +1,6 @@
 import { isEqual, throttle } from 'lodash'
 import * as Mobx from 'mobx'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('hoverSettler')
 

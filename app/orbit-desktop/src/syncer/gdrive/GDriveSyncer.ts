@@ -1,5 +1,5 @@
 import { Bit } from '@mcro/models'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'

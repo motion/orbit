@@ -4,7 +4,7 @@ import { URL } from 'url'
 import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import * as r2 from '@mcro/r2'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 

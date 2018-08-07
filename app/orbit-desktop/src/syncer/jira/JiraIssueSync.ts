@@ -5,7 +5,7 @@ import { IntegrationSyncer } from '../../syncer/core/IntegrationSyncer'
 import { JiraIssue, JiraIssueResponse } from './JiraIssueTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('syncer:jira:issue')
 

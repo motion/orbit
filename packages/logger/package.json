@@ -1,9 +1,8 @@
 {
-  "name": "@motion/logger",
+  "name": "@mcro/logger",
   "version": "2.2.1",
   "author": "Motion",
-  "license": "MIT",
-  "main": "_/index.js",
+  "main": "_/logger.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch --preserveWatchOutput"

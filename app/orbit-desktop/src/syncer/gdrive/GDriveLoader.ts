@@ -1,4 +1,4 @@
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 import { sequence } from '../../utils'
 import {
   googleDriveFileCommentQuery,

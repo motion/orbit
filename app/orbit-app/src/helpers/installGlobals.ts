@@ -9,7 +9,7 @@ import { render } from '../index'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
 import * as Repositories from '../repositories'
-import {Logger} from '@motion/logger'
+import {Logger} from '@mcro/logger'
 
 // add require('') to window for easy debugging
 // for example require('lodash')

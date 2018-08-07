@@ -3,7 +3,7 @@ import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
 import * as Constants from '../constants'
-import {logger} from '@motion/logger'
+import {logger} from '@mcro/logger'
 
 const log = logger('GeneralSettingManager')
 

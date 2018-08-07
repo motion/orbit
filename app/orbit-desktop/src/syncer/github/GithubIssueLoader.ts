@@ -1,7 +1,7 @@
 import { GithubIssueQueryResult } from '../../syncer/github/GithubTypes'
 import { GithubIssueQuery } from './GithubQueries'
 import { fetchFromGitHub } from './GithubUtils'
-import {logger} from '@motion/logger'
+import {logger} from '@mcro/logger'
 
 const log = logger('syncer:github:issues')
 

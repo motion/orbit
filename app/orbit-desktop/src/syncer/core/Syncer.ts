@@ -1,7 +1,7 @@
 import { SettingEntity } from '../../entities/SettingEntity'
 import { SyncerOptions } from './IntegrationSyncer'
 import Timer = NodeJS.Timer
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('syncer')
 

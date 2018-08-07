@@ -11,6 +11,7 @@ import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
+import { Person } from '@mcro/models'
 
 type Props = {
   store?: OrbitDirectoryStore
@@ -28,6 +29,7 @@ class OrbitDirectoryStore {
       if (!isActive) {
         throw react.cancel
       }
+      console.log('IS ACTIVE SETTING')
       await sleep(40)
       const getResults = () => this.results
       // @ts-ignore
@@ -50,11 +52,18 @@ class OrbitDirectoryStore {
     return query.slice(prefix ? 1 : 0)
   }
 
-  get people() {
-    return Helpers.fuzzy(this.peopleQuery, this.results, {
-      key: 'name',
-    })
-  }
+  people: Person[] = react(
+    () => [this.peopleQuery, this.isActive],
+    ([query, isActive], { state }) => {
+      if (!isActive && state.hasResolvedOnce) {
+        throw react.cancel
+      }
+      return Helpers.fuzzy(query, this.results, {
+        key: 'name',
+      })
+    },
+    { immediate: true, defaultValue: [] },
+  )
 
   // poll every few seconds while active
   results = modelQueryReaction(
@@ -75,11 +84,37 @@ const decorator = compose(
 export const OrbitDirectory = decorator((props: Props) => {
   return (
     <SubPane name="directory" fadeBottom>
-      <SubTitle>People</SubTitle>
       <OrbitDirectoryInner {...props} />
     </SubPane>
   )
 })
+
+const createSection = (people: Person[], letter, offset, total) => {
+  return (
+    <React.Fragment key={letter}>
+      <SubTitle>{letter}</SubTitle>
+      <Masonry>
+        {people.map((bit, index) => (
+          <OrbitCard
+            key={bit.id}
+            pane="docked"
+            subPane="directory"
+            index={offset + index}
+            // @ts-ignore
+            bit={bit}
+            total={total}
+            hide={{
+              icon: true,
+            }}
+            style={{
+              height: 77,
+            }}
+          />
+        ))}
+      </Masonry>
+    </React.Fragment>
+  )
+}
 
 const OrbitDirectoryInner = view(({ store }: Props) => {
   const total = store.results.length
@@ -87,21 +122,27 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
     return null
   }
   console.log('RENDER PRECIOUS STUFF')
-  return (
-    <Masonry>
-      {store.people.map((bit, index) => (
-        <OrbitCard
-          pane="docked"
-          subPane="directory"
-          key={bit.id}
-          index={index}
-          bit={bit}
-          total={total}
-          hide={{
-            icon: true,
-          }}
-        />
-      ))}
-    </Masonry>
-  )
+  const byLetter = {}
+  for (const person of store.people) {
+    const initial = person.name[0].toLowerCase()
+    byLetter[initial] = byLetter[initial] || []
+    byLetter[initial].push(person)
+  }
+  const sections = []
+  let offset = 0
+  const letters = Object.keys(byLetter)
+  letters.sort((a, b) => a.localeCompare(b))
+  for (const letter of letters) {
+    const nextPeople = byLetter[letter]
+    sections.push(
+      createSection(
+        nextPeople,
+        letter.toUpperCase(),
+        offset,
+        store.people.length,
+      ),
+    )
+    offset += nextPeople.length
+  }
+  return sections
 })

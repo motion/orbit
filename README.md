@@ -101,9 +101,9 @@ Bootstrap sort of checks a lot of stuff, but its really fast, so you can general
 
 When you start the apps you'll see a Chromium instance pop up and hook into each running app. Right now there are three: Desktop (Node), Electron, and App (Web). They share a few small helpers:
 
-### `Logger` from @motion/logger
+### `Logger` from @mcro/logger
 
-In dev mode we expose `Logger` from @motion/logger so you can control logs:
+In dev mode we expose `Logger` from @mcro/logger so you can control logs:
 
 ```js
 Logger.namespaces // list things that log
@@ -197,7 +197,6 @@ Desktop.sendMessage(App, App.messages.TOGGLE_SHOWN)
 // in App
 App.sendMessage(Electron, Electron.messages.SOME_MESSAGE, 'hello world')
 ```
-
 
 ### Syncers
 

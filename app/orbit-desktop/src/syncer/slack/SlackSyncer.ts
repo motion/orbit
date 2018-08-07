@@ -10,7 +10,7 @@ import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('syncer:slack')
 

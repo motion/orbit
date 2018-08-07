@@ -12,6 +12,42 @@ import { SearchStore } from '../../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../../repositories/modelQueryReaction'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { generalSettingQuery } from '../../../../repositories/settingQueries'
+import { ShortcutCapture } from '../../../../views/ShortcutCapture'
+import { Input } from '../../../../views/Input'
+
+const eventCharsToNiceChars = {
+  alt: '⌥',
+  cmd: '⌘',
+  ctrl: '⌃',
+}
+
+const niceToElectron = {
+  '⌥': 'Option',
+  '⌘': 'CommmandOrCtrl',
+  '⌃': 'Ctrl',
+}
+
+const electronToNice = {
+  Option: '⌥',
+  CommmandOrCtrl: '⌘',
+  Ctrl: '⌃',
+}
+
+const niceCharsToElectronChars = (charString: string) => {
+  let final = charString
+  for (const char in niceToElectron) {
+    final = final.replace(char, niceToElectron[char])
+  }
+  return final
+}
+
+const electronToNiceChars = (charString: string) => {
+  let final = charString
+  for (const char in electronToNice) {
+    final = final.replace(char, electronToNice[char])
+  }
+  return final
+}
 
 type Props = {
   name: string
@@ -49,7 +85,13 @@ class OrbitSettingsStore {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  generalSetting = modelQueryReaction(generalSettingQuery)
+  _generalSettingUpdate = Date.now()
+  _generalSetting = modelQueryReaction(generalSettingQuery)
+
+  get generalSetting() {
+    this._generalSettingUpdate
+    return this._generalSetting
+  }
 
   get allResults() {
     return [...this.integrationSettings]
@@ -95,9 +137,21 @@ class OrbitSettingsStore {
 
   generalChange = prop => val => {
     console.log('handleChange', prop, val)
-    this.props.setting.values[prop] = val
-    // this.props.setting.save()
-    SettingRepository.save(this.props.setting)
+    this.generalSetting.values[prop] = val
+    SettingRepository.save(this.generalSetting)
+    this._generalSettingUpdate = Date.now()
+  }
+
+  shortcutChange = val => {
+    this.generalChange('openShortcut')(niceCharsToElectronChars(val))
+  }
+
+  focusShortcut = () => {
+    App.setOrbitState({ shortcutInputFocused: true })
+  }
+
+  blurShortcut = () => {
+    App.setOrbitState({ shortcutInputFocused: false })
   }
 }
 
@@ -124,11 +178,21 @@ export class OrbitSettings extends React.Component<Props> {
             >
               Start on Login
             </Views.CheckBoxRow>
-            <Views.InputRow
-              label="Open shortcut"
-              value={store.generalSetting.values.openShortcut}
-              onChange={store.generalChange('openShortcut')}
-            />
+            <Views.FormRow label="Open shortcut">
+              <ShortcutCapture
+                defaultValue={electronToNiceChars(
+                  store.generalSetting.values.openShortcut,
+                )}
+                onUpdate={store.shortcutChange}
+                modifierChars={eventCharsToNiceChars}
+                element={
+                  <Input
+                    onFocus={store.focusShortcut}
+                    onBlur={store.blurShortcut}
+                  />
+                }
+              />
+            </Views.FormRow>
           </Section>
         )}
         {!!store.integrationSettings.length && (
@@ -171,6 +235,7 @@ export class OrbitSettings extends React.Component<Props> {
                   }}
                   iconProps={{
                     size: 18,
+                    top: 13,
                   }}
                   titleProps={{
                     size: 1.1,

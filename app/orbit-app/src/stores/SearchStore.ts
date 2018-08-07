@@ -11,7 +11,7 @@ import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { flatten } from 'lodash'
 import { MarkType } from './nlpStore/types'
-import { logger } from '@motion/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('searchStore')
 const TYPE_DEBOUNCE = 200
@@ -234,10 +234,15 @@ export class SearchStore /* extends Store */ {
           }
 
           const andConditions: any = {}
-          if (startDate) andConditions.bitCreatedAt = { $moreThan: startDate }
-          if (endDate) andConditions.bitCreatedAt = { $lessThan: endDate }
-          if (integrationFilters && integrationFilters.length)
+          if (startDate) {
+            andConditions.bitCreatedAt = { $moreThan: startDate }
+          }
+          if (endDate) {
+            andConditions.bitCreatedAt = { $lessThan: endDate }
+          }
+          if (integrationFilters && integrationFilters.length) {
             andConditions.integration = { $in: integrationFilters }
+          }
 
           if (activeQuery.length) {
             const likeString = `%${activeQuery.replace(/\s+/g, '%')}%`
@@ -272,14 +277,14 @@ export class SearchStore /* extends Store */ {
 
           if (peopleFilters.length) {
             // essentially, find at least one person
-            peopleFilters.forEach(name => {
+            for (const name of peopleFilters) {
               findOptions.where.push({
                 ...andConditions,
                 person: {
                   name: { $like: `%${name}%` },
                 },
               })
-            })
+            }
           }
 
           if (!findOptions.where.length) {

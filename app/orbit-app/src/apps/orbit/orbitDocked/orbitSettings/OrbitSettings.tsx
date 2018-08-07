@@ -12,6 +12,7 @@ import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettings
 import { SearchStore } from '../../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../../repositories/modelQueryReaction'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
+import { generalSettingQuery } from '../../../../repositories/settingQueries'
 
 type Props = {
   name: string
@@ -49,47 +50,10 @@ class OrbitSettingsStore {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  generalSettings = react(
-    async () => {
-      const settingQuery = [
-        { type: 'general', category: 'general' },
-        { type: 'account', category: 'general' },
-      ]
-
-      // don't like the fact that this is happening here. looks like backend should be the only place were this code should be
-      const settings = await Promise.all(
-        settingQuery.map(async settingQuery => {
-          const setting = await SettingRepository.findOne({
-            where: settingQuery,
-          })
-          if (setting) return setting
-
-          return SettingRepository.save(settingQuery as Setting) // todo: make sure save really returns us
-        }),
-      )
-
-      return [
-        {
-          id: settings[0].id,
-          type: 'setting',
-          title: 'General',
-          icon: 'gear',
-          subtitle: 'Shortcuts, login and sync',
-        },
-        {
-          id: settings[1].id,
-          type: 'setting',
-          title: 'Account',
-          icon: 'users_single',
-          subtitle: 'Login, invite your team',
-        },
-      ]
-    },
-    { defaultValue: [] },
-  )
+  generalSetting = modelQueryReaction(generalSettingQuery)
 
   get allResults() {
-    return [...this.generalSettings, ...this.integrationSettings]
+    return [...this.integrationSettings]
   }
 
   IntegrationCard = props => (
@@ -129,7 +93,18 @@ class OrbitSettingsStore {
       setting => setting.type === result.id,
     )
   }
+
+  generalChange = prop => val => {
+    console.log('handleChange', prop, val)
+    this.props.setting.values[prop] = val
+    // this.props.setting.save()
+    SettingRepository.save(this.props.setting)
+  }
 }
+
+const Section = view({
+  padding: [10, 0],
+})
 
 @view.attach('searchStore', 'paneManagerStore', 'integrationSettingsStore')
 @view.attach({
@@ -142,18 +117,21 @@ export class OrbitSettings extends React.Component<Props> {
     return (
       <SubPane name={name} fadeBottom>
         <Views.SubTitle>Settings</Views.SubTitle>
-        <Masonry>
-          {store.generalSettings.map((result, index) => (
-            <store.IntegrationCard
-              key={`${result.id}`}
-              result={result}
-              index={index}
-              subtitle={result.subtitle}
-              isActive
+        {!!store.generalSetting && (
+          <Section>
+            <Views.CheckBoxRow
+              checked={store.generalSetting.values.autoLaunch}
+              onChange={store.generalChange('autoLaunch')}
+            >
+              Start on Login
+            </Views.CheckBoxRow>
+            <Views.InputRow
+              label="Open shortcut"
+              value={store.generalSetting.values.openShortcut}
+              onChange={store.generalChange('openShortcut')}
             />
-          ))}
-        </Masonry>
-        <Views.VertSpace />
+          </Section>
+        )}
         {!!store.integrationSettings.length && (
           <>
             <Views.SubTitle>Active Integrations</Views.SubTitle>
@@ -162,7 +140,7 @@ export class OrbitSettings extends React.Component<Props> {
                 <store.IntegrationCard
                   key={`${setting.id}`}
                   result={integrationSettingsStore.settingToResult(setting)}
-                  index={index + store.generalSettings.length}
+                  index={index}
                   setting={setting}
                   isActive
                 >

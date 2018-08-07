@@ -2,9 +2,9 @@ import Passport from 'passport'
 import Refresh from 'passport-oauth2-refresh'
 import { Desktop, App } from '@mcro/stores'
 import { SettingEntity } from '../entities/SettingEntity'
-import { API_URL } from '../constants'
 import { closeChromeTabWithUrlStarting } from '../helpers/injections'
 import { OauthValues } from './oauthTypes'
+import { getConfig } from '../config'
 
 export default class Oauth {
   findInfo: Function
@@ -93,7 +93,7 @@ export default class Oauth {
 
   finishOauth = (type: string, values: OauthValues) => {
     // close window
-    closeChromeTabWithUrlStarting(`${API_URL}/auth/${type}`)
+    closeChromeTabWithUrlStarting(`${getConfig().server.url}/auth/${type}`)
     // create setting
     this.createSetting(type, values)
     // show Orbit again

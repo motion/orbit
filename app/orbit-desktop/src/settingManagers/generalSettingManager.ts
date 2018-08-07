@@ -2,9 +2,10 @@ import { store } from '@mcro/black'
 import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
-import * as Constants from '../constants'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
+import { getConfig } from '../config'
 
+const Config = getConfig()
 const log = logger('GeneralSettingManager')
 
 const generalSettingQuery = { type: 'general', category: 'general' }
@@ -13,7 +14,7 @@ const generalSettingQuery = { type: 'general', category: 'general' }
 @store
 export class GeneralSettingManager {
   constructor() {
-    if (Constants.IS_PROD) {
+    if (Config.env.prod) {
       log(
         'Note, autolaunch froze before, so check if it freezes after this log...',
       )
@@ -30,7 +31,7 @@ export class GeneralSettingManager {
   }
 
   autoLaunch =
-    Constants.IS_PROD &&
+    Config.env.prod &&
     new AutoLaunch({
       name: 'Orbit',
     })

@@ -50,24 +50,18 @@ Later we unlock p2p sync:
 
 Aug 7th:
 
+- SHOULD have auto-port finding not hardcoded
+- SHOULD one command to push update
+- SHOULD show banner, update and restart once update is pushed
+- General settings go directly in settings pane
+- SHOULD have general setting for shortuct
+- SHOULD have setting for start on login
+- SHOULD have simple query for mixed recent things by default to start
+- SHOULD handle screen changes/resizes
+
 - Masonry.fixedHeight mode for Directory/Settings cards (no double render)
 - react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
-
-- Build to .app
-  - SHOULD have auto-port finding not hardcoded
-  - SHOULD one command to push update
-  - SHOULD show banner, update and restart once update is pushed
-- Settings panes all fully working
-  - General settings go directly in settings pane
-  - SHOULD have general setting for shortuct
-  - SHOULD have setting for start on login
-  - SHOULD have Orbit area:
-    - SHOULD allow adding a new Orbit team in UI with peek input + add button
-- Minor bugs
-  - SHOULD have simple query for mixed recent things by default to start
-  - SHOULD handle screen changes/resizes
-  - SHOULD have open keyboard shortcuts work
-  - fix horizontal scroller to cut off nicer
+- fix horizontal scroller to cut off nicer
 
 Aug 14th:
 

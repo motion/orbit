@@ -7,7 +7,7 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [
+  , "../orbit-desktop/src/config.ts""references": [
     { "path": "../stores" },
     { "path": "../../packages/black" },
     { "path": "../../packages/constants" },

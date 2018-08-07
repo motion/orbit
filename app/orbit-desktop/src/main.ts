@@ -1,12 +1,15 @@
 import 'isomorphic-fetch'
 import * as Path from 'path'
-import { setConfig } from './getConfig'
+import { setConfig } from './config'
 
 export async function main({ port }) {
   /*
    *  Set config before requiring app!
    */
   setConfig({
+    env: {
+      prod: process.env.NODE_ENV === 'production',
+    },
     server: {
       url: `http://localhost:${port}`,
       host: 'localhost',

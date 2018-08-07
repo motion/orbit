@@ -41,7 +41,7 @@
     "electron-context-menu": "^0.9.1",
     "electron-debug": "^1.5.0",
     "electron-simple-updater": "^1.2.3",
-    "esm": "3.0.37",
+    "execa": "0.10.0",
     "iohook": "0.2.0",
     "kill-port": "^1.1.0",
     "lodash": "4.17.10",

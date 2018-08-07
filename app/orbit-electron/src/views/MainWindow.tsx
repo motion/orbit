@@ -1,10 +1,10 @@
 import * as React from 'react'
-import * as Constants from '../constants'
 import { on, view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
+import { getConfig } from '../config'
 
 class MainStore {
   get mouseInActiveArea() {
@@ -68,7 +68,7 @@ export class MainWindow extends React.Component<{
         alwaysOnTop
         ignoreMouseEvents={!store.mouseInActiveArea}
         ref={ref => ref && onRef(ref.window)}
-        file={Constants.API_URL}
+        file={getConfig().server.url}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}
@@ -77,7 +77,16 @@ export class MainWindow extends React.Component<{
         showDevTools={Electron.state.showDevTools.app}
         transparent
         background="#00000000"
-        webPreferences={Constants.WEB_PREFERENCES}
+        webPreferences={{
+          nativeWindowOpen: true,
+          experimentalFeatures: true,
+          transparentVisuals: true,
+          allowRunningInsecureContent: false,
+          webSecurity: false,
+          // plugins: true,
+          // scrollBounce: true,
+          // offscreen: true,
+        }}
         position={this.state.position}
         size={Electron.state.screenSize}
         onMove={this.handleMove}

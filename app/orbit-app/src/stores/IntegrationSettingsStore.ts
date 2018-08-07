@@ -1,12 +1,12 @@
-import { modelQueryReaction } from '@mcro/helpers'
 import { Setting } from '@mcro/models'
 import { SettingRepository } from '../repositories'
+import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
 export class IntegrationSettingsStore {
   settingsList?: Setting[] = modelQueryReaction(() =>
     SettingRepository.find({
       where: {
-        token: { $not: "" },
+        token: { $not: '' },
       },
     }),
   )

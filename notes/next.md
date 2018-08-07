@@ -1,51 +1,25 @@
-# Umed week of Aug 6th
+# Rate limit workaround
 
-## Main Goals
+1.  We need a table that tracks the rate limits for each token and understands when they hit limits and writes to it.
 
-- Have people profile queries ready
-- Have syncing set up for rate limits
+- Eventually this will be move into a DHT to do our magical rate limit workaround
 
-Other stuff:
+2.  We should auto-select popular things to sync in each setting once they are created and store those preferences into Settings, requires integration with frontend
 
-- Discuss handling mutations and updating in UI (Observable Ids work)
-- Gmail scan emails based on slack and other emails
-- Person:
-  1.  Have a query that returns recent items across integrations under person profile
-  2.  Person permalink from each integration
-  - Slack: `slack://user?team=${setting.values.oauth.info.team.id}&id=${person.data.id}`
-  - Gmail: `mailto:person@email.com`
-  - rest not important for now...
-  3.  Have a query that returns the "places" they spend time in most
-- Small: Person higher res image from slack
-- Small: simple "Delete integration" endpoint, deletes bits associated
-- Small: syncers persist last sync state so on restarts it doesn't re-run often
-- Small: syncers throttle various syncs so they don't all run at once (cpu)
-- Small: Duplicate types for models... way to resolve?
+1.  For slack that is rooms they talk in often, we already manage this so it's just selecting them on creation
+1.  For drive thats just recently viewed and recently shared files
+    1.  There's a concept of "team folders" i need to investigate that more
+1.  For gmail its:
+    1.  recent 50k, should see if we can query their Starred or Primary inbox and if so just do that
+    2.  whitelisted addresses based on any Person emails we find!
+    - So if Slack has natewienert@gmail.com then sync last 10k natewienert@gmail.com emails for now
+1.  Confluence/Jira don't need any special rules just sync all
 
-## Main goals, broken down...
-
-- Discuss rate limit workaround method
-
-  1.  We need a table that tracks the rate limits for each token and understands when they hit limits and writes to it.
-
-  - Eventually this will be move into a DHT to do our magical rate limit workaround
-
-  2.  We should auto-select popular things to sync in each setting once they are created and store those preferences into Settings, requires integration with frontend
-
-  1.  For slack that is rooms they talk in often, we already manage this so it's just selecting them on creation
-  1.  For drive thats just recently viewed and recently shared files
-      1.  There's a concept of "team folders" i need to investigate that more
-  1.  For gmail its:
-      1.  recent 50k, should see if we can query their Starred or Primary inbox and if so just do that
-      2.  whitelisted addresses based on any Person emails we find!
-      - So if Slack has natewienert@gmail.com then sync last 10k natewienert@gmail.com emails for now
-  1.  Confluence/Jira don't need any special rules just sync all
-
-* Discuss gdrive search-drives-sync strategy
+- Discuss gdrive search-drives-sync strategy
 
 GDrive is the hardest one because extreme rate limits but also easiest to solve with the DHT. So we're going to start building up to DHT by simulating with a local sqlite table.
 
-DHT:
+# p2p syncing / DHT
 
 - peers: (bit.identifier: string => Peer[])
   - "who has which bits synced"
@@ -77,31 +51,25 @@ Later we unlock p2p sync:
 Aug 7th:
 
 - Auto onboarding flow/history-scan/notifications/tray-guide
-  - SHOULD show in Tray (Setting up Orbit...)
-  - SHOULD show ORBIT saying "hello", and "start auto-setup"
-  - SHOULD scan history and open sites in order based on matches
-  - SHOULD show integration in orbit as it asks for integration
   - SHOULD show "proxy active" and privacy message during final step of integratino
   - SHOULD show nice progress menu of integrations
   - SHOULD show other options at the end
   - SHOULD show scan status during setup
 - Build to .app
-  - SHOULD one command build to an .app that works
   - SHOULD have auto-port finding not hardcoded
   - SHOULD one command to push update
   - SHOULD show banner, update and restart once update is pushed
-- Peek fixes
-  - fix horizontal scroller to cut off nicer
 - Settings panes all fully working
+  - General settings go directly in settings pane
   - SHOULD have general setting for shortuct
   - SHOULD have setting for start on login
   - SHOULD have Orbit area:
     - SHOULD allow adding a new Orbit team in UI with peek input + add button
 - Minor bugs
-  - SHOULD fix shortcuts by having electron register globalShortcuts only when focused
   - SHOULD have simple query for mixed recent things by default to start
   - SHOULD handle screen changes/resizes
   - SHOULD have open keyboard shortcuts work
+  - fix horizontal scroller to cut off nicer
 
 Aug 14th:
 

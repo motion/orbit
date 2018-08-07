@@ -12,9 +12,6 @@
     "@mcro/decor": "^2.2.1",
     "event-kit": "^2.5.0"
   },
-  "devDependencies": {
-    "@types/event-kit": "2.4.0"
-  },
   "publishConfig": {
     "registry": "http://localhost:4343"
   }

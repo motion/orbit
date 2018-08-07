@@ -20,6 +20,7 @@ import { propsToTextSize } from './helpers/propsToTextSize'
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
 export type SurfaceProps = CSSPropertySet & {
+  borderRadius?: number
   active?: boolean
   after?: React.ReactNode
   background?: Color

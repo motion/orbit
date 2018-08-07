@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { modelQueryReaction } from '@mcro/helpers'
 import { OrbitIcon } from '../../../views/OrbitIcon'
 import { BitRepository } from '../../../repositories'
 import { SubTitle, RoundButton } from '../../../views'
@@ -9,6 +8,7 @@ import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { Carousel } from '../../../components/Carousel'
 import { App } from '@mcro/stores'
+import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />

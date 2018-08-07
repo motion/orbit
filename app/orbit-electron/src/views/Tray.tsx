@@ -19,9 +19,7 @@ export default class TrayEl extends React.Component {
           'icons',
           'orbitTemplate.png',
         )}
-        title={
-          Desktop.state.paused ? 'Paused' : App.state.contextMessage || 'Orbit'
-        }
+        title={App.state.contextMessage}
       />
     )
   }

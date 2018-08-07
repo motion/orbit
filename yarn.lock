@@ -1344,9 +1344,45 @@
   version "0.7.0"
   resolved "https://registry.npmjs.org/@sindresorhus%2fis/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
+"@types/event-kit@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@types/event-kit/-/event-kit-2.4.0.tgz#d470e1e9b5ee1ad574ca4efc65093aa116277ff4"
+
+"@types/events@*":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
+
+"@types/lodash@4.14.115":
+  version "4.14.115"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.115.tgz#54d171b2ce12c058742443b5f6754760f701b8f9"
+
 "@types/node@*":
   version "10.3.2"
   resolved "https://registry.npmjs.org/@types%2fnode/-/node-10.3.2.tgz#3840ec6c12556fdda6e0e6d036df853101d732a4"
+
+"@types/react-dom@16.0.6":
+  version "16.0.6"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
+  dependencies:
+    "@types/node" "*"
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@16.4.7":
+  version "16.4.7"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.7.tgz#f33f6d759a7e1833befa15224d68942d178a5a3f"
+  dependencies:
+    csstype "^2.2.0"
+
+"@types/reconnectingwebsocket@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/reconnectingwebsocket/-/reconnectingwebsocket-1.0.1.tgz#56c6f19136ba265c16e7b2dc1bfbb97960a869d5"
+
+"@types/ws@5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-5.1.2.tgz#f02d3b1cd46db7686734f3ce83bdf46c49decd64"
+  dependencies:
+    "@types/events" "*"
+    "@types/node" "*"
 
 "@webassemblyjs/ast@1.5.13":
   version "1.5.13"
@@ -3300,6 +3336,10 @@ crypto-browserify@^3.11.0:
 css-initials@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/css-initials/-/css-initials-0.2.0.tgz#14c225bd8656255a6baee07231ef82fa55aacaa3"
+
+csstype@^2.2.0:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.5.6.tgz#2ae1db2319642d8b80a668d2d025c6196071e788"
 
 currently-unhandled@^0.4.1:
   version "0.4.1"

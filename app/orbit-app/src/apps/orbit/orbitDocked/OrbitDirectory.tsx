@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { App } from '@mcro/stores'
 import { view, react } from '@mcro/black'
-import { modelQueryReaction, compose } from '@mcro/helpers'
+import { compose } from '@mcro/helpers'
 import { PersonRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
@@ -10,6 +10,7 @@ import { SubTitle } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../../../stores/SearchStore'
+import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 
 type Props = {
   store?: OrbitDirectoryStore

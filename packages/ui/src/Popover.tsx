@@ -226,9 +226,8 @@ export class Popover extends React.PureComponent<PopoverProps> {
   // also, nicely lets us define get fn helpers
 
   static getDerivedStateFromProps(props, state) {
-    console.log('compare')
     if (!isEqual(omit(props, ['children']), omit(state.props, ['children']))) {
-      console.log('show me')
+      console.log('measuring popover', props, state.props)
       return {
         setPosition: true,
         props,

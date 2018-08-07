@@ -3,12 +3,12 @@
 
 
 "@types/node@^7.0.62":
-  version "7.0.68"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.68.tgz#f468d9a4407259faa64b472f64d795ff85d51a77"
+  version "7.0.69"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.69.tgz#709629340708ec0e1845559bf5c0c88d26d31dca"
 
 "@types/node@^8.0.24":
-  version "8.10.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.23.tgz#e5ccfdafff42af5397c29669b6d7d65f7d629a00"
+  version "8.10.24"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.24.tgz#302a8f0c00bd1bf364471b6687258617c5d410fc"
 
 "@verdaccio/file-locking@0.0.7", "@verdaccio/file-locking@^0.0.7":
   version "0.0.7"
@@ -193,8 +193,8 @@ author-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/author-regex/-/author-regex-1.0.0.tgz#d08885be6b9bbf9439fe087c76287245f0a81450"
 
 aws-sdk@^2.38.0:
-  version "2.286.2"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.286.2.tgz#0f35a1b3158049c015161ed83872a38305a7908a"
+  version "2.287.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.287.0.tgz#1f43b4feabde00d8d645fcdfd679c435763dc187"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -215,8 +215,8 @@ aws-sign2@~0.7.0:
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
 
 aws4@^1.2.1, aws4@^1.6.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.7.0.tgz#d4d0e9b9dbfca77bf08eeb0a8a471550fe39e289"
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
 
 balanced-match@^1.0.0:
   version "1.0.0"
@@ -2116,8 +2116,8 @@ path-key@^2.0.0:
   resolved "https://registry.yarnpkg.com/path-key/-/path-key-2.0.1.tgz#411cadb574c5a140d3a4b1910d40d80cc9f40b40"
 
 path-parse@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.5.tgz#3c1adf871ea9cd6c9431b6ea2bd74a0ff055c4c1"
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
 
 path-to-regexp@0.1.7:
   version "0.1.7"
@@ -2963,8 +2963,8 @@ uuid@^3.0.0, uuid@^3.1.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
 validate-npm-package-license@^3.0.1:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.3.tgz#81643bcbef1bdfecd4623793dc4648948ba98338"
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.4.tgz#fc91f6b9c7ba15c857f4cb2c5defeec39d4f410a"
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"

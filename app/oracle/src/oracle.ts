@@ -284,7 +284,7 @@ export default class Oracle {
       // coming from swift
       socket.on('message', str => {
         try {
-          const { action, value, state } = JSON.parse(str)
+          const { action, value, state } = JSON.parse(str.toString())
           if (state) {
             this.setState(state)
           }
@@ -309,6 +309,7 @@ export default class Oracle {
         console.log('socket.onerror', err)
       }
       socket.on('error', err => {
+        // @ts-ignore
         if (err.code !== 'ECONNRESET') {
           throw err
         }

@@ -7,6 +7,7 @@ import { AppStore } from '../stores/AppStore'
 import * as UI from '@mcro/ui'
 import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
 import { SearchStore } from '../stores/SearchStore'
+import { MainShortcuts } from './MainShortcuts'
 
 const Main = view(UI.Col, {
   // background: [0, 0, 0, 0.1],
@@ -32,11 +33,13 @@ export class MainPage extends React.Component<{
 }> {
   render() {
     return (
-      <Main>
-        {/* <HighlightsPage /> */}
-        <Orbit />
-        <Peek />
-      </Main>
+      <MainShortcuts>
+        <Main>
+          {/* <HighlightsPage /> */}
+          <Orbit />
+          <Peek />
+        </Main>
+      </MainShortcuts>
     )
   }
 }

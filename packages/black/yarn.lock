@@ -2,31 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/event-kit@2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@types/event-kit/-/event-kit-2.4.0.tgz#d470e1e9b5ee1ad574ca4efc65093aa116277ff4"
-
-"@types/node@*":
-  version "10.5.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.6.tgz#1640f021dd0eaf12e731e54198c12ad2e020dc8e"
-
-"@types/react-dom@^16.0.6":
-  version "16.0.6"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
-  dependencies:
-    "@types/node" "*"
-    "@types/react" "*"
-
-"@types/react@*", "@types/react@16.4.7":
-  version "16.4.7"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.7.tgz#f33f6d759a7e1833befa15224d68942d178a5a3f"
-  dependencies:
-    csstype "^2.2.0"
-
-csstype@^2.2.0:
-  version "2.5.6"
-  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.5.6.tgz#2ae1db2319642d8b80a668d2d025c6196071e788"
-
 dom-walk@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"

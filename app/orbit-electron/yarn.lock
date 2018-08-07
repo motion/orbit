@@ -2,30 +2,13 @@
 # yarn lockfile v1
 
 
-"@types/node@*":
-  version "10.5.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.6.tgz#1640f021dd0eaf12e731e54198c12ad2e020dc8e"
-
 "@types/node@^7.0.62":
-  version "7.0.68"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.68.tgz#f468d9a4407259faa64b472f64d795ff85d51a77"
+  version "7.0.69"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.69.tgz#709629340708ec0e1845559bf5c0c88d26d31dca"
 
 "@types/node@^8.0.24":
-  version "8.10.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.23.tgz#e5ccfdafff42af5397c29669b6d7d65f7d629a00"
-
-"@types/react-dom@16.0.6":
-  version "16.0.6"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
-  dependencies:
-    "@types/node" "*"
-    "@types/react" "*"
-
-"@types/react@*", "@types/react@16.4.7":
-  version "16.4.7"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.7.tgz#f33f6d759a7e1833befa15224d68942d178a5a3f"
-  dependencies:
-    csstype "^2.2.0"
+  version "8.10.24"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.24.tgz#302a8f0c00bd1bf364471b6687258617c5d410fc"
 
 abbrev@1:
   version "1.1.1"
@@ -152,8 +135,8 @@ aws-sign2@~0.7.0:
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
 
 aws4@^1.2.1, aws4@^1.6.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.7.0.tgz#d4d0e9b9dbfca77bf08eeb0a8a471550fe39e289"
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
 
 babel-polyfill@7.0.0-beta.3:
   version "7.0.0-beta.3"
@@ -505,10 +488,6 @@ cryptiles@2.x.x:
 crypto-random-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
-
-csstype@^2.2.0:
-  version "2.5.6"
-  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.5.6.tgz#2ae1db2319642d8b80a668d2d025c6196071e788"
 
 currently-unhandled@^0.4.1:
   version "0.4.1"

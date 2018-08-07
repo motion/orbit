@@ -52,7 +52,11 @@ export class WebSocketProvider {
     }
     return new Promise((ok, fail) => {
       try {
-        this.websocket.send(JSON.stringify(query))
+        if (this.websocket.OPEN) {
+          this.websocket.send(JSON.stringify(query))
+        } else {
+          console.warn('socket closed')
+        }
       } catch (err) {
         fail(`Failed to execute websocket operation ${JSON.stringify(query)}`)
         return

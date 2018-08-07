@@ -78,6 +78,9 @@ class DesktopStore {
     mouseState: {
       mouseDown: Date.now(),
     },
+    onboardState: {
+      foundIntegrations: {},
+    },
     operatingSystem: {
       isAccessible: false,
       macVersion: null,
@@ -89,7 +92,6 @@ class DesktopStore {
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
     lastSQLError: '',
-    shouldOnboard: false,
   })
 
   results = []

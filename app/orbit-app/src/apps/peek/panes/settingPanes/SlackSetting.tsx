@@ -8,6 +8,8 @@ import { TimeAgo } from '../../../../views/TimeAgo'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
+import { orderBy } from 'lodash'
+import { SettingRepository } from '../../../../repositories'
 
 const columnSizes = {
   repo: 'flex',
@@ -91,7 +93,7 @@ class SlackSettingStore {
   }
 
   get allChannels() {
-    return _.orderBy(
+    return orderBy(
       this.service.allChannels || [],
       ['is_private', 'num_members'],
       ['asc', 'desc'],

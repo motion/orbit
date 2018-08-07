@@ -4,7 +4,7 @@ import { ShortcutsStore } from './ShortcutsStore'
 import { WindowFocusStore } from '../stores/WindowFocusStore'
 import { HoverStateStore } from '../stores/HoverStateStore'
 import root from 'global'
-import { screen } from 'electron'
+import { screen, clipboard } from 'electron'
 
 // @ts-ignore
 @store
@@ -35,6 +35,9 @@ export class ElectronStore {
     this.shortcutStore.onShortcut(this.onShortcut)
     Electron.onMessage(msg => {
       switch (msg) {
+        case Electron.messages.COPY:
+          clipboard.writeText(msg)
+          return
         case Electron.messages.CLEAR:
           this.clear = Date.now()
           return

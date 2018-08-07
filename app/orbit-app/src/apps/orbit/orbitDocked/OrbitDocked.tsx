@@ -15,7 +15,13 @@ import { AppStore } from '../../../stores/AppStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitFilterBar } from '../orbitHeader/OrbitFilterBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
-import { OrbitOnboard } from './orbitOnboard/OrbitOnboard';
+import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
+
+type Props = {
+  paneManagerStore?: PaneManagerStore
+  searchStore?: SearchStore
+  appStore?: AppStore
+}
 
 const OrbitDockedFrame = view(UI.Col, {
   position: 'absolute',
@@ -70,11 +76,7 @@ const OrbitDockedInner = view({
   paneManagerStore: PaneManagerStore,
 })
 @view
-export class OrbitDocked extends React.Component<{
-  paneManagerStore: PaneManagerStore
-  searchStore: SearchStore
-  appStore: AppStore
-}> {
+export class OrbitDocked extends React.Component<Props> {
   render() {
     const { paneManagerStore, appStore, searchStore } = this.props
     const { animationState } = paneManagerStore
@@ -89,9 +91,7 @@ export class OrbitDocked extends React.Component<{
           <UI.View borderBottomRadius={BORDER_RADIUS} flex={1}>
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
-              after={
-                <OrbitHomeHeader paneManagerStore={paneManagerStore} />
-              }
+              after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
             />
             <OrbitFilterBar
               filterStore={searchStore.searchFilterStore}

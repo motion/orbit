@@ -1,6 +1,8 @@
 import { react, on } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
-import { SearchStore } from 'stores/SearchStore'
+import { App } from '@mcro/stores'
+import { SearchStore } from '../../stores/SearchStore'
+import { generalSettingQuery } from '../../repositories/settingQueries'
+import { modelQueryReaction } from '../../repositories/modelQueryReaction'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
@@ -49,6 +51,17 @@ export class PaneManagerStore {
     },
   )
 
+  setTrayTitleOnPaneChange = react(
+    () => this.activePane,
+    pane => {
+      if (pane === 'onboard') {
+        App.actions.setContextMessage('Welcome to Orbit...')
+      } else {
+        App.actions.setContextMessage('Orbit')
+      }
+    },
+  )
+
   setDirectoryOnAt = react(
     () => App.state.query[0] === '@',
     isDir => {
@@ -74,16 +87,29 @@ export class PaneManagerStore {
     return this.panes[this.paneIndex]
   }
 
+  manuallyFinishedOnboarding = false
+  hasOnboarded = modelQueryReaction(
+    generalSettingQuery,
+    setting => setting.values.hasOnboarded,
+  )
+
+  get shouldOnboard() {
+    if (this.manuallyFinishedOnboarding) {
+      return false
+    }
+    return !this.hasOnboarded
+  }
+
   activePane = react(
     () => [
       this.panes,
       this.paneIndex,
       App.orbitState.docked,
       App.state.query,
-      Desktop.state.shouldOnboard,
+      this.shouldOnboard,
     ],
     async (_, { sleep }) => {
-      if (Desktop.state.shouldOnboard) {
+      if (this.shouldOnboard) {
         return 'onboard'
       }
       // let activePaneFast be a frame ahead

@@ -3,9 +3,9 @@ import { PersonRepository } from '../repositories'
 // @ts-ignore
 import initNlp from './nlpStore/nlpQueryWorker'
 import { store, react } from '@mcro/black'
-import { modelQueryReaction } from '@mcro/helpers'
 import { App } from '@mcro/stores'
 import { NLPResponse } from './nlpStore/types'
+import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
 // runs off thread
 const { parseSearchQuery, setUserNames } = initNlp()

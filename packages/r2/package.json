@@ -1,6 +1,6 @@
 {
   "name": "@mcro/r2",
-  "main": "_/index.js",
+  "main": "_/r2.js",
   "version": "2.2.1",
   "scripts": {
     "build": "tsc || true",

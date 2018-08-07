@@ -8,7 +8,7 @@
     "build": "npm run build-js & npm run build-types",
     "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
     "build-types": "tsc  --emitDeclarationOnly || true",
-    "build-types-watch": "tsc  --emitDeclarationOnly --watch",
+    "build-types-watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch",
     "watch": "npm run build-js -- --watch & npm run build-types-watch"
   },
   "dependencies": {
@@ -27,11 +27,6 @@
     "react-tilt": "^0.1.4",
     "react-virtualized": "^9.20.1",
     "lodash": "^4.17.10"
-  },
-  "devDependencies": {
-    "@types/lodash": "4.14.112",
-    "@types/react": "16.4.7",
-    "@types/react-dom": "16.0.6"
   },
   "peerDependencies": {
     "@babel/runtime": "*",

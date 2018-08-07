@@ -21,3 +21,5 @@ very white contrast look for most sections
   - next gen knowledge tool
   - augmented intelligent operating system
   - the instant, unified, keyboard friendly, way to manage incoming
+  - offline, instant
+  - search by WHO

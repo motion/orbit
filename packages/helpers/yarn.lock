@@ -2,10 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/event-kit@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@types%2fevent-kit/-/event-kit-2.4.0.tgz#d470e1e9b5ee1ad574ca4efc65093aa116277ff4"
-
 disposable-event@^1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/disposable-event/-/disposable-event-1.0.3.tgz#c51986ec63048237ca82472fe549f895214d0e35"

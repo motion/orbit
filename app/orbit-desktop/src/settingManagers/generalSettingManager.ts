@@ -1,6 +1,4 @@
 import { store } from '@mcro/black'
-import { modelQueryReaction } from '@mcro/helpers'
-import { Setting } from '@mcro/models'
 import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
@@ -21,7 +19,14 @@ export class GeneralSettingManager {
       )
     }
     console.log('ensuring models are in place all over, remove me plz')
-    findOrCreate(SettingEntity, generalSettingQuery)
+    this.start()
+  }
+
+  async start() {
+    await findOrCreate(SettingEntity, generalSettingQuery)
+    const setting = await SettingEntity.findOne(generalSettingQuery)
+    this.ensureDefaultSettings(setting)
+    this.handleAutoLaunch(setting)
   }
 
   autoLaunch =
@@ -29,15 +34,6 @@ export class GeneralSettingManager {
     new AutoLaunch({
       name: 'Orbit',
     })
-
-  handleSetting = modelQueryReaction(
-    () => SettingEntity.findOne(generalSettingQuery),
-    (setting: Setting) => {
-      log('reacting to setting', setting)
-      this.ensureDefaultSettings(setting)
-      this.handleAutoLaunch(setting)
-    },
-  )
 
   ensureDefaultSettings = async setting => {
     if (Object.keys(setting.values).length) {

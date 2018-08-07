@@ -24,7 +24,6 @@ const WordInner = view({
   top: -14,
   left: -4,
   position: 'absolute',
-  wordWrap: 'no-wrap',
   whiteSpace: 'pre',
 })
 

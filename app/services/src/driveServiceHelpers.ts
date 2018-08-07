@@ -1,5 +1,5 @@
 import * as Constants from '@mcro/constants'
-import r2 from '@mcro/r2'
+import r2, { get } from '@mcro/r2'
 import Strategies from '@mcro/oauth-strategies'
 import { DriveServiceHelpers, FetchOptions } from './types'
 
@@ -44,7 +44,7 @@ export const getHelpers = (setting): DriveServiceHelpers => ({
       fetchOpts.mode = mode || 'cors'
     }
     const url = `${this.baseUrl}${path}`
-    const fetcher = r2.get(url, fetchOpts)
+    const fetcher = get(url, fetchOpts)
     let res
     try {
       res = await fetcher[type]

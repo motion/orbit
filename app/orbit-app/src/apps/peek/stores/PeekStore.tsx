@@ -225,4 +225,12 @@ export class PeekStore {
     // now that it's pinned, update position
     App.actions.finishPeekDrag(this.framePosition)
   }
+
+  openItem = () => {
+    App.actions.openItem(this.props.searchStore.selectedItem)
+  }
+
+  copyItem = () => {
+    App.actions.copyLink(this.props.searchStore.selectedItem)
+  }
 }

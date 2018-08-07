@@ -19,7 +19,6 @@ const Block = view(UI.Block, {
   bottom: 0,
   padding: [10, 3],
   whiteSpace: 'pre',
-  wordWrap: 'no-wrap',
 })
 
 type Color = string

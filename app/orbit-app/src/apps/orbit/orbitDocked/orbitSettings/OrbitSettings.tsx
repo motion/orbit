@@ -4,7 +4,6 @@ import { SettingRepository } from '../../../../repositories'
 import { OrbitSettingCard } from './OrbitSettingCard'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
-import { Setting } from '@mcro/models'
 import { Masonry } from '../../../../views/Masonry'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -103,7 +102,7 @@ class OrbitSettingsStore {
 }
 
 const Section = view({
-  padding: [10, 0],
+  padding: [0, 0, 20],
 })
 
 @view.attach('searchStore', 'paneManagerStore', 'integrationSettingsStore')

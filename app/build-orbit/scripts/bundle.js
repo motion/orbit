@@ -14,7 +14,8 @@ const log = {
 }
 
 const ROOT = Path.join(__dirname, '..')
-const APP_BUILD_DIR = Path.join(ROOT, 'app-built')
+const APP_DIR = Path.join(ROOT, '..', 'orbit')
+const APP_BUILD_DIR = Path.join(ROOT, 'dist')
 
 const ignorePaths = [
   // exclude extra dirs for xcode
@@ -75,7 +76,7 @@ async function bundle() {
 
   console.log('packaging new app...')
   const paths = await electronPackager({
-    dir: Path.join(ROOT, 'app'),
+    dir: APP_DIR,
     out: APP_BUILD_DIR,
     icon: Path.join(ROOT, 'resources', 'icon.icns'),
     overwrite: true,

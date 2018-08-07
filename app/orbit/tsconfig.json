@@ -1,12 +1,16 @@
 {
+  "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
-    "composite": true
+    "composite": true,
+    "module": "CommonJS",
+    "outDir": "_",
+    "rootDir": "src"
   },
+  "include": ["src/**/*"],
   "references": [
     { "path": "../orbit-app" },
     { "path": "../orbit-desktop" },
     { "path": "../orbit-electron" },
-    { "path": "../../packages/dev" },
-    { "path": "../../packages/debug-apps" }
+    { "path": "../../packages/dev" }
   ]
 }

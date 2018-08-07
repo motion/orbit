@@ -18,7 +18,7 @@ export const APP_SHADOW = [0, 0, 40, [0, 0, 0, 1]]
 export const ORBIT_COLOR = UI.color('#714842')
 
 const protocol = `${window.location.protocol}//`
-export const API_HOST = IS_PROD ? 'app.seemirai.com:3009' : 'localhost:3001'
+export const API_HOST = `${window.location.host}`
 export const API_URL = `${protocol}${API_HOST}`
 
 export const DB_CONFIG = {

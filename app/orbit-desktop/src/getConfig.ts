@@ -30,9 +30,6 @@ export const ROOT_DIR = Path.join(__dirname, '..')
 export const TMP_DIR = Path.join(ROOT_DIR, 'tmp')
 
 export const ORBIT_APP_STATIC_DIR = Path.join(
-  ROOT_DIR,
-  'node_modules',
-  '@mcro',
-  'orbit-app',
+  require.resolve('@mcro/orbit-app'),
   'dist',
 )

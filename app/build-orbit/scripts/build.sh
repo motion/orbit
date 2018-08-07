@@ -79,15 +79,15 @@ echo "running electron-bundler..."
 DEBUG=electron-packager node -r esm --trace-warnings ./scripts/bundle.js
 
 # echo "patching bundle..."
-# rm -r app-built/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules/iohook
-# cp -r ./build-resources/iohook/node_modules/iohook app-built/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules
+# rm -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules/iohook
+# cp -r ./build-resources/iohook/node_modules/iohook dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules
 
 # sign
 if [[ "$@" =~ "--no-sign" ]]; then
   echo "not signing"
 else
   echo "signing app..."
-  npx electron-osx-sign --ignore puppeteer/\\.local-chromium ./app-built/Orbit-darwin-x64/Orbit.app
+  npx electron-osx-sign --ignore puppeteer/\\.local-chromium ./dist/Orbit-darwin-x64/Orbit.app
   echo -n "--no-sign " >> ./scripts/.lastbuild
 fi
 
@@ -96,5 +96,5 @@ if [[ "$@" =~ "--no-pack" ]]; then
   echo "not signing"
 else
   echo "packing app into .dmg..."
-  npx electron-installer-dmg --overwrite --out ./app-built --icon ./resources/icon.icns ./app-built/Orbit-darwin-x64/Orbit.app Orbit
+  npx electron-installer-dmg --overwrite --out ./dist --icon ./resources/icon.icns ./dist/Orbit-darwin-x64/Orbit.app Orbit
 fi

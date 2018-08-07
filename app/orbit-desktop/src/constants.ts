@@ -28,3 +28,11 @@ export const SERVER_PORT = process.env.PORT || IS_DEV ? 3001 : 3009
 // directories
 export const ROOT_DIR = Path.join(__dirname, '..')
 export const TMP_DIR = Path.join(ROOT_DIR, 'tmp')
+
+export const ORBIT_APP_STATIC_DIR = Path.join(
+  ROOT_DIR,
+  'node_modules',
+  '@mcro',
+  'orbit-app',
+  'dist',
+)

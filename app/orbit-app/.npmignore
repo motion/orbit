@@ -1,3 +1,6 @@
-public
-scripts
-src
+# ignore all
+*
+**/*
+# except /dist
+!dist/*
+!dist/**/*

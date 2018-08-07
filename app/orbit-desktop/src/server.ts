@@ -11,7 +11,7 @@ import Passport from 'passport'
 import killPort from 'kill-port'
 import Fs from 'fs'
 import Path from 'path'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
 
 const { SERVER_PORT } = Constants
 
@@ -52,21 +52,10 @@ export default class Server {
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
-    // this.setupIcons
-    app.use('/icons', express.static(Constants.TMP_DIR))
-    // HACKY DANGEROUS
-    app.use('/contents', (req, res) => {
-      const filePath = Path.join('/', req.path.replace('/contents', ''))
-      const file = Fs.readFileSync(filePath)
-        .toString('utf8')
-        .slice(0, 3000)
-      res.json({ file })
-    })
-
     this.app.get('/hello', (_, res) => res.send('hello world'))
     this.setupCredPass()
     this.setupPassportRoutes()
-    this.setupProxy()
+    this.setupOrbitApp()
   }
 
   async start() {
@@ -128,22 +117,31 @@ export default class Server {
     return session.expires > Date.now()
   }
 
-  setupProxy() {
-    const router = {
-      'http://localhost:3001': Constants.PUBLIC_URL,
+  setupOrbitApp() {
+    // proxy to webpack-dev-server in development
+    if (process.env.NODE_ENV === 'development') {
+      log('Serving orbit app through proxy to webpack-dev-server...')
+      const router = {
+        'http://localhost:3001': Constants.PUBLIC_URL,
+      }
+      // log('proxying', router)
+      this.app.use(
+        '/',
+        proxy({
+          target: Constants.PUBLIC_URL,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+          logLevel: 'warn',
+          router,
+        }),
+      )
     }
-    // log('proxying', router)
-    this.app.use(
-      '/',
-      proxy({
-        target: Constants.PUBLIC_URL,
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-        logLevel: 'warn',
-        router,
-      }),
-    )
+    // serve static in production
+    if (process.env.NODE_ENV === 'production') {
+      log('Serving orbit static app...')
+      this.app.use('/', express.static(Constants.ORBIT_APP_STATIC_DIR))
+    }
   }
 
   setupPassportRoutes() {

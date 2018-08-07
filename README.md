@@ -101,17 +101,17 @@ Bootstrap sort of checks a lot of stuff, but its really fast, so you can general
 
 When you start the apps you'll see a Chromium instance pop up and hook into each running app. Right now there are three: Desktop (Node), Electron, and App (Web). They share a few small helpers:
 
-### `debug` from @mcro/debug
+### `Logger` from @motion/logger
 
-In dev mode we expose `debug` from @mcro/debug so you can control logs:
+In dev mode we expose `Logger` from @motion/logger so you can control logs:
 
 ```js
-debug.list() // list things that log
-debug.loud() // log everything, pass argument to narrow
-debug.quiet() // quiet everything, argument to narrow
+Logger.namespaces // list things that log
+Logger.loud() // log everything, pass argument to narrow
+Logger.quiet() // quiet everything, argument to narrow
 ```
 
-It may be helpful to run `debug.list()` and `debug.loud()` in each app just to get an idea of what's going on there.
+It may be helpful to run `Logger.list` and `Logger.loud()` in each app just to get an idea of what's going on there.
 
 ### `log` from @mcro/black
 
@@ -198,10 +198,40 @@ Desktop.sendMessage(App, App.messages.TOGGLE_SHOWN)
 App.sendMessage(Electron, Electron.messages.SOME_MESSAGE, 'hello world')
 ```
 
-### TypeORM Models from `@mcro/models`
 
-In dev mode we set up models to be globals so you can use them easily in REPL as well. So for now `Bit`, `Setting`, `Person`, and `Job`.
+### Syncers
+
+You can manually stop/run any syncers using REPL.
+
+To start any syncer you can use following command:
+
+```
+await Syncers.[SyncerName].start()
+```
+
+To stop any syncer you can use following command:
+
+```
+await Syncers.[SyncerName].stop()
+```
+
+To reset any syncer you can use following command:
+
+```
+await Syncers.[SyncerName].reset()
+```
+
+To apply same operations on multiple syncers you can use following pattern:
+
+```
+await Promise.all(Object.keys(Syncers).map(syncer => Syncers[syncer].start()))
+```
+
+### TypeORM Entities
+
+In dev mode we set up models to be globals so you can use them easily in REPL as well.
+You can use any entity from `app/orbit-desktop/src/entities` and use it in the REPL following way:
 
 ```js
-await Bit.find()
+await BitEntity.find()
 ```

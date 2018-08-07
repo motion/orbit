@@ -32,7 +32,6 @@
   "dependencies": {
     "@mcro/black": "^2.2.1",
     "@mcro/constants": "^2.2.1",
-    "@mcro/debug": "^2.2.1",
     "@mcro/orbit-desktop": "^2.2.1",
     "@mcro/r2": "^2.2.1",
     "@mcro/reactron": "^2.2.1",

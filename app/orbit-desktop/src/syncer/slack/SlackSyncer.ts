@@ -10,6 +10,9 @@ import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { logger } from '@motion/logger'
+
+const log = logger('syncer:slack')
 
 /**
  * Syncs Slack Bits.
@@ -25,13 +28,12 @@ export class SlackSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    try {
-      this.people = await this.syncUsers()
-      await this.syncMessages()
-    } catch (error) {
-      // todo: error catching should be on top-level
-      console.log(`error in slack syncer`, error)
-    }
+    this.people = await this.syncUsers()
+    await this.syncMessages()
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   /**
@@ -40,18 +42,18 @@ export class SlackSyncer implements IntegrationSyncer {
    */
   private async syncUsers(): Promise<Person[]> {
     // loading users from API
-    console.log(`loading users`)
+    log(`loading users`)
     const users = await this.loader.loadUsers()
 
     // load all persons in local database
     const existPeople = await PersonEntity.find({ settingId: this.setting.id })
 
     // creating entities for them
-    console.log(`finding and creating people for users`, users)
+    log(`finding and creating people for users`, users)
     const updatedPeople = users.map(user =>
       this.createPerson(existPeople, user),
     )
-    console.log(`updated people`, updatedPeople)
+    log(`updated people`, updatedPeople)
 
     // update in the database
     // @ts-ignore
@@ -73,14 +75,14 @@ export class SlackSyncer implements IntegrationSyncer {
       }),
     )
 
-    console.log(`people were updated`, updatedPeople)
+    log(`people were updated`, updatedPeople)
 
     // find remove people and remove them from the database
     const removedPeople = existPeople.filter(
       person => updatedPeople.indexOf(person) === -1,
     )
     await PersonEntity.remove(removedPeople)
-    console.log(`people were removed`, removedPeople)
+    log(`people were removed`, removedPeople)
 
     return updatedPeople
   }
@@ -90,16 +92,16 @@ export class SlackSyncer implements IntegrationSyncer {
    */
   private async syncMessages(): Promise<void> {
     // load channels
-    console.log(`loading channels`)
+    log(`loading channels`)
     const channels = await this.loader.loadChannels()
-    console.log(`channels loaded`, channels)
+    log(`channels loaded`, channels)
 
     // filter channels by only needed (based on settings)
     const activeChannels = filterChannelsBySettings(channels, this.setting)
-    console.log(`filtering only selected channels`, activeChannels)
+    log(`filtering only selected channels`, activeChannels)
 
     // load channel messages
-    console.log(`loading channels messages`)
+    log(`loading channels messages`)
     const lastMessageSync = this.setting.values.lastMessageSync || {}
 
     // load messages for each channel
@@ -114,7 +116,7 @@ export class SlackSyncer implements IntegrationSyncer {
         : undefined
 
       // load messages
-      console.log(`loading channel ${channel.id} messages`, { oldestMessageId })
+      log(`loading channel ${channel.id} messages`, { oldestMessageId })
       const loadedMessages = await this.loader.loadMessages(
         channel.id,
         oldestMessageId,
@@ -123,7 +125,7 @@ export class SlackSyncer implements IntegrationSyncer {
       // sync messages if we found them
       if (loadedMessages.length) {
         // left only messages we need - real user messages, no system or bot messages
-        console.log(`loaded messages`, loadedMessages)
+        log(`loaded messages`, loadedMessages)
         const filteredMessages = loadedMessages.filter(message => {
           return (
             message.type === 'message' &&
@@ -132,12 +134,12 @@ export class SlackSyncer implements IntegrationSyncer {
             message.user
           )
         })
-        console.log(`filter out unnecessary messages`, filteredMessages)
+        log(`filter out unnecessary messages`, filteredMessages)
 
         // group messages into special "conversations" to avoid insertion of multiple bits for each message
-        console.log(`creating conversations`)
+        log(`creating conversations`)
         const conversations = createConversation(filteredMessages)
-        console.log(
+        log(
           `created ${conversations.length} conversations`,
           conversations,
         )
@@ -151,13 +153,13 @@ export class SlackSyncer implements IntegrationSyncer {
         // note: we need to use loaded messages, not filtered
         lastMessageSync[channel.id] = loadedMessages[0].ts
       } else {
-        console.log(`no new messages found`)
+        log(`no new messages found`)
       }
 
       // find bits in the database and check if they all exist
       if (oldestMessageId) {
         // find bits in the database
-        console.log(`loading latest bits to check if some were removed`)
+        log(`loading latest bits to check if some were removed`)
         const latestBits = await BitEntity.find({
           settingId: this.setting.id,
           location: {
@@ -165,7 +167,7 @@ export class SlackSyncer implements IntegrationSyncer {
           },
           bitCreatedAt: MoreThan(parseInt(oldestMessageId)),
         })
-        console.log(`latest bits were loaded`, latestBits)
+        log(`latest bits were loaded`, latestBits)
 
         // if there is no loaded message for bit in the database
         // then we shall remove such bits
@@ -176,19 +178,19 @@ export class SlackSyncer implements IntegrationSyncer {
             })
           }),
         )
-        console.log(`bits to be removed`, removedBits)
+        log(`bits to be removed`, removedBits)
       }
     })
 
     // create new bits
-    console.log(`updated message bits`, updatedBits)
+    log(`updated message bits`, updatedBits)
     await BitEntity.save(updatedBits)
 
-    console.log(`removed message bits`, removedBits)
+    log(`removed message bits`, removedBits)
     await BitEntity.remove(removedBits)
 
     // update settings
-    console.log(`updating settings`, { lastMessageSync })
+    log(`updating settings`, { lastMessageSync })
     this.setting.values.lastMessageSync = lastMessageSync
     // @ts-ignore
     await this.setting.save()

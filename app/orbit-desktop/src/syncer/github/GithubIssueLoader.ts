@@ -1,9 +1,9 @@
 import { GithubIssueQueryResult } from '../../syncer/github/GithubTypes'
 import { GithubIssueQuery } from './GithubQueries'
 import { fetchFromGitHub } from './GithubUtils'
-import debug from '@mcro/debug'
+import {logger} from '@motion/logger'
 
-const log = debug('GithubIssueLoader')
+const log = logger('syncer:github:issues')
 
 /**
  * Loads GitHub issues for a single repository.

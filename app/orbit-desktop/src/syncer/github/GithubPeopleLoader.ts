@@ -1,9 +1,9 @@
+import { logger } from '@motion/logger'
 import { GithubPeopleQueryResult } from '../../syncer/github/GithubTypes'
 import { GithubPeopleQuery } from './GithubQueries'
 import { fetchFromGitHub } from './GithubUtils'
-import debug from '@mcro/debug'
 
-const log = debug('GithubPeopleLoader')
+const log = logger('syncer:github:people')
 
 /**
  * Loads GitHub people for a single organization.

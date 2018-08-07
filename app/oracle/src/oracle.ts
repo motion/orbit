@@ -6,9 +6,9 @@ import { Server } from 'ws'
 import killPort from 'kill-port'
 // import monitorScreenProcess from './monitorProcess'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-import debug from '@mcro/debug'
+import { logger } from '@motion/logger'
 
-const log = debug('oracle')
+const log = logger('oracle')
 
 // swift itself
 // and the swiftBridge

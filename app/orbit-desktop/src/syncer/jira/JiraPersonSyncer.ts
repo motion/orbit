@@ -7,6 +7,9 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { JiraPeopleResponse, JiraPerson } from './JiraPersonTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { logger } from '@motion/logger'
+
+const log = logger('syncer:jira:people')
 
 export class JiraPersonSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -16,13 +19,12 @@ export class JiraPersonSyncer implements IntegrationSyncer {
   }
 
   async run(): Promise<void> {
-    try {
-      console.log('synchronizing jira people')
-      const people = await this.syncPeople(0)
-      console.log(`created ${people.length} jira people`, people)
-    } catch (err) {
-      console.log('error in jira people sync', err.message, err.stack)
-    }
+    const people = await this.syncPeople(0)
+    log(`created ${people.length} jira people`, people)
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private async syncPeople(startAt: number): Promise<Person[]> {
@@ -30,14 +32,14 @@ export class JiraPersonSyncer implements IntegrationSyncer {
     const url = `/rest/api/2/user/search?maxResults=${maxResults}&startAt=${startAt}&username=_`
 
     // loading people from atlassian server
-    console.log(
+    log(
       `loading ${startAt === 0 ? 'first' : 'next'} ${maxResults} people`,
     )
     const result: JiraPeopleResponse = await fetchFromAtlassian(
       this.setting.values.atlassian,
       url,
     )
-    console.log(`${startAt + result.length} people were loaded`, result)
+    log(`${startAt + result.length} people were loaded`, result)
 
     // create people for each loaded issue
     const people = (await Promise.all(

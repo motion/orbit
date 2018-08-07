@@ -3,11 +3,14 @@ import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
 import { createOrUpdate } from '../../helpers/createOrUpdate'
 import { createOrUpdatePersonBit } from '../../repository'
-import { GithubPerson } from '../../syncer/github/GithubTypes'
+import { GithubPerson } from './GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
 import { sequence } from '../../utils'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { logger } from '@motion/logger'
+
+const log = logger('syncer:github:people')
 
 export class GithubPeopleSyncer implements IntegrationSyncer {
   setting: SettingEntity
@@ -16,17 +19,16 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     this.setting = setting
   }
 
-  run = async () => {
-    try {
-      console.log('Running github people sync')
-      const people = await this.syncRepos()
-      console.log('Created', people ? people.length : 0, 'people', people)
-    } catch (err) {
-      console.log('Error in github people sync', err.message, err.stack)
-    }
+  async run() {
+    const people = await this.syncRepos()
+    log('Created', people ? people.length : 0, 'people', people)
   }
 
-  private syncRepos = async (repos?: string[]) => {
+  async reset(): Promise<void> {
+
+  }
+
+  private async syncRepos(repos?: string[]) {
     const repoSettings = this.setting.values.repos
     const repositoryPaths = repos || Object.keys(repoSettings || {})
     const organizations: string[] = uniq(

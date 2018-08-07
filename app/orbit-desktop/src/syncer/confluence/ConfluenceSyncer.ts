@@ -1,6 +1,7 @@
 import { Bit, Person } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import TurndownService from 'turndown'
+import { logger } from '@motion/logger'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { createOrUpdatePersonBit } from '../../repository'
@@ -14,6 +15,8 @@ import {
 } from './ConfluenceTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 
+const log = logger('syncer:confluence')
+
 export class ConfluenceSyncer implements IntegrationSyncer {
   private setting: SettingEntity
   private service: AtlassianService
@@ -25,35 +28,35 @@ export class ConfluenceSyncer implements IntegrationSyncer {
   }
 
   async run(): Promise<void> {
-    try {
-      console.log('synchronizing confluence people')
-      this.people = await this.syncPeople()
-      if (!this.people) {
-        console.log('no people returned...')
-        return
-      }
-      console.log(
-        `created ${this.people.length} confluence people`,
-        this.people,
-      )
-
-      console.log('running confluence')
-      const result = await this.syncBits()
-      console.log(
-        'Created',
-        result ? result.length : 0,
-        'confluence items',
-        result,
-      )
-    } catch (err) {
-      console.log('Error in confluence task sync', err.message, err.stack)
+    log('synchronizing confluence people')
+    this.people = await this.syncPeople()
+    if (!this.people) {
+      log('no people returned...')
+      return
     }
+    log(
+      `created ${this.people.length} confluence people`,
+      this.people,
+    )
+
+    log('running confluence')
+    const result = await this.syncBits()
+    log(
+      'Created',
+      result ? result.length : 0,
+      'confluence items',
+      result,
+    )
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   async syncBits(): Promise<Bit[]> {
     const contentList = await this.service.fetchAll(`/wiki/rest/api/content`)
     if (!contentList) {
-      console.log('no content found')
+      log('no content found')
       return null
     }
     const contents = await Promise.all(
@@ -63,7 +66,7 @@ export class ConfluenceSyncer implements IntegrationSyncer {
         }),
       ),
     )
-    console.log(`loaded content`, contents)
+    log(`loaded content`, contents)
 
     const turndown = new TurndownService()
     const htmlToMarkdown = html => turndown.turndown(html)
@@ -121,14 +124,14 @@ export class ConfluenceSyncer implements IntegrationSyncer {
       const identifier = `confluence-${response.history.createdBy.accountId}`
       return person.identifier === identifier
     })
-    console.log(`found a person`, person)
+    log(`found a person`, person)
     if (person) {
       if (!person.personBit.bits) person.personBit.bits = []
 
       const hasSuchBit = person.personBit.bits.some(bit => {
         return bit.identifier === identifier && bit.integration === integration
       })
-      console.log(`don't have such bit`)
+      log(`don't have such bit`)
       if (!hasSuchBit) {
         // @ts-ignore
         person.personBit.bits.push(updatedBit)
@@ -143,19 +146,19 @@ export class ConfluenceSyncer implements IntegrationSyncer {
 
   private async syncPeople(): Promise<Person[]> {
     // load groups where from we will extract users
-    console.log('loading confluence groups')
+    log('loading confluence groups')
     const groups: ConfluenceGroupResponse = await fetchFromAtlassian(
       this.setting.values.atlassian,
       `/wiki/rest/api/group`,
     )
     if (!groups) {
-      console.log('error no groupd returned')
+      log('error no groupd returned')
       return
     }
-    console.log('confluence groups are loaded', groups.results)
+    log('confluence groups are loaded', groups.results)
 
     // now load group members from which we will create people
-    console.log('loading confluence members')
+    log('loading confluence members')
     const users: ConfluenceUser[] = []
     await Promise.all(
       groups.results.map(async group => {

@@ -5,5 +5,5 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "references": [{ "path": "../debug" }]
+  "references": [{ "path": "../logger" }]
 }

@@ -9,7 +9,7 @@
     { "path": "../models" },
     { "path": "../../packages/black" },
     { "path": "../../packages/constants" },
-    { "path": "../../packages/debug" },
+    { "path": "../../packages/logger" },
     { "path": "../../packages/mobx-bridge" }
   ]
 }

@@ -1,6 +1,9 @@
 import { SettingEntity } from '../../entities/SettingEntity'
 import { SyncerOptions } from './IntegrationSyncer'
 import Timer = NodeJS.Timer
+import { logger } from '@motion/logger'
+
+const log = logger('syncer')
 
 /**
  * Runs given integration syncer.
@@ -53,10 +56,44 @@ export class Syncer {
   }
 
   /**
+   * Resets all the data bring by a syncer.
+   * Can be used to make syncronization from scratch.
+   */
+  async reset() {
+    const settings = await SettingEntity.find({ type: this.options.type })
+    await Promise.all(settings.map(async setting => {
+      return this.resetSyncer(setting)
+    }))
+  }
+
+  /**
    * Runs syncer immediately.
    */
-  async runSyncer(setting: SettingEntity) {
-    const syncer = new this.options.constructor(setting)
-    return syncer.run() // todo: add try/catch block here
+  private async runSyncer(setting: SettingEntity) {
+    log(`starting ${this.options.constructor.name} syncer based on setting`, setting)
+    try {
+      const syncer = new this.options.constructor(setting)
+      await syncer.run()
+
+    } catch(error) {
+      log(`error`, `error in ${this.options.constructor.name} syncer sync`, error)
+    }
+    log(`${this.options.constructor.name} syncer has finished its job`)
   }
+
+  /**
+   * Resets syncer data.
+   */
+  private async resetSyncer(setting: SettingEntity) {
+    log(`resetting ${this.options.constructor.name} syncer`, setting)
+    try {
+      const syncer = new this.options.constructor(setting)
+      await syncer.reset()
+
+    } catch(error) {
+      log(`error`, `error in ${this.options.constructor.name} syncer reset based on setting`, error)
+    }
+    log(`${this.options.constructor.name} syncer has finished its job`)
+  }
+
 }

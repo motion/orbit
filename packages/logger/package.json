@@ -1,0 +1,14 @@
+{
+  "name": "@motion/logger",
+  "version": "2.2.1",
+  "author": "Motion",
+  "license": "MIT",
+  "main": "_/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4343"
+  }
+}

@@ -1,5 +1,6 @@
 import { Bit } from '@mcro/models'
 import { flatten, omit } from 'lodash'
+import { logger } from '@motion/logger'
 import { GithubIssue } from '../../syncer/github/GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubIssueLoader } from './GithubIssueLoader'
@@ -8,6 +9,8 @@ import { createOrUpdateBit } from '../../helpers/helpers'
 import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 
+const log = logger('syncer:github:issues')
+
 export class GithubIssueSyncer implements IntegrationSyncer {
   private setting: SettingEntity
 
@@ -15,18 +18,13 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     this.setting = setting
   }
 
-  run = async () => {
-    try {
-      console.log('synchronizing github issues')
-      const issues = await this.syncIssues()
-      console.log(`created ${issues.length} issues`, issues)
-    } catch (err) {
-      console.log(
-        'error in github issues synchronization',
-        err.message,
-        err.stack,
-      )
-    }
+  async run() {
+    const issues = await this.syncIssues()
+    log(`created ${issues.length} issues`, issues)
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private async syncIssues(repos?: string[]): Promise<Bit[]> {

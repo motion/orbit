@@ -46,8 +46,11 @@ export class ShortcutCapture extends Component<Props> {
     }
   }
 
-  select = e => {
+  select = elementOnFocus => e => {
     e.target.select()
+    if (elementOnFocus) {
+      elementOnFocus(e)
+    }
   }
 
   render() {
@@ -56,7 +59,7 @@ export class ShortcutCapture extends Component<Props> {
     return cloneElement(element, {
       value: value || defaultValue,
       onKeyDown: this.keyDown,
-      onFocus: this.select,
+      onFocus: this.select(element.props.onFocus),
       ...props,
     })
   }

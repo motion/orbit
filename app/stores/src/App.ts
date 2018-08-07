@@ -74,6 +74,7 @@ class AppStore {
       position: [0, 0],
       size: [0, 0],
       inputFocused: false,
+      shortcutInputFocused: false,
     },
     peekState: {
       pinned: false,

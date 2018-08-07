@@ -102,12 +102,11 @@ class OrbitSettingsStore {
   }
 
   focusShortcut = () => {
-    // 123 123 123 123
-    console.log('disable other shortcuts...')
+    App.setOrbitState({ shortcutInputFocused: true })
   }
 
   blurShortcut = () => {
-    console.log('re-enable other shortcuts...')
+    App.setOrbitState({ shortcutInputFocused: false })
   }
 }
 

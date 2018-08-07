@@ -3,7 +3,7 @@ import * as https from 'https'
 import { URL } from 'url'
 import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
-import r2 from '@mcro/r2'
+import * as r2 from '@mcro/r2'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
 

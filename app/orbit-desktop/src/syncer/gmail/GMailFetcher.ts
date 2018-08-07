@@ -1,5 +1,5 @@
 import Strategies from '@mcro/oauth-strategies'
-import r2 from '@mcro/r2'
+import * as r2 from '@mcro/r2'
 import * as Constants from '../../constants'
 import { queryObjectToQueryString } from '../../utils'
 import { GmailFetchOptions } from './GMailTypes'

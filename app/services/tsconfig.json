@@ -5,6 +5,7 @@
     "outDir": "_",
     "rootDir": "src"
   },
+  "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
     { "path": "../../packages/black" },

@@ -5,6 +5,7 @@
     "outDir": "_",
     "rootDir": "src"
   },
+  "include": ["src/**/*"],
   "references": [
     { "path": "../css" },
     { "path": "../color" },

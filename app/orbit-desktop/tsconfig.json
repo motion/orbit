@@ -8,6 +8,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
+  "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
     { "path": "../services" },

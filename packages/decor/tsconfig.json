@@ -5,5 +5,6 @@
     "composite": true,
     "outDir": "_",
     "rootDir": "src"
-  }
+  },
+  "include": ["src/**/*"]
 }

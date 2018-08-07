@@ -3,9 +3,9 @@ import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
 import * as Constants from '../constants'
-import debug from '@mcro/debug'
+import {logger} from '@motion/logger'
 
-const log = debug('GeneralSettingManager')
+const log = logger('GeneralSettingManager')
 
 const generalSettingQuery = { type: 'general', category: 'general' }
 

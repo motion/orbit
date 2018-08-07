@@ -1,9 +1,12 @@
 import Strategies from '@mcro/oauth-strategies'
 import * as r2 from '@mcro/r2'
+import { logger } from '@motion/logger'
 import * as Constants from '../../constants'
 import { queryObjectToQueryString } from '../../utils'
 import { GmailFetchOptions } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
+
+const log = logger('syncers:gmail')
 
 export class GMailFetcher {
   setting: SettingEntity
@@ -24,7 +27,7 @@ export class GMailFetcher {
     const url = `https://www.googleapis.com${path}${queryObjectToQueryString(
       query,
     )}`
-    console.log('fetching', url)
+    log('fetching', url)
     const response = await fetch(url, {
       mode: 'cors',
       headers: {
@@ -40,7 +43,7 @@ export class GMailFetcher {
           result.error.code === 401) &&
         !isRetrying
       ) {
-        console.log('refreshing token')
+        log('refreshing token')
         const didRefresh = await this.refreshToken()
         if (didRefresh) {
           return await this.doFetch(path, query, true)

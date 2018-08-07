@@ -1,4 +1,5 @@
 import { Bit } from '@mcro/models'
+import { logger } from '@motion/logger'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
@@ -9,6 +10,8 @@ import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
+
+const log = logger('syncers:gdrive')
 
 export class GDriveSyncer implements IntegrationSyncer {
   private loader: GDriveLoader
@@ -21,7 +24,7 @@ export class GDriveSyncer implements IntegrationSyncer {
 
   async run(): Promise<void> {
     try {
-      console.log('synchronizing google drive files')
+      log('synchronizing google drive files')
       await this.loader.load()
 
       // create entities for loaded files
@@ -31,7 +34,7 @@ export class GDriveSyncer implements IntegrationSyncer {
         }),
       )
       const newlyCreatedFiles = createdFiles.filter(file => !!file)
-      console.log(`synced ${newlyCreatedFiles.length} files`)
+      log(`synced ${newlyCreatedFiles.length} files`)
 
       // create entities for loaded users
       const createdPeople = await Promise.all(
@@ -40,9 +43,9 @@ export class GDriveSyncer implements IntegrationSyncer {
         }),
       )
       const newlyCreatedPeople = createdPeople.filter(person => !!person)
-      console.log(`synced ${newlyCreatedPeople.length} people`)
+      log(`synced ${newlyCreatedPeople.length} people`)
     } catch (err) {
-      console.log('error in google drive sync', err.message, err.stack)
+      log('error in google drive sync', err.message, err.stack)
     }
   }
 

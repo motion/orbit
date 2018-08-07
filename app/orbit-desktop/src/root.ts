@@ -15,7 +15,6 @@ import root from 'global'
 import Path from 'path'
 import open from 'opn'
 // import iohook from 'iohook'
-import debug from '@mcro/debug'
 import { Connection } from 'typeorm'
 import { GeneralSettingManager } from './settingManagers/GeneralSettingManager'
 import macosVersion from 'macos-version'
@@ -23,8 +22,9 @@ import { Server as WebSocketServer } from 'ws'
 import connectModels from './helpers/connectModels'
 import { Entities } from './entities'
 import { Onboard } from './onboard/Onboard'
+import { Logger, logger } from '@motion/logger'
 
-const log = debug('desktop')
+const log = logger('desktop')
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
 
@@ -152,6 +152,7 @@ export class Root {
   private registerREPLGlobals() {
     root.Root = this
     root.restart = this.restart
+    root.Logger = Logger
     root.Syncers = Syncers.reduce((map, syncer) => {
       // since Syncers is an array we need to convert it to object
       // to make them more usable in the REPL. We are using Syncer type

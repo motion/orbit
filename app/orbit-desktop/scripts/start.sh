@@ -8,7 +8,7 @@ npx nodemon \
   --watch _ \
   --watch $(realpath node_modules/@mcro/models)/_ \
   --watch $(realpath node_modules/@mcro/services)/_ \
-  --watch $(realpath node_modules/@mcro/debug) \
+  --watch $(realpath node_modules/@motion/logger) \
   --watch $(realpath node_modules/@mcro/dev)/_ \
   --watch $(realpath node_modules/@mcro/stores)/_ \
   --watch $(realpath node_modules/@mcro/oracle)/_ \

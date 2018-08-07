@@ -1,7 +1,7 @@
-import debug from 'debug'
 import { sortBy } from 'lodash'
+import {logger} from '@motion/logger'
 
-const log = debug('crawler:db')
+const log = logger('crawler:db')
 
 export default class CrawlerDB {
   crawled = []

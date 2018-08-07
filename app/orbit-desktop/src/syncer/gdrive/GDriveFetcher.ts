@@ -4,8 +4,11 @@ import { URL } from 'url'
 import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import * as r2 from '@mcro/r2'
+import { logger } from '@motion/logger'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
+
+const log = logger('syncers:gdrive')
 
 /**
  * Fetches data from Google Drive Api.
@@ -78,7 +81,7 @@ export class GDriveFetcher {
         throw result.error
       }
     } else if (result.error) {
-      console.log(fullUrl, 'error getting result for', result.error)
+      log(fullUrl, 'error getting result for', result.error)
       throw result.error
     }
     return result

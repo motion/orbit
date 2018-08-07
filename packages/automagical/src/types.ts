@@ -5,6 +5,9 @@ export type ReactionHelpers = {
   sleep: (ms?: number) => Promise<void>
   when: (condition: () => boolean, ms?: number) => Promise<void>
   whenChanged: <A>(condition: () => A, dontCompare?: boolean) => Promise<A>
+  state: {
+    hasResolvedOnce: boolean
+  }
 }
 
 export type ReactionOptions = {

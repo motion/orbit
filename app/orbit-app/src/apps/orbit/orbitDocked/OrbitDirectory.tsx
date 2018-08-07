@@ -53,12 +53,12 @@ class OrbitDirectoryStore {
   }
 
   people: Person[] = react(
-    () => this.peopleQuery,
-    () => {
-      if (!this.isActive) {
+    () => [this.peopleQuery, this.isActive],
+    ([query, isActive], { state }) => {
+      if (!isActive && state.hasResolvedOnce) {
         throw react.cancel
       }
-      return Helpers.fuzzy(this.peopleQuery, this.results, {
+      return Helpers.fuzzy(query, this.results, {
         key: 'name',
       })
     },

@@ -3,7 +3,7 @@ import { Reaction } from './constants'
 import { automagicReact } from './automagicReact'
 import { MagicalObject } from './types'
 import { Root } from './helpers'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
 
 // export @react decorator
 export { react } from './react'

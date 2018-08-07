@@ -47,6 +47,9 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
   let prev
   let stopReaction
   let disposed = false
+  const state = {
+    hasResolvedOnce: false,
+  }
 
   function getCurrentValue() {
     return current.get()
@@ -67,6 +70,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
     ) {
       return
     }
+    state.hasResolvedOnce = true
     current.set(value)
   }
 
@@ -215,6 +219,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
     sleep,
     when,
     whenChanged,
+    state,
   }
 
   function watcher(reactionFn) {

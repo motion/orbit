@@ -4,11 +4,11 @@ import { View } from '@mcro/ui'
 export const Input = view(View, {
   position: 'relative',
   flexFlow: 'row',
-  borderRadius: 5,
+  borderRadius: 7,
   height: '100%',
   width: '100%',
   alignItems: 'center',
-  padding: [6, 12],
+  padding: [8, 12],
   background: [255, 255, 255, 0.1],
 })
 

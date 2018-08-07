@@ -50,11 +50,6 @@ Later we unlock p2p sync:
 
 Aug 7th:
 
-- Auto onboarding flow/history-scan/notifications/tray-guide
-  - SHOULD show "proxy active" and privacy message during final step of integratino
-  - SHOULD show nice progress menu of integrations
-  - SHOULD show other options at the end
-  - SHOULD show scan status during setup
 - Build to .app
   - SHOULD have auto-port finding not hardcoded
   - SHOULD one command to push update

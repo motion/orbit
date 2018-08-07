@@ -15,6 +15,40 @@ import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { ShortcutCapture } from '../../../../views/ShortcutCapture'
 import { Input } from '../../../../views/Input'
 
+const eventCharsToNiceChars = {
+  alt: '⌥',
+  cmd: '⌘',
+  ctrl: '⌃',
+}
+
+const niceToElectron = {
+  '⌥': 'Option',
+  '⌘': 'CommmandOrCtrl',
+  '⌃': 'Ctrl',
+}
+
+const electronToNice = {
+  Option: '⌥',
+  CommmandOrCtrl: '⌘',
+  Ctrl: '⌃',
+}
+
+const niceCharsToElectronChars = (charString: string) => {
+  let final = charString
+  for (const char in niceToElectron) {
+    final = final.replace(char, niceToElectron[char])
+  }
+  return final
+}
+
+const electronToNiceChars = (charString: string) => {
+  let final = charString
+  for (const char in electronToNice) {
+    final = final.replace(char, electronToNice[char])
+  }
+  return final
+}
+
 type Props = {
   name: string
   store?: OrbitSettingsStore
@@ -51,7 +85,13 @@ class OrbitSettingsStore {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  generalSetting = modelQueryReaction(generalSettingQuery)
+  _generalSettingUpdate = Date.now()
+  _generalSetting = modelQueryReaction(generalSettingQuery)
+
+  get generalSetting() {
+    this._generalSettingUpdate
+    return this._generalSetting
+  }
 
   get allResults() {
     return [...this.integrationSettings]
@@ -99,6 +139,11 @@ class OrbitSettingsStore {
     console.log('handleChange', prop, val)
     this.generalSetting.values[prop] = val
     SettingRepository.save(this.generalSetting)
+    this._generalSettingUpdate = Date.now()
+  }
+
+  shortcutChange = val => {
+    this.generalChange('openShortcut')(niceCharsToElectronChars(val))
   }
 
   focusShortcut = () => {
@@ -135,8 +180,11 @@ export class OrbitSettings extends React.Component<Props> {
             </Views.CheckBoxRow>
             <Views.FormRow label="Open shortcut">
               <ShortcutCapture
-                defaultValue={store.generalSetting.values.openShortcut}
-                onUpdate={store.generalChange('openShortcut')}
+                defaultValue={electronToNiceChars(
+                  store.generalSetting.values.openShortcut,
+                )}
+                onUpdate={store.shortcutChange}
+                modifierChars={eventCharsToNiceChars}
                 element={
                   <Input
                     onFocus={store.focusShortcut}

@@ -208,6 +208,7 @@ const Subtitle = view(UI.View, {
   margin: [3, 0, 1],
   flexFlow: 'row',
   alignItems: 'center',
+  overflow: 'hidden',
 })
 
 const orbitIconProps = {
@@ -449,18 +450,12 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           {hasSubtitle && (
             <Subtitle>
               {!!location && (
-                <UI.Text
-                  display="inline-flex"
-                  alignItems="center"
-                  flexFlow="row"
-                >
-                  <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
-                    {location}
-                  </RoundButtonSmall>
-                </UI.Text>
+                <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
+                  {location}
+                </RoundButtonSmall>
               )}
               {typeof subtitle === 'string' ? (
-                <UI.Text alpha={0.55} ellipse maxWidth="calc(100% - 40px)">
+                <UI.Text alpha={0.55} ellipse>
                   {subtitle}
                 </UI.Text>
               ) : (
@@ -468,13 +463,8 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               )}
               {!!createdAt && (
                 <UI.Text alpha={0.55} size={0.95}>
-                  <strong> &middot;</strong> <TimeAgo date={createdAt} />
-                </UI.Text>
-              )}
-              {updatedAt !== createdAt && (
-                <UI.Text alpha={0.55} size={0.95}>
-                  <strong> &middot;</strong> updated{' '}
-                  <TimeAgo date={updatedAt} />
+                  <strong> &middot;</strong>{' '}
+                  <TimeAgo date={updatedAt || createdAt} />
                 </UI.Text>
               )}
             </Subtitle>

@@ -50,6 +50,9 @@ Later we unlock p2p sync:
 
 Aug 7th:
 
+- Masonry.fixedHeight mode for Directory/Settings cards (no double render)
+- react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
+
 - Build to .app
   - SHOULD have auto-port finding not hardcoded
   - SHOULD one command to push update

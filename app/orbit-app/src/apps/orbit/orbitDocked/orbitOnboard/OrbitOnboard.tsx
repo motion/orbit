@@ -7,6 +7,16 @@ import { Desktop } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
+import { generalSettingQuery } from '../../../../repositories/settingQueries'
+import { SettingRepository } from '../../../../repositories'
+import { PaneManagerStore } from '../../PaneManagerStore'
+import { sleep } from '../../../../helpers'
+
+type Props = {
+  integrationSettingsStore?: IntegrationSettingsStore
+  paneManagerStore?: PaneManagerStore
+  store?: OnboardStore
+}
 
 const sidePad = 16
 const controlsHeight = 40
@@ -60,9 +70,13 @@ const Unpad = view({
 
 const Item = view({
   flexFlow: 'row',
-  padding: [0, sidePad],
+  padding: [0, sidePad + 4],
   height: 56,
   alignItems: 'center',
+  inactive: {
+    opacity: 0.5,
+    filter: 'grayscale(1)',
+  },
   '&:hover': {
     background: '#f6f6f6',
   },
@@ -93,23 +107,32 @@ const AddButton = ({ disabled, ...props }) =>
 const buttonText = ["Let's get setup", 'Looks good', 'Done!']
 
 class OnboardStore {
+  props: Props
+
   curFrame = 0
-  nextFrame = () => this.curFrame++
   lastFrame = () => this.curFrame--
+  nextFrame = async () => {
+    this.curFrame++
+    // finish
+    if (this.curFrame === 3) {
+      await sleep(200)
+      // for now, manual
+      this.props.paneManagerStore.manuallyFinishedOnboarding = true
+      // save setting
+      const generalSetting = await generalSettingQuery()
+      generalSetting.values.hasOnboarded = true
+      await SettingRepository.save(generalSetting)
+    }
+  }
 }
 
 const decorator = compose(
-  view.attach('integrationSettingsStore'),
+  view.attach('integrationSettingsStore', 'paneManagerStore'),
   view.attach({
     store: OnboardStore,
   }),
   view,
 )
-
-type Props = {
-  integrationSettingsStore?: IntegrationSettingsStore
-  store?: OnboardStore
-}
 
 export const OrbitOnboard = decorator(
   ({ store, integrationSettingsStore }: Props) => {
@@ -148,7 +171,7 @@ export const OrbitOnboard = decorator(
             </Centered>
           </OnboardFrame>
           <OnboardFrame>
-            <Text size={1.3} fontWeight={600}>
+            <Text size={1.2} fontWeight={600}>
               Select integrations
             </Text>
             <View height={10} />
@@ -157,6 +180,7 @@ export const OrbitOnboard = decorator(
                 return (
                   <Item
                     key={item.id}
+                    inactive={item.added}
                     onClick={
                       item.added ? addIntegrationClickHandler(item) : null
                     }

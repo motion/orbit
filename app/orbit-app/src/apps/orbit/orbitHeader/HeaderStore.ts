@@ -4,8 +4,11 @@ import { App, Desktop } from '@mcro/stores'
 import { SearchStore } from '../../../stores/SearchStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
-const moveCursorToEndOfTextarea = textarea => {
-  textarea.setSelectionRange(textarea.value.length, textarea.value.length)
+const moveCursorToEndOfTextarea = el => {
+  el.setSelectionRange(el.value.length, el.value.length)
+}
+const selectTextarea = el => {
+  el.setSelectionRange(0, el.value.length)
 }
 
 export class HeaderStore {
@@ -58,8 +61,7 @@ export class HeaderStore {
         throw react.cancel
       }
       this.focus()
-      await when(() => Desktop.state.focusedOnOrbit)
-      this.focus()
+      selectTextarea(this.inputRef.current)
     },
     {
       log: false,

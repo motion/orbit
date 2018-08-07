@@ -13,7 +13,9 @@ export const Table = view(View, {
   width: '100%',
 })
 
-export const TableCell = view(View, {})
+export const TableCell = view(View, {
+  padding: [4, 0],
+})
 
 export const FormTableRow = view(Row, {
   width: '100%',

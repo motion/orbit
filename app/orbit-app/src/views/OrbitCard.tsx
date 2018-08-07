@@ -61,7 +61,6 @@ export type OrbitCardProps = {
 const CardWrap = view(UI.View, {
   position: 'relative',
   width: '100%',
-  marginBottom: 1,
   transform: {
     z: 0,
   },
@@ -88,7 +87,7 @@ const Card = view({
     background: 'transparent',
     padding: [12, 12, 12, 10],
     '&:hover': {
-      background: '#eee',
+      background: [0, 0, 0, 0.025],
     },
   },
 })
@@ -213,7 +212,7 @@ const Subtitle = view(UI.View, {
 
 const orbitIconProps = {
   orbitIconStyle: {
-    marginRight: 6,
+    marginRight: -2,
   },
 }
 
@@ -428,7 +427,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 {...orbitIconProps}
                 position="absolute"
                 top={listItem ? 25 : 10}
-                right={listItem ? 8 : 0}
+                right={listItem ? 8 : 10}
                 opacity={0.8}
                 {...iconProps}
               />

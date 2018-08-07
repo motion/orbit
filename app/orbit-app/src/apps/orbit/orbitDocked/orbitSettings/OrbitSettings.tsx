@@ -235,6 +235,7 @@ export class OrbitSettings extends React.Component<Props> {
                   }}
                   iconProps={{
                     size: 18,
+                    top: 13,
                   }}
                   titleProps={{
                     size: 1.1,

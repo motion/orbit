@@ -51,7 +51,7 @@ class OrbitHomeStore {
         findType('github', 'task', 1),
         findType('slack', 'conversation', 4),
         findType('gdocs', 'document'),
-        PersonRepository.findOne({}),
+        PersonRepository.findOne({ skip: 5 }),
         PersonRepository.findOne({ skip: 1 }),
         findType('confluence', 'document'),
         findType('jira', 'document'),

@@ -28,7 +28,7 @@ if [[ "$@" =~ "--no-iohook" ]]; then
 else
   echo "installing iohook..."
   (cd build-resources/iohook && npm install)
-  echo -n "--no-iohook " >> .lastbuild
+  echo -n "--no-iohook " >> ./scripts/.lastbuild
 fi
 
 # version
@@ -37,7 +37,7 @@ if [[ "$@" =~ "--no-version" ]]; then
 else
   echo "bump version..."
   npm version patch
-  echo -n "--no-version " >> .lastbuild
+  echo -n "--no-version " >> ./scripts/.lastbuild
 fi
 
 #publish
@@ -71,16 +71,16 @@ else
   # cleanup
   echo "killing verdaccio..."
   kill %-
-  echo -n "--no-install " >> .lastbuild
+  echo -n "--no-install " >> ./scripts/.lastbuild
 fi
 
 # bundle
 echo "running electron-bundler..."
 DEBUG=electron-packager node -r esm --trace-warnings ./scripts/bundle.js
 
-echo "patching bundle..."
-rm -r app-built/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules/iohook
-cp -r ./build-resources/iohook/node_modules/iohook app-built/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules
+# echo "patching bundle..."
+# rm -r app-built/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules/iohook
+# cp -r ./build-resources/iohook/node_modules/iohook app-built/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules
 
 # sign
 if [[ "$@" =~ "--no-sign" ]]; then
@@ -88,6 +88,7 @@ if [[ "$@" =~ "--no-sign" ]]; then
 else
   echo "signing app..."
   npx electron-osx-sign --ignore puppeteer/\\.local-chromium ./app-built/Orbit-darwin-x64/Orbit.app
+  echo -n "--no-sign " >> ./scripts/.lastbuild
 fi
 
 # pack

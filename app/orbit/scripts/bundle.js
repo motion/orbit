@@ -107,18 +107,9 @@ async function bundle() {
   await execa('xattr', ['-cr', 'Orbit.app'], {
     cwd: Path.join(APP_BUILD_DIR, 'Orbit-darwin-x64'),
   })
-  finish()
 }
 
-try {
-  bundle()
-} catch (err) {
-  finish()
-}
-
-function finish() {
-  console.log('all done! to resume development run bootstrap')
-}
+bundle()
 
 process.on('uncaughtException', err => {
   console.log('uncaughtException', err.stack)

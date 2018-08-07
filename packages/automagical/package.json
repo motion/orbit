@@ -7,7 +7,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/debug": "^2.2.1",
+    "@mcro/logger": "^2.2.1",
     "global": "^4.3.2"
   },
   "devDependencies": {

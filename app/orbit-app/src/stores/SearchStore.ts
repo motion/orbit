@@ -7,13 +7,13 @@ import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
 import * as Helpers from '../helpers'
 import * as SearchStoreHelpers from './helpers/searchStoreHelpers'
-import debug from '@mcro/debug'
 import { AppStore } from './AppStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { flatten } from 'lodash'
 import { MarkType } from './nlpStore/types'
+import { logger } from '@mcro/logger'
 
-const log = debug('searchStore')
+const log = logger('searchStore')
 const TYPE_DEBOUNCE = 200
 
 export class SearchStore /* extends Store */ {

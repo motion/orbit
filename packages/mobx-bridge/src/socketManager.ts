@@ -1,7 +1,7 @@
 import { Server } from 'ws'
-import debug from '@mcro/debug'
+import {logger} from '@mcro/logger'
 
-const log = debug('scrn')
+const log = logger('scrn')
 
 export default class SocketManager {
   activeSockets = []

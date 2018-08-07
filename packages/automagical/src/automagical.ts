@@ -1,9 +1,9 @@
 import * as Mobx from 'mobx'
-import debug from '@mcro/debug'
 import { Reaction } from './constants'
 import { automagicReact } from './automagicReact'
 import { MagicalObject } from './types'
 import { Root } from './helpers'
+import {logger} from '@mcro/logger'
 
 // export @react decorator
 export { react } from './react'
@@ -14,7 +14,7 @@ export {
 } from './constants'
 export * from './types'
 
-const log = debug('automagical')
+const log = logger('automagical')
 
 // TODO: fix deep() wrapper doesnt trigger reactions when mutating objects
 // so basically this.reactiveObj.x = 1, wont trigger react(() => this.reactiveObj)

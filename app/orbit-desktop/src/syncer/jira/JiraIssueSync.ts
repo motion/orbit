@@ -5,6 +5,9 @@ import { IntegrationSyncer } from '../../syncer/core/IntegrationSyncer'
 import { JiraIssue, JiraIssueResponse } from './JiraIssueTypes'
 import { fetchFromAtlassian } from './JiraUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { logger } from '@mcro/logger'
+
+const log = logger('syncer:jira:issue')
 
 export class JiraIssueSync implements IntegrationSyncer {
   setting: SettingEntity
@@ -14,13 +17,12 @@ export class JiraIssueSync implements IntegrationSyncer {
   }
 
   async run(): Promise<void> {
-    try {
-      console.log('synchronizing jira issues')
-      const issues = await this.syncIssues(0)
-      console.log(`created ${issues.length} jira issues`, issues)
-    } catch (err) {
-      console.log('error in jira task sync', err.message, err.stack)
-    }
+    const issues = await this.syncIssues(0)
+    log(`created ${issues.length} jira issues`, issues)
+  }
+
+  async reset(): Promise<void> {
+
   }
 
   private async syncIssues(startAt: number): Promise<Bit[]> {
@@ -28,14 +30,14 @@ export class JiraIssueSync implements IntegrationSyncer {
     const url = `/rest/api/2/search?maxResults=${maxResults}&startAt=${startAt}`
 
     // loading issues from atlassian server
-    console.log(
+    log(
       `loading ${startAt === 0 ? 'first' : 'next'} ${maxResults} issues`,
     )
     const searchResult: JiraIssueResponse = await fetchFromAtlassian(
       this.setting.values.atlassian,
       url,
     )
-    console.log(
+    log(
       `${startAt + searchResult.issues.length} of total ${
         searchResult.total
       } issues were loaded`,

@@ -8,7 +8,6 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/debug": "^2.2.1",
     "@mcro/decor": "^2.2.1",
     "@mcro/helpers": "^2.2.1",
     "@mcro/store-hmr": "^2.2.1",

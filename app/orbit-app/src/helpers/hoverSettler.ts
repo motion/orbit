@@ -1,8 +1,8 @@
 import { isEqual, throttle } from 'lodash'
-import debug from '@mcro/debug'
 import * as Mobx from 'mobx'
+import { logger } from '@mcro/logger'
 
-const log = debug('hoverSettler')
+const log = logger('hoverSettler')
 
 // isEqual but works with dom nodes (lodash doesnt)
 function isReallyEqual(a, b) {

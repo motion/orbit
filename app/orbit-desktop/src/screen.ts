@@ -2,11 +2,11 @@ import Oracle from '@mcro/oracle'
 import { debounce, last } from 'lodash'
 import { store, isEqual, react, on } from '@mcro/black'
 import { Desktop, Electron, Swift } from '@mcro/stores'
-import debug from '@mcro/debug'
+import {logger} from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
 
-const log = debug('screen')
+const log = logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
 const APP_ID = -1
 

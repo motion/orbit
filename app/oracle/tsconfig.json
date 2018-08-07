@@ -9,6 +9,6 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../../packages/black" },
-    { "path": "../../packages/debug" }
+    { "path": "../../packages/logger" }
   ]
 }

@@ -5,9 +5,9 @@ import WS from './websocket'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
-import debug from '@mcro/debug'
+import {logger} from '@mcro/logger'
 
-const log = debug('bridge')
+const log = logger('bridge')
 
 // exports
 export * from './proxySetters'

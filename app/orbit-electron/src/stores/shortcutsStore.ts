@@ -1,9 +1,9 @@
 import { globalShortcut } from 'electron'
 import { store, react } from '@mcro/black'
 import { App } from '@mcro/stores'
-import debug from '@mcro/debug'
+import { logger } from '@mcro/logger'
 
-const log = debug('shortcutsStore')
+const log = logger('shortcutsStore')
 
 // @ts-ignore
 @store

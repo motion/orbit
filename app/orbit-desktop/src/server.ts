@@ -1,5 +1,5 @@
 import 'isomorphic-fetch'
-import logger from 'morgan'
+import morgan from 'morgan'
 import express from 'express'
 import proxy from 'http-proxy-middleware'
 import session from 'express-session'
@@ -11,11 +11,11 @@ import Passport from 'passport'
 import killPort from 'kill-port'
 import Fs from 'fs'
 import Path from 'path'
-import debug from '@mcro/debug'
+import {logger} from '@mcro/logger'
 
 const { SERVER_PORT } = Constants
 
-const log = debug('desktop')
+const log = logger('desktop')
 
 export default class Server {
   oauth: OAuth
@@ -41,7 +41,7 @@ export default class Server {
     app.set('port', SERVER_PORT)
 
     if (Constants.IS_PROD) {
-      app.use(logger('dev'))
+      app.use(morgan('dev'))
     }
 
     this.app = app

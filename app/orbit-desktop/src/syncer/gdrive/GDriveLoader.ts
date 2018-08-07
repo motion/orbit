@@ -1,3 +1,4 @@
+import { logger } from '@mcro/logger'
 import { sequence } from '../../utils'
 import {
   googleDriveFileCommentQuery,
@@ -16,6 +17,8 @@ import { GDriveFetcher } from './GDriveFetcher'
 import * as path from 'path'
 import { SettingEntity } from '../../entities/SettingEntity'
 
+const log = logger('syncer:gdrive')
+
 export class GDriveLoader {
   fetcher: GDriveFetcher
   files: GDriveLoadedFile[] = []
@@ -26,9 +29,9 @@ export class GDriveLoader {
   }
 
   async load(): Promise<void> {
-    console.log(`loading google drive files`)
+    log(`loading google drive files`)
     const files = await this.loadFiles()
-    console.log(`loaded ${files.length} files`, files)
+    log(`loaded ${files.length} files`, files)
 
     // limit number of files for now
     // files.splice(10, files.length)
@@ -49,7 +52,7 @@ export class GDriveLoader {
       }
     })
 
-    console.log(`aggregating users from loaded files, comments and revisions`)
+    log(`aggregating users from loaded files, comments and revisions`)
     this.users = []
     this.files.forEach(file => {
       ;[
@@ -86,7 +89,7 @@ export class GDriveLoader {
         })
     })
 
-    console.log(`created ${this.users.length} users`, this.users)
+    log(`created ${this.users.length} users`, this.users)
   }
 
   private async loadFiles(pageToken?: string): Promise<GDriveFile[]> {
@@ -101,11 +104,11 @@ export class GDriveLoader {
   private async loadFilesContent(file: GDriveFile): Promise<string> {
     if (file.mimeType !== 'application/vnd.google-apps.document') return ''
 
-    console.log(`loading file content for`, file)
+    log(`loading file content for`, file)
     const content = await this.fetcher.fetch(
       googleDriveFileExportQuery(file.id),
     )
-    console.log(`content for file was loaded`, content)
+    log(`content for file was loaded`, content)
     return content
   }
 
@@ -116,12 +119,12 @@ export class GDriveLoader {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map') return []
 
-    console.log(`loading comments for`, file)
+    log(`loading comments for`, file)
     const result = await this.fetcher.fetch(
       googleDriveFileCommentQuery(file.id, pageToken),
     )
     if (result.nextPageToken) {
-      console.log(`next page found`)
+      log(`next page found`)
       const nextPageComments = await this.loadComments(
         file,
         result.nextPageToken,
@@ -138,12 +141,12 @@ export class GDriveLoader {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
 
-    console.log(`loading revisions for`, file)
+    log(`loading revisions for`, file)
     const result = await this.fetcher.fetch(
       googleDriveFileRevisionQuery(file.id, pageToken),
     )
     if (result.nextPageToken) {
-      console.log(`next page found`)
+      log(`next page found`)
       const nextPageRevisions = await this.loadRevisions(
         file,
         result.nextPageToken,
@@ -156,11 +159,11 @@ export class GDriveLoader {
   private async downloadThumbnail(file: GDriveFile): Promise<string> {
     if (!file.thumbnailLink) return ''
 
-    console.log(`downloading file thumbnail for`, file)
+    log(`downloading file thumbnail for`, file)
     const destination = path.normalize(
       __dirname + '/../../../../uploads/' + file.id + '.' + file.fileExtension,
     )
     await this.fetcher.downloadFile(file.thumbnailLink, destination)
-    console.log(`thumbnail downloaded and saved as`, destination)
+    log(`thumbnail downloaded and saved as`, destination)
   }
 }

@@ -9,7 +9,7 @@ import { render } from '../index'
 import { color } from '@mcro/gloss'
 import * as dateFns from 'date-fns'
 import * as Repositories from '../repositories'
-import debug from '@mcro/debug'
+import {Logger} from '@mcro/logger'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -34,7 +34,7 @@ window['Swift'] = Swift
 window['render'] = render
 window['color'] = color
 window['dateFns'] = dateFns
-window['debug'] = debug
+window['Logger'] = Logger
 
 for (const repo in Repositories) {
   window[repo] = Repositories[repo]

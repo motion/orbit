@@ -10,7 +10,7 @@
     { "path": "../stores" },
     { "path": "../../packages/black" },
     { "path": "../../packages/constants" },
-    { "path": "../../packages/debug" },
+    { "path": "../../packages/logger" },
     { "path": "../../packages/r2" },
     { "path": "../../packages/reactron" }
   ]

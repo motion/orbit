@@ -1,5 +1,5 @@
 import { Bit, Person } from '@mcro/models'
-import { In } from 'typeorm'
+import { getManager, getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
@@ -16,6 +16,9 @@ import {
 } from './GMailMessageParser'
 import { GmailThread } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { logger } from '@mcro/logger'
+
+const log = logger('syncer:gmail')
 
 export class GMailSyncer implements IntegrationSyncer {
   private setting: SettingEntity
@@ -27,12 +30,26 @@ export class GMailSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    try {
-      console.log('synchronizing GMail')
-      await this.syncMail()
-    } catch (err) {
-      console.error(err)
-    }
+    await this.syncMail()
+  }
+
+  async reset(): Promise<void> {
+
+    // todo: this logic should be extracted into separate place where settings managed
+    // get entities for removal / updation
+    const bits = await getRepository(BitEntity).find({ settingId: this.setting.id })
+    const people = await getRepository(PersonEntity).find({ settingId: this.setting.id })
+
+    // remove entities
+    log(`removing ${bits.length} bits and ${people.length} people`, bits, people)
+    await getManager().remove([...bits, ...people])
+    log(`people were removed`)
+
+    // reset settings
+    this.setting.values.historyId = null
+    this.setting.values.lastSyncFilter = null
+    this.setting.values.lastSyncMax = null
+    await getRepository(SettingEntity).save(this.setting)
   }
 
   private async syncMail() {
@@ -44,7 +61,7 @@ export class GMailSyncer implements IntegrationSyncer {
       lastSyncFilter,
     } = this.setting.values
     if (!max) max = 50
-    console.log('sync settings', {
+    log('sync settings', {
       historyId,
       max,
       filter,
@@ -54,13 +71,13 @@ export class GMailSyncer implements IntegrationSyncer {
 
     // if max or filter has changed - we drop all bits we have and make complete sync again
     if (max !== lastSyncMax || filter !== lastSyncFilter) {
-      console.log(
+      log(
         `last syncronization settings mismatch (max=${max}/${lastSyncMax}; filter=${filter}/${lastSyncFilter})`,
       )
       const truncatedBits = await BitEntity.find({ integration: 'gmail' }) // also need to filter by setting
-      console.log(`removing all bits`, truncatedBits)
+      log(`removing all bits`, truncatedBits)
       await BitEntity.remove(truncatedBits)
-      console.log(`bits were removed`)
+      log(`bits were removed`)
       historyId = null
     }
 
@@ -73,7 +90,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
       // load threads for newly added / changed threads
       if (history.addedThreadIds.length) {
-        console.log(
+        log(
           `loading all threads until we find following thread ids`,
           history.addedThreadIds,
         )
@@ -82,12 +99,12 @@ export class GMailSyncer implements IntegrationSyncer {
           history.addedThreadIds,
         )
       } else {
-        console.log(`no new messages in history were found`)
+        log(`no new messages in history were found`)
       }
 
       // load bits for removed threads
       if (history.removedThreadIds.length) {
-        console.log(
+        log(
           'found actions in history for thread removals',
           history.removedThreadIds,
         )
@@ -95,9 +112,9 @@ export class GMailSyncer implements IntegrationSyncer {
           integration: 'gmail',
           identifier: In(history.removedThreadIds),
         })
-        console.log('found bits to be removed', removedBits)
+        log('found bits to be removed', removedBits)
       } else {
-        console.log(`no removed messages in history were found`)
+        log(`no removed messages in history were found`)
       }
     } else {
       addedThreads = await this.loader.loadThreads(max)
@@ -106,18 +123,18 @@ export class GMailSyncer implements IntegrationSyncer {
 
     // if there are added threads then load messages and save their bits
     if (addedThreads.length) {
-      console.log(`have a threads to be added/changed`, addedThreads)
+      log(`have a threads to be added/changed`, addedThreads)
       await this.loader.loadMessages(addedThreads)
       const createdPeople = await this.createPeople(addedThreads)
       const createdBits = await this.createBits(addedThreads)
-      console.log('bits were created / updated', createdBits, createdPeople)
+      log('bits were created / updated', createdBits, createdPeople)
     }
 
     // if there are removed threads then remove their bits
     if (removedBits.length) {
-      console.log(`have a bits to be removed`, removedBits)
+      log(`have a bits to be removed`, removedBits)
       await BitEntity.remove(removedBits)
-      console.log('bits were removed')
+      log('bits were removed')
     }
 
     // update settings
@@ -142,6 +159,8 @@ export class GMailSyncer implements IntegrationSyncer {
           bitUpdatedAt: parseMailDate(
             thread.messages[thread.messages.length - 1],
           ),
+          webLink: `https://mail.google.com/mail/u/0/#inbox/` + thread.id,
+          settingId: this.setting.id,
         })
       }),
     )
@@ -161,6 +180,7 @@ export class GMailSyncer implements IntegrationSyncer {
               integrationId: email,
               integration: 'gmail',
               name: name,
+              settingId: this.setting.id
             },
             { matching: ['identifier', 'integration'] },
           )

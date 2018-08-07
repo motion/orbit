@@ -9,7 +9,6 @@
   "dependencies": {
     "@mcro/black": "^2.2.1",
     "@mcro/constants": "^2.2.1",
-    "@mcro/debug": "^2.2.1",
     "@mcro/helpers": "^2.2.1",
     "@mcro/models": "^2.2.1",
     "@mcro/oauth-strategies": "^2.2.1",

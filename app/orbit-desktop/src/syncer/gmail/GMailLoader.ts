@@ -1,7 +1,10 @@
+import { logger } from '../../../../../packages/logger'
 import { GMailFetcher } from './GMailFetcher'
 import { historyQuery, threadQuery, threadsQuery } from './GMailQueries'
 import { GmailHistoryLoadResult, GmailThread } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
+
+const log = logger('syncer:gmail')
 
 export class GMailLoader {
   setting: SettingEntity
@@ -22,13 +25,13 @@ export class GMailLoader {
     pageToken?: string,
   ): Promise<GmailHistoryLoadResult> {
     // load a history first
-    console.log(
+    log(
       pageToken ? `loading history from the next page` : `loading history`,
     )
     const result = await this.fetcher.fetch(
       historyQuery(startHistoryId, pageToken),
     )
-    console.log(`history loaded`, result)
+    log(`history loaded`, result)
 
     // collect from history list of added/changed and removed thread ids
     let addedThreadIds: string[] = [],
@@ -98,7 +101,7 @@ export class GMailLoader {
     pageToken?: string,
   ): Promise<GmailThread[]> {
     // load all threads first
-    console.log(
+    log(
       pageToken
         ? `loading next page threads (max ${count})`
         : `loading threads (max ${count})`,
@@ -124,7 +127,7 @@ export class GMailLoader {
 
       // this condition means we just found all requested threads, no need to load next page
       if (filteredIds.length === 0) {
-        console.log(`all requested threads were found`)
+        log(`all requested threads were found`)
         return threads
       }
     }
@@ -133,7 +136,7 @@ export class GMailLoader {
     // once we count is less than one we stop loading threads
     count -= result.threads.length // important to use result.threads here instead of mutated threads
     if (count < 1) {
-      console.log(
+      log(
         `stopped loading, maximum number of threads were loaded`,
         threads.length,
       )
@@ -157,13 +160,13 @@ export class GMailLoader {
    * Loads thread messages and pushes them into threads.
    */
   async loadMessages(threads: GmailThread[]): Promise<void> {
-    console.log(`loading thread messages`)
+    log(`loading thread messages`)
     await Promise.all(
       threads.map(async thread => {
         const result = await this.fetcher.fetch(threadQuery(thread.id))
         Object.assign(thread, result)
       }),
     )
-    console.log(`thread messages are loaded`, threads)
+    log(`thread messages are loaded`, threads)
   }
 }

@@ -74,9 +74,9 @@
     "@mcro/dev": "^2.2.1",
     "@types/passport": "0.4.5",
     "@types/fs-extra": "5.0.4",
-    "nodemon": "^1.15.0",
+    "nodemon": "1.18.3",
     "touch": "^3.1.0",
-    "watch": "^1.0.2"
+    "watch": "1.0.2"
   },
   "publishConfig": {
     "registry": "http://localhost:4343"

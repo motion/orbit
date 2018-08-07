@@ -12,6 +12,8 @@ import { SearchStore } from '../../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../../repositories/modelQueryReaction'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { generalSettingQuery } from '../../../../repositories/settingQueries'
+import { ShortcutCapture } from '../../../../views/ShortcutCapture'
+import { Input } from '../../../../views/Input'
 
 type Props = {
   name: string
@@ -95,9 +97,17 @@ class OrbitSettingsStore {
 
   generalChange = prop => val => {
     console.log('handleChange', prop, val)
-    this.props.setting.values[prop] = val
-    // this.props.setting.save()
-    SettingRepository.save(this.props.setting)
+    this.generalSetting.values[prop] = val
+    SettingRepository.save(this.generalSetting)
+  }
+
+  focusShortcut = () => {
+    // 123 123 123 123
+    console.log('disable other shortcuts...')
+  }
+
+  blurShortcut = () => {
+    console.log('re-enable other shortcuts...')
   }
 }
 
@@ -124,11 +134,18 @@ export class OrbitSettings extends React.Component<Props> {
             >
               Start on Login
             </Views.CheckBoxRow>
-            <Views.InputRow
-              label="Open shortcut"
-              value={store.generalSetting.values.openShortcut}
-              onChange={store.generalChange('openShortcut')}
-            />
+            <Views.FormRow label="Open shortcut">
+              <ShortcutCapture
+                defaultValue={store.generalSetting.values.openShortcut}
+                onUpdate={store.generalChange('openShortcut')}
+                element={
+                  <Input
+                    onFocus={store.focusShortcut}
+                    onBlur={store.blurShortcut}
+                  />
+                }
+              />
+            </Views.FormRow>
           </Section>
         )}
         {!!store.integrationSettings.length && (

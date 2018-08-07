@@ -53,7 +53,8 @@
     "turndown": "4.0.2",
     "webpack-runtime-require": "0.3.0",
     "react-hotkeys": "1.1.4",
-    "mobx-utils": "5.0.0"
+    "mobx-utils": "5.0.0",
+    "key-event-to-string": "1.2.0"
   },
   "devDependencies": {
     "@types/webpack-env": "1.13.6",

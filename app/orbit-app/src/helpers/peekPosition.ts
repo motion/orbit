@@ -27,8 +27,8 @@ type Position = {
 // always slightly taller than wide
 // capped between a set range
 const getPeekSize = ([screenWidth]: number[]) => {
-  const max = [800, 900]
-  const min = [600, 700]
+  const max = [650, 750]
+  const min = [550, 650]
   const preferred = [screenWidth / 3, screenWidth / 2.45]
   return preferred
     .map((z, i) => Math.min(z, max[i]))

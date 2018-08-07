@@ -29,6 +29,7 @@ class OrbitDirectoryStore {
       if (!isActive) {
         throw react.cancel
       }
+      console.log('IS ACTIVE SETTING')
       await sleep(40)
       const getResults = () => this.results
       // @ts-ignore
@@ -51,11 +52,18 @@ class OrbitDirectoryStore {
     return query.slice(prefix ? 1 : 0)
   }
 
-  get people(): Person[] {
-    return Helpers.fuzzy(this.peopleQuery, this.results, {
-      key: 'name',
-    })
-  }
+  people: Person[] = react(
+    () => this.peopleQuery,
+    () => {
+      if (!this.isActive) {
+        throw react.cancel
+      }
+      return Helpers.fuzzy(this.peopleQuery, this.results, {
+        key: 'name',
+      })
+    },
+    { immediate: true, defaultValue: [] },
+  )
 
   // poll every few seconds while active
   results = modelQueryReaction(
@@ -126,7 +134,6 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   letters.sort((a, b) => a.localeCompare(b))
   for (const letter of letters) {
     const nextPeople = byLetter[letter]
-    console.log('nextPeople', nextPeople, byLetter, letter)
     sections.push(
       createSection(
         nextPeople,
@@ -137,6 +144,5 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
     )
     offset += nextPeople.length
   }
-  console.log('sections', sections)
   return sections
 })

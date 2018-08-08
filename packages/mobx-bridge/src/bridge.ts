@@ -77,6 +77,7 @@ class Bridge {
     this.started = true
     if (options.master) {
       const stores = options.stores
+      log(`Starting socket manager on ${port}`)
       this.socketManager = new SocketManager({
         masterSource: 'Desktop',
         port,
@@ -100,6 +101,7 @@ class Bridge {
       })
       await this.socketManager.start()
     } else {
+      log(`Connecting socket to ${port}`)
       this._socket = new ReconnectingWebSocket(
         `ws://localhost:${port}`,
         undefined,

@@ -1,5 +1,4 @@
 import { findContiguousPorts } from './findContiguousPorts'
-import * as ElectronApp from '@mcro/orbit-electron'
 import { setConfig } from '@mcro/config'
 
 async function main() {
@@ -11,6 +10,9 @@ async function main() {
       swift: ports[2],
     },
   })
+
+  // require apps after config
+  const ElectronApp = require('@mcro/orbit-electron')
   ElectronApp.main({ port: ports[0] })
 }
 

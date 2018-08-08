@@ -10,6 +10,7 @@
     "start-prod": "NODE_ENV=production node desktop.js"
   },
   "dependencies": {
+    "@mcro/config": "*",
     "@mcro/orbit-app": "^2.2.1",
     "@mcro/black": "^2.2.1",
     "@mcro/constants": "^2.2.1",

@@ -6,6 +6,8 @@ export async function main({ port }) {
   /*
    *  Set config before requiring app!
    */
+
+  // local
   setConfig({
     env: {
       prod: process.env.NODE_ENV === 'production',

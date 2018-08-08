@@ -38,7 +38,8 @@ export async function main({ port }) {
 
   // start desktop in production
   if (process.env.NODE_ENV === 'production') {
-    require('./helpers/startDesktopInProcess')
+    log(`In production, starting desktop...`)
+    require('./helpers/startDesktopInProcess').startDesktopInProcess(port)
   }
 
   // set config before starting app

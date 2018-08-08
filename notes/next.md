@@ -1,28 +1,44 @@
+# now
+
+- make search suggestions show only on search
+- make header input have nice click effect like ios
+- fix directory design bugs
+- fix directory index/select bug
+- better design for "Add integrations"
+- fix search empty results on names
+- bugfix run through trello
+
 # nate
+
+## review week to aug 7th
+
+- everything needs a lot of work to feel nicer
+  - fix a bunch of search bugs
+  - make interactions faster with peeks
+  - make peek positions and design better
+- the settings needs to feel more "store-like"
+  - list-style apps in the "add integration" section (rename to "add apps")
+    - should have a description underneath in english and nice "add button"
+    - ideally even have a screenshot
+  - can live search through "apps" and add easily
+  - showing realtime sync info on integations feels futuristic
 
 ## August
 
-Aug 7th:
-
-- SHOULD one command to push update
-- SHOULD show banner, update and restart once update is pushed
-- SHOULD have general setting for shortuct
-- SHOULD have setting for start on login
-- SHOULD have simple query for mixed recent things by default to start
-- SHOULD handle screen changes/resizes
-
-- Masonry.fixedHeight mode for Directory/Settings cards (no double render)
-- react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
-- fix horizontal scroller to cut off nicer
-
 Aug 14th:
 
-- account system in cloud
-- p2p keyshare/syncer dedupe
-- invite friend onboarding
-- deploy to Matt/Kevin/friends
+- auto updates
+- redesign home
+- redesign settings/apps
+- fix searches and keynav a lot
+- upgrade visual look a lot
+- speed up interactions
+- lots of visual bug fixes
 
-umed: syncers/people/events
+Aug 21st:
+
+- p2p/app setup
+- invite friend onboarding
 
 Aug 21st:
 
@@ -46,6 +62,12 @@ p2p: https://github.com/mafintosh/hyperdb
 - alpha ocr/memory/contextual-search
 
 queue:
+
+- SHOULD show banner, update and restart once update is pushed
+- handle screen changes/resizes
+- Masonry.fixedHeight mode for Directory/Settings cards (no double render)
+- react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
+- fix horizontal scroller to cut off nicer
 
 - search: filtering "nick and nate" doesn't show any results for some reason
 - make all searches work: task search, message search

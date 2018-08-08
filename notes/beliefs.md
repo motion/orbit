@@ -52,6 +52,7 @@ Talked to James (Juul):
 Talked to Raymond (startup person)
 
 - https://retool.in/
+- Excited by DHT / shared apps
 
 # Jul 18th
 
@@ -74,3 +75,15 @@ Talked to Michael Shade (Stripe Home)
   - also he mentioned this could be because he hasn't seen the product
 - They are building a sort of data warehouse thing
 - Mentioned he couldn't use it on work laptop due to extreme security, but off hand and ran out of time
+
+# Aug 7th
+
+Talked to Patrick Gray
+
+- His diff in excitement between July and Now is 2 orders of magnitude at least
+- Thought we had no vision before, thinks this is one of the best now
+- He's especially resonant on:
+  - Private internal tooling
+  - Making it "feel like Minority Report"
+- Upweight:
+  - ++++ User experience and feeling of control

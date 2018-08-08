@@ -1,11 +1,14 @@
 import * as React from 'react'
-import { view, react, attachTheme } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import { BitRepository, PersonRepository } from '../../../../repositories'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { Masonry } from '../../../../views/Masonry'
+import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../../../../stores/SearchStore'
+import { Carousel } from '../../../../components/Carousel'
+import { capitalize } from 'lodash'
 
 type Props = {
   name: string
@@ -13,6 +16,16 @@ type Props = {
   searchStore?: SearchStore
   store?: OrbitHomeStore
 }
+
+const findManyType = integration =>
+  BitRepository.find({
+    take: 5,
+    where: {
+      integration,
+    },
+    relations: ['people'],
+    order: { bitCreatedAt: 'DESC' },
+  })
 
 const findType = (integration, type, skip = 0) =>
   BitRepository.findOne({
@@ -42,6 +55,30 @@ class OrbitHomeStore {
       this.props.searchStore.setGetResults(() => this.results)
     },
     { immediate: true },
+  )
+
+  following = react(
+    async () => {
+      const [slack, drive, github, confluence, jira] = await Promise.all([
+        findManyType('slack'),
+        findManyType('gdocs'),
+        findManyType('github'),
+        findManyType('confluence'),
+        findManyType('jira'),
+      ])
+      // only return ones with results
+      const all = { slack, drive, github, confluence, jira }
+      const res = {} as any
+      for (const name in all) {
+        if (all[name] && all[name].length) {
+          res[capitalize(name)] = all[name]
+        }
+      }
+      return res
+    },
+    {
+      defaultValue: {},
+    },
   )
 
   results = react(
@@ -80,7 +117,8 @@ const itemProps = {
   },
 }
 
-@attachTheme
+const Section = view()
+
 @view.attach('searchStore')
 @view.attach({
   store: OrbitHomeStore,
@@ -97,6 +135,16 @@ export class OrbitHome extends React.Component<Props> {
     return (
       <SubPane name="home" fadeBottom>
         <div style={{ paddingTop: 3 }}>
+          {Object.keys(store.following).map(category => {
+            return (
+              <Section key={category}>
+                <SubTitle>{category}</SubTitle>
+                <Carousel items={store.following[category]} />
+              </Section>
+            )
+          })}
+
+          <SubTitle>Interesting</SubTitle>
           <Masonry>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2

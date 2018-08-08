@@ -398,6 +398,7 @@ export type justifyContent =
   | 'center'
   | 'space-between'
   | 'space-around'
+  | 'stretch'
 export type letterSpacing = 'normal' | lengthPercentage
 export type lineBreak = 'auto' | 'loose' | 'normal' | 'strict'
 export type lineHeight = 'normal' | number | string

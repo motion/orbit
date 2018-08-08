@@ -92,9 +92,9 @@ const Card = view({
   },
 })
 
-const cardShadow = [0, 1, 2, [0, 0, 0, 0.04]]
-const cardHoverGlow = [0, 0, 0, 3, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
+const cardShadow = [0, 1, 4, [0, 0, 0, 0.06]]
+const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
+const cardSelectedGlow = [0, 0, 0, 2, '#90b1e433']
 const borderSelected = UI.color('#90b1e4cc')
 
 Card.theme = ({
@@ -111,16 +111,15 @@ Card.theme = ({
   disableShadow,
   chromeless,
 }) => {
-  if (chromeless) {
-    return {
-      padding: padding || 16,
-      borderRadius: borderRadius || 9,
-    }
-  }
-  const disabledShadow = disableShadow ? 'none' : null
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
+    padding: padding || 14,
+    borderRadius: borderRadius || 12,
   }
+  if (chromeless) {
+    return card
+  }
+  const disabledShadow = disableShadow ? 'none' : null
   if (listItem) {
     // LIST ITEM
     let listStyle
@@ -157,7 +156,7 @@ Card.theme = ({
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow],
-        border: border || [1, cardBackground.darken(0.08)],
+        border: border || [1, theme.base.borderColor],
         '&:hover': {
           boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
           border: [1, borderHover],
@@ -176,8 +175,6 @@ Card.theme = ({
     }
     card = {
       ...card,
-      padding: padding || 16,
-      borderRadius: borderRadius || 11,
       background: cardBackground,
       '&:active': {
         opacity: 0.8,
@@ -205,10 +202,10 @@ const Preview = view({
 
 const Subtitle = view(UI.View, {
   height: 20,
-  margin: [3, 0, 1],
+  margin: [2, 0, 0],
+  padding: [2, 0, 2],
   flexFlow: 'row',
   alignItems: 'center',
-  overflow: 'hidden',
 })
 
 const orbitIconProps = {

@@ -1,7 +1,6 @@
 {
   "name": "@mcro/color",
   "version": "2.2.1",
-  "description": "",
   "main": "_/color.js",
   "author": "Motion",
   "license": "MIT",

@@ -1,0 +1,40 @@
+{
+	"name": "@mcro/config",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/config",
+			"main": "_/config.js",
+			"version": "2.2.1",
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/config@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-+xeVEuLg6xRNBNUDTQxEUHvDF2O3wHf9I6zLUgi5m/HoOFQif/K9Gz/xz+Sc7xengFMeu8atFBtRJypDwwWvPg==",
+				"shasum": "81d0cc619dc403dc590b86468166ba69b2ca4060",
+				"tarball": "http://localhost:4343/@mcro/config/-/@mcro/config-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T18:05:48.538Z",
+		"created": "2018-08-08T18:05:48.538Z",
+		"2.2.1": "2018-08-08T18:05:48.538Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"config-2.2.1.tgz": {
+			"shasum": "81d0cc619dc403dc590b86468166ba69b2ca4060",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "3-a242ff33323cd68c",
+	"readme": "ERROR: No README data found!"
+}

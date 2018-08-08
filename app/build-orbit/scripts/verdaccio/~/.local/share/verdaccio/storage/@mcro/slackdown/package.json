@@ -1,0 +1,47 @@
+{
+	"name": "@mcro/slackdown",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/slackdown",
+			"version": "2.2.1",
+			"description": "",
+			"main": "_/slackdown.js",
+			"author": {
+				"name": "Motion",
+				"url": "http://motion.io"
+			},
+			"license": "MIT",
+			"scripts": {
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput"
+			},
+			"_id": "@mcro/slackdown@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-GKyd2JbGvSHSt2w/QjokNO3+Qi8njjDAEN7oXHndV1a1EAn/zvygivA9aY5McUY8kBJdhSr4DblWmMgdUI7GNw==",
+				"shasum": "2793b6ad11ede67d79abf107ad0b71b891070e7a",
+				"tarball": "http://localhost:4343/@mcro/slackdown/-/@mcro/slackdown-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T18:06:10.011Z",
+		"created": "2018-08-08T18:06:10.011Z",
+		"2.2.1": "2018-08-08T18:06:10.011Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"slackdown-2.2.1.tgz": {
+			"shasum": "2793b6ad11ede67d79abf107ad0b71b891070e7a",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "3-fcb73334fe673429",
+	"readme": "ERROR: No README data found!"
+}

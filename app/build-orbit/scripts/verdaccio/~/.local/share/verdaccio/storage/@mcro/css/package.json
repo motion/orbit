@@ -1,0 +1,51 @@
+{
+	"name": "@mcro/css",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/css",
+			"version": "2.2.1",
+			"description": "Turns objects into nice CSS styles. Has a few helpers:",
+			"main": "_/css.js",
+			"author": {
+				"name": "Motion"
+			},
+			"license": "MIT",
+			"scripts": {
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput",
+				"test": "node ./_/test.js"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"readmeFilename": "README.md",
+			"_id": "@mcro/css@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-Ivr9eyX3UB0Cp9qyKImOntvK1TQhusKiuwqN2hybr7y5LdZ3Ehy9EMxXYAkKE/PTuF8L98s6/c+Jv0+ddjS0gA==",
+				"shasum": "a824d5b891510215b534abff481b090e1acfa9e3",
+				"tarball": "http://localhost:4343/@mcro/css/-/@mcro/css-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T18:05:48.567Z",
+		"created": "2018-08-08T18:05:48.567Z",
+		"2.2.1": "2018-08-08T18:05:48.567Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"css-2.2.1.tgz": {
+			"shasum": "a824d5b891510215b534abff481b090e1acfa9e3",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "3-59ca08516797f1f1",
+	"readme": "## @mcro/css\n\nTurns objects into nice CSS styles. Has a few helpers:\n\n* Arrays to strings:\n\n```js\n{\n  border: [1, 'solid', '#eee'], // 1px solid #eee\n  border: [1, '#eee'], // defaults (solid)\n  color: [0, 0, 0, 0.5], // rgba(0,0,0,0.5)\n}\n```\n\n* Transform objects:\n\n```js\n{\n  transform: { x: 0, y: 10, z: 0, rotate: '100deg' }\n}\n```\n\n* Color objects:\n\n```js\n{\n  background: [0, 255, 0, 0.5] // rgba(0, 255, 0, 0.5)\n}\n```\n\n* Converts css-able functions/objects:\n\n```js\n{\n  background: chroma('#fff') // will call .css() automatically\n}\n```\n\n* Recurses into media queries + & selectors\n\n```js\n{\n  '@media screen': { ... }\n}\n```\n\n```js\n{\n  '& child': { ... }\n}\n```\n\n* Extra border shorthands\n\n```js\n{\n  borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],\n  borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],\n  borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],\n  borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],\n}\n```\n\n* Position shorthand\n\n```js\n{\n  position: [0, 'auto', 20, '50%'],\n  /*\n    position: absolute;\n    top: 0px;\n    right: auto;\n    bottom: 20px;\n    left: 50%;\n  */\n  position: ['fixed', 0, 'auto'],\n  /*\n    position: fixed;\n    top: 0px;\n    right: auto;\n  */\n}\n```\n\n* Comma separations for multiple boxShadows and transitions:\n\n```js\n{\n  boxShadow: [\n    { x: 5, y: 5, blur: 2, spread: 5, color: [0, 0, 0, 0.1] },\n    [0, 0, 10, [0, 0, 0, 0.2]],\n  ]\n}\n```\n\n* Object to value:\n\n```js\n{\n  background: {\n    color: 'green',\n    image: 'url(image.jpg)',\n    position: [0, 0],\n    repeat: 'no-repeat'\n  }\n}\n```\n"
+}

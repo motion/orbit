@@ -1,0 +1,53 @@
+{
+	"name": "@mcro/decor-mobx",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/decor-mobx",
+			"main": "_/decor-mobx.js",
+			"types": "decor-mobx.d.ts",
+			"sideEffects": false,
+			"version": "2.2.1",
+			"scripts": {
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput"
+			},
+			"dependencies": {
+				"@mcro/decor": "^2.2.1",
+				"mobx-react": "5.2.3"
+			},
+			"peerDependencies": {
+				"mobx": "5.0.3"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/decor-mobx@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-1rfqDZA5/aOdYBD43RV6rVy87s7+54RfQ9rv0nEZHXcXPDBGfaz+Cu3TlaOLJcXWceVoUE4zh3bR08/+Exifgg==",
+				"shasum": "943ed77b1e1b6f3d24d426b37bb93630c92564d9",
+				"tarball": "http://localhost:4343/@mcro/decor-mobx/-/@mcro/decor-mobx-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T17:55:01.773Z",
+		"created": "2018-08-08T17:55:01.773Z",
+		"2.2.1": "2018-08-08T17:55:01.773Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"decor-mobx-2.2.1.tgz": {
+			"shasum": "943ed77b1e1b6f3d24d426b37bb93630c92564d9",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "4-fb17ac8f22c8606a",
+	"readme": "ERROR: No README data found!"
+}

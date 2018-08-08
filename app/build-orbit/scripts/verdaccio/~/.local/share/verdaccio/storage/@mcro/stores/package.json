@@ -1,0 +1,55 @@
+{
+	"name": "@mcro/stores",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/stores",
+			"version": "2.2.1",
+			"main": "_/index",
+			"scripts": {
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput"
+			},
+			"dependencies": {
+				"@mcro/black": "^2.2.1",
+				"@mcro/constants": "^2.2.1",
+				"@mcro/mobx-bridge": "^2.2.1",
+				"@mcro/models": "^2.2.1",
+				"global": "^4.3.2",
+				"lodash": "4.17.10"
+			},
+			"peerDependencies": {
+				"mobx": "*"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/stores@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-Attjp3iQ0S9urbniepxn34mjit7g1cGRdKZvN6Cov3eD5oWdODT9AXfj61twAm61vchJobE/fA5P9qa6KflrwA==",
+				"shasum": "0da4b41c083223acbb4499259818996b30fd9e58",
+				"tarball": "http://localhost:4343/@mcro/stores/-/@mcro/stores-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T17:55:03.804Z",
+		"created": "2018-08-08T17:55:03.804Z",
+		"2.2.1": "2018-08-08T17:55:03.804Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"stores-2.2.1.tgz": {
+			"shasum": "0da4b41c083223acbb4499259818996b30fd9e58",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "4-38b1760637fef30f",
+	"readme": "ERROR: No README data found!"
+}

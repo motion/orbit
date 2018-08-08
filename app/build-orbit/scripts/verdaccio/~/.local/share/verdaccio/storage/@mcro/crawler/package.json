@@ -1,0 +1,55 @@
+{
+	"name": "@mcro/crawler",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/crawler",
+			"version": "2.2.1",
+			"main": "_/index.js",
+			"module": "src/index.js",
+			"scripts": {
+				"start": "node index.js",
+				"start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js"
+			},
+			"dependencies": {
+				"@mcro/logger": "2.2.1",
+				"babel-polyfill": "7.0.0-beta.3",
+				"isomorphic-fetch": "^2.2.1",
+				"lodash": "4.17.10",
+				"readability-from-string": "^2.0.0",
+				"sanitize-html": "^1.16.1",
+				"upndown": "^2.1.0",
+				"urijs": "^1.19.0"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/crawler@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-eMDOQHvIwtIeQgpQPauD3opwdkgU2pZ24GIvADKzwL3LIbZwmokrF25szNvtSQRQpiAobncPJ0a5JvQIFOq0oA==",
+				"shasum": "9b8be6419ad43a193a92e1c1c6d16d7ade5bb530",
+				"tarball": "http://localhost:4343/@mcro/crawler/-/@mcro/crawler-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T17:54:59.440Z",
+		"created": "2018-08-08T17:54:59.440Z",
+		"2.2.1": "2018-08-08T17:54:59.440Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"crawler-2.2.1.tgz": {
+			"shasum": "9b8be6419ad43a193a92e1c1c6d16d7ade5bb530",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "3-c9fe932cad024639",
+	"readme": "ERROR: No README data found!"
+}

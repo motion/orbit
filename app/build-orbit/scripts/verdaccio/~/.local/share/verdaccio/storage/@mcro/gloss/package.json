@@ -1,0 +1,66 @@
+{
+	"name": "@mcro/gloss",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/gloss",
+			"version": "2.2.1",
+			"description": "Higher order component for nicer component styles",
+			"main": "_/gloss.js",
+			"scripts": {
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput"
+			},
+			"repository": {
+				"type": "git",
+				"url": "git+https://github.com/motion/gloss.git"
+			},
+			"author": {
+				"name": "motion"
+			},
+			"license": "MIT",
+			"homepage": "https://github.com/motion/gloss",
+			"dependencies": {
+				"@mcro/color": "^2.2.1",
+				"@mcro/css": "^2.2.1"
+			},
+			"peerDependencies": {
+				"react": "^0.14.0 || ^15.0.0 || ^16.0.0",
+				"react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"readmeFilename": "README.md",
+			"bugs": {
+				"url": "https://github.com/motion/gloss/issues"
+			},
+			"_id": "@mcro/gloss@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-R9KIRb3Ky1jvrcH9IQ9i/3h67qc+nC/35iw+3rBtnmsI1yuwzNrbxwyv6IkhNrI/43yoXecdZb+grcXvlp1zng==",
+				"shasum": "7f932ffd43a4f63dffca803c89771bc0a11f3b26",
+				"tarball": "http://localhost:4343/@mcro/gloss/-/@mcro/gloss-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T17:54:59.499Z",
+		"created": "2018-08-08T17:54:59.499Z",
+		"2.2.1": "2018-08-08T17:54:59.499Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"gloss-2.2.1.tgz": {
+			"shasum": "7f932ffd43a4f63dffca803c89771bc0a11f3b26",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "4-a2f868d66512fb06",
+	"readme": "# gloss 💅\n\nusage:\n\nfull-featured example:\n\n```js\nimport React from 'react'\nimport ReactDOM from 'react-dom'\nimport Icon from './icon'\nimport Popover from './popover'\n\nconst LINE_HEIGHT = 30\n\nReactDOM.render(\n  <ThemeProvide bright={{ background: '#000' }}>\n    <Theme name=\"bright\">\n      <Surface icon=\"name\" />\n    </Theme>\n  </ThemeProvide>,\n  document.querySelector('#app'),\n)\n```"
+}

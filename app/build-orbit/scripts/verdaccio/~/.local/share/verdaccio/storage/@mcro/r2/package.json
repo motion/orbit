@@ -1,0 +1,49 @@
+{
+	"name": "@mcro/r2",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/r2",
+			"main": "_/r2.js",
+			"version": "2.2.1",
+			"scripts": {
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput"
+			},
+			"dependencies": {
+				"caseless": "^0.12.0",
+				"isomorphic-fetch": "^2.2.1",
+				"typedarray-to-buffer": "^3.1.2"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/r2@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-CydBc5nd4IH2P1eZQCTwVIbzNA4dKi77H0gqJaxJX62Tu4nJlWYPG4Lym51GU09M2vPiYJn41xUPrBsD+OOEog==",
+				"shasum": "ace75add45eee859964080f4e807fa7df918d849",
+				"tarball": "http://localhost:4343/@mcro/r2/-/@mcro/r2-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T18:05:59.300Z",
+		"created": "2018-08-08T18:05:59.300Z",
+		"2.2.1": "2018-08-08T18:05:59.300Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"r2-2.2.1.tgz": {
+			"shasum": "ace75add45eee859964080f4e807fa7df918d849",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "3-48cd5473e48e93ad",
+	"readme": "ERROR: No README data found!"
+}

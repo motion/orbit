@@ -1,0 +1,72 @@
+{
+	"name": "@mcro/ui",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/ui",
+			"version": "2.2.1",
+			"main": "_/index.js",
+			"license": "MIT",
+			"sideEffects": false,
+			"scripts": {
+				"build": "npm run build-js & npm run build-types",
+				"build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
+				"build-types": "tsc  --emitDeclarationOnly || true",
+				"build-types-watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch",
+				"watch": "npm run build-js -- --watch & npm run build-types-watch"
+			},
+			"dependencies": {
+				"@mcro/black": "^2.2.1",
+				"@mcro/color": "^2.2.1",
+				"@mcro/gloss": "^2.2.1",
+				"batch-processor": "^1.0.0",
+				"fuzzy": "^0.1.3",
+				"hoist-non-react-statics": "^2.3.0",
+				"keycode": "^2.1.9",
+				"prop-types": "^15.6.0",
+				"raf-throttle": "^2.0.3",
+				"react-fast-compare": "2.0.1",
+				"react-hot-loader": "4.3.4",
+				"react-resize-detector": "^2.3.0",
+				"react-tilt": "^0.1.4",
+				"react-virtualized": "^9.20.1",
+				"lodash": "^4.17.10"
+			},
+			"peerDependencies": {
+				"@babel/runtime": "*",
+				"mobx": "5.0.3",
+				"react": "^0.14.0 || ^15.0.0 || ^16.0.0",
+				"react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/ui@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-S7jF5wdvseBAlg62BOhcMy9AXoslA5Pqtq5xm85tE+dPeNSmEoRjY3OcKZzbtpmZizW5aUKAPmMIC91mogb1fg==",
+				"shasum": "bf76951e3582770ba25cd67ceea5716851c27519",
+				"tarball": "http://localhost:4343/@mcro/ui/-/@mcro/ui-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T17:55:03.266Z",
+		"created": "2018-08-08T17:55:03.266Z",
+		"2.2.1": "2018-08-08T17:55:03.266Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"ui-2.2.1.tgz": {
+			"shasum": "bf76951e3582770ba25cd67ceea5716851c27519",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "4-83c08dffe16fd323",
+	"readme": "ERROR: No README data found!"
+}

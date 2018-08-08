@@ -1,0 +1,62 @@
+{
+	"name": "@mcro/debug-apps",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/debug-apps",
+			"main": "_/index.js",
+			"version": "2.2.1",
+			"bin": {
+				"debug-apps": "./_/index.js"
+			},
+			"scripts": {
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput",
+				"start": "node --max_old_space_size=4096 ./_/index"
+			},
+			"dependencies": {
+				"@mcro/r2": "^2.2.1",
+				"debug": "^3.1.0",
+				"express": "^4.12.3",
+				"guid": "0.0.12",
+				"http-proxy-middleware": "^0.17.4",
+				"kill-port": "^1.2.0",
+				"lodash": "4.17.10",
+				"node-uuid": "^1.4.7",
+				"puppeteer": "1.5.0",
+				"request": "^2.67.0",
+				"socket.io": "^2.0.4",
+				"ws": "6.0.0"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/debug-apps@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-0WTKf8EyJVJAgtsHr4QEp24AlSRjGSRSBYsDzjpG97qsZVhQ02T2DR4miN2AXVPaMONp43/vjUjsHd2/kA/sVQ==",
+				"shasum": "faf41a6399f177840eeed4fe643e2a8843ebbc0b",
+				"tarball": "http://localhost:4343/@mcro/debug-apps/-/@mcro/debug-apps-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T17:54:59.431Z",
+		"created": "2018-08-08T17:54:59.431Z",
+		"2.2.1": "2018-08-08T17:54:59.431Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"debug-apps-2.2.1.tgz": {
+			"shasum": "faf41a6399f177840eeed4fe643e2a8843ebbc0b",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "3-f14f3f027126a881",
+	"readme": "ERROR: No README data found!"
+}

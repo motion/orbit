@@ -1,0 +1,58 @@
+{
+	"name": "@mcro/router",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/router",
+			"version": "2.2.1",
+			"main": "_/index.js",
+			"sideEffects": false,
+			"author": {
+				"name": "Motion",
+				"url": "http://motion.io"
+			},
+			"license": "MIT",
+			"scripts": {
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput"
+			},
+			"dependencies": {
+				"history": "^4.7.2",
+				"resolve-pathname": "^2.2.0",
+				"url-pattern": "^1.0.3"
+			},
+			"peerDependencies": {
+				"mobx": "5.0.3"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/router@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-0AMgPhBDQOyr3Zk3gHgSDWZ4lQMGorudWSoIRQBlzOCRrVc03H2QXhSBMjqWZOlkbJc24SJ0ZW1Tpm/cs64BAg==",
+				"shasum": "23abc82ecef58ea55c5a2fab6fb97adc1f7c4b55",
+				"tarball": "http://localhost:4343/@mcro/router/-/@mcro/router-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T18:06:10.038Z",
+		"created": "2018-08-08T18:06:10.038Z",
+		"2.2.1": "2018-08-08T18:06:10.038Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"router-2.2.1.tgz": {
+			"shasum": "23abc82ecef58ea55c5a2fab6fb97adc1f7c4b55",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "3-6f17507b6658bc2c",
+	"readme": "ERROR: No README data found!"
+}

@@ -11,10 +11,6 @@ storage: ~/.local/share/verdaccio/storage
 # path to a directory with plugins to include
 plugins: ./plugins
 
-store:
-  memory:
-    limit: 10000
-
 web:
   # WebUI is enabled as default, if you want disable it, just uncomment this line
   #enable: false
@@ -30,7 +26,7 @@ auth:
 # a list of other known repositories we can talk to
 uplinks:
   npmjs:
-    url: https://registry.npmjs.org/
+    url: https://registry.npmjs.org
 
 packages:
   '@*/*':

@@ -1,0 +1,104 @@
+{
+	"name": "@mcro/orbit-electron",
+	"versions": {
+		"2.2.1": {
+			"name": "@mcro/orbit-electron",
+			"productName": "Orbit",
+			"description": "Description",
+			"author": {
+				"name": "Orbit"
+			},
+			"version": "2.2.1",
+			"main": "_/main.js",
+			"updater": {
+				"url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
+			},
+			"scripts": {
+				"start": "./scripts/start.sh",
+				"build": "tsc || true",
+				"watch": "tsc --watch --preserveWatchOutput",
+				"deploy": "cd ../electron-build && npm run deploy"
+			},
+			"cmake-js": {
+				"runtime": "electron",
+				"runtimeVersion": "2.0.2"
+			},
+			"iohook": {
+				"targets": [
+					"electron-57"
+				],
+				"platforms": [
+					"darwin"
+				],
+				"arches": [
+					"x64"
+				]
+			},
+			"dependencies": {
+				"@mcro/config": "*",
+				"@mcro/black": "^2.2.1",
+				"@mcro/constants": "^2.2.1",
+				"@mcro/orbit-desktop": "^2.2.1",
+				"@mcro/r2": "^2.2.1",
+				"@mcro/reactron": "^2.2.1",
+				"@mcro/stores": "^2.2.1",
+				"@mcro/logger": "^2.2.1",
+				"babel-polyfill": "7.0.0-beta.3",
+				"electron-context-menu": "^0.9.1",
+				"electron-debug": "^1.5.0",
+				"electron-simple-updater": "^1.2.3",
+				"execa": "0.10.0",
+				"iohook": "0.2.0",
+				"kill-port": "^1.1.0",
+				"lodash": "4.17.10",
+				"mobx": "5.0.3",
+				"raf": "^3.4.0",
+				"react": "16.4.0",
+				"react-dom": "16.4.0",
+				"sb-promisify": "^2.0.2",
+				"source-map-support": "^0.5.0",
+				"usage": "^0.7.1",
+				"wait-port": "^0.2.2"
+			},
+			"devDependencies": {
+				"electron": "3.0.0-beta.3",
+				"electron-rebuild": "1.7.3",
+				"node-abi": "2.4.3",
+				"node-loader": "^0.6.0",
+				"nodemon": "1.18.3",
+				"tcp-port-used": "0.1.2",
+				"touch": "^3.1.0"
+			},
+			"publishConfig": {
+				"registry": "http://localhost:4343"
+			},
+			"_id": "@mcro/orbit-electron@2.2.1",
+			"_npmVersion": "6.3.0",
+			"_nodeVersion": "9.11.2",
+			"_npmUser": {},
+			"dist": {
+				"integrity": "sha512-gXpDdU6JjiVJ3FklzxDqGRcJmUsCwLlYj777YiqZaF517k00CqKX0bhuhkN5qSzBIAtNnDyY0hFmTXXU8EGx8A==",
+				"shasum": "500685c14f0af24b354b22a44ab13fb189801333",
+				"tarball": "http://localhost:4343/@mcro/orbit-electron/-/@mcro/orbit-electron-2.2.1.tgz"
+			}
+		}
+	},
+	"time": {
+		"modified": "2018-08-08T17:55:06.420Z",
+		"created": "2018-08-08T17:55:06.420Z",
+		"2.2.1": "2018-08-08T17:55:06.420Z"
+	},
+	"dist-tags": {
+		"latest": "2.2.1"
+	},
+	"_uplinks": {},
+	"_distfiles": {},
+	"_attachments": {
+		"orbit-electron-2.2.1.tgz": {
+			"shasum": "500685c14f0af24b354b22a44ab13fb189801333",
+			"version": "2.2.1"
+		}
+	},
+	"_rev": "4-ce70266b44240a96",
+	"readme": "ERROR: No README data found!"
+}

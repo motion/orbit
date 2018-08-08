@@ -1,8 +1,8 @@
-import * as Constants from '../constants'
 import updater from 'electron-simple-updater'
+import { getConfig } from '../config'
 
 // update checker
-if (Constants.IS_PROD) {
+if (getConfig().env.prod) {
   const updateUrl = require('../../package.json').updater.url
   console.log('updateUrl', updateUrl)
   updater.init(updateUrl)

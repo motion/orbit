@@ -2,9 +2,10 @@ import { store } from '@mcro/black'
 import AutoLaunch from 'auto-launch'
 import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
-import * as Constants from '../constants'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
+import { getConfig } from '../config'
 
+const Config = getConfig()
 const log = logger('GeneralSettingManager')
 
 const generalSettingQuery = { type: 'general', category: 'general' }
@@ -12,11 +13,17 @@ const generalSettingQuery = { type: 'general', category: 'general' }
 // @ts-ignore
 @store
 export class GeneralSettingManager {
+  autoLaunch: AutoLaunch
+
   constructor() {
-    if (Constants.IS_PROD) {
-      log(
-        'Note, autolaunch froze before, so check if it freezes after this log...',
-      )
+    if (Config.env.prod) {
+      try {
+        this.autoLaunch = new AutoLaunch({
+          name: 'Orbit',
+        })
+      } catch (err) {
+        console.error(err)
+      }
     }
     console.log('ensuring models are in place all over, remove me plz')
     this.start()
@@ -28,12 +35,6 @@ export class GeneralSettingManager {
     this.ensureDefaultSettings(setting)
     this.handleAutoLaunch(setting)
   }
-
-  autoLaunch =
-    Constants.IS_PROD &&
-    new AutoLaunch({
-      name: 'Orbit',
-    })
 
   ensureDefaultSettings = async setting => {
     if (Object.keys(setting.values).length) {

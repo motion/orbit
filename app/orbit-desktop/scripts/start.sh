@@ -21,7 +21,7 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/constants)/_  \
   --exec 'npx kill-port 3001 && \
     npx kill-port 9000 && \
-    NODE_ENV=development node --inspect=127.0.0.1:9000 _/main.js'
+    NODE_ENV=development node --inspect=127.0.0.1:9000 ./_/main-development'
 
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT > /dev/null
 

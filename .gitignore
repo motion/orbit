@@ -31,7 +31,6 @@ app/oracle/swindler/Carthage
 app/oracle/swindler/Build
 app/oracle/orbit/orbit.xcodeproj
 app/oracle/swindler/Swindler.xcodeproj
-app/orbit/app-built
 app/orbit-app/build
 app/orbit-desktop/uploads
 app/orbit-desktop/build

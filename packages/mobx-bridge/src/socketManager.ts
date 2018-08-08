@@ -1,9 +1,9 @@
 import { Server } from 'ws'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('scrn')
 
-export default class SocketManager {
+export class SocketManager {
   activeSockets = []
   onState: Function
   actions: { getState?: Function; onMessage: Function }

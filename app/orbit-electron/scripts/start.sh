@@ -21,6 +21,6 @@ npx nodemon \
   --watch $(realpath node_modules/@mcro/decor-react)/_  \
   --watch $(realpath node_modules/@mcro/decor-classes)/_  \
   --watch $(realpath node_modules/@mcro/decor)/_  \
-  --exec 'npx kill-port 9001 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 _/main.js'
+  --exec 'npx kill-port 9001 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 _/main-development.js'
 
 echo "bye orbit-electron"

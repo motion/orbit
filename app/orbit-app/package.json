@@ -1,14 +1,15 @@
 {
   "name": "@mcro/orbit-app",
   "version": "2.2.1",
-  "main": "src/index.js",
+  "main": "./index.js",
   "scripts": {
     "start": "./scripts/start.sh",
     "serve-prod": "static-server -p 3002 -n dist/index.html dist",
-    "build-app": "NODE_ENV=production mcro-build --build",
+    "build-app": "NODE_ENV=production mcro-build --entry ./src/main --build",
     "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
+    "@mcro/config": "*",
     "@babel/runtime": "7.0.0-beta.47",
     "@mcro/black": "^2.2.1",
     "@mcro/build": "^2.2.1",
@@ -26,6 +27,7 @@
     "@mcro/slackdown": "^2.2.1",
     "@mcro/stores": "^2.2.1",
     "@mcro/ui": "^2.2.1",
+    "typeorm": "^0.3.0-alpha.7",
     "electron": "3.0.0-beta.3",
     "arrford": "2.0.1",
     "compromise": "11.11.0",

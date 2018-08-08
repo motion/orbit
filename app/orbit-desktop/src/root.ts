@@ -5,7 +5,7 @@ import Server from './Server'
 import { Screen } from './Screen'
 import { KeyboardStore } from './stores/keyboardStore'
 import hostile_ from 'hostile'
-import * as Constants from './constants'
+import { getConfig } from './config'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 import { handleEntityActions } from './sqlBridge'
@@ -27,6 +27,7 @@ import { Logger, logger } from '@mcro/logger'
 const log = logger('desktop')
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
+const Config = getConfig()
 
 export class Root {
   isReconnecting = false
@@ -42,6 +43,7 @@ export class Root {
   start = async () => {
     this.registerREPLGlobals()
     this.registerEntityServer()
+    log(`Start Desktop Store..`)
     // iohook.start(false)
     await Desktop.start({
       ignoreSelf: true,
@@ -136,10 +138,10 @@ export class Root {
 
   setupHosts = async () => {
     const lines = await hostile.get(true)
-    const exists = lines.map(line => line[1]).indexOf(Constants.API_HOST) > -1
+    const exists = lines.map(line => line[1]).indexOf(Config.server.host) > -1
     if (!exists) {
-      log(`Adding host entry`, Constants.API_HOST)
-      await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Constants.API_HOST}`, {
+      log(`Adding host entry`, Config.server.host)
+      await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Config.server.host}`, {
         name: `Orbit`,
       })
     }

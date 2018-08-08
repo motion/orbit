@@ -1,13 +1,15 @@
 import { createConnection } from 'typeorm'
-import * as Constants from '../constants'
 import * as Path from 'path'
+import { getConfig } from '../config'
+
+const Config = getConfig()
 
 export default async function connectModels(models) {
   try {
     return await createConnection({
       name: 'default',
       type: 'sqlite',
-      database: Path.join(Constants.ROOT_DIR, 'app_data', 'database'),
+      database: Path.join(Config.directories.root, 'app_data', 'database'),
       // location: 'default',
       entities: models,
       // logging: true,

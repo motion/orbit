@@ -4,10 +4,12 @@ import RWebSocket from 'reconnecting-websocket'
 import WS from './websocket'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
-import T_SocketManager from './socketManager'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
+import { getConfig } from '@mcro/config'
+import { SocketManager } from './SocketManager'
 
 const log = logger('bridge')
+const port = getConfig().ports.bridge
 
 // exports
 export * from './proxySetters'
@@ -39,7 +41,7 @@ type Options = {
 // we want non-granular updates on state changes
 class Bridge {
   store: any
-  socketManager: T_SocketManager
+  socketManager: SocketManager
   started = false
   _awaitingSocket = []
   _store = null
@@ -64,6 +66,7 @@ class Bridge {
     if (!store) {
       throw new Error(`No source given for starting screen store`)
     }
+    log(`Starting bridge for ${store.source}...`)
     this.setupActions(store, options.actions)
     // on re-start treat as update
     if (this.started) {
@@ -73,12 +76,11 @@ class Bridge {
     store.bridge = this
     this.started = true
     if (options.master) {
-      // TODO: once parcel can ignore requires
-      const SocketManager = eval(`require('./socketManager')`).default
       const stores = options.stores
+      log(`Starting socket manager on ${port}`)
       this.socketManager = new SocketManager({
         masterSource: 'Desktop',
-        port: 40510,
+        port,
         onState: (source, state) => {
           log(`onState ${JSON.stringify(state)}`)
           this._update(stores[source].state, state)
@@ -99,8 +101,9 @@ class Bridge {
       })
       await this.socketManager.start()
     } else {
+      log(`Connecting socket to ${port}`)
       this._socket = new ReconnectingWebSocket(
-        'ws://localhost:40510',
+        `ws://localhost:${port}`,
         undefined,
         {
           constructor: WebSocket,
@@ -120,10 +123,8 @@ class Bridge {
     // setup start/quit actions
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', this.dispose)
-    } else {
-      await eval(`require('wait-port')`)({ host: 'localhost', port: 40510 })
-      process.on('exit', this.dispose)
     }
+    process.on('exit', this.dispose)
     // wait for initial state to come down for a little
     try {
       await Mobx.when(() => this._hasFetchedInitialState, { timeout: 250 })
@@ -411,7 +412,9 @@ class Bridge {
       this.socketManager.sendMessage(Store.source, message)
     } else {
       if (!this._wsOpen) {
+        log(`\n\n\nWaiting for open socket....\n\n\n`)
         await this.onOpenSocket()
+        log(`\n\n\Socket opened!\n\n\n`)
       }
       this._socket.send(JSON.stringify({ message, to: Store.source }))
     }

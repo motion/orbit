@@ -1,12 +1,12 @@
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
-import * as Constants from '@mcro/constants'
 import Strategies from '@mcro/oauth-strategies'
 import * as r2 from '@mcro/r2'
 import { logger } from '@mcro/logger'
 import { GDriveFetchQueryOptions } from './GDriveTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { getConfig } from '../../config'
 
 const log = logger('syncer:gdrive')
 
@@ -67,7 +67,7 @@ export class GDriveFetcher {
       mode: json ? 'cors' : undefined,
       headers: {
         Authorization: `Bearer ${this.setting.token}`,
-        'Access-Control-Allow-Origin': Constants.API_URL,
+        'Access-Control-Allow-Origin': getConfig().server.url,
         'Access-Control-Allow-Methods': 'GET',
       },
     })

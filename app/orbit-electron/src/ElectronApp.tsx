@@ -10,7 +10,6 @@ import { ElectronRoot } from './views/ElectronRoot'
 
 export class ElectronApp {
   constructor() {
-    this.handleExit()
     electronContextMenu()
     electronDebug()
     this.startApp()
@@ -21,24 +20,5 @@ export class ElectronApp {
       ignoreSelf: true,
     })
     render(<ElectronRoot />)
-  }
-
-  handleExit() {
-    const exitHandler = code => process.exit(code)
-    // dont close instantly
-    process.stdin.resume()
-    // do something when app is closing
-    // @ts-ignore
-    process.on('exit', exitHandler)
-    // @ts-ignore
-    process.on('SIGINT', () => exitHandler(0))
-    // @ts-ignore
-    process.on('SIGUSR1', () => exitHandler(0))
-    // @ts-ignore
-    process.on('SIGUSR2', () => exitHandler(0))
-    // @ts-ignore
-    process.on('uncaughtException', err => {
-      console.log('uncaughtException', err.stack)
-    })
   }
 }

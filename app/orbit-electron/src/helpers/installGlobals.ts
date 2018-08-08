@@ -1,9 +1,9 @@
 import root from 'global'
-import * as Constants from '../constants'
 import { App, Desktop, Swift, Electron } from '@mcro/stores'
+import { getConfig } from '../config'
 
 root['require'] = require
-root['Constants'] = Constants
+root['Config'] = getConfig()
 root['App'] = App
 root['Desktop'] = Desktop
 root['Electron'] = Electron

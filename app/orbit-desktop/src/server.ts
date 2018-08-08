@@ -4,16 +4,17 @@ import express from 'express'
 import proxy from 'http-proxy-middleware'
 import session from 'express-session'
 import bodyParser from 'body-parser'
-import * as Constants from './constants'
+import { getConfig } from './config'
+import { getConfig as getGlobalConfig } from '@mcro/config'
 import OAuth from './server/oauth'
 import OAuthStrategies from '@mcro/oauth-strategies'
 import Passport from 'passport'
 import killPort from 'kill-port'
 import Fs from 'fs'
 import Path from 'path'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
 
-const { SERVER_PORT } = Constants
+const Config = getConfig()
 
 const log = logger('desktop')
 
@@ -38,9 +39,9 @@ export default class Server {
     })
 
     const app = express()
-    app.set('port', SERVER_PORT)
+    app.set('port', Config.server.port)
 
-    if (Constants.IS_PROD) {
+    if (process.env.NODE_ENV === 'production') {
       app.use(morgan('dev'))
     }
 
@@ -52,31 +53,30 @@ export default class Server {
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
-    // this.setupIcons
-    app.use('/icons', express.static(Constants.TMP_DIR))
-    // HACKY DANGEROUS
-    app.use('/contents', (req, res) => {
-      const filePath = Path.join('/', req.path.replace('/contents', ''))
-      const file = Fs.readFileSync(filePath)
-        .toString('utf8')
-        .slice(0, 3000)
-      res.json({ file })
+    this.app.get('/hello', (_, res) => res.send('hello world'))
+
+    // config
+    this.app.get('/config', (_, res) => {
+      const config = getGlobalConfig()
+      log(`Send config ${JSON.stringify(config, null, 2)}`)
+      res.json(config)
     })
 
-    this.app.get('/hello', (_, res) => res.send('hello world'))
     this.setupCredPass()
     this.setupPassportRoutes()
-    this.setupProxy()
+    this.setupOrbitApp()
   }
 
   async start() {
     // kill old processes
-    await killPort(SERVER_PORT)
-    this.app.listen(SERVER_PORT, () => {
-      console.log('listening at port', SERVER_PORT)
+    log(`Killing any old servers...`)
+    await killPort(Config.server.port)
+    log(`Desktop listening!!!!!!!!!...`)
+    this.app.listen(Config.server.port, () => {
+      console.log('listening at port', Config.server.port)
     })
 
-    return SERVER_PORT
+    return Config.server.port
   }
 
   cors() {
@@ -128,22 +128,31 @@ export default class Server {
     return session.expires > Date.now()
   }
 
-  setupProxy() {
-    const router = {
-      'http://localhost:3001': Constants.PUBLIC_URL,
+  setupOrbitApp() {
+    // proxy to webpack-dev-server in development
+    if (process.env.NODE_ENV === 'development') {
+      log('Serving orbit app through proxy to webpack-dev-server...')
+      const webpackUrl = 'http://localhost:3002'
+      const router = {
+        'http://localhost:3001': webpackUrl,
+      }
+      this.app.use(
+        '/',
+        proxy({
+          target: webpackUrl,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+          logLevel: 'warn',
+          router,
+        }),
+      )
     }
-    // log('proxying', router)
-    this.app.use(
-      '/',
-      proxy({
-        target: Constants.PUBLIC_URL,
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-        logLevel: 'warn',
-        router,
-      }),
-    )
+    // serve static in production
+    if (process.env.NODE_ENV === 'production') {
+      log(`Serving orbit static app in ${Config.directories.orbitAppStatic}...`)
+      this.app.use('/', express.static(Config.directories.orbitAppStatic))
+    }
   }
 
   setupPassportRoutes() {

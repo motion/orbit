@@ -3,8 +3,6 @@
   "private": true,
   "version": "2.2.1",
   "scripts": {
-    "build": "echo hi",
-    "watch": "echo hi",
     "start": "mcro-build --port 3003",
     "start-pundle": "../../node_modules/.bin/pundle --dev.port 3003 --dev.singlepage --dev.static ./public::/",
     "build-app": "NODE_ENV=production mcro-build --prod --report"

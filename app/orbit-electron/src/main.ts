@@ -10,7 +10,7 @@ const log = logger('electron')
 Error.stackTraceLimit = Infinity
 
 export async function main({ port }) {
-  log(`Starting electron with port ${port}`)
+  log(`Starting electron with port ${port} in env ${process.env.NODE_ENV}`)
 
   // handle our own separate process in development
   if (process.env.NODE_ENV === 'development') {
@@ -37,7 +37,7 @@ export async function main({ port }) {
   }
 
   // start desktop in production
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV !== 'development') {
     log(`In production, starting desktop...`)
     require('./helpers/startDesktopInProcess').startDesktopInProcess(port)
     log(`Waiting for desktop startup to continue...`)
@@ -48,7 +48,7 @@ export async function main({ port }) {
   // set config before starting app
   setConfig({
     env: {
-      prod: process.env.NODE_ENV === 'production',
+      prod: process.env.NODE_ENV !== 'development',
     },
     server: {
       url: `http://localhost:${port}`,

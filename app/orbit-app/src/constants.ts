@@ -4,8 +4,7 @@ import * as UI from '@mcro/ui'
 
 export const IS_ORBIT = window.location.pathname === '/orbit'
 export const IS_PEEK = window.location.pathname.indexOf('/peek') === 0
-export const IS_PROD =
-  process.env.NODE_ENV === 'production' || process.env.IS_PROD
+export const IS_PROD = process.env.NODE_ENV !== 'development'
 export const IS_DEV = !IS_PROD
 export const VERSION = require('../package.json').version
 

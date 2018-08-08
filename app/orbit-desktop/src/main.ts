@@ -14,7 +14,7 @@ export async function main({ port }) {
   // local
   setConfig({
     env: {
-      prod: process.env.NODE_ENV === 'production',
+      prod: process.env.NODE_ENV !== 'development',
     },
     server: {
       url: `http://localhost:${port}`,

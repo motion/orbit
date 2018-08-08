@@ -10,7 +10,7 @@ const log = logger('electron')
 Error.stackTraceLimit = Infinity
 
 export async function main({ port }) {
-  log(`Starting electron with port ${port}`)
+  log(`Starting electron with port ${port} in env ${process.env.NODE_ENV}`)
 
   // handle our own separate process in development
   if (process.env.NODE_ENV === 'development') {

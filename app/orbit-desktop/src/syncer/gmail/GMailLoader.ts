@@ -1,4 +1,4 @@
-import { logger } from '../../../../../packages/logger'
+import { logger } from '@mcro/logger'
 import { GMailFetcher } from './GMailFetcher'
 import { historyQuery, threadQuery, threadsQuery } from './GMailQueries'
 import { GmailHistoryLoadResult, GmailThread } from './GMailTypes'
@@ -25,9 +25,7 @@ export class GMailLoader {
     pageToken?: string,
   ): Promise<GmailHistoryLoadResult> {
     // load a history first
-    log(
-      pageToken ? `loading history from the next page` : `loading history`,
-    )
+    log(pageToken ? `loading history from the next page` : `loading history`)
     const result = await this.fetcher.fetch(
       historyQuery(startHistoryId, pageToken),
     )

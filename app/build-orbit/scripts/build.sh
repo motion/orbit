@@ -51,8 +51,7 @@ function publish-packages() {
   # clean old one since we are re-publishing
   rm -r /tmp/.verdaccio-storage || true
   # run verdaccio
-  kill $(lsof -t -i:4343) || true
-  npx verdaccio -c ./scripts/verdaccio/publish-config.yaml --listen 4343 &
+  ./scripts/start-verdaccio-publish.sh &
   while ! nc -z localhost 4343; do sleep 0.1; done
   # publish
   (cd ../.. && npx lerna exec --ignore "@mcro/build-orbit" --ignore "@mcro/orbit" -- npm publish --registry http://localhost:4343 --force)
@@ -74,11 +73,15 @@ echo -n "--no-publish " >> ./scripts/.lastbuild
 
 function install-packages() {
   # run verdaccio
-  npx verdaccio -c ./scripts/verdaccio/install-config.yaml --listen 4343 &
+  ./scripts/start-verdaccio-install.sh &
   while ! nc -z localhost 4343; do sleep 0.1; done
   # install
   echo "installing for prod... $(pwd)"
-  (cd ./stage-app && npm install --production --registry http://localhost:4343)
+  cd ./stage-app
+    rm -r node_modules || true
+    rm package-lock.json || true
+    npm install --production --registry http://localhost:4343
+  cd -
   # kill verdaccio
   kill %-
   kill $(lsof -t -i:4343) || true

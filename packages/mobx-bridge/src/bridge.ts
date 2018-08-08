@@ -412,7 +412,9 @@ class Bridge {
       this.socketManager.sendMessage(Store.source, message)
     } else {
       if (!this._wsOpen) {
+        log(`\n\n\nWaiting for open socket....\n\n\n`)
         await this.onOpenSocket()
+        log(`\n\n\Socket opened!\n\n\n`)
       }
       this._socket.send(JSON.stringify({ message, to: Store.source }))
     }

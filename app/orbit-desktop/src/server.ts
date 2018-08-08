@@ -5,6 +5,7 @@ import proxy from 'http-proxy-middleware'
 import session from 'express-session'
 import bodyParser from 'body-parser'
 import { getConfig } from './config'
+import { getConfig as getGlobalConfig } from '@mcro/config'
 import OAuth from './server/oauth'
 import OAuthStrategies from '@mcro/oauth-strategies'
 import Passport from 'passport'
@@ -55,7 +56,11 @@ export default class Server {
     this.app.get('/hello', (_, res) => res.send('hello world'))
 
     // config
-    this.app.get('/config', (_, res) => res.json(getConfig()))
+    this.app.get('/config', (_, res) => {
+      const config = getGlobalConfig()
+      log(`Send config ${JSON.stringify(config, null, 2)}`)
+      res.json(config)
+    })
 
     this.setupCredPass()
     this.setupPassportRoutes()

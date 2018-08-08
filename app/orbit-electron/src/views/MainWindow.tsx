@@ -5,6 +5,9 @@ import { Electron, App } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { getConfig } from '../config'
+import { logger } from '@mcro/logger'
+
+const log = logger('electron')
 
 class MainStore {
   get mouseInActiveArea() {
@@ -63,12 +66,14 @@ export class MainWindow extends React.Component<{
 
   render() {
     const { store, electronStore, onRef } = this.props
+    const url = getConfig().server.url
+    log(`Rendering main window at url ${url}`)
     return (
       <Window
         alwaysOnTop
         ignoreMouseEvents={!store.mouseInActiveArea}
         ref={ref => ref && onRef(ref.window)}
-        file={getConfig().server.url}
+        file={url}
         show={electronStore.show ? this.state.show : false}
         opacity={electronStore.show === 1 ? 0 : 1}
         frame={false}

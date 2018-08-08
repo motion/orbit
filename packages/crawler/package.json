@@ -4,8 +4,6 @@
   "main": "_/index.js",
   "module": "src/index.js",
   "scripts": {
-    "build": "echo hi",
-    "watch": "echo hi",
     "start": "node index.js",
     "start-prod": "NODE_ENV=production IS_PROD=true node lib/index.js"
   },

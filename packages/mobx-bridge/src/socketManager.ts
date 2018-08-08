@@ -1,5 +1,5 @@
 import { Server } from 'ws'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('scrn')
 

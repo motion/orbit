@@ -6,7 +6,12 @@
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
+  "scripts": {
+    "start": "./scripts/start.sh",
+    "start-prod": "./scripts/start.sh start-prod"
+  },
   "dependencies": {
+    "@mcro/config": "*",
     "@mcro/dev": "^2.2.1",
     "@mcro/orbit-electron": "^2.2.1",
     "get-port": "4.0.0"

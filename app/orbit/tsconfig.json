@@ -11,6 +11,7 @@
     { "path": "../orbit-app" },
     { "path": "../orbit-desktop" },
     { "path": "../orbit-electron" },
-    { "path": "../../packages/dev" }
+    { "path": "../../packages/dev" },
+    { "path": "../../packages/config" }
   ]
 }

@@ -5,7 +5,7 @@
     "dev-apps": "./_/dev-apps.js"
   },
   "scripts": {
-    "start": "./start-apps.sh",
+    "start": "node _/dev-apps.js",
     "start-debug": "node es6/start",
     "start-app": "cd ../app && npm start",
     "start-electron": "sleep 35 && cd ../electron && npm start",

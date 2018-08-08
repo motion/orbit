@@ -1,15 +1,11 @@
 {
   "name": "@mcro/build-orbit",
   "productName": "Orbit",
-  "version": "2.2.28",
+  "version": "2.2.29",
   "updater": {
     "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
   },
   "scripts": {
-    "build": "echo hi",
-    "watch": "echo hi",
-    "start": "./scripts/start.sh",
-    "start-prod": "./scripts/start.sh start-prod",
     "test-built-app": "DEBUG=api,crawler,crawler:* dist/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "build-app": "./scripts/build.sh"
   },

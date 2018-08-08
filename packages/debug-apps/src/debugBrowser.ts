@@ -41,6 +41,7 @@ export default class DebugApps {
 
   async start() {
     try {
+      console.log('launching puppeteer...')
       this.browser = await puppeteer.launch({
         headless: false,
         args: [
@@ -165,6 +166,7 @@ export default class DebugApps {
     const pages = await this.getPages()
     const shouldUpdates = sessions.reduce((acc, session, index) => {
       const page = pages[index]
+      console.log('comapre browser', page.url(), session.debugUrl)
       acc[index] = !page || page.url() !== session.debugUrl ? true : false
       return acc
     }, [])
@@ -264,6 +266,7 @@ export default class DebugApps {
       return
     }
     const sessions = await this.getSessions()
+    console.log('got sessions...', sessions)
     const shouldUpdate = await this.shouldUpdateTabs(sessions)
     if (!shouldUpdate || !this.shouldRun) {
       return

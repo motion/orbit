@@ -1,6 +1,7 @@
 {
   "name": "@mcro/orbit-app",
   "version": "2.2.1",
+  "main": "index.js",
   "scripts": {
     "start": "./scripts/start.sh",
     "serve-prod": "static-server -p 3002 -n dist/index.html dist",

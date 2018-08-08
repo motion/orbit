@@ -5,9 +5,11 @@ import WS from './websocket'
 import * as Mobx from 'mobx'
 import stringify from 'stringify-object'
 import T_SocketManager from './socketManager'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
+import { getConfig } from '@mcro/config'
 
 const log = logger('bridge')
+const port = getConfig().ports.bridge
 
 // exports
 export * from './proxySetters'
@@ -78,7 +80,7 @@ class Bridge {
       const stores = options.stores
       this.socketManager = new SocketManager({
         masterSource: 'Desktop',
-        port: 40510,
+        port,
         onState: (source, state) => {
           log(`onState ${JSON.stringify(state)}`)
           this._update(stores[source].state, state)
@@ -100,7 +102,7 @@ class Bridge {
       await this.socketManager.start()
     } else {
       this._socket = new ReconnectingWebSocket(
-        'ws://localhost:40510',
+        `ws://localhost:${port}`,
         undefined,
         {
           constructor: WebSocket,
@@ -121,7 +123,7 @@ class Bridge {
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', this.dispose)
     } else {
-      await eval(`require('wait-port')`)({ host: 'localhost', port: 40510 })
+      await eval(`require('wait-port')`)({ host: 'localhost', port })
       process.on('exit', this.dispose)
     }
     // wait for initial state to come down for a little

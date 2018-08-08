@@ -2,12 +2,10 @@
 
 cd $(dirname $0)/..
 
-FLAG=""
-
 # test prod app
 if [ "$1" = "start-prod" ]; then
-  FLAG="start-prod"
-  echo "starting app in prod... $FLAG"
+  echo "starting app in prod..."
+  NODE_ENV=production ../build-orbit/node_modules/.bin/electron ./_/main
 fi
 
 browserPID=$!
@@ -17,7 +15,7 @@ electronPID=$!
 desktopPID=$!
 ../orbit-desktop/scripts/start.sh &
 appPID=$!
-../orbit-app/scripts/start.sh $FLAG &
+../orbit-app/scripts/start.sh &
 lastPID=$!
 
 wait

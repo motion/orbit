@@ -2,10 +2,15 @@ import 'source-map-support/register'
 import 'raf/polyfill'
 import { setConfig } from './config'
 import * as Path from 'path'
+import { logger } from '@mcro/logger'
+
+const log = logger('electron')
 
 Error.stackTraceLimit = Infinity
 
 export async function main({ port }) {
+  log(`Starting electron with port ${port}`)
+
   // handle our own separate process in development
   if (process.env.NODE_ENV === 'development') {
     require('./helpers/installGlobals')
@@ -53,5 +58,5 @@ export async function main({ port }) {
 
   // require app after setting config
   const { ElectronApp } = require('./ElectronApp')
-  new ElectronApp({ port })
+  new ElectronApp()
 }

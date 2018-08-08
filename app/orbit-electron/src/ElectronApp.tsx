@@ -9,10 +9,7 @@ import { Electron } from '@mcro/stores'
 import { ElectronRoot } from './views/ElectronRoot'
 
 export class ElectronApp {
-  port: number
-
-  constructor({ port }) {
-    this.port = port
+  constructor() {
     electronContextMenu()
     electronDebug()
     this.startApp()

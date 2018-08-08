@@ -53,6 +53,10 @@ export default class Server {
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
     this.app.get('/hello', (_, res) => res.send('hello world'))
+
+    // config
+    this.app.get('/config', (_, res) => res.json(getConfig()))
+
     this.setupCredPass()
     this.setupPassportRoutes()
     this.setupOrbitApp()

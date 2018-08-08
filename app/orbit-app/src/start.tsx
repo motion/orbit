@@ -7,9 +7,9 @@ import ReactDOM from 'react-dom'
 import './RootViewHMR'
 import './helpers/createElement'
 
-// hmr calls render twice out the gate
-// so prevent that
-export async function render() {
+// separate this so hmr works nicely
+
+export async function start() {
   console.log('rendering app')
   const { RootView } = require('./RootViewHMR')
   // Root is the topmost store essentially
@@ -27,8 +27,10 @@ export async function render() {
   ReactDOM.render(<RootView />, document.querySelector('#app'))
 }
 
-render()
+start()
 
 if (process.env.NODE_ENV === 'development') {
-  module.hot && module.hot.accept(render)
+  if (typeof module.hot !== 'undefined') {
+    module.hot.accept(start)
+  }
 }

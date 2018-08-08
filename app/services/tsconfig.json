@@ -5,7 +5,11 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "../orbit-app/src/start.tsx",
+    "../orbit-app/src/main.tsx"
+  ],
   "references": [
     { "path": "../models" },
     { "path": "../../packages/black" },

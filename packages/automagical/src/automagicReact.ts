@@ -12,7 +12,7 @@ import {
 
 const DEFAULT_VALUE = undefined
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
-const IS_PROD = process.env.NODE_ENV === 'production'
+const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
 
 // hacky for now

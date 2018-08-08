@@ -110,7 +110,7 @@ const getAllStyles = (baseId, target, rawStyles) => {
 export function createViewFactory(toCSS) {
   const tracker = new Map()
   const rulesToClass = new WeakMap()
-  const sheet = new StyleSheet(process.env.NODE_ENV === 'production')
+  const sheet = new StyleSheet(process.env.NODE_ENV !== 'development')
   const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 
   function hasEquivProps<A extends React.Props<Object>>(

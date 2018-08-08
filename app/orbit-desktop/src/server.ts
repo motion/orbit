@@ -41,7 +41,7 @@ export default class Server {
     const app = express()
     app.set('port', Config.server.port)
 
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV !== 'development') {
       app.use(morgan('dev'))
     }
 
@@ -149,7 +149,7 @@ export default class Server {
       )
     }
     // serve static in production
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV !== 'development') {
       log(`Serving orbit static app in ${Config.directories.orbitAppStatic}...`)
       this.app.use('/', express.static(Config.directories.orbitAppStatic))
     }

@@ -72,7 +72,10 @@ export default class DebugApps {
   renderLoop = async () => {
     while (this.shouldRun) {
       const sessions = await this.getSessions()
-      if (await this.shouldUpdateTabs(sessions)) {
+      if (
+        sessions.length === this.sessions.length &&
+        (await this.shouldUpdateTabs(sessions))
+      ) {
         // when desktop restarts, the dev urls for some reason change in electron
         // then the debugger attempts to change to that new url, which makes white bg appear
         // then once desktop starts up again, the dev urls return again as they were
@@ -86,11 +89,13 @@ export default class DebugApps {
   }
 
   getSessions = async (): Promise<any> => {
-    return _.uniq(
+    const sessions = _.uniqBy(
       _.flatten(await Promise.all(this.sessions.map(this.getDevUrl))).filter(
         Boolean,
       ),
-    ).sort((a, b) => a.debugUrl.localeCompare(b.debugUrl))
+      x => x.debugUrl,
+    )
+    return _.sortBy(sessions, x => x.debugUrl)
   }
 
   lastRes = {}
@@ -102,25 +107,23 @@ export default class DebugApps {
     const url = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
     try {
       const answers = await r2.get(url).json
-      const res = _.flatten(
-        answers
-          .map(({ webSocketDebuggerUrl, url }) => {
-            if (`${url}`.indexOf('chrome-extension') === 0) {
-              return null
-            }
-            if (!webSocketDebuggerUrl) {
-              return this.lastRes[url] || null
-            }
-            const debugUrl = `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=${webSocketDebuggerUrl.replace(
-              `ws://`,
-              '',
-            )}`
-            const res = { debugUrl, url, port }
-            this.lastRes[url] = res
-            return res
-          })
-          .filter(Boolean),
-      )
+      const res = answers
+        .map(({ webSocketDebuggerUrl, url }) => {
+          if (`${url}`.indexOf('chrome-extension') === 0) {
+            return null
+          }
+          if (!webSocketDebuggerUrl) {
+            return this.lastRes[url] || null
+          }
+          const debugUrl = `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=${webSocketDebuggerUrl.replace(
+            `ws://`,
+            '',
+          )}`
+          const res = { debugUrl, url, port }
+          this.lastRes[url] = res
+          return res
+        })
+        .filter(Boolean)
       return res
     } catch (err) {
       if (err.message.indexOf('ECONNREFUSED') !== -1) return

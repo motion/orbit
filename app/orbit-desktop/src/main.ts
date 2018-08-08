@@ -1,8 +1,12 @@
 import 'isomorphic-fetch'
 import * as Path from 'path'
 import { setConfig } from './config'
+import { logger } from '@mcro/logger'
+
+const log = logger('desktop')
 
 export async function main({ port }) {
+  log(`Desktop is starting`)
   /*
    *  Set config before requiring app!
    */
@@ -19,7 +23,11 @@ export async function main({ port }) {
     },
     directories: {
       root: Path.join(__dirname, '..'),
-      orbitAppStatic: Path.join(require.resolve('@mcro/orbit-app'), 'dist'),
+      orbitAppStatic: Path.join(
+        require.resolve('@mcro/orbit-app'),
+        '..',
+        'dist',
+      ),
     },
   })
 

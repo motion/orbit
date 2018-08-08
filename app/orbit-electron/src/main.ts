@@ -3,6 +3,7 @@ import 'raf/polyfill'
 import { setConfig } from './config'
 import * as Path from 'path'
 import { logger } from '@mcro/logger'
+import waitPort from 'wait-port'
 
 const log = logger('electron')
 
@@ -15,7 +16,6 @@ export async function main({ port }) {
   if (process.env.NODE_ENV === 'development') {
     require('./helpers/installGlobals')
     require('./helpers/watchForAppRestarts').watchForAppRestarts()
-    const waitPort = require('wait-port')
     await waitPort({ port: 3002 })
     await waitPort({ port: 3001 })
     const exitHandler = code => process.exit(code)
@@ -40,6 +40,9 @@ export async function main({ port }) {
   if (process.env.NODE_ENV === 'production') {
     log(`In production, starting desktop...`)
     require('./helpers/startDesktopInProcess').startDesktopInProcess(port)
+    log(`Waiting for desktop startup to continue...`)
+    await waitPort({ port })
+    log(`Found desktop, continue...`)
   }
 
   // set config before starting app

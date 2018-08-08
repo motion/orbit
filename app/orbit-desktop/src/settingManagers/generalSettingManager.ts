@@ -13,11 +13,17 @@ const generalSettingQuery = { type: 'general', category: 'general' }
 // @ts-ignore
 @store
 export class GeneralSettingManager {
+  autoLaunch: AutoLaunch
+
   constructor() {
     if (Config.env.prod) {
-      log(
-        'Note, autolaunch froze before, so check if it freezes after this log...',
-      )
+      try {
+        this.autoLaunch = new AutoLaunch({
+          name: 'Orbit',
+        })
+      } catch (err) {
+        console.error(err)
+      }
     }
     console.log('ensuring models are in place all over, remove me plz')
     this.start()
@@ -29,12 +35,6 @@ export class GeneralSettingManager {
     this.ensureDefaultSettings(setting)
     this.handleAutoLaunch(setting)
   }
-
-  autoLaunch =
-    Config.env.prod &&
-    new AutoLaunch({
-      name: 'Orbit',
-    })
 
   ensureDefaultSettings = async setting => {
     if (Object.keys(setting.values).length) {

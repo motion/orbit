@@ -60,7 +60,9 @@ export default class Server {
 
   async start() {
     // kill old processes
+    log(`Killing any old servers...`)
     await killPort(Config.server.port)
+    log(`Desktop listening!!!!!!!!!...`)
     this.app.listen(Config.server.port, () => {
       console.log('listening at port', Config.server.port)
     })
@@ -139,7 +141,7 @@ export default class Server {
     }
     // serve static in production
     if (process.env.NODE_ENV === 'production') {
-      log('Serving orbit static app...')
+      log(`Serving orbit static app in ${Config.directories.orbitAppStatic}...`)
       this.app.use('/', express.static(Config.directories.orbitAppStatic))
     }
   }

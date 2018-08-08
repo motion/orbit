@@ -3,8 +3,7 @@
   "dependencies": {
     "global": "^4.3.2",
     "react": "16.4.0",
-    "react-dom": "16.4.0",
-    "typeorm": "^0.3.0-alpha.7"
+    "react-dom": "16.4.0"
   },
   "resolutions": {
     "@types/react": "16.4.7"

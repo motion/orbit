@@ -26,6 +26,7 @@
     "@mcro/slackdown": "^2.2.1",
     "@mcro/stores": "^2.2.1",
     "@mcro/ui": "^2.2.1",
+    "typeorm": "^0.3.0-alpha.7",
     "electron": "3.0.0-beta.3",
     "arrford": "2.0.1",
     "compromise": "11.11.0",

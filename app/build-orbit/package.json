@@ -2,6 +2,7 @@
   "name": "@mcro/build-orbit",
   "version": "2.2.51",
   "scripts": {
+    "start": "./scripts/build.sh --resume",
     "test-built-app": "DEBUG=api,crawler,crawler:* dist/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
     "build-app": "./scripts/build.sh"
   },

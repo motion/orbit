@@ -90,12 +90,15 @@ export default class DebugApps {
       _.flatten(await Promise.all(this.sessions.map(this.getDevUrl))).filter(
         Boolean,
       ),
-    )
+    ).sort((a, b) => a.debugUrl.localeCompare(b.debugUrl))
   }
 
   lastRes = {}
 
-  getDevUrl = async ({ port, id }) => {
+  getDevUrl = async ({
+    port,
+    id,
+  }): Promise<{ debugUrl: string; url: string; port: string }> => {
     const url = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
     try {
       const answers = await r2.get(url).json
@@ -121,7 +124,7 @@ export default class DebugApps {
       return res
     } catch (err) {
       if (err.message.indexOf('ECONNREFUSED') !== -1) return
-      console.log('dev-apps err', err.message, err.stack)
+      console.log('dev err', err.message, err.stack)
       return null
     }
   }
@@ -166,7 +169,6 @@ export default class DebugApps {
     const pages = await this.getPages()
     const shouldUpdates = sessions.reduce((acc, session, index) => {
       const page = pages[index]
-      console.log('comapre browser', page.url(), session.debugUrl)
       acc[index] = !page || page.url() !== session.debugUrl ? true : false
       return acc
     }, [])
@@ -266,7 +268,6 @@ export default class DebugApps {
       return
     }
     const sessions = await this.getSessions()
-    console.log('got sessions...', sessions)
     const shouldUpdate = await this.shouldUpdateTabs(sessions)
     if (!shouldUpdate || !this.shouldRun) {
       return

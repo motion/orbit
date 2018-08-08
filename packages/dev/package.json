@@ -2,14 +2,10 @@
   "name": "@mcro/dev",
   "version": "2.2.1",
   "bin": {
-    "dev-apps": "./_/dev-apps.js"
+    "dev-apps": "./dev.js"
   },
   "scripts": {
-    "start": "node _/dev-apps.js",
-    "start-debug": "node es6/start",
-    "start-app": "cd ../app && npm start",
-    "start-electron": "sleep 35 && cd ../electron && npm start",
-    "start-desktop": "cd ../desktop && npm start",
+    "start": "node _/dev.js",
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },

@@ -14,6 +14,6 @@ if [ "$1" = "start-prod" ]; then
 fi
 
 npx kill-port 3002
-npx mcro-build --port 3002
+npx mcro-build --entry ./src/main --port 3002
 
 echo "bye orbit-app"

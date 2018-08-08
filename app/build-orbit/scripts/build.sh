@@ -49,7 +49,7 @@ echo -n "--no-bundle " >> ./scripts/.lastbuild
 
 function publish-packages() {
   # clean old one since we are re-publishing
-  rm -r /tmp/.verdaccio-storage
+  rm -r /tmp/.verdaccio-storage || true
   # run verdaccio
   kill $(lsof -t -i:4343) || true
   npx verdaccio -c ./scripts/verdaccio/publish-config.yaml --listen 4343 &

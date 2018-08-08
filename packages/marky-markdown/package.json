@@ -3,9 +3,6 @@
   "version": "2.2.1",
   "description": "npm's markdown parser",
   "main": "index.js",
-  "scripts": {
-    "test": "standard --fix && mocha --timeout 8000"
-  },
   "author": "Ashley Williams <ashley@npmjs.com> (http://ashleygwilliams.github.io/)",
   "license": "ISC",
   "dependencies": {

@@ -50,10 +50,8 @@ Later we unlock p2p sync:
 
 Aug 7th:
 
-- SHOULD have auto-port finding not hardcoded
 - SHOULD one command to push update
 - SHOULD show banner, update and restart once update is pushed
-- General settings go directly in settings pane
 - SHOULD have general setting for shortuct
 - SHOULD have setting for start on login
 - SHOULD have simple query for mixed recent things by default to start

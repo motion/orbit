@@ -56,7 +56,9 @@ export class PeekStore {
   }
 
   internalState = react(
-    () => [App.peekState.target, App.orbitState.docked, App.orbitState.hidden],
+    () => [
+      App.peekState.target /* App.orbitState.docked, App.orbitState.hidden */,
+    ],
     (_, { getValue }) => {
       const lastState = getValue().curState
       const curState = this.getCurState()

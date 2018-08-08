@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -21,6 +21,7 @@ type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: AppStore
+  store?: OrbitDockedStore
 }
 
 const OrbitDockedFrame = view(UI.Col, {
@@ -71,21 +72,51 @@ const OrbitDockedInner = view({
   },
 })
 
+class OrbitDockedStore {
+  animationState = react(
+    () => App.orbitState.docked,
+    async (visible, { sleep, setValue }) => {
+      // hmr already showing
+      if (visible && this.animationState.visible) {
+        throw react.cancel
+      }
+      // old value first to setup for transition
+      setValue({ willAnimate: true, visible: !visible })
+      await sleep(32)
+      // new value, start transition
+      setValue({ willAnimate: true, visible })
+      await sleep(App.animationDuration * 2)
+      // done animating, reset
+      setValue({ willAnimate: false, visible })
+      // this would do the toggle after the animation, trying out doing it before to see if its faster
+      // App.sendMessage(
+      //   Electron,
+      //   visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
+      // )
+    },
+    {
+      immediate: true,
+      log: false,
+      defaultValue: { willAnimate: false, visible: App.orbitState.docked },
+    },
+  )
+}
+
 @view.attach('appStore', 'searchStore')
 @view.provide({
   paneManagerStore: PaneManagerStore,
+  store: OrbitDockedStore,
 })
 @view
 export class OrbitDocked extends React.Component<Props> {
   render() {
-    const { paneManagerStore, appStore, searchStore } = this.props
-    const { animationState } = paneManagerStore
-    // log('DOCKED ------------', App.orbitState.docked)
+    const { paneManagerStore, appStore, searchStore, store } = this.props
+    log('DOCKED ------------', store.animationState)
     return (
       <UI.Theme name="grey">
         <OrbitDockedFrame
-          visible={animationState.visible}
-          willAnimate={animationState.willAnimate}
+          visible={store.animationState.visible}
+          willAnimate={store.animationState.willAnimate}
         >
           <OrbitDockedChrome appStore={appStore} />
           <UI.View borderBottomRadius={BORDER_RADIUS} flex={1}>

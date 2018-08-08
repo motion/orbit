@@ -142,32 +142,4 @@ export class PaneManagerStore {
       App.actions.clearPeek()
     },
   )
-
-  animationState = react(
-    () => App.orbitState.docked,
-    async (visible, { sleep, setValue }) => {
-      // hmr already showing
-      if (visible && this.animationState.visible) {
-        throw react.cancel
-      }
-      // old value first to setup for transition
-      setValue({ willAnimate: true, visible: !visible })
-      await sleep(32)
-      // new value, start transition
-      setValue({ willAnimate: true, visible })
-      await sleep(App.animationDuration * 2)
-      // done animating, reset
-      setValue({ willAnimate: false, visible })
-      // this would do the toggle after the animation, trying out doing it before to see if its faster
-      // App.sendMessage(
-      //   Electron,
-      //   visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
-      // )
-    },
-    {
-      immediate: true,
-      log: false,
-      defaultValue: { willAnimate: false, visible: App.orbitState.docked },
-    },
-  )
 }

@@ -1,1 +1,1 @@
---no-iohook --no-version --no-bundle 
+--no-iohook --no-version --no-bundle --no-publish --no-install --no-install 

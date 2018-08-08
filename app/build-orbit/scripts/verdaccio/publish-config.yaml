@@ -7,7 +7,7 @@
 #
 
 # path to a directory with all packages
-storage: ~/.local/share/verdaccio/storage
+storage: /tmp/.verdaccio-storage
 # path to a directory with plugins to include
 plugins: ./plugins
 

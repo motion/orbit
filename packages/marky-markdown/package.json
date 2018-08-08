@@ -23,6 +23,5 @@
     "markdown-it-lazy-headers": "^0.1.3",
     "markdown-it-task-lists": "^2.0.1",
     "sanitize-html": "^1.18.2"
-  },
-  "bin": "./bin/marky-markdown.js"
+  }
 }

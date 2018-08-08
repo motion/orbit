@@ -14,8 +14,8 @@ const log = {
 }
 
 const ROOT = Path.join(__dirname, '..')
-const APP_DIR = Path.join(ROOT, '..', 'orbit')
-const APP_BUILD_DIR = Path.join(ROOT, 'dist')
+const STAGING_DIR = Path.join(ROOT, 'stage-app')
+const BUILD_DIR = Path.join(ROOT, 'dist')
 
 const ignorePaths = [
   // exclude extra dirs for xcode
@@ -43,10 +43,9 @@ const ignorePaths = [
   '/.git/',
 ]
 
-async function bundle() {
-  console.log('cleaning old app...')
+async function clean() {
   await new Promise(resolve =>
-    rm(Path.join(APP_BUILD_DIR, 'Orbit-darwin-x64'), resolve),
+    rm(Path.join(BUILD_DIR, 'Orbit-darwin-x64'), resolve),
   )
   await new Promise(resolve =>
     rm(
@@ -68,7 +67,18 @@ async function bundle() {
       resolve,
     ),
   )
-  await new Promise(resolve => rm(Path.join(ROOT, 'app', 'Orbit.dmg'), resolve))
+  await new Promise(resolve =>
+    rm(Path.join(ROOT, 'dist', 'Orbit.dmg'), resolve),
+  )
+}
+
+async function bundle() {
+  console.log('cleaning old app...')
+  try {
+    await clean()
+  } catch (err) {
+    console.log('error cleaning', err)
+  }
 
   // why install --production and not just dereference symlinks?
   // because it avoids bundling massive things like Oracle build files
@@ -76,8 +86,8 @@ async function bundle() {
 
   console.log('packaging new app...')
   const paths = await electronPackager({
-    dir: APP_DIR,
-    out: APP_BUILD_DIR,
+    dir: STAGING_DIR,
+    out: BUILD_DIR,
     icon: Path.join(ROOT, 'resources', 'icon.icns'),
     overwrite: true,
     tmpdir: false,
@@ -106,7 +116,7 @@ async function bundle() {
   // this is necessary for high sierra to be able to sign
   console.log('removing metadata for signing...')
   await execa('xattr', ['-cr', 'Orbit.app'], {
-    cwd: Path.join(APP_BUILD_DIR, 'Orbit-darwin-x64'),
+    cwd: Path.join(BUILD_DIR, 'Orbit-darwin-x64'),
   })
 }
 

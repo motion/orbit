@@ -3,18 +3,16 @@
 # fail on exit, allow for exiting from verdaccio login
 set -e
 
-cd $(dirname $0)
+# start in root of this package
+cd $(dirname $0)/..
 
 # --resume
 FLAGS=$@
 if [ "$1" = "--resume" ]; then
-  FLAGS=`cat .lastbuild`
+  FLAGS=`cat ./scripts/.lastbuild`
   echo "resuming with options $FLAGS"
 fi
-echo -n "" > .lastbuild
-
-# run stuff from root of this package
-cd ..
+echo -n "" > ./scripts/.lastbuild
 
 # BUILD
 
@@ -57,7 +55,9 @@ function publish-packages() {
   npx verdaccio -c ./scripts/verdaccio/publish-config.yaml --listen 4343 &
   while ! nc -z localhost 4343; do sleep 0.1; done
   # publish
-  (cd ../.. && npx lerna exec --ignore "@mcro/orbit" --ignore "@mcro/build-orbit" -- npm publish --registry http://localhost:4343 --force)
+  (cd ../.. && npx lerna exec --ignore "@mcro/build-orbit" --ignore "@mcro/orbit" -- npm publish --registry http://localhost:4343 --force)
+  # then publish main app all together
+  (cd ../orbit && npm publish --registry http://localhost:4343 --force)
   # kill verdaccio
   kill %-
   kill $(lsof -t -i:4343) || true
@@ -78,11 +78,10 @@ function install-packages() {
   while ! nc -z localhost 4343; do sleep 0.1; done
   # install
   echo "installing for prod... $(pwd)"
-  (cd ../orbit && npm install --production --registry http://localhost:4343)
+  (cd ./stage-app && npm install --production --registry http://localhost:4343)
   # kill verdaccio
   kill %-
   kill $(lsof -t -i:4343) || true
-  echo -n "--no-install " >> ./scripts/.lastbuild
 }
 
 # install

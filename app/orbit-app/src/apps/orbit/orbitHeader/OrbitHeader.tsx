@@ -58,7 +58,7 @@ const OrbitFakeInput = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  background: '#ececec',
+  background: '#fff',
   borderRadius: 10,
   // '&:hover': {
   //   background: '#eee',

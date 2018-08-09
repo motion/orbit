@@ -68,11 +68,11 @@ const FilterBarFade = view({
   pointerEvents: 'none',
 })
 
-FilterBarFade.theme = ({ theme }) => ({
-  background: `linear-gradient(to right, transparent, ${
-    theme.base.background
-  } 80%)`,
-})
+// FilterBarFade.theme = ({ theme }) => ({
+//   background: `linear-gradient(to right, transparent, ${
+//     theme.base.background
+//   } 80%)`,
+// })
 
 type Props = {
   filterStore?: SearchFilterStore

@@ -6,23 +6,72 @@ import PromiseKit
 import Darwin
 import Async
 
+struct Position: Decodable {
+  let x: Int
+  let y: Int
+  let width: Int
+  let height: Int
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let queue = AsyncGroup()
   var socketBridge: SocketBridge!
   var windo: Windo!
   var screen: Screen!
+  var curPosition = NSRect()
   private var lastSent = ""
-  @IBOutlet weak var window: NSWindow!
+//  @IBOutlet weak var window: NSWindow!
+
+  lazy var window = NSWindow(contentRect: NSMakeRect(1413, 0, 500, 900),
+                             styleMask: [.resizable], backing: .buffered, defer: false, screen: nil)
+  
+  var blurryView = NSVisualEffectView(frame: NSRect(x: 0, y: 0, width: 500, height: 900))
   
   private func emit(_ msg: String) {
 //    print("sending \(msg)")
     self.socketBridge.send(msg)
   }
+  
+  private func _maskImage(cornerRadius: CGFloat) -> NSImage {
+    let edgeLength = 2.0 * cornerRadius + 1.0
+    let maskImage = NSImage(size: NSSize(width: edgeLength, height: edgeLength), flipped: false) { rect in
+      let bezierPath = NSBezierPath(roundedRect: rect, xRadius: cornerRadius, yRadius: cornerRadius)
+      NSColor.black.set()
+      bezierPath.fill()
+      return true
+    }
+    maskImage.capInsets = NSEdgeInsets(top: cornerRadius, left: cornerRadius, bottom: cornerRadius, right: cornerRadius)
+    maskImage.resizingMode = .stretch
+    return maskImage
+  }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
+    window.backgroundColor = NSColor.clear
+    window.alphaValue = 1
+    window.isOpaque = false
+    window.titlebarAppearsTransparent = true
+    window.titleVisibility = .hidden
+    window.setFrameOrigin(NSPoint.init(x: 1413, y: 260))
+
+    blurryView.maskImage = _maskImage(cornerRadius: 20.0)
+    blurryView.layer?.masksToBounds = true
+    blurryView.layer?.cornerRadius = 20.0
+    blurryView.wantsLayer = true
+    blurryView.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
+    if #available(OSX 10.14, *) {
+      blurryView.material = NSVisualEffectView.Material.light
+    } else {
+      // Fallback on earlier versions
+    }
+    blurryView.state = NSVisualEffectView.State.active
+    
+    window.contentView?.addSubview(blurryView)
+    
+    window.makeKeyAndOrderFront(nil)
+    
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
-    windo = Windo(emit: self.emit)
+//    windo = Windo(emit: self.emit)
 
     do {
       screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
@@ -60,30 +109,62 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
   
+  func showWindow() {
+    window.alphaValue = 1
+  }
+  
+  func hideWindow() {
+    window.alphaValue = 0
+//    window.setFrame(curPosition, display: false, animate: true)
+  }
+  
+  func position(_ position: Position) {
+//    window.setFrameOrigin(NSPoint.init(x: 1413, y: 260))
+    self.curPosition = NSRect(x: position.x, y: position.y, width: position.width, height: position.height)
+    window.setFrame(curPosition, display: true, animate: false)
+  }
+  
   func onMessage(_ text: String) {
 //    print("Swift.onMessage \(text)")
-    if text.count < 5 {
+    if text.count < 4 {
       print("weird text")
       return
     }
-    let action = text[0...4]
-    if action == "state" {
+    let action = text[0...3]
+    if action == "show" {
+      self.showWindow()
+      return
+    }
+    if action == "hide" {
+      self.hideWindow()
+      return
+    }
+    if action == "posi" {
+      do {
+        let position = try JSONDecoder().decode(Position.self, from: text[4..<text.count].data(using: .utf8)!)
+        self.position(position)
+      } catch {
+        print("Error parsing arguments \(text)")
+      }
+      return
+    }
+    if action == "stat" {
       // coming from us, ignore
       return
     }
-    if action == "pause" {
+    if action == "paus" {
       screen.pause()
       return
     }
-    if action == "resum" {
+    if action == "resu" {
       screen.resume()
       return
     }
-    if action == "start" {
+    if action == "star" {
       screen.start()
       return
     }
-    if action == "watch" {
+    if action == "watc" {
       do {
         let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
         screen.watchBounds(
@@ -100,11 +181,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
       return
     }
-    if action == "clear" {
+    if action == "clea" {
       screen.clear()
       return
     }
-    if action == "defoc" {
+    if action == "defo" {
       windo.defocus()
       return
     }

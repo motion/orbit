@@ -9,6 +9,7 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../../../../stores/SearchStore'
 import { Carousel } from '../../../../components/Carousel'
 import { capitalize } from 'lodash'
+import { View } from '@mcro/ui'
 
 type Props = {
   name: string
@@ -138,13 +139,16 @@ export class OrbitHome extends React.Component<Props> {
           {Object.keys(store.following).map(category => {
             return (
               <Section key={category}>
-                <SubTitle>{category}</SubTitle>
+                <SubTitle margin={0} padding={[10, 0, 0]}>
+                  {category}
+                </SubTitle>
                 <Carousel items={store.following[category]} />
               </Section>
             )
           })}
+          <View height={20} />
 
-          <SubTitle>Interesting</SubTitle>
+          {/* <SubTitle>Interesting</SubTitle>
           <Masonry>
             {store.results.map((bit, index) => {
               const isExpanded = index < 2
@@ -162,7 +166,7 @@ export class OrbitHome extends React.Component<Props> {
                 />
               )
             })}
-          </Masonry>
+          </Masonry> */}
         </div>
       </SubPane>
     )

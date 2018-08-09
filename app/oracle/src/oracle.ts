@@ -79,8 +79,7 @@ export default class Oracle {
     }
     await this.setState({ isPaused: false })
 
-    // ⚠️ DISABLED FOR NOW TESTING FREEZE ON MY CPU
-    // await this._runScreenProcess()
+    await this._runScreenProcess()
 
     await this._connectToScreenProcess()
     // monitorScreenProcess(this.process, this.restart)
@@ -135,6 +134,26 @@ export default class Oracle {
     }
     this.settings = settings
     await this.socketSend('watch', settings)
+    return this
+  }
+
+  hideWindow = async () => {
+    await this.socketSend('hide')
+    return this
+  }
+
+  showWindow = async () => {
+    await this.socketSend('show')
+    return this
+  }
+
+  positionWindow = async (position: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }) => {
+    await this.socketSend(`posi ${JSON.stringify(position)}`)
     return this
   }
 

@@ -142,7 +142,14 @@ export class OrbitHome extends React.Component<Props> {
                 <SubTitle margin={0} padding={[10, 0, 0]}>
                   {category}
                 </SubTitle>
-                <Carousel items={store.following[category]} />
+                <Carousel
+                  items={store.following[category]}
+                  cardProps={{
+                    padding: 10,
+                    hide: { body: true },
+                    titleFlex: 1,
+                  }}
+                />
               </Section>
             )
           })}

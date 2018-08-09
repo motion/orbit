@@ -56,6 +56,7 @@ export type OrbitCardProps = {
   disableShadow?: boolean
   preventAutoSelect?: boolean
   padding?: number | number[]
+  titleFlex?: number
 }
 
 const CardWrap = view(UI.View, {
@@ -397,6 +398,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       store,
       titleProps,
       padding,
+      titleFlex,
       ...props
     } = this.props
     const { isSelected } = store
@@ -433,7 +435,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 {...iconProps}
               />
             )}
-          <Title>
+          <Title style={titleFlex && { flex: titleFlex }}>
             <UI.Text
               size={1.2}
               sizeLineHeight={0.8}

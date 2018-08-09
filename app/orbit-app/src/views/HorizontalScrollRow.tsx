@@ -12,6 +12,10 @@ const Inner = view(UI.View, {
   alignItems: 'center',
   overflow: 'hidden',
   overflowX: 'scroll',
+  '&::-webkit-scrollbar': {
+    height: 0,
+    width: 0,
+  },
 })
 
 Inner.theme = ({ height, verticalPadding, scrollBarHeight }) => ({

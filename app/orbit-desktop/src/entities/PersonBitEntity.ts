@@ -14,51 +14,32 @@ import { PersonEntity } from './PersonEntity'
 
 @Entity()
 export class PersonBitEntity extends BaseEntity implements PersonBit {
-  // @ts-ignore
-  target = 'person-bit'
 
-  /**
-   * Person's email address.
-   */
-  @PrimaryColumn() email: string
+  target: 'person-bit' = 'person-bit'
 
-  /**
-   * Person's name.
-   */
+  @PrimaryColumn()
+  email: string
+
   @Column({ nullable: true })
   @Index()
   name: string
 
-  /**
-   * All known person names.
-   */
-  @Column('simple-array')
+  @Column({ type: 'simple-array', default: '[]' })
   @Index()
   allNames: string[]
 
-  /**
-   * Person's profile photo.
-   */
   @Column({ nullable: true })
   photo: string
 
-  /**
-   * All known person photos.
-   */
-  @Column('simple-array', { nullable: true })
+  @Column({ type: 'simple-array', default: '[]' })
   @Index()
   allPhotos: string[]
 
-  /**
-   * Bits related to this Person.
-   */
   @ManyToMany(() => BitEntity)
   @JoinTable()
   bits: Bit[]
 
-  /**
-   * People from integrations.
-   */
   @OneToMany(() => PersonEntity, person => person.personBit)
   people: Person[]
+
 }

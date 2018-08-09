@@ -1,33 +1,24 @@
+import { IntegrationType } from './IntegrationType'
 import { PersonBit } from './PersonBit'
 import { Setting } from './Setting'
+import { SlackPersonData } from './person-data/SlackPersonData'
 
 export interface Person {
 
   /**
    * Target type.
    */
-  target: "person"
+  target: 'person'
 
-  id: number
-  identifier: string
-  integration: "slack"|string // todo: need to specify all possible integration types here
+  id: string
+  integration: IntegrationType
   integrationId: string
   createdAt: Date
   updatedAt: Date
   name: string
   setting: Setting
   settingId: number
-  data: SlackPersonData // todo: write down all other data types from other integrations
+  data: SlackPersonData
   personBit: PersonBit
 
-}
-
-// todo: extract out of here later
-export interface SlackPersonData {
-  name: string
-  email: string
-  phone: string
-  profile?: {
-    image_48?: string
-  }
 }

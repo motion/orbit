@@ -1,5 +1,5 @@
 import { Bit } from '@mcro/models'
-import { flatten, omit } from 'lodash'
+import { omit } from 'lodash'
 import { logger } from '@mcro/logger'
 import { GithubIssue } from '../../syncer/github/GithubTypes'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
@@ -19,41 +19,35 @@ export class GithubIssueSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    const issues = await this.syncIssues()
-    log(`created ${issues.length} issues`, issues)
+
+    const createdIssues: BitEntity[] = []
+    const repoSettings = this.setting.values.repos
+    const repositoryPaths = Object.keys(repoSettings || {})
+    await sequence(repositoryPaths, async repositoryPath => {
+      const [organization, repository] = repositoryPath.split('/')
+      const loader = new GithubIssueLoader(
+        organization,
+        repository,
+        this.setting.token,
+      )
+      const issues = await loader.load()
+      return Promise.all(issues.map(async issue => {
+        createdIssues.push(await this.createIssue(issue, organization, repository))
+      }))
+    })
+
+    log(`created ${createdIssues.length} issues`, createdIssues)
   }
 
   async reset(): Promise<void> {
 
   }
 
-  private async syncIssues(repos?: string[]): Promise<Bit[]> {
-    const repoSettings = this.setting.values.repos
-    const repositoryPaths = repos || Object.keys(repoSettings || {})
-    return flatten(
-      // @ts-ignore
-      sequence(repositoryPaths, async repositoryPath => {
-        const [organization, repository] = repositoryPath.split('/')
-        const loader = new GithubIssueLoader(
-          organization,
-          repository,
-          this.setting.token,
-        )
-        const issues = await loader.load()
-        return Promise.all(
-          issues.map(issue =>
-            this.createIssue(issue, organization, repository),
-          ),
-        )
-      }),
-    )
-  }
-
   private async createIssue(
     issue: GithubIssue,
     organization: string,
     repository: string,
-  ): Promise<Bit> {
+  ): Promise<BitEntity> {
     const createdAt = issue.createdAt
       ? new Date(issue.createdAt).getTime()
       : undefined
@@ -62,7 +56,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       : undefined
     return await createOrUpdateBit(BitEntity, {
       integration: 'github',
-      identifier: issue.id,
+      id: issue.id,
       type: 'task',
       title: issue.title,
       body: issue.bodyText,

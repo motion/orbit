@@ -103,6 +103,6 @@ export class Onboard {
       },
     })
 
-    console.log('foundIntegrations', JSON.stringify(foundIntegrations, null, 2))
+    // console.log('foundIntegrations', JSON.stringify(foundIntegrations, null, 2))
   }
 }

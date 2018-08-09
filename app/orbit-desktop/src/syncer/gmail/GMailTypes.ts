@@ -35,7 +35,17 @@ export type GmailMessage = {
   historyId: string
   internalDate: string
   payload: {
-    headers: { name: string; value: string }[]
+    headers: {
+      name: string
+      value: string
+    }[]
+    parts: {
+      body: {
+        size: number
+        data: string
+      }
+    }[]
+    mimeType: string
   }
 }
 

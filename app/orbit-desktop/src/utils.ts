@@ -29,3 +29,10 @@ export function queryObjectToQueryString(query: { [key: string]: any }|undefined
     .map(key => `${key}=${query[key]}`)
     .join("&");
 }
+
+/**
+ * Type-safe version of Object.assign.
+ */
+export function assign<T>(obj: T, properties: Partial<T>) {
+  return Object.assign(obj, properties)
+}

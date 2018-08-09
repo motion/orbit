@@ -776,6 +776,10 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
+dompurify@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-1.0.7.tgz#33e5c4a5fc84df93b58ca162d1d3f28537aa3ec2"
+
 dot-prop@^4.1.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-4.2.0.tgz#1f19e0c2e1aa0e32797c49799f2837ac6af69c57"

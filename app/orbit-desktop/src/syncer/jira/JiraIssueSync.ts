@@ -64,7 +64,7 @@ export class JiraIssueSync implements IntegrationSyncer {
 
     return createOrUpdateBit(BitEntity, {
       integration: 'jira',
-      identifier: issue.id,
+      id: issue.id,
       type: 'document',
       title: issue.fields.summary,
       body: issue.fields.description || '',

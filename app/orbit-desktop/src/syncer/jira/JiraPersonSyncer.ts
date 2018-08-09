@@ -59,11 +59,11 @@ export class JiraPersonSyncer implements IntegrationSyncer {
 
   // todo: do not return null here
   private async createPerson(person: JiraPerson): Promise<Person | null> {
-    const identifier = `jira-${Helpers.hash(person)}`
+    const id = `jira-${Helpers.hash(person)}`
     const personEntity = await createOrUpdate(
       PersonEntity,
       {
-        identifier,
+        id,
         integrationId: person.accountId,
         integration: 'jira',
         name: person.displayName,
@@ -72,14 +72,13 @@ export class JiraPersonSyncer implements IntegrationSyncer {
           emails: person.emailAddress ? [person.emailAddress] : [],
         },
       },
-      { matching: ['identifier', 'integration'] },
+      { matching: ['id', 'integration'] },
     )
 
     await createOrUpdatePersonBit({
       email: person.emailAddress,
       name: person.displayName,
       photo: person.avatarUrls['48x48'],
-      identifier,
       integration: 'jira',
       person: personEntity,
     })

@@ -56,19 +56,15 @@ export class SlackSyncer implements IntegrationSyncer {
     log(`updated people`, updatedPeople)
 
     // update in the database
-    // @ts-ignore
     await PersonEntity.save(updatedPeople)
 
     // add person bits
     await Promise.all(
       updatedPeople.map(person => {
-        // @ts-ignore
         return createOrUpdatePersonBit({
-          // @ts-ignore
-          email: person.email,
+          email: person.data.email,
           name: person.name,
           photo: person.data.profile.image_48,
-          identifier: person.identifier,
           integration: 'slack',
           person: person,
         })
@@ -192,20 +188,19 @@ export class SlackSyncer implements IntegrationSyncer {
     // update settings
     log(`updating settings`, { lastMessageSync })
     this.setting.values.lastMessageSync = lastMessageSync
-    // @ts-ignore
     await this.setting.save()
   }
 
   /**
    * Creates a single integration person from given Slack user.
    */
-  private createPerson(people: Person[], user: SlackUser): Person {
-    const identifier = `slack-person-${user.id}`
-    const person = people.find(person => person.identifier === identifier)
+  private createPerson(people: PersonEntity[], user: SlackUser): PersonEntity {
+    const id = `slack-person-${user.id}`
+    const person = people.find(person => person.id === id)
 
     return Object.assign(person || new PersonEntity(), {
       setting: this.setting,
-      identifier,
+      id: id,
       integration: 'slack',
       integrationId: user.id,
       name: user.profile.real_name || user.name,
@@ -247,7 +242,7 @@ export class SlackSyncer implements IntegrationSyncer {
       .join(' ... ')
       .slice(0, 255)
 
-    const identifier = channel.id + '_' + messages[0].ts
+    const id = channel.id + '_' + messages[0].ts
     const bitCreatedAt = new Date(+_.first(messages).ts.split('.')[0] + 1000)
     const bitUpdatedAt = new Date(+_.last(messages).ts.split('.')[0] + 1000)
     const team = this.setting.values.oauth.info.team
@@ -268,13 +263,13 @@ export class SlackSyncer implements IntegrationSyncer {
 
     const bit = await BitEntity.findOne({
       settingId: this.setting.id,
-      identifier,
+      id,
     })
 
     return Object.assign(bit || new BitEntity(), {
       setting: this.setting,
       integration: 'slack',
-      identifier,
+      id,
       type: 'conversation',
       title: `#${channel.name}`,
       body,

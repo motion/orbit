@@ -11,8 +11,7 @@ export const fetchFromGitHub = async <T>(token: string, query: string, variables
     options.headers['Authorization'] = `bearer ${token}`
     next()
   })({ query, variables })
-  // @ts-ignore
-  if (results.message) {
+  if ((results as any).message) {
     console.error('Error doing fetch', results)
     return null
   }

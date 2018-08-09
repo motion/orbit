@@ -11,16 +11,19 @@ import { Job } from '@mcro/models'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {
-  // @ts-ignore
-  target = 'job'
 
-  @PrimaryGeneratedColumn() id: number
+  target: 'job' = 'job'
+
+  @PrimaryGeneratedColumn()
+  id: number
 
   @Index()
   @Column()
   type: string
 
-  @Column() action: string
+  @Column()
+  action: string
+
   @Column({ nullable: true })
   lastError: string
 

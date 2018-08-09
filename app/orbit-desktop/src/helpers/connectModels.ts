@@ -12,7 +12,8 @@ export default async function connectModels(models) {
       database: Path.join(Config.directories.root, 'app_data', 'database'),
       // location: 'default',
       entities: models,
-      // logging: true,
+      logging: ["error"],
+      logger: 'simple-console',
       synchronize: true,
     }).then(connection => {
       models.forEach(model => model.useConnection(connection))

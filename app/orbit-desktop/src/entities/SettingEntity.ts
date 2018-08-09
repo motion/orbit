@@ -10,18 +10,20 @@ import { Setting } from '@mcro/models'
 
 @Entity()
 export class SettingEntity extends BaseEntity implements Setting {
-  // @ts-ignore
-  target = 'setting'
 
-  @PrimaryGeneratedColumn() id: number
+  target: 'setting' = 'setting'
 
-  // use for determining if oauth is from same account as previous one
+  @PrimaryGeneratedColumn()
+  id: number
+
   @Column({ nullable: true, unique: true })
   identifier: string
 
-  @Column() category: string
+  @Column()
+  category: string
 
-  @Column() type: string
+  @Column()
+  type: string
 
   @Column({ nullable: true })
   token: string
@@ -65,7 +67,10 @@ export class SettingEntity extends BaseEntity implements Setting {
     lastSyncMax?: number
   }
 
-  @CreateDateColumn() createdAt: Date
+  @CreateDateColumn()
+  createdAt: Date
 
-  @UpdateDateColumn() updatedAt: Date
+  @UpdateDateColumn()
+  updatedAt: Date
+
 }

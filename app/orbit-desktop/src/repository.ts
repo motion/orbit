@@ -1,3 +1,4 @@
+import { BitEntity } from './entities/BitEntity'
 import { PersonBitEntity } from './entities/PersonBitEntity'
 import { PersonEntity } from './entities/PersonEntity'
 
@@ -6,19 +7,20 @@ export async function createOrUpdatePersonBit({
   name,
   photo,
   integration,
-  identifier,
   person,
+  bit,
 }: {
   email: string
   name: string
   photo?: string
   integration: string
-  identifier: string
-  person: PersonEntity
+  person: PersonEntity,
+  bit?: BitEntity,
 }): Promise<PersonBitEntity> {
+
   // find a person, if not found create a new one
   let personBit = await PersonBitEntity.findOne(email, {
-    relations: ['people'],
+    relations: ['people', 'bits'],
   })
   if (!personBit) {
     personBit = new PersonBitEntity()
@@ -31,6 +33,7 @@ export async function createOrUpdatePersonBit({
   if (!personBit.allNames) personBit.allNames = []
   if (!personBit.allPhotos) personBit.allPhotos = []
   if (!personBit.people) personBit.people = []
+  if (!personBit.bits) personBit.bits = []
 
   // add new properties
   if (name && personBit.allNames.indexOf(name) === -1)
@@ -38,12 +41,21 @@ export async function createOrUpdatePersonBit({
   if (photo && personBit.allPhotos.indexOf(photo) === -1)
     personBit.allPhotos.push(photo)
 
-  const hasPerson = personBit.people.some(person => {
-    return (
-      person.integration === integration && person.identifier === identifier
-    )
+  const hasPerson = personBit.people.some(existPerson => {
+    return existPerson.id === person.id
   })
-  if (!hasPerson) personBit.people.push(person)
+  if (!hasPerson) {
+    personBit.people.push(person)
+  }
+
+  if (bit) {
+    const hasBit = personBit.bits.some(existBit => {
+      return existBit.id === bit.id
+    })
+    if (!hasBit) {
+      personBit.bits.push(bit)
+    }
+  }
 
   await personBit.save()
   return personBit

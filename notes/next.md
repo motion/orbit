@@ -21,7 +21,7 @@ GDrive is the hardest one because extreme rate limits but also easiest to solve 
 
 # p2p syncing / DHT
 
-- peers: (bit.identifier: string => Peer[])
+- peers: (bit.id: string => Peer[])
   - "who has which bits synced"
 - rateLimits: (integration.id: string => RateLimitInfo: Object)
   - "rate limit info for integration"

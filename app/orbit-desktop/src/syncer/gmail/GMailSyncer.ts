@@ -1,22 +1,16 @@
-import { Bit, Person } from '@mcro/models'
+import { logger } from '@mcro/logger'
+import { Bit, GailBitDataParticipant, Person } from '@mcro/models'
 import { getManager, getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
-import * as Helpers from '../../helpers'
-import { createOrUpdate } from '../../helpers/createOrUpdate'
-import { createOrUpdateBit } from '../../helpers/createOrUpdateBit'
-import { createOrUpdatePersonBit } from '../../repository'
-import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { sequence } from '../../utils'
-import { GMailLoader } from './GMailLoader'
-import {
-  parseMailDate,
-  parseMailTitle,
-  parseSender,
-} from './GMailMessageParser'
-import { GmailThread } from './GMailTypes'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { logger } from '@mcro/logger'
+import * as Helpers from '../../helpers'
+import { createOrUpdatePersonBit } from '../../repository'
+import { assign, sequence } from '../../utils'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
+import { GMailLoader } from './GMailLoader'
+import { GMailMessageParser } from './GMailMessageParser'
+import { GmailThread } from './GMailTypes'
 
 const log = logger('syncer:gmail')
 
@@ -30,29 +24,6 @@ export class GMailSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    await this.syncMail()
-  }
-
-  async reset(): Promise<void> {
-
-    // todo: this logic should be extracted into separate place where settings managed
-    // get entities for removal / updation
-    const bits = await getRepository(BitEntity).find({ settingId: this.setting.id })
-    const people = await getRepository(PersonEntity).find({ settingId: this.setting.id })
-
-    // remove entities
-    log(`removing ${bits.length} bits and ${people.length} people`, bits, people)
-    await getManager().remove([...bits, ...people])
-    log(`people were removed`)
-
-    // reset settings
-    this.setting.values.historyId = null
-    this.setting.values.lastSyncFilter = null
-    this.setting.values.lastSyncMax = null
-    await getRepository(SettingEntity).save(this.setting)
-  }
-
-  private async syncMail() {
     let {
       historyId,
       max,
@@ -110,7 +81,7 @@ export class GMailSyncer implements IntegrationSyncer {
         )
         removedBits = await BitEntity.find({
           integration: 'gmail',
-          identifier: In(history.removedThreadIds),
+          id: In(history.removedThreadIds),
         })
         log('found bits to be removed', removedBits)
       } else {
@@ -125,9 +96,8 @@ export class GMailSyncer implements IntegrationSyncer {
     if (addedThreads.length) {
       log(`have a threads to be added/changed`, addedThreads)
       await this.loader.loadMessages(addedThreads)
-      const createdPeople = await this.createPeople(addedThreads)
-      const createdBits = await this.createBits(addedThreads)
-      log('bits were created / updated', createdBits, createdPeople)
+      const createdBits = await sequence(addedThreads, thread => this.createBit(thread))
+      log('bits were created / updated', createdBits)
     }
 
     // if there are removed threads then remove their bits
@@ -141,60 +111,128 @@ export class GMailSyncer implements IntegrationSyncer {
     this.setting.values.historyId = historyId
     this.setting.values.lastSyncFilter = filter
     this.setting.values.lastSyncMax = max
-    // @ts-ignore
     await this.setting.save()
   }
 
-  private async createBits(threads: GmailThread[]): Promise<Bit[]> {
-    return Promise.all(
-      threads.map(thread => {
-        return createOrUpdateBit(BitEntity, {
-          identifier: thread.id,
-          integration: 'gmail',
-          type: 'mail',
-          title: parseMailTitle(thread.messages[0]) || '',
-          body: '',
-          data: thread,
-          bitCreatedAt: parseMailDate(thread.messages[0]),
-          bitUpdatedAt: parseMailDate(
-            thread.messages[thread.messages.length - 1],
-          ),
-          webLink: `https://mail.google.com/mail/u/0/#inbox/` + thread.id,
-          settingId: this.setting.id,
-        })
-      }),
-    )
+  async reset(): Promise<void> {
+
+    // todo: this logic should be extracted into separate place where settings managed
+    // get entities for removal / updation
+    const bits = await getRepository(BitEntity).find({ settingId: this.setting.id })
+    const people = await getRepository(PersonEntity).find({ settingId: this.setting.id })
+
+    // remove entities
+    log(`removing ${bits.length} bits and ${people.length} people`, bits, people)
+    await getManager().remove([...bits, ...people])
+    log(`people were removed`)
+
+    // reset settings
+    this.setting.values.historyId = null
+    this.setting.values.lastSyncFilter = null
+    this.setting.values.lastSyncMax = null
+    await getRepository(SettingEntity).save(this.setting)
   }
 
-  private async createPeople(threads: GmailThread[]): Promise<Person[]> {
-    const people: Person[] = []
-    await sequence(threads, thread => {
-      return sequence(thread.messages, async message => {
-        const [name, email] = parseSender(message)
-        if (name && email) {
-          const identifier = `gmail-${Helpers.hash({ name, email })}`
-          const person = await createOrUpdate(
-            PersonEntity,
-            {
-              identifier,
-              integrationId: email,
-              integration: 'gmail',
-              name: name,
-              settingId: this.setting.id
-            },
-            { matching: ['identifier', 'integration'] },
-          )
+  private async createBit(thread: GmailThread): Promise<Bit> {
 
-          await createOrUpdatePersonBit({
-            email,
-            name,
-            identifier,
-            integration: 'gmail',
-            person,
-          })
+    const id = `gmail-${this.setting.id}-${thread.id}`
+    
+    const body = thread.messages.map(message => {
+      const parser = new GMailMessageParser(message)
+      return parser.getTextBody()
+    }).join('\r\n\r\n')
+
+    const messages = await Promise.all(thread.messages.map(async message => {
+      const parser = new GMailMessageParser(message)
+      return {
+        id: message.id,
+        date: parser.getDate(),
+        body: parser.getHtmlBody(),
+        participants: parser.getParticipants(),
+      }
+    }))
+
+    const allParticipants = thread.messages.reduce((allParticipants, message) => {
+      const parser = new GMailMessageParser(message)
+      const participants = parser.getParticipants()
+      for (let participant of participants) {
+        const inAllParticipant = allParticipants.find(p => p.email === participant.email)
+        if (inAllParticipant) {
+          if (!inAllParticipant.name && participant.name)
+            inAllParticipant.name = participant.name
+        } else {
+          allParticipants.push(participant)
         }
+      }
+      return allParticipants
+    }, [] as GailBitDataParticipant[])
+
+    const people = await Promise.all(allParticipants.map(async participant => {
+      const {name, email} = participant
+
+      const id = `gmail-${this.setting.id}-${Helpers.hash(email)}`
+      const person = (await getRepository(PersonEntity).findOne(id)) || new PersonEntity()
+      assign(person, {
+        id,
+        integrationId: email,
+        integration: 'gmail',
+        name: name || '',
+        settingId: this.setting.id,
       })
+      await getRepository(PersonEntity).save(person)
+
+      return person
+    }))
+
+    const firstMessage = thread.messages[0]
+    const lastMessage = thread.messages[thread.messages.length - 1]
+    const firstMessageParser = new GMailMessageParser(firstMessage)
+    const lastMessageParser = new GMailMessageParser(lastMessage)
+
+    const bit = (await getRepository(BitEntity).findOne(id, {
+        relations: ['people'],
+      })) || new BitEntity()
+
+    assign(bit, {
+      target: 'bit',
+      id,
+      integration: 'gmail',
+      type: 'mail',
+      title: firstMessageParser.getTitle(),
+      body,
+      data: { messages },
+      raw: thread,
+      bitCreatedAt: firstMessageParser.getDate(),
+      bitUpdatedAt: lastMessageParser.getDate(),
+      webLink: `https://mail.google.com/mail/u/0/#inbox/` + thread.id,
+      settingId: this.setting.id,
     })
-    return people
+
+    // adding bit people
+    if (!bit.people)
+      bit.people = []
+
+    people.forEach(person => {
+      const hasSuchPerson = bit.people.some(bitPerson => {
+        return bitPerson.id === person.id
+      })
+      if (!hasSuchPerson)
+        bit.people.push(person)
+    })
+
+    await getRepository(BitEntity).save(bit)
+
+    await Promise.all(people.map(async person => {
+      await createOrUpdatePersonBit({
+        integration: 'gmail',
+        email: person.integrationId,
+        name: person.name,
+        person,
+        bit,
+      })
+    }))
+
+    return bit
   }
+
 }

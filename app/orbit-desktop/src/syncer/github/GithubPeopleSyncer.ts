@@ -1,14 +1,14 @@
-import { flatten, uniq } from 'lodash'
+import { logger } from '@mcro/logger'
+import { uniq } from 'lodash'
 import { PersonEntity } from '../../entities/PersonEntity'
+import { SettingEntity } from '../../entities/SettingEntity'
 import * as Helpers from '../../helpers'
 import { createOrUpdate } from '../../helpers/createOrUpdate'
 import { createOrUpdatePersonBit } from '../../repository'
-import { GithubPerson } from './GithubTypes'
+import { sequence } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
-import { sequence } from '../../utils'
-import { SettingEntity } from '../../entities/SettingEntity'
-import { logger } from '@mcro/logger'
+import { GithubPerson } from './GithubTypes'
 
 const log = logger('syncer:github:people')
 
@@ -20,28 +20,26 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    const people = await this.syncRepos()
-    log('Created', people ? people.length : 0, 'people', people)
+    const repoSettings = this.setting.values.repos
+    const repositoryPaths = Object.keys(repoSettings || {})
+    const organizations: string[] = uniq(
+      repositoryPaths.map(repositoryPath => repositoryPath.split('/')[0]),
+    )
+
+    const allPeople: PersonEntity[] = []
+    await sequence(organizations, async organization => {
+      const loader = new GithubPeopleLoader(organization, this.setting.token)
+      const people = await loader.load()
+      await Promise.all(people.map(async person => {
+        allPeople.push(await this.createPerson(person))
+      }))
+    })
+
+    log('Created', allPeople ? allPeople.length : 0, 'people', allPeople)
   }
 
   async reset(): Promise<void> {
 
-  }
-
-  private async syncRepos(repos?: string[]) {
-    const repoSettings = this.setting.values.repos
-    const repositoryPaths = repos || Object.keys(repoSettings || {})
-    const organizations: string[] = uniq(
-      repositoryPaths.map(repositoryPath => repositoryPath.split('/')[0]),
-    )
-    return flatten(
-      // @ts-ignore
-      sequence(organizations, async organization => {
-        const loader = new GithubPeopleLoader(organization, this.setting.token)
-        const people = await loader.load()
-        return Promise.all(people.map(person => this.createPerson(person)))
-      }),
-    )
   }
 
   private async createPerson(githubPerson: GithubPerson) {
@@ -54,11 +52,11 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
         github: githubPerson,
       },
     }
-    const identifier = `github-${Helpers.hash(person)}`
+    const id = `github-${Helpers.hash(person)}`
     const personEntity = await createOrUpdate(
       PersonEntity,
       {
-        identifier,
+        id,
         integrationId: githubPerson.id,
         integration: 'github',
         name: githubPerson.login,
@@ -66,7 +64,7 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
           ...person,
         },
       },
-      { matching: ['identifier', 'integration'] },
+      { matching: ['id', 'integration'] },
     )
 
     if (githubPerson.email) {
@@ -74,7 +72,6 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
         email: githubPerson.email,
         name: githubPerson.name,
         photo: githubPerson.avatarUrl,
-        identifier,
         integration: 'github',
         person: personEntity,
       })

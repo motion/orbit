@@ -2,7 +2,9 @@ import { Bit, Person } from '@mcro/models'
 import { AtlassianService } from '@mcro/services'
 import TurndownService from 'turndown'
 import { logger } from '@mcro/logger'
+import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
+import { PersonBitEntity } from '../../entities/PersonBitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { createOrUpdatePersonBit } from '../../repository'
 import { fetchFromAtlassian } from '../../syncer/jira/JiraUtils'
@@ -91,14 +93,14 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     body,
   }: AtlassianObj): Promise<Bit> => {
     const integration = 'confluence'
-    const identifier = response.id
+    const id = response.id
     const bitCreatedAt = new Date(response.history.createdDate).getTime()
     const bitUpdatedAt = new Date(response.history.lastUpdated.when).getTime()
 
-    const bit = await BitEntity.findOne({ integration, identifier })
+    const bit = await BitEntity.findOne({ integration, id })
     const updatedBit = Object.assign(bit || new BitEntity(), {
       integration,
-      identifier,
+      id,
       type: 'document',
       title: response.title,
       body,
@@ -121,26 +123,23 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     await updatedBit.save()
 
     const person = this.people.find(person => {
-      const identifier = `confluence-${response.history.createdBy.accountId}`
-      return person.identifier === identifier
+      const id = `confluence-${response.history.createdBy.accountId}`
+      return person.id === id
     })
     log(`found a person`, person)
     if (person) {
       if (!person.personBit.bits) person.personBit.bits = []
 
       const hasSuchBit = person.personBit.bits.some(bit => {
-        return bit.identifier === identifier && bit.integration === integration
+        return bit.id === id && bit.integration === integration
       })
       log(`don't have such bit`)
       if (!hasSuchBit) {
-        // @ts-ignore
         person.personBit.bits.push(updatedBit)
-        // @ts-ignore
-        await person.personBit.save()
+        await getRepository(PersonBitEntity).save(person.personBit)
       }
     }
 
-    // @ts-ignore
     return updatedBit
   }
 
@@ -187,16 +186,15 @@ export class ConfluenceSyncer implements IntegrationSyncer {
   }
 
   private async createPerson(user: ConfluenceUser): Promise<Person> {
-    const identifier = `confluence-${user.accountId}`
+    const id = `confluence-${user.accountId}`
     const integration = 'confluence'
     const person = await PersonEntity.findOne(
-      { identifier, integration },
-      // @ts-ignore
-      { relations: ['personBit', 'personBit.bits'] },
+      { id, integration },
+      { relations: { personBit: { bits: true } } },
     )
     const updatedPerson = Object.assign(person || new PersonEntity(), {
       integration,
-      identifier,
+      id,
       integrationId: user.accountId,
       name: user.displayName,
       data: {
@@ -215,7 +213,6 @@ export class ConfluenceSyncer implements IntegrationSyncer {
       email: user.details.personal.email,
       name: user.displayName,
       photo: user.profilePicture.path,
-      identifier,
       integration,
       person: updatedPerson,
     })

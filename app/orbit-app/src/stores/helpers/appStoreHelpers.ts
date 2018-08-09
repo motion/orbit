@@ -32,9 +32,9 @@ export const uniq = arr => {
   const added = {}
   const final = []
   for (const item of arr) {
-    if (!added[item.identifier || item.id]) {
+    if (!added[item.id]) {
       final.push(item)
-      added[item.identifier || item.id] = true
+      added[item.id] = true
     }
   }
   return final

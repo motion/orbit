@@ -3,11 +3,11 @@ export interface GmailBitData {
     id: string
     date: number
     body: string
-    participants: GailBitDataParticipant[]
+    participants: GmailBitDataParticipant[]
   }[]
 }
 
-export interface GailBitDataParticipant {
+export interface GmailBitDataParticipant {
   name?: string
   email: string
   type: "from"|"to"

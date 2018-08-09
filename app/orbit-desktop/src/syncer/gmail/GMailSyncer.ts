@@ -1,5 +1,5 @@
 import { logger } from '@mcro/logger'
-import { Bit, GailBitDataParticipant, Person } from '@mcro/models'
+import { Bit, GmailBitDataParticipant, Person } from '@mcro/models'
 import { getManager, getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -108,9 +108,9 @@ export class GMailSyncer implements IntegrationSyncer {
     }
 
     // update settings
-    this.setting.values.historyId = historyId
-    this.setting.values.lastSyncFilter = filter
-    this.setting.values.lastSyncMax = max
+    // this.setting.values.historyId = historyId
+    // this.setting.values.lastSyncFilter = filter
+    // this.setting.values.lastSyncMax = max
     await this.setting.save()
   }
 
@@ -165,7 +165,7 @@ export class GMailSyncer implements IntegrationSyncer {
         }
       }
       return allParticipants
-    }, [] as GailBitDataParticipant[])
+    }, [] as GmailBitDataParticipant[])
 
     const people = await Promise.all(allParticipants.map(async participant => {
       const {name, email} = participant

@@ -23,16 +23,18 @@ export interface IntegrationSyncer {
  * Options to be passed to Syncer.
  */
 export interface SyncerOptions {
+
   /**
    * Integration type.
    * Used to get syncer settings.
+   * If type is not specified then syncer will be executed once without any setting specified.
    */
-  type: IntegrationType
+  type?: IntegrationType
 
   /**
    * Constructor of the integration syncer instance.
    */
-  constructor: new (setting: SettingEntity) => IntegrationSyncer
+  constructor: new (setting?: SettingEntity) => IntegrationSyncer
 
   /**
    * Interval during which syncers should be executed.

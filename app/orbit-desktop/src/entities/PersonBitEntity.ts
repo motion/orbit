@@ -35,6 +35,24 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   @Index()
   allPhotos: string[]
 
+  @Column({ default: false })
+  hasSlack: boolean
+
+  @Column({ default: false })
+  hasGithub: boolean
+
+  @Column({ default: false })
+  hasGdrive: boolean
+
+  @Column({ default: false })
+  hasJira: boolean
+
+  @Column({ default: false })
+  hasConfluence: boolean
+
+  @Column({ default: false })
+  hasGmail: boolean
+
   @ManyToMany(() => BitEntity)
   @JoinTable()
   bits: Bit[]

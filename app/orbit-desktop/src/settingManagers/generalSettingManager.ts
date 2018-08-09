@@ -8,7 +8,7 @@ import { getConfig } from '../config'
 const Config = getConfig()
 const log = logger('GeneralSettingManager')
 
-const generalSettingQuery = { type: 'general', category: 'general' }
+const generalSettingQuery = { type: 'general' as 'general', category: 'general' }
 
 // @ts-ignore
 @store

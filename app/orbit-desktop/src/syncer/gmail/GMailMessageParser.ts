@@ -1,7 +1,8 @@
-import { GailBitDataParticipant } from '@mcro/models'
+import { GmailBitDataParticipant } from '@mcro/models'
 import { GmailMessage } from './GMailTypes'
 const createDOMPurify = require('dompurify')
 const JSDOM = require('jsdom').JSDOM
+const addrs = require("email-addresses")
 
 /**
  * Parses Gmail Message.
@@ -36,17 +37,19 @@ export class GMailMessageParser {
    * Gets all participants in a Gmail message.
    * Returns a string name and email.
    */
-  getParticipants(): GailBitDataParticipant[] {
-    return this.message.payload.headers
-      .filter(header => header.name === 'From' || header.name === 'From')
-      .map(header => {
+  getParticipants(): GmailBitDataParticipant[] {
+    const participants: GmailBitDataParticipant[] = []
+    this.message.payload.headers
+      .filter(header => header.name === 'From' || header.name === 'To'  || header.name === 'Cc')
+      .forEach(header => {
         const type: "from"|"to" = header.name === 'From' ? "from" : "to"
-        const match = /(.*?) <(.*?)>/g.exec(header.value);
-        if (!match)
-          return { email: header.value, type }
-
-        return { name: match[1], email: match[2], type };
+        const emails = addrs.parseAddressList(header.value)
+        emails.forEach(email => {
+          participants.push({ name: email.name, email: email.address, type })
+        })
       })
+
+    return participants
   }
 
   /**

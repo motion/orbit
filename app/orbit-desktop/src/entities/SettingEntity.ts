@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Setting } from '@mcro/models'
+import { Setting, IntegrationType } from '@mcro/models'
 
 @Entity()
 export class SettingEntity extends BaseEntity implements Setting {
@@ -23,7 +23,7 @@ export class SettingEntity extends BaseEntity implements Setting {
   category: string
 
   @Column()
-  type: string
+  type: 'general' | IntegrationType
 
   @Column({ nullable: true })
   token: string
@@ -65,6 +65,7 @@ export class SettingEntity extends BaseEntity implements Setting {
     filter?: string
     lastSyncFilter?: string
     lastSyncMax?: number
+    whiteList?: { [key: string]: boolean }
   }
 
   @CreateDateColumn()

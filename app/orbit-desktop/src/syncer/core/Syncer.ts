@@ -30,20 +30,14 @@ export class Syncer {
    * Starts a process of active syncronization (runs interval).
    */
   async start() {
-    const settings = await SettingEntity.find({ type: this.options.type })
-    await Promise.all(
-      settings.map(async setting => {
-        if (this.intervalIds[setting.id])
-          clearInterval(this.intervalIds[setting.id])
-
-        this.intervalIds[setting.id] = setInterval(
-          () => this.runSyncer(setting),
-          1000 * 60, // 1 minute
-        )
-
-        await this.runSyncer(setting)
-      }),
-    )
+    if (this.options.type) {
+      const settings = await SettingEntity.find({ type: this.options.type })
+      await Promise.all(settings.map(async setting => {
+        return this.runInterval(setting.id, setting)
+      }))
+    } else {
+      return this.runInterval(0)
+    }
   }
 
   /**
@@ -60,17 +54,36 @@ export class Syncer {
    * Can be used to make syncronization from scratch.
    */
   async reset() {
-    const settings = await SettingEntity.find({ type: this.options.type })
-    await Promise.all(settings.map(async setting => {
-      return this.resetSyncer(setting)
-    }))
+    if (this.options.type) {
+      const settings = await SettingEntity.find({ type: this.options.type })
+      await Promise.all(settings.map(async setting => {
+        return this.resetSyncer(setting)
+      }))
+    } else {
+      return this.resetSyncer()
+    }
+  }
+
+  /**
+   * Runs interval to run a syncer.
+   */
+  private runInterval(index: number, setting?: SettingEntity) {
+    if (this.intervalIds[index])
+      clearInterval(this.intervalIds[index])
+
+    this.intervalIds[index] = setInterval(
+      () => this.runSyncer(setting),
+      this.options.interval
+    )
+
+    return this.runSyncer(setting)
   }
 
   /**
    * Runs syncer immediately.
    */
-  private async runSyncer(setting: SettingEntity) {
-    log(`starting ${this.options.constructor.name} syncer based on setting`, setting)
+  private async runSyncer(setting?: SettingEntity) {
+    log(`starting ${this.options.constructor.name} syncer`, setting)
     try {
       const syncer = new this.options.constructor(setting)
       await syncer.run()
@@ -84,7 +97,7 @@ export class Syncer {
   /**
    * Resets syncer data.
    */
-  private async resetSyncer(setting: SettingEntity) {
+  private async resetSyncer(setting?: SettingEntity) {
     log(`resetting ${this.options.constructor.name} syncer`, setting)
     try {
       const syncer = new this.options.constructor(setting)

@@ -58,14 +58,15 @@ const OrbitFakeInput = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  background: '#fff',
+  background: 'transparent',
+  transition: 'background ease-in 300ms',
   borderRadius: 10,
   // '&:hover': {
   //   background: '#eee',
   // },
-  // '&:focus-within': {
-  //   background: '#eee',
-  // },
+  '&:active': {
+    background: '#eee',
+  },
   isFocused: {
     // boxShadow: [cardSelectedGlow],
   },

@@ -2,7 +2,7 @@ import { RepositoryOperationType } from './Repository'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export class WebSocketProvider {
-  websocket: WebSocket
+  websocket: ReconnectingWebSocket
   operationId: number = 0
   subscriptions: {
     operationId: number
@@ -11,13 +11,9 @@ export class WebSocketProvider {
   }[] = []
 
   constructor() {
-    this.websocket = new ReconnectingWebSocket(
-      'ws://localhost:8082',
-      undefined,
-      {
-        constructor: WebSocket,
-      },
-    )
+    this.websocket = new ReconnectingWebSocket('ws://localhost:8082', [], {
+      WebSocket,
+    })
     this.websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     this.websocket.onerror = err => {
       console.log('ws error', err)

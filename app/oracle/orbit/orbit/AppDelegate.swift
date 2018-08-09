@@ -21,15 +21,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   var screen: Screen!
   var curPosition = NSRect()
   private var lastSent = ""
-//  @IBOutlet weak var window: NSWindow!
 
-  lazy var window = NSWindow(contentRect: NSMakeRect(1413, 0, 500, 900),
-                             styleMask: [.resizable], backing: .buffered, defer: false, screen: nil)
-  
-  var blurryView = NSVisualEffectView(frame: NSRect(x: 0, y: 0, width: 500, height: 900))
+  lazy var window = NSWindow(
+    contentRect: NSMakeRect(1413, 0, 500, 900),
+    styleMask: [.resizable],
+    backing: .buffered,
+    defer: false,
+    screen: nil
+  )
+  var blurryView = NSVisualEffectView(frame: NSMakeRect(0, 0, 500, 900))
   
   private func emit(_ msg: String) {
-//    print("sending \(msg)")
     self.socketBridge.send(msg)
   }
   
@@ -47,18 +49,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
+    window.level = .floating
     window.backgroundColor = NSColor.clear
     window.alphaValue = 1
     window.isOpaque = false
     window.titlebarAppearsTransparent = true
     window.titleVisibility = .hidden
-    window.setFrameOrigin(NSPoint.init(x: 1413, y: 260))
+    window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
+    window.isMovableByWindowBackground = true
 
-    blurryView.maskImage = _maskImage(cornerRadius: 20.0)
+    blurryView.maskImage = _maskImage(cornerRadius: 15.0)
     blurryView.layer?.masksToBounds = true
-    blurryView.layer?.cornerRadius = 20.0
+//    blurryView.layer?.cornerRadius = 20.0
     blurryView.wantsLayer = true
     blurryView.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
+    blurryView.isEmphasized = true
     if #available(OSX 10.14, *) {
       blurryView.material = NSVisualEffectView.Material.light
     } else {
@@ -67,7 +72,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     blurryView.state = NSVisualEffectView.State.active
     
     window.contentView?.addSubview(blurryView)
-    
     window.makeKeyAndOrderFront(nil)
     
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
@@ -115,13 +119,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   func hideWindow() {
     window.alphaValue = 0
-//    window.setFrame(curPosition, display: false, animate: true)
   }
   
   func position(_ position: Position) {
-//    window.setFrameOrigin(NSPoint.init(x: 1413, y: 260))
-    self.curPosition = NSRect(x: position.x, y: position.y, width: position.width, height: position.height)
-    window.setFrame(curPosition, display: true, animate: false)
+    let screen = NSScreen.main!
+    let rect = screen.frame
+    let height = rect.size.height
+    let x = CGFloat(position.x)
+    let y = CGFloat(position.y)
+    let w = CGFloat(position.width)
+    let h = CGFloat(position.height)
+    let nextRect = NSMakeRect(x, height - h - y, w, h)
+    self.window.setFrame(nextRect, display: true, animate: false)
+    self.blurryView.setFrameSize(NSMakeSize(w, h))
   }
   
   func onMessage(_ text: String) {

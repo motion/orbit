@@ -109,11 +109,11 @@ export class SubPane extends React.Component<Props> {
             {...props}
           >
             <PaneContentInner>{children}</PaneContentInner>
-            {fadeBottom && (
+            {/* {fadeBottom && (
               <OverflowFade
                 isInvisible={!subPaneStore.isActive || subPaneStore.isAtBottom}
               />
-            )}
+            )} */}
           </Pane>
         </DockedPaneInner>
         {after}

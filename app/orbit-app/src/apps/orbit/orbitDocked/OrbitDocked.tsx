@@ -110,14 +110,11 @@ class OrbitDockedStore {
 @view
 export class OrbitDocked extends React.Component<Props> {
   render() {
-    const { paneManagerStore, appStore, searchStore, store } = this.props
-    log('DOCKED ------------', store.animationState)
+    const { paneManagerStore, appStore, searchStore } = this.props
+    // log('DOCKED ------------', store.animationState)
     return (
       <UI.Theme name="grey">
-        <OrbitDockedFrame
-          visible={store.animationState.visible}
-          willAnimate={store.animationState.willAnimate}
-        >
+        <OrbitDockedFrame visible={App.orbitState.docked}>
           <OrbitDockedChrome appStore={appStore} />
           <UI.View borderBottomRadius={BORDER_RADIUS} flex={1}>
             <OrbitHeader

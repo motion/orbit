@@ -87,18 +87,19 @@ export class Screen {
 
   updateWindowPosition = react(
     () => {
-      const [_, screenHeight] = App.state.screenSize
       const { position, size } = App.orbitState
       const [x, y] = position
       const [width, height] = size
       return {
-        x,
-        y: screenHeight - height,
-        width,
-        height,
+        x: x - 10,
+        // mac topbar 23
+        y: y + 23 + 14,
+        width: width - 4,
+        height: height - 30,
       }
     },
     position => {
+      console.log('setting position', position)
       this.oracle.positionWindow(position)
     },
   )

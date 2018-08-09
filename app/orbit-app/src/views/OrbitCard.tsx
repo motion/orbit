@@ -113,8 +113,6 @@ Card.theme = ({
 }) => {
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
-    padding: padding || 14,
-    borderRadius: borderRadius || 12,
   }
   if (chromeless) {
     return card
@@ -128,7 +126,7 @@ Card.theme = ({
       listStyle = {
         background: '#f8faff',
         // border: [1, borderSelected],
-        boxShadow: disabledShadow || [cardSelectedGlow],
+        boxShadow: disabledShadow || [[0, 0, 0, 1, '#90b1e4']],
       }
     } else {
       listStyle = {
@@ -149,6 +147,11 @@ Card.theme = ({
       },
     }
   } else {
+    card = {
+      ...card,
+      padding: padding || 14,
+      borderRadius: borderRadius || 12,
+    }
     // CARD
     const cardBackground = background || theme.selected.background
     if (!isSelected) {

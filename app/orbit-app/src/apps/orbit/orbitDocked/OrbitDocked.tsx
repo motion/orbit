@@ -9,7 +9,7 @@ import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
 import { OrbitDirectory } from './OrbitDirectory'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
-import { BORDER_RADIUS, CHROME_PAD } from '../../../constants'
+import { BORDER_RADIUS } from '../../../constants'
 import { SearchStore } from '../../../stores/SearchStore'
 import { AppStore } from '../../../stores/AppStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
@@ -26,10 +26,10 @@ type Props = {
 
 const OrbitDockedFrame = view(UI.Col, {
   position: 'absolute',
-  top: 10 + CHROME_PAD,
-  right: 10 + CHROME_PAD,
-  bottom: 10 + CHROME_PAD,
-  width: ORBIT_WIDTH - CHROME_PAD,
+  top: 10,
+  right: 10,
+  bottom: 10,
+  width: ORBIT_WIDTH,
   borderRadius: BORDER_RADIUS + 2,
   zIndex: 2,
   flex: 1,
@@ -113,7 +113,7 @@ export class OrbitDocked extends React.Component<Props> {
     const { paneManagerStore, appStore, searchStore } = this.props
     // log('DOCKED ------------', store.animationState)
     return (
-      <UI.Theme name="grey">
+      <UI.Theme name="dark">
         <OrbitDockedFrame visible={App.orbitState.docked}>
           <OrbitDockedChrome appStore={appStore} />
           <UI.View borderBottomRadius={BORDER_RADIUS} flex={1}>

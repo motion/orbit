@@ -4,14 +4,7 @@ import { view } from '@mcro/black'
 import { SearchFilterStore } from '../../../stores/SearchFilterStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
-const inactiveTheme = {
-  background: 'transparent',
-  color: '#999',
-  hover: {
-    background: '#c7c7c7',
-    color: '#fff',
-  },
-}
+const inactiveTheme = false
 
 const activeThemes = {
   date: {
@@ -48,8 +41,9 @@ const HorizontalScroll = view({
 
 const FilterButton = props => (
   <UI.Button
+    glint={false}
     size={1}
-    sizeRadius={0.8}
+    sizeRadius={0.9}
     marginRight={4}
     sizeHeight={0.8}
     sizePadding={0.6}
@@ -103,6 +97,12 @@ export const OrbitFilterBar = view(
               <FilterButton
                 onClick={() => filterStore.toggleFilter(filter.text)}
                 opacity={opacityScale[index] || 0.333}
+                background={
+                  filter.active
+                    ? activeThemes[filter.type].background
+                    : 'transparent'
+                }
+                borderWidth={0}
               >
                 {filter.text}
               </FilterButton>

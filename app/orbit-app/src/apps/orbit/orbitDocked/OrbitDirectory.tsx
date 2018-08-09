@@ -5,13 +5,28 @@ import { compose } from '@mcro/helpers'
 import { PersonRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { Masonry } from '../../../views/Masonry'
 import { SubTitle } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
+
+const height = 77
+const gap = 10
+
+const Grid = view({
+  display: 'grid',
+  gap,
+  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+  // height of items
+  gridAutoRows: height,
+  margin: [0, -4],
+})
+
+const GridTitle = props => (
+  <SubTitle fontSize={22} fontWeight={400} padding={[12, 0, 4, 3]} {...props} />
+)
 
 type Props = {
   store?: OrbitDirectoryStore
@@ -92,11 +107,12 @@ export const OrbitDirectory = decorator((props: Props) => {
 const createSection = (people: Person[], letter, offset, total) => {
   return (
     <React.Fragment key={letter}>
-      <SubTitle>{letter}</SubTitle>
-      <Masonry>
+      <GridTitle>{letter}</GridTitle>
+      <Grid>
         {people.map((bit, index) => (
           <OrbitCard
             key={bit.id}
+            inGrid
             pane="docked"
             subPane="directory"
             index={offset + index}
@@ -107,11 +123,11 @@ const createSection = (people: Person[], letter, offset, total) => {
               icon: true,
             }}
             style={{
-              height: 77,
+              height,
             }}
           />
         ))}
-      </Masonry>
+      </Grid>
     </React.Fragment>
   )
 }

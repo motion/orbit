@@ -22,11 +22,14 @@ const Highlight = view({
   fontSize: 15,
   padding: [3, 6, 3, 14],
   margin: [4, 0, 0, 4],
+  fontWeight: 400,
   borderLeft: [2, 'transparent'],
-  color: [0, 0, 0, 0.8],
   '&:hover': {
     borderLeftColor: '#90b1e4',
   },
+})
+Highlight.theme = ({ theme }) => ({
+  color: theme.base.color,
 })
 
 const uglies = /([^a-zA-Z]{2,})/g

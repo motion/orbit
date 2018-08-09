@@ -15,7 +15,13 @@ const handleKeyDown = e => {
 
 export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
   return (
-    <View height="100%" flex={1} position="relative">
+    <View
+      height="100%"
+      flex={1}
+      position="relative"
+      flexFlow="row"
+      alignItems="center"
+    >
       <HighlightedTextArea
         width="100%"
         fontWeight={400}
@@ -37,13 +43,6 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
       <UI.ClearButton
         onClick={searchStore.clearQuery}
         opacity={App.state.query ? 1 : 0}
-        position="absolute"
-        top="50%"
-        right={0}
-        marginTop={-8}
-        transform={{
-          y: -0.5,
-        }}
       />
     </View>
   )

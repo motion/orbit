@@ -10,6 +10,9 @@ const Section = view('section', {
   padding: [0, 6, 0, 12],
   alignItems: 'center',
   transition: 'all ease 500ms',
+  transform: {
+    y: -0.5,
+  },
   invisible: {
     opacity: 0,
     pointerEvents: 'none',
@@ -24,6 +27,7 @@ type Props = {
 const exploreButton = {
   size: 1.1,
   circular: true,
+  glint: false,
   borderWidth: 1,
   margin: [0, 0, 0, 2],
   borderColor: 'transparent',

@@ -32,14 +32,15 @@ Border.theme = ({ theme }) => {
   }
 }
 
+// @ts-ignore
 const Chrome = view({
   position: 'absolute',
   top: -CHROME_PAD,
   left: -CHROME_PAD,
   right: -CHROME_PAD,
   bottom: -CHROME_PAD,
-  border: [CHROME_PAD, [0, 0, 0, 0.05]],
-  borderRadius: BORDER_RADIUS + CHROME_PAD - 1,
+  border: [CHROME_PAD, [255, 255, 255, 0.15]],
+  borderRadius: BORDER_RADIUS + CHROME_PAD,
   zIndex: -1,
 })
 
@@ -53,16 +54,22 @@ const Background = view({
   borderRadius: BORDER_RADIUS + 1,
   // background: 'rgba(255,255,255,0.92)',
 })
-Background.theme = ({ theme }) => ({
-  background: theme.base.background,
+Background.theme = ({ theme, isUpper }) => ({
+  // background: [0, 0, 0, 0.5],
+  // background: isUpper
+  //   ? theme.base.background.alpha(0.2)
+  //   : `linear-gradient(
+  //       ${theme.base.background.alpha(0.2)} 90%,
+  //       ${theme.base.background.alpha(0)}
+  //     )`,
 })
 
-const OrbitChrome = () => {
+const OrbitChrome = ({ isUpper = false }) => {
   return (
     <>
       <Border />
       <Chrome />
-      <Background />
+      <Background isUpper={isUpper} />
     </>
   )
 }
@@ -129,7 +136,7 @@ export const OrbitDockedChrome = view(({ appStore }: Props) => {
   return (
     <>
       <BlockTop height={90} overflow={SHADOW_PAD}>
-        <OrbitChrome />
+        <OrbitChrome isUpper />
       </BlockTop>
       <BlockBottom
         above={90}

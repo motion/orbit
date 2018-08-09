@@ -51,7 +51,13 @@ type Props = {
 }
 
 const FilterButton = props => (
-  <UI.Button background="#fbfbfb" size={0.95} alpha={0.9} {...props} />
+  <UI.Button
+    background="#fbfbfb"
+    size={0.95}
+    sizeRadius={3}
+    alpha={0.9}
+    {...props}
+  />
 )
 
 const decorate = compose(

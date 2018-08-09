@@ -93,8 +93,8 @@ export class Screen {
       return {
         x: x - 10,
         // mac topbar 23
-        y: y + 23 + 14,
-        width: width - 4,
+        y: y + 23 + 10,
+        width: width,
         height: height - 30,
       }
     },

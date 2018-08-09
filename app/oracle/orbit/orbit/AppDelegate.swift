@@ -30,6 +30,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     screen: nil
   )
   var blurryView = NSVisualEffectView(frame: NSMakeRect(0, 0, 500, 900))
+  var blurryView2 = NSVisualEffectView(frame: NSMakeRect(0, 0, 500, 900))
+  var blurryView3 = NSVisualEffectView(frame: NSMakeRect(0, 0, 500, 900))
   
   private func emit(_ msg: String) {
     self.socketBridge.send(msg)
@@ -60,18 +62,43 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     blurryView.maskImage = _maskImage(cornerRadius: 15.0)
     blurryView.layer?.masksToBounds = true
-//    blurryView.layer?.cornerRadius = 20.0
     blurryView.wantsLayer = true
     blurryView.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
     blurryView.isEmphasized = true
     if #available(OSX 10.14, *) {
-      blurryView.material = NSVisualEffectView.Material.light
+      blurryView.material = NSVisualEffectView.Material.ultraDark
     } else {
       // Fallback on earlier versions
     }
     blurryView.state = NSVisualEffectView.State.active
     
+    blurryView2.maskImage = _maskImage(cornerRadius: 15.0)
+    blurryView2.layer?.masksToBounds = true
+    blurryView2.wantsLayer = true
+    blurryView2.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
+    blurryView2.isEmphasized = true
+    if #available(OSX 10.14, *) {
+      blurryView2.material = NSVisualEffectView.Material.ultraDark
+    } else {
+      // Fallback on earlier versions
+    }
+    blurryView2.state = NSVisualEffectView.State.active
+    
+    blurryView3.maskImage = _maskImage(cornerRadius: 15.0)
+    blurryView3.layer?.masksToBounds = true
+    blurryView3.wantsLayer = true
+    blurryView3.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
+    blurryView3.isEmphasized = true
+    if #available(OSX 10.14, *) {
+      blurryView3.material = NSVisualEffectView.Material.ultraDark
+    } else {
+      // Fallback on earlier versions
+    }
+    blurryView3.state = NSVisualEffectView.State.active
+    
     window.contentView?.addSubview(blurryView)
+    window.contentView?.addSubview(blurryView2)
+    window.contentView?.addSubview(blurryView3)
     window.makeKeyAndOrderFront(nil)
     
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
@@ -132,6 +159,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let nextRect = NSMakeRect(x, height - h - y, w, h)
     self.window.setFrame(nextRect, display: true, animate: false)
     self.blurryView.setFrameSize(NSMakeSize(w, h))
+    self.blurryView2.setFrameSize(NSMakeSize(w, h))
+    self.blurryView3.setFrameSize(NSMakeSize(w, h))
   }
   
   func onMessage(_ text: String) {

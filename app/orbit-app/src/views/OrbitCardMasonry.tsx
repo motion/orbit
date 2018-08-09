@@ -4,7 +4,7 @@ import { OrbitCard } from './OrbitCard'
 import * as UI from '@mcro/ui'
 
 export const OrbitCardMasonry = ({ items, ...props }) => (
-  <UI.Theme name="grey">
+  <UI.Theme name="dark">
     <Masonry {...props}>
       {items.map((result, index) => (
         <OrbitCard

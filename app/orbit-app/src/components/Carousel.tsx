@@ -1,7 +1,7 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { OrbitCard } from '../views/OrbitCard'
 import { HorizontalScrollRow } from '../views/HorizontalScrollRow'
+import * as UI from '@mcro/ui'
 
 type CarouselProps = {
   items?: any[]

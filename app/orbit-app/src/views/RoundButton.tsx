@@ -5,7 +5,7 @@ const roundTheme = theme => ({
   ...theme,
   base: {
     ...theme.base,
-    background: theme.base.background.darken(0.02),
+    background: theme.base.background.darken(0.02).alpha(0.4),
     color: theme.base.color.alpha(0.6),
   },
 })

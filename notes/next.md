@@ -1,8 +1,7 @@
 # now
 
-- make search suggestions show only on search
-- make header input have nice click effect like ios
-- fix directory design bugs
+- auto update
+- test .app on umed computer
 - fix directory index/select bug
 - better design for "Add integrations"
 - fix search empty results on names
@@ -103,7 +102,12 @@ queue:
 
 # gamechangers
 
-- calendar support
-- injest anything (instant crawler/snippets)
-- memory
-- contextual search
+- personal home
+  - idea is: netflix style scroll bars with titles
+  - default they are just your integrations
+  - "pin search" to follow that search in netflix (this can then be super powerful... nlp + dates)
+
+* calendar support
+* injest anything (instant crawler/snippets)
+* memory
+* contextual search

@@ -11,18 +11,9 @@ import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
+import { Grid } from '../../../views/Grid'
 
 const height = 77
-const gap = 10
-
-const Grid = view({
-  display: 'grid',
-  gap,
-  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-  // height of items
-  gridAutoRows: height,
-  margin: [0, -4],
-})
 
 const GridTitle = props => (
   <SubTitle fontSize={22} fontWeight={400} padding={[12, 0, 4, 3]} {...props} />

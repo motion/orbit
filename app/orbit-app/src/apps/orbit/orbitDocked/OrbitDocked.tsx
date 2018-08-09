@@ -7,6 +7,7 @@ import { OrbitHomeHeader } from './orbitHome/OrbitHomeHeader'
 import { OrbitHeader } from '../orbitHeader/OrbitHeader'
 import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
 import { OrbitDirectory } from './OrbitDirectory'
+import { OrbitApps } from './OrbitApps'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { BORDER_RADIUS } from '../../../constants'
@@ -133,6 +134,7 @@ export class OrbitDocked extends React.Component<Props> {
                   name="directory"
                   paneManagerStore={paneManagerStore}
                 />
+                <OrbitApps name="apps" paneManagerStore={paneManagerStore} />
                 <OrbitSearchResults name="docked-search" />
                 <OrbitSettings name="settings" />
               </div>

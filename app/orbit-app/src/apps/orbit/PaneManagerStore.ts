@@ -12,7 +12,7 @@ export class PaneManagerStore {
     searchStore: SearchStore
   }
 
-  panes = ['home', 'directory', 'settings']
+  panes = ['home', 'directory', 'apps', 'settings']
   paneIndex = 0
 
   willMount() {

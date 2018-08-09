@@ -22,7 +22,7 @@ const Pane = view(UI.View, {
   transition: 'all ease 80ms 60ms',
   overflowX: 'hidden',
   overflowY: 'scroll',
-  padding: [0, 14, 0],
+  padding: [0, 14],
   margin: [0, 0, 0],
   // pointerEvents: 'none',
   opacity: 0,

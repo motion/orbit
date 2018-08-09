@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { SearchStore } from '../stores/SearchStore'
-import { View, Row } from '@mcro/ui'
+import { View, Row, Text } from '@mcro/ui'
 import { Input } from './Input'
 
 export * from './RoundButton'
@@ -31,7 +31,7 @@ export const FormTableValue = ({ children }) => (
   <TableCell width="70%">{children}</TableCell>
 )
 
-const Label = view('label', { padding: [0, 4], fontWeight: 400 })
+const Label = props => <Text tagName="lable" {...props} />
 
 export const FormRow = ({ label, children }) => (
   <FormTableRow>
@@ -111,12 +111,12 @@ export const VertSpace = view({
 
 export const SubTitle = ({ verticalSpacing = 1, ...props }) => (
   <UI.Text
-    alpha={0.65}
-    fontWeight={300}
+    alpha={0.7}
+    fontWeight={400}
     fontSize={16}
     alignItems="center"
     flexFlow="row"
-    padding={[3 * verticalSpacing, 0, 10 * verticalSpacing]}
+    padding={[4 * verticalSpacing, 0, 10 * verticalSpacing]}
     opacity={0.75}
     {...props}
   />

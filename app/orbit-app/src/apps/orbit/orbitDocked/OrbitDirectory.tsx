@@ -5,7 +5,7 @@ import { compose } from '@mcro/helpers'
 import { PersonRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { SubTitle } from '../../../views'
+import { SubTitle, Title } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../../../stores/SearchStore'
@@ -15,8 +15,16 @@ import { Grid } from '../../../views/Grid'
 
 const height = 77
 
+const Separator = view({
+  background: [0, 0, 0, 0.05],
+  padding: [0, 16],
+  margin: [12, -16],
+})
+
 const GridTitle = props => (
-  <SubTitle fontSize={22} fontWeight={400} padding={[12, 0, 4, 3]} {...props} />
+  <Separator>
+    <SubTitle fontSize={16} fontWeight={500} padding={0} {...props} />
+  </Separator>
 )
 
 type Props = {
@@ -151,5 +159,10 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
     )
     offset += nextPeople.length
   }
-  return sections
+  return (
+    <>
+      <Title>Directory</Title>
+      {sections}
+    </>
+  )
 })

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { OrbitCard } from '../views/OrbitCard'
 import { HorizontalScrollRow } from '../views/HorizontalScrollRow'
-import * as UI from '@mcro/ui'
 
 type CarouselProps = {
   items?: any[]
@@ -13,6 +12,7 @@ type CarouselProps = {
   before?: React.ReactNode
   after?: React.ReactNode
   children?: React.ReactNode
+  offset?: number
 }
 
 export const Carousel = ({
@@ -22,6 +22,7 @@ export const Carousel = ({
   cardHeight = 90,
   cardSpace = 12,
   cardProps = {},
+  offset = 0,
   before,
   after,
   ...props
@@ -34,7 +35,8 @@ export const Carousel = ({
           key={`${index}${bit.id}`}
           pane="carousel"
           bit={bit}
-          index={index}
+          index={index + offset}
+          offset={offset}
           total={items.length}
           inGrid
           {...cardProps}

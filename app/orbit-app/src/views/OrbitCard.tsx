@@ -160,7 +160,7 @@ Card.theme = ({
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow],
-        border: border || [1, theme.base.borderColor],
+        border: border || [1, theme.base.borderColor.alpha(0.2)],
         '&:hover': {
           boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
           border: [1, borderHover],
@@ -438,7 +438,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           <Title style={titleFlex && { flex: titleFlex }}>
             <UI.Text
               size={1.2}
-              sizeLineHeight={0.8}
+              sizeLineHeight={0.775}
               ellipse={2}
               alpha={isSelected || listItem ? 1 : 0.8}
               fontWeight={600}

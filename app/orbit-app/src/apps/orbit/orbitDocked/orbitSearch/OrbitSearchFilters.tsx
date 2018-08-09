@@ -52,7 +52,8 @@ type Props = {
 
 const FilterButton = props => (
   <UI.Button
-    background="#fbfbfb"
+    chromeless
+    glint={false}
     size={0.95}
     sizeRadius={3}
     alpha={0.9}
@@ -89,6 +90,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
             <RoundButton
               key={`${filter.icon}${i}`}
               circular
+              glint={false}
               size={1.1}
               marginLeft={5}
               icon={<OrbitIcon size={18} icon={filter.icon} />}

@@ -8,8 +8,9 @@ type Props = {
   appStore: AppStore
 }
 
-const SHADOW_PAD = 100
-const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.24]]
+const extraShadow = 100
+const SHADOW_PAD = 100 + extraShadow
+const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.34]]
 
 const Border = view({
   position: 'absolute',
@@ -23,12 +24,12 @@ const Border = view({
 })
 
 Border.theme = ({ theme }) => {
-  // const borderColor = theme.base.background.darken(0.45)
+  // const borderColor = theme.base.background.lighten(0.4)
   // const borderShadow = [0, 0, 0, 0.5, borderColor]
   // const lightBg = theme.base.background.lighten(1)
   // const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
   return {
-    boxShadow: [DOCKED_SHADOW],
+    boxShadow: [DOCKED_SHADOW /* , borderShadow */],
   }
 }
 
@@ -40,7 +41,7 @@ const Chrome = view({
   right: -CHROME_PAD,
   bottom: -CHROME_PAD,
   border: [CHROME_PAD, [255, 255, 255, 0.15]],
-  borderRadius: BORDER_RADIUS + CHROME_PAD,
+  borderRadius: BORDER_RADIUS + CHROME_PAD / 2,
   zIndex: -1,
 })
 
@@ -119,7 +120,7 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
           left: overflow,
           right: overflow,
           height: maxHeight,
-          transform: `translateY(${height - maxHeight}px)`,
+          transform: `translateY(${height - maxHeight + extraShadow}px)`,
           transition: 'transform ease-out 60ms',
         }}
       >

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import { SettingRepository } from '../../../../repositories'
 import { SubPane } from '../../SubPane'
 import * as Views from '../../../../views'
@@ -103,7 +103,7 @@ export class OrbitSettings extends React.Component<Props> {
     const { name, store } = this.props
     return (
       <SubPane name={name} fadeBottom>
-        <Views.SubTitle>Settings</Views.SubTitle>
+        <Views.Title>Settings</Views.Title>
         {!!store.generalSetting && (
           <Section>
             <Views.CheckBoxRow
@@ -111,6 +111,12 @@ export class OrbitSettings extends React.Component<Props> {
               onChange={store.generalChange('autoLaunch')}
             >
               Start on Login
+            </Views.CheckBoxRow>
+            <Views.CheckBoxRow
+              checked={store.generalSetting.values.autoLaunch}
+              onChange={store.generalChange('autoLaunch')}
+            >
+              Auto Update
             </Views.CheckBoxRow>
             <Views.FormRow label="Open shortcut">
               <ShortcutCapture

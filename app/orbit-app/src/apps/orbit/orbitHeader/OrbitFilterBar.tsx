@@ -6,13 +6,15 @@ import { PaneManagerStore } from '../PaneManagerStore'
 
 const inactiveTheme = false
 
+const dateBg = UI.color('#ffb049')
+
 const activeThemes = {
   date: {
-    background: '#ffb049',
+    background: dateBg.alpha(0.5),
     color: '#fff',
   },
   integration: {
-    background: 'rgba(71, 189, 36)',
+    background: 'rgba(71, 189, 36, 0.5)',
     color: '#fff',
   },
   person: {

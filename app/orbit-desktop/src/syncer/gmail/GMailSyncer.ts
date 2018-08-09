@@ -199,6 +199,8 @@ export class GMailSyncer implements IntegrationSyncer {
         integration: 'gmail',
         name: name || '',
         settingId: this.setting.id,
+        webLink: 'mailto:' + email,
+        desktopLink: 'mailto:' + email,
       })
       await getRepository(PersonEntity).save(person)
 

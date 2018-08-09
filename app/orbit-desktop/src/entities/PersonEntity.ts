@@ -45,4 +45,10 @@ export class PersonEntity extends BaseEntity implements Person {
   @ManyToOne(() => PersonBitEntity, person => person.people)
   personBit: PersonBit
 
+  @Column({ nullable: true })
+  webLink: string
+
+  @Column({ nullable: true })
+  desktopLink: string
+
 }

@@ -20,5 +20,8 @@ export interface Person {
   settingId: number
   data: SlackPersonData
   personBit: PersonBit
+  webLink: string
+  desktopLink: string
+
 
 }

@@ -15,5 +15,5 @@ export const fetchFromGitHub = async <T>(token: string, query: string, variables
     console.error('Error doing fetch', results)
     return null
   }
-  return results.then(results => results.data);
+  return results.then(results => results.data)
 }

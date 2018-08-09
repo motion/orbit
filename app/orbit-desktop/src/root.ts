@@ -23,6 +23,7 @@ import connectModels from './helpers/connectModels'
 import { Entities } from './entities'
 import { Onboard } from './onboard/Onboard'
 import { Logger, logger } from '@mcro/logger'
+import * as typeorm from 'typeorm'
 
 const log = logger('desktop')
 const hostile = promisifyAll(hostile_)
@@ -152,6 +153,7 @@ export class Root {
    * Used for the development purposes.
    */
   private registerREPLGlobals() {
+    root.typeorm = typeorm
     root.Root = this
     root.restart = this.restart
     root.Logger = Logger

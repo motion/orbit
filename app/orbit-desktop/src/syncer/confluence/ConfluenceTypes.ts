@@ -29,14 +29,18 @@ export type ConfluenceUser = {
   }
 }
 
-export type ConfluenceGroupMember = ConfluenceGroupMembersResponse["results"][0];
+export type ConfluenceGroupMember = ConfluenceGroupMembersResponse["results"][0]
 
 export type AtlassianUser = {
   accountId: string
   userKey: string
   username: string
   displayName: string
-  profilePicture: { path: string; height: number; width: number }
+  profilePicture: {
+    path: string
+    height: number
+    width: number
+  }
   latest: boolean
 }
 

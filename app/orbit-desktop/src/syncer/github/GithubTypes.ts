@@ -54,7 +54,7 @@ export type GithubIssueQueryResult = {
   }
 }
 
-export type GithubIssue = GithubIssueQueryResult["repository"]["issues"]["edges"][0]["node"];
+export type GithubIssue = GithubIssueQueryResult["repository"]["issues"]["edges"][0]["node"]
 
 export type GithubPeopleQueryResult = {
   organization: {
@@ -85,4 +85,4 @@ export type GithubPeopleQueryResult = {
   }
 }
 
-export type GithubPerson = GithubPeopleQueryResult["organization"]["members"]["edges"][0]["node"];
+export type GithubPerson = GithubPeopleQueryResult["organization"]["members"]["edges"][0]["node"]

@@ -30,14 +30,17 @@ export class GMailSyncer implements IntegrationSyncer {
       filter,
       lastSyncMax,
       lastSyncFilter,
+      whiteList,
     } = this.setting.values
     if (!max) max = 50
+
     log('sync settings', {
       historyId,
       max,
       filter,
       lastSyncMax,
       lastSyncFilter,
+      whiteList,
     })
 
     // if max or filter has changed - we drop all bits we have and make complete sync again
@@ -55,6 +58,7 @@ export class GMailSyncer implements IntegrationSyncer {
     let addedThreads: GmailThread[] = [],
       removedBits: BitEntity[] = []
     if (historyId) {
+
       // load history
       const history = await this.loader.loadHistory(historyId)
       historyId = history.historyId
@@ -67,6 +71,7 @@ export class GMailSyncer implements IntegrationSyncer {
         )
         addedThreads = await this.loader.loadThreads(
           max,
+          this.setting.values.filter,
           history.addedThreadIds,
         )
       } else {
@@ -88,9 +93,25 @@ export class GMailSyncer implements IntegrationSyncer {
         log(`no removed messages in history were found`)
       }
     } else {
-      addedThreads = await this.loader.loadThreads(max)
+      addedThreads = await this.loader.loadThreads(max, this.setting.values.filter)
       historyId = addedThreads.length > 0 ? addedThreads[0].historyId : null
     }
+
+    // load emails for whitelisted people separately
+    log(`loading threads from whitelisted people`)
+    const threadsFromWhiteList: GmailThread[] = []
+    await Promise.all(Object.keys(whiteList).map(async email => {
+      if (whiteList[email] === false)
+        return
+
+      const threads = await this.loader.loadThreads(max, `from:${email}`)
+      const nonDuplicateThreads = threads.filter(thread => {
+        return addedThreads.some(addedThread => addedThread.id === thread.id)
+      })
+      threadsFromWhiteList.push(...nonDuplicateThreads)
+    }))
+    addedThreads.push(...threadsFromWhiteList)
+    log(`whitelisted people threads loaded`, threadsFromWhiteList)
 
     // if there are added threads then load messages and save their bits
     if (addedThreads.length) {

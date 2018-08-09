@@ -23,5 +23,5 @@ export type JiraIssueResponse = {
   }[]
 }
 
-export type JiraIssue = JiraIssueResponse["issues"][0];
+export type JiraIssue = JiraIssueResponse["issues"][0]
 

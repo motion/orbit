@@ -55,7 +55,7 @@ export class GDriveLoader {
     log(`aggregating users from loaded files, comments and revisions`)
     this.users = []
     this.files.forEach(file => {
-      ;[
+      [
         ...file.file.owners,
         ...file.comments.map(comment => comment.author),
         ...file.revisions.map(revision => revision.lastModifyingUser),

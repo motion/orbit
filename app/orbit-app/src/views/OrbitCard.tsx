@@ -133,7 +133,7 @@ Card.theme = ({
       listStyle = {
         // border: [1, 'transparent'],
         '&:hover': {
-          background: [255, 255, 255, 0.8],
+          background: theme.hover.background,
         },
       }
     }

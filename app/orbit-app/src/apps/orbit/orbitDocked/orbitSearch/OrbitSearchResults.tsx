@@ -29,7 +29,7 @@ const Highlight = view({
   },
 })
 Highlight.theme = ({ theme }) => ({
-  color: theme.base.color,
+  color: theme.base.color.alpha(0.85),
 })
 
 const uglies = /([^a-zA-Z]{2,})/g
@@ -55,6 +55,7 @@ const highlightOptions = (query, bit) => ({
   maxSurroundChars: 110,
   trimWhitespace: true,
   separator: '&nbsp;&middot;&nbsp;',
+  style: 'font-weight: 700; color: #fff;',
 })
 
 const OrbitSearchResultsList = view(({ name, store, searchStore }: Props) => {

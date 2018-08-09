@@ -102,25 +102,24 @@ export class OrbitApps extends React.Component<Props> {
     const { name, store, integrationSettingsStore } = this.props
     return (
       <SubPane name={name} fadeBottom>
-        <Views.SubTitle>My Apps</Views.SubTitle>
-        <Theme name="grey">
-          {!!store.integrationSettings.length && (
-            <>
-              <Grid>
-                {store.integrationSettings.map((setting, index) => (
-                  <store.IntegrationCard
-                    key={`${setting.id}`}
-                    result={integrationSettingsStore.settingToResult(setting)}
-                    index={index}
-                    setting={setting}
-                    isActive
-                  />
-                ))}
-              </Grid>
-              <Views.VertSpace />
-            </>
-          )}
-        </Theme>
+        <Views.Title>Apps</Views.Title>
+        <Views.SubTitle>Active</Views.SubTitle>
+        {!!store.integrationSettings.length && (
+          <>
+            <Grid>
+              {store.integrationSettings.map((setting, index) => (
+                <store.IntegrationCard
+                  key={`${setting.id}`}
+                  result={integrationSettingsStore.settingToResult(setting)}
+                  index={index}
+                  setting={setting}
+                  isActive
+                />
+              ))}
+            </Grid>
+            <Views.VertSpace />
+          </>
+        )}
         <Views.SubTitle>Add App</Views.SubTitle>
         <Unpad>
           {integrationSettingsStore.allIntegrations

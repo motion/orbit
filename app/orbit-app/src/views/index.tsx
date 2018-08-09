@@ -96,18 +96,13 @@ export const Circle = view({
   margin: [-3, 4, 0, -2],
 })
 
-export const Title = ({ center, children, ...props }) => (
+export const Title = ({ verticalSpacing = 1, ...props }) => (
   <UI.Text
     size={1.4}
     fontWeight={300}
-    css={{
-      padding: [0, 13, 2],
-      alignItems: center ? 'center' : 'flex-start',
-    }}
+    padding={[5 * verticalSpacing, 0, 12 * verticalSpacing]}
     {...props}
-  >
-    {children}
-  </UI.Text>
+  />
 )
 
 export const VertSpace = view({

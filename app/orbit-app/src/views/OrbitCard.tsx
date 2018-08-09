@@ -150,12 +150,12 @@ Card.theme = ({
     card = {
       ...card,
       padding: padding || 14,
-      borderRadius: borderRadius || 10,
+      borderRadius: borderRadius || 7,
     }
     // CARD
     const cardBackground = background || theme.selected.background
     if (!isSelected) {
-      const borderHover = UI.color('#c9c9c9')
+      const borderHover = cardBackground.darken(0.2)
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow],
@@ -178,7 +178,7 @@ Card.theme = ({
     }
     card = {
       ...card,
-      background: cardBackground,
+      background: cardBackground.alpha(0.2),
       '&:active': {
         opacity: 0.8,
       },

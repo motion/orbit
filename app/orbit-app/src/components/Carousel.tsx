@@ -27,28 +27,26 @@ export const Carousel = ({
   ...props
 }: CarouselProps) => {
   return (
-    <UI.Theme name="grey">
-      <HorizontalScrollRow height={cardHeight + verticalPadding * 2} {...props}>
-        {before}
-        {(items || []).map((bit, index) => (
-          <OrbitCard
-            key={`${index}${bit.id}`}
-            pane="carousel"
-            bit={bit}
-            index={index}
-            total={items.length}
-            inGrid
-            {...cardProps}
-            style={{
-              width: cardWidth,
-              height: cardHeight,
-              marginRight: cardSpace,
-              ...cardProps['style'],
-            }}
-          />
-        ))}
-        {after}
-      </HorizontalScrollRow>
-    </UI.Theme>
+    <HorizontalScrollRow height={cardHeight + verticalPadding * 2} {...props}>
+      {before}
+      {(items || []).map((bit, index) => (
+        <OrbitCard
+          key={`${index}${bit.id}`}
+          pane="carousel"
+          bit={bit}
+          index={index}
+          total={items.length}
+          inGrid
+          {...cardProps}
+          style={{
+            width: cardWidth,
+            height: cardHeight,
+            marginRight: cardSpace,
+            ...cardProps['style'],
+          }}
+        />
+      ))}
+      {after}
+    </HorizontalScrollRow>
   )
 }

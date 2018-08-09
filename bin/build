@@ -16,7 +16,7 @@ if [ "$(realpath .)" = "$ROOT" ]; then
   # build --watch
   if [ "$1" = "--watch" ]; then
     ARGS=${@:2}
-    (bin/in orbit tsc --build --watch $ARGS) &
+    (cd app && tsc --build --watch $ARGS) &
     (bin/in ui npm run watch) &
     (bin/in store-hmr npm run build --watch) &
     wait

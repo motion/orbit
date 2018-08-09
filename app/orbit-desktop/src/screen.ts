@@ -93,7 +93,7 @@ export class Screen {
       const [width, height] = size
       return {
         x,
-        y: screenHeight - y - height,
+        y: screenHeight - height,
         width,
         height,
       }

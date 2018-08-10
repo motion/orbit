@@ -116,7 +116,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     blurryView.wantsLayer = true
     blurryView.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
     if #available(OSX 10.14, *) {
-      blurryView.material = NSVisualEffectView.Material.appearanceBased
+      blurryView.material = NSVisualEffectView.Material.dark
     } else {
       // Fallback on earlier versions
     }

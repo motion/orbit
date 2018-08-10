@@ -212,7 +212,9 @@ export class PeekHeaderContent extends React.Component<Props> {
                 </UI.Row>
               </>
             }
-          />
+          >
+            {title}
+          </TitleBar>
           {hasSubTitle && (
             <SubTitle before={subtitleBefore} after={subtitleAfter}>
               {subtitle}

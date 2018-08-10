@@ -12,7 +12,7 @@ import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClick
 import { generalSettingQuery } from '../../../repositories/settingQueries'
 import { Grid } from '../../../views/Grid'
 import { SimpleItem } from '../../../views/SimpleItem'
-import { Theme } from '@mcro/ui'
+import { Theme, Button } from '@mcro/ui'
 
 type Props = {
   name: string
@@ -131,6 +131,7 @@ export class OrbitApps extends React.Component<Props> {
                   onClick={addIntegrationClickHandler(item)}
                   title={item.title}
                   icon={item.icon}
+                  after={<Button>Add</Button>}
                 />
               )
             })}

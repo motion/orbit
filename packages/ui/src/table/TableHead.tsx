@@ -27,6 +27,7 @@ const invariant = require('invariant')
 const TableHeaderArrow = view({
   display: 'block',
   float: 'right',
+  fontSize: '80%',
 })
 
 const TableHeaderColumnInteractive = view(Interactive, {
@@ -55,6 +56,8 @@ const TableHeadContainer = view(Row, {
 })
 
 const TableHeadColumnContainer = view({
+  flexFlow: 'row',
+  justifyContent: 'space-between',
   position: 'relative',
   backgroundColor: colors.white,
   height: 23,

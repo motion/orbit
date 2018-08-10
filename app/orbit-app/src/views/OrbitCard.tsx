@@ -225,7 +225,15 @@ class OrbitCardStore {
   isSelected = false
   cardWrapRef = null
 
+  clickAt = 0
+
   handleClick = e => {
+    // so we can control the speed of double clicks
+    if (Date.now() - this.clickAt < 180) {
+      this.open()
+      e.stopPropagation()
+    }
+    this.clickAt = Date.now()
     if (this.props.onClick) {
       this.props.onClick(e, this.cardWrapRef)
       return
@@ -239,6 +247,13 @@ class OrbitCardStore {
     }
     this.props.searchStore.setSelectEvent('click')
     this.props.searchStore.toggleSelected(this.props.index)
+  }
+
+  open = () => {
+    if (!this.props.bit) {
+      return
+    }
+    App.actions.openItem(this.props.bit)
   }
 
   setCardWrapRef = cardWrapRef => {
@@ -344,24 +359,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       this.props.store.isSelected ||
       (this.props.listItem && this.props.store.isSelected)
     )
-  }
-
-  clickAt = 0
-
-  handleDoubleClick = e => {
-    // so we can control the speed of double clicks
-    if (Date.now() - this.clickAt < 150) {
-      this.open()
-      e.stopPropagation()
-    }
-    this.clickAt = Date.now()
-  }
-
-  open = () => {
-    if (!this.props.bit) {
-      return
-    }
-    App.actions.open(this.props.bit.url)
   }
 
   id = Math.random()

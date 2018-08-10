@@ -3,9 +3,35 @@
 - auto update
 - test .app on umed computer
 - fix directory index/select bug
-- better design for "Add integrations"
-- fix search empty results on names
 - bugfix run through trello
+
+MOVEMENT
+
+- IF you have a grid/carousel view active THEN
+  - WHEN you move down into selecting something
+    - SWITCH L/R to only move between cards not panes
+- CAROUSEL
+  - make all carousels behave under one component that handles l/r scrolling
+
+FOLLOW
+
+- Small (+) button to the right of FilterBar with tooltip "Follow"
+  - ON click add that search term to homescreen
+  - models/Follow
+
+ACCOUNT
+
+- Signup on site for account
+- That gives you a:
+  - Download of Orbit app
+  - Special license key
+- Download orbit.app
+- Add license key
+- That lets you click to open a peek window for managing master keys
+
+DESIGN
+
+- Peek windows no more fancy theme just mac looking headers
 
 # nate
 

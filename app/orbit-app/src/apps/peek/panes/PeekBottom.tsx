@@ -1,10 +1,13 @@
 import { view } from '@mcro/black'
 
 export const PeekBottom = view({
-  background: '#fff',
   margin: [0, -30],
   padding: [0, 30],
-  borderTop: [1, '#eee'],
   position: 'relative',
   zIndex: 10,
+})
+
+PeekBottom.theme = ({ theme }) => ({
+  borderTop: [1, theme.base.borderColor.alpha(0.5)],
+  background: theme.base.background,
 })

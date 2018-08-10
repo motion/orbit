@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -7,9 +7,10 @@ import { OrbitHomeHeader } from './orbitHome/OrbitHomeHeader'
 import { OrbitHeader } from '../orbitHeader/OrbitHeader'
 import { OrbitSearchResults } from './orbitSearch/OrbitSearchResults'
 import { OrbitDirectory } from './OrbitDirectory'
+import { OrbitApps } from './OrbitApps'
 import { App } from '@mcro/stores'
 import { PaneManagerStore } from '../PaneManagerStore'
-import { BORDER_RADIUS, CHROME_PAD } from '../../../constants'
+import { BORDER_RADIUS } from '../../../constants'
 import { SearchStore } from '../../../stores/SearchStore'
 import { AppStore } from '../../../stores/AppStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
@@ -21,36 +22,37 @@ type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: AppStore
+  store?: OrbitDockedStore
 }
 
 const OrbitDockedFrame = view(UI.Col, {
   position: 'absolute',
-  top: 10 + CHROME_PAD,
-  right: 10 + CHROME_PAD,
-  bottom: 10 + CHROME_PAD,
-  width: ORBIT_WIDTH - CHROME_PAD,
+  top: 10,
+  right: 10,
+  bottom: 10,
+  width: ORBIT_WIDTH,
   borderRadius: BORDER_RADIUS + 2,
   zIndex: 2,
   flex: 1,
   pointerEvents: 'none',
   opacity: 0,
-  // transition: 'bottom ease 80ms',
-  transform: {
-    x: 6,
-  },
   visible: {
     pointerEvents: 'auto',
     opacity: 1,
-    transform: {
-      x: 0,
-    },
   },
-  willAnimate: {
-    willChange: 'transform, opacity',
-    transition: `
-      transform ease ${App.animationDuration}ms,
-      opacity ease ${App.animationDuration}ms
-    `,
+})
+
+const OrbitDockedInnerFrame = view(UI.Col, {
+  opacity: 0,
+  // transform: {
+  //   x: 12,
+  // },
+  // transition: `
+  //   transform ease 80ms,
+  //   opacity ease 80ms
+  // `,
+  visible: {
+    opacity: 1,
   },
 })
 
@@ -71,24 +73,55 @@ const OrbitDockedInner = view({
   },
 })
 
+class OrbitDockedStore {
+  animationState = react(
+    () => App.orbitState.docked,
+    async (visible, { sleep, setValue }) => {
+      // hmr already showing
+      if (visible && this.animationState.visible) {
+        throw react.cancel
+      }
+      // old value first to setup for transition
+      setValue({ willAnimate: true, visible: !visible })
+      await sleep(32)
+      // new value, start transition
+      setValue({ willAnimate: true, visible })
+      await sleep(App.animationDuration * 2)
+      // done animating, reset
+      setValue({ willAnimate: false, visible })
+      // this would do the toggle after the animation, trying out doing it before to see if its faster
+      // App.sendMessage(
+      //   Electron,
+      //   visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
+      // )
+    },
+    {
+      immediate: true,
+      log: false,
+      defaultValue: { willAnimate: false, visible: App.orbitState.docked },
+    },
+  )
+}
+
 @view.attach('appStore', 'searchStore')
 @view.provide({
   paneManagerStore: PaneManagerStore,
+  store: OrbitDockedStore,
 })
 @view
 export class OrbitDocked extends React.Component<Props> {
   render() {
     const { paneManagerStore, appStore, searchStore } = this.props
-    const { animationState } = paneManagerStore
-    // log('DOCKED ------------', App.orbitState.docked)
+    // log('DOCKED ------------', store.animationState)
     return (
-      <UI.Theme name="grey">
-        <OrbitDockedFrame
-          visible={animationState.visible}
-          willAnimate={animationState.willAnimate}
-        >
+      <UI.Theme name="dark">
+        <OrbitDockedFrame visible={App.orbitState.docked}>
           <OrbitDockedChrome appStore={appStore} />
-          <UI.View borderBottomRadius={BORDER_RADIUS} flex={1}>
+          <OrbitDockedInnerFrame
+            borderBottomRadius={BORDER_RADIUS}
+            flex={1}
+            visible={App.orbitState.docked}
+          >
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
               after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
@@ -105,11 +138,12 @@ export class OrbitDocked extends React.Component<Props> {
                   name="directory"
                   paneManagerStore={paneManagerStore}
                 />
+                <OrbitApps name="apps" paneManagerStore={paneManagerStore} />
                 <OrbitSearchResults name="docked-search" />
                 <OrbitSettings name="settings" />
               </div>
             </OrbitDockedInner>
-          </UI.View>
+          </OrbitDockedInnerFrame>
         </OrbitDockedFrame>
       </UI.Theme>
     )

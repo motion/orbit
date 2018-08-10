@@ -7,7 +7,7 @@ const oneLine = str => str.replace(/\r?\n|\r/g, '')
 
 const TextAreaOuter = view(UI.Col, {
   position: 'relative',
-  width: '100%',
+  flex: 1,
 })
 
 const Block = view(UI.Block, {
@@ -36,6 +36,7 @@ type Props = CSSPropertySet & {
   onKeyDown?: Function
   onClick?: Function
   forwardRef?: React.Ref<any>
+  placeholder?: string
 }
 
 export class HighlightedTextArea extends React.Component<Props> {

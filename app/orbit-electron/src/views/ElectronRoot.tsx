@@ -5,6 +5,7 @@ import Tray from './Tray'
 import { MenuItems } from './MenuItems'
 import { MainWindow } from './MainWindow'
 import { ElectronStore } from '../stores/ElectronStore'
+// import { VibrantWindow } from './VibrantWindow'
 
 @view.provide({
   electronStore: ElectronStore,
@@ -41,6 +42,7 @@ export class ElectronRoot extends React.Component {
         devTools={[DevTools.mobx, DevTools.react]}
       >
         <MenuItems />
+        {/* <VibrantWindow /> */}
         <MainWindow onRef={electronStore.windowFocusStore.setOrbitRef} />
         <Tray />
       </AppWindow>

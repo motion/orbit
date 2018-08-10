@@ -58,16 +58,17 @@ const OrbitFakeInput = view({
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  background: '#ececec',
+  // background: 'transparent',
+  transition: 'background ease-in 300ms',
   borderRadius: 10,
-  // '&:hover': {
-  //   background: '#eee',
-  // },
-  // '&:focus-within': {
-  //   background: '#eee',
-  // },
   isFocused: {
     // boxShadow: [cardSelectedGlow],
+  },
+})
+OrbitFakeInput.theme = ({ theme }) => ({
+  background: theme.base.background.alpha(0.35),
+  '&:active': {
+    background: theme.base.background.alpha(0.6),
   },
 })
 
@@ -136,7 +137,7 @@ export class OrbitHeader extends React.Component<{
               theme={theme}
             />
           </Title>
-          <After if={after}>{after}</After>
+          {!!after && <After>{after}</After>}
           <PinnedControlButton
             if={showPin}
             onClick={App.togglePinned}

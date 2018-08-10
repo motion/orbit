@@ -5,13 +5,39 @@ import { compose } from '@mcro/helpers'
 import { PersonRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { Masonry } from '../../../views/Masonry'
-import { SubTitle } from '../../../views'
+import { SubTitle, Title } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
+import { Grid } from '../../../views/Grid'
+
+const height = 69
+
+const Separator = view({
+  padding: [3, 16],
+  margin: [0, -16, 10],
+})
+// Separator.theme = ({ theme }) => ({
+//   background: theme.base.background.alpha(0.1),
+// })
+
+const VerticalSpace = view({
+  height: 10,
+})
+
+const GridTitle = props => (
+  <Separator>
+    <SubTitle
+      fontSize={15}
+      lineHeight={15}
+      fontWeight={600}
+      padding={0}
+      {...props}
+    />
+  </Separator>
+)
 
 type Props = {
   store?: OrbitDirectoryStore
@@ -92,11 +118,12 @@ export const OrbitDirectory = decorator((props: Props) => {
 const createSection = (people: Person[], letter, offset, total) => {
   return (
     <React.Fragment key={letter}>
-      <SubTitle>{letter}</SubTitle>
-      <Masonry>
+      <GridTitle>{letter}</GridTitle>
+      <Grid>
         {people.map((bit, index) => (
           <OrbitCard
             key={bit.id}
+            inGrid
             pane="docked"
             subPane="directory"
             index={offset + index}
@@ -107,11 +134,12 @@ const createSection = (people: Person[], letter, offset, total) => {
               icon: true,
             }}
             style={{
-              height: 77,
+              height,
             }}
           />
         ))}
-      </Masonry>
+      </Grid>
+      <VerticalSpace />
     </React.Fragment>
   )
 }
@@ -144,5 +172,10 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
     )
     offset += nextPeople.length
   }
-  return sections
+  return (
+    <>
+      <Title>Directory</Title>
+      {sections}
+    </>
+  )
 })

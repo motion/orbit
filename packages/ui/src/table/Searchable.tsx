@@ -16,7 +16,7 @@ import { View } from '../blocks/View'
 import { Icon } from '../Icon'
 import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
-import { Theme } from '@mcro/gloss'
+import { Theme, attachTheme } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
 import { ClearButton } from '../buttons/ClearButton'
 
@@ -65,13 +65,13 @@ export const SearchBox = view(View, {
   flex: 1,
   alignItems: 'center',
   paddingLeft: 4,
-  background: [255, 255, 255, 0.1],
   '&:focus-within': {
     boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
   },
 })
 
 SearchBox.theme = ({ theme }) => ({
+  background: theme.base.background.lighten(0.1),
   border: [1, theme.base.borderColor.desaturate(0.1)],
 })
 
@@ -101,9 +101,7 @@ SearchInput.theme = ({ focus, theme }) => ({
 })
 
 export const SearchIcon = view(Icon, {
-  marginRight: 4,
-  marginLeft: 3,
-  marginTop: -1,
+  margin: [-1, 6, 0],
   minWidth: 16,
 })
 
@@ -125,8 +123,8 @@ type State = {
   hasFocus: boolean
 }
 
-export const Searchable = (Component: any) =>
-  class extends React.PureComponent<Props, State> {
+export const Searchable = (Component: any) => {
+  class SearchableComponent extends React.PureComponent<Props, State> {
     static defaultProps = {
       placeholder: 'Search...',
       defaultValue: '',
@@ -392,55 +390,53 @@ export const Searchable = (Component: any) =>
         searchBarProps,
         searchInputProps,
         focusOnMount,
-        searchBarTheme,
         before,
         after,
+        theme,
         ...props
       } = this.props
       const searchBar = (
-        <Theme theme={searchBarTheme}>
-          <SearchBar
-            position="relative"
-            zIndex="1"
-            key="searchbar"
-            {...searchBarProps}
-          >
-            {before}
-            <SearchBox tabIndex={-1}>
-              <SearchIcon
-                name="ui-1_zoom"
-                color={[255, 255, 255, 0.3]}
-                size={16}
+        <SearchBar
+          position="relative"
+          zIndex="1"
+          key="searchbar"
+          {...searchBarProps}
+        >
+          {before}
+          <SearchBox tabIndex={-1}>
+            <SearchIcon
+              name="ui-1_zoom"
+              color={theme.base.color.alpha(0.5)}
+              size={16}
+            />
+            {this.state.filters.map((filter, i) => (
+              <FilterToken
+                key={`${filter.key}:${filter.type}`}
+                index={i}
+                filter={filter}
+                focused={i === this.state.focusedToken}
+                onFocus={this.onTokenFocus}
+                onDelete={this.removeFilter}
+                onReplace={this.replaceFilter}
+                onBlur={this.onTokenBlur}
               />
-              {this.state.filters.map((filter, i) => (
-                <FilterToken
-                  key={`${filter.key}:${filter.type}`}
-                  index={i}
-                  filter={filter}
-                  focused={i === this.state.focusedToken}
-                  onFocus={this.onTokenFocus}
-                  onDelete={this.removeFilter}
-                  onReplace={this.replaceFilter}
-                  onBlur={this.onTokenBlur}
-                />
-              ))}
-              <SearchInput
-                placeholder={placeholder}
-                onChange={this.onChangeSearchTerm}
-                value={this.state.searchTerm}
-                forwardRef={this.inputRef}
-                onFocus={this.onInputFocus}
-                onBlur={this.onInputBlur}
-                {...searchInputProps}
-              />
-              {this.state.searchTerm || this.state.filters.length > 0 ? (
-                <SearchClearButton onClick={this.clear} />
-              ) : null}
-            </SearchBox>
-            {after}
-            {actions != null ? <Actions>{actions}</Actions> : null}
-          </SearchBar>
-        </Theme>
+            ))}
+            <SearchInput
+              placeholder={placeholder}
+              onChange={this.onChangeSearchTerm}
+              value={this.state.searchTerm}
+              forwardRef={this.inputRef}
+              onFocus={this.onInputFocus}
+              onBlur={this.onInputBlur}
+              {...searchInputProps}
+            />
+            {this.state.searchTerm || this.state.filters.length > 0 ? (
+              <SearchClearButton onClick={this.clear} />
+            ) : null}
+          </SearchBox>
+          {after}
+          {actions != null ? <Actions>{actions}</Actions> : null}
+        </SearchBar>
       )
 
       const body = (
@@ -466,3 +462,6 @@ export const Searchable = (Component: any) =>
       )
     }
   }
+
+  return attachTheme(SearchableComponent)
+}

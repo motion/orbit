@@ -5,6 +5,7 @@ import { SettingRepository } from '../../../../repositories'
 import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
 import { OrbitCardProps } from '../../../../views/OrbitCard'
+import pluralize from 'pluralize'
 
 @view.attach('appStore')
 @view.attach({
@@ -34,21 +35,22 @@ export class OrbitSettingCard extends React.Component<
       ? ''
       : store.bitsCount === null
         ? '...'
-        : `${store.bitsCount || '0'} total`
+        : `${store.bitsCount}`
     const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard
         inactive={!isActive}
         title={result.title}
         subtitle={subtitleDisplay}
+        subtitleProps={{
+          size: 2,
+          fontWeight: 500,
+        }}
         date={store.job && store.job.updatedAt}
         icon={result.icon}
-        iconProps={
-          !isActive && {
-            color: '#999',
-            alpha: 0.8,
-          }
-        }
+        iconProps={{
+          size: 20,
+        }}
         result={result}
         {...props}
         onClick={onClick || (!isActive ? this.handleClick : null)}

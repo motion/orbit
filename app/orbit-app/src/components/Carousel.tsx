@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { OrbitCard } from '../views/OrbitCard'
 import { HorizontalScrollRow } from '../views/HorizontalScrollRow'
 
@@ -13,6 +12,7 @@ type CarouselProps = {
   before?: React.ReactNode
   after?: React.ReactNode
   children?: React.ReactNode
+  offset?: number
 }
 
 export const Carousel = ({
@@ -22,33 +22,33 @@ export const Carousel = ({
   cardHeight = 90,
   cardSpace = 12,
   cardProps = {},
+  offset = 0,
   before,
   after,
   ...props
 }: CarouselProps) => {
   return (
-    <UI.Theme name="grey">
-      <HorizontalScrollRow height={cardHeight + verticalPadding * 2} {...props}>
-        {before}
-        {(items || []).map((bit, index) => (
-          <OrbitCard
-            key={`${index}${bit.id}`}
-            pane="carousel"
-            bit={bit}
-            index={index}
-            total={items.length}
-            inGrid
-            {...cardProps}
-            style={{
-              width: cardWidth,
-              height: cardHeight,
-              marginRight: cardSpace,
-              ...cardProps['style'],
-            }}
-          />
-        ))}
-        {after}
-      </HorizontalScrollRow>
-    </UI.Theme>
+    <HorizontalScrollRow height={cardHeight + verticalPadding * 2} {...props}>
+      {before}
+      {(items || []).map((bit, index) => (
+        <OrbitCard
+          key={`${index}${bit.id}`}
+          pane="carousel"
+          bit={bit}
+          index={index + offset}
+          offset={offset}
+          total={items.length}
+          inGrid
+          {...cardProps}
+          style={{
+            width: cardWidth,
+            height: cardHeight,
+            marginRight: cardSpace,
+            ...cardProps['style'],
+          }}
+        />
+      ))}
+      {after}
+    </HorizontalScrollRow>
   )
 }

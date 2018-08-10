@@ -97,7 +97,7 @@ const textify = thing => {
 const SubTitle = ({ children, before, after }) => (
   <UI.Row
     position="relative"
-    padding={[0, 12]}
+    padding={[0, 6]}
     alignItems="center"
     flex={1}
     height={32}

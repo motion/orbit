@@ -15,7 +15,7 @@ const SearchFilters = view(UI.Col, {
 })
 
 SearchFilters.theme = ({ theme }) => ({
-  borderTop: [1, theme.base.borderColor],
+  borderTop: [1, theme.base.borderColor.alpha(0.3)],
   background: 'transparent',
 })
 
@@ -30,18 +30,21 @@ const ExtraFilters = view(UI.View, {
   },
 })
 
+const simplerDateWords = str =>
+  str.replace('about ', '').replace('less than a minute', 'now')
+
 const getDate = ({ startDate, endDate }) => {
   if (!startDate) {
     return null
   }
-  const startInWords = formatDistance(Date.now(), startDate).replace(
-    'about ',
-    '',
-  )
+  const startInWords = simplerDateWords(formatDistance(Date.now(), startDate))
   if (!endDate) {
     return `${startInWords}`
   }
-  const endInWords = formatDistance(Date.now(), endDate).replace('about ', '')
+  if (startDate - endDate <= 1000 * 60 * 24) {
+    return startInWords
+  }
+  const endInWords = simplerDateWords(formatDistance(Date.now(), endDate))
   return `${startInWords} - ${endInWords}`
 }
 
@@ -51,7 +54,14 @@ type Props = {
 }
 
 const FilterButton = props => (
-  <UI.Button background="#fbfbfb" size={0.95} alpha={0.9} {...props} />
+  <UI.Button
+    chromeless
+    glint={false}
+    size={0.95}
+    sizeRadius={3}
+    alpha={0.9}
+    {...props}
+  />
 )
 
 const decorate = compose(
@@ -83,6 +93,7 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
             <RoundButton
               key={`${filter.icon}${i}`}
               circular
+              glint={false}
               size={1.1}
               marginLeft={5}
               icon={<OrbitIcon size={18} icon={filter.icon} />}

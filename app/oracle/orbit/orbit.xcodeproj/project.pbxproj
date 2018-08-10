@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CF0BCD71202E0A860012723C /* Swindler.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD6D202E0A620012723C /* Swindler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCD76202E0C060012723C /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCD74202E0C050012723C /* PromiseKit.framework */; };
-		CF0BCD77202E0C060012723C /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD74202E0C050012723C /* PromiseKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CF0BCD77202E0C060012723C /* PromiseKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD74202E0C050012723C /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCD78202E0C060012723C /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCD75202E0C060012723C /* AXSwift.framework */; };
-		CF0BCD79202E0C060012723C /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD75202E0C060012723C /* AXSwift.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CF0BCD79202E0C060012723C /* AXSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD75202E0C060012723C /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCD7D202E0C260012723C /* AXSwift.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD7B202E0C250012723C /* AXSwift.framework.dSYM */; };
 		CF0BCD7E202E0C260012723C /* PromiseKit.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCD7C202E0C250012723C /* PromiseKit.framework.dSYM */; };
 		CF0BCD83202E0E0F0012723C /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD82202E0E0F0012723C /* Characters.swift */; };
@@ -29,9 +29,9 @@
 		CF0BCD9D202E0E3D0012723C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9C202E0E3C0012723C /* Extensions.swift */; };
 		CF0BCD9F202E0E3E0012723C /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCD9E202E0E3E0012723C /* util.swift */; };
 		CF0BCDA6202E10FB0012723C /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; };
-		CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CF0BCDA7202E10FB0012723C /* SwiftWebSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA4202E10FB0012723C /* SwiftWebSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCDA8202E10FB0012723C /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; };
-		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CF0BCDA9202E10FB0012723C /* Async.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDA5202E10FB0012723C /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CF0BCDAC202E11140012723C /* SwiftWebSocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAA202E11140012723C /* SwiftWebSocket.framework.dSYM */; };
 		CF0BCDAD202E11140012723C /* Async.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CF0BCDAB202E11140012723C /* Async.framework.dSYM */; };
 		CF0BCDB5202E189F0012723C /* Windo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB4202E189F0012723C /* Windo.swift */; };
@@ -245,7 +245,7 @@
 				CFBEEE19202D838D005F925A /* Resources */,
 				CF0BCD70202E0A790012723C /* CopyFiles */,
 				CF0BCD7A202E0C120012723C /* CopyFiles */,
-				CF0BCDB2202E139F0012723C /* ShellScript */,
+				AE496FAB211BD8A5008319A0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -264,7 +264,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Nate Wienert";
 				TargetAttributes = {
 					CFBEEE1A202D838D005F925A = {
@@ -326,18 +326,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		CF0BCDB2202E139F0012723C /* ShellScript */ = {
+		AE496FAB211BD8A5008319A0 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
+			);
+			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "touch ../../../apps/desktop/_/index.js";
+			shellScript = "touch ../../orbit-desktop/_/main.js\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -404,6 +408,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -411,6 +416,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -461,6 +467,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -468,6 +475,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

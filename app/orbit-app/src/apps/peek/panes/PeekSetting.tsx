@@ -26,6 +26,8 @@ const statusIcons = {
   COMPLETE: { name: 'check', color: 'darkgreen' },
 }
 
+const SubTitleButton = props => <UI.Button sizeHeight={0.9} {...props} />
+
 @view.attach('integrationSettingsStore')
 @view.attach({
   store: SettingInfoStore,
@@ -75,49 +77,43 @@ class SettingContent extends React.Component<
           const icon = statusIcons[store.job && store.job.status] || {}
           return children({
             title: capitalize(integration),
+            subtitleBefore: (
+              <SubTitleButton
+                icon="remove"
+                tooltip="Remove integration"
+                onClick={this.removeIntegration}
+              >
+                Remove
+              </SubTitleButton>
+            ),
+            subtitle: (
+              <>
+                <UI.Text>{store.bitsCount} total</UI.Text>
+                <PeekActionBar.Space />
+                {!!store.job &&
+                  !!store.job.updatedAt && (
+                    <RoundButton
+                      icon={icon.name}
+                      iconProps={icon}
+                      tooltip={
+                        <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
+                      }
+                    >
+                      Last run
+                    </RoundButton>
+                  )}
+              </>
+            ),
+            subtitleAfter: (
+              <SubTitleButton
+                tooltip="Re-run sync"
+                onClick={this.handleRefresh}
+              >
+                Sync
+              </SubTitleButton>
+            ),
             belowHead,
             content,
-            postBody: (
-              <PeekBottom>
-                <PeekActionBar>
-                  <UI.Text>{store.bitsCount} total</UI.Text>
-                  <PeekActionBar.Space />
-                  {!!store.job &&
-                    !!store.job.updatedAt && (
-                      <RoundButton
-                        icon={icon.name}
-                        iconProps={icon}
-                        tooltip={
-                          <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-                        }
-                      >
-                        Last run
-                      </RoundButton>
-                    )}
-                  <UI.ListRow
-                    flex={1}
-                    margin={[0, -8, -5, 0]}
-                    itemProps={{
-                      size: 0.9,
-                      chromeless: true,
-                      opacity: 0.7,
-                      margin: [0, 0, 0, 5],
-                    }}
-                  >
-                    <UI.Button
-                      icon="refresh"
-                      tooltip="Refresh"
-                      onClick={this.handleRefresh}
-                    />
-                    <UI.Button
-                      icon="remove"
-                      tooltip="Remove"
-                      onClick={this.removeIntegration}
-                    />
-                  </UI.ListRow>
-                </PeekActionBar>
-              </PeekBottom>
-            ),
           })
         }}
       </SettingPane>

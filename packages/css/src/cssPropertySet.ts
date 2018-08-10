@@ -398,6 +398,7 @@ export type justifyContent =
   | 'center'
   | 'space-between'
   | 'space-around'
+  | 'stretch'
 export type letterSpacing = 'normal' | lengthPercentage
 export type lineBreak = 'auto' | 'loose' | 'normal' | 'strict'
 export type lineHeight = 'normal' | number | string
@@ -800,7 +801,7 @@ export type brStyle =
   | 'inset'
   | 'outset'
 export type borderWidth = number | 'thin' | 'medium' | 'thick' | string
-export type color = string
+export type color = string | Color | number[]
 export type compositeStyle =
   | 'clear'
   | 'copy'

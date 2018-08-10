@@ -45,7 +45,7 @@ export class AppStore {
   )
 
   get selectedPane() {
-    if (App.orbitState.docked) {
+    if (App.orbitState.hidden) {
       if (App.state.query) {
         return 'docked-search'
       }

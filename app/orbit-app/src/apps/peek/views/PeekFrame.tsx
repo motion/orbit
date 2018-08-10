@@ -35,10 +35,6 @@ const PeekMain = view({
   opacity: 1,
 })
 
-PeekMain.theme = ({ theme }) => ({
-  background: theme.base.background,
-})
-
 type PeekFrameProps = {
   peekStore: PeekStore
   children: any

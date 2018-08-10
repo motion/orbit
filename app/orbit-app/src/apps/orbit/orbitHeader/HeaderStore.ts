@@ -102,7 +102,10 @@ export class HeaderStore {
 
   updateInputOnPaneChange = react(
     () => this.props.paneManagerStore.activePane,
-    () => {
+    pane => {
+      if (pane === 'search' || pane === 'home') {
+        throw react.cancel
+      }
       this.props.searchStore.clearQuery()
       this.focus()
     },

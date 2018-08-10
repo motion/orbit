@@ -8,9 +8,9 @@ type Props = {
   appStore: AppStore
 }
 
-const extraShadow = 100
+const extraShadow = -20
 const SHADOW_PAD = 100 + extraShadow
-const DOCKED_SHADOW = [0, 0, SHADOW_PAD, [0, 0, 0, 0.34]]
+const DOCKED_SHADOW = [0, SHADOW_PAD / 6, SHADOW_PAD, [0, 0, 0, 0.4]]
 
 const Border = view({
   position: 'absolute',
@@ -23,15 +23,15 @@ const Border = view({
   borderRadius: BORDER_RADIUS,
 })
 
-// Border.theme = ({ theme }) => {
-//   // const borderColor = theme.base.background.lighten(0.4)
-//   // const borderShadow = [0, 0, 0, 0.5, borderColor]
-//   // const lightBg = theme.base.background.lighten(1)
-//   // const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
-//   return {
-//     boxShadow: [DOCKED_SHADOW /* , borderShadow */],
-//   }
-// }
+Border.theme = ({ theme }) => {
+  // const borderColor = theme.base.background.lighten(0.4)
+  // const borderShadow = [0, 0, 0, 0.5, borderColor]
+  // const lightBg = theme.base.background.lighten(1)
+  // const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
+  return {
+    boxShadow: [DOCKED_SHADOW /* , borderShadow */],
+  }
+}
 
 // @ts-ignore
 const Chrome = view({
@@ -56,7 +56,7 @@ const Background = view({
   // background: 'rgba(255,255,255,0.92)',
 })
 Background.theme = ({ theme, isUpper }) => ({
-  background: theme.base.background.lighten(1).alpha(0.5),
+  background: [50, 50, 50, 0.76],
   // background: [0, 0, 0, 0.5],
   // background: isUpper
   //   ? theme.base.background.alpha(0.2)

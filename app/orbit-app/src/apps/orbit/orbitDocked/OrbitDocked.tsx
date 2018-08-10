@@ -36,23 +36,27 @@ const OrbitDockedFrame = view(UI.Col, {
   flex: 1,
   pointerEvents: 'none',
   opacity: 0,
-  // transition: 'bottom ease 80ms',
+  visible: {
+    pointerEvents: 'auto',
+    opacity: 1,
+  },
+})
+
+const OrbitDockedInnerFrame = view(UI.Col, {
+  opacity: 0,
   transform: {
     x: 12,
   },
+  transition: `
+    transform ease 80ms,
+    opacity ease 80ms
+  `,
   visible: {
     pointerEvents: 'auto',
     opacity: 1,
     transform: {
       x: 0,
     },
-  },
-  willAnimate: {
-    willChange: 'transform, opacity',
-    transition: `
-      transform ease ${App.animationDuration}ms,
-      opacity ease ${App.animationDuration}ms
-    `,
   },
 })
 
@@ -115,15 +119,13 @@ export class OrbitDocked extends React.Component<Props> {
     // log('DOCKED ------------', store.animationState)
     return (
       <UI.Theme name="dark">
-        <OrbitDockedFrame
-          visible={App.orbitState.docked}
-          // visible={App.orbitState.docked ? store.animationState.visible : false}
-          // willAnimate={
-          //   App.orbitState.docked ? store.animationState.willAnimate : false
-          // }
-        >
+        <OrbitDockedFrame visible={App.orbitState.docked}>
           <OrbitDockedChrome appStore={appStore} />
-          <UI.View borderBottomRadius={BORDER_RADIUS} flex={1}>
+          <OrbitDockedInnerFrame
+            borderBottomRadius={BORDER_RADIUS}
+            flex={1}
+            visible={App.orbitState.docked}
+          >
             <OrbitHeader
               borderRadius={BORDER_RADIUS}
               after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
@@ -145,7 +147,7 @@ export class OrbitDocked extends React.Component<Props> {
                 <OrbitSettings name="settings" />
               </div>
             </OrbitDockedInner>
-          </UI.View>
+          </OrbitDockedInnerFrame>
         </OrbitDockedFrame>
       </UI.Theme>
     )

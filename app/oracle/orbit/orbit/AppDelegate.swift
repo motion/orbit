@@ -13,6 +13,31 @@ struct Position: Decodable {
   let height: Int
 }
 
+class BlurryEffectView: NSVisualEffectView {
+  override func updateLayer() {
+    super.updateLayer()
+    
+    let backdrop = self.layer!.sublayers!.first!
+    
+    if backdrop.sublayers != nil {
+      for sublayer in backdrop.sublayers! {
+        print("123 \(String(describing: sublayer.name))")
+        if sublayer.name == "Backdrop" {
+          for filter in sublayer.filters! {
+            print("------------------- \(type(of: filter))")
+            //          let f = filter as [Filter]
+            //          if filter.respondsToSelector("name") {
+            //            if filter.name == "Backdrop" {
+            //
+            //            }
+            //          }
+          }
+        }
+      }
+    }
+  }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
   let shouldRunTest = ProcessInfo.processInfo.environment["TEST_RUN"] == "true"
   let queue = AsyncGroup()
@@ -29,7 +54,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     defer: false,
     screen: nil
   )
-  var blurryView = NSVisualEffectView(frame: NSMakeRect(0, 0, 500, 900))
+  lazy var window2 = NSWindow(
+    contentRect: NSMakeRect(1413, 0, 500, 900),
+    styleMask: [.resizable],
+    backing: .buffered,
+    defer: false,
+    screen: nil
+  )
+  var blurryView = BlurryEffectView(frame: NSMakeRect(0, 0, 500, 900))
+  var opaqueView = NSVisualEffectView(frame: NSMakeRect(0, 0, 500, 900))
 
   private func emit(_ msg: String) {
     self.socketBridge.send(msg)
@@ -51,27 +84,53 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     window.level = .floating
     window.backgroundColor = NSColor.clear
-    window.alphaValue = 1
+    window.alphaValue = 0
     window.isOpaque = false
     window.titlebarAppearsTransparent = true
     window.titleVisibility = .hidden
     window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
     window.isMovableByWindowBackground = true
+    
+    window2.level = .floating
+    window2.backgroundColor = NSColor.clear
+    window2.alphaValue = 0
+    window2.isOpaque = false
+    window2.titlebarAppearsTransparent = true
+    window2.titleVisibility = .hidden
+    window2.setFrameOrigin(NSPoint.init(x: 0, y: 0))
+    window2.isMovableByWindowBackground = true
+    
+    opaqueView.maskImage = _maskImage(cornerRadius: 15.0)
+    opaqueView.layer?.masksToBounds = false
+    opaqueView.wantsLayer = true
+    opaqueView.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
+    if #available(OSX 10.14, *) {
+      opaqueView.material = NSVisualEffectView.Material.dark
+    } else {
+      // Fallback on earlier versions
+    }
+    opaqueView.state = NSVisualEffectView.State.active
 
     blurryView.maskImage = _maskImage(cornerRadius: 15.0)
     blurryView.layer?.masksToBounds = true
     blurryView.wantsLayer = true
+
     blurryView.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
     blurryView.isEmphasized = true
     if #available(OSX 10.14, *) {
-      blurryView.material = NSVisualEffectView.Material.ultraDark
+      blurryView.material = NSVisualEffectView.Material.appearanceBased
     } else {
       // Fallback on earlier versions
     }
     blurryView.state = NSVisualEffectView.State.active
+    blurryView.updateLayer()
+
 
     window.contentView?.addSubview(blurryView)
     window.makeKeyAndOrderFront(nil)
+    
+    window2.contentView?.addSubview(opaqueView)
+    window2.makeKeyAndOrderFront(nil)
     
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
 //    windo = Windo(emit: self.emit)
@@ -114,10 +173,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   func showWindow() {
     window.alphaValue = 1
+    window2.alphaValue = 1
   }
   
   func hideWindow() {
     window.alphaValue = 0
+    window2.alphaValue = 0
   }
   
   func position(_ position: Position) {
@@ -129,17 +190,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let w = CGFloat(position.width)
     let h = CGFloat(position.height)
     let nextRect = NSMakeRect(x, height - h - y, w, h)
+    self.window2.setFrame(nextRect, display: true, animate: false)
     self.window.setFrame(nextRect, display: true, animate: false)
     self.blurryView.setFrameSize(NSMakeSize(w, h))
+    self.opaqueView.setFrameSize(NSMakeSize(w, h))
   }
   
   func theme(_ theme: String) {
     if #available(OSX 10.14, *) {
       if theme == "dark" {
         blurryView.material = NSVisualEffectView.Material.dark
+        opaqueView.material = NSVisualEffectView.Material.dark
       }
       if theme == "light" {
         blurryView.material = NSVisualEffectView.Material.light
+        opaqueView.material = NSVisualEffectView.Material.light
       }
     } else {
       // Fallback on earlier versions

@@ -229,7 +229,7 @@ class OrbitCardStore {
 
   handleClick = e => {
     // so we can control the speed of double clicks
-    if (Date.now() - this.clickAt < 180) {
+    if (Date.now() - this.clickAt < 220) {
       this.open()
       e.stopPropagation()
     }

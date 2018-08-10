@@ -10,19 +10,19 @@ const dateBg = UI.color('#ffb049')
 
 const activeThemes = {
   date: {
-    background: dateBg.alpha(0.5),
+    borderColor: dateBg.alpha(0.5),
     color: '#fff',
   },
   integration: {
-    background: 'rgba(71, 189, 36, 0.5)',
+    borderColor: 'rgba(71, 189, 36, 0.5)',
     color: '#fff',
   },
   person: {
-    background: '#8279ff',
+    borderColor: '#8279ff',
     color: '#fff',
   },
   type: {
-    background: 'rgba(193, 255, 143)',
+    borderColor: 'rgba(193, 255, 143)',
     color: '#fff',
   },
 }
@@ -50,6 +50,10 @@ const FilterButton = props => (
     sizeHeight={0.8}
     sizePadding={0.6}
     fontWeight={600}
+    hoverStyle={{
+      background: [0, 0, 0, 0.2],
+      border: [1, 'transparent'],
+    }}
     {...props}
   />
 )
@@ -80,6 +84,8 @@ const opacityScale = [1, 0.9, 0.8, 0.7, 0.5]
 const hideFilterPanes = {
   settings: true,
   onboard: true,
+  directory: true,
+  apps: true,
 }
 
 export const OrbitFilterBar = view(
@@ -92,23 +98,19 @@ export const OrbitFilterBar = view(
       <FilterBar opacity={hideFilterPanes[paneManagerStore.activePane] ? 0 : 1}>
         <HorizontalScroll>
           {filterStore.allFilters.map((filter, index) => (
-            <UI.Theme
+            <FilterButton
               key={`${filter.text}${filter.active}${index}`}
-              theme={filter.active ? activeThemes[filter.type] : inactiveTheme}
+              onClick={() => filterStore.toggleFilter(filter.text)}
+              opacity={opacityScale[index] || 0.333}
+              borderColor={
+                (filter.active && activeThemes[filter.type].borderColor) ||
+                'transparent'
+              }
+              borderWidth={1}
+              background="transparent"
             >
-              <FilterButton
-                onClick={() => filterStore.toggleFilter(filter.text)}
-                opacity={opacityScale[index] || 0.333}
-                background={
-                  filter.active
-                    ? activeThemes[filter.type].background
-                    : 'transparent'
-                }
-                borderWidth={0}
-              >
-                {filter.text}
-              </FilterButton>
-            </UI.Theme>
+              {filter.text}
+            </FilterButton>
           ))}
           <UI.View width={50} />
         </HorizontalScroll>

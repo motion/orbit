@@ -23,15 +23,15 @@ const Border = view({
   borderRadius: BORDER_RADIUS,
 })
 
-Border.theme = ({ theme }) => {
-  // const borderColor = theme.base.background.lighten(0.4)
-  // const borderShadow = [0, 0, 0, 0.5, borderColor]
-  // const lightBg = theme.base.background.lighten(1)
-  // const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
-  return {
-    boxShadow: [DOCKED_SHADOW /* , borderShadow */],
-  }
-}
+// Border.theme = ({ theme }) => {
+//   // const borderColor = theme.base.background.lighten(0.4)
+//   // const borderShadow = [0, 0, 0, 0.5, borderColor]
+//   // const lightBg = theme.base.background.lighten(1)
+//   // const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
+//   return {
+//     boxShadow: [DOCKED_SHADOW /* , borderShadow */],
+//   }
+// }
 
 // @ts-ignore
 const Chrome = view({
@@ -56,7 +56,7 @@ const Background = view({
   // background: 'rgba(255,255,255,0.92)',
 })
 Background.theme = ({ theme, isUpper }) => ({
-  background: theme.base.background.lighten(3).alpha(0.75),
+  background: theme.base.background.lighten(4).alpha(0.5),
   // background: [0, 0, 0, 0.5],
   // background: isUpper
   //   ? theme.base.background.alpha(0.2)

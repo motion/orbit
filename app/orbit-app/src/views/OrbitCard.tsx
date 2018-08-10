@@ -437,7 +437,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
               size={1.2}
               sizeLineHeight={0.775}
               ellipse={2}
-              alpha={isSelected || listItem ? 1 : 0.8}
               fontWeight={600}
               maxWidth="calc(100% - 30px)"
               {...titleProps}

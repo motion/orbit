@@ -17,7 +17,7 @@ const height = 72
 
 const Separator = view({
   background: [0, 0, 0, 0.05],
-  padding: [0, 16],
+  padding: [3, 16],
   margin: [0, -16, 12],
 })
 
@@ -27,7 +27,13 @@ const VerticalSpace = view({
 
 const GridTitle = props => (
   <Separator>
-    <SubTitle fontSize={15} fontWeight={600} padding={0} {...props} />
+    <SubTitle
+      fontSize={15}
+      lineHeight={15}
+      fontWeight={600}
+      padding={0}
+      {...props}
+    />
   </Separator>
 )
 

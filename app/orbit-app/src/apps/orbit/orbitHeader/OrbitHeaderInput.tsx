@@ -24,15 +24,15 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
     >
       <HighlightedTextArea
         width="100%"
-        fontWeight={500}
-        fontSize={16}
-        lineHeight={21}
+        fontWeight={600}
+        fontSize={15}
+        lineHeight={21.5}
         border="none"
         display="block"
         background="transparent"
         value={searchStore.query}
         highlight={headerStore.highlightWords}
-        color={theme.base.color.alpha(0.8)}
+        color={theme.base.color}
         onChange={searchStore.onChangeQuery}
         onFocus={searchStore.onFocus}
         onBlur={searchStore.onBlur}

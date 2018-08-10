@@ -15,7 +15,7 @@ const SearchFilters = view(UI.Col, {
 })
 
 SearchFilters.theme = ({ theme }) => ({
-  borderTop: [1, theme.base.borderColor],
+  borderTop: [1, theme.base.borderColor.alpha(0.3)],
   background: 'transparent',
 })
 

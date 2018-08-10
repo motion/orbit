@@ -25,7 +25,7 @@ const Highlight = view({
   fontWeight: 400,
   borderLeft: [2, 'transparent'],
   '&:hover': {
-    borderLeftColor: '#90b1e4',
+    borderLeftColor: '#90b1e455',
   },
 })
 Highlight.theme = ({ theme }) => ({

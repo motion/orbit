@@ -44,19 +44,15 @@ const OrbitDockedFrame = view(UI.Col, {
 
 const OrbitDockedInnerFrame = view(UI.Col, {
   opacity: 0,
-  transform: {
-    x: 12,
-  },
-  transition: `
-    transform ease 80ms,
-    opacity ease 80ms
-  `,
+  // transform: {
+  //   x: 12,
+  // },
+  // transition: `
+  //   transform ease 80ms,
+  //   opacity ease 80ms
+  // `,
   visible: {
-    pointerEvents: 'auto',
     opacity: 1,
-    transform: {
-      x: 0,
-    },
   },
 })
 

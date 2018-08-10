@@ -215,6 +215,9 @@ const Subtitle = view(UI.View, {
   padding: [2, 0, 2],
   flexFlow: 'row',
   alignItems: 'center',
+  listItem: {
+    margin: [6, 0, 0],
+  },
 })
 
 const orbitIconProps = {
@@ -439,7 +442,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             )}
           <Title style={titleFlex && { flex: titleFlex }}>
             <UI.Text
-              size={listItem ? 1.2 : 1.1}
+              fontSize={listItem ? 16 : 15}
               sizeLineHeight={0.7}
               ellipse={2}
               fontWeight={600}
@@ -452,7 +455,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {afterTitle}
           </Title>
           {hasSubtitle && (
-            <Subtitle>
+            <Subtitle listItem={listItem}>
               {!!location && (
                 <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
                   {location}

@@ -147,6 +147,11 @@ export default class Oracle {
     return this
   }
 
+  themeWindow = async (theme: string) => {
+    await this.socketSend(`them ${theme}`)
+    return this
+  }
+
   positionWindow = async (position: {
     x: number
     y: number

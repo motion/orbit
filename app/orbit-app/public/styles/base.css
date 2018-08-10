@@ -59,7 +59,8 @@ a.anchor {
   user-select: auto;
 }
 
-.markdown p img {
+.markdown p img,
+.markdown li img {
   max-width: 100%;
   user-select: none;
 }

@@ -67,9 +67,9 @@ export function parseSearchQuery(query: string): NLPResponse {
     marks.push(newMark)
   }
   function highlightIfClear(word, className) {
-    const start = lowerCaseQuery.indexOf(word)
+    const start = lowerCaseQuery.indexOf(word.toLowerCase())
     const end = start + word.length
-    addMarkIfClear([start, end, className, word])
+    addMarkIfClear([Math.max(0, start), end, className, word])
   }
 
   // @ts-ignore

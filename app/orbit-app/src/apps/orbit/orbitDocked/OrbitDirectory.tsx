@@ -13,7 +13,7 @@ import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
 import { Grid } from '../../../views/Grid'
 
-const height = 72
+const height = 69
 
 const Separator = view({
   padding: [3, 16],

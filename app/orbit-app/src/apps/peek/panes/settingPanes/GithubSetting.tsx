@@ -13,8 +13,8 @@ const columnSizes = {
   repo: 'flex',
   org: 'flex',
   lastCommit: '20%',
-  numIssues: '12%',
-  active: '10%',
+  numIssues: '13%',
+  active: '13%',
 }
 
 const columns = {

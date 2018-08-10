@@ -114,9 +114,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     blurryView.maskImage = _maskImage(cornerRadius: 15.0)
     blurryView.layer?.masksToBounds = true
     blurryView.wantsLayer = true
-
     blurryView.blendingMode = NSVisualEffectView.BlendingMode.behindWindow
-    blurryView.isEmphasized = true
     if #available(OSX 10.14, *) {
       blurryView.material = NSVisualEffectView.Material.appearanceBased
     } else {
@@ -198,6 +196,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   func theme(_ theme: String) {
     if #available(OSX 10.14, *) {
+      if theme == "ultra" {
+        blurryView.material = NSVisualEffectView.Material.ultraDark
+        opaqueView.material = NSVisualEffectView.Material.ultraDark
+      }
       if theme == "dark" {
         blurryView.material = NSVisualEffectView.Material.dark
         opaqueView.material = NSVisualEffectView.Material.dark

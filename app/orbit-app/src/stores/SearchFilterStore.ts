@@ -133,20 +133,13 @@ export class SearchFilterStore /* extends Store */ {
     return unique
   }
 
-  get activeIntegrationFilters() {
-    if (this.hasExclusiveFilters) {
-      return this.integrationFilters.filter(x => x.active).map(x => x.type)
-    }
-    return false
-  }
-
   get integrationFilters(): SearchFilter[] {
     const { exclusiveFilters } = this
     return this.uniqueSettings.map(setting => ({
       type: setting.type,
       icon: setting.type,
       name: this.integrationSettingsStore.getTitle(setting),
-      active: exclusiveFilters[setting.type],
+      active: this.hasExclusiveFilters ? exclusiveFilters[setting.type] : true,
     }))
   }
 

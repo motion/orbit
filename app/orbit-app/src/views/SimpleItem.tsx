@@ -6,12 +6,15 @@ const sidePad = 16
 
 const Item = view({
   flexFlow: 'row',
-  padding: [0, sidePad + 4],
-  height: 56,
+  padding: [0, sidePad],
+  height: 42,
   alignItems: 'center',
   inactive: {
     opacity: 0.5,
     filter: 'grayscale(1)',
+  },
+  '&:last-child': {
+    borderBottom: 'none',
   },
 })
 Item.theme = ({ theme }) => ({

@@ -150,7 +150,7 @@ Card.theme = ({
   } else {
     card = {
       ...card,
-      padding: padding || 14,
+      padding: padding || 13,
       borderRadius: borderRadius || 7,
     }
     // CARD
@@ -434,11 +434,12 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             )}
           <Title style={titleFlex && { flex: titleFlex }}>
             <UI.Text
-              size={1.2}
+              size={listItem ? 1.2 : 1.1}
               sizeLineHeight={0.775}
               ellipse={2}
               fontWeight={600}
               maxWidth="calc(100% - 30px)"
+              textShadow="0 0.5px 0 #000"
               {...titleProps}
             >
               {title}

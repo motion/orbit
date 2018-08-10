@@ -16,13 +16,15 @@ import { Grid } from '../../../views/Grid'
 const height = 72
 
 const Separator = view({
-  background: [0, 0, 0, 0.05],
   padding: [3, 16],
-  margin: [0, -16, 12],
+  margin: [0, -16, 10],
 })
+// Separator.theme = ({ theme }) => ({
+//   background: theme.base.background.alpha(0.1),
+// })
 
 const VerticalSpace = view({
-  height: 20,
+  height: 10,
 })
 
 const GridTitle = props => (

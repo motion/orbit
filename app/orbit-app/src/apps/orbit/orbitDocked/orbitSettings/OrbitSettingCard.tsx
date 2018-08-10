@@ -5,6 +5,7 @@ import { SettingRepository } from '../../../../repositories'
 import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
 import { OrbitCardProps } from '../../../../views/OrbitCard'
+import pluralize from 'pluralize'
 
 @view.attach('appStore')
 @view.attach({
@@ -34,7 +35,7 @@ export class OrbitSettingCard extends React.Component<
       ? ''
       : store.bitsCount === null
         ? '...'
-        : `${store.bitsCount || '0'} total`
+        : `${store.bitsCount} ${pluralize('item', store.bitsCount)}`
     const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard

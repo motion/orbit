@@ -36,6 +36,7 @@ type Props = CSSPropertySet & {
   onKeyDown?: Function
   onClick?: Function
   forwardRef?: React.Ref<any>
+  placeholder?: string
 }
 
 export class HighlightedTextArea extends React.Component<Props> {

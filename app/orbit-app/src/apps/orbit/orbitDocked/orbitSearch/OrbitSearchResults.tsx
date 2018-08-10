@@ -96,21 +96,18 @@ const OrbitSearchResultsList = view(({ name, store, searchStore }: Props) => {
 })
 
 const OrbitSearchResultsFrame = view({
-  flex: 1,
-})
-OrbitSearchResultsFrame.theme = ({ theme }) => ({
-  background: theme.base.background,
+  position: 'relative',
+  // allows for card glow
+  paddingTop: 2,
+  transition: 'all ease 100ms',
 })
 
 const OrbitSearchResultsContents = view(({ name, searchStore, store }) => {
   const { isChanging, message } = searchStore
   return (
-    <div
+    <OrbitSearchResultsFrame
       style={{
-        position: 'relative',
         opacity: isChanging ? 0.3 : 1,
-        // allows for card glow
-        paddingTop: 2,
       }}
     >
       {message ? <div>{message}</div> : null}
@@ -121,7 +118,7 @@ const OrbitSearchResultsContents = view(({ name, searchStore, store }) => {
         name={name}
       />
       <div style={{ height: 20 }} />
-    </div>
+    </OrbitSearchResultsFrame>
   )
 })
 

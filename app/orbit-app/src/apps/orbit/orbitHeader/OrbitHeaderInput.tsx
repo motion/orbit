@@ -39,6 +39,7 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
         onKeyDown={handleKeyDown}
         forwardRef={headerStore.inputRef}
         onClick={headerStore.onClickInput}
+        placeholder={headerStore.placeholder}
       />
       <UI.ClearButton
         onClick={searchStore.clearQuery}

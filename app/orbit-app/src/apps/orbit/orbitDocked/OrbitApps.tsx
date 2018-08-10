@@ -57,6 +57,9 @@ class OrbitAppsStore {
       subPane="apps"
       total={this.integrationSettings.length}
       inGrid
+      titleProps={{
+        size: 1,
+      }}
       {...props}
     />
   )

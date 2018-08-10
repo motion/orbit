@@ -28,6 +28,16 @@ export class HeaderStore {
     return () => activeMarks
   }
 
+  get placeholder() {
+    const { activePane } = this.props.paneManagerStore
+    if (activePane === 'apps') {
+      return 'Find apps...'
+    }
+    if (activePane === 'directory') {
+      return 'Search people...'
+    }
+  }
+
   // not based on real focus because when you scroll down and select it technically
   // focuses on the list items but still lets you type
   // also needs to be
@@ -56,15 +66,12 @@ export class HeaderStore {
 
   focusInputOnVisible = react(
     () => App.orbitState.pinned || App.orbitState.docked,
-    async (shown, { when }) => {
+    async shown => {
       if (!shown) {
         throw react.cancel
       }
       this.focus()
       selectTextarea(this.inputRef.current)
-    },
-    {
-      log: false,
     },
   )
 
@@ -90,6 +97,14 @@ export class HeaderStore {
     },
     {
       log: false,
+    },
+  )
+
+  updateInputOnPaneChange = react(
+    () => this.props.paneManagerStore.activePane,
+    () => {
+      this.props.searchStore.clearQuery()
+      this.focus()
     },
   )
 

@@ -66,9 +66,9 @@ const OrbitFakeInput = view({
   },
 })
 OrbitFakeInput.theme = ({ theme }) => ({
-  background: theme.base.background.alpha(0.2),
+  background: theme.base.background.alpha(0.3),
   '&:active': {
-    background: theme.base.background.alpha(0.4),
+    background: theme.base.background.alpha(0.5),
   },
 })
 

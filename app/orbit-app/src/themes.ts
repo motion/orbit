@@ -66,6 +66,9 @@ export const themes = {
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',
     borderColor: '#222',
+    card: {
+      background: '#45454599',
+    },
     hover: {
       background: color([255, 255, 255, 0.01]),
     },

@@ -93,7 +93,7 @@ const Card = view({
   },
 })
 
-const cardShadow = [0, 1, 4, [0, 0, 0, 0.05]]
+const cardShadow = [0, 6, 14, [0, 0, 0, 0.12]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
 const cardSelectedGlow = [0, 0, 0, 2, '#90b1e433']
 const borderSelected = UI.color('#90b1e4cc')
@@ -151,19 +151,22 @@ Card.theme = ({
     card = {
       ...card,
       padding: padding || 13,
-      borderRadius: borderRadius || 7,
+      borderRadius: borderRadius || 9,
+      background: theme.base.background,
+      ...theme.card,
+    }
+    if (background) {
+      card.background = background
     }
     // CARD
-    const cardBackground = background || theme.selected.background
     if (!isSelected) {
-      const borderHover = cardBackground.darken(0.2)
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow],
-        border: border || [1, theme.base.borderColor.alpha(0.2)],
+        border: border || [1, [255, 255, 255, 0.07]],
         '&:hover': {
           boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-          border: [1, borderHover],
+          border: [1, [255, 255, 255, 0.2]],
         },
       }
     }
@@ -179,7 +182,6 @@ Card.theme = ({
     }
     card = {
       ...card,
-      background: cardBackground.alpha(0.2),
       '&:active': {
         opacity: 0.8,
       },
@@ -428,18 +430,17 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 position="absolute"
                 top={listItem ? 25 : 10}
                 right={listItem ? 8 : 10}
-                opacity={0.8}
                 {...iconProps}
               />
             )}
           <Title style={titleFlex && { flex: titleFlex }}>
             <UI.Text
               size={listItem ? 1.2 : 1.1}
-              sizeLineHeight={0.775}
+              sizeLineHeight={0.67}
               ellipse={2}
               fontWeight={600}
               maxWidth="calc(100% - 30px)"
-              textShadow="0 0.5px 0 #000"
+              textShadow={listItem ? '0 0.5px 0 rgba(0,0,0,0.5)' : null}
               {...titleProps}
             >
               {title}

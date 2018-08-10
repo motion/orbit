@@ -12,7 +12,7 @@ import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClick
 import { generalSettingQuery } from '../../../repositories/settingQueries'
 import { Grid } from '../../../views/Grid'
 import { SimpleItem } from '../../../views/SimpleItem'
-import { Theme, Button } from '@mcro/ui'
+import { Button } from '@mcro/ui'
 
 type Props = {
   name: string
@@ -56,6 +56,7 @@ class OrbitAppsStore {
       pane="docked"
       subPane="apps"
       total={this.integrationSettings.length}
+      inGrid
       {...props}
     />
   )
@@ -105,7 +106,10 @@ export class OrbitApps extends React.Component<Props> {
         <Views.Title>Apps</Views.Title>
         {!!store.integrationSettings.length && (
           <>
-            <Grid>
+            <Grid
+              gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
+              gridAutoRows={80}
+            >
               {store.integrationSettings.map((setting, index) => (
                 <store.IntegrationCard
                   key={`${setting.id}`}

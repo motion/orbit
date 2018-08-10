@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 const HorizontalScrollRowFrame = view(UI.View, {
-  maxWidth: '100%',
+  flex: 1,
   overflow: 'hidden',
 })
 
@@ -18,10 +18,15 @@ const Inner = view(UI.View, {
   },
 })
 
+// for shadows
+const extraPad = 20
+
 Inner.theme = ({ height, verticalPadding, scrollBarHeight }) => ({
-  height: height + verticalPadding + scrollBarHeight + 3, // 3 ??
-  paddingBottom: scrollBarHeight + verticalPadding,
-  paddingTop: verticalPadding + scrollBarHeight,
+  height: extraPad * 2 + height + verticalPadding + scrollBarHeight + 3, // 3 ??
+  paddingBottom: extraPad + scrollBarHeight + verticalPadding,
+  paddingTop: extraPad + verticalPadding + scrollBarHeight,
+  paddingLeft: extraPad,
+  paddingRight: extraPad,
   marginTop: -(scrollBarHeight / 2 - verticalPadding),
 })
 
@@ -33,7 +38,7 @@ export const HorizontalScrollRow = ({
   ...props
 }) => {
   return (
-    <HorizontalScrollRowFrame height={height}>
+    <HorizontalScrollRowFrame height={height + extraPad * 2} margin={-extraPad}>
       <Inner
         height={height}
         verticalPadding={verticalPadding}

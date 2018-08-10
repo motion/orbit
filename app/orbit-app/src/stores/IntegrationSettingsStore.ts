@@ -81,21 +81,21 @@ export class IntegrationSettingsStore {
       icon: 'jira',
       auth: true,
     },
-    {
-      id: 'website',
-      type: 'setting',
-      integration: 'website',
-      title: 'Crawl Website',
-      icon: 'webpage',
-      auth: false,
-    },
-    {
-      id: 'folder',
-      type: 'setting',
-      integration: 'folder',
-      title: 'Folder',
-      icon: 'folder',
-      auth: false,
-    },
+    // {
+    //   id: 'website',
+    //   type: 'setting',
+    //   integration: 'website',
+    //   title: 'Crawl Website',
+    //   icon: 'webpage',
+    //   auth: false,
+    // },
+    // {
+    //   id: 'folder',
+    //   type: 'setting',
+    //   integration: 'folder',
+    //   title: 'Folder',
+    //   icon: 'folder',
+    //   auth: false,
+    // },
   ]
 }

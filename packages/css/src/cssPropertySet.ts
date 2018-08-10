@@ -801,7 +801,7 @@ export type brStyle =
   | 'inset'
   | 'outset'
 export type borderWidth = number | 'thin' | 'medium' | 'thick' | string
-export type color = string
+export type color = string | Color | number[]
 export type compositeStyle =
   | 'clear'
   | 'copy'

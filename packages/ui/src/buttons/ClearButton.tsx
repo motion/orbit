@@ -5,7 +5,8 @@ import { View } from '../blocks/View'
 const ClearClickableArea = view({
   padding: 5,
   '&:hover > *': {
-    backgroundColor: 'rgba(0,0,0,0.25)',
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    color: [255,255,255],
   },
 })
 
@@ -18,7 +19,7 @@ const ClearFrame = view(View, {
   borderRadius: 999,
   textAlign: 'center',
   backgroundColor: 'rgba(0,0,0,0.1)',
-  color: '#fff',
+  color: [255,255,255,0.8],
   display: 'block',
 })
 

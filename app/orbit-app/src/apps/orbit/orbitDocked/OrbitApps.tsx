@@ -103,7 +103,6 @@ export class OrbitApps extends React.Component<Props> {
     return (
       <SubPane name={name} fadeBottom>
         <Views.Title>Apps</Views.Title>
-        <Views.SubTitle>Active</Views.SubTitle>
         {!!store.integrationSettings.length && (
           <>
             <Grid>

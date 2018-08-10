@@ -13,17 +13,21 @@ import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
 import { Grid } from '../../../views/Grid'
 
-const height = 77
+const height = 72
 
 const Separator = view({
   background: [0, 0, 0, 0.05],
   padding: [0, 16],
-  margin: [12, -16],
+  margin: [0, -16, 12],
+})
+
+const VerticalSpace = view({
+  height: 20,
 })
 
 const GridTitle = props => (
   <Separator>
-    <SubTitle fontSize={16} fontWeight={500} padding={0} {...props} />
+    <SubTitle fontSize={15} fontWeight={600} padding={0} {...props} />
   </Separator>
 )
 
@@ -127,6 +131,7 @@ const createSection = (people: Person[], letter, offset, total) => {
           />
         ))}
       </Grid>
+      <VerticalSpace />
     </React.Fragment>
   )
 }

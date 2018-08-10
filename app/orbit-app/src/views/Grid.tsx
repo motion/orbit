@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 
-const height = 75
+const height = 70
 const gap = 7
 
 export const Grid = view({

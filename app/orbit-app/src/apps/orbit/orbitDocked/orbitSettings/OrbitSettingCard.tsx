@@ -35,13 +35,17 @@ export class OrbitSettingCard extends React.Component<
       ? ''
       : store.bitsCount === null
         ? '...'
-        : `${store.bitsCount} ${pluralize('item', store.bitsCount)}`
+        : `${store.bitsCount}`
     const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard
         inactive={!isActive}
         title={result.title}
         subtitle={subtitleDisplay}
+        subtitleProps={{
+          size: 2,
+          fontWeight: 500,
+        }}
         date={store.job && store.job.updatedAt}
         icon={result.icon}
         iconProps={

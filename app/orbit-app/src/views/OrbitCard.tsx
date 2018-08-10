@@ -57,6 +57,7 @@ export type OrbitCardProps = {
   preventAutoSelect?: boolean
   padding?: number | number[]
   titleFlex?: number
+  subtitleProps?: Object
 }
 
 const CardWrap = view(UI.View, {
@@ -95,8 +96,10 @@ const Card = view({
 
 const cardShadow = [0, 6, 14, [0, 0, 0, 0.12]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 2, '#90b1e433']
-const borderSelected = UI.color('#90b1e4cc')
+// 90b1e433
+// 90b1e4cc
+const cardSelectedGlow = [0, 0, 0, 2, [0, 0, 0, 0.1]]
+const borderSelected = '#666'
 
 Card.theme = ({
   listItem,
@@ -208,7 +211,7 @@ const Preview = view({
 
 const Subtitle = view(UI.View, {
   height: 20,
-  margin: [2, 0, 0],
+  margin: [3, 0, 0],
   padding: [2, 0, 2],
   flexFlow: 'row',
   alignItems: 'center',
@@ -396,6 +399,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       searchStore,
       store,
       titleProps,
+      subtitleProps,
       padding,
       titleFlex,
       ...props
@@ -436,7 +440,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           <Title style={titleFlex && { flex: titleFlex }}>
             <UI.Text
               size={listItem ? 1.2 : 1.1}
-              sizeLineHeight={0.67}
+              sizeLineHeight={0.7}
               ellipse={2}
               fontWeight={600}
               maxWidth="calc(100% - 30px)"
@@ -455,7 +459,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 </RoundButtonSmall>
               )}
               {typeof subtitle === 'string' ? (
-                <UI.Text alpha={0.55} ellipse>
+                <UI.Text alpha={0.55} ellipse {...subtitleProps}>
                   {subtitle}
                 </UI.Text>
               ) : (

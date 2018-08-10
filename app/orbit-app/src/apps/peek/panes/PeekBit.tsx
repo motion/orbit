@@ -9,10 +9,11 @@ import { App } from '@mcro/stores'
 import { RoundButton } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
-import { PeekRelated } from '../views/PeekRelated'
+// import { PeekRelated } from '../views/PeekRelated'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekBottom } from './PeekBottom'
 import { PeekActionBar } from './PeekActionBar'
+import { View } from '@mcro/ui'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -22,11 +23,7 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
 })
 
 const Cmd = view({
-  opacity: 0.5,
-})
-
-const BottomSpace = view({
-  height: 100,
+  opacity: 0.6,
 })
 
 const extra = 50
@@ -47,13 +44,8 @@ BottomFloat.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background} 50%)`,
 })
 
-const searchBarProps = {
-  padding: [7, 10],
-  height: 48,
-}
-
 const HeadSide = view({
-  width: 40,
+  width: 80,
   alignItems: 'center',
   justifyContent: 'center',
 })
@@ -97,7 +89,10 @@ export const PeekBit = ({
             onChange={() => searchStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
             placeholder={`Search this ${item.subType} and related...`}
-            searchBarProps={searchBarProps}
+            searchBarProps={{
+              padding: [5, 10],
+              height: 42,
+            }}
             before={<HeadSide />}
             after={
               <HeadSide>
@@ -119,9 +114,9 @@ export const PeekBit = ({
                 icon,
                 belowHeadMain: searchBar,
                 postBody: (
-                  <PeekBottom>
-                    <PeekActionBar>
-                      <UI.Theme name="grey">
+                  <UI.Theme theme={peekStore.theme}>
+                    <PeekBottom>
+                      <PeekActionBar>
                         <RoundButton
                           onClick={e => {
                             e.stopPropagation()
@@ -130,30 +125,30 @@ export const PeekBit = ({
                         >
                           {location}
                         </RoundButton>
-                      </UI.Theme>
-                      <PeekActionBar.Space />
-                      <UI.Text>
-                        <TimeAgo>{updatedAt}</TimeAgo>
-                      </UI.Text>
-                      <div />
-                      <UI.View flex={1} />
-                      <UI.Row alignItems="center">
-                        <RoundButton
-                          onClick={peekStore.copyItem}
-                          alignItems="center"
-                        >
-                          Copy Link <Cmd>⌘+Shift+C</Cmd>
-                        </RoundButton>
                         <PeekActionBar.Space />
-                        <RoundButton
-                          onClick={peekStore.openItem}
-                          alignItems="center"
-                        >
-                          Open <Cmd>⌘+Enter</Cmd>
-                        </RoundButton>
-                      </UI.Row>
-                    </PeekActionBar>
-                  </PeekBottom>
+                        <UI.Text>
+                          <TimeAgo>{updatedAt}</TimeAgo>
+                        </UI.Text>
+                        <div />
+                        <UI.View flex={1} />
+                        <UI.Row alignItems="center">
+                          <RoundButton
+                            onClick={peekStore.copyItem}
+                            alignItems="center"
+                          >
+                            Copy Link <Cmd>⌘+Shift+C</Cmd>
+                          </RoundButton>
+                          <View width={5} />
+                          <RoundButton
+                            onClick={peekStore.openItem}
+                            alignItems="center"
+                          >
+                            Open <Cmd>⌘+Enter</Cmd>
+                          </RoundButton>
+                        </UI.Row>
+                      </PeekActionBar>
+                    </PeekBottom>
+                  </UI.Theme>
                 ),
                 content: (
                   <>

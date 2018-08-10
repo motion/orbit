@@ -65,13 +65,13 @@ export const SearchBox = view(View, {
   flex: 1,
   alignItems: 'center',
   paddingLeft: 4,
-  background: [255, 255, 255, 0.1],
   '&:focus-within': {
     boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
   },
 })
 
 SearchBox.theme = ({ theme }) => ({
+  background: theme.base.background.lighten(0.1),
   border: [1, theme.base.borderColor.desaturate(0.1)],
 })
 
@@ -404,7 +404,11 @@ export const Searchable = (Component: any) => {
         >
           {before}
           <SearchBox tabIndex={-1}>
-            <SearchIcon name="ui-1_zoom" color={theme.base.color} size={16} />
+            <SearchIcon
+              name="ui-1_zoom"
+              color={theme.base.color.alpha(0.5)}
+              size={16}
+            />
             {this.state.filters.map((filter, i) => (
               <FilterToken
                 key={`${filter.key}:${filter.type}`}

@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 
 export const PeekActionBar = view({
-  padding: [6, 10, 8],
+  padding: [4, 5, 5],
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',

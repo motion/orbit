@@ -31,7 +31,7 @@ const ExtraFilters = view(UI.View, {
 })
 
 const simplerDateWords = str =>
-  str.replace('about ', '').replace('lass than a minute', 'now')
+  str.replace('about ', '').replace('less than a minute', 'now')
 
 const getDate = ({ startDate, endDate }) => {
   if (!startDate) {
@@ -40,6 +40,9 @@ const getDate = ({ startDate, endDate }) => {
   const startInWords = simplerDateWords(formatDistance(Date.now(), startDate))
   if (!endDate) {
     return `${startInWords}`
+  }
+  if (startDate - endDate <= 1000 * 60 * 24) {
+    return startInWords
   }
   const endInWords = simplerDateWords(formatDistance(Date.now(), endDate))
   return `${startInWords} - ${endInWords}`

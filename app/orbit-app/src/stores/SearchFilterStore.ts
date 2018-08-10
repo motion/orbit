@@ -175,8 +175,12 @@ export class SearchFilterStore /* extends Store */ {
           startDate: null,
           endDate: null,
         }
+        // set Relevant
+        this.sortBy = this.sortOptions[0]
       } else {
         this.dateState = this.nlpStore.nlp.date
+        // set Recent
+        this.sortBy = this.sortOptions[1]
       }
     },
   )

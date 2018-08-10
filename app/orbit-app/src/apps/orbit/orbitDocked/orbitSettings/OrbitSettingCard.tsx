@@ -48,12 +48,9 @@ export class OrbitSettingCard extends React.Component<
         }}
         date={store.job && store.job.updatedAt}
         icon={result.icon}
-        iconProps={
-          !isActive && {
-            color: '#999',
-            alpha: 0.8,
-          }
-        }
+        iconProps={{
+          size: 20,
+        }}
         result={result}
         {...props}
         onClick={onClick || (!isActive ? this.handleClick : null)}

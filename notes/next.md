@@ -35,28 +35,14 @@ DESIGN
 
 # nate
 
-## review week to aug 7th
+## aug 14th
 
+- auto updates
 - everything needs a lot of work to feel nicer
   - fix a bunch of search bugs
   - make interactions faster with peeks
   - make peek positions and design better
-- the settings needs to feel more "store-like"
-  - list-style apps in the "add integration" section (rename to "add apps")
-    - should have a description underneath in english and nice "add button"
-    - ideally even have a screenshot
-  - can live search through "apps" and add easily
-  - showing realtime sync info on integations feels futuristic
-
-## August
-
-Aug 14th:
-
-- auto updates
-- redesign home
-- redesign settings/apps
 - fix searches and keynav a lot
-- upgrade visual look a lot
 - speed up interactions
 - lots of visual bug fixes
 
@@ -64,15 +50,12 @@ Aug 21st:
 
 - p2p/app setup
 - invite friend onboarding
-
-Aug 21st:
-
 - big polish run, empty queue
 - iterate on bugs/profiles from deploys
 
 Aug 31st:
 
-- ready for salesforce demo...
+- ready for workday demo...
 
 # August details
 

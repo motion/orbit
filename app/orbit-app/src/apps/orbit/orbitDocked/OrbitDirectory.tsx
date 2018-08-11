@@ -12,6 +12,7 @@ import { SearchStore } from '../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
 import { Grid } from '../../../views/Grid'
+import { sortBy } from 'lodash'
 
 const height = 69
 
@@ -91,9 +92,14 @@ class OrbitDirectoryStore {
     { immediate: true, defaultValue: [] },
   )
 
-  // poll every few seconds while active
   results = modelQueryReaction(
     () => PersonRepository.find({ take: 100, where: { integration: 'slack' } }),
+    people => {
+      if (!this.isActive && this.results.length) {
+        throw react.cancel
+      }
+      return sortBy(people, x => x.name.toLowerCase())
+    },
     {
       defaultValue: [],
     },
@@ -149,28 +155,29 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   if (!total) {
     return null
   }
-  console.log('RENDER PRECIOUS STUFF')
-  const byLetter = {}
-  for (const person of store.people) {
-    const initial = person.name[0].toLowerCase()
-    byLetter[initial] = byLetter[initial] || []
-    byLetter[initial].push(person)
-  }
-  const sections = []
+  // create sections by letter
+  let sections = []
+  let nextPeople = []
   let offset = 0
-  const letters = Object.keys(byLetter)
-  letters.sort((a, b) => a.localeCompare(b))
-  for (const letter of letters) {
-    const nextPeople = byLetter[letter]
-    sections.push(
-      createSection(
-        nextPeople,
-        letter.toUpperCase(),
-        offset,
-        store.people.length,
-      ),
-    )
-    offset += nextPeople.length
+  let lastPersonLetter
+  for (const [index, person] of store.results.entries()) {
+    let letter = person.name[0].toLowerCase()
+    const isNewSection = lastPersonLetter && letter !== lastPersonLetter
+    if ((isNewSection && nextPeople.length) || index === total - 1) {
+      sections.push(
+        createSection(
+          nextPeople,
+          lastPersonLetter.toUpperCase(),
+          offset,
+          total,
+        ),
+      )
+      offset += nextPeople.length
+      nextPeople = [person]
+    } else {
+      nextPeople.push(person)
+    }
+    lastPersonLetter = letter
   }
   return (
     <>

@@ -2,7 +2,6 @@
 
 - auto update
 - test .app on umed computer
-- fix directory index/select bug
 - bugfix run through trello
 
 MOVEMENT

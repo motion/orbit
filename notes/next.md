@@ -20,12 +20,16 @@ FOLLOW
 
 ACCOUNT
 
+- find that all in one easy software license management github repo
 - Signup on site for account
 - That gives you a:
   - Download of Orbit app
   - Special license key
 - Download orbit.app
 - Add license key
+  - that powers p2p system
+- gives share link with co-workers
+- send app + link to co-workers
 - That lets you click to open a peek window for managing master keys
 
 UI

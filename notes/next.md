@@ -28,9 +28,16 @@ ACCOUNT
 - Add license key
 - That lets you click to open a peek window for managing master keys
 
-DESIGN
+UI
 
 - Peek windows no more fancy theme just mac looking headers
+- Add button for settings panes that easily lots into with table
+- Confirm native modal for Remove setting
+- Fix themes a lot in terms of color choice
+- Theme psuedo state better strategy
+- able to have for example: Dark.card theme and apply a custom states easily per-component:
+  - hover: [brightenBorders(0.1), biggerShadow(1.5)]
+  - active: [darken(1.1)]
 
 # nate
 

@@ -254,7 +254,8 @@ class OrbitCardStore {
       return
     }
     this.props.searchStore.setSelectEvent('click')
-    this.props.searchStore.toggleSelected(this.props.index)
+    // TODO make this toggle
+    App.actions.selectItem(this.target, this.position)
   }
 
   open = () => {
@@ -289,6 +290,15 @@ class OrbitCardStore {
     return 16
   }
 
+  get position() {
+    const position = getTargetPosition(this.cardWrapRef)
+    // list items are closer to edge, adjust...
+    if (this.props.listItem === true) {
+      position.left += 5
+    }
+    return position
+  }
+
   // this cancels to prevent renders very aggressively
   updateIsSelected = react(
     () => [
@@ -321,12 +331,7 @@ class OrbitCardStore {
         }
         // fluidity
         await sleep(80)
-        const position = getTargetPosition(this.cardWrapRef)
-        // list items are closer to edge, adjust...
-        if (this.props.listItem === true) {
-          position.left += 5
-        }
-        App.actions.selectItem(this.target, position)
+        App.actions.selectItem(this.target, this.position)
       }
     },
     { immediate: true },

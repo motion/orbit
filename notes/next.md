@@ -69,7 +69,7 @@ Aug 31st:
 
 # August details
 
-p2p: https://github.com/mafintosh/hyperdb
+p2p: https://github.com/webtorrent/bittorrent-dht
 
 ## September
 

@@ -1,3 +1,15 @@
+# big next things
+
+- key/oauth management
+  - test an integration with Okta/OneLogin SSO/SAML 2.0
+- onboarding
+- site/account
+- p2p sharing
+  - step 1: oauth dedupe
+  - step 2: app sharing
+- site documentation
+- ui kit
+
 # now
 
 - auto update

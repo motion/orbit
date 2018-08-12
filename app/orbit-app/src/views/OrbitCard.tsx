@@ -58,6 +58,7 @@ export type OrbitCardProps = {
   padding?: number | number[]
   titleFlex?: number
   subtitleProps?: Object
+  getIndex?: (id: number) => number
 }
 
 const CardWrap = view(UI.View, {
@@ -209,7 +210,7 @@ const Preview = view({
   flex: 1,
 })
 
-const Subtitle = view(UI.View, {
+const CardSubtitle = view(UI.View, {
   height: 20,
   margin: [3, 0, 0],
   padding: [2, 0, 2],
@@ -254,8 +255,7 @@ class OrbitCardStore {
       return
     }
     this.props.searchStore.setSelectEvent('click')
-    // TODO make this toggle
-    App.actions.selectItem(this.target, this.position)
+    App.actions.toggleSelectItem(this.target, this.position)
   }
 
   open = () => {
@@ -312,25 +312,33 @@ class OrbitCardStore {
       if (!isPaneActive) {
         throw react.cancel
       }
+      const {
+        bit,
+        getIndex,
+        index,
+        preventAutoSelect,
+        subPaneStore,
+      } = this.props
       let nextIsSelected
       if (typeof isSelected === 'boolean') {
         nextIsSelected = isSelected
       } else {
-        nextIsSelected = nextIndex === this.props.index
+        const resolvedIndex = getIndex ? getIndex(bit.id) : index
+        nextIsSelected = nextIndex === resolvedIndex
       }
       if (nextIsSelected === this.isSelected) {
         throw react.cancel
       }
       this.isSelected = nextIsSelected
-      if (nextIsSelected && !this.props.preventAutoSelect) {
-        if (this.props.subPaneStore) {
-          this.props.subPaneStore.scrollIntoView(this.cardWrapRef)
+      if (nextIsSelected && !preventAutoSelect) {
+        if (subPaneStore) {
+          subPaneStore.scrollIntoView(this.cardWrapRef)
         }
         if (!this.target) {
           throw new Error(`No target!`)
         }
         // fluidity
-        await sleep(80)
+        await sleep(32)
         App.actions.selectItem(this.target, this.position)
       }
     },
@@ -460,7 +468,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {afterTitle}
           </Title>
           {hasSubtitle && (
-            <Subtitle listItem={listItem}>
+            <CardSubtitle listItem={listItem}>
               {!!location && (
                 <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
                   {location}
@@ -479,7 +487,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                   <TimeAgo date={updatedAt || createdAt} />
                 </UI.Text>
               )}
-            </Subtitle>
+            </CardSubtitle>
           )}
           {/* vertical space only if needed */}
           {hasSubtitle &&

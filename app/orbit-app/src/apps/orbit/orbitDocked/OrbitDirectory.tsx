@@ -74,6 +74,10 @@ class OrbitDirectoryStore {
       defaultValue: [],
     },
   )
+
+  getIndex = id => {
+    return this.people.findIndex(x => x.id === id)
+  }
 }
 
 const decorator = compose(
@@ -91,18 +95,18 @@ export const OrbitDirectory = decorator((props: Props) => {
   )
 })
 
-const createSection = (people: Person[], letter, offset, total) => {
+const createSection = (people: Person[], letter, getIndex, total) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
       <Grid>
-        {people.map((bit, index) => (
+        {people.map(bit => (
           <OrbitCard
-            key={`${index}${bit.id}`}
+            key={bit.id}
             inGrid
             pane="docked"
             subPane="directory"
-            index={offset + index}
+            getIndex={getIndex}
             // @ts-ignore
             bit={bit}
             total={total}
@@ -129,7 +133,6 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   // create sections by letter
   let sections = []
   let nextPeople = []
-  let offset = 0
   let lastPersonLetter
   for (const [index, person] of people.entries()) {
     let letter = person.name[0].toLowerCase()
@@ -142,11 +145,10 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
         createSection(
           nextPeople,
           lastPersonLetter.toUpperCase(),
-          offset,
+          store.getIndex,
           total,
         ),
       )
-      offset += nextPeople.length
       nextPeople = [person]
     } else {
       nextPeople.push(person)

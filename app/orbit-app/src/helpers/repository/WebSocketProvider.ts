@@ -1,5 +1,6 @@
 import { RepositoryOperationType } from './Repository'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import { getConfig } from '@mcro/config'
 
 export class WebSocketProvider {
   websocket: ReconnectingWebSocket
@@ -11,9 +12,13 @@ export class WebSocketProvider {
   }[] = []
 
   constructor() {
-    this.websocket = new ReconnectingWebSocket('ws://localhost:8082', [], {
-      WebSocket,
-    })
+    this.websocket = new ReconnectingWebSocket(
+      `ws://localhost:${getConfig().ports.dbBridge}`,
+      [],
+      {
+        WebSocket,
+      },
+    )
     this.websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     this.websocket.onerror = err => {
       console.log('ws error', err)

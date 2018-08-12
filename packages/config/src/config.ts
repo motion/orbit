@@ -2,7 +2,8 @@ type Config = {
   ports: {
     server: number
     bridge: number
-    swift: number
+    swift: number,
+    dbBridge: number
   }
 }
 

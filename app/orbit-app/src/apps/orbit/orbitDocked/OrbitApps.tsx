@@ -13,6 +13,11 @@ import { generalSettingQuery } from '../../../repositories/settingQueries'
 import { Grid } from '../../../views/Grid'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
+import { fuzzy } from '../../../helpers'
+import { App } from '@mcro/stores'
+import { Setting } from '@mcro/models'
+import { settingToResult } from '../../../helpers/settingToResult'
+import { settingsList } from '../../../helpers/settingsList'
 
 type Props = {
   name: string
@@ -24,23 +29,36 @@ type Props = {
 
 class OrbitAppsStore {
   props: Props
-  integrationSettings = []
-
-  setGetResults = react(
-    () => [this.isPaneActive, this.integrationSettings],
-    async ([isActive, allResults], { sleep }) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      await sleep(40)
-      const getResults = () => allResults
-      this.props.searchStore.setGetResults(getResults)
-    },
-    { immediate: true },
-  )
+  integrationSettings: Setting[] = []
 
   get isPaneActive() {
     return this.props.paneManagerStore.activePane === this.props.name
+  }
+
+  private get rawInactiveApps() {
+    // sort by not used first
+    return settingsList.sort(
+      (a, b) => (!this.isActive(a) && this.isActive(b) ? -1 : 1),
+    )
+  }
+
+  get inactiveApps() {
+    return fuzzy(App.state.query, this.rawInactiveApps, {
+      key: 'title',
+    })
+  }
+
+  private get rawActiveApps() {
+    return this.integrationSettings.map(setting => ({
+      ...settingToResult(setting),
+      setting,
+    }))
+  }
+
+  get activeApps() {
+    return fuzzy(App.state.query, this.rawActiveApps, {
+      key: 'title',
+    })
   }
 
   _generalSettingUpdate = Date.now()
@@ -103,22 +121,22 @@ const Unpad = view({
 @view
 export class OrbitApps extends React.Component<Props> {
   render() {
-    const { name, store, integrationSettingsStore } = this.props
+    const { name, store } = this.props
     return (
       <SubPane name={name} fadeBottom>
         <Views.Title>Apps</Views.Title>
-        {!!store.integrationSettings.length && (
+        {!!store.activeApps.length && (
           <>
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
               gridAutoRows={80}
             >
-              {store.integrationSettings.map((setting, index) => (
+              {store.activeApps.map((result, index) => (
                 <store.IntegrationCard
-                  key={`${setting.id}`}
-                  result={integrationSettingsStore.settingToResult(setting)}
+                  key={result.id}
+                  result={result}
                   index={index}
-                  setting={setting}
+                  setting={result.setting}
                   isActive
                 />
               ))}
@@ -128,20 +146,17 @@ export class OrbitApps extends React.Component<Props> {
         )}
         <Views.SubTitle>Add App</Views.SubTitle>
         <Unpad>
-          {integrationSettingsStore.allIntegrations
-            // sort by not used first
-            .sort((a, b) => (!store.isActive(a) && store.isActive(b) ? -1 : 1))
-            .map(item => {
-              return (
-                <SimpleItem
-                  key={`${item.id}`}
-                  onClick={addIntegrationClickHandler(item)}
-                  title={item.title}
-                  icon={item.icon}
-                  after={<Button>Add</Button>}
-                />
-              )
-            })}
+          {store.inactiveApps.map(item => {
+            return (
+              <SimpleItem
+                key={item.id}
+                onClick={addIntegrationClickHandler(item)}
+                title={item.title}
+                icon={item.icon}
+                after={<Button>Add</Button>}
+              />
+            )
+          })}
         </Unpad>
       </SubPane>
     )

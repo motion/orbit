@@ -68,7 +68,7 @@ const OrbitSearchResultsList = view(({ name, store, searchStore }: Props) => {
     <OrbitCard
       pane={name}
       subPane="search"
-      key={`${index}${bit.identifier || bit.id}`}
+      key={`${index}${bit.id}`}
       index={index}
       total={results.length}
       bit={bit}

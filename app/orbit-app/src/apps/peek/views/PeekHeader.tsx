@@ -229,9 +229,5 @@ export class PeekHeaderContent extends React.Component<Props> {
 }
 
 export const PeekHeader = view.attach('peekStore')(
-  view(props => (
-    <UI.Theme theme={props.peekStore.theme || false}>
-      <PeekHeaderContent {...props} />
-    </UI.Theme>
-  )),
+  view(props => <PeekHeaderContent {...props} />),
 )

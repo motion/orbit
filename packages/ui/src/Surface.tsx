@@ -50,7 +50,7 @@ export type SurfaceProps = CSSPropertySet & {
   iconSize?: number
   inline?: boolean
   noInnerElement?: boolean
-  onClick?: Function
+  onClick?: any
   size?: number
   sizeIcon?: number
   spaced?: boolean

@@ -49,14 +49,6 @@
 
 # Wow features
 
-## Fast Search
-
-- Instant results as you type
-- Highlights sub-sections much better
-- Keyboard nav thats snappy
-- Sub-search within selected item with just a couple keystrokes
-- Enter to open
-
 ## Follow
 
 - This should show on your homepage

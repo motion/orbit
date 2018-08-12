@@ -3,6 +3,8 @@ type Config = {
     server: number
     bridge: number
     swift: number
+    dbBridge: number
+    oracleBridge: number
   }
 }
 

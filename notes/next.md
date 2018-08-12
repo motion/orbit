@@ -1,82 +1,65 @@
-# now
+# Week ending Aug 17th
 
-- auto update
-- test .app on umed computer
-- fix directory index/select bug
-- bugfix run through trello
+**Production build that properly handles OAuth sync for a real-world user**
 
-MOVEMENT
+We want by Wednesday to have a rough prod build with auto-updating and a few low level features that will get us across the finish line.
 
-- IF you have a grid/carousel view active THEN
-  - WHEN you move down into selecting something
-    - SWITCH L/R to only move between cards not panes
-- CAROUSEL
-  - make all carousels behave under one component that handles l/r scrolling
+Then by Friday we should have everything polished quite a lot more. This is what will make these last couple weeks really hard is it's a _ton_ of polish, so it's hard to point to the exact final state.
 
-FOLLOW
+The big things on my side are:
 
-- Small (+) button to the right of FilterBar with tooltip "Follow"
-  - ON click add that search term to homescreen
-  - models/Follow
+- Oauth key strategy:
+  1.  UI/storage for adding your own oauth keys as master/admin
+  2.  Using those keys in Passport
+  3.  Documentation to onboard for creating your own keys
+      - should be built into app as well as on a website
+      - https://docs.tryretool.com/docs/sso-google-and-okta
+- Finish auto-update / build to prod .app
+- Finish/improve onboarding flow
+- Finish settings panes
+- Final peek design run with native looking theme
+- Fix keyboard nav and logic for moving between cards
 
-ACCOUNT
+On Umed's side:
 
-- Signup on site for account
-- That gives you a:
-  - Download of Orbit app
-  - Special license key
-- Download orbit.app
-- Add license key
-- That lets you click to open a peek window for managing master keys
+- Final syncer fixes, as much as possible
+- Mutation/observe pattern for data updates
+- More People aggregation
+- Help fix build to prod on older mac
 
-DESIGN
+# Week ending Aug 24th
+
+**Syncer/UI improvements and P2P system for sharing the app and sharing oauth config**
+
+- SAML login support
+- Website signup / onboarding
+- Website docs deploy
+- Lots of bugfixing and polish with search / people aggregation
+
+# Week ending Aug 31st
+
+**Ready for workday...**
+
+---
+
+---
+
+---
+
+UI
 
 - Peek windows no more fancy theme just mac looking headers
-
-# nate
-
-## review week to aug 7th
-
-- everything needs a lot of work to feel nicer
-  - fix a bunch of search bugs
-  - make interactions faster with peeks
-  - make peek positions and design better
-- the settings needs to feel more "store-like"
-  - list-style apps in the "add integration" section (rename to "add apps")
-    - should have a description underneath in english and nice "add button"
-    - ideally even have a screenshot
-  - can live search through "apps" and add easily
-  - showing realtime sync info on integations feels futuristic
-
-## August
-
-Aug 14th:
-
-- auto updates
-- redesign home
-- redesign settings/apps
-- fix searches and keynav a lot
-- upgrade visual look a lot
-- speed up interactions
-- lots of visual bug fixes
-
-Aug 21st:
-
-- p2p/app setup
-- invite friend onboarding
-
-Aug 21st:
-
-- big polish run, empty queue
-- iterate on bugs/profiles from deploys
-
-Aug 31st:
-
-- ready for salesforce demo...
+- Add button for settings panes that easily lots into with table
+- Confirm native modal for Remove setting
+- Fix themes a lot in terms of color choice
+- Theme psuedo state better strategy
+- able to have for example: Dark.card theme and apply a custom states easily per-component:
+  - hover: [brightenBorders(0.1), biggerShadow(1.5)]
+  - active: [darken(1.1)]
 
 # August details
 
-p2p: https://github.com/mafintosh/hyperdb
+p2p: https://github.com/webtorrent/bittorrent-dht
 
 ## September
 
@@ -93,7 +76,6 @@ queue:
 - Masonry.fixedHeight mode for Directory/Settings cards (no double render)
 - react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
 - fix horizontal scroller to cut off nicer
-
 - search: filtering "nick and nate" doesn't show any results for some reason
 - make all searches work: task search, message search
 - Remove setting button
@@ -128,12 +110,9 @@ queue:
 
 # gamechangers
 
-- personal home
-  - idea is: netflix style scroll bars with titles
-  - default they are just your integrations
-  - "pin search" to follow that search in netflix (this can then be super powerful... nlp + dates)
-
-* calendar support
-* injest anything (instant crawler/snippets)
-* memory
-* contextual search
+- calendar support
+- injest anything (instant crawler/snippets)
+- memory
+- contextual search
+- component store
+- forking apps / app store

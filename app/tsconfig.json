@@ -2,6 +2,7 @@
   "extends": "../tsconfig.tspackage",
   "files": [],
   "references": [
+    { "path": "./orbit" },
     { "path": "./orbit-desktop" },
     { "path": "./orbit-electron" },
     { "path": "./models" },

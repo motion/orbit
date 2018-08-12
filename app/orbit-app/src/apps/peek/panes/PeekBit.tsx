@@ -76,7 +76,7 @@ export const PeekBit = ({
         location,
         locationLink,
         integration,
-        // permalink,
+        permalink,
         updatedAt,
         comments,
       }) => {
@@ -85,7 +85,6 @@ export const PeekBit = ({
             key={item.id}
             defaultValue={App.state.query}
             focusOnMount
-            searchBarTheme={peekStore.theme}
             onChange={() => searchStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
             placeholder={`Search this ${item.subType} and related...`}
@@ -93,8 +92,7 @@ export const PeekBit = ({
               padding: [5, 10],
               height: 42,
             }}
-            before={<HeadSide />}
-            after={
+            before={
               <HeadSide>
                 {!!icon && (
                   <UI.Button
@@ -107,6 +105,18 @@ export const PeekBit = ({
                 )}
               </HeadSide>
             }
+            after={
+              <HeadSide>
+                {!!icon && (
+                  <UI.Button
+                    onClick={permalink}
+                    circular
+                    icon="link"
+                    iconSize={14}
+                  />
+                )}
+              </HeadSide>
+            }
           >
             {({ searchBar, searchTerm }) => {
               return children({
@@ -114,41 +124,39 @@ export const PeekBit = ({
                 icon,
                 belowHeadMain: searchBar,
                 postBody: (
-                  <UI.Theme theme={peekStore.theme}>
-                    <PeekBottom>
-                      <PeekActionBar>
+                  <PeekBottom>
+                    <PeekActionBar>
+                      <RoundButton
+                        onClick={e => {
+                          e.stopPropagation()
+                          locationLink()
+                        }}
+                      >
+                        {location}
+                      </RoundButton>
+                      <PeekActionBar.Space />
+                      <UI.Text>
+                        <TimeAgo>{updatedAt}</TimeAgo>
+                      </UI.Text>
+                      <div />
+                      <UI.View flex={1} />
+                      <UI.Row alignItems="center">
                         <RoundButton
-                          onClick={e => {
-                            e.stopPropagation()
-                            locationLink()
-                          }}
+                          onClick={peekStore.copyItem}
+                          alignItems="center"
                         >
-                          {location}
+                          Copy Link <Cmd>⌘+Shift+C</Cmd>
                         </RoundButton>
-                        <PeekActionBar.Space />
-                        <UI.Text>
-                          <TimeAgo>{updatedAt}</TimeAgo>
-                        </UI.Text>
-                        <div />
-                        <UI.View flex={1} />
-                        <UI.Row alignItems="center">
-                          <RoundButton
-                            onClick={peekStore.copyItem}
-                            alignItems="center"
-                          >
-                            Copy Link <Cmd>⌘+Shift+C</Cmd>
-                          </RoundButton>
-                          <View width={5} />
-                          <RoundButton
-                            onClick={peekStore.openItem}
-                            alignItems="center"
-                          >
-                            Open <Cmd>⌘+Enter</Cmd>
-                          </RoundButton>
-                        </UI.Row>
-                      </PeekActionBar>
-                    </PeekBottom>
-                  </UI.Theme>
+                        <View width={5} />
+                        <RoundButton
+                          onClick={peekStore.openItem}
+                          alignItems="center"
+                        >
+                          Open <Cmd>⌘+Enter</Cmd>
+                        </RoundButton>
+                      </UI.Row>
+                    </PeekActionBar>
+                  </PeekBottom>
                 ),
                 content: (
                   <>

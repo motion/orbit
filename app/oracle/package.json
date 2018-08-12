@@ -13,9 +13,6 @@
     "test-scroll": "node ./test/test --scroll",
     "edit": "open ./orbit/orbit.xcodeproj"
   },
-  "files": [
-    "_/**/*"
-  ],
   "dependencies": {
     "@mcro/black": "^2.2.1",
     "@mcro/logger": "^2.2.1",

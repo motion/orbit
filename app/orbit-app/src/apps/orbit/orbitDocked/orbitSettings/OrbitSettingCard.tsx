@@ -5,7 +5,6 @@ import { SettingRepository } from '../../../../repositories'
 import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
 import { OrbitCardProps } from '../../../../views/OrbitCard'
-import pluralize from 'pluralize'
 
 @view.attach('appStore')
 @view.attach({

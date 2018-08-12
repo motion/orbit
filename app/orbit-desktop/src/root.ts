@@ -23,6 +23,7 @@ import connectModels from './helpers/connectModels'
 import { Entities } from './entities'
 import { Onboard } from './onboard/Onboard'
 import { Logger, logger } from '@mcro/logger'
+import { getConfig as getConfigGlobal } from '@mcro/config'
 
 const log = logger('desktop')
 const hostile = promisifyAll(hostile_)
@@ -43,7 +44,7 @@ export class Root {
   start = async () => {
     this.registerREPLGlobals()
     this.registerEntityServer()
-    log(`Start Desktop Store..`)
+    log('Start Desktop Store..')
     // iohook.start(false)
     await Desktop.start({
       ignoreSelf: true,
@@ -140,9 +141,9 @@ export class Root {
     const lines = await hostile.get(true)
     const exists = lines.map(line => line[1]).indexOf(Config.server.host) > -1
     if (!exists) {
-      log(`Adding host entry`, Config.server.host)
+      log('Adding host entry', Config.server.host)
       await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Config.server.host}`, {
-        name: `Orbit`,
+        name: 'Orbit',
       })
     }
   }
@@ -169,7 +170,9 @@ export class Root {
    * for communication between processes.
    */
   private registerEntityServer() {
-    const server = new WebSocketServer({ port: 8082 })
+    const server = new WebSocketServer({
+      port: getConfigGlobal().ports.dbBridge,
+    })
     server.on('connection', socket => {
       socket.on('message', str => {
         // @ts-ignore TODO

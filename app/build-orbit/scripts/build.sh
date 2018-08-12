@@ -55,7 +55,9 @@ function publish-packages() {
   while ! nc -z localhost 4343; do sleep 0.1; done
   # publish
   (cd ../.. && \
-    npx lerna exec --ignore "@mcro/build-orbit" --ignore "@mcro/orbit" -- npm unpublish --registry http://localhost:4343 --force && npm publish --registry http://localhost:4343)
+    npx lerna exec --ignore "@mcro/build-orbit" --ignore "@mcro/orbit" -- \
+      npm unpublish --registry http://localhost:4343 --force || true && \
+      npm publish --registry http://localhost:4343)
   # then publish main app all together
   (cd ../orbit && npm publish --registry http://localhost:4343 --force)
   # kill verdaccio

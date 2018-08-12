@@ -1,50 +1,50 @@
-# sunday
+# Week ending Aug 17th
 
-# big next things
+**Production build that properly handles OAuth sync for a real-world user**
 
-- key/oauth management
-  - test an integration with Okta/OneLogin SSO/SAML 2.0
-- onboarding
-- site/account
-- p2p sharing
-  - step 1: oauth dedupe
-  - step 2: app sharing
-- site documentation
-- ui kit
+We want by Wednesday to have a rough prod build with auto-updating and a few low level features that will get us across the finish line.
 
-# now
+Then by Friday we should have everything polished quite a lot more. This is what will make these last couple weeks really hard is it's a _ton_ of polish, so it's hard to point to the exact final state.
 
-- auto update
-- test .app on umed computer
-- bugfix run through trello
+The big things on my side are:
 
-MOVEMENT
+- Oauth key strategy:
+  1.  UI/storage for adding your own oauth keys as master/admin
+  2.  Using those keys in Passport
+  3.  Documentation to onboard for creating your own keys
+      - should be built into app as well as on a website
+      - https://docs.tryretool.com/docs/sso-google-and-okta
+- Finish auto-update / build to prod .app
+- Finish/improve onboarding flow
+- Finish settings panes
+- Final peek design run with native looking theme
+- Fix keyboard nav and logic for moving between cards
 
-- IF you have a grid/carousel view active THEN
-  - WHEN you move down into selecting something
-    - SWITCH L/R to only move between cards not panes
-- CAROUSEL
-  - make all carousels behave under one component that handles l/r scrolling
+On Umed's side:
 
-FOLLOW
+- Final syncer fixes, as much as possible
+- Mutation/observe pattern for data updates
+- More People aggregation
+- Help fix build to prod on older mac
 
-- Small (+) button to the right of FilterBar with tooltip "Follow"
-  - ON click add that search term to homescreen
-  - models/Follow
+# Week ending Aug 24th
 
-ACCOUNT
+**Syncer/UI improvements and P2P system for sharing the app and sharing oauth config**
 
-- find that all in one easy software license management github repo
-- Signup on site for account
-- That gives you a:
-  - Download of Orbit app
-  - Special license key
-- Download orbit.app
-- Add license key
-  - that powers p2p system
-- gives share link with co-workers
-- send app + link to co-workers
-- That lets you click to open a peek window for managing master keys
+- SAML login support
+- Website signup / onboarding
+- Website docs deploy
+- Lots of bugfixing and polish with search / people aggregation
+
+# Week ending Aug 31st
+
+**Ready for workday...**
+
+---
+
+---
+
+---
 
 UI
 
@@ -56,30 +56,6 @@ UI
 - able to have for example: Dark.card theme and apply a custom states easily per-component:
   - hover: [brightenBorders(0.1), biggerShadow(1.5)]
   - active: [darken(1.1)]
-
-# nate
-
-## aug 14th
-
-- auto updates
-- everything needs a lot of work to feel nicer
-  - fix a bunch of search bugs
-  - make interactions faster with peeks
-  - make peek positions and design better
-- fix searches and keynav a lot
-- speed up interactions
-- lots of visual bug fixes
-
-Aug 21st:
-
-- p2p/app setup
-- invite friend onboarding
-- big polish run, empty queue
-- iterate on bugs/profiles from deploys
-
-Aug 31st:
-
-- ready for workday demo...
 
 # August details
 
@@ -100,7 +76,6 @@ queue:
 - Masonry.fixedHeight mode for Directory/Settings cards (no double render)
 - react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
 - fix horizontal scroller to cut off nicer
-
 - search: filtering "nick and nate" doesn't show any results for some reason
 - make all searches work: task search, message search
 - Remove setting button
@@ -135,12 +110,9 @@ queue:
 
 # gamechangers
 
-- personal home
-  - idea is: netflix style scroll bars with titles
-  - default they are just your integrations
-  - "pin search" to follow that search in netflix (this can then be super powerful... nlp + dates)
-
-* calendar support
-* injest anything (instant crawler/snippets)
-* memory
-* contextual search
+- calendar support
+- injest anything (instant crawler/snippets)
+- memory
+- contextual search
+- component store
+- forking apps / app store

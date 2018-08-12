@@ -97,10 +97,16 @@ fi
 echo -n "--no-install " >> ./scripts/.lastbuild
 
 # bundle
-echo "running electron-bundler..."
-DEBUG=electron-packager node -r esm --trace-warnings ./scripts/bundle.js
+if [[ "$FLAGS" =~ "--no-bundle" ]]; then
+  echo "not bundling..."
+else
+  echo "running electron-bundler..."
+  DEBUG=electron-packager node -r esm --trace-warnings ./scripts/bundle.js
+fi
+echo -n "--no-install " >> ./scripts/.lastbuild
 
-# echo "patching bundle..."
+echo "patching bundle..."
+rm -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/build || true
 # rm -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules/iohook
 # cp -r ./build-resources/iohook/node_modules/iohook dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules
 

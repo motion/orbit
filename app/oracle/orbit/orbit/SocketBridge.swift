@@ -18,7 +18,13 @@ class SocketBridge {
     self.onMessage = onMessage
 
     // socket bridge
-    let ws = WebSocket("ws://localhost:40512")
+    guard let port = ProcessInfo.processInfo.environment["SOCKET_PORT"] else {
+      print("no SOCKET_PORT environment variable set")
+      return
+    }
+
+    let ws = WebSocket("ws://localhost:\(port)")
+
     self.send = { (msg) in
       ws.send(msg)
     }

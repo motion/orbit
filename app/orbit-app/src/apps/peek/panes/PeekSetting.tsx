@@ -11,9 +11,7 @@ import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton } from '../../../views'
-import { PeekBottom } from './PeekBottom'
 import { PeekActionBar } from './PeekActionBar'
-import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -121,42 +119,18 @@ class SettingContent extends React.Component<
   }
 }
 
-class PeekSettingStore {
-  props: PeekPaneProps
-
-  get setting() {
-    return this.idSetting || this.typeSetting
-  }
-
-  get item() {
-    return this.props.item
-  }
-
-  idSetting = modelQueryReaction(() =>
-    SettingRepository.findOne({ id: this.item.id }),
-  )
-
-  // hackkkkky for now because look at OrbitSettings.generalsettings
-  // need a migration to insert the settings first and then make them just like integrationSettingsd
-  typeSetting = modelQueryReaction(() =>
-    SettingRepository.findOne({ type: this.item.id }),
-  )
-}
-
-@view.attach({
-  store: PeekSettingStore,
-})
 @view
-export class PeekSetting extends React.Component<
-  PeekPaneProps & {
-    store: PeekSettingStore
-  }
-> {
+export class PeekSetting extends React.Component<PeekPaneProps> {
   render() {
-    const { store, ...props } = this.props
-    if (!store.setting) {
-      return null
+    const { peekStore, ...props } = this.props
+    const { model } = peekStore.state
+    if (!model) {
+      return (
+        <div style={{ background: 'red', width: '100%', height: '100%' }}>
+          helllo
+        </div>
+      )
     }
-    return <SettingContent setting={store.setting} {...props} />
+    return <SettingContent setting={model} peekStore={peekStore} {...props} />
   }
 }

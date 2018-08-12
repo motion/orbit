@@ -5,7 +5,11 @@ import { PEEK_THEMES } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import { SearchStore } from '../../../stores/SearchStore'
 import * as Constants from '../../../constants'
-import { PersonRepository, BitRepository } from '../../../repositories'
+import {
+  PersonRepository,
+  BitRepository,
+  SettingRepository,
+} from '../../../repositories'
 
 export class PeekStore {
   props: {
@@ -137,8 +141,10 @@ export class PeekStore {
     let selectedItem
     if (type === 'person') {
       selectedItem = await PersonRepository.findOne({ id })
-    } else {
+    } else if (type === 'bit') {
       selectedItem = await BitRepository.findOne({ id })
+    } else if (type === 'setting') {
+      selectedItem = await SettingRepository.findOne({ id })
     }
     const { docked, hidden } = App.orbitState
     if (docked || !hidden) {

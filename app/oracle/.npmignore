@@ -1,8 +1,5 @@
+*
 !_
+!_/*
 !orbit/Build/Products/Release/orbit.app
-orbit
-pyocr
-swindler
-test
-*.ts
-**/*.ts
+!orbit/Build/Products/Release/orbit.app/**/*

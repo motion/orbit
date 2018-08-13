@@ -47,14 +47,20 @@ class OrbitHomeStore {
             return !!this.results.length ? 0 : -1
           }
           const curResult = this.results[curIndex]
-          if (curResult && curResult.moves.some(move => move === direction)) {
+          const canMoveOne =
+            curResult && curResult.moves.some(move => move === direction)
+          if (canMoveOne) {
             switch (direction) {
               case 'right':
                 return curIndex + 1
               case 'left':
                 return curIndex - 1
               default:
-                const movesToNextRow = this.maxMoves(direction, curIndex)
+                const rowDirection = direction === 'down' ? 'right' : 'left'
+                const movesToNextRow = this.movesToNextRow(
+                  rowDirection,
+                  curIndex,
+                )
                 return curIndex + movesToNextRow
             }
           }
@@ -65,16 +71,18 @@ class OrbitHomeStore {
     { immediate: true },
   )
 
-  maxMoves = (direction, curIndex) => {
-    const { results } = this
-    const hasMove = index =>
-      results[index] && results[index].moves.indexOf(direction) > -1
-    const moveDirection = direction === 'down' ? 1 : -1
-    let movesToNextRow = moveDirection
+  movesToNextRow = (dir, curIndex) => {
+    const amt = dir === 'right' ? 1 : -1
+    const all = this.results
+    const hasMove = index => all[index] && all[index].moves.indexOf(dir) > -1
+    let movesToNextRow = amt
     while (hasMove(curIndex + movesToNextRow)) {
-      movesToNextRow += moveDirection
+      movesToNextRow += amt
     }
-    return moveDirection
+    if (dir === 'right') {
+      movesToNextRow += amt
+    }
+    return movesToNextRow
   }
 
   get results() {
@@ -82,7 +90,7 @@ class OrbitHomeStore {
     const rows = Object.keys(this.following)
     for (const [rowIndex, row] of rows.entries()) {
       const rowItems = this.following[row].items
-      const downMoves = rowIndex < rows.length ? ['down'] : []
+      const downMoves = rowIndex < rows.length ? ['down', 'up'] : ['up']
       const nextMoves = rowItems.map((item, index) => ({
         item,
         moves: [

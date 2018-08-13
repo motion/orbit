@@ -1,6 +1,7 @@
 export * from './Bit'
 export * from './IntegrationType'
 export * from './Job'
+export * from './JobStatus'
 export * from './Location'
 export * from './Person'
 export * from './PersonBit'

@@ -97,6 +97,7 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     const updatedBit = Object.assign(bit || new BitEntity(), {
       integration,
       id,
+      setting: this.setting,
       type: 'document',
       title: response.title,
       body,
@@ -191,6 +192,7 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     const updatedPerson = Object.assign(person || new PersonEntity(), {
       integration,
       id,
+      setting: this.setting,
       integrationId: user.accountId,
       name: user.displayName,
       data: {

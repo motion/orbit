@@ -1,3 +1,5 @@
+import { IntegrationType } from './IntegrationType'
+
 export interface Job {
 
   /**
@@ -5,15 +7,35 @@ export interface Job {
    */
   target: "job"
 
+  /**
+   * Job id.
+   */
   id: number
-  type: string
-  lastError: string
+
+  /**
+   * Syncer name that run this job.
+   */
+  syncer: string
+
+  /**
+   * Integration type.
+   */
+  integration: IntegrationType
+
+  /**
+   * Time when job was executed.
+   */
+  time: number
+
+  /**
+   * Execution status.
+   */
   status: string
-  tries: number
-  percent: number
-  createdAt: Date
-  updatedAt: Date
-  lock: string
+
+  /**
+   * Execution message.
+   */
+  message: string
 
 }
 

@@ -1,9 +1,11 @@
-import { EntitySubscriberInterface, getConnection } from 'typeorm'
+import { EntitySubscriberInterface, getConnection, getRepository } from 'typeorm'
+import { JobEntity } from '../../entities/JobEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { SyncerOptions } from './IntegrationSyncer'
 import Timer = NodeJS.Timer
 import { logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
+import { assign } from '../../utils'
 
 const log = logger('syncer')
 
@@ -22,7 +24,9 @@ const log = logger('syncer')
  */
 export class Syncer {
 
-  options: SyncerOptions
+  name: string
+
+  private options: SyncerOptions
   private intervals: {
     setting?: Setting,
     timer: Timer
@@ -31,6 +35,7 @@ export class Syncer {
 
   constructor(options: SyncerOptions) {
     this.options = options
+    this.name = options.name || options.constructor.name
   }
 
   /**
@@ -79,6 +84,36 @@ export class Syncer {
    */
   private async runInterval(index: number, settingId?: number) {
 
+    // get the last run job
+    const lastJob = await getRepository(JobEntity).findOne({
+      where: {
+        syncer: this.name,
+        integration: this.options.type,
+      },
+      order: {
+        time: "desc"
+      }
+    })
+    if (lastJob) {
+      const needToWait = (lastJob.time + this.options.interval) - new Date().getTime()
+      if (needToWait > 0) {
+        log(
+          `found last executed job for ${this.name} and we should wait some time ` +
+          `until enough interval time will pass before we execute a new job`,
+          {
+            jobTime: lastJob.time + this.options.interval * 1000,
+            currentTime: new Date().getTime(),
+            needToWait,
+            lastJob,
+          }
+        )
+        setTimeout(() => this.runInterval(index, settingId), needToWait)
+        return
+      } else {
+        log(`found last executed job for ${this.name} and its okay to execute a new job`, lastJob)
+      }
+    }
+
     // clear previously run interval if exist
     if (this.intervals[index])
       clearInterval(this.intervals[index].timer)
@@ -93,14 +128,21 @@ export class Syncer {
         setting,
         timer: setInterval(
           async () => {
+
+            // if we still have previous interval running - we don't do anything
+            if (this.intervals[index].running) {
+              log(`tried to run ${this.name} based on interval, but synchronization is already running, skipping`)
+              return
+            }
+
             const setting = await SettingEntity.findOne({ id: settingId })
             this.intervals[index].setting = setting
             this.intervals[index].running = this.runSyncer(setting)
             await this.intervals[index].running
             this.intervals[index].running = undefined
           },
-          this.options.interval
-        )
+          this.options.interval,
+        ),
       }
     }
   }
@@ -111,12 +153,33 @@ export class Syncer {
   private async runSyncer(setting?: SettingEntity) {
 
     log(`starting ${this.options.constructor.name} syncer`, setting)
+
+    // create a new job - the fact that we started a new syncer
+    const job = assign(new JobEntity(), {
+      syncer: this.name,
+      integration: this.options.type,
+      time: new Date().getTime(),
+      status: 'PROCESSING',
+      message: ``
+    })
+    await getRepository(JobEntity).save(job)
+    log(`created a new job`, job)
+
     try {
       const syncer = new this.options.constructor(setting)
       await syncer.run()
 
+      // update our job (finish successfully)
+      job.status = 'COMPLETE'
+      await getRepository(JobEntity).save(job)
+
     } catch(error) {
       log(`error`, `error in ${this.options.constructor.name} syncer sync`, error)
+
+      // update our job (finish with error)
+      job.status = 'FAILED'
+      job.message = JSON.stringify(error)
+      await getRepository(JobEntity).save(job)
     }
     log(`${this.options.constructor.name} syncer has finished its job`)
   }
@@ -163,7 +226,7 @@ export class Syncer {
         log(`okay we had interval for it, let's removing it now`, interval)
         this.intervals.splice(this.intervals.indexOf(interval))
       }
-    }
+    },
   }
 
 }

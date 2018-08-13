@@ -39,11 +39,11 @@ class SettingContent extends React.Component<
   }
 > {
   handleRefresh = async () => {
-    const store = this.props.store
-    const job: Job = {} as Job
-    job.type = store.setting.type
-    job.status = 'PENDING'
-    await JobRepository.save(job)
+    // const store = this.props.store
+    // const job: Job = {} as Job
+    // job.type = store.setting.type
+    // job.status = 'PENDING'
+    // await JobRepository.save(job)
   }
 
   removeIntegration = async () => {

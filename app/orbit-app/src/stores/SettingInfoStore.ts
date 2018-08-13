@@ -1,5 +1,6 @@
 // import { react } from '@mcro/black'
 import { Setting } from '@mcro/models'
+import { IntegrationType } from '../../../models/src'
 import { BitRepository, JobRepository } from '../repositories'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
@@ -18,8 +19,8 @@ export class SettingInfoStore {
   job = modelQueryReaction(
     async () => {
       return await JobRepository.findOne({
-        where: { type: this.setting.type },
-        order: { createdAt: 'DESC' },
+        where: { integration: this.setting.type as IntegrationType },
+        order: { id: 'DESC' },
       })
     },
     {
@@ -31,7 +32,7 @@ export class SettingInfoStore {
   bitsCount = modelQueryReaction(
     () =>
       BitRepository.count({
-        integration: this.setting.type,
+        integration: this.setting.type as IntegrationType,
       }),
     {
       immediate: true,

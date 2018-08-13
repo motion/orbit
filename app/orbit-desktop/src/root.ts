@@ -84,7 +84,7 @@ export class Root {
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    // this.startSyncers()
+    await this.startSyncers()
     this.screen = new Screen()
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,
@@ -166,11 +166,11 @@ export class Root {
       if (syncerOrGroup instanceof SyncerGroup) {
         map[syncerOrGroup.name] = syncerOrGroup
         for (let syncer of syncerOrGroup.syncers) {
-            map[syncer.options.constructor.name] = syncer
+            map[syncer.name] = syncer
         }
 
       } else {
-        map[syncerOrGroup.options.constructor.name] = syncerOrGroup
+        map[syncerOrGroup.name] = syncerOrGroup
       }
       return map
     }, {})

@@ -248,6 +248,10 @@ auto-launch@5.0.5:
     untildify "^3.0.2"
     winreg "1.2.4"
 
+autolinker@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/autolinker/-/autolinker-1.7.1.tgz#36397dd0c09c369433142677b5247ed4c9d2d705"
+
 aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"

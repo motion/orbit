@@ -1,16 +1,18 @@
 import { Person } from '@mcro/models'
 import * as _ from 'lodash'
-import { MoreThan } from 'typeorm'
+import { getRepository, MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
+import { PersonBitEntity } from '../../entities/PersonBitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { createOrUpdatePersonBit } from '../../repository'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { sequence } from '../../utils'
+import { sequence, assign } from '../../utils'
 import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { logger } from '@mcro/logger'
+const Autolinker = require( 'autolinker')
 
 const log = logger('syncer:slack')
 
@@ -44,13 +46,27 @@ export class SlackSyncer implements IntegrationSyncer {
     // loading users from API
     log(`loading users`)
     const users = await this.loader.loadUsers()
+    log(`loaded users`, users)
+
+    // filter out bots and strange users without emails
+    const cleanUsers = users.filter(user => user.is_bot === false && user.profile.email)
+    log(`filtered users (non bots)`, cleanUsers)
 
     // load all persons in local database
-    const existPeople = await PersonEntity.find({ settingId: this.setting.id })
+    const existPeople = await PersonEntity.find({
+      where: {
+        settingId: this.setting.id
+      },
+      relations: {
+        personBit: {
+          bits: true
+        }
+      }
+    })
 
     // creating entities for them
-    log(`finding and creating people for users`, users)
-    const updatedPeople = users.map(user =>
+    log(`finding and creating people for users`, cleanUsers)
+    const updatedPeople = cleanUsers.map(user =>
       this.createPerson(existPeople, user),
     )
     log(`updated people`, updatedPeople)
@@ -60,11 +76,11 @@ export class SlackSyncer implements IntegrationSyncer {
 
     // add person bits
     await Promise.all(
-      updatedPeople.map(person => {
-        return createOrUpdatePersonBit({
-          email: person.data.email,
+      updatedPeople.map(async person => {
+        person.personBit = await createOrUpdatePersonBit({
+          email: person.data.profile.email,
           name: person.name,
-          photo: person.data.profile.image_48,
+          photo: person.data.profile.image_512,
           integration: 'slack',
           person: person,
         })
@@ -117,11 +133,11 @@ export class SlackSyncer implements IntegrationSyncer {
         channel.id,
         oldestMessageId,
       )
+      log(`loaded messages`, loadedMessages)
 
       // sync messages if we found them
       if (loadedMessages.length) {
         // left only messages we need - real user messages, no system or bot messages
-        log(`loaded messages`, loadedMessages)
         const filteredMessages = loadedMessages.filter(message => {
           return (
             message.type === 'message' &&
@@ -135,21 +151,40 @@ export class SlackSyncer implements IntegrationSyncer {
         // group messages into special "conversations" to avoid insertion of multiple bits for each message
         log(`creating conversations`)
         const conversations = createConversation(filteredMessages)
-        log(
-          `created ${conversations.length} conversations`,
-          conversations,
-        )
+        log(`created ${conversations.length} conversations`, conversations)
 
         // create bits from conversations
         await sequence(conversations, async messages => {
-          updatedBits.push(await this.createConversation(channel, messages))
+
+          // get people from messages
+          const people: Person[] = this.people.filter(person => {
+            return messages.find(message => message.user === person.integrationId)
+          })
+
+          // create and save a new conversion bit
+          const bit = await this.createConversation(channel, messages, people)
+          await BitEntity.save(bit)
+          updatedBits.push(bit)
+
+          // add bits to the list of person bits
+          for (let person of people) {
+            const hasBit = person.personBit.bits.some(personBitBit => {
+              return personBitBit.id === bit.id
+            })
+            if (!hasBit)
+              person.personBit.bits.push(bit)
+
+            console.log("person.personBit", person.personBit)
+            await getRepository(PersonBitEntity).save(person.personBit)
+          }
         })
+
+        // create new bits
+        log(`updated message bits`, updatedBits)
 
         // update last message sync setting
         // note: we need to use loaded messages, not filtered
         lastMessageSync[channel.id] = loadedMessages[0].ts
-      } else {
-        log(`no new messages found`)
       }
 
       // find bits in the database and check if they all exist
@@ -168,22 +203,16 @@ export class SlackSyncer implements IntegrationSyncer {
         // if there is no loaded message for bit in the database
         // then we shall remove such bits
         removedBits.push(
-          ...latestBits.filter(bit => {
-            return !loadedMessages.some(message => {
-              return bit.bitCreatedAt === +message.ts
+          ...latestBits.filter(existBit => {
+            return !updatedBits.some(updatedBit => {
+              return updatedBit.id === existBit.id
             })
           }),
         )
-        log(`bits to be removed`, removedBits)
+        log(`removed message bits`, removedBits)
+        await BitEntity.remove(removedBits)
       }
     })
-
-    // create new bits
-    log(`updated message bits`, updatedBits)
-    await BitEntity.save(updatedBits)
-
-    log(`removed message bits`, removedBits)
-    await BitEntity.remove(removedBits)
 
     // update settings
     log(`updating settings`, { lastMessageSync })
@@ -195,16 +224,18 @@ export class SlackSyncer implements IntegrationSyncer {
    * Creates a single integration person from given Slack user.
    */
   private createPerson(people: PersonEntity[], user: SlackUser): PersonEntity {
-    const id = `slack-person-${user.id}`
-    const person = people.find(person => person.id === id)
+    const id = `slack-${this.setting.id}-${user.id}`
+    const person = people.find(person => person.id === id) || new PersonEntity()
 
-    return Object.assign(person || new PersonEntity(), {
+    return assign(person, {
       setting: this.setting,
       id: id,
       integration: 'slack',
       integrationId: user.id,
       name: user.profile.real_name || user.name,
-      data: user,
+      data: user as any,
+      webLink: `https://${this.setting.values.oauth.info.team.id}.slack.com/messages/${user.id}`,
+      desktopLink: `slack://user?team=${this.setting.values.oauth.info.team.id}&id=${user.id}`,
     })
   }
 
@@ -214,16 +245,12 @@ export class SlackSyncer implements IntegrationSyncer {
   private async createConversation(
     channel: SlackChannel,
     messages: SlackMessage[],
+    people: Person[],
   ): Promise<BitEntity> {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
     messages = messages.reverse()
-
-    // get people from messages
-    const people: Person[] = this.people.filter(person => {
-      return messages.find(message => message.user === person.integrationId)
-    })
 
     // create a new messages structure special for a data property
     const dataMessages = messages.map(message => {
@@ -237,36 +264,42 @@ export class SlackSyncer implements IntegrationSyncer {
     })
 
     // create a bit body - main searching content
-    const body = messages
+    // todo: extract body creation into separate helper
+    let body = messages
       .map(message => message.text)
       .join(' ... ')
       .slice(0, 255)
 
-    const id = channel.id + '_' + messages[0].ts
-    const bitCreatedAt = new Date(+_.first(messages).ts.split('.')[0] + 1000)
-    const bitUpdatedAt = new Date(+_.last(messages).ts.split('.')[0] + 1000)
-    const team = this.setting.values.oauth.info.team
-
-    const location = {
-      id: channel.id,
-      name: channel.name,
-      webLink: `https://${team.domain}.slack.com/archives/${channel.id}`,
-      desktopLink: `slack://channel?id=${channel.id}&team=${team.id}`,
+    for (let person of this.people) {
+      body = body.replace(`<@${person.data.id}>`, person.name)
     }
 
-    const webLink = `https://${team.domain}.slack.com/archives/${
-      channel.id
-    }/p${messages[0].ts.replace('.', '')}`
-    const desktopLink = `slack://channel?id=${channel.id}&message=${
-      messages[0].ts
-    }&team=${team.id}`
+    const matchedLinks: string[] = []
+    body = Autolinker.link(body, {
+      replaceFn: match => {
+        matchedLinks.push(match.getAnchorText())
+        return match.getAnchorText()
+      },
+    })
+
+    for (let matchedLink of matchedLinks) {
+      body = body.replace(`<${matchedLink}>`, matchedLink)
+    }
+
+    const id = 'slack' + this.setting.id + '_' + channel.id + '_' + messages[0].ts
+    const bitCreatedAt = +_.first(messages).ts.split('.')[0] * 1000
+    const bitUpdatedAt = +_.last(messages).ts.split('.')[0] * 1000
+    const team = this.setting.values.oauth.info.team
+
+    const webLink = `https://${team.domain}.slack.com/archives/${channel.id}/p${messages[0].ts.replace('.', '')}`
+    const desktopLink = `slack://channel?id=${channel.id}&message=${messages[0].ts}&team=${team.id}`
 
     const bit = await BitEntity.findOne({
       settingId: this.setting.id,
       id,
     })
 
-    return Object.assign(bit || new BitEntity(), {
+    return assign(bit || new BitEntity(), {
       setting: this.setting,
       integration: 'slack',
       id,
@@ -285,7 +318,12 @@ export class SlackSyncer implements IntegrationSyncer {
       bitCreatedAt,
       bitUpdatedAt,
       people,
-      location,
+      location: {
+        id: channel.id,
+        name: channel.name,
+        webLink: `https://${team.domain}.slack.com/archives/${channel.id}`,
+        desktopLink: `slack://channel?id=${channel.id}&team=${team.id}`,
+      },
       webLink,
       desktopLink,
     })

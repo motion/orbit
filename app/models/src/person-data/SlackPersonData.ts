@@ -1,8 +1,10 @@
 export interface SlackPersonData {
+  id: string
   name: string
   email: string
   phone: string
   profile?: {
-    image_48?: string
+    image_512?: string
+    email: string
   }
 }

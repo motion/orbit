@@ -61,7 +61,7 @@ export function selectItem(
 }
 
 function selectPerson(person: Person, target?: PeekTarget) {
-  const avatar = person.data.profile ? person.data.profile.image_48 : ''
+  const avatar = person.data.profile ? person.data.profile.image_512 : ''
   setPeekState({
     target,
     peekId: Math.random(),

@@ -8,23 +8,12 @@ export default function Strategy(options, verify) {
     options.authorizationURL || 'https://slack.com/oauth/authorize'
   // options.scopeSeparator = ','
   options.scope = options.scope || [
-    'channels:history',
-    'channels:read',
-    'files:read',
-    'groups:history',
-    'groups:read',
-    'im:history',
-    'im:read',
-    'links:read',
-    'mpim:history',
-    'mpim:read',
-    'search:read',
-    'team:read',
-    'usergroups:read',
-    'users:read',
-    'users:read.email',
+    'identity.basic',
+    'identity.email',
+    'identity.avatar',
+    'identity.team'
   ]
-  options.skipUserProfile = true
+  options.skipUserProfile = false
 
   this.profileUrl =
     options.profileUrl || 'https://slack.com/api/users.identity?token=' // requires 'identity.basic' scope

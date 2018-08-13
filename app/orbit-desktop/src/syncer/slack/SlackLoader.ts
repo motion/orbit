@@ -56,6 +56,8 @@ export class SlackLoader {
 
   /**
    * Loads all slack messages.
+   *
+   * @see https://api.slack.com/methods/channels.history
    */
   async loadMessages(
     channelId: string,
@@ -77,16 +79,4 @@ export class SlackLoader {
     return response.messages
   }
 
-  /**
-   * Loads message permalink.
-   */
-  async loadPermalink(channelId: string, messageTs: string): Promise<string> {
-    const response = await chat.getPermalink({
-      token: this.setting.token,
-      channel: channelId,
-      message_ts: messageTs,
-    })
-
-    return response.permalink
-  }
 }

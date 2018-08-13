@@ -7,6 +7,13 @@ import { QueryStore } from './QueryStore'
 
 const log = logger('selectionStore')
 
+type Direction = 'left' | 'right' | 'up' | 'down'
+
+type SelectionHandler = {
+  getResult: (index: number) => any
+  getNextIndex: (index: number, direction: Direction) => number
+}
+
 export class SelectionStore {
   props: {
     appStore: AppStore
@@ -21,7 +28,7 @@ export class SelectionStore {
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
-  getResult = null
+  handler: SelectionHandler = null
 
   willMount() {
     on(this, window, 'keydown', this.windowKeyDown)
@@ -63,8 +70,8 @@ export class SelectionStore {
   }
 
   get selectedItem() {
-    if (this.getResult) {
-      return this.getResult(this.activeIndex)
+    if (this.handler) {
+      return this.handler.getResult(this.activeIndex)
     }
     return null
   }
@@ -112,23 +119,6 @@ export class SelectionStore {
       this.clearSelected()
     },
   )
-
-  // resetActiveIndexOnKeyPastEnds = react(
-  //   () => this.nextIndex,
-  //   index => {
-  //     if (index === -1) {
-  //       this.activeIndex = this.nextIndex
-  //     } else {
-  //       const len = this.searchState.results.length
-  //       if (index >= len) {
-  //         this.nextIndex = len - 1
-  //         this.activeIndex = this.nextIndex
-  //       } else {
-  //         throw react.cancel
-  //       }
-  //     }
-  //   },
-  // )
 
   // delay for speed of rendering
   updateActiveIndexToNextIndex = react(
@@ -181,37 +171,22 @@ export class SelectionStore {
     return false
   }
 
-  // clearIndexOnTarget = react(
-  //   () => App.peekState.target,
-  //   target => {
-  //     if (target) {
-  //       throw react.cancel
-  //     }
-  //     this.nextIndex = -1
-  //   },
-  // )
+  move = (direction: Direction) => {
+    if (!this.handler) {
+      throw new Error('No handler for events')
+    }
+    const nextIndex = this.handler.getNextIndex(this.activeIndex, direction)
+    if (nextIndex !== this.activeIndex) {
+      this.toggleSelected(nextIndex)
+    }
+  }
 
   setSelectEvent = (val: string) => {
     this.selectEvent = val
   }
 
-  increment = (by = 1) => {
-    this.setSelectEvent('key')
-    const next = this.nextIndex + 1
-    const hasNextResult = this.getResult ? !!this.getResult(next) : true
-    if (!hasNextResult) {
-      return
-    }
-    this.toggleSelected(Math.min(next, this.nextIndex + by))
-  }
-
-  decrement = (by = 1) => {
-    this.setSelectEvent('key')
-    this.toggleSelected(Math.max(-1, this.nextIndex - by))
-  }
-
-  setGetResult = fn => {
-    this.getResult = fn
+  setHandler = (handler: SelectionHandler) => {
+    this.handler = handler
   }
 
   openSelected = () => {
@@ -228,26 +203,19 @@ export class SelectionStore {
 
   windowKeyDown = e => {
     const { keyCode } = e
+    this.setSelectEvent('key')
     switch (keyCode) {
       case 37: // left
-        // if (this.isInCarousel) {
-        //   this.decrement()
-        //   return
-        // }
-        this.emit('key', 'left')
+        this.move('left')
         return
       case 39: // right
-        // if (this.isInCarousel) {
-        //   this.increment()
-        //   return
-        // }
-        this.emit('key', 'right')
+        this.move('right')
         return
       case 40: // down
-        this.increment()
+        this.move('down')
         return
       case 38: // up
-        this.decrement()
+        this.move('up')
         return
       case 13: // enter
         e.preventDefault()

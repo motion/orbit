@@ -33,21 +33,67 @@ class OrbitHomeStore {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  setGetResults = react(
+  setSelectionHandler = react(
     () => [this.isActive, this.results],
-    async ([isActive], { sleep }) => {
-      if (!isActive) throw react.cancel
-      sleep()
-      this.props.selectionStore.setGetResult(index => this.results[index])
+    ([isActive]) => {
+      if (!isActive) {
+        throw react.cancel
+      }
+      this.props.selectionStore.setHandler({
+        getResult: index =>
+          this.results[index] ? this.results[index].item : null,
+        getNextIndex: (curIndex, direction) => {
+          if (curIndex === -1) {
+            return !!this.results.length ? 0 : -1
+          }
+          const curResult = this.results[curIndex]
+          if (curResult && curResult.moves.some(move => move === direction)) {
+            switch (direction) {
+              case 'right':
+                return curIndex + 1
+              case 'left':
+                return curIndex - 1
+              default:
+                const movesToNextRow = this.maxMoves(direction, curIndex)
+                return curIndex + movesToNextRow
+            }
+          }
+          return curIndex
+        },
+      })
     },
+    { immediate: true },
   )
 
-  get results() {
-    let res = []
-    for (const key in this.following) {
-      res = [...res, ...this.following[key].items]
+  maxMoves = (direction, curIndex) => {
+    const { results } = this
+    const hasMove = index =>
+      results[index] && results[index].moves.indexOf(direction) > -1
+    const moveDirection = direction === 'down' ? 1 : -1
+    let movesToNextRow = moveDirection
+    while (hasMove(curIndex + movesToNextRow)) {
+      movesToNextRow += moveDirection
     }
-    return res
+    return moveDirection
+  }
+
+  get results() {
+    let results = []
+    const rows = Object.keys(this.following)
+    for (const [rowIndex, row] of rows.entries()) {
+      const rowItems = this.following[row].items
+      const downMoves = rowIndex < rows.length ? ['down'] : []
+      const nextMoves = rowItems.map((item, index) => ({
+        item,
+        moves: [
+          index < rowItems.length - 1 ? 'right' : null,
+          index > 0 ? 'left' : null,
+          ...downMoves,
+        ],
+      }))
+      results = [...results, ...nextMoves]
+    }
+    return results
   }
 
   following = react(

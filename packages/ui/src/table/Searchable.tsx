@@ -8,7 +8,6 @@
 import { view, on } from '@mcro/black'
 import { Filter } from './types'
 import * as React from 'react'
-import { Toolbar } from '../Toolbar'
 import { Row } from '../blocks/Row'
 import { TableInput } from './TableInput'
 import { colors } from '../helpers/colors'
@@ -16,7 +15,7 @@ import { View } from '../blocks/View'
 import { Icon } from '../Icon'
 import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
-import { Theme, attachTheme } from '@mcro/gloss'
+import { attachTheme } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
 import { ClearButton } from '../buttons/ClearButton'
 
@@ -48,13 +47,9 @@ type Props = {
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
-const SearchBar = view(Toolbar, {
+const SearchBar = view(Row, {
   height: 37,
   padding: [3, 5],
-})
-
-SearchBar.theme = () => ({
-  background: 'transparent',
 })
 
 export const SearchBox = view(View, {

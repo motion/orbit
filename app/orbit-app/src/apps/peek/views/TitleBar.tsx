@@ -20,7 +20,7 @@ const TitleBarContain = view({
 const TitleBarText = props => (
   <Text
     size={1}
-    fontWeight={700}
+    fontWeight={400}
     ellipse={1}
     margin={0}
     padding={[3, 80]}

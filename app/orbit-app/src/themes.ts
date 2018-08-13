@@ -23,8 +23,8 @@ const macTheme = {
   titleBar: {
     background: 'linear-gradient(to bottom, #eae9eb 0%, #dcdbdc 100%)',
     backgroundBlur: '#f6f6f6',
-    border: '#c1c0c2',
-    borderBlur: '#cecece',
+    borderColor: '#c1c0c2',
+    borderColorBlur: '#cecece',
     icon: '#6f6f6f',
     iconBlur: '#acacac',
     iconSelected: '#4d84f5',

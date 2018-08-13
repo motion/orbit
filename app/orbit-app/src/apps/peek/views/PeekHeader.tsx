@@ -31,11 +31,13 @@ PeekHeaderContain.theme = ({ position, theme, focused }) => {
     style = {
       ...style,
       background: theme.titleBar.backgroundBlur,
+      borderBottom: [1, theme.titleBar.borderColorBlur],
     }
   } else {
     style = {
       ...style,
       background: theme.titleBar.background,
+      borderBottom: [1, theme.titleBar.borderColor],
     }
   }
   return style
@@ -113,11 +115,6 @@ export class PeekHeaderContent extends React.Component<Props> {
         {...props}
       >
         <MainHead>
-          {/* Nice gradient effect on header */}
-          <UI.FullScreen
-            background="linear-gradient(rgba(255,255,255,0.027), transparent 44%)"
-            pointerEvents="none"
-          />
           <TitleBar
             after={
               <>

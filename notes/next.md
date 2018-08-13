@@ -1,3 +1,7 @@
+- <UI.Theme name="grey.titlebar" />
+  - that takes the subset from theme.gray.titleBar
+    - which means that can have specific button styles nicely :D
+
 # Week ending Aug 17th
 
 **Production build that properly handles OAuth sync for a real-world user**

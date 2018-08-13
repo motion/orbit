@@ -1,4 +1,4 @@
-- <UI.Theme name="grey.titlebar" />
+- <UI.Theme select={theme => theme.titleBar} />
   - that takes the subset from theme.gray.titleBar
     - which means that can have specific button styles nicely :D
 

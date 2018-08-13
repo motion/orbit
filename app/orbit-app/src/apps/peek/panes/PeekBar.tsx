@@ -14,6 +14,7 @@ export const PeekBar = view({
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
+  // backdropFilter: 'blur(10px)',
 })
 
 PeekBar.theme = ({ theme }) => ({

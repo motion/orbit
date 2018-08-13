@@ -11,9 +11,9 @@ import { View } from '@mcro/ui'
 
 type Props = {
   name: string
-  paneManagerStore: PaneManagerStore
+  paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore
-  store?: OrbitHomeStore
+  homeStore?: OrbitHomeStore
 }
 
 const findManyType = integration =>
@@ -88,9 +88,9 @@ const Unpad = view({
   padding: [0, 0, 0, 14],
 })
 
-@view.attach('searchStore')
+@view.attach('searchStore', 'selectionStore', 'paneManagerStore')
 @view.attach({
-  store: OrbitHomeStore,
+  homeStore: OrbitHomeStore,
 })
 @view
 export class OrbitHome extends React.Component<Props> {
@@ -99,12 +99,12 @@ export class OrbitHome extends React.Component<Props> {
   }
 
   render() {
-    const { store } = this.props
+    const { homeStore } = this.props
     return (
       <SubPane name="home" fadeBottom>
         <div style={{ paddingTop: 3 }}>
-          {Object.keys(store.following).map(categoryName => {
-            const category = store.following[categoryName]
+          {Object.keys(homeStore.following).map(categoryName => {
+            const category = homeStore.following[categoryName]
             return (
               <Section key={categoryName}>
                 <SubTitle margin={0} padding={[10, 0, 0]}>

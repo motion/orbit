@@ -11,6 +11,7 @@ import { FindOptions } from 'typeorm'
 import { BitRepository, PersonRepository } from '../repositories'
 import { flatten } from 'lodash'
 import { SelectionStore } from './SelectionStore'
+import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 
 const TYPE_DEBOUNCE = 200
 
@@ -19,6 +20,7 @@ export class SearchStore {
     appStore: AppStore
     paneManagerStore: PaneManagerStore
     selectionStore: SelectionStore
+    integrationSettingsStore: IntegrationSettingsStore
   }
 
   nlpStore = new NLPStore()

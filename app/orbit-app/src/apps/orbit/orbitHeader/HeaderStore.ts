@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { SearchStore } from '../../../stores/SelectionStore'
-import { PaneManagerStore } from '../PaneManagerStore'
+import { HeaderProps } from './HeaderProps'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -12,10 +11,7 @@ const selectTextarea = el => {
 }
 
 export class HeaderStore {
-  props: {
-    searchStore: SearchStore
-    paneManagerStore: PaneManagerStore
-  }
+  props: HeaderProps
 
   inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false

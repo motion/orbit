@@ -25,8 +25,10 @@ export class SelectionStore {
     const disposeAppListen = App.onMessage(App.messages.CLEAR_SELECTED, () => {
       this.clearSelected()
     })
-    this.subscriptions.add(() => {
-      disposeAppListen()
+    this.subscriptions.add({
+      dispose: () => {
+        disposeAppListen()
+      },
     })
   }
 

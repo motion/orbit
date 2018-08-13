@@ -90,7 +90,7 @@ class OrbitDirectoryStore {
 }
 
 const decorator = compose(
-  view.attach('selectionStore'),
+  view.attach('selectionStore', 'paneManagerStore'),
   view.attach({
     store: OrbitDirectoryStore,
   }),

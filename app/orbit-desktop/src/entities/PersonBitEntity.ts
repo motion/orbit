@@ -1,14 +1,5 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  Index,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm'
 import { Bit, Person, PersonBit } from '@mcro/models'
+import { AfterLoad, BaseEntity, Column, Entity, getRepository, Index, OneToMany, PrimaryColumn } from 'typeorm'
 import { BitEntity } from './BitEntity'
 import { PersonEntity } from './PersonEntity'
 
@@ -16,6 +7,7 @@ import { PersonEntity } from './PersonEntity'
 export class PersonBitEntity extends BaseEntity implements PersonBit {
 
   target: 'person-bit' = 'person-bit'
+  bits: Bit[]
 
   @PrimaryColumn()
   email: string
@@ -53,11 +45,17 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
   @Column({ default: false })
   hasGmail: boolean
 
-  @ManyToMany(() => BitEntity)
-  @JoinTable()
-  bits: Bit[]
-
   @OneToMany(() => PersonEntity, person => person.personBit)
   people: Person[]
+
+  @AfterLoad()
+  async afterLoad() {
+    this.bits = await getRepository(BitEntity)
+      .createQueryBuilder("bit")
+      .innerJoin("bit.people", "bitPerson")
+      .innerJoin("bitPerson.personBit", "personBit", "personBit.email = :email")
+      .setParameters({ email: this.email })
+      .getMany()
+  }
 
 }

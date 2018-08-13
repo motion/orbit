@@ -135,25 +135,6 @@ export class GMailSyncer implements IntegrationSyncer {
     await this.setting.save()
   }
 
-  async reset(): Promise<void> {
-
-    // todo: this logic should be extracted into separate place where settings managed
-    // get entities for removal / updation
-    const bits = await getRepository(BitEntity).find({ settingId: this.setting.id })
-    const people = await getRepository(PersonEntity).find({ settingId: this.setting.id })
-
-    // remove entities
-    log(`removing ${bits.length} bits and ${people.length} people`, bits, people)
-    await getManager().remove([...bits, ...people])
-    log(`people were removed`)
-
-    // reset settings
-    this.setting.values.historyId = null
-    this.setting.values.lastSyncFilter = null
-    this.setting.values.lastSyncMax = null
-    await getRepository(SettingEntity).save(this.setting)
-  }
-
   private async createBit(thread: GmailThread): Promise<Bit> {
 
     const id = `gmail-${this.setting.id}-${thread.id}`
@@ -251,7 +232,6 @@ export class GMailSyncer implements IntegrationSyncer {
         email: person.integrationId,
         name: person.name,
         person,
-        bit,
       })
     }))
 

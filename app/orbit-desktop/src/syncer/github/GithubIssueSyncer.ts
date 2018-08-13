@@ -39,10 +39,6 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     log(`created ${createdIssues.length} issues`, createdIssues)
   }
 
-  async reset(): Promise<void> {
-
-  }
-
   private async createIssue(
     issue: GithubIssue,
     organization: string,

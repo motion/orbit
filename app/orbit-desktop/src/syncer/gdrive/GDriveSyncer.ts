@@ -45,10 +45,6 @@ export class GDriveSyncer implements IntegrationSyncer {
     log(`synced ${newlyCreatedPeople.length} people`)
   }
 
-  async reset(): Promise<void> {
-
-  }
-
   private createFile(file: GDriveLoadedFile): Promise<Bit | null> {
     return createOrUpdateBit(BitEntity, {
       integration: 'gdocs',

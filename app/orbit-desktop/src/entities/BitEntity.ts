@@ -1,4 +1,4 @@
-import { Bit, SlackBitData, GmailBitData, IntegrationType, Setting, Person } from '@mcro/models'
+import { Bit, GmailBitData, IntegrationType, Person, Setting, SlackBitData } from '@mcro/models'
 import {
   BaseEntity,
   BeforeInsert,
@@ -9,7 +9,8 @@ import {
   Index,
   JoinTable,
   ManyToMany,
-  ManyToOne, PrimaryColumn,
+  ManyToOne,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { hash } from '../helpers/createOrUpdateBit'

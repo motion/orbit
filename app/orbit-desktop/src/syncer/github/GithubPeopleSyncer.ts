@@ -38,10 +38,6 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     log('Created', allPeople ? allPeople.length : 0, 'people', allPeople)
   }
 
-  async reset(): Promise<void> {
-
-  }
-
   private async createPerson(githubPerson: GithubPerson) {
     const person = {
       location: githubPerson.location || '',

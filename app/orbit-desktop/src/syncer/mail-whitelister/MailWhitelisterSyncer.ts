@@ -52,8 +52,5 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
     log(`newly whitelisted emails`, newWhiteListedEmails)
   }
 
-  async reset(): Promise<void> {
-
-  }
 
 }

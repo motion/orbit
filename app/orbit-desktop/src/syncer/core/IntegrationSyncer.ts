@@ -11,12 +11,6 @@ export interface IntegrationSyncer {
    */
   run(): Promise<void>
 
-  /**
-   * Resets all the synchronization data.
-   * Useful when its necessary to run syncer from scratch.
-   */
-  reset(): Promise<void>
-
 }
 
 /**

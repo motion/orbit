@@ -21,10 +21,6 @@ export class JiraIssueSync implements IntegrationSyncer {
     log(`created ${issues.length} jira issues`, issues)
   }
 
-  async reset(): Promise<void> {
-
-  }
-
   private async syncIssues(startAt: number): Promise<Bit[]> {
     const maxResults = 100
     const url = `/rest/api/2/search?maxResults=${maxResults}&startAt=${startAt}`

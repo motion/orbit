@@ -51,10 +51,6 @@ export class ConfluenceSyncer implements IntegrationSyncer {
     )
   }
 
-  async reset(): Promise<void> {
-
-  }
-
   async syncBits(): Promise<Bit[]> {
     const contentList = await this.service.fetchAll(`/wiki/rest/api/content`)
     if (!contentList) {

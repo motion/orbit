@@ -23,10 +23,6 @@ export class JiraPersonSyncer implements IntegrationSyncer {
     log(`created ${people.length} jira people`, people)
   }
 
-  async reset(): Promise<void> {
-
-  }
-
   private async syncPeople(startAt: number): Promise<Person[]> {
     const maxResults = 1000
     const url = `/rest/api/2/user/search?maxResults=${maxResults}&startAt=${startAt}&username=_`

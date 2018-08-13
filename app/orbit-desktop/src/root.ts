@@ -24,6 +24,7 @@ import { Entities } from './entities'
 import { Onboard } from './onboard/Onboard'
 import { Logger, logger } from '@mcro/logger'
 import * as typeorm from 'typeorm'
+import { SyncerGroup } from './syncer/core/SyncerGroup'
 
 const log = logger('desktop')
 const hostile = promisifyAll(hostile_)
@@ -157,11 +158,20 @@ export class Root {
     root.Root = this
     root.restart = this.restart
     root.Logger = Logger
-    root.Syncers = Syncers.reduce((map, syncer) => {
+    root.Syncers = Syncers.reduce((map, syncerOrGroup) => {
+
       // since Syncers is an array we need to convert it to object
       // to make them more usable in the REPL.
       // we are using Syncer constructor name as an object key.
-      map[syncer.options.constructor.name] = syncer
+      if (syncerOrGroup instanceof SyncerGroup) {
+        map[syncerOrGroup.name] = syncerOrGroup
+        for (let syncer of syncerOrGroup.syncers) {
+            map[syncer.options.constructor.name] = syncer
+        }
+
+      } else {
+        map[syncerOrGroup.options.constructor.name] = syncerOrGroup
+      }
       return map
     }, {})
   }

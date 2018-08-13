@@ -3,7 +3,7 @@ import { view, react, compose, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import * as UI from '@mcro/ui'
-import { SearchStore } from '../../../../stores/SearchStore'
+import { SearchStore } from '../../../../stores/SelectionStore'
 import { AppStore } from '../../../../stores/AppStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
 
@@ -113,9 +113,7 @@ export const OrbitSearchQuickResults = decorate(
                   key={`${item.id}${index}`}
                   bit={item}
                   inGrid
-                  isSelected={() => {
-                    return searchStore.nextIndex === -1 && index === store.index
-                  }}
+                  index={index}
                   style={{
                     width: 240,
                     height: height - 20, // 20 == shadow space

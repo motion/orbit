@@ -2,7 +2,7 @@ import { Bit, Person } from '@mcro/models'
 import { AppStore } from '../../stores/AppStore'
 import { PeekStore } from './stores/PeekStore'
 import { AppStatePeekItem } from '@mcro/stores'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from '../../stores/SelectionStore'
 
 export type PeekContents = {
   title?: React.ReactNode

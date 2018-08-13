@@ -103,8 +103,9 @@ class OrbitDockedStore {
   )
 }
 
-@view.attach('appStore', 'searchStore')
+@view.attach('appStore')
 @view.provide({
+  searchStore: SearchStore,
   paneManagerStore: PaneManagerStore,
   store: OrbitDockedStore,
 })

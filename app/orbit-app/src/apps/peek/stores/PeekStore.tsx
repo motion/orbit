@@ -3,8 +3,6 @@ import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { PEEK_THEMES } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
-import { SearchStore } from '../../../stores/SearchStore'
-import * as Constants from '../../../constants'
 import {
   PersonRepository,
   BitRepository,
@@ -14,7 +12,6 @@ import {
 export class PeekStore {
   props: {
     appStore: AppStore
-    searchStore: SearchStore
     fixed?: boolean
   }
 
@@ -30,7 +27,7 @@ export class PeekStore {
   }
 
   scrollToHighlight = react(
-    () => this.props.searchStore.highlightIndex,
+    () => App.peekState.highlightIndex,
     async (index, { sleep }) => {
       if (typeof index !== 'number') {
         throw react.cancel
@@ -54,10 +51,10 @@ export class PeekStore {
   )
 
   goToNextHighlight = () => {
-    const { highlightIndex, setHighlightIndex } = this.props.searchStore
+    const { highlightIndex } = App.peekState
     // loop back to beginning once at end
     const next = (highlightIndex + 1) % this.highlights.length
-    setHighlightIndex(next)
+    App.actions.setHighlightIndex(next)
   }
 
   internalState = react(
@@ -250,10 +247,10 @@ export class PeekStore {
   }
 
   openItem = () => {
-    App.actions.openItem(this.props.searchStore.selectedItem)
+    App.actions.openItem(this.state.model)
   }
 
   copyItem = () => {
-    App.actions.copyLink(this.props.searchStore.selectedItem)
+    App.actions.copyLink(this.state.model)
   }
 }

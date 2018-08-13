@@ -13,6 +13,18 @@ const handleKeyDown = e => {
   }
 }
 
+const onFocus = () => {
+  App.setOrbitState({
+    inputFocused: true,
+  })
+}
+
+const onBlur = () => {
+  App.setOrbitState({
+    inputFocused: false,
+  })
+}
+
 export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
   return (
     <View
@@ -34,8 +46,8 @@ export const OrbitHeaderInput = view(({ searchStore, theme, headerStore }) => {
         highlight={headerStore.highlightWords}
         color={theme.base.color}
         onChange={searchStore.onChangeQuery}
-        onFocus={searchStore.onFocus}
-        onBlur={searchStore.onBlur}
+        onFocus={onFocus}
+        onBlur={onBlur}
         onKeyDown={handleKeyDown}
         forwardRef={headerStore.inputRef}
         onClick={headerStore.onClickInput}

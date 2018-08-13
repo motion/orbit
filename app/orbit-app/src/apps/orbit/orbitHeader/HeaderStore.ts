@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { SearchStore } from '../../../stores/SearchStore'
+import { SearchStore } from '../../../stores/SelectionStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
 const moveCursorToEndOfTextarea = el => {

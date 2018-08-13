@@ -1,78 +1,46 @@
-import { react, on } from '@mcro/black'
-import { App, Electron } from '@mcro/stores'
-import { FindOptions } from 'typeorm'
-import { Bit, Person } from '@mcro/models'
-import { BitRepository, PersonRepository } from '../repositories'
+import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
+import { App } from '@mcro/stores'
+import { react } from '@mcro/black'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
-import * as Helpers from '../helpers'
-import * as SearchStoreHelpers from './helpers/searchStoreHelpers'
 import { AppStore } from './AppStore'
-import { IntegrationSettingsStore } from './IntegrationSettingsStore'
-import { flatten } from 'lodash'
+import { Bit, Person } from '@mcro/models'
+import { matchSort } from './helpers/searchStoreHelpers'
 import { MarkType } from './nlpStore/types'
-import { logger } from '@mcro/logger'
+import { FindOptions } from 'typeorm'
+import { BitRepository, PersonRepository } from '../repositories'
+import { flatten } from 'lodash'
+import { SelectionStore } from './SelectionStore'
 
-const log = logger('searchStore')
 const TYPE_DEBOUNCE = 200
 
-export class SearchStore /* extends Store */ {
+export class SearchStore {
   props: {
     appStore: AppStore
-    integrationSettingsStore: IntegrationSettingsStore
+    paneManagerStore: PaneManagerStore
+    selectionStore: SelectionStore
   }
 
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore(this)
-
-  // start it with state from last time
-  query = App.state.query
-  lastPinKey = ''
-
-  selectEvent = ''
-  quickIndex = 0
-  highlightIndex = -1
-  nextIndex = -1
-  leaveIndex = -1
-  lastSelectAt = 0
-  _activeIndex = -1
-  getResults = null
-
   extraFiltersHeight = 325
   extraFiltersVisible = false
 
-  setActivePane = ref => {
-    console.log('setactivepane-----------', ref)
-  }
-
   willMount() {
-    on(this, window, 'keydown', this.windowKeyDown)
-
-    this.props.appStore.onPinKey(key => {
-      if (key === 'Delete') {
-        this.setQuery('')
-        return
-      }
-      const { lastPinKey } = this
-      if (!lastPinKey || lastPinKey != this.query[this.query.length - 1]) {
-        this.setQuery(key)
-      } else {
-        this.setQuery(this.query + key)
-      }
-      this.lastPinKey = key
-    })
-
-    const disposeAppListen = App.onMessage(App.messages.CLEAR_SELECTED, () => {
-      this.clearSelected()
-    })
-
     this.subscriptions.add({
       dispose: () => {
         this.nlpStore.subscriptions.dispose()
         this.searchFilterStore.subscriptions.dispose()
-        disposeAppListen()
       },
     })
+  }
+
+  get selectedItem(): Bit | Person {
+    const { results } = this.searchState
+    if (!results.length) {
+      return null
+    }
+    return results[this.props.selectionStore.activeIndex]
   }
 
   get isChanging() {
@@ -83,76 +51,36 @@ export class SearchStore /* extends Store */ {
     return this.props.appStore.selectedPane === 'docked-search'
   }
 
-  get isQuickSearchActive() {
-    return (
-      this.isOnSearchPane &&
-      this.activeIndex === -1 &&
-      !!this.quickSearchState.results.length
-    )
-  }
-
-  get activeIndex() {
-    this.lastSelectAt
-    return this._activeIndex
-  }
-
-  set activeIndex(val) {
-    this.lastSelectAt = Date.now()
-    this._activeIndex = val
-  }
-
-  get selectedItem(): Bit | Person {
-    if (this.activeIndex === -1) {
-      const { results } = this.quickSearchState
-      if (!results.length) {
-        return null
-      }
-      return results[this.quickIndex]
-    }
-    const { results } = this.searchState
-    if (!results.length) {
-      return null
-    }
-    return results[this.activeIndex]
-  }
-
-  get hasActiveIndex() {
-    return (
-      this.activeIndex > -1 &&
-      this.activeIndex < this.searchState.results.length
-    )
+  get isActive() {
+    return this.props.paneManagerStore.activePane === 'search'
   }
 
   get extraHeight() {
     return this.extraFiltersVisible ? this.extraFiltersHeight : 0
   }
 
-  get isActive() {
-    return this.props.appStore.selectedPane === 'docked-search'
+  hasQuery() {
+    return !!App.state.query
+  }
+
+  setExtraFiltersVisible = target => {
+    this.extraFiltersVisible = !!target
   }
 
   searchState = react(
     () => [
       App.state.query,
-      this.getResults,
       // filter updates
       this.searchFilterStore.activeFilters,
       this.searchFilterStore.exclusiveFilters,
       this.searchFilterStore.sortBy,
       this.searchFilterStore.dateState,
     ],
-    async ([query, getResults], { sleep, when, setValue, preventLogging }) => {
+    async ([query], { sleep, when, setValue, preventLogging }) => {
       if (!query) {
         return setValue({
           query,
-          results: getResults ? getResults() : [],
-        })
-      }
-      // these are all specialized searches, see below for main search logic
-      if (getResults && getResults.shouldFilter) {
-        return setValue({
-          query,
-          results: Helpers.fuzzy(query, getResults()),
+          results: [],
         })
       }
       let results
@@ -162,7 +90,7 @@ export class SearchStore /* extends Store */ {
       const isFilteringSlack = query[0] === '#'
       const isFilteringChannel = isFilteringSlack && query.indexOf(' ') === -1
       if (isFilteringSlack) {
-        channelResults = SearchStoreHelpers.matchSort(
+        channelResults = matchSort(
           query.split(' ')[0],
           this.props.appStore.services.slack.activeChannels.map(channel => ({
             id: channel.id,
@@ -357,7 +285,7 @@ export class SearchStore /* extends Store */ {
       const results = flatten([
         ...exactPeople,
         integrations.map(name => ({ name, icon: name })),
-        ...SearchStoreHelpers.matchSort(searchQuery, flatten(allResults)),
+        ...matchSort(searchQuery, flatten(allResults)),
       ]).filter(Boolean)
       return {
         query,
@@ -369,285 +297,4 @@ export class SearchStore /* extends Store */ {
       defaultValue: { results: [] },
     },
   )
-
-  // selectFirstItemAfterSearchSettles = react(
-  //   () => this.searchState.query,
-  //   async (query, { sleep }) => {
-  //     if (!query) {
-  //       throw react.cancel
-  //     }
-  //     await sleep(300)
-  //     console.log('it worked?')
-  //     if (this.nextIndex === -1) {
-  //       this.nextIndex = 0
-  //     }
-  //   },
-  // )
-
-  clearSelectedOnLeave = react(
-    () => [this.leaveIndex, Electron.hoverState.peekHovered],
-    async ([leaveIndex, peekHovered], { sleep, when }) => {
-      if (!peekHovered) {
-        await sleep(100)
-      }
-      await when(() => !peekHovered)
-      await sleep(100)
-      if (leaveIndex === -1) {
-        throw react.cancel
-      }
-      this.clearSelected()
-    },
-  )
-
-  clearPeekOnInactiveIndex = react(
-    () => this.activeIndex,
-    () => {
-      if (this.hasActiveIndex) {
-        throw react.cancel
-      }
-      App.actions.clearPeek()
-    },
-  )
-
-  resetActiveIndexOnPeekTarget = react(
-    () => App.peekState.target,
-    target => {
-      if (target || !this.hasActiveIndex) {
-        throw react.cancel
-      }
-      log(`ok clearing ${target} ${this.hasActiveIndex} ${this.activeIndex}`)
-      this.clearSelected()
-    },
-  )
-
-  resetActiveIndexOnKeyPastEnds = react(
-    () => this.nextIndex,
-    index => {
-      if (index === -1) {
-        this.activeIndex = this.nextIndex
-      } else {
-        const len = this.searchState.results.length
-        if (index >= len) {
-          this.nextIndex = len - 1
-          this.activeIndex = this.nextIndex
-        } else {
-          throw react.cancel
-        }
-      }
-    },
-  )
-
-  // delay for speed of rendering
-  updateActiveIndexToNextIndex = react(
-    () => this.nextIndex,
-    async (i, { sleep }) => {
-      await sleep(32)
-      this.activeIndex = i
-    },
-  )
-
-  resetActiveIndexOnNewSearchValue = react(
-    () => this.searchState.query,
-    async (_, { sleep }) => {
-      await sleep(16)
-      this.nextIndex = -1
-      this.activeIndex = -1
-    },
-  )
-
-  clearSelected = (clearPeek = true) => {
-    this.leaveIndex = -1
-    this.nextIndex = -1
-    this.activeIndex = -1
-    if (clearPeek) {
-      App.actions.clearPeek()
-    }
-  }
-
-  getHoverSettler = Helpers.hoverSettler({
-    enterDelay: 40,
-    betweenDelay: 40,
-    onHovered: res => {
-      // leave
-      if (!res) {
-        if (this.activeIndex !== -1) {
-          this.leaveIndex = this.activeIndex
-        }
-        return
-      }
-      this.leaveIndex = -1
-      this.toggleSelected(res.index)
-    },
-  })
-
-  toggleSelected = index => {
-    const isSame = this.activeIndex === index && this.activeIndex > -1
-    if (isSame && App.peekState.target) {
-      if (Date.now() - this.lastSelectAt < 70) {
-        // ignore really fast double clicks
-        console.log('isSame, ignore', index, this.activeIndex)
-        return isSame
-      }
-      this.clearSelected()
-    } else {
-      if (typeof index === 'number') {
-        this.nextIndex = index
-      }
-    }
-    return false
-  }
-
-  setHighlightIndex = highlightIndex => {
-    this.highlightIndex = +highlightIndex
-  }
-
-  clearIndexOnTarget = react(
-    () => App.peekState.target,
-    target => {
-      if (target) {
-        throw react.cancel
-      }
-      this.nextIndex = -1
-    },
-  )
-
-  setSelectEvent = (val: string) => {
-    this.selectEvent = val
-  }
-
-  increment = (by = 1) => {
-    this.setSelectEvent('key')
-    const max = this.searchState.results.length - 1
-    // dont go past end
-    if (this.nextIndex === max) {
-      return
-    }
-    this.toggleSelected(Math.min(max, this.nextIndex + by))
-  }
-
-  decrement = (by = 1) => {
-    this.setSelectEvent('key')
-    this.toggleSelected(Math.max(-1, this.nextIndex - by))
-  }
-
-  setGetResults = fn => {
-    this.getResults = fn
-  }
-
-  openSelected = () => {
-    if (this.selectedItem) {
-      this.props.appStore.open(this.selectedItem)
-      return true
-    }
-    return false
-  }
-
-  hasQuery() {
-    return !!App.state.query
-  }
-
-  setExtraFiltersVisible = target => {
-    this.extraFiltersVisible = !!target
-  }
-
-  updateAppQuery = react(
-    () => this.query,
-    async (query, { sleep }) => {
-      // slight debounce for super fast typing
-      await sleep(50)
-      App.setQuery(query)
-    },
-  )
-
-  clearQuery = () => {
-    this.query = ''
-  }
-
-  windowKeyDown = e => {
-    const { keyCode } = e
-    switch (keyCode) {
-      case 37: // left
-        if (this.isQuickSearchActive) {
-          this.decrementQuick()
-          return
-        }
-        this.emit('key', 'left')
-        return
-      case 39: // right
-        if (this.isQuickSearchActive) {
-          this.incrementQuick()
-          return
-        }
-        this.emit('key', 'right')
-        return
-      case 40: // down
-        this.increment()
-        return
-      case 38: // up
-        this.decrement()
-        return
-      case 13: // enter
-        e.preventDefault()
-        if (this.isQuickSearchActive) {
-          // two things happen:
-          //  first, if no target, open a peek
-          //  then, if peek already open, then open the item
-          if (App.peekState.target) {
-            this.openSelected()
-          } else {
-            // see OrbitSearchQuickResults
-            this.emit('key', 'enter')
-          }
-          return
-        }
-        if (App.orbitState.inputFocused) {
-          if (this.openSelected()) {
-            return
-          }
-        }
-        return
-    }
-  }
-
-  setQuery = value => {
-    this.query = value
-  }
-
-  onChangeQuery = e => {
-    this.query = e.target.value
-  }
-
-  onFocus = () => {
-    App.setOrbitState({
-      inputFocused: true,
-    })
-  }
-
-  onBlur = () => {
-    App.setOrbitState({
-      inputFocused: false,
-    })
-  }
-
-  resetQuickIndexOnChange = react(
-    () => this.quickSearchState,
-    () => {
-      this.quickIndex = 0
-    },
-    {
-      log: false,
-    },
-  )
-
-  incrementQuick = () => {
-    if (this.quickIndex < this.quickSearchState.results.length - 1) {
-      this.quickIndex += 1
-    }
-  }
-
-  decrementQuick = () => {
-    if (this.quickIndex > 0) {
-      this.quickIndex -= 1
-    }
-  }
 }

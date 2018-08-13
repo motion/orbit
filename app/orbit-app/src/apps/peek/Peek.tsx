@@ -8,7 +8,7 @@ import { PeekFrame } from './views/PeekFrame'
 import { AppStore } from '../../stores/AppStore'
 import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from '../../stores/SelectionStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
 
 type Props = {

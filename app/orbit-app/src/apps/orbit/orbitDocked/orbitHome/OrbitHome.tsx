@@ -4,7 +4,7 @@ import { BitRepository } from '../../../../repositories'
 import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SearchStore } from '../../../../stores/SearchStore'
+import { SelectionStore } from '../../../../stores/SelectionStore'
 import { Carousel } from '../../../../components/Carousel'
 import { capitalize } from 'lodash'
 import { View } from '@mcro/ui'
@@ -12,7 +12,7 @@ import { View } from '@mcro/ui'
 type Props = {
   name: string
   paneManagerStore: PaneManagerStore
-  searchStore?: SearchStore
+  selectionStore?: SelectionStore
   store?: OrbitHomeStore
 }
 
@@ -36,13 +36,10 @@ class OrbitHomeStore {
   setGetResults = react(
     () => [this.isActive, this.results],
     async ([isActive], { sleep }) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      await sleep(40)
-      this.props.searchStore.setGetResults(() => this.results)
+      if (!isActive) throw react.cancel
+      sleep()
+      this.props.selectionStore.setGetResult(index => this.results[index])
     },
-    { immediate: true },
   )
 
   get results() {

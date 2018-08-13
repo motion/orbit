@@ -42,6 +42,7 @@ class AppStore {
     clearPeek: Function
     setPeekTarget: Function
     setContextMessage: Function
+    setHighlightIndex: Function
   }
 
   messages = {

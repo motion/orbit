@@ -2,7 +2,7 @@ import * as React from 'react'
 import { on, react } from '@mcro/black'
 import { AppStore } from '../../stores/AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore } from '../../stores/SelectionStore'
 import { throttle } from 'lodash'
 
 function getTopOffset(element, parent?) {

@@ -1,5 +1,5 @@
 import { store, react } from '@mcro/black'
-import { SearchStore } from './SearchStore'
+import { SearchStore } from './SelectionStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { memoize, uniqBy } from 'lodash'
 import { MarkType, NLPResponse } from './nlpStore/types'

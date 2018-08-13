@@ -6,7 +6,7 @@ import { ControlButton } from '../../../views/ControlButton'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
-import { SearchStore } from '../../../stores/SearchStore'
+import { SearchStore } from '../../../stores/SelectionStore'
 
 const OrbitHeaderContainer = view({
   position: 'relative',

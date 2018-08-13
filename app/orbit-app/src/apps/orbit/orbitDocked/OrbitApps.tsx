@@ -6,7 +6,7 @@ import { SubPane } from '../SubPane'
 import * as Views from '../../../views'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
-import { SearchStore } from '../../../stores/SearchStore'
+import { SelectionStore } from '../../../stores/SelectionStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClickHandler'
 import { generalSettingQuery } from '../../../repositories/settingQueries'
@@ -22,23 +22,32 @@ import { settingsList } from '../../../helpers/settingsList'
 type Props = {
   name: string
   store?: OrbitAppsStore
-  searchStore?: SearchStore
   paneManagerStore?: PaneManagerStore
   integrationSettingsStore?: IntegrationSettingsStore
+  selectionStore?: SelectionStore
 }
 
 class OrbitAppsStore {
   props: Props
   integrationSettings: Setting[] = []
 
-  get isPaneActive() {
+  get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
   }
+
+  setGetResults = react(
+    () => [this.isActive, this.results],
+    async ([isActive], { sleep }) => {
+      if (!isActive) throw react.cancel
+      sleep()
+      this.props.selectionStore.setGetResult(index => this.results[index])
+    },
+  )
 
   private get rawInactiveApps() {
     // sort by not used first
     return settingsList.sort(
-      (a, b) => (!this.isActive(a) && this.isActive(b) ? -1 : 1),
+      (a, b) => (!this.isAppActive(a) && this.isAppActive(b) ? -1 : 1),
     )
   }
 
@@ -55,7 +64,7 @@ class OrbitAppsStore {
     }))
   }
 
-  get activeApps() {
+  get results() {
     return fuzzy(App.state.query, this.rawActiveApps, {
       key: 'title',
     })
@@ -92,7 +101,7 @@ class OrbitAppsStore {
   // this will go away soon...
   refreshSettings = modelQueryReaction(this.getSettings, val => {
     // only when pane active
-    if (!this.isPaneActive && this.integrationSettings.length) {
+    if (!this.isActive && this.integrationSettings.length) {
       throw react.cancel
     }
     this.updateIntegrationSettings(val)
@@ -103,7 +112,7 @@ class OrbitAppsStore {
     this.integrationSettings = next
   }
 
-  isActive = result => {
+  isAppActive = result => {
     return !!this.integrationSettings.find(
       setting => setting.type === result.id,
     )
@@ -114,7 +123,7 @@ const Unpad = view({
   margin: [0, -16],
 })
 
-@view.attach('searchStore', 'paneManagerStore', 'integrationSettingsStore')
+@view.attach('selectionStore', 'paneManagerStore', 'integrationSettingsStore')
 @view.attach({
   store: OrbitAppsStore,
 })
@@ -125,13 +134,13 @@ export class OrbitApps extends React.Component<Props> {
     return (
       <SubPane name={name} fadeBottom>
         <Views.Title>Apps</Views.Title>
-        {!!store.activeApps.length && (
+        {!!store.results.length && (
           <>
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
               gridAutoRows={80}
             >
-              {store.activeApps.map((result, index) => (
+              {store.results.map((result, index) => (
                 <store.IntegrationCard
                   key={result.id}
                   result={result}

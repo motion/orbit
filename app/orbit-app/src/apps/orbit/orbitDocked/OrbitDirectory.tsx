@@ -8,12 +8,12 @@ import { OrbitCard } from '../../../views/OrbitCard'
 import { Title } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
-import { SearchStore } from '../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
 import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
+import { SelectionStore } from '../../../stores/SelectionStore'
 
 const height = 69
 
@@ -28,9 +28,9 @@ const VerticalSpace = view({
 
 type Props = {
   store?: OrbitDirectoryStore
-  name: string
   paneManagerStore: PaneManagerStore
-  searchStore: SearchStore
+  selectionStore: SelectionStore
+  name: string
 }
 
 class OrbitDirectoryStore {
@@ -39,6 +39,15 @@ class OrbitDirectoryStore {
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
   }
+
+  setGetResults = react(
+    () => [this.isActive, this.results],
+    async ([isActive], { sleep }) => {
+      if (!isActive) throw react.cancel
+      sleep()
+      this.props.selectionStore.setGetResult(index => this.results[index])
+    },
+  )
 
   get peopleQuery() {
     const query = App.state.query
@@ -49,23 +58,23 @@ class OrbitDirectoryStore {
     return query.slice(prefix ? 1 : 0)
   }
 
-  people: Person[] = react(
+  results: Person[] = react(
     () => [this.peopleQuery, this.isActive],
     ([query, isActive], { state }) => {
       if (!isActive && state.hasResolvedOnce) {
         throw react.cancel
       }
-      return Helpers.fuzzy(query, this.results, {
+      return Helpers.fuzzy(query, this.allPeople, {
         key: 'name',
       })
     },
     { immediate: true, defaultValue: [] },
   )
 
-  results = modelQueryReaction(
+  allPeople = modelQueryReaction(
     () => PersonRepository.find({ take: 100, where: { integration: 'slack' } }),
     people => {
-      if (!this.isActive && this.results.length) {
+      if (!this.isActive && this.allPeople.length) {
         throw react.cancel
       }
       return sortBy(people, x => x.name.toLowerCase())
@@ -76,12 +85,12 @@ class OrbitDirectoryStore {
   )
 
   getIndex = id => {
-    return this.people.findIndex(x => x.id === id)
+    return this.results.findIndex(x => x.id === id)
   }
 }
 
 const decorator = compose(
-  view.attach('searchStore'),
+  view.attach('selectionStore'),
   view.attach({
     store: OrbitDirectoryStore,
   }),
@@ -125,8 +134,8 @@ const createSection = (people: Person[], letter, getIndex, total) => {
 }
 
 const OrbitDirectoryInner = view(({ store }: Props) => {
-  const { people } = store
-  const total = people.length
+  const { results } = store
+  const total = results.length
   if (!total) {
     return null
   }
@@ -134,7 +143,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   let sections = []
   let nextPeople = []
   let lastPersonLetter
-  for (const [index, person] of people.entries()) {
+  for (const [index, person] of results.entries()) {
     let letter = person.name[0].toLowerCase()
     const isNewSection = lastPersonLetter && letter !== lastPersonLetter
     if ((isNewSection && nextPeople.length) || index === total - 1) {

@@ -128,7 +128,7 @@ export class PeekHeaderContent extends React.Component<Props> {
                   zIndex={10000}
                   alignItems="center"
                 >
-                  <WindowControls onClose={App.actions.clearPeek} />
+                  <WindowControls onClose={peekStore.clearPeek} />
                   {/* {!!peekStore.hasHistory && (
                   <UI.Button icon="arrowminleft" circular size={0.8} />
                 )} */}

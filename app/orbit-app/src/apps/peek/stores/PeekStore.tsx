@@ -58,12 +58,10 @@ export class PeekStore {
   }
 
   internalState = react(
-    () => [
-      App.peekState.target /* App.orbitState.docked, App.orbitState.hidden */,
-    ],
-    async (_, { getValue, setValue, sleep }) => {
+    () => [App.peekState.target, this.tornState],
+    async ([target, tornState], { getValue, setValue, sleep }) => {
       const lastState = getValue().curState
-      const isShown = !!App.peekState.target && !!App.orbitState.docked
+      const isShown = !!tornState || (!!target && !!App.orbitState.docked)
       let nextState = {
         lastState,
         curState: lastState,
@@ -76,7 +74,7 @@ export class PeekStore {
       setValue(nextState)
       if (isShown) {
         // then load model and update again
-        const curState = await this.getCurState()
+        const curState = tornState || (await this.getCurState())
         await sleep()
         setValue({
           ...nextState,
@@ -97,9 +95,6 @@ export class PeekStore {
   )
 
   get state() {
-    if (this.tornState) {
-      return this.tornState
-    }
     if (this.willHide) {
       return this.internalState.lastState
     }
@@ -170,15 +165,10 @@ export class PeekStore {
     return this.history.length > 1
   }
 
-  unTear = react(
-    () => App.peekState.pinned,
-    pinned => {
-      if (pinned) {
-        throw react.cancel
-      }
-      this.clearTorn()
-    },
-  )
+  clearPeek = () => {
+    App.actions.clearPeek()
+    this.clearTorn()
+  }
 
   clearTorn = () => {
     this.dragOffset = null

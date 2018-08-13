@@ -106,10 +106,11 @@ const OrbitDockedInner = view({
 // }
 
 @view.attach('appStore', 'integrationSettingsStore')
-// selection and query are used by SearchStore
+@view.provide({
+  queryStore: QueryStore,
+})
 @view.provide({
   selectionStore: SelectionStore,
-  queryStore: QueryStore,
 })
 @view.provide({
   searchStore: SearchStore,

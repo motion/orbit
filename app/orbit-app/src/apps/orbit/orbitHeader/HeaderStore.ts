@@ -102,7 +102,7 @@ export class HeaderStore {
       if (pane === 'search' || pane === 'home') {
         throw react.cancel
       }
-      this.props.searchStore.clearQuery()
+      this.props.queryStore.clearQuery()
       this.focus()
     },
   )
@@ -126,7 +126,7 @@ export class HeaderStore {
       App.actions.closeOrbit()
     } else {
       if (App.state.query) {
-        this.props.searchStore.clearQuery()
+        this.props.queryStore.clearQuery()
       } else {
         this.props.paneManagerStore.setActivePane('home')
       }

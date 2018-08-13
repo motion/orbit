@@ -112,22 +112,22 @@ export class SelectionStore {
     },
   )
 
-  resetActiveIndexOnKeyPastEnds = react(
-    () => this.nextIndex,
-    index => {
-      if (index === -1) {
-        this.activeIndex = this.nextIndex
-      } else {
-        const len = this.searchState.results.length
-        if (index >= len) {
-          this.nextIndex = len - 1
-          this.activeIndex = this.nextIndex
-        } else {
-          throw react.cancel
-        }
-      }
-    },
-  )
+  // resetActiveIndexOnKeyPastEnds = react(
+  //   () => this.nextIndex,
+  //   index => {
+  //     if (index === -1) {
+  //       this.activeIndex = this.nextIndex
+  //     } else {
+  //       const len = this.searchState.results.length
+  //       if (index >= len) {
+  //         this.nextIndex = len - 1
+  //         this.activeIndex = this.nextIndex
+  //       } else {
+  //         throw react.cancel
+  //       }
+  //     }
+  //   },
+  // )
 
   // delay for speed of rendering
   updateActiveIndexToNextIndex = react(
@@ -196,12 +196,12 @@ export class SelectionStore {
 
   increment = (by = 1) => {
     this.setSelectEvent('key')
-    const max = this.searchState.results.length - 1
-    // dont go past end
-    if (this.nextIndex === max) {
+    const next = this.nextIndex + 1
+    const hasNextResult = this.getResult ? !!this.getResult(next) : true
+    if (!hasNextResult) {
       return
     }
-    this.toggleSelected(Math.min(max, this.nextIndex + by))
+    this.toggleSelected(Math.min(next, this.nextIndex + by))
   }
 
   decrement = (by = 1) => {
@@ -225,17 +225,17 @@ export class SelectionStore {
     const { keyCode } = e
     switch (keyCode) {
       case 37: // left
-        if (this.isInCarousel) {
-          this.decrement()
-          return
-        }
+        // if (this.isInCarousel) {
+        //   this.decrement()
+        //   return
+        // }
         this.emit('key', 'left')
         return
       case 39: // right
-        if (this.isInCarousel) {
-          this.increment()
-          return
-        }
+        // if (this.isInCarousel) {
+        //   this.increment()
+        //   return
+        // }
         this.emit('key', 'right')
         return
       case 40: // down

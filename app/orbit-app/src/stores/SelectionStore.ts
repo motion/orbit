@@ -3,12 +3,14 @@ import { App, Electron } from '@mcro/stores'
 import * as Helpers from '../helpers'
 import { AppStore } from './AppStore'
 import { logger } from '@mcro/logger'
+import { QueryStore } from './QueryStore'
 
 const log = logger('selectionStore')
 
 export class SelectionStore {
   props: {
     appStore: AppStore
+    queryStore: QueryStore
   }
 
   lastPinKey = ''
@@ -22,6 +24,19 @@ export class SelectionStore {
 
   willMount() {
     on(this, window, 'keydown', this.windowKeyDown)
+    this.props.appStore.onPinKey(key => {
+      if (key === 'Delete') {
+        this.props.queryStore.setQuery('')
+        return
+      }
+      const { query } = this.props.queryStore
+      if (!this.lastPinKey || this.lastPinKey != query[query.length - 1]) {
+        this.props.queryStore.setQuery(key)
+      } else {
+        this.props.queryStore.setQuery(query + key)
+      }
+      // this.lastPinKey = key
+    })
     const disposeAppListen = App.onMessage(App.messages.CLEAR_SELECTED, () => {
       this.clearSelected()
     })
@@ -52,6 +67,14 @@ export class SelectionStore {
     }
     return null
   }
+
+  resetActiveIndexOnNewSearchValue = react(
+    () => this.props.queryStore.query,
+    async (_, { sleep }) => {
+      await sleep(16)
+      this.clearSelected()
+    },
+  )
 
   clearSelectedOnLeave = react(
     () => [this.leaveIndex, Electron.hoverState.peekHovered],

@@ -57,6 +57,7 @@ export class ShortcutCapture extends Component<Props> {
     const { defaultValue, element, ...props } = this.props
     const { value } = this.state
     return cloneElement(element, {
+      readOnly: true,
       value: value || defaultValue,
       onKeyDown: this.keyDown,
       onFocus: this.select(element.props.onFocus),

@@ -9,7 +9,7 @@ import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
 import { Bit } from '@mcro/models'
-import { SearchStore } from '../stores/SelectionStore'
+import { SelectionStore } from '../stores/SelectionStore'
 import { AppStore } from '../stores/AppStore'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { EMPTY_ITEM } from '../constants'
@@ -20,7 +20,7 @@ export type OrbitCardProps = {
   total?: number
   hoverToSelect?: boolean
   appStore?: AppStore
-  searchStore?: SearchStore
+  selectionStore?: SelectionStore
   paneManagerStore?: PaneManagerStore
   subPaneStore?: SubPaneStore
   title?: React.ReactNode
@@ -254,7 +254,7 @@ class OrbitCardStore {
     if (this.props.inactive) {
       return
     }
-    this.props.searchStore.setSelectEvent('click')
+    this.props.selectionStore.setSelectEvent('click')
     App.actions.toggleSelectItem(this.target, this.position)
   }
 
@@ -283,8 +283,8 @@ class OrbitCardStore {
       return 16
     }
     // depending on type of move, adjust speed
-    if (this.props.searchStore) {
-      const { selectEvent } = this.props.searchStore
+    if (this.props.selectionStore) {
+      const { selectEvent } = this.props.selectionStore
       return selectEvent === 'key' ? 130 : 0
     }
     return 16
@@ -302,7 +302,7 @@ class OrbitCardStore {
   // this cancels to prevent renders very aggressively
   updateIsSelected = react(
     () => [
-      this.props.searchStore && this.props.searchStore.nextIndex,
+      this.props.selectionStore && this.props.selectionStore.nextIndex,
       this.props.subPaneStore && this.props.subPaneStore.isActive,
       typeof this.props.isSelected === 'function'
         ? this.props.isSelected()
@@ -346,7 +346,7 @@ class OrbitCardStore {
   )
 }
 
-@view.attach('appStore', 'searchStore', 'paneManagerStore', 'subPaneStore')
+@view.attach('appStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitCardStore,
 })
@@ -362,9 +362,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   constructor(a, b) {
     super(a, b)
     this.getOrbitCard = this.getOrbitCard.bind(this)
-    const { searchStore, hoverToSelect } = this.props
+    const { selectionStore, hoverToSelect } = this.props
     if (hoverToSelect) {
-      this.hoverSettler = searchStore.getHoverSettler()
+      this.hoverSettler = selectionStore.getHoverSettler()
       this.hoverSettler.setItem({
         index: this.props.index,
       })
@@ -412,7 +412,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       listItem,
       nextUpStyle,
       onClick,
-      searchStore,
+      selectionStore,
       store,
       titleProps,
       subtitleProps,
@@ -550,7 +550,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
 
   render() {
     const {
-      searchStore,
+      selectionStore,
       store,
       pane,
       bit,

@@ -13,6 +13,7 @@ export class SelectionStore {
     queryStore: QueryStore
   }
 
+  highlightIndex = -1
   lastPinKey = ''
   selectEvent = ''
   quickIndex = 0
@@ -219,6 +220,10 @@ export class SelectionStore {
       return true
     }
     return false
+  }
+
+  setHighlightIndex = index => {
+    this.highlightIndex = index
   }
 
   windowKeyDown = e => {

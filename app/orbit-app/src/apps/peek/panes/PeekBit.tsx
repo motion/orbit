@@ -54,7 +54,7 @@ export const PeekBit = ({
   item,
   bit,
   appStore,
-  searchStore,
+  selectionStore,
   peekStore,
   children,
 }: PeekPaneProps) => {
@@ -85,7 +85,7 @@ export const PeekBit = ({
             key={item.id}
             defaultValue={App.state.query}
             focusOnMount
-            onChange={() => searchStore.setHighlightIndex(0)}
+            onChange={() => selectionStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
             placeholder={`Search this ${item.subType} and related...`}
             searchBarProps={{

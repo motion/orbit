@@ -21,8 +21,7 @@ const macTheme = {
   highlight: '#dbe7fa', // used for text selection, tokens, etc.
   highlightActive: '#85afee', // active tokens
   titleBar: {
-    backgroundTop: '#eae9eb',
-    backgroundBottom: '#dcdbdc',
+    background: 'linear-gradient(to bottom, #eae9eb 0%, #dcdbdc 100%)',
     backgroundBlur: '#f6f6f6',
     border: '#c1c0c2',
     borderBlur: '#cecece',
@@ -66,26 +65,29 @@ export const themes = {
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
-  grey: Theme.fromStyles({
-    highlightBackground: [0, 0, 0, 0.05],
-    highlightColor,
-    background: greyBg,
-    color: '#222',
-    borderColor: greyActiveBg,
-    hover: {
-      background: greyHoverBg,
-    },
-    selected: {
-      background: color('#fff'),
-    },
-    active: {
-      background: orbitColor,
-      color: '#fff',
-    },
-    activeHover: {
-      background: greyActiveHoverBg,
-    },
-  }),
+  grey: {
+    ...macTheme,
+    ...Theme.fromStyles({
+      highlightBackground: [0, 0, 0, 0.05],
+      highlightColor,
+      background: greyBg,
+      color: '#222',
+      borderColor: greyActiveBg,
+      hover: {
+        background: greyHoverBg,
+      },
+      selected: {
+        background: color('#fff'),
+      },
+      active: {
+        background: orbitColor,
+        color: '#fff',
+      },
+      activeHover: {
+        background: greyActiveHoverBg,
+      },
+    }),
+  },
   tan: Theme.fromStyles({
     background: tanBg,
     color: '#656141',

@@ -5,6 +5,7 @@ import { forwardRef } from './helpers/forwardRef'
 const LINE_HEIGHT = 28
 
 export type SizedSurfaceProps = SurfaceProps & {
+  flex?: any
   circular?: boolean
   sizeHeight?: boolean | number
   sizeFont?: boolean | number

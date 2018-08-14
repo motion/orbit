@@ -112,6 +112,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     clicked: false,
     mounted: false,
     track: false,
+    willTrack: false,
     parentNode: null,
     position: { x: 0, y: 0 },
     bounds: { width: 0, height: 0, left: 0, top: 0 },

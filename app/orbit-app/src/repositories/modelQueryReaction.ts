@@ -40,7 +40,6 @@ export function modelQueryReaction<T extends ValidModel | ValidModel[]>(
     ...options,
   }
   const finalOptions: ReactionOptions = {
-    immediate: true,
     defaultValue: null,
     log: false,
     ...restOptions,

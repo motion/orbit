@@ -68,7 +68,7 @@ class OrbitDirectoryStore {
         key: 'name',
       })
     },
-    { immediate: true, defaultValue: [] },
+    { defaultValue: [] },
   )
 
   allPeople = modelQueryReaction(

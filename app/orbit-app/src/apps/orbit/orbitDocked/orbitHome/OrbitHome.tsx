@@ -6,10 +6,6 @@ import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import {
   SelectionStore,
-  SelectionResult,
-  SelectionResultGrid,
-  SelectionResultGridItem,
-  SelectionResultRaw,
   SelectionGroup,
 } from '../../../../stores/SelectionStore'
 import { Carousel } from '../../../../components/Carousel'
@@ -46,7 +42,6 @@ class OrbitHomeStore {
       if (!isActive) throw react.cancel
       this.props.selectionStore.setResults(this.results)
     },
-    { immediate: true },
   )
 
   get results() {
@@ -69,15 +64,10 @@ class OrbitHomeStore {
       // only return ones with results
       const all = { slack, drive, github, confluence, jira }
       const res = {} as any
-      let offset = 0
       for (const name in all) {
         if (all[name] && all[name].length) {
           const items = all[name]
-          res[capitalize(name)] = {
-            items,
-            offset,
-          }
-          offset += items.length
+          res[capitalize(name)] = items
         }
       }
       return res
@@ -106,11 +96,11 @@ export class OrbitHome extends React.Component<Props> {
   }
 
   render() {
-    const { homeStore } = this.props
+    const { homeStore, selectionStore } = this.props
     return (
       <SubPane name="home" fadeBottom>
         {Object.keys(homeStore.following).map(categoryName => {
-          const category = homeStore.following[categoryName]
+          const items = homeStore.following[categoryName]
           return (
             <Section key={categoryName}>
               <SubTitle margin={0} padding={[10, 0, 0]}>
@@ -118,8 +108,8 @@ export class OrbitHome extends React.Component<Props> {
               </SubTitle>
               <Unpad>
                 <Carousel
-                  items={category.items}
-                  offset={category.offset}
+                  items={items}
+                  getIndex={selectionStore.getIndexForItem}
                   cardProps={{
                     padding: 9,
                     hide: { body: true },

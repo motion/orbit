@@ -129,9 +129,6 @@ export class SubPaneStore {
       }
       this.props.appStore.setContentHeight(height)
     },
-    {
-      immediate: true,
-    },
   )
 
   addObserver = (node, cb) => {

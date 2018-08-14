@@ -52,7 +52,6 @@
 //       // log('set get results')
 //       this.props.searchStore.setGetResults(() => this.results)
 //     },
-//     { immediate: true },
 //   )
 
 //   results = react(

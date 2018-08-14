@@ -13,6 +13,7 @@ type CarouselProps = {
   after?: React.ReactNode
   children?: React.ReactNode
   offset?: number
+  getIndex?: Function
 }
 
 export class Carousel extends React.Component<CarouselProps> {
@@ -37,7 +38,7 @@ export class Carousel extends React.Component<CarouselProps> {
       cardHeight = 90,
       cardSpace = 12,
       cardProps = {},
-      offset = 0,
+      getIndex = null,
       before,
       after,
       ...props
@@ -54,9 +55,9 @@ export class Carousel extends React.Component<CarouselProps> {
             key={`${index}${bit.id}`}
             pane="carousel"
             bit={bit}
-            index={index + offset}
             total={items.length}
             inGrid
+            getIndex={getIndex}
             {...cardProps}
             style={{
               width: cardWidth,

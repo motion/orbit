@@ -120,7 +120,7 @@ class AppStore {
       await sleep(over ? 0 : App.animationDuration)
       setValue(over)
     },
-    { immediate: true, log: false },
+    { log: false },
   )
 
   last: Boolean

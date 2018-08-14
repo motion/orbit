@@ -19,6 +19,7 @@ import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { QueryStore } from '../../../stores/QueryStore'
+import { KeyboardStore } from '../../../stores/KeyboardStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -98,7 +99,6 @@ const OrbitDockedInner = view({
 //       // )
 //     },
 //     {
-//       immediate: true,
 //       log: false,
 //       defaultValue: { willAnimate: false, visible: App.orbitState.docked },
 //     },
@@ -108,13 +108,16 @@ const OrbitDockedInner = view({
 @view.attach('appStore', 'integrationSettingsStore')
 @view.provide({
   queryStore: QueryStore,
+  keyboardStore: KeyboardStore,
 })
 @view.provide({
   selectionStore: SelectionStore,
 })
 @view.provide({
-  searchStore: SearchStore,
   paneManagerStore: PaneManagerStore,
+})
+@view.provide({
+  searchStore: SearchStore,
 })
 @view
 export class OrbitDocked extends React.Component<Props> {

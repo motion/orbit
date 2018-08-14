@@ -42,7 +42,6 @@ export class HeaderStore {
     ([focused, nextIndex]) => {
       return focused && nextIndex === -1
     },
-    { immediate: true },
   )
 
   onInput = () => {

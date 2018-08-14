@@ -342,7 +342,6 @@ class OrbitCardStore {
         App.actions.selectItem(this.target, this.position)
       }
     },
-    { immediate: true },
   )
 }
 

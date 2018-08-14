@@ -4,10 +4,16 @@ import * as Helpers from '../helpers'
 import { AppStore } from './AppStore'
 import { logger } from '@mcro/logger'
 import { QueryStore } from './QueryStore'
+import { KeyboardStore } from './KeyboardStore'
 
 const log = logger('selectionStore')
 
-type Direction = 'left' | 'right' | 'up' | 'down'
+enum Direction {
+  left,
+  right,
+  up,
+  down,
+}
 
 export type SelectionResult = {
   moves?: Direction[]
@@ -16,7 +22,7 @@ export type SelectionResult = {
 
 export type SelectionGroup = {
   name: string
-  items: Partial<SelectionResult>[]
+  items: any[]
   type: 'row' | 'column'
   [key: string]: any
 }
@@ -26,6 +32,7 @@ export class SelectionStore {
   props: {
     appStore: AppStore
     queryStore: QueryStore
+    keyboardStore: KeyboardStore
   }
 
   highlightIndex = -1
@@ -38,8 +45,14 @@ export class SelectionStore {
   _activeIndex = -1
   results: SelectionResult[] = null
 
-  willMount() {
-    on(this, window, 'keydown', this.windowKeyDown)
+  didMount() {
+    on(this, this.props.keyboardStore, 'key', key => {
+      console.log('got key', key)
+      if (Direction[key]) {
+        this.move(key)
+      }
+    })
+
     this.props.appStore.onPinKey(key => {
       if (key === 'Delete') {
         this.props.queryStore.setQuery('')
@@ -56,6 +69,7 @@ export class SelectionStore {
     const disposeAppListen = App.onMessage(App.messages.CLEAR_SELECTED, () => {
       this.clearSelected()
     })
+
     this.subscriptions.add({
       dispose: () => {
         disposeAppListen()
@@ -184,6 +198,7 @@ export class SelectionStore {
       throw new Error('No results')
     }
     const nextIndex = this.getNextIndex(this.activeIndex, direction)
+    console.log('nextIndex', nextIndex)
     if (nextIndex !== this.activeIndex) {
       this.toggleSelected(nextIndex)
     }
@@ -191,6 +206,9 @@ export class SelectionStore {
 
   getNextIndex = (curIndex, direction) => {
     if (curIndex === -1) {
+      if (direction === 'right' || direction === 'left' || direction === 'up') {
+        return
+      }
       return this.results.length ? 0 : -1
     }
     const curResult = this.results[curIndex]
@@ -242,12 +260,16 @@ export class SelectionStore {
             index < items.length - 1 ? 'right' : null,
             index > 0 ? 'left' : null,
             ...downMoves,
-          ],
+          ] as Direction[],
         }))
         results = [...results, ...nextMoves]
       }
     }
     this.results = results
+  }
+
+  getIndexForItem = id => {
+    return this.results.findIndex(x => x.item.id === id)
   }
 
   openSelected = () => {
@@ -260,32 +282,5 @@ export class SelectionStore {
 
   setHighlightIndex = index => {
     this.highlightIndex = index
-  }
-
-  windowKeyDown = e => {
-    const { keyCode } = e
-    this.setSelectEvent('key')
-    switch (keyCode) {
-      case 37: // left
-        this.move('left')
-        return
-      case 39: // right
-        this.move('right')
-        return
-      case 40: // down
-        this.move('down')
-        return
-      case 38: // up
-        this.move('up')
-        return
-      case 13: // enter
-        e.preventDefault()
-        if (App.orbitState.inputFocused) {
-          if (this.openSelected()) {
-            return
-          }
-        }
-        return
-    }
   }
 }

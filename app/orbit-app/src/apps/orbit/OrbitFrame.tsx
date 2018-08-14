@@ -92,7 +92,6 @@ class FrameStore {
       }
     },
     {
-      immediate: true,
       defaultValue: { willAnimate: false, hidden: true },
     },
   )

@@ -43,7 +43,6 @@ export class SearchStore {
       if (!isActive) throw react.cancel
       this.props.selectionStore.setResults(this.results)
     },
-    { immediate: true },
   )
 
   // aggregated results for selection store
@@ -52,7 +51,10 @@ export class SearchStore {
     async (query, { when }) => {
       await when(() => query === this.quickSearchState.query)
       await when(() => query === this.searchState.query)
-      return [...this.quickSearchState.results, ...this.searchState.results]
+      return [
+        { type: 'row', items: this.quickSearchState.results },
+        { type: 'column', items: this.searchState.results },
+      ]
     },
   )
 
@@ -221,7 +223,7 @@ export class SearchStore {
             for (const name of peopleFilters) {
               findOptions.where.push({
                 ...andConditions,
-                person: {
+                people: {
                   name: { $like: `%${name}%` },
                 },
               })
@@ -263,7 +265,6 @@ export class SearchStore {
     },
     {
       defaultValue: { results: [], query: '' },
-      immediate: true,
     },
   )
 
@@ -306,7 +307,6 @@ export class SearchStore {
       }
     },
     {
-      immediate: true,
       defaultValue: { results: [] },
     },
   )

@@ -229,6 +229,5 @@ export class AppReactions /* extends Store */ {
         orbitDocked,
       })
     },
-    { immediate: true },
   )
 }

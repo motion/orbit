@@ -45,9 +45,6 @@ export class PeekStore {
       // move frame to center the highlight but 100px more towards the top which looks nicer
       frame.scrollTop = activeHighlight.offsetTop - frame.clientHeight / 2 + 100
     },
-    {
-      immediate: true,
-    },
   )
 
   goToNextHighlight = () => {
@@ -83,7 +80,6 @@ export class PeekStore {
       }
     },
     {
-      immediate: true,
       defaultValue: {
         lastState: null,
         curState: null,

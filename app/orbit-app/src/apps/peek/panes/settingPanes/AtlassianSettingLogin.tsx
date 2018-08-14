@@ -56,9 +56,6 @@ class AtlassianSettingLoginStore {
       if (setting) return setting
       return await SettingRepository.save(values)
     },
-    {
-      immediate: true,
-    },
   )
 
   updateValuesFromSetting = react(
@@ -76,9 +73,6 @@ class AtlassianSettingLoginStore {
         }
       }
       this.values = setting.values.atlassian
-    },
-    {
-      immediate: true,
     },
   )
 

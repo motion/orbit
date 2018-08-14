@@ -123,9 +123,6 @@ export class PaneManagerStore {
       }
       return active
     },
-    {
-      immediate: true,
-    },
   )
 
   lastActivePane = react(() => this.activePane, _ => _, { delayValue: true })

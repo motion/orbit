@@ -40,7 +40,6 @@ export class NLPStore /* extends Store */ {
       }
     },
     {
-      immediate: true,
       defaultValue: DEFAULT_NLP,
     },
   )

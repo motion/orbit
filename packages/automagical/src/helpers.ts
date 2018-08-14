@@ -1,8 +1,8 @@
 import * as Mobx from 'mobx'
-import {logger} from '@mcro/logger'
+import { logger } from '@mcro/logger'
 import { MagicalObject, ReactionOptions } from './types'
 
-const PREFIX = `=>`
+const PREFIX = '=>'
 
 export const Root = typeof window !== 'undefined' ? window : require('global')
 
@@ -29,13 +29,6 @@ export const getReactionName = (obj: MagicalObject) => {
 export function getReactionOptions(userOptions?: ReactionOptions) {
   let options: ReactionOptions = {
     equals: Mobx.comparer.structural,
-  }
-  if (userOptions.immediate) {
-    options.fireImmediately = true
-    delete userOptions.immediate
-  }
-  if (userOptions === true) {
-    options.fireImmediately = true
   }
   if (userOptions instanceof Object) {
     options = { ...options, ...userOptions }

@@ -27,12 +27,20 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
     delayValue,
     defaultValue,
     onlyUpdateIfChanged,
+    deferFirstRun,
     trace,
     ...options
   } = getReactionOptions({
     name: method,
     ...userOptions,
   })
+
+  let mobxOptions = options as Mobx.IReactionOptions
+
+  // we run immediately by default
+  // its the 95% use case and causes less bugs
+  mobxOptions.fireImmediately = !deferFirstRun
+
   const delayLog =
     options && options.delay >= 0 ? ` (...${options.delay}ms)` : ''
   const methodName = `${getReactionName(obj)}.${method}`
@@ -104,8 +112,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           )
         }
         // reaction
-        // @ts-ignore
-        stopReaction = Mobx.reaction(val[0], watcher(val[1]), options)
+        stopReaction = Mobx.reaction(val[0], watcher(val[1]), mobxOptions)
       } else {
         if (typeof val !== 'function') {
           throw new Error(
@@ -113,7 +120,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
           )
         }
         //autorun
-        stopReaction = Mobx.autorun(watcher(val), options)
+        stopReaction = Mobx.autorun(watcher(val), mobxOptions)
       }
     }, 0)
   }
@@ -277,7 +284,7 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
       }
 
       const changed = Root.__trackStateChanges.changed
-      const prefix = `${name} ${isReaction ? `@r` : `@w`}`
+      const prefix = `${name} ${isReaction ? '@r' : '@w'}`
       Root.__trackStateChanges = {}
 
       // handle promises
@@ -323,9 +330,9 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
             `${prefix}`,
             reactValArg,
             ...logRes(result),
-            `\n\n CHANGED:`,
+            '\n\n CHANGED:',
             changed,
-            `\n\n`,
+            '\n\n',
           )
         } else {
           if (options.log !== 'state') {

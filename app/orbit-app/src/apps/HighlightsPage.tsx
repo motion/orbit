@@ -92,13 +92,11 @@ const Frame = view(UI.Col, {
     hoverOCRLines = react(
       () => Desktop.ocrState.lines,
       this.setupHover('line'),
-      { immediate: true },
     )
 
     hoverOCRWords = react(
       () => this.ocrWords, //Desktop.ocrState.words,
       this.setupHover('word'),
-      { immediate: true },
     )
 
     get showAll() {

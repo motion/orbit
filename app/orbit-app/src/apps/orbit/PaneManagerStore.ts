@@ -3,6 +3,7 @@ import { App } from '@mcro/stores'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { generalSettingQuery } from '../../repositories/settingQueries'
 import { modelQueryReaction } from '../../repositories/modelQueryReaction'
+import { KeyboardStore } from '../../stores/KeyboardStore'
 
 // filters = ['all', 'general', 'status', 'showoff']
 // panes = [...this.mainPanes, ...this.filters]
@@ -10,16 +11,15 @@ import { modelQueryReaction } from '../../repositories/modelQueryReaction'
 export class PaneManagerStore {
   props: {
     selectionStore: SelectionStore
+    keyboardStore: KeyboardStore
   }
 
   panes = ['home', 'directory', 'apps', 'settings']
   paneIndex = 0
 
   willMount() {
-    on(this, this.props.selectionStore, 'key', key => {
-      // no keyshortcuts when peek is open
+    on(this, this.props.keyboardStore, 'key', key => {
       if (!App.orbitState.inputFocused) {
-        console.log('not input focused')
         return
       }
       if (App.state.query) {

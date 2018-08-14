@@ -1,8 +1,11 @@
 import * as React from 'react'
 import { OrbitCard } from '../views/OrbitCard'
-import { HorizontalScrollRow } from '../views/HorizontalScrollRow'
+import {
+  HorizontalScrollRow,
+  HorizontalScrollRowProps,
+} from '../views/HorizontalScrollRow'
 
-type CarouselProps = {
+type CarouselProps = HorizontalScrollRowProps & {
   items?: any[]
   verticalPadding?: number
   cardWidth?: number
@@ -13,20 +16,30 @@ type CarouselProps = {
   after?: React.ReactNode
   children?: React.ReactNode
   offset?: number
-  getIndex?: Function
+  scrollTo?: number
+  className?: string
 }
 
 export class Carousel extends React.Component<CarouselProps> {
   frameRef = React.createRef<HTMLDivElement>()
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.scrollTo != this.props.scrollTo) {
+      this.scrollTo(this.props.scrollTo)
+    }
+  }
+
   get cardRefs(): HTMLDivElement[] {
-    return Array.from(this.frameRef.current.querySelectorAll('.result-item'))
+    return Array.from(
+      this.frameRef.current.querySelectorAll('.carousel-result-item'),
+    )
   }
 
   scrollTo = index => {
     const frame = this.frameRef.current
     if (!frame) return
     const activeCard = this.cardRefs[index]
+    if (!activeCard) return
     frame.scrollLeft = activeCard.offsetLeft - 12
   }
 
@@ -38,7 +51,8 @@ export class Carousel extends React.Component<CarouselProps> {
       cardHeight = 90,
       cardSpace = 12,
       cardProps = {},
-      getIndex = null,
+      offset = 0,
+      className,
       before,
       after,
       ...props
@@ -53,11 +67,12 @@ export class Carousel extends React.Component<CarouselProps> {
         {(items || []).map((bit, index) => (
           <OrbitCard
             key={`${index}${bit.id}`}
+            index={index + offset}
+            className={`carousel-result-item ${className || ''}`}
             pane="carousel"
             bit={bit}
             total={items.length}
             inGrid
-            getIndex={getIndex}
             {...cardProps}
             style={{
               width: cardWidth,

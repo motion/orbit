@@ -82,7 +82,6 @@ const Section = view()
 
 const Unpad = view({
   margin: [0, -16],
-  padding: [0, 0, 0, 14],
 })
 
 @view.attach('searchStore', 'selectionStore', 'paneManagerStore')
@@ -109,8 +108,9 @@ export class OrbitHome extends React.Component<Props> {
               <Unpad>
                 <Carousel
                   items={items}
-                  getIndex={selectionStore.getIndexForItem}
+                  horizontalPadding={16}
                   cardProps={{
+                    getIndex: selectionStore.getIndexForItem,
                     padding: 9,
                     hide: { body: true },
                     titleFlex: 1,

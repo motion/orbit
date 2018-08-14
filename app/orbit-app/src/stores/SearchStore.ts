@@ -47,13 +47,14 @@ export class SearchStore {
 
   // aggregated results for selection store
   results = react(
-    () => App.state.query,
-    async (query, { when }) => {
-      await when(() => query === this.quickSearchState.query)
-      await when(() => query === this.searchState.query)
+    () => [App.state.query, this.quickSearchState, this.searchState],
+    async ([query, quickState, searchState], { when }) => {
+      await when(
+        () => query === quickState.query && query === searchState.query,
+      )
       return [
-        { type: 'row', items: this.quickSearchState.results },
-        { type: 'column', items: this.searchState.results },
+        { type: 'row', items: quickState.results },
+        { type: 'column', items: searchState.results },
       ]
     },
   )

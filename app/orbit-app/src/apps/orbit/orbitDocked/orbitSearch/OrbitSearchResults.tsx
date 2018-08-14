@@ -75,8 +75,8 @@ const OrbitSearchResultsList = view(
       <OrbitCard
         pane={name}
         subPane="search"
-        key={`${index}${bit.id}`}
-        index={index}
+        key={bit.id}
+        getIndex={selectionStore.getIndexForItem}
         total={results.length}
         bit={bit}
         listItem
@@ -110,27 +110,36 @@ const OrbitSearchResultsFrame = view({
   transition: 'all ease 100ms',
 })
 
-const OrbitSearchResultsContents = view(({ name, searchStore }) => {
-  const { isChanging, message } = searchStore
-  return (
-    <OrbitSearchResultsFrame
-      style={{
-        opacity: isChanging ? 0.3 : 1,
-      }}
-    >
-      {message ? <div>{message}</div> : null}
-      <OrbitSearchQuickResults searchStore={searchStore} />
-      <OrbitSearchResultsList searchStore={searchStore} name={name} />
-      <div style={{ height: 20 }} />
-    </OrbitSearchResultsFrame>
-  )
-})
+const OrbitSearchResultsContents = view(
+  ({ name, searchStore, selectionStore }) => {
+    const { isChanging, message } = searchStore
+    return (
+      <OrbitSearchResultsFrame
+        style={{
+          opacity: isChanging ? 0.3 : 1,
+        }}
+      >
+        {message ? <div>{message}</div> : null}
+        <OrbitSearchQuickResults
+          searchStore={searchStore}
+          selectionStore={selectionStore}
+        />
+        <OrbitSearchResultsList
+          searchStore={searchStore}
+          selectionStore={selectionStore}
+          name={name}
+        />
+        <div style={{ height: 20 }} />
+      </OrbitSearchResultsFrame>
+    )
+  },
+)
 
-@view.attach('searchStore', 'paneManagerStore')
+@view.attach('searchStore', 'selectionStore', 'paneManagerStore')
 @view
 export class OrbitSearchResults extends React.Component<Props> {
   render() {
-    const { searchStore, name } = this.props
+    const { searchStore, selectionStore, name } = this.props
     const hideHeight = searchStore.extraFiltersVisible
       ? 0
       : searchStore.extraFiltersHeight
@@ -152,7 +161,11 @@ export class OrbitSearchResults extends React.Component<Props> {
         extraCondition={this.props.searchStore.hasQuery}
         before={<OrbitSearchFilters />}
       >
-        <OrbitSearchResultsContents searchStore={searchStore} name={name} />
+        <OrbitSearchResultsContents
+          selectionStore={selectionStore}
+          searchStore={searchStore}
+          name={name}
+        />
       </SubPane>
     )
   }

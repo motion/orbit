@@ -1,46 +1,11 @@
 import * as React from 'react'
-import { view, react, compose, on } from '@mcro/black'
-import { App } from '@mcro/stores'
+import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import * as UI from '@mcro/ui'
-import { SearchStore } from '../../../../stores/SelectionStore'
+import { SearchStore } from '../../../../stores/SearchStore'
 import { AppStore } from '../../../../stores/AppStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
-
-class QuickSearchStore {
-  props: {
-    searchStore: SearchStore
-  }
-
-  frameRef = React.createRef<HTMLDivElement>()
-
-  willMount() {
-    on(this, this.searchStore, 'key', val => {
-      if (val === 'enter') {
-        App.actions.selectItem(
-          this.quickResults[this.index],
-          this.cardRefs[this.index],
-        )
-      }
-    })
-  }
-
-  get searchStore() {
-    return this.props.searchStore
-  }
-
-  get quickResults() {
-    return this.searchStore.quickSearchState.results
-  }
-
-  get index() {
-    return this.searchStore.quickIndex
-  }
-
-  get isChanging() {
-    return App.state.query !== this.searchStore.quickSearchState.query
-  }
-}
+import { SelectionStore } from '../../../../stores/SelectionStore'
 
 const height = 100
 const pad = 12
@@ -61,9 +26,7 @@ const QuickResultsFrame = view(UI.Row, {
 })
 
 const decorate = compose(
-  view.attach({
-    store: QuickSearchStore,
-  }),
+  view.attach('selectionStore'),
   view,
 )
 
@@ -71,31 +34,28 @@ type Props = {
   appStore?: AppStore
   paneManagerStore?: PaneManagerStore
   searchStore: SearchStore
-  store: QuickSearchStore
+  selectionStore: SelectionStore
 }
 
 export const OrbitSearchQuickResults = decorate(
-  ({ searchStore, store }: Props) => {
+  ({ searchStore, selectionStore }: Props) => {
     const { results } = searchStore.quickSearchState
     return (
       <QuickResultsFrameHideScrollBar height={results.length ? frameHeight : 0}>
-        <QuickResultsFrame
-          opacity={store.isChanging ? 0.5 : 1}
-          forwardRef={store.frameRef}
-        >
+        <QuickResultsFrame>
           {/* inner div so scrolls to end all the way */}
           <div style={{ flexFlow: 'row', padding: pad }}>
-            {results.map((item, index) => {
+            {results.map(item => {
               return (
                 <OrbitCard
                   preventAutoSelect
                   pane="docked-search"
                   subPane="search"
                   className="quick-result-card"
-                  key={`${item.id}${index}`}
+                  key={item.id}
                   bit={item}
+                  getIndex={selectionStore.getIndexForItem}
                   inGrid
-                  index={index}
                   style={{
                     width: 240,
                     height: height - 20, // 20 == shadow space
@@ -107,7 +67,6 @@ export const OrbitSearchQuickResults = decorate(
                   hide={{
                     icon: true,
                   }}
-                  onClick={searchStore.toggleSelected}
                 />
               )
             })}

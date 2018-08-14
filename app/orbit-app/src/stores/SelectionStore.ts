@@ -47,7 +47,6 @@ export class SelectionStore {
 
   didMount() {
     on(this, this.props.keyboardStore, 'key', key => {
-      console.log('got key', key)
       if (Direction[key]) {
         this.move(key)
       }
@@ -98,7 +97,7 @@ export class SelectionStore {
     return null
   }
 
-  resetActiveIndexOnNewSearchValue = react(
+  clearSelectedOnSearch = react(
     () => this.props.queryStore.query,
     async (_, { sleep }) => {
       await sleep(16)
@@ -131,7 +130,7 @@ export class SelectionStore {
     },
   )
 
-  resetActiveIndexOnPeekTarget = react(
+  clearSelectedOnClosePeek = react(
     () => App.peekState.target,
     target => {
       if (target || !this.hasActiveIndex) {
@@ -206,22 +205,23 @@ export class SelectionStore {
 
   getNextIndex = (curIndex, direction) => {
     if (curIndex === -1) {
-      if (direction === 'right' || direction === 'left' || direction === 'up') {
-        return
+      if (direction === Direction.down) {
+        return this.results.length ? 0 : -1
       }
-      return this.results.length ? 0 : -1
+      return
     }
     const curResult = this.results[curIndex]
     const canMoveOne =
       curResult && curResult.moves.some(move => move === direction)
     if (canMoveOne) {
       switch (direction) {
-        case 'right':
+        case Direction.right:
           return curIndex + 1
-        case 'left':
+        case Direction.left:
           return curIndex - 1
         default:
-          const rowDirection = direction === 'down' ? 'right' : 'left'
+          const rowDirection =
+            direction === Direction.down ? Direction.right : Direction.left
           const movesToNextRow = this.movesToNextRow(rowDirection, curIndex)
           return curIndex + movesToNextRow
       }
@@ -253,15 +253,32 @@ export class SelectionStore {
     const numGroups = resultGroups.length
     for (const [groupIndex, { items, type }] of resultGroups.entries()) {
       if (type === 'row') {
-        const downMoves = groupIndex < numGroups ? ['down', 'up'] : ['up']
+        const downMoves =
+          groupIndex < numGroups
+            ? [Direction.down, Direction.up]
+            : [Direction.up]
         const nextMoves = items.map((item, index) => ({
           item,
           moves: [
-            index < items.length - 1 ? 'right' : null,
-            index > 0 ? 'left' : null,
+            index < items.length - 1 ? Direction.right : null,
+            index > 0 ? Direction.left : null,
             ...downMoves,
-          ] as Direction[],
+          ],
         }))
+        results = [...results, ...nextMoves]
+      }
+      if (type === 'column') {
+        const hasPrevResults = !!results.length
+        const nextMoves = items.map((item, index) => {
+          const moves = []
+          if (index < items.length - 1) {
+            moves.push(Direction.down)
+          }
+          if (hasPrevResults || index > 0) {
+            moves.push(Direction.up)
+          }
+          return { moves, item }
+        })
         results = [...results, ...nextMoves]
       }
     }

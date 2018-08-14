@@ -40,24 +40,6 @@ class QuickSearchStore {
   get isChanging() {
     return App.state.query !== this.searchStore.quickSearchState.query
   }
-
-  get cardRefs(): HTMLDivElement[] {
-    return Array.from(
-      this.frameRef.current.querySelectorAll('.quick-result-card'),
-    )
-  }
-
-  scrollToSelected = react(
-    () => this.index,
-    index => {
-      const frame = this.frameRef.current
-      if (!frame) {
-        throw react.cancel
-      }
-      const activeCard = this.cardRefs[index]
-      frame.scrollLeft = activeCard.offsetLeft - 12
-    },
-  )
 }
 
 const height = 100

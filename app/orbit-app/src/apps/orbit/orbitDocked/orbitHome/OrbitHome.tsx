@@ -4,7 +4,14 @@ import { BitRepository } from '../../../../repositories'
 import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SelectionStore } from '../../../../stores/SelectionStore'
+import {
+  SelectionStore,
+  SelectionResult,
+  SelectionResultGrid,
+  SelectionResultGridItem,
+  SelectionResultRaw,
+  SelectionGroup,
+} from '../../../../stores/SelectionStore'
 import { Carousel } from '../../../../components/Carousel'
 import { capitalize } from 'lodash'
 import { View } from '@mcro/ui'
@@ -36,70 +43,16 @@ class OrbitHomeStore {
   setSelectionHandler = react(
     () => [this.isActive, this.results],
     ([isActive]) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      this.props.selectionStore.setHandler({
-        getResult: index =>
-          this.results[index] ? this.results[index].item : null,
-        getNextIndex: (curIndex, direction) => {
-          if (curIndex === -1) {
-            return !!this.results.length ? 0 : -1
-          }
-          const curResult = this.results[curIndex]
-          const canMoveOne =
-            curResult && curResult.moves.some(move => move === direction)
-          if (canMoveOne) {
-            switch (direction) {
-              case 'right':
-                return curIndex + 1
-              case 'left':
-                return curIndex - 1
-              default:
-                const rowDirection = direction === 'down' ? 'right' : 'left'
-                const movesToNextRow = this.movesToNextRow(
-                  rowDirection,
-                  curIndex,
-                )
-                return curIndex + movesToNextRow
-            }
-          }
-          return curIndex
-        },
-      })
+      if (!isActive) throw react.cancel
+      this.props.selectionStore.setResults(this.results)
     },
     { immediate: true },
   )
 
-  movesToNextRow = (dir, curIndex) => {
-    const amt = dir === 'right' ? 1 : -1
-    const all = this.results
-    const hasMove = index => all[index] && all[index].moves.indexOf(dir) > -1
-    let movesToNextRow = amt
-    while (hasMove(curIndex + movesToNextRow)) {
-      movesToNextRow += amt
-    }
-    if (dir === 'right') {
-      movesToNextRow += amt
-    }
-    return movesToNextRow
-  }
-
   get results() {
-    let results = []
-    const rows = Object.keys(this.following)
-    for (const [rowIndex, row] of rows.entries()) {
-      const rowItems = this.following[row].items
-      const downMoves = rowIndex < rows.length ? ['down', 'up'] : ['up']
-      const nextMoves = rowItems.map((item, index) => ({
-        item,
-        moves: [
-          index < rowItems.length - 1 ? 'right' : null,
-          index > 0 ? 'left' : null,
-          ...downMoves,
-        ],
-      }))
-      results = [...results, ...nextMoves]
+    let results: SelectionGroup[] = []
+    for (const name in this.following) {
+      results.push({ name, type: 'row', items: this.following[name] })
     }
     return results
   }
@@ -156,30 +109,28 @@ export class OrbitHome extends React.Component<Props> {
     const { homeStore } = this.props
     return (
       <SubPane name="home" fadeBottom>
-        <div style={{ paddingTop: 3 }}>
-          {Object.keys(homeStore.following).map(categoryName => {
-            const category = homeStore.following[categoryName]
-            return (
-              <Section key={categoryName}>
-                <SubTitle margin={0} padding={[10, 0, 0]}>
-                  {categoryName}
-                </SubTitle>
-                <Unpad>
-                  <Carousel
-                    items={category.items}
-                    offset={category.offset}
-                    cardProps={{
-                      padding: 9,
-                      hide: { body: true },
-                      titleFlex: 1,
-                    }}
-                  />
-                </Unpad>
-              </Section>
-            )
-          })}
-          <View height={20} />
-        </div>
+        {Object.keys(homeStore.following).map(categoryName => {
+          const category = homeStore.following[categoryName]
+          return (
+            <Section key={categoryName}>
+              <SubTitle margin={0} padding={[10, 0, 0]}>
+                {categoryName}
+              </SubTitle>
+              <Unpad>
+                <Carousel
+                  items={category.items}
+                  offset={category.offset}
+                  cardProps={{
+                    padding: 9,
+                    hide: { body: true },
+                    titleFlex: 1,
+                  }}
+                />
+              </Unpad>
+            </Section>
+          )
+        })}
+        {!!homeStore.results.length && <View height={15} />}
       </SubPane>
     )
   }

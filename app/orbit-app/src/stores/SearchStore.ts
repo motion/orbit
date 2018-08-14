@@ -37,13 +37,24 @@ export class SearchStore {
     })
   }
 
-  get selectedItem(): Bit | Person {
-    const { results } = this.searchState
-    if (!results.length) {
-      return null
-    }
-    return results[this.props.selectionStore.activeIndex]
-  }
+  setSelectionHandler = react(
+    () => [this.isActive, this.results],
+    ([isActive]) => {
+      if (!isActive) throw react.cancel
+      this.props.selectionStore.setResults(this.results)
+    },
+    { immediate: true },
+  )
+
+  // aggregated results for selection store
+  results = react(
+    () => App.state.query,
+    async (query, { when }) => {
+      await when(() => query === this.quickSearchState.query)
+      await when(() => query === this.searchState.query)
+      return [...this.quickSearchState.results, ...this.searchState.results]
+    },
+  )
 
   get isChanging() {
     return this.searchState.query !== App.state.query

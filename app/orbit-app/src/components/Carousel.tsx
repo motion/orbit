@@ -15,40 +15,59 @@ type CarouselProps = {
   offset?: number
 }
 
-export const Carousel = ({
-  items,
-  verticalPadding = 3,
-  cardWidth = 180,
-  cardHeight = 90,
-  cardSpace = 12,
-  cardProps = {},
-  offset = 0,
-  before,
-  after,
-  ...props
-}: CarouselProps) => {
-  return (
-    <HorizontalScrollRow height={cardHeight + verticalPadding * 2} {...props}>
-      {before}
-      {(items || []).map((bit, index) => (
-        <OrbitCard
-          key={`${index}${bit.id}`}
-          pane="carousel"
-          bit={bit}
-          index={index + offset}
-          offset={offset}
-          total={items.length}
-          inGrid
-          {...cardProps}
-          style={{
-            width: cardWidth,
-            height: cardHeight,
-            marginRight: cardSpace,
-            ...cardProps['style'],
-          }}
-        />
-      ))}
-      {after}
-    </HorizontalScrollRow>
-  )
+export class Carousel extends React.Component<CarouselProps> {
+  frameRef = React.createRef<HTMLDivElement>()
+
+  get cardRefs(): HTMLDivElement[] {
+    return Array.from(this.frameRef.current.querySelectorAll('.result-item'))
+  }
+
+  scrollTo = index => {
+    const frame = this.frameRef.current
+    if (!frame) return
+    const activeCard = this.cardRefs[index]
+    frame.scrollLeft = activeCard.offsetLeft - 12
+  }
+
+  render() {
+    const {
+      items,
+      verticalPadding = 3,
+      cardWidth = 180,
+      cardHeight = 90,
+      cardSpace = 12,
+      cardProps = {},
+      offset = 0,
+      before,
+      after,
+      ...props
+    } = this.props
+    return (
+      <HorizontalScrollRow
+        forwardRef={this.frameRef}
+        height={cardHeight + verticalPadding * 2}
+        {...props}
+      >
+        {before}
+        {(items || []).map((bit, index) => (
+          <OrbitCard
+            key={`${index}${bit.id}`}
+            pane="carousel"
+            bit={bit}
+            index={index + offset}
+            total={items.length}
+            inGrid
+            {...cardProps}
+            style={{
+              width: cardWidth,
+              height: cardHeight,
+              marginRight: cardSpace,
+              ...cardProps['style'],
+            }}
+          />
+        ))}
+        {after}
+      </HorizontalScrollRow>
+    )
+  }
 }

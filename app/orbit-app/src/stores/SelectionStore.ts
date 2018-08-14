@@ -9,11 +9,19 @@ const log = logger('selectionStore')
 
 type Direction = 'left' | 'right' | 'up' | 'down'
 
-type SelectionHandler = {
-  getResult: (index: number) => any
-  getNextIndex: (index: number, direction: Direction) => number
+export type SelectionResult = {
+  moves?: Direction[]
+  item: any
 }
 
+export type SelectionGroup = {
+  name: string
+  items: Partial<SelectionResult>[]
+  type: 'row' | 'column'
+  [key: string]: any
+}
+
+// selection store
 export class SelectionStore {
   props: {
     appStore: AppStore
@@ -28,7 +36,7 @@ export class SelectionStore {
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
-  handler: SelectionHandler = null
+  results: SelectionResult[] = null
 
   willMount() {
     on(this, window, 'keydown', this.windowKeyDown)
@@ -70,8 +78,8 @@ export class SelectionStore {
   }
 
   get selectedItem() {
-    if (this.handler) {
-      return this.handler.getResult(this.activeIndex)
+    if (this.results) {
+      return this.results[this.activeIndex].item
     }
     return null
   }
@@ -172,21 +180,74 @@ export class SelectionStore {
   }
 
   move = (direction: Direction) => {
-    if (!this.handler) {
-      throw new Error('No handler for events')
+    if (!this.results) {
+      throw new Error('No results')
     }
-    const nextIndex = this.handler.getNextIndex(this.activeIndex, direction)
+    const nextIndex = this.getNextIndex(this.activeIndex, direction)
     if (nextIndex !== this.activeIndex) {
       this.toggleSelected(nextIndex)
     }
+  }
+
+  getNextIndex = (curIndex, direction) => {
+    if (curIndex === -1) {
+      return this.results.length ? 0 : -1
+    }
+    const curResult = this.results[curIndex]
+    const canMoveOne =
+      curResult && curResult.moves.some(move => move === direction)
+    if (canMoveOne) {
+      switch (direction) {
+        case 'right':
+          return curIndex + 1
+        case 'left':
+          return curIndex - 1
+        default:
+          const rowDirection = direction === 'down' ? 'right' : 'left'
+          const movesToNextRow = this.movesToNextRow(rowDirection, curIndex)
+          return curIndex + movesToNextRow
+      }
+    }
+    return curIndex
+  }
+
+  movesToNextRow = (dir, curIndex) => {
+    const amt = dir === 'right' ? 1 : -1
+    const all = this.results
+    const hasMove = index => all[index] && all[index].moves.indexOf(dir) > -1
+    let movesToNextRow = amt
+    while (hasMove(curIndex + movesToNextRow)) {
+      movesToNextRow += amt
+    }
+    if (dir === 'right') {
+      movesToNextRow += amt
+    }
+    return movesToNextRow
   }
 
   setSelectEvent = (val: string) => {
     this.selectEvent = val
   }
 
-  setHandler = (handler: SelectionHandler) => {
-    this.handler = handler
+  setResults = (resultGroups: SelectionGroup[]) => {
+    let results: SelectionResult[] = []
+    // calculate moves
+    const numGroups = resultGroups.length
+    for (const [groupIndex, { items, type }] of resultGroups.entries()) {
+      if (type === 'row') {
+        const downMoves = groupIndex < numGroups ? ['down', 'up'] : ['up']
+        const nextMoves = items.map((item, index) => ({
+          item,
+          moves: [
+            index < items.length - 1 ? 'right' : null,
+            index > 0 ? 'left' : null,
+            ...downMoves,
+          ],
+        }))
+        results = [...results, ...nextMoves]
+      }
+    }
+    this.results = results
   }
 
   openSelected = () => {

@@ -88,7 +88,7 @@ export class Syncer {
     const lastJob = await getRepository(JobEntity).findOne({
       where: {
         syncer: this.name,
-        integration: this.options.type,
+        settingId: settingId,
       },
       order: {
         time: "desc"
@@ -157,7 +157,7 @@ export class Syncer {
     // create a new job - the fact that we started a new syncer
     const job = assign(new JobEntity(), {
       syncer: this.name,
-      integration: this.options.type,
+      setting: setting,
       time: new Date().getTime(),
       status: 'PROCESSING',
       message: ``

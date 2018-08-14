@@ -19,7 +19,7 @@ export class SettingInfoStore {
   job = modelQueryReaction(
     async () => {
       return await JobRepository.findOne({
-        where: { integration: this.setting.type as IntegrationType },
+        where: { settingId: this.setting.id },
         order: { id: 'DESC' },
       })
     },

@@ -280,7 +280,7 @@ export class SearchStore /* extends Store */ {
             for (const name of peopleFilters) {
               findOptions.where.push({
                 ...andConditions,
-                person: {
+                people: {
                   name: { $like: `%${name}%` },
                 },
               })

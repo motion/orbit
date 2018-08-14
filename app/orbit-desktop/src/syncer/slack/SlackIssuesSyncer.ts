@@ -110,21 +110,21 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
 
         // if there is no loaded message for bit in the database
         // then we shall remove such bits
-        removedBits.push(
-          ...latestBits.filter(existBit => {
-            return !updatedBits.some(updatedBit => {
-              return updatedBit.id === existBit.id
-            })
-          }),
-        )
+        removedBits.push(...latestBits.filter(existBit => {
+          return !updatedBits.some(updatedBit => {
+            return updatedBit.id === existBit.id
+          })
+        }))
       }
     }
 
     // update and remove bits
-    await getRepository(BitEntity).save(updatedBits)
-    log(`updated message bits`, updatedBits)
-    await getRepository(BitEntity).remove(removedBits as BitEntity[])
-    log(`removed message bits`, removedBits)
+    log(`saving bits`, updatedBits)
+    await getRepository(BitEntity).save(updatedBits, { chunk: 100 })
+    log(`bits are saved`)
+    log(`removing bits`, removedBits)
+    await getRepository(BitEntity).remove(removedBits as BitEntity[], { chunk: 100 })
+    log(`bits are removed`)
 
     // update settings
     log(`updating settings`, { lastMessageSync })
@@ -152,7 +152,7 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
       location: {
         id: channelId,
       },
-      bitCreatedAt: MoreThan(parseInt(oldestMessageId)),
+      bitCreatedAt: MoreThan(parseInt(oldestMessageId) * 1000),
     })
   }
 

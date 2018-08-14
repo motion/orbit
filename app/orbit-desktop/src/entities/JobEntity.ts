@@ -1,5 +1,6 @@
-import { Job, JobStatus, IntegrationType } from '@mcro/models'
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Job, JobStatus, IntegrationType, Setting } from '@mcro/models'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import { SettingEntity } from './SettingEntity'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {
@@ -12,9 +13,6 @@ export class JobEntity extends BaseEntity implements Job {
   @Column()
   syncer: string
 
-  @Column({ nullable: true })
-  integration: IntegrationType
-
   @Column()
   time: number
 
@@ -23,5 +21,11 @@ export class JobEntity extends BaseEntity implements Job {
 
   @Column()
   message: string
+
+  @Column({ nullable: true })
+  settingId: number
+
+  @ManyToOne(() => SettingEntity)
+  setting: Setting
 
 }

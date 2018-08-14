@@ -192,13 +192,14 @@ export class Root {
 
   /**
    * Starts all the syncers.
+   * We start syncers in a small timeout to prevent app-overload.
    */
   private async startSyncers() {
-    await Promise.all(
+    setTimeout(() => Promise.all(
       Syncers.map(syncer => {
         return syncer.start()
       }),
-    )
+    ), 5000)
   }
 
   /**

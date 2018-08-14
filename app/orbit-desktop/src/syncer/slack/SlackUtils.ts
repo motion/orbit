@@ -16,9 +16,9 @@ export class SlackUtils {
     channels: SlackChannel[],
     setting: SettingEntity,
   ) {
-    const settingChannels = setting.values.channels || {
-      // 'C0Z43BNJX': 'C0Z43BNJX',
-    }
+    const settingChannels = setting.values.channels /*|| {
+      'C0Z43BNJX': 'C0Z43BNJX',
+    }*/
 
     // if no channels in settings are selected then return all channels
     if (!settingChannels) return channels

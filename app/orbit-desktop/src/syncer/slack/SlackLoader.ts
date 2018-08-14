@@ -1,6 +1,6 @@
-import { channels, chat, users } from 'slack'
-import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
+import { channels, users } from 'slack'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { SlackChannel, SlackMessage, SlackUser } from './SlackTypes'
 
 /**
  * Loads the data from the Slack API.
@@ -57,23 +57,38 @@ export class SlackLoader {
   /**
    * Loads all slack messages.
    *
+   * Loading messages is very tricky.
+   * In the case if you load all messages for the first time,
+   * you'll need to get all messages and organize pagination using "latest" message id.
+   * But if you use "oldest message id" which gives you messages after that oldest message,
+   * you can't use "latest" message id - it will give you wrong results now.
+   * Now you need continue to use "oldest" to get all paginated new messages.
+   *
    * @see https://api.slack.com/methods/channels.history
    */
   async loadMessages(
     channelId: string,
     oldestMessageId?: string,
+    latestMessageId?: string,
   ): Promise<SlackMessage[]> {
     const response = await channels.history({
       token: this.setting.token,
       channel: channelId,
       count: 1000,
       oldest: oldestMessageId,
+      latest: latestMessageId,
     })
 
     if (response.has_more === true) {
-      const oldest = response.messages[response.messages.length - 1]
-      const nextPageMessages = await this.loadMessages(channelId, oldest)
-      return [...nextPageMessages, ...response.messages]
+      const latest = response.messages[0].ts
+      const oldest = response.messages[response.messages.length - 1].ts
+      if (oldestMessageId) {
+        const nextPageMessages = await this.loadMessages(channelId, latest, undefined) // variable order isn't a typo!
+        return [...nextPageMessages, ...response.messages]
+      } else {
+        const nextPageMessages = await this.loadMessages(channelId, undefined, oldest) // variable order isn't a typo!
+        return [...nextPageMessages, ...response.messages]
+      }
     }
 
     return response.messages

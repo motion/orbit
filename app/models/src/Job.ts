@@ -1,4 +1,4 @@
-import { IntegrationType } from './IntegrationType'
+import { Setting } from './Setting'
 
 export interface Job {
 
@@ -18,9 +18,14 @@ export interface Job {
   syncer: string
 
   /**
-   * Integration type.
+   * Integration id for which this job was executed.
    */
-  integration: IntegrationType
+  settingId: number
+
+  /**
+   * Integration for which this job was executed.
+   */
+  setting: Setting
 
   /**
    * Time when job was executed.

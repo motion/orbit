@@ -12,16 +12,16 @@ import { SlackIssuesSyncer } from './slack/SlackIssuesSyncer'
 import { SlackPeopleSyncer } from './slack/SlackPeopleSyncer'
 
 export const Syncers = [
-  new Syncer({ type: 'jira', constructor: JiraIssueSync, interval: 1000 * 30 }),
-  new Syncer({ type: 'jira', constructor: JiraPersonSyncer, interval: 1000 * 30 }),
-  new Syncer({ type: 'confluence', constructor: ConfluenceSyncer, interval: 1000 * 30 }),
-  new Syncer({ type: 'gdrive', constructor: GDriveSyncer, interval: 1000 * 30 }),
-  new Syncer({ type: 'gmail', constructor: GMailSyncer, interval: 1000 * 30 }),
-  new Syncer({ type: 'github', constructor: GithubIssueSyncer, interval: 1000 * 30 }),
-  new Syncer({ type: 'github', constructor: GithubPeopleSyncer, interval: 1000 * 30 }),
+  new Syncer({ type: 'jira', constructor: JiraIssueSync, interval: 1000 * 120 }),
+  new Syncer({ type: 'jira', constructor: JiraPersonSyncer, interval: 1000 * 120 }),
+  new Syncer({ type: 'confluence', constructor: ConfluenceSyncer, interval: 1000 * 120 }),
+  new Syncer({ type: 'gdrive', constructor: GDriveSyncer, interval: 1000 * 120 }),
+  new Syncer({ type: 'gmail', constructor: GMailSyncer, interval: 1000 * 120 }),
+  new Syncer({ type: 'github', constructor: GithubIssueSyncer, interval: 1000 * 120 }),
+  new Syncer({ type: 'github', constructor: GithubPeopleSyncer, interval: 1000 * 120 }),
   new SyncerGroup('SlackGroup', [
-    new Syncer({ type: 'slack', constructor: SlackPeopleSyncer, interval: 1000 * 30 }),
-    new Syncer({ type: 'slack', constructor: SlackIssuesSyncer, interval: 1000 * 90 }),
+    new Syncer({ type: 'slack', constructor: SlackPeopleSyncer, interval: 1000 * 120 }),
+    new Syncer({ type: 'slack', constructor: SlackIssuesSyncer, interval: 1000 * 200 }),
   ]),
-  new Syncer({ constructor: MailWhitelisterSyncer, interval: 1000 * 30 }),
+  new Syncer({ constructor: MailWhitelisterSyncer, interval: 1000 * 120 }),
 ]

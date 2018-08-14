@@ -8,7 +8,7 @@ const log = logger('sql-bridge')
  * actions that needs to manipulate with the database.
  */
 export function handleEntityActions(socket: WebSocket, data: any) {
-  log('sqlBridge received data', data)
+  // log('sqlBridge received data', data)
 
   // check if data has all necessary stuff
   if (!data.operation || !data.entity || !data.operationId) {
@@ -31,7 +31,7 @@ export function handleEntityActions(socket: WebSocket, data: any) {
   // get the repository and register a callback that will handle repository method calls
   const repository = getRepository(entityTarget.target)
   const sendResultsBack = result => {
-    log(`operation ${data.operation} executed successfully`, result)
+    // log(`operation ${data.operation} executed successfully`, result)
     socket.send(
       JSON.stringify({
         operationId: data.operationId,

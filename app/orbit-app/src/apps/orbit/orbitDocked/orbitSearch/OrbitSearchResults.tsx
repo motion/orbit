@@ -20,9 +20,9 @@ type Props = {
 
 const Highlight = view({
   display: 'inline-block',
-  lineHeight: 22,
+  lineHeight: 20.5,
   fontSize: 15,
-  padding: [3, 6, 3, 14],
+  padding: [2, 6, 2, 14],
   margin: [4, 0, 0, 4],
   fontWeight: 400,
   borderLeft: [2, 'transparent'],
@@ -31,7 +31,7 @@ const Highlight = view({
   },
 })
 Highlight.theme = ({ theme }) => ({
-  color: theme.base.color.alpha(0.85),
+  color: theme.base.color.alpha(0.95),
 })
 
 const uglies = /([^a-zA-Z]{2,})/g

@@ -96,6 +96,7 @@ export class OrbitHome extends React.Component<Props> {
 
   render() {
     const { homeStore, selectionStore } = this.props
+    console.log('HOME RENDER')
     return (
       <SubPane name="home" fadeBottom>
         {Object.keys(homeStore.following).map(categoryName => {

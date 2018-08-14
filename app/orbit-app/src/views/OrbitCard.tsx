@@ -61,6 +61,125 @@ export type OrbitCardProps = {
   getIndex?: (id: number) => number
 }
 
+class OrbitCardStore {
+  props: OrbitCardProps
+
+  normalizedBit = null
+  isSelected = false
+  cardWrapRef = null
+
+  clickAt = 0
+
+  handleClick = e => {
+    // so we can control the speed of double clicks
+    if (Date.now() - this.clickAt < 220) {
+      this.open()
+      e.stopPropagation()
+    }
+    this.clickAt = Date.now()
+    if (this.props.onClick) {
+      this.props.onClick(e, this.cardWrapRef)
+      return
+    }
+    if (this.props.onSelect) {
+      this.props.onSelect(this.cardWrapRef)
+      return
+    }
+    if (this.props.inactive) {
+      return
+    }
+    this.props.selectionStore.setSelectEvent('click')
+    App.actions.toggleSelectItem(this.target, this.position)
+  }
+
+  open = () => {
+    if (!this.props.bit) {
+      return
+    }
+    App.actions.openItem(this.props.bit)
+  }
+
+  setCardWrapRef = cardWrapRef => {
+    if (!cardWrapRef) return
+    this.cardWrapRef = cardWrapRef
+    if (this.props.getRef) {
+      this.props.getRef(cardWrapRef)
+    }
+  }
+
+  get target() {
+    return this.props.result || this.normalizedBit
+  }
+
+  get sleepBeforePeek() {
+    // first time, go fast
+    if (!App.peekState.target) {
+      return 16
+    }
+    // depending on type of move, adjust speed
+    if (this.props.selectionStore) {
+      const { selectEvent } = this.props.selectionStore
+      return selectEvent === 'key' ? 130 : 0
+    }
+    return 16
+  }
+
+  get position() {
+    const position = getTargetPosition(this.cardWrapRef)
+    // list items are closer to edge, adjust...
+    if (this.props.listItem === true) {
+      position.left += 5
+    }
+    return position
+  }
+
+  // this cancels to prevent renders very aggressively
+  updateIsSelected = react(
+    () => [
+      this.props.selectionStore && this.props.selectionStore.nextIndex,
+      this.props.subPaneStore && this.props.subPaneStore.isActive,
+      typeof this.props.isSelected === 'function'
+        ? this.props.isSelected()
+        : this.props.isSelected,
+    ],
+    async ([nextIndex, isPaneActive, isSelected], { sleep }) => {
+      if (!isPaneActive) {
+        throw react.cancel
+      }
+      const {
+        bit,
+        getIndex,
+        index,
+        preventAutoSelect,
+        subPaneStore,
+      } = this.props
+      let nextIsSelected
+      if (typeof isSelected === 'boolean') {
+        nextIsSelected = isSelected
+      } else {
+        const resolvedIndex = getIndex ? getIndex(bit.id) : index
+        nextIsSelected = nextIndex === resolvedIndex
+      }
+      if (nextIsSelected === this.isSelected) {
+        throw react.cancel
+      }
+      console.log('update is selected', this.props)
+      this.isSelected = nextIsSelected
+      if (nextIsSelected && !preventAutoSelect) {
+        if (subPaneStore) {
+          subPaneStore.scrollIntoView(this.cardWrapRef)
+        }
+        if (!this.target) {
+          throw new Error(`No target!`)
+        }
+        // fluidity
+        await sleep(32)
+        App.actions.selectItem(this.target, this.position)
+      }
+    },
+  )
+}
+
 const CardWrap = view(UI.View, {
   position: 'relative',
   width: '100%',
@@ -225,124 +344,6 @@ const orbitIconProps = {
   orbitIconStyle: {
     marginRight: -2,
   },
-}
-
-class OrbitCardStore {
-  props: OrbitCardProps
-
-  normalizedBit = null
-  isSelected = false
-  cardWrapRef = null
-
-  clickAt = 0
-
-  handleClick = e => {
-    // so we can control the speed of double clicks
-    if (Date.now() - this.clickAt < 220) {
-      this.open()
-      e.stopPropagation()
-    }
-    this.clickAt = Date.now()
-    if (this.props.onClick) {
-      this.props.onClick(e, this.cardWrapRef)
-      return
-    }
-    if (this.props.onSelect) {
-      this.props.onSelect(this.cardWrapRef)
-      return
-    }
-    if (this.props.inactive) {
-      return
-    }
-    this.props.selectionStore.setSelectEvent('click')
-    App.actions.toggleSelectItem(this.target, this.position)
-  }
-
-  open = () => {
-    if (!this.props.bit) {
-      return
-    }
-    App.actions.openItem(this.props.bit)
-  }
-
-  setCardWrapRef = cardWrapRef => {
-    if (!cardWrapRef) return
-    this.cardWrapRef = cardWrapRef
-    if (this.props.getRef) {
-      this.props.getRef(cardWrapRef)
-    }
-  }
-
-  get target() {
-    return this.props.result || this.normalizedBit
-  }
-
-  get sleepBeforePeek() {
-    // first time, go fast
-    if (!App.peekState.target) {
-      return 16
-    }
-    // depending on type of move, adjust speed
-    if (this.props.selectionStore) {
-      const { selectEvent } = this.props.selectionStore
-      return selectEvent === 'key' ? 130 : 0
-    }
-    return 16
-  }
-
-  get position() {
-    const position = getTargetPosition(this.cardWrapRef)
-    // list items are closer to edge, adjust...
-    if (this.props.listItem === true) {
-      position.left += 5
-    }
-    return position
-  }
-
-  // this cancels to prevent renders very aggressively
-  updateIsSelected = react(
-    () => [
-      this.props.selectionStore && this.props.selectionStore.nextIndex,
-      this.props.subPaneStore && this.props.subPaneStore.isActive,
-      typeof this.props.isSelected === 'function'
-        ? this.props.isSelected()
-        : this.props.isSelected,
-    ],
-    async ([nextIndex, isPaneActive, isSelected], { sleep }) => {
-      if (!isPaneActive) {
-        throw react.cancel
-      }
-      const {
-        bit,
-        getIndex,
-        index,
-        preventAutoSelect,
-        subPaneStore,
-      } = this.props
-      let nextIsSelected
-      if (typeof isSelected === 'boolean') {
-        nextIsSelected = isSelected
-      } else {
-        const resolvedIndex = getIndex ? getIndex(bit.id) : index
-        nextIsSelected = nextIndex === resolvedIndex
-      }
-      if (nextIsSelected === this.isSelected) {
-        throw react.cancel
-      }
-      this.isSelected = nextIsSelected
-      if (nextIsSelected && !preventAutoSelect) {
-        if (subPaneStore) {
-          subPaneStore.scrollIntoView(this.cardWrapRef)
-        }
-        if (!this.target) {
-          throw new Error(`No target!`)
-        }
-        // fluidity
-        await sleep(32)
-        App.actions.selectItem(this.target, this.position)
-      }
-    },
-  )
 }
 
 @view.attach('appStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
@@ -558,7 +559,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       item,
       ...props
     } = this.props
-    // debounceLog(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
+    console.log(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
     if (!bit) {
       return this.getOrbitCard(props)
     }

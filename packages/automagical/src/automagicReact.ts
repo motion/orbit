@@ -255,6 +255,9 @@ export function automagicReact(obj: MagicalObject, method, val, userOptions) {
 
       let result
       reactionHelpers.setValue = val => {
+        if (!reactionID) {
+          throw SHARED_REJECTION_ERROR
+        }
         hasCalledSetValue = true
         updateAsyncValue(val)
       }

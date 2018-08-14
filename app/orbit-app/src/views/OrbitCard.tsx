@@ -111,19 +111,6 @@ class OrbitCardStore {
     return this.props.result || this.normalizedBit
   }
 
-  get sleepBeforePeek() {
-    // first time, go fast
-    if (!App.peekState.target) {
-      return 16
-    }
-    // depending on type of move, adjust speed
-    if (this.props.selectionStore) {
-      const { selectEvent } = this.props.selectionStore
-      return selectEvent === 'key' ? 130 : 0
-    }
-    return 16
-  }
-
   get position() {
     const position = getTargetPosition(this.cardWrapRef)
     // list items are closer to edge, adjust...
@@ -173,7 +160,7 @@ class OrbitCardStore {
           throw new Error(`No target!`)
         }
         // fluidity
-        await sleep(32)
+        await sleep()
         App.actions.selectItem(this.target, this.position)
       }
     },

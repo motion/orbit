@@ -23,6 +23,12 @@ type CarouselProps = HorizontalScrollRowProps & {
 export class Carousel extends React.Component<CarouselProps> {
   frameRef = React.createRef<HTMLDivElement>()
 
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.scrollTo != this.props.scrollTo) {
+      return false
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.scrollTo != this.props.scrollTo) {
       this.scrollTo(this.props.scrollTo)

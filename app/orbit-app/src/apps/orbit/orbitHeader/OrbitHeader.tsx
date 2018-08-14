@@ -44,7 +44,7 @@ OrbitFakeInput.theme = ({ theme }) => ({
 })
 
 @attachTheme
-@view.attach('paneManagerStore', 'selectionStore', 'searchStore')
+@view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
 @view.attach({
   headerStore: HeaderStore,
 })

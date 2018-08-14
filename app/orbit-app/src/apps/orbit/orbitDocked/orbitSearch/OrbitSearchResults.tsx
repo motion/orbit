@@ -71,12 +71,13 @@ const OrbitSearchResultsList = view(
     if (!results || !results.length) {
       return null
     }
+    const quickResultsLen = searchStore.quickSearchState.results.length
     return results.map((bit, index) => (
       <OrbitCard
         pane={name}
         subPane="search"
         key={bit.id}
-        getIndex={selectionStore.getIndexForItem}
+        index={index + quickResultsLen}
         total={results.length}
         bit={bit}
         listItem

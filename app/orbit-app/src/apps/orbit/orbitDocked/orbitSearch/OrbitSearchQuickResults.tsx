@@ -37,42 +37,40 @@ type Props = {
   selectionStore: SelectionStore
 }
 
-export const OrbitSearchQuickResults = decorate(
-  ({ searchStore, selectionStore }: Props) => {
-    const { results } = searchStore.quickSearchState
-    return (
-      <QuickResultsFrameHideScrollBar height={results.length ? frameHeight : 0}>
-        <QuickResultsFrame>
-          {/* inner div so scrolls to end all the way */}
-          <div style={{ flexFlow: 'row', padding: pad }}>
-            {results.map(item => {
-              return (
-                <OrbitCard
-                  preventAutoSelect
-                  pane="docked-search"
-                  subPane="search"
-                  className="quick-result-card"
-                  key={item.id}
-                  bit={item}
-                  getIndex={selectionStore.getIndexForItem}
-                  inGrid
-                  style={{
-                    width: 240,
-                    height: height - 20, // 20 == shadow space
-                    marginRight: 10,
-                  }}
-                  cardProps={{
-                    flex: 1,
-                  }}
-                  hide={{
-                    icon: true,
-                  }}
-                />
-              )
-            })}
-          </div>
-        </QuickResultsFrame>
-      </QuickResultsFrameHideScrollBar>
-    )
-  },
-)
+export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
+  const { results } = searchStore.quickSearchState
+  return (
+    <QuickResultsFrameHideScrollBar height={results.length ? frameHeight : 0}>
+      <QuickResultsFrame>
+        {/* inner div so scrolls to end all the way */}
+        <div style={{ flexFlow: 'row', padding: pad }}>
+          {results.map((item, index) => {
+            return (
+              <OrbitCard
+                preventAutoSelect
+                pane="docked-search"
+                subPane="search"
+                className="quick-result-card"
+                key={item.id}
+                bit={item}
+                index={index}
+                inGrid
+                style={{
+                  width: 240,
+                  height: height - 20, // 20 == shadow space
+                  marginRight: 10,
+                }}
+                cardProps={{
+                  flex: 1,
+                }}
+                hide={{
+                  icon: true,
+                }}
+              />
+            )
+          })}
+        </div>
+      </QuickResultsFrame>
+    </QuickResultsFrameHideScrollBar>
+  )
+})

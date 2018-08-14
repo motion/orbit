@@ -9,10 +9,10 @@ import { KeyboardStore } from './KeyboardStore'
 const log = logger('selectionStore')
 
 enum Direction {
-  left,
-  right,
-  up,
-  down,
+  left = 'left',
+  right = 'right',
+  up = 'up',
+  down = 'down',
 }
 
 export type SelectionResult = {
@@ -46,9 +46,9 @@ export class SelectionStore {
   results: SelectionResult[] = null
 
   didMount() {
-    on(this, this.props.keyboardStore, 'key', key => {
+    on(this, this.props.keyboardStore, 'key', (key: string) => {
       if (Direction[key]) {
-        this.move(key)
+        this.move(Direction[key])
       }
     })
 
@@ -203,7 +203,7 @@ export class SelectionStore {
     }
   }
 
-  getNextIndex = (curIndex, direction) => {
+  getNextIndex = (curIndex, direction: Direction) => {
     if (curIndex === -1) {
       if (direction === Direction.down) {
         return this.results.length ? 0 : -1
@@ -211,6 +211,15 @@ export class SelectionStore {
       return
     }
     const curResult = this.results[curIndex]
+    const isInRow = curResult.moves.some(
+      move => move === Direction.right || move === Direction.left,
+    )
+    if (!isInRow) {
+      return Math.min(
+        Math.max(-1, curIndex + (direction === Direction.up ? -1 : 1)),
+        this.results.length - 1,
+      )
+    }
     const canMoveOne =
       curResult && curResult.moves.some(move => move === direction)
     if (canMoveOne) {
@@ -248,6 +257,9 @@ export class SelectionStore {
   }
 
   setResults = (resultGroups: SelectionGroup[]) => {
+    if (!resultGroups) {
+      return
+    }
     let results: SelectionResult[] = []
     // calculate moves
     const numGroups = resultGroups.length

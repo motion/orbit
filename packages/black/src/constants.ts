@@ -1,4 +1,3 @@
-export const IS_PROD = process.env.NODE_ENV === 'production'
 export const IS_ELECTRON = isElectron()
 
 function isElectron() {

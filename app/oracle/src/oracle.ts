@@ -9,11 +9,6 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 import { logger } from '@mcro/logger'
 
 const log = logger('oracle')
-
-// swift itself
-// and the swiftBridge
-// both connect to here:
-const ORACLE_ROOT = 40512
 const idFn = _ => _
 
 const dir = electronUtil.fixPathForAsarUnpack(__dirname)
@@ -36,6 +31,7 @@ export default class Oracle {
   wss: Server
   process: any
 
+  socketPort: number
   debugBuild = false
   settings = null
   changedIds = null
@@ -59,7 +55,8 @@ export default class Oracle {
     await this.socketSend('state', this.state)
   }
 
-  constructor({ debugBuild = false } = {}) {
+  constructor({ debugBuild = false, socketPort = 40512 } = {}) {
+    this.socketPort = socketPort
     this.debugBuild = debugBuild
     macosVersion.assertGreaterThanOrEqualTo('10.11')
   }
@@ -73,16 +70,13 @@ export default class Oracle {
     }
     if (!this.wss) {
       // kill old ones
-      await killPort(ORACLE_ROOT)
-      this.wss = new Server({ port: ORACLE_ROOT })
+      await killPort(this.socketPort)
+      this.wss = new Server({ port: this.socketPort })
       this.setupSocket()
     }
     await this.setState({ isPaused: false })
-
-    // ⚠️ DISABLED FOR NOW TESTING FREEZE ON MY CPU
-    // await this._runScreenProcess()
-
-    await this._connectToScreenProcess()
+    await this.runScreenProcess()
+    await this.connectToScreenProcess()
     // monitorScreenProcess(this.process, this.restart)
   }
 
@@ -135,6 +129,31 @@ export default class Oracle {
     }
     this.settings = settings
     await this.socketSend('watch', settings)
+    return this
+  }
+
+  hideWindow = async () => {
+    await this.socketSend('hide')
+    return this
+  }
+
+  showWindow = async () => {
+    await this.socketSend('show')
+    return this
+  }
+
+  themeWindow = async (theme: string) => {
+    await this.socketSend(`them ${theme}`)
+    return this
+  }
+
+  positionWindow = async (position: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }) => {
+    await this.socketSend(`posi ${JSON.stringify(position)}`)
     return this
   }
 
@@ -321,7 +340,7 @@ export default class Oracle {
     })
   }
 
-  _connectToScreenProcess() {
+  private connectToScreenProcess() {
     return new Promise(res => {
       // wait for connection to socket before sending start
       let startWait = setInterval(() => {
@@ -334,14 +353,18 @@ export default class Oracle {
     })
   }
 
-  async _runScreenProcess() {
+  private async runScreenProcess() {
     if (this.process !== undefined) {
       throw new Error('Call `.stop()` first')
     }
     const binDir = this.debugBuild ? DEBUG_PATH : RELEASE_PATH
+    log(`Running oracle app at ${binDir}`)
     this.process = execa('./orbit', [], {
       cwd: binDir,
       reject: false,
+      env: {
+        SOCKET_PORT: `${this.socketPort}`,
+      },
     })
     // never logs :( (tried with spawn too)...
     this.process.stdout.setEncoding('utf8')

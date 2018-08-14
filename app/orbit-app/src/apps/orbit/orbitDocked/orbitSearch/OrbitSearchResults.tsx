@@ -22,11 +22,14 @@ const Highlight = view({
   fontSize: 15,
   padding: [3, 6, 3, 14],
   margin: [4, 0, 0, 4],
+  fontWeight: 400,
   borderLeft: [2, 'transparent'],
-  color: [0, 0, 0, 0.8],
   '&:hover': {
-    borderLeftColor: '#90b1e4',
+    borderLeftColor: '#90b1e455',
   },
+})
+Highlight.theme = ({ theme }) => ({
+  color: theme.base.color.alpha(0.85),
 })
 
 const uglies = /([^a-zA-Z]{2,})/g
@@ -52,6 +55,7 @@ const highlightOptions = (query, bit) => ({
   maxSurroundChars: 110,
   trimWhitespace: true,
   separator: '&nbsp;&middot;&nbsp;',
+  style: 'font-weight: 700; color: #fff;',
 })
 
 const OrbitSearchResultsList = view(({ name, store, searchStore }: Props) => {
@@ -92,21 +96,18 @@ const OrbitSearchResultsList = view(({ name, store, searchStore }: Props) => {
 })
 
 const OrbitSearchResultsFrame = view({
-  flex: 1,
-})
-OrbitSearchResultsFrame.theme = ({ theme }) => ({
-  background: theme.base.background,
+  position: 'relative',
+  // allows for card glow
+  paddingTop: 2,
+  transition: 'all ease 100ms',
 })
 
 const OrbitSearchResultsContents = view(({ name, searchStore, store }) => {
   const { isChanging, message } = searchStore
   return (
-    <div
+    <OrbitSearchResultsFrame
       style={{
-        position: 'relative',
         opacity: isChanging ? 0.3 : 1,
-        // allows for card glow
-        paddingTop: 2,
       }}
     >
       {message ? <div>{message}</div> : null}
@@ -117,7 +118,7 @@ const OrbitSearchResultsContents = view(({ name, searchStore, store }) => {
         name={name}
       />
       <div style={{ height: 20 }} />
-    </div>
+    </OrbitSearchResultsFrame>
   )
 })
 

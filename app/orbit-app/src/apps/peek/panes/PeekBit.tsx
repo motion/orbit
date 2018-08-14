@@ -9,10 +9,11 @@ import { App } from '@mcro/stores'
 import { RoundButton } from '../../../views'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { OrbitIcon } from '../../../views/OrbitIcon'
-import { PeekRelated } from '../views/PeekRelated'
+// import { PeekRelated } from '../views/PeekRelated'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekBottom } from './PeekBottom'
 import { PeekActionBar } from './PeekActionBar'
+import { View } from '@mcro/ui'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -22,11 +23,7 @@ const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
 })
 
 const Cmd = view({
-  opacity: 0.5,
-})
-
-const BottomSpace = view({
-  height: 100,
+  opacity: 0.6,
 })
 
 const extra = 50
@@ -47,13 +44,8 @@ BottomFloat.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background} 50%)`,
 })
 
-const searchBarProps = {
-  padding: [7, 10],
-  height: 48,
-}
-
 const HeadSide = view({
-  width: 40,
+  width: 80,
   alignItems: 'center',
   justifyContent: 'center',
 })
@@ -84,7 +76,7 @@ export const PeekBit = ({
         location,
         locationLink,
         integration,
-        // permalink,
+        permalink,
         updatedAt,
         comments,
       }) => {
@@ -93,13 +85,14 @@ export const PeekBit = ({
             key={item.id}
             defaultValue={App.state.query}
             focusOnMount
-            searchBarTheme={peekStore.theme}
             onChange={() => searchStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
             placeholder={`Search this ${item.subType} and related...`}
-            searchBarProps={searchBarProps}
-            before={<HeadSide />}
-            after={
+            searchBarProps={{
+              padding: [5, 10],
+              height: 42,
+            }}
+            before={
               <HeadSide>
                 {!!icon && (
                   <UI.Button
@@ -108,6 +101,18 @@ export const PeekBit = ({
                     }}
                     circular
                     icon={<OrbitIcon icon={icon} size={16} />}
+                  />
+                )}
+              </HeadSide>
+            }
+            after={
+              <HeadSide>
+                {!!icon && (
+                  <UI.Button
+                    onClick={permalink}
+                    circular
+                    icon="link"
+                    iconSize={14}
                   />
                 )}
               </HeadSide>
@@ -121,16 +126,14 @@ export const PeekBit = ({
                 postBody: (
                   <PeekBottom>
                     <PeekActionBar>
-                      <UI.Theme name="grey">
-                        <RoundButton
-                          onClick={e => {
-                            e.stopPropagation()
-                            locationLink()
-                          }}
-                        >
-                          {location}
-                        </RoundButton>
-                      </UI.Theme>
+                      <RoundButton
+                        onClick={e => {
+                          e.stopPropagation()
+                          locationLink()
+                        }}
+                      >
+                        {location}
+                      </RoundButton>
                       <PeekActionBar.Space />
                       <UI.Text>
                         <TimeAgo>{updatedAt}</TimeAgo>
@@ -144,7 +147,7 @@ export const PeekBit = ({
                         >
                           Copy Link <Cmd>⌘+Shift+C</Cmd>
                         </RoundButton>
-                        <PeekActionBar.Space />
+                        <View width={5} />
                         <RoundButton
                           onClick={peekStore.openItem}
                           alignItems="center"
@@ -167,14 +170,14 @@ export const PeekBit = ({
                         comments={comments}
                       />
                     </HighlightsLayer>
-                    <BottomSpace />
+                    {/* <BottomSpace />
                     <BottomFloat>
                       <PeekRelated
                         padding={[0, 15]}
                         cardSpace={10}
                         verticalPadding={10}
                       />
-                    </BottomFloat>
+                    </BottomFloat> */}
                   </>
                 ),
               })

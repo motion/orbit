@@ -28,19 +28,9 @@ var marky = (module.exports = function(markdown, options) {
   options = options || {}
   defaults(options, defaultOptions)
 
-  var log = function(msg) {
-    if (options.debug) {
-      console.log('marky-markdown: ' + msg)
-    }
-  }
-
-  log('\n\n' + markdown + '\n\n')
-
-  log('Parse markdown into HTML')
   html = render(markdown, options)
 
   if (options.sanitize) {
-    log('Sanitize malicious or malformed HTML')
     html = sanitize(html, options)
   }
 

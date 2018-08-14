@@ -5,6 +5,11 @@ import { PEEK_THEMES } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
 import { SearchStore } from '../../../stores/SearchStore'
 import * as Constants from '../../../constants'
+import {
+  PersonRepository,
+  BitRepository,
+  SettingRepository,
+} from '../../../repositories'
 
 export class PeekStore {
   props: {
@@ -56,17 +61,30 @@ export class PeekStore {
   }
 
   internalState = react(
-    () => [App.peekState.target, App.orbitState.docked, App.orbitState.hidden],
-    (_, { getValue }) => {
+    () => [
+      App.peekState.target /* App.orbitState.docked, App.orbitState.hidden */,
+    ],
+    async (_, { getValue, setValue, sleep }) => {
       const lastState = getValue().curState
-      const curState = this.getCurState()
-      return {
+      const isShown = !!App.peekState.target && !!App.orbitState.docked
+      let nextState = {
         lastState,
-        curState,
-        isShown: !!curState,
-        willHide: !!lastState && !curState,
-        willShow: !!curState && !lastState,
-        willStayShown: !!curState && !!lastState,
+        curState: lastState,
+        isShown,
+        willHide: !!lastState && !isShown,
+        willShow: !!isShown && !lastState,
+        willStayShown: !!isShown && !!lastState,
+      }
+      // start animation right away
+      setValue(nextState)
+      if (isShown) {
+        // then load model and update again
+        const curState = await this.getCurState()
+        await sleep()
+        setValue({
+          ...nextState,
+          curState,
+        })
       }
     },
     {
@@ -115,14 +133,19 @@ export class PeekStore {
     return this.internalState.willStayShown
   }
 
-  getCurState = () => {
+  getCurState = async () => {
     if (this.tornState) {
       return this.tornState
     }
-    if (!App.peekState.target) {
-      return null
+    const { id, type } = App.peekState.item
+    let selectedItem
+    if (type === 'person') {
+      selectedItem = await PersonRepository.findOne({ id })
+    } else if (type === 'bit') {
+      selectedItem = await BitRepository.findOne({ id })
+    } else if (type === 'setting') {
+      selectedItem = await SettingRepository.findOne({ id })
     }
-    const { selectedItem } = this.props.searchStore
     const { docked, hidden } = App.orbitState
     if (docked || !hidden) {
       return {

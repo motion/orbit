@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/orbit",
+  "name": "orbit-monorepo",
   "dependencies": {
     "global": "^4.3.2",
     "react": "16.4.0",

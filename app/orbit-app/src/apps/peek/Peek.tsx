@@ -26,7 +26,7 @@ const decorator = compose(
 
 export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
   return (
-    <UI.Theme name="light">
+    <UI.Theme name="grey">
       <PeekFrame>
         <PeekPageInner
           appStore={appStore}

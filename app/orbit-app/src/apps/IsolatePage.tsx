@@ -7,11 +7,13 @@ import { AppStore } from '../stores/AppStore'
 import { App } from '@mcro/stores'
 import * as UI from '@mcro/ui'
 import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
+import { settingToResult } from '../helpers/settingToResult'
 
 const store = new IntegrationSettingsStore()
 
 const getItem = {
-  githubItem: () => BitRepository.findOne({ where: { integration: 'github' }, skip: 6 }),
+  githubItem: () =>
+    BitRepository.findOne({ where: { integration: 'github' }, skip: 6 }),
   gdocsSetting: async () => ({
     id: 1,
     title: 'GDocs',
@@ -19,7 +21,9 @@ const getItem = {
     integration: 'gdocs',
   }),
   githubSetting: async () =>
-    SettingRepository.findOne({ where: { type: 'github' } }).then(store.settingToResult),
+    SettingRepository.findOne({ where: { type: 'github' } }).then(
+      settingToResult,
+    ),
 }
 
 @view

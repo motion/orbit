@@ -3,6 +3,7 @@ import { flatten } from 'lodash'
 
 const splitChar = '🂓'
 
+const notLetter = /[^A-Za-z0-9]+/g
 const cutoff = (str, maxChars) => {
   return str.replace(/(\s{2,}|\n)/g, ' ').slice(0, maxChars - 3) + '...'
 }
@@ -25,7 +26,9 @@ export const highlightText = (options, returnList = false) => {
   if (trimWhitespace) {
     parts[0] = parts[0].replace(/(\s{2,}|\n)/g, separator)
   }
-  const wordFinders = words.map(word => new RegExp(`(${word})`, 'gi'))
+  const wordFinders = words.map(
+    word => new RegExp(`(${word.replace(notLetter, '')})`, 'gi'),
+  )
   // split all the highlight words:
   for (const [index] of words.entries()) {
     const regex = wordFinders[index]

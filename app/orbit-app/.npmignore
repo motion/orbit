@@ -4,3 +4,4 @@
 # except /dist
 !dist/*
 !dist/**/*
+!index.js

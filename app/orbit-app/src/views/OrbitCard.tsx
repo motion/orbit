@@ -56,6 +56,9 @@ export type OrbitCardProps = {
   disableShadow?: boolean
   preventAutoSelect?: boolean
   padding?: number | number[]
+  titleFlex?: number
+  subtitleProps?: Object
+  getIndex?: (id: number) => number
 }
 
 const CardWrap = view(UI.View, {
@@ -92,10 +95,12 @@ const Card = view({
   },
 })
 
-const cardShadow = [0, 1, 2, [0, 0, 0, 0.04]]
-const cardHoverGlow = [0, 0, 0, 3, [0, 0, 0, 0.05]]
-const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
-const borderSelected = UI.color('#90b1e4cc')
+const cardShadow = [0, 6, 14, [0, 0, 0, 0.12]]
+const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
+// 90b1e433
+// 90b1e4cc
+const cardSelectedGlow = [0, 0, 0, 2, [0, 0, 0, 0.1]]
+const borderSelected = '#666'
 
 Card.theme = ({
   listItem,
@@ -111,31 +116,28 @@ Card.theme = ({
   disableShadow,
   chromeless,
 }) => {
-  if (chromeless) {
-    return {
-      padding: padding || 16,
-      borderRadius: borderRadius || 9,
-    }
-  }
-  const disabledShadow = disableShadow ? 'none' : null
   let card: CSSPropertySet = {
     flex: inGrid ? 1 : 'none',
   }
+  if (chromeless) {
+    return card
+  }
+  const disabledShadow = disableShadow ? 'none' : null
   if (listItem) {
     // LIST ITEM
     let listStyle
     // selected...
     if (isSelected) {
       listStyle = {
-        background: '#f8faff',
+        background: theme.base.background.alpha(0.2),
         // border: [1, borderSelected],
-        boxShadow: disabledShadow || [cardSelectedGlow],
+        // boxShadow: disabledShadow || [[0, 0, 0, 1, '#90b1e4']],
       }
     } else {
       listStyle = {
         // border: [1, 'transparent'],
         '&:hover': {
-          background: theme.base.background.darken(0.03),
+          background: theme.hover.background,
         },
       }
     }
@@ -150,17 +152,25 @@ Card.theme = ({
       },
     }
   } else {
+    card = {
+      ...card,
+      padding: padding || 13,
+      borderRadius: borderRadius || 9,
+      background: theme.base.background,
+      ...theme.card,
+    }
+    if (background) {
+      card.background = background
+    }
     // CARD
-    const cardBackground = background || theme.selected.background
     if (!isSelected) {
-      const borderHover = UI.color('#c9c9c9')
       card = {
         ...card,
         boxShadow: disabledShadow || [cardShadow],
-        border: border || [1, cardBackground.darken(0.08)],
+        border: border || [1, [255, 255, 255, 0.07]],
         '&:hover': {
           boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-          border: [1, borderHover],
+          border: [1, [255, 255, 255, 0.2]],
         },
       }
     }
@@ -176,9 +186,6 @@ Card.theme = ({
     }
     card = {
       ...card,
-      padding: padding || 16,
-      borderRadius: borderRadius || 11,
-      background: cardBackground,
       '&:active': {
         opacity: 0.8,
       },
@@ -203,12 +210,15 @@ const Preview = view({
   flex: 1,
 })
 
-const Subtitle = view(UI.View, {
+const CardSubtitle = view(UI.View, {
   height: 20,
-  margin: [3, 0, 1],
+  margin: [3, 0, 0],
+  padding: [2, 0, 2],
   flexFlow: 'row',
   alignItems: 'center',
-  overflow: 'hidden',
+  listItem: {
+    margin: [6, 0, 0],
+  },
 })
 
 const orbitIconProps = {
@@ -224,7 +234,15 @@ class OrbitCardStore {
   isSelected = false
   cardWrapRef = null
 
+  clickAt = 0
+
   handleClick = e => {
+    // so we can control the speed of double clicks
+    if (Date.now() - this.clickAt < 220) {
+      this.open()
+      e.stopPropagation()
+    }
+    this.clickAt = Date.now()
     if (this.props.onClick) {
       this.props.onClick(e, this.cardWrapRef)
       return
@@ -237,7 +255,14 @@ class OrbitCardStore {
       return
     }
     this.props.searchStore.setSelectEvent('click')
-    this.props.searchStore.toggleSelected(this.props.index)
+    App.actions.toggleSelectItem(this.target, this.position)
+  }
+
+  open = () => {
+    if (!this.props.bit) {
+      return
+    }
+    App.actions.openItem(this.props.bit)
   }
 
   setCardWrapRef = cardWrapRef => {
@@ -265,6 +290,15 @@ class OrbitCardStore {
     return 16
   }
 
+  get position() {
+    const position = getTargetPosition(this.cardWrapRef)
+    // list items are closer to edge, adjust...
+    if (this.props.listItem === true) {
+      position.left += 5
+    }
+    return position
+  }
+
   // this cancels to prevent renders very aggressively
   updateIsSelected = react(
     () => [
@@ -278,31 +312,34 @@ class OrbitCardStore {
       if (!isPaneActive) {
         throw react.cancel
       }
+      const {
+        bit,
+        getIndex,
+        index,
+        preventAutoSelect,
+        subPaneStore,
+      } = this.props
       let nextIsSelected
       if (typeof isSelected === 'boolean') {
         nextIsSelected = isSelected
       } else {
-        nextIsSelected = nextIndex === this.props.index
+        const resolvedIndex = getIndex ? getIndex(bit.id) : index
+        nextIsSelected = nextIndex === resolvedIndex
       }
       if (nextIsSelected === this.isSelected) {
         throw react.cancel
       }
       this.isSelected = nextIsSelected
-      if (nextIsSelected && !this.props.preventAutoSelect) {
-        if (this.props.subPaneStore) {
-          this.props.subPaneStore.scrollIntoView(this.cardWrapRef)
+      if (nextIsSelected && !preventAutoSelect) {
+        if (subPaneStore) {
+          subPaneStore.scrollIntoView(this.cardWrapRef)
         }
         if (!this.target) {
           throw new Error(`No target!`)
         }
         // fluidity
-        await sleep(80)
-        const position = getTargetPosition(this.cardWrapRef)
-        // list items are closer to edge, adjust...
-        if (this.props.listItem === true) {
-          position.left += 5
-        }
-        App.actions.selectItem(this.target, position)
+        await sleep(32)
+        App.actions.selectItem(this.target, this.position)
       }
     },
     { immediate: true },
@@ -345,24 +382,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
     )
   }
 
-  clickAt = 0
-
-  handleDoubleClick = e => {
-    // so we can control the speed of double clicks
-    if (Date.now() - this.clickAt < 150) {
-      this.open()
-      e.stopPropagation()
-    }
-    this.clickAt = Date.now()
-  }
-
-  open = () => {
-    if (!this.props.bit) {
-      return
-    }
-    App.actions.open(this.props.bit.webLink)
-  }
-
   id = Math.random()
 
   getOrbitCard(contentProps: ResolvedItem) {
@@ -396,7 +415,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       searchStore,
       store,
       titleProps,
+      subtitleProps,
       padding,
+      titleFlex,
       ...props
     } = this.props
     const { isSelected } = store
@@ -429,18 +450,17 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                 position="absolute"
                 top={listItem ? 25 : 10}
                 right={listItem ? 8 : 10}
-                opacity={0.8}
                 {...iconProps}
               />
             )}
-          <Title>
+          <Title style={titleFlex && { flex: titleFlex }}>
             <UI.Text
-              size={1.2}
-              sizeLineHeight={0.8}
+              fontSize={listItem ? 16 : 15}
+              sizeLineHeight={0.7}
               ellipse={2}
-              alpha={isSelected || listItem ? 1 : 0.8}
               fontWeight={600}
               maxWidth="calc(100% - 30px)"
+              textShadow={listItem ? '0 0.5px 0 rgba(0,0,0,0.5)' : null}
               {...titleProps}
             >
               {title}
@@ -448,14 +468,14 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
             {afterTitle}
           </Title>
           {hasSubtitle && (
-            <Subtitle>
+            <CardSubtitle listItem={listItem}>
               {!!location && (
                 <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
                   {location}
                 </RoundButtonSmall>
               )}
               {typeof subtitle === 'string' ? (
-                <UI.Text alpha={0.55} ellipse>
+                <UI.Text alpha={0.55} ellipse {...subtitleProps}>
                   {subtitle}
                 </UI.Text>
               ) : (
@@ -467,7 +487,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
                   <TimeAgo date={updatedAt || createdAt} />
                 </UI.Text>
               )}
-            </Subtitle>
+            </CardSubtitle>
           )}
           {/* vertical space only if needed */}
           {hasSubtitle &&

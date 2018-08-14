@@ -11,9 +11,7 @@ import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton } from '../../../views'
-import { PeekBottom } from './PeekBottom'
 import { PeekActionBar } from './PeekActionBar'
-import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -25,6 +23,8 @@ const statusIcons = {
   PROCESSING: { name: 'sport_user-run', color: 'darkblue' },
   COMPLETE: { name: 'check', color: 'darkgreen' },
 }
+
+const SubTitleButton = props => <UI.Button sizeHeight={0.9} {...props} />
 
 @view.attach('integrationSettingsStore')
 @view.attach({
@@ -75,49 +75,43 @@ class SettingContent extends React.Component<
           const icon = statusIcons[store.job && store.job.status] || {}
           return children({
             title: capitalize(integration),
+            subtitleBefore: (
+              <SubTitleButton
+                icon="remove"
+                tooltip="Remove integration"
+                onClick={this.removeIntegration}
+              >
+                Remove
+              </SubTitleButton>
+            ),
+            subtitle: (
+              <>
+                <UI.Text>{store.bitsCount} total</UI.Text>
+                <PeekActionBar.Space />
+                {!!store.job &&
+                  !!store.job.updatedAt && (
+                    <RoundButton
+                      icon={icon.name}
+                      iconProps={icon}
+                      tooltip={
+                        <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
+                      }
+                    >
+                      Last run
+                    </RoundButton>
+                  )}
+              </>
+            ),
+            subtitleAfter: (
+              <SubTitleButton
+                tooltip="Re-run sync"
+                onClick={this.handleRefresh}
+              >
+                Sync
+              </SubTitleButton>
+            ),
             belowHead,
             content,
-            postBody: (
-              <PeekBottom>
-                <PeekActionBar>
-                  <UI.Text>{store.bitsCount} total</UI.Text>
-                  <PeekActionBar.Space />
-                  {!!store.job &&
-                    !!store.job.updatedAt && (
-                      <RoundButton
-                        icon={icon.name}
-                        iconProps={icon}
-                        tooltip={
-                          <TimeAgo postfix="ago">{store.job.updatedAt}</TimeAgo>
-                        }
-                      >
-                        Last run
-                      </RoundButton>
-                    )}
-                  <UI.ListRow
-                    flex={1}
-                    margin={[0, -8, -5, 0]}
-                    itemProps={{
-                      size: 0.9,
-                      chromeless: true,
-                      opacity: 0.7,
-                      margin: [0, 0, 0, 5],
-                    }}
-                  >
-                    <UI.Button
-                      icon="refresh"
-                      tooltip="Refresh"
-                      onClick={this.handleRefresh}
-                    />
-                    <UI.Button
-                      icon="remove"
-                      tooltip="Remove"
-                      onClick={this.removeIntegration}
-                    />
-                  </UI.ListRow>
-                </PeekActionBar>
-              </PeekBottom>
-            ),
           })
         }}
       </SettingPane>
@@ -125,42 +119,18 @@ class SettingContent extends React.Component<
   }
 }
 
-class PeekSettingStore {
-  props: PeekPaneProps
-
-  get setting() {
-    return this.idSetting || this.typeSetting
-  }
-
-  get item() {
-    return this.props.item
-  }
-
-  idSetting = modelQueryReaction(() =>
-    SettingRepository.findOne({ id: this.item.id }),
-  )
-
-  // hackkkkky for now because look at OrbitSettings.generalsettings
-  // need a migration to insert the settings first and then make them just like integrationSettingsd
-  typeSetting = modelQueryReaction(() =>
-    SettingRepository.findOne({ type: this.item.id }),
-  )
-}
-
-@view.attach({
-  store: PeekSettingStore,
-})
 @view
-export class PeekSetting extends React.Component<
-  PeekPaneProps & {
-    store: PeekSettingStore
-  }
-> {
+export class PeekSetting extends React.Component<PeekPaneProps> {
   render() {
-    const { store, ...props } = this.props
-    if (!store.setting) {
-      return null
+    const { peekStore, ...props } = this.props
+    const { model } = peekStore.state
+    if (!model) {
+      return (
+        <div style={{ background: 'red', width: '100%', height: '100%' }}>
+          helllo
+        </div>
+      )
     }
-    return <SettingContent setting={store.setting} {...props} />
+    return <SettingContent setting={model} peekStore={peekStore} {...props} />
   }
 }

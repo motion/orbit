@@ -114,7 +114,7 @@ function doLog(...args) {
 }
 
 export function log(...args) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV !== 'development') {
     return
   }
   doCutoff = true
@@ -125,7 +125,7 @@ export function log(...args) {
 
 // @ts-ignore
 log.full = function(...args) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV !== 'development') {
     return
   }
   doCutoff = false

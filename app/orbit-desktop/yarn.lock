@@ -3432,9 +3432,9 @@ type-is@~1.6.15, type-is@~1.6.16:
     media-typer "0.3.0"
     mime-types "~2.1.18"
 
-typeorm@^0.3.0-alpha.7:
-  version "0.3.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.7.tgz#a5aff08d2ddc532ef18bb190d2f5767f7888c157"
+typeorm@^0.3.0-alpha.9:
+  version "0.3.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.0-alpha.10.tgz#31909d4dc99e1c406cb36c785cdaa23b1d7fc77b"
   dependencies:
     app-root-path "^2.0.1"
     buffer "^5.1.0"

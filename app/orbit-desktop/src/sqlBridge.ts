@@ -1,5 +1,5 @@
 import { getConnection, getRepository } from 'typeorm'
-import { logger } from '../../../packages/logger'
+import { logger } from '@mcro/logger'
 
 const log = logger('sql-bridge')
 

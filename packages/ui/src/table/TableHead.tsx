@@ -27,6 +27,8 @@ const invariant = require('invariant')
 const TableHeaderArrow = view({
   display: 'block',
   float: 'right',
+  fontSize: '75%',
+  opacity: 0.6,
 })
 
 const TableHeaderColumnInteractive = view(Interactive, {
@@ -38,7 +40,13 @@ const TableHeaderColumnInteractive = view(Interactive, {
 })
 
 const TableHeaderColumnContainer = view({
+  flexFlow: 'row',
   padding: '0 8px',
+})
+
+const TableColumnText = view({
+  flex: 1,
+  overflow: 'hidden',
 })
 
 const TableHeadContainer = view(Row, {
@@ -55,6 +63,8 @@ const TableHeadContainer = view(Row, {
 })
 
 const TableHeadColumnContainer = view({
+  flexFlow: 'row',
+  justifyContent: 'space-between',
   position: 'relative',
   backgroundColor: colors.white,
   height: 23,
@@ -288,7 +298,7 @@ export default class TableHead extends React.PureComponent {
           onColumnResize={onColumnResize}
           title={key}
         >
-          {col.value}
+          <TableColumnText>{col.value}</TableColumnText>
           {arrow}
         </TableHeadColumn>
       )

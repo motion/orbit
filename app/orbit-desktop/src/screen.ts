@@ -1,10 +1,11 @@
 import Oracle from '@mcro/oracle'
 import { debounce, last } from 'lodash'
 import { store, isEqual, react, on } from '@mcro/black'
-import { Desktop, Electron, Swift } from '@mcro/stores'
-import {logger} from '@mcro/logger'
+import { Desktop, Electron, Swift, App } from '@mcro/stores'
+import { logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
 import macosVersion from 'macos-version'
+import { getConfig } from '@mcro/config'
 
 const log = logger('screen')
 const ORBIT_APP_ID = 'com.github.electron'
@@ -44,7 +45,9 @@ export class Screen {
   curAppID = ''
   curAppName = ''
   watchSettings = { name: '', settings: {} }
-  oracle = new Oracle()
+  oracle = new Oracle({
+    socketPort: getConfig().ports.oracleBridge,
+  })
 
   rescanOnNewAppState = react(() => Desktop.appState, this.rescanApp)
 
@@ -74,6 +77,36 @@ export class Screen {
     },
   )
 
+  updateWindowVisibility = react(
+    () => !!App.orbitState.docked,
+    visible => {
+      if (visible) {
+        this.oracle.showWindow()
+      } else {
+        this.oracle.hideWindow()
+      }
+    },
+  )
+
+  updateWindowPosition = react(
+    () => {
+      const { position, size } = App.orbitState
+      const [x, y] = position
+      const [width, height] = size
+      return {
+        x: x - 10,
+        // mac topbar 23
+        y: y + 23 + 10,
+        width: width,
+        height: height - 30,
+      }
+    },
+    position => {
+      console.log('setting position', position)
+      this.oracle.positionWindow(position)
+    },
+  )
+
   togglePaused = () => {
     console.log('toggle paused screen')
     const paused = !Desktop.state.paused
@@ -89,6 +122,7 @@ export class Screen {
   clearTimeout?: Function
 
   start = async () => {
+    console.log('starting oracle...')
     Desktop.onMessage(Desktop.messages.TOGGLE_PAUSED, this.togglePaused)
     // for now just enable until re enable oracle
     if (macosVersion.is('<10.12')) {

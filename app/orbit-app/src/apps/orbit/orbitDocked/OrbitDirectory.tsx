@@ -5,13 +5,26 @@ import { compose } from '@mcro/helpers'
 import { PersonRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { Masonry } from '../../../views/Masonry'
-import { SubTitle } from '../../../views'
+import { Title } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { SearchStore } from '../../../stores/SearchStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
+import { Grid } from '../../../views/Grid'
+import { sortBy } from 'lodash'
+import { GridTitle } from './GridTitle'
+
+const height = 69
+
+export const Separator = view({
+  padding: [3, 16],
+  margin: [0, -16, 10],
+})
+
+const VerticalSpace = view({
+  height: 10,
+})
 
 type Props = {
   store?: OrbitDirectoryStore
@@ -22,22 +35,6 @@ type Props = {
 
 class OrbitDirectoryStore {
   props: Props
-
-  setGetResults = react(
-    () => [this.isActive, this.results],
-    async ([isActive], { sleep }) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      console.log('IS ACTIVE SETTING')
-      await sleep(40)
-      const getResults = () => this.results
-      // @ts-ignore
-      getResults.shouldFilter = true
-      this.props.searchStore.setGetResults(getResults)
-    },
-    { immediate: true },
-  )
 
   get isActive() {
     return this.props.paneManagerStore.activePane === this.props.name
@@ -65,13 +62,22 @@ class OrbitDirectoryStore {
     { immediate: true, defaultValue: [] },
   )
 
-  // poll every few seconds while active
   results = modelQueryReaction(
     () => PersonRepository.find({ take: 100, where: { integration: 'slack' } }),
+    people => {
+      if (!this.isActive && this.results.length) {
+        throw react.cancel
+      }
+      return sortBy(people, x => x.name.toLowerCase())
+    },
     {
       defaultValue: [],
     },
   )
+
+  getIndex = id => {
+    return this.people.findIndex(x => x.id === id)
+  }
 }
 
 const decorator = compose(
@@ -89,17 +95,18 @@ export const OrbitDirectory = decorator((props: Props) => {
   )
 })
 
-const createSection = (people: Person[], letter, offset, total) => {
+const createSection = (people: Person[], letter, getIndex, total) => {
   return (
     <React.Fragment key={letter}>
-      <SubTitle>{letter}</SubTitle>
-      <Masonry>
-        {people.map((bit, index) => (
+      <GridTitle>{letter}</GridTitle>
+      <Grid>
+        {people.map(bit => (
           <OrbitCard
             key={bit.id}
+            inGrid
             pane="docked"
             subPane="directory"
-            index={offset + index}
+            getIndex={getIndex}
             // @ts-ignore
             bit={bit}
             total={total}
@@ -107,42 +114,51 @@ const createSection = (people: Person[], letter, offset, total) => {
               icon: true,
             }}
             style={{
-              height: 77,
+              height,
             }}
           />
         ))}
-      </Masonry>
+      </Grid>
+      <VerticalSpace />
     </React.Fragment>
   )
 }
 
 const OrbitDirectoryInner = view(({ store }: Props) => {
-  const total = store.results.length
+  const { people } = store
+  const total = people.length
   if (!total) {
     return null
   }
-  console.log('RENDER PRECIOUS STUFF')
-  const byLetter = {}
-  for (const person of store.people) {
-    const initial = person.name[0].toLowerCase()
-    byLetter[initial] = byLetter[initial] || []
-    byLetter[initial].push(person)
+  // create sections by letter
+  let sections = []
+  let nextPeople = []
+  let lastPersonLetter
+  for (const [index, person] of people.entries()) {
+    let letter = person.name[0].toLowerCase()
+    const isNewSection = lastPersonLetter && letter !== lastPersonLetter
+    if ((isNewSection && nextPeople.length) || index === total - 1) {
+      if (!lastPersonLetter) {
+        lastPersonLetter = letter
+      }
+      sections.push(
+        createSection(
+          nextPeople,
+          lastPersonLetter.toUpperCase(),
+          store.getIndex,
+          total,
+        ),
+      )
+      nextPeople = [person]
+    } else {
+      nextPeople.push(person)
+    }
+    lastPersonLetter = letter
   }
-  const sections = []
-  let offset = 0
-  const letters = Object.keys(byLetter)
-  letters.sort((a, b) => a.localeCompare(b))
-  for (const letter of letters) {
-    const nextPeople = byLetter[letter]
-    sections.push(
-      createSection(
-        nextPeople,
-        letter.toUpperCase(),
-        offset,
-        store.people.length,
-      ),
-    )
-    offset += nextPeople.length
-  }
-  return sections
+  return (
+    <>
+      <Title>Directory</Title>
+      {sections}
+    </>
+  )
 })

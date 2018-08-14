@@ -4,14 +4,13 @@ import * as UI from '@mcro/ui'
 
 export const IS_ORBIT = window.location.pathname === '/orbit'
 export const IS_PEEK = window.location.pathname.indexOf('/peek') === 0
-export const IS_PROD =
-  process.env.NODE_ENV === 'production' || process.env.IS_PROD
+export const IS_PROD = process.env.NODE_ENV !== 'development'
 export const IS_DEV = !IS_PROD
 export const VERSION = require('../package.json').version
 
 export const BORDER_RADIUS = 15
-export const CHROME_PAD = 4
-export const PEEK_BORDER_RADIUS = 6
+export const CHROME_PAD = 1
+export const PEEK_BORDER_RADIUS = 7
 
 export const SHADOW_PAD = 15
 export const APP_SHADOW = [0, 0, 40, [0, 0, 0, 1]]

@@ -20,8 +20,6 @@
 		2F86CEE41BD6DAD7007E8C29 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F86CEE31BD6DAD7007E8C29 /* State.swift */; };
 		2F9E31A91BF050AF00EAD248 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9E31A81BF050AF00EAD248 /* Property.swift */; };
 		2FEEA2E31C1E6E9200CD515E /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FEEA2E21C1E6E9200CD515E /* Log.swift */; };
-		CFBEEE08202D819B005F925A /* PromiseKit.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CFBEEE06202D819A005F925A /* PromiseKit.framework.dSYM */; };
-		CFBEEE09202D819B005F925A /* AXSwift.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = CFBEEE07202D819A005F925A /* AXSwift.framework.dSYM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,8 +29,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				CFBEEE08202D819B005F925A /* PromiseKit.framework.dSYM in CopyFiles */,
-				CFBEEE09202D819B005F925A /* AXSwift.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

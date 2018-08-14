@@ -1,5 +1,5 @@
 {
-  "name": "orbit",
+  "name": "@mcro/orbit",
   "main": "_/main.js",
   "productName": "Orbit",
   "version": "2.2.9",

@@ -52,10 +52,18 @@ const IconInner = view(View, {
   justifyContent: 'center',
 })
 
-IconInner.theme = ({ padding, width: propWidth, height: propHeight, size }) => {
+IconInner.theme = ({
+  padding,
+  width: propWidth,
+  height: propHeight,
+  size,
+  theme,
+  color,
+}) => {
   const width = (propWidth || size) + widthPadding(padding)
   const height = (propHeight || size) + heightPadding(padding)
   return {
+    color: color || theme.base.color,
     width,
     height,
     fontSize: size,

@@ -171,3 +171,22 @@ Or monetizing monetizing.
 ---
 
 # I Can't Believe It's Not Native
+
+---
+
+# Privacy and design are your most important features
+
+- Look at Mozilla's latest experiment (Recommendations with Laserlike)
+- Look at previous cloud search companies
+- Look at ugly chrome extensions with no keyboard navigation
+- People forget that privacy is not just a feature, but one of the biggest features
+  - It forces you to sell your product at a price which garners trust
+  - It gives people the chance to try your product without compromising their data
+  - It lets you do a ton more because you can now access a lot more of their data without issue
+  - It reduces your liabilities and overhead of safeguarding data
+  - It makes your users love you rather than hate you
+- Design is the other most under-considered feature
+  - Your product is almost worthless without great design, even if it's revolutionary
+  - Design is not just gradients, it's speed, interaction, and all the small details
+  - Good design can take 75% of your product's development time (it's harder than you think)
+  - It makes people love your product and spread it organically (See Framer X)

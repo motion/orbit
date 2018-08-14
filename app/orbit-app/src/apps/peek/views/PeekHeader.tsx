@@ -97,7 +97,7 @@ const textify = thing => {
 const SubTitle = ({ children, before, after }) => (
   <UI.Row
     position="relative"
-    padding={[0, 12]}
+    padding={[0, 6]}
     alignItems="center"
     flex={1}
     height={32}
@@ -229,9 +229,5 @@ export class PeekHeaderContent extends React.Component<Props> {
 }
 
 export const PeekHeader = view.attach('peekStore')(
-  view(props => (
-    <UI.Theme theme={props.peekStore.theme || false}>
-      <PeekHeaderContent {...props} />
-    </UI.Theme>
-  )),
+  view(props => <PeekHeaderContent {...props} />),
 )

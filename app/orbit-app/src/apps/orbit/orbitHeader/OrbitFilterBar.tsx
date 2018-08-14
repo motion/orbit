@@ -4,30 +4,25 @@ import { view } from '@mcro/black'
 import { SearchFilterStore } from '../../../stores/SearchFilterStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
-const inactiveTheme = {
-  background: 'transparent',
-  color: '#999',
-  hover: {
-    background: '#c7c7c7',
-    color: '#fff',
-  },
-}
+const inactiveTheme = false
+
+const dateBg = UI.color('#ffb049')
 
 const activeThemes = {
   date: {
-    background: '#ffb049',
+    borderColor: dateBg.alpha(0.5),
     color: '#fff',
   },
   integration: {
-    background: 'rgba(71, 189, 36)',
+    borderColor: 'rgba(71, 189, 36, 0.5)',
     color: '#fff',
   },
   person: {
-    background: '#8279ff',
+    borderColor: '#8279ff',
     color: '#fff',
   },
   type: {
-    background: 'rgba(193, 255, 143)',
+    borderColor: 'rgba(193, 255, 143)',
     color: '#fff',
   },
 }
@@ -48,12 +43,17 @@ const HorizontalScroll = view({
 
 const FilterButton = props => (
   <UI.Button
+    glint={false}
     size={1}
-    sizeRadius={0.8}
+    sizeRadius={0.9}
     marginRight={4}
     sizeHeight={0.8}
     sizePadding={0.6}
     fontWeight={600}
+    hoverStyle={{
+      background: [0, 0, 0, 0.2],
+      border: [1, 'transparent'],
+    }}
     {...props}
   />
 )
@@ -68,11 +68,11 @@ const FilterBarFade = view({
   pointerEvents: 'none',
 })
 
-FilterBarFade.theme = ({ theme }) => ({
-  background: `linear-gradient(to right, transparent, ${
-    theme.base.background
-  } 80%)`,
-})
+// FilterBarFade.theme = ({ theme }) => ({
+//   background: `linear-gradient(to right, transparent, ${
+//     theme.base.background
+//   } 80%)`,
+// })
 
 type Props = {
   filterStore?: SearchFilterStore
@@ -84,6 +84,8 @@ const opacityScale = [1, 0.9, 0.8, 0.7, 0.5]
 const hideFilterPanes = {
   settings: true,
   onboard: true,
+  directory: true,
+  apps: true,
 }
 
 export const OrbitFilterBar = view(
@@ -96,17 +98,19 @@ export const OrbitFilterBar = view(
       <FilterBar opacity={hideFilterPanes[paneManagerStore.activePane] ? 0 : 1}>
         <HorizontalScroll>
           {filterStore.allFilters.map((filter, index) => (
-            <UI.Theme
+            <FilterButton
               key={`${filter.text}${filter.active}${index}`}
-              theme={filter.active ? activeThemes[filter.type] : inactiveTheme}
+              onClick={() => filterStore.toggleFilter(filter.text)}
+              opacity={opacityScale[index] || 0.333}
+              borderColor={
+                (filter.active && activeThemes[filter.type].borderColor) ||
+                'transparent'
+              }
+              borderWidth={1}
+              background="transparent"
             >
-              <FilterButton
-                onClick={() => filterStore.toggleFilter(filter.text)}
-                opacity={opacityScale[index] || 0.333}
-              >
-                {filter.text}
-              </FilterButton>
-            </UI.Theme>
+              {filter.text}
+            </FilterButton>
           ))}
           <UI.View width={50} />
         </HorizontalScroll>

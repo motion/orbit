@@ -1,23 +1,33 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, compose, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { App } from '@mcro/stores'
+import { ThemeObject } from '@mcro/gloss'
 
 type Props = {
   peekStore: PeekStore
   borderShadow: any
+  theme: ThemeObject
 }
 
-const background = '#f9f9f9'
+const getBackground = (y, theme) => {
+  if (y < 20) return theme.titleBar.backgroundTop
+  if (y < 40) return theme.titleBar.backgroundBottom
+  return theme.base.background
+}
 
-export const PeekFrameArrow = view(({ peekStore, borderShadow }: Props) => {
+const decorator = compose(
+  attachTheme,
+  view,
+)
+
+export const PeekFrameArrow = decorator(({ theme, borderShadow }: Props) => {
   const state = App.peekState
   if (!state || !state.position || !state.position.length || !state.target) {
     return null
   }
-  const { theme } = peekStore
   const isHidden = !state
   const onRight = !state.peekOnLeft
   const arrowSize = 18
@@ -39,11 +49,7 @@ export const PeekFrameArrow = view(({ peekStore, borderShadow }: Props) => {
       transition="transform ease 170ms"
       size={arrowSize}
       towards={onRight ? 'left' : 'right'}
-      background={
-        arrowY < 40 && theme
-          ? UI.color(theme.background).darken(theme.darkenTitleBarAmount || 0)
-          : background
-      }
+      background={getBackground(arrowY, theme)}
       boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
       css={{
         left: !onRight ? 'auto' : -14,

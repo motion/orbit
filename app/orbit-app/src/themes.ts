@@ -21,6 +21,8 @@ const macTheme = {
   highlight: '#dbe7fa', // used for text selection, tokens, etc.
   highlightActive: '#85afee', // active tokens
   titleBar: {
+    backgroundTop: '#eae9eb',
+    backgroundBottom: '#dcdbdc',
     background: 'linear-gradient(to bottom, #eae9eb 0%, #dcdbdc 100%)',
     backgroundBlur: '#f6f6f6',
     borderColor: '#c1c0c2',

@@ -136,7 +136,7 @@ class TableHeadColumn extends React.PureComponent {
       return
     }
 
-    let normalizedWidth = newWidth
+    let normalizedWidth: string | number = newWidth
 
     // normalise number to a percentage if we were originally passed a percentage
     if (isPercentage(width)) {

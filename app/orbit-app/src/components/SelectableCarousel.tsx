@@ -35,6 +35,7 @@ class CarouselStore {
 })
 export class SelectableCarousel extends React.Component<Props> {
   render() {
+    // @ts-ignore
     const { store, selectionStore, ...props } = this.props
     return <Carousel ref={store.carouselRef} {...props} />
   }

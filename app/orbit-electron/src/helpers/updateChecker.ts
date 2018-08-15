@@ -3,8 +3,8 @@ import { getConfig } from '../config'
 
 // update checker
 if (getConfig().env.prod) {
-  const updateUrl = require('../../package.json').updater.url
-  console.log('updateUrl', updateUrl)
+  const updateUrl =
+    'https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json'
   updater.init(updateUrl)
 
   updater.on('update-available', () => {

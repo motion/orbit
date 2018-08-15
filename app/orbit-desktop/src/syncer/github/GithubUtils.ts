@@ -12,8 +12,13 @@ export const fetchFromGitHub = async <T>(token: string, query: string, variables
     next()
   })({ query, variables })
   if ((results as any).message) {
-    console.error('Error doing fetch', results)
-    return null
+    throw new Error(results as any)
   }
-  return results.then(results => results.data)
+  return results.then(results => {
+    if (results.errors) {
+      throw new Error(results as any)
+    }
+
+    return results.data
+  })
 }

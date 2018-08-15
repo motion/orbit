@@ -5,7 +5,7 @@ import { getRepository, MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { assign } from '../../utils'
+import { assign, timeout } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage } from './SlackTypes'
@@ -31,14 +31,15 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
     // note that people must be synced before this syncer's sync
     log(`loading (already synced) people`)
     const allPeople = await this.loadPeople()
+
+    // if there are no people it means we run this syncer before people sync,
+    // postpone syncer execution
     if (!allPeople.length) {
       log(`no people were found, looks like people syncer wasn't executed yet, scheduling restart in 10 seconds`)
-      // restart syncer in 10 seconds
-      setTimeout(() => {
+      await timeout(10000, () => {
         log(`restarting people syncer`)
         return this.run()
-      }, 10000)
-      return
+      })
 
     } else {
       log(`loaded people`, allPeople)
@@ -106,7 +107,7 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
             messages,
             existBits,
             allPeople,
-          ))
+          )),
         )
 
         // update last message sync setting
@@ -144,7 +145,7 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
     return getRepository(PersonEntity).find({
       where: {
         settingId: this.setting.id,
-      }
+      },
     })
   }
 
@@ -186,7 +187,6 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
     const body = SlackUtils.buildBitBody(messages, allPeople)
     const bit = bits.find(bit => bit.id === id)
     const mentionedPeople = SlackUtils.findMessageMentionedPeople(messages, allPeople)
-    console.log("mentionedPeople", mentionedPeople)
 
     return assign(bit || new BitEntity(), {
       setting: this.setting,
@@ -200,7 +200,7 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
           user: message.user,
           text: message.text,
           time: +message.ts.split('.')[0] * 1000,
-        }))
+        })),
       } as SlackBitData,
       bitCreatedAt,
       bitUpdatedAt,

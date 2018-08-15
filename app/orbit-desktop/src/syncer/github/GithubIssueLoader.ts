@@ -25,9 +25,8 @@ export class GithubIssueLoader {
     log(`loading ${this.organization}/${this.repository} github issues`)
     const issues = await this.loadByCursor()
     log(
-      `loading is finished. Loaded ${issues.length} issues. Total query cost: ${
-        this.totalCost
-      }/${this.remainingCost}`,
+      `loading is finished. Loaded ${issues.length} issues. ` +
+      `Total query cost: ${this.totalCost}/${this.remainingCost}`,
     )
     return issues
   }
@@ -44,6 +43,7 @@ export class GithubIssueLoader {
         cursor,
       },
     )
+    log(`loaded results`, results)
 
     // query was made. calculate total costs
     this.totalCost += results.rateLimit.cost
@@ -52,12 +52,9 @@ export class GithubIssueLoader {
     const edges = results.repository.issues.edges
     const issues = edges.map(edge => edge.node)
     if (!cursor) {
+      const totalCount = results.repository.issues.totalCount
       log(`${issues.length} issues were loaded`)
-      log(
-        `there are ${
-          results.repository.issues.totalCount
-        } issues in the repository`,
-      )
+      log(`there are ${totalCount} issues in the repository`)
     } else {
       log(`next ${issues.length} issues were loaded`)
     }

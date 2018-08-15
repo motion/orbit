@@ -17,9 +17,11 @@ export const Syncers = [
   new Syncer({ type: 'confluence', constructor: ConfluenceSyncer, interval: 1000 * 120 }),
   new Syncer({ type: 'gdrive', constructor: GDriveSyncer, interval: 1000 * 120 }),
   new Syncer({ type: 'gmail', constructor: GMailSyncer, interval: 1000 * 120 }),
-  new Syncer({ type: 'github', constructor: GithubIssueSyncer, interval: 1000 * 120 }),
-  new Syncer({ type: 'github', constructor: GithubPeopleSyncer, interval: 1000 * 120 }),
-  new SyncerGroup('SlackGroup', [
+  new SyncerGroup('GithubSyncers', [
+    new Syncer({ type: 'github', constructor: GithubPeopleSyncer, interval: 1000 * 120 }),
+    new Syncer({ type: 'github', constructor: GithubIssueSyncer, interval: 1000 * 120 }),
+  ]),
+  new SyncerGroup('SlackSyncers', [
     new Syncer({ type: 'slack', constructor: SlackPeopleSyncer, interval: 1000 * 120 }),
     new Syncer({ type: 'slack', constructor: SlackIssuesSyncer, interval: 1000 * 200 }),
   ]),

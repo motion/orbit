@@ -48,6 +48,7 @@ export class GDriveSyncer implements IntegrationSyncer {
   private createFile(file: GDriveLoadedFile): Promise<Bit | null> {
     return createOrUpdateBit(BitEntity, {
       integration: 'gdocs',
+      setting: this.setting,
       id: file.file.id,
       type: 'document',
       title: file.file.name,
@@ -90,6 +91,7 @@ export class GDriveSyncer implements IntegrationSyncer {
       PersonEntity,
       {
         id,
+        setting: this.setting,
         integrationId: user.email,
         integration: 'gdrive',
         name: user.name,

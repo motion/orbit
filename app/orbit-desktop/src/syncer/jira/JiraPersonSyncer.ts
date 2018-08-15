@@ -60,6 +60,7 @@ export class JiraPersonSyncer implements IntegrationSyncer {
       PersonEntity,
       {
         id,
+        setting: this.setting,
         integrationId: person.accountId,
         integration: 'jira',
         name: person.displayName,

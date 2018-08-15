@@ -98,20 +98,22 @@ export class GMailSyncer implements IntegrationSyncer {
     }
 
     // load emails for whitelisted people separately
-    log(`loading threads from whitelisted people`)
-    const threadsFromWhiteList: GmailThread[] = []
-    await Promise.all(Object.keys(whiteList).map(async email => {
-      if (whiteList[email] === false)
-        return
+    if (whiteList) {
+      log(`loading threads from whitelisted people`)
+      const threadsFromWhiteList: GmailThread[] = []
+      await Promise.all(Object.keys(whiteList).map(async email => {
+        if (whiteList[email] === false)
+          return
 
-      const threads = await this.loader.loadThreads(max, `from:${email}`)
-      const nonDuplicateThreads = threads.filter(thread => {
-        return addedThreads.some(addedThread => addedThread.id === thread.id)
-      })
-      threadsFromWhiteList.push(...nonDuplicateThreads)
-    }))
-    addedThreads.push(...threadsFromWhiteList)
-    log(`whitelisted people threads loaded`, threadsFromWhiteList)
+        const threads = await this.loader.loadThreads(max, `from:${email}`)
+        const nonDuplicateThreads = threads.filter(thread => {
+          return addedThreads.some(addedThread => addedThread.id === thread.id)
+        })
+        threadsFromWhiteList.push(...nonDuplicateThreads)
+      }))
+      addedThreads.push(...threadsFromWhiteList)
+      log(`whitelisted people threads loaded`, threadsFromWhiteList)
+    }
 
     // if there are added threads then load messages and save their bits
     if (addedThreads.length) {

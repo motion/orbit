@@ -1,11 +1,11 @@
 import { logger } from '@mcro/logger'
+import { Setting } from '@mcro/models'
 import { uniq } from 'lodash'
+import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import * as Helpers from '../../helpers'
-import { createOrUpdate } from '../../helpers/createOrUpdate'
 import { createOrUpdatePersonBit } from '../../repository'
-import { sequence } from '../../utils'
+import { assign } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
 import { GithubPerson } from './GithubTypes'
@@ -27,52 +27,51 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
     )
 
     const allPeople: PersonEntity[] = []
-    await sequence(organizations, async organization => {
+    for (let organization of organizations) {
       const loader = new GithubPeopleLoader(organization, this.setting.token)
       const people = await loader.load()
-      await Promise.all(people.map(async person => {
-        allPeople.push(await this.createPerson(person))
-      }))
-    })
+      for (let person of people) {
+        await GithubPeopleSyncer.createPerson(this.setting, person)
+      }
+    }
 
     log('Created', allPeople ? allPeople.length : 0, 'people', allPeople)
   }
 
-  private async createPerson(githubPerson: GithubPerson) {
-    const person = {
-      location: githubPerson.location || '',
-      bio: githubPerson.bio || '',
-      avatar: githubPerson.avatarUrl || '',
-      emails: githubPerson.email ? [githubPerson.email] : [],
-      data: {
-        github: githubPerson,
-      },
-    }
-    const id = `github-${Helpers.hash(person)}`
-    const personEntity = await createOrUpdate(
-      PersonEntity,
-      {
-        id,
-        integrationId: githubPerson.id,
-        integration: 'github',
-        name: githubPerson.login,
-        data: {
-          ...person,
-        },
-      },
-      { matching: ['id', 'integration'] },
-    )
+  static async createPerson(setting: Setting, githubPerson: GithubPerson) {
 
+    const id = `github-${setting.id}-${githubPerson.id}`
+    const person = (await getRepository(PersonEntity).findOne(id)) || new PersonEntity()
+    assign(person, {
+      id,
+      setting: setting,
+      integrationId: githubPerson.id,
+      integration: 'github',
+      name: githubPerson.login,
+      webLink: `https://github.com/${githubPerson.login}`,
+      data: {
+        location: githubPerson.location || '',
+        bio: githubPerson.bio || '',
+        avatar: githubPerson.avatarUrl || '',
+        emails: githubPerson.email ? [githubPerson.email] : [],
+        data: {
+          github: githubPerson,
+        },
+      } as any // todo create a data interface for github
+    })
+    await getRepository(PersonEntity).save(person)
+
+    // some people don't have their email exposed, that's why we need this check
     if (githubPerson.email) {
       await createOrUpdatePersonBit({
         email: githubPerson.email,
         name: githubPerson.name,
         photo: githubPerson.avatarUrl,
         integration: 'github',
-        person: personEntity,
+        person: person,
       })
     }
 
-    return personEntity
+    return person
   }
 }

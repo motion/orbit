@@ -17,10 +17,7 @@ export type GithubIssueQueryResult = {
           bodyText: string
           createdAt: string
           updatedAt: string
-          author: {
-            avatarUrl: string
-            login: string
-          }
+          author: GithubPerson
           labels: {
             edges: { node: { name: string } }[]
           }
@@ -33,10 +30,7 @@ export type GithubIssueQueryResult = {
           comments: {
             edges: {
               node: {
-                author: {
-                  avatarUrl: string
-                  login: string
-                }
+                author: GithubPerson
                 createdAt: string
                 body: string
               }

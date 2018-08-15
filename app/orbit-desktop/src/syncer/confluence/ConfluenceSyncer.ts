@@ -172,6 +172,13 @@ export class ConfluenceSyncer implements IntegrationSyncer {
                 member.accountId +
                 '&expand=operations,details.personal',
             )
+
+            // make sure to ignore system users
+            const email = user.details.personal.email || ''
+            const ignoredEmail = `@connect.atlassian.com`
+            if (email.substr(ignoredEmail.length * -1) === ignoredEmail)
+              return
+
             users.push(user)
           }),
         )

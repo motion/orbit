@@ -28,24 +28,24 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
     log(`users loaded`, users)
 
     // filter out bots and strange users without emails
-    const filteredUsers = users.filter(user => user.is_bot === false && user.profile.email)
+    const filteredUsers = users.filter(user => {
+      return user.is_bot === false && user.profile.email
+    })
     log(`filtered users (non bots)`, filteredUsers)
 
-    // load all persons in local database
+    // load all people from the local database
     const existPeople = await PersonEntity.find({
-      where: {
-        settingId: this.setting.id
-      }
+      settingId: this.setting.id
     })
 
     // creating entities for them
     log(`finding and creating people for users`, filteredUsers)
-    const updatedPeople = filteredUsers.map(user =>
-      this.createPerson(existPeople, user),
-    )
-    log(`updated people`, updatedPeople)
+    const updatedPeople = filteredUsers.map(user => {
+      return this.createPerson(existPeople, user)
+    })
 
     // update in the database
+    log(`updated people`, updatedPeople)
     await PersonEntity.save(updatedPeople)
 
     // add person bits
@@ -64,9 +64,9 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
     log(`people were updated`, updatedPeople)
 
     // find remove people and remove them from the database
-    const removedPeople = existPeople.filter(
-      person => updatedPeople.indexOf(person) === -1,
-    )
+    const removedPeople = existPeople.filter(person => {
+      return updatedPeople.indexOf(person) === -1
+    })
     await PersonEntity.remove(removedPeople)
     log(`people were removed`, removedPeople)
   }

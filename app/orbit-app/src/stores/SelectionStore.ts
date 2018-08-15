@@ -7,6 +7,8 @@ import { QueryStore } from './QueryStore'
 import { KeyboardStore } from './KeyboardStore'
 
 const log = logger('selectionStore')
+const isInRow = item =>
+  item.moves.some(move => move === Direction.right || move === Direction.left)
 
 enum Direction {
   left = 'left',
@@ -196,6 +198,9 @@ export class SelectionStore {
   }
 
   getNextIndex = (curIndex, direction: Direction) => {
+    if (curIndex === 0 && direction === Direction.up) {
+      return -1
+    }
     if (curIndex === -1) {
       if (direction === Direction.down) {
         return this.results.length ? 0 : -1
@@ -203,10 +208,15 @@ export class SelectionStore {
       return
     }
     const curResult = this.results[curIndex]
-    const isInRow = curResult.moves.some(
-      move => move === Direction.right || move === Direction.left,
-    )
-    if (!isInRow) {
+    const curInRow = isInRow(curResult)
+    if (!curInRow) {
+      const prevIndex = curIndex - 1
+      const prevIsRow = isInRow(this.results[prevIndex])
+      // move to begining of previous row if going up into it
+      if (prevIsRow && Direction.up) {
+        const movesToNextRow = this.movesToNextRow(Direction.left, prevIndex)
+        return prevIndex + movesToNextRow
+      }
       return Math.min(
         Math.max(-1, curIndex + (direction === Direction.up ? -1 : 1)),
         this.results.length - 1,

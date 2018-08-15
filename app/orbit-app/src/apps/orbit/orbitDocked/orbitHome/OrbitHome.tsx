@@ -84,11 +84,9 @@ class OrbitHomeStore {
 
 const Section = view()
 
-const OrbitHomeCarousel = view(
+const OrbitHomeCarouselSection = view(
   ({ selectionStore, homeStore, categoryName }) => {
-    const { nextIndex } = selectionStore
-    const { items, startIndex, endIndex } = homeStore.following[categoryName]
-    const shouldScrollTo = nextIndex >= startIndex && nextIndex <= endIndex
+    const { items, startIndex } = homeStore.following[categoryName]
     return (
       <Section key={categoryName}>
         <SubTitle margin={0} padding={[10, 0, 0]}>
@@ -132,7 +130,7 @@ export class OrbitHome extends React.Component<Props> {
     return (
       <SubPane name="home" fadeBottom>
         {Object.keys(homeStore.following).map(categoryName => (
-          <OrbitHomeCarousel
+          <OrbitHomeCarouselSection
             key={categoryName}
             selectionStore={selectionStore}
             homeStore={homeStore}

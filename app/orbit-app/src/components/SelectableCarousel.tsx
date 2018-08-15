@@ -18,6 +18,12 @@ class CarouselStore {
   handleScrollTo = react(
     () => this.props.selectionStore.nextIndex,
     index => {
+      if (
+        index < this.props.offset ||
+        index > this.props.offset + this.props.items.length
+      ) {
+        throw react.cancel
+      }
       const scrollTo = this.props.offset + index
       if (!this.carouselRef.current) {
         throw new Error('no carousel ref...')

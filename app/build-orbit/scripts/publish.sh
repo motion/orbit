@@ -23,6 +23,6 @@ fi
 npx publish ./scripts/publish-config.json -p $DIST -d
 
 # clean up
-# rm -r $DIST/Orbit-$npm_package_version-mac.zip
-# mkdir -p $DIST/releases
-# mv $DIST/Orbit-$npm_package_version.dmg $DIST/releases
+rm -r $DIST/Orbit-$npm_package_version-mac.zip
+mkdir -p $DIST/releases
+mv $DIST/Orbit-$npm_package_version.dmg $DIST/releases

@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.2.65",
+  "version": "2.2.69",
   "scripts": {
     "start": "./scripts/build.sh --resume",
     "test-built-app": "DEBUG=api,crawler,crawler:* dist/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",
@@ -21,6 +21,6 @@
     "node-abi": "2.4.1",
     "read-pkg-up": "3.0.0",
     "rimraf": "^2.6.2",
-    "verdaccio": "3.5.1"
+    "verdaccio": "3.6.0"
   }
 }

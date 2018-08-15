@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.2.61",
+  "version": "2.2.65",
   "scripts": {
     "start": "./scripts/build.sh --resume",
     "test-built-app": "DEBUG=api,crawler,crawler:* dist/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit",

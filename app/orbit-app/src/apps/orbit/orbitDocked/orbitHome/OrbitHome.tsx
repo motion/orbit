@@ -89,13 +89,6 @@ const OrbitHomeCarousel = view(
     const { nextIndex } = selectionStore
     const { items, startIndex, endIndex } = homeStore.following[categoryName]
     const shouldScrollTo = nextIndex >= startIndex && nextIndex <= endIndex
-    console.log(
-      'shouldScrollTo',
-      shouldScrollTo,
-      startIndex,
-      endIndex,
-      nextIndex,
-    )
     return (
       <Section key={categoryName}>
         <SubTitle margin={0} padding={[10, 0, 0]}>

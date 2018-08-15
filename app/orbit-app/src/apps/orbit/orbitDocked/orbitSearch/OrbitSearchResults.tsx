@@ -141,9 +141,9 @@ const OrbitSearchResultsContents = view(
 export class OrbitSearchResults extends React.Component<Props> {
   render() {
     const { searchStore, selectionStore, name } = this.props
-    const hideHeight = searchStore.extraFiltersVisible
+    const hideHeight = searchStore.searchFilterStore.extraFiltersVisible
       ? 0
-      : searchStore.extraFiltersHeight
+      : searchStore.searchFilterStore.extraFiltersHeight
     const transform = {
       y: -hideHeight,
     }

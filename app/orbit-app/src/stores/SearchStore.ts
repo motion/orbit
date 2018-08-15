@@ -12,6 +12,7 @@ import { BitRepository, PersonRepository } from '../repositories'
 import { flatten } from 'lodash'
 import { SelectionStore } from './SelectionStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
+import { QueryStore } from './QueryStore'
 
 const TYPE_DEBOUNCE = 200
 
@@ -21,12 +22,15 @@ export class SearchStore {
     paneManagerStore: PaneManagerStore
     selectionStore: SelectionStore
     integrationSettingsStore: IntegrationSettingsStore
+    queryStore: QueryStore
   }
 
   nlpStore = new NLPStore()
-  searchFilterStore = new SearchFilterStore(this)
-  extraFiltersHeight = 325
-  extraFiltersVisible = false
+  searchFilterStore = new SearchFilterStore({
+    queryStore: this.props.queryStore,
+    integrationSettingsStore: this.props.integrationSettingsStore,
+    nlpStore: this.nlpStore,
+  })
 
   willMount() {
     this.subscriptions.add({
@@ -71,16 +75,8 @@ export class SearchStore {
     return this.props.paneManagerStore.activePane === 'search'
   }
 
-  get extraHeight() {
-    return this.extraFiltersVisible ? this.extraFiltersHeight : 0
-  }
-
   hasQuery() {
     return !!App.state.query
-  }
-
-  setExtraFiltersVisible = target => {
-    this.extraFiltersVisible = !!target
   }
 
   searchState = react(

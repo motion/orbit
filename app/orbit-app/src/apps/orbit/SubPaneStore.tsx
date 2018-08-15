@@ -2,7 +2,7 @@ import * as React from 'react'
 import { on, react } from '@mcro/black'
 import { AppStore } from '../../stores/AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from '../../stores/SelectionStore'
+import { SearchStore } from '../../stores/SearchStore'
 import { throttle } from 'lodash'
 
 function getTopOffset(element, parent?) {
@@ -60,7 +60,7 @@ export class SubPaneStore {
       }
       return isActive
     },
-    { immediate: true, defaultValue: false },
+    { defaultValue: false },
   )
 
   didMount() {
@@ -88,7 +88,7 @@ export class SubPaneStore {
   get fullHeight() {
     // this is the expandable filterpane in searches
     const framePad = 8
-    const { extraHeight } = this.props.searchStore
+    const { extraHeight } = this.props.searchStore.searchFilterStore
     const addHeight = extraHeight ? extraHeight + 14 : 0
     const fullHeight =
       addHeight + this.contentHeight + this.aboveContentHeight + framePad

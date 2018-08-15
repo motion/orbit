@@ -7,6 +7,11 @@ cd $(dirname $0)/..
 
 DIST="./dist"
 
+if [ "$npm_package_version" = "" ]; then
+  echo "to run: npm run publish"
+  exit 0
+fi
+
 # prepare for publish by version
 if [ ! -f "$DIST/Orbit-$npm_package_version.dmg" ]; then
   cp $DIST/Orbit.dmg $DIST/Orbit-$npm_package_version.dmg

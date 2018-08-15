@@ -1,4 +1,5 @@
 type Config = {
+  version: string
   ports: {
     server: number
     bridge: number

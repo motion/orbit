@@ -19,13 +19,12 @@ class CarouselStore {
     () => this.props.selectionStore.activeIndex,
     index => {
       const { items, offset, selectionStore } = this.props
+      const scrollTo = offset + index
       react.ensure(selectionStore.selectEvent !== 'click')
       react.ensure(index >= offset && index <= offset + items.length)
       react.ensure(this.carouselRef.current)
-      const scrollTo = offset + index
-      if (typeof scrollTo === 'number') {
-        this.carouselRef.current.scrollTo(scrollTo)
-      }
+      react.ensure(typeof scrollTo === 'number')
+      this.carouselRef.current.scrollTo(scrollTo)
     },
   )
 }

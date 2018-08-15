@@ -47,6 +47,7 @@ export class SelectionStore {
   didMount() {
     on(this, this.props.keyboardStore, 'key', (key: string) => {
       if (Direction[key]) {
+        this.setSelectEvent('key')
         this.move(Direction[key])
       }
     })

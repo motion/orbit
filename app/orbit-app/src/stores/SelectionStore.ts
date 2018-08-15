@@ -207,19 +207,22 @@ export class SelectionStore {
       }
       return
     }
+    const maxIndex = this.results.length - 1
     const curResult = this.results[curIndex]
-    const curInRow = isInRow(curResult)
-    if (!curInRow) {
-      const prevIndex = curIndex - 1
-      const prevIsRow = isInRow(this.results[prevIndex])
+    const nowInRow = isInRow(curResult)
+    if (!nowInRow) {
       // move to begining of previous row if going up into it
-      if (prevIsRow && Direction.up) {
-        const movesToNextRow = this.movesToNextRow(Direction.left, prevIndex)
-        return prevIndex + movesToNextRow
+      if (direction === Direction.up) {
+        const prevIndex = curIndex - 1
+        const prevIsRow = isInRow(this.results[prevIndex])
+        if (prevIsRow) {
+          const movesToNextRow = this.movesToNextRow(Direction.left, prevIndex)
+          return prevIndex + movesToNextRow
+        }
       }
       return Math.min(
         Math.max(-1, curIndex + (direction === Direction.up ? -1 : 1)),
-        this.results.length - 1,
+        maxIndex,
       )
     }
     const canMoveOne =
@@ -234,7 +237,7 @@ export class SelectionStore {
           const rowDirection =
             direction === Direction.down ? Direction.right : Direction.left
           const movesToNextRow = this.movesToNextRow(rowDirection, curIndex)
-          return curIndex + movesToNextRow
+          return Math.min(maxIndex, curIndex + movesToNextRow)
       }
     }
     return curIndex

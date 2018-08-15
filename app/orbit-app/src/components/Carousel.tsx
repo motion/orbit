@@ -35,7 +35,6 @@ export class Carousel extends React.Component<CarouselProps> {
 
   scrollTo = index => {
     const frame = this.frameRef.current
-    console.log('scrolling to', index, frame, this)
     if (!frame) return
     const activeCard = this.cardRefs[index]
     if (!activeCard) return

@@ -156,7 +156,7 @@ class OrbitCardStore {
           throw new Error(`No target!`)
         }
         // fluidity
-        await sleep()
+        await sleep(16)
         App.actions.selectItem(this.target, this.position)
       }
     },

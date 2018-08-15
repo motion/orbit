@@ -12,6 +12,7 @@ if [ "$1" = "--resume" ]; then
   FLAGS=`cat ./scripts/.lastbuild`
   echo "resuming with options $FLAGS"
 fi
+
 echo -n "" > ./scripts/.lastbuild
 
 # BUILD

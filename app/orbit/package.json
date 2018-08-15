@@ -3,9 +3,6 @@
   "main": "_/main.js",
   "productName": "Orbit",
   "version": "2.2.9",
-  "updater": {
-    "url": "https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json"
-  },
   "scripts": {
     "start": "./scripts/start.sh",
     "start-prod": "./scripts/start.sh start-prod",

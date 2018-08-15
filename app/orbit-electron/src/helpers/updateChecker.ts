@@ -5,8 +5,7 @@ console.log('Update checker... is prod?', getConfig().env.prod)
 
 // update checker
 if (getConfig().env.prod) {
-  const updateUrl =
-    'https://raw.githubusercontent.com/motion/orbit-updates/master/updates.json'
+  const updateUrl = 'http://138.68.15.104/updates/update.json'
   updater.init(updateUrl)
 
   updater.on('update-available', () => {

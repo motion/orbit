@@ -98,7 +98,7 @@ export class Syncer {
       const needToWait = (lastJob.time + this.options.interval) - new Date().getTime()
       if (needToWait > 0) {
         log(
-          `found last executed job for ${this.name} and we should wait some time ` +
+          `found last executed job for ${this.name}${settingId ? ':' + settingId : ''} and we should wait some time ` +
           `until enough interval time will pass before we execute a new job`,
           {
             jobTime: lastJob.time + this.options.interval * 1000,

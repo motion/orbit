@@ -1,5 +1,5 @@
 import { logger } from '@mcro/logger'
-import { Bit, Person, PersonBit } from '@mcro/models'
+import { Bit, Person, PersonBit, SlackBitData } from '@mcro/models'
 import * as _ from 'lodash'
 import { getRepository, MoreThan } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
@@ -31,7 +31,18 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
     // note that people must be synced before this syncer's sync
     log(`loading (already synced) people`)
     const allPeople = await this.loadPeople()
-    log(`loaded people`, allPeople)
+    if (!allPeople.length) {
+      log(`no people were found, looks like people syncer wasn't executed yet, scheduling restart in 10 seconds`)
+      // restart syncer in 10 seconds
+      setTimeout(() => {
+        log(`restarting people syncer`)
+        return this.run()
+      }, 10000)
+      return
+
+    } else {
+      log(`loaded people`, allPeople)
+    }
 
     // load all slack channels
     log(`loading API channels`)
@@ -60,6 +71,17 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
       const loadedMessages = await this.loader.loadMessages(channel.id, oldestMessageId)
       log(`loaded messages`, loadedMessages)
 
+      // we need to load all bits in the data range period we are working with (oldestMessageId)
+      // because we do comparision and update bits, also we remove removed messages
+      // if oldestMessageId is missing it means this is a first time loading for this slack channel
+      // and we don't have bits in the database yet
+      let existBits: BitEntity[] = []
+      if (oldestMessageId) {
+        log(`loading channel ${channel.id} exist database bits`, { oldestMessageId })
+        existBits = await this.loadLatestBits(channel.id, oldestMessageId)
+        log(`exist database bits were loaded`, existBits)
+      }
+
       // sync messages if we found them
       if (loadedMessages.length) {
 
@@ -68,7 +90,8 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
           message.type === 'message' &&
           !message.subtype &&
           !message.bot_id &&
-          message.user
+          message.user &&
+          message.text // snippets for example does not contain text, maybe attachments too
         ))
         log(`filtered messages (no bots and others)`, filteredMessages)
 
@@ -77,45 +100,27 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
         log(`created ${conversations.length} conversations`, conversations)
 
         // create bits from conversations
-        for (let messages of conversations) {
-
-          // get people involved in conversation
-          const messagesPeople: Person[] = allPeople.filter(person => {
-            return messages.find(message => message.user === person.integrationId)
-          })
-          log(`found people ${messagesPeople.length} people in conversation`, messagesPeople, messages)
-
-          // create and save a new conversion bit
-          const bit = await this.createBit(
+        updatedBits.push(
+          ...conversations.map(messages => this.createBit(
             channel,
             messages,
-            messagesPeople,
+            existBits,
             allPeople,
-          )
-          updatedBits.push(bit)
-        }
+          ))
+        )
 
         // update last message sync setting
         // note: we need to use loaded messages, not filtered
         lastMessageSync[channel.id] = loadedMessages[0].ts
       }
 
-      // find bits in the database and check if they all exist
-      if (oldestMessageId) {
-
-        // find bits in the database
-        log(`loading latest bits to check if some were removed`)
-        const latestBits = await this.loadLatestBits(channel.id, oldestMessageId)
-        log(`latest bits were loaded`, latestBits)
-
-        // if there is no loaded message for bit in the database
-        // then we shall remove such bits
-        removedBits.push(...latestBits.filter(existBit => {
-          return !updatedBits.some(updatedBit => {
-            return updatedBit.id === existBit.id
-          })
-        }))
-      }
+      // compare database bits with loaded bits and if some loaded bits were removed
+      // add them to the list of bits needs to be removed
+      removedBits.push(...existBits.filter(existBit => {
+        return !updatedBits.some(updatedBit => {
+          return updatedBit.id === existBit.id
+        })
+      }))
     }
 
     // update and remove bits
@@ -159,12 +164,16 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
   /**
    * Creates new or updated bit.
    */
-  private async createBit(
+  private createBit(
     channel: SlackChannel,
     messages: SlackMessage[],
-    people: Person[],
+    bits: BitEntity[],
     allPeople: Person[],
-  ): Promise<BitEntity> {
+  ): BitEntity {
+
+    // we need message in a reverse order
+    // by default messages we get are in last-first order,
+    // but we need in last-last order here
 
     const firstMessage = messages[0]
     const lastMessage = messages[messages.length - 1]
@@ -175,26 +184,9 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
     const webLink = `https://${team.domain}.slack.com/archives/${channel.id}/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${team.id}`
     const body = SlackUtils.buildBitBody(messages, allPeople)
-    const bit = await BitEntity.findOne({
-      settingId: this.setting.id,
-      id,
-    })
-
-    // we need message in a reverse order
-    // by default messages we get are in last-first order,
-    // but we need in last-last order here
-    messages = messages.reverse()
-
-    // create a new messages structure special for a data property
-    const dataMessages = messages.map(message => {
-      const person = people.find(
-        person => person.integrationId === message.user,
-      )
-      return {
-        name: person.data.name, // todo: looks weird, person name alongside message and its called "message name"?
-        ...message,
-      }
-    })
+    const bit = bits.find(bit => bit.id === id)
+    const mentionedPeople = SlackUtils.findMessageMentionedPeople(messages, allPeople)
+    console.log("mentionedPeople", mentionedPeople)
 
     return assign(bit || new BitEntity(), {
       setting: this.setting,
@@ -204,17 +196,21 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
       title: `#${channel.name}`,
       body,
       data: {
-        channel: {
-          id: channel.id,
-          purpose: channel.purpose.value,
-          topic: channel.topic.value,
-          members: channel.members,
-        },
-        messages: dataMessages,
-      },
+        messages: messages.reverse().map(message => ({
+          user: message.user,
+          text: message.text,
+          time: +message.ts.split('.')[0] * 1000,
+        }))
+      } as SlackBitData,
       bitCreatedAt,
       bitUpdatedAt,
-      people,
+      people: allPeople.filter(person => {
+        return messages.some(message => {
+          return message.user === person.integrationId
+        }) || mentionedPeople.some(mentionedPerson => {
+          return person.id === mentionedPerson.id
+        })
+      }),
       location: {
         id: channel.id,
         name: channel.name,

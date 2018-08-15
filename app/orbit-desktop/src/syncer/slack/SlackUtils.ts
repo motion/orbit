@@ -64,15 +64,22 @@ export class SlackUtils {
   }
 
   /**
+   * Finds all the mentioned people in the given slack messages.
+   */
+  static findMessageMentionedPeople(messages: SlackMessage[], allPeople: Person[]) {
+    const body = messages.map(message => message.text).join("")
+    return allPeople.filter(person => new RegExp(`<@${person.data.id}>`).test(body))
+  }
+
+  /**
    * Builds "body" for a Bit object.
    */
   static buildBitBody(messages: SlackMessage[], allPeople: Person[]): string {
 
     // merge all messages texts into a single body
     let body = messages
-      .map(message => message.text)
+      .map(message => message.text.trim())
       .join(' ... ')
-      .slice(0, 255)
 
     // replace all people id mentions in the message into a real people names
     for (let person of allPeople) {

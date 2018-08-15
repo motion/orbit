@@ -63,7 +63,7 @@ export class OrbitHeader extends React.Component<
     const headerBg = theme.base.background
     return (
       <OrbitHeaderContainer headerBg={headerBg} borderRadius={borderRadius}>
-        <OrbitFakeInput isFocused={headerStore.isInputFocused}>
+        <OrbitFakeInput>
           <Title>
             <UI.Icon
               name={'ui-1_zoom'}

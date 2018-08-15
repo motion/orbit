@@ -34,21 +34,11 @@ export class HeaderStore {
     }
   }
 
-  // not based on real focus because when you scroll down and select it technically
-  // focuses on the list items but still lets you type
-  // also needs to be
-  isInputFocused = react(
-    () => [App.orbitState.inputFocused, this.props.searchStore.nextIndex],
-    ([focused, nextIndex]) => {
-      return focused && nextIndex === -1
-    },
-  )
-
   onInput = () => {
     if (!this.inputRef.current) {
       return
     }
-    this.props.searchStore.onChangeQuery(this.inputRef.current.innerText)
+    this.props.queryStore.onChangeQuery(this.inputRef.current.innerText)
   }
 
   focus = () => {

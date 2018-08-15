@@ -4,7 +4,7 @@ import { SearchStore } from '../../../../stores/SearchStore'
 import { AppStore } from '../../../../stores/AppStore'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore } from '../../../../stores/SelectionStore'
-import { Carousel } from '../../../../components/Carousel'
+import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 
 const height = 100
 
@@ -37,19 +37,17 @@ const cardProps = {
   },
 }
 
-export const OrbitSearchQuickResults = decorate(
-  ({ searchStore, selectionStore }: Props) => {
-    const { results } = searchStore.quickSearchState
-    if (!results.length) {
-      return null
-    }
-    return (
-      <Carousel
-        scrollTo={selectionStore.nextIndex}
-        cardProps={cardProps}
-        items={results}
-        horizontalPadding={14}
-      />
-    )
-  },
-)
+export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
+  const { results } = searchStore.quickSearchState
+  if (!results.length) {
+    return null
+  }
+  return (
+    <SelectableCarousel
+      offset={0}
+      cardProps={cardProps}
+      items={results}
+      horizontalPadding={14}
+    />
+  )
+})

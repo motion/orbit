@@ -28,6 +28,7 @@ const decorator = compose(
   }),
   view,
 )
+
 export const OrbitSettingCard = decorator(
   ({ store, result, isActive, subtitle, onClick, ...props }: Props) => {
     const countSubtitle = !isActive
@@ -45,9 +46,10 @@ export const OrbitSettingCard = decorator(
         }}
         subtitle={subtitleDisplay}
         subtitleProps={{
-          size: 1.75,
+          size: 1.5,
           fontWeight: 500,
         }}
+        titleFlex={1}
         date={store.job && store.job.updatedAt}
         icon={result.icon}
         iconProps={{

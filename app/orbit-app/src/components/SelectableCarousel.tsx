@@ -16,18 +16,13 @@ class CarouselStore {
   carouselRef = React.createRef<Carousel>()
 
   handleScrollTo = react(
-    () => this.props.selectionStore.nextIndex,
+    () => this.props.selectionStore.activeIndex,
     index => {
-      if (
-        index < this.props.offset ||
-        index > this.props.offset + this.props.items.length
-      ) {
-        throw react.cancel
-      }
-      const scrollTo = this.props.offset + index
-      if (!this.carouselRef.current) {
-        throw new Error('no carousel ref...')
-      }
+      const { items, offset, selectionStore } = this.props
+      react.ensure(selectionStore.selectEvent !== 'click')
+      react.ensure(index >= offset && index <= offset + items.length)
+      react.ensure(this.carouselRef.current)
+      const scrollTo = offset + index
       if (typeof scrollTo === 'number') {
         this.carouselRef.current.scrollTo(scrollTo)
       }

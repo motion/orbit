@@ -35,12 +35,13 @@ class OrbitAppsStore {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  setGetResults = react(
+  setSelectionHandler = react(
     () => [this.isActive, this.results],
-    async ([isActive], { sleep }) => {
+    ([isActive]) => {
       if (!isActive) throw react.cancel
-      sleep()
-      this.props.selectionStore.setGetResult(index => this.results[index])
+      this.props.selectionStore.setResults([
+        { type: 'column', items: this.results },
+      ])
     },
   )
 

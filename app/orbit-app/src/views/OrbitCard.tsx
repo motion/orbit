@@ -88,8 +88,7 @@ class OrbitCardStore {
     if (this.props.inactive) {
       return
     }
-    this.props.selectionStore.setSelectEvent('click')
-    App.actions.toggleSelectItem(this.target, this.position)
+    this.props.selectionStore.toggleSelected(this.realIndex, 'click')
   }
 
   open = () => {
@@ -120,32 +119,30 @@ class OrbitCardStore {
     return position
   }
 
+  get realIndex() {
+    const { bit, getIndex, index } = this.props
+    return getIndex ? getIndex(bit.id) : index
+  }
+
   // this cancels to prevent renders very aggressively
   updateIsSelected = react(
     () => [
-      this.props.selectionStore && this.props.selectionStore.nextIndex,
+      this.props.selectionStore && this.props.selectionStore.activeIndex,
       this.props.subPaneStore && this.props.subPaneStore.isActive,
       typeof this.props.isSelected === 'function'
         ? this.props.isSelected()
         : this.props.isSelected,
     ],
-    async ([nextIndex, isPaneActive, isSelected], { sleep }) => {
+    async ([activeIndex, isPaneActive, isSelected], { sleep }) => {
       if (!isPaneActive) {
         throw react.cancel
       }
-      const {
-        bit,
-        getIndex,
-        index,
-        preventAutoSelect,
-        subPaneStore,
-      } = this.props
+      const { preventAutoSelect, subPaneStore } = this.props
       let nextIsSelected
       if (typeof isSelected === 'boolean') {
         nextIsSelected = isSelected
       } else {
-        const resolvedIndex = getIndex ? getIndex(bit.id) : index
-        nextIsSelected = nextIndex === resolvedIndex
+        nextIsSelected = activeIndex === this.realIndex
       }
       if (nextIsSelected === this.isSelected) {
         throw react.cancel
@@ -204,8 +201,8 @@ const cardShadow = [0, 6, 14, [0, 0, 0, 0.12]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
 // 90b1e433
 // 90b1e4cc
-const cardSelectedGlow = [0, 0, 0, 2, [0, 0, 0, 0.1]]
-const borderSelected = '#666'
+const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
+const borderSelected = '#90b1e4ee'
 
 Card.theme = ({
   listItem,

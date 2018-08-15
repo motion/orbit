@@ -39,7 +39,6 @@ export class SelectionStore {
   lastPinKey = ''
   selectEvent = ''
   quickIndex = 0
-  nextIndex = -1
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
@@ -141,18 +140,8 @@ export class SelectionStore {
     },
   )
 
-  // delay for speed of rendering
-  updateActiveIndexToNextIndex = react(
-    () => this.nextIndex,
-    async (i, { sleep }) => {
-      await sleep(32)
-      this.activeIndex = i
-    },
-  )
-
   clearSelected = (clearPeek = true) => {
     this.leaveIndex = -1
-    this.nextIndex = -1
     this.activeIndex = -1
     if (clearPeek) {
       App.actions.clearPeek()
@@ -175,7 +164,10 @@ export class SelectionStore {
     },
   })
 
-  toggleSelected = index => {
+  toggleSelected = (index, eventType?: string) => {
+    if (eventType) {
+      this.setSelectEvent(eventType)
+    }
     const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState.target) {
       if (Date.now() - this.lastSelectAt < 70) {
@@ -186,7 +178,7 @@ export class SelectionStore {
       this.clearSelected()
     } else {
       if (typeof index === 'number') {
-        this.nextIndex = index
+        this.activeIndex = index
       }
     }
     return false
@@ -196,10 +188,9 @@ export class SelectionStore {
     if (!this.results) {
       throw new Error('No results')
     }
-    const nextIndex = this.getNextIndex(this.activeIndex, direction)
-    console.log('nextIndex', nextIndex)
-    if (nextIndex !== this.activeIndex) {
-      this.toggleSelected(nextIndex)
+    const activeIndex = this.getNextIndex(this.activeIndex, direction)
+    if (activeIndex !== this.activeIndex) {
+      this.toggleSelected(activeIndex)
     }
   }
 

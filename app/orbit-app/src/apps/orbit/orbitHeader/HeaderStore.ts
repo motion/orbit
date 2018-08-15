@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { SearchStore } from '../../../stores/SearchStore'
-import { PaneManagerStore } from '../PaneManagerStore'
+import { HeaderProps } from './HeaderProps'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -12,10 +11,7 @@ const selectTextarea = el => {
 }
 
 export class HeaderStore {
-  props: {
-    searchStore: SearchStore
-    paneManagerStore: PaneManagerStore
-  }
+  props: HeaderProps
 
   inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false
@@ -38,22 +34,11 @@ export class HeaderStore {
     }
   }
 
-  // not based on real focus because when you scroll down and select it technically
-  // focuses on the list items but still lets you type
-  // also needs to be
-  isInputFocused = react(
-    () => [App.orbitState.inputFocused, this.props.searchStore.nextIndex],
-    ([focused, nextIndex]) => {
-      return focused && nextIndex === -1
-    },
-    { immediate: true },
-  )
-
   onInput = () => {
     if (!this.inputRef.current) {
       return
     }
-    this.props.searchStore.onChangeQuery(this.inputRef.current.innerText)
+    this.props.queryStore.onChangeQuery(this.inputRef.current.innerText)
   }
 
   focus = () => {
@@ -106,7 +91,7 @@ export class HeaderStore {
       if (pane === 'search' || pane === 'home') {
         throw react.cancel
       }
-      this.props.searchStore.clearQuery()
+      this.props.queryStore.clearQuery()
       this.focus()
     },
   )
@@ -130,7 +115,7 @@ export class HeaderStore {
       App.actions.closeOrbit()
     } else {
       if (App.state.query) {
-        this.props.searchStore.clearQuery()
+        this.props.queryStore.clearQuery()
       } else {
         this.props.paneManagerStore.setActivePane('home')
       }

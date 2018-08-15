@@ -4,16 +4,19 @@ import { BitRepository } from '../../../../repositories'
 import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SearchStore } from '../../../../stores/SearchStore'
-import { Carousel } from '../../../../components/Carousel'
+import {
+  SelectionStore,
+  SelectionGroup,
+} from '../../../../stores/SelectionStore'
 import { capitalize } from 'lodash'
 import { View } from '@mcro/ui'
+import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 
 type Props = {
   name: string
-  paneManagerStore: PaneManagerStore
-  searchStore?: SearchStore
-  store?: OrbitHomeStore
+  paneManagerStore?: PaneManagerStore
+  selectionStore?: SelectionStore
+  homeStore?: OrbitHomeStore
 }
 
 const findManyType = integration =>
@@ -33,24 +36,20 @@ class OrbitHomeStore {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  setGetResults = react(
+  setSelectionHandler = react(
     () => [this.isActive, this.results],
-    async ([isActive], { sleep }) => {
-      if (!isActive) {
-        throw react.cancel
-      }
-      await sleep(40)
-      this.props.searchStore.setGetResults(() => this.results)
+    ([isActive]) => {
+      if (!isActive) throw react.cancel
+      this.props.selectionStore.setResults(this.results)
     },
-    { immediate: true },
   )
 
   get results() {
-    let res = []
-    for (const key in this.following) {
-      res = [...res, ...this.following[key].items]
+    let results: SelectionGroup[] = []
+    for (const name in this.following) {
+      results.push({ name, type: 'row', items: this.following[name].items })
     }
-    return res
+    return results
   }
 
   following = react(
@@ -65,15 +64,14 @@ class OrbitHomeStore {
       // only return ones with results
       const all = { slack, drive, github, confluence, jira }
       const res = {} as any
-      let offset = 0
+      let curIndex = 0
       for (const name in all) {
         if (all[name] && all[name].length) {
           const items = all[name]
-          res[capitalize(name)] = {
-            items,
-            offset,
-          }
-          offset += items.length
+          const startIndex = curIndex
+          const endIndex = startIndex + items.length
+          res[capitalize(name)] = { items, startIndex, endIndex }
+          curIndex += items.length
         }
       }
       return res
@@ -86,14 +84,39 @@ class OrbitHomeStore {
 
 const Section = view()
 
+const OrbitHomeCarouselSection = view(
+  ({ selectionStore, homeStore, categoryName }) => {
+    const { items, startIndex } = homeStore.following[categoryName]
+    return (
+      <Section key={categoryName}>
+        <SubTitle margin={0} padding={[10, 0, 0]}>
+          {categoryName}
+        </SubTitle>
+        <Unpad>
+          <SelectableCarousel
+            items={items}
+            offset={startIndex}
+            horizontalPadding={16}
+            cardProps={{
+              getIndex: selectionStore.getIndexForItem,
+              padding: 9,
+              hide: { body: true },
+              titleFlex: 1,
+            }}
+          />
+        </Unpad>
+      </Section>
+    )
+  },
+)
+
 const Unpad = view({
   margin: [0, -16],
-  padding: [0, 0, 0, 14],
 })
 
-@view.attach('searchStore')
+@view.attach('searchStore', 'selectionStore', 'paneManagerStore')
 @view.attach({
-  store: OrbitHomeStore,
+  homeStore: OrbitHomeStore,
 })
 @view
 export class OrbitHome extends React.Component<Props> {
@@ -102,33 +125,19 @@ export class OrbitHome extends React.Component<Props> {
   }
 
   render() {
-    const { store } = this.props
+    const { homeStore, selectionStore } = this.props
+    console.log('HOME RENDER')
     return (
       <SubPane name="home" fadeBottom>
-        <div style={{ paddingTop: 3 }}>
-          {Object.keys(store.following).map(categoryName => {
-            const category = store.following[categoryName]
-            return (
-              <Section key={categoryName}>
-                <SubTitle margin={0} padding={[10, 0, 0]}>
-                  {categoryName}
-                </SubTitle>
-                <Unpad>
-                  <Carousel
-                    items={category.items}
-                    offset={category.offset}
-                    cardProps={{
-                      padding: 9,
-                      hide: { body: true },
-                      titleFlex: 1,
-                    }}
-                  />
-                </Unpad>
-              </Section>
-            )
-          })}
-          <View height={20} />
-        </div>
+        {Object.keys(homeStore.following).map(categoryName => (
+          <OrbitHomeCarouselSection
+            key={categoryName}
+            selectionStore={selectionStore}
+            homeStore={homeStore}
+            categoryName={categoryName}
+          />
+        ))}
+        {!!homeStore.results.length && <View height={15} />}
       </SubPane>
     )
   }

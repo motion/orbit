@@ -1,12 +1,9 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { App } from '@mcro/stores'
-import { ControlButton } from '../../../views/ControlButton'
-import { PaneManagerStore } from '../PaneManagerStore'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { HeaderStore } from './HeaderStore'
-import { SearchStore } from '../../../stores/SearchStore'
+import { HeaderProps } from './HeaderProps'
 
 const OrbitHeaderContainer = view({
   position: 'relative',
@@ -16,26 +13,6 @@ const OrbitHeaderContainer = view({
   padding: [9, 9, 7, 9],
   transition: 'all ease-in 300ms',
   zIndex: 4,
-})
-
-const PinnedControlButton = view(ControlButton, {
-  position: 'relative',
-  zIndex: 10000,
-  transition: 'all ease-in 100ms 100ms',
-  marginRight: 12,
-  opacity: 0.2,
-  '&:hover': {
-    opacity: 0.4,
-  },
-  isPinned: {
-    opacity: 1,
-  },
-  onLeft: {
-    right: 3,
-  },
-  onRight: {
-    left: 0,
-  },
 })
 
 const After = view({
@@ -50,20 +27,14 @@ const Title = view({
   alignItems: 'stretch',
 })
 
-const cardSelectedGlow = ['inset', 0, 0, 0, 0.5, [0, 0, 0, 0.2]]
-
 const OrbitFakeInput = view({
   height: 43,
   flex: 1,
   flexFlow: 'row',
   alignItems: 'stretch',
   justifyContent: 'stretch',
-  // background: 'transparent',
   transition: 'background ease-in 300ms',
   borderRadius: 10,
-  isFocused: {
-    // boxShadow: [cardSelectedGlow],
-  },
 })
 OrbitFakeInput.theme = ({ theme }) => ({
   background: theme.base.background.alpha(0.35),
@@ -73,44 +44,26 @@ OrbitFakeInput.theme = ({ theme }) => ({
 })
 
 @attachTheme
-@view.attach('searchStore', 'paneManagerStore')
+@view.attach('paneManagerStore', 'selectionStore', 'searchStore', 'queryStore')
 @view.attach({
   headerStore: HeaderStore,
 })
 @view
-export class OrbitHeader extends React.Component<{
-  headerStore?: HeaderStore
-  paneManagerStore?: PaneManagerStore
-  searchStore?: SearchStore
-  after?: React.ReactNode
-  borderRadius?: number
-  theme?: Object
-  showPin?: boolean
-}> {
-  hoverSettler = this.props.searchStore.getHoverSettler({
-    onHover: this.props.headerStore.hover,
-  })
-
+export class OrbitHeader extends React.Component<
+  HeaderProps & {
+    headerStore?: HeaderStore
+    after?: React.ReactNode
+    borderRadius?: number
+    theme?: Object
+    showPin?: boolean
+  }
+> {
   render() {
-    const {
-      // paneManagerStore,
-      headerStore,
-      after,
-      theme,
-      showPin,
-      borderRadius,
-      searchStore,
-    } = this.props
+    const { headerStore, after, theme, borderRadius } = this.props
     const headerBg = theme.base.background
-    // const isHome = paneManagerStore.activePane === 'home'
-    // const { iconHovered } = headerStore
     return (
-      <OrbitHeaderContainer
-        headerBg={headerBg}
-        {...this.hoverSettler.props}
-        borderRadius={borderRadius}
-      >
-        <OrbitFakeInput isFocused={headerStore.isInputFocused}>
+      <OrbitHeaderContainer headerBg={headerBg} borderRadius={borderRadius}>
+        <OrbitFakeInput>
           <Title>
             <UI.Icon
               name={'ui-1_zoom'}
@@ -131,30 +84,9 @@ export class OrbitHeader extends React.Component<{
                 },
               }}
             />
-            <OrbitHeaderInput
-              searchStore={searchStore}
-              headerStore={headerStore}
-              theme={theme}
-            />
+            <OrbitHeaderInput headerStore={headerStore} theme={theme} />
           </Title>
           {!!after && <After>{after}</After>}
-          <PinnedControlButton
-            if={showPin}
-            onClick={App.togglePinned}
-            borderWidth={App.orbitState.pinned ? 0.5 : 2}
-            onLeft={App.orbitOnLeft}
-            onRight={!App.orbitOnLeft}
-            isPinned={App.orbitState.pinned}
-            background={App.orbitState.pinned ? '#7954F9' : 'transparent'}
-            borderColor={
-              App.orbitState.pinned
-                ? null
-                : theme.base.background.darken(0.4).desaturate(0.6)
-            }
-            css={{
-              opacity: App.orbitState.hidden ? 0 : 1,
-            }}
-          />
         </OrbitFakeInput>
       </OrbitHeaderContainer>
     )

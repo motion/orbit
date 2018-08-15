@@ -15,9 +15,7 @@ export class GithubService {
     })
   }
 
-  allOrgs = react(() => this.github && this.github.user.orgs.fetchAll(), {
-    immediate: true,
-  })
+  allOrgs = react(() => this.github && this.github.user.orgs.fetchAll())
 
   get activeRepos() {
     if (!this.setting) return

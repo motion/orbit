@@ -22,6 +22,8 @@ kubeconfig
 
 common/temp/**
 
+app/build-orbit/stage-app/package-lock.json
+
 app/oracle/train
 app/oracle/orbit/orbit.xcodeproj/project.xcworkspace
 app/oracle/orbit/orbit.xcodeproj/xcuserdata

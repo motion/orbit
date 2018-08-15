@@ -2,6 +2,15 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
+export type HorizontalScrollRowProps = {
+  height?: number
+  verticalPadding?: number
+  horizontalPadding?: number
+  scrollBarHeight?: number
+  children?: React.ReactNode
+  forwardRef?: React.RefObject<any>
+}
+
 const HorizontalScrollRowFrame = view(UI.View, {
   flex: 1,
   overflow: 'hidden',
@@ -33,12 +42,16 @@ Inner.theme = ({ height, verticalPadding, scrollBarHeight }) => ({
 export const HorizontalScrollRow = ({
   height,
   verticalPadding = 0,
+  horizontalPadding = 10,
   children,
   scrollBarHeight = 16,
   ...props
-}) => {
+}: HorizontalScrollRowProps) => {
   return (
-    <HorizontalScrollRowFrame height={height + extraPad * 2} margin={-extraPad}>
+    <HorizontalScrollRowFrame
+      height={height + extraPad * 2}
+      margin={[-extraPad, -(extraPad - horizontalPadding)]}
+    >
       <Inner
         height={height}
         verticalPadding={verticalPadding}

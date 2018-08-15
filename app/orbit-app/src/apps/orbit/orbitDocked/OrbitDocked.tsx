@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitHome } from './orbitHome/OrbitHome'
 import { OrbitSettings } from './orbitSettings/OrbitSettings'
@@ -17,12 +17,15 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitFilterBar } from '../orbitHeader/OrbitFilterBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
+import { SelectionStore } from '../../../stores/SelectionStore'
+import { QueryStore } from '../../../stores/QueryStore'
+import { KeyboardStore } from '../../../stores/KeyboardStore'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
   appStore?: AppStore
-  store?: OrbitDockedStore
+  // store?: OrbitDockedStore
 }
 
 const OrbitDockedFrame = view(UI.Col, {
@@ -73,45 +76,53 @@ const OrbitDockedInner = view({
   },
 })
 
-class OrbitDockedStore {
-  animationState = react(
-    () => App.orbitState.docked,
-    async (visible, { sleep, setValue }) => {
-      // hmr already showing
-      if (visible && this.animationState.visible) {
-        throw react.cancel
-      }
-      // old value first to setup for transition
-      setValue({ willAnimate: true, visible: !visible })
-      await sleep(32)
-      // new value, start transition
-      setValue({ willAnimate: true, visible })
-      await sleep(App.animationDuration * 2)
-      // done animating, reset
-      setValue({ willAnimate: false, visible })
-      // this would do the toggle after the animation, trying out doing it before to see if its faster
-      // App.sendMessage(
-      //   Electron,
-      //   visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
-      // )
-    },
-    {
-      immediate: true,
-      log: false,
-      defaultValue: { willAnimate: false, visible: App.orbitState.docked },
-    },
-  )
-}
+// class OrbitDockedStore {
+//   animationState = react(
+//     () => App.orbitState.docked,
+//     async (visible, { sleep, setValue }) => {
+//       // hmr already showing
+//       if (visible && this.animationState.visible) {
+//         throw react.cancel
+//       }
+//       // old value first to setup for transition
+//       setValue({ willAnimate: true, visible: !visible })
+//       await sleep(32)
+//       // new value, start transition
+//       setValue({ willAnimate: true, visible })
+//       await sleep(App.animationDuration * 2)
+//       // done animating, reset
+//       setValue({ willAnimate: false, visible })
+//       // this would do the toggle after the animation, trying out doing it before to see if its faster
+//       // App.sendMessage(
+//       //   Electron,
+//       //   visible ? Electron.messages.FOCUS : Electron.messages.DEFOCUS,
+//       // )
+//     },
+//     {
+//       log: false,
+//       defaultValue: { willAnimate: false, visible: App.orbitState.docked },
+//     },
+//   )
+// }
 
-@view.attach('appStore', 'searchStore')
+@view.attach('appStore', 'integrationSettingsStore')
+@view.provide({
+  queryStore: QueryStore,
+  keyboardStore: KeyboardStore,
+})
+@view.provide({
+  selectionStore: SelectionStore,
+})
 @view.provide({
   paneManagerStore: PaneManagerStore,
-  store: OrbitDockedStore,
+})
+@view.provide({
+  searchStore: SearchStore,
 })
 @view
 export class OrbitDocked extends React.Component<Props> {
   render() {
-    const { paneManagerStore, appStore, searchStore } = this.props
+    const { appStore, searchStore, paneManagerStore } = this.props
     // log('DOCKED ------------', store.animationState)
     return (
       <UI.Theme name="dark">
@@ -127,18 +138,15 @@ export class OrbitDocked extends React.Component<Props> {
               after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
             />
             <OrbitFilterBar
-              filterStore={searchStore.searchFilterStore}
               paneManagerStore={paneManagerStore}
+              filterStore={searchStore.searchFilterStore}
             />
             <OrbitDockedInner style={{ height: window.innerHeight }}>
               <div style={{ position: 'relative', flex: 1 }}>
                 <OrbitOnboard name="onboard" />
-                <OrbitHome name="home" paneManagerStore={paneManagerStore} />
-                <OrbitDirectory
-                  name="directory"
-                  paneManagerStore={paneManagerStore}
-                />
-                <OrbitApps name="apps" paneManagerStore={paneManagerStore} />
+                <OrbitHome name="home" />
+                <OrbitDirectory name="directory" />
+                <OrbitApps name="apps" />
                 <OrbitSearchResults name="docked-search" />
                 <OrbitSettings name="settings" />
               </div>

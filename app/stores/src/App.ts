@@ -42,6 +42,7 @@ class AppStore {
     clearPeek: Function
     setPeekTarget: Function
     setContextMessage: Function
+    setHighlightIndex: Function
   }
 
   messages = {
@@ -119,7 +120,7 @@ class AppStore {
       await sleep(over ? 0 : App.animationDuration)
       setValue(over)
     },
-    { immediate: true, log: false },
+    { log: false },
   )
 
   last: Boolean

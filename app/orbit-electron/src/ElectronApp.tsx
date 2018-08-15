@@ -1,6 +1,5 @@
 import './helpers/monitorResourceUsage'
 import './helpers/handlePromiseErrors'
-import './helpers/updateChecker'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
 import React from 'react'
@@ -10,6 +9,7 @@ import { ElectronRoot } from './views/ElectronRoot'
 
 export class ElectronApp {
   constructor() {
+    require('./helpers/updateChecker')
     electronContextMenu()
     electronDebug()
     this.startApp()

@@ -540,6 +540,7 @@ export default class TableBody extends PureComponent<
           rowCount={this.props.rows.length}
           rowRenderer={this.buildVirtualElement}
           onScroll={this.onScroll}
+          // @ts-ignore
           getPrecalculatedDimensions={this.getPrecalculatedDimensions}
           onMount={this.maybeScrollToBottom}
         />

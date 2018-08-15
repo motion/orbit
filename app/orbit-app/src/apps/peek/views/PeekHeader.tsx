@@ -4,10 +4,10 @@ import * as UI from '@mcro/ui'
 import { WindowControls } from '../../../views/WindowControls'
 import { App } from '@mcro/stores'
 import { PeekStore } from '../stores/PeekStore'
-import { color } from '@mcro/gloss'
-// import { ControlButton } from '../../views/ControlButton'
 import * as Constants from '../../../constants'
 import { PeekContents } from '../PeekPaneProps'
+import { TitleBar } from './TitleBar'
+import { CSSPropertySet } from '@mcro/gloss'
 
 type Props = PeekContents & {
   peekStore?: PeekStore
@@ -21,59 +21,27 @@ const PeekHeaderContain = view(UI.View, {
   zIndex: 100,
   overflow: 'hidden',
   borderTopRadius: Constants.PEEK_BORDER_RADIUS,
-  // transition: 'background ease-in 1300ms',
 })
 
-PeekHeaderContain.theme = ({ theme, position }) => {
-  return {
+PeekHeaderContain.theme = ({ position, theme, focused }) => {
+  let style: CSSPropertySet = {
     position: position || 'relative',
-    // borderBottom: [
-    //   1,
-    //   theme.titlebarBorder || theme.base.background.darken(0.2),
-    // ],
-    background: theme.headerBackground || theme.base.background,
   }
-}
-
-// just the top titlebar:
-const TitleBar = ({ children, after, ...props }) => (
-  <TitleBarContain {...props}>
-    <TitleBarText>{children}</TitleBarText>
-    {after}
-  </TitleBarContain>
-)
-
-const TitleBarContain = view({
-  flex: 1,
-  height: 27,
-  maxWidth: '100%',
-  position: 'relative',
-  zIndex: 1,
-})
-
-TitleBarContain.theme = ({ theme }) => {
-  const hoverBackground =
-    theme.titlebarBackground || color('rgba(255,255,255,0.04)')
-  return {
-    background: theme.titlebarBackground,
-    '&:hover': {
-      background: hoverBackground,
-    },
+  if (!focused) {
+    style = {
+      ...style,
+      background: theme.titleBar.backgroundBlur,
+      borderBottom: [1, theme.titleBar.borderColorBlur],
+    }
+  } else {
+    style = {
+      ...style,
+      background: theme.titleBar.background,
+      borderBottom: [1, theme.titleBar.borderColor],
+    }
   }
+  return style
 }
-
-const TitleBarText = props => (
-  <UI.Text
-    size={1}
-    fontWeight={700}
-    ellipse={1}
-    margin={0}
-    padding={[3, 80]}
-    lineHeight="1.5rem"
-    textAlign="center"
-    {...props}
-  />
-)
 
 const Centered = view({
   position: 'absolute',
@@ -141,52 +109,12 @@ export class PeekHeaderContent extends React.Component<Props> {
     return (
       <PeekHeaderContain
         draggable
+        focused
         onDragStart={peekStore.onDragStart}
         theme={theme}
         {...props}
       >
         <MainHead>
-          {/* Nice gradient effect on header */}
-          <UI.FullScreen
-            background="linear-gradient(rgba(255,255,255,0.027), transparent 44%)"
-            pointerEvents="none"
-          />
-          {/* Fade below the icon */}
-          <UI.View
-            zIndex={1}
-            pointerEvents="none"
-            position="absolute"
-            top={0}
-            right={0}
-            bottom={0}
-            left={0}
-            background={`linear-gradient(
-            to right,
-            transparent 80%,
-            ${
-              theme.darkenTitleBarAmount
-                ? theme.base.background.darken(theme.darkenTitleBarAmount)
-                : 'transparent'
-            }
-          ),
-          linear-gradient(
-            to left,
-            transparent 80%,
-            ${
-              theme.darkenTitleBarAmount
-                ? theme.base.background.darken(theme.darkenTitleBarAmount)
-                : 'transparent'
-            }
-          )`}
-          />
-          {/* <UI.HoverGlow
-          width={400}
-          height={300}
-          opacity={0.1}
-          blur={90}
-          zIndex={10000}
-          resist={50}
-        /> */}
           <TitleBar
             after={
               <>
@@ -200,7 +128,7 @@ export class PeekHeaderContent extends React.Component<Props> {
                   zIndex={10000}
                   alignItems="center"
                 >
-                  <WindowControls onClose={App.actions.clearPeek} />
+                  <WindowControls onClose={peekStore.clearPeek} />
                   {/* {!!peekStore.hasHistory && (
                   <UI.Button icon="arrowminleft" circular size={0.8} />
                 )} */}

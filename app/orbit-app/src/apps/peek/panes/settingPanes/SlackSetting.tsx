@@ -110,7 +110,6 @@ class SlackSettingStore {
       })
     },
     {
-      immediate: true,
       defaultValue: [],
     },
   )

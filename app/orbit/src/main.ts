@@ -1,9 +1,14 @@
 import { findContiguousPorts } from './findContiguousPorts'
 import { setConfig } from '@mcro/config'
 
-async function main() {
+type OrbitOpts = {
+  version: string
+}
+
+export async function main({ version }: OrbitOpts) {
   const ports = await findContiguousPorts(5, 3333)
   setConfig({
+    version,
     ports: {
       server: ports[0],
       bridge: ports[1],
@@ -17,5 +22,3 @@ async function main() {
   const ElectronApp = require('@mcro/orbit-electron')
   ElectronApp.main({ port: ports[0] })
 }
-
-main()

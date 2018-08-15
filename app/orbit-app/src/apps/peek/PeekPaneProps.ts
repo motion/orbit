@@ -2,7 +2,7 @@ import { Bit, Person } from '@mcro/models'
 import { AppStore } from '../../stores/AppStore'
 import { PeekStore } from './stores/PeekStore'
 import { AppStatePeekItem } from '@mcro/stores'
-import { SearchStore } from '../../stores/SearchStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 
 export type PeekContents = {
   title?: React.ReactNode
@@ -26,7 +26,7 @@ export type PeekPaneProps = {
   scrollToHighlight?: () => void
   bit?: Bit
   person?: Person
-  searchStore: SearchStore
+  selectionStore: SelectionStore
   appStore: AppStore
   peekStore: PeekStore
   item: AppStatePeekItem

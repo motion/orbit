@@ -62,7 +62,7 @@ type InteractiveProps = {
   minHeight: number
   maxWidth?: number
   maxHeight?: number
-  onCanResize?: (sides: ResizingSides) => void
+  onCanResize?: (sides?: ResizingSides) => void
   onResizeStart?: () => void
   onResizeEnd?: () => void
   onResize?: (width: number, height: number) => void
@@ -116,9 +116,9 @@ export class Interactive extends React.Component<
     resizingSides: null,
   }
 
-  nextTop: number | void
-  nextLeft: number | void
-  nextEvent: MouseEvent | void
+  nextTop?: number
+  nextLeft?: number
+  nextEvent?: MouseEvent
 
   onMouseMove = (event: MouseEvent) => {
     if (this.state.moving) {
@@ -246,7 +246,7 @@ export class Interactive extends React.Component<
     })
   }
 
-  componentDidUpdate(prevProps: InteractiveProps, prevState: InteractiveState) {
+  componentDidUpdate(_: InteractiveProps, prevState: InteractiveState) {
     if (prevState.cursor !== this.state.cursor) {
       const { updateCursor } = this.props
       if (updateCursor) {

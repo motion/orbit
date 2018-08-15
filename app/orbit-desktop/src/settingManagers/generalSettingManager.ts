@@ -18,8 +18,10 @@ export class GeneralSettingManager {
   constructor() {
     if (Config.env.prod) {
       try {
+        console.log('auto launch path', getConfig().directories.root)
         this.autoLaunch = new AutoLaunch({
           name: 'Orbit',
+          path: getConfig().directories.root,
         })
       } catch (err) {
         console.error(err)

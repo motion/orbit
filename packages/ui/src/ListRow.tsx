@@ -29,6 +29,7 @@ const Label = view({
   fontSize: 11,
 })
 
+// @ts-ignore
 @attachTheme
 @view.ui
 export class ListRow extends React.Component<ListRowProps> {
@@ -89,7 +90,7 @@ export class ListRow extends React.Component<ListRowProps> {
 
     if (spaced) {
       itemProps = itemProps || {}
-      itemProps.marginLeft = typeof props.spaced === 'number' ? spaced : 5
+      itemProps.marginLeft = typeof spaced === 'number' ? spaced : 5
     }
 
     if (stretch) {
@@ -106,7 +107,11 @@ export class ListRow extends React.Component<ListRowProps> {
             return false
           }
           const finalChild =
-            typeof child === 'string' ? <span>{child}</span> : child
+            typeof child === 'string' || typeof child === 'number' ? (
+              <span>{child}</span>
+            ) : (
+              child
+            )
 
           return (
             <UIContext.Provider
@@ -125,9 +130,12 @@ export class ListRow extends React.Component<ListRowProps> {
         .filter(Boolean)
     } else if (Array.isArray(items)) {
       children = items.map((seg, index) => {
+        // @ts-ignore
         const { text, id, icon, ...segmentProps } =
           typeof seg === 'object' ? seg : { text: seg, id: seg }
+        // @ts-ignore
         if (segmentProps.flex) {
+          // @ts-ignore
           return <div style={{ flex: segmentProps.flex }} />
         }
         return (
@@ -148,7 +156,7 @@ export class ListRow extends React.Component<ListRowProps> {
               {...segmentProps}
               {...itemProps}
             >
-              {(!onlyIcons && text) || segmentProps.children}
+              {(!onlyIcons && text) || segmentProps['children']}
             </Button>
           </UIContext.Provider>
         )

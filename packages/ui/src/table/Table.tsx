@@ -396,7 +396,7 @@ export default class Table extends PureComponent<TableProps, TableState> {
 
   onMouseUp = () => this.setState({ dragStartingKey: null })
 
-  onKeyDown = (e: React.KeyboardEvent) => {
+  onKeyDown = (e: KeyboardEvent) => {
     const { onHighlight, highlightedRows } = this.props
     const { sortedRows } = this.state
     const currentlyHighlightedRows = highlightedRows || []

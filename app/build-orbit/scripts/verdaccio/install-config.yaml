@@ -5,6 +5,8 @@ auth:
     file: ./htpasswd
 
 uplinks:
+  yarn:
+    url: https://registry.yarnpkg.com
   npmjs:
     url: https://registry.npmjs.org
 
@@ -12,12 +14,16 @@ packages:
   '@*/*':
     access: $all
     publish: $all
-    proxy: npmjs
+    proxy:
+      - yarn
+      - npmjs
 
   '**':
     access: $all
     publish: $authenticated
-    proxy: npmjs
+    proxy:
+      - yarn
+      - npmjs
 
 logs:
-  - {type: stdout, format: pretty, level: http}
+  - { type: stdout, format: pretty, level: http }

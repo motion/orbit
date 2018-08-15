@@ -31,6 +31,7 @@ const filterRowsFactory = (filters: Array<Filter>, searchTerm: string) => (
   filters
     .map((filter: Filter) => {
       if (filter.type === 'enum' && row.type != null) {
+        // @ts-ignore
         return filter.value.length === 0 || filter.value.indexOf(row.type) > -1
       } else if (filter.type === 'include') {
         return (

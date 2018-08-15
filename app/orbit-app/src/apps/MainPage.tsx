@@ -6,7 +6,6 @@ import { Peek } from './peek/Peek'
 import { AppStore } from '../stores/AppStore'
 import * as UI from '@mcro/ui'
 import { IntegrationSettingsStore } from '../stores/IntegrationSettingsStore'
-import { SearchStore } from '../stores/SearchStore'
 import { MainShortcuts } from './MainShortcuts'
 
 const Main = view(UI.Col, {
@@ -23,9 +22,6 @@ const Main = view(UI.Col, {
 @view.provide({
   integrationSettingsStore: IntegrationSettingsStore,
   appStore: AppStore,
-})
-@view.provide({
-  searchStore: SearchStore, // Peek and Orbit both can use search store
 })
 export class MainPage extends React.Component<{
   integrationSettingsStore: IntegrationSettingsStore

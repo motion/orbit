@@ -202,6 +202,7 @@ const baseIconStyle = {
   justifyContent: 'center',
 }
 
+// @ts-ignore
 @attachTheme
 @view.ui
 export class Surface extends React.Component<SurfaceProps> {
@@ -281,6 +282,7 @@ export class Surface extends React.Component<SurfaceProps> {
         {icon && !stringIcon ? <div>{icon}</div> : null}
         {icon && stringIcon ? (
           <Icon
+            // @ts-ignore
             order={icon && iconAfter ? 3 : 'auto'}
             name={`${icon}`}
             size={getIconSize(this.props)}

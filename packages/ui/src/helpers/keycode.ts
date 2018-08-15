@@ -4,6 +4,7 @@ import _keyCode from 'keycode'
 export function keyCode(event) {
   event.persist()
   const code = _keyCode(event)
+  // @ts-ignore
   if (localStorage.debug) {
     console.log(code)
   }

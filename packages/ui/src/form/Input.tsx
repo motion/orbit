@@ -4,14 +4,19 @@ import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { UIContext } from '../helpers/contexts'
 
 export type InputProps = SizedSurfaceProps & {
-  uiContext: Object
-  sync?: Object
+  uiContext: {
+    inForm?: boolean
+    formValues: Object
+    form: { submit: Function }
+  }
+  sync?: { get: () => any; set: (a: any) => void }
   onEnter?: Function
   type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password'
   name?: string
   form?: Object
   elementProps?: Object
   onClick?: Function
+  forwardRef: any
 }
 
 @view.ui
@@ -68,13 +73,14 @@ class InputPlain extends React.PureComponent<InputProps> {
       forwardRef,
       ...props
     } = this.props
-    const finalProps = { ...elementProps }
+    const finalProps = { ...elementProps } as InputProps
     if (sync && elementProps) {
       finalProps.value = sync.get()
       finalProps.onChange = this.syncSet
     }
     return (
       <SizedSurface
+        // @ts-ignore
         width="100%"
         sizeFont
         sizePadding

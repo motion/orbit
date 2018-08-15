@@ -23,7 +23,6 @@ export class SettingInfoStore {
       })
     },
     {
-      immediate: true,
       condition: () => !!this.setting,
     },
   )
@@ -34,7 +33,6 @@ export class SettingInfoStore {
         integration: this.setting.type,
       }),
     {
-      immediate: true,
       condition: () => !!this.setting,
     },
   )

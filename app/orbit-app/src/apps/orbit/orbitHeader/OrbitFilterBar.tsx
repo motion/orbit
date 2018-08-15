@@ -4,8 +4,6 @@ import { view } from '@mcro/black'
 import { SearchFilterStore } from '../../../stores/SearchFilterStore'
 import { PaneManagerStore } from '../PaneManagerStore'
 
-const inactiveTheme = false
-
 const dateBg = UI.color('#ffb049')
 
 const activeThemes = {

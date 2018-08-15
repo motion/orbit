@@ -8,7 +8,7 @@ import { Color, CSSPropertySet } from '@mcro/gloss'
 
 export type IconProps = CSSPropertySet & {
   size: number
-  color: Color
+  color?: Color
   type?: 'mini' | 'outline'
   opacity?: number
   tooltip?: string

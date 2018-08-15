@@ -190,3 +190,16 @@ Or monetizing monetizing.
   - Design is not just gradients, it's speed, interaction, and all the small details
   - Good design can take 75% of your product's development time (it's harder than you think)
   - It makes people love your product and spread it organically (See Framer X)
+
+---
+
+# the motivational theory of software development
+
+- you need big goalposts that are spaced out "just enough"
+- you'll always have one big one in every project, "cut first beta release"
+- you can count on demoralization if you don't hit a goalpost every 1-2months
+- they don't need to be "big" just need to be concrete, measureable
+- but also they should have some "demo" (showoff-driven-development)
+- the downside of thinking this way is it can encourage feature bloat
+- be sure goalposts look like this pattern:
+- [hacked together/runs] => [big features] => [big refinements] => [release]

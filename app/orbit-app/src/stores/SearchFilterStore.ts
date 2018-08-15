@@ -1,11 +1,11 @@
 import { store, react } from '@mcro/black'
-import { SearchStore } from './SearchStore'
 import { IntegrationSettingsStore } from './IntegrationSettingsStore'
 import { memoize, uniqBy } from 'lodash'
 import { MarkType, NLPResponse } from './nlpStore/types'
 import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
 import { hoverSettler } from '../helpers/hoverSettler'
+import { QueryStore } from './QueryStore'
 
 export type SearchFilter = {
   type: string
@@ -20,10 +20,6 @@ type DateSelections = {
   key?: string
 }
 
-type DateState = {
-  ranges: DateSelections[]
-}
-
 const suggestedDates = [
   { text: 'Last Week', type: MarkType.Date },
   { text: 'Last Month', type: MarkType.Date },
@@ -31,10 +27,12 @@ const suggestedDates = [
 
 @store
 export class SearchFilterStore /* extends Store */ {
-  searchStore: SearchStore
+  queryStore: QueryStore
   integrationSettingsStore: IntegrationSettingsStore
   nlpStore: NLPStore
 
+  extraFiltersHeight = 325
+  extraFiltersVisible = false
   disabledFilters = {}
   exclusiveFilters = {}
   sortBy = 'Relevant'
@@ -50,16 +48,24 @@ export class SearchFilterStore /* extends Store */ {
     leaveDelay: 400,
   })()
 
-  constructor(searchStore) {
-    this.searchStore = searchStore
-    this.integrationSettingsStore = searchStore.props.integrationSettingsStore
-    this.nlpStore = searchStore.nlpStore
+  constructor({ queryStore, integrationSettingsStore, nlpStore }) {
+    this.integrationSettingsStore = integrationSettingsStore
+    this.nlpStore = nlpStore
+    this.queryStore = queryStore
   }
 
   willMount() {
     this.dateHover.setOnHovered(target => {
-      this.searchStore.setExtraFiltersVisible(target)
+      this.setExtraFiltersVisible(target)
     })
+  }
+
+  setExtraFiltersVisible = target => {
+    this.extraFiltersVisible = !!target
+  }
+
+  get extraHeight() {
+    return this.extraFiltersVisible ? this.extraFiltersHeight : 0
   }
 
   // this contains the segments we found via nlp in order of search
@@ -186,7 +192,7 @@ export class SearchFilterStore /* extends Store */ {
   )
 
   resetIntegrationFiltersOnNLPChange = react(
-    () => this.searchStore.nlpStore.nlp,
+    () => this.nlpStore.nlp,
     (nlp: NLPResponse) => {
       if (!nlp) {
         throw react.cancel
@@ -207,7 +213,7 @@ export class SearchFilterStore /* extends Store */ {
   )
 
   resetFiltersOnSearchClear = react(
-    () => !!this.searchStore.query,
+    () => !!this.queryStore.query,
     hasQuery => {
       if (hasQuery) {
         throw react.cancel
@@ -227,7 +233,7 @@ export class SearchFilterStore /* extends Store */ {
   toggleFilter = (name: string) => {
     // if adding a suggested filter, add it dont disable
     if (!this.queryHasActiveSegment(name)) {
-      this.searchStore.setQuery(`${this.searchStore.query} ${name}`.trim())
+      this.queryStore.setQuery(`${this.queryStore.query} ${name}`.trim())
       return
     }
     const key = name.toLowerCase()

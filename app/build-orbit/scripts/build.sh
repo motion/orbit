@@ -12,6 +12,7 @@ if [ "$1" = "--resume" ]; then
   FLAGS=`cat ./scripts/.lastbuild`
   echo "resuming with options $FLAGS"
 fi
+
 echo -n "" > ./scripts/.lastbuild
 
 # BUILD
@@ -39,13 +40,13 @@ fi
 echo -n "--no-version " >> ./scripts/.lastbuild
 
 # bundle
-if [[ "$FLAGS" =~ "--no-bundle" ]]; then
+if [[ "$FLAGS" =~ "--no-app-bundle" ]]; then
   echo "not bundling..."
 else
   echo "bundling..."
   (cd ../orbit-app && npm run build-app)
 fi
-echo -n "--no-bundle " >> ./scripts/.lastbuild
+echo -n "--no-app-bundle " >> ./scripts/.lastbuild
 
 function publish-packages() {
   # clean old one since we are re-publishing
@@ -55,7 +56,7 @@ function publish-packages() {
   while ! nc -z localhost 4343; do sleep 0.1; done
   # publish packages
   (cd ../.. && \
-    npx lerna exec --ignore "@mcro/build-orbit" --ignore "@mcro/orbit" -- \
+    npx lerna exec --ignore "orbit" --ignore "@mcro/orbit" -- \
         npm publish --force --registry http://localhost:4343)
   # then publish main app with all packages
   (cd ../orbit && npm publish --registry http://localhost:4343 --force)
@@ -117,7 +118,7 @@ if [[ "$FLAGS" =~ "--no-sign" ]]; then
   echo "not signing"
 else
   echo "signing app..."
-  npx electron-osx-sign --ignore puppeteer/\\.local-chromium ./dist/Orbit-darwin-x64/Orbit.app
+  npx electron-osx-sign --ignore puppeteer/\\.local-chromium --ignore oracle ./dist/Orbit-darwin-x64/Orbit.app
 fi
 echo -n "--no-sign " >> ./scripts/.lastbuild
 

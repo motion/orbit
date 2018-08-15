@@ -1,6 +1,7 @@
 import { store, react } from '@mcro/black'
 import { WebSocket, ReconnectingWebSocket } from '@mcro/mobx-bridge'
 import { Desktop } from './Desktop'
+import { getConfig } from '@mcro/config'
 
 export let Swift
 
@@ -31,7 +32,6 @@ class SwiftStore {
       }
       this.setupLink()
     },
-    { immediate: true },
   )
 
   clear = () => {
@@ -60,9 +60,13 @@ class SwiftStore {
   }
 
   private setupLink() {
-    this.ws = new ReconnectingWebSocket('ws://localhost:40512', undefined, {
-      constructor: WebSocket,
-    })
+    this.ws = new ReconnectingWebSocket(
+      `ws://localhost:${getConfig().ports.swift}`,
+      undefined,
+      {
+        constructor: WebSocket,
+      },
+    )
     this.ws.onmessage = ({ data }) => {
       try {
         if (data.slice(0, 5) === 'state') {
@@ -74,7 +78,7 @@ class SwiftStore {
           this.onStateChange(this.state)
         }
       } catch (err) {
-        console.log(`client receiving message error`, data)
+        console.log('client receiving message error', data)
       }
     }
     this.ws.onopen = () => {

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { view, on } from '@mcro/black'
 import { ListItem } from './ListItem'
-// import { List as VirtualList } from 'react-virtualized'
+import { List as VirtualList } from 'react-virtualized'
 import { parentSize } from './helpers/parentSize'
 import { isArrayLike } from 'mobx'
-// import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+import { CellMeasurer } from 'react-virtualized'
 import { throttle, debounce } from 'lodash'
 import { ItemProps } from './ListItem'
 
@@ -36,7 +36,7 @@ export type ListProps = {
   onHighlight: Function
   onItemMount?: Function
   onSelect: Function
-  parentSize?: Object
+  parentSize?: { width: number; height: number }
   rowHeight?: number
   scrollable?: boolean
   segmented?: boolean
@@ -57,6 +57,8 @@ export type ListProps = {
   scrollToRow?: number
   // passes react-virtualized onScroll to here
   onScroll?: Function
+  itemsKey?: string
+  highlight?: any
 }
 
 // type VirtualItemProps = {
@@ -77,9 +79,18 @@ class ListUI extends React.PureComponent<ListProps> {
 
   state = {
     selected: -1,
+    started: false,
   }
 
-  // for tracking list resizing for virtual lists
+  groupedIndex = null
+  cache = null
+  realIndex = null
+  lastSelectionDate = null
+  lastDidReceivePropsDate = null
+  children = null
+  childrenVersion = null
+  didUpdateChildren = null
+  lastScrolledToRow = null
   onRef = []
   totalItems = null
   itemRefs = []
@@ -147,6 +158,7 @@ class ListUI extends React.PureComponent<ListProps> {
       hasNewItems ||
       hasNewItemsKey
     if (shouldUpdateChildren) {
+      // @ts-ignore
       this.props = prevProps
       this.updateChildren()
     }
@@ -221,7 +233,7 @@ class ListUI extends React.PureComponent<ListProps> {
     }
   }
 
-  highlightItem(setter, event) {
+  highlightItem(setter, event?) {
     const selected = setter(this.state.selected)
     const hasSelectCb = !!this.props.onSelect
     if (hasSelectCb && event && this.props.captureClickEvents) {
@@ -362,6 +374,7 @@ class ListUI extends React.PureComponent<ListProps> {
     if (React.isValidElement(item)) {
       return React.cloneElement(
         item,
+        // @ts-ignore
         this.getItemProps(index, rowProps, item.type.isListItem),
       )
     }
@@ -378,9 +391,10 @@ class ListUI extends React.PureComponent<ListProps> {
   // for children={}
   getListChildren = children =>
     React.Children.map(children, (item, index) => rowProps =>
-      item
+      React.isValidElement(item)
         ? React.cloneElement(
             item,
+            // @ts-ignore
             this.getItemProps(index, rowProps, item.type.isListItem),
           )
         : null,
@@ -448,7 +462,7 @@ class ListUI extends React.PureComponent<ListProps> {
       realIndex = realIndex.filter(x => typeof x !== 'undefined')
 
       for (const { index, name } of groups) {
-        let child = extraProps => (
+        const getChild = (extraProps?) => (
           <div
             css={{
               borderBottom: [1, '#000'],
@@ -461,10 +475,7 @@ class ListUI extends React.PureComponent<ListProps> {
             {name}
           </div>
         )
-        if (!virtualized) {
-          child = child()
-        }
-        children.splice(index, 0, child)
+        children.splice(index, 0, !virtualized ? getChild() : getChild)
       }
     }
 
@@ -553,9 +564,7 @@ class ListUI extends React.PureComponent<ListProps> {
           onScroll={onScroll}
           {...virtualized}
         />
-        <div css={{ height: 'auto' }} if={!virtualized}>
-          {children}
-        </div>
+        {!virtualized && <div style={{ height: 'auto' }}>{children}</div>}
       </ListContain>
     )
   }

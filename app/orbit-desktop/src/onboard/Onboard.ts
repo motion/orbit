@@ -102,7 +102,5 @@ export class Onboard {
         foundIntegrations,
       },
     })
-
-    console.log('foundIntegrations', JSON.stringify(foundIntegrations, null, 2))
   }
 }

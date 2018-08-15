@@ -3,8 +3,6 @@ import { react, on } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { PEEK_THEMES } from '../../../constants'
 import { AppStore } from '../../../stores/AppStore'
-import { SearchStore } from '../../../stores/SearchStore'
-import * as Constants from '../../../constants'
 import {
   PersonRepository,
   BitRepository,
@@ -14,7 +12,6 @@ import {
 export class PeekStore {
   props: {
     appStore: AppStore
-    searchStore: SearchStore
     fixed?: boolean
   }
 
@@ -30,7 +27,7 @@ export class PeekStore {
   }
 
   scrollToHighlight = react(
-    () => this.props.searchStore.highlightIndex,
+    () => App.peekState.highlightIndex,
     async (index, { sleep }) => {
       if (typeof index !== 'number') {
         throw react.cancel
@@ -48,25 +45,20 @@ export class PeekStore {
       // move frame to center the highlight but 100px more towards the top which looks nicer
       frame.scrollTop = activeHighlight.offsetTop - frame.clientHeight / 2 + 100
     },
-    {
-      immediate: true,
-    },
   )
 
   goToNextHighlight = () => {
-    const { highlightIndex, setHighlightIndex } = this.props.searchStore
+    const { highlightIndex } = App.peekState
     // loop back to beginning once at end
     const next = (highlightIndex + 1) % this.highlights.length
-    setHighlightIndex(next)
+    App.actions.setHighlightIndex(next)
   }
 
   internalState = react(
-    () => [
-      App.peekState.target /* App.orbitState.docked, App.orbitState.hidden */,
-    ],
-    async (_, { getValue, setValue, sleep }) => {
+    () => [App.peekState.target, this.tornState],
+    async ([target, tornState], { getValue, setValue, sleep }) => {
       const lastState = getValue().curState
-      const isShown = !!App.peekState.target && !!App.orbitState.docked
+      const isShown = !!tornState || (!!target && !!App.orbitState.docked)
       let nextState = {
         lastState,
         curState: lastState,
@@ -79,8 +71,8 @@ export class PeekStore {
       setValue(nextState)
       if (isShown) {
         // then load model and update again
-        const curState = await this.getCurState()
-        await sleep()
+        const curState = tornState || (await this.getCurState())
+        await sleep(60)
         setValue({
           ...nextState,
           curState,
@@ -88,7 +80,6 @@ export class PeekStore {
       }
     },
     {
-      immediate: true,
       defaultValue: {
         lastState: null,
         curState: null,
@@ -100,9 +91,6 @@ export class PeekStore {
   )
 
   get state() {
-    if (this.tornState) {
-      return this.tornState
-    }
     if (this.willHide) {
       return this.internalState.lastState
     }
@@ -173,15 +161,10 @@ export class PeekStore {
     return this.history.length > 1
   }
 
-  unTear = react(
-    () => App.peekState.pinned,
-    pinned => {
-      if (pinned) {
-        throw react.cancel
-      }
-      this.clearTorn()
-    },
-  )
+  clearPeek = () => {
+    App.actions.clearPeek()
+    this.clearTorn()
+  }
 
   clearTorn = () => {
     this.dragOffset = null
@@ -250,10 +233,10 @@ export class PeekStore {
   }
 
   openItem = () => {
-    App.actions.openItem(this.props.searchStore.selectedItem)
+    App.actions.openItem(this.state.model)
   }
 
   copyItem = () => {
-    App.actions.copyLink(this.props.searchStore.selectedItem)
+    App.actions.copyLink(this.state.model)
   }
 }

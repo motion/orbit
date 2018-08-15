@@ -15,7 +15,7 @@ import { View } from '../blocks/View'
 import { Icon } from '../Icon'
 import { FilterToken } from './FilterToken'
 import PropTypes from 'prop-types'
-import { attachTheme } from '@mcro/gloss'
+import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { findDOMNode } from 'react-dom'
 import { ClearButton } from '../buttons/ClearButton'
 
@@ -43,6 +43,7 @@ type Props = {
   onEnter?: Function
   before?: React.ReactNode
   after?: React.ReactNode
+  theme?: ThemeObject
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
@@ -290,6 +291,7 @@ export const Searchable = (Component: any) => {
             type = 'exclude'
             key = key.slice(0, -1)
           }
+          // @ts-ignore
           this.addFilter({
             type,
             key,
@@ -314,7 +316,7 @@ export const Searchable = (Component: any) => {
           defaultFilter.type === 'enum' &&
           filters[filterIndex].type === 'enum'
         ) {
-          filters[filterIndex].enum = defaultFilter.enum
+          filters[filterIndex]['enum'] = defaultFilter.enum
         }
         this.setState({ filters })
         // filter for this key already exists
@@ -401,6 +403,7 @@ export const Searchable = (Component: any) => {
           <SearchBox tabIndex={-1}>
             <SearchIcon
               name="ui-1_zoom"
+              // @ts-ignore
               color={theme.base.color.alpha(0.5)}
               size={16}
             />

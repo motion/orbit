@@ -474,7 +474,7 @@ export type offsetBlockStart = string
 export type offsetInlineEnd = string
 export type offsetInlineStart = string
 export type opacity = number
-export type order = number
+export type order = number | 'auto'
 export type orphans = number
 type outlineSyntax = {
   width?: borderWidth

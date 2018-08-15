@@ -11,22 +11,22 @@ type ChildArgs = {
 }
 
 export type HoverGlowProps = {
-  width: number
-  height: number
-  color: string
-  zIndex: number
-  resist: number
-  scale: number
-  opacity: number
-  boundPct: number
-  offsetTop: number
-  offsetLeft: number
-  clickable: boolean
-  clickDuration: number
-  clickScale: number
-  duration: number
-  overlayZIndex: number
-  blur: number
+  width?: number
+  height?: number
+  color?: string
+  zIndex?: number
+  resist?: number
+  scale?: number
+  opacity?: number
+  boundPct?: number
+  offsetTop?: number
+  offsetLeft?: number
+  clickable?: boolean
+  clickDuration?: number
+  clickScale?: number
+  duration?: number
+  overlayZIndex?: number
+  blur?: number
   parent?: () => HTMLElement
   backdropFilter?: boolean
   restingPosition?: [number, number]

@@ -4,8 +4,9 @@ import {
   HorizontalScrollRow,
   HorizontalScrollRowProps,
 } from '../views/HorizontalScrollRow'
+import isEqual from 'react-fast-compare'
 
-type CarouselProps = HorizontalScrollRowProps & {
+export type CarouselProps = HorizontalScrollRowProps & {
   items?: any[]
   verticalPadding?: number
   cardWidth?: number
@@ -16,7 +17,6 @@ type CarouselProps = HorizontalScrollRowProps & {
   after?: React.ReactNode
   children?: React.ReactNode
   offset?: number
-  scrollTo?: number
   className?: string
 }
 
@@ -24,15 +24,7 @@ export class Carousel extends React.Component<CarouselProps> {
   frameRef = React.createRef<HTMLDivElement>()
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.scrollTo != this.props.scrollTo) {
-      return false
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.scrollTo != this.props.scrollTo) {
-      this.scrollTo(this.props.scrollTo)
-    }
+    return !isEqual(nextProps, this.props)
   }
 
   get cardRefs(): HTMLDivElement[] {
@@ -43,6 +35,7 @@ export class Carousel extends React.Component<CarouselProps> {
 
   scrollTo = index => {
     const frame = this.frameRef.current
+    console.log('scrolling to', index, frame, this)
     if (!frame) return
     const activeCard = this.cardRefs[index]
     if (!activeCard) return

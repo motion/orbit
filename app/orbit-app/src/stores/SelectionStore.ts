@@ -21,7 +21,7 @@ export type SelectionResult = {
 }
 
 export type SelectionGroup = {
-  name: string
+  name?: string
   items: any[]
   type: 'row' | 'column'
   [key: string]: any

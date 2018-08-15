@@ -13,7 +13,7 @@ import { Person } from '@mcro/models'
 import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
-import { SelectionStore } from '../../../stores/SelectionStore'
+import { SelectionStore, SelectionGroup } from '../../../stores/SelectionStore'
 
 const height = 69
 
@@ -40,12 +40,13 @@ class OrbitDirectoryStore {
     return this.props.paneManagerStore.activePane === this.props.name
   }
 
-  setGetResults = react(
+  setSelectionHandler = react(
     () => [this.isActive, this.results],
-    async ([isActive], { sleep }) => {
+    ([isActive]) => {
       if (!isActive) throw react.cancel
-      sleep()
-      this.props.selectionStore.setGetResult(index => this.results[index])
+      this.props.selectionStore.setResults([
+        { type: 'column', items: this.results },
+      ])
     },
   )
 

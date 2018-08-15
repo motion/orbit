@@ -150,7 +150,6 @@ class OrbitCardStore {
       if (nextIsSelected === this.isSelected) {
         throw react.cancel
       }
-      console.log('update is selected', this.props)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {
         if (subPaneStore) {

@@ -8,9 +8,9 @@ import {
   SelectionStore,
   SelectionGroup,
 } from '../../../../stores/SelectionStore'
-import { Carousel } from '../../../../components/Carousel'
 import { capitalize } from 'lodash'
 import { View } from '@mcro/ui'
+import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 
 type Props = {
   name: string
@@ -47,7 +47,7 @@ class OrbitHomeStore {
   get results() {
     let results: SelectionGroup[] = []
     for (const name in this.following) {
-      results.push({ name, type: 'row', items: this.following[name] })
+      results.push({ name, type: 'row', items: this.following[name].items })
     }
     return results
   }
@@ -64,10 +64,14 @@ class OrbitHomeStore {
       // only return ones with results
       const all = { slack, drive, github, confluence, jira }
       const res = {} as any
+      let curIndex = 0
       for (const name in all) {
         if (all[name] && all[name].length) {
           const items = all[name]
-          res[capitalize(name)] = items
+          const startIndex = curIndex
+          const endIndex = startIndex + items.length
+          res[capitalize(name)] = { items, startIndex, endIndex }
+          curIndex += items.length
         }
       }
       return res
@@ -79,6 +83,41 @@ class OrbitHomeStore {
 }
 
 const Section = view()
+
+const OrbitHomeCarousel = view(
+  ({ selectionStore, homeStore, categoryName }) => {
+    const { nextIndex } = selectionStore
+    const { items, startIndex, endIndex } = homeStore.following[categoryName]
+    const shouldScrollTo = nextIndex >= startIndex && nextIndex <= endIndex
+    console.log(
+      'shouldScrollTo',
+      shouldScrollTo,
+      startIndex,
+      endIndex,
+      nextIndex,
+    )
+    return (
+      <Section key={categoryName}>
+        <SubTitle margin={0} padding={[10, 0, 0]}>
+          {categoryName}
+        </SubTitle>
+        <Unpad>
+          <SelectableCarousel
+            items={items}
+            offset={startIndex}
+            horizontalPadding={16}
+            cardProps={{
+              getIndex: selectionStore.getIndexForItem,
+              padding: 9,
+              hide: { body: true },
+              titleFlex: 1,
+            }}
+          />
+        </Unpad>
+      </Section>
+    )
+  },
+)
 
 const Unpad = view({
   margin: [0, -16],
@@ -99,28 +138,14 @@ export class OrbitHome extends React.Component<Props> {
     console.log('HOME RENDER')
     return (
       <SubPane name="home" fadeBottom>
-        {Object.keys(homeStore.following).map(categoryName => {
-          const items = homeStore.following[categoryName]
-          return (
-            <Section key={categoryName}>
-              <SubTitle margin={0} padding={[10, 0, 0]}>
-                {categoryName}
-              </SubTitle>
-              <Unpad>
-                <Carousel
-                  items={items}
-                  horizontalPadding={16}
-                  cardProps={{
-                    getIndex: selectionStore.getIndexForItem,
-                    padding: 9,
-                    hide: { body: true },
-                    titleFlex: 1,
-                  }}
-                />
-              </Unpad>
-            </Section>
-          )
-        })}
+        {Object.keys(homeStore.following).map(categoryName => (
+          <OrbitHomeCarousel
+            key={categoryName}
+            selectionStore={selectionStore}
+            homeStore={homeStore}
+            categoryName={categoryName}
+          />
+        ))}
         {!!homeStore.results.length && <View height={15} />}
       </SubPane>
     )

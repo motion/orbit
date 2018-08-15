@@ -1,6 +1,8 @@
 import updater from 'electron-simple-updater'
 import { getConfig } from '../config'
 
+console.log('Update checker... is prod?', getConfig().env.prod)
+
 // update checker
 if (getConfig().env.prod) {
   const updateUrl =

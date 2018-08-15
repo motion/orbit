@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "./scripts/start.sh",
-    "start-prod": "./scripts/start.sh start-prod"
+    "start-prod": "./scripts/start.sh start-prod",
+    "build-app": "cd ../build-orbit && npm run build-app"
   },
   "dependencies": {
     "@mcro/config": "*",

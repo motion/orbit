@@ -40,13 +40,13 @@ fi
 echo -n "--no-version " >> ./scripts/.lastbuild
 
 # bundle
-if [[ "$FLAGS" =~ "--no-bundle" ]]; then
+if [[ "$FLAGS" =~ "--no-app-bundle" ]]; then
   echo "not bundling..."
 else
   echo "bundling..."
   (cd ../orbit-app && npm run build-app)
 fi
-echo -n "--no-bundle " >> ./scripts/.lastbuild
+echo -n "--no-app-bundle " >> ./scripts/.lastbuild
 
 function publish-packages() {
   # clean old one since we are re-publishing

@@ -14,12 +14,16 @@ packages:
   '@*/*':
     access: $all
     publish: $all
-    proxy: npmjs
+    proxy:
+      - yarn
+      - npmjs
 
   '**':
     access: $all
     publish: $authenticated
-    proxy: npmjs
+    proxy:
+      - yarn
+      - npmjs
 
 logs:
   - { type: stdout, format: pretty, level: http }

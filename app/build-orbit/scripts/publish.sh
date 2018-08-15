@@ -14,7 +14,7 @@ if [ ! -f "$DIST/Orbit-$npm_package_version.dmg" ]; then
 fi
 
 # publish
-npx publish -p $DIST
+npx publish ./scripts/publish-config.json -p $DIST
 
 # clean up
 rm -r $DIST/Orbit-$npm_package_version-mac.zip

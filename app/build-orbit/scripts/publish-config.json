@@ -1,0 +1,10 @@
+{
+  "transport": {
+    "module": "ssh",
+    "host": "138.68.15.104",
+    "username": "orbit",
+    "password": "iloveorbit123",
+    "remotePath": "/updates",
+    "remoteUrl": "http://138.68.15.104/updates"
+  }
+}

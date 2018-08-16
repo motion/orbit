@@ -43,4 +43,35 @@ export interface PersonBit {
    */
   people: Person[]
 
+  /**
+   * Indicates if person has integrations with Slack.
+   */
+  hasSlack: boolean
+
+  /**
+   * Indicates if person has integrations with Github.
+   */
+  hasGithub: boolean
+
+  /**
+   * Indicates if person has integrations with Gdrive.
+   */
+  hasGdrive: boolean
+
+  /**
+   * Indicates if person has integrations with Jira.
+   */
+  hasJira: boolean
+
+  /**
+   * Indicates if person has integrations with Confluence.
+   */
+  hasConfluence: boolean
+
+  /**
+   * Indicates if person has integrations with Gmail.
+   */
+  hasGmail: boolean
+
+
 }

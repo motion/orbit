@@ -185,7 +185,7 @@ export class PeekPerson extends React.Component<
       content: (
         <Frame>
           <CardContent>
-            <Avatar src={person.data.profile.image_48} />
+            <Avatar src={person.data.profile.image_512} />
             <Info>
               <Name>{person.name}</Name>
               <br />

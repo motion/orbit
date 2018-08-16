@@ -75,6 +75,7 @@ export type SlackUser = {
     always_active: boolean
     real_name: string
     real_name_normalized: string
+    email: string
   }
   is_admin: boolean
   is_owner: boolean

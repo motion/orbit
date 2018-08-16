@@ -23,18 +23,12 @@ export class JiraPersonSyncer implements IntegrationSyncer {
     log(`created ${people.length} jira people`, people)
   }
 
-  async reset(): Promise<void> {
-
-  }
-
   private async syncPeople(startAt: number): Promise<Person[]> {
     const maxResults = 1000
     const url = `/rest/api/2/user/search?maxResults=${maxResults}&startAt=${startAt}&username=_`
 
     // loading people from atlassian server
-    log(
-      `loading ${startAt === 0 ? 'first' : 'next'} ${maxResults} people`,
-    )
+    log(`loading ${startAt === 0 ? 'first' : 'next'} ${maxResults} people`)
     const result: JiraPeopleResponse = await fetchFromAtlassian(
       this.setting.values.atlassian,
       url,
@@ -58,12 +52,13 @@ export class JiraPersonSyncer implements IntegrationSyncer {
   }
 
   // todo: do not return null here
-  private async createPerson(person: JiraPerson): Promise<Person | null> {
-    const identifier = `jira-${Helpers.hash(person)}`
+  private async createPerson(person: JiraPerson): Promise<Person> {
+    const id = `jira-${Helpers.hash(person)}`
     const personEntity = await createOrUpdate(
       PersonEntity,
       {
-        identifier,
+        id,
+        setting: this.setting,
         integrationId: person.accountId,
         integration: 'jira',
         name: person.displayName,
@@ -72,14 +67,13 @@ export class JiraPersonSyncer implements IntegrationSyncer {
           emails: person.emailAddress ? [person.emailAddress] : [],
         },
       },
-      { matching: ['identifier', 'integration'] },
+      { matching: ['id', 'integration'] },
     )
 
     await createOrUpdatePersonBit({
       email: person.emailAddress,
       name: person.displayName,
       photo: person.avatarUrls['48x48'],
-      identifier,
       integration: 'jira',
       person: personEntity,
     })

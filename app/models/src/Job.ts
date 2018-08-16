@@ -1,3 +1,5 @@
+import { Setting } from './Setting'
+
 export interface Job {
 
   /**
@@ -5,15 +7,40 @@ export interface Job {
    */
   target: "job"
 
+  /**
+   * Job id.
+   */
   id: number
-  type: string
-  lastError: string
+
+  /**
+   * Syncer name that run this job.
+   */
+  syncer: string
+
+  /**
+   * Integration id for which this job was executed.
+   */
+  settingId: number
+
+  /**
+   * Integration for which this job was executed.
+   */
+  setting: Setting
+
+  /**
+   * Time when job was executed.
+   */
+  time: number
+
+  /**
+   * Execution status.
+   */
   status: string
-  tries: number
-  percent: number
-  createdAt: Date
-  updatedAt: Date
-  lock: string
+
+  /**
+   * Execution message.
+   */
+  message: string
 
 }
 

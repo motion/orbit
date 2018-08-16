@@ -23,6 +23,8 @@ import connectModels from './helpers/connectModels'
 import { Entities } from './entities'
 import { Onboard } from './onboard/Onboard'
 import { Logger, logger } from '@mcro/logger'
+import * as typeorm from 'typeorm'
+import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { getConfig as getConfigGlobal } from '@mcro/config'
 
 const log = logger('desktop')
@@ -83,7 +85,7 @@ export class Root {
     this.onboard = new Onboard()
     this.generalSettingManager = new GeneralSettingManager()
     // no need to wait for them...
-    // this.startSyncers()
+    await this.startSyncers()
     this.screen = new Screen()
     this.keyboardStore = new KeyboardStore({
       onKeyClear: this.screen.lastScreenChange,
@@ -153,14 +155,24 @@ export class Root {
    * Used for the development purposes.
    */
   private registerREPLGlobals() {
+    root.typeorm = typeorm
     root.Root = this
     root.restart = this.restart
     root.Logger = Logger
-    root.Syncers = Syncers.reduce((map, syncer) => {
+    root.Syncers = Syncers.reduce((map, syncerOrGroup) => {
+
       // since Syncers is an array we need to convert it to object
       // to make them more usable in the REPL.
       // we are using Syncer constructor name as an object key.
-      map[syncer.options.constructor.name] = syncer
+      if (syncerOrGroup instanceof SyncerGroup) {
+        map[syncerOrGroup.name] = syncerOrGroup
+        for (let syncer of syncerOrGroup.syncers) {
+            map[syncer.name] = syncer
+        }
+
+      } else {
+        map[syncerOrGroup.name] = syncerOrGroup
+      }
       return map
     }, {})
   }
@@ -183,13 +195,14 @@ export class Root {
 
   /**
    * Starts all the syncers.
+   * We start syncers in a small timeout to prevent app-overload.
    */
   private async startSyncers() {
-    await Promise.all(
+    setTimeout(() => Promise.all(
       Syncers.map(syncer => {
         return syncer.start()
       }),
-    )
+    ), 5000)
   }
 
   /**

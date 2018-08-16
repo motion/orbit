@@ -1,3 +1,5 @@
+import { GmailBitData } from './bit-data/GmailBitData'
+import { SlackBitData } from './bit-data/SlackBitData'
 import { Location } from './Location'
 import { Person } from './Person'
 import { Setting } from './Setting'
@@ -11,19 +13,9 @@ export interface Bit {
   target: "bit"
 
   /**
-   * @deprecated
-   */
-  id: number
-
-  /**
-   * @deprecated
-   */
-  url: string
-
-  /**
    * Bit id.
    */
-  identifier: string
+  id: string
 
   /**
    * Integration type.
@@ -47,7 +39,7 @@ export interface Bit {
   title: string
 
   /**
-   * Bit body.
+   * Bit format-less body.
    * Primary used for search.
    */
   body: string
@@ -98,9 +90,15 @@ export interface Bit {
   settingId: number
 
   /**
-   * Bit raw JSON data.
+   * Additional bit data.
    */
-  data: SlackBitDataType | Object // todo: provide other union types
+  data: SlackBitData | GmailBitData | Object // todo: provide other union types
+
+  /**
+   * Raw JSON data.
+   * Used to debugging purpose current, don't use this property, use "data" property instead.
+   */
+  raw: any
 
   /**
    * Used for filtering: slack room, github repo, google doc folder, etc
@@ -111,11 +109,5 @@ export interface Bit {
    * todo: find about usages
    */
   contentHash: string
-
-}
-
-// todo: finish
-// todo: extract
-export interface SlackBitDataType {
 
 }

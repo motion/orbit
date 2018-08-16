@@ -2,9 +2,6 @@ export async function fetchFromAtlassian<T = any>(
   atlassian: any,
   path: string,
 ): Promise<T> {
-  if (!atlassian) {
-    return null
-  }
   const { username, password, domain } = atlassian
   const credentials = Buffer.from(`${username}:${password}`).toString('base64')
 

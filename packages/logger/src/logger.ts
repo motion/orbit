@@ -135,9 +135,14 @@ export const Logger = {
 }
 
 /**
+ * Logger interface.
+ */
+export type LoggerInterface = (...messages: any[]) => void
+
+/**
  * Creates a new namespace-based logger.
  */
-export function logger(namespace: string) {
+export function logger(namespace: string): LoggerInterface {
   return function(...messages: any[]) {
     log(namespace, messages)
   }

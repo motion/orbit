@@ -110,7 +110,6 @@ export class GDriveFetcher {
     }).json
     if (reply && reply.access_token) {
       setting.token = reply.access_token
-      // @ts-ignore
       await setting.save()
       return true
     }

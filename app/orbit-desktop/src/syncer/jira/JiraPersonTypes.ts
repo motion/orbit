@@ -8,7 +8,7 @@ export type JiraPeopleResponse = {
   avatarUrls: {
     "48x48": string
   }
-}[];
+}[]
 
-export type JiraPerson = JiraPeopleResponse[0];
+export type JiraPerson = JiraPeopleResponse[0]
 

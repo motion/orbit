@@ -29,3 +29,32 @@ export function queryObjectToQueryString(query: { [key: string]: any }|undefined
     .map(key => `${key}=${query[key]}`)
     .join("&");
 }
+
+/**
+ * Type-safe version of Object.assign.
+ */
+export function assign<T>(obj: T, properties: Partial<T>) {
+  return Object.assign(obj, properties)
+}
+
+/**
+ * Creates a timeout and returns a Promise for it.
+ */
+export function timeout<T>(ms: number, callback: () => T|Promise<T>): Promise<T> {
+  return new Promise((ok, fail) => {
+    setTimeout(() => {
+      try {
+        const result = callback()
+        if (result instanceof Promise) {
+          result
+            .then(res => ok(res))
+            .catch(err => fail(err))
+        } else {
+          ok(result)
+        }
+      } catch (err) {
+        fail(err)
+      }
+    }, ms)
+  })
+}

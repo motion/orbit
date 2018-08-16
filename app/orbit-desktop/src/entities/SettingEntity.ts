@@ -6,22 +6,24 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Setting } from '@mcro/models'
+import { Setting, IntegrationType } from '@mcro/models'
 
 @Entity()
 export class SettingEntity extends BaseEntity implements Setting {
-  // @ts-ignore
-  target = 'setting'
 
-  @PrimaryGeneratedColumn() id: number
+  target: 'setting' = 'setting'
 
-  // use for determining if oauth is from same account as previous one
+  @PrimaryGeneratedColumn()
+  id: number
+
   @Column({ nullable: true, unique: true })
   identifier: string
 
-  @Column() category: string
+  @Column()
+  category: string
 
-  @Column() type: string
+  @Column()
+  type: 'general' | IntegrationType
 
   @Column({ nullable: true })
   token: string
@@ -63,9 +65,13 @@ export class SettingEntity extends BaseEntity implements Setting {
     filter?: string
     lastSyncFilter?: string
     lastSyncMax?: number
+    whiteList?: { [key: string]: boolean }
   }
 
-  @CreateDateColumn() createdAt: Date
+  @CreateDateColumn()
+  createdAt: Date
 
-  @UpdateDateColumn() updatedAt: Date
+  @UpdateDateColumn()
+  updatedAt: Date
+
 }

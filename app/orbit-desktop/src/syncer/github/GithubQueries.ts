@@ -25,8 +25,15 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
             url
           }
           author {
-            avatarUrl
-            login
+            ... on User {
+              id
+              login
+              location
+              avatarUrl
+              bio
+              email
+              name
+            }
           }
           labels(first: 10) {
             edges {
@@ -39,8 +46,15 @@ query GithubIssueQuery($organization: String!, $repository: String!, $cursor: St
             edges {
               node {
                 author {
-                  avatarUrl
-                  login
+                  ... on User {
+                    id
+                    login
+                    location
+                    avatarUrl
+                    bio
+                    email
+                    name
+                  }
                 }
                 createdAt
                 body

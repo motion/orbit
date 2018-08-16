@@ -1,25 +1,49 @@
+
+/**
+ * Confluence user group response result.
+ *
+ * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-get
+ */
 export type ConfluenceGroupResponse = {
-  results: {
-    name: string
-  }[]
+  results: ConfluenceGroup[]
+  start: number
+  limit: number
+  size: number
 }
 
-export type ConfluenceGroupMembersResponse = {
-  results: {
-    accountId: string
-    displayName: string
-    profilePicture: {
-      path: string
-    }
-    username: string
-  }[]
+/**
+ * Confluence user group.
+ *
+ * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-get
+ */
+export type ConfluenceGroup = {
+  name: string
 }
 
+/**
+ * Confluence user group members response result.
+ *
+ * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-groupName-member-get
+ */
+export type ConfluenceMemberResponse = {
+  results: ConfluenceUser[]
+  start: number
+  limit: number
+  size: number
+}
+
+/**
+ * Member of the confluence user group.
+ *
+ * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-groupName-member-get
+ */
 export type ConfluenceUser = {
   accountId: string
   displayName: string
   profilePicture: {
     path: string
+    height: number
+    width: number
   }
   username: string
   details: {
@@ -27,26 +51,39 @@ export type ConfluenceUser = {
       email: string
     }
   }
-}
-
-export type ConfluenceGroupMember = ConfluenceGroupMembersResponse["results"][0];
-
-export type AtlassianUser = {
-  accountId: string
   userKey: string
-  username: string
-  displayName: string
-  profilePicture: { path: string; height: number; width: number }
   latest: boolean
 }
 
-export type AtlassianContent = {
-  body: { storage: { value: string } }
+/**
+ * Confluence content response result.
+ *
+ * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-get
+ */
+export type ConfluenceContentResponse = {
+  results: ConfluenceContent[]
+  start: number
+  limit: number
+  size: number
+}
+
+/**
+ * Some confluence content, like pages.
+ *
+ * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-get
+ */
+export type ConfluenceContent = {
+  type: 'page'
+  body: {
+    storage: {
+      value: string
+    }
+  }
   history: {
     createdDate: string
-    createdBy: AtlassianUser
+    createdBy: ConfluenceUser
     lastUpdated: {
-      by: AtlassianUser
+      by: ConfluenceUser
       when: string
     }
   }
@@ -62,15 +99,14 @@ export type AtlassianContent = {
   id: string
   status: string
   title: string
-  type: 'page'
   _links: {
     base: string
     webui: string
   }
 }
 
-export type AtlassianObj = {
-  response: AtlassianContent
+export type ConfluenceObj = {
+  response: ConfluenceContent
   markdownBody: string
   body: string
 }

@@ -11,16 +11,7 @@ export const deepClone = obj =>
       )
     : obj
 
-export const getSlackDate = ts => {
-  if (!ts) {
-    return null
-  }
-  const split = ts.split('.')
-  if (!split.length) {
-    return null
-  }
-  return new Date(split[0] * 1000)
-}
+export const getSlackDate = (time: number) => new Date(time)
 
 export const fuzzy = (query, results, extraOpts?) =>
   !query

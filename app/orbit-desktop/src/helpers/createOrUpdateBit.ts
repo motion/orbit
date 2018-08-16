@@ -20,7 +20,7 @@ export async function createOrUpdateBit(
     },
     {
       updateIf: found => found.contentHash !== contentHash,
-      matching: ['identifier', 'type', 'integration'],
+      matching: ['id', 'type', 'integration'],
       ...options,
     },
   )

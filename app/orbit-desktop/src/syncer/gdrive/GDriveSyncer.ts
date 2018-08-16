@@ -45,14 +45,11 @@ export class GDriveSyncer implements IntegrationSyncer {
     log(`synced ${newlyCreatedPeople.length} people`)
   }
 
-  async reset(): Promise<void> {
-
-  }
-
   private createFile(file: GDriveLoadedFile): Promise<Bit | null> {
     return createOrUpdateBit(BitEntity, {
       integration: 'gdocs',
-      identifier: file.file.id,
+      setting: this.setting,
+      id: file.file.id,
       type: 'document',
       title: file.file.name,
       body: file.content || 'empty',
@@ -89,11 +86,12 @@ export class GDriveSyncer implements IntegrationSyncer {
       avatar: user.photo || '',
       emails: user.email ? [user.email] : [],
     }
-    const identifier = `gdrive-${Helpers.hash(person)}`
+    const id = `gdrive-${Helpers.hash(person)}`
     const personEntity = await createOrUpdate(
       PersonEntity,
       {
-        identifier,
+        id,
+        setting: this.setting,
         integrationId: user.email,
         integration: 'gdrive',
         name: user.name,
@@ -101,7 +99,7 @@ export class GDriveSyncer implements IntegrationSyncer {
           ...user,
         },
       },
-      { matching: ['identifier', 'integration'] },
+      { matching: ['id', 'integration'] },
     )
 
     if (user.email) {
@@ -109,7 +107,6 @@ export class GDriveSyncer implements IntegrationSyncer {
         email: user.email,
         name: user.name,
         photo: user.photo,
-        identifier,
         integration: 'gdrive',
         person: personEntity,
       })

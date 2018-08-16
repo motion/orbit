@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { SlackMessage } from './SlackMessage'
 import keywordExtract from '@mcro/keyword-extract'
+import {SlackBitData} from '@mcro/models'
 import arrford from 'arrford'
 import { capitalize } from 'lodash'
 import { ItemResolverProps } from '../../ItemResolver'
@@ -19,18 +20,19 @@ export const ResolveConversation = ({
   itemProps,
   isExpanded,
 }: ItemResolverProps) => {
+  const data = bit.data as SlackBitData
   const content = isExpanded
-    ? ((bit.data && bit.data.messages) || [])
+    ? data.messages
         .slice(0, shownLimit)
         .map((message, index) => (
           <SlackMessage
             key={index}
             message={message}
-            previousMessage={bit.data.messages[index - 1]}
+            previousMessage={data.messages[index - 1]}
             bit={bit}
             itemProps={itemProps}
           />
-        ))
+        )) as any // todo(nate) please fix type error and remove "as any"
     : null
   return children({
     title:

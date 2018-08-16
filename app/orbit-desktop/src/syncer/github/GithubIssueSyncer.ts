@@ -1,13 +1,14 @@
-import { Bit } from '@mcro/models'
-import { flatten, omit } from 'lodash'
 import { logger } from '@mcro/logger'
-import { GithubIssue } from '../../syncer/github/GithubTypes'
-import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { GithubIssueLoader } from './GithubIssueLoader'
-import { sequence } from '../../utils'
-import { createOrUpdateBit } from '../../helpers/helpers'
+import { Bit, Person } from '@mcro/models'
+import { omit, uniqBy } from 'lodash'
 import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { createOrUpdateBit } from '../../helpers/helpers'
+import { GithubIssue } from './GithubTypes'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
+import { SyncerUtils } from '../core/SyncerUtils'
+import { GithubIssueLoader } from './GithubIssueLoader'
+import { GithubPeopleSyncer } from './GithubPeopleSyncer'
 
 const log = logger('syncer:github:issues')
 
@@ -19,50 +20,63 @@ export class GithubIssueSyncer implements IntegrationSyncer {
   }
 
   async run() {
-    const issues = await this.syncIssues()
-    log(`created ${issues.length} issues`, issues)
-  }
 
-  async reset(): Promise<void> {
-
-  }
-
-  private async syncIssues(repos?: string[]): Promise<Bit[]> {
+    const createdIssues: BitEntity[] = []
     const repoSettings = this.setting.values.repos
-    const repositoryPaths = repos || Object.keys(repoSettings || {})
-    return flatten(
-      // @ts-ignore
-      sequence(repositoryPaths, async repositoryPath => {
-        const [organization, repository] = repositoryPath.split('/')
-        const loader = new GithubIssueLoader(
-          organization,
-          repository,
-          this.setting.token,
-        )
-        const issues = await loader.load()
-        return Promise.all(
-          issues.map(issue =>
-            this.createIssue(issue, organization, repository),
-          ),
-        )
-      }),
-    )
+    const repositoryPaths = Object.keys(repoSettings || {})
+
+    // if no repositories were selected in settings, we don't do anything
+    if (!repositoryPaths.length) {
+      log(`no repositories were selected in the settings, skip sync`)
+      return
+    }
+
+    // load people, we need them to deal with bits
+    // note that people must be synced before this syncer's sync
+    const allPeople = await SyncerUtils.loadPeople(this.setting.id, log)
+
+    // sync each repository
+    for (let repositoryPath of repositoryPaths) {
+      const [organization, repository] = repositoryPath.split('/')
+      const loader = new GithubIssueLoader(
+        organization,
+        repository,
+        this.setting.token,
+      )
+      const issues = await loader.load()
+      for (let issue of issues) {
+        createdIssues.push(await this.createIssue(issue, organization, repository, allPeople))
+      }
+    }
+
+    log(`created ${createdIssues.length} issues`, createdIssues)
   }
 
   private async createIssue(
     issue: GithubIssue,
     organization: string,
     repository: string,
-  ): Promise<Bit> {
-    const createdAt = issue.createdAt
-      ? new Date(issue.createdAt).getTime()
-      : undefined
-    const updatedAt = issue.updatedAt
-      ? new Date(issue.updatedAt).getTime()
-      : undefined
+    allPeople: Person[],
+  ): Promise<BitEntity> {
+
+    const createdAt = new Date(issue.createdAt).getTime()
+    const updatedAt = new Date(issue.updatedAt).getTime()
+    const comments = issue.comments.edges.map(edge => edge.node)
+
+    const githubPeople = uniqBy([
+      issue.author,
+      ...comments.map(comment => comment.author),
+    ], 'id')
+
+    const people: Person[] = []
+    for (let githubPerson of githubPeople) {
+      people.push(await GithubPeopleSyncer.createPerson(this.setting, githubPerson))
+    }
+
     return await createOrUpdateBit(BitEntity, {
+      setting: this.setting,
       integration: 'github',
-      identifier: issue.id,
+      id: issue.id,
       type: 'task',
       title: issue.title,
       body: issue.bodyText,
@@ -82,6 +96,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       author: issue.author ? issue.author.login : null, // github can return null author in the case if github user was removed,
       bitCreatedAt: createdAt,
       bitUpdatedAt: updatedAt,
+      people: people,
     })
   }
 }

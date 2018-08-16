@@ -17,10 +17,7 @@ export type GithubIssueQueryResult = {
           bodyText: string
           createdAt: string
           updatedAt: string
-          author: {
-            avatarUrl: string
-            login: string
-          }
+          author: GithubPerson
           labels: {
             edges: { node: { name: string } }[]
           }
@@ -33,10 +30,7 @@ export type GithubIssueQueryResult = {
           comments: {
             edges: {
               node: {
-                author: {
-                  avatarUrl: string
-                  login: string
-                }
+                author: GithubPerson
                 createdAt: string
                 body: string
               }
@@ -54,7 +48,7 @@ export type GithubIssueQueryResult = {
   }
 }
 
-export type GithubIssue = GithubIssueQueryResult["repository"]["issues"]["edges"][0]["node"];
+export type GithubIssue = GithubIssueQueryResult["repository"]["issues"]["edges"][0]["node"]
 
 export type GithubPeopleQueryResult = {
   organization: {
@@ -85,4 +79,4 @@ export type GithubPeopleQueryResult = {
   }
 }
 
-export type GithubPerson = GithubPeopleQueryResult["organization"]["members"]["edges"][0]["node"];
+export type GithubPerson = GithubPeopleQueryResult["organization"]["members"]["edges"][0]["node"]

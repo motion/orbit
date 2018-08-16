@@ -95,6 +95,7 @@ export class GMailLoader {
    */
   async loadThreads(
     count: number,
+    queryFilter?: string,
     filteredIds: string[] = [],
     pageToken?: string,
   ): Promise<GmailThread[]> {
@@ -105,9 +106,12 @@ export class GMailLoader {
         : `loading threads (max ${count})`,
     )
     const result = await this.fetcher.fetch(
-      threadsQuery(count, this.setting.values.filter, pageToken),
+      threadsQuery(count, queryFilter, pageToken),
     )
+
     let threads = result.threads
+    if (!threads)
+      return []
 
     // if array of filtered thread ids were passed then we load threads until we find all threads by given ids
     // once we found all threads we stop loading threads
@@ -145,6 +149,7 @@ export class GMailLoader {
     if (result.nextPageToken) {
       const nextPageThreads = await this.loadThreads(
         count,
+        queryFilter,
         filteredIds,
         result.nextPageToken,
       )

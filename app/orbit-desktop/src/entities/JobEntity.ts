@@ -1,80 +1,31 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
-import { Job } from '@mcro/models'
+import { Job, JobStatus, IntegrationType, Setting } from '@mcro/models'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import { SettingEntity } from './SettingEntity'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {
-  // @ts-ignore
-  target = 'job'
 
-  @PrimaryGeneratedColumn() id: number
+  target: 'job' = 'job'
 
-  @Index()
+  @PrimaryGeneratedColumn()
+  id: number
+
   @Column()
-  type: string
+  syncer: string
 
-  @Column() action: string
+  @Column()
+  time: number
+
+  @Column()
+  status: JobStatus
+
+  @Column()
+  message: string
+
   @Column({ nullable: true })
-  lastError: string
+  settingId: number
 
-  @Column({
-    default: 'PENDING',
-  })
-  status: string
+  @ManyToOne(() => SettingEntity)
+  setting: Setting
 
-  @Column({ default: 0 })
-  tries: number
-
-  @Column({ default: 0 })
-  percent: number
-
-  @Index()
-  @CreateDateColumn()
-  createdAt: Date
-
-  @Index()
-  @UpdateDateColumn()
-  updatedAt: Date
-
-  get lock() {
-    return `${this.type}`
-  }
-
-  static statuses = {
-    PENDING: 'PENDING',
-    FAILED: 'FAILED',
-    PROCESSING: 'PROCESSING',
-    COMPLETE: 'COMPLETE',
-  }
-
-  static lastPending(query?: Object) {
-    return this.findOne({
-      where: { ...query, status: JobEntity.statuses.PENDING },
-      order: { createdAt: 'DESC' },
-      take: 1,
-    } as any)
-  }
-
-  static lastCompleted(query?: Object) {
-    return this.findOne({
-      where: { ...query, status: JobEntity.statuses.COMPLETE },
-      order: { createdAt: 'DESC' },
-      take: 1,
-    } as any)
-  }
-
-  static lastProcessing(query?: Object) {
-    return this.findOne({
-      where: { ...query, status: JobEntity.statuses.PROCESSING },
-      order: { createdAt: 'DESC' },
-      take: 1,
-    } as any)
-  }
 }

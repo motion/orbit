@@ -11,28 +11,30 @@ export interface IntegrationSyncer {
    */
   run(): Promise<void>
 
-  /**
-   * Resets all the synchronization data.
-   * Useful when its necessary to run syncer from scratch.
-   */
-  reset(): Promise<void>
-
 }
 
 /**
  * Options to be passed to Syncer.
  */
 export interface SyncerOptions {
+
+  /**
+   * Syncer name.
+   * By default equals to implementation constructor name.
+   */
+  name?: string
+
   /**
    * Integration type.
    * Used to get syncer settings.
+   * If type is not specified then syncer will be executed once without any setting specified.
    */
-  type: IntegrationType
+  type?: IntegrationType
 
   /**
    * Constructor of the integration syncer instance.
    */
-  constructor: new (setting: SettingEntity) => IntegrationSyncer
+  constructor: new (setting?: SettingEntity) => IntegrationSyncer
 
   /**
    * Interval during which syncers should be executed.

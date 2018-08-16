@@ -15,6 +15,7 @@
 - Slack select all settings by default (syncer needs to respect settings/set them)
   - Toggle select all button in table view
 - working remove integration
+  - Confirm native modal for Remove setting
 - working re-run
 
 # Week ending Aug 17th
@@ -46,10 +47,7 @@
 UI
 
 - Add button for settings panes that easily lots into with table
-- Confirm native modal for Remove setting
-- Fix themes a lot in terms of color choice
 - Theme psuedo state better strategy
-- able to have for example: Dark.card theme and apply a custom states easily per-component:
   - hover: [brightenBorders(0.1), biggerShadow(1.5)]
   - active: [darken(1.1)]
 
@@ -69,27 +67,16 @@ queue:
 
 - SHOULD show banner, update and restart once update is pushed
 - handle screen changes/resizes
-- Masonry.fixedHeight mode for Directory/Settings cards (no double render)
 - react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
-- fix horizontal scroller to cut off nicer
-- search: filtering "nick and nate" doesn't show any results for some reason
 - make all searches work: task search, message search
 - Remove setting button
 - Google drive settings pane
-- Manage tab for every one:
-  - Stats card of total bits
-  - Clear all bits
-  - Remove integration
-  - Can have login settings if applicable
 
 ## unnecessary for beta polish bucket
 
-- shortcuts bar working
 - cmd+z undo in search area (needs to work with toggles...)
 - peek arrow position shouldn't straddle weird borders
 - react-spring for peek placement
-- styling on settings panes
-- peek header styles
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
 - test-app: fix themes/tabs
@@ -106,7 +93,7 @@ queue:
 
 # gamechangers
 
-- calendar support
+- calendar
 - injest anything (instant crawler/snippets)
 - memory
 - contextual search

@@ -35,6 +35,7 @@ const Centered = view({
   margin: 'auto',
   alignItems: 'center',
   justifyContent: 'center',
+  textAlign: 'center',
 })
 
 const Controls = view({
@@ -78,22 +79,26 @@ const Item = view({
     filter: 'grayscale(1)',
   },
   '&:hover': {
-    background: '#f6f6f6',
+    background: [0, 0, 0, 0.05],
   },
 })
 
 Item.theme = ({ theme }) => ({
-  borderBottom: [1, theme.base.borderColor.alpha(0.7)],
+  borderBottom: [1, theme.base.borderColor.alpha(0.2)],
 })
 
-const ItemTitle = view({
-  fontWeight: 600,
-  padding: [0, 12],
-  justifyContent: 'center',
-  fontSize: 16,
-  alpha: 0.5,
-  flex: 1,
-})
+const ItemTitle = props => (
+  <Text
+    {...{
+      fontWeight: 600,
+      padding: [0, 12],
+      justifyContent: 'center',
+      fontSize: 16,
+      flex: 1,
+    }}
+    {...props}
+  />
+)
 
 const AddButton = ({ disabled, ...props }) =>
   disabled ? (
@@ -172,7 +177,11 @@ export const OrbitOnboard = decorator(
           </OnboardFrame>
           <OnboardFrame>
             <Text size={1.2} fontWeight={600}>
-              Select integrations
+              Select apps
+            </Text>
+            <Text>
+              You can always set these up and add multiple apps through the
+              store later, but it's nice to get a few working.
             </Text>
             <View height={10} />
             <Unpad>
@@ -182,7 +191,7 @@ export const OrbitOnboard = decorator(
                     key={item.id}
                     inactive={item.added}
                     onClick={
-                      item.added ? addIntegrationClickHandler(item) : null
+                      item.added ? null : addIntegrationClickHandler(item)
                     }
                   >
                     <OrbitIcon size={18} icon={item.id} />
@@ -194,6 +203,19 @@ export const OrbitOnboard = decorator(
                 )
               })}
             </Unpad>
+          </OnboardFrame>
+          <OnboardFrame>
+            <Centered>
+              <Text size={2.5} fontWeight={600}>
+                All set!
+              </Text>
+              <View height={10} />
+              <Text size={1.5} alpha={0.5}>
+                Orbit will scan your integrations and create an index. It
+                creates profiles of people it sees from across different
+                integrations.
+              </Text>
+            </Centered>
           </OnboardFrame>
         </FrameAnimate>
         <Controls>

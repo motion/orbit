@@ -47,6 +47,7 @@
     "dev": "bin/run orbit",
     "build-app": "cd app/build-orbit && npm run build-app",
     "build-app-resume": "cd app/build-orbit && npm run build-app-resume",
-    "publish-app": "cd app/build-orbit && npm run publish"
+    "publish-app": "cd app/build-orbit && npm run publish",
+    "test-built-app": "cd app/build-orbit && npm run test-built-app"
   }
 }

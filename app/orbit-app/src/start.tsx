@@ -10,7 +10,6 @@ import './helpers/createElement'
 // separate this so hmr works nicely
 
 export async function start() {
-  console.log('rendering app')
   const { RootView } = require('./RootViewHMR')
   // Root is the topmost store essentially
   // We export it so you can access a number of helpers

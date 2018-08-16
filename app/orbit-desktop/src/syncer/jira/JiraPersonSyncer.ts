@@ -28,9 +28,7 @@ export class JiraPersonSyncer implements IntegrationSyncer {
     const url = `/rest/api/2/user/search?maxResults=${maxResults}&startAt=${startAt}&username=_`
 
     // loading people from atlassian server
-    log(
-      `loading ${startAt === 0 ? 'first' : 'next'} ${maxResults} people`,
-    )
+    log(`loading ${startAt === 0 ? 'first' : 'next'} ${maxResults} people`)
     const result: JiraPeopleResponse = await fetchFromAtlassian(
       this.setting.values.atlassian,
       url,
@@ -54,7 +52,7 @@ export class JiraPersonSyncer implements IntegrationSyncer {
   }
 
   // todo: do not return null here
-  private async createPerson(person: JiraPerson): Promise<Person | null> {
+  private async createPerson(person: JiraPerson): Promise<Person> {
     const id = `jira-${Helpers.hash(person)}`
     const personEntity = await createOrUpdate(
       PersonEntity,

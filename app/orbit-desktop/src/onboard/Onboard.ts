@@ -4,6 +4,7 @@ import Fs from 'fs-extra'
 import Path from 'path'
 import Os from 'os'
 import { Desktop } from '@mcro/stores'
+import { findOrCreate } from '../helpers/helpers'
 
 const chromeDbPaths = [
   Path.join(
@@ -36,7 +37,7 @@ export class Onboard {
   }
 
   async start() {
-    this.generalSetting = await SettingEntity.findOne({
+    this.generalSetting = await findOrCreate(SettingEntity, {
       type: 'general',
       category: 'general',
     })

@@ -13,8 +13,14 @@ const HiddenInput = view({
   },
 })
 
+type Props = {
+  defaultValue?: any
+  onChange?: Function
+  sync?: any
+}
+
 @view
-export class Checkbox extends React.Component {
+export class Checkbox extends React.Component<Props> {
   @observable isChecked = this.props.defaultValue || false
 
   onChange = e => {
@@ -22,7 +28,8 @@ export class Checkbox extends React.Component {
     return this.isChecked
   }
 
-  render({ onChange, sync, hover, ...props }) {
+  render() {
+    const { onChange, sync, ...props } = this.props
     const { isChecked } = this
     return (
       <SizedSurface
@@ -39,11 +46,7 @@ export class Checkbox extends React.Component {
         height={18}
         align="center"
         justify="center"
-        flex={false}
-        hover={{
-          color: isChecked ? '#fff' : '#ddd',
-          ...hover,
-        }}
+        flex={0}
         iconProps={{
           css: {
             opacity: isChecked ? 1 : 0,

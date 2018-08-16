@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import { Col } from './blocks/Col'
-import { Color } from '@mcro/gloss'
+import { Color, ThemeObject } from '@mcro/gloss'
 
 type Props = {
   size: number
   color?: Color
   towards?: 'top' | 'right' | 'bottom' | 'left'
-  theme?: string | Object
+  theme?: ThemeObject
   boxShadow?: any
   background?: Color
   opacity?: number

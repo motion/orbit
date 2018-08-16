@@ -19,15 +19,6 @@ const STAGING_DIR = Path.join(ROOT, 'stage-app')
 const BUILD_DIR = Path.join(ROOT, 'dist')
 
 const ignorePaths = [
-  // exclude extra dirs for xcode
-  'oracle/train',
-  'oracle/pyocr',
-  'oracle/swindler',
-  'oracle/orbit/Carthage',
-  'oracle/orbit/Index',
-  'oracle/orbit/Build/Intermediates',
-  'oracle/orbit/Build/Products/Debug',
-  'oracle/orbit/orbit.xcodeproj',
   // this avoids duplicating the chromium build,
   // since it derefs the subling Versions/Current symlink it still copies
   'Framework.framework/Versions/A',

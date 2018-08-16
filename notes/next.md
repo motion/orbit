@@ -6,23 +6,13 @@
 
 **Production build that properly handles OAuth sync for a real-world user**
 
-We want by Wednesday to have a rough prod build with auto-updating and a few low level features that will get us across the finish line.
-
-Then by Friday we should have everything polished quite a lot more. This is what will make these last couple weeks really hard is it's a _ton_ of polish, so it's hard to point to the exact final state.
-
-The big things on my side are:
-
 - Oauth key strategy:
   1.  UI/storage for adding your own oauth keys as master/admin
   2.  Using those keys in Passport
   3.  Documentation to onboard for creating your own keys
       - should be built into app as well as on a website
       - https://docs.tryretool.com/docs/sso-google-and-okta
-- Finish auto-update / build to prod .app
-- Finish/improve onboarding flow
 - Finish settings panes
-- Final peek design run with native looking theme
-- Fix keyboard nav and logic for moving between cards
 
 On Umed's side:
 

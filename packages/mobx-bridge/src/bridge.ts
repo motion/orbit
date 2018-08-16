@@ -64,7 +64,7 @@ class Bridge {
   // note: you have to call start to make it explicitly connect
   start = async (store, initialState, options: Options = {}) => {
     if (!store) {
-      throw new Error(`No source given for starting screen store`)
+      throw new Error('No source given for starting screen store')
     }
     log(`Starting bridge for ${store.source}...`)
     this.setupActions(store, options.actions)
@@ -163,7 +163,7 @@ class Bridge {
         }, 40)
       }
       if (!data) {
-        console.log(`No data received over socket`)
+        console.log('No data received over socket')
         return
       }
       if (data[0] === '-') {
@@ -174,7 +174,7 @@ class Bridge {
       try {
         const messageObj = JSON.parse(data)
         if (!messageObj || typeof messageObj !== 'object') {
-          throw new Error(`Non-object received`)
+          throw new Error('Non-object received')
         }
         const { source, state: newState } = messageObj
         if (this._options.ignoreSelf && source === this._source) {
@@ -191,7 +191,7 @@ class Bridge {
         }
         if (!this.stores[source]) {
           console.warn(
-            `Store not imported: this.stores:`,
+            'Store not imported: this.stores:',
             this.stores,
             `source: ${source}`,
           )
@@ -276,7 +276,7 @@ class Bridge {
   setState = (newState, ignoreSocketSend?) => {
     if (!this.started) {
       throw new Error(
-        `Not started, can only call setState on the app that starts it.`,
+        'Not started, can only call setState on the app that starts it.',
       )
     }
     if (!this._store) {
@@ -399,7 +399,7 @@ class Bridge {
   sendMessage = async (Store: any, ogMessage: string, value?: string) => {
     if (!this.started) {
       throw new Error(
-        `Not started, can only call sendMessage on the app that starts it.`,
+        'Not started, can only call sendMessage on the app that starts it.',
       )
     }
     if (!Store || !ogMessage) {
@@ -412,9 +412,9 @@ class Bridge {
       this.socketManager.sendMessage(Store.source, message)
     } else {
       if (!this._wsOpen) {
-        log(`\n\n\nWaiting for open socket....\n\n\n`)
+        log('\n\n\nWaiting for open socket....\n\n\n')
         await this.onOpenSocket()
-        log(`\n\n\Socket opened!\n\n\n`)
+        log('\n\n\Socket opened!\n\n\n')
       }
       this._socket.send(JSON.stringify({ message, to: Store.source }))
     }

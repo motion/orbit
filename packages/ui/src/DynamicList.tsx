@@ -189,6 +189,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
   }
 
   recalculateVisibleRows = (props: DynamicListProps) => {
+    // @ts-ignore
     this.setState(state => {
       let startTop = 0
       // find the start index
@@ -229,6 +230,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
       if (
         startIndex === state.startIndex &&
         endIndex === state.endIndex &&
+        // @ts-ignore
         startTop === state.containerStyle.top
       ) {
         // this is to ensure that we don't create a new containerStyle object and obey reference equality for purity checks

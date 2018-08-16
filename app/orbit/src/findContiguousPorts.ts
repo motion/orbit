@@ -1,4 +1,5 @@
 import getPort from 'get-port'
+
 export const findContiguousPorts = async (
   total = 3,
   start = 3000,
@@ -13,6 +14,7 @@ export const findContiguousPorts = async (
     const foundPorts = await Promise.all(next.map(x => getPort(x)))
     // found three in a row
     if (foundPorts.every(Boolean)) {
+      console.log(`Found ports: ${next}`)
       found = next
     } else {
       current += 10

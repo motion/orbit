@@ -34,8 +34,8 @@ export type ItemProps = {
   childrenProps?: Object
   primaryEllipse?: boolean
   glow?: boolean
-  fontWeight?: number | string
-  fontSize?: number | string
+  fontWeight?: any
+  fontSize?: any
   primaryProps?: Object
   index?: number
   secondaryProps?: Object
@@ -43,7 +43,7 @@ export type ItemProps = {
   style?: Object
   childrenEllipse?: boolean
   getRef?: Function
-  highlight?: boolean
+  highlight?: boolean | Function
   selectable?: boolean
 }
 
@@ -108,6 +108,8 @@ export class ListItem extends React.Component<ItemProps> {
       zIndex: -1,
     },
   }
+
+  node = null
 
   componentDidMount() {
     if (this.props.onItemMount) {
@@ -180,6 +182,7 @@ export class ListItem extends React.Component<ItemProps> {
     let children = _children
     // allows for reactive children
     if (typeof children === 'function') {
+      // @ts-ignore
       children = _children()
     }
 
@@ -191,7 +194,7 @@ export class ListItem extends React.Component<ItemProps> {
         size={size}
         sizePadding={1.4}
         {...radiusProps}
-        border={false}
+        borderWidth={0}
         background="transparent"
         row
         onClick={onClick}
@@ -222,12 +225,12 @@ export class ListItem extends React.Component<ItemProps> {
               <Text
                 wordWrap="break-word"
                 fontSize={fontSize}
+                fontWeight={fontWeight}
                 size={size}
                 editable={editable}
                 autoselect={autoselect}
                 onFinishEdit={onFinishEdit}
                 ellipse={primaryEllipse}
-                fontWeight={fontWeight}
                 {...primaryProps}
               >
                 {primary}
@@ -245,7 +248,7 @@ export class ListItem extends React.Component<ItemProps> {
               </Text>
             </Prop>
           </Above>
-          <div if={!areChildrenString}>{children}</div>
+          {!areChildrenString && <div>{children}</div>}
           <Text
             if={areChildrenString}
             size={size * 0.9}

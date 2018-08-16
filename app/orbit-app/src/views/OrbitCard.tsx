@@ -9,7 +9,7 @@ import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
 import { Bit } from '@mcro/models'
-import { SearchStore } from '../stores/SearchStore'
+import { SelectionStore } from '../stores/SelectionStore'
 import { AppStore } from '../stores/AppStore'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { EMPTY_ITEM } from '../constants'
@@ -20,7 +20,7 @@ export type OrbitCardProps = {
   total?: number
   hoverToSelect?: boolean
   appStore?: AppStore
-  searchStore?: SearchStore
+  selectionStore?: SelectionStore
   paneManagerStore?: PaneManagerStore
   subPaneStore?: SubPaneStore
   title?: React.ReactNode
@@ -61,6 +61,108 @@ export type OrbitCardProps = {
   getIndex?: (id: number) => number
 }
 
+class OrbitCardStore {
+  props: OrbitCardProps
+
+  normalizedBit = null
+  isSelected = false
+  cardWrapRef = null
+
+  clickAt = 0
+
+  handleClick = e => {
+    // so we can control the speed of double clicks
+    if (Date.now() - this.clickAt < 220) {
+      this.open()
+      e.stopPropagation()
+    }
+    this.clickAt = Date.now()
+    if (this.props.onClick) {
+      this.props.onClick(e, this.cardWrapRef)
+      return
+    }
+    if (this.props.onSelect) {
+      this.props.onSelect(this.cardWrapRef)
+      return
+    }
+    if (this.props.inactive) {
+      return
+    }
+    this.props.selectionStore.toggleSelected(this.realIndex, 'click')
+  }
+
+  open = () => {
+    if (!this.props.bit) {
+      return
+    }
+    App.actions.openItem(this.props.bit)
+  }
+
+  setCardWrapRef = cardWrapRef => {
+    if (!cardWrapRef) return
+    this.cardWrapRef = cardWrapRef
+    if (this.props.getRef) {
+      this.props.getRef(cardWrapRef)
+    }
+  }
+
+  get target() {
+    return this.props.result || this.normalizedBit
+  }
+
+  get position() {
+    const position = getTargetPosition(this.cardWrapRef)
+    // list items are closer to edge, adjust...
+    if (this.props.listItem === true) {
+      position.left += 5
+    }
+    return position
+  }
+
+  get realIndex() {
+    const { bit, getIndex, index } = this.props
+    return getIndex ? getIndex(bit.id) : index
+  }
+
+  // this cancels to prevent renders very aggressively
+  updateIsSelected = react(
+    () => [
+      this.props.selectionStore && this.props.selectionStore.activeIndex,
+      this.props.subPaneStore && this.props.subPaneStore.isActive,
+      typeof this.props.isSelected === 'function'
+        ? this.props.isSelected()
+        : this.props.isSelected,
+    ],
+    async ([activeIndex, isPaneActive, isSelected], { sleep }) => {
+      if (!isPaneActive) {
+        throw react.cancel
+      }
+      const { preventAutoSelect, subPaneStore } = this.props
+      let nextIsSelected
+      if (typeof isSelected === 'boolean') {
+        nextIsSelected = isSelected
+      } else {
+        nextIsSelected = activeIndex === this.realIndex
+      }
+      if (nextIsSelected === this.isSelected) {
+        throw react.cancel
+      }
+      this.isSelected = nextIsSelected
+      if (nextIsSelected && !preventAutoSelect) {
+        if (subPaneStore) {
+          subPaneStore.scrollIntoView(this.cardWrapRef)
+        }
+        if (!this.target) {
+          throw new Error(`No target!`)
+        }
+        // fluidity
+        await sleep(16)
+        App.actions.selectItem(this.target, this.position)
+      }
+    },
+  )
+}
+
 const CardWrap = view(UI.View, {
   position: 'relative',
   width: '100%',
@@ -99,8 +201,8 @@ const cardShadow = [0, 6, 14, [0, 0, 0, 0.12]]
 const cardHoverGlow = [0, 0, 0, 2, [0, 0, 0, 0.05]]
 // 90b1e433
 // 90b1e4cc
-const cardSelectedGlow = [0, 0, 0, 2, [0, 0, 0, 0.1]]
-const borderSelected = '#666'
+const cardSelectedGlow = [0, 0, 0, 3, '#90b1e433']
+const borderSelected = '#90b1e4ee'
 
 Card.theme = ({
   listItem,
@@ -227,126 +329,7 @@ const orbitIconProps = {
   },
 }
 
-class OrbitCardStore {
-  props: OrbitCardProps
-
-  normalizedBit = null
-  isSelected = false
-  cardWrapRef = null
-
-  clickAt = 0
-
-  handleClick = e => {
-    // so we can control the speed of double clicks
-    if (Date.now() - this.clickAt < 220) {
-      this.open()
-      e.stopPropagation()
-    }
-    this.clickAt = Date.now()
-    if (this.props.onClick) {
-      this.props.onClick(e, this.cardWrapRef)
-      return
-    }
-    if (this.props.onSelect) {
-      this.props.onSelect(this.cardWrapRef)
-      return
-    }
-    if (this.props.inactive) {
-      return
-    }
-    this.props.searchStore.setSelectEvent('click')
-    App.actions.toggleSelectItem(this.target, this.position)
-  }
-
-  open = () => {
-    if (!this.props.bit) {
-      return
-    }
-    App.actions.openItem(this.props.bit)
-  }
-
-  setCardWrapRef = cardWrapRef => {
-    if (!cardWrapRef) return
-    this.cardWrapRef = cardWrapRef
-    if (this.props.getRef) {
-      this.props.getRef(cardWrapRef)
-    }
-  }
-
-  get target() {
-    return this.props.result || this.normalizedBit
-  }
-
-  get sleepBeforePeek() {
-    // first time, go fast
-    if (!App.peekState.target) {
-      return 16
-    }
-    // depending on type of move, adjust speed
-    if (this.props.searchStore) {
-      const { selectEvent } = this.props.searchStore
-      return selectEvent === 'key' ? 130 : 0
-    }
-    return 16
-  }
-
-  get position() {
-    const position = getTargetPosition(this.cardWrapRef)
-    // list items are closer to edge, adjust...
-    if (this.props.listItem === true) {
-      position.left += 5
-    }
-    return position
-  }
-
-  // this cancels to prevent renders very aggressively
-  updateIsSelected = react(
-    () => [
-      this.props.searchStore && this.props.searchStore.nextIndex,
-      this.props.subPaneStore && this.props.subPaneStore.isActive,
-      typeof this.props.isSelected === 'function'
-        ? this.props.isSelected()
-        : this.props.isSelected,
-    ],
-    async ([nextIndex, isPaneActive, isSelected], { sleep }) => {
-      if (!isPaneActive) {
-        throw react.cancel
-      }
-      const {
-        bit,
-        getIndex,
-        index,
-        preventAutoSelect,
-        subPaneStore,
-      } = this.props
-      let nextIsSelected
-      if (typeof isSelected === 'boolean') {
-        nextIsSelected = isSelected
-      } else {
-        const resolvedIndex = getIndex ? getIndex(bit.id) : index
-        nextIsSelected = nextIndex === resolvedIndex
-      }
-      if (nextIsSelected === this.isSelected) {
-        throw react.cancel
-      }
-      this.isSelected = nextIsSelected
-      if (nextIsSelected && !preventAutoSelect) {
-        if (subPaneStore) {
-          subPaneStore.scrollIntoView(this.cardWrapRef)
-        }
-        if (!this.target) {
-          throw new Error(`No target!`)
-        }
-        // fluidity
-        await sleep(32)
-        App.actions.selectItem(this.target, this.position)
-      }
-    },
-    { immediate: true },
-  )
-}
-
-@view.attach('appStore', 'searchStore', 'paneManagerStore', 'subPaneStore')
+@view.attach('appStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
   store: OrbitCardStore,
 })
@@ -362,9 +345,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
   constructor(a, b) {
     super(a, b)
     this.getOrbitCard = this.getOrbitCard.bind(this)
-    const { searchStore, hoverToSelect } = this.props
+    const { selectionStore, hoverToSelect } = this.props
     if (hoverToSelect) {
-      this.hoverSettler = searchStore.getHoverSettler()
+      this.hoverSettler = selectionStore.getHoverSettler()
       this.hoverSettler.setItem({
         index: this.props.index,
       })
@@ -412,7 +395,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       listItem,
       nextUpStyle,
       onClick,
-      searchStore,
+      selectionStore,
       store,
       titleProps,
       subtitleProps,
@@ -550,7 +533,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
 
   render() {
     const {
-      searchStore,
+      selectionStore,
       store,
       pane,
       bit,
@@ -559,7 +542,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       item,
       ...props
     } = this.props
-    // debounceLog(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
+    console.log(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
     if (!bit) {
       return this.getOrbitCard(props)
     }

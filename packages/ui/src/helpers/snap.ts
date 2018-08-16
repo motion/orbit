@@ -87,7 +87,6 @@ export function maybeSnapLeft(
   // │A│B│
   // └─┴─┘
   const snapRight = getPossibleSnappedPosition(windows, {
-    debug: true,
     getGap: win => win.left - (props.width + left),
     getNew: win => win.left - props.width,
   })

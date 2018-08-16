@@ -40,7 +40,6 @@ export class NLPStore /* extends Store */ {
       }
     },
     {
-      immediate: true,
       defaultValue: DEFAULT_NLP,
     },
   )
@@ -54,6 +53,9 @@ export class NLPStore /* extends Store */ {
   updateUsers = react(
     () => this.peopleNames,
     names => {
+      if (!names) {
+        throw react.cancel
+      }
       // ensure js
       setUserNames(names.slice())
     },

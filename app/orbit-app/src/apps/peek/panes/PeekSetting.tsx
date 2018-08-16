@@ -11,7 +11,6 @@ import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton } from '../../../views'
-import { PeekActionBar } from './PeekActionBar'
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -87,7 +86,7 @@ class SettingContent extends React.Component<
             subtitle: (
               <>
                 <UI.Text>{store.bitsCount} total</UI.Text>
-                <PeekActionBar.Space />
+                <UI.View width={10} />
                 {!!store.job &&
                   !!store.job.updatedAt && (
                     <RoundButton

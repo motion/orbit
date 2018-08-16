@@ -60,7 +60,7 @@ export class SubPaneStore {
       }
       return isActive
     },
-    { immediate: true, defaultValue: false },
+    { defaultValue: false },
   )
 
   didMount() {
@@ -88,7 +88,7 @@ export class SubPaneStore {
   get fullHeight() {
     // this is the expandable filterpane in searches
     const framePad = 8
-    const { extraHeight } = this.props.searchStore
+    const { extraHeight } = this.props.searchStore.searchFilterStore
     const addHeight = extraHeight ? extraHeight + 14 : 0
     const fullHeight =
       addHeight + this.contentHeight + this.aboveContentHeight + framePad
@@ -128,9 +128,6 @@ export class SubPaneStore {
         throw react.cancel
       }
       this.props.appStore.setContentHeight(height)
-    },
-    {
-      immediate: true,
     },
   )
 

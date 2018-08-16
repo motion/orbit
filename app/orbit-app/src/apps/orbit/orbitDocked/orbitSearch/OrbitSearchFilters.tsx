@@ -118,8 +118,8 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
         onMouseLeave={searchFilterStore.dateHover.props.onMouseLeave}
         onMouseMove={searchFilterStore.dateHover.props.onMouseMove}
         className="calendar-dom"
-        height={searchStore.extraFiltersHeight}
-        visible={searchStore.extraFiltersVisible}
+        height={searchStore.searchFilterStore.extraFiltersHeight}
+        visible={searchStore.searchFilterStore.extraFiltersVisible}
       >
         <DateRangePicker
           onChange={searchFilterStore.onChangeDate}

@@ -8,13 +8,13 @@ import { PeekFrame } from './views/PeekFrame'
 import { AppStore } from '../../stores/AppStore'
 import { PeekContent } from './views/PeekContent'
 import { PeekHeader } from './views/PeekHeader'
-import { SearchStore } from '../../stores/SearchStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 import { PeekPaneProps, PeekContents } from './PeekPaneProps'
 
 type Props = {
   appStore?: AppStore
   peekStore?: PeekStore
-  searchStore?: SearchStore
+  selectionStore?: SelectionStore
 }
 
 const decorator = compose(
@@ -24,26 +24,28 @@ const decorator = compose(
   }),
 )
 
-export const Peek = decorator(({ appStore, searchStore, peekStore }: Props) => {
-  return (
-    <UI.Theme name="grey">
-      <PeekFrame>
-        <PeekPageInner
-          appStore={appStore}
-          searchStore={searchStore}
-          peekStore={peekStore}
-        />
-      </PeekFrame>
-    </UI.Theme>
-  )
-})
+export const Peek = decorator(
+  ({ appStore, selectionStore, peekStore }: Props) => {
+    return (
+      <UI.Theme name="grey">
+        <PeekFrame>
+          <PeekPageInner
+            appStore={appStore}
+            selectionStore={selectionStore}
+            peekStore={peekStore}
+          />
+        </PeekFrame>
+      </UI.Theme>
+    )
+  },
+)
 
 type PeekPane = React.SFC<PeekPaneProps>
 
 @view
 class PeekPageInner extends React.Component<Props> {
   render() {
-    const { peekStore, appStore, searchStore } = this.props
+    const { peekStore, appStore, selectionStore } = this.props
     if (!peekStore.state) {
       return null
     }
@@ -62,7 +64,7 @@ class PeekPageInner extends React.Component<Props> {
         person={model}
         appStore={appStore}
         peekStore={peekStore}
-        searchStore={searchStore}
+        selectionStore={selectionStore}
       >
         {(resolvedProps: PeekContents) => {
           const {

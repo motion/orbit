@@ -2,6 +2,7 @@ import { main } from './main'
 import { setConfig } from '@mcro/config'
 
 setConfig({
+  version: '0',
   ports: {
     server: 3001,
     bridge: 3003,

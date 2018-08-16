@@ -5,8 +5,9 @@
  * @format
  */
 
+import * as React from 'react'
 import { view } from '@mcro/black'
-import { Filter } from '../filter/types'
+import { Filter } from './types'
 import { PureComponent } from 'react'
 import { Text } from '../Text'
 import { findDOMNode } from 'react-dom'

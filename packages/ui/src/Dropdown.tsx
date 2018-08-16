@@ -34,7 +34,7 @@ export class Dropdown extends React.Component<Props> {
       ...props
     } = this.props
     const arrow = (
-      <div $icon $arrow>
+      <div>
         <Arrow color="#000" size={8} />
       </div>
     )

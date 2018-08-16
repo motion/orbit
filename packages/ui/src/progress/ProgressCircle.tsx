@@ -53,14 +53,14 @@ export class ProgressCircle extends React.Component<Props> {
       >
         <path
           d={pathString}
-          stroke={backgroundColor}
+          stroke={`${backgroundColor}`}
           strokeWidth={lineWidth}
           fillOpacity="0"
         />
         <path
           d={pathString}
           strokeLinecap={lineType}
-          stroke={lineColor}
+          stroke={`${lineColor}`}
           strokeWidth={lineWidth}
           fillOpacity="0"
           ref="path"

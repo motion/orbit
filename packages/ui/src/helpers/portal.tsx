@@ -1,13 +1,14 @@
 import { Component } from 'react'
-import PropTypes from 'prop-types'
 import ReactDom from 'react-dom'
 
 const useCreatePortal = typeof ReactDom.createPortal === 'function'
 
-export class Portal extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-  }
+type Props = {
+  children?: any
+}
+
+export class Portal extends Component<Props> {
+  popup = null
 
   constructor(a, b) {
     super(a, b)

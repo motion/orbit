@@ -19,7 +19,6 @@ import { propsToTextSize } from './helpers/propsToTextSize'
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
 export type SurfaceProps = CSSPropertySet & {
-  borderRadius?: number
   active?: boolean
   after?: React.ReactNode
   background?: Color
@@ -34,7 +33,6 @@ export type SurfaceProps = CSSPropertySet & {
   dim?: boolean
   elementProps?: Object
   elevation?: number
-  flex?: boolean | number
   forwardRef?: React.Ref<any>
   glint?: boolean
   glow?: boolean
@@ -202,6 +200,7 @@ const baseIconStyle = {
   justifyContent: 'center',
 }
 
+// @ts-ignore
 @attachTheme
 @view.ui
 export class Surface extends React.Component<SurfaceProps> {
@@ -281,6 +280,7 @@ export class Surface extends React.Component<SurfaceProps> {
         {icon && !stringIcon ? <div>{icon}</div> : null}
         {icon && stringIcon ? (
           <Icon
+            // @ts-ignore
             order={icon && iconAfter ? 3 : 'auto'}
             name={`${icon}`}
             size={getIconSize(this.props)}
@@ -292,7 +292,7 @@ export class Surface extends React.Component<SurfaceProps> {
             full
             scale={1.1}
             opacity={0.35}
-            borderRadius={props.borderRadius}
+            borderRadius={+props.borderRadius}
             {...glowProps}
           />
         ) : null}

@@ -43,7 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let queue = AsyncGroup()
   var socketBridge: SocketBridge!
   var windo: Windo!
-  var screen: Screen!
+//  var screen: Screen!
   var curPosition = NSRect()
   private var lastSent = ""
 
@@ -164,40 +164,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
 //    windo = Windo(emit: self.emit)
 
-    do {
-      screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
-    } catch let error as NSError {
-      print("Error \(error.domain)")
-      print(Thread.callStackSymbols)
-    }
+//    do {
+//      screen = try Screen(emit: self.emit, queue: self.queue, displayId: CGMainDisplayID())
+//    } catch let error as NSError {
+//      print("Error \(error.domain)")
+//      print(Thread.callStackSymbols)
+//    }
     
-    if shouldRunTest {
-      print("running in test mode...")
-//      screen.watchBounds(
-//        fps: 10,
-//        boxes: [
-//          Box(id: 1, x: 0, y: 23, width: 850, height: 1200, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true, ocr: true)
-//        ],
-//        showCursor: true,
-//        videoCodec: "mp4",
-//        sampleSpacing: 10,
-//        sensitivity: 2,
-//        debug: true
-//      )
-      screen.start()
-    }
+//    if shouldRunTest {
+//      print("running in test mode...")
+////      screen.watchBounds(
+////        fps: 10,
+////        boxes: [
+////          Box(id: 1, x: 0, y: 23, width: 850, height: 1200, screenDir: "/tmp/screen", findContent: true, initialScreenshot: true, ocr: true)
+////        ],
+////        showCursor: true,
+////        videoCodec: "mp4",
+////        sampleSpacing: 10,
+////        sensitivity: 2,
+////        debug: true
+////      )
+//      screen.start()
+//    }
 
-    screen.onStart = {
-      print("screen started")
-    }
-    screen.onFinish = {
-      exit(0)
-    }
-    screen.onError = {
-      print(Thread.callStackSymbols)
-      printErr($0)
-      exit(1)
-    }
+//    screen.onStart = {
+//      print("screen started")
+//    }
+//    screen.onFinish = {
+//      exit(0)
+//    }
+//    screen.onError = {
+//      print(Thread.callStackSymbols)
+//      printErr($0)
+//      exit(1)
+//    }
   }
   
   func showWindow() {
@@ -281,39 +281,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       // coming from us, ignore
       return
     }
-    if action == "paus" {
-      screen.pause()
-      return
-    }
-    if action == "resu" {
-      screen.resume()
-      return
-    }
-    if action == "star" {
-      screen.start()
-      return
-    }
-    if action == "watc" {
-      do {
-        let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
-        screen.watchBounds(
-          fps: options.fps,
-          boxes: options.boxes,
-          showCursor: options.showCursor,
-          videoCodec: options.videoCodec,
-          sampleSpacing: options.sampleSpacing,
-          sensitivity: options.sensitivity,
-          debug: options.debug
-        )
-      } catch {
-        print("Error parsing arguments \(text)")
-      }
-      return
-    }
-    if action == "clea" {
-      screen.clear()
-      return
-    }
+//    if action == "paus" {
+//      screen.pause()
+//      return
+//    }
+//    if action == "resu" {
+//      screen.resume()
+//      return
+//    }
+//    if action == "star" {
+//      screen.start()
+//      return
+//    }
+//    if action == "watc" {
+//      do {
+//        let options = try JSONDecoder().decode(Options.self, from: text[5..<text.count].data(using: .utf8)!)
+//        screen.watchBounds(
+//          fps: options.fps,
+//          boxes: options.boxes,
+//          showCursor: options.showCursor,
+//          videoCodec: options.videoCodec,
+//          sampleSpacing: options.sampleSpacing,
+//          sensitivity: options.sensitivity,
+//          debug: options.debug
+//        )
+//      } catch {
+//        print("Error parsing arguments \(text)")
+//      }
+//      return
+//    }
+//    if action == "clea" {
+//      screen.clear()
+//      return
+//    }
     if action == "defo" {
       windo.defocus()
       return
@@ -323,7 +323,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   func applicationWillTerminate(_ aNotification: Notification) {
     print("telling recorder to stop...")
-    screen.stop()
+//    screen.stop()
     print("recorder stopped, exiting...")
   }
   

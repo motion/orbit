@@ -1,50 +1,55 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
 import { SettingRepository } from '../../../../repositories'
 import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
 import { OrbitCardProps } from '../../../../views/OrbitCard'
 
-@view.attach('appStore')
-@view.attach({
-  store: SettingInfoStore,
-})
-@view
-export class OrbitSettingCard extends React.Component<
-  OrbitCardProps & {
-    store: SettingInfoStore
-    isActive?: boolean
+const handleClick = async () => {
+  const { result } = this.props
+  if (result.auth === false) {
+    const setting: Setting = {} as Setting
+    setting.category = 'integration'
+    setting.type = result.type
+    setting.token = 'good'
+    await SettingRepository.save(setting)
   }
-> {
-  handleClick = async () => {
-    const { result } = this.props
-    if (result.auth === false) {
-      const setting: Setting = {} as Setting
-      setting.category = 'integration'
-      setting.type = result.type
-      setting.token = 'good'
-      await SettingRepository.save(setting)
-    }
-  }
+}
 
-  render() {
-    const { store, result, isActive, subtitle, onClick, ...props } = this.props
+type Props = OrbitCardProps & {
+  store: SettingInfoStore
+  isActive?: boolean
+}
+
+const decorator = compose(
+  view.attach({
+    store: SettingInfoStore,
+  }),
+  view,
+)
+
+export const OrbitSettingCard = decorator(
+  ({ store, result, isActive, subtitle, onClick, ...props }: Props) => {
     const countSubtitle = !isActive
       ? ''
-      : store.bitsCount === null
-        ? '...'
-        : `${store.bitsCount}`
+      : store.bitsCount >= 0
+        ? `${store.bitsCount}`
+        : '...'
     const subtitleDisplay = subtitle || countSubtitle
     return (
       <OrbitCard
         inactive={!isActive}
         title={result.title}
+        titleProps={{
+          ellipse: true,
+        }}
         subtitle={subtitleDisplay}
         subtitleProps={{
-          size: 2,
+          size: 1.5,
           fontWeight: 500,
         }}
+        titleFlex={1}
         date={store.job && store.job.updatedAt}
         icon={result.icon}
         iconProps={{
@@ -52,8 +57,8 @@ export class OrbitSettingCard extends React.Component<
         }}
         result={result}
         {...props}
-        onClick={onClick || (!isActive ? this.handleClick : null)}
+        onClick={onClick || (!isActive ? handleClick : null)}
       />
     )
-  }
-}
+  },
+)

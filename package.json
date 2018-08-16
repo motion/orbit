@@ -43,7 +43,10 @@
     "watch": "source .env && build --watch",
     "clean": "lerna exec --parallel -- rm -r ./_",
     "clean-packages": "lerna exec --parallel -- rm -r ./node_modules",
-    "start": "cd apps/orbit && npm start",
-    "dev": "bin/run orbit"
+    "start": "cd app/orbit && npm start",
+    "dev": "bin/run orbit",
+    "build-app": "cd app/build-orbit && npm run build-app",
+    "build-app-resume": "cd app/build-orbit && npm run build-app-resume",
+    "publish-app": "cd app/build-orbit && npm run publish"
   }
 }

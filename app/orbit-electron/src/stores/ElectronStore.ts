@@ -141,6 +141,7 @@ export class ElectronStore {
       await when(() => !Desktop.mouseState.mouseDown) // ensure not moving window
       this.show = 2
     },
+    { deferFirstRun: true }
   )
 
   // focus on pinned

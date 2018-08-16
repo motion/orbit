@@ -15,7 +15,17 @@ const defaultSettings = {
   reset: true,
 }
 
-export class Tilt extends React.Component {
+type Props = {
+  restingPosition?: [number, number]
+  onMouseEnter?: Function
+  onMouseMove?: Function
+  onMouseLeave?: Function
+  className?: string
+  style?: Object
+  options?: any
+}
+
+export class Tilt extends React.Component<Props> {
   static defaultProps = {
     onMouseEnter: idFn,
     onMouseMove: idFn,
@@ -23,10 +33,13 @@ export class Tilt extends React.Component {
   }
 
   state = {
+    mounted: false,
+    entering: false,
     style: {},
-    settings: {},
+    settings: defaultSettings,
   }
 
+  event = null
   width = null
   height = null
   left = null
@@ -133,7 +146,7 @@ export class Tilt extends React.Component {
     return this.props.onMouseLeave(e)
   }
 
-  setTransition(cb) {
+  setTransition(cb?) {
     clearTimeout(this.transitionTimeout)
     this.setState(
       {
@@ -190,7 +203,7 @@ export class Tilt extends React.Component {
     this.top = rect.top
   }
 
-  update = position => {
+  update = (position?) => {
     let values
     if (position) {
       values = this.getValues(position[0], position[1])
@@ -231,6 +244,7 @@ export class Tilt extends React.Component {
       opacity: willFadeIn ? 0 : 1,
     }
     if (willFadeIn) {
+      // @ts-ignore
       style.transition = `all ${this.settings.easing}ms ${this.settings.speed}`
     }
     return (

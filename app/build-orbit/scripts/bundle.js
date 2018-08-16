@@ -6,6 +6,7 @@ import electronPackager from 'electron-packager'
 import rebuild from 'electron-rebuild'
 import debug from 'debug'
 import execa from 'execa'
+import Fs from 'fs-extra'
 
 const log = {
   bundle: debug('electron-build:bundle'),
@@ -79,6 +80,15 @@ async function bundle() {
   } catch (err) {
     console.log('error cleaning', err)
   }
+
+  console.log('copying parent version into stage-app...')
+  const parentPkg = Path.join(STAGING_DIR, '..', 'package.json')
+  const stagePkg = Path.join(STAGING_DIR, 'package.json')
+  const { version } = require(parentPkg)
+  const pkg = require(stagePkg)
+  pkg.version = version
+  await Fs.writeFile(stagePkg, JSON.stringify(pkg, null, 2))
+  console.log('copied version', version)
 
   // why install --production and not just dereference symlinks?
   // because it avoids bundling massive things like Oracle build files

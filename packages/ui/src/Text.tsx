@@ -5,7 +5,7 @@ import { InlineBlock } from './blocks/InlineBlock'
 import { Inline } from './blocks/Inline'
 import { highlightText } from './helpers/highlightText'
 import { propsToTextSize } from './helpers/propsToTextSize'
-import { Color, alphaColor } from '@mcro/gloss'
+import { Color, alphaColor, CSSPropertySet } from '@mcro/gloss'
 
 const TextBlock = view(InlineBlock, {
   userSelect: 'none',
@@ -54,7 +54,7 @@ export type Highlights = {
   highlights: string[]
 }
 
-export type TextProps = {
+export type TextProps = CSSPropertySet & {
   editable?: boolean
   autoselect?: boolean
   selectable?: boolean
@@ -63,11 +63,9 @@ export type TextProps = {
   getRef?: Function
   ellipse?: boolean | number
   tagName?: string
-  fontWeight?: number
   lines?: number
   alpha?: number
   onKeyDown?: Function
-  fontSize?: number
   color?: Color
   opacity?: number
   size?: number

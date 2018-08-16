@@ -6,7 +6,7 @@ import { isNumber, debounce, throttle, isEqual, omit } from 'lodash'
 import { Arrow } from './Arrow'
 import { SizedSurface } from './SizedSurface'
 // import isEqual from 'react-fast-compare'
-import { Color } from '@mcro/css'
+import { Color, CSSPropertySet } from '@mcro/css'
 import { findDOMNode } from 'react-dom'
 
 const ArrowContain = view({
@@ -14,7 +14,7 @@ const ArrowContain = view({
   left: '50%',
 })
 
-export type PopoverProps = {
+export type PopoverProps = CSSPropertySet & {
   // can pass function to get isOpen passed in
   children?: React.ReactNode | ((showPopover: boolean) => React.ReactNode)
   // element or function that returns element, or querySelector to element

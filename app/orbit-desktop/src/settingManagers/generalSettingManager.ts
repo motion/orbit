@@ -4,6 +4,7 @@ import { SettingEntity } from '../entities/SettingEntity'
 import { findOrCreate } from '../helpers/helpers'
 import { logger } from '@mcro/logger'
 import { getConfig } from '../config'
+import * as Path from 'path'
 
 const Config = getConfig()
 const log = logger('GeneralSettingManager')
@@ -18,8 +19,20 @@ export class GeneralSettingManager {
   constructor() {
     if (Config.env.prod) {
       try {
+        // jank
+        const appPath = Path.join(
+          getConfig().directories.root,
+          '..',
+          '..',
+          '..',
+          '..',
+          '..',
+          '..',
+        )
+        console.log('auto launch path', appPath)
         this.autoLaunch = new AutoLaunch({
           name: 'Orbit',
+          path: appPath,
         })
       } catch (err) {
         console.error(err)

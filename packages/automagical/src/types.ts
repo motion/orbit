@@ -12,15 +12,14 @@ export type ReactionHelpers = {
 
 export type ReactionOptions = {
   trace?: boolean
-  fireImmediately?: boolean
-  immediate?: boolean
   equals?: Function
   log?: boolean | 'state' | 'all'
   delay?: number
-  isIf?: boolean
   delayValue?: boolean
+  isIf?: boolean
   onlyUpdateIfChanged?: boolean
   defaultValue?: any
+  deferFirstRun?: boolean
 }
 
 export type MagicalObject = {

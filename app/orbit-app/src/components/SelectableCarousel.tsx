@@ -20,10 +20,13 @@ class CarouselStore {
     index => {
       const { items, offset, selectionStore } = this.props
       const scrollTo = offset + index
-      react.ensure(selectionStore.selectEvent !== 'click')
-      react.ensure(index >= offset && index <= offset + items.length)
-      react.ensure(this.carouselRef.current)
-      react.ensure(typeof scrollTo === 'number')
+      react.ensure('wasnt clicked', selectionStore.selectEvent !== 'click')
+      react.ensure(
+        'within bounds',
+        index >= offset && index <= offset + items.length,
+      )
+      react.ensure('has carousel', this.carouselRef.current)
+      react.ensure('has scrollTo', typeof scrollTo === 'number')
       this.carouselRef.current.scrollTo(scrollTo)
     },
   )

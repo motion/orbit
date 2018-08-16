@@ -124,9 +124,10 @@ export class SubPaneStore {
           await sleep(100)
         }
       }
-      if (height === this.props.appStore.contentHeight) {
-        throw react.cancel
-      }
+      react.ensure(
+        'different height',
+        height !== this.props.appStore.contentHeight,
+      )
       this.props.appStore.setContentHeight(height)
     },
   )

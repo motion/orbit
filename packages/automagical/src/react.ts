@@ -34,7 +34,7 @@ export type ReactionFunction<A, B> = {
     c?: ReactionOptions,
   ): B
   cancel: Error
-  ensure: (boolean) => void
+  ensure: (message: string, condition: boolean) => void
 }
 
 // @watch decorator
@@ -74,8 +74,9 @@ export const react = <ReactionFunction<any, any>>(
 
 react.cancel = new ReactionRejectionError()
 
-react.ensure = (a: boolean) => {
-  if (!a) {
+react.ensure = (message: string, condition: boolean) => {
+  if (!condition) {
+    console.error(`Reaction cancelled: ${message}`)
     throw react.cancel
   }
 }

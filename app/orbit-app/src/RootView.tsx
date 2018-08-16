@@ -6,23 +6,8 @@ import { view, on } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { themes } from './themes'
 
+// install these after we setup everything so they
 require('./helpers/installDevelopmentHelpers')
-
-if (process.env.NODE_ENV === 'development') {
-  if (module.hot && module.hot.addStatusHandler) {
-    if (module.hot.status() === 'idle') {
-      module.hot.addStatusHandler(status => {
-        if (status === 'prepare') {
-          // for gloss to update styles
-          window['__recentHMR'] = true
-          setTimeout(() => (window['__recentHMR'] = false), 400)
-          view.emit('will-hmr')
-          view.provide.emit('will-hmr')
-        }
-      })
-    }
-  }
-}
 
 export class RootView extends React.Component {
   state = {
@@ -30,11 +15,13 @@ export class RootView extends React.Component {
   }
 
   componentDidMount() {
-    window['rootViewInstance'] = this
+    // prevent scroll bounce
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
 
     // capture un-captured links
+    // if you don't then clicking a link will cause electron to go there
+    // this is a good safeguard
     on(this, document, 'click', event => {
       if (
         event.target.tagName === 'A' &&
@@ -104,5 +91,20 @@ export class RootView extends React.Component {
         <CurrentPage key={Router.key} {...Router.params} />
       </UI.ThemeProvide>
     )
+  }
+}
+
+if (process.env.NODE_ENV === 'development') {
+  if (module.hot && module.hot.addStatusHandler) {
+    if (module.hot.status() === 'idle') {
+      module.hot.addStatusHandler(status => {
+        if (status === 'prepare') {
+          // for gloss to update styles
+          window['__lastHMR'] = Date.now()
+          view.emit('will-hmr')
+          view.provide.emit('will-hmr')
+        }
+      })
+    }
   }
 }

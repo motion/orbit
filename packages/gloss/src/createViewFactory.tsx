@@ -20,8 +20,10 @@ const isHMREnabled =
   typeof module !== 'undefined' &&
   !!module['hot']
 
-const falseIfRecentHMR = () =>
-  typeof window['__recentHMR'] === 'boolean' ? !window['__recentHMR'] : true
+const recentHMR = () => {
+  const lastHMR = +window['__lastHMR']
+  return Date.now() - lastHMR < 400
+}
 
 const arrToDict = obj => {
   if (Array.isArray(obj)) {
@@ -360,11 +362,11 @@ export function createViewFactory(toCSS) {
       }
 
       static getDerivedStateFromProps(props: Props, state: State) {
-        if (
-          (isHMREnabled ? falseIfRecentHMR() : true) &&
+        const shouldPreventUpdate =
+          (isHMREnabled ? !recentHMR() : true) &&
           state.prevProps !== null &&
           hasEquivProps(props, state.prevProps)
-        ) {
+        if (shouldPreventUpdate) {
           return null
         }
         let nextState: Partial<State> = {}

@@ -11,6 +11,13 @@ const historyDirection = val =>
     Number(localStorage.getItem(LENGTH_KEY)) + val,
   )
 
+type RouterProps = {
+  routes: {
+    [name: string]: any
+  }
+  history?: any
+}
+
 export class ObservableRouter {
   router: Router
   routes: any
@@ -26,7 +33,7 @@ export class ObservableRouter {
   _id = Math.random()
   onNavigateCallback = null
 
-  constructor({ routes, history }) {
+  constructor({ routes, history }: RouterProps) {
     this.routes = routes
     this.history = history || browserHistory()
     // setup router

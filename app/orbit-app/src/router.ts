@@ -11,11 +11,9 @@ export function runRouter() {
       '/isolate': IsolatePage,
     },
   })
-  window['Router'] = AppRouter
 }
 
 runRouter()
 
 // is something you can import directly
-// TODO clean this up a lot
 export default AppRouter

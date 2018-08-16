@@ -1,10 +1,23 @@
+# search improvements
+
+- Search pagination should scroll down more
+- make search better without using peek
+  - peek should also show infinite scroll of related things
+
+# ui kit
+
 - <UI.Theme select={theme => theme.titleBar} />
   - that takes the subset from theme.gray.titleBar
     - which means that can have specific button styles nicely :D
 
-# Week ending Aug 17th
+# settings
 
-**Production build that properly handles OAuth sync for a real-world user**
+- Slack select all settings by default (syncer needs to respect settings/set them)
+  - Toggle select all button in table view
+- working remove integration
+- working re-run
+
+# Week ending Aug 17th
 
 - Oauth key strategy:
   1.  UI/storage for adding your own oauth keys as master/admin
@@ -13,13 +26,7 @@
       - should be built into app as well as on a website
       - https://docs.tryretool.com/docs/sso-google-and-okta
 - Finish settings panes
-
-On Umed's side:
-
-- Final syncer fixes, as much as possible
 - Mutation/observe pattern for data updates
-- More People aggregation
-- Help fix build to prod on older mac
 
 # Week ending Aug 24th
 
@@ -32,17 +39,12 @@ On Umed's side:
 
 # Week ending Aug 31st
 
-**Ready for workday...**
-
----
-
----
-
----
+- Search improvements and bugfix
+- p2p system in place
+- deploy to a few friends
 
 UI
 
-- Peek windows no more fancy theme just mac looking headers
 - Add button for settings panes that easily lots into with table
 - Confirm native modal for Remove setting
 - Fix themes a lot in terms of color choice

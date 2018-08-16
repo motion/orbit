@@ -4,13 +4,13 @@ import { Text } from '../Text'
 
 export const Label = ({
   children,
-  alignItems = 'center',
-  justifyContent = 'center',
+  alignItems,
+  justifyContent,
   textProps,
   ...props
 }) => (
   <SizedSurface
-    borderRadius
+    sizeRadius
     sizeHeight
     sizePadding={1.5}
     justifyContent={justifyContent}

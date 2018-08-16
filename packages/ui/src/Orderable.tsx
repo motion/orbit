@@ -82,8 +82,8 @@ export class Orderable extends React.Component<OrderableProps, OrderableState> {
     this.setProps(props)
   }
 
-  _mousemove: Function | void
-  _mouseup: Function | void
+  _mousemove?: any
+  _mouseup?: any
   timer: any
 
   sizeKey: 'width' | 'height'
@@ -91,7 +91,7 @@ export class Orderable extends React.Component<OrderableProps, OrderableState> {
   mouseKey: 'offsetX' | 'offsetY'
   screenKey: 'screenX' | 'screenY'
 
-  containerRef: HTMLElement | void
+  containerRef?: HTMLElement
   tabRefs: {
     [key: string]: HTMLElement | void
   }
@@ -126,7 +126,7 @@ export class Orderable extends React.Component<OrderableProps, OrderableState> {
     }
     if (this.props.ignoreChildEvents === true) {
       const tabRef = this.tabRefs[key]
-      // $FlowFixMe parentNode not implemented
+      // @ts-ignore
       if (event.target !== tabRef && event.target.parentNode !== tabRef) {
         return
       }

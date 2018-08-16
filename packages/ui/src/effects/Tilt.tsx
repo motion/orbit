@@ -22,6 +22,7 @@ type Props = {
   onMouseLeave?: Function
   className?: string
   style?: Object
+  options?: any
 }
 
 export class Tilt extends React.Component<Props> {

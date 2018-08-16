@@ -5,8 +5,6 @@
  * @format
  */
 
-import { Node } from 'react'
-
 function isReactElement(object: any) {
   return (
     typeof object === 'object' &&
@@ -30,7 +28,7 @@ export default (node: Node): string => {
       node.forEach(traverse)
     } else if (isReactElement(node)) {
       // node is a react element access its children an recursively stringify them
-      // $FlowFixMe
+      // @ts-ignore
       const { children } = node.props
       if (Array.isArray(children)) {
         children.forEach(traverse)

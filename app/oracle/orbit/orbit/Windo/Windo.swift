@@ -34,11 +34,12 @@ final class Windo {
     self.checkAccessibility()
     // TODO: prompt again in certain cases, ideally make this prompt controllable from oracle.ts
     self.hasPromptedAccessibility = true
-    self.accessibilityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-      if self != nil {
-        self!.checkAccessibility()
-      }
-    }
+    
+//    self.accessibilityTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+//      if self != nil {
+//        self!.checkAccessibility()
+//      }
+//    }
 
     var lastScroll = DispatchTime.now()
     NSEvent.addGlobalMonitorForEvents(matching: NSEvent.EventTypeMask.scrollWheel, handler: { event in

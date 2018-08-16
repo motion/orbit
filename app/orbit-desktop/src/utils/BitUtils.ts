@@ -4,7 +4,6 @@ import { Bit } from '@mcro/models'
  * Bit-related utilities.
  */
 export class BitUtils {
-
   /**
    * Returns missing elements of the first bits based on given list of second bits.
    */
@@ -15,5 +14,4 @@ export class BitUtils {
       })
     })
   }
-
 }

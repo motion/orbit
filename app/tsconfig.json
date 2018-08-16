@@ -8,18 +8,6 @@
     { "path": "./models" },
     { "path": "./services" },
     { "path": "./stores" },
-    { "path": "./oracle" },
-    { "path": "../packages/dev" },
-    { "path": "../packages/config" }
-    { "path": "../packages/black" },
-    { "path": "../packages/build" },
-    { "path": "../packages/color" },
-    { "path": "../packages/constants" },
-    { "path": "../packages/logger" },
-    { "path": "../packages/gloss" },
-    { "path": "../packages/helpers" },
-    { "path": "../packages/r2" },
-    { "path": "../packages/router" },
-    { "path": "../packages/slackdown" }
+    { "path": "./oracle" }
   ]
 }

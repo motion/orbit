@@ -203,3 +203,19 @@ Or monetizing monetizing.
 - the downside of thinking this way is it can encourage feature bloat
 - be sure goalposts look like this pattern:
 - [hacked together/runs] => [big features] => [big refinements] => [release]
+
+---
+
+# A commitment to control
+
+- a new generation of products
+- user-first as a feature
+- decentralized (peter thiel reference?)
+- completely private data - a first
+- extensible and hackable
+- release significant portion of base open source
+- build value based on design, low level features, market
+- survive due to get stewardship not lockdown
+- the value of being user-aligned > the value of tracking data
+- companies that do this will out-compete companies that don't
+- software is getting mature enough to allow this to be a feature

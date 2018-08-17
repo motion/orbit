@@ -19,7 +19,12 @@ export async function main({ version }: OrbitOpts) {
   // for some reason you'll get "directv-tick" consistently on a port
   // even though that port was found to be empty....
   // so attempting to make sure we kill anything even if it looks empty
-  await Promise.all(ports.map(port => killPort(port)))
+  try {
+    console.log('Found ports, ensuring clear', ports)
+    await Promise.all(ports.map(port => killPort(port)))
+  } catch {
+    // errors are just showing the ports are empty
+  }
 
   setConfig({
     version,

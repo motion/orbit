@@ -46,7 +46,7 @@ export const PeekFrameArrow = decorator(({ theme, borderShadow }: Props) => {
       position="absolute"
       top={0}
       zIndex={100}
-      transition="transform ease 170ms"
+      transition="transform ease 80ms"
       size={arrowSize}
       towards={onRight ? 'left' : 'right'}
       background={getBackground(arrowY, theme)}

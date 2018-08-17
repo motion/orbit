@@ -13,7 +13,7 @@ const transitions = store => {
   if (store.isHidden) return 'none'
   if (store.tornState) return 'all linear 10ms'
   if (store.willHide) return 'all ease 100ms'
-  if (store.willStayShown) return 'all ease 100ms'
+  if (store.willStayShown) return 'all ease 60ms'
   return 'all ease 100ms'
 }
 

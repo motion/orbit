@@ -251,3 +251,6 @@ or
     - Is asynchronous so you can celerate as you feel the need without disrupting
     - Forces you to make things presentable and encourages doing nice screen recordings
     - Sense of unity and achievement
+- Why it makes you antifragile:
+  - Small thoughts bring in fresh content without "needing to be a big idea"
+  - Showoff is similarly an unencumbered way to measure what people care about and keep them happy

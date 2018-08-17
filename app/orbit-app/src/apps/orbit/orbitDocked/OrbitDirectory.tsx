@@ -119,7 +119,6 @@ const createSection = (people: Person[], letter, getIndex, total) => {
             getIndex={getIndex}
             // @ts-ignore
             bit={bit}
-            total={total}
             hide={{
               icon: true,
             }}

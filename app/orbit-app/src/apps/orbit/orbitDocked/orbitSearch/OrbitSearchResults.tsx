@@ -10,6 +10,7 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../../../../stores/SearchStore'
 import { SelectionStore } from '../../../../stores/SelectionStore'
 import { App } from '@mcro/stores'
+import { memoize } from 'lodash'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -64,21 +65,33 @@ const highlightOptions = (query, bit) => ({
   style: 'font-weight: 700; color: #fff;',
 })
 
-const OrbitSearchResultsList = view(
-  ({ name, searchStore, selectionStore }: Props) => {
+@view
+class OrbitSearchResultsList extends React.Component<Props> {
+  getHighlight = memoize(index => ({ highlights }) => {
+    const { selectionStore } = this.props
+    return highlights.map((highlight, hlIndex) => {
+      return (
+        <Highlight
+          key={hlIndex}
+          dangerouslySetInnerHTML={{ __html: highlight }}
+          onClick={selectHighlight(index, hlIndex, selectionStore)}
+        />
+      )
+    })
+  })
+
+  render() {
+    const { name, searchStore } = this.props
     const { results, query } = searchStore.searchState
-    // log(`RENDER SENSITIVE`)
     if (!results || !results.length) {
       return null
     }
-    const quickResultsLen = searchStore.quickSearchState.results.length
     return results.map((bit, index) => (
       <OrbitCard
         pane={name}
         subPane="search"
         key={bit.id}
-        index={index + quickResultsLen}
-        total={results.length}
+        index={index}
         bit={bit}
         listItem
       >
@@ -87,22 +100,12 @@ const OrbitSearchResultsList = view(
           wordBreak="break-all"
           highlight={highlightOptions(query, bit)}
         >
-          {({ highlights }) => {
-            return highlights.map((highlight, hlIndex) => {
-              return (
-                <Highlight
-                  key={hlIndex}
-                  dangerouslySetInnerHTML={{ __html: highlight }}
-                  onClick={selectHighlight(index, hlIndex, selectionStore)}
-                />
-              )
-            })
-          }}
+          {this.getHighlight(index)}
         </UI.Text>
       </OrbitCard>
     ))
-  },
-)
+  }
+}
 
 const OrbitSearchResultsFrame = view({
   position: 'relative',

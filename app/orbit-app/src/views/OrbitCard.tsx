@@ -15,9 +15,9 @@ import { getTargetPosition } from '../helpers/getTargetPosition'
 import { EMPTY_ITEM } from '../constants'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { RoundButtonSmall } from './RoundButtonSmall'
+import isEqual from 'react-fast-compare'
 
 export type OrbitCardProps = {
-  total?: number
   hoverToSelect?: boolean
   appStore?: AppStore
   selectionStore?: SelectionStore
@@ -58,7 +58,7 @@ export type OrbitCardProps = {
   padding?: number | number[]
   titleFlex?: number
   subtitleProps?: Object
-  getIndex?: (id: number) => number
+  getIndex?: (id: string) => number
 }
 
 class OrbitCardStore {
@@ -334,7 +334,7 @@ const orbitIconProps = {
   store: OrbitCardStore,
 })
 @view
-export class OrbitCard extends React.Component<OrbitCardProps> {
+export class OrbitCardInner extends React.Component<OrbitCardProps> {
   hoverSettler = null
 
   static defaultProps = {
@@ -344,7 +344,6 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
 
   constructor(a, b) {
     super(a, b)
-    this.getOrbitCard = this.getOrbitCard.bind(this)
     const { selectionStore, hoverToSelect } = this.props
     if (hoverToSelect) {
       this.hoverSettler = selectionStore.getHoverSettler()
@@ -367,7 +366,7 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
 
   id = Math.random()
 
-  getOrbitCard(contentProps: ResolvedItem) {
+  getOrbitCard = (contentProps: ResolvedItem) => {
     // TODO weird mutation
     this.props.store.normalizedBit = contentProps
     const {
@@ -544,7 +543,11 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
       item,
       ...props
     } = this.props
-    console.log(`${(bit && bit.id) || props.title}.${pane} ${store.isSelected}`)
+    console.log(
+      `${props.index} ${(bit && bit.id) || props.title}.${pane} ${
+        store.isSelected
+      }`,
+    )
     if (!bit) {
       return this.getOrbitCard(props)
     }
@@ -559,5 +562,19 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
         {this.getOrbitCard}
       </ItemResolver>
     )
+  }
+}
+
+// wrap the outside so we can do much faster shallow renders when need be
+export class OrbitCard extends React.Component<OrbitCardProps> {
+  shouldComponentUpdate(nextProps) {
+    if (!isEqual(this.props, nextProps)) {
+      console.log('not equal re-render', this.props, nextProps)
+    }
+    return !isEqual(this.props, nextProps)
+  }
+
+  render() {
+    return <OrbitCardInner {...this.props} />
   }
 }

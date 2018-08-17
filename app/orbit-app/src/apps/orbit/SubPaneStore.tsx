@@ -165,7 +165,7 @@ export class SubPaneStore {
   updateHeight = () => {
     const { top, height } = this.paneInnerNode.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {
-      this.aboveContentHeight = top
+      this.aboveContentHeight = Math.max(0, top)
       this.contentHeight = height
     }
   }

@@ -69,7 +69,6 @@ export class Carousel extends React.Component<CarouselProps> {
             className={`carousel-result-item ${className || ''}`}
             pane="carousel"
             bit={bit}
-            total={items.length}
             inGrid
             {...cardProps}
             style={{

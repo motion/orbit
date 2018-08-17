@@ -5,6 +5,7 @@ import Path from 'path'
 import Os from 'os'
 import { Desktop } from '@mcro/stores'
 import { findOrCreate } from '../helpers/helpers'
+import { PortForwardStore } from './PortForwardStore'
 
 const chromeDbPaths = [
   Path.join(
@@ -31,6 +32,7 @@ export class Onboard {
   generalSetting: SettingEntity
   history = []
   foundIntegrations = null
+  portForwardStore = new PortForwardStore()
 
   constructor() {
     this.start()

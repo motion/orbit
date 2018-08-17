@@ -3,14 +3,13 @@ import { view, compose } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
-import { Desktop } from '@mcro/stores'
+import { Desktop, App } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { sleep } from '../../../../helpers'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -114,20 +113,29 @@ const buttonText = ['Next', 'Looks good', 'Done!']
 class OnboardStore {
   props: Props
 
-  curFrame = 0
+  curFrame = 1
   lastFrame = () => this.curFrame--
+
   nextFrame = async () => {
-    this.curFrame++
-    // finish
+    // before incrementing, run some actions...
+
+    // first
+    if (this.curFrame === 1) {
+      // await acceptsforwarding...
+      App.setState({ acceptsForwarding: true })
+    }
+    // last
     if (this.curFrame === 3) {
-      await sleep(200)
-      // for now, manual
-      this.props.paneManagerStore.manuallyFinishedOnboarding = true
+      console.log('cur frame now...')
+      this.props.paneManagerStore.forceOnboard = false
       // save setting
       const generalSetting = await generalSettingQuery()
       generalSetting.values.hasOnboarded = true
       await SettingRepository.save(generalSetting)
     }
+
+    // go to next frame
+    this.curFrame++
   }
 }
 

@@ -22,7 +22,6 @@ import { Logger, logger } from '@mcro/logger'
 import * as typeorm from 'typeorm'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { getConfig as getConfigGlobal } from '@mcro/config'
-import { PortForward } from './stores/PortForwardStore'
 
 const log = logger('desktop')
 
@@ -35,7 +34,6 @@ export class Root {
   keyboardStore: KeyboardStore
   generalSettingManager: GeneralSettingManager
   server = new Server()
-  portForward = new PortForward()
   stores = null
 
   start = async () => {

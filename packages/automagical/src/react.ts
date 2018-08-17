@@ -1,8 +1,7 @@
-import { Reaction, ReactionRejectionError } from './constants'
+import { Reaction } from './constants'
 import { ReactionOptions, ReactionHelpers } from './types'
-import { logger } from '@mcro/logger'
-
-const log = logger('automagical')
+import { ensure } from './ensure'
+import { cancel } from './cancel'
 
 // decorator to do reactions
 
@@ -75,14 +74,8 @@ export const react = <ReactionFunction<any, any>>(
   }
 )
 
-react.cancel = new ReactionRejectionError()
-
-react.ensure = (message: string, condition: boolean) => {
-  if (!condition) {
-    log(`Reaction cancelled: ${message}`)
-    throw react.cancel
-  }
-}
+react.cancel = cancel
+react.ensure = ensure
 
 function doWatch(target, _, descriptor, userOptions) {
   // non-decorator

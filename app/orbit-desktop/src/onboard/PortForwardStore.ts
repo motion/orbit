@@ -14,11 +14,11 @@ const Config = getConfig()
 
 // @ts-ignore
 @store
-export class PortForward {
+export class PortForwardStore {
   isForwarded = false
 
   forwardOnAccept = react(
-    () => App.state.acceptsForward,
+    () => App.state.acceptsForwarding,
     accepts => {
       react.ensure('accepts', accepts)
       react.ensure('not forwarded', !this.isForwarded)

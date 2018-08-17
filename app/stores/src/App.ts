@@ -95,7 +95,7 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
-    acceptsForward: false,
+    acceptsForwarding: false,
   })
 
   get isShowingOrbit() {

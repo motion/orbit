@@ -12,6 +12,7 @@
     "@mcro/config": "*",
     "@mcro/dev": "^2.2.1",
     "@mcro/orbit-electron": "^2.2.1",
-    "get-port": "4.0.0"
+    "get-port": "4.0.0",
+    "kill-port": "1.3.1"
   }
 }

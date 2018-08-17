@@ -1,5 +1,6 @@
 import { findContiguousPorts } from './findContiguousPorts'
 import { setConfig } from '@mcro/config'
+import killPort from 'kill-port'
 
 type OrbitOpts = {
   version: string
@@ -7,6 +8,17 @@ type OrbitOpts = {
 
 export async function main({ version }: OrbitOpts) {
   const ports = await findContiguousPorts(5, 3333)
+
+  if (!ports) {
+    console.log('no ports found!')
+    return
+  }
+
+  // for some reason you'll get "directv-tick" consistently on a port
+  // even though that port was found to be empty....
+  // so attempting to make sure we kill anything even if it looks empty
+  await Promise.all(ports.map(port => killPort(port)))
+
   setConfig({
     version,
     ports: {

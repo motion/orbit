@@ -1,3 +1,6 @@
+- Search pagination should scroll down more
+- move `when` and `sleep` out of the destructure?
+- scroll carousels back to beginning after change pane
 - Oauth: Properly proxy/prompt the production domain in prod mode
 - Fix horizontal scroll bugs
 - Fix empty profiles from gmail contacts import
@@ -6,7 +9,6 @@
 - Fix blur in prod build on other macs (test on my other mac)
 - Onboard fix final bugs
 - Onboard click tray to focus
-- Search pagination should scroll down more
 - clear peek on scroll searches
 - make search better without using peek
   - peek should also show infinite scroll of related things

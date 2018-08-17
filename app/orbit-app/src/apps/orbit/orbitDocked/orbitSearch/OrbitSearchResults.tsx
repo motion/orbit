@@ -161,6 +161,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         name="search"
         extraCondition={this.props.searchStore.hasQuery}
         before={<OrbitSearchFilters />}
+        onScrollNearBottom={this.props.searchStore.loadMore}
       >
         <OrbitSearchResultsContents
           selectionStore={selectionStore}

@@ -87,15 +87,16 @@ export class PaneManagerStore {
     return this.panes[this.paneIndex]
   }
 
-  manuallyFinishedOnboarding = false
+  forceOnboard = null
+
   hasOnboarded = modelQueryReaction(
     generalSettingQuery,
     setting => setting.values.hasOnboarded,
   )
 
   get shouldOnboard() {
-    if (this.manuallyFinishedOnboarding) {
-      return false
+    if (typeof this.forceOnboard === 'boolean') {
+      return this.forceOnboard
     }
     return !this.hasOnboarded
   }

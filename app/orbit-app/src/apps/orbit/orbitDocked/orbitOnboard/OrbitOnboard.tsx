@@ -28,7 +28,7 @@ const OnboardFrame = view({
   position: 'relative',
   width: frameWidth,
   minHeight: 300,
-  padding: [20, 0, 20 + controlsHeight],
+  padding: [20, 30, 20 + controlsHeight],
 })
 
 const Centered = view({
@@ -109,7 +109,7 @@ const AddButton = ({ disabled, ...props }) =>
     </Theme>
   )
 
-const buttonText = ["Let's get setup", 'Looks good', 'Done!']
+const buttonText = ['Next', 'Looks good', 'Done!']
 
 class OnboardStore {
   props: Props
@@ -169,9 +169,16 @@ export const OrbitOnboard = decorator(
               <Text size={2.5} fontWeight={600}>
                 Hello
               </Text>
-              <View height={10} />
+              <View height={5} />
               <Text size={1.5} alpha={0.5}>
-                Welcome to Orbit.
+                Welcome to Orbit
+              </Text>
+              <View height={20} />
+              <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                Orbit is the first ever completely private search and app
+                platform. To work, it needs to proxy our OAuth keys on your
+                machine. Learn how this Orbit privacy works, and hit "Next" to
+                enter password for this.
               </Text>
             </Centered>
           </OnboardFrame>

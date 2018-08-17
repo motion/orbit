@@ -4,10 +4,6 @@ import { Syncers } from './syncer'
 import Server from './Server'
 import { Screen } from './Screen'
 import { KeyboardStore } from './stores/keyboardStore'
-import hostile_ from 'hostile'
-import { getConfig } from './config'
-import { promisifyAll } from 'sb-promisify'
-import sudoPrompt_ from 'sudo-prompt'
 import { handleEntityActions } from './sqlBridge'
 import { App, Electron, Desktop } from '@mcro/stores'
 import { debugState, on } from '@mcro/black'
@@ -26,11 +22,9 @@ import { Logger, logger } from '@mcro/logger'
 import * as typeorm from 'typeorm'
 import { SyncerGroup } from './syncer/core/SyncerGroup'
 import { getConfig as getConfigGlobal } from '@mcro/config'
+import { PortForward } from './stores/PortForwardStore'
 
 const log = logger('desktop')
-const hostile = promisifyAll(hostile_)
-const sudoPrompt = promisifyAll(sudoPrompt_)
-const Config = getConfig()
 
 export class Root {
   isReconnecting = false
@@ -41,6 +35,7 @@ export class Root {
   keyboardStore: KeyboardStore
   generalSettingManager: GeneralSettingManager
   server = new Server()
+  portForward = new PortForward()
   stores = null
 
   start = async () => {
@@ -92,7 +87,6 @@ export class Root {
     })
     this.keyboardStore.start()
     this.watchLastBit()
-    this.setupHosts()
     await this.server.start()
     this.screen.start()
     debugState(({ stores }) => {
@@ -139,17 +133,6 @@ export class Root {
     return true
   }
 
-  setupHosts = async () => {
-    const lines = await hostile.get(true)
-    const exists = lines.map(line => line[1]).indexOf(Config.server.host) > -1
-    if (!exists) {
-      log('Adding host entry', Config.server.host)
-      await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Config.server.host}`, {
-        name: 'Orbit',
-      })
-    }
-  }
-
   /**
    * Registers global variables in the REPL.
    * Used for the development purposes.
@@ -160,16 +143,14 @@ export class Root {
     root.restart = this.restart
     root.Logger = Logger
     root.Syncers = Syncers.reduce((map, syncerOrGroup) => {
-
       // since Syncers is an array we need to convert it to object
       // to make them more usable in the REPL.
       // we are using Syncer constructor name as an object key.
       if (syncerOrGroup instanceof SyncerGroup) {
         map[syncerOrGroup.name] = syncerOrGroup
         for (let syncer of syncerOrGroup.syncers) {
-            map[syncer.name] = syncer
+          map[syncer.name] = syncer
         }
-
       } else {
         map[syncerOrGroup.name] = syncerOrGroup
       }
@@ -198,11 +179,15 @@ export class Root {
    * We start syncers in a small timeout to prevent app-overload.
    */
   private async startSyncers() {
-    setTimeout(() => Promise.all(
-      Syncers.map(syncer => {
-        return syncer.start()
-      }),
-    ), 5000)
+    setTimeout(
+      () =>
+        Promise.all(
+          Syncers.map(syncer => {
+            return syncer.start()
+          }),
+        ),
+      5000,
+    )
   }
 
   /**

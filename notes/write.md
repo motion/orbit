@@ -206,7 +206,13 @@ Or monetizing monetizing.
 
 ---
 
+(Launch Post:)
+
 # A commitment to control
+
+or
+
+# The next big feature: User Control
 
 - a new generation of products
 - user-first as a feature
@@ -219,3 +225,29 @@ Or monetizing monetizing.
 - the value of being user-aligned > the value of tracking data
 - companies that do this will out-compete companies that don't
 - software is getting mature enough to allow this to be a feature
+
+---
+
+# Smallthoughts and Showoffs: How to build a antifragile company
+
+- Smallthoughts and Showoffs, or Incoming and Outgoing
+- Incoming: observations from the real-world, showerthoughts
+- Outgoing: a channel to showoff your recent work, technical or not
+- Why they matter:
+- Incoming:
+  - Nintendo got into video games because Gunpei Yokoi was observing someone passively hitting buttons on a calculator for amusement
+  - He had a small thought: people like to play on small devices with screens
+  - That small thought led to about 200+B in revenue and ongoing
+  - Make a room in slack #smallthoughts
+- Outgoing:
+  - You're always achieving small milestones
+  - It feels great to hit them, but often there's no place to release that
+  - Humility is good, but you need an outlet for celebration
+  - We created a #showoff room 3 years ago and it's been our "most successful" idea
+  - It has many great downstream effects:
+    - A small place to celebrate small and big wins
+    - Lets you define your own wins: getting a technical bug is a great showoff
+    - That helps the company calibrate what matters internally and builds pride
+    - Is asynchronous so you can celerate as you feel the need without disrupting
+    - Forces you to make things presentable and encourages doing nice screen recordings
+    - Sense of unity and achievement

@@ -16,6 +16,7 @@
     { "path": "../oracle" },
     { "path": "../../packages/black" },
     { "path": "../../packages/constants" },
+    { "path": "../../packages/config" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/helpers" },
     { "path": "../../packages/oauth-strategies" },

@@ -4,10 +4,6 @@
   "references": [
     { "path": "./orbit" },
     { "path": "./orbit-desktop" },
-    { "path": "./orbit-electron" },
-    { "path": "./models" },
-    { "path": "./services" },
-    { "path": "./stores" },
-    { "path": "./oracle" }
+    { "path": "./orbit-electron" }
   ]
 }

@@ -1,11 +1,8 @@
-
 /**
- * Confluence user group response result.
- *
- * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-get
+ * Confluence paginated (collections) are returned in this format.
  */
-export type ConfluenceGroupResponse = {
-  results: ConfluenceGroup[]
+export type ConfluenceCollection<T> = {
+  results: T[]
   start: number
   limit: number
   size: number
@@ -18,18 +15,6 @@ export type ConfluenceGroupResponse = {
  */
 export type ConfluenceGroup = {
   name: string
-}
-
-/**
- * Confluence user group members response result.
- *
- * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-groupName-member-get
- */
-export type ConfluenceMemberResponse = {
-  results: ConfluenceUser[]
-  start: number
-  limit: number
-  size: number
 }
 
 /**
@@ -56,30 +41,34 @@ export type ConfluenceUser = {
 }
 
 /**
- * Confluence content response result.
- *
- * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-get
- */
-export type ConfluenceContentResponse = {
-  results: ConfluenceContent[]
-  start: number
-  limit: number
-  size: number
-}
-
-/**
  * Some confluence content, like pages.
  *
  * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-get
  */
 export type ConfluenceContent = {
   type: 'page'
+  childTypes: {
+    attachment: {
+      value: boolean
+    }
+    comment: {
+      value: boolean
+    }
+    page: {
+      value: boolean
+    }
+  }
   body: {
     storage: {
       value: string
     }
   }
   history: {
+    contributors: {
+      publishers: {
+        userAccountIds: string[]
+      }
+    }
     createdDate: string
     createdBy: ConfluenceUser
     lastUpdated: {
@@ -103,10 +92,19 @@ export type ConfluenceContent = {
     base: string
     webui: string
   }
+
+  // custom properties
+  comments: ConfluenceComment[]
 }
 
-export type ConfluenceObj = {
-  response: ConfluenceContent
-  markdownBody: string
-  body: string
+/**
+ * Confluence content comment.
+ *
+ * @see https://developer.atlassian.com/cloud/confluence/rest/#api-content-id-child-comment-get
+ */
+export type ConfluenceComment = {
+  title: string
+  history: {
+    createdBy: ConfluenceUser
+  }
 }

@@ -474,7 +474,9 @@ export class OrbitCard extends React.Component<OrbitCardProps> {
           )}
           {/* vertical space only if needed */}
           {hasSubtitle &&
-            (!!children || !!preview) && <div style={{ height: 4 }} />}
+            (!!children || !!preview) && (
+              <div style={{ flex: 1, maxHeight: 4 }} />
+            )}
           {!!preview &&
             !children &&
             !hide.body && (

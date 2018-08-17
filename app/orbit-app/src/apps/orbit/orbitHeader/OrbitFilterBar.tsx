@@ -44,7 +44,7 @@ const FilterButton = props => (
     glint={false}
     size={1}
     sizeRadius={0.9}
-    marginRight={4}
+    marginRight={3}
     sizeHeight={0.8}
     sizePadding={0.6}
     fontWeight={600}

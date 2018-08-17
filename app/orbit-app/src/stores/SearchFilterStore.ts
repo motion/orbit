@@ -15,8 +15,8 @@ export type SearchFilter = {
 }
 
 type DateSelections = {
-  startDate?: Date
-  endDate?: Date
+  startDate: Date
+  endDate: Date
   key?: string
 }
 
@@ -25,6 +25,7 @@ const suggestedDates = [
   { text: 'Last Month', type: MarkType.Date },
 ]
 
+// @ts-ignore
 @store
 export class SearchFilterStore /* extends Store */ {
   queryStore: QueryStore

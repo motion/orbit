@@ -59,7 +59,8 @@ const FilterButton = props => (
     glint={false}
     size={0.95}
     sizeRadius={3}
-    alpha={0.9}
+    alpha={0.8}
+    fontWeight={500}
     {...props}
   />
 )
@@ -79,12 +80,8 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
         >
           {getDate(searchFilterStore.dateState) || 'Any time'}
         </FilterButton>
-        <div style={{ width: 4 }} />
-        <FilterButton
-          chromeless
-          alpha={0.6}
-          onClick={searchFilterStore.toggleSortBy}
-        >
+        <div style={{ width: 2 }} />
+        <FilterButton onClick={searchFilterStore.toggleSortBy}>
           {searchFilterStore.sortBy}
         </FilterButton>
         <UI.Col flex={1} />
@@ -95,8 +92,8 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
               circular
               glint={false}
               size={1.1}
-              marginLeft={5}
-              icon={<OrbitIcon size={18} icon={filter.icon} />}
+              marginLeft={1}
+              icon={<OrbitIcon size={16} icon={filter.icon} />}
               tooltip={filter.name}
               onClick={searchFilterStore.integrationFilterToggler(filter)}
               filter={filter.active ? null : 'grayscale(100%)'}

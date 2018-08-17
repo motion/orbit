@@ -6,7 +6,6 @@
 
 .rdrCalendarWrapper {
   background: transparent;
-  color: #000000;
 }
 
 .rdrDateDisplay {
@@ -15,7 +14,6 @@
 
 .rdrDateDisplayItem {
   border-radius: 4px;
-  background: rgb(255, 255, 255);
   -webkit-box-shadow: 0 1px 2px 0 rgba(35, 57, 66, 0.21);
   box-shadow: 0 1px 2px 0 rgba(35, 57, 66, 0.21);
   border: 1px solid transparent;
@@ -28,11 +26,12 @@
   border: 0px;
   background: transparent;
   width: 100%;
-  color: #849095;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .rdrDateDisplayItemActive {
-  border-color: rgb(40.4%, 70.5%, 92.9%);
+  border-color: rgba(40.4%, 70.5%, 92.9%, 0.5);
+  color: #fff;
 }
 
 .rdrDateDisplayItemActive input {
@@ -59,7 +58,7 @@
   padding: 10px 30px 10px 10px;
   border-radius: 4px;
   outline: 0;
-  color: #3e484f;
+  color: #fff;
   background: url("data:image/svg+xml;utf8,<svg width='9px' height='6px' viewBox='0 0 9 6' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><g id='Artboard' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' transform='translate(-636.000000, -171.000000)' fill-opacity='0.368716033'><g id='input' transform='translate(172.000000, 37.000000)' fill='#0E242F' fill-rule='nonzero'><g id='Group-9' transform='translate(323.000000, 127.000000)'><path d='M142.280245,7.23952813 C141.987305,6.92353472 141.512432,6.92361662 141.219585,7.23971106 C140.926739,7.5558055 140.926815,8.06821394 141.219755,8.38420735 L145.498801,13 L149.780245,8.38162071 C150.073185,8.0656273 150.073261,7.55321886 149.780415,7.23712442 C149.487568,6.92102998 149.012695,6.92094808 148.719755,7.23694149 L145.498801,10.7113732 L142.280245,7.23952813 Z' id='arrow'></path></g></g></g></svg>")
     no-repeat;
   background-position: right 8px center;
@@ -105,7 +104,7 @@
 
 .rdrPprevButton i {
   border-width: 4px 6px 4px 4px;
-  border-color: transparent rgb(52, 73, 94) transparent transparent;
+  border-color: transparent #fff transparent transparent;
   -webkit-transform: translate(-3px, 0px);
   transform: translate(-3px, 0px);
 }
@@ -113,7 +112,7 @@
 .rdrNextButton i {
   margin: 0 0 0 7px;
   border-width: 4px 4px 4px 6px;
-  border-color: transparent transparent transparent rgb(52, 73, 94);
+  border-color: transparent transparent transparent #fff;
   -webkit-transform: translate(3px, 0px);
   transform: translate(3px, 0px);
 }
@@ -152,7 +151,7 @@
   line-height: 3em;
   height: 2.5em;
   text-align: center;
-  color: #1d2429;
+  color: #fff;
 }
 
 .rdrDay:focus {
@@ -226,9 +225,6 @@
 .rdrSelected {
   left: 2px;
   right: 2px;
-}
-
-.rdrInRange {
 }
 
 .rdrStartEdge {
@@ -339,6 +335,7 @@
   display: block;
   outline: 0;
   padding: 0;
+  color: #fff;
 }
 
 .rdrStaticRange:hover {
@@ -390,7 +387,7 @@
 .rdrInputRangeInput:hover {
   border-color: rgba(0, 0, 0, 0.1);
   outline: 0;
-  color: #333;
+  color: #fff;
 }
 
 .rdrCalendarWrapper:not(.rdrDateRangeWrapper)

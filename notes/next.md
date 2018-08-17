@@ -1,5 +1,3 @@
-- Search pagination should scroll down more
-- move `when` and `sleep` out of the destructure?
 - scroll carousels back to beginning after change pane
 - Oauth: Properly proxy/prompt the production domain in prod mode
 - Fix horizontal scroll bugs

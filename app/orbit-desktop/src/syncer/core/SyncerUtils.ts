@@ -20,7 +20,7 @@ export class SyncerUtils {
    */
   static async loadPeople(settingId: number, log: LoggerInterface): Promise<PersonEntity[]> {
 
-    log(`loading (already synced) people`)
+    log(`loading database (already synced) people`)
     const people = await getRepository(PersonEntity).find({
       where: {
         settingId: settingId
@@ -30,7 +30,7 @@ export class SyncerUtils {
       }
     })
     if (people.length) {
-      log(`loaded people`, people)
+      log(`loaded database people`, people)
       return people
     }
 

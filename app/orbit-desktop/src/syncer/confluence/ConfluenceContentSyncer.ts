@@ -32,17 +32,19 @@ export class ConfluenceContentSyncer {
     this.people = await SyncerUtils.loadPeople(this.setting.id, log)
 
     // load all database bits
+    log(`loading database bits`)
     this.bits = await getRepository(BitEntity).find({
       settingId: this.setting.id
     })
+    log(`database bits were loaded`, this.bits)
 
     // load pages
-    console.log(`loading content from the api`)
+    log(`loading content from the api`)
     const contents = await this.loader.loadContents()
-    console.log(`content loaded`, contents)
+    log(`content loaded`, contents)
 
     // create bits from them and save them
-    const bits = contents.map(content => this.createIssue(content))
+    const bits = contents.map(content => this.buildBit(content))
     log(`saving bits`, bits)
     await getRepository(BitEntity).save(bits)
     log(`bits where saved`)
@@ -54,19 +56,26 @@ export class ConfluenceContentSyncer {
     log(`bits were removed`)
   }
 
-  private createIssue(content: ConfluenceContent) {
+  private buildBit(content: ConfluenceContent) {
 
     const id = `confluence-${this.setting.id}-${content.id}`
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
     const markdownBody = ConfluenceUtils.contentHtmlToMarkdown(content.body.storage.value)
     const body = markdownBody.replace(/\s\s+/g, ' ')
-    const author = content.history.createdBy.displayName ||
+    const authorName = content.history.createdBy.displayName ||
       content.history.createdBy.username
-    const personId = `confluence-${this.setting.id}-${content.history.createdBy.accountId}`
-    const person = this.people.find(person => person.id === personId)
     const bit = this.bits.find(bit => bit.id === id)
-    const people = person ? [person] : []
+
+    // get people contributed to this bit
+    const peopleIds = [
+      content.history.createdBy.accountId,
+      ...content.comments.map(comment => comment.history.createdBy.accountId),
+      ...content.history.contributors.publishers.userAccountIds
+    ]
+    const people = this.people.filter(person => {
+      return peopleIds.indexOf(person.integrationId) !== -1
+    })
 
     return assign(bit || new BitEntity(), {
       integration: 'confluence',
@@ -78,7 +87,7 @@ export class ConfluenceContentSyncer {
       data: {
         ...content,
         markdownBody,
-        author,
+        author: authorName,
       } as any,
       location: {
         id: content.space.id,

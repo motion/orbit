@@ -16,7 +16,7 @@ export class JobEntity extends BaseEntity implements Job {
   @Column()
   time: number
 
-  @Column()
+  @Column({ type: String })
   status: JobStatus
 
   @Column()

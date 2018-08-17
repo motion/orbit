@@ -50,7 +50,6 @@ export type OrbitCardProps = {
   borderRadius?: number
   nextUpStyle?: Object
   isSelected?: boolean | Function
-  getRef?: Function
   cardProps?: Object
   item?: AppStatePeekItem
   disableShadow?: boolean
@@ -101,9 +100,6 @@ class OrbitCardStore {
   setCardWrapRef = cardWrapRef => {
     if (!cardWrapRef) return
     this.cardWrapRef = cardWrapRef
-    if (this.props.getRef) {
-      this.props.getRef(cardWrapRef)
-    }
   }
 
   get target() {

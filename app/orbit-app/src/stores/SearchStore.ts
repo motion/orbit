@@ -224,12 +224,13 @@ export class SearchStore {
       }
 
       // pagination
+      let skip = 0
       const take = 4
+      // initial search results max amt:
       const takeMax = take * 10
       const sleepBtwn = 80
 
-      // gather all the pieces from nlp store for query
-      // const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
+      // query builder pieces
       const {
         exclusiveFilters,
         activeFilters,
@@ -260,7 +261,6 @@ export class SearchStore {
         integrationFilters,
         peopleFilters,
       }
-      let skip = 0
 
       const updateNextResults = async skip => {
         const nextResults = await getSearchResults({
@@ -290,9 +290,10 @@ export class SearchStore {
         await sleep(sleepBtwn)
       }
 
-      // then wait for scroll/pagination to load more
+      // infinite scroll
       this.loadMoreAmount = 0
       while (true) {
+        // wait for load more event
         await whenChanged(() => this.loadMoreAmount)
         skip += take
         const updated = await updateNextResults(skip)

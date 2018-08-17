@@ -214,6 +214,10 @@ or
 
 # The next big feature: User Control
 
+or
+
+# The future of computing (clickbait :))
+
 - a new generation of products
 - user-first as a feature
 - decentralized (peter thiel reference?)

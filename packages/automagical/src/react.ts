@@ -1,5 +1,8 @@
 import { Reaction, ReactionRejectionError } from './constants'
 import { ReactionOptions, ReactionHelpers } from './types'
+import { logger } from '@mcro/logger'
+
+const log = logger('automagical')
 
 // decorator to do reactions
 
@@ -76,7 +79,7 @@ react.cancel = new ReactionRejectionError()
 
 react.ensure = (message: string, condition: boolean) => {
   if (!condition) {
-    console.error(`Reaction cancelled: ${message}`)
+    log(`Reaction cancelled: ${message}`)
     throw react.cancel
   }
 }

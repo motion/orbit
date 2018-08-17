@@ -10,7 +10,7 @@ type Props = {
 
 const extraShadow = -20
 const SHADOW_PAD = 100 + extraShadow
-const DOCKED_SHADOW = [0, SHADOW_PAD / 6, SHADOW_PAD, [0, 0, 0, 0.4]]
+const DOCKED_SHADOW = [0, SHADOW_PAD / 6, SHADOW_PAD, [0, 0, 0, 0.5]]
 
 const Border = view({
   position: 'absolute',
@@ -20,7 +20,7 @@ const Border = view({
   bottom: 0,
   zIndex: Number.MAX_SAFE_INTEGER,
   pointerEvents: 'none',
-  borderRadius: BORDER_RADIUS,
+  borderRadius: BORDER_RADIUS + 1,
 })
 
 Border.theme = ({ theme }) => {
@@ -41,7 +41,7 @@ const Chrome = view({
   right: -CHROME_PAD,
   bottom: -CHROME_PAD,
   border: [CHROME_PAD, [255, 255, 255, 0.15]],
-  borderRadius: BORDER_RADIUS + CHROME_PAD / 2,
+  borderRadius: BORDER_RADIUS + CHROME_PAD + 1,
   zIndex: -1,
 })
 
@@ -56,7 +56,7 @@ const Background = view({
   // background: 'rgba(255,255,255,0.92)',
 })
 Background.theme = ({ theme, isUpper }) => ({
-  background: [80, 80, 80, 0.76],
+  background: [80, 80, 80, 0.7],
   // background: [0, 0, 0, 0.5],
   // background: isUpper
   //   ? theme.base.background.alpha(0.2)
@@ -134,7 +134,6 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
 // this view has two halves so it can animate smoothly without causing layout reflows
 
 export const OrbitDockedChrome = view(({ appStore }: Props) => {
-  // return null
   return (
     <>
       <BlockTop height={90} overflow={SHADOW_PAD}>

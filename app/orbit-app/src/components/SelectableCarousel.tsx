@@ -25,7 +25,7 @@ class CarouselStore {
         'within bounds',
         index >= offset && index <= offset + items.length,
       )
-      react.ensure('has carousel', this.carouselRef.current)
+      react.ensure('has carousel', !!this.carouselRef.current)
       react.ensure('has scrollTo', typeof scrollTo === 'number')
       this.carouselRef.current.scrollTo(scrollTo)
     },

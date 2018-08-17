@@ -31,10 +31,6 @@ export default class DebugApps {
     this.options = options
   }
 
-  setSessions(next) {
-    this.sessions = next
-  }
-
   get shouldRun() {
     return this.browser && !this.disposed
   }
@@ -72,64 +68,62 @@ export default class DebugApps {
   renderLoop = async () => {
     while (this.shouldRun) {
       const sessions = await this.getSessions()
-      if (
-        sessions.length === this.sessions.length &&
-        (await this.shouldUpdateTabs(sessions))
-      ) {
-        // when desktop restarts, the dev urls for some reason change in electron
-        // then the debugger attempts to change to that new url, which makes white bg appear
-        // then once desktop starts up again, the dev urls return again as they were
-        // so sleep 1s here when we see a change, and hope desktop has restarted, so we dont
-        // ever see those weird urls......
-        await sleep(2000)
+      console.log('wtf1...')
+      await this.ensureEnoughTabs(sessions)
+      console.log('wtf...')
+      const updateTabs = await this.shouldUpdateTabs(sessions)
+      console.log('updateTabs', updateTabs)
+      if (updateTabs.some(x => x === true)) {
+        console.log('render...')
         await this.render()
+        console.log('done with render')
       }
       await sleep(500)
     }
   }
 
   getSessions = async (): Promise<any> => {
-    const sessions = _.uniqBy(
-      _.flatten(await Promise.all(this.sessions.map(this.getDevUrl))).filter(
-        Boolean,
-      ),
-      x => x.debugUrl,
-    )
-    return _.sortBy(sessions, x => x.debugUrl)
+    return await Promise.all(this.sessions.map(this.getDevUrl))
   }
 
   lastRes = {}
 
-  getDevUrl = async ({
+  getUrlForJsonInfo = (jsonInfo, port) => {
+    const { webSocketDebuggerUrl, url } = jsonInfo
+    if (!webSocketDebuggerUrl) {
+      return this.lastRes[url] || null
+    }
+    const debugUrl = `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=${webSocketDebuggerUrl.replace(
+      'ws://',
+      '',
+    )}`
+    const res = { debugUrl, url, port }
+    this.lastRes[url] = res
+    return res
+  }
+
+  getDevUrl = ({
     port,
     id,
   }): Promise<{ debugUrl: string; url: string; port: string }> => {
-    const url = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
-    try {
-      const answers = await r2.get(url).json
-      const res = answers
-        .map(({ webSocketDebuggerUrl, url }) => {
-          if (`${url}`.indexOf('chrome-extension') === 0) {
-            return null
-          }
-          if (!webSocketDebuggerUrl) {
-            return this.lastRes[url] || null
-          }
-          const debugUrl = `chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=${webSocketDebuggerUrl.replace(
-            `ws://`,
-            '',
-          )}`
-          const res = { debugUrl, url, port }
-          this.lastRes[url] = res
-          return res
-        })
-        .filter(Boolean)
-      return res
-    } catch (err) {
-      if (err.message.indexOf('ECONNREFUSED') !== -1) return
-      console.log('dev err', err.message, err.stack)
-      return null
-    }
+    return new Promise(async resolve => {
+      const infoUrl = `http://127.0.0.1:${port}/${id ? `${id}/` : ''}json`
+      // timeout because it doesnt resolve if the app is down
+      setTimeout(() => {
+        resolve(null)
+      }, 1000)
+      try {
+        const answers = await r2.get(infoUrl).json
+        // always use the LAST result because it gets the right one for browser
+        // later we can add support for more than one-per-port
+        // if that ever is needed
+        resolve(this.getUrlForJsonInfo(answers[answers.length - 1], port))
+      } catch (err) {
+        if (err.message.indexOf('ECONNREFUSED') !== -1) return
+        console.log('dev err', err.message, err.stack)
+        resolve(null)
+      }
+    })
   }
 
   pages = []
@@ -168,24 +162,31 @@ export default class DebugApps {
     }
   }
 
-  shouldUpdateTabs = async sessions => {
-    const pages = await this.getPages()
-    const shouldUpdates = sessions.reduce((acc, session, index) => {
-      const page = pages[index]
-      acc[index] = !page || page.url() !== session.debugUrl ? true : false
-      return acc
-    }, [])
-    if (!shouldUpdates.reduce((a, b) => a || b, false)) {
-      return false
+  shouldUpdateTabs = async (sessions): Promise<boolean[]> => {
+    const urls = (await this.getPages()).map(page => page.url())
+    console.log('got pages', urls, sessions)
+    const result = sessions.map(() => true)
+    for (const [index, session] of sessions.entries()) {
+      if (!session) {
+        result[index] = false
+        continue
+      }
+      console.log('session is', session)
+      if (urls.indexOf(session.debugUrl) > -1) {
+        result[index] = false
+      }
     }
-    return shouldUpdates
+    console.log('return', result)
+    return result
   }
 
   openUrlsInTabs = async (sessions, pages, updateTabs) => {
     let opens = []
     for (const [index, update] of updateTabs.entries()) {
       const page = pages[index]
-      if (!page || !update) continue
+      if (!page || !update || !sessions[index]) {
+        continue
+      }
       opens.push(
         page.goto(sessions[index].debugUrl, {
           waitUntil: 'domcontentloaded',
@@ -272,15 +273,16 @@ export default class DebugApps {
     }
     const sessions = await this.getSessions()
     const shouldUpdate = await this.shouldUpdateTabs(sessions)
-    if (!shouldUpdate || !this.shouldRun) {
+    if (!shouldUpdate.some(x => x === true) || !this.shouldRun) {
       return
     }
     // YO watch out:
     this.isRendering = true
     try {
-      await this.ensureEnoughTabs(sessions)
       const pages = await this.getPages()
       console.log('updating', shouldUpdate)
+      console.log('   sessions:', sessions.map(x => x && x.debugUrl))
+      console.log('      pages:', pages.map(x => x.url()))
       if (shouldUpdate.length > this.options.expectTabs) {
         // throw 'inspecting inside electron, pause'
         return

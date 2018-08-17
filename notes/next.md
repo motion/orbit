@@ -1,25 +1,22 @@
-# search improvements
-
+- Oauth: Properly proxy/prompt the production domain in prod mode
+- Fix horizontal scroll bugs
+- Fix empty profiles from gmail contacts import
+- Fix slack not showing usernames
+- Fix intra-peek clicking
+- Fix blur in prod build on other macs (test on my other mac)
+- Onboard fix final bugs
+- Onboard click tray to focus
 - Search pagination should scroll down more
+- clear peek on scroll searches
 - make search better without using peek
   - peek should also show infinite scroll of related things
-
-# ui kit
-
-- <UI.Theme select={theme => theme.titleBar} />
-  - that takes the subset from theme.gray.titleBar
-    - which means that can have specific button styles nicely :D
-
-# settings
-
 - Slack select all settings by default (syncer needs to respect settings/set them)
   - Toggle select all button in table view
 - working remove integration
+- fix highlight index click interaction
+- fix integration buttons styling and going inactive after click
+- fix calendar colors
   - Confirm native modal for Remove setting
-- working re-run
-
-# Week ending Aug 17th
-
 - Oauth key strategy:
   1.  UI/storage for adding your own oauth keys as master/admin
   2.  Using those keys in Passport
@@ -74,6 +71,10 @@ queue:
 
 ## unnecessary for beta polish bucket
 
+- make ui themes better
+- <UI.Theme select={theme => theme.titleBar} />
+  - that takes the subset from theme.gray.titleBar
+    - which means that can have specific button styles nicely :D
 - cmd+z undo in search area (needs to work with toggles...)
 - peek arrow position shouldn't straddle weird borders
 - react-spring for peek placement

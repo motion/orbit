@@ -130,8 +130,8 @@ export class SearchStore {
         }
 
         // pagination
-        const take = 6
-        const takeMax = take * 2
+        const take = 4
+        const takeMax = take * 10
         const sleepBtwn = 80
 
         // gather all the pieces from nlp store for query

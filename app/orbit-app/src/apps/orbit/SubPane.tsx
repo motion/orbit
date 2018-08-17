@@ -41,7 +41,7 @@ const Pane = view(UI.View, {
 })
 
 const OverflowFade = view({
-  pointerEvents: 'none !important',
+  pointerEvents: 'none',
   position: 'fixed',
   bottom: 0,
   left: 0,
@@ -61,7 +61,7 @@ OverflowFade.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background})`,
 })
 
-const DockedPaneFrame = view(UI.FullScreen, {
+const SubPaneFrame = view(UI.FullScreen, {
   opacity: 0,
   pointerEvents: 'none',
   isActive: {
@@ -70,7 +70,7 @@ const DockedPaneFrame = view(UI.FullScreen, {
   },
 })
 
-const DockedPaneInner = view(UI.View, {
+const SubPaneInner = view(UI.View, {
   position: 'relative',
   flex: 1,
 })
@@ -98,9 +98,9 @@ export class SubPane extends React.Component<Props> {
       ...props
     } = this.props
     return (
-      <DockedPaneFrame isActive={subPaneStore.isActive}>
+      <SubPaneFrame isActive={subPaneStore.isActive}>
         {before}
-        <DockedPaneInner {...containerStyle}>
+        <SubPaneInner {...containerStyle}>
           <Pane
             isActive={subPaneStore.isActive}
             style={style}
@@ -115,9 +115,9 @@ export class SubPane extends React.Component<Props> {
               />
             )} */}
           </Pane>
-        </DockedPaneInner>
+        </SubPaneInner>
         {after}
-      </DockedPaneFrame>
+      </SubPaneFrame>
     )
   }
 }

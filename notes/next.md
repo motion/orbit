@@ -17,7 +17,6 @@
 - working remove integration
 - fix highlight index click interaction
 - fix integration buttons styling and going inactive after click
-- fix calendar colors
   - Confirm native modal for Remove setting
 - Oauth key strategy:
   1.  UI/storage for adding your own oauth keys as master/admin

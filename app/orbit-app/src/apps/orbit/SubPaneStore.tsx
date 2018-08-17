@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { on, react } from '@mcro/black'
-import { AppStore } from '../../stores/AppStore'
-import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
 import { throttle } from 'lodash'
+import { SubPaneProps } from './SubPane'
 
 function getTopOffset(element, parent?) {
   let offset = 0
@@ -15,13 +13,7 @@ function getTopOffset(element, parent?) {
 }
 
 export class SubPaneStore {
-  props: {
-    appStore: AppStore
-    paneManagerStore: PaneManagerStore
-    searchStore: SearchStore
-    name: string
-    extraCondition?: () => boolean
-  }
+  props: SubPaneProps
 
   aboveContentHeight = 0
   contentHeight = 0
@@ -163,7 +155,10 @@ export class SubPaneStore {
   }, 60)
 
   updateHeight = () => {
-    const { top, height } = this.paneInnerNode.getBoundingClientRect()
+    // this gets full content height
+    const { height } = this.paneInnerNode.getBoundingClientRect()
+    // get top from here because its not affected by scroll
+    const { top } = this.paneNode.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {
       this.aboveContentHeight = Math.max(0, top)
       this.contentHeight = height
@@ -174,9 +169,14 @@ export class SubPaneStore {
     const pane = this.paneNode
     const innerHeight = this.paneInnerNode.clientHeight
     const scrolledTo = pane.scrollTop + pane.clientHeight
-    const next = innerHeight <= scrolledTo
-    if (next !== this.isAtBottom) {
-      this.isAtBottom = next
+    const isAtBottom = scrolledTo >= innerHeight
+    if (isAtBottom !== this.isAtBottom) {
+      this.isAtBottom = isAtBottom
+    }
+    const isNearBottom = scrolledTo + 450 > innerHeight
+    if (isNearBottom && this.props.onScrollNearBottom) {
+      console.log('SCROLL NEAR BOTTOM TRIGGER')
+      this.props.onScrollNearBottom()
     }
   }
 }

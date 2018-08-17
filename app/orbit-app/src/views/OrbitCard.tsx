@@ -427,11 +427,11 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
             !hide.icon && (
               <OrbitIcon
                 icon={icon}
-                size={24}
+                size={22}
                 {...orbitIconProps}
                 position="absolute"
                 top={listItem ? 25 : 10}
-                right={listItem ? 8 : 10}
+                right={listItem ? 16 : 10}
                 {...iconProps}
               />
             )}

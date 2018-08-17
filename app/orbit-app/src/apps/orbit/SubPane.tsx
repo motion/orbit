@@ -4,14 +4,22 @@ import * as _ from 'lodash'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
+import { AppStore } from '../../stores/AppStore'
+import { PaneManagerStore } from './PaneManagerStore'
+import { SearchStore } from '../../stores/SearchStore'
 
-type Props = CSSPropertySet & {
+export type SubPaneProps = CSSPropertySet & {
   store?: SubPaneStore
   style?: Object
   after?: React.ReactNode
   before?: React.ReactNode
   fadeBottom?: boolean
   name?: string
+  onScrollNearBottom?: Function
+  extraCondition?: () => boolean
+  appStore?: AppStore
+  paneManagerStore?: PaneManagerStore
+  searchStore?: SearchStore
 }
 
 const Pane = view(UI.View, {
@@ -84,7 +92,7 @@ const PaneContentInner = view({
   subPaneStore: SubPaneStore,
 })
 @view
-export class SubPane extends React.Component<Props> {
+export class SubPane extends React.Component<SubPaneProps> {
   render() {
     const {
       children,

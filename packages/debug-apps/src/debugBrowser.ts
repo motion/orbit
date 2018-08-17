@@ -68,15 +68,10 @@ export default class DebugApps {
   renderLoop = async () => {
     while (this.shouldRun) {
       const sessions = await this.getSessions()
-      console.log('wtf1...')
       await this.ensureEnoughTabs(sessions)
-      console.log('wtf...')
       const updateTabs = await this.shouldUpdateTabs(sessions)
-      console.log('updateTabs', updateTabs)
       if (updateTabs.some(x => x === true)) {
-        console.log('render...')
         await this.render()
-        console.log('done with render')
       }
       await sleep(500)
     }
@@ -164,19 +159,16 @@ export default class DebugApps {
 
   shouldUpdateTabs = async (sessions): Promise<boolean[]> => {
     const urls = (await this.getPages()).map(page => page.url())
-    console.log('got pages', urls, sessions)
     const result = sessions.map(() => true)
     for (const [index, session] of sessions.entries()) {
       if (!session) {
         result[index] = false
         continue
       }
-      console.log('session is', session)
       if (urls.indexOf(session.debugUrl) > -1) {
         result[index] = false
       }
     }
-    console.log('return', result)
     return result
   }
 
@@ -280,9 +272,6 @@ export default class DebugApps {
     this.isRendering = true
     try {
       const pages = await this.getPages()
-      console.log('updating', shouldUpdate)
-      console.log('   sessions:', sessions.map(x => x && x.debugUrl))
-      console.log('      pages:', pages.map(x => x.url()))
       if (shouldUpdate.length > this.options.expectTabs) {
         // throw 'inspecting inside electron, pause'
         return

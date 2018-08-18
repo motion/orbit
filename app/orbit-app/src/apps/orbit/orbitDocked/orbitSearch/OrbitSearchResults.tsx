@@ -99,7 +99,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
         pane={name}
         subPane="search"
         key={bit.id}
-        index={index}
+        index={index + searchStore.quickSearchState.results.length}
         bit={bit}
         listItem
         hide={bit.integration === 'slack' ? hideSlack : null}
@@ -135,7 +135,7 @@ const OrbitSearchResultsContents = view(
           opacity: isChanging ? 0.3 : 1,
         }}
       >
-        {message ? <div>{message}</div> : null}
+        {!!message && <div>{message}</div>}
         <OrbitSearchQuickResults
           searchStore={searchStore}
           selectionStore={selectionStore}

@@ -1,4 +1,3 @@
-- fix peek positioning
 - slack search needs to be not one big paragraph
 - and needs to show name next to message in the main pane
 - "in (location)" nlp for slack rooms especially

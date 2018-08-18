@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, compose } from '@mcro/black'
 import { BitRepository } from '../../../../repositories'
 import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
@@ -84,8 +84,12 @@ class OrbitHomeStore {
 
 const Section = view()
 
-const OrbitHomeCarouselSection = view(
-  ({ selectionStore, homeStore, categoryName }) => {
+const decorator = compose(
+  view.attach('subPaneStore'),
+  view,
+)
+const OrbitHomeCarouselSection = decorator(
+  ({ selectionStore, subPaneStore, homeStore, categoryName }) => {
     const { items, startIndex } = homeStore.following[categoryName]
     return (
       <Section key={categoryName}>
@@ -97,6 +101,8 @@ const OrbitHomeCarouselSection = view(
             items={items}
             offset={startIndex}
             horizontalPadding={16}
+            isActiveStore={subPaneStore}
+            resetOnInactive
             cardProps={{
               getIndex: selectionStore.getIndexForItem,
               padding: 9,

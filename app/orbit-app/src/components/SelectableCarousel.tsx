@@ -8,26 +8,39 @@ type Props = CarouselProps & {
   selectionStore?: SelectionStore
   store?: CarouselStore
   offset: number
+  isActiveStore?: { isActive?: boolean }
+  resetOnInactive?: boolean
 }
 
 class CarouselStore {
-  props: CarouselProps & {
-    selectionStore: SelectionStore
-  }
+  props: Props
 
   carouselRef = React.createRef<Carousel>()
 
   handleScrollTo = react(
     () => this.props.selectionStore.activeIndex,
     index => {
-      const { items, offset, selectionStore } = this.props
+      react.ensure('has carousel', !!this.carouselRef.current)
+      const {
+        items,
+        offset,
+        selectionStore,
+        isActiveStore,
+        resetOnInactive,
+      } = this.props
+      if (isActiveStore && !isActiveStore.isActive) {
+        console.log('NOT ACTRIVve', this)
+        if (resetOnInactive) {
+          this.carouselRef.current.scrollTo(0)
+        }
+        throw react.cancel
+      }
       const scrollTo = offset + index
       react.ensure('wasnt clicked', selectionStore.selectEvent !== 'click')
       react.ensure(
         'within bounds',
         index >= offset && index <= offset + items.length,
       )
-      react.ensure('has carousel', !!this.carouselRef.current)
       react.ensure('has scrollTo', typeof scrollTo === 'number')
       this.carouselRef.current.scrollTo(scrollTo)
     },

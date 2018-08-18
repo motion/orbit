@@ -1,3 +1,4 @@
+- scroll carousels back to beginning after change pane
 - search results date strategy:
   - do separators based on time periods:
   - do by day for first week within the current month
@@ -5,7 +6,6 @@
 - slack search needs to be not one big paragraph
 - and needs to show name next to message in the main pane
 - "in (location)" nlp for slack rooms especially
-- scroll carousels back to beginning after change pane
 - Oauth: Properly proxy/prompt the production domain in prod mode
 - Fix horizontal scroll bugs
 - Fix empty profiles from gmail contacts import

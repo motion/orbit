@@ -65,6 +65,13 @@ const FilterButton = props => (
   />
 )
 
+const IntegrationFiltersRow = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+  background: [0, 0, 0, 0.1],
+  borderRadius: 100,
+})
+
 const decorate = compose(
   view.attach('integrationSettingsStore', 'searchStore'),
   view,
@@ -85,30 +92,32 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
           {searchFilterStore.sortBy}
         </FilterButton>
         <UI.Col flex={1} />
-        {searchFilterStore.integrationFilters.map((filter, i) => {
-          return (
-            <RoundButton
-              key={`${filter.icon}${i}`}
-              circular
-              glint={false}
-              size={1.1}
-              marginLeft={1}
-              icon={<OrbitIcon size={16} icon={filter.icon} />}
-              tooltip={filter.name}
-              onClick={searchFilterStore.integrationFilterToggler(filter)}
-              filter={filter.active ? null : 'grayscale(100%)'}
-              opacity={filter.active ? 1 : 0.3}
-              background="transparent"
-              activeStyle={{
-                background: 'transparent',
-              }}
-              hoverStyle={{
-                filter: 'none',
-                opacity: filter.active ? 1 : 0.75,
-              }}
-            />
-          )
-        })}
+        <IntegrationFiltersRow>
+          {searchFilterStore.integrationFilters.map((filter, i) => {
+            return (
+              <RoundButton
+                key={`${filter.icon}${i}`}
+                circular
+                glint={false}
+                size={1.1}
+                marginLeft={1}
+                icon={<OrbitIcon size={16} icon={filter.icon} />}
+                tooltip={filter.name}
+                onClick={searchFilterStore.integrationFilterToggler(filter)}
+                filter={filter.active ? null : 'grayscale(100%)'}
+                opacity={filter.active ? 1 : 0.3}
+                background="transparent"
+                activeStyle={{
+                  background: 'transparent',
+                }}
+                hoverStyle={{
+                  filter: 'none',
+                  opacity: filter.active ? 1 : 0.75,
+                }}
+              />
+            )
+          })}
+        </IntegrationFiltersRow>
       </UI.Row>
       <ExtraFilters
         onMouseEnter={searchFilterStore.dateHover.props.onMouseEnter}

@@ -59,6 +59,7 @@ export type OrbitCardProps = {
   titleFlex?: number
   subtitleProps?: Object
   getIndex?: (id: string) => number
+  subtitleSpaceBetween?: React.ReactNode
 }
 
 class OrbitCardStore {
@@ -312,7 +313,7 @@ const Preview = view({
 const CardSubtitle = view(UI.View, {
   height: 20,
   margin: [3, 0, 0],
-  padding: [2, 0, 2],
+  padding: [2, 30, 2, 0],
   flexFlow: 'row',
   alignItems: 'center',
   listItem: {
@@ -397,6 +398,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
       subtitleProps,
       padding,
       titleFlex,
+      subtitleSpaceBetween,
       ...props
     } = this.props
     const { isSelected } = store
@@ -462,9 +464,9 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
               ) : (
                 subtitle
               )}
+              {subtitleSpaceBetween}
               {!!createdAt && (
                 <UI.Text alpha={0.55} size={0.95}>
-                  <strong> &middot;</strong>{' '}
                   <DateFormat
                     date={new Date(updatedAt)}
                     nice={

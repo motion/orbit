@@ -103,6 +103,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
         bit={bit}
         listItem
         hide={bit.integration === 'slack' ? hideSlack : null}
+        subtitleSpaceBetween={<div style={{ flex: 1 }} />}
       >
         <OrbitCardContent>
           <UI.Text

@@ -246,7 +246,7 @@ Card.theme = ({
       ...listStyle,
       borderLeft: 'none',
       borderRight: 'none',
-      padding: padding || [8, 16],
+      padding: padding || [12, 16],
       '&:active': {
         opacity: isSelected ? 1 : 0.8,
       },

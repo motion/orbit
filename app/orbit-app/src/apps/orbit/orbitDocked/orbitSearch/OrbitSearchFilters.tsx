@@ -11,12 +11,12 @@ import { SearchStore } from '../../../../stores/SearchStore'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 
 const SearchFilters = view(UI.Col, {
-  padding: [7, 12],
+  padding: [0, 12],
 })
 
 const SearchFilterBar = view({
   flexFlow: 'row',
-  padding: [0, 8],
+  padding: [6, 8],
   width: '100%',
   alignItems: 'center',
 })

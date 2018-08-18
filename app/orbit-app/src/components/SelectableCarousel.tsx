@@ -66,6 +66,8 @@ export class SelectableCarousel extends React.Component<Props> {
         after={
           <div style={{ width: App.orbitState.size[0] - cardWidth - 20 }} />
         }
+        cardWidth={cardWidth}
+        cardHeight={cardHeight}
         {...props}
       />
     )

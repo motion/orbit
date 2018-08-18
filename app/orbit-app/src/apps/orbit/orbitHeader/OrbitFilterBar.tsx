@@ -27,7 +27,7 @@ const activeThemes = {
 
 const FilterBar = view(UI.Row, {
   position: 'relative',
-  padding: [2, 15, 8],
+  padding: [0, 15, 6],
 })
 
 const HorizontalScroll = view({

@@ -6,8 +6,6 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { SelectionStore } from '../../../../stores/SelectionStore'
 import { SelectableCarousel } from '../../../../components/SelectableCarousel'
 
-const height = 100
-
 const decorate = compose(
   view.attach('selectionStore'),
   view,
@@ -23,11 +21,6 @@ type Props = {
 const cardProps = {
   pane: 'docked-search',
   subPane: 'search',
-  style: {
-    width: 240,
-    height: height - 20, // 20 == shadow space
-    marginRight: 10,
-  },
   cardProps: {
     inGrid: true,
     flex: 1,
@@ -43,11 +36,17 @@ export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {
     return null
   }
   return (
-    <SelectableCarousel
-      offset={0}
-      cardProps={cardProps}
-      items={results}
-      horizontalPadding={14}
-    />
+    <>
+      <SelectableCarousel
+        offset={0}
+        cardHeight={70}
+        cardWidth={200}
+        cardSpace={10}
+        cardProps={cardProps}
+        items={results}
+        horizontalPadding={14}
+      />
+      <div style={{ height: 12 }} />
+    </>
   )
 })

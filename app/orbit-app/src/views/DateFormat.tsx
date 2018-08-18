@@ -1,4 +1,4 @@
-import { differenceInCalendarDays } from 'date-fns/esm'
+import * as React from 'react'
 import { TimeAgo } from './TimeAgo'
 
 const defaultOptions = {
@@ -14,8 +14,8 @@ export const DateFormat = ({
   options = defaultOptions,
   nice = false,
 }) => {
-  if (nice && differenceInCalendarDays(Date.now(), date) < 7) {
+  if (nice) {
     return <TimeAgo>{date}</TimeAgo>
   }
-  return `${date.toLocaleDateString(locale, options)}`
+  return <>{`${date.toLocaleDateString(locale, options)}`}</>
 }

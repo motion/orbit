@@ -16,6 +16,7 @@ import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
+import { differenceInCalendarDays } from 'date-fns/esm/fp'
 
 export type OrbitCardProps = {
   hoverToSelect?: boolean
@@ -464,7 +465,13 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
               {!!createdAt && (
                 <UI.Text alpha={0.55} size={0.95}>
                   <strong> &middot;</strong>{' '}
-                  <DateFormat date={new Date(updatedAt || createdAt * 1000)} />
+                  <DateFormat
+                    date={new Date(+updatedAt * 1000)}
+                    nice={
+                      !listItem &&
+                      differenceInCalendarDays(Date.now, updatedAt) < 7
+                    }
+                  />
                 </UI.Text>
               )}
             </CardSubtitle>

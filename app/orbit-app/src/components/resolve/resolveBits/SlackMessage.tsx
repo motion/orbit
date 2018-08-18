@@ -76,10 +76,12 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           </DateView>
         </UI.Row>
         <UI.Row>
-          <Content
-            className="searchable-item rendered-content"
-            dangerouslySetInnerHTML={{ __html: htmlText }}
-          />
+          <UI.Text>
+            <Content
+              className="searchable-item rendered-content"
+              dangerouslySetInnerHTML={{ __html: htmlText }}
+            />
+          </UI.Text>
         </UI.Row>
       </UI.Col>
     )

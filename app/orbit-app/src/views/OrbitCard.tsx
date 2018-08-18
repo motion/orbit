@@ -466,9 +466,9 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
                 <UI.Text alpha={0.55} size={0.95}>
                   <strong> &middot;</strong>{' '}
                   <DateFormat
-                    date={new Date(+updatedAt * 1000)}
+                    date={new Date(updatedAt)}
                     nice={
-                      !listItem &&
+                      !listItem ||
                       differenceInCalendarDays(Date.now, updatedAt) < 7
                     }
                   />

@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import slackDown from '@mcro/slackdown'
+import Markdown from 'react-markdown'
 import { Bit, SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
 import { TimeAgo } from '../../../views/TimeAgo'
@@ -25,12 +26,6 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
     if (!message.text || !bit) {
       console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
-    }
-    let htmlText = message.text
-    try {
-      htmlText = slackDown(message.text)
-    } catch (err) {
-      console.error('err parsing', err)
     }
     const person = (bit.people || []).find(
       person => person.integrationId === message.user,
@@ -61,8 +56,8 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           </UI.Row>
         )}
         <SlackMessageInner>
-          <UI.Text className="searchable-item" renderAsHtml>
-            {htmlText.replace('``', '')}
+          <UI.Text className="searchable-item">
+            <Markdown source={message.text} />
           </UI.Text>
         </SlackMessageInner>
       </UI.Col>

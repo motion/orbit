@@ -2,8 +2,10 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { Carousel, CarouselProps } from './Carousel'
 import { SelectionStore } from '../stores/SelectionStore'
+import { App } from '@mcro/stores'
 
 type Props = CarouselProps & {
+  selectionStore?: SelectionStore
   store?: CarouselStore
   offset: number
 }
@@ -38,8 +40,21 @@ class CarouselStore {
 })
 export class SelectableCarousel extends React.Component<Props> {
   render() {
-    // @ts-ignore
-    const { store, selectionStore, ...props } = this.props
-    return <Carousel ref={store.carouselRef} {...props} />
+    const {
+      store,
+      selectionStore,
+      cardWidth = 180,
+      cardHeight = 90,
+      ...props
+    } = this.props
+    return (
+      <Carousel
+        ref={store.carouselRef}
+        after={
+          <div style={{ width: App.orbitState.size[0] - cardWidth - 20 }} />
+        }
+        {...props}
+      />
+    )
   }
 }

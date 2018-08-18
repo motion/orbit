@@ -72,7 +72,7 @@ export class PeekStore {
       if (isShown) {
         // then load model and update again
         const curState = tornState || (await this.getCurState())
-        await sleep(90)
+        await sleep(120)
         setValue({
           ...nextState,
           curState,

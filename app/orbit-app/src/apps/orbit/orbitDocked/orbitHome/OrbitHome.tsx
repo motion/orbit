@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view, react, compose } from '@mcro/black'
-import { BitRepository } from '../../../../repositories'
+import { BitRepository, PersonRepository } from '../../../../repositories'
 import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -54,6 +54,10 @@ class OrbitHomeStore {
 
   following = react(
     async () => {
+      const people = await PersonRepository.find({
+        order: { createdAt: 'DESC' },
+        take: 10,
+      })
       const [slack, drive, github, confluence, jira] = await Promise.all([
         findManyType('slack'),
         findManyType('gdocs'),
@@ -62,7 +66,7 @@ class OrbitHomeStore {
         findManyType('jira'),
       ])
       // only return ones with results
-      const all = { slack, drive, github, confluence, jira }
+      const all = { people, slack, drive, github, confluence, jira }
       const res = {} as any
       let curIndex = 0
       for (const name in all) {

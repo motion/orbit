@@ -88,9 +88,30 @@ class OrbitSearchResultsList extends React.Component<Props> {
     })
   })
 
+  getChildren = ({ content }, bit, index) => {
+    return bit.integration === 'slack' ? (
+      content
+    ) : (
+      <OrbitCardContent>
+        <UI.Text
+          alpha={0.85}
+          wordBreak="break-all"
+          highlight={highlightOptions(
+            this.props.searchStore.searchState.query,
+            bit,
+          )}
+        >
+          {this.getHighlight(index)}
+        </UI.Text>
+      </OrbitCardContent>
+    )
+  }
+
+  spaceBetween = <div style={{ flex: 1 }} />
+
   render() {
     const { name, searchStore } = this.props
-    const { results, query } = searchStore.searchState
+    const { results } = searchStore.searchState
     if (!results || !results.length) {
       return null
     }
@@ -105,24 +126,10 @@ class OrbitSearchResultsList extends React.Component<Props> {
             bit={bit}
             listItem
             hide={bit.integration === 'slack' ? hideSlack : null}
-            subtitleSpaceBetween={<div style={{ flex: 1 }} />}
-            isExpanded={bit.integration === 'slack'}
+            subtitleSpaceBetween={this.spaceBetween}
+            isExpanded
           >
-            {({ content }) =>
-              bit.integration === 'slack' ? (
-                content
-              ) : (
-                <OrbitCardContent>
-                  <UI.Text
-                    alpha={0.85}
-                    wordBreak="break-all"
-                    highlight={highlightOptions(query, bit)}
-                  >
-                    {this.getHighlight(index)}
-                  </UI.Text>
-                </OrbitCardContent>
-              )
-            }
+            {this.getChildren}
           </OrbitCard>
         ))}
         {!!results.length && <div style={{ height: 20 }} />}

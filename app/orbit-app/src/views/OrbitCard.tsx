@@ -45,7 +45,7 @@ export type OrbitCardProps = {
   subPane?: string
   bit?: Bit
   itemProps?: Object
-  children?: ((a: Object) => JSX.Element) | React.ReactNode
+  children?: ((a: Object, b: Bit, c: number) => JSX.Element) | React.ReactNode
   onClick?: Function
   onSelect?: (a: HTMLElement) => any
   borderRadius?: number
@@ -491,27 +491,19 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
                 {typeof preview !== 'string' && preview}
                 {typeof preview === 'string' && (
                   <UI.Text
-                    className="preview-text"
                     alpha={isSelected ? 1 : 0.7}
                     size={listItem ? 1.1 : 1.3}
                     sizeLineHeight={0.9}
                     margin={inGrid ? ['auto', 0] : 0}
                   >
                     {preview}
-                    {/* .slice(0, 220)
-                      .split(' ')
-                      .map((word, i) => (
-                        <React.Fragment key={i}>
-                          <SmallLink searchStore={searchStore}>
-                            {word}
-                          </SmallLink>{' '}
-                        </React.Fragment>
-                      )) */}
                   </UI.Text>
                 )}
               </Preview>
             )}
-          {typeof children === 'function' ? children(contentProps) : children}
+          {typeof children === 'function'
+            ? children(contentProps, props.bit, props.index)
+            : children}
           {people && people.length && people[0].data.profile ? (
             <div>
               <PeopleRow people={people} />

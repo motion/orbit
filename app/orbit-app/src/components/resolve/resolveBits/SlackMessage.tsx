@@ -2,9 +2,9 @@ import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import slackDown from '@mcro/slackdown'
-import { TimeAgo } from '../../../views/TimeAgo'
 import { Bit, SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
+import { DateFormat } from '../../../views/DateFormat'
 
 type SlackMessageProps = {
   bit: Bit
@@ -30,7 +30,7 @@ const Content = view({
   userSelect: 'auto',
   wordWrap: 'break-word',
   fontSize: 16,
-  lineHeight: 25,
+  lineHeight: 20,
 })
 
 @view
@@ -54,7 +54,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
     let previousWithinOneMinute = false
     if (previousMessage) {
       previousBySameAuthor = message.user === previousMessage.user
-      previousWithinOneMinute = (message.time - previousMessage.time) < 1000 * 60 // todo(nate) can you please check it?
+      previousWithinOneMinute = message.time - previousMessage.time < 1000 * 60 // todo(nate) can you please check it?
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     return (
@@ -72,7 +72,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           {!!person && <RoundButtonPerson person={person} />}
           <div style={{ width: 6 }} />
           <DateView if={!previousMessage || !previousWithinOneMinute}>
-            {<TimeAgo>{new Date(message.time)}</TimeAgo>}
+            {<DateFormat date={new Date(message.time)} />}
           </DateView>
         </UI.Row>
         <UI.Row>

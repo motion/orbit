@@ -21,14 +21,14 @@ type Props = {
 
 const Highlight = view({
   display: 'inline-block',
-  lineHeight: 20.5,
+  lineHeight: 18.5,
   fontSize: 15,
-  padding: [2, 6, 2, 14],
-  margin: [4, 0, 0, 4],
+  padding: [2, 6, 2, 10],
+  margin: [0, 0, 0, 4],
   fontWeight: 400,
   borderLeft: [2, 'transparent'],
   '&:hover': {
-    borderLeftColor: '#90b1e455',
+    borderLeftColor: [255, 255, 255, 0.2],
   },
 })
 Highlight.theme = ({ theme }) => ({
@@ -65,6 +65,14 @@ const highlightOptions = (query, bit) => ({
   style: 'font-weight: 700; color: #fff;',
 })
 
+const hideSlack = {
+  title: true,
+}
+
+const OrbitCardContent = view({
+  padding: [6, 0],
+})
+
 @view
 class OrbitSearchResultsList extends React.Component<Props> {
   getHighlight = memoize(index => ({ highlights }) => {
@@ -94,14 +102,17 @@ class OrbitSearchResultsList extends React.Component<Props> {
         index={index}
         bit={bit}
         listItem
+        hide={bit.integration === 'slack' ? hideSlack : null}
       >
-        <UI.Text
-          alpha={0.85}
-          wordBreak="break-all"
-          highlight={highlightOptions(query, bit)}
-        >
-          {this.getHighlight(index)}
-        </UI.Text>
+        <OrbitCardContent>
+          <UI.Text
+            alpha={0.85}
+            wordBreak="break-all"
+            highlight={highlightOptions(query, bit)}
+          >
+            {this.getHighlight(index)}
+          </UI.Text>
+        </OrbitCardContent>
       </OrbitCard>
     ))
   }

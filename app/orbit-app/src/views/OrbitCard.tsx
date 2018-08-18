@@ -3,7 +3,6 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
 import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
-import { TimeAgo } from './TimeAgo'
 import { App, AppStatePeekItem } from '@mcro/stores'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
@@ -16,6 +15,7 @@ import { EMPTY_ITEM } from '../constants'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import isEqual from 'react-fast-compare'
+import { DateFormat } from './DateFormat'
 
 export type OrbitCardProps = {
   hoverToSelect?: boolean
@@ -37,7 +37,7 @@ export type OrbitCardProps = {
   titleProps?: Object
   inactive?: boolean
   iconProps?: Object
-  hide?: { icon?: boolean; subtitle?: boolean; body?: boolean }
+  hide?: { title?: boolean; icon?: boolean; subtitle?: boolean; body?: boolean }
   className?: string
   inGrid?: boolean
   pane?: string
@@ -244,7 +244,7 @@ Card.theme = ({
       ...listStyle,
       borderLeft: 'none',
       borderRight: 'none',
-      padding: padding || [20, 18],
+      padding: padding || [8, 16],
       '&:active': {
         opacity: isSelected ? 1 : 0.8,
       },
@@ -423,28 +423,30 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
             !hide.icon && (
               <OrbitIcon
                 icon={icon}
-                size={22}
+                size={listItem ? 18 : 22}
                 {...orbitIconProps}
                 position="absolute"
-                top={listItem ? 25 : 10}
+                top={listItem ? 16 : 10}
                 right={listItem ? 16 : 10}
                 {...iconProps}
               />
             )}
-          <Title style={titleFlex && { flex: titleFlex }}>
-            <UI.Text
-              fontSize={listItem ? 16 : 15}
-              sizeLineHeight={0.7}
-              ellipse={2}
-              fontWeight={600}
-              maxWidth="calc(100% - 30px)"
-              textShadow={listItem ? '0 0.5px 0 rgba(0,0,0,0.5)' : null}
-              {...titleProps}
-            >
-              {title}
-            </UI.Text>
-            {afterTitle}
-          </Title>
+          {!hide.title && (
+            <Title style={titleFlex && { flex: titleFlex }}>
+              <UI.Text
+                fontSize={listItem ? 16 : 15}
+                sizeLineHeight={0.7}
+                ellipse={2}
+                fontWeight={600}
+                maxWidth="calc(100% - 30px)"
+                textShadow={listItem ? '0 0.5px 0 rgba(0,0,0,0.5)' : null}
+                {...titleProps}
+              >
+                {title}
+              </UI.Text>
+              {afterTitle}
+            </Title>
+          )}
           {hasSubtitle && (
             <CardSubtitle listItem={listItem}>
               {!!location && (
@@ -462,7 +464,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
               {!!createdAt && (
                 <UI.Text alpha={0.55} size={0.95}>
                   <strong> &middot;</strong>{' '}
-                  <TimeAgo date={updatedAt || createdAt} />
+                  <DateFormat date={new Date(updatedAt || createdAt * 1000)} />
                 </UI.Text>
               )}
             </CardSubtitle>

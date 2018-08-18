@@ -33,6 +33,11 @@ export class SubPaneStore {
     return this.paneNode.firstChild as HTMLDivElement
   }
 
+  get isLeft() {
+    const thisIndex = this.props.paneManagerStore.indexOfPane(this.props.name)
+    return thisIndex < this.props.paneManagerStore.paneIndex
+  }
+
   // prevents uncessary and expensive OrbitCard re-renders
   isActive = react(
     () => {

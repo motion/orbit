@@ -83,6 +83,10 @@ export class PaneManagerStore {
     }
   }
 
+  indexOfPane = name => {
+    return this.panes.indexOf(name)
+  }
+
   get activePaneFast() {
     return this.panes[this.paneIndex]
   }
@@ -101,7 +105,7 @@ export class PaneManagerStore {
     return !this.hasOnboarded
   }
 
-  activePane = react(
+  activePane: string = react(
     () => [
       this.panes,
       this.paneIndex,

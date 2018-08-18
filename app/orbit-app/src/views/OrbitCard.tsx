@@ -400,7 +400,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
       ...props
     } = this.props
     const { isSelected } = store
-    const hasSubtitle = !!(location || subtitle) && !hide.subtitle
+    const hasSubtitle = !!(location || subtitle) && !(hide && hide.subtitle)
     return (
       <CardWrap
         {...hoverToSelect && !inactive && this.hoverSettler.props}
@@ -432,7 +432,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
                 {...iconProps}
               />
             )}
-          {!hide.title && (
+          {!(hide && hide.title) && (
             <Title style={titleFlex && { flex: titleFlex }}>
               <UI.Text
                 fontSize={listItem ? 16 : 15}

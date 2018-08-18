@@ -60,7 +60,7 @@ export type OrbitCardProps = {
   subtitleProps?: Object
   getIndex?: (id: string) => number
   subtitleSpaceBetween?: React.ReactNode
-  highlight?: Object
+  searchTerm?: string
 }
 
 class OrbitCardStore {
@@ -400,7 +400,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
       padding,
       titleFlex,
       subtitleSpaceBetween,
-      highlight,
+      searchTerm,
       ...props
     } = this.props
     const { isSelected } = store
@@ -543,6 +543,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
       itemProps,
       inGrid,
       item,
+      searchTerm,
       ...props
     } = this.props
     console.log(
@@ -559,6 +560,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
         bit={bit}
         item={item}
         isExpanded={this.isExpanded}
+        searchTerm={searchTerm}
         {...itemProps}
       >
         {this.getOrbitCard}

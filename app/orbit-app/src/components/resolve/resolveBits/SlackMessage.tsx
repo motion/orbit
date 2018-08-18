@@ -14,17 +14,6 @@ type SlackMessageProps = {
   highlight?: Object
 }
 
-const Content = view({
-  width: '100%',
-  display: 'block',
-  position: 'relative',
-  margin: [1, 0, 0],
-  userSelect: 'auto',
-  wordWrap: 'break-word',
-  fontSize: 14,
-  lineHeight: 18,
-})
-
 const SlackMessageInner = view({
   padding: [0, 0, 0, 14],
 })

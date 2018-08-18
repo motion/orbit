@@ -32,7 +32,6 @@ export type ItemResolverProps = {
   shownLimit?: number
   itemProps?: Object
   searchTerm?: string
-  highlight?: Object
 }
 
 export const ItemResolver = ({ bit, item, ...props }: ItemResolverProps) => {

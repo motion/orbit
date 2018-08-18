@@ -116,8 +116,9 @@ class OrbitSearchResultsList extends React.Component<Props> {
     if (!results || !results.length) {
       return null
     }
+    const searchTerm = searchStore.searchState.query
     return (
-      <HighlightsLayer term={searchStore.searchState.query}>
+      <HighlightsLayer term={searchTerm}>
         <>
           {results.map((bit, index) => (
             <OrbitCard
@@ -130,7 +131,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
               hide={bit.integration === 'slack' ? hideSlack : null}
               subtitleSpaceBetween={this.spaceBetween}
               isExpanded
-              highlight={highlightOptions(searchStore.searchState.query, bit)}
+              searchTerm={searchTerm}
             >
               {this.getChildren}
             </OrbitCard>

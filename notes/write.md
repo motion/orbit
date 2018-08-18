@@ -210,14 +210,6 @@ Or monetizing monetizing.
 
 # A commitment to control
 
-or
-
-# The next big feature: User Control
-
-or
-
-# The future of computing (clickbait :))
-
 - a new generation of products
 - user-first as a feature
 - decentralized (peter thiel reference?)
@@ -229,6 +221,10 @@ or
 - the value of being user-aligned > the value of tracking data
 - companies that do this will out-compete companies that don't
 - software is getting mature enough to allow this to be a feature
+
+---
+
+# Decentralizing software
 
 ---
 

@@ -43,7 +43,6 @@ export class SubPaneStore {
       )
     },
     isActive => {
-      console.log('running is active...', isActive, this.isActive)
       if (isActive === this.isActive) {
         throw react.cancel
       }
@@ -158,7 +157,8 @@ export class SubPaneStore {
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
     // get top from here because its not affected by scroll
-    const { top } = this.paneNode.getBoundingClientRect()
+    const top = (document.querySelector('#above-content') as HTMLDivElement)
+      .offsetTop
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {
       this.aboveContentHeight = Math.max(0, top)
       this.contentHeight = height

@@ -141,7 +141,10 @@ export class OrbitDocked extends React.Component<Props> {
               paneManagerStore={paneManagerStore}
               filterStore={searchStore.searchFilterStore}
             />
-            <OrbitDockedInner style={{ height: window.innerHeight }}>
+            <OrbitDockedInner
+              id="above-content"
+              style={{ height: window.innerHeight }}
+            >
               <div style={{ position: 'relative', flex: 1 }}>
                 <OrbitOnboard name="onboard" />
                 <OrbitHome name="home" />

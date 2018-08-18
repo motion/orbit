@@ -12,7 +12,6 @@ if [ ! -d "./node_modules/iohook/builds/node-v59-darwin-x64" ]; then
 fi
 
 npx nodemon \
-  --quiet \
   --watch _ \
   --watch $(realpath node_modules/@mcro/stores)/_ \
   --watch $(realpath node_modules/@mcro/constants)/_  \

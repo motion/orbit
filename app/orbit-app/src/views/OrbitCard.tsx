@@ -467,6 +467,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
               {subtitleSpaceBetween}
               {!!createdAt && (
                 <UI.Text alpha={0.55} size={0.95}>
+                  {!!(subtitle || location) && <div style={{ width: 5 }} />}
                   <DateFormat
                     date={new Date(updatedAt)}
                     nice={

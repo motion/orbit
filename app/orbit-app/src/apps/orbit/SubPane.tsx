@@ -107,14 +107,16 @@ export class SubPane extends React.Component<SubPaneProps> {
       containerStyle,
       ...props
     } = this.props
-    console.log('subPaneStore.isLeft', subPaneStore.isLeft)
     return (
       <SubPaneFrame
         isActive={subPaneStore.isActive}
         isLeft={subPaneStore.isLeft}
       >
         {before}
-        <SubPaneInner {...containerStyle}>
+        <SubPaneInner
+          forwardRef={subPaneStore.subPaneInner}
+          {...containerStyle}
+        >
           <Pane
             isActive={subPaneStore.isActive}
             style={style}

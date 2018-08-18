@@ -11,7 +11,7 @@ const defaultOptions = {
 export const DateFormat = ({
   date = new Date(),
   locale = 'en-US',
-  options,
+  options = null,
   nice = false,
 }) => {
   if (nice) {

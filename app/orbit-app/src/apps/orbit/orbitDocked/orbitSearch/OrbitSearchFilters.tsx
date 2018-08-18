@@ -14,9 +14,14 @@ const SearchFilters = view(UI.Col, {
   padding: [7, 12],
 })
 
-SearchFilters.theme = ({ theme }) => ({
+const SearchFilterBar = view({
+  flexFlow: 'row',
+  padding: [0, 8],
+  width: '100%',
+  alignItems: 'center',
+})
+SearchFilterBar.theme = ({ theme }) => ({
   borderTop: [1, theme.base.borderColor.alpha(0.3)],
-  background: 'transparent',
 })
 
 const ExtraFilters = view(UI.View, {
@@ -79,8 +84,8 @@ const decorate = compose(
 export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   const { searchFilterStore } = searchStore
   return (
-    <SearchFilters width="100%" alignItems="center">
-      <UI.Row width="100%" alignItems="center">
+    <>
+      <SearchFilterBar>
         <FilterButton
           {...searchFilterStore.dateHover.props}
           active={searchFilterStore.dateHover.isStuck()}
@@ -118,20 +123,22 @@ export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
             )
           })}
         </IntegrationFiltersRow>
-      </UI.Row>
-      <ExtraFilters
-        onMouseEnter={searchFilterStore.dateHover.props.onMouseEnter}
-        onMouseLeave={searchFilterStore.dateHover.props.onMouseLeave}
-        onMouseMove={searchFilterStore.dateHover.props.onMouseMove}
-        className="calendar-dom"
-        height={searchStore.searchFilterStore.extraFiltersHeight}
-        visible={searchStore.searchFilterStore.extraFiltersVisible}
-      >
-        <DateRangePicker
-          onChange={searchFilterStore.onChangeDate}
-          ranges={[searchFilterStore.dateState]}
-        />
-      </ExtraFilters>
-    </SearchFilters>
+      </SearchFilterBar>
+      <SearchFilters width="100%" alignItems="center">
+        <ExtraFilters
+          onMouseEnter={searchFilterStore.dateHover.props.onMouseEnter}
+          onMouseLeave={searchFilterStore.dateHover.props.onMouseLeave}
+          onMouseMove={searchFilterStore.dateHover.props.onMouseMove}
+          className="calendar-dom"
+          height={searchStore.searchFilterStore.extraFiltersHeight}
+          visible={searchStore.searchFilterStore.extraFiltersVisible}
+        >
+          <DateRangePicker
+            onChange={searchFilterStore.onChangeDate}
+            ranges={[searchFilterStore.dateState]}
+          />
+        </ExtraFilters>
+      </SearchFilters>
+    </>
   )
 })

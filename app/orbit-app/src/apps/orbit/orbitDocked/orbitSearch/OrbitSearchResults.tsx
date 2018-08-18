@@ -94,28 +94,33 @@ class OrbitSearchResultsList extends React.Component<Props> {
     if (!results || !results.length) {
       return null
     }
-    return results.map((bit, index) => (
-      <OrbitCard
-        pane={name}
-        subPane="search"
-        key={bit.id}
-        index={index + searchStore.quickSearchState.results.length}
-        bit={bit}
-        listItem
-        hide={bit.integration === 'slack' ? hideSlack : null}
-        subtitleSpaceBetween={<div style={{ flex: 1 }} />}
-      >
-        <OrbitCardContent>
-          <UI.Text
-            alpha={0.85}
-            wordBreak="break-all"
-            highlight={highlightOptions(query, bit)}
+    return (
+      <>
+        {results.map((bit, index) => (
+          <OrbitCard
+            pane={name}
+            subPane="search"
+            key={bit.id}
+            index={index + searchStore.quickSearchState.results.length}
+            bit={bit}
+            listItem
+            hide={bit.integration === 'slack' ? hideSlack : null}
+            subtitleSpaceBetween={<div style={{ flex: 1 }} />}
           >
-            {this.getHighlight(index)}
-          </UI.Text>
-        </OrbitCardContent>
-      </OrbitCard>
-    ))
+            <OrbitCardContent>
+              <UI.Text
+                alpha={0.85}
+                wordBreak="break-all"
+                highlight={highlightOptions(query, bit)}
+              >
+                {this.getHighlight(index)}
+              </UI.Text>
+            </OrbitCardContent>
+          </OrbitCard>
+        ))}
+        {!!results.length && <div style={{ height: 20 }} />}
+      </>
+    )
   }
 }
 
@@ -145,7 +150,6 @@ const OrbitSearchResultsContents = view(
           selectionStore={selectionStore}
           name={name}
         />
-        <div style={{ height: 20 }} />
       </OrbitSearchResultsFrame>
     )
   },

@@ -37,12 +37,6 @@
 - Finish settings panes
 - Mutation/observe pattern for data updates
 
-* SEARCH GROUPING
-  - this would really help display i think
-  - for slack especially
-  - group together a few results into a more compact view
-  - show the group in the peek window
-
 # Week ending Aug 24th
 
 **Syncer/UI improvements and P2P system for sharing the app and sharing oauth config**

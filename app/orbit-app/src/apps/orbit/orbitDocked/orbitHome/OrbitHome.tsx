@@ -143,7 +143,8 @@ export class OrbitHome extends React.Component<Props> {
             categoryName={categoryName}
           />
         ))}
-        {!!homeStore.results.length && <View height={15} />}
+        {/* this is a nice lip effect */}
+        <View height={20} />
       </SubPane>
     )
   }

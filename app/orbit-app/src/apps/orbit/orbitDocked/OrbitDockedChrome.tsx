@@ -122,7 +122,7 @@ const BlockBottom = ({ overflow, above, maxHeight, height, children }) => (
           right: overflow,
           height: maxHeight,
           transform: `translateY(${height - maxHeight + extraShadow}px)`,
-          transition: 'transform ease-out 60ms',
+          // transition: 'transform ease-out 60ms',
         }}
       >
         {children}

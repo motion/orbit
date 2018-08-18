@@ -84,11 +84,9 @@ export class SubPaneStore {
 
   get fullHeight() {
     // this is the expandable filterpane in searches
-    const framePad = 8
     const { extraHeight } = this.props.searchStore.searchFilterStore
     const addHeight = extraHeight ? extraHeight + 14 : 0
-    const fullHeight =
-      addHeight + this.contentHeight + this.aboveContentHeight + framePad
+    const fullHeight = addHeight + this.contentHeight + this.aboveContentHeight
     const minHeight = 90
     // never go all the way to bottom
     // cap min and max

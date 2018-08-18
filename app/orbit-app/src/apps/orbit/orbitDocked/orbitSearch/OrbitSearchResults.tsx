@@ -63,7 +63,6 @@ const highlightOptions = (query, bit) => ({
   maxSurroundChars: 110,
   trimWhitespace: true,
   separator: '&nbsp;&middot;&nbsp;',
-  style: 'font-weight: 700; color: #fff;',
 })
 
 const hideSlack = {

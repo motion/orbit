@@ -25,18 +25,30 @@
   flex-flow: row;
 }
 
-#app code {
+#app code,
+#app pre code {
   background: #fff;
-  padding: 0 4px;
   border: 1px solid #eee;
+}
+
+#app .theme-dark code,
+#app .theme-dark pre code {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+
+#app code {
+  line-height: 18px;
+  padding: 0 4px;
   border-radius: 7px;
   white-space: pre;
+  overflow: scroll;
+  padding: 10px;
 }
 
 #app pre code {
-  background: #fff;
   padding: 10px 18px;
-  border: 1px solid #eee;
   margin: 10px -5px;
   border-radius: 7px;
   white-space: pre;

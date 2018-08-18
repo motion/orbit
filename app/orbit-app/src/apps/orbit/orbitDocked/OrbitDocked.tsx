@@ -126,7 +126,10 @@ export class OrbitDocked extends React.Component<Props> {
     // log('DOCKED ------------', store.animationState)
     return (
       <UI.Theme name="dark">
-        <OrbitDockedFrame visible={App.orbitState.docked}>
+        <OrbitDockedFrame
+          className="theme-dark"
+          visible={App.orbitState.docked}
+        >
           <OrbitDockedChrome appStore={appStore} />
           <OrbitDockedInnerFrame
             borderBottomRadius={BORDER_RADIUS}

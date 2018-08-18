@@ -106,16 +106,23 @@ class OrbitSearchResultsList extends React.Component<Props> {
             listItem
             hide={bit.integration === 'slack' ? hideSlack : null}
             subtitleSpaceBetween={<div style={{ flex: 1 }} />}
+            isExpanded={bit.integration === 'slack'}
           >
-            <OrbitCardContent>
-              <UI.Text
-                alpha={0.85}
-                wordBreak="break-all"
-                highlight={highlightOptions(query, bit)}
-              >
-                {this.getHighlight(index)}
-              </UI.Text>
-            </OrbitCardContent>
+            {({ content }) =>
+              bit.integration === 'slack' ? (
+                content
+              ) : (
+                <OrbitCardContent>
+                  <UI.Text
+                    alpha={0.85}
+                    wordBreak="break-all"
+                    highlight={highlightOptions(query, bit)}
+                  >
+                    {this.getHighlight(index)}
+                  </UI.Text>
+                </OrbitCardContent>
+              )
+            }
           </OrbitCard>
         ))}
         {!!results.length && <div style={{ height: 20 }} />}

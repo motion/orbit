@@ -11,6 +11,7 @@ import { SearchStore } from '../../../../stores/SearchStore'
 import { SelectionStore } from '../../../../stores/SelectionStore'
 import { App } from '@mcro/stores'
 import { memoize } from 'lodash'
+import { HighlightsLayer } from '../../../../views/HighlightsLayer'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -116,25 +117,27 @@ class OrbitSearchResultsList extends React.Component<Props> {
       return null
     }
     return (
-      <>
-        {results.map((bit, index) => (
-          <OrbitCard
-            pane={name}
-            subPane="search"
-            key={bit.id}
-            index={index + searchStore.quickSearchState.results.length}
-            bit={bit}
-            listItem
-            hide={bit.integration === 'slack' ? hideSlack : null}
-            subtitleSpaceBetween={this.spaceBetween}
-            isExpanded
-            highlight={highlightOptions(searchStore.searchState.query, bit)}
-          >
-            {this.getChildren}
-          </OrbitCard>
-        ))}
-        {!!results.length && <div style={{ height: 20 }} />}
-      </>
+      <HighlightsLayer term={searchStore.searchState.query}>
+        <>
+          {results.map((bit, index) => (
+            <OrbitCard
+              pane={name}
+              subPane="search"
+              key={bit.id}
+              index={index + searchStore.quickSearchState.results.length}
+              bit={bit}
+              listItem
+              hide={bit.integration === 'slack' ? hideSlack : null}
+              subtitleSpaceBetween={this.spaceBetween}
+              isExpanded
+              highlight={highlightOptions(searchStore.searchState.query, bit)}
+            >
+              {this.getChildren}
+            </OrbitCard>
+          ))}
+          {!!results.length && <div style={{ height: 20 }} />}
+        </>
+      </HighlightsLayer>
     )
   }
 }

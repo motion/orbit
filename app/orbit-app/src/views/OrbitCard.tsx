@@ -543,7 +543,6 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
       itemProps,
       inGrid,
       item,
-      highlight,
       ...props
     } = this.props
     console.log(
@@ -560,7 +559,6 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
         bit={bit}
         item={item}
         isExpanded={this.isExpanded}
-        highlight={highlight}
         {...itemProps}
       >
         {this.getOrbitCard}

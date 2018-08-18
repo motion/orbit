@@ -32,7 +32,7 @@ const SlackMessageInner = view({
 @view
 export class SlackMessage extends React.Component<SlackMessageProps> {
   render() {
-    const { bit, message, previousMessage, highlight, itemProps } = this.props
+    const { bit, message, previousMessage, itemProps } = this.props
     if (!message.text || !bit) {
       console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -72,18 +72,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           </UI.Row>
         )}
         <SlackMessageInner>
-          <UI.Text
-            renderAsHtml
-            highlight={
-              highlight
-                ? {
-                    ...highlight,
-                    maxChars: 500000,
-                    maxSurroundChars: 500000,
-                  }
-                : null
-            }
-          >
+          <UI.Text className="searchable-item" renderAsHtml>
             {htmlText.replace('``', '')}
           </UI.Text>
         </SlackMessageInner>

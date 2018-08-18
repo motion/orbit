@@ -19,7 +19,6 @@ export const ResolveConversation = ({
   shownLimit = 5,
   itemProps,
   isExpanded,
-  highlight,
 }: ItemResolverProps) => {
   const data = bit.data as SlackBitData
   const content = isExpanded
@@ -32,7 +31,6 @@ export const ResolveConversation = ({
             previousMessage={data.messages[index - 1]}
             bit={bit}
             itemProps={itemProps}
-            highlight={highlight}
           />
         )) as any) // todo(nate) please fix type error and remove "as any"
     : null

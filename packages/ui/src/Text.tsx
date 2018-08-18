@@ -76,7 +76,7 @@ export type TextProps = CSSPropertySet & {
   placeholder?: string
   lineHeight?: number
   sizeLineHeight?: number
-  className?: number
+  className?: string
   measure?: boolean
   onMeasure?: Function
   sizeMethod?: string

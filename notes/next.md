@@ -32,7 +32,6 @@
   - this would really help display i think
   - for slack especially
   - group together a few results into a more compact view
-  - no need for title for each
   - show the group in the peek window
 
 # Week ending Aug 24th
@@ -101,8 +100,9 @@ queue:
 - hmr: doesn't store.unmount stores often
 - react: await finishRender() could be interesting
 
-# gamechangers
+# potential gamechangers
 
+- personalize your profile
 - calendar
 - injest anything (instant crawler/snippets)
 - memory

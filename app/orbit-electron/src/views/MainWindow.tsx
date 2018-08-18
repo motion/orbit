@@ -62,6 +62,7 @@ export class MainWindow extends React.Component<{
       e.preventDefault()
       Electron.sendMessage(App, App.messages.HIDE)
     }
+    process.exit(0)
   }
 
   render() {

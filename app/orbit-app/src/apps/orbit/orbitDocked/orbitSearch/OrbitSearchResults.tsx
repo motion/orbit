@@ -128,6 +128,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
             hide={bit.integration === 'slack' ? hideSlack : null}
             subtitleSpaceBetween={this.spaceBetween}
             isExpanded
+            highlight={highlightOptions(searchStore.searchState.query, bit)}
           >
             {this.getChildren}
           </OrbitCard>

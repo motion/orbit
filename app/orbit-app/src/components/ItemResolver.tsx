@@ -3,8 +3,8 @@ import { ResolvePerson } from './resolve/ResolvePerson'
 import { ResolveBit } from './resolve/ResolveBit'
 import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit } from '@mcro/models'
-import { AppStatePeekItem } from '../../../stores/App'
 import { AppStore } from '../stores/AppStore'
+import { AppStatePeekItem } from '@mcro/stores'
 
 export type ResolvedItem = {
   title: string
@@ -32,6 +32,7 @@ export type ItemResolverProps = {
   shownLimit?: number
   itemProps?: Object
   searchTerm?: string
+  highlight?: Object
 }
 
 export const ItemResolver = ({ bit, item, ...props }: ItemResolverProps) => {

@@ -4,7 +4,7 @@ import { differenceInCalendarYears } from 'date-fns/esm/fp'
 
 const defaultOptions = {
   weekday: 'short',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
 }
 

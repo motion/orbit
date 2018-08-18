@@ -29,19 +29,20 @@
 #app pre code {
   background: #fff;
   border: 1px solid #eee;
+  font-weight: 600;
 }
 
 #app .theme-dark code,
 #app .theme-dark pre code {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
   color: #fff;
 }
 
 #app code {
-  line-height: 18px;
+  line-height: 16px;
   padding: 0 4px;
-  border-radius: 7px;
+  border-radius: 3px;
   white-space: pre;
   overflow: scroll;
   padding: 10px;
@@ -50,7 +51,7 @@
 #app pre code {
   padding: 10px 18px;
   margin: 10px -5px;
-  border-radius: 7px;
+  border-radius: 3px;
   white-space: pre;
   overflow-x: scroll;
 }

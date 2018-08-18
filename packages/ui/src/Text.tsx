@@ -219,6 +219,7 @@ export class Text extends React.Component<TextProps> {
       color,
       measure,
       highlight,
+      renderAsHtml,
       ...props
     } = this.props
     const { multiLineEllipse } = this
@@ -238,6 +239,12 @@ export class Text extends React.Component<TextProps> {
       ellipseProps = {
         dangerouslySetInnerHTML: {
           __html,
+        },
+      }
+    } else if (renderAsHtml) {
+      ellipseProps = {
+        dangerouslySetInnerHTML: {
+          __html: children,
         },
       }
     }
@@ -262,6 +269,10 @@ export class Text extends React.Component<TextProps> {
           {children}
         </TextEllipse>
       )
+    }
+
+    if ((highlight && typeof children !== 'function') || renderAsHtml) {
+      contents = <span {...ellipseProps} />
     }
 
     return (

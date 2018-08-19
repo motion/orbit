@@ -15,8 +15,12 @@ type SlackMessageProps = {
   highlight?: Object
 }
 
+const SlackMessageFrame = view({
+  padding: [2, 0],
+})
+
 const SlackMessageInner = view({
-  padding: [0, 0, 0, 14],
+  padding: [2, 0, 2, 14],
 })
 
 @view
@@ -38,7 +42,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
     }
     const hideHeader = previousBySameAuthor && previousWithinOneMinute
     return (
-      <UI.Col {...itemProps}>
+      <SlackMessageFrame {...itemProps}>
         {!hideHeader && (
           <UI.Row
             flexFlow="row"
@@ -60,11 +64,15 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           </UI.Row>
         )}
         <SlackMessageInner>
-          <UI.Text className="searchable-item" fontWeight={400}>
+          <UI.Text
+            className="searchable-item"
+            fontWeight={400}
+            sizeLineHeight={0.85}
+          >
             <Markdown source={message.text} />
           </UI.Text>
         </SlackMessageInner>
-      </UI.Col>
+      </SlackMessageFrame>
     )
   }
 }

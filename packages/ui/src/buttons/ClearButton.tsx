@@ -6,7 +6,7 @@ const ClearClickableArea = view({
   padding: 5,
   '&:hover > *': {
     backgroundColor: 'rgba(0,0,0,0.45)',
-    color: [255,255,255],
+    color: [255, 255, 255],
   },
 })
 
@@ -19,17 +19,17 @@ const ClearFrame = view(View, {
   borderRadius: 999,
   textAlign: 'center',
   backgroundColor: 'rgba(0,0,0,0.1)',
-  color: [255,255,255,0.8],
+  color: [255, 255, 255, 0.8],
   display: 'block',
 })
 
 export const ClearButton = ({
-  onClick,
-  onHover,
-  onMouseDown,
-  onMouseUp,
-  onMouseEnter,
-  onMouseLeave,
+  onClick = null,
+  onHover = null,
+  onMouseDown = null,
+  onMouseUp = null,
+  onMouseEnter = null,
+  onMouseLeave = null,
   ...props
 }) => (
   <ClearClickableArea

@@ -1,3 +1,4 @@
+- fix themes to fix lots of things
 - direct open button in search results
 - clicking location buttons should filter that location
 - clicking a name should search that name

@@ -9,23 +9,6 @@
 
 # Launch
 
-## Productionize
-
-- Builds to prod with a command into nice app bundle, auto updates smoothly
-- Settings panes all work well, look well
-- Has more polish: nice tray icon, shortcut settings, onboarding
-- People syncers work
-
-## Onboarding
-
-- use the tray to help them set up accessibility
-  - click tray opens accessibility, shows an indicator
-- scanning their history and try to auto import things
-- crawler could start importing some popular website data even
-- much smoother adding of integration flow
-- automatic configure integrations a bit
-  - slack top rooms, gmail filters
-
 ## Beta
 
 - Simple and nice signup process, sends email, downloads app

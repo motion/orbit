@@ -193,7 +193,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
             <Title style={titleFlex && { flex: titleFlex }}>
               <UI.Text
                 fontSize={16}
-                sizeLineHeight={0.7}
+                sizeLineHeight={0.85}
                 ellipse={2}
                 fontWeight={600}
                 maxWidth="calc(100% - 30px)"

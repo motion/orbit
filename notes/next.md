@@ -15,14 +15,11 @@
 - Fix blur in prod build on other macs (test on my other mac)
 - Onboard fix final bugs
 - Onboard click tray to focus
-- make search better without using peek
-  - peek should also show infinite scroll of related things
 - Slack select all settings by default (syncer needs to respect settings/set them)
   - Toggle select all button in table view
 - working remove integration
 - fix highlight index click interaction
 - fix integration buttons styling and going inactive after click
-  - Confirm native modal for Remove setting
 - Oauth key strategy:
   1.  UI/storage for adding your own oauth keys as master/admin
   2.  Using those keys in Passport

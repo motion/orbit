@@ -1,9 +1,7 @@
 - direct open button in search results
-- show full convo style view inline in search results
 - clicking location buttons should filter that location
 - clicking a name should search that name
 - find by type (file / link is helpful)
-- scroll carousels back to beginning after change pane
 - search results date strategy:
   - do separators based on time periods:
   - do by day for first week within the current month

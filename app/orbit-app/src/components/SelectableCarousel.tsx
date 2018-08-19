@@ -18,18 +18,14 @@ class CarouselStore {
   carouselRef = React.createRef<Carousel>()
 
   handleScrollTo = react(
-    () => this.props.selectionStore.activeIndex,
-    index => {
+    () => [
+      this.props.selectionStore.activeIndex,
+      this.props.isActiveStore ? this.props.isActiveStore.isActive : null,
+    ],
+    ([index, isActive]) => {
       react.ensure('has carousel', !!this.carouselRef.current)
-      const {
-        items,
-        offset,
-        selectionStore,
-        isActiveStore,
-        resetOnInactive,
-      } = this.props
-      if (isActiveStore && !isActiveStore.isActive) {
-        console.log('NOT ACTRIVve', this)
+      const { items, offset, selectionStore, resetOnInactive } = this.props
+      if (isActive == false) {
         if (resetOnInactive) {
           this.carouselRef.current.scrollTo(0)
         }

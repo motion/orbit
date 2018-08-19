@@ -3,16 +3,11 @@ import { view, react } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
 import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
-import { App, AppStatePeekItem } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
-import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
-import { Bit } from '@mcro/models'
-import { SelectionStore } from '../stores/SelectionStore'
-import { AppStore } from '../stores/AppStore'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { EMPTY_ITEM } from '../constants'
-import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
@@ -241,37 +236,11 @@ const orbitIconProps = {
   store: OrbitCardStore,
 })
 @view
-export class OrbitCardInner extends React.Component<OrbitCardProps> {
-  hoverSettler = null
-
+export class OrbitCardInner extends React.Component<OrbitItemProps> {
   static defaultProps = {
     item: EMPTY_ITEM,
     hide: {},
   }
-
-  constructor(a, b) {
-    super(a, b)
-    const { selectionStore, hoverToSelect } = this.props
-    if (hoverToSelect) {
-      this.hoverSettler = selectionStore.getHoverSettler()
-      this.hoverSettler.setItem({
-        index: this.props.index,
-      })
-    }
-  }
-
-  get isExpanded() {
-    const { isExpanded } = this.props
-    if (typeof isExpanded === 'boolean') {
-      return isExpanded
-    }
-    return (
-      this.props.store.isSelected ||
-      (this.props.listItem && this.props.store.isSelected)
-    )
-  }
-
-  id = Math.random()
 
   getOrbitCard = (contentProps: ResolvedItem) => {
     // TODO weird mutation
@@ -313,7 +282,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
     const hasSubtitle = !!(location || subtitle) && !(hide && hide.subtitle)
     return (
       <CardWrap
-        {...hoverToSelect && !inactive && this.hoverSettler.props}
+        {...hoverToSelect && !inactive && store.hoverSettler.props}
         forwardRef={store.setCardWrapRef}
         zIndex={isSelected ? 5 : 4}
         {...props}
@@ -453,7 +422,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
       <ItemResolver
         bit={bit}
         item={item}
-        isExpanded={this.isExpanded}
+        isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}
         {...itemProps}
       >
@@ -464,7 +433,7 @@ export class OrbitCardInner extends React.Component<OrbitCardProps> {
 }
 
 // wrap the outside so we can do much faster shallow renders when need be
-export class OrbitCard extends React.Component<OrbitCardProps> {
+export class OrbitCard extends React.Component<OrbitItemProps> {
   shouldComponentUpdate(nextProps) {
     if (!isEqual(this.props, nextProps)) {
       console.log('not equal re-render', this.props, nextProps)

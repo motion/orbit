@@ -17,7 +17,6 @@
 - Fix blur in prod build on other macs (test on my other mac)
 - Onboard fix final bugs
 - Onboard click tray to focus
-- clear peek on scroll searches
 - make search better without using peek
   - peek should also show infinite scroll of related things
 - Slack select all settings by default (syncer needs to respect settings/set them)

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { on, react } from '@mcro/black'
 import { throttle } from 'lodash'
 import { SubPaneProps } from './SubPane'
+import { App } from '@mcro/stores'
 
 function getTopOffset(element, parent?) {
   let offset = 0
@@ -61,7 +62,7 @@ export class SubPaneStore {
   )
 
   didMount() {
-    on(this, this.paneNode, 'scroll', throttle(this.updateScrolledTo, 16 * 3))
+    on(this, this.paneNode, 'scroll', throttle(this.onPaneScroll, 16 * 3))
     this.addObserver(this.paneNode, this.handlePaneChange)
 
     // watch resizes
@@ -136,7 +137,7 @@ export class SubPaneStore {
 
   handlePaneChange = () => {
     this.updateHeight()
-    this.updateScrolledTo()
+    this.onPaneScroll()
   }
 
   scrollIntoView = throttle((card: HTMLDivElement) => {
@@ -168,7 +169,10 @@ export class SubPaneStore {
     }
   }
 
-  updateScrolledTo = () => {
+  onPaneScroll = () => {
+    if (App.peekState.target) {
+      App.actions.clearPeek()
+    }
     const pane = this.paneNode
     const innerHeight = this.paneInnerNode.clientHeight
     const scrolledTo = pane.scrollTop + pane.clientHeight

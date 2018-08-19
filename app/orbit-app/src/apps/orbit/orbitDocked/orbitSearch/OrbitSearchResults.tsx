@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { OrbitCard } from '../../../../views/OrbitCard'
+import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { SubPane } from '../../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
@@ -67,6 +67,7 @@ const highlightOptions = (query, bit) => ({
 
 const hideSlack = {
   title: true,
+  people: true,
 }
 
 const OrbitCardContent = view({
@@ -120,7 +121,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
       <HighlightsLayer term={searchTerm}>
         <>
           {results.map((bit, index) => (
-            <OrbitCard
+            <OrbitListItem
               pane={name}
               subPane="search"
               key={bit.id}
@@ -133,7 +134,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
               searchTerm={searchTerm}
             >
               {this.getChildren}
-            </OrbitCard>
+            </OrbitListItem>
           ))}
           {!!results.length && <div style={{ height: 20 }} />}
         </>

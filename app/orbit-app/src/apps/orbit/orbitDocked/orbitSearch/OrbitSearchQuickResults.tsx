@@ -21,13 +21,13 @@ type Props = {
 const cardProps = {
   pane: 'docked-search',
   subPane: 'search',
-  cardProps: {
-    inGrid: true,
-    flex: 1,
-    hide: {
-      icon: true,
-    },
+  titleProps: {
+    ellipse: true,
   },
+  hide: {
+    icon: true,
+  },
+  inGrid: true,
 }
 
 export const OrbitSearchQuickResults = decorate(({ searchStore }: Props) => {

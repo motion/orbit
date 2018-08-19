@@ -48,15 +48,19 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
             userSelect="none"
             cursor="default"
           >
-            {!!person && <RoundButtonPerson person={person} />}
+            {!!person && (
+              <RoundButtonPerson background="transparent" person={person} />
+            )}
             <div style={{ width: 6 }} />
             {(!previousMessage || !previousWithinOneMinute) && (
-              <UI.Text>{<TimeAgo date={new Date(message.time)} />}</UI.Text>
+              <UI.Text alpha={0.5}>
+                {<TimeAgo date={new Date(message.time)} />}
+              </UI.Text>
             )}
           </UI.Row>
         )}
         <SlackMessageInner>
-          <UI.Text className="searchable-item">
+          <UI.Text className="searchable-item" fontWeight={400}>
             <Markdown source={message.text} />
           </UI.Text>
         </SlackMessageInner>

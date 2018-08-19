@@ -56,7 +56,7 @@ const Background = view({
   // background: 'rgba(255,255,255,0.92)',
 })
 Background.theme = ({ theme, isUpper }) => ({
-  background: [80, 80, 80, 0.78],
+  background: [60, 60, 60, 0.78],
   // background: [0, 0, 0, 0.5],
   // background: isUpper
   //   ? theme.base.background.alpha(0.2)

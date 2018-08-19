@@ -3,7 +3,7 @@ import { App } from '@mcro/stores'
 import { RoundButton } from './RoundButton'
 import * as UI from '@mcro/ui'
 
-export const RoundButtonPerson = ({ person }) => {
+export const RoundButtonPerson = ({ person, ...props }) => {
   // TODO: avatar value on person
   const avatar = person.data.profile.image_512
   return (
@@ -13,6 +13,7 @@ export const RoundButtonPerson = ({ person }) => {
         e.stopPropagation()
         App.actions.selectPerson(person)
       }}
+      {...props}
     >
       <UI.Row alignItems="center">
         {!!avatar && (

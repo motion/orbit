@@ -116,6 +116,7 @@ export class SearchStore {
     queryStore: this.props.queryStore,
     integrationSettingsStore: this.props.integrationSettingsStore,
     nlpStore: this.nlpStore,
+    searchStore: this,
   })
 
   willMount() {

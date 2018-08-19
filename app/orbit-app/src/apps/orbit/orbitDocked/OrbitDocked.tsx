@@ -14,7 +14,7 @@ import { BORDER_RADIUS } from '../../../constants'
 import { SearchStore } from '../../../stores/SearchStore'
 import { AppStore } from '../../../stores/AppStore'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitFilterBar } from '../orbitHeader/OrbitFilterBar'
+import { OrbitSuggestionBar } from '../orbitHeader/OrbitSuggestionBar'
 import { OrbitDockedChrome } from './OrbitDockedChrome'
 import { OrbitOnboard } from './orbitOnboard/OrbitOnboard'
 import { SelectionStore } from '../../../stores/SelectionStore'
@@ -140,7 +140,7 @@ export class OrbitDocked extends React.Component<Props> {
               borderRadius={BORDER_RADIUS}
               after={<OrbitHomeHeader paneManagerStore={paneManagerStore} />}
             />
-            <OrbitFilterBar
+            <OrbitSuggestionBar
               paneManagerStore={paneManagerStore}
               filterStore={searchStore.searchFilterStore}
             />

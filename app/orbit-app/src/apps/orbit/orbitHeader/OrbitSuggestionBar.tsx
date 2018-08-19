@@ -86,7 +86,7 @@ const hideFilterPanes = {
   apps: true,
 }
 
-export const OrbitFilterBar = view(
+export const OrbitSuggestionBar = view(
   ({ filterStore, paneManagerStore }: Props) => {
     filterStore.disabledFilters
     if (hideFilterPanes[paneManagerStore.activePane]) {
@@ -97,7 +97,7 @@ export const OrbitFilterBar = view(
         <HorizontalScroll>
           {filterStore.allFilters.map((filter, index) => (
             <FilterButton
-              key={`${filter.text}${filter.active}${index}`}
+              key={`${filter.text}${filter.active}`}
               onClick={() => filterStore.toggleFilter(filter.text)}
               opacity={opacityScale[index] || 0.333}
               borderColor={

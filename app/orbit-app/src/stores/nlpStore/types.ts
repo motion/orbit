@@ -3,6 +3,7 @@ export enum MarkType {
   Integration = 'integration',
   Person = 'person',
   Type = 'type',
+  Location = 'location',
 }
 
 export type Mark = [number, number, MarkType, string]

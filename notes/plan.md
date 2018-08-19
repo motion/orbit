@@ -1,6 +1,11 @@
 # Demo
 
 - show some wow features + generally scale up app
+- pitch them this:
+  - basically we've shown we can build a great experience here and deliver hard features
+  - we have X, Y, Z on the roadmap
+  - but given you guys are a great name and would give us a lot of prestige
+  - we could definitely basically be your in house crack team of developers
 
 # Launch
 

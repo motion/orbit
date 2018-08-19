@@ -38,17 +38,14 @@ const Pane = view(UI.View, {
   opacity: 0,
   isActive: {
     opacity: 1,
-    transform: {
-      x: 0,
-    },
     '& > *': {
       pointerEvents: 'auto',
     },
   },
 })
-Pane.theme = ({ isLeft }) => ({
+Pane.theme = ({ isLeft, isActive }) => ({
   transform: {
-    x: isLeft ? -20 : 20,
+    x: isActive ? 0 : isLeft ? -20 : 20,
   },
 })
 

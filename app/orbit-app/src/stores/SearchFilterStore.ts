@@ -6,6 +6,7 @@ import { Setting } from '@mcro/models'
 import { NLPStore } from './NLPStore'
 import { hoverSettler } from '../helpers/hoverSettler'
 import { QueryStore } from './QueryStore'
+import { SearchStore } from './SearchStore'
 
 export type SearchFilter = {
   type: string
@@ -31,6 +32,7 @@ export class SearchFilterStore /* extends Store */ {
   queryStore: QueryStore
   integrationSettingsStore: IntegrationSettingsStore
   nlpStore: NLPStore
+  searchStore: SearchStore
 
   extraFiltersHeight = 325
   extraFiltersVisible = false
@@ -49,10 +51,11 @@ export class SearchFilterStore /* extends Store */ {
     leaveDelay: 400,
   })()
 
-  constructor({ queryStore, integrationSettingsStore, nlpStore }) {
+  constructor({ queryStore, integrationSettingsStore, nlpStore, searchStore }) {
     this.integrationSettingsStore = integrationSettingsStore
     this.nlpStore = nlpStore
     this.queryStore = queryStore
+    this.searchStore = searchStore
   }
 
   willMount() {
@@ -161,10 +164,12 @@ export class SearchFilterStore /* extends Store */ {
     if (!this.parsedQuery) {
       return suggestedDates
     }
+    let suggestions = []
+    // show location filters based on current search
+    suggestions = [...suggestions, ...this.searchLocations]
     const hasDates = this.parsedQuery.some(x => x.type === MarkType.Date)
     const numPeople = this.parsedQuery.filter(x => x.type === MarkType.Person)
       .length
-    let suggestions = []
     if (!hasDates) {
       suggestions = [...suggestions, ...suggestedDates]
     }
@@ -173,6 +178,23 @@ export class SearchFilterStore /* extends Store */ {
     }
     return suggestions
   }
+
+  // unique locations currently in search results list
+  searchLocations = react(
+    () => this.searchStore.searchState,
+    async ({ results }, { sleep }) => {
+      await sleep(100)
+      return [...new Set(results.map(x => x.location && x.location.name))]
+        .filter(Boolean)
+        .map(text => ({
+          text,
+          type: MarkType.Location,
+        }))
+    },
+    {
+      defaultValue: [],
+    },
+  )
 
   updateDateStateOnNLPDate = react(
     () => this.activeDateFilters,

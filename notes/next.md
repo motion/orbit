@@ -6,8 +6,6 @@
   - do separators based on time periods:
   - do by day for first week within the current month
   - do by month after that
-- slack search needs to be not one big paragraph
-- and needs to show name next to message in the main pane
 - "in (location)" nlp for slack rooms especially
 - Oauth: Properly proxy/prompt the production domain in prod mode
 - Fix horizontal scroll bugs

@@ -45,5 +45,6 @@ module.exports = {
     Proxy: true,
     Symbol: true,
     ResizeObserver: true,
+    electronRequire: true,
   },
 }

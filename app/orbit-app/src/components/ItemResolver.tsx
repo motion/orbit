@@ -5,6 +5,7 @@ import { ResolveEmpty } from './resolve/ResolveEmpty'
 import { Person, Bit } from '@mcro/models'
 import { AppStore } from '../stores/AppStore'
 import { AppStatePeekItem } from '@mcro/stores'
+import { ItemHideProps } from '../types/ItemHideProps'
 
 export type ResolvedItem = {
   title: string
@@ -32,6 +33,7 @@ export type ItemResolverProps = {
   shownLimit?: number
   itemProps?: Object
   searchTerm?: string
+  hide?: ItemHideProps
 }
 
 export const ItemResolver = ({ bit, item, ...props }: ItemResolverProps) => {

@@ -20,13 +20,13 @@ export const RoundButtonPerson = ({ person, ...props }) => {
           <UI.Image
             src={avatar}
             borderRadius={100}
-            width={15}
-            height={15}
-            marginRight={5}
+            width={14}
+            height={14}
+            marginRight={6}
             marginLeft={-1}
           />
         )}
-        <UI.Text size={0.95} fontWeight={400} alignItems="center">
+        <UI.Text size={0.95} fontWeight={600} alpha={0.9} alignItems="center">
           {person.name}
         </UI.Text>
       </UI.Row>

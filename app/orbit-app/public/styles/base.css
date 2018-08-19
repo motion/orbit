@@ -41,11 +41,20 @@
 
 #app code {
   line-height: 16px;
-  padding: 0 4px;
   border-radius: 3px;
   white-space: pre;
   overflow: scroll;
+}
+
+#app div code {
   padding: 10px;
+}
+
+#app p > code {
+  padding: 3px 4px;
+  margin: -7px 0;
+  line-height: inherit;
+  overflow: hidden;
 }
 
 #app pre code {

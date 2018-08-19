@@ -1,11 +1,12 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import slackDown from '@mcro/slackdown'
+// import slackDown from '@mcro/slackdown'
 import Markdown from 'react-markdown'
 import { Bit, SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
 import { TimeAgo } from '../../../views/TimeAgo'
+import { ItemHideProps } from '../../../types/ItemHideProps'
 
 type SlackMessageProps = {
   bit: Bit
@@ -13,6 +14,7 @@ type SlackMessageProps = {
   previousMessage?: SlackBitDataMessage
   itemProps?: Object
   highlight?: Object
+  hide: ItemHideProps
 }
 
 const SlackMessageFrame = view({
@@ -20,13 +22,13 @@ const SlackMessageFrame = view({
 })
 
 const SlackMessageInner = view({
-  padding: [2, 0, 2, 14],
+  padding: [2, 0, 2, 20],
 })
 
 @view
 export class SlackMessage extends React.Component<SlackMessageProps> {
   render() {
-    const { bit, message, previousMessage, itemProps } = this.props
+    const { bit, message, previousMessage, hide = {}, itemProps } = this.props
     if (!message.text || !bit) {
       console.log(`no messagetext/bit ${JSON.stringify(message)}`)
       return null
@@ -47,7 +49,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
           <UI.Row
             flexFlow="row"
             alignItems="center"
-            margin={[0, 0, 2, -2]}
+            margin={[0, 0, 2, 0]}
             padding={[2, 0]}
             userSelect="none"
             cursor="default"
@@ -56,11 +58,12 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
               <RoundButtonPerson background="transparent" person={person} />
             )}
             <div style={{ width: 6 }} />
-            {(!previousMessage || !previousWithinOneMinute) && (
-              <UI.Text alpha={0.5}>
-                {<TimeAgo date={new Date(message.time)} />}
-              </UI.Text>
-            )}
+            {!(hide && hide.date) &&
+              (!previousMessage || !previousWithinOneMinute) && (
+                <UI.Text alpha={0.5}>
+                  {<TimeAgo date={new Date(message.time)} />}
+                </UI.Text>
+              )}
           </UI.Row>
         )}
         <SlackMessageInner>

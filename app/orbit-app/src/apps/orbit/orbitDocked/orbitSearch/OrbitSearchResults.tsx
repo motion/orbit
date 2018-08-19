@@ -68,6 +68,7 @@ const highlightOptions = (query, bit) => ({
 const hideSlack = {
   title: true,
   people: true,
+  date: true,
 }
 
 const OrbitCardContent = view({

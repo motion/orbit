@@ -5,6 +5,7 @@ import { SelectionStore } from '../stores/SelectionStore'
 import { AppStore } from '../stores/AppStore'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { OrbitItemStore } from './OrbitItemStore'
+import { ItemHideProps } from '../types/ItemHideProps'
 
 export type OrbitItemProps = {
   listItem?: boolean
@@ -28,13 +29,7 @@ export type OrbitItemProps = {
   titleProps?: Object
   inactive?: boolean
   iconProps?: Object
-  hide?: {
-    people?: boolean
-    title?: boolean
-    icon?: boolean
-    subtitle?: boolean
-    body?: boolean
-  }
+  hide?: ItemHideProps
   className?: string
   inGrid?: boolean
   pane?: string

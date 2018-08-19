@@ -282,6 +282,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       item,
       searchTerm,
       isExpanded,
+      hide,
       ...props
     } = this.props
     console.log(
@@ -299,6 +300,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
         item={item}
         isExpanded={isExpanded}
         searchTerm={searchTerm}
+        hide={hide}
         {...itemProps}
       >
         {this.getInner}

@@ -7,6 +7,7 @@ import { SubPaneStore } from './SubPaneStore'
 import { AppStore } from '../../stores/AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { SearchStore } from '../../stores/SearchStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 
 export type SubPaneProps = CSSPropertySet & {
   store?: SubPaneStore
@@ -20,6 +21,7 @@ export type SubPaneProps = CSSPropertySet & {
   appStore?: AppStore
   paneManagerStore?: PaneManagerStore
   searchStore?: SearchStore
+  selectionStore?: SelectionStore
 }
 
 const Pane = view(UI.View, {
@@ -89,7 +91,7 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-@view.attach('paneManagerStore', 'appStore', 'searchStore')
+@view.attach('paneManagerStore', 'appStore', 'searchStore', 'selectionStore')
 @view.provide({
   subPaneStore: SubPaneStore,
 })

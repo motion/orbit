@@ -171,7 +171,9 @@ export class SubPaneStore {
 
   onPaneScroll = () => {
     if (App.peekState.target) {
-      App.actions.clearPeek()
+      if (Date.now() - this.props.selectionStore.lastSelectAt > 200) {
+        App.actions.clearPeek()
+      }
     }
     const pane = this.paneNode
     const innerHeight = this.paneInnerNode.clientHeight

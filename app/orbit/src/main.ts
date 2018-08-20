@@ -43,6 +43,9 @@ export async function main({ version }: OrbitOpts) {
   // handle exits gracefully
   process.on('exit', () => {
     console.log('Orbit exiting...')
+    const exitWait = setTimeout(() => {
+      console.log('failed to exit gracefully!')
+    }, 500)
     psTree(process.getuid(), (err, children) => {
       if (err) {
         console.log('error getting children', err)
@@ -53,6 +56,7 @@ export async function main({ version }: OrbitOpts) {
       for (const pid of pids) {
         process.kill(pid)
       }
+      clearTimeout(exitWait)
     })
   })
 }

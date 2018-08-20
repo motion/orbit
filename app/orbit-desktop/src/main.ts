@@ -11,6 +11,9 @@ export async function main({ port }) {
 
   // handle exits gracefully
   process.on('exit', () => {
+    const exitWait = setTimeout(() => {
+      console.log('failed to exit desktop gracefully!')
+    }, 500)
     console.log('Orbit Desktop exiting...')
     psTree(process.getuid(), (err, children) => {
       if (err) {
@@ -22,6 +25,7 @@ export async function main({ port }) {
       for (const pid of pids) {
         process.kill(pid)
       }
+      clearTimeout(exitWait)
     })
   })
 

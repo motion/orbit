@@ -7,16 +7,15 @@ import { getConfig } from '@mcro/config'
 import electronUtil from 'electron-util/node'
 
 const log = logger('electron')
-const exec = promisify(fork)
 
-export async function startDesktopInProcess(port) {
+export function startDesktopInProcess(port) {
   const desktopRoot = electronUtil.fixPathForAsarUnpack(
     require.resolve('@mcro/orbit-desktop'),
   )
   const productionRoot = Path.join(desktopRoot, '..', 'main-production.js')
   log(`Desktop main file: ${productionRoot}`)
   try {
-    const child = await exec(productionRoot, [], {
+    const child = fork(productionRoot, [], {
       cwd: Path.join(desktopRoot, '..'),
       env: {
         DESKTOP_PORT: port,

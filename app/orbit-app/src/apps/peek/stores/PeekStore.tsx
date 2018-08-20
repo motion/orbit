@@ -72,12 +72,15 @@ export class PeekStore {
         willShow: !!isShown && !lastState,
         willStayShown: !!isShown && !!lastState,
       }
-      setValue(nextState)
+      // avoid showing until loaded if showing for first time
+      if (!nextState.willShow) {
+        setValue(nextState)
+      }
       if (isShown) {
         // wait and fetch in parallel
         const [model] = await Promise.all([
           tornState || this.getModel(),
-          sleep(100),
+          sleep(32),
         ])
         setValue({
           ...nextState,

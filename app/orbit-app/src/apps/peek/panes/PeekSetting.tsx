@@ -145,11 +145,7 @@ export class PeekSetting extends React.Component<PeekPaneProps> {
     const { peekStore, ...props } = this.props
     const { model } = peekStore.state
     if (!model) {
-      return (
-        <div style={{ background: 'red', width: '100%', height: '100%' }}>
-          helllo
-        </div>
-      )
+      return null
     }
     return <SettingContent setting={model} peekStore={peekStore} {...props} />
   }

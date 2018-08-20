@@ -12,6 +12,7 @@ import { OrbitIcon } from '../../../views/OrbitIcon'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { View } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
+import { Bit } from '@mcro/models'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -50,12 +51,13 @@ const HeadSide = view({
 
 export const PeekBit = ({
   item,
-  bit,
+  model,
   appStore,
   selectionStore,
   peekStore,
   children,
 }: PeekPaneProps) => {
+  const bit = model as Bit
   const bitPaneName = capitalize(item.subType)
   const BitPaneContent = PeekBitPanes[bitPaneName]
   if (!BitPaneContent) {

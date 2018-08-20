@@ -26,7 +26,9 @@ const statusIcons = {
   COMPLETE: { name: 'check', color: 'darkgreen' },
 }
 
-const SubTitleButton = props => <UI.Button sizeHeight={0.9} {...props} />
+const SubTitleButton = props => (
+  <UI.Button sizeHeight={0.85} sizePadding={0.9} {...props} />
+)
 
 @view.attach('integrationSettingsStore')
 @view.attach({
@@ -65,8 +67,14 @@ class SettingContent extends React.Component<
   }
 
   render() {
-    const { appStore, integrationSettingsStore, store, children } = this.props
-    const { setting } = store
+    const {
+      appStore,
+      integrationSettingsStore,
+      model,
+      store,
+      children,
+    } = this.props
+    const setting = model as Setting
     if (!setting) {
       return children({})
     }

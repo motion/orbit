@@ -60,8 +60,7 @@ class PeekPageInner extends React.Component<Props> {
       <PeekContentsView
         key={peekId}
         item={item}
-        bit={model}
-        person={model}
+        model={model}
         appStore={appStore}
         peekStore={peekStore}
         selectionStore={selectionStore}

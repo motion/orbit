@@ -9,6 +9,7 @@ import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsSto
 import { Carousel } from '../../../components/Carousel'
 import { App } from '@mcro/stores'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
+import { Person } from '@mcro/models'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />
@@ -162,7 +163,8 @@ export class PeekPerson extends React.Component<
   }
 > {
   render() {
-    const { store, integrationSettingsStore, person, children } = this.props
+    const { store, integrationSettingsStore, model, children } = this.props
+    const person = model as Person
     const { settings } = integrationSettingsStore
     if (!settings) {
       return children({})

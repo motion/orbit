@@ -249,7 +249,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       createdAt,
       icon,
       location,
-      locationLink,
       people,
       preview,
       subtitle,
@@ -276,6 +275,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       titleFlex,
       subtitleSpaceBetween,
       searchTerm,
+      onClickLocation,
       ...props
     } = this.props
     const { isSelected } = store
@@ -326,7 +326,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
           {hasSubtitle && (
             <CardSubtitle>
               {!!location && (
-                <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
+                <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
                   {location}
                 </RoundButtonSmall>
               )}

@@ -9,11 +9,11 @@ import { modelQueryReaction } from '../repositories/modelQueryReaction'
 
 export class SettingInfoStore {
   props: {
-    setting: Setting
+    model: Setting
   }
 
   get setting() {
-    return this.props.setting
+    return this.props.model
   }
 
   job = modelQueryReaction(

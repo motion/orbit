@@ -137,7 +137,7 @@ export class SubPaneStore {
 
   handlePaneChange = () => {
     this.updateHeight()
-    this.onPaneScroll()
+    this.onPaneNearEdges()
   }
 
   scrollIntoView = throttle((card: HTMLDivElement) => {
@@ -166,15 +166,20 @@ export class SubPaneStore {
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {
       this.aboveContentHeight = Math.max(0, top)
       this.contentHeight = height
+      this.onPaneNearEdges()
     }
   }
 
   onPaneScroll = () => {
+    this.onPaneNearEdges()
     if (App.peekState.target) {
       if (Date.now() - this.props.selectionStore.lastSelectAt > 200) {
         App.actions.clearPeek()
       }
     }
+  }
+
+  onPaneNearEdges = () => {
     const pane = this.paneNode
     const innerHeight = this.paneInnerNode.clientHeight
     const scrolledTo = pane.scrollTop + pane.clientHeight

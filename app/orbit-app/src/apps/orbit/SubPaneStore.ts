@@ -35,12 +35,12 @@ export class SubPaneStore {
     return this.paneNode.firstChild as HTMLDivElement
   }
 
-  get isLeft() {
+  isLeft() {
     const thisIndex = this.props.paneManagerStore.indexOfPane(this.props.name)
     return thisIndex < this.props.paneManagerStore.paneIndex
   }
 
-  isActive = react(
+  positionState = react(
     () => {
       const { extraCondition, name, paneManagerStore } = this.props
       return (
@@ -49,13 +49,21 @@ export class SubPaneStore {
       )
     },
     isActive => {
-      ensure('changed', isActive !== this.isActive)
+      ensure('changed', isActive !== this.positionState.isActive)
       if (isActive) {
         this.isTransitioningToActive = true
       }
-      return isActive
+      return {
+        isActive,
+        isLeft: this.isLeft(),
+      }
     },
-    { defaultValue: false },
+    {
+      defaultValue: {
+        isActive: false,
+        isLeft: this.isLeft(),
+      },
+    },
   )
 
   didMount() {
@@ -100,7 +108,7 @@ export class SubPaneStore {
   hasRunOnce = false
 
   setAppHeightOnHeightChange = react(
-    () => [this.fullHeight, this.isActive],
+    () => [this.fullHeight, this.positionState.isActive],
     async ([height, isActive], { sleep }) => {
       if (!isActive) {
         this.hasRunOnce = false

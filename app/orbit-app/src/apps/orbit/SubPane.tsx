@@ -24,6 +24,15 @@ export type SubPaneProps = CSSPropertySet & {
   selectionStore?: SelectionStore
 }
 
+const SubPaneFrame = view(UI.FullScreen, {
+  pointerEvents: 'none',
+  opacity: 0,
+  isActive: {
+    opacity: 1,
+    pointerEvents: 'all',
+  },
+})
+
 const Pane = view(UI.View, {
   position: 'absolute',
   top: 0,
@@ -35,17 +44,16 @@ const Pane = view(UI.View, {
   padding: [0, 14],
   margin: [0, 0, 0],
   // pointerEvents: 'none',
-  // opacity: 0,
   isActive: {
-    opacity: 1,
     '& > *': {
       pointerEvents: 'auto',
     },
   },
 })
 Pane.theme = ({ isLeft, isActive }) => ({
+  opacity: isActive ? 1 : 0,
   transform: {
-    x: isActive ? 0 : isLeft ? -200 : 200,
+    x: isActive ? 0 : isLeft ? -10 : 10,
   },
 })
 
@@ -68,15 +76,6 @@ const OverflowFade = view({
 
 OverflowFade.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background})`,
-})
-
-const SubPaneFrame = view(UI.FullScreen, {
-  opacity: 0,
-  pointerEvents: 'none',
-  isActive: {
-    opacity: 1,
-    pointerEvents: 'all',
-  },
 })
 
 const SubPaneInner = view(UI.View, {
@@ -106,19 +105,17 @@ export class SubPane extends React.Component<SubPaneProps> {
       containerStyle,
       ...props
     } = this.props
-    console.log('subPaneStore.isLeft', name, subPaneStore.isLeft)
+    const { isActive, isLeft } = subPaneStore.positionState
     return (
-      <SubPaneFrame
-        isActive={subPaneStore.isActive}
-        isLeft={subPaneStore.isLeft}
-      >
+      <SubPaneFrame isActive={isActive}>
         {before}
         <SubPaneInner
           forwardRef={subPaneStore.subPaneInner}
           {...containerStyle}
         >
           <Pane
-            isActive={subPaneStore.isActive}
+            isActive={isActive}
+            isLeft={isLeft}
             style={style}
             height={subPaneStore.contentHeightLimited}
             forwardRef={subPaneStore.paneRef}

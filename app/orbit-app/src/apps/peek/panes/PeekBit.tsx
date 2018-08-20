@@ -74,12 +74,12 @@ export const PeekBit = ({
         content,
         location,
         locationLink,
-        integration,
         webLink,
         desktopLink,
         updatedAt,
         comments,
       }) => {
+        console.log('what', webLink, desktopLink, locationLink)
         return (
           <SearchablePeek
             key={item.id}
@@ -97,7 +97,8 @@ export const PeekBit = ({
                 {!!icon && (
                   <UI.Button
                     onClick={() => {
-                      console.log('todo open integration', integration)
+                      App.actions.open(locationLink)
+                      App.actions.closeOrbit()
                     }}
                     circular
                     icon={<OrbitIcon icon={icon} size={16} />}
@@ -109,7 +110,10 @@ export const PeekBit = ({
               <HeadSide>
                 {!!icon && (
                   <UI.Button
-                    onClick={() => App.actions.openItem(desktopLink || webLink)}
+                    onClick={() => {
+                      App.actions.open(desktopLink || webLink)
+                      App.actions.closeOrbit()
+                    }}
                     circular
                     icon="link"
                     iconSize={14}

@@ -1,7 +1,7 @@
 import { findContiguousPorts } from './findContiguousPorts'
 import { setConfig } from '@mcro/config'
 import killPort from 'kill-port'
-import psTree from 'ps-tree'
+import cleanupChildren from './cleanupChildren'
 
 type OrbitOpts = {
   version: string
@@ -38,25 +38,13 @@ export async function main({ version }: OrbitOpts) {
 
   // require apps after config
   const ElectronApp = require('@mcro/orbit-electron')
-  ElectronApp.main({ port: ports[0] })
+  const desktopPid = await ElectronApp.main({ port: ports[0] })
 
   // handle exits gracefully
-  process.on('exit', () => {
-    console.log('Orbit exiting...')
-    const exitWait = setTimeout(() => {
-      console.log('failed to exit gracefully!')
-    }, 500)
-    psTree(process.getuid(), (err, children) => {
-      if (err) {
-        console.log('error getting children', err)
-        return
-      }
-      const pids = children.map(x => x.PID)
-      console.log('exiting children', pids)
-      for (const pid of pids) {
-        process.kill(pid)
-      }
-      clearTimeout(exitWait)
-    })
+  process.on('exit', async () => {
+    console.log('Orbit exiting...', process.getuid())
+    process.kill(desktopPid)
+    await cleanupChildren()
+    console.log('bye!')
   })
 }

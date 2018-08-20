@@ -8,7 +8,7 @@ const log = logger('electron')
 
 Error.stackTraceLimit = Infinity
 
-export async function main({ port }) {
+export async function main({ port }): Promise<number | void> {
   log(`Starting electron with port ${port} in env ${process.env.NODE_ENV}`)
 
   // handle our own separate process in development
@@ -36,10 +36,14 @@ export async function main({ port }) {
     })
   }
 
+  let desktopPid
+
   // start desktop in production
   if (process.env.NODE_ENV !== 'development') {
     log('In production, starting desktop...')
-    require('./helpers/startDesktopInProcess').startDesktopInProcess(port)
+    desktopPid = require('./helpers/startDesktopInProcess').startDesktopInProcess(
+      port,
+    )
     log('Waiting for desktop startup to continue...')
     const failStartTm = setTimeout(() => {
       require('electron').dialog.showMessageBox({
@@ -70,4 +74,6 @@ export async function main({ port }) {
   // require app after setting config
   const { ElectronApp } = require('./ElectronApp')
   new ElectronApp()
+
+  return desktopPid
 }

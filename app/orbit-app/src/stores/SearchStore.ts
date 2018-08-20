@@ -1,6 +1,6 @@
 import { PaneManagerStore } from '../apps/orbit/PaneManagerStore'
 import { App } from '@mcro/stores'
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { NLPStore } from './NLPStore'
 import { SearchFilterStore } from './SearchFilterStore'
 import { AppStore } from './AppStore'
@@ -131,14 +131,25 @@ export class SearchStore {
   setSelectionHandler = react(
     () => [this.isActive, this.results],
     ([isActive]) => {
-      if (!isActive) throw react.cancel
+      ensure('is active', isActive)
       this.props.selectionStore.setResults(this.results)
+    },
+  )
+
+  activeQuery = react(
+    () => [App.state.query, this.isActive],
+    ([query, isActive]) => {
+      ensure('is active', isActive)
+      return query
+    },
+    {
+      defaultValue: App.state.query,
     },
   )
 
   // aggregated results for selection store
   results = react(
-    () => [App.state.query, this.quickSearchState, this.searchState],
+    () => [this.activeQuery, this.quickSearchState, this.searchState],
     async ([query, quickState, searchState], { when }) => {
       await when(
         () => query === quickState.query && query === searchState.query,
@@ -151,7 +162,7 @@ export class SearchStore {
   )
 
   get isChanging() {
-    return this.searchState.query !== App.state.query
+    return this.searchState.query !== this.activeQuery
   }
 
   get isOnSearchPane() {
@@ -162,13 +173,13 @@ export class SearchStore {
     return this.props.paneManagerStore.activePane === 'search'
   }
 
-  hasQuery() {
-    return !!App.state.query
+  hasQuery = () => {
+    return !!this.activeQuery
   }
 
   searchState = react(
     () => [
-      App.state.query,
+      this.activeQuery,
       // filter updates
       this.searchFilterStore.activeFilters,
       this.searchFilterStore.exclusiveFilters,
@@ -320,7 +331,7 @@ export class SearchStore {
   }
 
   quickSearchState = react(
-    () => App.state.query,
+    () => this.activeQuery,
     async (query, { sleep, when }) => {
       if (!this.isOnSearchPane) {
         throw react.cancel

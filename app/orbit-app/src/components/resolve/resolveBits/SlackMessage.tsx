@@ -7,6 +7,8 @@ import { Bit, SlackBitDataMessage } from '@mcro/models'
 import { RoundButtonPerson } from '../../../views/RoundButtonPerson'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { ItemHideProps } from '../../../types/ItemHideProps'
+import { View } from '@mcro/ui'
+import { markdownOptions } from '../../../constants/markdownOptions'
 
 type SlackMessageProps = {
   bit: Bit
@@ -17,7 +19,7 @@ type SlackMessageProps = {
   hide: ItemHideProps
 }
 
-const SlackMessageFrame = view({
+const SlackMessageFrame = view(View, {
   padding: [2, 0],
 })
 
@@ -72,7 +74,7 @@ export class SlackMessage extends React.Component<SlackMessageProps> {
             fontWeight={400}
             sizeLineHeight={0.85}
           >
-            <Markdown source={message.text} />
+            <Markdown source={message.text} {...markdownOptions} />
           </UI.Text>
         </SlackMessageInner>
       </SlackMessageFrame>

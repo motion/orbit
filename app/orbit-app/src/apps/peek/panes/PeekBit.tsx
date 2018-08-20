@@ -158,6 +158,8 @@ export const PeekBit = ({
                         content={content}
                         comments={comments}
                       />
+                      {/* height for bottom bar */}
+                      <div style={{ height: 80 }} />
                     </HighlightsLayer>
                     {/* <BottomSpace />
                     <BottomFloat>

@@ -364,7 +364,8 @@ export function createViewFactory(toCSS) {
       static getDerivedStateFromProps(props: Props, state: State) {
         const noRecentHMR = isHMREnabled ? !recentHMR() : true
         const hasPrevProps = state.prevProps !== null
-        const hasSameProps = hasEquivProps(props, state.prevProps)
+        const hasSameProps =
+          hasPrevProps && hasEquivProps(props, state.prevProps)
         const shouldAvoidUpdate = noRecentHMR && hasPrevProps && hasSameProps
         if (shouldAvoidUpdate) {
           return null

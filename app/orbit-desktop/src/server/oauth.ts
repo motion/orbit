@@ -97,7 +97,7 @@ export default class Oauth {
     // create setting
     this.createSetting(type, values)
     // show Orbit again
-    Desktop.sendMessage(App, App.messages.TOGGLE_SETTINGS, type)
+    Desktop.sendMessage(App, App.messages.SHOW_APPS, type)
   }
 
   private createSetting = async (type: string, values: OauthValues) => {

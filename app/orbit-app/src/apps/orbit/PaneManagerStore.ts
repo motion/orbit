@@ -33,12 +33,20 @@ export class PaneManagerStore {
       }
     })
 
-    const dispose = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
-      console.log('got message toggle settings')
+    const disposeToggleSettings = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       this.setActivePane('settings')
       App.setOrbitState({ docked: true })
     })
-    this.subscriptions.add({ dispose })
+
+    const disposeShowApps = App.onMessage(App.messages.SHOW_APPS, () => {
+      this.setActivePane('apps')
+      App.setOrbitState({ docked: true })
+    })
+    
+    this.subscriptions.add({ dispose: () => {
+      disposeToggleSettings()
+      disposeShowApps()
+    } })
   }
 
   setActivePaneHomeOnSearchInSettings = react(

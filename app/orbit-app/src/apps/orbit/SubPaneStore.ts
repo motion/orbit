@@ -40,6 +40,10 @@ export class SubPaneStore {
     return thisIndex < this.props.paneManagerStore.paneIndex
   }
 
+  get isActive() {
+    return this.positionState.isActive
+  }
+
   positionState = react(
     () => {
       const { extraCondition, name, paneManagerStore } = this.props

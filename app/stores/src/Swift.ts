@@ -21,15 +21,15 @@ class SwiftStore {
     this.onStateChange = props.onStateChange
   }
 
-  setupOnVersion = react(
-    () => Desktop.state.operatingSystem.macVersion || '',
-    version => {
-      if (version.indexOf('10') !== 0) {
-        throw react.cancel
-      }
-      if (+version.split('.')[1] < 12) {
-        throw react.cancel
-      }
+  setup = react(
+    () => [
+      Desktop.state.operatingSystem.isAccessible,
+      Desktop.state.operatingSystem.macVersion || '',
+    ],
+    ([isAccessible, version]) => {
+      react.ensure('accessible', isAccessible)
+      react.ensure('version 10', version.indexOf('10') === 0)
+      react.ensure('at least verison 11', +version.split('.')[1] >= 11)
       this.setupLink()
     },
   )

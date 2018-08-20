@@ -93,7 +93,13 @@ export class PaneManagerStore {
     this.setPaneIndex(this.panes.findIndex(val => val === name))
   }
 
+  beforeSetPane = () => {
+    // clear selection results on change pane
+    this.props.selectionStore.setResults(null)
+  }
+
   setPaneIndex = index => {
+    this.beforeSetPane()
     if (index !== this.paneIndex) {
       this.paneIndex = index
     }

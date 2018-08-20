@@ -193,7 +193,7 @@ export class SelectionStore {
 
   move = (direction: Direction) => {
     if (!this.results) {
-      throw new Error('No results')
+      return
     }
     const activeIndex = this.getNextIndex(this.activeIndex, direction)
     if (activeIndex !== this.activeIndex) {
@@ -202,6 +202,9 @@ export class SelectionStore {
   }
 
   getNextIndex = (curIndex, direction: Direction) => {
+    if (!this.results) {
+      return -1
+    }
     if (curIndex === 0 && direction === Direction.up) {
       return -1
     }
@@ -267,6 +270,7 @@ export class SelectionStore {
 
   setResults = (resultGroups: SelectionGroup[]) => {
     if (!resultGroups) {
+      this.results = null
       return
     }
     let results: SelectionResult[] = []

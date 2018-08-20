@@ -12,6 +12,7 @@ import { DateFormat } from './DateFormat'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import { OrbitItemProps } from './OrbitItemProps'
 import { OrbitItemStore } from './OrbitItemStore'
+import { App } from '@mcro/stores'
 
 const CardWrap = view(UI.View, {
   position: 'relative',
@@ -106,6 +107,11 @@ const CardSubtitle = view(UI.View, {
   },
 })
 
+const Bottom = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+})
+
 const orbitIconProps = {
   orbitIconStyle: {
     marginRight: -2,
@@ -158,6 +164,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       subtitleSpaceBetween,
       searchTerm,
       onClickLocation,
+      bit,
       ...props
     } = this.props
     const { isSelected } = store
@@ -220,22 +227,13 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
                   {location}
                 </RoundButtonSmall>
               )}
+              {subtitleSpaceBetween}
               {typeof subtitle === 'string' ? (
                 <UI.Text alpha={0.55} ellipse {...subtitleProps}>
                   {subtitle}
                 </UI.Text>
               ) : (
                 subtitle
-              )}
-              {subtitleSpaceBetween}
-              {!!createdAt && (
-                <UI.Text alpha={0.75} size={0.95}>
-                  {!!(subtitle || location) && <div style={{ width: 5 }} />}
-                  <DateFormat
-                    date={new Date(updatedAt)}
-                    nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
-                  />
-                </UI.Text>
               )}
             </CardSubtitle>
           )}
@@ -262,17 +260,42 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
               </Preview>
             )}
           {typeof children === 'function'
-            ? children(contentProps, props.bit, props.index)
+            ? children(contentProps, bit, props.index)
             : children}
-          {!(hide && hide.people) &&
-          this.props.bit.integration !== 'slack' &&
-          people &&
-          people.length &&
-          people[0].data.profile ? (
-            <div>
-              <PeopleRow people={people} />
-            </div>
-          ) : null}
+          <Bottom>
+            {!(hide && hide.people) &&
+            bit.integration !== 'slack' &&
+            people &&
+            people.length &&
+            people[0].data.profile ? (
+              <div>
+                <PeopleRow people={people} />
+              </div>
+            ) : null}
+            <UI.View flex={1} />
+            {!!createdAt && (
+              <>
+                <UI.Text alpha={0.75} size={0.95}>
+                  <DateFormat
+                    date={new Date(updatedAt)}
+                    nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
+                  />
+                </UI.Text>
+                <div style={{ width: 5 }} />
+              </>
+            )}
+            <RoundButtonSmall
+              icon="link"
+              size={1.2}
+              onClick={e => {
+                console.log('opening', bit)
+                e.preventDefault()
+                e.stopPropagation()
+                App.actions.open(bit.desktopLink || bit.webLink)
+                App.actions.closeOrbit()
+              }}
+            />
+          </Bottom>
         </ListItem>
         <Divider />
       </CardWrap>

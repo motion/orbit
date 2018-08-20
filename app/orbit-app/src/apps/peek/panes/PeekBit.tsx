@@ -83,7 +83,7 @@ export const PeekBit = ({
           <SearchablePeek
             key={item.id}
             defaultValue={App.state.query}
-            focusOnMount
+            // focusOnMount
             onChange={() => selectionStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
             placeholder={`Search this ${item.subType} and related...`}

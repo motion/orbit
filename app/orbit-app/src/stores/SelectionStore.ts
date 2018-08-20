@@ -52,6 +52,10 @@ export class SelectionStore {
         this.setSelectEvent('key')
         this.move(Direction[key])
       }
+      if (key === 'enter') {
+        App.actions.openItem(this.selectedItem)
+        App.actions.closeOrbit()
+      }
     })
 
     this.props.appStore.onPinKey(key => {

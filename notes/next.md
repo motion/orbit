@@ -10,8 +10,8 @@ And just to be safe, our servers disable logs and deny all requests. Learn more.
 - fix themes to fix lots of things
 - Properly proxy/prompt the production domain in prod mode
 - in:x for location
-- direct open button in search results
 - clicking location buttons should filter that location
+- direct open button in search results
 - clicking a name should search that name
 - find by type (file / link is helpful)
 - search results date strategy:

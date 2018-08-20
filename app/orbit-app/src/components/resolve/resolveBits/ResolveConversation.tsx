@@ -49,7 +49,7 @@ export const ResolveConversation = ({
       .join(' '),
     icon: 'slack',
     locationLink: () => appStore.open(bit, 'channel'),
-    permalink: () => App.actions.open(bit),
+    permalink: () => App.actions.openItem(bit),
     location: bit.title,
     content,
   })

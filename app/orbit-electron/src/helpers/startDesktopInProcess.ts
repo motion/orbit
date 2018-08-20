@@ -1,6 +1,4 @@
 import { fork } from 'child_process'
-// @ts-ignore
-import { promisify } from 'util'
 import { logger } from '@mcro/logger'
 import * as Path from 'path'
 import { getConfig } from '@mcro/config'

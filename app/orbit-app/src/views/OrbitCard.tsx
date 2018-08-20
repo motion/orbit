@@ -1,116 +1,16 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { OrbitIcon } from './OrbitIcon'
 import { ItemResolver, ResolvedItem } from '../components/ItemResolver'
-import { App } from '@mcro/stores'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet } from '@mcro/gloss'
-import { getTargetPosition } from '../helpers/getTargetPosition'
 import { EMPTY_ITEM } from '../constants'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import isEqual from 'react-fast-compare'
 import { DateFormat } from './DateFormat'
 import { OrbitItemProps } from './OrbitItemProps'
-
-class OrbitCardStore {
-  props: OrbitItemProps
-
-  normalizedBit = null
-  isSelected = false
-  cardWrapRef = null
-
-  clickAt = 0
-
-  handleClick = e => {
-    // so we can control the speed of double clicks
-    if (Date.now() - this.clickAt < 220) {
-      this.open()
-      e.stopPropagation()
-    }
-    this.clickAt = Date.now()
-    if (this.props.onClick) {
-      this.props.onClick(e, this.cardWrapRef)
-      return
-    }
-    if (this.props.onSelect) {
-      this.props.onSelect(this.cardWrapRef)
-      return
-    }
-    if (this.props.inactive) {
-      return
-    }
-    this.props.selectionStore.toggleSelected(this.realIndex, 'click')
-  }
-
-  open = () => {
-    if (!this.props.bit) {
-      return
-    }
-    App.actions.openItem(this.props.bit)
-  }
-
-  setCardWrapRef = cardWrapRef => {
-    if (!cardWrapRef) return
-    this.cardWrapRef = cardWrapRef
-  }
-
-  get target() {
-    return this.props.result || this.normalizedBit
-  }
-
-  get position() {
-    const position = getTargetPosition(this.cardWrapRef)
-    // list items are closer to edge, adjust...
-    if (this.props.listItem === true) {
-      position.left += 5
-    }
-    return position
-  }
-
-  get realIndex() {
-    const { bit, getIndex, index } = this.props
-    return getIndex ? getIndex(bit.id) : index
-  }
-
-  // this cancels to prevent renders very aggressively
-  updateIsSelected = react(
-    () => [
-      this.props.selectionStore && this.props.selectionStore.activeIndex,
-      this.props.subPaneStore && this.props.subPaneStore.isActive,
-      typeof this.props.isSelected === 'function'
-        ? this.props.isSelected()
-        : this.props.isSelected,
-    ],
-    async ([activeIndex, isPaneActive, isSelected], { sleep }) => {
-      if (!isPaneActive) {
-        throw react.cancel
-      }
-      const { preventAutoSelect, subPaneStore } = this.props
-      let nextIsSelected
-      if (typeof isSelected === 'boolean') {
-        nextIsSelected = isSelected
-      } else {
-        nextIsSelected = activeIndex === this.realIndex
-      }
-      if (nextIsSelected === this.isSelected) {
-        throw react.cancel
-      }
-      this.isSelected = nextIsSelected
-      if (nextIsSelected && !preventAutoSelect) {
-        if (subPaneStore) {
-          subPaneStore.scrollIntoView(this.cardWrapRef)
-        }
-        if (!this.target) {
-          throw new Error(`No target!`)
-        }
-        // fluidity
-        await sleep(16)
-        App.actions.selectItem(this.target, this.position)
-      }
-    },
-  )
-}
+import { OrbitItemStore } from './OrbitItemStore'
 
 const CardWrap = view(UI.View, {
   position: 'relative',
@@ -233,7 +133,7 @@ const orbitIconProps = {
 
 @view.attach('appStore', 'selectionStore', 'paneManagerStore', 'subPaneStore')
 @view.attach({
-  store: OrbitCardStore,
+  store: OrbitItemStore,
 })
 @view
 export class OrbitCardInner extends React.Component<OrbitItemProps> {

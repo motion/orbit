@@ -8,6 +8,22 @@ import {
   BitRepository,
   SettingRepository,
 } from '../../../repositories'
+import { Person, Bit, Setting } from '@mcro/models'
+
+// @ts-ignore
+type PeekStoreItemState = App.state.peekState & {
+  peekId: string
+  model: Person | Bit | Setting
+}
+
+export type PeekStoreState = {
+  willShow: boolean
+  willStayShown: boolean
+  willHide: boolean
+  isShown: boolean
+  curState: PeekStoreItemState
+  lastState: PeekStoreItemState
+}
 
 export class PeekStore {
   props: {
@@ -54,7 +70,7 @@ export class PeekStore {
     App.actions.setHighlightIndex(next)
   }
 
-  internalState = react(
+  internalState: PeekStoreState = react(
     () => [App.peekState.target, this.tornState],
     async ([target, tornState], { getValue, setValue, sleep }) => {
       const lastState = getValue().curState
@@ -87,6 +103,7 @@ export class PeekStore {
           curState: {
             ...nextState.curState,
             model,
+            peekId: `${Math.random()}`,
           },
         })
       }
@@ -102,12 +119,19 @@ export class PeekStore {
     },
   )
 
-  get state() {
-    if (this.willHide) {
-      return this.internalState.lastState
-    }
-    return this.internalState.curState
-  }
+  // make this not change if not needed
+  state: PeekStoreItemState = react(
+    () => this.internalState,
+    ({ lastState, curState }) => {
+      if (this.willHide) {
+        return lastState
+      }
+      return curState
+    },
+    {
+      onlyUpdateIfChanged: true,
+    },
+  )
 
   get isShown() {
     return this.internalState.isShown

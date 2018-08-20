@@ -10,6 +10,7 @@ import { Carousel } from '../../../components/Carousel'
 import { App } from '@mcro/stores'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { Person } from '@mcro/models'
+import { trace } from 'mobx'
 
 const StrongSubTitle = props => (
   <SubTitle fontWeight={500} fontSize={16} alpha={0.8} {...props} />

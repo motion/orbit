@@ -151,6 +151,9 @@ export class SubPaneStore {
 
   scrollIntoView = throttle((card: HTMLDivElement) => {
     const pane = this.paneNode
+    if (!pane) {
+      return
+    }
     const cardOffset = getTopOffset(card, pane)
     // too high
     if (cardOffset < pane.scrollTop) {

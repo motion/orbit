@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { on, view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
-import { Electron, App } from '@mcro/stores'
+import { Electron } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { getConfig } from '../config'
@@ -51,20 +51,6 @@ export class MainWindow extends React.Component<{
     this.setState({ position })
   }
 
-  handleClose = e => {
-    console.log('handling close...')
-    if (App.peekState.item) {
-      e.preventDefault()
-      Electron.sendMessage(App, App.messages.HIDE_PEEK)
-      return
-    }
-    if (App.orbitState.docked || !App.orbitState.hidden) {
-      e.preventDefault()
-      Electron.sendMessage(App, App.messages.HIDE)
-    }
-    process.exit(0)
-  }
-
   render() {
     const { store, electronStore, onRef } = this.props
     const url = getConfig().server.url
@@ -96,7 +82,6 @@ export class MainWindow extends React.Component<{
         position={this.state.position}
         size={Electron.state.screenSize}
         onMove={this.handleMove}
-        onClose={this.handleClose}
       />
     )
   }

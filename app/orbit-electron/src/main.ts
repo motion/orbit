@@ -41,9 +41,9 @@ export async function main({ port }): Promise<number | void> {
   // start desktop in production
   if (process.env.NODE_ENV !== 'development') {
     log('In production, starting desktop...')
-    desktopPid = require('./helpers/startDesktopInProcess').startDesktopInProcess(
-      port,
-    )
+    const { startDesktopInProcess } = require('./helpers/startDesktopInProcess')
+    desktopPid = await startDesktopInProcess(port)
+    console.log('\n\n\n\n\n\ndesktop pid is\n\n\n\n\n\n', desktopPid)
     log('Waiting for desktop startup to continue...')
     const failStartTm = setTimeout(() => {
       require('electron').dialog.showMessageBox({

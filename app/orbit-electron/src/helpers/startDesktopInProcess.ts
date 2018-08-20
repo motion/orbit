@@ -27,6 +27,9 @@ export async function startDesktopInProcess(port) {
     })
     child.stdout.pipe(process.stdout)
     child.stderr.pipe(process.stderr)
+
+    // return pid
+    return child.pid
   } catch (err) {
     console.log('error starting desktop', err)
   }

@@ -18,7 +18,6 @@ And just to be safe, our servers disable logs and deny all requests. Learn more.
   - do separators based on time periods:
   - do by day for first week within the current month
   - do by month after that
-- "in (location)" nlp for slack rooms especially
 - Fix empty profiles from gmail contacts import
 - Fix slack not showing usernames
 - Fix intra-peek clicking

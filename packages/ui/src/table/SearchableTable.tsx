@@ -99,4 +99,5 @@ class SearchableManagedTable extends React.PureComponent<Props> {
   }
 }
 
+// @ts-ignore
 export const SearchableTable = Searchable(SearchableManagedTable)

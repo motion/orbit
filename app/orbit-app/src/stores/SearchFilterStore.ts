@@ -183,6 +183,7 @@ export class SearchFilterStore /* extends Store */ {
   searchLocations = react(
     () => this.searchStore.searchState,
     async ({ results }, { sleep }) => {
+      react.ensure('has results', !!results && results.length)
       await sleep(100)
       return [...new Set(results.map(x => x.location && x.location.name))]
         .filter(Boolean)

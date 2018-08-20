@@ -5,7 +5,7 @@
  * @format
  */
 
-import { view } from '@mcro/black'
+import { view, isEqual } from '@mcro/black'
 import * as React from 'react'
 import {
   TableColumnRawOrder,
@@ -308,6 +308,7 @@ type TableState = {
   columnKeys: TableColumnKeys
   sortedRows: TableRows
   dragStartingKey?: string
+  props: TableProps
 }
 
 const NO_COLUMN_SIZE: TableColumnSizes = {}
@@ -326,9 +327,51 @@ const NO_COLUMN_SIZE: TableColumnSizes = {}
  * [`<ManagedTable>`]().
  */
 export default class Table extends PureComponent<TableProps, TableState> {
-  constructor(props: TableProps, context: Object) {
-    super(props, context)
-    this.state = this.deriveState(props)
+  static getDerivedStateFromProps(
+    props: TableProps,
+    state,
+  ): Partial<TableState> {
+    const columnSizes: TableColumnSizes = props.columnSizes || NO_COLUMN_SIZE
+    const columnOrder: TableColumnOrder = getColumnOrder(
+      props.columnOrder,
+      props.columns,
+    )
+
+    let columnKeys
+    if (state && state.columnOrder === columnOrder) {
+      columnKeys = state.columnKeys
+    } else {
+      columnKeys = []
+      for (const { key, visible } of columnOrder) {
+        if (visible) {
+          columnKeys.push(key)
+        }
+      }
+    }
+
+    let sortedRows = []
+    if (
+      !state ||
+      state.props.filter !== props.filter ||
+      state.props.filterValue !== props.filterValue ||
+      !isEqual(state.props.sortOrder, props.sortOrder)
+    ) {
+      // need to reorder or refilter the rows
+      sortedRows = getSortedRows(
+        props.sortOrder,
+        filterRows(props.rows, props.filterValue, props.filter),
+      )
+    } else {
+      sortedRows = state.sortedRows
+    }
+
+    return {
+      columnKeys,
+      columnOrder,
+      columnSizes,
+      sortedRows,
+      props,
+    }
   }
 
   static defaultProps = {
@@ -344,54 +387,6 @@ export default class Table extends PureComponent<TableProps, TableState> {
 
   componentWillUnmount() {
     document.removeEventListener('mouseup', this.onMouseUp)
-  }
-
-  deriveState(props: TableProps): TableState {
-    const columnSizes: TableColumnSizes = props.columnSizes || NO_COLUMN_SIZE
-    const columnOrder: TableColumnOrder = getColumnOrder(
-      props.columnOrder,
-      props.columns,
-    )
-
-    let columnKeys
-    if (this.state && this.state.columnOrder === columnOrder) {
-      columnKeys = this.state.columnKeys
-    } else {
-      columnKeys = []
-      for (const { key, visible } of columnOrder) {
-        if (visible) {
-          columnKeys.push(key)
-        }
-      }
-    }
-
-    let sortedRows = []
-    if (
-      !this.state ||
-      this.props.filter !== props.filter ||
-      this.props.filterValue !== props.filterValue ||
-      this.props.sortOrder !== props.sortOrder ||
-      this.props.rows !== props.rows
-    ) {
-      // need to reorder or refilter the rows
-      sortedRows = getSortedRows(
-        props.sortOrder,
-        filterRows(props.rows, props.filterValue, props.filter),
-      )
-    } else {
-      sortedRows = this.state.sortedRows
-    }
-
-    return {
-      columnKeys,
-      columnOrder,
-      columnSizes,
-      sortedRows,
-    }
-  }
-
-  componentWillReceiveProps(nextProps: TableProps) {
-    this.setState(this.deriveState(nextProps))
   }
 
   onMouseUp = () => this.setState({ dragStartingKey: null })
@@ -547,6 +542,8 @@ export default class Table extends PureComponent<TableProps, TableState> {
 
   render() {
     const { props, state } = this
+
+    console.log('props.sortOrder', props.sortOrder)
 
     const tableHead =
       props.hideHeader === true ? null : (

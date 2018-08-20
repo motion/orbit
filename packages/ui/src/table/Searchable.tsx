@@ -119,7 +119,7 @@ type State = {
   hasFocus: boolean
 }
 
-export const Searchable = (Component: any) => {
+export function Searchable<T>(Component: T): T {
   class SearchableComponent extends React.PureComponent<Props, State> {
     static defaultProps = {
       placeholder: 'Search...',

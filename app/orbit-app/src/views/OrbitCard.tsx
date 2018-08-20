@@ -435,9 +435,6 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
 // wrap the outside so we can do much faster shallow renders when need be
 export class OrbitCard extends React.Component<OrbitItemProps> {
   shouldComponentUpdate(nextProps) {
-    if (!isEqual(this.props, nextProps)) {
-      console.log('not equal re-render', this.props, nextProps)
-    }
     return !isEqual(this.props, nextProps)
   }
 

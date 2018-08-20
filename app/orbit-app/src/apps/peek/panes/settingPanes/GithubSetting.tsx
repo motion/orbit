@@ -45,6 +45,15 @@ const columns = {
 }
 
 class GithubSettingStore {
+  props: SettingPaneProps
+
+  active = 'repos'
+  userOrgs = []
+  sortOrder = {
+    key: 'lastCommit',
+    direction: 'up',
+  }
+
   get setting() {
     return this.props.setting
   }
@@ -57,26 +66,32 @@ class GithubSettingStore {
     BitRepository.find({ where: { integration: 'github', type: 'task' } }),
   )
 
-  active = 'repos'
-  userOrgs = []
-
   get orgsList() {
     const { allOrgs } = this.service
     return (allOrgs && allOrgs.map(org => org.login)) || []
   }
 
-  allRepos = react(async () => {
-    return _.flatten(
-      await Promise.all(
-        this.orgsList.map(async org => {
-          return await this.service.github
-            .orgs(org)
-            .repos.fetch({ per_page: 100 })
-            .then(res => res.items)
-        }),
-      ),
-    )
-  })
+  onSortOrder = newOrder => {
+    this.sortOrder = newOrder
+  }
+
+  allRepos = react(
+    async () => {
+      return _.flatten(
+        await Promise.all(
+          this.orgsList.map(async org => {
+            return await this.service.github
+              .orgs(org)
+              .repos.fetch({ per_page: 100 })
+              .then(res => res.items)
+          }),
+        ),
+      )
+    },
+    {
+      defaultValue: [],
+    },
+  )
 
   rows = react(
     () => this.allRepos,
@@ -178,7 +193,9 @@ export class GithubSetting extends React.Component<
               floating={false}
               columnSizes={columnSizes}
               columns={columns}
-              onRowHighlighted={this.onRowHighlighted}
+              // onRowHighlighted={this.onRowHighlighted}
+              sortOrder={store.sortOrder}
+              onSort={store.onSortOrder}
               multiHighlight
               rows={store.rows}
               bodyPlaceholder={

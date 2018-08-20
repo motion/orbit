@@ -12,7 +12,6 @@
     "@mcro/config": "*",
     "@babel/runtime": "7.0.0-beta.47",
     "@mcro/black": "^2.2.1",
-    "@mcro/build": "^2.2.1",
     "@mcro/color": "^2.2.1",
     "@mcro/constants": "^2.2.1",
     "@mcro/logger": "^2.2.1",
@@ -61,6 +60,7 @@
     "key-event-to-string": "1.2.0"
   },
   "devDependencies": {
+    "@mcro/build": "^2.2.1",
     "@types/webpack-env": "1.13.6",
     "pundle-cli": "3.0.0-beta4",
     "pundle-preset-default": "3.0.0-beta4"

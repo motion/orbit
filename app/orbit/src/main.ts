@@ -51,7 +51,7 @@ export async function main({ version }: OrbitOpts) {
       }
       const pids = children.map(x => x.PID)
       console.log('exiting children', pids)
-      childProcess.spawn('kill', ['-9', ...pids])
+      childProcess.spawn('kill', [...pids])
     })
   })
 }

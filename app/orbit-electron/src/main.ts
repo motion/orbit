@@ -1,4 +1,3 @@
-import 'source-map-support/register'
 import 'raf/polyfill'
 import { setConfig } from './config'
 import * as Path from 'path'
@@ -14,6 +13,7 @@ export async function main({ port }) {
 
   // handle our own separate process in development
   if (process.env.NODE_ENV === 'development') {
+    require('source-map-support/register')
     require('./helpers/installGlobals')
     require('./helpers/watchForAppRestarts').watchForAppRestarts()
     await waitPort({ port: 3002 })
@@ -38,11 +38,18 @@ export async function main({ port }) {
 
   // start desktop in production
   if (process.env.NODE_ENV !== 'development') {
-    log(`In production, starting desktop...`)
+    log('In production, starting desktop...')
     require('./helpers/startDesktopInProcess').startDesktopInProcess(port)
-    log(`Waiting for desktop startup to continue...`)
+    log('Waiting for desktop startup to continue...')
+    const failStartTm = setTimeout(() => {
+      require('electron').dialog.showMessageBox({
+        message: 'Node process didnt start!',
+        buttons: ['Ok'],
+      })
+    }, 5000)
     await waitPort({ port })
-    log(`Found desktop, continue...`)
+    clearTimeout(failStartTm)
+    log('Found desktop, continue...')
   }
 
   // set config before starting app

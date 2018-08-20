@@ -134,12 +134,13 @@ export class OrbitApps extends React.Component<Props> {
     const { name, store } = this.props
     return (
       <SubPane name={name} fadeBottom>
-        <Views.Title>Apps</Views.Title>
+        <Views.Title>Manage Apps</Views.Title>
         {!!store.results.length && (
           <>
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
               gridAutoRows={80}
+              margin={[5, -4]}
             >
               {store.results.map((result, index) => (
                 <store.IntegrationCard

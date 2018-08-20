@@ -22,8 +22,6 @@ export function startDesktopInProcess(port) {
         PATH: process.env.PATH,
       },
     })
-    child.stdout.pipe(process.stdout)
-    child.stderr.pipe(process.stderr)
 
     // return pid
     return child.pid

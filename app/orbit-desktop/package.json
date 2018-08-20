@@ -22,6 +22,7 @@
     "@mcro/r2": "^2.2.1",
     "@mcro/services": "^2.2.1",
     "@mcro/stores": "^2.2.1",
+    "ps-tree": "1.1.0",
     "http-port-forward": "2.0.3",
     "apollo-fetch": "^0.7.0",
     "auto-launch": "5.0.5",

@@ -2,11 +2,29 @@ import 'isomorphic-fetch'
 import * as Path from 'path'
 import { setConfig } from './config'
 import { logger } from '@mcro/logger'
+import psTree from 'ps-tree'
 
 const log = logger('desktop')
 
 export async function main({ port }) {
-  log(`Desktop is starting`)
+  log('Desktop is starting')
+
+  // handle exits gracefully
+  process.on('exit', () => {
+    console.log('Orbit Desktop exiting...')
+    psTree(process.getuid(), (err, children) => {
+      if (err) {
+        console.log('error getting children', err)
+        return
+      }
+      const pids = children.map(x => x.PID)
+      console.log('exiting children', pids)
+      for (const pid of pids) {
+        process.kill(pid)
+      }
+    })
+  })
+
   /*
    *  Set config before requiring app!
    */

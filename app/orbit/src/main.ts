@@ -2,7 +2,6 @@ import { findContiguousPorts } from './findContiguousPorts'
 import { setConfig } from '@mcro/config'
 import killPort from 'kill-port'
 import psTree from 'ps-tree'
-import childProcess from 'child_process'
 
 type OrbitOpts = {
   version: string
@@ -51,7 +50,9 @@ export async function main({ version }: OrbitOpts) {
       }
       const pids = children.map(x => x.PID)
       console.log('exiting children', pids)
-      childProcess.spawn('kill', [...pids])
+      for (const pid of pids) {
+        process.kill(pid)
+      }
     })
   })
 }

@@ -6,6 +6,7 @@ import { AppStore } from '../stores/AppStore'
 import { SubPaneStore } from '../apps/orbit/SubPaneStore'
 import { OrbitItemStore } from './OrbitItemStore'
 import { ItemHideProps } from '../types/ItemHideProps'
+import { ResolvedItem } from '../components/ItemResolver'
 
 export type OrbitItemProps = {
   listItem?: boolean
@@ -52,4 +53,5 @@ export type OrbitItemProps = {
   getIndex?: (id: string) => number
   subtitleSpaceBetween?: React.ReactNode
   searchTerm?: string
+  onClickLocation?: (e: Event, item: ResolvedItem) => any
 }

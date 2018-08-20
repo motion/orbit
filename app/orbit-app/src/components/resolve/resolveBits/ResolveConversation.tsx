@@ -5,7 +5,6 @@ import { SlackBitData } from '@mcro/models'
 import arrford from 'arrford'
 import { capitalize } from 'lodash'
 import { ItemResolverProps } from '../../ItemResolver'
-import { App } from '@mcro/stores'
 
 const options = {
   remove_digits: true,
@@ -16,7 +15,6 @@ const options = {
 export const ResolveConversation = ({
   children,
   bit,
-  appStore,
   shownLimit = 5,
   itemProps,
   isExpanded,
@@ -48,8 +46,9 @@ export const ResolveConversation = ({
       .slice(0, 8)
       .join(' '),
     icon: 'slack',
-    locationLink: () => appStore.open(bit, 'channel'),
-    permalink: () => App.actions.openItem(bit),
+    locationLink: bit.location.desktopLink || bit.location.webLink,
+    desktopLink: bit.desktopLink,
+    webLink: bit.webLink,
     location: bit.title,
     content,
   })

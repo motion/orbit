@@ -68,38 +68,15 @@ class PeekPageInner extends React.Component<Props> {
       >
         {(resolvedProps: PeekContents) => {
           const {
-            title,
-            titleAfter,
-            permalink,
-            icon,
-            date,
-            belowHead,
-            belowHeadMain,
             preBody,
             postBody,
-            subtitle,
-            subtitleBefore,
-            subtitleAfter,
-            after,
             content,
             headerProps,
+            ...restResolvedProps
           } = resolvedProps
           return (
             <>
-              <PeekHeader
-                title={title}
-                titleAfter={titleAfter}
-                subtitle={subtitle}
-                subtitleBefore={subtitleBefore}
-                subtitleAfter={subtitleAfter}
-                after={after}
-                icon={icon}
-                date={date}
-                belowHead={belowHead}
-                belowHeadMain={belowHeadMain}
-                permalink={permalink}
-                {...headerProps}
-              />
+              <PeekHeader {...restResolvedProps} {...headerProps} />
               {preBody}
               <PeekContent peekStore={peekStore}>{content}</PeekContent>
               {postBody}

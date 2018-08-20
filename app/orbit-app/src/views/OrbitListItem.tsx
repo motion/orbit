@@ -23,7 +23,7 @@ const CardWrap = view(UI.View, {
 
 const Divider = view({
   height: 1,
-  background: [0, 0, 0, 0.05],
+  background: [0, 0, 0, 0.08],
   position: 'absolute',
   bottom: 0,
   left: 10,
@@ -157,6 +157,7 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
       titleFlex,
       subtitleSpaceBetween,
       searchTerm,
+      onClickLocation,
       ...props
     } = this.props
     const { isSelected } = store
@@ -208,7 +209,14 @@ export class OrbitListInner extends React.Component<OrbitItemProps> {
           {hasSubtitle && (
             <CardSubtitle>
               {!!location && (
-                <RoundButtonSmall marginLeft={-3} onClick={locationLink}>
+                <RoundButtonSmall
+                  marginLeft={-3}
+                  onClick={
+                    onClickLocation
+                      ? e => onClickLocation(e, contentProps)
+                      : locationLink
+                  }
+                >
                   {location}
                 </RoundButtonSmall>
               )}

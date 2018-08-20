@@ -75,7 +75,8 @@ export const PeekBit = ({
         location,
         locationLink,
         integration,
-        permalink,
+        webLink,
+        desktopLink,
         updatedAt,
         comments,
       }) => {
@@ -108,7 +109,7 @@ export const PeekBit = ({
               <HeadSide>
                 {!!icon && (
                   <UI.Button
-                    onClick={permalink}
+                    onClick={() => App.actions.openItem(desktopLink || webLink)}
                     circular
                     icon="link"
                     iconSize={14}
@@ -127,7 +128,7 @@ export const PeekBit = ({
                     <PeekBar.Button
                       onClick={e => {
                         e.stopPropagation()
-                        locationLink()
+                        App.actions.open(locationLink)
                       }}
                     >
                       {location}

@@ -13,8 +13,9 @@ export type ResolvedItem = {
   content?: string
   icon: string
   location: string
-  locationLink: Function
-  permalink: Function
+  locationLink: string
+  webLink: string
+  desktopLink?: string
   createdAt?: Date
   updatedAt?: Date
   comments?: React.ReactNode[]

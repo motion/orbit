@@ -6,6 +6,7 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppReactions } from './AppReactions'
 import { getPermalink } from '../helpers/getPermalink'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
+import { Bit, Setting } from '@mcro/models'
 
 export class AppStore {
   contentHeight = 0
@@ -64,11 +65,14 @@ export class AppStore {
     this.contentHeight = height
   }
 
-  services = modelQueryReaction(
-    () =>
-      SettingRepository.find({
-        where: { category: 'integration', token: { $not: 'good' } },
-      }),
+  appSettings = modelQueryReaction(() =>
+    SettingRepository.find({
+      where: { category: 'integration', token: { $not: 'good' } },
+    }),
+  )
+
+  services = react(
+    () => this.appSettings,
     settings => {
       console.log('update services')
       const services = {}
@@ -87,6 +91,13 @@ export class AppStore {
       return services
     },
   )
+
+  getSettingForBit = (bit: Bit): Setting | null => {
+    if (!this.appSettings) {
+      return null
+    }
+    return this.appSettings.find(x => x.type === bit.integration)
+  }
 
   updateLastSelectedPane = react(
     () => this.selectedPane,
@@ -109,13 +120,5 @@ export class AppStore {
         }
       }, 1000),
     )
-  }
-
-  open = async (result, openType?) => {
-    if (!result) {
-      throw new Error('No result given to open')
-    }
-    const url = await getPermalink(result, openType)
-    App.open(url)
   }
 }

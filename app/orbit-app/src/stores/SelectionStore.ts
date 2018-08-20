@@ -312,7 +312,7 @@ export class SelectionStore {
 
   openSelected = () => {
     if (this.selectedItem) {
-      this.props.appStore.open(this.selectedItem)
+      App.actions.openItem(this.selectedItem)
       return true
     }
     return false

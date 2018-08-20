@@ -31,11 +31,10 @@ class CarouselStore {
         }
         throw react.cancel
       }
-      const scrollTo = offset + index
+      ensure('has index', typeof index === 'number')
       ensure('wasnt clicked', selectionStore.selectEvent !== 'click')
       ensure('within bounds', index >= offset && index <= offset + items.length)
-      ensure('has scrollTo', typeof scrollTo === 'number')
-      this.carouselRef.current.scrollTo(scrollTo)
+      this.carouselRef.current.scrollTo(index - offset)
     },
   )
 }

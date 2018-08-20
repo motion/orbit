@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { on, react } from '@mcro/black'
+import { on, react, ensure } from '@mcro/black'
 import { throttle } from 'lodash'
 import { SubPaneProps } from './SubPane'
 import { App } from '@mcro/stores'
@@ -40,7 +40,6 @@ export class SubPaneStore {
     return thisIndex < this.props.paneManagerStore.paneIndex
   }
 
-  // prevents uncessary and expensive OrbitCard re-renders
   isActive = react(
     () => {
       const { extraCondition, name, paneManagerStore } = this.props
@@ -50,9 +49,7 @@ export class SubPaneStore {
       )
     },
     isActive => {
-      if (isActive === this.isActive) {
-        throw react.cancel
-      }
+      ensure('changed', isActive !== this.isActive)
       if (isActive) {
         this.isTransitioningToActive = true
       }

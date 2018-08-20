@@ -7,6 +7,7 @@ import { logger } from '@mcro/logger'
 
 // export @react decorator
 export { react } from './react'
+export { ensure } from './ensure'
 export {
   Reaction,
   ReactionRejectionError,

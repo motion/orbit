@@ -227,7 +227,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   static getDerivedStateFromProps(props, state) {
     if (!isEqual(omit(props, ['children']), omit(state.props, ['children']))) {
-      console.log('measuring popover', props, state.props)
       return {
         setPosition: true,
         props,

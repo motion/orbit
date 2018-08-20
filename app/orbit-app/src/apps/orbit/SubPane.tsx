@@ -35,7 +35,7 @@ const Pane = view(UI.View, {
   padding: [0, 14],
   margin: [0, 0, 0],
   // pointerEvents: 'none',
-  opacity: 0,
+  // opacity: 0,
   isActive: {
     opacity: 1,
     '& > *': {
@@ -45,7 +45,7 @@ const Pane = view(UI.View, {
 })
 Pane.theme = ({ isLeft, isActive }) => ({
   transform: {
-    x: isActive ? 0 : isLeft ? -20 : 20,
+    x: isActive ? 0 : isLeft ? -200 : 200,
   },
 })
 
@@ -106,6 +106,7 @@ export class SubPane extends React.Component<SubPaneProps> {
       containerStyle,
       ...props
     } = this.props
+    console.log('subPaneStore.isLeft', name, subPaneStore.isLeft)
     return (
       <SubPaneFrame
         isActive={subPaneStore.isActive}

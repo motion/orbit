@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { App } from '@mcro/stores'
-import { view, react } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { compose } from '@mcro/helpers'
 import { PersonRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
@@ -50,22 +50,32 @@ class OrbitDirectoryStore {
     },
   )
 
+  queryWhenActive = react(
+    () => App.state.query,
+    (query, { state }) => {
+      if (state.hasResolvedOnce) {
+        ensure('is active and resolved once', this.isActive)
+      }
+      return query
+    },
+    {
+      defaultValue: '',
+    },
+  )
+
   get peopleQuery() {
-    const query = App.state.query
-    if (!query) {
-      return ''
-    }
+    const query = this.queryWhenActive
     const prefix = query[0] === '@'
     return query.slice(prefix ? 1 : 0)
   }
 
   results: Person[] = react(
-    () => [this.peopleQuery, this.isActive],
-    ([query, isActive], { state }) => {
-      if (!isActive && state.hasResolvedOnce) {
-        throw react.cancel
+    () => [this.peopleQuery, this.allPeople],
+    ([query, people]) => {
+      if (!query) {
+        return people
       }
-      return Helpers.fuzzy(query, this.allPeople, {
+      return Helpers.fuzzy(query, people, {
         key: 'name',
       })
     },

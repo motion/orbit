@@ -119,7 +119,8 @@ type State = {
   hasFocus: boolean
 }
 
-export function Searchable<T>(Component: T): T {
+
+export function Searchable<T extends object>(Component: React.Component<T>): React.Component<T & SearchableProps> {
   class SearchableComponent extends React.PureComponent<Props, State> {
     static defaultProps = {
       placeholder: 'Search...',
@@ -438,6 +439,7 @@ export function Searchable<T>(Component: T): T {
       )
 
       const body = (
+        // @ts-ignore
         <Component
           {...props}
           key="table"

@@ -16,11 +16,12 @@ export const wrapTheme = (props, Klass, avoidTheme?) => {
   )
 }
 
-export const attachTheme = Klass => {
-  Klass._hasTheme = true
+export function attachTheme<T>(Klass: T): T {
+  Klass['_hasTheme'] = true
   const AttachedKlass = props => {
     return wrapTheme(props, Klass)
   }
+  // @ts-ignore
   return new Proxy(AttachedKlass, {
     set(_, method, value) {
       Klass[method] = value

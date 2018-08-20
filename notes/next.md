@@ -1,3 +1,14 @@
+- oauth:
+  - when going through flow show orbit
+  - show message:
+    - "Private Auth Mode"
+
+"Orbit proxies the keys directly to your computer.
+You and only you receive the key to your data.
+And just to be safe, our servers disable logs and deny all requests. Learn more."
+
+- Properly proxy/prompt the production domain in prod mode
+- in:x for location
 - fix themes to fix lots of things
 - direct open button in search results
 - clicking location buttons should filter that location
@@ -8,8 +19,6 @@
   - do by day for first week within the current month
   - do by month after that
 - "in (location)" nlp for slack rooms especially
-- Oauth: Properly proxy/prompt the production domain in prod mode
-- Fix horizontal scroll bugs
 - Fix empty profiles from gmail contacts import
 - Fix slack not showing usernames
 - Fix intra-peek clicking

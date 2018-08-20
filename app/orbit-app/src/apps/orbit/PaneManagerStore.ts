@@ -33,12 +33,26 @@ export class PaneManagerStore {
       }
     })
 
-    const dispose = App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
-      console.log('got message toggle settings')
-      this.setActivePane('settings')
+    const disposeToggleSettings = App.onMessage(
+      App.messages.TOGGLE_SETTINGS,
+      () => {
+        this.setActivePane('settings')
+        App.setOrbitState({ docked: true })
+      },
+    )
+
+    const disposeShowApps = App.onMessage(App.messages.SHOW_APPS, () => {
+      this.setActivePane('apps')
       App.setOrbitState({ docked: true })
     })
-    this.subscriptions.add({ dispose })
+
+    // @ts-ignore
+    this.subscriptions.add({
+      dispose: () => {
+        disposeToggleSettings()
+        disposeShowApps()
+      },
+    })
   }
 
   setActivePaneHomeOnSearchInSettings = react(
@@ -83,24 +97,29 @@ export class PaneManagerStore {
     }
   }
 
+  indexOfPane = name => {
+    return this.panes.indexOf(name)
+  }
+
   get activePaneFast() {
     return this.panes[this.paneIndex]
   }
 
-  manuallyFinishedOnboarding = false
+  forceOnboard = null
+
   hasOnboarded = modelQueryReaction(
     generalSettingQuery,
     setting => setting.values.hasOnboarded,
   )
 
   get shouldOnboard() {
-    if (this.manuallyFinishedOnboarding) {
-      return false
+    if (typeof this.forceOnboard === 'boolean') {
+      return this.forceOnboard
     }
     return !this.hasOnboarded
   }
 
-  activePane = react(
+  activePane: string = react(
     () => [
       this.panes,
       this.paneIndex,

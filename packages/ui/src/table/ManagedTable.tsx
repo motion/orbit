@@ -18,6 +18,7 @@ import {
   TableOnAddFilter,
 } from './types'
 import Table from './Table'
+import { isEqual } from '@mcro/black'
 
 export type ManagedTableProps = {
   bodyPlaceholder?: any
@@ -97,11 +98,14 @@ export type ManagedTableProps = {
    * Whether to hide the column names at the top of the table.
    */
   hideHeader?: boolean
+
+  // allow these to be managed from above
+  sortOrder: TableRowSortOrder
+  onSort: any
 }
 
 type ManagedTableState = {
   highlightedRows: TableHighlightedRows
-  sortOrder?: TableRowSortOrder
   columnOrder?: TableColumnRawOrder
   columnSizes?: TableColumnSizes
 }
@@ -116,6 +120,35 @@ export class ManagedTable extends React.PureComponent<
   ManagedTableProps,
   ManagedTableState
 > {
+  static getDerivedStateFromProps(
+    props: ManagedTableProps,
+    state: ManagedTableState,
+  ) {
+    let nextState
+    // if columnSizes has changed
+    if (!isEqual(props.columnSizes, state.columnSizes)) {
+      nextState = {
+        columnSizes: {
+          ...(state.columnSizes || {}),
+          ...props.columnSizes,
+        },
+      }
+    }
+    // if columnOrder has changed
+    if (!isEqual(props.columnOrder, state.columnOrder)) {
+      nextState = {
+        ...nextState,
+        columnOrder: props.columnOrder,
+      }
+    }
+    // return nextState
+    if (nextState) {
+      return nextState
+    } else {
+      return null
+    }
+  }
+
   getTableKey = (): string => {
     return (
       'TABLE_COLUMNS_' +
@@ -131,29 +164,9 @@ export class ManagedTable extends React.PureComponent<
       this.props.columnOrder,
     columnSizes: this.props.columnSizes,
     highlightedRows: [],
-    sortOrder: null,
   }
 
   tableRef?: Table
-
-  componentWillReceiveProps(nextProps: ManagedTableProps) {
-    // if columnSizes has changed
-    if (nextProps.columnSizes !== this.props.columnSizes) {
-      this.setState({
-        columnSizes: {
-          ...(this.state.columnSizes || {}),
-          ...nextProps.columnSizes,
-        },
-      })
-    }
-
-    // if columnOrder has changed
-    if (nextProps.columnOrder !== this.props.columnOrder) {
-      this.setState({
-        columnOrder: nextProps.columnOrder,
-      })
-    }
-  }
 
   onHighlight = (highlightedRows: TableHighlightedRows) => {
     if (this.props.highlightableRows === false) {
@@ -168,10 +181,6 @@ export class ManagedTable extends React.PureComponent<
     if (this.props.onRowHighlighted) {
       this.props.onRowHighlighted(highlightedRows)
     }
-  }
-
-  onSort = (sortOrder: TableRowSortOrder) => {
-    this.setState({ sortOrder })
   }
 
   onColumnOrder = (columnOrder: TableColumnOrder) => {
@@ -214,8 +223,8 @@ export class ManagedTable extends React.PureComponent<
         filterValue={props.filterValue}
         highlightedRows={state.highlightedRows}
         onHighlight={this.onHighlight}
-        sortOrder={state.sortOrder}
-        onSort={this.onSort}
+        sortOrder={props.sortOrder}
+        onSort={props.onSort}
         columnOrder={state.columnOrder}
         onColumnOrder={this.onColumnOrder}
         columnSizes={state.columnSizes}

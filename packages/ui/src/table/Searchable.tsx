@@ -119,7 +119,9 @@ type State = {
   hasFocus: boolean
 }
 
-export const Searchable = (Component: any) => {
+export function Searchable<T extends object>(
+  Component: React.Component<T>,
+): React.Component<T & SearchableProps> {
   class SearchableComponent extends React.PureComponent<Props, State> {
     static defaultProps = {
       placeholder: 'Search...',
@@ -438,6 +440,7 @@ export const Searchable = (Component: any) => {
       )
 
       const body = (
+        // @ts-ignore
         <Component
           {...props}
           key="table"
@@ -461,5 +464,6 @@ export const Searchable = (Component: any) => {
     }
   }
 
+  // @ts-ignore
   return attachTheme(SearchableComponent)
 }

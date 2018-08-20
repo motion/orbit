@@ -13,6 +13,7 @@
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/r2" },
+    { "path": "../../packages/config" },
     { "path": "../../packages/reactron" }
   ]
 }

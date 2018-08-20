@@ -3,14 +3,13 @@ import { view, compose } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
-import { Desktop } from '@mcro/stores'
+import { Desktop, App } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { sleep } from '../../../../helpers'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -28,13 +27,14 @@ const OnboardFrame = view({
   position: 'relative',
   width: frameWidth,
   minHeight: 300,
-  padding: [20, 0, 20 + controlsHeight],
+  padding: [20, 30, 20 + controlsHeight],
 })
 
 const Centered = view({
   margin: 'auto',
   alignItems: 'center',
   justifyContent: 'center',
+  textAlign: 'center',
 })
 
 const Controls = view({
@@ -78,22 +78,26 @@ const Item = view({
     filter: 'grayscale(1)',
   },
   '&:hover': {
-    background: '#f6f6f6',
+    background: [0, 0, 0, 0.05],
   },
 })
 
 Item.theme = ({ theme }) => ({
-  borderBottom: [1, theme.base.borderColor.alpha(0.7)],
+  borderBottom: [1, theme.base.borderColor.alpha(0.2)],
 })
 
-const ItemTitle = view({
-  fontWeight: 600,
-  padding: [0, 12],
-  justifyContent: 'center',
-  fontSize: 16,
-  alpha: 0.5,
-  flex: 1,
-})
+const ItemTitle = props => (
+  <Text
+    {...{
+      fontWeight: 600,
+      padding: [0, 12],
+      justifyContent: 'center',
+      fontSize: 16,
+      flex: 1,
+    }}
+    {...props}
+  />
+)
 
 const AddButton = ({ disabled, ...props }) =>
   disabled ? (
@@ -104,25 +108,34 @@ const AddButton = ({ disabled, ...props }) =>
     </Theme>
   )
 
-const buttonText = ["Let's get setup", 'Looks good', 'Done!']
+const buttonText = ['Next', 'Looks good', 'Done!']
 
 class OnboardStore {
   props: Props
 
-  curFrame = 0
+  curFrame = 1
   lastFrame = () => this.curFrame--
+
   nextFrame = async () => {
-    this.curFrame++
-    // finish
+    // before incrementing, run some actions...
+
+    // first
+    if (this.curFrame === 1) {
+      // await acceptsforwarding...
+      App.setState({ acceptsForwarding: true })
+    }
+    // last
     if (this.curFrame === 3) {
-      await sleep(200)
-      // for now, manual
-      this.props.paneManagerStore.manuallyFinishedOnboarding = true
+      console.log('cur frame now...')
+      this.props.paneManagerStore.forceOnboard = false
       // save setting
       const generalSetting = await generalSettingQuery()
       generalSetting.values.hasOnboarded = true
       await SettingRepository.save(generalSetting)
     }
+
+    // go to next frame
+    this.curFrame++
   }
 }
 
@@ -164,15 +177,26 @@ export const OrbitOnboard = decorator(
               <Text size={2.5} fontWeight={600}>
                 Hello
               </Text>
-              <View height={10} />
+              <View height={5} />
               <Text size={1.5} alpha={0.5}>
-                Welcome to Orbit.
+                Welcome to Orbit
+              </Text>
+              <View height={20} />
+              <Text textAlign="left" size={1.1} sizeLineHeight={0.9}>
+                Orbit is the first ever completely private search and app
+                platform. To work, it needs to proxy our OAuth keys on your
+                machine. Learn how this Orbit privacy works, and hit "Next" to
+                enter password for this.
               </Text>
             </Centered>
           </OnboardFrame>
           <OnboardFrame>
             <Text size={1.2} fontWeight={600}>
-              Select integrations
+              Select apps
+            </Text>
+            <Text>
+              You can always set these up and add multiple apps through the
+              store later, but it's nice to get a few working.
             </Text>
             <View height={10} />
             <Unpad>
@@ -182,7 +206,7 @@ export const OrbitOnboard = decorator(
                     key={item.id}
                     inactive={item.added}
                     onClick={
-                      item.added ? addIntegrationClickHandler(item) : null
+                      item.added ? null : addIntegrationClickHandler(item)
                     }
                   >
                     <OrbitIcon size={18} icon={item.id} />
@@ -194,6 +218,19 @@ export const OrbitOnboard = decorator(
                 )
               })}
             </Unpad>
+          </OnboardFrame>
+          <OnboardFrame>
+            <Centered>
+              <Text size={2.5} fontWeight={600}>
+                All set!
+              </Text>
+              <View height={10} />
+              <Text size={1.5} alpha={0.5}>
+                Orbit will scan your integrations and create an index. It
+                creates profiles of people it sees from across different
+                integrations.
+              </Text>
+            </Centered>
           </OnboardFrame>
         </FrameAnimate>
         <Controls>

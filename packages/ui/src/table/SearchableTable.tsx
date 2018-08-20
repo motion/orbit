@@ -15,7 +15,6 @@ import deepEqual from 'react-fast-compare'
 
 type Props = ManagedTableProps &
   SearchableProps & {
-    innerRef?: (ref: any) => void
     defaultFilters: Array<Filter>
     filter: any
     filterValue: any
@@ -88,7 +87,6 @@ class SearchableManagedTable extends React.PureComponent<Props> {
       addFilter,
       searchTerm: _searchTerm,
       filters: _filters,
-      innerRef,
       ...props
     } = this.props
     return (
@@ -96,10 +94,10 @@ class SearchableManagedTable extends React.PureComponent<Props> {
         {...props}
         filter={this.state.filterRows}
         onAddFilter={addFilter}
-        ref={innerRef}
       />
     )
   }
 }
 
+// @ts-ignore
 export const SearchableTable = Searchable(SearchableManagedTable)

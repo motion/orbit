@@ -15,7 +15,7 @@ export const propsToTextSize = props => {
   let styles: TextStyles = {}
   let lineHeight = props.lineHeight
   if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
-    lineHeight = Math.log(fontSize * 500) * 2.5 + fontSize / 1.4 - 8
+    lineHeight = Math.log(fontSize * 500) * 2.2 + fontSize / 1.4 - 9
     if (props.sizeLineHeight) {
       lineHeight = lineHeight * props.sizeLineHeight
     }

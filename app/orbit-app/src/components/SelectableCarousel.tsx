@@ -2,28 +2,42 @@ import * as React from 'react'
 import { view, react } from '@mcro/black'
 import { Carousel, CarouselProps } from './Carousel'
 import { SelectionStore } from '../stores/SelectionStore'
+import { App } from '@mcro/stores'
 
 type Props = CarouselProps & {
+  selectionStore?: SelectionStore
   store?: CarouselStore
   offset: number
+  isActiveStore?: { isActive?: boolean }
+  resetOnInactive?: boolean
 }
 
 class CarouselStore {
-  props: CarouselProps & {
-    selectionStore: SelectionStore
-  }
+  props: Props
 
   carouselRef = React.createRef<Carousel>()
 
   handleScrollTo = react(
-    () => this.props.selectionStore.activeIndex,
-    index => {
-      const { items, offset, selectionStore } = this.props
+    () => [
+      this.props.selectionStore.activeIndex,
+      this.props.isActiveStore ? this.props.isActiveStore.isActive : null,
+    ],
+    ([index, isActive]) => {
+      react.ensure('has carousel', !!this.carouselRef.current)
+      const { items, offset, selectionStore, resetOnInactive } = this.props
+      if (isActive == false) {
+        if (resetOnInactive) {
+          this.carouselRef.current.scrollTo(0)
+        }
+        throw react.cancel
+      }
       const scrollTo = offset + index
-      react.ensure(selectionStore.selectEvent !== 'click')
-      react.ensure(index >= offset && index <= offset + items.length)
-      react.ensure(this.carouselRef.current)
-      react.ensure(typeof scrollTo === 'number')
+      react.ensure('wasnt clicked', selectionStore.selectEvent !== 'click')
+      react.ensure(
+        'within bounds',
+        index >= offset && index <= offset + items.length,
+      )
+      react.ensure('has scrollTo', typeof scrollTo === 'number')
       this.carouselRef.current.scrollTo(scrollTo)
     },
   )
@@ -35,8 +49,23 @@ class CarouselStore {
 })
 export class SelectableCarousel extends React.Component<Props> {
   render() {
-    // @ts-ignore
-    const { store, selectionStore, ...props } = this.props
-    return <Carousel ref={store.carouselRef} {...props} />
+    const {
+      store,
+      selectionStore,
+      cardWidth = 180,
+      cardHeight = 90,
+      ...props
+    } = this.props
+    return (
+      <Carousel
+        ref={store.carouselRef}
+        after={
+          <div style={{ width: App.orbitState.size[0] - cardWidth - 20 }} />
+        }
+        cardWidth={cardWidth}
+        cardHeight={cardHeight}
+        {...props}
+      />
+    )
   }
 }

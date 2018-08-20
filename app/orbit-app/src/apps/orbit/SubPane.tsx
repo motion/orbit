@@ -4,14 +4,24 @@ import * as _ from 'lodash'
 import * as UI from '@mcro/ui'
 import { CSSPropertySet } from '@mcro/gloss'
 import { SubPaneStore } from './SubPaneStore'
+import { AppStore } from '../../stores/AppStore'
+import { PaneManagerStore } from './PaneManagerStore'
+import { SearchStore } from '../../stores/SearchStore'
+import { SelectionStore } from '../../stores/SelectionStore'
 
-type Props = CSSPropertySet & {
+export type SubPaneProps = CSSPropertySet & {
   store?: SubPaneStore
   style?: Object
   after?: React.ReactNode
   before?: React.ReactNode
   fadeBottom?: boolean
   name?: string
+  onScrollNearBottom?: Function
+  extraCondition?: () => boolean
+  appStore?: AppStore
+  paneManagerStore?: PaneManagerStore
+  searchStore?: SearchStore
+  selectionStore?: SelectionStore
 }
 
 const Pane = view(UI.View, {
@@ -19,29 +29,28 @@ const Pane = view(UI.View, {
   top: 0,
   right: 0,
   left: 0,
-  transition: 'all ease 80ms 60ms',
+  transition: 'all ease 120ms',
   overflowX: 'hidden',
   overflowY: 'auto',
   padding: [0, 14],
   margin: [0, 0, 0],
   // pointerEvents: 'none',
-  opacity: 0,
-  transform: {
-    x: 10,
-  },
+  // opacity: 0,
   isActive: {
     opacity: 1,
-    transform: {
-      x: 0,
-    },
     '& > *': {
       pointerEvents: 'auto',
     },
   },
 })
+Pane.theme = ({ isLeft, isActive }) => ({
+  transform: {
+    x: isActive ? 0 : isLeft ? -200 : 200,
+  },
+})
 
 const OverflowFade = view({
-  pointerEvents: 'none !important',
+  pointerEvents: 'none',
   position: 'fixed',
   bottom: 0,
   left: 0,
@@ -61,7 +70,7 @@ OverflowFade.theme = ({ theme }) => ({
   background: `linear-gradient(transparent, ${theme.base.background})`,
 })
 
-const DockedPaneFrame = view(UI.FullScreen, {
+const SubPaneFrame = view(UI.FullScreen, {
   opacity: 0,
   pointerEvents: 'none',
   isActive: {
@@ -70,7 +79,7 @@ const DockedPaneFrame = view(UI.FullScreen, {
   },
 })
 
-const DockedPaneInner = view(UI.View, {
+const SubPaneInner = view(UI.View, {
   position: 'relative',
   flex: 1,
 })
@@ -79,12 +88,12 @@ const PaneContentInner = view({
   position: 'relative',
 })
 
-@view.attach('paneManagerStore', 'appStore', 'searchStore')
+@view.attach('paneManagerStore', 'appStore', 'searchStore', 'selectionStore')
 @view.provide({
   subPaneStore: SubPaneStore,
 })
 @view
-export class SubPane extends React.Component<Props> {
+export class SubPane extends React.Component<SubPaneProps> {
   render() {
     const {
       children,
@@ -97,10 +106,17 @@ export class SubPane extends React.Component<Props> {
       containerStyle,
       ...props
     } = this.props
+    console.log('subPaneStore.isLeft', name, subPaneStore.isLeft)
     return (
-      <DockedPaneFrame isActive={subPaneStore.isActive}>
+      <SubPaneFrame
+        isActive={subPaneStore.isActive}
+        isLeft={subPaneStore.isLeft}
+      >
         {before}
-        <DockedPaneInner {...containerStyle}>
+        <SubPaneInner
+          forwardRef={subPaneStore.subPaneInner}
+          {...containerStyle}
+        >
           <Pane
             isActive={subPaneStore.isActive}
             style={style}
@@ -115,9 +131,9 @@ export class SubPane extends React.Component<Props> {
               />
             )} */}
           </Pane>
-        </DockedPaneInner>
+        </SubPaneInner>
         {after}
-      </DockedPaneFrame>
+      </SubPaneFrame>
     )
   }
 }

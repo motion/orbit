@@ -3,7 +3,6 @@
 cd $(dirname $0)/..
 
 npx nodemon \
-  --quiet \
   --ignore src \
   --watch _ \
   --watch $(realpath node_modules/@mcro/models)/_ \

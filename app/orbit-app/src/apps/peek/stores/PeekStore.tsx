@@ -72,7 +72,7 @@ export class PeekStore {
       if (isShown) {
         // then load model and update again
         const curState = tornState || (await this.getCurState())
-        await sleep(60)
+        await sleep(120)
         setValue({
           ...nextState,
           curState,
@@ -130,6 +130,7 @@ export class PeekStore {
     if (type === 'person') {
       selectedItem = await PersonRepository.findOne({ id })
     } else if (type === 'bit') {
+      // TODO add relations: ['people']
       selectedItem = await BitRepository.findOne({ id })
     } else if (type === 'setting') {
       selectedItem = await SettingRepository.findOne({ id })

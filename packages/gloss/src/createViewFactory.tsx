@@ -362,11 +362,12 @@ export function createViewFactory(toCSS) {
       }
 
       static getDerivedStateFromProps(props: Props, state: State) {
-        const shouldPreventUpdate =
-          (isHMREnabled ? !recentHMR() : true) &&
-          state.prevProps !== null &&
-          hasEquivProps(props, state.prevProps)
-        if (shouldPreventUpdate) {
+        const noRecentHMR = isHMREnabled ? !recentHMR() : true
+        const hasPrevProps = state.prevProps !== null
+        const hasSameProps =
+          hasPrevProps && hasEquivProps(props, state.prevProps)
+        const shouldAvoidUpdate = noRecentHMR && hasPrevProps && hasSameProps
+        if (shouldAvoidUpdate) {
           return null
         }
         let nextState: Partial<State> = {}

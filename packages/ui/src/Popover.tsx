@@ -227,7 +227,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
 
   static getDerivedStateFromProps(props, state) {
     if (!isEqual(omit(props, ['children']), omit(state.props, ['children']))) {
-      console.log('measuring popover', props, state.props)
       return {
         setPosition: true,
         props,
@@ -443,7 +442,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
   }
 
   setPosition(callback?) {
-    console.log('set pos', this.positionState, this.popoverRef)
     if (!this.popoverRef) {
       return
     }
@@ -772,7 +770,6 @@ export class Popover extends React.PureComponent<PopoverProps> {
       const key = `${name}Hovered`
       this.setState({ [key]: isHovered ? Date.now() : false })
     }
-    console.log('set hovered', isHovered, openOnHover)
     if (isHovered) {
       if (openOnHover) {
         this.setPosition(setter)

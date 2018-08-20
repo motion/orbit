@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { on, react } from '@mcro/black'
-import { AppStore } from '../../stores/AppStore'
-import { PaneManagerStore } from './PaneManagerStore'
-import { SearchStore } from '../../stores/SearchStore'
+import { on, react, ensure } from '@mcro/black'
 import { throttle } from 'lodash'
+import { SubPaneProps } from './SubPane'
+import { App } from '@mcro/stores'
 
 function getTopOffset(element, parent?) {
   let offset = 0
@@ -15,16 +14,11 @@ function getTopOffset(element, parent?) {
 }
 
 export class SubPaneStore {
-  props: {
-    appStore: AppStore
-    paneManagerStore: PaneManagerStore
-    searchStore: SearchStore
-    name: string
-    extraCondition?: () => boolean
-  }
+  props: SubPaneProps
 
   aboveContentHeight = 0
   contentHeight = 0
+  subPaneInner = React.createRef<HTMLDivElement>()
   paneRef = React.createRef<HTMLDivElement>()
   isAtBottom = false
   childMutationObserver = null
@@ -41,7 +35,11 @@ export class SubPaneStore {
     return this.paneNode.firstChild as HTMLDivElement
   }
 
-  // prevents uncessary and expensive OrbitCard re-renders
+  get isLeft() {
+    const thisIndex = this.props.paneManagerStore.indexOfPane(this.props.name)
+    return thisIndex < this.props.paneManagerStore.paneIndex
+  }
+
   isActive = react(
     () => {
       const { extraCondition, name, paneManagerStore } = this.props
@@ -51,10 +49,7 @@ export class SubPaneStore {
       )
     },
     isActive => {
-      console.log('running is active...', isActive, this.isActive)
-      if (isActive === this.isActive) {
-        throw react.cancel
-      }
+      ensure('changed', isActive !== this.isActive)
       if (isActive) {
         this.isTransitioningToActive = true
       }
@@ -64,7 +59,7 @@ export class SubPaneStore {
   )
 
   didMount() {
-    on(this, this.paneNode, 'scroll', throttle(this.updateScrolledTo, 16 * 3))
+    on(this, this.paneNode, 'scroll', throttle(this.onPaneScroll, 16 * 3))
     this.addObserver(this.paneNode, this.handlePaneChange)
 
     // watch resizes
@@ -87,11 +82,9 @@ export class SubPaneStore {
 
   get fullHeight() {
     // this is the expandable filterpane in searches
-    const framePad = 8
     const { extraHeight } = this.props.searchStore.searchFilterStore
     const addHeight = extraHeight ? extraHeight + 14 : 0
-    const fullHeight =
-      addHeight + this.contentHeight + this.aboveContentHeight + framePad
+    const fullHeight = addHeight + this.contentHeight + this.aboveContentHeight
     const minHeight = 90
     // never go all the way to bottom
     // cap min and max
@@ -124,9 +117,10 @@ export class SubPaneStore {
           await sleep(100)
         }
       }
-      if (height === this.props.appStore.contentHeight) {
-        throw react.cancel
-      }
+      react.ensure(
+        'different height',
+        height !== this.props.appStore.contentHeight,
+      )
       this.props.appStore.setContentHeight(height)
     },
   )
@@ -140,7 +134,7 @@ export class SubPaneStore {
 
   handlePaneChange = () => {
     this.updateHeight()
-    this.updateScrolledTo()
+    this.onPaneNearEdges()
   }
 
   scrollIntoView = throttle((card: HTMLDivElement) => {
@@ -162,20 +156,38 @@ export class SubPaneStore {
   }, 60)
 
   updateHeight = () => {
-    const { top, height } = this.paneInnerNode.getBoundingClientRect()
+    // this gets full content height
+    const { height } = this.paneInnerNode.getBoundingClientRect()
+    // get top from here because its not affected by scroll
+    const { top } = this.subPaneInner.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {
-      this.aboveContentHeight = top
+      this.aboveContentHeight = Math.max(0, top)
       this.contentHeight = height
+      this.onPaneNearEdges()
     }
   }
 
-  updateScrolledTo = () => {
+  onPaneScroll = () => {
+    this.onPaneNearEdges()
+    if (App.peekState.target) {
+      if (Date.now() - this.props.selectionStore.lastSelectAt > 200) {
+        App.actions.clearPeek()
+      }
+    }
+  }
+
+  onPaneNearEdges = () => {
     const pane = this.paneNode
     const innerHeight = this.paneInnerNode.clientHeight
     const scrolledTo = pane.scrollTop + pane.clientHeight
-    const next = innerHeight <= scrolledTo
-    if (next !== this.isAtBottom) {
-      this.isAtBottom = next
+    const isAtBottom = scrolledTo >= innerHeight
+    if (isAtBottom !== this.isAtBottom) {
+      this.isAtBottom = isAtBottom
+    }
+    const isNearBottom = scrolledTo + 450 > innerHeight
+    if (isNearBottom && this.props.onScrollNearBottom) {
+      console.log('SCROLL NEAR BOTTOM TRIGGER')
+      this.props.onScrollNearBottom()
     }
   }
 }

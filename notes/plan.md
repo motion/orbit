@@ -1,25 +1,13 @@
 # Demo
 
 - show some wow features + generally scale up app
+- pitch them this:
+  - basically we've shown we can build a great experience here and deliver hard features
+  - we have X, Y, Z on the roadmap
+  - but given you guys are a great name and would give us a lot of prestige
+  - we could definitely basically be your in house crack team of developers
 
 # Launch
-
-## Productionize
-
-- Builds to prod with a command into nice app bundle, auto updates smoothly
-- Settings panes all work well, look well
-- Has more polish: nice tray icon, shortcut settings, onboarding
-- People syncers work
-
-## Onboarding
-
-- use the tray to help them set up accessibility
-  - click tray opens accessibility, shows an indicator
-- scanning their history and try to auto import things
-- crawler could start importing some popular website data even
-- much smoother adding of integration flow
-- automatic configure integrations a bit
-  - slack top rooms, gmail filters
 
 ## Beta
 

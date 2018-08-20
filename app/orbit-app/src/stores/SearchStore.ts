@@ -16,6 +16,90 @@ import { QueryStore } from './QueryStore'
 
 const TYPE_DEBOUNCE = 200
 
+const getSearchResults = async ({
+  query,
+  sortBy,
+  take,
+  skip,
+  startDate,
+  endDate,
+  integrationFilters,
+  peopleFilters,
+}) => {
+  const findOptions: FindOptions<Bit> = {
+    where: [],
+    relations: {
+      people: true,
+    },
+    take,
+    skip,
+  }
+
+  const andConditions: any = {}
+  if (startDate) {
+    andConditions.bitCreatedAt = { $moreThan: startDate }
+  }
+  if (endDate) {
+    andConditions.bitCreatedAt = { $lessThan: endDate }
+  }
+  if (integrationFilters && integrationFilters.length) {
+    andConditions.integration = { $in: integrationFilters }
+  }
+
+  if (query.length) {
+    const likeString = `%${query.replace(/\s+/g, '%')}%`
+    findOptions.where.push({
+      ...andConditions,
+      title: { $like: likeString },
+    })
+    findOptions.where.push({
+      ...andConditions,
+      body: { $like: likeString },
+    })
+  }
+
+  // SORT
+  if (sortBy) {
+    switch (sortBy) {
+      case 'Relevant':
+        // TODO: i think it is this by default
+        // once we do sprint on better search/hsf5 we can maybe make better
+        break
+      case 'Recent':
+        findOptions.order = {
+          bitCreatedAt: 'desc',
+        }
+        break
+    }
+  } else {
+    findOptions.order = {
+      bitCreatedAt: 'desc',
+    }
+  }
+
+  if (peopleFilters.length) {
+    // essentially, find at least one person
+    for (const name of peopleFilters) {
+      findOptions.where.push({
+        ...andConditions,
+        people: {
+          name: { $like: `%${name}%` },
+        },
+      })
+    }
+  }
+
+  if (!findOptions.where.length) {
+    if (Object.keys(andConditions).length) {
+      findOptions.where = andConditions
+    } else {
+      findOptions.where = undefined
+    }
+  }
+
+  return await BitRepository.find(findOptions)
+}
+
 export class SearchStore {
   props: {
     appStore: AppStore
@@ -25,11 +109,14 @@ export class SearchStore {
     queryStore: QueryStore
   }
 
+  loadMoreAmount = 0
+  curFindOptions = null
   nlpStore = new NLPStore()
   searchFilterStore = new SearchFilterStore({
     queryStore: this.props.queryStore,
     integrationSettingsStore: this.props.integrationSettingsStore,
     nlpStore: this.nlpStore,
+    searchStore: this,
   })
 
   willMount() {
@@ -88,13 +175,14 @@ export class SearchStore {
       this.searchFilterStore.sortBy,
       this.searchFilterStore.dateState,
     ],
-    async ([query], { sleep, when, setValue, preventLogging }) => {
+    async ([query], { sleep, whenChanged, when, setValue }) => {
       if (!query) {
         return setValue({
           query,
           results: [],
         })
       }
+
       let results
       let channelResults
       let message
@@ -118,152 +206,118 @@ export class SearchStore {
       if (isFilteringChannel && this.props.appStore.services.slack) {
         message = 'SPACE to search selected channel'
         results = channelResults
+        return setValue({
+          query,
+          message,
+          results,
+        })
       }
+
       // regular search
-      if (!results) {
-        // if typing, wait a bit
-        if (this.searchState.query !== query) {
-          // debounce a little for fast typer
-          await sleep(TYPE_DEBOUNCE)
-          // wait for nlp to give us results
-          await when(() => this.nlpStore.nlp.query === query)
-        }
 
-        // pagination
-        const take = 6
-        const takeMax = take * 2
-        const sleepBtwn = 80
-
-        // gather all the pieces from nlp store for query
-        // const { searchQuery, people, startDate, endDate } = this.nlpStore.nlp
-        const {
-          exclusiveFilters,
-          activeFilters,
-          activeQuery,
-          dateState,
-          sortBy,
-        } = this.searchFilterStore
-
-        let results = []
-
-        // filters
-        const peopleFilters = activeFilters
-          .filter(x => x.type === MarkType.Person)
-          .map(x => x.text)
-        const integrationFilters = [
-          // these come from the text string
-          ...activeFilters
-            .filter(x => x.type === MarkType.Integration)
-            .map(x => x.text),
-          // these come from the button bar
-          ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
-        ]
-
-        const { startDate, endDate } = dateState
-
-        for (let i = 0; i < takeMax / take; i += 1) {
-          const skip = i * take
-
-          const findOptions: FindOptions<Bit> = {
-            where: [],
-            relations: {
-              people: true,
-            },
-            take,
-            skip,
-          }
-
-          const andConditions: any = {}
-          if (startDate) {
-            andConditions.bitCreatedAt = { $moreThan: startDate }
-          }
-          if (endDate) {
-            andConditions.bitCreatedAt = { $lessThan: endDate }
-          }
-          if (integrationFilters && integrationFilters.length) {
-            andConditions.integration = { $in: integrationFilters }
-          }
-
-          if (activeQuery.length) {
-            const likeString = `%${activeQuery.replace(/\s+/g, '%')}%`
-            findOptions.where.push({
-              ...andConditions,
-              title: { $like: likeString },
-            })
-            findOptions.where.push({
-              ...andConditions,
-              body: { $like: likeString },
-            })
-          }
-
-          // SORT
-          if (sortBy) {
-            switch (sortBy) {
-              case 'Relevant':
-                // TODO: i think it is this by default
-                // once we do sprint on better search/hsf5 we can maybe make better
-                break
-              case 'Recent':
-                findOptions.order = {
-                  bitCreatedAt: 'desc',
-                }
-                break
-            }
-          } else {
-            findOptions.order = {
-              bitCreatedAt: 'desc',
-            }
-          }
-
-          if (peopleFilters.length) {
-            // essentially, find at least one person
-            for (const name of peopleFilters) {
-              findOptions.where.push({
-                ...andConditions,
-                people: {
-                  name: { $like: `%${name}%` },
-                },
-              })
-            }
-          }
-
-          if (!findOptions.where.length) {
-            if (Object.keys(andConditions).length) {
-              findOptions.where = andConditions
-            } else {
-              findOptions.where = undefined
-            }
-          }
-
-          console.log('SEARCH FIND OPTIONS:', findOptions)
-          const nextResults = await BitRepository.find(findOptions)
-
-          results = [...results, ...nextResults]
-          setValue({
-            results,
-            query,
-          })
-          // no more results...
-          if (!nextResults.length) {
-            throw react.cancel
-          }
-          // only log it once...
-          preventLogging()
-          // get next page results
-          await sleep(sleepBtwn)
-        }
-        return
+      results = []
+      // if typing, wait a bit
+      if (this.searchState.query !== query) {
+        // debounce a little for fast typer
+        await sleep(TYPE_DEBOUNCE)
+        // wait for nlp to give us results
+        await when(() => this.nlpStore.nlp.query === query)
       }
-      return setValue({
+
+      // pagination
+      let skip = 0
+      const take = 4
+      // initial search results max amt:
+      const takeMax = take * 10
+      const sleepBtwn = 80
+
+      // query builder pieces
+      const {
+        exclusiveFilters,
+        activeFilters,
+        activeQuery,
+        dateState,
+        sortBy,
+      } = this.searchFilterStore
+
+      // filters
+      const peopleFilters = activeFilters
+        .filter(x => x.type === MarkType.Person)
+        .map(x => x.text)
+      const integrationFilters = [
+        // these come from the text string
+        ...activeFilters
+          .filter(x => x.type === MarkType.Integration)
+          .map(x => x.text),
+        // these come from the button bar
+        ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
+      ]
+
+      const { startDate, endDate } = dateState
+      const baseFindOptions = {
+        query: activeQuery,
+        sortBy,
+        startDate,
+        endDate,
+        integrationFilters,
+        peopleFilters,
+      }
+
+      const updateNextResults = async skip => {
+        const nextResults = await getSearchResults({
+          ...baseFindOptions,
+          skip,
+          take,
+        })
+        if (!nextResults) {
+          return false
+        }
+        results = [...results, ...nextResults]
+        setValue({
+          results,
+          query,
+        })
+        return true
+      }
+
+      // do initial search
+      for (let i = 0; i < takeMax / take; i += 1) {
+        skip = i * take
+        const updated = await updateNextResults(skip)
+        if (!updated) {
+          break
+        }
+        // get next page results
+        await sleep(sleepBtwn)
+      }
+
+      // infinite scroll
+      this.loadMoreAmount = 0
+      while (true) {
+        // wait for load more event
+        await whenChanged(() => this.loadMoreAmount)
+        skip += take
+        const updated = await updateNextResults(skip)
+        if (!updated) {
+          break
+        }
+      }
+
+      // finished
+      setValue({
         query,
-        message,
         results,
+        finished: true,
       })
     },
     {
-      defaultValue: { results: [], query: '' },
+      defaultValue: { results: [], query: '', finished: false },
     },
   )
+
+  loadMore = () => {
+    this.loadMoreAmount++
+  }
 
   quickSearchState = react(
     () => App.state.query,

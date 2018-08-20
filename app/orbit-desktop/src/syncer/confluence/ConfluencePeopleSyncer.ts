@@ -22,48 +22,54 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
   }
 
   async run(): Promise<void> {
-
     // load users from confluence API
-    log(`loading confluence users`)
+    log('loading confluence users')
     const allUsers = await this.loader.loadUsers()
-    log(`got confluence users`, allUsers)
+    log('got confluence users', allUsers)
 
     // load users from the database
     const dbUsers = await getRepository(PersonEntity).find({
-      settingId: this.setting.id
+      settingId: this.setting.id,
     })
 
     // we don't need some confluence users, like system or bot users
     // so we are filtering them out
-    log(`filter out users we don't need`)
+    log('filter out users we don\'t need')
     const filteredUsers = allUsers.filter(member => {
       const email = member.details.personal.email || ''
-      const ignoredEmail = `@connect.atlassian.com`
+      const ignoredEmail = '@connect.atlassian.com'
       return email.substr(ignoredEmail.length * -1) !== ignoredEmail
     })
-    log(`users were filtered out`, filteredUsers)
+    log('users were filtered out', filteredUsers)
 
     // create entities for each loaded member
     log('creating person entities from the loaded content')
     const people = filteredUsers.map(user => this.createPerson(dbUsers, user))
-    log(`entities created`, people)
+    log('entities created', people)
 
     // saving person entities and person bits
-    log(`saving entities`, people)
+    log('saving entities', people)
     await getRepository(PersonEntity).save(people)
-    await Promise.all(people.map(person => {
-      return createOrUpdatePersonBit({
-        email: person.data.emails[0],
-        name: person.name,
-        photo: person.data.avatar,
-        integration: person.integration,
-        person: person,
-      })
-    }))
-    log(`entities saved`)
+    await Promise.all(
+      people.map(person => {
+        return createOrUpdatePersonBit({
+          // @ts-ignore TODO
+          email: person.data.emails[0],
+          name: person.name,
+          // @ts-ignore TODO
+          photo: person.data.avatar,
+          integration: person.integration,
+          person: person,
+        })
+      }),
+    )
+    log('entities saved')
   }
 
-  private createPerson(dbUsers: PersonEntity[], user: ConfluenceUser): PersonEntity {
+  private createPerson(
+    dbUsers: PersonEntity[],
+    user: ConfluenceUser,
+  ): PersonEntity {
     const id = `confluence-${this.setting.id}-${user.accountId}`
     const person = dbUsers.find(user => user.id === id)
     return assign(person || new PersonEntity(), {
@@ -78,8 +84,7 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
         data: {
           github: user,
         },
-      } as any
+      } as any,
     })
   }
-
 }

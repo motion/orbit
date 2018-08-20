@@ -1,5 +1,7 @@
-import { Reaction, ReactionRejectionError } from './constants'
+import { Reaction } from './constants'
 import { ReactionOptions, ReactionHelpers } from './types'
+import { ensure } from './ensure'
+import { cancel } from './cancel'
 
 // decorator to do reactions
 
@@ -34,7 +36,7 @@ export type ReactionFunction<A, B> = {
     c?: ReactionOptions,
   ): B
   cancel: Error
-  ensure: (boolean) => void
+  ensure: (message: string, condition: boolean) => void
 }
 
 // @watch decorator
@@ -72,13 +74,8 @@ export const react = <ReactionFunction<any, any>>(
   }
 )
 
-react.cancel = new ReactionRejectionError()
-
-react.ensure = (a: boolean) => {
-  if (!a) {
-    throw react.cancel
-  }
-}
+react.cancel = cancel
+react.ensure = ensure
 
 function doWatch(target, _, descriptor, userOptions) {
   // non-decorator

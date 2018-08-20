@@ -27,7 +27,7 @@ const activeThemes = {
 
 const FilterBar = view(UI.Row, {
   position: 'relative',
-  padding: [2, 15, 8],
+  padding: [0, 15, 6],
 })
 
 const HorizontalScroll = view({
@@ -44,7 +44,7 @@ const FilterButton = props => (
     glint={false}
     size={1}
     sizeRadius={0.9}
-    marginRight={4}
+    marginRight={3}
     sizeHeight={0.8}
     sizePadding={0.6}
     fontWeight={600}
@@ -86,7 +86,7 @@ const hideFilterPanes = {
   apps: true,
 }
 
-export const OrbitFilterBar = view(
+export const OrbitSuggestionBar = view(
   ({ filterStore, paneManagerStore }: Props) => {
     filterStore.disabledFilters
     if (hideFilterPanes[paneManagerStore.activePane]) {
@@ -97,7 +97,7 @@ export const OrbitFilterBar = view(
         <HorizontalScroll>
           {filterStore.allFilters.map((filter, index) => (
             <FilterButton
-              key={`${filter.text}${filter.active}${index}`}
+              key={`${filter.text}${filter.active}`}
               onClick={() => filterStore.toggleFilter(filter.text)}
               opacity={opacityScale[index] || 0.333}
               borderColor={

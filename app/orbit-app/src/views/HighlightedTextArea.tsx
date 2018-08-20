@@ -21,6 +21,13 @@ const Block = view(UI.Block, {
   whiteSpace: 'pre',
 })
 
+Block.theme = ({ theme }) => ({
+  '&::selection': {
+    color: theme.base.color.lighten(0.1),
+    background: theme.base.background.darken(0.1),
+  },
+})
+
 type Color = string
 
 type Props = CSSPropertySet & {

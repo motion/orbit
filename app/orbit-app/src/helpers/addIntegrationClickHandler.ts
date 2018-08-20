@@ -9,6 +9,7 @@ type IntegrationItem = {
 export const addIntegrationClickHandler = (item: IntegrationItem) => ({
   currentTarget,
 }) => {
+  console.log('add integration', currentTarget, item)
   if (item.auth) {
     App.actions.toggleSelectItem(
       { id: item.id, type: 'view', title: item.title },

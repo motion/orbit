@@ -46,6 +46,7 @@ class AppStore {
   }
 
   messages = {
+    SHOW_APPS: 'SHOW_APPS',
     TOGGLE_SETTINGS: 'TOGGLE_SETTINGS',
     TOGGLE_DOCKED: 'TOGGLE_DOCKED',
     TOGGLE_SHOWN: 'TOGGLE_SHOWN',
@@ -95,6 +96,7 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: 'Orbit',
+    acceptsForwarding: false,
   })
 
   get isShowingOrbit() {

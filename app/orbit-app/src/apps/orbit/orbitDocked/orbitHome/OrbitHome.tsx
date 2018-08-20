@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
-import { BitRepository } from '../../../../repositories'
+import { view, react, compose } from '@mcro/black'
+import { BitRepository, PersonRepository } from '../../../../repositories'
 import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
@@ -54,6 +54,10 @@ class OrbitHomeStore {
 
   following = react(
     async () => {
+      const people = await PersonRepository.find({
+        order: { createdAt: 'DESC' },
+        take: 10,
+      })
       const [slack, drive, github, confluence, jira] = await Promise.all([
         findManyType('slack'),
         findManyType('gdocs'),
@@ -62,7 +66,7 @@ class OrbitHomeStore {
         findManyType('jira'),
       ])
       // only return ones with results
-      const all = { slack, drive, github, confluence, jira }
+      const all = { people, slack, drive, github, confluence, jira }
       const res = {} as any
       let curIndex = 0
       for (const name in all) {
@@ -84,8 +88,12 @@ class OrbitHomeStore {
 
 const Section = view()
 
-const OrbitHomeCarouselSection = view(
-  ({ selectionStore, homeStore, categoryName }) => {
+const decorator = compose(
+  view.attach('subPaneStore'),
+  view,
+)
+const OrbitHomeCarouselSection = decorator(
+  ({ selectionStore, subPaneStore, homeStore, categoryName }) => {
     const { items, startIndex } = homeStore.following[categoryName]
     return (
       <Section key={categoryName}>
@@ -97,6 +105,8 @@ const OrbitHomeCarouselSection = view(
             items={items}
             offset={startIndex}
             horizontalPadding={16}
+            isActiveStore={subPaneStore}
+            resetOnInactive
             cardProps={{
               getIndex: selectionStore.getIndexForItem,
               padding: 9,
@@ -137,7 +147,8 @@ export class OrbitHome extends React.Component<Props> {
             categoryName={categoryName}
           />
         ))}
-        {!!homeStore.results.length && <View height={15} />}
+        {/* this is a nice lip effect */}
+        <View height={20} />
       </SubPane>
     )
   }

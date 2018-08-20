@@ -11,12 +11,17 @@ import { SearchStore } from '../../../../stores/SearchStore'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
 
 const SearchFilters = view(UI.Col, {
-  padding: [7, 12],
+  padding: [0, 12],
 })
 
-SearchFilters.theme = ({ theme }) => ({
+const SearchFilterBar = view({
+  flexFlow: 'row',
+  padding: [6, 8],
+  width: '100%',
+  alignItems: 'center',
+})
+SearchFilterBar.theme = ({ theme }) => ({
   borderTop: [1, theme.base.borderColor.alpha(0.3)],
-  background: 'transparent',
 })
 
 const ExtraFilters = view(UI.View, {
@@ -59,10 +64,18 @@ const FilterButton = props => (
     glint={false}
     size={0.95}
     sizeRadius={3}
-    alpha={0.9}
+    alpha={0.8}
+    fontWeight={500}
     {...props}
   />
 )
+
+const IntegrationFiltersRow = view({
+  flexFlow: 'row',
+  alignItems: 'center',
+  background: [0, 0, 0, 0.1],
+  borderRadius: 100,
+})
 
 const decorate = compose(
   view.attach('integrationSettingsStore', 'searchStore'),
@@ -71,61 +84,61 @@ const decorate = compose(
 export const OrbitSearchFilters = decorate(({ searchStore }: Props) => {
   const { searchFilterStore } = searchStore
   return (
-    <SearchFilters width="100%" alignItems="center">
-      <UI.Row width="100%" alignItems="center">
+    <>
+      <SearchFilterBar>
         <FilterButton
           {...searchFilterStore.dateHover.props}
           active={searchFilterStore.dateHover.isStuck()}
         >
           {getDate(searchFilterStore.dateState) || 'Any time'}
         </FilterButton>
-        <div style={{ width: 4 }} />
-        <FilterButton
-          chromeless
-          alpha={0.6}
-          onClick={searchFilterStore.toggleSortBy}
-        >
+        <div style={{ width: 2 }} />
+        <FilterButton onClick={searchFilterStore.toggleSortBy}>
           {searchFilterStore.sortBy}
         </FilterButton>
         <UI.Col flex={1} />
-        {searchFilterStore.integrationFilters.map((filter, i) => {
-          return (
-            <RoundButton
-              key={`${filter.icon}${i}`}
-              circular
-              glint={false}
-              size={1.1}
-              marginLeft={5}
-              icon={<OrbitIcon size={18} icon={filter.icon} />}
-              tooltip={filter.name}
-              onClick={searchFilterStore.integrationFilterToggler(filter)}
-              filter={filter.active ? null : 'grayscale(100%)'}
-              opacity={filter.active ? 1 : 0.3}
-              background="transparent"
-              activeStyle={{
-                background: 'transparent',
-              }}
-              hoverStyle={{
-                filter: 'none',
-                opacity: filter.active ? 1 : 0.75,
-              }}
-            />
-          )
-        })}
-      </UI.Row>
-      <ExtraFilters
-        onMouseEnter={searchFilterStore.dateHover.props.onMouseEnter}
-        onMouseLeave={searchFilterStore.dateHover.props.onMouseLeave}
-        onMouseMove={searchFilterStore.dateHover.props.onMouseMove}
-        className="calendar-dom"
-        height={searchStore.searchFilterStore.extraFiltersHeight}
-        visible={searchStore.searchFilterStore.extraFiltersVisible}
-      >
-        <DateRangePicker
-          onChange={searchFilterStore.onChangeDate}
-          ranges={[searchFilterStore.dateState]}
-        />
-      </ExtraFilters>
-    </SearchFilters>
+        <IntegrationFiltersRow>
+          {searchFilterStore.integrationFilters.map((filter, i) => {
+            return (
+              <RoundButton
+                key={`${filter.icon}${i}`}
+                circular
+                glint={false}
+                size={1.1}
+                marginLeft={1}
+                icon={<OrbitIcon size={16} icon={filter.icon} />}
+                tooltip={filter.name}
+                onClick={searchFilterStore.integrationFilterToggler(filter)}
+                filter={filter.active ? null : 'grayscale(100%)'}
+                opacity={filter.active ? 1 : 0.3}
+                background="transparent"
+                activeStyle={{
+                  background: 'transparent',
+                }}
+                hoverStyle={{
+                  filter: 'none',
+                  opacity: filter.active ? 1 : 0.75,
+                }}
+              />
+            )
+          })}
+        </IntegrationFiltersRow>
+      </SearchFilterBar>
+      <SearchFilters width="100%" alignItems="center">
+        <ExtraFilters
+          onMouseEnter={searchFilterStore.dateHover.props.onMouseEnter}
+          onMouseLeave={searchFilterStore.dateHover.props.onMouseLeave}
+          onMouseMove={searchFilterStore.dateHover.props.onMouseMove}
+          className="calendar-dom"
+          height={searchStore.searchFilterStore.extraFiltersHeight}
+          visible={searchStore.searchFilterStore.extraFiltersVisible}
+        >
+          <DateRangePicker
+            onChange={searchFilterStore.onChangeDate}
+            ranges={[searchFilterStore.dateState]}
+          />
+        </ExtraFilters>
+      </SearchFilters>
+    </>
   )
 })

@@ -1,35 +1,42 @@
-- <UI.Theme select={theme => theme.titleBar} />
-  - that takes the subset from theme.gray.titleBar
-    - which means that can have specific button styles nicely :D
+- oauth:
+  - when going through flow show orbit
+  - show message:
+    - "Private Auth Mode"
 
-# Week ending Aug 17th
+"Orbit proxies the keys directly to your computer.
+You and only you receive the key to your data.
+And just to be safe, our servers disable logs and deny all requests. Learn more."
 
-**Production build that properly handles OAuth sync for a real-world user**
-
-We want by Wednesday to have a rough prod build with auto-updating and a few low level features that will get us across the finish line.
-
-Then by Friday we should have everything polished quite a lot more. This is what will make these last couple weeks really hard is it's a _ton_ of polish, so it's hard to point to the exact final state.
-
-The big things on my side are:
-
+- fix themes to fix lots of things
+- Properly proxy/prompt the production domain in prod mode
+- in:x for location
+- direct open button in search results
+- clicking location buttons should filter that location
+- clicking a name should search that name
+- find by type (file / link is helpful)
+- search results date strategy:
+  - do separators based on time periods:
+  - do by day for first week within the current month
+  - do by month after that
+- Fix empty profiles from gmail contacts import
+- Fix slack not showing usernames
+- Fix intra-peek clicking
+- Fix blur in prod build on other macs (test on my other mac)
+- Onboard fix final bugs
+- Onboard click tray to focus
+- Slack select all settings by default (syncer needs to respect settings/set them)
+  - Toggle select all button in table view
+- working remove integration
+- fix highlight index click interaction
+- fix integration buttons styling and going inactive after click
 - Oauth key strategy:
   1.  UI/storage for adding your own oauth keys as master/admin
   2.  Using those keys in Passport
   3.  Documentation to onboard for creating your own keys
       - should be built into app as well as on a website
       - https://docs.tryretool.com/docs/sso-google-and-okta
-- Finish auto-update / build to prod .app
-- Finish/improve onboarding flow
 - Finish settings panes
-- Final peek design run with native looking theme
-- Fix keyboard nav and logic for moving between cards
-
-On Umed's side:
-
-- Final syncer fixes, as much as possible
 - Mutation/observe pattern for data updates
-- More People aggregation
-- Help fix build to prod on older mac
 
 # Week ending Aug 24th
 
@@ -42,22 +49,14 @@ On Umed's side:
 
 # Week ending Aug 31st
 
-**Ready for workday...**
-
----
-
----
-
----
+- Search improvements and bugfix
+- p2p system in place
+- deploy to a few friends
 
 UI
 
-- Peek windows no more fancy theme just mac looking headers
 - Add button for settings panes that easily lots into with table
-- Confirm native modal for Remove setting
-- Fix themes a lot in terms of color choice
 - Theme psuedo state better strategy
-- able to have for example: Dark.card theme and apply a custom states easily per-component:
   - hover: [brightenBorders(0.1), biggerShadow(1.5)]
   - active: [darken(1.1)]
 
@@ -77,27 +76,20 @@ queue:
 
 - SHOULD show banner, update and restart once update is pushed
 - handle screen changes/resizes
-- Masonry.fixedHeight mode for Directory/Settings cards (no double render)
 - react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
-- fix horizontal scroller to cut off nicer
-- search: filtering "nick and nate" doesn't show any results for some reason
 - make all searches work: task search, message search
 - Remove setting button
 - Google drive settings pane
-- Manage tab for every one:
-  - Stats card of total bits
-  - Clear all bits
-  - Remove integration
-  - Can have login settings if applicable
 
 ## unnecessary for beta polish bucket
 
-- shortcuts bar working
+- make ui themes better
+- <UI.Theme select={theme => theme.titleBar} />
+  - that takes the subset from theme.gray.titleBar
+    - which means that can have specific button styles nicely :D
 - cmd+z undo in search area (needs to work with toggles...)
 - peek arrow position shouldn't straddle weird borders
 - react-spring for peek placement
-- styling on settings panes
-- peek header styles
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
 - test-app: fix themes/tabs
@@ -112,9 +104,10 @@ queue:
 - hmr: doesn't store.unmount stores often
 - react: await finishRender() could be interesting
 
-# gamechangers
+# potential gamechangers
 
-- calendar support
+- personalize your profile
+- calendar
 - injest anything (instant crawler/snippets)
 - memory
 - contextual search

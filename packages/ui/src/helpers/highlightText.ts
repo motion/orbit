@@ -19,7 +19,7 @@ export const highlightText = (options, returnList = false) => {
     trimWhitespace,
     maxChars = 500,
     maxSurroundChars = 50,
-    style = 'font-weight: 600; color: #000;',
+    style = 'background: rgba(251, 255, 162, 0.15); border-radius: 4px;',
     separator = '&nbsp;&nbsp;&middot;&nbsp;&nbsp;',
   } = options
   let parts = [text]

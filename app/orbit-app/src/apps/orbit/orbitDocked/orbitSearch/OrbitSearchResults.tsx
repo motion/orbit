@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { OrbitCard } from '../../../../views/OrbitCard'
+import { OrbitListItem } from '../../../../views/OrbitListItem'
 import { SubPane } from '../../SubPane'
 import { OrbitSearchQuickResults } from './OrbitSearchQuickResults'
 import * as UI from '@mcro/ui'
@@ -10,6 +10,8 @@ import { PaneManagerStore } from '../../PaneManagerStore'
 import { SearchStore } from '../../../../stores/SearchStore'
 import { SelectionStore } from '../../../../stores/SelectionStore'
 import { App } from '@mcro/stores'
+import { memoize } from 'lodash'
+import { HighlightsLayer } from '../../../../views/HighlightsLayer'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -20,14 +22,14 @@ type Props = {
 
 const Highlight = view({
   display: 'inline-block',
-  lineHeight: 20.5,
+  lineHeight: 18.5,
   fontSize: 15,
-  padding: [2, 6, 2, 14],
-  margin: [4, 0, 0, 4],
+  padding: [2, 6, 2, 10],
+  margin: [0, 0, 0, 4],
   fontWeight: 400,
   borderLeft: [2, 'transparent'],
   '&:hover': {
-    borderLeftColor: '#90b1e455',
+    borderLeftColor: [255, 255, 255, 0.2],
   },
 })
 Highlight.theme = ({ theme }) => ({
@@ -61,48 +63,86 @@ const highlightOptions = (query, bit) => ({
   maxSurroundChars: 110,
   trimWhitespace: true,
   separator: '&nbsp;&middot;&nbsp;',
-  style: 'font-weight: 700; color: #fff;',
 })
 
-const OrbitSearchResultsList = view(
-  ({ name, searchStore, selectionStore }: Props) => {
-    const { results, query } = searchStore.searchState
-    // log(`RENDER SENSITIVE`)
-    if (!results || !results.length) {
-      return null
-    }
-    const quickResultsLen = searchStore.quickSearchState.results.length
-    return results.map((bit, index) => (
-      <OrbitCard
-        pane={name}
-        subPane="search"
-        key={bit.id}
-        index={index + quickResultsLen}
-        total={results.length}
-        bit={bit}
-        listItem
-      >
+const hideSlack = {
+  title: true,
+  people: true,
+  date: true,
+}
+
+const OrbitCardContent = view({
+  padding: [6, 0],
+})
+
+@view
+class OrbitSearchResultsList extends React.Component<Props> {
+  getHighlight = memoize(index => ({ highlights }) => {
+    const { selectionStore } = this.props
+    return highlights.map((highlight, hlIndex) => {
+      return (
+        <Highlight
+          key={hlIndex}
+          dangerouslySetInnerHTML={{ __html: highlight }}
+          onClick={selectHighlight(index, hlIndex, selectionStore)}
+        />
+      )
+    })
+  })
+
+  getChildren = ({ content }, bit, index) => {
+    return bit.integration === 'slack' ? (
+      content
+    ) : (
+      <OrbitCardContent>
         <UI.Text
           alpha={0.85}
           wordBreak="break-all"
-          highlight={highlightOptions(query, bit)}
+          highlight={highlightOptions(
+            this.props.searchStore.searchState.query,
+            bit,
+          )}
         >
-          {({ highlights }) => {
-            return highlights.map((highlight, hlIndex) => {
-              return (
-                <Highlight
-                  key={hlIndex}
-                  dangerouslySetInnerHTML={{ __html: highlight }}
-                  onClick={selectHighlight(index, hlIndex, selectionStore)}
-                />
-              )
-            })
-          }}
+          {this.getHighlight(index)}
         </UI.Text>
-      </OrbitCard>
-    ))
-  },
-)
+      </OrbitCardContent>
+    )
+  }
+
+  spaceBetween = <div style={{ flex: 1 }} />
+
+  render() {
+    const { name, searchStore } = this.props
+    const { results } = searchStore.searchState
+    if (!results || !results.length) {
+      return null
+    }
+    const searchTerm = searchStore.searchState.query
+    return (
+      <HighlightsLayer term={searchTerm}>
+        <>
+          {results.map((bit, index) => (
+            <OrbitListItem
+              pane={name}
+              subPane="search"
+              key={bit.id}
+              index={index + searchStore.quickSearchState.results.length}
+              bit={bit}
+              listItem
+              hide={bit.integration === 'slack' ? hideSlack : null}
+              subtitleSpaceBetween={this.spaceBetween}
+              isExpanded
+              searchTerm={searchTerm}
+            >
+              {this.getChildren}
+            </OrbitListItem>
+          ))}
+          {!!results.length && <div style={{ height: 20 }} />}
+        </>
+      </HighlightsLayer>
+    )
+  }
+}
 
 const OrbitSearchResultsFrame = view({
   position: 'relative',
@@ -120,7 +160,7 @@ const OrbitSearchResultsContents = view(
           opacity: isChanging ? 0.3 : 1,
         }}
       >
-        {message ? <div>{message}</div> : null}
+        {!!message && <div>{message}</div>}
         <OrbitSearchQuickResults
           searchStore={searchStore}
           selectionStore={selectionStore}
@@ -130,7 +170,6 @@ const OrbitSearchResultsContents = view(
           selectionStore={selectionStore}
           name={name}
         />
-        <div style={{ height: 20 }} />
       </OrbitSearchResultsFrame>
     )
   },
@@ -161,6 +200,7 @@ export class OrbitSearchResults extends React.Component<Props> {
         name="search"
         extraCondition={this.props.searchStore.hasQuery}
         before={<OrbitSearchFilters />}
+        onScrollNearBottom={this.props.searchStore.loadMore}
       >
         <OrbitSearchResultsContents
           selectionStore={selectionStore}

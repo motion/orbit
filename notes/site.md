@@ -23,3 +23,10 @@ very white contrast look for most sections
   - the instant, unified, keyboard friendly, way to manage incoming
   - offline, instant
   - search by WHO
+
+# pages
+
+- advantages of on device:
+  - much faster search, works offline
+  - no privacy breaches
+  - private and public data in your app

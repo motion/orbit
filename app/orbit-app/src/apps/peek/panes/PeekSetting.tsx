@@ -1,16 +1,19 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { Job, Setting } from '@mcro/models'
+import { Setting } from '@mcro/models'
 import { capitalize } from 'lodash'
 import * as UI from '@mcro/ui'
-import { JobRepository, SettingRepository } from '../../../repositories'
+import { SettingRepository } from '../../../repositories'
 import * as SettingPanes from './settingPanes'
 import { SettingInfoStore } from '../../../stores/SettingInfoStore'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { PeekPaneProps } from '../PeekPaneProps'
 import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsStore'
 import { RoundButton } from '../../../views'
+
+// @ts-ignore
+const Electron = electronRequire('electron')
 
 const EmptyPane = ({ setting }) => (
   <div>no setting {JSON.stringify(setting)} pane</div>
@@ -47,8 +50,18 @@ class SettingContent extends React.Component<
 
   removeIntegration = async () => {
     const { store } = this.props
-    await SettingRepository.remove(store.setting)
-    App.actions.clearPeek()
+    const response = Electron.remote.dialog.showMessageBox({
+      type: 'question',
+      title: 'Remove integration?',
+      message: `Are you sure you want to remove ${store.setting.type}`,
+      buttons: ['Cancel', 'Ok'],
+      defaultId: 1,
+      cancelId: 0,
+    })
+    if (response === 1) {
+      await SettingRepository.remove(store.setting)
+      App.actions.clearPeek()
+    }
   }
 
   render() {

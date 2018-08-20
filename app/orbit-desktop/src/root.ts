@@ -56,7 +56,10 @@ export class Root {
         macVersion: macosVersion(),
       },
     })
-    Desktop.onMessage(Desktop.messages.OPEN, open)
+    Desktop.onMessage(Desktop.messages.OPEN, url => {
+      console.log('opening', url)
+      open(url)
+    })
     await this.connect()
 
     // rtemp

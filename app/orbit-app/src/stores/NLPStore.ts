@@ -20,6 +20,7 @@ const DEFAULT_NLP = {
   },
 }
 
+// @ts-ignore
 @store
 export class NLPStore /* extends Store */ {
   get marks() {

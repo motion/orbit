@@ -59,7 +59,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
   }
 
   doSearch() {
-    if (!this.state.doSearch) {
+    if (!this.state.doSearch || !this.frameRef.current) {
       return
     }
     if (this.props.term.length < 3) {
@@ -91,6 +91,9 @@ export class HighlightsLayer extends React.Component<Props, State> {
     range: Range,
     frameBounds: DOMRect,
   ) {
+    if (!range) {
+      throw new Error('No range')
+    }
     const hasTerm = (text = '', term = '') =>
       text.toLowerCase().indexOf(term) >= 0
     for (const node of searchableNodes) {
@@ -127,10 +130,6 @@ export class HighlightsLayer extends React.Component<Props, State> {
 
   render() {
     const { highlights } = this.state
-    if (!React.isValidElement(this.props.children)) {
-      console.log(this.props.children)
-      return <div>error bad children</div>
-    }
     return (
       <UI.View position="relative">
         <UI.FullScreen

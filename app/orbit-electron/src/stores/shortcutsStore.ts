@@ -44,6 +44,7 @@ export class ShortcutsStore {
       const ret = globalShortcut.register(shortcut, () => {
         this.onShortcutCb(shortcut)
       })
+      // @ts-ignore
       if (!ret) {
         console.log('couldnt register shortcut', shortcut, ret)
       }

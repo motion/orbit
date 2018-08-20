@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { Carousel, CarouselProps } from './Carousel'
 import { SelectionStore } from '../stores/SelectionStore'
 import { App } from '@mcro/stores'
@@ -23,7 +23,7 @@ class CarouselStore {
       this.props.isActiveStore ? this.props.isActiveStore.isActive : null,
     ],
     ([index, isActive]) => {
-      react.ensure('has carousel', !!this.carouselRef.current)
+      ensure('has carousel', !!this.carouselRef.current)
       const { items, offset, selectionStore, resetOnInactive } = this.props
       if (isActive == false) {
         if (resetOnInactive) {
@@ -32,12 +32,9 @@ class CarouselStore {
         throw react.cancel
       }
       const scrollTo = offset + index
-      react.ensure('wasnt clicked', selectionStore.selectEvent !== 'click')
-      react.ensure(
-        'within bounds',
-        index >= offset && index <= offset + items.length,
-      )
-      react.ensure('has scrollTo', typeof scrollTo === 'number')
+      ensure('wasnt clicked', selectionStore.selectEvent !== 'click')
+      ensure('within bounds', index >= offset && index <= offset + items.length)
+      ensure('has scrollTo', typeof scrollTo === 'number')
       this.carouselRef.current.scrollTo(scrollTo)
     },
   )

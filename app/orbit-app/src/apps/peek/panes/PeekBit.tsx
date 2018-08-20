@@ -56,7 +56,8 @@ export const PeekBit = ({
   peekStore,
   children,
 }: PeekPaneProps) => {
-  const BitPaneContent = PeekBitPanes[capitalize(item.subType)]
+  const bitPaneName = capitalize(item.subType)
+  const BitPaneContent = PeekBitPanes[bitPaneName]
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {item.subType}</div>
   }

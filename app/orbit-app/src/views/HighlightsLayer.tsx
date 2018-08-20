@@ -127,6 +127,10 @@ export class HighlightsLayer extends React.Component<Props, State> {
 
   render() {
     const { highlights } = this.state
+    if (!React.isValidElement(this.props.children)) {
+      console.log(this.props.children)
+      return <div>error bad children</div>
+    }
     return (
       <UI.View position="relative">
         <UI.FullScreen

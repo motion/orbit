@@ -61,21 +61,30 @@ export class PeekStore {
       const isShown = !!tornState || (!!target && !!App.orbitState.docked)
       let nextState = {
         lastState,
-        curState: lastState,
+        // first make target update quickly so it moves fast
+        // while keeping the last model the same so it doesn't flicker
+        curState: {
+          ...lastState,
+          ...App.peekState,
+        },
         isShown,
         willHide: !!lastState && !isShown,
         willShow: !!isShown && !lastState,
         willStayShown: !!isShown && !!lastState,
       }
-      // start animation right away
       setValue(nextState)
       if (isShown) {
-        // then load model and update again
-        const curState = tornState || (await this.getCurState())
-        await sleep(120)
+        // wait and fetch in parallel
+        const [model] = await Promise.all([
+          tornState || this.getModel(),
+          sleep(100),
+        ])
         setValue({
           ...nextState,
-          curState,
+          curState: {
+            ...nextState.curState,
+            model,
+          },
         })
       }
     },
@@ -121,12 +130,9 @@ export class PeekStore {
     return this.internalState.willStayShown
   }
 
-  getCurState = async () => {
-    if (this.tornState) {
-      return this.tornState
-    }
+  getModel = async () => {
     const { id, type } = App.peekState.item
-    let selectedItem
+    let selectedItem = null
     if (type === 'person') {
       selectedItem = await PersonRepository.findOne({ id })
     } else if (type === 'bit') {
@@ -135,15 +141,7 @@ export class PeekStore {
     } else if (type === 'setting') {
       selectedItem = await SettingRepository.findOne({ id })
     }
-    const { docked, hidden } = App.orbitState
-    if (docked || !hidden) {
-      return {
-        _internalId: Math.random(),
-        ...App.peekState,
-        model: selectedItem,
-      }
-    }
-    return null
+    return selectedItem
   }
 
   get theme() {

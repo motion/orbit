@@ -4,7 +4,7 @@ import { OrbitCard } from '../../../../views/OrbitCard'
 import { SettingRepository } from '../../../../repositories'
 import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
 import { Setting } from '@mcro/models'
-import { OrbitCardProps } from '../../../../views/OrbitCard'
+import { OrbitItemProps } from '../../../../views/OrbitItemProps'
 
 const handleClick = async () => {
   const { result } = this.props
@@ -17,7 +17,7 @@ const handleClick = async () => {
   }
 }
 
-type Props = OrbitCardProps & {
+type Props = OrbitItemProps & {
   store: SettingInfoStore
   isActive?: boolean
 }

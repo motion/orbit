@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, compose } from '@mcro/black'
+import { view, react, compose, ensure } from '@mcro/black'
 import { BitRepository, PersonRepository } from '../../../../repositories'
 import { SubTitle } from '../../../../views'
 import { SubPane } from '../../SubPane'
@@ -39,7 +39,7 @@ class OrbitHomeStore {
   setSelectionHandler = react(
     () => [this.isActive, this.results],
     ([isActive]) => {
-      if (!isActive) throw react.cancel
+      ensure('is active', isActive)
       this.props.selectionStore.setResults(this.results)
     },
   )

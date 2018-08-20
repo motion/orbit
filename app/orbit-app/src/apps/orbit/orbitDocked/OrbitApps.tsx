@@ -147,7 +147,7 @@ export class OrbitApps extends React.Component<Props> {
                   key={result.id}
                   result={result}
                   index={index}
-                  setting={result.setting}
+                  model={result.setting}
                   isActive
                 />
               ))}

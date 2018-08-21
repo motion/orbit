@@ -36,7 +36,7 @@ export const ResolveDocument = ({
     content: isExpanded
       ? markdown(
           markdownBoldifySearch(
-            bit.data.markdownBody || bit.data.body || bit.body || '',
+            bit.body,
             searchTerm,
           ),
         )

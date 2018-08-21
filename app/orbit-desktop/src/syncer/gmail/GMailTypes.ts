@@ -40,11 +40,16 @@ export type GmailMessage = {
       value: string
     }[]
     parts: {
+      mimeType: string
       body: {
         size: number
         data: string
       }
     }[]
+    body: {
+      size: number
+      data: string
+    }
     mimeType: string
   }
 }

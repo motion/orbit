@@ -5,7 +5,7 @@ import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
 import { createOrUpdate } from '../../helpers/createOrUpdate'
 import { createOrUpdateBit } from '../../helpers/createOrUpdateBit'
-import { createOrUpdatePersonBit } from '../../repository'
+import { createOrUpdatePersonBits } from '../../repository'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GDriveLoader } from './GDriveLoader'
 import { GDriveLoadedFile, GDriveLoadedUser } from './GDriveTypes'
@@ -95,6 +95,8 @@ export class GDriveSyncer implements IntegrationSyncer {
         integrationId: user.email,
         integration: 'gdrive',
         name: user.name,
+        email: user.email,
+        photo: user.photo,
         data: {
           ...user,
         },
@@ -102,15 +104,8 @@ export class GDriveSyncer implements IntegrationSyncer {
       { matching: ['id', 'integration'] },
     )
 
-    if (user.email) {
-      await createOrUpdatePersonBit({
-        email: user.email,
-        name: user.name,
-        photo: user.photo,
-        integration: 'gdrive',
-        person: personEntity,
-      })
-    }
+    if (user.email)
+      await createOrUpdatePersonBits(personEntity)
 
     return personEntity
   }

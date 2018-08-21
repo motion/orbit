@@ -1,43 +1,40 @@
 import { logger } from '@mcro/logger'
-import { Bit, Person, ConfluencePersonData } from '@mcro/models'
-import { AtlassianService } from '@mcro/services'
+import { JiraPersonData, Person } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
-import { ConfluenceLoader } from './ConfluenceLoader'
-import { ConfluenceUser } from './ConfluenceTypes'
+import { JiraLoader } from './JiraLoader'
+import { JiraUser } from './JiraTypes'
 
-const log = logger('syncer:confluence:people')
+const log = logger('syncer:jira:people')
 
 /**
- * Syncs Confluence people.
+ * Syncs Jira people.
  */
-export class ConfluencePeopleSyncer implements IntegrationSyncer {
+export class JiraPeopleSyncer implements IntegrationSyncer {
   private setting: SettingEntity
-  private loader: ConfluenceLoader
+  private loader: JiraLoader
   private people: PersonEntity[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
-    this.loader = new ConfluenceLoader(setting)
+    this.loader = new JiraLoader(setting)
   }
 
-  /**
-   * Runs synchronization process.
-   */
   async run(): Promise<void> {
-    // load users from confluence API
-    log('loading confluence API users')
-    const allUsers = await this.loader.loadUsers()
-    log('got confluence API users', allUsers)
 
-    // we don't need some confluence users, like system or bot users
+    // load users from jira API
+    log('loading jira API users')
+    const allUsers = await this.loader.loadUsers()
+    log('got jira API users', allUsers)
+
+    // we don't need some jira users, like system or bot users
     // so we are filtering them out
     log("filter out users we don't need")
-    const filteredUsers = allUsers.filter(member => this.checkUser(member))
+    const filteredUsers = allUsers.filter(user => this.checkUser(user))
     log('users were filtered out', filteredUsers)
 
     // load users from the database
@@ -47,7 +44,7 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
     })
     log('got database users', this.people)
 
-    // create entities for each loaded member
+    // create entities for each loaded user
     log('creating person entities from the loaded content')
     const people = filteredUsers.map(user => this.createPerson(user))
     log('entities created', people)
@@ -62,8 +59,8 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
   /**
    * Checks if confluence user is acceptable and can be used to create person entity from.
    */
-  private checkUser(user: ConfluenceUser): boolean {
-    const email = user.details.personal.email || ''
+  private checkUser(user: JiraUser): boolean {
+    const email = user.emailAddress || ''
     const ignoredEmail = '@connect.atlassian.com'
     return email.substr(ignoredEmail.length * -1) !== ignoredEmail
   }
@@ -71,24 +68,20 @@ export class ConfluencePeopleSyncer implements IntegrationSyncer {
   /**
    * Creates person entity from a given confluence user.
    */
-  private createPerson(user: ConfluenceUser): PersonEntity {
-    const id = `confluence-${this.setting.id}-${user.accountId}`
+  private createPerson(user: JiraUser): PersonEntity {
+    const id = `jira-${this.setting.id}-${user.accountId}`
     const person = this.people.find(person => person.id === id)
+    const data: JiraPersonData = {}
     return assign(person || new PersonEntity(), {
       id,
-      integration: 'confluence',
+      integration: 'jira',
       setting: this.setting,
       integrationId: user.accountId,
       name: user.displayName,
-      email: user.details.personal.email,
-      photo: user.profilePicture.path,
-      data: {
-        avatar: user.profilePicture.path || '', // todo: duplication
-        emails: [user.details.personal.email], // todo: duplication
-        data: {
-          github: user, // todo: what github is going here in confluence?
-        },
-      } as ConfluencePersonData,
+      email: user.emailAddress,
+      photo: user.avatarUrls['48x48'],
+      data,
     })
   }
+
 }

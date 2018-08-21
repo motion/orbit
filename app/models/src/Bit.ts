@@ -1,4 +1,6 @@
+import { ConfluenceBitData } from './bit-data/ConfluenceBitData'
 import { GmailBitData } from './bit-data/GmailBitData'
+import { JiraBitData } from './bit-data/JiraBitData'
 import { SlackBitData } from './bit-data/SlackBitData'
 import { Location } from './Location'
 import { Person } from './Person'
@@ -70,6 +72,11 @@ export interface Bit {
   desktopLink: string
 
   /**
+   * Original bit content author.
+   */
+  author: Person
+
+  /**
    * Related to this Bit people.
    */
   people: Person[]
@@ -92,7 +99,7 @@ export interface Bit {
   /**
    * Additional bit data.
    */
-  data: SlackBitData | GmailBitData | Object // todo: provide other union types
+  data: SlackBitData | GmailBitData | ConfluenceBitData | JiraBitData // todo: provide other union types
 
   /**
    * Raw JSON data.

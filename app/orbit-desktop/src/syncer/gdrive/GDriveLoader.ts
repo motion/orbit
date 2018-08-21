@@ -161,7 +161,7 @@ export class GDriveLoader {
 
     log(`downloading file thumbnail for`, file)
     const destination = path.normalize(
-      __dirname + '/../../../../uploads/' + file.id + '.' + file.fileExtension,
+      __dirname + '/../../../uploads/' + file.id + '.' + file.fileExtension,
     )
     await this.fetcher.downloadFile(file.thumbnailLink, destination)
     log(`thumbnail downloaded and saved as`, destination)

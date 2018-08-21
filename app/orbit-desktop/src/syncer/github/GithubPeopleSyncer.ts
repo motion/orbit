@@ -4,7 +4,7 @@ import { uniq } from 'lodash'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { createOrUpdatePersonBit } from '../../repository'
+import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GithubPeopleLoader } from './GithubPeopleLoader'
@@ -49,6 +49,8 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
       integration: 'github',
       name: githubPerson.login,
       webLink: `https://github.com/${githubPerson.login}`,
+      email: githubPerson.email,
+      photo: githubPerson.avatarUrl,
       data: {
         location: githubPerson.location || '',
         bio: githubPerson.bio || '',
@@ -63,13 +65,7 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
 
     // some people don't have their email exposed, that's why we need this check
     if (githubPerson.email) {
-      await createOrUpdatePersonBit({
-        email: githubPerson.email,
-        name: githubPerson.name,
-        photo: githubPerson.avatarUrl,
-        integration: 'github',
-        person: person,
-      })
+      await createOrUpdatePersonBits(person)
     }
 
     return person

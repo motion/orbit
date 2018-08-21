@@ -72,7 +72,6 @@ Card.theme = ({
   if (background) {
     card.background = background
   }
-  // CARD
   if (!isSelected) {
     card = {
       ...card,
@@ -80,11 +79,10 @@ Card.theme = ({
       border: border || [1, [255, 255, 255, 0.07]],
       '&:hover': {
         boxShadow: disabledShadow || [cardShadow, cardHoverGlow],
-        border: [1, [255, 255, 255, 0.2]],
+        border: [1, [255, 255, 255, 0.25]],
       },
     }
-  }
-  if (isSelected) {
+  } else {
     card = {
       ...card,
       boxShadow: disabledShadow || [cardShadow, cardSelectedGlow],
@@ -243,7 +241,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
               {!!createdAt && (
                 <>
                   {!!(subtitle || location) && <div style={{ width: 5 }} />}
-                  <UI.Text alpha={0.75} size={0.95}>
+                  <UI.Text alpha={0.65} size={0.9}>
                     <DateFormat date={new Date(updatedAt)} nice />
                   </UI.Text>
                 </>

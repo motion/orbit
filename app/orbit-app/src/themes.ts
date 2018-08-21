@@ -45,7 +45,9 @@ export const themes = {
   }),
   dark: {
     ...macTheme,
-    cardBackground: '#77777788',
+    card: Theme.colorize({
+      background: '#77777788',
+    }),
     ...Theme.fromStyles({
       background: 'rgba(20,20,20,0.94)',
       color: '#fff',

@@ -66,11 +66,8 @@ Card.theme = ({
     ...card,
     padding: padding || 13,
     borderRadius: borderRadius || 9,
-    background: theme.background,
+    background: background || theme.background,
     ...theme.card,
-  }
-  if (background) {
-    card.background = background
   }
   if (!isSelected) {
     card = {

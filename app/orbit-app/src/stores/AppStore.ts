@@ -70,7 +70,7 @@ export class AppStore {
         where: { category: 'integration', token: { $not: 'good' } },
       }),
     {
-      ignoreKeys: ['updatedAt'],
+      ignoreKeys: ['updatedAt', 'values'],
     },
   )
 

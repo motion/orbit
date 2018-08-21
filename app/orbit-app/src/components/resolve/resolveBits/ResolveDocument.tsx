@@ -22,7 +22,6 @@ const markdownBoldifySearch = (str = '', term = '') => {
 export const ResolveDocument = ({
   item,
   bit,
-  appStore,
   searchTerm,
   children,
   isExpanded,
@@ -30,9 +29,10 @@ export const ResolveDocument = ({
   children({
     title: bit.title || item.title,
     icon: bit.integration || item.integration,
-    location: bit.location.name || item.location || 'Wiki',
-    locationLink: () => {},
-    permalink: () => appStore.open(bit),
+    location: bit.location.name || '',
+    locationLink: bit.location.desktopLink || bit.location.webLink,
+    webLink: bit.webLink,
+    desktopLink: bit.webLink,
     content: isExpanded
       ? markdown(
           markdownBoldifySearch(

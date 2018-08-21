@@ -30,9 +30,10 @@ type Props = PeekBitPaneProps & {
 
 export const Conversation = decorator(
   ({ /* relatedStore, */ content }: Props) => {
+    console.log('content is', content)
     return (
       <>
-        {content}
+        {content || null}
         {/* {relatedStore.relatedConversations.length ? (
         <UI.View marginTop={20}>
           <Section>

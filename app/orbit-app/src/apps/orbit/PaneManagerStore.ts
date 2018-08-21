@@ -25,11 +25,13 @@ export class PaneManagerStore {
       if (App.state.query) {
         return
       }
-      if (key === 'right') {
-        this.setPaneIndex(Math.min(this.panes.length - 1, this.paneIndex + 1))
-      }
-      if (key === 'left') {
-        this.setPaneIndex(Math.max(0, this.paneIndex - 1))
+      if (this.props.selectionStore.activeIndex === -1) {
+        if (key === 'right') {
+          this.setPaneIndex(Math.min(this.panes.length - 1, this.paneIndex + 1))
+        }
+        if (key === 'left') {
+          this.setPaneIndex(Math.max(0, this.paneIndex - 1))
+        }
       }
     })
 
@@ -91,7 +93,13 @@ export class PaneManagerStore {
     this.setPaneIndex(this.panes.findIndex(val => val === name))
   }
 
+  beforeSetPane = () => {
+    // clear selection results on change pane
+    this.props.selectionStore.setResults(null)
+  }
+
   setPaneIndex = index => {
+    this.beforeSetPane()
     if (index !== this.paneIndex) {
       this.paneIndex = index
     }

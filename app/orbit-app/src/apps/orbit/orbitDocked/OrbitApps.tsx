@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react } from '@mcro/black'
+import { view, react, ensure } from '@mcro/black'
 import { SettingRepository } from '../../../repositories'
 import { OrbitSettingCard } from './OrbitSettings/OrbitSettingCard'
 import { SubPane } from '../SubPane'
@@ -9,7 +9,6 @@ import { IntegrationSettingsStore } from '../../../stores/IntegrationSettingsSto
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
 import { addIntegrationClickHandler } from '../../../helpers/addIntegrationClickHandler'
-import { generalSettingQuery } from '../../../repositories/settingQueries'
 import { Grid } from '../../../views/Grid'
 import { SimpleItem } from '../../../views/SimpleItem'
 import { Button } from '@mcro/ui'
@@ -38,7 +37,7 @@ class OrbitAppsStore {
   setSelectionHandler = react(
     () => [this.isActive, this.results],
     ([isActive]) => {
-      if (!isActive) throw react.cancel
+      ensure('is active', isActive)
       this.props.selectionStore.setResults([
         { type: 'column', items: this.results },
       ])
@@ -71,14 +70,6 @@ class OrbitAppsStore {
     })
   }
 
-  _generalSettingUpdate = Date.now()
-  _generalSetting = modelQueryReaction(generalSettingQuery)
-
-  get generalSetting() {
-    this._generalSettingUpdate
-    return this._generalSetting
-  }
-
   IntegrationCard = props => (
     <OrbitSettingCard
       pane="docked"
@@ -100,13 +91,16 @@ class OrbitAppsStore {
     })
 
   // this will go away soon...
-  refreshSettings = modelQueryReaction(this.getSettings, val => {
-    // only when pane active
-    if (!this.isActive && this.integrationSettings.length) {
-      throw react.cancel
-    }
-    this.updateIntegrationSettings(val)
-  })
+  refreshSettings = modelQueryReaction(
+    this.getSettings,
+    val => {
+      ensure('is active', this.isActive || !this.integrationSettings.length)
+      this.updateIntegrationSettings(val)
+    },
+    {
+      ignoreKeys: ['updatedAt', 'values'],
+    },
+  )
 
   updateIntegrationSettings = async (settings?) => {
     const next = settings || (await this.getSettings())
@@ -140,14 +134,14 @@ export class OrbitApps extends React.Component<Props> {
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
               gridAutoRows={80}
-              margin={[5, -4]}
+              margin={[5, 0]}
             >
               {store.results.map((result, index) => (
                 <store.IntegrationCard
                   key={result.id}
                   result={result}
                   index={index}
-                  setting={result.setting}
+                  model={result.setting}
                   isActive
                 />
               ))}

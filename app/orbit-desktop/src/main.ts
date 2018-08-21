@@ -2,11 +2,13 @@ import 'isomorphic-fetch'
 import * as Path from 'path'
 import { setConfig } from './config'
 import { logger } from '@mcro/logger'
+import { cleanupChildren } from './helpers/cleanupChildren'
 
 const log = logger('desktop')
 
 export async function main({ port }) {
-  log(`Desktop is starting`)
+  log('Desktop is starting')
+
   /*
    *  Set config before requiring app!
    */
@@ -39,5 +41,13 @@ export async function main({ port }) {
   if (process.env.NODE_ENV === 'development') {
     require('./helpers/startDevelopment').startDevelopment(appRoot)
   }
+
+  // handle exits gracefully
+  process.on('exit', () => {
+    console.log('Orbit Desktop exiting...')
+    appRoot.dispose()
+    cleanupChildren()
+  })
+
   await appRoot.start()
 }

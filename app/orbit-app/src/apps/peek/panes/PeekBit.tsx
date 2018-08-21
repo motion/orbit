@@ -12,6 +12,7 @@ import { OrbitIcon } from '../../../views/OrbitIcon'
 import { TimeAgo } from '../../../views/TimeAgo'
 import { View } from '@mcro/ui'
 import { PeekBar } from './PeekBar'
+import { Bit } from '@mcro/models'
 
 const SearchablePeek = UI.Searchable(({ children, searchBar, searchTerm }) => {
   return children({
@@ -50,13 +51,15 @@ const HeadSide = view({
 
 export const PeekBit = ({
   item,
-  bit,
+  model,
   appStore,
   selectionStore,
   peekStore,
   children,
 }: PeekPaneProps) => {
-  const BitPaneContent = PeekBitPanes[capitalize(item.subType)]
+  const bit = model as Bit
+  const bitPaneName = capitalize(item.subType)
+  const BitPaneContent = PeekBitPanes[bitPaneName]
   if (!BitPaneContent) {
     return <div>Error yo item.subType: {item.subType}</div>
   }
@@ -73,16 +76,17 @@ export const PeekBit = ({
         content,
         location,
         locationLink,
-        integration,
-        permalink,
+        webLink,
+        desktopLink,
         updatedAt,
         comments,
       }) => {
+        console.log('what', webLink, desktopLink, locationLink)
         return (
           <SearchablePeek
             key={item.id}
             defaultValue={App.state.query}
-            focusOnMount
+            // focusOnMount
             onChange={() => selectionStore.setHighlightIndex(0)}
             onEnter={peekStore.goToNextHighlight}
             placeholder={`Search this ${item.subType} and related...`}
@@ -95,7 +99,8 @@ export const PeekBit = ({
                 {!!icon && (
                   <UI.Button
                     onClick={() => {
-                      console.log('todo open integration', integration)
+                      App.actions.open(locationLink)
+                      App.actions.closeOrbit()
                     }}
                     circular
                     icon={<OrbitIcon icon={icon} size={16} />}
@@ -107,7 +112,10 @@ export const PeekBit = ({
               <HeadSide>
                 {!!icon && (
                   <UI.Button
-                    onClick={permalink}
+                    onClick={() => {
+                      App.actions.open(desktopLink || webLink)
+                      App.actions.closeOrbit()
+                    }}
                     circular
                     icon="link"
                     iconSize={14}
@@ -126,7 +134,7 @@ export const PeekBit = ({
                     <PeekBar.Button
                       onClick={e => {
                         e.stopPropagation()
-                        locationLink()
+                        App.actions.open(locationLink)
                       }}
                     >
                       {location}
@@ -158,9 +166,9 @@ export const PeekBit = ({
                         content={content}
                         comments={comments}
                       />
-                      {/* height for bottom bar */}
-                      <div style={{ height: 80 }} />
                     </HighlightsLayer>
+                    {/* height for bottom bar */}
+                    <div style={{ height: 80 }} />
                     {/* <BottomSpace />
                     <BottomFloat>
                       <PeekRelated

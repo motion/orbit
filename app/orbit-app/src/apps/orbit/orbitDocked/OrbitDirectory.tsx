@@ -13,7 +13,7 @@ import { Person } from '@mcro/models'
 import { Grid } from '../../../views/Grid'
 import { sortBy } from 'lodash'
 import { GridTitle } from './GridTitle'
-import { SelectionStore, SelectionGroup } from '../../../stores/SelectionStore'
+import { SelectionStore } from '../../../stores/SelectionStore'
 
 const height = 69
 
@@ -115,7 +115,7 @@ export const OrbitDirectory = decorator((props: Props) => {
   )
 })
 
-const createSection = (people: Person[], letter, getIndex, total) => {
+const createSection = (people: Person[], letter, getIndex) => {
   return (
     <React.Fragment key={letter}>
       <GridTitle>{letter}</GridTitle>
@@ -149,6 +149,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   if (!total) {
     return null
   }
+  console.log('rendering directory...')
   // create sections by letter
   let sections = []
   let nextPeople = []
@@ -165,7 +166,6 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
           nextPeople,
           lastPersonLetter.toUpperCase(),
           store.getIndex,
-          total,
         ),
       )
       nextPeople = [person]

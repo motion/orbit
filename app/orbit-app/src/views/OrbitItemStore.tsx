@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { getTargetPosition } from '../helpers/getTargetPosition'
 import { OrbitItemProps } from './OrbitItemProps'
@@ -81,9 +81,7 @@ export class OrbitItemStore {
         : this.props.isSelected,
     ],
     async ([activeIndex, isPaneActive, isSelected], { sleep }) => {
-      if (!isPaneActive) {
-        throw react.cancel
-      }
+      ensure('active', isPaneActive)
       const { preventAutoSelect, subPaneStore } = this.props
       let nextIsSelected
       if (typeof isSelected === 'boolean') {
@@ -91,9 +89,7 @@ export class OrbitItemStore {
       } else {
         nextIsSelected = activeIndex === this.realIndex
       }
-      if (nextIsSelected === this.isSelected) {
-        throw react.cancel
-      }
+      ensure('new index', nextIsSelected !== this.isSelected)
       this.isSelected = nextIsSelected
       if (nextIsSelected && !preventAutoSelect) {
         if (subPaneStore) {

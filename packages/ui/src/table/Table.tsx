@@ -543,8 +543,6 @@ export default class Table extends PureComponent<TableProps, TableState> {
   render() {
     const { props, state } = this
 
-    console.log('props.sortOrder', props.sortOrder)
-
     const tableHead =
       props.hideHeader === true ? null : (
         <TableHead

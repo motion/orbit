@@ -59,7 +59,6 @@ export const ResolveTask = ({
   children,
   isExpanded,
   shownLimit,
-  appStore,
 }: ItemResolverProps) => {
   const { content, comments } = isExpanded
     ? parseGithubContents({ bit, shownLimit })
@@ -67,17 +66,13 @@ export const ResolveTask = ({
   return children({
     title: bit.title,
     icon: 'github',
-    locationLink: () =>
-      appStore.open(
-        `https://github.com/${bit.data.orgLogin}/${bit.data.repositoryName}`,
-      ),
+    locationLink: `https://github.com/${bit.data.orgLogin}/${
+      bit.data.repositoryName
+    }`,
     location: `${bit.data.orgLogin}/${bit.data.repositoryName}`,
-    permalink: () =>
-      appStore.open(
-        `https://github.com/${bit.data.orgLogin}/${
-          bit.data.repositoryName
-        }/issues/${bit.data.number}`,
-      ),
+    webLink: `https://github.com/${bit.data.orgLogin}/${
+      bit.data.repositoryName
+    }/issues/${bit.data.number}`,
     people: bit.people,
     content,
     comments,

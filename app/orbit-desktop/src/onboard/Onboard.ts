@@ -47,22 +47,22 @@ export class Onboard {
     // for now always run...
     this.generalSetting.values.hasOnboarded = false
     if (!this.generalSetting.values.hasOnboarded) {
-      const didRun = await this.runOnboarding()
-      if (didRun) {
-        this.generalSetting.values.hasOnboarded = true
-        await this.generalSetting.save()
-      }
+      await this.runOnboarding()
+      // if (didRun) {
+      //   this.generalSetting.values.hasOnboarded = true
+      //   await this.generalSetting.save()
+      // }
     }
   }
 
   async runOnboarding() {
-    await this.scanHistory()
+    this.scanHistory()
   }
 
-  scanHistory() {
+  async scanHistory() {
     const chromeFolder = chromeDbPaths.find(x => Fs.existsSync(x))
     if (chromeFolder) {
-      this.scanChrome(chromeFolder)
+      await this.scanChrome(chromeFolder)
     }
   }
 

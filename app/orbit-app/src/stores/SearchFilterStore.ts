@@ -64,6 +64,11 @@ export class SearchFilterStore /* extends Store */ {
     })
   }
 
+  // todo: this should replace any existing filters of same type
+  setFilter = (type: string, value: string) => {
+    console.log('should set filter', type, value)
+  }
+
   setExtraFiltersVisible = target => {
     this.extraFiltersVisible = !!target
   }
@@ -149,7 +154,7 @@ export class SearchFilterStore /* extends Store */ {
       type: setting.type,
       icon: setting.type,
       name: this.integrationSettingsStore.getTitle(setting),
-      active: this.hasExclusiveFilters ? exclusiveFilters[setting.type] : true,
+      active: this.hasExclusiveFilters ? exclusiveFilters[setting.type] : false,
     }))
   }
 
@@ -251,12 +256,12 @@ export class SearchFilterStore /* extends Store */ {
     },
   )
 
-  queryHasActiveSegment = name =>
+  hasActiveFilter = name =>
     this.parsedQuery.some(x => x.text.toLowerCase() === name.toLowerCase())
 
-  toggleFilter = (name: string) => {
+  toggleFilterActive = (name: string) => {
     // if adding a suggested filter, add it dont disable
-    if (!this.queryHasActiveSegment(name)) {
+    if (!this.hasActiveFilter(name)) {
       this.queryStore.setQuery(`${this.queryStore.query} ${name}`.trim())
       return
     }

@@ -110,8 +110,9 @@ echo -n "--no-install " >> ./scripts/.lastbuild
 
 echo "patching bundle..."
 rm -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/build || true
-# rm -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules/iohook
-# cp -r ./build-resources/iohook/node_modules/iohook dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/orbit-desktop/node_modules
+
+echo "fixing sqlite for desktop process..."
+cp -r dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 dist/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
 
 # sign
 if [[ "$FLAGS" =~ "--no-sign" ]]; then

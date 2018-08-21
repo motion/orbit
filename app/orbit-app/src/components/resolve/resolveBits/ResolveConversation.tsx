@@ -15,7 +15,6 @@ const options = {
 export const ResolveConversation = ({
   children,
   bit,
-  appStore,
   shownLimit = 5,
   itemProps,
   isExpanded,
@@ -47,9 +46,10 @@ export const ResolveConversation = ({
       .slice(0, 8)
       .join(' '),
     icon: 'slack',
-    locationLink: () => appStore.open(bit, 'channel'),
+    locationLink: bit.location.desktopLink || bit.location.webLink,
+    desktopLink: bit.desktopLink,
+    webLink: bit.webLink,
     location: bit.title,
-    permalink: () => appStore.open(bit),
     content,
   })
 }

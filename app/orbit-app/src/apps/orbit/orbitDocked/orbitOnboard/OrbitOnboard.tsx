@@ -113,19 +113,19 @@ const buttonText = ['Next', 'Looks good', 'Done!']
 class OnboardStore {
   props: Props
 
-  curFrame = 1
+  curFrame = 0
   lastFrame = () => this.curFrame--
 
   nextFrame = async () => {
-    // before incrementing, run some actions...
+    // before incrementing, run some actions for:
+    // LEAVING curFrame page...
 
-    // first
     if (this.curFrame === 1) {
       // await acceptsforwarding...
-      App.setState({ acceptsForwarding: true })
+      // App.setState({ acceptsForwarding: true })
     }
-    // last
-    if (this.curFrame === 3) {
+
+    if (this.curFrame === 2) {
       console.log('cur frame now...')
       this.props.paneManagerStore.forceOnboard = false
       // save setting

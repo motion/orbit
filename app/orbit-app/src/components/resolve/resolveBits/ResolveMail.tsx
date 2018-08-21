@@ -9,7 +9,7 @@ const options = {
   remove_duplicates: false,
 }
 
-export const ResolveMail = ({ bit, appStore, children }: ItemResolverProps) =>
+export const ResolveMail = ({ bit, children }: ItemResolverProps) =>
   children({
     title: keywordExtract
       .extract(bit.title, options)
@@ -17,9 +17,10 @@ export const ResolveMail = ({ bit, appStore, children }: ItemResolverProps) =>
       .map(_.capitalize)
       .join(' '),
     icon: 'gmail',
-    permalink: () => appStore.open(bit),
+    webLink: bit.webLink,
+    desktopLink: bit.desktopLink,
     location: Helpers.getHeaderFromShort(bit),
-    locationLink: () => {},
+    locationLink: bit.location.webLink,
     content: bit.body,
     preview: keywordExtract
       .extract(bit.body, options)

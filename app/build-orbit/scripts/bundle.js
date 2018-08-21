@@ -87,6 +87,8 @@ async function bundle() {
 
   console.log('packaging new app...')
   const paths = await electronPackager({
+    appBundleId: 'com.tryorbit',
+    helperBundleId: 'com.tryorbit',
     dir: STAGING_DIR,
     out: BUILD_DIR,
     icon: Path.join(ROOT, 'resources', 'icon.icns'),

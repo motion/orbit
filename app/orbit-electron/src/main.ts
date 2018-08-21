@@ -1,19 +1,20 @@
-import 'source-map-support/register'
 import 'raf/polyfill'
 import { setConfig } from './config'
 import * as Path from 'path'
 import { logger } from '@mcro/logger'
 import waitPort from 'wait-port'
+import { startDesktopInProcess } from './helpers/startDesktopInProcess'
 
 const log = logger('electron')
 
 Error.stackTraceLimit = Infinity
 
-export async function main({ port }) {
+export async function main({ port }): Promise<number | void> {
   log(`Starting electron with port ${port} in env ${process.env.NODE_ENV}`)
 
   // handle our own separate process in development
   if (process.env.NODE_ENV === 'development') {
+    require('source-map-support/register')
     require('./helpers/installGlobals')
     require('./helpers/watchForAppRestarts').watchForAppRestarts()
     await waitPort({ port: 3002 })
@@ -36,13 +37,23 @@ export async function main({ port }) {
     })
   }
 
+  let desktopPid
+
   // start desktop in production
   if (process.env.NODE_ENV !== 'development') {
-    log(`In production, starting desktop...`)
-    require('./helpers/startDesktopInProcess').startDesktopInProcess(port)
-    log(`Waiting for desktop startup to continue...`)
+    log('In production, starting desktop...')
+    desktopPid = startDesktopInProcess(port)
+    console.log('\n\n\n\n\n\ndesktop pid is\n\n\n\n\n\n', desktopPid)
+    log('Waiting for desktop startup to continue...')
+    const failStartTm = setTimeout(() => {
+      require('electron').dialog.showMessageBox({
+        message: 'Node process didnt start!',
+        buttons: ['Ok'],
+      })
+    }, 5000)
     await waitPort({ port })
-    log(`Found desktop, continue...`)
+    clearTimeout(failStartTm)
+    log('Found desktop, continue...')
   }
 
   // set config before starting app
@@ -63,4 +74,6 @@ export async function main({ port }) {
   // require app after setting config
   const { ElectronApp } = require('./ElectronApp')
   new ElectronApp()
+
+  return desktopPid
 }

@@ -49,57 +49,34 @@ class PeekPageInner extends React.Component<Props> {
     if (!peekStore.state) {
       return null
     }
-    const { item, peekId, model } = peekStore.state
+    const { item, model, peekId } = peekStore.state
     const type = (item && capitalize(item.type)) || 'Empty'
     const PeekContentsView = PeekPanes[type] as PeekPane
     if (!PeekContentsView) {
       console.error('none', type)
       return <div>no pane found</div>
     }
+    console.log('render with id', peekId)
     return (
       <PeekContentsView
         key={peekId}
         item={item}
-        bit={model}
-        person={model}
+        model={model}
         appStore={appStore}
         peekStore={peekStore}
         selectionStore={selectionStore}
       >
         {(resolvedProps: PeekContents) => {
           const {
-            title,
-            titleAfter,
-            permalink,
-            icon,
-            date,
-            belowHead,
-            belowHeadMain,
             preBody,
             postBody,
-            subtitle,
-            subtitleBefore,
-            subtitleAfter,
-            after,
             content,
             headerProps,
+            ...restResolvedProps
           } = resolvedProps
           return (
             <>
-              <PeekHeader
-                title={title}
-                titleAfter={titleAfter}
-                subtitle={subtitle}
-                subtitleBefore={subtitleBefore}
-                subtitleAfter={subtitleAfter}
-                after={after}
-                icon={icon}
-                date={date}
-                belowHead={belowHead}
-                belowHeadMain={belowHeadMain}
-                permalink={permalink}
-                {...headerProps}
-              />
+              <PeekHeader {...restResolvedProps} {...headerProps} />
               {preBody}
               <PeekContent peekStore={peekStore}>{content}</PeekContent>
               {postBody}

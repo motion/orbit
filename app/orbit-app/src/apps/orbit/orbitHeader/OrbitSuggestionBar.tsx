@@ -98,7 +98,7 @@ export const OrbitSuggestionBar = view(
           {filterStore.allFilters.map((filter, index) => (
             <FilterButton
               key={`${filter.text}${filter.active}`}
-              onClick={() => filterStore.toggleFilter(filter.text)}
+              onClick={() => filterStore.toggleFilterActive(filter.text)}
               opacity={opacityScale[index] || 0.333}
               borderColor={
                 (filter.active && activeThemes[filter.type].borderColor) ||

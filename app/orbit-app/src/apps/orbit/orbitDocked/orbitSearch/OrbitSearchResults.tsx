@@ -12,6 +12,7 @@ import { SelectionStore } from '../../../../stores/SelectionStore'
 import { App } from '@mcro/stores'
 import { memoize } from 'lodash'
 import { HighlightsLayer } from '../../../../views/HighlightsLayer'
+import { ResolvedItem } from '../../../../components/ItemResolver'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -109,6 +110,14 @@ class OrbitSearchResultsList extends React.Component<Props> {
     )
   }
 
+  handleLocation = (e, item: ResolvedItem) => {
+    e.preventDefault()
+    this.props.searchStore.searchFilterStore.setFilter(
+      'location',
+      item.location,
+    )
+  }
+
   spaceBetween = <div style={{ flex: 1 }} />
 
   render() {
@@ -133,6 +142,7 @@ class OrbitSearchResultsList extends React.Component<Props> {
               subtitleSpaceBetween={this.spaceBetween}
               isExpanded
               searchTerm={searchTerm}
+              onClickLocation={this.handleLocation}
             >
               {this.getChildren}
             </OrbitListItem>

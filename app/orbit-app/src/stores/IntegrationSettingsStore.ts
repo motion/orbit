@@ -4,12 +4,16 @@ import { modelQueryReaction } from '../repositories/modelQueryReaction'
 import { getSettingTitle } from '../helpers/settingToResult'
 
 export class IntegrationSettingsStore {
-  settingsList?: Setting[] = modelQueryReaction(() =>
-    SettingRepository.find({
-      where: {
-        token: { $not: '' },
-      },
-    }),
+  settingsList?: Setting[] = modelQueryReaction(
+    () =>
+      SettingRepository.find({
+        where: {
+          token: { $not: '' },
+        },
+      }),
+    {
+      ignoreKeys: ['updatedAt'],
+    },
   )
 
   get settings() {

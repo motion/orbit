@@ -14,15 +14,15 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
   const half = total / 2
   return (
     <UI.Row padding={[3, 0, 0]}>
-      <UI.Row marginRight={14}>
+      <UI.Row marginRight={14} alignItems="center">
         {people.map((person, i) => (
           <UI.Image
             key={i}
-            width={20}
-            height={20}
+            width={16}
+            height={16}
             marginRight={-10}
             borderRadius={100}
-            border={[2, theme.base.background.lighten(2)]}
+            border={[1, theme.base.background.lighten(2)]}
             transform={{
               rotate: `${(i + half - total / total) * 12}deg`,
             }}
@@ -31,7 +31,7 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
         ))}
       </UI.Row>
       <UI.Row>
-        <UI.Text size={0.95} alpha={0.5}>
+        <UI.Text size={0.95} alpha={0.6} fontWeight={500}>
           {people.map((person, i) => (
             <UI.Inline marginRight={4} key={i}>
               {shortName(person.name)}

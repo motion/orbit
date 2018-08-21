@@ -1,4 +1,4 @@
-import { react, on } from '@mcro/black'
+import { react, on, isEqual } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import * as Helpers from '../helpers'
 import { AppStore } from './AppStore'
@@ -45,12 +45,17 @@ export class SelectionStore {
   lastSelectAt = 0
   _activeIndex = -1
   results: SelectionResult[] = null
+  private resultsIn = null
 
   didMount() {
     on(this, this.props.keyboardStore, 'key', (key: string) => {
       if (Direction[key]) {
         this.setSelectEvent('key')
         this.move(Direction[key])
+      }
+      if (key === 'enter') {
+        App.actions.openItem(this.selectedItem)
+        App.actions.closeOrbit()
       }
     })
 
@@ -189,7 +194,7 @@ export class SelectionStore {
 
   move = (direction: Direction) => {
     if (!this.results) {
-      throw new Error('No results')
+      return
     }
     const activeIndex = this.getNextIndex(this.activeIndex, direction)
     if (activeIndex !== this.activeIndex) {
@@ -198,6 +203,9 @@ export class SelectionStore {
   }
 
   getNextIndex = (curIndex, direction: Direction) => {
+    if (!this.results) {
+      return -1
+    }
     if (curIndex === 0 && direction === Direction.up) {
       return -1
     }
@@ -262,7 +270,14 @@ export class SelectionStore {
   }
 
   setResults = (resultGroups: SelectionGroup[]) => {
+    const lastResults = this.resultsIn
+    this.resultsIn = resultGroups
     if (!resultGroups) {
+      this.results = null
+      return
+    }
+    // avoid unecessary updates
+    if (lastResults && isEqual(lastResults, resultGroups)) {
       return
     }
     let results: SelectionResult[] = []
@@ -303,12 +318,15 @@ export class SelectionStore {
   }
 
   getIndexForItem = id => {
+    if (!this.results) {
+      throw new Error('Calling index before')
+    }
     return this.results.findIndex(x => x.item.id === id)
   }
 
   openSelected = () => {
     if (this.selectedItem) {
-      this.props.appStore.open(this.selectedItem)
+      App.actions.openItem(this.selectedItem)
       return true
     }
     return false

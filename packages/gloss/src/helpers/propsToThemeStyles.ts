@@ -86,8 +86,9 @@ export const propsToThemeStyles = (
     if (pseudoKey) {
       styles[pseudoKey] = {
         ...styles[pseudoKey],
-        ...baseStylesFromProps,
         ...pseudoStyle,
+        // propogate overrides on the base style props like <Surface background="transparent" />
+        ...baseStylesFromProps,
       }
     }
     // merge into base stlyes if booleans force it on

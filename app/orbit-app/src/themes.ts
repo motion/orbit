@@ -50,6 +50,7 @@ export const themes = {
     },
     ...Theme.fromStyles({
       background: 'rgba(20,20,20,0.94)',
+      backgroundHover: 'rgba(20,20,20,0.2)',
       color: '#fff',
       borderColor: '#222',
     }),

@@ -55,17 +55,17 @@ export const propsToThemeStyles = (
   }
   // if we set styles from props we should propogate those styles
   // down to be sure we don't "undo" them inside pseudo styles
-  let baseStylesFromProps
+  let propOverrides
   if (props.background || props.borderColor || props.color) {
-    baseStylesFromProps = {}
+    propOverrides = {}
     if (props.background) {
-      baseStylesFromProps.background = props.background
+      propOverrides.background = props.background
     }
     if (props.color) {
-      baseStylesFromProps.color = props.color
+      propOverrides.color = props.color
     }
     if (props.borderColor) {
-      baseStylesFromProps.borderColor = props.borderColor
+      propOverrides.borderColor = props.borderColor
     }
   }
 
@@ -88,7 +88,7 @@ export const propsToThemeStyles = (
         ...styles[pseudoKey],
         ...pseudoStyle,
         // propogate overrides on the base style props like <Surface background="transparent" />
-        ...baseStylesFromProps,
+        ...propOverrides,
       }
     }
     // merge into base stlyes if booleans force it on

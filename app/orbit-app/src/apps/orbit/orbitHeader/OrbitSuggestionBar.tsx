@@ -55,6 +55,13 @@ const HorizontalScroll = view({
   },
 })
 
+const suggestionTheme = theme => ({
+  ...theme,
+  background: theme.background.alpha(0.2),
+  color: theme.color.alpha(0.6),
+  backgroundHover: theme.backgroundHover.alpha(0.1),
+})
+
 const SuggestionButton = props => (
   <UI.Button
     glint={false}
@@ -64,6 +71,7 @@ const SuggestionButton = props => (
     sizeHeight={0.8}
     sizePadding={0.6}
     fontWeight={600}
+    themeAdjust={suggestionTheme}
     {...props}
   />
 )
@@ -111,12 +119,12 @@ export const OrbitSuggestionBar = view(
               key={`${filter.text}${filter.active}`}
               onClick={() => filterStore.toggleFilterActive(filter.text)}
               opacity={opacityScale[index] || 0.333}
+              background="transparent"
               borderColor={
                 (filter.active && activeThemes[filter.type].borderColor) ||
                 'transparent'
               }
               borderWidth={1}
-              background="transparent"
             >
               {filter.text}
             </SuggestionButton>

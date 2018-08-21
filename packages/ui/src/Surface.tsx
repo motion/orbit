@@ -139,7 +139,10 @@ SurfaceFrame.theme = props => {
         : props.overflow,
     justifyContent: props.justify || props.justifyContent,
     alignSelf: props.alignSelf,
-    borderStyle: props.borderStyle || props.borderWidth ? 'solid' : undefined,
+    borderStyle:
+      props.borderStyle || props.borderWidth
+        ? props.borderStyle || 'solid'
+        : undefined,
     ...circularStyles,
     '& > div > .icon': iconStyle,
     '&:hover > div > .icon': hoverIconStyle,

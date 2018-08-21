@@ -4,7 +4,6 @@ import { SettingRepository } from '../repositories'
 import * as AppStoreHelpers from './helpers/appStoreHelpers'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { AppReactions } from './AppReactions'
-import { getPermalink } from '../helpers/getPermalink'
 import { modelQueryReaction } from '../repositories/modelQueryReaction'
 import { Bit, Setting } from '@mcro/models'
 
@@ -65,10 +64,14 @@ export class AppStore {
     this.contentHeight = height
   }
 
-  appSettings = modelQueryReaction(() =>
-    SettingRepository.find({
-      where: { category: 'integration', token: { $not: 'good' } },
-    }),
+  appSettings = modelQueryReaction(
+    () =>
+      SettingRepository.find({
+        where: { category: 'integration', token: { $not: 'good' } },
+      }),
+    {
+      ignoreKeys: ['updatedAt'],
+    },
   )
 
   services = react(

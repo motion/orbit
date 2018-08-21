@@ -98,7 +98,7 @@ class OrbitAppsStore {
       this.updateIntegrationSettings(val)
     },
     {
-      ignoreKeys: ['updatedAt'],
+      ignoreKeys: ['updatedAt', 'values'],
     },
   )
 
@@ -134,7 +134,7 @@ export class OrbitApps extends React.Component<Props> {
             <Grid
               gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
               gridAutoRows={80}
-              margin={[5, -4]}
+              margin={[5, 0]}
             >
               {store.results.map((result, index) => (
                 <store.IntegrationCard

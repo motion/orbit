@@ -270,13 +270,14 @@ export class SelectionStore {
   }
 
   setResults = (resultGroups: SelectionGroup[]) => {
+    const lastResults = this.resultsIn
     this.resultsIn = resultGroups
     if (!resultGroups) {
       this.results = null
       return
     }
     // avoid unecessary updates
-    if (isEqual(this.resultsIn, resultGroups)) {
+    if (lastResults && isEqual(lastResults, resultGroups)) {
       return
     }
     let results: SelectionResult[] = []
@@ -317,6 +318,9 @@ export class SelectionStore {
   }
 
   getIndexForItem = id => {
+    if (!this.results) {
+      throw new Error('Calling index before')
+    }
     return this.results.findIndex(x => x.item.id === id)
   }
 

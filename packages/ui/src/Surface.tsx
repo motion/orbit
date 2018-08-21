@@ -110,7 +110,7 @@ const SurfaceFrame = view(View, {
 })
 
 SurfaceFrame.theme = props => {
-  const themeStyles = propsToThemeStyles(props, true)
+  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, true)
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -145,8 +145,11 @@ SurfaceFrame.theme = props => {
     ...(props.dimmed && dimmedStyle),
     ...(props.dim && dimStyle),
     ...props.userStyle,
+    // note: base theme styles go *above* propsToStyles...
     ...themeStyles,
     ...propsToStyles(props),
+    // ...whereas theme styles passed in as ovverrides go in here
+    ...themeStylesFromProps,
     ...propsToTextSize(props),
     ...chromelessStyle,
   }

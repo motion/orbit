@@ -100,7 +100,7 @@ export const Title = ({ verticalSpacing = 1, ...props }) => (
   <UI.Text
     size={1.4}
     fontWeight={300}
-    padding={[9 * verticalSpacing, 0, 12 * verticalSpacing]}
+    padding={[-10 + 1 * verticalSpacing, 0, 12 * verticalSpacing]}
     {...props}
   />
 )

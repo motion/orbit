@@ -94,8 +94,9 @@ export class ThemeMaker {
     if (this.cache[key]) {
       return this.cache[key]
     }
-    const { background, color, borderColor } = styleObject
+    const { background, color, borderColor, ...rest } = styleObject
     const backgroundColored = background ? $(background) : opposite($(color))
+    // some handy basic styles
     const base = this.colorize({
       background: backgroundColored,
       color: color || decreaseContrast(opposite(backgroundColored), largeAmt),
@@ -127,6 +128,8 @@ export class ThemeMaker {
         ...active,
         ...blur,
         ...focus,
+        // ensure rest is last so they can override anything
+        ...rest,
       }),
     }
     this.cache[key] = res

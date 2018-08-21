@@ -35,19 +35,10 @@ const exploreButton = {
     y: -0.5,
   },
   iconProps: {
-    color: 'black',
     size: 12,
   },
   opacity: 0.35,
   activeStyle: {
-    color: '#000',
-    background: 'transparent',
-    borderColor: 'transparent',
-    opacity: 1,
-  },
-  hoverStyle: {
-    background: 'transparent',
-    borderColor: 'transparent',
     opacity: 1,
   },
 }

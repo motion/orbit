@@ -3,16 +3,25 @@ import { ThemeObject } from '../types'
 // resolves props into styles for valid css
 // backs up to theme colors if not found
 
-const themeStates = {
-  Hover: '&:hover',
-  Focus: '&:focus',
-  Active: '&:active',
-}
-
-const themeOverrides = {
-  active: 'activeStyle',
-  hover: 'hoverStyle',
-  focus: 'focusStyle',
+const config = {
+  hover: {
+    pseudoKey: '&:hover',
+    postfix: 'Hover',
+    booleanProp: 'hover',
+    extraStyleProp: 'hoverStyle',
+  },
+  focus: {
+    pseudoKey: '&:focus',
+    postfix: 'Focus',
+    booleanProp: 'focus',
+    extraStyleProp: 'focusStyle',
+  },
+  active: {
+    pseudoKey: '&:active',
+    postfix: 'Active',
+    booleanProp: 'active',
+    extraStyleProp: 'activeStyle',
+  },
 }
 
 const collectStylesForPsuedo = (theme, postfix) => {
@@ -29,32 +38,57 @@ const collectStylesForPsuedo = (theme, postfix) => {
   return styles
 }
 
+type ThemeObjectWithPsuedos = ThemeObject & {
+  '&:hover': ThemeObject
+  '&:focus': ThemeObject
+  '&:active': ThemeObject
+}
+
+type ThemeStyles = {
+  themeStyles: ThemeObjectWithPsuedos
+  themeStylesFromProps: Partial<ThemeObject>
+}
+
 export const propsToThemeStyles = (
   props,
   mapPropStylesToPseudos?,
-): ThemeObject => {
+): ThemeStyles => {
   const theme = props.theme
   let styles = {
     color: theme.color,
     background: theme.background,
     borderColor: theme.borderColor,
   }
-  for (const postfix in themeStates) {
-    const key = themeStates[postfix]
-    const psuedoStyles = collectStylesForPsuedo(theme, postfix)
-    styles[key] = {
-      ...styles[key],
-      ...psuedoStyles,
+  let stylesFromProps = {}
+  for (const themeKey in config) {
+    const { postfix, psuedoKey, booleanProp, extraStyleProp } = config[themeKey]
+    const booleanOn = booleanProp && props[booleanProp] === true
+    let psuedoStyle =
+      psuedoKey || booleanOn ? collectStylesForPsuedo(theme, postfix) : null
+    // add in any overrideStyles
+    if (mapPropStylesToPseudos && typeof props[extraStyleProp] === 'object') {
+      psuedoStyle = {
+        ...psuedoStyle,
+        ...props[extraStyleProp],
+      }
     }
-    if (mapPropStylesToPseudos) {
-      const overrideStyles = props[themeOverrides[postfix.toLowerCase()]]
-      if (overrideStyles) {
-        styles[key] = {
-          ...styles[key],
-          ...overrideStyles,
-        }
+    // merge now into the psuedo state
+    if (psuedoKey) {
+      styles[psuedoKey] = {
+        ...styles[psuedoKey],
+        ...psuedoStyle,
+      }
+    }
+    // merge into base stlyes if booleans force it on
+    if (booleanOn) {
+      stylesFromProps = {
+        ...stylesFromProps,
+        ...psuedoStyle,
       }
     }
   }
-  return styles
+  return {
+    themeStyles: styles as ThemeObjectWithPsuedos,
+    themeStylesFromProps: stylesFromProps
+  }
 }

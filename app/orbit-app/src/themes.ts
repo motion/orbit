@@ -53,6 +53,7 @@ export const themes = {
       color: '#fff',
       borderColor: '#222',
     }),
+    colorActive: '#fff',
   },
   light: {
     ...macTheme,

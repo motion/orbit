@@ -62,13 +62,11 @@ const TabListItem = view(Row, {
 })
 
 TabListItem.theme = ({ theme, active }) => ({
-  color: active ? theme.active.color : theme.inactive.color,
-  background: active ? theme.active.background : theme.inactive.background,
+  color: active ? theme.colorActive : theme.colorBlur,
+  background: active ? theme.background : theme.backgroundBlur,
   '&:hover': {
-    color: active ? theme.active.color : theme.hover.color,
-    background: active
-      ? theme.base.background
-      : theme.inactive.background.darken(0.05),
+    color: active ? theme.colorActive : theme.colorHover,
+    background: active ? theme.background : theme.backgroundBlur,
   },
 })
 

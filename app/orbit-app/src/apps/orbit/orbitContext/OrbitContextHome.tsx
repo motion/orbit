@@ -204,12 +204,12 @@
 //   //   return {
 //   //     fadeTop: {
 //   //       background: `linear-gradient(${
-//   //         theme.base.background
+//   //         theme.background
 //   //       } 25%, transparent)`,
 //   //     },
 //   //     fadeBottom: {
 //   //       background: `linear-gradient(transparent 45%, ${
-//   //         theme.base.background
+//   //         theme.background
 //   //       })`,
 //   //     },
 //   //   }

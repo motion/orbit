@@ -70,7 +70,7 @@ export const Arrow = attachTheme(
                 boxShadow,
                 opacity,
                 border,
-                background: background || theme.base.background,
+                background: background || theme.background,
               }}
             />
           </Col>

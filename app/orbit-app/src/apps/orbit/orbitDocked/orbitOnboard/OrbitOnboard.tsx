@@ -83,7 +83,7 @@ const Item = view({
 })
 
 Item.theme = ({ theme }) => ({
-  borderBottom: [1, theme.base.borderColor.alpha(0.2)],
+  borderBottom: [1, theme.borderColor.alpha(0.2)],
 })
 
 const ItemTitle = props => (

@@ -130,7 +130,7 @@ SurfaceFrame.theme = props => {
     background: 'transparent',
   }
   let surfaceStyles = {
-    color: props.color || props.theme.base.color,
+    color: props.color || props.theme.color,
     ...(props.inline && inlineStyle),
     overflow:
       props.overflow || props.glow

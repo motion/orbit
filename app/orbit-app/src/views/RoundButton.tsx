@@ -3,14 +3,9 @@ import * as UI from '@mcro/ui'
 
 const roundTheme = theme => ({
   ...theme,
-  base: {
-    ...theme.base,
-    background: theme.base.background.darken(0.02).alpha(0.2),
-    color: theme.base.color.alpha(0.6),
-  },
-  hover: {
-    background: theme.base.background.darken(0.02).alpha(0.1),
-  },
+  background: theme.background.darken(0.02).alpha(0.2),
+  color: theme.color.alpha(0.6),
+  backgroundHover: theme.backgroundHover.darken(0.02).alpha(0.1),
 })
 
 export const RoundButton = props => (

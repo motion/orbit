@@ -57,7 +57,7 @@ const exploreButton = {
 export class OrbitHomeHeader extends React.Component<Props> {
   render() {
     const { paneManagerStore, theme } = this.props
-    const buttonColor = theme.base.color.lighten(0.2)
+    const buttonColor = theme.color.lighten(0.2)
     exploreButton.iconProps.color = buttonColor
     const homeActive =
       paneManagerStore.activePane === 'home' ||
@@ -114,7 +114,7 @@ export class OrbitHomeHeader extends React.Component<Props> {
               sizePadding={1.3}
               icon="arrowsmalldown"
               iconProps={{
-                color: theme.active.background.darken(0.15),
+                color: theme.backgroundActive.darken(0.15),
                 style: { marginTop: 3 },
               }}
             />

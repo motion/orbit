@@ -74,6 +74,7 @@ export class PeekStore {
     () => [App.peekState.target, this.tornState],
     async ([target, tornState], { getValue, setValue, sleep }) => {
       const lastState = getValue().curState
+      const wasShown = !!(lastState && lastState.target)
       const isShown = !!tornState || (!!target && !!App.orbitState.docked)
       let nextState = {
         lastState,
@@ -85,8 +86,8 @@ export class PeekStore {
         },
         isShown,
         willHide: !!lastState && !isShown,
-        willShow: !!isShown && !lastState,
-        willStayShown: !!isShown && !!lastState,
+        willShow: !!isShown && !wasShown,
+        willStayShown: !!isShown && !!wasShown,
       }
       // avoid showing until loaded if showing for first time
       if (!nextState.willShow) {

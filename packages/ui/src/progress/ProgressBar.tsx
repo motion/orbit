@@ -44,13 +44,13 @@ export class ProgressBar extends React.Component {
   //     minWidth: width,
   //     width,
   //     background:
-  //       background || theme.base.background
-  //         ? $(theme.base.background).darken(0.5)
+  //       background || theme.background
+  //         ? $(theme.background).darken(0.5)
   //         : '#eee',
   //   },
   //   inner: {
   //     width: `${percent}%`,
-  //     background: color || theme.base.highlightColor,
+  //     background: color || theme.highlightColor,
   //   },
   // })
 }

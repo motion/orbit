@@ -83,7 +83,7 @@ const FadeMap = view({
 })
 
 // FadeMap.theme = ({ theme }) => ({
-//   background: `linear-gradient(transparent, ${theme.base.background})`,
+//   background: `linear-gradient(transparent, ${theme.background})`,
 // })
 
 const FadeMapRight = view({
@@ -96,9 +96,7 @@ const FadeMapRight = view({
 })
 
 FadeMapRight.theme = ({ theme }) => ({
-  background: `linear-gradient(to right, transparent, ${
-    theme.base.background
-  })`,
+  background: `linear-gradient(to right, transparent, ${theme.background})`,
 })
 
 const Info = view({

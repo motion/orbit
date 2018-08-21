@@ -24,7 +24,7 @@ const TextBlock = view(InlineBlock, {
 TextBlock.theme = ({ theme, color, alpha }) =>
   alphaColor(
     {
-      color: color || theme.base.color,
+      color: color || theme.color,
     },
     alpha,
   )

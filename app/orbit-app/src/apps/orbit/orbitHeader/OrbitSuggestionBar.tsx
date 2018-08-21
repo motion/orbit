@@ -68,7 +68,7 @@ const FilterBarFade = view({
 
 // FilterBarFade.theme = ({ theme }) => ({
 //   background: `linear-gradient(to right, transparent, ${
-//     theme.base.background
+//     themease.background
 //   } 80%)`,
 // })
 

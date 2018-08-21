@@ -24,7 +24,7 @@ class PaneStore {
 @view
 class Orbit extends React.Component {
   render({ orbitPage, theme }) {
-    const headerBg = theme.base.background
+    const headerBg = theme.background
     return (
       <OrbitFrame orbitPage={orbitPage}>
         <OrbitHeader showPin headerBg={headerBg} />

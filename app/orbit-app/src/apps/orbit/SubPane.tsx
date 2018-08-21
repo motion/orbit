@@ -75,7 +75,7 @@ const OverflowFade = view({
 })
 
 OverflowFade.theme = ({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.base.background})`,
+  background: `linear-gradient(transparent, ${theme.background})`,
 })
 
 const SubPaneInner = view(UI.View, {

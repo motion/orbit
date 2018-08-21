@@ -63,7 +63,7 @@ IconInner.theme = ({
   const width = (propWidth || size) + widthPadding(padding)
   const height = (propHeight || size) + heightPadding(padding)
   return {
-    color: color || theme.base.color,
+    color: color || theme.iconColor || theme.color,
     width,
     height,
     fontSize: size,

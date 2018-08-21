@@ -84,6 +84,9 @@ export default class DebugApps {
   lastRes = {}
 
   getUrlForJsonInfo = (jsonInfo, port) => {
+    if (!jsonInfo) {
+      return ''
+    }
     const { webSocketDebuggerUrl, url } = jsonInfo
     if (!webSocketDebuggerUrl) {
       return this.lastRes[url] || null

@@ -20,7 +20,7 @@ export const TableInput = view('input', {
 })
 
 TableInput.theme = ({ theme }) => ({
-  border: [1, theme.base.borderColor],
+  border: [1, theme.borderColor],
 })
 
 TableInput.defaultProps = {

@@ -20,7 +20,7 @@ export const BarInner = view({
 
 BarInner.theme = ({ theme }) => ({
   '& .bar': {
-    background: theme.hover.background,
+    background: theme.backgroundHover,
   },
 })
 

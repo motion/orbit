@@ -13,9 +13,9 @@ type Props = {
 }
 
 const getBackground = (y, theme) => {
-  if (y < 20) return theme.titleBar.backgroundTop
-  if (y < 40) return theme.titleBar.backgroundBottom
-  return theme.base.background
+  if (y < 20) return theme.background
+  if (y < 40) return theme.backgroundBottom || theme.background
+  return theme.background
 }
 
 const decorator = compose(

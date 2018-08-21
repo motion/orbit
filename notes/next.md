@@ -1,5 +1,14 @@
 # next
 
+friday goals
+
+- 90% of deployable .app
+  - proper oauth keys and proxy
+  - onboarding much improved
+  - profile/theme cleanup
+- typeform survey to capture a few potential paths
+- (bonus) oauth key management
+
 ## Deployable .app
 
 - productionize: fix proxy process for prod

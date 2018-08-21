@@ -13,6 +13,7 @@ import { App } from '@mcro/stores'
 import { memoize } from 'lodash'
 import { HighlightsLayer } from '../../../../views/HighlightsLayer'
 import { ResolvedItem } from '../../../../components/ItemResolver'
+import { SuggestionBarVerticalPad } from '../../../../views'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -209,7 +210,12 @@ export class OrbitSearchResults extends React.Component<Props> {
         }}
         name="search"
         extraCondition={this.props.searchStore.hasQuery}
-        before={<OrbitSearchFilters />}
+        before={
+          <>
+            <SuggestionBarVerticalPad />
+            <OrbitSearchFilters />
+          </>
+        }
         onScrollNearBottom={this.props.searchStore.loadMore}
       >
         <OrbitSearchResultsContents

@@ -80,6 +80,11 @@ export const CheckBoxRow = ({
   </FormTableRow>
 )
 
+export const SuggestionBarVerticalPad = view({
+  height: 28,
+  pointerEvents: 'none',
+})
+
 export const Circle = view({
   display: 'inline-block',
   borderRadius: 100,
@@ -100,7 +105,7 @@ export const Title = ({ verticalSpacing = 1, ...props }) => (
   <UI.Text
     size={1.4}
     fontWeight={300}
-    padding={[-10 + 1 * verticalSpacing, 0, 12 * verticalSpacing]}
+    margin={[0, 0, 12 * verticalSpacing]}
     {...props}
   />
 )

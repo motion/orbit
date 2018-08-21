@@ -24,34 +24,28 @@ const config = {
   },
 }
 
-const collectStylesForPsuedo = (theme, postfix) => {
-  const keys = Object.keys(theme).filter(
-    x => x.indexOf(postfix) === x.length - 1,
-  )
-  if (!keys.length) {
-    return null
+const collectStylesForPseudo = (theme, postfix) => {
+  return {
+    background: theme[`background${postfix}`],
+    color: theme[`color${postfix}`],
+    borderColor: theme[`borderColor${postfix}`],
   }
-  let styles = {}
-  for (const key of keys) {
-    styles[key] = theme[key]
-  }
-  return styles
 }
 
-type ThemeObjectWithPsuedos = ThemeObject & {
+type ThemeObjectWithPseudo = ThemeObject & {
   '&:hover': ThemeObject
   '&:focus': ThemeObject
   '&:active': ThemeObject
 }
 
 type ThemeStyles = {
-  themeStyles: ThemeObjectWithPsuedos
-  themeStylesFromProps: Partial<ThemeObject>
+  themeStyles: ThemeObjectWithPseudo
+  themeStylesFromProps?: Partial<ThemeObject>
 }
 
 export const propsToThemeStyles = (
   props,
-  mapPropStylesToPseudos?,
+  mapPropStylesToPseudos?: boolean,
 ): ThemeStyles => {
   const theme = props.theme
   let styles = {
@@ -59,36 +53,54 @@ export const propsToThemeStyles = (
     background: theme.background,
     borderColor: theme.borderColor,
   }
-  let stylesFromProps = {}
+  // if we set styles from props we should propogate those styles
+  // down to be sure we don't "undo" them inside pseudo styles
+  let baseStylesFromProps
+  if (props.background || props.borderColor || props.color) {
+    baseStylesFromProps = {}
+    if (props.background) {
+      baseStylesFromProps.background = props.background
+    }
+    if (props.color) {
+      baseStylesFromProps.color = props.color
+    }
+    if (props.borderColor) {
+      baseStylesFromProps.borderColor = props.borderColor
+    }
+  }
+
+  let stylesFromProps
   for (const themeKey in config) {
-    const { postfix, psuedoKey, booleanProp, extraStyleProp } = config[themeKey]
+    const { postfix, pseudoKey, booleanProp, extraStyleProp } = config[themeKey]
     const booleanOn = booleanProp && props[booleanProp] === true
-    let psuedoStyle =
-      psuedoKey || booleanOn ? collectStylesForPsuedo(theme, postfix) : null
+    let pseudoStyle =
+      pseudoKey || booleanOn ? collectStylesForPseudo(theme, postfix) : null
     // add in any overrideStyles
     if (mapPropStylesToPseudos && typeof props[extraStyleProp] === 'object') {
-      psuedoStyle = {
-        ...psuedoStyle,
+      pseudoStyle = {
+        ...pseudoStyle,
         ...props[extraStyleProp],
       }
     }
     // merge now into the psuedo state
-    if (psuedoKey) {
-      styles[psuedoKey] = {
-        ...styles[psuedoKey],
-        ...psuedoStyle,
+    if (pseudoKey) {
+      styles[pseudoKey] = {
+        ...styles[pseudoKey],
+        ...baseStylesFromProps,
+        ...pseudoStyle,
       }
     }
     // merge into base stlyes if booleans force it on
     if (booleanOn) {
+      stylesFromProps = stylesFromProps || {}
       stylesFromProps = {
         ...stylesFromProps,
-        ...psuedoStyle,
+        ...pseudoStyle,
       }
     }
   }
   return {
-    themeStyles: styles as ThemeObjectWithPsuedos,
-    themeStylesFromProps: stylesFromProps
+    themeStyles: styles as ThemeObjectWithPseudo,
+    themeStylesFromProps: stylesFromProps,
   }
 }

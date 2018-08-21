@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view, react, compose, ensure } from '@mcro/black'
 import { BitRepository, PersonRepository } from '../../../../repositories'
-import { SubTitle } from '../../../../views'
+import { SubTitle, SuggestionBarVerticalPad } from '../../../../views'
 import { SubPane } from '../../SubPane'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import {
@@ -139,6 +139,7 @@ export class OrbitHome extends React.Component<Props> {
     console.log('HOME RENDER')
     return (
       <SubPane name="home" fadeBottom>
+        <SuggestionBarVerticalPad />
         {Object.keys(homeStore.following).map(categoryName => (
           <OrbitHomeCarouselSection
             key={categoryName}

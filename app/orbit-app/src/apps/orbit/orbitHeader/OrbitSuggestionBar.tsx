@@ -25,9 +25,13 @@ const activeThemes = {
   },
 }
 
-const FilterBar = view(UI.Row, {
+const SuggestionBar = view(UI.Row, {
   position: 'relative',
-  padding: [0, 15, 6],
+  // above subpane
+  zIndex: 10,
+  padding: [0, 15, 0],
+  // have this take up no height because it lets us not have an awkward gap when this is not visible
+  height: 0,
   transition: 'all ease 90ms 40ms',
   opacity: 0,
   transform: {
@@ -42,6 +46,7 @@ const FilterBar = view(UI.Row, {
 })
 
 const HorizontalScroll = view({
+  height: 28,
   overflowX: 'scroll',
   flex: 1,
   flexFlow: 'row',
@@ -50,7 +55,7 @@ const HorizontalScroll = view({
   },
 })
 
-const FilterButton = props => (
+const SuggestionButton = props => (
   <UI.Button
     glint={false}
     size={1}
@@ -59,15 +64,11 @@ const FilterButton = props => (
     sizeHeight={0.8}
     sizePadding={0.6}
     fontWeight={600}
-    hoverStyle={{
-      background: [0, 0, 0, 0.2],
-      border: [1, 'transparent'],
-    }}
     {...props}
   />
 )
 
-const FilterBarFade = view({
+const SuggestionBarFade = view({
   position: 'absolute',
   top: 0,
   right: 0,
@@ -77,7 +78,7 @@ const FilterBarFade = view({
   pointerEvents: 'none',
 })
 
-// FilterBarFade.theme = ({ theme }) => ({
+// SuggestionBarFade.theme = ({ theme }) => ({
 //   background: `linear-gradient(to right, transparent, ${
 //     themease.background
 //   } 80%)`,
@@ -101,12 +102,12 @@ export const OrbitSuggestionBar = view(
   ({ filterStore, paneManagerStore }: Props) => {
     filterStore.disabledFilters
     return (
-      <FilterBar
+      <SuggestionBar
         visible={hideFilterPanes[paneManagerStore.activePane] ? false : true}
       >
         <HorizontalScroll>
           {filterStore.allFilters.map((filter, index) => (
-            <FilterButton
+            <SuggestionButton
               key={`${filter.text}${filter.active}`}
               onClick={() => filterStore.toggleFilterActive(filter.text)}
               opacity={opacityScale[index] || 0.333}
@@ -118,12 +119,12 @@ export const OrbitSuggestionBar = view(
               background="transparent"
             >
               {filter.text}
-            </FilterButton>
+            </SuggestionButton>
           ))}
           <UI.View width={50} />
         </HorizontalScroll>
-        <FilterBarFade />
-      </FilterBar>
+        <SuggestionBarFade />
+      </SuggestionBar>
     )
   },
 )

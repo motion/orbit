@@ -60,7 +60,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.background.alpha(0.2),
+      background: theme.background.alpha(0.6),
       // border: [1, borderSelected],
       // boxShadow: disabledShadow || [[0, 0, 0, 1, '#90b1e4']],
     }

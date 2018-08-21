@@ -175,6 +175,8 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
       titleFlex,
       subtitleSpaceBetween,
       searchTerm,
+      // ignore so it doesnt add tooltip to div
+      title: _ignoreTitle,
       onClickLocation,
       ...props
     } = this.props

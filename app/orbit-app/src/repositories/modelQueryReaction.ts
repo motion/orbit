@@ -2,10 +2,12 @@ import { react, ReactionOptions } from '@mcro/black'
 import { now } from 'mobx-utils'
 import { comparer } from 'mobx'
 import { Person, Bit, Setting, Job, PersonBit } from '@mcro/models'
+import { omit } from 'lodash'
 
 type ReactModelQueryOpts = ReactionOptions & {
   condition?: () => boolean
   poll?: number
+  ignoreKeys: string[]
 }
 
 const trueFn = () => true
@@ -35,7 +37,7 @@ export function modelQueryReaction<T extends ValidModel | ValidModel[]>(
   } else if (b instanceof Object) {
     options = b
   }
-  const { poll, condition, ...restOptions } = {
+  const { poll, condition, ignoreKeys = [], ...restOptions } = {
     ...DEFAULT_OPTIONS,
     ...options,
   }
@@ -52,7 +54,7 @@ export function modelQueryReaction<T extends ValidModel | ValidModel[]>(
         throw react.cancel
       }
       const next = await query()
-      if (isEqual(currentVal, next)) {
+      if (isEqual(omit(currentVal, ignoreKeys), omit(next, ignoreKeys))) {
         throw react.cancel
       }
       currentVal = next

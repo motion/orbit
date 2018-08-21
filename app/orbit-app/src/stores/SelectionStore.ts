@@ -1,4 +1,4 @@
-import { react, on } from '@mcro/black'
+import { react, on, isEqual } from '@mcro/black'
 import { App, Electron } from '@mcro/stores'
 import * as Helpers from '../helpers'
 import { AppStore } from './AppStore'
@@ -45,6 +45,7 @@ export class SelectionStore {
   lastSelectAt = 0
   _activeIndex = -1
   results: SelectionResult[] = null
+  private resultsIn = null
 
   didMount() {
     on(this, this.props.keyboardStore, 'key', (key: string) => {
@@ -269,8 +270,13 @@ export class SelectionStore {
   }
 
   setResults = (resultGroups: SelectionGroup[]) => {
+    this.resultsIn = resultGroups
     if (!resultGroups) {
       this.results = null
+      return
+    }
+    // avoid unecessary updates
+    if (isEqual(this.resultsIn, resultGroups)) {
       return
     }
     let results: SelectionResult[] = []

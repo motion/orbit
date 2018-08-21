@@ -154,7 +154,7 @@ export class SearchFilterStore /* extends Store */ {
       type: setting.type,
       icon: setting.type,
       name: this.integrationSettingsStore.getTitle(setting),
-      active: this.hasExclusiveFilters ? exclusiveFilters[setting.type] : true,
+      active: this.hasExclusiveFilters ? exclusiveFilters[setting.type] : false,
     }))
   }
 

@@ -1,3 +1,5 @@
+- productionize: fix proxy process for prod
+
 - oauth:
   - when going through flow show orbit
   - show message:

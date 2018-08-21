@@ -1,7 +1,10 @@
+// resolves props into styles for valid css
+// backs up to theme colors if not found
+
 const themeStates = {
-  hover: '&:hover',
-  focus: '&:focus',
-  active: '&:active',
+  Hover: '&:hover',
+  Focus: '&:focus',
+  Active: '&:active',
 }
 
 const themeOverrides = {
@@ -10,24 +13,39 @@ const themeOverrides = {
   focus: 'focusStyle',
 }
 
-// resolves props into styles for valid css
-// backs up to theme colors if not found
+const collectStylesForPsuedo = (theme, postfix) => {
+  const keys = Object.keys(theme).filter(
+    x => x.indexOf(postfix) === x.length - 1,
+  )
+  if (!keys.length) {
+    return null
+  }
+  let styles = {}
+  for (const key of keys) {
+    styles[key] = theme[key]
+  }
+  return styles
+}
 
 export const propsToThemeStyles = (props, mapPropStylesToPseudos?) => {
+  const theme = props.theme
   let styles = {
-    ...props.theme.base,
+    color: theme.color,
+    background: theme.background,
+    borderColor: theme.borderColor,
   }
-  for (const state in themeStates) {
-    const pseudoKey = themeStates[state]
-    styles[pseudoKey] = {
-      ...styles[pseudoKey],
-      ...props.theme[state],
+  for (const postfix in themeStates) {
+    const key = themeStates[postfix]
+    const psuedoStyles = collectStylesForPsuedo(theme, postfix)
+    styles[key] = {
+      ...styles[key],
+      ...psuedoStyles,
     }
     if (mapPropStylesToPseudos) {
-      const overrideStyles = props[themeOverrides[state]]
+      const overrideStyles = props[themeOverrides[postfix.toLowerCase()]]
       if (overrideStyles) {
-        styles[pseudoKey] = {
-          ...styles[pseudoKey],
+        styles[key] = {
+          ...styles[key],
           ...overrideStyles,
         }
       }

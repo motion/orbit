@@ -18,9 +18,9 @@ const Item = view({
   },
 })
 Item.theme = ({ theme }) => ({
-  borderBottom: [1, theme.base.borderColor.alpha(0.3)],
+  borderBottom: [1, theme.borderColor.alpha(0.3)],
   '&:hover': {
-    background: theme.hover.background,
+    background: theme.backgroundHover,
   },
 })
 

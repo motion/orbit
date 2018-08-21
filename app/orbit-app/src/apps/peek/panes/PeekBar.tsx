@@ -18,8 +18,8 @@ export const PeekBar = view({
 })
 
 PeekBar.theme = ({ theme }) => ({
-  background: theme.base.background.alpha(0.9),
-  border: [1, theme.base.borderColor],
+  background: theme.background.alpha(0.9),
+  border: [1, theme.borderColor],
 })
 
 PeekBar.Space = view({

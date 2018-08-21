@@ -34,7 +34,7 @@ const Highlight = view({
   },
 })
 Highlight.theme = ({ theme }) => ({
-  color: theme.base.color.alpha(0.95),
+  color: theme.color.alpha(0.95),
 })
 
 const uglies = /([^a-zA-Z]{2,})/g

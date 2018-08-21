@@ -37,9 +37,9 @@ const OrbitFakeInput = view({
   borderRadius: 10,
 })
 OrbitFakeInput.theme = ({ theme }) => ({
-  background: theme.base.background.alpha(0.35),
+  background: theme.background.alpha(0.35),
   '&:active': {
-    background: theme.base.background.alpha(0.6),
+    background: theme.background.alpha(0.6),
   },
 })
 
@@ -60,7 +60,7 @@ export class OrbitHeader extends React.Component<
 > {
   render() {
     const { headerStore, after, theme, borderRadius } = this.props
-    const headerBg = theme.base.background
+    const headerBg = theme.background
     return (
       <OrbitHeaderContainer headerBg={headerBg} borderRadius={borderRadius}>
         <OrbitFakeInput>

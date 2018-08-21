@@ -23,8 +23,8 @@ const Block = view(UI.Block, {
 
 Block.theme = ({ theme }) => ({
   '&::selection': {
-    color: theme.base.color.lighten(0.1),
-    background: theme.base.background.darken(0.1),
+    color: theme.color.lighten(0.1),
+    background: theme.background.darken(0.1),
   },
 })
 

@@ -119,9 +119,9 @@ export class OrbitFrame extends React.Component<{
     }
     const { hidden, willAnimate } = store.animationState
     const { position, size, orbitOnLeft } = App.orbitState
-    const borderColor = theme.base.background.darken(0.25).desaturate(0.6)
+    const borderColor = theme.background.darken(0.25).desaturate(0.6)
     const borderShadow = [0, 0, 0, 0.5, borderColor]
-    const background = theme.base.background
+    const background = theme.background
     const borderLeftRadius = !orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const borderRightRadius = orbitOnLeft ? 0 : Constants.BORDER_RADIUS
     const orbitLightShadow = [
@@ -136,7 +136,7 @@ export class OrbitFrame extends React.Component<{
     return (
       <UI.Col
         css={{
-          color: theme.base.color,
+          color: theme.color,
           position: 'absolute',
           pointerEvents: hidden ? ' none' : 'auto',
           width: size[0],
@@ -204,7 +204,7 @@ export class OrbitFrame extends React.Component<{
                   css={{
                     opacity: 1,
                     background: `linear-gradient(transparent, ${
-                      theme.base.background
+                      theme.background
                     } 95%)`,
                   }}
                 />

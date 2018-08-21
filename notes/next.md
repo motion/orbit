@@ -22,7 +22,6 @@ friday goals
 You and only you receive the key to your data.
 And just to be safe, our servers disable logs and deny all requests. Learn more."
 
-- fix themes to fix lots of things
 - Properly proxy/prompt the production domain in prod mode
 - in:x for location
 - clicking location buttons should filter that location

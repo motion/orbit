@@ -10,8 +10,7 @@ type SimpleStyleObject = {
   hover?: ColorObject
   active?: ColorObject
   focus?: ColorObject
-  inactive?: ColorObject
-  disabled?: ColorObject
+  blur?: ColorObject
 }
 
 const darken = (color, amt) => {
@@ -42,22 +41,29 @@ const opposite = color => {
     : color.mix(color.lightness(1)).lightness(25)
 }
 
+const isValidColorString = s =>
+  typeof s === 'string' && s.indexOf('gradient') === -1
+const isPlainObj = o => typeof o == 'object' && o.constructor == Object
+
 export class ThemeMaker {
   cache = {}
 
-  colorize = (obj): SimpleStyleObject =>
-    Object.keys(obj).reduce(
-      (acc, cur) => ({
-        ...acc,
-        [cur]:
-          (typeof obj[cur] === 'string' &&
-            !(obj[cur].indexOf('gradient') >= 0)) ||
-          Array.isArray(obj[cur])
-            ? $(obj[cur])
-            : obj[cur],
-      }),
-      {},
-    )
+  colorize = (obj): SimpleStyleObject => {
+    const res = {}
+    for (const key in obj) {
+      const val = obj[key]
+      if (isPlainObj(val)) {
+        // recurse into objects
+        res[key] = this.colorize(val)
+      } else if (isValidColorString(val)) {
+        res[key] = $(val)
+      } else {
+        // could be color or something weird
+        res[key] = val
+      }
+    }
+    return res
+  }
 
   fromColor = (bgName): ThemeObject => {
     if (typeof bgName !== 'string') {
@@ -78,6 +84,8 @@ export class ThemeMaker {
     return this.fromStyles({ background })
   }
 
+  // generate some properly contrasted colors based on base colors
+  // insert theme into psuedo styles for Blur Active and ActiveHighlight
   fromStyles = (styleObject: SimpleStyleObject): ThemeObject => {
     if (!styleObject.background && !styleObject.color) {
       throw new Error('Themes require at least background or color')
@@ -86,7 +94,7 @@ export class ThemeMaker {
     if (this.cache[key]) {
       return this.cache[key]
     }
-    const { background, color, borderColor, ...rest } = styleObject
+    const { background, color, borderColor } = styleObject
     const backgroundColored = background ? $(background) : opposite($(color))
     const base = this.colorize({
       background: backgroundColored,
@@ -94,42 +102,31 @@ export class ThemeMaker {
       borderColor: borderColor || increaseContrast(backgroundColored, smallAmt),
     })
     const hover = {
-      color: increaseContrast(base.color, smallAmt),
-      background: increaseContrast(base.background, smallAmt),
-      borderColor: increaseContrast(base.borderColor, smallAmt),
-      ...rest.hover,
+      colorHover: increaseContrast(base.color, smallAmt),
+      backgroundHover: increaseContrast(base.background, smallAmt),
+      borderColorHover: increaseContrast(base.borderColor, smallAmt),
     }
     const active = {
       ...base,
-      borderColor: decreaseContrast(base.borderColor, smallAmt),
-      ...rest.active,
+      borderColorActive: decreaseContrast(base.borderColor, smallAmt),
     }
-    const inactive = {
-      background: darken(base.background, largeAmt),
-      color: darken(base.color, largeAmt),
-      borderColor: darken(base.borderColor, largeAmt),
-      ...rest.inactive,
-    }
-    const disabled = {
-      background: increaseContrast(base.background, largeAmt),
-      color: increaseContrast(base.color, largeAmt),
-      borderColor: increaseContrast(base.borderColor, largeAmt),
-      ...rest.disabled,
+    const blur = {
+      backgroundBlur: darken(base.background, largeAmt),
+      colorBlur: darken(base.color, largeAmt),
+      borderColorBlur: darken(base.borderColor, largeAmt),
     }
     const focus = {
-      background: decreaseContrast(base.background, largeAmt),
-      borderColor: decreaseContrast(base.borderColor, largeAmt),
-      ...rest.focus,
+      backgroundFocus: decreaseContrast(base.background, largeAmt),
+      borderColorFocus: decreaseContrast(base.borderColor, largeAmt),
     }
+    // flattened
     const res = {
-      ...rest,
       ...this.colorize({
-        base,
-        hover,
-        active,
-        inactive,
-        disabled,
-        focus,
+        ...base,
+        ...hover,
+        ...active,
+        ...blur,
+        ...focus,
       }),
     }
     this.cache[key] = res

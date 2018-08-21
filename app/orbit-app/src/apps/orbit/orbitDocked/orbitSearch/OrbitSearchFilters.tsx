@@ -21,7 +21,7 @@ const SearchFilterBar = view({
   alignItems: 'center',
 })
 SearchFilterBar.theme = ({ theme }) => ({
-  borderTop: [1, theme.base.borderColor.alpha(0.3)],
+  borderTop: [1, theme.borderColor.alpha(0.3)],
 })
 
 const ExtraFilters = view(UI.View, {

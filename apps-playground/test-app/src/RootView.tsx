@@ -62,7 +62,7 @@ const Test2 = view(Test, {
 Test2.theme = ({ theme, big }) => ({
   fontStyle: 'italic',
   fontWeight: big ? 'bold' : 'light',
-  color: big ? 'pink' : theme.base.color,
+  color: big ? 'pink' : theme.color,
 })
 
 // extend theme

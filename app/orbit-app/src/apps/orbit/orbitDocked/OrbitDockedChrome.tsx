@@ -24,9 +24,9 @@ const Border = view({
 })
 
 Border.theme = ({ theme }) => {
-  // const borderColor = theme.base.background.lighten(0.4)
+  // const borderColor = theme.background.lighten(0.4)
   // const borderShadow = [0, 0, 0, 0.5, borderColor]
-  // const lightBg = theme.base.background.lighten(1)
+  // const lightBg = theme.background.lighten(1)
   // const borderGlow = ['inset', 0, 0.5, 0, 0.5, lightBg]
   return {
     boxShadow: [DOCKED_SHADOW /* , borderShadow */],
@@ -59,10 +59,10 @@ Background.theme = ({ theme, isUpper }) => ({
   background: [50, 50, 50, 0.82],
   // background: [0, 0, 0, 0.5],
   // background: isUpper
-  //   ? theme.base.background.alpha(0.2)
+  //   ? theme.background.alpha(0.2)
   //   : `linear-gradient(
-  //       ${theme.base.background.alpha(0.2)} 90%,
-  //       ${theme.base.background.alpha(0)}
+  //       ${theme.background.alpha(0.2)} 90%,
+  //       ${theme.background.alpha(0)}
   //     )`,
 })
 

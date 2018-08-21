@@ -42,16 +42,16 @@ Toolbar.theme = ({
   compact,
   theme,
 }) => ({
-  background: background || theme.base.background || colors.light02,
+  background: background || theme.background || colors.light02,
   borderBottom:
     borderBottom ||
     (position === 'bottom'
       ? 'none'
-      : [1, theme.base.borderColor || colors.sectionHeaderBorder]),
+      : [1, theme.borderColor || colors.sectionHeaderBorder]),
   borderTop:
     borderTop ||
     (position === 'bottom'
-      ? [1, theme.base.borderColor || colors.sectionHeaderBorder]
+      ? [1, theme.borderColor || colors.sectionHeaderBorder]
       : 'none'),
   height: height || (compact ? 28 : 42),
 })

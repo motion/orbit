@@ -3,48 +3,58 @@ import { ThemeContext } from './ThemeContext'
 import { ThemeMaker } from './ThemeMaker'
 
 const MakeTheme = new ThemeMaker()
-const uniqThemeName = `theme-${Math.random}`.slice(0, 15)
+const makeName = () => `theme-${Math.random}`.slice(0, 15)
+const baseThemeName = makeName()
 const themeCache = {}
 
 // takes gloss themes and adds a "generate from base object/color"
 
 // TODO: this just re-mounts everything below it on every render (when used with an object)?....
+// TODO: the uniqeThemeName stuff is super wierd maybe not necessary
 
-export const Theme = ({ theme, name, children }) => {
+export const Theme = ({ theme, name, select, children }) => {
   if (name) {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
   }
   // pass through if no theme
-  if (!theme) {
+  if (!select && !theme) {
     return children
   }
-  const isString = typeof theme === 'string'
   let nextTheme
-  if (isString) {
+  let uniqThemeName = baseThemeName
+  if (typeof theme === 'string') {
     // cache themes, we can't have that many right...
     if (!themeCache[theme]) {
       themeCache[theme] = MakeTheme.fromColor(theme)
+      uniqThemeName = theme
     }
     nextTheme = themeCache[theme]
-  } else {
+  } else if (!!theme) {
     nextTheme = MakeTheme.fromStyles(theme)
+    uniqThemeName = makeName()
   }
   return (
     <ThemeContext.Consumer>
-      {theme => (
-        <ThemeContext.Provider
-          value={{
-            allThemes: {
-              ...theme.allThemes,
-              [uniqThemeName]: nextTheme,
-            },
-            activeThemeName: uniqThemeName,
-            activeTheme: nextTheme,
-          }}
-        >
-          {children}
-        </ThemeContext.Provider>
-      )}
+      {theme => {
+        if (select) {
+          nextTheme = select(theme.activeTheme)
+          uniqThemeName = makeName()
+        }
+        return (
+          <ThemeContext.Provider
+            value={{
+              allThemes: {
+                ...theme.allThemes,
+                [uniqThemeName]: nextTheme,
+              },
+              activeThemeName: uniqThemeName,
+              activeTheme: nextTheme,
+            }}
+          >
+            {children}
+          </ThemeContext.Provider>
+        )
+      }}
     </ThemeContext.Consumer>
   )
 }

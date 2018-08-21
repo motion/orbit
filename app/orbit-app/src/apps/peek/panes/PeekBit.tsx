@@ -40,7 +40,7 @@ const BottomFloat = view({
 })
 
 BottomFloat.theme = ({ theme }) => ({
-  background: `linear-gradient(transparent, ${theme.base.background} 50%)`,
+  background: `linear-gradient(transparent, ${theme.background} 50%)`,
 })
 
 const HeadSide = view({

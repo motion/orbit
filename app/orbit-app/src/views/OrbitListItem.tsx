@@ -60,7 +60,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.base.background.alpha(0.2),
+      background: theme.background.alpha(0.2),
       // border: [1, borderSelected],
       // boxShadow: disabledShadow || [[0, 0, 0, 1, '#90b1e4']],
     }
@@ -68,7 +68,7 @@ ListItem.theme = ({ inGrid, theme, isSelected, padding, chromeless }) => {
     listStyle = {
       // border: [1, 'transparent'],
       '&:hover': {
-        background: theme.hover.background,
+        background: theme.backgroundHover,
       },
     }
   }

@@ -67,8 +67,8 @@ export const SearchBox = view(View, {
 })
 
 SearchBox.theme = ({ theme }) => ({
-  background: theme.base.background.lighten(0.1),
-  border: [1, theme.base.borderColor.desaturate(0.1)],
+  background: theme.background,
+  border: [1, theme.borderColor],
 })
 
 export const SearchInput = view(TableInput, {
@@ -89,10 +89,10 @@ export const SearchInput = view(TableInput, {
 })
 
 SearchInput.theme = ({ focus, theme }) => ({
-  color: theme.base.color,
+  color: theme.color,
   border: focus ? '1px solid black' : 0,
   '&::-webkit-input-placeholder': {
-    color: theme.base.color.alpha(0.5),
+    color: theme.color,
   },
 })
 
@@ -406,7 +406,7 @@ export function Searchable<T extends object>(
             <SearchIcon
               name="ui-1_zoom"
               // @ts-ignore
-              color={theme.base.color.alpha(0.5)}
+              color={theme.color.alpha(0.5)}
               size={16}
             />
             {this.state.filters.map((filter, i) => (

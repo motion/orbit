@@ -2,7 +2,6 @@ import * as React from 'react'
 import { view, attachTheme } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { WindowControls } from '../../../views/WindowControls'
-import { App } from '@mcro/stores'
 import { PeekStore } from '../stores/PeekStore'
 import * as Constants from '../../../constants'
 import { PeekContents } from '../PeekPaneProps'
@@ -30,14 +29,14 @@ PeekHeaderContain.theme = ({ position, theme, focused }) => {
   if (!focused) {
     style = {
       ...style,
-      background: theme.titleBar.backgroundBlur,
-      borderBottom: [1, theme.titleBar.borderColorBlur],
+      background: theme.backgroundBlur,
+      borderBottom: [1, theme.borderColorBlur],
     }
   } else {
     style = {
       ...style,
-      background: theme.titleBar.background,
-      borderBottom: [1, theme.titleBar.borderColor],
+      background: theme.backgroundGradient || theme.background,
+      borderBottom: [1, theme.borderColor],
     }
   }
   return style
@@ -157,5 +156,9 @@ export class PeekHeaderContent extends React.Component<Props> {
 }
 
 export const PeekHeader = view.attach('peekStore')(
-  view(props => <PeekHeaderContent {...props} />),
+  view(props => (
+    <UI.Theme select={theme => theme.titleBar || theme}>
+      <PeekHeaderContent {...props} />
+    </UI.Theme>
+  )),
 )

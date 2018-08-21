@@ -22,7 +22,7 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
             height={16}
             marginRight={-10}
             borderRadius={100}
-            border={[1, theme.base.background.lighten(2)]}
+            border={[1, theme.background.lighten(2)]}
             transform={{
               rotate: `${(i + half - total / total) * 12}deg`,
             }}

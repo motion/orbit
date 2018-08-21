@@ -1,4 +1,3 @@
-``
 export interface ConfluencePersonData {
   avatar: string
   emails: string[]

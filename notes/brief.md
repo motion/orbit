@@ -9,7 +9,7 @@ nearest neighbors:
 - guru (guru flux) - https://www.getguru.com/solutions/flux/
 - cresta - https://www.cresta.ai/
 - slab, carrot.io, tipihub.com, getnifty.io, tettra
-- startups - diamond.io, layer
+- startups - diamond.io, layer, onebar.io, usejournal
 - openfin
 - stripe home
 - advanced tech companies' internal intranet, microsoft start menu meets ms365, google for work

@@ -35,7 +35,7 @@ PeekHeaderContain.theme = ({ position, theme, focused }) => {
   } else {
     style = {
       ...style,
-      background: theme.background,
+      background: theme.backgroundGradient || theme.background,
       borderBottom: [1, theme.borderColor],
     }
   }

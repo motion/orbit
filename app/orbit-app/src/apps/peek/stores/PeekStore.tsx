@@ -96,7 +96,7 @@ export class PeekStore {
         // wait and fetch in parallel
         const [model] = await Promise.all([
           tornState || this.getModel(),
-          sleep(32),
+          sleep(50),
         ])
         setValue({
           ...nextState,

@@ -1,11 +1,9 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view, react, compose } from '@mcro/black'
-import { TimeAgo } from '../../../../views/TimeAgo'
+import { view, compose } from '@mcro/black'
 import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
 import { SettingPaneProps } from './SettingPaneProps'
 import { HideablePane } from '../../views/HideablePane'
-import { orderBy } from 'lodash'
 import { SettingRepository } from '../../../../repositories'
 
 const columnSizes = {

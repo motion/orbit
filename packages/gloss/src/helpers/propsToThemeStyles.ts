@@ -1,3 +1,5 @@
+import { ThemeObject } from '../types'
+
 // resolves props into styles for valid css
 // backs up to theme colors if not found
 
@@ -27,7 +29,10 @@ const collectStylesForPsuedo = (theme, postfix) => {
   return styles
 }
 
-export const propsToThemeStyles = (props, mapPropStylesToPseudos?) => {
+export const propsToThemeStyles = (
+  props,
+  mapPropStylesToPseudos?,
+): ThemeObject => {
   const theme = props.theme
   let styles = {
     color: theme.color,

@@ -7,6 +7,12 @@ export type ThemeObject = {
   backgroundBlur?: Color
   colorBlur?: Color
   borderColorBlur?: Color
+  backgroundHover?: Color
+  colorHover?: Color
+  borderColorHover?: Color
+  backgroundFocus?: Color
+  colorFocus?: Color
+  borderColorFocus?: Color
   backgroundActive?: Color
   colorActive?: Color
   borderColorActive?: Color

@@ -123,7 +123,7 @@ SurfaceFrame.theme = props => {
     ...baseIconStyle,
   }
   const hoverIconStyle = {
-    color: props.iconHoverColor || themeStyles.hoverColor,
+    color: props.iconHoverColor || themeStyles.colorHover,
   }
   const chromelessStyle = props.chromeless && {
     borderColor: 'transparent',
@@ -148,7 +148,6 @@ SurfaceFrame.theme = props => {
     ...themeStyles,
     ...propsToStyles(props),
     ...propsToTextSize(props),
-    ...(props.active && themeStyles['&:active']),
     ...chromelessStyle,
   }
   return alphaColor(surfaceStyles, props.alpha)

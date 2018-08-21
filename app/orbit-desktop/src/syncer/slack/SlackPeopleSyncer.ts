@@ -2,7 +2,7 @@ import { logger } from '@mcro/logger'
 import { Person } from '@mcro/models'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
-import { createOrUpdatePersonBit } from '../../repository'
+import { createOrUpdatePersonBits } from '../../repository'
 import { assign } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { SlackLoader } from './SlackLoader'
@@ -51,13 +51,7 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
     // add person bits
     await Promise.all(
       updatedPeople.map(async person => {
-        person.personBit = await createOrUpdatePersonBit({
-          email: person.data.profile.email,
-          name: person.name,
-          photo: person.data.profile.image_512,
-          integration: 'slack',
-          person: person,
-        })
+        person.personBit = await createOrUpdatePersonBits(person)
       }),
     )
 
@@ -87,6 +81,8 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
       data: user as any,
       webLink: `https://${this.setting.values.oauth.info.team.id}.slack.com/messages/${user.id}`,
       desktopLink: `slack://user?team=${this.setting.values.oauth.info.team.id}&id=${user.id}`,
+      email: user.profile.email,
+      photo: user.profile.image_512,
     })
   }
 

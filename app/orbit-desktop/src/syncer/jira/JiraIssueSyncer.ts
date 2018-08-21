@@ -1,32 +1,31 @@
 import { logger } from '@mcro/logger'
-import { Bit, Person, ConfluenceBitData } from '@mcro/models'
-import { AtlassianService } from '@mcro/services'
+import { Bit, JiraBitData } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
+import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { assign } from '../../utils'
 import { BitUtils } from '../../utils/BitUtils'
 import { SyncerUtils } from '../core/SyncerUtils'
-import { ConfluenceLoader } from './ConfluenceLoader'
-import { ConfluenceContent } from './ConfluenceTypes'
-import { ConfluenceUtils } from './ConfluenceUtils'
+import { JiraLoader } from './JiraLoader'
+import { JiraIssue } from './JiraTypes'
 
-const log = logger('syncer:confluence:content')
+const log = logger('syncer:jira:issue')
 
 /**
- * Syncs Confluence pages and blogs.
+ * Syncs Jira issues.
  */
-export class ConfluenceContentSyncer {
+export class JiraIssueSyncer implements IntegrationSyncer {
 
   private setting: SettingEntity
-  private loader: ConfluenceLoader
+  private loader: JiraLoader
   private people: PersonEntity[]
   private bits: BitEntity[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
-    this.loader = new ConfluenceLoader(setting)
+    this.loader = new JiraLoader(setting)
   }
 
   /**
@@ -40,17 +39,17 @@ export class ConfluenceContentSyncer {
     // load all database bits
     log(`loading database bits`)
     this.bits = await getRepository(BitEntity).find({
-      settingId: this.setting.id
+      settingId: this.setting.id,
     })
     log(`database bits were loaded`, this.bits)
 
-    // load pages
-    log(`loading content from the api`)
-    const contents = await this.loader.loadContents()
-    log(`content loaded`, contents)
+    // load jira issues
+    log(`loading jira issues from the api`)
+    const issues = await this.loader.loadIssues()
+    log(`jira issues loaded`, issues)
 
     // create bits from them and save them
-    const bits = contents.map(content => this.buildBit(content))
+    const bits = issues.map(issue => this.buildBit(issue))
     log(`saving bits`, bits)
     await getRepository(BitEntity).save(bits)
     log(`bits where saved`)
@@ -63,56 +62,57 @@ export class ConfluenceContentSyncer {
   }
 
   /**
-   * Builds a bit from the given confluence content.
+   * Builds a bit from the given jira issue.
    */
-  private buildBit(content: ConfluenceContent) {
+  private buildBit(issue: JiraIssue) {
 
-    const id = `confluence-${this.setting.id}-${content.id}`
-    const bitCreatedAt = new Date(content.history.createdDate).getTime()
-    const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
-    const body = ConfluenceUtils.buildTextBody(content)
-    const cleanHtml = ConfluenceUtils.buildHtmlBody(content)
+    const id = `jira-${this.setting.id}-${issue.id}`
+    const bitCreatedAt = new Date(issue.fields.created).getTime()
+    const bitUpdatedAt = new Date(issue.fields.updated).getTime()
     const domain = this.setting.values.atlassian.domain
 
     // get people contributed to this bit (content author, editors, commentators)
-    const peopleIds = [
-      content.history.createdBy.accountId,
-      ...content.comments.map(comment => comment.history.createdBy.accountId),
-      ...content.history.contributors.publishers.userAccountIds
-    ]
+    const peopleIds = []
+    if (issue.fields.comment)
+      peopleIds.push(...issue.fields.comment.map(comment => comment.author.accountId))
+    if (issue.fields.assignee)
+      peopleIds.push(issue.fields.assignee.accountId)
+    if (issue.fields.creator)
+      peopleIds.push(issue.fields.creator.accountId)
+    if (issue.fields.reporter)
+      peopleIds.push(issue.fields.reporter.accountId)
+
     const people = this.people.filter(person => {
       return peopleIds.indexOf(person.integrationId) !== -1
     })
 
     // find original content creator
     const author = this.people.find(person => {
-      return person.integrationId === content.history.createdBy.accountId
+      return person.integrationId === issue.fields.creator.accountId
     })
 
     // build the data property for this bit
-    const data: ConfluenceBitData = {
-      content: cleanHtml,
-    }
+    // const data: JiraBitData = { }
 
     // create or update a bit
     const bit = this.bits.find(bit => bit.id === id)
     return assign(bit || new BitEntity(), {
-      integration: 'confluence',
+      integration: 'jira',
       id,
       setting: this.setting,
       type: 'document',
-      title: content.title,
-      body,
-      data,
+      title: issue.fields.summary,
+      body: issue.fields.description || '',
       author,
-      raw: content,
+      data: issue as any,
+      raw: issue,
       location: {
-        id: content.space.id,
-        name: content.space.name,
-        webLink: domain + "/wiki" + content.space._links.webui,
+        id: issue.fields.project.id,
+        name: issue.fields.project.name,
+        webLink: domain + '/browse/' + issue.fields.project.key,
         desktopLink: ''
       },
-      webLink: domain + "/wiki" + content._links.webui,
+      webLink: domain + '/browse/' + issue.key,
       people,
       bitCreatedAt,
       bitUpdatedAt,

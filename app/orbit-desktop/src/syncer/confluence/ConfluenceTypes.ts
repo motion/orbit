@@ -59,7 +59,7 @@ export type ConfluenceContent = {
     }
   }
   body: {
-    storage: {
+    styled_view: {
       value: string
     }
   }

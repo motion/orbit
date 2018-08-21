@@ -1,8 +1,11 @@
 import { GmailBitDataParticipant } from '@mcro/models'
 import { GmailMessage } from './GMailTypes'
+
 const createDOMPurify = require('dompurify')
 const JSDOM = require('jsdom').JSDOM
 const addrs = require("email-addresses")
+const window = (new JSDOM('')).window
+const DOMPurify = createDOMPurify(window)
 
 /**
  * Parses Gmail Message.
@@ -56,19 +59,81 @@ export class GMailMessageParser {
    * Gets message text body.
    */
   getTextBody() {
-    const data = this.message.payload.parts[0].body.data
-    return Buffer.from(data, 'base64').toString('utf8')
+    const parts = [
+      ...(this.message.payload.parts || []),
+      this.message.payload,
+    ]
+
+    let textBody = ""
+    const textPart = parts.find(part => {
+      return part.mimeType === "text/plain" && !!part.body && !!part.body.data
+    })
+    if (textPart) {
+      textBody = Buffer.from(textPart.body.data, 'base64').toString('utf8')
+    }
+
+    let htmlBody = ""
+    const htmlPart = parts.find(part => {
+      return part.mimeType === "text/html" && !!part.body && !!part.body.data
+    })
+    if (htmlPart) {
+      htmlBody = Buffer.from(htmlPart.body.data, 'base64').toString('utf8')
+    }
+
+    if (textBody) {
+      return textBody
+
+    } else if (htmlBody) {
+      return DOMPurify
+        .sanitize(htmlBody, { ALLOWED_TAGS: [] })
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/•/gi, '')
+        .trim()
+
+    } else {
+      return this.message.snippet
+    }
   }
 
   /**
    * Gets message html body.
    */
   getHtmlBody() {
-    const data = this.message.payload.parts[1].body.data
-    const html = Buffer.from(data, 'base64').toString('utf8')
-    const window = (new JSDOM('')).window
-    const DOMPurify = createDOMPurify(window)
-    return DOMPurify.sanitize(html).replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '').trim()
+    const parts = [
+      ...(this.message.payload.parts || []),
+      this.message.payload,
+    ]
+
+    let textBody = ""
+    const textPart = parts.find(part => {
+      return part.mimeType === "text/plain" && !!part.body && !!part.body.data
+    })
+    if (textPart) {
+      textBody = Buffer.from(textPart.body.data, 'base64').toString('utf8')
+    }
+
+    let htmlBody = ""
+    const htmlPart = parts.find(part => {
+      return part.mimeType === "text/html" && !!part.body && !!part.body.data
+    })
+    if (htmlPart) {
+      htmlBody = Buffer.from(htmlPart.body.data, 'base64').toString('utf8')
+    }
+
+    if (htmlBody) {
+      return DOMPurify
+        .sanitize(htmlBody, { ALLOWED_TAGS: [] })
+        .replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/•/gi, '')
+        .trim()
+
+    } else if (textBody) {
+        return textBody
+
+    } else {
+      return this.message.snippet
+    }
   }
   
 }

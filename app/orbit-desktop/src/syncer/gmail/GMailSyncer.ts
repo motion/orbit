@@ -5,7 +5,7 @@ import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import * as Helpers from '../../helpers'
-import { createOrUpdatePersonBit } from '../../repository'
+import { createOrUpdatePersonBits } from '../../repository'
 import { assign, sequence } from '../../utils'
 import { IntegrationSyncer } from '../core/IntegrationSyncer'
 import { GMailLoader } from './GMailLoader'
@@ -184,6 +184,7 @@ export class GMailSyncer implements IntegrationSyncer {
         settingId: this.setting.id,
         webLink: 'mailto:' + email,
         desktopLink: 'mailto:' + email,
+        email: email
       })
       await getRepository(PersonEntity).save(person)
 
@@ -227,16 +228,7 @@ export class GMailSyncer implements IntegrationSyncer {
     })
 
     await getRepository(BitEntity).save(bit)
-
-    await Promise.all(people.map(async person => {
-      await createOrUpdatePersonBit({
-        integration: 'gmail',
-        email: person.integrationId,
-        name: person.name,
-        person,
-      })
-    }))
-
+    await createOrUpdatePersonBits(people)
     return bit
   }
 

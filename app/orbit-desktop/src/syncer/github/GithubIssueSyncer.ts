@@ -66,7 +66,7 @@ export class GithubIssueSyncer implements IntegrationSyncer {
     const githubPeople = uniqBy([
       issue.author,
       ...comments.map(comment => comment.author),
-    ], 'id')
+    ], 'id').filter(user => !!user)
 
     const people: Person[] = []
     for (let githubPerson of githubPeople) {
@@ -93,7 +93,6 @@ export class GithubIssueSyncer implements IntegrationSyncer {
         orgLogin: organization,
         repositoryName: repository,
       },
-      author: issue.author ? issue.author.login : null, // github can return null author in the case if github user was removed,
       bitCreatedAt: createdAt,
       bitUpdatedAt: updatedAt,
       people: people,

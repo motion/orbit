@@ -6,20 +6,20 @@ import { GDriveSyncer } from './gdrive/GDriveSyncer'
 import { GithubIssueSyncer } from './github/GithubIssueSyncer'
 import { GithubPeopleSyncer } from './github/GithubPeopleSyncer'
 import { GMailSyncer } from './gmail/GMailSyncer'
-import { JiraIssueSync } from './jira/JiraIssueSync'
-import { JiraPersonSyncer } from './jira/JiraPersonSyncer'
+import { JiraIssueSyncer } from './jira/JiraIssueSyncer'
+import { JiraPeopleSyncer } from './jira/JiraPeopleSyncer'
 import { MailWhitelisterSyncer } from './mail-whitelister/MailWhitelisterSyncer'
 import { SlackIssuesSyncer } from './slack/SlackIssuesSyncer'
 import { SlackPeopleSyncer } from './slack/SlackPeopleSyncer'
 
 export const Syncers = [
-  new Syncer({ type: 'jira', constructor: JiraIssueSync, interval: 1000 * 120 }),
-  new Syncer({ type: 'jira', constructor: JiraPersonSyncer, interval: 1000 * 120 }),
+  new Syncer({ type: 'jira', constructor: JiraIssueSyncer, interval: 1000 * 120 }),
+  new Syncer({ type: 'jira', constructor: JiraPeopleSyncer, interval: 1000 * 120 }),
   new SyncerGroup('GithubSyncers', [
     new Syncer({ type: 'confluence', constructor: ConfluencePeopleSyncer, interval: 1000 * 120 }),
     new Syncer({ type: 'confluence', constructor: ConfluenceContentSyncer, interval: 1000 * 120 }),
   ]),
-  new Syncer({ type: 'gdrive', constructor: GDriveSyncer, interval: 1000 * 120 }),
+  new Syncer({ type: 'gdocs' as any, constructor: GDriveSyncer, interval: 1000 * 120 }), // todo: fix gdocs as any - to fix that we need to change all gdocs to gdrive
   new Syncer({ type: 'gmail', constructor: GMailSyncer, interval: 1000 * 120 }),
   new SyncerGroup('GithubSyncers', [
     new Syncer({ type: 'github', constructor: GithubPeopleSyncer, interval: 1000 * 120 }),

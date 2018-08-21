@@ -31,13 +31,13 @@ const exploreButton = {
   borderWidth: 1,
   borderColor: 'transparent',
   background: 'transparent',
+  opacity: 0.35,
   transform: {
     y: -0.5,
   },
   iconProps: {
     size: 12,
   },
-  opacity: 0.35,
   activeStyle: {
     opacity: 1,
   },

@@ -1,3 +1,7 @@
+# next
+
+## Deployable .app
+
 - productionize: fix proxy process for prod
 
 - oauth:
@@ -23,7 +27,6 @@ And just to be safe, our servers disable logs and deny all requests. Learn more.
 - Fix empty profiles from gmail contacts import
 - Fix slack not showing usernames
 - Fix intra-peek clicking
-- Fix blur in prod build on other macs (test on my other mac)
 - Onboard fix final bugs
 - Onboard click tray to focus
 - Slack select all settings by default (syncer needs to respect settings/set them)
@@ -31,33 +34,69 @@ And just to be safe, our servers disable logs and deny all requests. Learn more.
 - working remove integration
 - fix highlight index click interaction
 - fix integration buttons styling and going inactive after click
+- Finish settings panes
+
+## Oauth custom keys
+
 - Oauth key strategy:
   1.  UI/storage for adding your own oauth keys as master/admin
   2.  Using those keys in Passport
   3.  Documentation to onboard for creating your own keys
       - should be built into app as well as on a website
       - https://docs.tryretool.com/docs/sso-google-and-okta
-- Finish settings panes
-- Mutation/observe pattern for data updates
 
-# Week ending Aug 24th
+## Website signup for beta
 
-**Syncer/UI improvements and P2P system for sharing the app and sharing oauth config**
+- Signup process
+- Account manage area
+- keygen.sh
+- Secure source code
+- Documentation for onboarding
+- Questionaire
 
-- SAML login support
-- Website signup / onboarding
-- Website docs deploy
-- Lots of bugfixing and polish with search / people aggregation
+## Orbit 1.1 best guess
 
-# Week ending Aug 31st
+- Big bugfix run
+- Profiles upgrade
+- Cosal
+- Account/settings upgrades
+- Search upgrades
 
-- Search improvements and bugfix
-- p2p system in place
-- deploy to a few friends
+## Orbit 1.2 best guess
+
+- Better filtering by type/location
+- Attachment/file previews
+- Follow topics
+
+## Requested features best guess
+
+- Custom lists
+- Better search in 10 ways
+- Support for X integration
+
+---
+
+# GameChangers
+
+## App store
+
+- Platform refactor
+- Simple p2p app deploy system
+- Improve Manage Apps pane with a few extras
+- Website / Documentation of UI components
+
+## Realtime Search
+
+## Brain
+
+- Ridiculously easy indexing
+
+---
+
+# Small things
 
 UI
 
-- Add button for settings panes that easily lots into with table
 - Theme psuedo state better strategy
   - hover: [brightenBorders(0.1), biggerShadow(1.5)]
   - active: [darken(1.1)]
@@ -68,8 +107,6 @@ p2p: https://github.com/webtorrent/bittorrent-dht
 
 ## September
 
-- Hire top frontender
-- auto setup
 - p2p sync with real features (rate-limit, pin-to-search)
 - deploy it with 5 teams
 - alpha ocr/memory/contextual-search
@@ -79,8 +116,6 @@ queue:
 - SHOULD show banner, update and restart once update is pushed
 - handle screen changes/resizes
 - react-fast-compare local copy and fix comparison for our setting card (proxies breaking?)
-- make all searches work: task search, message search
-- Remove setting button
 - Google drive settings pane
 
 ## unnecessary for beta polish bucket
@@ -95,10 +130,6 @@ queue:
 - hoverGlow needs fix for x/left just like top/y
 - @mcro/color: increaseContrast, decreaseContrast
 - test-app: fix themes/tabs
-- fix orbitdocked resizing/overflow logic
-- roundbutton hover more contrast
-- Person titlebar borderbottom is weird
-- no titlabar faderight to transparent on profile
 - UI.Text not wrapping subtitlePrefix
 
 ## random dev notes

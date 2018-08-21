@@ -30,6 +30,7 @@ export class PortForwardStore {
   forwardPort = () => {
     const port = Config.server.port
     forwardPort(80, port, { isPublicAccess: true })
+    this.isForwarded = true
   }
 
   setupHosts = async () => {

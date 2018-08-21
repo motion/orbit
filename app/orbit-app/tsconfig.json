@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "noEmit": true,
     "rootDir": "src",
     "typeRoots": ["./src/main.d.ts"]
   },

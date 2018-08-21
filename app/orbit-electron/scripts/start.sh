@@ -13,13 +13,8 @@ fi
 
 npx nodemon \
   --watch _ \
-  --watch $(realpath node_modules/@mcro/stores)/_ \
-  --watch $(realpath node_modules/@mcro/constants)/_  \
-  --watch $(realpath node_modules/@mcro/reactron)/_  \
-  --watch $(realpath node_modules/@mcro/decor-mobx)/_  \
-  --watch $(realpath node_modules/@mcro/decor-react)/_  \
-  --watch $(realpath node_modules/@mcro/decor-classes)/_  \
-  --watch $(realpath node_modules/@mcro/decor)/_  \
+  --ignore src \
+  --delay 2 \
   --exec 'npx kill-port 9001 && NODE_ENV=development electron --inspect=9001 --remote-debugging-port=9002 _/main-development.js'
 
 echo "bye orbit-electron"

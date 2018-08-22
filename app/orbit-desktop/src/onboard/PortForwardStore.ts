@@ -2,13 +2,13 @@ import { store, react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { getConfig } from '../config'
 import { logger } from '@mcro/logger'
-import Sudoer from 'electron-sudo'
+// import Sudoer from 'electron-sudo'
+import sudoPrompt from 'sudo-prompt'
 import * as Path from 'path'
 
 const log = logger('desktop')
 const Config = getConfig()
 const options = { name: 'Orbit Proxy' }
-const sudoer = new Sudoer(options)
 
 // @ts-ignore
 @store
@@ -28,13 +28,34 @@ export class PortForwardStore {
   forwardPort = async () => {
     const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
     log(`Running proxy script: ${pathToOrbitProxy}`)
-    const proc = await sudoer.spawn('node', [pathToOrbitProxy], {
-      env: {
-        HOST: Config.server.host,
-        PORT: Config.server.port,
+
+    const { host, port } = Config.server
+
+    sudoPrompt.exec(
+      `node ${pathToOrbitProxy} --port ${port} --host private.tryorbit.com`,
+      options,
+      (err, stdout, stderr) => {
+        if (err) {
+          log('OrbitProxy', err)
+        } else {
+          log('OrbitProxy', stdout, stderr)
+        }
       },
-    })
+    )
+
+    // const sudoer = new Sudoer(options)
+    // const proc = await sudoer.spawn('node', [pathToOrbitProxy], {
+    //   env: {
+    //     HOST: host,
+    //     PORT: port,
+    //   },
+    // })
+    // this.handleProcess(proc)
+
     log('Launched orbit Proxy')
+  }
+
+  private handleProcess = proc => {
     proc.stdout.on('data', data => {
       log(`OrbitProxyProcess: ${data}`)
     })

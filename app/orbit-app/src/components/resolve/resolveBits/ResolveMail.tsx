@@ -1,5 +1,4 @@
 import keywordExtract from '@mcro/keyword-extract'
-import * as _ from 'lodash'
 import { ItemResolverProps } from '../../ItemResolver'
 import { getHeader } from '../../../helpers'
 
@@ -9,18 +8,23 @@ const options = {
   remove_duplicates: false,
 }
 
-export const ResolveMail = ({ bit, children }: ItemResolverProps) =>
-  children({
-    title: keywordExtract
-      .extract(bit.title, options)
-      .slice(0, 4)
-      .map(_.capitalize)
-      .join(' '),
+export const ResolveMail = ({ bit, children }: ItemResolverProps) => {
+  // for now do location as the person name
+  let location = ''
+  // @ts-ignore TODO
+  if (bit.data.messages) {
+    // @ts-ignore TODO
+    const lastParticipant = getHeader(bit.data.messages[0], 'from')
+    if (lastParticipant) {
+      location = lastParticipant.name || lastParticipant.email
+    }
+  }
+  return children({
+    title: bit.title,
     icon: 'gmail',
     webLink: bit.webLink,
     desktopLink: bit.desktopLink,
-    // @ts-ignore
-    location: `${getHeader(bit.data.messages[0], 'from')}`,
+    location,
     locationLink: bit.location.webLink,
     content: bit.body,
     preview: keywordExtract
@@ -28,3 +32,4 @@ export const ResolveMail = ({ bit, children }: ItemResolverProps) =>
       .slice(0, 6)
       .join(' '),
   })
+}

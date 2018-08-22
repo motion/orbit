@@ -16,6 +16,10 @@ const Para = view({
 export const Mail = ({ bit }: PeekBitPaneProps) => {
   // @ts-ignore
   const { messages } = bit.data
+  if (!messages) {
+    debugger
+    return null
+  }
   return (
     <div>
       {messages

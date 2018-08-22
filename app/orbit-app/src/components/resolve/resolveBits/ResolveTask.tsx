@@ -1,8 +1,9 @@
-import * as React from 'react'
 import keywordExtract from '@mcro/keyword-extract'
 import markdown from '@mcro/marky-markdown'
-import { TimeAgo } from '../../../views/TimeAgo'
+import { GithubBitData, GithubBitDataComment } from '@mcro/models'
 import * as UI from '@mcro/ui'
+import * as React from 'react'
+import { TimeAgo } from '../../../views/TimeAgo'
 import { ItemResolverProps } from '../../ItemResolver'
 
 // const converter = new Showdown.Converter()
@@ -14,7 +15,7 @@ const options = {
   remove_duplicates: false,
 }
 
-const BitGithubTaskComment = ({ comment }) => {
+const BitGithubTaskComment = ({ comment }: { comment: GithubBitDataComment }) => {
   const {
     author: { avatarUrl, login },
     createdAt,
@@ -40,17 +41,18 @@ const BitGithubTaskComment = ({ comment }) => {
 }
 
 const parseGithubContents = ({ bit, shownLimit }) => {
-  let comments
-  if (bit.data && bit.data.comments) {
-    comments = bit.data.comments
+  let commentComponents
+  const { comments, body } = bit.data as GithubBitData
+  if (comments) {
+    commentComponents = comments
       .slice(0, shownLimit)
       .map((comment, index) => (
         <BitGithubTaskComment key={index} comment={comment} />
       ))
   }
   return {
-    content: markdown(bit.data ? bit.data.body : ''),
-    comments,
+    content: markdown(body),
+    comments: commentComponents,
   }
 }
 
@@ -66,13 +68,9 @@ export const ResolveTask = ({
   return children({
     title: bit.title,
     icon: 'github',
-    locationLink: `https://github.com/${bit.data.orgLogin}/${
-      bit.data.repositoryName
-    }`,
-    location: `${bit.data.orgLogin}/${bit.data.repositoryName}`,
-    webLink: `https://github.com/${bit.data.orgLogin}/${
-      bit.data.repositoryName
-    }/issues/${bit.data.number}`,
+    locationLink: bit.location.webLink,
+    location: bit.location.name,
+    webLink: bit.webLink,
     people: bit.people,
     content,
     comments,

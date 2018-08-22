@@ -1,11 +1,8 @@
-import { ConfluenceBitData } from './bit-data/ConfluenceBitData'
-import { GmailBitData } from './bit-data/GmailBitData'
-import { JiraBitData } from './bit-data/JiraBitData'
-import { SlackBitData } from './bit-data/SlackBitData'
+import { BitData } from './bit-data/BitData'
+import { IntegrationType } from './IntegrationType'
 import { Location } from './Location'
 import { Person } from './Person'
 import { Setting } from './Setting'
-import { IntegrationType } from './IntegrationType'
 
 export interface Bit {
 
@@ -99,7 +96,7 @@ export interface Bit {
   /**
    * Additional bit data.
    */
-  data: SlackBitData | GmailBitData | ConfluenceBitData | JiraBitData // todo: provide other union types
+  data: BitData
 
   /**
    * Raw JSON data.

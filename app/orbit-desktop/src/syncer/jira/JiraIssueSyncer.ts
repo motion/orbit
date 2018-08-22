@@ -70,11 +70,13 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
     const domain = this.setting.values.atlassian.domain
+    const body = SyncerUtils.stripHtml(issue.renderedFields.description)
+    const cleanHtml = SyncerUtils.sanitizeHtml(issue.renderedFields.description)
 
     // get people contributed to this bit (content author, editors, commentators)
     const peopleIds = []
     if (issue.fields.comment)
-      peopleIds.push(...issue.fields.comment.map(comment => comment.author.accountId))
+      peopleIds.push(...issue.comments.map(comment => comment.author.accountId))
     if (issue.fields.assignee)
       peopleIds.push(issue.fields.assignee.accountId)
     if (issue.fields.creator)
@@ -92,7 +94,9 @@ export class JiraIssueSyncer implements IntegrationSyncer {
     })
 
     // build the data property for this bit
-    // const data: JiraBitData = { }
+    const data: JiraBitData = {
+      content: cleanHtml
+    }
 
     // create or update a bit
     const bit = this.bits.find(bit => bit.id === id)
@@ -102,9 +106,9 @@ export class JiraIssueSyncer implements IntegrationSyncer {
       setting: this.setting,
       type: 'document',
       title: issue.fields.summary,
-      body: issue.fields.description || '',
+      body,
       author,
-      data: issue as any,
+      data,
       raw: issue,
       location: {
         id: issue.fields.project.id,

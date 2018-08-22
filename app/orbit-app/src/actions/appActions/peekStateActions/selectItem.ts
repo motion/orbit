@@ -63,10 +63,9 @@ function getItem(item: Person | Bit | AppStatePeekItem) {
 }
 
 function getPersonItem(person: Person) {
-  const avatar = person.data.profile ? person.data.profile.image_512 : ''
   return {
     id: person.id,
-    icon: avatar,
+    icon: person.photo || '',
     title: person.name,
     body: '',
     type: 'person',

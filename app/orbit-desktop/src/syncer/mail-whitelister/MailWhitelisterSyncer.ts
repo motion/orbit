@@ -32,7 +32,7 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
     // next we find all gmail integrations to add those emails to their whitelists
     log(`loading gmail integrations`)
     const integrations = await SettingEntity.find({
-      where: { type: "gmail" }
+      where: { type: 'gmail' }
     })
     log(`loaded gmail integrations`, integrations)
 

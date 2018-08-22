@@ -3,7 +3,7 @@ import { GmailMessage } from './GMailTypes'
 
 const createDOMPurify = require('dompurify')
 const JSDOM = require('jsdom').JSDOM
-const addrs = require("email-addresses")
+const addrs = require('email-addresses')
 const window = (new JSDOM('')).window
 const DOMPurify = createDOMPurify(window)
 
@@ -45,7 +45,7 @@ export class GMailMessageParser {
     this.message.payload.headers
       .filter(header => header.name === 'From' || header.name === 'To'  || header.name === 'Cc')
       .forEach(header => {
-        const type: "from"|"to" = header.name === 'From' ? "from" : "to"
+        const type: 'from'|'to' = header.name === 'From' ? 'from' : 'to'
         const emails = addrs.parseAddressList(header.value)
         emails.forEach(email => {
           participants.push({ name: email.name, email: email.address, type })
@@ -64,17 +64,17 @@ export class GMailMessageParser {
       this.message.payload,
     ]
 
-    let textBody = ""
+    let textBody = ''
     const textPart = parts.find(part => {
-      return part.mimeType === "text/plain" && !!part.body && !!part.body.data
+      return part.mimeType === 'text/plain' && !!part.body && !!part.body.data
     })
     if (textPart) {
       textBody = Buffer.from(textPart.body.data, 'base64').toString('utf8')
     }
 
-    let htmlBody = ""
+    let htmlBody = ''
     const htmlPart = parts.find(part => {
-      return part.mimeType === "text/html" && !!part.body && !!part.body.data
+      return part.mimeType === 'text/html' && !!part.body && !!part.body.data
     })
     if (htmlPart) {
       htmlBody = Buffer.from(htmlPart.body.data, 'base64').toString('utf8')
@@ -104,17 +104,17 @@ export class GMailMessageParser {
       this.message.payload,
     ]
 
-    let textBody = ""
+    let textBody = ''
     const textPart = parts.find(part => {
-      return part.mimeType === "text/plain" && !!part.body && !!part.body.data
+      return part.mimeType === 'text/plain' && !!part.body && !!part.body.data
     })
     if (textPart) {
       textBody = Buffer.from(textPart.body.data, 'base64').toString('utf8')
     }
 
-    let htmlBody = ""
+    let htmlBody = ''
     const htmlPart = parts.find(part => {
-      return part.mimeType === "text/html" && !!part.body && !!part.body.data
+      return part.mimeType === 'text/html' && !!part.body && !!part.body.data
     })
     if (htmlPart) {
       htmlBody = Buffer.from(htmlPart.body.data, 'base64').toString('utf8')

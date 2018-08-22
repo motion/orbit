@@ -6,7 +6,7 @@ import { GmailFetchOptions, GmailUserProfile } from './GMailTypes'
  *
  * @see https://developers.google.com/gmail/api/v1/reference/users/getProfile
  */
-export function userProfileQuery(userId = "me"): GmailFetchOptions<GmailUserProfile> {
+export function userProfileQuery(userId = 'me'): GmailFetchOptions<GmailUserProfile> {
   return {
     url: `/users/${userId}/profile`
   }
@@ -17,7 +17,7 @@ export function userProfileQuery(userId = "me"): GmailFetchOptions<GmailUserProf
  *
  * @see https://developers.google.com/gmail/api/v1/reference/users/threads/list
  */
-export function threadsQuery(max: number, filter?: string, pageToken?: string, userId = "me"): GmailFetchOptions<GmailThreadResult> {
+export function threadsQuery(max: number, filter?: string, pageToken?: string, userId = 'me'): GmailFetchOptions<GmailThreadResult> {
   return {
     url: `/users/${userId}/threads`,
     query: {
@@ -33,7 +33,7 @@ export function threadsQuery(max: number, filter?: string, pageToken?: string, u
  *
  * @see https://developers.google.com/gmail/api/v1/reference/users/threads/get
  */
-export function threadQuery(threadId: string, userId = "me"): GmailFetchOptions<GmailThread> {
+export function threadQuery(threadId: string, userId = 'me'): GmailFetchOptions<GmailThread> {
   return {
     url: `/users/${userId}/threads/${threadId}`
   }
@@ -45,7 +45,7 @@ export function threadQuery(threadId: string, userId = "me"): GmailFetchOptions<
  *
  * @see https://developers.google.com/gmail/api/v1/reference/users/history/list
  */
-export function historyQuery(startHistoryId: string, pageToken: string|undefined = undefined, userId = "me"): GmailFetchOptions<GmailHistory> {
+export function historyQuery(startHistoryId: string, pageToken: string|undefined = undefined, userId = 'me'): GmailFetchOptions<GmailHistory> {
   return {
     url: `/users/${userId}/history`,
     query: {

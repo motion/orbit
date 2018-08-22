@@ -135,7 +135,7 @@ class OrbitCardTeamContent extends React.Component<any> {
                       borderRadius: 100,
                       transform: { rotate: `-${angle * index}deg` },
                     }}
-                    src={person.data.profile.image_512}
+                    src={person.photo}
                   />
                 </UI.View>
               )

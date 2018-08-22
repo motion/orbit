@@ -1,3 +1,4 @@
+import { GmailBitData } from '@mcro/models'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
@@ -14,8 +15,7 @@ const Para = view({
 })
 
 export const Mail = ({ bit }: PeekBitPaneProps) => {
-  // @ts-ignore
-  const { messages } = bit.data
+  const { messages } = bit.data as GmailBitData
   if (!messages) {
     debugger
     return null

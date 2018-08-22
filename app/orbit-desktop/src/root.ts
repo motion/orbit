@@ -169,8 +169,7 @@ export class Root {
     })
     server.on('connection', socket => {
       socket.on('message', str => {
-        // @ts-ignore TODO
-        handleEntityActions(socket, JSON.parse(str))
+        handleEntityActions(socket, typeof str === "string" ? JSON.parse(str) : str)
       })
     })
   }

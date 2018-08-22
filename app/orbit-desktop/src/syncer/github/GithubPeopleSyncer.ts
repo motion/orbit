@@ -1,5 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Setting } from '@mcro/models'
+import { GithubPersonData } from '@mcro/models'
 import { uniq } from 'lodash'
 import { getRepository } from 'typeorm'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -42,6 +43,8 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
 
     const id = `github-${setting.id}-${githubPerson.id}`
     const person = (await getRepository(PersonEntity).findOne(id)) || new PersonEntity()
+    const data: GithubPersonData = {}
+
     assign(person, {
       id,
       setting: setting,
@@ -51,15 +54,8 @@ export class GithubPeopleSyncer implements IntegrationSyncer {
       webLink: `https://github.com/${githubPerson.login}`,
       email: githubPerson.email,
       photo: githubPerson.avatarUrl,
-      data: {
-        location: githubPerson.location || '',
-        bio: githubPerson.bio || '',
-        avatar: githubPerson.avatarUrl || '',
-        emails: githubPerson.email ? [githubPerson.email] : [],
-        data: {
-          github: githubPerson,
-        },
-      } as any // todo create a data interface for github
+      raw: githubPerson,
+      data
     })
     await getRepository(PersonEntity).save(person)
 

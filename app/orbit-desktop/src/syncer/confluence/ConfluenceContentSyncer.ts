@@ -10,7 +10,6 @@ import { BitUtils } from '../../utils/BitUtils'
 import { SyncerUtils } from '../core/SyncerUtils'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceContent } from './ConfluenceTypes'
-import { ConfluenceUtils } from './ConfluenceUtils'
 
 const log = logger('syncer:confluence:content')
 
@@ -55,7 +54,7 @@ export class ConfluenceContentSyncer {
     await getRepository(BitEntity).save(bits)
     log(`bits where saved`)
 
-    // get a difference to find a removed bits
+    // get a difference to find a removed bits and remove them
     const removedBits = BitUtils.difference(this.bits, bits)
     log(`removing bits`, removedBits)
     await getRepository(BitEntity).remove(removedBits)
@@ -67,12 +66,15 @@ export class ConfluenceContentSyncer {
    */
   private buildBit(content: ConfluenceContent) {
 
+    const domain = this.setting.values.atlassian.domain
     const id = `confluence-${this.setting.id}-${content.id}`
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
-    const body = ConfluenceUtils.buildTextBody(content)
-    const cleanHtml = ConfluenceUtils.buildHtmlBody(content)
-    const domain = this.setting.values.atlassian.domain
+    const body = SyncerUtils.stripHtml(content.body.styled_view.value)
+    let cleanHtml = SyncerUtils.sanitizeHtml(content.body.styled_view.value)
+    const matches = content.body.styled_view.value.match(/<style default-inline-css>((.|\n)*)<\/style>/gi)
+    if (matches)
+      cleanHtml = matches[0] + cleanHtml
 
     // get people contributed to this bit (content author, editors, commentators)
     const peopleIds = [
@@ -91,7 +93,7 @@ export class ConfluenceContentSyncer {
 
     // build the data property for this bit
     const data: ConfluenceBitData = {
-      content: cleanHtml,
+      content: cleanHtml
     }
 
     // create or update a bit
@@ -109,10 +111,10 @@ export class ConfluenceContentSyncer {
       location: {
         id: content.space.id,
         name: content.space.name,
-        webLink: domain + "/wiki" + content.space._links.webui,
+        webLink: domain + '/wiki' + content.space._links.webui,
         desktopLink: ''
       },
-      webLink: domain + "/wiki" + content._links.webui,
+      webLink: domain + '/wiki' + content._links.webui,
       people,
       bitCreatedAt,
       bitUpdatedAt,

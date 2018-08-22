@@ -1,4 +1,5 @@
 import keywordExtract from '@mcro/keyword-extract'
+import { GmailBitData } from '@mcro/models'
 import { ItemResolverProps } from '../../ItemResolver'
 import { getHeader } from '../../../helpers'
 
@@ -11,10 +12,9 @@ const options = {
 export const ResolveMail = ({ bit, children }: ItemResolverProps) => {
   // for now do location as the person name
   let location = ''
-  // @ts-ignore TODO
-  if (bit.data.messages) {
-    // @ts-ignore TODO
-    const lastParticipant = getHeader(bit.data.messages[0], 'from')
+  const { messages } = bit.data as GmailBitData
+  if (messages) {
+    const lastParticipant = getHeader(messages[0], 'from')
     if (lastParticipant) {
       location = lastParticipant.name || lastParticipant.email
     }

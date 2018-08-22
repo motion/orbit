@@ -39,7 +39,13 @@ export class PortForwardStore {
       options,
       (err, stdout, stderr) => {
         if (err) {
-          log('OrbitProxy', err)
+          if (err.indexOf('EADDRINUSE')) {
+            // handle error!
+            log('OrbitProxy IN USE ERRR', err)
+          } else {
+            // handle error!
+            log('OrbitProxy', err)
+          }
         } else {
           log('OrbitProxy', stdout, stderr)
         }

@@ -24,7 +24,7 @@ if (!host || !port) {
     }
 
     // forward port
-    forwardPort(80, port, { isPublicAccess: true })
+    forwardPort(port, 80, { isPublicAccess: true })
   }
 
   // run

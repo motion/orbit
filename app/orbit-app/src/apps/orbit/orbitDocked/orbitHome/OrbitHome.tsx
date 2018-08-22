@@ -112,7 +112,6 @@ const OrbitHomeCarouselSection = decorator(
             resetOnInactive
             cardProps={{
               getIndex: selectionStore.getIndexForItem,
-              padding: 9,
               hide: { body: true },
               titleFlex: 1,
             }}

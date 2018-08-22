@@ -85,6 +85,10 @@ export const SuggestionBarVerticalPad = view({
   pointerEvents: 'none',
 })
 
+export const VerticalSpace = view({
+  height: 16
+})
+
 export const Circle = view({
   display: 'inline-block',
   borderRadius: 100,

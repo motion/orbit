@@ -5,7 +5,7 @@ import { compose } from '@mcro/helpers'
 import { PersonRepository } from '../../../repositories'
 import { SubPane } from '../SubPane'
 import { OrbitCard } from '../../../views/OrbitCard'
-import { Title } from '../../../views'
+import { Title, VerticalSpace } from '../../../views'
 import * as Helpers from '../../../helpers'
 import { PaneManagerStore } from '../PaneManagerStore'
 import { modelQueryReaction } from '../../../repositories/modelQueryReaction'
@@ -20,10 +20,6 @@ const height = 69
 export const Separator = view({
   padding: [3, 16],
   margin: [0, -16, 10],
-})
-
-const VerticalSpace = view({
-  height: 10,
 })
 
 type Props = {
@@ -176,6 +172,7 @@ const OrbitDirectoryInner = view(({ store }: Props) => {
   }
   return (
     <>
+      <VerticalSpace />
       <Title>Directory</Title>
       {sections}
     </>

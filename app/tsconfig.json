@@ -5,9 +5,9 @@
     { "path": "./orbit-electron" },
     { "path": "./orbit" },
     // references from orbit-app since we want to have that one empty
-    { "path": "./models" },
-    { "path": "./services" },
-    { "path": "./stores" },
+    // { "path": "./models" },
+    // { "path": "./services" },
+    // { "path": "./stores" },
     { "path": "../packages/black" },
     { "path": "../packages/config" },
     { "path": "../packages/color" },

@@ -104,6 +104,7 @@ export class OrbitSettings extends React.Component<Props> {
     const { name, store } = this.props
     return (
       <SubPane name={name} fadeBottom>
+        <Views.VerticalSpace />
         <Views.Title>Settings</Views.Title>
         {!!store.generalSetting && (
           <Section>

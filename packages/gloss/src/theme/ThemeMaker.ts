@@ -25,7 +25,7 @@ const decreaseContrast = (color, amt) => {
   return color.isLight() ? color.lighten(adjustAmt) : color.darken(adjustAmt)
 }
 
-const roundToExtreme = (color, pct = 15) => {
+const roundToExtreme = (color, pct = 20) => {
   const lightness = color.lightness()
   if (lightness <= pct) {
     return '#000'

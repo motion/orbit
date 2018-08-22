@@ -1,16 +1,17 @@
 import { store, react } from '@mcro/black'
-import { App, Desktop, Electron } from '@mcro/stores'
-import orbitPosition from '../helpers/orbitPosition'
-import { ORBIT_WIDTH } from '@mcro/constants'
+import { App } from '@mcro/stores'
+// import orbitPosition from '../helpers/orbitPosition'
+// import { ORBIT_WIDTH } from '@mcro/constants'
 // const log = debug('AppReactions')
 
-const appTarget = ({ offset = null, bounds = null } = {}) => {
-  if (!offset || !bounds) return null
-  const [left, top] = offset
-  const [width, height] = bounds
-  return { top, left, width, height }
-}
+// const appTarget = ({ offset = null, bounds = null } = {}) => {
+//   if (!offset || !bounds) return null
+//   const [left, top] = offset
+//   const [width, height] = bounds
+//   return { top, left, width, height }
+// }
 
+// @ts-ignore
 @store
 export class AppReactions /* extends Store */ {
   onPinKey = null

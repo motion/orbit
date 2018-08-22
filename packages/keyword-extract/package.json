@@ -1,6 +1,6 @@
 {
   "name": "@mcro/keyword-extract",
-  "main": "_/index.js",
+  "main": "index.js",
   "sideEffects": false,
   "version": "2.2.1",
   "dependencies": {

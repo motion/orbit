@@ -4,22 +4,5 @@
     "rootDir": "src",
     "typeRoots": ["./src/main.d.ts"]
   },
-  "include": ["src/**/*"],
-  "references": [
-    { "path": "../models" },
-    { "path": "../services" },
-    { "path": "../stores" },
-    { "path": "../../packages/black" },
-    { "path": "../../packages/config" },
-    { "path": "../../packages/color" },
-    { "path": "../../packages/constants" },
-    { "path": "../../packages/logger" },
-    { "path": "../../packages/gloss" },
-    { "path": "../../packages/helpers" },
-    { "path": "../../packages/keyword" },
-    { "path": "../../packages/r2" },
-    { "path": "../../packages/router" },
-    { "path": "../../packages/slackdown" },
-    { "path": "../../packages/ui" }
-  ]
+  "include": ["src/**/*"]
 }

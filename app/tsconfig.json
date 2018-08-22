@@ -1,9 +1,22 @@
 {
   "files": [],
   "references": [
-    { "path": "./orbit-app" },
     { "path": "./orbit-desktop" },
     { "path": "./orbit-electron" },
-    { "path": "./orbit" }
+    { "path": "./orbit" },
+    // references from orbit-app since we want to have that one empty
+    { "path": "./models" },
+    { "path": "./services" },
+    { "path": "./stores" },
+    { "path": "../packages/black" },
+    { "path": "../packages/config" },
+    { "path": "../packages/color" },
+    { "path": "../packages/constants" },
+    { "path": "../packages/logger" },
+    { "path": "../packages/gloss" },
+    { "path": "../packages/helpers" },
+    { "path": "../packages/r2" },
+    { "path": "../packages/router" },
+    { "path": "../packages/slackdown" }
   ]
 }

@@ -39,9 +39,10 @@ export class PortForwardStore {
       options,
       (err, stdout, stderr) => {
         if (err) {
-          if (err.indexOf('EADDRINUSE')) {
+          const message = `${err.message}`
+          if (message.indexOf('EADDRINUSE')) {
             // handle error!
-            log('OrbitProxy in use error')
+            log('OrbitProxy in use error', message)
             // TODO: we can run lsof or similar and show what app is using it and show instructions.
             // they only need to forward during oauth so we could tell them its temporary too.
             Desktop.sendMessage(
@@ -55,7 +56,7 @@ export class PortForwardStore {
             Desktop.sendMessage(
               App,
               App.messages.FORWARD_STATUS,
-              err.slice(0, 400),
+              message.slice(0, 400),
             )
           }
         } else {

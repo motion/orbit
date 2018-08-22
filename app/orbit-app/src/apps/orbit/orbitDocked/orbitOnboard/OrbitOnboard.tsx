@@ -1,5 +1,5 @@
 import { SubPane } from '../../SubPane'
-import { view, compose } from '@mcro/black'
+import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
@@ -10,7 +10,7 @@ import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettings
 import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
-import { SubTitle, Title } from '../../../../views'
+import { Title } from '../../../../views'
 import { getConfig } from '@mcro/config'
 
 type Props = {
@@ -119,20 +119,44 @@ class OnboardStore {
   acceptedMessage = ''
   accepted = null
   curFrame = 0
-  lastFrame = () => this.curFrame--
 
+  didMount() {
+    this.checkAlreadyProxied()
+  }
+
+  async checkAlreadyProxied() {
+    try {
+      const testUrl = `${getConfig().privateUrl}/hello`
+      console.log(`Checking testurl: ${testUrl}`)
+      const res = await fetch(testUrl).then(res => res.text())
+      if (res && res === 'hello world') {
+        // already proxied!
+        this.accepted = true
+      }
+    } catch (err) {
+      console.log('error seeing if already proxied')
+    }
+  }
+
+  prevFrame = () => this.curFrame--
   nextFrame = async () => {
     // before incrementing, run some actions for:
     // LEAVING curFrame page...
 
-    if (this.curFrame === 1) {
-      // await acceptsforwarding...
+    if (this.curFrame === 0) {
+      // await acceptsforwarding... TODO should be message
+      App.setState({ acceptsForwarding: false })
+      await sleep(1)
       App.setState({ acceptsForwarding: true })
       const accepted = await new Promise(res => {
         const dispose = App.onMessage(App.messages.FORWARD_STATUS, status => {
+          console.log('got status', status)
           dispose()
           if (status === 'accepted') {
-            res(true)
+            // show message for just a bit
+            sleep(1500).then(() => {
+              res(true)
+            })
           } else {
             this.acceptedMessage = status
             res(false)
@@ -141,6 +165,7 @@ class OnboardStore {
       })
       this.accepted = accepted
       if (!accepted) {
+        console.log('not accepting, not advancing frame...')
         return
       }
     }
@@ -233,6 +258,18 @@ export const OrbitOnboard = decorator(
                 </Text>
               </Centered>
             )}
+            {store.accepted === true && (
+              <Centered>
+                <Text size={2.5} fontWeight={600}>
+                  Success!
+                </Text>
+                <View height={5} />
+                <Text size={1.5} alpha={0.5}>
+                  The local proxy is active, we can set up your integrations
+                  now...
+                </Text>
+              </Centered>
+            )}
           </OnboardFrame>
           <OnboardFrame>
             <Title size={1.2} fontWeight={600}>
@@ -279,7 +316,7 @@ export const OrbitOnboard = decorator(
         </FrameAnimate>
         <Controls>
           {store.curFrame > 1 && (
-            <Button chromeless onClick={store.lastFrame}>
+            <Button chromeless onClick={store.prevFrame}>
               Back
             </Button>
           )}

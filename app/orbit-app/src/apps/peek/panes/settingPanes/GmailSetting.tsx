@@ -56,19 +56,21 @@ class GmailSettingStore {
     return this.props.setting
   }
 
-  get whitelist() {
+  get whiteList() {
     // @ts-ignore
-    return (
-      this.setting.values.whitelist || [
-        { name: 'natewienert@gmail.com', isActive: () => true },
-        { name: 'natewienert@gmail.com', isActive: () => true },
-        { name: 'natewienert@gmail.com', isActive: () => true },
-      ]
-    )
+    const { whiteList } = this.setting.values
+    if (whiteList) {
+      let a = []
+      for (const id in whiteList) {
+        a.push({ id, name: id, isActive: () => whiteList[id] })
+      }
+      return a
+    }
+    return []
   }
 
   get rows() {
-    return this.whitelist.map((item, index) =>
+    return this.whiteList.map((item, index) =>
       itemToRow(item, index, this.onSync),
     )
   }

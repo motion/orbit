@@ -127,6 +127,10 @@ export class PaneManagerStore {
     return !this.hasOnboarded
   }
 
+  setForceOnboard = val => {
+    this.forceOnboard = val
+  }
+
   activePane: string = react(
     () => [
       this.panes,

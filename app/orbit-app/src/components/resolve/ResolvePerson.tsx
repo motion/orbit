@@ -1,6 +1,8 @@
 import { view } from '@mcro/black'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
+import { ItemResolverProps } from '../ItemResolver'
+import { Person } from '@mcro/models'
 
 const Avatar = view('img', {
   borderRadius: 100,
@@ -17,20 +19,19 @@ const Avatar = view('img', {
   },
 })
 
-export const ResolvePerson = ({ children, model }) => {
+export const ResolvePerson = ({
+  children,
+  model,
+}: ItemResolverProps & { model: Person }) => {
   if (!model) {
     return null
   }
   return children({
-    id: model.id,
     title: model.name,
-    type: 'person',
     icon: model.photo || 'users_square',
-    subtitle: !!model.email,
-    date: model.updatedAt,
-    iconProps: {
-      color: '#ccc',
-    },
+    subtitle: model.email,
+    createdAt: model.createdAt,
+    updatedAt: model.updatedAt,
     preview: !!model.photo && (
       <UI.Col flex={1}>
         <Avatar src={model.photo} />

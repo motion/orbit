@@ -5,6 +5,7 @@ import { logger } from '@mcro/logger'
 // import Sudoer from 'electron-sudo'
 import sudoPrompt from 'sudo-prompt'
 import * as Path from 'path'
+import { getConfig as getGlobalConfig } from '@mcro/config'
 
 const log = logger('desktop')
 const Config = getConfig()
@@ -29,10 +30,12 @@ export class PortForwardStore {
     const pathToOrbitProxy = Path.join(__dirname, '..', 'proxyOrbit.js')
     log(`Running proxy script: ${pathToOrbitProxy}`)
 
-    const { host, port } = Config.server
+    const { port } = Config.server
+    const GlobalConfig = getGlobalConfig()
+    const host = GlobalConfig.privateUrl.replace('https://', '')
 
     sudoPrompt.exec(
-      `node ${pathToOrbitProxy} --port ${port} --host private.tryorbit.com`,
+      `node ${pathToOrbitProxy} --port ${port} --host ${host}`,
       options,
       (err, stdout, stderr) => {
         if (err) {

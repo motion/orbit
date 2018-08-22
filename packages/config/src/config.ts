@@ -1,4 +1,5 @@
 type Config = {
+  privateUrl: string
   version: string
   ports: {
     server: number

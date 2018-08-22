@@ -39,6 +39,7 @@ export async function main({ version }: OrbitOpts) {
   }
 
   setConfig({
+    privateUrl: 'https://private.tryorbit.com',
     version,
     ports: {
       server: ports[0],

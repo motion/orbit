@@ -11,6 +11,7 @@ import { generalSettingQuery } from '../../../../repositories/settingQueries'
 import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { SubTitle, Title } from '../../../../views'
+import { getConfig } from '@mcro/config'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -189,7 +190,8 @@ export const OrbitOnboard = decorator(
                 <br />
                 <br />
                 To work, Orbit sets up a proxy to direct our servers at{' '}
-                <strong>auth.tryorbit.com</strong> to your local computer.{' '}
+                <strong>{getConfig().privateUrl}</strong> to your local
+                computer.{' '}
                 <a href="http://tryorbit.com/auth">
                   Learn more about how this works
                 </a>.

@@ -1,5 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Bit, GmailBitDataParticipant, Person } from '@mcro/models'
+import { GmailBitData, GmailPersonData } from '@mcro/models'
 import { getManager, getRepository, In } from 'typeorm'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
@@ -176,6 +177,8 @@ export class GMailSyncer implements IntegrationSyncer {
 
       const id = `gmail-${this.setting.id}-${Helpers.hash(email)}`
       const person = (await getRepository(PersonEntity).findOne(id)) || new PersonEntity()
+      const data: GmailPersonData = {}
+
       assign(person, {
         id,
         integrationId: email,
@@ -184,7 +187,9 @@ export class GMailSyncer implements IntegrationSyncer {
         settingId: this.setting.id,
         webLink: 'mailto:' + email,
         desktopLink: 'mailto:' + email,
-        email: email
+        email: email,
+        data,
+        raw: participant
       })
       await getRepository(PersonEntity).save(person)
 
@@ -200,6 +205,10 @@ export class GMailSyncer implements IntegrationSyncer {
         relations: ['people'],
       })) || new BitEntity()
 
+    const data: GmailBitData = {
+      messages
+    }
+
     assign(bit, {
       target: 'bit',
       id,
@@ -207,7 +216,7 @@ export class GMailSyncer implements IntegrationSyncer {
       type: 'mail',
       title: firstMessageParser.getTitle(),
       body,
-      data: { messages },
+      data,
       raw: thread,
       bitCreatedAt: firstMessageParser.getDate(),
       bitUpdatedAt: lastMessageParser.getDate(),

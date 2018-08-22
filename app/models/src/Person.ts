@@ -21,6 +21,7 @@ export interface Person {
   setting: Setting
   settingId: number
   data: PersonData
+  raw: any
   personBit: PersonBit
   webLink: string
   desktopLink: string

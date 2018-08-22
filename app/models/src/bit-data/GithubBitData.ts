@@ -5,7 +5,7 @@ export interface GithubBitData {
 
 export interface GithubBitDataComment {
   author: GithubBitDataCommentPerson
-  createdAt: Date
+  createdAt: string
   body: string
 }
 

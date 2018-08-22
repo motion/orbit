@@ -187,6 +187,20 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
     const body = SlackUtils.buildBitBody(messages, allPeople)
     const bit = bits.find(bit => bit.id === id)
     const mentionedPeople = SlackUtils.findMessageMentionedPeople(messages, allPeople)
+    const data: SlackBitData = {
+      messages: messages.reverse().map(message => ({
+        user: message.user,
+        text: message.text,
+        time: +message.ts.split('.')[0] * 1000,
+      })),
+    }
+    const people = allPeople.filter(person => {
+      return messages.some(message => {
+        return message.user === person.integrationId
+      }) || mentionedPeople.some(mentionedPerson => {
+        return person.id === mentionedPerson.id
+      })
+    })
 
     return assign(bit || new BitEntity(), {
       setting: this.setting,
@@ -195,22 +209,11 @@ export class SlackIssuesSyncer implements IntegrationSyncer {
       type: 'conversation',
       title: `#${channel.name}`,
       body,
-      data: {
-        messages: messages.reverse().map(message => ({
-          user: message.user,
-          text: message.text,
-          time: +message.ts.split('.')[0] * 1000,
-        })),
-      } as SlackBitData,
+      data,
+      raw: { channel, messages },
       bitCreatedAt,
       bitUpdatedAt,
-      people: allPeople.filter(person => {
-        return messages.some(message => {
-          return message.user === person.integrationId
-        }) || mentionedPeople.some(mentionedPerson => {
-          return person.id === mentionedPerson.id
-        })
-      }),
+      people,
       location: {
         id: channel.id,
         name: channel.name,

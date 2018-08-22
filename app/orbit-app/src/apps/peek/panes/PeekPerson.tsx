@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import { Person } from '@mcro/models'
-import { SlackPersonData } from '@mcro/models/_'
+import { SlackPersonData } from '@mcro/models'
 import { App } from '@mcro/stores'
 import * as React from 'react'
 import { Carousel } from '../../../components/Carousel'

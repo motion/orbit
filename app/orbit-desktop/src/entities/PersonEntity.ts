@@ -7,6 +7,7 @@ import {
   Setting,
   SlackPersonData,
   JiraPersonData,
+  PersonData
 } from '@mcro/models'
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm'
 import { PersonBitEntity } from './PersonBitEntity'
@@ -39,7 +40,10 @@ export class PersonEntity extends BaseEntity implements Person {
   settingId: number
 
   @Column({ type: 'simple-json', default: '{}' })
-  data: SlackPersonData | ConfluencePersonData | JiraPersonData
+  data: PersonData
+
+  @Column({ type: 'simple-json', default: '{}' })
+  raw: any
 
   @CreateDateColumn()
   createdAt: Date

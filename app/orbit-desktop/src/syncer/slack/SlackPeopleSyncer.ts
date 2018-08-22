@@ -1,5 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Person } from '@mcro/models'
+import { SlackPersonData } from '@mcro/models'
 import { PersonEntity } from '../../entities/PersonEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
 import { createOrUpdatePersonBits } from '../../repository'
@@ -16,6 +17,7 @@ const log = logger('syncer:slack:people')
 export class SlackPeopleSyncer implements IntegrationSyncer {
   private setting: SettingEntity
   private loader: SlackLoader
+  private people: PersonEntity[]
 
   constructor(setting: SettingEntity) {
     this.setting = setting
@@ -34,14 +36,14 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
     log(`filtered users (non bots)`, filteredUsers)
 
     // load all people from the local database
-    const existPeople = await PersonEntity.find({
+    this.people = await PersonEntity.find({
       settingId: this.setting.id
     })
 
     // creating entities for them
     log(`finding and creating people for users`, filteredUsers)
     const updatedPeople = filteredUsers.map(user => {
-      return this.createPerson(existPeople, user)
+      return this.createPerson(user)
     })
 
     // update in the database
@@ -58,7 +60,7 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
     log(`people were updated`, updatedPeople)
 
     // find remove people and remove them from the database
-    const removedPeople = existPeople.filter(person => {
+    const removedPeople = this.people.filter(person => {
       return updatedPeople.indexOf(person) === -1
     })
     await PersonEntity.remove(removedPeople)
@@ -68,17 +70,21 @@ export class SlackPeopleSyncer implements IntegrationSyncer {
   /**
    * Creates a single integration person from given Slack user.
    */
-  private createPerson(people: PersonEntity[], user: SlackUser): PersonEntity {
+  private createPerson(user: SlackUser): PersonEntity {
     const id = `slack-${this.setting.id}-${user.id}`
-    const person = people.find(person => person.id === id) || new PersonEntity()
+    const person = this.people.find(person => person.id === id)
+    const data: SlackPersonData = {
+      tz: user.tz
+    }
 
-    return assign(person, {
+    return assign(person || new PersonEntity(), {
       setting: this.setting,
       id: id,
       integration: 'slack',
       integrationId: user.id,
       name: user.profile.real_name || user.name,
-      data: user as any,
+      data,
+      raw: user,
       webLink: `https://${this.setting.values.oauth.info.team.id}.slack.com/messages/${user.id}`,
       desktopLink: `slack://user?team=${this.setting.values.oauth.info.team.id}&id=${user.id}`,
       email: user.profile.email,

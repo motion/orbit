@@ -30,6 +30,7 @@ const getSearchResults = async ({
     where: [],
     relations: {
       people: true,
+      author: true,
     },
     take,
     skip,

@@ -5,7 +5,7 @@ import { SettingEntity } from '../../entities/SettingEntity'
 import { queryObjectToQueryString } from '../../utils'
 import { JiraComment, JiraCommentCollection, JiraIssue, JiraIssueCollection, JiraUser } from './JiraTypes'
 
-const log = logger('syncer:confluence:loader')
+const log = logger('syncer:jira:loader')
 
 /**
  * Loads jira data from its API.
@@ -22,8 +22,12 @@ export class JiraLoader {
    */
   async loadUsers(startAt: number = 0): Promise<JiraUser[]> {
     const maxResults = 1000
-    const url = `/rest/api/2/user/search?maxResults=${maxResults}&startAt=${startAt}&username=_`
-    const users = await this.fetch<JiraUser[]>(url)
+    const url = `/rest/api/2/user/search`
+    const users = await this.fetch<JiraUser[]>(url, {
+      maxResults,
+      startAt,
+      username: '_'
+    })
 
     // since we can only load max 1000 people per request, we check if we have more people to load
     // then execute recursive call to load next 1000 people. Since users API does not return total
@@ -42,18 +46,23 @@ export class JiraLoader {
   async loadIssues(startAt: number = 0): Promise<JiraIssue[]> {
 
     const maxResults = 100
-    const url = `/rest/api/2/search?maxResults=${maxResults}&startAt=${startAt}`
-    const response = await this.fetch<JiraIssueCollection>(url)
+    const url = `/rest/api/2/search`
+    const response = await this.fetch<JiraIssueCollection>(url, {
+      fields: '*all',
+      maxResults,
+      startAt,
+      expand: 'renderedFields'
+    })
 
 
     // load content comments
-    // for (let issue of response.issues) {
-    //   // if (content.childTypes.comment.value === true) {
-    //     issue.comments = await this.loadComments(issue.id)
-    //   // } else {
-    //   //   issue.comments = []
-    //   // }
-    // }
+    for (let issue of response.issues) {
+      if (issue.fields.comment.total > 0) {
+        issue.comments = await this.loadComments(issue.id)
+      } else {
+        issue.comments = []
+      }
+    }
 
     // since we can only load max 100 issues per request, we check if we have more issues to load
     // then execute recursive call to load next 100 issues. Do it until we reach the end (total)
@@ -69,7 +78,7 @@ export class JiraLoader {
    * Loads jira issue's comments.
    *
    * @see https://developer.atlassian.com/cloud/jira/platform/rest/#api-api-2-issue-issueIdOrKey-comment-get
-
+   */
   private async loadComments(issueId: string, startAt = 0, maxResults = 25): Promise<JiraComment[]> {
 
     const response = await this.fetch<JiraCommentCollection>(
@@ -87,7 +96,7 @@ export class JiraLoader {
     }
 
     return response.comments
-  } */
+  }
 
 
   /**

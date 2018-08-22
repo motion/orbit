@@ -1,5 +1,6 @@
 import { Bit } from '@mcro/models'
 import { logger } from '@mcro/logger'
+import { GDriveBitData, GDrivePersonData } from '@mcro/models'
 import { BitEntity } from '../../entities/BitEntity'
 import { PersonEntity } from '../../entities/PersonEntity'
 import * as Helpers from '../../helpers'
@@ -46,6 +47,7 @@ export class GDriveSyncer implements IntegrationSyncer {
   }
 
   private createFile(file: GDriveLoadedFile): Promise<Bit | null> {
+    const data: GDriveBitData = {}
     return createOrUpdateBit(BitEntity, {
       integration: 'gdocs',
       setting: this.setting,
@@ -53,13 +55,8 @@ export class GDriveSyncer implements IntegrationSyncer {
       type: 'document',
       title: file.file.name,
       body: file.content || 'empty',
-      data: {
-        ...file.file,
-        // storing too much for now just to have flexibility
-        // htmlBody: html || '',
-        // markdownBody: html ? htmlToMarkdown(html) : text || '',
-        // textBody: text || '',
-      },
+      data,
+      raw: file,
       webLink: file.file.webViewLink
         ? file.file.webViewLink
         : file.file.webContentLink,
@@ -86,7 +83,8 @@ export class GDriveSyncer implements IntegrationSyncer {
       avatar: user.photo || '',
       emails: user.email ? [user.email] : [],
     }
-    const id = `gdrive-${Helpers.hash(person)}`
+    const id = `gdrive-${this.setting.id}-${Helpers.hash(person)}`
+    const data: GDrivePersonData = {}
     const personEntity = await createOrUpdate(
       PersonEntity,
       {
@@ -97,9 +95,8 @@ export class GDriveSyncer implements IntegrationSyncer {
         name: user.name,
         email: user.email,
         photo: user.photo,
-        data: {
-          ...user,
-        },
+        data,
+        raw: user,
       },
       { matching: ['id', 'integration'] },
     )

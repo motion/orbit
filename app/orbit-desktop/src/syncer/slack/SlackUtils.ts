@@ -67,8 +67,8 @@ export class SlackUtils {
    * Finds all the mentioned people in the given slack messages.
    */
   static findMessageMentionedPeople(messages: SlackMessage[], allPeople: Person[]) {
-    const body = messages.map(message => message.text).join("")
-    return allPeople.filter(person => new RegExp(`<@${(person.data as SlackPersonData).id}>`).test(body))
+    const body = messages.map(message => message.text).join('')
+    return allPeople.filter(person => new RegExp(`<@${person.integrationId}>`).test(body))
   }
 
   /**
@@ -83,7 +83,7 @@ export class SlackUtils {
 
     // replace all people id mentions in the message into a real people names
     for (let person of allPeople) {
-      body = body.replace(`<@${(person.data as SlackPersonData).id}>`, person.name)
+      body = body.replace(`<@${person.integrationId}>`, person.name)
     }
 
     // make all links in the message a better formatting (without http and <>)

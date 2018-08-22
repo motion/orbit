@@ -26,7 +26,7 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
             transform={{
               rotate: `${(i + half - total / total) * 12}deg`,
             }}
-            src={person.data.profile.image_512}
+            src={person.photo}
           />
         ))}
       </UI.Row>

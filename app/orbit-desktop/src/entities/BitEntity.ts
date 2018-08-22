@@ -1,4 +1,4 @@
-import { Bit, GmailBitData, IntegrationType, Person, Setting, SlackBitData, ConfluenceBitData, JiraBitData } from '@mcro/models'
+import { Bit, GmailBitData, IntegrationType, Person, Setting, SlackBitData, ConfluenceBitData, JiraBitData, BitData } from '@mcro/models'
 import {
   BaseEntity,
   BeforeInsert,
@@ -53,7 +53,7 @@ export class BitEntity extends BaseEntity implements Bit {
   settingId: number
 
   @Column({ type: 'simple-json', default: '{}' })
-  data: SlackBitData | GmailBitData | ConfluenceBitData | JiraBitData
+  data: BitData
 
   @Column({ type: 'simple-json', default: '{}' })
   raw: any

@@ -1,5 +1,6 @@
 import { logger } from '@mcro/logger'
 import { Bit, Person } from '@mcro/models'
+import { GithubBitData } from '@mcro/models'
 import { omit, uniqBy } from 'lodash'
 import { BitEntity } from '../../entities/BitEntity'
 import { SettingEntity } from '../../entities/SettingEntity'
@@ -73,6 +74,20 @@ export class GithubIssueSyncer implements IntegrationSyncer {
       people.push(await GithubPeopleSyncer.createPerson(this.setting, githubPerson))
     }
 
+    const data: GithubBitData = {
+      body: issue.body,
+      comments: issue.comments.edges.map(edge => {
+        return {
+          author: {
+            avatarUrl: edge.node.author.avatarUrl,
+            login: edge.node.author.login,
+          },
+          createdAt: edge.node.createdAt,
+          body: edge.node.body,
+        }
+      }),
+    }
+
     return await createOrUpdateBit(BitEntity, {
       setting: this.setting,
       integration: 'github',
@@ -86,13 +101,8 @@ export class GithubIssueSyncer implements IntegrationSyncer {
         name: issue.repository.name,
         webLink: issue.repository.url,
       },
-      data: {
-        ...omit(issue, ['bodyText']),
-        labels: issue.labels.edges.map(edge => edge.node),
-        comments: issue.comments.edges.map(edge => edge.node),
-        orgLogin: organization,
-        repositoryName: repository,
-      },
+      data,
+      raw: issue,
       bitCreatedAt: createdAt,
       bitUpdatedAt: updatedAt,
       people: people,

@@ -1,7 +1,5 @@
 import { IntegrationType } from './IntegrationType'
-import { ConfluencePersonData } from './person-data/ConfluencePersonData'
-import { JiraPersonData } from './person-data/JiraPersonData'
-import { SlackPersonData } from './person-data/SlackPersonData'
+import { PersonData } from './person-data/PersonData'
 import { PersonBit } from './PersonBit'
 import { Setting } from './Setting'
 
@@ -22,7 +20,8 @@ export interface Person {
   name: string
   setting: Setting
   settingId: number
-  data: SlackPersonData | ConfluencePersonData | JiraPersonData
+  data: PersonData
+  raw: any
   personBit: PersonBit
   webLink: string
   desktopLink: string

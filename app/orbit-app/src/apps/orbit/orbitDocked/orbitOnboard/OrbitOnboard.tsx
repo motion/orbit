@@ -3,7 +3,7 @@ import { view, compose, sleep } from '@mcro/black'
 import { Text, Button, Theme, View } from '@mcro/ui'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { OrbitIcon } from '../../../../views/OrbitIcon'
-import { Desktop, App } from '@mcro/stores'
+import { Desktop } from '@mcro/stores'
 import { NICE_INTEGRATION_NAMES } from '../../../../constants'
 import { addIntegrationClickHandler } from '../../../../helpers/addIntegrationClickHandler'
 import { IntegrationSettingsStore } from '../../../../stores/IntegrationSettingsStore'
@@ -12,6 +12,8 @@ import { SettingRepository } from '../../../../repositories'
 import { PaneManagerStore } from '../../PaneManagerStore'
 import { Title } from '../../../../views'
 import { getConfig } from '@mcro/config'
+import { checkAuthProxy } from '../../../../helpers/checkAuthProxy'
+import { promptForAuthProxy } from '../../../../helpers/promptForAuthProxy'
 
 type Props = {
   integrationSettingsStore?: IntegrationSettingsStore
@@ -125,16 +127,8 @@ class OnboardStore {
   }
 
   async checkAlreadyProxied() {
-    try {
-      const testUrl = `${getConfig().privateUrl}/hello`
-      console.log(`Checking testurl: ${testUrl}`)
-      const res = await fetch(testUrl).then(res => res.text())
-      if (res && res === 'hello world') {
-        // already proxied!
-        this.accepted = true
-      }
-    } catch (err) {
-      console.log('error seeing if already proxied')
+    if (await checkAuthProxy()) {
+      this.accepted = true
     }
   }
 
@@ -146,27 +140,13 @@ class OnboardStore {
     if (this.curFrame === 0) {
       await this.checkAlreadyProxied()
       if (this.accepted !== true) {
-        // await acceptsforwarding... TODO should be message
-        App.setState({ acceptsForwarding: false })
-        await sleep(1)
-        App.setState({ acceptsForwarding: true })
-        const accepted = await new Promise(res => {
-          const dispose = App.onMessage(App.messages.FORWARD_STATUS, status => {
-            console.log('got status', status)
-            dispose()
-            if (status === 'accepted') {
-              // show message for just a bit
-              sleep(1500).then(() => {
-                res(true)
-              })
-            } else {
-              this.acceptedMessage = status
-              res(false)
-            }
-          })
-        })
+        const { accepted, message } = await promptForAuthProxy()
         this.accepted = accepted
-        if (!accepted) {
+        this.acceptedMessage = message
+        if (accepted) {
+          // show message for a sec
+          await sleep(1500)
+        } else {
           console.log('not accepting, not advancing frame...')
           return
         }

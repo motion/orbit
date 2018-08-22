@@ -60,7 +60,10 @@ export class PortForwardStore {
             )
           }
         } else {
+          // TODO one more failure case here if stdout or stderr have error
+          // Success!
           log('OrbitProxy', stdout, stderr)
+          Desktop.sendMessage(App, App.messages.FORWARD_STATUS, 'accepted')
         }
       },
     )

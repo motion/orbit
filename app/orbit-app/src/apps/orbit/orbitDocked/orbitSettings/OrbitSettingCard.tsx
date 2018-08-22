@@ -1,21 +1,8 @@
 import * as React from 'react'
 import { view, compose } from '@mcro/black'
 import { OrbitCard } from '../../../../views/OrbitCard'
-import { SettingRepository } from '../../../../repositories'
 import { SettingInfoStore } from '../../../../stores/SettingInfoStore'
-import { Setting } from '@mcro/models'
 import { OrbitItemProps } from '../../../../views/OrbitItemProps'
-
-const handleClick = async () => {
-  const { result } = this.props
-  if (result.auth === false) {
-    const setting: Setting = {} as Setting
-    setting.category = 'integration'
-    setting.type = result.type
-    setting.token = 'good'
-    await SettingRepository.save(setting)
-  }
-}
 
 type Props = OrbitItemProps & {
   store: SettingInfoStore
@@ -30,7 +17,7 @@ const decorator = compose(
 )
 
 export const OrbitSettingCard = decorator(
-  ({ store, result, isActive, subtitle, onClick, ...props }: Props) => {
+  ({ store, result, isActive, subtitle, ...props }: Props) => {
     const countSubtitle = !isActive
       ? ''
       : store.bitsCount >= 0
@@ -57,7 +44,6 @@ export const OrbitSettingCard = decorator(
         }}
         result={result}
         {...props}
-        onClick={onClick || (!isActive ? handleClick : null)}
       />
     )
   },

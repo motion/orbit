@@ -1,6 +1,7 @@
 {
   "files": [],
   "references": [
+    { "path": "./orbit-app" },
     { "path": "./orbit-desktop" },
     { "path": "./orbit-electron" },
     { "path": "./orbit" }

@@ -28,7 +28,7 @@ const exploreButton = {
   size: 1.3,
   circular: true,
   glint: false,
-  borderWidth: 1,
+  borderWidth: 0,
   borderColor: 'transparent',
   background: 'transparent',
   opacity: 0.35,

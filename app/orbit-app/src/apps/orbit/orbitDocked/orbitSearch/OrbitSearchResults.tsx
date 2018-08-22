@@ -148,7 +148,6 @@ class OrbitSearchResultsList extends React.Component<Props> {
               {this.getChildren}
             </OrbitListItem>
           ))}
-          {!!results.length && <div style={{ height: 20 }} />}
         </>
       </HighlightsLayer>
     )

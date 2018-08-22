@@ -1,5 +1,7 @@
 # next
 
+- next: fix production oauth
+
 friday goals
 
 - 90% of deployable .app

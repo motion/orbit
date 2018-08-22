@@ -52,7 +52,6 @@ run electron
 /black              # compiles and exports @view and @store decorator
 /constants          # shared static variables between apps
 /crawler            # website crawler for custom search
-/debug              # simple logger - require('@mcro/debug')('myApp')('hello world')
 /debug-apps         # the Chromium app that gives us REPL into every app
 /gloss              # our CSS-in-JS solution, see README
 /reactron           # fork of react-ionize with more features and up to date React

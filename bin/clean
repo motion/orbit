@@ -1,15 +1,17 @@
 #!/bin/bash
 
-rm -rf app/*/npm-debug.log.*
-rm -rf app/*/_
-rm -rf apps-*/*/_
-rm -rf packages/*/_
-rm -rf packages/*/npm-debug.log.*
-rm -rf packages/*/shrinkwrap.json
+set +e
+
+rm -r app/*/npm-debug.log.* || true
+rm -r app/*/_ || true
+rm -r apps-*/*/_ || true
+rm -r packages/*/_ || true
+rm -r packages/*/npm-debug.log.* || true
+rm -r packages/*/shrinkwrap.json || true
 
 if [[ "$1" = "--all" ]]; then
-  rm -rf node_modules
-  rm -rf app/*/node_modules
-  rm -rf apps-*/*/node_modules
-  rm -rf packages/*/node_modules
+  rm -r node_modules || true
+  rm -r app/*/node_modules || true
+  rm -r apps-*/*/node_modules || true
+  rm -r packages/*/node_modules || true
 fi

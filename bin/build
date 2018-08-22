@@ -7,10 +7,10 @@ if [ "$(realpath .)" = "$ROOT" ]; then
   # build
   if [ "$1" = "" ]; then
     ARGS=${@:1}
-    (bin/in orbit tsc --build --force $ARGS) &
-    (bin/in orbit-desktop tsc) &
     (bin/in ui npm run build) &
     (bin/in store-hmr npm run build) &
+    wait
+    (cd app && tsc --build $ARGS)
     wait
   fi
   # build --watch

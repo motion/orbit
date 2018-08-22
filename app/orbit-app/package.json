@@ -9,9 +9,9 @@
     "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
-    "@mcro/config": "*",
     "@babel/runtime": "7.0.0-beta.47",
     "@mcro/black": "^2.2.1",
+    "@mcro/config": "*",
     "@mcro/color": "^2.2.1",
     "@mcro/constants": "^2.2.1",
     "@mcro/logger": "^2.2.1",

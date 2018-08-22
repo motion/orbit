@@ -972,7 +972,7 @@ export class HomeWrapper extends React.Component {
                     pageHeight={sectionHeight}
                     config={config.fast} // { tension: 170, friction: 26 }
                   >
-                    <Orbit if={isLarge} />
+                    {isLarge && <Orbit />}
                     <Header {...sectionProps} white />
                     <HomeHeader {...sectionProps} />
                     <SectionSearch {...sectionProps} />

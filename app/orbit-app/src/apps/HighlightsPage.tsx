@@ -89,10 +89,7 @@ const Frame = view(UI.Col, {
       // ]
     }
 
-    hoverOCRLines = react(
-      () => Desktop.ocrState.lines,
-      this.setupHover('line'),
-    )
+    hoverOCRLines = react(() => Desktop.ocrState.lines, this.setupHover('line'))
 
     hoverOCRWords = react(
       () => this.ocrWords, //Desktop.ocrState.words,
@@ -133,8 +130,11 @@ const Frame = view(UI.Col, {
 export class HighlightsPage extends React.Component {
   render() {
     const { store } = this.props
+    if (!store.showAll) {
+      return null
+    }
     return (
-      <Frame if={store.showAll}>
+      <Frame>
         {(store.ocrWords || []).map(item => (
           <OCRWord key={Helpers.wordKey(item)} item={item} store={store} />
         ))}

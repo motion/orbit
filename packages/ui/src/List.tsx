@@ -548,22 +548,23 @@ class ListUI extends React.PureComponent<ListProps> {
         }}
         {...props}
       >
-        <VirtualList
-          if={virtualized}
-          deferredMeasurementCache={this.cache}
-          height={height}
-          width={width}
-          ref={this.setVirtualRef}
-          overscanRowCount={10}
-          scrollToIndex={
-            realIndex ? realIndex[this.state.selected] : this.state.selected
-          }
-          rowCount={totalItems + totalGroups}
-          rowRenderer={this.rowRenderer}
-          rowHeight={this.cache.rowHeight}
-          onScroll={onScroll}
-          {...virtualized}
-        />
+        {!!virtualized && (
+          <VirtualList
+            deferredMeasurementCache={this.cache}
+            height={height}
+            width={width}
+            ref={this.setVirtualRef}
+            overscanRowCount={10}
+            scrollToIndex={
+              realIndex ? realIndex[this.state.selected] : this.state.selected
+            }
+            rowCount={totalItems + totalGroups}
+            rowRenderer={this.rowRenderer}
+            rowHeight={this.cache.rowHeight}
+            onScroll={onScroll}
+            {...virtualized}
+          />
+        )}
         {!virtualized && <div style={{ height: 'auto' }}>{children}</div>}
       </ListContain>
     )

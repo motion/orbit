@@ -26,11 +26,11 @@ echo "installing packages"
 npx lerna bootstrap --loglevel=warn
 # internal tools
 if [ ! -f "./packages/gloss/_/gloss.js" ]; then
-  build-builder-modules
+  bin/build-builder-modules
 fi
 # link second
 if [ ! -L "./node_modules/@mcro/gloss" ]; then
-  link-root-modules
+  bin/link-root-modules
 fi
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then

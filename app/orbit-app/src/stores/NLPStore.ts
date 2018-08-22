@@ -47,7 +47,7 @@ export class NLPStore /* extends Store */ {
 
   // TODO select just the names
   peopleNames = modelQueryReaction(
-    () => PersonRepository.find({ take: 5000 }),
+    () => PersonRepository.find({ select: { name: true } }),
     people => people.map(person => person.name),
     { poll: 60 * 5 * 1000 },
   )

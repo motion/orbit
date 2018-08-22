@@ -319,7 +319,7 @@ export class OrbitCardInner extends React.Component<OrbitItemProps> {
     store.isSelected
     return (
       <ItemResolver
-        bit={bit}
+        model={bit}
         item={item}
         isExpanded={this.props.isExpanded}
         searchTerm={searchTerm}
